@@ -1,100 +1,113 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA27AD25
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B88BAD56;
+	Wed, 12 Jun 2024 01:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155156; cv=none; b=ff2MmyiEw/l56F4JqakV87tjG/IOzXM7A4QeEcfQdelXtWFGDuizd0BYe3vAIUDpumYfSp1ZKDvhA6qDP2Au2s3+nWFslh0qs8EBgZc2vhGxBZnvn7mX5CdVB3t3j8COoe/hG6TBqZadRWa8GYE3m2D1/pWhwCLPoLfQgZKbdl4=
+	t=1718155156; cv=none; b=AT2Fo++pwkep2cIFXrqWvh5KmtEEnuECS42qE0UbpYLwGmVt1sOVmhotmrbML5hnElGmyxjXQKQ51Jfa05JykHbuLo5GBpy8nwDzpeOdxva6EBmQVVUVJ6yI8y+t4Id9cA/BnJuwdtSPYqpm8UWWb5wYjDycDrGNay7503z80ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718155156; c=relaxed/simple;
-	bh=j74mLBolZka09Rl/k9datpc7l1Az7Efas1c/FiOj2lM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=pczTlgR4y6v8f6UMhpMQpBXy5e88S5YrP4++7liDqlw2qjUcJyFqHhGaTtXqbO3nFjfcCKO8zjgZnmdYjC45KJ0Do9NOalpQDucsTDRS4aSBfoGzPVEKa+u5K5uYdtu4k8gzyr7oOGSSNkO0k6HM+4p8ev7Ie/uY2xuOZ3hdZSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sLztlY4b; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	bh=kSYXv9nIPkIFXOkJTequSQ7Wqj4nVqUZe+e6mX6ay74=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=r/bgN1Dc/sWKqKXQvyy4+482U1Qwl6hzRvp5NXsr9AV7zLXPefcB1MkCxADw7gW0p3B1pIFMpA/HmsVsv2AMqB2dzR9c/rMTbbvBeKuiaPkLGkVj8G2QvPS9CBdHAE7WkM9rjwFaD5qxfOg+rQul/IxGXFKhs+1BN4t77UV+gnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MhKWQPkS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLztlY4b"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6e35e34f9b7so264570a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718155154; x=1718759954; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OycshDtHbSNfjOhpYEd5FzYSc4S1OTDwcYjhFujY3Cw=;
-        b=sLztlY4b8/7i4M9O202QyopnKD3NDCojXeitOZaauOPZgvs3Na/bjKmxg+rWss1dLi
-         /SWzT4uxGrnNF2kXq2shGD8pPJsaSP7Er3rQVBQUcSLZbz9rNg5kpPd0CDNlOTcT8bsL
-         VVH/0A/WNMoYHchc1oI+kXZP6mOFgafu7Nah/XUAjQGrr/ncpTySBohoFgQuSuRFnRn4
-         RSrI41nIugDEGOUH/YmpMPIuAYpU50CNe1UxlcY/ZmOIJ6WGqxVeG1N17XT7V8WcbsD7
-         OrVI5d5FkK2zY3ChwqkaGdIRoiAu8ksDM9gvs2N6apgpEMn5eN55I1aP5FsXWtAW2p4t
-         uA9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718155154; x=1718759954;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OycshDtHbSNfjOhpYEd5FzYSc4S1OTDwcYjhFujY3Cw=;
-        b=m7G3Q1WepzxYuXtNgWi27Meqc8kEFJTciHuHrct/jJG4qnFA3+uW8aQA2/Emb6uD2g
-         Od5rr5NTtTe6Pa7L/1/czo0xMOShFN/r0HF0ASCZGR+/CIgOWBybKFGOqGUZMrdtm72b
-         J/R2ttMm+4kykys+xlWR+rPP6kTykSVvhy0DdugXcunZSWaNet1q84C0Z/GwcPRsYpzY
-         MZYpppw3rRQ0/VXu08sWQTvX29bYkG/kCFOmrb4LxWVuYyOezEl58mZ30B4T1dVoTMgy
-         +65Qzt7ZWW4OrguYxqThIR76lAzVog7WYt7ayQJeY5c5cdwAYHK13huR5kW0ltaOLipk
-         qtcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUu/k1jZgonpp7GzA5Y/LsBsZMpInVpsl00clngUD0e2J1Txx1W5sBFcoCkHI3PoqUzFwYu7aAkC4NrbkA/CPzHS/vkZIQMp/X8Mj1g
-X-Gm-Message-State: AOJu0YxIOEZS89y00WMo8RcqZmOok758d9kNIzgyvhAixLKGZNEz2kjp
-	o6aq/8mZykwkNixK6UN6gSuOR12Bu+QYQT9mzsP9+nlz9YZXrNT+Z4vw67uw2L7cl+asV/OtAfV
-	WDw==
-X-Google-Smtp-Source: AGHT+IGTOVJWoC/IZGpdHTWIQr0wyCI+DQgy7TWj2KigyMYTW0aE5HL9Fv+uFkjZTnUvUlYtk2sdSu0OJzQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:3c4:b0:2c2:f2f8:a997 with SMTP id
- 98e67ed59e1d1-2c32b466c91mr43869a91.1.1718155154238; Tue, 11 Jun 2024
- 18:19:14 -0700 (PDT)
-Date: Tue, 11 Jun 2024 18:18:29 -0700
-In-Reply-To: <20240506101751.3145407-1-foxywang@tencent.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MhKWQPkS"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BHHrFi001180;
+	Wed, 12 Jun 2024 01:19:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=yw0xmqzsIr/6r5+9NKqm3b
+	RLhcjjifZCyGq40TyF3tI=; b=MhKWQPkSpWuFqtV+qjM+Hfbb2rIgsO+IXEG7DM
+	/9FtdsfJnM9LwQy2LG4u1nryfpf6VNZkMjpklq46ZLNkmZuUgwtqawWnXtXBB8kD
+	pAsAGtu/Mcx0ezs/4KzdxxLNW0qz4SvsGZcYaw+9fI/bQuaRJwCVLG9YL/jjmwou
+	K7VtbXoK/10sAIEiDWgmmr2zZkrblrP+1hIutyN0Wz+c2BeOCR5ijvi/7CF4AloY
+	LEZKGxb4OxW2Rdm7QamL+3jCpswV5OucWkN1lfabD2X+w9TYxpAJq9OlLpnMGxm4
+	3JDKDcvgbPuHFzT6tscp9Zyw5MQ8q+87riWuVjCEQq/hrYiA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yptuy0ux8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 01:19:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C1JCOk026642
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 01:19:12 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
+ 2024 18:19:11 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Tue, 11 Jun 2024 18:19:10 -0700
+Subject: [PATCH] usb: phy: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240506101751.3145407-1-foxywang@tencent.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <171803642381.3355478.4236692282060742412.b4-ty@google.com>
-Subject: Re: [v5 0/3] KVM: irqchip: synchronize srcu only if needed
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	wanpengli@tencent.com, foxywang@tencent.com, oliver.upton@linux.dev, 
-	maz@kernel.org, anup@brainfault.org, atishp@atishpatra.org, 
-	borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com, 
-	weijiang.yang@intel.com, Yi Wang <up2wing@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240611-md-drivers-usb-phy-v1-1-1cacb41280c3@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAI33aGYC/x3MTQ6CMBBA4auQWTsJrWLUqxgX/ZnaSaSSGSAYw
+ t0pLr/FeysoCZPCo1lBaGblb6kwpwZCduVNyLEabGsv7dUY7CNG4ZlEcVKPQ/6hvdlzl7q7Syl
+ ADQehxMt/+nxVe6eEXlwJ+Vh9uEwL9k5HEti2Hcikx+2DAAAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: oAh1paW8K3R4STJ9BfoJwCvCotDadggY
+X-Proofpoint-ORIG-GUID: oAh1paW8K3R4STJ9BfoJwCvCotDadggY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_13,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 mlxlogscore=643 phishscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120006
 
-On Mon, 06 May 2024 18:17:48 +0800, Yi Wang wrote:
-> From: Yi Wang <foxywang@tencent.com>
-> 
-> We found that it may cost more than 20 milliseconds very accidentally
-> to enable cap of KVM_CAP_SPLIT_IRQCHIP on a host which has many vms
-> already.
-> 
-> The reason is that when vmm(qemu/CloudHypervisor) invokes
-> KVM_CAP_SPLIT_IRQCHIP kvm will call synchronize_srcu_expedited() and
-> might_sleep and kworker of srcu may cost some delay during this period.
-> One way makes sence is setup empty irq routing when creating vm and
-> so that x86/s390 don't need to setup empty/dummy irq routing.
-> 
-> [...]
+With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x-control.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x.o
 
-Applied to kvm-x86 generic, with a lot of fixup.  A sanity check on the end
-result would be much appreciated.  Thanks!
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
-[1/3] KVM: Setup empty IRQ routing when creating a VM
-      https://github.com/kvm-x86/linux/commit/fbe4a7e881d4
-[2/3] KVM: x86: Don't re-setup empty IRQ routing when KVM_CAP_SPLIT_IRQCHIP
-      https://github.com/kvm-x86/linux/commit/e3c89f5dd11d
-[3/3] KVM: s390: Don't re-setup dummy routing when KVM_CREATE_IRQCHIP
-      https://github.com/kvm-x86/linux/commit/c4201bd24f4a
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/usb/phy/phy-am335x-control.c | 1 +
+ drivers/usb/phy/phy-am335x.c         | 1 +
+ 2 files changed, 2 insertions(+)
 
---
-https://github.com/kvm-x86/linux/tree/next
+diff --git a/drivers/usb/phy/phy-am335x-control.c b/drivers/usb/phy/phy-am335x-control.c
+index 97e6603c7149..ada508be090a 100644
+--- a/drivers/usb/phy/phy-am335x-control.c
++++ b/drivers/usb/phy/phy-am335x-control.c
+@@ -189,4 +189,5 @@ static struct platform_driver am335x_control_driver = {
+ };
+ 
+ module_platform_driver(am335x_control_driver);
++MODULE_DESCRIPTION("AM335x USB PHY Control Driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/usb/phy/phy-am335x.c b/drivers/usb/phy/phy-am335x.c
+index e39665cf4b4a..6db88e00f127 100644
+--- a/drivers/usb/phy/phy-am335x.c
++++ b/drivers/usb/phy/phy-am335x.c
+@@ -142,4 +142,5 @@ static struct platform_driver am335x_phy_driver = {
+ };
+ 
+ module_platform_driver(am335x_phy_driver);
++MODULE_DESCRIPTION("AM335x USB PHY Driver");
+ MODULE_LICENSE("GPL v2");
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240611-md-drivers-usb-phy-28235f59affc
+
