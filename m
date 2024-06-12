@@ -1,123 +1,101 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A6617B437;
-	Wed, 12 Jun 2024 16:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CACA17B437
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 16:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718211344; cv=none; b=uWxkMMPjFndwvlOICugGDQl3wXFGTtPOGcDwrT4T4oQujjfxJhDD95dL4A8/7R+hCYXjqn/6uyMf+vHhEXhGodKepv2lcT3j4ndMAj3rpGydCcU/DCZFKNsGwPuzFoV3/XBfz6s6qYU9GP/kwCZ8SXAr3zE7ObT6SPAlQgzdqkI=
+	t=1718211457; cv=none; b=lIV5j7rkyhGYXeF3c8XGOrHoBakQI0XkqB9XEAbgCEaPY+gunTFeh9RNo842hqFf2za4xZqX8KI4QYYFRvX7VAWuo2UTwatGfsZSE0pkUcULbeYSirVADEgXDzX7JsTsTt3NxW5bVRFkjB/WVEkLXdARbRNosWGHUdGbJE4B6fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718211344; c=relaxed/simple;
-	bh=KEigEmaM4Bgy0UfbEbKbIhA0Ndjs89ehHeiMCsBe1Io=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N+bs284KpBJskUIn5nc/47kqpM0vtEySAwqU3O3xArAT3E7dw9wU3ez4ei8kFIBLZUvH3GcXZ7SOozszyEFYRZPJQFnZXtHJYD6eEq6kKCDd13xfhxEwiHBVz2VpyTHiruKIJICrOKHyBSfwsYDVrlF/wL1JOoWPp+pWbENKXsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZPW3+2U; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718211457; c=relaxed/simple;
+	bh=vebMEaW02jolhLdtvQPmHMC1OEEbWYTVGy+Bor5wYMg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DL9hFKU6RG5pmCFrccmny0V16dcBmUWU7fVlYIUG4PgQ6BN3B1f6wRZ5XKcrcCXbaBVZ5Jj5TPLA3MEogAZyIonPnm9VrUs5H3hvRbsEZbcAbR3M1yuX5gDUqugp9AgfXBSUxTd9lQGj/Nt1XJa+Frsm3nII6iCZ1K3w8bnlJLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=d+l1Ih95; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZPW3+2U"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f44b45d6abso1043525ad.0;
-        Wed, 12 Jun 2024 09:55:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="d+l1Ih95"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-25075f3f472so485fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718211343; x=1718816143; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezWpinzUl8erONkbD/y5khH8TAKVckebPB7LaqPHoHI=;
-        b=CZPW3+2UNnq+Qu9uTIJxMCCktcAz/74q05Qq5dt86z6c2FsKijcowbrDL5u8qak4qe
-         TPiEqwLZAXhh1vTRElTqHuXCJkAZRlwyW9ebyZTXEXdDAl/tbT6UT6WivUbWULCPFbLW
-         YEB1nY9d+KuEA6RIwtoeMfi3nmskmoAdZH69/aUPRPTRf/KFSFbhQmr0H5ujUujcZtEt
-         CfI5CHM5b4vxsz8qD/EDDVHObaR0NG4kWKjjaopT4AeCipv5L3a1/5Qx3gJVdd1Mcni7
-         hyjegRbeEo0PvfjnOmjQTD5LFP78lK8y7sLAWUGiw9T0AX0s9l3BGvG92fJmkAglpILd
-         LNyw==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1718211454; x=1718816254; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pAftVLKn20HbmalpH3Tni7KQXwsU3yAXAUhGqIphnu0=;
+        b=d+l1Ih95QeAlRyz0HNZpXALgmOEuWDHQFwfysCuMSY3ZA40F08jSQrUmTx2gl8Mbi+
+         qAETXqgkSFv7duiRBXhNNElzK1VVoCXfv2y/XbbyBeN+a1ELF6YOq1oisGmpkBIKFg0C
+         lJs+G9IaBI2Jo3r42Kh5/Q+/2ekT/FTHoR3aMcSN7Ct9U9td6I34ihp3783vBaahWA1a
+         xRNBvWtFrMdMiIQXMR1HdrW+t68KdtxtXG7LqNhNB7eEyyv2SnHKIax2Eegwp140t4Z3
+         cJqKx4WWpXv2EYYO9vP5miFNt2qW9C3Ff04UoqH73lraY9p+yp4q3CJdltjhgBC0WfKW
+         px5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718211343; x=1718816143;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ezWpinzUl8erONkbD/y5khH8TAKVckebPB7LaqPHoHI=;
-        b=KD0xzFFY7uH6RZxv5KeCkEcAycdJs4mLEt1pt7ob1JOoMud6nbmn2sZxFNnpdoarhT
-         79aJNf0csJq0zK39W2IAoEtpedSWo1zNbX80v2kB/dbNNqSS4AJoDnWF+kxkUj54lWwi
-         Z5exaoendKIu17SRLy94z53GtWuZcGJVuHxW3HlTaF+1Ru8JtzZ/F+8+AwT4Uw22QKIV
-         HUj423HCjuCQdabBoSHsMu7af1zTjrehp74n1YOxCnfWqAr/GUnwOqAFfUcU72YGIWx8
-         YkYCGaQYQVqozW12JLoOyTVOAZsg1ik6QBQkiYstCEgfOCR5Ls9qRtQrZYbO7zUYM2KJ
-         j+SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrcOu9XTjTEv7JTfoPgJRbg1wPqitCVjkbp2DWe4clKvWG+kpJZCnsJeCiUnHfB8i3oMzMXeDoY0YorHmgvHXSUPJYPRVJ7WaUzUdtvPE/SaKIwPczHdSPf3CbWb4mP7y9+7drrvfL5o17Y+6C1zjKHSya3xrgal4J3xgEgSPzlvsPWpwDOg==
-X-Gm-Message-State: AOJu0YyOrn0k1fwud5GA6UPaJqc0YZN5Ucb/zOa0YToNFrEkaZdgvnqq
-	jAOrZsos33G7JJOz/0gfZ7zqfJ0kOzgz5Sa8M6qyqliMn1L7dtHO
-X-Google-Smtp-Source: AGHT+IEYN+NKFQ62L1iRJ2d8loPKcOYD0p4c8lW5UuYKg41ftwzbs0S8YP6Mp3I857PTvxFwJa+96w==
-X-Received: by 2002:a17:902:f54f:b0:1f7:82b:903c with SMTP id d9443c01a7336-1f83b6f650emr29949915ad.32.1718211342611;
-        Wed, 12 Jun 2024 09:55:42 -0700 (PDT)
-Received: from fedora.one.one.one.one ([2405:201:6013:c0b2:ea4b:30e0:4e3a:ab56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd75efb4sm124218495ad.14.2024.06.12.09.55.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 09:55:42 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: serial: nxp,sc16is7xx: Add missing child node
-Date: Wed, 12 Jun 2024 22:24:55 +0530
-Message-ID: <20240612165457.103575-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1718211454; x=1718816254;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAftVLKn20HbmalpH3Tni7KQXwsU3yAXAUhGqIphnu0=;
+        b=biys723R+9IJ4tDEf3OAaSRycdKj41PeGPk6+98OuaS9DAhDmdH0nrfqES//ct6N/4
+         p7TYiXg9vxhoBgEuVCCPCwkA3RVTVYN9UE07iWAoNpYmsJhFeNqc+azaVZ5sNGxVIrEN
+         fJtbdmdLDBsDfnT6Jst4D7P0FVHT5dtlX7Vg1yS92JyTNlmUq3GA/6hs9FEtCZS23yCz
+         JF8epS/EEe7BIQnc5H3QL3dUY3enqKRx/g0dfxYXuKrh3ht0DII5qc+JZoD0Ae5PNdFd
+         iSxvKaPqelOBUN5EPGc5PD18t77+n79zioHkZQZheVD7XiHIakaVUXr0bLttEVhL0tKa
+         9KUw==
+X-Gm-Message-State: AOJu0YyxDTtoroSnxVagHk+gKtxMLNeFOReTRYktrnEXoL8iEy1hmOeq
+	Rvhd7JM8oYtCPSfjPqGnTbR3vI4ShpbaS4f/4eEkrjtuLkhwJk5gumsqavzUT/k=
+X-Google-Smtp-Source: AGHT+IE5gURtOYtjCbJQWtUubvSvxNRA1uBWwaFjKaz5/Y4ebMHZrD+Oj4sfPGkerxg+PybPLlQnIg==
+X-Received: by 2002:a05:6870:818f:b0:254:affe:5a08 with SMTP id 586e51a60fabf-25514c7026emr2515800fac.2.1718211454633;
+        Wed, 12 Jun 2024 09:57:34 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-254d96e5e7fsm1377401fac.26.2024.06.12.09.57.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 09:57:34 -0700 (PDT)
+Message-ID: <ec203c0e-13a9-4163-94dd-a8a8d6d2c070@kernel.dk>
+Date: Wed, 12 Jun 2024 10:57:30 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] zap_pid_ns_processes: clear TIF_NOTIFY_SIGNAL along with
+ TIF_SIGPENDING
+To: Oleg Nesterov <oleg@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Rachel Menge <rachelmenge@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ Wei Fu <fuweid89@gmail.com>, apais@linux.microsoft.com,
+ Sudhanva Huruli <Sudhanva.Huruli@microsoft.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Mike Christie <michael.christie@oracle.com>,
+ Joel Granados <j.granados@samsung.com>, Mateusz Guzik <mjguzik@gmail.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>
+References: <1386cd49-36d0-4a5c-85e9-bc42056a5a38@linux.microsoft.com>
+ <20240608120616.GB7947@redhat.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240608120616.GB7947@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add missing child node property clock-sc16is7xx to nxp,sc16is7xx.yaml. This
-fixes the following warning upon running make dtbs_check:
+On 6/8/24 6:06 AM, Oleg Nesterov wrote:
+> kernel_wait4() doesn't sleep and returns -EINTR if there is no
+> eligible child and signal_pending() is true.
+> 
+> That is why zap_pid_ns_processes() clears TIF_SIGPENDING but this is not
+> enough, it should also clear TIF_NOTIFY_SIGNAL to make signal_pending()
+> return false and avoid a busy-wait loop.
 
-./arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dtb: serial@0:
-Unevaluated properties are not allowed ('clock-sc16is7xx' was unexpected)
-from schema $id: http://devicetree.org/schemas/serial/nxp,sc16is7xx.yaml#
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
----
- .../bindings/serial/nxp,sc16is7xx.yaml        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-index 5dec15b7e7c3..d572b7e76c39 100644
---- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-+++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
-@@ -70,6 +70,25 @@ properties:
-       minimum: 0
-       maximum: 1
- 
-+  clock-sc16is7xx:
-+    type: object
-+
-+    additionalProperties: false
-+
-+    properties:
-+      compatible:
-+        const: fixed-clock
-+
-+      "#clock-cells":
-+        const: 0
-+
-+      clock-frequency: true
-+
-+    required:
-+      - compatible
-+      - "#clock-cells"
-+      - clock-frequency
-+
- required:
-   - compatible
-   - reg
 -- 
-2.45.2
+Jens Axboe
 
