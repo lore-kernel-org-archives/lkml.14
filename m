@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E8884A3F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ED184A51;
 	Wed, 12 Jun 2024 20:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718223866; cv=none; b=L/Aru0U+JJApeJdIBSYtmfb2lrIroElL/s2ym862fAbtHEAGlDyQ6R/819901irQWoclhq0u4p4ZANNiTC9gXzLYB7IG07jpbC4lerjCCj9KlPnry7JHU8Rs9MGdou6zlsZNhevasXrLNuWvYJDF0DhoK4WZYJMkPysqZZGvV9o=
+	t=1718223866; cv=none; b=eGa7UrHsEmv7P1miKOKO3jhE7XKyG/6XbWHWK4MU8baVJMpGVDDI2s6sfdU+zR2axgrHo3wnj3HWzRpT8jh4/+IcHdCCfMaRC07bn/N/mVYE+WczB1GFvP2UivFWBrXHvvD+yNHKvfqZ0P97ee9TQlZlJP3rHsrM9l5TZQZa/oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718223866; c=relaxed/simple;
-	bh=f3YVlAbG/gr0/3IicxHUxaBgsAbpua9uiVBKwnQJtE8=;
+	bh=3Xp2WQTIBaPQkZuUK95la9ovfKSvsB7IAQDJPyJuUXs=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MHSOabGZ3veRbx4m/E+QCRW0uGrvczB3EmimBhR8jS92E6HTn2I1229KiH2iCJf+zyme2BsHAwWwayBBdr0JyMxCwTpWjIpOGG4ks2kidEwXmRswugFfsuN48soxptr64nsoFAOBgSWHgThZ4K4o+TvmOKBdrq8OVqEKnV+VLmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FS8dVrjC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w41sGYvB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ko7pviOJu8Ie6QTefjwuXnccEdU8E55b5MOTB1y/BvubglpsiN3mOf757NjMI4Z9zDD5UZuqddtUkrJmT1b3bqTfYJQXYF354hrT98HO5XJRNRwd6qJPcvQVEuvbOMCT0CsDHAVEVdGm7x8KJShupuC7UCLmL5c/nHHIYJvFBQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gpaD6Suy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F1ur9UUf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FS8dVrjC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w41sGYvB"
-Date: Wed, 12 Jun 2024 20:24:23 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gpaD6Suy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F1ur9UUf"
+Date: Wed, 12 Jun 2024 20:24:22 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1718223863;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nW2yfzAq7hujWLwBAiewiWaNuh+lQE+TLxNe8o9eSEY=;
-	b=FS8dVrjCE00vWI8G5btLG5cbvM1wQ7Sd1nnS/6JZXoxY/mY+/SgBKFH0f3lcj2+5iXA/gx
-	inK8D0IRJVYL+8Xn4Bz5JrO+9h6pTpZY7cy/qydtKFcG6PBjGOBeJeh471XiHDYm6p9TH4
-	11NHwEfgWo2mwIdlt8Fcyejv6uZGt//DbfOvwWhJby+CbHBOl0VXcuGpGszeXODNTzSM83
-	9g3btpOYphvkPIP2mOYyLdAq3U2elpbaqwaAs4rk5/GTWE51I1x3RXo9kdEogiaLWLLgwV
-	IK+GiKaparrY+xhrnCroXgYlSS2NFVyb5yhTD7mjAOKk1Yt+J66Xd2CqVGH4/Q==
+	bh=uk509uBnwJRFKqhm8eH6qWAk6sMchO1rsPBSFh8LzKA=;
+	b=gpaD6SuyFk2uSVbESXPJB4izHXOPz5fcuPehXeOGmZDOQog7QGUSmC9TRuet2q6WH6M9K6
+	lXPCEB7R9TxI73h2qbHX9WiaqgNjs8fFTsxCuKNLu8F25wQE2vlHbANXswiL+oLJXq/Q6r
+	qzBELFsLCJpPepNlxQFFavNo/iKvSX99CQnmssL9GT7vWIdGRk6rQA2qryqsg3Vg6pUcW+
+	PMsW2Pr9nQOSqRkXk1T5nJdJy3Cj8kE5vLfRBzXkt8P3w7YDvVpJYoMYDyGotu/AwRS9uo
+	fVFdzd6sikyiOtHzjj6I6PrwnqspPszTtYGRAK6v0b3MQYRe6IdVwxVqDknfNg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1718223863;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nW2yfzAq7hujWLwBAiewiWaNuh+lQE+TLxNe8o9eSEY=;
-	b=w41sGYvB5unwZ7RHzHa2cpudXUIdKsIMG/nBe4D3jEpXXmq6SPzhpdtwWEPOC7ewjwgIq/
-	jwox4miv5/qB/DCw==
+	bh=uk509uBnwJRFKqhm8eH6qWAk6sMchO1rsPBSFh8LzKA=;
+	b=F1ur9UUfewrqcHLIEn+b5iyaDytCHfg9zxK8BqotaJ9CE/PacgpYO1GyNx+eGLY+OBnM0z
+	X4rABxx+w5T4DDDg==
 From: "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] hwmon: (k10temp) Remove unused HAVE_TDIE() macro
+Subject: [tip: x86/misc] hwmon: (k10temp) Rename _data variable
 Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, Guenter Roeck <linux@roeck-us.net>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240606-fix-smn-bad-read-v4-7-ffde21931c3f@amd.com>
-References: <20240606-fix-smn-bad-read-v4-7-ffde21931c3f@amd.com>
+In-Reply-To: <20240606-fix-smn-bad-read-v4-8-ffde21931c3f@amd.com>
+References: <20240606-fix-smn-bad-read-v4-8-ffde21931c3f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171822386330.10875.16252992043193047565.tip-bot2@tip-bot2>
+Message-ID: <171822386297.10875.859676357459803879.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,39 +67,46 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/misc branch of tip:
 
-Commit-ID:     0e097f2b5928651de3b4f0100401c9e71fa73dba
-Gitweb:        https://git.kernel.org/tip/0e097f2b5928651de3b4f0100401c9e71fa73dba
+Commit-ID:     efdf761a83cd390523223f58793755f5d60a4489
+Gitweb:        https://git.kernel.org/tip/efdf761a83cd390523223f58793755f5d60a4489
 Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Thu, 06 Jun 2024 11:13:00 -05:00
+AuthorDate:    Thu, 06 Jun 2024 11:13:01 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Jun 2024 11:40:17 +02:00
+CommitterDate: Wed, 12 Jun 2024 11:40:31 +02:00
 
-hwmon: (k10temp) Remove unused HAVE_TDIE() macro
+hwmon: (k10temp) Rename _data variable
 
 ...to address the following warning:
 
-  drivers/hwmon/k10temp.c:104:9:
-  warning: macro is not used [-Wunused-macros]
-
+  drivers/hwmon/k10temp.c:273:47:
+  warning: declaration shadows a variable in the global scope [-Wshadow]
+  static umode_t k10temp_is_visible(const void *_data,
+                                              ^
 No functional change is intended.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Acked-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20240606-fix-smn-bad-read-v4-7-ffde21931c3f@amd.com
+Link: https://lore.kernel.org/r/20240606-fix-smn-bad-read-v4-8-ffde21931c3f@amd.com
 ---
- drivers/hwmon/k10temp.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/hwmon/k10temp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index 6deb272..a2d2033 100644
+index a2d2033..543526b 100644
 --- a/drivers/hwmon/k10temp.c
 +++ b/drivers/hwmon/k10temp.c
-@@ -101,7 +101,6 @@ struct k10temp_data {
- #define TCCD_BIT(x)	((x) + 2)
+@@ -269,11 +269,11 @@ static int k10temp_read(struct device *dev, enum hwmon_sensor_types type,
+ 	}
+ }
  
- #define HAVE_TEMP(d, channel)	((d)->show_temp & BIT(channel))
--#define HAVE_TDIE(d)		HAVE_TEMP(d, TDIE_BIT)
+-static umode_t k10temp_is_visible(const void *_data,
++static umode_t k10temp_is_visible(const void *drvdata,
+ 				  enum hwmon_sensor_types type,
+ 				  u32 attr, int channel)
+ {
+-	const struct k10temp_data *data = _data;
++	const struct k10temp_data *data = drvdata;
+ 	struct pci_dev *pdev = data->pdev;
+ 	u32 reg;
  
- struct tctl_offset {
- 	u8 model;
