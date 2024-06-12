@@ -1,146 +1,182 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2020.outbound.protection.outlook.com [40.92.99.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51585DDC4;
-	Wed, 12 Jun 2024 02:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718160768; cv=fail; b=XQQzlmMDJCoUxxOTWPCYN9e1RP95UYLa+jDEGb4pWrHWES+91E5MNbup4a5g/Vc9bHiVS3nwzLmyVqmI6bRGkz15VszVM3UC2bjGtwR7iPT8rO/IFyv1+bWn7vEViHuxcOf+gDXbkBk/8tGgPDkGnGTvs45wh3CaUFu18Cehcl4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718160768; c=relaxed/simple;
-	bh=buuIiOQGoff+vz5Sd19MBnjxdZabcjz03fZ8jU9Gqck=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lfAa98XjC0yG7+55eR2LwriNHQd7JdjlLtoB6DVlWCVXiBY1mb5jRqKip/DGp0Ky+L4EEVrwK4TFq1gbd7w/7AjVIiSLYNzsvtqnakyClJIGwg7V9ZHKEudvXzXFK7GVybTlijZFcZG/jG4QMZmq+vK4bybFdfgjwevEyrQ2msU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=AMwuBv1e; arc=fail smtp.client-ip=40.92.99.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D1F3C2F;
+	Wed, 12 Jun 2024 02:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718160951; cv=none; b=KOUgARNSxcit/AxrKntwuJlTux+okqAFhYz0dNfkDIMQNecgqWchJ+5xalJ/L8E5d03I3pOUu+FLR5gLlly7JaRdZ4dnbnM694uwB117NO7Jl9Ye9e9T4dt+yMOiRe15Ayivvkvjg6QKGwfdZjhfwd1UH6ItHMQc86nQt1UnA1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718160951; c=relaxed/simple;
+	bh=CWUH+foI6HMl68oOCwwSHQTb1k2+/MYYF0gH8gZanhY=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=LfdH5X3vsAokbTaX0Ba0arMr8y2rYylSd01VunIPfJSyTbDEk9rlVK/Vss0rWo3aMge9g1NoJmNU7WHUWuGAKboxz0RKKn4IQbGcILGVChUwyiJqcs/+6UA14+KeH36qubpw9krH4Y1FoCdM0O2u3vRPIBrh8Kk33zUwpJDwDCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnBguCff; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P+G7PaQI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnBguCff; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P+G7PaQI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="AMwuBv1e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UhMW7jGdeKtnSRQpUgFSerw4kblgDYdr+46iqHDVZMjABs5P7qAtsIY5bMN2r3QRZi5ALVhUmn+x1buSz+I44H3W+Rs3uF5s7hSGWFNkTAlGTJub+IL5z1IqHXZueDbM/esKYdn1qnWGxa9Hh23rJzLyGmImJHz8olNxYSCria5c0DpaMEuofHaFHAHqRd5sdNGYG02qx+Es+k3f4zr+gRHkW2j1n340LIYqlu19B6eO9N5623AROVIRFJtbKhbLioglFGtTQ15iOb//dkODwKSQ15SiqSBpFMBI3+srHMvUnjPnmQ0YmJL14FIZBoX0Tco4KkL/XHEqRGf/uqhUUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mfBaPbr+1B07yA3UWFpVBv0zR1ewlCfBxFi3v76pZnQ=;
- b=YiJo+n2xlw5k/DUJmmjhadmr8IZlyODTshWw7fyvbpLgLsUWIpYSDjJpMhwOjuJwqDAVr5YxJedUyv3VC8W/LNOPPvihfq5Hjfj88SLCIYSKO9r7mIuKXnCgKf/NuAXcSxn7XMDqjDQ8wm4ZD+zU/ImYGIbKBoxAyMpbiAALmLV6qJtdw03bxGXHoVgUBqcjxvEIpMXnOQfIll/K+/lxQWj+ADO4Z8nm0FmiLE5L7zgnhlOLn0ulAr3UmJ3CG7pyQzu1xxqYj9Omno9jv9Fk9TT2w0zQXRW3RvQxUEdm1o6JY1v+Z4ch3S6t1mp/kg2VjQQwQxcW7bXNe3J1KkYBnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mfBaPbr+1B07yA3UWFpVBv0zR1ewlCfBxFi3v76pZnQ=;
- b=AMwuBv1eGnSs6NDWndXtkIkK3erYFNaTBfzltLb1FfP0qgksq/E1CtApgqF86TKDg5Ir6Xguh6iJuOr2UkTcn4zPrv/rQLjwruUSV0mUiup7b7ATG0qDJxBOaBXhC2YET1PZw0WrMFHhTHHizuI37i8A2IU4TiRrlFkmMTjT8tQuDKi9bbv+RhrBTziIz7eXb6DALL8alLV1COrhky5gRgChHMFU7UeeiTpN6h/zZ7x2FpwA6CAmveKHQzMaPtEG0mtCekKWSaD1jskxggJjIKHOZACk0UHD/sNDrqEzEYeINEZey8txsZLiG3B3797lR/zgGSvU11BLM9rt50EqnQ==
-Received: from OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:1f1::11)
- by OSZP286MB1485.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:1a6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.39; Wed, 12 Jun
- 2024 02:52:43 +0000
-Received: from OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM
- ([fe80::1167:655a:7fa5:5cef]) by OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM
- ([fe80::1167:655a:7fa5:5cef%4]) with mapi id 15.20.7633.037; Wed, 12 Jun 2024
- 02:52:43 +0000
-Message-ID:
- <OS3P286MB249073C57E2B5A36F45A02E0B1C02@OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM>
-Date: Wed, 12 Jun 2024 10:52:35 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] cpufreq/cppc: Remove the desired_perf compare when set
- target
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: beata.michalska@arm.com, rafael@kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, hotran@apm.com, Riwen Lu <luriwen@kylinos.cn>
-References: <20240530061621.36byo5a2iqc6o2az@vireshk-i7>
- <OS3P286MB249076187B3497D1EDD70988B1F32@OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM>
- <20240606090737.z3qenphikjs5ijj4@vireshk-i7> <ZmgQ06jtJBPh5wat@arm.com>
- <20240611091049.lrypvvluntf37uff@vireshk-i7>
-Content-Language: en-US
-From: Riwen Lu <luriwen@hotmail.com>
-In-Reply-To: <20240611091049.lrypvvluntf37uff@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TMN: [Vcye6qVrRSyyp3pLxSPKrxTethtFDSjt]
-X-ClientProxiedBy: SI1PR02CA0039.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::9) To OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:604:1f1::11)
-X-Microsoft-Original-Message-ID:
- <f6e6e2d9-c9dd-4c5a-9309-6b2438c0f7c8@hotmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnBguCff";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P+G7PaQI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnBguCff";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P+G7PaQI"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CBEE620E49;
+	Wed, 12 Jun 2024 02:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718160947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
+	b=HnBguCffpXlQE5lNoNrD1iAZCzOx7MKcBvU13zSgMPlBdzyXItj3sG317S71ShPfLLJVUS
+	ygDf53cBGHafhqz4C3mcq9hDS+CujKgDEMit4EOF61ItG9zjqZC/yLFMLmP3lbPtYxRi1D
+	YAe6/0TAJhbtOJ4DBxrHaoVAdle+Flw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718160947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
+	b=P+G7PaQI9wQ69zlBmPm3tK1W9z0tIcijUFV4TAu06akCknpdoUcjp7PrSe7Ua4W46plY/u
+	qeva8bmxWc6UaZAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718160947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
+	b=HnBguCffpXlQE5lNoNrD1iAZCzOx7MKcBvU13zSgMPlBdzyXItj3sG317S71ShPfLLJVUS
+	ygDf53cBGHafhqz4C3mcq9hDS+CujKgDEMit4EOF61ItG9zjqZC/yLFMLmP3lbPtYxRi1D
+	YAe6/0TAJhbtOJ4DBxrHaoVAdle+Flw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718160947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/btJp52x6H5kgv/jR8z+3XSQ/4SH6/WdXpxSMLKM3U=;
+	b=P+G7PaQI9wQ69zlBmPm3tK1W9z0tIcijUFV4TAu06akCknpdoUcjp7PrSe7Ua4W46plY/u
+	qeva8bmxWc6UaZAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1FDDD137DF;
+	Wed, 12 Jun 2024 02:55:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tv4oLS8OaWZPCgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 12 Jun 2024 02:55:43 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS3P286MB2490:EE_|OSZP286MB1485:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35143306-7307-42ba-7749-08dc8a8abb64
-X-Microsoft-Antispam: BCL:0;ARA:14566002|461199020|440099020|3412199017;
-X-Microsoft-Antispam-Message-Info:
-	QwlrkyzcTYr0CFXW+vmL8VcZxvzgjYmADSfRqyGjBnbwxFYOs5pG875rDWXPydbqlbN64QXl0JtYSA7JOGUwMEGOsoHJJU50f4wJUQSAfXsn/JqXUqOT6OmOPjI4jC0ERcF1fajUTjbEb3QhFo8uqcUfsR45tGOnbTIpJwXVhjdNt4kmB1+yaoTQT6PTlQVL9SQXPo9byJ51UQO97eufmeY9vHA3kX9HMW9vUfeG2KczJgutDXV03lF+UPhhpbSVyAhbBGxYPIlTgO4ndLvw8Et5fJ1h0/H73osRgdRNm4xpg+4EU+aTnUrtzxc+PGO2pd3Jg7RxIgJCxPI5ghchpu7RYCvVjnS/wtTueSeTgqvDWMiy8dYmwQZCaOB+5E3N+uPIByNwAquuRKJKfHg0vz+qXfoljyTh6lwplpjYOPZ1kWawlN0hnNU3QMt5TT3+I9RcoB3iciUEw46GTh5B6iLFlfnpLFzqSvSVS9ABe/gr8eYw3p/FQKe7ubsLPmpvvS66/YFeiYPqAgejpf77ox5qBidlXqqiX5hL8Tc6NVaSm1NKDKkixhwNi4J9v73JOeWN0ldEBWGIWvMxBTt6u/XFaV+lthcDWrPqUtPWW6D54WyFPopv2pyol8sazFXJWfX9EqkktBP2udq1D4Gf/VDE9OSxKmqCjex8xJ5+YJI=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ekpBbVVobTVOWTlab2ltVG42WVp5Z0E0eTdlc1QwZHc4b2ZQbkhZWG9tMUsx?=
- =?utf-8?B?UEZIY3VpeGRaNDI4a0NsbHcycDdaWWlHblFOd1RXbCtWTEFUOG8veVRpb3BP?=
- =?utf-8?B?VHhINXZ2MGlteTdGSGZpeEJYVmpkdENPRGxnaHh5RS9CcjkrQlMxSHdrOUNp?=
- =?utf-8?B?ekVRV01hWWwySksyc29RTmJZdmwzNENKY3NaNmVNcEljYW9LYjhJcVZ5b2x0?=
- =?utf-8?B?emd5c01VWE5pVzc5eFFubTRyaEpWbEJZSVZCQUlQMGo5c2plTHpkUU43Rlc2?=
- =?utf-8?B?THRZQmE0L2RXV2RjT1FNRk5MODcwM0ZyYnZMWklqSFFXUGxFLzVDb2FBeDhZ?=
- =?utf-8?B?cVlJUjFFUEQwRFFxZm5IU29OMzd0bjdNcGpFOHA3ci9wV214QWFnTjNTazFh?=
- =?utf-8?B?MWNad0dOZ1VyMjh1Q0orcko1dFMvN1Y0Q0JtYkhqV0ZjcEFrWmIvLzFXUmNP?=
- =?utf-8?B?TkZvM2pwdXE3VlNwVUttVEpPakhiaVhCaTAxZHVXblVOUkk2Umg0d1RVM24r?=
- =?utf-8?B?T0RraEN2UEJldnNESk01Z25JTkUxZXR3YTZHaG5sNVBHVjd0YlA0ZDREU0lY?=
- =?utf-8?B?dUFiSHRiSU9GY2k0RXZBTnp6MUhScVNhdTA1c0NEVm5LSld3Q29PK1FjZ2hC?=
- =?utf-8?B?T1g4a0FCQjE5b0NrUUo2djJoN05LWmhQTld6N1JMSEhoMjV5VG41d0UxRmlU?=
- =?utf-8?B?anBKZElLMDR0OWR0SllrMTN6Y0toVWxHNXVqWGtrOTBjSW9jeFBxUmVUR3BE?=
- =?utf-8?B?N2orc3p4R3lwaEdXY2g2S3lraDJ4M2hjT0NXUStDVkFTZnh6RCtaUnM1SStD?=
- =?utf-8?B?UnJ1dWdRa2VwbUZRV0xKOFhqVFlJMXpTWFY0bHFmaHBpS28vLy90OVRBUk9s?=
- =?utf-8?B?cDl1NzFIRFMwaTJBclE0dFUrU2tKY3ZibGZ6UlVVaEQ2dEFVU3lSWG9uQ2I2?=
- =?utf-8?B?N25oeFR5RjFBWlhyVElPbjBUTXlReEFzb0t0YUh6d2xWYTRZdEtGTGFQRnY1?=
- =?utf-8?B?WVZuT1MrTTNjSTFYK2c0SjgyQTE3RVNOczhtWnA2Z01oVmlpTnM4bTJmZkI0?=
- =?utf-8?B?d2hHZjl4cnhPc0VwOXJaSE9kRnJpdEFoOXc3QkF5anhOeVlRbmJjYjVuOUpi?=
- =?utf-8?B?dzNlZm9GZW8zaC92L3g1V3M4OVBNZitPTTNPK2VuYWNOT3NvdWJyV2p2T3Mz?=
- =?utf-8?B?ZE1ZVHlxYXZ5WGRuelpXRVZIYTVDbXB2bTRhSEFwZlJUNmVrVFJnSjZwaElM?=
- =?utf-8?B?NW9BWDlMQTRvQ09tcTBseE1LbGVRdEw2S1pYWjhpNGVQWkJrNWsvM1JJcHBY?=
- =?utf-8?B?NXlwMHFmM1lWaVN4WVVBZXlFV0JYZnI3d3pDcjJMVWFaaWQ5ZmVHWUFaNU16?=
- =?utf-8?B?TEp5NktCWEMxbkhWVVVSWStmUzlhVHYrWUVVT20yUkVTb0Rqc3FsTC9HTUl6?=
- =?utf-8?B?MHdBYi9TcUtaNlFpQ3pSd3ZJcnVqd2pKbW9HV0VqRkhmdW1aWTJPVUg3WERi?=
- =?utf-8?B?dVpqcWs2WE5rMmVUeGhvUklxODF2Sk02Tlo3UHJLakZmUlVxUnpwMmlXbVNm?=
- =?utf-8?B?Z3pLVUoxNnZpY3pxQlpsM3BQUU1tZ3B1UnIzWHllM1FTSksrUDNpNHRGdktR?=
- =?utf-8?Q?yxswDG4L0kZ1xKgVywusXxXz8kVMGnq0vqKPQKlJ8/OM=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-05f45.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35143306-7307-42ba-7749-08dc8a8abb64
-X-MS-Exchange-CrossTenant-AuthSource: OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 02:52:43.7371
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZP286MB1485
+From: "NeilBrown" <neilb@suse.de>
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Amir Goldstein" <amir73il@gmail.com>, "James Clark" <james.clark@arm.com>,
+ ltp@lists.linux.it, linux-nfs@vger.kernel.org,
+ "LKML" <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
+Subject:
+ Re: [PATCH] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open used.
+In-reply-to: <20240612023748.GG1629371@ZenIV>
+References: <171815791109.14261.10223988071271993465@noble.neil.brown.name>,
+ <20240612023748.GG1629371@ZenIV>
+Date: Wed, 12 Jun 2024 12:55:40 +1000
+Message-id: <171816094008.14261.10304380583720747013@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,suse.cz,gmail.com,arm.com,lists.linux.it,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
 
-在 2024/6/11 17:10, Viresh Kumar 写道:
-> On 11-06-24, 09:54, Ionela Voinescu wrote:
->> It's alright with me.
-> 
-> Great.
-> 
->> Some "nits":
->>   - the "desired_perf" local variable could be removed in this case.
-> 
-> Riwen, please fix this and resend.
+On Wed, 12 Jun 2024, Al Viro wrote:
+> On Wed, Jun 12, 2024 at 12:05:11PM +1000, NeilBrown wrote:
+>=20
+> > For finish_open() there are three cases:
+> >  - finish_open is used in ->atomic_open handlers.  For these we add a
+> >    call to fsnotify_open() in do_open() if FMODE_OPENED is set - which
+> >    means do_dentry_open() has been called. This happens after fsnotify_cr=
+eate().
+>=20
+> 	Hummm....  There's a bit of behaviour change; in case we fail in
+> may_open(), we used to get fsnotify_open()+fsnotify_close() and with that
+> patch we's get fsnotify_close() alone.
 
-I think it's no need to remove the "desired_perf" local variable here, 
-the code is seems more readable.
-> 
->>   - [note] while this change helps, we'd still need policy->cur to always
->>     have the latest request value (see details at [1]) for this check to
->>     be made obsolete by the comparison between target_freq and policy->cur,
->>     as mentioned in the commit message. But this is/can be a separate
->>     matter.
->>
->>     [1] https://lore.kernel.org/lkml/ZmB1qKucR5fXk100@arm.com/
-> 
-> Yeah, lets discuss that in the other thread only.
-> 
+True.  Presumably we could fix that by doing
+diff --git a/fs/namei.c b/fs/namei.c
+index 37fb0a8aa09a..6fd04c9046fa 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3645,6 +3645,8 @@ static int do_open(struct nameidata *nd,
+ 			return error;
+ 		do_truncate =3D true;
+ 	}
++	if (file->f_mode & FMODE_OPENED)
++		fsnotify_open(file);
+ 	error =3D may_open(idmap, &nd->path, acc_mode, open_flag);
+ 	if (!error && !(file->f_mode & FMODE_OPENED))
+ 		error =3D vfs_open(&nd->path, file);
+@@ -3702,6 +3704,7 @@ int vfs_tmpfile(struct mnt_idmap *idmap,
+ 	dput(child);
+ 	if (error)
+ 		return error;
++	fsnotify_open(file);
+ 	/* Don't check for other permissions, the inode was just created */
+ 	error =3D may_open(idmap, &file->f_path, 0, file->f_flags);
+ 	if (error)
+
+instead, but it seems a little weird sending an OPEN notification if
+may_open() fails.
+
+>=20
+> 	IF we don't care about that, we might as well take fsnotify_open()
+> out of vfs_open() and, for do_open()/do_tmpfile()/do_o_path(), into
+> path_openat() itself.  I mean, having
+>         if (likely(!error)) {
+>                 if (likely(file->f_mode & FMODE_OPENED)) {
+> 			fsnotify_open(file);
+>                         return file;
+> 		}
+> in there would be a lot easier to follow...  It would lose fsnotify_open()
+> in a few more failure exits, but if we don't give a damn about having it
+> paired with fsnotify_close()...
+>=20
+
+Should we have fsnotify_open() set a new ->f_mode flag, and
+fsnotify_close() abort if it isn't set (and clear it if it is)?
+Then we would be guaranteed a balance - which does seem like a good
+idea.
+
+Thanks,
+NeilBrown
 
