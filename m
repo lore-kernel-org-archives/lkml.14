@@ -1,252 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3DE20DF7;
-	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16674FBED;
+	Wed, 12 Jun 2024 02:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158627; cv=none; b=HUmK1iuI/kSg4mH91t58lxSuHgR4Kg8BRfOiTBZ7ipi6IFHTufOJhFfSX7GXCGTQdXZvI8s7kbhWTibXn2h0nTMVIJXV5Et97BSWpaPdA7qqhwiWQhWT/mQJOiTSst9/Z7Qr1//PpvXsLjvwfJxhAv+eRr+w2G5sJz5b39bDupw=
+	t=1718158695; cv=none; b=n5zjfshS1EHixbQkR9QWuoZCrz8x+g0aaiE6WSnzywwjw4awvvVqu28thyW4Lali2ez3uDu5hfKQxd4uNGTcqNVsVhNbjjWmIwXN+xX8ukbEuqG3ud9Yz/GV0SSDbZR3D15RhZJAOPImZ+DjhkmXeR5gd1eOscCd3EQqfs5qYOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718158627; c=relaxed/simple;
-	bh=ssSeXi7BFIPhLBrvWHaTeqk4SQQW53gNHjHlpycGqZE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pJ4kM1P+n9nZ43ShmDjdmEE9zD5tSWCpAqXZ5vcPNltPnnyl4Buo+WZUDloIrfVLwOlNciPCqbwUTKu5EHACdzwodd16Auu/RA27lIIPkzC4dmk+oj1sAvwy4nooC+YlJ5N8Gec5G+gLok692atSaHjlFuMsGZFnFq+NvRvCcFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7416C4AF67;
-	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYB-00000001XNh-3V5d;
-	Tue, 11 Jun 2024 22:17:23 -0400
-Message-ID: <20240612021723.690952544@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [PATCH v5 10/13] tracing/ring-buffer: Add last_boot_info file to boot instance
-References: <20240612021642.941740855@goodmis.org>
+	s=arc-20240116; t=1718158695; c=relaxed/simple;
+	bh=LEnS+jNFyJx9uiATkokg6IY5rP2tFw8S69h4N1UjI3Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kzrAd7ok0+mM1NuehXfgBlDftjwtMVfEDjKsm50Sa78M6zcYcSdTyKp/v9JT4kQhUSJToPuDE07KOeK+2ceg34f/AFqOH197rXLGZ++e9e7QgIr6Dxs0QibF3afvtZwOuMXJ+QaFRyqyD3Pzff3hW/I4qZNVo+CjOtLrvMBN1sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=euyXEFAh; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="euyXEFAh"
+X-UUID: 02be1036286211efa54bbfbb386b949c-20240612
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+mnQM4khjFBoKH3kg23UGpaJgkGoMkA6dhnST6cEZY8=;
+	b=euyXEFAh9SdHoE1hnestZPSBPtfvGjtgsSXFK/PKqleroXSSqpZGAltE4iRAlgVLIJfANNtSdPqOywqqHfz2rORHG5BT+oSrxcGi50cxJps0ueCpCJM4R5Xe8JPVsWZYpWC1Vn0981TDFcxjusd0R7gewFwSPuHBhRP0rKr5P3M=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:bf94eae9-510f-441b-83da-331ebd421482,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:393d96e,CLOUDID:71e47988-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 02be1036286211efa54bbfbb386b949c-20240612
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <zhi.mao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1071046744; Wed, 12 Jun 2024 10:18:08 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 12 Jun 2024 10:18:07 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 12 Jun 2024 10:18:06 +0800
+From: Zhi Mao <zhi.mao@mediatek.com>
+To: <mchehab@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <sakari.ailus@linux.intel.com>
+CC: <laurent.pinchart@ideasonboard.com>, <shengnan.wang@mediatek.com>,
+	<yaya.chang@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, <yunkec@chromium.org>,
+	<conor+dt@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <jacopo.mondi@ideasonboard.com>,
+	<zhi.mao@mediatek.com>, <10572168@qq.com>, <hverkuil-cisco@xs4all.nl>,
+	<heiko@sntech.de>, <jernej.skrabec@gmail.com>, <macromorgan@hotmail.com>,
+	<linus.walleij@linaro.org>, <hdegoede@redhat.com>,
+	<tomi.valkeinen@ideasonboard.com>, <gerald.loacker@wolfvision.net>,
+	<andy.shevchenko@gmail.com>, <bingbu.cao@intel.com>,
+	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v9 0/3] media: i2c: Add support for GC08A3 sensor 
+Date: Wed, 12 Jun 2024 10:17:57 +0800
+Message-ID: <20240612021800.19512-1-zhi.mao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+This series adds YAML DT binding and V4L2 sub-device driver for Galaxycore's
+GC08A3 8-megapixel 10-bit RAW CMOS 1/4" sensor, with an MIPI CSI-2 image data
+interface and the I2C control bus.
 
-If an instance is mapped to memory on boot up, create a new file called
-"last_boot_info" that will hold information that can be used to properly
-parse the raw data in the ring buffer.
+The driver is implemented with V4L2 framework.
+ - Async registered as a V4L2 sub-device.
+ - As the first component of camera system including Seninf, ISP pipeline.
+ - A media entity that provides one source pad in common.
+ - Used in camera features on ChromeOS application.
 
-It will export the delta of the addresses for text and data from what it
-was from the last boot. It does not expose actually addresses (unless you
-knew what the actual address was from the last boot).
+Also this driver supports following features:
+ - manual exposure and analog gain control support
+ - vertical blanking control support
+ - test pattern support
+ - media controller support
+ - runtime PM support
+ - support resolution: 3264x2448@30fps, 1920x1080@60fps
 
-The output will look like:
+Previous versions of this patch-set can be found here:
+v8: https://lore.kernel.org/all/20240323023851.5503-1-zhi.mao@mediatek.com/
+v7: https://lore.kernel.org/linux-media/20240303022609.26263-1-zhi.mao@mediatek.com/
+v6: https://lore.kernel.org/linux-media/20240227013221.21512-1-zhi.mao@mediatek.com/
+v5: https://lore.kernel.org/linux-media/20240220012540.10607-1-zhi.mao@mediatek.com/
+v4: https://lore.kernel.org/linux-media/20240204061538.2105-1-zhi.mao@mediatek.com/
+v3: https://lore.kernel.org/linux-media/20240109022715.30278-1-zhi.mao@mediatek.com/
+v2: https://lore.kernel.org/linux-media/20231207052016.25954-1-zhi.mao@mediatek.com/
+v1: https://lore.kernel.org/linux-media/20231123115104.32094-1-zhi.mao@mediatek.com/
 
- # cat last_boot_info
- text delta:	-268435456
- data delta:	-268435456
+This series is based on linux-next, tag: next-20240611
+Changes in v9:
+- Add maintainer entry for GC08A3 image sensor
 
-The text and data are kept separate in case they are ever made different.
+Thanks
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/ring_buffer.h |  3 +++
- kernel/trace/ring_buffer.c  | 23 ++++++++++++++++++
- kernel/trace/trace.c        | 47 ++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace.h        |  2 ++
- 4 files changed, 74 insertions(+), 1 deletion(-)
+Zhi Mao (3):
+  media: dt-bindings: i2c: add GalaxyCore GC08A3 image sensor
+  media: i2c: Add GC08A3 image sensor driver
+  MAINTAINERS: Add entry for GC08A3 image sensor
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index a50b0223b1d3..55de3798a9b9 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -94,6 +94,9 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       unsigned long range_size,
- 					       struct lock_class_key *key);
- 
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data);
-+
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 195e47ef730d..ccb2101a2e38 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2396,6 +2396,29 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 	return alloc_buffer(size, flags, order, start, start + range_size, key);
- }
- 
-+/**
-+ * ring_buffer_last_boot_delta - return the delta offset from last boot
-+ * @buffer: The buffer to return the delta from
-+ * @text: Return text delta
-+ * @data: Return data delta
-+ *
-+ * Returns: The true if the delta is non zero
-+ */
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data)
-+{
-+	if (!buffer)
-+		return false;
-+
-+	if (!buffer->last_text_delta)
-+		return false;
-+
-+	*text = buffer->last_text_delta;
-+	*data = buffer->last_data_delta;
-+
-+	return true;
-+}
-+
- /**
-  * ring_buffer_free - free a ring buffer.
-  * @buffer: the buffer to free.
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dfde26aa3211..dc4eee33d920 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6041,6 +6041,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return ret;
- }
- 
-+static void update_last_data(struct trace_array *tr)
-+{
-+	if (!tr->text_delta && !tr->data_delta)
-+		return;
-+
-+	/* Clear old data */
-+	tracing_reset_online_cpus(&tr->array_buffer);
-+
-+	/* Using current data now */
-+	tr->text_delta = 0;
-+	tr->data_delta = 0;
-+}
- 
- /**
-  * tracing_update_buffers - used by tracing facility to expand ring buffers
-@@ -6058,6 +6070,9 @@ int tracing_update_buffers(struct trace_array *tr)
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
-+
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded)
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6113,6 +6128,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6860,6 +6877,21 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
-+static ssize_t
-+tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct trace_array *tr = filp->private_data;
-+	struct seq_buf seq;
-+	char buf[64];
-+
-+	seq_buf_init(&seq, buf, 64);
-+
-+	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
-+	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
-+
-+	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
-+}
-+
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
-@@ -7499,6 +7531,13 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- 	.release	= tracing_single_release_tr,
- };
- 
-+static const struct file_operations last_boot_fops = {
-+	.open		= tracing_open_generic_tr,
-+	.read		= tracing_last_boot_read,
-+	.llseek		= generic_file_llseek,
-+	.release	= tracing_release_generic_tr,
-+};
-+
- #ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations snapshot_fops = {
- 	.open		= tracing_snapshot_open,
-@@ -9242,6 +9281,9 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
- 						      tr->range_addr_size);
-+
-+		ring_buffer_last_boot_delta(buf->buffer,
-+					    &tr->text_delta, &tr->data_delta);
- 		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
-@@ -9751,7 +9793,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	if (!tr->range_addr_start) {
-+	if (tr->range_addr_start) {
-+		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
-+				  tr, &last_boot_fops);
-+	} else {
- 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
- 				  tr, &snapshot_fops);
- 	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 2efa4cccdd3b..611be17fdc70 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -347,6 +347,8 @@ struct trace_array {
- 	/* The below is for memory mapped ring buffer */
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
-+	long			text_delta;
-+	long			data_delta;
- 
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
+ .../bindings/media/i2c/galaxycore,gc08a3.yaml |  112 ++
+ MAINTAINERS                                   |    7 +
+ drivers/media/i2c/Kconfig                     |   10 +
+ drivers/media/i2c/Makefile                    |    1 +
+ drivers/media/i2c/gc08a3.c                    | 1339 +++++++++++++++++
+ 5 files changed, 1469 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/galaxycore,gc08a3.yaml
+ create mode 100644 drivers/media/i2c/gc08a3.c
+
 -- 
-2.43.0
+2.25.1
 
 
