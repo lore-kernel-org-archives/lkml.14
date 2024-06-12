@@ -1,48 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599A116D4C0;
-	Wed, 12 Jun 2024 11:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55D716D4C0;
+	Wed, 12 Jun 2024 11:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718190529; cv=none; b=HFx5Tr8y7hBNN1NMrzQ6rP5DByiKZzcfrnM6sKivn1I1hqirPxOJ9tXOubmJnZjPNVPNdbr4gcQIQhyw0bXLSsRJUAkKH6ZVvbP5PQcJahawS83fOwQgtL67BLsJhXczd/l45ciGfw0va01YhdAUCIYfiywPIZ/DooO6DZMay64=
+	t=1718190536; cv=none; b=C7Cc87p3U3H/b1vhYUAH4ge1wTP5KZihGHUUywdq16uaFXmSdKJT1XURvsRqq8DKkN0Fs23gEU7dbQ+5CK2H5S3g7F2VfZMeborydEF3gSx8qlYBrDOebpqPXW6TKpjMKDYY+gjvDbwkOSZwDcIc6OSaeqAX8gD7UhPyEc0LiLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718190529; c=relaxed/simple;
-	bh=vY+cTHN2NsFnRhjuV3RjzB4VG0gkCLG7K7dwwRsL6IE=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=ZUZ1+s7nA8ObWtln/zHm10Mxc5edMcVdl2XnOeyVOlAeHZ52RPZ8PlJWkjk+pI8+gqP4Izki7s9Qpx2FpVcBNuKrTCkFxOUAarzHVDqg9aADFesFL5hwwKzPxzh8oE5+5/aXnc79w1JzRLWfTigDjnX2qPajCDV8XiC7d4NNhqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RBBDQG3x; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1718190536; c=relaxed/simple;
+	bh=rIcjMBSXazBqcvGy8BmCrNvAHJfeSwQxdHLUIYD3Zak=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=E13jUlJgBFXA7l0g5BNOfiAoAd7LVdt6fNzY+GgAzU1AdmJP8rN8LaS/diownfUv5BeC4R/pr6Bpeaf5BR2uRRqQu1pGNyPDniixrwolRylJ8rZWjKl4Cxkf7A+jQxL/OcZZJzWUCek1FtkVjraK2H0UTthRK2H6rol6u76pqYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l+FKGIyT; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RBBDQG3x"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C4Z5CS002543;
-	Wed, 12 Jun 2024 11:08:42 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l+FKGIyT"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C63GM2000770;
+	Wed, 12 Jun 2024 11:08:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=3xGDmpJU1uCnOHWH+WIGuJ
-	trY0ErZVdyv5NatW7Uh5k=; b=RBBDQG3xgcHJoLUWybbuoufKIzYComUx/vj/Zk
-	dsq6aGmg0b3+tOovQ6l7kSBc9xdUnCzvcEsMmEAFnZthy4BUKTdhIfA0GHQiesE1
-	Un9+zzNO0dFumspX0qEDOyCz7ShYUlzMkFbSERFvDgQZSXuy7uNeZszh4tPePu0L
-	iZmTLr7kE3LcRnczcNwR113dizljQ5v/neE82ErlsCDrcxuRUEscn6RlsbcBoNuN
-	Z6Cazv7saglwEnI2z8lU7pS4RiYI49Ce5SmaWn6aL0nI+1Ng3JHCBAMvMq881fKW
-	s6vm26gjRUmQBwSRTcakHnvJWHuUEnvSDHdXbCBJuV2++/Fg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq4s08vwu-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FVufAAxvtUUMGRL44tiXFFEKX+k8XmzfFmNbgBw0Ezg=; b=l+FKGIyT5wO7ZrdG
+	55B/ddTUqW1dUZGe9fY6D97W/aZZRxydJ5ZXzN1v/4x5iCabe3sq6AbNW/KiyT51
+	iE/ma7TQ1a26XKwBH5Y4b1RVz86gtk5yBDHeLTSyKvOV9jfEDQV47h1axPC0fLUL
+	vrd+2fwvR6YIfWEjJRi9kV5ehf7hFoeBXcPQ/HesveWrtqi+MZPZtSCIZ4/Skmxu
+	HIMAlI6pTAVWwu/20VqAfDfKxTrqMFHS8JhN4wZMsE+PmbTXMK5YrEJthi3TTrdl
+	ViYmtM6EV3XXdMoe/x/2STQiMjImByZkI31hZLzvL4Sm1Sk2rW6iokKVWxT27H32
+	WpTaDA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yphsaupjk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 11:08:42 +0000 (GMT)
+	Wed, 12 Jun 2024 11:08:49 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CB8fAJ005852
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CB8m1a021192
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 11:08:41 GMT
+	Wed, 12 Jun 2024 11:08:48 GMT
 Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Jun 2024 04:08:37 -0700
+ 15.2.1544.9; Wed, 12 Jun 2024 04:08:45 -0700
 From: Taniya Das <quic_tdas@quicinc.com>
-Subject: [PATCH v2 0/6] Update GCC, GPUCC clock drivers on SA8775P
-Date: Wed, 12 Jun 2024 16:38:20 +0530
-Message-ID: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-0-adcc756a23df@quicinc.com>
+Date: Wed, 12 Jun 2024 16:38:22 +0530
+Subject: [PATCH v2 2/6] clk: qcom: gcc-sa8775p: Update the GDSC wait_val
+ fields and flags
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,10 +53,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKSBaWYC/0WMwQ6CMBBEf4X07JJ2ASme/A9jTLMssAcBWyAmh
- H939eJl8l4mM7tJHIWTuWS7ibxJkmlUwVNmaAhjzyCtukGLpT07hBR8XVczbAg9EfTzqtnJmxM
- wOfRt5cuavdGDOfKv0P3trt7F6QnLEDn8L6vC2UahyZ3FpgCE1yr0WNqQrl+SkXKanuY4PhdKx
- yyrAAAA
+Message-ID: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-2-adcc756a23df@quicinc.com>
+References: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-0-adcc756a23df@quicinc.com>
+In-Reply-To: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-0-adcc756a23df@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Michael Turquette
 	<mturquette@baylibre.com>,
@@ -72,49 +73,148 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hYHGUAWyqxhjQK3lTcUl-ECN-HRwXSRE
-X-Proofpoint-ORIG-GUID: hYHGUAWyqxhjQK3lTcUl-ECN-HRwXSRE
+X-Proofpoint-ORIG-GUID: oN7JFJkOcSyc6HMxj19jLAU56NLabeNu
+X-Proofpoint-GUID: oN7JFJkOcSyc6HMxj19jLAU56NLabeNu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-12_06,2024-06-12_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxlogscore=600
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120081
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ adultscore=0 spamscore=0 mlxlogscore=710 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406120081
 
-Update GCC, GPUCC clock controller drivers on SA8775P platform.
+Update the GDSC wait_val fields as per the default hardware values as
+otherwise they would lead to GDSC FSM state to be stuck and causing
+failures to power on/off. Also add the GDSC flags as applicable and
+add support to control PCIE GDSC's using collapse vote registers.
 
-Changes in V2:
- [PATCH 1/6]: Dropped fixes tag for removing ufs hw ctl clocks
- [PATCH 3/6]: Updated commit text on setting FORCE_MEM_CORE_ON
-              bit for ufs phy ice core clk
- [PATCH 4/6]: Updated commit text on removing CLK_IS_CRITICAL
-              for GPU clocks
-
-Link to V1: https://lore.kernel.org/all/20240531090249.10293-1-quic_tdas@quicinc.com/
-
-Multimedia clock controller patches from above v1 series have
-been split to a separate series:
-https://lore.kernel.org/lkml/20240612-sa8775p-mm-clock-controllers-v1-0-db295a846ee7@quicinc.com/T/#t
-
+Fixes: 08c51ceb12f7 ("clk: qcom: add the GCC driver for sa8775p")
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
-Taniya Das (6):
-      clk: qcom: gcc-sa8775p: Remove support for UFS hw ctl clocks
-      clk: qcom: gcc-sa8775p: Update the GDSC wait_val fields and flags
-      clk: qcom: gcc-sa8775p: Set FORCE_MEM_CORE_ON for gcc_ufs_phy_ice_core_clk
-      clk: qcom: gpucc-sa8775p: Remove the CLK_IS_CRITICAL and ALWAYS_ON flags
-      clk: qcom: gpucc-sa8775p: Park RCG's clk source at XO during disable
-      clk: qcom: gpucc-sa8775p: Update wait_val fields for GPU GDSC's
+ drivers/clk/qcom/gcc-sa8775p.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
- drivers/clk/qcom/gcc-sa8775p.c   | 154 ++++++++++++---------------------------
- drivers/clk/qcom/gpucc-sa8775p.c |  41 ++++++-----
- 2 files changed, 66 insertions(+), 129 deletions(-)
----
-base-commit: 03d44168cbd7fc57d5de56a3730427db758fc7f6
-change-id: 20240612-sa8775p-v2-gcc-gpucc-fixes-ec128d5847e8
+diff --git a/drivers/clk/qcom/gcc-sa8775p.c b/drivers/clk/qcom/gcc-sa8775p.c
+index 7bb7aa3a7be5..71fa95f59a0a 100644
+--- a/drivers/clk/qcom/gcc-sa8775p.c
++++ b/drivers/clk/qcom/gcc-sa8775p.c
+@@ -4203,74 +4203,114 @@ static struct clk_branch gcc_video_axi1_clk = {
+ 
+ static struct gdsc pcie_0_gdsc = {
+ 	.gdscr = 0xa9004,
++	.collapse_ctrl = 0x4b104,
++	.collapse_mask = BIT(0),
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "pcie_0_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE | RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc pcie_1_gdsc = {
+ 	.gdscr = 0x77004,
++	.collapse_ctrl = 0x4b104,
++	.collapse_mask = BIT(1),
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "pcie_1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE | RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc ufs_card_gdsc = {
+ 	.gdscr = 0x81004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "ufs_card_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc ufs_phy_gdsc = {
+ 	.gdscr = 0x83004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "ufs_phy_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc usb20_prim_gdsc = {
+ 	.gdscr = 0x1c004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "usb20_prim_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc usb30_prim_gdsc = {
+ 	.gdscr = 0x1b004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "usb30_prim_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc usb30_sec_gdsc = {
+ 	.gdscr = 0x2f004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "usb30_sec_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc emac0_gdsc = {
+ 	.gdscr = 0xb6004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "emac0_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct gdsc emac1_gdsc = {
+ 	.gdscr = 0xb4004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "emac1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = RETAIN_FF_ENABLE | POLL_CFG_GDSCR,
+ };
+ 
+ static struct clk_regmap *gcc_sa8775p_clocks[] = {
 
-Best regards,
 -- 
-Taniya Das <quic_tdas@quicinc.com>
+2.45.2
 
