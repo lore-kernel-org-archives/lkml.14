@@ -1,85 +1,129 @@
-Received: from hust.edu.cn (unknown [202.114.0.240])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FE217F374;
-	Wed, 12 Jun 2024 14:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.114.0.240
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F3A17DE21;
+	Wed, 12 Jun 2024 14:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718203964; cv=none; b=jBHaX8ktCvZlpWFOTuE02up2q4DNjZwNGzCpBOOSH811DOINosH1tbdW5h6/lLCO/sSKDKfRd56Y52ctSgZEyTTBcIjfZ2P43MhjNVmywWek1N2qnTM9tO1WIXir/452eJA2OgoAMq66PThrgQo/WFe24eRtkEO3yRazd8fligQ=
+	t=1718203995; cv=none; b=VScqdtZTT2NgwHaNByKaP4i9ICHZ0S9uspzzKjh+lFH7kHoa6vnwliU1/1zuJDWhOEwhWpjs8BBnaMEhJ+jZpI3H/jd2yUVqMyH7XPGnNa39OWBmhKiI6t44qXTnChP/UYq2dgnLQPqH7VXOVrcPImGjnU/InNKaim7VI0qCdNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718203964; c=relaxed/simple;
-	bh=kicZ9/XRu1MAmkWk/I+JRxn8BvTZI+30+zPvFIqGN2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Sk8BYQp5UnHreVfyoPR/tSs01u4IX2viS4TykiI5kQDrWOS9JgE/kNnMhNmGmuBTGjVrVc3U+Z+BMlvY3zGpSYuPTKFTw+OtTuQEw7/lGcDSSieo3aTecEmYqTee8RkYsom/lwYOtFU3qYE3mDBmGH/U0WakzXVJoxBi/cQUNe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=202.114.0.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.52])
-	by app2 (Coremail) with SMTP id HwEQrABHn8cCtmlm6cxvAQ--.12262S2;
-	Wed, 12 Jun 2024 22:51:46 +0800 (CST)
-Received: from pride-poweredge-r740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wDn7sYBtmlmLq4KAQ--.11539S2;
-	Wed, 12 Jun 2024 22:51:46 +0800 (CST)
-From: Dongliang Mu <dzm91@hust.edu.cn>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dongliang Mu <dzm91@hust.edu.cn>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs/zh_CN: Update the translation of dev-tools/gdb-kernel-debugging
-Date: Wed, 12 Jun 2024 22:50:45 +0800
-Message-Id: <20240612145048.57829-1-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718203995; c=relaxed/simple;
+	bh=CV7A6h7Ej/JI3EvTIGvVnDsWenKFFHJmc2Q7IgFEoqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DfiFfk6p5eGzmcUg1Q+ezKvDAdGNIrx8mXKadcor67BwhXYxHHL8kYV/2FJPok7iDZLGz0A7UGCrAzD/a94hsnpzk3sMDOlgEo31WpzjNXXImWSrIUOXX6+d20lXv218Li8F8NMeWfOprq5ks8M/8M+VC2FMRMmQWzMLylYhmWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPGeWD3s; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPGeWD3s"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-356c4e926a3so2554714f8f.1;
+        Wed, 12 Jun 2024 07:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718203992; x=1718808792; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DjlN83lPIOr4ltIrDkbCr9NcIIfgwrCEwftXlf1Dyvg=;
+        b=HPGeWD3srlC3q5EGEza2ITcOJR2EFJiYeXGRDCQy3GYrKAy2UzJmFD430sJgYDHHx4
+         Quj4aNfvMZNq6c/crItGBYyzWKwIrguKNR1U/8AJExdGmqULCOWAdDEuoEvih1kGHj9F
+         0CntlLe3e26NPP6QklOZXPBTsej8pn4SN3B8Mh8G5qFLSNCT+mzdIrf9yIzbHj87FWsC
+         c8ZPK2VkDg5MzPCg47dcU4W9MGBhuLYP4QeKgXMLgw68bVAmN+E8KQLXKfSa7YHTxzOK
+         yGfJHH10on+HnvOKQ0gjq4hAmAnMmSAA8snzesghzsc+AosTgA0HHn9rVlmKfhCwIxv0
+         PPUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718203992; x=1718808792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DjlN83lPIOr4ltIrDkbCr9NcIIfgwrCEwftXlf1Dyvg=;
+        b=sIiZ/XFgso09qXBxkfAHBY8S/JiXmRhk9GOHoAzoC2D44Grlz2oc+yaYnxxrd7yhbi
+         vwTOzhfXF+oGN2XQgNsxoUMHdKWWnSon/M4Ff5arjxJqxM7pEriD5L21gFE1jhju8gCR
+         fCELDmDecbl3zdgPbeNGLhjEWeU7nCDEX9VxYqC1i/fPJRRF9WFo3QUahRGENBr2k7DR
+         9Mr7mfJvXINnf43A3IUmltSutYwPbxh+FjLabtFDGVt0hqHS9ILaL+PLsbWK3G9ugS+7
+         2sCJcklR8SZUkcVQXPphuwJMzwpi4y2MKc4k278io7fmxDfnLW5dXITUjZLTntBgIH0O
+         yoTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMvrlunpAFFC1uVqrohtYjRYYw4uJRzuniJ94+b8jfGHSz5BYpZg7hzWJ6m2WG8gI9NqOHMoR4vqLE+YvYiT/co4bWCDudBe3EKZP7brr58nXh0lpahZ8Sl2z+AotjEwbJ
+X-Gm-Message-State: AOJu0YyUxvAyLZyHtZ6BGIGTsNELIdkGJ1iAQFVDkKxGVYBTG6wm3lwQ
+	1vV4NGmnPkWlaQijoAy1QXMis7KKT9RQgoQCrtFPSO1LdG0M9K8NGLSisMPWZTaOXKviJjvVArx
+	TgYgAHNoPow1Ou76VGAYMsUaO8q8=
+X-Google-Smtp-Source: AGHT+IEd4n+XPIwBn+v+LL+Ojvsu3xO9fas8ggtkreZ08f3keaLg6Vzs5Zl9RbMU/yMnOZm0nXtQbZqww/eUVIyV3x4=
+X-Received: by 2002:adf:e5d2:0:b0:35f:1d67:cdb4 with SMTP id
+ ffacd0b85a97d-35fdf7adde2mr1394282f8f.37.1718203991639; Wed, 12 Jun 2024
+ 07:53:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrABHn8cCtmlm6cxvAQ--.12262S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1rGr48ZF48ZF15ur1DAwb_yoW8JFyxpw
-	4q9FyfG3WfZry3J345GF48GFy7Jas7GF45KFy0va4Fqryvq3yIqw4akas0qFy2q34IyFWU
-	uF4fCFyj93y093JanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jr
-	v_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxAIw2
-	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07jfpndUUUUU=
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+References: <20240612-master-v1-1-a95f24339dab@gmail.com>
+In-Reply-To: <20240612-master-v1-1-a95f24339dab@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 12 Jun 2024 07:53:00 -0700
+Message-ID: <CAADnVQJLgo4zF5SVf-P5U_nOaiFW--mCe-zY6_Dec98z_QE24A@mail.gmail.com>
+Subject: Re: [PATCH RESEND] bpf: fix order of args in call to bpf_map_kvcalloc
+To: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update to commit 6b219431037b ("docs/scripts/gdb: add necessary
-make scripts_gdb step")
+On Wed, Jun 12, 2024 at 2:51=E2=80=AFAM Mohammad Shehar Yaar Tausif
+<sheharyaar48@gmail.com> wrote:
+>
+> The original function call passed size of smap->bucket before the number =
+of
+> buckets which raises the error 'calloc-transposed-args' on compilation.
+>
+> Fixes: 62827d612ae5 ("bpf: Remove __bpf_local_storage_map_alloc")
+> Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+> ---
+> - already merged in linux-next
+> - [1] suggested sending as a fix for 6.10 cycle
 
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
----
- .../translations/zh_CN/dev-tools/gdb-kernel-debugging.rst     | 4 ++++
- 1 file changed, 4 insertions(+)
+No. It's not a fix.
 
-diff --git a/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst b/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
-index 17b5ce85a90c..94c15c258726 100644
---- a/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
-+++ b/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
-@@ -34,6 +34,10 @@ Kgdb内核调试器、QEMU等虚拟机管理程序或基于JTAG的硬件接口
-   但这通常仅在不依赖内核模块时才有效。有关此模式的更多详细信息，请参阅QEMU文档。
-   在这种情况下，如果架构支持KASLR，应该在禁用CONFIG_RANDOMIZE_BASE的情况下构建内核。
- 
-+- 构建gdb脚本（适用于内核v5.1版本及以上）
-+
-+    make scripts_gdb 
-+
- - 启用QEMU/KVM的gdb stub，可以通过如下方式实现
- 
-     - 在VM启动时，通过在QEMU命令行中添加“-s”参数
--- 
-2.34.1
+pw-bot: cr
 
+>
+> [1] https://lore.kernel.org/all/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@inte=
+l.com/
+> ---
+>  kernel/bpf/bpf_local_storage.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storag=
+e.c
+> index 976cb258a0ed..c938dea5ddbf 100644
+> --- a/kernel/bpf/bpf_local_storage.c
+> +++ b/kernel/bpf/bpf_local_storage.c
+> @@ -782,8 +782,8 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
+>         nbuckets =3D max_t(u32, 2, nbuckets);
+>         smap->bucket_log =3D ilog2(nbuckets);
+>
+> -       smap->buckets =3D bpf_map_kvcalloc(&smap->map, sizeof(*smap->buck=
+ets),
+> -                                        nbuckets, GFP_USER | __GFP_NOWAR=
+N);
+> +       smap->buckets =3D bpf_map_kvcalloc(&smap->map, nbuckets,
+> +                                        sizeof(*smap->buckets), GFP_USER=
+ | __GFP_NOWARN);
+>         if (!smap->buckets) {
+>                 err =3D -ENOMEM;
+>                 goto free_smap;
+>
+> ---
+> base-commit: 2ef5971ff345d3c000873725db555085e0131961
+> change-id: 20240612-master-fe9e63ab5c95
+>
+> Best regards,
+> --
+> Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+>
