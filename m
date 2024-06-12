@@ -1,155 +1,127 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C744C17E90A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B5617E90D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204414; cv=none; b=IlShm9HOjvSvflVNH/fHsoQ9cW/5kmpHXqqalpydNufBFMPNxZZ7qZu7V4JS1hJbTYlGSmkiRfotWwNgxP3Qhm1d/O52bJ4+KSz1J5dNSUEl9hTEWD9cbn2h0WF0DYT/EcJ2qVzRgcjG1IW13jVipB0gKlnlWy9eZYFjpYqSF1Q=
+	t=1718204427; cv=none; b=Nn+L9lKoYt5cZKfqCNozdC5WHsdRV012GFyNx/JXZWNY/F2feo/4HwJIQU9Bf7GGmzfJz+Dx4lbKcrjUMkvshc0tuLwdwS+ZwufxZkngFnud42MHuiqTXHyvFGFRJNCeUn6flz6vukBzNyEG4P4B7Tpku6QfR/BHqWUyc9itrrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204414; c=relaxed/simple;
-	bh=f34fdBeyY/ZmGv0O8WhD9I3tze49PDqiPO6M3mFfPfk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZZM+EzOHP/1IqhAXbbpIcT87+h1rPteTlaxrBe8q740sffj9WfSZTmGIj71DQLKOhgBf/vwdZk14Qa1YdfA2ANmm213a6Q+KVO3khr8OBjLuRybfnzQbQpcvewLVnwex9QaqOhHq9JzEzhR2PKnNTVsQpWSO1Qs79LghoLeLlqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gXIURYSK; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gXIURYSK"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-421eab59723so26683695e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718204411; x=1718809211; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jhh2/EbO+KzKdZ2Ceo1EYx6oUtTDKk/jJAIaFVIVoMI=;
-        b=gXIURYSKL2460MC6KjA4+KDI1t5PVcIZwodO9/DegeMFiNN4Ws1chIxV9Ms4fA23kh
-         EY3iz7EXyWEkKyOntpUyr1Fvx94E+tLZN2Msm5EuzWtli9gas1C+Hva5WB1hq8qsk3ZC
-         /wPAIhfR39zbGF/Y834MStdXxXlDO0/KSIcHcJxESSYbFc89b+iYrEU1nd/8fpDA169+
-         RYc1QOu+KSQ0vqxYcCzBpmJO/cujE083AzrMBNTnh7Kg1fhJYMAl6izQOds9XEiSMt5X
-         yun/SdyfO4ZXbcDdPXWq3h9JDZm20hhGUbP4LuFqNN9t8JL7fd5VZu0fdulHwBGT5Wjc
-         FOGA==
+	s=arc-20240116; t=1718204427; c=relaxed/simple;
+	bh=3eMaFVhay/i0vo7c+Hz/UuCWshmGXLFqDysYaOiFKVE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WfquAdrSQNk2vP2W1p+6JNiatBRq/l2PgNeEdJ8gMwXbcab+/kJ4jfPojPIzXkwU62gNlMHRuH9fjnoausipu3Stc6zX7jl+B1m1cp9UPXLNOZMSSH6xu6mNoTRHa7HrYTu4k8IjXc8VZBJb9LyDX9cGpdUDDYMJQi8h1C52Gbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-374b2adee08so8066935ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:00:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718204411; x=1718809211;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Jhh2/EbO+KzKdZ2Ceo1EYx6oUtTDKk/jJAIaFVIVoMI=;
-        b=lRGP2OQmaytc4DoUF5gUl2nMFPyB3nIJcl0YcXq4o012NNpKrYUEJmTsjyYXx/8vqu
-         tEi+XWoJuQ6qyWBQFeG2s4KxdFUwvCwGBUdQg2py7OJGetgDNijWjdNavXqrSe3+hQdn
-         lL2zoNcbKj9aUcDiKv/8onKK4pYk+jYE791byGUQ4r3DHETLKBFmj506PZUawoWPC6y+
-         vz0WTL9Xlgv/7hRGKMfrxqqww9ksFaDNkkVvgxTrMGYYRSWf/SkuR62if2PZnUN54FAh
-         12mxJZM0VQLEm749l3ssqGQ6ix/Y3zasvNRX/1o/B7LleisUWu9NSQYVtHMqyc5fgYjz
-         PVfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJHITkxbgkqFXV3PeiSx8z+wxGLJ0YCrlbGdimIssnbDRM2gxadeQdtxmRPQ8xkZv4CmB1Z8EbYNm2NhsDDYP7JVa/cvk/GhH9IT6s
-X-Gm-Message-State: AOJu0YxpXMKHg5rw9sgfp0Wsp9SbvQ+crvj/e/CLagWCG3K+sCuPt2C/
-	UA8NcJVvSjVi2YzxW4gOac51PT2EE7+q4z55VNCdfV5JWRf3vP5HEA7fm/znP4o=
-X-Google-Smtp-Source: AGHT+IHYnEIUuKhHAo+YHne7cw1OEPvSnqErGK9eKY2wBCW7WO7/RuHH1cbOVIMAIN9kpXDkMQlCSQ==
-X-Received: by 2002:a7b:cbc5:0:b0:421:2711:cde9 with SMTP id 5b1f17b1804b1-422864af234mr18269665e9.22.1718204410921;
-        Wed, 12 Jun 2024 08:00:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:30bd:bf21:eed1:8aeb? ([2a01:e0a:982:cbb0:30bd:bf21:eed1:8aeb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870ebadbsm29401255e9.23.2024.06.12.08.00.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 08:00:09 -0700 (PDT)
-Message-ID: <a29db79c-53ab-45a6-bdc3-b165475da0fb@linaro.org>
-Date: Wed, 12 Jun 2024 17:00:08 +0200
+        d=1e100.net; s=20230601; t=1718204425; x=1718809225;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bbeKAD+PQktYXehGoaYBo7fgZr7EtmHmdBdx3YMLw+8=;
+        b=ODyu7t3P1gDDjxjGnWwDB8yo5t8Vus6xoATiRb5rk9Om6+8kYtm6VySW+wXe6aDfc/
+         saj6tv5Q51yFr/J3p0ndm1LS0zWLYxDH1EOKdKdSppe3yQIoLjMSKTrohPpgpwqU3HSw
+         wnMSQ8BOwDoBjBINPYO3OtSJ7CO0iokcEhyH9QBa2Ci61nHIuTXLELIjJWic9M/tCy6Y
+         dBH+BRyiXc3HL7PGB9DyT/ZkQAvPe6CSHQ3neYDFxk5l02jleXjsL/CtPAfbzuj4IVEE
+         CW2vII9wWzM/rOSChOjKrpoUScGe6zcnGa/zy7xBI8pttLeH7ktTrtodxhmipuF/q/I6
+         6bLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAJDK5LBAhtZXQxKONx6ES9Bb3i9ag6RhHsflHq39PzZkTZd0kmhZOUYL/uevKMvgAmvyZxghnyo4aD2onkLAOVf4T4fRmf+USQ7Hv
+X-Gm-Message-State: AOJu0Yw1Fa2UTAah0F+DKt6zdYO9EpL7qrpknWfH27Dc28IBL1vxinlV
+	q1kdqDw8Mbh13wpyE95Dt+HXTmA+rP2z5XxtYKmrqTJlik0wQMO5nFUHNsrPWggS2H3FZ53H/D6
+	xuTaqgQnhdvWGSvmN+j1LrFiAiA/K+ImLo3B+h80yM0CdPVeLkomnWgs=
+X-Google-Smtp-Source: AGHT+IH3R32w1VW7Y2KaLY6PKpWL/Q9c51grIOOxTjW+pjUsEJNpELXxCAVB7ZiQGeyWSoEcdBoZj0tbye8niqMEx6mmZWpU4TE/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/2] drm/mipi-dsi: fix handling of ctx in mipi_dsi_msleep
-To: Doug Anderson <dianders@chromium.org>
-Cc: Tejas Vipin <tejasvipin76@gmail.com>, quic_jesszhan@quicinc.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, daniel@ffwll.ch, linus.walleij@linaro.org,
- dmitry.baryshkov@linaro.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240612133550.473279-1-tejasvipin76@gmail.com>
- <20240612133550.473279-3-tejasvipin76@gmail.com>
- <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
- <9beb8011-cb0f-4694-87e7-d4c02de80cd8@linaro.org>
- <CAD=FV=Udsw=XCR204A8QGwVSAxyprLCrrOgmZf+pU+8m-7sQ0Q@mail.gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <CAD=FV=Udsw=XCR204A8QGwVSAxyprLCrrOgmZf+pU+8m-7sQ0Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cd88:0:b0:374:9ea3:a2e with SMTP id
+ e9e14a558f8ab-375cc8768b6mr1765605ab.1.1718204424911; Wed, 12 Jun 2024
+ 08:00:24 -0700 (PDT)
+Date: Wed, 12 Jun 2024 08:00:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000660926061ab2a441@google.com>
+Subject: [syzbot] [btrfs?] KMSAN: uninit-value in iov_iter_alignment_iovec
+From: syzbot <syzbot+f2a9c06bfaa027217ebb@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 12/06/2024 16:52, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Jun 12, 2024 at 7:34 AM <neil.armstrong@linaro.org> wrote:
->>
->> On 12/06/2024 16:21, Doug Anderson wrote:
->>> Hi,
->>>
->>> On Wed, Jun 12, 2024 at 6:37 AM Tejas Vipin <tejasvipin76@gmail.com> wrote:
->>>>
->>>> ctx would be better off treated as a pointer to account for most of its
->>>> usage so far, and brackets should be added to account for operator
->>>> precedence for correct evaluation.
->>>>
->>>> Fixes: f79d6d28d8fe7 ("drm/mipi-dsi: wrap more functions for streamline handling")
->>>> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
->>>> ---
->>>>    include/drm/drm_mipi_dsi.h | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> Yeah. Looking closer at the history, it looks like it was always
->>> intended to be a pointer since the first users all used it as a
->>> pointer.
->>>
->>> Suggested-by: Douglas Anderson <dianders@chromium.org>
->>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->>>
->>> I've also compile-tested all the panels currently using mipi_dsi_msleep().
->>>
->>> Neil: Given that this is a correctness thing, I'd rather see this land
->>> sooner rather than later. If you agree, maybe you can land these two
->>> patches whenever you're comfortable with them?
->>
->> Applying them, but inverting them, fix should go first.
-> 
-> Well, they're both fixes, and inverting them means that you get a
-> compile failure across several panels if you happen to be bisecting
-> and land on the first commit, but it doesn't really matter. I guess
-> the compile failure is maybe a benefit given that they were not doing
-> their delays properly... ;-)
+Hello,
 
-Yes, and thanksfully there's a fix for the build failure!
+syzbot found the following issue on:
 
-> 
-> -Doug
+HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=166b7286980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
+dashboard link: https://syzkaller.appspot.com/bug?extid=f2a9c06bfaa027217ebb
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113f7f16980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11698dce980000
 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/b8b22127e3de/mount_2.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f2a9c06bfaa027217ebb@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in iov_iter_alignment_iovec+0x1a8/0x470 lib/iov_iter.c:788
+ iov_iter_alignment_iovec+0x1a8/0x470 lib/iov_iter.c:788
+ iov_iter_alignment+0x1aa/0x290 lib/iov_iter.c:833
+ check_direct_IO fs/btrfs/file.c:1452 [inline]
+ check_direct_read fs/btrfs/file.c:3736 [inline]
+ btrfs_direct_read fs/btrfs/file.c:3765 [inline]
+ btrfs_file_read_iter+0x46f/0xc70 fs/btrfs/file.c:3826
+ call_read_iter include/linux/fs.h:2114 [inline]
+ aio_read+0x4b3/0x690 fs/aio.c:1611
+ io_submit_one+0x2809/0x3280 fs/aio.c:2061
+ __do_sys_io_submit fs/aio.c:2120 [inline]
+ __se_sys_io_submit+0x275/0x700 fs/aio.c:2090
+ __x64_sys_io_submit+0x96/0xe0 fs/aio.c:2090
+ x64_sys_call+0x3620/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:210
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable inline_vecs created at:
+ aio_read+0x4c/0x690 fs/aio.c:1592
+ io_submit_one+0x2809/0x3280 fs/aio.c:2061
+
+CPU: 1 PID: 5053 Comm: syz-executor335 Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
