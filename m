@@ -1,138 +1,120 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096BA17F374;
-	Wed, 12 Jun 2024 14:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A820717F37B;
+	Wed, 12 Jun 2024 14:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204088; cv=none; b=p4uNGbL0WBB6fvrheG4bcnOOP7zY7f2rCGhFioCJEsjC7s3nhPyUyt6gGah98/0GIbBeGkMrh4afOUlgrFlz8KK1CqoTjU7KrdZJYAGxmKxYD638aCpvwyBgpHfYCoPLq+KKlBsmVvRNWUyBbdNpjuz0jbuz0Ai/S6Kg2LiaTJg=
+	t=1718204098; cv=none; b=r8JrWPQkxSpqcJoV+5umpXZPbyg2x3fm0DqED2fO+u+y1xol7i+0LtsszNMb0WZy44RzoaISX0/Mx3h9nggnmTrMuMctRU9PnSPfbqUr257GQwXXAbqMyYx3JZSDw+J5tQAXSMt+/MqdBy0F/mFIpML5BC+WESdVvG5tCKFxli8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204088; c=relaxed/simple;
-	bh=OHIuj+cu4kdvIF7ubfsWz5g8ux/ANr5PX5Lbo01ZnRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=phO3TYZkEGc7Te/qUHlGEiKDV03t4pbXBiXSBFPTL0Oz8+7oKDQlWKLbfI1n2OBflAw3QFuoFVgejHjbtEuHdpYZ5RITayov89dli6s76iMg0RELVUf8YR5TxCGsmaCgcyoYJQWM3goAHZLs4Uod4Wj6GZJvGDGXGZ39onQZmXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqGE9Z35; arc=none smtp.client-ip=209.85.208.174
+	s=arc-20240116; t=1718204098; c=relaxed/simple;
+	bh=TdnMRlY8eU1gITOGUrVoljnN7uigPURXsJ3psiHrBfs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=AwiQSStsFQpFa61Tj3Fwni5SaVa5t+CYiMBhSbAqMeGzn4yvLP4rZ+w8PC1FtKXW79sGBONxWAgIwTz/brBMO0JDyhcNy17TPVSP2LR2bC7BDnYXgQhD9ZXadlWl9dE2FldeH3niwyKia2Bo1vSqRZ5OXZU3Vz6DYK9mupwXoxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NbuqYZ9r; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqGE9Z35"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ebe785b234so33448241fa.1;
-        Wed, 12 Jun 2024 07:54:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbuqYZ9r"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-6ce533b6409so1846922a12.1;
+        Wed, 12 Jun 2024 07:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718204085; x=1718808885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFvoluEX8O1ZuVrZ4TkWpRmCK6s/5ISbLklS0xYIk/Q=;
-        b=ZqGE9Z35hfWlSEBRa29VsoKWUEH0VxNtUmpWcb6+e+nMSEAa/qFDdTC6lTKVsm60QB
-         e6/NWNHVOnUK+jcm2X5fHdnmgzAx7/wudfNyFjZ1cDgaYX9jRgrqzkDeGS69xm+klIJd
-         EFsc0LcTntbZKmmBOIMeY34K6W7ELpn9efpqHfQP9NXwIlxsLaWvJ0aW6jMDlCogEcTE
-         VPcDUGqavuZFW+Xix7PlzVhdinmuPR8/Sns0CWf7tkMd4aLZgqoS5edIekQa/i9Q+yFr
-         Ck5FfN5Qp1YzZHcSj8MFrRfZnZnfmWN4NUIem/eZyfnPCyV9locpqSWnGJQSaMhxva1d
-         WPgg==
+        d=gmail.com; s=20230601; t=1718204096; x=1718808896; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tfYwhTvzmupicsQsu7JIZ1FN+uaECXqcNKkkP1OPyAw=;
+        b=NbuqYZ9rIc9d42IeJzZy/HeQtj/uaP2xBw4s+fUjtYedLUDzjAPIm4Ywo173dwFZ87
+         QqLkp4GOcPfVMUDCkur0a04Ll9SOgMMf0JVN99jjWZUBcsq8eIDAkRQDRbP/bR2Qfdh+
+         9usFJUSmu9wxEPPY2iSTP66RN+qFuUT9dc9G2uzzY9LQUJvXrd4G8/FSgdfbQge/Ycw2
+         0FtUZbG/26NDhS83y+2VbQt75Cc9kkWvlCMabrUKWTzcqgh06PJJG1rdT/Cb+N4Wi4zy
+         qAw1gCYBGrsJkChml0p41a0cA3SbTyfMul8i0s++khAF6do9QHpekz6BnTy8HM6OLjpF
+         Pcig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718204085; x=1718808885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFvoluEX8O1ZuVrZ4TkWpRmCK6s/5ISbLklS0xYIk/Q=;
-        b=hyZXht01v/sfLDwLr4yf5/nlZuRNtQpwbIGPFPJkQKh0VNDkCkCb4HrM2naOXOEk9Y
-         3dS+6iv0MVL/g/R/98/vIJ2pJ8v/9SliTqFbmRkZ0lpVfYbb1CQSBDmn86KmpQqsWfWY
-         /qYsVoJcNENzCoDPZHOk7/6x1xB5BC2hHZSQk6nAJGEtUMuDM2uI4Pv0wA2RMnVVIXwY
-         4fN6owqrZn8Dofu+FeSbrrYBBjAPil03+Gnx7iTfejRspK/LWsSrGy4ruKzYJZV/FWRc
-         o6SH8AOvpWwhbMbEI+/PtgnkE/O78Z5SegjQk0HMdJ+ZgWJwO4KAFf6VL+N3mg/ooF2/
-         /HbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWENKjSZXzw1UkqqHoCSgzO1rpi/bme6VTMutCNpy6BjL9aGlSj17te+OV4IhKxWvui7MOEcphSUowqMaqKY+ECU1vIXD0IWbKbMOJDFvxbpfl79u4HhBBgrTn+CPUTW1IxxPyOWBw1cEC8dUBjSC8oxYx/KckFUgHizVFbTzFDgR254BWJlptfntLz++Fr+6nTkfJYGImIjosz+NH4da8Tg==
-X-Gm-Message-State: AOJu0YwWTqYwb4p1ZpgYng89rwKo4ngYMRbWxda8nEB3HXe/Cdn/Qc+U
-	5t823Ay5IXiNi+dZZGHYgCEkPvvApGrCWDfd4LYEpjpi0gLPunL2XGxVllRYLSytDQeAUnTBB6/
-	49dkxyMDf05vG8RZFvSQteH+uE41UNg==
-X-Google-Smtp-Source: AGHT+IEdMHZiLDsGBMrK9SAia7MmzWrOkgMko6njHoqmapJDPT6oys75Nm5/b67yHbBOs+Nsqvk1c8udWrC6CRDgao0=
-X-Received: by 2002:a2e:9290:0:b0:2ea:df2e:428c with SMTP id
- 38308e7fff4ca-2ebfca5dd9amr13446111fa.49.1718204084938; Wed, 12 Jun 2024
- 07:54:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718204096; x=1718808896;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tfYwhTvzmupicsQsu7JIZ1FN+uaECXqcNKkkP1OPyAw=;
+        b=N2ZxMOuH9dDHLBP7COduLRkOAZpBMCCb99GVzPoEV4TU2aWWT0iZY8mYEScmjvGaa/
+         HOzEjNfFdRjrV7i7Pqr6lhv+Yp9NMYBodcSCXr4CaAcL1nIzC8VJkwqf6/F4S8W4/iGC
+         a0Ja68+pMf2U5JZ6LYvl6GycUhsvzuhvAmuTMIE0PU8y6aRiPHLazoDp8jhrPkpw9jtO
+         oxmh4PwLTixbV2aBN8gkkMA9mAOd62y9p0TqLkpXARViCSFcxykfThbAheWfuzGXxuUn
+         hvm9RZFhExoAfZrH/dZ/htDcalt/5WgwwoHzwyJUIvkXxbSt5/oM0a4ofU2PfJkcyD3p
+         uCDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdVydRwGBckEs57d5yyhTG0q5ACZ6TSi8QsRpKlN0LranXoy2Eq0ed3OAV+IPs2tEm9jslz4lD+Op+mAvW2/Hw64QEgosCcjyW/kpKT4r3c5viYMCyyxznEhj6HEnu+RKrf2v5teV2HC5ApAzWCiaL1SiWaXzhiEmOpWahnF9PZD4PqA==
+X-Gm-Message-State: AOJu0Yy2YN52vzn0kbSfanYCbc/Ppc5+Ep4A6IEHTSOd29cargfn/pEy
+	yy/s69FJwAvb2nl/W3wb66W1PXSxAtQ0nYQLD38BMKnM2uxaZkhQ
+X-Google-Smtp-Source: AGHT+IGWUPYM8K3Nnkcka/I8nD/MNSiEar2GaXIc7pu/h7PPkdh9SKZwgNksERpTNh6mAOSYvrCRhg==
+X-Received: by 2002:a17:90b:2242:b0:2c3:13dd:fe56 with SMTP id 98e67ed59e1d1-2c4a7629b14mr2214108a91.19.1718204095871;
+        Wed, 12 Jun 2024 07:54:55 -0700 (PDT)
+Received: from localhost ([113.143.197.225])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4a76d391esm1856733a91.57.2024.06.12.07.54.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2024 07:54:55 -0700 (PDT)
+From: joswang <joswang1221@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: Thinh.Nguyen@synopsys.com,
+	gregkh@linuxfoundation.org,
+	balbi@kernel.org,
+	linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jos Wang <joswang@lenovo.com>
+Subject: [PATCH v3, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
+Date: Wed, 12 Jun 2024 22:54:48 +0800
+Message-Id: <20240612145448.2614-1-joswang1221@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240601092646.52139-1-joswang1221@gmail.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240612075829.18241-1-brgl@bgdev.pl> <CABBYNZLrwgj848w97GP+ijybt-yU8yMNnW5UWhb2y5Zq6b5H9A@mail.gmail.com>
- <CAMRc=Mdb31YGUUXRWACnx55JawayFaRjEPYSdjOCMrYr5xDYag@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdb31YGUUXRWACnx55JawayFaRjEPYSdjOCMrYr5xDYag@mail.gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 12 Jun 2024 10:54:32 -0400
-Message-ID: <CABBYNZLPv3zk_UX67yPetQKWiQ-g+Dv9ZjZydhwG3jfaeV+48w@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable tag between the Bluetooth and pwrseq
- branches for v6.11-rc1
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
+From: Jos Wang <joswang@lenovo.com>
 
-On Wed, Jun 12, 2024 at 10:45=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> On Wed, Jun 12, 2024 at 4:43=E2=80=AFPM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
-> >
-> > Hi Bartosz,
-> >
-> > On Wed, Jun 12, 2024 at 3:59=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Hi Marcel, Luiz,
-> > >
-> > > Please pull the following power sequencing changes into the Bluetooth=
- tree
-> > > before applying the hci_qca patches I sent separately.
-> > >
-> > > Link: https://lore.kernel.org/linux-kernel/20240605174713.GA767261@bh=
-elgaas/T/
-> > >
-> > > The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688=
-ffa670:
-> > >
-> > >   Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/p=
-wrseq-initial-for-v6.11
-> > >
-> > > for you to fetch changes up to 2f1630f437dff20d02e4b3f07e836f42869128=
-dd:
-> > >
-> > >   power: pwrseq: add a driver for the PMU module on the QCom WCN chip=
-sets (2024-06-12 09:20:13 +0200)
-> > >
-> > > ----------------------------------------------------------------
-> > > Initial implementation of the power sequencing subsystem for linux v6=
-.11
-> > >
-> > > ----------------------------------------------------------------
-> > > Bartosz Golaszewski (2):
-> > >       power: sequencing: implement the pwrseq core
-> > >       power: pwrseq: add a driver for the PMU module on the QCom WCN =
-chipsets
-> >
-> > Is this intended to go via bluetooth-next or it is just because it is
-> > a dependency of another set? You could perhaps send another set
-> > including these changes to avoid having CI failing to compile.
-> >
->
-> No, the pwrseq stuff is intended to go through its own pwrseq tree
-> hence the PR. We cannot have these commits in next twice.
+There is an issue with the DWC31 2.00a and earlier versions
+where the controller link power state transition from
+P3/P3CPM/P4 to P2 may take longer than expected, ultimately
+resulting in the hibernation D3 entering time exceeding the
+expected 10ms.
 
-Not following you here, why can't we have these commits on different
-next trees? If that is the case how can we apply the bluetooth
-specific ones without causing build regressions?
+Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
+for enable the controller transitions directly from phy
+power state P2 to P3 or from state P3 to P2.
 
---=20
-Luiz Augusto von Dentz
+Note that this can only be set if the USB3 PHY supports
+direct p3 to p2 or p2 to p3 conversion.
+
+Signed-off-by: Jos Wang <joswang@lenovo.com>
+---
+v1 -> v2:
+- v1 did not add this PATCH
+v2 -> v3:
+- modify Author Jos Wang
+---
+ Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+index 1cd0ca90127d..721927495887 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+@@ -242,6 +242,13 @@ properties:
+       When set, all HighSpeed bus instances in park mode are disabled.
+     type: boolean
+ 
++  snps,p2p3tranok-quirk:
++    description:
++      When set, the controller transitions directly from phy power state
++      P2 to P3 or from state P3 to P2. Note that this can only be set
++      if the USB3 PHY supports direct p3 to p2 or p2 to p3 conversion.
++    type: boolean
++
+   snps,dis_metastability_quirk:
+     description:
+       When set, disable metastability workaround. CAUTION! Use only if you are
+-- 
+2.17.1
+
