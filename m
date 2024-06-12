@@ -1,38 +1,70 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1559E16D9AC
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B4616D9AC;
+	Wed, 12 Jun 2024 09:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718184721; cv=none; b=RXhkohqVJy2EWOlaKCe6ND0xc1FZZnYjZHy5PLsCmg9X0VZYtR9C23oV0UPUhjyX7oSy6PB+Y4BDJxVHc6k03zlxTQ5py90W1MRXh36usAopafrXFwMHMBKhFvC3xIymPg0oNbK4BYmq0lIQEBvf6O0lUds/tjVUIijvSsW2kp4=
+	t=1718184748; cv=none; b=RiulIOeP/V6oaxOMQRK0+Ex095IQdtTOIam5oqms/6peBUPUkd6kLL1JNQ5CKO24rGjeh2haXWdivE/YW5OZqcRQy1H6j+B7YZUNS+/yph8XkkM5sbcIR7w8c8KLQKAA3DHcdML+REb/y15R6G0RrZvQ77TlCtBEScqxM5UxAAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718184721; c=relaxed/simple;
-	bh=L5xe4VaIYlJKWRqCsvQkXzFnIxKCJWxbzLAhptdoC9E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iLerISpLRR0o1a44wDrxOuLgFyYVKCY0LOsL90TaWNWgVleaC/CqOHv1/TzCH1YltaaItPsfdaIWbGylgOPuu6sOVrW96EBBh5vXT8DBSFFCbiwEeWuEcfeGeA3m3XnlOsoNHnQrrKSY/pn80D+vRglL4FJhF3eQHkmhKTxfHWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VzgF40XBnzxS1q;
-	Wed, 12 Jun 2024 17:27:52 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 71552140443;
-	Wed, 12 Jun 2024 17:31:56 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 12 Jun 2024 17:31:56 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <osalvador@suse.de>
-Subject: [PATCH v3 -next 3/3] mm/hugetlb_cgroup: switch to the new cftypes
-Date: Wed, 12 Jun 2024 09:24:09 +0000
-Message-ID: <20240612092409.2027592-4-xiujianfeng@huawei.com>
+	s=arc-20240116; t=1718184748; c=relaxed/simple;
+	bh=6X0iD7TzpO+roGTpjK6TPJPfQxfbzItBOFhP+OjO2G8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IsacgVob7MI0mjww44OzY1HtuZm2Ov+/Z9A8/1ecFR/SgmCHo5U519H9t0YqmDSXzeoHOlpKZQCvme5xqph97zMegeHgIE4fcYbEdHsoZrhVa0P+CddyOsRnlRla3YFV6rOyy4iJ4NXnUPblrx6SC+/IIThovR0d5kToqQvhDsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZnVoGqSU; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnVoGqSU"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-705c1220a52so194617b3a.1;
+        Wed, 12 Jun 2024 02:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718184746; x=1718789546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FQNww1AD6dH8cAepq1wCWnMnAcDBJE7rz1cWisQhNU=;
+        b=ZnVoGqSUOIIVP9N3HfXs+JHhD/OWvxQ6hOqmg+5Q9zAn6NFjRhJu1U+8Zq6jrFrsvY
+         cQPw0HWIeBiZMtb+2XipOXKU2C8zrm8fQRzOZdDRIRdvPYOpb72e+S554UwI+38A7MTA
+         njVJdHNu6lxn7xyytbYVMkLlKFinMxNC9DZUK7DJu7uyb4Ti3SH1lvWfccVM5bnn0sK4
+         80louL6R/W2hEyLNOch+nQn3h7ChVfRF8VMsqzXOIqxmAaxT8KqvKaLukupIQM1y04b4
+         8L5IZSTrAxJW7U0pgVK0eB++jPYQux43ZnnibUiBC5KJl/wXiAvzY5Vnwg1BsZ367dVS
+         iTlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718184746; x=1718789546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/FQNww1AD6dH8cAepq1wCWnMnAcDBJE7rz1cWisQhNU=;
+        b=oF+8rBH61KQPruHg4Ifpio5T8DJFnZWEmJML93O1HFkSLgjAAM8sPF0jPaONsDvpWH
+         dpDN5TAj9KW0YXXTw6b2Z10akZGAdeoOig+eMqJ9nWN81iTH6tOifHQuFQmvLTfGirMG
+         9os4J6FNpdXXSSAd2MLbiUDZR44Y8B8/9XSRV8FfgdwA9l9QS1drGlLRr2jvUR4YzcvO
+         6STl4bNWC1FaND159fwFVRWQhd105fnBglUnIASZMgCqlEdNDqcMA8Z43IBJFV/YJpLu
+         RC8j0qrc+W+RHJh+4Y7fSLDn5fsHy3MjXUJ+pJkcTOS2MhuG+ku6ByYYN7/dQfYpflqv
+         WZZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbofqOgK2mtA+JHXhYzjgUc8uMpcErcCZEmEO/mVn0q0wnIu1wvvtpytecpTvJ/LeRcIXbW3LsyoZueAz05rkPeGoyQV+ErZo86ec05AA4athG0K1YyV9lenDuzDbqortmRprU
+X-Gm-Message-State: AOJu0YzpitVyezBZzNO101aB1nKoMH9CNfHYqc2LxOHKmPD77pmLWaDL
+	bnRt1rjSRA5CcbewgbQaEPKZWlLEG5OD1eULQwUp/M2VbGLSoRBW
+X-Google-Smtp-Source: AGHT+IFFogTLuH64nEqmLHYgxgSfQlcYfIeRTZOamLN1Dw4tSaasHxdPL+wJBoZgTkyLeT9PAPCdYA==
+X-Received: by 2002:a05:6a00:a14:b0:6fc:fcc8:cb38 with SMTP id d2e1a72fcca58-705bcf1accamr1608167b3a.33.1718184746256;
+        Wed, 12 Jun 2024 02:32:26 -0700 (PDT)
+Received: from lhy-a01-ubuntu22.. ([106.39.42.164])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd39569csm10223126b3a.72.2024.06.12.02.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 02:32:25 -0700 (PDT)
+From: Huai-Yuan Liu <qq810974084@gmail.com>
+To: jes@trained-monkey.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-hippi@sunsite.dk,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	baijiaju1990@gmail.com,
+	Huai-Yuan Liu <qq810974084@gmail.com>
+Subject: [PATCH] hippi: fix possible buffer overflow caused by bad DMA value in rr_start_xmit()
+Date: Wed, 12 Jun 2024 17:31:53 +0800
+Message-Id: <20240612093153.297167-1-qq810974084@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240612092409.2027592-1-xiujianfeng@huawei.com>
-References: <20240612092409.2027592-1-xiujianfeng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,236 +72,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500023.china.huawei.com (7.185.36.114)
 
-The previous patch has already reconstructed the cftype attributes
-based on the templates and saved them in dfl_cftypes and legacy_cftypes.
-then remove the old procedure and switch to the new cftypes.
+The value rrpriv->info->tx_ctrl is stored in DMA memory, and it is
+assigned to txctrl, so txctrl->pi can be modified at any time by malicious
+hardware. Becausetxctrl->pi is assigned to index, buffer overflow may
+occur when the code "rrpriv->tx_skbuff[index]" is executed.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+To address this issue, the index should be checked.
+
+Fixes: f33a7251c825 ("hippi: switch from 'pci_' to 'dma_' API")
+Signed-off-by: Huai-Yuan Liu <qq810974084@gmail.com>
 ---
- include/linux/hugetlb.h |   5 --
- mm/hugetlb_cgroup.c     | 163 +++++-----------------------------------
- 2 files changed, 17 insertions(+), 151 deletions(-)
+ drivers/net/hippi/rrunner.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 279aca379b95..a951c0d06061 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -686,11 +686,6 @@ struct hstate {
- 	unsigned int nr_huge_pages_node[MAX_NUMNODES];
- 	unsigned int free_huge_pages_node[MAX_NUMNODES];
- 	unsigned int surplus_huge_pages_node[MAX_NUMNODES];
--#ifdef CONFIG_CGROUP_HUGETLB
--	/* cgroup control files */
--	struct cftype cgroup_files_dfl[8];
--	struct cftype cgroup_files_legacy[10];
--#endif
- 	char name[HSTATE_NAME_LEN];
- };
+diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+index aa8f828a0ae7..184f0933bca0 100644
+--- a/drivers/net/hippi/rrunner.c
++++ b/drivers/net/hippi/rrunner.c
+@@ -1440,6 +1440,11 @@ static netdev_tx_t rr_start_xmit(struct sk_buff *skb,
+ 	txctrl = &rrpriv->info->tx_ctrl;
  
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 43aae8f88d5f..2b899c4ae968 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -839,164 +839,26 @@ hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
- 	}
- }
+ 	index = txctrl->pi;
++	if (index < 0 || index >= TX_RING_ENTRIES) {
++		printk("invalid index value %02x\n", index);
++		spin_unlock_irqrestore(&rrpriv->lock, flags);
++		return NETDEV_TX_BUSY;
++	}
  
--static void __init __hugetlb_cgroup_file_dfl_init(int idx)
-+static void __init __hugetlb_cgroup_file_dfl_init(struct hstate *h)
- {
--	char buf[32];
--	struct cftype *cft;
--	struct hstate *h = &hstates[idx];
-+	int idx = hstate_index(h);
- 
- 	hugetlb_cgroup_cfttypes_init(h, dfl_files + idx * DFL_TMPL_SIZE,
- 				     hugetlb_dfl_tmpl, DFL_TMPL_SIZE);
--
--	/* format the size */
--	mem_fmt(buf, sizeof(buf), huge_page_size(h));
--
--	/* Add the limit file */
--	cft = &h->cgroup_files_dfl[0];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_LIMIT);
--	cft->seq_show = hugetlb_cgroup_read_u64_max;
--	cft->write = hugetlb_cgroup_write_dfl;
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the reservation limit file */
--	cft = &h->cgroup_files_dfl[1];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.max", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_LIMIT);
--	cft->seq_show = hugetlb_cgroup_read_u64_max;
--	cft->write = hugetlb_cgroup_write_dfl;
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the current usage file */
--	cft = &h->cgroup_files_dfl[2];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.current", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
--	cft->seq_show = hugetlb_cgroup_read_u64_max;
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the current reservation usage file */
--	cft = &h->cgroup_files_dfl[3];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.current", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_USAGE);
--	cft->seq_show = hugetlb_cgroup_read_u64_max;
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the events file */
--	cft = &h->cgroup_files_dfl[4];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events", buf);
--	cft->private = MEMFILE_PRIVATE(idx, 0);
--	cft->seq_show = hugetlb_events_show;
--	cft->file_offset = offsetof(struct hugetlb_cgroup, events_file[idx]);
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the events.local file */
--	cft = &h->cgroup_files_dfl[5];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events.local", buf);
--	cft->private = MEMFILE_PRIVATE(idx, 0);
--	cft->seq_show = hugetlb_events_local_show;
--	cft->file_offset = offsetof(struct hugetlb_cgroup,
--				    events_local_file[idx]);
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* Add the numa stat file */
--	cft = &h->cgroup_files_dfl[6];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.numa_stat", buf);
--	cft->private = MEMFILE_PRIVATE(idx, 0);
--	cft->seq_show = hugetlb_cgroup_read_numa_stat;
--	cft->flags = CFTYPE_NOT_ON_ROOT;
--
--	/* NULL terminate the last cft */
--	cft = &h->cgroup_files_dfl[7];
--	memset(cft, 0, sizeof(*cft));
--
--	WARN_ON(cgroup_add_dfl_cftypes(&hugetlb_cgrp_subsys,
--				       h->cgroup_files_dfl));
- }
- 
--static void __init __hugetlb_cgroup_file_legacy_init(int idx)
-+static void __init __hugetlb_cgroup_file_legacy_init(struct hstate *h)
- {
--	char buf[32];
--	struct cftype *cft;
--	struct hstate *h = &hstates[idx];
-+	int idx = hstate_index(h);
- 
- 	hugetlb_cgroup_cfttypes_init(h, legacy_files + idx * LEGACY_TMPL_SIZE,
- 				     hugetlb_legacy_tmpl, LEGACY_TMPL_SIZE);
--
--	/* format the size */
--	mem_fmt(buf, sizeof(buf), huge_page_size(h));
--
--	/* Add the limit file */
--	cft = &h->cgroup_files_legacy[0];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.limit_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_LIMIT);
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--	cft->write = hugetlb_cgroup_write_legacy;
--
--	/* Add the reservation limit file */
--	cft = &h->cgroup_files_legacy[1];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.limit_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_LIMIT);
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--	cft->write = hugetlb_cgroup_write_legacy;
--
--	/* Add the usage file */
--	cft = &h->cgroup_files_legacy[2];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the reservation usage file */
--	cft = &h->cgroup_files_legacy[3];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.usage_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_USAGE);
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the MAX usage file */
--	cft = &h->cgroup_files_legacy[4];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
--	cft->write = hugetlb_cgroup_reset;
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the MAX reservation usage file */
--	cft = &h->cgroup_files_legacy[5];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.max_usage_in_bytes", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_MAX_USAGE);
--	cft->write = hugetlb_cgroup_reset;
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the failcntfile */
--	cft = &h->cgroup_files_legacy[6];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_FAILCNT);
--	cft->write = hugetlb_cgroup_reset;
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the reservation failcntfile */
--	cft = &h->cgroup_files_legacy[7];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.failcnt", buf);
--	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_FAILCNT);
--	cft->write = hugetlb_cgroup_reset;
--	cft->read_u64 = hugetlb_cgroup_read_u64;
--
--	/* Add the numa stat file */
--	cft = &h->cgroup_files_legacy[8];
--	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.numa_stat", buf);
--	cft->private = MEMFILE_PRIVATE(idx, 0);
--	cft->seq_show = hugetlb_cgroup_read_numa_stat;
--
--	/* NULL terminate the last cft */
--	cft = &h->cgroup_files_legacy[9];
--	memset(cft, 0, sizeof(*cft));
--
--	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
--					  h->cgroup_files_legacy));
- }
- 
--static void __init __hugetlb_cgroup_file_init(int idx)
-+static void __init __hugetlb_cgroup_file_init(struct hstate *h)
- {
--	__hugetlb_cgroup_file_dfl_init(idx);
--	__hugetlb_cgroup_file_legacy_init(idx);
-+	__hugetlb_cgroup_file_dfl_init(h);
-+	__hugetlb_cgroup_file_legacy_init(h);
- }
- 
- static void __init __hugetlb_cgroup_file_pre_init(void)
-@@ -1011,13 +873,22 @@ static void __init __hugetlb_cgroup_file_pre_init(void)
- 	BUG_ON(!legacy_files);
- }
- 
-+static void __init __hugetlb_cgroup_file_post_init(void)
-+{
-+	WARN_ON(cgroup_add_dfl_cftypes(&hugetlb_cgrp_subsys,
-+				       dfl_files));
-+	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
-+					  legacy_files));
-+}
-+
- void __init hugetlb_cgroup_file_init(void)
- {
- 	struct hstate *h;
- 
- 	__hugetlb_cgroup_file_pre_init();
- 	for_each_hstate(h)
--		__hugetlb_cgroup_file_init(hstate_index(h));
-+		__hugetlb_cgroup_file_init(h);
-+	__hugetlb_cgroup_file_post_init();
- }
- 
- /*
+ 	rrpriv->tx_skbuff[index] = skb;
+ 	set_rraddr(&rrpriv->tx_ring[index].addr,
 -- 
 2.34.1
 
