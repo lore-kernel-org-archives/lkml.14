@@ -1,156 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B16C3FE2A;
-	Wed, 12 Jun 2024 18:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3632904;
+	Wed, 12 Jun 2024 18:30:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216974; cv=none; b=inFGmxtf0sOSBzhty+kkk484pbecsrJpJEjO+YclojsakmGx/jFtbwZbyCc93Q77SNkPgDf3KNJt5jYeGcusFXzQyXqqNMPYubtlwNrSDCHCvwCkElcftINPnzo7lN/wIxy9cH1niHO37H//dHJkgZrU/wFGiaVVn21719GFxCs=
+	t=1718217056; cv=none; b=QMpC2AnTN94zW2MQLUZIBZCdIOYlWjeP/tJwCQdmwHt22HiZNdkLFDWn0sba0hbjIXC4AqTubKTS6Inaix5+xZWYsUHGqfXawmeTQg7Icjh/S4ZxAL+b75gBqxUFUcSZ98dPtbJkhQneM8kByNe1+S8nmPwEemriTXGL4dv8Q2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216974; c=relaxed/simple;
-	bh=OmrPRsVW/SqHsQ62oU68f2r5XqKqs5zc1yIXlgibcIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ssOLY+K348ine7Cf3lArNJl4I6X6ynKbRj2RCvvzB6ByK0JW/LrsUwhg4NHXhy5duO1/GrjLw68QTYse9LnKs6b7zMVSmSPQ1GTX7c9bg7brgPsd6Z5FiHdPTO0XOGN9sZKU8XSY+t88JqlCj4gIksS/2RLtogqTTkUdPJfY1Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uygpFqX6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718217056; c=relaxed/simple;
+	bh=e3QzXrAaU67B/41FElb0xb11by+jePMPQ9A+1cBeILs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDAKUX/4gGxufVdPuVUrMYOXA0N+h6jWw9JdwbF3w5uAotapO8h5BWuyZcYKGgX3+9V87oaRHUTXPtt4Xo08mPPlJ0UM2VCe9hbPkOC/DCiqJ5ZLW2T/mki/+WBKUVkAqOCb9cxntBQCHNt2EHU6j04egvL89C//Z6bdxxkVCIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcN1LmqV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uygpFqX6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB57C4AF1C;
-	Wed, 12 Jun 2024 18:29:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcN1LmqV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA306C116B1;
+	Wed, 12 Jun 2024 18:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718216973;
-	bh=OmrPRsVW/SqHsQ62oU68f2r5XqKqs5zc1yIXlgibcIs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uygpFqX6aS5aZZu5MqHl50UapjHNeRaTdABTq3yex0HOvX/S228MsxfCQxhAqTPg8
-	 OThcV8SbqJQ3irPlV7/MhDK5lQQUOu/OR3rCoU3y1jWlwobuY1IrCb3QgInydpqrhx
-	 zAAbjbCZpRB7Ubr+uvXE9c1WpczfN1NllupVLm4AlJpxWL/W5ap0oxBaIa8YtYj35Z
-	 d01NNSY5yFo3R/m8ZPj1XcRHqFRH4+i7nQLjGOwzkU7VJskKExdqFXUPxTJWnrBIRF
-	 5FN1SNIbkj+6RT/X5bzct1zm+DMnVdbupFj7Ua/DvKXUDxZAMavt1eDKStXRNHrE8W
-	 rXDleSxKni+Qg==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5bad4e45863so12805eaf.3;
-        Wed, 12 Jun 2024 11:29:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6dwSmVx4cnP2taCKriJiBys0XhBGAvTGliOhNmhYTkseZduYt0fC85rGYN+L+TDl1xdexWu3LLb7EP54=@vger.kernel.org, AJvYcCUT0rEHomCncIVJ6Sn0lOMgcq/pCO+IJ12uZNriZF4zUZSBiwBBIHJJOwewUR7LvL/7IyJaupC4c5Cz@vger.kernel.org, AJvYcCVRuUp19QCMOH1T4P1aomM4z22FTnsn+5iBCo1rBhRHp1strAJqF187xinDuXfsqt1pkVuPCVGcRdki287A@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaTfLo8oNWZbYWkL4GIx/J2jYr8Tt5poMoMOxJ0zqm87OcNLY8
-	KlsjiH6Mb+TkXBKfp9oOjxk9UWqj955mrO/DDMlqK+Sm8EUnCayacGx6svNE/YFliYJ9KfoqteM
-	Ki0gaawVG8WoY3d3SA9r1UCBajbc=
-X-Google-Smtp-Source: AGHT+IFylrCsWLsKLPqjnXt++1LHB3b3Atfwm0DR77ZFQrwea2y+55nezG7Xq+Di2smKAkN62xbjg85zPihLMpPy22E=
-X-Received: by 2002:a05:6871:4e91:b0:24f:ddd5:a21d with SMTP id
- 586e51a60fabf-255151f70fcmr2841268fac.5.1718216973099; Wed, 12 Jun 2024
- 11:29:33 -0700 (PDT)
+	s=k20201202; t=1718217056;
+	bh=e3QzXrAaU67B/41FElb0xb11by+jePMPQ9A+1cBeILs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pcN1LmqVDCujeGcsZoS9HdgBzlkuVNCDq07GI+9cpH8K5pC1eVzYA0EJ1U+5Us3S6
+	 8XS6xBsIILjM86ioB0/3ul9dJdGy3rwr7nHauYBjgGCgr8BPYWtxh3zJgc1oZTxbaY
+	 uUuFBemjxteVBFqOxC30bM9JizYIgAFgmgfj9fUE+C5nY0PYGVpMzFcw+C3fvvr+hz
+	 +6oKQKeBrB2U3zhHGXnsLjgs9PCMOHkX4PdmiR41VkKu5Jez/H/cOWI+tXr3B/GXkc
+	 LMpXgSRf+g6u/4EfHaLitBTwNO+7XigGtjyoYl5WY/+f9wL/CDHIqaI5Mrc9zDgwFF
+	 o2pqi914O6sqw==
+Date: Wed, 12 Jun 2024 21:30:51 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v4] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240612183051.GE4966@unreal>
+References: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
- <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com> <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
- <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com> <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
- <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain>
-In-Reply-To: <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 20:29:21 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gtK9yusimCOVV2dGkQWDwQ6=r=vfbgC-eE60Cg-5wk_Q@mail.gmail.com>
-Message-ID: <CAJZ5v0gtK9yusimCOVV2dGkQWDwQ6=r=vfbgC-eE60Cg-5wk_Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-Hi Sakari,
+On Mon, Jun 10, 2024 at 03:28:39AM -0700, Shradha Gupta wrote:
+> Allow variable size indirection table allocation in MANA instead
+> of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> indirection table is allocated dynamically.
+> 
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  Changes in v4:
+>  * Skip NULLify after free
+>  * Log proper errors in mana_probe() if mana_attach(), mana_probe_port()
+>    fails
+>  * Implement mana_cleanup_indir_table() to avoid code duplication.
+> 
+>  Changes in v3:
+>  * Fixed the memory leak(save_table) in mana_set_rxfh()
+> 
+>  Changes in v2:
+>  * Rebased to latest net-next tree
+>  * Rearranged cleanup code in mana_probe_port to avoid extra operations
+> ---
+>  drivers/infiniband/hw/mana/qp.c               | 10 +--
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 85 ++++++++++++++++---
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 ++++--
+>  include/net/mana/gdma.h                       |  4 +-
+>  include/net/mana/mana.h                       |  9 +-
+>  5 files changed, 104 insertions(+), 31 deletions(-)
 
-On Wed, Jun 12, 2024 at 8:21=E2=80=AFPM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> On Wed, Jun 12, 2024 at 03:06:53PM +0200, Rafael J. Wysocki wrote:
-> > Hi Sakari,
-> >
-> > On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
-> > > > > > > > I just hit the same problem on another Dell laptop. It seem=
-s that
-> > > > > > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alde=
-r Lake
-> > > > > > > > and Raptor Lake generations suffer from this problem.
-> > > > > > > >
-> > > > > > > > So instead of playing whack a mole with DMI matches we shou=
-ld
-> > > > > > > > simply disable ACPI MIPI DISCO support on all Dell laptops
-> > > > > > > > with those CPUs. I'm preparing a fix for this to replace
-> > > > > > > > the DMI matching now.
-> > > > > > >
-> > > > > > > DisCo for Imaging support shouldn't be dropped on these syste=
-ms, and this
-> > > > > > > isn't what your patch does either. Instead the ACPI graph por=
-t nodes (as
-> > > > > > > per Linux specific definitions) are simply dropped, i.e. this=
- isn't related
-> > > > > > > to DisCo for Imaging at all.
-> > > > > >
-> > > > > > So it looks like the changelog of that patch could be improved,=
- right?
-> > > > >
-> > > > > Well, yes. The reason the function is in the file is that nearly =
-all camera
-> > > > > related parsing is located there, not that it would be related to=
- DisCo for
-> > > > > Imaging as such.
-> > > >
-> > > > So IIUC the camera graph port nodes are created by default with the
-> > > > help of the firmware-supplied information, but if that is defective=
- a
-> > > > quirk can be added to skip the creation of those ports in which cas=
-e
-> > > > they will be created elsewhere.
-> > > >
-> > > > Is this correct?
-> > >
-> > > Yes.
-> >
-> > So it would be good to add a comment to this effect to
-> > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
-> > called.
-> >
-> > And there is a somewhat tangential question that occurred to me: If
-> > the nodes are created elsewhere when acpi_graph_ignore_port() is true,
-> > why is it necessary to consult the platform firmware for the
-> > information on them at all?  Wouldn't it be better to simply always
-> > create them elsewhere?
->
-> Simple answer: for the same reason why in general system specific
-> information comes from ACPI and not from platform data compiled into the
-> kernel.
->
-> Of course this is technically possible but it does not scale.
+Hi Jakub,
 
-While I agree in general, in this particular case the platform data
-compiled into the kernel needs to be present anyway, at least
-apparently, in case the data coming from the platform firmware is
-invalid.
+Like we talked, I created new shared branch for this patch:
+https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=mana-shared
 
-So we need to do 3 things: compile in the platform data into the
-kernel and expect the platform firmware to provide the necessary
-information, and add quirks for the systems where it is known invalid.
+Because it took time, the base of this branch is v6.10-rc3 as I'm eager
+to get the commit c9d52fb313d3 ("PCI: Revert the cfg_access_lock lockdep mechanism")
+from Linus's master, and this shared patch gives me the reason to pull
+the fix.
 
-Isn't this a bit too much?
+I see that your net-next didn't get -rc3 tag yet, so please pull it after you
+advance net-next. After that I'll do the same in RDMA tree.
 
-> On laptops shipped with Windows some additional information is also avail=
-able
-> from ACPI via custom objects but a lot of information is just hard coded =
-into
-> the IPU bridge as well as the INT3472 driver.
-
-Well, that's how it goes.
+Thanks
