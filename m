@@ -1,124 +1,129 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB800170835;
-	Wed, 12 Jun 2024 11:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E680716F0D1;
+	Wed, 12 Jun 2024 11:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718190549; cv=none; b=YRDrwX6l5qAf7+zON8KZBfgwRCIlC22Lvv3+F6F7ng9N3YoDjkh4jICVW7wZyYretu/Zv0inQBDFC+jiaA1PE4EKf28dyFDEqG+tofA0dkkzLHjjh9JlFpiqvX/1qXBaP6x88b3tOrkxgveUHDvIE3diidyrodT8Jc3q2JrsLcY=
+	t=1718190837; cv=none; b=QJvZ0SNYFvcETct08XKnbnjRgYTRVMm2vaPMwb3gpf1UGMitsKpUQ8c+/bR5/yLclilURNqdLtl2ACbfuQn8YSwoybs0pmsLyL2a6b4+fbVuNycUu1jC3AvrXrFj39qvKkSOfohdvg5HS8ciM3x+qQWmUQe9G2/pKcnaM2cvjkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718190549; c=relaxed/simple;
-	bh=ZpX2s9AVltGY9qGaXmgfl9K7J2KEaesELz2gXylgajs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=V43zcWSk2PV0dpdSGiSX2nhgZcyDCQkgHqfcv/iAfJn5sV2gF75KOX+6LzbuoCWsRZ8/f3RtF4eEz7zbjvOeV0Oec9YGPUqTOc0b81VYw6khqXoI9VKMS6z9Kal2vR4ZGeQP9QJ5W0FByzkDsf3DXhZ33bNb1ETHieugGBKoTHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q62Vwm+x; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q62Vwm+x"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C6Epvr001302;
-	Wed, 12 Jun 2024 11:09:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rl4ZzLZTNW6HYIDFpaYJ1+DSR4TWsp6N9+/231EsyqI=; b=Q62Vwm+xdDl0pMXO
-	R+qQvZxA91H155KuAVW54YwZUt5mVW7TBDduHzoflvUy88RKoRq6rJv33wwZ60vQ
-	hd1Zlv+eZ92XBj4FLpbjskMEhlpmggjJFzFONptQFOVf6oOTndEiDyhGlc44aitu
-	j4AejEPpe8Go4GSgBlXL1Uo1eSWlIzShmYJXIY2uVAi5rqCDGVqSOFNZNYmhlMOH
-	P6+wdQWapKtA1XU0YIoO2DKXnAwmxsFHkTGNWsnPq48UVwPuFPHRFGPVkik0sGc0
-	QwILfTXdfADcbYyiw8NdcmZ/8HQxtEje+kgeLB7ahd2HLt3Zn7y1uSkkVV/RTLSF
-	EQLnuA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yptuy22pj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 11:09:04 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CB93rX021865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 11:09:03 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Jun 2024 04:09:00 -0700
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Wed, 12 Jun 2024 16:38:26 +0530
-Subject: [PATCH v2 6/6] clk: qcom: gpucc-sa8775p: Update wait_val fields
- for GPU GDSC's
+	s=arc-20240116; t=1718190837; c=relaxed/simple;
+	bh=tGPupE+j4PNoFUUhCfT2XJ/QhRvNfK0mEe6nInmY/cE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TnpMBYhcXl89SILb98yESXpxa7CoU68IpcjtkQ6rXkd4PM0duWRkqr5xXm1cb7pIw/KZN1pbJ0rHMbfKtwPuIIn2R4/SpV7S1c5Vafjj56q5ts3V6GPu5yED5DrhgMug7qRUWWYDuAlSRRs+db71QOO2W2IwTPlR0XjbTfIWt/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F421595;
+	Wed, 12 Jun 2024 04:14:18 -0700 (PDT)
+Received: from [10.162.42.15] (e116581.arm.com [10.162.42.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 471543F73B;
+	Wed, 12 Jun 2024 04:13:45 -0700 (PDT)
+Message-ID: <6bd821a3-9dbe-499c-ae17-afce70076299@arm.com>
+Date: Wed, 12 Jun 2024 16:43:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests: kvm: remove print_skip()
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Haibo Xu <haibo1.xu@intel.com>,
+ Anup Patel <anup@brainfault.org>, Andrew Jones <ajones@ventanamicro.com>,
+ Aaron Lewis <aaronlewis@google.com>, Thomas Huth <thuth@redhat.com>,
+ Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kernel@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dev Jain <dev.jain@arm.com>
+References: <20240612104500.425012-1-usama.anjum@collabora.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20240612104500.425012-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-6-adcc756a23df@quicinc.com>
-References: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-0-adcc756a23df@quicinc.com>
-In-Reply-To: <20240612-sa8775p-v2-gcc-gpucc-fixes-v2-0-adcc756a23df@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        Shazad Hussain <quic_shazhuss@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_jkona@quicinc.com>,
-        <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>
-X-Mailer: b4 0.14-dev-f7c49
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LXuSP9rBQ54XGSXhuzOxMvY_HTkL_r2z
-X-Proofpoint-ORIG-GUID: LXuSP9rBQ54XGSXhuzOxMvY_HTkL_r2z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_06,2024-06-12_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 clxscore=1015 mlxlogscore=812 phishscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120080
 
-Update wait_val fields as per the default hardware values of the GDSC as
-otherwise it would lead to GDSC FSM state stuck causing power on/off
-failures of the GSDC.
 
-Fixes: 0afa16afc36d ("clk: qcom: add the GPUCC driver for sa8775p")
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- drivers/clk/qcom/gpucc-sa8775p.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 6/12/24 16:14, Muhammad Usama Anjum wrote:
+>
+>
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> index 4f5881d4ef66d..695c45635d257 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> @@ -144,10 +144,9 @@ int main(int argc, char *argv[])
+>   	free((void *)hv_cpuid_entries);
+>   
+>   	if (!kvm_cpu_has(X86_FEATURE_VMX) ||
+> -	    !kvm_has_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS)) {
+> -		print_skip("Enlightened VMCS is unsupported");
+> -		goto do_sys;
+> -	}
+> +	    !kvm_has_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS))
+> +		ksft_exit_skip("Enlightened VMCS is unsupported\n");
+> +
 
-diff --git a/drivers/clk/qcom/gpucc-sa8775p.c b/drivers/clk/qcom/gpucc-sa8775p.c
-index 1f7a02a7503d..3deabf833388 100644
---- a/drivers/clk/qcom/gpucc-sa8775p.c
-+++ b/drivers/clk/qcom/gpucc-sa8775p.c
-@@ -523,6 +523,9 @@ static struct clk_regmap *gpu_cc_sa8775p_clocks[] = {
- 
- static struct gdsc cx_gdsc = {
- 	.gdscr = 0x9108,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0xf,
- 	.gds_hw_ctrl = 0x953c,
- 	.pd = {
- 		.name = "cx_gdsc",
-@@ -533,6 +536,9 @@ static struct gdsc cx_gdsc = {
- 
- static struct gdsc gx_gdsc = {
- 	.gdscr = 0x905c,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0xf,
- 	.pd = {
- 		.name = "gx_gdsc",
- 		.power_on = gdsc_gx_do_nothing_enable,
+Isn't it incorrect to delete 'goto do_sys'? ksft_exit_skip() will exit and the
+program will never jump to that label. At other places too you have deleted the 'goto'.
 
--- 
-2.45.2
 
+>   	vcpu_enable_evmcs(vcpu);
+>   	hv_cpuid_entries = vcpu_get_supported_hv_cpuid(vcpu);
+>   	test_hv_cpuid(hv_cpuid_entries, true);
+> @@ -155,10 +154,8 @@ int main(int argc, char *argv[])
+>   
+>   do_sys:
+>   	/* Test system ioctl version */
+> -	if (!kvm_has_cap(KVM_CAP_SYS_HYPERV_CPUID)) {
+> -		print_skip("KVM_CAP_SYS_HYPERV_CPUID not supported");
+> -		goto out;
+> -	}
+> +	if (!kvm_has_cap(KVM_CAP_SYS_HYPERV_CPUID))
+> +		ksft_exit_skip("KVM_CAP_SYS_HYPERV_CPUID not supported\n");
+>   
+>   	test_hv_cpuid_e2big(vm, NULL);
+>   
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_extended_hypercalls.c b/tools/testing/selftests/kvm/x86_64/hyperv_extended_hypercalls.c
+> index 949e08e98f315..d37212a27990b 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_extended_hypercalls.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_extended_hypercalls.c
+> @@ -47,10 +47,8 @@ int main(void)
+>   
+>   	/* Verify if extended hypercalls are supported */
+>   	if (!kvm_cpuid_has(kvm_get_supported_hv_cpuid(),
+> -			   HV_ENABLE_EXTENDED_HYPERCALLS)) {
+> -		print_skip("Extended calls not supported by the kernel");
+> -		exit(KSFT_SKIP);
+> -	}
+> +			   HV_ENABLE_EXTENDED_HYPERCALLS))
+> +		ksft_exit_skip("Extended calls not supported by the kernel\n");
+>   
+>   	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+>   	run = vcpu->run;
+> diff --git a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> index 57f157c06b393..1dcb37a1f0be9 100644
+> --- a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> @@ -273,10 +273,8 @@ int main(int argc, char *argv[])
+>   	kvm_ioctl(vm->kvm_fd, KVM_X86_GET_MCE_CAP_SUPPORTED,
+>   		  &supported_mcg_caps);
+>   
+> -	if (!(supported_mcg_caps & MCG_CMCI_P)) {
+> -		print_skip("MCG_CMCI_P is not supported");
+> -		exit(KSFT_SKIP);
+> -	}
+> +	if (!(supported_mcg_caps & MCG_CMCI_P))
+> +		ksft_exit_skip("MCG_CMCI_P is not supported\n");
+>   
+>   	ucna_vcpu = create_vcpu_with_mce_cap(vm, 0, true, ucna_injection_guest_code);
+>   	cmcidis_vcpu = create_vcpu_with_mce_cap(vm, 1, false, cmci_disabled_guest_code);
