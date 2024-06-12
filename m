@@ -1,113 +1,113 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963A916F0D4;
-	Wed, 12 Jun 2024 12:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9207171E74;
+	Wed, 12 Jun 2024 12:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196302; cv=none; b=LrxHEdNtzrihKxJszOIm/GLoJOjE2IGpLhtjuLU2du86h1+8+bZg5F41mY4oGAeoNzwfuVwUfsilzeSjQ4atIJSTmzasunIbnpoYW4y3aqDVx7hmuDVk6zlMQfchkcFaDkrqDaE6VhKtFpB8JTFojs3oolpFoC6I5Fh0N7GQ2GY=
+	t=1718196454; cv=none; b=cBL+NY6SeRQ2g8Hffw4dhscJOi6VMExiHPrKvzxf2u4kCKstUwI67PSdGJZq0kaL5N2SChE4IIGHDlonfEBqWZBkQg+gt7T8baAIN1+0H067VxTTikq717PzEjEKP1YZD+0uenCipB21iY493s1d3rfx1Vqjl4+7/1ErBk/4ffg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196302; c=relaxed/simple;
-	bh=ToG6BzHtI/rb2S4dySACsofNTnEPMpjXjIAcAeo94XI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oaQ7Cqv8znsg3MBakCd706b4XMRp2nV09QlcZwtAw9VnT51Srsm2w21KwMsd3+qVeDyH3zHmac8AqGgFkUjkeT81x73q64NIr+HIlWR3XnWvPz/UuOP19bo168ZRe9dPMViX7TRH6FwI6v9lEbneQ2o0SOc3bz3Td3lIHeyu0jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqLHufmt; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718196454; c=relaxed/simple;
+	bh=RCpcnDSuYyhSuOfsyj0v8b20wpxftEkl0uwbleRYRug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhaqKecolN3kGMniU3ZLeYBucw5p6zbhTlhtghwjh4lE4bLuuV+Zz6Z9MG38qjEybqBIdz7ryvoQ7sXQaohSc23lCrYWevBYhM6iX9Lo5VT1OV7klImQiU1gmjRlUM9jlhBNXLsL7d1+FowZ5KGcyxhYatyaMdoOmKMdp9l1Urw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3L0As8D; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqLHufmt"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57ca81533d0so1341992a12.0;
-        Wed, 12 Jun 2024 05:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718196299; x=1718801099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PFz7E97KT/QfrEMFbCJhoNnw2GGkEahMUEAz9KOKeB4=;
-        b=VqLHufmtBBuLVOG+MY7fLSsEPudjWGeNke5mPcQJZS/KfqrLQasOxaxRTA0NFv/5vy
-         Fh2RmxEMxg/0xnii0D8uDPNs+zzplqW0j+Z1fmXEnKi/frU+/SD0tzT61zt3OHKkUlTD
-         Jm5f3HPiGYFDnzeCQqZbv2Wb5qYTn6ZD60ZlLeGmLHFboLb1OBWpEW4YOcq/vVNVvjkE
-         2rf7YCfuoZ8bkPYrJW+FMhemvU7Rv97s0pKLv1yNTJEfJ7NMy4nq8AjP2nWBQbUTxBaX
-         hSzcLVyf8wpikOwgz9ugz8cA06ZTKdFqPBD7WJ89WX/oz21BLT2sQMTGhBZ7VJIlvR58
-         wXfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718196299; x=1718801099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PFz7E97KT/QfrEMFbCJhoNnw2GGkEahMUEAz9KOKeB4=;
-        b=Sczok4wNFeSq6sK49/CS3e54w87lMM1uXgEIYtfmWFwF8fywRK7AQzvqrKzPUHheYW
-         qPlpXq9aVonTo0paGVLRhyIOcdVKsKBMrc5M37vKGXDOQddNGNnEIraDtFZgGPG1eLE/
-         s9pBJ47KdfrI0/i8aa4SuRWLb1wwj0S9s6nmtbHlmuiukr1zmUwgO0n0lhN3CmCplluT
-         WjxImgVBFXtPpv4ijnTXGfxEs8EpUPUrBxp6EXDrKK08zLUCTWycWV5BgOprKbqWhPTM
-         65CnkEQQsvuN9JZYIAVrKWJC9V8Y8myW4Sdva1EK6SFLtGvw4MmFZp/mhMpMp8Z3d17F
-         5HGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPAsUJeJrokL+AWTntN5hp/d6oLaeWEyppiy5dXOGMgmkcvd+MDQriEnzE60ZakiHfoDBwxY+ZvUk+eVpkPQotLt3+xmN/RGgZk5CMngUh479foDFoIYcWZ240rUmgsSeqoBcMQYr9
-X-Gm-Message-State: AOJu0YwUOG/snunSxYdMFNeucEpBOInjEl7HU+ixR7MZcTYZ2JQW0ogU
-	lbqPTAYkmpmfK3gYUyVnj+aLyQjLLcWNI6SbYs44ZGvd8AbFEUrdGn5MIFpWj/FuGZ9MMQ5ysii
-	3GeO5uC+iNsRTUNS2I3o8wch5GXE=
-X-Google-Smtp-Source: AGHT+IHcci7QpGj3bZnXK1M4+y8pE5RZBZzm+luYAOhm6VIvB2UmcoMk/VPkQ/0Dd9mLOBnqDtVCAqa4hFVvtxtb6EU=
-X-Received: by 2002:a05:6402:34c3:b0:57c:7cff:6c7e with SMTP id
- 4fb4d7f45d1cf-57cac8905a4mr1155336a12.12.1718196298548; Wed, 12 Jun 2024
- 05:44:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3L0As8D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718196453; x=1749732453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RCpcnDSuYyhSuOfsyj0v8b20wpxftEkl0uwbleRYRug=;
+  b=X3L0As8DQxoCXKfOZ7eYjxQXcIVcUMsAZ7olcRgnxsQy1drf/2m8RcDp
+   5j9wdcJxZ6DHIR1o8LxYLt+dUfeH2GcDZZsXYb30JgUoSVG7S/+QHj4q/
+   VeERjB7tZ3ZenEbpdOUmppxfMyLANS5IAwX/C9znoLFWc+0UfkWnnjCz6
+   SKpSkgUt9xf8U/vVjWqq4neSI801/fasr4aEe3lVlsrXWx9l4D1AZCk/e
+   hAfoUoNQRfq38djY1gOpsVg+wUC3Q0v9UcEESauKOCxXNis4QvDNGMVnr
+   r5y72/QGuXakl1Yama+LqzajE1/YmzBFRe/wvKDteDj9GLyuvZH7Huvse
+   g==;
+X-CSE-ConnectionGUID: VDzQQz+SRDGhawAOSIXqPw==
+X-CSE-MsgGUID: dZqZo4R6QT+SrhefZ5sdRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14829370"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="14829370"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:47:32 -0700
+X-CSE-ConnectionGUID: vX5eai9VRA6LWem5iWRhDg==
+X-CSE-MsgGUID: kW6Vl90bSTyr+WYelJmpYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="40477364"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:47:29 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5D34811FA94;
+	Wed, 12 Jun 2024 15:47:26 +0300 (EEST)
+Date: Wed, 12 Jun 2024 12:47:26 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
+ <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
+ <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240601092646.52139-1-joswang1221@gmail.com> <20240611142953.12057-1-joswang1221@gmail.com>
- <2024061247-geranium-unstaffed-ff09@gregkh>
-In-Reply-To: <2024061247-geranium-unstaffed-ff09@gregkh>
-From: joswang <joswang1221@gmail.com>
-Date: Wed, 12 Jun 2024 20:44:46 +0800
-Message-ID: <CAMtoTm1_2+oiLeMFLWyUHutAts3=+HLWSKWim6h1vVK9Lq7b8g@mail.gmail.com>
-Subject: Re: [PATCH v3, 3/3] usb: dwc3: core: Workaround for CSR read timeout
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jos Wang <joswang@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
 
-On Wed, Jun 12, 2024 at 3:58=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Tue, Jun 11, 2024 at 10:29:53PM +0800, joswang wrote:
-> > From: Jos Wang <joswang@lenovo.com>
+Hi Rafael,
+
+On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
+> > > > > I just hit the same problem on another Dell laptop. It seems that
+> > > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> > > > > and Raptor Lake generations suffer from this problem.
+> > > > >
+> > > > > So instead of playing whack a mole with DMI matches we should
+> > > > > simply disable ACPI MIPI DISCO support on all Dell laptops
+> > > > > with those CPUs. I'm preparing a fix for this to replace
+> > > > > the DMI matching now.
+> > > >
+> > > > DisCo for Imaging support shouldn't be dropped on these systems, and this
+> > > > isn't what your patch does either. Instead the ACPI graph port nodes (as
+> > > > per Linux specific definitions) are simply dropped, i.e. this isn't related
+> > > > to DisCo for Imaging at all.
+> > >
+> > > So it looks like the changelog of that patch could be improved, right?
 > >
-> > This is a workaround for STAR 4846132, which only affects
-> > DWC_usb31 version2.00a operating in host mode.
-> >
-> > There is a problem in DWC_usb31 version 2.00a operating
-> > in host mode that would cause a CSR read timeout When CSR
-> > read coincides with RAM Clock Gating Entry. By disable
-> > Clock Gating, sacrificing power consumption for normal
-> > operation.
-> >
-> > Signed-off-by: Jos Wang <joswang@lenovo.com>
-> > ---
-> > v1 -> v2:
-> > - add "dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk" patch
-> > v2 -> v3:
-> > - code refactor
-> > - modify comment, add STAR number, workaround applied in host mode
-> > - modify commit message, add STAR number, workaround applied in host mo=
-de
-> > - modify Author Jos Wang
-> > ---
-> >  drivers/usb/dwc3/core.c | 20 +++++++++++++++++++-
-> >  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> Should this have a cc: stable line?
->
-> thanks,
->
-> greg k-h
+> > Well, yes. The reason the function is in the file is that nearly all camera
+> > related parsing is located there, not that it would be related to DisCo for
+> > Imaging as such.
+> 
+> So IIUC the camera graph port nodes are created by default with the
+> help of the firmware-supplied information, but if that is defective a
+> quirk can be added to skip the creation of those ports in which case
+> they will be created elsewhere.
+> 
+> Is this correct?
 
-Thanks for your help in reviewing the code.
-In the subsequent v4 version, Cc: stable@vger.kernel.org will be added
-to the patch approval area.
+Yes.
 
-Thanks,
-
-Jos Wang
+-- 
+Sakari Ailus
