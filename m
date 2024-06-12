@@ -1,152 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887D8381C4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A433C381C4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718222109; cv=none; b=LoEDKsLVU6XajI1nsr6KZ1tMpc9C31L+lUEe/7m7DU911m1zY76LUh0PLxGOhEQkUUdmT/9+ENhNa9YUp8znWNHJnLLkHE7t0E1zrqkpJaVyNtXkhsAOFgw/GvevcqWBOj7+V3ATwJhd5sOV+zP2hjszJGY0HbGUPJB1eAV2cPk=
+	t=1718222150; cv=none; b=ZQU6NMVvuQo8kO8/Hx6EkotrbO50AsyPRKTTFIdo9KelaqihDypbyWNbNBW688RV5f+5FtclxemYTqTLxVO+FBQLVsVVNt3wX0dkGHRsMecmVyQF/vJACDruNEm73ZzHLIyDshK0lgylsN9uYAneVA4n3xKnzvEAAgDxDQ/1SXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718222109; c=relaxed/simple;
-	bh=lAiuT2H0ZpL6CYGuPE2qv6qz9QdBfxioDaU4gY9nmiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMXB2ULQrbggHq4vsOAz49SeC+b7tA/n8mB6XRjfr0rDxm2bJLGNqf+1wgVLCF6mkwdoA8zXiGv0ZhhLXXGQ1dllvTTxkpFZbAUyaN71/810PtvNluoseseg5aV6RHj8MvIRArQEnQZ94faAGmDLNVl/GoD04Ic9SqYAjf6iKJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DDCwvYHy; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718222150; c=relaxed/simple;
+	bh=XJdyLcK8t8NoaJ10fulIo7C0zbtjGLK4RqYX+yDpnNU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nh2xHrzP6Ca8a7b8wKDSv0eKfdhA4z0dj5fJ/31rl8w3u1+n2RbKM6EfFTfsly/UWnEPCvsEVLDLcHgp4dzHPY7EIND/KKp8V4E06lYSFqFuezn7ItXvOfIpznxUR7TDdb2oSIL0ST29XQzm1oC36bS34ZJHFHqhZhFHpt2wyh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lVUUBpWF; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DDCwvYHy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718222107; x=1749758107;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lAiuT2H0ZpL6CYGuPE2qv6qz9QdBfxioDaU4gY9nmiE=;
-  b=DDCwvYHyNjcGumT9nWDdBz3TvnTyRUv71bMUtUi9l4AQgAIfOTkyMABL
-   +41Wbu/5Nt0Lmv5akO1aar2rGl+ryUev199DN5XcAZZeSJ7DxbNS80coa
-   2iSJ5zAdfkSKRxxTC0j6z2RDRgIv0wHcAvt5B7KDoyCQRkCFa3KkZCH5n
-   0bB/3RyeVYrAVA3iswb7DHDQMlUepgfIKSQYOP5hhqZsGpak3A/niSSMT
-   524PFIep2MBn1W1M3rjsds/gIDxmZHnVV8cMYjOj9ujlxQLUuJOqnz+wN
-   hlakV2Zc8JQd7afOA46HCWqdbmIoZxEy4vyYo0z1z3NdYv9EEQ7ccOOl2
-   A==;
-X-CSE-ConnectionGUID: 6bNzoYPURTSXRQlE22h7FQ==
-X-CSE-MsgGUID: iU0nJEc5QgmQ2DMp7kf4vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="40415414"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40415414"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 12:55:06 -0700
-X-CSE-ConnectionGUID: HMUvc0fjSMur9HBLGzBIug==
-X-CSE-MsgGUID: PPNktQK9SR6WqHxi1uZyLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="39845552"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by fmviesa008.fm.intel.com with SMTP; 12 Jun 2024 12:55:02 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 12 Jun 2024 22:55:01 +0300
-Date: Wed, 12 Jun 2024 22:55:01 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
-	alexander.deucher@amd.com, christian.koenig@amd.com,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lVUUBpWF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=IoIedJhtd8jVuc+UJluRtTNuNTSW0KI62AWD3MB81eQ=; b=lVUUBpWFqGBHwEjx3P2DuTZteT
+	gHqtCj/eLyz6hwlWKxkQSA9OgXvOg1+RrrWhxOg+OP90UWr4U+nugCcJMZz6klcYK8LbyUafegAXa
+	TCzZ+WQDBP319uGm+hd7fyEUKu/A4K+fUI+0WPdRJUu+hvQrpvRq9caBaUflthlZPbGjieaOZVYr7
+	IF0l0IVKSUbj90imKNB6mOuftjHIi6oZ0V4aHrRh9eqbo4jErC1O6VidtAGR5sr7PLEq+6YKW6R41
+	IER4xm1uLi3OwxhCLcIM1KiYxUtfaYTkAZorDlIyzC5WVKoQDTkuQht/fD2OKYxQc1q9q5UjpCAyc
+	8iZ/HuMA==;
+Received: from [191.204.194.169] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sHTmc-002RtF-5P; Wed, 12 Jun 2024 21:37:22 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel-dev@igalia.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
 	Simon Ser <contact@emersion.fr>,
-	Pekka Paalanen <ppaalanen@gmail.com>, daniel@ffwll.ch,
+	Pekka Paalanen <ppaalanen@gmail.com>,
+	daniel@ffwll.ch,
 	Daniel Stone <daniel@fooishbar.org>,
-	'Marek =?utf-8?B?T2zFocOhayc=?= <maraeo@gmail.com>,
-	Dave Airlie <airlied@gmail.com>, Xaver Hugl <xaver.hugl@gmail.com>,
+	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
+	Dave Airlie <airlied@gmail.com>,
+	ville.syrjala@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
 	Joshua Ashton <joshua@froggi.es>,
-	Michel =?iso-8859-1?Q?D=E4nzer?= <michel.daenzer@mailbox.org>
-Subject: Re: [PATCH v5 2/3] drm: Allow drivers to choose plane types to async
- flip
-Message-ID: <Zmn9FdyMh-tyGTQg@intel.com>
-References: <20240612193713.167448-1-andrealmeid@igalia.com>
- <20240612193713.167448-3-andrealmeid@igalia.com>
+	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v5 0/3] drm/atomic: Allow drivers to write their own plane check for async
+Date: Wed, 12 Jun 2024 16:37:10 -0300
+Message-ID: <20240612193713.167448-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240612193713.167448-3-andrealmeid@igalia.com>
-X-Patchwork-Hint: comment
 
-On Wed, Jun 12, 2024 at 04:37:12PM -0300, André Almeida wrote:
-> Different planes may have different capabilities of doing async flips,
-> so create a field to let drivers allow async flip per plane type.
-> 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> ---
->  drivers/gpu/drm/drm_atomic_uapi.c | 4 ++--
->  drivers/gpu/drm/drm_plane.c       | 3 +++
->  include/drm/drm_plane.h           | 5 +++++
->  3 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-> index 2e1d9391febe..dd4b1578f141 100644
-> --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> @@ -1079,9 +1079,9 @@ int drm_atomic_set_property(struct drm_atomic_state *state,
->  			break;
->  		}
->  
-> -		if (async_flip && plane_state->plane->type != DRM_PLANE_TYPE_PRIMARY) {
-> +		if (async_flip && !plane_state->plane->async_flip) {
+Hi,
 
-You alreayd have 'plane', no need to dog it out again.
+AMD hardware can do async flips with overlay planes, so this patchset does a
+small redesign to allow drivers to choose per plane type if they can or cannot
+do async flips.
 
->  			drm_dbg_atomic(prop->dev,
-> -				       "[OBJECT:%d] Only primary planes can be changed during async flip\n",
-> +				       "[OBJECT:%d] This type of plane cannot be changed during async flip\n",
->  				       obj->id);
+It also allows async commits with IN_FENCE_ID in any driver.
 
-"[PLANE:%d:%s] does not support async flips"
-or something like it would make more sense to me.
+Changes from v4:
+- Rebased on top current drm-misc/drm-misc-next
 
->  			ret = -EINVAL;
->  			break;
-> diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-> index 57662a1fd345..bbcec3940636 100644
-> --- a/drivers/gpu/drm/drm_plane.c
-> +++ b/drivers/gpu/drm/drm_plane.c
-> @@ -385,6 +385,9 @@ static int __drm_universal_plane_init(struct drm_device *dev,
->  
->  	drm_modeset_lock_init(&plane->mutex);
->  
-> +	if (type == DRM_PLANE_TYPE_PRIMARY)
-> +		plane->async_flip = true;
+Changes from v3:
+- Major patchset redesign 
+v3: https://lore.kernel.org/lkml/20240128212515.630345-1-andrealmeid@igalia.com/
 
-Setting that would be the job of the driver.
+Changes from v2:
+ - Allow IN_FENCE_ID for any driver
+ - Allow overlay planes again
+v2: https://lore.kernel.org/lkml/20240119181235.255060-1-andrealmeid@igalia.com/
 
-You could probably just nuke mode_config.async_page_flip
-and replace it fully with plane.async_flip checks.
+Changes from v1:
+ - Drop overlay planes option for now
+v1: https://lore.kernel.org/dri-devel/20240116045159.1015510-1-andrealmeid@igalia.com/
 
-> +
->  	plane->base.properties = &plane->properties;
->  	plane->dev = dev;
->  	plane->funcs = funcs;
-> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
-> index 9507542121fa..0bebc72af5c3 100644
-> --- a/include/drm/drm_plane.h
-> +++ b/include/drm/drm_plane.h
-> @@ -786,6 +786,11 @@ struct drm_plane {
->  	 * @kmsg_panic: Used to register a panic notifier for this plane
->  	 */
->  	struct kmsg_dumper kmsg_panic;
-> +
-> +	/**
-> +	 * @async_flip: indicates if a plane can do async flips
-> +	 */
-> +	bool async_flip;
->  };
->  
->  #define obj_to_plane(x) container_of(x, struct drm_plane, base)
-> -- 
-> 2.45.2
+AndrÃ© Almeida (3):
+  drm/atomic: Allow userspace to use explicit sync with atomic async
+    flips
+  drm: Allow drivers to choose plane types to async flip
+  drm/amdgpu: Make it possible to async flip overlay planes
+
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 1 +
+ drivers/gpu/drm/drm_atomic_uapi.c                       | 4 +++-
+ include/drm/drm_plane.h                                 | 5 +++++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
 -- 
-Ville Syrjälä
-Intel
+2.45.2
+
