@@ -1,137 +1,186 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B94D5464A;
-	Wed, 12 Jun 2024 20:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804642F50;
+	Wed, 12 Jun 2024 20:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718224186; cv=none; b=uvKlkgYb/1PC+hTdBaTJtbQpNh9nlO9Tfbn8snXi2g94bhKmU7uo+QJAUmbpA4x6epwKXv3CEuaQ/RT2cmZO/B6Jv7pJmPO1ytkSdzRMat1CESBdNAEUMcEjbRt+GYY5F8GlTZGmjH1jBAy569m+drWkhohYy3a1JZQRxVOM5Ak=
+	t=1718224279; cv=none; b=PEPKJS3x25I2EQggV7kVJGeom2+p2tcNTYcEEdyC91OWcnIM5yJgQ5gkoWdc9JAj6hGkZ9BKrKMWfgu+EajD3jVsHHr8zTavhnEXsvbP9+z9N26ERySq1zA4wh+dQpRO5v83f/rJK10qZacKYrrq+48Nhc17T6yS98pOu69LRi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718224186; c=relaxed/simple;
-	bh=nZJUMBUheKF0XOl916w6d2YHbRoc99XnuIc4mLqyvfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CzyVpruxgipoquDT97qG4QMOmmxiXk6yxPTksSdg8uPRs6mrDVn8j0EG0T+omWv0fQkh5JmLMciQJnl75nU7ONkp/dVE9qnjqXUrA++AKfwj3Mh0wHyo/yE9rGsZIOFYELswpba23zrpH4/OQGuWTcYjkQgiAElylOhDmA6VrrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ndaM6OGb; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718224279; c=relaxed/simple;
+	bh=HY2qgzNeWbkLILb0hdsOFXDNhMJvoo73ZepbbNjLKSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q+lGK4K6nZbIMLNb0Qh16FzjVuea39rJ1eDtTYUcbgXJ7vnAPRXQLlGU4hbxCs+DMMmUPA4+fCanAg1pioFevgCjv1CPRAesEa50rGvQuqtqVqtrm93drWHFZWmTJr+aLTTIYYAlC0upawWfmVghm4qgT8rAIXiFnb69e8mzjjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eX4ALd3Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndaM6OGb"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f717b3f2d8so10339765ad.1;
-        Wed, 12 Jun 2024 13:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718224184; x=1718828984; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=UgeVeYOXHXcgp0WcORL2Jki2ywZbKPO7faQ9DlnaobA=;
-        b=ndaM6OGbF3wAHPKPROTgSbLz5SEELBMpa+/1O8jVEb1pEF2+98ZNXxoXnXpLo9KhJM
-         o1ppHBYd2pjV4qlVf/hQ//qxoXFtbsquVt1kJWVJXRnvkg0tPoZX0TJkhmcIkOoOVFKh
-         P0CgPJF2GXtx8sJGyNqm1qAUY5+frL/uxA3uxTjLWkLRLqVD0v73H56kf+9gF2+lKc0/
-         KwZqA9KHD90ZtNZPudFGLWYLzjWNJcJ9UA+/aY71zsS9Sus1lMq9VLH8qMl7OnInVKki
-         Bz8njK0NYzDfpGbuCbsJSUxacYPJtjM1tgFdUKO+vJhMMIah2nOzmYm2QVCZCHR1/nyg
-         VOpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718224184; x=1718828984;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UgeVeYOXHXcgp0WcORL2Jki2ywZbKPO7faQ9DlnaobA=;
-        b=Lq9HNNpLV/YOtVjaXD89IlSUgmVg+ig06ET0luPT92xD/bGmrgK1ffwyGkePK80vwL
-         p1RrdLzJPzHWeHSMfWbvFHRBRelEw4mmOD5fgDGyrXgIgUWC78AMbNlb9S/c4E0zTr9K
-         WlTlXAv8AUPuIZ+Jo4wZ6ZWD51GNbRWlMro+1zA7NDWbZ52PX/3Z4OpB3vyPMUcGQlWR
-         k+CuFx8erWmjxrAIbwk1MxPZfPFm+Awip2TEEUnSxE0FN5kk2my0CToAfO7Tk8T0rHSG
-         G6oOqfVph4rWdlXzJu15sxYcY2ANeMP5hVCCOwd6bJJipfMTCeix7oZqm5lO3stScEol
-         ZDGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEdgESIlD4k/pyNibpDeWwqNOP/Klq628T+TBIu100iTvkDXDe1uLn7bJkuWPUnxuStDa7K4Lr6wfZgHlmT/Xbmc3ObdQ89tQb7+G3y4xCurirCi1SSsA1M3gTAT1wYn+L+MjdxVV5
-X-Gm-Message-State: AOJu0Ywi4bnCjnuc1Aqq8dPzAHCQFuR6WpeG+19V8o+SPPN6psT8HQB7
-	5KmRSnZuYhINh+HXux3XYHCIYQ9IVZeeRS8I7HG+utcpHarUr5CXXNqgYg==
-X-Google-Smtp-Source: AGHT+IFyOmXN6ACnRvjCoW3iJbwvVT2NJHu0gBiQPYGOynbuJ3aHut0/FLbFnkOT4TrnAb5sJ/NkCA==
-X-Received: by 2002:a17:902:c404:b0:1f7:105:97d1 with SMTP id d9443c01a7336-1f84df9b500mr11316145ad.6.1718224183603;
-        Wed, 12 Jun 2024 13:29:43 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f7092a525esm71335195ad.241.2024.06.12.13.29.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 13:29:42 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <590a37ae-98d5-4fac-838d-6d7eb224c5ea@roeck-us.net>
-Date: Wed, 12 Jun 2024 13:29:40 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eX4ALd3Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191AFC4AF55;
+	Wed, 12 Jun 2024 20:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718224279;
+	bh=HY2qgzNeWbkLILb0hdsOFXDNhMJvoo73ZepbbNjLKSQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eX4ALd3Y8T7LAZznqDfmCsFZyXnFjfrIxBHz5zjL8yXZv2ypLnQIGPNztZTjKsFvQ
+	 2qPT6lnjJNTRHTZiKXvrCeCM/Hl1XX80J3/kOW/TWRt/eQYj9fqJHnTzO+EWZgR+8P
+	 f+/dSh1xrXuKF6zeXe5D2S/rNcjjst2S5ywK1naINfdfEksVBsy7HtV5TRkV1Y9Gef
+	 Vr6OrBUc17lzbd7/cGspYNB3LiM92W1tnQsrBZYY93paf1OLB3+G6tIzYR5JZsoY2i
+	 IEtolFsFgiXiKsklU+3Hyys8pIJaJovO4GEjMwnNVv7RFmTkUXYzGLdY3ZJMzU2HfO
+	 Ds3P0ANwVsXTw==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-254ceab70e3so31140fac.2;
+        Wed, 12 Jun 2024 13:31:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUb9jGRewniRZc5CSyuTj3FjlxrMKsWCuc5TpeW6L1Iwz/7/0i/KQPlEdWNcJN0M612bN03ld8t9W8ZOnuAZx+TpfqKgEbAxrjQ5xcqoJxWWuZVwx9T7cTCRzTzNK3BrwIh+uCPyfrIl3UWJbWBzSQ0iKQb4KvjJc/VNYDnCm5dGdn0KIzj
+X-Gm-Message-State: AOJu0Yxf4JOKodwlss3Tqx822jrcgNrQnSDfMN28vLy5g31BQFNXka9t
+	TQbQPRAboNeB4Qi1SC9TzhmxSop7uTQHlgXBQuY3HQgbZ6h1isdsudq/arL5HiJBCO/fm7iaHPV
+	IVGxcPZbRmLdcwW79e4GPc7osCEY=
+X-Google-Smtp-Source: AGHT+IE6zLDp0Xr9uEZW3NcTgA28SMy5R0lGm6I9ZmdfoYb6zvenzjQgpu06Q4ox7ABFxNDHbnIu5Ak4Fc+s2DYR/Ww=
+X-Received: by 2002:a05:6870:e2cc:b0:255:1fea:340d with SMTP id
+ 586e51a60fabf-2551fea40d9mr2036264fac.0.1718224278027; Wed, 12 Jun 2024
+ 13:31:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] i2c: smbus: Handle stuck alerts
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Wolfram Sang <wsa@kernel.org>, Jean Delvare <khali@linux-fr.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220110172857.2980523-1-linux@roeck-us.net>
- <18c810b6-2961-44e6-b890-5c6830fde995@roeck-us.net>
- <54uga6gyib76qxy3dhgsrwf4x2tbg7644m7cquc7zyw5fzphvb@y5eb54wfvau6>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <54uga6gyib76qxy3dhgsrwf4x2tbg7644m7cquc7zyw5fzphvb@y5eb54wfvau6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
+ <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain> <CAJZ5v0gtK9yusimCOVV2dGkQWDwQ6=r=vfbgC-eE60Cg-5wk_Q@mail.gmail.com>
+ <ZmnrtIEla9R24egi@kekkonen.localdomain> <CAJZ5v0hXU62QiXxWfkbiovciNNEk0h49kRdScmz5qONTMDA+4A@mail.gmail.com>
+ <20240612200012.GP28989@pendragon.ideasonboard.com>
+In-Reply-To: <20240612200012.GP28989@pendragon.ideasonboard.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Jun 2024 22:31:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hF+6_RCyP-Rr+ajNNEKe0YenFR8x6wX3dG1Pq+vguTwg@mail.gmail.com>
+Message-ID: <CAJZ5v0hF+6_RCyP-Rr+ajNNEKe0YenFR8x6wX3dG1Pq+vguTwg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, 
+	mchehab@kernel.org, hverkuil-cisco@xs4all.nl, wentong.wu@intel.com, 
+	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/24 13:21, Wolfram Sang wrote:
-> 
->> Looking through the patches I carry locally, I just noticed that
->> I never got a reply to this series. Is there a problem with it,
->> or did it just get lost ?
-> 
-> The only problem was that I didn't have the bandwidth. But luckily, I
-> need to work on SMBALERT myself now, so I will handle all related
-> commits around that.
-> 
+On Wed, Jun 12, 2024 at 10:00=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Wed, Jun 12, 2024 at 08:50:57PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jun 12, 2024 at 8:41=E2=80=AFPM Sakari Ailus wrote:
+> > > On Wed, Jun 12, 2024 at 08:29:21PM +0200, Rafael J. Wysocki wrote:
+> > > > On Wed, Jun 12, 2024 at 8:21=E2=80=AFPM Sakari Ailus wrote:
+> > > > > On Wed, Jun 12, 2024 at 03:06:53PM +0200, Rafael J. Wysocki wrote=
+:
+> > > > > > On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM Sakari Ailus wrote:
+> > > > > > > On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki w=
+rote:
+> > > > > > > > > > > > I just hit the same problem on another Dell laptop.=
+ It seems that
+> > > > > > > > > > > > all Dell laptops with IPU6 camera from the Tiger La=
+ke, Alder Lake
+> > > > > > > > > > > > and Raptor Lake generations suffer from this proble=
+m.
+> > > > > > > > > > > >
+> > > > > > > > > > > > So instead of playing whack a mole with DMI matches=
+ we should
+> > > > > > > > > > > > simply disable ACPI MIPI DISCO support on all Dell =
+laptops
+> > > > > > > > > > > > with those CPUs. I'm preparing a fix for this to re=
+place
+> > > > > > > > > > > > the DMI matching now.
+> > > > > > > > > > >
+> > > > > > > > > > > DisCo for Imaging support shouldn't be dropped on the=
+se systems, and this
+> > > > > > > > > > > isn't what your patch does either. Instead the ACPI g=
+raph port nodes (as
+> > > > > > > > > > > per Linux specific definitions) are simply dropped, i=
+.e. this isn't related
+> > > > > > > > > > > to DisCo for Imaging at all.
+> > > > > > > > > >
+> > > > > > > > > > So it looks like the changelog of that patch could be i=
+mproved, right?
+> > > > > > > > >
+> > > > > > > > > Well, yes. The reason the function is in the file is that=
+ nearly all camera
+> > > > > > > > > related parsing is located there, not that it would be re=
+lated to DisCo for
+> > > > > > > > > Imaging as such.
+> > > > > > > >
+> > > > > > > > So IIUC the camera graph port nodes are created by default =
+with the
+> > > > > > > > help of the firmware-supplied information, but if that is d=
+efective a
+> > > > > > > > quirk can be added to skip the creation of those ports in w=
+hich case
+> > > > > > > > they will be created elsewhere.
+> > > > > > > >
+> > > > > > > > Is this correct?
+> > > > > > >
+> > > > > > > Yes.
+> > > > > >
+> > > > > > So it would be good to add a comment to this effect to
+> > > > > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
+> > > > > > called.
+> > > > > >
+> > > > > > And there is a somewhat tangential question that occurred to me=
+: If
+> > > > > > the nodes are created elsewhere when acpi_graph_ignore_port() i=
+s true,
+> > > > > > why is it necessary to consult the platform firmware for the
+> > > > > > information on them at all?  Wouldn't it be better to simply al=
+ways
+> > > > > > create them elsewhere?
+> > > > >
+> > > > > Simple answer: for the same reason why in general system specific
+> > > > > information comes from ACPI and not from platform data compiled i=
+nto the
+> > > > > kernel.
+> > > > >
+> > > > > Of course this is technically possible but it does not scale.
+> > > >
+> > > > While I agree in general, in this particular case the platform data
+> > > > compiled into the kernel needs to be present anyway, at least
+> > > > apparently, in case the data coming from the platform firmware is
+> > > > invalid.
+> > > >
+> > > > So we need to do 3 things: compile in the platform data into the
+> > > > kernel and expect the platform firmware to provide the necessary
+> > > > information, and add quirks for the systems where it is known inval=
+id.
+> > > >
+> > > > Isn't this a bit too much?
+> > >
+> > > Isn't this pretty much how ACPI works currently?
+> >
+> > No, we don't need to put platform data into the kernel for every bit
+> > of information that can be retrieved from the platform firmware via
+> > ACPI.
+> >
+> > The vast majority of information in the ACPI tables is actually
+> > correct and if quirks are needed, they usually are limited in scope.
+> >
+> > Where it breaks is when the ACPI tables are not sufficiently validated
+> > by OEMs which mostly happens when the data in question are not needed
+> > to pass some sort of certification or admission tests.
+>
+> We have to be careful here. Part of the job of the ACPI methods for
+> camera objects is to control the camera sensor PMIC and set up the right
+> voltages (many PMICs have programmable output levels). In many cases
+> we've seen with the IPU3, broken ACPI support means the methods will try
+> to do something completely bogus, like accessing a PMIC at an incorrect
+> I2C address. That's mostly fine, it will result in the camera not being
+> detected. We could however have broken ACPI implementation that would
+> program the PMIC to output voltages that would damage the sensor. Users
+> won't be happy.
 
-Ah, just the "normal" problem. Let me know if I can help.
-I still have the hardware that I used to test that code.
+My point is basically that if that data were also used by Windows,
+then chances are that breakage of this sort would be caught during
+Windows validation before shipping the machines and so it wouldn't
+affect Linux as well.
 
-Guenter
+However, if OEMs have no vehicle to validate their systems against,
+bad things can happen indeed.
 
+Also, if an OEM has no incentive to carry out the requisite checks,
+the result is likely to be invalid data in the platform firmware.
