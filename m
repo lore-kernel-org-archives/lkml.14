@@ -1,125 +1,171 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22D917DE21;
-	Wed, 12 Jun 2024 14:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E23A17BB27
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718201769; cv=none; b=EsZfnK3IRFvxr8PkYS4kKaoLCwCX5S2VWuSBtqiIpzGJNHU3clLSfSSe4xB6srCbg1329MiZSYJ0YgS2SE2wAA+YnwK+mJ2Tstp0nMy+Toh+SSSLeQJMuWQV474HX5DGIGrATEbTf3BI+j7Vy5oyS5m0GmGXzDfZcRT3x8ZOnMM=
+	t=1718201795; cv=none; b=Tx9kcOiunZLAqVncDR4Lz+Rg0BtK2bXABKBO7gdlezeGOBWSmC9W8xNb/KKzsyhaWTUauz+XRlfBvt+ksS8PDAh5uexKxHA65L8djSmqpLIVoa3PBEIvrSBAk0lWSRS/f4fSBN5KV/jpUij7KdQ6YmYHmDWm14e64RHr0Q1HvR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718201769; c=relaxed/simple;
-	bh=lS4Q64mUZkPtGZTGN1Vvs1emIda9a/KP8HYXBdNQGHA=;
+	s=arc-20240116; t=1718201795; c=relaxed/simple;
+	bh=WQWaU2XPSa7u7FY7PxELttfz2xxEozi/YyFkdxy44JE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mMINyZCEGMjW1hQrAASSErLd7ZJwYCJQsAPMDL6ttbqOxRQiRfj6t6C3um0xwToTInBuqVk05Gsa/r+mgQWS7HgoWgYGhQc1m3JWeMhtWkzdxPgVzZeDJAum0BV5ggfyh2zPUHbVCF+O64SRwCHTaBzIyh9dx4MezQ5BarTXPHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0khO82C; arc=none smtp.client-ip=209.85.221.50
+	 To:Cc:Content-Type; b=ox/aZkKn2q3QbGCA+1NgsSn5jP6xQh/CspsJry+9qMfde5IVX038BCBTd88oCFaR5vsjQMM7flsjynTGrI7novjOvZ1uHQyHqc0Q98E3hN3hcYf6zM/Jh5UU6OOXUiIKlvm1TjKGppJ+tEwRM7cPbTwx5Q0uVoSGgG2LohelYdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gdi/516v; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0khO82C"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-35f06861ae6so4444685f8f.2;
-        Wed, 12 Jun 2024 07:16:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gdi/516v"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a44c2ce80so3088550a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718201764; x=1718806564; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718201792; x=1718806592; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JNJdiRvVFKx+Fq5oad51B9nRPB0lGgFCkitSs5laVyY=;
-        b=M0khO82CpfvEDY30HHWAMvM/0ZvaRXSHW0pHS/iuG9/8dXW4IrA0KsOGO9hUTCEeXx
-         K03l3XkLflOiTTeu/2RFQmU6vOtzQ7PdUQ2HRMrkB6qidrkLcNjMSm4Tod3oY59DRIwZ
-         Q9yuRoDbL7qS06eD6epStZY9Aik8wECohhPr36cxJbL4RQSqWN7eOrhMIng3gln+Vose
-         E3RYDHwje3xn82KzmAUFsmOs0cPD3fsgB0Xz6rh23k/7M1xFuLY0pAGk+cHHceYY0hlJ
-         RNoUAwZJMYECg3Kn5FQmi8x+nWyONPT+2tRLKkoenJrQfMZsE19Xo37joXmCmmPwvVGv
-         7AlA==
+        bh=SXFeQu/InAtcwu283qRDGnx+2udBV3ofp/Fn0b8L8Uw=;
+        b=Gdi/516v/lyCNq9XEN/ghjprrGnukQkYq3Is8xeAdoj5G2Vx7ZeqvScRaKZnZIbzfo
+         3CxQWpQryC3rDH7vlQXDNoILlYiLsMUTjv7IjIUvtidzO9SZyC/PecaQnQKHIIxQmDiT
+         VR0vudCatrOkAkniLO6uFA4ErBQXy2zy7NFlTWt9Wz/qvakltNT+PRxFB80EVO8qP+nH
+         8QKB9N47AepXxToLAgMU+IYX5wGwvhndfluJ8khO53gUtRCksBBtG6D+A5k5E9NeXiAF
+         MVuTMKp1tg6Ox69y6/t/7e6yJbJMYONPnIrQFxfF/BOiZ3hi8pCMaSxGrUBsEnyuwm20
+         gj/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718201764; x=1718806564;
+        d=1e100.net; s=20230601; t=1718201792; x=1718806592;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JNJdiRvVFKx+Fq5oad51B9nRPB0lGgFCkitSs5laVyY=;
-        b=UYjJGJ0+vqfWOt03qzMKb69iMCPVrf7gh9i582JRKEOZkXjHBvCzQD0B0sDKlQPdSO
-         YGpzthAK15z6zNtKjq80xSeKnEZ1Xsn0B/2K5kD34M2GQGRXey/NlInOEUt4IjgVrUe0
-         vNnZgECaROBpRcxK0KAQGCygfrulfcyhHUa12WiKovrhWQbsVgicM8c5zP5YoHS7TM+W
-         80qPi+gp39v6VWtITeiWAl5/ZN5yT0WFE9k+kL3Ew/fHE5vxiNgQfy+/yixNZR2zIWKS
-         ochMnoiYYSBu9YvsrQ17PGlBhs8TqfcHRuXsyxetB5Ncc+wkizelOgmOD89RJhj51ywt
-         emuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVBIgDe46aCoEWyZx6MduNux5VjRs+zlqatYn4YgmPwLxbK7XtKUUxp3LKkzx13FsqtWnBlE/FHBUWYcgH0imrNZjJuQNzUXasLl8Ip7B/Nn/SYSprg4phhbgbLx73q82pNjo1GhsK
-X-Gm-Message-State: AOJu0YzRLVgM6vYEQUGISJ+f+Zyrx0jn81FHP2CdJUWDx37jeof5GfOm
-	J8i+g68bnL949sbhBaeIiTH092L9XEyEzUjBNGFHHpVPrkmnbL0m3IW6+ICOZzK4fpDTJROFM4s
-	V8l4HHHrKRcnENdYWbslgyYTTBEvmqTlAie65dw==
-X-Google-Smtp-Source: AGHT+IEAOwXzvDL/aUgGhZr0L8GgFeDp+p5XP45ibYIyQtwVdipelfwhOfbZ6mfhMY8Z9i9VxewbjVBLBySpmdHGsYw=
-X-Received: by 2002:a5d:6248:0:b0:35f:122d:a589 with SMTP id
- ffacd0b85a97d-35fe1c0a0acmr1218164f8f.40.1718201764066; Wed, 12 Jun 2024
- 07:16:04 -0700 (PDT)
+        bh=SXFeQu/InAtcwu283qRDGnx+2udBV3ofp/Fn0b8L8Uw=;
+        b=dj2SYPTlNkyVR6qLpN192GQAYDgt1snH/WqkMh4M5bed1Je2sbeYI9sgaHH8+mJ8IB
+         5Cis26D+MFT/7IsTWvdFmW5ixJT63k5b8AUFTQXEiUJ9ODDAJxz8ZaeVU3W9fEqxinf2
+         3040Y2SEMbuoJVzP83wGqHfVnteXw7yPgALD7k6BEj2X1KnhV0mqxe8t9YU5ggTW3r61
+         xcFP1hZ4PLLIW1dlQ28pin2T8GNzjzFkvrwWBwzPEi9HkaZzBBMNEepZxyn80sMcpNU5
+         MGvHfPASHp+8Vw+fsT+nvApaWeDogaS6UZ2PRKy7CQr5m56OQKy0+asBxO0dARHsnAnE
+         udug==
+X-Forwarded-Encrypted: i=1; AJvYcCW/G7vI505aa1gVkdt6vSW+Cd1IRVHAvfK7fyoRdRDFLfKv6VqI2BFpIcVpPZWRuajdY6XyxxAR+Nqsmvv2d0hUBJg7sPMaiID9Bm+U
+X-Gm-Message-State: AOJu0YxpMOSN+niZiVOke3/z0RlejqQIjeUL4NXs2SVxwMcTGzS2CSQp
+	WUYE2dROasbNsezpnBf24MeG6fOGpaOFNIZ8DvoSvlviocbzLzfuQv+soPmmHrDprpPjbucF/76
+	+MaYifNzpH/bNC8kJloe9/1l/66I=
+X-Google-Smtp-Source: AGHT+IHW/hXJG+TBumCiBmHqhgd87pgriARFMrlfHwt20rM+xtCGUrKlVfeGKfk0StJxgwQF6b7D2BSQv+6WeSAyOU8=
+X-Received: by 2002:a50:9308:0:b0:57c:947c:f9cf with SMTP id
+ 4fb4d7f45d1cf-57ca975348cmr1205743a12.11.1718201792124; Wed, 12 Jun 2024
+ 07:16:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240601092646.52139-1-joswang1221@gmail.com> <20240611142953.12057-1-joswang1221@gmail.com>
- <2024061247-geranium-unstaffed-ff09@gregkh> <CAMtoTm32JDwWAjpKJ4TXxA9ROqqr-fNaOR1nqui8ayMHnYzkjg@mail.gmail.com>
- <2024061217-haiku-unlocked-9d72@gregkh>
-In-Reply-To: <2024061217-haiku-unlocked-9d72@gregkh>
-From: joswang <joswang1221@gmail.com>
-Date: Wed, 12 Jun 2024 22:15:52 +0800
-Message-ID: <CAMtoTm0dk2y9XLjABP-O27b37zZfjfVKAGvAootzwAE4aJuUtQ@mail.gmail.com>
-Subject: Re: [PATCH v3, 3/3] usb: dwc3: core: Workaround for CSR read timeout
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jos Wang <joswang@lenovo.com>
+References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+ <4fd9e467d49ae4a747e428bcd821c7d13125ae67.1718090413.git.baolin.wang@linux.alibaba.com>
+ <CAK1f24=Rz4qPyw9pfTHTAuQO6Yv9mFHccjCd75a0kvHvCBH3uA@mail.gmail.com> <df06474c-110f-459d-a093-76074e0b5666@linux.alibaba.com>
+In-Reply-To: <df06474c-110f-459d-a093-76074e0b5666@linux.alibaba.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Wed, 12 Jun 2024 22:16:20 +0800
+Message-ID: <CAK1f24=4tNTvT0Kr2wuERe11M1ZkYorv9rTNTtehOFmGSSt+Nw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] mm: shmem: add mTHP counters for anonymous shmem
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org, 
+	david@redhat.com, wangkefeng.wang@huawei.com, ying.huang@intel.com, 
+	21cnbao@gmail.com, ryan.roberts@arm.com, shy828301@gmail.com, ziy@nvidia.com, 
+	da.gomez@samsung.com, p.raghav@samsung.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 10:07=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
+On Wed, Jun 12, 2024 at 5:28=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
 >
-> On Wed, Jun 12, 2024 at 09:52:04PM +0800, joswang wrote:
-> > On Wed, Jun 12, 2024 at 3:58=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > On Tue, Jun 11, 2024 at 10:29:53PM +0800, joswang wrote:
-> > > > From: Jos Wang <joswang@lenovo.com>
-> > > >
-> > > > This is a workaround for STAR 4846132, which only affects
-> > > > DWC_usb31 version2.00a operating in host mode.
-> > > >
-> > > > There is a problem in DWC_usb31 version 2.00a operating
-> > > > in host mode that would cause a CSR read timeout When CSR
-> > > > read coincides with RAM Clock Gating Entry. By disable
-> > > > Clock Gating, sacrificing power consumption for normal
-> > > > operation.
-> > > >
-> > > > Signed-off-by: Jos Wang <joswang@lenovo.com>
-> > > > ---
-> > > > v1 -> v2:
-> > > > - add "dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk" patch
-> > > > v2 -> v3:
-> > > > - code refactor
-> > > > - modify comment, add STAR number, workaround applied in host mode
-> > > > - modify commit message, add STAR number, workaround applied in hos=
-t mode
-> > > > - modify Author Jos Wang
-> > > > ---
-> > > >  drivers/usb/dwc3/core.c | 20 +++++++++++++++++++-
-> > > >  1 file changed, 19 insertions(+), 1 deletion(-)
-> > >
-> > > Should this have a cc: stable line?
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
+>
+>
+> On 2024/6/12 16:04, Lance Yang wrote:
+> > Hi Baolin,
 > >
-> > I have a question here, please help me confirm
-> > 1. Cc: stable@vger.kernel.org or Cc: stable@kernel.org ?
-> > 2. Do I need to modify the commit message, for example:
-> > Cc: stable@kernel.org
-> > Signed-off-by: Jos Wang <joswang@lenovo.com>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Jos Wang <joswang@lenovo.com>
+> > On Tue, Jun 11, 2024 at 6:11=E2=80=AFPM Baolin Wang
+> > <baolin.wang@linux.alibaba.com> wrote:
+> >>
+> >> Add mTHP counters for anonymous shmem.
+> >>
+> >> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> >> ---
+> >>   include/linux/huge_mm.h |  3 +++
+> >>   mm/huge_memory.c        |  6 ++++++
+> >>   mm/shmem.c              | 18 +++++++++++++++---
+> >>   3 files changed, 24 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> >> index 909cfc67521d..212cca384d7e 100644
+> >> --- a/include/linux/huge_mm.h
+> >> +++ b/include/linux/huge_mm.h
+> >> @@ -281,6 +281,9 @@ enum mthp_stat_item {
+> >>          MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> >>          MTHP_STAT_SWPOUT,
+> >>          MTHP_STAT_SWPOUT_FALLBACK,
+> >> +       MTHP_STAT_FILE_ALLOC,
+> >> +       MTHP_STAT_FILE_FALLBACK,
+> >> +       MTHP_STAT_FILE_FALLBACK_CHARGE,
+> >>          __MTHP_STAT_COUNT
+> >>   };
+> >>
+> >> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> >> index 1360a1903b66..3fbcd77f5957 100644
+> >> --- a/mm/huge_memory.c
+> >> +++ b/mm/huge_memory.c
+> >> @@ -555,6 +555,9 @@ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_ST=
+AT_ANON_FAULT_FALLBACK);
+> >>   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAU=
+LT_FALLBACK_CHARGE);
+> >>   DEFINE_MTHP_STAT_ATTR(swpout, MTHP_STAT_SWPOUT);
+> >>   DEFINE_MTHP_STAT_ATTR(swpout_fallback, MTHP_STAT_SWPOUT_FALLBACK);
+> >> +DEFINE_MTHP_STAT_ATTR(file_alloc, MTHP_STAT_FILE_ALLOC);
+> >> +DEFINE_MTHP_STAT_ATTR(file_fallback, MTHP_STAT_FILE_FALLBACK);
+> >> +DEFINE_MTHP_STAT_ATTR(file_fallback_charge, MTHP_STAT_FILE_FALLBACK_C=
+HARGE);
+> >>
+> >>   static struct attribute *stats_attrs[] =3D {
+> >>          &anon_fault_alloc_attr.attr,
+> >> @@ -562,6 +565,9 @@ static struct attribute *stats_attrs[] =3D {
+> >>          &anon_fault_fallback_charge_attr.attr,
+> >>          &swpout_attr.attr,
+> >>          &swpout_fallback_attr.attr,
+> >> +       &file_alloc_attr.attr,
+> >> +       &file_fallback_attr.attr,
+> >> +       &file_fallback_charge_attr.attr,
+> >>          NULL,
+> >>   };
+> >>
+> >> diff --git a/mm/shmem.c b/mm/shmem.c
+> >> index f5469c357be6..99bd3c34f0fb 100644
+> >> --- a/mm/shmem.c
+> >> +++ b/mm/shmem.c
+> >> @@ -1773,6 +1773,9 @@ static struct folio *shmem_alloc_and_add_folio(s=
+truct vm_fault *vmf,
+> >>
+> >>                          if (pages =3D=3D HPAGE_PMD_NR)
+> >>                                  count_vm_event(THP_FILE_FALLBACK);
+> >> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >> +                       count_mthp_stat(order, MTHP_STAT_FILE_FALLBACK=
+);
+> >> +#endif
+> >
+> > Using the conditional compilation directives here is a bit weird :)
+> > Would there be any issues if we were to drop them?
 >
-> Please read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.ht=
-ml
-> for how to do this properly.
+> Will cause building errors if CONFIG_TRANSPARENT_HUGEPAGE is not enabled.
 
-Thank You
+Sorry, I got it wrong :p
+
+>
+> >
+> > Since THP_FILE_FALLBACK is working as expected, MTHP_STAT_FILE_FALLBACK
+> > should work as well without the conditional compilation directives, IIU=
+C.
+>
+> No, you should take a look at how count_mthp_stat() is defined :)
+
+You're correct. count_mthp_stat() does cause a compilation error without th=
+em
+when CONFIG_TRANSPARENT_HUGEPAGE is not defined.
+
+Thanks,
+Lance
