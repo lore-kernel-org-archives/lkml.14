@@ -1,244 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86BE31A67;
-	Wed, 12 Jun 2024 21:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6230631A67
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 21:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718228964; cv=none; b=dSqzj61dEjiPW7QTde3HUWaItkXSJMwU80CiPm5wWbnPJzKy1e0rSa+dfZ1SYyypiDaXgTpJI5HoXeTf8KAdg4QAMEWVLKk8eoQ4STQd1sLcZzRBKjLsMtZmImv8xu7v8qdnzlaUCOVHyptOjbnsGlOQXYSgEc2kNOR5hD13hGU=
+	t=1718229185; cv=none; b=sT3E4btmb3Aqd36D07tBrHiP1G6j/EN4LC9Wr9LELlwU8yCtJp1zgBgmJHJPI6ujH1KPIr9kbr+Vh1VAukGzgjEdRuAY+2OwdKddBsxnKmFGomuwhkkgNiwfO8JT63YPb3k1UfBKOKjOq+Xmk76vBV7teZYtrjF1k4gkfSIcKA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718228964; c=relaxed/simple;
-	bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N54Hxqoe49bJHz8b92wgbkrEHeDvP+n8cEPhUnQHq9ZbO+1h0l5di4RXMzfYFuDYIwwKYOPg1DV+lBOvQe718/1vW3ezycVgYJNNteuagA2SvmSY7ozpUrzQwM0KaDL72LYX1qc9mVY8HGLA1iHP+qYi14uMzqGumedbisP9Mkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGAmVynx; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718229185; c=relaxed/simple;
+	bh=wusK4kc1FS+vHMjVpzL07yrjIW2g3Y3LcvsX2vuPaps=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KGv2UpslBnfnWQKX5GFso+1AkvCJTQ8f/avMgV0v+IkugeIKcd/3o23juSvjS+oqJsEgF7fOUi9K5Z74ELXRxDHe9rodkSPJ0wOvJ9CYyWtginLu4HDmbZ79sATFM+ipNG7bOV6KE0Q38gl613/g853n7qVcAFXye2oxmXSmdk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fB8clxDM; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGAmVynx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718228963; x=1749764963;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
-  b=bGAmVynxv63nhKUFeefO0sbDwoOu6FN899ZEgBMx/3O4blfWvsW/dCWf
-   uknWlL0fOwIhhzSy8h8rxY+JpqowOxny13yoSOqXhZv4sE2bv4VbDEEEb
-   5WE6prCJy+wByoL3YS8M99fiQmlS/wCYm4zuVuAZ+hYIU+23MAiJI5SRn
-   4xZrmTVW2pBbllmWSaeMrMfxM54CbXd80g8MN2lc3ec5QUFKyj27lwNE2
-   /4iF5JSzeufoezrSgC7KWlO+hFWjNmaRnAsv4LBXglUO7rP3ytnSrGBDu
-   TW+CJVabCVPzuDDm9aO05eyRluEAKAPrNxqH62TMPkDUlHTJM6F59xM41
-   Q==;
-X-CSE-ConnectionGUID: AMydol0ORUeyUqMNLfy/3w==
-X-CSE-MsgGUID: OVjCr/hhTGKb26esavOq9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="37538063"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="37538063"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
-X-CSE-ConnectionGUID: dCcAC2uKQDK2uEhxGOO+SA==
-X-CSE-MsgGUID: r/u0rVcsT7GNOnZdviVPeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="39813691"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
-Date: Wed, 12 Jun 2024 14:54:24 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 4/6] x86/irq: Process nmi sources in NMI handler
-Message-ID: <20240612145424.61890aa3@jacob-builder>
-In-Reply-To: <b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
-References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
-	<20240611165457.156364-5-jacob.jun.pan@linux.intel.com>
-	<b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fB8clxDM"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c24109ad3fso235342a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718229183; x=1718833983; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xc5E1XEOoOO6m8at8GOziJ7pGWON/gur52mgUSEksH0=;
+        b=fB8clxDMfQn1hS6Z2I1gxumHpNNQjaVGN3szaluSHppL6hXntf8uxhdY9Js8lzGccg
+         ggTTh5Z1SsyDNOSmoGSmxBnNJ7RqDqJPK1LD7+6QT480YauemTIvdv4pgjpMoybFHuby
+         jIsATDnv+s5qGaXHuD8ZLAX43k5JNhmEfJzUM1mCvIhBAOyY1rWbTaPKvm5XNxf5AU0E
+         ZzCe1ivh/IQrQhiiQ0RqvMIZvDjDkoAMW3hgwyWOuFsz2E8VFIAbZJCvjEK8qBfIYc4H
+         5UB94XtiRSqYWhJv6kMFgHQh6e/d2upyP2zj/BW+PzWk66CpJ5p+jF3Xu8FegBkuKfTB
+         y5vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718229183; x=1718833983;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xc5E1XEOoOO6m8at8GOziJ7pGWON/gur52mgUSEksH0=;
+        b=L24c5M4OUuJ2iaOnlk4kqPDJK674noBlo/IZ3OBpBGU+kEthvbNfgM89x6f7fEileH
+         /LBCgjqjF4COFNlMzZBFpZ37mOLrjknzHOeDtzRKvs48SW6NQ0MBqDCi/Vtn40UJvN41
+         Bl3eaf9nUOWNMnga4/MpuJuwftqUSdMz7+VTerFHza6wXHWspt62HJq+vbEsQSNZXcys
+         4AAE9cN7qRnDD8FxNsaDZfPQd2EFPf4Ep3wJBt11wtwvZ1+3XgzlaW2ryMEEfrjegQs6
+         KvSSJHB5eY7kdBHOMZkvX6MezY0ymF/mzNu8YN4p8S/5THh7Q5DMN5qgeK5Pb7iHT1az
+         pqDQ==
+X-Gm-Message-State: AOJu0YzLYz3TFf3oxXK0QlAy0rkpikBROo4ciTVEjzbP1UhJfK4dyrRH
+	guP+IHHvrUIXexD+qUowfanMLkBoLquYMkmMjYXWpvV7f69E5ZWhmvpsWrQK8NBip093BXqxm3u
+	2cg==
+X-Google-Smtp-Source: AGHT+IHbT5hnMTXfHXSrzZVzfM2ddDy1yTfVBw9Mcqt2XJ++35TEAMcRNhA5paiMB3+XTpPwciNXAbVip6c=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:62c9:b0:2c2:c65f:52dc with SMTP id
+ 98e67ed59e1d1-2c4a770e8f6mr8577a91.6.1718229182634; Wed, 12 Jun 2024 14:53:02
+ -0700 (PDT)
+Date: Wed, 12 Jun 2024 14:53:01 -0700
+In-Reply-To: <20240207172646.3981-10-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-10-xin3.li@intel.com>
+Message-ID: <ZmoYvcbFBPJ5ARma@google.com>
+Subject: Re: [PATCH v2 09/25] KVM: VMX: Switch FRED RSP0 between host and guest
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin3.li@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	shuah@kernel.org, vkuznets@redhat.com, peterz@infradead.org, 
+	ravi.v.shankar@intel.com, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi H.,
-
-On Tue, 11 Jun 2024 11:41:07 -0700, "H. Peter Anvin" <hpa@zytor.com> wrote:
-
-> On 6/11/24 09:54, Jacob Pan wrote:
-> > +
-> > +	source_bitmask = fred_event_data(regs);
-> > +	if (!source_bitmask) {
-> > +		pr_warn_ratelimited("NMI without source information!
-> > Disable source reporting.\n");
-> > +		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
-> > +		return 0;
-> > +	}  
+On Wed, Feb 07, 2024, Xin Li wrote:
+> Switch MSR_IA32_FRED_RSP0 between host and guest in
+> vmx_prepare_switch_to_{host,guest}().
 > 
-> Is setup_clear_cpu_cap() even meaningful here?
-Right, alternative patching doesn't work here. Let me use a separate flag.
-
+> MSR_IA32_FRED_RSP0 is used during ring 3 event delivery only, thus
+> KVM, running on ring 0, can run safely with guest FRED RSP0, i.e.,
+> no need to switch between host/guest FRED RSP0 during VM entry and
+> exit.
 > 
-> > +
-> > +	/*
-> > +	 * Per NMI source specification, there is no guarantee that a
-> > valid
-> > +	 * NMI vector is always delivered, even when the source
-> > specified
-> > +	 * one. It is software's responsibility to check all available
-> > NMI
-> > +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we
-> > have
-> > +	 * to call every handler as if we have no NMI source.
-> > +	 * On the other hand, if we do get non-zero vectors, we know
-> > exactly
-> > +	 * what the sources are. So we only call the handlers with the
-> > bit set.
-> > +	 */
-> > +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-> > +		pr_warn_ratelimited("NMI received with unknown
-> > source\n");
-> > +		return 0;
-> > +	}
-> > +  
+> KVM should switch to host FRED RSP0 before returning to user level,
+> and switch to guest FRED RSP0 before entering guest mode.
+
+Heh, if only KVM had a framework that was specifically designed for context
+switching MSRs on return to userspace.  Translation: please use the user_return_msr()
+APIs.
+
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> Tested-by: Shan Kang <shan.kang@intel.com>
+> ---
 > 
-> You can still dispatch the known NMI handlers early before doing the 
-> polling.
-
-True, my thinking was based on two conditions:
-1. unknown NMI source is a rare/unlikely case
-2. when unknown source does get set, it is due to deep CPU idle where
-performance optimization is not productive.
-
-So I think any optimization to the unlikely case should not add cost to the
-common case. Tracking early/direct dispatched handler adds cost to the
-common case. Below is my attempt, there must be a better way.
-
-static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *handled_mask)
-{
-	static bool nmi_source_disabled = false;
-	bool has_unknown_src = false;
-	unsigned long source_bitmask;
-	struct nmiaction *a;
-	int handled = 0;
-	int vec = 1;
-
-	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
-	    type != NMI_LOCAL || nmi_source_disabled)
-		return 0;
-
-	source_bitmask = fred_event_data(regs);
-	if (!source_bitmask) {
-		pr_warn("NMI received without source information! Disable source reporting.\n");
-		nmi_source_disabled = true;
-		return 0;
-	}
-
-	/*
-	 * Per NMI source specification, there is no guarantee that a valid
-	 * NMI vector is always delivered, even when the source specified
-	 * one. It is software's responsibility to check all available NMI
-	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
-	 * to call every handler as if we have no NMI source.
-	 * On the other hand, if we do get non-zero vectors, we know exactly
-	 * what the sources are. So we only call the handlers with the bit set.
-	 */
-	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-		pr_warn_ratelimited("NMI received with unknown source\n");
-		has_unknown_src = true;
-	}
-
-	rcu_read_lock();
-	/* Bit 0 is for unknown NMI sources, skip it. */
-	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
-		a = rcu_dereference(nmiaction_src_table[vec]);
-		if (!a) {
-			pr_warn_ratelimited("NMI received %d no handler", vec);
-			continue;
-		}
-		handled += do_handle_nmi(a, regs, type);
-		/*
-		 * Needs polling if unknown source bit is set, handled_mask is
-		 * used to tell the polling code which NMIs can be skipped.
-		 */
-		if (has_unknown_src)
-			*handled_mask |= BIT(vec);
-	}
-	rcu_read_unlock();
-
-	return handled;
-}
-
-static int nmi_handle(unsigned int type, struct pt_regs *regs)
-{
-	struct nmi_desc *desc = nmi_to_desc(type);
-	unsigned long handled_mask = 0;
-	struct nmiaction *a;
-	int handled=0;
-
-	/*
-	 * Check if the NMI source handling is complete, otherwise polling is
-	 * still required. handled_mask is non-zero if NMI source handling is
-	 * partial due to unknown NMI sources.
-	 */
-	handled = nmi_handle_src(type, regs, &handled_mask);
-	if (handled && !handled_mask)
-		return handled;
-
-	rcu_read_lock();
-	/*
-	 * NMIs are edge-triggered, which means if you have enough
-	 * of them concurrently, you can lose some because only one
-	 * can be latched at any given time.  Walk the whole list
-	 * to handle those situations.
-	 */
-	list_for_each_entry_rcu(a, &desc->head, list) {
-		/* Skip NMIs handled earlier with source info */
-		if (BIT(a->source_vec) & handled_mask)
-			continue;
-		handled += do_handle_nmi(a, regs, type);
-	}
-	rcu_read_unlock();
-
-	/* return total number of NMI events handled */
-	return handled;
-}
-NOKPROBE_SYMBOL(nmi_handle);
-
-
-> > +	rcu_read_lock();
-> > +	/* Bit 0 is for unknown NMI sources, skip it. */
-> > +	for_each_set_bit_from(vec, &source_bitmask,
-> > NR_NMI_SOURCE_VECTORS) {
-> > +		a = rcu_dereference(nmiaction_src_table[vec]);
-> > +		if (!a) {
-> > +			pr_warn_ratelimited("NMI received %d no
-> > handler", vec);
-> > +			continue;
-> > +		}
-> > +		handled += do_handle_nmi(a, regs, type);
-> > +	}
-> > +	rcu_read_unlock();
-> > +	return handled;
-> > +}
-> > +  
+> Changes since v1:
+> * Don't use guest_cpuid_has() in vmx_prepare_switch_to_{host,guest}(),
+>   which are called from IRQ-disabled context (Chao Gao).
+> * Reset msr_guest_fred_rsp0 in __vmx_vcpu_reset() (Chao Gao).
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 17 +++++++++++++++++
+>  arch/x86/kvm/vmx/vmx.h |  2 ++
+>  2 files changed, 19 insertions(+)
 > 
-> That would mean that you would also need to return a bitmask of which 
-> source vectors need to be handled with polling.
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b7b772183ee4..264378c3b784 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1337,6 +1337,16 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+> +
+> +	if (guest_can_use(vcpu, X86_FEATURE_FRED)) {
+> +		/*
+> +		 * MSR_IA32_FRED_RSP0 is top of task stack, which never changes.
+> +		 * Thus it should be initialized only once.
 
-Should it be the bitmask to be skipped by polling? see handled_mask in
-the code above.
+Then grab the host value during vmx_hardware_setup().  And when you rebase on top
+of the latest kvm-x86/next, there's a handy dandy "struct kvm_host_values kvm_host"
+to track host MSR values (and similar state).
 
+You could also use that for MSR_IA32_FRED_CONFIG and MSR_IA32_FRED_STKLVLS.
 
+> +		 */
+> +		if (unlikely(vmx->msr_host_fred_rsp0 == 0))
+> +			vmx->msr_host_fred_rsp0 = read_msr(MSR_IA32_FRED_RSP0);
+> +		wrmsrl(MSR_IA32_FRED_RSP0, vmx->msr_guest_fred_rsp0);
+> +	}
+>  #else
+>  	savesegment(fs, fs_sel);
+>  	savesegment(gs, gs_sel);
+> @@ -1381,6 +1391,11 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+>  	invalidate_tss_limit();
+>  #ifdef CONFIG_X86_64
+>  	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_host_kernel_gs_base);
+> +
+> +	if (guest_can_use(&vmx->vcpu, X86_FEATURE_FRED)) {
+> +		vmx->msr_guest_fred_rsp0 = read_msr(MSR_IA32_FRED_RSP0);
+> +		wrmsrl(MSR_IA32_FRED_RSP0, vmx->msr_host_fred_rsp0);
+> +	}
+>  #endif
+>  	load_fixmap_gdt(raw_smp_processor_id());
+>  	vmx->guest_state_loaded = false;
+> @@ -4889,6 +4904,8 @@ static void __vmx_vcpu_reset(struct kvm_vcpu *vcpu)
+>  
+>  #ifdef CONFIG_X86_64
+>  	if (kvm_cpu_cap_has(X86_FEATURE_FRED)) {
+> +		vmx->msr_guest_fred_rsp0 = 0;
 
-Thanks,
+Eh, I wouldn't bother.  Arguably it's better to use __kvm_set_msr(), and "vmx"
+is zero-allocated so this is unnecessary.
 
-Jacob
+The GUEST_IA32_FRED_* VMCS fields need to be explicitly initialized because the
+VMCS could (very theoretically) use a non-zero-based encoding scheme.
