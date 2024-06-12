@@ -1,117 +1,133 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DA733FE
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3A3110A;
+	Wed, 12 Jun 2024 10:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718187104; cv=none; b=B38u5Ron5Zcb5fV5TgeXciZXPkWtjpUHvNtyLjkONpEiR8Z+zJp0KCNOKXv6eZ92T8kmhtUSW1tz18oF/hUStB8CZthxyDRW5Rs5Zp2Wl3nKfnb2IQstVylkEgc8lHdYMkMzirDVm7bCExkXTrJ3WBYzEzmZIWCGbmO+Izu5bpo=
+	t=1718187388; cv=none; b=RdXnVtFpxNEUG0O7x8oAeokWBcwhQvoUFr9bHPsmCdkK8zefPnf8Izu8GBhCfPBzVMio77Iy6U2xDWgxoIDSCH5sY8Ctu+n1vQayb+AnbPKpPQAPN34mZisCNye0xlLHNFABTntxCMw+tG1WHLEWP/nu4fIUJ5FtvFcC530kAv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718187104; c=relaxed/simple;
-	bh=KFf2FT18RPV8C8MRIqXhIhGb0bt0t/RSv998zsVKsOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tuLWbaGf98JL/pT+L5BH35GB8bfjKGTXSzDMm5cCVK7GIYI2NNUJI63aDhkcW6l9awvcWGZXTwnhR8HGMmlS1ubHnFxuLxSGuVGp3oACwYalm0vDLJYXcFPQXC7xtxHXxDl5GfEhTvtUkAK7w0r/TWl5to9SwhpWOnE+LQRkr6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FdY2uucs; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FdY2uucs"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ee5f3123d8so109505ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 03:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718187102; x=1718791902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JB137Y60BhwWEDBjTqvHulcYwQ9jTNh9hWVkbeGFpbY=;
-        b=FdY2uucssI/Pc5Gx5pwQ8/ZrpiX0jO/VHBFMJ5EZnOXBWMYEN1W8F6fMe/yOPJqADR
-         pWYFhotDZJj2z5ag4jZFl1IWZtlTI8L20gmaB5AiPqTVlF/hb+/D4fLeQdu4Z/LhelVu
-         KzshCLBt5Hv3tds9nRCzi/QIrXURpJ8OPP7+JZm01TkBekIoFrRXRYdWHa9NclPcLwNR
-         4Pm/MWg7Sxycj9AnFv7IPYyaZONdVkfFhcxg38tv50CbDm3VkweoBGHSiP2RGxQgCmaQ
-         8C45mkIqnVnjbUlquUtWIf+ttoXONNGYJ+/1RWpslj76hOLEHaHuyr/bqBdCN3NTVYAK
-         MgpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718187102; x=1718791902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JB137Y60BhwWEDBjTqvHulcYwQ9jTNh9hWVkbeGFpbY=;
-        b=stR4TUSL9lOtpXqnM63Dv0gxR9Go4C42bDQTfOko/2eiDKyYs5kvbf36XpSqxUaqhc
-         vr8HEeyTHF7/kcZP/5stwEki/L0P6PYspQ+LMXJ5n6uDDhXAsPNWvzp28Phfnbcwtamu
-         fH0NEGDAcqRvoZw+E7WkWJw/4+JlhzlO7WG1iIRlMSEFaKG9FK/7gih0kwmZaAGgUrVu
-         GDkN1KUFklLzvlA2IwnAGZjcKQtDgDg/CGccd9DhDG/t6uS7bEIsMn0wjmwul7E2HLbc
-         Fabm2eT9jUEA8Z2+6lE7/bDyFazSS4ulAULZhpvz1kLIsPQsnFIsC1i6ZKR58l/kFN6K
-         BH3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWgdBlq0wSXm3488gcFRaodRCTt1fT9pz+2HXIY5ervxD/sBWlphEqhPzEZQ2AFO0wzqu63d/ttyTbO0r9Lp5uBhX/tyzy9idoIjYN9
-X-Gm-Message-State: AOJu0YyMrWez9Nh8EAGlQWknkrfFlsIXBMDvyHCMSmfgcYZRmxBUIlsK
-	lAexYkxF6bqlZwBqdX7e4Qm7j9NyPnWQNiqAiNtL7femLIEn+vkJxNRFTxjRPROUWoRL+ueR1N7
-	7aJBHdu240JPQXG5Yzb2VquIGR3VxtaEPr1BU
-X-Google-Smtp-Source: AGHT+IFt0QaTJrjbAM5Lih+9Ea8MU4NOCHo2x5tga3NpRGP3FmXtBmDy4kPOtkuS4PyhJ27G4ZzU8X9NtVD5QjNUA9Y=
-X-Received: by 2002:a17:902:c40a:b0:1e0:c571:d652 with SMTP id
- d9443c01a7336-1f83b371decmr2105695ad.1.1718187101848; Wed, 12 Jun 2024
- 03:11:41 -0700 (PDT)
+	s=arc-20240116; t=1718187388; c=relaxed/simple;
+	bh=aObPsDD/jDTOxpxuQPyX8DttTAfm3t8fCC5A2NzoRNI=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RvHVOi8jNRcCBqjTIxpCIdafHK0eKFeqDcRSLUHz/ZA78e4j8vVcbM9sNmHd7CyYTU9LFoCk8F/Nx7pLh/KFhb5X6WP9GrRmSeqSu+gcTg3+HI6NLMo7MFs1W2xyKEJjNr0328e4oLQ82YTjznJyvEfq0YmeRHoObyisTVPvBmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VzhGj3HPMz1HDY6;
+	Wed, 12 Jun 2024 18:14:21 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 72296180065;
+	Wed, 12 Jun 2024 18:16:16 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 12 Jun 2024 18:16:15 +0800
+CC: <yangyicong@hisilicon.com>
+Subject: Re: [PATCH v1] perf arm: Workaround ARM PMUs cpu maps having offline
+ cpus
+To: Ian Rogers <irogers@google.com>, Suzuki K Poulose
+	<suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James Clark
+	<james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, Will Deacon
+	<will@kernel.org>, Leo Yan <leo.yan@linux.dev>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian
+ Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
+	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240607065343.695369-1-irogers@google.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <cc4ac58b-6a0b-1d72-f881-a60b43d5c229@huawei.com>
+Date: Wed, 12 Jun 2024 18:16:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611133229.527822-1-nogikh@google.com> <20240611115133.fa80466e924ad34ed4ad73cb@linux-foundation.org>
-In-Reply-To: <20240611115133.fa80466e924ad34ed4ad73cb@linux-foundation.org>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Wed, 12 Jun 2024 12:11:30 +0200
-Message-ID: <CANp29Y6TqZ2T5xKzwW8RJ4o7+4w+mWs2awNebXo1dyaw154Opg@mail.gmail.com>
-Subject: Re: [PATCH] kcov: don't lose track of remote references during softirqs
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: dvyukov@google.com, andreyknvl@gmail.com, arnd@arndb.de, elver@google.com, 
-	glider@google.com, syzkaller@googlegroups.com, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240607065343.695369-1-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Tue, Jun 11, 2024 at 8:51=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Tue, 11 Jun 2024 15:32:29 +0200 Aleksandr Nogikh <nogikh@google.com> w=
-rote:
->
-> > In kcov_remote_start()/kcov_remote_stop(), we swap the previous KCOV
-> > metadata of the current task into a per-CPU variable. However, the
-> > kcov_mode_enabled(mode) check is not sufficient in the case of remote
-> > KCOV coverage: current->kcov_mode always remains KCOV_MODE_DISABLED
-> > for remote KCOV objects.
-> >
-> > If the original task that has invoked the KCOV_REMOTE_ENABLE ioctl
-> > happens to get interrupted and kcov_remote_start() is called, it
-> > ultimately leads to kcov_remote_stop() NOT restoring the original
-> > KCOV reference. So when the task exits, all registered remote KCOV
-> > handles remain active forever.
-> >
-> > Fix it by introducing a special kcov_mode that is assigned to the
-> > task that owns a KCOV remote object. It makes kcov_mode_enabled()
-> > return true and yet does not trigger coverage collection in
-> > __sanitizer_cov_trace_pc() and write_comp_data().
->
-> What are the userspace visible effects of this bug?  I *think* it's
-> just an efficiency thing, but how significant?  In other words, should
-> we backport this fix?
->
+Hi Ian,
 
-The most uncomfortable effect (at least for syzkaller) is that the bug
-prevents the reuse of the same /sys/kernel/debug/kcov descriptor. If
-we obtain it in the parent process and then e.g. drop some
-capabilities and continuously fork to execute individual programs, at
-some point current->kcov of the forked process is lost,
-kcov_task_exit() takes no action, and all KCOV_REMOTE_ENABLE ioctls
-calls from subsequent forks fail.
+On 2024/6/7 14:53, Ian Rogers wrote:
+> When PMUs have a cpu map in the 'cpus' or 'cpumask' file, perf will
+> try to open events on those CPUs. ARM doesn't remove offline CPUs
+> meaning taking a CPU offline will cause perf commands to fail unless a
+> CPU map is passed on the command line.
+> 
+> More context in:
+> https://lore.kernel.org/lkml/20240603092812.46616-1-yangyicong@huawei.com/
+> 
+> Reported-by: Yicong Yang <yangyicong@huawei.com>
+> Closes: https://lore.kernel.org/lkml/20240603092812.46616-2-yangyicong@huawei.com/
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-And, yes, the efficiency is also affected if we keep on losing remote
-kcov objects.
-a) kcov_remote_map keeps on growing forever.
-b) (If I'm not mistaken), we're also not freeing the memory referenced
-by kcov->area.
+Tested worked for this case:
 
-I think it would be nice to backport the fix to the stable trees.
+[root@localhost tmp]# echo 0 > /sys/devices/system/cpu/cpu1/online
+[root@localhost tmp]# /home/yang/perf_static stat -e armv8_pmuv3_0/cpu_cycles/ --timeout 100
+Error:
+The sys_perf_event_open() syscall returned with 19 (No such device) for event (armv8_pmuv3_0/cpu_cycles/).
+/bin/dmesg | grep -i perf may provide additional information.
 
---=20
-Aleksandr
+[root@localhost tmp]# /tmp/perf_Ian stat -e armv8_pmuv3_0/cpu_cycles/ --timeout 100
+
+ Performance counter stats for 'system wide':
+
+          54994604      armv8_pmuv3_0/cpu_cycles/
+
+       0.176079800 seconds time elapsed
+
+So:
+Tested-by: Yicong Yang <yangyicong@hisilicon.com>
+
+But still wondering why isn't it better to move this into pmu_cpumask() as does in
+the previous patch? Yes currently this is a arm specific issue, but we cannot handle
+the case if later PMU doesn't update the cpus/cpumask either :)
+
+> ---
+>  tools/perf/arch/arm/util/pmu.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+> index 8b7cb68ba1a8..6b544edbd3f6 100644
+> --- a/tools/perf/arch/arm/util/pmu.c
+> +++ b/tools/perf/arch/arm/util/pmu.c
+> @@ -11,12 +11,15 @@
+>  
+>  #include "arm-spe.h"
+>  #include "hisi-ptt.h"
+> +#include "../../../util/cpumap.h"
+>  #include "../../../util/pmu.h"
+>  #include "../../../util/cs-etm.h"
+>  #include "../../arm64/util/mem-events.h"
+>  
+> -void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+> +void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  {
+> +	struct perf_cpu_map *intersect;
+> +
+>  #ifdef HAVE_AUXTRACE_SUPPORT
+>  	if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
+>  		/* add ETM default config here */
+> @@ -33,6 +36,9 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
+>  		pmu->selectable = true;
+>  #endif
+>  	}
+> -
+>  #endif
+> +	/* Workaround some ARM PMU's failing to correctly set CPU maps for online processors. */
+> +	intersect = perf_cpu_map__intersect(cpu_map__online(), pmu->cpus);
+> +	perf_cpu_map__put(pmu->cpus);
+> +	pmu->cpus = intersect;
+>  }
+> 
