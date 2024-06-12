@@ -1,118 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0822317FADF
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919EC17F504
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204169; cv=none; b=hlprQF5FpzrWO07ZzFC1uObZrhleAmkOtHb/H/LV+ZllcLQ1JweSXDHITHULL2H/CRF86Y6QOGtIcMvNZIbBW/ZRxoPBAdyR6KAEWIlnKdv/IKMEBVGlMDfOBCx9cTIFkzqhZnmQZj+ZgACfP+2nv7MrG/xJAcvSh6IwDW/GIds=
+	t=1718204194; cv=none; b=b2vxrWGMdKk40N2hdj8z26gnLN264MBkxSkvrA3ckz514Ldn5Ix7Mcg8gQyigsJrVy40rZPT8QR7rqMC0rZrjy850/K9dUyUT6i+0yEwnNmva0cyAUDysO6I8ZLaUfZq2FaN2Fzq4GuuLrqoXpufG2wA/MgQtEeaJM4kWNqdTRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204169; c=relaxed/simple;
-	bh=IIcVdAqmaOW8pjieI7wldk6Uea4Gpi3604HhIUuqmbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GNH2F/trPE+ARMoxmWZFCiiLXT5PRES+lMSTgYETsqUn7hYtH6eeiYyBiduKJsoMjkheseXuhpcyj+PMJ7nkGC5MqIf+Z1fvAoAyLXgmEOC8xo5e2KU3Ew+wSheTORR4L0pyQwTZaAnALYafRy0jyr+MYKiO4Lgl4GRUIIWK/uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VicfPlrA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718204194; c=relaxed/simple;
+	bh=4kn8S3LzHMMLi/6nFeWowtDlnUvyLGqfc/HqAgfIrhQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=StO+aP/ZlxdevjM+cT/CbwbZk7o7wg9IOP261MQ9tuBs5/xootqu5JKKUSIyTgRClca+RCbrpfRK+UyPsZ+yAiU+AMMCYbcoIHlLmCJibY3lQCruks/H+FSkWq2fMpfuOkulJi+0kq3nw0sgQxCkCem2nccf4uZ8AtjWmc9gsk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jcPK+yGu; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VicfPlrA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718204167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wJUNan0C2AlKgNFgffgh9zDoO6nSF+BoZ31Zaf+PwhE=;
-	b=VicfPlrAvnW08saPlwEVeYevSAcSF91LtNzswnjYginQI/ZXno1VQR/t6SPEp0S9qaPSY8
-	49cCqpMHRoJJTovLX+uSGXA4RtTWovBQaoSOsmmR8XAvEZe5GFTMPSCMqTYBBIK4GxM7yI
-	1AsOX0XH39QYThB1todV87EWlVgBpj8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-218-DO1enfHbPo-fesQIQwjLBw-1; Wed,
- 12 Jun 2024 10:56:05 -0400
-X-MC-Unique: DO1enfHbPo-fesQIQwjLBw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45CFF19560BE;
-	Wed, 12 Jun 2024 14:56:04 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.68])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F19F1954AC0;
-	Wed, 12 Jun 2024 14:56:01 +0000 (UTC)
-From: tglozar@redhat.com
-To: bristot@kernel.org,
-	rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jkacur@redhat.com,
-	jwyatt@redhat.com,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 5/5] rtla: Documentation: Add --disable-idle-states
-Date: Wed, 12 Jun 2024 16:54:39 +0200
-Message-ID: <20240612145439.206990-6-tglozar@redhat.com>
-In-Reply-To: <20240612145439.206990-1-tglozar@redhat.com>
-References: <20240612145439.206990-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jcPK+yGu"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6f09eaf420so465680866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718204191; x=1718808991; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q5yu8LOR9yMB+oZSUx+fwYASzFM4Hileor0B9Ph2tUI=;
+        b=jcPK+yGuvsDp844baXORuuy6LmQF02uRm5rukBMTdd8MDXHPn25+f0462WZrez8Ola
+         3rMNDiWO95xmcGBOtVhDY684AkBlRVN9wMFmJL9pAucYAlz64uV9CxblrOU4MpFgxIAD
+         ose+245sCKpgoD5qSf5I2G3u6QZCPYUdUwvaoahSVdKUsvwaEpc+QPMQ9yi3jooeQBs4
+         YORLLEh0dwDHRAVmbHFZOwok4AN+mfFdthdRzE1ULUiECnMD9PhQgdrVlozuY46Usk2b
+         XjtIP12IE0ggKDjjeqNF1Of3PSUbg2U1nEkW6dJvZpM/LlLe4g4aErYcdHRfyk0yxH35
+         A2/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718204191; x=1718808991;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q5yu8LOR9yMB+oZSUx+fwYASzFM4Hileor0B9Ph2tUI=;
+        b=td8cxZyLDvPW7sPK1r5zeX7KotdBN1/PY/1e5Pd8yJ8NADOBnYqeLVp80GiCVbeNBQ
+         Ig+iLffJJm/XJu9ool5HX1/kdERiB8V1DvYNr7uQAu/s+AkhEs8iuDt5+DwRQZ2V0Ha+
+         iXtaWZrngXB1/SNx3xQH8ZSREJg2DdGcay22LmJv+ncI0muqyhKPA7KCjhAgpDGDiOgv
+         7kmZnZfvyTlXV5mdBgn2F1MmxqQt0MVlaDMCiwCdQoOEJ8d830p6b4BB1FxtdMjSPoHk
+         IGuvn7IgRfBeHuWJmgnAJ8Od8y+AlPlPLOGc9858EOLQ5VlrvhuEdeNIN25ZXAAgxqUN
+         hDMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBZadAW3yOkfyVyy82/vJijyFpGqYyc68OKJZVWOZgXnHfDxrMuisM4o7LN5dqmhPw8Z58EOVZtSvlL33E+qYnTPRiDdkoH2H0IYAZ
+X-Gm-Message-State: AOJu0YxR6GPbPxDpRHxOujskEAWeJa5g2cqUqn+29pRjQz2f6eVL80cJ
+	NptGNaCh1c9h6lP6RRBeoHvAvSu4ZnputrDQafkEOxUeFFq0pK2vkN25PIn4LiuZz22CJGGq3BZ
+	jMyw=
+X-Google-Smtp-Source: AGHT+IEwGz7ExK9rFeDcCAcMm8cBQlNhVoJT3sknKM3Eud8XI4/QAubfXavkLlUfpvUlX4mMSSoZ7Q==
+X-Received: by 2002:a17:906:cb13:b0:a6f:4f2c:1936 with SMTP id a640c23a62f3a-a6f4f2c1c19mr45887366b.44.1718204190879;
+        Wed, 12 Jun 2024 07:56:30 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0f98a285sm552368966b.210.2024.06.12.07.56.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 07:56:30 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Amol Maheshwari <amahesh@qti.qualcomm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dylan Van Assche <me@dylanvanassche.be>
+Cc: Caleb Connolly <caleb.connolly@linaro.org>, phone-devel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht
+In-Reply-To: <20240524161423.15392-1-me@dylanvanassche.be>
+References: <20240524161423.15392-1-me@dylanvanassche.be>
+Subject: Re: [PATCH v5 0/2] misc: fastrpc: FastRPC reserved memory
+ assignment for SDM845 SLPI
+Message-Id: <171820418971.165525.3637990952357907188.b4-ty@linaro.org>
+Date: Wed, 12 Jun 2024 15:56:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
-From: Tomas Glozar <tglozar@redhat.com>
 
-Add --disable-idle-states to manpage and mention libcpupower dependency
-in README.txt.
+On Fri, 24 May 2024 18:14:01 +0200, Dylan Van Assche wrote:
+> * About *
+> 
+> The Qualcomm SDM845 SoC has a separate SLPI (Sensor Low Power Island)
+> DSP for sensors connected to the SoC which is responsible for exposing
+> sensors to userspace, power saving, and other features.
+> While sensors are connected to GPIOs of the SoC, they cannot be used
+> because the hypervisor blocks direct access to the sensors, thus the
+> DSP must be used to access any sensor on this SoC. The SLPI DSP uses a
+> GLink edge (dsps) to communicate with the host and has a FastRPC interface
+> to load files from the host filesystem such as sensor configuration files.
+> The FastRPC interface does not use regular FastRPC Compute Banks
+> but instead uses an allocated CMA region through which communication happens.
+> 
+> [...]
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- Documentation/tools/rtla/common_timerlat_options.rst | 6 ++++++
- tools/tracing/rtla/README.txt                        | 4 ++++
- 2 files changed, 10 insertions(+)
+Applied, thanks!
 
-diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
-index cef6651f1435..7429e77f95ca 100644
---- a/Documentation/tools/rtla/common_timerlat_options.rst
-+++ b/Documentation/tools/rtla/common_timerlat_options.rst
-@@ -31,6 +31,12 @@
-         *cyclictest* sets this value to *0* by default, use **--dma-latency** *0* to have
-         similar results.
- 
-+**--disable-idle-states**
-+        Set the /sys/devices/system/cpu/cpu<n>/cpuidle/state*/disable files to 1 for cpus
-+        that are running timerlat threads to avoid exit from idle latencies. On exit from
-+        timerlat, the state*/disable setting is restored to its original value before
-+        running timerlat.
-+
- **-k**, **--kernel-threads**
- 
-         Use timerlat kernel-space threads, in contrast of **-u**.
-diff --git a/tools/tracing/rtla/README.txt b/tools/tracing/rtla/README.txt
-index 4af3fd40f171..6617b9911c81 100644
---- a/tools/tracing/rtla/README.txt
-+++ b/tools/tracing/rtla/README.txt
-@@ -11,6 +11,7 @@ RTLA depends on the following libraries and tools:
- 
-  - libtracefs
-  - libtraceevent
-+ - libcpupower
- 
- It also depends on python3-docutils to compile man pages.
- 
-@@ -26,6 +27,9 @@ For development, we suggest the following steps for compiling rtla:
-   $ make
-   $ sudo make install
-   $ cd ..
-+  $ cd $libcpupower_src
-+  $ make
-+  $ sudo make install
-   $ cd $rtla_src
-   $ make
-   $ sudo make install
+[1/2] misc: fastrpc: support complete DMA pool access to the DSP
+      commit: 9cee10334bdfa9db771b006fe2eba060f8719687
+[2/2] misc: fastrpc: use coherent pool for untranslated Compute Banks
+      commit: 0ff3de43062785462d9acede2987f35525b1c0ba
+
+Best regards,
 -- 
-2.43.0
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
