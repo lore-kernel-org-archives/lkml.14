@@ -1,107 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463C016C6B4;
-	Wed, 12 Jun 2024 07:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542FF1369AF;
+	Wed, 12 Jun 2024 07:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179162; cv=none; b=oWKHRDT2+xKmM7ZEZ9tm87wlpVaEqqHakwdiFq3JACEyWy7iHrLZGK9g5fvKdrYNoqxSKFCbsNmBleetE+uT1sPtnmJSu35Z4BPt3CpR8hpIDH5rug9xjBz0RCD61InChWaysUwvxZzV1N9qeGStlo03QuoHVi4Kb4sKec2lZ6c=
+	t=1718179190; cv=none; b=EnoRSZPQCKlX5Tq6OsAPZdSQRxavdN7FCeYurrSxXAGcRee+dHy68uXayj6KZC9hAjT5KWYmHu3LtImfdYFhXezNPFh15MaTekriMb/1c8F8B3lo3aaSZ/mrBMBjCDMO9MmdRp5eG1cZhtL5b6Jp/0RbcGqmUhcVYPunuYZvUhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179162; c=relaxed/simple;
-	bh=7mTgNg2ikwIKft8i7UAtYj8u3wE6XKrlCmTmjGuHvTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LGtD+78+s38fEheRu2M97+XvwDMaaRLcnKnSzXPEnHW0YNOHWIgDggMcQX5gMkH3LU5TEoCy8M6zYjFetS3aRouMCnJEsjPuT4gFQV4RaXugNZYL+1Nmkf78nxgyENiCW2zPsf/QfhkUR5lxGANvnY586fYSwBLeKqn/JoI1V/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnbv1Ed3; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718179190; c=relaxed/simple;
+	bh=IawdLXVTxFLymI92USdaxv8s69/d7KuTRBgkwNJFy2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NuM0v4US9jDFEoz8vKAEPSoUUlCaSu0rGZ/gGULYDmuL2ZU69FvV5F1CVKH2mRXsYo9dDgWn6QmzfD6SwZYAf3GMGAIxML6tRXtMF5/Lf46134o36++aph8J9ULK8zbff9grU0Vi3jfU48IpR/DneZBI8Cqps64pXlySqaG7cgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+0chLGp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnbv1Ed3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718179162; x=1749715162;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7mTgNg2ikwIKft8i7UAtYj8u3wE6XKrlCmTmjGuHvTY=;
-  b=hnbv1Ed3Frzy/NGL6TTNKqdNzpwQH9I6n9rfrzqOKmksSL9dydSrzDbu
-   r80W/cEEum3g4wWS3xCnNq31hbm3ZxgA2uBJH71T+uzfkxYq3hZvtAaAY
-   rhuM2BT8Ya+4LKog3JGiZHGl+K9pDQdVoBwhQzYSyyUwSbSiIl4bfeJKd
-   1Hp5pp4KWpNn9X9IrgZEDvu3ctoQyW+nnQIzFvAhUZnFzVb336kvVLR7A
-   uMtuYbGmDQyZgtMlmDWFmOY83U5yC15IN0IbZGiiuc16l8Mr6UxEncHrd
-   fiJEUpOGejiNtmCv6B9WZXv1yv20ezoYsOzdU+r2RXuU/qhOrk/Zb5DBp
-   Q==;
-X-CSE-ConnectionGUID: VOCIsYWeRE6kPuRGFEPBsQ==
-X-CSE-MsgGUID: CgSWh2oYTKycgpG6+h+jLw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14768825"
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="14768825"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:59:21 -0700
-X-CSE-ConnectionGUID: 5bFV976PRICls1WKE1o/UQ==
-X-CSE-MsgGUID: TVfmcDRRRV6XTDc3W17Fsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="39597596"
-Received: from zwan2-desk1.sh.intel.com ([10.239.160.154])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:59:18 -0700
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
-To: peterz@infradead.org
-Cc: kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	x86@kernel.org,
-	Rui Zhang <rui.zhang@intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@intel.com>,
-	Wendy Wang <wendy.wang@intel.com>
-Subject: [PATCH RESEND AGAIN] perf/x86/intel/cstate: Add pkg C2 residency counter for Sierra Forest
-Date: Wed, 12 Jun 2024 16:08:35 +0800
-Message-ID: <20240612080835.306254-1-zhenyuw@linux.intel.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240515032158.12845-1-zhenyuw@linux.intel.com>
-References: <20240515032158.12845-1-zhenyuw@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+0chLGp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71D1C3277B;
+	Wed, 12 Jun 2024 07:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718179189;
+	bh=IawdLXVTxFLymI92USdaxv8s69/d7KuTRBgkwNJFy2I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G+0chLGp54wyAGi7A+apGyUAiZTuwSavDO88Ajal/9KxsXKtOrjdlGa51lzpMht+W
+	 RuLzab0qTJ27Nja9lxde7lE3OVtpfjp/8Bbaf19V5VJlFWYLC9CNNryX6BSKjQUl8P
+	 DPVcgtZVkzSoYjrNy/0Qp9YCLlj58a7G0dC3CyjkzQR+fmMEoHPJfSA+c+t6Ji4zfL
+	 aIBpNjMFqRRAkRIJQiazQfYZyTMLCUP/jJlEk5swEv04BZS+SL1HdDlcGbRXx2kJp3
+	 xLX1qhDsJr9yhe6dKd/g7tdkI6gRK0jlisyHbllH0rU8FqP7X8xzJ2xRLDWBfnewFK
+	 s6GdSehruh2jQ==
+Message-ID: <fed7b2ca-5180-417f-a676-fb126157dff3@kernel.org>
+Date: Wed, 12 Jun 2024 09:59:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 net-next 1/7] net: add rx_sk to trace_kfree_skb
+To: Yan Zhai <yan@cloudflare.com>, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ David Ahern <dsahern@kernel.org>,
+ Abhishek Chauhan <quic_abchauha@quicinc.com>,
+ Mina Almasry <almasrymina@google.com>, Florian Westphal <fw@strlen.de>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ Pavel Begunkov <asml.silence@gmail.com>, linux-kernel@vger.kernel.org,
+ kernel-team@cloudflare.com, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Neil Horman <nhorman@tuxdriver.com>, linux-trace-kernel@vger.kernel.org,
+ Dan Carpenter <dan.carpenter@linaro.org>
+References: <cover.1718136376.git.yan@cloudflare.com>
+ <dcfa5db9be2d29b68fe7c87b3f017e98e5ec83b4.1718136376.git.yan@cloudflare.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <dcfa5db9be2d29b68fe7c87b3f017e98e5ec83b4.1718136376.git.yan@cloudflare.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Package C2 residency counter is also available on Sierra Forest.
-So add it support in srf_cstates.
 
-Cc: Rui Zhang <rui.zhang@intel.com>
-Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
-Cc: Wendy Wang <wendy.wang@intel.com>
-Tested-by: Wendy Wang <wendy.wang@intel.com>
-Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
----
- arch/x86/events/intel/cstate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 9d6e8f13d13a..b1a822af25d0 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -64,7 +64,7 @@
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-- *						RPL,SPR,MTL
-+ *						RPL,SPR,MTL,SRF
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -684,7 +684,8 @@ static const struct cstate_model srf_cstates __initconst = {
- 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
- 				  BIT(PERF_CSTATE_CORE_C6_RES),
- 
--	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
-+	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-+				  BIT(PERF_CSTATE_PKG_C6_RES),
- 
- 	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
- };
--- 
-2.45.1
+On 11/06/2024 22.11, Yan Zhai wrote:
+> skb does not include enough information to find out receiving
+> sockets/services and netns/containers on packet drops. In theory
+> skb->dev tells about netns, but it can get cleared/reused, e.g. by TCP
+> stack for OOO packet lookup. Similarly, skb->sk often identifies a local
+> sender, and tells nothing about a receiver.
+> 
+> Allow passing an extra receiving socket to the tracepoint to improve
+> the visibility on receiving drops.
+> 
+> Signed-off-by: Yan Zhai<yan@cloudflare.com>
+> ---
+> v3->v4: adjusted the TP_STRUCT field order to be consistent
+> v2->v3: fixed drop_monitor function prototype
+> ---
+>   include/trace/events/skb.h | 11 +++++++----
+>   net/core/dev.c             |  2 +-
+>   net/core/drop_monitor.c    |  9 ++++++---
+>   net/core/skbuff.c          |  2 +-
+>   4 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
+> index 07e0715628ec..3e9ea1cca6f2 100644
+> --- a/include/trace/events/skb.h
+> +++ b/include/trace/events/skb.h
+> @@ -24,13 +24,14 @@ DEFINE_DROP_REASON(FN, FN)
+>   TRACE_EVENT(kfree_skb,
+>   
+>   	TP_PROTO(struct sk_buff *skb, void *location,
+> -		 enum skb_drop_reason reason),
+> +		 enum skb_drop_reason reason, struct sock *rx_sk),
+>   
+> -	TP_ARGS(skb, location, reason),
+> +	TP_ARGS(skb, location, reason, rx_sk),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(void *,		skbaddr)
+>   		__field(void *,		location)
+> +		__field(void *,		rx_skaddr)
 
+Is there any reason for appending the "addr" part to "rx_sk" ?
+It makes it harder to read this is the sk (socket).
+
+AFAICR the skbaddr naming is a legacy thing.
+
+>   		__field(unsigned short,	protocol)
+>   		__field(enum skb_drop_reason,	reason)
+>   	),
+> @@ -38,12 +39,14 @@ TRACE_EVENT(kfree_skb,
+>   	TP_fast_assign(
+>   		__entry->skbaddr = skb;
+>   		__entry->location = location;
+> +		__entry->rx_skaddr = rx_sk;
+>   		__entry->protocol = ntohs(skb->protocol);
+>   		__entry->reason = reason;
+>   	),
+>   
+> -	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
+> -		  __entry->skbaddr, __entry->protocol, __entry->location,
+> +	TP_printk("skbaddr=%p rx_skaddr=%p protocol=%u location=%pS reason: %s",
+                               ^^^^^^^^^
+I find it hard to visually tell skbaddr and rx_skaddr apart.
+And especially noticing the "skb" vs "sk" part of the string.
+
+
+> +		  __entry->skbaddr, __entry->rx_skaddr, __entry->protocol,
+> +		  __entry->location,
+>   		  __print_symbolic(__entry->reason,
+>   				   DEFINE_DROP_REASON(FN, FNe)))
+>   );
+
+
+--Jesper
