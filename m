@@ -1,55 +1,57 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56CD358A7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5A116D33A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179341; cv=none; b=hkC/K5sBMhrRQWY48AuDn/vhfYJErRnfj/Xkm2k3LPHjI2rqCAwM1qrIewLLara2i9gPdaXsTFvGlfWb9iyT/czESv9qQk4UWPADALpq4VvCoOH7BowCyilgCmtDsQAHhC7E6AYVWDh1FhR77zT/uBZIBItZaK+05ZhtaMcpcqo=
+	t=1718179343; cv=none; b=bXFeaWGtSPS63oiM1Xegg23w6xw3xKxo3ssoW6ed4V43H8Lyz3WVGyRuEW2t6cSfsF9gMWyLS4JjCw2U/+p2pPWivkCwUnlecmCG4v+q7D0KdJSrSyeihObWYYXXineRJor3AO6ZhSSwzHyrWjexksz3WiMuTy8n3toSp0Wr+3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179341; c=relaxed/simple;
-	bh=s3mfIsukRZmgouUhCyn9Wd/i7okI8+3DBaijsAj2WU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f3BHhIiDnlDfwFUvOMnqc2pLDIrgLl3dog2xjJ2ioglVEBLHIpWe4WscWvjeGaYsm+38NEO9ENzRGbkmbbULzJosYsdY5i9I3ajb+Skcw1q4Avxi0w7gy6i5kf+mUwBNzs9e8xl07/TrP2dGAAurcr0X/7C1BNkHquGGXec3Nso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MoeWCxca; arc=none smtp.client-ip=209.85.221.53
+	s=arc-20240116; t=1718179343; c=relaxed/simple;
+	bh=W+e6GzcGPpmKnfH/4lMgnkYBO9jQbYopGjcoMVmsm/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gR6H11uQ7eqqZ9yHkKLxXKT1yEH3V7jQ4JzRCv8jjrjBPdxHIQINsm8SsAIv2WeLFFAR8hJIYh45d8+/p7l46E4Veklgz9y1PZdGAMCNjod2yTxnf9RvnrIMDxwUZczKt4hiBL5bol05qKSs9ePw8EctzfooVArs2L0HhUGvNNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IP0n2msn; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MoeWCxca"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-35f1691b18fso3459627f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:02:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IP0n2msn"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52bc035a7ccso2219393e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718179337; x=1718784137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ksBSyA+j9QPSkEsVDee/zoG9hDnAPGUv/QuDtN8Vy0=;
-        b=MoeWCxcaJfh4knync7Fc5ivflDbf+9FUEE4rB9Ur7qKbL8a94cOa+R9bXm5ThhCHJO
-         gCCH9S+Z9MK+HaXEqOQ5yHiwlN1P6itZ/HCXwFWuZISe9hz8k2MYUE9NZbvOlxBvpFgk
-         4hTdEom3Tts/IGl/qct4vm7zZyaeC2khtddA4LoOdDjRr2rIvkjd0rwHGALNTkO60e8D
-         S7301X071GmGv2MQGLP8xMty8r4p/PadhvwT+J103O0s6gSHECateWf07JHyJqB4RZ0q
-         wYhIk7ZL3cMCjYvZ/X/C58tEJA3Ndaa6/kFXlksEzBjgrxoEnfz3vmRyzYnySSHSf796
-         1QlA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718179340; x=1718784140; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ibUc+zwzJLvbl/Wmj0pe2SpxSlINttj4gVe75zpWZPo=;
+        b=IP0n2msnQb8vkTxJnWkRKB3Q+0/1Kmfsm/tUzDE3Srv6qCIkqDHUrP0oyXf2qdO3KA
+         QT3y3wycFgwQIUgozlrJ3LnMb8tcOTwGXiaVLvCzygnwCbEvrrV7HUPh/Mvu/qWMYcsV
+         vJlqehWI+la2i6cKLkeFwqMb/Y2//4VVZWJTEl+DUTvo0n1Hc6mMFWqbP5Y+iC4rOxo5
+         QZHczZUtrUYZFl17H+ZE0wV+C9ftAxfYHMrL9O3QuHWfrUytiEUFfcHVNN6UztGaZzoG
+         CqXDLAPTYAHshtNiTcSb/NZeY4ngZH5t8cfGNiryqeYzsqIoMoJDqO4g/r8X0S9NCXrj
+         +1jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718179337; x=1718784137;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ksBSyA+j9QPSkEsVDee/zoG9hDnAPGUv/QuDtN8Vy0=;
-        b=Cu5O7sJyKNE6p9jPwrT6dQdNZEYrpUkXIjVMOFVoUc6swIh2vVznOT4s4YlRvhOPRu
-         s8ty1xCEp/A509J0z70Q/9G0BxYDw98KbSIoJNCyUjGt3gsePQplw3vR82TvF5IKSiEz
-         5pxwamtX62+KIEmCCvdJ9HEOCYEDu6QvsdEZoZaARJRkptrNu4bBQs5VMlRLWdS+Q6cI
-         FMLMHBEthkrC0cyLHbYEoSIA7YPlVJRV9g4GphRnrofDniRly+6SU9Lq6kuRkVpOUCs+
-         3dZUI/gKc0cybvxfuvsX/5Ng7yAaS/V7koDsa4/EL4LUhimNLPvTN/TZbZKVMQTIWSeU
-         AZOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOYUkHpbSph7Q9aCHTxsY12D6Q03yM0ZsnF55OCsamLTtfSFTeDRn95DtHfgLKFJ/9B3yDA2qtO4nrvcm6uPvzfGk2lcC2c60dt388
-X-Gm-Message-State: AOJu0YyJd5xyF5mPWb5u6d+AFZhJHleVqKB+bK8J9jzOujY17De4XWKs
-	uJC9SbAsjJWdmG+waYuha/Gfm06Dib8CFhQDlFko1rk1t6WOj5MA6LzNVTONyy8=
-X-Google-Smtp-Source: AGHT+IFXYFUX0JPIwmj9Dya04E+MPasUBHNXYfyKZZbDpuWUHf5YESL4MGY5Xiz2kjIyRyPElOx9vw==
-X-Received: by 2002:a5d:6a8c:0:b0:35f:1cbe:2e2f with SMTP id ffacd0b85a97d-35fe8917f56mr730173f8f.47.1718179336991;
-        Wed, 12 Jun 2024 01:02:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718179340; x=1718784140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ibUc+zwzJLvbl/Wmj0pe2SpxSlINttj4gVe75zpWZPo=;
+        b=htNcQQqOtto67j4AYczk4zUd/kYF0Bwj2tWtbVFh7vE+P7M0ljaIeWV/Z5RfmWadpa
+         u1Ait90lAMXSHUr/UEQFH51ZbaH9n7vB+oPVw/B5BUhuRt6ZNuAnsZbcSDvZrKa+8HMK
+         mR9WAyu3Du5IELcgs0ZsYooYItgptIUN8bt+TYGBfnAmqZq3UeclvPU2I5xCMya8oWYi
+         8WSNzyVy6iIcjWMC/yfZxGpYx11Z/3SuPwPldYpzpO7Wdb90QdS+/T0OGQk7wPOqxQep
+         6yDj5kk6DfOy619/Uh0K/lNJF1SQGfcrmde2Chv/7z+EV3LGqsxdVg9qjacdJii6KMOg
+         uwHw==
+X-Forwarded-Encrypted: i=1; AJvYcCW29Xw05RGzDd0OZqr3Vo2MaD0odd/hhqJXTLth2/qcmcCpXi2lcUh+Y+6T9k3l+Kk7vw89qI6kMA3yB3tJ/YVuL93DyE0rURN/s5nn
+X-Gm-Message-State: AOJu0YwFDWMwpTHkPDUw3kO6dBHCUCQjusKOj9evfr36ef1Z9HbU3tQF
+	XkhYcgsffE8Sd4QulgbMs8vy9eNA56GCj8Gse+41REYumiKW1FDkJwB468uXr5A=
+X-Google-Smtp-Source: AGHT+IEZO0Ryu2SN1F0auWS4jC+K9mTuzpwX5ynw1tvj4TWxSVveKrOVJOe+PFGEMMWDSZwmTq+PVw==
+X-Received: by 2002:a05:6512:110e:b0:52c:9252:f822 with SMTP id 2adb3069b0e04-52c9a3fd6e8mr697924e87.53.1718179339955;
+        Wed, 12 Jun 2024 01:02:19 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f24c7a9c8sm7452585f8f.78.2024.06.12.01.02.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f24c7a9c8sm7452585f8f.78.2024.06.12.01.02.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 01:02:16 -0700 (PDT)
+        Wed, 12 Jun 2024 01:02:18 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
@@ -64,11 +66,16 @@ Cc: linux-bluetooth@vger.kernel.org,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v9 0/2] Bluetooth: qca: use the power sequencing subsystem in hci_qca
-Date: Wed, 12 Jun 2024 10:01:48 +0200
-Message-ID: <20240612080150.18375-1-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>
+Subject: [PATCH v9 2/2] Bluetooth: qca: use the power sequencer for QCA6390
+Date: Wed, 12 Jun 2024 10:01:50 +0200
+Message-ID: <20240612080150.18375-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240612080150.18375-1-brgl@bgdev.pl>
+References: <20240612080150.18375-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,85 +86,157 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Here are the dt-bindings and the hci_qca patches split out of the larger
-power sequencing series. They target the Bluetooth subsystem but depend
-on the following immutable tag:
+Use the pwrseq subsystem's consumer API to run the power-up sequence for
+the Bluetooth module of the QCA6390 package.
 
-    https://lore.kernel.org/lkml/20240612075829.18241-1-brgl@bgdev.pl/
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD, SM8650-QRD & SM8650-HDK
+Tested-by: Caleb Connolly <caleb.connolly@linaro.org> # OnePlus 8T
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/bluetooth/hci_qca.c | 74 +++++++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 15 deletions(-)
 
-Please consider picking them up into your tree, they were reviewed and
-thoroughly tested.
-
-Changelog:
-
-Since v8:
-- split out the Bluetooth patches into their own series
-- Link to v8: https://lore.kernel.org/r/20240528-pwrseq-v8-0-d354d52b763c@linaro.org
-
-Since v7:
-- added DTS changes for sm8650-hdk
-- added circular dependency detection for pwrseq units
-- fixed a KASAN reported use-after-free error in remove path
-- improve Kconfig descriptions
-- fix typos in bindings and Kconfig
-- fixed issues reported by smatch
-- fix the unbind path in PCI pwrctl
-- lots of minor improvements to the pwrseq core
-
-Since v6:
-- kernel doc fixes
-- drop myself from the DT bindings maintainers list for ath12k
-- wait until the PCI bridge device is fully added before creating the
-  PCI pwrctl platform devices for its sub-nodes, otherwise we may see
-  sysfs and procfs attribute failures (due to duplication, we're
-  basically trying to probe the same device twice at the same time)
-- I kept the regulators for QCA6390's ath11k as required as they only
-  apply to this specific Qualcomm package
-
-Since v5:
-- unify the approach to modelling the WCN WLAN/BT chips by always exposing
-  the PMU node on the device tree and making the WLAN and BT nodes become
-  consumers of its power outputs; this includes a major rework of the DT
-  sources, bindings and driver code; there's no more a separate PCI
-  pwrctl driver for WCN7850, instead its power-up sequence was moved
-  into the pwrseq driver common for all WCN chips
-- don't set load_uA from new regulator consumers
-- fix reported kerneldoc issues
-- drop voltage ranges for PMU outputs from DT
-- many minor tweaks and reworks
-
-v1: Original RFC:
-
-https://lore.kernel.org/lkml/20240104130123.37115-1-brgl@bgdev.pl/T/
-
-v2: First real patch series (should have been PATCH v2) adding what I
-    referred to back then as PCI power sequencing:
-
-https://lore.kernel.org/linux-arm-kernel/2024021413-grumbling-unlivable-c145@gregkh/T/
-
-v3: RFC for the DT representation of the PMU supplying the WLAN and BT
-    modules inside the QCA6391 package (was largely separate from the
-    series but probably should have been called PATCH or RFC v3):
-
-https://lore.kernel.org/all/CAMRc=Mc+GNoi57eTQg71DXkQKjdaoAmCpB=h2ndEpGnmdhVV-Q@mail.gmail.com/T/
-
-v4: Second attempt at the full series with changed scope (introduction of
-    the pwrseq subsystem, should have been RFC v4)
-
-https://lore.kernel.org/lkml/20240201155532.49707-1-brgl@bgdev.pl/T/
-
-v5: Two different ways of handling QCA6390 and WCN7850:
-
-https://lore.kernel.org/lkml/20240216203215.40870-1-brgl@bgdev.pl/
-
-Bartosz Golaszewski (2):
-  dt-bindings: net: bluetooth: qualcomm: describe regulators for QCA6390
-  Bluetooth: qca: use the power sequencer for QCA6390
-
- .../net/bluetooth/qualcomm-bluetooth.yaml     | 17 +++++
- drivers/bluetooth/hci_qca.c                   | 74 +++++++++++++++----
- 2 files changed, 76 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 2f47267508d5..2b31f3dc33a9 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -28,6 +28,7 @@
+ #include <linux/of.h>
+ #include <linux/acpi.h>
+ #include <linux/platform_device.h>
++#include <linux/pwrseq/consumer.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/serdev.h>
+ #include <linux/mutex.h>
+@@ -214,6 +215,7 @@ struct qca_power {
+ 	struct regulator_bulk_data *vreg_bulk;
+ 	int num_vregs;
+ 	bool vregs_on;
++	struct pwrseq_desc *pwrseq;
+ };
+ 
+ struct qca_serdev {
+@@ -1684,6 +1686,27 @@ static bool qca_wakeup(struct hci_dev *hdev)
+ 	return wakeup;
+ }
+ 
++static int qca_port_reopen(struct hci_uart *hu)
++{
++	int ret;
++
++	/* Now the device is in ready state to communicate with host.
++	 * To sync host with device we need to reopen port.
++	 * Without this, we will have RTS and CTS synchronization
++	 * issues.
++	 */
++	serdev_device_close(hu->serdev);
++	ret = serdev_device_open(hu->serdev);
++	if (ret) {
++		bt_dev_err(hu->hdev, "failed to open port");
++		return ret;
++	}
++
++	hci_uart_set_flow_control(hu, false);
++
++	return 0;
++}
++
+ static int qca_regulator_init(struct hci_uart *hu)
+ {
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+@@ -1752,21 +1775,7 @@ static int qca_regulator_init(struct hci_uart *hu)
+ 		break;
+ 	}
+ 
+-	/* Now the device is in ready state to communicate with host.
+-	 * To sync host with device we need to reopen port.
+-	 * Without this, we will have RTS and CTS synchronization
+-	 * issues.
+-	 */
+-	serdev_device_close(hu->serdev);
+-	ret = serdev_device_open(hu->serdev);
+-	if (ret) {
+-		bt_dev_err(hu->hdev, "failed to open port");
+-		return ret;
+-	}
+-
+-	hci_uart_set_flow_control(hu, false);
+-
+-	return 0;
++	return qca_port_reopen(hu);
+ }
+ 
+ static int qca_power_on(struct hci_dev *hdev)
+@@ -1794,6 +1803,17 @@ static int qca_power_on(struct hci_dev *hdev)
+ 		ret = qca_regulator_init(hu);
+ 		break;
+ 
++	case QCA_QCA6390:
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++		ret = pwrseq_power_on(qcadev->bt_power->pwrseq);
++		if (ret)
++			return ret;
++
++		ret = qca_port_reopen(hu);
++		if (ret)
++			return ret;
++		break;
++
+ 	default:
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 		if (qcadev->bt_en) {
+@@ -2168,6 +2188,10 @@ static void qca_power_shutdown(struct hci_uart *hu)
+ 		}
+ 		break;
+ 
++	case QCA_QCA6390:
++		pwrseq_power_off(qcadev->bt_power->pwrseq);
++		break;
++
+ 	default:
+ 		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+ 	}
+@@ -2309,12 +2333,25 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	case QCA_WCN6750:
+ 	case QCA_WCN6855:
+ 	case QCA_WCN7850:
++	case QCA_QCA6390:
+ 		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+ 						sizeof(struct qca_power),
+ 						GFP_KERNEL);
+ 		if (!qcadev->bt_power)
+ 			return -ENOMEM;
++		break;
++	default:
++		break;
++	}
+ 
++	switch (qcadev->btsoc_type) {
++	case QCA_WCN3988:
++	case QCA_WCN3990:
++	case QCA_WCN3991:
++	case QCA_WCN3998:
++	case QCA_WCN6750:
++	case QCA_WCN6855:
++	case QCA_WCN7850:
+ 		qcadev->bt_power->dev = &serdev->dev;
+ 		err = qca_init_regulators(qcadev->bt_power, data->vregs,
+ 					  data->num_vregs);
+@@ -2360,6 +2397,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		}
+ 		break;
+ 
++	case QCA_QCA6390:
++		qcadev->bt_power->pwrseq = devm_pwrseq_get(&serdev->dev,
++							   "bluetooth");
++		if (IS_ERR(qcadev->bt_power->pwrseq))
++			return PTR_ERR(qcadev->bt_power->pwrseq);
++		fallthrough;
++
+ 	default:
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
 -- 
 2.40.1
 
