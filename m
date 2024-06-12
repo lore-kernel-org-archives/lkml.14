@@ -1,204 +1,201 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25983F8F7;
-	Wed, 12 Jun 2024 18:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216915; cv=fail; b=oFu/Rsm9Q5DYpDJF5cinjF6tFNOJrRquP9+ugtFIkTba8cZXXwiiihL5SuuBFiPZ/g6yK5P7AHo6SLG0CHqTSDdNNM1brYkE32dBBMWPHHx6Ej0uZpoZQ9pSHdvs4mu+JQVgYYOZ190Rmkw1+K+iUVVLzDQGypEYbcRBZeyhu1c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216915; c=relaxed/simple;
-	bh=O/tssF8N467H7YEWxOaa14SJ8c9kk7I+NTHdHktmdNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mC2LQQDJH0pqUVv1wRyy/rId5GG/U3ZjBZTQfnkzbohwAEMYPiS7hlFcgV2kpKnASbciWKXZavD6+c9wAhmzsuEqmmsDgH9d2LshqQFO/mfNTF/Aokgo0HEF4/8Qu3Gxd85DCijKQgcOvvnnNr20Luact7VZlIpp4M9Q4YA8FeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=bG3gRfsx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YwDQ5p6l; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8127454757
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718216925; cv=none; b=bFr2HJTfivYbJnAlrEcHaCVb2hxQlAnqQGQSTB/WsTTwVnzEBxGX17LlSE7I/3PlqeZ0DB7EPbWjiaPNThh5Ezxr4/n6yjOA09pW0gOmYcLn39t9SiORAP7t5g4wAH1rsL7ajYnBS7e+UyU8lQ1LPo1HY7DLha2/Z0zkAIXQ2fw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718216925; c=relaxed/simple;
+	bh=EJ6QMiTUGD8BpAvPeihNMjmAsqVldBn/0MSVdoeEM84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1aix/YkpQosmtVZpgURcYEi8geVfJGm5TML2Z3XjoYbHNoWrKQWxmCQ9/h7fjCpva+P36XJeZ8X8JHaA5iwKuz1nCbEn8dZWdZug/NEKG8F0sT7/MkRJrQzWOqG1v8pZzg1k0PwzG1ncBFETN68B/Lnlurd84PxkBEvU8z9Ql8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dN9TB0PW; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bG3gRfsx";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YwDQ5p6l"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CFGFf8008934;
-	Wed, 12 Jun 2024 18:28:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=b6N5xqQnVM5rxyg
-	7/qJn6eQbl2IVss4qPMcmG/8bekw=; b=bG3gRfsx/qIW8CIsxKWP+/RxoX1h4DF
-	MqO/28FI7l4cujLkfUE/RUiCdQlCysPhwO0if3STRQxeI1iRnsMHxLx06jm2r1yt
-	u4SUxbyBnMsVt8iyK/VYCJ+eiLhQH4nLrSnB9uz0iUSyyT8o9tcXhfdVXcaoF40U
-	EpQjGxK6KOfFWy7M0/gw/2wLQ/zejXn7xEH4ctNXZF3m3u8blYR5MZyyfu8quTAD
-	eojWvL72rXb3J9kCxlfhuybSuXAn0OTxIjaSMaSnKOCwFciVd8jGuBkM2Q0eTPoG
-	fmMFYYhKiBYxa9rn7TYvuoZGzDeMHe5VVGi/DNacrAtr08wzddtvohg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh197s5j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Jun 2024 18:28:15 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45CI9wsV014351;
-	Wed, 12 Jun 2024 18:28:14 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2040.outbound.protection.outlook.com [104.47.51.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yncevu9pf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Jun 2024 18:28:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ei29v2SB5K43Y65YvCUZmN2jBTcG4Y9sYNSrMPyQmM0PlnPEzJVPB3WiGjGfO3LPlGKnpwTg6yoWLQhD8ygkaO4W87sYeRraDCI7VJOjNuPQ8kTEkglAdGLuL3oZn3nNeqtPbq01FVtwVwvGZuwDvB0T8jkWq0Kfb/nYTd8ebjoexsMn/VIKaFLRYU0SWgWFirk0fl/r9PBXsFPJrBhwP+10Rd8/udzZc2Cw2RCdvQAK3x/h3JBcFUHnprp7Ds+HNOxiPJPYxIqISyHUamHimENKHPCiyKyhE/onW94RlEMO+5Bi7nHjC8tQbi1taEUrQ9WWPE2pPlyD56ssC/4YhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b6N5xqQnVM5rxyg7/qJn6eQbl2IVss4qPMcmG/8bekw=;
- b=BKpWVA8P7nxPd9i8rRpwxzuP7nEqKF3KfKx1lyX1n1l2uEkvTIz+OHaj5h4SZ583Y8ODdZegtw6hdvF7Yap27E37K2FLmcLjY6AgFCAJbGPmn6IwD/NTHhxOGuvhzTDsAWwnfBTAme4Se4EEOdHB6YnsWxlTCR8H9eIIUMc+5c91y1ZjA5fISWVPxJ6I95yq57DFuuiyvRG/UnPw65mNuDQE8HCGIP2Uah7BOGxMpEJWwnfy1QCavidJUqopm4wW2wxvVI5jQbIK0EkoMIic3lSeOHRNXgMybDuMzb9Pdg3M3yYE3Xim28d+GqwvjarD0mYu1BtMloKaaZjwdgm+4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dN9TB0PW"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c84a21c62so245454e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:28:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b6N5xqQnVM5rxyg7/qJn6eQbl2IVss4qPMcmG/8bekw=;
- b=YwDQ5p6lk3jr5YFjoSPSSr0VNUbJcSYQDat9EJujX0hvrSo+EmSLgtL++tKqVrAxgIfJhYOVUVuWWImpQ3fAm+vQgcZm3JiUfXtvU9ONQPzaOrhnAeh4Tfi5vkNLt/D9oUnHtkPL8zlOah/phYrHM3DQoV8SAy4s3yqNAQsVP9I=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by SA1PR10MB5784.namprd10.prod.outlook.com (2603:10b6:806:22a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Wed, 12 Jun
- 2024 18:28:12 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.7633.037; Wed, 12 Jun 2024
- 18:28:12 +0000
-Date: Wed, 12 Jun 2024 14:28:09 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, gregkh@linuxfoundation.org, linux-mm@kvack.org,
-        surenb@google.com, rppt@kernel.org, gerd.rausch@oracle.com
-Subject: Re: [PATCH v4 3/7] fs/procfs: add build ID fetching to PROCMAP_QUERY
- API
-Message-ID: <uofb56lk6isrwqf42ilky7r3wa4tetaaze2m2ususzqpbnftkw@hwskh5quvlfm>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, gregkh@linuxfoundation.org, linux-mm@kvack.org, 
-	surenb@google.com, rppt@kernel.org, gerd.rausch@oracle.com
-References: <20240611110058.3444968-1-andrii@kernel.org>
- <20240611110058.3444968-4-andrii@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611110058.3444968-4-andrii@kernel.org>
-User-Agent: NeoMutt/20231103
-X-ClientProxiedBy: YT4PR01CA0408.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:108::13) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+        d=linaro.org; s=google; t=1718216922; x=1718821722; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X4A3nskQbinN2oXidgSFRXNzq96u2qf2Pg7QGZ6rhiQ=;
+        b=dN9TB0PWNdbyW1kqe9Hj4w8O8IGUe8mj2zXhexLjZ4K1CBI2Wkzfp/zB25XFjJh2Mv
+         a328Pe84OkkVW+Cjaj7iEg+qS52F4j1FYQEUjNV6D4HnE1V7WTvCbMUiGeqqmw8TabGq
+         Pyao63JuOrRKbUPoAy5bMx16r0LzbXtqbpoxdGDKqrx1lZ+Bfz0x1uj9D5RGd8YO3nL2
+         TvxF7DL/uIMqkXKSkbcbVr7nMk8YISfRuTTAuIKEuRGwpJymkq/p9GKzRQGrssdcr1DE
+         WFwn/94WglmOPMIms1bEn+Ya36tp4DARSQORKVuCyYVXC8mBs7bh/HMpfStPpGonkS0A
+         C27A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718216922; x=1718821722;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X4A3nskQbinN2oXidgSFRXNzq96u2qf2Pg7QGZ6rhiQ=;
+        b=lzB8IZG0rvKJlCqrNeR5iweKUh/Rkn5HAFWE2AL3IOBdZTtA2mDYQgSLve+DQlFy+a
+         yW4Xdx6Cd38ybE3kSL+/Gp0YO9YICfo7MJM5lw4xsbDVPUwNNuPuAw7gBE1ZU1lZwd+Z
+         uZjDZBrMiXwjlLcXJ47KWpG8A+zehjBsj7cGX7/D1tOgqYpKGOp+lcvG7MYXIhvlOXKW
+         pzTd1oNCDuAeRlESp9UFOPdfeJL6eJmtqIiw+B0NAlZ/bkPnmxesx0v+BWSTvdgNj/bT
+         /CMvC46n05PLfINxBIb3NFvbGbZ1HIdzdCgpjRzSsTeCefO2UQ+A4+7PfTkcX/E2BbMj
+         YnvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+JLeoFgGuqMFLgropcNePXqYQBf03SkyzB0Z+rOb4TfV7pYMLKEMAahoYGY9pF52hj0JZcCN7mwdPskv2t/36PC16q9lFuI31R20V
+X-Gm-Message-State: AOJu0Yw7Jjwlm7l6Ef76z0oszZHZHpZGz3EUlHFIhwnO+zvZJyDogGTO
+	JxqLayJZlf62H/K5Hg/vOj9Lcu7Twp+e5FxndSfI/SuiQrSwToyv4l1QBgNzOy3myaAs/eqhUz5
+	XUBo=
+X-Google-Smtp-Source: AGHT+IHqxWBY5W5/D7iMvIiOM+bNYgI78Otk50SorVbJ2aH6damt3orZjW3DPhMTysOg1CnepRZEIg==
+X-Received: by 2002:ac2:504f:0:b0:52c:84d1:180e with SMTP id 2adb3069b0e04-52c9a406773mr1338021e87.67.1718216921351;
+        Wed, 12 Jun 2024 11:28:41 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52c8d61d17csm1380065e87.45.2024.06.12.11.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 11:28:41 -0700 (PDT)
+Date: Wed, 12 Jun 2024 21:28:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>, 
+	Oded Gabbay <ogabbay@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
+	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v1] misc: fastrpc: Move fastrpc driver to misc/fastrpc/
+Message-ID: <zbpia232dh4ojfsvhcqxrp6cwfygaalu5cycdrs47pqmnrisvk@dq24nww26gkm>
+References: <20240612064731.25651-1-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|SA1PR10MB5784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8deea059-752d-4e35-349b-08dc8b0d6a90
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230034|376008|1800799018|366010|7416008;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?WTNtpWRRFyl6RUmIQ2P2v28itot9dzbHYs4Vd3z7tXbm1d+f1KNKiHtBFgVu?=
- =?us-ascii?Q?QFK86Yw2dRhpPe1I2rl6dXH5s7ePxWVCCbRZePVi8Lud5nH1k4E/3isYfLa4?=
- =?us-ascii?Q?bTCRE+ehKROu+4wteXCMyYiGmVggIdfSopbnAcMuXIw3lDzZ7/xAK1UFcPJl?=
- =?us-ascii?Q?40w+3LUevBlcrkwgw+B/TDSNn7b0Z+r9C+3PVm+Y7QOfFj/dpCcAO2+FtQsd?=
- =?us-ascii?Q?a9IklXnAtVR7vlSjlWYr47ioUPwd4tFfGIur8wMae/N883BCSlVm+rpsxNVN?=
- =?us-ascii?Q?eT2P6JHU+p4+qyO6aRuHjEzqF9oxupddpIxg4M/O3I6t7d71F0uCSLS+RJTm?=
- =?us-ascii?Q?0Z2UYJSc/VeYDz1s5FxC+6eEYGz4FhJrsJ65y/l6dCNrb2MBRCWmN4M0JrXj?=
- =?us-ascii?Q?LIOrfSro5f2s7tSzYr6pzhHl3C3bgBofdnSaRmLenTG+E+yyzaY7/twdrRKV?=
- =?us-ascii?Q?7v70EmGEiQQ2vYMLOYD3m8pQB5yHKQiE8OtUw5x68EjEdtMlBdRkdUf3ujdd?=
- =?us-ascii?Q?kI4rwhIgpHIdGlc0SE2SXGFXfOTwsrzgTjwYt6yP/HhFpTEGF9nTIt62OO9L?=
- =?us-ascii?Q?C8QmmZhqB/8y6xZePf/J750BZ6WaEoddr2JRfn+8lcZRHtcH5ir+eeh3in/L?=
- =?us-ascii?Q?SbqKA2ZmlfaPluqnjcPdfaL4feXh1shUMfPfuCKNpN1g9keN9V94zrlnhwfQ?=
- =?us-ascii?Q?197pAGv9S94WIKWZK7xXO43IMM4LZHoa1dVTBImZ3sM22jQZqtpdA4aooq2e?=
- =?us-ascii?Q?RxJu6p7/HCPKuwQllWA27WU/tGDkkeCg5HWh8yRMJW+bu6Qswu1f4aFWq28c?=
- =?us-ascii?Q?z1OcdZpnIX+tuldKtNvmUQVmTbkjcSnQItahe9HMZFVTKIPixc+0adaPI5jB?=
- =?us-ascii?Q?itZjbSXl/Ai8bNI509ztjQQoGJ3hlzC6Tt7WM26sv/joCGJpzOIFrb4oCbA/?=
- =?us-ascii?Q?AqYlPwWY4NcsHnwBh1i7X2bjf5LId4Gu+9cLNOrJ24H9CZ5+A5UBXQNPW6v0?=
- =?us-ascii?Q?95KeBoDqx7TJQIymUnTQjyXJZRWAHQq8rIGUTyU9CBfDdY38YR/5vir8Tr26?=
- =?us-ascii?Q?mnJU8q60qxsVJi12BBaBpRV9mKzAnxzsJC5Ha42RiZvaozvUycA3QD70wWH2?=
- =?us-ascii?Q?2n4J0cMVXTM7zDM9wzC6id6Gn9/ydxcNZYPHyz1812IyMzunOT4d2ok4/wM0?=
- =?us-ascii?Q?IOsJf21DJv4YJ7S+aT3WP7e8pOFSxW2+DSShB8MZs86q8ZTMRJYcqiwZhv9Q?=
- =?us-ascii?Q?9tO6lUFHcclpsXW2nwSOUrDBsxJxJAE5XTuQeSdKhy5CEo8AdXSQnzDXbhQk?=
- =?us-ascii?Q?fKjs8jnMmy8uHk32kXgstEIb?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230034)(376008)(1800799018)(366010)(7416008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?H9oEHnVfE1fAkKNosmnKrwyVFavBYePeubicNScJUZFJP/YQwwf3Muf/RYqo?=
- =?us-ascii?Q?bwmTdP+ZovdWyIu1KUJ4mXwcXpET2uJYplslCWf0kZS3WEIi/XSdGoq/ovYS?=
- =?us-ascii?Q?6iws2mBAFOnKqdgoKCLIXdgsiEvFbRFzCmsNvuejYMUIhRiUJ7jYzvbjcFlw?=
- =?us-ascii?Q?0TM92+SURVf80cOuykz9UQjs6t2mwdw3FyO0Db5Ae3hfj7dtYXuJGuL6/w+E?=
- =?us-ascii?Q?zDuEPHrWBg0S1vnSE1kDrcyYrhOpJw6Vc8ztDVnhf2T4GTuFIXCwuylwob7X?=
- =?us-ascii?Q?bmWzMKsSCH3hsd8S/G37vEZSA/NGWjmINH1dtmzpfbDWtOWDYm66VsnNTuON?=
- =?us-ascii?Q?1xEyVD0cOgVOmkZKbxnVko6qw42JZAybdxLTkR1Bfauk80C+qQS0kfbAhbLw?=
- =?us-ascii?Q?xZC5iTKQWRk4JNqsP4VNB6YGPi/tUon0HcNsFI5CGYpoMwzvmxWeUXQXsZEw?=
- =?us-ascii?Q?bPmfohvyzhODehX0XFVFggK9qwhgFwwirO4N3JNplOaWprywWFJ/TSNauLNO?=
- =?us-ascii?Q?5V5q3BUYDlQ4UDzJr/jbpt0t17p4VEzqBqBkvD7NL3qbrh+50T3EKJ6ix/dB?=
- =?us-ascii?Q?i3YYxuZ/b0Zu98snk5ItAaIu1ad+w0/9nQeazK9Qqsraja648gxJ9trsfuoR?=
- =?us-ascii?Q?P4iQu73Avhtp0SbNf2ad/QkwRE6C3jiTVOwjbFRXJe5PKUYuCRnqTElodOI8?=
- =?us-ascii?Q?gBiCLhH7OK5WPPqajzolzVsXBk1Qs5WZ2Jff9NVMtVboQHZrYBg/JIF+XqsB?=
- =?us-ascii?Q?DBpwoc//f3mHT9y5mZ7m9r6bri++SxFG61DQ1EWaoRTF6AEyoxiaxPb0CmLl?=
- =?us-ascii?Q?tl3cCnXCc8pZCLNik5mESUcgY3WsyeMLaTdmBKlTlnN3h8amnecBP5SUCJbm?=
- =?us-ascii?Q?JIge3KcD4zyEqxZUH24VD3VIAwwQYN3talby7kTM3+YJiyjrOrPk+ccIBqsc?=
- =?us-ascii?Q?YUtVZCWcp1ZQnwtZDZ2Et22S7g93R3wI7NrEwz1wYVxWaaMnYEWmr1JMkFG1?=
- =?us-ascii?Q?7QzV4E2Ya3WSgXx++vyxKh/IxupGPTCBWoypKNJ6u6AZnRrJvbEeNEn5lF35?=
- =?us-ascii?Q?VAqut4g7LgTkI79Th6LjGLxdq1c1Q+zUuIy+EAw5d49F4t+4KEYxVM3/b6Qd?=
- =?us-ascii?Q?ltlMJjpEpiSEr36a9F+ckCwptDAhMrKpbNUKgEJC9OYIeDDQSuPMTTfz0E1T?=
- =?us-ascii?Q?fI/r1fXiWNN86DqnAXtS3rGZXx19OJ+3Arvhvo+Gk7HjuB33RkEGq+5ueiVb?=
- =?us-ascii?Q?2IKU5weVA9DndH7yHcEacr3aA9DQd7o1CgYj6IVfXb1H+syQLHAapZ5UZ9dD?=
- =?us-ascii?Q?hgPjmdRuSdkesBAD1GFB/q0cks72QFa0XmqPEMIkb61V81ihrclqTJ6t4yPf?=
- =?us-ascii?Q?geGRFo8X0WL7yQzjmLKmpoQHZnrgG515CahGb6jBEwYAmmUhQNLrUHm3tiTv?=
- =?us-ascii?Q?NEpeQWqraE0L50shHSXxSPQuBzHVhxyy2IwKI4PAgyukBxg/Zoj0fiMOP5I/?=
- =?us-ascii?Q?scYxpPqk/9f+eeDLIJIO4crOFXoAuus7v+Uf8QLm/xOMitLB0xRD+RW/7/4a?=
- =?us-ascii?Q?gHubd6Bf1kV4LjCHO48lLFKXbZY8wVvEkOK96IE9?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	RhVd8uwP0PocfIQGEV0z4TykLtge+vLHXvzsKUZuPGEhK8TiE2bpxCTdRjEBlCHlkN2PTil2XMzQ3055xWy5LDt1DozKcD1o0ToGzJnvwIbyqi+dkxa4OELdR3xnc3e9ylJHGO6Q6nQnPHGjYPNAZ4wRGIaTCRxivatQrTwRVwgVIqmZKTBX0EEdV6/9gLevTkQ99Apv7Si/8iTvPjX6TgGPu7FpwMFgRwfH3DX2Ea9QVfCIgdzU/Gj1ILTeFx1r0DLi7rxaSzJrH77DAevCth1t5iGmB98yW2g2BsMDUQzuHyADVicIAlPbCpqGwpsQxaJ500RJwtkAuiHdHHg/pMOB2v2BwmDXURcSmLCr+iPPBW9jPq0+Uk7NtyEjOlVvej1FGclWIsgyQHesB83VbGDYFBXpXDKMR4Ed0TSHwLEMprHgnOPmwK6YWYpmGzvPQbDRLa487F1N7tz8EGb3diAdmLA7fTTu3eLbh+wyFY3iCWfAOiZBFreknZ+ZBXqdUQ/AV6obXchFAdP4j2STzMrQloLYBl7L6p4hpMWqZejEm6VzKh0u6W8X2BlsHhoicLmytAo8G5nLaLMBouqVXzWh1oZhailxAhdWtiXMw98=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8deea059-752d-4e35-349b-08dc8b0d6a90
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 18:28:12.0180
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uztJBvHvEjhme2QUIZ+mTwaoAvyCFH+S4vhUZoFMnCxyIKJLUySqjRyLMnCT4CBPMtadWntYKkC0uFX5fyegsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5784
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_09,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
- mlxlogscore=694 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406120131
-X-Proofpoint-GUID: wQcyU5rNRp76FpF08C5GUkVaWP9xP7cP
-X-Proofpoint-ORIG-GUID: wQcyU5rNRp76FpF08C5GUkVaWP9xP7cP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612064731.25651-1-quic_ekangupt@quicinc.com>
 
-* Andrii Nakryiko <andrii@kernel.org> [240611 07:01]:
-> The need to get ELF build ID reliably is an important aspect when
-> dealing with profiling and stack trace symbolization, and
-> /proc/<pid>/maps textual representation doesn't help with this.
+On Wed, Jun 12, 2024 at 12:17:28PM +0530, Ekansh Gupta wrote:
+> Move fastrpc.c from misc/ to misc/fastrpc/. New C files are planned
+> to be added for PD notifications and other missing features. Adding
+> and maintaining new files from within fastrpc directory would be easy.
 > 
-> To get backing file's ELF build ID, application has to first resolve
-> VMA, then use it's start/end address range to follow a special
-> /proc/<pid>/map_files/<start>-<end> symlink to open the ELF file (this
-> is necessary because backing file might have been removed from the disk
-> or was already replaced with another binary in the same file path.
+> Example of feature that is being planned to be introduced in a new C
+> file:
+> https://lore.kernel.org/all/20240606165939.12950-6-quic_ekangupt@quicinc.com/
+> 
+> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> ---
+>  MAINTAINERS                          |  2 +-
+>  drivers/misc/Kconfig                 | 13 +------------
+>  drivers/misc/Makefile                |  2 +-
+>  drivers/misc/fastrpc/Kconfig         | 16 ++++++++++++++++
+>  drivers/misc/fastrpc/Makefile        |  2 ++
+>  drivers/misc/{ => fastrpc}/fastrpc.c |  0
+>  6 files changed, 21 insertions(+), 14 deletions(-)
+>  create mode 100644 drivers/misc/fastrpc/Kconfig
+>  create mode 100644 drivers/misc/fastrpc/Makefile
+>  rename drivers/misc/{ => fastrpc}/fastrpc.c (100%)
 
-Can we please also add the vma_kernel_pagesize() to this interface?  We
-have a user who parses the entire smaps file specifically for
-KernelPageSize, which could be included for a low cost here.
+Please consider whether it makes sense to move to drivers/accel instead
+(and possibly writing a better Kconfig entry, specifying that the driver
+is to be used to offload execution to the DSP).
 
-The only way to get this information today seems to be from the
-/proc/<pid>/smaps file and it is necessary for certain hugepage calls
-for alignment reasons (otherwise the calls fail with -EINVAL).  Adding
-this extra information would allow for another text-parsing user to
-switch to this API.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d6c90161c7bf..e9c79e9063f8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18501,7 +18501,7 @@ M:	Amol Maheshwari <amahesh@qti.qualcomm.com>
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
+> -F:	drivers/misc/fastrpc.c
+> +F:	drivers/misc/fastrpc/
+>  F:	include/uapi/misc/fastrpc.h
+>  
+>  QUALCOMM HEXAGON ARCHITECTURE
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index faf983680040..630e8ccd8669 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -276,18 +276,6 @@ config QCOM_COINCELL
+>  	  to maintain PMIC register and RTC state in the absence of
+>  	  external power.
+>  
+> -config QCOM_FASTRPC
+> -	tristate "Qualcomm FastRPC"
+> -	depends on ARCH_QCOM || COMPILE_TEST
+> -	depends on RPMSG
+> -	select DMA_SHARED_BUFFER
+> -	select QCOM_SCM
+> -	help
+> -	  Provides a communication mechanism that allows for clients to
+> -	  make remote method invocations across processor boundary to
+> -	  applications DSP processor. Say M if you want to enable this
+> -	  module.
+> -
+>  config SGI_GRU
+>  	tristate "SGI GRU driver"
+>  	depends on X86_UV && SMP
+> @@ -602,4 +590,5 @@ source "drivers/misc/cardreader/Kconfig"
+>  source "drivers/misc/uacce/Kconfig"
+>  source "drivers/misc/pvpanic/Kconfig"
+>  source "drivers/misc/mchp_pci1xxxx/Kconfig"
+> +source "drivers/misc/fastrpc/Kconfig"
+>  endmenu
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 153a3f4837e8..f83d73844ea5 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -16,7 +16,6 @@ obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
+>  obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
+>  obj-$(CONFIG_PHANTOM)		+= phantom.o
+>  obj-$(CONFIG_QCOM_COINCELL)	+= qcom-coincell.o
+> -obj-$(CONFIG_QCOM_FASTRPC)	+= fastrpc.o
+>  obj-$(CONFIG_SENSORS_BH1770)	+= bh1770glc.o
+>  obj-$(CONFIG_SENSORS_APDS990X)	+= apds990x.o
+>  obj-$(CONFIG_ENCLOSURE_SERVICES) += enclosure.o
+> @@ -69,3 +68,4 @@ obj-$(CONFIG_TMR_INJECT)	+= xilinx_tmr_inject.o
+>  obj-$(CONFIG_TPS6594_ESM)	+= tps6594-esm.o
+>  obj-$(CONFIG_TPS6594_PFSM)	+= tps6594-pfsm.o
+>  obj-$(CONFIG_NSM)		+= nsm.o
+> +obj-y				+= fastrpc/
+> diff --git a/drivers/misc/fastrpc/Kconfig b/drivers/misc/fastrpc/Kconfig
+> new file mode 100644
+> index 000000000000..3243dc56b2a0
+> --- /dev/null
+> +++ b/drivers/misc/fastrpc/Kconfig
+> @@ -0,0 +1,16 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Qualcomm FastRPC devices
+> +#
+> +
+> +config QCOM_FASTRPC
+> +	tristate "Qualcomm FastRPC"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on RPMSG
+> +	select DMA_SHARED_BUFFER
+> +	select QCOM_SCM
+> +	help
+> +	  Provides a communication mechanism that allows for clients to
+> +	  make remote method invocations across processor boundary to
+> +	  applications DSP processor. Say M if you want to enable this
+> +	  module.
+> \ No newline at end of file
+> diff --git a/drivers/misc/fastrpc/Makefile b/drivers/misc/fastrpc/Makefile
+> new file mode 100644
+> index 000000000000..77fd2b763b6b
+> --- /dev/null
+> +++ b/drivers/misc/fastrpc/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_QCOM_FASTRPC)	+= fastrpc.o
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc/fastrpc.c
+> similarity index 100%
+> rename from drivers/misc/fastrpc.c
+> rename to drivers/misc/fastrpc/fastrpc.c
+> -- 
+> 2.43.0
+> 
 
-Thanks,
-Liam
+-- 
+With best wishes
+Dmitry
