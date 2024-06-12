@@ -1,735 +1,367 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A97B16F0E1
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718192300; cv=none; b=Al0eB24gO/8LxjU/gcQjEV/FqBfKQHJ73OcSWkxCOkEUhSI1wkKxnnfgt+MgID09ywmMuxKtCeMWhSe3gmSH31/D8GjuV0wudyxhz2p3vnSwDhMstWxCMqSB7pMK/30XplKkxctXElrayLdtuvZjwy7fhuZYHrJDE7jqrL4I6Ps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718192300; c=relaxed/simple;
-	bh=KuN3GT8ee9WLSaYvtazOTGv9PgxiIRHZAeAlnmPD4RQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j5hohOI8oIPVrSbDGu4ESdK7SC+FGJuirQkDyoyTxBUOTX+hS7P5oVyMkcbWdeVsRQ6Aus5DGQ+4jqrjkRpKGdXYzhWtzcXQ163TAF8ruUN0EDh6NOs0dJQLW5BJmA+T9Yo7bHbttL5i3/1GIVv5QVpNjHqWpBJEbGob0FtwJz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=h1urPgCa; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46E716F0C1;
+	Wed, 12 Jun 2024 11:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718192306; cv=fail; b=Qnt+VOs8Kq6CavSc1Ry8+Z6Cvnren25HEPM/NUHNsspngrqtON1CXZfKTMVStYtoRYxC+0d3F3zMCSP9p4nmo4yP2lzc5Rzvd55z9LPzh0oZ5gf0afUXmKtFmRYZi/33RgYj66JcZaBLuOhZvGJBbn5gQLGQ2LiEIu64wC79nJg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718192306; c=relaxed/simple;
+	bh=FkTQINzxwWHoq2OnAT3FZZsknZ+YTKMIUSDTPjLRgEs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GJumyqKR/Gqb9acQTMJQayPQegBZPbYiF8ZHO1eWh3vwJrskMnkGU/SbuQijSuxUZxaetRq3srsTJJ8JWOVv2FZIcwzEOR17AuBXl0D+6cJMsAQvvnoQaTlu5L+BzSv7v84W6NmKvdUwJVGW35rN9ObAjcxXnlHJ5bnx9f/vVuk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=vj2e5h0f; arc=fail smtp.client-ip=148.163.139.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="h1urPgCa"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7041bc85bafso164421b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1718192297; x=1718797097; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeKzzDxKthVxLl4/eqtxucwloy8jGKCjUGQP5lcpYNQ=;
-        b=h1urPgCa1EKXeRuTY+rT+NTGLgt37DtzreyOL8W269lz5eJjTs0seKVOzPUE00JLwU
-         ISOZaHS4pv1tHfK/b7erj2Wae8Zb8A4YVqIYab8+A5aywmH9txtDXEULYsotRh+KRfyK
-         O4VTBr+Lmbdql9dMiNmthkFAlxcGEKd7wP0oI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718192297; x=1718797097;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeKzzDxKthVxLl4/eqtxucwloy8jGKCjUGQP5lcpYNQ=;
-        b=Br0DXNxB5GXg6RaLfVz1Dp9+ShrnbIwLNUUj0PMtUwDoPGGKoQ/POcWwufBcRNxWfl
-         +NDb1fWGkUJZPfeGVtGuA9Hu09tju1lgD2yybg4PqQKS7iC24Dvy/Ufs1sfN+eWSMrqF
-         oB9WxIulbi07OGLhHov1S/7XD8W+g7x5+X+VAAhZPVuwq0oP3YW5dji6b7tHQqkjEDZ9
-         5j00lemNqFBZO931OJFY4VJYZzBe0qwKUSQF8hOLLKXNcTUzpcTYp85LT3uprvGXCW4v
-         RA4acjsxkElt7bJikJTEDqkdRVJyyC9MYACwLIBxQ4s3os6yWVDXoIsxdddgxPSWd3UC
-         p1kA==
-X-Gm-Message-State: AOJu0Yz+5ayUj2HNAqEnQkQu3N7fmD/0Xb8ccFlAYpRg3sSBoeBliMq5
-	FlyJrkMtJh2QK1CeFHt8G/WV00mZXdMP/g0ADYzWcBlOutnX6FBVWb59JCsrziQXlHaU3LiQ+OU
-	=
-X-Google-Smtp-Source: AGHT+IF/B9hr3Dxj7LXzRM0rIWoZpQJ7g/qv4LpYG525zAhkCaJ01DaFEKMi96VciAfKZVkI9GJVzg==
-X-Received: by 2002:a05:6a20:96da:b0:1af:aeb7:7a10 with SMTP id adf61e73a8af0-1b8a9b48604mr1494010637.1.1718192297319;
-        Wed, 12 Jun 2024 04:38:17 -0700 (PDT)
-Received: from dhcp-135-24-192-142.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6fc06a5d2sm74392305ad.306.2024.06.12.04.38.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2024 04:38:16 -0700 (PDT)
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	bhelgaas@google.com
-Cc: linux-kernel@vger.kernel.org,
-	sumanesh.samanta@broadcom.com,
-	sathya.prakash@broadcom.com,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: [PATCH 1/2] switch_discovery: Add new module to discover inter switch links between PCI-to-PCI bridges
-Date: Wed, 12 Jun 2024 04:27:35 -0700
-Message-Id: <1718191656-32714-2-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-X-Mailer: git-send-email 2.4.3
-In-Reply-To: <1718191656-32714-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-References: <1718191656-32714-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="vj2e5h0f"
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C5Iehl007682;
+	Wed, 12 Jun 2024 06:57:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=ykqL5
+	y2KToGqpLoSESQUJh7GajeEsIPS0in0Ve7QBpo=; b=vj2e5h0fOHVPSwRBFA8rR
+	lH/ZC6iBJEyQD/LS/SicQU5QkjYCV5dkLx+vctmNrLroA9o1lVUtdbNFUJjOREb5
+	9464mX2Svr9B/OHgVJ03Hl5h6uc99QshkV/lm6Ycp4M5eYljyP8qxC64sy99WGfv
+	/oAKUS+DddVObbYJ411/kiyvAuVpA8o2A7TF3gw1ZEsIFPfsbbsunNKqPoekonRX
+	9Gvq3LwJlxKN+k9dHjP8u3Prq/bM1hVYmX6if+3Td2544SWCPyqb9d00sFSWJn5l
+	P+bvXfe2YQtuWPumHsPF35xtqu5hTNi7orDFcjQLmwscUYHBIpElipsahR4EdS36
+	g==
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2048.outbound.protection.outlook.com [104.47.70.48])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3ymh27wvx9-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 06:57:46 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OXyf2VDkbfxaOiMCodcmu8nOkRBYMG/flfNBA7sy3QPgd9mJwQo4Gcgsl6Juv2Oag/c5kuVEqhAzkh/FORbe6ivMBKI0yJ1ggKAFIpPGyfKKy60Cb3lazTFV04KjsyX5cqGs1cVCJ6HYyGP4hjC7vtsqQj6YUm0xfzn7mHekoOybt+fwLTbTDMPoNTRhVbZcyUfoUJlaTMhrUQ2ljqJPF4lEOOmgPZ0Q6ADwHv9YG/9d/bemTz4hHXEj9RnSmEWdjr7u94Xa+PGzu3zMV1mMAnouH00i+n774dsNRg8sqonKfyyRr0lVrrvXv5Umx2rMSWNSozXuJ9xSuPbAzNnNIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ykqL5y2KToGqpLoSESQUJh7GajeEsIPS0in0Ve7QBpo=;
+ b=P9nTyTC8nMnfOEwvEL1GC0GMB+Hzi5k122W6yfQBHkMbDWM/9aPZI+MJlu+Bc4TLDcw1C5MNDRcsU+sNkwR9GcLDhXzenHdrdKR2SjVfPOu3MPw1mKZw8dvy9eVIN6iLxn10gdL0B5sw336/1KntX98J7kjCDbtat5yzcI5LJYvck9uvCYYzGB6XtsGprJT0N8Lj3UeJKJm/oXxRyvUAaLNkpNFbA45nUG0tPH9+NqsbuNlovzS7JUrDlXkdIEpcfCfT1oPEJHfb+AuWVPkNyYExCltZy+Z4kg/kkcSiiO3Iuo5nPhOkZKQHQ7WqVGt0BG2kvQ823CHZ4NOBvX7vFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+Received: from PH0PR03MB7141.namprd03.prod.outlook.com (2603:10b6:510:296::20)
+ by PH0PR03MB6368.namprd03.prod.outlook.com (2603:10b6:510:aa::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Wed, 12 Jun
+ 2024 10:57:42 +0000
+Received: from PH0PR03MB7141.namprd03.prod.outlook.com
+ ([fe80::c559:3d31:1af3:b01]) by PH0PR03MB7141.namprd03.prod.outlook.com
+ ([fe80::c559:3d31:1af3:b01%5]) with mapi id 15.20.7633.037; Wed, 12 Jun 2024
+ 10:57:42 +0000
+From: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Dimitri Fedrau
+	<dima.fedrau@gmail.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        "Hennerich,
+ Michael" <Michael.Hennerich@analog.com>,
+        =?iso-8859-1?Q?Nuno_S=E1?=
+	<noname.nuno@gmail.com>
+Subject: RE: [PATCH v3 1/5] iio: ABI: Generalize ABI documentation for DAC
+Thread-Topic: [PATCH v3 1/5] iio: ABI: Generalize ABI documentation for DAC
+Thread-Index: AQHatVSHmwOhJ2StkkygP01nVjkJQbG9+RGAgAYJYgA=
+Date: Wed, 12 Jun 2024 10:57:42 +0000
+Message-ID: 
+ <PH0PR03MB71416493AB2788638599CAE4F9C02@PH0PR03MB7141.namprd03.prod.outlook.com>
+References: <20240603012200.16589-1-kimseer.paller@analog.com>
+	<20240603012200.16589-2-kimseer.paller@analog.com>
+ <20240608154053.1cf1097e@jic23-huawei>
+In-Reply-To: <20240608154053.1cf1097e@jic23-huawei>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: 
+ =?iso-8859-1?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNca3BhbGxlcj?=
+ =?iso-8859-1?Q?JcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZi?=
+ =?iso-8859-1?Q?ODRiYTI5ZTM1Ylxtc2dzXG1zZy05NGU2MzY3ZC0yOGFhLTExZWYtYWFmNC?=
+ =?iso-8859-1?Q?1mOGU0M2IzM2Q2NmVcYW1lLXRlc3RcOTRlNjM2N2YtMjhhYS0xMWVmLWFh?=
+ =?iso-8859-1?Q?ZjQtZjhlNDNiMzNkNjZlYm9keS50eHQiIHN6PSIxMTIxMiIgdD0iMTMzNj?=
+ =?iso-8859-1?Q?I2NjM0NTk1NTYyNDg5IiBoPSJFTjlRYy9aRUppc2pKQzcyUXVTa1VhQXFw?=
+ =?iso-8859-1?Q?c1E9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVU?=
+ =?iso-8859-1?Q?ZOQ2dVQUFFb0NBQUQ1YzVsWHQ3emFBWTFQb3RIdVBndExqVStpMGU0K0Mw?=
+ =?iso-8859-1?Q?c0RBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBRUFBUUFCQUFBQTNMaFNmZ0FBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUo0QUFBQmhBR1FBYVFCZkFITUFaUUJqQUhVQWNnQmxBRjhBY0FCeU?=
+ =?iso-8859-1?Q?FHOEFhZ0JsQUdNQWRBQnpBRjhBWmdCaEFHd0Fjd0JsQUY4QVpnQnZBSE1B?=
+ =?iso-8859-1?Q?YVFCMEFHa0FkZ0JsQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0?=
+ =?iso-8859-1?Q?FBQUdFQVpBQnBBRjhBY3dCbEFHTUFkUUJ5QUdVQVh3QndBSElBYndCcUFH?=
+ =?iso-8859-1?Q?VUFZd0IwQUhNQVh3QjBBR2tBWlFCeUFERUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFBQUFDZUFBQUFZUUJr?=
+ =?iso-8859-1?Q?QUdrQVh3QnpBR1VBWXdCMUFISUFaUUJmQUhBQWNnQnZBR29BWlFCakFIUU?=
+ =?iso-8859-1?Q?Fjd0JmQUhRQWFRQmxBSElBTWdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9tZXRhPg=3D?=
+ =?iso-8859-1?Q?=3D?=
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR03MB7141:EE_|PH0PR03MB6368:EE_
+x-ms-office365-filtering-correlation-id: 29d58d56-9dd0-4066-4590-08dc8ace7b98
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230032|1800799016|366008|376006|7416006|38070700010;
+x-microsoft-antispam-message-info: 
+ =?iso-8859-1?Q?IMQjanZuFIedR24wyL4G7LenVdXbbtuEKkB2XA9EE1MEpntttsWOfG/ULZ?=
+ =?iso-8859-1?Q?b2paqSbboyZ+NOp/CSNY5SoWWFXk1FxB/0oiCNgBNyv27qmIver+d1v+Kt?=
+ =?iso-8859-1?Q?2bPyCVINYk0X2ZEgQNSrbDUqHwrH2H3ELc1kNJaKqqjqRXYe5IMA+i+bIN?=
+ =?iso-8859-1?Q?o6MWkxZAF3OejVbjFzLumUGSzkac9Gsu0Ea22c0DIo8ope0+ur26DONKdd?=
+ =?iso-8859-1?Q?P8nRGQ6EoSJmOHcP8Q/wfbznolUh3LWMZ6y5kM+N0HsOhPTAvrMs3gC8NC?=
+ =?iso-8859-1?Q?JUs2M1s3rv/VvT7/PwDWpVTJ6bYk+VZYhsaACsR0nJ/Gk2bPvTRTB/9gMw?=
+ =?iso-8859-1?Q?ohWqsZbWvfFYHjzKI5vV6KGjCC7WqUjXCSQOBmIhDwHWm0aItlP7x9gXSc?=
+ =?iso-8859-1?Q?kz3kWMlwlmCCHt5vyYzAMlMRc3pFOc1sJ3NZOU6J4QTD4bxv9sjfozlbkh?=
+ =?iso-8859-1?Q?QDAf2fBLhzztI4qufvmwgb+PSn/G9WtQhpQoj8354vz+2MVBH+Ca6InkG1?=
+ =?iso-8859-1?Q?Rx5sqAYtBkKOc5X9BV7cnbt7syk6Hp2OvW/vDmzrM53Rrais7m/BcGLVax?=
+ =?iso-8859-1?Q?B4kO/y1zFT/SLH2SrH/qCZAVpS5kjI6IWs1G0gyMhC3o3FQPTcZzhyR97K?=
+ =?iso-8859-1?Q?f4V/DMHMgZ+EXQ+7bElrP+Nqo08ovPtlxp3IR8knMTtv6G7vE8WviZa3gP?=
+ =?iso-8859-1?Q?oLqz2NH+MIxN3ffuJq9LZTG8w7MctXJRu4qrzstxpV++Mcz/+CLIZhqoKg?=
+ =?iso-8859-1?Q?KgFw2pdlO6wBoGViyxPphA9byRt9j0ylJZscwZXH2LzIU/YIEY3PGQ2z5v?=
+ =?iso-8859-1?Q?NBeMRLd8Ii/bYZQWG+3NBOGHlysgbVDkJMidWvvaAsN4jw0vjaKbprw4gp?=
+ =?iso-8859-1?Q?/WNtkstaiqT/PSyGFQKRP410vKKFvWl22Nv0tIX4ajyGVGSi7fW7qcprkw?=
+ =?iso-8859-1?Q?bYjOGuma9yoHo+5jt7Ce/zgJ9pRCWPOfOw4teYsBkbY+5Deuj9LvUWk0rI?=
+ =?iso-8859-1?Q?6Q2LHVCEWp8mkPSg9tRoPNcWBZ9ok+7gLTPHmoQc9NTYjWJf2JWZgflJ3P?=
+ =?iso-8859-1?Q?Xro7e3Xzs7uvQtA/6hcIOOvHMF3viJ+iSaDSiVSUHJA2sn05c9kLWa+Rqi?=
+ =?iso-8859-1?Q?E4vF7OqPA3qT1Kykh71fQGcSAbH+J3jM+2eRoUsewiYosAAZfMUGm3ZAQt?=
+ =?iso-8859-1?Q?UnscDUu6mNZ6FRbTY25Z5Vmo6jedrB0Vh2oak4hKfCk03j6/lH4in1Biw4?=
+ =?iso-8859-1?Q?Xelv5hFMSGhMIiHj5QoQZiN0ufkVD8wWNjJV/+hOSOe+ANlJh0eSoaHaUy?=
+ =?iso-8859-1?Q?nfUKe1U+CwZzq6vEw6ujdFH92ddt6cDRD1wPOMuzBClVFRF9XkTAWorR31?=
+ =?iso-8859-1?Q?1+CucMsNxYmU0V1nLocXs7uu4Ve1DRgq04KeYiNVgmFoS6GcUA9kM=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR03MB7141.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230032)(1800799016)(366008)(376006)(7416006)(38070700010);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?x0R55pb7gReyu0CQtzYDX/sBiVhW85zGIfafOYW6jeNrEO13f8I7pRQ4tK?=
+ =?iso-8859-1?Q?/IZnfXSMxqk3wADdEO96AaYk9wypiNAj8OyckmHCm81FFDp5dQERwqy7EP?=
+ =?iso-8859-1?Q?QblD4vNbY0TNmlb8Db3Lm5i3J8vyx9UtQH/SOAqO36yg2k2Se0RVNstEUm?=
+ =?iso-8859-1?Q?lo/lxd7b2nMTTXbI196mA4i33JWg9ANgbYdn+9m/jjG3U914D8js6HcRbv?=
+ =?iso-8859-1?Q?EvzzzYM7eX+tueArMLSpYyKX3eHi86bJnScNhyoKVyDAuOxnclhCRvDrVo?=
+ =?iso-8859-1?Q?Y74dZ7mk+VGahNqaHmYHCngMQn9boE6bJqR6KKfp7gH6r1PLQ7tmRdBgE4?=
+ =?iso-8859-1?Q?5gAnrG6KXNR9saFQ+C761SeFMfAEAV4Z3MM/szH5/FAAYFMvMk5Wgq8htd?=
+ =?iso-8859-1?Q?0nVAIMyQbyt/KHQUnfQGMgtNhKXEHjy9Add8kK9ULtzgvzUqD7OAfnhN/u?=
+ =?iso-8859-1?Q?JiazrqLSFMHbbDO9/ToVmNDdtw+pZy9Mg3BRlLZguEjzhU+As3Pch1nR67?=
+ =?iso-8859-1?Q?2IWkDsFSEiR3sR1NUDaEQjJj2XJnya9g7CrELbNK/xxzbOZW5uenf58OHn?=
+ =?iso-8859-1?Q?Fd5KFmQG+wztNovSTGF79nkK4ARVnV03OrLEo9F78cPQNljGpGntHRvPoD?=
+ =?iso-8859-1?Q?eM5dItWOkhUoMWUU0u+DLqWRVIQ5eX2dEgP0SKqaxHvOmkqo9BvN3CxGMr?=
+ =?iso-8859-1?Q?ACvRurqspMkvnSKHwBph7zfhQyp9JLmxy1z9K+EoV4qijktSUr+5SAjQ7D?=
+ =?iso-8859-1?Q?B8QcetsWfZFOlWc34mhb88oi2K/icUYM0Xoi+DXWR3K7DnH3+jC4kdsa8o?=
+ =?iso-8859-1?Q?E6GPIYvZ7WNHBlekwbCALkf3xUE3NL0tQQpl8Q0g1H34E7R8yPzgXJcC9R?=
+ =?iso-8859-1?Q?c7m2SSKKQ8odOo/gTYanA2w27xrm+sChjYaCX2JYUHHcXO1zjSt0ZDlKe9?=
+ =?iso-8859-1?Q?ZEsdFj2UKLO+d2rp1uiAwG4j17svaFrtcpAmR1cTC9/A569yfGSUo7pIPj?=
+ =?iso-8859-1?Q?g3jYpifTbnRgBcNn+CkmAgiSB13BclNaRn/0bAeFOdyF83tKefdMrlGdHt?=
+ =?iso-8859-1?Q?h743Mwy1vQWnjDbHI5x6z8nEuPKZX/u3AuU3OqFFD1/LVvvdHL2zjfpV8g?=
+ =?iso-8859-1?Q?3kxrpRKYZ9UsIs5b0Tw/aq/hkdk9AFnhjyQWUYFyF50vIgRtoVcJL8cHg8?=
+ =?iso-8859-1?Q?oquT+P7T7fCkhgNVeYbb5TZHgnj/10+fdyz7X0ww/SpsF0nfak/PpZYL/z?=
+ =?iso-8859-1?Q?HGatlTy9wyofc102L8qKaS9HaRDUCeYm/hnU6eIXVf86HoPGP/X2qj3Vo8?=
+ =?iso-8859-1?Q?LPxIILUmP1n1tShbanEk9uaK7hr1ycKT8krd5Fd1nLDv2J5elp465D4cBy?=
+ =?iso-8859-1?Q?Kchvz0a8639ltpRDl/1cQi8sdiN7CaBbPHV61ex5mCrwavPa1LOZ5fPhh3?=
+ =?iso-8859-1?Q?wtSXXhDqgeEaS32S0aATrV10EKXo3WDqEC9X67QvLPw9yHT90g53zial+D?=
+ =?iso-8859-1?Q?5TsDf1vDJiIkdny5jUrl9HMUGDrTF6/ZCN7nehf3FaJrNZM4eJsSKeoXoB?=
+ =?iso-8859-1?Q?TDd2oFxlZI4QaeRgwHnRY+CjUUpa+IykNFR6OBAtSM3jC2UsbCq5QFPi8J?=
+ =?iso-8859-1?Q?fgCOAjry4P3I8LL8IJFt4Nfyhxudd8so0j?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000091edb5061aafd19e"
-
---00000000000091edb5061aafd19e
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This kernel module discovers the virtual inter-switch P2P links present
-between two PCI-to-PCI bridges that allows an optimal data path for data
-movement. The module creates sysfs entries for upstream PCI-to-PCI
-bridges which supports the inter switch P2P links as below:
-
-                             Host root bridge
-                ---------------------------------------
-                |                                     |
-  NIC1 --- PCI Switch1 --- Inter-switch link --- PCI Switch2 --- NIC2
-(af:00.0)   (ad:00.0)                             (8b:00.0)   (8d:00.0)
-                |                                     |
-               GPU1                                  GPU2
-            (b0:00.0)                             (8e:00.0)
-                               SERVER 1
-
-/sys/kernel/pci_switch_link/virtual_switch_links
-├── 0000:8b:00.0
-│   └── 0000:ad:00.0 -> ../0000:ad:00.0
-└── 0000:ad:00.0
-    └── 0000:8b:00.0 -> ../0000:8b:00.0
-
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Sumanesh Samanta <sumanesh.samanta@broadcom.com>
----
- .../driver-api/pci/switch_discovery.rst       |  52 +++
- MAINTAINERS                                   |  13 +
- drivers/pci/switch/Kconfig                    |   9 +
- drivers/pci/switch/Makefile                   |   1 +
- drivers/pci/switch/switch_discovery.c         | 375 ++++++++++++++++++
- drivers/pci/switch/switch_discovery.h         |  44 ++
- 6 files changed, 494 insertions(+)
- create mode 100644 Documentation/driver-api/pci/switch_discovery.rst
- create mode 100644 drivers/pci/switch/switch_discovery.c
- create mode 100644 drivers/pci/switch/switch_discovery.h
-
-diff --git a/Documentation/driver-api/pci/switch_discovery.rst b/Documentation/driver-api/pci/switch_discovery.rst
-new file mode 100644
-index 000000000000..7c1476260e5e
---- /dev/null
-+++ b/Documentation/driver-api/pci/switch_discovery.rst
-@@ -0,0 +1,52 @@
-+=================================
-+Linux PCI Switch discovery module
-+=================================
-+
-+Modern PCI switches support inter switch Peer-to-Peer(P2P) data transfer
-+without using host resources. For example, Broadcom(PLX) PCIe Switches have a
-+capability where a single physical switch can be divided up into multiple
-+virtual switches at SOD. PCIe switch discovery module detects the virtual links
-+between the switches that belong to the same physical switch.
-+This allows user space applications to discover these virtual links that belong
-+to the same physical switch and configure optimized data paths.
-+
-+Userspace Interface
-+===================
-+
-+The module exposes sysfs entries for user space applications like MPI, NCCL,
-+UCC, RCCL, HCCL, etc to discover the virtual switch links.
-+
-+Consider the below topology
-+
-+                             Host root bridge
-+                ---------------------------------------
-+                |                                     |
-+  NIC1 --- PCI Switch1 --- Inter-switch link --- PCI Switch2 --- NIC2
-+(af:00.0)   (ad:00.0)                             (8b:00.0)   (8d:00.0)
-+                |                                     |
-+               GPU1                                  GPU2
-+            (b0:00.0)                             (8e:00.0)
-+                               SERVER 1
-+
-+The simple topology above shows SERVER1, has Switch1 and Switch2 which are
-+virtual switches that belong to the same physical switch that support
-+Inter switch P2P.
-+Switch1 and Switch2 have a GPU and NIC each connected.
-+The module will detect the virtual P2P link existing between the two switches
-+and create the sysfs entries as below.
-+
-+/sys/kernel/pci_switch_link/virtual_switch_links
-+├── 0000:8b:00.0
-+│   └── 0000:ad:00.0 -> ../0000:ad:00.0
-+└── 0000:ad:00.0
-+    └── 0000:8b:00.0 -> ../0000:8b:00.0
-+
-+The HPC/AI libraries that analyze the topology can decide the optimal data
-+path like: NIC1->GPU1->GPU2->NIC1 which would have otherwise take a
-+non-optimal path like NIC1->GPU1->GPU2->GPU1->NIC1.
-+
-+Enable P2P DMA to discover virtual links
-+----------------------------------------
-+The module also enhances :c:func:`pci_p2pdma_distance()` to determine a virtual
-+link between the upstream PCI-to-PCI bridges of the devices and detect optimal
-+path for applications using P2P DMA API.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 823387766a0c..b1bf3533ea6f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17359,6 +17359,19 @@ F:	Documentation/driver-api/pci/p2pdma.rst
- F:	drivers/pci/p2pdma.c
- F:	include/linux/pci-p2pdma.h
- 
-+PCI SWITCH DISCOVERY
-+M:	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-+M:	Sumanesh Samanta <sumanesh.samanta@broadcom.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+Q:	https://patchwork.kernel.org/project/linux-pci/list/
-+B:	https://bugzilla.kernel.org
-+C:	irc://irc.oftc.net/linux-pci
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-+F:	Documentation/driver-api/pci/switch_discovery.rst
-+F:	drivers/pci/switch/switch_discovery.c
-+F:	drivers/pci/switch/switch_discovery.h
-+
- PCI SUBSYSTEM
- M:	Bjorn Helgaas <bhelgaas@google.com>
- L:	linux-pci@vger.kernel.org
-diff --git a/drivers/pci/switch/Kconfig b/drivers/pci/switch/Kconfig
-index d370f4ce0492..fb4410153950 100644
---- a/drivers/pci/switch/Kconfig
-+++ b/drivers/pci/switch/Kconfig
-@@ -12,4 +12,13 @@ config PCI_SW_SWITCHTEC
- 	 devices. See <file:Documentation/driver-api/switchtec.rst> for more
- 	 information.
- 
-+config PCI_SW_DISCOVERY
-+	depends on PCI
-+	tristate "PCI Switch discovery module"
-+	help
-+	 This kernel module discovers the PCI-to-PCI bridges of PCIe switches
-+	 and forms the virtual switch links if the bridges belong to the same
-+	 Physical switch. The switch links help to identify shorter distances
-+	 for P2P configurations.
-+
- endmenu
-diff --git a/drivers/pci/switch/Makefile b/drivers/pci/switch/Makefile
-index acd56d3b4a35..a3584b5146af 100644
---- a/drivers/pci/switch/Makefile
-+++ b/drivers/pci/switch/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PCI_SW_SWITCHTEC) += switchtec.o
-+obj-$(CONFIG_PCI_SW_DISCOVERY) += switch_discovery.o
-diff --git a/drivers/pci/switch/switch_discovery.c b/drivers/pci/switch/switch_discovery.c
-new file mode 100644
-index 000000000000..a427d3885b1f
---- /dev/null
-+++ b/drivers/pci/switch/switch_discovery.c
-@@ -0,0 +1,375 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  PCI Switch Discovery module
-+ *
-+ *  Copyright (c) 2024  Broadcom Inc.
-+ *
-+ *  Authors: Broadcom Inc.
-+ *           Sumanesh Samanta <sumanesh.samanta@broadcom.com>
-+ *           Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/sysfs.h>
-+#include <linux/slab.h>
-+#include <linux/rwsem.h>
-+#include <linux/pci.h>
-+#include <linux/vmalloc.h>
-+#include "switch_discovery.h"
-+
-+static DECLARE_RWSEM(sw_disc_rwlock);
-+static struct kobject *sw_disc_kobj, *sw_link_kobj;
-+static struct kobject *sw_kobj[SWD_MAX_VIRT_SWITCH];
-+static DECLARE_BITMAP(swdata_valid, SWD_MAX_VIRT_SWITCH);
-+
-+static struct switch_data *swdata;
-+
-+static int sw_disc_probe(void);
-+static int sw_disc_create_sysfs_files(void);
-+static bool brcm_sw_is_p2p_supported(struct pci_dev *pdev, char *serial_num);
-+
-+static inline bool sw_disc_is_supported_pdev(struct pci_dev *pdev)
-+{
-+	if ((pdev->vendor == PCI_VENDOR_ID_LSI) &&
-+	   ((pdev->device == PCI_DEVICE_ID_BRCM_PEX_89000_HLC) ||
-+	    (pdev->device == PCI_DEVICE_ID_BRCM_PEX_89000_LLC)))
-+		return true;
-+
-+	return false;
-+}
-+
-+static ssize_t sw_disc_show(struct kobject *kobj,
-+			struct kobj_attribute *attr,
-+			char *buf)
-+{
-+	int retval;
-+
-+	down_write(&sw_disc_rwlock);
-+	retval = sw_disc_probe();
-+	if (!retval) {
-+		pr_debug("No new switch found\n");
-+		goto exit_success;
-+	}
-+
-+	retval = sw_disc_create_sysfs_files();
-+	if (retval < 0) {
-+		pr_err("Failed to create the sysfs entries, retval %d\n",
-+		       retval);
-+	}
-+
-+exit_success:
-+	up_write(&sw_disc_rwlock);
-+	return sysfs_emit(buf, SWD_SCAN_DONE);
-+}
-+
-+/* This function probes the PCIe devices for virtual links */
-+static int sw_disc_probe(void)
-+{
-+	int i, bit;
-+	struct pci_dev *pdev = NULL;
-+	int topology_changed = 0;
-+	DECLARE_BITMAP(sw_found_map, SWD_MAX_VIRT_SWITCH);
-+
-+	while ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pdev)) != NULL) {
-+		int sw_found;
-+
-+		/* Currently this function only traverses Broadcom
-+		 * PEX switches and determines the virtual SW links.
-+		 * Other Switch vendors can add their specific logic
-+		 * determine the virtual links.
-+		 */
-+		if (!sw_disc_is_supported_pdev(pdev))
-+			continue;
-+
-+		sw_found = -1;
-+
-+		for_each_set_bit(bit, swdata_valid, SWD_MAX_VIRT_SWITCH) {
-+			if (swdata[bit].devfn == pdev->devfn &&
-+			    swdata[bit].bus == pdev->bus) {
-+				sw_found = bit;
-+				set_bit(sw_found, sw_found_map);
-+				break;
-+			}
-+		}
-+
-+		if (sw_found != -1)
-+			continue;
-+
-+		for (i = 0; i < SWD_MAX_VIRT_SWITCH; i++)
-+			if (!swdata[i].bus)
-+				break;
-+
-+		if (i >= SWD_MAX_VIRT_SWITCH) {
-+			pr_err("Max switch exceeded\n");
-+			break;
-+		}
-+
-+		sw_found = i;
-+
-+		if (!brcm_sw_is_p2p_supported(pdev, (char *)&swdata[sw_found].serial_num))
-+			continue;
-+
-+		/* Found a new switch which supports P2P */
-+		swdata[sw_found].devfn = pdev->devfn;
-+		swdata[sw_found].bus = pdev->bus;
-+
-+		topology_changed = 1;
-+		set_bit(sw_found, sw_found_map);
-+		set_bit(sw_found, swdata_valid);
-+	}
-+
-+	/* handle device removal */
-+	for_each_clear_bit(bit, sw_found_map, SWD_MAX_VIRT_SWITCH) {
-+		if (test_bit(bit, swdata_valid)) {
-+			memset(&swdata[bit], 0, sizeof(swdata[i]));
-+			clear_bit(bit, swdata_valid);
-+			topology_changed = 1;
-+		}
-+	}
-+
-+	return topology_changed;
-+}
-+
-+/* Check the various config space registers of the Broadcom PCI device and
-+ * return true if the device supports inter switch P2P.
-+ * If P2P is supported, return the device serial number back to
-+ * caller.
-+ */
-+bool brcm_sw_is_p2p_supported(struct pci_dev *pdev, char *serial_num)
-+{
-+	int base;
-+	u32 cap_data1, cap_data2;
-+	u16 vsec;
-+	u32 vsec_data;
-+
-+	base = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DSN);
-+	if (!base) {
-+		pr_debug("Failed to get extended capability bus %x devfn %x\n",
-+			 pdev->bus->number, pdev->devfn);
-+		return false;
-+	}
-+
-+	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_LSI, 1);
-+	if (!vsec) {
-+		pr_debug("Failed to get VSEC bus %x devfn %x\n",
-+			 pdev->bus->number, pdev->devfn);
-+		return false;
-+	}
-+
-+	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM)
-+		return false;
-+
-+	pci_read_config_dword(pdev, base + 8, &cap_data1);
-+	pci_read_config_dword(pdev, base + 4, &cap_data2);
-+
-+	pci_read_config_dword(pdev, vsec + 12, &vsec_data);
-+
-+	pr_debug("Found Broadcom device bus 0x%x devfn 0x%x "
-+		 "Serial Number: 0x%x 0x%x, VSEC 0x%x\n",
-+		 pdev->bus->number, pdev->devfn,
-+		 cap_data1, cap_data2, vsec_data);
-+
-+	if (!SECURE_PART(cap_data1))
-+		return false;
-+
-+	if (!(P2PMASK(vsec_data) & INTER_SWITCH_LINK))
-+		return false;
-+
-+	if (serial_num)
-+		snprintf(serial_num, SWD_MAX_CHAR, "%x%x", cap_data1, cap_data2);
-+
-+	return true;
-+}
-+
-+static int sw_disc_create_sysfs_files(void)
-+{
-+	int i, j, retval;
-+
-+	for (i = 0; i < SWD_MAX_VIRT_SWITCH; i++) {
-+		if (sw_kobj[i]) {
-+			kobject_put(sw_kobj[i]);
-+			sw_kobj[i] = NULL;
-+		}
-+	}
-+
-+	if (sw_link_kobj) {
-+		kobject_put(sw_link_kobj);
-+		sw_link_kobj = NULL;
-+	}
-+
-+	sw_link_kobj = kobject_create_and_add(SWD_LINK_DIR_STRING, sw_disc_kobj);
-+	if (!sw_link_kobj) {
-+		pr_err("Failed to create pci link object\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < SWD_MAX_VIRT_SWITCH; i++) {
-+		int segment, bus, device, function;
-+		char bdf_i[SWD_MAX_CHAR];
-+
-+		if (!test_bit(i, swdata_valid))
-+			continue;
-+
-+		segment = pci_domain_nr(swdata[i].bus);
-+		bus = swdata[i].bus->number;
-+		device = pci_ari_enabled(swdata[i].bus) ?
-+				0 : PCI_SLOT(swdata[i].devfn);
-+		function = pci_ari_enabled(swdata[i].bus) ?
-+				swdata[i].devfn : PCI_FUNC(swdata[i].devfn);
-+		sprintf(bdf_i, "%04x:%02x:%02x.%x",
-+			segment, bus, device, function);
-+
-+		for (j = i + 1; j < SWD_MAX_VIRT_SWITCH; j++) {
-+			char bdf_j[SWD_MAX_CHAR];
-+
-+			if (!test_bit(j, swdata_valid))
-+				continue;
-+			segment = pci_domain_nr(swdata[j].bus);
-+			bus = swdata[j].bus->number;
-+			device = pci_ari_enabled(swdata[j].bus) ?
-+					0 : PCI_SLOT(swdata[j].devfn);
-+			function = pci_ari_enabled(swdata[j].bus) ?
-+					swdata[j].devfn : PCI_FUNC(swdata[j].devfn);
-+			sprintf(bdf_j, "%04x:%02x:%02x.%x",
-+				segment, bus, device, function);
-+
-+			if (strcmp(swdata[i].serial_num, swdata[j].serial_num) == 0) {
-+				if (!sw_kobj[i]) {
-+					sw_kobj[i] = kobject_create_and_add(bdf_i,
-+									    sw_link_kobj);
-+					if (!sw_kobj[i]) {
-+						pr_err("Failed to create sysfs entry for switch %s\n",
-+						       bdf_i);
-+					}
-+				}
-+
-+				if (!sw_kobj[j]) {
-+					sw_kobj[j] = kobject_create_and_add(bdf_j,
-+									    sw_link_kobj);
-+					if (!sw_kobj[j]) {
-+						pr_err("Failed to create sysfs entry for switch %s\n",
-+						       bdf_j);
-+					}
-+				}
-+
-+				retval = sysfs_create_link(sw_kobj[i], sw_kobj[j], bdf_j);
-+				if (retval)
-+					pr_err("Error creating symlink %s and %s\n",
-+					       bdf_i, bdf_j);
-+
-+				retval = sysfs_create_link(sw_kobj[j], sw_kobj[i], bdf_i);
-+				if (retval)
-+					pr_err("Error creating symlink %s and %s\n",
-+					       bdf_j, bdf_i);
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Check if the two pci devices have virtual P2P link available.
-+ * This function is used by the p2pdma to determine virtual
-+ * links between the PCI-to-PCI bridges
-+ */
-+bool sw_disc_check_virtual_link(struct pci_dev *a,
-+				 struct pci_dev *b)
-+{
-+	char serial_num_a[SWD_MAX_CHAR], serial_num_b[SWD_MAX_CHAR];
-+
-+	/*
-+	 * Check if the PCIe devices support Virtual P2P links
-+	 */
-+	if (!sw_disc_is_supported_pdev(a))
-+		return false;
-+
-+	if (!sw_disc_is_supported_pdev(b))
-+		return false;
-+
-+	if (brcm_sw_is_p2p_supported(a, serial_num_a) &&
-+	    brcm_sw_is_p2p_supported(b, serial_num_b))
-+		if (!strcmp(serial_num_a, serial_num_b))
-+			return true;
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(sw_disc_check_virtual_link);
-+
-+static struct kobj_attribute sw_disc_attribute =
-+	__ATTR(SWD_FILE_NAME_STRING, 0444, sw_disc_show, NULL);
-+
-+// Create attribute group
-+static struct attribute *attrs[] = {
-+	&sw_disc_attribute.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group attr_group = {
-+	.attrs = attrs,
-+};
-+
-+static int __init sw_discovery_init(void)
-+{
-+	int i, retval;
-+
-+	for (i = 0; i < SWD_MAX_VIRT_SWITCH; i++)
-+		sw_kobj[i] = NULL;
-+
-+	// Create "sw_disc" kobject
-+	sw_disc_kobj = kobject_create_and_add(SWD_DIR_STRING, kernel_kobj);
-+	if (!sw_disc_kobj) {
-+		pr_err("Failed to create sw_disc_kobj\n");
-+		return -ENOMEM;
-+	}
-+
-+	retval = sysfs_create_group(sw_disc_kobj, &attr_group);
-+	if (retval) {
-+		pr_err("Cannot register sysfs attribute group\n");
-+		kobject_put(sw_disc_kobj);
-+	}
-+
-+	swdata = kzalloc(sizeof(swdata) * SWD_MAX_VIRT_SWITCH, GFP_KERNEL);
-+	if (!swdata) {
-+		sysfs_remove_group(sw_disc_kobj, &attr_group);
-+		kobject_put(sw_disc_kobj);
-+		return 0;
-+	}
-+
-+	pr_info("Loading PCIe switch discovery module, version %s\n",
-+		SWITCH_DISC_VERSION);
-+
-+	return 0;
-+}
-+
-+static void __exit sw_discovery_exit(void)
-+{
-+	int i;
-+
-+	if (!swdata)
-+		kfree(swdata);
-+
-+	for (i = 0; i < SWD_MAX_VIRT_SWITCH; i++) {
-+		if (sw_kobj[i])
-+			kobject_put(sw_kobj[i]);
-+	}
-+
-+	// Remove kobject
-+	if (sw_link_kobj)
-+		kobject_put(sw_link_kobj);
-+
-+	sysfs_remove_group(sw_disc_kobj, &attr_group);
-+	kobject_put(sw_disc_kobj);
-+}
-+
-+module_init(sw_discovery_init);
-+module_exit(sw_discovery_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Broadcom Inc.");
-+MODULE_VERSION(SWITCH_DISC_VERSION);
-+MODULE_DESCRIPTION("PCIe Switch Discovery Module");
-diff --git a/drivers/pci/switch/switch_discovery.h b/drivers/pci/switch/switch_discovery.h
-new file mode 100644
-index 000000000000..b84f5d2e29ac
---- /dev/null
-+++ b/drivers/pci/switch/switch_discovery.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  PCI Switch Discovery module
-+ *
-+ *  Copyright (c) 2024  Broadcom Inc.
-+ *
-+ *  Authors: Broadcom Inc.
-+ *           Sumanesh Samanta <sumanesh.samanta@broadcom.com>
-+ *           Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-+ */
-+
-+#ifndef PCI_SWITCH_DISC_H
-+#define PCI_SWITCH_DISC_H
-+
-+#define SWD_MAX_SWITCH		32
-+#define SWD_MAX_VER_PER_SWITCH	8
-+
-+#define SWD_MAX_VIRT_SWITCH	(SWD_MAX_SWITCH * SWD_MAX_VER_PER_SWITCH)
-+#define SWD_MAX_CHAR		16
-+#define SWITCH_DISC_VERSION	"0.1.1"
-+#define SWD_DIR_STRING		"pci_switch_link"
-+#define SWD_LINK_DIR_STRING	"virtual_switch_links"
-+#define SWD_SCAN_DONE		"done\n"
-+
-+#define SWD_FILE_NAME_STRING	refresh_switch_toplogy
-+
-+/* Broadcom Vendor Specific definitions */
-+#define PCI_VENDOR_ID_LSI			0x1000
-+#define PCI_DEVICE_ID_BRCM_PEX_89000_HLC	0xC030
-+#define PCI_DEVICE_ID_BRCM_PEX_89000_LLC	0xC034
-+
-+#define P2PMASK(x)		(((x) & 0x300) >> 8)
-+#define SECURE_PART(x)		((x) & 0x8)
-+#define INTER_SWITCH_LINK	0x2
-+
-+struct switch_data {
-+	int  devfn;
-+	struct pci_bus *bus;
-+	char serial_num[SWD_MAX_CHAR];
-+};
-+
-+bool sw_disc_check_virtual_link(struct pci_dev *a, struct pci_dev *b);
-+
-+#endif /* PCI_SWITCH_DISC_H */
--- 
-2.43.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR03MB7141.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29d58d56-9dd0-4066-4590-08dc8ace7b98
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2024 10:57:42.0646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xL0CehJrJATF06uxbcuaWB9Z7+jKGXU58uyr1vcswDGc7TrsdrARjOj29MiiJjBufOCgqmtxxl1io0JL0sbpBfFfgvOzem949DJuGmEE9Cw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6368
+X-Proofpoint-GUID: Yfx9neBHmGi2F-c6liv3t9oHNrbWecD0
+X-Proofpoint-ORIG-GUID: Yfx9neBHmGi2F-c6liv3t9oHNrbWecD0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_06,2024-06-12_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 clxscore=1011 spamscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120079
 
 
---00000000000091edb5061aafd19e
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBXYwggReoAMCAQICDFr9U6igf1QRzoaH1TANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwOTMyNDhaFw0yNTA5MTAwOTMyNDhaMIGq
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xIzAhBgNVBAMTGlNoaXZhc2hhcmFuIFNyaWthbnRlc2h3YXJh
-MTYwNAYJKoZIhvcNAQkBFidzaGl2YXNoYXJhbi5zcmlrYW50ZXNod2FyYUBicm9hZGNvbS5jb20w
-ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDulAFNbtc+tsB1JubfhUwbq5745iWy0PqA
-tUlf8OsSpnKZPtpZ/P9TJL8MrXyDJN5GdKeVAvh1YAvXb2S0i90gW5qWZtFQ4MRMQwXKHvwdVCTj
-NBVuju4wvuIk8TWSSWryDIa/KUmQEFgRethHXcwAGKVM2LV19E+RJxjbqcqBXqT20XVYJ+86q3gC
-pKeDdMqs49aS4NkFAulUXfKMvwayi1/al6l6H6NjkYI9V+VAhd2Pw5dVGT1UGNnGenU1ASxrICxB
-p1may//a5w+WwgjNTKaKkyc6n0c4ds/TIbS/qi/G87n1VXSpcJHiebcJy8WZCbvo6g9j0Ipsx9mZ
-ZyjVAgMBAAGjggHoMIIB5DAOBgNVHQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsG
-AQUFBzAChkJodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29u
-YWxzaWduMmNhMjAyMC5jcnQwQQYIKwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29t
-L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIG
-CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRME
-AjAAMEkGA1UdHwRCMEAwPqA8oDqGOGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3Bl
-cnNvbmFsc2lnbjJjYTIwMjAuY3JsMDIGA1UdEQQrMCmBJ3NoaXZhc2hhcmFuLnNyaWthbnRlc2h3
-YXJhQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdb
-NHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUOXk95+zAtIGGWGU9q37iyIJKcYMwDQYJKoZIhvcNAQEL
-BQADggEBABd5fRmxw/2mYuimst/fZaHYCHDoiYauRKIOm2YcV+s/4xhvXJx0fFit4LzpW8EgTXQv
-GQCCaJeSArd/ad3NUOhuQtVB5xOO5cHcCYpdb9gvRPzSZss4mN5OrQsOD6iH0lyg9zIQfhReghMc
-Y0C0m8ndFGSil396kqXLgxfPWJ8LChptV9z3iLmGoxJa/gqhi4xu+Ql3ZcQqcP6YItbGOmGjXF/p
-uwxVuxQ2ZLaLPPZF5H6t1UPCJRYZXbcjPQHXqFTijI0/1PIUtJy3gUmAsxZe+1n/rCqqCHE4rM+q
-Xm1kxB5u/2AMUovVed0IK1+1PFQLP47vY8PfDbSkU4UXH0YxggJtMIICaQIBATBrMFsxCzAJBgNV
-BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdD
-QyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxa/VOooH9UEc6Gh9UwDQYJYIZIAWUDBAIBBQCg
-gdQwLwYJKoZIhvcNAQkEMSIEIBITWPsCTtHFEOdDgQ/rEmDxDMecR+gMMR7IpbGGeoOyMBgGCSqG
-SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYxMjExMzgxN1owaQYJKoZI
-hvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG
-9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEF
-AASCAQBOZIR0vfqEYWY8YYf9GAAg729++4Ut4RLtR3DNmmyWYSK1zd461mhfMF6uO4vGlG37Pf8t
-RJtv6dgA4PfE5b1WYqIRBYg7NGGMQdVWcGgoJtrQQo6ERPgiYwv3J8cy1fv4rIsSNgJl+Xl1bjfg
-r8ayCzeKfFDotoivIVrnbhXCfceFXyoxnqX65txHrzu6mIDUUYSWqqBdiguk4HjfxIekH9tyBxIL
-TrRdsyngypIxqRVPj63u/5wOEsMBRrv4VgTFAbuwcYS7184HZOskYOLJved2/oKSBoxld16w9AAx
-9vLGIR8OxXBVcTSCOFtj71VWixsyG3Ehc18BsXRIicdI
---00000000000091edb5061aafd19e--
+> -----Original Message-----
+> From: Jonathan Cameron <jic23@kernel.org>
+> Sent: Saturday, June 8, 2024 10:41 PM
+> To: Paller, Kim Seer <KimSeer.Paller@analog.com>
+> Cc: linux-kernel@vger.kernel.org; linux-iio@vger.kernel.org;
+> devicetree@vger.kernel.org; David Lechner <dlechner@baylibre.com>; Lars-
+> Peter Clausen <lars@metafoo.de>; Liam Girdwood <lgirdwood@gmail.com>;
+> Mark Brown <broonie@kernel.org>; Dimitri Fedrau <dima.fedrau@gmail.com>;
+> Krzysztof Kozlowski <krzk+dt@kernel.org>; Rob Herring <robh@kernel.org>;
+> Conor Dooley <conor+dt@kernel.org>; Hennerich, Michael
+> <Michael.Hennerich@analog.com>; Nuno S=E1 <noname.nuno@gmail.com>
+> Subject: Re: [PATCH v3 1/5] iio: ABI: Generalize ABI documentation for DA=
+C
+>=20
+> [External]
+>=20
+> On Mon, 3 Jun 2024 09:21:56 +0800
+> Kim Seer Paller <kimseer.paller@analog.com> wrote:
+>=20
+> > Introduces a more generalized ABI documentation for DAC. Instead of
+> > having separate ABI files for each DAC, we now have a single ABI file
+> > that covers the common sysfs interface for all DAC.
+> >
+> > Co-developed-by: Michael Hennerich <michael.hennerich@analog.com>
+> > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> > Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+>=20
+> A few comments inline.
+>=20
+> I wondered if it made sense to combine voltage and current entries of eac=
+h
+> type
+> in single block, but I think the docs would become too complicated with l=
+ots
+> of wild cards etc.  Hence I think the duplication is fine.
+>=20
+> Jonathan
+>=20
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio-dac   | 61 +++++++++++++++++++
+> >  .../ABI/testing/sysfs-bus-iio-dac-ltc2688     | 31 ----------
+> >  2 files changed, 61 insertions(+), 31 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac
+> b/Documentation/ABI/testing/sysfs-bus-iio-dac
+> > new file mode 100644
+> > index 000000000000..36d316bb75f6
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac
+> > @@ -0,0 +1,61 @@
+> > +What:
+> 	/sys/bus/iio/devices/iio:deviceX/out_currentY_toggle_en
+> > +KernelVersion:	5.18
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +       		Toggle enable. Write 1 to enable toggle or 0 to disable it. T=
+his
+> Tab vs space issue - see below.
+>=20
+> > +		is useful when one wants to change the DAC output codes. The
+> way
+> > +		it should be done is:
+> > +
+> > +        	- disable toggle operation;
+> > +        	- change out_currentY_rawN, where N is the integer value of t=
+he
+> symbol;
+> > +        	- enable toggle operation.
+> Same question as below on whether this is accurate - Maybe it just needs =
+to
+> mention
+> this scheme needs to be used for autonomous toggling (out of software
+> control).
+> It works for software toggling but may be overkill!
+>=20
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_rawN
+> > +KernelVersion:	5.18
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		This attribute has the same meaning as out_currentY_raw. It is
+> > +		specific to toggle enabled channels and refers to the DAC
+> output
+> > +		code in INPUT_N (_rawN), where N is the integer value of the
+> symbol.
+> > +		The same scale and offset as in out_currentY_raw applies.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_symbol
+> > +KernelVersion:	5.18
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Performs a SW switch to a predefined output symbol. This
+> attribute
+> > +		is specific to toggle enabled channels and allows switching
+> between
+> > +		multiple predefined symbols. Each symbol corresponds to a
+> different
+> > +		output, denoted as out_currentY_rawN, where N is the integer
+> value
+> > +		of the symbol. Writing an integer value N will select
+> out_currentY_rawN.
+> > +
+> > +What:
+> 	/sys/bus/iio/devices/iio:deviceX/out_voltageY_toggle_en
+> > +KernelVersion:	5.18
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +       		Toggle enable. Write 1 to enable toggle or 0 to disable it. T=
+his
+>=20
+> Mix of spacing and tabs is inconsistent. Hence the odd indent in this rep=
+ly
+> version.
+>=20
+> > +		is useful when one wants to change the DAC output codes. The
+> way
+> > +		it should be done is:
+>=20
+> Hmm. Is this true?  If we are doing autonomous toggling on a clock or sim=
+ilar
+> than agreed.
+> If we are using the out_current_symbol software control it would be commo=
+n
+> to switch
+> to A, modify B, switch to B, modify A etc.
+>=20
+> I think our interface has probably evolved and so this might need an upda=
+te.
+
+I agree that the description could be clear about the differences between=20
+autonomous and software toggling. If we were to change the description, wou=
+ld=20
+this suffice?
+
+Description:
+        Toggle enable. Write 1 to enable toggle or 0 to disable it. This
+        is useful when one wants to change the DAC output codes. For autono=
+mous toggling, the way
+        it should be done is:
+
+        - disable toggle operation;
+        - change out_currentY_rawN, where N is the integer value of the sym=
+bol;
+        - enable toggle operation.
+
+For software toggling, one can switch to A, modify B, switch to B, modify A=
+, etc.
+>=20
+> > +
+> > +        	- disable toggle operation;
+> > +        	- change out_voltageY_rawN, where N is the integer value of t=
+he
+> symbol;
+> > +        	- enable toggle operation.
