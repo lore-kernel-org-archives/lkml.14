@@ -1,102 +1,111 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EE5156F29;
-	Tue, 11 Jun 2024 23:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F21517C;
+	Wed, 12 Jun 2024 00:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718150071; cv=none; b=Nj8rC/Xk27VOWPCDAiJ37O1kAlRBfOcDQ8+VSitSzpMPRf2nFE/lwS4Zntxgt5FZgBzlAlkOK1stxKt1EgCv91v3b6SAQT+YLC6AQdz0TE6T9szsg9+q/K+Pw2yQzTEjAU88umXhN9yL5FeS298AMhb1JjYuWRZu59whw1RYuJ8=
+	t=1718150600; cv=none; b=A8OUlL4HSQfDr9XSeSr3Y4mBkfmJzLrSmiI5nuQfmeh6MEwXj3/UQn3AyyY4qzoRmA04XNkrkS7O88scmF5v5HD4lDRpLnTdKUv8KaUYhE8qKYUK4tDksy65Rm8vRMAG1dGlQecx41eidGnViX5HRPzKizvsbk66x62NHjX+xws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718150071; c=relaxed/simple;
-	bh=VtZWuGrh1ylypaTQdU8aTLu6D7GfyOsmzUhjq6KIDwU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c7C5PVTLC0+ppJFWlglSWJWDd0qGsyZkc2PP9RwtXPB6ASOavIe3/Aq6bkfGyrH1QYya9Hp/mtZwBlAXeXEAv4YpN5ii4vk9cWS9Im5yKT4x/zpF/swUUx3e5oNvj1jFGTI67r9zotkv/rai2n4uCneBEcFQf72hstVlm8/W4Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=tzl3N853; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1718150600; c=relaxed/simple;
+	bh=CfmyTtQtTR+NEjqwxQHjbPbQLc9kh23HqpCVVQcN7s8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JdzhtnfRSvmH5P/nxnzqa5x9ITySJHZ8+emm4Mc9viSSeiB1C2Ofnj+vkTMdLnt9esfCAh3lX7zecc/5ciO1/3yAPouvfd3W1mlsqpfdJCOReDVtIxkW9EVjFKg7zdQZOxnHtAQ3evDoaz/6p8uX2qtFcVVeWG2ZHes/VU0firE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ERmB5so1; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="tzl3N853"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1718150060;
-	bh=VtZWuGrh1ylypaTQdU8aTLu6D7GfyOsmzUhjq6KIDwU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tzl3N853ldx1Vy8RVIE4f7klT3sIGqET1NC5ncXlItYPqG8YniyvJJpZIQZovihdz
-	 tsk5ebcSveeKwT1Z+cwKojy9zw4KCqKAd51/fI4QpE6WzqItL/8hSSF9qn7PgNbb6L
-	 3jXVAJ0oPSqM4q16wogLB8YFQZlwDgF7GHED5SGmCHXKV98KiL6DQM6aW0kZw0t4Vo
-	 jSvD22gcgSJEUvl50vq5wK9LiVYZXsHnzrS4umf7EbmWOcpQk3wMUhssoV6yBNatsB
-	 IrAR7s8odiEwMeh/V9GuQY3Ko1nMY2DTnsn7qX43VWYAcQhz/SkjU2Yqumn+OKQh5x
-	 ToZF6MXf+MnIQ==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 5D2B76009D;
-	Tue, 11 Jun 2024 23:54:17 +0000 (UTC)
-Received: by x201s (Postfix, from userid 1000)
-	id 6FD3D202E0F; Tue, 11 Jun 2024 23:54:00 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: Davide Caratti <dcaratti@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next 3/9] net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
-Date: Tue, 11 Jun 2024 23:53:36 +0000
-Message-ID: <20240611235355.177667-4-ast@fiberby.net>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240611235355.177667-1-ast@fiberby.net>
-References: <20240611235355.177667-1-ast@fiberby.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERmB5so1"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52c8c0d73d3so3382038e87.1;
+        Tue, 11 Jun 2024 17:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718150596; x=1718755396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CfmyTtQtTR+NEjqwxQHjbPbQLc9kh23HqpCVVQcN7s8=;
+        b=ERmB5so1mgkNHOi7TrQgHedrn6UmFfsNudHIvGUkO9GBN9huFn30RiELRhR5ijc1Mq
+         PGtnIpJNxQe7BVgtLkx9CPpi3fPnBD0bxPITFg3TxvyFbkFm8PD0wzd7+99K8vNGILKT
+         ECVP9QpCwlKSBpU/WrfOQvuQTngAHAwYTQqi3VEaCByiFL0TONco2sCTA+GiVIy2isql
+         Aj0ebDxcVDGJSI1szvw+hrJiICnBpAVeRk3aiLgqq/lVYacCDDLZIwXNtCjogdlHDXkB
+         YO3+JYkzC9zHPCF5PThHJ01+4SCJh+sKNTO3y96tw5u3VFx06K8/M1bw/QeW6s7K6NMl
+         hNVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718150596; x=1718755396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CfmyTtQtTR+NEjqwxQHjbPbQLc9kh23HqpCVVQcN7s8=;
+        b=Je1dntzzlyqjIvb48gDVyKZ1FLG1YsCxkf3hvKlp4MpEzvrRFuRAYp8UF6YhrgZVIU
+         APDqQFakdybxPM1mepqMwhV5kV7tFfhUdNAFUhO8lB7NidGOhk+4Niay35OL9YLrddOG
+         shtYaETFPclUdzggzp4Hj9siQvrLprksGcBDNtU9Pn8VTk+DxxeTAQHHKlR61w4PhrG+
+         HPkvgd4UkQgn5OvX6bS6RwwVcntWzrp6XcYlASMaZBMdDKuAFNlgOawmAFxtopnfQtlA
+         Ih4GvTHia4gAcGWDK9+PizcxGHbOtZMll2B0PPmpD+DonuQWmLjhGDD3zE3sTi5cWIKh
+         4K8A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0wi8ZTPLETil1XJAaQO9BAI4weiccsGEVkxpwrSB5+K92cVYmP6spzm4LOcpJqk3j9WDkBTDfcVgPqh33kyZ167ybcm2g99yQ0Zmrt3kuCayqyBjp9Csb7sIvi8htjgyn60iY
+X-Gm-Message-State: AOJu0Yz+2BrW+2rh9HNyvXRvP4DcmZDm9qnKWDIYrXIbQ0ijxSukwWLI
+	WpEgJ0t5KEQfSivZjEm1G7xgZmcdHmtQJQhzhwFygnxZ1GwNd64oYZWDrjP7vWecOyumOgZpONK
+	0n+I4CjRWCTaAkrhhR0XW8/KZH4w=
+X-Google-Smtp-Source: AGHT+IEBVVvYLSGYvm4uf1GOSV5JMsYxcpBlNHTVh0/GQvXEgkeNNjR+vtvzEvRhncIOCmt177HI2gV083bAUyjEonY=
+X-Received: by 2002:a05:6512:2004:b0:52b:b8c9:9cd7 with SMTP id
+ 2adb3069b0e04-52c9a3d1c0bmr86074e87.18.1718150596124; Tue, 11 Jun 2024
+ 17:03:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240528120424.3353880-1-arnd@kernel.org> <CACRpkdYOb3S8=EffjE8BpP1GTu5SWSEyorJ7i9HA2u7GQexwzg@mail.gmail.com>
+In-Reply-To: <CACRpkdYOb3S8=EffjE8BpP1GTu5SWSEyorJ7i9HA2u7GQexwzg@mail.gmail.com>
+From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+Date: Tue, 11 Jun 2024 21:03:04 -0300
+Message-ID: <CAJq09z7y_Hfnmgtb+0+Fh7cnAL==xoExr2e_GfSk6SMPD7yPig@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: realtek: add LEDS_CLASS dependency
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, 
+	=?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This policy guards fl_set_key_flags() from seeing flags
-not used in the context of TCA_FLOWER_KEY_FLAGS.
+> On Tue, May 28, 2024 at 2:04=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> w=
+rote:
+>
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > This driver fails to link when LED support is disabled:
+> >
+> > ERROR: modpost: "led_init_default_state_get" [drivers/net/dsa/realtek/r=
+tl8366.ko] undefined!
+> > ERROR: modpost: "devm_led_classdev_register_ext" [drivers/net/dsa/realt=
+ek/rtl8366.ko] undefined!
+> >
+> > Add a dependency that prevents this configuration.
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- net/sched/cls_flower.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Thank you, Arnd.
 
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index 6a5cecfd95619..6a2afc31f038b 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -41,6 +41,10 @@
- #define TCA_FLOWER_KEY_CT_FLAGS_MASK \
- 		(TCA_FLOWER_KEY_CT_FLAGS_MAX - 1)
- 
-+#define TCA_FLOWER_KEY_FLAGS_POLICY_MASK \
-+		(TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT | \
-+		TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST)
-+
- #define TUNNEL_FLAGS_PRESENT (\
- 	_BITUL(IP_TUNNEL_CSUM_BIT) |		\
- 	_BITUL(IP_TUNNEL_DONT_FRAGMENT_BIT) |	\
-@@ -676,8 +680,10 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
- 	[TCA_FLOWER_KEY_ENC_UDP_SRC_PORT_MASK]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT_MASK]	= { .type = NLA_U16 },
--	[TCA_FLOWER_KEY_FLAGS]		= { .type = NLA_U32 },
--	[TCA_FLOWER_KEY_FLAGS_MASK]	= { .type = NLA_U32 },
-+	[TCA_FLOWER_KEY_FLAGS]		= NLA_POLICY_MASK(NLA_U32,
-+							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
-+	[TCA_FLOWER_KEY_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_U32,
-+							  TCA_FLOWER_KEY_FLAGS_POLICY_MASK),
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE]	= { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE_MASK] = { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_CODE]	= { .type = NLA_U8 },
--- 
-2.45.1
+> >
+> > Fixes: 32d617005475 ("net: dsa: realtek: add LED drivers for rtl8366rb"=
+)
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> I tried to create a separate .c file for the leds and stubbed functions
+> for the LED stuff, but it ended up having to create a set of headers
+> just to share things between the different parts of the drivers and
+> it was so messy that it's not worth it.
 
+Thanks, Linus. I'll give it a try next month. For now, the fixed
+dependency is not a big deal as this switch was designed for small
+routers, which normally have LEDs.
+
+>
+> Yours,
+> Linus Walleij
+
+Reviewed-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
