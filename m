@@ -1,39 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86978170824;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D7617E91E;
 	Wed, 12 Jun 2024 17:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213546; cv=none; b=hkwN5AxdEchwJQljRAdf9j59yRYaku0gUerB7xxcJv3MjahGXDahD7jNVCQFjYCzBuH3aQwgfFrOlIP75pGEzoNcFw9jo1L44YQtix/rgkYv2Asf+61gvjSkgXk+iTNIEK8aCqxS84AHjaDDyP54uiHgUcHZI8wITyhKklikX6E=
+	t=1718213546; cv=none; b=WMwUHAdrJ5Fu6RsR+4n+PXkiOJBrIRWmeVO9oHQtLkTEWDR1uZ/W0llPignp8c1ETTf8HJIuDhnmmIvQ0hOZDZyaCWIaLAAMkBx76Oc3U/uW3mROf5T1+QhtyyoFRdKpr2AvQTkdxVJjmgRzP5imqKqYGbAJSxwgyZNXPgA68m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718213546; c=relaxed/simple;
-	bh=H+1Gh32TLe9//W5DEjtFjRYrLhHpR4ykiLSiVsQC96s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1JUKRyN4WjAOqe5cjv6mzfUq93tQ4oZES7eEU0xGLpNfbJLySWsfRq9CIGMIYnwaUn621h9oNg0L+vJxIraEnv9MGxQnm/iCtv4CFmsk7UE3B8RATgWwaZQKFfKFatT1b+AiHUE3g9QsElfMAIyFY/B/6O8nOLn7cqlJqfjJGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rLiCeW0i; arc=none smtp.client-ip=46.235.227.194
+	bh=r9Pm0rMa12TnlTbVnCAif5kBsOtAXCY8BoST484+vUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hZY24DCVlCnHwWau6hUAKR9K40aZTtRMRTDC6h/Jp5QMbc8p4pIgB90zA5Ts0r8fY2E4pcL1lP5OnsFdRSWtup+8TIW4/GhjRfj8SeYjOnta430v9glBsUfaFCNykHf91oGi99bMqXiixR/B3C/INGfRssLvfJDruMuUWlYTSoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PqcYgz1F; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rLiCeW0i"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PqcYgz1F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718213541;
-	bh=H+1Gh32TLe9//W5DEjtFjRYrLhHpR4ykiLSiVsQC96s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rLiCeW0iJDT+jJlR3bYdUqudRoD6iXy2Z5kB2zdmWqiPWgu2smHSHKdln9Y7OUUDC
-	 F4/TYcdQ29dmUBoYPgbCNxbTI+gJpTpsel0GjhdLCV7P+NV+bv7RYG3Ir24KJz9opu
-	 PKAxif+1wQMOKokJ4iWkgPLex2dfZDzNot/+gktQKHeovfImt8MX0t1bk7UhT+Ylji
-	 MED8xsU2AKugrDLgfTJ09SAIWdHV4y7OLRHhAICKDhwGvG5hEuwKxDoTXZVsRsiPyS
-	 Ty7J0xcTQWfEGQISIQqjgZ9SDzMg8nT1O3iTklXwE+1bW4dcRrT30ClicWA8t64poL
-	 /1HJcfS3le7DQ==
+	s=mail; t=1718213542;
+	bh=r9Pm0rMa12TnlTbVnCAif5kBsOtAXCY8BoST484+vUQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PqcYgz1FzL+j/xAfT53N0okz1nknSrba+8D8H82pfxa/tY/HR9Z8wGzKbiNivoEff
+	 CpqM2XcjJ1LobLBYxrvkKKmZBx0TCuRgQ7zSOK78tfphvEpxw77W2QTA9BQ1ti/c+0
+	 ipDCrBAxt14PHeK4phaBk7ysmWZciAwOkiNVNEuNXm7SjXLlkkOenChUE1InBvAaD7
+	 Uhtk13fDS34ncRiPnQz6gsea3Fn4ewzT8KO2x+ftf2ChRm/OTapc90JSoBa3QFQOiv
+	 lW2BX/9OtlkB8k7ZsnWdkK8UzKtp1Ku4lwUrhu+AwwQ8r0ndRuhyHZ1lkLQ3hoIq/s
+	 9YZMktstN/KHA==
 Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A8DE03782191;
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D1BCF3781139;
 	Wed, 12 Jun 2024 17:32:21 +0000 (UTC)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id 5958C4800C9; Wed, 12 Jun 2024 19:32:21 +0200 (CEST)
+	id 607274800CF; Wed, 12 Jun 2024 19:32:21 +0200 (CEST)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
 To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
 	Philipp Zabel <p.zabel@pengutronix.de>,
@@ -49,12 +50,14 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-rockchip@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	kernel@collabora.com
-Subject: [PATCH v5 0/5] RK3588 VEPU121/VPU121 support
-Date: Wed, 12 Jun 2024 19:15:40 +0200
-Message-ID: <20240612173213.42827-1-sebastian.reichel@collabora.com>
+	kernel@collabora.com,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH v5 4/5] arm64: dts: rockchip: Add VEPU121 to RK3588
+Date: Wed, 12 Jun 2024 19:15:44 +0200
+Message-ID: <20240612173213.42827-5-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240612173213.42827-1-sebastian.reichel@collabora.com>
+References: <20240612173213.42827-1-sebastian.reichel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,65 +66,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
 
-This series enables Hantro support for RK3588. It is based on these two
-previous series from Emmanuel Gil Peyrot and Jianfeng Liu, which looked
-stall to me. Considering the full driver is already upstream, I think
-this low hanging fruit should be enabled in 6.11:
+RK3588 has 4 Hantro G1 encoder-only cores. They are all independent IP,
+but can be used as a cluster (i.e. sharing work between the cores).
+These cores are called VEPU121 in the TRM. The TRM describes one more
+VEPU121, but that is combined with a Hantro H1. That one will be handled
+using the VPU binding instead.
 
- * https://lore.kernel.org/all/20240316071100.2419369-1-liujianfeng1994@gmail.com/
- * https://lore.kernel.org/linux-rockchip/20240412151515.837824-1-linkmauve@linkmauve.fr/
+Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 80 +++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-Their series got some feedback from Nicolas Dufresne, that there should be a
-plan how multi-core processing will be handled once it is supported in the
-kernel. I had a look (and internal discussion with Nicolas) and came up with a
-patch, which allows describing all the Hantro IP in DT. The driver will only
-probe for the first instance. This involves dropping the RK3568 compatible
-for the VEPU121, so that only kernels with the driver change will try to
-handle these IP. Once the kernel is capable of multi-core support, the same
-technique to disable cores 1-3 can be used to combine them all into one
-cluster.
-
-We also discussed, if they should be described as a cluster (e.g. by creating
-some kind of virtual bus for the 4 encoders in DT). Apparently the VSI doc
-describes the grouping of up to 4 instances. But there is no obvious reason
-why only these groups can be used as a cluster. It seems that even the 5th
-encoder from the combo VPU121 could be used together with the other clustered
-cores in theory. In practice this is probably a bad idea because of the shared
-cache of that encoder. Since that is handled with a different compatible, this
-can be thought about at a later point of time and handled in the kernel. Thus
-no special cluster description is needed in DT.
-
-The series is based on Heiko's for-next branch.
-
-Changes since PATCHv3 (VEPU121) / PATCHv4 (VPU121)
- * combine both patchsets, since there is some overleap
- * add patch to disable multi-core handling in the hantro driver
- * drop the RK3568 fallback compatible for VEPU (see above for the reason)
- * describe all RK3588 VEPU cores (possible because of driver change)
-
-Greetings,
-
--- Sebastian
-
-Emmanuel Gil Peyrot (2):
-  media: dt-bindings: rk3568-vepu: Add RK3588 VEPU121
-  arm64: dts: rockchip: Add VEPU121 to RK3588
-
-Jianfeng Liu (2):
-  media: dt-bindings: rockchip-vpu: Add RK3588 VPU121
-  arm64: dts: rockchip: Add VPU121 support for RK3588
-
-Sebastian Reichel (1):
-  media: hantro: Add RK3588 VEPU121 support
-
- .../bindings/media/rockchip,rk3568-vepu.yaml  |   5 +-
- .../bindings/media/rockchip-vpu.yaml          |   3 +
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 101 ++++++++++++++++++
- .../media/platform/verisilicon/hantro_drv.c   |  38 +++++++
- 4 files changed, 145 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+index 6ac5ac8b48ab..9edbcfe778ca 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+@@ -1159,6 +1159,86 @@ power-domain@RK3588_PD_SDMMC {
+ 		};
+ 	};
+ 
++	jpeg_enc0: video-codec@fdba0000 {
++		compatible = "rockchip,rk3588-vepu121";
++		reg = <0x0 0xfdba0000 0x0 0x800>;
++		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER0>, <&cru HCLK_JPEG_ENCODER0>;
++		clock-names = "aclk", "hclk";
++		iommus = <&jpeg_enc0_mmu>;
++		power-domains = <&power RK3588_PD_VDPU>;
++	};
++
++	jpeg_enc0_mmu: iommu@fdba0800 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdba0800 0x0 0x40>;
++		interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER0>, <&cru HCLK_JPEG_ENCODER0>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_VDPU>;
++		#iommu-cells = <0>;
++	};
++
++	jpeg_enc1: video-codec@fdba4000 {
++		compatible = "rockchip,rk3588-vepu121";
++		reg = <0x0 0xfdba4000 0x0 0x800>;
++		interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER1>, <&cru HCLK_JPEG_ENCODER1>;
++		clock-names = "aclk", "hclk";
++		iommus = <&jpeg_enc1_mmu>;
++		power-domains = <&power RK3588_PD_VDPU>;
++	};
++
++	jpeg_enc1_mmu: iommu@fdba4800 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdba4800 0x0 0x40>;
++		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER1>, <&cru HCLK_JPEG_ENCODER1>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_VDPU>;
++		#iommu-cells = <0>;
++	};
++
++	jpeg_enc2: video-codec@fdba8000 {
++		compatible = "rockchip,rk3588-vepu121";
++		reg = <0x0 0xfdba8000 0x0 0x800>;
++		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER2>, <&cru HCLK_JPEG_ENCODER2>;
++		clock-names = "aclk", "hclk";
++		iommus = <&jpeg_enc2_mmu>;
++		power-domains = <&power RK3588_PD_VDPU>;
++	};
++
++	jpeg_enc2_mmu: iommu@fdba8800 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdba8800 0x0 0x40>;
++		interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER2>, <&cru HCLK_JPEG_ENCODER2>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_VDPU>;
++		#iommu-cells = <0>;
++	};
++
++	jpeg_enc3: video-codec@fdbac000 {
++		compatible = "rockchip,rk3588-vepu121";
++		reg = <0x0 0xfdbac000 0x0 0x800>;
++		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER3>, <&cru HCLK_JPEG_ENCODER3>;
++		clock-names = "aclk", "hclk";
++		iommus = <&jpeg_enc3_mmu>;
++		power-domains = <&power RK3588_PD_VDPU>;
++	};
++
++	jpeg_enc3_mmu: iommu@fdbac800 {
++		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
++		reg = <0x0 0xfdbac800 0x0 0x40>;
++		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_JPEG_ENCODER3>, <&cru HCLK_JPEG_ENCODER3>;
++		clock-names = "aclk", "iface";
++		power-domains = <&power RK3588_PD_VDPU>;
++		#iommu-cells = <0>;
++	};
++
+ 	av1d: video-codec@fdc70000 {
+ 		compatible = "rockchip,rk3588-av1-vpu";
+ 		reg = <0x0 0xfdc70000 0x0 0x800>;
 -- 
 2.43.0
 
