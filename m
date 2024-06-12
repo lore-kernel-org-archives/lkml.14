@@ -1,73 +1,90 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D793A29F;
-	Wed, 12 Jun 2024 19:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473876A8DB
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718220824; cv=none; b=rEN3cyF7r7DDzML1UajAdQO487HDwmMFOhB5JxTE283JNdPboF6VdYBRkwpQjzCW5u7hDmy5uGvnJqL8ixJ+h81nz75U9sTx8eRbuLcwgQAUKo+cXl9HSlix+OiePFLAZc7SsG/A5qOyjm3EbifgipYcZd+dnSkYD6RCF/ZR4Hg=
+	t=1718221065; cv=none; b=hUgism7Zwfhnze1q6PHPhx8X2n2h2ZFsq0ux+1RYwj4mAzrR+M/vfun0GipKnaBbHhe+Q0HCdfGomG8g9JK01ONj+J2Mf4owKRafe+Wm7cg7ELcw3KEzcCnDmcVQ+gC4Ss0uxDuMlYcOQXmLsVOtGqYhLvbsCmR3KcV2afaVro8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718220824; c=relaxed/simple;
-	bh=Gax1/X8fKY4aRilNx+vxa7ff0//c5oRtSKW1r+ZZUwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZaqu6029278UDphr6Wum0+Wr3Jag4sVUkNwk43tpFed269uK9w8fEnEvLVGMqlgDm1juevKPFvqeK1RQhLabNWahMw4/odaT8r4X4Khz+G6f1kSDx0POW/En53SbrbmpvxxBvXiHyeu7eeqoZbm12a0nkakk8oa9fWK43WLcPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=eFgF4iMw; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
+	s=arc-20240116; t=1718221065; c=relaxed/simple;
+	bh=bAgvQLjry72ucsu6tyvE+IoTpk3LdoXsF+98JxrZlGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pfrBQqgQ8DZfWo/DbAG7u0e/HvshbAcS6YD+tkRuXPnOyIqzNRS+qZZmLsyIVXWYa0WHJHAeJeEKi421onSADsq3aIdcejgWIyIyhx9SvEN0ZwsuVnuDn0MjzPpvnQ271/2PrQS4ZDy7CYbjisHIk9QyJ9DWVPG+ZS6F8r4OAi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Pj8oAdlG; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="eFgF4iMw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
-	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
-	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Pj8oAdlG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ak6OXrPF07tGTttAP9HDGFvaFe9ciAKjMYI3suYEzEo=; b=eFgF4iMwqL8SamlFCaLlXT9wi1
-	GAheQ0ACG+IrfSit8wAxJ1clqQNzcpdPZEtlBX4eXVhxCr0DzSDpDSIz7/wXqroTylslTQrlZJjOh
-	bFEe0KEEWGGizmzev+Kvl7Bz/wrQI1I6Ix7tnJ5jnm07esmyhXkG6SsCYQPbusAbx8EQpQxtzm3Xy
-	ToU1kFenDeKbB/Kr3LV3iSIaKWe4ug06QM9dHEiDlkOwC6aJKImaCAJozv1ln2S/qkr0WejPlfWGl
-	TY37foRlLiuRMfZHwfbo/vyHg3njCFFiihrFhi5LWkL0Mci644fhy5OD4pR6Uz0Gi/5o3PF6j0Dls
-	hUwVWazQ==;
-Received: from [2001:9e8:9cb:9501:3235:adff:fed0:37e6] (port=58678 helo=lindesnes.fjasle.eu)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <nicolas@fjasle.eu>)
-	id 1sHTiq-005QXv-Ou;
-	Wed, 12 Jun 2024 21:33:28 +0200
-Date: Wed, 12 Jun 2024 21:33:24 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH 2/2] kbuild: package: add -e and -u options to shell
- scripts
-Message-ID: <20240612-innocent-acrid-husky-5a6cce@lindesnes>
-References: <20240611160938.3511096-1-masahiroy@kernel.org>
- <20240611160938.3511096-2-masahiroy@kernel.org>
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rJP3bi32e6r8RV+D2X0N8VAFuxM3UDfcxB2VNYPJ2TI=; b=Pj8oAdlGr1ZqbcE2L91WeNekxr
+	UJtQDy2roFDtBjZdT9mC+3YBbRvFn8Akid+p+qWIVSNiBkorGQXAywBjBl3PywJpv0B0Nrnyfx4Ql
+	3QmcQ3OVRTLFMbqmN2S9Rw07Vm7tXgLhOXCwBpeD0agZtb8wB8Lo6Ed4LU9Gw3sw7BD0VFgXx9ClE
+	S26I6mzsO+3y1fY89GpB8fbN8opQSeRA1j+1i+nY0aVJ0Qa0a3VJZZhQHzw1AobZV+quj0ItSHQCy
+	GJZScBPIAZxwqbOJ1T7XHMemb9BczneTGknNwktnvaTeTNbF4ICoZgzVF99oH8YudzeOueMxWqekE
+	cOaa+Knw==;
+Received: from [191.204.194.169] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sHTmp-002RtF-F2; Wed, 12 Jun 2024 21:37:35 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel-dev@igalia.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Simon Ser <contact@emersion.fr>,
+	Pekka Paalanen <ppaalanen@gmail.com>,
+	daniel@ffwll.ch,
+	Daniel Stone <daniel@fooishbar.org>,
+	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
+	Dave Airlie <airlied@gmail.com>,
+	ville.syrjala@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Joshua Ashton <joshua@froggi.es>,
+	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v5 3/3] drm/amdgpu: Make it possible to async flip overlay planes
+Date: Wed, 12 Jun 2024 16:37:13 -0300
+Message-ID: <20240612193713.167448-4-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240612193713.167448-1-andrealmeid@igalia.com>
+References: <20240612193713.167448-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611160938.3511096-2-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 12, 2024 at 01:08:06AM +0900, Masahiro Yamada wrote:
-> Set -e to make these scripts fail on the first error.
-> 
-> Set -u because these scripts are invoked by Makefile, and do not work
-> properly without necessary variables defined.
-> 
-> Remove the explicit "test -n ..." from scripts/package/install-extmod-build.
-> 
-> Both options are described in POSIX. [1]
-> 
-> [1]: https://pubs.opengroup.org/onlinepubs/009604499/utilities/set.html
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+amdgpu can handle async flips on overlay planes, so mark it as true
+during the plane initialization.
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
+index 8a4c40b4c27e..dc5392c08a87 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
+@@ -1708,6 +1708,7 @@ int amdgpu_dm_plane_init(struct amdgpu_display_manager *dm,
+ 	} else if (plane->type == DRM_PLANE_TYPE_OVERLAY) {
+ 		unsigned int zpos = 1 + drm_plane_index(plane);
+ 		drm_plane_create_zpos_property(plane, zpos, 1, 254);
++		plane->async_flip = true;
+ 	} else if (plane->type == DRM_PLANE_TYPE_CURSOR) {
+ 		drm_plane_create_zpos_immutable_property(plane, 255);
+ 	}
+-- 
+2.45.2
+
