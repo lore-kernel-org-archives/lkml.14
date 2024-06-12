@@ -1,101 +1,142 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611902F50;
-	Wed, 12 Jun 2024 19:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06A72F50;
+	Wed, 12 Jun 2024 19:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718221656; cv=none; b=SmCvLgnawZVBrEz2/WKz2SqqHNtDUyFktbiEV83vwestkQHi3Flzk0tmko+En/HDtuk2ylIDmcodxq+BUg10Rt1aGxrthQwaZ3gkvgBBfOYOS9w96igV/sUjgikfRKGd0dh47hsMHNI2vqd4rBX5PhCRtt1DRtVo/g9ycmDltds=
+	t=1718221661; cv=none; b=dWTKmM65ZY5mq/NZs0iraOWfo2EMGykYOYLHcfx8ttdquouHoiXF3Knp2afC8LjDhdDrG4pay2ndULw/ftSH1OdoAPJdtprE2CHFH6JfjwcmMiQLzhgSMUfYBnKZJY8y/ibQjMv4HDz/0T8z6+7qGF+Tu/vTh38pLBLArRYjhbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718221656; c=relaxed/simple;
-	bh=iXYrYf6E3VhpKvW64KtUd6Z5LCbXkEegDMyJGiIA/oE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=jCZwzpXL9k0Wi54FNIvws7CHHf1Zlg8M1/genKadDa/I7p0S/XbCfMm1xB88dtDY8V9Apgb4gDs/I0qxrCrlJz5iofvIRoH0iLFG7Os2jQ21eOAlvSgTTgCXeJQvGG7Q5pJfCywV+hzu0AQ1AsJhzBO+Gr2wfmfKJITHx0z6eKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l581TawO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718221661; c=relaxed/simple;
+	bh=8FQ9c7Ch3FC/45m1f2sv/N9cm5NEyghZRzqrKFkzdcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XduqL8uip+lQyqhMEQLlkTuTTViGjIV80UnHgcYnHOyBFIaNVhm1U6UwKdwenqN4Je0qq7PBzs+4N8/It3COslxy8gmpyLm7179h44gG+h2XzAGibHFcHnrnITN/68v2LezdSl2AgCacLMq4j7k2DFOvkVDpQwDI5p8PUhXKW8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3n2VsgT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l581TawO"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CHW7Hh001183;
-	Wed, 12 Jun 2024 19:47:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ww4DJkpHpVwnOLvPdxsLkl
-	dRNeezNP3rbu3LoE38HcI=; b=l581TawOjWicNLrKoJrF24VSEq2R3amStx/Npb
-	C3wE1b7Q63BlcoZfismcGZ6jTX2hcSk5YrnffH3H6dGxXw4IzBI+A1+mFyOeHmc3
-	N/yl291mqYr1uWADrg7Oxvk/9ex10CJPHSgzh0Pa/Omc4XzCKitMoOqHc5wzCR0y
-	eaeleQhOsTC0WtkZY3SN65pIXpWjoNoVXLurTFlkmnZC/Y9fqf48fsLFawShiCbg
-	UI3WuJpNIavce3Pal1sZU1YI+9ABN8Y6N/X32D3sHIdnUD4lJDce8Lw9k5bs/lHH
-	baURJHjeBM4zghiaxHYwPfSwXhdiAj1BU0Hcy4cD3zGPxsQQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypp87vgs0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 19:47:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CJlU5c025453
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 19:47:31 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 12:47:30 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 12 Jun 2024 12:47:29 -0700
-Subject: [PATCH] media: tda9887: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3n2VsgT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0E3C32786;
+	Wed, 12 Jun 2024 19:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718221660;
+	bh=8FQ9c7Ch3FC/45m1f2sv/N9cm5NEyghZRzqrKFkzdcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t3n2VsgTo08P0X+ucMW5nAE/Jvi9bmuYntTSGWbfOVXyyUq+OavQcZ4zmCAVQnZpv
+	 +i6acaHOQFmJDaIa632xABI/nodaQrNGRsnz75tgXcuWQJJAfJ2tIpZV/bu/xhlA8p
+	 CG4jNiNFNskT1asWdp4RKIYVhwfkIcjGQxFxA1U8bG7+cwLhd/2cSAXDl8w/VGK9Cw
+	 YTRdjK5Vzg5lAtN4p1q4kPEobXuvszyijmAYOr7nMJFj+qijmGCB+sAFS9hN59DeN9
+	 g55JEtguQDdCLfgG9tqwF1AxhD2eeNBL/41lPRER0tTmJIdgbRfqyvtgy38zWi0knR
+	 5xAiZJGcQ69aA==
+Date: Wed, 12 Jun 2024 12:47:39 -0700
+From: Kees Cook <kees@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Gow <davidgow@google.com>,
+	Vitor Massaru Iha <vitor@massaru.org>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH v2 2/2] usercopy: Convert test_user_copy to KUnit test
+Message-ID: <202406121245.D3536D45D@keescook>
+References: <20240610213055.it.075-kees@kernel.org>
+ <20240610213330.1310156-2-kees@kernel.org>
+ <CABVgOSmFL50_qYOBROkE9LZx__W6MLnHWahGnAVuLBDVO4k1zQ@mail.gmail.com>
+ <202406120927.3C64ACD6@keescook>
+ <CAMuHMdUsjy86z3=s6ipFSQrbsycPaExNv8oxrcL_8FhzabMoTg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-md-drivers-media-tuners-v1-1-7ea6440d766c@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAFD7aWYC/x3MwQqDMAyA4VeRnBeo0vWwVxk7xDadgbUbiYogv
- rt1x+/w/zsYq7DBo9tBeRWTb23obx3EieqbUVIzDG7wLvQDloRJZWU1LJyEcF7qBbpnTzGz8yF
- Aq3/KWbb/+flqHskYR6Uap+v3kbpsWMhmVjiOE2VC9GGIAAAA
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -520wfINMfu24n5CnOh1Ujuy0MvHfMZl
-X-Proofpoint-ORIG-GUID: -520wfINMfu24n5CnOh1Ujuy0MvHfMZl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- spamscore=0 suspectscore=0 mlxlogscore=910 priorityscore=1501 adultscore=0
- bulkscore=0 mlxscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406120140
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUsjy86z3=s6ipFSQrbsycPaExNv8oxrcL_8FhzabMoTg@mail.gmail.com>
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
+On Wed, Jun 12, 2024 at 09:21:52PM +0200, Geert Uytterhoeven wrote:
+> Hi Kees,
+> 
+> On Wed, Jun 12, 2024 at 6:51 PM Kees Cook <kees@kernel.org> wrote:
+> > On Wed, Jun 12, 2024 at 05:13:39PM +0800, David Gow wrote:
+> > > On Tue, 11 Jun 2024 at 05:33, Kees Cook <kees@kernel.org> wrote:
+> > > > Convert the runtime tests of hardened usercopy to standard KUnit tests.
+> > > >
+> > > > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> > > > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > > > Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
+> > > > Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > > ---
+> > >
+> > > This looks good, particularly with the x86 fix applied.
+> > >
+> > > It's still hanging on m68k -- I think at the 'illegal reversed
+> > > copy_to_user passed' test -- but I'll admit to not having tried to
+> > > debug it further.
+> > >
+> > > One other (set of) notes below about using KUNIT_EXPECT_MEMEQ_MSG(),
+> > > otherwise (assuming the m68k stuff isn't actually a regression, which
+> > > I haven't tested but I imagine is unlikely),
+> >
+> > I'm trying to debug a hang on m68k in the usercopy behavioral testing
+> > routines. It's testing for the pathological case of having inverted
+> > arguments to copy_to_user():
+> >
+> >         user_addr = kunit_vm_mmap(test, NULL, 0, priv->size,
+> >                             PROT_READ | PROT_WRITE | PROT_EXEC,
+> >                             MAP_ANONYMOUS | MAP_PRIVATE, 0);
+> >         ...
+> >         bad_usermem = (char *)user_addr;
+> >         ...
+> >         KUNIT_EXPECT_NE_MSG(test, copy_to_user((char __user *)kmem, bad_usermem,
+> >                                                PAGE_SIZE), 0,
+> >                 "illegal reversed copy_to_user passed");
+> >
+> > On other architectures, this immediate fails because the access_ok()
+> > check rejects it. On m68k with CONFIG_ALTERNATE_USER_ADDRESS_SPACE,
+> > access_ok() short-circuits to "true". I've tried reading
+> > arch/m68k/include/asm/uaccess.h but I'm not sure what's happening under
+> > CONFIG_CPU_HAS_ADDRESS_SPACES.
+> 
+> On m68k CPUs that support CPU_HAS_ADDRESS_SPACES (i.e. all traditional
+> 680x0 that can run real Linux), the CPU has separate address spaces
+> for kernel and user addresses.  Accessing userspace addresses is done
+> using the special "moves" instruction, so we can just use the MMU to
+> catch invalid accesses.
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+Okay, that's what I suspected. I think I'll need to just not test this
+particular case for archs with separate address spaces, since it would
+be meaningless.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/media/tuners/tda9887.c | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> > For now I've excluded that test for m68k, but I'm not sure what's
+> > expected to happen here on m68k for this set of bad arguments. Can you
+> > advise?
+> 
+> Perhaps the kernel address is actually a valid user address, or
+> vice versa?
 
-diff --git a/drivers/media/tuners/tda9887.c b/drivers/media/tuners/tda9887.c
-index dca2fc776e44..b2f7054c1832 100644
---- a/drivers/media/tuners/tda9887.c
-+++ b/drivers/media/tuners/tda9887.c
-@@ -707,4 +707,5 @@ struct dvb_frontend *tda9887_attach(struct dvb_frontend *fe,
- }
- EXPORT_SYMBOL_GPL(tda9887_attach);
- 
-+MODULE_DESCRIPTION("NXP TDA9885/6/7 analog IF demodulator driver");
- MODULE_LICENSE("GPL");
+Right -- I think that's what's happened.
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240612-md-drivers-media-tuners-a5f4acfe0466
+> 
+> Does the test work on systems that use 4G/4G for kernel/userspace
+> instead of the usual 1G/3G split?
+> 
+> /me runs the old test_user_copy.ko on ARAnyM
+> Seems to take a while? Or it hangs, too?
 
+Sounds like the same behavior.
+
+> Related reading material
+> https://lore.kernel.org/all/CAMuHMdUzHwm5_TL7TNAOF+uqheJnKgsqF+_vzqGRzB_3eufKug@mail.gmail.com/
+> https://lore.kernel.org/all/CAMuHMdVQ93ihgcxUbjptTaHdPjxXLyVAsAr-m3tWBJV0krS2vw@mail.gmail.com/
+
+Thanks!
+
+-Kees
+
+-- 
+Kees Cook
