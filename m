@@ -1,106 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3632904;
-	Wed, 12 Jun 2024 18:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329142904;
+	Wed, 12 Jun 2024 18:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217056; cv=none; b=QMpC2AnTN94zW2MQLUZIBZCdIOYlWjeP/tJwCQdmwHt22HiZNdkLFDWn0sba0hbjIXC4AqTubKTS6Inaix5+xZWYsUHGqfXawmeTQg7Icjh/S4ZxAL+b75gBqxUFUcSZ98dPtbJkhQneM8kByNe1+S8nmPwEemriTXGL4dv8Q2k=
+	t=1718217070; cv=none; b=E8/McPnd3LDRfJIVNqBsW11GxgB7+NKl0ncMlGFolHilP2OEsBSxM5HZDCVYaLWd1hCuN7Zwdu7/KoNb1Nqzitb5/g29lu3WXl93NFvX3ImgaRMdVFFO/s0oW5P4DjhWVArIE+ZXWrl6SYAenosQSoecHQ496kzlekdLQGBv/3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217056; c=relaxed/simple;
-	bh=e3QzXrAaU67B/41FElb0xb11by+jePMPQ9A+1cBeILs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDAKUX/4gGxufVdPuVUrMYOXA0N+h6jWw9JdwbF3w5uAotapO8h5BWuyZcYKGgX3+9V87oaRHUTXPtt4Xo08mPPlJ0UM2VCe9hbPkOC/DCiqJ5ZLW2T/mki/+WBKUVkAqOCb9cxntBQCHNt2EHU6j04egvL89C//Z6bdxxkVCIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcN1LmqV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718217070; c=relaxed/simple;
+	bh=bbW9jfn/YkVzxgq0mUcCmWnAQ+1pHU/SiOxwbF4Robs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A12fxE9TskWEkN/V+7ZbdazmMAFZFA4N4nRb9JDo6JGPfldyDIby7/o5hSt8KtNxSda09qybPIT4kkg3JGYuNz1cf6voNPzGCELZN1G/iC16OLZu1Jn/fipj+uN23NShPrWFlvsr4lemmAacXkkHvpRVpAXLJdyl3BLKSQ05nkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hGkDeiqB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcN1LmqV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA306C116B1;
-	Wed, 12 Jun 2024 18:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718217056;
-	bh=e3QzXrAaU67B/41FElb0xb11by+jePMPQ9A+1cBeILs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pcN1LmqVDCujeGcsZoS9HdgBzlkuVNCDq07GI+9cpH8K5pC1eVzYA0EJ1U+5Us3S6
-	 8XS6xBsIILjM86ioB0/3ul9dJdGy3rwr7nHauYBjgGCgr8BPYWtxh3zJgc1oZTxbaY
-	 uUuFBemjxteVBFqOxC30bM9JizYIgAFgmgfj9fUE+C5nY0PYGVpMzFcw+C3fvvr+hz
-	 +6oKQKeBrB2U3zhHGXnsLjgs9PCMOHkX4PdmiR41VkKu5Jez/H/cOWI+tXr3B/GXkc
-	 LMpXgSRf+g6u/4EfHaLitBTwNO+7XigGtjyoYl5WY/+f9wL/CDHIqaI5Mrc9zDgwFF
-	 o2pqi914O6sqw==
-Date: Wed, 12 Jun 2024 21:30:51 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v4] net: mana: Allow variable size indirection
- table
-Message-ID: <20240612183051.GE4966@unreal>
-References: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hGkDeiqB"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CFbk34016948;
+	Wed, 12 Jun 2024 18:30:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EzEJlEWFLZbkymQcOUSopO
+	cRdcYxgvQlzTjdmeL+W4g=; b=hGkDeiqBA7+fhg3uWzCox7KlLclY0ov7oIH/6Q
+	yYv+aZmpML5yrWgc8hHdUen0fdon168D7hZFtI5FzpWp1n+wftssKw5QJkcYnVnw
+	mFCc6QVSoXZUF5bvZ5/JNfZ4JyOTDKQvZHIh7hUBtkUuGL7S473f40MFSeeJAkfw
+	MElXflXSdf+L7FzkDiWVT1wp6uru+Bqyz5OBgWxm1iAWkwBxTMKu5wKMtszfs/Bj
+	HdRQbt4lWMPbsw+KnnVlC17LGPdNAAzJO+Chy1V2qCD+z+zm03hWiccP+FFg0Itj
+	iwZ8t2pXnQSdEqR3Ojs5s7Mkseh7xQEKk5C2P+PqAh1Wvy3g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypmjavmby-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 18:30:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CIUvr6007635
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 18:30:57 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Jun 2024 11:30:53 -0700
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
+        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>
+Subject: [RFC V2 0/4] firmware: arm_scmi: vendors: Qualcomm Vendor Protocol
+Date: Thu, 13 Jun 2024 00:00:27 +0530
+Message-ID: <20240612183031.219906-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: nzqeVsfnI2NV1gNaM2IAzbyH651A5Gwt
+X-Proofpoint-ORIG-GUID: nzqeVsfnI2NV1gNaM2IAzbyH651A5Gwt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ clxscore=1015 mlxscore=0 impostorscore=0 mlxlogscore=913
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120132
 
-On Mon, Jun 10, 2024 at 03:28:39AM -0700, Shradha Gupta wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  Changes in v4:
->  * Skip NULLify after free
->  * Log proper errors in mana_probe() if mana_attach(), mana_probe_port()
->    fails
->  * Implement mana_cleanup_indir_table() to avoid code duplication.
-> 
->  Changes in v3:
->  * Fixed the memory leak(save_table) in mana_set_rxfh()
-> 
->  Changes in v2:
->  * Rebased to latest net-next tree
->  * Rearranged cleanup code in mana_probe_port to avoid extra operations
-> ---
->  drivers/infiniband/hw/mana/qp.c               | 10 +--
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 85 ++++++++++++++++---
->  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 ++++--
->  include/net/mana/gdma.h                       |  4 +-
->  include/net/mana/mana.h                       |  9 +-
->  5 files changed, 104 insertions(+), 31 deletions(-)
+The SCMI QCOM vendor protocol provides a generic way of exposing a
+number of Qualcomm SoC specific features (like memory bus scaling)
+through a mixture of pre-determined algorithm strings and param_id
+pairs hosted on the SCMI controller. Introduce a client driver that
+uses the memlat algorithm string hosted on QCOM SCMI Vendor Protocol
+to detect memory latency workloads and control frequency/level of
+the various memory buses (DDR/LLCC/DDR_QOS).
 
-Hi Jakub,
+Generic QCOM Vendor protocol background:
+It was found that a lot of the vendor protocol used internally was
+for debug/internal development purposes that would either be super
+SoC specific or had to be disabled because of some features being
+fused during production. This lead to a large number of vendor
+protocol numbers being quickly consumed and were never released
+either. Using a generic vendor protocol with functionality abstracted
+behind algorithm strings gave us the flexibility of allowing such
+functionality exist during initial development/debugging while
+still being able to expose functionality like memlat once they have
+matured enough. The param-ids are certainly expected to act as ABI
+for algorithms strings like MEMLAT.
 
-Like we talked, I created new shared branch for this patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=mana-shared
+Now that the SCMI controller firmware (CPUCP) is feature complete
+with the impending release of X1E SoCs, I should be able to get out
+next re-spins a lot quicker. I'll keep adding more documentation in
+the subsequent re-spins. Thanks in advance for taking time to review
+the series.
 
-Because it took time, the base of this branch is v6.10-rc3 as I'm eager
-to get the commit c9d52fb313d3 ("PCI: Revert the cfg_access_lock lockdep mechanism")
-from Linus's master, and this shared patch gives me the reason to pull
-the fix.
+Opens:
+* opp-tables are used but they don't get to be added to the scmi device (thus we
+  rely on a lot of manual parsing) because the memlat client driver doesn't vote
+  on these resources clocks/interconnects/power-domain from the kernel and some
+  of the resouces aren't modelled in the first place like DDR_QOS.
 
-I see that your net-next didn't get -rc3 tag yet, so please pull it after you
-advance net-next. After that I'll do the same in RDMA tree.
+V1:
+* Add missing bindings for the protocol. [Konrad/Dmitry]
+* Use alternate bindings. [Dmitry/Konrad]
+* Rebase on top of Cristian's "SCMI multiple vendor protocol support" series. [Cristian]
+* Add more documentation wherever possible. [Sudeep]
+* Replace pr_err/info with it's dev equivalents.
+* Mixed tabs and initialization cleanups in the memlat driver. [Konrad]
+* Commit message update for the memlat driver. [Dmitry]
+* Cleanups/Fixes suggested for the client driver. [Dmitry/Konrad/Cristian]
+* Use opp-tables instead of memfreq-tbl. [Dmitry/Konrad]
+* Detect physical cpu to deal with variants with reduced cpu count.
+* Add support for DDR_QOS mem_type.
 
-Thanks
+To Dos:
+* More documentation [Sudeep/Dmitry/Konrad]
+* Use alternate bindings instead of freq-table-Hz. [Dmitry]
+* Prevent duplication of code using vendor protocol driver. [Dmitry]
+
+Depends on:
+vendor protocol submenu: https://lore.kernel.org/all/20240408093052.3801576-3-cristian.marussi@arm.com/
+X1E cpufreq: https://lore.kernel.org/lkml/20240612124056.39230-1-quic_sibis@quicinc.com/
+
+Sibi Sankar (4):
+  dt-bindings: firmware: Add support for QCOM Vendor Protocol
+  firmware: arm_scmi: vendors: Add QCOM vendor protocol
+  soc: qcom: Introduce SCMI based Memlat (Memory Latency) governor
+  arm64: dts: qcom: x1e80100: Enable LLCC/DDR/DDR_QOS dvfs
+
+ .../bindings/firmware/arm,scmi.yaml           |  21 +
+ .../bindings/soc/qcom/qcom,scmi-memlat.yaml   | 243 ++++++++
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 136 ++++
+ drivers/firmware/arm_scmi/vendors/Kconfig     |  12 +
+ drivers/firmware/arm_scmi/vendors/Makefile    |   2 +-
+ .../arm_scmi/vendors/qcom_scmi_vendor.c       | 184 ++++++
+ drivers/soc/qcom/Kconfig                      |  12 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/qcom_scmi_client.c           | 590 ++++++++++++++++++
+ include/dt-bindings/soc/qcom,scmi-vendor.h    |  22 +
+ include/linux/qcom_scmi_vendor.h              |  39 ++
+ 11 files changed, 1261 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml
+ create mode 100644 drivers/firmware/arm_scmi/vendors/qcom_scmi_vendor.c
+ create mode 100644 drivers/soc/qcom/qcom_scmi_client.c
+ create mode 100644 include/dt-bindings/soc/qcom,scmi-vendor.h
+ create mode 100644 include/linux/qcom_scmi_vendor.h
+
+-- 
+2.34.1
+
