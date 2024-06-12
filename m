@@ -1,90 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE1A180A79;
-	Wed, 12 Jun 2024 15:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322F9180A79;
+	Wed, 12 Jun 2024 15:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718206368; cv=none; b=CDvs30jo8eaBM3f4DuPKu0sP9Vib0WMdKuBDF16f1+XmihKa97IgIQnIQ/utw0fyw0gIVKtvAquNp5zXskBsPzE3ER3NglEuV5Pg8IzsBWk0vlgPXRPui0dp72s8KHjKg5YFnVC5OLa7qCjdWUGk4O7X+tBJI5m4PJInAu4WEiU=
+	t=1718206374; cv=none; b=LZQJLuEnYwSggYpmNkA9viPgsWdecgGDYEdumU5f+Z6ECbVlwyWA6e8nG6i36JgAFA12VjmRhsSq+Px3Z9C64m/TEwcXYbRjW/K2f9knCDDKM1TXAIkRYsIDLAQpkZLgfCksBgNCsR1uJBoeZswJPVU7mpX8agC5MWuKBHZjn/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718206368; c=relaxed/simple;
-	bh=A4LXxVy38n/hdJk7+HDkZy7E6cYBqwA9u3vwpbFPPpg=;
+	s=arc-20240116; t=1718206374; c=relaxed/simple;
+	bh=2wwPlROZa4IjXKMB/B8j6xb6yzJ8Sd+ewIMeIt5CG6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsb0zV8NRefHc72Q2eFyJe3EP9ZtmZW6GOj4TUJ7fwp6dBf/bjmSH2yYObhzYlPejAKKeMz6KXYgiV7NbWeA/DNcYNCYkgR+uqy06vCA5qIHguBrEje5zvjdBDGOSdvnbJNP2+DPSQr1rcbU/4pjh2sjp4NPqI/jzJs4ZkSF51c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1dk2jb0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUxrC1UnfIn7jaltqv9sGRaP4Gf0CHF7ZkRLmCcRT9ROpc5jNYCAeeKBw4Gjp37MRZhXkCIBiuTCbyb8ghAEqgg3tXe5Mu5iA5l0eH+dpXkcCIdhlx7zHAYYZiRlwGsCa91lrU6PXbPLvEo9lOqMC3gDhfgQ2gRn+YZh7E3lNKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=rBqrXBe6; arc=none smtp.client-ip=148.163.152.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1dk2jb0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B0FC32786;
-	Wed, 12 Jun 2024 15:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718206368;
-	bh=A4LXxVy38n/hdJk7+HDkZy7E6cYBqwA9u3vwpbFPPpg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1dk2jb0rep78D4tnoiuqiiBrgVtN1bUOCYTIwfvuZ/b3q38BkVLLJ5MUFll4BYN4
-	 DFUUEUezYt0Df2uShLAIVdPsleyPJJRzC0XkLqYbAW3wQHnvp4rL+zrU0TpyyjQtBe
-	 N+ee/D0QPsI5VvieCA4hGr3aSjVy88FC5vtJ42lU45zFYLiIBOpT6Sf6OzAqE5CUe4
-	 WPwI0kEt9/vo4Mn60rhgalqzG5vbZ/wh5ebbq987KmbwqOoktgO5k7UK9XAPZgtrjA
-	 lo6XleH3JWS3aOxcj1yR/OzXsYsqaYQ4HIrvF1gra0iGOoMfQ83g5WzNZYjGQay83j
-	 CLezwVyROkCmA==
-Date: Wed, 12 Jun 2024 16:32:46 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-kernel@vger.kernel.org, patches@opensource.cirrus.com,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH] ASoC: cs35l56: Disconnect ASP1 TX sources when ASP1 DAI
- is hooked up
-Message-ID: <Zmm_np5cIF0MSE9U@finisterre.sirena.org.uk>
-References: <20240611145746.1454663-1-rf@opensource.cirrus.com>
- <Zmh3VmRfGEU6pGps@finisterre.sirena.org.uk>
- <36219997-397b-4a26-96ee-7527fb6eb024@opensource.cirrus.com>
- <Zml2FfjbO4Vgk0jy@finisterre.sirena.org.uk>
- <92f2d6c6-2d63-42eb-ae91-59a14831145a@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="rBqrXBe6"
+Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
+	by m0355090.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 45CDleNs004491;
+	Wed, 12 Jun 2024 15:32:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=DKIM202306; bh=5UYz7vM8ukqZ7+rx3Rz0bIj
+	lD/l1jReNBhEadDHRJ70=; b=rBqrXBe6qrlvYkIRocJmwI/w/30JQDW1d5FBlxC
+	va2Yr8DYzIwLJHWai3Oc23+Z38N+nLb1A6NmAyyo0KiBVdSsjoqDkUAtN+v094ZZ
+	7YvxCfQJE/q2bSheubx/z+/uE25pTJfzug+bZtiiF0TtvJJ9LWrAGXb964dNls8g
+	DTt9jV/8l+9NqvXRvu4Gy3CkY69yhk1tnquk+L4KbYZbTxzH1mGohMRdkl3uohBq
+	2/QVrzM9vwqtVEIrJ+oa5GjHSV0Zq1/CGZaB3jgo61B80EcHbD0rdHkSAdHATqFi
+	cTMJJfnWz4jqBAtHyO7lUswFAEYC5MgvVTGGS/jT0jOpsUg==
+Received: from va32lpfpp03.lenovo.com ([104.232.228.23])
+	by m0355090.ppops.net (PPS) with ESMTPS id 3yn2msg6vg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 15:32:19 +0000 (GMT)
+Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by va32lpfpp03.lenovo.com (Postfix) with ESMTPS id 4VzqKZ6ymTz51Q9y;
+	Wed, 12 Jun 2024 15:32:18 +0000 (UTC)
+Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mbland)
+	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VzqKZ3HsBz2VZ3B;
+	Wed, 12 Jun 2024 15:32:18 +0000 (UTC)
+Date: Wed, 12 Jun 2024 10:32:17 -0500
+From: Maxwell Bland <mbland@motorola.com>
+To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH bpf-next v6 3/3] arm64/cfi,bpf: Use DEFINE_CFI_TYPE in arm64
+Message-ID: <c6fsgv7bjt2d2ejz2uuin2g475fkvpyenp32wehdqlcf6ihqgx@5gicsaw4u37f>
+References: <illfkwuxwq3adca2h4shibz2xub62kku3g2wte4sqp7xj7cwkb@ckn3qg7zxjuv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ws70HyzkY6K4LGiZ"
-Content-Disposition: inline
-In-Reply-To: <92f2d6c6-2d63-42eb-ae91-59a14831145a@opensource.cirrus.com>
-X-Cookie: Your love life will be... interesting.
-
-
---ws70HyzkY6K4LGiZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <illfkwuxwq3adca2h4shibz2xub62kku3g2wte4sqp7xj7cwkb@ckn3qg7zxjuv>
+X-Proofpoint-ORIG-GUID: 4_v9B3kXPAzqWmjgo_DoyOlN5e58hRxg
+X-Proofpoint-GUID: 4_v9B3kXPAzqWmjgo_DoyOlN5e58hRxg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 phishscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120111
 
-On Wed, Jun 12, 2024 at 11:42:15AM +0100, Richard Fitzgerald wrote:
+Corrects Puranjay Mohan's commit to adopt Mark Rutland's
+suggestion of using a C CFI type macro in kCFI+BPF.
 
-> I can send a V2 of this patch with this long explanation of the
-> background. I didn't put it all in V1 because it never occurred to me
+Signed-off-by: Maxwell Bland <mbland@motorola.com>
+---
+ arch/arm64/kernel/alternative.c | 46 ++++-----------------------------
+ 1 file changed, 5 insertions(+), 41 deletions(-)
 
-Yes, please - it just needs to mention that due to the firmware we don't
-have hardware defaults here.  I think it would probably be more robust
-for the driver to just set all the documented registers rather than
-hoping it's set all the important values and needing to keep adding to
-that piecemeal.
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index 1715da7df137..d7a58eca7665 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -8,6 +8,7 @@
+ 
+ #define pr_fmt(fmt) "alternatives: " fmt
+ 
++#include <linux/cfi_types.h>
+ #include <linux/init.h>
+ #include <linux/cpu.h>
+ #include <linux/elf.h>
+@@ -302,53 +303,16 @@ EXPORT_SYMBOL(alt_cb_patch_nops);
+ 
+ #ifdef CONFIG_CFI_CLANG
+ struct bpf_insn;
+-
+ /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
+ extern unsigned int __bpf_prog_runX(const void *ctx,
+ 				    const struct bpf_insn *insn);
+-
+-/*
+- * Force a reference to the external symbol so the compiler generates
+- * __kcfi_typid.
+- */
+-__ADDRESSABLE(__bpf_prog_runX);
+-
+-/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_hash,@object				\n"
+-"	.globl	cfi_bpf_hash					\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_hash:							\n"
+-"	.word	__kcfi_typeid___bpf_prog_runX			\n"
+-"	.size	cfi_bpf_hash, 4					\n"
+-"	.popsection						\n"
+-);
+-
++DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+ /* Must match bpf_callback_t */
+ extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
+-
+-__ADDRESSABLE(__bpf_callback_fn);
+-
+-/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_subprog_hash,@object			\n"
+-"	.globl	cfi_bpf_subprog_hash				\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_subprog_hash:						\n"
+-"	.word	__kcfi_typeid___bpf_callback_fn			\n"
+-"	.size	cfi_bpf_subprog_hash, 4				\n"
+-"	.popsection						\n"
+-);
+-
++DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+ u32 cfi_get_func_hash(void *func)
+ {
+-	u32 hash;
+-
+-	if (get_kernel_nofault(hash, func - cfi_get_offset()))
+-		return 0;
+-
+-	return hash;
++	u32 *hashp = func - cfi_get_offset();
++	return READ_ONCE(*hashp);
+ }
+ #endif
+-- 
+2.43.0
 
-> that defaulting the mixer sources would be controversial.
 
-There's probably a reason you have all these use case specific
-variations set in firmware...
-
---ws70HyzkY6K4LGiZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZpv50ACgkQJNaLcl1U
-h9CtUwf+NBoXGau3/eYXKr81FuNxSnOhRdPBQp57iszrQ4weyqBab6t0wWKr5pUQ
-AHAj4nwoFFaiehndPQaQol3kxvrrOn1f4vpk+n79F/eksHlXk6GOykyueklNlD99
-Y2g+k2uETzBOHPTosZ99RQbLRj6aGVEWfAItaP5tAZw53ryiRcFrRTXlywlnverP
-hS/uEt2Oi6SI+qdWg1BVx2+YPqbk/OnxucbLnyl90xOwa0CdZbbyIcD9rmIi0+c2
-zS7t3m0NIHuiI5gz4vFChPQubxf/OSU2kwJ1O57WFySsXu0cKxI3kv2kBmURS+uS
-A0UJPakozVyIIiJi2nw64Hl0IJDTcg==
-=CNPA
------END PGP SIGNATURE-----
-
---ws70HyzkY6K4LGiZ--
