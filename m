@@ -1,134 +1,133 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A52816FF59
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 12:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26B016F29C;
+	Wed, 12 Jun 2024 12:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196033; cv=none; b=na4ZyzswUpNzQSAGR0VYZmLlnQHPnFuTgpZScl2MdGIb//orVyXnEnjqmzgVtD2zBnuZIHSd2Efxyac6cGtBh/SrFoCDYCYJkBv1FUH/Ilavjhn32JHGiwd3saM9gML14QvOHO/VdI4p7g5CwMst26rsg8xthiXH/ZHd+XjyNeU=
+	t=1718196071; cv=none; b=YvoLWru2vy0oPxgPa3TdkMlQAJUHOO+1x4O6wbpSdmcHIqNmlhwdDUAsLO3iozXH7Rzpqmvy0MIjEumv2WlTuShjcUwwqSeoDDQDBklBorBDi9Pq3rNGD9gVZgsdmCmpBBGxhXKyBp3juwV+ikkNSER8A1fhUOCryYQ9zQMvMl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196033; c=relaxed/simple;
-	bh=c+DRRveXulk99snT5VccdZXEOQB7aOSMnf5enVXmdbQ=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=NGfQmYeckSTm5FxtYMDkeFTkb2EHyDV0NOtad17a5QPS7fqxhRJqQvtIADCOpwnSaxEQuXhi+JAKclB469TL1iNj+SNmXCDUSYoa9jx67NjLv6v0aMAGjd4bSUtf1E8Hoxh/hEKE4pxPHS712QwUBuE95Uko+OI+0VHlcO3d0Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u4YR6W9z; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1718196071; c=relaxed/simple;
+	bh=8t9V+RAuQ307UNgRL1t8CxJDFzSaO2i9p55Z97H1iSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dLjno9OkAsKqgsVQeGxN19+oldqAUW4S1iR7sra3Iwl3/TWNyvHJhQzGS6Ii+rMP5gnnDEIS0rSaAq832M7pH+1kCPaBkb+chF15XAomXkHgN59sbMjOSQ72gxCjAS2zIMuzC5cdh2GuaNgMv9dQC44cG6QMYe4mCk5Ch/xtc+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A/5sGVd3; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4YR6W9z"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627f43bec13so41203987b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 05:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718196031; x=1718800831; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DfSgBhx2prDvvpbn/rXVh0w6qYSSonJrkoho8C5QmNY=;
-        b=u4YR6W9zi+yi3lOYpXYJI/c0cQHv1faIKiyySmXHvKBzcxQAv4VTrFCMMAJ62XyTYU
-         Lhe07dewELjfoKad4pDBCI7kAlKVkXDRRG6v79GkrvCiVOprft/zKYABldsnVx3ZvjSU
-         XpJaW45o+tTIFPaR/ZeHE1RvNjZdKdsNpyixRiCEryYmiWhCNaE55X+YbWcD+RtFkHMm
-         fXWYmpz5QFw8G0kYBOaKJTeqATcjDF1Zm1xhK5LqnB0NDqJUHCDwSKboKa//f8iKnxZK
-         eSexkE2fcKseibo8VJ9yH1EIXoQcHjvCYidLhtuqSu7O6yI44iFUQflZ8lWmZh8u7FV+
-         B+ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718196031; x=1718800831;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DfSgBhx2prDvvpbn/rXVh0w6qYSSonJrkoho8C5QmNY=;
-        b=c/z5DjW5jyW2GFNP5eDO1cSeUxAw8VERiYtH4DkxrR1w/KGT0RDQBXV8adYl8M3Tfi
-         E1Bu1zlyAQt+cT9U7SYVYXOuY/kWbur5FsLPPE+pDtbZjq7yPx8kGURBspzhMVxS/xe9
-         hcawsWvkfW+mEKlEpZVU6+7D9L9OfRSL8IFOptGzXe8Fv7ZQMYu7kpPXXsXNilceLzgz
-         cFFnbs7RzgJSQ+6htnxlHIW7CwlC0n1irNR9tn0dP06vb6dC0KdThCwRNgb8OUfGXKJ5
-         osXIhJEvgpcCgXZJsRiMOIE9eia3s6tAZwBuilVfnZgw1mX3+yss4Z0vJG4eNw9ABIvj
-         HMiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa03/AhduvW6+CIbxRpfF5uDjyYVdTzIJJawjRtkMzporGrRehi9414QmnXYgcjqhNJ+OXAH8Ly/8VVvzlu2k6vdMsXbo0NsxCRfxH
-X-Gm-Message-State: AOJu0YycPjQLvX0ORugKQ0USYPP7YG5WdxIiyw/SNKhq//nypNcv0Xyt
-	qoQ383BcTH+ZGzMzWWHTmHnjZlnZ6y283Knw9GiOkDqJArUgPyjDufXs1OutNqqfKrTZsAqiDny
-	3qqwUpA==
-X-Google-Smtp-Source: AGHT+IFsvL4EQynJNi0fl6hpXid6BCCRZLXCXaUyrZcJtE/YeA0i+GUTbcsmCCc9bk4eqiIQIkDukubWbUDJ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ea09:ea36:268b:d86f])
- (user=irogers job=sendgmr) by 2002:a05:690c:4491:b0:62f:f535:f37 with SMTP id
- 00721157ae682-62ff535129amr3636757b3.0.1718196031241; Wed, 12 Jun 2024
- 05:40:31 -0700 (PDT)
-Date: Wed, 12 Jun 2024 05:40:27 -0700
-Message-Id: <20240612124027.2712643-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A/5sGVd3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=pRy0sJWQM10IgB/bhi5G6l1DK7UQGSd130PPr57Mh4Y=;
+	t=1718196069; x=1718628069; b=A/5sGVd3QQbrZi9TzZmWda2DCsSu4WcQCFj9QwkkG6b0xmx
+	Zv3onSkETgPd341pc2KfX7lUmKJOw3p1YWkO+SJrtnSxxBv9aNrMpImVaDS40wCJF8HyQMa3kweNQ
+	6TJk4mvRAE6xBDFUn8jhYMakbx1eX8dtlwDfQ4AHxVMLHWpGA/HPlyEABjCtxxX9i6NAOvfnhyuSV
+	w/pbYPj3m7aoz95SvGFbI4RV/DtYW1Lx0dMvEweP0ydlujKa5dFB0BDiG9G/KL44QVOzAKfZrxiOM
+	9rPyPWEPEwVpb7Orssb1D5Adv0aeRzvfKpQE/NzzzzKI+DFObWz1TYrAYOpsbd2w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHNHl-0004yB-H5; Wed, 12 Jun 2024 14:41:05 +0200
+Message-ID: <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
+Date: Wed, 12 Jun 2024 14:41:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Subject: [PATCH v1] perf test pmu: Warn don't fail for legacy mixed case event names
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] QXL display malfunction
+To: "tzimmermann@suse.de" <tzimmermann@suse.de>
+Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
+ "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+ "Kaplan, David" <David.Kaplan@amd.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Dave Airlie <airlied@redhat.com>, Dave Airlie <airlied@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718196069;3e301e0f;
+X-HE-SMSGID: 1sHNHl-0004yB-H5
 
-PowerPC has mixed case events matching legacy hardware cache
-events. Warn but don't fail in this case. Event parsing will still
-work in this case by matching the legacy case.
+[CCing a few more people and lists that get_maintainers pointed out for qxl]
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Kajol Jain <kjain@linux.ibm.com>
----
- tools/perf/tests/pmu.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index cc88b5920c3e..201df4446f7c 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -260,26 +260,42 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
- static bool permitted_event_name(const char *name)
- {
- 	bool has_lower = false, has_upper = false;
-+	__u64 config;
- 
- 	for (size_t i = 0; i < strlen(name); i++) {
- 		char c = name[i];
- 
- 		if (islower(c)) {
- 			if (has_upper)
--				return false;
-+				goto check_legacy;
- 			has_lower = true;
- 			continue;
- 		}
- 		if (isupper(c)) {
- 			if (has_lower)
--				return false;
-+				goto check_legacy;
- 			has_upper = true;
- 			continue;
- 		}
- 		if (!isdigit(c) && c != '.' && c != '_' && c != '-')
--			return false;
-+			goto check_legacy;
- 	}
- 	return true;
-+check_legacy:
-+	/*
-+	 * If the event name matches a legacy cache name the legacy encoding
-+	 * will still be used. This isn't quite WAI as sysfs events should take
-+	 * priority, but this case happens on PowerPC and matches the behavior
-+	 * in older perf tools where legacy events were the priority. Be
-+	 * permissive and assume later PMU drivers will use all lower or upper
-+	 * case names.
-+	 */
-+	if (parse_events__decode_legacy_cache(name, /*extended_pmu_type=*/0, &config) == 0) {
-+		pr_warning("sysfs event '%s' should be all lower/upper case, it will be matched using legacy encoding.",
-+			   name);
-+		return true;
-+	}
-+	return false;
- }
- 
- static int test__pmu_event_names(struct test_suite *test __maybe_unused,
--- 
-2.45.2.505.gda0bf45e8d-goog
+Thomas, from here it looks like this report that apparently is caused by
+a change of yours that went into 6.10-rc1 (b33651a5c98dbd ("drm/qxl: Do
+not pin buffer objects for vmap")) fell through the cracks. Or was
+progress made to resolve this and I just missed this?
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+
+On 03.06.24 04:29, Kaplan, David wrote:
+>> -----Original Message-----
+>> From: Kaplan, David
+>> Sent: Sunday, June 2, 2024 9:25 PM
+>> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
+>> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
+>> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.dev
+>> Subject: [REGRESSION] QXL display malfunction
+>>
+>> Hi,
+>>
+>> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I've
+>> observed the VM graphics often malfunction after boot, sometimes failing to
+>> load the Ubuntu desktop or even immediately shutting the guest down.
+>> When it does load, the guest dmesg log often contains errors like
+>>
+>> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65376256x16777216+0+0
+>> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65376256x16777216+0+0
+>> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65335296x16777216+0+0
+>> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id in
+>> release_idr
+>>
+>> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap"
+>> (b33651a5c98dbd5a919219d8c129d0674ef74299).
+>>
+>> The full guest .config and guest XML can be provided if desired.  The guest
+>> kernel has QXL support compiled in and the VM has
+>>
+>> <video>
+>>   <model type="qxl" ram="65536" vram="65536" vgamem="16384"
+>> heads="1" primary="yes"/>
+>>   <address type="pci" domain="0x0000" bus="0x00" slot="0x01"
+>> function="0x0"/> </video>
+>>
+>> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is run
+>> under virt-manager 4.1.0.  If other information would be helpful, just let me
+>> know.
+>>
+>> Thanks --David Kaplan
+> 
+> Fixing emails...sorry
+> 
+> --David Kaplan
+> 
+> 
