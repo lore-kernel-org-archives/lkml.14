@@ -1,73 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8277E16D4D3;
-	Wed, 12 Jun 2024 11:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939FD16D4D3;
+	Wed, 12 Jun 2024 11:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718192891; cv=none; b=us0zQcoqmwF6zjp4zOvfWRJy5w+f7+xADQ0wZn0/zPBfK7tnMlyetLKDxTyo0XGnfRpRkZPOMyz9ZmA++PAlYym4Wg5+6yBJUr8tW463bSjeZMu9XoTcmP+MjETJuGpsAld50MI/WiG0LVEU2TVmUbwzV3mJVXthJHrvj1UKy0Q=
+	t=1718193024; cv=none; b=uuWkpgkVr7SVCrxsZDDpqsVv2RbkyrOuqqdbMAJJf6mPKzCS48/jCszclse3a+XxMdGdi1UQmSKCHd8RiPXQUkjQpv3Q0mAoFICY651xH2Fiy1+lLvpeG4Cpylhcs1jyoCXyv4w5RLNdMsVZelXbMteM3Bo2n7NgWIS7dCt6m4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718192891; c=relaxed/simple;
-	bh=+5fRX/VuHHGoAI9oN7+6SerJZMyY5a5f+pHiSoygEuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kEqT/a2fWgHJHosvmkD+o5MRcHi2IewWxWW6gS42dBl6A/3fGmELHG8kZ653LtnUOcVtpYoMxVZc85c0n4htiZY8c4H14epsUzUJlqk8kzFSH8mCdSQ8iU+QFV+59TEf0e/nL+2jBeVPG6K6Tq5I6wv7naH4i15HYkjU572PaTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePp/Cy0m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718193024; c=relaxed/simple;
+	bh=3eKOWjrVJava8YNnTU7U4+iYN/4hSdOslNxJluc1cYs=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ryomiZ7/HZ4q1IaDKSZLCZGLqUSLcQ3l0we08s6huCC1fyjBxa8NihFwT5fC88d/5j385RJNGwbL6GKkgCj73CELhVWfUGHyBh1E0OlQIqT1TZcQi68SexJzSQvWI6zEJgGu5ql1nAd68rK0IkA8xUkD9acEIHc97vquoBmRCTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JXTTvfkn; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePp/Cy0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69710C3277B;
-	Wed, 12 Jun 2024 11:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718192891;
-	bh=+5fRX/VuHHGoAI9oN7+6SerJZMyY5a5f+pHiSoygEuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ePp/Cy0ma1tw9W7mjqM1+MkKOU5Cq/8eNmXEJHlNp+ceBJeAwC+FX8ZzHuOKGV0P8
-	 dyeDSLOc9mZq5SGPc3FJWcsgZ8CLVZs4TWU96Uqj8bQl+czgxrT57SZEzYpff7N5Oa
-	 TM4uTrVPiEjDSkzP518roRrn+ukIfofzNUxXMY5yAC5i518Gj9pchsFtwrxG6l+h3i
-	 2fmHTWiyNL8BRZgDdXMVJGLkwVvpw20g28yQeHijzSC3M/yKaNBDqk5Bn/s3dSJGpx
-	 md30mJuHA5Wi20bTaRJnLunHmarBviaO7Ab7Vp92jFBZ+h8ozAcf0sDbM1k+Kg7HED
-	 +y4lK4JQulXIw==
-Date: Wed, 12 Jun 2024 13:48:06 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Marius Fleischer <fleischermarius@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, syzkaller@googlegroups.com, 
-	harrisonmichaelgreen@gmail.com
-Subject: Re: possible deadlock in freeze_super
-Message-ID: <20240612-hofiert-hymne-11f5a03b7e73@brauner>
-References: <CAJg=8jz4OwA9LdXtWJuPup+wGVJ8kKFXSboT3G8kjPXBSa-qHA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXTTvfkn"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6efae34c83so518055666b.0;
+        Wed, 12 Jun 2024 04:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718193021; x=1718797821; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6FTZ1hyJcf6QF0wQ81I5HTj1gs6efTfWrUVdJjnNkCg=;
+        b=JXTTvfkn/ZThcfO6yUefOvkPwjsFwZjcpZiHPGt2kpy//lZp8a1FYIM3SZVjpQUjDU
+         DcougL/BW2aNOFALmbHZ/ClA758OYxcoDPlVC1mg1gm4hdhQ/NKGKrv9eMObrD2T7LTP
+         /8VHabwzSR2dDShi6iTj43senAVt3x2RfkS9MNOFYK7F58pW/teY8enSxC4oo+g9hmeV
+         5qXSuWXR1lWTbrJVXEoP7nrADrEALK5oELW+MTdAljrt7MGP7D39c9kTV/kCDiD5iJum
+         3jp8Wq+pO/hqoWMsOHwBIOxWQweK6igeT6z3hQ2v0srURsstv4zay5OqfR3I2xD14Prv
+         RYFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718193021; x=1718797821;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6FTZ1hyJcf6QF0wQ81I5HTj1gs6efTfWrUVdJjnNkCg=;
+        b=h/SIv3XO+Z8uaxcl7ZeKhxwXefpiCYgt3eKcbhSS6o7icFn34PYdhKYt4ec5HAfhbf
+         CFQnRqVDAf7CmEtSUXQ1I0t9SLkf/Vhbj0auWh4iZRBTrvA6JAqvL3IW/c4WQlyGvPJ2
+         hxLij/Ax6RQORde2OHkUgbAavH2n/fKZM/W09h/RXkWRnrK0yk4bOz3uqBoSCkGw34Vu
+         IrO3/5e2kRnfl8Zars2xtsaj/6W/BUMtEwlvgrbJwznYRb9o1O3rrH2MRXLQ3HILVkw7
+         3vRZUCVtaHD0h20pkzuzBhDDTqF+lLLTGf4PuZBIJ7fTpbv/kSJys+0VeyXmEmZzGp9H
+         kuNw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3gmsOBLPV9R+WFpFDJko0VHMyVWdzt09asGgXbcynG0XW4+WpAcp6jCBPYe8i6ov1vWiDdYwpn/K83kvtgBgp46pVRjHkiecQCf/Qo+QQu6sS78kqdECd3LLxHyBOOb1fsyuzOQaERwKW4hUiOIY513JA1milBO3NtO6C42S94i6qwg==
+X-Gm-Message-State: AOJu0YzwWSsO2gkJmdy3KmncCXnUBIc0d/aOc/Fosn/N71KY3noleuva
+	KuKiOH7Wfk2Ud3FaNRQLGtfpUgG0h8doLR8r+tbsZJuT0vs73JHr
+X-Google-Smtp-Source: AGHT+IHaFPqZF682IyxegQxDj1aKjCaUc+FExsq1xSH8oq6DTf27dquNCAbDGoQHjmPS7nuxLnzYRw==
+X-Received: by 2002:a17:906:9a9:b0:a6e:372c:cc5e with SMTP id a640c23a62f3a-a6f47fd6f28mr82582966b.61.1718193020451;
+        Wed, 12 Jun 2024 04:50:20 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0c410d31sm553091566b.73.2024.06.12.04.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 04:50:20 -0700 (PDT)
+Message-ID: <b9c974265111887e7a944cb9e854e86cc8bcd47c.camel@gmail.com>
+Subject: Re: [PATCH v3 2/2] iio: frequency: adf4350: add clk provider
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, Lars-Peter Clausen
+	 <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron
+	 <jic23@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 12 Jun 2024 13:54:07 +0200
+In-Reply-To: <20240612104554.66851-2-antoniu.miclaus@analog.com>
+References: <20240612104554.66851-1-antoniu.miclaus@analog.com>
+	 <20240612104554.66851-2-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJg=8jz4OwA9LdXtWJuPup+wGVJ8kKFXSboT3G8kjPXBSa-qHA@mail.gmail.com>
 
-On Mon, Jun 10, 2024 at 02:52:36PM -0700, Marius Fleischer wrote:
-> Hi,
-> 
-> We would like to report the following bug which has been found by our
-> modified version of syzkaller.
-> 
-> ======================================================
-> description: possible deadlock in freeze_super
-> affected file: fs/super.c
-> kernel version: 5.15.159
-> kernel commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+Hi Antonium
 
-I'm sorry but this is really inconsistent information.
-The kernel version points to 5.15.159. The commit referenced right after
-is for v6.9 though and it goes on...
+On Wed, 2024-06-12 at 13:45 +0300, Antoniu Miclaus wrote:
+> Add clk provider feature for the adf4350.
+>=20
+> Even though the driver was sent as an IIO driver in most cases the
+> device is actually seen as a clock provider.
+>=20
+> This patch aims to cover actual usecases requested by users in order to
+> completely control the output frequencies from userspace.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> changes in v3:
+> =C2=A0- use container_of to directly access the adf4350_state structure.
+> =C2=A0drivers/iio/frequency/adf4350.c | 118 +++++++++++++++++++++++++++++=
++++
+> =C2=A01 file changed, 118 insertions(+)
+>=20
+> diff --git a/drivers/iio/frequency/adf4350.c b/drivers/iio/frequency/adf4=
+350.c
+> index 4abf80f75ef5..f716f744baa9 100644
+> --- a/drivers/iio/frequency/adf4350.c
+> +++ b/drivers/iio/frequency/adf4350.c
+> @@ -19,6 +19,7 @@
+> =C2=A0#include <linux/gpio/consumer.h>
+> =C2=A0#include <asm/div64.h>
+> =C2=A0#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> =C2=A0
+> =C2=A0#include <linux/iio/iio.h>
+> =C2=A0#include <linux/iio/sysfs.h>
+> @@ -36,6 +37,9 @@ struct adf4350_state {
+> =C2=A0	struct gpio_desc		*lock_detect_gpiod;
+> =C2=A0	struct adf4350_platform_data	*pdata;
+> =C2=A0	struct clk			*clk;
+> +	struct clk			*clkout;
+> +	const char			*clk_out_name;
+> +	struct clk_hw			hw;
+> =C2=A0	unsigned long			clkin;
+> =C2=A0	unsigned long			chspc; /* Channel Spacing */
+> =C2=A0	unsigned long			fpfd; /* Phase Frequency Detector */
+> @@ -61,6 +65,8 @@ struct adf4350_state {
+> =C2=A0	__be32				val __aligned(IIO_DMA_MINALIGN);
+> =C2=A0};
+> =C2=A0
+> +#define to_state(_hw) container_of(_hw, struct adf4350_state, hw)
+> +
 
->        freeze_go_sync+0x1d6/0x320 fs/gfs2/glops.c:584
+nit: to_adf4350_state() would be neater...
 
-That function doesn't exist on v6.9 and has been removed in
-commit b77b4a4815a9 ("gfs2: Rework freeze / thaw logic") which fixes the
-deadlock you supposedly detected. So, this must be from a kernel prior
-to v6.5.
+> =C2=A0static struct adf4350_platform_data default_pdata =3D {
+> =C2=A0	.channel_spacing =3D 10000,
+> =C2=A0	.r2_user_settings =3D ADF4350_REG2_PD_POLARITY_POS |
+> @@ -264,6 +270,10 @@ static ssize_t adf4350_write(struct iio_dev *indio_d=
+ev,
+> =C2=A0	mutex_lock(&st->lock);
+> =C2=A0	switch ((u32)private) {
+> =C2=A0	case ADF4350_FREQ:
+> +		if (st->clkout) {
+> +			ret =3D clk_set_rate(st->clkout, readin);
+> +			break;
+> +		}
 
-In general we will ignore bug reports from automated tools that are not
-the official syzkaller instance because stuff like this is stealing time
-spent actually writing code or fixing bugs.
+So, apparently you forgot or decided otherwise to not go with the suggestio=
+n of
+not including the IIO interface (at least he channel one - debugfs could be
+maintained I guess) or with the more in the middle approach Michael suggest=
+ed.
+Just not allowing ADF4350_FREQ and ADF4350_FREQ_REFIN.
+
+Hence, I would expect at least some justification to keep the above in your=
+ v3
+changelog. Also note that keeping ADF4350_FREQ_REFIN while being a clock
+provider seems pointless and maybe even be wrong (as the clock framework sh=
+ould
+take care of the parent clock). This also brings another question... see be=
+low
+
+...
+
+>=20
+> +static int adf4350_clk_register(struct adf4350_state *st)
+> +{
+> +	struct spi_device *spi =3D st->spi;
+> +	struct clk_init_data init;
+> +	struct clk *clk;
+> +	const char *parent_name;
+> +	int ret;
+> +
+> +	if (!device_property_present(&spi->dev, "#clock-cells"))
+> +		return 0;
+> +
+> +	init.name =3D devm_kasprintf(&spi->dev, GFP_KERNEL, "%s-clk",
+> +				=C2=A0=C2=A0 fwnode_get_name(dev_fwnode(&spi->dev)));
+> +	device_property_read_string(&spi->dev, "clock-output-names",
+> +				=C2=A0=C2=A0=C2=A0 &init.name);
+> +
+> +	parent_name =3D of_clk_get_parent_name(spi->dev.of_node, 0);
+> +	if (!parent_name)
+> +		return -EINVAL;
+> +
+> +	init.ops =3D &adf4350_clk_ops;
+> +	init.parent_names =3D &parent_name;
+> +	init.num_parents =3D 1;
+
+Shouldn't we set CLK_SET_RATE_PARENT in init.flags?
+
+- Nuno S=C3=A1
+
+
