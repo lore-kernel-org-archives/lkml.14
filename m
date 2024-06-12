@@ -1,155 +1,139 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EE22C697;
-	Wed, 12 Jun 2024 04:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028A3250EC
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718166913; cv=none; b=ZuwWALIrAIsHZMQdSbFc4H70G5ios1zVr1/e6ClLwMOaT71xxA4cU66ftmys1/wE93Phme7apqqM+nyJ0jshiY9vbuyWi8pylwKdHkZeCAsKg//2U1b5mVf/a9YWERamyw+l/yeph92BEOqs03WYM0xyvQh2Hps0eqZYxR27P5k=
+	t=1718166991; cv=none; b=Xpu0DPxLKR539aQ58/peYZKOvuv4eqVq64Fw+S/fKmM5plKupSDOpJjtkP2hLds8ccx1WW+Z6L2sC1+3g4LAf+11Cng/jNGXqo2yGiDKeRjQWazSKLdTEPjQLOSSSGArYKIrfA/7yt0KXW4opuNx79btCgNxKb92unp6BL8j1RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718166913; c=relaxed/simple;
-	bh=ue26OFhLv6t999/EBCasyGcLCXckFy5Jpdpv06rKJCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oGTQBr6plde5noO278VwJ0J3m7P2Lobgz1VfnBj2OgtBI6qMfhkiX5iKTwdHxGWFRGKNBBYeyGXC2piTDOBAazMhtKw6U0F/1AGUumdW6PSMX6ufStTm5Ov9lS/0pfuDWX2+qg0VX+Z8ll1O/P06PLO0SXXGA4V0u1+xNk7MibM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Af+vj6BW; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718166991; c=relaxed/simple;
+	bh=EO0aImAqYw7a/OBDl+S8gijoba1Ra+Y0nG8ZUi4cOaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ll8Wh7QhHk5bFrVnZUkydx7/VRTXuiyw3Y38WNHsfOFZWZlmlG/Lk9eykqAO+rldqgaCXASCYtnLp2rDAopZRRvrbvCgJ6ErBEMW38W0buDP3OqIW4oAl682ceI+SkQ/1F8q9/gbNp0L3moAuwnS+1iNxBziDIfC0ZWXquGaoLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mO1SE5N/; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Af+vj6BW"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6f980c89db8so2054358a34.1;
-        Tue, 11 Jun 2024 21:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mO1SE5N/"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-254aec5a084so1721738fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718166911; x=1718771711; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBAtrRw3IsjVN4466JhOY7FCejNziv5PE0AxDPMJel4=;
-        b=Af+vj6BWjOTqzrDpE6qVJXrdXZhuZcjIzne4gCIc4cQmzrbF14Cd34wkbqlyFDz6+V
-         QFaGAu+p6OOJGzJTLX8huPjh2UJNpUYrZs8TzW7twU3QkgBy1swAa/DQFJeVBmI3uH9X
-         Ndossblgcij+D6hnm+WGuTzqQ81L9xFdJsaY9JTKEEOS5P7TWgZBXoiHsHpecv9/XrdL
-         gDGCO2KEWM3nH6zvPpihUlo4uN0sENlkFs2o0TxdarRcTH9Lj35QGdhkrMQ9spae9g+q
-         XAaTI8mAPtvW4lCvJioDAso+ddR8j7QezIV72eDC8ozq/JpMHDZQEjC2xCDj6RW+nwa1
-         JkxQ==
+        d=linaro.org; s=google; t=1718166987; x=1718771787; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vH+4iQ0Kxj/vMdKXd1GL4axukTJSkL87xzz/uOsZjd0=;
+        b=mO1SE5N/M0tG01ESL1v165Gc2cXKhIEQpVMvkNmR1k8hD6LT/GUQH9T67w1/ZiUnJV
+         BTE/83PZ0qb7z5x+EYoUI+EXNIzw4/Oy+0N+HB4DqIWlH7QzI1mvaOHg1hR3sMefS5QJ
+         n2Fv8qOybF+xsyHxwyd9be3qbW3T6Zp2025NcTeFJtwPbUJBl2L/Mi5BWQXBjQhdaZ+c
+         uy8wBEIcxYZDH/aWFLgpYggu8LUM9H1fxKni/vLZ0RR0bUKVs5Ufx6wU5rJTzMtRvvPx
+         8aRoU4+jvADQXEwVgeVkicXj1fENT4Tgg3sW159UCvmNSigq2yBEDPfGy+oUYp6U66+J
+         1+mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718166911; x=1718771711;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBAtrRw3IsjVN4466JhOY7FCejNziv5PE0AxDPMJel4=;
-        b=VBTHjGTc103+r/dNQ0d/UmTkFoUvaWyKFbVlR5Ba+4iyYqc4hfiD10UOjn+1AL/7dA
-         azq7/V0UfXPz86qq/GquhVB1lmO9XmnvuGtSV0ipjaH5VAbMKRFjusnSuoSokSBkQkpB
-         zJT4AMQNNhxmou8yCgDFi6iAVZb1KNGz5sAXugg+Xh48rU3UTStNqQxBmM/0NEVGMo5/
-         4yIFjyr3qsifhRdppNRIz4TvPJGntgkWP1aCYuK34wk2vEJThfvQcl66NJRxF32VlP24
-         1oIoQSTSBvROLz+tvvc1H2PJaCDeZ0sSDql+d1Tk2yCqaTdkw+71zlT5Pd07fiNRP75q
-         tguA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhAujZ6D+vDltTpl821Azxf+M7yE1phUQubsrrCnS9XJuuTukrfX03RcoCl2/1/iutMpUh1x/ToYwCAzvoNyRfpF63URW44pqI//7OU5siuTZ+ROuzlHIlWYbROmSlltY9DN37iNvtUw==
-X-Gm-Message-State: AOJu0YzK4HMZQl7gnXO/2ftS1Gju4Jj2bQZsId2sPTuWfFq3SvAI0HkT
-	4iqD3YYy3JQUxYj5XFRkQ9J/QjSFc2IDsoJT8akSq4PtDwl/q6CU
-X-Google-Smtp-Source: AGHT+IEkBZAViksldFhdGgOs9b8r6qLPy8cm7BY0Le7mrdkX1xXzmFBIocpy1+EtnriZdKxr01utIg==
-X-Received: by 2002:a9d:64cd:0:b0:6f9:60e4:5312 with SMTP id 46e09a7af769-6fa1bf86359mr721799a34.21.1718166910686;
-        Tue, 11 Jun 2024 21:35:10 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de276061e3sm9021275a12.80.2024.06.11.21.35.08
+        d=1e100.net; s=20230601; t=1718166987; x=1718771787;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vH+4iQ0Kxj/vMdKXd1GL4axukTJSkL87xzz/uOsZjd0=;
+        b=Fhn1BOUa7Jm0jI8neBeRp9zar7DV+kvUo4DjyuOh18b0fQewEUXR1PIcxdsAA4EsGI
+         Q/W/oS2jDcuTm2ICUj4sWAifOd1VvCSk5GFeg9NbPbv1HvUKdqIA81j7jj/QWOAkR1HY
+         FHZPMW6P0Sm1zEPs5VBYI/sUGlbED3T5RWNcfm7HBl8zRag+vb84/zel9poudF1xX6Cc
+         Oj1tCifBR4u2WhPGTkqEzheA8hzVE36jiKCYtBqKkaSGygh1CGR/izsfkCm7B5epxc6G
+         rPPeMQdnGRVV+XzTkr1PYJ+u60OFsduX7oQo87gvrolT3BX0wPV8xbX2g3xLo6sn5Lky
+         0AUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+xRx3KcWN/Abu4Tu23hNPDf18i2meSqAA+UYipFDKBwvPDXqWi9D77M6yBX1NVOvI/n+pcDpjNddMmw7CoU0itzdWBFmkJZvvj+ef
+X-Gm-Message-State: AOJu0YyVrDQndwbqpFVbFJ+qb9YM0/bdtBCMWVDMg6PzsV+CxLlAHcT1
+	5DPXQ+66Eabwqy2WxM+5Gf41BbDSsEMt26gM9uFTRNZS4F4m94D3XfV74zE3Aw==
+X-Google-Smtp-Source: AGHT+IF/i1Z4g1iXpug+xajahacKVwnIvfnsiSOznBlRwgjL1WHJ0xairr9brTYDWvv7YNpLZYuzDg==
+X-Received: by 2002:a05:6870:d186:b0:251:46d:d32a with SMTP id 586e51a60fabf-25514b4e021mr927373fac.8.1718166986969;
+        Tue, 11 Jun 2024 21:36:26 -0700 (PDT)
+Received: from thinkpad ([120.60.129.29])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6e9a52a3012sm5409033a12.30.2024.06.11.21.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 21:35:10 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-To: Corey Minyard <minyard@acm.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Quan Nguyen <quan@os.amperecomputing.com>
-Cc: openipmi-developer@lists.sourceforge.net,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Cosmo Chou <cosmo.chou@quantatw.com>,
-	Potin Lai <potin.lai@quantatw.com>,
-	Potin Lai <potin.lai.pt@gmail.com>
-Subject: [PATCH 2/2] ipmi: ssif_bmc: support skipping ARM SBMR bootprogress response
-Date: Wed, 12 Jun 2024 12:32:55 +0800
-Message-Id: <20240612043255.1849007-3-potin.lai.pt@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240612043255.1849007-1-potin.lai.pt@gmail.com>
-References: <20240612043255.1849007-1-potin.lai.pt@gmail.com>
+        Tue, 11 Jun 2024 21:36:26 -0700 (PDT)
+Date: Wed, 12 Jun 2024 10:06:12 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	mhi@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH 2/5] PCI: endpoint: Introduce 'epc_deinit' event and
+ notify the EPF drivers
+Message-ID: <20240612043612.GC2645@thinkpad>
+References: <20240606-pci-deinit-v1-2-4395534520dc@linaro.org>
+ <20240611220640.GA1001976@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240611220640.GA1001976@bhelgaas>
 
-In ARM SBMR document, the host can chosse to not read back the response of
-“Send Boot Progress Code” command.
+On Tue, Jun 11, 2024 at 05:06:40PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jun 06, 2024 at 12:56:35PM +0530, Manivannan Sadhasivam wrote:
+> > As like the 'epc_init' event, that is used to signal the EPF drivers about
+> > the EPC initialization, let's introduce 'epc_deinit' event that is used to
+> > signal EPC deinitialization.
+> > 
+> > The EPC deinitialization applies only when any sort of fundamental reset
+> > is supported by the endpoint controller as per the PCIe spec.
+> > 
+> > Reference: PCIe Base spec v5.0, sections 4.2.4.9.1 and 6.6.1.
+> 
+> PCIe r6.0, sec 4.2.5.9.1 and 6.6.1.
+> 
+> (Not 4.2.4.9.1, which no longer exists in r6.x)
+> 
 
-To avoid SSIF being in a wrong state due to host not read back the
-response, add the implementation of "arm-sbmr,skip-bootprogress-response"
-property for skipping the response of "Send Boot Progress Code" command
-from userspace.
+Ammended the commit in pci/endpoint, thanks!
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
----
- drivers/char/ipmi/ssif_bmc.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+- Mani
 
-diff --git a/drivers/char/ipmi/ssif_bmc.c b/drivers/char/ipmi/ssif_bmc.c
-index 56346fb328727..3386a8bd18afd 100644
---- a/drivers/char/ipmi/ssif_bmc.c
-+++ b/drivers/char/ipmi/ssif_bmc.c
-@@ -39,6 +39,11 @@
- #define SSIF_IPMI_MULTIPART_READ_START          0x3
- #define SSIF_IPMI_MULTIPART_READ_MIDDLE         0x9
- 
-+#define GET_NETFN(netfn_lun)                    ((netfn_lun >> 2) & 0xfe)
-+#define IPMI_GROUP_EXT_NETFN                    0x2C
-+#define IPMI_SBMR_GROUP                         0xAE
-+#define IPMI_SBMR_BOOTPROGRESS_CMD              0x02
-+
- /*
-  * IPMI 2.0 Spec, section 12.7 SSIF Timing,
-  * Request-to-Response Time is T6max(250ms) - T1max(20ms) - 3ms = 227ms
-@@ -102,6 +107,8 @@ struct ssif_bmc_ctx {
- 	struct ssif_part_buffer part_buf;
- 	struct ipmi_ssif_msg    response;
- 	struct ipmi_ssif_msg    request;
-+	/* Flag to skip response of Send Boot Progress Code */
-+	bool                    skip_bootprogress_resp;
- };
- 
- static inline struct ssif_bmc_ctx *to_ssif_bmc(struct file *file)
-@@ -187,6 +194,20 @@ static ssize_t ssif_bmc_write(struct file *file, const char __user *buf, size_t
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(&ssif_bmc->lock, flags);
-+	if (ssif_bmc->skip_bootprogress_resp &&
-+	    GET_NETFN(msg.payload[0]) == IPMI_GROUP_EXT_NETFN &&
-+	    msg.payload[1] == IPMI_SBMR_BOOTPROGRESS_CMD &&
-+	    msg.payload[3] == IPMI_SBMR_GROUP) {
-+		if (ssif_bmc->response_timer_inited) {
-+			del_timer(&ssif_bmc->response_timer);
-+			ssif_bmc->response_timer_inited = false;
-+		}
-+		ssif_bmc->busy = false;
-+		memset(&ssif_bmc->request, 0, sizeof(struct ipmi_ssif_msg));
-+		spin_unlock_irqrestore(&ssif_bmc->lock, flags);
-+		return count;
-+	}
-+
- 	while (ssif_bmc->response_in_progress) {
- 		spin_unlock_irqrestore(&ssif_bmc->lock, flags);
- 		if (file->f_flags & O_NONBLOCK)
-@@ -806,6 +827,10 @@ static int ssif_bmc_probe(struct i2c_client *client)
- 	if (!ssif_bmc)
- 		return -ENOMEM;
- 
-+	if (of_property_read_bool(client->dev.of_node,
-+				  "arm-sbmr,skip-bootprogress-response"))
-+		ssif_bmc->skip_bootprogress_resp = true;
-+
- 	spin_lock_init(&ssif_bmc->lock);
- 
- 	init_waitqueue_head(&ssif_bmc->wait_queue);
+> > Currently, some EPC drivers like pcie-qcom-ep and pcie-tegra194 support
+> > PERST# as the fundamental reset. So the 'deinit' event will be notified to
+> > the EPF drivers when PERST# assert happens in the above mentioned EPC
+> > drivers.
+> > 
+> > The EPF drivers, on receiving the event through the epc_deinit() callback
+> > should reset the EPF state machine and also cleanup any configuration that
+> > got affected by the fundamental reset like BAR, DMA etc...
+> > 
+> > This change also warrants skipping the cleanups in unbind() if already done
+> > in epc_deinit().
+> > 
+> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
 -- 
-2.31.1
-
+மணிவண்ணன் சதாசிவம்
