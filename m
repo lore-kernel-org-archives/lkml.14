@@ -1,106 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E437552F62
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 20:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EDB84D04;
+	Wed, 12 Jun 2024 20:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718224359; cv=none; b=m6kduk2cJ1SPrl0qTbf8EZqZvScE1eX2cj0zOaJB/h31JS4tE5Ii4kPTsx6IZppRQv2/WNQHckXTPKyMKMS0uYvPZByS1kRC4qybQ/PJbdEe6/HYSdtdr2hWlNUywpCrhMMWEeIN2zB0cyGeWQM/XPaORd4h+BBp6ofLgd0Lkvo=
+	t=1718224380; cv=none; b=WK3jQYl1bL8mefoChpwRfEB+9z55twzojZHNxrjODj9fjaqRd2uwELZs/tR1zH7eaiQIhRRwI+PPm1WOTZZd/BHMO2QUz55nicIx56jtpg0MzUvGMzJAs5nTow8siuLROjoK4ZQ/sOBQCssYTViB9i11bsH3hIqoDupy5l55Wpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718224359; c=relaxed/simple;
-	bh=9IdeTemBZcFn+eza7Th10FBeF3X9Au3MQePWWBpoZag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jcmepg1m0V39ttyQZP7ChASR0xodgumi9AF1DZjzgFDyMsM5L8sN50Q5q41H4NPinqSImk4f+Vno0sjnVa9f7+eHCn9am2vCtTmNhwmwWCtjm0v9ix3T2ZwiRfvFsxvTVPyhSp79ARrGrMiN0KvTv20qtfJ0LOBhh1YIEPUb9N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+TE1hq/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+TE1hq/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718224356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oBcfmifnqAR8qklw82vumrXeiUswj4bsQ8QdOVoBb0Q=;
-	b=N+TE1hq/L+orj+QKI0uVowniF3utfZYwu7RR3SIerJh4dgtQSuJNTG2XeYKZDhxKSv81Ft
-	oiB30XWuqLe9EZBwCtIsXwBQekR9NF6adDaxjB2OOOIE73P/mKKe2yoT0FkVLHejQbaU47
-	3HyPQuLXQkPiucttNrj42jpWeNleoxs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-115-B0wM7vaTMkapof3mOeCSmw-1; Wed,
- 12 Jun 2024 16:32:32 -0400
-X-MC-Unique: B0wM7vaTMkapof3mOeCSmw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACE8C1956080;
-	Wed, 12 Jun 2024 20:32:29 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.215])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6E0DE19560AB;
-	Wed, 12 Jun 2024 20:32:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 12 Jun 2024 22:30:58 +0200 (CEST)
-Date: Wed, 12 Jun 2024 22:30:52 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 3/9] x86/fpu: Make task_struct::thread constant size
-Message-ID: <20240612203052.GC23973@redhat.com>
-References: <20240608073134.264210-1-mingo@kernel.org>
- <20240608073134.264210-4-mingo@kernel.org>
- <20240610211350.GA1613053@thelio-3990X>
- <20240611124145.GA26798@redhat.com>
- <ZmlZiHVF8w09mExw@gmail.com>
- <20240612184148.GB23973@redhat.com>
+	s=arc-20240116; t=1718224380; c=relaxed/simple;
+	bh=2nCR64Zc31pzpiWEW5Gs2Jv/fYZlIieQTBon12415e0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pZEyCpeynwtrdgHgNYZb4vpjwbQ9NvNrRndI3iBmLelhehEGJLTn9XfIOtZWH90tLG+i+x7c3VdWmHBCu1k2wenSVcLrKy0NHWHHqArU5nKXBqvwzyLnEdcHid6ytpY68TGwfRVLcKEWLaWOv0f7sNt43szyLYGxElang0NI9rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA8B1042;
+	Wed, 12 Jun 2024 13:33:21 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9108F3F5A1;
+	Wed, 12 Jun 2024 13:32:54 -0700 (PDT)
+Message-ID: <cc1b0673-13b3-439f-afdf-c9cb450f8fed@arm.com>
+Date: Wed, 12 Jun 2024 21:32:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612184148.GB23973@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf arm: Workaround ARM PMUs cpu maps having offline
+ cpus
+To: Ian Rogers <irogers@google.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yicong Yang <yangyicong@huawei.com>
+References: <20240607065343.695369-1-irogers@google.com>
+ <23ee1734-7e65-4f11-aede-fea44ada3cc4@arm.com>
+ <CAP-5=fUP69NJ+j6+9rUnp+UPBxcopJ=BOY-LeOjs8vYdt4soMA@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAP-5=fUP69NJ+j6+9rUnp+UPBxcopJ=BOY-LeOjs8vYdt4soMA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Damn, sorry for the additional spam, but if I was not clear...
 
-On 06/12, Oleg Nesterov wrote:
->
-> The patch below seems to fix the problem.
+Hi Ian,
 
-Of course I am not trying to propose this change. This is just
-the debugging patch. Which can hopefully explain the problem.
+On 6/10/24 18:33, Ian Rogers wrote:
 
-> Again, the changes in fpu__init_system_early_generic() are not
-> strictly needed to fix it, but I believe make sense anyway.
+[...]
 
-...
+>> Just a nitpick and I think it is not an issue caused by this patch.
+>> After hotplug off one CPU and then if specify the CPU with option '-C',
+>> the 'perf stat' command still continues to run. This is inconsistent
+>> with the 'perf record' which exits with failures immediately.
+>>
+>> Maybe consider to send an extra patch to address this issue?
+> 
+> As you say, this doesn't relate to the problem fixed here. I don't
+> have a problem with the command line behavior change but I think my
+> getting shouted at budget is fairly well exhausted.
 
->  static void __init fpu__init_system_early_generic(void)
->  {
-> -	int this_cpu = smp_processor_id();
-> -
->  	fpstate_reset(&x86_init_fpu);
->  	current->thread.fpu = &x86_init_fpu;
-> -	per_cpu(fpu_fpregs_owner_ctx, this_cpu) = &x86_init_fpu;
-> -	x86_init_fpu.last_cpu = this_cpu;
-> +	set_thread_flag(TIF_NEED_FPU_LOAD);
-> +	x86_init_fpu.last_cpu = -1;
+I understand you put much efforts on fixing issues, on Arm platforms and
+other platforms. This is also why I want to contribute a bit for testing
+the patches.
 
-Yes, in particular set_thread_flag(TIF_NEED_FPU_LOAD). And x86_init_fpu
-should die after the next patch.
+> How about we trade issues, if the following get fixed:
+> 
+> Renaming of the cycles event in arm_dsu_pmu.c - I'd say this is a top
+> priority issue right now.
 
-Oleg.
+I cannot promise this. The main reason is that I still believe the
+'cycles' event (or, generally speaking, all events) should be managed by
+the tool rather than by the uncore PMU drivers. Additionally, the perf
+tool currently has handled these symbolic events effectively.
 
+> Fixing ARM hybrid default perf stat (it is crazy we can accept this
+> being broken), opening events on both BIG.little PMUs as done here.
+
+Yeah, James is working on this.
+
+> I'll address this.
+
+Anyway, I appreciate your work.
+
+Thanks,
+Leo
