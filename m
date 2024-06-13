@@ -1,101 +1,177 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1F4145FFD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B2914659E;
+	Thu, 13 Jun 2024 11:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279393; cv=none; b=NJg62s1NdTWlTtuGjasjcveIe36pIyBAz7cfw7O5DgATmrCt7rUjCFGXcU5ZK0WncgLTtv3HA32Nr45IvOmh98DQFvvtxv6nIM6e10FDKfEr5cslbbzsiWWQWPYXibj9Q2JFXuMcu+fPP0LSIYBka3QaljYmGM6NZuOKTUPo+ak=
+	t=1718279402; cv=none; b=ljhw+ChOR+YrBWT3AVPIujVtzYqEfrcUmSR8VkmVaS6gpoUnx8pEh0Lbc4wWuTNXQVlGlPj32OeX+y1l7f4LnWz9TyL5WXWqxEcv+zE/TOubmPrYRcisLPiaKV0WHkCTPCviYfSwqiuMEBBK1KOruJ5V5z2/vFUlH6WLxuGX38c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279393; c=relaxed/simple;
-	bh=JMH7aegv+MnUlyAhiAM0CDdTw+aBY3IivqXYt0vaVMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fSEBWKvHLVzhfcv5h2pgFGBAf0Nhf0oYAj6N2tSrYZ9mnGVU+O9iGNKAqlC/Wjq5tidDLsq09de3bFBLe48lToc56diHCr+gbNt9SYUH10BcLqEzoMW+8EM2Dn6h22H0htYK8WoZguv4ybK4mm/TGA2wW8I46kcvytjunI47MX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MelYgE+K; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1718279402; c=relaxed/simple;
+	bh=DE+FVo77unx9XVdvimGFNJZwqU+7Z3SMhyWIyT6Piz8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hAjPbb9x1ibRoWlBGRS+NdHj1gQ5EBGlwghC3JcaYWq0TAiP2sf7WZWdnUe1HO/zHzhc7j3tDJ9iyoGRw0MAZRBnW+qlqit9djsXb4ny/ST6vSbWVWSqX2xsfmeD/5T+QzOSqmiZXzFzw1SLxvjk2UeyHSPWtxx3GcpRS0SxqZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKLy4KkI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MelYgE+K"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7955ddc6516so57641485a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1718279391; x=1718884191; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jK9pHfBGXfQm/UiByYtEUABvVZaPCm/AtIE7LocooA8=;
-        b=MelYgE+Kl7Ng5gKsWGHUdZcEBt3m9G1gbQ/LukJ+6QdDvIIzfAE4or/6pGER/H1TUD
-         ZB7U5V1zn5JoLql72f4+zOQyN6CTQJX3H1ap0IUype7mhUrKZKIoZ4IJsfh75XxTRbJ+
-         9WTSmlMz5E0yGdBhnnGfqMlQGxz8O17gZ6QRkyxMh28TbyQ6MTCYgc5EjEFONDHyiaf6
-         zTHUzjvTFdRawHV8kpTJ9H9voRecAonQz37DDV9XDN4Q769wRHz3dmuPjK7VEKMXXDkF
-         6l/sOzyC62pa6W7HvTh5asUhUSa3gaYQX5ZZs/BiK+q9NFRYNGgYYUL+iyX0I8oHV4Nj
-         e4hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718279391; x=1718884191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jK9pHfBGXfQm/UiByYtEUABvVZaPCm/AtIE7LocooA8=;
-        b=kdPwxjYDFL6uKObYkC/bNUcHWdce2QepHERINiSlA6HglVlNO76WpHhIZEiQQbfCQo
-         ZqVax5VLOLSR8YCfTXf/lBskyhz5EBzfEPVp93lYgsjwdIPQn7RXQB96FDchFq3yP/C/
-         9uZmzkVKqtbcsTh6KdM0sKP4rFmm6cbs2yrm2WAFiJTBqMbzqBR25YBJrfo/ySfFvsK6
-         DoOEALP0794DiGumwbASe7cx6OxQQFAIlQk6Cmm7Zi9NJ0XgWsswCHbPJRTEleCVFNJM
-         tbeYDfFpiU59PUGD2ep4ezfn7lgUYI4vuY3oDB3pVcF4J+EjJ0z9gfHyKLRGA5XdzOXJ
-         2ihQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXT7ixBx6LGja3eVOR0zPNJE0uHQa6W6LJH6kQ+Bev6dt5++qV+ho9Wmpf0pgiiM3B3YjEdhfB7WAcaHJ7S+4dJfUrQ/HgPb/PlVtE4
-X-Gm-Message-State: AOJu0YwFEyhBjlYgZ3R/lWwWvgeoWYir2g+wIRMeaP9uxBuZedR+Dh6J
-	w19D9daglr7lU1dS6HcqDqUkHZnnU80ZrkHCh2rar3gwZoJnHKPgXUelNc2klVUu7SfAc63TmGb
-	oRV8=
-X-Google-Smtp-Source: AGHT+IFWK9h3YEybm6BIGLMJNixPvA73NV4oZYSszQRCqVG7+H7HxqTpkqRohcPjaEg2JALqIvr1Ug==
-X-Received: by 2002:a05:620a:4482:b0:794:d988:521a with SMTP id af79cd13be357-797f6006419mr521195085a.7.1718279390820;
-        Thu, 13 Jun 2024 04:49:50 -0700 (PDT)
-Received: from ziepe.ca ([128.77.69.89])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798b73fb4dcsm40891385a.100.2024.06.13.04.49.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 04:49:50 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sHixg-00FW6s-Sj;
-	Thu, 13 Jun 2024 08:49:48 -0300
-Date: Thu, 13 Jun 2024 08:49:48 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 03/10] iommu: Add attach handle to struct iopf_group
-Message-ID: <20240613114948.GA791043@ziepe.ca>
-References: <20240527040517.38561-1-baolu.lu@linux.intel.com>
- <20240527040517.38561-4-baolu.lu@linux.intel.com>
- <20240612133732.GW791043@ziepe.ca>
- <013afe9a-756f-4c85-baa1-977bea6be395@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKLy4KkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3A91BC4AF1C;
+	Thu, 13 Jun 2024 11:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718279402;
+	bh=DE+FVo77unx9XVdvimGFNJZwqU+7Z3SMhyWIyT6Piz8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iKLy4KkIlmnmndkcf/a7tYazVU+rhFO7B6oOSEP72csJiLPHvNW0nIA+Lmsg7ekpL
+	 ax2lT4LBQp4lOTElfFrqD94tNM6QDKIMid0uxZymtgJLibLrB+ruyOLZDr4d3+NEuq
+	 8qoHhkl2EMFBDE+vA8bs4Q2BJWVheC6xK9yEBefuLKXkcKxH/08ji9fxh1fGgasq4n
+	 hpgXxjhs84t8AY2uzN9jlfyq9meIWu6xdPVAD14HO8Di1H5rZCIrBcB//l98PTseVT
+	 3LkdaBrhFPZk8Uh4yEdRWdun/8HI9kvbrkXXvaiVGc1EGkWYm03AKTGLl7SnE8o4cV
+	 uEhIKC2Ns79SQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6E5C27C79;
+	Thu, 13 Jun 2024 11:50:02 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Date: Thu, 13 Jun 2024 19:48:07 +0800
+Subject: [PATCH v9 1/2] dt-bindings: dma: Add Loongson-1 APB DMA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <013afe9a-756f-4c85-baa1-977bea6be395@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240613-loongson1-dma-v9-1-6181f2c7dece@gmail.com>
+References: <20240613-loongson1-dma-v9-0-6181f2c7dece@gmail.com>
+In-Reply-To: <20240613-loongson1-dma-v9-0-6181f2c7dece@gmail.com>
+To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718279399; l=2830;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=VMRWdh/PCclHrwoAYaQVWsjCcphB3QpZQvLeWMebljU=;
+ b=gVcArp33eBjNU3lrIGNmCLbNiRFTOaR+A53ZRC2mMm4QS1dKOc0phBTHgKmad+6GoBJbmYbSK
+ GfRBF+EIASVBi4mLl4O5C1B4IyZceHLWBNl8DIV+D7VImqHbx2p1z+A
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-On Thu, Jun 13, 2024 at 12:23:17PM +0800, Baolu Lu wrote:
+From: Keguang Zhang <keguang.zhang@gmail.com>
 
->  struct iommu_ops {
->         bool (*capable)(struct device *dev, enum iommu_cap);
-> @@ -600,6 +598,7 @@ struct iommu_ops {
->         struct iommu_domain *blocked_domain;
->         struct iommu_domain *release_domain;
->         struct iommu_domain *default_domain;
-> +       bool user_pasid_table;
->  };
+Add devicetree binding document for Loongson-1 APB DMA.
 
-Yeah, maybe spell it 
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+---
+Changes in v9:
+- None
 
-  u8 user_pasid_table : 1;
+Changes in v8:
+- Change 'interrupts' property to an items list
 
-Jason
+Changes in v7:
+- Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+- Update the title and description part accordingly
+- Rename the file to loongson,ls1b-apbdma.yaml
+- Add a compatible string for LS1A
+- Delete minItems of 'interrupts'
+- Change patterns of 'interrupt-names' to const
+
+Changes in v6:
+- Change the compatible to the fallback
+- Some minor fixes
+
+Changes in v5:
+- A newly added patch
+---
+ .../bindings/dma/loongson,ls1b-apbdma.yaml         | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.yaml b/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.yaml
+new file mode 100644
+index 000000000000..192c85c1199d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/loongson,ls1b-apbdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson-1 APB DMA Controller
++
++maintainers:
++  - Keguang Zhang <keguang.zhang@gmail.com>
++
++description:
++  Loongson-1 APB DMA controller provides 3 independent channels for
++  peripherals such as NAND, audio playback and capture.
++
++properties:
++  compatible:
++    oneOf:
++      - const: loongson,ls1b-apbdma
++      - items:
++          - enum:
++              - loongson,ls1a-apbdma
++              - loongson,ls1c-apbdma
++          - const: loongson,ls1b-apbdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: NAND interrupt
++      - description: Audio playback interrupt
++      - description: Audio capture interrupt
++
++  interrupt-names:
++    items:
++      - const: ch0
++      - const: ch1
++      - const: ch2
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - '#dma-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    dma-controller@1fd01160 {
++        compatible = "loongson,ls1b-apbdma";
++        reg = <0x1fd01160 0x4>;
++
++        interrupt-parent = <&intc0>;
++        interrupts = <13 IRQ_TYPE_EDGE_RISING>,
++                     <14 IRQ_TYPE_EDGE_RISING>,
++                     <15 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "ch0", "ch1", "ch2";
++
++        #dma-cells = <1>;
++    };
+
+-- 
+2.43.0
+
+
