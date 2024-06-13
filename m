@@ -1,102 +1,164 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49842148FFC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6E953E31;
+	Thu, 13 Jun 2024 15:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718291119; cv=none; b=WtEsF4u9d+tcT00CANcypqnAhhVt8Elr+l9xHHtoYUFkS+0ZI6bZdhRu5Zmz6Htd1HbEsD76IAXivqbyM6llgv5yQxokn5ykHwuV0wDdHDj2SSO7O8CxH6c6YOWwfxHprFOGfKoh6UVFSG9TgHNBhMlFQcegWQLI12xj0XGhfp0=
+	t=1718291191; cv=none; b=hOQWu7RcR5tjDOI1BYxWSH0QeljgFZnr9VmLyIRQyyrkp2MA8JETZ8B8kfviur1iNq2zLZ70kumX8liDknPuJx72o4Sw7e9pP3eVVkT/2lSCMtEPdQJzlf7xxSm1bmgH/YVpWZlG7Sd2A1rn9XvhyEUmSJW8FpHA6oDMm7ZELzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718291119; c=relaxed/simple;
-	bh=aZrqo1QdvlsVzHr8N4a87ImSH7QfmCAPFz6ktnixMRI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VJiwpMpegi38DCHp2gSDgEjr9dWmq6O+rdBYSvzrU06Ts7en9ehuXGY8x4kSV11YMggtJ21EkxnQvrETeDFcXTD0ZpNNOLcYdYxPX98HlxrRZZa+ttV8+0jSggZKxo+dpDsuRKQNicomxvD+v6gqvYOKcUeMd93zze1WGE9vgC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EllD0SyD; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718291191; c=relaxed/simple;
+	bh=wgsmED+LXJqE3La/bOLyHDsAdYsz1Isrd2OZaovkeiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SefNXXEgiokPOZj1MwSoT5Um0V3uOYIxDEnp5na3pd1hlPU1l2UCe4z6TKY5d+Am6tK88ev9eGR5Qz7YxCivUDnPT/6nxKQjqN80qP2dVMXzmLb/8EkoR3+V9sS1VmDzjyTmH2cnOw3t/GAoSJrpD8CmR4cCMZw2xP8IxA6gO8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsvcVPrx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EllD0SyD"
-X-Envelope-To: christophe.jaillet@wanadoo.fr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718291114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N065K9zNHNGpuRaLl+nprLkgcSGQ568ihUQMVU2BLJg=;
-	b=EllD0SyDBeMkOGeaIaxZmqcKY7M1zqEgbzoIkCaHrMOAvYQYbWZakznOm2clrE5nyVWOl6
-	eyUUR4aR/U3is3tXsblYmq7dT8Ck4YpakP8v/cayQlSkoSLy7HRNwicCpJOqO3nH50pj9K
-	cJGZ9Kmle0+PXG9xQmxwu8+6MjnRVOI=
-X-Envelope-To: laurent.pinchart@ideasonboard.com
-X-Envelope-To: tomi.valkeinen@ideasonboard.com
-X-Envelope-To: maarten.lankhorst@linux.intel.com
-X-Envelope-To: mripard@kernel.org
-X-Envelope-To: tzimmermann@suse.de
-X-Envelope-To: airlied@gmail.com
-X-Envelope-To: daniel@ffwll.ch
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: kernel-janitors@vger.kernel.org
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-Message-ID: <120ffe3c-0240-4f93-a220-e0df565bcdbf@linux.dev>
-Date: Thu, 13 Jun 2024 11:05:01 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsvcVPrx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE25BC2BBFC;
+	Thu, 13 Jun 2024 15:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718291190;
+	bh=wgsmED+LXJqE3La/bOLyHDsAdYsz1Isrd2OZaovkeiA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=BsvcVPrxieuyVR6+qllHztbJhLvGWba7+HmN+SIlEElKHi1Zd9/dzBPedwRMCli8S
+	 FKpRyagelBFngmKn9sPg3P02A8uzaYcHLSm4ZCiJ23ukBHqE6QmQhU0xzrnx/01bBh
+	 4tqDsCvxFzIiuHlyJwzZGNFrhx54EIpgDvaMQ8HYCqaDWvzmMTunrp+TKCyPqaNDLa
+	 /GbEdfXKY54P/m5SCsGf4TMotsXHaXBrs3REfjdxZBx/wm+QlwVSdjc5u2RbCBB4ta
+	 WRq65TWMuPnHdq4aaao+h9OYo4/mhtegaJrK22Z05AWdgoiz0bQKHsta3wVVF+fskZ
+	 CT+12OJKFo+6g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 7A44DCE09E0; Thu, 13 Jun 2024 08:06:30 -0700 (PDT)
+Date: Thu, 13 Jun 2024 08:06:30 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <ZmrfA1p2zSVIaYam@zx2c4.com>
+ <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
+ <Zmru7hhz8kPDPsyz@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] drm: zynqmp_dpsub: Fix an error handling path in
- zynqmp_dpsub_probe()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-References: <974d1b062d7c61ee6db00d16fa7c69aa1218ee02.1716198025.git.christophe.jaillet@wanadoo.fr>
- <5288867f-ee45-4930-bde0-14b24b878181@linux.dev>
-Content-Language: en-US
-In-Reply-To: <5288867f-ee45-4930-bde0-14b24b878181@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmru7hhz8kPDPsyz@pc636>
 
-On 5/20/24 11:05, Sean Anderson wrote:
-> On 5/20/24 05:40, Christophe JAILLET wrote:
->> If zynqmp_dpsub_drm_init() fails, we must undo the previous
->> drm_bridge_add() call.
->> 
->> Fixes: be3f3042391d ("drm: zynqmp_dpsub: Always register bridge")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> Compile tested only
->> ---
->>  drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> index face8d6b2a6f..f5781939de9c 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> @@ -269,6 +269,7 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
->>  	return 0;
->>  
->>  err_disp:
->> +	drm_bridge_remove(dpsub->bridge);
->>  	zynqmp_disp_remove(dpsub);
->>  err_dp:
->>  	zynqmp_dp_remove(dpsub);
+On Thu, Jun 13, 2024 at 03:06:54PM +0200, Uladzislau Rezki wrote:
+> On Thu, Jun 13, 2024 at 05:47:08AM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 13, 2024 at 01:58:59PM +0200, Jason A. Donenfeld wrote:
+> > > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
+> > > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
+> > > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
+> > > > > > Since SLOB was removed, it is not necessary to use call_rcu
+> > > > > > when the callback only performs kmem_cache_free. Use
+> > > > > > kfree_rcu() directly.
+> > > > > > 
+> > > > > > The changes were done using the following Coccinelle semantic patch.
+> > > > > > This semantic patch is designed to ignore cases where the callback
+> > > > > > function is used in another way.
+> > > > > 
+> > > > > How does the discussion on:
+> > > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
+> > > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
+> > > > > reflect on this series? IIUC we should hold off..
+> > > > 
+> > > > We do need to hold off for the ones in kernel modules (such as 07/14)
+> > > > where the kmem_cache is destroyed during module unload.
+> > > > 
+> > > > OK, I might as well go through them...
+> > > > 
+> > > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+> > > > 	Needs to wait, see wg_allowedips_slab_uninit().
+> > > 
+> > > Also, notably, this patch needs additionally:
+> > > 
+> > > diff --git a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
+> > > index e4e1638fce1b..c95f6937c3f1 100644
+> > > --- a/drivers/net/wireguard/allowedips.c
+> > > +++ b/drivers/net/wireguard/allowedips.c
+> > > @@ -377,7 +377,6 @@ int __init wg_allowedips_slab_init(void)
+> > > 
+> > >  void wg_allowedips_slab_uninit(void)
+> > >  {
+> > > -	rcu_barrier();
+> > >  	kmem_cache_destroy(node_cache);
+> > >  }
+> > > 
+> > > Once kmem_cache_destroy has been fixed to be deferrable.
+> > > 
+> > > I assume the other patches are similar -- an rcu_barrier() can be
+> > > removed. So some manual meddling of these might be in order.
+> > 
+> > Assuming that the deferrable kmem_cache_destroy() is the option chosen,
+> > agreed.
+> >
+> <snip>
+> void kmem_cache_destroy(struct kmem_cache *s)
+> {
+> 	int err = -EBUSY;
+> 	bool rcu_set;
 > 
-> Reviewed-by: Sean Anderson <sean.anderso@linux.dev>
+> 	if (unlikely(!s) || !kasan_check_byte(s))
+> 		return;
+> 
+> 	cpus_read_lock();
+> 	mutex_lock(&slab_mutex);
+> 
+> 	rcu_set = s->flags & SLAB_TYPESAFE_BY_RCU;
+> 
+> 	s->refcount--;
+> 	if (s->refcount)
+> 		goto out_unlock;
+> 
+> 	err = shutdown_cache(s);
+> 	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
+> 	     __func__, s->name, (void *)_RET_IP_);
+> ...
+> 	cpus_read_unlock();
+> 	if (!err && !rcu_set)
+> 		kmem_cache_release(s);
+> }
+> <snip>
+> 
+> so we have SLAB_TYPESAFE_BY_RCU flag that defers freeing slab-pages
+> and a cache by a grace period. Similar flag can be added, like
+> SLAB_DESTROY_ONCE_FULLY_FREED, in this case a worker rearm itself
+> if there are still objects which should be freed.
+> 
+> Any thoughts here?
 
-Will this be applied soon? The patch it fixes has made its way into the stable tree already.
+Wouldn't we also need some additional code to later check for all objects
+being freed to the slab, whether or not that code is  initiated from
+kmem_cache_destroy()?
 
---Sean
+Either way, I am adding the SLAB_DESTROY_ONCE_FULLY_FREED possibility,
+thank you! [1]
 
+							Thanx, Paul
+
+[1] https://docs.google.com/document/d/1v0rcZLvvjVGejT3523W0rDy_sLFu2LWc_NR3fQItZaA/edit?usp=sharing
