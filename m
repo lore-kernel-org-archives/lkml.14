@@ -1,95 +1,204 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D21A23
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3205912F386
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718295467; cv=none; b=RJIJwmZQkpKhLwQqh2pM29Hn7bQEVQ8j637BGQ9Kp3MH99APF+SW1uXb0w+O/X9XasnaaO0VDonoKxxdH3mRoNZGQ3dHBYMOX9cWslhOl5LKojwHsvVo6mp7voQUZQU+gzSCypLKGK+nyGvUDDGyciJjVRkYzQCOvql6Ay5bT1g=
+	t=1718295492; cv=none; b=dcTtuHXFxz6JfJ6WQU7/Pu569pVjWEoVthFcWP/V6dQe+Q3e59d4gI/RrFBEbfD79BcS3G2Q8TsF/ASu8+SdNXA/4RXBBc6EHDITcdG+GQ5mdsOGJo6ZXEzLBNXciIc3/9o5FDNSWRNhk6I84mzpcsR27VOSOY+mgwio/Ld9+Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718295467; c=relaxed/simple;
-	bh=NxetfL+8UA5elqSQR6Cen3UPmfvfE9TG7qcJTxAigXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iGzPrNlrfOtTUXK69Upnw9dg+Fj4aJoRuXhHNo4nT4/ir6q7PcE4ENpvwLM5ObbwDAIk/viMnYXn48JIOi2zQEvl6ugVoTGRHjhSOosRrDQrCYBo2O1ZM2yomtB0J/CNXLnTtZWtC3bAfNRHyQv6O33m+QISjrS/U+u2XlzNz2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UAbku8va; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718295492; c=relaxed/simple;
+	bh=iBM4pmUdvLp0wJE+5dcbsfYPkB5DnRjbzC1GW3wslw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CHc+tMTQJu2RlgFq0ufobpZYyxapp1bR9p95QBgObjT/zCCXWL+H4vn0T5CKPPnWHleNU8PB36N5IsV2e0U3BMNnPuyMWq7Ys0T63GG0JggIINWaIYhCg2VqE1ePGQlsr6ajOvCw5Qh169vLeLjoKRHdAFhVkfRXQdPWLhMgPUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Wl2lmBsW; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UAbku8va"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a63359aaaa6so175772066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718295463; x=1718900263; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UBOcYXNoCGPTWNLnO75nM0G5NCzcYXH2vvEcL0OCf+o=;
-        b=UAbku8va09FbrXzbl8QncyS4ScME2TG1EZGLgETVnT3wDVzYrzl3ICLpBzopO/z9QX
-         dSIhmOYsEDhVXk7RrfYgMLt+o/nHom08akVpQtxTwCgWdvwY3am9CQAe2hlr2srIqXsh
-         KkxLJaatef3LNhNh8zowd84zUIdkw94zF1fa0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718295463; x=1718900263;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UBOcYXNoCGPTWNLnO75nM0G5NCzcYXH2vvEcL0OCf+o=;
-        b=aTRHJgpYkhReyd0sS02X1WgXh1U450aO0zWJWU9aWdMrsRI4KYULX6mFf6mqp1qJrJ
-         4H21ym826ZMKwQmzwM6aB65z2KfEbvqvMtVjnP/ZmyyDI5lAOT0c1vwlV0CEP5CFAgQ7
-         +2cmKNIyasxAoQDdWCx+AAA/bTIRMW3RwOGSMeFvzazR7Mh4GsDz2Qb3kg+8nknwWJZs
-         uZBs6C8pbTKSuvySFi5DEy/qh8MTiPoKC76ZvU7mp8TUsmqP//LK47WpcMDIAp8PlEs9
-         pI4cWolE9TMx8Rf9Owsbg4jtHUVY/EnVAL1P+rXelItNzUbkmo3CE4vGN5JS/elf32g2
-         qSCQ==
-X-Gm-Message-State: AOJu0YwMhlLTn0R9Mxu8L7guaOCohFESyHJsVVBNgVNOY7nxgYLhd+6s
-	MpTIVcdwVQNKdmqz7beDxIOafza3AfYNNPR5xFdOBziRzw4WZOXKHL4FcLFXX7JIYNlu6Z3RGDQ
-	rL/gqDQ==
-X-Google-Smtp-Source: AGHT+IHVRlaCf4kVN7PvAgTRgImSZ/pPFHIfq4vMy4kZzWlR89s1mPRjg8faCoM2imY5wwdI42vx+Q==
-X-Received: by 2002:a17:906:b858:b0:a68:ece7:8db5 with SMTP id a640c23a62f3a-a6f60d2c9e0mr14073066b.31.1718295463247;
-        Thu, 13 Jun 2024 09:17:43 -0700 (PDT)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db681fsm87224366b.72.2024.06.13.09.17.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 09:17:43 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57cb9a370ddso1134576a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:17:42 -0700 (PDT)
-X-Received: by 2002:a50:a6d8:0:b0:57c:6e94:a1a9 with SMTP id
- 4fb4d7f45d1cf-57cbd66c9d3mr182768a12.17.1718295462010; Thu, 13 Jun 2024
- 09:17:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Wl2lmBsW"
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 45DFWE6Y015627;
+	Thu, 13 Jun 2024 16:16:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc : content-type : date
+ : from : in-reply-to : message-id : mime-version : references : subject :
+ to; s=pps0720; bh=Y3rT6DLE+dHOJaRI2CdWBzq1y0u3tAjCK1Syhh5F3Ng=;
+ b=Wl2lmBsWmxvHwWIsAIoowr2ZAJCWzDS1SnpWYBC1OLSCD1QklXjJx1XCWlHv46NJXtTL
+ Jv1Le2U+sM3MnlhnzX8cfSCiwrIMcX/g2fDZnINYwzM5KEQWXVmmkTsUblttQuXikOKs
+ egpD2kZf/4pDrdGEGztu3wmQNWFeAEzNJYhpjTUkkQw3kWBZRTOLXvOhAhhr5q603UjA
+ n5SsgL7wy6TR+z4ehrsDJ6YKBsYUbmjtDfLaQ4reUQF6ElNbsWWuGqrs05Mjus5U3UaH
+ 6CY4u5jNmxDNWp8p7pka0ilYRqCh9AaQ31i/9A/CjKpcJryf22b3EErj9PfIcu4pAoW3 QQ== 
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3yr1yxha3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 16:16:48 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id C80C2147AA;
+	Thu, 13 Jun 2024 16:16:44 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id C7DC6809D02;
+	Thu, 13 Jun 2024 16:16:38 +0000 (UTC)
+Date: Thu, 13 Jun 2024 11:16:36 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Ashish Kalra <ashish.kalra@amd.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, Pavin Joseph <me@pavinjoseph.com>,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Hou Wenlong <houwenlong.hwl@antgroup.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
+Message-ID: <ZmsbZCF9rFzuB3rO@swahl-home.5wahls.com>
+References: <20240520183633.1457687-1-steve.wahl@hpe.com>
+ <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
+X-Proofpoint-GUID: iau639vRooRc3lIOREaNeZ5DNksGBcka
+X-Proofpoint-ORIG-GUID: iau639vRooRc3lIOREaNeZ5DNksGBcka
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com>
- <ZmrTZozoi0t/tuva@duo.ucw.cz>
-In-Reply-To: <ZmrTZozoi0t/tuva@duo.ucw.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 13 Jun 2024 09:17:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjqHL7KjOWYBVKFewcKPWL7CJxddWfJnvL3AfOqfR8vMg@mail.gmail.com>
-Message-ID: <CAHk-=wjqHL7KjOWYBVKFewcKPWL7CJxddWfJnvL3AfOqfR8vMg@mail.gmail.com>
-Subject: Re: Linux 6.10-rc1
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-13_09,2024-06-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 impostorscore=0 phishscore=0 clxscore=1011 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406130115
 
-On Thu, 13 Jun 2024 at 04:09, Pavel Machek <pavel@ucw.cz> wrote:
->
-> I tried ~6.10-rc1 for a week or so, and it something was very wrong with
-> the performance, likely to do with graphics. Thinkpad X220.
->
-> It looked like GPU is working way harder than usual, leading to
-> machine overheating and thermal throttling, making machine _really_
-> unusable.
->
-> I went back to 6.9, and things seem better. At least "have to buy new
-> machine" feeling is gone.
->
-> Unfortunately, these GPU perfromance issues are not exactly to
-> confirm/debug. Hints would be welcome.
+On Thu, Jun 13, 2024 at 05:28:56PM +0200, Borislav Petkov wrote:
 
-Well, it sounds like it is a big enough performance issue that you can
-definitely feel it fairly easily.
+Thank you for at least saying something on this!
 
-Which would make a bisection possible?
+> On Mon, May 20, 2024 at 01:36:30PM -0500, Steve Wahl wrote:
+> > Although there was a previous fix to avoid early kernel access to the
+> > EFI config table on Intel systems, the problem can still exist on AMD
+> > systems that support SEV (Secure Encrypted Virtualization).  The
+> > command line option "nogbpages" brings this bug to the surface.  And
+> > this is what caused the regression with my earlier patch that
+> > attempted to reduce the use of gbpages.  This patch series fixes that
+> > problem and restores my earlier patch.
+> > 
+> > The following 2 commits caused the EFI config table, and the CC_BLOB
+> > entry in that table, to be accessed when enabling SEV at kernel
+> > startup.
+> > 
+> >     commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
+> >                           earlier during boot")
+> >     commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
+> >                           detection/setup")
+> > 
+> > These accesses happen before the new kernel establishes its own
+> > identity map, and before establishing a routine to handle page faults.
+> > But the areas referenced are not explicitly added to the kexec
+> > identity map.
+> > 
+> > This goes unnoticed when these areas happen to be placed close enough
+> > to others areas that are explicitly added to the identity map, but
+> > that is not always the case.
+> > 
+> > Under certain conditions, for example Intel Atom processors that don't
+> > support 1GB pages, it was found that these areas don't end up mapped,
+> > and the SEV initialization code causes an unrecoverable page fault,
+> > and the kexec fails.
+> 
+> What does Intel Atom have to do with SEV?!
 
-                 Linus
+The Atom was the prominent example of a platform that the code
+introduced for SEV broke.  Unfortunately, the fix currently
+implemented leaves things still broken for actual AMD SEV capable
+processors when nogbpages is used, and this problem is the reason for
+the apparent regression when my reduce-use-of-gbpages patch was
+accepted (later removed).
+
+Tau Liu's original patch fixed this problem, but was not accepted.
+The patch that was accepted does not fix this.
+
+> > Tau Liu had offered a patch to put the config table into the kexec
+> > identity map to avoid this problem:
+> > 
+> > https://lore.kernel.org/all/20230601072043.24439-1-ltao@redhat.com/
+> > 
+> > But the community chose instead to avoid referencing this memory on
+> > non-AMD systems where the problem was reported.
+> > 
+> >     commit bee6cf1a80b5 ("x86/sev: Do not try to parse for the CC blob
+> >                           on non-AMD hardware")
+> > 
+> > I later wanted to make a different change to kexec identity map
+> > creation, and had this patch accepted:
+> > 
+> >     commit d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+> > 
+> > but it quickly needed to be reverted because of problems on AMD systems.
+> > 
+> > The reported regression problems on AMD systems were due to the above
+> > mentioned references to the EFI config table.  In fact, on the same
+> > systems, the "nogbpages" command line option breaks kexec as well.
+> > 
+> > So I resubmit Tau Liu's original patch that maps the EFI config
+> > table, add an additional patch by me that ensures that the CC blob is
+> > also mapped (if present), and also resubmit my earlier patch to use
+> > gpbages only when a full GB of space is requested to be mapped.
+> > 
+> > I do not advocate for removing the earlier, non-AMD fix.  With kexec,
+> > two different kernel versions can be in play, and the earlier fix
+> > still covers non-AMD systems when the kexec'd-from kernel doesn't have
+> > these patches applied.
+> > 
+> > All three of the people who reported regression with my earlier patch
+> > have retested with this patch series and found it to work where my
+> > single patch previously did not.  With current kernels, all fail to
+> > kexec when "nogbpages" is on the command line, but all succeed with
+> > "nogbpages" after the series is applied.
+> > 
+> > Tao Liu (1):
+> >   x86/kexec: Add EFI config table identity mapping for kexec kernel
+> > 
+> > Steve Wahl (2):
+> >   x86/kexec: Add EFI Confidential Computing blob to kexec identity
+> >     mapping.
+> >   x86/mm/ident_map: Use gbpages only where full GB page should be
+> >     mapped.
+> > 
+> >  arch/x86/kernel/machine_kexec_64.c | 82 ++++++++++++++++++++++++++++--
+> >  arch/x86/mm/ident_map.c            | 23 +++++++--
+> >  2 files changed, 95 insertions(+), 10 deletions(-)
+> 
+> Anyway, + Ashish who's been dealing with SNP kexec. We have identified one EFI
+> issue so far:
+> 
+> https://lore.kernel.org/r/20240612135638.298882-2-ardb%2Bgit@google.com
+> 
+> You could give it a try and report back.
+
+I will look at it, but a cursory inspection doesn't show anything
+that affects what I'm talking about here.
+
+Thanks!
+
+--> Steve
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
