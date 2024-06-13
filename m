@@ -1,99 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A3213C9D5;
-	Thu, 13 Jun 2024 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF21457CB9;
+	Thu, 13 Jun 2024 07:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718264592; cv=none; b=mvYbzmnx5qwnW7iuGu6nUpeE93EhQ+4plKltEoU30fkhKNzBYpqkYqjh80QMvoJq6KReqJOlB9xZF/4f/G9emvedvip9nQqPGchFEjLEanIJTC2DUSqY1Sdn+lqlHONLZwhTcCh46rE8PfSoOGG4hxbKvwfoC2RTTxzEQ0RdDjs=
+	t=1718264686; cv=none; b=eNJILOhbcO2t0W2X9ql07OIWIwEU1OfdRwbBSLEeQpBopgE0dfaam6D5upsU8YZXEqj5OgvYLIvjzkursca6MbOybIvSV8qbdH7OzUliPrzTHp1US/DqNsy9nx27hpNDc52IDdY37QCpqpKb7vOxl2IMpCgp9oZZ/FtrcknEoWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718264592; c=relaxed/simple;
-	bh=YehfgFC2fciO3pRMzakftx9BA51/qmvAe+pwvzKRskQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=guCLtaW+5LIKrn9ftAsFlv9qHCyU/+gUy1ExaY/8nZhFfX7Y0ymdZuUqqzRAKTiZIFX6JARp+rkMpVJ5pacWCmwoWIbg0ddKGKnJv7bUminZOEFa+hBSlMvcy7DCMOiZUdy3E0m8e8ekKk3gM814vW987dk8wqPFrEVDubCDPsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.180.133.93])
-	by gateway (Coremail) with SMTP id _____8Cxe+oLo2pmEW0GAA--.26167S3;
-	Thu, 13 Jun 2024 15:43:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.133.93])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusYKo2pmd2AeAA--.9308S2;
-	Thu, 13 Jun 2024 15:43:06 +0800 (CST)
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-To: Markus Elfring <Markus.Elfring@web.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Nitesh Narayan Lal <nitesh@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	stable@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when selected cpu is offline
-Date: Thu, 13 Jun 2024 15:42:58 +0800
-Message-Id: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1718264686; c=relaxed/simple;
+	bh=mel7bwaTI0YQ/pctqBNK1nhGmHDx+xhaXi+DHFUFFF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7+jpXinEHh/msiBK/ByHLOjFU5OZ83taZOEvf3h3Uio9oihU+5D5FfOmFW08iu7hkFIjABGqDpIg0ditLA+ScWg+YNZJ4deeVdM/uVmcgUVnrGk63zRyh1E9oaRf6QFVjqbBVD2WPeM53H9S9oeGawGQLDOykIjeVjGS4DeF5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=DP2mWG9W; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DP2mWG9W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GT7AIZgIWhfB3f40JHe4sssXTLZj1T2xiSRKtERm9SM=; b=DP2mWG9WDbCmVmWFiyhxfuq1rN
+	RX48xVvY9ADB7V6llW6XUtwt6ZJQ2fBFn8NfKJikaJWyxeR3FKDwTUkcw6AJg43zeXdURFyOPq3vm
+	SNhfj6/hIpdjHvlZYWo2cKZupc4sQwUy65pCNxrUnKO12ir0516VHTJNvw8HH49IpAWd1K3Eq3PeU
+	ASONUnDRob6PoxBlflH77PJuzZt2fSh2ewt6BmzAK9NtJf8xeXTMEwDxtPzAEvhCfPacrh8lFivQa
+	36KG1Rz2ZUlNF665ws1oqPKFtKubiz1IFDMPD75D2B5FE5WX8oJ17WgwYNMLW5jV8JE04dBG9qala
+	tGd3jAXw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42754)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sHf8L-0005hz-1s;
+	Thu, 13 Jun 2024 08:44:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sHf8K-00013v-Ia; Thu, 13 Jun 2024 08:44:32 +0100
+Date: Thu, 13 Jun 2024 08:44:32 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, bryan.whitehead@microchip.com,
+	andrew@lunn.ch, sbauer@blackbox.su, hmehrtens@maxlinear.com,
+	lxu@maxlinear.com, hkallweit1@gmail.com, edumazet@google.com,
+	pabeni@redhat.com, wojciech.drewek@intel.com,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net V4 1/3] net: lan743x: disable WOL upon resume to
+ restore full data path operation
+Message-ID: <ZmqjYEs0G9pGQTog@shell.armlinux.org.uk>
+References: <20240612172539.28565-1-Raju.Lakkaraju@microchip.com>
+ <20240612172539.28565-2-Raju.Lakkaraju@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxusYKo2pmd2AeAA--.9308S2
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAHB2ZqUJQEggACsN
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF1DKryktr1ktw1rJrWfXrc_yoW8Gr1fpF
-	ZrG34Skr4kJF4UG3Wqqay8uFyFganrJa429a1xCwnxZFZxAF10y3Z7ArW3Jr1UWrWkZr1a
-	v3WDAryUGFWUArbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612172539.28565-2-Raju.Lakkaraju@microchip.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
-@cpu is a offline cpu would cause system stuck forever.
+On Wed, Jun 12, 2024 at 10:55:37PM +0530, Raju Lakkaraju wrote:
+> @@ -3728,6 +3729,30 @@ static int lan743x_pm_resume(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> +	ret = lan743x_csr_read(adapter, MAC_WK_SRC);
+> +	netif_info(adapter, drv, adapter->netdev,
+> +		   "Wakeup source : 0x%08X\n", ret);
 
-This can be happen if a node is online while all its CPUs are
-offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
+Does this need to be printed at info level, or is it a debug message?
 
-So, in the above case, let pci_call_probe() call local_pci_probe()
-instead of work_on_cpu() when the best selected cpu is offline.
+Thanks.
 
-Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping CPUs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
----
-v2 -> v3: Modify commit message according to Markus's suggestion
-v1 -> v2: Add a method to reproduce the problem
----
- drivers/pci/pci-driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index af2996d0d17f..32a99828e6a3 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
- 		free_cpumask_var(wq_domain_mask);
- 	}
- 
--	if (cpu < nr_cpu_ids)
-+	if ((cpu < nr_cpu_ids) && cpu_online(cpu))
- 		error = work_on_cpu(cpu, local_pci_probe, &ddi);
- 	else
- 		error = local_pci_probe(&ddi);
 -- 
-2.33.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
