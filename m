@@ -1,117 +1,104 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0613F13D53E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABCB13D53E;
+	Thu, 13 Jun 2024 08:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268594; cv=none; b=nHCxRdmBJ41AlmGHBnHZs6rw0xUNpHeedq437EOUlUdlVjSDA0lxDae+VnVchxj39u0Wkt9uHZCsXvIcP3TS04g7WemL13+pdeKuBVkxBiwTkXZdUrMk+8LPdTj+FdPGEGkjfU/pJdTI+EdiaLxqxs4cfBbb7IdBhu8KW1fr4pk=
+	t=1718268607; cv=none; b=c2m8jZ5Zy9aX2smjxZHoj3QPHMwgxro5ROPE7uWm4SsQpblCTN7CnQgQVsfMivoNtG5G6YWdawz+YT/ZNNUq5r5DRS7AYiZdB8IMX+DUKAaXQKYN7dH8Rpg3Z/29WFIxNRAGNl4SlL9bwkzsxVXD9+fOOAAD8Ahi+e1Rs1AKC90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268594; c=relaxed/simple;
-	bh=f9zjtO9AtabnLNuJxqiPcWb5sV8xQYdL18OmBwU1Kd4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VB3fwIslhJrehkwpJESDy0ZAE+d4+QWkxDhuKTnd23Udm8jjQR8RCtIKyQvNDniIVDV0MfPEx6JmEDhkXaMjKOQG/2FmzbWR/eqJUX+jjzwY/oBR9Qtbp6J9WWtvTM3GDZ/JQTqqRJOr07hW1KK+yqJ3JsNRYezQ7uNNHqeHL2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZ1OKDk+; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718268607; c=relaxed/simple;
+	bh=H08dtzpcV6vh+UEjTegBQqh3P6JlbqWb9sXQeK2PSU4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DS/dESjPGhumdaauonZW91RYB7tdvtpPA1hTCAxrKVzPowxThAdLXveK0149I7AQUXcPQhnk9ti2rbhfM7MsOrW2VjIzzz9X65QZE9ewrM1HqCZTThVMfUaLJjyfPNeOVtai8nSnoawmedNpEtWl1iIEQGuBwfADNzNR6a1XNL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dqlHz6ak; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZ1OKDk+"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cb9a370ddso394602a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718268591; x=1718873391; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f9zjtO9AtabnLNuJxqiPcWb5sV8xQYdL18OmBwU1Kd4=;
-        b=IZ1OKDk+VfsxUUKK684UtQSpWUpSSdu/W8dkrQKUQZwamqyTUHOeTyEsyiOOzBATmP
-         WyzkWw7ft2Xpx4GM0/F7FneFgp99EjpCQH+dTPs3q9mXEFbgnHUQE5QVUOMmDWcPhMsP
-         xOJfeQrvugoZqLLxUNdqtVpk7Y88T46Yacqav3zMS/lY1pW1324aoMgWdccADwdrFTUH
-         CBLdSQguXaggDwYYWeSaV6begIQME0l8k2D3/uVh3yqn8e+bKkLbPDLaDCbMm8iLAU8Z
-         /oHHXgLVo5TI3AJtAY97xkqtTMm6GrxDjjfNE0BmGctKMRnAns/q53CroEd3XoNj+aPm
-         DQfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718268591; x=1718873391;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f9zjtO9AtabnLNuJxqiPcWb5sV8xQYdL18OmBwU1Kd4=;
-        b=MZRFh7PRejw3OQ2M4H/X6TTa8GzraUwuqC9UkXRHr9yE28yp1SSM4ylx2rFkToPN1f
-         bfN943UT3oawxaeDBRyX2vM8r5QiyUbIpKelCwf+qLoe1Z5YEQvqb4qJpUzZvNkqCSDf
-         j1Zo4DxahoqHPVkCL7Ejr1112BtWmkIFCIOC9XnLpi0FU+vjh+J/rO9p1PmTBiEESS3U
-         5QjZA01y+Kwp4RLCX+6EI3+RwANhgixsW8Wq3uJYxxSRFY7ajjUrh9gPyj+dPsv+lJ+X
-         WyDVlbUIVPfl4fw+hWjuIseku02v9pk/f55O0wtAaBPR+txaqdq48xPOs3/xo1114VBP
-         VVSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXviV32eccYdKuyDUJ5fMEQ5lnjjjNy9ySYZsnPi2UXP+W0mMRwEOahtrGzEijsEXaMeNfwmLKtqzX+WyjyNe0i0BiOyIMl/GLeHlC9
-X-Gm-Message-State: AOJu0YyC6xtS11L1VQtC2LR0o1PyP4Cdpah05UV9PzIuUNMcMXKjSUli
-	YDxiU0OA/n5sERVeEzlgKFhZU/Ji4OVUm9AJa93J7zkBHXLs9zXf9arP38H0pggj/H9duXADE4i
-	aYQm8QjwwTWl+3wCpJbgBoRygcI8=
-X-Google-Smtp-Source: AGHT+IHwOYreymC1B9TPFN1wj6YCfUaTdYq1QGaY2/vdQUfMOFyZMPCj764A6qrN+sEltGa36FWWwsci3aEnDocO0C4=
-X-Received: by 2002:a50:8e48:0:b0:57c:610a:6e7f with SMTP id
- 4fb4d7f45d1cf-57ca9750ac8mr2586590a12.11.1718268591200; Thu, 13 Jun 2024
- 01:49:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dqlHz6ak"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8noH6105424;
+	Thu, 13 Jun 2024 03:49:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718268591;
+	bh=WLa2Qq6Zg/X0YE7uwzuclfCHM6AmiqShLiqT1n/tRNg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=dqlHz6akXLlN8o5p9dQC78rYMQwMcWbxQCgDuG6JP9u2cB/tAypgzhmghB/6ziIJx
+	 lr8UgdHO5xdPlQo+MKK5go0uw2IIrH4nqhphN50/MAMhMX23hJe7nXdkYr4U00Jvb1
+	 UDKWvSNk6FRl/qWXh9+7piPjU5KF7TypYbJ7gJX0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8nor4092165
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Jun 2024 03:49:50 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jun 2024 03:49:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jun 2024 03:49:50 -0500
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8nkEP088934;
+	Thu, 13 Jun 2024 03:49:47 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: <robh@kernel.org>, <conor+dt@kernel.org>, <krzk+dt@kernel.org>,
+        <kristo@kernel.org>, <nm@ti.com>,
+        Neha Malcom Francis <n-francis@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <s-k6@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH] arm64: boot: dts: ti: k3-*: Add memory node to bootloader stage
+Date: Thu, 13 Jun 2024 14:19:44 +0530
+Message-ID: <171826022271.240984.16412947163722025506.b4-ty@ti.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240506110203.3230255-1-n-francis@ti.com>
+References: <20240506110203.3230255-1-n-francis@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610120209.66311-1-ioworker0@gmail.com> <20240610120209.66311-2-ioworker0@gmail.com>
- <CAGsJ_4y4sKXbq4_ra9tTD-LWgB-x-HECyouxm_9r_N7Kw2We4g@mail.gmail.com> <be85ddcc-88ee-4f8d-9f73-b388f4d47b71@redhat.com>
-In-Reply-To: <be85ddcc-88ee-4f8d-9f73-b388f4d47b71@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 13 Jun 2024 16:49:39 +0800
-Message-ID: <CAK1f24kWHWL=nT2uDp=GF6dLp9AYuEVr4=ipUsWGK=cf9Qbfbg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] mm/rmap: remove duplicated exit code in pagewalk loop
-To: David Hildenbrand <david@redhat.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, willy@infradead.org, 
-	sj@kernel.org, baolin.wang@linux.alibaba.com, maskray@google.com, 
-	ziy@nvidia.com, ryan.roberts@arm.com, mhocko@suse.com, fengwei.yin@intel.com, 
-	zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com, 
-	libang.li@antgroup.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
-	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Jun 13, 2024 at 4:27=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 13.06.24 09:52, Barry Song wrote:
-> > On Tue, Jun 11, 2024 at 12:02=E2=80=AFAM Lance Yang <ioworker0@gmail.co=
-m> wrote:
-> >>
-> >> Introduce the labels walk_done and walk_done_err as exit points to
-> >> eliminate duplicated exit code in the pagewalk loop.
-> >>
-> >> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> >> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> >> Reviewed-by: David Hildenbrand <david@redhat.com>
-> >> Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> >
+Hi Neha Malcom Francis,
 
-Hi Barry and David,
+On Mon, 06 May 2024 16:32:03 +0530, Neha Malcom Francis wrote:
+> Add the bootph-all property to the memory node so that it can be
+> accessed by FDT functions at bootloader stage.
+> 
+> The bootloader requires the memory node to be able to initialize and set
+> the size of the DRAM banks. For this purpose, make sure all memory nodes
+> are present and standardized, and modify them if not.
+> 
+> [...]
 
-Thanks for taking time to review!
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-> > I don't think "return false" necessarily indicates an error, so
-> > "walk_done_err" doesn't seem like an appropriate name.
-> > However, this is a minor issue.
->
-> Agreed. As we only have a single walk_done user, should we instead
-> remove "walk_done", keep the "page_vma_mapped_walk_done" for that single
-> user, and rename "walk_done_err" to "abort_walk" ?
+[1/1] arm64: boot: dts: ti: k3-*: Add memory node to bootloader stage
+      commit: 12a29fb4f9a0597ad598f2c986c8e2509a62b6ff
 
-Yeah, I agree that 'abort_walk' is better than 'walk_done_err', and let's
-keep 'page_vma_mapped_walk_done' for that single user ;)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Thanks again for the suggestions!
-Lance
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
