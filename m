@@ -1,97 +1,89 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572F91586FB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962B514F134
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718306271; cv=none; b=MfM3oVEjJ2buZAZhQl2DSO6+d6A2HYk7ta17didGBNzI0aJi12gPfQkU8mDvA2OscfHaUkJo+LXRQox3fq94XJZU2zjsZ279KCBs4QbhQfYNIq+MG/6c6N0kweR2DBzaA3vFuIWvvJJauucCENCjdyfye6eS+q8xBIh4TnG2LbM=
+	t=1718306275; cv=none; b=ictNkAEJdE575M031K+7fKldJ9sDsJC/Hpk+gRheQWg6DQLuR5eOd7C6SkMGvz6j1jurBmBpPUxO7Ui359cDO+iUqOOYDzPpcxr40F7phky8+Up4DM6rrl6rMRGk2fw9fZ84T0WfXaS3ZalITEQnWL2v5Z6LTgcu9AgYHpBx1EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718306271; c=relaxed/simple;
-	bh=pO+yFu4yGkWTYYNA9LzaXwWjyJpbG08DpogfV1qhSKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sN5kbeClZQD3ZNaDf5Y6LdEDDBPbbQ7ng757qb+61vZn5l0Hamo/Kan5BLv0/561j4wnvw8hHGpJ8kGaldoUGHRqOwPkBQ0/MfVOOOelHMpmkQWh55ChmEgpHo5st09kDt2BKpRFDWmC5HKVGKtbNnym4eDghGKe6DJtn6R7TGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SHv3P3kQ; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1718306275; c=relaxed/simple;
+	bh=JnrkH5FyMjsCzZIiYdt1ni9oWej36xLzQp8VsV/K6Oc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Mi5ZiVABay4BimloYMYLWA8xtaRHpRepLsD7w9fXo6MHrUh+5d0XO1oMm8fafzv83EFS+hWhzr9Fu+C4yWs/pawT6BcDKlzJbF4Gk4sPKHDKPpJS7vzYX+hmht3mK64gdNIjpe+dZA6EwyEU7r9pcwDTO/kMKUFllhfb6WsHe/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FtFbQyd9; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SHv3P3kQ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f8507aac31so12765295ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FtFbQyd9"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6b060f0f48aso7255166d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718306269; x=1718911069; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1718306272; x=1718911072; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l5Of0EkcykOsZIYMENcTbIOpaZnOyRzNH4j4//yvpcs=;
-        b=SHv3P3kQwWNlmO679X59CKTPFHhQhRiApUKGOgm4nCaRK2qoaDQjFVjBAdwu/tBNHa
-         LkHndc6r7Hn2fItIR/5He/AoFygb2sdAuYVAMSYfQqVfRmBWTRefu40/riS1rF+lrun3
-         uvOfkf+H8NcV/FRjcsyduSe5ph6K2UQBzpt3Yfg9pnEA0fxdxbkUGORCT7cPHYuiWlfm
-         ekJr/AUItI0e1V+yviXh/mwg1i7ObnTUD+Y7MKwOtjRWezLwfGZf79Q5GyfykuGrGZPB
-         aIg2rlJG5/JrAdLrZfVfySOpXL5/zfX0d8CmffK4p9Ma2h4tDhtHPvFE30B3TxV1r+Lm
-         JQ3A==
+        bh=U6QyinaOFJqkp/FwCYbZM2RK9dvc3sFq+NiGTtbWdDw=;
+        b=FtFbQyd9hEgyPQaFcppmnWLiclwQsmsLmNvTmXeXeMUQDRsB3XhWLi4Tzsnr+9aHYa
+         YDikcMSn9jx5SD8OgJCQB5SCm78eB4tR0K1zDf4xY1IYJMqwf1byQG8dWW3nmArFP38I
+         6z0oT+MxGOb+YLTBBs1JdUAnis210oqGTYSgo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718306269; x=1718911069;
+        d=1e100.net; s=20230601; t=1718306272; x=1718911072;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l5Of0EkcykOsZIYMENcTbIOpaZnOyRzNH4j4//yvpcs=;
-        b=T3aAaca2maH40wmsY8TGnGHG7EuwcMHGEUh3tHSPZGtm3iKu/KwRX0UPI1dnRs5pWD
-         VbitjJfpgBru4n3ql0CJMPgu/wGgHzcRgdrCfU13aHyDIYZm5SbY2CbVkLIZdowpK+kh
-         Z3A/MColsItoOGWS8CwkU9ojKhxVCWQ1NkHHUPWNlCRPH6IPNV5L6LYJ7Hx0AEa7B/hg
-         XOfVNoep5KQ8XlJwAo4J8NegqdgNwesZgSA7sU9K2sys2oDa2R/GYZiN50ZhaLtaz1FO
-         qtO5csHCK5HgR1vNzS8n2NfV0pnSRyfFvDPsTDYwL2hrvOC/MbFpVXxFSWptjWz8ScGu
-         qYww==
-X-Forwarded-Encrypted: i=1; AJvYcCUGnvhzE86OZGa7mdwaWu4IVtvH5V173MdOuhST9nWC08F8y9VEJUOkHTDbrOVLAaAll+W3y2uxz++3LTFUigcdxFWAONQZiAliT7A5
-X-Gm-Message-State: AOJu0YwHs40lUo0bIInkAl/PDWGFy5R2btSz1OAjKYXgivFAlKkXEcHg
-	NMc4PGV3GAH9CVbivAnHU+zgzPtL1Su6QRcJr2daHxlVsUIGhOMI+gKCi0/oeAU=
-X-Google-Smtp-Source: AGHT+IFeYYnuwrF9NiGYw5EanheGBxXcQDznRNds6KUvN7djCnDAEnowkfw/KxTzTFdopU/Ia85E1Q==
-X-Received: by 2002:a17:902:e88a:b0:1f6:d368:7dd7 with SMTP id d9443c01a7336-1f862b155e2mr6566675ad.45.1718306268578;
-        Thu, 13 Jun 2024 12:17:48 -0700 (PDT)
-Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e7ca78sm17471015ad.106.2024.06.13.12.17.34
+        bh=U6QyinaOFJqkp/FwCYbZM2RK9dvc3sFq+NiGTtbWdDw=;
+        b=AYO3bHHZyqYhd41hf52nsMHow5hcKFsw/V2UCP1P7U44XV2e+TE+rSi4OxCj4StfQH
+         k3iyFXxlH7iEEzp+zC1jwbpmhXPanx7sLhRNvX/wYj2Bg4vMjQOXhdcvEKvErXwRJnfw
+         EEnfA9t8IG9p8QFtVsrwHLm3LeQ4L4oAk7K+zWE/+YgewONqFTFgSuP7WoJpOp9gM6UZ
+         z7+d1Kq9l1Q1qbp2+E2ZbrBJDdx/75WJZLmFEHY/Z5wkw6Og9lTi6Ha6r/CAljBQNK5f
+         ioFPdJX6WKGfCeZ/BF2Mu3zY+QY8wlJIn0WoElrxL3V1KwVp1/1c6aHRaS8TSI2/icAP
+         x2PA==
+X-Gm-Message-State: AOJu0Yzdoi7kQWKmUS4Yw1/+Gxhc4VAPJ4Yuj0Nr4Ggo+RS7nmxqzY7n
+	IbAQTkNj8fhMMEqdf1CPwCy7cjetoBJ6FsNsN247wBnb+82NsGm2RaaYMp1KPSfWXOoh0z4yc8z
+	0A6kx1bvntwFPh3ypI+CocpCJnTLVgez9YZ+ukw643T2RupOSG/XzXiIZZrhYr3hBcixkxXE68F
+	ub+NY3gjD73wn69PLJ+qn46/II1JLtK2zUkVlAwJz6Ix7NBe8+d+3t
+X-Google-Smtp-Source: AGHT+IEhHo4/bVvLX5CCRFwAPWXs+0Q6azIN2QMKWV00z/494lBSBlAsOpG3aNUM+fwFk0Vdxltj4A==
+X-Received: by 2002:a05:6214:cab:b0:6b0:6443:7fcb with SMTP id 6a1803df08f44-6b2afc793b7mr7504386d6.10.1718306272057;
+        Thu, 13 Jun 2024 12:17:52 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb47f6sm9714106d6.82.2024.06.13.12.17.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 12:17:48 -0700 (PDT)
-From: Jesse Taube <jesse@rivosinc.com>
-To: linux-riscv@lists.infradead.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@gmx.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 5/6] RISC-V: Report vector unaligned access speed hwprobe
-Date: Thu, 13 Jun 2024 15:16:14 -0400
-Message-ID: <20240613191616.2101821-6-jesse@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240613191616.2101821-1-jesse@rivosinc.com>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
+        Thu, 13 Jun 2024 12:17:51 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	bp@alien8.de,
+	hpa@zytor.com,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com,
+	tglx@linutronix.de
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	richardcochran@gmail.com,
+	linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com,
+	timothym@vmware.com,
+	akaher@vmware.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	horms@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Tim Merrifield <tim.merrifield@broadcom.com>
+Subject: [PATCH v11 8/8] x86/vmware: Add TDX hypercall support
+Date: Thu, 13 Jun 2024 12:16:50 -0700
+Message-Id: <20240613191650.9913-9-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.4
+In-Reply-To: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
+References: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,324 +92,194 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Detect if vector misaligned accesses are faster or slower than
-equivalent vector byte accesses. This is useful for usermode to know
-whether vector byte accesses or vector misaligned accesses have a better
-bandwidth for operations like memcpy.
+VMware hypercalls use I/O port, VMCALL or VMMCALL instructions.
+Add __tdx_hypercall path to support TDX guests.
 
-Signed-off-by: Jesse Taube <jesse@rivosinc.com>
----
-V1 -> V2:
- - Add Kconfig options
- - Add WORD_EEW to vec-copy-unaligned.S
----
- arch/riscv/Kconfig                         |  18 +++
- arch/riscv/kernel/Makefile                 |   3 +-
- arch/riscv/kernel/copy-unaligned.h         |   5 +
- arch/riscv/kernel/sys_hwprobe.c            |   6 +
- arch/riscv/kernel/unaligned_access_speed.c | 130 ++++++++++++++++++++-
- arch/riscv/kernel/vec-copy-unaligned.S     |  58 +++++++++
- 6 files changed, 217 insertions(+), 3 deletions(-)
- create mode 100644 arch/riscv/kernel/vec-copy-unaligned.S
+No change in high bandwidth hypercalls, as only low bandwidth
+ones are supported for TDX guests.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index f12df0ca6c18..b181b35f37ca 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -813,6 +813,24 @@ config CONFIG_RISCV_UNALIGNED_ACCESS_UNSUPPORTED
- 	  The kernel and userspace programs may run them successfully on systems
- 	  that do support vector unaligned memory accesses.
+Co-developed-by: Tim Merrifield <tim.merrifield@broadcom.com>
+Signed-off-by: Tim Merrifield <tim.merrifield@broadcom.com>
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+---
+ arch/x86/include/asm/vmware.h | 45 +++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/vmware.c  | 51 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 96 insertions(+)
+
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index d83444f03969..c9cf43d5ef23 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -18,6 +18,12 @@
+  * arg2 - Hypercall command
+  * arg3 bits [15:0] - Port number, LB and direction flags
+  *
++ * - Low bandwidth TDX hypercalls (x86_64 only) are similar to LB
++ * hypercalls. They also have up to 6 input and 6 output on registers
++ * arguments, with different argument to register mapping:
++ * %r12 (arg0), %rbx (arg1), %r13 (arg2), %rdx (arg3),
++ * %rsi (arg4), %rdi (arg5).
++ *
+  * - High bandwidth (HB) hypercalls are I/O port based only. They have
+  * up to 7 input and 7 output arguments passed and returned using
+  * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
+@@ -54,6 +60,12 @@
+ #define VMWARE_CMD_GETHZ		45
+ #define VMWARE_CMD_GETVCPU_INFO		68
+ #define VMWARE_CMD_STEALCLOCK		91
++/*
++ * Hypercall command mask:
++ *   bits [6:0] command, range [0, 127]
++ *   bits [19:16] sub-command, range [0, 15]
++ */
++#define VMWARE_CMD_MASK			0xf007fU
  
-+config RISCV_SLOW_VEC_UNALIGNED_ACCESS
-+	bool "Assume the system supports slow vector unaligned memory accesses"
-+	depends on NONPORTABLE
-+	help
-+	  Assume that the system supports slow vector unaligned memory accesses. The
-+	  kernel and userspace programs may not be able to run at all on systems
-+	  that do not support unaligned memory accesses.
-+
-+config RISCV_EFFICIENT_VEC_UNALIGNED_ACCESS
-+	bool "Assume the system supports fast vector unaligned memory accesses"
-+	depends on NONPORTABLE
-+	help
-+	  Assume that the system supports fast vector unaligned memory accesses. When
-+	  enabled, this option improves the performance of the kernel on such
-+	  systems. However, the kernel and userspace programs will run much more
-+	  slowly, or will not be able to run at all, on systems that do not
-+	  support efficient unaligned memory accesses.
-+
- endchoice
+ #define CPUID_VMWARE_FEATURES_ECX_VMMCALL	BIT(0)
+ #define CPUID_VMWARE_FEATURES_ECX_VMCALL	BIT(1)
+@@ -64,6 +76,15 @@ extern unsigned long vmware_hypercall_slow(unsigned long cmd,
+ 					   u32 *out1, u32 *out2, u32 *out3,
+ 					   u32 *out4, u32 *out5);
  
- endmenu # "Platform type"
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 62ac19c029f1..c4d6f54705a4 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -64,7 +64,8 @@ obj-$(CONFIG_MMU) += vdso.o vdso/
- 
- obj-y	+= traps_misaligned.o
- obj-y	+= unaligned_access_speed.o
--obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)	+= copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)		+= copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)	+= vec-copy-unaligned.o
- 
- obj-$(CONFIG_FPU)		+= fpu.o
- obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
-diff --git a/arch/riscv/kernel/copy-unaligned.h b/arch/riscv/kernel/copy-unaligned.h
-index e3d70d35b708..85d4d11450cb 100644
---- a/arch/riscv/kernel/copy-unaligned.h
-+++ b/arch/riscv/kernel/copy-unaligned.h
-@@ -10,4 +10,9 @@
- void __riscv_copy_words_unaligned(void *dst, const void *src, size_t size);
- void __riscv_copy_bytes_unaligned(void *dst, const void *src, size_t size);
- 
-+#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-+void __riscv_copy_vec_words_unaligned(void *dst, const void *src, size_t size);
-+void __riscv_copy_vec_bytes_unaligned(void *dst, const void *src, size_t size);
-+#endif
++#define VMWARE_TDX_VENDOR_LEAF 0x1af7e4909ULL
++#define VMWARE_TDX_HCALL_FUNC  1
 +
- #endif /* __RISCV_KERNEL_COPY_UNALIGNED_H */
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index c40df314058b..1679db4fe360 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -203,6 +203,12 @@ static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
- 	if (IS_ENABLED(CONFIG_RISCV_UNALIGNED_ACCESS_UNSUPPORTED))
- 		return RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED;
- 
-+	if (IS_ENABLED(CONFIG_RISCV_EFFICIENT_VEC_UNALIGNED_ACCESS))
-+		return RISCV_HWPROBE_VEC_MISALIGNED_FAST;
++extern unsigned long vmware_tdx_hypercall(unsigned long cmd,
++					  unsigned long in1, unsigned long in3,
++					  unsigned long in4, unsigned long in5,
++					  u32 *out1, u32 *out2, u32 *out3,
++					  u32 *out4, u32 *out5);
 +
-+	if (IS_ENABLED(CONFIG_RISCV_SLOW_VEC_UNALIGNED_ACCESS))
-+		return RISCV_HWPROBE_VEC_MISALIGNED_SLOW;
-+
- 	/* Return if supported or not even if speed wasn't probed */
- 	for_each_cpu(cpu, cpus) {
- 		int this_perf = per_cpu(vector_misaligned_access, cpu);
-diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-index c6106bd4a25a..ddc49cce54e3 100644
---- a/arch/riscv/kernel/unaligned_access_speed.c
-+++ b/arch/riscv/kernel/unaligned_access_speed.c
-@@ -8,9 +8,11 @@
- #include <linux/jump_label.h>
- #include <linux/mm.h>
- #include <linux/smp.h>
-+#include <linux/kthread.h>
- #include <linux/types.h>
- #include <asm/cpufeature.h>
- #include <asm/hwprobe.h>
-+#include <asm/vector.h>
- 
- #include "copy-unaligned.h"
- 
-@@ -262,9 +264,126 @@ static int check_unaligned_access_speed_all_cpus(void)
- }
- #endif /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
- 
-+#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-+static void check_vector_unaligned_access(struct work_struct *unused)
-+{
-+	int cpu = smp_processor_id();
-+	u64 start_cycles, end_cycles;
-+	u64 word_cycles;
-+	u64 byte_cycles;
-+	int ratio;
-+	unsigned long start_jiffies, now;
-+	struct page *page;
-+	void *dst;
-+	void *src;
-+	long speed = RISCV_HWPROBE_VEC_MISALIGNED_SLOW;
-+
-+	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_VEC_MISALIGNED_SLOW)
-+		return;
-+
-+	page = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-+	if (!page) {
-+		pr_warn("Allocation failure, not measuring vector misaligned performance\n");
-+		return;
-+	}
-+
-+	/* Make an unaligned destination buffer. */
-+	dst = (void *)((unsigned long)page_address(page) | 0x1);
-+	/* Unalign src as well, but differently (off by 1 + 2 = 3). */
-+	src = dst + (MISALIGNED_BUFFER_SIZE / 2);
-+	src += 2;
-+	word_cycles = -1ULL;
-+
-+	/* Do a warmup. */
-+	local_irq_enable();
-+	kernel_vector_begin();
-+	__riscv_copy_vec_words_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+
-+	start_jiffies = jiffies;
-+	while ((now = jiffies) == start_jiffies)
-+		cpu_relax();
-+
-+	/*
-+	 * For a fixed amount of time, repeatedly try the function, and take
-+	 * the best time in cycles as the measurement.
-+	 */
-+	while (time_before(jiffies, now + (1 << MISALIGNED_ACCESS_JIFFIES_LG2))) {
-+		start_cycles = get_cycles64();
-+		/* Ensure the CSR read can't reorder WRT to the copy. */
-+		mb();
-+		__riscv_copy_vec_words_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+		/* Ensure the copy ends before the end time is snapped. */
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < word_cycles)
-+			word_cycles = end_cycles - start_cycles;
-+	}
-+
-+	byte_cycles = -1ULL;
-+	__riscv_copy_vec_bytes_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+	start_jiffies = jiffies;
-+	while ((now = jiffies) == start_jiffies)
-+		cpu_relax();
-+
-+	while (time_before(jiffies, now + (1 << MISALIGNED_ACCESS_JIFFIES_LG2))) {
-+		start_cycles = get_cycles64();
-+		mb();
-+		__riscv_copy_vec_bytes_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < byte_cycles)
-+			byte_cycles = end_cycles - start_cycles;
-+	}
-+
-+	kernel_vector_end();
-+
-+	/* Don't divide by zero. */
-+	if (!word_cycles || !byte_cycles) {
-+		pr_warn("cpu%d: rdtime lacks granularity needed to measure unaligned vector access speed\n",
-+			cpu);
-+
-+		return;
-+	}
-+
-+	if (word_cycles < byte_cycles)
-+		speed = RISCV_HWPROBE_VEC_MISALIGNED_FAST;
-+
-+	ratio = div_u64((byte_cycles * 100), word_cycles);
-+	pr_info("cpu%d: Ratio of vector byte access time to vector unaligned word access is %d.%02d, unaligned accesses are %s\n",
-+		cpu,
-+		ratio / 100,
-+		ratio % 100,
-+		(speed ==  RISCV_HWPROBE_VEC_MISALIGNED_FAST) ? "fast" : "slow");
-+
-+	per_cpu(vector_misaligned_access, cpu) = speed;
-+}
-+
-+static int riscv_online_cpu_vec(unsigned int cpu)
-+{
-+	check_vector_unaligned_access(NULL);
-+	return 0;
-+}
-+
-+/* Measure unaligned access speed on all CPUs present at boot in parallel. */
-+static int vec_check_unaligned_access_speed_all_cpus(void *unused)
-+{
-+	/* Schecudles work que*/
-+	schedule_on_each_cpu(check_vector_unaligned_access);
-+
-+	/*
-+	 * Setup hotplug callbacks for any new CPUs that come online or go
-+	 * offline.
-+	 */
-+	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-+				  riscv_online_cpu_vec, NULL);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS */
-+
- static int check_unaligned_access_all_cpus(void)
+ /*
+  * The low bandwidth call. The low word of %edx is presumed to have OUT bit
+  * set. The high word of %edx may contain input data from the caller.
+@@ -79,6 +100,10 @@ unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
  {
--	bool all_cpus_emulated;
-+	bool all_cpus_emulated, all_cpus_vec_supported;
- 	int cpu;
+ 	unsigned long out0;
  
- 	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
-@@ -280,7 +399,14 @@ static int check_unaligned_access_all_cpus(void)
- 	}
- 
- 	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
--	check_vector_unaligned_access_emulated_all_cpus();
-+	all_cpus_vec_supported = check_vector_unaligned_access_emulated_all_cpus();
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    NULL, NULL, NULL, NULL, NULL);
 +
-+#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-+	if (all_cpus_vec_supported) {
-+		kthread_run(vec_check_unaligned_access_speed_all_cpus,
-+			    NULL, "vec_check_unaligned_access_speed_all_cpus");
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
+ 					     NULL, NULL, NULL, NULL, NULL);
+@@ -100,6 +125,10 @@ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
+ {
+ 	unsigned long out0;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    out1, out2, NULL, NULL, NULL);
++
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
+ 					     out1, out2, NULL, NULL, NULL);
+@@ -121,6 +150,10 @@ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
+ {
+ 	unsigned long out0;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    out1, out2, out3, NULL, NULL);
++
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
+ 					     out1, out2, out3, NULL, NULL);
+@@ -143,6 +176,10 @@ unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
+ {
+ 	unsigned long out0;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, in3, in4, in5,
++					    NULL, out2, NULL, NULL, NULL);
++
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
+ 					     NULL, out2, NULL, NULL, NULL);
+@@ -167,6 +204,10 @@ unsigned long vmware_hypercall6(unsigned long cmd, unsigned long in1,
+ {
+ 	unsigned long out0;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, in3, 0, 0,
++					    NULL, out2, out3, out4, out5);
++
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, in3, 0, 0,
+ 					     NULL, out2, out3, out4, out5);
+@@ -191,6 +232,10 @@ unsigned long vmware_hypercall7(unsigned long cmd, unsigned long in1,
+ {
+ 	unsigned long out0;
+ 
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, in3, in4, in5,
++					    out1, out2, out3, NULL, NULL);
++
+ 	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
+ 		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
+ 					     out1, out2, out3, NULL, NULL);
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index d24ba03b30b8..708048b8a095 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -477,6 +477,57 @@ static bool __init vmware_legacy_x2apic_available(void)
+ 		(eax & GETVCPU_INFO_LEGACY_X2APIC);
+ }
+ 
++#ifdef CONFIG_INTEL_TDX_GUEST
++/*
++ * TDCALL[TDG.VP.VMCALL] uses %rax (arg0) and %rcx (arg2). Therefore,
++ * we remap those registers to %r12 and %r13, respectively.
++ */
++unsigned long vmware_tdx_hypercall(unsigned long cmd,
++				   unsigned long in1, unsigned long in3,
++				   unsigned long in4, unsigned long in5,
++				   u32 *out1, u32 *out2, u32 *out3,
++				   u32 *out4, u32 *out5)
++{
++	struct tdx_module_args args;
++
++	if (!hypervisor_is_type(X86_HYPER_VMWARE)) {
++		pr_warn_once("Incorrect usage\n");
++		return ULONG_MAX;
 +	}
++
++	if (cmd & ~VMWARE_CMD_MASK) {
++		pr_warn_once("Out of range command %lx\n", cmd);
++		return ULONG_MAX;
++	}
++
++	args.rbx = in1;
++	args.rdx = in3;
++	args.rsi = in4;
++	args.rdi = in5;
++	args.r10 = VMWARE_TDX_VENDOR_LEAF;
++	args.r11 = VMWARE_TDX_HCALL_FUNC;
++	args.r12 = VMWARE_HYPERVISOR_MAGIC;
++	args.r13 = cmd;
++	args.r15 = 0; /* CPL */
++
++	__tdx_hypercall(&args);
++
++	if (out1)
++		*out1 = args.rbx;
++	if (out2)
++		*out2 = args.r13;
++	if (out3)
++		*out3 = args.rdx;
++	if (out4)
++		*out4 = args.rsi;
++	if (out5)
++		*out5 = args.rdi;
++
++	return args.r12;
++}
++EXPORT_SYMBOL_GPL(vmware_tdx_hypercall);
 +#endif
- 
- #ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
- 	if (!all_cpus_emulated)
-diff --git a/arch/riscv/kernel/vec-copy-unaligned.S b/arch/riscv/kernel/vec-copy-unaligned.S
-new file mode 100644
-index 000000000000..e5bc94917e60
---- /dev/null
-+++ b/arch/riscv/kernel/vec-copy-unaligned.S
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2024 Rivos Inc. */
 +
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <linux/args.h>
-+
-+	.text
-+
-+#define WORD_EEW 32
-+
-+#define WORD_SEW CONCATENATE(e, WORD_EEW)
-+#define VEC_L CONCATENATE(vle, WORD_EEW).v
-+#define VEC_S CONCATENATE(vle, WORD_EEW).v
-+
-+/* void __riscv_copy_vec_words_unaligned(void *, const void *, size_t) */
-+/* Performs a memcpy without aligning buffers, using word loads and stores. */
-+/* Note: The size is truncated to a multiple of WORD_EEW */
-+SYM_FUNC_START(__riscv_copy_vec_words_unaligned)
-+	andi  a4, a2, ~(WORD_EEW-1)
-+	beqz  a4, 2f
-+	add   a3, a1, a4
-+	.option push
-+	.option arch, +zve32x
-+1:
-+	vsetivli t0, 8, WORD_SEW, m8, ta, ma
-+	VEC_L v0, (a1)
-+	VEC_S v0, (a0)
-+	addi  a0, a0, WORD_EEW
-+	addi  a1, a1, WORD_EEW
-+	bltu  a1, a3, 1b
-+
-+2:
-+	.option pop
-+	ret
-+SYM_FUNC_END(__riscv_copy_vec_words_unaligned)
-+
-+/* void __riscv_copy_vec_bytes_unaligned(void *, const void *, size_t) */
-+/* Performs a memcpy without aligning buffers, using only byte accesses. */
-+/* Note: The size is truncated to a multiple of 8 */
-+SYM_FUNC_START(__riscv_copy_vec_bytes_unaligned)
-+	andi a4, a2, ~(8-1)
-+	beqz a4, 2f
-+	add  a3, a1, a4
-+	.option push
-+	.option arch, +zve32x
-+1:
-+	vsetivli t0, 8, e8, m8, ta, ma
-+	vle8.v v0, (a1)
-+	vse8.v v0, (a0)
-+	addi a0, a0, 8
-+	addi a1, a1, 8
-+	bltu a1, a3, 1b
-+
-+2:
-+	.option pop
-+	ret
-+SYM_FUNC_END(__riscv_copy_vec_bytes_unaligned)
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ static void vmware_sev_es_hcall_prepare(struct ghcb *ghcb,
+ 					struct pt_regs *regs)
 -- 
-2.43.0
+2.39.4
 
