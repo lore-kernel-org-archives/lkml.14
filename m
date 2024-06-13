@@ -1,41 +1,50 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD562119;
-	Thu, 13 Jun 2024 06:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E497137924
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718261225; cv=none; b=lOXdsqEEUSNg0yV7ZV+hnXlzSx3kxX0RyEUXA8c9ljrb7/0c9cyN0tABi0xX96/7y5GWBF1NRALll+GGrlDU9So84tdJmnwxhFpFLi5x6Uyf0jSG8CQZiObDRHAM8lFVLoaszAIh7Qm3OmfuDDJjY8yPPO8Ml/gP678sG5sQQSY=
+	t=1718261227; cv=none; b=iiopnBMonBYtHlsuR8By0ctIOrkCNvvr4EKTX9YAxe4orQDq+dpDTtXBu3CUhvH952r8do2ME1QQBolzyHB+xo/NhNvfilmm0gnmLwT/5aDhnXRMhloUc3rXcW8gqJHLpJTFwXYbHUw5LIBrpdqTWO90rf8MmQJKx1uK4Oip1cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718261225; c=relaxed/simple;
-	bh=fPVczjN6QqloCDP/VCGPXgoE3JwqY0vu//dwIeh6Nn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PHJZjuOhDKuhmGXl0uo6hr3cwk1vRQddEOcJ/U+mFTNVlDuGWjRNW7IWVw3E4LIvzdi8VzydLJJOqPmqtEupgcztm+0gb2X8QkkeYJDTml1yuz+XG1rzVVVclKjSoX05OzUgMp+v1Ngn0fUGEVgRZo+b+AsJyDmV+PXjBe4uqtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZscDM31Y; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718261227; c=relaxed/simple;
+	bh=hKFBgo1zxsvPe2XZH3PZju070f1XZgJSoxjnv76xuss=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IdZ2riujQqaHYhQ3IR1zzTu1ig3X3UqeYWYqBjc6AjuYYYiE01vX5nqEgtmk4whB5sNxI338NyipXvGHBCfHgtJgOdvn0lDxO8x7LAuNo1m7ZMBPBZGD/oBygEbxPZEBbPXUldG2luPhJm0ul11nt8F2l3Rmroj85A/LI/hzPwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MGAgzDHQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZscDM31Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718261195; x=1718865995; i=markus.elfring@web.de;
-	bh=fPVczjN6QqloCDP/VCGPXgoE3JwqY0vu//dwIeh6Nn0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ZscDM31YM9VdKaZDF3/78lZqwhU/0DM6/P5LlyA851Ik9qCwj1/hcDqnPQIX4AHV
-	 j5lJ9rD89fJ6TtkNuE/41cGsnU/knLdDhs1/5D8l9BapufQDth9DqWFJNIQChGIR8
-	 8AoiBLstAf9MN3YneDYPfdymoFdT4E3DeTKp/Y/jM5L0FXJIGkEmq4eFgHQboXTu5
-	 xRjBD0vuOuvzaF+HjG8fcMMd9IToSKg+2pKHmro3LuoVDH0c7w7UexZwlCoCHrtbd
-	 ifs/rztZkHGWo7yKmArEeJc928CpIDDjhr7Q8fGizAh2Qh2+ki/XuxRNsvYzYpWkB
-	 TryFa47+vjqehfTuJA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M2gkf-1sGHJc1VN9-00FHht; Thu, 13
- Jun 2024 08:46:35 +0200
-Message-ID: <77970d8c-503d-4ca2-af7f-dd50ee1c9bc5@web.de>
-Date: Thu, 13 Jun 2024 08:46:33 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MGAgzDHQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718261226; x=1749797226;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hKFBgo1zxsvPe2XZH3PZju070f1XZgJSoxjnv76xuss=;
+  b=MGAgzDHQwGD0TqrbxdBJvXDDNr104kWZKZSmD2d2nwoF/REuOjALJkfg
+   8JZOol0ddOOwFPeGyN3cWsQInMAAAcGKk1bazqzthJ7xCP4GSrtJ1PiMg
+   jFUwnqn6PHqSJsJk8R22GMBcKMI9lc0SLvsR5MEMS830bPLFz8Jbhwx+8
+   LFL8Ed8zzcJNEbMskJCe7xok8jPe7if3Tsln45rlG5Ehd2fcR2Me+yWxu
+   9mURx/Z6E4BRV0I2zv12XaDoqHYPk+MWqJFVBXEK3TrB1xzBSfGMPNPbg
+   R6nyuU5Vle5vvSKF7/q8JFMGXfOWX/fyAJV0G58k9ru7e+H1Fuk85lPWL
+   w==;
+X-CSE-ConnectionGUID: cftHbgbJTBKl4r7ZTh+VQg==
+X-CSE-MsgGUID: Szm8+iUTQaK0ZVcyAp0Kfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="32546796"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="32546796"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:47:06 -0700
+X-CSE-ConnectionGUID: HnzvIUYeRd2KKrf3gOlWZw==
+X-CSE-MsgGUID: yKKRf0CPSI6AvloXzCwYhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40149228"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa009.jf.intel.com with ESMTP; 12 Jun 2024 23:47:02 -0700
+Message-ID: <75d459d5-1d04-4d10-bc04-71ea83e55ccc@linux.intel.com>
+Date: Thu, 13 Jun 2024 14:44:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,42 +52,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] i2c: octeon: Add block-mode r/w operations
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
- linux-i2c@vger.kernel.org
-Cc: Andi Shyti <andi.shyti@kernel.org>, Robert Richter <rric@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240613025412.3848629-1-aryan.srivastava@alliedtelesis.co.nz>
- <20240613025412.3848629-3-aryan.srivastava@alliedtelesis.co.nz>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240613025412.3848629-3-aryan.srivastava@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:U+VonU8sDHW799I/QZw30s3qh6WLautldqzyfOo3puqWoezz/El
- NHf29vIq7bWLc2yDuLUjU8PeZ3kmB1IQ+2K2XRgkJl8xbZudmrhHeM7OSvETlp8p7egbb2d
- 6llAs//ktD6bu/H6tlGUCazvw/jdULKLPfq0UYEHy+ohrsMrHaLpTdcJeDEIIp6lURMCZbo
- d14XySZaohHpqfRGtFecg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Fm7PBpq/fpQ=;3IgQLR93+MK87XzZvhi5OoYfhdk
- IidE/i4Kt/v81gUBn4Z75hSJZNPiZF4hcuMz3PnsSK327EZRmnQ+nNz5hCE5iNi/zGMzGDHgN
- lQbWP9XaiAc6qTk/jLw0NZ7xVVPPcu9oS9ajAMCGUOSEA0HPkFsgrasRjRJTp9tgd4hiAJ8c9
- ztvuATLS+WDdn4W9ij1naHelXvSeJLyT4z+2sZBdHHF/VIChXmqfNoIxk9ZW3FPaReRzuV25H
- /QPo4xIVPg7nMmPksQ7DL0lX6e0V+ilJ6T3Nthz8eJYTOzRwBmBNpsYi8mLI24rkZyTjJpIN6
- /t2u4UGxvgp1usX9mdSM7SUpAL7tdvGVxPCKsWs1Ac5wlHZ6ML8rRxg/6oSLge4Fn61Nu3HnH
- TNh8Yh2IA5Ik467qz5/ozHrICsP/AYSkN1CWjRW7on4+pyzSaRvyAnYIQMEyGSlDHFyLrhdQ1
- 5mLr2/JM5FqSKPHL3sPzh27v73MWp4uROkB/eoqE+34ccBFatHxpcLCzX8ub1AzKXFNM9E6xr
- LnZaiznxJZcl9YMzJ3BNeT9gv3ZnCTu8ENKil03ZXucDx89SUd2eWMJiJm7dklD7rq9nc/aVu
- a5jMR9u3aOr6gKXRrAc/R8+2aBuner+S7dSxyoI9Zk5b0sBa4P3OCLT1Mr1i/FmO3VuyyF8tk
- 5wEiKMjm07O9YeEtWfKWvFBJUPg7IuiSM9HltDEIPBxK276AApiCBb1h39EID77T9TwoooDWP
- JL+T+y4qAVgzLa4gaNjB1KhOTQlL0kMNpKLWUI+6v3Nl6rWtl0SpLxJUP0w/zHJ9LguYKKc7F
- j8p1I6vwky8sbYtVpQAX0dQl9FMaRDofce4mcFajqLOr0=
+Cc: baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "virtualization@lists.linux-foundation.org"
+ <virtualization@lists.linux-foundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 06/10] iommufd: Add iommufd fault object
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240527040517.38561-1-baolu.lu@linux.intel.com>
+ <20240527040517.38561-7-baolu.lu@linux.intel.com>
+ <BN9PR11MB527615EC664698C340A0CA878CFB2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <a17113d3-500e-45ef-a2d2-747d890c9c5e@linux.intel.com>
+ <20240612132531.GV791043@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240612132531.GV791043@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> mode is the usage of separate FIFO buffer to store data.d
-=E2=80=A6
+On 6/12/24 9:25 PM, Jason Gunthorpe wrote:
+> On Sat, Jun 08, 2024 at 05:58:34PM +0800, Baolu Lu wrote:
+> 
+>>>> +static int iommufd_fault_fops_release(struct inode *inode, struct file *filep)
+>>>> +{
+>>>> +	struct iommufd_fault *fault = filep->private_data;
+>>>> +
+>>>> +	iommufd_ctx_put(fault->ictx);
+>>>> +	refcount_dec(&fault->obj.users);
+>>>> +	return 0;
+> 
+> This is in the wrong order, dec users before ctx_put.
 
-Will a typo be avoided for the final commit message?
+Done.
 
-Regards,
-Markus
+Best regards,
+baolu
