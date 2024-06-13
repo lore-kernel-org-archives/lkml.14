@@ -1,134 +1,90 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69C713F45B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B6213D529;
+	Thu, 13 Jun 2024 09:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718271807; cv=none; b=k5LfUii3YL5AqZowLvf5SrpcuhoVhW03TPjPqzuKA23lf8Js+iQHc2PrCsLoUkvIayPV+7Fy8jy790GEEODHRmgd33XJW4va5YytrRJXlETJydiRKQxgWWG1urrV0KWWmXpSHcCe4kWBdETB4enH4c6oIW4shREE+jJXMCS5VEk=
+	t=1718271838; cv=none; b=Xh/qnngPf9SOp3ZdBcDFFI6I+ySDMDsOsopvDkm1qbTndo9yru0X50yHDok5/9EONJu7OcnIF/BMvzE/qxRNzS6LruvoXhp4gS2Gq2+Yl6Bx+yXRp4/iB+QkPlGwh5/uneid6OSzy53KTSZiGmAI18GMWL1yZhZW3Q2OVvEKJ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718271807; c=relaxed/simple;
-	bh=XdWD7NDBH2MZHT7kAWuCQTYJgCqR+oT+j023LwQheaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lMKLqsE7OPOR+tqW1rEcr3vS1hra3kqGB0HalTYG2bDZxWpEUm73Qe+PEoQGpTGhRDgKJ9O4/HDoYnEvzBug0OR92PA72KY+KPfWHMyldfqnridMtIZMvIlHGO4PUtOUD+ioWJMDg235FBwJS0y/mD2gah/inOmC+lVqgeU87BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3YJu6hGE; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3YJu6hGE"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e95a75a90eso7573721fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 02:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718271804; x=1718876604; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XdWD7NDBH2MZHT7kAWuCQTYJgCqR+oT+j023LwQheaU=;
-        b=3YJu6hGEBkE71HsHYCKIrKkNtaQN/4hBsqkccMN6SZBLJO59BLWxMJQy5bT5h02rwL
-         cPPYOKSRhEm3xNhUkNv0uXp/8CeXGeB5cFetfBsz+kJj0EQrbQ3pedWuG6/uDeYr7GsP
-         NP2H9S6HfLG4GXONcEEFfbsXio2jnZ6O7wKQVaB0aNUow3AQfwHBphf1dxr40a+uTila
-         D/Jw0rX9QDsjIyExB3dVaCm3nPp0s5vZM8jozZ/f18EBHvfYCy02JS+Muji0dsU3/16c
-         Inj6DJ4HlMJZFRC+SY27FnD3Q+lfPckmTYmS3HH8TKkTnPqcQsFwjfRTa5b99pvwHkob
-         GaZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718271804; x=1718876604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XdWD7NDBH2MZHT7kAWuCQTYJgCqR+oT+j023LwQheaU=;
-        b=Du2UZ8ppy+/b8XlOb0c+1qaL861Rqfv8YRBSxB+V0HFNDzn+7zWhJodKWMBYoM313i
-         DAeoQ2sbhTNbNzYQTswwTxCwJEkZzJN1q7WVya7V7eRJJoLrsTfH7R7CCKniSZte1OJE
-         izhpujqX0vwA0V4H33QliXL4vM3rUui69RQNhHzMjZEXwV/NNJUIAkZcwsHZNtZ8VhMT
-         fApWmNrMx/MwY++gC9BVhAV3N1Vk7vBRLvSP5sw4DRQte66rSFA8qSHqVZT7RrKlgF9M
-         nH3NfpQjgqQWpdfZXjJuTk0rslYq6Lk4SEcFbxhEep7BIb6B73gd5lqec9ZQ8TW/DOGs
-         qbPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqxOGb9iZusMg94McusKKbCBISA4GGUqwV8TSbKMqsZAunYvA+sRr4MqMRXH2jL1d9CKEaxnWliDnb1LZ+96+ZN8GjnZgapr2s8pxF
-X-Gm-Message-State: AOJu0Yzxs7qRehvr3r2nHdy6hmqJJKjla75fbm0T6CZgMCFJ2Oy2Ccp6
-	5LaZ+eGVcpry8jMFOrYixNaAsZlZ+FjI03+bNGSFAoW/7xWgGRZXPn9A8PJ/fgTj6GuDBqwqtIF
-	GlVbnkIt7oG7fLqe0bB5/PdvseE5bqj2q12rQNWLP+ThzhEsE
-X-Google-Smtp-Source: AGHT+IEXw894d4CqHfrKT7vpJjkQQa/77wKxL0xzaPs5YVHkjP7iOr6p77hXjXiPE5IhzrRyBwBwHczJBb44uDNP3AE=
-X-Received: by 2002:a2e:8891:0:b0:2eb:d9a3:2071 with SMTP id
- 38308e7fff4ca-2ebfc964d08mr25060641fa.50.1718271803787; Thu, 13 Jun 2024
- 02:43:23 -0700 (PDT)
+	s=arc-20240116; t=1718271838; c=relaxed/simple;
+	bh=kQ9SNyo/+BrkPE7wtz1I5d20j0D1dHO8ar/GU0OUDHU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aSfCrUqWD9D6iWxDI47bP2VvRTH3z6FtOyGpz0ND2x+KKXnqQ5BxEmQXmuIWh0x83DsdU23U2iMbH7gqhkKRXO+bUC1B5CoPa/YRInOirMkaeu9BthtDGIjVRt9e3QrZRh3xnYVJQbL/NcxBgwEL5yx4l3jUpsnWfPhGIKTyPXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W0HSh43jrz2Ck2M;
+	Thu, 13 Jun 2024 17:40:04 +0800 (CST)
+Received: from kwepemd200010.china.huawei.com (unknown [7.221.188.124])
+	by mail.maildlp.com (Postfix) with ESMTPS id 00791140133;
+	Thu, 13 Jun 2024 17:43:53 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd200010.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 13 Jun 2024 17:43:52 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Thu, 13 Jun 2024 17:43:52 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
+	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [PATCH 2/2] perf: disasm: prefer symsrc_filename for filename
+Thread-Topic: [PATCH 2/2] perf: disasm: prefer symsrc_filename for filename
+Thread-Index: AQHavVvh9tYwOTcSHEG6bdTlEhoGM7HE0t8AgACesgA=
+Date: Thu, 13 Jun 2024 09:43:52 +0000
+Message-ID: <39be46d6a5194b6390ed31be67689c6c@huawei.com>
+References: <20240613063510.348692-1-changbin.du@huawei.com>
+ <20240613063510.348692-3-changbin.du@huawei.com>
+ <395cfff7-9692-4123-96b6-353752007f46@intel.com>
+In-Reply-To: <395cfff7-9692-4123-96b6-353752007f46@intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <687803AF4BE4D84498FD7C39AA55BAC4@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com> <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
-In-Reply-To: <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 13 Jun 2024 11:43:12 +0200
-Message-ID: <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 10:50=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
->
-> On Thu, Jun 13, 2024, at 10:27, Linus Walleij wrote:
-> > On Thu, Jun 13, 2024 at 10:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> >
-> >> On second thought
-> >> though: are you sure drivers/gpio/ is the right place for it?
-> >
-> > Actually that is something I requested.
-> >
-> > I think it fits in drivers/gpio as it is such a clear cut usage of GPIO
-> > lines, and it doesn't really fit into any other subsystem.
-> >
-> >> May I suggest moving it over to drivers/misc/?
-> >
-> > Misc is a bit...
-> > messy. I remember Arnd being very sceptical about putting stuff there
-> > rather than creating new subsystems, so since I've tried to avoid it,
-> > albeit recently more and more stuff gets merged there again :/
->
-> Right, and that is mostly to avoid having code in there because
-> there is no other place for it. Some parts of drivers/misc should
-> have been a separate subsystem, some should have use an existing
-> subsystem, and other parts should have never been merged.
->
-> The parts of drivers/misc that make the most sense to me are
-> those that expose a one-of-a-kind piece of hardware as a
-> single character device.
->
-> This one would probably fit into drivers/misc/ better than
-> some other drivers we have in there, but leaving it in
-> drivers/gpio/ also seems fine.
->
+On Thu, Jun 13, 2024 at 11:15:28AM +0300, Adrian Hunter wrote:
+> On 13/06/24 09:35, Changbin Du wrote:
+> > If we already found a debugging version when loading symbols for that d=
+so,
+> > then use the same file for disasm instead of looking up in buildid-cach=
+e.
+>=20
+> In the past, there have been cases where the debugging version has not
+> worked for reading object code.  I don't remember the details, but the
+> symbols and debugging information was OK while the object code was not.
+>=20
+> In general, using anything other than the file that was actually executed
+> for reading object code seems like a bad idea.
+>=20
+Is this a platform specific issue? AFAIK, the binary code in debugging and
+non-debugging version should be identical.=20
 
-This is my point. This really is a one-of-a-kind module that also
-doesn't register with any particular subsystem. If anything fits into
-drivers/misc/ then it's this.
+>=20
+>=20
 
-To prove this point, I even moved the gpio-virtuser driver I'm working
-on to drivers/misc/ too as it isn't a GPIO provider either and merely
-a GPIO consumer with a one-shot user-space interface not conforming to
-any standards.
-
-> I could also imagine the functionality being exposed
-> through drivers/iio/ in a way that is similar to an
-> adc, but I don't know if that would work in practice or
-> how much of a rewrite that would be.
->
-
-I could see it using configfs instead of DT for configuration and iio
-for presenting the output but - from what Wolfram said - insisting on
-this will simply result in this development being dropped entirely.
-
-Bart
+--=20
+Cheers,
+Changbin Du
