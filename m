@@ -1,170 +1,128 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC80F441D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BA9161;
+	Thu, 13 Jun 2024 12:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718282175; cv=none; b=t+RPdaPaIOhb+hi33bzCCDOBjDYkkCoReDTOH5J6+TVChX2ycN7E7x9thvb/xBs51rLboXL5duxb6JK4j/9C2x+XKifTQGiVKiNA3/4LFax5Pa3KysoPQyV/t43mjk0bR4jQChMFuMrZNf2o6Mh6YyjdnX4Lo+A4NulPu0Lx/lo=
+	t=1718282215; cv=none; b=ehCVCdNIjzJxydp9bzYVgGpgKjxksN7mgyC2eqa7f13ykXKqWeWUBlfwJjGgW5ulerr0QZOoWTL0z7zj+vq1BjGRmGiuOEyXdWDbUghNMagmKtnWIuBryUOFiGhKE+ATYDq4kzu9KdFq0M7Lx7KYb+Ej8RIl5SICDorLwaYkAi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718282175; c=relaxed/simple;
-	bh=sFnumGq0FcH5zMjWPpjF2N6XyYSbcjK42uJL+OPfYEE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uRhxyILxLspGguOrjQdieFxoxFhuQCdQpk+3IZzky71Mw9M7wPHGlOHhS6gvkxAGbxZchOpW69RyqecBdE2ylxypEVTbXO131/7uwfat0fxHTHiOEAvI/uWBVXDzOGBtCIqscZbu8yeGaccM4jjfAdJoIQrAJ/hWPj28gtrM8EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fq/BtvHX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kNhNRnGy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PrPVfGbD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=q2LD2wmz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1718282215; c=relaxed/simple;
+	bh=Lmm6tXZTC3jIXcaeCEEA6/VnvpVEp8ej1EHFZPnras8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s29GCX9WeIuv1x8k7F/cXyoPTELVD2QH1tIGgM4iA5FSHPo3xCTL010BzZ9EfdqVNjraajjAvpWsLMSt3rQAJHXj378//DMTGakQNufWOl+qhKYhQPv+lpWG5MtxppNSRVzEixDI6qU6TWN3xRJwQ3T8ni08iu45vtLvQT1k+QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u/CcFr7R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fq/BtvHX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kNhNRnGy";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PrPVfGbD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="q2LD2wmz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 887D63716C;
-	Thu, 13 Jun 2024 12:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718282171; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8U3dMXngmkBtVM3jPXHQhakytYCFzeNC5q9L/Q2hlTk=;
-	b=fq/BtvHXeWeaW2fBbFu1piuFVL91QUYziFWuovljmLtXSM1wARITzV4v5hAb3p0T9GtdMu
-	cbeOVfgawaLNfVttoQI/+NSIR3ESDe4Zr4WaTvl4Zsk9gB1tgIixMksoN+cdWio4EOD5Ss
-	8PsDmEoThwxFs3MzuYYqObfUyyslZeo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718282171;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8U3dMXngmkBtVM3jPXHQhakytYCFzeNC5q9L/Q2hlTk=;
-	b=kNhNRnGy30F54VQ3nBLBAzWP4P8m/vJBknWX6qm4tTHBcbwR6NZ0WViLKejL8prK8uH2zG
-	iMu6+AlwXmqKuwCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718282170; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8U3dMXngmkBtVM3jPXHQhakytYCFzeNC5q9L/Q2hlTk=;
-	b=PrPVfGbD05wbWXCgHVx7uzlNJQzPaR7ERYV5ZDP7KSmFm8k3hUBNWCNXT9eM7/9bN0OiDX
-	W/gcnCYXMDxEZ9YT8hRcrb2ujpU5MyfYQLNnudMkt6lOsQrvbzU8uw/00K/hk+z9ccsmSr
-	kurw9B1+M+Ft3LaoVA5YM1srJzjAJjc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718282170;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8U3dMXngmkBtVM3jPXHQhakytYCFzeNC5q9L/Q2hlTk=;
-	b=q2LD2wmz1GNmgPoLxza3WPYPcaD+ta5OXdqDbnEG2wYT7MxmmLATMHRZE24PmTm0OVQ/Fb
-	rRY/4DC77Eb4DVBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 16B2E13A7F;
-	Thu, 13 Jun 2024 12:36:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LbD0A7rnamaQKgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 13 Jun 2024 12:36:10 +0000
-Date: Thu, 13 Jun 2024 14:36:33 +0200
-Message-ID: <875xudnhny.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Baojun Xu <baojun.xu@ti.com>
-Cc: <robh+dt@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<lgirdwood@gmail.com>,
-	<perex@perex.cz>,
-	<pierre-louis.bossart@linux.intel.com>,
-	<kevin-lu@ti.com>,
-	<shenghao-ding@ti.com>,
-	<navada@ti.com>,
-	<13916275206@139.com>,
-	<v-hampiholi@ti.com>,
-	<v-po@ti.com>,
-	<niranjan.hy@ti.com>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<liam.r.girdwood@intel.com>,
-	<yung-chuan.liao@linux.intel.com>,
-	<broonie@kernel.org>,
-	<soyer@irl.hu>
-Subject: Re: [PATCH v7 1/1] ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
-In-Reply-To: <20240613082633.388-2-baojun.xu@ti.com>
-References: <20240613082633.388-1-baojun.xu@ti.com>
-	<20240613082633.388-2-baojun.xu@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u/CcFr7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0997C2BBFC;
+	Thu, 13 Jun 2024 12:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718282214;
+	bh=Lmm6tXZTC3jIXcaeCEEA6/VnvpVEp8ej1EHFZPnras8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=u/CcFr7RwuSDJy+zhhOm7Q8n2xy5ztaLRtei9DJSLtLt4wv3dO4EIV8OVflFUTDfb
+	 z1AaDGsF9YaBEP5a1sgqjKC75vZvl6FqvMNwdE9JLRWTv0q5r+g7uM0cuSoPWfH0sT
+	 noqGzhKf4d+nRaRIG+v8QVzqjOMNwsWFLuBQqOms=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Leo Yan <leo.yan@linaro.org>,
+	linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 201/402] coresight: etm4x: Fix unbalanced pm_runtime_enable()
+Date: Thu, 13 Jun 2024 13:32:38 +0200
+Message-ID: <20240613113309.983930117@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240613113302.116811394@linuxfoundation.org>
+References: <20240613113302.116811394@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -1.80
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[dt];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,ti.com,139.com,alsa-project.org,vger.kernel.org,intel.com,irl.hu];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Jun 2024 10:26:33 +0200,
-Baojun Xu wrote:
-> --- a/sound/pci/hda/Makefile
-> +++ b/sound/pci/hda/Makefile
-> @@ -70,6 +70,8 @@ obj-$(CONFIG_SND_HDA_SCODEC_CS35L56_SPI) += snd-hda-scodec-cs35l56-spi.o
->  obj-$(CONFIG_SND_HDA_CS_DSP_CONTROLS) += snd-hda-cs-dsp-ctls.o
->  obj-$(CONFIG_SND_HDA_SCODEC_COMPONENT) += snd-hda-scodec-component.o
->  obj-$(CONFIG_SND_HDA_SCODEC_TAS2781_I2C) += snd-hda-scodec-tas2781-i2c.o
-> +obj-$(CONFIG_SND_HDA_SCODEC_TAS2781_SPI) += snd-hda-scodec-tas2781-spi.o
-> +snd-hda-scodec-tas2781-spi-y :=	tas2781_hda_spi.o tas2781_spi_fwlib.o
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
-Try to put *-y addition to the right place.  There are the section
-defining snd-hda-codec-*-y.
+------------------
 
-> +#define TASDEVICE_REG(book, page, reg)	(((book & GENMASK(7, 0)) << 16) + \
-> +					 ((page & GENMASK(7, 0)) << 8) + \
-> +					  ((reg & GENMASK(6, 0)) << 1))
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Usually bits are combined with '|', not '+'.
+[ Upstream commit caa41c47dab7e1054f587e592ab21296e3a6781c ]
 
-> +/* Firmware block Checksum */
-> +#define TASDEVICE_Checksum		TASDEVICE_REG(0x0, 0x0, 0x7e)
+There is an unbalanced pm_runtime_enable() in etm4_probe_platform_dev()
+when etm4_probe() fails. This problem can be observed via the coresight
+etm4 module's (load -> unload -> load) sequence when etm4_probe() fails
+in etm4_probe_platform_dev().
 
-Use capital letters.
+[   63.379943] coresight-etm4x 7040000.etm: Unbalanced pm_runtime_enable!
+[   63.393630] coresight-etm4x 7140000.etm: Unbalanced pm_runtime_enable!
+[   63.407455] coresight-etm4x 7240000.etm: Unbalanced pm_runtime_enable!
+[   63.420983] coresight-etm4x 7340000.etm: Unbalanced pm_runtime_enable!
+[   63.420999] coresight-etm4x 7440000.etm: Unbalanced pm_runtime_enable!
+[   63.441209] coresight-etm4x 7540000.etm: Unbalanced pm_runtime_enable!
+[   63.454689] coresight-etm4x 7640000.etm: Unbalanced pm_runtime_enable!
+[   63.474982] coresight-etm4x 7740000.etm: Unbalanced pm_runtime_enable!
+
+This fixes the above problem - with an explicit pm_runtime_disable() call
+when etm4_probe() fails during etm4_probe_platform_dev().
+
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Fixes: 5214b563588e ("coresight: etm4x: Add support for sysreg only devices")
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Link: https://lore.kernel.org/r/20240314055843.2625883-2-anshuman.khandual@arm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 26d0d4485ae99..3f5e9400222e7 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -2022,6 +2022,9 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
+ 	ret = etm4_probe(&pdev->dev, NULL, 0);
+ 
+ 	pm_runtime_put(&pdev->dev);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
+ 	return ret;
+ }
+ 
+-- 
+2.43.0
 
 
-... and at this point, I noticed that the patch doesn't contain the
-code for sound/pci/hda/tas2781_spi_fwlib.c at all.  The patch must be
-utterly broken.
-
-*PLEASE* try to apply and build the patch to submit beforehand from
-the clean state and verify it really works.
-
-
-thanks,
-
-Takashi
 
