@@ -1,116 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2731E135A4B;
-	Thu, 13 Jun 2024 06:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDB3135A4B;
+	Thu, 13 Jun 2024 06:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718259122; cv=none; b=RvgMbT9V5qZglIEeXXGvHRZZgOCXt5Xpmq9hV8xl8+UeywhrXYEc2L319vNKRoScQENWnXOXZf8pwzaCCeyaWCWz1+adeYk0w1g39n3kkfefPH2pbQa4jQc+mJRwHm3OIe2O0tADqEB2Z0POm89EiJmjiBdmbPxdnE+GvJd3v6E=
+	t=1718259128; cv=none; b=M95oN+K1Bz+yPD6coopN4lwOFzopdWhusGFf2DOEaWbV3Qs7AMiNKPIKQ5M3LXs0wGzxOy9zDt5/OCF7O9fl0cdSOTPWUAuDN4/n7OLWoaTllvzFNLbP+Txd5wuwmFULXlf7I7RiTpgAq/5VDBAnErZB6coYqC42D824ycG4aNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718259122; c=relaxed/simple;
-	bh=2tfIxnfDqiV8m2eUOgIRXcgva0U3ORhh129cB7f/07Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FMYfvKI4y3cOKWZDwUxgYCwqb8dO/QbtXDLLrkQgvBZ2ngtgIhNOWV2414flntPgsmPteZDEt/StyUzPGeeRDugH+dYlF5voevpcStLyCVvYzRFJNm/WJTWz+HUPyPlISqL0IayIalgRyrtQrKhEaIaQK7LAzjVBDumaOYmkMZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLMc62CM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718259128; c=relaxed/simple;
+	bh=200iro4Vmpjs5iDslEXl3WgKuWoTIPG9CIIZtZp9mVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hB0se2jEPa6uI1G7Qnwighl8hyUcKOhVMOkN4wkFQNgSbC59jws3/dXfUv7PH6S47ZD2tyUiGpUSLVpXve80mqYe98ofVEUFGlBzNsM3uDCUeDehamM6k/0pWNNCHCv9Catvv+ewIqbRe/cSk5TBAY9XtX6R2cmVwwknzSV05fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPVGPkHM; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLMc62CM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62D6C4AF5F;
-	Thu, 13 Jun 2024 06:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718259121;
-	bh=2tfIxnfDqiV8m2eUOgIRXcgva0U3ORhh129cB7f/07Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aLMc62CMcYbhlI0BxA1bmCKIFpC7d6uUNzAaYgoMqzg59/gCWcohnthbnkHm3+PuL
-	 zVtwTkOMcMOvC7TikDQsC/2VSZMAFRluA1HBDadue43vDev0PzLlvojOLhhkNE1YCg
-	 ex0oFd7VBGibaU6QGkqbCRvkNW6/ksv7xrRJ5lEsQ83WEsxJKkJWb4mTGWG3N/K9QA
-	 Javtf6isZCNRW3fAseXH79Ym7TvCN4tEredwd9vy0ftIPHqUwvY2N3dddOOUW95Rbv
-	 XoB1GELyN67C3bG8sUp7ZHz7I499XFVQKJJ4mMRS5J7xQEgFSJU9bmkPkIsS8G4zhH
-	 lkCItH0cnFioQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52c7f7fdd24so937540e87.1;
-        Wed, 12 Jun 2024 23:12:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDNxy4lrQpweYxTY4V9BSZiB+J6aTiZkzC1kadm70Vx4fg4X819O/pobF4Cg+YF6jCTspFq/dK0FZckVI2MEv7N1rVed0XwAVh74r3xT5HYk4rLz5lMnfF6kpHPrxaFMD7Zr/yWMVGwh86KqehkC2rWenxnXSdRMT+nao/Wxd3B56EZBMrsMLB4ThezY2jg951
-X-Gm-Message-State: AOJu0Yx1KIHlneXm5/rZ59Bjvbxv8N91tiosXzCM1Gdl7pC5cIbQQkaW
-	nIIYBIu+XVidJsqnVHOi7KvZGe0Hde+XWndf5Pb2nNHJ6ATAr9MdG1E0VpvPZoeiTR+CFUiXNzn
-	DOV61wV5Ge0T+vE+pGH8KKzP7xVc=
-X-Google-Smtp-Source: AGHT+IFdLbYZojyhqvDEXOP8w6OnQtiDQDSpYwdN44bj4F4g15wPRxlf8c6AOb6GWfv8yK5ap3XFShBJ/euTC9+lXSo=
-X-Received: by 2002:ac2:4a82:0:b0:52b:cb05:ed46 with SMTP id
- 2adb3069b0e04-52c9a3c79a1mr2099464e87.21.1718259119855; Wed, 12 Jun 2024
- 23:11:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPVGPkHM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718259127; x=1749795127;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=200iro4Vmpjs5iDslEXl3WgKuWoTIPG9CIIZtZp9mVc=;
+  b=KPVGPkHMPHKJSPU4JslM3u65erR82kLl19jKoiZnUhWgVxytLd5Fq1+D
+   WS9x810lH+wjbOj1zDBckHHU408jG8MPe4Z5xtZMaN7jvxwtNoxmaM/En
+   ytQ4kqsVcQ5ETSkUtO92qO5kooZqQivyk8mYreQwPyjqPalc0RVmx9qJR
+   P+A44FIgA7BFG8VIetjLsVBepxk/zfxg3SYpNC2l0QrwneKNLBevY8MBM
+   a9bKs7C6uA0R79bOQ3dMyynNfM2hjNskuJ6tij9WNhyqvf1y0xugR6wBn
+   b7KyEiRVo8E8wxgFxNuha2fPvM3j+LnC5xk8IQd/LlyfWdV5CHjKAAKR6
+   g==;
+X-CSE-ConnectionGUID: friMxZrJRLeaaBYMdFM7Qg==
+X-CSE-MsgGUID: DaDIW5QmTE6Q8uoJOXLZgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25734269"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="25734269"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:12:07 -0700
+X-CSE-ConnectionGUID: xvVCxiNORzShhmx7pEI/3g==
+X-CSE-MsgGUID: Jh2Q/CkXTNe0fI8K+ti5hQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40669223"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:12:03 -0700
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	isaku.yamahata@intel.com,
+	dmatlack@google.com,
+	sagis@google.com,
+	erdemaktas@google.com,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH 5/5] KVM: selftests: Test private access to deleted memslot with quirk disabled
+Date: Thu, 13 Jun 2024 14:11:05 +0800
+Message-ID: <20240613061105.11880-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240613060708.11761-1-yan.y.zhao@intel.com>
+References: <20240613060708.11761-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611144911.327227285@goodmis.org> <20240611144949.703297941@goodmis.org>
- <202406121145.8860502D7@keescook> <20240612145228.5bf426e0@rorschach.local.home>
- <ZmqLejL1mblOikLp@kernel.org>
-In-Reply-To: <ZmqLejL1mblOikLp@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 13 Jun 2024 08:11:48 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
-Message-ID: <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
-	Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, wklin@google.com, 
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Suleiman Souhlal <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Jun 2024 at 08:04, Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Wed, Jun 12, 2024 at 02:52:28PM -0400, Steven Rostedt wrote:
-> > On Wed, 12 Jun 2024 11:45:57 -0700
-> > Kees Cook <kees@kernel.org> wrote:
-> >
-> > > On Tue, Jun 11, 2024 at 10:49:13AM -0400, Steven Rostedt wrote:
-> > > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > >
-> > > > Add a method to find a region specified by reserve_mem=nn:align:name for
-> > > > ramoops. Adding a kernel command line parameter:
-> > > >
-> > > >   reserve_mem=12M:4096:oops ramoops.mem_name=oops
-> > > >
-> > > > Will use the size and location defined by the memmap parameter where it
-> > > > finds the memory and labels it "oops". The "oops" in the ramoops option
-> > > > is used to search for it.
-> > > >
-> > > > This allows for arbitrary RAM to be used for ramoops if it is known that
-> > > > the memory is not cleared on kernel crashes or soft reboots.
-> > > >
-> > > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > >
-> > > Acked-by: Kees Cook <kees@kernel.org>
-> > >
-> > > Let me know if this should go via the pstore tree, if you'd rather carry
-> > > it?
-> > >
-> >
-> > I'm going to send out another version to cover some more comments that
-> > were made, and perhaps it's best if Mike Rapoport takes it through his
-> > tree.
->
-> I've added one more comment to v5, with that fixed I can take this.
->
+Update private_mem_kvm_exits_test to make sure private access to deleted
+memslot functional both when quirk KVM_X86_QUIRK_SLOT_ZAP_ALL is enabled
+and disabled.
 
-So how is this supposed to work wrt to the rigid 'no user visible
-regressions' rule, given that this whole thing is a best effort thing
-to begin with. This needs at least a huge disclaimer that this rule
-does not apply, and if this works today, there is no guarantee that it
-will keep working on newer kernels. Otherwise, you will be making the
-job of the people who work on the boot code significantly more
-difficult. And even then, I wonder whether Linus and #regzcop are
-going to honour such a disclaimer.
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ .../selftests/kvm/x86_64/private_mem_kvm_exits_test.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-So this belongs downstream, unless some guarantees can be provided
-that this functionality is exempt from the usual regression policies.
+diff --git a/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c b/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
+index 13e72fcec8dd..a4d304fce294 100644
+--- a/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
++++ b/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
+@@ -44,7 +44,7 @@ const struct vm_shape protected_vm_shape = {
+ 	.type = KVM_X86_SW_PROTECTED_VM,
+ };
+ 
+-static void test_private_access_memslot_deleted(void)
++static void test_private_access_memslot_deleted(bool disable_slot_zap_quirk)
+ {
+ 	struct kvm_vm *vm;
+ 	struct kvm_vcpu *vcpu;
+@@ -55,6 +55,9 @@ static void test_private_access_memslot_deleted(void)
+ 	vm = vm_create_shape_with_one_vcpu(protected_vm_shape, &vcpu,
+ 					   guest_repeatedly_read);
+ 
++	if (disable_slot_zap_quirk)
++		vm_enable_cap(vm, KVM_CAP_DISABLE_QUIRKS2, KVM_X86_QUIRK_SLOT_ZAP_ALL);
++
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+ 				    EXITS_TEST_GPA, EXITS_TEST_SLOT,
+ 				    EXITS_TEST_NPAGES,
+@@ -115,6 +118,10 @@ int main(int argc, char *argv[])
+ {
+ 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+ 
+-	test_private_access_memslot_deleted();
++	test_private_access_memslot_deleted(false);
++
++	if (kvm_check_cap(KVM_CAP_DISABLE_QUIRKS2) & KVM_X86_QUIRK_SLOT_ZAP_ALL)
++		test_private_access_memslot_deleted(true);
++
+ 	test_private_access_memslot_not_private();
+ }
+-- 
+2.43.2
+
