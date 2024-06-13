@@ -1,120 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CA810F9;
-	Thu, 13 Jun 2024 14:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB11448D7;
+	Thu, 13 Jun 2024 14:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287667; cv=none; b=IpM2cqsJrArEEKeVbm8AV/df6yeg9itC/98rJrJBQqcTSA6xxFNGZeALNMG/uppsQhB+aB64ko/cUem2lyObJKzzgKVr8u1SQGP7KtA8nJmx/p/sjugdmK9KutKxGqqGElLsKVV5EZrsw2o2+lUp9/CPieRgleCfoNZ6bT9NGk4=
+	t=1718287821; cv=none; b=CZ+6ypLyxU7aAONwd9KM+LQcLTNRe8mSQ1gDJhxhWxdeIPGMr5nchK7rnaVan1Sy9bMH5JvH4mGrx8vqcKRTvdMw2zszbp8Gt069x7NWyX+aYozmQ6+SsZFwvjNfQl8cCdQUC0gZgGnSan/GWcVYdUJ/h7c4o8a4fgVdIxK9K4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287667; c=relaxed/simple;
-	bh=odfp1TpgeErbFjJ61Se8vEzIbx/qU6+JD3DTGwxuJtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To; b=t3e+5wnHk8mTrXx9c0c7TokYWPkWmd+C4PHjyFctTr/5KUxeBZoBWBPTu+Z0lh6IjA1WzKkEag1fAS+7u0/gBzcrnaYU4lPCLVGV/nzBhSd9Fn6lW0f3q7lWLFXxpnze9AfvWP00Cz60swQ6mIKf+5sBMxoJtTfsttJ+4TaI/u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2Gh31x0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718287821; c=relaxed/simple;
+	bh=EunqTQzqUJ/F3JjE+G+C/6XlPd3N6vJCY/SP3DH8r0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WDhZRB3j4Be4X1Lr2v/0DBodIAUjhO4OL6DhI0gBim001MbUjfYQc+nokvJaRHRARu5yjq83kunjfWvGxTZvh1vtwDBVNkLWGk8jmHvNT6G/51n2tNjlopBb0AruI9wgyGVmxHVNjLKfoixAqHbnK+wICYc/72+vurS4us+UNOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=baV8suq5; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2Gh31x0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830FEC2BBFC;
-	Thu, 13 Jun 2024 14:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718287667;
-	bh=odfp1TpgeErbFjJ61Se8vEzIbx/qU6+JD3DTGwxuJtk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:From;
-	b=Q2Gh31x0D8g+FDWZnBJ4HAyMYMjVk7RRlq9uO/0AyrM13tWmr2HVLbcigsBbvVBBW
-	 1VjNa589ejVuxOYtWXUj0IKD9Xfx977Gg8zRrx9cv7+bNbGExDAVOcpBQqpj4aJ+Z1
-	 MD4HjSxYbfUSAttpDVRdLUHUO5KY0VY8WbYlm7pcoBYWQ4x8Ww+ztMuR/h/9i+wXxx
-	 ZT86AZO+IFS2ELHnLt2kAqh/IdrAENiicumNSjxi7SdBL1qL9HX7i2Stlq1HD1uyAh
-	 5frETOxA7lkrf/IZuHk13SkQwy6m8fRZiVJLZ5qn8sZIZAOwdeSpTQHuxUKItzKTDW
-	 0rycJZY4fktsA==
-From: SeongJae Park <sj@kernel.org>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gregory Price <gregory.price@memverge.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com,
-	kernel_team@skhynix.com
-Subject: Re: [PATCH v5 8/8] Docs/.../mm/damon: add more damos actions
-Date: Thu, 13 Jun 2024 07:07:29 -0700
-Message-Id: <20240613140729.27177-1-sj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240613132056.608-9-honggyu.kim@sk.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="baV8suq5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 432301BF213;
+	Thu, 13 Jun 2024 14:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718287812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C+8CGh8peOxYqhyLXUs4A1Iy7daW4jSk3Jb9aFviGrI=;
+	b=baV8suq5UfSJ8byMycRDYXiJEWCNgKschAdtStX9cmHOyVQ7go0km0aomrOqboJ9bO7Ctu
+	X6Tb2HeB1RGCXsr5Kmo4rQvK3gH05XY8kXJ7sI/yLrLk2qPamtMJfWSQdQ85lrAH4ybNZ+
+	Z+516AUehwZjqcNTpA8GR0Nmr6h4RTn6UbvJL1fed1hFYfN9gdBXIEIKnKCXokqpIhEOk3
+	1c5UCwm5cNZAo6gzj36xwDUuCYzjYMITs6msoHSOYLFLMtAptAD6tWEYDrPYQhYYo84Ux2
+	JhlvRM8OArrxFTvcpPzFrpRA756AqGxbeyyyGlLPjdFh6i9W1v3097K0yTxm3Q==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Thu, 13 Jun 2024 16:06:41 +0200
+Subject: [PATCH 2/6] wifi: wilc1000: let host->chip suspend/resume
+ notifications manage chip wake/sleep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240613-wilc_suspend-v1-2-c2f766d0988c@bootlin.com>
+References: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
+In-Reply-To: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
+To: linux-wireless@vger.kernel.org
+Cc: Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hi Honggyu,
+host_wakeup_notify and host_sleep_notify are surrounded by chip_wakeup and
+chip_allow_sleep calls, which theorically need to be protected with the
+hif_cs lock. This lock protection is currently missing. Instead of adding
+the lock where those two functions are called, move those in host->chip
+suspend notifications to benefit from the lock already used there (in
+bus_acquire/bus_release)
 
-On Thu, 13 Jun 2024 22:20:55 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+---
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 5 -----
+ drivers/net/wireless/microchip/wilc1000/wlan.c | 8 ++++----
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
-> This patch adds damon description for "migrate_hot" and "migrate_cold"
-> actions for both usage and design documents as long as a new
-> "target_nid" knob to set the migration target node.
-> 
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> ---
->  Documentation/admin-guide/mm/damon/usage.rst | 8 +++++++-
->  Documentation/mm/damon/design.rst            | 4 ++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-> index 7bff54963975..84d62d16c9f9 100644
-> --- a/Documentation/admin-guide/mm/damon/usage.rst
-> +++ b/Documentation/admin-guide/mm/damon/usage.rst
-> @@ -300,6 +300,10 @@ from the file and their meaning are same to those of the list on
->  The ``apply_interval_us`` file is for setting and getting the scheme's
->  :ref:`apply_interval <damon_design_damos>` in microseconds.
->  
-> +The ``target_nid`` file is for setting the migration target node, which is
-> +only meaningful when the ``action`` is either ``migrate_hot`` or
-> +``migrate_cold``.
-> +
->  .. _sysfs_access_pattern:
->  
->  schemes/<N>/access_pattern/
-> @@ -759,7 +763,9 @@ list on :ref:`design doc <damon_design_damos_action>`.
->   - 4: ``nohugepage``
->   - 5: ``lru_prio``
->   - 6: ``lru_deprio``
-> - - 7: ``stat``
-> + - 7: ``migrate_hot``
-> + - 8: ``migrate_cold``
-> + - 9: ``stat``
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 6461a3ec0120..4e478a2cd4cc 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -256,14 +256,12 @@ static int wilc_sdio_suspend(struct device *dev)
+ 	int ret;
+ 
+ 	dev_info(dev, "sdio suspend\n");
+-	chip_wakeup(wilc);
+ 
+ 	if (!IS_ERR(wilc->rtc_clk))
+ 		clk_disable_unprepare(wilc->rtc_clk);
+ 
+ 	if (wilc->suspend_event) {
+ 		host_sleep_notify(wilc);
+-		chip_allow_sleep(wilc);
+ 	}
+ 
+ 	ret = wilc_sdio_reset(wilc);
+@@ -1003,14 +1001,11 @@ static int wilc_sdio_resume(struct device *dev)
+ 
+ 	dev_info(dev, "sdio resume\n");
+ 	sdio_release_host(func);
+-	chip_wakeup(wilc);
+ 	wilc_sdio_init(wilc, true);
+ 
+ 	if (wilc->suspend_event)
+ 		host_wakeup_notify(wilc);
+ 
+-	chip_allow_sleep(wilc);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/wireless/microchip/wilc1000/wlan.c b/drivers/net/wireless/microchip/wilc1000/wlan.c
+index 41a5c0ed7480..533939e71534 100644
+--- a/drivers/net/wireless/microchip/wilc1000/wlan.c
++++ b/drivers/net/wireless/microchip/wilc1000/wlan.c
+@@ -678,17 +678,17 @@ EXPORT_SYMBOL_GPL(chip_wakeup);
+ 
+ void host_wakeup_notify(struct wilc *wilc)
+ {
+-	acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
++	acquire_bus(wilc, WILC_BUS_ACQUIRE_AND_WAKEUP);
+ 	wilc->hif_func->hif_write_reg(wilc, WILC_CORTUS_INTERRUPT_2, 1);
+-	release_bus(wilc, WILC_BUS_RELEASE_ONLY);
++	release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
+ }
+ EXPORT_SYMBOL_GPL(host_wakeup_notify);
+ 
+ void host_sleep_notify(struct wilc *wilc)
+ {
+-	acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
++	acquire_bus(wilc, WILC_BUS_ACQUIRE_AND_WAKEUP);
+ 	wilc->hif_func->hif_write_reg(wilc, WILC_CORTUS_INTERRUPT_1, 1);
+-	release_bus(wilc, WILC_BUS_RELEASE_ONLY);
++	release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
+ }
+ EXPORT_SYMBOL_GPL(host_sleep_notify);
+ 
 
-This section is for DAMON debugfs interface.  And to my understanding, this
-patchset is not adding support of migrate_{hot,cold} DAMOS actions on DAMON
-debugfs interface.  So I think this part should be removed.
+-- 
+2.45.2
 
->  
->  Quota
->  ~~~~~
-> diff --git a/Documentation/mm/damon/design.rst b/Documentation/mm/damon/design.rst
-> index 3df387249937..3f12c884eb3a 100644
-> --- a/Documentation/mm/damon/design.rst
-> +++ b/Documentation/mm/damon/design.rst
-> @@ -325,6 +325,10 @@ that supports each action are as below.
->     Supported by ``paddr`` operations set.
->   - ``lru_deprio``: Deprioritize the region on its LRU lists.
->     Supported by ``paddr`` operations set.
-> + - ``migrate_hot``: Migrate the regions prioritizing warmer regions.
-> +   Supported by ``paddr`` operations set.
-> + - ``migrate_cold``: Migrate the regions prioritizing colder regions.
-> +   Supported by ``paddr`` operations set.
->   - ``stat``: Do nothing but count the statistics.
->     Supported by all operations sets.
-
-Except the DAMON debugfs interface section, this patch looks good to me.
-
-
-Thanks,
-SJ
-
-[...]
