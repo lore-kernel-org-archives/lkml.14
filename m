@@ -1,59 +1,35 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C627E1459FB;
-	Thu, 13 Jun 2024 12:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208D5145FF6;
+	Thu, 13 Jun 2024 12:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718280898; cv=none; b=RbDuXaezJh7jWjRvM3IpgBs4EViUrJhMpNhH3Pcf7ERYtStti760hZfT7CLnhXeYAZoqWWXBkLkTF/hcNfEY8m3IpsPaR04ovEZ2nK5c8LZA9FglrluJ9E7NKtGIGGuEyyVSSf1d4RzDyQAIXqKiraHodrV/xE/9Iz9MSn3s5Q4=
+	t=1718281016; cv=none; b=EUygJpU0bk86WvF6m98wzE9qlZMsFDKlDYzsddOpYnjfNxE2P6G8VOARh/0LgiZ0uEP7mjP5ql91rzBP1N1kc5kwVV2zz7qJXonmv0rSqbSCWKvzO1Oqi93y91WEisOZnZCeBiTO4NRmRIqJ/qTJnmq/v4cilC+br1wA0OD6S7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718280898; c=relaxed/simple;
-	bh=Ughm9l3G5ckH3Jnm36S6wz8bPjQrkCbc1vToYq+2KW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lztoc039/6M2V4sZCdfVrBcVAi6qj/9FRUa8/1EcltuFngXFH301JTikYhcHBZK6vZrr2e78Jx3m/thNCZ2mO/UCWt0ibgCP/DmxddyWoF7JsVcRQ+YYcuXvGDsf0UZKyBD4yqtxgqt5x/TzEcIIDS602Dtt7ZGCniDXKqhbtf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mj7cV27f; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718281016; c=relaxed/simple;
+	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=beVz5CmK+Xm/DIYLB79lTpz7rttUH5f37botuXo8OAxfxbny0J0q9qVo5aUmaW13iWiJ6l9h0c6OHolFjgN7oteWxm6161TBCoRcKLpJL9ioI9B1p5BrVHh6eFq1hNboYXCru9qMcmiS8b3+8kKpWjIJ9fGT5tTBRucnDcbFWMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lq5oDNTn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mj7cV27f"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c778b5742so976003a12.2;
-        Thu, 13 Jun 2024 05:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718280895; x=1718885695; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjivG+XaKe4Am+Fx0XOt/e28iXIYWa1P+7zK1ifd1rw=;
-        b=Mj7cV27fLwEF366zUY7dfm+PClIVDclW+jD1efBXuRtkrlt/loXAgBBWDqYWF2HoIb
-         tE5LlLc/4+YSBM7k//vIe+Hq/WbK9MDQyAluPmirb3pigypC+GytV2xyL/1NfvybZc1R
-         Dxhvk264pqTgFJO3XMEQXrc/ZGuPSYGh2LiZp/y+iqo6MYY4v3OR37NpjOYmgPl/0vez
-         sByUmwZSZFWfkqWq9KYREkWFgoKv4411/MmyZpPnG6YDF7WLxwQG+Ml4d2ds5Y87rt/m
-         ENlXpH68RLKWEgQEligWooBqp14y9JULBPXiVSXFyAnF9o9yW6sS9mJIaQwv3josQidc
-         vv3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718280895; x=1718885695;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zjivG+XaKe4Am+Fx0XOt/e28iXIYWa1P+7zK1ifd1rw=;
-        b=tRmIdBxhZqrbQUa6xRFmkcNAl8a10kzH3GoWstH1vevZW+mPdMuMZEw7+ZmLYRhhAI
-         iBPY2EdN0w0cHRwFlQv/tjq5pZD7398qEGy0oIdVLlX6areqnKePDoGs8cOvU2+AqDSH
-         3WR+E1oungKuAn9MYIFiBJ/UKVK7nngaVMbJcEv/UN3Rb9f76tE5nxRNiaJ8a00LrnPL
-         IOKI2iBFGwLZ7SrZjcGVvwFhCrcn/dLL4+XCrnqN8f1YIJaWZveKDz17qUl4e9vsWpYW
-         u4iGaUV+1ZsquGXfxcxzHyHRRSrpwYfytvTdtxfbMzwttYRIPCxeFZW1kkyXDSBy7y6j
-         mCVw==
-X-Forwarded-Encrypted: i=1; AJvYcCW53tTSalVLUjvn6oPmEbeaPU4N466TRudkgWkLrFKKiPVcaMwLJ1SfFvnmqeoJrA5Z8u2+pUUeXPE1e//+o1IG2KnFYQX0h05xzbDi/Jo0lEJzCs8vS6Cyjp0XsylhMFeytRyP
-X-Gm-Message-State: AOJu0Yz0LF1xsVxKFoN6rVFlYyKBLpP2Bj8nNf6PWmUtHw4/4QpPgtPc
-	s1n5vp3ulNyUJUcDQzDf44g4WpUvSm98NPthw96Jvc3u1x/LLUA1
-X-Google-Smtp-Source: AGHT+IGzyxg4N9X/04QjUk81mzMKs4lvDIGYdWaRPWHzvvEjA+WMsslAg9qHkv+RapswAaEsqS6raA==
-X-Received: by 2002:a50:d65a:0:b0:57c:68fd:2bc9 with SMTP id 4fb4d7f45d1cf-57ca9749636mr2961850a12.3.1718280894903;
-        Thu, 13 Jun 2024 05:14:54 -0700 (PDT)
-Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da82fsm815747a12.32.2024.06.13.05.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 05:14:54 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Thu, 13 Jun 2024 14:14:48 +0200
-Subject: [PATCH] usb: typec: ucsi: glink: fix child node release in probe
- function
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lq5oDNTn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9439AC32786;
+	Thu, 13 Jun 2024 12:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718281015;
+	bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=lq5oDNTn+e1GkKZ2nErzc+Njjzk3f52tL6j9vfiYZlU8WgXI+UpcwQJxOKN/rk7Fm
+	 qQdynARCd0DS6dac+uRLTrHLod7Q08bNUC/wUxbPvD85vTV4DK78xDBNFfULBYXbiP
+	 cr8BS6tLMpX6+xu2ANvyxuXV7IOkPuD6xkNo84i4cxau3ETBA9xWPwBExsK0QwCcJ/
+	 TKOosv2sMMdZsCMAMJLPAvTkNJw2SratzDmSk+15sGUz7ipTBUP7FiQi9plh0hqiTy
+	 bM88EBFVkXdKc5NMZz3jSQS/RBCmem1xPVmk5jdPVfWtPaGkfh5fMYXzBllPlP/0hc
+	 PJ5pq1lek8cww==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/5] nfsd/sunrpc: allow starting/stopping pooled NFS
+ server via netlink
+Date: Thu, 13 Jun 2024 08:16:37 -0400
+Message-Id: <20240613-nfsd-next-v2-0-20bf690d65fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,81 +38,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-ucsi-glink-release-node-v1-1-f7629a56f70a@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALfiamYC/x3MwQpAQBRG4VfRXbs1g4RXkYVmftxoaG6k5N1Nl
- t/inIcUUaDUZQ9FXKKyhwSbZ+SWMcxg8clUmKIytS35dCo8bxJWjtgwKjjsHtxOzrS+sbBlQ6k
- +Iia5/3M/vO8HLZq5tWkAAAA=
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718280893; l=2414;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=Ughm9l3G5ckH3Jnm36S6wz8bPjQrkCbc1vToYq+2KW8=;
- b=YDgrSVBahWgrzOAC3FGi+0YtUEAsHFh5ocCyy795FfD+LmURtA0lSth9sMHj8hkjA4QByq4zv
- yDBQaF49grEBxzAgRYmYa5SAIFi+RLhcFhvCjs2NfZi0pMRhzgoJ7Pr
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+X-B4-Tracking: v=1; b=H4sIACXjamYC/23MQQrDIBCF4auEWXeKERHTVe9RsrCZMZEWLRokI
+ Xj32qy7/B+P74DMyXOGW3dA4uKzj6GFvHQwLTbMjJ5agxRSCS0UBpcJA28rPoWaBEkygx2g/T+
+ Jnd9O6zG2XnxeY9pPuvS/9Z9SehRoyGmjLeue+P7iFPh9jWmGsdb6BWk77s2jAAAA
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1609; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=tekr1M6Lsc3KhBXnhzbB36yW495Ts1ygNA+MzUsdHb0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmauMwl+985IQvKqH1qc1BTaAnAhPDnAv2mUgCR
+ fhb3t2xv0SJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZmrjMAAKCRAADmhBGVaC
+ FfJgD/92YQiqGXFcQHYnJqPTc8bw/oPZQ01N6W5Re6kJaxOZIJfWD6wTMvt+qWDbkH3GX95e7wV
+ LunethNs8AlRxEv21yEP+J+aOsxfHqZj8vVXdMFb9dtmwfKjKR0nEqTz72QvzfBrrNCQozm5k5m
+ L+TeHAK+/RX/C/xHLhtinRe6Em8C1k3/wsWfFrDcn9yPaUngYVmJWFSqyVxipR0t+Gz3fYEwbpU
+ yWVSl6o2U1VLvicPNiOGEK74plqqNbii3P+Fa6eWpWoCpaEaUF3EiGzz64xY/GTukm7WdawwsuV
+ cm4g4LwsJ5iKkrF87H75YA/GG3edbW3cGXE8uWCkqTQcxIw3X6OMWbZAZz8dWy66hXOJGFEBcB+
+ 08utiAE/waDVmkoAfsjpS8MSqegcE5zMl+I97XVSg8krFlakqYrzIwCzLCwKU1y4qdgVjlEbUqZ
+ kLwoCvrJOrq33AoV83TJEryOy4vDvO4UflzQOvaK0SWDpjJgjuFW7pGcqTa9V2SGaFJZBNSIO0g
+ 4gx7JN5g+I9bfawYzP29AMoV2bfUfQlfaotMfjP2OZzPzf+M2J6xdYx5EqLDN8w56troetwYTZy
+ 2K0B+VVBtCKX5nXgFlhvVdiNfDY4JTSbFwp9Esn3La7zF+9rWXdNQOgqrR/CcCknQQqxTJb1zze
+ 18NNpl9xiH9zMMg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The device_for_each_child_node() macro requires explicit calls to
-fwnode_handle_put() in all early exits of the loop if the child node is
-not required outside. Otherwise, the child node's refcount is not
-decremented and the resource is not released.
+This is a resend of the patchset I sent a little over a week ago, with
+a couple of new patches that allow setting the pool-mode via netlink.
 
-The current implementation of pmic_glink_ucsi_probe() makes use of the
-device_for_each_child_node(), but does not release the child node on
-early returns. Add the missing calls to fwnode_handle_put().
+This patchset first attempts to detangle the pooled/non-pooled service
+handling in the sunrpc layer, unifies the codepaths that start the
+pooled vs. non-pooled nfsd, and then wires up the new netlink threads
+interface to allow you to start a pooled server by specifying an
+array of thread counts.
 
-Cc: stable@vger.kernel.org
-Fixes: c6165ed2f425 ("usb: ucsi: glink: use the connector orientation GPIO to provide switch events")
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-This case would be a great opportunity for the recently introduced
-device_for_each_child_node_scoped(), but given that it has not been
-released yet, the traditional approach has been used to account for
-stable kernels (bug introduced with v6.7). A second patch to clean
-this up with that macro is ready to be sent once this fix is applied,
-so this kind of problem does not arise if more early returns are added.
-
-This issue has been found while analyzing the code and not tested with
-hardware, only compiled and checked with static analysis tools. Any
-tests with real hardware are always welcome.
----
- drivers/usb/typec/ucsi/ucsi_glink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi_glink.c b/drivers/usb/typec/ucsi/ucsi_glink.c
-index f7546bb488c3..41375e0f9280 100644
---- a/drivers/usb/typec/ucsi/ucsi_glink.c
-+++ b/drivers/usb/typec/ucsi/ucsi_glink.c
-@@ -372,6 +372,7 @@ static int pmic_glink_ucsi_probe(struct auxiliary_device *adev,
- 		ret = fwnode_property_read_u32(fwnode, "reg", &port);
- 		if (ret < 0) {
- 			dev_err(dev, "missing reg property of %pOFn\n", fwnode);
-+			fwnode_handle_put(fwnode);
- 			return ret;
- 		}
- 
-@@ -386,9 +387,11 @@ static int pmic_glink_ucsi_probe(struct auxiliary_device *adev,
- 		if (!desc)
- 			continue;
- 
--		if (IS_ERR(desc))
-+		if (IS_ERR(desc)) {
-+			fwnode_handle_put(fwnode);
- 			return dev_err_probe(dev, PTR_ERR(desc),
- 					     "unable to acquire orientation gpio\n");
-+		}
- 		ucsi->port_orientation[port] = desc;
- 	}
- 
+Changes in v2:
+- add new pool-mode set/get netlink calls
 
 ---
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240613-ucsi-glink-release-node-9fc09d81e138
+Jeff Layton (5):
+      sunrpc: fix up the special handling of sv_nrpools == 1
+      nfsd: make nfsd_svc call nfsd_set_nrthreads
+      nfsd: allow passing in array of thread counts via netlink
+      sunrpc: refactor pool_mode setting code
+      nfsd: new netlink ops to get/set server pool_mode
+
+ Documentation/netlink/specs/nfsd.yaml |  27 +++++++++
+ fs/nfsd/netlink.c                     |  17 ++++++
+ fs/nfsd/netlink.h                     |   2 +
+ fs/nfsd/nfsctl.c                      | 102 +++++++++++++++++++++++++++++-----
+ fs/nfsd/nfsd.h                        |   3 +-
+ fs/nfsd/nfssvc.c                      |  30 +++++-----
+ include/linux/sunrpc/svc.h            |   3 +
+ include/uapi/linux/nfsd_netlink.h     |  10 ++++
+ net/sunrpc/svc.c                      | 102 +++++++++++++++++++++-------------
+ 9 files changed, 225 insertions(+), 71 deletions(-)
+---
+base-commit: fec4124bac55ad92c47585fe537e646fe108b8fa
+change-id: 20240604-nfsd-next-b04c0d2d89a9
 
 Best regards,
 -- 
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Jeff Layton <jlayton@kernel.org>
 
