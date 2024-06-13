@@ -1,165 +1,145 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38D14206C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7E412EBC7;
+	Thu, 13 Jun 2024 15:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718294076; cv=none; b=qu1YdQwGF8p1c4oeKF4VYf3hKZKLyQ4GPpILTHQJCP2rJBWlpGwucutOL88DRCGdYCbMRA+9SkQ7gMk7E3QauI0czsZaAMy8hSXhIESi6d3jDuVE/HPLO1fvUQliq+Pm+YYFpEZvYmMBChzLJmmHJ5J6NkixdPtQf0EErrq1mqA=
+	t=1718294107; cv=none; b=pUu0kxVQgodoPDRNMqGHIPT9GAXMKBlpgvJppDFfsVUyRlhFAw3Qb9QuCLeDRtbNbwnandBWBKUQbIagM5W60DbRjIpQ3uKLOoueQr+9O9MmNdnluo5eGkmLprgVha//1OWK8uao6Uffdy2mrKS0U+jPhxVeLl6URimeGSZRqZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718294076; c=relaxed/simple;
-	bh=Qy/EAdDgX6MDEf5U1qYDCjyyjVP7uqwzYamTDW0h/is=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jCWKz/BT80lvvOzA+dS+MPkQYdU/iiD+7VePGg/yOWbMZ1OUg6UXKsZGk66aenmyavQxKTu8E97d+t7wq9glg3DQXCrFmP+1GW4Ip63cBrj8i7Y0XyxBquTgSjvhx/0Sn54yejUN7L9WQaJhZc196BtrqLHMPKXMtPmpl2VAIEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=A2PCjoYL; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="A2PCjoYL"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42172ab4b60so11935905e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718294072; x=1718898872; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d6tXE2AO0lPT2LpEB7LFIA9IGhDPpvidsM8ojyddTgQ=;
-        b=A2PCjoYLE1hnBVC2z0gEMmJnoQx6dLxVZ7rX4ybwpuIEOvwiOjuIYfsEv+k+DboNda
-         f741QZusIxyB8BfCPfJ+r2Tq2P59FLA/pE5q0NR3Kiboxh6+BcqOHGI0XTUtDwIogoxX
-         wEYIInm+3iel38D0B9hKh0TQVqSCM1ZqZqsZXgTdM3lB7tEg1KCVXvk1TUX+3dsCwtIH
-         +hko9XKYbdaj6d2SlUb1+uzTyUBqhFwgsWiuK0XMPeCGQxIp5qOLNJrk6pTtFD8RFRwT
-         mxfsDpXVmKmU7gKbJR7SJ6YTemCLqAqwmF/Sqv6yPb6HRaU7SKHJWWNaUNOm42HjjhB5
-         kuZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718294072; x=1718898872;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d6tXE2AO0lPT2LpEB7LFIA9IGhDPpvidsM8ojyddTgQ=;
-        b=RBHz8Hw936z4LsD8U6/bRa4ATK08LR6aT25AV9sUvIurZFUExwFxLzC+fqV0VFIRby
-         YRfL9TAVvC038Agm0/BTSunZauMW2CVeA/5YIOU2PU8qh1eDxT/cG0Yztd5JMDzNGKzs
-         rpXRDhgyQkmjegM1fo4Gvnr0hPTpdtvA/cb3jMqwBnPDA6gz7EtXLIgK4bx0vuxsC7oI
-         WVr8Plc/Y8eiFVHmkXU47UdC8QwD4p6vZtxbY1N0NQGBy6JiwPMBVqa1UQUatL6D/eJM
-         JcRbzsXaDxknsfzkn2pBPCGtu0/VLzV8TaWHcnxp6XdEssF0ebNzPz/O0mC1l3yE3r6Q
-         F1pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLiUx91JM1StLgGnra0+XMIzNOW0obJoRknUPsXUWWI2Un/PGhgnPxrdu5uKa/Hu/Vno037UlzjTSVXWxX9R349MIWfbrZD6Wu4V6d
-X-Gm-Message-State: AOJu0YxM6oMHJwavxUVcrv09znAqsLsKSq7Pv4QrtCrSXQLlFhyfJ2m/
-	IMK5i3CKZAWYkHe8SFpByuCHA9F4/IW3hm1vbq6S/0pU65WOGh6IhjrUOz5mQ+I=
-X-Google-Smtp-Source: AGHT+IG1zc8YWNE0EHvhNYi1n4wvzpml1bFEuKoi2CO1pl70ncYnu86I0E00hbaTdU/6tEtLjLTn0g==
-X-Received: by 2002:a05:600c:4689:b0:423:366:ad3d with SMTP id 5b1f17b1804b1-42304827295mr2065555e9.13.1718294072242;
-        Thu, 13 Jun 2024 08:54:32 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:ec82:cd82:409a:270b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a633sm29738235e9.43.2024.06.13.08.54.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 08:54:31 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-  Neil Armstrong
- <neil.armstrong@linaro.org>,  Kevin Hilman <khilman@baylibre.com>,  Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>,  Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  kelvin.zhang@amlogic.com,
-  linux-pwm@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  linux-amlogic@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  devicetree@vger.kernel.org,  Junyi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v8 1/2] pwm: meson: Add support for Amlogic S4 PWM
-In-Reply-To: <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com> (Kelvin Zhang
-	via's message of "Thu, 13 Jun 2024 19:46:35 +0800")
-References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
-	<20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
-Date: Thu, 13 Jun 2024 17:54:31 +0200
-Message-ID: <1jfrtgj0so.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1718294107; c=relaxed/simple;
+	bh=M2xV7vzzrRkxotOFpiEZRBjy2P5R3xO1TuJFrK8U2f0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=doOsIl9YnH+X6u5mhfTnkDFJ8Z5OoOaU8OERpXzWOcuNi8e8SQBqkew0nWRzQEYqpXEcriaRE9KIZaC1LyWgJwLMZfNubRTxzKimLxVciyLkxAIiC2YT9Dv0j/VHlBKWjYIoyr3wQQuZSmhfVunx8l7GCUoV4kLWq+CXWsUqwQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01FA4C4AF50;
+	Thu, 13 Jun 2024 15:55:07 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sHmnP-00000001jnV-34AG;
+	Thu, 13 Jun 2024 11:55:27 -0400
+Message-ID: <20240613155527.591647061@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 13 Jun 2024 11:55:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ David Howells <dhowells@redhat.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH v6 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240613155506.811013916@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 
-On Thu 13 Jun 2024 at 19:46, Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: Junyi Zhao <junyi.zhao@amlogic.com>
->
-> Add support for Amlogic S4 PWM.
->
-> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
-> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
-> ---
->  drivers/pwm/pwm-meson.c | 39 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index b2f97dfb01bb..98e6c1533312 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -460,6 +460,37 @@ static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->  	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->  }
->  
-> +static void meson_pwm_s4_put_clk(void *data)
-> +{
-> +	struct clk *clk = data;
-> +
-> +	clk_put(clk);
-> +}
-> +
-> +static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-> +{
-> +	struct device *dev = pwmchip_parent(chip);
-> +	struct device_node *np = dev->of_node;
-> +	struct meson_pwm *meson = to_meson_pwm(chip);
-> +	int i, ret;
-> +
-> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
-> +		meson->channels[i].clk = of_clk_get(np, i);
-> +		if (IS_ERR(meson->channels[i].clk))
-> +			return dev_err_probe(dev,
-> +					     PTR_ERR(meson->channels[i].clk),
-> +					     "Failed to get clk\n");
+Add a method to find a region specified by reserve_mem=nn:align:name for
+ramoops. Adding a kernel command line parameter:
 
-here it is ok but ..
+  reserve_mem=12M:4096:oops ramoops.mem_name=oops
 
-> +
-> +		ret = devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
-> +					       meson->channels[i].clk);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to add clk_put action\n");
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
 
-... here, devm_add_action_or_reset cannot defer, so dev_err_probe is not useful.
-dev_err() if you must print something. Just "return ret;" would be fine
-by me
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct meson_pwm_data pwm_meson8b_data = {
->  	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
->  	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-> @@ -498,6 +529,10 @@ static const struct meson_pwm_data pwm_meson8_v2_data = {
->  	.channels_init = meson_pwm_init_channels_meson8b_v2,
->  };
->  
-> +static const struct meson_pwm_data pwm_s4_data = {
-> +	.channels_init = meson_pwm_init_channels_s4,
-> +};
-> +
->  static const struct of_device_id meson_pwm_matches[] = {
->  	{
->  		.compatible = "amlogic,meson8-pwm-v2",
-> @@ -536,6 +571,10 @@ static const struct of_device_id meson_pwm_matches[] = {
->  		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
->  		.data = &pwm_g12a_ao_cd_data
->  	},
-> +	{
-> +		.compatible = "amlogic,meson-s4-pwm",
-> +		.data = &pwm_s4_data
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/admin-guide/ramoops.rst | 13 +++++++++++++
+ fs/pstore/ram.c                       | 14 ++++++++++++++
+ 2 files changed, 27 insertions(+)
 
+diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+index e9f85142182d..6f534a707b2a 100644
+--- a/Documentation/admin-guide/ramoops.rst
++++ b/Documentation/admin-guide/ramoops.rst
+@@ -23,6 +23,8 @@ and type of the memory area are set using three variables:
+   * ``mem_size`` for the size. The memory size will be rounded down to a
+     power of two.
+   * ``mem_type`` to specify if the memory type (default is pgprot_writecombine).
++  * ``mem_name`` to specify a memory region defined by ``reserve_mem`` command
++    line parameter.
+ 
+ Typically the default value of ``mem_type=0`` should be used as that sets the pstore
+ mapping to pgprot_writecombine. Setting ``mem_type=1`` attempts to use
+@@ -118,6 +120,17 @@ Setting the ramoops parameters can be done in several different manners:
+ 	return ret;
+   }
+ 
++ D. Using a region of memory reserved via ``reserve_mem`` command line
++    parameter. The address and size will be defined by the ``reserve_mem``
++    parameter. Note, that ``reserve_mem`` may not always allocate memory
++    in the same location, and cannot be relied upon. Testing will need
++    to be done, and it may not work on every machine, nor every kernel.
++    Consider this a "best effort" approach. The ``reserve_mem`` option
++    takes a size, alignment and name as arguments. The name is used
++    to map the memory to a label that can be retrieved by ramoops.
++
++	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
++
+ You can specify either RAM memory or peripheral devices' memory. However, when
+ specifying RAM, be sure to reserve the memory by issuing memblock_reserve()
+ very early in the architecture code, e.g.::
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..4311fcbc84f2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,10 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
+ 
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name, "name of kernel param that holds addr");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +918,16 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
++	if (mem_name) {
++		phys_addr_t start;
++		phys_addr_t size;
++
++		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
 -- 
-Jerome
+2.43.0
+
+
