@@ -1,96 +1,145 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549C14E2E7
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 23:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E6914F134;
+	Thu, 13 Jun 2024 23:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718321608; cv=none; b=WnF2DyOHa5Hpc+yRKyAkbDznrd3rUGh6Xx8AK97l+BVUKMG73EbIglHDPWDMgdwgfFa2ywP659Y06SdzcbPj7GCzFe/Ne3eO4boGDJHB7sthoGDJzqNgh3CXwmSn+FOlRU/k3QqH9xSSMkQn9OX7Tu9TrS5i0dGaKO4y15D6Nlc=
+	t=1718321665; cv=none; b=M8+6jJR84ZAY8UcukgPAdsGLQNOJD5UXrSYRfrb0IvPcnlvPLibxiYcOpzay0VlrR3Zhc7cU1gpL+EhQEyQDpwLxYsrG9K6UMvJ0PNK/DeWjOnPrk9ulbUFWLJxw8RtWEnbz2Abr487LIgWlqeyl/0lRMxe9Xp6YS7xM7VaPp0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718321608; c=relaxed/simple;
-	bh=qAt2UhvpvEnOSzh/aTun94gQOxAFglIb1x68LgT5u/U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fh/tQs0cMeULRIvW5fohMdGvGC0k+XPf+aqEhRFkWiIE73MwZ5D2yir9Crp5etxMGYHdFO3hie8WS1JbZkRge1pwCNCPsv154a6TA8uxSK88HBGEUoaRDXgQ6ozYdWBk2S0e+Ku+FHKTxuzhO4jjBcZNt3m4xGyhuMavThr8eb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sasEoIn; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sasEoIn"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfeff072f65so2455518276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718321606; x=1718926406; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/IekIUszeeugklFzZ/8PWVNYpSQN15CTup3urqE43g=;
-        b=4sasEoInUqj1CeNY/ryElq34gXJktIoRPvl46p/YjtKF/YaLvsItdqF90lJeAoBwHr
-         xuj/4z8sx9kBxvVigH9tIzjDRKfVqaak12gq8Tt0Ra5mdgHJwbUStxyCr9CzKGBmmPOw
-         xcroUBlF0+aF4gEQqz5YuJ5ERwKRzlNHPHijfPa7364q9DElP3vccPzSjSyIyPbUzaa3
-         Bnq8iB5XkxlIgZYOgawDvc7CutvMu3Wokx1UKihu6heFWIfnmRqQNKGgrBewUfqsiLF9
-         tDkbWQ+Bk1DmlLBQFygDsmBzuvgZh9x8a3CjTSQ/RMmDw89BAfLYhhsF6bgVFE42Sqdi
-         Tm7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718321606; x=1718926406;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/IekIUszeeugklFzZ/8PWVNYpSQN15CTup3urqE43g=;
-        b=RoAuFup3gplj3qkp5qfw69mHMJGcp1mbjDDfGT7BuuDAAa3VA4IjGnM2lbwce9VFXR
-         JQ+avyG0XTaiHrESgv3vv/jcvDWOlunE7syrLC6rlJfEeMFSYdiaA9QoyGJLij5J52LX
-         53qSE4wOfnyBB8QJ+d51e9nIA82r1t42wAqu6R9pBrN7wlQ3665buzbBu1LJdEhDVizC
-         KUJYlmKr/ZI1ff8aEad23X+AwCdF/KEtEjsME8RiWb6yH+YX1Pvfd7U0X8EmtdjeYFB1
-         x/Fc6SFIBMtGjc8zFkJDNsdkXsXLvLMAbR3n/vf8FZjJ7T01vcwCreI/L/IoAOELK9R8
-         QXkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVM8BNmIWWOQtW5lZUWV2FjdldEd4+sy/E6WEnaBpOy9hgA9rQyg10hjk6yca3T1oQ+Gf0KYbDoqUYepo8rwhSYJUzSEbM6JCC8osx
-X-Gm-Message-State: AOJu0YyF/4jzm6MTZV+TcdUa9OWpfTLzH5HQzNjZ2NRvbJ6ENeOmLX4J
-	ITBJJ8D860B30vCjnSEc3SbfPRMNLo9/Fxy2eX0jjTvqNXgGQpJfq9rJPUNuTat+Kb6ZtR/VdUT
-	miA==
-X-Google-Smtp-Source: AGHT+IELUA3WIM5Wphps0xkQTRhby+UDCJjkk/RQ2PxIjMMY045f/NVk5on7zOgMXu0rVeJlBwRipETmKZ0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:adcf:0:b0:dfb:c58:6beb with SMTP id
- 3f1490d57ef6-dff153d0fdfmr32821276.4.1718321606405; Thu, 13 Jun 2024 16:33:26
- -0700 (PDT)
-Date: Thu, 13 Jun 2024 16:33:24 -0700
-In-Reply-To: <ZmthZVGmgcM5NQEm@google.com>
+	s=arc-20240116; t=1718321665; c=relaxed/simple;
+	bh=8moigw637ieHT33YXV/AkKxkbGL72rg/LRp0HyYUdIQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=GNFgYVvry5m5tdRJJub+cDofrp8pkwE/usG3J2YL69hbHqEW8/DElYyp4soqurQ56aHakvjoNOM5dQKtUmjG7tZCb7TGOvDT74aizpmnXNoxPy94kcp5UBedrYiix+TAfoZIQEeOEf2s+nqpwXBD1XJQsJPyQMcVFgPLysJFSUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A314C4AF51;
+	Thu, 13 Jun 2024 23:34:25 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sHtxu-00000001m5X-1mhV;
+	Thu, 13 Jun 2024 19:34:46 -0400
+Message-ID: <20240613233446.283241953@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 13 Jun 2024 19:34:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ David Howells <dhowells@redhat.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH v7 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240613233415.734483785@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240611215805.340664-1-seanjc@google.com> <ZmthZVGmgcM5NQEm@google.com>
-Message-ID: <ZmuBxFwWLAReYUn1@google.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Clean up function comments for dirty
- logging APIs
-From: Sean Christopherson <seanjc@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Jun 13, 2024, David Matlack wrote:
-> On 2024-06-11 02:58 PM, Sean Christopherson wrote:
-> > I don't actually care too much about the comment itself, I really just want to
-> > get rid of the annoying warnings (I was *very* tempted to just delete the extra
-> > asterisk), so if anyone has any opinion whatsoever...
-> 
-> I vote to drop it and document the nuance around PML in the function
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-As in, drop the function comment entirely?  I'm definitely a-ok with that too.
+Add a method to find a region specified by reserve_mem=nn:align:name for
+ramoops. Adding a kernel command line parameter:
 
-> > @@ -1373,14 +1354,26 @@ static void kvm_mmu_clear_dirty_pt_masked(struct kvm *kvm,
-> >  }
-> >  
-> >  /**
-> > - * kvm_arch_mmu_enable_log_dirty_pt_masked - enable dirty logging for selected
-> > - * PT level pages.
-> > + * kvm_arch_mmu_enable_log_dirty_pt_masked - (Re)Enable dirty logging for a set
-> > + * of GFNs
-> >   *
-> > - * It calls kvm_mmu_write_protect_pt_masked to write protect selected pages to
-> > - * enable dirty logging for them.
-> > + * @kvm: kvm instance
-> > + * @slot: slot to containing the gfns to dirty log
-> > + * @gfn_offset: start of the BITS_PER_LONG pages we care about
-> 
-> Someone once told me to avoid using "we" in comments :)
+  reserve_mem=12M:4096:oops ramoops.mem_name=oops
 
-Darn copy+paste.
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
+
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
+
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/admin-guide/ramoops.rst | 13 +++++++++++++
+ fs/pstore/ram.c                       | 14 ++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+index e9f85142182d..2eabef31220d 100644
+--- a/Documentation/admin-guide/ramoops.rst
++++ b/Documentation/admin-guide/ramoops.rst
+@@ -23,6 +23,8 @@ and type of the memory area are set using three variables:
+   * ``mem_size`` for the size. The memory size will be rounded down to a
+     power of two.
+   * ``mem_type`` to specify if the memory type (default is pgprot_writecombine).
++  * ``mem_name`` to specify a memory region defined by ``reserve_mem`` command
++    line parameter.
+ 
+ Typically the default value of ``mem_type=0`` should be used as that sets the pstore
+ mapping to pgprot_writecombine. Setting ``mem_type=1`` attempts to use
+@@ -118,6 +120,17 @@ Setting the ramoops parameters can be done in several different manners:
+ 	return ret;
+   }
+ 
++ D. Using a region of memory reserved via ``reserve_mem`` command line
++    parameter. The address and size will be defined by the ``reserve_mem``
++    parameter. Note, that ``reserve_mem`` may not always allocate memory
++    in the same location, and cannot be relied upon. Testing will need
++    to be done, and it may not work on every machine, nor every kernel.
++    Consider this a "best effort" approach. The ``reserve_mem`` option
++    takes a size, alignment and name as arguments. The name is used
++    to map the memory to a label that can be retrieved by ramoops.
++
++	reserve_mem=2M:4096:oops  ramoops.mem_name=oops
++
+ You can specify either RAM memory or peripheral devices' memory. However, when
+ specifying RAM, be sure to reserve the memory by issuing memblock_reserve()
+ very early in the architecture code, e.g.::
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..4311fcbc84f2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,10 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
+ 
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name, "name of kernel param that holds addr");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +918,16 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
++	if (mem_name) {
++		phys_addr_t start;
++		phys_addr_t size;
++
++		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
+-- 
+2.43.0
+
+
