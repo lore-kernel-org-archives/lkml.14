@@ -1,100 +1,121 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6531513E8A7;
-	Thu, 13 Jun 2024 09:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C845F29AB;
+	Thu, 13 Jun 2024 09:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718270294; cv=none; b=OKfdBTLOYaoM6ETT12uRUlEz0LvhVleSfWrUh75/EGq2p/w4tpji+1hS9bBwBPFzf9nofVZoS8enbIzEC59iWoTdl+Fdg+DDR9FHHgRXsioHRFdUiVYuYQm8qwAwt23kPK2TB/rReBJrDhOjFaObGAJkwMvR8AmQvjL2yJpnMVc=
+	t=1718270395; cv=none; b=rX9cy6dxGhh8+mjRUd20LcKUDrzoI13hXk0m/fo+lYiGJOuIJMI4o/fU9cQHJ3QYC/hGXYa3kfm+F2C2LZrXtqAxz9fLdyIAwh01l9eroXkcFv+NXgKU4ON7/9Z/Hy3SWwjzKo9cAwibk0CZQUj0Tmz55y05g1xUicO+ZXdMmHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718270294; c=relaxed/simple;
-	bh=j57AjH7vWOzLYS8GEi6N0Sm4lqhf9PnfiNNs+BWRZvc=;
+	s=arc-20240116; t=1718270395; c=relaxed/simple;
+	bh=8Xjm/uj9cAgItooDzOKc5oI7NbTaImBSC4XKzPzMWAY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ub9Sul6WhfiOSoZL6TupcoJSA6XFzYzfR9cPjZrtZ6TQmCVJEQeYm8tdR8QfzIui21jcwfDOqK0/dJGkfyjdzjZuxFuWtcZmv47TKSob4R0Bnt9NEVGB7Y3b7sbZEDHBfzWrmXnkS9HbstOpLSq1R58Li/BRmjQ2Or+TLt9EZP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A0TLT7/3; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kKraMzGHwnnoQhDIivBl8aLlE3v6d1A1UBKmXfw7pHTDlT+y30EaUYeKYdThFK7aZm1bAD3Q22OIIGsEHqs4uC4Ck0EntlkVgzEgrc7RvGWZPrWEi79hdUNlKHpv+I96xJoDDGquRk3Pc4YeF+F84/SPxdiSzK00uSDsBHKGBx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9FwA2BH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A0TLT7/3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p0dnDPDEIYuJ2y75CbrgMsy67e1FESlmVsvTOPepdeA=; b=A0TLT7/3PW8jq4FG22ssotSS0g
-	zPEMM2uzluilJ2tNOjM9f5NZ6KZM2OQshkLdPgKv+9qmi+fIk9ccNkgp82a7JoC9sCGKPOG1eN6ZK
-	fLtadKbtssSZyz+uAin1jf6o+EDnhCxsprUnKhbmaxCAdSCtSINGkMzMb9Sa8yQr+d8UJrIW4e37c
-	Z7NIv6OC2+S2ZHiBSzwmuYy9biFMMC+KNad4ogL57b1BoNyAUNeuFmNTetACp01Gh8YYGucXUvY1w
-	8ZL4IUDpKPtuypRva/qqBvfWB1zmtJIqc6lwu58UdEw3eYOIvsTlkddi7wZMC0I1YWt8D1tkXCRk/
-	fWpzxxjQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHgaW-00000003Uvs-2WWA;
-	Thu, 13 Jun 2024 09:17:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4C42E300B40; Thu, 13 Jun 2024 11:17:47 +0200 (CEST)
-Date: Thu, 13 Jun 2024 11:17:47 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Will Deacon <will@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	kent.overstreet@gmail.com, elver@google.com,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	torvalds@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, Trevor Gross <tmgross@umich.edu>,
-	dakr@redhat.com
-Subject: Re: [RFC 1/2] rust: Introduce atomic API helpers
-Message-ID: <20240613091747.GB17707@noisy.programming.kicks-ass.net>
-References: <20240612223025.1158537-1-boqun.feng@gmail.com>
- <20240612223025.1158537-2-boqun.feng@gmail.com>
- <2024061341-whole-snowfall-89a6@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9FwA2BH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD1BC2BBFC;
+	Thu, 13 Jun 2024 09:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718270395;
+	bh=8Xjm/uj9cAgItooDzOKc5oI7NbTaImBSC4XKzPzMWAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o9FwA2BHwLLmZ/7ti+Yq9/n6AalsdGJWg2ax2sYZQGUCb/xn+XoMMbgd/9muEROwH
+	 TBOm3a3DZy98nUC8dHQryUBpQuXRWlkfbh85h49ZrvkJhyVzES0rAWS7jWpI9fLXzu
+	 r8uMvqN/BcwNslxHy9o5vDdojL9yZQXUcVqGhdBJCa7qWSmu/UTi6wE06Vy9VtriaK
+	 dRvGi+cYDdN4nqmFi98hiLWhX3LQ0JOVubmpvQg4859Er3Av9PHqpruZGrVPiQFfwd
+	 SDTL3ax4y1ycLXw9u3MYl1FXXqHeVpcODHpTR9wbSFMGoFsqFlY1HW/UvyVPKu1P0h
+	 kmmPJ3NJ9P45Q==
+Date: Thu, 13 Jun 2024 10:19:52 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: shuah@kernel.org, oleg@redhat.com, stsp2@yandex.ru, mingo@kernel.org,
+	tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com,
+	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
+	DeepakKumar.Mishra@arm.com, AneeshKumar.KizhakeVeetil@arm.com,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] selftests: Add a test mangling with uc_sigmask
+Message-ID: <Zmq5uK0RfvgVKFdO@finisterre.sirena.org.uk>
+References: <20240611075650.814397-1-dev.jain@arm.com>
+ <20240611075650.814397-3-dev.jain@arm.com>
+ <Zmg0GoGnJFbPysfK@finisterre.sirena.org.uk>
+ <ec1973ee-909d-41a2-8b32-256302d190b4@arm.com>
+ <ZmmfkbuCl61rEPs-@finisterre.sirena.org.uk>
+ <920f2e27-39ee-4c53-9c90-63d67e7d7586@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YUY1zS9czf83kEFd"
+Content-Disposition: inline
+In-Reply-To: <920f2e27-39ee-4c53-9c90-63d67e7d7586@arm.com>
+X-Cookie: Your love life will be... interesting.
+
+
+--YUY1zS9czf83kEFd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024061341-whole-snowfall-89a6@gregkh>
 
-On Thu, Jun 13, 2024 at 07:38:51AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Jun 12, 2024 at 03:30:24PM -0700, Boqun Feng wrote:
-> > +// Generated by scripts/atomic/gen-rust-atomic-helpers.sh
-> > +// DO NOT MODIFY THIS FILE DIRECTLY
-> 
-> Why not just build this at build time and not check the file into the
-> tree if it is always automatically generated?  That way it never gets
-> out of sync.  We do this for other types of auto-generated files in the
-> kernel today already.
+On Thu, Jun 13, 2024 at 10:21:39AM +0530, Dev Jain wrote:
 
-Part of the problem is, is that a *TON* of files depend on the atomic.h
-headers. If we'd generate it on every build, you'd basically get to
-rebuild the whole kernel every single time.
+> I guess we agree on the same thing; so, how about I rephrase the delivery
+> and blocking code comments this way:
+> "A process can request blocking of a signal by masking it into its set of
+> blocked signals; such a signal, when sent to the process by the kernel, will
+> get blocked by the process and it may later unblock it and take an action.
+> At that point, the signal will be "delivered".
 
-Also, these files don't change too often. And if you look, there's a
-hash in those files which is used to check if things somehow got stale.
+Yes.
+
+> A signal sent by the kernel to the process, is said to be delivered to the
+> process when the process takes an action upon receipt of the signal: such
+> action may include termination, or jumping to a signal handler."
+
+I'd just drop this last paragraph.
+
+> > TBH I'm not sure what you mean there by real time signals, I can't see
+> > a reference to real time in the copies of signal(2), signal(7) or
+> > sigaction(2) on my system.  I suspect SA_NODEFER is the actual thing
+> > here.
+
+> Real-time signals get a mention on signal(7), under the heading
+> "Real-time signals":
+
+Ah, it's got a - in there so it doesn't show up in searches.
+
+> > I still don't follow what the above means.  When you say "invariant" you
+> > don't specify with respect to what, and it's not clear to me why the
+> > saved context in ucontext would have changed without the handler writing
+> > to it.  For clarity I think this needs to say what the ucontext is
+> > expected to be the same as/different to.
+
+> The ucontext at this stage is supposed to be empty, I guess I'll replace
+> the word "invariant" then.
+> "it's not clear to me why the saved context in ucontext would have changed
+> without the handler writing to it" - by invariant I meant, the set of blocked
+> signals before invocation of handler is exactly the set of signals blocked in
+> ucontext, which, in this case, is the empty set. I'll just write that ucontext
+> is empty.
+
+Yes, or like I say in general it's the the interrupted context (there's
+other parts of the signal frame which are changed).
+
+--YUY1zS9czf83kEFd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZqubMACgkQJNaLcl1U
+h9AXLQf/aNzj6GO0tVDsn4lAZgwmn9+i5bZOPoYs2VUX+xjqGAgxXGaBHZYGTtQv
+x6p5xqPIKZMH0IqOL2t6GjyQsvuxFLZqXSiTgTKUpGQBYzt5yG9HtHIWkQdDBelM
+3hXcZHCqYaqIh0eDTcJZcrMfHb4QUJIVXqsa1i2/Oz8oJNDVYTs+NeXtO8V5Z9dp
+rpJjtQF61pCwH3H6KaBlAUWcy8qnkA+WrwfgIgBU1lG1UFgmUp4FOTadg45JlBne
+zKHGSw9N74vmrNfrCxZp6961JbMxDWFRaHOVNlHlwpjkQwJiDHvWcYjED1L+32YO
+7Kp1Dq+eoxoW8dmF1uLF3VVYnyXXzg==
+=/g6T
+-----END PGP SIGNATURE-----
+
+--YUY1zS9czf83kEFd--
