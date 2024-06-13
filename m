@@ -1,99 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352DC145321;
-	Thu, 13 Jun 2024 14:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B326F146018
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 14:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718288026; cv=none; b=CKLtDKWHuRYUjbOAlJ1CsMolvil5ER4TVGwQnrq0HIXL2wIIVAlVqyisrLGbpaKPsR1cUcbNR7qYGZlUvKQa1dyLaHI17cLrnQiTP4NPpNpmI/qAXvuzRt0L2LayuTdyBxAGVh5mM/DRs2yDzTvuf2W6rCcKeDZOhJRk315D6jM=
+	t=1718288028; cv=none; b=LVmpD05DJ+wAbkcCvGm5togeWG3qbTNkTg/5iU+7brd1pnTv8MwLLPPCwPelzCbGEpLnBOsUuoh3jhhKBPXscKyzDDMRdH5DYFNsF7au6TBwuesbuLxlf3s9uPoQ/FpA68EC3KbPnisSw1dmPHE8k5pdnXx+/BiZNDV71kcF8tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718288026; c=relaxed/simple;
-	bh=miLeVMM2w5yAcnT3uzAx4GpVzV/Y9CzVC17jsvEBUfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LFrRW8EsNPzlLdlfDrJ98UN7hAf2zD27vz4a+wAsvDSARhauN1EmjMqobC1P0FqC+2/8s6UcDvaKrrIdcoMepodiM1CjAkTZGmSRXqo1TpwB2h9QBwr8qnhRDAll1A5cmDqcskeC4h9QVYwayQ0ZkvGb8lnBwU7ZqUE0DxuEwpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogjDdw34; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718288028; c=relaxed/simple;
+	bh=ERjV5BJYroAXFIaG6FmVQOy7+GFyAqC/Q40IjLgdSn0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oqzxDCvZeqoePWU+fFdRC9vDTu6fu62OxqyXs8MYnv0Fz6OYMHfZKGsxtz1x/kCl3lfGYiBbtwnb9P1Y5flvxmKjrlRCuA654CKlEiLZGYlvbmbE4GmqrCDpmJqmULkwCPEaUrylnxM4x6txu7/uoGncZ575YToWYUrzG/78y2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fJvG1WGD; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogjDdw34"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C59BC2BBFC;
-	Thu, 13 Jun 2024 14:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718288024;
-	bh=miLeVMM2w5yAcnT3uzAx4GpVzV/Y9CzVC17jsvEBUfU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ogjDdw34aMYbnVFXO1TQJ6gxcFOElu+kQ1l9kcwCvX/5TJXX6Y46YnhOfBue9+SfZ
-	 KpPZTJi+ymmNr/Fe68Gb+Dj57jzeUz4dXcdurC3Y09XSnhkysiQrzzFouyiUXmPG+h
-	 0Kw32Ke9rEiUSd1lqkOMQXvXVpp7YdjaLVT8YQdUjqxJpeUE/hzDrskqDgJmQaAtLh
-	 37Y3FO250POxonskubWav59Lxb9Vj8N2COWpo2ifg80tyiSjgFNLU5YuwuFpltcUAS
-	 pavfyYFer7rPxxkOfzw+IPQUsivZ0OlfTrFK3ejk/7EUpbu2SoYv2OJdtoIY5zQygp
-	 rp62AoeqnUtCw==
-Date: Thu, 13 Jun 2024 07:13:43 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: <intel-wired-lan@lists.osuosl.org>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Maciej
- Fijalkowski <maciej.fijalkowski@intel.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
- <magnus.karlsson@intel.com>, Michal Kubiak <michal.kubiak@intel.com>
-Subject: Re: [PATCH iwl-net 0/3] ice: fix synchronization between .ndo_bpf()
- and reset
-Message-ID: <20240613071343.019e7dca@kernel.org>
-In-Reply-To: <ZmqztPo6UDIC6gKx@lzaremba-mobl.ger.corp.intel.com>
-References: <20240610153716.31493-1-larysa.zaremba@intel.com>
-	<20240611193837.4ffb2401@kernel.org>
-	<ZmlGppe04yuGHvPx@lzaremba-mobl.ger.corp.intel.com>
-	<20240612140935.54981c49@kernel.org>
-	<ZmqztPo6UDIC6gKx@lzaremba-mobl.ger.corp.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fJvG1WGD"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-63128f5eb5bso12531207b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718288025; x=1718892825; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xD4B/30d59fgI1TQcHmQ/HHM3gNeD0CWu+CBJTxBNY=;
+        b=fJvG1WGDnhRDHzpu+eZ9gNG7a6k2i7yrK76/2EK4GUj6ojle9CMNoZJsSMWzRzLTgl
+         tkUYdnhFIVKQESN0/Ez5bQSzfyQfsyj6hEh1a6w8+8WkwW3elKzD+2OL7cHDsR3iVIkg
+         CzfIQigi3kmcXQWF3pRbjEt2nKwxXHH1Womz0qcToeIMd3QXZ/nfd0eN1Yft1FiYcQCI
+         kTZf7iSzUD/miGWQwJ4khpMkMLR+Zh4o1Si1C1/zEDP0VLGuVQPfj1w5sPlB8EadZSbz
+         nuNn4jVRit0aUVTeRJaTFNSLP6NbKioZTuuCwJqnfkFta3OleD4UxBkTBq8Q80epWhnZ
+         hlJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718288025; x=1718892825;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xD4B/30d59fgI1TQcHmQ/HHM3gNeD0CWu+CBJTxBNY=;
+        b=XulLYkJiFHnQwS1IOTGXCxMGN+emK3H61Bw3rRM9kiz+CKYn5GtO396L6IIjNJNfHw
+         07c3YJipa60PaYXq3AilPhghV1olE+D7Wudcd2vMTzK55NfoGs70lniiRLCbwEX5BAd3
+         9skQIIpct1yOYJ3CJlDyEMXfdFIZEFcDWgx5XJ87/28ENd6v3I9gY8uDLrTyBnld8030
+         Aa4beKTMcfyCBdbQBPJaKLcZwNmHRA6os2QfJ9+9s5F1dXHHcgby1HomkDh1kpLOwlxW
+         jJND3qPsndBaW2vwaT2UMaPvrDjIUo1zS2ecfkQOzqQxIbs0ecgXZXV1QiZVGn1/Ctyv
+         dloA==
+X-Gm-Message-State: AOJu0YyI+rCKbuSzSI2DMfsK/mm9cmgfRf/UHaDgKnxuHQZIqDqdoY/2
+	O5UrnMdyLAqKck6RLPnnkbKb6LxvvIvjvxhiwwdn3aPMfxVNp9JVO8sBv6O/WEn4GyvlwvKbRx2
+	Ehta727mJ+/dA5l5eEEJoikFRtA==
+X-Google-Smtp-Source: AGHT+IE4GGKM2aTl6lWB2KY+Wdp3WNUVj4Ae+A0AMzyGnV4UVuSwDQxm/tAmKK1qBnTgqzTNbtfDQPyFW+GwABUCxZU=
+X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
+ (user=sebastianene job=sendgmr) by 2002:a05:690c:25c7:b0:627:a962:4252 with
+ SMTP id 00721157ae682-62fba47067dmr11954057b3.7.1718288024746; Thu, 13 Jun
+ 2024 07:13:44 -0700 (PDT)
+Date: Thu, 13 Jun 2024 14:13:34 +0000
+In-Reply-To: <20240613141335.1134341-1-sebastianene@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240613141335.1134341-1-sebastianene@google.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240613141335.1134341-2-sebastianene@google.com>
+Subject: [PATCH v2 1/2] dt-bindings: vcpu_stall_detector: Add a PPI interrupt
+ to the virtual device
+From: Sebastian Ene <sebastianene@google.com>
+To: arnd@arndb.de, gregkh@linuxfoundation.org, will@kernel.org, maz@kernel.org, 
+	Rob Herring <robh+dt@kernel.org>, Dragan Cvetic <dragan.cvetic@xilinx.com>, 
+	Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	kernel-team@android.com, Sebastian Ene <sebastianene@google.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 13 Jun 2024 10:54:12 +0200 Larysa Zaremba wrote:
-> > > The locking mechanisms I use here do not look pretty, but if I am not missing 
-> > > anything, the synchronization they provide must be robust.  
-> > 
-> > Robust as in they may be correct here, but you lose lockdep and all
-> > other infra normal mutex would give you.
-> 
-> I know, but __netif_queue_set_napi() requires rtnl_lock() inside the potential 
-> critical section and creates a deadlock this way. However, after reading 
-> patches that introduce this function, I think it is called too early in the
-> configuration. Seems like it should be called somewhere right after 
-> netif_set_real_num_rx/_tx_queues(), much later in the configuration where we 
-> already hold the rtnl_lock(). In such way, ice_vsi_rebuild() could be protected 
-> with an internal mutex. WDYT?
+The vcpu stall detector allows the host to monitor the availability of a
+guest VM. Introduce a PPI interrupt which can be injected from the host
+into the virtual gic to let the guest reboot itself.
 
-On a quick look I think that may work. For setting the NAPI it makes
-sense - netif_set_real_num_rx/_tx_queues() and netif_queue_set_napi()
-both inform netdev about the queue config, so its logical to keep them
-together. I was worried there may be an inconveniently placed
-netif_queue_set_napi() call which is clearing the NAPI pointer.
-But I don't see one.
+Signed-off-by: Sebastian Ene <sebastianene@google.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../devicetree/bindings/misc/qemu,vcpu-stall-detector.yaml  | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> > > A prettier way of protecting the same critical sections would be replacing 
-> > > ICE_CFG_BUSY around ice_vsi_rebuild() with rtnl_lock(), this would eliminate 
-> > > locking code from .ndo_bpf() altogether, ice_rebuild_pending() logic will have 
-> > > to stay.
-> > > 
-> > > At some point I have decided to avoid using rtnl_lock(), if I do not have to. I 
-> > > think this is a goal worth pursuing?  
-> > 
-> > Is the reset for failure recovery, rather than reconfiguration? 
-> > If so netif_device_detach() is generally the best way of avoiding
-> > getting called (I think I mentioned it to someone @intal recently).  
-> 
-> AFAIK, netif_device_detach() does not affect .ndo_bpf() calls. We were trying 
-> such approach with idpf and it does work for ethtool, but not for XDP.
+diff --git a/Documentation/devicetree/bindings/misc/qemu,vcpu-stall-detector.yaml b/Documentation/devicetree/bindings/misc/qemu,vcpu-stall-detector.yaml
+index 1aebeb696ee0..e12d80be00cd 100644
+--- a/Documentation/devicetree/bindings/misc/qemu,vcpu-stall-detector.yaml
++++ b/Documentation/devicetree/bindings/misc/qemu,vcpu-stall-detector.yaml
+@@ -29,6 +29,9 @@ properties:
+       Defaults to 10 if unset.
+     default: 10
+ 
++  interrupts:
++    maxItems: 1
++
+   timeout-sec:
+     description: |
+       The stall detector expiration timeout measured in seconds.
+@@ -43,9 +46,12 @@ additionalProperties: false
+ 
+ examples:
+   - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
+     vmwdt@9030000 {
+       compatible = "qemu,vcpu-stall-detector";
+       reg = <0x9030000 0x10000>;
+       clock-frequency = <10>;
+       timeout-sec = <8>;
++      interrupts = <GIC_PPI 15 IRQ_TYPE_EDGE_RISING>;
+     };
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
-I reckon that's an unintentional omission. In theory XDP is "pure
-software" but if the device is running driver will likely have to
-touch HW to reconfigure. So, if you're willing, do send a ndo_bpf 
-patch to add a detached check.
