@@ -1,97 +1,84 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F62914B064
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7872F14D2A0
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718306226; cv=none; b=OmdRjHMc0BPdkH8jIU9u1Iv0aZ2ICQ5sLTyLYF7K+jqhiqbJ6Xi2m2RTEKXhEWK8/Smzo5Rm/EKK65KLgXgTfZQMwpp33vGYgOaVEL/iszZe/YkeuyS2lfPwMWal2f4HdWv70tIxZLK+pvh3DFkbo72P/7LZXdrPD0WlQyasJrU=
+	t=1718306233; cv=none; b=EOMV8eLZeX/6abpBrfq6tqJ0mQ0t+6xp9X0Y9zbopTvzNWBYbJS20S9vlVX2HFbSUwZOC0JEZACnwkb0qPZ07V4JmR76Rq1nMGntJWt+6BNNiWb3wd9zTmQamWV+skwWEhx+i7O9YBBFBh5BW4LpYw0jvHZR3Ym5pQpk386PNUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718306226; c=relaxed/simple;
-	bh=SV+MkVPA7IjipbxXq9CYQ51R+m8bJWkmFeRtI4XsMPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IATeFItlMr1niwJw756b4mXnCuvp88/9Tzp+JMOgHV7DawfCPTaDZlV+4LEnLXIjHWRt3M/CvG8J6HOFi0bB0VB3cmmJz8vv++f7tJUOv9K2JS2p8U56WQiI602OBaIRhc+ZWVDvp1yWuPXvCpr7nyGaSkVmNIboP1v6JCgB17o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=LEnauKVe; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1718306233; c=relaxed/simple;
+	bh=CrA2LbZw2fj1oZQlxW6cbBwREuI1pwVFNKXdbbVw6aE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TAb+E+QL5Oi+iZQ4m6RVhX4NDQrKzfBLa3AX+s4JoyO6Zy9bROwZ4JM+W09IKEZP35woOpzVf229Y9IQr76ZmGhz3elU7d4f9FtLmcvPsHoFEr4qCcNWV4a433lPzoh1l3N9yLbHrxljFTGif3qeX2vK+pPj+f1rXoGDyOaNBY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XtGa5DO3; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="LEnauKVe"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f6fada63a6so12052725ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XtGa5DO3"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b06b78e716so9257796d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718306224; x=1718911024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpE2Ww+0dze0r9EN+Ae4oSiwfKGmmGKW1FHSshUbIM8=;
-        b=LEnauKVeetD1sZlkRpPpsMHTrPbS+TqXrZocfREPhDTr7AfLrpre5nqNFjdF3LcWj/
-         pfJeo8G2qa/DmRxS0QWSB4XNjzQkRSTPGGL3BfYD1gqwaxp7tSiwIPpL0XNO6biUoSur
-         GezYDspBKwx2RYUUX3LcLC2DvKZ5KTgW6oTROkI3JZ+VcnL80MGfQO+a5O4lhQyl8qbd
-         ADNa6yZZjtrT2y5Ze+kyDAy4IAJgji7lYWuC2qfFKlkRjzkRKhjX3VpHkEyhEI3bmSgH
-         gLoqLviQMaQav4tuS7+3J0cZEVm4Qbda0s+S06VIzPu3szLsAyv2Z+j6m17sZKPanrXQ
-         tcVQ==
+        d=broadcom.com; s=google; t=1718306230; x=1718911030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SqRZVCpbYo2jtcU4VLLPgUkKEV8z0zarA1K4gBzGSZs=;
+        b=XtGa5DO39owFRgz7eiFLh0BKcx+ZaoAoM0nazFe9979KkIrj2TS33fQOBeBFWkt3Us
+         Q4yHnPiKUmHx4iVAolspZgZwAlJ3KyZcy2HN6ng8IRO9ORy3IKXllSZST8ROGxwtywBk
+         dIgcjokRQ0mzaajlLTvC/0kBhAhv8r4+zwp1w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718306224; x=1718911024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpE2Ww+0dze0r9EN+Ae4oSiwfKGmmGKW1FHSshUbIM8=;
-        b=W51WzF1t+YZ4Y1dcQjdkkiAnKhNTp/ytAuqP6js9V8pLGIq/sbDxBTzYJG/A9m0R4a
-         n3Ql422QxHJLFxfQBT+n631V+/wNlzOWB8+FVpJ0ilGI1KsAtMZKnLJyrbHmN+kiPLmk
-         fPfFX+qpOPLF6jeO7Tpk60zGrUiR4lI5xQ0zODhyqpqmTqA9VL5qNymOMCR/GZpUwJwu
-         I56sBKvLYppvMX3qAC08J2KDjXk+8B5dtHLm6NWmRZsYmWx7iuT0cA+uZuaUORlbgnF6
-         94jINu5ilLVOGW4+ncGWKPKkSpA9+pOombr5hjLfqZDslJBiQdL1yLuvtjqoOlyM0QBw
-         dQLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAlQeiJ6Gz98JdpZQOeXK7KiUCxY+zIu9BtjIsJJJl+yopZpIyOTVjnRxVdTAZaSSo6LFeZ4Rpfg7kXedk2PzN5dn1RiKTwUHhTDGi
-X-Gm-Message-State: AOJu0YyBKjOkrV7ZRi5cN/OnrxU4SPT2ziiYA+NR2EtX5GSuWpKoXB6G
-	oOOsy7WL3d2zD9Phb1SNlS1B4u2riURmZpt3qzUadwKRioOBXSJbNFnDFvADT50=
-X-Google-Smtp-Source: AGHT+IEBHUiOGS6vq7hxV351Pocq5uf+7spoaKHpPHfr2Yp/P2zIdVv4yVxvGq5/azSD93awMnHT+g==
-X-Received: by 2002:a17:903:228f:b0:1f7:317f:5454 with SMTP id d9443c01a7336-1f862804bb9mr8516685ad.51.1718306224484;
-        Thu, 13 Jun 2024 12:17:04 -0700 (PDT)
-Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e7ca78sm17471015ad.106.2024.06.13.12.16.50
+        d=1e100.net; s=20230601; t=1718306230; x=1718911030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SqRZVCpbYo2jtcU4VLLPgUkKEV8z0zarA1K4gBzGSZs=;
+        b=M5dz7r+ukO580FIbfKQ5A3lS80I+IuGOjA2FYpPvw8zhfLL2hQuFM2bfZ1+76D1i4T
+         /H2Y11Kmnh+WKzQTUXR+lGqa4PHEUJwskIeNygeoLMLvVyC/vvVpG5APc1nvQKW9OSrH
+         HQA5H9ZLO0NMCEkz07PP1+p048IRtPZacbDwBUg0A8tyzl+fTZbPy8mSX6c/wGqdnJ0o
+         AuY+PTbtnAF3NIPeprLJVha3yGp/uRTt2W3qJLLbamch+KabiXfWKTrlAQulZhK8w8NW
+         PQKJzTTj8V2zF2+M8dHGhjq0NfmLFC5Rw8fKm/2qe8hVlkGUUK5t+p2cGXuMOO/Xz6xA
+         K5Zw==
+X-Gm-Message-State: AOJu0Yyfuwb0vPvLOLWsBqVrUX3Secvaa0/Va7MIqtW3BwUXHQdm/85Z
+	L8WuHcLE/RaGPJs5MN2v3ktPjyTkbii0Sf9m09rRZiTA2FP/pHOPoyb6hnkb/tyJxpm0Sr3PY/Q
+	ggtMFikPtCLEG0nrxWaaY+aqtmZcMvSpQPSFuEfFW1M0pmfetuA+Fq+hH489u/bBRn/hWbkrEOM
+	lpfsrHKtge1thXfeCFlse/kEKtSb6aKkruR52fDBN77pI94xr7a9Sq
+X-Google-Smtp-Source: AGHT+IFjEHPK4k0l7eyVsilK8yUQTNHgIqYDnv7SJ1An/1VqFCPEcRK7LH9vCsjmYZUTW3mQYOd55w==
+X-Received: by 2002:a0c:f882:0:b0:6b0:839e:ba6b with SMTP id 6a1803df08f44-6b2afd5f040mr5356876d6.43.1718306229909;
+        Thu, 13 Jun 2024 12:17:09 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb47f6sm9714106d6.82.2024.06.13.12.17.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 12:17:04 -0700 (PDT)
-From: Jesse Taube <jesse@rivosinc.com>
-To: linux-riscv@lists.infradead.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@gmx.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 2/6] dt-bindings: riscv: Add Zicclsm ISA extension description.
-Date: Thu, 13 Jun 2024 15:16:11 -0400
-Message-ID: <20240613191616.2101821-3-jesse@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240613191616.2101821-1-jesse@rivosinc.com>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
+        Thu, 13 Jun 2024 12:17:09 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	bp@alien8.de,
+	hpa@zytor.com,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com,
+	tglx@linutronix.de
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	richardcochran@gmail.com,
+	linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com,
+	timothym@vmware.com,
+	akaher@vmware.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	horms@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>
+Subject: [PATCH v11 0/8] VMware hypercalls enhancements
+Date: Thu, 13 Jun 2024 12:16:42 -0700
+Message-Id: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,34 +87,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add description for Zicclsm ISA extension.
+VMware hypercalls invocations were all spread out across the kernel
+implementing same ABI as in-place asm-inline. With encrypted memory
+and confidential computing it became harder to maintain every changes
+in these hypercall implementations.
 
-Signed-off-by: Jesse Taube <jesse@rivosinc.com>
----
-V1 -> V2:
- - New patch
----
- Documentation/devicetree/bindings/riscv/extensions.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+Intention of this patchset is to introduce arch independent VMware
+hypercall API layer other subsystems such as device drivers can call
+to, while hiding architecture specific implementation behind.
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index cfed80ad5540..9f6aae1f5b65 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -317,6 +317,13 @@ properties:
-             The standard Zicboz extension for cache-block zeroing as ratified
-             in commit 3dd606f ("Create cmobase-v1.0.pdf") of riscv-CMOs.
- 
-+        - const: zicclsm
-+          description:
-+            The standard Zicclsm extension for misaligned support for all regular
-+            load and store instructions (including scalar and vector) but not AMOs
-+            or other specialized forms of memory access. Defined in the
-+            RISC-V RVA Profiles Specification.
-+
-         - const: zicntr
-           description:
-             The standard Zicntr extension for base counters and timers, as
+First patch introduces the vmware_hypercall low and high bandwidth
+families of functions, with little enhancements there. And the last
+patch adds tdx hypercall support
+
+arm64 implementation of vmware_hypercalls is in drivers/gpu/drm/
+vmwgfx/vmwgfx_msg_arm64.h and going to be moved to arch/arm64 with
+a separate patchset with the introduction of VMware Linux guest
+support for arm64.
+
+No functional changes in drivers/input/mouse/vmmouse.c and
+drivers/ptp/ptp_vmw.c
+
+v10->v11 changes:
+- Redesign VMware hypercall asm inline. Move slow path to a separate function
+  keeping asm inline alternative small a simple. Suggested by Borislav Petkov.
+- Use existing _ASM_BP instead of introduction of VMW_BP_REG as was suggested
+  by Uros Bizjak.
+- Patch 6: add "Fixes" tag as was suggested by Markus Elfring. 
+
+v9->v10 changes:
+- Restructure the patchset as was suggested by Borislav Petkov to
+  introduce vmware_hypercalls API first, then move callers to use this
+  API, and then remove the old mechanism.  
+- Reduce alternative portion of VMWARE_HYPERCALL by moving common code
+  outside of alternative block. Suggested by Borislav Petkov.
+- Use u32 instead of uint32_t in vmware_hypercall API and across vmware.c
+  as was suggested by Simon Horman.
+- Remove previous Reviewed-by and Acked-by.
+- Fix typos in comments and commit descriptions.
+- No major changes in patches 2,3,4,8 compare to v9.
+
+v8->v9 change:
+First patch "x86/vmware: Move common macros to vmware.h" was split on 2 pieces:
+  "x86/vmware: Move common macros to vmware.h" - just code movement, and
+  "x86/vmware: Correct macro names" - macro renaming.
+
+v7->v8 no functional changes. Updated authors and reviewers emails to
+@broadcom.com
+
+v6->v7 changes (only in patch 7):
+- Addressed comments from H. Peter Anvin:
+  1. Removed vmware_tdx_hypercall_args(), moved args handling inside
+     vmware_tdx_hypercall().
+  2. Added pr_warn_once() for !hypervisor_is_type(X86_HYPER_VMWARE) case.
+- Added ack by Dave Hansen.
+
+v5->v6 change:
+- Added ack by Kirill A. Shutemov in patch 7. 
+
+v4->v5 changes:
+  [patch 2]:
+- Fixed the problem reported by Simon Horman where build fails after
+  patch 2 application. Do not undefine VMWARE_HYPERCALL for now, and
+  update vmwgfx, vmmouse and ptp_vmw code for new VMWARE_HYPERCALL macro.
+- Introduce new patch 6 to undefine VMWARE_HYPERCALL, which is safe to do
+  after patches 3 to 5.
+- [patch 7 (former patch 6)]: Add missing r15 (CPL) initialization.
+
+v3->v4 changes: (no functional changes in patches 1-5)
+  [patch 2]:
+- Added the comment with VMware hypercall ABI description.
+  [patch 6]:
+- vmware_tdx_hypercall_args remove in6/out6 arguments as excessive.
+- vmware_tdx_hypercall return ULONG_MAX on error to mimic bad hypercall
+  command error from the hypervisor.
+- Replaced pr_warn by pr_warn_once as pointed by Kirill Shutemov.
+- Fixed the warning reported by Intel's kernel test robot.
+- Added the comment describing VMware TDX hypercall ABI.
+
+v2->v3 changes: (no functional changes in patches 1-5)
+- Improved commit message in patches 1, 2 and 5 as was suggested by
+  Borislav Petkov.
+- To address Dave Hansen's concern, patch 6 was reorganized to avoid
+  exporting bare __tdx_hypercall and to make exported vmware_tdx_hypercall
+  VMWare guest specific.
+
+v1->v2 changes (no functional changes):
+- Improved commit message in patches 2 and 5.
+- Added Reviewed-by for all patches.
+- Added Ack from Dmitry Torokhov in patch 4. No fixes regarding reported
+  by Simon Horman gcc error in this patch.
+
+Alexey Makhalov (8):
+  x86/vmware: Introduce VMware hypercall API
+  ptp/vmware: Use VMware hypercall API
+  input/vmmouse: Use VMware hypercall API
+  drm/vmwgfx: Use VMware hypercall API
+  x86/vmware: Use VMware hypercall API
+  x86/vmware: Correct macro names
+  x86/vmware: Remove legacy VMWARE_HYPERCALL* macros
+  x86/vmware: Add TDX hypercall support
+
+ arch/x86/include/asm/vmware.h             | 336 +++++++++++++++++++---
+ arch/x86/kernel/cpu/vmware.c              | 212 ++++++++------
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c       | 173 ++++-------
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg_arm64.h | 196 +++++++++----
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h   | 185 ------------
+ drivers/input/mouse/vmmouse.c             |  76 ++---
+ drivers/ptp/ptp_vmw.c                     |  12 +-
+ 7 files changed, 654 insertions(+), 536 deletions(-)
+
 -- 
-2.43.0
+2.39.4
 
