@@ -1,122 +1,116 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EXCEDGE02.prodrive.nl (mail.prodrive-technologies.com [212.61.153.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FE213A41A
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 14:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D242AEE9;
+	Thu, 13 Jun 2024 14:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290471; cv=none; b=pdpCvLD3ZKBnskReL0gN8AcXvIKqBdDlmaLRlQBNM8K4P4ItbWqwAsXiRD0AXIeJVOT70aFucr0uYa+Qizf0ySzFm6PfzTBYrdLIccGlsEJCksskymcjm0I/z3YNYZnBpoHVxQ5EnKUMXf5ODc7+m/bTXwHbeswOFoR8KcAv6dg=
+	t=1718290615; cv=none; b=e4nEQBRLH4saBWw9vmYh+YTWW9Z/NBLe2C0/GsG635YlSZ7TsiTj01FpaYdtHr9/R03QRQrily0bL5NHosxXPelpkMjdDZamtOyxAOIw3Fp60IPpEyjOMVnxoJZ4T6X13iaXHRzemM8BUJZABROxiQbqKwtsGDeJMJkH43P9cdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290471; c=relaxed/simple;
-	bh=+HZBDinZDCMT7Ez14OypUVVwLMkZvNTY8vfAf9qVU3o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HzXHtA1MT9Xhxwj//pyPIVSpkfmKA4YTvpdTCSy13woalGw0x2sgNEM6ih2QYVvNBiSTKrCOncXcB90z4jD/l33CFH21i3JxOj9wxr/o8OLemWdLk73uwH6WS7WL9naISVeShrRTWhrcj8oU6Wm4v/jbOnlqPKbWlLuC+J/X+TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Atz33ow2; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Atz33ow2"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-80d61a602f2so389466241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718290469; x=1718895269; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7g5SALnsdPJQWBZt0kVgnA0bB4kjPLGUDBHBwv4noI=;
-        b=Atz33ow2Y46i+1Uyb90M1hD1amAg8mvabA9p0oqITmZAh0CyHmffJodCTqn3JNo1lE
-         OEo9wEKfTNDSQhqxv6lg6TZwdPHXRRT7parrTc9/kHYlcpNLv9i2DGaImHR1x8Y5UMav
-         0jUeTr+9EFZx/wkQxSFTZjhEWTKJN8jQti8P+RNTp7D8CQ8OwW1acu6bxSpgyIGY/LHO
-         R8ACeZ8D6E0WyjukIkpkr07XXj98UaKObY2ppQi0Lk10oQ08u2UHYhbSTut85fow94bz
-         2X3Q5SOLZjrYnZvcDhA859iPOm2ctT10fDp3gpiKhK+eriNo7ULrh9SCnBLPJD6/HDB3
-         4o9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718290469; x=1718895269;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z7g5SALnsdPJQWBZt0kVgnA0bB4kjPLGUDBHBwv4noI=;
-        b=hETdC2yReqGOoMc3jv/EGBC58n5oyssO03hObQb4E1ZUZEZ/KFed+NG1ayswg/Qda1
-         y4Ncv+rYnFEDDHOeq9z8iMSD94/5r7z8Mr5qqb2bgchrvKRjic2aXLbP4bh5Vh1kjV/z
-         /9UZ5hpETnosSPzkIW2i4ghG2OMR1bdsGzyTzIbxVXUyZ4u26yiyCNXMp+kHS1T8FtS/
-         3gZa1tOy8axGU11PeohqGxibtQ21aEacG2uppSfoiH8qYFccTzIzkM4UtDYjH6vUd7Wr
-         ezBCXNXQX8NFaSBM6GSf3g6QkGWhOCFqUhHWEXHGzz+gCMpehTKVKGiucdgSndSrEpzG
-         8Clw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7fWCR93J0FQUttg/BqLBS6MS2L7cJJHmp/p5RoIGkDpUPfXid2zcJb8yNA2d+d5LwK+ZRQeLs1+tdwUeqEEJzY8PlvA1TYmZvRBff
-X-Gm-Message-State: AOJu0YyoSOGDKfbxUueXEtK+1GNIug8rRPFfFTIPBW0wvgaxhn/tsSx3
-	pRevPDhw3aYZnd8BncwXwxahqHx6AEQjmJFASHj3Aqk93jhrR4U18X8irqIiDUiEpEolq4PjYM7
-	YccqZgOU7FT7mdCQKGGvkXnK1zB+0HACHYXwB4w==
-X-Google-Smtp-Source: AGHT+IEFJBIeVpnD+lw3dEtVlaKMEXn/UPaJkQ+jBNt3IL0NdXWuc6/aVyLKENNOoHl9TZ+IQBZ2xK7qOnH1FQoGYNM=
-X-Received: by 2002:a05:6122:20a1:b0:4ec:f27b:ee9c with SMTP id
- 71dfb90a1353d-4ee3f1628c5mr73958e0c.5.1718290467801; Thu, 13 Jun 2024
- 07:54:27 -0700 (PDT)
+	s=arc-20240116; t=1718290615; c=relaxed/simple;
+	bh=JBD5JZgYoYP7sSdaelVg7aP3qlQnjwjxKiVYCRSyL+E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Axx2SXDaikXzFTDUgyboaOzGlVHOACk744fCddn97dLmIIvF+HsN1BTCqPZPQvcKTQEdGXsfLGx3w3L5Vsil93XrDa5UvA1AHcLVcm8RTYrE0ZTXtgv+7dUJlinGP3PhcBqYIQPjSnxDlSGy24q38c8tg4nqy0Kqm6YU3pBEHWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by webmail.prodrive.nl
+ (192.168.102.63) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Jun
+ 2024 16:41:42 +0200
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 13 Jun
+ 2024 16:41:41 +0200
+Received: from lnxdevrm02.bk.prodrive.nl (10.1.1.121) by
+ EXCOP01.bk.prodrive.nl (10.1.0.22) with Microsoft SMTP Server id 15.2.1258.12
+ via Frontend Transport; Thu, 13 Jun 2024 16:41:41 +0200
+Received: from paugeu by lnxdevrm02.bk.prodrive.nl with local (Exim 4.94.2)
+	(envelope-from <paul.geurts@prodrive-technologies.com>)
+	id 1sHle1-001Uou-3r; Thu, 13 Jun 2024 16:41:41 +0200
+From: Paul Geurts <paul.geurts@prodrive-technologies.com>
+To: <wei.fang@nxp.com>, <shenwei.wang@nxp.com>, <xiaoning.wang@nxp.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Paul Geurts <paul.geurts@prodrive-technologies.com>
+Subject: [PATCH] fec_main: Register net device before initializing the MDIO bus
+Date: Thu, 13 Jun 2024 16:41:11 +0200
+Message-ID: <20240613144112.349707-1-paul.geurts@prodrive-technologies.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613113247.525431100@linuxfoundation.org>
-In-Reply-To: <20240613113247.525431100@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 13 Jun 2024 20:24:16 +0530
-Message-ID: <CA+G9fYvS7u7seBUY36kGdJQJ4LS==ex=zzvBztYUE_X9AT5nYg@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/317] 5.10.219-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, 13 Jun 2024 at 17:43, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.10.219 release.
-> There are 317 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 15 Jun 2024 11:31:50 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.219-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Registration of the FEC MDIO bus triggers a probe of all devices
+connected to that bus. DSA based Ethernet switch devices connect to the
+uplink Ethernet port during probe. When a DSA based, MDIO controlled
+Ethernet switch is connected to FEC, it cannot connect the uplink port,
+as the FEC MDIO port is registered before the net device is being
+registered. This causes an unnecessary defer of the Ethernet switch
+driver probe.
 
-The powerpc builds failed on stable-rc 5.10 branch with gcc-12 and clang.
+Register the net device before initializing and registering the MDIO
+bus.
 
-Powerpc:
- - maple_defconfig
- - ppc6xx_defconfig
- - tinyconfig
+Fixes: e6b043d512fa ("netdev/fec.c: add phylib supporting to enable carrier detection (v2)")
+Signed-off-by: Paul Geurts <paul.geurts@prodrive-technologies.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 881ece735dcf..ed71f1f25ab9 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -4500,10 +4500,6 @@ fec_probe(struct platform_device *pdev)
+ 	/* Decide which interrupt line is wakeup capable */
+ 	fec_enet_get_wakeup_irq(pdev);
+ 
+-	ret = fec_enet_mii_init(pdev);
+-	if (ret)
+-		goto failed_mii_init;
+-
+ 	/* Carrier starts down, phylib will bring it up */
+ 	netif_carrier_off(ndev);
+ 	fec_enet_clk_enable(ndev, false);
+@@ -4515,6 +4511,10 @@ fec_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto failed_register;
+ 
++	ret = fec_enet_mii_init(pdev);
++	if (ret)
++		goto failed_mii_init;
++
+ 	device_init_wakeup(&ndev->dev, fep->wol_flag &
+ 			   FEC_WOL_HAS_MAGIC_PACKET);
+ 
+@@ -4528,9 +4528,9 @@ fec_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-failed_register:
+-	fec_enet_mii_remove(fep);
+ failed_mii_init:
++	unregister_netdev(ndev);
++failed_register:
+ failed_irq:
+ 	fec_enet_deinit(ndev);
+ failed_init:
+@@ -4577,8 +4577,8 @@ fec_drv_remove(struct platform_device *pdev)
+ 
+ 	cancel_work_sync(&fep->tx_timeout_work);
+ 	fec_ptp_stop(pdev);
+-	unregister_netdev(ndev);
+ 	fec_enet_mii_remove(fep);
++	unregister_netdev(ndev);
+ 	if (fep->reg_phy)
+ 		regulator_disable(fep->reg_phy);
+ 
+-- 
+2.30.2
 
-Build log:
----------
-from /builds/linux/arch/powerpc/kernel/asm-offsets.c:14:
-arch/powerpc/include/asm/uaccess.h: In function 'raw_copy_from_user':
-arch/powerpc/include/asm/uaccess.h:472:25: error: implicit declaration
-of function '__get_user_size'; did you mean '__get_user_bad'?
-[-Werror=implicit-function-declaration]
-  472 |                         __get_user_size(*(u8 *)to, from, 1, ret);
-      |                         ^~~~~~~~~~~~~~~
-      |                         __get_user_bad
-cc1: some warnings being treated as errors
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.218-318-g853b71b570fb/testrun/24321785/suite/build/test/gcc-12-maple_defconfig/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.218-318-g853b71b570fb/testrun/24321785/suite/build/test/gcc-12-maple_defconfig/history/
-
---
-Linaro LKFT
-https://lkft.linaro.org
