@@ -1,75 +1,119 @@
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5654D13F456
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A329526AE4;
+	Thu, 13 Jun 2024 08:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268068; cv=none; b=e7gfw5etBEeG1/WxJiX6BTF9QNz9y4o+P8Hc0IEDDdML5pYI9YWvwy4vjgO9eq+ZJAMZrBYPqJi5jjpGNvX4QvtN4RCxDWbQZMppdZyhHJi49DmoIhNBEtbifc9YTDyrtoKkzvoW3UTudhPSHO0cB7NUhoDJdghVBf05gm3W0W4=
+	t=1718268110; cv=none; b=eWT4WciF80nOALngo8cdMixlz/7obvXPOTRhemsE7FVObDTGEgzJIpST+e9yiGrXk0WpGg3122IaAk2EtPmN7LPEsbcFL+Ld02akSpmYRk0VgLh1UsO6FqJ/opjin5R79tFefBZMyS6jgUvbxfpmgurpjwj/4bF2HGdFIuXChpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268068; c=relaxed/simple;
-	bh=kaJDHSUhZn+FcluExfAV2T2ascjiP3guZqN5suxacLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu5SnzZ+d9rCpGSggk+f5llMX6CJg9V4kWEjqaknr5qmPxHho2H7Vr2tDnGasJXuVHMVyQ3GBVyxKZaVJ404YeaZylN8XDtY3u1eQCxUByFzVjmj5z0N4PG+FlUsNaWBwVWIg/BRQZPFrh4vGG57UEvk2lfoA9k9XS8zneEJVew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=LHgFx7Ui; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1718268110; c=relaxed/simple;
+	bh=1ZJ/uxN8Pb7qwYIgbsTKzzdLKnI4ejAlfOoGuc1Nl6A=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=HTB7lZqA1ocj8pS5BJar/swymLXVbb6o83Lp58KJO0eBW4H+NyTTMM6z545qYaEDH4n1hFIONfOoOQxSKujXD2KNi9xqpCTWDjLHS8FOZRiHI1MiDlXfJzVvw2UTRL9ugbRRvrjgySSKFb1DZqtBXtEUlAEj5xhEMVtaGaGVXZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J17GTGLY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FtkKBH20; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="LHgFx7Ui"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1718268066; x=1749804066;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VI3iX+RqAjqXsW2mXfYAzvb4c/eAmPyXQ29Eq194SH8=;
-  b=LHgFx7UiOqsfS1ivUxI9ZEvUAAceJxz+KWyGFclHCJFJvohDw6634vYZ
-   bz1yFzLikzDNJnJexCBi1QHECPGT6rjUZHz9QU9eDPZJMSzdT08Cq375t
-   HdMikTv1wdqZDERSPBd7s4MnAbItTARoFADC7GvV42BgKlYebeCE1RFcy
-   L1wuh0qAbpWATa5ZDsJ+FljFxTxT8CaKOAjlccEE31WzK0ZRBhAFzG6hM
-   QV9Q3/DPvezaNrsPD6O0MZx+3I6g/frJk8pA0lC9WE1tBLE3svnXhd87Z
-   Ef/roKh2FnzCINIHT9rV5uxUlaBYIm7nxiq/TbmnfkIGY0C8esan3DUgm
-   w==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 17:30:57 +0900
-X-IronPort-AV: E=Sophos;i="6.08,234,1712588400"; 
-   d="scan'208";a="399086883"
-Received: from unknown (HELO LXJ00013166) ([IPv6:2001:cf8:2:f100:2ef0:5dff:fe04:1f0f])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP; 13 Jun 2024 17:30:56 +0900
-Date: Thu, 13 Jun 2024 08:30:56 +0000
-From: Khasnis Soumya <soumya.khasnis@sony.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org,
-	daniel.lezcano@linaro.org, festevam@denx.de, lee@kernel.org,
-	benjamin.bara@skidata.com, dmitry.osipenko@collabora.com,
-	ldmldm05@gmail.com, soumya.khasnis@sony.com,
-	srinavasa.nagaraju@sony.com, Madhusudan.Bobbili@sony.com,
-	shingo.takeuchi@sony.com, keita.aihara@sony.com,
-	masaya.takahashi@sony.com
-Subject: Re: [PATCH v4] driver core: Add timeout for device shutdown
-Message-ID: <20240613083056.GA8140@sony.com>
-References: <20240610055844.GA68891@sony.com>
- <2024061046-protozoan-repost-6443@gregkh>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J17GTGLY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FtkKBH20"
+Date: Thu, 13 Jun 2024 08:41:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718268106;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=05oMZ/uaU2LNUMzjQkqwNiFcFWF1pVwE3ycVjjdx3f0=;
+	b=J17GTGLY0h9QF8mqNBHCSAKz2rR8jhbG2pfBLmpsVAKDpAToGLlTWklsUz9WM770F0j4NW
+	etOt7GRO/JE2RAJ6IBPeVEe10JRK0kr1L2bAi33FIppsT4t60z4Mu/zCh0BSDuTLWZ9bpb
+	ka822TwfHdyidqh4JKL78lkPYIhM9MdpjBKEE8UOwEU6rBEcaVqKcqFKTd0b9uf46xqqY3
+	j1JceW7A2UwRAHZsHuLiWRyqYUl+qKiaUEZkKR86GUSSJGBuc/EHDEpmJTMfQNr1/qiKdr
+	ZtUPrF+dVKJp/R87DK2IZZxtKvZ1Dg9oiDJe9KuN4GmImM7fg47YI7LR40N31A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718268106;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=05oMZ/uaU2LNUMzjQkqwNiFcFWF1pVwE3ycVjjdx3f0=;
+	b=FtkKBH203/SnzCcJbfsbZo+LZ6t2VVS5XrYxcnApx/u1nMo2Ji+i2ei6nbv86ZlmhNMzg+
+	3hwpZ0ecfvmc0qDw==
+From: "tip-bot2 for Benjamin Segall" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/boot: Don't add the EFI stub to targets, again
+Cc: Ben Segall <bsegall@google.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org,
+	#@tip-bot2.tec.linutronix.de, v6.1+@tip-bot2.tec.linutronix.de,
+	x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <xm267ceukksz.fsf@bsegall.svl.corp.google.com>
+References: <xm267ceukksz.fsf@bsegall.svl.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024061046-protozoan-repost-6443@gregkh>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <171826810609.10875.7242823258662782011.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 08:29:02AM +0200, Greg KH wrote:
-> On Mon, Jun 10, 2024 at 05:58:44AM +0000, Soumya Khasnis wrote:
-> > +config DEVICE_SHUTDOWN_TIMEOUT
-> > +	bool "device shutdown timeout"
-> > +	default n
-> 
-> n is the default, no need to ever set it like that.
-thank you for review Gerg, i will fix it.
-> 
-> thanks,
-> 
-> greg k-h
-Thanks and Regards,
-Soumya.
+The following commit has been merged into the x86/urgent branch of tip:
+
+Commit-ID:     b2747f108b8034271fd5289bd8f3a7003e0775a3
+Gitweb:        https://git.kernel.org/tip/b2747f108b8034271fd5289bd8f3a7003e0775a3
+Author:        Benjamin Segall <bsegall@google.com>
+AuthorDate:    Wed, 12 Jun 2024 12:44:44 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Thu, 13 Jun 2024 10:32:36 +02:00
+
+x86/boot: Don't add the EFI stub to targets, again
+
+This is a re-commit of
+
+  da05b143a308 ("x86/boot: Don't add the EFI stub to targets")
+
+after the tagged patch incorrectly reverted it.
+
+vmlinux-objs-y is added to targets, with an assumption that they are all
+relative to $(obj); adding a $(objtree)/drivers/...  path causes the
+build to incorrectly create a useless
+arch/x86/boot/compressed/drivers/...  directory tree.
+
+Fix this just by using a different make variable for the EFI stub.
+
+Fixes: cb8bda8ad443 ("x86/boot/compressed: Rename efi_thunk_64.S to efi-mixed.S")
+Signed-off-by: Ben Segall <bsegall@google.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org # v6.1+
+Link: https://lore.kernel.org/r/xm267ceukksz.fsf@bsegall.svl.corp.google.com
+---
+ arch/x86/boot/compressed/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 243ee86..f205164 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -105,9 +105,9 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+ 
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+-vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
+-$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
++$(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
