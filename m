@@ -1,115 +1,112 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635DA130AC8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 18:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B5214AD2C;
+	Thu, 13 Jun 2024 18:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718304207; cv=none; b=rVASZEOVzWmsQQQ1FL1LUCqfbkGZk2AApqyDy0BvBToGuHKFsYq4i24jwTwSAzegwBEksvE8oXd9LXicwcZHIi5KwiKmMg3j1jYKU+Sg5NpSR1DDqX/ZvpBvY4AcgLCAwLMjXo1GNdD5iC6s31NYkpAeU6RcHu1IUNEd2qOz8rs=
+	t=1718304317; cv=none; b=BWjgA/6Cms/oo41bcGkoUd/Pbl3ws2Ka3Rblpk2mQjPr+raAqlVGwW8Mrgx+i9FP6/kznZOpb2XSqO3SP4h1LVOh8MgTMka8dqsV9LTvMio2xFigVj4C8o7O4XCwwAa0Lw5xEN1dfnFSdcAWk1ktzqArIF4CN9WYG00UAVmREOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718304207; c=relaxed/simple;
-	bh=r5DiRvR5pZWBaw2R0JM4QcTuV5NNPDsViKSFsSYOZVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Icw8h9lUenrwF3clNUzhFscFztdIQnz9oTiLTaY7Kr8XTsKX8HMFimIZQCh2E2wXz8bw0aPqH71fOxNPXN4lOmkUhuLRXLSPnPytduKOIbrSMt2IPXNwRkQ71LPp3PHHCEhWzTZqufHpxYEfQ7H2wd+StgA1Jt9HekzUpeWMOC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Msq8uo7L; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718304317; c=relaxed/simple;
+	bh=SaYK7xDVIVPlSht74HhNqclsX16Ie88uGUDzvreWhC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=n396HNQ/gjzH/DyEoJeh4vwn2HirmG8pP0pcvItDX8ah4GPNVsBfgNf0HRyAUcSczkVUN1sBlEDH0BfjQBRFdH0El71B5VB6yOk6RZvOTILlQGHt49gvA8jTfmE2W7PGYBxwJPQEQH+yiMBmmxaWsmp177WHWFdaXfsHnTay+k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3XGyyGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Msq8uo7L"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6f1da33826so212985666b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718304203; x=1718909003; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J6MehwvGkTLXwJwX8TygZIo4GI9E/mz52rreRcv1Jb8=;
-        b=Msq8uo7LISNoM1/Vov6e0Ydgzrnwvd91aqmtZs2HWaq3ZeI52W1KJCrMdh46IZgK/B
-         l1Vh+QhFn9mUk2sg2rex8hvA2E31qYpZ92MeI+uPqiP04AJSGuUYPczQ0c2EmLW202i6
-         DhqSlzuMiLsbS78yuh3vnbh2OQQ3ZR/jwZ5tA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718304203; x=1718909003;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J6MehwvGkTLXwJwX8TygZIo4GI9E/mz52rreRcv1Jb8=;
-        b=WUiBDAnchYf6aHOz6offKj0CRx9BLmmRs1tXrx0FoPGMpIoyQdRXsGFjJjeySdaOv2
-         f0NKoIloS+uzGrIv0iVElqK0oWkuJifEuiKEMKMzDD6+WP10rI+sQ96Ey8VLb6a778/8
-         oFeSJUM/ZlgjySbVdxB37GtkygHr2cNdA4YJq9eUeOPrKxAblvzoVkZt2XWWkqnSZ8HO
-         NEpmLlk374F/bDbqKu+Alylq0YYQWl6iv+d5fZ4aD11OupEqPc/Zmv6xLQTNre12HEsp
-         8vpmhsYR2iyXp6jWboKSKyVgEZ8rtj00KLqI+ofrQnYrTOG91jRqgW7ZmCKG+p8qqUUB
-         R53Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ+agtgBBIXAU8anoGvP+veC3J74zncVLWhEUlCT5BLXEtqmzHyn0/DDp7sbH8ZSX3MFpPK/v6ISEetx5sRc7iAubJo2tzBWTibB+j
-X-Gm-Message-State: AOJu0YzLRKLZnGCXgwyudf+5wXlvABCiievWJlQiJT7N4Yf/Od4NnOq/
-	2eGqyfvtN51MOSJUOG3uwxiKKc+wdTcU1w6Q5qbHmHDzC8Hh3DYrZ2nqco2tfVUMcjE9XdJW6b6
-	YCeqQmQ==
-X-Google-Smtp-Source: AGHT+IFP3+w7AfRDLW30n06egr0vbGeQflaQA9cwtwhZ4kxg7qj+jyT4JRO4fbjNjuVBxL39MYh6jA==
-X-Received: by 2002:a17:906:a0c:b0:a6f:d57:aedc with SMTP id a640c23a62f3a-a6f60dc50eamr47258966b.57.1718304203374;
-        Thu, 13 Jun 2024 11:43:23 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecdd2asm101043666b.141.2024.06.13.11.43.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 11:43:22 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6f253a06caso179018266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:43:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV02glOXx77xTpV25kJZHBi0XDy1yUhfbQUJqoMGxVPu4UJ7j02EAiEPGhRll+9sXAiWvWNo9cqVw3tV42GZhiZmhZAW8dPVjkd/HDR
-X-Received: by 2002:a17:906:b182:b0:a6f:4c90:7958 with SMTP id
- a640c23a62f3a-a6f60d13a7amr46483766b.12.1718304202217; Thu, 13 Jun 2024
- 11:43:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3XGyyGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54CA4C2BBFC;
+	Thu, 13 Jun 2024 18:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718304316;
+	bh=SaYK7xDVIVPlSht74HhNqclsX16Ie88uGUDzvreWhC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=R3XGyyGFzwjza+YIqcLz1yLluC+7EBBbxz+bjk3bINlUnfF3fBo0vxvRZJE5rfezX
+	 IdtqN5Ji664TSC9q1zDKWqteUv+wYuC1Nj5D/qWFhIxfv8aJHOsOlVa+YlyfZXwTbw
+	 q8YhThE/zwkuHoY0Gow1P3nfPb7g0HDwiVmv6lBgHboXDBhEInoNST0x9kr7XAcZST
+	 7l5nAMqy+jilTniLJNCAATJ9/PnOsT2mV1J+v0mG6Iq95VwyFrsc8mUvCjaBHL5hu4
+	 1iFHa0yZKD8X3mVu1QH6PyWqatlTDDPlcJHDN/wiinR13NnQmlbKLPuT6KqVIHBrt1
+	 ehn9BXQozHTbg==
+Date: Thu, 13 Jun 2024 13:45:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Philipp Stanner <pstanner@redhat.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org,
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] PCI: Reimplement plural devres functions
+Message-ID: <20240613184514.GA1071919@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613001215.648829-1-mjguzik@gmail.com> <20240613001215.648829-2-mjguzik@gmail.com>
- <CAHk-=wgX9UZXWkrhnjcctM8UpDGQqWyt3r=KZunKV3+00cbF9A@mail.gmail.com>
- <CAHk-=wgPgGwPexW_ffc97Z8O23J=G=3kcV-dGFBKbLJR-6TWpQ@mail.gmail.com>
- <5cixyyivolodhsru23y5gf5f6w6ov2zs5rbkxleljeu6qvc4gu@ivawdfkvus3p>
- <20240613-pumpen-durst-fdc20c301a08@brauner> <CAHk-=wj0cmLKJZipHy-OcwKADygUgd19yU1rmBaB6X3Wb5jU3Q@mail.gmail.com>
- <CAGudoHHWL_CftUXyeZNU96qHsi5DT_OTL5ZLOWoCGiB45HvzVA@mail.gmail.com>
-In-Reply-To: <CAGudoHHWL_CftUXyeZNU96qHsi5DT_OTL5ZLOWoCGiB45HvzVA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 13 Jun 2024 11:43:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi4xCJKiCRzmDDpva+VhsrBuZfawGFb9vY6QXV2-_bELw@mail.gmail.com>
-Message-ID: <CAHk-=wi4xCJKiCRzmDDpva+VhsrBuZfawGFb9vY6QXV2-_bELw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lockref: speculatively spin waiting for the lock to
- be released
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aa4e5dd8-2ac4-ae58-2b1b-8d05115ac769@linux.intel.com>
 
-On Thu, 13 Jun 2024 at 11:13, Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> I would assume the rule is pretty much well known and instead an
-> indicator where is what (as added in my comments) would be welcome.
+On Thu, Jun 13, 2024 at 07:54:38PM +0300, Ilpo Järvinen wrote:
+> On Wed, 5 Jun 2024, Philipp Stanner wrote:
+> 
+> > When the original PCI devres API was implemented, priority was given to
+> > the creation of a set of "plural functions" such as
+> > pcim_request_regions(). These functions have bit masks as parameters to
+> > specify which BARs shall get mapped. Most users, however, only use those
+> > to map 1-3 BARs.
 
-Oh, the rule is well-known, but I think what is worth pointing out is
-the different classes of fields, and the name[] field in particular.
+> > +static int __pcim_request_region_range(struct pci_dev *pdev, int bar,
+> > +		unsigned long offset, unsigned long maxlen,
+> > +		const char *name, int req_flags)
+> > +{
+> > +	resource_size_t start = pci_resource_start(pdev, bar);
+> > +	resource_size_t len = pci_resource_len(pdev, bar);
+> > +	unsigned long dev_flags = pci_resource_flags(pdev, bar);
+> > +
+> > +	if (start == 0 || len == 0) /* That's an unused BAR. */
+> > +		return 0;
+> > +	if (len <= offset)
+> > +		return  -EINVAL;
+> 
+> Extra space.
 
-This ordering was last really updated back in 2011, by commit
-44a7d7a878c9 ("fs: cache optimise dentry and inode for rcu-walk"). And
-it was actually somewhat intentional at the time. Quoting from that
-commit:
+Thanks for reviewing this.  I dropped the space locally in the v9
+series.
 
-    We also fit in 8 bytes of inline name in the first 64 bytes, so for short
-    names, only 64 bytes needs to be touched to perform the lookup. We should
-    get rid of the hash->prev pointer from the first 64 bytes, and fit 16 bytes
-    of name in there, which will take care of 81% rather than 32% of the kernel
-    tree.
+> >  void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+> >  {
+> > -	void __iomem * const *iomap;
+> > -	int i;
+> > -
+> > -	iomap = pcim_iomap_table(pdev);
+> > -	if (!iomap)
+> > -		return;
+> > +	short bar;
+> 
+> The current best practice is to use unsigned for loop vars that will never 
+> be negative.
+> 
+> I don't entirely follow what is reasoning behind making it short instead 
+> of unsigned int?
 
-but what has actually really changed - and that I didn't even realize
-until I now did a 'pahole' on it, was that this was all COMPLETELY
-broken by
+Existing interfaces like pcim_iomap() take "int bar".  I locally
+changed all the BAR indices to "int".  We can make everything unsigned
+later if worthwhile.
 
-       seqcount_spinlock_t        d_seq;
+> > -	for (i = 0; i < PCIM_IOMAP_MAX; i++) {
+> > -		if (!mask_contains_bar(mask, i))
+> > +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> 
+> Is this change minimal if it contains variable renames like this?
+> Was "i" not "bar" even if it was given as a parameter to 
+> mask_contains_bar()?
 
-because seqcount_spinlock_t has been entirely broken and went from
-being 4 bytes back when, to now being 64 bytes.
+Replaced locally with "i".
 
-Crazy crazy.
-
-How did that happen?
-
-               Linus
+Bjorn
