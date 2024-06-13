@@ -1,320 +1,134 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9A65A4FD;
-	Thu, 13 Jun 2024 21:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D08E5A4FD;
+	Thu, 13 Jun 2024 21:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718315378; cv=none; b=hnXP4lfClevBt2I9dYO1zFBZz9iarqBaYg6ilY8tLqQSGTcqNgC4HRYSF+Wav4oTrjM9naU19NRu220RZupTH7ltUzTqUqFjBKjw/9kKLPFMu5ILm+L4FR/qPk0aePcpZSJ8L4BlhEDbjjTQvCLdEXBh104kBabD904PFb1as5A=
+	t=1718315449; cv=none; b=NujhTdHsm0fJKRTdPpULNJ1hrlBtJOcvYbPFwEf5gcaZQhhFrhZkfW0EfdYmpHqnaowgMn5oYzx/27qRXERGcnHcU8EkWjqYN/0sWEpjAfwE7m/XZWibh4IFw/YT0fFg2hhTEmvCZ5FYrgz0CrJTEH1CDi+jbcUYQ3hMwBAcA8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718315378; c=relaxed/simple;
-	bh=ETYgORMuqtSoTr818gKpIfKridOj8I0R7TG0CAFQppc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7WPuz0bR/wZdo8uVSLCI8miQNvHsETG/2B+rp1rvCv9n5aaEDfauWxqoYrfmZTXmWTpvIGrs7W6D2SZ9MaBX0JWrj5Bog66opt0c7osOyPYrZIagSnkSYMexhhVRl9w8pZQgC9XulPSFobKeyI/Qjh8Ct7LJkn6QiA7fKuOhCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=3EnM92Rk; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1718315449; c=relaxed/simple;
+	bh=E1LZ2qD4h47Nm0fqTgahufLnfYId7G2BDN4j2DBKUCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Y6chLNkbTkTC0BEKwlxEavS7GIuMrDqzUmw5Ec9KYihUuduoRQRLXT6EGdfsVpjDK8oJTF5ulxRr0bONlEmGIVZWq718KvDBS4xiTdd8mV1RXS4TOZ6pjQnVpdgD+YqsHOQRcm9iKJpJHqXEOdlhYiAM36ppxYZZbp2d5EiPCYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ahtnjbfp; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3EnM92Rk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=2tgawcyxp7e6LF/gNJHmG9oPpwqaaAvXUh9+M7UWf7c=; b=3EnM92Rk7DmDJc+RAa3EiMUH1m
-	hHpvDI0GQPzxsTAWddB2Q20QiDM/mMCPCPtKzRZ1hi+4tCZ+WoImbaFDu5RTREUPfcIN6iStA3T9J
-	/pA8sqcDg0PcH5KpLpk6yqSMBIufj7NfpabiOrUoHNLerqkOxh/pkPonVcnEdcTsWSVk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sHsK5-0000ZS-5O; Thu, 13 Jun 2024 23:49:33 +0200
-Date: Thu, 13 Jun 2024 23:49:33 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Omer Shpigelman <oshpigelman@habana.ai>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	ogabbay@kernel.org, zyehudai@habana.ai
-Subject: Re: [PATCH 09/15] net: hbl_en: add habanalabs Ethernet driver
-Message-ID: <10902044-fb02-4328-bf88-0b386ee51c78@lunn.ch>
-References: <20240613082208.1439968-1-oshpigelman@habana.ai>
- <20240613082208.1439968-10-oshpigelman@habana.ai>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ahtnjbfp"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DLlh9b031385;
+	Thu, 13 Jun 2024 21:50:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=pp1; bh=XfZH3QdHnUhyEF5FH3erh0hNNk8
+	Aq0lyphP1+FusXOQ=; b=AhtnjbfpjiJr5bCvMnSzcUf8TyNL9iGvyW019pquIcV
+	5h5PwSosD+VKRTVPhuC4Al2vgT+BmchWoJ/ySStw/IDgz8THzr4UspieTGYvViVC
+	ScNoLnms23vLDeh6JiDWAq18fZDK08aVd3Aml3pE0D2De6V4lE9ASxfmP3SXz1bB
+	ZN577x3kGLyq5bAhBd6dLLEq4O25S0fEMGxqlQRJdAAiJMCIhP1xZkChx/nJO0A2
+	kVudq5s6/jGHe+PlzlJ/L2NIVd5Dx4xd28mh5/m2zUDemIb3vvVjN6Kmo2/7Be/s
+	S+WWofgE77M6VwD4nisZ8UoxVn6ZeODTrqwZNUwON8w==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr76mg9hh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 21:50:45 +0000 (GMT)
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DLojbd002840;
+	Thu, 13 Jun 2024 21:50:45 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr76mg9hf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 21:50:45 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DKZtQm027243;
+	Thu, 13 Jun 2024 21:50:44 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn211c1r2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 21:50:44 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DLocP956688914
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Jun 2024 21:50:40 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9CF8220040;
+	Thu, 13 Jun 2024 21:50:38 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 070F720043;
+	Thu, 13 Jun 2024 21:50:38 +0000 (GMT)
+Received: from localhost (unknown [9.171.17.6])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 13 Jun 2024 21:50:37 +0000 (GMT)
+Date: Thu, 13 Jun 2024 23:50:36 +0200
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Halil Pasic <pasic@linux.ibm.com>
+Cc: Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+        Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Boqiao Fu <bfu@redhat.com>,
+        Sebastian Mitterle <smitterl@redhat.com>
+Subject: Re: [PATCH 1/1] s390/virtio_ccw: fix config change notifications
+Message-ID: <your-ad-here.call-01718315436-ext-6568@work.hours>
+References: <20240611214716.1002781-1-pasic@linux.ibm.com>
+ <6086ef5e-48e7-40f3-b0a7-ff67b20aeae3@redhat.com>
+ <20240613152115.48b00798.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240613152115.48b00798.pasic@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Zh5pS27zY4hCl2nM5Z-JIj_yqJcTPm8n
+X-Proofpoint-GUID: ISNNOKrlGBlJTnIO7-XUbGs6B1Of3jyG
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613082208.1439968-10-oshpigelman@habana.ai>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-13_13,2024-06-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=447 bulkscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 clxscore=1011 phishscore=0
+ spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406130154
 
-> +static int hbl_en_napi_poll(struct napi_struct *napi, int budget);
-> +static int hbl_en_port_open(struct hbl_en_port *port);
+On Thu, Jun 13, 2024 at 03:21:15PM +0200, Halil Pasic wrote:
+> On Wed, 12 Jun 2024 16:04:15 +0200
+> Thomas Huth <thuth@redhat.com> wrote:
+> 
+> > On 11/06/2024 23.47, Halil Pasic wrote:
+> > > Commit e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+> > > broke configuration change notifications for virtio-ccw by putting the
+> > > DMA address of *indicatorp directly into ccw->cda disregarding the fact
+> > > that if !!(vcdev->is_thinint) then the function
+> > > virtio_ccw_register_adapter_ind() will overwrite that ccw->cda value
+> > > with the address of the virtio_thinint_area so it can actually set up
+> > > the adapter interrupts via CCW_CMD_SET_IND_ADAPTER.  Thus we end up
+> > > pointing to the wrong object for both CCW_CMD_SET_IND if setting up the
+> > > adapter interrupts fails, and for CCW_CMD_SET_CONF_IND regardless
+> > > whether it succeeds or fails.
+> > > 
+> > > To fix this, let us save away the dma address of *indicatorp in a local
+> > > variable, and copy it to ccw->cda after the "vcdev->is_thinint" branch.
+> > > 
+> > > Reported-by: Boqiao Fu <bfu@redhat.com>
+> > > Reported-by: Sebastian Mitterle <smitterl@redhat.com>
+> > > Fixes: e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+> > > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > > ---
+> > > I know that checkpatch.pl complains about a missing 'Closes' tag.
+> > > Unfortunately I don't have an appropriate URL at hand. @Sebastian,
+> > > @Boqiao: do you have any suggetions?  
+> > 
+> > Closes: https://issues.redhat.com/browse/RHEL-39983
+> > ?
+> 
+> Yep! That is a public bug tracker bug. Qualifies!
+> @Vasily: Can you guys pick hat one up when picking the patch?
 
-When you do the Intel internal review, i expect this is crop up. No
-forward declarations please. Put the code in the right order so they
-are not needed.
-
-> +static int hbl_en_get_src_ip(struct hbl_aux_dev *aux_dev, u32 port_idx, u32 *src_ip)
-> +{
-> +	struct hbl_en_port *port = HBL_EN_PORT(aux_dev, port_idx);
-> +	struct net_device *ndev = port->ndev;
-> +	struct in_device *in_dev;
-> +	struct in_ifaddr *ifa;
-> +	int rc = 0;
-> +
-> +	/* for the case where no src IP is configured */
-> +	*src_ip = 0;
-> +
-> +	/* rtnl lock should be acquired in relevant flows before taking configuration lock */
-> +	if (!rtnl_is_locked()) {
-> +		netdev_err(port->ndev, "Rtnl lock is not acquired, can't proceed\n");
-> +		rc = -EFAULT;
-> +		goto out;
-> +	}
-
-You will find all other drivers just do:
-
-	ASSERT_RTNL().
-
-If your locking is broken, you are probably dead anyway, so you might
-as well keep going and try to explode in the most interesting way
-possible.
-
-> +static void hbl_en_reset_stats(struct hbl_aux_dev *aux_dev, u32 port_idx)
-> +{
-> +	struct hbl_en_port *port = HBL_EN_PORT(aux_dev, port_idx);
-> +
-> +	port->net_stats.rx_packets = 0;
-> +	port->net_stats.tx_packets = 0;
-> +	port->net_stats.rx_bytes = 0;
-> +	port->net_stats.tx_bytes = 0;
-> +	port->net_stats.tx_errors = 0;
-> +	atomic64_set(&port->net_stats.rx_dropped, 0);
-> +	atomic64_set(&port->net_stats.tx_dropped, 0);
-
-Why atomic64_set? Atomics are expensive, so you should not be using
-them. netdev has other cheaper methods, which other Intel developers
-should be happy to tell you all about.
-
-> +static u32 hbl_en_get_mtu(struct hbl_aux_dev *aux_dev, u32 port_idx)
-> +{
-> +	struct hbl_en_port *port = HBL_EN_PORT(aux_dev, port_idx);
-> +	struct net_device *ndev = port->ndev;
-> +	u32 mtu;
-> +
-> +	if (atomic_cmpxchg(&port->in_reset, 0, 1)) {
-> +		netdev_err(ndev, "port is in reset, can't get MTU\n");
-> +		return 0;
-> +	}
-> +
-> +	mtu = ndev->mtu;
-
-I think you need a better error message. All this does is access
-ndev->mtu. What does it matter if the port is in reset? You don't
-access it.
-
-> +static int hbl_en_close(struct net_device *netdev)
-> +{
-> +	struct hbl_en_port *port = hbl_netdev_priv(netdev);
-> +	struct hbl_en_device *hdev = port->hdev;
-> +	ktime_t timeout;
-> +
-> +	/* Looks like the return value of this function is not checked, so we can't just return
-> +	 * EBUSY if the port is under reset. We need to wait until the reset is finished and then
-> +	 * close the port. Otherwise the netdev will set the port as closed although port_close()
-> +	 * wasn't called. Only if we waited long enough and the reset hasn't finished, we can return
-> +	 * an error without actually closing the port as it is a fatal flow anyway.
-> +	 */
-> +	timeout = ktime_add_ms(ktime_get(), PORT_RESET_TIMEOUT_MSEC);
-> +	while (atomic_cmpxchg(&port->in_reset, 0, 1)) {
-> +		/* If this is called from unregister_netdev() then the port was already closed and
-> +		 * hence we can safely return.
-> +		 * We could have just check the port_open boolean, but that might hide some future
-> +		 * bugs. Hence it is better to use a dedicated flag for that.
-> +		 */
-> +		if (READ_ONCE(hdev->in_teardown))
-> +			return 0;
-> +
-> +		usleep_range(50, 200);
-> +		if (ktime_compare(ktime_get(), timeout) > 0) {
-> +			netdev_crit(netdev,
-> +				    "Timeout while waiting for port to finish reset, can't close it\n"
-> +				    );
-> +			return -EBUSY;
-> +		}
-
-This has the usual bug. Please look at include/linux/iopoll.h. 
-
-> +		timeout = ktime_add_ms(ktime_get(), PORT_RESET_TIMEOUT_MSEC);
-> +		while (atomic_cmpxchg(&port->in_reset, 0, 1)) {
-> +			usleep_range(50, 200);
-> +			if (ktime_compare(ktime_get(), timeout) > 0) {
-> +				netdev_crit(port->ndev,
-> +					    "Timeout while waiting for port %d to finish reset\n",
-> +					    port->idx);
-> +				break;
-> +			}
-> +		}
-
-and again. Don't roll your own timeout loops like this, use the core
-version.
-
-> +static int hbl_en_change_mtu(struct net_device *netdev, int new_mtu)
-> +{
-> +	struct hbl_en_port *port = hbl_netdev_priv(netdev);
-> +	int rc = 0;
-> +
-> +	if (atomic_cmpxchg(&port->in_reset, 0, 1)) {
-> +		netdev_err(netdev, "port is in reset, can't change MTU\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (netif_running(port->ndev)) {
-> +		hbl_en_port_close(port);
-> +
-> +		/* Sleep in order to let obsolete events to be dropped before re-opening the port */
-> +		msleep(20);
-> +
-> +		netdev->mtu = new_mtu;
-> +
-> +		rc = hbl_en_port_open(port);
-> +		if (rc)
-> +			netdev_err(netdev, "Failed to reinit port for MTU change, rc %d\n", rc);
-
-Does that mean the port is FUBAR?
-
-Most operations like this are expected to roll back to the previous
-working configuration on failure. So if changing the MTU requires new
-buffers in your ring, you should first allocate the new buffers, then
-free the old buffers, so that if allocation fails, you still have
-buffers, and the device can continue operating.
-
-> +module_param(poll_enable, bool, 0444);
-> +MODULE_PARM_DESC(poll_enable,
-> +		 "Enable Rx polling rather than IRQ + NAPI (0 = no, 1 = yes, default: no)");
-
-Module parameters are not liked. This probably needs to go away.
-
-> +static int hbl_en_ethtool_get_module_info(struct net_device *ndev, struct ethtool_modinfo *modinfo)
-> +{
-> +	modinfo->eeprom_len = ETH_MODULE_SFF_8636_LEN;
-> +	modinfo->type = ETH_MODULE_SFF_8636;
-
-Is this an SFF, not an SFP? How else can you know what module it is
-without doing an I2C transfer to ask the module what it is?
-
-> +static int hbl_en_ethtool_get_module_eeprom(struct net_device *ndev, struct ethtool_eeprom *ee,
-> +					    u8 *data)
-> +{
-
-This is the old API. Please update to the new API so there is access
-to all the pages of the SFF/SFP.
-
-> +static int hbl_en_ethtool_get_link_ksettings(struct net_device *ndev,
-> +					     struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct hbl_en_aux_ops *aux_ops;
-> +	struct hbl_aux_dev *aux_dev;
-> +	struct hbl_en_device *hdev;
-> +	struct hbl_en_port *port;
-> +	u32 port_idx, speed;
-> +
-> +	port = hbl_netdev_priv(ndev);
-> +	hdev = port->hdev;
-> +	port_idx = port->idx;
-> +	aux_dev = hdev->aux_dev;
-> +	aux_ops = aux_dev->aux_ops;
-> +	speed = aux_ops->get_speed(aux_dev, port_idx);
-> +
-> +	cmd->base.speed = speed;
-> +	cmd->base.duplex = DUPLEX_FULL;
-> +
-> +	ethtool_link_ksettings_zero_link_mode(cmd, supported);
-> +	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
-> +
-> +	switch (speed) {
-> +	case SPEED_100000:
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 100000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 100000baseSR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 100000baseKR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 100000baseLR4_ER4_Full);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 100000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 100000baseSR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 100000baseKR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 100000baseLR4_ER4_Full);
-> +
-> +		cmd->base.port = PORT_FIBRE;
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, FIBRE);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, FIBRE);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, Backplane);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, Backplane);
-> +		break;
-> +	case SPEED_50000:
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 50000baseSR2_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 50000baseCR2_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 50000baseKR2_Full);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 50000baseSR2_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 50000baseCR2_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 50000baseKR2_Full);
-> +		break;
-> +	case SPEED_25000:
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 25000baseCR_Full);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 25000baseCR_Full);
-> +		break;
-> +	case SPEED_200000:
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 200000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 200000baseKR4_Full);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 200000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 200000baseKR4_Full);
-> +		break;
-> +	case SPEED_400000:
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 400000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, supported, 400000baseKR4_Full);
-> +
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 400000baseCR4_Full);
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, 400000baseKR4_Full);
-> +		break;
-> +	default:
-> +		netdev_err(port->ndev, "unknown speed %d\n", speed);
-> +		return -EFAULT;
-> +	}
-> +
-> +	ethtool_link_ksettings_add_link_mode(cmd, supported, Autoneg);
-> +
-> +	if (port->auto_neg_enable) {
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, Autoneg);
-> +		cmd->base.autoneg = AUTONEG_ENABLE;
-> +		if (port->auto_neg_resolved)
-> +			ethtool_link_ksettings_add_link_mode(cmd, lp_advertising, Autoneg);
-
-That looks odd. Care to explain?
-
-> +	} else {
-> +		cmd->base.autoneg = AUTONEG_DISABLE;
-> +	}
-> +
-> +	ethtool_link_ksettings_add_link_mode(cmd, supported, Pause);
-> +
-> +	if (port->pfc_enable)
-> +		ethtool_link_ksettings_add_link_mode(cmd, advertising, Pause);
-
-And is suspect that is wrong. Everybody gets pause wrong. Please
-double check my previous posts about pause.
-
-> +	if (auto_neg && !(hdev->auto_neg_mask & BIT(port_idx))) {
-> +		netdev_err(port->ndev, "port autoneg is disabled by BMC\n");
-> +		rc = -EFAULT;
-> +		goto out;
-
-Don't say you support autoneg in supported if that is the case.
-
-And EFAULT is about memory problems. EINVAL, maybe EPERM? or
-EOPNOTSUPP.
-
-	Andrew
+Sure, applied. Thanks!
