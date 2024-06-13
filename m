@@ -1,59 +1,49 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6610714D6FA;
-	Thu, 13 Jun 2024 19:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA435134407
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718307663; cv=none; b=AcbThi9NECnS6z1L8FEua0UyDy6rfBo7TcYOHxloyDv3ClOYCCMeldZvRELuohyWhihOsSZVdoOkhLVOygzQ6ahUvMPhgbanl1AfLC79VNNBxuU+YB+HsBeKoXTc7danI26luWt61MTruhjgN+rjvFpH15F20E+zdGWFx4avhKk=
+	t=1718307719; cv=none; b=j3FCeRwlPgUazE7dd5rDsF6IdidLXu02pJoFXlrK3e1UeDy0d9hU/JrGIljfHzoeyvaex61nK5F/aiQHU42GvBCs08kbydLGIGAQ0jFunj//r3mX65Dme3a72zYE85P4avGTkq6bR8iWSizl0QitOAACffixgBxH2JwpfRFnnoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718307663; c=relaxed/simple;
-	bh=krDJ0efxWuTgHMl52r7hlgXIBjsj6i/SwlWapzZJpyE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T1tEEEsbuVSTdWYM2SYgm6X+j0OuigUvXJAi+5luWWwz/jazDNu6oDzVFEtUIaxflP0gLp/Dp0BxQC6ZtZ+iKjpA9zxzjnPnwWiO4ZrP3EJZUgA8yW0P0yV51zP6mM/rd12kTT9kUIMvWgzBLYZTnBIG6DxENepMuW5eNCSdwuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=acDwYpG3; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1718307719; c=relaxed/simple;
+	bh=XAZMt9N0NCglaqew8dSYutoepiDFHTvY9wdHf9ybtaM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EHifgB5vT6kN4PIbNnWfz64PFoN3UtabgXUafXDkLtokrzc5XueEyoxXHct1cGCed/DpqG4TJFPBYK9dJmh0ccxONKxAz2issHpEkJGMwZc/rGRtlRu5IrNVXB5ndCRP/9dixR3/c8uaLgNCh3VO40bICw2zcYzEAEI04xgsNOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=H8n2FqwP; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="acDwYpG3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1718307661; x=1749843661;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NV7Lhmej4Lxe5+Y6UUlma1D1VKEYEqQOtLkFv+lMdpQ=;
-  b=acDwYpG3LKqOQUhSL3oxXSBYrCVJj3WhhiwtTlsbOAgCRFU5PjtLlxHw
-   sYidVwAUkX++te5PGcouj+qXpvyo4WPxG70SXdD4rL06WAugySum2o3FS
-   QDB/hH+kQVoJpqz//looDx8GzL8hyGHO+9iZOljuYQ2xe5iPrEibDsmx2
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.08,236,1712620800"; 
-   d="scan'208";a="302057957"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 19:40:59 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:7470]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.37.96:2525] with esmtp (Farcaster)
- id a010f6d4-7be5-4303-9392-ad0c8cfe3f17; Thu, 13 Jun 2024 19:40:59 +0000 (UTC)
-X-Farcaster-Flow-ID: a010f6d4-7be5-4303-9392-ad0c8cfe3f17
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 13 Jun 2024 19:40:58 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.100.23) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Thu, 13 Jun 2024 19:40:55 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <ignat@cloudflare.com>
-CC: <davem@davemloft.net>, <dsa@cumulusnetworks.com>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <kernel-team@cloudflare.com>, <kraig@google.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <stable@vger.kernel.org>
-Subject: Re: [PATCH] net: do not leave dangling sk pointer in inet_create()/inet6_create()
-Date: Thu, 13 Jun 2024 12:40:47 -0700
-Message-ID: <20240613194047.36478-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CALrw=nEVktSeq4HcLqM0VfTrdHCLHeqi71-fKD8+UcBjtoVaBA@mail.gmail.com>
-References: <CALrw=nEVktSeq4HcLqM0VfTrdHCLHeqi71-fKD8+UcBjtoVaBA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="H8n2FqwP"
+Received: from Monstersaurus.local (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B82CF4CF;
+	Thu, 13 Jun 2024 21:41:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1718307700;
+	bh=XAZMt9N0NCglaqew8dSYutoepiDFHTvY9wdHf9ybtaM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H8n2FqwPsn9XaUAxAi9ViKjzn9H+1Tkzuk/1K3gSDTwc6yMFsT1158JD9PRUBOYRr
+	 Y/dH1FDyJsknVhZrgFl14dWZcxuZdpYGQcs6jm234HLZK05ZeADGcVq+/VgCaJmfLv
+	 nsb1V5NLPlAgYYg99kkhmzjrb4ijc+POsIHLxAR4=
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Umang Jain <umang.jain@ideasonboard.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-rpi-kernel@lists.infradead.org
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.org>,
+	detule <ogjoneski@gmail.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
+	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] staging: vc04_services: vchiq_arm: Fix initialisation check
+Date: Thu, 13 Jun 2024 20:41:45 +0100
+Message-Id: <20240613194150.2915202-1-kieran.bingham@ideasonboard.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,111 +51,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWC003.ant.amazon.com (10.13.139.198) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Ignat Korchagin <ignat@cloudflare.com>
-Date: Wed, 12 Jun 2024 14:22:36 -0400
-> > And curious if bpf_get_socket_cookie() can be called any socket
-> > family to trigger the splat.  e.g. ieee802154_create() seems to
-> > have the same bug.
-> 
-> Just judging from the code - yes, indeed.
-> 
-> > If so, how about clearing sock->sk in sk_common_release() ?
-> 
-> This was my first thought, but I was a bit put off by the fact that
-> sk_common_release() is called from many places and the sk object
-> itself is reference counted. So not every call to sk_common_release()
-> seems to actually free the sk object.
+The vchiq_state used to be obtained through an accessor
+which would validate that the VCHIQ had been initialised
+correctly with the remote.
 
-sk_common_release() is called
+In commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
+vchiq_state") the global state was moved to the vchiq_mgnt structures
+stored as a vchiq instance specific context. This conversion removed the
+helpers and instead replaced users of this helper with the assumption
+that the state is always available and the remote connected.
 
-  1. when we fail to create a socket (socket() or accept() syscall)
-  2. when we release the last refcount of the socket's file descriptor
-     (basically close() syscall)
+Fix this broken assumption by re-introducing the logic that was lost
+during the conversion.
 
-The issue only happens at 1. because we clear sock->sk at 2. in
-__sock_release() after calling sock->ops->release().
+Fixes: 42a2f6664e18 ("staging: vc04_services: Move global g_state to vchiq_state")
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+---
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_arm.c  | 4 ++--
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_core.h | 5 +++++
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_dev.c  | 7 ++++++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-So, we need not take care of these callers of sk_common_release().
-
-  - inet_release
-    - ->close()
-      - udp_lib_close
-      - ping_close
-      - raw_close
-      - rawv6_close
-      - l2tp_ip_close
-      - l2tp_ip6_close
-      - sctp_close
-  - ieee802154_sock_release
-    - ->close()
-      - raw_close
-      - dgram_close
-  - mctp_release
-    - ->close()
-      - mctp_sk_close
-  - pn_socket_release
-    - ->close()
-      - pn_sock_close
-      - pep_sock_close
-
-Then, the rest of the callers are:
-
-  - __sock_create
-    - pf->create()
-      - inet_create
-      - inet6_create
-      - ieee802154_create
-      - smc_create
-        - __smc_create
-
-  - setsockopt(TCP_ULP)
-    - smc_ulp_init
-      - __smc_create
-
-  - sctp_accept
-    - sctp_v4_create_accept_sk
-    - sctp_v6_create_accept_sk
-
-we need not care about sctp_v[46]_create_accept_sk() because they don't set
-sock->sk for the socket; we don't pass sock to sock_init_data(NULL, newsk)
-before calling sk_common_release().
-
-__sock_create() path and SMC's ULP path have the same issue, and
-sk_common_release() releases the last refcount of struct sock there.
-
-So, I think we can set NULL to sock->sk in sk_common_release().
-
-
-> Secondly, I was put off by this
-> comment (which I don't fully understand TBH) [1]
-> 
-> On the other hand - in inet/inet6_create() we definitely know that the
-> object would be freed, because we just created that.
-> 
-> But if someone more familiar with the code confirms it is
-> better/possible to do in sk_common_release(), I'm happy to adjust and
-> it would be cleaner indeed.
-> 
-> > ---8<---
-> > diff --git a/net/core/sock.c b/net/core/sock.c
-> > index 8629f9aecf91..bbc94954d9bf 100644
-> > --- a/net/core/sock.c
-> > +++ b/net/core/sock.c
-> > @@ -3754,6 +3754,9 @@ void sk_common_release(struct sock *sk)
-> >          * until the last reference will be released.
-> >          */
-> >
-> > +       if (sk->sk_socket)
-> > +               sk->sk_socket->sk = NULL;
-> > +
-> >         sock_orphan(sk);
-> >
-> >         xfrm_sk_free_policy(sk);
-> > ---8<---
-> 
-> [1]: https://elixir.bootlin.com/linux/v6.10-rc3/source/include/net/sock.h#L1985
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index 54467be8c371..67d853f5f2a0 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -804,7 +804,7 @@ int vchiq_initialise(struct vchiq_state *state, struct vchiq_instance **instance
+ 	 * block forever.
+ 	 */
+ 	for (i = 0; i < VCHIQ_INIT_RETRIES; i++) {
+-		if (state)
++		if (vchiq_remote_initialised(state))
+ 			break;
+ 		usleep_range(500, 600);
+ 	}
+@@ -1299,7 +1299,7 @@ void vchiq_dump_platform_instances(struct vchiq_state *state, struct seq_file *f
+ {
+ 	int i;
+ 
+-	if (!state)
++	if (!vchiq_remote_initialised(state))
+ 		return;
+ 
+ 	/*
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+index 8af209e34fb2..382ec08f6a14 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+@@ -413,6 +413,11 @@ struct vchiq_state {
+ 	struct opaque_platform_state *platform_state;
+ };
+ 
++static inline bool vchiq_remote_initialised(const struct vchiq_state *state)
++{
++	return state->remote && state->remote->initialised;
++}
++
+ struct bulk_waiter {
+ 	struct vchiq_bulk *bulk;
+ 	struct completion event;
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
+index 3c63347d2d08..8c4830df1070 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_dev.c
+@@ -1170,6 +1170,11 @@ static int vchiq_open(struct inode *inode, struct file *file)
+ 
+ 	dev_dbg(state->dev, "arm: vchiq open\n");
+ 
++	if (!vchiq_remote_initialised(state)) {
++		dev_err(state->dev, "arm: vchiq has no connection to VideoCore\n");
++		return -ENOTCONN;
++	}
++
+ 	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
+ 	if (!instance)
+ 		return -ENOMEM;
+@@ -1200,7 +1205,7 @@ static int vchiq_release(struct inode *inode, struct file *file)
+ 
+ 	dev_dbg(state->dev, "arm: instance=%p\n", instance);
+ 
+-	if (!state) {
++	if (!vchiq_remote_initialised(state)) {
+ 		ret = -EPERM;
+ 		goto out;
+ 	}
+-- 
+2.34.1
 
