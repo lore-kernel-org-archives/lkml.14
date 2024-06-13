@@ -1,96 +1,266 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12635144D11
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA461448FF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285388; cv=none; b=uIVzbrpq3qTisvFHe9DyXaLNZ+KyH4xrn2aW69VTTjdiELEbhm5TfNRE40nhVe+xYwZEcxWcUbZJykqat0TwZbnXVJ/uIuyygXuK8MW2pdtIBwSH4PUIIfyPlrLsASemIIEe0nyQeZH39MpA6SXjJ9Msnff+Vl+oeroMdx2m46o=
+	t=1718285387; cv=none; b=poUEgwoyGiuxNlmqXdIijzEMbKhpZiDr+lY0PQu8dkNQYqwI/320BWBU7YDR1X1lYb43JWepbG0wwerU4hq3cQGV/I9HIkqTzfmhw5n6PR99ef8KYnY9LIsAvxXm+Edku2i0GGqucSD7v64PnbW2DJgYkXMeuYfbi1+DZVq0cSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285388; c=relaxed/simple;
-	bh=9YjZ0mNxtiI0w3TDnF6tuEkwNoMXfJVq5u/FUSPFA1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qZWEfrk7OifXEFxMo2VE/sN0vJpgMyM8WETbIT+nVzr1M5LYsRNlj/xqGwuPqDhSTmtWHJsIU2t9ox9MZNOyRHE/WRQJcA+1Cfdvd/1MsGsNwDmCGKkV6peE5nGFzH43aKrOYBZQ42yoM1XE/OPWSd1PpMwtzbiDsAL4ikdA4M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mDScTybu; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718285387; c=relaxed/simple;
+	bh=EwDYV86apdp1y3FgvqhXoUdcP6ZAutdGUFD8nB4Rupc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c/bwsozwXH5I7oWSZDAJnLwUiM+5sukSrQrtJiJT2Zhdx795MqEPBRLKV+LYCYfJoqdvfV2X9aLVADTxSPjN7ZC/3zfMuIN102XS23mPeFu3d5/h8dXd2nl8TeVEnoroEDZMHu0AcRkXJNiRZTiyhj9LTGFF2GQk8Xea+H/AF9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gn58lC0F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDScTybu"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-422df2a81f2so7000645e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718285385; x=1718890185; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aj73urKvgW9wZChdKp/grUo5S7WR7EBtNMzzOYz9T24=;
-        b=mDScTybunNOD0tFDls83WMhzu7AdNBqKg7jqHv/XDAi+c/GZTMcWU7F7LhY9c7d0jU
-         Ga6xIg8bYBtdGeklzB8DChca4g7EdX/oDkIZW8onjjTU6x4wDV/B92xhRvRbP/7X4roM
-         5amtZHwwd5gUPjW0BAu/+dQgI5G3EBpL54wMsZq9muplQCz4m+mfXaZo2KbQvvxBrX6G
-         9SVdnP6UYbFqudsu0Yx+0RSA98+qEIWuaVw1guB2ZzFLvOfFU6thn9kSRr+4cCfGOaUY
-         erPQo+W5QmfEnQKqJnnbilF3fWdEPBIbiW3BGcv2dNXNU4MwZVtoK7fzCENVl2MsREE3
-         KJFw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gn58lC0F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718285385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y9evobZ56tePgOcIz6BoUUANwCX8e2L9RTd9imGKDRo=;
+	b=gn58lC0F7YRH1Ed+QnaEAiKC4OtiMuUVk+4wo2SmvW5BETV+97QmQnD89nVSDLcDgnlTDL
+	W6in+YzPTT17GVDZn/Zi8lWp7OyMyK6A/TwNYOCVTbpZOUhzCtKVeWZNCULac1+pB46fr6
+	TURmVhP8g8/kB78o/Y2ezjd/uOIzcHA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-86-sR_Cn4GDOR28Cu_fv7HBog-1; Thu, 13 Jun 2024 09:29:43 -0400
+X-MC-Unique: sR_Cn4GDOR28Cu_fv7HBog-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6f0f7d6eaaso231264066b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:29:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718285385; x=1718890185;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aj73urKvgW9wZChdKp/grUo5S7WR7EBtNMzzOYz9T24=;
-        b=ltxvV/+2XL9ZWyuhpV5h0TSpvpVhwYBOcG+yGZsDO8KzMmWTMcxmtwshHsUWDlKtUg
-         /onTRgnc4yELSkn7DF2a/sjEn9JaoI0IhgDQk3Huy3IkiXDlfneWM1/P2E5XYuGYBqZm
-         n6N8tfab7cZe/+Ia8cHWZGnAAtjRIL7+sL3XZbTY8y7TzYVsuUlnOfNnYguK1KGVwsJM
-         dOiqWn2NRM0r0vjkjsYyc8WWNMjVzCXC1t2eS6qj2m9mbZd1MK+VAxilJ688vyt5i5jt
-         mjpKk2rZsBV68Vlykjudf/e5tkJxm/2CNQf25+QX7uvlKC9pjNsKYZLpAZF+UMhZtAkM
-         0H5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXmVzeHIPXThkHv9xOkh2tNb18XwsS4KpKrrC/QwWULPvuKolA5xghYGYE7zh35ad//q5X//sBp4IbMlf7wsb2wb6o4bHtW1pgWKPaj
-X-Gm-Message-State: AOJu0Ywqxa0/BUVXLHMR2LaEEAtI3G9ItSarqystcGfka+Jdjjm5Jv8i
-	n2nsFnLjf3BVMn26/pUrLyRrAko0VJHzusiQauiFKb3euPtuXbXK
-X-Google-Smtp-Source: AGHT+IGN3ewMVPxG6hTEa9MKx/jd9wdA02rG/0ezuJmL2oalAxDGMCY9OKmvZ+w1oQsMikOP8XdAZA==
-X-Received: by 2002:a05:600c:1c83:b0:422:1609:a7db with SMTP id 5b1f17b1804b1-422861ae833mr42397645e9.8.1718285385168;
-        Thu, 13 Jun 2024 06:29:45 -0700 (PDT)
-Received: from localhost.localdomain ([31.120.167.14])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422d0be1424sm29981455e9.12.2024.06.13.06.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 06:29:44 -0700 (PDT)
-From: Teddy Engel <engel.teddy@gmail.com>
-To: Philipp Hortmann <philipp.g.hortmann@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Teddy Engel <engel.teddy@gmail.com>
-Subject: [PATCH v3] staging: vt6656: Remove line from TODO
-Date: Thu, 13 Jun 2024 14:28:53 +0100
-Message-Id: <20240613132853.2249-1-engel.teddy@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1718285382; x=1718890182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y9evobZ56tePgOcIz6BoUUANwCX8e2L9RTd9imGKDRo=;
+        b=skglsPBHtOMTtJuO2UqOviZQULR+uVhkawoFAdOVVbtHT5i5PoARoRHaNasgWTzt+g
+         4A0pSCbtFR6Tu4LvQ/vAdpYuzABOmCKEpt+1QghyZv8Oi9IO4GIRNKcUVTu/JZ1kO6Qw
+         /G4dUbqKLNs5CeYGur6OhACzhZjtWLcSt2hVZeGDl9o7o3Fshh2TispI+564GyjY6N1j
+         RfJwbE/uhArpEhAGFrLBMS0h+oe4rnNdgwiYtGocWoz3SZDv6JuxUohthyXLepL1GQfv
+         eHfhpMm157JkzgP6ZERLI0BINLrAVMFAQrp1aQwSJZFJyg+GFwQCSxR1LD24J/GicADh
+         mynw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUzDhuye6sNJEtcPhQsZ8/P6uKVZxGiw5kmS3itRBkiIhWe9FHFOr+2LOdvDtntiYWuNqecyK8Rk58P6tGCvdS+FQjXzxRB+EWPlU1
+X-Gm-Message-State: AOJu0YxYxdCAvBMBIyrsRrBYDA4s1QSBkCHfcQKqeCHB9D41YVAE8+a/
+	56kAiDcCyQ3yaRv5jHCIoBrnSFYf0/gPboyk9Fm3ZJXUJW865XkTmPb7sW9CMpprWpfoyiqPRtd
+	0xwwC5okFOETXYSvjHdsvCQQCWahXTvP/lK/AdMeTlhjHtbco79WMMtC5xHf5eeoaE/C6deYiaD
+	xBbUzRXJpLLGXg/OXPYyJP6ubTJbQyxaH+Vmhr
+X-Received: by 2002:a17:906:f2cf:b0:a6f:1c0e:6776 with SMTP id a640c23a62f3a-a6f5240f021mr181403366b.16.1718285382606;
+        Thu, 13 Jun 2024 06:29:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGUeOJDpHV2LdwavarsbYi5bPL2vRysrQ5fKaLl/dCD/lbPcIEg1tjiBX4sLf6XM7kiJX4bP1FfUh1UTOsXPLI=
+X-Received: by 2002:a17:906:f2cf:b0:a6f:1c0e:6776 with SMTP id
+ a640c23a62f3a-a6f5240f021mr181401766b.16.1718285382121; Thu, 13 Jun 2024
+ 06:29:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240611053239.516996-1-lulu@redhat.com> <20240613025548-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240613025548-mutt-send-email-mst@kernel.org>
+From: Cindy Lu <lulu@redhat.com>
+Date: Thu, 13 Jun 2024 21:29:04 +0800
+Message-ID: <CACLfguWwkkfFA143uOavS0jDkW1Q0XEd5JZDdriOz-yywDkYng@mail.gmail.com>
+Subject: Re: [PATCH 1/2] vdpa: support set mac address from vdpa tool
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: dtatulea@nvidia.com, jasowang@redhat.com, 
+	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove checkpatch.pl line from TODO as no valid checkpatch recommendations
-still present.
-
-Signed-off-by: Teddy Engel <engel.teddy@gmail.com>
----
-v3: Bump version number + add version history changes.
-v2: Revert the parentheses removal changes.
----
- drivers/staging/vt6656/TODO | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/vt6656/TODO b/drivers/staging/vt6656/TODO
-index e154b2f3b247..876cdccb6948 100644
---- a/drivers/staging/vt6656/TODO
-+++ b/drivers/staging/vt6656/TODO
-@@ -11,7 +11,6 @@ TODO:
- - switch to use LIB80211
- - switch to use MAC80211
- - use kernel coding style
--- checkpatch.pl fixes
- - sparse fixes
- - integrate with drivers/net/wireless
- 
--- 
-2.39.2
+On Thu, Jun 13, 2024 at 2:59=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Tue, Jun 11, 2024 at 01:32:32PM +0800, Cindy Lu wrote:
+> > Add new UAPI to support the mac address from vdpa tool
+> > Function vdpa_nl_cmd_dev_config_set_doit() will get the
+> > MAC address from the vdpa tool and then set it to the device.
+> >
+> > The usage is: vdpa dev set name vdpa_name mac **:**:**:**:**:**
+> >
+> > Here is sample:
+> > root@L1# vdpa -jp dev config show vdpa0
+> > {
+> >     "config": {
+> >         "vdpa0": {
+> >             "mac": "82:4d:e9:5d:d7:e6",
+> >             "link ": "up",
+> >             "link_announce ": false,
+> >             "mtu": 1500
+> >         }
+> >     }
+> > }
+> >
+> > root@L1# vdpa dev set name vdpa0 mac 00:11:22:33:44:55
+> >
+> > root@L1# vdpa -jp dev config show vdpa0
+> > {
+> >     "config": {
+> >         "vdpa0": {
+> >             "mac": "00:11:22:33:44:55",
+> >             "link ": "up",
+> >             "link_announce ": false,
+> >             "mtu": 1500
+> >         }
+> >     }
+> > }
+> >
+> > Signed-off-by: Cindy Lu <lulu@redhat.com>
+>
+>
+>
+> I think actually the idea of allowing provisioning
+> by specifying config of the device is actually valid.
+> However
+> - the name SET_CONFIG makes people think this allows
+>   writing even when e.g. device is assigned to guest
+> - having the internal api be mac specific is weird
+>
+> Shouldn't config be an attribute maybe, not a new command?
+>
+Got it. Thanks, Michael. I will change this.
+Thanks
+Cindy
+>
+> > ---
+> >  drivers/vdpa/vdpa.c       | 71 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/vdpa.h      |  2 ++
+> >  include/uapi/linux/vdpa.h |  1 +
+> >  3 files changed, 74 insertions(+)
+> >
+> > diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
+> > index a7612e0783b3..347ae6e7749d 100644
+> > --- a/drivers/vdpa/vdpa.c
+> > +++ b/drivers/vdpa/vdpa.c
+> > @@ -1149,6 +1149,72 @@ static int vdpa_nl_cmd_dev_config_get_doit(struc=
+t sk_buff *skb, struct genl_info
+> >       return err;
+> >  }
+> >
+> > +static int vdpa_nl_cmd_dev_config_set_doit(struct sk_buff *skb,
+> > +                                        struct genl_info *info)
+> > +{
+> > +     struct vdpa_dev_set_config set_config =3D {};
+> > +     struct nlattr **nl_attrs =3D info->attrs;
+> > +     struct vdpa_mgmt_dev *mdev;
+> > +     const u8 *macaddr;
+> > +     const char *name;
+> > +     int err =3D 0;
+> > +     struct device *dev;
+> > +     struct vdpa_device *vdev;
+> > +
+> > +     if (!info->attrs[VDPA_ATTR_DEV_NAME])
+> > +             return -EINVAL;
+> > +
+> > +     name =3D nla_data(info->attrs[VDPA_ATTR_DEV_NAME]);
+> > +
+> > +     down_write(&vdpa_dev_lock);
+> > +     dev =3D bus_find_device(&vdpa_bus, NULL, name, vdpa_name_match);
+> > +     if (!dev) {
+> > +             NL_SET_ERR_MSG_MOD(info->extack, "device not found");
+> > +             err =3D -ENODEV;
+> > +             goto dev_err;
+> > +     }
+> > +     vdev =3D container_of(dev, struct vdpa_device, dev);
+> > +     if (!vdev->mdev) {
+> > +             NL_SET_ERR_MSG_MOD(
+> > +                     info->extack,
+> > +                     "Fail to find the specified management device");
+> > +             err =3D -EINVAL;
+> > +             goto mdev_err;
+> > +     }
+> > +     mdev =3D vdev->mdev;
+> > +     if (nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
+> > +             if (!(mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC=
+))) {
+> > +                     NL_SET_ERR_MSG_FMT_MOD(
+> > +                             info->extack,
+> > +                             "Missing features 0x%llx for provided att=
+ributes",
+> > +                             BIT_ULL(VIRTIO_NET_F_MAC));
+> > +                     err =3D -EINVAL;
+> > +                     goto mdev_err;
+> > +             }
+> > +             macaddr =3D nla_data(nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACAD=
+DR]);
+> > +             memcpy(set_config.net.mac, macaddr, ETH_ALEN);
+> > +             set_config.mask |=3D BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MACADD=
+R);
+> > +             if (mdev->ops->set_mac) {
+> > +                     err =3D mdev->ops->set_mac(mdev, vdev, &set_confi=
+g);
+> > +             } else {
+> > +                     NL_SET_ERR_MSG_FMT_MOD(
+> > +                             info->extack,
+> > +                             "%s device not support set mac address ",=
+ name);
+> > +             }
+> > +
+> > +     } else {
+> > +             NL_SET_ERR_MSG_FMT_MOD(info->extack,
+> > +                                    "%s device not support this config=
+ ",
+> > +                                    name);
+> > +     }
+> > +
+> > +mdev_err:
+> > +     put_device(dev);
+> > +dev_err:
+> > +     up_write(&vdpa_dev_lock);
+> > +     return err;
+> > +}
+> > +
+> >  static int vdpa_dev_config_dump(struct device *dev, void *data)
+> >  {
+> >       struct vdpa_device *vdev =3D container_of(dev, struct vdpa_device=
+, dev);
+> > @@ -1285,6 +1351,11 @@ static const struct genl_ops vdpa_nl_ops[] =3D {
+> >               .doit =3D vdpa_nl_cmd_dev_stats_get_doit,
+> >               .flags =3D GENL_ADMIN_PERM,
+> >       },
+> > +     {
+> > +             .cmd =3D VDPA_CMD_DEV_CONFIG_SET,
+> > +             .doit =3D vdpa_nl_cmd_dev_config_set_doit,
+> > +             .flags =3D GENL_ADMIN_PERM,
+> > +     },
+> >  };
+> >
+> >  static struct genl_family vdpa_nl_family __ro_after_init =3D {
+> > diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+> > index db15ac07f8a6..c97f4f1da753 100644
+> > --- a/include/linux/vdpa.h
+> > +++ b/include/linux/vdpa.h
+> > @@ -581,6 +581,8 @@ struct vdpa_mgmtdev_ops {
+> >       int (*dev_add)(struct vdpa_mgmt_dev *mdev, const char *name,
+> >                      const struct vdpa_dev_set_config *config);
+> >       void (*dev_del)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *d=
+ev);
+> > +     int (*set_mac)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *de=
+v,
+> > +                    const struct vdpa_dev_set_config *config);
+> >  };
+> >
+> >  /**
+> > diff --git a/include/uapi/linux/vdpa.h b/include/uapi/linux/vdpa.h
+> > index 54b649ab0f22..53f249fb26bc 100644
+> > --- a/include/uapi/linux/vdpa.h
+> > +++ b/include/uapi/linux/vdpa.h
+> > @@ -19,6 +19,7 @@ enum vdpa_command {
+> >       VDPA_CMD_DEV_GET,               /* can dump */
+> >       VDPA_CMD_DEV_CONFIG_GET,        /* can dump */
+> >       VDPA_CMD_DEV_VSTATS_GET,
+> > +     VDPA_CMD_DEV_CONFIG_SET,
+> >  };
+> >
+> >  enum vdpa_attr {
+> > --
+> > 2.45.0
+>
 
