@@ -1,134 +1,129 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B314C130A79
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06842143C59
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296446; cv=none; b=kYrjMYmPMzr6VBhne00oORfjx77dwRK+uVxtZNb1gJU9t8eHQnsDGiZad1gsW3cT+dQQg4PFaXlFoSiGCTVeNMKnVptG2solVW97qalVBYOC6EaryS0R6T6b46jkVFVA0oXF8aS5PWu3ir7u4U7nxftEB8F8naU8BYvjxM5YMwQ=
+	t=1718296452; cv=none; b=m4GeymH1YY+DvN3ZAPA++49zJvqZtduA6M9MKdGYvP399Vr1rOamY8T3UdtGn126gJcm6fWL5NlhRcOlLQef5+WpDhO97rF+zIBwGCHmcsDv1gT9bt2eKVRcPOlDhDyp2kGecldw1FoDEas+4YR+jI1h2Qjvy8KRpAv9xODm6wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296446; c=relaxed/simple;
-	bh=9Oy2rhgmMbROnThGOyXo7UyCu8RbyWradi7uQ/YWriE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NV+HO6Zjx1XO2oF/DxcxLwtvA/JgV4wj73AomgvnHk5+VsIPuRVBB0vy2Fq3f7clHdFQMdBg21TmaKlzrDZplJDDf204jRrI/X/pZQN6bykDUgKKat126+BDtiNnaKohdqic5ei9sI2o64IBL7TyjKprdzfoiGFPqh2U9mjmHAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vvw7fxJT; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718296452; c=relaxed/simple;
+	bh=TH6yUbejSw9+JlXPysbovmJBDZzKEu7WvN4dTHb6Tok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rL4sDjnfAZKSZtc3CuR43EdJP/bfw0bbaGxPX0oedrKYE2dTS/cRR2m2eP02ggt0GCbaeaFc+VwK1a+Qu0MhuWDLXKicKn1Qgxfeo5q5zJ+yRYZ1+FUYS5vVjQ7YPpc/TmMqMUgRxDLZgkRnvOhmYUqrh2/lnoc1xLjEd+AFeeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eFs0LCY7; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vvw7fxJT"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso19590081fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:34:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eFs0LCY7"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4405e343dd8so5846091cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:34:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718296439; x=1718901239; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zHgrY4xIc9CPVKKUbUHFPFlrW7UpxJwbiRlbNkc9MGM=;
-        b=Vvw7fxJTyKLNWc06vMoV0eWV2yh1+U7IdO/+dkyZBnpi4hF1Nqb/nqehJwZBGbtWBx
-         S8EYcXMps7CHcQpktHj4+12Kk+SmZTg0mWlWl/HAtmaThJW9mEgYweumdTW6c6FJmAry
-         83ljjJEs7aljkTMPxYHwk04Fexzagbv1o+Q07Qlwo8M5CWM4QZOjhyr+SDcXhT3MH91p
-         Ki66b45AzyPM3DJ5nKK/vkyne7wJnG+EsbPrTnKlfA8lRA08wu5ZPDDTZwUPOXZFUwrg
-         bd1wpdAq5YYyTU7b0PqrKM160ek7w7u76RoM/HdPgmCzVG57mLYFLH8Kw7+Tp8C9SuUq
-         FQJA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718296449; x=1718901249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jnTqeJui//cZvCx8TIdIEgkp7fczgV1PTRw+9hdKvO0=;
+        b=eFs0LCY79hUWbCNK0mgWjc9pyxmcrLfetrN1J7mIB4gERGy/kIxSHeOirM+Zpc0Tpi
+         aE8ORly9Mmv9ZYiJzUigNJYFpTlszXyI+xrteHtw+85jvbFUDWEReYijkuGIVOaRWqse
+         q1veWdS4UXOgC43WbbRSc015IbkbbBZBpoAEAAQq9Gj3t4+1C3qRcIHoXan6zIn6qyV5
+         hErl5Qzdc8JOcFDM2xUfrrslhQSAoIvJFFx/jzyidItPhY8iDpFX2qYVh/2pFH47lufz
+         vakSG7x8kjM8LXQXBc5WDc3bYLqzwRoRm4QNxUfZQ10D85VkekA8FXkrGZuuiD0bEwCJ
+         H1Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718296439; x=1718901239;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1718296449; x=1718901249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zHgrY4xIc9CPVKKUbUHFPFlrW7UpxJwbiRlbNkc9MGM=;
-        b=MlyzfoexjOwL6GCTbArXJ8h9y2mO+sjASPBTS+BmfcyIRgi2Nt2kRs4Pgtlf7iyGtD
-         tPGp1AotYC9pJolPqdRMR0eTDItHoEZHx4ioF5XWaio0nrlfuPEt0k0P//EAl3MX3mnG
-         W37Sq2XlJSKViaMljS0bQC66OnHI1Q3G6Lqa7MjZxllVypYimJWaL1hSLCYREwxVE8tg
-         6M5ewrIntLmlTqbgENDwd5dtNPQOtyUVm4CDc3/KuwfEs6Adqf0sysFsAeLOTb5EVZoi
-         m6KhE4O7lB2NhoaQ6+t+5FaUpMFYrvTBCvaoFLodSfadyA1R3eod5VIuNTdWKqEJ9qGE
-         YkYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVL0A+QIh4JY/2ENaGvmUw2Fa1InJxFXRoeXylgvHtId/vA0ZJNG9EKzY//V1ZJZXwE00Yx3md+CYVDPu/JcwsAJMUiPKGOoFTrcH/Y
-X-Gm-Message-State: AOJu0Yzn/dWhkxTdZvyYmR4z0tOXKg/2kKLQRvkRSSNYpe+SiZ9FvjqK
-	DaBI9hfX5rABwAICzQiLBUfCLmQo+s+qOjncXNTYmNvRS8KINsvQ+yJ9oreeeWM=
-X-Google-Smtp-Source: AGHT+IHQjwGnyIBB6w17aMs8YaOjxovU+qzoNkHKK0oqzTbPn4+mi5cAWSa9lQLAGg4Hgz05mK53Qw==
-X-Received: by 2002:a2e:9943:0:b0:2eb:eb82:4112 with SMTP id 38308e7fff4ca-2ec0e4826dbmr2994861fa.17.1718296438829;
-        Thu, 13 Jun 2024 09:33:58 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c9ae70sm3005621fa.133.2024.06.13.09.33.57
+        bh=jnTqeJui//cZvCx8TIdIEgkp7fczgV1PTRw+9hdKvO0=;
+        b=nSKkNPnsH/NZ4ZRzzIm7f7nKFLbcgR5MyMxG4oWeSpNO8YpbYBHcUiX7agsBf+yiOg
+         u6PKvF8JSksVjiHYPbhy6o3SaqUzge2qH+899sT5VSWOKOVBzJg00O+HkKHBLfUv0quR
+         rnMVA/GE0faw+wkeor9Fr/ARZbPVhDCDRK9fvHce+gImPEWQkYNnYDTKrDzdT8+RKvZV
+         jT2xITpKkhiRwzknFSjHkC/+vm/lUo9kxr9HVuTJp80ff7znkY6Idme4NyJtdrtv83Kj
+         yx3CDl/IZUibS08h+qOe/mk1Op9TsQKVnenq82ghl6LrPjaaYNnwWxiOiTQ7L64cOrhQ
+         KoOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfXylDaBkdcoVMGLDCZl6jXJYdHvCif8WJvhTtSZrSlK0y8UA9NNFO1SPgF44odhWHplNJSH5GAZEVDok1cGWEINCa1Micuyp9+AfS
+X-Gm-Message-State: AOJu0Yx96ctLwMnMXyoqIwN6DrXDwj2TxL6/wNLxxMfQNdDx6NCetkZw
+	XwZnFyx4hTznzf3sTeXKWddYZt/Pp2toQ3X+Es8Zcbt2GVbTssZFQB3NPInzWlM=
+X-Google-Smtp-Source: AGHT+IHuqdhXoaTBFdtn9ov3LvddNezgc3CiIjKhWKx8XUQamhaY/ID6htUbUnQzSxu8vYpFzCveXA==
+X-Received: by 2002:a05:622a:4cb:b0:440:5275:d435 with SMTP id d75a77b69052e-442168ad9e8mr1673321cf.30.1718296448835;
+        Thu, 13 Jun 2024 09:34:08 -0700 (PDT)
+Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4420f96efbbsm5884171cf.54.2024.06.13.09.34.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 09:33:58 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 13 Jun 2024 19:33:57 +0300
-Subject: [PATCH] drm/ci: mark kms_addfb_basic@addfb25-bad-modifier as
- passing on msm
+        Thu, 13 Jun 2024 09:34:08 -0700 (PDT)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: adc: adi-axi-adc: improve probe() error messaging
+Date: Thu, 13 Jun 2024 12:34:06 -0400
+Message-ID: <20240613163407.2147884-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-msm-pass-addfb25-bad-modifier-v1-1-23c556e96c8a@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAHQfa2YC/x3MwQqDMAwA0F+RnBdoOxX0V8YObZNqDq3SwBCk/
- 77i8V3eDcpVWGEdbqj8E5WjdNjXAHH3ZWMU6gZn3Ghm+8asGU+vip4oBTdh8IT5IEnCFeM420R
- LNC4E6MdZOcn1/J9va3+GH6EdbwAAAA==
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Helen Koike <helen.koike@collabora.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1692;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=9Oy2rhgmMbROnThGOyXo7UyCu8RbyWradi7uQ/YWriE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmax91DGbuj22LlXzjIrZ3rzJ7TcRR5ZnaZlaZv
- xDd47ibag+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZmsfdQAKCRCLPIo+Aiko
- 1ZRyCACHj5FwfHDMFnICBk6c9bsSibSfFyyQ7foUfaKd0HdH7hkKubcXTIzpfHkQyAnGxQfjHc/
- aqZ1VduL+GHVFdJBw/CZ8pL8YipTrpHrMGaI+vwxGutamsp21f9+8vZv27yn6BgIXzQtDckQd3+
- fWMKZfI0oNHZAKvea59SaFEqG10Q/9x7+yPwkMOLaLgeWU7i8LZVPLHXZ5BsGHt3sq/r5sFFeZf
- 1v1NfNOppwJchUxn+3cWWw+lK/S5VNtwBKGC45xchIr/gIfvtKiqFsAw36C41urnMETEhTVGhD1
- aXUxik06RCS2hjyYgJdOTQSRVkM5GgimG0wIZm1P5MTnxcJq
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Transfer-Encoding: 8bit
 
-The commit b228501ff183 ("drm/msm: merge dpu format database to MDP
-formats") made get_format take modifiers into account. This makes
-kms_addfb_basic@addfb25-bad-modifier pass on MDP4 and MDP5 platforms.
+The current error handling for calls such as devm_clk_get_enabled() in
+the adi-axi-adc probe() function means that, if a property such as
+'clocks' (for example) is not present in the devicetree when booting a
+kernel with the driver enabled, the resulting error message will be
+vague, e.g.:
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+|adi_axi_adc 44a00000.backend: probe with driver adi_axi_adc failed with error -2
+
+Change the devm_clk_get_enabled(), devm_regmap_init_mmio(), and
+devm_iio_backend_register() checks to use dev_err_probe() with some
+context for easier debugging.
+
+After the fix:
+
+|adi_axi_adc 44a00000.backend: error -ENOENT: failed to get clock
+|adi_axi_adc 44a00000.backend: probe with driver adi_axi_adc failed with error -2
+
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
- drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt | 1 -
- drivers/gpu/drm/ci/xfails/msm-apq8096-fails.txt | 1 -
- 2 files changed, 2 deletions(-)
+ drivers/iio/adc/adi-axi-adc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-index 3dfbabdf905e..6e7fd1ccd1e3 100644
---- a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-+++ b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
-@@ -4,7 +4,6 @@ device_reset@unbind-cold-reset-rebind,Fail
- device_reset@unbind-reset-rebind,Fail
- dumb_buffer@invalid-bpp,Fail
- kms_3d,Fail
--kms_addfb_basic@addfb25-bad-modifier,Fail
- kms_cursor_legacy@forked-move,Fail
- kms_cursor_legacy@single-bo,Fail
- kms_cursor_legacy@torture-bo,Fail
-diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8096-fails.txt b/drivers/gpu/drm/ci/xfails/msm-apq8096-fails.txt
-index 23a5f6f9097f..46ca69ce2ffe 100644
---- a/drivers/gpu/drm/ci/xfails/msm-apq8096-fails.txt
-+++ b/drivers/gpu/drm/ci/xfails/msm-apq8096-fails.txt
-@@ -4,6 +4,5 @@ device_reset@unbind-cold-reset-rebind,Fail
- device_reset@unbind-reset-rebind,Fail
- dumb_buffer@invalid-bpp,Fail
- kms_3d,Fail
--kms_addfb_basic@addfb25-bad-modifier,Fail
- kms_lease@lease-uevent,Fail
- tools_test@tools_test,Fail
-
----
-base-commit: 6b4468b0c6ba37a16795da567b58dc80bc7fb439
-change-id: 20240613-msm-pass-addfb25-bad-modifier-c461fd9c02bb
-
-Best regards,
+diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+index 0cf0d81358fd..99998c2769d5 100644
+--- a/drivers/iio/adc/adi-axi-adc.c
++++ b/drivers/iio/adc/adi-axi-adc.c
+@@ -292,7 +292,8 @@ static int adi_axi_adc_probe(struct platform_device *pdev)
+ 	st->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+ 					   &axi_adc_regmap_config);
+ 	if (IS_ERR(st->regmap))
+-		return PTR_ERR(st->regmap);
++		return dev_err_probe(&pdev->dev, PTR_ERR(st->regmap),
++				     "failed to init register map\n");
+ 
+ 	expected_ver = device_get_match_data(&pdev->dev);
+ 	if (!expected_ver)
+@@ -300,7 +301,8 @@ static int adi_axi_adc_probe(struct platform_device *pdev)
+ 
+ 	clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(clk))
+-		return PTR_ERR(clk);
++		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
++				     "failed to get clock\n");
+ 
+ 	/*
+ 	 * Force disable the core. Up to the frontend to enable us. And we can
+@@ -328,7 +330,8 @@ static int adi_axi_adc_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_iio_backend_register(&pdev->dev, &adi_axi_adc_generic, st);
+ 	if (ret)
+-		return ret;
++		return dev_err_probe(&pdev->dev, ret,
++				     "failed to register iio backend\n");
+ 
+ 	dev_info(&pdev->dev, "AXI ADC IP core (%d.%.2d.%c) probed\n",
+ 		 ADI_AXI_PCORE_VER_MAJOR(ver),
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.45.2
 
