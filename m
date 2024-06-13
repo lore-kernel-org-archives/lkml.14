@@ -1,83 +1,92 @@
-Received: from mail78-59.sinamail.sina.com.cn (mail78-59.sinamail.sina.com.cn [219.142.78.59])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4AE13D534
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 10:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8D313D534;
+	Thu, 13 Jun 2024 10:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718276288; cv=none; b=K3+HygPMhJ+zc0iZm+4WZwV2up+A/M2sc6k0WFAVpopKIr7yAFfa5DFbahtFXiI7XoXJyLmltYP8NoH1GeKHKKB1+iR2BcPS1V/vaihx8lmgC+xSN8oCsO4/hixoNkOKN7cPnAv5rvsL0/7HUWmhCUCktQyfIEpVD5uryebwOjc=
+	t=1718276321; cv=none; b=tldWYsjfVwt8bE3+LipC9lcA0UVe/SAOHQp9csN6MA7UgCkC22fm/vINm0JDpm9geVAUnQ13MgORkCzykY01qkGfkip4kG/W4DsboqdRRu5483eFj4z/+0anNZAQmx8EUm2BkT7N/aAModjUm0mEuT3PdKCDbEBwcgJeOdLSWgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718276288; c=relaxed/simple;
-	bh=8/8N98dtnuGnocrm29FSFaydJECYzafJ/9Ktn7njb+c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AsZj9vD08UMIPYWdOcdrZcccNd8U9QozouSaHOsjFXvqYCGBcbohCm7R9GnrKLmUWKXf0/7pX9ZeANm5UAbLZCpwKpshy2TNnLK1WCaK7xACG/Mer6PQvRILU+tY9gDisovvEPdLjV/bdY8D3VUicnygHvy7Ri7g/Ii9E+TVqFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.164])
-	by sina.com (172.16.235.25) with ESMTP
-	id 666AD0AE00007EA1; Thu, 13 Jun 2024 18:57:53 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 4686634210564
-X-SMAIL-UIID: 56118CC1132A43D5AEE54EB72863AB41-20240613-185753-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+d79afb004be235636ee8@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [nilfs?] [mm?] KASAN: slab-use-after-free Read in lru_add_fn
-Date: Thu, 13 Jun 2024 18:57:41 +0800
-Message-Id: <20240613105741.2380-1-hdanton@sina.com>
-In-Reply-To: <000000000000cae276061aa12d5e@google.com>
-References: 
+	s=arc-20240116; t=1718276321; c=relaxed/simple;
+	bh=xn1NLopsPGDM9FSzN8JBsWn2CIEUUIIf+VQzj4DUEF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VIJ4nWDNvC8FZo4CB/lcvTY8r45SbzzGZPcUTTJq06spSmmH4qE2SBt0Qn73rmhFYF2HBjGt6E/gaIqgBvVfl7syfeftq0OVqn0dO5tl5l31GSr1LUFxo9IHoz4DvzZmcj+BmQ24++4OXFvE+d9k1fdvuKR8bl+EzJPMy8LKQJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=UzwupdY/; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="UzwupdY/"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 3E1051C0082; Thu, 13 Jun 2024 12:58:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1718276317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6QQ5va+aQlfb/vFalaHPg5H34Qi6y4ixcQX/yxfzk4Y=;
+	b=UzwupdY/Ac2rvSWK4CcDb7IHw17P1YQfhSJeFe5Eiaf5ZQnXaNRH7FLMZMq4nUB4esdAa1
+	MdXvLUELmlq3RYK5tK03k0Oxba9oFa+to0qIHHQ4OMxwsVhOqHkw0+qZBpXenPrb/YRxzd
+	m1khVbAGHM8KN8XWo17biXMw9eDXRiE=
+Date: Thu, 13 Jun 2024 12:58:36 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jason-ch Chen <jason-ch.chen@mediatek.com>,
+	Singo Chang <singo.chang@mediatek.com>,
+	Nancy Lin <nancy.lin@mediatek.com>,
+	Shawn Sung <shawn.sung@mediatek.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Jason-jh Lin <jason-jh.lin@mediatek.corp-partner.google.com>
+Subject: Re: [PATCH RESEND,v6 0/8] Add CMDQ secure driver for SVP
+Message-ID: <ZmrQ3NWxwy8719Vr@duo.ucw.cz>
+References: <20240526144443.14345-1-jason-jh.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0ugZqD1PtgeGMHeh"
+Content-Disposition: inline
+In-Reply-To: <20240526144443.14345-1-jason-jh.lin@mediatek.com>
 
-On Tue, 11 Jun 2024 11:10:20 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    83a7eefedc9b Linux 6.10-rc3
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c645e2980000
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+--0ugZqD1PtgeGMHeh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---- x/fs/read_write.c
-+++ y/fs/read_write.c
-@@ -570,6 +570,7 @@ EXPORT_SYMBOL(kernel_write);
- ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *pos)
- {
- 	ssize_t ret;
-+	struct super_block *sb;
- 
- 	if (!(file->f_mode & FMODE_WRITE))
- 		return -EBADF;
-@@ -583,6 +584,9 @@ ssize_t vfs_write(struct file *file, con
- 		return ret;
- 	if (count > MAX_RW_COUNT)
- 		count =  MAX_RW_COUNT;
-+	sb = file_inode(file)->i_sb;
-+	if (!down_read_trylock(&sb->s_umount))
-+		return -EINVAL;
- 	file_start_write(file);
- 	if (file->f_op->write)
- 		ret = file->f_op->write(file, buf, count, pos);
-@@ -596,6 +600,7 @@ ssize_t vfs_write(struct file *file, con
- 	}
- 	inc_syscw(current);
- 	file_end_write(file);
-+	up_read(&sb->s_umount);
- 	return ret;
- }
- 
---
+On Sun 2024-05-26 22:44:35, Jason-JH.Lin wrote:
+> From: Jason-jh Lin <jason-jh.lin@mediatek.corp-partner.google.com>
+>=20
+> For the Secure Video Path (SVP) feature, inculding the memory stored
+> secure video content, the registers of display HW pipeline and the
+> HW configure operations are required to execute in the secure world.
+
+This feature goes against interests of hardware users/owners. We
+should not merge this.
+								Pavel
+							=09
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--0ugZqD1PtgeGMHeh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZmrQ3AAKCRAw5/Bqldv6
+8hagAJ91OcdTYdDnoCizlMOqRMmJHUnS9QCcDaoEoZdKMTlzCo9uoGaVA2KHcyI=
+=iTbB
+-----END PGP SIGNATURE-----
+
+--0ugZqD1PtgeGMHeh--
