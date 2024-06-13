@@ -1,224 +1,247 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2073C2119
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B99137911;
+	Thu, 13 Jun 2024 06:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718261472; cv=none; b=doSr0gaZ+n46a7NbUfUimYnuxMxz7xs0UnAKwZv1IYoA1suBFQLDMWnKrQ8r9oTZuu/0hwTIkkLYog9dAK4uFHN7tYWeDvZ8Ap/8J+mpeG0gtdcb2/BzN9vl3TmRppVN3oVuSi8alIEDnAqV15labcyhOtr8jRcuBIDqWtoySnU=
+	t=1718261508; cv=none; b=ZUn3LZNHQbIQijFNuMctWeNIlqVMtQ6M1Uz321e55Fqgop6Kw2UdphpcxD9xV9DaJUavV0h89bjrCAZqySJ3lU+IhSXsxjq46+M/4OzzSxm8lkVoSEcqGMXdl9OBqZBt+2Ssq8jAkYZSoJJms6V8aHys/CqRSUSU0zF1wGm41JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718261472; c=relaxed/simple;
-	bh=dCYSl6m4zIwH4JbW6vfy7hbe96U8QsTjiiAI04n+hHg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bLiPcetmGuv0Sd3Mrltb1X8BvSLUq2z1nCzu7VY6Yyo5EGx5hKdP++/IG7W4NNhezhWwGHXHAMz7S51DvKFAMy+1ii625+b3Q70sd6XkI7inLEBVnHkOLJdaT1SPpKnP7k7e0N2UZpnd0g2oFU2JQN1zEI3pXvnmGpwFe2FmXiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JoAzxBX4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoAzxBX4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718261469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dCYSl6m4zIwH4JbW6vfy7hbe96U8QsTjiiAI04n+hHg=;
-	b=JoAzxBX4Odb5UwJnY/3oa9O1NqoGR0Cvz9GfsftU9UyZFUE6KvVXbf9wqAWK1vhGsIKOGW
-	/ogb1ONJDGOxIM84H5pkWdUAHkxDVIRdi9CWjEzX1VwpE317DMYhWgPw41/somJZu+/8gH
-	0nwD+rT1p8wbzZS3w8lM8HF+OMdDkJg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-cmtoofamPw-4RMyS56pkcQ-1; Thu, 13 Jun 2024 02:51:05 -0400
-X-MC-Unique: cmtoofamPw-4RMyS56pkcQ-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-354f30004c8so100850f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 23:51:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718261464; x=1718866264;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dCYSl6m4zIwH4JbW6vfy7hbe96U8QsTjiiAI04n+hHg=;
-        b=osfdxALkJRsqEhkVueQvtIQfZGXoiHnj0PptG5jmNtrlBQi/P2+p3bJDKZmAhiP5SM
-         oduI5H2dSsJW/lcJrDXWyMLczO+fCqR5WOUNS1HT6WMcAum76jIw/mJ++X9/OAzNXNvq
-         P3UUT5FYw64lO24dXE5PEm8YQMRmJhvs4OyG/Y5QE2RQDcUwNIqzjVYfgrmtX8WRfcvs
-         hW5BftlQB4DE8NpUpjZurauzX5N3f0VEf6AIjQZ5Ut9GeewQLZyFZFG6Fex7FAKckA19
-         Nma5TxbgM/9vABjSSa0A1rvH1cjRiXCEtkgVleuSkzRJ8uv9x9UZ6//xfq6pCQR8fwYS
-         A2Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvsG1/wtrJfI12uFoOVIDFCiM9ql2uo7NGtFexr/Mp9IW10NniB/fmiF6DZQngi7kaCWUZJwKEofBhsUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzad2/lsvpgTJ+sB7YwVO+Vx/fE3mlfPHsTS9oseW2KI5+Y+gy4
-	iCqqzN4av8aIbV5gSMRLJtgaaJ4Myhnumh2xEi+8nkV0Ou6oRePnCquFwmtAlKkBaBJdEDFDG/y
-	+pysZ/5dtTZ6FHUhq0eT76Tn3Gn/c48Lftwg8kK3WS6vncIYUXfq3gtNLADuCzw==
-X-Received: by 2002:a05:600c:511c:b0:421:7f30:7ccb with SMTP id 5b1f17b1804b1-422863a85d2mr28530815e9.1.1718261464148;
-        Wed, 12 Jun 2024 23:51:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEne33eg3SL5vDGQDj3JXJ9FvT7/47jv8TG8IqrLLqDZjm0NwnmBgsExGCfn22f4gGdxb3/Tg==
-X-Received: by 2002:a05:600c:511c:b0:421:7f30:7ccb with SMTP id 5b1f17b1804b1-422863a85d2mr28530655e9.1.1718261463751;
-        Wed, 12 Jun 2024 23:51:03 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de607sm49767315e9.34.2024.06.12.23.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 23:51:03 -0700 (PDT)
-Message-ID: <ef32b9184700a07048fbb387f7d42410f7db308d.camel@redhat.com>
-Subject: Re: [PATCH v8 03/13] PCI: Reimplement plural devres functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
- Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-Date: Thu, 13 Jun 2024 08:51:02 +0200
-In-Reply-To: <20240612204235.GA1037175@bhelgaas>
-References: <20240612204235.GA1037175@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1718261508; c=relaxed/simple;
+	bh=LvAer61IVH3wkuY3o1V+TCBKGzSLg//rzxfuqvW7yD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HtNXTyxOIMIPr+1XwaCWIhu1lRGmgdGuyXD1+heAi2O0ly3TWlJEoaOblchVqihVd1y9+ureZnKO7ZPfwU18GjN0idCTKKPOMIBasLE6DRuhXz417pf/6asdm7efN0Jh5cyXdTkMq7m38zMC18Fko4OehKP8d2yTnmo+c9qy5M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ee3d0b30294c11ef9305a59a3cc225df-20240613
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:74a01a1e-22e2-4f46-b7a0-1fcbd41cdafc,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:5
+X-CID-INFO: VERSION:1.1.38,REQID:74a01a1e-22e2-4f46-b7a0-1fcbd41cdafc,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-META: VersionHash:82c5f88,CLOUDID:67dda018e55f71979f6b6a6fb68dcbf9,BulkI
+	D:240613141932DQLUDI5I,BulkQuantity:1,Recheck:0,SF:17|19|44|64|66|24|102,T
+	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,QS:nil,BEC:nil,
+	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: ee3d0b30294c11ef9305a59a3cc225df-20240613
+Received: from node2.com.cn [(39.156.73.10)] by mailgw.kylinos.cn
+	(envelope-from <mengfanhui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 586363061; Thu, 13 Jun 2024 14:19:46 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 018F6B80758A;
+	Thu, 13 Jun 2024 14:19:46 +0800 (CST)
+X-ns-mid: postfix-666A8F81-83225835
+Received: from [172.30.60.81] (unknown [172.30.60.81])
+	by node2.com.cn (NSMail) with ESMTPA id 4DC5AB80758A;
+	Thu, 13 Jun 2024 06:19:45 +0000 (UTC)
+Message-ID: <c0ed2c60-47b9-4853-a164-8e66016e49d3@kylinos.cn>
+Date: Thu, 13 Jun 2024 14:19:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] scsi: megaraid_sas: Fix DCMD issue command handling
+To: kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+ shivasharan.srikanteshwara@broadcom.com, chandrakanth.patil@broadcom.com
+Cc: liuyun01@kylinos.cn, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, geliang@kernel.org
+References: <20240530094514.2750723-1-mengfanhui@kylinos.cn>
+Content-Language: en-US
+From: mengfanhui <mengfanhui@kylinos.cn>
+In-Reply-To: <20240530094514.2750723-1-mengfanhui@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-06-12 at 15:42 -0500, Bjorn Helgaas wrote:
-> On Wed, Jun 12, 2024 at 10:51:40AM +0200, Philipp Stanner wrote:
-> > On Tue, 2024-06-11 at 16:44 -0500, Bjorn Helgaas wrote:
-> > > I'm trying to merge these into pci/next, but I'm having a hard
-> > > time
-> > > writing the merge commit log.=C2=A0 I want a one-sentence description
-> > > of
-> > > each patch that tells me what the benefit of the patch is.=C2=A0
-> > > Usually
-> > > the subject line is a good start.
-> > >=20
-> > > "Reimplement plural devres functions" is kind of vague and
-> > > doesn't
-> > > quite motivate this patch, and I'm having a hard time extracting
-> > > the
-> > > relevant details from the commit log below.
-> >=20
-> > I would say that the summary would be something along the lines:
-> > "Set ground layer for devres simplification and extension"
-> >=20
-> > because this patch simplifies the existing functions and adds
-> > infrastructure that can later be used to deprecate the bloated
-> > existing
-> > functions, remove the hybrid mechanism and add pcim_iomap_range().
+Can someone help review it? Thank you!
+
+=E5=9C=A8 2024/5/30 17:45, mengfanhui =E5=86=99=E9=81=93:
+> If DCMD timeout not handled, the next interaction between the driver an=
+d firmware will still
+> result in DCMD timeout, which may cause system crashes or hang up
 >=20
-> I think something concrete like "Add partial-BAR devres support"
-> would
-> give people a hint about what to look for.
-
-Okay, will do.
-
+> This patch will do proper error handling for DCMD command
+> for Fusion adapters:
 >=20
-> This patch contains quite a bit more than that, and if it were
-> possible, it might be nice to split the rest to a different patch,
-> but
-> I'm not sure it's even possible=C2=A0
-
-I tried and got screamed at by the build chain because of dead code. So
-I don't really think they can be split more, unfortunately.
-
-In possibly following series's to PCI I'll pay attention to design
-things as atomically as possible from the start.
-
-
-> and I just want to get this series out
-> the door.
-
-That's actually something you and I have in common. I have been working
-on the preparations for this since November last year ^^'
-
+> 1. What action needs to be taken in case of DCMD timeout is decided by
+> function dcmd_timeout_ocr_possible().  DCMD timeout causing OCR is
+> applicable to the following situation:
+>     INITIATE_OCR
+>     KILL_ADAPTER
+>     IGNORE_TIMEOUT
 >=20
-> If the commit log includes the partial-BAR idea and the specific
-> functions added, I think that will hold together.=C2=A0 And then it makes
-> sense for why the "plural" functions would be implemented on top of
-> the "singular" ones.
+> 2. If those DCMDs fail, driver bails out.
 >=20
-> > > > Implement a set of singular functions=20
-> > >=20
-> > > What is this set of functions?=C2=A0 My guess is below.
-> > >=20
-> > > > that use devres as it's intended and
-> > > > use those singular functions to reimplement the plural
-> > > > functions.
-> > >=20
-> > > What does "as it's intended" mean?=C2=A0 Too nebulous to fit here.
-> >=20
-> > Well, the idea behind devres is that you allocate a device resource
-> > _for each_ object you want to be freed / deinitialized
-> > automatically.
-> > One devres object per driver / subsystem object, one devres
-> > callback
-> > per cleanup job for the driver / subsystem.
-> >=20
-> > What PCI devres did instead was to use just ONE devres object _for
-> > everything_ and then it had to implement all sorts of checks to
-> > check
-> > which sub-resource this master resource is actually about:
-> >=20
-> > (from devres.c)
-> > static void pcim_release(struct device *gendev, void *res)
-> > {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pci_dev *dev =3D=
- to_pci_dev(gendev);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pci_devres *this=
- =3D res;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int i;
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i < DEVIC=
-E_COUNT_RESOURCE; i++)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0if (this->region_mask & (1 << i))
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-pci_release_region(dev, i);
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (this->mwi)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_clear_mwi(dev);
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (this->restore_intx)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_intx(dev, this->orig_intx);
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (this->enabled && !t=
-his->pinned)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_disable_device(dev);
-> > }
-> >=20
-> >=20
-> > So one could dare to say that devres was partially re-implemented
-> > on
-> > top of devres.
-> >=20
-> > The for-loop and the if-conditions constitute that "re-
-> > implementation".
-> > No one has any clue why it has been done that way, because it
-> > provides
-> > 0 upsides and would have been far easier to implement by just
-> > letting
-> > devres do its job.
-> >=20
-> > Would you like to see the above details in the commit message?
+> Error log:
+> [ 201.689759] megaraid_sas 0001:05:00.0: megasas_sync_pd_seq_num DCMD t=
+imed out, continue without JBOD sequence map
+> [ 242.649061] [] megasas_init+0x114/0x4000 [megaraid_sas]
+> [ 363.481009] [] megasas_issue_blocked_cmd+0x1d8/0x268 [megaraid_sas]
+> [ 363.481159] [] megasas_get_pd_list+0x548/0x688 [megaraid_sas]
+> [ 363.481309] [] megasas_init_fw+0xb38/0x1104 [megaraid_sas]
+> [ 363.481459] [] megasas_probe_one+0x1f4/0x5c4 [megaraid_sas]
+> [ 363.482419] [] megasas_init+0x114/0x4000 [megaraid_sas]
+> [ 381.912298] megaraid_sas 0001:05:00.0: DCMD(opcode: 0x2010100) is tim=
+ed out, func:megasas_issue_blocked_cmd
+> [ 381.912979] megaraid_sas 0001:05:00.0: Ignore DCMD timeout: megasas_g=
+et_pd_list 4727
+> [ 484.313526] [] megasas_init+0x114/0x4000 [megaraid_sas]
+> [ 562.136294] megaraid_sas 0001:05:00.0: DCMD(opcode: 0x3010100) is tim=
+ed out, func:megasas_issue_blocked_cmd
+> [ 562.137074] megaraid_sas 0001:05:00.0: Ignore DCMD timeout: megasas_l=
+d_list_query 4973
+> [ 562.137081] megaraid_sas 0001:05:00.0: failed to get LD list
+> [ 562.137425] megaraid_sas 0001:05:00.0: megasas_init_fw: megasas_get_d=
+evice_list failed
+> [ 562.137767] megaraid_sas 0001:05:00.0: megasas_disable_intr_fusion is=
+ called outbound_intr_mask:0x40000009
+> [ 562.139232] megaraid_sas 0001:05:00.0: Failed from megasas_init_fw 65=
+72
 >=20
-> No.=C2=A0 Just remove the "use devres as it's intended" since that's not
-> needed to motivate this patch.=C2=A0 I think we need fewer and
-> more-specific words.
-
-ACK. I will rework it
-
-
-Thank you Bjorn for your time and effort,
-
-P.
-
-
+> Co-developed-by: Jackie Liu <liuyun01@kylinos.cn>
+> Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+> Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
+> Suggested-by: Geliang Tang <geliang@kernel.org>
+> ---
+>  drivers/scsi/megaraid/megaraid_sas.h        |  1 +
+>  drivers/scsi/megaraid/megaraid_sas_base.c   |  4 +-
+>  drivers/scsi/megaraid/megaraid_sas_fusion.c | 71 +++++++++++++++++----
+>  3 files changed, 62 insertions(+), 14 deletions(-)
 >=20
-> Bjorn
->=20
-
+> diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megara=
+id/megaraid_sas.h
+> index 5680c6cdb221..91570c5e8456 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas.h
+> +++ b/drivers/scsi/megaraid/megaraid_sas.h
+> @@ -2760,5 +2760,6 @@ void megasas_exit_debugfs(void);
+>  void megasas_setup_debugfs(struct megasas_instance *instance);
+>  void megasas_destroy_debugfs(struct megasas_instance *instance);
+>  int megasas_blk_mq_poll(struct Scsi_Host *shost, unsigned int queue_nu=
+m);
+> +int dcmd_timeout_ocr_possible(struct megasas_instance *instance);
+> =20
+>  #endif				/*LSI_MEGARAID_SAS_H */
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/m=
+egaraid/megaraid_sas_base.c
+> index 170b38f04655..ba8061ea2078 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+> @@ -4518,8 +4518,8 @@ int megasas_alloc_cmds(struct megasas_instance *i=
+nstance)
+>   * Return 0 for only Fusion adapter, if driver load/unload is not in p=
+rogress
+>   * or FW is not under OCR.
+>   */
+> -inline int
+> -dcmd_timeout_ocr_possible(struct megasas_instance *instance) {
+> +int dcmd_timeout_ocr_possible(struct megasas_instance *instance)
+> +{
+> =20
+>  	if (instance->adapter_type =3D=3D MFI_SERIES)
+>  		return KILL_ADAPTER;
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi=
+/megaraid/megaraid_sas_fusion.c
+> index 6c1fb8149553..f0aeb1ee83a2 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> @@ -1363,17 +1363,42 @@ megasas_sync_pd_seq_num(struct megasas_instance=
+ *instance, bool pend) {
+>  			"driver supports max %d JBOD, but FW reports %d\n",
+>  			MAX_PHYSICAL_DEVICES, le32_to_cpu(pd_sync->count));
+>  		ret =3D -EINVAL;
+> +		goto out;
+>  	}
+> =20
+> -	if (ret =3D=3D DCMD_TIMEOUT)
+> -		dev_warn(&instance->pdev->dev,
+> -			 "%s DCMD timed out, continue without JBOD sequence map\n",
+> -			 __func__);
+> -
+> -	if (ret =3D=3D DCMD_SUCCESS)
+> +	switch (ret) {
+> +	case DCMD_SUCCESS:
+>  		instance->pd_seq_map_id++;
+> +		break;
+> +	case DCMD_TIMEOUT:
+> +		switch (dcmd_timeout_ocr_possible(instance)) {
+> +		case INITIATE_OCR:
+> +			cmd->flags |=3D DRV_DCMD_SKIP_REFIRE;
+> +			mutex_unlock(&instance->reset_mutex);
+> +			megasas_reset_fusion(instance->host,
+> +					     MFI_IO_TIMEOUT_OCR);
+> +			mutex_lock(&instance->reset_mutex);
+> +			break;
+> +		case KILL_ADAPTER:
+> +			megaraid_sas_kill_hba(instance);
+> +			break;
+> +		case IGNORE_TIMEOUT:
+> +			dev_info(&instance->pdev->dev, "Ignore DCMD timeout: %s %d\n",
+> +				 __func__, __LINE__);
+> +			break;
+> +		}
+> +		break;
+> +	case DCMD_FAILED:
+> +		dev_err(&instance->pdev->dev,
+> +			"%s: MR_DCMD_SYSTEM_PD_MAP_GET_INFO failed\n",
+> +			__func__);
+> +		break;
+> +	}
+> +
+> +out:
+> +	if (ret !=3D DCMD_TIMEOUT)
+> +		megasas_return_cmd(instance, cmd);
+> =20
+> -	megasas_return_cmd(instance, cmd);
+>  	return ret;
+>  }
+> =20
+> @@ -1449,12 +1474,34 @@ megasas_get_ld_map_info(struct megasas_instance=
+ *instance)
+>  	else
+>  		ret =3D megasas_issue_polled(instance, cmd);
+> =20
+> -	if (ret =3D=3D DCMD_TIMEOUT)
+> -		dev_warn(&instance->pdev->dev,
+> -			 "%s DCMD timed out, RAID map is disabled\n",
+> -			 __func__);
+> +	switch (ret) {
+> +	case DCMD_TIMEOUT:
+> +		switch (dcmd_timeout_ocr_possible(instance)) {
+> +		case INITIATE_OCR:
+> +			cmd->flags |=3D DRV_DCMD_SKIP_REFIRE;
+> +			mutex_unlock(&instance->reset_mutex);
+> +			megasas_reset_fusion(instance->host,
+> +					     MFI_IO_TIMEOUT_OCR);
+> +			mutex_lock(&instance->reset_mutex);
+> +			break;
+> +		case KILL_ADAPTER:
+> +			megaraid_sas_kill_hba(instance);
+> +			break;
+> +		case IGNORE_TIMEOUT:
+> +			dev_info(&instance->pdev->dev, "Ignore DCMD timeout: %s %d\n",
+> +				 __func__, __LINE__);
+> +			break;
+> +		}
+> +		break;
+> +	case DCMD_FAILED:
+> +		dev_err(&instance->pdev->dev,
+> +			"%s: MR_DCMD_LD_MAP_GET_INFO failed\n",
+> +			__func__);
+> +		break;
+> +	}
+> =20
+> -	megasas_return_cmd(instance, cmd);
+> +	if (ret !=3D DCMD_TIMEOUT)
+> +		megasas_return_cmd(instance, cmd);
+> =20
+>  	return ret;
+>  }
