@@ -1,64 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA10B155CA3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545EB156654;
 	Thu, 13 Jun 2024 15:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718293221; cv=none; b=MMr0IiupZseHHvDl5/dIjcxbUt9ddyzpwY7L0S9P8pR/j0miJJpwjGzN6IFeenIloZWTLzplB9HU5172K/SxCN8IEQ8qfQctTO+8eI7Wv0n/uHndiZTsk4fmX1McuJdDbWG/bvs/4jv62IffjJ8clJWTMifeEpaH41g9lmDvU/E=
+	t=1718293222; cv=none; b=MmUMVlasGVbug1MpXb7Yf9oq4W3Mc5F5X3Vg0sBE/HV1dwMhSlPXCQpixVTOLvr7B+F8HmGm1yE4MQAG00S7KFq81BdL9qMa/CNZZn4mZJ0N7GlEUHV9Qoc9zYqf88C0u6qAQbKpLVKQ7ROtt+u6Ua/k6DCZlfFbaF6BCioRgZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718293221; c=relaxed/simple;
-	bh=0r+mj0WHoOK5XU05tDWkuhV0guJgDxHLN3hdlmvl4FM=;
+	s=arc-20240116; t=1718293222; c=relaxed/simple;
+	bh=rxVyQ6lZU702PwA+PUfiD2YlhwM/n97a6/s5p7/Epck=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uVTghgT7pWWjg1y+qmFhic3I3RRqsIyYWSa+IhTllnMXcjCdT+bOnbzEzS2qGSSc/2K+GG/KsvUMwc9EZQmKeGgRKe+HWIC4w3p6BJLHPuR52eSDOvqAPc/GPM/wiaCok5TmbGdm/Nz8Ib5VfsZj89XVn8Csjb5UA5B+Cv6GKRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HmIS1qUj; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=shVZNy4Jv+PqL3q6GaxAhgeJT11Md/+57xCNmay9eE3Us65T+WJ1DU2wZ8j5jSmY3vUU8l/KedNjQNhomY+XAxnDqoD2GwvCAY5tg9bb+AbjaHRi9axYcXb/eAoi4nwXyhRVndXKQMiTY0Th/yVP+VpxRxRRIr3d7pK73IeAc8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kZUSIkqS; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HmIS1qUj"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DFMPaL026307;
-	Thu, 13 Jun 2024 15:39:58 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kZUSIkqS"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DE7HXP011927;
+	Thu, 13 Jun 2024 15:39:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=Lf8JDXEAibfeu
-	4y+WuUMeyCObr8U6xtLlRth+wjWPFs=; b=HmIS1qUjW/tRR+bUEdy5btx3OQgyr
-	umdrhVFIfANsPUb/RDv6yccWECWCTg3jiyd0kfqnSYGkFpfFsv9s4V2u7i56WcST
-	tSTHcTxYUP89Q7DgnXmqxZtDuB0Vrz0ATe6cgaHmz/mtHOxqruuYSB1ifx+tOnPX
-	YUFpJfpCQPQDMPBPwS8D4bTmvKYt+oFhgkZh1/W/PxETnGsSWeOv7EGGlOUtpXVJ
-	L9XYev+jgYLk0OqDqf3goL0ed0TtkcGlvuDRWpg4sNdfkpZc7mcFIOJguQLhj7F6
-	8qI6n1IcvXQdSHeNvdKBKYnr3b0gTZ9S0TYiOWdev5LpqOBFNwgxFK5+Q==
+	:mime-version:content-transfer-encoding; s=pp1; bh=aLe/3XBqno9Yk
+	h6K8Gazkn5dKq5eSwzJESHfR5NZsd4=; b=kZUSIkqSEK8rID5S9ATMlltGMsS0Q
+	uzznxKeXDkX6/Qijwi+iCmI5fBrRLs/ym0YRuJ7YNTTLBDsb8DDwTWbHFx9L2mGB
+	lkpw++wnXqNp2xTSS82OXdt/g0nIJ103WngSZpslqH4u87caiJorvyCOYiPMX4cM
+	DgCyrCgFNr6Q65/H0/lDGsqe8wkUUjFXuCnmlelHYPndpVm1WiQm/JrobmoumyC4
+	N/SIulgz13wcix+y1zqiBE1GNZptNarMx0fAZzWy/2rUSG6bgotK1qiGUqyr7Ddy
+	Qfi8Zt+ZTEywmQWe7MQsInWh9MJbGIgRO07K/GNjyhd8uE+03Z5EO8Yag==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqq4rt37g-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr28g8bve-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 13 Jun 2024 15:39:57 +0000 (GMT)
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdvZk026874;
-	Thu, 13 Jun 2024 15:39:57 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqq4rt37c-1
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdu25032626;
+	Thu, 13 Jun 2024 15:39:56 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr28g8bvb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 13 Jun 2024 15:39:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DEjjfs028690;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DEIs5m008716;
 	Thu, 13 Jun 2024 15:39:55 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn1mus9ga-1
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn4b3rk1t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 13 Jun 2024 15:39:55 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFdo1k49086754
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFdo3A44302740
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 13 Jun 2024 15:39:52 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D49042004E;
-	Thu, 13 Jun 2024 15:39:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id EB6C12004D;
+	Thu, 13 Jun 2024 15:39:49 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 614DE2006E;
-	Thu, 13 Jun 2024 15:39:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 78B9120043;
+	Thu, 13 Jun 2024 15:39:49 +0000 (GMT)
 Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Jun 2024 15:39:48 +0000 (GMT)
+	Thu, 13 Jun 2024 15:39:49 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -79,9 +79,9 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v4 29/35] s390/mm: Define KMSAN metadata for vmalloc and modules
-Date: Thu, 13 Jun 2024 17:34:31 +0200
-Message-ID: <20240613153924.961511-30-iii@linux.ibm.com>
+Subject: [PATCH v4 31/35] s390/traps: Unpoison the kernel_stack_overflow()'s pt_regs
+Date: Thu, 13 Jun 2024 17:34:33 +0200
+Message-ID: <20240613153924.961511-32-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240613153924.961511-1-iii@linux.ibm.com>
 References: <20240613153924.961511-1-iii@linux.ibm.com>
@@ -93,78 +93,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pD6uyOhh-bdrq5oWD9AJUmqZbuVWYtd9
-X-Proofpoint-GUID: hE3He5xumiJgo0Zbuv3p-52CPM54okmR
+X-Proofpoint-GUID: qN5TvlINAwkoyVJTUb7mish1SpksN-h9
+X-Proofpoint-ORIG-GUID: Bgo41_z9p3q4U6eGSVczp70jPlI-Yan7
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_08,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=697 adultscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406130109
+ definitions=2024-06-13_09,2024-06-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ phishscore=0 clxscore=1015 suspectscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406130112
 
-The pages for the KMSAN metadata associated with most kernel mappings
-are taken from memblock by the common code. However, vmalloc and module
-metadata needs to be defined by the architectures.
-
-Be a little bit more careful than x86: allocate exactly MODULES_LEN
-for the module shadow and origins, and then take 2/3 of vmalloc for
-the vmalloc shadow and origins. This ensures that users passing small
-vmalloc= values on the command line do not cause module metadata
-collisions.
+This is normally done by the generic entry code, but the
+kernel_stack_overflow() flow bypasses it.
 
 Reviewed-by: Alexander Potapenko <glider@google.com>
-Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Acked-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- arch/s390/boot/startup.c        | 7 +++++++
- arch/s390/include/asm/pgtable.h | 8 ++++++++
- 2 files changed, 15 insertions(+)
+ arch/s390/kernel/traps.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/s390/boot/startup.c b/arch/s390/boot/startup.c
-index 182aac6a0f77..93775142322d 100644
---- a/arch/s390/boot/startup.c
-+++ b/arch/s390/boot/startup.c
-@@ -301,11 +301,18 @@ static unsigned long setup_kernel_memory_layout(unsigned long kernel_size)
- 	MODULES_END = round_down(kernel_start, _SEGMENT_SIZE);
- 	MODULES_VADDR = MODULES_END - MODULES_LEN;
- 	VMALLOC_END = MODULES_VADDR;
-+	if (IS_ENABLED(CONFIG_KMSAN))
-+		VMALLOC_END -= MODULES_LEN * 2;
+diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
+index 52578b5cecbd..dde69d2a64f0 100644
+--- a/arch/s390/kernel/traps.c
++++ b/arch/s390/kernel/traps.c
+@@ -27,6 +27,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/cpu.h>
+ #include <linux/entry-common.h>
++#include <linux/kmsan.h>
+ #include <asm/asm-extable.h>
+ #include <asm/vtime.h>
+ #include <asm/fpu.h>
+@@ -262,6 +263,11 @@ static void monitor_event_exception(struct pt_regs *regs)
  
- 	/* allow vmalloc area to occupy up to about 1/2 of the rest virtual space left */
- 	vsize = (VMALLOC_END - FIXMAP_SIZE) / 2;
- 	vsize = round_down(vsize, _SEGMENT_SIZE);
- 	vmalloc_size = min(vmalloc_size, vsize);
-+	if (IS_ENABLED(CONFIG_KMSAN)) {
-+		/* take 2/3 of vmalloc area for KMSAN shadow and origins */
-+		vmalloc_size = round_down(vmalloc_size / 3, _SEGMENT_SIZE);
-+		VMALLOC_END -= vmalloc_size * 2;
-+	}
- 	VMALLOC_START = VMALLOC_END - vmalloc_size;
- 
- 	__memcpy_real_area = round_down(VMALLOC_START - MEMCPY_REAL_SIZE, PAGE_SIZE);
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 70b6ee557eb2..2f44c23efec0 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -107,6 +107,14 @@ static inline int is_module_addr(void *addr)
- 	return 1;
- }
- 
-+#ifdef CONFIG_KMSAN
-+#define KMSAN_VMALLOC_SIZE (VMALLOC_END - VMALLOC_START)
-+#define KMSAN_VMALLOC_SHADOW_START VMALLOC_END
-+#define KMSAN_VMALLOC_ORIGIN_START (KMSAN_VMALLOC_SHADOW_START + KMSAN_VMALLOC_SIZE)
-+#define KMSAN_MODULES_SHADOW_START (KMSAN_VMALLOC_ORIGIN_START + KMSAN_VMALLOC_SIZE)
-+#define KMSAN_MODULES_ORIGIN_START (KMSAN_MODULES_SHADOW_START + MODULES_LEN)
-+#endif
-+
- #ifdef CONFIG_RANDOMIZE_BASE
- #define KASLR_LEN	(1UL << 31)
- #else
+ void kernel_stack_overflow(struct pt_regs *regs)
+ {
++	/*
++	 * Normally regs are unpoisoned by the generic entry code, but
++	 * kernel_stack_overflow() is a rare case that is called bypassing it.
++	 */
++	kmsan_unpoison_entry_regs(regs);
+ 	bust_spinlocks(1);
+ 	printk("Kernel stack overflow.\n");
+ 	show_regs(regs);
 -- 
 2.45.1
 
