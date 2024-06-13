@@ -1,134 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0A813D88D;
-	Thu, 13 Jun 2024 08:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540413D608
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267870; cv=none; b=Avlpods+50apZBOAxOxMmTx5pBWmpn2rbYoLx6R7j6jax4ylXrvhgwLzRLwggFYUDLasLLSguCW7tb2UBSkT/0Hu9fTh8GvRmfTdOq0tvWSlOgNdUFKvgOQFLI9rglfzOKt6aI5SFATByhk2CpkKJkcRnkzZLZXMIP+gbZhbbZY=
+	t=1718267926; cv=none; b=BpM5v6mZNdkAcnnfUeC4TtTAVFfimLKPMQ1PMRuoRfa60c40ZKeLJUxdszGEGS5q9KJ7+jbPs6lK46+YJaMOd9gqqKoknsvvrsLmCF+yuhCc53l2KD+UCIddJW5O5ikZX5BPGt4nTMcNtdVuJdysMv6f3lZRo5MtLg93rZPaY1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267870; c=relaxed/simple;
-	bh=ex1BfUqwBKGcn6bmqOhnx0hqarbIcWjP42s/m1fBXKk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VHmWcsXDR3jLa2MgTViWRJcC1bm65ZVo18rDkcAtq1L8rve61zkIQTd6kH/5fZztUqFAacVA3RARF+mH/DOgAIw5M1RXbGG1ZdME1suEOQumjggpHUPCraaU2ea9M9kFxFreUtYaYZsIJ4ugns3fTXcOHKouwBjZdJPrHd3wBAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F6Mcol+M; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718267926; c=relaxed/simple;
+	bh=9SUeiVi1T9oGrBbo854n3vOCgOUM0D7zt4AESPxaOPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXTcKOdWe7HpW1bC4ZCXxuyhAjGrsqDrX7HhwS8rPCzm380XyIxrCfz0rmL76i/QKWux25Ly13XsSOVHNIy4Y+0WBY/XjB9bAdaxhqcEQuBNf5BS8PVzqRuQ8v1ZdtuGYS8QXiQH9fMoDaFlm/l77hCudENv/4L/mEUCWdzb9Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rCuBfqHf; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F6Mcol+M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718267868; x=1749803868;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ex1BfUqwBKGcn6bmqOhnx0hqarbIcWjP42s/m1fBXKk=;
-  b=F6Mcol+Mf98mG1lU3NY66ovG0avOWsIf+PchjUeipeuKGvLy4QpZoFXA
-   US4AqVBct/15sXjrp8QH8nqXcFac5/vo/38rU+GonHo9X+K5kfZ8P+hfT
-   pgMB0Rto70FzmFAFNnkmlRDVsn0qDJ2RXAd1lEqm8hBUYbI9KN/DbGu59
-   7k4JLWgsL4nmGws7ybiSE9InDAm2IaafWYWFF069oI8HdzCRvV1j8iIxp
-   TzN1DLT7H/qj3/keqiOIUundjyBm0fw8u7QkqlyGJM9fd4Wgq4kY1NZdK
-   rxQAFuAzzTk56drDRSoJKQUrj/6CWi0sBwpfJu6ivffHMDfA3FSgBKLNM
-   g==;
-X-CSE-ConnectionGUID: yMLOk7s5TKuKYwmLQvtHiA==
-X-CSE-MsgGUID: IVxGmJ8iSpOhX4tqAcozKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25749297"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="25749297"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:37:47 -0700
-X-CSE-ConnectionGUID: 1gvnnVjqQ6yZUNEZ9djjdQ==
-X-CSE-MsgGUID: sHA/Q8m2T2yX18P2Q81yoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40033851"
-Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
-  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:37:38 -0700
-From: Haibo Xu <haibo1.xu@intel.com>
-To: sunilvl@ventanamicro.com,
-	arnd@arndb.de
-Cc: xiaobo55x@gmail.com,
-	ajones@ventanamicro.com,
-	Haibo Xu <haibo1.xu@intel.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rCuBfqHf"
+X-Envelope-To: shahuang@redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718267919;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bowi7EOkTndTQt3cslYbea98TP7rJlt6kYEQxSxfRQU=;
+	b=rCuBfqHfkguMUdlF6u8DRs0d0yksqiHxDzN0PlaV3AhxkrAUcUy96qZD4WDSx8mjOqPEX4
+	Jws3URRCEyxeDtGrSJeDq393+zqy++RBmNHTLS2jgV4plUQozy3596VX4auQ2kFZY3S6H1
+	XR2XCNV1A3JN7SyJMZKf3aMAz5N5Rxg=
+X-Envelope-To: maz@kernel.org
+X-Envelope-To: kvmarm@lists.linux.dev
+X-Envelope-To: eauger@redhat.com
+X-Envelope-To: sebott@redhat.com
+X-Envelope-To: cohuck@redhat.com
+X-Envelope-To: catalin.marinas@arm.com
+X-Envelope-To: james.morse@arm.com
+X-Envelope-To: kvm@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-kselftest@vger.kernel.org
+X-Envelope-To: pbonzini@redhat.com
+X-Envelope-To: shuah@kernel.org
+X-Envelope-To: suzuki.poulose@arm.com
+X-Envelope-To: will@kernel.org
+X-Envelope-To: yuzenghui@huawei.com
+Date: Thu, 13 Jun 2024 01:38:33 -0700
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Shaoqin Huang <shahuang@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, kvmarm@lists.linux.dev,
+	Eric Auger <eauger@redhat.com>, Sebastian Ott <sebott@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Baoquan He <bhe@redhat.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Zong Li <zong.li@sifive.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Chen Jiahao <chenjiahao16@huawei.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	James Morse <james.morse@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Evan Green <evan@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Robert Richter <rrichter@amd.com>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH v4 4/4] ACPI: NUMA: replace pr_info with pr_debug in arch_acpi_numa_init
-Date: Thu, 13 Jun 2024 16:54:36 +0800
-Message-Id: <109354315a02cd22145d2effa4a8c571b69d3e56.1718268003.git.haibo1.xu@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1718268003.git.haibo1.xu@intel.com>
-References: <cover.1718268003.git.haibo1.xu@intel.com>
+	James Morse <james.morse@arm.com>, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [RFC PATCH v1 0/2] KVM: arm64: Making BT Field in
+ ID_AA64PFR1_EL1 writable
+Message-ID: <ZmqwCbxvBErCZ43v@linux.dev>
+References: <20240612023553.127813-1-shahuang@redhat.com>
+ <Zmkyi39Pz6Wqll-7@linux.dev>
+ <8634pilbja.wl-maz@kernel.org>
+ <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-There are lots of ACPI enabled systems that aren't NUMA and If the
-firmware didn't provide the SRAT/SLIT, then there will be a message
-"Failed to initialise from firmware" from arch_acpi_numa_init() which
-adding noise to the boot on all of those kind of systems. Replace the
-pr_info with pr_debug in arch_acpi_numa_init() to avoid it.
+On Thu, Jun 13, 2024 at 04:31:45PM +0800, Shaoqin Huang wrote:
+> Hi Marc,
+> 
+> On 6/12/24 18:07, Marc Zyngier wrote:
+> > On Wed, 12 Jun 2024 06:30:51 +0100,
+> > Oliver Upton <oliver.upton@linux.dev> wrote:
+> > > 
+> > > Hi Shaoqin,
+> > > 
+> > > On Tue, Jun 11, 2024 at 10:35:50PM -0400, Shaoqin Huang wrote:
+> > > > Hi guys,
+> > > > 
+> > > > I'm trying to enable migration from MtCollins(Ampere Altra, ARMv8.2+) to
+> > > > AmpereOne(AmpereOne, ARMv8.6+), the migration always fails when migration from
+> > > > MtCollins to AmpereOne due to some register fields differing between the
+> > > > two machines.
+> > > > 
+> > > > In this patch series, we try to make more register fields writable like
+> > > > ID_AA64PFR1_EL1.BT. This is first step towards making the migration possible.
+> > > > Some other hurdles need to be overcome. This is not sufficient to make the
+> > > > migration successful from MtCollins to AmpereOne.
+> > > 
+> > > It isn't possible to transparently migrate between these systems. The
+> > > former has a cntfrq of 25MHz, and the latter has a cntfrq of 1GHz. There
+> > > isn't a mechanism for scaling the counter frequency, and I have zero
+> > > appetite for a paravirt interface.
+> > 
+> > Note that there *is* an architectural workaround in the form of
+> > FEAT_CNTSC. But of course:
 
-Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
----
- drivers/base/arch_numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Heh, I should've further specified a per-CPU mechanism :)
 
-diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-index 5b59d133b6af..555aee3ee8e7 100644
---- a/drivers/base/arch_numa.c
-+++ b/drivers/base/arch_numa.c
-@@ -445,7 +445,7 @@ static int __init arch_acpi_numa_init(void)
- 
- 	ret = acpi_numa_init();
- 	if (ret) {
--		pr_info("Failed to initialise from firmware\n");
-+		pr_debug("Failed to initialise from firmware\n");
- 		return ret;
- 	}
- 
+> > - it is optional (and likely not implemented)
+> > - it is global (hence affecting all SW running on the machine)
+> > - it invalidates the requirements of ARMv8.6 (who cares?)
+> > - KVM has nothing to do with it (yay!)
+> > 
+> > So if the two systems (from the same manufacturer) were ever designed
+> > to allow migration between the two, they would have at least baked
+> > some of that in.
+> > 
+> > As for the paravirt interface, I agree that this is a non-starter
+> > (been there, done that, dumped it in the bin).
+> > 
+> > The patch itself is interesting and may be of use once it has been put
+> > to a compiler and not just dumped on the list without any testing.
+> > 
+> > 	M.
+> 
+> Thanks for putting your comments here.
+> 
+> If we don't care about the FEAT_CNTSC right now. Could I fix the compile
+> issue and respin this again without the background of enabling migration
+> between MtCollins and AmpereOne, and just keep the information of the
+> different BT field between different machine?
+
+I don't think cross-platform migration is relevant for the KVM UAPI
+you're trying to augment. We want to give userspace the ability to control
+the visible feature set for a VM, which *could* be used by userspace in such
+a way to transparently migrate VMs.
+
+So if you could focus the changelog purely as an improvement upon the
+existing controls we expose to the VMM then the patch is more obviously
+justified.
+
+Please do respin.
+
 -- 
-2.34.1
-
+Thanks,
+Oliver
