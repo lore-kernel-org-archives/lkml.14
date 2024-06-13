@@ -1,141 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EF5143C46;
-	Thu, 13 Jun 2024 13:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B11448DD;
+	Thu, 13 Jun 2024 13:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284415; cv=none; b=TCd9AxtnXUwoe7KrLDMWFwzpUqqz0bLHAR9k3z2TAGhFaGhM/HNhyGoUpf6k2cjv81vitTe8vt+zYoWsHxHgR3U5U3ZwsOGskmbr6Oi7R6ja2GRyah/kmWmwPX4ZZeGM94sxyMgPYLxUjWLTl6g5ULH0VxVfa3C/7NNmTuGQhRY=
+	t=1718284421; cv=none; b=rmYF91k7vNzolAISHP2l8VQ8tetUbumAg33YfdTrlKCHpwsqSCaZSs+6skCZoYYeLgxdKG5PKFLTKVU8ZDzKaRJvWZt6TUIuBz1LXzIDcujv53WXls44XMpjr4As4VqIeWq5YVR7JWREqx2lu4LxDUigIO1Ati1v7HfFkrqGojs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284415; c=relaxed/simple;
-	bh=KsGR0s1bpnrhR66Qenc48T6r5LcBDO7RJCcU7p0OA2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ppd9HANk2nzxIi46S/hCCt7eqaK784fJPx47NyXDNQa9AYDEofIVovjC3KV1n+ZbgEdnZ19uqF0gS4vLsxiy9XUT7XD26cTbei1a3GUufSTJJhlYwRr+EGSSds9Z1uYhiuHnMtCS0HSZ+JytAeAJX4PyXfXpms+/RLInVX3WhI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQ4PFJSR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718284421; c=relaxed/simple;
+	bh=c88ZCilto4D3Y6vZSmXpoHvp3MSBbJyyFDct46CSzCQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bfA044D+OTjYOAF8d+1uxBCsC5jrHBpnJ0e+zBlOw/0fHNo2K/UM0e2tLDBVKGqPzD+aFIrA5mxm737MMGqPdVgmqGsK1WMhizJLETp/pB/lGmemjOq9N/m3NUl8yK3VO9L/SQL8dugP54aAt42xik+Q2Vsb+GKJWJ8OoWSg1Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n4sR/H+V; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQ4PFJSR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57620C2BBFC;
-	Thu, 13 Jun 2024 13:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718284415;
-	bh=KsGR0s1bpnrhR66Qenc48T6r5LcBDO7RJCcU7p0OA2E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oQ4PFJSRHuxn/ZDSHWVjnzONEXtNVkkzNRrB5Wc2+o5d4lBxjpfXLVPFi7j1x1+EO
-	 I4bqQcTsNYdE30mEGdkUMUOBWg/gggmXK8L7Y0IebpguhEcNrSeFnHH20yM4OG/NR+
-	 iN5EWx8AavHOmcHcOkQXc98QkVTeLtFTZIJqBRmjf8MAqW+nZH+it6c7nRkSZRMoLs
-	 Q/Uela0+whEM7mv5S11tfslYPsz2cox2dln2xiy8GLuD4w+lOnRxJzd5pIDdmXVncK
-	 FqL+Tetv44+hU4o+mAskS+kgAdCummJwzOnVAg/shSeGCB+Y1IvfYU9PlqhgnkLtW4
-	 ovVW8C3/+yBlg==
-Message-ID: <56030532-fe5d-414c-b254-f6b39f58cde1@kernel.org>
-Date: Thu, 13 Jun 2024 15:13:29 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n4sR/H+V"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A11D620011;
+	Thu, 13 Jun 2024 13:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718284416;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=P/fueTuzPX+npqEtb6YMMbPx/Wvb3LcWrFA3x/uKoSg=;
+	b=n4sR/H+Vq9KcKn1EwBXmmQMv/Qyke6+YWCHndXKG5fS6pIh2hKSKHB8X8b7qQNwqXTbeuc
+	CSxDV6nGe9OjBRhNhcy8Aws+PZEooR07Xk3WgdJMczaOLmNefCeOQ1BVQeFozKfqemn4Qz
+	zyZ01tAVhCoHB2b1TDtAWFkB/S7R5EoZd9U45HvLQcfZL7pg7c9jCy/wGLxhR6GA6WnGLu
+	eINPFvHGWzFLFjJsudtNqKBXEIyP/0kFr5aQUAUMPNuJVWEoN47WswLHKknMtGVSjavOhQ
+	LGmEuImvPn1313fLKYiUzH0JeJhd0up737zBqAjlPiyfKgqSbPMo0V0vM2VC1Q==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH 0/2] Wakeup the i2c-omap controller during suspend stage
+Date: Thu, 13 Jun 2024 15:13:26 +0200
+Message-Id: <20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] DONOTMERGE: dt-bindings: mfd: syscon: add TI's opp
- table compatible
-To: Conor Dooley <conor.dooley@microchip.com>, Lee Jones <lee@kernel.org>
-Cc: Bryan Brattlof <bb@ti.com>, Conor Dooley <conor@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
- Vibhore Vardhan <vibhore@ti.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240612-ti-opp-updates-v1-0-3551c31d9872@ti.com>
- <20240612-ti-opp-updates-v1-3-3551c31d9872@ti.com>
- <20240612-unranked-unsalted-b32674a98d4a@spud>
- <20240612175457.b6q37nm6x4vsdnks@bryanbrattlof.com>
- <20240613120923.GP1504919@google.com>
- <20240613-suspend-synapse-4c7596888198@wendy>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240613-suspend-synapse-4c7596888198@wendy>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHbwamYC/x2OwQrCMBBEf6Xk7EIarai/Ij2kybZdrJuwa1Uo/
+ XcTLwNvBh6zGUUhVHNrNiP4JqXEBdpDY8LseUKgWNg460723B6BXID09Bk+/oFrhpD4JWlZUCC
+ uQjyBrpqRI1yunY9jCWs7U3yDV4RBPIe5GtUJ1KpOWXCk7//Gvd/3HyNHP0aWAAAA
+To: Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+ Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On 13/06/2024 14:20, Conor Dooley wrote:
-> On Thu, Jun 13, 2024 at 01:09:23PM +0100, Lee Jones wrote:
->> On Wed, 12 Jun 2024, Bryan Brattlof wrote:
->>
->>> On June 12, 2024 thus sayeth Conor Dooley:
->>>> On Wed, Jun 12, 2024 at 11:41:52AM -0500, Bryan Brattlof wrote:
->>>>> The JTAG_USER_ID_USERCODE efuse address, which is located inside the
->>>>> WKUP_CTRL_MMR0 range holds information to identify the speed grades of
->>>>> various components on TI's K3 SoCs. Add a compatible to allow the
->>>>> cpufreq driver to obtain the data to limit the maximum frequency for the
->>>>> CPUs under Linux control.
->>>>>
->>>>> Signed-off-by: Bryan Brattlof <bb@ti.com>
->>>>
->>>> $subject: DONOTMERGE: dt-bindings: mfd: syscon: add TI's opp table compatible
->>>>
->>>> Okay, if this isn't for merging then I won't Ack it.
->>>
->>> Ha! Nice. If I don't hear anything from anyone else I'll send a v2 in a 
->>> few hours.
->>
->> What's the point of all the DONOTMERGE nonsense?
-> 
-> AFAICT, TI live in fear of subsystem maintainers merging the dts patches,
-> so they do this.
+The patches of this series were originally in the series "Add suspend to
+ram support for PCIe on J7200" [1].
+There is no changes compared to the patches in the series [1].
 
-And want some strict timeframe of merging bindings (via subsystem) and
-DTS (via SoC tree), which causes all weird submissions like this above
-or sending bindings without users.
+The goal is to wakeup the controller during the suspend stage to be able
+to use it during suspend_noirq stage.
+As autosuspend is enabled, the controller can be suspended at suspend_noirq
+stage. But runtime pm is disabled in suspend_late stage. So it's not
+possible to wakeup the controller during suspend_noirq.
+The trick is to force the wakeup of the controller during suspend stage.
 
-So far I can live with it but if more such peculiarities come up, then
-sorry, fix your process/tools instead of putting burden on maintainers
-and community.
+[1] https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com/
+
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Thomas Richard (2):
+      i2c: omap: switch to NOIRQ_SYSTEM_SLEEP_PM_OPS() and RUNTIME_PM_OPS()
+      i2c: omap: wakeup the controller during suspend() callback
+
+ drivers/i2c/busses/i2c-omap.c | 36 +++++++++++++++++++++++++++++-------
+ 1 file changed, 29 insertions(+), 7 deletions(-)
+---
+base-commit: 0719fea199617c798ad3a9158916066ac17219b2
+change-id: 20240613-i2c-omap-wakeup-controller-during-suspend-895adf95a005
 
 Best regards,
-Krzysztof
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
