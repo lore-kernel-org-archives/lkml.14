@@ -1,133 +1,109 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32539145343
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB57D1448DD;
+	Thu, 13 Jun 2024 13:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284865; cv=none; b=TZw3X+p2ehiLHuP7qCh0di6L7ikUHwdvO0S3gSLRTuszD7aHGew5dA2mBL6LKqplNd+C/J2SRushW1J4U01U0qd7HLsTM1u34TZgS4tLSDxoQJb7OWwf/HKdUqBS0dHCMweA5piPozcyKeqZ3k2qKJSb/lEF+z6oGA/AW1dJPoc=
+	t=1718284874; cv=none; b=fhkfh+9B9n9AmIVdl646oQIW3SRpBrKxwrvqXJNcsdBhypMzyZaOiGxUSndhtQL8SWuD1m5VTz29KwvWyhimK1NHNjJ2cx5ZcmC31+AmiOfL9cNsC43Mh4GBO5oH+luHf8FJxoElm97PYwhYAHC7xkhX7KbxH8s3X3ZYAypwY1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284865; c=relaxed/simple;
-	bh=kxJ6yca6FhrEdaeRJHlyh47eGEiERJamoE3DlUAPJas=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pxur2o03zWc1wUGaT0pLrKGyqMr39JPzshPmG4/iG7znQmhuHUxD5Qv56cWdfOUTWtcwSiUdr00w0O1V4GRtVg7UuZFrYOfPHXum5mQ0o+Tx8siHxYPOcr/GJRTv+kE7F3jgyl6Q1i5lSorW7Z5JICXJJenHmbH/uDfo9pZ2YHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T9CwySmF; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T9CwySmF"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-421739476b3so9398245e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:21:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718284862; x=1718889662; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=85ojJxkNYXxh97Mo9k1gfrYfK0JeNvYJnaS4+QvvHCA=;
-        b=T9CwySmFiPGAIyyPzRBeYmfEZWcJ9U4n0VwFg2EBH9pkMCGXx4h3VZnzvJXYNZiJxq
-         AEmSxr5IihDIAF9MTRpltqtpe4mwb1h4TFOnQw+WfNBvRJ4d9ViO73Uzq4Prkv8E2wYw
-         zeT25QoUO8jxVHDJlzjkGd60nNrqYjg+wCkmHKBlp3l1jnazZdvpCbHTsFdhoplBBcD4
-         Lcobhs5boJhlLDW3ouokVvJ23xC+7nV8PHuT8Hm0377eWCTnAdmcpXKIKK8XC/BGt5br
-         irK3PQ5Wnn31XhBTvVl0NteSYgqyCFKIfYxtOl1MFaW31yzK7Be++4OsJ/n5vRtxOaI5
-         XrpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718284862; x=1718889662;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=85ojJxkNYXxh97Mo9k1gfrYfK0JeNvYJnaS4+QvvHCA=;
-        b=RZxGZZgysjwiZHok4KKjypCL7oa6qQeOXglhtkCl9Ox8g0lf5YPr37i2deJjUukuRE
-         tV3iCVsvuRsHblxRv+TXDoK2nzFXF/TmH9O64KunEzlThoGMuyQ/Dp+AYA+VMEek04f7
-         F2Hq6JCJe4Q8CU5s0QP8f0I1al0h7B9nIaDc/SjSne4C3Q0aKgNMxwf/XcmiPTCgPvZn
-         xm8BGaxQRv8IEJ0sU0/X7Nq+tJGcqpYBeL9YGxZbyjJ9RvWidPbE5+DQkH0hQB5qknOR
-         GrJDOeXCCOgox6dLe89LNpdBKC15UgOMnicYto4QCOzraaP+BfnS3V659ttpJbEmDby0
-         xCEA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/vdGKnTdHdRdHXJOOVb05TrysEDY5YkatykAgpQbPFonC7F9OZv4qt/QdbQN957KmaZGklz6M/IuJ+lBgk6XzRYDj3YAwEaCJYdNe
-X-Gm-Message-State: AOJu0YznO4csDUp+nz/WtMYrMQsxr+xfaREZL6iZZNrxR42pdm2EKVkr
-	pYJMRVVw/2ZMexkNSUvp5TEvmAk+8j6oKrsj/Bnqg+rzOlrreLdNqi6O8R0yhHR1YfCT6WISFhC
-	6bpneuMhzLsyhplZcnTlynB/okQ==
-X-Google-Smtp-Source: AGHT+IEGmcAxjB2wRcZVPwbydQye9U+Lfxf52+t870ONm/t/2enRlN5yWNU9fxSxYfGOvDAZatwr0XKHsQNvtwSMq2I=
-X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
- (user=sebastianene job=sendgmr) by 2002:a5d:4e09:0:b0:354:f4a4:6d35 with SMTP
- id ffacd0b85a97d-35fe8928988mr10512f8f.13.1718284862437; Thu, 13 Jun 2024
- 06:21:02 -0700 (PDT)
-Date: Thu, 13 Jun 2024 13:20:35 +0000
-In-Reply-To: <20240613132035.1070360-1-sebastianene@google.com>
+	s=arc-20240116; t=1718284874; c=relaxed/simple;
+	bh=zH9/26bCnqQ1D4kgrGaATCsRHHQL0Yv8+lKkx1Ua+NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Kc78AY/dDtlDa2oX/CYSGFqWT+M/MyIG9/NBtFyu1c68zSkopzBSWQfDbPKSuWQMFeki6jqy4NnML8jxyPY60cbXAvU7sdcA6cvHmGNeKJ5bLVYAN8rKTieDosX13QLs4wnXNdds5BclVqOjj9Z4Kw4bmk0m75dI7050VED5Gq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-39-666af2465f9e
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gregory Price <gregory.price@memverge.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH v5 1/8] mm: make alloc_demote_folio externally invokable for migration
+Date: Thu, 13 Jun 2024 22:20:48 +0900
+Message-ID: <20240613132056.608-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240613132056.608-1-honggyu.kim@sk.com>
+References: <20240613132056.608-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240613132035.1070360-1-sebastianene@google.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240613132035.1070360-5-sebastianene@google.com>
-Subject: [PATCH v3 4/4] KVM: arm64: Use FF-A 1.1 with pKVM
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org, 
-	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com, 
-	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
-	tabba@google.com, will@kernel.org, yuzenghui@huawei.com, 
-	lpieralisi@kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Sebastian Ene <sebastianene@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsXC9ZZnoa7bp6w0gz9t2hYTewws5qxfw2Zx
+	/8Frdosn/3+zWjQ0PWKxuLxrDpvFvTX/WS2OrD/LYrH57Blmi8XL1Sz2dTxgsjj89Q2TA4/H
+	0tNv2Dx2zrrL7tGy7xa7x6ZVnWwemz5NYvc4MeM3i8eLzTMZPTZ+/M/u8XmTXABnFJdNSmpO
+	Zllqkb5dAlfGlNMHmQs6uSv+Tl3N3sA4n7OLkZNDQsBEYsG+LkYYu3n+AVYQm01ATeLKy0lM
+	XYwcHCICVhLTdsR2MXJxMAtsYJaYdO4FE0iNsECYxP2rq8B6WQRUJZbfeMUGUs8rYCrxdW4A
+	xEhNicfbf7KD2JwCZhKP5oKUcHIIAZXM+HGVGcTmFRCUODnzCQuIzSwgL9G8dTYzyC4Jgdds
+	Eht+bYC6TVLi4IobLBMY+Wch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMAYWFb7
+	J3oH46cLwYcYBTgYlXh4PZ5lpQmxJpYVV+YeYpTgYFYS4Z21ECjEm5JYWZValB9fVJqTWnyI
+	UZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBkXvCj/NF55TF3vOxZF/jE1c8tkl8WueX
+	OI7eJy9jQi3OfnC+8uXNfm/JzauOxm5h+1zY18S3LmHTPbtVt/esNs0yuxC7v4LjnFBgo3fI
+	FbtPDudyrgf58KdFvQ818i9Ydm2H9uveyyUcosd3cx6b7hcawvWs81/E1qTsi7wXDMxSBLkr
+	9q2/psRSnJFoqMVcVJwIAPvxNUh9AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNLT9ftU1aawa4WWYuJPQYWc9avYbO4
+	/+A1u8WT/79ZLRqaHrFYfH72mtni8NyTrBaXd81hs7i35j+rxZH1Z1ksNp89w2yxeLmaxb6O
+	B0wWh7++YXLg81h6+g2bx85Zd9k9WvbdYvfYtKqTzWPTp0nsHidm/GbxeLF5JqPHxo//2T2+
+	3fbwWPziA5PH501yAdxRXDYpqTmZZalF+nYJXBlTTh9kLujkrvg7dTV7A+N8zi5GTg4JAROJ
+	5vkHWEFsNgE1iSsvJzF1MXJwiAhYSUzbEdvFyMXBLLCBWWLSuRdMIDXCAmES96+uYgSxWQRU
+	JZbfeMUGUs8rYCrxdW4AxEhNicfbf7KD2JwCZhKP5oKUcHIIAZXM+HGVGcTmFRCUODnzCQuI
+	zSwgL9G8dTbzBEaeWUhSs5CkFjAyrWIUycwry03MzDHVK87OqMzLrNBLzs/dxAgM8WW1fybu
+	YPxy2f0QowAHoxIPr8ezrDQh1sSy4srcQ4wSHMxKIryzFgKFeFMSK6tSi/Lji0pzUosPMUpz
+	sCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGM8kb+bQs/ZmPe3XwMzcsfKXg/q2zCOm9+uU
+	HveU29wu/eDzwzhvn7bUG5/r3KK9Pzw9n6Y4yP6dvkhlYojUkVXi8iWzv0edjMr9d3iH6ePr
+	orv2LkkRM5WNE81/nr5+2nWPWw4/klevO/XOZREXz6PoOeYXNVNlkn5d7Z7Fw9bUyL73CN+v
+	NiWW4oxEQy3mouJEAAuC0cFtAgAA
+X-CFilter-Loop: Reflected
 
-Now that the layout of the structures is compatible with 1.1 it is time
-to probe the 1.1 version of the FF-A protocol inside the hypervisor. If
-the TEE doesn't support it, it should return the minimum supported
-version.
+The alloc_demote_folio can be used out of vmscan.c so it'd be better to
+remove static keyword from it.
 
-Signed-off-by: Sebastian Ene <sebastianene@google.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- arch/arm64/kvm/hyp/nvhe/ffa.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ mm/internal.h | 1 +
+ mm/vmscan.c   | 3 +--
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index 4eaef673e98d..fdb63b7857ec 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -457,7 +457,7 @@ static __always_inline void do_ffa_mem_xfer(const u64 func_id,
- 	memcpy(buf, host_buffers.tx, fraglen);
+diff --git a/mm/internal.h b/mm/internal.h
+index b2c75b12014e..b3ca996a4efc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1052,6 +1052,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+         unsigned long, unsigned long);
  
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, hyp_ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	if (!offset || buf->ep_count != 1 || buf->sender_id != HOST_FFA_ID) {
- 		ret = FFA_RET_INVALID_PARAMETERS;
-@@ -536,7 +536,7 @@ static void do_ffa_mem_reclaim(struct arm_smccc_res *res,
- 	fraglen = res->a2;
+ extern void set_pageblock_order(void);
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private);
+ unsigned long reclaim_pages(struct list_head *folio_list);
+ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 					    struct list_head *folio_list);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2e34de9cd0d4..2f4406872f43 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -916,8 +916,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
+ 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
+ }
  
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, hyp_ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	/*
- 	 * We can trust the SPMD to get this right, but let's at least
-@@ -844,7 +844,7 @@ int hyp_ffa_init(void *pages)
- 	if (kvm_host_psci_config.smccc_version < ARM_SMCCC_VERSION_1_2)
- 		return 0;
- 
--	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_0, 0, 0, 0, 0, 0, 0, &res);
-+	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_1, 0, 0, 0, 0, 0, 0, &res);
- 	if (res.a0 == FFA_RET_NOT_SUPPORTED)
- 		return 0;
- 
-@@ -864,7 +864,11 @@ int hyp_ffa_init(void *pages)
- 	if (FFA_MAJOR_VERSION(res.a0) != 1)
- 		return -EOPNOTSUPP;
- 
--	hyp_ffa_version = FFA_VERSION_1_0;
-+	if (FFA_MINOR_VERSION(res.a0) < FFA_MINOR_VERSION(FFA_VERSION_1_1))
-+		hyp_ffa_version = res.a0;
-+	else
-+		hyp_ffa_version = FFA_VERSION_1_1;
-+
- 	tx = pages;
- 	pages += KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE;
- 	rx = pages;
+-static struct folio *alloc_demote_folio(struct folio *src,
+-		unsigned long private)
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private)
+ {
+ 	struct folio *dst;
+ 	nodemask_t *allowed_mask;
 -- 
-2.45.2.505.gda0bf45e8d-goog
+2.34.1
 
