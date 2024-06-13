@@ -1,57 +1,57 @@
 Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E03145A16
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF01145FFF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:24:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285062; cv=none; b=DbKEy8NNL+qLHoTchrLDTjn+/vnMEqKIHK2jiZEw4+AulY7dbSKj/XpJuJaGKa+gu1ivTEqHFzloatz5R8bdwIxuAEVSY7KiVJiastl1oINPEz4kY+CXAoGJEv3Hxnm6OiuzT4c93uP1t88Gn4gidSYLX3MYIuTkNEXsYUaR1gg=
+	t=1718285064; cv=none; b=P9oA+i8aeSObNaw7JQdYQ5G9ev9wkK2J/OlmIHU9o2FZMetwm0OloL5GLj49wa6rR3CYQZI7AQY3DnpaFKZRMqmS/+wNt0k10vWiwHVaVfxeIwHUUsI4+t+9FVRq7/vJJwCxBucI+uUEb/F7CctTpeg5yWPXoDJQLAFRytDY0aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285062; c=relaxed/simple;
-	bh=j7f3ZXCinJ1j3RqxyoUU0BtazpbIWYMRhtwdrGF0DRM=;
+	s=arc-20240116; t=1718285064; c=relaxed/simple;
+	bh=ei6MygeSgJsE+wcqS+H6XtwKC909xyCYznIa430bejg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EPQ2aIEM/Gql91y13E+xQJiYZVeteE3osiOlhPfTQWFBUgVpqG2XEBklU2a7e/qquYufwAKSqzXp3bVkljALDUtmxRWT6WWB/dllUHz9F1hwUEBGswpsvazcrIdcgEMhSJ6xHkNxa13ukFQTaoOw96kyFV3F4PWKSoRy3m+5rAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vSRp1pYG; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version; b=aZ+LYcO6NiXW2/aqKZbU9CUIeC4yV/M0yN+d52Vl45uIC3qQsBbgBcOsoP/bbaUCMyMnwQak7ud7A+JbdOF020k53r9O0eWga3Ezq8MH1W1TTokcj+ErcncJV987MAo6uszUw9xUqQ8GkUNRaDQzzEVGPMvPwXXZbDcXe4DvF6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lVYHjfpX; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vSRp1pYG"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-421a1b834acso9635445e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lVYHjfpX"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4217136a74dso9658415e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718285058; x=1718889858; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718285061; x=1718889861; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/LyOSi8f/3UaYrbHuOz6VLA6k5tiA3tUA9t+QNNaNjo=;
-        b=vSRp1pYGWLsoWhr1wdptYe1itkN3vVztankJ+tU74HmFgOk2PZc4L8jnm8n3AJV2/p
-         E8U8SjMkKil2uJTXBW13+8Wx9Qc7+NiiILJHEOegb5ptrysM621v6LpLYMo+f5OB57t3
-         SHJuPr8U4kXOZHACkxaBDHjJknirlUAMsWbvx3A9EROU9nWnAuThNtMKCheOUx+q8kCm
-         hoX8gp2QVDSRitmh2MAfJdyfk8Wk/C0J+vXV4HeB3rLj48rmkzbSqnS9DR9NEjUrHC99
-         wrotLsl0x6xNFG1nHYQ5dYBshcD816DqAo/GBlUWuXY6C6rmqsZ1/ZQXZNU7B6D6vpwC
-         JzCg==
+        bh=FIdfAng31JZ7AXh+5wJJBwNTBQjKsoPR8mg2mxmZaFA=;
+        b=lVYHjfpXkOBC6G1ZkUaQ+V7WtKaalI0UX/StJ63ftEgS53JTpaDbxmYKC4QhwUaXo4
+         4JpN2r8r5xJugiOvqOjhJi7aEI3D8Asc5w0GVZ2fbMHj2qyoySpCkubNUr1A1JrKdBir
+         lvyi9fR/C6snMQTOZplZyZGGmJpr8uDpKzHLvoKRbasEhFw6jFrI8M9scovaRQn+3fOu
+         EbSQk2vqlrKn+FTPzNHlkYIQ/GgvUF/LjjDKGojpfPUXU6zvjA7NQTr7GEiZcr/wJbAt
+         tGl+DpllKo39/DFAlJNIkgeMZg9ZQb4a/b1KtmcNCNzRw4BmmFk5DsaY0MnMNEEI/ZAj
+         OMcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718285058; x=1718889858;
+        d=1e100.net; s=20230601; t=1718285061; x=1718889861;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/LyOSi8f/3UaYrbHuOz6VLA6k5tiA3tUA9t+QNNaNjo=;
-        b=A1Xo8p5/gUy4kVm76Du3Mkykm3HSOAA3nCV+ywDqzMqRaZUujzybWnpWlp6mDSNxTI
-         eaGKrgGrnCg23PV9nczWF/B/yP318o81LyacARdQJgzgd61R1RuV8bKo785KBFMn32ph
-         ybyxajDI5u8nG88nNF1nABZmI1EmejQ8i/VFfO8IWKFRZPcZPtEnVH6rHfepFQSEKgKU
-         NuhXOE56WH6s8A8XN/hg1f/m/WSHe5AIwGB2tuY031LBDXJEvSgwBXJmsmkK6SDckkz4
-         RR+1e/p79c6Lk0wqnUL/jOCzecx9VV3VpxX+1ZME+f3SzFYC6u47//8O/Y68o0uilIJa
-         B9hA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHdMFCmMUCxIeB6oF3woLGNGEtsXQrbwk/SFB1AY+WIjDBGq0eRQEx4JEkFjeeTZ9rP2T9ijwCXlt2qjLRcdawO9MOiljKRSmgHfo7
-X-Gm-Message-State: AOJu0Yyydihk26SECvh1AZmZELoZhcfTReiYEva4S9JEhni2O6XoliEG
-	glZg4CdqahEX6y5EBPfsKpfT2N7OCODlrsW8sNXPYDS+W/vzFbOKC4XddHY+SwM=
-X-Google-Smtp-Source: AGHT+IGsOLsgFK7ts6VttFOyzjo0d0li8FyVir5Ilvh/4L2ZA8c+T3S4y7KLtVeT+iKItocG0DgtjA==
-X-Received: by 2002:a05:600c:3d16:b0:421:8345:7891 with SMTP id 5b1f17b1804b1-422863a8d1amr53462135e9.16.1718285057919;
-        Thu, 13 Jun 2024 06:24:17 -0700 (PDT)
+        bh=FIdfAng31JZ7AXh+5wJJBwNTBQjKsoPR8mg2mxmZaFA=;
+        b=CAYKKGBzKtFp/AFNziX6V5Qy78NQSem8IQblK6/c72KA74HCMd3Ez2Ax6IdCJAvY2T
+         dJ+M5QeDwbtXaI+Oy/3n5Uqvuf3NcJGtNLI/ZSDOrelatwj0NtUUWjAi57cSnfsleETD
+         khv1EMLtpsMb+CXvR/W0pr5a9hGIR5Bd+w9BfN+aElV42eYBANVZz6WVMB864sVvvM/N
+         rHEfKAwUMmdmokyEJ9Qcewkq04ZAa2FM8beeVzzpM3z+VY0jGwBY0ajUqj7B5M0wjKU1
+         RNuSMxyO5Iw/9l0YwwowWFTgcdzJTjAt2OFPVL9orqNj/wRHuQvBN9rkUD9KeQSOuKAq
+         JBBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr5Uuw2qd+CLjH17xsoSNIXX5cSy4kjeG8tDBY7Hi3qOqyxhkA0oQKEAsObBBYnqzHQbHwXhl3yAROpAMBuwVcFV1dnZKLogK5tjSH
+X-Gm-Message-State: AOJu0Ywh1UHeTd1TiZs7wTFOeVRf3+kklPH+RC4opOJdKsulR8BBdA9j
+	IBdm4qkr/MA4ygVqLLyOBjYFaTSf9byBPzTorM7yM6bkOr1NMtYri7zD91uAqSE=
+X-Google-Smtp-Source: AGHT+IEaGyMoVlH5DAEAQTeEGpbxwW1clV0twr/chrl0KmoLh9fV5Vaxzf96/t1WHAqzFEyPkITxdw==
+X-Received: by 2002:a05:600c:190d:b0:421:82ed:28d1 with SMTP id 5b1f17b1804b1-422867c02f1mr39073585e9.41.1718285061285;
+        Thu, 13 Jun 2024 06:24:21 -0700 (PDT)
 Received: from blaptop.baylibre (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f5f33c6esm25086225e9.4.2024.06.13.06.24.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f5f33c6esm25086225e9.4.2024.06.13.06.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 06:24:16 -0700 (PDT)
+        Thu, 13 Jun 2024 06:24:20 -0700 (PDT)
 From: Alexandre Bailon <abailon@baylibre.com>
 To: rafael@kernel.org,
 	daniel.lezcano@linaro.org,
@@ -64,9 +64,9 @@ Cc: rui.zhang@intel.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH v4 2/4] thermal: Add support of multi sensors to thermal_core
-Date: Thu, 13 Jun 2024 15:24:08 +0200
-Message-ID: <20240613132410.161663-3-abailon@baylibre.com>
+Subject: [PATCH v4 4/4] ARM64: mt8195: Use thermal aggregation for big and little cpu
+Date: Thu, 13 Jun 2024 15:24:10 +0200
+Message-ID: <20240613132410.161663-5-abailon@baylibre.com>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240613132410.161663-1-abailon@baylibre.com>
 References: <20240613132410.161663-1-abailon@baylibre.com>
@@ -78,365 +78,281 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adds support of multi sensors to thermal.
-Currently, this only support the get_temp operation.
-This returns the maximum temperature among all the sensors.
+This uses the thermal aggregation for the mt8195 to get the maximal
+temperature of big and little cpu clusters.
 
 Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- drivers/thermal/Makefile        |   1 +
- drivers/thermal/thermal_core.h  |  15 ++
- drivers/thermal/thermal_multi.c | 286 ++++++++++++++++++++++++++++++++
- include/uapi/linux/thermal.h    |   5 +
- 4 files changed, 307 insertions(+)
- create mode 100644 drivers/thermal/thermal_multi.c
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi | 210 +++--------------------
+ 1 file changed, 25 insertions(+), 185 deletions(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 5cdf7d68687f..872190f9062b 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -6,6 +6,7 @@ CFLAGS_thermal_core.o		:= -I$(src)
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o
- thermal_sys-y			+= thermal_trip.o thermal_helpers.o
-+thermal_sys-y			+= thermal_multi.o
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+index 5d8b68f86ce4..90778c609ceb 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+@@ -3600,50 +3600,30 @@ dp_tx: dp-tx@1c600000 {
+ 	};
  
- # netlink interface to manage the thermal framework
- thermal_sys-$(CONFIG_THERMAL_NETLINK)		+= thermal_netlink.o
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 20e7b45673d6..c2cf2c19738a 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -261,6 +261,21 @@ ssize_t weight_show(struct device *, struct device_attribute *, char *);
- ssize_t weight_store(struct device *, struct device_attribute *, const char *,
- 		     size_t);
+ 	thermal_zones: thermal-zones {
+-		cpu0-thermal {
++		cpu-little {
+ 			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_LITTLE_CPU0>;
++			polling-delay-passive = <100>;
++			thermal-sensors = <&lvts_mcu MT8195_MCU_LITTLE_CPU0>,
++					  <&lvts_mcu MT8195_MCU_LITTLE_CPU1>,
++					  <&lvts_mcu MT8195_MCU_LITTLE_CPU2>,
++					  <&lvts_mcu MT8195_MCU_LITTLE_CPU3>;
++			sustainable-power = <1500>;
  
-+/* Multi sensors */
-+struct thermal_zone_device *thermal_multi_sensor_find_tz(const char *type);
-+struct thermal_zone_device_ops *thermal_multi_sensor_alloc_ops(void);
-+struct thermal_zone_device *thermal_multi_sensor_tz_alloc(const char *type,
-+						  struct thermal_trip *trips,
-+						  int num_trips,
-+						  struct thermal_zone_device_ops *ops,
-+						  int passive_delay, int polling_delay);
-+void thermal_multi_sensor_tz_free(struct thermal_zone_device *tz);
-+int thermal_multi_sensor_validate_coeff(int *coeff, int count, int offset);
-+int thermal_multi_sensor_register(struct thermal_zone_device *tz,
-+	struct thermal_zone_device *sensor_tz, int coeff);
-+void thermal_multi_sensor_unregister(struct thermal_zone_device *sensor_tz);
-+
-+
- #ifdef CONFIG_THERMAL_STATISTICS
- void thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
- 					 unsigned long new_state);
-diff --git a/drivers/thermal/thermal_multi.c b/drivers/thermal/thermal_multi.c
-new file mode 100644
-index 000000000000..4b3f261a7000
---- /dev/null
-+++ b/drivers/thermal/thermal_multi.c
-@@ -0,0 +1,286 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+#include <linux/thermal.h>
-+#include <linux/types.h>
-+#include <linux/string.h>
-+
-+#include "thermal_core.h"
-+
-+struct sensor_interface {
-+	struct thermal_zone_device *tz;
-+	int coeff;
-+
-+	struct list_head node;
-+};
-+
-+struct multi_sensor_thermal_zone {
-+	struct thermal_zone_device *tz;
-+	struct mutex sensors_lock;
-+	struct list_head sensors;
-+
-+	struct list_head node;
-+};
-+
-+static DEFINE_MUTEX(multi_tz_mutex);
-+static LIST_HEAD(multi_tz_list);
-+
-+#define TJ_MAX 120000
-+
-+static int multi_sensor_get_temp_max(struct thermal_zone_device *tz, int *temp)
-+{
-+	struct multi_sensor_thermal_zone *multi_tz = tz->devdata;
-+	struct sensor_interface *sensor;
-+	int max_temp;
-+	int ret;
-+
-+	mutex_lock(&multi_tz->sensors_lock);
-+
-+	if (list_empty(&multi_tz->sensors)) {
-+		mutex_unlock(&multi_tz->sensors_lock);
-+		return -ENODEV;
-+	}
-+
-+	list_for_each_entry(sensor, &multi_tz->sensors, node) {
-+		ret = thermal_zone_get_temp(sensor->tz, temp);
-+		if (ret) {
-+			mutex_unlock(&multi_tz->sensors_lock);
-+			return ret;
-+		}
-+
-+		max_temp = max(max_temp, *temp * sensor->coeff);
-+	}
-+
-+	mutex_unlock(&multi_tz->sensors_lock);
-+
-+	*temp = max_temp;
-+	return ret;
-+}
-+
-+/**
-+ * Check if the sum of the coefficients multiplied by sensors temperature plus
-+ * an offset won't overflow during the aggregation.
-+ * @coeff: An array of coefficient
-+ * @count: Number of coefficient
-+ * @offset: The offset
-+ *
-+ * Returns: 0 if the coefficient are safe, -EOVERFLOW otherwise
-+ */
-+int thermal_multi_sensor_validate_coeff(int *coeff, int count, int offset)
-+{
-+	int max_accumulated_temp = 0;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		max_accumulated_temp += TJ_MAX * coeff[i];
-+		if (max_accumulated_temp < 0)
-+			return -EOVERFLOW;
-+	}
-+
-+	max_accumulated_temp += offset;
-+	return max_accumulated_temp < 0 ? -EOVERFLOW : 0;
-+}
-+
-+/**
-+ * Find a multi sensor thermal zone
-+ * @type: The thermal zone type to find
-+ *
-+ * Returns: a pointer to the thermal zone or NULL  if not found
-+ */
-+struct thermal_zone_device *thermal_multi_sensor_find_tz(const char *type)
-+{
-+	struct thermal_zone_device *tz;
-+
-+	tz = thermal_zone_get_zone_by_name(type);
-+	if (IS_ERR(tz))
-+		return NULL;
-+	return tz;
-+}
-+
-+/**
-+ * Allocate a struct thermal_zone_device_ops for the multi sensor thermal zoen
-+ *
-+ * This allocates a struct thermal_zone_device_ops with a predifiend get_temp
-+ * operation. This allows setting the other function pointers before registering
-+ * the thermal zone.
-+ *
-+ * Returns: a pointer to the created struct thermal_zone_device_ops or an
-+ * in case of error, an ERR_PTR. Caller must check return value with
-+ * IS_ERR*() helpers.
-+ */
-+struct thermal_zone_device_ops *thermal_multi_sensor_alloc_ops(void)
-+{
-+	struct thermal_zone_device_ops *ops;
-+
-+	ops = kzalloc(sizeof(*ops), GFP_KERNEL);
-+	if (!ops)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ops->get_temp = multi_sensor_get_temp_max;
-+
-+	return ops;
-+}
-+
-+/**
-+ * Register a new thermal zone device that supports multi sensors
-+ * @type:	the thermal zone device type
-+ * @trips:	a pointer to an array of thermal trips
-+ * @num_trips:	the number of trip points the thermal zone support
-+ * @mask:	a bit string indicating the writeablility of trip points
-+ * @ops:	standard thermal zone device callbacks
-+ * @passive_delay: number of milliseconds to wait between polls when
-+ *		   performing passive cooling
-+ * @polling_delay: number of milliseconds to wait between polls when checking
-+ *		   whether trip points have been crossed (0 for interrupt
-+ *		   driven systems)
-+ *
-+ * This function allocates and register a multi sensor thermal zone.
-+ * To register a sensor to this thermal zone, use thermal_multi_sensor_register().
-+ * thermal_multi_sensor_unregister() must be called to unregister the sensors
-+ * and release this thermal zone when it is not used anymore.
-+ *
-+ * Return: a pointer to the created struct thermal_zone_device or an
-+ * in case of error, an ERR_PTR. Caller must check return value with
-+ * IS_ERR*() helpers.
-+ */
-+struct thermal_zone_device *thermal_multi_sensor_tz_alloc(const char *type,
-+					struct thermal_trip *trips,
-+					int num_trips,
-+					struct thermal_zone_device_ops *ops,
-+					int passive_delay, int polling_delay)
-+{
-+	struct thermal_zone_device *tz;
-+	struct thermal_zone_params tzp = {};
-+	struct multi_sensor_thermal_zone *multi_tz;
-+
-+	mutex_lock(&multi_tz_mutex);
-+
-+	tz = thermal_zone_get_zone_by_name(type);
-+	if (!IS_ERR(tz))
-+		goto unlock;
-+
-+	multi_tz = kzalloc(sizeof(*multi_tz), GFP_KERNEL);
-+	if (!multi_tz) {
-+		tz = ERR_PTR(-ENOMEM);
-+		goto unlock;
-+	}
-+	mutex_init(&multi_tz->sensors_lock);
-+	INIT_LIST_HEAD(&multi_tz->sensors);
-+
-+	tzp.no_hwmon = true;
-+	tzp.slope = 1;
-+	tzp.offset = 0;
-+
-+	tz = thermal_zone_device_register_with_trips(type, trips, num_trips,
-+						     multi_tz, ops, &tzp,
-+						     passive_delay, polling_delay);
-+	if (IS_ERR(tz)) {
-+		kfree(multi_tz);
-+	} else {
-+		multi_tz->tz = tz;
-+		list_add(&multi_tz->node, &multi_tz_list);
-+	}
-+
-+unlock:
-+	mutex_unlock(&multi_tz_mutex);
-+	return tz;
-+}
-+
-+/**
-+ * Remove all sensors from multi sensor thermal zone and release it
-+ *
-+ * This function must not be used except on error path to correctly
-+ * release all the allocated resources.
-+ * Use thermal_multi_sensor_unregister() to unregister a sensor and
-+ * release a thermal zone that is not used anymore.
-+ *
-+ * @tz: Pointer to thermal zone to release
-+ */
-+void thermal_multi_sensor_tz_free(struct thermal_zone_device *tz)
-+{
-+	struct multi_sensor_thermal_zone *multi_tz = tz->devdata;
-+	struct thermal_zone_device_ops *ops = &tz->ops;
-+	struct sensor_interface *sensor, *tmp;
-+
-+	list_for_each_entry_safe(sensor, tmp, &multi_tz->sensors, node) {
-+		list_del(&sensor->node);
-+		kfree(sensor);
-+	}
-+
-+	thermal_zone_device_unregister(tz);
-+	list_del(&multi_tz->node);
-+	kfree(multi_tz);
-+	kfree(ops);
-+}
-+
-+/**
-+ * Register a thermal sensor to a multi sensor thermal zone
-+ * @tz: The multi sensor thermal zone
-+ * @sensor_tz: The thermal zone of the zensor to register
-+ * @coeff: The coefficient to apply to the temperature returned by the sensor
-+ *
-+ * Returns: On success 0, a negative value in case of error
-+ */
-+int thermal_multi_sensor_register(struct thermal_zone_device *tz,
-+				  struct thermal_zone_device *sensor_tz,
-+				  int coeff)
-+{
-+	struct multi_sensor_thermal_zone *multi_tz;
-+	struct sensor_interface *sensor;
-+
-+	mutex_lock(&multi_tz_mutex);
-+
-+	multi_tz =  tz->devdata;
-+
-+	sensor = kzalloc(sizeof(*sensor), GFP_KERNEL);
-+	if (!sensor) {
-+		mutex_unlock(&multi_tz_mutex);
-+		return -ENOMEM;
-+	}
-+
-+	sensor->tz = sensor_tz;
-+	sensor->coeff = coeff;
-+	mutex_lock(&multi_tz->sensors_lock);
-+	list_add(&sensor->node, &multi_tz->sensors);
-+	mutex_unlock(&multi_tz->sensors_lock);
-+
-+	thermal_zone_device_enable(tz);
-+
-+	mutex_unlock(&multi_tz_mutex);
-+
-+	return 0;
-+}
-+
-+/**
-+ * Unregister a thermal sensor from a multi sensor thermal zone
-+ *
-+ * This unregister a thermal sensor from a multi sensor thermal zone.
-+ * If all the sensors have been removed then this also release the multi sensor
-+ * thermal zone.
-+ * @sensor_tz: The sensor to unregister
-+ */
-+void thermal_multi_sensor_unregister(struct thermal_zone_device *sensor_tz)
-+{
-+	struct multi_sensor_thermal_zone *multi_tz, *tmp_tz;
-+	struct sensor_interface *sensor, *tmp;
-+
-+	mutex_lock(&multi_tz_mutex);
-+	list_for_each_entry_safe(multi_tz, tmp_tz, &multi_tz_list, node) {
-+		mutex_lock(&multi_tz->sensors_lock);
-+		list_for_each_entry_safe(sensor, tmp, &multi_tz->sensors, node) {
-+			if (sensor->tz == sensor_tz) {
-+				list_del(&sensor->node);
-+				kfree(sensor);
-+				break;
-+			}
-+		}
-+		mutex_unlock(&multi_tz->sensors_lock);
-+
-+		if (list_empty(&multi_tz->sensors))
-+			thermal_multi_sensor_tz_free(multi_tz->tz);
-+	}
-+	mutex_unlock(&multi_tz_mutex);
-+}
-diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
-index fc78bf3aead7..e4f6c4c5e6fd 100644
---- a/include/uapi/linux/thermal.h
-+++ b/include/uapi/linux/thermal.h
-@@ -16,6 +16,11 @@ enum thermal_trip_type {
- 	THERMAL_TRIP_CRITICAL,
- };
+ 			trips {
+-				cpu0_alert: trip-alert {
+-					temperature = <85000>;
++				cpu_little_threshold: trip-point {
++					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
  
-+enum thermal_aggregation_type {
-+	THERMAL_AGGR_AVG = 0,
-+	THERMAL_AGGR_MAX = 1,
-+};
-+
- /* Adding event notification support elements */
- #define THERMAL_GENL_FAMILY_NAME		"thermal"
- #define THERMAL_GENL_VERSION			0x01
+-				cpu0_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu0_alert>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu1-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_LITTLE_CPU1>;
+-
+-			trips {
+-				cpu1_alert: trip-alert {
++				cpu_little_target: target {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu1_crit: trip-crit {
+-					temperature = <100000>;
++				cpu_little_soc_max_crit: soc-max-crit {
++					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+ 				};
+@@ -3651,7 +3631,7 @@ cpu1_crit: trip-crit {
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu1_alert>;
++					trip = <&cpu_little_target>;
+ 					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 								<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 								<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+@@ -3660,170 +3640,30 @@ map0 {
+ 			};
+ 		};
+ 
+-		cpu2-thermal {
++		cpu-big {
+ 			polling-delay = <1000>;
+ 			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_LITTLE_CPU2>;
++			thermal-sensors = <&lvts_mcu MT8195_MCU_BIG_CPU0>,
++					  <&lvts_mcu MT8195_MCU_BIG_CPU1>,
++					  <&lvts_mcu MT8195_MCU_BIG_CPU2>,
++					  <&lvts_mcu MT8195_MCU_BIG_CPU3>;
++			sustainable-power = <1500>;
+ 
+ 			trips {
+-				cpu2_alert: trip-alert {
+-					temperature = <85000>;
++				cpu_big_threshold: trip-point {
++					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu2_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu2_alert>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu3-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_LITTLE_CPU3>;
+-
+-			trips {
+-				cpu3_alert: trip-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu3_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu3_alert>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu4-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_BIG_CPU0>;
+-
+-			trips {
+-				cpu4_alert: trip-alert {
++				cpu_big_target: target {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu4_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu4_alert>;
+-					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu5-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_BIG_CPU1>;
+-
+-			trips {
+-				cpu5_alert: trip-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu5_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu5_alert>;
+-					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu6-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_BIG_CPU2>;
+-
+-			trips {
+-				cpu6_alert: trip-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu6_crit: trip-crit {
+-					temperature = <100000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu6_alert>;
+-					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-								<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+-		};
+-
+-		cpu7-thermal {
+-			polling-delay = <1000>;
+-			polling-delay-passive = <250>;
+-			thermal-sensors = <&lvts_mcu MT8195_MCU_BIG_CPU3>;
+-
+-			trips {
+-				cpu7_alert: trip-alert {
+-					temperature = <85000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				cpu7_crit: trip-crit {
+-					temperature = <100000>;
++				cpu_big_soc_max_crit: soc-max-crit {
++					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+ 				};
+@@ -3831,7 +3671,7 @@ cpu7_crit: trip-crit {
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu7_alert>;
++					trip = <&cpu_big_target>;
+ 					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 								<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 								<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 -- 
 2.44.1
 
