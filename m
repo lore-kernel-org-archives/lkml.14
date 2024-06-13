@@ -1,148 +1,131 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D91A20ED
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B9717FD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718282361; cv=none; b=Cxkp79zrBq3nWQlrRZ4ykcf9cWhe6QRPW/cUT9y6NO37dstyv3yalpfWCkhUsA+1M4y2AkLPSCbqns9x8ToieNO60EBCm0qlTBkRXam7mrXNeW7N8zEYaxwe/+HFlc5diVOteO9Q6U6XOmxd450EZMvhlpAVru4BDP8ZgCtwxdw=
+	t=1718282419; cv=none; b=dVYn3/32sHSpxQdM3WADZ0Ix5gSml7r6OYjlxEthEKUxg3HMa2MPlBtnd88b2LsZGBf6R0XFytiHWHIj3PE5F0I//YObYbeTIxX3vtEaegif60U4b9j90zR07grRVexGZt5WfzOIYULVzebD/cL2gxJf2oCjO9YjJOVWyYMQfe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718282361; c=relaxed/simple;
-	bh=dIMx3klx1aYTahUxgVL0ygIuWYp3D7e2wljj0j4/hSk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kE4wqSx49c36czdGl7iPkjZZVOGY7FANFLUKh499SRZsdDhiXhVYQjsIGlz+Rt3ysgJfFpvurzCfOU0a5AGyiHql6ybPJlIYltHD7btlhRzN/NdHulk1VKBvxjph+EMDNcHluwoaLcL6PrEiJBgQ7IzJQAd9vuOb9emyQPoAr/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb7cf84c6cso95015239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 05:39:20 -0700 (PDT)
+	s=arc-20240116; t=1718282419; c=relaxed/simple;
+	bh=1huBxxS455lFb9lb95aj5aHQLKb1A7Gghj5h9+l71k0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GT8IiYRjr5Cc8VHV1wlj/Tz10Uf+CUjg6fy2oR5UiFrZSqC9mZnVsErNuwQSN3Zaj5yRMfC/lqQC+zVAMYSfN0TJ5HswjxgTMUQoVPs9/2XNbdaJQ3n3/qkbT39PW5Rgt451dn40zOZ59rmY969CNHs4KRdq8wqrrIN/6YuBGYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iU0cJ8RT; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iU0cJ8RT"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so9621471fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 05:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718282416; x=1718887216; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U3ih0pRkamLgGn89/coTp+mG03B+Ar2meens0mN7r6I=;
+        b=iU0cJ8RTqcuLkRvseOLP+yFg2Y2Echz6G6ReydWdEBxcCy7vjfmMT/mVDQtat1UsQE
+         LdZpvU/wNPRoUU4K1NCMAzEE7Uk6mjgD4ZgaGyqgJW6C1dYUiR+faC54BbGorGh/PGPG
+         P8uuMFoB1bqOVz/FPvJDKlOEiRgV1fb3tmJ/qKiFzBlUSaHEMqlX34p7TPWmxW0axOjp
+         y8a2FUVfiqwPfUvS1sAtENR5qljWhIJ7eqpzPgVCQKOOn255/GcyUq+YfhkEX4mMB4dk
+         fK6NK5id/VPH7sriRUf8gsZ3z5KV88mZ14GPBkortKrIkurzbvZG5kZ0o4oqLUD63Rsz
+         zEmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718282359; x=1718887159;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=90sgWRcRTbkt2hNtVjR41YJy01AkA7uEUxv3xqb4oFY=;
-        b=f4p7YMo/+INQE2y51TbKFu3sqhPfYZb3l/88SSiVAia7cgaEdB9/z0tWkpja1w8Rsv
-         uho2G3q1Ghj70/ZAp7owVLdXYrZr57A4fnEApDoH2P2LeLpKsfwhrl/QnqvCLWYdU1QV
-         xBpg4UalHgp0VSOIYYyenVEPmttrJf9tOregKtagd81yRaOryR7IjXdaODDrCbcXB5E6
-         Ep+674ks3NYKgx62NN0E2z0jdNg81kefj5BZm43XP71QxbvotoCo6O4Cq+9L/eTXm4Iq
-         pXuEdElgzhUe5kQsvM1CPb0O2vcBrGj9p10Pc4aNoTBuRfMtdDEjI2b+Mx8KSEGeIlMt
-         8CfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRZ3EJS3z/6yVDmHRfSzOEfX3FeVpHGUOhdCx2Ezxe7i3u48AolEo8fNQHInr1MZHq+NbzEBDJJpKSbYX7aLZOPIebsEdkmae9JhAT
-X-Gm-Message-State: AOJu0Yyp6AY1bBJ7wEUQymnaS5hIDnNXR2HLwT8+EQpLrC79KpKc+6kS
-	/CCC9RvesvEMfDe+CD/yEwzxG3HzSwLCM4B7qhOzajxR95GygZm2X0XKBG16EB6+lF6DEM40jOT
-	nHM9bJnJ1YEbbz15aUN+4niBiAgpnQ5E8yGhZcnH28JZ+b/v/nun/+Bo=
-X-Google-Smtp-Source: AGHT+IEch/ZagfAh1kyKc3yFoJwHV/k0QVtH7TxX7bC4jJNF20s094WKS+gBG1xL2vfoPcCbD2Ygn8eHL6uUvR/9CkpaiebkYz+i
+        d=1e100.net; s=20230601; t=1718282416; x=1718887216;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U3ih0pRkamLgGn89/coTp+mG03B+Ar2meens0mN7r6I=;
+        b=Kc72xgbQt5Qe2d+k/XBwH8Ff+ceav3JvxOf0IihhquXwis2wkJjTe7rDBhijZ2SY6X
+         SQb2Yn6WmDB4KfbCyurR7BOyq8RsfQJ6T+OyVLe5lMaCYO2jnLZ5+EeVf7gp6zPoQv3w
+         ZWZ2AUThH0rR6CD1a8cqMkZhnRTnpupgaykcW1gSlbScSAEYQZgs2RWgV/MayDxfUTHL
+         3iSi4OlLbMzAPX+zg+dbCL+xFKQWbmYHXrGMe1M3Mpt0UHueFEyd5sB/QWvvW+hfKz5I
+         f2oQh+bTh9sc5Xok1hYgAeQ5U9jNC+0KWzHn4vtbR0FIla5F/jV4FiNvQdd14h0WdNHq
+         22tA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRHnFYyRGlTYlp0SVu1gw9NMZxSIIxpvplkrxDsKwBg/E7NEWcoeKETHh9WB/HvD4u4GxUVQS9ZDL7dlqK5FHKUZL7S6JOE3DEZBVe
+X-Gm-Message-State: AOJu0YxHqzoKBlN2rB3PoRIBzCkmFiDAKAY5T96KLmOgQxF7lTUDxm+f
+	s0Q9KNdAfaP7tMR7gTH1TW3LuI/aeUFCsirmkEdeUoT9g3Jy9k04hhpKCbZnhNk=
+X-Google-Smtp-Source: AGHT+IEqq49c8cGicA+OdVdYsOlsGoIcr/1WK+4fWR/h8LRWQ3o9Z/xoaT075/lNiMhPVaQRL6RyNA==
+X-Received: by 2002:a05:651c:1258:b0:2eb:dd0b:b9ec with SMTP id 38308e7fff4ca-2ebfc932783mr26945561fa.20.1718282415951;
+        Thu, 13 Jun 2024 05:40:15 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c05d3csm2060981fa.43.2024.06.13.05.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 05:40:15 -0700 (PDT)
+Date: Thu, 13 Jun 2024 15:40:14 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: srinivas.kandagatla@linaro.org
+Cc: broonie@kernel.org, perex@perex.cz, lgirdwood@gmail.com, 
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	krzk+dt@kernel.org
+Subject: Re: [PATCH v3 0/4] ASoC: qcom: display port changes
+Message-ID: <3q77jowqtvnlsrskzbmt627mgoebnkld2tswjaby6tfluadszn@v7vcgkgagyiy>
+References: <20240606104922.114229-1-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1512:b0:7eb:78b4:faff with SMTP id
- ca18e2360f4ac-7ebcd165a01mr11014839f.3.1718282359594; Thu, 13 Jun 2024
- 05:39:19 -0700 (PDT)
-Date: Thu, 13 Jun 2024 05:39:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aaf271061ac4c9ab@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_journal_res_get
-From: syzbot <syzbot+ffd2270f0bca3322ee00@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606104922.114229-1-srinivas.kandagatla@linaro.org>
 
-Hello,
+On Thu, Jun 06, 2024 at 11:49:18AM +0100, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> This patchset adds support for.
+> 	1. parse Display Port module tokens from ASoC topology
+> 	2. add support to DP/HDMI Jack events.
+> 	3. fixes a typo in function name in sm8250
+> 
+> Verified these patches on X13s along with changes to tplg in 
+> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/tree/topic/x13s-dp?ref_type=heads
+> and ucm changes from https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
+> 
+> x1e80100 is verified by Krzysztof with his changes in tplg 
+> 
+> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/merge_requests/7/commits
 
-syzbot found the following issue on:
+Together with [1] and corresponding DT changes:
 
-HEAD commit:    8867bbd4a056 mm: arm64: Fix the out-of-bounds issue in con..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1210c3fc980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
-dashboard link: https://syzkaller.appspot.com/bug?extid=ffd2270f0bca3322ee00
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16aecfba980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171b3126980000
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> # X13s
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6ea21f50498b/disk-8867bbd4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e2fed09364aa/vmlinux-8867bbd4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4860173c7a18/Image-8867bbd4.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/bd29adaaf7ea/mount_0.gz
+Note, patch [1] is required to get the switching between Speakers and DP
+work in a stable way, so I'd consider for it to be a dependency for this
+series.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ffd2270f0bca3322ee00@syzkaller.appspotmail.com
+[1] https://lore.kernel.org/linux-sound/20240613-q6apm-fixes-v1-1-d88953675ab3@linaro.org/
 
-bcachefs (loop0): flushing journal and stopping allocators, journal seq 11
-bcachefs (loop0): flushing journal and stopping allocators complete, journal seq 11
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/journal.h:375!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 6249 Comm: syz-executor102 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
-lr : bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
-sp : ffff80009b3076e0
-x29: ffff80009b3076e0 x28: 1fffe0001bf4957f x27: 0000000000000002
-x26: dfff800000000000 x25: 1ffff00013660ee8 x24: dfff800000000000
-x23: 1ffff00013660eec x22: dfff800000000000 x21: 0000000000000005
-x20: ffff0000dfa4a5c0 x19: ffff80009b307760 x18: 0000000000000008
-x17: 6c706d6f63207372 x16: ffff80008ae4f3c0 x15: 0000000000000002
-x14: 1ffff00013660eec x13: 0000000000000000 x12: 0000000000000000
-x11: ffff700013660eee x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000d62fbc80 x7 : 0000000000000000 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000010
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-Call trace:
- bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
- bch2_journal_meta+0x9c/0x268 fs/bcachefs/journal.c:828
- bch2_fs_journal_stop+0x188/0x348 fs/bcachefs/journal.c:1179
- __bch2_fs_read_only+0x2a4/0x3d0 fs/bcachefs/super.c:291
- __bch2_fs_read_write+0x2f0/0x434 fs/bcachefs/super.c:507
- bch2_fs_read_write+0xa8/0xf0 fs/bcachefs/super.c:520
- bch2_remount+0x2bc/0x460 fs/bcachefs/fs.c:1731
- legacy_reconfigure+0xfc/0x114 fs/fs_context.c:685
- reconfigure_super+0x1d0/0x6f0 fs/super.c:1072
- vfs_cmd_reconfigure fs/fsopen.c:267 [inline]
- vfs_fsconfig_locked fs/fsopen.c:296 [inline]
- __do_sys_fsconfig fs/fsopen.c:476 [inline]
- __se_sys_fsconfig fs/fsopen.c:349 [inline]
- __arm64_sys_fsconfig+0x8b8/0xc40 fs/fsopen.c:349
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-Code: 17ffffab 9770cd61 d4210000 9770cd5f (d4210000) 
----[ end trace 0000000000000000 ]---
+> 
+> Thanks,
+> Srini
+> 
+> Changes since v2:
+>  - remove hdmi references.
+>  - added more DP jacks
+>  - added some comments in code
+>  - added x1e80100 patch to this series
+> 
+> Krzysztof Kozlowski (1):
+>   ASoC: qcom: x1e80100: Add USB DisplayPort plug support
+> 
+> Srinivas Kandagatla (3):
+>   ASoC: qcom: q6dsp: parse Display port tokens
+>   ASoC: qcom: common: add Display port Jack function
+>   ASoC: qcom: sc8280xp: add Display port Jack
+> 
+>  sound/soc/qcom/common.c         | 35 +++++++++++++++++++++++++++++++++
+>  sound/soc/qcom/common.h         |  3 +++
+>  sound/soc/qcom/qdsp6/topology.c | 26 ++++++++++++++++++++++++
+>  sound/soc/qcom/sc8280xp.c       | 15 ++++++++++++++
+>  sound/soc/qcom/x1e80100.c       | 20 +++++++++++++++++++
+>  5 files changed, 99 insertions(+)
+> 
+> -- 
+> 2.43.0
+> 
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
