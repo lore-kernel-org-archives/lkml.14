@@ -1,132 +1,165 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26839137758
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1763F14D2B9
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718307504; cv=none; b=Xk5wb+8gOtLJ3RtYaQlhXwt8x3bhRBvnW0PnPSB3qzaLsfGp/RwyrgdvnR6S9GooYcvmQP1NT+t4xCt7p9Havj1F7h1506JkfqXIGxjD1tAlrIhadLc0eqlxIrapu5dNgVuN/WI6L2sP+F6C/b5Vb9FiHAk8ioaWtXr7h6Oqcfg=
+	t=1718307508; cv=none; b=QzOYRFtsk+oALx/NB47NWnNbypAVtLlV1CGEYBn93LldcphX0PO0z6LVRwhmFhEu7wx6khq+10MUa13ONdZ6Ved1ZkxdwUWCBiIbNhJpjbIYJOnZ4WUtkcxDJ6fNFgMbaZQgC08MyQGa+MPRJrUxZq9Ib5KvGjEKojTrrXv7egc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718307504; c=relaxed/simple;
-	bh=TR4cAm5xNK5AcGmAj98ChxZtgaFF/ujYrlwuTqic8RI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2JTmbqsLwO1SSguX/O0+G6XBsa8AKLYGozAK3BdPJQJDVfDFzQh+6MX8OLo1CGiLs6bLkg8tyxwfrY4qBVzZZ22vBbOv9Sj3HoTeTmS0+sn+J1qp5Ltyexmc3EGFMwc2ioWWH4/Jz7SG3tJTgmymXAKFeaAEdxwNFVD5GaoqSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LE4JWSWw; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LE4JWSWw"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42198492353so11390225e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718307501; x=1718912301; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gkVryrNJA6CiSEHBBoY/tn5Xtb/QS0Aw+i138p1q7mg=;
-        b=LE4JWSWwFiQ4DF7wcVJ0w+SRrJeH3CShHWPEnQ3yC1BfXviDHKS/cE7GJI8qPcOA8y
-         T0u1GjCT0pmPh9AiFCz8CKVYO4ZUFvB24OtrmRHId3fDnxa83+uJck5iISfx88ic7gIV
-         BS4Go4hknoUESmCOglqMgxAGoR7frRfrB/oijnalIGnaJ2GPPLa6Cc26BdeOtKaajdcZ
-         fZ7k+7JFlrUUjXUsT4uwkr4NBG590y3QofSM8M3OCw/kHlwsvd2xRhyfdRs9ZJKdMVyy
-         Rx/rrD0Vmb6e0Z3NLn5jOqiGxVyinzBzn9/o3lWT3javkMuiSvUVPib5ewsPZ9NQzI8y
-         N+SA==
+	s=arc-20240116; t=1718307508; c=relaxed/simple;
+	bh=6aypa/TFn6vR7GekpQf4/xcU4O9K8Fca3MiDire0XIs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=D2SiMesXxjzvHELZ8BcyjeAhnFiBWBmSJKl3gjByXCsWrGkYC+4udDBC5I6qeZjZtTIjvhtkCzRED2l17Q5pthCzXg2llBieK9lLoiYlfi5X0+iA0IcpKGqM3EaMLJgebl7A/4Sxrh3BruG54wJLJqfMsMNOFv5tNuDerPd2E2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7eb9bf4d07aso140484739f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:38:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718307501; x=1718912301;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gkVryrNJA6CiSEHBBoY/tn5Xtb/QS0Aw+i138p1q7mg=;
-        b=CtCPuqUY4qyJgwcCUFy7Ts/1kPG02AqNF9LO7CYo7NwDH4q0Ult5Pu4IU6oyPIWYDW
-         RGFOHTNHSyeT00kqH9jFaG18SZFQUTtbruFCmESswkurMukfqBvc6nv6RP+ZD7AUm9Cb
-         hOONJYLZKOLivB+yCFR8f4GO2rLKtFCjN75hYBWhzcdhM0B1U06Ma81D5RvthE4vwEya
-         0hWIhVbOxoB4TrQ94yQWvvMya8ilqayQA+yHHxRrNLix57a9YijR5x1FgqBLMLjNXGKd
-         8tt8s+V7ZTU4hF6Q5ThqKAyJw9BDtDYw0/imYn9L6ISFYR/AN9YILzRfbW3jdXaLbNot
-         czfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+2ANjoDYCXjkCfExXdYIzWHquUFEH2vHRzx2mGLriuEmCa0M+thyObpkok50GwDrm7h9d5tUZ3K7dyCSVNRhaPHPnloPt8XS7qzKz
-X-Gm-Message-State: AOJu0YyfjD/hVerZEAD78nfJ+cLluYePdfieDZ9YgjdoCMA4qXmj8TFY
-	AewgNoiuHikuWfnQNHSu6cVWojThGatTNmi2NVfQsOe0GQimz08a
-X-Google-Smtp-Source: AGHT+IEnEqeoMG/JJxTOMZkZ/oBkHUfBTCamWig8WosWNOft6m9a3oO84QR7RMYwtkq2b2NIi81fxA==
-X-Received: by 2002:a05:600c:4f84:b0:422:683b:df34 with SMTP id 5b1f17b1804b1-4230484eed9mr6166685e9.28.1718307501137;
-        Thu, 13 Jun 2024 12:38:21 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6a:b75d:0:64:3301:4710:ec21? ([2a02:6b6a:b75d:0:64:3301:4710:ec21])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f61280f6sm35170855e9.27.2024.06.13.12.38.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 12:38:20 -0700 (PDT)
-Message-ID: <8b155ba8-ff53-4202-b2eb-afe73db77d7e@gmail.com>
-Date: Thu, 13 Jun 2024 20:38:20 +0100
+        d=1e100.net; s=20230601; t=1718307506; x=1718912306;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MLJJOWCX65rxIwkhEm2uOMKY3r7EFZtqKAwAdHzJM9g=;
+        b=O6MiDOqsXHpNEzdqYMNzFaxDYtcfjJLeJkm+nwg57zo5ENPwqN5G73KZf/3s8U4jvp
+         aiH8iXcj3JtltrgUPnfERShBO40ybOWNvx0mo9GmW6sAKYOnyrQjm13Fzr7nUJffqP+b
+         3bhIl9oU0WyN79Rk/gqhGl6+NOVAHu+drMLWMbvK9YzuPFtUng0eRaERZKL0qpbWa3lC
+         jK7TL5sTH4hhKBkJyLySCElp+BBV/kVA5SD51AoQ/GJY8v3YPp7F+VJHssD06t9qEBcs
+         JYPpyy3dLweNe4TC6O57FMSmlo0raK1GUjt+PkVdHOe6vWYc5vi2nxfbnLkYyUHMcnxg
+         /xZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQILLi+vq2+19MMRFuguE1FSG3sZHv6NBzq8M8cXpJV1qr+gaqGFZ1uN92KCoaU0F8IWmCJpAjgSMudIQQa7/0OXtTxkaVXIAba9e2
+X-Gm-Message-State: AOJu0YwUaB0YpCJxcVIczjoblNKnpyvM3YTZcS188duB1pYsEIi+qlzt
+	OgfYFfDaLkzH8eWOrXUVJ6X90lVHAPyayqXR4yjTwsotUZ8nQKx4Boi54IvSIjYYM1plXGRNeV6
+	+kmhwFf9yov3GDCfUBxr9RdSHN+AQALxQR7g03Sn2HKc0WL8MQPxIxpg=
+X-Google-Smtp-Source: AGHT+IHzIrUbSrbDOTpr6qQydzMSs7GCZvTCI9PQnIbCAKH2f2LdyUAT50wUuyIqvD2skpvH/Siu5CXVvClMaLe1skIHINU42xbE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] mm: store zero pages to be swapped out in a bitmap
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
- david@redhat.com, ying.huang@intel.com, hughd@google.com,
- willy@infradead.org, nphamcs@gmail.com, chengming.zhou@linux.dev,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20240612124750.2220726-1-usamaarif642@gmail.com>
- <20240612124750.2220726-2-usamaarif642@gmail.com>
- <ZmoBf6RPJzC2RaqM@google.com>
- <85804484-9973-41a1-a05d-000833285f39@gmail.com>
- <CAJD7tkYBxN4uAHLacAx=m2+B9zPidz0V5pGP030yvNYLTnk=VQ@mail.gmail.com>
- <0572d8b1-3b17-45a8-bf75-f66e19216d38@gmail.com>
- <CAJD7tkYGFsYbbbHp3+MMHTuxNcG_Z+i-5TCo3wieVArcra5wmA@mail.gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CAJD7tkYGFsYbbbHp3+MMHTuxNcG_Z+i-5TCo3wieVArcra5wmA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:841f:b0:4b7:ca3d:c0dd with SMTP id
+ 8926c6da1cb9f-4b96417f130mr5610173.6.1718307506165; Thu, 13 Jun 2024 12:38:26
+ -0700 (PDT)
+Date: Thu, 13 Jun 2024 12:38:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000852fce061acaa456@google.com>
+Subject: [syzbot] [io-uring?] KMSAN: uninit-value in io_req_cqe_overflow (3)
+From: syzbot <syzbot+e6616d0dc8ded5dc56d6@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12980e41980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
+dashboard link: https://syzkaller.appspot.com/bug?extid=e6616d0dc8ded5dc56d6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13526ca2980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144e5256980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e6616d0dc8ded5dc56d6@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in io_req_cqe_overflow+0x193/0x1c0 io_uring/io_uring.c:810
+ io_req_cqe_overflow+0x193/0x1c0 io_uring/io_uring.c:810
+ __io_submit_flush_completions+0x7eb/0x1be0 io_uring/io_uring.c:1464
+ io_submit_flush_completions io_uring/io_uring.h:148 [inline]
+ ctx_flush_and_put+0x16c/0x360 io_uring/io_uring.c:1055
+ io_handle_tw_list+0x58b/0x5c0 io_uring/io_uring.c:1095
+ tctx_task_work_run+0xf8/0x3d0 io_uring/io_uring.c:1155
+ tctx_task_work+0x6d/0xc0 io_uring/io_uring.c:1173
+ task_work_run+0x268/0x310 kernel/task_work.c:180
+ ptrace_notify+0x304/0x320 kernel/signal.c:2404
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work+0x14e/0x3e0 kernel/entry/common.c:173
+ syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x135/0x160 kernel/entry/common.c:218
+ do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was stored to memory at:
+ io_req_set_res io_uring/io_uring.h:215 [inline]
+ io_recv_finish+0xf10/0x1560 io_uring/net.c:861
+ io_recv+0x12ec/0x1ea0 io_uring/net.c:1175
+ io_issue_sqe+0x429/0x22c0 io_uring/io_uring.c:1751
+ io_poll_issue+0x32/0x40 io_uring/io_uring.c:1782
+ io_poll_check_events io_uring/poll.c:331 [inline]
+ io_poll_task_func+0x5f9/0x14d0 io_uring/poll.c:357
+ io_handle_tw_list+0x23a/0x5c0 io_uring/io_uring.c:1083
+ tctx_task_work_run+0xf8/0x3d0 io_uring/io_uring.c:1155
+ tctx_task_work+0x6d/0xc0 io_uring/io_uring.c:1173
+ task_work_run+0x268/0x310 kernel/task_work.c:180
+ ptrace_notify+0x304/0x320 kernel/signal.c:2404
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work+0x14e/0x3e0 kernel/entry/common.c:173
+ syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x135/0x160 kernel/entry/common.c:218
+ do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3877 [inline]
+ slab_alloc_node mm/slub.c:3918 [inline]
+ __do_kmalloc_node mm/slub.c:4038 [inline]
+ __kmalloc+0x6e4/0x1060 mm/slub.c:4052
+ kmalloc include/linux/slab.h:632 [inline]
+ io_alloc_async_data+0xc0/0x220 io_uring/io_uring.c:1662
+ io_msg_alloc_async io_uring/net.c:166 [inline]
+ io_recvmsg_prep_setup io_uring/net.c:725 [inline]
+ io_recvmsg_prep+0xbe8/0x1a20 io_uring/net.c:806
+ io_init_req io_uring/io_uring.c:2135 [inline]
+ io_submit_sqe io_uring/io_uring.c:2182 [inline]
+ io_submit_sqes+0x1135/0x2f10 io_uring/io_uring.c:2335
+ __do_sys_io_uring_enter io_uring/io_uring.c:3246 [inline]
+ __se_sys_io_uring_enter+0x40f/0x3c80 io_uring/io_uring.c:3183
+ __x64_sys_io_uring_enter+0x11f/0x1a0 io_uring/io_uring.c:3183
+ x64_sys_call+0x2c0/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:427
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 PID: 5049 Comm: syz-executor107 Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+=====================================================
 
 
-On 13/06/2024 20:26, Yosry Ahmed wrote:
-> [..]
->>>>>> @@ -498,6 +507,8 @@ static void swap_do_scheduled_discard(struct swap_info_struct *si)
->>>>>>                __free_cluster(si, idx);
->>>>>>                memset(si->swap_map + idx * SWAPFILE_CLUSTER,
->>>>>>                                0, SWAPFILE_CLUSTER);
->>>>>> +            for (i = 0; i < SWAPFILE_CLUSTER; i++)
->>>>>> +                    clear_bit(idx * SWAPFILE_CLUSTER + i, si->zeromap);
->>>>> Same here. I didn't look into the specific code paths, but shouldn't the
->>>>> cluster be unused (and hence its zeromap bits already cleared?).
->>>>>
->>>> I think this one is needed (or atleast very good to have). There are 2
->>>> paths:
->>>>
->>>> 1) swap_cluster_schedule_discard (clears zeromap) -> swap_discard_work
->>>> -> swap_do_scheduled_discard (clears zeromap)
->>>>
->>>> Path 1 doesnt need it as swap_cluster_schedule_discard already clears it.
->>>>
->>>> 2) scan_swap_map_slots -> scan_swap_map_try_ssd_cluster ->
->>>> swap_do_scheduled_discard (clears zeromap)
->>>>
->>>> Path 2 might need it as zeromap isnt cleared earlier I believe
->>>> (eventhough I think it might already be 0).
->>> Aren't the clusters in the discard list free by definition? It seems
->>> like we add a cluster there from swap_cluster_schedule_discard(),
->>> which we establish above that it gets called on a free cluster, right?
->> You mean for path 2? Its not from swap_cluster_schedule_discard. The
->> whole call path is
->>
->> get_swap_pages -> scan_swap_map_slots -> scan_swap_map_try_ssd_cluster
->> -> swap_do_scheduled_discard. Nowhere up until swap_do_scheduled_discard
->> was the zeromap cleared, which is why I think we should add it here.
-> swap_do_scheduled_discard() iterates over clusters from
-> si->discard_clusters. Clusters are added to that list from
-> swap_cluster_schedule_discard().
->
-> IOW, swap_cluster_schedule_discard() schedules freed clusters to be
-> discarded, and swap_do_scheduled_discard() later does the actual
-> discarding, whether it's through si->discard_work scheduled by
-> swap_cluster_schedule_discard(), or when looking for a free cluster
-> through scan_swap_map_try_ssd_cluster().
->
-> Did I miss anything?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Ah ok, and the schedule_discard in free_cluster wont be called scheduled 
-before swap_range_free. Will only keep the one in swap_range_free. Thanks!
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
