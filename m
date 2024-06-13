@@ -1,139 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFC617C72;
-	Thu, 13 Jun 2024 02:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4517F9;
+	Thu, 13 Jun 2024 02:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718244392; cv=none; b=rsQdJDnxalYKy3lerHvExSUp51hQHHUXXDYchxZuXHziaDw2E1UFoy5Os5ZHKy4YmSzLe1oREycOjrBb5DQ2WuoH8NMHULY9iAK4vWM/tXb58lREmBlONlFmo46ma2f+ZHexw8ev+S3icF6hAXHd35RUGdEftlMa8GISR70ZRrw=
+	t=1718244466; cv=none; b=daIZXzrVmAQ8rLUUKqIiHIZgNRrqzxqz2t9jXBuBHanNsFbMfMSaHaQr4xyvW6Glp+Gyu4EzIUkhIka1FcDQcWMJAcipY929ytl+IMbvQ5137bKpPOhe48o2K1c3Rjj6ZPqxP7sMuupM3BOji7k1687y+4JamxCFFdoDIhrMPOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718244392; c=relaxed/simple;
-	bh=8sFmvQ7Z83X7NLUoXzzUfw6X3sNAVrct6codoq1wV7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahN4vHTQZX/E29ojOqaqH00WW3uXfg6WRp4BA5txMLpg/lDvyU+3df4HZrbnyFQO7fJjZQM+e+yo1hOGwMneVpGFaip7AUaZNz5ohs14bQ9a1f6WljkIJ9uCrTVHnmtMCpZahhy4hYWfY/8MeAIKAjYTT6aTTICD9hNeZTtXyXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FeSl3aPj; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718244466; c=relaxed/simple;
+	bh=dBbES7awD4iFglEVKTenODuZBBYjAay3KmNMAQU0kvg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W+J/+UT3B+sILDPke6dpfN5yNnAjiU0gRysY2A4l/mIdmehTDFBaubsn/depTRuA1iqZXweKd5QTdHATQZMF/+UAbGEt/czMIwCvc+4ik6WRRN3tjFtdl1GQDAOEIBG83fygzMkw5VTReqVGlIRp7zRXEh6d1gQ/ht/5pjvGIQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=fGZSZb0T; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FeSl3aPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718244391; x=1749780391;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8sFmvQ7Z83X7NLUoXzzUfw6X3sNAVrct6codoq1wV7Q=;
-  b=FeSl3aPjOjZFmnCKj9Sfa4taT7g0EXtP7ZvmJ3dBSfVbZjhjpisYgt/i
-   H1QwLVH4WAf6wWP0DA4vrMmpI/ceWvokH6AeVCEyA9on2Okz8XMQ4CvWd
-   MPkjG7qBcP23BD+/g8HmhLOl6+sAiZu8x+Xk9L4MmM3pvi5ssCk/C5Nsp
-   iRohLlX3Iees3RD6pp2fKjbP7dId1DZpqquKNUa3QeM9bb7pWRLsqn/93
-   um7uRHeiDEwCncXhYnzyYPA6QLHtGQY9de+GHuzPvM2vWH1XPf3BGJ9as
-   NQUuNfzeUdSUPt1u+j44ctJxJ8BkoIVWWe3p99redMnftwDCemYJ1fHF4
-   g==;
-X-CSE-ConnectionGUID: WYbSL4Q3QZa2HulvPGK6oQ==
-X-CSE-MsgGUID: P75acOM5TCSmz+MfFGhNRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15194300"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="15194300"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 19:06:30 -0700
-X-CSE-ConnectionGUID: S0kNdoNXTeaDmFV2fIXYpQ==
-X-CSE-MsgGUID: 6aVpmYIvR1+lJTRSNmEW5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="44427853"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Jun 2024 19:06:24 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sHZr4-000270-15;
-	Thu, 13 Jun 2024 02:06:22 +0000
-Date: Thu, 13 Jun 2024 10:05:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Tomeu Vizoso <tomeu.vizoso@tomeuvizoso.net>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH 6/9] accel/rocket: Add a new driver for Rockchip's NPU
-Message-ID: <202406130901.oiofrkFe-lkp@intel.com>
-References: <20240612-6-10-rocket-v1-6-060e48eea250@tomeuvizoso.net>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fGZSZb0T"
+X-UUID: b213090c292911efa22eafcdcd04c131-20240613
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=2crroThV307a6U2HBQxfAj7rvwYaNimPg3nw6UZQSko=;
+	b=fGZSZb0TbzqTWlboQgHS0OUdEKgIdRjjtwWEO7e3LQN0LbngX+cL2FlZPjtigKaS4cgwZBgRcVJJlQCKVotYIPoMntZBp7BXCb34Wf/pBDGkro4kA6vqPg/MX11+IydM5DZ8LK5djVGz+shyBcUYN5rLrSfKeADbqc5bDAtjnE8=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:ff59c77f-f08b-456b-bfd4-7717010e5b1a,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:393d96e,CLOUDID:a4f38244-4544-4d06-b2b2-d7e12813c598,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: b213090c292911efa22eafcdcd04c131-20240613
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+	(envelope-from <jiaxin.yu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 464247858; Thu, 13 Jun 2024 10:07:32 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 13 Jun 2024 10:07:28 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 13 Jun 2024 10:07:27 +0800
+From: Jiaxin Yu <jiaxin.yu@mediatek.com>
+To: <broonie@kernel.org>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<angelogioacchino.delregno@collabora.com>, Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v2] ASoC: mediatek: mt6358: Add "Dmic Mode Switch" kcontrol for switch DMIC mode.
+Date: Thu, 13 Jun 2024 10:07:25 +0800
+Message-ID: <20240613020725.27874-1-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612-6-10-rocket-v1-6-060e48eea250@tomeuvizoso.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--3.735100-8.000000
+X-TMASE-MatchedRID: 7/lA1c0rODlUeA157rRKD2h77jTUbA6yoA9Le8XJpbovM0Gdq0fzqaJQ
+	wY2eSfAKzQCEFcQpqpiD1p+T3PkHc6o+znd4MHO5KaMQ6tw7oDJUENBIMyKD0bKeTtOdjMy6F8G
+	YXulqwlo0AOwawpZRrJu74XJZgEpKHxPMjOKY7A8LbigRnpKlKTpcQTtiHDgWCGZVZ8EYI018t8
+	OiP4eDQIaxMeSCvXD3QXZ+RKpogWYFpx4IRdvLnIR5/Gw18G/B1f8mlpYseAs8jJT9O16z2i5IC
+	Jp2q1I34sOrsb4iT/K/bbEolHIgZUOc7GjOamnWv5a9cmIodEszD8HZ4XvJ2ZRMZUCEHkRt
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--3.735100-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	4799F9C4A4B70B3A0C2BF48F28D264815A81BBF9223A6F6C1EF8F65DEFDE680F2000:8
+X-MTK: N
 
-Hi Tomeu,
+There are two hardware connection methods for DMICs on the MT6358. In cases
+where more than two DMICs are used, we need to time-multiplex these DMICs.
+Therefore, we need to dynamically switch the modes of these DMICs based on
+the actual usage scenarios.
 
-kernel test robot noticed the following build errors:
+            ---- DMIC1
+AU_VIN0 ---
+            ---- DMIC2
 
-[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
+AU_VIN2 --- ----DMIC3
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tomeu-Vizoso/iommu-rockchip-Add-compatible-for-rockchip-rk3588-iommu/20240612-215814
-base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-patch link:    https://lore.kernel.org/r/20240612-6-10-rocket-v1-6-060e48eea250%40tomeuvizoso.net
-patch subject: [PATCH 6/9] accel/rocket: Add a new driver for Rockchip's NPU
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240613/202406130901.oiofrkFe-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240613/202406130901.oiofrkFe-lkp@intel.com/reproduce)
+When we want to use DMIC1/2, configure it to one-wire mode. When we want to
+use DMIC1/3, configure it to two-wire mode.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406130901.oiofrkFe-lkp@intel.com/
+Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+---
+ sound/soc/codecs/mt6358.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-All errors (new ones prefixed by >>):
-
-   In file included from arch/loongarch/include/asm/processor.h:17,
-                    from arch/loongarch/include/asm/thread_info.h:15,
-                    from include/linux/thread_info.h:60,
-                    from include/asm-generic/current.h:6,
-                    from ./arch/loongarch/include/generated/asm/current.h:1,
-                    from include/linux/mutex.h:14,
-                    from include/linux/notifier.h:14,
-                    from include/linux/clk.h:14,
-                    from drivers/accel/rocket/rocket_core.c:6:
->> arch/loongarch/include/uapi/asm/ptrace.h:25:25: error: expected identifier before '(' token
-      25 | #define PC              (GPR_END + 2)
-         |                         ^
-   drivers/accel/rocket/rocket_registers.h:53:9: note: in expansion of macro 'PC'
-      53 |         PC = 0x00000100,
-         |         ^~
-
-
-vim +25 arch/loongarch/include/uapi/asm/ptrace.h
-
-803b0fc5c3f2ba Huacai Chen 2022-05-31  16  
-803b0fc5c3f2ba Huacai Chen 2022-05-31  17  /*
-803b0fc5c3f2ba Huacai Chen 2022-05-31  18   * For PTRACE_{POKE,PEEK}USR. 0 - 31 are GPRs,
-803b0fc5c3f2ba Huacai Chen 2022-05-31  19   * 32 is syscall's original ARG0, 33 is PC, 34 is BADVADDR.
-803b0fc5c3f2ba Huacai Chen 2022-05-31  20   */
-803b0fc5c3f2ba Huacai Chen 2022-05-31  21  #define GPR_BASE	0
-803b0fc5c3f2ba Huacai Chen 2022-05-31  22  #define GPR_NUM		32
-803b0fc5c3f2ba Huacai Chen 2022-05-31  23  #define GPR_END		(GPR_BASE + GPR_NUM - 1)
-803b0fc5c3f2ba Huacai Chen 2022-05-31  24  #define ARG0		(GPR_END + 1)
-803b0fc5c3f2ba Huacai Chen 2022-05-31 @25  #define PC		(GPR_END + 2)
-803b0fc5c3f2ba Huacai Chen 2022-05-31  26  #define BADVADDR	(GPR_END + 3)
-803b0fc5c3f2ba Huacai Chen 2022-05-31  27  
-
+diff --git a/sound/soc/codecs/mt6358.c b/sound/soc/codecs/mt6358.c
+index 0284e29c11d3..9247b90d1b99 100644
+--- a/sound/soc/codecs/mt6358.c
++++ b/sound/soc/codecs/mt6358.c
+@@ -96,7 +96,7 @@ struct mt6358_priv {
+ 
+ 	int wov_enabled;
+ 
+-	unsigned int dmic_one_wire_mode;
++	int dmic_one_wire_mode;
+ };
+ 
+ int mt6358_set_mtkaif_protocol(struct snd_soc_component *cmpnt,
+@@ -577,6 +577,39 @@ static int mt6358_put_wov(struct snd_kcontrol *kcontrol,
+ 	return 0;
+ }
+ 
++static int mt6358_dmic_mode_get(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *c = snd_soc_kcontrol_component(kcontrol);
++	struct mt6358_priv *priv = snd_soc_component_get_drvdata(c);
++
++	ucontrol->value.integer.value[0] = priv->dmic_one_wire_mode;
++	dev_dbg(priv->dev, "%s() dmic_mode = %d", __func__, priv->dmic_one_wire_mode);
++
++	return 0;
++}
++
++static int mt6358_dmic_mode_set(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *c = snd_soc_kcontrol_component(kcontrol);
++	struct mt6358_priv *priv = snd_soc_component_get_drvdata(c);
++	int enabled = ucontrol->value.integer.value[0];
++
++	if (enabled < 0 || enabled > 1)
++		return -EINVAL;
++
++	if (priv->dmic_one_wire_mode != enabled) {
++		priv->dmic_one_wire_mode = enabled;
++		dev_dbg(priv->dev, "%s() dmic_mode = %d", __func__, priv->dmic_one_wire_mode);
++
++		return 1;
++	}
++	dev_dbg(priv->dev, "%s() dmic_mode = %d", __func__, priv->dmic_one_wire_mode);
++
++	return 0;
++}
++
+ static const DECLARE_TLV_DB_SCALE(playback_tlv, -1000, 100, 0);
+ static const DECLARE_TLV_DB_SCALE(pga_tlv, 0, 600, 0);
+ 
+@@ -599,6 +632,9 @@ static const struct snd_kcontrol_new mt6358_snd_controls[] = {
+ 
+ 	SOC_SINGLE_BOOL_EXT("Wake-on-Voice Phase2 Switch", 0,
+ 			    mt6358_get_wov, mt6358_put_wov),
++
++	SOC_SINGLE_BOOL_EXT("Dmic Mode Switch", 0,
++			    mt6358_dmic_mode_get, mt6358_dmic_mode_set),
+ };
+ 
+ /* MUX */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
