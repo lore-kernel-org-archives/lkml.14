@@ -1,113 +1,100 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx2-at.ubimet.com (mx2-at.ubimet.com [141.98.226.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8747F14883C;
-	Thu, 13 Jun 2024 14:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749122AEFE;
+	Thu, 13 Jun 2024 14:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.98.226.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290646; cv=none; b=GytmrOLUwwZF460L7F0JMRj/T89RyM2rIMP83uf4fkmyX3EsZzMVdGRFdFG7qxEkG8TzTD5K/DOJY3witxcHHrJH595Xbc6fobYPDuJquuoq4bal6VjoskrRvWMToclg8Pzu5kW0Wi2Zd4Rf6pX8TRpZ90bHVNJf/krcYhO8Utk=
+	t=1718290744; cv=none; b=CM8PgE/jM9f65dbyQZDfglXGwRxOe33xnnY1sjVRDCJWyff+GZW7X/hmIp/FhnzNdcqOjEyCH+/t9tc5awDkDeSuIpYwkvFzwPuh1tzI81Kp3xly682ePnLKL3DXO4tJw8NfGBMjZeUzmtYTl2J/uzmm+sPr0oCljq5ON+o6XyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290646; c=relaxed/simple;
-	bh=nGI5SQtPbmjFzz0oS2g0Vv0q9MObkyinZcCMmyUMgc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fh26RsvfRPL+SrXga36708VA17mccW5gd+F5Pq3skatVx/v55HSoq2MYu85mVZHrMXnmBvg/pclW6IapnTOyXas5lPF5LsSRSRQXH+VmdeaE84FXhHZbPaypk0cBxVbe0y9i9CpreP7PwTd1O2mt040NogFYc+zilw+csosbARo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ja3zVbuE; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718290744; c=relaxed/simple;
+	bh=PkwrnxW49KXKombbCY1USp7kfKxbA1A4Nxf0R8gfIwo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rUKrco1NV2UDI75RlqZQRnSTMBh7m9FMk9PyX5mnbgRdQgbTgePgH2lvSUkAktYogYo0nt9oA2zsGq2mYYW9c3dKFuwJYmGLb44J9BmxXLFseCTEj2+n9Z+FVaGBdZ0CyLOoezAU+P1SjX9dB9XNrzqVdgyrxcdkTrm7u01i3Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com; spf=pass smtp.mailfrom=ubimet.com; dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b=WZGBza/v; arc=none smtp.client-ip=141.98.226.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubimet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ja3zVbuE"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 371AB40E00C9;
-	Thu, 13 Jun 2024 14:57:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id VxFUwAUY_gPk; Thu, 13 Jun 2024 14:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718290629; bh=4PpkPfFOmQteTZnPUEGfiyHPxl3RB0xgm8bItFqnfk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ja3zVbuEKXRUlqooI8H7OOrG10geSsCj9PBH5w2Id4s1ieQGglEfA7XJoKDFTF9JX
-	 epVhd/OSmSar4OcKkNykGLcf6rMfDeLqA2tharfM0zkRXHajeBWf4w7K+StiHBaYy+
-	 UmDqQGt6Gj6JW1RRmZEYjjYb9ugcch3i4wkay5YCl94poFAL1newXDTzG4cEGkoLWv
-	 NFTAg/aE+yDOGGuge2S6Ph8C9MIGPr1cm1iHz/TOedm1P4nH3dzgcwu7Oq6QCyNBwk
-	 QYqYkNMfTqbbiiMnckCwDq3Z5e6kt+LlkdDk1O4x9qCwldl17tWmfZ2BUKjgNxXRbB
-	 2/ckNhH1LU+HhGZC8VmO3+KkBDwJ8D7mUE2I63WKZGNOlnQdQt1ZalHutsPPm9fnfa
-	 iiRJCFaTfi8wE5Zdz7IPFHXJpdKwMeCYplQvoz0iM+RgxPC9lN1fMVR9b3Ih9nGfd2
-	 tHvDFD2YFDfqZ4+ljm6uk/Z4rpLfmpRIevGB+ZBZS5tJ12HYHcKp+jttN8SVc+N/uO
-	 lNQqFpWTSFrXj2kUWtXUw/aAhSIR0kw7wNt9hBDphnTPZeQDgkW48SqxzTM10A7j0b
-	 yquOA/Sp4tsEXR60IN3GhEe0pX6itv6tdbmM/O81pLhEwP+hGqkFA2xUtwPTWTTM8k
-	 x1TfveMz3kITMZ845FfSr1YE=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BC90040E0031;
-	Thu, 13 Jun 2024 14:56:41 +0000 (UTC)
-Date: Thu, 13 Jun 2024 16:56:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
- ACPI MADT wakeup method
-Message-ID: <20240613145636.GGZmsIpHn16R04QlaN@fat_crate.local>
-References: <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
- <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
- <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
- <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
- <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
- <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
- <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
- <2kc27uzrsvpevtvos2harqj3bgfkizi5dhhxkigswlylpnogr5@lk6fi2okv53i>
- <20240612092943.GCZmlqh7O662JB-yGu@fat_crate.local>
- <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+	dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b="WZGBza/v"
+Received: from localhost (localhost [127.0.0.1])
+	by mx2-at.ubimet.com (Postfix) with ESMTP id C44B481186;
+	Thu, 13 Jun 2024 14:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ubimet.com;
+	s=20200131mdel; t=1718290299;
+	bh=PkwrnxW49KXKombbCY1USp7kfKxbA1A4Nxf0R8gfIwo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WZGBza/vR1BVuAri/u2N54duL+y8duDubz4EbM9DsDI9P4j3hPMe43QbdFOsL38/4
+	 cLptxKndvu2vcCAEj4isopnHxeQe4lCsPg/ggqHS2tV5aBOszZtEyM6GnN0VWuQo+g
+	 0aa2kKnPXVxztjMt/R0MAefJceEZkzdyh7/6fqTWqsJcc0n7kTjV4os//ZovOr+54L
+	 gBft2rFd7cTRcCCIzji6cJ77fSBE+mF6q6pTBOpAQcfjR67oZyfKQwzscIoWbQ0ixj
+	 5u24Ref3Up6u/+zN5WvhghGUmg1zfeve/bUY3iydHn19dqNvKAbu7kdoBCsWwfQM1F
+	 Zqg249FAnq6fA==
+Received: from mx2-at.ubimet.com ([127.0.0.1])
+	by localhost (mx02.dmz.dc.at.ubimet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id WwTyPJ8Qhyk8; Thu, 13 Jun 2024 14:51:39 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com (zimbra-mta01.ext.dc.at.ubimet.com [10.1.18.22])
+	by mx2-at.ubimet.com (Postfix) with ESMTPS id A425B81110;
+	Thu, 13 Jun 2024 14:51:39 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id 91C3080771;
+	Thu, 13 Jun 2024 14:51:39 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id VXqqTe2gBYSc; Thu, 13 Jun 2024 14:51:38 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id BD03380782;
+	Thu, 13 Jun 2024 14:51:38 +0000 (UTC)
+X-Virus-Scanned: amavis at zimbra-mta01.ext.dc.at.ubimet.com
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id hVaxFwn5rYsh; Thu, 13 Jun 2024 14:51:38 +0000 (UTC)
+Received: from pcn112.wl97.hub.at.ubimet.com (pcn112.it.hub.at.ubimet.com [10.15.66.143])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTPSA id 7210A80771;
+	Thu, 13 Jun 2024 14:51:38 +0000 (UTC)
+From: =?UTF-8?q?Jo=C3=A3o=20Rodrigues?= <jrodrigues@ubimet.com>
+To: 
+Cc: jrodrigues@ubimet.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org (open list:ETHERNET PHY LIBRARY),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 0/3] net: phy: dp83867: add cable diag support
+Date: Thu, 13 Jun 2024 16:51:50 +0200
+Message-Id: <20240613145153.2345826-1-jrodrigues@ubimet.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 04:41:00PM +0300, Kirill A. Shutemov wrote:
-> It is easy enough to do. See the patch below.
+This series adds more diagnostics of the physical medium to the DP83867.
+The TDR reporting is similar to DP83869, so there might be some interest
+in porting this changes to that driver.
+The TDR reporting in PD83867 is divided into segments (from which a
+cable length can be extracted). Because the reported lengths do not come
+in regular intervals, when doing cable-test-tdr from ethtool, the value
+of the reflection is reported, but not the length at which occurred
+(even though the PHY reports it).
+Likewise, the configuration of measurement lengths is also not
+supported in this series, for the same reason (it is theoretically
+possible to do it, with more complex configuration)
 
-Thanks, will have a look.
+Jo=C3=A3o Rodrigues (3):
+  net: phy: dp83867: Add SQI support
+  net: phy: dp83867: add cable test support
+  net: phy: dp83867: Add support for amplitude graph
 
-> But I am not sure if I can justify it properly. If someone doesn't really
-> need 5-level paging, disabling it at compile-time would save ~34K of
-> kernel code with the configuration.
-> 
-> Is it worth saving ~100 lines of code?
+ drivers/net/phy/dp83867.c | 353 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 353 insertions(+)
 
-Well, it goes both ways: is it worth saving ~34K kernel text and for that make
-the code a lot less conditional, more readable, contain less ugly ifdeffery,
-...?
+--=20
+2.25.1
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
