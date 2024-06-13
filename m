@@ -1,263 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B69313D539
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEF213E024
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268051; cv=none; b=d5yzHm8BJCIzKPV/8i8FyT3oyaWUoDmjDfR7oe4tGd07wH1ZrqfAXqWl7mufRy4RWTAoUVexfDUL9e7xF3WhuS2i9mrLK39koFGXhEq6bWmEnbTKEkJN/Ifzf5MYqC0ql/swyMIHV+NZD4tg9p+m1mlix+TmpAaobMDm6S9kWTM=
+	t=1718268057; cv=none; b=nwpWJ8JN5ybT1Zge3ZorJErG0nATOFAcibPjug7+d8i1vuwVo2pRMGBiZ4jX3zuSSy+WEJ0YQ3bSgrhHUK6WQsLluTip+kkFalNS5xI9+nFnwh1z5rFl92foL2ekb7c905yBFui/wVYlPdSNvilSswJ8XcFtTk+R3M28D8W3xA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268051; c=relaxed/simple;
-	bh=BufJUpD5h99/QMmWwXqc0nJMKvoaciS9R2964RYmPDQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UPFuGMVW9FYUAMcFcsu+yAAeU3ZyEPqn5eZv+N33ewl7LMBZvC+u9CcD/4LSBVeS5887P7OGWazCQL9pXx7Anq1+J2B66Qtw/PxlslNUonCDbHtXlQimrJrR36kPYM5LiM4hd60LF+h/3rR9YSbv6nUPYZkTFafE5rNjh6AeGeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZWCGdnqO; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718268057; c=relaxed/simple;
+	bh=lz+J7ECynvwrICT+knSUHp3JLF9AhqPp3gvZh+sZfzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUKURjOb0mKNyGFQDvth9wgNWflZth4Nn7C5xbrFxz3w/HMQm4BvSK9mnYqPKde0Z1NZv3ABQHzzfFc9rd1WigV7AVbODGUnBO9IkjwArLWUIQ7YhE3zYJLeWiu8Tn0X+xEH30cgiMuMjosOe5O4BBkItSI6EDZ73AiFAHIWAMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y0rS1jAI; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZWCGdnqO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718268049; x=1749804049;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=BufJUpD5h99/QMmWwXqc0nJMKvoaciS9R2964RYmPDQ=;
-  b=ZWCGdnqOFoKSYOUbEzkFaBT6m6mzUc0uQtWBjTOqvT5rhH9utEA+56sr
-   PvKWu8zt5cTAKJF+KTMf41+d+Bto3QAoyNJD4Kv51q8CdtiuIupj9gAAW
-   SQOAz09jN+p2UXwSQ9kfwaNFeQT+6g2mrE8B8Xcpm74tT+GpyHivvTFYp
-   baKcD3aLAfw0kYZLWaI9fKqXspWuY1azw7kIBlKaahf7jCzPs8obzKR8l
-   uYUH0KImU7UmW1EWZoxXeIGTupviSq/sDHaWWMSVNfhdXlJivltunfmEW
-   ZScCx9HwaSDlo+wxZxS4NB3kuus1XqPm9zdIU6lz6AcLUufKKjd6DEP7C
-   Q==;
-X-CSE-ConnectionGUID: YMOmvmViQruFFlRFImGeCQ==
-X-CSE-MsgGUID: WrtH4HwlQ/mL7G0WgAId0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15038179"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="15038179"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:40:49 -0700
-X-CSE-ConnectionGUID: y6ZThw5fQ/qC4Z8Tk3LApA==
-X-CSE-MsgGUID: oiRJwbZRTGmKIw26B63CQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="45197867"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:40:47 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Kairui Song
- <kasong@tencent.com>,  Ryan Roberts <ryan.roberts@arm.com>,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Barry Song
- <baohua@kernel.org>
-Subject: Re: [PATCH 0/2] mm: swap: mTHP swap allocator base on swap cluster
- order
-In-Reply-To: <CANeU7Q=Epa438LXEX4WEccxLt6WOziLg2sp_=RA3C4PxtHD5uw@mail.gmail.com>
-	(Chris Li's message of "Tue, 11 Jun 2024 00:11:42 -0700")
-References: <20240524-swap-allocator-v1-0-47861b423b26@kernel.org>
-	<CANeU7QkmQ+bJoFnr-ca-xp_dP1XgEKNSwb489MYVqynP_Q8Ddw@mail.gmail.com>
-	<87cyp5575y.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuN8HWLpv7=abVM2=M247KGZ92HLDxfgxWZD6JS47iZwZA@mail.gmail.com>
-	<875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuMc3sXKarq3hMPYGFfeqyo81Q63HrE0XtztK9uQkcZacA@mail.gmail.com>
-	<87o78mzp24.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuPLhmJqMi-unDOm820c8_kRnQVA_dnSfgRzMXaHKnDHAQ@mail.gmail.com>
-	<875xum96nn.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CANeU7Q=iYzyjDwgMRLtSZwKv414JqtZK8w=XWDd6bWZ7Ah-8jA@mail.gmail.com>
-	<87wmmw6w9e.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CANeU7Q=Epa438LXEX4WEccxLt6WOziLg2sp_=RA3C4PxtHD5uw@mail.gmail.com>
-Date: Thu, 13 Jun 2024 16:38:55 +0800
-Message-ID: <87a5jp6xuo.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y0rS1jAI"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f717ee193fso6026825ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718268054; x=1718872854; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YDwa0aAv5gxFNuZZc/0uN+kIGJAkjMhJhrL06tEhYk8=;
+        b=Y0rS1jAIJm3V9OqXQnQfhNP3EHyEvjlqeFU+dU6393K43N7wHL1cAfI5VhgYdYSwHE
+         v1xVYYgwKsHPf/mgbpGaLc0FbE265bN05FWf25gVqvxBIZlnn4Vfg5NWeEF0xA9F4V+c
+         UUqErN1FewiZRtEJtNSLdkwciUbJCkdO73kx1GZW+fKf+0DG3owrmfh/Fdo94j5fGKCA
+         K90Xv0d52I25CrIo8q5WBTbmYs4YxxbhOF6NCWn8l1dTl+vNjYEfi2l41GZ7LkhYvPDm
+         F7684F/FgaWc9N1eJoKD+318jWwhOhepF42mlvCEnmSfMK8808ttYnDSmXt56kSS3dcT
+         UTUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718268054; x=1718872854;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YDwa0aAv5gxFNuZZc/0uN+kIGJAkjMhJhrL06tEhYk8=;
+        b=OwTnBNfBxaO0vBrwnsB46wKR1CzF9BwokShfieKEvFMgvuEuJlTirt9IC5LbVWugH8
+         3SB9sGSlsaItj572REVIoBbQZw9C/P9ycBOWChHtoav8O1CDoS3dCDGfswkk9jM9PE4e
+         oHZJibUKMepoTYfjsc71uAqtmiukiXstUhUxcQP3/wq+vByx+VhK3a+NeARed6mF7FyR
+         0GH/QRLxPNl9yXF+q2XcG4gJPIL39gblCMk5D+I1lzEdnOxtETMks6VXYGP0//iRvOE1
+         YAxQWaPOtd9khkZQ3GhlJMLm+bDj6tWUIQlWrS4oDrYVKVXd/81r0Ojg4s2XHFGsC3ci
+         L8Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCV85G2GK8qklrfaHjKq86DTOZ8gF2gDijXJhNMxyyOGBdDVbpHjknlBGnkEqd8oE3dmd6cz/QTK6IjJURotR6pPqkY1mHa8FRFxFEhO
+X-Gm-Message-State: AOJu0YwmniE/ULVQVfiObiyJxSJGLRT0ol/nuCQR0o63g313qa2nDiw3
+	cJ3I74qR8zqr1g2y5MgCwarbNvOOZCsNDIXhd4oO1I+9E+rOhI6W5A5KE8X9JdQ=
+X-Google-Smtp-Source: AGHT+IExRaITsIyPWFBZWYk+cCJaiWCZcYlnzQyFSWjVSUx4WBIhmdHHpVxHQkRAc7kEd0QvJmAA8g==
+X-Received: by 2002:a17:902:ce90:b0:1f6:a96f:225c with SMTP id d9443c01a7336-1f83b60eea6mr49703325ad.28.1718268054236;
+        Thu, 13 Jun 2024 01:40:54 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855ee81casm8226255ad.163.2024.06.13.01.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 01:40:53 -0700 (PDT)
+Date: Thu, 13 Jun 2024 14:10:51 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: "liwei (JK)" <liwei728@huawei.com>,
+	Beata Michalska <beata.michalska@arm.com>,
+	Vanshidhar Konda <vanshikonda@os.amperecomputing.com>,
+	rafael@kernel.org, al.stone@linaro.org, ashwin.chaugule@linaro.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liwei391@huawei.com, liaoyu15@huawei.com
+Subject: Re: [PATCH] cpufreq/cppc: changing highest_perf to nominal_perf in
+ cppc_cpufreq_cpu_init()
+Message-ID: <20240613084051.6e7o32nmwim4wj5d@vireshk-i7>
+References: <20240428092852.1588188-1-liwei728@huawei.com>
+ <20240429104945.esdukn6ayudgyumc@vireshk-i7>
+ <ZjoBrF4bAK5ukm7H@arm.com>
+ <be312b75-eede-44f5-b7f3-b50f50c6fb56@huawei.com>
+ <ZmB1qKucR5fXk100@arm.com>
+ <20240606072031.lxr7tykl7sdgjwva@vireshk-i7>
+ <ZmgbRh+m9MmEaopK@arm.com>
+ <20240611094526.vcirawlsdefbkuhf@vireshk-i7>
+ <Zmgm9Rf0piqFqnrI@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmgm9Rf0piqFqnrI@arm.com>
 
-Chris Li <chrisl@kernel.org> writes:
+On 11-06-24, 11:29, Ionela Voinescu wrote:
+> Yes, I mean we should only update policy->cur to a requested frequency
+> from a governor, after we start it (cpufreq_start_governor()).
 
-> On Mon, Jun 10, 2024 at 7:38=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Chris Li <chrisl@kernel.org> writes:
->>
->> > On Wed, Jun 5, 2024 at 7:02=E2=80=AFPM Huang, Ying <ying.huang@intel.c=
-om> wrote:
->> >>
->> >> Chris Li <chrisl@kernel.org> writes:
->> >>
->> >
->> >> > In the page allocation side, we have the hugetlbfs which reserve so=
-me
->> >> > memory for high order pages.
->> >> > We should have similar things to allow reserve some high order swap
->> >> > entries without getting polluted by low order one.
->> >>
->> >> TBH, I don't like the idea of high order swap entries reservation.
->> > May I know more if you don't like the idea? I understand this can be
->> > controversial, because previously we like to take the THP as the best
->> > effort approach. If there is some reason we can't make THP, we use the
->> > order 0 as fall back.
->> >
->> > For discussion purpose, I want break it down to smaller steps:
->> >
->> > First, can we agree that the following usage case is reasonable:
->> > The usage case is that, as Barry has shown, zsmalloc compresses bigger
->> > size than 4K and can have both better compress ratio and CPU
->> > performance gain.
->> > https://lore.kernel.org/linux-mm/20240327214816.31191-1-21cnbao@gmail.=
-com/
->> >
->> > So the goal is to make THP/mTHP have some reasonable success rate
->> > running in the mix size swap allocation, after either low order or
->> > high order swap requests can overflow the swap file size. The allocate
->> > can still recover from that, after some swap entries got free.
->> >
->> > Please let me know if you think the above usage case and goal are not
->> > reasonable for the kernel.
->>
->> I think that it's reasonable to improve the success rate of high-order
->
-> Glad to hear that.
->
->> swap entries allocation.  I just think that it's hard to use the
->> reservation based method.  For example, how much should be reserved?
->
-> Understand, it is harder to use than a fully transparent method, but
-> still better than no solution at all. The alternative right now is we
-> can't do it.
->
-> Regarding how much we should reserve. Similarly, how much should you
-> choose your swap file size? If you choose N, why not N*120% or N*80%?
-> That did not stop us from having a swapfile, right?
->
->> Why system OOM when there's still swap space available?  And so forth.
->
-> Keep in mind that the reservation is an option. If you prefer the old
-> behavior, you don't have to use the reservation. That shouldn't be a
-> reason to stop others who want to use it. We don't have an alternative
-> solution for the long run mix size allocation yet. If there is, I like
-> to hear it.
+Hmm, I went through the code one more time and there is more to it I guess.
 
-It's not enough to make it optional.  When you run into issue, you need
-to debug it.  And you may debug an issue on a system that is configured
-by someone else.
+During the earlier days (when the cpufreq core was taking shape), I think the
+basic idea behind keeping the policy->cur field was (which is true today as
+well):
 
->> So, I prefer the transparent methods.  Just like THP vs. hugetlbfs.
->
-> Me too. I prefer transparent over reservation if it can achieve the
-> same goal. Do we have a fully transparent method spec out? How to
-> achieve fully transparent and also avoid fragmentation caused by mix
-> order allocation/free?
->
-> Keep in mind that we are still in the early stage of the mTHP swap
-> development, I can have the reservation patch relatively easily. If
-> you come up with a better transparent method patch which can achieve
-> the same goal later, we can use it instead.
+- Know current frequency of a CPU, quickly and so we cached it.
 
-Because we are still in the early stage, I think that we should try to
-improve transparent solution firstly.  Personally, what I don't like is
-that we don't work on the transparent solution because we have the
-reservation solution.
+- Avoid a frequency change, and not waste time, if we know that we aren't going
+  to change the frequency eventually.
 
->>
->> >> that's really important for you, I think that it's better to design
->> >> something like hugetlbfs vs core mm, that is, be separated from the
->> >> normal swap subsystem as much as possible.
->> >
->> > I am giving hugetlbfs just to make the point using reservation, or
->> > isolation of the resource to prevent mixing fragmentation existing in
->> > core mm.
->> > I am not suggesting copying the hugetlbfs implementation to the swap
->> > system. Unlike hugetlbfs, the swap allocation is typically done from
->> > the kernel, it is transparent from the application. I don't think
->> > separate from the swap subsystem is a good way to go.
->> >
->> > This comes down to why you don't like the reservation. e.g. if we use
->> > two swapfile, one swapfile is purely allocate for high order, would
->> > that be better?
->>
->> Sorry, my words weren't accurate.  Personally, I just think that it's
->> better to make reservation related code not too intrusive.
->
-> Yes. I will try to make it not too intrusive.
->
->> And, before reservation, we need to consider something else firstly.
->> Whether is it generally good to swap-in with swap-out order?  Should we
->
-> When we have the reservation patch (or other means to sustain mix size
-> swap allocation/free), we can test it out to get more data to reason
-> about it.
-> I consider the swap in size policy an orthogonal issue.
+- Ideally we can just remove the field, if the get() operation has zero
+  overhead. But it doesn't and so we have this field.
 
-No.  I don't think so.  If you swap-out in higher order, but swap-in in
-lower order, you make the swap clusters fragmented.
 
->> consider memory wastage too?  One static policy doesn't fit all, we may
->> need either a dynamic policy, or make policy configurable.
->> In general, I think that we need to do this step by step.
->
-> The core swap layer needs to be able to sustain mix size swap
-> allocation free in the long run. Without that the swap in size policy
-> is meaningless.
->
-> Yes, that is the step by step approach. Allowing long run mix size
-> swap allocation as the first step.
->
->> >> >> > Do you see another way to protect the high order cluster pollute=
-d by
->> >> >> > lower order one?
->> >> >>
->> >> >> If we use high-order page allocation as reference, we need somethi=
-ng
->> >> >> like compaction to guarantee high-order allocation finally.  But w=
-e are
->> >> >> too far from that.
->> >> >
->> >> > We should consider reservation for high-order swap entry allocation
->> >> > similar to hugetlbfs for memory.
->> >> > Swap compaction will be very complicated because it needs to scan t=
-he
->> >> > PTE to migrate the swap entry. It might be easier to support folio
->> >> > write out compound discontiguous swap entries. That is another way =
-to
->> >> > address the fragmentation issue. We are also too far from that as
->> >> > right now.
->> >>
->> >> That's not easy to write out compound discontiguous swap entries too.
->> >> For example, how to put folios in swap cache?
->> >
->> > I propose the idea in the recent LSF/MM discussion, the last few
->> > slides are for the discontiguous swap and it has the discontiguous
->> > entries in swap cache.
->> > https://drive.google.com/file/d/10wN4WgEekaiTDiAx2AND97CYLgfDJXAD/view
->> >
->> > Agree it is not an easy change. The cache cache would have to change
->> > the assumption all offset are contiguous.
->> > For swap, we kind of have some in memory data associated with per
->> > offset already, so it might provide an opportunity to combine the
->> > offset related data structure for swap together. Another alternative
->> > might be using xarray without the multi entry property. , just treat
->> > each offset like a single entry. I haven't dug deep into this
->> > direction yet.
->>
->> Thanks!  I will study your idea.
->>
->
-> I am happy to discuss if you have any questions.
->
->> > We can have more discussion, maybe arrange an upstream alignment
->> > meeting if there is interest.
->>
->> Sure.
->
-> Ideally, if we can resolve our differences over the mail list then we
-> don't need to have a separate meeting :-)
->
+What the core does now is this:
 
---
-Best Regards,
-Huang, Ying
+- Once the frequency is changed, set policy->cur to the frequency that the
+  software believes the hardware is running at. This can be different from the
+  requested frequency for example.
+
+- If we end up getting the real frequency from the hardware somehow, update
+  policy->cur to match and so to avoid wasting of time later.
+
+- And I think this is the right thing to do even today.
+
+> But currently policy->cur gets updated to the .get() returned value in
+> multiple places, via cpufreq_verify_current_freq() (for example from 
+> show_cpuinfo_cur_freq() or cpufreq_get().
+
+Which makes sense based on above..
+
+> .get() is meant to return the current frequency of the hardware and that
+> can opportunistically be different from the last request made.
+
+Right, and so if we have called get() for some other reason, like the user
+requesting it, we opportunistically fix policy->cur as well.
+
+> (+ we probably should force the first request from a governor to go
+> through to the driver to make sure the policy->cur obtained before,
+> via .get(), did not just happen to coincide with the governor request,
+> therefore making the request no longer go through to the driver: see
+> __cpufreq_driver_target)
+
+Not sure why would we want to do that.
+
+> > needs to be up to date all the times, it is an important part of the
+> > entire working of the cpufreq core..
+> 
+> When you say that "policy->cur must be kept up to date at all times",
+> I suppose you mean that it should be kept up to date with any frequency
+> change requests not with any changes happening in hardware?
+
+Yes and no. It should be up to date with the best knowledge that the software
+has, without any extra overheads.
+
+-- 
+viresh
