@@ -1,152 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD340135A4B;
-	Thu, 13 Jun 2024 06:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6137C;
+	Thu, 13 Jun 2024 06:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718258968; cv=none; b=N0Dr9p54C4KgYxJGMdrQL3xDzM7Kti+jP+LMOmutNskEQ2eHkoAMAYXZJcWHKrzIV6D4SlczcxHnmVluIJGs+3QiYNENcC2tOzNbf/09m19kBKw1Ls7TQHpDATOMpMm+LwHfifMSUTzDblyu/pspegPtDQg7Mb96w5RPsmK4c/E=
+	t=1718259012; cv=none; b=UbkShhuoF5+KB9BAcd6xOgrokbDZSgEycn+wbecfkVFFfKfVhcBhmE2IXiKD1XJB9mr/BzRnNITvD4xvTtP7l4JnoGQdu4pC3oh0r62SwA7cqXyjnHhnZJt+5KTgQZ1O2ON5La3uSlKsYf29pO6LB2SbZAIu3QCGFcDbxPUYtjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718258968; c=relaxed/simple;
-	bh=bbKEWwxPZT1MGbNUJwasQJFcX1zxr/x5+hhhJZnpu2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X2cyG1DGFmaCClM2fQrbs3raXtxbWTU+mI+xDskWq+P0lFZzrj3SYU8h7xlrLjQ8W3DsgF4hTptBeo5u9JF33Oua/MHCUyVlwOGTkIs6+BpPL8yKzFDzwyDlu4Ry+tiQoJ6DjVZgEwIoFJ45BW4xjIxuL9kLT1cEPuwxpBtQSOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+0pv7QH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718259012; c=relaxed/simple;
+	bh=1ExmQjbJI13xSDtMVPtRIrUCgSubm+bChzK3Ga+6AD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XD1oN7t18c/2U9/mzHAuCDym2u1pzPgb3TbrNRfSwXPIs/MKTzXEIhb8oz51ubrURqWGzxhpxHC9KEPxhGnfcpK3eqZDjh58WFgpsnSpspElMQUTfGhg4zl9AM6dG/N0WJCyCvVmw4mAMgC82yn6wA/3lau5am3Xm1gkvtCnDrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U9rQksKe; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+0pv7QH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92148C2BBFC;
-	Thu, 13 Jun 2024 06:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718258968;
-	bh=bbKEWwxPZT1MGbNUJwasQJFcX1zxr/x5+hhhJZnpu2k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l+0pv7QHW3Uo1aG1Nam8Rb0tUCcz94L4ehaSclgjQs0By5gn20C+2G3C/VSfpM6hU
-	 XTRg6JQaIuGV9tXr6N4QXUOL5TQKBlSfLy2k02D5lvBXMuH5p6FwPGAZpQJjPCQ5+9
-	 r23/SEQLrdzzdAK4xK6d6Zvs83RZ0N1M4Ucg12mYTT6mNiZYlnwRWvGMbU/9qzqX28
-	 gSQ/TPSShofnZ0WaVywtGDbYzkSep0O3ZRQD9CYbGJ0PCSY/4ahmN2LFj+RwY8l3n2
-	 0BRgIqlCf7/x9r5DLlK9g1OwHtqjhFNWfnjyyLuf8PnUba8wzuVXeW7O5ZWO6Qvn3V
-	 hB/iAA3r57lMA==
-Message-ID: <3275676c-7392-47ac-8345-808681462003@kernel.org>
-Date: Thu, 13 Jun 2024 08:09:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9rQksKe"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52c8ddc2b29so757039e87.3;
+        Wed, 12 Jun 2024 23:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718259008; x=1718863808; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KdN1kjijVwtGMORrXmsLXoepez5UVCrcKY+bNf7CBOE=;
+        b=U9rQksKevx1H5Wum7zssVOYCjkrRlFaxxRpwC4+hh8DS2Dsmx67Nkto1daWEPrPEzA
+         SzNeYzD/qlwTWA2EP0e5X0cPOeFmlA2aRpctHyPpVpX5kraWcRSa06u3zcIuesp44GqW
+         M6+FF8iHHWdJ39seJTlRHp7XizRZb6hrVtb2L0a9hlQOvE0SiCt9+U3SzShnroaikDrf
+         gGksbCsbioSlMv583WGyEjd7LuHuA/mt2pKMXFEvjXYorNDY1nHdSh5YX70LPGUTZjjH
+         MIsB64VEGt6L8O9FOO2f7XNY3tbhLbonIIcJn6i2QCZc7BO2W5CFPRR6fFUiYuuwNU9x
+         NCsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718259008; x=1718863808;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KdN1kjijVwtGMORrXmsLXoepez5UVCrcKY+bNf7CBOE=;
+        b=W5hMSum8I4FdYWr9zqsbN1NGdNmx2J4HkMWEzL9/v40LKoX/1DQIJZ6AnkRBZPTErN
+         R6fZsJl0WyFrkfXWG/caFCdjPc9ZzJbeKLGa3HWJ58QtTYW99F+p605aAIiBEhKTNttw
+         e8oVDzs6ieD1CNk0QL4zwHzQW40pZlwefK2XXi8JHrxM9s4Btf1OHsXpMjbgbbeZ0d38
+         gr801uKZXbQuOUAJZrtdb/h3D8EXVSZWd3Lqpb7Hlfkm7qWu37ZqnHBOS1syr1enydyi
+         K1zBP/knsDzk92K8VakPbNSOMGOdArIDR4wzBA47SASlkdylyl0dBtlUkt6+26YiPrU0
+         Nulw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWhPsIYk3Fx9ao8+mtGlZ/FbCJpQqOHV58+t4abJ7CoJIMVRKCi5LiZYx+GQSgd9kjwqfKT51zlrjlPzYZ2YI4WliasPWTDMdHPp0CPS1ELz5vtBKQFFfXfN5t8ZGWsPhGss9JjH87rgpBeQ==
+X-Gm-Message-State: AOJu0Ywa5Ky0VInZFbDuZkK/mFaVejspnDaehRjRsK6W0nxJH98BJ9Zv
+	OO07pukk9u/MgghfST+792zAWOI7Gr6UmjpgTTFihPbQUI55lJsT/MNZiA==
+X-Google-Smtp-Source: AGHT+IHQUoZhnogXJAX13obwm/gOawCMf/+LHs9I2RDbdpYNB4OLdVH40cmtyfUUWa7FrU2hH54mtw==
+X-Received: by 2002:a05:6512:31c6:b0:52c:8a9b:17f4 with SMTP id 2adb3069b0e04-52c9a3df0e7mr3508033e87.37.1718259008222;
+        Wed, 12 Jun 2024 23:10:08 -0700 (PDT)
+Received: from f (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286eef9eesm49034065e9.9.2024.06.12.23.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 23:10:07 -0700 (PDT)
+Date: Thu, 13 Jun 2024 08:09:57 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] lockref: speculatively spin waiting for the lock to
+ be released
+Message-ID: <5cixyyivolodhsru23y5gf5f6w6ov2zs5rbkxleljeu6qvc4gu@ivawdfkvus3p>
+References: <20240613001215.648829-1-mjguzik@gmail.com>
+ <20240613001215.648829-2-mjguzik@gmail.com>
+ <CAHk-=wgX9UZXWkrhnjcctM8UpDGQqWyt3r=KZunKV3+00cbF9A@mail.gmail.com>
+ <CAHk-=wgPgGwPexW_ffc97Z8O23J=G=3kcV-dGFBKbLJR-6TWpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
-To: joswang <joswang1221@gmail.com>
-Cc: Thinh.Nguyen@synopsys.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, balbi@kernel.org, devicetree@vger.kernel.org,
- joswang <joswang@lenovo.com>
-References: <20240601092646.52139-1-joswang1221@gmail.com>
- <20240603130004.25662-1-joswang1221@gmail.com>
- <9c665afe-16d7-469e-ac3e-d0d7388a31b7@kernel.org>
- <CAMtoTm1ojhCSRb4c+MPjuJB+JaeD2ex6B7FpCaJtLvrTj0Q8Cg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAMtoTm1ojhCSRb4c+MPjuJB+JaeD2ex6B7FpCaJtLvrTj0Q8Cg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgPgGwPexW_ffc97Z8O23J=G=3kcV-dGFBKbLJR-6TWpQ@mail.gmail.com>
 
-On 12/06/2024 16:28, joswang wrote:
-> On Tue, Jun 4, 2024 at 2:33 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 03/06/2024 15:00, joswang wrote:
->>> From: joswang <joswang@lenovo.com>
->>
->> Is this your full name or known identity you want to use for all kernel
->> contributions? Looks like login...
->>
->>>
->>> There is an issue with the DWC31 2.00a and earlier versions
->>> where the controller link power state transition from
->>> P3/P3CPM/P4 to P2 may take longer than expected, ultimately
->>> resulting in the hibernation D3 entering time exceeding the
->>> expected 10ms.
->>>
->>> Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
->>> for enable the controller transitions directly from phy
->>> power state P2 to P3 or from state P3 to P2.
->>>
->>> Note that this can only be set if the USB3 PHY supports
->>> direct p3 to p2 or p2 to p3 conversion.
->>>
->>> Signed-off-by: joswang <joswang@lenovo.com>
->>> ---
->>>  Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
->>> index 1cd0ca90127d..721927495887 100644
->>> --- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
->>> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
->>> @@ -242,6 +242,13 @@ properties:
->>>        When set, all HighSpeed bus instances in park mode are disabled.
->>>      type: boolean
->>>
->>> +  snps,p2p3tranok-quirk:
->>
->> Why this cannot be deduced from compatible? Which upstream SoCs are
->> affected?
->>
->>
->>
->> Best regards,
->> Krzysztof
->>
+On Wed, Jun 12, 2024 at 06:23:18PM -0700, Linus Torvalds wrote:
+> So I have no problem with your patch 2/2 - moving the lockref data
+> structure away from everything else that can be shared read-only makes
+> a ton of sense independently of anything else.
 > 
-> Thanks for your help in reviewing the code
-> DWC31_USB 2.00a and earlier versions IP bug, regardless of platform.
+> Except you also randomly increased a retry count in there, which makes no sense.
+> 
 
-So this can be deduced from compatible, then use quirks in the driver
-based on compatible and drop the property.
+Cmon man, that's a change which unintentionally crept into the patch and
+I failed to notice.
 
-Best regards,
-Krzysztof
+> But this patch 1/2 makes me go "Eww, hacky hacky".
+> 
+> We already *have* the retry loop, it's just that currently it only
+> covers the cmpxchg failures.
+> 
+> The natural thing to do is to just make the "wait for unlocked" be
+> part of the same loop.
+> 
 
+I was playing with a bpftrace probe reporting how many spins were
+performed waiting for the lock. For my intentional usage with ls it was
+always < 30 or so. The random-ass intruder which messes with my bench on
+occasion needed over 100.
+
+The bump is something I must have fat-fingered into the wrong patch.
+
+Ultimately even if *some* iterations will still take the lock, they
+should be able to avoid it next time around, so the permanent
+degradation problem is still solved.
+
+> Mind testing this approach instead?
+> 
+
+So I'm not going to argue about the fix.
+
+I tested your code and confirm it fixes the problem, nothing blows up
+either and I fwiw I don't see any bugs in it.
+
+When writing the commit message feel free to use mine in whatever capacity
+(including none) you want. 
+
+On Wed, Jun 12, 2024 at 06:49:00PM -0700, Linus Torvalds wrote:
+
+> On Wed, 12 Jun 2024 at 18:23, Linus Torvalds
+> One of the ideas behind the reflux was that locking should be an
+> exceptional thing when something special happens. So things like final
+> dput() and friends.
+> 
+> What I *think* is going on - judging by your description of how you
+> triggered this - is that sadly our libfs 'readdir()' thing is pretty
+> nasty.
+> 
+> It does use d_lock a lot for the cursor handling, and things like
+> scan_positives() in particular.
+> 
+> I understand *why* it does that, and maybe it's practically unfixable,
+> but I do think the most likely deeper reason for that "go into slow
+> mode" is the cursor on the directory causing issues.
+> 
+> Put another way: while I think doing the retry loop will help
+> benchmarks, it would be lovely if you were to look at that arguably
+> deeper issue of the 'd_sib' list.
+> 
+
+I think lockref claiming to be a general locking facility means it
+should not be suffering the degradation problem to begin with, so that
+would be the real problem as far as lockref goes.
+
+For vfs as a whole I do agree that the d_lock usage in various spots is
+probably avoidable and if so would be nice to get patched out, readdir
+included. So Someone(tm) should certainly look into it.
+
+As for me at the moment I have other stuff on my todo list, so I am not
+going to do it for the time being.
+
+Regardless, patching up lockref to dodge the lock is a step forward in
+the right direction AFAICS.
+
+=====
+
+All that aside, you did not indicate how do you want to move forward
+regarding patch submission.
+
+As indicated in my cover letter the vfs change (if it is to land) needs
+to be placed *after* the lockref issue is addressed, otherwise it may
+result in bogus regression reports. Thus I think it makes most sense to
+just ship them together.
+
+So maybe you can send me a patch and I send a v2 of the patchset with
+that, alternatively perhaps you can edit out the unintional retry
+adjustment from my dentry patch and handle the rest yourself.
+
+Or maybe you have some other idea.
+
+The thing that matters to me is not landing in a state where d_lockref
+is moved around, but the lockref corner case is not patched (even it is
+patched *after*). I really don't want to investigate a regression report
+only to find it's caused by the above.
