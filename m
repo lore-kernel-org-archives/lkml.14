@@ -1,104 +1,113 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B7E144D1A
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924551465BA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279506; cv=none; b=rUT8PXzn0PgKQXGjG7K3386wOpsaAYijIRF4LL34IRB07HLP7gXoUL2WK4U5xGCyZR0Re/3U/GyoL7pE5TRCu+n3NKek/UqdivgT4Qzv+nVWOHUTvUCa3wst+qJEax1J1pFusFCh4f9Uk32OInahRko7CDPyjF3YO6B92lmu71U=
+	t=1718279508; cv=none; b=BhlI8rQa0AVzUf/XpupwP1tN9p2E1f+eOiUMgSlHbseFk79dyycNHUIDZ+HPaxG5uxcW00j5idg/PKvHwVZCemGgfTHtaaLZbwc6ah/+4aQt6VXmSS3g/Fk4A91llb031g/iC69H0YWJ4EaJpxbdFqlZ2XqXAOScLHFyb6eT/CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279506; c=relaxed/simple;
-	bh=sZEKZfHubIqep01PYDDOG2DiKYyzvbmcvlOdh30m7Us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mC7jw8f/z4LuCqUsq/WDdbIJFo//cLVpjxG7WaG6/YKT60ndy0594D7BSTdzAdcV8Rv2W8zBUzuZmWwoGMtXhAFlxUje54j8nngdjhbeTQIrBotxtevL/o0KpWVMyG+4rl6Z8W3BLy9w8x8BAgVde2/GaFcqWV5MPdCnOSRKro4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nG3ZGyzs; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718279508; c=relaxed/simple;
+	bh=w2vdeE6HyK1zqMKz4ydvXzIOS4kYoy98j5IM9DRJLYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rmDYRUQqtArIfqng3VTTQFFaLLhqG062jC4nwioOegqWpkD1UnIQbVxbPdE1SkljOGqh+CZg8KeqwRmwHlnAr9iRd6VCqf2WazFSf6eg3qxijsnelGsI7MdmI/MRw0Bdjd5KMNIBmuPFgVmkmGNVBX7JAxVI4wmlq+1J1tPP5Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=vGD8G6TL; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nG3ZGyzs"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-62a2424ed00so11755597b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:51:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="vGD8G6TL"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso1307500e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718279504; x=1718884304; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRvIRe1C8JF7J2k72Eq1IoWCS+jAa2AM8+ph/DDThXs=;
-        b=nG3ZGyzs0+FGeRWMyFqTafgjocV1ZCf4AZaydmP1Gn5Aw47SfjbW9cs6LMFL9Uz4nT
-         8HdsLKEc4nONPnRJ7XrCGPpNLpX5iSySpz9aFPXdO5oNWbfrHTQHaZKoBz1zCYscjoVu
-         s/URdGDMaVoGA0E8+QIE2IG0MAIvVGbTC5dVdJ7mFpycHwdIn54UtMeO4SNHA8ODWoVN
-         qyoKIgQl+4wXQxkwunl64Ep8/WoGjzv+12IUaZVK3JUfBskRaEtUUW9a8OPARY8mh0XF
-         4fV3FsknDPTcjrifA5j3C2nQehltVk4hTM21XtcPxXc4yl6VFEHqTSKgqEHdnEgE7TOi
-         5Klg==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718279505; x=1718884305; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G8v2PHEc7ReSFsN3sKt9G9rx4uLCxEdCe0Zu0J7gE0g=;
+        b=vGD8G6TLdNHdHdgl6OafKkZEcV1Vk09xc6O3GpNI1QOMlW11YFEr4B8KJ6ccWWffxQ
+         7BFzp82RuZXG4Np49kCqlyeTHKaA4ZmlnXz7SuGeGWWkLkOF87sUjvqYtSsmIxghczcc
+         BNmoLX9Ut65I5/ehnL/WTycwRZnGwBMna2tRa7ioDVVHf8FSAzGeCOMqc3wiqn4P1q83
+         qBflhEeuqVjDhjk0qRDrAUyqcyM0oiSnQDkGd4p+putyR+woYsbAJt10KmdtIvOWxswv
+         vBH89QnacYW0euJqb4VZyJlvjXFTUV8642Fwgg/tSauecsnzMfuCrHfgHjZSnWPLOZdg
+         aCkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718279504; x=1718884304;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YRvIRe1C8JF7J2k72Eq1IoWCS+jAa2AM8+ph/DDThXs=;
-        b=J/qpfsO+0aDTcCWsO+rnqG9BbEO1g2S8kNAcVkUuMur8pnNwo+D33ZsINfPQVgMCam
-         7GWWq7GwidUiT8d1Knf6iAQw8Pc3kPrsui9K29+fEktAaHpK3mCIZ1rPA89OFyHhkdkw
-         mjLO8b7IsOHXkKeQ0p8XD+cUUq6HL7Z3ZrrpswDvYosgu1Eqx+6gyUkYdVTzD0mF+iXU
-         QFfiGEWow3VKyiMNnCqxeqq3avqDklEBiVcTnn0wuyrkkYDY3pMyv6/e2OMhJHgdw0at
-         s0xLHc0ndw1pFeKeyAM0NozpS8Ol9B49WoIc2a5nTKiiM8uHXwGquA7xm9/nwL/EuTAT
-         LUGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuiv6cgc2pWQNYN7v5VjQQ4BdxPGEkG96mh92Y4LEVCWB6ubBcEUcmHls6tRIGRqkdkgaReQUlWu48ZP7UlWAIFzwAFs3ghYtoYSEA
-X-Gm-Message-State: AOJu0YwEz5cb+HJRkKH1Gz5PHRH3HC9JcDj5sd+yJ4evt0x2dp1F6k3P
-	2CapsuvxmdJCtEEiaMVvsksenaHNw34VNcE0xIJjDKMJz3ZI5w9ZVVuUl7hR+gEHKwc/7GipxPK
-	XL1rJ7jv/y41Jp7RBJlhkOu1zLfpRfKnzm2rZdQ==
-X-Google-Smtp-Source: AGHT+IHsbTNLvjN8WuDB84rv+zysR6fpgX/dxzhUTfN9xcKd94L2FQdMlBq8iWThBr9t45yXD5czpiz8aOD25S8hU38=
-X-Received: by 2002:a0d:dc84:0:b0:62a:259f:74d1 with SMTP id
- 00721157ae682-62fb847d3a1mr45680067b3.5.1718279503794; Thu, 13 Jun 2024
- 04:51:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718279505; x=1718884305;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G8v2PHEc7ReSFsN3sKt9G9rx4uLCxEdCe0Zu0J7gE0g=;
+        b=ZoS1lfMkp16zugvdj5g9EpXsaGEv5ZeTyQKMsVcu+mdBScLEFUn4a7ogxMkBssuQl5
+         DpYQRSe9kx03BWDlGjutxEwE5U3EpYSXM9Dg2cxf1zYg3HCuJmVQFSk/zgR5dNiZ7zBH
+         k6iDg2LLmBuJfhYr9ARMsQjBaQagHIv0raP9nM0aPP/JHSpQQOqqFGttfw6dD78YqaCY
+         y8Z5V6qR6t6iCSWK6fOxOLvmEJkbxi0fDVD+V/3siTQRqv4d71FtSaHIzhB/LBK3cqXq
+         HKTtfUwyHYum+n8XScpGAMJYeTh8KtZGv5v9Fm4OvcG0aXGbh8dxoZ3vR+0lVOTLbQYN
+         qfIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkS08DZXfCnDngSGoRlF5yJHSggvuK+byLv3sIJ6Laa2i24JUxtrC7zHbOfGu5/escgo2kMLSE6xi2jOMfgmWy+m1a4NuzwYdoOY4K
+X-Gm-Message-State: AOJu0Yxgn9PgjL6f613F7/QJ61/IMbQR/kLhBOf7kj3XwZC0baBJ2/PM
+	B9gJxVPh+G2l66CxVrRi6rbfuoWtH+pwIKplBYa6mu8DJ7qL3dD/B/FHnEvE+3k=
+X-Google-Smtp-Source: AGHT+IElojoAfrs8n0pkfZzmTeuOaz+6NcooThdQKgGUe+znNmXNMT8cPYX3NudFuuz+WEL6CBAanw==
+X-Received: by 2002:a05:6512:3d87:b0:52c:a5cc:19d6 with SMTP id 2adb3069b0e04-52ca5cc1c34mr27988e87.22.1718279504561;
+        Thu, 13 Jun 2024 04:51:44 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a64bsm21649075e9.46.2024.06.13.04.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 04:51:44 -0700 (PDT)
+Date: Thu, 13 Jun 2024 12:51:42 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Joel Fernandes <joel@joelfernandes.org>, kernel-team@android.com
+Subject: Re: [PATCH] RFC: sched: Rework task_sched_runtime to avoid calling
+ update_rq_clock
+Message-ID: <20240613115142.kxrmlf3btmwjcprg@airbuntu>
+References: <20240613015837.4132703-1-jstultz@google.com>
+ <20240613100441.GC17707@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524082236.24112-1-quic_kbajaj@quicinc.com>
- <CAA8EJpp9U-ucMAiNmVvWDuupd=OR_fLK9fQ+n21SVmktWMxhmA@mail.gmail.com> <ae289c19-2701-d00f-3f6f-5e87ec37e475@quicinc.com>
-In-Reply-To: <ae289c19-2701-d00f-3f6f-5e87ec37e475@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 13 Jun 2024 14:51:32 +0300
-Message-ID: <CAA8EJpo4v1sfjo2nUEj0-kZ_0rrMh07s67LzhBs8POjkN2Nybg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: qdu/qru1000-idp: Fix the voltage setting
-To: Komal Bajaj <quic_kbajaj@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Melody Olvera <quic_molvera@quicinc.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240613100441.GC17707@noisy.programming.kicks-ass.net>
 
-On Thu, 13 Jun 2024 at 14:43, Komal Bajaj <quic_kbajaj@quicinc.com> wrote:
->
->
->
-> On 5/24/2024 2:59 PM, Dmitry Baryshkov wrote:
-> > On Fri, 24 May 2024 at 11:23, Komal Bajaj <quic_kbajaj@quicinc.com> wrote:
-> >>
-> >> While adding the USB support, it was found that the configuration
-> >> for regulator smps5 was incorrectly set. Upon cross verifying for
-> >> all the regulators, found that smps4, smps6 and smps8 are also
-> >> incorrectly configured. This patch fixes the same.
-> >
-> > Nit: see Documentation/process/submitting-patches.rst, "This patch..."
->
-> Will update the commit message.
->
-> >
-> >> In particular -
-> >> - smps4 is 1.574V min and 2.04V max
-> >> - smps5 is 1.2V min and 1.4V max
-> >> - smps6 is 0.382V min and 1.12V max
-> >
-> > Just for my understanding, will anything further constraint these values?
->
-> As far as i know, this is going to be final.
+On 06/13/24 12:04, Peter Zijlstra wrote:
 
-Ack
+> ---
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0935f9d4bb7b..d4b87539d72a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -724,7 +724,6 @@ static void update_rq_clock_task(struct rq *rq, s64 delta)
+>  
+>  	rq->prev_irq_time += irq_delta;
+>  	delta -= irq_delta;
+> -	psi_account_irqtime(rq->curr, irq_delta);
+>  	delayacct_irq(rq->curr, irq_delta);
+>  #endif
+>  #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
+> @@ -5459,6 +5458,8 @@ void sched_tick(void)
+>  
+>  	sched_clock_tick();
+>  
+> +	psi_account_irqtime(curr, &rq->psi_irq_time);
+> +
 
-> currently, usb device is not working without this min/max change.
+If wakeup preemption causes a context switch, wouldn't we lose this
+information then? I *think* active migration might cause this information to be
+lost too.
 
--- 
-With best wishes
-Dmitry
+pick_next_task() might be a better place to do the accounting?
+
+>  	rq_lock(rq, &rf);
+>  
+>  	update_rq_clock(rq);
