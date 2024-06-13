@@ -1,45 +1,45 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2061.outbound.protection.outlook.com [40.107.8.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D89E146A81;
-	Thu, 13 Jun 2024 13:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A09146D51;
+	Thu, 13 Jun 2024 13:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284883; cv=fail; b=Oq6WZGHdJUHFPiKId4BrCJmcNpyXvfoIYqRd0KEz/ALQGKxohoFn9SQNzvhNqkiCpO43QvkRsgOHm2edqWVSvPOG50boVNyHDRo2SAD6zjMVdFG1Lac50VbYjHk/Ifr3VwNKG1ejZiLzmDw3mdKspZg1rZpnYyLWUB+cwqiLQUY=
+	t=1718284884; cv=fail; b=sy6L4GFC0IrdzqfX9ebuxQ+fGrzdKoTSrqmcUlocb7IbFnFY3me1k8yH8d7OPWT+1HxgW1qj6kgmsEB/Z8lxfFNoYrgdHbDkQg9XfZKYS3xoR2f4XaZlKDK4w0Sd/rDBRR99vSDHt3IanR/x37GlhpzmHpNXJvANKNMiZXNIjSI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284883; c=relaxed/simple;
-	bh=cwMzZ2m1dn0C9rY/2h0EsG+79CnYazYIlygrMQT/FSA=;
+	s=arc-20240116; t=1718284884; c=relaxed/simple;
+	bh=AZ06KBNE2fF/6w81AnnwMxflls9XuUXNo+5aPZow2DE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fNRCmXnUdZRktibrmHlj0ZJc2gx2Z0QTVZR6Gs9x6jctNB9FBywixSkcc/angBGM6uTllEmHUMACuOmkkR1HDddqO+S99vRJI4o2irzrU5KmBER+swkD3nEtsX9X00KaAydUgG9OkNKywUpNp8LK8+i0+zYawj6XVsBRud7KdIk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=rJ6gwIT2; arc=fail smtp.client-ip=40.107.22.58
+	 MIME-Version:Content-Type; b=M6Ac1AGy2fP2g5rCDmLMeWw5o/z3aLoDMe8PR3/ev7SEvIVUW+AHniYsJ4+Lk8uU0adfQm/SHX9ryb5UTmW11p6GqyLebAKRYbhMvoE7CElRn5pS3sGKct3IA9btQDRPhHV8noZlDVZdYi0ktyrsMB7beT7iu+n66NDCsJMo7v4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=alLavymb; arc=fail smtp.client-ip=40.107.8.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="rJ6gwIT2"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="alLavymb"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eeErG+fI3D1SXMfrrdG7DM/Cxv4HvXgvXZE5p5sGXS6IUVhGfB1X2eABLsFWTT2GmQz1W2POkucTBf42EroVv0x/wQYsGrRhoihXm3EkKvfwSsGlOuTZNk/PW6bERT7zzDmrgu75NTLYoxPz+BQ3tVjj1VXHKun8o2hz88Xu7Iwh8/XDDqXOaPntiizbqbXleUsoEyu1nNP0t6tMers9W7hf1VM1BE/NTCy+X2MpcOpvBpndCSz/RKCoK6gQlF6lG99DipJsdDAPe0SX16k2OZdCEJ15YD7oesJuv1wrrvuskkFNc/5SpI8mpZiQLco1rZSZhaguVM7pwQupOQg0Tg==
+ b=em0MsV48FH5f5xPf7zURAKqekSmUXf+KVjNJDGT8+cDvSQ4GPD6eZEmYHqtknjFluOLBu/eb1CNczZoX7BpZRN/Cszh8YugaoRaoXGYNSNalj9FtbNo3pXCVEoVpZdLOTPouF6oxXCt0uzW15y+8upS+cv0Z07FwJAH2xi30MFQeA38YVmA8RGLgWObpUGnJBCi4sgFTxcHdF+dto5Qry2kcQ4jg9k5f8s4udqMmTW3y7pRlG+543UQVjueNfH9g8RvYeIyUHRT7hs0DT7tYNE1KIsnA1wVsBptv4w3chIn3wi+YPGSwSq9v75YZo+DQ/QxfyVG7rgGAwqIEJ1KEEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sN2dOLLQhedQOncCwIWhdfCtJiOCA4UAEPCcB7/T4m4=;
- b=DY1eO6EmujMepzBJYnNIqFxtunoaMKmPxyw460dkKM8ArqM73d1XwAIaTjjQmhXu8GpyFiSkfU9Ik/TkF6/f2bPLvv8VDmf+iPjDFlitChDVfjAANaQEwpjye2mBJuhNTkyYoxFRF41DLPKORwcBMCIbW74bVkOn2BrBlPojuQ/1OGK/iIS+4/jcrScN0Tg//Hj9gud9k1e2cCllR/KtCkph3cUY/lmrhPvkoFlgKrLLFi/U40sbt8IdaMJWvAGxGNejBYv+s01TrCPqwv85NAadW+N6YcWlwmxLvsXJSkXZl5R5Gx2tFodi1CIZmkys/CIxXuhKXMFFbV6v8gbyiw==
+ bh=4Qk5HkWquX5hnH4oz0TZDo8Tx+l3Dq48d2ORsvVXy1U=;
+ b=f0R4XWeEtwmi/+9H4Y1rl5C86WbGoTblUC81ost+MiTv36PukIBi8ZimVj/L4RKh3m/kcYR/MpReEQ1SqmBdjdFFq9HjWxfZ8NRyqaOHLs9H1lr8WZaSB3paRTccl6854O7QRkQpgK4lcdGQ06PA7kXdu1Nv1HF6Czv5lpT3dNeDcyAZYOLkd0/Z2YjMNZtXvjSPWqSH2pj3YwDb7lHXRRrqlDbuUgTX16IZ8vT2KDKit8aVR2HJ7pSk/TLW/24LtnS/0Yjv3gBkxGqtGdUamV6THs6VxK2qzRtWjQF+t+ICdXvbqIQ6Je5RBiI/O4Vt6kz6DtGzbzrm34RRe1NUnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sN2dOLLQhedQOncCwIWhdfCtJiOCA4UAEPCcB7/T4m4=;
- b=rJ6gwIT2U+mTSsZJvwn3+vUPdX2dz0Wj/ZGPJyk8DQZ9wkSs2jF+xJriuvuxSMfJr2gsxSoHQfbix1KWjAT0KPOsY8idPADvlcsfq0OY82i01ylIv0unAmxHSEXok6I+n0FceS5M7yz99olk81t+l8VAaM9tz2YgIoiGLGJ6pzw=
-Received: from DU7P195CA0011.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::14)
- by AS2PR02MB9262.eurprd02.prod.outlook.com (2603:10a6:20b:5fc::15) with
+ bh=4Qk5HkWquX5hnH4oz0TZDo8Tx+l3Dq48d2ORsvVXy1U=;
+ b=alLavymbZ0n4GZp7t3axX6qfRU79IQSfHilEMrsHTxQd8rrdMfsvvw8WaIWwWtuvb86fzLOG2HwEHaEmPJlgODd9+pB0V5+Z/EVo0++qcwkBjNrJobUlpIqZ5VKNm9eBISdvTV6nlCjSS5fxw0J6XuPo+eTT2JTzjxMhPbqRysQ=
+Received: from DU7P195CA0007.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::26)
+ by PA4PR02MB6927.eurprd02.prod.outlook.com (2603:10a6:102:108::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Thu, 13 Jun
- 2024 13:21:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.24; Thu, 13 Jun
+ 2024 13:21:17 +0000
 Received: from DU2PEPF0001E9C5.eurprd03.prod.outlook.com
- (2603:10a6:10:54d:cafe::75) by DU7P195CA0011.outlook.office365.com
- (2603:10a6:10:54d::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.20 via Frontend
+ (2603:10a6:10:54d:cafe::93) by DU7P195CA0007.outlook.office365.com
+ (2603:10a6:10:54d::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.24 via Frontend
  Transport; Thu, 13 Jun 2024 13:21:17 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
@@ -60,9 +60,9 @@ To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
 	<andrew@lunn.ch>, <hkallweit1@gmail.com>
 CC: <kamilh@axis.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 3/4] dt-bindings: ethernet-phy: add optional brr-mode flag
-Date: Thu, 13 Jun 2024 15:20:54 +0200
-Message-ID: <20240613132055.49207-4-kamilh@axis.com>
+Subject: [PATCH v6 1/4] net: phy: bcm54811: New link mode for BroadR-Reach
+Date: Thu, 13 Jun 2024 15:20:52 +0200
+Message-ID: <20240613132055.49207-2-kamilh@axis.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240613132055.49207-1-kamilh@axis.com>
 References: <20240613132055.49207-1-kamilh@axis.com>
@@ -78,93 +78,125 @@ X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
  (10.20.40.7)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9C5:EE_|AS2PR02MB9262:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b31a580-fd2d-4c38-4f9a-08dc8babb571
+X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9C5:EE_|PA4PR02MB6927:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2576ad7-7aa4-48b7-410c-08dc8babb501
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230035|36860700008|82310400021|1800799019|376009;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZlhqYlRqTGdQbzlsTDZhUTR0WC9rUHFvb1hObWt3ckJhKytwamJMTnd2dDBr?=
- =?utf-8?B?MnpBYnVBakZjVU9BWDNmSk8xRTloRzhJS214MmJVVmhmQ0N4RUZ2ZzJIQUQ1?=
- =?utf-8?B?aloyeEVzaGp4WEtnOTltbkVqMlMzNS94NzlWQUZUUStGcVQ3MXJ1UkVnd1NB?=
- =?utf-8?B?c2V0ZzRNWkRIbEFLVUcvejljdVRXYVVVVmpWdGVsOTZuZmlMQ29ycDE1cHQ3?=
- =?utf-8?B?Um1BVDY2ajQxYVBPQ0xadkFJdFAvWlBsaHg4UnlEc0p4WlQ5UDQ0S3pwazJE?=
- =?utf-8?B?Rk1iRVlQeEtuWk5ibWMySUI5a2RubCsrUHVIWjlydUM3L0YrZnhJdkQyLzhx?=
- =?utf-8?B?NE9kb2ZhR3ROZG1PTWcrakdxNDU2QkZ1eHA0dFFMajAxc3N3bTFpVm92NUhO?=
- =?utf-8?B?b2FuVUxNMTAwcEN4RjlmU3ZwbHREUXh3d2gwNXBhZmd1R0F3VThSeWhlbE5Y?=
- =?utf-8?B?UURSZGV4d0xTZmNhZnd2VG9NQWFIRzZlcDFvbUUvMHVyM0QwVEVFeExPUkU4?=
- =?utf-8?B?aW9UbTQ5bkhOMWJISktsVUpBejBmbGMrWC9xWmJJVm1BYXc0WEhTN3p0Vm16?=
- =?utf-8?B?YzV6QUEzbHAyTm9WakNiWlBQbEM2NjhSYTVEVWF3eFZIeEZ1eEZTbDZmVUJ1?=
- =?utf-8?B?dC9zTEJ5dTVjdml4M0UyOXExL2FWeHdpWkFROXpZQmU3Tjh2aDFFMzVhclJw?=
- =?utf-8?B?Y3JxcVFsQ0s0bmhoakF4VjhqSG11UElKVmRNb1BnWVlZaEJJb3I2Mnk0M1pV?=
- =?utf-8?B?TnNjYkxVbEpkc01xWWN2VE9xSWJxeWM2SHVrdm1DWTdrbGh6TWNZalZDL2pp?=
- =?utf-8?B?cXc5VVEzUWEwSVBGRFpSVStYSDEwNEgyRGZqSHFjRXEvSTFVSlowWjdIWUlH?=
- =?utf-8?B?SkJWRWZKdTFTd1B3VW16MjRWSFRTNzR2TWExbytUOEdBY1VIUHB4bml1ZDRD?=
- =?utf-8?B?Z0tKRW51NVVGMDFHbFZyRFU5NDlKZFJzNTUwdDJKZnBuZXBXVzFwOXVHWngw?=
- =?utf-8?B?ZVVMdU5lSHp5bFhNVnorYVErSFI4SGpsYi95RW8zR3FyR2NOazZtR1JROFk2?=
- =?utf-8?B?NkM1Y21WKytGS1pabDBoS3NyVVQ0ejlYWHlnY0lNclJ0OFN2M1pabDQrbnor?=
- =?utf-8?B?d005N1l5eDJLSkU1M1JQVVlLcE9BVVBCLzJ5Z1JHbkIvaEFaOGcxY3hhdXZO?=
- =?utf-8?B?NmZRc1FvT2xrbkloaXVBa0V1ejU1c0xOK1U0NFMrdUhMZ1hKVHdaM0FzY3la?=
- =?utf-8?B?K1VVanorL0ZETXpQZHZuU3ozYndsaUk1QWNubVptblZxOUlMdk1KNVhYdity?=
- =?utf-8?B?djRWaExNZ3orSVN3UE5KMEpLdm8xZ2s0azNETkE1eHcrZDE5M2ZVR2tUNGVz?=
- =?utf-8?B?Yno5eHhnUXpjQjAzNzZKdkZsdThBMk1aay9jTlVtWHc4c2hwMGhXZ1lxU0ZT?=
- =?utf-8?B?c3IrU2hCdlpUajhZNXM4N0YxQncvNnZZbTY2ZHVFbkxOb2JmWEVJQjVVcERD?=
- =?utf-8?B?UVZacUp6M05OYzFRRllBZDMzWStiemhSZTQ1MmUyT3VWMXRVWmNPZ2thWUpD?=
- =?utf-8?B?MS9oTXcrV1FFb0l1ODF5SlE2YW1JMlM5T1RQYWx5RDFsbVBMcUxZeE1LMnVh?=
- =?utf-8?B?UGg0SE1zOHBLa1pRRndMZGJmUjE0UFZGNzdXTDZFT0E5N3l3RTJ4NWRnZHJm?=
- =?utf-8?B?TDh1TnRRZUcyZmU5RFF4ZjhnYjlnRS9jWVI1MUpkQjB2SDdNMmRrM1MxdS9X?=
- =?utf-8?B?Ry9FMWFzUTFyK1FQQnpsRUl4U1Q4STVoR01iTTlETUgrcW5pdHFQR1AvZW5Q?=
- =?utf-8?B?WG9DRlVWN2I2VFd5cVJBTjJneHg3YlFHVHpPTjZCNU16ZEJHbFYzYnBtbWl2?=
- =?utf-8?B?TTlUT05NZHRPd21LNmI2QVNKZXpESjhkZG5CWFdHa2M4RFE9PQ==?=
+	=?utf-8?B?SUVMbXk2OTZuZncwT0hLY2t2Z0gzWW1CN214Y2krandVdlFXRm9Ya3poTXFi?=
+ =?utf-8?B?WU41SkpsNDFXNldnT0swRU1MVUFsbTdGLys2aEl3MWo3ZkM2T3pWZGYyYVE1?=
+ =?utf-8?B?c2VqcFVoMEs4VU8rR3R0Ylp0NE8rbGRGZjN2YUNYc3hwaG5QOFNzMysyWGdq?=
+ =?utf-8?B?VkRibzVMYk8zZ2QzNjNhNXFYano5OXpwTW55RkcvT3hDbVRmUUVGK2FnMThT?=
+ =?utf-8?B?S29FTVRqaWhPSHowZ3BYR2lOUVR0ZDdsbGJaRGp2WlNTOW9mR2ZqOXE4NG96?=
+ =?utf-8?B?UFpsa21xd1lPSlVqdG41R2xHSGM0b29TUUNmV2doSUVKNzI3ZHlXRVZIRTEv?=
+ =?utf-8?B?czZ4VkMzL0xtMENkRDRTQkxUajZ4b3FDQ3BVS3cvR2ExeDE4M2pnNXNJaFZY?=
+ =?utf-8?B?Skk2ZUFkbXM1M0hQZVVxcGY4b1BNZUpsYlFiWWZxSnYzSkVVTngxQXdMSXd6?=
+ =?utf-8?B?QkR5Y3lRbUdxeis4dUZWZVlQeDNVdGFDSlJzNHZoTml4bkc4RGxEak95MmtN?=
+ =?utf-8?B?LzdXN2ZWTC9LSzcrWTRXZ1VUV1N3Ym5lNkxZb3RvVnJTeUF2R2ZQWVoyYnVE?=
+ =?utf-8?B?QXhVSnNyc0FNRGpLaEgrdkJjRVF6MTRRdy9nUm9oQ200Ny9vZnFNUFBzWWNo?=
+ =?utf-8?B?N2VtRm9hME8wYmNpbTJJeTQ2azdXdmQxaEZmeUNiN2kvdVQ2U052SmpQSUJq?=
+ =?utf-8?B?ZUF4NkZSbHB1ZThVZGdXVEROOHdlZ2YydDZDclpoZ2dyekZWaHhDbS9Bcmlj?=
+ =?utf-8?B?NTRCWFV6cmpUL3ByeTRMdGp2SGdYZnVuT29JVFZzK2VmVmxmYWw2bFNqRG80?=
+ =?utf-8?B?L3IzTzJDWWxGdEtrRjRndnB6MzlMNEtLa3RITjdWTC9HTXR1dHNxQ3c5cXVE?=
+ =?utf-8?B?b1BsNnJhK1pQUjczSnFMbVM3MFU5MnJXaDlOdHJ3MUlNc1EyWjFmOUpxbGpH?=
+ =?utf-8?B?V2xjNThveWJ3ajk1QW5pNGMvcmZWNjJ1bURnT3k3OGdxSnluUU0zYXFOT3Vr?=
+ =?utf-8?B?S2JGZFVBOHYzOG9DaE9QNUgxNVlXUFFTNys2cExleW9wL01hT09WQXRQc3Bj?=
+ =?utf-8?B?QnFEV1VMUHQ5NmxhTVRzd2NkNkdNUUN4Mmh4ZTJpKzZZbUJaVndjdmlnQUxn?=
+ =?utf-8?B?YlMrK01zMmRsOXpmdFFrUkFDU1ZtTUhWZUNSbUZjM1ZvTjZtZ2hDNDJFS1dM?=
+ =?utf-8?B?TDFYRXZuK1RrRHFNdGozakU1TkE0bHY5b05iSmlJWENwVnNnck9XSmZJWmxl?=
+ =?utf-8?B?eSszWldVQ3o5MzRuM3BoMDFoOWt3azl5Q3VzRURRSFpIdkl2d3REUlZQMnZ1?=
+ =?utf-8?B?dml0U3JEZEtNczR2d0N6VTQ5NWhJZ0JFTjA3OSs1V0YreUhya3JjYXFUbkRt?=
+ =?utf-8?B?MmV5R1d1ckpReVRlVWpKSEdkbEI4Y2pKN0lDWUdMc1Z1S08wZWdSdmNDM3R0?=
+ =?utf-8?B?YjV4Z2dJc0M5UnMxLzVOYlhCcUVjZ3MxSXBwdDhUc0tLaXNxaUI2elB5cHNh?=
+ =?utf-8?B?Tm5tWXNiMnZyUjZhb1AwNzBtWVJhMHVzRHI4VnVjYzhjcVpzeHRkMTFqZUF3?=
+ =?utf-8?B?ZjlSVmhMTkQvSFYvd1p5YWNOZlhxdVc2SGpjajBPWUoyUWJJWG9iZk1SR0gv?=
+ =?utf-8?B?VDBMcER1dHpzR0hqOTFKZThOaGI1L2xxQkYwK3IvQWZveGJPeFFoVW8wUjZK?=
+ =?utf-8?B?aHkyZ0JvbGZidTJGSk43VHlFWis1THFXU09FN0VwcG1EZlA2bTNPUkVZb05j?=
+ =?utf-8?B?Z09TZ2lWaUZjU0JZaFVJTXhiNkFNWU1WMHlMZlZ5aG5KODZMNmwxMThsbms0?=
+ =?utf-8?B?QjN6bVV6MWJyenVZTUhKRkNJTk5VaXhvbU02TVc5LzFRNkl0T0F4ZkJnREZl?=
+ =?utf-8?B?dW1WWmN4SDV1TnVXRUZCMzVaT0pBRFduL2xkNDBkajErdVE9PQ==?=
 X-Forefront-Antispam-Report:
 	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230035)(36860700008)(82310400021)(1800799019)(376009);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 13:21:17.8757
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 13:21:17.1413
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b31a580-fd2d-4c38-4f9a-08dc8babb571
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2576ad7-7aa4-48b7-410c-08dc8babb501
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DU2PEPF0001E9C5.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB9262
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR02MB6927
 
-There is a group of PHY chips supporting BroadR-Reach link modes in
-a manner allowing for more or less identical register usage as standard
-Clause 22 PHY.
-These chips support standard Ethernet link modes as well, however, the
-circuitry is mutually exclusive and cannot be auto-detected.
-The link modes in question are 100Base-T1 as defined in IEEE802.3bw,
-based on Broadcom's 1BR-100 link mode, and newly defined 10Base-T1BRR
-(1BR-10 in Broadcom documents).
-
-Add optional brr-mode flag to switch the PHY to BroadR-Reach mode.
+Introduce a new link mode necessary for 10 MBit single-pair
+connection in BroadR-Reach mode on bcm5481x PHY by Broadcom.
+This new link mode, 10baseT1BRR, is known as 1BR10 in the Broadcom
+terminology. Another link mode to be used is 1BR100 and it is already
+present as 100baseT1, because Broadcom's 1BR100 became 100baseT1
+(IEEE 802.3bw).
 
 Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
 ---
- Documentation/devicetree/bindings/net/ethernet-phy.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/phy/phy-core.c   | 1 +
+ include/uapi/linux/ethtool.h | 1 +
+ net/ethtool/common.c         | 3 +++
+ 3 files changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-index 8fb2a6ee7e5b..0353ef98f2e1 100644
---- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-@@ -93,6 +93,13 @@ properties:
-       the turn around line low at end of the control phase of the
-       MDIO transaction.
+diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+index 15f349e5995a..4a1972e94107 100644
+--- a/drivers/net/phy/phy-core.c
++++ b/drivers/net/phy/phy-core.c
+@@ -265,6 +265,7 @@ static const struct phy_setting settings[] = {
+ 	PHY_SETTING(     10, FULL,     10baseT1S_Full		),
+ 	PHY_SETTING(     10, HALF,     10baseT1S_Half		),
+ 	PHY_SETTING(     10, HALF,     10baseT1S_P2MP_Half	),
++	PHY_SETTING(     10, FULL,     10baseT1BRR_Full		),
+ };
+ #undef PHY_SETTING
  
-+  brr-mode:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Request the PHY to operate in BroadR-Reach mode. This means the
-+      PHY will use the BroadR-Reach protocol to communicate with the other
-+      end of the link, including LDS auto-negotiation if applicable.
-+
-   clocks:
-     maxItems: 1
-     description:
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 8733a3117902..76813ca5cb1d 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -1845,6 +1845,7 @@ enum ethtool_link_mode_bit_indices {
+ 	ETHTOOL_LINK_MODE_10baseT1S_Full_BIT		 = 99,
+ 	ETHTOOL_LINK_MODE_10baseT1S_Half_BIT		 = 100,
+ 	ETHTOOL_LINK_MODE_10baseT1S_P2MP_Half_BIT	 = 101,
++	ETHTOOL_LINK_MODE_10baseT1BRR_Full_BIT		 = 102,
+ 
+ 	/* must be last entry */
+ 	__ETHTOOL_LINK_MODE_MASK_NBITS
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 6b2a360dcdf0..82ba2ca98d4c 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -211,6 +211,7 @@ const char link_mode_names[][ETH_GSTRING_LEN] = {
+ 	__DEFINE_LINK_MODE_NAME(10, T1S, Full),
+ 	__DEFINE_LINK_MODE_NAME(10, T1S, Half),
+ 	__DEFINE_LINK_MODE_NAME(10, T1S_P2MP, Half),
++	__DEFINE_LINK_MODE_NAME(10, T1BRR, Full),
+ };
+ static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
+ 
+@@ -251,6 +252,7 @@ static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
+ #define __LINK_MODE_LANES_T1S_P2MP	1
+ #define __LINK_MODE_LANES_VR8		8
+ #define __LINK_MODE_LANES_DR8_2		8
++#define __LINK_MODE_LANES_T1BRR		1
+ 
+ #define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex)	\
+ 	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = {		\
+@@ -374,6 +376,7 @@ const struct link_mode_info link_mode_params[] = {
+ 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Full),
+ 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Half),
+ 	__DEFINE_LINK_MODE_PARAMS(10, T1S_P2MP, Half),
++	__DEFINE_LINK_MODE_PARAMS(10, T1BRR, Full),
+ };
+ static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
+ 
 -- 
 2.39.2
 
