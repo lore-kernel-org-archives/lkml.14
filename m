@@ -1,103 +1,112 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2994D145B03;
-	Thu, 13 Jun 2024 13:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D92A94D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285895; cv=none; b=LgC6uA77DdMDYEeI9c9bGScjB6Z/Rt+pewxeh/XEtM97k2cZTRcVAaWcnN/5O3hc5MIXsv62tpMXE+5juo3AINdpuhsutl9F/xcaPQNKat3Y78YgqMm2PcNpGMq4jDAl1prO/U24zgBaDccvS17RoJqN0YA1Xl67YVR7be02WAs=
+	t=1718285928; cv=none; b=GsiQPSs8r0x3W//fuBOyTBhwwcC2V4jmhsswzY+Cg5EpqlHStLRtS7+2vF3AW/wza1jsGMwarZXkjfFqWHgmIKmcijqzQC7/h/s28tlTMxHK07akK9hsa3zTMAuhnVrudGaQLlUly+jlrSYCKOTwFjigbofwdLoTb8XJwYJqnG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285895; c=relaxed/simple;
-	bh=Rsa9LIJVLCfEEDfRcJqmUcTi+WPu7QmEWLsbETwevYo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kc8DU5uC1oNY+JV3euTR2o2d+cvpCiWRJuFcnSVmoOZLj1SjePBwJMbADNOQyNvS0OBlwgz5TeGBG2GpR/dUywcWR5GddbOCa+2qes0tst6v9QI4xYtPSFbj8btNE6nnn8RTUJTSXf4rpCV0D/R35mauAnr07yfof8oM+kvVcjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nbeDsZIQ; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1718285928; c=relaxed/simple;
+	bh=/fq0TZJn7YnJzUyVEjTbb5vPCeq8nCTFnjPoXw1SaQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D/YD1aoht7PYcXwDUJDqkMKfgOCrYT9QSrW2ML9Zi5yNzkKxe+gb9m930WjnZjdgDE9ZOar6lGqIdmXDzb68yC47h+Ei9I6OvfiLICl7064nYbnlOYtooMpBzAdKAfo3vA5s5xVovSO2MVvcUe+Gc6CEGWTjJps3NjZjXgQO2GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cU8DrxXR; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nbeDsZIQ"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45D4iWlr013712;
-	Thu, 13 Jun 2024 08:38:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=S5+j64neUDQ+dJuwRMUcq1jrgKa4cIarmoNF4x/Fz/I=; b=
-	nbeDsZIQddeRfaSxJnGNOMQlWBLcT4pfNOpyMaYtgwmEiMgnvwne4fLeeAb88rTT
-	Dm+kr2BqXufz8MASwbYDF4m3AHgN34Vq2gt4wISw0VvmJyckS7J/MP0hgTyfo7BS
-	Dvy27/prA0ApZB1wqlpVUQ9DXFAjK+BxXwFRZpJ+wmfH/HOQ/GIqmGSJ1+jKk9CU
-	hDiDfEiLNyZ/WO6Cn1D5qtbHJdUOo6wJJzbRUvFwYvDqsqmLXuLCRSer11I7M4Vi
-	kXRKjRbK8A36KDR/77YIhauP5QSRB9CLIFemY4ZTEM7pJpcbS1/2y2wt5ilpOiKP
-	UN5ICaN3m2O5os433k864g==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3yqskgreva-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 08:38:05 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Jun
- 2024 14:37:55 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Thu, 13 Jun 2024 14:37:55 +0100
-Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.65.41])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id E4790820248;
-	Thu, 13 Jun 2024 13:37:54 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <soyer@irl.hu>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, Simon Trimmer <simont@opensource.cirrus.com>
-Subject: [PATCH 2/3] ALSA: hda: cs35l41: Component should be unbound before deconstruction
-Date: Thu, 13 Jun 2024 14:37:12 +0100
-Message-ID: <20240613133713.75550-3-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240613133713.75550-1-simont@opensource.cirrus.com>
-References: <20240613133713.75550-1-simont@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cU8DrxXR"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4217dbeb4caso9323705e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718285924; x=1718890724; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wd6mMNX2S1BvaXmQq6C+uLeNiInNteHl0yr+fj9gdKI=;
+        b=cU8DrxXRkHwAOpX7MedAxaQvrfprJesu3b/7pGE6i/Lz+wdxmfD7Gvg+2aSl7fUPUg
+         t3CBWltzX+crJMufGJJQSq9zjrzlFnp9lb3YH4UMzLoTG3gaRPPGKyJwx4Q9XkYDOgEt
+         gW4JpD6MU/Aaru4cg2e5BBbJb1cYHOtDEEEPkbDLxvqSUxRlvYyckG6Qj4u5nCoyQaxu
+         qMYNzDjdzx6ylhrW76lhNdR9YatUgVfoIhKKelc4OUy7ucw+vi5fH1Hy2Vfu1JXeLv3S
+         2ijClMtsRetz2i8DwjkyP8izffH6eONFi1TUzkL3L/U4hi+gWEGpL8AXSToTBa15Cu54
+         vVeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718285924; x=1718890724;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wd6mMNX2S1BvaXmQq6C+uLeNiInNteHl0yr+fj9gdKI=;
+        b=Pma4MVwPXyN/By19MLeJpZgIKSgGJt26mujfTdXMh6uRJGtiWfFCefF0qk08mTca4d
+         tIGZ764SKI5S6h/i4FHL1ztfiiM0eAnM24AouqIbfIClw/aSdkFstHUJ03xoetd2/4d7
+         HRB/LJv9OjB6tqcY5AImqCQvdXO7/cdk1Q3O7uXipx5A4nFqNbpNdfiu75snZlEupx3z
+         XdbXxLlvxZhm8AX7ESQWwox3TNo4jsN3m/VYe5iiUsoT/AnVyWuPR6DOxEFFMT899Isy
+         RHK6LN8BwbIhgEvoh1scJPFKzOfT/YXVv7UzZlep78jyQQZhMlCSWyPvmGtMM1kuxf1C
+         bQaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiW2NGNK1apElu/+zqMo7S9nCrWapOZ59rb6QQwSeHmmL6OmCuGraG++U93UsZXpH4wjSEO09jfRgPMWWON2QvDvA2bthj3DDfJelr
+X-Gm-Message-State: AOJu0YwRYF7JUarE84sm685r3kifHHrOHNhg6ItP4u483WpwEgOhqvRP
+	xTvWN2atCcGUtqaZEvShxEtaFB9y5d0JhFVmDz93bVjtA6RcIIjCdOVRz7LWaQk=
+X-Google-Smtp-Source: AGHT+IFUqr5sGQRcNAQ13+nGKzOjcicanr5LrzrR9lynEZ7s4rDVAOtSSSoEI8XHdMfKIq2OgA/eDA==
+X-Received: by 2002:a05:600c:190a:b0:422:fa63:33f0 with SMTP id 5b1f17b1804b1-422fa63360amr11707035e9.38.1718285924382;
+        Thu, 13 Jun 2024 06:38:44 -0700 (PDT)
+Received: from krzk-bin.monzoon.net (46-253-189-43.dynamic.monzoon.net. [46.253.189.43])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286eef9eesm63435725e9.9.2024.06.13.06.38.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 06:38:43 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Olof Johansson <olof@lixom.net>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] MAINTAINERS: ARM: airoha: add entry to cover Airoha SoC
+Date: Thu, 13 Jun 2024 15:38:23 +0200
+Message-ID: <20240613133840.6949-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: ZUQfwjpz7gjGbeVXX6N9VTg_IYKDCY5r
-X-Proofpoint-ORIG-GUID: ZUQfwjpz7gjGbeVXX6N9VTg_IYKDCY5r
-X-Proofpoint-Spam-Reason: safe
 
-The interface associated with the hda_component should be deactivated
-before the driver is deconstructed during removal.
+Airoha SoC is not covered by any maintainer entry so relevant patches
+can be missed.  It seems Mediatek SoC maintainers were covering some
+parts of Airoha and Airoha itself is subsidiary of Mediatek, so assign
+the Airoha maintenance to Matthias and AngeloGioacchino.
 
-Fixes: 7b2f3eb492da ("ALSA: hda: cs35l41: Add support for CS35L41 in HDA systems")
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- sound/pci/hda/cs35l41_hda.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/pci/hda/cs35l41_hda.c b/sound/pci/hda/cs35l41_hda.c
-index d54d4d60b03e..031703f010be 100644
---- a/sound/pci/hda/cs35l41_hda.c
-+++ b/sound/pci/hda/cs35l41_hda.c
-@@ -2019,6 +2019,8 @@ void cs35l41_hda_remove(struct device *dev)
- {
- 	struct cs35l41_hda *cs35l41 = dev_get_drvdata(dev);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fb32a2fe3a79..e7fd595b8f5e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1924,6 +1924,15 @@ F:	include/dt-bindings/reset/actions,*
+ F:	include/linux/soc/actions/
+ N:	owl
  
-+	component_del(cs35l41->dev, &cs35l41_hda_comp_ops);
++ARM/AIROHA SOC SUPPORT
++M:	Matthias Brugger <matthias.bgg@gmail.com>
++M:	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
++S:	Odd Fixes
++F:	arch/arm/boot/dts/airoha/
++F:	arch/arm64/boot/dts/airoha/
 +
- 	pm_runtime_get_sync(cs35l41->dev);
- 	pm_runtime_dont_use_autosuspend(cs35l41->dev);
- 	pm_runtime_disable(cs35l41->dev);
-@@ -2026,8 +2028,6 @@ void cs35l41_hda_remove(struct device *dev)
- 	if (cs35l41->halo_initialized)
- 		cs35l41_remove_dsp(cs35l41);
- 
--	component_del(cs35l41->dev, &cs35l41_hda_comp_ops);
--
- 	acpi_dev_put(cs35l41->dacpi);
- 
- 	pm_runtime_put_noidle(cs35l41->dev);
+ ARM/Allwinner SoC Clock Support
+ M:	Emilio López <emilio@elopez.com.ar>
+ S:	Maintained
 -- 
-2.34.1
+2.43.0
 
