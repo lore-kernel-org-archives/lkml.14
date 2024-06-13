@@ -1,64 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFC714A62D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919BA12E1F2;
 	Thu, 13 Jun 2024 15:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718293217; cv=none; b=If2McNODmkWekw9y8tOOeGPb2JnyPi7ppFGUY1wjTIk5bW7PhiE4Jbt0Yl3e+zj9J9FHc8EbTyLbhSNlnojCM91LGuj4SdlsMPdMw/mO3FyYFgJCfCgmTUyqXsSaeQqobtac5lwuC9hanvQo+RbNpgOwr3Sh2KU+IC1YlyQyHkE=
+	t=1718293218; cv=none; b=n9m7/l5FZjfB3zEKq4DYpmNrCNwProGQtxQrqnSUp5/PMt/oKiu7gEqi0MoG4/dBdSZpwv0h7yZYJAsZ8IpljiQlcbqqCwkWnk79yGCawzujKP6VScjJ7gBtiOkR6M3Ok9eY0MqCDjakYnsCu7VQK5qKC8mR3IVOd5uQXKx6rvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718293217; c=relaxed/simple;
-	bh=CBwonVN5qdYsbauALkUyypsV6xqE8x/13TEVjhHgzYM=;
+	s=arc-20240116; t=1718293218; c=relaxed/simple;
+	bh=O25mRw7S/ZC8M5ctPubCjPY5+A4szOidaddkhJ/87GI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ILWka8JSpCami1U2YNSy5WCTYPoFMLuyZgXZsmn0Yatfow3RRw17xuW0U50+bYoIxM6B1J8RNE32aUgqa47t1FHKtBeDMLPV356vborGBVOaMIn6Rb7RY9TwUskt6Id4XXX/6gvAkFZACzigkf89BNbalE40DseLgOM2Yfo0mKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qK+vecRb; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=uID2nvOQGw4MZ6AI8JFo1bEJIw3+kEJyl8za7l5/S48oiQmw6Fk9bAeIFC0YVp4mNmgtr439LVnyzxKGHvzkafE28+usMILe+UrDQaj75a4Ql/60miZjuBa6+rTusC3BXdMwb1u2RJvNxopLd4k2jbBg56R64e6kNqIB1r245HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oNvZmbF4; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qK+vecRb"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DFaxh5028926;
-	Thu, 13 Jun 2024 15:39:46 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oNvZmbF4"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DFL9hI017855;
+	Thu, 13 Jun 2024 15:39:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=EtpzWUsKPF6Xq
-	g09UGXz7IHFcSozBdT63cYyYIkbG/E=; b=qK+vecRbYYzCJkRsHBWubrva3REep
-	w/L05qAPzmCKy04ck7vhAnXHPdQL7ZgY4AB0/HwhxaazpXScZzYfEI7dT2/HXWEQ
-	sK6/3glkhSZDbHnN3sJeK1GUk6U8wd3J5meIeDstRJEMRWqT7aHpxfePPMVFag4G
-	wT4UdP62uM8MtrSW2QWQa09IjK1EVvq3NzwKhJ+N3BQxJpkT9oBvYST3Ljo/8G7X
-	LSyp1nWkVWc7Ywi81lW8IyUbgTH6UASVaM1n9CfRpdAUt0SefudhICkZlF1fUC63
-	gCQ2yuJj8651Sly70S2kImGowL4ZHICA2AxR/mgD8iysnBsEdRexIi7bA==
+	:mime-version:content-transfer-encoding; s=pp1; bh=+zoFJVlk37wQa
+	OMfwbNCgteXo249s6T95ikp3xQJB1k=; b=oNvZmbF4K+Py1jf/5icbM1AudoXW6
+	51g5mW81oXPABJVfl8cQQxY3isYOHx+0CtD91DheqYBN1CvQdqdnq1/qYi/huM17
+	qJ7rNH3AIB2rwIvQ2syI5/tT119S5UFHqCa7KPrKf4WG6zWhs6nIxwuOY+esRb4d
+	+WALCQPp12bTjFWplrH+wwfiJf0y+eOYLubrXjMiZrjMnlsg36LecYlRuy7szI77
+	IXTbPjlwSqvAZ+HeuuFiDUBy8o1qyqEsW+LzKCg99vjB14Mefn3jyeDIHERevoUT
+	u/ZLR9cl/KRaMelg0dT1w8/AaJs+wV1bp14CC60HlsFLfQuKV4+EV/EKA==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr320r32t-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqy258xxr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:46 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdjpx002434;
-	Thu, 13 Jun 2024 15:39:45 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr320r32q-1
+	Thu, 13 Jun 2024 15:39:56 +0000 (GMT)
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdt94021165;
+	Thu, 13 Jun 2024 15:39:55 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqy258xxn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:45 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DEU7Sm008700;
-	Thu, 13 Jun 2024 15:39:44 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn4b3rk0u-1
+	Thu, 13 Jun 2024 15:39:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DFBb7N020069;
+	Thu, 13 Jun 2024 15:39:54 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn34nh0d1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:44 +0000
+	Thu, 13 Jun 2024 15:39:54 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFddjr52036052
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFdmkh52494780
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Jun 2024 15:39:41 GMT
+	Thu, 13 Jun 2024 15:39:50 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB49C2005A;
-	Thu, 13 Jun 2024 15:39:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4E2152006C;
+	Thu, 13 Jun 2024 15:39:48 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 783B82006C;
-	Thu, 13 Jun 2024 15:39:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id CF64920065;
+	Thu, 13 Jun 2024 15:39:47 +0000 (GMT)
 Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Jun 2024 15:39:38 +0000 (GMT)
+	Thu, 13 Jun 2024 15:39:47 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -79,9 +79,9 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v4 11/35] kmsan: Allow disabling KMSAN checks for the current task
-Date: Thu, 13 Jun 2024 17:34:13 +0200
-Message-ID: <20240613153924.961511-12-iii@linux.ibm.com>
+Subject: [PATCH v4 28/35] s390/irqflags: Do not instrument arch_local_irq_*() with KMSAN
+Date: Thu, 13 Jun 2024 17:34:30 +0200
+Message-ID: <20240613153924.961511-29-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240613153924.961511-1-iii@linux.ibm.com>
 References: <20240613153924.961511-1-iii@linux.ibm.com>
@@ -93,203 +93,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LKpz0MVqEHZkt6RKhjF39DHCXdemLjnE
-X-Proofpoint-ORIG-GUID: 4diWKsJb6QpzSM8Rww7A3YFM9_vI0f-x
+X-Proofpoint-ORIG-GUID: 3YJV7_fgCmflF5r_am0hLna8GcLzFF1F
+X-Proofpoint-GUID: _271Y5yjDhi0fa7CjP4Omqz2uyCbtCUn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-13_09,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- phishscore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406130112
 
-Like for KASAN, it's useful to temporarily disable KMSAN checks around,
-e.g., redzone accesses. Introduce kmsan_disable_current() and
-kmsan_enable_current(), which are similar to their KASAN counterparts.
+Lockdep generates the following false positives with KMSAN on s390x:
 
-Make them reentrant in order to handle memory allocations in interrupt
-context. Repurpose the allow_reporting field for this.
+[    6.063666] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+[         ...]
+[    6.577050] Call Trace:
+[    6.619637]  [<000000000690d2de>] check_flags+0x1fe/0x210
+[    6.665411] ([<000000000690d2da>] check_flags+0x1fa/0x210)
+[    6.707478]  [<00000000006cec1a>] lock_acquire+0x2ca/0xce0
+[    6.749959]  [<00000000069820ea>] _raw_spin_lock_irqsave+0xea/0x190
+[    6.794912]  [<00000000041fc988>] __stack_depot_save+0x218/0x5b0
+[    6.838420]  [<000000000197affe>] __msan_poison_alloca+0xfe/0x1a0
+[    6.882985]  [<0000000007c5827c>] start_kernel+0x70c/0xd50
+[    6.927454]  [<0000000000100036>] startup_continue+0x36/0x40
 
+Between trace_hardirqs_on() and `stosm __mask, 3` lockdep thinks that
+interrupts are on, but on the CPU they are still off. KMSAN
+instrumentation takes spinlocks, giving lockdep a chance to see and
+complain about this discrepancy.
+
+KMSAN instrumentation is inserted in order to poison the __mask
+variable. Disable instrumentation in the respective functions. They are
+very small and it's easy to see that no important metadata updates are
+lost because of this.
+
+Reviewed-by: Alexander Potapenko <glider@google.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- Documentation/dev-tools/kmsan.rst |  4 ++--
- include/linux/kmsan.h             | 24 ++++++++++++++++++++++++
- include/linux/kmsan_types.h       |  2 +-
- mm/kmsan/core.c                   |  1 -
- mm/kmsan/hooks.c                  | 18 +++++++++++++++---
- mm/kmsan/report.c                 |  7 ++++---
- tools/objtool/check.c             |  2 ++
- 7 files changed, 48 insertions(+), 10 deletions(-)
+ arch/s390/include/asm/irqflags.h | 17 ++++++++++++++---
+ drivers/s390/char/sclp.c         |  2 +-
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/dev-tools/kmsan.rst b/Documentation/dev-tools/kmsan.rst
-index 323eedad53cd..022a823f5f1b 100644
---- a/Documentation/dev-tools/kmsan.rst
-+++ b/Documentation/dev-tools/kmsan.rst
-@@ -338,11 +338,11 @@ Per-task KMSAN state
- ~~~~~~~~~~~~~~~~~~~~
+diff --git a/arch/s390/include/asm/irqflags.h b/arch/s390/include/asm/irqflags.h
+index 02427b205c11..bcab456dfb80 100644
+--- a/arch/s390/include/asm/irqflags.h
++++ b/arch/s390/include/asm/irqflags.h
+@@ -37,12 +37,18 @@ static __always_inline void __arch_local_irq_ssm(unsigned long flags)
+ 	asm volatile("ssm   %0" : : "Q" (flags) : "memory");
+ }
  
- Every task_struct has an associated KMSAN task state that holds the KMSAN
--context (see above) and a per-task flag disallowing KMSAN reports::
-+context (see above) and a per-task counter disallowing KMSAN reports::
- 
-   struct kmsan_context {
-     ...
--    bool allow_reporting;
-+    unsigned int depth;
-     struct kmsan_context_state cstate;
-     ...
-   }
-diff --git a/include/linux/kmsan.h b/include/linux/kmsan.h
-index fe6c2212bdb1..23de1b3d6aee 100644
---- a/include/linux/kmsan.h
-+++ b/include/linux/kmsan.h
-@@ -239,6 +239,22 @@ void kmsan_unpoison_entry_regs(const struct pt_regs *regs);
-  */
- void *kmsan_get_metadata(void *addr, bool is_origin);
- 
-+/*
-+ * kmsan_enable_current(): Enable KMSAN for the current task.
-+ *
-+ * Each kmsan_enable_current() current call must be preceded by a
-+ * kmsan_disable_current() call. These call pairs may be nested.
-+ */
-+void kmsan_enable_current(void);
+-static __always_inline unsigned long arch_local_save_flags(void)
++#ifdef CONFIG_KMSAN
++#define arch_local_irq_attributes noinline notrace __no_sanitize_memory __maybe_unused
++#else
++#define arch_local_irq_attributes __always_inline
++#endif
 +
-+/*
-+ * kmsan_disable_current(): Disable KMSAN for the current task.
-+ *
-+ * Each kmsan_disable_current() current call must be followed by a
-+ * kmsan_enable_current() call. These call pairs may be nested.
-+ */
-+void kmsan_disable_current(void);
-+
- #else
- 
- static inline void kmsan_init_shadow(void)
-@@ -338,6 +354,14 @@ static inline void kmsan_unpoison_entry_regs(const struct pt_regs *regs)
++static arch_local_irq_attributes unsigned long arch_local_save_flags(void)
  {
+ 	return __arch_local_irq_stnsm(0xff);
  }
  
-+static inline void kmsan_enable_current(void)
-+{
-+}
-+
-+static inline void kmsan_disable_current(void)
-+{
-+}
-+
- #endif
- 
- #endif /* _LINUX_KMSAN_H */
-diff --git a/include/linux/kmsan_types.h b/include/linux/kmsan_types.h
-index 929287981afe..dfc59918b3c0 100644
---- a/include/linux/kmsan_types.h
-+++ b/include/linux/kmsan_types.h
-@@ -31,7 +31,7 @@ struct kmsan_context_state {
- struct kmsan_ctx {
- 	struct kmsan_context_state cstate;
- 	int kmsan_in_runtime;
--	bool allow_reporting;
-+	unsigned int depth;
- };
- 
- #endif /* _LINUX_KMSAN_TYPES_H */
-diff --git a/mm/kmsan/core.c b/mm/kmsan/core.c
-index 95f859e38c53..81b22220711a 100644
---- a/mm/kmsan/core.c
-+++ b/mm/kmsan/core.c
-@@ -43,7 +43,6 @@ void kmsan_internal_task_create(struct task_struct *task)
- 	struct thread_info *info = current_thread_info();
- 
- 	__memset(ctx, 0, sizeof(*ctx));
--	ctx->allow_reporting = true;
- 	kmsan_internal_unpoison_memory(info, sizeof(*info), false);
- }
- 
-diff --git a/mm/kmsan/hooks.c b/mm/kmsan/hooks.c
-index b408714f9ba3..267d0afa2e8b 100644
---- a/mm/kmsan/hooks.c
-+++ b/mm/kmsan/hooks.c
-@@ -39,12 +39,10 @@ void kmsan_task_create(struct task_struct *task)
- 
- void kmsan_task_exit(struct task_struct *task)
+-static __always_inline unsigned long arch_local_irq_save(void)
++static arch_local_irq_attributes unsigned long arch_local_irq_save(void)
  {
--	struct kmsan_ctx *ctx = &task->kmsan_ctx;
--
- 	if (!kmsan_enabled || kmsan_in_runtime())
- 		return;
- 
--	ctx->allow_reporting = false;
-+	kmsan_disable_current();
+ 	return __arch_local_irq_stnsm(0xfc);
+ }
+@@ -52,7 +58,12 @@ static __always_inline void arch_local_irq_disable(void)
+ 	arch_local_irq_save();
  }
  
- void kmsan_slab_alloc(struct kmem_cache *s, void *object, gfp_t flags)
-@@ -424,3 +422,17 @@ void kmsan_check_memory(const void *addr, size_t size)
- 					   REASON_ANY);
- }
- EXPORT_SYMBOL(kmsan_check_memory);
-+
-+void kmsan_enable_current(void)
+-static __always_inline void arch_local_irq_enable(void)
++static arch_local_irq_attributes void arch_local_irq_enable_external(void)
 +{
-+	KMSAN_WARN_ON(current->kmsan_ctx.depth == 0);
-+	current->kmsan_ctx.depth--;
++	__arch_local_irq_stosm(0x01);
 +}
-+EXPORT_SYMBOL(kmsan_enable_current);
 +
-+void kmsan_disable_current(void)
-+{
-+	current->kmsan_ctx.depth++;
-+	KMSAN_WARN_ON(current->kmsan_ctx.depth == 0);
-+}
-+EXPORT_SYMBOL(kmsan_disable_current);
-diff --git a/mm/kmsan/report.c b/mm/kmsan/report.c
-index c79d3b0d2d0d..92e73ec61435 100644
---- a/mm/kmsan/report.c
-+++ b/mm/kmsan/report.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/console.h>
-+#include <linux/kmsan.h>
- #include <linux/moduleparam.h>
- #include <linux/stackdepot.h>
- #include <linux/stacktrace.h>
-@@ -158,12 +159,12 @@ void kmsan_report(depot_stack_handle_t origin, void *address, int size,
- 
- 	if (!kmsan_enabled)
- 		return;
--	if (!current->kmsan_ctx.allow_reporting)
-+	if (current->kmsan_ctx.depth)
- 		return;
- 	if (!origin)
- 		return;
- 
--	current->kmsan_ctx.allow_reporting = false;
-+	kmsan_disable_current();
- 	ua_flags = user_access_save();
- 	raw_spin_lock(&kmsan_report_lock);
- 	pr_err("=====================================================\n");
-@@ -216,5 +217,5 @@ void kmsan_report(depot_stack_handle_t origin, void *address, int size,
- 	if (panic_on_kmsan)
- 		panic("kmsan.panic set ...\n");
- 	user_access_restore(ua_flags);
--	current->kmsan_ctx.allow_reporting = true;
-+	kmsan_enable_current();
++static arch_local_irq_attributes void arch_local_irq_enable(void)
+ {
+ 	__arch_local_irq_stosm(0x03);
  }
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0a33d9195b7a..01237d167223 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1202,6 +1202,8 @@ static const char *uaccess_safe_builtin[] = {
- 	"__sanitizer_cov_trace_switch",
- 	/* KMSAN */
- 	"kmsan_copy_to_user",
-+	"kmsan_disable_current",
-+	"kmsan_enable_current",
- 	"kmsan_report",
- 	"kmsan_unpoison_entry_regs",
- 	"kmsan_unpoison_memory",
+diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
+index d53ee34d398f..fb1d9949adca 100644
+--- a/drivers/s390/char/sclp.c
++++ b/drivers/s390/char/sclp.c
+@@ -736,7 +736,7 @@ sclp_sync_wait(void)
+ 	cr0_sync.val = cr0.val & ~CR0_IRQ_SUBCLASS_MASK;
+ 	cr0_sync.val |= 1UL << (63 - 54);
+ 	local_ctl_load(0, &cr0_sync);
+-	__arch_local_irq_stosm(0x01);
++	arch_local_irq_enable_external();
+ 	/* Loop until driver state indicates finished request */
+ 	while (sclp_running_state != sclp_running_state_idle) {
+ 		/* Check for expired request timer */
 -- 
 2.45.1
 
