@@ -1,104 +1,93 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784613E036
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E2A13E036;
+	Thu, 13 Jun 2024 08:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268903; cv=none; b=mKWQpcm6ycj+E+xdRYfahhTp0ytSAjbAufwNYvSKmOdJDV9Wx0CvIoBIMMtEl/YNQrwR0XLZzm7dgKHBz/3ayfEPvdbuFP3LExrDCfC3+InzD/ixhnHuf81g2Nhj2+1mjGBw7kxZAiYLJbbS95W0+y9TIFmfnxcI/KMzOrrm11o=
+	t=1718268923; cv=none; b=nRkzT2XUPwB79u02I5/WbrUx6d8789A0zfCoxGgk5bLHnVB/5vJnxN5ykdRmlVWrjuOxZlDvC/PJafVoLjrMv3++ITatyie1fhbCaqeTcbRmlq9AsrrMW/BwAKgrBocG26ByL9M0WBRSH0KA3gN8NK0oqPKJe7QzPGq9aM89hjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268903; c=relaxed/simple;
-	bh=6Dp5z9ju75aH+FsH4apNpldKWYtpIrXAlWNsBFc7nBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UpgBO8lvc9cunZ7iiEt2iQJDvXsPxwYdRKa+UYx54taPPKuPIF5LFPQaIdsuWVVUHRCfX0bKsb1Ea6wQ2VSmTmfhCfBSYZqZxgOXSjFE3kLDVLvzBt17O3wZcajhH1T+wfoUqgvH38E7/66p0fPuUjAO+CHrAqzs8bh5IeJfH8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ndQ8oFuS; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718268923; c=relaxed/simple;
+	bh=Mbx86OvHeq6gyJt0/wrbcA7csW4sD7XcvVlcTa4GkFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=quQCWGSRx2vQJbrbqOJXLZ1ulBdkozJakDvfYNfYYPGJd2NZCqZcbZRQ5S3ScQ6K1Z83uiZ3VCka1WAagExiudIrNLz27Uex0zNglJ92mOfIxCdho6hz6rXYSc+jCTycVFygBjbnBMfqnsDFKjTSgR+vmEtxdFOboR8ywWgl538=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FCRHpAur; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ndQ8oFuS"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8sBjH026475;
-	Thu, 13 Jun 2024 03:54:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718268852;
-	bh=7kkBMQaDoeYNzDsRgMfJgiGjbnPVFl+KEhsMxEZwPWY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ndQ8oFuSNEgyU9+O5CrbuDsQgtS1wMbvYEp7/hJEalFISshugd2BiIVI5GONrtid1
-	 of9bejvvcUYkbR/FdokdLT8v08nZgbwzmkjQrh1jANU7txBr8papTo+BgVMp00e02/
-	 CvGkJadgG5XtPU+keiWigbeBfUfSzd+QZ07bHB7I=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8sBwV094870
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 03:54:11 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 03:54:11 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 03:54:11 -0500
-Received: from [10.249.129.248] ([10.249.129.248])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8s5Db095270;
-	Thu, 13 Jun 2024 03:54:05 -0500
-Message-ID: <11b01dd4-79f7-432b-8a43-ec653d60a87b@ti.com>
-Date: Thu, 13 Jun 2024 14:24:04 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FCRHpAur"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3C24740E016C;
+	Thu, 13 Jun 2024 08:55:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id bZBfFqES31R9; Thu, 13 Jun 2024 08:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718268915; bh=3Dzk+C3x6/O7l/Mmw+O7gTZjYw/iV38/2gr+mmH9V9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FCRHpAurF+Wm/EOGZM65m6GLwmaYdiGwKyoDw/JKgAHLBrGG3jBdRefQOXpURQTgq
+	 pRL5nPED5jvwl8KeUqkAUCH6sFbGufzeSw3VpJopkeeMYQpYB5G33X3y52FuuSOjEa
+	 UoE0qjM8ngZca0OcO5ZFtgGSmJIlYEFoQ9sPzGXPtbMAnZ8Gn9WfDQIIJ816tJwGLT
+	 HEbNzybwLGzKBYTBuA4MgSO2lVzwWn5HKCcGbG6bE9NSaMPRKIgy4Zdg6UWCbU5EP3
+	 O94BGrYUpFVF0msJz0MP6Klh6B/upITbg7aWriz3jVjxxBdVbdIL0SkQe7DoAsJH5w
+	 D2AfKnd4qR7iU40tp4HAhSuErQrS+q3Fi3cBakIuJTKvkhIab+WFMJ7YXhB8uBu0hU
+	 d4S71CrP5lW6ej2pT4Lb2Pi0Wi5oxXRQ+mFEaTJjmm2f6KiNzzazG2HILEb0Pka/l8
+	 mtn6YgY/hyo9gxaLihpmwJvvXkkL0AGJbQEv1hcIOKqkPOsjOpKD7o3Rh1XNFh6pfK
+	 cpvZI+lQ8IESc/H9E4rdWOWCqmhHivDRq5HfiVodUvng//j5tZ6aldkWgGSHhrA0l+
+	 Qu1UJsBfoHjn8sLTURFd2GcB//vOtSFVFBnGjrDp6HhZfQBMHzkK+FuKZ0vq0+8f1c
+	 O4IIWM8GAvZiDWb5079/AjxQ=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9031940E0081;
+	Thu, 13 Jun 2024 08:55:06 +0000 (UTC)
+Date: Thu, 13 Jun 2024 10:55:05 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ashish Kalra <Ashish.Kalra@amd.com>, Dave Young <dyoung@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3] x86/efi: Free EFI memory map only when installing a
+ new one.
+Message-ID: <20240613085505.GDZmqz6UWxZ1QxKeHu@fat_crate.local>
+References: <20240612135638.298882-2-ardb+git@google.com>
+ <CAMj1kXEgAStastV+sMhXt0pUmvM=nr9D-oDctwb8iiYxt9+fAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] drm/bridge: sii902x: Add pixel clock check in
- atomic_check
-Content-Language: en-US
-To: Jayesh Choudhary <j-choudhary@ti.com>, <linux-kernel@vger.kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <sui.jingfeng@linux.dev>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <mripard@kernel.org>, <sam@ravnborg.org>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>
-References: <20240613083805.439337-1-j-choudhary@ti.com>
- <20240613083805.439337-4-j-choudhary@ti.com>
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-In-Reply-To: <20240613083805.439337-4-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEgAStastV+sMhXt0pUmvM=nr9D-oDctwb8iiYxt9+fAQ@mail.gmail.com>
 
-
-
-On 13-Jun-24 14:08, Jayesh Choudhary wrote:
-> Check the pixel clock for the mode in atomic_check and ensure that
-> it is within the range supported by the bridge.
+On Thu, Jun 13, 2024 at 10:28:05AM +0200, Ard Biesheuvel wrote:
+> Given that this fixes an actual use-after-free bug that is not
+> specific to TDX/SEV or kexec, I'm inclined to queue this up as a fix.
 > 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->  drivers/gpu/drm/bridge/sii902x.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-> index 00a8c469f553..7f91b0db161e 100644
-> --- a/drivers/gpu/drm/bridge/sii902x.c
-> +++ b/drivers/gpu/drm/bridge/sii902x.c
-> @@ -496,6 +496,10 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
->  				       struct drm_crtc_state *crtc_state,
->  				       struct drm_connector_state *conn_state)
->  {
-> +	if (crtc_state->mode.clock < SII902X_MIN_PIXEL_CLOCK_KHZ ||
-> +	    crtc_state->mode.clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * There might be flags negotiation supported in future but
->  	 * set the bus flags in atomic_check statically for now.
+> @Boris: Mind if I take this as an EFI fix? Otherwise, can you queue
+> this up? Thanks.
 
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Sure, go ahead:
+
+$ git log master..tip/master arch/x86/platform/efi/memmap.c
+$ 
+
+Should be fine, conflict-wise.
+
+:-)
+
+Thx.
 
 -- 
-Regards
-Aradhya
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
