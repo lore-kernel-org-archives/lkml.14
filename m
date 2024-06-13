@@ -1,97 +1,88 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32DF15250F
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C765714C585
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718306241; cv=none; b=aHb1b6BcO0oGdtUILOJ7XFwEZ0ee1pDAzmBQynAgPz742ibPPKFuVtTD5rYALvqFe2CDOzMpW9pH7hERK1eXfR/CSPNzayPMzT7v1AdHvdNsAqc410iSbQsBMdAEPLmX4Y+dfP2XO6g5vOg9tHAxual32hgXAKmIXETzEl8MAZY=
+	t=1718306239; cv=none; b=c21cWC9JWkPWp98b7DulW+b1vqc1GG6D5dU5aoEKr4ff4u56elTmKHOTqGBKwUkymqfpBZ1CeT14mmuXhMoJgB1ffZL76FgoDSFhAji/QqoxJ4/B1zMqZD4rppC/M9IycINTuVGGWgipVejsUaJmFRIKyJeqt07apXvXutvKTjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718306241; c=relaxed/simple;
-	bh=+jnJtiUScAEX7YebGNkKf8lf6RqHQioTg5h1y/TviSY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LeEFcyUDoY0WbrwTBiL38NqCbUJVeCKCMWwf2zG57BmQ/KceZwyFoe1byHfys0x9/jnFEd/mkE8UZRucN61icguBKPUBceBZQZDKB7/vbjbDnu9vRR3rAAjGYmBOTiYVQKG0riRHGjT0MzxfgvmArrVEivM6sJJzq+gG8HrEkYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PghC1xDV; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1718306239; c=relaxed/simple;
+	bh=50mbFqI9fBr+NxEmKs09WwYX6bgzJxlemRTo/dg8/3U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Xl3BGKGETTyvKJ2C/aQfwu437Uqf86iSevU4mQpzT2kSz2yLHpmtzi0mdfFwAkGRKWBAw3hnQjZv6dqp3PI3HFdlHwxz209qLidU/ICYqkjI6h6S673Xy3XmFcFLk5v6+wBzy7pc0jxRkcH75nAtQtldjgJ4oXUQqPhZYqyJOz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hCKmGXHo; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PghC1xDV"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f64ecb1766so11615125ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hCKmGXHo"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-795fb13b256so207666985a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718306239; x=1718911039; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1718306236; x=1718911036; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d2si2x/qxMiiRgx/ptA73I3ih5KSBTyIVIweBGPWOt8=;
-        b=PghC1xDVcvoeRzTkSxuMFXK0jJO/4JFGVDpQCQYwx1JDHGatOuKUhsvMC/T9XTVxZq
-         ts7INWTFFDqwPdVnfDq2EgnnvjRCR6KBm4dKNdeAoWJYGtgmWcWPw9VEQYqxI5slI36m
-         GZfHy72ZjoOaV1e7sU5iZLj2n5pHPe3n5Z/DEhAmykCmkAaK+2qcuPwCAVK9Cw8H5QUL
-         y8Mlvvce2YZVSkw9XsNl9DHOUX+CsSOp4l4rl0Uuo4jvAbHOjVkREnwzTyNgoCD5RCrW
-         yIkGBuD4W1jKiodGmintUg1KaOm9/WwfI7awiv9dje6cXPrTg1vnI8264qAUUK122VnM
-         n+pw==
+        bh=NC/AYFyoO9S19kQ3qOxs7+XLTodYdZI/b1WzHwADho0=;
+        b=hCKmGXHoeOL3nYqi+SxFmpcwladmeMBeDC/q3ePvo4sjcinVvdnLEUDkxaHnX7oR8B
+         hmLJDc4mp8BOEYRcPlaPyKaNUmBTo4kq6ncugfqUkw1o5ilPUXRUCGz/ytDl9fvx6Q58
+         ucncJn8CrUBvEKpiWfAiuUvQXNV2sJ7surmf4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718306239; x=1718911039;
+        d=1e100.net; s=20230601; t=1718306236; x=1718911036;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d2si2x/qxMiiRgx/ptA73I3ih5KSBTyIVIweBGPWOt8=;
-        b=dUNrHcRudqIkZA73ljW+Cn2ESEi3YOaSn2FnYSnU8utCruA6wTHj3IS31LmLsceTHN
-         E+JI9vukEyrO/RCXoNj/j30zrUsprgs8815XdpY5nhTRLuVpY9byOGa8Ykk82WejYfzT
-         gZB+W+TkRmFBK+Ak/T/5OZbZVmjOVG+rvOQ6inbdB1Yg4yibkzkRlut3Qq8RWo3Q9aDE
-         u0Gu5Imuz/L08Sqtqay+b6WSzTyMFVmqKnlSz0dTd341VMtF0wkgG1/8BrkDDDO1WogM
-         YUpylLV5AHpnKsaGeCPFAK78UeFg5ccZei0dzMIsgxxzgimebjRNVK/vfnuQrYUT+lm0
-         xtKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDlapmLYK32IM/AAuPeyiqHHsXbQChvqrbhkzIQANw5uAyLxqbREmFu2O7XM81e9wSStzuX3Ifd+fm5g8xZztiQ357U32ON4DKnnLO
-X-Gm-Message-State: AOJu0YwalJDYHmfw7cl9Rb8BzcW+xl3SGArIA2sIVMU+jUNCfu1fNL8x
-	L9rtkyLe5wz4NpGyXXgUqQ2x58A5NnyLTt50kQLNsY9UiC2X5oA4VSK3+7FhpnM=
-X-Google-Smtp-Source: AGHT+IEe/pgm4wbdzYk9w01vIQjdm01pqBBmuWzC0VnQ7Vhdd+iuX8Zf6okO8XfjDwZx3EhOCo7asg==
-X-Received: by 2002:a17:903:2341:b0:1f6:7ee8:8935 with SMTP id d9443c01a7336-1f8629fef3bmr7650085ad.59.1718306239110;
-        Thu, 13 Jun 2024 12:17:19 -0700 (PDT)
-Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e7ca78sm17471015ad.106.2024.06.13.12.17.05
+        bh=NC/AYFyoO9S19kQ3qOxs7+XLTodYdZI/b1WzHwADho0=;
+        b=bLu59LVO6ddh1zZjGo/noFeTbfaSnjUXLageKCbKITqtH0KlhiYJW4pEyXy+pq3XUY
+         iz2AQ8xNrdwP30kvrLRivKwWfYlt7A5J4mTqmN0yOAN7/TcpvX+SUKecQzuaicGLuhEM
+         VMggfUVHsZJrPDCRB5Hfgq2yHqhOjgO+tZZ0MvXCrzgogm7zixAwPa/xjM+1I9nJpsAm
+         2nArxb+dqFBIGmXVF66bTighKn/qseTq3JlXJXc1Wn58MlkDT7sjOJm9dqF5Fpu8KbUN
+         1oGEoJH30DiBsz+wa6U9eOSuu/B+faLumLtluJqzpNoAaUJpyYqDOHGG65vagIAy6tDB
+         y3pQ==
+X-Gm-Message-State: AOJu0YyHzXoQgEtWVPPSzfR04LtyHhz2J5y3sYaT18MkOTQ54RrKoy2x
+	hEw4iq1r6RSILnnv6lfGOQEQcarLDCWLIg+5yDHKgHrPfNtJshnF6pEx2pfTNbwSmSZFk/xq31O
+	uX9QpWc+RW4+3tl7pomue+++ZwnGTCVHNL+mwa87/J5cwvr/9C+UqwWrjrtnvuHVbqwopljPOXP
+	3ISN3uRcdZ5uOwVHY/e3RCiGqEZHqykrzz2hcCI8Ft1hXHtpm9kO4b
+X-Google-Smtp-Source: AGHT+IHgqzhScZOgUE/gqvz3OpOTuoDlrnlwif3SW+jviqBJcKlg3UXk9A/jLXi1/PPNVDEkMOEYWA==
+X-Received: by 2002:a0c:d6cf:0:b0:6b2:9e53:fe50 with SMTP id 6a1803df08f44-6b2af2ee3famr12897306d6.22.1718306235389;
+        Thu, 13 Jun 2024 12:17:15 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb47f6sm9714106d6.82.2024.06.13.12.17.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 12:17:18 -0700 (PDT)
-From: Jesse Taube <jesse@rivosinc.com>
-To: linux-riscv@lists.infradead.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@gmx.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 3/6] RISC-V: Check scalar unaligned access on all CPUs
-Date: Thu, 13 Jun 2024 15:16:12 -0400
-Message-ID: <20240613191616.2101821-4-jesse@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240613191616.2101821-1-jesse@rivosinc.com>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
+        Thu, 13 Jun 2024 12:17:15 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	bp@alien8.de,
+	hpa@zytor.com,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com,
+	tglx@linutronix.de
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	richardcochran@gmail.com,
+	linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com,
+	timothym@vmware.com,
+	akaher@vmware.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	horms@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>
+Subject: [PATCH v11 1/8] x86/vmware: Introduce VMware hypercall API
+Date: Thu, 13 Jun 2024 12:16:43 -0700
+Message-Id: <20240613191650.9913-2-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.4
+In-Reply-To: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
+References: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,116 +91,407 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Originally, the check_unaligned_access_emulated_all_cpus function
-only checked the boot hart. This fixes the function to check all
-harts.
+Introduce vmware_hypercall family of functions. It is a common
+implementation to be used by the VMware guest code and virtual
+device drivers in architecture independent manner.
 
-Check for Zicclsm before checking for unaligned access. This will
-greatly reduce the boot up time as finding the access speed is no longer
-necessary.
+The API consists of vmware_hypercallX and vmware_hypercall_hb_{out,in}
+set of functions by analogy with KVM hypercall API. Architecture
+specific implementation is hidden inside.
 
-Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+It will simplify future enhancements in VMware hypercalls such
+as SEV-ES and TDX related changes without needs to modify a
+caller in device drivers code.
+
+Current implementation extends an idea from commit bac7b4e84323
+("x86/vmware: Update platform detection code for VMCALL/VMMCALL
+hypercalls") to have a slow, but safe path vmware_hypercall_slow()
+earlier during the boot when alternatives are not yet applied.
+The code inherits VMWARE_CMD logic from the commit mentioned above.
+
+Move common macros from vmware.c to vmware.h.
+
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
 ---
-V1 -> V2:
- - New patch
----
- arch/riscv/kernel/traps_misaligned.c       | 23 ++++++----------------
- arch/riscv/kernel/unaligned_access_speed.c | 23 +++++++++++++---------
- 2 files changed, 20 insertions(+), 26 deletions(-)
+ arch/x86/include/asm/vmware.h | 279 ++++++++++++++++++++++++++++++++--
+ arch/x86/kernel/cpu/vmware.c  |  58 ++++++-
+ 2 files changed, 315 insertions(+), 22 deletions(-)
 
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-index b62d5a2f4541..8fadbe00dd62 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -526,31 +526,17 @@ int handle_misaligned_store(struct pt_regs *regs)
- 	return 0;
- }
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index ac9fc51e2b18..724c8b9b4b8d 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -7,26 +7,277 @@
+ #include <linux/stringify.h>
  
--static bool check_unaligned_access_emulated(int cpu)
-+static void check_unaligned_access_emulated(struct work_struct *unused)
- {
-+	int cpu = smp_processor_id();
- 	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
- 	unsigned long tmp_var, tmp_val;
--	bool misaligned_emu_detected;
- 
- 	*mas_ptr = RISCV_HWPROBE_MISALIGNED_UNKNOWN;
- 
- 	__asm__ __volatile__ (
- 		"       "REG_L" %[tmp], 1(%[ptr])\n"
- 		: [tmp] "=r" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
--
--	misaligned_emu_detected = (*mas_ptr == RISCV_HWPROBE_MISALIGNED_EMULATED);
--	/*
--	 * If unaligned_ctl is already set, this means that we detected that all
--	 * CPUS uses emulated misaligned access at boot time. If that changed
--	 * when hotplugging the new cpu, this is something we don't handle.
--	 */
--	if (unlikely(unaligned_ctl && !misaligned_emu_detected)) {
--		pr_crit("CPU misaligned accesses non homogeneous (expected all emulated)\n");
--		while (true)
--			cpu_relax();
--	}
--
--	return misaligned_emu_detected;
- }
- 
- bool check_unaligned_access_emulated_all_cpus(void)
-@@ -562,8 +548,11 @@ bool check_unaligned_access_emulated_all_cpus(void)
- 	 * accesses emulated since tasks requesting such control can run on any
- 	 * CPU.
- 	 */
-+	schedule_on_each_cpu(check_unaligned_access_emulated);
+ /*
+- * The hypercall definitions differ in the low word of the %edx argument
+- * in the following way: the old port base interface uses the port
+- * number to distinguish between high- and low bandwidth versions.
++ * VMware hypercall ABI.
++ *
++ * - Low bandwidth (LB) hypercalls (I/O port based, vmcall and vmmcall)
++ * have up to 6 input and 6 output arguments passed and returned using
++ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
++ * %esi (arg4), %edi (arg5).
++ * The following input arguments must be initialized by the caller:
++ * arg0 - VMWARE_HYPERVISOR_MAGIC
++ * arg2 - Hypercall command
++ * arg3 bits [15:0] - Port number, LB and direction flags
++ *
++ * - High bandwidth (HB) hypercalls are I/O port based only. They have
++ * up to 7 input and 7 output arguments passed and returned using
++ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
++ * %esi (arg4), %edi (arg5), %ebp (arg6).
++ * The following input arguments must be initialized by the caller:
++ * arg0 - VMWARE_HYPERVISOR_MAGIC
++ * arg1 - Hypercall command
++ * arg3 bits [15:0] - Port number, HB and direction flags
++ *
++ * For compatibility purposes, x86_64 systems use only lower 32 bits
++ * for input and output arguments.
++ *
++ * The hypercall definitions differ in the low word of the %edx (arg3)
++ * in the following way: the old I/O port based interface uses the port
++ * number to distinguish between high- and low bandwidth versions, and
++ * uses IN/OUT instructions to define transfer direction.
+  *
+  * The new vmcall interface instead uses a set of flags to select
+  * bandwidth mode and transfer direction. The flags should be loaded
+- * into %dx by any user and are automatically replaced by the port
+- * number if the VMWARE_HYPERVISOR_PORT method is used.
+- *
+- * In short, new driver code should strictly use the new definition of
+- * %dx content.
++ * into arg3 by any user and are automatically replaced by the port
++ * number if the I/O port method is used.
++ */
 +
- 	for_each_online_cpu(cpu)
--		if (!check_unaligned_access_emulated(cpu))
-+		if (per_cpu(misaligned_access_speed, cpu)
-+		    != RISCV_HWPROBE_MISALIGNED_EMULATED)
- 			return false;
- 
- 	unaligned_ctl = true;
-diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-index a9a6bcb02acf..70c1588fc353 100644
---- a/arch/riscv/kernel/unaligned_access_speed.c
-+++ b/arch/riscv/kernel/unaligned_access_speed.c
-@@ -259,23 +259,28 @@ static int check_unaligned_access_speed_all_cpus(void)
- 	kfree(bufs);
- 	return 0;
- }
-+#endif /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
- 
- static int check_unaligned_access_all_cpus(void)
- {
--	bool all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
-+	bool all_cpus_emulated;
-+	int cpu;
- 
-+	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
-+		for_each_online_cpu(cpu) {
-+			per_cpu(misaligned_access_speed, cpu) = RISCV_HWPROBE_MISALIGNED_FAST;
-+		}
-+		return 0;
-+	}
++#define VMWARE_HYPERVISOR_HB		BIT(0)
++#define VMWARE_HYPERVISOR_OUT		BIT(1)
 +
-+	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
++#define VMWARE_HYPERVISOR_PORT		0x5658
++#define VMWARE_HYPERVISOR_PORT_HB	(VMWARE_HYPERVISOR_PORT | \
++					 VMWARE_HYPERVISOR_HB)
 +
-+#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
- 	if (!all_cpus_emulated)
- 		return check_unaligned_access_speed_all_cpus();
++#define VMWARE_HYPERVISOR_MAGIC		0x564d5868U
++
++#define VMWARE_CMD_GETVERSION		10
++#define VMWARE_CMD_GETHZ		45
++#define VMWARE_CMD_GETVCPU_INFO		68
++#define VMWARE_CMD_STEALCLOCK		91
++
++#define CPUID_VMWARE_FEATURES_ECX_VMMCALL	BIT(0)
++#define CPUID_VMWARE_FEATURES_ECX_VMCALL	BIT(1)
++
++extern unsigned long vmware_hypercall_slow(unsigned long cmd,
++					   unsigned long in1, unsigned long in3,
++					   unsigned long in4, unsigned long in5,
++					   u32 *out1, u32 *out2, u32 *out3,
++					   u32 *out4, u32 *out5);
++
++/*
++ * The low bandwidth call. The low word of %edx is presumed to have OUT bit
++ * set. The high word of %edx may contain input data from the caller.
+  */
++#define VMWARE_HYPERCALL					\
++	ALTERNATIVE_2("movw %[port], %%dx\n\t"			\
++		      "inl (%%dx), %%eax",			\
++		      "vmcall", X86_FEATURE_VMCALL,		\
++		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
++
++static inline
++unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     NULL, NULL, NULL, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (0)
++		: "cc", "memory");
++	return out0;
++}
++
++static inline
++unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
++				u32 *out1, u32 *out2)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     out1, out2, NULL, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=b" (*out1), "=c" (*out2)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (0)
++		: "cc", "memory");
++	return out0;
++}
++
++static inline
++unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
++				u32 *out1, u32 *out2, u32 *out3)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     out1, out2, out3, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (0)
++		: "cc", "memory");
++	return out0;
++}
++
++static inline
++unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
++				unsigned long in3, unsigned long in4,
++				unsigned long in5, u32 *out2)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
++					     NULL, out2, NULL, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=c" (*out2)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (in3),
++		  "S" (in4),
++		  "D" (in5)
++		: "cc", "memory");
++	return out0;
++}
++
++static inline
++unsigned long vmware_hypercall6(unsigned long cmd, unsigned long in1,
++				unsigned long in3, u32 *out2,
++				u32 *out3, u32 *out4, u32 *out5)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, in3, 0, 0,
++					     NULL, out2, out3, out4, out5);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=c" (*out2), "=d" (*out3), "=S" (*out4),
++		  "=D" (*out5)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (in3)
++		: "cc", "memory");
++	return out0;
++}
++
++static inline
++unsigned long vmware_hypercall7(unsigned long cmd, unsigned long in1,
++				unsigned long in3, unsigned long in4,
++				unsigned long in5, u32 *out1,
++				u32 *out2, u32 *out3)
++{
++	unsigned long out0;
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
++					     out1, out2, out3, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (in3),
++		  "S" (in4),
++		  "D" (in5)
++		: "cc", "memory");
++	return out0;
++}
++
++#ifdef CONFIG_X86_64
++#define VMW_BP_CONSTRAINT "r"
++#else
++#define VMW_BP_CONSTRAINT "m"
 +#endif
++
++/*
++ * High bandwidth calls are not supported on encrypted memory guests.
++ * The caller should check cc_platform_has(CC_ATTR_MEM_ENCRYPT) and use
++ * low bandwidth hypercall if memory encryption is set.
++ * This assumption simplifies HB hypercall implementation to just I/O port
++ * based approach without alternative patching.
++ */
++static inline
++unsigned long vmware_hypercall_hb_out(unsigned long cmd, unsigned long in2,
++				      unsigned long in3, unsigned long in4,
++				      unsigned long in5, unsigned long in6,
++				      u32 *out1)
++{
++	unsigned long out0;
++
++	asm_inline volatile (
++		UNWIND_HINT_SAVE
++		"push %%" _ASM_BP "\n\t"
++		UNWIND_HINT_UNDEFINED
++		"mov %[in6], %%" _ASM_BP "\n\t"
++		"rep outsb\n\t"
++		"pop %%" _ASM_BP "\n\t"
++		UNWIND_HINT_RESTORE
++		: "=a" (out0), "=b" (*out1)
++		: "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (cmd),
++		  "c" (in2),
++		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
++		  "S" (in4),
++		  "D" (in5),
++		  [in6] VMW_BP_CONSTRAINT (in6)
++		: "cc", "memory");
++	return out0;
++}
  
- 	return 0;
- }
--#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
--static int check_unaligned_access_all_cpus(void)
--{
--	check_unaligned_access_emulated_all_cpus();
+-/* Old port-based version */
+-#define VMWARE_HYPERVISOR_PORT    0x5658
+-#define VMWARE_HYPERVISOR_PORT_HB 0x5659
++static inline
++unsigned long vmware_hypercall_hb_in(unsigned long cmd, unsigned long in2,
++				     unsigned long in3, unsigned long in4,
++				     unsigned long in5, unsigned long in6,
++				     u32 *out1)
++{
++	unsigned long out0;
+ 
+-/* Current vmcall / vmmcall version */
+-#define VMWARE_HYPERVISOR_HB   BIT(0)
+-#define VMWARE_HYPERVISOR_OUT  BIT(1)
++	asm_inline volatile (
++		UNWIND_HINT_SAVE
++		"push %%" _ASM_BP "\n\t"
++		UNWIND_HINT_UNDEFINED
++		"mov %[in6], %%" _ASM_BP "\n\t"
++		"rep insb\n\t"
++		"pop %%" _ASM_BP "\n\t"
++		UNWIND_HINT_RESTORE
++		: "=a" (out0), "=b" (*out1)
++		: "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (cmd),
++		  "c" (in2),
++		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
++		  "S" (in4),
++		  "D" (in5),
++		  [in6] VMW_BP_CONSTRAINT (in6)
++		: "cc", "memory");
++	return out0;
++}
++#undef VMW_BP_CONSTRAINT
++#undef VMWARE_HYPERCALL
+ 
+ /* The low bandwidth call. The low word of edx is presumed clear. */
+ #define VMWARE_HYPERCALL						\
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 11f83d07925e..533ac2d1de88 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -41,17 +41,9 @@
+ 
+ #define CPUID_VMWARE_INFO_LEAF               0x40000000
+ #define CPUID_VMWARE_FEATURES_LEAF           0x40000010
+-#define CPUID_VMWARE_FEATURES_ECX_VMMCALL    BIT(0)
+-#define CPUID_VMWARE_FEATURES_ECX_VMCALL     BIT(1)
+ 
+-#define VMWARE_HYPERVISOR_MAGIC	0x564D5868
 -
--	return 0;
--}
--#endif
+-#define VMWARE_CMD_GETVERSION    10
+-#define VMWARE_CMD_GETHZ         45
+-#define VMWARE_CMD_GETVCPU_INFO  68
+ #define VMWARE_CMD_LEGACY_X2APIC  3
+ #define VMWARE_CMD_VCPU_RESERVED 31
+-#define VMWARE_CMD_STEALCLOCK    91
  
- arch_initcall(check_unaligned_access_all_cpus);
+ #define STEALCLOCK_NOT_AVAILABLE (-1)
+ #define STEALCLOCK_DISABLED        0
+@@ -110,6 +102,56 @@ struct vmware_steal_time {
+ static unsigned long vmware_tsc_khz __ro_after_init;
+ static u8 vmware_hypercall_mode     __ro_after_init;
+ 
++unsigned long vmware_hypercall_slow(unsigned long cmd,
++				    unsigned long in1, unsigned long in3,
++				    unsigned long in4, unsigned long in5,
++				    u32 *out1, u32 *out2, u32 *out3,
++				    u32 *out4, u32 *out5)
++{
++	unsigned long out0;
++
++	switch (vmware_hypercall_mode) {
++	case CPUID_VMWARE_FEATURES_ECX_VMCALL:
++		asm_inline volatile ("vmcall"
++				: "=a" (out0), "=b" (*out1), "=c" (*out2),
++				"=d" (*out3), "=S" (*out4), "=D" (*out5)
++				: "a" (VMWARE_HYPERVISOR_MAGIC),
++				"b" (in1),
++				"c" (cmd),
++				"d" (in3),
++				"S" (in4),
++				"D" (in5)
++				: "cc", "memory");
++		break;
++	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:
++		asm_inline volatile ("vmmcall"
++				: "=a" (out0), "=b" (*out1), "=c" (*out2),
++				"=d" (*out3), "=S" (*out4), "=D" (*out5)
++				: "a" (VMWARE_HYPERVISOR_MAGIC),
++				"b" (in1),
++				"c" (cmd),
++				"d" (in3),
++				"S" (in4),
++				"D" (in5)
++				: "cc", "memory");
++		break;
++	default:
++		asm_inline volatile ("movw %[port], %%dx; inl (%%dx), %%eax"
++				: "=a" (out0), "=b" (*out1), "=c" (*out2),
++				"=d" (*out3), "=S" (*out4), "=D" (*out5)
++				: [port] "i" (VMWARE_HYPERVISOR_PORT),
++				"a" (VMWARE_HYPERVISOR_MAGIC),
++				"b" (in1),
++				"c" (cmd),
++				"d" (in3),
++				"S" (in4),
++				"D" (in5)
++				: "cc", "memory");
++		break;
++	}
++	return out0;
++}
++
+ static inline int __vmware_platform(void)
+ {
+ 	uint32_t eax, ebx, ecx, edx;
 -- 
-2.43.0
+2.39.4
 
