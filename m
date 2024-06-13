@@ -1,145 +1,116 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FA8149C7D;
-	Thu, 13 Jun 2024 15:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B1F1474CE;
+	Thu, 13 Jun 2024 15:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718291715; cv=none; b=I6k4pqn5/dnQLOyMWKruLeFSOBwjVdYSTr1f3x99KWFHFM/o5FCp66V0vm77JZddfbMvxArw8ykJz6xDy04Aau4JRhKa2agjvfS66UJ8RAFpAXXjqPWllg7zf/8T6yNyW36L8udfxZ+S88BqZoFRXJOrcRgtfYaJLtZ1CWKGyGc=
+	t=1718291730; cv=none; b=CFUcGkdcW7MDO1EKoX/YZM78YLEomKR5Q1PT9geiXaGbAst/oVq/1QtXBH3Dse+6u6RabnuaJ6/WLQpamkSa0jadAHx+tjCMXZE6WtGztbQlG/OmuQGr6BUAA8Go0PdeIvSF/d/ZeABTMU5cZlic7fo3pvoi+stucZTZH6UqLbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718291715; c=relaxed/simple;
-	bh=mt4zljf//d/ZLhry8ZIW+H+w5ZVB+RIooYCp5+PfIp8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s3wasWUNaw1lo22uj+M3oljXdvkGXm6okZTU+FrI80K5CboGeMEmCydwcQDGUf+vq27Nc72s4ypESmddPlCBmv8cvGfxQ5kGBByCQ2SP60K30dxeValU2yw/PQK/kRCufb1mJZfGKDav498t2WJ3s2lRVyTgroUCSbhMgw0av1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ui23fgE4; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ui23fgE4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718291712;
-	bh=mt4zljf//d/ZLhry8ZIW+H+w5ZVB+RIooYCp5+PfIp8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ui23fgE4fIJb1iwXrYKnDH/yvk/z9ELcIU9rN0w3xYDk8TWLWIWjnNP3Amiw9QjU5
-	 k01zUI1l1A49/L48DV5oQ280ZYHDUa38BHzYezTi9KqmXNpafWRFhdWZC56zA+Xb0m
-	 tE98g9NtQjbdegx/sqlzAeQebnSOTOGlMakAGdBqYzHZa3SDn7u/2H8tlbeOIXv1o/
-	 NE40UymaBZ+i1GIz+XaLQ3+B2ZcMiX/3Dod2p2MLWMURvoB7o1m7TzX0O3QtZ3kHy5
-	 Ujf43TGsOGrGN1VKD6+/sxjhK0CvommnTLHOtp8f8fixdrMyAAR/kkGtQ7C8eOTRHI
-	 tjUAfkDyi2G4g==
-Received: from [192.168.1.250] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 162553782198;
-	Thu, 13 Jun 2024 15:15:10 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Thu, 13 Jun 2024 11:14:52 -0400
-Subject: [PATCH 2/2] kselftest: devices: Add of-fullname-regex property
+	s=arc-20240116; t=1718291730; c=relaxed/simple;
+	bh=upw3YZFDSMosNFgE94Z/c8GKTYTwKdjYG5hj/Ti18sQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XWlEMVv+M90SJq8v9Npe7mQmRoqP1OTYYmMBObQq4fifYwVODCRYtvfcPFBfsHKfkOwPq4Sdb3eDf8P/yhGKkL/sC6PudTEZ2FTtGhg8iGxBGRzcXK8IWb2R/Z6gxZOKEapoT0TeW7QLngK2ZFx39LuOESGD125RJU2gTcn3nN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-63152a07830so6923307b3.3;
+        Thu, 13 Jun 2024 08:15:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718291726; x=1718896526;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3USazagu6cS/+37Hogg/qABAlJZ7SMpYxKFouZ1jhuA=;
+        b=hyaV1QG5xEG+hdcEXr7FWnuZyYbnxCCej4a8XYDqXeBZBbynST+IsD4Fq+ALy+hBO4
+         K/Oo1+BoLKu1YCYL4p84RvtjT2+mlBoQiwAScb2cQSS5qxFFRJnubihW4qJGaMRt5h6D
+         EdJbAjQQb1C0b40Ieo+wW6Vnr7NKA5AWzFEkWsPrPI/5NM9Njlz+Dg5ygyq2iSyrFyz1
+         H84fqxPXkxx2fnF3HvmUbaYciqdXy5QBmKiyp8XqJUPkwHSFqbf7NcyxVVeZnV9Oyb/E
+         6W7uBchuf+cQzEAzs2MaptbN3nJWiwcjGazDaNOAE7OsDNhVK/m5EFZ0mQ98dLb8xurs
+         OevQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVb+I9sfE2o073qznscslnh0mfXT9U+4FoQBKcoYtyqUft1KRiOB4PPAEi1RRi08T02ThKLNRmOtDj+Pwj5a/SzIYZgxzEj86oF4qMJP9b3JiwnjTdie3ZEp8EHpNgTthCsFfdmw90KMxYqu50m3cwpIWDQa/CLOSYbH8aE6eLPIwdgMeIegXOjiwHhZpJMxRiqJJI87+N58YidWMINFoWQAjW6Ece
+X-Gm-Message-State: AOJu0YzHW5NikyqhS2HZ/6ACEjE9qABVyRwtdpFLe8U57GmuCPJNDtPn
+	IsvXgSIzpE8nM8SKWfuiXIApAbZWsEgEsUbjwHCZNHggXlDw8r64/A2F8y/5
+X-Google-Smtp-Source: AGHT+IGagWeXE+WryF70K5ZP2Dq4uP0EZSxpfr05it96YSS/9QVMlIYbu2RV8nmgBgub9iGPg8sICw==
+X-Received: by 2002:a0d:c645:0:b0:615:35e1:e512 with SMTP id 00721157ae682-62fb79c2c01mr48079267b3.0.1718291724927;
+        Thu, 13 Jun 2024 08:15:24 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-631183d7842sm1951217b3.24.2024.06.13.08.15.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jun 2024 08:15:24 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6312dc531d3so8495417b3.0;
+        Thu, 13 Jun 2024 08:15:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWsu8KdoT17RdRLYMieCZAFg+Dz3q244Nc3S7j5QYuA1JpUjRcaHAl8FaR2G9PKkqqq2ubEL5rwkZkyOHpxOUmbOkXTXHMZ5uO/e+Ce5EZibb5sGLh1GqMVAaVy38tIjAaa4sDToTWv/mbuF2XulG9sd93oML0TuvVjH7KWwhRHOgcYOzUrtZjw00BfXy6zUVX270eTrlyQnmbMIZVgaP1eb+/j4Gim
+X-Received: by 2002:a0d:df17:0:b0:62c:f90d:3797 with SMTP id
+ 00721157ae682-62fbc5d7d86mr45329167b3.37.1718291724474; Thu, 13 Jun 2024
+ 08:15:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240613-kselftest-discoverable-probe-mt8195-kci-v1-2-7b396a9b032d@collabora.com>
-References: <20240613-kselftest-discoverable-probe-mt8195-kci-v1-0-7b396a9b032d@collabora.com>
-In-Reply-To: <20240613-kselftest-discoverable-probe-mt8195-kci-v1-0-7b396a9b032d@collabora.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-usb@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernelci@lists.linux.dev, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.13.0
+References: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240610233221.242749-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <6b3fe242-3733-4f16-b727-494dc1d82002@kernel.org> <CA+V-a8vp0qHKqUMvyfy9hQjKyk8Cs0bDTnYh-ChvPi150r5i2g@mail.gmail.com>
+ <3d0a7a82-6262-40e6-be25-4a1c4d8df2fe@kernel.org>
+In-Reply-To: <3d0a7a82-6262-40e6-be25-4a1c4d8df2fe@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 13 Jun 2024 17:15:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUvtUWdEfN_=gNJWY+qfE6Yw9KdenQ2OkLc=HvmRnB6pw@mail.gmail.com>
+Message-ID: <CAMuHMdUvtUWdEfN_=gNJWY+qfE6Yw9KdenQ2OkLc=HvmRnB6pw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/4] dt-bindings: clock: Add R9A09G057 core clocks
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce a new 'of-fullname-regex' property that takes a regular
-expression and matches against the OF_FULLNAME property. It allows
-matching controllers that don't have a unique DT address across sibling
-controllers, and thus dt-mmio can't be used.
+Hi Krzysztof,
 
-One particular example of where this is needed is on MT8195 which has
-multiple USB controllers described by two level deep nodes and using the
-ranges property:
+On Thu, Jun 13, 2024 at 2:56=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+> On 13/06/2024 11:57, Lad, Prabhakar wrote:
+> >>> of section 4.4.2 which cannot be controlled by CLKON register.
+> >>> ---
+> >>>  include/dt-bindings/clock/r9a09g057-cpg.h | 21 +++++++++++++++++++++
+> >>>  1 file changed, 21 insertions(+)
+> >>>  create mode 100644 include/dt-bindings/clock/r9a09g057-cpg.h
+> >>
+> >> Missing vendor prefix.
+> >>
+> > OK, Is this just for new includes being added, or do you want me to
+> > rename the existing Renesas specific includes in here which dont have
+> > vendor prefix?
+>
+> Didn't we discuss it?
+>
+> I commented only about this binding.
 
-    ssusb2: usb@112a1000 {
-        reg = <0 0x112a1000 0 0x2dff>, <0 0x112a3e00 0 0x0100>;
-        ranges = <0 0 0 0x112a0000 0 0x3f00>;
-        xhci2: usb@0 {
+Yes we did, in the context of the R-Car V4M DT binding definitions,
+which became include/dt-bindings/clock/renesas,r8a779h0-cpg-mssr.h
+But Prabhakar was not involved there.
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- .../selftests/devices/boards/google,spherion.yaml  |  4 ++++
- .../selftests/devices/test_discoverable_devices.py | 24 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+Note that I also asked to include the vendor prefix, see
+https://lore.kernel.org/linux-renesas-soc/CAMuHMdU7+O-+v=3D2V83AjQmTWyGy_a-=
+AHgU_nPMDHnVUtYt89iQ@mail.gmail.com/
 
-diff --git a/tools/testing/selftests/devices/boards/google,spherion.yaml b/tools/testing/selftests/devices/boards/google,spherion.yaml
-index 17157ecd8c14..3ea843324797 100644
---- a/tools/testing/selftests/devices/boards/google,spherion.yaml
-+++ b/tools/testing/selftests/devices/boards/google,spherion.yaml
-@@ -11,6 +11,10 @@
- # this, several optional keys can be used:
- # - dt-mmio: identify the MMIO address of the controller as defined in the
- #   Devicetree.
-+# - of-fullname-regex: regular expression to match against the OF_FULLNAME
-+#   property. Useful when the controller's address is not unique across other
-+#   sibling controllers. In this case, dt-mmio can't be used, and this property
-+#   allows the matching to include parent nodes as well to make it unique.
- # - usb-version: for USB controllers to differentiate between USB3 and USB2
- #   buses sharing the same controller.
- # - acpi-uid: _UID property of the controller as supplied by the ACPI. Useful to
-diff --git a/tools/testing/selftests/devices/test_discoverable_devices.py b/tools/testing/selftests/devices/test_discoverable_devices.py
-index 19f28ea774f4..8f2200540a1f 100755
---- a/tools/testing/selftests/devices/test_discoverable_devices.py
-+++ b/tools/testing/selftests/devices/test_discoverable_devices.py
-@@ -64,6 +64,22 @@ def get_dt_mmio(sysfs_dev_dir):
-         sysfs_dev_dir = os.path.dirname(sysfs_dev_dir)
- 
- 
-+def get_of_fullname(sysfs_dev_dir):
-+    re_of_fullname = re.compile("OF_FULLNAME=(.*)")
-+    of_full_name = None
-+
-+    # PCI controllers' sysfs don't have an of_node, so have to read it from the
-+    # parent
-+    while not of_full_name:
-+        try:
-+            with open(os.path.join(sysfs_dev_dir, "uevent")) as f:
-+                of_fullname = re_of_fullname.search(f.read()).group(1)
-+                return of_fullname
-+        except:
-+            pass
-+        sysfs_dev_dir = os.path.dirname(sysfs_dev_dir)
-+
-+
- def get_acpi_uid(sysfs_dev_dir):
-     with open(os.path.join(sysfs_dev_dir, "firmware_node", "uid")) as f:
-         return f.read()
-@@ -97,6 +113,11 @@ def find_controller_in_sysfs(controller, parent_sysfs=None):
-             if str(controller["dt-mmio"]) != get_dt_mmio(c):
-                 continue
- 
-+        if controller.get("of-fullname-regex"):
-+            re_of_fullname = re.compile(str(controller["of-fullname-regex"]))
-+            if not re_of_fullname.match(get_of_fullname(c)):
-+                continue
-+
-         if controller.get("usb-version"):
-             if controller["usb-version"] != get_usb_version(c):
-                 continue
-@@ -195,6 +216,9 @@ def generate_pathname(device):
-     if device.get("dt-mmio"):
-         pathname += "@" + str(device["dt-mmio"])
- 
-+    if device.get("of-fullname-regex"):
-+        pathname += "-" + str(device["of-fullname-regex"])
-+
-     if device.get("name"):
-         pathname = pathname + "/" + device["name"]
- 
+Gr{oetje,eeting}s,
 
--- 
-2.45.0
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
