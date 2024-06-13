@@ -1,133 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BB11428E2;
-	Thu, 13 Jun 2024 13:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCCF9449;
+	Thu, 13 Jun 2024 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284660; cv=none; b=sVV65y4vKcS+OpE7ajyEbObCyIfQvn/9TJTTBgp0IYQedPMI0T2M2dFDwF+PciC8Rmo7F67ZohG42FSpHTVl2Cfk18ODg93oU7fI9R8poWEOos3BAbjj849QKq5gX+3vVDmd/2VYWaG82mgJL6gx9E9yUquHrA3RH+vuDdmiodw=
+	t=1718284691; cv=none; b=ArT8J6oxusIeh9chLCnHyzKztxUZgYf/lQJv/XNXz1GfgAiAwynSx4MPaSRhkuDFZIX1C2NzJq/h94YHk7aSx8wV2kieB66uuLLe4C6gsqQZATd/0EyRX1/NbEKUkStTk/E3eGIDnlRytK6qUlzxRFNbiE8s51bI4BOmq31kvXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284660; c=relaxed/simple;
-	bh=MNEPDLoK2PpSr3mXs73h/X1IsDVoNn91Thnl+e7QMOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XUF+VKx672bniCJ80BRvr8A9FuHycsvIfAXvC7Vc4n7w8jbaahH4uvSuKUGZB/ryAzDpNn2gw6TlOv1NoyD7RKVBi1dcydpjYHRijWLAFe1FRxGQKK9wQUyx8Z0EuKDWWbNpnybmH3BH3UGMyTIBBsGkCVQSDxwxtlhGG5PPmZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrJNonci; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrJNonci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9840FC2BBFC;
-	Thu, 13 Jun 2024 13:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718284659;
-	bh=MNEPDLoK2PpSr3mXs73h/X1IsDVoNn91Thnl+e7QMOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PrJNoncip6Fskk6khSzwVkZcP4VV4lL66FNijKu7vU7Sa2sDJxXcnY6X8XmLSQiA2
-	 4cB4hS1wXzFghXFB3J5yFAKY+IKpZgNy8qW0HPZhuZmz5DjP3vXmvgxzO4aWxQ43wP
-	 taLyw7OM6XqoXVoZdLh1xaql+VFaOhDe83nvyqml33dQwUsZNR5W8SNp+SZsHj+V0E
-	 ZevF626b65m9P7cUAMT3nA2qCvZnSTH1IIFeUSRQBfSEFqmhuFsLDjo/xbGSfh5iza
-	 OrbJgcAnTw7Yn4fFtj9AXgzmZt0aGT5SoaVsRV5proKczNLZZS+fl8ca4Uw1+Mr13q
-	 G7DB+bZAFs3cA==
-Message-ID: <c108719b-992f-4aa6-aa9d-c0276a0ec646@kernel.org>
-Date: Thu, 13 Jun 2024 15:17:34 +0200
+	s=arc-20240116; t=1718284691; c=relaxed/simple;
+	bh=zH9/26bCnqQ1D4kgrGaATCsRHHQL0Yv8+lKkx1Ua+NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bl46d5j2QoSz4YT8AJyAeNA/ww+sixI9WRnVHQ8xUC9Le450VlhTpui+hdxLnyhTZxsHSAseCAGNrURiHkBEh4fO6YU2j0FZY29zOziOU6OUuUsQd2k80VXcfBQhDlfTQCzm+gs3LGqpP4SKeyUUj8lRNADoNFnYB3oQdNaARws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-2b-666af18c52e4
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gregory Price <gregory.price@memverge.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH 1/8] mm: make alloc_demote_folio externally invokable for migration
+Date: Thu, 13 Jun 2024 22:17:32 +0900
+Message-ID: <20240613131741.513-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240613131741.513-1-honggyu.kim@sk.com>
+References: <20240613131741.513-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100-crd: fix DAI used for
- headset recording
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240611142555.994675-1-krzysztof.kozlowski@linaro.org>
- <20240611142555.994675-2-krzysztof.kozlowski@linaro.org>
- <90f5ad41-7192-4c01-90c0-ad9c54094917@linaro.org>
- <9e9cbc0b-f9fd-439c-93d1-054179f7b07f@linaro.org>
- <7rfoogp7w3gmtyawmil5lilx4blbpnb3nzl5tv2onydmzblcqw@qooqesspnrp4>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <7rfoogp7w3gmtyawmil5lilx4blbpnb3nzl5tv2onydmzblcqw@qooqesspnrp4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsXC9ZZnkW7Px6w0g/2T5S0m9hhYzFm/hs3i
+	/oPX7BZP/v9mtWhoesRicXnXHDaLe2v+s1ocWX+WxWLz2TPMFouXq1ns63jAZHH46xsmBx6P
+	paffsHnsnHWX3aNl3y12j02rOtk8Nn2axO5xYsZvFo8Xm2cyemz8+J/d4/MmuQDOKC6blNSc
+	zLLUIn27BK6MKacPMhd0clf8nbqavYFxPmcXIyeHhICJxK8JR9lg7FtNRxhBbDYBNYkrLycx
+	dTFycIgIWElM2xHbxcjFwSywgVli0rkXTCA1wgLBElt6O5hBbBYBVYnuRYvAenkFTCXmfl3L
+	AjFTU+Lx9p/sIDangJnEum/3wWqEgGo6/j9jhqgXlDg58wlYPbOAvETz1tnMIMskBJ6zSSyd
+	vh7qOEmJgytusExg5J+FpGcWkp4FjEyrGIUy88pyEzNzTPQyKvMyK/SS83M3MQKjYFntn+gd
+	jJ8uBB9iFOBgVOLh9XiWlSbEmlhWXJl7iFGCg1lJhHfWQqAQb0piZVVqUX58UWlOavEhRmkO
+	FiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGxgmbT4lXGsstDDgw6UuL2YoF6yd8jTLLK3dt
+	O17lLnrE7YX+/IoTc24tC5Jr3nh8mVzz9vNvtiw0i566hcmqqyZp0dftbgncqpbcebz3fIqf
+	3RZpmdhcqv71ULHp8mPSJVyO2jbdKbtXra9fvXa6qJXD2qip2m/y9axDlcq53LdEVm16+c+s
+	VImlOCPRUIu5qDgRADNYT1t+AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNLT7fnY1aawdtLghYTewws5qxfw2Zx
+	/8Frdosn/3+zWjQ0PWKx+PzsNbPF4bknWS0u75rDZnFvzX9WiyPrz7JYbD57htli8XI1i30d
+	D5gsDn99w+TA57H09Bs2j52z7rJ7tOy7xe6xaVUnm8emT5PYPU7M+M3i8WLzTEaPjR//s3t8
+	u+3hsfjFByaPz5vkArijuGxSUnMyy1KL9O0SuDKmnD7IXNDJXfF36mr2Bsb5nF2MnBwSAiYS
+	t5qOMILYbAJqEldeTmLqYuTgEBGwkpi2I7aLkYuDWWADs8Skcy+YQGqEBYIltvR2MIPYLAKq
+	Et2LFoH18gqYSsz9upYFYqamxOPtP9lBbE4BM4l13+6D1QgB1XT8f8YMUS8ocXLmE7B6ZgF5
+	ieats5knMPLMQpKahSS1gJFpFaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmCQL6v9M3EH45fL
+	7ocYBTgYlXh4PZ5lpQmxJpYVV+YeYpTgYFYS4Z21ECjEm5JYWZValB9fVJqTWnyIUZqDRUmc
+	1ys8NUFIID2xJDU7NbUgtQgmy8TBKdXAuGcS/8F7a1WXezHoi9Wa+XJIXWbeGlhkM3ma+vV+
+	zQ9zWwUvLjzJqrD80YGJBgVCXYx7ngd4Fa7dmnji0M1ZQjcYD+cfKXqSumNq5dlOOz+DZXNn
+	dshqrHdnyd24Y43Z8xTByVnHFjW5zFM9spfTIHbxr41aXwpDUo9YL2Isn2D1cIaEscu5AiWW
+	4oxEQy3mouJEAJ586qJuAgAA
+X-CFilter-Loop: Reflected
 
-On 13/06/2024 12:10, Dmitry Baryshkov wrote:
-> On Thu, Jun 13, 2024 at 11:11:05AM +0200, Krzysztof Kozlowski wrote:
->> On 13/06/2024 09:45, Konrad Dybcio wrote:
->>>
->>>
->>> On 6/11/24 16:25, Krzysztof Kozlowski wrote:
->>>> The SWR2 Soundwire instance has 1 output and 4 input ports, so for the
->>>> headset recording (via the WCD9385 codec and the TX macro codec) we want
->>>> to use the next DAI, not the first one (see qcom,dout-ports and
->>>> qcom,din-ports for soundwire@6d30000 node).
->>>>
->>>> Original code was copied from other devices like SM8450 and SM8550.  On
->>>> the SM8450 this was a correct setting, however on the SM8550 this worked
->>>> probably only by coincidence, because the DTS defined no output ports on
->>>> SWR2 Soundwire.
->>>
->>> Planning to send a fix for that?
->>>
->>> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>
->> Not really, because microphone works on these targets and changing it
->> would require testing. I don't have boards suitable for testing, so
->> let's just leave it.
-> 
-> If you provide instructions, I can test microphones on SM8450 HDK.
-> 
+The alloc_demote_folio can be used out of vmscan.c so it'd be better to
+remove static keyword from it.
 
-SM8550 and SM8650
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ mm/internal.h | 1 +
+ mm/vmscan.c   | 3 +--
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/mm/internal.h b/mm/internal.h
+index b2c75b12014e..b3ca996a4efc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1052,6 +1052,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+         unsigned long, unsigned long);
+ 
+ extern void set_pageblock_order(void);
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private);
+ unsigned long reclaim_pages(struct list_head *folio_list);
+ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 					    struct list_head *folio_list);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2e34de9cd0d4..2f4406872f43 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -916,8 +916,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
+ 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
+ }
+ 
+-static struct folio *alloc_demote_folio(struct folio *src,
+-		unsigned long private)
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private)
+ {
+ 	struct folio *dst;
+ 	nodemask_t *allowed_mask;
+-- 
+2.34.1
 
