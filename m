@@ -1,86 +1,108 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AA6399;
-	Thu, 13 Jun 2024 12:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D2128FF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718281863; cv=none; b=pvAsQY8uuG2ohl3skruRTbdUmWyK5nWpQfqnxnUguZdb9CSvL1FBcY6S9pNPfAaHcKjJ//d8qG0mhZaDDCgEPyXtg1Iy2OyCcE20Qnrc1H6Z2cebMjukTrcAFRsYd+XD+DnAWE9018DBb2Tcf8Az4NPRCSgr0lXPZznUWRw/3Oc=
+	t=1718281916; cv=none; b=V8IFzxVYXzpTc/77KZF6mEgkaI+4Fn2tJnvWW9Goz9Plx30dfBo4Cc6DG5P/skEWk76hyWDByVzUashFg4xaGsPjOEp4JF0pIA6nTSc3Slnq5MORVbGedzohoSTvUsK6zOVnpZY95CvofMUmM88ztyjubWZmLbiSUJRBc0XMzTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718281863; c=relaxed/simple;
-	bh=7K6byeNV/a8FAZlE6zuSjSiVcp+LG7CLBjBGax448NU=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=qz9bvy7kTCjJI6cj/8kRTUtj+1idwqsIxZzZJXWQNnkh4U4GIqt1c3lOvWtkCSDe90fKYzjW+UC6O+y5hvT/cdxDDksbPVmiXYD2ToPA/O5y8Zqh/QQleOUK0eFuyG4NpguNwORBxzuqKzlp+LkvcHOQ6rgWhPM6OGbTmQh7qWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=99085fba10=ms@dev.tdt.de>)
-	id 1sHjbV-00211c-FU; Thu, 13 Jun 2024 14:30:57 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sHjbU-002BOj-JQ; Thu, 13 Jun 2024 14:30:56 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 2E02B240053;
-	Thu, 13 Jun 2024 14:30:56 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id AD4D8240050;
-	Thu, 13 Jun 2024 14:30:55 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id 34DA63852A;
-	Thu, 13 Jun 2024 14:30:55 +0200 (CEST)
+	s=arc-20240116; t=1718281916; c=relaxed/simple;
+	bh=V8V25mHe3o3dnQMzJHzUOo+mYsYHzL6B8ZGKBhsc9Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyQ3eZ3vJGkf7KZiBvGN4Z769FiwP/ruVR0jECQHQ2qRhqy2fkwcBrTfFQKqsNtGzi6k4gkh1vsgIv0zcCTR5XKsk1jHMBT4wHsLgb+mL82SuwE521txVXITkRTbckjX3Cp6mugvFAl0aqBCNsqKWluWCBkqE4lthnB3ejJups8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hv1ir7F5; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hv1ir7F5"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ebed33cbafso10735471fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 05:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718281912; x=1718886712; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vsUrIlTW6nGOTZobooi2Rw2dAWLou1HKoci8poY+DbY=;
+        b=Hv1ir7F59zmgva0ffRY5aGBHjHE5pNOtq5gIep1bUhID33+/LClKaucoZod9jZzTfq
+         0C+pfhinXRDcmdLUMqBmJGopyLhb5EvFX66z1Z6/s/XMDLTZ7aRZFss+E1+VbxaKCe/A
+         L3DFqnmxFXu7sR5p598RJX22lcDOctqwiOynFi0ddxAjHtGpHohQkbZFMPAdNQH86sqk
+         90LMFcH0uqsz4Kyrgd1/uYwiA+X6Ryel6aYvbYIkokcSUutVp+GIPe0P8C6VS2fsquHZ
+         j1BJLgo9MX8rQLrWxsBssFCs0RP42jRhqT47zm1WV7ODXeYgYZ4ZwkT7xrP0EwfNhUZd
+         Yc2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718281912; x=1718886712;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vsUrIlTW6nGOTZobooi2Rw2dAWLou1HKoci8poY+DbY=;
+        b=s9OF8MifRJc8Oj/qaCOW44q8AZQK2bYJU+NgYDSCflzeFuSHmftIG8xOkAzhv8dpX0
+         nTL0WTxOPi0Iq2d9CSZtEs9GThBNl5wBag3XfHuzLD9Sllb0nzCzlZeyIgL2e8YYDWjl
+         R2yBx8t+uQO8NWRHB6O9+irnBVJif3lF25lelniKoXwvETtmFfLT2f8LwlN6/W9cnTFd
+         WX82vxc6Q8tttP9HyI+YIa3VtwJxSThEmdGx1LgjF7sdivMh/0c6Yyq5oMgkjY+u8YCG
+         d+jEbRSyeJIIF5AZA74P34SSqYroAC78Ow518ug3SRP/PhP09rlJSmqN9CPNorOPBUij
+         vc3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXpmJAhfccBXIcuHMav9GAyfwSU+wR4NlFEqS91fyW36UPx4CK5it0hqDr2HaetKiR18xF0IIZUDMl+aB8tIX9gsUXXGb2lgRFG6ler
+X-Gm-Message-State: AOJu0Yy75tANkgv98S4wvDBQbBOdGHMSnzmhTrtTDUuzaPZKHpt5lj9j
+	0pXk0eNdQGdqv0m2s3c1pwVoaVmEY4QI73imu/aKF0WUvKuIGetok9CrwDX721c=
+X-Google-Smtp-Source: AGHT+IEU9KxKELVXLWfJkodtYnVXSyXkK5gIERXu1+MCu7JJm3O/m+D3Cy2CeuCHgC1aKwmurCr0nQ==
+X-Received: by 2002:a2e:9211:0:b0:2ec:67:8647 with SMTP id 38308e7fff4ca-2ec0067882amr20415521fa.2.1718281912500;
+        Thu, 13 Jun 2024 05:31:52 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c7813dsm2004091fa.76.2024.06.13.05.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 05:31:52 -0700 (PDT)
+Date: Thu, 13 Jun 2024 15:31:50 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: glink: fix child node release in probe
+ function
+Message-ID: <fuoqdo3s7vxjb4edctkgmvqmzd4bcivos2crotbl6iyhjtylii@jyqk26c7quxd>
+References: <20240613-ucsi-glink-release-node-v1-1-f7629a56f70a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Thu, 13 Jun 2024 14:30:55 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 12/12] net: dsa: lantiq_gswip: Improve error
- message in gswip_port_fdb()
-Organization: TDT AG
-In-Reply-To: <20240613114832.23pvevg6wmyczr7i@skbuf>
-References: <20240611135434.3180973-1-ms@dev.tdt.de>
- <20240611135434.3180973-13-ms@dev.tdt.de>
- <20240613114832.23pvevg6wmyczr7i@skbuf>
-Message-ID: <89d63f2338d25e0466d7a35e59e059d0@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate: clean
-X-purgate-ID: 151534::1718281857-CF4488CF-572BDD86/0/0
-X-purgate-type: clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613-ucsi-glink-release-node-v1-1-f7629a56f70a@gmail.com>
 
-On 2024-06-13 13:48, Vladimir Oltean wrote:
-> On Tue, Jun 11, 2024 at 03:54:34PM +0200, Martin Schiller wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> 
->> Print that no FID is found for bridge %s instead of the incorrect
->> message that the port is not part of a bridge.
->> 
->> Signed-off-by: Martin Blumenstingl 
->> <martin.blumenstingl@googlemail.com>
->> Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
->> ---
+On Thu, Jun 13, 2024 at 02:14:48PM +0200, Javier Carrasco wrote:
+> The device_for_each_child_node() macro requires explicit calls to
+> fwnode_handle_put() in all early exits of the loop if the child node is
+> not required outside. Otherwise, the child node's refcount is not
+> decremented and the resource is not released.
 > 
-> This needs your Signed-off-by tag as well. Anyway, if there is no other
-> reason to resend, maybe you can post it here as a reply and the
-> maintainers can pick it up while applying.
+> The current implementation of pmic_glink_ucsi_probe() makes use of the
+> device_for_each_child_node(), but does not release the child node on
+> early returns. Add the missing calls to fwnode_handle_put().
 > 
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+> Cc: stable@vger.kernel.org
+> Fixes: c6165ed2f425 ("usb: ucsi: glink: use the connector orientation GPIO to provide switch events")
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> ---
+> This case would be a great opportunity for the recently introduced
+> device_for_each_child_node_scoped(), but given that it has not been
+> released yet, the traditional approach has been used to account for
+> stable kernels (bug introduced with v6.7). A second patch to clean
+> this up with that macro is ready to be sent once this fix is applied,
+> so this kind of problem does not arise if more early returns are added.
+> 
+> This issue has been found while analyzing the code and not tested with
+> hardware, only compiled and checked with static analysis tools. Any
+> tests with real hardware are always welcome.
+> ---
+>  drivers/usb/typec/ucsi/ucsi_glink.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
 
-Thank you for pointing this out to me.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+
+-- 
+With best wishes
+Dmitry
