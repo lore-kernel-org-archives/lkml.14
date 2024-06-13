@@ -1,128 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BA9161;
-	Thu, 13 Jun 2024 12:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E690F20ED
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718282215; cv=none; b=ehCVCdNIjzJxydp9bzYVgGpgKjxksN7mgyC2eqa7f13ykXKqWeWUBlfwJjGgW5ulerr0QZOoWTL0z7zj+vq1BjGRmGiuOEyXdWDbUghNMagmKtnWIuBryUOFiGhKE+ATYDq4kzu9KdFq0M7Lx7KYb+Ej8RIl5SICDorLwaYkAi4=
+	t=1718282236; cv=none; b=dT6NzH7OGeLNeXuxx8rbtU+XVSlYlw/aIiy9gguZ0ai9+jS5IW7SqYaiGB8WPR3y2jAWuO0vPIqqJ0JojOPvHWsdZYzjwgvo9HgwJNabuyEJ4w+MUe8FnohUdbM/pWomzBDYHZX0toX5D9sF55lKv4V4zIBZrJzQMI40IdGhNwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718282215; c=relaxed/simple;
-	bh=Lmm6tXZTC3jIXcaeCEEA6/VnvpVEp8ej1EHFZPnras8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s29GCX9WeIuv1x8k7F/cXyoPTELVD2QH1tIGgM4iA5FSHPo3xCTL010BzZ9EfdqVNjraajjAvpWsLMSt3rQAJHXj378//DMTGakQNufWOl+qhKYhQPv+lpWG5MtxppNSRVzEixDI6qU6TWN3xRJwQ3T8ni08iu45vtLvQT1k+QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u/CcFr7R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718282236; c=relaxed/simple;
+	bh=/13ngaRTyPeB4vBu9MQ8WJijEgAX5lH/Z0IZ+QKcV+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXVFGGAMJ+jNxSwoS9Leh1e4lnfCxmfOEvEp+pNPP6Bsa8PvO7LGKpN+lm+mreKP9y3hlhKSJoy52yabHmvH5AdMY8v0g9McHqJ/wCaPfaWOXLKcZgH/uBLOFkE2TsS/GfWapBoQchyxmfsQc361UZgksBkoDWK+1RKSHrT2NHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=if3XD65s; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u/CcFr7R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0997C2BBFC;
-	Thu, 13 Jun 2024 12:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718282214;
-	bh=Lmm6tXZTC3jIXcaeCEEA6/VnvpVEp8ej1EHFZPnras8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u/CcFr7RwuSDJy+zhhOm7Q8n2xy5ztaLRtei9DJSLtLt4wv3dO4EIV8OVflFUTDfb
-	 z1AaDGsF9YaBEP5a1sgqjKC75vZvl6FqvMNwdE9JLRWTv0q5r+g7uM0cuSoPWfH0sT
-	 noqGzhKf4d+nRaRIG+v8QVzqjOMNwsWFLuBQqOms=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 201/402] coresight: etm4x: Fix unbalanced pm_runtime_enable()
-Date: Thu, 13 Jun 2024 13:32:38 +0200
-Message-ID: <20240613113309.983930117@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240613113302.116811394@linuxfoundation.org>
-References: <20240613113302.116811394@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="if3XD65s"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso15649a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 05:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718282233; x=1718887033; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MznSC12yYzkye/+ENgqiPXuQSrlPFjsWMKgcvI0Z2PU=;
+        b=if3XD65s+cw5yGk+YkOEH9hfN6QWVFfV+HKtdiUNN3QPgCIW1KaBs5+SkfeWFlM9m4
+         RrbWiBkeM5mBPi49f5NUouwYgHR/j5cvivHnWNDxVFj+5VV2jy5uouh1vy64Pw9Y8J5b
+         UYrCqqYiZIkFQcktjkeVBR2b+1Z/GRrmRsf9JUImYYOo38S3ZB3YbhfQ4/JFxk+AMZKz
+         tyPswwxCNRgci/xIOc6lAt9wrdBsIouUsOiR3LdihNqnW2dFPEs8W2N6yVPhu7f027Xr
+         qZuWD3OCqrMtJ/+2j+o21/z/Tk3A910iRv8QN4Yrmvz9nXLccwbKeZ3gyVcDRxLqmIHR
+         cmcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718282233; x=1718887033;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MznSC12yYzkye/+ENgqiPXuQSrlPFjsWMKgcvI0Z2PU=;
+        b=Srp60DGAfp3mTe0heIge1sweDbL0AlbsTe5ekB8JBjL0EO8NRNuw0uiVEFX1wJOb+y
+         9AzsRnmJ4n1u7gAVlEEzDXBQelnU3Wqr7wbsPRbwTrWCtBUeKEQchjBvxnJcCpDMbEg4
+         8api0AHFRmO9OwqXEQqqPNJwXbN6uncnkz8zn19UR4bsexJ/nnP8eiDRrH94hLnbMt6m
+         N0DW11H95jy8Ncs1pwi/ddc61BT8ZB8K8gghrVKuSK2DObQzMT6w6MaBx2G1r55JuuWU
+         JrRgp3y6LV98kNCWtXp1ig7DJVwoYxbYL/aPHikBui2fN9vNoZTWkYMlePjIgW6gDQyR
+         JkuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVEIW6lehv9GRzSQd+fSwtR0sie7at19o096kZKTcaxbMkMeA/HX+7ZNorDzzeoxArznjF9DO1Bp9L3gGOzxUb/AzlRyIiK4Ba7kBm
+X-Gm-Message-State: AOJu0YwL3iSXSlgwccbSDxXgBIRpqDRKAtcnLyAMontDSF8t5E9oWVru
+	oWe2NeqHPAOa2CBYISZbkMUfZU9IxUe/RSHa2FLun5J8+HSjcQToeusXhWOnjg==
+X-Google-Smtp-Source: AGHT+IFP8djsGWBB5M7AJLJBWEREHC1E9615rPjaCU+riDmr7PzZ+qpZx22Wb8eUXNrKQ7Be+vXNdg==
+X-Received: by 2002:a05:6402:524f:b0:57c:b799:2527 with SMTP id 4fb4d7f45d1cf-57cb7992890mr126050a12.7.1718282232985;
+        Thu, 13 Jun 2024 05:37:12 -0700 (PDT)
+Received: from google.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509c890sm1628667f8f.28.2024.06.13.05.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 05:37:12 -0700 (PDT)
+Date: Thu, 13 Jun 2024 12:37:10 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
+	qwandor@google.com, suzuki.poulose@arm.com, tabba@google.com,
+	will@kernel.org, yuzenghui@huawei.com, lpieralisi@kernel.org,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 3/4] KVM: arm64: Fix the identification range for the
+ FF-A smcs
+Message-ID: <Zmrn9u8pJ0nduxfQ@google.com>
+References: <20240515172258.1680881-1-sebastianene@google.com>
+ <20240515172258.1680881-4-sebastianene@google.com>
+ <Zmmy4pmgLFZNhXqp@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmmy4pmgLFZNhXqp@bogus>
 
-5.15-stable review patch.  If anyone has any objections, please let me know.
+On Wed, Jun 12, 2024 at 03:38:26PM +0100, Sudeep Holla wrote:
+> On Wed, May 15, 2024 at 05:22:57PM +0000, Sebastian Ene wrote:
+> > The FF-A spec 1.2 reserves the following ranges for identifying FF-A
+> > calls:
+> > 0x84000060-0x840000FF: FF-A 32-bit calls
+> > 0xC4000060-0xC40000FF: FF-A 64-bit calls.
+> >
+> > Use the range identification according to the spec and allow calls that
+> > are currently out of the range(eg. FFA_MSG_SEND_DIRECT_REQ2) to be
+> > identified correctly.
+> >
+> 
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> Not sure if this needs to be fixes though. With addition of notifications
+> in the FF-A driver(since v6.7), host can send FF-A messages beyond 0x7F.
+> But since the pKVM FF-A proxy support is not yet updated to v1.1, so I
+> don't think it needs to be tagged as fix. Just thought I will mention it
+> here anyways.
 
-------------------
+Yes, good point. I will rewrite the title of the commit to remove the
+fixes tag.
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> --
+> Regards,
+> Sudeep
 
-[ Upstream commit caa41c47dab7e1054f587e592ab21296e3a6781c ]
-
-There is an unbalanced pm_runtime_enable() in etm4_probe_platform_dev()
-when etm4_probe() fails. This problem can be observed via the coresight
-etm4 module's (load -> unload -> load) sequence when etm4_probe() fails
-in etm4_probe_platform_dev().
-
-[   63.379943] coresight-etm4x 7040000.etm: Unbalanced pm_runtime_enable!
-[   63.393630] coresight-etm4x 7140000.etm: Unbalanced pm_runtime_enable!
-[   63.407455] coresight-etm4x 7240000.etm: Unbalanced pm_runtime_enable!
-[   63.420983] coresight-etm4x 7340000.etm: Unbalanced pm_runtime_enable!
-[   63.420999] coresight-etm4x 7440000.etm: Unbalanced pm_runtime_enable!
-[   63.441209] coresight-etm4x 7540000.etm: Unbalanced pm_runtime_enable!
-[   63.454689] coresight-etm4x 7640000.etm: Unbalanced pm_runtime_enable!
-[   63.474982] coresight-etm4x 7740000.etm: Unbalanced pm_runtime_enable!
-
-This fixes the above problem - with an explicit pm_runtime_disable() call
-when etm4_probe() fails during etm4_probe_platform_dev().
-
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Fixes: 5214b563588e ("coresight: etm4x: Add support for sysreg only devices")
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Link: https://lore.kernel.org/r/20240314055843.2625883-2-anshuman.khandual@arm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwtracing/coresight/coresight-etm4x-core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index 26d0d4485ae99..3f5e9400222e7 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -2022,6 +2022,9 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
- 	ret = etm4_probe(&pdev->dev, NULL, 0);
- 
- 	pm_runtime_put(&pdev->dev);
-+	if (ret)
-+		pm_runtime_disable(&pdev->dev);
-+
- 	return ret;
- }
- 
--- 
-2.43.0
-
-
-
+Thanks,
+Seb
