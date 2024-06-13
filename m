@@ -1,141 +1,114 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F965382
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA6137C;
+	Thu, 13 Jun 2024 00:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718237288; cv=none; b=B+NZWxhJytnKe1BazPe3jG6GTWWOPEciN2ArDL6U5Qr/hxb48ERkNsQfuPlFZfuxGvvtWh/Xqd8y71EPVsAhyQthBaVijw5jB7EwnmA9XIAHbE9vxUvpG6lKuooGCAdkX04lzYI+S/NuzOEE49qKoOmGvuW5nxNABV65C+0mPB0=
+	t=1718237432; cv=none; b=hrlwPFeAog/B8XYNVTRfZz4tNgZJlsJ75L0cRtlORlEDV5Rrno6WJ1MvVSE0UtCzWFrAWLqgsrTN6pSnrlmQ4TzKQqi77eqNQ5AF+u2Uvpp8IxPE3DJWepbaOy+Y4swkMSlse1LkWq9L9TOITwXuCOA/IhuuGSr+sW4TTB/4NKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718237288; c=relaxed/simple;
-	bh=WND7e/sneIYamSwVZtwK+Jk7CqxRkWKfBklPXPWTRbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TLNpxDjvDsOPfCvczYmtH02Q4lwtVyicJqDKq71B8mxDPxqCZqpXMtkh6qABqYXSgJLWNpej9wBJYs+khHRvu4+N4TJvb/bFrJYu0AjaFUrKyv6gVmKGB4dLO4z4pX8QU7DGu6SKYy2njpxxzUmzgUGU2hIzHl95aQwUVk5xiT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mtqGFxq0; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718237432; c=relaxed/simple;
+	bh=ALaMOklo/D6m9out9qebU875GAFWtP61hk1J63pvt/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BGTfOfycW+8XJWjm6WtyCQMTCZ4ViI1AeILaW5e40PN+BZ96FqKqUpC9aw1KjwrJsix9l9B0XgI4Qwx4axQbraEL7z8ObmIH7N4tG9gJLSvHgYp8PzL+5tF4RnQausEAeq/Fbh/WsSKoqY/0+2bqzmwXp0V1tPYK4Hjk4G16fzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz/ZQ4SN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtqGFxq0"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f70509b811so3275615ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 17:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718237286; x=1718842086; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bCCgBtm4kYdnlOxW6KC7ddfNlNkcCijSw9u/7Ny6adI=;
-        b=mtqGFxq0s718aGq/qUQq+dCjlxcPFZxeudcZvKeSJcHLfa8qh3mLWs+iA0ejWTNeQ+
-         qPbBt36H+IZs5hN4h28886tw7/FqxlSg7ezsFCcE7FLj8dBSAFDo39p1f58qPXZUl17a
-         yxc5rgCqwK574hHH0SsgSU00QUX83X84JgR369wCD428RoezejV1yTt1/JVpH6u+yJ+X
-         sDd4a829IAGcLpHD82XPPQuK2C4Qjqo5tH687qNPlEy1CHaqbcY6Q/ifNMhr+ZEoTYSB
-         PWhfvxs/T9p7FtPI/XCOw5VGg014d+aERSrSPH2SqXxxn4dssEjLgUP89KFL5f0U+YIq
-         MhyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718237286; x=1718842086;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bCCgBtm4kYdnlOxW6KC7ddfNlNkcCijSw9u/7Ny6adI=;
-        b=MzBRylS1H96gIYacn5Q2nsSPlSn/Moz1JBL/lIjlwmVHK756tCfPINfMpYL7ljZCB7
-         RTLsTSfTqZ6oG6jcp4cJejfLLoMVFweoJeL7Ld1i8NYRe4kNTnbhwTIynQHDoazIsO/Y
-         Af0QHLQxdOVcdPWoppXaNSo5QuDSiI1EL4nsDWDtnHZas+OfIKvAlshK6+BicItP2qF+
-         xr3zX5UIbvXYeGLvtBXnQ3ji1/yllVJEZJ+bqwehG5VzkOJ6jAr3u2rT/0l+SoVHTxXo
-         tHMXj/NE4ADYq3a61J11rU2xiH8yXYl/V54yYoAUKtpN90E4W6JW7ZP3G2u9m+EdE19Q
-         WbBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW33UfnXD/B3ubdxpKPnTczz7QKjPcV06CKcklg1a4JI9AXobFax65iOfB8zbKICPNVjTzXlVwYSxlz/v/LMjIp6LlZ6+Jo8YfGcc5A
-X-Gm-Message-State: AOJu0Yxvn7VWPWuLaACntAR9++NlpMym/nnGU+QqOLstIcYzGgPzXBTH
-	kZBgqGlnSoUk4+pxXvAO3Kh+J4idWPNNukU93lfpd7LLO+uw+PJZ
-X-Google-Smtp-Source: AGHT+IF3arrhaKJraeaVPGonKcs+bjSohtVRGhBzdoUWTP+KTk/DXUJQQ7qlrLIgRjj+zyClZOrwPA==
-X-Received: by 2002:a17:903:188:b0:1f7:1c84:13cc with SMTP id d9443c01a7336-1f83b713848mr38288865ad.42.1718237286072;
-        Wed, 12 Jun 2024 17:08:06 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f1af16sm525515ad.246.2024.06.12.17.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 17:08:05 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: david@redhat.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: chrisl@kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhocko@suse.com,
-	ryan.roberts@arm.com,
-	baolin.wang@linux.alibaba.com,
-	yosryahmed@google.com,
-	shy828301@gmail.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	willy@infradead.org,
-	ying.huang@intel.com,
-	yuzhao@google.com
-Subject: [PATCH RFC 3/3] mm: remove folio_test_anon(folio)==false path in __folio_add_anon_rmap()
-Date: Thu, 13 Jun 2024 12:07:21 +1200
-Message-Id: <20240613000721.23093-4-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240613000721.23093-1-21cnbao@gmail.com>
-References: <20240613000721.23093-1-21cnbao@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz/ZQ4SN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BC8C116B1;
+	Thu, 13 Jun 2024 00:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718237431;
+	bh=ALaMOklo/D6m9out9qebU875GAFWtP61hk1J63pvt/w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mz/ZQ4SNRhD4Slftyf1RGHhLam/Qf7W3PwDTBqymj8MrjJ2zFfcEBpzzqoIp7aIRE
+	 +HNQhNVE1+IOeDAWgqZssDT0yMjs5KujxGNYD5/v0d4xLqGdW6Z4IfirrVTI0gfG77
+	 pMXEtZ7kL2cG4kkEGdlkXN+sdZwbMnbryjY9PGB3jmEupZmxCvx/3ljnSDJVkMYjc3
+	 aerFM5mLp0PJV3xP/U6IojVO32XHdmwSgJHAiTk7a4PvwYlAlAf0U2KtXvJacugqV3
+	 /CEmWSpj8No1QubiV6AWTL6traVV8XO5JJaskmf2fawRbrkUX9ZG4c4dRG9FtdOikt
+	 K1w3nC+pECkGA==
+Date: Wed, 12 Jun 2024 17:10:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan
+ <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, "Christian
+ =?UTF-8?B?S8O2bmln?=" <christian.koenig@amd.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
+ Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, linux-mm@kvack.org, Matthew Wilcox
+ <willy@infradead.org>
+Subject: Re: [PATCH net-next v11 05/13] page_pool: convert to use netmem
+Message-ID: <20240612171029.71adc273@kernel.org>
+In-Reply-To: <20240607005127.3078656-6-almasrymina@google.com>
+References: <20240607005127.3078656-1-almasrymina@google.com>
+	<20240607005127.3078656-6-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+On Fri,  7 Jun 2024 00:51:15 +0000 Mina Almasry wrote:
+> Abstrace the memory type from the page_pool so we can later add support
+> for new memory types. Convert the page_pool to use the new netmem type
+> abstraction, rather than use struct page directly.
+> 
+> As of this patch the netmem type is a no-op abstraction: it's always a
+> struct page underneath. All the page pool internals are converted to
+> use struct netmem instead of struct page, and the page pool now exports
+> 2 APIs:
+> 
+> 1. The existing struct page API.
+> 2. The new struct netmem API.
+> 
+> Keeping the existing API is transitional; we do not want to refactor all
+> the current drivers using the page pool at once.
+> 
+> The netmem abstraction is currently a no-op. The page_pool uses
+> page_to_netmem() to convert allocated pages to netmem, and uses
+> netmem_to_page() to convert the netmem back to pages to pass to mm APIs,
+> 
+> Follow up patches to this series add non-paged netmem support to the
+> page_pool. This change is factored out on its own to limit the code
+> churn to this 1 patch, for ease of code review.
 
-The folio_test_anon(folio)==false case within do_swap_page() has been
-relocated to folio_add_new_anon_rmap(). Additionally, two other callers
-consistently pass anonymous folios.
+Sorry for lack of meaningful review, busy times, in the meantime:
 
-stack 1:
-remove_migration_pmd
-   -> folio_add_anon_rmap_pmd
-     -> __folio_add_anon_rmap
-
-stack 2:
-__split_huge_pmd_locked
-   -> folio_add_anon_rmap_ptes
-      -> __folio_add_anon_rmap
-
-__folio_add_anon_rmap() only needs to handle the cases
-folio_test_anon(folio)==true now.
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/rmap.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
-
-diff --git a/mm/rmap.c b/mm/rmap.c
-index e612d999811a..e84c706c8241 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1299,21 +1299,10 @@ static __always_inline void __folio_add_anon_rmap(struct folio *folio,
- 
- 	nr = __folio_add_rmap(folio, page, nr_pages, level, &nr_pmdmapped);
- 
--	if (unlikely(!folio_test_anon(folio))) {
--		VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
--		/*
--		 * For a PTE-mapped large folio, we only know that the single
--		 * PTE is exclusive. Further, __folio_set_anon() might not get
--		 * folio->index right when not given the address of the head
--		 * page.
--		 */
--		VM_WARN_ON_FOLIO(folio_test_large(folio) &&
--				 level != RMAP_LEVEL_PMD, folio);
--		__folio_set_anon(folio, vma, address,
--				 !!(flags & RMAP_EXCLUSIVE));
--	} else if (likely(!folio_test_ksm(folio))) {
-+	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
-+
-+	if (likely(!folio_test_ksm(folio)))
- 		__page_check_anon_rmap(folio, page, vma, address);
--	}
- 
- 	__folio_mod_stat(folio, nr, nr_pmdmapped);
- 
+drivers/net/ethernet/renesas/ravb_main.c:306:16: error: incompatible integer to pointer conversion assigning to 'struct page *' from 'netmem_ref' (aka 'unsigned long') [-Wint-conversion]
+  306 |         rx_buff->page = page_pool_alloc(priv->rx_pool[q], &rx_buff->offset,
+      |                       ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  307 |                                         &size, gfp_mask);
+      |                                         ~~~~~~~~~~~~~~~~
 -- 
-2.34.1
-
+pw-bot: cr
