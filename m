@@ -1,110 +1,119 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5094739FCE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849C113E020;
+	Thu, 13 Jun 2024 08:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267291; cv=none; b=Jj+yrI8v2vmV5pTuwDHJ5j9DViQ1GaQkEf2t7RBdahhGdbADNRFknKFFGkIYzzJMnZaiZMUr7ngJJkI450xHWejVgkqFDhxJRY2D7P3qg//kHeVsay3RJuOO/6UOJTQT9ZxvvSbGFQVLMNXgMLtd9vAgHwXlNkCZIMTZy1vWF7Q=
+	t=1718267298; cv=none; b=iotrDPVf/Wo8g88reSqUP92D62RjpCAqAh0aOU9k5/IzrBqVBK5YFXJlMXbj6k7ki6Nqrsfaix1PZmd0V7xBX0gH5NbUUbooHu1jU8fMjsSK7PHatz8MEWFbwFLlbBGVtOa22do5kDi+aRpFcEGibhCS7QKsTKnfcxHrCSwqxt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267291; c=relaxed/simple;
-	bh=HAObrbbzE0TQLfgup3KQTN40gEAzIttEj6AOQZ738lM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uvzHwH4Y3bcQbhZWZPlj/Ii0J/UaUfq/FTQXb8u82ear6A+F7clQBP20dvoWlwz0gPeRvNYHoIC1ZhjqopG3uHJfC0dtrJWw/vkMtFr0qv/88s4t4KSF+bDuOeRJg+XYSE3fWCqp7H7EtrwIYo+JFonZsGmDLzBXiN4BzplyhX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m3qHUrZv; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718267298; c=relaxed/simple;
+	bh=4n7R2Wjj5XV2Iowlqp+1RuKz8iVi3GSvTL7mxRY+v00=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PNP46cjSF/IbPsVT00LQaQCFolLUDDrDHgcMiThB9gJORS+TvxJ9qLbTRaGn+REcAxDp6GYRTiiIP2tXg/EcQKkcGN4MXbaSmbcjAnIYSB9b9Ylce+3lNBdh3GLbAYrOLTUa8nkuJOh7sDIvZcM1G75e/ylmFgQlrRPQjdq7XCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPRKEOuv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m3qHUrZv"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8R6kK096441;
-	Thu, 13 Jun 2024 03:27:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718267226;
-	bh=6NtxnPB5cbCDF/Wpkq/8aAGbHdXDlZm6OGryzWfh4Q8=;
-	h=From:To:CC:Subject:Date;
-	b=m3qHUrZvtUT/0EGVmM8zXu7fkYUEyab3avZE3nFIjK6h7aRc8kwwaw++77qReR/Jw
-	 ZyGnkFgAETigxm7hpPGU9k+Ny7XJeF5WCpQ4O/cL06/HSJNFnfaUsSlBh4Vs7+GYrH
-	 wKvPT/9gvccyBgP8L0OdBu9tQL5RUDSJdtLCPmlI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8R6YF012520
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 03:27:06 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 03:27:06 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 03:27:06 -0500
-Received: from lelvsmtp6.itg.ti.com ([10.250.165.138])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8QwPT058785;
-	Thu, 13 Jun 2024 03:26:59 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>
-CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <pierre-louis.bossart@linux.intel.com>, <kevin-lu@ti.com>,
-        <shenghao-ding@ti.com>, <navada@ti.com>, <13916275206@139.com>,
-        <v-hampiholi@ti.com>, <v-po@ti.com>, <niranjan.hy@ti.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <yung-chuan.liao@linux.intel.com>,
-        <baojun.xu@ti.com>, <broonie@kernel.org>, <soyer@irl.hu>
-Subject: [PATCH v7 0/1] Add tas2781 driver for SPI.
-Date: Thu, 13 Jun 2024 16:26:32 +0800
-Message-ID: <20240613082633.388-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPRKEOuv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A5EC4AF1A;
+	Thu, 13 Jun 2024 08:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718267298;
+	bh=4n7R2Wjj5XV2Iowlqp+1RuKz8iVi3GSvTL7mxRY+v00=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WPRKEOuv0mOgEHMKvZqGsfkAm5933mmOgHZsOo8HgG0hHGM0fmhkiYDoJxdVQ7neb
+	 78YJvklk3YNXcRwTpwUNo80U56Lp7Ac6EmxxgqNYDdGyN45FskVXr7fUrjdCwhceI8
+	 Rst5HcwSNfxxM40X2+ixoW5++42/N2kk4oHC8AWOxt18giExrEkjOQL4XwT9c+PqI8
+	 lNTjL2aArQUcMKoHfrG0SLzgUXLNL6Tfn3iswvrmteS7U2x8B6ZnTlth6RV8IR212A
+	 gz6IKqaWyXAyxns4pvW3FYgTbihGzZbwBaM0al9h35jUt92yPCWUVoj8RW6KcJf5rc
+	 EafLYUZ8V5kXQ==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52bbdb15dd5so953877e87.3;
+        Thu, 13 Jun 2024 01:28:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV6I/ptSkCY81QGJQDstixRArkxrKF4x3k55YqHgDaUemq8E10FuUV5QZA7UeC3kvb1CmJxOhFqPH/ahjINoRNDpAZUFSLBECihyk+P
+X-Gm-Message-State: AOJu0Yw3cQsOdk4e+pICgi9HsfPUufWX61uv+yl3jgqWwH3IwZJl0F2j
+	2AobLcn0zyY7hvSs8cDK17XkEP+ttk6eVIG8dBhbIwGAHWbpM/nXxYIZU9D7AtwiP+YAKxEjOLb
+	Z+/dT3YqDq1INuryzS+cK6G6blkM=
+X-Google-Smtp-Source: AGHT+IG/j++akO5qxY65t0GL+p9ootSMH/RUNfNAQtZCPHxEx6h0eAbolyYYMinKC3GqQKHGKcStF6NdQU+9RZWagDU=
+X-Received: by 2002:a05:6512:1d2:b0:52c:8271:5252 with SMTP id
+ 2adb3069b0e04-52c9a3c6f75mr2286027e87.16.1718267296466; Thu, 13 Jun 2024
+ 01:28:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240612135638.298882-2-ardb+git@google.com>
+In-Reply-To: <20240612135638.298882-2-ardb+git@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 13 Jun 2024 10:28:05 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEgAStastV+sMhXt0pUmvM=nr9D-oDctwb8iiYxt9+fAQ@mail.gmail.com>
+Message-ID: <CAMj1kXEgAStastV+sMhXt0pUmvM=nr9D-oDctwb8iiYxt9+fAQ@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/efi: Free EFI memory map only when installing a
+ new one.
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ashish Kalra <Ashish.Kalra@amd.com>, Dave Young <dyoung@redhat.com>, 
+	Mike Rapoport <rppt@kernel.org>, Borislav Petkov <bp@alien8.de>, Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This patch was used to add TAS2781 devices on SPI support in sound/pci/hda.
-It use ACPI node descript about parameters of TAS2781 on SPI, it like:
-    Scope (_SB.PC00.SPI0)
-    {
-        Device (GSPK)
-        {
-            Name (_HID, "TXNW2781")  // _HID: Hardware ID
-            Method (_CRS, 0, NotSerialized)
-            {
-                Name (RBUF, ResourceTemplate ()
-                {
-                    SpiSerialBusV2 (...)
-                    SpiSerialBusV2 (...)
-                }
-            }
-        }
-    }
+On Wed, 12 Jun 2024 at 15:56, Ard Biesheuvel <ardb+git@google.com> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> The logic in __efi_memmap_init() is shared between two different
+> execution flows:
+> - mapping the EFI memory map early or late into the kernel VA space, so
+>   that its entries can be accessed;
+> - cloning the EFI memory map in order to insert new entries that are
+>   created as a result of creating a memory reservation
+>   (efi_arch_mem_reserve())
+>
+> In the former case, the underlying memory containing the kernel's view
+> of the EFI memory map (which may be heavily modified by the kernel
+> itself on x86) is not modified at all, and the only thing that changes
+> is the virtual mapping of this memory, which is different between early
+> and late boot.
+>
+> In the latter case, an entirely new allocation is created that carries a
+> new, updated version of the kernel's view of the EFI memory map. When
+> installing this new version, the old version will no longer be
+> referenced, and if the memory was allocated by the kernel, it will leak
+> unless it gets freed.
+>
+> The logic that implements this freeing currently lives on the code path
+> that is shared between these two use cases, but it should only apply to
+> the latter. So move it to the correct spot.
+>
+> While at it, move __efi_memmap_free() into its only caller, and drop the
+> dummy definition for non-x86 architectures, as that is no longer needed.
+>
+> Cc: Ashish Kalra <Ashish.Kalra@amd.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Fixes: f0ef6523475f ("efi: Fix efi_memmap_alloc() leaks")
+> Link: https://lore.kernel.org/all/36ad5079-4326-45ed-85f6-928ff76483d3@amd.com
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+> v3:
+> - don't move __efi_memmap_free() into what turned out not to be its only
+>   caller
+> - drop another CPP #define related to the dummy definition
+>
+> v2:
+> - free old memory map only after installing the new one succeeded
+> - move __efi_memmap_free() into its only caller
+> - drop obsolete dummy declaration from generic code
+>
+>  arch/x86/include/asm/efi.h     |  1 -
+>  arch/x86/platform/efi/memmap.c | 12 +++++++++++-
+>  drivers/firmware/efi/memmap.c  |  9 ---------
+>  3 files changed, 11 insertions(+), 11 deletions(-)
+>
 
-And in platform/x86/serial-multi-instantiate.c, those spi devices will be
-added into system as a single SPI device, so TAS2781 SPI driver will
-probe twice for every single SPI device. And driver will also parser
-mono DSP firmware binary and RCA binary for itself.
+Given that this fixes an actual use-after-free bug that is not
+specific to TDX/SEV or kexec, I'm inclined to queue this up as a fix.
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
-
-Baojun Xu (1):
-  ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
-
- drivers/acpi/scan.c                           |    1 +
- .../platform/x86/serial-multi-instantiate.c   |   12 +
- sound/pci/hda/Kconfig                         |   14 +
- sound/pci/hda/Makefile                        |    2 +
- sound/pci/hda/patch_realtek.c                 |   14 +
- sound/pci/hda/tas2781-spi.h                   |  148 ++
- sound/pci/hda/tas2781_hda_spi.c               | 1266 ++++++++++
- sound/pci/hda/tas2781_spi_fwlib.c             | 2101 +++++++++++++++++
- 8 files changed, 3558 insertions(+)
- create mode 100644 sound/pci/hda/tas2781-spi.h
- create mode 100644 sound/pci/hda/tas2781_hda_spi.c
- create mode 100644 sound/pci/hda/tas2781_spi_fwlib.c
-
--- 
-2.40.1
-
+@Boris: Mind if I take this as an EFI fix? Otherwise, can you queue
+this up? Thanks.
