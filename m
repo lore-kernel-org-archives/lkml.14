@@ -1,94 +1,190 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB17A14A617;
-	Thu, 13 Jun 2024 18:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718302815; cv=none; b=uWR6fGAhhQUNIuMt/UsuYC97beaSsUYXSZUhV5yDpoPmZzIT8iKudDMNEQJDD7r2+feX93Rcp0ywZ5w/S7j3h0ZOO9ta69shpIpepCQwBIY1i+0h2TI3jroYWFqpVDRDFKlyh3UCvBrxYPhwf21YEn6lzu05VN+0X5vTKQTg0aY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718302815; c=relaxed/simple;
-	bh=TOatw6k1CBHe6gpw+mH/HeqeppZsp3vmIJFGZFpVvXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sp0mWKY52Mt3lfOdVo9bsmFRABV1EMLuJk+pPyBCUNoj37YKxUX+VlRYPaTRrf6hMYjgJ21p3CtOdN8QdGDZm4j8wQihp92LlGiocMW6qh2HoVjj67ZrQZJJiG26azoCDhj9Rr26HhxPLMOpUQaK546hrYsxODkGjH21CK5PlQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=K5Tq4sbm; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F409C14B08A;
+	Thu, 13 Jun 2024 18:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718302823; cv=fail; b=GySBefZVp7SrgtUslK+AWSZmrrPOsrFCnd85AlBSjPEJvtwzFzn3rtnsy0UIartsQ8gHNLs0EM8YzYpHxraodtZlijiu6xA1qy2C11L0EOgNaCST7VAycUsHiGMrDFAgwLZljNxlGwXDmK/pRl8Fvukd17mxAJAd7BA2bHdK7Mc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718302823; c=relaxed/simple;
+	bh=UkD26qGUOlcbxW/8s97Eb2Dvahx8fBscroVhbsYpork=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WnnAL3U6onKAR0Ug30OYEezdQiIiYxiZMf+5davBtUaM9E+fAz9lKDW5wrpE9zeHk280hAFAwI++uELVWx3+0K39R2XKht+gwgFwk0BgXN7k5B/xyA23CffNNAxUi2Lk4Gom80N6MoXk1uU82Uj+Qh6tmQLywqENXw7flJkHcYc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y5Z63C0k; arc=fail smtp.client-ip=40.107.94.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="K5Tq4sbm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MFcS3b+KeKQkV59PFBLNqWqobt/CiM0335GMv/JZlvo=; b=K5Tq4sbm0tlVf4ZuqWLDIzEa0C
-	EzfP2Ai6ZiPZeNKXwoUeBMPn8vLVNc0eZDJz7ZSasFRD9iY86GSJehBQaVEaAWRF3vuGMvFnUWC0R
-	7GaQdTKJC+7Smw7nMnofWsPx9oDV5Adw5wjU56kqvuQuUqy+XdQRgeFk8S0P3zHiQMZmWKXGxSODI
-	kEDcFEWd/tgtbCNH1IvL1TzrViB03FvBLl1zwvcF88m5UFU4BldfYu4H5TPLHN6ThAWZ58OlUzFPS
-	wx8/gNpCtJ5l7ZV7qdanx3T+BGxGDsBQ2FyypyozxYdJAikkJl/lp7RxnTBcNoFQ9epayhX5Kbp9g
-	jc+O7m6w==;
-Received: from [191.205.188.103] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sHp3K-002pj6-Bc; Thu, 13 Jun 2024 20:20:02 +0200
-Message-ID: <6a6bd674-48ca-f7fc-d572-51e52e6899d9@igalia.com>
-Date: Thu, 13 Jun 2024 15:19:50 -0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y5Z63C0k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mikHzaZEujTr2nRiCyzGQFI8tjoQyhFH3UbRZpTe7OpbKoR/mKeUPtaMCaYbjfALVWbIY/Qw5yPxn/2JibJ9fJzylyKwSMEOyKy302GBuBTA5kuzdNuXiYGD15fDnpoBGjbshp7JE4lOx6dN+E4u9uhbOqXU6sdqYllNd7CnWUNfYF9xtHMIspIQiMndPXMlBFrl1UNmgSw640j8vrgXgWUZcXRhvtTA2vMqhQd02J1OvfygsiH4rErbFFY5Go4+VlPo6eUP162KMD4SNeKEuVmLW36hQNGZhNVPg2ucyxE044P01PAyzDJpIbbQ6X/Buwi0P1ehLTNbZEusAEk5pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tdS/HlgV2qB5FXuFxAuMWLTfcJ3kk8B4HY4EB+i9Fdg=;
+ b=HFOdntrp2QHhe9luFIc7NeAcfZ9IvHyBS+oQBacjeP1buEbaP3zPT3RDSN3/E+q8G4s3aRS16Wj0tCV9Q8ssxWlA3fG5kFRMtmk9capJpWYmP9HnXfgx/uBbKp3ILX/s+MioLLs4A9u4aYeoW+BGDPVmv9lekZ/HgQH7G6fHRIr2vBcXDKTLrmOsVUIglfv+n+njl4ZcPyxVn9vtNmhEcCjws5Yo1lN0L2jWnORLoDlSYPqq2GApCjvgI0SFreXMK0gdwMtZb0K0iV98bc9wHHNcYhNtEN6G/tYWLFtP+FfkoUm513GvR4SbfYvmWUYl9nrUdOCZqXgqRctImNzWKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tdS/HlgV2qB5FXuFxAuMWLTfcJ3kk8B4HY4EB+i9Fdg=;
+ b=y5Z63C0kMwOjNaJ3oi2fdUE5X9zKgEnglH1v0CnXzhF1QYwFnOcWPBANjg7vsoZ5o1YDE6+tTjICQhiSM2/Nx5MyztOZE5uEQddKzU6jHPP/RznTrdtLIjn6SHOsyGS7RTTa6fW+fR81KJyHRU4oL3ZtmnA1WVYHMTHEuw3hOhI=
+Received: from PH7P220CA0045.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32b::17)
+ by MW4PR12MB7381.namprd12.prod.outlook.com (2603:10b6:303:223::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21; Thu, 13 Jun
+ 2024 18:20:15 +0000
+Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
+ (2603:10b6:510:32b:cafe::5b) by PH7P220CA0045.outlook.office365.com
+ (2603:10b6:510:32b::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25 via Frontend
+ Transport; Thu, 13 Jun 2024 18:20:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Thu, 13 Jun 2024 18:20:14 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Jun
+ 2024 13:20:06 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, Jonas Bonn <jonas@southpole.se>, "Stefan
+ Kristiansson" <stefan.kristiansson@saunalahti.fi>, Stafford Horne
+	<shorne@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, <linux-openrisc@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>
+Subject: [PATCH v2 07/14] openrisc/thread_info: Introduce TIF_NOTIFY_IPI flag
+Date: Thu, 13 Jun 2024 18:16:06 +0000
+Message-ID: <20240613181613.4329-8-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240613181613.4329-1-kprateek.nayak@amd.com>
+References: <20240613181613.4329-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 2/2] pstore/ramoops: Add ramoops.mem_name= command line
- option
-To: Steven Rostedt <rostedt@goodmis.org>, Mike Rapoport <rppt@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com, Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>, Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>, David Howells <dhowells@redhat.com>
-References: <20240613155506.811013916@goodmis.org>
- <20240613155527.591647061@goodmis.org>
-Content-Language: en-US
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240613155527.591647061@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|MW4PR12MB7381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59e11ef9-d14e-4b17-2da7-08dc8bd578e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230035|376009|7416009|1800799019|36860700008|82310400021;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RrxikFt7BOyQQWIew2F9KO19qH6m3C4Hk7nqsmujZYLb5gzSPR4sbHmDK8OA?=
+ =?us-ascii?Q?9MA5BDiM7D3D8LJ5lvkYDWcDb8S7L9cmMMFhGD7rO3CjZuhSp7SS+Fy570us?=
+ =?us-ascii?Q?yArnOa90z4moVf7URNQkmhnxQNLJ7iPDRc3GpTxGU0U93y7efeuyovkrrsyy?=
+ =?us-ascii?Q?xUNapkAFtWdlsLSBE6OJhfcjejqmXnnAGEtPJ0BW5uUEjTGVnerbktsnHc3U?=
+ =?us-ascii?Q?c2bpvL8Q7GAisZsX3NyAv0fBFxnoBBV1fVYZNF7LjF5bBDH3D9Pghxyl3nLc?=
+ =?us-ascii?Q?EJ9c1aN3oyBLTDfmiS4dMEIAsJoRynAj6c+Bs4UPAz5NZldMlSRltWeNEy7o?=
+ =?us-ascii?Q?xKN6bx9ycmfQ3Efu7VoMGAe6eoYNJNA6PVzm4vr25TfkUVvbfvS3tJgMRgvc?=
+ =?us-ascii?Q?V+xQokozDQKSuRm1nr+5k0rIDhNW7aW01Tp+RLXqtwAf1EI15Mmmp5XlTdLp?=
+ =?us-ascii?Q?8yepQ90xs2IRzBmMjZj9Lq7YqStOtKEbB4TMbXzL9WC+Q5aaMcxlheJ764NO?=
+ =?us-ascii?Q?I03v35OMeELSk17MufHhPd2gTwVEky0p1TqoWH7q2WvfejtrAyR5KeNh4Hxb?=
+ =?us-ascii?Q?Df7W5JnFEunqP3PQYYTnA+aHO04lDtpCh+oXi1qM3gmAC6ByATE/K4J2sXiX?=
+ =?us-ascii?Q?v9eJzUgZ7+nuSCtK6vIfiFzZqeQ41DdSwyTF8oyVV+3E/NxLY//9iDPlA0W+?=
+ =?us-ascii?Q?c7fLxsyXUckMmcQBTbes2g495Dc4ieXg75VEfRIZfHYcUR4j+sJ62LvxPFnQ?=
+ =?us-ascii?Q?qXtCxqXM7NhLGwpUJZBK9jwje9BSTko6bt7/sxNCNevIuXZFBV4KjbV5n/tE?=
+ =?us-ascii?Q?sqtXvNBSu1/+Np+9mBrbQj9jIi86qr+nZuX9drcAgm94oOShcGuZZyA1ob4C?=
+ =?us-ascii?Q?qm0qTKwpPm2SDkSq29HeU+v2bbYmQbrfIDgazCE79K5qVI4bkG5OYcIAzh3x?=
+ =?us-ascii?Q?+FW+fxJvGzcn5fLau8I8pT9U++5SfaB2dIwXloTuvB27Cnr9piNiJAUQZj2j?=
+ =?us-ascii?Q?h595snJ7KsIOuHretMC3smnNAOKWb072Hx7WJcGOk1TgK3HVX7t0gcPgkpOw?=
+ =?us-ascii?Q?fBaqfoXKCwC5p9y59Y9WcobNWgfh34YyLmQFK0s17MS8HFtTmHdfYEmnuS6y?=
+ =?us-ascii?Q?Gh5Sq4QQwvWVHv+KDdayiqY41DL+WqwU9B45jN5poQbfOUuOBEhO+6YSf4Aa?=
+ =?us-ascii?Q?yv3tdy5wYysH9ODm+0LKBwNmtLEnLLafyoC//heenqUmtTfDx0NoMRfPkX/g?=
+ =?us-ascii?Q?h+DKuYPTNjVAkDTxBKsW4vI5W6tC/vWagkanODCxmEdy7m3sI3y0aQbf4zaR?=
+ =?us-ascii?Q?QoRcEqBJiqyiuZHWpA/aE+EjG92JDOpkAau9AXd7bv875MZPBP8VgiXGKs+q?=
+ =?us-ascii?Q?7QEbbXdNvTbMys5eeFaglRn3f9JhJEdPE2cRKdw2qV2kySWeMw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230035)(376009)(7416009)(1800799019)(36860700008)(82310400021);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 18:20:14.9404
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59e11ef9-d14e-4b17-2da7-08dc8bd578e3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7381
 
-Thanks Steve, re-tested in my VM and it's working fine.
-Just a minor below...
+Add support for TIF_NOTIFY_IPI on OpenRISC. With TIF_NOTIFY_IPI, a
+sender sending an IPI to an idle CPU in TIF_POLLING mode will set the
+TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
+CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
+avoids spurious calls to schedule_idle() in cases where an IPI does not
+necessarily wake up a task on the idle CPU.
 
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+v1..v2:
+o No changes.
+---
+ arch/openrisc/include/asm/thread_info.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 13/06/2024 12:55, Steven Rostedt wrote:
-> [...]
-> + D. Using a region of memory reserved via ``reserve_mem`` command line
-> +    parameter. The address and size will be defined by the ``reserve_mem``
-> +    parameter. Note, that ``reserve_mem`` may not always allocate memory
-> +    in the same location, and cannot be relied upon. Testing will need
-> +    to be done, and it may not work on every machine, nor every kernel.
-> +    Consider this a "best effort" approach. The ``reserve_mem`` option
-> +    takes a size, alignment and name as arguments. The name is used
-> +    to map the memory to a label that can be retrieved by ramoops.
-> +
-> +	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
-> +
+diff --git a/arch/openrisc/include/asm/thread_info.h b/arch/openrisc/include/asm/thread_info.h
+index 4af3049c34c2..6a386703bc43 100644
+--- a/arch/openrisc/include/asm/thread_info.h
++++ b/arch/openrisc/include/asm/thread_info.h
+@@ -92,6 +92,7 @@ register struct thread_info *current_thread_info_reg asm("r10");
+ 					 * mode
+ 					 */
+ #define TIF_NOTIFY_SIGNAL	5	/* signal notifications exist */
++#define TIF_NOTIFY_IPI		6	/* Pending IPI on TIF_POLLLING idle CPU */
+ #define TIF_SYSCALL_TRACEPOINT  8       /* for ftrace syscall instrumentation */
+ #define TIF_RESTORE_SIGMASK     9
+ #define TIF_POLLING_NRFLAG	16	/* true if poll_idle() is polling						 * TIF_NEED_RESCHED
+@@ -104,6 +105,7 @@ register struct thread_info *current_thread_info_reg asm("r10");
+ #define _TIF_NEED_RESCHED	(1<<TIF_NEED_RESCHED)
+ #define _TIF_SINGLESTEP		(1<<TIF_SINGLESTEP)
+ #define _TIF_NOTIFY_SIGNAL	(1<<TIF_NOTIFY_SIGNAL)
++#define _TIF_NOTIFY_IPI		(1<<TIF_NOTIFY_IPI)
+ #define _TIF_POLLING_NRFLAG	(1<<TIF_POLLING_NRFLAG)
+ 
+ 
+-- 
+2.34.1
 
-Likely this could be fixed on merge, to avoid another version, but...
-
-s/reserver_mem/reserve_mem
-
-
-Cheers!
