@@ -1,321 +1,290 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB413CFBB;
-	Thu, 13 Jun 2024 07:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5667513D52C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718265472; cv=none; b=dH1hK6xTUc1ZBoupIAoGJos8LEYkCN5AqDoe/EoJDexl68EFgDbrIA0rehH8QHl/7Tj7phV02qtnl9W20At2mAXvvYg7yCsEjRzGIKX/ECljWfJpSuMoD9qVr2WMC9wK7KNkXgx+etJcujsdP37lxswiftt4NFh4lOZP8P9rM6w=
+	t=1718265505; cv=none; b=L52cQFKWaRtkpD2KxKd1xf1834leFrjBiieJtDu0ziT7iNpYXT+ib4+mMvNObYcbnFSUJmZiwciID1l20K+mfxa1uWpdwepAOH/jKxHuSq0c58f/Z/pWVXLan38/ezM9j8B64XI1JKE3cCVGf2bX9UqDTsuzfalvb29QYstP1b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718265472; c=relaxed/simple;
-	bh=e0NxTlF2iD4qbRcwJ7BIXq/PGgNblesDkARtB5e6oSo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rc5Cer/Y7uv0GM0A6z1Sb2JNVC26YT28FPnq2oxzOtKoJ6GZt+6ZL9HoIUOj6NMKo0eJ0beFsMOrpf1d4MFh81VkYcOK3jiQy2XJ3limqrd0eTAjyM6+27nfC3dQm/bTYnLLPX8wOX5DhtXxb1BtJbDwGCmti3ak+BdXx3zuypw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gTjnPvBA; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718265505; c=relaxed/simple;
+	bh=B7sg/iEyq210V0MFz1vtiIWcdW0ECgpunIQOlRz7Sl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AG06ArPHNi5bk84U5wOddZ0wkciZEtYnJxcqbFPoaKzCwjAcRWsB5qlnLtYaxutvv9gwYO9etDSxQAIKOMWBMpzSHYNAoWQeoWfd/M6zVndzRkIjjuxtqgbVIeYVpufR0s0UIhswhxcpvzd20Laa56+1TJ8lCu5J69F6JwBRUvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GLfza6s+; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gTjnPvBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718265470; x=1749801470;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=e0NxTlF2iD4qbRcwJ7BIXq/PGgNblesDkARtB5e6oSo=;
-  b=gTjnPvBAMx+GTdq5rnCfJIBJ7Hnac9JXGQVe2251qErTg9NvzrNdNl2T
-   StVworITY3MNq0Wx/2EXjaSfOLbJsoF2pZrpiEj8ErQ41JpczasLrrLyR
-   +cZy9no2MEOaZiXkdrRZuBTXb3noE6j8sDvmDa3JlcTMEJNTet8/BfoDP
-   OO9ivdMeNsLP5reVwDFnsaHHsFYE0w8QpkkZTbVo0Qi5Ao1iNVfm3YZ5p
-   puqshw7RHY57YynkWYFsyRhyBAlwWp4cIQQXLKZcYJKiaMIUv2N+q7WYI
-   aSxeLhcJvVBM27aikmKpc60hVPCE2qaPTjId0U/mVuMjMa3t1niHuWlmb
-   w==;
-X-CSE-ConnectionGUID: 1jVAoXHWT2aVyDodDj5Rjg==
-X-CSE-MsgGUID: xrp2OwTiT8688un+pEz+vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26182325"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="26182325"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 00:57:50 -0700
-X-CSE-ConnectionGUID: M8wZ9vsRT3enWARScp26kw==
-X-CSE-MsgGUID: d2kYW95NT4uLxwd8VzG9/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40022628"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 00:57:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Jun 2024 10:57:41 +0300 (EEST)
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v6 4/6] power: supply: lenovo_yoga_c630_battery: add
- Lenovo C630 driver
-In-Reply-To: <20240612-yoga-ec-driver-v6-4-8e76ba060439@linaro.org>
-Message-ID: <4fc43c56-f801-909a-9178-166d275a5fee@linux.intel.com>
-References: <20240612-yoga-ec-driver-v6-0-8e76ba060439@linaro.org> <20240612-yoga-ec-driver-v6-4-8e76ba060439@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLfza6s+"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4ecf9ba11c8so256263e0c.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718265502; x=1718870302; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=D6UsanlqmRGWt2wkDE0xNCesMGGbqP90Tc99QErNZ/Y=;
+        b=GLfza6s+BcYS3k9B6JHi+Nj56+ZkgLPuE8dXGbNi3GROOOlQd9OFpuqVVl/+Qydxwx
+         6bUULXNOQ81PVoA0gcR4XdpCWSZJDotmGQoOETQlBo9ycFi1cn4lUzFwYVA7qcsTD8wo
+         I6a4XQfmiv0lQeD0lH3Ly/H7Cxu3UCfOlbIiLfmbzkpVUpWlsj3UNJuFpFAYKOgYk6dT
+         yDOtjSBOK+WgA8nzaMWreev3Uudl9nhLay05yVacWIiIFvRI31DQuk1ls1hmy27W9j+n
+         VqbMI+XPWuhdteZBv5YuVKtEN/cKv3QrVsOo3C36ueIpJDsAgwb/NA6Qfa2MC6snmC3Y
+         R/Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718265502; x=1718870302;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D6UsanlqmRGWt2wkDE0xNCesMGGbqP90Tc99QErNZ/Y=;
+        b=DDBk1rtQA7Ok+oVAqFnGzF9ofAbNSMQojdOurTDJoF2YPiRap9cJjvfchNSOZGA4T8
+         Pq+6YakkGd3G5VNSdWgWtt57zVCIWvemX+Us/RRbMCpjWqe2Sm/QSaAPTHo6uG25lMl9
+         US8e7zNxE1Ukp3RMQWYfXuaS4xZ5auX+xqFIk0S48v94PibQpbeqHR7te+oKBLGjTBIU
+         LTuYTT/aJ9fPK95U3pbNE7lWcgjfOXnhDji4lCdeEbvqJkqIwTfnkGBVlKVKRgawY7fS
+         baLGL1xfRbdguw1palIc5HgWs6uprXYAlliRQqRH9XFIyy1pSKlhizkYtMIWH27H9r7K
+         XYWw==
+X-Gm-Message-State: AOJu0YzSwGLHbV9+2jdEUE6A2WfHMbymzuRC8muqT3nwka2UiU+QcmLg
+	tz77+8wDfU/qxZIjPOz9HHCHiW4JoBfNfyS/3xAWKOSyaqVfi7oGP+WiS5r4USijVeYQAUEkvta
+	Qe3OSlSSyyWSwVq+ttxV2EswyF7fUMOC2sf8PfQ==
+X-Google-Smtp-Source: AGHT+IGGML7+r+q4qkE3xcXGTIo/kF3rkJ/kaGpbKvUdf4/u9BXdeHU649Q25zz3DR1+x0GS6FSB86Mb4xYhsiZbK2E=
+X-Received: by 2002:a05:6122:4490:b0:4ea:f128:7adb with SMTP id
+ 71dfb90a1353d-4ed07bc2a69mr4527374e0c.10.1718265502208; Thu, 13 Jun 2024
+ 00:58:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
+ <20240612125130.2c1d6d2d@rorschach.local.home>
+In-Reply-To: <20240612125130.2c1d6d2d@rorschach.local.home>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 13 Jun 2024 13:28:10 +0530
+Message-ID: <CA+G9fYusnp3AdtfPji2oX1=WKzm6Gwy_GcK2E4bVyaQcaf2+jA@mail.gmail.com>
+Subject: Re: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc : ftrace_ops_test
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 12 Jun 2024, Dmitry Baryshkov wrote:
+On Wed, 12 Jun 2024 at 22:21, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Wed, 12 Jun 2024 16:52:05 +0530
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> > The following kernel oops and kernel panic noticed while running LTP tracing
+> > test cases on arm64 rk3399-rock-pi-4 device running Linux next-20240612 tag.
+>
+> How reproducible is this?  Do you only see it on arm64?
 
-> On the Lenovo Yoga C630 WOS laptop the EC provides access to the adapter
-> and battery status. Add the driver to read power supply status on the
-> laptop.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+This is only seen once and not easy to reproduce.
+I see only on arm64 rk3399-rock-pi-4 board.
 
-> +/* the mutex should already be locked */
+>
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Boot and test log:
+> > --------------
+> > [    0.000000] Linux version 6.10.0-rc3-next-20240612 (tuxmake@tuxmake)
+> >  (Debian clang version 18.1.6
+> >  (++20240518023133+1118c2e05e67-1~exp1~20240518143227.130),
+> >  Debian LLD 18.1.6) #1 SMP PREEMPT @1718178628
+> > ...
+> > trap: SIGUSR1: bad trap
+> > ftrace-stress-test 1 TINFO: Start pid16=595
+>
+> ug, I guess I need to try to get LTP working again.
+>
+>
+> > /opt/ltp/testcases/bin/ftrace_stress/ftrace_tracing_cpumask.sh
+> > ftrace-stress-test 1 TINFO: Start pid17=598
+> > /opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_filter.sh
+> > [   55.770077] Scheduler tracepoints stat_sleep, stat_iowait,
+> > stat_blocked and stat_runtime require the kernel parameter
+> > schedstats=enable or kernel.sched_schedstats=1
+> > [   55.790580] Scheduler tracepoints stat_sleep, stat_iowait,
+> > stat_blocked and stat_runtime require the kernel parameter
+> > schedstats=enable or kernel.sched_schedstats=1
+> > trap: SIGTERM: bad trap
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+> > [  100.599846] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000008
+> > [  100.599846] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000008
+> > [  100.599846] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000008
+> > [  100.599846] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000008
+> > [  100.599856] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000008
+> > [  100.599866] Mem abort info:
+> > [  100.599867] Mem abort info:
+> > [  100.599867] Mem abort info:
+> > [  100.599874]   ESR = 0x0000000096000004
+> > [  100.599875]   ESR = 0x0000000096000004
+> > [  100.599875]   ESR = 0x0000000096000004
+> > [  100.599883]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [  100.599892]   SET = 0, FnV = 0
+> > [  100.599896]   SET = 0, FnV = 0
+> > [  100.599896]   SET = 0, FnV = 0
+> > [  100.599899]   EA = 0, S1PTW = 0
+> > [  100.599906]   EA = 0, S1PTW = 0
+> > [  100.599906]   EA = 0, S1PTW = 0
+> > [  100.599906]   FSC = 0x04: level 0 translation fault
+> > [  100.599914] Data abort info:
+> > [  100.599915]   FSC = 0x04: level 0 translation fault
+> > [  100.599915]   FSC = 0x04: level 0 translation fault
+> > [  100.599920]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> > [  100.599925] Data abort info:
+> > [  100.599926] Data abort info:
+> > [  100.599928]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > [  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> > [  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> > [  100.599936]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [  100.599944]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > [  100.599946]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > [  100.599945] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000014fc7000
+> > [  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [  100.599956] [0000000000000008] pgd=0000000000000000
+> > [  100.599964] , p4d=0000000000000000
+> > [  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000006ce0000
+> > [  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000079ec000
+> > [  100.599975]
+> > [  100.599976] [0000000000000008] pgd=0000000000000000
+> > [  100.599977] [0000000000000008] pgd=0000000000000000
+> > [  100.599985] , p4d=0000000000000000
+> > [  100.599986] , p4d=0000000000000000
+> > [  100.599985] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> > [  100.599992]
+> > [  100.599994]
+> > [  100.599997] Modules linked in: brcmfmac snd_soc_hdmi_codec
+> > dw_hdmi_cec dw_hdmi_i2s_audio brcmutil crct10dif_ce rockchipdrm
+> > hci_uart snd_soc_spdif_tx hantro_vpu panfrost snd_soc_simple_card
+> > snd_soc_audio_graph_card btqca dw_mipi_dsi gpu_sched
+> > snd_soc_simple_card_utils btbcm v4l2_h264 analogix_dp cfg80211
+> > drm_shmem_helper dw_hdmi v4l2_vp9 phy_rockchip_pcie bluetooth
+> > v4l2_mem2mem cec snd_soc_rockchip_i2s videobuf2_v4l2
+> > drm_display_helper videobuf2_dma_contig drm_dma_helper
+> > videobuf2_memops rtc_rk808 rfkill snd_soc_es8316 videobuf2_common
+> > drm_kms_helper rockchip_saradc industrialio_triggered_buffer
+> > pcie_rockchip_host rockchip_thermal kfifo_buf coresight_cpu_debug drm
+> > fuse backlight dm_mod ip_tables x_tables
+> > [  100.600212] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
+> > 6.10.0-rc3-next-20240612 #1
+> > [  100.600222] Hardware name: Radxa ROCK Pi 4B (DT)
+> > [  100.600229] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [  100.600239] pc : ftrace_ops_test+0x34/0x138
+>
+> Hmm, could you show the exact line of the above code? Specifically we have:
 
-Enforce this with lockdep_assert_held() (and remove the comment).
+Sorry. I have tried to decode stack dump but it is not giving valid information.
 
-> +static int yoga_c630_psy_update_bat_info(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int val;
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_PRESENT);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->bat_present = !!(val & LENOVO_EC_BAT_PRESENT_IS_PRESENT);
-> +	if (!ecbat->bat_present)
-> +		return val;
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_ATTRIBUTES);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->unit_mA = val & LENOVO_EC_BAT_ATTRIBUTES_UNIT_IS_MA;
-> +
-> +	val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_DESIGN_CAPACITY);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->design_capacity = val * 1000;
-> +
-> +	/*
-> +	 * DSDT has delays after most of EC reads in these methods.
-> +	 * Having no documentation for the EC we have to follow and sleep here.
-> +	 */
-> +	msleep(50);
-> +
-> +	val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_DESIGN_VOLTAGE);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->design_voltage = val;
-> +
-> +	msleep(50);
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_FULL_REGISTER);
-> +	if (val < 0)
-> +		return val;
-> +	val = yoga_c630_ec_read16(ec,
-> +				  val & LENOVO_EC_BAT_FULL_REGISTER_IS_FACTORY ?
-> +				  LENOVO_EC_BAT_FULL_FACTORY :
-> +				  LENOVO_EC_BAT_FULL_CAPACITY);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	ecbat->full_charge_capacity = val * 1000;
-> +
-> +	if (!ecbat->unit_mA) {
-> +		ecbat->design_capacity *= 10;
-> +		ecbat->full_charge_capacity *= 10;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int yoga_c630_psy_maybe_update_bat_status(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int current_mA;
-> +	int val;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
+>
+>         rcu_assign_pointer(hash.filter_hash, ops->func_hash->filter_hash);
+>         rcu_assign_pointer(hash.notrace_hash, ops->func_hash->notrace_hash);
+>
+> Hmm, it's a NULL pointer dereference at 0x8, so ops is likely not NULL,
+> as func_hash is much farther down. But if func_hash is NULL,
+> filter_hash is at the 0x8 offset.
+>
+> So now the question is, how did func_hash become NULL. It should always
+> be pointing at something. May have to do with the subops. Will investigate.
+>
+> Thanks,
+>
+> -- Steve
 
-This too could be simply guard() to bring down the indentation level.
-
-> +		if (time_before(jiffies, ecbat->last_status_update + LENOVO_EC_CACHE_TIME))
-> +			return 0;
-> +
-> +		val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_STATUS);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->bat_status = val;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_REMAIN_CAPACITY);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->capacity_now = val * 1000;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_VOLTAGE);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->voltage_now = val * 1000;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_CURRENT);
-> +		if (val < 0)
-> +			return val;
-> +		current_mA = sign_extend32(val, 15);
-> +		ecbat->current_now = current_mA * 1000;
-> +		ecbat->rate_now = current_mA * (ecbat->voltage_now / 1000);
-> +
-> +		msleep(50);
-> +
-> +		if (!ecbat->unit_mA)
-> +			ecbat->capacity_now *= 10;
-> +
-> +		ecbat->last_status_update = jiffies;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int yoga_c630_psy_update_adapter_status(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int val;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
-
-Ditto.
-
-> +		val = yoga_c630_ec_read8(ec, LENOVO_EC_ADPT_STATUS);
-> +		if (val < 0)
-> +			return val;
-> +
-> +		ecbat->adapter_online = !!(val & LENOVO_EC_ADPT_STATUS_PRESENT);
-> +	}
-> +
-> +	return 0;
-> +}
-
-
-> +static const struct power_supply_desc yoga_c630_psy_bat_psy_desc_mA = {
-> +	.name = "yoga-c630-battery",
-> +	.type = POWER_SUPPLY_TYPE_BATTERY,
-> +	.properties = yoga_c630_psy_bat_mA_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_bat_mA_properties),
-> +	.get_property = yoga_c630_psy_bat_get_property,
-> +};
-> +
-> +static const struct power_supply_desc yoga_c630_psy_bat_psy_desc_mWh = {
-> +	.name = "yoga-c630-battery",
-> +	.type = POWER_SUPPLY_TYPE_BATTERY,
-> +	.properties = yoga_c630_psy_bat_mWh_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_bat_mWh_properties),
-> +	.get_property = yoga_c630_psy_bat_get_property,
-> +};
-> +
-> +static int yoga_c630_psy_adpt_get_property(struct power_supply *psy,
-> +					  enum power_supply_property psp,
-> +					  union power_supply_propval *val)
-> +{
-> +	struct yoga_c630_psy *ecbat = power_supply_get_drvdata(psy);
-> +	int ret = 0;
-> +
-> +	ret = yoga_c630_psy_update_adapter_status(ecbat);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_ONLINE:
-> +		val->intval = ecbat->adapter_online;
-> +		break;
-> +	case POWER_SUPPLY_PROP_USB_TYPE:
-> +		val->intval = POWER_SUPPLY_USB_TYPE_C;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static enum power_supply_property yoga_c630_psy_adpt_properties[] = {
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +	POWER_SUPPLY_PROP_USB_TYPE,
-> +};
-> +
-> +static const enum power_supply_usb_type yoga_c630_psy_adpt_usb_type[] = {
-> +	POWER_SUPPLY_USB_TYPE_C,
-> +};
-> +
-> +static const struct power_supply_desc yoga_c630_psy_adpt_psy_desc = {
-> +	.name = "yoga-c630-adapter",
-> +	.type = POWER_SUPPLY_TYPE_USB,
-> +	.usb_types = yoga_c630_psy_adpt_usb_type,
-> +	.num_usb_types = ARRAY_SIZE(yoga_c630_psy_adpt_usb_type),
-> +	.properties = yoga_c630_psy_adpt_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_adpt_properties),
-> +	.get_property = yoga_c630_psy_adpt_get_property,
-> +};
-> +
-> +static int yoga_c630_psy_register_bat_psy(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct power_supply_config bat_cfg = {};
-> +
-> +	bat_cfg.drv_data = ecbat;
-> +	bat_cfg.fwnode = ecbat->fwnode;
-> +	ecbat->bat_psy = power_supply_register_no_ws(ecbat->dev,
-> +						     ecbat->unit_mA ?
-> +						     &yoga_c630_psy_bat_psy_desc_mA :
-> +						     &yoga_c630_psy_bat_psy_desc_mWh,
-> +						     &bat_cfg);
-> +	if (IS_ERR(ecbat->bat_psy)) {
-> +		dev_err(ecbat->dev, "failed to register battery supply\n");
-> +		return PTR_ERR(ecbat->bat_psy);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void yoga_c630_ec_refresh_bat_info(struct yoga_c630_psy *ecbat)
-> +{
-> +	bool current_unit;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
-
-guard()
-
-> +		current_unit = ecbat->unit_mA;
-> +
-> +		yoga_c630_psy_update_bat_info(ecbat);
-> +
-> +		if (current_unit != ecbat->unit_mA) {
-> +			power_supply_unregister(ecbat->bat_psy);
-> +			yoga_c630_psy_register_bat_psy(ecbat);
-> +		}
-> +	}
-> +}
-
-
-> +	adp_cfg.supplied_to = (char **)&yoga_c630_psy_bat_psy_desc_mA.name;
-
-This is not problem with your patch but I'm wondering why supplied_to 
-needs to be non-const char *. Are those strings expected to be altered by 
-something, I couldn't find anything to that effect (the pointer itself 
-does not become const if supplied_to is changed to const char **)?
-
---
- i.
-
+ - Naresh
+>
+> > [  100.600258] lr : function_graph_enter+0x144/0x208
+> > [  100.600271] sp : ffff800082fd3730
+> > [  100.600276] x29: ffff800082fd3770 x28: 0000000000000038 x27: ffff80008271a790
+> > [  100.600293] x26: ffff800082d24b08 x25: ffffffffffffffff x24: ffff800082d24000
+> > [  100.600310] x23: 0000000000000001 x22: 0000000000000001 x21: ffff000000cbdf00
+> > [  100.600326] x20: ffff80008271a3f0 x19: ffff800080163078 x18: 000000000000123d
+> > [  100.600343] x17: 0000000000000000 x16: 00500072b5503510 x15: 0000000000000000
+> > [  100.600359] x14: 0000000000000009 x13: 0000000000000037 x12: 0000000000000006
+> > [  100.600375] x11: 00000000fffffffe x10: ffff800082fd3740 x9 : ffff800082fd3738
+> > [  100.600391] x8 : 0000000000000000 x7 : 00000072b5503510 x6 : 0000000000300000
+> > [  100.600407] x5 : 0000000000000000 x4 : ffff8000801ffc20 x3 : ffff800082fd3900
+> > [  100.600423] x2 : 0000000000000000 x1 : ffff800080163078 x0 : ffff80008271a400
+> > [  100.600440] Call trace:
+> > [  100.600445]  ftrace_ops_test+0x34/0x138
+> > [  100.600455]  function_graph_enter+0x144/0x208
+> > [  100.600465]  ftrace_graph_func+0x34/0x58
+> > [  100.600477]  arch_ftrace_ops_list_func+0xd0/0x180
+> > [  100.600489]  ftrace_caller+0x6c/0x9c
+> > [  100.600498]  __traceiter_rcu_dyntick+0xc/0x88
+> > [  100.600511]  trace_rcu_dyntick+0x7c/0xa0
+> > [  100.600523]  ct_nmi_enter+0x90/0xc0
+> > [  100.600537]  ct_irq_enter+0x10/0x20
+> > [  100.600548]  enter_from_kernel_mode+0x30/0x58
+> > [  100.600560]  el1_abort+0x24/0x60
+> > [  100.600570]  el1h_64_sync_handler+0x80/0xd0
+> > [  100.600580]  el1h_64_sync+0x64/0x68
+> > [  100.600590]  ftrace_ops_test+0x34/0x138
+> > [  100.600600]  function_graph_enter+0x144/0x208
+> > [  100.600610]  ftrace_graph_func+0x34/0x58
+> > [  100.600620]  arch_ftrace_ops_list_func+0xd0/0x180
+> > [  100.600633] Mem abort info:
+> > [  100.600630]  ftrace_caller+0x6c/0x9c
+> > [  100.600639]   ESR = 0x0000000096000004
+> > [  100.600641]  arch_timer_set_next_event_phys+0xc/0x50
+> > [  100.600656]  clockevents_program_event+0xa0/0x1e0
+> > [  100.600669]  tick_program_event+0x5c/0xb0
+> > [  100.600679]  hrtimer_start_range_ns+0x15c/0x350
+> > [  100.600691]  tick_nohz_restart_sched_tick+0x90/0xb0
+> > [  100.600702]  tick_nohz_idle_exit+0xf0/0x168
+> > [  100.600712]  do_idle+0x238/0x290
+> > [  100.600721]  cpu_startup_entry+0x40/0x50
+> > [  100.600730]  secondary_start_kernel+0x13c/0x168
+> > [  100.600743]  __secondary_switched+0xb8/0xc0
+> > [  100.600761] Code: f9402c08 a902ffff a901ffff a900ffff (f9400508)
+> > [  100.600769] ---[ end trace 0000000000000000 ]---
+> > [  100.600782] Kernel panic - not syncing: Attempted to kill the idle task!
+> > [  100.600789] SMP: stopping secondary CPUs
+> > [  101.767463] SMP: failed to stop secondary CPUs 0-1,3-5
+> > [  101.767476] Kernel Offset: disabled
+> > [  101.767481] CPU features: 0x04,00001041,60100000,4200421b
+> > [  101.767489] Memory Limit: none
+> > [  101.814070] ---[ end Kernel panic - not syncing: Attempted to kill
+> > the idle task! ]---
+> >
+> > metadata:
+> > -------
+> >   git_describe: next-20240612
+> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+> >   git_sha: 03d44168cbd7fc57d5de56a3730427db758fc7f6
+> >   kernel-config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/config
+> >   build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/
+> >   kernel_version: 6.10.0-rc3
+> >   toolchain: clang-18
+> >
+> > Links:
+> > ----
+> >  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240612/testrun/24277665/suite/log-parser-test/tests/
+> >  - https://lkft.validation.linaro.org/scheduler/job/7658998#L1508
+> >
+> >  --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+>
