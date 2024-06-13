@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335DF12BF02
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB056130A5C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718242579; cv=none; b=Qyc1eGtL/lFwISsuuCgDVIqkYlb1jj3QbASuMwfhj/dRekthe1SX/R7HvYpX3KcoCvyALfE1V4pXQ2RX/LsLz+26CWC7kkUG5o2+f3QNsOW1yqA/sJA9mfj0IIESWH8gM7Ps0aQVFAHNaFJb9UwFHu2vOw9ZyWdDsls9f/Fr1Hs=
+	t=1718242595; cv=none; b=AkhehwKFBsriUwJDdJb+rB4aFoJ+u49Wzfc88OlOnDGSjNQ7c0csMkk8ldlmfDsRH5E6O1RcDiUo0+vlNFf/CZ1rJ6qY8JYBsCyJ1/m5aEYNazgh/ZTL+YffRz8leTL3cAcHIZBoRALgMjTriSDCem/5D2WbZnQgIKkODUbCkkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718242579; c=relaxed/simple;
-	bh=6R+D7bvWJv9ZjLcUKNpP5C6/9hO14TzlXcaezF4C92Y=;
+	s=arc-20240116; t=1718242595; c=relaxed/simple;
+	bh=IpmsKdmAg2dkzE7gg4B1MRUlTQNolccrcZaFLDHfwBA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rw7lAryDn40WMI6P+mGbwhyq4KVaFjjKyjX7IzWcu4JBcxr3w+m+s+/qcyefrMmwiFPge64FNi+mF7L6lQ0HKU1JmEq/ISDNQIHU46RSVwbK/VqkMIdYbRZP3aZdwou/QYqlp/l7r1j5Hqunb/IaXSf31vDcIEtfjJwdTxBGl6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AfR9XUWh; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=Li3USIgnhCPot51J11o9kXJIFsC3SZ1sNSVlOIhJZ7wJSfrtckAVk8feo1y7YSiwENbTKzyQ79pO28H8TXIQM+aOtE60mRpkN/fKNRTLgW/uWIRPRAp5nqXxyfvG7UI0rIylxGINeyXKZPkwpLJoIk+DqoFxfUb9jA72Kc9maJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xzBcIC9s; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AfR9XUWh"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfede368fcaso861567276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:36:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xzBcIC9s"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfdfe3d9fc8so880809276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718242572; x=1718847372; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718242584; x=1718847384; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=40fh2iIgaMXtjtwVcOKfX1XrvM5jH239yn5HOFy7+mE=;
-        b=AfR9XUWhUxIvMm8kRTEUtn7xnY5/QaX5aobuHGLL4T/Xed31nPUZwJKDbCQw3SZkpB
-         V06PYXM3HmfUPStolBbbFzFQDJMeRsoiYh59KbK7jTsAriDb28NQUEczwkiMMzg5F/U6
-         UZ4aYftNcWRpwsLdF9AEJ07IJ7HATCX9iiFRH46mxM7m/w9YC8FKYCTqv8H0/g8twPHr
-         Bx7wqi43LayP3ZGXqo+kUVumvd8KtPYPS/dYaGYvzQ+sfj04H/M1VSZyNXOWKOH3DDoC
-         YVOOCALTcNCsrpQqt7Q9hLEUAlVfmvH06hLkKO1AJYsK71sme+c2QMVEZ3FQ453C58DV
-         XIDQ==
+        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
+        b=xzBcIC9s86NLmu5LOqa3Cc0MaXmRvReIXywRKS8HuXbOoH20O4OuQcpwb1V+4QDyGR
+         sp9yBZ8fxbFL9vAXyC1fGh7XduuYrv822KYT+/vqrXj1/jJ0Gjydr4m38GLX4SPi5ykt
+         hNGGYs/cQ7gN64YnW5o/3eh75ASC0m45Zssgpo899j+PGoR3GSeAi8DHyiI16LjSvWJ5
+         m9Ir4HnD6bOawEq+OXw0aWBGP6x2UT5FRZkkHqPwte6sNeNZS6CZDKHJoNzWdIXtey2k
+         lWxLNkYtrO37K6USc2qYOWdw2UCbVYqvH6CMNZPDF8xA0PorOszAsTZZLp6bW68IXvsV
+         WMkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718242572; x=1718847372;
+        d=1e100.net; s=20230601; t=1718242584; x=1718847384;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=40fh2iIgaMXtjtwVcOKfX1XrvM5jH239yn5HOFy7+mE=;
-        b=VxsnEZxkMoSyl0flII/yQHnnyjAN6SIE/q+n1SgGmqoRM95qTXaiE00N8M9ZZL4PJB
-         bA4gXF/SFQtG/+C895z/RESxKSAE0Oii79xsRmqhHassKuG8ptxY+P1fq2ao8MHaXeUY
-         zQOGh9Af7hinLw4cMgq23cbYpqBRnHOwr7i90CEmCJbom8u3lXhRQishOUwjgaFXy1FR
-         t+hlTVXDx5j44bjTNCIntOQAOULubNF7m9AZt4KYygydrir4VcGv+Jaj8aymdzH5amgu
-         7xwiz6SOPq5syUdeso9cgf26JxYxU5VPQiAVDMwzahkVnOFXurOQA34XMjYTQE+Wib37
-         a9KA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjIiYwKd+A7p0zOgJCK1PgLS0erkywExS3HzENEWCWcRjfA0/AluB5kxO9aXHrWvayh8K7J6Eap5Mf7VMLAjJDrKCoMirJQVPB5WYT
-X-Gm-Message-State: AOJu0YzsDP4aC3KaddJ3CWDouc7E2Yam6RSvAMpaGbU9H5HfMMDDo4IU
-	1LpPnu5aRfVikiT6bar1jnDrsA9GsMOmHENmOISnwYujwSHhrczG10qSKzEroTyTH8oX1xabJBA
-	jkgrvY6/Sf7P2J9mr3t570g==
-X-Google-Smtp-Source: AGHT+IFnGhOsFewsn/rSoNQzevbHosN/jpvtC/Nzbie3iUpFmGxcVlvMUY7MEvgUYS2VKGdqdPMK0bAgcOAtltrDYw==
+        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
+        b=nbfz1kHaxWSaT3wP2tyYedHdPepMImJtl60T+RHduEKplyTE0LeXGHlGb/UgdBK7Tl
+         1Oo8Fdjvgm5rXVLtliGvI2ioAbWBhP0uFmD4p+rTikL2IAx45/LvtBPM/QYEVgP1MlG1
+         mhw14Z+0GF+XgGzqT2nwsYaznH1FBh6IlBpREu2RLO/J1JRHU2fHExmf5aqsaAH5L4ZT
+         PWhSMvNxqmJ2kZNvHpKe2b30U6cBfkKLRLHEgQ7R6+li43yUWanJ3v2wh3NiUKWnlbax
+         tvFQGJh+qu48hg/J9ewXswYHL3/+TGB4wzHZu06uSDJ4oHe9vykcm6vwlK5JzfX9JQIy
+         kRhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Pts0gx/q3UB4Yc2+oIgtEFEcoNUSo3O9vNpoDvC1m/BgIryJOeSb82TsHKB+BDFn6swBXuDBsAw2c540+ww5qyo0C4vLuRfTQJZP
+X-Gm-Message-State: AOJu0Yz2l3T+VCZbRDz8hg8ttg7apIN174zrO+/inoBlqCyAcnK8o+1Z
+	7Mw8HOLuSBF34Rle9UgmiDE20fYarYyF8Xke6D8cZMqPx6t/elYQbeYTScoGSuHleiC7p7RsRpZ
+	sr5wTT3SJp2s7VjIwjVQEEg==
+X-Google-Smtp-Source: AGHT+IFa0xOn8RWrqSudbMRRLaCNrvq6gMEsC85wYC4QCuGRc0LeGekCRm/7oZxxFmtkroHd4asu4SUKsm5sDQR3aQ==
 X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a25:f306:0:b0:dfa:5a23:379e with SMTP
- id 3f1490d57ef6-dfe6655c4aamr635071276.4.1718242572009; Wed, 12 Jun 2024
- 18:36:12 -0700 (PDT)
-Date: Thu, 13 Jun 2024 01:35:43 +0000
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:f89:b0:dfa:59bc:8857 with
+ SMTP id 3f1490d57ef6-dfe67e3a1e3mr912630276.9.1718242583658; Wed, 12 Jun 2024
+ 18:36:23 -0700 (PDT)
+Date: Thu, 13 Jun 2024 01:35:49 +0000
 In-Reply-To: <20240613013557.1169171-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240613013557.1169171-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240613013557.1169171-7-almasrymina@google.com>
-Subject: [PATCH net-next v12 06/13] page_pool: devmem support
+Message-ID: <20240613013557.1169171-13-almasrymina@google.com>
+Subject: [PATCH net-next v12 12/13] net: add devmem TCP documentation
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
@@ -93,525 +93,312 @@ Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.ne
 	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
 	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
 	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Convert netmem to be a union of struct page and struct netmem. Overload
-the LSB of struct netmem* to indicate that it's a net_iov, otherwise
-it's a page.
-
-Currently these entries in struct page are rented by the page_pool and
-used exclusively by the net stack:
-
-struct {
-	unsigned long pp_magic;
-	struct page_pool *pp;
-	unsigned long _pp_mapping_pad;
-	unsigned long dma_addr;
-	atomic_long_t pp_ref_count;
-};
-
-Mirror these (and only these) entries into struct net_iov and implement
-netmem helpers that can access these common fields regardless of
-whether the underlying type is page or net_iov.
-
-Implement checks for net_iov in netmem helpers which delegate to mm
-APIs, to ensure net_iov are never passed to the mm stack.
+Add documentation outlining the usage and details of devmem TCP.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 ---
 
-v9: https://lore.kernel.org/netdev/20240403002053.2376017-8-almasrymina@google.com/
-- Remove CONFIG checks in netmem_is_net_iov() (Pavel/David/Jens)
+v9: https://lore.kernel.org/netdev/20240403002053.2376017-14-almasrymina@google.com/
+- Bagas doc suggestions.
+
+v8:
+- Applied docs suggestions (Randy). Thanks!
 
 v7:
-- Remove static_branch_unlikely from netmem_to_net_iov(). We're getting
-  better results from the fast path in bench_page_pool_simple tests
-  without the static_branch_unlikely, and the addition of
-  static_branch_unlikely doesn't improve performance of devmem TCP.
+- Applied docs suggestions (Jakub).
 
-  Additionally only check netmem_to_net_iov() if
-  CONFIG_DMA_SHARED_BUFFER is enabled, otherwise dmabuf net_iovs cannot
-  exist anyway.
+v2:
 
-  net-next base: 8 cycle fast path.
-  with static_branch_unlikely: 10 cycle fast path.
-  without static_branch_unlikely: 9 cycle fast path.
-  CONFIG_DMA_SHARED_BUFFER disabled: 8 cycle fast path as baseline.
-
-  Performance of devmem TCP is at 95% line rate is regardless of
-  static_branch_unlikely or not.
-
-v6:
-- Rebased on top of the merged netmem_ref type.
-- Rebased on top of the merged skb_pp_frag_ref() changes.
-
-v5:
-- Use netmem instead of page* with LSB set.
-- Use pp_ref_count for refcounting net_iov.
-- Removed many of the custom checks for netmem.
-
-v1:
-- Disable fragmentation support for iov properly.
-- fix napi_pp_put_page() path (Yunsheng).
-- Use pp_frag_count for devmem refcounting.
-
-Cc: linux-mm@kvack.org
-Cc: Matthew Wilcox <willy@infradead.org>
+- Missing spdx (simon)
+- add to index.rst (simon)
 
 ---
- include/net/netmem.h            | 137 ++++++++++++++++++++++++++++++--
- include/net/page_pool/helpers.h |  25 +++---
- net/core/devmem.c               |   3 +
- net/core/page_pool.c            |  26 +++---
- net/core/skbuff.c               |  22 +++--
- 5 files changed, 168 insertions(+), 45 deletions(-)
+ Documentation/networking/devmem.rst | 258 ++++++++++++++++++++++++++++
+ Documentation/networking/index.rst  |   1 +
+ 2 files changed, 259 insertions(+)
+ create mode 100644 Documentation/networking/devmem.rst
 
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 664df8325ece5..35ad237fdf29e 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -9,14 +9,51 @@
- #define _NET_NETMEM_H
- 
- #include <net/devmem.h>
-+#include <net/net_debug.h>
- 
- /* net_iov */
- 
-+DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
+diff --git a/Documentation/networking/devmem.rst b/Documentation/networking/devmem.rst
+new file mode 100644
+index 0000000000000..f32acfd62075d
+--- /dev/null
++++ b/Documentation/networking/devmem.rst
+@@ -0,0 +1,258 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+/*  We overload the LSB of the struct page pointer to indicate whether it's
-+ *  a page or net_iov.
-+ */
-+#define NET_IOV 0x01UL
++=================
++Device Memory TCP
++=================
 +
- struct net_iov {
-+	unsigned long __unused_padding;
-+	unsigned long pp_magic;
-+	struct page_pool *pp;
- 	struct dmabuf_genpool_chunk_owner *owner;
- 	unsigned long dma_addr;
-+	atomic_long_t pp_ref_count;
- };
- 
-+/* These fields in struct page are used by the page_pool and net stack:
-+ *
-+ *	struct {
-+ *		unsigned long pp_magic;
-+ *		struct page_pool *pp;
-+ *		unsigned long _pp_mapping_pad;
-+ *		unsigned long dma_addr;
-+ *		atomic_long_t pp_ref_count;
-+ *	};
-+ *
-+ * We mirror the page_pool fields here so the page_pool can access these fields
-+ * without worrying whether the underlying fields belong to a page or net_iov.
-+ *
-+ * The non-net stack fields of struct page are private to the mm stack and must
-+ * never be mirrored to net_iov.
-+ */
-+#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
-+	static_assert(offsetof(struct page, pg) == \
-+		      offsetof(struct net_iov, iov))
-+NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
-+NET_IOV_ASSERT_OFFSET(pp, pp);
-+NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
-+NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
-+#undef NET_IOV_ASSERT_OFFSET
 +
- static inline struct dmabuf_genpool_chunk_owner *
- net_iov_owner(const struct net_iov *niov)
- {
-@@ -47,20 +84,22 @@ net_iov_binding(const struct net_iov *niov)
-  */
- typedef unsigned long __bitwise netmem_ref;
- 
-+static inline bool netmem_is_net_iov(const netmem_ref netmem)
-+{
-+	return (__force unsigned long)netmem & NET_IOV;
-+}
++Intro
++=====
 +
- /* This conversion fails (returns NULL) if the netmem_ref is not struct page
-  * backed.
-- *
-- * Currently struct page is the only possible netmem, and this helper never
-- * fails.
-  */
- static inline struct page *netmem_to_page(netmem_ref netmem)
- {
-+	if (WARN_ON_ONCE(netmem_is_net_iov(netmem)))
-+		return NULL;
++Device memory TCP (devmem TCP) enables receiving data directly into device
++memory (dmabuf). The feature is currently implemented for TCP sockets.
 +
- 	return (__force struct page *)netmem;
- }
- 
--/* Converting from page to netmem is always safe, because a page can always be
-- * a netmem.
-- */
- static inline netmem_ref page_to_netmem(struct page *page)
- {
- 	return (__force netmem_ref)page;
-@@ -68,17 +107,103 @@ static inline netmem_ref page_to_netmem(struct page *page)
- 
- static inline int netmem_ref_count(netmem_ref netmem)
- {
-+	/* The non-pp refcount of net_iov is always 1. On net_iov, we only
-+	 * support pp refcounting which uses the pp_ref_count field.
-+	 */
-+	if (netmem_is_net_iov(netmem))
-+		return 1;
 +
- 	return page_ref_count(netmem_to_page(netmem));
- }
- 
- static inline unsigned long netmem_to_pfn(netmem_ref netmem)
- {
-+	if (netmem_is_net_iov(netmem))
-+		return 0;
++Opportunity
++-----------
 +
- 	return page_to_pfn(netmem_to_page(netmem));
- }
- 
-+static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-+{
-+	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
-+}
++A large number of data transfers have device memory as the source and/or
++destination. Accelerators drastically increased the prevalence of such
++transfers.  Some examples include:
 +
-+static inline unsigned long netmem_get_pp_magic(netmem_ref netmem)
-+{
-+	return __netmem_clear_lsb(netmem)->pp_magic;
-+}
++- Distributed training, where ML accelerators, such as GPUs on different hosts,
++  exchange data.
 +
-+static inline void netmem_or_pp_magic(netmem_ref netmem, unsigned long pp_magic)
-+{
-+	__netmem_clear_lsb(netmem)->pp_magic |= pp_magic;
-+}
++- Distributed raw block storage applications transfer large amounts of data with
++  remote SSDs. Much of this data does not require host processing.
 +
-+static inline void netmem_clear_pp_magic(netmem_ref netmem)
-+{
-+	__netmem_clear_lsb(netmem)->pp_magic = 0;
-+}
++Typically the Device-to-Device data transfers in the network are implemented as
++the following low-level operations: Device-to-Host copy, Host-to-Host network
++transfer, and Host-to-Device copy.
 +
-+static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
-+{
-+	return __netmem_clear_lsb(netmem)->pp;
-+}
++The flow involving host copies is suboptimal, especially for bulk data transfers,
++and can put significant strains on system resources such as host memory
++bandwidth and PCIe bandwidth.
 +
-+static inline void netmem_set_pp(netmem_ref netmem, struct page_pool *pool)
-+{
-+	__netmem_clear_lsb(netmem)->pp = pool;
-+}
++Devmem TCP optimizes this use case by implementing socket APIs that enable
++the user to receive incoming network packets directly into device memory.
 +
-+static inline unsigned long netmem_get_dma_addr(netmem_ref netmem)
-+{
-+	return __netmem_clear_lsb(netmem)->dma_addr;
-+}
++Packet payloads go directly from the NIC to device memory.
 +
-+static inline void netmem_set_dma_addr(netmem_ref netmem,
-+				       unsigned long dma_addr)
-+{
-+	__netmem_clear_lsb(netmem)->dma_addr = dma_addr;
-+}
++Packet headers go to host memory and are processed by the TCP/IP stack
++normally. The NIC must support header split to achieve this.
 +
-+static inline atomic_long_t *netmem_get_pp_ref_count_ref(netmem_ref netmem)
-+{
-+	return &__netmem_clear_lsb(netmem)->pp_ref_count;
-+}
++Advantages:
 +
-+static inline bool netmem_is_pref_nid(netmem_ref netmem, int pref_nid)
-+{
-+	/* Assume net_iov are on the preferred node without actually
-+	 * checking...
-+	 *
-+	 * This check is only used to check for recycling memory in the page
-+	 * pool's fast paths. Currently the only implementation of net_iov
-+	 * is dmabuf device memory. It's a deliberate decision by the user to
-+	 * bind a certain dmabuf to a certain netdev, and the netdev rx queue
-+	 * would not be able to reallocate memory from another dmabuf that
-+	 * exists on the preferred node, so, this check doesn't make much sense
-+	 * in this case. Assume all net_iovs can be recycled for now.
-+	 */
-+	if (netmem_is_net_iov(netmem))
-+		return true;
++- Alleviate host memory bandwidth pressure, compared to existing
++  network-transfer + device-copy semantics.
 +
-+	return page_to_nid(netmem_to_page(netmem)) == pref_nid;
-+}
++- Alleviate PCIe bandwidth pressure, by limiting data transfer to the lowest
++  level of the PCIe tree, compared to the traditional path which sends data
++  through the root complex.
 +
- static inline netmem_ref netmem_compound_head(netmem_ref netmem)
- {
-+	/* niov are never compounded */
-+	if (netmem_is_net_iov(netmem))
-+		return netmem;
 +
- 	return page_to_netmem(compound_head(netmem_to_page(netmem)));
- }
- 
-+static inline void *netmem_address(netmem_ref netmem)
-+{
-+	if (netmem_is_net_iov(netmem))
-+		return NULL;
++More Info
++---------
 +
-+	return page_address(netmem_to_page(netmem));
-+}
++  slides, video
++    https://netdevconf.org/0x17/sessions/talk/device-memory-tcp.html
 +
- #endif /* _NET_NETMEM_H */
-diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-index 5e129d5304f53..1770c7be24afc 100644
---- a/include/net/page_pool/helpers.h
-+++ b/include/net/page_pool/helpers.h
-@@ -217,7 +217,7 @@ page_pool_get_dma_dir(const struct page_pool *pool)
- 
- static inline void page_pool_fragment_netmem(netmem_ref netmem, long nr)
- {
--	atomic_long_set(&netmem_to_page(netmem)->pp_ref_count, nr);
-+	atomic_long_set(netmem_get_pp_ref_count_ref(netmem), nr);
- }
- 
- /**
-@@ -245,7 +245,7 @@ static inline void page_pool_fragment_page(struct page *page, long nr)
- 
- static inline long page_pool_unref_netmem(netmem_ref netmem, long nr)
- {
--	struct page *page = netmem_to_page(netmem);
-+	atomic_long_t *pp_ref_count = netmem_get_pp_ref_count_ref(netmem);
- 	long ret;
- 
- 	/* If nr == pp_ref_count then we have cleared all remaining
-@@ -262,19 +262,19 @@ static inline long page_pool_unref_netmem(netmem_ref netmem, long nr)
- 	 * initially, and only overwrite it when the page is partitioned into
- 	 * more than one piece.
- 	 */
--	if (atomic_long_read(&page->pp_ref_count) == nr) {
-+	if (atomic_long_read(pp_ref_count) == nr) {
- 		/* As we have ensured nr is always one for constant case using
- 		 * the BUILD_BUG_ON(), only need to handle the non-constant case
- 		 * here for pp_ref_count draining, which is a rare case.
- 		 */
- 		BUILD_BUG_ON(__builtin_constant_p(nr) && nr != 1);
- 		if (!__builtin_constant_p(nr))
--			atomic_long_set(&page->pp_ref_count, 1);
-+			atomic_long_set(pp_ref_count, 1);
- 
- 		return 0;
- 	}
- 
--	ret = atomic_long_sub_return(nr, &page->pp_ref_count);
-+	ret = atomic_long_sub_return(nr, pp_ref_count);
- 	WARN_ON(ret < 0);
- 
- 	/* We are the last user here too, reset pp_ref_count back to 1 to
-@@ -283,7 +283,7 @@ static inline long page_pool_unref_netmem(netmem_ref netmem, long nr)
- 	 * page_pool_unref_page() currently.
- 	 */
- 	if (unlikely(!ret))
--		atomic_long_set(&page->pp_ref_count, 1);
-+		atomic_long_set(pp_ref_count, 1);
- 
- 	return ret;
- }
-@@ -402,9 +402,7 @@ static inline void page_pool_free_va(struct page_pool *pool, void *va,
- 
- static inline dma_addr_t page_pool_get_dma_addr_netmem(netmem_ref netmem)
- {
--	struct page *page = netmem_to_page(netmem);
--
--	dma_addr_t ret = page->dma_addr;
-+	dma_addr_t ret = netmem_get_dma_addr(netmem);
- 
- 	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA)
- 		ret <<= PAGE_SHIFT;
-@@ -427,18 +425,17 @@ static inline dma_addr_t page_pool_get_dma_addr(const struct page *page)
- static inline bool page_pool_set_dma_addr_netmem(netmem_ref netmem,
- 						 dma_addr_t addr)
- {
--	struct page *page = netmem_to_page(netmem);
--
- 	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA) {
--		page->dma_addr = addr >> PAGE_SHIFT;
-+		netmem_set_dma_addr(netmem, addr >> PAGE_SHIFT);
- 
- 		/* We assume page alignment to shave off bottom bits,
- 		 * if this "compression" doesn't work we need to drop.
- 		 */
--		return addr != (dma_addr_t)page->dma_addr << PAGE_SHIFT;
-+		return addr != (dma_addr_t)netmem_get_dma_addr(netmem)
-+				       << PAGE_SHIFT;
- 	}
- 
--	page->dma_addr = addr;
-+	netmem_set_dma_addr(netmem, addr);
- 	return false;
- }
- 
-diff --git a/net/core/devmem.c b/net/core/devmem.c
-index b53ea67c020d3..f4fd9b9dbb675 100644
---- a/net/core/devmem.c
-+++ b/net/core/devmem.c
-@@ -80,7 +80,10 @@ net_devmem_alloc_dmabuf(struct net_devmem_dmabuf_binding *binding)
- 	index = offset / PAGE_SIZE;
- 	niov = &owner->niovs[index];
- 
-+	niov->pp_magic = 0;
-+	niov->pp = NULL;
- 	niov->dma_addr = 0;
-+	atomic_long_set(&niov->pp_ref_count, 0);
- 
- 	net_devmem_dmabuf_binding_get(binding);
- 
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index a5957d3359762..1152e3547795a 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -26,6 +26,8 @@
- 
- #include "page_pool_priv.h"
- 
-+DEFINE_STATIC_KEY_FALSE(page_pool_mem_providers);
++  patchset
++    [RFC PATCH v6 00/12] Device Memory TCP
++    https://lore.kernel.org/netdev/20240305020153.2787423-1-almasrymina@google.com/
 +
- #define DEFER_TIME (msecs_to_jiffies(1000))
- #define DEFER_WARN_INTERVAL (60 * HZ)
- 
-@@ -357,7 +359,7 @@ static noinline netmem_ref page_pool_refill_alloc_cache(struct page_pool *pool)
- 		if (unlikely(!netmem))
- 			break;
- 
--		if (likely(page_to_nid(netmem_to_page(netmem)) == pref_nid)) {
-+		if (likely(netmem_is_pref_nid(netmem, pref_nid))) {
- 			pool->alloc.cache[pool->alloc.count++] = netmem;
- 		} else {
- 			/* NUMA mismatch;
-@@ -453,10 +455,8 @@ static bool page_pool_dma_map(struct page_pool *pool, netmem_ref netmem)
- 
- static void page_pool_set_pp_info(struct page_pool *pool, netmem_ref netmem)
- {
--	struct page *page = netmem_to_page(netmem);
--
--	page->pp = pool;
--	page->pp_magic |= PP_SIGNATURE;
-+	netmem_set_pp(netmem, pool);
-+	netmem_or_pp_magic(netmem, PP_SIGNATURE);
- 
- 	/* Ensuring all pages have been split into one fragment initially:
- 	 * page_pool_set_pp_info() is only called once for every page when it
-@@ -471,10 +471,8 @@ static void page_pool_set_pp_info(struct page_pool *pool, netmem_ref netmem)
- 
- static void page_pool_clear_pp_info(netmem_ref netmem)
- {
--	struct page *page = netmem_to_page(netmem);
--
--	page->pp_magic = 0;
--	page->pp = NULL;
-+	netmem_clear_pp_magic(netmem);
-+	netmem_set_pp(netmem, NULL);
- }
- 
- static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
-@@ -691,8 +689,9 @@ static bool page_pool_recycle_in_cache(netmem_ref netmem,
- 
- static bool __page_pool_page_can_be_recycled(netmem_ref netmem)
- {
--	return page_ref_count(netmem_to_page(netmem)) == 1 &&
--	       !page_is_pfmemalloc(netmem_to_page(netmem));
-+	return netmem_is_net_iov(netmem) ||
-+	       (page_ref_count(netmem_to_page(netmem)) == 1 &&
-+		!page_is_pfmemalloc(netmem_to_page(netmem)));
- }
- 
- /* If the page refcnt == 1, this will try to recycle the page.
-@@ -714,7 +713,7 @@ __page_pool_put_page(struct page_pool *pool, netmem_ref netmem,
- 	 * refcnt == 1 means page_pool owns page, and can recycle it.
- 	 *
- 	 * page is NOT reusable when allocated when system is under
--	 * some pressure. (page_is_pfmemalloc)
-+	 * some pressure. (page_pool_page_is_pfmemalloc)
- 	 */
- 	if (likely(__page_pool_page_can_be_recycled(netmem))) {
- 		/* Read barrier done in page_ref_count / READ_ONCE */
-@@ -727,6 +726,7 @@ __page_pool_put_page(struct page_pool *pool, netmem_ref netmem,
- 		/* Page found as candidate for recycling */
- 		return netmem;
- 	}
 +
- 	/* Fallback/non-XDP mode: API user have elevated refcnt.
- 	 *
- 	 * Many drivers split up the page into fragments, and some
-@@ -948,7 +948,7 @@ static void page_pool_empty_ring(struct page_pool *pool)
- 	/* Empty recycle ring */
- 	while ((netmem = (__force netmem_ref)ptr_ring_consume_bh(&pool->ring))) {
- 		/* Verify the refcnt invariant of cached pages */
--		if (!(page_ref_count(netmem_to_page(netmem)) == 1))
-+		if (!(netmem_ref_count(netmem) == 1))
- 			pr_crit("%s() page_pool refcnt %d violation\n",
- 				__func__, netmem_ref_count(netmem));
- 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 8d5e85d71998d..5aaaa796c5fb4 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -904,9 +904,9 @@ static void skb_clone_fraglist(struct sk_buff *skb)
- 		skb_get(list);
- }
- 
--static bool is_pp_page(struct page *page)
-+static bool is_pp_netmem(netmem_ref netmem)
- {
--	return (page->pp_magic & ~0x3UL) == PP_SIGNATURE;
-+	return (netmem_get_pp_magic(netmem) & ~0x3UL) == PP_SIGNATURE;
- }
- 
- int skb_pp_cow_data(struct page_pool *pool, struct sk_buff **pskb,
-@@ -1004,9 +1004,7 @@ EXPORT_SYMBOL(skb_cow_data_for_xdp);
- #if IS_ENABLED(CONFIG_PAGE_POOL)
- bool napi_pp_put_page(netmem_ref netmem)
- {
--	struct page *page = netmem_to_page(netmem);
--
--	page = compound_head(page);
-+	netmem = netmem_compound_head(netmem);
- 
- 	/* page->pp_magic is OR'ed with PP_SIGNATURE after the allocation
- 	 * in order to preserve any existing bits, such as bit 0 for the
-@@ -1015,10 +1013,10 @@ bool napi_pp_put_page(netmem_ref netmem)
- 	 * and page_is_pfmemalloc() is checked in __page_pool_put_page()
- 	 * to avoid recycling the pfmemalloc page.
- 	 */
--	if (unlikely(!is_pp_page(page)))
-+	if (unlikely(!is_pp_netmem(netmem)))
- 		return false;
- 
--	page_pool_put_full_netmem(page->pp, page_to_netmem(page), false);
-+	page_pool_put_full_netmem(netmem_get_pp(netmem), netmem, false);
- 
- 	return true;
- }
-@@ -1045,7 +1043,7 @@ static bool skb_pp_recycle(struct sk_buff *skb, void *data)
- static int skb_pp_frag_ref(struct sk_buff *skb)
- {
- 	struct skb_shared_info *shinfo;
--	struct page *head_page;
-+	netmem_ref head_netmem;
- 	int i;
- 
- 	if (!skb->pp_recycle)
-@@ -1054,11 +1052,11 @@ static int skb_pp_frag_ref(struct sk_buff *skb)
- 	shinfo = skb_shinfo(skb);
- 
- 	for (i = 0; i < shinfo->nr_frags; i++) {
--		head_page = compound_head(skb_frag_page(&shinfo->frags[i]));
--		if (likely(is_pp_page(head_page)))
--			page_pool_ref_page(head_page);
-+		head_netmem = netmem_compound_head(shinfo->frags[i].netmem);
-+		if (likely(is_pp_netmem(head_netmem)))
-+			page_pool_ref_netmem(head_netmem);
- 		else
--			page_ref_inc(head_page);
-+			page_ref_inc(netmem_to_page(head_netmem));
- 	}
- 	return 0;
- }
++Interface
++=========
++
++Example
++-------
++
++tools/testing/selftests/net/ncdevmem.c:do_server shows an example of setting up
++the RX path of this API.
++
++NIC Setup
++---------
++
++Header split, flow steering, & RSS are required features for devmem TCP.
++
++Header split is used to split incoming packets into a header buffer in host
++memory, and a payload buffer in device memory.
++
++Flow steering & RSS are used to ensure that only flows targeting devmem land on
++an RX queue bound to devmem.
++
++Enable header split & flow steering::
++
++	# enable header split
++	ethtool -G eth1 tcp-data-split on
++
++
++	# enable flow steering
++	ethtool -K eth1 ntuple on
++
++Configure RSS to steer all traffic away from the target RX queue (queue 15 in
++this example)::
++
++	ethtool --set-rxfh-indir eth1 equal 15
++
++
++The user must bind a dmabuf to any number of RX queues on a given NIC using
++the netlink API::
++
++	/* Bind dmabuf to NIC RX queue 15 */
++	struct netdev_queue *queues;
++	queues = malloc(sizeof(*queues) * 1);
++
++	queues[0]._present.type = 1;
++	queues[0]._present.idx = 1;
++	queues[0].type = NETDEV_RX_QUEUE_TYPE_RX;
++	queues[0].idx = 15;
++
++	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
++
++	req = netdev_bind_rx_req_alloc();
++	netdev_bind_rx_req_set_ifindex(req, 1 /* ifindex */);
++	netdev_bind_rx_req_set_dmabuf_fd(req, dmabuf_fd);
++	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
++
++	rsp = netdev_bind_rx(*ys, req);
++
++	dmabuf_id = rsp->dmabuf_id;
++
++
++The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
++that has been bound.
++
++Socket Setup
++------------
++
++The socket must be flow steered to the dmabuf bound RX queue::
++
++	ethtool -N eth1 flow-type tcp4 ... queue 15,
++
++
++Receiving data
++--------------
++
++The user application must signal to the kernel that it is capable of receiving
++devmem data by passing the MSG_SOCK_DEVMEM flag to recvmsg::
++
++	ret = recvmsg(fd, &msg, MSG_SOCK_DEVMEM);
++
++Applications that do not specify the MSG_SOCK_DEVMEM flag will receive an EFAULT
++on devmem data.
++
++Devmem data is received directly into the dmabuf bound to the NIC in 'NIC
++Setup', and the kernel signals such to the user via the SCM_DEVMEM_* cmsgs::
++
++		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
++			if (cm->cmsg_level != SOL_SOCKET ||
++				(cm->cmsg_type != SCM_DEVMEM_DMABUF &&
++				 cm->cmsg_type != SCM_DEVMEM_LINEAR))
++				continue;
++
++			dmabuf_cmsg = (struct dmabuf_cmsg *)CMSG_DATA(cm);
++
++			if (cm->cmsg_type == SCM_DEVMEM_DMABUF) {
++				/* Frag landed in dmabuf.
++				 *
++				 * dmabuf_cmsg->dmabuf_id is the dmabuf the
++				 * frag landed on.
++				 *
++				 * dmabuf_cmsg->frag_offset is the offset into
++				 * the dmabuf where the frag starts.
++				 *
++				 * dmabuf_cmsg->frag_size is the size of the
++				 * frag.
++				 *
++				 * dmabuf_cmsg->frag_token is a token used to
++				 * refer to this frag for later freeing.
++				 */
++
++				struct dmabuf_token token;
++				token.token_start = dmabuf_cmsg->frag_token;
++				token.token_count = 1;
++				continue;
++			}
++
++			if (cm->cmsg_type == SCM_DEVMEM_LINEAR)
++				/* Frag landed in linear buffer.
++				 *
++				 * dmabuf_cmsg->frag_size is the size of the
++				 * frag.
++				 */
++				continue;
++
++		}
++
++Applications may receive 2 cmsgs:
++
++- SCM_DEVMEM_DMABUF: this indicates the fragment landed in the dmabuf indicated
++  by dmabuf_id.
++
++- SCM_DEVMEM_LINEAR: this indicates the fragment landed in the linear buffer.
++  This typically happens when the NIC is unable to split the packet at the
++  header boundary, such that part (or all) of the payload landed in host
++  memory.
++
++Applications may receive no SO_DEVMEM_* cmsgs. That indicates non-devmem,
++regular TCP data that landed on an RX queue not bound to a dmabuf.
++
++
++Freeing frags
++-------------
++
++Frags received via SCM_DEVMEM_DMABUF are pinned by the kernel while the user
++processes the frag. The user must return the frag to the kernel via
++SO_DEVMEM_DONTNEED::
++
++	ret = setsockopt(client_fd, SOL_SOCKET, SO_DEVMEM_DONTNEED, &token,
++			 sizeof(token));
++
++The user must ensure the tokens are returned to the kernel in a timely manner.
++Failure to do so will exhaust the limited dmabuf that is bound to the RX queue
++and will lead to packet drops.
++
++
++Implementation & Caveats
++========================
++
++Unreadable skbs
++---------------
++
++Devmem payloads are inaccessible to the kernel processing the packets. This
++results in a few quirks for payloads of devmem skbs:
++
++- Loopback is not functional. Loopback relies on copying the payload, which is
++  not possible with devmem skbs.
++
++- Software checksum calculation fails.
++
++- TCP Dump and bpf can't access devmem packet payloads.
++
++
++Testing
++=======
++
++More realistic example code can be found in the kernel source under
++tools/testing/selftests/net/ncdevmem.c
++
++ncdevmem is a devmem TCP netcat. It works very similarly to netcat, but
++receives data directly into a udmabuf.
++
++To run ncdevmem, you need to run it on a server on the machine under test, and
++you need to run netcat on a peer to provide the TX data.
++
++ncdevmem has a validation mode as well that expects a repeating pattern of
++incoming data and validates it as such. For example, you can launch
++ncdevmem on the server by::
++
++	ncdevmem -s <server IP> -c <client IP> -f eth1 -d 3 -n 0000:06:00.0 -l \
++		 -p 5201 -v 7
++
++On client side, use regular netcat to send TX data to ncdevmem process
++on the server::
++
++	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
++		tr \\n \\0 | head -c 5G | nc <server IP> 5201 -p 5201
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index a6443851a1424..f93950a441573 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -48,6 +48,7 @@ Contents:
+    cdc_mbim
+    dccp
+    dctcp
++   devmem
+    dns_resolver
+    driver
+    eql
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
