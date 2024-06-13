@@ -1,268 +1,207 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47249137933
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E5B137933;
+	Thu, 13 Jun 2024 06:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718261745; cv=none; b=OyPUoA6taygkqtkQS0a2312olZ6TVWZ4X8ywH7eeLRaoPTB3uId6aBUYPzU+Trtv98k1K+5NPNed3ptlZT/FVRyhX4LYC6BvUAVSKBbd7UH2EDD9Lu8G7Xc0mqnqO5zbBYFydJDXg4lkzeZVYKEuQWT74xrQghEyV6v9c9EXmow=
+	t=1718261774; cv=none; b=Ev3XZ2GGMjxuYvSsY6qZ5JWL7NZvUQkMIvH4EhX7Mkk7pMGjx8EMyWrT9a6PsWSIPji2XeDV8okg/8JR1NlaEEcr+PJ3FPjZ7j40+GlGQ7UA7kbCh0w1Ph3RgHanIJiMt4ImSQtvgQJn3Md+hi6cGgf2DQNoEDKObbhH0hJWKTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718261745; c=relaxed/simple;
-	bh=lKH0bz9WsYwamKoQgyxUqq/befgWPvo0QFCJdZqZAaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yz6exmxSjAEkSEocl0woWsfOSXanJLHPqeN7wXlRjwZOk2fXtedVNlwMjP5ZWGBmmo5Ns8Z9wMUdsCtHtRY7qaLdDvqfB0IxVG5Dy4anZ7/U89jc8a7vls76Hfsggx9KzdJqCCuZ960XQ5h77lpXADoqZL3NsHGXseVDwCtyv7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B50dbWE4; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718261774; c=relaxed/simple;
+	bh=WpxKaln42QaWmGoIIAoSAtunAaG5uokc4CAg6/rTG64=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dIKfW7JzZ57uE1+lGB50wc6idfFUJ5vzhxt/2eE+pg2LEOq40nMz4PaV0Pa+jwjNjAe5RQHuzewfXqA6SOfq5FgqUptp2VrQ6BErAsoXEGOCne429m2UXtsGvmUzl18UlfeC7X7G5MqpMxTNu9Ri52ldMDYC9DjT2Hii860UCAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=htkJPuU8; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B50dbWE4"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2c2c6b27428so490119a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 23:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718261743; x=1718866543; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wlWYFNni2hrEPGxN+kZESH09HLiR3+ntsGQI95h9/gg=;
-        b=B50dbWE4D5WijveIdJyHrD3HIkf3fVYtUaUZtjETpkF1YRBVlxFpt2BNGZscXDJfdA
-         X30/JFFF7dDsAHZXQ00LnHT327XyCOPeafM1cQRF9jwQsPsUaJqlOKGIMfn9LyTegiEp
-         neZSJcQ2Rtbf8DZjWwihVQdhiRqkV5o+0PV1DxE5WSyljUdoqUks+XxTLQm8LazbDG+q
-         pxP3+vpS3kfVPWvJN7sKOgeD0Emhd048YtAblZhz/FgnMzfOBcYl18JCbUukliKBgFPd
-         ARe35NILTF19vIKZGedx2FT2xUeXhHhJi9xLzmvS3LijgLQccekOl8DNpV9EUl1UlDIr
-         chBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718261743; x=1718866543;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wlWYFNni2hrEPGxN+kZESH09HLiR3+ntsGQI95h9/gg=;
-        b=NRAj9dGqSFNoHLIQ2GQMdTf0W1l1PSpdpsnTUkM1Q65m8WmIWkLy3lt8kjvh1FBdGt
-         2f4SJiNEwzq5+4oKI+aL5mxw2czbyZJ855UJxdVvxPeRVKzvKIOGk111ByGGXPuS9jma
-         cxwdcikXwr5LFTiF8D10L52xnA5BpXvdWhWFVsipddVavpdnwJ3Iu1xZWG75FB+N7owY
-         aS0/2INbiSNCBpsAhAbZTJxI3bVD+/JdxK06y1S3LnzWyh9YTtlt70gp3DODSu2ly0WX
-         lJxktZNvin4AZ2OLmS43olkk0jmQwP49Fg7CPTIOJasZiSoIYDhiUX9jzgxLIa+62A0U
-         QMLA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0XQzTHMePy+/oGBlnALaOCslk7pr2HNLZWGccszrf0agEZ8x70X9rTZPCAiNZ5N6nshh/obIIAhnFGS19IU4CkYOt4ULw4kx2S+Yt
-X-Gm-Message-State: AOJu0YyNaVNZiuIltYEQ8CzLeJmCztr7mksCOhrefNLyBMhpnATQqXxt
-	UQJ0zcUvWeIJxX+6lifAjLnkUpK0uPUJKjXiia4HNbMh6JhsI7vv
-X-Google-Smtp-Source: AGHT+IHHox0pia+wncnKZphDQikJOEjj2rdonLp0knNk9bk3eR3NJallf9SweyY7CyKgdM3PTgbOng==
-X-Received: by 2002:a17:90a:b00b:b0:2c3:1b66:19b2 with SMTP id 98e67ed59e1d1-2c4a7601cd2mr3816779a91.1.1718261743359;
-        Wed, 12 Jun 2024 23:55:43 -0700 (PDT)
-Received: from LancedeMBP.lan.lan ([2403:2c80:6::304e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c467ae5esm831570a91.47.2024.06.12.23.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 23:55:42 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: baolin.wang@linux.alibaba.com,
-	david@redhat.com
-Cc: ioworker0@gmail.com,
-	21cnbao@gmail.com,
-	akpm@linux-foundation.org,
-	fengwei.yin@intel.com,
-	libang.li@antgroup.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	maskray@google.com,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	sj@kernel.org,
-	songmuchun@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	willy@infradead.org,
-	xiehuan09@gmail.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH v7 4/4] mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
-Date: Thu, 13 Jun 2024 14:55:21 +0800
-Message-Id: <20240613065521.15960-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20240610120809.66601-1-ioworker0@gmail.com>
-References: <20240610120809.66601-1-ioworker0@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="htkJPuU8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718261773; x=1749797773;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WpxKaln42QaWmGoIIAoSAtunAaG5uokc4CAg6/rTG64=;
+  b=htkJPuU833v4tPB7EdUL8rQxC+aitfH+UsKwLF9H/gqJSJmoIEgwJCI+
+   bcajD4+en47Ticv5hIcuVq0JNpVP3jVC3fQxJSBxLVXalMsZv60Zw9SBs
+   IRKZyviQ9APHkE5YCTYbCWINlduIAnhxhKZsTL9PauNRRXbdMMhu9JFfj
+   arsJXXUUZlRkbWe6MPU69uG7Dx2M64H+45W3pJO+KpvBgm49mwBDdkkrO
+   KreT5fkBsyLLe7GUY5svXBy4zJZPuzjK7L7HpN07/xlxO/P1eTev8uVwc
+   gmJxn3PdA917YcLfp9p79789B+7YJ5QStthvdaSxd2JYHRnyaUO19IUCf
+   A==;
+X-CSE-ConnectionGUID: TYju+PcqQsarh3BUL+ceDA==
+X-CSE-MsgGUID: n16lizVoQTKiBIsYb+YjtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15187781"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="15187781"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:56:12 -0700
+X-CSE-ConnectionGUID: x+oAxnUzSWOOR928zu+KfQ==
+X-CSE-MsgGUID: jvydUJVJTA+nD7QtCZWztg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="44487294"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:56:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 13 Jun 2024 09:56:02 +0300 (EEST)
+To: Doug Anderson <dianders@chromium.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+    Tony Lindgren <tony@atomide.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Johan Hovold <johan+linaro@kernel.org>, 
+    John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, 
+    Stephen Boyd <swboyd@chromium.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 2/8] tty: serial: Add uart_fifo_timeout_ms()
+In-Reply-To: <CAD=FV=WWrTHRdwrbOFBrZ94HpWQo6v6FkLTxa1vgN31SC6GqDA@mail.gmail.com>
+Message-ID: <ed012fe3-e704-de86-2b5d-bc8d71ebbeaa@linux.intel.com>
+References: <20240610222515.3023730-1-dianders@chromium.org> <20240610152420.v4.2.I65a6430ab75f74d20c28b5c5f819dd5b8455933d@changeid> <0bb414fa-851b-40cf-ede9-fc6252c6b173@linux.intel.com>
+ <CAD=FV=WWrTHRdwrbOFBrZ94HpWQo6v6FkLTxa1vgN31SC6GqDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1323085982-1718261762=:1023"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1323085982-1718261762=:1023
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-
-On Mon, Jun 10, 2024 at 8:08 PM Lance Yang <ioworker0@gmail.com> wrote:
+On Wed, 12 Jun 2024, Doug Anderson wrote:
+> On Wed, Jun 12, 2024 at 12:38=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Mon, 10 Jun 2024, Douglas Anderson wrote:
+> >
+> > > The current uart_fifo_timeout() returns jiffies, which is not always
+> > > the most convenient for callers. Add a variant uart_fifo_timeout_ms()
+> > > that returns the timeout in milliseconds.
+> > >
+> > > NOTES:
+> > > - msecs_to_jiffies() rounds up, unlike nsecs_to_jiffies(). This is
+> > >   because msecs_to_jiffies() is actually intended for device drivers
+> > >   to calculate timeout value. This means we don't need to take the ma=
+x
+> > >   of the timeout and "1" since the timeout will always be > 0 ms (we
+> > >   add 20 ms of slop).
+> > > - uart_fifo_timeout_ms() returns "unsigned int" but we leave
+> > >   uart_fifo_timeout() returning "unsigned long". This matches the
+> > >   types of msecs_to_jiffies().
+> > >
+> > > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > > Changes in v4:
+> > > - New
+> > >
+> > >  include/linux/serial_core.h | 15 +++++++++++----
+> > >  1 file changed, 11 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/include/linux/serial_core.h b/include/linux/serial_core.=
+h
+> > > index 8cb65f50e830..97968acfd564 100644
+> > > --- a/include/linux/serial_core.h
+> > > +++ b/include/linux/serial_core.h
+> > > @@ -889,14 +889,21 @@ unsigned int uart_get_divisor(struct uart_port =
+*port, unsigned int baud);
+> > >  /*
+> > >   * Calculates FIFO drain time.
+> > >   */
+> > > -static inline unsigned long uart_fifo_timeout(struct uart_port *port=
+)
+> > > +static inline unsigned int uart_fifo_timeout_ms(struct uart_port *po=
+rt)
+> > >  {
+> > >       u64 fifo_timeout =3D (u64)READ_ONCE(port->frame_time) * port->f=
+ifosize;
+> > > +     unsigned int fifo_timeout_ms =3D div_u64(fifo_timeout, NSEC_PER=
+_MSEC);
+> > >
+> > > -     /* Add .02 seconds of slop */
+> > > -     fifo_timeout +=3D 20 * NSEC_PER_MSEC;
+> > > +     /*
+> > > +      * Add .02 seconds of slop. This also helps account for the fac=
+t that
+> > > +      * when we converted from ns to ms that we didn't round up.
+> > > +      */
+> > > +     return fifo_timeout_ms + 20;
+> > > +}
+> > >
+> > > -     return max(nsecs_to_jiffies(fifo_timeout), 1UL);
+> > > +static inline unsigned long uart_fifo_timeout(struct uart_port *port=
+)
+> > > +{
+> > > +     return msecs_to_jiffies(uart_fifo_timeout_ms(port));
+> > >  }
+> >
+> > Hi,
+> >
+> > This is definitely towards the right direction! However, it now does
+> > double conversion, first div_u64() and then msecs_to_jiffies(). Perhaps=
+ it
+> > would be better to retain the nsecs version (maybe rename it to _ns for
+> > consistency) and add _ms variant that does the nsec -> msec conversion.
+>=20
+> I spent a bit of time thinking about it and I don't agree. If you feel
+> very strongly about it or someone else wants to jump in and break the
+> tie then I can look again, but:
 >
-[...]
-> +static bool __discard_anon_folio_pmd_locked(struct vm_area_struct *vma,
-> +                                           unsigned long addr, pmd_t *pmdp,
-> +                                           struct folio *folio)
-> +{
-> +       VM_WARN_ON_FOLIO(folio_test_swapbacked(folio), folio);
-> +       VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
-> +
-> +       struct mm_struct *mm = vma->vm_mm;
-> +       int ref_count, map_count;
-> +       pmd_t orig_pmd = *pmdp;
-> +       struct page *page;
-> +
-> +       if (unlikely(!pmd_present(orig_pmd) || !pmd_trans_huge(orig_pmd)))
-> +               return false;
-> +
-> +       page = pmd_page(orig_pmd);
-> +       if (unlikely(page_folio(page) != folio))
-> +               return false;
-> +
-> +       if (folio_test_dirty(folio) || pmd_dirty(orig_pmd)) {
-> +               folio_set_swapbacked(folio);
-> +               return false;
-> +       }
-> +
-> +       orig_pmd = pmdp_huge_clear_flush(vma, addr, pmdp);
-> +
-> +       /*
-> +        * Syncing against concurrent GUP-fast:
-> +        * - clear PMD; barrier; read refcount
-> +        * - inc refcount; barrier; read PMD
-> +        */
-> +       smp_mb();
-> +
-> +       ref_count = folio_ref_count(folio);
-> +       map_count = folio_mapcount(folio);
-> +
-> +       /*
-> +        * Order reads for folio refcount and dirty flag
-> +        * (see comments in __remove_mapping()).
-> +        */
-> +       smp_rmb();
-> +
-> +       /*
-> +        * If the folio or its PMD is redirtied at this point, or if there
-> +        * are unexpected references, we will give up to discard this folio
-> +        * and remap it.
-> +        *
-> +        * The only folio refs must be one from isolation plus the rmap(s).
-> +        */
-> +       if (folio_test_dirty(folio) || pmd_dirty(orig_pmd))
-> +               folio_set_swapbacked(folio);
-> +
-> +       if (folio_test_swapbacked(folio) || ref_count != map_count + 1) {
-> +               set_pmd_at(mm, addr, pmdp, orig_pmd);
-> +               return false;
-> +       }
-> +
-> +       folio_remove_rmap_pmd(folio, page, vma);
-> +       zap_deposited_table(mm, pmdp);
-> +       add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
-> +       if (vma->vm_flags & VM_LOCKED)
-> +               mlock_drain_local();
-> +       folio_put(folio);
-> +
-> +       return true;
-> +}
-[...]
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index b77f88695588..8e901636ade9 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1630,6 +1630,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->         enum ttu_flags flags = (enum ttu_flags)(long)arg;
->         unsigned long pfn;
->         unsigned long hsz = 0;
-> +       bool pmd_mapped = false;
+> 1. The comment before nsecs_to_jiffies() specifically states that it's
+> not supposed to be used for this purpose. Specifically, it says:
+>=20
+>  * Unlike {m,u}secs_to_jiffies, type of input is not unsigned int but u64=
+=2E
+>  * And this doesn't return MAX_JIFFY_OFFSET since this function is design=
+ed
+>  * for scheduler, not for use in device drivers to calculate timeout valu=
+e.
+>=20
+> ...so switching away from nsecs_to_jiffies() to msecs_to_jiffies() is
+> arguably a "bugfix", or at least avoids using the API in a way that's
+> against the documentation.
+
+Okay, I see. However, there's no way around using u64 here even with your=
+=20
+version that does not use nsecs_to_jiffies() because nsecs is the most=20
+useful form of input when starting from frame_time, usecs is a bit=20
+coarse-grained for higher data rates.
+
+> 2. As mentioned in the commit message, nsecs_to_jiffies() truncates
+> where msecs_to_jiffies() rounds up. Presumably this difference is
+> related to the comment above where the "ns" version is intended for
+> the scheduler. Using the "ms" version allows us to get rid of the
+> extra call to "max()" which is a benefit. Technically since the
+> timeout is at least 20 ms the minimum HZ is 100 I guess we didn't need
+> the max anyway, but I guess someone thought it was cleaner and now we
+> can definitely get rid of it.
+>=20
+> 3. These functions are inline anyway, so I don't think it's causing a
+> huge bloat of instructions. In fact, moving from 64-bit math to 32-bit
+> math sooner could make the code smaller.
 >
->         /*
->          * When racing against e.g. zap_pte_range() on another cpu,
-> @@ -1676,16 +1677,24 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->                         goto walk_done_err;
->                 }
->
-> -               if (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)) {
-> -                       /*
-> -                        * We temporarily have to drop the PTL and start once
-> -                        * again from that now-PTE-mapped page table.
-> -                        */
-> -                       split_huge_pmd_locked(vma, pvmw.address, pvmw.pmd,
-> -                                             false, folio);
-> -                       flags &= ~TTU_SPLIT_HUGE_PMD;
-> -                       page_vma_mapped_walk_restart(&pvmw);
-> -                       continue;
-> +               if (!pvmw.pte) {
-> +                       pmd_mapped = true;
-> +                       if (unmap_huge_pmd_locked(vma, pvmw.address, pvmw.pmd,
-> +                                                 folio))
-> +                               goto walk_done;
-> +
-> +                       if (flags & TTU_SPLIT_HUGE_PMD) {
-> +                               /*
-> +                                * We temporarily have to drop the PTL and start
-> +                                * once again from that now-PTE-mapped page
-> +                                * table.
-> +                                */
-> +                               split_huge_pmd_locked(vma, pvmw.address,
-> +                                                     pvmw.pmd, false, folio);
-> +                               flags &= ~TTU_SPLIT_HUGE_PMD;
-> +                               page_vma_mapped_walk_restart(&pvmw);
-> +                               continue;
-> +                       }
->                 }
->
->                 /* Unexpected PMD-mapped THP? */
-> @@ -1813,7 +1822,12 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->                          */
->                         if (unlikely(folio_test_swapbacked(folio) !=
->                                         folio_test_swapcache(folio))) {
-> -                               WARN_ON_ONCE(1);
-> +                               /*
-> +                                * unmap_huge_pmd_locked() will unmark a
-> +                                * PMD-mapped folio as lazyfree if the folio or
-> +                                * its PMD was redirtied.
-> +                                */
-> +                               WARN_ON_ONCE(!pmd_mapped);
+> 4. I don't feel like it hurts the readability to convert down to ms
+> and then to jiffies. In fact, IMO it helps since it makes it more
+> obvious that we're working with ms.
 
-Damn it. I forgot to remap the folio to the page table since we've cleared
-the PTE here.
-
-But it seems like we neither need to do that, nor unmark a PMD-mapped folio
-as lazyfree in unmap_huge_pmd_locked(); the next block[1] will catch the
-folio and do the same thing.
-
-Hi David and Baolin, what do you think?
-
->                                 goto walk_done_err;
->                         }
-
-[1] https://elixir.bootlin.com/linux/v6.10-rc3/source/mm/rmap.c#L1820
-
-/* MADV_FREE page check */
-if (!folio_test_swapbacked(folio)) {
-	int ref_count, map_count;
-
-[...]
-	/*
-	 * The only page refs must be one from isolation
-	 * plus the rmap(s) (dropped by discard:).
-	 */
-	if (ref_count == 1 + map_count &&
-	    !folio_test_dirty(folio)) {
-		dec_mm_counter(mm, MM_ANONPAGES);
-		goto discard;
-	}
-
-	/*
-	 * If the folio was redirtied, it cannot be
-	 * discarded. Remap the page to page table.
-	 */
-	set_pte_at(mm, address, pvmw.pte, pteval);
-	folio_set_swapbacked(folio);
-	goto walk_done_err;
-}
+I'd be lying if I'd say I feel strongly about it but my only argument=20
+involves doing an extra divide which is somewhat costly. It's a=20
+plain 32-bit divide though so not as bad as the u64 one that is=20
+unavoidable.
 
 
-Thanks,
-Lance
+--=20
+ i.
 
->
-> --
-> 2.33.1
->
+--8323328-1323085982-1718261762=:1023--
