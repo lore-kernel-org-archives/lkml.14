@@ -1,198 +1,126 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085C212D757
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9AE12D757;
+	Thu, 13 Jun 2024 16:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296741; cv=none; b=POykN/35/eaSxtwLelsZn95Fy9Ztu4UJkVTa3OdZR6GfeafuwQ/3+PMAo3r2dcFnZD3p9Jo+jyGYYyQlnJFUr0M0luKz3NYhptklcaSv3jmHxUPC+8fQllAoipj6ucJOnkvZ+0CfDqsELTpZgmeZV6KnwtQXfhOlkqbz78OcDjI=
+	t=1718296899; cv=none; b=nJXCTpqalDfa/kbHXdadJVEc+t+ii0g7UkJ5hqCAGpXs0ibgiLXY6EH/+wLwmMhtroe1E8t30Km0ojNBaRulwCDCJDvd2fT5iMtB4+Q/l5NV0eUP/u8Rb1qG6uT8vtKnq4JkkxcJWDddoHDOmgrR3DkiATA40ccw3Y/atYzkrbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296741; c=relaxed/simple;
-	bh=92t4P2j0X0NUI7+L37aNZ9vtNckVXpfJBPANovmwbBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b6bwhzLm/2IhD14SjvskAnkRe+A4cgFX1XlSs3Ws/igEt93WhXYacDspRnkBHiFuS3T3xRQq8/uGls4QRmm1WIYToeGPPSI5tIpapXyaSc5D/U9JJHhM2ET5Ml1zvG+uw5OeYOMiJon8G2+GWYE64tKunpaniUDlmsD3t+Trxyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iSYJRjgH; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718296899; c=relaxed/simple;
+	bh=SIwMvO39BmbW7c2qCC3FVPcLtHrn3VC2fa9BqViEGSM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UMECC3uSLCOnCTXZQBK6/YRHxRRNGAcuF2PS4MIPvBsh+KbY/oJ/6GqniFO7zdfPW2rWo8+hBe49bFLEUqaNw2VLnBbwm8kDPHa82qnclT7NpffRlQKGUEvsN6HSKxZo7lKdv4VyC+NN2dMRxArU/m6eQfOJ0D4F7xKQkyVTVvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=OaCnBr8D; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GIqKFfjk; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iSYJRjgH"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6ef793f4b8so144807666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718296738; x=1718901538; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=f0+hUYfcg/6wCMFIjwJOq9go/0av2eejFWyVyZxl9Js=;
-        b=iSYJRjgHWSwdy9nEaJoZZffA3jzlVt3TrVsk5wKUc488a/4eSqqBXLzl/EVHhW9DAW
-         wsZ4c+Hy2WYXcECLWEaTGeNRnd286S+OjMHuBtm1guMrkp6kerVdjHE/v8NO4dWCMlVS
-         6AvKzlNQzEdQhaIgmfKcBOKU9cgM4pqczzpWsfsbsYT8LXoDzAbkKeMc5UiTpbRcM0Vq
-         SlY3xMlURjPeMv4XFIC0NTihB/4sKDihMfVJDHl2ALA0li9SKE8FN9qqf1DG3SMSYsPR
-         /eMu8Kq/h991jzus+2YAC0ZomSsjdrOAmD9oeNuA190moIjyMu19Sd5rS0qRz+RgJxTv
-         VlXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718296738; x=1718901538;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f0+hUYfcg/6wCMFIjwJOq9go/0av2eejFWyVyZxl9Js=;
-        b=IaqNMRjPacINm5NU/MiupvFXiPBwsqec3y5WBoEY22a1FKtMy4BpKn5yBpJsJRkNs8
-         J3MAWkuvkaQFmoRzxju+P3/cNUwrTRebkSaNDKSIDU4voWNMk9wNqj7jVJUTdxQ73OiT
-         P1T5EcJIzgtQVyLZeZbtRU0EwZUfXYbSW8w1u/UQbHO5NnBXvDlMRH8PMfKoOsBgWswC
-         jT9tfOaSyX9i6rRl4b7iP5oAUwYLGO/hHqI87l6/urMcjDAm8x7XVEVqtf8m5KQMKOC6
-         pWqTEn8bsx1rzjtt2EzMrXeQbHijwhs4b/4x/hFG0BXMCUVnx43EoJvCBIm8Np03d72b
-         eLUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwz07rKyTOnGCJmvwHbe51ILqH9QPw0EIqP89c+8W3vXPnWN9IRfckC4T1JvVfh/JTVKrqhliS5AGAxCQRDh8WgTvZIefFwGt7UtCN
-X-Gm-Message-State: AOJu0YyghU/hqOe2pNtwIYam1n7ywgS1ii0VbZTTZwy5MuTkdugqlDDj
-	1GTKN1qR1w8JC2vY/i/LeSeq2kRSI5ZB0xZJLYMv8EtDW802YanL7JjAb2nbT+uUI8HjjG/bbCz
-	uL6XxdwIDmL/tosgIxSfcJjqQsLdborla5IsL
-X-Google-Smtp-Source: AGHT+IEvGD4fSm3ydygWLoTfbaCnK79SffQTu/wBgZUu6TR1D/t/B12H5lg4vCBg6YG63Pn4824qOynOJfGllokJ1aE=
-X-Received: by 2002:a17:906:3ec4:b0:a6f:48b2:aac5 with SMTP id
- a640c23a62f3a-a6f60cf44efmr19942566b.15.1718296737931; Thu, 13 Jun 2024
- 09:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="OaCnBr8D";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GIqKFfjk"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfout.nyi.internal (Postfix) with ESMTP id E4C8C13800BE;
+	Thu, 13 Jun 2024 12:41:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 13 Jun 2024 12:41:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1718296896; x=1718383296; bh=AK
+	wt86hx8VrZMzXcCZWfK6szZPgA3uEjcq8VP/L9IQc=; b=OaCnBr8DfSxfoQXg+d
+	rdlqwrhll1vSkGKYPuN+GbkTaiAiWegRadk73wsxExVMY/ZWzlZTdmvF5/jboczE
+	LFGbgJ9ie7oItGRkSwBlaGheKfvLQg6O9pYeWWIkS/m7tHxxwDE07rAeA7YgK2Ha
+	ADyy6LpHqhdjF4FsLi1C/KWgQJCIWEbdoQfSmyutJQ8f55dfXy9S2oA9Gn0K2hlY
+	9iUavQSfCy5WC0HAmotXzgfW06sTWiX3Dgi+XfHY7ndiVxoonUMkq4YKVyEoKNFi
+	JahhcURXklttR2ZmY6hnKGZ9WwmpcxNOfoSEK+24lEVBkXrLR08DHhAy/uXAg+AH
+	V3PA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1718296896; x=1718383296; bh=AKwt86hx8VrZM
+	zXcCZWfK6szZPgA3uEjcq8VP/L9IQc=; b=GIqKFfjkbqatz7mRpMWYuCQ8R2Vot
+	zptLZwb50JqIjA+TaPiQH11YsjYOJWZa+oBGEC7szerQIJhXwMLvSxcbLCxWz49B
+	+uPrAB68oTOHc2FRMEajiXJVkISg6dAIrZCipwKC6GiJyZiJPfHVti8BcF96PvHa
+	LRrBzeptmJZkREGEgEDElolQtXTHbDTp22W2ipw4+bAavkxuUZ0exjtEfK9vF+fX
+	ktsdX/cWdpIjnVxw27u/ezCAEVzKXsvqx2NPRM96A7hojEy1kWgSTV3HaN/Tfvw/
+	W52yHxs5AVOtojM/34YAlIJnqY7j8pYxqHvtgaRwMHsHbBT4pKZcBm21w==
+X-ME-Sender: <xms:QCFrZrOjhjtvnxQy0aNPiAehCmRWao3uMbTEStxXy6jH_L-0-bwsxw>
+    <xme:QCFrZl-hYLpvmBnyymRUf84MfH1Az5Nlv7wndJ0rU-99e0ksB2uTCI_wMlK6eiqsh
+    fvtrySAjfeGdDU8o24>
+X-ME-Received: <xmr:QCFrZqRnFEn_NtRAcoKxmbeMh3w69Vra8UTTNWaLLVkAxNz8EC7zF-w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedujedguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpedufffffffhueehvefhgfelveekueegteefgeeiieejheefkeeh
+    keevudevieegueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:QCFrZvvk4HroSmVCYb6Qrci8CRfG5i0qrL75UDhBddeVxj2iA98vWw>
+    <xmx:QCFrZjfFIl1aVIVAal_MpmEjoAl511Jl_DO1_XiEivMf5aF2aSctww>
+    <xmx:QCFrZr3-l-ahK74EbabNIAdwWxkA26Y7eqRzpPOyzGJIiZskNFqR-w>
+    <xmx:QCFrZv_VbuyE0lF4VASRTr11b3czGbKw9PnWie8bYiF5070TSVJfiw>
+    <xmx:QCFrZrRbACPnFw0R1FhSwhPRt4txrlu0rNoEnA4vxWiTZdbSwLxQ_m_C>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 13 Jun 2024 12:41:35 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/2] LoongArch: Fix S3 sleep on U-Boot + QEMU virt machine
+Date: Thu, 13 Jun 2024 17:41:33 +0100
+Message-Id: <20240613-loongarch64-sleep-v1-0-a245232af5e4@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612124750.2220726-1-usamaarif642@gmail.com>
- <20240612124750.2220726-2-usamaarif642@gmail.com> <ZmoBf6RPJzC2RaqM@google.com>
- <85804484-9973-41a1-a05d-000833285f39@gmail.com>
-In-Reply-To: <85804484-9973-41a1-a05d-000833285f39@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 13 Jun 2024 09:38:19 -0700
-Message-ID: <CAJD7tkYBxN4uAHLacAx=m2+B9zPidz0V5pGP030yvNYLTnk=VQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] mm: store zero pages to be swapped out in a bitmap
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, shakeel.butt@linux.dev, 
-	david@redhat.com, ying.huang@intel.com, hughd@google.com, willy@infradead.org, 
-	nphamcs@gmail.com, chengming.zhou@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD0ha2YC/x3MQQqAIBBA0avErBPMSqirRIvSGR0IFYUIpLsnL
+ d/i/woFM2OBtauQ8ebCMTQMfQfGH8GhYNsMSqpJ6mEUV4zBHdl4PYlyISYhx5nIWKIFT2hdykj
+ 8/M9tf98P7cMiAGMAAAA=
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=993;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=SIwMvO39BmbW7c2qCC3FVPcLtHrn3VC2fa9BqViEGSM=;
+ b=kA0DAAoWQ3EMfdd3KcMByyZiAGZrIT+imFecZ5S2NsCy2hMND++bVyGKsRUn6ql4zh/6aqaTK
+ Ih1BAAWCgAdFiEEVBAijrCB0aDX4Gr8Q3EMfdd3KcMFAmZrIT8ACgkQQ3EMfdd3KcMVRgEAiwCE
+ C0oAJBwbXMnYfZvq/oTJCLFXrXNFPhKQcjKuwpABALz+By/KjdKKHHVWCFLZwLqq+ynXrlEtgAk
+ IDzvUXi4C
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-[..]
->
-> >
-> >> +    for (i = 0; i < SWAPFILE_CLUSTER; i++)
-> >> +            clear_bit(idx * SWAPFILE_CLUSTER + i, si->zeromap);
-> > Could you explain why we need to clear the zeromap here?
-> >
-> > swap_cluster_schedule_discard() is called from:
-> > - swap_free_cluster() -> free_cluster()
-> >
-> > This is already covered below.
-> >
-> > - swap_entry_free() -> dec_cluster_info_page() -> free_cluster()
-> >
-> > Each entry in the cluster should have its zeromap bit cleared in
-> > swap_entry_free() before the entire cluster is free and we call
-> > free_cluster().
-> >
-> > Am I missing something?
->
-> Yes, it looks like this one is not needed as swap_entry_free and
-> swap_free_cluster would already have cleared the bit. Will remove it.
->
-> I had initially started checking what codepaths zeromap would need to be
-> cleared. But then thought I could do it wherever si->swap_map is cleared
-> or set to SWAP_MAP_BAD, which is why I added it here.
->
-> >>
-> >>      cluster_list_add_tail(&si->discard_clusters, si->cluster_info, idx);
-> >>
-> >> @@ -482,7 +491,7 @@ static void __free_cluster(struct swap_info_struct *si, unsigned long idx)
-> >>   static void swap_do_scheduled_discard(struct swap_info_struct *si)
-> >>   {
-> >>      struct swap_cluster_info *info, *ci;
-> >> -    unsigned int idx;
-> >> +    unsigned int idx, i;
-> >>
-> >>      info = si->cluster_info;
-> >>
-> >> @@ -498,6 +507,8 @@ static void swap_do_scheduled_discard(struct swap_info_struct *si)
-> >>              __free_cluster(si, idx);
-> >>              memset(si->swap_map + idx * SWAPFILE_CLUSTER,
-> >>                              0, SWAPFILE_CLUSTER);
-> >> +            for (i = 0; i < SWAPFILE_CLUSTER; i++)
-> >> +                    clear_bit(idx * SWAPFILE_CLUSTER + i, si->zeromap);
-> > Same here. I didn't look into the specific code paths, but shouldn't the
-> > cluster be unused (and hence its zeromap bits already cleared?).
-> >
-> I think this one is needed (or atleast very good to have). There are 2
-> paths:
->
-> 1) swap_cluster_schedule_discard (clears zeromap) -> swap_discard_work
-> -> swap_do_scheduled_discard (clears zeromap)
->
-> Path 1 doesnt need it as swap_cluster_schedule_discard already clears it.
->
-> 2) scan_swap_map_slots -> scan_swap_map_try_ssd_cluster ->
-> swap_do_scheduled_discard (clears zeromap)
->
-> Path 2 might need it as zeromap isnt cleared earlier I believe
-> (eventhough I think it might already be 0).
+Hi all,
 
-Aren't the clusters in the discard list free by definition? It seems
-like we add a cluster there from swap_cluster_schedule_discard(),
-which we establish above that it gets called on a free cluster, right?
+This series fixed S3 sleep on U-Boot + QEMU virt machine.
 
->
-> Even if its cleared in path 2, I think its good to keep this one, as the
-> function is swap_do_scheduled_discard, i.e. incase it gets directly
-> called or si->discard_work gets scheduled anywhere else in the future,
-> it should do as the function name suggests, i.e. swap discard(clear
-> zeromap).
+The first patch is a further DMW window setting fix, the
+second fixed support of ACPI standard S3 sleep procdure.
 
-I think we just set the swap map to SWAP_MAP_BAD in
-swap_cluster_schedule_discard() and then clear it in
-swap_do_scheduled_discard(), and the clusters are already freed at
-that point. Ying could set me straight if I am wrong here.
+Please review.
+Thanks
 
-It is confusing to me to keep an unnecessary call tbh, it makes sense
-to clear zeromap bits once, when the swap entry/cluster is not being
-used anymore and before it's reallocated.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+Jiaxun Yang (2):
+      LoongArch: Initialise unused Direct Map Windows
+      LoongArch: Fix ACPI standard register based S3 support
 
->
-> >>              unlock_cluster(ci);
-> >>      }
-> >>   }
-> >> @@ -1059,9 +1070,12 @@ static void swap_free_cluster(struct swap_info_struct *si, unsigned long idx)
-> >>   {
-> >>      unsigned long offset = idx * SWAPFILE_CLUSTER;
-> >>      struct swap_cluster_info *ci;
-> >> +    unsigned int i;
-> >>
-> >>      ci = lock_cluster(si, offset);
-> >>      memset(si->swap_map + offset, 0, SWAPFILE_CLUSTER);
-> >> +    for (i = 0; i < SWAPFILE_CLUSTER; i++)
-> >> +            clear_bit(offset + i, si->zeromap);
-> >>      cluster_set_count_flag(ci, 0, 0);
-> >>      free_cluster(si, idx);
-> >>      unlock_cluster(ci);
-> >> @@ -1336,6 +1350,7 @@ static void swap_entry_free(struct swap_info_struct *p, swp_entry_t entry)
-> >>      count = p->swap_map[offset];
-> >>      VM_BUG_ON(count != SWAP_HAS_CACHE);
-> >>      p->swap_map[offset] = 0;
-> >> +    clear_bit(offset, p->zeromap);
-> > I think instead of clearing the zeromap in swap_free_cluster() and here
-> > separately, we can just do it in swap_range_free(). I suspect this may
-> > be the only place we really need to clear the zero in the swapfile code.
->
-> Sure, we could move it to swap_range_free, but then also move the
-> clearing of swap_map.
->
-> When it comes to clearing zeromap, I think its just generally a good
-> idea to clear it wherever swap_map is cleared.
+ arch/loongarch/include/asm/loongarch.h   |  4 ++++
+ arch/loongarch/include/asm/stackframe.h  | 11 +++++++++++
+ arch/loongarch/kernel/head.S             | 12 ++----------
+ arch/loongarch/power/platform.c          | 24 ++++++++++++++++++------
+ arch/loongarch/power/suspend_asm.S       |  8 ++------
+ drivers/firmware/efi/libstub/loongarch.c |  2 ++
+ 6 files changed, 39 insertions(+), 22 deletions(-)
+---
+base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+change-id: 20240613-loongarch64-sleep-035ffcdff9eb
 
-I am not convinced about this argument. The swap_map is used for
-multiple reasons beyond just keeping track of whether a swap entry is
-in-use. The zeromap on the other hand is simpler and just needs to be
-cleared once when an entry is being freed.
+Best regards,
+-- 
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Unless others disagree, I prefer to only clear the zeromap once in
-swap_range_free() and keep the swap_map code as-is for now. If we
-think there is value in moving clearing the swap_map to
-swap_range_free(), it should at least be in a separate patch to be
-evaluated separately.
-
-Just my 2c.
