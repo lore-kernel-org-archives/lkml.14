@@ -1,187 +1,109 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0831E519
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07294DF71
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718286515; cv=none; b=Zb+/7gsv4M2+hwIvAUuH0Wy3GbeukvSOTlIGJJ3CmheyUAcm5Qu2vRxIguAGVluSOnbfvHMOr4mUMgmT7RSxKoWKm9duXvFk7QbhO9QYk09t3AStzNVriFhLm15phmb18OqXx12f8jRg1DP9HUzwc9E0lJTr/U6HE1/WBqZVRNI=
+	t=1718286581; cv=none; b=EVo4tOE7jVyS03wDUO1RgpvXVRmJgDmRdRvGrVBJgavPIjgtu4u3AjgYGhGa1NL98lvZGR3diZ8oPUDL5dv3SBlmIArdejTUVPlCxQ0/qR8kRbeoP0MMWC2mpzR+zBcINXMCwGRdSqFIP8wLDgkJJf3oYWN09GVJvNTlkQpWCzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718286515; c=relaxed/simple;
-	bh=jEEBdVuKEuJBbrShQff2AKG6F9qOOzWHj9ofq3GOtqU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=syz6kTDqECFOqrx/9rr/4qKLtYG0D54NRtHv5qNAWj7K7bhbLcT/rao5pRNB96LqqZwqhg4f9bTyw+ppMIEb+8sO2t791ttgS8MMsAuRKSNYOqCzWgP1dNvpmVSKQkPr+o+1urpX2jmIpT3tLX49moPy/l7mVOvJriLUDzwha3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com; spf=fail smtp.mailfrom=infogain.com; dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b=rmDFM4Bm; arc=none smtp.client-ip=209.85.218.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=infogain.com
+	s=arc-20240116; t=1718286581; c=relaxed/simple;
+	bh=ZqZ5SaCke+0+f3Zq0bwbTWT57JT0Y++Oi2Zpy5Uf27I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SaWdCmmoW2yGvxg7AwOlw0EOMkbtpLaY4rueTp61L1kHSRFGhT7UBVmBtl1k3NejrrHNr9Sjzj1Rb1GaFw6zywskOKcY7rE8vvOmHbfWS7juJzds6EZg22ml+jSBxpCnHNv9x4Ebp+on91lKnrAb6lEeOMg+1oxjPWJ/UYO+9Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zz/MVZS9; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b="rmDFM4Bm"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a688e726755so20123266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:48:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zz/MVZS9"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso175731066b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=infogain-com.20230601.gappssmtp.com; s=20230601; t=1718286509; x=1718891309; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718286578; x=1718891378; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kyL394KBw2Z6LA6a/Q2YL4+8+ZukJAmciJ1Xrb3bTfo=;
-        b=rmDFM4BmyLdxeVxVYOsNViAX2qRZ4SjFpCFe/g0uNBT8CtBJvnsCXpUs/cF0i+YHSQ
-         AwVHBYFrrTqjVoS+WrQTQ9zpqf2v+0US8uDfHq4ysmvPlmDMBBY8I789FHmMACmU9raY
-         QneBuDxHbLcoZeMm27+mgw6090/Yhar1dzp8Xc7pKrZPm8rmaQ4AOJ93TOk8xXWfM2PT
-         GaQcIv5N6LjPfL8D/+GdhIiVvCAie/JUF6DOrXjEDOEKZCFwxiEm0RzAQ7++TzGtqG+5
-         y/acGLgRzJdo+YT3muJhY1RJzWq7/zP8RRzUpjzgn252DVNO9ErfK/SbcpgyYVh0xwyf
-         x5cg==
+        bh=yEvA9jroZsDs24LkJE27e1G6AbVYrGCtuXUJX4MNe1s=;
+        b=Zz/MVZS9t3dUIbQHCVl1fiIqORRBTmPwWt44TZ59hXC215aqtGVLjAAYUay6dH790X
+         aT07kvkVBtEyA4LDq8JakFWWPX6O+NiNr350Lw/9KNktZSRM7xtav7Ok6+xQiXuvmOgm
+         JIqJ7n5AWSsJJLxM6/2aTHf3kVi3zhZL7zk1VeO6aCIQsVtVy1TXieuD7ooWSVShkY71
+         /SV93pZPSqzhcY1JZN0PqXKVUIhTgr+37bT3YJ8PPTCI+Tyyn67FOtZ7NG1ndAD3HBk4
+         RU5uvFeiV4wSpOOGGnSvlYc7dwJDYJ2UYg6Lsk2NVleULL1Pg9ItB69HHttEpkyQS3UN
+         epAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718286509; x=1718891309;
+        d=1e100.net; s=20230601; t=1718286578; x=1718891378;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kyL394KBw2Z6LA6a/Q2YL4+8+ZukJAmciJ1Xrb3bTfo=;
-        b=mUlFkJRPBda+oAvfOG2UFhYBG8DlW80qGBYj3uSku0vWRX6G2XmfChp65nHKK6lsPV
-         oHjxWU+uJr8ktXx42uN1WpSuVC/xz/m5wb92xLzlKmUb2cjfBo526it5ke2o7Yk1Vj7p
-         AWlXhKYx33e7qali6FkS0MVpzlBlnd4QAPoCKS/0nEh/uZb8PVVd6Xbm5EZRJTcevLNr
-         ngG7rdt9RTIoNcrOobGzpRAjiKaLeLVyAXKM6K8roy5WR5s7sb+AK26p9NSSDtPyYb7E
-         oc9vlxC7yXZtXfsu0Te7ai91mwUHOgtIaMfG2M+9csNUZlvDAxjQpkj9izQDiD0BRaXQ
-         IVDA==
-X-Forwarded-Encrypted: i=1; AJvYcCX63u9AQM0ZvynzrB3UMVFHoXmCpVS0NGWc/sNwfXPkn3QILnvxz++mWY0ds+jPbxyH36508i3mMqID5BD7AYR/rglhBtQ0+1OkHyJu
-X-Gm-Message-State: AOJu0YwKGVpGzLLCYuz6iVdwgaW33C+LsnFtCUGq1ZF9W8PQeqmHCSTy
-	x6z3rMtl9CfH8ub9j1mOIk1/uVY+nrxmSMZZMITQiJ+60cm7cJY9kWEdcuoCkDc=
-X-Google-Smtp-Source: AGHT+IGA4TFp9nPo4T+ZXYozM/JqJdEKNmqRi9Juoezk/ujN31cHheX49nDZoa0iphC59RNJEFmoRA==
-X-Received: by 2002:a17:906:d7a6:b0:a67:a2e0:9dd9 with SMTP id a640c23a62f3a-a6f5f2ef325mr27214666b.2.1718286509513;
-        Thu, 13 Jun 2024 06:48:29 -0700 (PDT)
-Received: from nkaminski-desktop.lan ([37.31.128.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecdd79sm74483766b.132.2024.06.13.06.48.28
+        bh=yEvA9jroZsDs24LkJE27e1G6AbVYrGCtuXUJX4MNe1s=;
+        b=TAfIqLIISgqbWEKaYfB97jdsY7EvAOmZwoWXexyW7Z8/rREngLg0A7MX21G8imzi0K
+         FPOzPLm5J0rKqRhk7ZuiN67vDa9nc0lsYfnwWN1RfMwsPeQslOhduzUME4F4e8sB9v3B
+         7akecwb9j8zVOFjrayjFvcB2RlLsGRBiT9MMx7l1cUyQW3K/cvXQ1qDONWH2zZCUgk51
+         3D6iEwrIFG6HDJ6YTenpMm8Jm03g5JlKkjAK0zNfigmTtEIjeQaaFgBXjjft01yT2TZn
+         046zSwCy/s92QyCLI3/YKVm6GyHQHs3pWq+7Lkl8T88ibVBPcQ8xG8hR9qXY+4iet0PB
+         U+hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMg6HBg9uma5J0OV9veUji70Gk1g+fVsMzBqkZJXGSRjqHSVi1EHCNVIP2EBd2LodjqUsXu17ev1X1lt2hvezMD8Eo5onJ/KG714ZG
+X-Gm-Message-State: AOJu0YzK58W92dnUtoAoC4g3PUVxaveXyoG3Ul0fBKrJZ8sL1PuUrhwP
+	TtzebEj9bl09U1J9AwUmcnvbAKFr/rvN6Y+V608OQUIv2ovI7Xf+mqoqBVoxRCI=
+X-Google-Smtp-Source: AGHT+IE8JSarZGMRvnKm1sM0hW1gVfIATdlYWc5pmUAEWGuxrgcsVbMkkFTyUXFdWA7D5wJfcseu7g==
+X-Received: by 2002:a17:906:517:b0:a6e:2a67:7899 with SMTP id a640c23a62f3a-a6f47f7fc60mr284236566b.35.1718286578234;
+        Thu, 13 Jun 2024 06:49:38 -0700 (PDT)
+Received: from krzk-bin.monzoon.net (46-253-189-43.dynamic.monzoon.net. [46.253.189.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56fa4030sm73785166b.207.2024.06.13.06.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 06:48:29 -0700 (PDT)
-From: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@infogain.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
+        Thu, 13 Jun 2024 06:49:37 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: arm@kernel.org,
+	soc@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Olof Johansson <olof@lixom.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Norbert=20Kami=C5=84ski?= <norbert.kaminski@infogain.com>,
-	syzbot+aeb14e2539ffb6d21130@syzkaller.appspotmail.com
-Subject: [PATCH] fs/ext4: Prevent encryption/decryption of unaligned blocks in aes_encrypt
-Date: Thu, 13 Jun 2024 15:48:25 +0200
-Message-Id: <20240613134825.53238-1-norbert.kaminski@infogain.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] MAINTAINERS: ARM: axm: add Krzysztof Kozlowski as maintainer
+Date: Thu, 13 Jun 2024 15:49:10 +0200
+Message-ID: <20240613134910.7862-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-syzbot is reporting an uninitialized value in aes_encrypt(). The block
-cipher expects the bytes to encrypt or decrypt to be a multiple of the
-cipher’s block size. However, when ext4_write_begin() is called and new
-folios are allocated, they might not be aligned to the required block
-size.
+There is no maintainers entry for the ARM LSI AXM SoC, thus patches end
+up nowhere.  Add such entry, because even if platform is orphaned and on
+its way out of the kernel, it is nice to take patches if someone sends
+something.
 
-To ensure that padding bytes are automatically initialized in the
-ext4_write_begin, this patch adds __GFP_ZERO to the existing GFP masks.
-This adjustment is applied only when the CONFIG_FS_ENCRYPTION is
-defined.
+I do not plan to actively support/maintain AXM but I can take odd fixes
+now and then.
 
-Syzbot reported:
-
-=====================================================
-BUG: KMSAN: uninit-value in subshift lib/crypto/aes.c:149 [inline]
-BUG: KMSAN: uninit-value in aes_encrypt+0x15cc/0x1db0 lib/crypto/aes.c:282
- subshift lib/crypto/aes.c:149 [inline]
- aes_encrypt+0x15cc/0x1db0 lib/crypto/aes.c:282
- aesti_encrypt+0x7d/0xf0 crypto/aes_ti.c:31
- crypto_ecb_crypt crypto/ecb.c:23 [inline]
- crypto_ecb_encrypt2+0x18a/0x300 crypto/ecb.c:40
- crypto_lskcipher_crypt_sg+0x36b/0x7f0 crypto/lskcipher.c:228
- crypto_lskcipher_encrypt_sg+0x8a/0xc0 crypto/lskcipher.c:247
- crypto_skcipher_encrypt+0x119/0x1e0 crypto/skcipher.c:669
- xts_encrypt+0x3c4/0x550 crypto/xts.c:269
- crypto_skcipher_encrypt+0x1a0/0x1e0 crypto/skcipher.c:671
- fscrypt_crypt_data_unit+0x4ee/0x8f0 fs/crypto/crypto.c:144
- fscrypt_encrypt_pagecache_blocks+0x422/0x900 fs/crypto/crypto.c:207
- ext4_bio_write_folio+0x13db/0x2e40 fs/ext4/page-io.c:526
- mpage_submit_folio+0x351/0x4a0 fs/ext4/inode.c:1869
- mpage_process_page_bufs+0xb92/0xe30 fs/ext4/inode.c:1982
- mpage_prepare_extent_to_map+0x1702/0x22c0 fs/ext4/inode.c:2490
- ext4_do_writepages+0x1117/0x62e0 fs/ext4/inode.c:2632
- ext4_writepages+0x312/0x830 fs/ext4/inode.c:2768
- do_writepages+0x427/0xc30 mm/page-writeback.c:2612
- filemap_fdatawrite_wbc+0x1d8/0x270 mm/filemap.c:397
- __filemap_fdatawrite_range mm/filemap.c:430 [inline]
- file_write_and_wait_range+0x1bf/0x370 mm/filemap.c:788
- generic_buffers_fsync_noflush+0x84/0x3e0 fs/buffer.c:602
- ext4_fsync_nojournal fs/ext4/fsync.c:88 [inline]
- ext4_sync_file+0x5ba/0x13a0 fs/ext4/fsync.c:151
- vfs_fsync_range+0x20d/0x270 fs/sync.c:188
- generic_write_sync include/linux/fs.h:2795 [inline]
- ext4_buffered_write_iter+0x9ad/0xaa0 fs/ext4/file.c:305
- ext4_file_write_iter+0x208/0x3450
- call_write_iter include/linux/fs.h:2110 [inline]
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xb63/0x1520 fs/read_write.c:590
- ksys_write+0x20f/0x4c0 fs/read_write.c:643
- __do_sys_write fs/read_write.c:655 [inline]
- __se_sys_write fs/read_write.c:652 [inline]
- __x64_sys_write+0x93/0xe0 fs/read_write.c:652
- x64_sys_call+0x3062/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:2
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
- alloc_pages_mpol+0x299/0x990 mm/mempolicy.c:2264
- alloc_pages mm/mempolicy.c:2335 [inline]
- folio_alloc+0x1d0/0x230 mm/mempolicy.c:2342
- filemap_alloc_folio+0xa6/0x440 mm/filemap.c:984
- __filemap_get_folio+0xa10/0x14b0 mm/filemap.c:1926
- ext4_write_begin+0x3e5/0x2230 fs/ext4/inode.c:1159
- generic_perform_write+0x400/0xc60 mm/filemap.c:3974
- ext4_buffered_write_iter+0x564/0xaa0 fs/ext4/file.c:299
- ext4_file_write_iter+0x208/0x3450
- call_write_iter include/linux/fs.h:2110 [inline]
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xb63/0x1520 fs/read_write.c:590
- ksys_write+0x20f/0x4c0 fs/read_write.c:643
- __do_sys_write fs/read_write.c:655 [inline]
- __se_sys_write fs/read_write.c:652 [inline]
- __x64_sys_write+0x93/0xe0 fs/read_write.c:652
- x64_sys_call+0x3062/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:2
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=====================================================
-
-Reported-by: syzbot+aeb14e2539ffb6d21130@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=aeb14e2539ffb6d21130
-Signed-off-by: Norbert Kamiński <norbert.kaminski@infogain.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- fs/ext4/inode.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 4bae9ccf5fe0..965f790a9d36 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1156,6 +1156,9 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
- 	 * the folio (if needed) without using GFP_NOFS.
- 	 */
- retry_grab:
-+	if (IS_ENABLED(CONFIG_FS_ENCRYPTION))
-+		mapping_set_gfp_mask(mapping,
-+				     mapping_gfp_mask(mapping) | __GFP_ZERO);
- 	folio = __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
- 					mapping_gfp_mask(mapping));
- 	if (IS_ERR(folio))
-@@ -2882,6 +2885,9 @@ static int ext4_da_write_begin(struct file *file, struct address_space *mapping,
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7fd595b8f5e..60f2815f0453 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2127,6 +2127,14 @@ F:	arch/arm/boot/dts/aspeed/
+ F:	arch/arm/mach-aspeed/
+ N:	aspeed
  
- retry:
-+	if (IS_ENABLED(CONFIG_FS_ENCRYPTION))
-+		mapping_set_gfp_mask(mapping,
-+				     mapping_gfp_mask(mapping) | __GFP_ZERO);
- 	folio = __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
- 			mapping_gfp_mask(mapping));
- 	if (IS_ERR(folio))
++ARM/AXM LSI SOC
++M:	Krzysztof Kozlowski <krzk@kernel.org>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Odd Fixes
++F:	Documentation/devicetree/bindings/arm/axxia.yaml
++F:	arch/arm/boot/dts/intel/axm/
++F:	arch/arm/mach-axxia/
++
+ ARM/BITMAIN ARCHITECTURE
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
-2.34.1
+2.43.0
 
