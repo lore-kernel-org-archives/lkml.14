@@ -1,148 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7F2149C41
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E9F143883;
+	Thu, 13 Jun 2024 11:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279464; cv=none; b=T6sVCp74F+BgTQA22fvfct6E9tWolzx+Oem54YRVN2Crie9T7xAgyaNPibGDaYgGyldIvz6DwPmyW6Aoiq4axju29Bx2zA0fypeeLg24w+LVvqUFC1BdGaHNbXZ/PIdeQ6vxB3deSsPaajQ2URmJvM6klJ8qrtdgAILfz7WocRU=
+	t=1718279504; cv=none; b=MIxmIbUEm+hR+4s7egeAX1UkBqbLBMTGld8n1QrrMJl32dvJ4AdvTNg7XDtiFCwSyXpw3rP57YupO8852xwwojpkK+rzHhj9Dbmu0vFK3nS31Eiq5TEE8swmF4nsiSb+fKv4t/ec4fgT9C15xCFbRxo+vHg42MiILaKqO+CrNGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279464; c=relaxed/simple;
-	bh=iGO9d2tDV8jgMXAb9ljo4BmxYhAXls7ncq8pchC9GTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n8vmr/dnBK3qiBveU1jV/fUqDdUczZlFjNgfOIQgMBmeUUrByw/z8GSXFG+v7+9udrgEYwjM5cZjt5NOQ8tJn5cEr1bJmnxjfB9K8OQSD4ydmVUP8nNlzvy246ocUQ9OD6WA48Jo/EwFTDaXa1+Aydl0JFGg5hKA9lpPG87QYeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iJdn2JSK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718279504; c=relaxed/simple;
+	bh=5yq8m+SBGM96rXAdcdQvH/rJPfubuzK0CuGVUXOIVAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jh9Jh/VGqn08hTE6672OLxDCwyWrW6NMWl4F9BFo6cE9O8ITmaNaQz5+2X9riTbNT0eFG+0gtEtNbzIsxj8HC8avcFebHRdR08BLovC21i+WkiwvoBWmO4c3aatSsXkJfd8d/FOkaFbonxQRGQvuVdFYwgKAKzJWqMIP7YzkcVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEYNDcyU; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iJdn2JSK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718279461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-	b=iJdn2JSKo5UmFrR0ugN7WDNJnADI+q/iHS3wsxwrBwj0luJgq6wF2hvbiW1zzZZ+ymA6Wz
-	BukKK2Twj8vyoNVea4PtlWEJ7+8+ZXyUV/BEQ64F5VHv5KngFs0QzmihAov9VIH7jq2Cpg
-	qqx75VA8vuHAGvh64DHELqNCkzwrGmk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-35-EwyvKO4VMD2z4flqWhLWnQ-1; Thu, 13 Jun 2024 07:51:00 -0400
-X-MC-Unique: EwyvKO4VMD2z4flqWhLWnQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-36073543200so107649f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:51:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEYNDcyU"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-579fa270e53so1174802a12.3;
+        Thu, 13 Jun 2024 04:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718279501; x=1718884301; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KJefyQyjkOVfFqQZSnaUeK5Yr2ypYtTp77GMMmsGIZU=;
+        b=dEYNDcyUbhsZ8S9LewhAlZ0r+drK3RWEg6pR20ccdIQF3auoUzCVjRs1Y8iWtwaI3P
+         57pDkUTj/Hy2XaIhGi0lvqR8Lbnty7cTDOr4e2/yzCQgTc5lyP2ljyxlZZsNAKw2sTGq
+         GwalnwqKt7g7vDI2oBoGxdw8bbXmemHXeXnpnlKRiF9QZ/tnMibVhyDDDy8QhUwMpAW5
+         aOD8w5r4KlNVFrN5/taSEOFxhDqy9R+qdg/+7as+z+tqiTc5TGTSLBt00dx9ya1BVDp1
+         3FHic3HWuES5P9dYQO1BNlPGwT6rFm3YgM7xfuvJIy7cZNPtzwzxpTrA4lMRgQ/em41d
+         GZNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718279459; x=1718884259;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-        b=mpXvRBPiGuUgletKKDPnfibWNflYy8LlHmlU6wi4wAM2QWVfBn9TLHh5XFbVSiJZaD
-         lqZ07RgyUTmu9Bxu9Phn9muc4mb/0rbdTl0B6uqCB1NW3W1D1RVNTt4uIbUeRfjJRDdH
-         6sg4mlVrnE97m0bsioSQW/IU8dSDStbOtII/O2kGwodfGfJmEmawygbZ9ttrclWtwFio
-         A40IyD2UPJO5nfslLwHVzCq0TWpfcN9KXeTxcI6dpWT3tK5VcCEggpRHPokFeGmZfYUi
-         aOO5qhdjT1U92VegZOr24HgDAgJf/Cl+MQMJCmHEJmCsPJLmYNCsZPmyC7CFpwz3lC1c
-         9BXg==
-X-Forwarded-Encrypted: i=1; AJvYcCX87m7Vyfxd8+/+c+MsbaWPnWPQ/wmjz1GXXedZCG9AAWQwTkDVugvUdJJcpj+xfTkMso6DVEM3Je/b7FE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXjiSle2UPxLbTv4FhCru8Wsmm9fdo/lcuBwgYc1XQrdRsb7P
-	FwklV/07v0Yr9INWFvHiRm/RcJOY89XKLN+o3SUZSa1DQAIhOsKvuEilonwQJm1kT6lFCSNWDGs
-	Bz/AOyWfTuPkyzMOlYoRo41DxZHdaEG0firvXSrX5vf+VDfWpvGSqI8Lyp44Tzg==
-X-Received: by 2002:a5d:6da4:0:b0:35f:2584:7714 with SMTP id ffacd0b85a97d-36079a55d96mr164404f8f.5.1718279459403;
-        Thu, 13 Jun 2024 04:50:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElWKl4RSn/FE/WxBDl2/l3vU5Ab6FM43jl4nz2rwpq5A2nGMHBM+4ko0mCUeuR7gvoXMoyQA==
-X-Received: by 2002:a5d:6da4:0:b0:35f:2584:7714 with SMTP id ffacd0b85a97d-36079a55d96mr164394f8f.5.1718279459138;
-        Thu, 13 Jun 2024 04:50:59 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509c883sm1510620f8f.29.2024.06.13.04.50.58
+        d=1e100.net; s=20230601; t=1718279501; x=1718884301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KJefyQyjkOVfFqQZSnaUeK5Yr2ypYtTp77GMMmsGIZU=;
+        b=r7UL7MMjz1AIa5W66YcSY31JtsjhShEapBMf3Gm7QFIKil5WPu0revLLsifrTPvT/q
+         QBXdRQ5GMrms87WRWP0kgvoDpMqBN3iyoHL18iJxWhK5skuR34T4oUMlX50lyblxsvgS
+         Tjuo7z7RJWKh5YCnSyaXLWgEkGszJUFCvpXpmn5gTskSLYzRR1kgM37odwBrCyNl2/dv
+         JQwQK0/sZgNgwtEjCksgrOYtev3z3uq607eI63tCZFtBmcNdhzJ45C7UhJsI2XfWQHEl
+         4QsR0NvsuVY0dXelmfH2zS9ro52nnWC/tEldnYz2hByWz0nQ85ZxVFHP3KS+pip1cZJ0
+         OD+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXdRdj05Qcht3uAP+dPfaiKOcLdLxY8dPk66ht4HQYCD6tl6MpW2ZbcDApq85ql95WmBA8gUcMegaDymdCUF4ixiu1rlvIE/tfLWSQzwzZlLt+VJ1GIjjBroCD9JtQG3TutCpN+bXkjGaer1VAjLFbR417FIBeWLCbbkYL6dUVLUg==
+X-Gm-Message-State: AOJu0YxpQZXSA+UdpV8anQeEajXQ5v6MLeXRqNlIqzWGThulQs7XACqX
+	UMXDinc8CVLocw574GJZZkCxO3xwFjfgyiD/xj1puN7wE11OmauC
+X-Google-Smtp-Source: AGHT+IGXMOflSMi6KOV3hqkc/LDkCH7Tx3vmolC5e6vFF/VUI6SVgZ6qSUivVUegzux7CBuHZAnxGQ==
+X-Received: by 2002:a17:906:651:b0:a6f:e15:8163 with SMTP id a640c23a62f3a-a6f47d4ed2bmr336987866b.7.1718279500976;
+        Thu, 13 Jun 2024 04:51:40 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db5bafsm64364566b.50.2024.06.13.04.51.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 04:50:58 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v9 13/13] drm/vboxvideo: fix mapping leaks
-Date: Thu, 13 Jun 2024 13:50:26 +0200
-Message-ID: <20240613115032.29098-14-pstanner@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240613115032.29098-1-pstanner@redhat.com>
-References: <20240613115032.29098-1-pstanner@redhat.com>
+        Thu, 13 Jun 2024 04:51:40 -0700 (PDT)
+Date: Thu, 13 Jun 2024 14:51:37 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
+	f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 04/12] net: dsa: lantiq_gswip: Use
+ dev_err_probe where appropriate
+Message-ID: <20240613115137.ignzu35jxmmorxys@skbuf>
+References: <20240611135434.3180973-1-ms@dev.tdt.de>
+ <20240611135434.3180973-1-ms@dev.tdt.de>
+ <20240611135434.3180973-5-ms@dev.tdt.de>
+ <20240611135434.3180973-5-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611135434.3180973-5-ms@dev.tdt.de>
+ <20240611135434.3180973-5-ms@dev.tdt.de>
 
-When the PCI devres API was introduced to this driver, it was wrongly
-assumed that initializing the device with pcim_enable_device() instead
-of pci_enable_device() will make all PCI functions managed.
+On Tue, Jun 11, 2024 at 03:54:26PM +0200, Martin Schiller wrote:
+> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> dev_err_probe() can be used to simplify the existing code. Also it means
+> we get rid of the following warning which is seen whenever the PMAC
+> (Ethernet controller which connects to GSWIP's CPU port) has not been
+> probed yet:
+>   gswip 1e108000.switch: dsa switch register failed: -517
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+> ---
 
-This is wrong and was caused by the quite confusing PCI devres API in
-which some, but not all, functions become managed that way.
+Needs your sign off.
 
-The function pci_iomap_range() is never managed.
-
-Replace pci_iomap_range() with the actually managed function
-pcim_iomap_range().
-
-Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 42c2d8a99509..d4ade9325401 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
- 	/* Take a command buffer for each screen from the end of usable VRAM. */
- 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
- 
--	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
--					     vbox->available_vram_size,
--					     vbox->num_crtcs *
--					     VBVA_MIN_BUFFER_SIZE);
--	if (!vbox->vbva_buffers)
--		return -ENOMEM;
-+	vbox->vbva_buffers = pcim_iomap_range(
-+			pdev, 0, vbox->available_vram_size,
-+			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-+	if (IS_ERR(vbox->vbva_buffers))
-+		return PTR_ERR(vbox->vbva_buffers);
- 
- 	for (i = 0; i < vbox->num_crtcs; ++i) {
- 		vbva_setup_buffer_context(&vbox->vbva_info[i],
-@@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
- 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
- 
- 	/* Map guest-heap at end of vram */
--	vbox->guest_heap =
--	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
--			    GUEST_HEAP_SIZE);
--	if (!vbox->guest_heap)
--		return -ENOMEM;
-+	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-+			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-+	if (IS_ERR(vbox->guest_heap))
-+		return PTR_ERR(vbox->guest_heap);
- 
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
--- 
-2.45.0
-
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
