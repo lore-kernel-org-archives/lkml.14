@@ -1,68 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7594513C9CF;
-	Thu, 13 Jun 2024 20:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD21E12EBF3
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 20:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718309935; cv=none; b=AAlbo2O/B0l4rtp0nN0pfK6vey/s8O2iMYMM8P0WDv7Wk+Kvsp9W+vZO8u1XD01S94cvzz7FcdJFmrkJI7+40rynJjSf+hQFm7GyfUny6w6lZDYghEq+mPcqO7CQly6Qzay+LHnpeyoEfem1c7HlvkNKYc/gvbO4LTv7zNiiFSU=
+	t=1718309945; cv=none; b=W1C+Trg8t1fgpopd2OhKf1oW2jxAQB2/Wbeb6tx8DijyA+qeqF+l4WjarBPSlOPZdvhs5rf7J3l+QzVsLUh40k2CwKg2zh9Bm9SYpQNImt+6mc1OinTUCwc36cHQHUxaehM2zFERAvBYWUtmklX+AIy0mes/jZRmrpL1T8HuEC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718309935; c=relaxed/simple;
-	bh=tZkWlPzsEIJD0w2s0YudkX0DW+VefZKFhtp6mC0r2IU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bH1KIwVsF6aM7kLlToKsks7wolV3AbQJlljAUG2hY+rYlyzO5jZ6WUb74YacGL/Jh3WX9DFII66EtQ+CNJWDlKZnmjNoQdwPr0dGeX2AfGk8R85UGjL4El2/ZCFu+C3Uk/z2pXoO+cJq8aL9QpNDLFyzRmhnERwE9+d7eUIir6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Bf5/YajK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Bf5/YajK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D924C32786;
-	Thu, 13 Jun 2024 20:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1718309935;
-	bh=tZkWlPzsEIJD0w2s0YudkX0DW+VefZKFhtp6mC0r2IU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Bf5/YajKc4bfbaMnNBJtRIpnDJlNphOAbPvgJhaNCxXLBU5O1cF2Vv2cdDksmwZ8t
-	 24wyy/nVoSssXL2C+IQDaESgQcRd2hVNQwRF4vQZqJDdiaf4+wuo3rN8uEqqqzl1Et
-	 OW0XOY8HY+vtdqMwTvzMuRNA1pMauFSPHlAQ5qao=
-Date: Thu, 13 Jun 2024 13:18:53 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Christoph Hellwig
- <hch@infradead.org>, Lorenzo Stoakes <lstoakes@gmail.com>, Baoquan He
- <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, hailong liu
- <hailong.liu@oppo.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Zhaoyang Huang <huangzhaoyang@gmail.com>,
- steve.kang@unisoc.com
-Subject: Re: [Resend PATCHv4 1/1] mm: fix incorrect vbq reference in
- purge_fragmented_block
-Message-Id: <20240613131853.814a40233d36d57f868f9a39@linux-foundation.org>
-In-Reply-To: <ZmstXFYq6iSHYdtR@pc636>
-References: <20240607023116.1720640-1-zhaoyang.huang@unisoc.com>
-	<ZmstXFYq6iSHYdtR@pc636>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718309945; c=relaxed/simple;
+	bh=3eMv7DL13ZCf4yys+63EEQ2AEUW/IgfiRQCSfBzmLzI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=c+EqfQMAH2EWwH3Wa3f5xlA4X1vLMtwZmsB29KdfZ0/Bd0dhs6KBYpwGgouJXuzZOiJFp2BgAW7b9sKNOa4XR08Ptas4hwarapFzt0QFxkRyNNF3C7vWygC8OS9FY0ud5pu0xdD7LPVZB/xj+QH+foeJRXfXgW/cWiUicCfwsfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7eb6fd69f7cso154159339f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:19:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718309943; x=1718914743;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eZr6Co06KvKRHiMHcD6McYVqxp2MyMT713pL9kkaxCU=;
+        b=o40s5hy8l5fOiPQpIjetoodQDJxyy+LlV/XzhfuKyQwdjyfRjeRl959QjWgPPDXi8Z
+         QkmkPI52VWN+uZxPmJTr0pQfVVBtTmoPUTXXWrQW19oDlRKa8egWIpWOWakNydFGRSkD
+         XMgLTA7zl1p+yWf5QyNyBWzxqAC4nw3vII/KUAWLubBhGWf01OcF5dfoQUICSPn3Imh3
+         YxM/N7myE394UcLWk/AHWUMYDXmnNKvWuWR9vqlKEgi6sjIDdqUTxBp/aMwbrB8oxa/A
+         JV86UgcphDe+FmbqIYCrGu0Z2RW+K2z6PLx/T+KLcTkc4AOqrjOTbtCCcUy7fFAoWNLT
+         U54g==
+X-Gm-Message-State: AOJu0YwRUCyytPbRlNc2skSII2MnHCYEr4vq8q8Wqr7ktOx1wkyASDTI
+	PR84b/Nl1lC1tJmBt/y7dd8sYzMrR0PXQHHbskbJHQQMGhEmDtSxB9tP8W9geYGlK3WiP/aCzzl
+	8xD5qYxnme1Hl43XQm3EAHG+V7dG4QUOOekbkz8muiiS6r2cuWJ/f+Ow=
+X-Google-Smtp-Source: AGHT+IFOXnqatbycfH4K5gFhHEb9rhcQsjKhtmVRO+a5Ib6mQVtHf3uSx4UFGiK6P/O5fVBw5nBJI+q9tzi01CyjOYpy89ynEq/9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:1581:b0:7eb:db06:e07c with SMTP id
+ ca18e2360f4ac-7ebeaef25bdmr1020239f.0.1718309942916; Thu, 13 Jun 2024
+ 13:19:02 -0700 (PDT)
+Date: Thu, 13 Jun 2024 13:19:02 -0700
+In-Reply-To: <PN2PR01MB4891B609F58042DF0651A21DFCC12@PN2PR01MB4891.INDPRD01.PROD.OUTLOOK.COM>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c31424061acb355b@google.com>
+Subject: Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_lookup_percpu_elem
+From: syzbot <syzbot+1971e47e5210c718db3c@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	wojciech.gladysz@infogain.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 13 Jun 2024 19:33:16 +0200 Uladzislau Rezki <urezki@gmail.com> wrote:
+Hello,
 
-> > 2.25.1
-> > 
-> Yes there is a mess with holding wrong vbq->lock and vmap_blocks xarray.
-> 
-> The patch looks good to me. One small nit from my side is a commit
-> message. To me it is vague and it should be improved.
-> 
-> Could you please use Hailong.Liu <hailong.liu@oppo.com> explanation
-> of the issue and resend the patch?
-> 
-> See it here: https://lkml.org/lkml/2024/6/2/2
-> 
-> Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Thanks, I'll queue this (with a cc:stable) for testing and shall await
-the updated changelog.
+failed to apply patch:
+checking file kernel/bpf/helpers.c
+Hunk #1 FAILED at 139.
+Hunk #2 FAILED at 7146.
+Hunk #3 FAILED at 7230.
+Hunk #4 FAILED at 8748.
+Hunk #5 FAILED at 8763.
+5 out of 5 hunks FAILED
+
+
+
+Tested on:
+
+commit:         e478cf26 Merge branch 'bpf-fix-a-couple-of-test-failur..
+git tree:       https://linux.googlesource.com/linux/kernel/git/torvalds/linux
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b5bc506ebba90cbf
+dashboard link: https://syzkaller.appspot.com/bug?extid=1971e47e5210c718db3c
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=127983ee980000
+
