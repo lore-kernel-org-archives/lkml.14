@@ -1,154 +1,103 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E998317FD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C98E12EBE6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718297469; cv=none; b=dL69KA2fFtXf+00piYRiUoppva5KbB1XdvOofzOknrxXQ6whapEN5E9DwIipHg845eLn6IoQnUIZcrCtBeesV++M/Zy3AIJLovL4C8dunut78D28y+EmSQ+xUAf9FcxONvHxh890zDPZN4dc/DA198syn638mh2vFjwC76yCwmk=
+	t=1718297495; cv=none; b=L1KFNkfei/uqvKYnOGvBXYenN1ZzpQxutfgjw6YvcQfqeSmYQEQExKelIH/o1kwaWPCN4ASoeLhuaVT6ei9mx7X0Cl/aYH/kSMiW0esAjYnl1g/z+xos9iizLaHePV3WdYgB8m39kM5VA/BoZuo+5x8tUQW6Sz4S/kApH6KMHZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718297469; c=relaxed/simple;
-	bh=6NWJFRUxcKND4U4SpQJfsTGcu3XSWWW8WSpW7MTVo7I=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZ6I26G3QHisIQUXqczKkOVf/m4JkFopNOsJzDj32B5W7MbuJPUFOe48Slq2uEJ/8NUElCLuvO9k1/WeePITQ/5QqDIJTNNP82Q5WrKMx+/tEsGdV2bBXboY4vWhPcmRaoi8f91FhxNsPiBPtHyDduvNsaNKZ+vR0iMD7V/BE3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGm1vR4o; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718297495; c=relaxed/simple;
+	bh=3Uv9P687Co6Bcq3L3Ugq2lwsGwOHTvKyqnIbkSW0VR8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=XK6F1Q39DCjEGh871ADFh9x0EpvnXgkOzr//2Eta30+mdQ8uwW7mjwIxcTGfzqJu5qu17e1BA/M63cL/sDc+vWZl7w7qI7uYaENHCx+D9aflBrZnO5wbCO4j4Pk/Ef9NtV3YzRnIwSLvo8xdKNHeKMBmJsH/QghbZ26k7+Ff82I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Avz9gaPj; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGm1vR4o"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f2266edd8so969789f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718297466; x=1718902266; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nzzUB/FjhEnH/BYJNIleLEzzp0Ljx1jUDZ5+DBBvWYc=;
-        b=RGm1vR4om7S8Tt++HKPbTOadylz7Tl3DrSPGjokihxTyrBD63tKC0gqow3MtdN65qq
-         +VG4o8PLDTvVGiJYLg4MFDueIWpU8lgQniFDLQ85Hadlyzka4tIylvxQFW8otKusM9b5
-         6xPsyehA3pmLxyjEcUEnUg6I1IGzCrKL1YREzlNCxgV1VlHyAbfos1i3QXSO/0Eq0m5o
-         6/cgaCP6pr6qmwjigYq4lIaS4IHNlmBP/TUlh9lTKvZAuoHe8j/jdGRaBR9QNBdi/TVB
-         4tE4uX1sKOqiHYOqKeXRTy8f88n1xNvEmEx/45AOOwBKuCvnCsOxI3fVWRVCHtIiVlz1
-         ONSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718297466; x=1718902266;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nzzUB/FjhEnH/BYJNIleLEzzp0Ljx1jUDZ5+DBBvWYc=;
-        b=MdZf67muG58wHQOYl3qEmhD/87CTk9pOVmhgnbjAVjDflwzUvQGAFDiHBZLf6GjCvV
-         jwBcxFKRLv3+uWQdu2mOc3S0dKBzkjoO62CTRzmPOa4Fu1SLk639sizgsGOIMRy4a+3f
-         L1sPs7DsIvyxO5touLFrXvtAMLLSNqK8hK+8mITjyx3YOB/MAt5P/uuKZAnSiOAMOB0C
-         Y+bzTPgcJP3EVtN9iiAB+D202hbhUkVOKYogm1vYtTNZjv0cybcIY2ZYUSDNFkmA4Ya1
-         4+0jcBHu45Selr+njgv8grMV0yOxLWnFNC5qPhBCVNejCjmc4es/i3qaM9MMjx0UhGZL
-         doWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCRqveUSxleK4Q/f/c8ht49DZ2IM/NL0Uf6n0Pi1U7b3uRSK/D9+uzLEoUKgrv4+KibN/CWDmpStpGxYN8JJcvenn6e0UYg3y02g1t
-X-Gm-Message-State: AOJu0YyYczjHOYoePC3PcNgKI/hzy9zJPC1ecDLEhRgVLRq1rvPiIP+j
-	631W4C9aWKYKScrp0S/O3boBisWmSZghxHkTQhHi/pMWmU5tfNrt
-X-Google-Smtp-Source: AGHT+IFd44wXWFVM2hw1th+c947IyNuuiuSNQutEgNIYsg030ZErOxFLm+hL+7BwFMhxl6Lwv7yfZQ==
-X-Received: by 2002:a05:6000:128d:b0:35f:2a43:3b11 with SMTP id ffacd0b85a97d-3607a78432cmr194032f8f.67.1718297466026;
-        Thu, 13 Jun 2024 09:51:06 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075093d41sm2248075f8f.16.2024.06.13.09.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 09:51:05 -0700 (PDT)
-Message-ID: <666b2379.5d0a0220.c7eec.8b6f@mx.google.com>
-X-Google-Original-Message-ID: <Zmr3VW50gEx2qXah@Ansuel-XPS.>
-Date: Thu, 13 Jun 2024 15:42:45 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@somainline.org>,
-	John Crispin <john@phrozen.org>
-Subject: Re: [PATCH v2 0/2] ARM: decompressor: support AUTO_ZRELADDR and
- appended DTB
-References: <20240121203009.9257-1-ansuelsmth@gmail.com>
- <65d62b60.050a0220.c7b96.614e@mx.google.com>
- <666ad6e0.df0a0220.f8b16.4a5e@mx.google.com>
- <CACRpkdYJoNRpciyQE_A6dkb8f6Jsy4+qwb4w9K3bss2mkZpp1A@mail.gmail.com>
- <ZmsXdWWidNjXdbSa@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Avz9gaPj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718297466; x=1718902266; i=markus.elfring@web.de;
+	bh=YFkSc9CKpSbzYGObHg7hLaAew0BY2AKB2tveQbaNtko=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Avz9gaPjA/Y2T47/8yA0Siun4DlzrI6JqJegC30JnDj6y1v8gGHgOhc1eLceNiA0
+	 1euNryqXV9Hym03STUBFXVQNkH+yPMa+Mjs1tlRMcWNy6tpiOIU+xkstcDCm66koj
+	 IYcF0Htvhjg6ThpmPzPMeDSMDKnMEGGjdMJL896jeQXhiO87DEn8cW7OpFxTuS4PZ
+	 n4E7EanKgMtpi6Lt3u1lmE3GQSTu1I0E9uKYwxPzUFvIw/Y3wcdVjBAH4cH+5oCxr
+	 ve7ezPwMIASVd6EU2QlP9Av1cu6wLrrZ5mho/qDSr1aLdSYieyCUnV5kZo2WqfeOm
+	 Fn2ezAIJLOKjrNlKUQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MYcll-1rv1Za45Mh-00OyyV; Thu, 13
+ Jun 2024 18:51:06 +0200
+Message-ID: <7daafcb7-2c80-4c2a-bf25-7202634f79f0@web.de>
+Date: Thu, 13 Jun 2024 18:50:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZmsXdWWidNjXdbSa@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+To: Carlos Llamas <cmllamas@google.com>, kernel-team@android.com,
+ Alice Ryhl <aliceryhl@google.com>, =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?=
+ <arve@android.com>, Christian Brauner <brauner@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Joel Fernandes <joel@joelfernandes.org>, Martijn Coenen <maco@android.com>,
+ Suren Baghdasaryan <surenb@google.com>, Todd Kjos <tkjos@android.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+ John Stultz <jstultz@google.com>, Nick Chen <chenjia3@oppo.com>,
+ Steven Moreland <smoreland@google.com>, Tim Murray <timmurray@google.com>
+References: <20240612042535.1556708-1-cmllamas@google.com>
+Subject: Re: [PATCH v5] binder: use bitmap for faster descriptor lookup
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240612042535.1556708-1-cmllamas@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rZTOq3c5bVF59YHL+9ew+vmZxgNyinmAaSyUpX/VJDnVFelxcNf
+ mUfbLSWYvWwiDB5qnnCyZbUvWxFG70ahzq+KWDkPGBBc48KuFxwgx3d3Qj2STg+B0aVPwon
+ wfwEugmlXJWLZW430aktHk+fboJ+C1wAdnnQrKT/DLwrWO1ghcKOQiG6NokPtlM0kX5APp3
+ KL47bhaysyH2RxI1jHFJw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ps1ZIzQZw6s=;eoLeI042XTr8v7Hvc0IRxGMCnVo
+ xtnfjtg9K0X0F/viALADXrvHgybzVI4vsM+YSzyg6eig4G6Ma9Pv9PYxEBPnbpKIb4QBx9fJY
+ /2N9eul0qyyHaIrjGNTko8+DBQCsBrS4njO23YoeNcG5QGXAPjvogNtzxEx1OAXdcPa9ehacf
+ Fs2lkXEXv9DLquw4O5ffOnRZNXHAnOTpCpGEf5Lnrv0mTbYzvKF0Y02I2HX2gkykV1ndJHFDq
+ FEtaytScecxrJ2eYiphZIYrBpu00AIWix8mb+hfNfMzQHidPgZ5FPnA45KePa0UtQYxmVhj92
+ SqUJeBWYWqA4WHhkWkm3sXnsfWQUQUvsHCJE/g4kjAjWDXaMHqoBEviFZfmqfTHyuAmBdji7g
+ zYgDswXZ5dfJQS5rw7U/QoSzvfYkM1u5jxj0qzgASHvUy5tl4lEeBK7yCH/QBEg08UKEps0Rz
+ lWhmQRVP+tIsk339HwBOv2BMR2en/KaY35FS42H/4axv7fK3RXBeL2PqzGfQcNICPZ2IDwhrV
+ Nwnqj8LIdvm1Fuy3XDq6HyW8XRzGyYJTV654HzkKFqlh1UKWkAXAsUk55fGN27IexAvLlx7Em
+ YYdihkD2kcNNLbrsdHPcVRlQG67X9DMSw+/NirMtpVYPY+CPiBnSMNRsebg44SXdKljXphx91
+ KDk3QnP9BJzrLqLx45Dr+nKPpxkDRJUIH2k+RRbDRVdYe7hmgSezFgWNCwbM4atvCix0Q3ueI
+ SjgLd41vcxJ0rPtSrUKqCvNqbL21aST2ocDPSOZIwOmrbnWA3eowxMP14uD7owsAleKgDCLAt
+ CDaGl/uthLLybqOVnHOmMc0Ia0fD4P++5xDLq4MJujPJ0=
 
-On Thu, Jun 13, 2024 at 04:59:49PM +0100, Russell King (Oracle) wrote:
-> On Thu, Jun 13, 2024 at 03:50:58PM +0200, Linus Walleij wrote:
-> > On Thu, Jun 13, 2024 at 1:24 PM Christian Marangi <ansuelsmth@gmail.com> wrote:
-> > 
-> > > Sorry for asking again... but any news for this?
-> > >
-> > > I have also added the 2 patch here [1] [2].
-> > >
-> > > Been in incoming from a long time and I have seen other patch getting
-> > > accepted. Did I do something wrong in submitting the 2 patch?
-> > 
-> > Hm Russell must have had some concerns, Russell?
-> 
-> I've been snowed under for about the last six weeks - with only the
-> occasional day that isn't silly. It's that kind of frustrating snowed
-> under where each problem is a bit like a brick wall placed every 1m
-> and you're supposed to be doing a 100m sprint race - you can't see
-> the next brick wall until you've climbed over the first.
-> 
-> Whether I have time to read the mailing lists or not depends entirely
-> on what is happening on any particular day.
-> 
-> > If for nothing else I think some Tested-by:s would be appreciated,
-> > do we have some people who use this that can provide Tested-by
-> > tags?
-> 
-> Yes, tested-by's would be a really good idea, because my gut feeling
-> is that this change has moderate risk of causing regressions. I'm
-> not talking about "it works for me on the setup it's intended for"
-> I'm talking about other platforms.
-> 
-> I'm also wondering about distros, and what they're supposed to do
-> with the config option with their "universal" kernel that's
-> supposed to boot across as many platforms as possible, what they
-> should set the config option to, and what impact it has when enabled
-> on platforms that it isn't originally intended for.
-> 
-> I haven't really read much of the patch because I've been so busy,
-> so I may be being overly cautious. Given that I am quite busy, I
-> would appreciate a summary of the situation rather than being fed
-> with lots of results! In other words, the tested-bys, and "it works
-> on all the xyz platforms that we've testsed, nothing appears to have
-> regressed" would be ideal.
->
+=E2=80=A6
+> +++ b/drivers/android/binder.c
+=E2=80=A6
+> +static void try_shrink_dmap(struct binder_proc *proc)
+> +{
+=E2=80=A6
+> +	binder_proc_lock(proc);
+> +	nbits =3D dbitmap_shrink_nbits(&proc->dmap);
+> +	binder_proc_unlock(proc);
+=E2=80=A6
+> +	new =3D bitmap_zalloc(nbits, GFP_KERNEL);
+> +	binder_proc_lock(proc);
+> +	dbitmap_shrink(&proc->dmap, new, nbits);
+> +	binder_proc_unlock(proc);
+> +}
+=E2=80=A6
 
-The current patch are used downstream on the OpenWrt ipq806x target that
-is a mix of legacy (what this affects) and non legacy targets. (old
-bootloader support loading DTB from the image and older ones require it
-to be appended)
+Would you become interested to apply lock guards?
+https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/cleanup.h#=
+L124
 
-I think I need some help from the community to test this.
-
-I can also move these patches to our "generic" target on OpenWrt so that
-they will be enabled by every arm target we support.
-
-Anyway thanks for the feedback, my only concern was that I messed
-submitting the patch on the tracking system. Hope community can help
-with this since it's a big feature for legacy devices that was broken
-from a looong time (and only solution currently is to hardcode the PHY
-offset values)
-
--- 
-	Ansuel
+Regards,
+Markus
