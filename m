@@ -1,407 +1,167 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3899B13D529
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EDC283A12
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718271843; cv=none; b=moR5IoKzXzGW67HGJZG3J1JCzjlpjYqHJQVgbXcZEbMDyS9X+/IR1QPzOc9wWfr0kTDSxg+W0kf8E1yiV5IEYs8uVCn+k465a2l0b9vxzmZMBDexJkT9j/PPxkKZqwdiNbWpAi78OgfgtxfBLX5vIa/30uVxiR+G9DP41ZdZ384=
+	t=1718271952; cv=none; b=MALv9ZojgJAooSYd80HfILXoXuZRlw1aM+0gzkCukJ5r/gCvMvHvgI6YbrEhx/aGfj1orO67OB/iNAhEwhHXMG/rBPSPKXhXgex0n97BrpVcE+F6e5PtAG5aA0Y99hcKRrOZNu09rCQBHGL47asYmmFM2IifJJUJxY0nWMdGKkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718271843; c=relaxed/simple;
-	bh=gomJKyQwZcBRO7Pw5T+bCYMk+FZgxySizruZkVy7MBY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LESlBcSMsvn7moMtvxBcnUYcUkYAIV+oOoqIQ6byObqOLQjVTVqcMjKWmmHFVAKzzjeS3pLo/2WtjyDuveaIyIo3NVXC5AUmeSf+W0LwYHpLMH2O+wwIallIAg193Q9NBhgY93bLr5JXb6N2Am4N8iq0aGGIsKwfE7iSWC13RzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-80b7c11aaf9so238601241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 02:44:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718271840; x=1718876640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fGZpwvvFWoUM4hVcXQNXUXevJ3SayuXE1Zat2o0h0YY=;
-        b=aR7Ou7IesXUQrgIHCJixmKpD82lYZifSK6Uz7mPrY6OH/wF170zugrTuvD0v2SrcdI
-         25EdCaQqPU8R8CZldM25ryCdLFgnM4DPNG4/kj7FbRTWmihZJhtNyVXEDgrlWackEoFc
-         c+QuvMHbgEvuJqj4AENrI9ZzguAWgDjNaJ6PVjDuObKUN3g5Uv+0iq86qGrEjlSsdvXA
-         YC3KhtVmcbiYJvc9PH0timYekQq+T/NPp4iopqPU4OHKqHIeTTqLzO/ed+IyjnL/ZKK5
-         C301Mr2iNTX1tLGKXwSrSn7Pyrs2NBGuuxOnx5Pguj99s6yDCfVzVc7B1VLvn1TPzlPi
-         2EaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgJOsGYB4HFbdTQFD2yzz6mZvmXbyiEbT/dIRInmdUusxhwFTo6W2qDMMIFVN6XzN7RzdaEeop9Sg4fsgVNTNkxJHrNQT+RbqUDb5Z
-X-Gm-Message-State: AOJu0YzQ8X31KEjQNQ7FcFBZ8AOdDeVjs2NgtH/9N3WxiRYYJkVTCMXj
-	eRn2hV8CMSaoddiP1zxj369ImzTF6Jrur+PgS5BG7+/H+7vYqD4s5aGReXU1j3U4QkIhKXcc89Y
-	8cDJsxuaWMW+q98xpVqzQV4A4lXI=
-X-Google-Smtp-Source: AGHT+IGzVboPNn9QwP00HuEIScFGw9jAyxyp7d/HTvGYqatEmQgQOs87kiAZnvyqZ+VNoxlfAX7WDSMTcRpcUVhu3AU=
-X-Received: by 2002:a05:6122:6107:b0:4ed:145:348f with SMTP id
- 71dfb90a1353d-4ed07b90d72mr3768649e0c.12.1718271839964; Thu, 13 Jun 2024
- 02:43:59 -0700 (PDT)
+	s=arc-20240116; t=1718271952; c=relaxed/simple;
+	bh=SpDaa/PbNFuNoPtKhY62ianrBVgrywHyqQj33pLWZpA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h9ekz80TXwVjZvuS/HnU2XSQjN4QEP+gI5m9V96m1l6D6vc7+4GbaEY8rtyIZxbBlMecAudaUsTXcasmVdGv1y+6X5oxIWmSk8KnHqE8kJ1Xguye/A3Fd1J3oMY5q6t44xNg/tEsaA/Xc0AR0sAxQWhpm84A9AImzWVUdiWWPwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2AD61063;
+	Thu, 13 Jun 2024 02:46:13 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.44.128])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 871943F5A1;
+	Thu, 13 Jun 2024 02:45:46 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com,
+	ryan.roberts@arm.com,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64/mm: Drop ESR_ELx_FSC_TYPE
+Date: Thu, 13 Jun 2024 15:15:38 +0530
+Message-Id: <20240613094538.3263536-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612081216.1319089-1-zhai.he@nxp.com> <20240612114748.bf5983b50634f23d674bc749@linux-foundation.org>
- <CAGsJ_4wsAh8C08PXutYZx9xV3rLRwLG-E6Mq-JgoSO5LA1ns=A@mail.gmail.com>
- <AS1PR04MB9559D82F720BC9A64077186AEAC12@AS1PR04MB9559.eurprd04.prod.outlook.com>
- <CAGsJ_4zGRnGhn1zA1=H+TgqL8z59_Dy7x7YVKsKY0wRFt4tu9w@mail.gmail.com>
- <AS1PR04MB955915A33F184E141BCD69A2EAC12@AS1PR04MB9559.eurprd04.prod.outlook.com>
- <CAGsJ_4w=MYMOoQnY7c9nE-iCdzP9amCyYTkje-PNGYe35u+1Kg@mail.gmail.com>
- <AS1PR04MB955988579ADFC6B5CCC8BBB3EAC12@AS1PR04MB9559.eurprd04.prod.outlook.com>
- <CAGsJ_4wyQnAhzq_KoAoMp6g89DHgjKo3VfmE=o=g3HANGj6n+Q@mail.gmail.com> <AS1PR04MB95593F3D6C60573707DFFF0DEAC12@AS1PR04MB9559.eurprd04.prod.outlook.com>
-In-Reply-To: <AS1PR04MB95593F3D6C60573707DFFF0DEAC12@AS1PR04MB9559.eurprd04.prod.outlook.com>
-From: Barry Song <baohua@kernel.org>
-Date: Thu, 13 Jun 2024 21:43:48 +1200
-Message-ID: <CAGsJ_4xXwU0ebCPcwpC3PCOGwV4sZQAAzVTvFW+uuz4cwOnS4w@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v2] Supports to use the default CMA when the
- device-specified CMA memory is not enough.
-To: Zhai He <zhai.he@nxp.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "sboyd@kernel.org" <sboyd@kernel.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhipeng Wang <zhipeng.wang_1@nxp.com>, 
-	Jindong Yue <jindong.yue@nxp.com>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 8:49=E2=80=AFPM Zhai He <zhai.he@nxp.com> wrote:
->
-> > -----Original Message-----
-> > From: Barry Song <baohua@kernel.org>
-> > Sent: Thursday, June 13, 2024 3:38 PM
-> > To: Zhai He <zhai.he@nxp.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>; sboyd@kernel.org;
-> > linux-mm@kvack.org; linux-kernel@vger.kernel.org; Zhipeng Wang
-> > <zhipeng.wang_1@nxp.com>; Jindong Yue <jindong.yue@nxp.com>; Christoph
-> > Hellwig <hch@lst.de>
-> > Subject: Re: [EXT] Re: [PATCH v2] Supports to use the default CMA when =
-the
-> > device-specified CMA memory is not enough.
-> >
-> > Caution: This is an external email. Please take care when clicking link=
-s or
-> > opening attachments. When in doubt, report the message using the 'Repor=
-t this
-> > email' button
-> >
-> >
-> > On Thu, Jun 13, 2024 at 7:11=E2=80=AFPM Zhai He <zhai.he@nxp.com> wrote=
-:
-> > >
-> > > > -----Original Message-----
-> > > > From: Barry Song <baohua@kernel.org>
-> > > > Sent: Thursday, June 13, 2024 2:15 PM
-> > > > To: Zhai He <zhai.he@nxp.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>; sboyd@kernel.org;
-> > > > linux-mm@kvack.org; linux-kernel@vger.kernel.org; Zhipeng Wang
-> > > > <zhipeng.wang_1@nxp.com>; Jindong Yue <jindong.yue@nxp.com>;
-> > > > Christoph Hellwig <hch@lst.de>
-> > > > Subject: Re: [EXT] Re: [PATCH v2] Supports to use the default CMA
-> > > > when the device-specified CMA memory is not enough.
-> > > >
-> > > > Caution: This is an external email. Please take care when clicking
-> > > > links or opening attachments. When in doubt, report the message
-> > > > using the 'Report this email' button
-> > > >
-> > > >
-> > > > On Thu, Jun 13, 2024 at 5:32=E2=80=AFPM Zhai He <zhai.he@nxp.com> w=
-rote:
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Barry Song <baohua@kernel.org>
-> > > > > > Sent: Thursday, June 13, 2024 11:28 AM
-> > > > > > To: Zhai He <zhai.he@nxp.com>
-> > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>; sboyd@kernel.org=
-;
-> > > > > > linux-mm@kvack.org; linux-kernel@vger.kernel.org; Zhipeng Wang
-> > > > > > <zhipeng.wang_1@nxp.com>; Jindong Yue <jindong.yue@nxp.com>;
-> > > > > > Christoph Hellwig <hch@lst.de>
-> > > > > > Subject: Re: [EXT] Re: [PATCH v2] Supports to use the default
-> > > > > > CMA when the device-specified CMA memory is not enough.
-> > > > > >
-> > > > > > Caution: This is an external email. Please take care when
-> > > > > > clicking links or opening attachments. When in doubt, report th=
-e
-> > > > > > message using the 'Report this email' button
-> > > > > >
-> > > > > >
-> > > > > > On Thu, Jun 13, 2024 at 2:34=E2=80=AFPM Zhai He <zhai.he@nxp.co=
-m> wrote:
-> > > > > > >
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Barry Song <baohua@kernel.org>
-> > > > > > > > Sent: Thursday, June 13, 2024 5:37 AM
-> > > > > > > > To: Andrew Morton <akpm@linux-foundation.org>
-> > > > > > > > Cc: Zhai He <zhai.he@nxp.com>; sboyd@kernel.org;
-> > > > > > > > linux-mm@kvack.org; linux-kernel@vger.kernel.org;
-> > > > > > > > stable@vger.kernel.org; Zhipeng Wang
-> > > > > > > > <zhipeng.wang_1@nxp.com>; Jindong Yue <jindong.yue@nxp.com>=
-;
-> > > > > > > > Christoph Hellwig <hch@lst.de>
-> > > > > > > > Subject: [EXT] Re: [PATCH v2] Supports to use the default
-> > > > > > > > CMA when the device-specified CMA memory is not enough.
-> > > > > > > >
-> > > > > > > > Caution: This is an external email. Please take care when
-> > > > > > > > clicking links or opening attachments. When in doubt, repor=
-t
-> > > > > > > > the message using the 'Report this email' button
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > On Thu, Jun 13, 2024 at 6:47=E2=80=AFAM Andrew Morton
-> > > > > > > > <akpm@linux-foundation.org>
-> > > > > > > > wrote:
-> > > > > > > > >
-> > > > > > > > > On Wed, 12 Jun 2024 16:12:16 +0800 "zhai.he"
-> > > > > > > > > <zhai.he@nxp.com>
-> > > > > > wrote:
-> > > > > > > > >
-> > > > > > > > > > From: He Zhai <zhai.he@nxp.com>
-> > > > > > > > >
-> > > > > > > > > (cc Barry & Christoph)
-> > > > > > > > >
-> > > > > > > > > What was your reason for adding cc:stable to the email he=
-aders?
-> > > > > > > > > Does this address some serious problem?  If so, please
-> > > > > > > > > fully describe that problem.
-> > > > > > > > >
-> > > > > > > > > > In the current code logic, if the device-specified CMA
-> > > > > > > > > > memory allocation fails, memory will not be allocated
-> > > > > > > > > > from the
-> > > > default CMA area.
-> > > > > > > > > > This patch will use the default cma region when the
-> > > > > > > > > > device's specified CMA is not enough.
-> > > > > > > > > >
-> > > > > > > > > > In addition, the log level of allocation failure is cha=
-nged to debug.
-> > > > > > > > > > Because these logs will be printed when memory
-> > > > > > > > > > allocation from the device specified CMA fails, but if
-> > > > > > > > > > the allocation fails, it will be allocated from the
-> > > > > > > > > > default cma area. It can easily mislead
-> > > > > > developers'
-> > > > > > > > > > judgment.
-> > > > > > > >
-> > > > > > > > I am not convinced that this patch is correct. If
-> > > > > > > > device-specific CMA is too small, why not increase it in th=
-e device
-> > tree?
-> > > > > > > > Conversely, if the default CMA size is too large, why not
-> > > > > > > > reduce it via the cmdline?  CMA offers all kinds of flexibl=
-e
-> > > > > > > > configuration options based
-> > > > > > on users=E2=80=99 needs.
-> > > > > > > >
-> > > > > > > > One significant benefit of device-specific CMA is that it
-> > > > > > > > helps decrease fragmentation in the common CMA pool. While
-> > > > > > > > many devices allocate memory from the same pool, they have
-> > > > > > > > different memory requirements in terms of sizes and
-> > > > > > > > alignments. Occasions of memory allocation and release can
-> > > > > > > > lead to situations where the CMA pool has enough free space=
-,
-> > > > > > > > yet someone fails to obtain
-> > > > contiguous memory from it.
-> > > > > > > >
-> > > > > > > > This patch entirely negates the advantage we gain from
-> > > > > > > > device-specific
-> > > > CMA.
-> > > > > > > > My point is that instead of modifying the core code, please
-> > > > > > > > consider correcting your device tree or cmdline configurati=
-ons.
-> > > > > > > >
-> > > > > > > Because we enabled secure heap to support widevine DRM, and
-> > > > > > > secure heap requires security configuration, its starting
-> > > > > > > address cannot be specified arbitrarily, which causes the
-> > > > > > > default CMA to be reduced. So we
-> > > > > > reduced the CMA, but in order to avoid the impact of reducing
-> > > > > > the CMA, we used a multi-segment CMA and gave one segment to th=
-e
-> > VPU.
-> > > > > > >
-> > > > > > > However, under our memory configuration, the device-specific
-> > > > > > > CMA is not
-> > > > > > enough to support the VPU decoding high-resolution code streams=
-,
-> > > > > > so this patch is added so that the VPU can work properly.
-> > > > > > > Thanks.
-> > > > > >
-> > > > > > I don=E2=80=99t quite understand what you are saying. Why can=
-=E2=80=99t you
-> > > > > > increase VPU=E2=80=99s CMA size?
-> > > > > Thanks for your quick reply.
-> > > > > Because we added a secure heap to support Widevine DRM, this heap
-> > > > requires hardware protection, so its starting address cannot be
-> > > > specified arbitrarily. This causes the secure heap to occupy part o=
-f
-> > > > the default CMA, and the default CMA is therefore reduced, so in
-> > > > order to avoid default CMA Shrinking introduces other problems. We
-> > > > added a specific CMA area for the VPU. However, due to the large
-> > > > size of the secure heap and default CMA, There is no remaining memo=
-ry
-> > available to increase specific CMA for VPU.
-> > > >
-> > > > I assume the secure heap you are referring to is a section of memor=
-y
-> > > > that should only be accessed by TrustZone and not be visible to
-> > > > Linux running in non-secure mode. How do you allocate this secure h=
-eap
-> > from the default CMA?
-> > >
-> > > No, secure heap is a reserved memory, secure heap is not allocated fr=
-om CMA,
-> > secure heap has been reserved during the kernel startup phase.
-> > > And this reserved memory is protected by hardware. Only specific hard=
-ware
-> > and secure world can accessed it.
-> > > For example:
-> > > &{/reserved-memory/} {
-> > >         secure_region: secure {
-> > >                 compatible =3D "imx-secure-ion-pool";
-> > >                 reg =3D <0x0 0xA0000000 0 0x1EF00000>;
-> > >         };
-> > > };
-> > >
-> > > > Do you use the cma_alloc() APIs or the dma_alloc_coherent() APIs?
-> > > > Given that the VPU has its own device-specific CMA, why is this
-> > > > secure heap allocated from the default CMA instead of the VPU's CMA=
-?
-> > > >
-> > > The VPU driver will use dma_alloc_coherent() to allocate contiguous m=
-emory.
-> > The secure heap is not allocated from the CMA, but because the secure h=
-eap is
-> > enabled, it occupies some contiguous memory, causing the default CMA to=
- be
-> > reduced.
-> > >
-> > > > If this secure heap was allocated before the kernel booted, why did
-> > > > the kernel(your dts) fail to mark this area as nomap/reserved to
-> > > > prevent the default CMA from intersecting with it?
-> > > >
-> > > Secure heap does not intersect with the CMA.
-> > > for example:
-> > > before secure heap enabled:
-> > > 0xA000 0000 ~ 0xFFFFFFFF: default CMA
-> > > after secure heap enabled:
-> > > 0x9000 0000 ~0x9FFF FFFF is the CMA specified by VPU,
-> > > 0xA000 0000 ~0xAFFF FFFF is secure heap, (the start address cannot be
-> > specified arbitrarily, because this memory is protected by hardware, if=
- the start
-> > address is 0x9000 0000, uboot will use this memory, but uboot can't acc=
-ess this
-> > memory because of hardware protection. So we find a section of memory t=
-hat
-> > UBOOT will not use as secure heap.
-> > > Note: The memory of uboot can be adjusted, but avoiding the secure
-> > > heap will limit the memory range that uboot can use, causing problems
-> > > such as the uboot stack)
-> > > 0xB000 0000 ~0xFFFFFFFF is default CMA.
-> > > So default CMA is reduced.
-> >
-> > How is that related to your patch? I assume the default CMA is reduced =
-because
-> > you modified it in the DTS after enabling the secure heap, as the CMA s=
-ize is set
-> > by you. The default CMA size won't automatically decrease due to the se=
-cure
-> > heap. To me, 0xB0000000-0xFFFFFFFF(1.25GiB) is still too large a CMA.
-> >
->
-> Sorry, This example is just an example. In fact, the size of our default =
-CMA is less than 1.25GiB.
-> Our current memory distribution is as follows. Now the size of "c" (defau=
-lt CMA) could not meet the needs of our requirement. And "b" (reserved memo=
-ry for secure) is fixed, so we couldn't expand "c" (default CMA) through mo=
-dify DTS. Then we reserved "a" (specific CMA) for VPU. However, we have con=
-firmed with the multimedia team that the maximum size required is It is unc=
-ertain, so specify "a" for VPU to use first, and "c" for other devices that=
- require continuous memory. If "a" is not enough, use "c".
-> That's the purpose of this patch.
->         --------------------------------------------------
->         | a. VPU specific cma             |
->         --------------------------------------------------
->         | b. reserved memory for secure    |
->         ---------------------------------------------------
->     | c. default CMA                 |
->     ---------------------------------------------------
-> > >
+Fault status codes at page table level 0, 1, 2 and 3 for access, permission
+and translation faults are architecturally organized in a way, that masking
+out ESR_ELx_FSC_TYPE, fetches Level 0 status code for the respective fault.
 
-Ok, I understand your problem. Because B is enabled, you can't have C as la=
-rge
-as you would without B. So you add A, but A might have insufficient space f=
-or
-high-resolution video. You also don't know the exact size needed for A. In =
-the
-corner case of encoding/decoding high-resolution video, A might be insuffic=
-ient,
-forcing you to borrow memory from C.  Because B is situated between A and C=
-,
-creating a gap, you cannot merge A and C into a single default CMA.
+Helpers like esr_fsc_is_[translation|permission|access_flag]_fault() mask
+out ESR_ELx_FSC_TYPE before comparing against corresponding Level 0 status
+code as the kernel does not yet care about the page table level, the fault
+really occurred previously.
 
-This does indeed seem like a valid requirement. Please ensure to
-clearly describe
-the problem next time. However, as a general rule, allowing device-specific=
- CMAs
-to borrow from the default CMA is not advisable. This would undermine
-the reasons
-why we started supporting device-specific CMAs in the first place.
+This scheme is starting to crumble after FEAT_LPA2 when level -1 got added.
+Fault status code for translation fault at level -1 is 0x2B which does not
+follow ESR_ELx_FSC_TYPE, requiring esr_fsc_is_translation_fault() changes.
 
-So the problem is that memory holes may prevent the formation of large CMAs=
-.
+This changes above helpers to compare against individual fault status code
+values for each page table level and drop ESR_ELx_FSC_TYPE which is losing
+its value as a common mask.
 
-This situation raises a question: can we have two or more default CMAs due =
-to
-memory holes like B, which might hinder the system from obtaining a suffici=
-ently
-large default CMA?
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This applies on 6.10-rc3
 
-If you could define both A and C as default CMAs, you wouldn't require
-these kinds of
-fallbacks. Is it possible for you to make dma_contiguous_default_area
-a list rather
-than a global variant ?
+ arch/arm64/include/asm/esr.h | 42 +++++++++++++++++++++++++++---------
+ arch/arm64/mm/fault.c        |  4 ++--
+ 2 files changed, 34 insertions(+), 12 deletions(-)
 
-Another option is that we allow devices to have more than one memory-region=
-,
-we can use device tree to fallback.
-memory-region =3D <&mem1, &mem2>;
+diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+index 7abf09df7033..8cc0311d3fba 100644
+--- a/arch/arm64/include/asm/esr.h
++++ b/arch/arm64/include/asm/esr.h
+@@ -109,14 +109,23 @@
+ 
+ /* Shared ISS fault status code(IFSC/DFSC) for Data/Instruction aborts */
+ #define ESR_ELx_FSC		(0x3F)
+-#define ESR_ELx_FSC_TYPE	(0x3C)
+ #define ESR_ELx_FSC_LEVEL	(0x03)
+ #define ESR_ELx_FSC_EXTABT	(0x10)
+ #define ESR_ELx_FSC_MTE		(0x11)
+ #define ESR_ELx_FSC_SERROR	(0x11)
+-#define ESR_ELx_FSC_ACCESS	(0x08)
+-#define ESR_ELx_FSC_FAULT	(0x04)
+-#define ESR_ELx_FSC_PERM	(0x0C)
++#define ESR_ELx_FSC_ACCESS_L0	(0x08)
++#define ESR_ELx_FSC_ACCESS_L1	(0x09)
++#define ESR_ELx_FSC_ACCESS_L2	(0x0A)
++#define ESR_ELx_FSC_ACCESS_L3	(0x0B)
++#define ESR_ELx_FSC_FAULT_LN1	(0x2B)
++#define ESR_ELx_FSC_FAULT_L0	(0x04)
++#define ESR_ELx_FSC_FAULT_L1	(0x05)
++#define ESR_ELx_FSC_FAULT_L2	(0x06)
++#define ESR_ELx_FSC_FAULT_L3	(0x07)
++#define ESR_ELx_FSC_PERM_L0	(0x0C)
++#define ESR_ELx_FSC_PERM_L1	(0x0D)
++#define ESR_ELx_FSC_PERM_L2	(0x0E)
++#define ESR_ELx_FSC_PERM_L3	(0x0F)
+ #define ESR_ELx_FSC_SEA_TTW(n)	(0x14 + (n))
+ #define ESR_ELx_FSC_SECC	(0x18)
+ #define ESR_ELx_FSC_SECC_TTW(n)	(0x1c + (n))
+@@ -388,20 +397,33 @@ static inline bool esr_is_data_abort(unsigned long esr)
+ 
+ static inline bool esr_fsc_is_translation_fault(unsigned long esr)
+ {
+-	/* Translation fault, level -1 */
+-	if ((esr & ESR_ELx_FSC) == 0b101011)
+-		return true;
+-	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
++	esr = esr & ESR_ELx_FSC;
++
++	return (esr == ESR_ELx_FSC_FAULT_L3) ||
++	       (esr == ESR_ELx_FSC_FAULT_L2) ||
++	       (esr == ESR_ELx_FSC_FAULT_L1) ||
++	       (esr == ESR_ELx_FSC_FAULT_L0) ||
++	       (esr == ESR_ELx_FSC_FAULT_LN1);
+ }
+ 
+ static inline bool esr_fsc_is_permission_fault(unsigned long esr)
+ {
+-	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_PERM;
++	esr = esr & ESR_ELx_FSC;
++
++	return (esr == ESR_ELx_FSC_PERM_L3) ||
++	       (esr == ESR_ELx_FSC_PERM_L2) ||
++	       (esr == ESR_ELx_FSC_PERM_L1) ||
++	       (esr == ESR_ELx_FSC_PERM_L0);
+ }
+ 
+ static inline bool esr_fsc_is_access_flag_fault(unsigned long esr)
+ {
+-	return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_ACCESS;
++	esr = esr & ESR_ELx_FSC;
++
++	return (esr == ESR_ELx_FSC_ACCESS_L3) ||
++	       (esr == ESR_ELx_FSC_ACCESS_L2) ||
++	       (esr == ESR_ELx_FSC_ACCESS_L1) ||
++	       (esr == ESR_ELx_FSC_ACCESS_L0);
+ }
+ 
+ /* Indicate whether ESR.EC==0x1A is for an ERETAx instruction */
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 451ba7cbd5ad..7199aaff2a29 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -440,7 +440,7 @@ static void set_thread_esr(unsigned long address, unsigned long esr)
+ 			 */
+ 			esr &= ESR_ELx_EC_MASK | ESR_ELx_IL |
+ 				ESR_ELx_CM | ESR_ELx_WNR;
+-			esr |= ESR_ELx_FSC_FAULT;
++			esr |= ESR_ELx_FSC_FAULT_L0;
+ 			break;
+ 		case ESR_ELx_EC_IABT_LOW:
+ 			/*
+@@ -449,7 +449,7 @@ static void set_thread_esr(unsigned long address, unsigned long esr)
+ 			 * reported with that DFSC value, so we clear them.
+ 			 */
+ 			esr &= ESR_ELx_EC_MASK | ESR_ELx_IL;
+-			esr |= ESR_ELx_FSC_FAULT;
++			esr |= ESR_ELx_FSC_FAULT_L0;
+ 			break;
+ 		default:
+ 			/*
+-- 
+2.30.2
 
-My perspective is that I acknowledge your problem as a valid requirement.
-However, I find the approach to be too aggressive.
-
-> > > > >
-> > > > > > It seems you mean that only in some corner cases do you need a
-> > > > > > large CMA, but most of the time, you don=E2=80=99t need it to b=
-e this
-> > > > > > big? So you have
-> > > > to "borrow"
-> > > > > > memory from the
-> > > > > > default CMA. but why not move that portion from the default CMA
-> > > > > > to your VPU=E2=80=99s CMA?
-> > > > > >
-> > > > > This is a method, but because for VPU, the continuous memory size
-> > > > > allocated
-> > > > by the driver is based on the video stream, we cannot determine the
-> > > > maximum size of memory required by the VPU. This makes it impossibl=
-e
-> > > > for us to determine the size of the specific CMA assigned to the VP=
-U. Thanks.
-> > > >
-> > > > I don't understand how this can happen. You should precisely know
-> > > > the maximum size required for the VPU based on your multimedia
-> > > > pipeline and resolutions.
-> > > >
-> > > We cannot estimate the maximum contiguous memory required by the VPU
-> > because it depends on how the video is encoded.
-> > > Thanks very much.
-> >
-> > Yes, you can. Please ask your multimedia team; they will give you a num=
-ber.
-> >
-> > >
-> > > > I still don't understand your scenarios or the problem you are faci=
-ng.
-> > >
-> > >
-> >
-
-Thanks
-Barry
