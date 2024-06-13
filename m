@@ -1,226 +1,141 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9421F13BC0D;
-	Thu, 13 Jun 2024 07:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD513C3E2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718263875; cv=none; b=hHzPZN0hXkqC7qS3GAQhLhuzFdkxFV3hWmNFuvCVYQB2P34w43nge4kr+M3jOIVGKbqOYJYjhtHy7WDqZIu5qK2obmxD0eAsy9TxuWcOvbK+ETIyK5B7sRL0umgJ9YONSAaleydzELTLgnJrmMqVStKZiS4Zb+h/jZ9z8fQLvd0=
+	t=1718263962; cv=none; b=aJnaW1KicGzEKt0I1i6LSo1jZAGq7A2kXwxLVva9kLL3ComC7mhgUj2n9cLDYFddL+ybGerBo7kXPybjC0e9duemOpV99ieNkNVxFEN6ZiQ9aXGnStMKQ7W27wKuAVzFwdlU8abxZjxcaEQccX5sgrtiDM2+azpgI4x6Sp1qX/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718263875; c=relaxed/simple;
-	bh=CR2vCZ7zdRzX00CQQ42G136ShNwfvXLPurS6gkUl8JM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MVpLlAOyPgECSX5TE78QMk0q/BWZHXrpmY6a+tvOiMPEtE5p4O4cWar38+HecKUQfZivV10d/wUkLrEvhvgJ08jhkwH/MgsPh5Lx9ZcjWWt/RarccuvAGpxOuKX8F/KsbLYwMhPaPDQ0macaKPxUweza2i2WMns7DqsDepQOCF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kfbGT37W; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718263962; c=relaxed/simple;
+	bh=vEH4B/nWb5j8tsvBXi0MDsuLT+abhB89bcABJJ3eO6k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Py+XeLqj4NGWut0JOsbHpw+WN2Y3OvH7ga7xWRsqmUrjkQDcA3pclt0NCFDAy81NdzyOoL1cIWqZdIT4CBOW6STesErizs6NguGGUYntsfVhXA0Nx92MRbdS773jUetvX7t77wn/jbzuOF5rNDIwJe9rH7ZNoresi4WJAF0s0jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=hdWF+JAS; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfbGT37W"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b0745efaeeso3530356d6.1;
-        Thu, 13 Jun 2024 00:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hdWF+JAS"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-254efc9ca45so446398fac.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718263872; x=1718868672; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U5UwcZQgMEQIOp6sHS8xrUu+ogF+oqd67ekyxw5sYR8=;
-        b=kfbGT37Wp/FKNgCMJl4NNBl0M3jf5MxfYrQGnLXGEZYeQiP9D3mJP2/XsaKTwOYrZ9
-         zgIGrHQKmtQWaP5l+chM5u4qMV1+yElvHBD23mkDHfWvHMn0pagfp5gCBfvyfTrZ3su4
-         JLrJkq4cDYcKPjppSHbJTSaaMvMiyxNh7INPm2pG9ctN/kLvPcLIXVyQjBbWWZG2+XAj
-         SFN8ZRIYfV+fhx6CYOXPyp/jFw5wBj3Dz9GXfDt+0BWRioOi3Jtq3MPji2dEX0oiAENI
-         BFmwkv9kkY0IHUORerg9i8FLenqO2jwkvBdokbneqEbij2wXGbNp5pNRxwrCQfzIXpNd
-         okPA==
+        d=sifive.com; s=google; t=1718263960; x=1718868760; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYkT3MY6oOMowcuPeCUIoQ2Ndwhv5Wfye8oIKBe0p2g=;
+        b=hdWF+JASGzcCefhDgvhLcbGNNkwHsPGKbfEgtZNJofVNMWVhHUjr52gXyBYL9k00Mo
+         /rDrfcT4nQy4W31cviA4yC7Xl2tFEjn94WdGmvfyQNAK+I0sJ0D2BIc8MFnoEUj/xdHj
+         NgMLLpbRwqazmRo8ukQeoMjaNXGcKhbuS+Qu5s0eXg7SrEMAmvBCD4GV0xO/Du5Wu34n
+         nRR//bPiJ/mrj46NhDP3mDFCg3EeEEVXtDQbJiKfbj+CSAtJ3e0e/9+pmu7kuLkzroOF
+         cTfG9+jK6hEX9BRGS5hZsX4z/aV2j7gZ2s2mksSCnSsaQ9sQTT/5OTT7JkAdkw/+xxA4
+         n2uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718263872; x=1718868672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U5UwcZQgMEQIOp6sHS8xrUu+ogF+oqd67ekyxw5sYR8=;
-        b=dkIQjtacWdNCVUjdZyNZH1ndI9UERZIfcShRdD2sbF838wAyv0Ig4xLrmzDSuM/9cm
-         r9dkYJLEImlVy8J+stFmwletcLoI+S6136HAmzo0dM+iKaDsC2L0q2es/m4U79ZujWAQ
-         d4YLtK7ZKiBzhmy1Dfh+l5muJUDP8L6rLKhbYw20+frrQyRwgHBhKaT/zK0VvuXKjLiQ
-         9hfSqZfQvWfpssCS3Au0L/LA3UC4RmOMvbHOxeOc/uE8wC60mR2eTlqtDdRk7ruYX9rR
-         RvMdZGfohtq5FtNHrepbiM6RgpmQGIwGl7XiWUaCW8N1Ko4eKY8HAlKGuVCnygOg4l4V
-         nJeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjJsG1SmX+w706/c+prPXcOOm/zrBY5ahl536nnxNS5lm6HgkxAyIf9AvOhdj1yVz/WD1hO+QDIUirILF8DvCDTmt6uu3VDbxjIwgBCtaENWwayPqVHYl8KkNS7ISncTTeI8yu6VFCR+NV4u2pIjwV+OXZZu2NFDZZEBjuEl63wckYnjSSmA==
-X-Gm-Message-State: AOJu0Yzlih9cMILX0hL3aMpCW8UVrVw5jvkJH9aVj6ZWjq+KXmACPGg3
-	LHYkuM/Muvid4wqJQj/XFK/AvEDegNHUw2C+tJjHtJziZNIW2rCwHwrMLwGowKhW/BYUmczpLzy
-	GSmcVh3CXV8LphusbJhHwZ4Lod3c=
-X-Google-Smtp-Source: AGHT+IFbpfSFMJuePaJond8yuZhV+5vlXbm32Wex30d26dnEELli5NckMHvLs+Y0Jk01EnL5twKPzTrAxlrNY5sg50U=
-X-Received: by 2002:a05:6214:4a89:b0:6b0:825e:ab71 with SMTP id
- 6a1803df08f44-6b191778be9mr51179626d6.1.1718263872153; Thu, 13 Jun 2024
- 00:31:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718263960; x=1718868760;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FYkT3MY6oOMowcuPeCUIoQ2Ndwhv5Wfye8oIKBe0p2g=;
+        b=Ywl1KHRPglWUddkYatC1RmllHthNrEDHTx9mq9V5ekcW+9Q30ijG1Z0pmppn3mw4IW
+         upfynRxccw7VjcfXx3z4kvZdT+EuPijmh8xaoIFrcazcG8AyL23RiYxAX8/bJiaWhkQV
+         baHc5ZjnPzK5t6VPttdjThLIpvq46wGkU0pfsKz6nMOAZ+VGHAB4fheFVpMFLsvH4Y0e
+         LtUgqkUMfXjwNd4qTNZC2QpMR6PR6zkzJhSMlJ7uFG4cL3qoXc59DAZ75/FHUivDBzgt
+         t6RedTFa0CNd7Y2fv76lx9XgFuTNRYaos75JrvFmCZpKjGUIaaiczGjoD86+nu803o8N
+         Kp+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUdMFsO9bhy7Szyw/Flj7kktLXhFPMr/UwVJxcQez0snNrr+Wcok3Gyq3psQJbAiDM1cRd5jgPXDI22z8ZrMATZCGx+rZxjXqFcCHR
+X-Gm-Message-State: AOJu0YxdEQDZ2hmzaNeCF+Evo1QJxduKKEQbCwosbwXMEhi8LMSPKZ0O
+	RvjCXUGSQ2PxlgRjA4jSAyyWDP5hGgy3EC686orAIMD0xT5dOL1sS7jcvMOx2xs=
+X-Google-Smtp-Source: AGHT+IGmYhRnTeJ1bd7J2EL+xnsQNgi//5OJtSEKyWJEXOiAjofEj7fKYDnP/Ta8QspMsNmDQvrm/A==
+X-Received: by 2002:a05:6870:392b:b0:254:8006:8e06 with SMTP id 586e51a60fabf-25514c94529mr4505658fac.31.1718263960249;
+        Thu, 13 Jun 2024 00:32:40 -0700 (PDT)
+Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc78a1a0sm730028b3a.0.2024.06.13.00.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 00:32:39 -0700 (PDT)
+From: Andy Chiu <andy.chiu@sifive.com>
+Subject: [PATCH 0/8] riscv: ftrace: atmoic patching and preempt
+ improvements
+Date: Thu, 13 Jun 2024 15:11:05 +0800
+Message-Id: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171817619547.14261.975798725161704336@noble.neil.brown.name> <20240612-nennung-ungnade-ae9bdc5f8c4c@brauner>
-In-Reply-To: <20240612-nennung-ungnade-ae9bdc5f8c4c@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 13 Jun 2024 10:31:00 +0300
-Message-ID: <CAOQ4uxgSje5Trq7CySjf7M6F92y3J2NNZihP1jzQU2n-2RNKSA@mail.gmail.com>
-Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
- ->atomic_open used.
-To: Christian Brauner <brauner@kernel.org>, NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	James Clark <james.clark@arm.com>, ltp@lists.linux.it, linux-nfs@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAImbamYC/x3MMQqAMAxA0atIZgOtFkGvIg6hiZqlSitFkd7d4
+ viG/19IElUSTM0LUbImPUKFbRvwO4VNULkaOtM5M9geWTJS4McjPwHXK5IXzA5HZ9mRMUJ2hFq
+ fUVa9//O8lPIBP9tutWkAAAA=
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li <zong.li@sifive.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Puranjay Mohan <puranjay@kernel.org>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>, 
+ Evgenii Shatokhin <e.shatokhin@yadro.com>
+X-Mailer: b4 0.12.4
 
-On Wed, Jun 12, 2024 at 4:53=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Wed, Jun 12, 2024 at 05:09:55PM +1000, NeilBrown wrote:
-> >
-> > When a file is opened and created with open(..., O_CREAT) we get
-> > both the CREATE and OPEN fsnotify events and would expect them in that
-> > order.   For most filesystems we get them in that order because
-> > open_last_lookups() calls fsnofify_create() and then do_open() (from
-> > path_openat()) calls vfs_open()->do_dentry_open() which calls
-> > fsnotify_open().
-> >
-> > However when ->atomic_open is used, the
-> >    do_dentry_open() -> fsnotify_open()
-> > call happens from finish_open() which is called from the ->atomic_open
-> > handler in lookup_open() which is called *before* open_last_lookups()
-> > calls fsnotify_create.  So we get the "open" notification before
-> > "create" - which is backwards.  ltp testcase inotify02 tests this and
-> > reports the inconsistency.
-> >
-> > This patch lifts the fsnotify_open() call out of do_dentry_open() and
-> > places it higher up the call stack.  There are three callers of
-> > do_dentry_open().
-> >
-> > For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-> > directly in that caller so there should be no behavioural change.
-> >
-> > For finish_open() there are two cases:
-> >  - finish_open is used in ->atomic_open handlers.  For these we add a
-> >    call to fsnotify_open() at the top of do_open() if FMODE_OPENED is
-> >    set - which means do_dentry_open() has been called.
-> >  - finish_open is used in ->tmpfile() handlers.  For these a similar
-> >    call to fsnotify_open() is added to vfs_tmpfile()
-> >
-> > With this patch NFSv3 is restored to its previous behaviour (before
-> > ->atomic_open support was added) of generating CREATE notifications
-> > before OPEN, and NFSv4 now has that same correct ordering that is has
-> > not had before.  I haven't tested other filesystems.
-> >
-> > Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC =
-correctly.")
+This series makes atmoic code patching possible in riscv ftrace. A
+direct benefit of this is that we can get rid of stop_machine() when
+patching function entries. This also makes it possible to run ftrace
+with full kernel preemption. Before this series, the kernel initializes
+patchable function entries to NOP4 + NOP4. To start tracing, it updates
+entries to AUIPC + JALR while holding other cores in stop_machine.
+stop_machine() is required because it is impossible to update 2
+instructions, and be seen atomically. And preemption must have to be
+prevented, as kernel preemption allows process to be scheduled out while
+executing on one of these instruction pairs.
 
-I think it is better to add (also?)
-Fixes: 7b8c9d7bb457 ("fsnotify: move fsnotify_open() hook into
-do_dentry_open()")
-because this is when the test case was regressed for other atomic_open() fs
+This series addresses the problem by initializing the first NOP4 to
+AUIPC. So, atmoic patching is possible because the kernel only has to
+update one instruction. As long as the instruction is naturally aligned,
+then it is expected to be updated atomically.
 
-> > Reported-by: James Clark <james.clark@arm.com>
-> > Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d8c=
-8@arm.com
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
->
-> We should take this is a bugfix because it doesn't change behavior.
->
+However, the address range of the ftrace trampoline is limited to +-2K
+from ftrace_caller after appplying this series. This issue is expected
+to be solved by Puranjay's CALL_OPS, where it adds 8B naturally align
+data in front of pacthable functions and can  use it to direct execution
+out to any custom trampolines.
 
-I agree.
-I would love for this to be backported to at least v6.9.y
-because FAN_CREATE events supported on fuse,nfs, (zero f_fsid)
-only since v6.8, which triggered my fix to fanotify16 LTP test.
+The series is composed by two parts. The first part (1-3) cleans up
+existing issues that was found during testing of and not caused by the
+implementation. The second part modifies the ftrace code patching
+mechanism (4-6) as mentioned above. Then prepare ftrace to be able to
+run with kernel preemption (7,8)
 
-> But then we should follow this up with a patch series that tries to
-> rectify the open/close imbalance because I find that pretty ugly. That's
-> at least my opinion.
->
-> We should aim to only generate an open event when may_open() succeeds
-> and don't generate a close event when the open has failed. Maybe:
->
-> +#ifdef CONFIG_FSNOTIFY
-> +#define file_nonotify(f) ((f)->f_mode |=3D __FMODE_NONOTIFY)
-> +#else
-> +#define file_nonotify(f) ((void)(f))
-> +#endif
->
-> will do.
+---
+Andy Chiu (8):
+      riscv: stacktrace: convert arch_stack_walk() to noinstr
+      tracing: do not trace kernel_text_address()
+      riscv: ftrace: support fastcc in Clang for WITH_ARGS
+      riscv: ftrace: align patchable functions to 4 Byte boundary
+      riscv: ftrace: prepare ftrace for atomic code patching
+      riscv: ftrace: do not use stop_machine to update code
+      riscv: vector: Support calling schedule() for preemptible Vector
+      riscv: ftrace: support PREEMPT
 
-Why bother with the ifdef? __FMODE_NONOTIFY is always defined.
+ arch/riscv/Kconfig                 |   3 +-
+ arch/riscv/Makefile                |   7 +-
+ arch/riscv/include/asm/ftrace.h    |  11 +++
+ arch/riscv/include/asm/processor.h |   5 ++
+ arch/riscv/include/asm/vector.h    |  22 +++++-
+ arch/riscv/kernel/asm-offsets.c    |   7 ++
+ arch/riscv/kernel/ftrace.c         | 133 ++++++++++++++++---------------------
+ arch/riscv/kernel/mcount-dyn.S     |  25 +++++--
+ arch/riscv/kernel/stacktrace.c     |   2 +-
+ kernel/extable.c                   |   4 +-
+ 10 files changed, 129 insertions(+), 90 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240613-dev-andyc-dyn-ftrace-v4-941d4a00ea19
 
-Maybe something like this (untested partial patch):
+Best regards,
+-- 
+Andy Chiu <andy.chiu@sifive.com>
 
-
-+static inline int fsnotify_open_error(struct file *f, int error)
-+{
-+       /*
-+        * Once we return a file with FMODE_OPENED, __fput() will call
-+        * fsnotify_close(), so we need to either call fsnotify_open() or
-+        * set __FMODE_NONOTIFY to suppress fsnotify_close() for symmetry.
-+        */
-+       if (error)
-+               f->f_mode |=3D __FMODE_NONOTIFY;
-+       else
-+               fsnotify_open(f);
-+       return error;
-+}
-+
- static int do_dentry_open(struct file *f,
-                          int (*open)(struct inode *, struct file *))
- {
-@@ -1004,11 +1018,6 @@ static int do_dentry_open(struct file *f,
-                }
-        }
-
--       /*
--        * Once we return a file with FMODE_OPENED, __fput() will call
--        * fsnotify_close(), so we need fsnotify_open() here for symmetry.
--        */
--       fsnotify_open(f);
-        return 0;
-
- cleanup_all:
-@@ -1085,8 +1094,11 @@ EXPORT_SYMBOL(file_path);
-  */
- int vfs_open(const struct path *path, struct file *file)
- {
-+       int error;
-+
-        file->f_path =3D *path;
--       return do_dentry_open(file, NULL);
-+       error =3D do_dentry_open(file, NULL);
-+       return fsnotify_open_error(file, error);
- }
-
- struct file *dentry_open(const struct path *path, int flags,
-@@ -1175,6 +1187,7 @@ struct file *kernel_file_open(const struct path
-*path, int flags,
-
-        f->f_path =3D *path;
-        error =3D do_dentry_open(f, NULL);
-+       fsnotify_open_error(f, error);
-        if (error) {
-                fput(f);
-                f =3D ERR_PTR(error);
-
-
->
-> Basic open permissions failing should count as failure to open and thus
-> also turn of a close event.
->
-> The somewhat ugly part is imho that security hooks introduce another
-> layer of complexity. While we do count security_file_permission() as
-> a failure to open we wouldn't e.g., count security_file_post_open() as a
-> failure to open (Though granted here that "*_post_open()" makes it
-> easier.). But it is really ugly that LSMs get to say "no" _after_ the
-> file has been opened. I suspect this is some IMA or EVM thing where they
-> hash the contents or something but it's royally ugly and I complained
-> about this before. But maybe such things should just generate an LSM
-> layer event via fsnotify in the future (FSNOTIFY_MAC) or something...
-> Then userspace can see "Hey, the VFS said yes but then the MAC stuff
-> said no."
-
-Not sure what IMA/EVM needs so cannot comment about this proposal.
-
-Thanks,
-Amir.
