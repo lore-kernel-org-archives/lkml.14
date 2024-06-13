@@ -1,345 +1,280 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD43013D8A1;
-	Thu, 13 Jun 2024 09:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B0713E024;
+	Thu, 13 Jun 2024 09:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718272193; cv=none; b=iP/5W7mcbqW1LiN8uL+Oio78xmvtxGA7mFGzp7Sbk+WlqMt20yraaZZ2LHSCe6XAd73Jsgnw17UJ5y1OM2CGfwjwrQNsdi9bwjvBLtOcBYzxStEjLNFS2wd8JuOganqQ2pn+WjY+iEJkoKQ6VUYFANHLv951HMBlSGDmpK7LblY=
+	t=1718272223; cv=none; b=Kt5bMobxVPTcwNvU8/HEI0LuMrzEKtq6/oGjp67bCDs5yYwYH08cvqUtbwcgxpiN9ddwJ3V3yOURQwAjKfh/wLii5MPfAibJINNai2RnodeMqOyBPNfJyvf6/pzdtPhCO3d2yGa8bjU/4rg/SwEJiUs2TholFDyRzCTg+9nedlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718272193; c=relaxed/simple;
-	bh=chr9JA/bnKpL3g4g4rv7ud4C6VS38QLsi8tMH8cl5g0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YCXX3Y1GwVN3HuPRm4pGvGYP84q+sOVKo/YJQdi/71ufxcHH8+PPVebjxr2G1WQSkNnb5kanaQH3WyVdtalnJ2SdWQVVYALbQGG3u83otN3TOv914JvDrCmyAjmOvOTQPce7p6uTV+FrEWJ57Z3q6KIW6K2VipjH7CmQCxNJFI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W0HbX22lCz2CkML;
-	Thu, 13 Jun 2024 17:46:00 +0800 (CST)
-Received: from kwepemd500010.china.huawei.com (unknown [7.221.188.84])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFB821402CA;
-	Thu, 13 Jun 2024 17:49:48 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd500010.china.huawei.com (7.221.188.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 13 Jun 2024 17:49:48 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Thu, 13 Jun 2024 17:49:48 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
-	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
-	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH 1/2] perf: support specify vdso path in cmdline
-Thread-Topic: [PATCH 1/2] perf: support specify vdso path in cmdline
-Thread-Index: AQHavVvgPApptK0OsE6+S63iYUbWKrHE1RgAgACeKQA=
-Date: Thu, 13 Jun 2024 09:49:48 +0000
-Message-ID: <1e17854b16fe46a4b384b6ddec05029a@huawei.com>
-References: <20240613063510.348692-1-changbin.du@huawei.com>
- <20240613063510.348692-2-changbin.du@huawei.com>
- <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
-In-Reply-To: <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <71BFC53452BD0846B1C74A7511D4179B@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718272223; c=relaxed/simple;
+	bh=CiS/vwgvhI96k1n3BHULEcR1iEwkD4iIpW9CfsgBXrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tL0kU7foUjd1EkYK0Hdj7AuqeExguI2nElb5jpRmk4G5uLH8cJji3cz0R6lbRfdCL+QZHpFf4MjsHIbqIbZ0tmbahzLXqqfdMHh8Qgxls8LtVxGxf1iSaHwfrpPkDiB4EcG2G0TnMZV1a5w4CgVGtwufRdM1L3Mjn2hyR0dvODw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com; spf=pass smtp.mailfrom=yandex.com; dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b=Lz7ebCIu; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b="Lz7ebCIu"
+Received: from mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:298c:0:640:7729:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 326E861317;
+	Thu, 13 Jun 2024 12:44:35 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Vicprp1Oca60-NKeaeh3H;
+	Thu, 13 Jun 2024 12:44:33 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.com; s=mail;
+	t=1718271874; bh=rXDnmJ5ZQOUO+9FQYV87xXfZpc46R3cPAarAmqFfOiA=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=Lz7ebCIu5oUOLBGf+eWcXQ5AFXnNvRxLl6ZQnVz9AUfKAP28kEEi1tE1S0i5AaWFc
+	 m5ri4Y5j79nsndV76J15Y4Gs6PE76abROtAXGJ222vO+PVUzo3htJ30mH7XXqPVxRe
+	 Z9JQvUcYgzr5EQ1sfY95eHQX5PhyroLRur5AFFQo=
+Authentication-Results: mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.com
+Message-ID: <cc66cca1-33db-4f30-afcf-d256a959896b@yandex.com>
+Date: Thu, 13 Jun 2024 11:44:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] dt-bindings: phy: rockchip-emmc-phy: Convert to
+ dtschema
+To: Shresth Prasad <shresthprasad7@gmail.com>, vkoul@kernel.org,
+ kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ heiko@sntech.de, sebastian.reichel@collabora.com, s.hauer@pengutronix.de,
+ cristian.ciocaltea@collabora.com, andy.yan@rock-chips.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ javier.carrasco.cruz@gmail.com
+References: <20240613085812.4020-2-shresthprasad7@gmail.com>
+Content-Language: en-US
+From: Johan Jonker <jbx6244@yandex.com>
+In-Reply-To: <20240613085812.4020-2-shresthprasad7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 11:23:26AM +0300, Adrian Hunter wrote:
-> On 13/06/24 09:35, Changbin Du wrote:
-> > The vdso dumped from process memory (in buildid-cache) lacks debugging
-> > info. To annotate vdso symbols with source lines we need specify a
-> > debugging version.
-> >=20
-> > For x86, we can find them from your local build as
-> > arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
-> > /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
-> > the buildid has to match.
-> >=20
-> > $ sudo perf record -a
-> > $ sudo perf report --objdump=3Dllvm-objdump \
-> >   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.s=
-o.dbg
-> >=20
-> > When doing cross platform analysis, we also need specify the vdso path =
-if
-> > we are interested in its symbols.
->=20
-> We already have logic to find debug files, and to deal with a symbol sour=
-ce
-> (syms_ss) and runtime symbol source (runtime_ss).
->=20
-> Can't we make that work transparently for vdso so that the user does
-> not have to.
->
-For Ubuntu, we can find the debug files of vdso in
-/lib/modules/<version>/vdso/vdso{32,64}.so. These two are debug version.
 
-For local build, seems vdso{32,64}.so.dbg are not installed in /lib/modules=
-/ nor
-other locations.
 
-> >=20
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > ---
-> >  tools/perf/builtin-annotate.c |  2 +
-> >  tools/perf/builtin-c2c.c      |  2 +
-> >  tools/perf/builtin-inject.c   |  2 +
-> >  tools/perf/builtin-report.c   |  2 +
-> >  tools/perf/builtin-script.c   |  2 +
-> >  tools/perf/builtin-top.c      |  2 +
-> >  tools/perf/util/symbol.c      | 74 +++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/symbol_conf.h |  5 +++
-> >  8 files changed, 91 insertions(+)
-> >=20
-> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotat=
-e.c
-> > index 50d2fb222d48..ff466882065d 100644
-> > --- a/tools/perf/builtin-annotate.c
-> > +++ b/tools/perf/builtin-annotate.c
-> > @@ -742,6 +742,8 @@ int cmd_annotate(int argc, const char **argv)
-> >  		   "file", "vmlinux pathname"),
-> >  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
-> >  		    "load module symbols - WARNING: use only with -k and LIVE kernel=
-"),
-> > +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  	OPT_BOOLEAN('l', "print-line", &annotate_opts.print_lines,
-> >  		    "print matching source lines (may be slow)"),
-> >  	OPT_BOOLEAN('P', "full-paths", &annotate_opts.full_path,
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index c157bd31f2e5..4764f9139661 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -3018,6 +3018,8 @@ static int perf_c2c__report(int argc, const char =
-**argv)
-> >  	const struct option options[] =3D {
-> >  	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
-> >  		   "file", "vmlinux pathname"),
-> > +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  	OPT_STRING('i', "input", &input_name, "file",
-> >  		   "the input file to process"),
-> >  	OPT_INCR('N', "node-info", &c2c.node_info,
-> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> > index a212678d47be..e774e83d0a0f 100644
-> > --- a/tools/perf/builtin-inject.c
-> > +++ b/tools/perf/builtin-inject.c
-> > @@ -2247,6 +2247,8 @@ int cmd_inject(int argc, const char **argv)
-> >  			    "don't load vmlinux even if found"),
-> >  		OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name, "file",
-> >  			   "kallsyms pathname"),
-> > +		OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  		OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
-> >  		OPT_CALLBACK_OPTARG(0, "itrace", &inject.itrace_synth_opts,
-> >  				    NULL, "opts", "Instruction Tracing options\n"
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index 69618fb0110b..a64b48460dce 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -1324,6 +1324,8 @@ int cmd_report(int argc, const char **argv)
-> >                      "don't load vmlinux even if found"),
-> >  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
-> >  		   "file", "kallsyms pathname"),
-> > +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"=
-),
-> >  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
-> >  		    "load module symbols - WARNING: use only with -k and LIVE kernel=
-"),
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index c16224b1fef3..2e358922a8d1 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -3965,6 +3965,8 @@ int cmd_script(int argc, const char **argv)
-> >  		   "file", "vmlinux pathname"),
-> >  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
-> >  		   "file", "kallsyms pathname"),
-> > +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
-> >  		    "When printing symbols do not display call chain"),
-> >  	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > index 1d6aef51c122..a3cce4e76eb9 100644
-> > --- a/tools/perf/builtin-top.c
-> > +++ b/tools/perf/builtin-top.c
-> > @@ -1479,6 +1479,8 @@ int cmd_top(int argc, const char **argv)
-> >  		   "file", "kallsyms pathname"),
-> >  	OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
-> >  		    "hide kernel symbols"),
-> > +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> > +		     parse_vdso_pathnames),
-> >  	OPT_CALLBACK('m', "mmap-pages", &opts->mmap_pages, "pages",
-> >  		     "number of mmap data pages", evlist__parse_mmap_pages),
-> >  	OPT_INTEGER('r', "realtime", &top.realtime_prio,
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 9e5940b5bc59..8d040039a7ce 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -19,6 +19,7 @@
-> >  #include "build-id.h"
-> >  #include "cap.h"
-> >  #include "dso.h"
-> > +#include "vdso.h"
-> >  #include "util.h" // lsdir()
-> >  #include "debug.h"
-> >  #include "event.h"
-> > @@ -44,6 +45,7 @@
-> > =20
-> >  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
-> >  static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map=
-);
-> > +static int dso__load_vdso_sym(struct dso *dso, struct map *map);
-> >  static bool symbol__is_idle(const char *name);
-> > =20
-> >  int vmlinux_path__nr_entries;
-> > @@ -1833,6 +1835,12 @@ int dso__load(struct dso *dso, struct map *map)
-> >  		goto out;
-> >  	}
-> > =20
-> > +	if (dso__is_vdso(dso)) {
-> > +		ret =3D dso__load_vdso_sym(dso, map);
-> > +		if (ret > 0)
-> > +			goto out;
-> > +	}
-> > +
-> >  	dso__set_adjust_symbols(dso, false);
-> > =20
-> >  	if (perfmap) {
-> > @@ -2349,6 +2357,72 @@ static int vmlinux_path__init(struct perf_env *e=
-nv)
-> >  	return -1;
-> >  }
-> > =20
-> > +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
-> > +			 const char *arg, int unset __maybe_unused)
-> > +{
-> > +	char *tmp, *tok, *str =3D strdup(arg);
-> > +	unsigned int i =3D 0;
-> > +
-> > +	for (tok =3D strtok_r(str, ",", &tmp); tok && i < ARRAY_SIZE(symbol_c=
-onf.vdso_name);
-> > +	     tok =3D strtok_r(NULL, ",", &tmp)) {
-> > +		symbol_conf.vdso_name[i++] =3D strdup(tok);
-> > +	}
-> > +
-> > +	free(str);
-> > +	return 0;
-> > +}
-> > +
-> > +static int dso__load_vdso(struct dso *dso, struct map *map,
-> > +			  const char *vdso)
-> > +{
-> > +	int err =3D -1;
-> > +	struct symsrc ss;
-> > +	char symfs_vdso[PATH_MAX];
-> > +
-> > +	if (vdso[0] =3D=3D '/')
-> > +		snprintf(symfs_vdso, sizeof(symfs_vdso), "%s", vdso);
-> > +	else
-> > +		symbol__join_symfs(symfs_vdso, vdso);
-> > +
-> > +	if (symsrc__init(&ss, dso, symfs_vdso, DSO_BINARY_TYPE__SYSTEM_PATH_D=
-SO))
-> > +		return -1;
-> > +
-> > +	/*
-> > +	 * dso__load_sym() may copy 'dso' which will result in the copies hav=
-ing
-> > +	 * an incorrect long name unless we set it here first.
-> > +	 */
-> > +	dso__set_long_name(dso, vdso, false);
-> > +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> > +
-> > +	err =3D dso__load_sym(dso, map, &ss, &ss, 0);
-> > +	symsrc__destroy(&ss);
-> > +
-> > +	if (err > 0) {
-> > +		dso__set_loaded(dso);
-> > +		pr_debug("Using %s for %s symbols\n", symfs_vdso, dso__short_name(ds=
-o));
-> > +	}
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +static int dso__load_vdso_sym(struct dso *dso, struct map *map)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (!dso__is_vdso(dso))
-> > +		return -1;
-> > +
-> > +	for (unsigned int i =3D 0; i < ARRAY_SIZE(symbol_conf.vdso_name); i++=
-) {
-> > +		if (symbol_conf.vdso_name[i] !=3D NULL) {
-> > +			ret =3D dso__load_vdso(dso, map, symbol_conf.vdso_name[i]);
-> > +			if (ret > 0)
-> > +				return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return -1;
-> > +}
-> > +
-> >  int setup_list(struct strlist **list, const char *list_str,
-> >  		      const char *list_name)
-> >  {
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_con=
-f.h
-> > index c114bbceef40..108356e3c981 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -3,6 +3,7 @@
-> >  #define __PERF_SYMBOL_CONF 1
-> > =20
-> >  #include <stdbool.h>
-> > +#include <subcmd/parse-options.h>
-> > =20
-> >  struct strlist;
-> >  struct intlist;
-> > @@ -55,6 +56,7 @@ struct symbol_conf {
-> >  	const char	*default_guest_vmlinux_name,
-> >  			*default_guest_kallsyms,
-> >  			*default_guest_modules;
-> > +	const char	*vdso_name[2];
-> >  	const char	*guestmount;
-> >  	const char	*dso_list_str,
-> >  			*comm_list_str,
-> > @@ -85,4 +87,7 @@ struct symbol_conf {
-> > =20
-> >  extern struct symbol_conf symbol_conf;
-> > =20
-> > +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
-> > +			 const char *arg, int unset __maybe_unused);
-> > +
-> >  #endif // __PERF_SYMBOL_CONF
->=20
->=20
+On 6/13/24 10:58, Shresth Prasad wrote:
+> Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
+> for validation.
+> 
+> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+> ---
 
---=20
-Cheers,
-Changbin Du
+Add ack request from phy maintainer here.
+
+> Changes in v3:
+>     - fix `reg` in example being too long
+> 
+> Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
+> and `rockchip/rk3399-pinebook-pro.dtb`.
+> 
+>  .../bindings/phy/rockchip,emmc-phy.yaml       | 79 +++++++++++++++++++
+>  .../bindings/phy/rockchip-emmc-phy.txt        | 43 ----------
+>  .../devicetree/bindings/soc/rockchip/grf.yaml |  2 +-
+>  3 files changed, 80 insertions(+), 44 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+> new file mode 100644
+> index 000000000000..85d74b343991
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+> @@ -0,0 +1,79 @@
+
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+
+You are converting an existing document, so GPL 2 only.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/rockchip,emmc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip EMMC PHY
+> +
+> +maintainers:
+
+> +  - Shresth Prasad <shresthprasad7@gmail.com>
+
+Prefer to add someone that can immediately respond if Rob H. wants to delete something.
+Use the Rockchip DT maintainer here:
+  - Heiko Stuebner <heiko@sntech.de>
+
+> +
+> +properties:
+
+> +  "#phy-cells":
+> +    const: 0
+
+Move this to the bottom of this list.
+
+> +
+> +  compatible:
+> +    const: rockchip,rk3399-emmc-phy
+> +
+> +  reg:
+
+> +    description:
+> +      PHY register address offset and length in "general register files"
+
+remove
+
+> +    maxItems: 1
+> +
+> +  clock-names:
+
+> +    description: |
+> +      Although this is not a required property (because most boards can get
+> +      basic functionality without having access to it), it is strongly
+> +      suggested.
+
+remove
+No need for descriptions if there's just 1 clock.
+
+> +    const: emmcclk
+> +
+> +  clocks:
+
+> +    description:
+> +      Should have a phandle to the card clock exported by the SDHCI driver.
+
+remove 
+
+> +    maxItems: 1
+> +
+> +  drive-impedance-ohm:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Specifies the drive impedance in Ohm.
+> +    enum: [33, 40, 50, 66, 100]
+> +    default: 50
+> +
+> +  rockchip,enable-strobe-pulldown:
+> +    type: boolean
+> +    description: |
+> +      Enable internal pull-down for the strobe
+> +      line.  If not set, pull-down is not used.
+> +
+> +  rockchip,output-tapdelay-select:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Specifies the phyctrl_otapdlysec register.
+> +    default: 0x4
+> +    maximum: 0xf
+> +
+> +required:
+
+> +  - "#phy-cells"
+
+Move at the bottom of this list.
+
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    grf: syscon@ff770000 {
+> +      compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> +      reg = <0xff770000 0x10000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      emmcphy: phy@f780 {
+
+> +        #phy-cells = <0>;
+
+Move at the bottom of this list.
+Order of Properties in Device Node:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/dts-coding-style.rst#n112
+
+> +        compatible = "rockchip,rk3399-emmc-phy";
+> +        reg = <0xf780 0x20>;
+> +        clocks = <&sdhci>;
+> +        clock-names = "emmcclk";
+> +        drive-impedance-ohm = <50>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> deleted file mode 100644
+> index 57d28c0d5696..000000000000
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -Rockchip EMMC PHY
+> ------------------------
+> -
+> -Required properties:
+> - - compatible: rockchip,rk3399-emmc-phy
+> - - #phy-cells: must be 0
+> - - reg: PHY register address offset and length in "general
+> -   register files"
+> -
+> -Optional properties:
+> - - clock-names: Should contain "emmcclk".  Although this is listed as optional
+> -		(because most boards can get basic functionality without having
+> -		access to it), it is strongly suggested.
+> -		See ../clock/clock-bindings.txt for details.
+> - - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
+> - - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+> -                        Possible values are 33, 40, 50, 66 and 100.
+> -                        If not set, the default value of 50 will be applied.
+> - - rockchip,enable-strobe-pulldown: Enable internal pull-down for the strobe
+> -                                    line.  If not set, pull-down is not used.
+> - - rockchip,output-tapdelay-select: Specifies the phyctrl_otapdlysec register.
+> -                                    If not set, the register defaults to 0x4.
+> -                                    Maximum value 0xf.
+> -
+> -Example:
+> -
+> -
+> -grf: syscon@ff770000 {
+> -	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -...
+> -
+> -	emmcphy: phy@f780 {
+> -		compatible = "rockchip,rk3399-emmc-phy";
+> -		reg = <0xf780 0x20>;
+> -		clocks = <&sdhci>;
+> -		clock-names = "emmcclk";
+> -		drive-impedance-ohm = <50>;
+> -		#phy-cells = <0>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+> index 79798c747476..1f88416657cc 100644
+
+> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+
+grf.yaml can be busy at times. Let Heiko take care of the merge order.
+Ask for an ack from the phy maintainers in your commit message below a "---"
+
+> @@ -178,7 +178,7 @@ allOf:
+>        patternProperties:
+>          "phy@[0-9a-f]+$":
+
+>            description:
+> -            Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +            Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+
+Integrate rockchip,emmc-phy.yaml with grf.yaml with $ref.
+Remove above, use/test below:
+
+          $ref: /schemas/phy/rockchip,emmc-phy.yaml#
+
+          unevaluatedProperties: false
+
+
+>  
+>    - if:
+>        properties:
