@@ -1,174 +1,314 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E849E12EBF3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 20:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731EE824A4;
+	Thu, 13 Jun 2024 20:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718309952; cv=none; b=oZPFQawK+wdqvbN9QjaailRZyRwv+W+RdoFSXfpCaK7xqzOeN5Vtd+97U7ko/F9Y7IfGC3t4FBrLJgF6l9TRRQHcKcp/azRRLoWWwsYfhdJMaRSPq9+/2VBaSMqkkkAFb8fkLOfjlJrb0IV+W4wCcx0i+VhEjwE6NRkRYdU2k/E=
+	t=1718309999; cv=none; b=bVqcGVYq2otPJgKlDLZevQqUg/a7mLv92xtGNUCphRZlIdO1UNA0YF1+0/7kX6m4N7GTqaDtJGvxjCkaXERJYYBysRWwHabfzumwuLka5VzIDTQ8cmUp/Dlq/tSjRUVKkS/T6BeEx4uhm/ciDGhQxtL5LAFew2AUnVtYh+/8Bwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718309952; c=relaxed/simple;
-	bh=Jqdp3U67GObwq5246ghxD3ALRxVeQ0KFTivrPhuYxVc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h4K4jq3XXTxxHDyfERoa0G5w/MldhPtpGBKEmBmvil/PaPgnUpZnzDUFcuMiOIpUNEFy0DLN7+eH2QiixWL1ORAk8E7ysBzW0Wr+SnMlbEZ7Njd3Uh1GS4Lo/NyeOhkJZ59Fn91AfbTV+Skp7WGIEMPaUT056b41KWnm/iLlVcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DSwVCT1k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718309999; c=relaxed/simple;
+	bh=V/ohRnl28oyDkoRIfL5uvZjED2GpbSlnYYCHYbUE/xE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrJOlD6nqyxzWFyo0UHvsaiEseRKz1+ARzWwuFhOFebFSmwImYmWBL0vCk5w4KD/cJvXCgEcmTC5VL1ql620oFRJJfYTDFzI9aLLpPPjHzZWRjY+vnDJAN0pT280mh74v4n/a9INRVR0+wChQ4dHDjh2pFvWj4N9+0oUvrESaic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnKeyJvu; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSwVCT1k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718309950;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jqdp3U67GObwq5246ghxD3ALRxVeQ0KFTivrPhuYxVc=;
-	b=DSwVCT1kX9vcqgcMa64M+1TcDEkJa/bq3WkwRkHELNjkEZBx3oRzvF3qBV5XcHfLjC/95n
-	Le2bWuOKY9XxrV/buAjsWMoob+kx+nFkvRrfFmGiw0ojo7CXmmC0NkJK+ViM2uc41akeHU
-	2Vjytm2OBqgDCwehvtpqlqw0ongOLwc=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-103-a0rok003PZ2vj_TH28hpnw-1; Thu, 13 Jun 2024 16:18:58 -0400
-X-MC-Unique: a0rok003PZ2vj_TH28hpnw-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6b2aec935f5so4529456d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:18:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnKeyJvu"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52bd48cf36bso1829857e87.3;
+        Thu, 13 Jun 2024 13:19:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718309995; x=1718914795; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=thBf8i7EEHE/1IDtEKHUzXgXRMaKSMoMlRxJ2tobSiA=;
+        b=EnKeyJvuDzve9iAANq8wB986Sz2hlTPe8LtYKRFTto1VzZHmA1sdhxtJfWL+QzOKFf
+         GzNSvfrAiipw930qyLgSDmOgPf+ri+OETTr059LXPdPBKG3RmQl06fKEUHtMfK9rksYD
+         PvjZYOcx73YdYKAZmrYMtFwrlJrrbcoMAtAzefCfxW4E4RewDLvzJq5bMydir+jyzi9V
+         Q5gXvPI+CodVFJD2ErpC5Xo6NnrzWbSTBjGCKMIuXYYvtakjidYuxSl8mmHGIZ8drk/s
+         eTqkS5y8VuPaA/z908pN2NSgSadUyqKyECEr7MTEYHkq1TJ0Jq59fNc7dVOHxIeH5OSh
+         Qqzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718309937; x=1718914737;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jqdp3U67GObwq5246ghxD3ALRxVeQ0KFTivrPhuYxVc=;
-        b=c+R2791pjuvfzICoYK3c+bpqLCVRyNNopE97dl77U5cbNNtmJQN+O5HgPMDjBqRhzA
-         TQfL0WYTnruHxw8olyrC82CbQjipGcBEdj1MUZN+auBcFKGhlWRyF3L19lda63ov6LBx
-         G6D7HV6fNl+qkJIsrrnOkdfpjoCu2uaBL8xOBUf9sh49QWmP/dvOkgEdmLJr9y8N3QbM
-         iKJDS0WMY1Va3EA0Bw9DjmR7N3zkIfBH4y/K5OO6e3bOSRylkpr+mis5ZhnpPRhLuAj9
-         PJIAWj8ky1LbZmU4VVLuzIXdlrBj2Xle0iaEAoP3lY6UilkyAIWhd90x7nQjdl0Ml/n5
-         tInA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpwz+OcjAa8Vz3h5nf/UIn1yzdZjV4ZexH+TOrLz1ORlscw/PIlTsD6pYRLEtyyPzGzmZxpYtgFNeTHNMnLEVIG+2xnfaxQ+IfmKah
-X-Gm-Message-State: AOJu0YwYqOpiW6YjzraHDx6ZHjR3P0IjUVAcA6GzrDKCK99rGoAdWAnG
-	5Dr+EUBiXwDwuHEgqynvGsFOJUxDPN5h1zpyI9Nqyi4ElRaDtylINPcZtOSCnQLJvXZ805Y81H2
-	ZRYclLQ76y7kyrukJgaDlGqB0wOV5B4tajHk7LzG8PzhjNevHwiyxDIIC2ISxyg==
-X-Received: by 2002:a05:6214:5016:b0:6ad:650a:855d with SMTP id 6a1803df08f44-6b2afc9e1f1mr8824556d6.23.1718309937640;
-        Thu, 13 Jun 2024 13:18:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IErJd8M9fqhwfjCydqbIqLlZFHMREZAW10/WLYJOeLO/N0JndEwGAHhKdPLaAPDMteuOgnpLg==
-X-Received: by 2002:a05:6214:5016:b0:6ad:650a:855d with SMTP id 6a1803df08f44-6b2afc9e1f1mr8824256d6.23.1718309937268;
-        Thu, 13 Jun 2024 13:18:57 -0700 (PDT)
-Received: from chopper.lyude.net ([2600:4040:5c4c:a000::789])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5efb07csm10255266d6.134.2024.06.13.13.18.56
+        d=1e100.net; s=20230601; t=1718309995; x=1718914795;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thBf8i7EEHE/1IDtEKHUzXgXRMaKSMoMlRxJ2tobSiA=;
+        b=I0Q/5x8mblRJnGh4ZhZYcIH/jgLNd+5zcfbiy708kG7H92h2NcAQuZfFGhetmDBFnL
+         7ps02Q4ZGRVE6HkH84bPSyw07Dmk/lGoXmE91qFmPXeh39BwwyyyTnR4ncpb2VSWTgfC
+         sByyL+GpQp8Lgn+Xi5GQNLSTHa4cMkIldHZAbTa3CtislcZztP9jGa92oBZP8m2AvIZy
+         PhGHI8NXMUCtNngxIQpMVBmxL2+VdnkA1sZovb6Nt9wZSf8jDuX4ixfuJJkRerVWS6ge
+         IlPDkd75OIX6FpDxeL0EeZ75Kb8yTGiUqPOBh6LyrcdT5CQbmlT+xS3cJPeCF+im1X7h
+         hjpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9ImbRat8dcmsx39I33SlhCf4VS8OneWQqTelyqD8dhq92Lkxj7WCFhNp23EW9e3yuM6ez2VIj5m7wywtnJ47Rd/TDAsblroeusiI1yJ/qf/ii6F2olIVHY4EcD0UorxWIoep6mM24UCCQzZDsPmpeBJoivbsI3R2KDdyJt8RlFg==
+X-Gm-Message-State: AOJu0Yzwr1NvURsgILLb4Vo4TFJ8U35BTtopEmvV/iuEZAgWZx3Bd3ev
+	KcodqUh/unecxP5fxP0Zj68rlO2eqmYs010GJabnJGQPzbTEj7vo
+X-Google-Smtp-Source: AGHT+IHKdhL4ZZ221gRS/nvpLVeZ1jNMizZz1RZ/oM1RZofw526OCquol3tzA3iwaEcNDIMdoaInkA==
+X-Received: by 2002:a19:f816:0:b0:52c:99cc:eef4 with SMTP id 2adb3069b0e04-52ca6e564afmr594244e87.4.1718309995045;
+        Thu, 13 Jun 2024 13:19:55 -0700 (PDT)
+Received: from mobilestation ([176.213.10.53])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282567bsm332884e87.54.2024.06.13.13.19.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 13:18:56 -0700 (PDT)
-Message-ID: <3fae55cb4012c137072b54f4ec96027190958048.camel@redhat.com>
-Subject: Re: [PATCH v2 1/2] rust: add abstraction for struct device
-From: Lyude Paul <lyude@redhat.com>
-To: Danilo Krummrich <dakr@redhat.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, rafael@kernel.org, mcgrof@kernel.org,
-  russell.h.weight@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
- wedsonaf@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
- benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
- airlied@gmail.com, fujita.tomonori@gmail.com, pstanner@redhat.com, 
- ajanulgu@redhat.com, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Thu, 13 Jun 2024 16:18:55 -0400
-In-Reply-To: <Zmrkg7oOceWWV4nz@pollux>
-References: <2024061136-unbridle-confirm-c653@gregkh>
-	 <Zmh3oN9sWamaYHOD@Boquns-Mac-mini.home>
-	 <d74edb73-1dba-43f4-a50c-36354c39d758@redhat.com>
-	 <2024061245-kangaroo-clothes-76e1@gregkh> <ZmnAOfCUFkZqhDji@pollux>
-	 <2024061214-dusk-channel-e124@gregkh> <ZmnKXoBYf0qOcPU4@pollux>
-	 <2024061254-scoured-gallantly-5e41@gregkh> <ZmoLi57aT4EB_97W@pollux>
-	 <2024061345-troubling-visiting-830a@gregkh> <Zmrkg7oOceWWV4nz@pollux>
-Organization: Red Hat Inc.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+        Thu, 13 Jun 2024 13:19:54 -0700 (PDT)
+Date: Thu, 13 Jun 2024 23:19:52 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Maxime Chevallier <maxime.chevallier@bootlin.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Sagar Cheluvegowda <quic_scheluve@quicinc.com>, 
+	Abhishek Chauhan <quic_abchauha@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
+	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
+	Tomer Maimon <tmaimon77@gmail.com>, openbmc@lists.ozlabs.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 06/10] dt-bindings: net: Add Synopsys DW xPCS
+ bindings
+Message-ID: <kxb23k56nwtp6744r2nghgqecjw3aex5v56dk2bgkri3hwj3p5@awcsno3xbjkk>
+References: <20240602143636.5839-1-fancer.lancer@gmail.com>
+ <20240602143636.5839-7-fancer.lancer@gmail.com>
+ <20240605232916.GA3400992-robh@kernel.org>
+ <d57e77t4cz434qfdnuq7qek6zxcaehxmzlqtb3ezloh74ihclb@wn7gbfd6wbw7>
+ <20240610214916.GA3120860-robh@kernel.org>
+ <hx5pcbxao3ozymwh5pe4m3aje65lhxh5fzqynvphphfmpmnopk@2akvqrpxyg2v>
+ <20240613154125.GA1877114-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613154125.GA1877114-robh@kernel.org>
 
-On Thu, 2024-06-13 at 14:22 +0200, Danilo Krummrich wrote:
-> On Thu, Jun 13, 2024 at 07:47:13AM +0200, Greg KH wrote:
-> > On Wed, Jun 12, 2024 at 10:56:43PM +0200, Danilo Krummrich wrote:
-> >=20
-> > As someone who has written comments in code for functions that are
-> > always ignored, I am happy to see you think that this is actually
-> > going
-> > to do anything :)
->=20
-> One advantage we have in Rust is, that if something has a specific
-> requirement
-> we mark it as `unsafe` and the user of the API has to put it in an
-> `unsafe`
-> block, which we require a sfety comment for, where the user of the
-> API has to
-> explain why this is the correct thing to do in this case.
->=20
-> In other words we can technically enforce that people read the
-> comment and
-> explain how they ensure to fulfill what the comment asks for.
+On Thu, Jun 13, 2024 at 09:41:25AM -0600, Rob Herring wrote:
+> On Tue, Jun 11, 2024 at 01:45:16PM +0300, Serge Semin wrote:
+> > Hi Rob
+> > 
+> > On Mon, Jun 10, 2024 at 03:49:16PM -0600, Rob Herring wrote:
+> > > On Thu, Jun 06, 2024 at 12:54:33PM +0300, Serge Semin wrote:
+> > > > On Wed, Jun 05, 2024 at 05:29:16PM -0600, Rob Herring wrote:
+> > > > > On Sun, Jun 02, 2024 at 05:36:20PM +0300, Serge Semin wrote:
+> > > > > > Synopsys DesignWare XPCS IP-core is a Physical Coding Sublayer (PCS) layer
+> > > > > > providing an interface between the Media Access Control (MAC) and Physical
+> > > > > > Medium Attachment Sublayer (PMA) through a Media independent interface.
+> > > > > > >From software point of view it exposes IEEE std. Clause 45 CSR space and
+> > > > > > can be accessible either by MDIO or MCI/APB3 bus interfaces. In the former
+> > > > > > case the PCS device is supposed to be defined under the respective MDIO
+> > > > > > bus DT-node. In the later case the DW xPCS will be just a normal IO
+> > > > > > memory-mapped device.
+> > > > > > 
+> > > > > > Besides of that DW XPCS DT-nodes can have an interrupt signal and clock
+> > > > > > source properties specified. The former one indicates the Clause 73/37
+> > > > > > auto-negotiation events like: negotiation page received, AN is completed
+> > > > > > or incompatible link partner. The clock DT-properties can describe up to
+> > > > > > three clock sources: peripheral bus clock source, internal reference clock
+> > > > > > and the externally connected reference clock.
+> > > > > > 
+> > > > > > Finally the DW XPCS IP-core can be optionally synthesized with a
+> > > > > > vendor-specific interface connected to the Synopsys PMA (also called
+> > > > > > DesignWare Consumer/Enterprise PHY). Alas that isn't auto-detectable in a
+> > > > > > portable way. So if the DW XPCS device has the respective PMA attached
+> > > > > > then it should be reflected in the DT-node compatible string so the driver
+> > > > > > would be aware of the PMA-specific device capabilities (mainly connected
+> > > > > > with CSRs available for the fine-tunings).
+> > > > > > 
+> > > > > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > > > 
+> > > > > > ---
+> > > > > > 
+> > > > > > Changelog v2:
+> > > > > > - Drop the Management Interface DT-node bindings. DW xPCS with MCI/APB3
+> > > > > >   interface is just a normal memory-mapped device.
+> > > > > > ---
+> > > > > >  .../bindings/net/pcs/snps,dw-xpcs.yaml        | 133 ++++++++++++++++++
+> > > > > >  1 file changed, 133 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml b/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..7927bceefbf3
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
+> > > > > > @@ -0,0 +1,133 @@
+> > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/net/pcs/snps,dw-xpcs.yaml#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: Synopsys DesignWare Ethernet PCS
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Serge Semin <fancer.lancer@gmail.com>
+> > > > > > +
+> > > > > > +description:
+> > > > > > +  Synopsys DesignWare Ethernet Physical Coding Sublayer provides an interface
+> > > > > > +  between Media Access Control and Physical Medium Attachment Sublayer through
+> > > > > > +  the Media Independent Interface (XGMII, USXGMII, XLGMII, GMII, etc)
+> > > > > > +  controlled by means of the IEEE std. Clause 45 registers set. The PCS can be
+> > > > > > +  optionally synthesized with a vendor-specific interface connected to
+> > > > > > +  Synopsys PMA (also called DesignWare Consumer/Enterprise PHY) although in
+> > > > > > +  general it can be used to communicate with any compatible PHY.
+> > > > > > +
+> > > > > > +  The PCS CSRs can be accessible either over the Ethernet MDIO bus or directly
+> > > > > > +  by means of the APB3/MCI interfaces. In the later case the XPCS can be mapped
+> > > > > > +  right to the system IO memory space.
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  compatible:
+> > > > > > +    oneOf:
+> > > > > > +      - description: Synopsys DesignWare XPCS with none or unknown PMA
+> > > > > > +        const: snps,dw-xpcs
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen1 3G PMA
+> > > > > > +        const: snps,dw-xpcs-gen1-3g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen2 3G PMA
+> > > > > > +        const: snps,dw-xpcs-gen2-3g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen2 6G PMA
+> > > > > > +        const: snps,dw-xpcs-gen2-6g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen4 3G PMA
+> > > > > > +        const: snps,dw-xpcs-gen4-3g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen4 6G PMA
+> > > > > > +        const: snps,dw-xpcs-gen4-6g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen5 10G PMA
+> > > > > > +        const: snps,dw-xpcs-gen5-10g
+> > > > > > +      - description: Synopsys DesignWare XPCS with Consumer Gen5 12G PMA
+> > > > > > +        const: snps,dw-xpcs-gen5-12g
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    items:
+> > > > > > +      - description:
+> > > > > > +          In case of the MDIO management interface this just a 5-bits ID
+> > > > > > +          of the MDIO bus device. If DW XPCS CSRs space is accessed over the
+> > > > > > +          MCI or APB3 management interfaces, then the space mapping can be
+> > > > > > +          either 'direct' or 'indirect'. In the former case all Clause 45
+> > > > > > +          registers are contiguously mapped within the address space
+> > > > > > +          MMD '[20:16]', Reg '[15:0]'. In the later case the space is divided
+> > > > > > +          to the multiple 256 register sets. There is a special viewport CSR
+> > > > > > +          which is responsible for the set selection. The upper part of
+> > > > > > +          the CSR address MMD+REG[20:8] is supposed to be written in there
+> > > > > > +          so the corresponding subset would be mapped to the lowest 255 CSRs.
+> > > > > > +
+> > > > > > +  reg-names:
+> > > > > > +    items:
+> > > > > > +      - enum: [ direct, indirect ]
+> > > > > > +
+> > > > > > +  reg-io-width:
+> > > > > > +    description:
+> > > > > > +      The way the CSRs are mapped to the memory is platform depended. Since
+> > > > > > +      each Clause 45 CSR is of 16-bits wide the access instructions must be
+> > > > > > +      two bytes aligned at least.
+> > > > > > +    default: 2
+> > > > > > +    enum: [ 2, 4 ]
+> > > > > > +
+> > > > > > +  interrupts:
+> > > > > > +    description:
+> > > > > > +      System interface interrupt output (sbd_intr_o) indicating Clause 73/37
+> > > > > > +      auto-negotiation events':' Page received, AN is completed or incompatible
+> > > > > > +      link partner.
+> > > > > > +    maxItems: 1
+> > > > > > +
+> > > > > > +  clocks:
+> > > > > > +    description:
+> > > > > > +      Both MCI and APB3 interfaces are supposed to be equipped with a clock
+> > > > > > +      source connected via the clk_csr_i line.
+> > > > > > +
+> > > > > > +      PCS/PMA layer can be clocked by an internal reference clock source
+> > > > > > +      (phyN_core_refclk) or by an externally connected (phyN_pad_refclk) clock
+> > > > > > +      generator. Both clocks can be supplied at a time.
+> > > > > > +    minItems: 1
+> > > > > > +    maxItems: 3
+> > > > > > +
+> > > > > > +  clock-names:
+> > > > > > +    minItems: 1
+> > > > > > +    maxItems: 3
+> > > > > > +    anyOf:
+> > > > > > +      - items:
+> > > > > > +          enum: [ core, pad ]
+> > > > > 
+> > > > 
+> > > > > This has no effect. If it is true, then the 2nd entry is too.
+> > > > 
+> > > > Yeah, from the anyOf logic it's redundant indeed. But the idea was to
+> > > > signify that the DT-node may have one the next clock-names
+> > > > combination:
+> > > >    clock-names = "pad";
+> > > > or clock-names = "core";
+> > > > or clock-names = "core", "pad";
+> > > > or clock-names = "pclk";
+> > > > or clock-names = "pclk", "core";
+> > > > or clock-names = "pclk", "pad";
+> > > > or clock-names = "pclk", "core", "pad";
+> > > 
+> > > That would be:
+> > > 
+> > > oneOf:
+> > >   - minItems: 1
+> > >     items:
+> > >       - enum: [core, pad]
+> > >       - const: pad
+> > >   - minItems: 1
+> > >     items:
+> > >       - const: pclk
+> > >       - enum: [core, pad]
+> > >       - const: pad
+> > > 
+> > > *-names is enforced to be 'uniqueItems: true', so we don't have to worry 
+> > > about repeated entries.
+> > > 
+> > > This also nicely splits between MMIO and MDIO.
+> > 
+> > I had such approach in mind, but it seemed to me more complicated and
+> > weakly scaleable (should we need to add some more clocks). Isn't the
+> > next constraint look more readable:
+> 
+> Hardware is magically growing more clocks?
 
-Been going through this thread to catch up on the status of the patches
-here: I've been working with danilo for a while, but have been busy
-with kernel modesetting bindings for rust. Anyway, as someone who's
-spent quite a lot of time writing up really detailed documentation for
-some of the DisplayPort MST kernel APIs only to keep running into
-situations where said documentation was ignored (not to criticize
-anyone! I'm certainly guilty of having misread documentation or not
-reading something myself :) I like to think about unsafe blocks in the
-sense of being one thing I'm less likely to have to keep repeating
-myself about over a mailing list. Because I know at the very least that
-a contributor has to actively ignore a compiler warning or be aware in
-some sense that there is some kind of safety constraint they're being
-held responsible for that will come up during code review. If it's just
-a comment in C code, I don't even have a guarantee that a contributor's
-IDE isn't hiding large kdoc comments by default.
+There is a non-zero probability I could have missed some additional
+clocks defined in the DW XPCS IP-core databooks or there are some
+vendor-specific clock sources we can't predict. Moreover the new
+IP-core releases may have the clock sources list extended. So the
+magic may happen.)
 
-Also, in regards to rust code relying on C code not being guaranteed
-safe even if it is 'safe' code: frankly, sometimes I wish "unsafe" was
-just named "danger". "un-safe" implies code outside the block is
-perfectly "safe" - but it is still possible to introduce UB in entirely
-safe code bases (source: cve-rs) and most rust contributors I've talked
-to don't see safe code as being perfectly-safe either.
+> 
+>  
+> > anyOf:
+> >   - description: DW XPCS accessible over MDIO-bus
+> >     minItems: 1
+> >     maxItems: 2
+> >     items:
+> >       enum: [core, pad]
+> >   - description: DW XPCS with the MCI/APB3 CSRs IO interface
+> >     minItems: 1
+> >     maxItems: 3
+> >     items:
+> >       enum: [pclk, core, pad]
+> >     contains:
+> >       const: pclk
+> > ?
+> 
+> I don't see how that is much better in simplicity or scaleability. I 
+> would just do this over the above:
+> 
+> minItems: 1
+> maxItems: 3
+> items:
+>   enum: [pclk, core, pad]
+> 
+> Either you define the order or you don't. The former is strongly 
+> preferred. The latter is done when it's too much a mess or we just don't 
+> care to discuss it any more.
 
->=20
-> >=20
-> > Heck, I have put huge messages in kernel code for when people
-> > implement
-> > the api wrong[1], and they still ignore that at runtime.=C2=A0 Only way
-> > to get
-> > it noticed is if you break someone's build.
->=20
-> You only see the ones who still do it wrong. You probably don't have
-> visibility
-> of the ones who did it right due to your effort to write it down. :-)
->=20
-> >=20
-> > So you all need to really define what `Send` means, as it sounds
-> > like a
-> > userspace thing that isn't going to fit in well within the kernel
-> > model.
->=20
-> Please see the explanation above.
->=20
-> >=20
-> > thanks,
-> >=20
-> > greg k-h
-> >=20
-> > [1] See the pr_debug() calls in kobject_cleanup() as proof, people
-> > just
-> > =C2=A0=C2=A0=C2=A0 create an "empty" release function to shut them up, =
-thinking
-> > that is
-> > =C2=A0=C2=A0=C2=A0 the correct solution when obviously it is not...
-> >=20
->=20
+Ok. Since the order-based constraint is strongly preferable, then
+there is nothing to discuss. I'll make sure the order is defined.
+Thanks for review.
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+-Serge(y)
 
+> 
+> Rob
