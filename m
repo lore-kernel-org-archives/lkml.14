@@ -1,158 +1,106 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DAB137C25;
-	Thu, 13 Jun 2024 10:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D84A1411E1
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 10:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718275596; cv=none; b=Zb8mOEiiqoXAw47nrbxpL2tlvE9WlQgDOuwDcJgpwwYDwHJzdRJLawVGgny8cz6TRsePa/YTYS8W+eNZS7TVmGpfOBDMzXP2seFENsJHwEn/XCjIwqPE7Q8QT/71pa31G9bZY50yvZH5uz631QF1DynXeVFtcdMq14MSPeMvFiU=
+	t=1718275596; cv=none; b=bi358ntmuxuVPCTu8igNVFchim6XZarj60AbVzLA12dFQNBQGNCaGOAxXrWJaMz/Ee6U1NHzU3N2x/anjnZh/orzgxVys1EqRh1bCQ+H7c2iHfY2jS9SYfViP10YFpn0alIgh9PevB8aJ+2iOQZzNx6bi3yd+tJ2kHNA5SM/M1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718275596; c=relaxed/simple;
-	bh=NNoLj6NG7+/lmRKiScF9b/hfIGCzN5rkCrwpdxpZr1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kG1Le8SS6adOcmmB1k7GI0L1yFL4wiYCwqlEDde+nC0HM0cj8W9qVczZFEFPQYTJXgmxwiPYpzXBbgDycXZLPjpFQEn/TKqV8ccwcSue+GEiAlhrPQlXDBB2aGbFXT51AtXltmCdgPsq+jlQlsiXpeOUvkn+nKInqNlBvcdVmIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 45DAjF41023155;
-	Thu, 13 Jun 2024 05:45:15 -0500
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 45DAjC98023150;
-	Thu, 13 Jun 2024 05:45:12 -0500
-Date: Thu, 13 Jun 2024 05:45:12 -0500
-From: "Dr. Greg" <greg@enjellic.com>
-To: John Johansen <john.johansen@canonical.com>
-Cc: Paul Moore <paul@paul-moore.com>, Jonathan Calmels <jcalmels@3xx0.net>,
-        brauner@kernel.org, ebiederm@xmission.com,
-        Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, KP Singh <kpsingh@kernel.org>,
-        Matt Bobrowski <mattbobrowski@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <kees@kernel.org>, Joel Granados <j.granados@samsung.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>, Mykola Lysenko <mykolal@fb.com>,
-        Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
-        bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] bpf,lsm: Allow editing capabilities in BPF-LSM hooks
-Message-ID: <20240613104512.GA22971@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240609104355.442002-5-jcalmels@3xx0.net> <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com> <z2bgjrzeq7crqx24chdbxnaanuhczbjnq6da3xw6al6omjj5xz@mqbzzzfva5sw> <887a3658-2d8d-4f9e-98f2-27124bb6f8e6@canonical.com> <CAHC9VhQFNPJTOct5rUv3HT6Z2S20mYdW75seiG8no5=fZd7JjA@mail.gmail.com> <uuvwcdsy7o4ulmrdzwffr6uywfacmlkjrontmjdj44luantpok@dtatxaa6tzyv> <CAHC9VhRnthf8+KgfuzFHXWEAc9RShDO0G_g0kc1OJ-UTih1ywg@mail.gmail.com> <rgzhcsblub7wedm734n56cw2qf6czjb4jgck6l5miur6odhovo@n5tgrco74zce> <CAHC9VhRGJTND25MFk4gR-FGxoLhMmgUrMpz_YoMFOwL6kr28zQ@mail.gmail.com> <ba8d88c8-a251-4c1f-8653-1082b0a101dd@canonical.com>
+	bh=zvynH4+/ZKi6EO3xPqDT8KhKU9w/4hcTOIDyS5SoVso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYUhjLfZewBD9M3jno/ETk53TY8PJfAw1ubdAeJ5/DsnEI7CRyHGmQ+Okl+jlDVBlPeZfKwz2qnluTdqbEDlDn90v/TpxNuEUe/QKVGnGyhClmcsqm+VI2VzQE2FvDKz5mTV8lCQPST3melF3ArsmEJKFk/jsyP2P9T7eBiYuQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x3fqht00; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x3fqht00"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AA3C2BBFC;
+	Thu, 13 Jun 2024 10:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718275595;
+	bh=zvynH4+/ZKi6EO3xPqDT8KhKU9w/4hcTOIDyS5SoVso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x3fqht00QKPezzBfAiCoYVWYrvvO3do7G5v+OSlQ+tzyhRAtJ/m/a7+3BlPMb86J9
+	 eiUKrY5u6QHs2fILzIvkTxMSMgupzI0Zc5hXsn/aYEjAf+Et+vuGtMc/ghpTePgL7b
+	 eEyqjeX7HEnc1NBC2EBMhsOgIoHUMzB6OUldDlLA=
+Date: Thu, 13 Jun 2024 12:46:33 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Lee Jones <lee@kernel.org>, Michal Hocko <mhocko@suse.com>,
+	cve@kernel.org, linux-kernel@vger.kernel.org,
+	Felix Kuehling <felix.kuehling@amd.com>
+Subject: Re: CVE-2024-26628: drm/amdkfd: Fix lock dependency warning
+Message-ID: <2024061312-freebee-buffalo-4bd5@gregkh>
+References: <2024030649-CVE-2024-26628-f6ce@gregkh>
+ <Zerheyn-4rB5kySt@tiehlicka>
+ <20240314110938.GM1522089@google.com>
+ <ZfsBpal_29lihveI@tiehlicka>
+ <20240320154734.GU1522089@google.com>
+ <Zmq8uSVv0X5f7xx+@duo.ucw.cz>
+ <2024061335-wistful-brownnose-28ea@gregkh>
+ <ZmrMo6qFbt9/3xoh@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba8d88c8-a251-4c1f-8653-1082b0a101dd@canonical.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 13 Jun 2024 05:45:15 -0500 (CDT)
+In-Reply-To: <ZmrMo6qFbt9/3xoh@duo.ucw.cz>
 
-On Wed, Jun 12, 2024 at 08:54:28PM -0700, John Johansen wrote:
-
-Good morning, I hope the day is going well for everyone.
-
-> On 6/12/24 10:29, Paul Moore wrote:
-> >On Wed, Jun 12, 2024 at 4:15???AM Jonathan Calmels <jcalmels@3xx0.net> 
-> >wrote:
-> >>On Tue, Jun 11, 2024 at 06:38:31PM GMT, Paul Moore wrote:
-> >>>On Tue, Jun 11, 2024 at 6:15???PM Jonathan Calmels <jcalmels@3xx0.net> 
-> >>>wrote:
-> >
-> >...
-> >
-> >>>>Arguably, if we do want fine-grained userns policies, we need LSMs to
-> >>>>influence the userns capset at some point.
-> >>>
-> >>>One could always use, or develop, a LSM that offers additional
-> >>>controls around exercising capabilities.  There are currently four
-> >>>in-tree LSMs, including the capabilities LSM, which supply a
-> >>>security_capable() hook that is used by the capability-based access
-> >>>controls in the kernel; all of these hook implementations work
-> >>>together within the LSM framework and provide an additional level of
-> >>>control/granularity beyond the existing capabilities.
-> >>
-> >>Right, but the idea was to have a simple and easy way to reuse/trigger
-> >>as much of the commoncap one as possible from BPF. If we're saying we
-> >>need to reimplement and/or use a whole new framework, then there is
-> >>little value.
-> >
-> >I can appreciate how allowing direct manipulation of capability bits
-> >from a BPF LSM looks attractive, but my hope is that our discussion
-> >here revealed that as you look deeper into making it work there are a
-> >number of pitfalls which prevent this from being a safe option for
-> >generalized systems.
-> >
-> >>TBH, I don't feel strongly about this, which is why it is absent from
-> >>v1. However, as John pointed out, we should at least be able to modify
-> >>the blob if we want flexible userns caps policies down the road.
-> >
-> >As discussed in this thread, there are existing ways to provide fine
-> >grained control over exercising capabilities that can be safely used
-> >within the LSM framework.  I don't want to speak to what John is
-> >envisioning, but he should be aware of these mechanisms, and if I
-> >recall he did voice a level of concern about the same worries I
-> >mentioned.
-> >
+On Thu, Jun 13, 2024 at 12:40:35PM +0200, Pavel Machek wrote:
+> On Thu 2024-06-13 12:16:50, Greg Kroah-Hartman wrote:
+> > On Thu, Jun 13, 2024 at 11:32:41AM +0200, Pavel Machek wrote:
+> > > On Wed 2024-03-20 15:47:34, Lee Jones wrote:
+> > > > On Wed, 20 Mar 2024, Michal Hocko wrote:
+> > > > 
+> > > > > On Thu 14-03-24 11:09:38, Lee Jones wrote:
+> > > > > > On Fri, 08 Mar 2024, Michal Hocko wrote:
+> > > > > > 
+> > > > > > > On Wed 06-03-24 06:46:11, Greg KH wrote:
+> > > > > > > [...]
+> > > > > > > >  Possible unsafe locking scenario:
+> > > > > > > > 
+> > > > > > > >        CPU0                    CPU1
+> > > > > > > >        ----                    ----
+> > > > > > > >   lock(&svms->lock);
+> > > > > > > >                                lock(&mm->mmap_lock);
+> > > > > > > >                                lock(&svms->lock);
+> > > > > > > >   lock((work_completion)(&svm_bo->eviction_work));
+> > > > > > > > 
+> > > > > > > > I believe this cannot really lead to a deadlock in practice, because
+> > > > > > > > svm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO
+> > > > > > > > refcount is non-0. That means it's impossible that svm_range_bo_release
+> > > > > > > > is running concurrently. However, there is no good way to annotate this.
+> > > > > > > 
+> > > > > > > OK, so is this even a bug (not to mention a security/weakness)?
+> > > > > > 
+> > > > > > Looks like the patch fixes a warning which can crash some kernels.  So
+> > > > > > the CVE appears to be fixing that, rather than the impossible deadlock.
+> > > > > 
+> > > > > Are you talking about lockdep warning or anything else?
+> > > > 
+> > > > Anything that triggers a BUG() or a WARN() (as per the splat in the
+> > > > commit message).  Many in-field kernels are configured to panic on
+> > > > BUG()s and WARN()s, thus triggering them are presently considered local
+> > > > DoS and attract CVE status.
+> > > 
+> > > So... because it is possible to configure machine to reboot on
+> > > warning, now every warning is a security issue?
+> > > 
+> > > Lockdep is for debugging, if someone uses it in production with panic
+> > > on reboot, they are getting exactly what they are asking for.
+> > > 
+> > > Not a security problem.
+> > 
+> > And we agree, I don't know what you are arguing about here, please stop.
 > 
-> sorry, I should have been more clear. I envision LSMs being able to
-> update their own state in the userns hook.
+> So you agree that WARN triggering randomly is not a security problem?
 > 
-> Basically the portion of the patch that removes const from the
-> userns hook.
+> Following communication did not say so.
 > 
-> An LSM updating the capset is worrysome for all the reasons you
-> pointed out, and I think a few more. I haven't had a chance to really
-> look at v2 yet, so I didn't want to speak directly on the bpf part of
-> the patch without first giving a good once over.
-> 
-> >I'm happy to discuss ways in which we can adjust the LSM hooks/layer
-> >to support different approaches to capability controls, but one LSM
-> >directly manipulating the state of another is going to be a no vote
-> >from me.
-> >
-> I might not be as hard no as Paul here, I am always willing to listen
-> to arguments, but it would have to be a really good argument to
-> modify the capset, when there are multiple LSMs in play on a system.
+> "The splat in the circular lockdep detection code appears to be generated
+> using some stacked pr_warn() calls, rather than a WARN()."
 
-Putting my pragmatic operations hat on, it isn't just the impact on
-multiple LSM's.
-
-The security vendors, CrowdStrike's Falcon comes immediately to mind,
-are installing BPF hooks as part of their agent systems.
-
-Given that the issue of signing BPF programs is still an open
-question, allowing the ability of a BPF program to modify the security
-capabilities of a process opens the door to supply chain attacks that
-would seem unbounded in scope.
-
-On the other side of the fence, installing a BPF program is a
-privileged operation.  If a decision is made to allow that kind of
-privilege on a system the argument can be made that you get to keep
-both pieces.
-
-Of course that needs to be paired against the fact that system's
-administrators are not given any choice as to the wisdom of that type
-of permission being afforded to security applications.
-
-Best wishes for a productive remainder of the week.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+*plonk*
