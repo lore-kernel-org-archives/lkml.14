@@ -1,65 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch [185.70.41.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035612CD8C;
-	Thu, 13 Jun 2024 03:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3146612CD8C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 03:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.41.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718247935; cv=none; b=nhjAa+Ojkvp0PZhmQ4Q2lzjsi32U52VPiT31mz2qKK7zwhqNcUTm3BqEiC9i516sqGeMutGfTn8qClcwJBcEPGsBNUJjB6WTTveG6LHQ55OOEYwqhvS9B/YOYGJ1G07PP1I0ZUMy/+OG9rKtTrf0Nazi+gUjwVO49gOGCXp71G0=
+	t=1718247961; cv=none; b=l+eKxSuo7dBLfGx+XCMBvkZ96sElb7diVRRjSGvBqP4/Km/YWI45Z9WkrILGHNHh8mEOCYKgqraQxtUyVqW/U3895w8b6+qrCLdTqG1SBqEA1gpwWjwkCNrVyqp1AT3r+RrDG3Yes6NtonZHxb5zBw6j2NwSczwcmbd93H/7z5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718247935; c=relaxed/simple;
-	bh=4/qP8iALJ2CgmtztzTTE52P6OmpNtjaTkKxP969Ql0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOgR1Xfypk5L+MMXBW7PTmxoP9X4aktMze0r6sAHsXpNZ02uui6itIw+/je5Lynb6P+hhP0jcbp5d+r4FiKCncmhzeWPKkE92TYe64qpD8bFmRSSCNZAlRnOHJGVk/KAaQa0U2m5/jyNxjTn6vuMaU0HDI8DG7CDcO5Pa567C/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIAndfv2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718247961; c=relaxed/simple;
+	bh=4caMDJk1fymacmDutxXRaq4p+OusCKGUepMMnXhyzuE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dfDB+ncMOF22Phin9NQojMW8HNl6togrkQyeeV4cE2gBKAiY9dfvBLUUey9WDnjYewvnjzJ7nKVpbTJgxG1n2Hp7WkfcfOzHF2VVisWBqm6SyL1m1f0r9NjtB3UjhELLVLXNwcRg4TYsqrGUhfoVyD7fJ1NyH81jVBiU3nlbB0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=gnjJoPkO; arc=none smtp.client-ip=185.70.41.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIAndfv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EADF9C116B1;
-	Thu, 13 Jun 2024 03:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718247935;
-	bh=4/qP8iALJ2CgmtztzTTE52P6OmpNtjaTkKxP969Ql0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WIAndfv2ZIidRa65O52I4HSr4r8H/g+BFE/EF6QsC9dVxzBl1iFCW5zRvkRnVMuyv
-	 kx4HEi6GaRS7ZzL7lkvaeMhd7or24QGINZTZzVmYgPlVsFL3u8EEJ3hFvNPRV5rAoK
-	 NRTWWD20N2/v9Aiuy+azJISDH10vhOefMCndLitusHCxoMK0f7S+6G5U5+7tjt1f62
-	 TWiCkzmwllU/4j5WQ1B/4ZXCp+XOhz5a9uAHF9aHqqa+htgc2mfreuOtgeSfMsRZvu
-	 JuyuicE2bafavvKEzILB4tZI7uBVKPDhNCnn7AbnF9pmvuyO+tayKQClWhF8Nl4mGJ
-	 3zIuOIGtbmhjQ==
-Date: Wed, 12 Jun 2024 20:05:34 -0700
-From: Kees Cook <kees@kernel.org>
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-	linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
-	mw@semihalf.com, netdev@vger.kernel.org, pabeni@redhat.com
-Subject: Re: [PATCH v1] net: mvpp2: use slab_build_skb for oversized frames
-Message-ID: <202406122003.E02C37ADD1@keescook>
-References: <20240611193318.5ed8003a@kernel.org>
- <20240613024900.3842238-1-aryan.srivastava@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="gnjJoPkO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1718247417; x=1718506617;
+	bh=v9+fU/3I0sW3EO1/uEtuQOuAAW/aw8IWkdBocAl5mAU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=gnjJoPkOQ9grf+eAMoLWDYAYxEI3dNd7sUEO5WPg6WC3XPKbGceb5L3P5wWYPB9WJ
+	 67uzBFXGd5jwsd+RCGiSk8bc8s8ERF6xsNA+J0u59PXufjSsbr1/UPDGA9ubomp4Zx
+	 essIN93KcXXJq/OUDyTxOTrgy8YLTy5eaJOAb+5rJFNsLAWDFHx+WBkN4ApYUneMQj
+	 a0OiqDhsWT9qx8cXEtdVq0ppU5EQGAqjveJLajZ10SMg8J4g6+OhPd4K8qxwgyA51O
+	 wDRzryZlBR08bwSsAX9E4dve0n1w4NEiVmP2JunbotZxnryop8+ZcnAKOiPxn1XKOV
+	 f0MPoGvqz/6EQ==
+Date: Thu, 13 Jun 2024 02:56:54 +0000
+To: linux-kernel@vger.kernel.org
+From: Raymond Hackley <raymondhackley@protonmail.com>
+Cc: Markuss Broks <markuss.broks@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH v2 1/3] input/touchscreen: imagis: Clarify the usage of protocol_b
+Message-ID: <20240613025631.5425-2-raymondhackley@protonmail.com>
+In-Reply-To: <20240613025631.5425-1-raymondhackley@protonmail.com>
+References: <20240613025631.5425-1-raymondhackley@protonmail.com>
+Feedback-ID: 49437091:user:proton
+X-Pm-Message-ID: b8475f1b66fb1743f99407396eeefd71710f8969
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613024900.3842238-1-aryan.srivastava@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 02:49:00PM +1200, Aryan Srivastava wrote:
-> Setting frag_size to 0 to indicate kmalloc has been deprecated,
-> use slab_build_skb directly.
-> 
-> Fixes: ce098da1497c ("skbuff: Introduce slab_build_skb()")
-> Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-> ---
-> Changes in v1:
-> - Added Fixes tag
+protocol_b is a property, which tells Imagis panel to use a different
+format for coordinates.
 
-This looks like similar updates like commit 99b415fe8986 ("tg3: Use
-slab_build_skb() when needed")
+IST30XXC series is known for using protocol B, while the other series
+aren't. Note this could be confusing, unlike the model name implies.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+Adjust the usage of protocol_b to avoid confusion.
 
--- 
-Kees Cook
+Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
+---
+ drivers/input/touchscreen/imagis.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/touchscreen/imagis.c b/drivers/input/touchscreen=
+/imagis.c
+index 074dd6c342ec..886bcfc8497a 100644
+--- a/drivers/input/touchscreen/imagis.c
++++ b/drivers/input/touchscreen/imagis.c
+@@ -120,12 +120,12 @@ static irqreturn_t imagis_interrupt(int irq, void *de=
+v_id)
+=20
+ =09for (i =3D 0; i < finger_count; i++) {
+ =09=09if (ts->tdata->protocol_b)
+-=09=09=09error =3D imagis_i2c_read_reg(ts,
+-=09=09=09=09=09=09    ts->tdata->touch_coord_cmd, &finger_status);
+-=09=09else
+ =09=09=09error =3D imagis_i2c_read_reg(ts,
+ =09=09=09=09=09=09    ts->tdata->touch_coord_cmd + (i * 4),
+ =09=09=09=09=09=09    &finger_status);
++=09=09else
++=09=09=09error =3D imagis_i2c_read_reg(ts,
++=09=09=09=09=09=09    ts->tdata->touch_coord_cmd, &finger_status);
+ =09=09if (error) {
+ =09=09=09dev_err(&ts->client->dev,
+ =09=09=09=09"failed to read coordinates for finger %d: %d\n",
+@@ -394,6 +394,7 @@ static const struct imagis_properties imagis_3032c_data=
+ =3D {
+ =09.whoami_cmd =3D IST3038C_REG_CHIPID,
+ =09.whoami_val =3D IST3032C_WHOAMI,
+ =09.touch_keys_supported =3D true,
++=09.protocol_b =3D true,
+ };
+=20
+ static const struct imagis_properties imagis_3038b_data =3D {
+@@ -401,7 +402,6 @@ static const struct imagis_properties imagis_3038b_data=
+ =3D {
+ =09.touch_coord_cmd =3D IST3038B_REG_STATUS,
+ =09.whoami_cmd =3D IST3038B_REG_CHIPID,
+ =09.whoami_val =3D IST3038B_WHOAMI,
+-=09.protocol_b =3D true,
+ };
+=20
+ static const struct imagis_properties imagis_3038c_data =3D {
+@@ -409,6 +409,7 @@ static const struct imagis_properties imagis_3038c_data=
+ =3D {
+ =09.touch_coord_cmd =3D IST3038C_REG_TOUCH_COORD,
+ =09.whoami_cmd =3D IST3038C_REG_CHIPID,
+ =09.whoami_val =3D IST3038C_WHOAMI,
++=09.protocol_b =3D true,
+ };
+=20
+ #ifdef CONFIG_OF
+--=20
+2.39.2
+
+
