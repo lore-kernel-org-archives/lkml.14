@@ -1,182 +1,99 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5770514D43E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BF4134407;
+	Thu, 13 Jun 2024 19:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718307509; cv=none; b=RHI1cSnnni+xaXHl4Ok3UPvH7Oud1Vu28D4GycB9vakBVl1DRyh/EFADfu+4TZVVf0fuOOVvhi4xkhTZFhnK/cPAkEZB+iMdS/PDGcmN82astNT7YgYd8TOP+E/Hl3rRqh/WSx/RO0xo7x8azgobgX2ZA/1frDmzdA/rqJvskEc=
+	t=1718307585; cv=none; b=SNXuk1ToW0MRQ36ooHIruuLhMR+2c5wllG5DeINUnBJEmGMB0eS2jzkZ/nvC0xw6k94Y3brbtlfpwi0T3KohrJLOfj/TBhL/tcs2qUwOQXAMzGwrbauR7hF32xV2ZIJ1N+tnmNIY5xk/3xjW6uU7EHGGbauJbMa0bFh2mR8VEKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718307509; c=relaxed/simple;
-	bh=H/S6Itvy0jisfI7Obwgq98dRfRkKXMx6ORGiUDwNTn8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rR1nspqWNNAstdU5oDe3qQdRbZ9KHxBP0C2etwqrnmrqG6LwpImhmhNDvsiedlgzNc8QQvluh/mTyGN6DO2wVqGzEE4hMpV+uQXvtqez2VUQOtYJb362dl5IFt3M8VDouPWbXT8R+hu/DWfZVX7SYx00bBiQJV0RMrESOv2PlH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb73f0683cso133062439f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:38:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718307506; x=1718912306;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=shcUfsSzR60MVrYZuaw9/Nxrd9k8exAnjdSt/gZq5FA=;
-        b=duiorH5meqovApfyy0qaZAkf1QpA3e0/sPKT5Lub8EbsmfDBUUXN7aEB40lNozn/7g
-         ytL7SwRpbjNNvW98T5rl2RagDxIYWBW/Bwr2Wn/yIlTzFWPlJ7B1rG30HyPmP3Y+s8Hp
-         GT4zYpcRSC4YLId8SpNq00DDTfdb247WozJVk6SNQYs9h5O/AqwuuSEb8MZUi3OVfPsy
-         3ePzuEbnqVzeip6Ntsvo07fv5EYi0AR2uvmtYOWuhr2dwdO0SMxHDPiyLFDCoGGs/5Yk
-         tvp8mWXZz4ccIXTujo56rtO3AbDiWU00Q9P51d9LByc1bllxIlVWnZoRiNT9bs5XkaTY
-         23bw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXO6SnAPnjuzPCrUrXuXC6gklsqXg+5cpWOKkOlAgxJYoqdXBoQ3OPx2mmDsSbJyD+IZnD6GIRLvXlVOCPeRooZWw6VcM2VQUpzEQa
-X-Gm-Message-State: AOJu0Yw5/XMhe5Gy1g172Y8SZC7dG6B/OdmAsS0rwmBi2P065N7FmAXa
-	zTQWejxZkF647fX4fDYFNS1WvGZVEVyc34ZuHIriUmgRFrGlvMAbRqlHdlGamW0f/zMp5oAtYJb
-	k4jcBKob6dHaYPCTpCIsZaROKPFHbjrbbawd8EE4//D7RTQ4fH+UdgIU=
-X-Google-Smtp-Source: AGHT+IEKRTYIJl4K/2L5FZ+wi/rO2ZD/NJ9La25Jt9LHYHlUMCFt1mnWd3VbnDHD1cXbC93gs8qe/JhxLYXvV8iU9bG+2hUJzQnt
+	s=arc-20240116; t=1718307585; c=relaxed/simple;
+	bh=Xr1ZR0w4u2FAgkjvH5Mi9hxZ/0C28Zy328vRfJN5fEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=trwiVtIlSETbW0ZB0i1GG12Ghot+K7Zeynwg+JVpOE1lGWIUE0iAvWwzh5QEE1Go2SmghVRImHhPKgyz2js6wkJoh2EoAW4kiju4XXoRJxDeeryvFxCB7RYD+07bWsnzryFiXdoI0edeuv/du+/ieBPcwPzefJVBtGPvghY8DOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gHN1FKo/; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gHN1FKo/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zszsi0/aB2A5gS3nj8dtgFtDV/ZCUUoBmBVvRLy5hi4=; b=gHN1FKo/gLkrKUqlWBHqnu5ICW
+	tW5aD/4ifvUlVBvAHVylwxXEpvpguH59nQIX5H6WkFRNAcj6aR6TGR85v0cTHzvT2KQLdtR+GK0qP
+	fRmgw6YLsUmThl/Kj9O8bJ9c9WkikVf2myaGQ0AC+cbud5Kas7Rt2Zk23eOZRFygikkg32gTOx+QJ
+	xDbOzuShVX9VaDl6R7wJcm7vk5BygjkwJ7F5F48D0/KBW0pW3PE4W5wJ0FDsLUXA3MMZrLGY+7OVE
+	bOYGVzvlISO1vrDkKgNhrnErMIfjOL9QiGpY9qESwtpkw4aFLKPBBohz8/DBdxlQdUoGyPo7c4OqL
+	8iHdTHtg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHqIG-00000000IvW-0Jyf;
+	Thu, 13 Jun 2024 19:39:32 +0000
+Date: Thu, 13 Jun 2024 12:39:32 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
+	yang@os.amperecomputing.com, linmiaohe@huawei.com,
+	muchun.song@linux.dev, osalvador@suse.de,
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
+	hare@suse.de, linux-kernel@vger.kernel.org,
+	Zi Yan <zi.yan@sent.com>, linux-xfs@vger.kernel.org,
+	p.raghav@samsung.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
+	gost.dev@samsung.com, cl@os.amperecomputing.com,
+	john.g.garry@oracle.com
+Subject: Re: [PATCH v7 06/11] filemap: cap PTE range to be created to allowed
+ zero fill in folio_map_range()
+Message-ID: <ZmtK9NcsITV0aoL8@bombadil.infradead.org>
+References: <20240607145902.1137853-7-kernel@pankajraghav.com>
+ <ZmnyH_ozCxr_NN_Z@casper.infradead.org>
+ <ZmqmWrzmL5Wx2DoF@bombadil.infradead.org>
+ <818f69fa-9dc7-4ca0-b3ab-a667cd1fb16d@redhat.com>
+ <ZmqqIrv4Fms-Vi6E@bombadil.infradead.org>
+ <b3fef638-4f4a-4688-8a39-8dfa4ae88836@redhat.com>
+ <ZmsP36zmg2-hgtak@bombadil.infradead.org>
+ <ZmsRC8YF-JEc_dQ0@casper.infradead.org>
+ <ZmsSZzIGCfOXPKjj@bombadil.infradead.org>
+ <ZmsS7JipzuBxJm92@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2163:b0:375:a6cd:e005 with SMTP id
- e9e14a558f8ab-375e0ec95admr232875ab.4.1718307506500; Thu, 13 Jun 2024
- 12:38:26 -0700 (PDT)
-Date: Thu, 13 Jun 2024 12:38:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008a444b061acaa487@google.com>
-Subject: [syzbot] [nfs?] INFO: task hung in nfsd_nl_rpc_status_get_start
-From: syzbot <syzbot+e9820daec56bcb4c41b5@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	kolga@netapp.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	neilb@suse.de, syzkaller-bugs@googlegroups.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmsS7JipzuBxJm92@casper.infradead.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Hello,
+On Thu, Jun 13, 2024 at 04:40:28PM +0100, Matthew Wilcox wrote:
+> On Thu, Jun 13, 2024 at 08:38:15AM -0700, Luis Chamberlain wrote:
+> > On Thu, Jun 13, 2024 at 04:32:27PM +0100, Matthew Wilcox wrote:
+> > > On Thu, Jun 13, 2024 at 08:27:27AM -0700, Luis Chamberlain wrote:
+> > > > The case I tested that failed the test was tmpfs with huge pages (not
+> > > > large folios). So should we then have this:
+> > > 
+> > > No.
+> > 
+> > OK so this does have a change for tmpfs with huge pages enabled, do we
+> > take the position then this is a fix for that?
+> 
+> You literally said it was a fix just a few messages up thread?
+> 
+> Besides, the behaviour changes (currently) depending on whether
+> you specify "within_size" or "always".  This patch makes it consistent.
 
-syzbot found the following issue on:
+The quoted mmap(2) text made me doubt it, and I was looking for
+clarification. It seems clear now based on feedback the text does
+not apply to tmpfs with huge pages, and so we'll just annotate it
+as a fix for tmpfs with huge pages.
 
-HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=158e5256980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c79815c08cc14227
-dashboard link: https://syzkaller.appspot.com/bug?extid=e9820daec56bcb4c41b5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+It makes sense to not apply, I mean, why *would* you assume you will
+have an extended range zeroed out range to muck around with beyond
+PAGE_SIZE just because huge pages were used when the rest of all other
+filesystem APIs count on the mmap(2) PAGE_SIZE boundary.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9fb20954c51e/disk-2ccbdf43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/06d78b3cf960/vmlinux-2ccbdf43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/15e5b0a8df77/bzImage-2ccbdf43.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e9820daec56bcb4c41b5@syzkaller.appspotmail.com
-
-INFO: task syz-executor.1:7517 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.1  state:D stack:23800 pid:7517  tgid:7515  ppid:6054   flags:0x00000006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0x1796/0x49d0 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x6a4/0xd70 kernel/locking/mutex.c:752
- nfsd_nl_rpc_status_get_start+0x8d/0xe0 fs/nfsd/nfsctl.c:1476
- genl_start+0x4d6/0x6d0 net/netlink/genetlink.c:1005
- __netlink_dump_start+0x45c/0x780 net/netlink/af_netlink.c:2445
- genl_family_rcv_msg_dumpit net/netlink/genetlink.c:1076 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:1192 [inline]
- genl_rcv_msg+0x88c/0xec0 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2564
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1361
- netlink_sendmsg+0x8db/0xcb0 net/netlink/af_netlink.c:1905
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:745
- ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
- ___sys_sendmsg net/socket.c:2639 [inline]
- __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f182b67cea9
-RSP: 002b:00007f182c48a0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f182b7b3f80 RCX: 00007f182b67cea9
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f182b6ebff4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f182b7b3f80 R15: 00007ffd83adb8d8
- </TASK>
-
-Showing all locks held in the system:
-5 locks held by kworker/u8:1/12:
- #0: ffff888015ed3148 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
- #0: ffff888015ed3148 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
- #1: ffffc90000117d00 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
- #1: ffffc90000117d00 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
- #2: ffffffff8f5c8cd0 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x16a/0xcc0 net/core/net_namespace.c:594
- #3: ffff8880237ed408 (&wg->device_update_lock){+.+.}-{3:3}, at: wg_destruct+0x110/0x2e0 drivers/net/wireguard/device.c:249
- #4: ffffffff8e339240 (rcu_state.barrier_mutex){+.+.}-{3:3}, at: rcu_barrier+0x4c/0x530 kernel/rcu/tree.c:4448
-1 lock held by khungtaskd/30:
- #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #0: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
-3 locks held by kworker/u8:4/61:
- #0: ffff8880b953e798 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
- #1: ffff8880b9528948 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x441/0x770 kernel/sched/psi.c:988
- #2: ffff8880b953e798 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
-3 locks held by kworker/0:2/1156:
- #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
- #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
- #1: ffffc90004627d00 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
- #1: ffffc90004627d00 ((linkwatch_work).work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
- #2: ffffffff8f5d5508 (rtnl_mutex){+.+.}-{3:3}, at: linkwatch_event+0xe/0x60 net/core/link_watch.c:276
-2 locks held by kworker/u8:9/2839:
-2 locks held by getty/4842:
- #0: ffff88802b04c0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002f162f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b5/0x1e10 drivers/tty/n_tty.c:2201
-2 locks held by syz-fuzzer/5088:
-3 locks held by kworker/0:6/5164:
- #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
- #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
- #1: ffffc90004577d00 (free_ipc_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
- #1: ffffc90004577d00 (free_ipc_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
- #2: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
- #2: ffffffff8e339378 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
-2 locks held by syz-executor.4/7353:
- #0: ffffffff8f63b9d0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8e600748 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_listener_set_doit+0x12d/0x1a90 fs/nfsd/nfsctl.c:1966
-3 locks held by syz-executor.1/7517:
- #0: ffffffff8f63b9d0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffff888052998678 (nlk_cb_mutex-GENERIC){+.+.}-{3:3}, at: __netlink_dump_start+0x119/0x780 net/netlink/af_netlink.c:2418
- #2: ffffffff8e600748 (nfsd_mutex){+.+.}-{3:3}, at: nfsd_nl_rpc_status_get_start+0x8d/0xe0 fs/nfsd/nfsctl.c:1476
-2 locks held by syz-executor.1/10475:
- #0: ffffffff8f5d5508 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
- #0: ffffffff8f5d5508 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x842/0x1180 net/core/rtnetlink.c:6632
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+  Luis
