@@ -1,400 +1,376 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD3413D523;
-	Thu, 13 Jun 2024 08:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD14B13D51F;
+	Thu, 13 Jun 2024 08:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267796; cv=none; b=XgqrWfWk/XX93h5daw2VrEPSJg9MTLgABEoNm/OxxpyWtcP0QqLFAafGCkJf+Tzl680GUPaGQBWcFF659gTIhJH3xTUrI/xQ8gWD828Ag0ZLuAJJTPOLc5bp5BA5S/zyfWU8uupR5VJ9Fn8VmkdWOSRvybRjoHRRBzziMhZhpiY=
+	t=1718267813; cv=none; b=u++Fpg7cwbwwQrUZ+hMxqBieOZOcvZl7oZyv5Qt89CqyHKsE2/RfYZesHG/pHeZVOPV5AlQEvK0jHkyBwvn1XyQvVIEzXqWNE+gEL3GkzK5cedejqiepNUABcJl2f2+d4QpwIVWeBYk0QsR+gHWgp5J78DjLkNnoqh1Ip7lV5+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267796; c=relaxed/simple;
-	bh=a09l5h73FaDd7vlH/86BhnM3rl737CKNI/vH4xhurWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3xYxf9gK6xC3N5Mpz4HeWQCx4Mq7mSpbPgx0IrKmY3bKrG+NpG9iEnvEgBHZaleLt1rz0AsoXeeJ1tb0awTiwCvkyPZb6dmfjPefIWBSIUmRgG2WjtjIZvK0SEiXPxvPDvV4a17DRKwn5MuWtS0Xu2ksJ4J4TigY0A4Ir2bycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.08,234,1712588400"; 
-   d="asc'?scan'208";a="207767857"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 13 Jun 2024 17:36:22 +0900
-Received: from [10.226.93.204] (unknown [10.226.93.204])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 422B94203313;
-	Thu, 13 Jun 2024 17:36:00 +0900 (JST)
-Message-ID: <322e7317-61dc-4f1e-8706-7db6f5f7a030@bp.renesas.com>
-Date: Thu, 13 Jun 2024 09:36:00 +0100
+	s=arc-20240116; t=1718267813; c=relaxed/simple;
+	bh=MdSsdR+nCk+lUET3GoDI+x2qw9fyMSMCpII1FEoUKIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IOR5e1YefZhy84rTKwrs9SdA4mRaWutgY1omutePGHjOca4j9SuxtGEiWTOsTcVQsrLJZB3pslDZXuTjNHHzdJefug/agrULqNQtH0xHIA1IjBv6V6Zg5xqLAk0nkKFjkQuXll9zWhWZ/1GZ+TDtacN5QbMKkd978S/r8lM0bEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h5hp5aq9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h5hp5aq9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718267811; x=1749803811;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MdSsdR+nCk+lUET3GoDI+x2qw9fyMSMCpII1FEoUKIU=;
+  b=h5hp5aq9eB4+aC3BxmgPnbq4le+4zaNkfp4rTojCHiH6mllisVBQ3upd
+   bQl4bV1BaCeXPzeFIlHq70qbB1GBb1YInhmDo5FYbpSkciQzI6QizNyev
+   2WbOHGTC+aG2S0nz6+6PgmeLYPxLDeXF5lhLI1q09/0vOR8EN3hHpzrz4
+   N3aawaefPgXOtjPVOJlf26rSA52HgKK0od9Vw+/8JjFzbpbYU3i8Da81O
+   c01xZFYUMAwPHz6+jxH52gnezBIqgSngdqjNibrQaUZiBFAJEMQHUKPYY
+   7Hj58Jua0fJYDJjS/Mxwcxh7K9K0uqI1FGplvfdKo9makGQrowC9aMUKs
+   g==;
+X-CSE-ConnectionGUID: pMzlAkmzSROYl3HBWL4sxw==
+X-CSE-MsgGUID: rLpcQBO7RHOYx8kQ1bp+3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15037794"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="15037794"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:36:50 -0700
+X-CSE-ConnectionGUID: /6kYW/xnTOybf+evepdIFg==
+X-CSE-MsgGUID: mtQyswmUSkiWSqE2erBdeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40033671"
+Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:36:40 -0700
+From: Haibo Xu <haibo1.xu@intel.com>
+To: sunilvl@ventanamicro.com,
+	arnd@arndb.de
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anup Patel <anup@brainfault.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Baoquan He <bhe@redhat.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Zong Li <zong.li@sifive.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Evan Green <evan@rivosinc.com>,
+	Zhao Ke <ke.zhao@shingroup.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Robert Richter <rrichter@amd.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH v4 1/4] ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+Date: Thu, 13 Jun 2024 16:54:33 +0800
+Message-Id: <65dbad1fda08a32922c44886e4581e49b4a2fecc.1718268003.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1718268003.git.haibo1.xu@intel.com>
+References: <cover.1718268003.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v12 05/13] page_pool: convert to use netmem
-Content-Language: en-GB
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Sergey Shtylyov <s.shtylyov@omp.ru>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Nikolay Aleksandrov <razor@blackwall.org>,
- Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-References: <20240613013557.1169171-1-almasrymina@google.com>
- <20240613013557.1169171-6-almasrymina@google.com>
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-Organization: Renesas Electronics Corporation
-In-Reply-To: <20240613013557.1169171-6-almasrymina@google.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------2BCbfj48rMDr1Ni41u40ZNJI"
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------2BCbfj48rMDr1Ni41u40ZNJI
-Content-Type: multipart/mixed; boundary="------------GGmF9Y2iOanb3ZPuNcD0T337";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Sergey Shtylyov <s.shtylyov@omp.ru>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Nikolay Aleksandrov <razor@blackwall.org>,
- Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-Message-ID: <322e7317-61dc-4f1e-8706-7db6f5f7a030@bp.renesas.com>
-Subject: Re: [PATCH net-next v12 05/13] page_pool: convert to use netmem
-References: <20240613013557.1169171-1-almasrymina@google.com>
- <20240613013557.1169171-6-almasrymina@google.com>
-In-Reply-To: <20240613013557.1169171-6-almasrymina@google.com>
+Add acpi_numa.c file to enable parse NUMA information from
+ACPI SRAT and SLIT tables. SRAT table provide CPUs(Hart) and
+memory nodes to proximity domain mapping, while SLIT table
+provide the distance metrics between proximity domains.
 
---------------GGmF9Y2iOanb3ZPuNcD0T337
-Content-Type: multipart/mixed; boundary="------------VLyD3IZiBv1Y2W5pY0JQYGkf"
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+---
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ include/linux/acpi.h          |   6 ++
+ 7 files changed, 154 insertions(+), 10 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
 
---------------VLyD3IZiBv1Y2W5pY0JQYGkf
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+index 7dad0cf9d701..e0a1f84404f3 100644
+--- a/arch/riscv/include/asm/acpi.h
++++ b/arch/riscv/include/asm/acpi.h
+@@ -61,11 +61,14 @@ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+ 
+ void acpi_init_rintc_map(void);
+ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+-u32 get_acpi_id_for_cpu(int cpu);
++static inline u32 get_acpi_id_for_cpu(int cpu)
++{
++	return acpi_cpu_get_madt_rintc(cpu)->uid;
++}
++
+ int acpi_get_riscv_isa(struct acpi_table_header *table,
+ 		       unsigned int cpu, const char **isa);
+ 
+-static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
+ void acpi_get_cbo_block_size(struct acpi_table_header *table, u32 *cbom_size,
+ 			     u32 *cboz_size, u32 *cbop_size);
+ #else
+@@ -87,4 +90,12 @@ static inline void acpi_get_cbo_block_size(struct acpi_table_header *table,
+ 
+ #endif /* CONFIG_ACPI */
+ 
++#ifdef CONFIG_ACPI_NUMA
++int acpi_numa_get_nid(unsigned int cpu);
++void acpi_map_cpus_to_nodes(void);
++#else
++static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
++static inline void acpi_map_cpus_to_nodes(void) { }
++#endif /* CONFIG_ACPI_NUMA */
++
+ #endif /*_ASM_ACPI_H*/
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 5b243d46f4b1..1e2afec141b5 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -110,3 +110,4 @@ obj-$(CONFIG_COMPAT)		+= compat_vdso/
+ 
+ obj-$(CONFIG_64BIT)		+= pi/
+ obj-$(CONFIG_ACPI)		+= acpi.o
++obj-$(CONFIG_ACPI_NUMA)	+= acpi_numa.o
+diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+index e619edc8b0cc..040bdbfea2b4 100644
+--- a/arch/riscv/kernel/acpi.c
++++ b/arch/riscv/kernel/acpi.c
+@@ -191,11 +191,6 @@ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+ 	return &cpu_madt_rintc[cpu];
+ }
+ 
+-u32 get_acpi_id_for_cpu(int cpu)
+-{
+-	return acpi_cpu_get_madt_rintc(cpu)->uid;
+-}
+-
+ /*
+  * __acpi_map_table() will be called before paging_init(), so early_ioremap()
+  * or early_memremap() should be called here to for ACPI table mapping.
+diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
+new file mode 100644
+index 000000000000..0231482d6946
+--- /dev/null
++++ b/arch/riscv/kernel/acpi_numa.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACPI 6.6 based NUMA setup for RISCV
++ * Lots of code was borrowed from arch/arm64/kernel/acpi_numa.c
++ *
++ * Copyright 2004 Andi Kleen, SuSE Labs.
++ * Copyright (C) 2013-2016, Linaro Ltd.
++ *		Author: Hanjun Guo <hanjun.guo@linaro.org>
++ * Copyright (C) 2024 Intel Corporation.
++ *
++ * Reads the ACPI SRAT table to figure out what memory belongs to which CPUs.
++ *
++ * Called from acpi_numa_init while reading the SRAT and SLIT tables.
++ * Assumes all memory regions belonging to a single proximity domain
++ * are in one chunk. Holes between them will be included in the node.
++ */
++
++#define pr_fmt(fmt) "ACPI: NUMA: " fmt
++
++#include <linux/acpi.h>
++#include <linux/bitmap.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++#include <linux/memblock.h>
++#include <linux/mmzone.h>
++#include <linux/module.h>
++#include <linux/topology.h>
++
++#include <asm/numa.h>
++
++static int acpi_early_node_map[NR_CPUS] __initdata = { NUMA_NO_NODE };
++
++int __init acpi_numa_get_nid(unsigned int cpu)
++{
++	return acpi_early_node_map[cpu];
++}
++
++static inline int get_cpu_for_acpi_id(u32 uid)
++{
++	int cpu;
++
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
++		if (uid == get_acpi_id_for_cpu(cpu))
++			return cpu;
++
++	return -EINVAL;
++}
++
++static int __init acpi_parse_rintc_pxm(union acpi_subtable_headers *header,
++				       const unsigned long end)
++{
++	struct acpi_srat_rintc_affinity *pa;
++	int cpu, pxm, node;
++
++	if (srat_disabled())
++		return -EINVAL;
++
++	pa = (struct acpi_srat_rintc_affinity *)header;
++	if (!pa)
++		return -EINVAL;
++
++	if (!(pa->flags & ACPI_SRAT_RINTC_ENABLED))
++		return 0;
++
++	pxm = pa->proximity_domain;
++	node = pxm_to_node(pxm);
++
++	/*
++	 * If we can't map the UID to a logical cpu this
++	 * means that the UID is not part of possible cpus
++	 * so we do not need a NUMA mapping for it, skip
++	 * the SRAT entry and keep parsing.
++	 */
++	cpu = get_cpu_for_acpi_id(pa->acpi_processor_uid);
++	if (cpu < 0)
++		return 0;
++
++	acpi_early_node_map[cpu] = node;
++	pr_info("SRAT: PXM %d -> HARTID 0x%lx -> Node %d\n", pxm,
++		cpuid_to_hartid_map(cpu), node);
++
++	return 0;
++}
++
++void __init acpi_map_cpus_to_nodes(void)
++{
++	int i;
++
++	/*
++	 * In ACPI, SMP and CPU NUMA information is provided in separate
++	 * static tables, namely the MADT and the SRAT.
++	 *
++	 * Thus, it is simpler to first create the cpu logical map through
++	 * an MADT walk and then map the logical cpus to their node ids
++	 * as separate steps.
++	 */
++	acpi_table_parse_entries(ACPI_SIG_SRAT, sizeof(struct acpi_table_srat),
++				 ACPI_SRAT_TYPE_RINTC_AFFINITY, acpi_parse_rintc_pxm, 0);
++
++	for (i = 0; i < nr_cpu_ids; i++)
++		early_map_cpu_to_node(i, acpi_numa_get_nid(i));
++}
++
++/* Callback for Proximity Domain -> logical node ID mapping */
++void __init acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa)
++{
++	int pxm, node;
++
++	if (srat_disabled())
++		return;
++
++	if (pa->header.length < sizeof(struct acpi_srat_rintc_affinity)) {
++		pr_err("SRAT: Invalid SRAT header length: %d\n", pa->header.length);
++		bad_srat();
++		return;
++	}
++
++	if (!(pa->flags & ACPI_SRAT_RINTC_ENABLED))
++		return;
++
++	pxm = pa->proximity_domain;
++	node = acpi_map_pxm_to_node(pxm);
++
++	if (node == NUMA_NO_NODE) {
++		pr_err("SRAT: Too many proximity domains %d\n", pxm);
++		bad_srat();
++		return;
++	}
++
++	node_set(node, numa_nodes_parsed);
++}
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 4f73c0ae44b2..a2cde65b69e9 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -281,8 +281,10 @@ void __init setup_arch(char **cmdline_p)
+ 	setup_smp();
+ #endif
+ 
+-	if (!acpi_disabled)
++	if (!acpi_disabled) {
+ 		acpi_init_rintc_map();
++		acpi_map_cpus_to_nodes();
++	}
+ 
+ 	riscv_init_cbo_blocksizes();
+ 	riscv_fill_hwcap();
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 19baf0d574d3..0f8f1c95ac38 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -96,7 +96,6 @@ static int __init acpi_parse_rintc(union acpi_subtable_headers *header, const un
+ 	if (hart == cpuid_to_hartid_map(0)) {
+ 		BUG_ON(found_boot_cpu);
+ 		found_boot_cpu = true;
+-		early_map_cpu_to_node(0, acpi_numa_get_nid(cpu_count));
+ 		return 0;
+ 	}
+ 
+@@ -106,7 +105,6 @@ static int __init acpi_parse_rintc(union acpi_subtable_headers *header, const un
+ 	}
+ 
+ 	cpuid_to_hartid_map(cpu_count) = hart;
+-	early_map_cpu_to_node(cpu_count, acpi_numa_get_nid(cpu_count));
+ 	cpu_count++;
+ 
+ 	return 0;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 28c3fb2bef0d..5a2b620ccd58 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -264,6 +264,12 @@ static inline void
+ acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+ #endif
+ 
++#ifdef CONFIG_RISCV
++void acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa);
++#else
++static inline void acpi_numa_rintc_affinity_init(struct acpi_srat_rintc_affinity *pa) { }
++#endif
++
+ #ifndef PHYS_CPUID_INVALID
+ typedef u32 phys_cpuid_t;
+ #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
+-- 
+2.34.1
 
-On 13/06/2024 02:35, Mina Almasry wrote:
-> Abstrace the memory type from the page_pool so we can later add support=
-
-
-s/Abstrace/Abstract/
-
-> for new memory types. Convert the page_pool to use the new netmem type
-> abstraction, rather than use struct page directly.
->=20
-> As of this patch the netmem type is a no-op abstraction: it's always a
-> struct page underneath. All the page pool internals are converted to
-> use struct netmem instead of struct page, and the page pool now exports=
-
-> 2 APIs:
->=20
-> 1. The existing struct page API.
-> 2. The new struct netmem API.
->=20
-> Keeping the existing API is transitional; we do not want to refactor al=
-l
-> the current drivers using the page pool at once.
->=20
-> The netmem abstraction is currently a no-op. The page_pool uses
-> page_to_netmem() to convert allocated pages to netmem, and uses
-> netmem_to_page() to convert the netmem back to pages to pass to mm APIs=
-,
->=20
-> Follow up patches to this series add non-paged netmem support to the
-> page_pool. This change is factored out on its own to limit the code
-> churn to this 1 patch, for ease of code review.
->=20
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
->=20
-> ---
->=20
-> v12:
-> - Fix allmodconfig build error. Very recently renesas/ravb_main.c added=
-
->   a dependency on page_pool that I missed in my rebase. The dependency
->   calls page_pool_alloc() directly as it wants to set a custom gfp_mask=
-,
->   which is unique as all other drivers call a wrapper to that function.=
-
->   Fix it by adding netmem_to_page() in the driver.> - Fix printing netm=
-em trace printing (Pavel).
->=20
-> v11:
-> - Fix typing to remove sparse warning. (Paolo/Steven)
->=20
-> v9:
-> - Fix sparse error (Simon).
->=20
-> v8:
-> - Fix napi_pp_put_page() taking netmem instead of page to fix
->   patch-by-patch build error.
-> - Add net/netmem.h include in this patch to fix patch-by-patch build
->   error.
->=20
-> v6:
->=20
-> - Rebased on top of the merged netmem_ref type.
->=20
-> Cc: linux-mm@kvack.org
-> Cc: Matthew Wilcox <willy@infradead.org>
->=20
-> ---
->  drivers/net/ethernet/renesas/ravb_main.c |   5 +-
->  include/linux/skbuff_ref.h               |   4 +-
->  include/net/netmem.h                     |  15 ++
->  include/net/page_pool/helpers.h          | 120 ++++++---
->  include/net/page_pool/types.h            |  14 +-
->  include/trace/events/page_pool.h         |  30 +--
->  net/bpf/test_run.c                       |   5 +-
->  net/core/page_pool.c                     | 304 ++++++++++++-----------=
-
->  net/core/skbuff.c                        |   8 +-
->  9 files changed, 305 insertions(+), 200 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/eth=
-ernet/renesas/ravb_main.c
-> index c1546b916e4ef..093236ebfeecb 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> @@ -303,8 +303,9 @@ ravb_alloc_rx_buffer(struct net_device *ndev, int q=
-, u32 entry, gfp_t gfp_mask,
-> =20
->  	rx_buff =3D &priv->rx_buffers[q][entry];
->  	size =3D info->rx_buffer_size;
-> -	rx_buff->page =3D page_pool_alloc(priv->rx_pool[q], &rx_buff->offset,=
-
-> -					&size, gfp_mask);
-> +	rx_buff->page =3D netmem_to_page(page_pool_alloc(priv->rx_pool[q],
-> +						       &rx_buff->offset,
-> +						       &size, gfp_mask));
->  	if (unlikely(!rx_buff->page)) {
->  		/* We just set the data size to 0 for a failed mapping which
->  		 * should prevent DMA from happening...
-
-[snip]
-
-> =20
-> -static inline struct page *page_pool_alloc(struct page_pool *pool,
-> -					   unsigned int *offset,
-> -					   unsigned int *size, gfp_t gfp)
-> +static inline netmem_ref page_pool_alloc(struct page_pool *pool,
-> +					 unsigned int *offset,
-> +					 unsigned int *size, gfp_t gfp)
->  {
->  	unsigned int max_size =3D PAGE_SIZE << pool->p.order;
-> -	struct page *page;
-> +	netmem_ref netmem;
-> =20
->  	if ((*size << 1) > max_size) {
->  		*size =3D max_size;
->  		*offset =3D 0;
-> -		return page_pool_alloc_pages(pool, gfp);
-> +		return page_pool_alloc_netmem(pool, gfp);
->  	}
-> =20
-> -	page =3D page_pool_alloc_frag(pool, offset, *size, gfp);
-> -	if (unlikely(!page))
-> -		return NULL;
-> +	netmem =3D page_pool_alloc_frag_netmem(pool, offset, *size, gfp);
-> +	if (unlikely(!netmem))
-> +		return 0;
-> =20
->  	/* There is very likely not enough space for another fragment, so app=
-end
->  	 * the remaining size to the current fragment to avoid truesize
-> @@ -140,7 +142,7 @@ static inline struct page *page_pool_alloc(struct p=
-age_pool *pool,
->  		pool->frag_offset =3D max_size;
->  	}
-> =20
-> -	return page;
-> +	return netmem;
->  }
-> =20
->  /**
-> @@ -154,7 +156,7 @@ static inline struct page *page_pool_alloc(struct p=
-age_pool *pool,
->   * utilization and performance penalty.
->   *
->   * Return:
-> - * Return allocated page or page fragment, otherwise return NULL.
-> + * Return allocated page or page fragment, otherwise return 0.
->   */
->  static inline struct page *page_pool_dev_alloc(struct page_pool *pool,=
-
->  					       unsigned int *offset,
-> @@ -162,7 +164,7 @@ static inline struct page *page_pool_dev_alloc(stru=
-ct page_pool *pool,
->  {
->  	gfp_t gfp =3D (GFP_ATOMIC | __GFP_NOWARN);
-> =20
-> -	return page_pool_alloc(pool, offset, size, gfp);
-> +	return netmem_to_page(page_pool_alloc(pool, offset, size, gfp));
->  }
-
-I find this API change confusing - why should page_pool_alloc() return a
-netmem_ref but page_pool_dev_alloc() return a struct page *?
-
-Is there any reason to change page_pool_alloc() anyway? It calls
-page_pool_alloc_pages() or page_pool_alloc_frag() as appropriate, both
-of which your patch already converts to wrappers around the appropriate
-_netmem() functions. In all instances where page_pool_alloc() is called
-in this patch, you wrap it with netmem_to_page() anyway, there are no
-calls to page_pool_alloc() added which actually want a netmem_ref.
-
-Thanks,
-
---=20
-Paul Barker
---------------VLyD3IZiBv1Y2W5pY0JQYGkf
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
-
---------------VLyD3IZiBv1Y2W5pY0JQYGkf--
-
---------------GGmF9Y2iOanb3ZPuNcD0T337--
-
---------------2BCbfj48rMDr1Ni41u40ZNJI
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZmqvcAUDAAAAAAAKCRDbaV4Vf/JGvUxW
-AP4uKbMQBWqrwm4N0a12WI8fJo+BUUCc25C9JJxwln5cIQEAkBtvIuJdTLFRhcetWpSP/iJbKgG5
-snTgszJnAOLlDAE=
-=U1fu
------END PGP SIGNATURE-----
-
---------------2BCbfj48rMDr1Ni41u40ZNJI--
