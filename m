@@ -1,280 +1,102 @@
-Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B0713E024;
-	Thu, 13 Jun 2024 09:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F54140E2B;
+	Thu, 13 Jun 2024 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718272223; cv=none; b=Kt5bMobxVPTcwNvU8/HEI0LuMrzEKtq6/oGjp67bCDs5yYwYH08cvqUtbwcgxpiN9ddwJ3V3yOURQwAjKfh/wLii5MPfAibJINNai2RnodeMqOyBPNfJyvf6/pzdtPhCO3d2yGa8bjU/4rg/SwEJiUs2TholFDyRzCTg+9nedlk=
+	t=1718272261; cv=none; b=KFd8ZG9C0GyebgyVBzOakx56+exqa1er6wcgYHFlPOzPFl11k6NMeADAseC5U6ytaYPgT/Oj2pOFBI+Y0JUuEYhQ+mgwRVDxHuz0KqUGF3Q5KZACPTAncygbYRpxHasmVWlZ1ch5zBGys7wwFaJ4+W+f5w63h+tqcy+RIvIE3kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718272223; c=relaxed/simple;
-	bh=CiS/vwgvhI96k1n3BHULEcR1iEwkD4iIpW9CfsgBXrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tL0kU7foUjd1EkYK0Hdj7AuqeExguI2nElb5jpRmk4G5uLH8cJji3cz0R6lbRfdCL+QZHpFf4MjsHIbqIbZ0tmbahzLXqqfdMHh8Qgxls8LtVxGxf1iSaHwfrpPkDiB4EcG2G0TnMZV1a5w4CgVGtwufRdM1L3Mjn2hyR0dvODw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com; spf=pass smtp.mailfrom=yandex.com; dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b=Lz7ebCIu; arc=none smtp.client-ip=178.154.239.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.com
+	s=arc-20240116; t=1718272261; c=relaxed/simple;
+	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dxq9czCkXUNoQVEaeBDzEae8DcrK6ppZFngxlwLa1dwPTm2aSx01GWqXXdJV7Dy6FLONXhdH4ajy+I2HjZLsho1SAoPYogsFUdnsuOccBM3DlTX0LkiaSjxprNqDKQEA61PShk27veKXjS+cu5boQJ7oAc30XfJDiJS97RO4sUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVUcNJAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b="Lz7ebCIu"
-Received: from mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:298c:0:640:7729:0])
-	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 326E861317;
-	Thu, 13 Jun 2024 12:44:35 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Vicprp1Oca60-NKeaeh3H;
-	Thu, 13 Jun 2024 12:44:33 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.com; s=mail;
-	t=1718271874; bh=rXDnmJ5ZQOUO+9FQYV87xXfZpc46R3cPAarAmqFfOiA=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=Lz7ebCIu5oUOLBGf+eWcXQ5AFXnNvRxLl6ZQnVz9AUfKAP28kEEi1tE1S0i5AaWFc
-	 m5ri4Y5j79nsndV76J15Y4Gs6PE76abROtAXGJ222vO+PVUzo3htJ30mH7XXqPVxRe
-	 Z9JQvUcYgzr5EQ1sfY95eHQX5PhyroLRur5AFFQo=
-Authentication-Results: mail-nwsmtp-smtp-production-main-37.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.com
-Message-ID: <cc66cca1-33db-4f30-afcf-d256a959896b@yandex.com>
-Date: Thu, 13 Jun 2024 11:44:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVUcNJAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37EFC4AF1C;
+	Thu, 13 Jun 2024 09:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718272261;
+	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RVUcNJANurLX6qKW3W2xf6Fl4wZYNeNxn7+iw/2c4zp+OVda5WkTyj/41ummI67UZ
+	 Ud8ChBUTEDR0WQBxQeWf9uDUv9tplmGh/y+r2RFJT6XmSYbXho2hxiAg7JA49uj8l1
+	 evis/bFksYao+zUPUJYcW1HBigOmKlFfm5k+gucc4Xfp0hPvZAXEQFg/O0lvQRiNA1
+	 po1Dfo9GJvDuLjzVLmeuYruiATe2PEs+mbrAYE24sCqvMeaC53qLgtoAI2jnn0lnoW
+	 2hdmxd1NVeO9UR+32gNQwc8uLACi8So5g5+gE9gGcNho89lZg8xzuws/IfvItRNZ0X
+	 tocH7TK9zapvA==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b335681e82so51737eaf.2;
+        Thu, 13 Jun 2024 02:51:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUV40vPanHZTd1Gv3LPHCq0WprjPo9sUG/D8Mbb5DlTLm9T03NqKxXzONBzcuENZAxEsZa0SBOSuhxk3xPtcEwLkn1O07m1Vlq76xdsmtlWDnnEXmoUcXAnL6qUcglIqtUYdTdQ8sKF2mnuF/Ts9T3jDQBOuN/WE6ze5VGhRTAwmMEwYdCH
+X-Gm-Message-State: AOJu0Yz2gAzJINkj1SGpYCs01TWDMcTPWTHhCpvbPnP5jsxI81pG6hfj
+	V8NOk5sSt6ZFUjCpF4xtqBjdc37rK8dGz8Tk0sNCTaZn3o7roKzlwxUacD++uI9U3xN4HzqT8ld
+	SOklCr3t+WXOdrzHZErF2w560xNk=
+X-Google-Smtp-Source: AGHT+IEcaBEAG1NmWL/I9RS0vHUxgrV83BuKZJ+zxf4O57zYlHmYtUHwc4Z7TBN+zb6NrRmrRDwkdL+RKuRXm9EHD20=
+X-Received: by 2002:a05:6820:2c86:b0:5aa:3e4f:f01e with SMTP id
+ 006d021491bc7-5bb3b9c614cmr4555004eaf.1.1718272260335; Thu, 13 Jun 2024
+ 02:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: phy: rockchip-emmc-phy: Convert to
- dtschema
-To: Shresth Prasad <shresthprasad7@gmail.com>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- heiko@sntech.de, sebastian.reichel@collabora.com, s.hauer@pengutronix.de,
- cristian.ciocaltea@collabora.com, andy.yan@rock-chips.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- javier.carrasco.cruz@gmail.com
-References: <20240613085812.4020-2-shresthprasad7@gmail.com>
-Content-Language: en-US
-From: Johan Jonker <jbx6244@yandex.com>
-In-Reply-To: <20240613085812.4020-2-shresthprasad7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
+ <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com> <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
+In-Reply-To: <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 13 Jun 2024 11:50:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
+Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Sakari,
 
+On Wed, Jun 12, 2024 at 10:17=E2=80=AFPM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Hans,
+>
+> On Wed, Jun 12, 2024 at 04:30:30PM +0200, Hans de Goede wrote:
+> > Sakari I know you have been pushing for MIPI camera descriptions under
+> > ACPI to move to a standardized format and I can see how that is a good
+> > thing, but atm it seems to mainly cause things to break and before
+> > the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
+> > since the information used by the ipu-bridge code does seem to be corre=
+ct.
+>
+> Support for capturing from cameras on IPU6 systems (IPU6 ISYS driver and
+> IPU bridge changes) was upstreamed for 6.10, with some drivers such as IV=
+SC
+> (four of them) and IVSC related IPU bridge changes merged for 6.8 already=
+.
+>
+> We can't guarantee the continued functioning of downstream drivers in cas=
+es
+> where new upstream drivers for the same devices get merged to the kernel,
+> often with different APIs. You know that as well as I do.
+>
+> In other words, there was no regression with respect to the upstream
+> kernel.
 
-On 6/13/24 10:58, Shresth Prasad wrote:
-> Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
-> for validation.
-> 
-> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
-> ---
+Users' opinions on this may differ I suppose.
 
-Add ack request from phy maintainer here.
+If a user sees a new kernel warning on boot, they will easily count it
+as a regression, and with panic_on_warn this becomes a full-fledged
+kernel crash.
 
-> Changes in v3:
->     - fix `reg` in example being too long
-> 
-> Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
-> and `rockchip/rk3399-pinebook-pro.dtb`.
-> 
->  .../bindings/phy/rockchip,emmc-phy.yaml       | 79 +++++++++++++++++++
->  .../bindings/phy/rockchip-emmc-phy.txt        | 43 ----------
->  .../devicetree/bindings/soc/rockchip/grf.yaml |  2 +-
->  3 files changed, 80 insertions(+), 44 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..85d74b343991
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
-> @@ -0,0 +1,79 @@
-
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-
-You are converting an existing document, so GPL 2 only.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/rockchip,emmc-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip EMMC PHY
-> +
-> +maintainers:
-
-> +  - Shresth Prasad <shresthprasad7@gmail.com>
-
-Prefer to add someone that can immediately respond if Rob H. wants to delete something.
-Use the Rockchip DT maintainer here:
-  - Heiko Stuebner <heiko@sntech.de>
-
-> +
-> +properties:
-
-> +  "#phy-cells":
-> +    const: 0
-
-Move this to the bottom of this list.
-
-> +
-> +  compatible:
-> +    const: rockchip,rk3399-emmc-phy
-> +
-> +  reg:
-
-> +    description:
-> +      PHY register address offset and length in "general register files"
-
-remove
-
-> +    maxItems: 1
-> +
-> +  clock-names:
-
-> +    description: |
-> +      Although this is not a required property (because most boards can get
-> +      basic functionality without having access to it), it is strongly
-> +      suggested.
-
-remove
-No need for descriptions if there's just 1 clock.
-
-> +    const: emmcclk
-> +
-> +  clocks:
-
-> +    description:
-> +      Should have a phandle to the card clock exported by the SDHCI driver.
-
-remove 
-
-> +    maxItems: 1
-> +
-> +  drive-impedance-ohm:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Specifies the drive impedance in Ohm.
-> +    enum: [33, 40, 50, 66, 100]
-> +    default: 50
-> +
-> +  rockchip,enable-strobe-pulldown:
-> +    type: boolean
-> +    description: |
-> +      Enable internal pull-down for the strobe
-> +      line.  If not set, pull-down is not used.
-> +
-> +  rockchip,output-tapdelay-select:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Specifies the phyctrl_otapdlysec register.
-> +    default: 0x4
-> +    maximum: 0xf
-> +
-> +required:
-
-> +  - "#phy-cells"
-
-Move at the bottom of this list.
-
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    grf: syscon@ff770000 {
-> +      compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +      reg = <0xff770000 0x10000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      emmcphy: phy@f780 {
-
-> +        #phy-cells = <0>;
-
-Move at the bottom of this list.
-Order of Properties in Device Node:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/dts-coding-style.rst#n112
-
-> +        compatible = "rockchip,rk3399-emmc-phy";
-> +        reg = <0xf780 0x20>;
-> +        clocks = <&sdhci>;
-> +        clock-names = "emmcclk";
-> +        drive-impedance-ohm = <50>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> deleted file mode 100644
-> index 57d28c0d5696..000000000000
-> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -Rockchip EMMC PHY
-> ------------------------
-> -
-> -Required properties:
-> - - compatible: rockchip,rk3399-emmc-phy
-> - - #phy-cells: must be 0
-> - - reg: PHY register address offset and length in "general
-> -   register files"
-> -
-> -Optional properties:
-> - - clock-names: Should contain "emmcclk".  Although this is listed as optional
-> -		(because most boards can get basic functionality without having
-> -		access to it), it is strongly suggested.
-> -		See ../clock/clock-bindings.txt for details.
-> - - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
-> - - drive-impedance-ohm: Specifies the drive impedance in Ohm.
-> -                        Possible values are 33, 40, 50, 66 and 100.
-> -                        If not set, the default value of 50 will be applied.
-> - - rockchip,enable-strobe-pulldown: Enable internal pull-down for the strobe
-> -                                    line.  If not set, pull-down is not used.
-> - - rockchip,output-tapdelay-select: Specifies the phyctrl_otapdlysec register.
-> -                                    If not set, the register defaults to 0x4.
-> -                                    Maximum value 0xf.
-> -
-> -Example:
-> -
-> -
-> -grf: syscon@ff770000 {
-> -	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -
-> -...
-> -
-> -	emmcphy: phy@f780 {
-> -		compatible = "rockchip,rk3399-emmc-phy";
-> -		reg = <0xf780 0x20>;
-> -		clocks = <&sdhci>;
-> -		clock-names = "emmcclk";
-> -		drive-impedance-ohm = <50>;
-> -		#phy-cells = <0>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> index 79798c747476..1f88416657cc 100644
-
-> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-
-grf.yaml can be busy at times. Let Heiko take care of the merge order.
-Ask for an ack from the phy maintainers in your commit message below a "---"
-
-> @@ -178,7 +178,7 @@ allOf:
->        patternProperties:
->          "phy@[0-9a-f]+$":
-
->            description:
-> -            Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> +            Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
-
-Integrate rockchip,emmc-phy.yaml with grf.yaml with $ref.
-Remove above, use/test below:
-
-          $ref: /schemas/phy/rockchip,emmc-phy.yaml#
-
-          unevaluatedProperties: false
-
-
->  
->    - if:
->        properties:
+This is bad, even though it may be coming from a new driver strictly speaki=
+ng.
