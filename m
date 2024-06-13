@@ -1,135 +1,94 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67D51494D1;
-	Thu, 13 Jun 2024 16:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0261369B0;
+	Thu, 13 Jun 2024 16:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296952; cv=none; b=HuHc988/JI7R94NT498hDH0lyGqTfYoLx4Du+FMzKH284H6a1XASkWQjjs3wfi9uDrSvOuajz2Kb/kNjGEcnkORM5W0Xqtb3oxFQJoEoahysfmOmHqqEKWcZaTyLkiTpJk3J5oR12hDyd2X6O1MVpn6oNqgQX2Q0EJmVH4QAOEo=
+	t=1718296966; cv=none; b=r96Bmg1QrWH+Zm60bI5NHivV3p5QawgMoUa4KXsWl0INhMdV3D6WOte9zM2YCyqHNEfCgwQ/u2JJXn67tez+JhYaWbybF+xN65QFm/hgf4zmMXfdn9sY9PBsiOHdKjY2k46EnqJ6x+gg3EWGgH5zvJayZR6FMwAW0Y9Inc4pH9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296952; c=relaxed/simple;
-	bh=Rwt9PdDlBPU1Mtk8I78hJCVMn23gkkE1PpUlz0qmemU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cDOJiFy4/FRVOVVKYtFxeFM8uorFTLXP+pV/HgEkVCHnTU1zLUiHzBvZ10gSuaMNSXgq8BU5Xqk9ZZBww+gJQLiRxrCoawnfys6wtxsaXYkzSW3Qwnt508f+aYVKPRToleWZ5AGVSnCVagIHtP1lHt/gG5AYZvtEyRRYZSmi+t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hqJIAeaq; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718296966; c=relaxed/simple;
+	bh=k6RZFuL5RbQMXBfC1QGbjlIe42D9eii5Ww819cD7sCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZkiwHwpjkQxfCP3ZCVo169M1G08W7ohH5o9sWfjMJQCMLKgg4DzRNhnFAIWiGaZ13jeZLRQk340ym7YtVEM4fMKPU3Bl3SzD2JRa3LqeSGz4JrtNSYvLMqflNvIUljoeiQ3IEQ3tKFSrXuospUeSSd8VoKR3juG6+dJjjkTNLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kncp641X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hqJIAeaq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 63AF2FF806;
-	Thu, 13 Jun 2024 16:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718296942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4dJR3hHbvgKmOl5sUDZdsAffIZFQ6lBPh0rzTj8sNRs=;
-	b=hqJIAeaqOGMgsL2S+VuFTO8+j4NW7CjsmyX26xsMZdv4kQdapRvADPzBTIBGaU1ZsGWI19
-	od+G7uXc9+Nd1sHNGsr5Ck77HElrJqF7nek+xBxiGYVRTwC532NwufMKnFBhGmH5wFh2A6
-	MCEZA31gAoBan5ilW75Kv/3h1iJatr7z/Mad283QjSGMMBIYlS80HsaZzz2BtBAgW4S1cl
-	TGm+iqZpaqt1F2MKT6HktF9/zm4J2ZXrBdFCn5efLHuotbPxcu8h9LrOPBD5kn4KwT+G2Z
-	jOF9RknNfjZuAxfWN0ffW4RCNNGyhieuHzmdUVi+E7s5Vh1FTr0tIm+6q5U2aw==
-From: Thomas Richard <thomas.richard@bootlin.com>
-To: wim@linux-watchdog.org,
-	linux@roeck-us.net
-Cc: linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	michael.brunner@kontron.com,
-	thomas.richard@bootlin.com,
-	thomas.petazzoni@bootlin.com
-Subject: [PATCH] watchdog: kempld: use pretimeout member of watchdog_device struct
-Date: Thu, 13 Jun 2024 18:41:57 +0200
-Message-Id: <20240613164157.457693-1-thomas.richard@bootlin.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kncp641X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BE0C2BBFC;
+	Thu, 13 Jun 2024 16:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718296965;
+	bh=k6RZFuL5RbQMXBfC1QGbjlIe42D9eii5Ww819cD7sCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kncp641X+UbghLKCtc6JUOvH5mOgzmtoEz/z4YK0RdIZ59bV2tVcBnppQgJB7g00v
+	 i4Qt+uGMjBwLFzx7fAkeb157E4AROuJI7qDYEjm5YCRB/qqM7NM4gFCBJj7BA5VnjP
+	 E2tFErP3LenNAcCr5q0F7sW641LObjwlB617yjTOuM1nNokJcs4HhsJBamqM7EyxKY
+	 WcfEHR3bIWoFqAOg7nDg4s9M4b11HZ77dTcXzFF+1gE4aY2onT15YV/Rcp8P6tQ4yo
+	 KjN8x5hP+GNpgpY9YCN2taV1QCRnSLox7fcvKDApOMcG8tvy+4Lz6u0t59RFrYeUCY
+	 czqPkuBZpIaWg==
+Date: Thu, 13 Jun 2024 10:42:44 -0600
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>, Viacheslav <adeep@lexina.in>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] dt-bindings: arm: amlogic:
+ amlogic,meson-gx-ao-secure: add secure-monitor property
+Message-ID: <20240613164244.GA1999034-robh@kernel.org>
+References: <20240610084032.3096614-1-adeep@lexina.in>
+ <20240610084032.3096614-4-adeep@lexina.in>
+ <20240610-dropout-compress-6d6a9b749524@spud>
+ <4866f6d4-2e3c-40c7-a8cb-ba4e422ffef6@lexina.in>
+ <20240611-undying-earthy-00236ac251aa@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611-undying-earthy-00236ac251aa@spud>
 
-Th driver was written whereas pretimeout wasn't supported by the watchdog
-core. So the pretimeout was stored in the driver data.
+On Tue, Jun 11, 2024 at 07:07:28PM +0100, Conor Dooley wrote:
+> On Tue, Jun 11, 2024 at 01:25:11PM +0300, Viacheslav wrote:
+> > Hi!
+> > 
+> > 10/06/2024 19.08, Conor Dooley wrote:
+> > > On Mon, Jun 10, 2024 at 11:39:49AM +0300, Viacheslav Bocharov wrote:
+> > > > Add secure-monitor property to schema for meson-gx-socinfo-sm driver.
+> > > 
+> > > "bindings are for hardware, not drivers". Why purpose does the "secure
+> > > monitor" serve that the secure firmware needs a reference to it?
+> > 
+> > This driver is an extension to the meson-gx-socinfo driver: it supplements
+> > information obtained from the register with information from the
+> > SM_GET_CHIP_ID secure monitor call. Due to the specifics of the module
+> > loading order, we cannot do away with meson-gx-socinfo, as it is used for
+> > platform identification in some drivers. Therefore, the extended information
+> > is formatted as a separate driver, which is loaded after the secure-monitor
+> > driver.
+> 
+> Please stop talking about drivers, this is a binding which is about
+> hardware. Please provide, in your next version, a commit message that
+> justifies adding this property without talking about driver probing
+> order etc, and instead focuses on what service the "secure monitor"
+> provides etc.
 
-Now the core has pretimeout support, so use it.
+To put it another way, how many secure monitors does 1 system have? 
 
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/watchdog/kempld_wdt.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+What do you do if the property is not present? You didn't make it 
+required which is good because that would be an ABI break.
 
-diff --git a/drivers/watchdog/kempld_wdt.c b/drivers/watchdog/kempld_wdt.c
-index e6c7a2906680..ebb873502203 100644
---- a/drivers/watchdog/kempld_wdt.c
-+++ b/drivers/watchdog/kempld_wdt.c
-@@ -73,7 +73,6 @@ struct kempld_wdt_stage {
- struct kempld_wdt_data {
- 	struct kempld_device_data	*pld;
- 	struct watchdog_device		wdd;
--	unsigned int			pretimeout;
- 	struct kempld_wdt_stage		stage[KEMPLD_WDT_MAX_STAGES];
- 	u8				pm_status_store;
- };
-@@ -205,8 +204,8 @@ static int kempld_wdt_set_timeout(struct watchdog_device *wdd,
- 	timeout_stage = &wdt_data->stage[STAGE_TIMEOUT];
- 	pretimeout_stage = &wdt_data->stage[STAGE_PRETIMEOUT];
- 
--	if (pretimeout_stage->mask && wdt_data->pretimeout > 0)
--		timeout = wdt_data->pretimeout;
-+	if (pretimeout_stage->mask && wdd->pretimeout > 0)
-+		timeout = wdd->pretimeout;
- 
- 	ret = kempld_wdt_set_stage_action(wdt_data, timeout_stage,
- 						ACTION_RESET);
-@@ -249,13 +248,14 @@ static int kempld_wdt_set_pretimeout(struct watchdog_device *wdd,
- 	if (ret)
- 		return ret;
- 
--	wdt_data->pretimeout = pretimeout;
-+	wdd->pretimeout = pretimeout;
- 	return 0;
- }
- 
- static void kempld_wdt_update_timeouts(struct kempld_wdt_data *wdt_data)
- {
- 	struct kempld_device_data *pld = wdt_data->pld;
-+	struct watchdog_device *wdd = &wdt_data->wdd;
- 	struct kempld_wdt_stage *pretimeout_stage;
- 	struct kempld_wdt_stage *timeout_stage;
- 	unsigned int pretimeout, timeout;
-@@ -269,11 +269,11 @@ static void kempld_wdt_update_timeouts(struct kempld_wdt_data *wdt_data)
- 	kempld_release_mutex(pld);
- 
- 	if (pretimeout)
--		wdt_data->pretimeout = timeout;
-+		wdd->pretimeout = timeout;
- 	else
--		wdt_data->pretimeout = 0;
-+		wdd->pretimeout = 0;
- 
--	wdt_data->wdd.timeout = pretimeout + timeout;
-+	wdd->timeout = pretimeout + timeout;
- }
- 
- static int kempld_wdt_start(struct watchdog_device *wdd)
-@@ -336,7 +336,6 @@ static int kempld_wdt_keepalive(struct watchdog_device *wdd)
- static long kempld_wdt_ioctl(struct watchdog_device *wdd, unsigned int cmd,
- 				unsigned long arg)
- {
--	struct kempld_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
- 	void __user *argp = (void __user *)arg;
- 	int ret = -ENOIOCTLCMD;
- 	int __user *p = argp;
-@@ -352,7 +351,7 @@ static long kempld_wdt_ioctl(struct watchdog_device *wdd, unsigned int cmd,
- 		ret = kempld_wdt_keepalive(wdd);
- 		break;
- 	case WDIOC_GETPRETIMEOUT:
--		ret = put_user(wdt_data->pretimeout, (int __user *)arg);
-+		ret = put_user(wdd->pretimeout, (int __user *)arg);
- 		break;
- 	}
- 
--- 
-2.39.2
+You only need a link in DT if there are different possible providers or 
+some per consumer information to describe (e.g. an interrupt number or 
+clock ID). You don't have the latter and likely there is only 1 possible 
+provider. 
+
+Rob
 
