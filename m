@@ -1,134 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2108D1448ED;
-	Thu, 13 Jun 2024 15:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349B91494CB;
+	Thu, 13 Jun 2024 15:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718291682; cv=none; b=gMnWIfgdKb+ZLO4cSDXu06GvpK4mMk2P35kdIPxyZLt3mg68V5VzjNFmIU1oFFbW2Vvw5xZJC/04MQqdapuCfOckP1x36Fk3AFBrVMwhVxxXfzYnOX6BDeeQj0e9uyFrqpare2Z6x9XqTjCiRPN3HXsEOL56ySltbEmZ5X5k0Z0=
+	t=1718291707; cv=none; b=P1dxtEv/v2EqY8bhtk5Zji34S/Br6lk+dvKSUHTUEP2cFrQo5xCUbAmNNJ2HOkFdC0tWI6+3efit9WxM8zpBaKs5rWJILfQW1R/Hv9KpVjAZOzcD/K5QjDKQMtHCAiYyvr0ekVlyaBmO6e79/OXixWR8TmClsCYgUT5mA+oOnJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718291682; c=relaxed/simple;
-	bh=OSIoFPP6ehaEIJXs+89MIW5R38UOvWK3VJSPoOB54oA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T0H3NvMkHlsvCKR5Iloq+mzg2jOufut3Zijt8EAbsWFXqzWC5L+g5HwmJtrqMbjc8zeWspi7cvWUaUH0GDkNfK/NACDJ2lO23naXJ6XDOTbBqaIt8xcAuzC4TnP0jInjG1nk0JKK3Edm853OUnd9Vx8fu55HFtSZb7kMOeNms0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijlEn8zx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718291707; c=relaxed/simple;
+	bh=UGMX7r3y2vc+BLuaUSO5ILKzqK/XETMaB5uPu6PRr3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLzxGxFvpxPptVrU9QNomMenELef+IhjmQnJqUTL7Rh/ZdvCubChcfReF0svRi1b4FThio5ZJkUQ5YVpl6vEdY1t9Mb6yCfBG3+BKcBCQ8LbdCK3umgKihYgDS4iKJRtmdLUisbQrZH3QEEnxL5JjoKy+IFEIk8YueoeJms0Nwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwAN4M93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijlEn8zx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B067EC2BBFC;
-	Thu, 13 Jun 2024 15:14:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwAN4M93"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50FFC2BBFC;
+	Thu, 13 Jun 2024 15:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718291681;
-	bh=OSIoFPP6ehaEIJXs+89MIW5R38UOvWK3VJSPoOB54oA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ijlEn8zxPhPR00qsRkxvJ35VZGdeRjO0h5xFd/XDzboC7Xu4f8r+0MNMxHDqWnLZN
-	 PuxUMKDS68lsFAyxvvqUTPbgh6i+0ODEuHejFHF7MF4eAWAARs5nfTjO/ExuAMvLce
-	 icIh1xcYqw5bzS2bqrC7QYw2f0kCOrgq8IcpFQ4E9j/IMZ+6uPljgPpH00oaNhCCIE
-	 e87cm49l9EsATTdgauu1Gpkb11smfXl+lvRiWLHKV5myUAI4cZ4uKO1Yt/WPRaMQUj
-	 TpQgizCrCx7Yt+1Q/86vBQpEHpgrIbC6JCLgJ8lmOlZq25AqxCLO+98k7Yk0996OuH
-	 47oA8Gwsk0tDQ==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5bad112b623so38694eaf.3;
-        Thu, 13 Jun 2024 08:14:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXFC2oMDMtU3/azuVdTu3dOF6BhZKjCdiCjkIEDaqHjTeFaJ6/MLjs693O4ow+E5ZAs7v7wCeY6fzfU1BbYJtY0m2qT8tjslOT/dGPI
-X-Gm-Message-State: AOJu0YzsXqW3Iaq3FIgYeCCQ1fop++YqTKmyZ3QU0wuvgnI7KP1fM8qk
-	q9kTckVnFEeuruaxTD5wdNj/py2TZLhvQYDcADilo22occecG5OGnJ7emc+SF1OiR8ytOINlqGy
-	Lpy6QcXyRf1Ere4LPa0oFrVE/k8Q=
-X-Google-Smtp-Source: AGHT+IHYvaAwxGtXqI5rPPSqH9crCQlvA3HdSLCIiKQW22jl1kgK8okggtUecAAkWCBRX2CtT92znfX3IEUSA3o3JXM=
-X-Received: by 2002:a4a:b4c1:0:b0:5bb:815d:e2ab with SMTP id
- 006d021491bc7-5bdabf41a2bmr663673eaf.1.1718291680932; Thu, 13 Jun 2024
- 08:14:40 -0700 (PDT)
+	s=k20201202; t=1718291706;
+	bh=UGMX7r3y2vc+BLuaUSO5ILKzqK/XETMaB5uPu6PRr3g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=EwAN4M93i2dFJki3F5pcLJc6uuL+sJS9K7MXJLvgZ2k6DzvdIpbtrxtMqZJ9DvrUB
+	 881zQ3MCgC6R8fbZpS8JMN1ZjzU7q7PgadbcVz0OdO7YzZnRWrhfcNMsBTVBFYS0z+
+	 2BjP51fIR79iZguOf2FGkz5qgal1fe3OHdqYxrPhX194rXpq3zbBp4wSCXKoUXWU1e
+	 yX648Xg3a0oUQ6yzhPcCC6olYDGEwKufbPD2grtx3ELXpRWBe/IjVQZG7RDD/khSBK
+	 K1h8dNbpzH6dAsLVk+c98VnceU2FWVHdDCPQPXZ2lAjppW8C1bkmsFzESVjgrvm00R
+	 QOVpTfolzKmjg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 5C7B0CE09E0; Thu, 13 Jun 2024 08:15:06 -0700 (PDT)
+Date: Thu, 13 Jun 2024 08:15:06 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Nilay Shroff <nilay@linux.ibm.com>, l@kbusch-mbp.dhcp.thefacebook.com,
+	Keith Busch <kbusch@meta.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	hch@lst.de, sagi@grimberg.me, davidgow@google.com,
+	akpm@linux-foundation.org, venkat88@linux.vnet.ibm.com
+Subject: Re: [PATCH 1/2] list: introduce a new cutting helper
+Message-ID: <73b994eb-c689-48e0-b09c-a414041a0525@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240612155135.3060667-1-kbusch@meta.com>
+ <f0e4c51c-8227-4f5c-876f-38fbb4a0e1bf@linux.ibm.com>
+ <ZmrscxG51gFRDVlM@kbusch-mbp>
+ <c475f0d8-3bc9-4d65-8fce-586f4b75b4fc@linux.ibm.com>
+ <ZmsD_HDLBQAqOOU3@kbusch-mbp.dhcp.thefacebook.com>
+ <31eb40f9-d68d-4348-b1fd-3cf057939297@paulmck-laptop>
+ <ZmsGfle1aZQauzRb@kbusch-mbp.dhcp.thefacebook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de> <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
- <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de> <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
- <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de> <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
- <78549853-1763-40cf-9974-3fc737fad093@yahoo.de> <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
- <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de> <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
- <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de> <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
- <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de> <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
- <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 13 Jun 2024 17:14:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jGGV=i8Swu=c8f9bwo--AckUfqZrt0zeqDWKBijG+Z3A@mail.gmail.com>
-Message-ID: <CAJZ5v0jGGV=i8Swu=c8f9bwo--AckUfqZrt0zeqDWKBijG+Z3A@mail.gmail.com>
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: "fhortner@yahoo.de" <fhortner@yahoo.de>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: multipart/mixed; boundary="000000000000437c47061ac6f571"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmsGfle1aZQauzRb@kbusch-mbp.dhcp.thefacebook.com>
 
---000000000000437c47061ac6f571
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 13, 2024 at 08:47:26AM -0600, Keith Busch wrote:
+> On Thu, Jun 13, 2024 at 07:43:35AM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 13, 2024 at 08:36:44AM -0600, Keith Busch wrote:
+> > > On Thu, Jun 13, 2024 at 07:11:52PM +0530, Nilay Shroff wrote:
+> > > > On 6/13/24 18:26, Keith Busch wrote:
+> > > > > But that's not the problem for the rcu case. It's the last line that's
+> > > > > the problem:
+> > > > > 
+> > > > >  	list->prev->next = list;
+> > > > > 
+> > > > > We can't change forward pointers for any element being detached from
+> > > > > @head because a reader iterating the list may see that new pointer value
+> > > > > and end up in the wrong list, breaking iteration. A synchronize rcu
+> > > > > needs to happen before forward pointers can be mucked with, so it still
+> > > > > needs to be done in two steps. Oh bother...
+> > > > 
+> > > > Agree and probably we may break it down using this API:
+> > > > static inline void list_cut_rcu(struct list_head *list,
+> > > >  		struct list_head *head, struct list_head *entry, 
+> > > > 		void (*sync)(void))
+> > > > {
+> > > >  	list->next = entry;
+> > > >  	list->prev = head->prev;
+> > > > 	__list_del(entry->prev, head);
+> > > > 	sync();
+> > > >  	entry->prev = list;
+> > > >  	list->prev->next = list;
+> > > > }
+> > > 
+> > > Yes, that's the pattern, but I think we need an _srcu() variant: the
+> > > "sync" callback needs to know the srcu_struct.
+> > 
+> > Just make a helper function like this:
+> > 
+> > 	static void my_synchronize_srcu(void)
+> > 	{
+> > 		synchronize_srcu(&my_srcu_struct);
+> > 	}
+> > 
+> > Or am I missing something subtle here?
+> 
+> That would work if we had a global srcu, but the intended usage
+> dynamically allocates one per device the driver is attached to, so a
+> void callback doesn't know which one to sync.
 
-On Wed, Jun 12, 2024 at 7:23=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> Restored list CCs.
->
-> On Wed, Jun 12, 2024 at 3:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
-org> wrote:
-> >
-> > On Wed, Jun 12, 2024 at 11:56=E2=80=AFAM fhortner@yahoo.de <fhortner@ya=
-hoo.de> wrote:
-> > >
-> > > Am 11.06.24 um 16:42 schrieb Rafael J. Wysocki:
-> > >
-> > > This doesn't make them run in a different order, it just delays both
-> > > of them, because the notifiers are called sequentially.
-> > >
-> > > However, if you added the msleep() at the beginning of
-> > > thermal_zone_device_resume(), it would change the ordering of this
-> > > function with respect to the PM notifiers, so please try doing this.
-> > >
-> > > I did so and added msleep(1000) to thermal_core.c line 1634
-> > > I have also reverted the patch you sent me.
-> > >
-> > > The battery readings after resume from S3 sleep where fine.
-> > > I have tried 2 reboots with 4 sleep/wake cycles, respectively
-> >
-> > Thanks!
-> >
-> > This means that the two code paths in question somehow interfere
-> > destructively when they are running in parallel with each other.
->
-> One more thing to try is the attached patch (independent of the
-> previous one) to lower the priority of the thermal PM notifier to make
-> it run always after the ACPI battery one.
->
-> Please test this one too and let me know if it works for you.
+Ah, good point!  I suppose that a further suggestion to just JIT the
+needed function would not be well-received?  ;-)
 
-Attached is a slightly modified version of the last patch I sent.
-Please test it and let me know if it addresses the problem you are
-seeing.
+I cannot resist suggesting placing a pointer to the srcu_struct in
+the task structure.  /me runs...
 
-If it helps, I think we are done with this at least for now.
+Perhaps somewhat more constructively, my usual question:  Is it really
+necessary to have per-driver SRCU here?  What would break if there was
+a global srcu_struct that applied to all drivers?
 
---000000000000437c47061ac6f571
-Content-Type: text/x-patch; charset="US-ASCII"; name="thermal-core-resume-prio.patch"
-Content-Disposition: attachment; filename="thermal-core-resume-prio.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lxdeempy0>
-X-Attachment-Id: f_lxdeempy0
-
-LS0tCiBkcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMgfCAgICA2ICsrKysrKwogMSBmaWxl
-IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQoKSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvdGhlcm1h
-bC90aGVybWFsX2NvcmUuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvdGhl
-cm1hbC90aGVybWFsX2NvcmUuYworKysgbGludXgtcG0vZHJpdmVycy90aGVybWFsL3RoZXJtYWxf
-Y29yZS5jCkBAIC0xNzEyLDYgKzE3MTIsMTIgQEAgc3RhdGljIGludCB0aGVybWFsX3BtX25vdGlm
-eShzdHJ1Y3Qgbm90aQogCiBzdGF0aWMgc3RydWN0IG5vdGlmaWVyX2Jsb2NrIHRoZXJtYWxfcG1f
-bmIgPSB7CiAJLm5vdGlmaWVyX2NhbGwgPSB0aGVybWFsX3BtX25vdGlmeSwKKwkvKgorCSAqIFJ1
-biBhdCB0aGUgbG93ZXN0IHByaW9yaXR5IHRvIGF2b2lkIGludGVyZmVyZW5jZSBiZXR3ZWVuIHRo
-ZSB0aGVybWFsCisJICogem9uZSByZXN1bWUgd29yayBpdGVtcyBzcGF3bmVkIGJ5IHRoZXJtYWxf
-cG1fbm90aWZ5KCkgYW5kIHRoZSBvdGhlcgorCSAqIFBNIG5vdGlmaWVycy4KKwkgKi8KKwkucHJp
-b3JpdHkgPSBJTlRfTUlOLAogfTsKIAogc3RhdGljIGludCBfX2luaXQgdGhlcm1hbF9pbml0KHZv
-aWQpCg==
---000000000000437c47061ac6f571--
+						Thanx, Paul
