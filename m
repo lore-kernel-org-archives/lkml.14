@@ -1,60 +1,67 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFC213D529
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A495B13C660;
+	Thu, 13 Jun 2024 07:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718263994; cv=none; b=sgb96e2Vz/kjNar+dlcK2qvQ/rVRT9c9f1Yq7/LRdmxTcwAoTK7fbUxGfHKZ1J/zEFsDoZ9lqfdQ8fTu3rJ6BEpIYR+xe1kgj13KC5w3ioVlwrZlYtOZhGtJCGnc2T9KAvIlGlq/vd5M9aJo/kiOHcDqn18USys8snIvKACnfvE=
+	t=1718264074; cv=none; b=pkEWiDIsI3Ud0/2YwFcQitl/EgNoTf0HWGKa4c8YPkGPQFE/9ZqA+1iGmaDvrbu7yPnXFU4ZSY/nEG0Ftr0UEKOHXGvyLyjkluXeXWnmU8FA7hbOTGRwxt02oRanAo5IMThjaiVDyTHIq7GxiysnMp+PsCszBKCQnOd3PW3PwcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718263994; c=relaxed/simple;
-	bh=uoTnrqYSg19kqb0lgMH7SLS/qe9dnaqbOD+HJnS87Ho=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=haQr3eVJqzHK/IG0iGhtYKVhWU73HwGgNhwP66rmWcD4pf6YedtqBrU0z3R73mGEGMawb4YFw4623GCb70Zr8LzFXeND1Ciagq4Mp8FmiwPpyyG3ED78jWTR5Sw4cip1zl/JJEUfsqJ7bZ7uYIQh/TlQbm8ZdvFqLTdOUPngYXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=WlfE5jC2; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1718264074; c=relaxed/simple;
+	bh=BgGPUA4CJHBAi6sstPxqPZGkojFNDXKzqwrZiGnPZHQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ao2Du3jDFCmeUd6tx0QMLcAjZezzimeCa+GX7MxVeT5ockW0Ad2Df8aPeYzUybeLDLkLnn/YA2vhW2MEfgPlfrIfBtrch/kQzxtLrOz1knFmGRvlmJdl1U53P8k3aHX1chQ9DmqFskvYHGf3uP26vw6bMQTzPoalbd3Ut8rpDUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z4cBLzcg; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WlfE5jC2"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7042cb2abc8so510734b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:33:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4cBLzcg"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42189d3c7efso8516715e9.2;
+        Thu, 13 Jun 2024 00:34:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1718263992; x=1718868792; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RlJIkXaRaXYEOo0FtAy4w5B+d0jhj99dMDrjOpWfyi4=;
-        b=WlfE5jC2GSHvYdL9YEYEFvD537xrYazzBJ5mcLQhpz6eXYU1TCCthCwF/9Cx4OGZG5
-         M5dcRHbYBN8zf7QyWPprIZvpyEqDCAGabmxG0cpu47t9F+v5jRoLq54svsMPwYaSYXxo
-         MbqkKkVE76RkQOkzbk9o1t+nlNWyD/mSjNxXvgmD6kdWjHRL4UiNcm6dbFjq6HcHb8ht
-         jnNHxiZFEfy0Tl1Da6DlSmvzTiKMPMUdoWO3weOiLfM7Mhi/Xg9f3c0rjAToPMUvEsVy
-         byUqA1iW/vapQZGso9cMJL9g//EPx1sODvCJLndZW0DRbnp8AB80IqtZXCNGcBByQluk
-         XS0A==
+        d=gmail.com; s=20230601; t=1718264071; x=1718868871; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MSHRYQpgTDWbDhn+hhtstnXRqbhO24DfQNz+E/HyPBU=;
+        b=Z4cBLzcgRHjbW21WaW2xRi64ZiXmV/Gwhzs/xo/g1Q8frvnEcfQ6+kh6Um0Qh0YJ24
+         p8e6whW27/S7k2zKjHI8hJtMQSI/BQkRSKpB1XRIpc78BpSc/EdtHT8onVk3QlpZPphV
+         /panKcM6Lg1xkm2gyADwa/wCMakSdK7ANOoMsUrzguTwcuZLm4gFfDUGdy6QAoDLVOL5
+         SIbGvWLs4j1M7THeP30HBcrAR1rfWKLbdQkZEdeQyGV3a40RmULs/Hzt4HgYGTKM4tVh
+         RJ/ez12Am7sUeZgqGAg66SOgMi64E7Ikd+niF9RlYpHHA+ExqWalDnjJMCynzzO0KNNR
+         kPKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718263992; x=1718868792;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RlJIkXaRaXYEOo0FtAy4w5B+d0jhj99dMDrjOpWfyi4=;
-        b=HJ4HUy40GJzfSdXf8cUOXdGLGqPb/ovjv541EyhAKP+7Z8g8FyZBUCNWTe0Oy+46ip
-         jg5vN4tkz7tHH4zMEb9bk9hMPlX1cXxawQqQuTNkYCL1kiB0pRoolG16iqRNamxSArqi
-         9bNQtJ9d3EWr9fRuStE0BhluN3ps2aeREllqMIpcsDuTpTRcGbxK0v7Z/XnKJnqlEjk3
-         mY18/uGt8jwlLY6zUynJrUq7+r7qcr36T3uq/k2b7yLJf3cQ8DqkB1CzYHQwkhtlyePi
-         Zz6zo5RP3Xo14vWUE7nWtuirp3q6Vv7ifd0cLKVUtsnmCzDfGmY5lcDwqMLWufcvIorj
-         XZ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVQS5T5mmoKWHq+Z411EwCBXB5VbllX7tXTEGViac+pLCNZufu2FCy4pHOW+OymEjvsuUnnxnLwLrfmnLZyvW0J7+O58tUbfAjOQoKp
-X-Gm-Message-State: AOJu0Yx/Aet3BPZKSRXjD+1MbhmMXYzSYlR8babM6+7FOkHPEB6Whrsd
-	v7bDSgWdQdglS7tc0CzgfEO5CMiREUSs939+6GSp/ln0G3P3JHCZ8i5GDvbjO+Y=
-X-Google-Smtp-Source: AGHT+IEyM0ONI7ICTx6DjS1SeAdMKnjMDIyvhgY/AOB26Jk18oYzU1QW75t2bRm257+1EVhnYwVCTA==
-X-Received: by 2002:a05:6a20:3d88:b0:1b2:a889:f7da with SMTP id adf61e73a8af0-1b8a9c887fdmr4702279637.55.1718263991983;
-        Thu, 13 Jun 2024 00:33:11 -0700 (PDT)
-Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc78a1a0sm730028b3a.0.2024.06.13.00.33.08
+        d=1e100.net; s=20230601; t=1718264071; x=1718868871;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MSHRYQpgTDWbDhn+hhtstnXRqbhO24DfQNz+E/HyPBU=;
+        b=RmewW2eMOG9wBzY/FC4f1RnMGfaJ4nlJCw5MIEkx21rkp76zmrSDcGv6OJ/O7ncxas
+         zaj08UED+T/eA/IJFax9ZkeH/sLWWljivsOceqacraepP3PQlHa95DnEDLmM2soVEA2Q
+         n7zWPW9qCAZUPW1M1l3/N/1RRP4LDMbh0KFWZOQTXtniwsJtkD1SUL8rLpRKgkVRjcv+
+         o3qDlohXzcpl2OQ4/OlnBCtq54aHHyI7DETXeRTiq+TsvP42PRRQByE+c1bVmbCtTcvp
+         xuOV7shHfp0vaNv0SFlO1yqRSMzhDLT6oK+ogSpeRLnLCMgwoUSnwfGzAISFfW+X317O
+         12yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUteEbYt+n0Zgmb6EZ0gC9VoJr+yFQIR2kRv/I8GWQL+LImhAdGPxk4GvPUzEkDAxYQcfxlMaLcnn7+S8pFRCaDF8xdKxtVjHfSdkIWy6LNXC0DDZUlUj8c3LRStZLjnu0/IsUHUzAT663DD8PU
+X-Gm-Message-State: AOJu0YxlWkXxVcqdfV3XajNLdvkxgymXuBIHXFGw7ZRs3T/rRKCRE7BW
+	Y8EI5WX/Z2Ckj/f5tga0YmhI2OzDfe6/6LUjz6KHaBWvgyZFpxA0ywmUDg==
+X-Google-Smtp-Source: AGHT+IE5HZjrLoCnNxLVajnotnkeImtDf2cI0u88h47cCjcg16Llc86SnlptsYF62rR065Ce2k3SMw==
+X-Received: by 2002:a05:600c:314d:b0:421:7c1e:5d5d with SMTP id 5b1f17b1804b1-422867bf846mr47056455e9.35.1718264070779;
+        Thu, 13 Jun 2024 00:34:30 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286eef70csm51236815e9.3.2024.06.13.00.34.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 00:33:11 -0700 (PDT)
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Thu, 13 Jun 2024 15:11:13 +0800
-Subject: [PATCH 8/8] riscv: ftrace: support PREEMPT
+        Thu, 13 Jun 2024 00:34:30 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] kselftest/arm64: Fix a couple of spelling mistakes
+Date: Thu, 13 Jun 2024 08:34:29 +0100
+Message-Id: <20240613073429.1797451-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,45 +69,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-dev-andyc-dyn-ftrace-v4-v1-8-1a538e12c01e@sifive.com>
-References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
-In-Reply-To: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li <zong.li@sifive.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Puranjay Mohan <puranjay@kernel.org>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-Now, we can safely enable dynamic ftrace with kernel preemption.
+There are two spelling mistakes in some error messages. Fix them.
 
-Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- arch/riscv/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/arm64/fp/kernel-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 80b8d48e1e46..c1493ee1b8cd 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -133,7 +133,7 @@ config RISCV
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_EBPF_JIT if MMU
- 	select HAVE_GUP_FAST if MMU
- 	select HAVE_FUNCTION_ARG_ACCESS_API
-
+diff --git a/tools/testing/selftests/arm64/fp/kernel-test.c b/tools/testing/selftests/arm64/fp/kernel-test.c
+index 50db26a3ed79..e8da3b4cbd23 100644
+--- a/tools/testing/selftests/arm64/fp/kernel-test.c
++++ b/tools/testing/selftests/arm64/fp/kernel-test.c
+@@ -233,7 +233,7 @@ static bool compute_digest(void *buf)
+ reread:
+ 	ret = recv(sock, buf, digest_len, 0);
+ 	if (ret == 0) {
+-		printf("No disgest returned\n");
++		printf("No digest returned\n");
+ 		return false;
+ 	}
+ 	if (ret != digest_len) {
+@@ -308,7 +308,7 @@ int main(void)
+ 
+ 	while (true) {
+ 		if (!compute_digest(digest)) {
+-			printf("Failed to coempute digest, iter=%d\n", iter);
++			printf("Failed to compute digest, iter=%d\n", iter);
+ 			return EXIT_FAILURE;
+ 		}
+ 
 -- 
-2.43.0
+2.39.2
 
