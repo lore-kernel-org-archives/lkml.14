@@ -1,302 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BA313B2B4
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 20:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8430137905;
+	Thu, 13 Jun 2024 20:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718311100; cv=none; b=kuznDwYZf3GrH+HWIYsm5Mjp4EnOzvfvto0QcUfBAfCG5H1C87WPm7VXjLvS+8ZnNwW4zBoIsBnhDynSBaCtKSuXTRrVGfnMr/KrySdkNQt0nsaqdNoe9vkB+LMbgPowOhUAZGrP32gOdutR7KzycPQX+h34b7Qoe+tpGSesEls=
+	t=1718311166; cv=none; b=qhVN5NmWx4EzCyuH7Hf0rTygk3l3/eLcbmfoMnFmyckYw2ciL5cFwhNVHrmTii4kS6KxjUdXgxnsKU4dTDWQkJX16eo39sklRmZft0rUkMWTGmyEaqBRfRMnsOW3sRYf4nUEGUDVYQTB5P8gC+UsS77MZIzGSr42eSCdrb0uoRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718311100; c=relaxed/simple;
-	bh=WSd1d7DffFSrkxa5KT+aYXD0eQQSAWOPzWO6NnEqpeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nY2tlEE7HJCBpxclxJIkIiFIOQ5qc+ChUmw6Z/i6qEcObxGBsayfQweaaTximdtZfUOfxPegc4RGCbeZFVV5JK+7bctn8fU58UhsX5HDUQ7+vGlJdv1ZnejhQ8JTxJCPgAuez2n54oEvPAfoa/uCIyG/LYBkFsWf3NLuGxW4ROQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ArXHWozP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718311166; c=relaxed/simple;
+	bh=I8gRIi2tdxobdYcQwtNcLo7D0+WLao4oQLpSk9VGsd4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aivuZAnTmJKVB3GEBTL2iGH+a9QiTbzmSv2sRt/7XSN+GQ6jnGC7uSQ3PTxHZ/yk/saPd2vQfB4Z3RMgsHFV2OQxYPK2vwEYarb9JHgY5t+8V6WKFIdAJa/FjXvSYc7OehMmeTkVXwaKHd72J3dnEGN2cGlV11aKFqb9gJyjzok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=FNz012tG; arc=none smtp.client-ip=80.12.242.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ArXHWozP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718311097;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O2ih6wgTeeTdUw+I9BZrmiKxVOGbI/igMq6wiMNrZ34=;
-	b=ArXHWozPN/QIhv9yPpwoew9aJQs9VUTUDtwByikYR847W4Kq3wm3uvMAsdtnRultcKJQwi
-	FBPK3NSKyhxTgM+UiMGY4/ooeZcPN8iMx83z+jAUvOUrtFMUw/FlmdHKELN1aV0GfLAThJ
-	yGS89mb5Q7yx2AgE5RKxCb8+uWeMsko=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-85-KsaRrX0SNnOZZqQmhCHV3g-1; Thu, 13 Jun 2024 16:38:16 -0400
-X-MC-Unique: KsaRrX0SNnOZZqQmhCHV3g-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b07983a8adso46013686d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:38:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718311095; x=1718915895;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O2ih6wgTeeTdUw+I9BZrmiKxVOGbI/igMq6wiMNrZ34=;
-        b=PpwhC5Rb40Wpu7Tfr40zJrgTFOgbhR8hsvJWz4x82Aff03CZFEUwMOVLZb7lNYS6AH
-         bVC6e3wNpraOGRI1QttXNEgmfTr9w0skuwzhAkx+dfAjwGgIa5aS6wPwc/IONZ7A6FVs
-         gJ70G5RxA4bFv/rxW/dS7jcZ/eptE6UgaXYA+2IbPaFfPESa/KiTkhmIX0OEJIwGDcVV
-         ChVcl3b6FAbwsXZSRzmEWkI4LtH2o1EoUYIM5TJ3+965ufmhXcfJE2JYr4sk5e0lLwII
-         lr+Work/5CsaxuVcD0LwXexJDRwSwQCub6zWctS4AUs8HzLnnuMkYNO5P7gSOBCME6Wa
-         Wo/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVpZC/cF2Ty39nZMbpc8gEpYsoqS7sEDTCkt5cCe1AtlfhANVahsRiGcqFBAt90yadqRt2AOu+a/PKcYrw7qXFeSh1m2bOWXRy+Pumu
-X-Gm-Message-State: AOJu0YwRZG3f/PFLiaS4fpmUmMsTE6EL1LjolMO8O9eMeigzUn0SAfIx
-	cNmbaW3tMNhFa0mbTUuzEejTtFOF5/wkKKDOMBr+JvHd9p4ffA3VpQl2GAROKlnCiGzs25y/V2x
-	l78YBw0LOxRgaS1diDyLB8NKCIcVHDofe9Lo47XI9Puw43Aj+l+ggISXfMkHC2w==
-X-Received: by 2002:a0c:f842:0:b0:6b0:4cc0:2168 with SMTP id 6a1803df08f44-6b2af2ff426mr16437106d6.30.1718311094994;
-        Thu, 13 Jun 2024 13:38:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFu8a4fdhnpNgdM2gticJkdjVruJDQDkRnFfoLr9AqrMxOrjCQznv6qdckUc1Nq7Kl5S2B65Q==
-X-Received: by 2002:a0c:f842:0:b0:6b0:4cc0:2168 with SMTP id 6a1803df08f44-6b2af2ff426mr16436576d6.30.1718311094473;
-        Thu, 13 Jun 2024 13:38:14 -0700 (PDT)
-Received: from maya.cloud.tilaa.com (maya.cloud.tilaa.com. [164.138.29.33])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5ee04fdsm10389506d6.117.2024.06.13.13.38.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2024 13:38:13 -0700 (PDT)
-Date: Thu, 13 Jun 2024 22:37:37 +0200
-From: Stefano Brivio <sbrivio@redhat.com>
-To: Aaron Conole <aconole@redhat.com>
-Cc: netdev@vger.kernel.org, dev@openvswitch.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Pravin B
- Shelar <pshelar@ovn.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, Adrian Moreno
- <amorenoz@redhat.com>, Ilya Maximets <i.maximets@ovn.org>
-Subject: Re: [RFC net-next 6/7] selftests: net: Use the provided dpctl
- rather than the vswitchd for tests.
-Message-ID: <20240613223737.28761cf3@elisabeth>
-In-Reply-To: <20240613181333.984810-7-aconole@redhat.com>
-References: <20240613181333.984810-1-aconole@redhat.com>
-	<20240613181333.984810-7-aconole@redhat.com>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="FNz012tG"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id HqihskRdZzBzYHqihsC6L4; Thu, 13 Jun 2024 22:06:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718309213;
+	bh=XRaMoPqcQEHhhGv65L0zaAfzpWmzmbt3FcfVA4d11vc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=FNz012tGnpXwimGS2ZPNBYPk07XwB2DRtd4sKHikpv/oIMXvLx+UcSkHqRDo4DeQC
+	 xs5rhCoDST8vj3aWQKXTHtG2wkXg6p21xVVcak5M1kdkLTaGe1oFQXjT4z2wAEPQqI
+	 SfUpOHmz0VAt251TQ/hF+xI4GLPGMo66qH9/iG4w6PPeljyUDBoBlb+fjWWvbNaqzK
+	 4cl0DrlT0aqIV2q1crlvTRlRdzazcSG0tJ2sR0Myfahih3PFH3ULLKQq8WBvZhJDqP
+	 hJaHBBwBw6iI4Vnn5yGkaGFT0BRQzaK8J/i0n55XDpzpsjD/eAuroK5PwOZEmxGSzF
+	 hh+jBcAsSb0rw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 13 Jun 2024 22:06:53 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <35b8a2e6-dc26-456e-be93-e929c6c8ca64@wanadoo.fr>
+Date: Thu, 13 Jun 2024 22:06:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: duplicate patch in the vfs-brauner tree
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240613104837.346519cc@canb.auug.org.au>
+ <20240612192141.69896438b5f6e674e07d418e@linux-foundation.org>
+ <20240613-verbogen-daneben-84c61797c60a@brauner>
+ <20240613124307.df90ed3225c7454ad81ac76c@linux-foundation.org>
+Content-Language: en-MW
+From: Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240613124307.df90ed3225c7454ad81ac76c@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Jun 2024 14:13:32 -0400
-Aaron Conole <aconole@redhat.com> wrote:
 
-> The current pmtu test infrastucture requires an installed copy of the
-> ovs-vswitchd userspace.  This means that any automated or constrained
-> environments may not have the requisite tools to run the tests.  However,
-> the pmtu tests don't require any special classifier processing.  Indeed
-> they are only using the vswitchd in the most basic mode - as a NORMAL
-> switch.
-> 
-> However, the ovs-dpctl kernel utility can now program all the needed basic
-> flows to allow traffic to traverse the tunnels and provide support for at
-> least testing some basic pmtu scenarios.
+Le 13/06/2024 à 21:43, Andrew Morton a écrit :
+> On Thu, 13 Jun 2024 14:17:01 +0200 Christian Brauner <brauner@kernel.org> wrote:
+>
+>>> Christian, if procfs patches are to henceforth go via the vfs tree,
+>>> let's be a bit more organized about it?
+>> Sure. I simply didn't see any any "applied" message from you so I just
+>> assumed to pick the parts that are relevant. Sorry about that.
+> No probs.  If the author didn't cc you then my remember-to-cc-christian
+> brain cell is unreliable :(
 
-I didn't know about that tool, that looks like a nice improvement. A
-few comments below (mostly nits):
+I guess, that the author is me.
 
-> More complicated flow pipelines
-> can be added to the internal ovs test infrastructure, but that is work for
-> the future.  For now, enable the most common cases - wide mega flows with
-> no other prerequisites.
-> 
-> Signed-off-by: Aaron Conole <aconole@redhat.com>
-> ---
->  tools/testing/selftests/net/pmtu.sh | 87 ++++++++++++++++++++++-------
->  1 file changed, 67 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/pmtu.sh b/tools/testing/selftests/net/pmtu.sh
-> index cfc84958025a..7f4f35d88dcc 100755
-> --- a/tools/testing/selftests/net/pmtu.sh
-> +++ b/tools/testing/selftests/net/pmtu.sh
-> @@ -846,22 +846,73 @@ setup_ovs_vxlan_or_geneve() {
->  	type="${1}"
->  	a_addr="${2}"
->  	b_addr="${3}"
-> +	dport="6081"
->  
->  	if [ "${type}" = "vxlan" ]; then
-> +		dport="4789"
->  		opts="${opts} ttl 64 dstport 4789"
->  		opts_b="local ${b_addr}"
->  	fi
->  
-> -	run_cmd ovs-vsctl add-port ovs_br0 ${type}_a -- \
-> -		set interface ${type}_a type=${type} \
-> -		options:remote_ip=${b_addr} options:key=1 options:csum=true || return 1
-> -
-> +	run_cmd python3 ./openvswitch/ovs-dpctl.py add-if ovs_br0 ${type}_a -t ${type}
+in my .gitconfig, I use
 
-In some restricted environments, it might actually be more convenient
-to carry around ovs-vsctl than Python with (Python) libraries.
+[sendemail.linux]
+     tocmd ="`pwd`/scripts/get_maintainer.pl --nogit --nogit-fallback 
+--norolestats --nol"
+     cccmd ="`pwd`/scripts/get_maintainer.pl --nogit --nogit-fallback 
+--norolestats --nom"
 
-Nowadays I typically (albeit seldom) run kselftests in throw-away VM
-images made by mbuto (https://mbuto.sh/, see demo on the right), and
-while it copies python3 and dynamic libraries from the host, adding
-Python libraries such as pyroute2 gets quite complicated.
+and
 
-So I'm wondering, if it's not too messy: could we have two functions
-starting from approximately here (say, setup_ovs_dpctl() and
-setup_ovs_vsctl()), try with ovs-dpctl first, and, if that fails,
-fall back to ovs-vsctl?
+ >scripts/get_maintainer.pl --nogit --nogit-fallback --norolestats --nol 
+fs/proc/generic.c
+[EMPTY OUTPUT]
 
->  	run_cmd ${ns_b} ip link add ${type}_b type ${type} id 1 ${opts_b} remote ${a_addr} ${opts} || return 1
->  
->  	run_cmd ${ns_b} ip addr add ${tunnel4_b_addr}/${tunnel4_mask} dev ${type}_b
->  	run_cmd ${ns_b} ip addr add ${tunnel6_b_addr}/${tunnel6_mask} dev ${type}_b
->  
-> +	run_cmd ip link set ${type}_a up
->  	run_cmd ${ns_b} ip link set ${type}_b up
-> +
-> +	ports=$(python3 ./openvswitch/ovs-dpctl.py show)
-> +	br0_port=$(echo "$ports" | grep -E "\sovs_br0" | sed -e 's@port @@' | cut -d: -f1 | xargs)
-> +	type_a_port=$(echo "$ports" | grep ${type}_a | sed -e 's@port @@' | cut -d: -f1 | xargs)
-> +	veth_a_port=$(echo "$ports" | grep veth_A | sed -e 's@port @@' | cut -d: -f1 | xargs)
-> +
-> +	v4_a_tun="${prefix4}.${a_r1}.1"
-> +	v4_b_tun="${prefix4}.${b_r1}.1"
-> +
-> +	v6_a_tun="${prefix6}:${a_r1}::1"
-> +	v6_b_tun="${prefix6}:${b_r1}::1"
-> +
-> +	if [ "${v4_a_tun}" == "${a_addr}" ]; then
+ >scripts/get_maintainer.pl --nogit --nogit-fallback --norolestats --nol 
+fs/proc/generic.c
+linux-kernel@vger.kernel.org
+linux-fsdevel@vger.kernel.org
 
-I see now that 05d92cb0e919 ("selftests/net: change shebang to bash to
-support "source"") turned this into a Bash script (for no real reason,
-lib.sh could have simply been sourced with '.' instead).
 
-Other than that, this happily runs with dash and possibly others, and:
+Should MAINTAINERS be updated somewhere?
 
-  $ checkbashisms -f pmtu.sh 
-  possible bashism in pmtu.sh line 201 (should be '.', not 'source'):
-  source lib.sh
-  possible bashism in pmtu.sh line 202 (should be '.', not 'source'):
-  source net_helper.sh
 
-Would it be possible to change this to POSIX shell:
+(sorry for the mess I've generated :( )
 
-	if [ "${v4_a_tun}" = "${a_addr}" ]; then
 
-even just for consistency with the rest of the file?
+CJ
 
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0800),ipv4()" \
-> +		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-> +		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0800),ipv4()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0806),arp()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0806),arp(sip=${veth4_c_addr},tip=${tunnel4_b_addr})" \
-> +		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +	else
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0800),ipv4()" \
-> +		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-> +		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0800),ipv4()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0806),arp()" \
-> +		    "${veth_a_port}"
-> +		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-> +		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0806),arp(sip=${veth4_c_addr},tip=${tunnel4_b_addr})" \
-> +		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-> +	fi
->  }
->  
->  setup_ovs_geneve4() {
-> @@ -881,7 +932,7 @@ setup_ovs_vxlan6() {
->  }
->  
->  setup_ovs_bridge() {
-> -	run_cmd ovs-vsctl add-br ovs_br0 || return $ksft_skip
-> +	run_cmd python3 ./openvswitch/ovs-dpctl.py add-dp ovs_br0 || return $ksft_skip
->  	run_cmd ip link set ovs_br0 up
->  
->  	run_cmd ${ns_c} ip link add veth_C-A type veth peer name veth_A-C
-> @@ -891,7 +942,7 @@ setup_ovs_bridge() {
->  	run_cmd ${ns_c} ip link set veth_C-A up
->  	run_cmd ${ns_c} ip addr add ${veth4_c_addr}/${veth4_mask} dev veth_C-A
->  	run_cmd ${ns_c} ip addr add ${veth6_c_addr}/${veth6_mask} dev veth_C-A
-> -	run_cmd ovs-vsctl add-port ovs_br0 veth_A-C
-> +	run_cmd python3 ./openvswitch/ovs-dpctl.py add-if ovs_br0 veth_A-C
->  
->  	# Move veth_A-R1 to init
->  	run_cmd ${ns_a} ip link set veth_A-R1 netns 1
-> @@ -942,8 +993,10 @@ cleanup() {
->  
->  	ip link del veth_A-C			2>/dev/null
->  	ip link del veth_A-R1			2>/dev/null
-> -	ovs-vsctl --if-exists del-port vxlan_a	2>/dev/null
-> -	ovs-vsctl --if-exists del-br ovs_br0	2>/dev/null
-> +	# squelch the output of the del-if commands since it can be wordy
-> +	python3 ./openvswitch/ovs-dpctl.py del-if ovs_br0 -d true vxlan_a	>/dev/null	2>&1
-> +	python3 ./openvswitch/ovs-dpctl.py del-if ovs_br0 -d true geneve_a	>/dev/null	2>&1
-> +	python3 ./openvswitch/ovs-dpctl.py del-dp ovs_br0 >/dev/null	2>&1
 
-The idea behind those tabs before 2>/dev/null was to keep them aligned
-and make those redirections a bit easier on the eyes.
-
-If you add more, you could keep those aligned as well -- or just decide
-that lines are too long and drop the tabs altogether.
-
->  	rm -f "$tmpoutfile"
->  }
->  
-> @@ -1407,16 +1460,10 @@ test_pmtu_ipvX_over_ovs_vxlanY_or_geneveY_exception() {
->  		exp_mtu=$((${ll_mtu} - 40          - 8          - 8                   - 14))
->  	fi
->  
-> -	if [ "${type}" = "vxlan" ]; then
-> -		tun_a="vxlan_sys_4789"
-> -	elif [ "${type}" = "geneve" ]; then
-> -		tun_a="genev_sys_6081"
-> -	fi
-> -
-> -	trace ""        "${tun_a}"  "${ns_b}"  ${type}_b \
-> -	      ""        veth_A-R1   "${ns_r1}" veth_R1-A \
-> -	      "${ns_b}" veth_B-R1   "${ns_r1}" veth_R1-B \
-> -	      ""        ovs_br0     ""         veth-A-C  \
-> +	trace ""        "${type}_a"  "${ns_b}"  ${type}_b \
-> +	      ""        veth_A-R1    "${ns_r1}" veth_R1-A \
-> +	      "${ns_b}" veth_B-R1    "${ns_r1}" veth_R1-B \
-> +	      ""        ovs_br0      ""         veth-A_C  \
->  	      "${ns_c}" veth_C-A
->  
->  	if [ ${family} -eq 4 ]; then
-> @@ -1436,8 +1483,8 @@ test_pmtu_ipvX_over_ovs_vxlanY_or_geneveY_exception() {
->  	mtu "${ns_b}"  veth_B-R1 ${ll_mtu}
->  	mtu "${ns_r1}" veth_R1-B ${ll_mtu}
->  
-> -	mtu ""        ${tun_a}  $((${ll_mtu} + 1000))
-> -	mtu "${ns_b}" ${type}_b $((${ll_mtu} + 1000))
-> +	mtu ""        ${type}_a  $((${ll_mtu} + 1000))
-> +	mtu "${ns_b}" ${type}_b  $((${ll_mtu} + 1000))
->  
->  	run_cmd ${ns_c} ${ping} -q -M want -i 0.1 -c 20 -s $((${ll_mtu} + 500)) ${dst} || return 1
->  
-
--- 
-Stefano
-
+>
+> It'll be at https://lore.kernel.org/mm-commits/ but that's a hassle.
+>
