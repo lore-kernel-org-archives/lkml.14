@@ -1,358 +1,192 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68D213D531
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B733E13E8A7;
+	Thu, 13 Jun 2024 08:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267777; cv=none; b=MhngkfTbUe4GRgj+Zsskk3I9euK7ZCE+Mr8UxG7XGDTC8A2noy6qYCVD7Tdhpa25TWzI8GFhV8g5RHDDmR1lJ1wXh0XK7lRbsur4Hy8EpwX+6V+5YlOcQ1Q0/m/ZaV3sgSVCWydfMkWWW4P6aHuV84PXNsj99C/8XWVrXSn5tWA=
+	t=1718267793; cv=none; b=eGFj1M3Bx+jLSumlJYICIr2zozLiRvOtBp4B3zTWFGupSPMUyuXJrd3miQ/Zg+06ziwAk+NULFG3uEeF6ceABOxABtbUyr9gFP2XlEkRAPd9WXigLiQHKNEvH2ZtHZ+usb1dvD+U3IT3Ufm/o+ixcjKlOdb1YOZ2Gmfp0YzdZJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267777; c=relaxed/simple;
-	bh=B+p84waxXOwElG0/87eHt/laWADkBk6xlYgmpwgMmxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S6oPVuO+U1i/RITHn1LUYoZf1wA+2oO1x7q/CUzpIEt7YmfmdmZD+ibz7lDGgwXbXRho3KAe5ir/XEU3g1kHmDnIxja7oyKdFxpVLI8JLzQtAH0QEIjPD5Lh759D9T5Oi3ueRyU16gObcqqBNwCosNq8sRyPvsG2whDCpPRZEVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fOhCO1gA; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718267793; c=relaxed/simple;
+	bh=3ovCB/zXsuebWe0Yz4yc+d18kQMuEVZClgl8PA7HD5o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m9iAM+OMqQ/D5twr0Qzaj+MZkIs1d03c1Zo8XZpcvhg/qTZuigYQjHqJki5SBP6nwHFbBN+GgrSKfpToXyCzEI+4Zlg0BLXPXiELv/0ZWNRlPXc/jwL31YxBHOqviANpTVu+Cq5qrvDy7VOqk2bmiN6FddkFlHPnd7m9EHA2UE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhCFEV+9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fOhCO1gA"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ebe6495aedso6398711fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718267772; x=1718872572; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ybIQ5CeAWwcGafjH4//aR+7GcflfnxnbdHeF4JEy5gs=;
-        b=fOhCO1gAmYExSLlCF/JODwFzoWVfSTIxqJdzLfaivaQNkGL5KK/71hGGtMJyLx32VI
-         DZ02GpvOTTTEn23T7eA1ufoFYfpN0aHqVOSqCtHyhXWZ7kreDxf49H+Th5+uYBSWSSf0
-         9xrZM8GjsgvC4Kln57Nhi4WLuj1czG80fqBdo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718267772; x=1718872572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ybIQ5CeAWwcGafjH4//aR+7GcflfnxnbdHeF4JEy5gs=;
-        b=cuA/zOvNAbFdiCYif9ovsVuyYMHaHIotbeSCOsXU2MyWEsSA9bH5oEOtltF9wFwAUB
-         RCoL+TVlmkqjOWA24PtWttL4ClTPiQWymzP2T8D2fkWvd69/E9NhC9CIr0rH7Cw6qQ6W
-         FFH9Uf40CjHaguLLQOu70v3RcY66akQFlUzxMtcHjcVIlsxnyf32I4Tc+sJd9wO6IhIh
-         Xnd2i8P1RLPR4sJCBsvRKPuGThq0pMcnhPXnZFKNRe4abF8KpoggjMoZsiB9tuHm9aZ1
-         NKXyLNKk2LHWObbH9fPIKk35m5iau6The5ZlNrXKdgEhJQ21hRf52GybUpw/CVZRZdNA
-         Vh/w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/oDAgmUd2xd5KEab+4m0BduPMer4vmTlvENV6X5t/x1mtaDu4U587GHKvu4CXd/PHcTI3UJ3jKEqTza/Wu3Ds92ns3Qa63z359v8b
-X-Gm-Message-State: AOJu0Yxi7EQIoL8tR2LCFtBC2SSWKP70EaqF7yK/8rTe+Ie6tMxt4e92
-	wzjubT2Dmmrt2rtKcUoluSKNEYk6e7mp2BQ7phYTgR1Hk9uhRiWZuEnxkZnjuuaWu/gotkRDDvt
-	mg5q+2BKLKq1XPoNcV7vOv/R3fYptC3hvghbC
-X-Google-Smtp-Source: AGHT+IGMz0ZJMbYjSjQWA7KRhtlPsL+Cs6+uv48MtLgUAzgV0vU9/yghyhVPr647rsH0k2Jr1hfdruYMQ+IWpwmgdx0=
-X-Received: by 2002:ac2:562a:0:b0:52c:831d:7eb3 with SMTP id
- 2adb3069b0e04-52c9a3c74b7mr2536749e87.18.1718267771892; Thu, 13 Jun 2024
- 01:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhCFEV+9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718267792; x=1749803792;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3ovCB/zXsuebWe0Yz4yc+d18kQMuEVZClgl8PA7HD5o=;
+  b=FhCFEV+9C2vyZt+iZPkMZKiob11F3RAFl7pHIZajmilVXbH+oYFUN8PH
+   f6gAYlvGllyWUqaWZQXG7bytEkLF4k15UhnAGfE0TJ2fx1ykiXGxgg9nP
+   ltR4PNvd2y4kKR6PHepzS4wpdIufmlokOQmap+Sa9Bl+6GvrBnjIS4XSt
+   8guTawXdY1rsAfEX3L5mRhdOL0dJYe3HY0NDYb5C9DAkLBKVmeQ9sodAS
+   0h7KoFdfnEuWyUnwKfJA2g1j6iOyVl6eC70pglV6qdZZcm+8BPPIwxI0q
+   PWqCo12/5+OAlpFxGj5dENR7/Kv/Y9uZxPIXrCg9vYOvyFAlZvfZtjMdB
+   Q==;
+X-CSE-ConnectionGUID: 6j9hhkotQrOTIQAuUVMeZA==
+X-CSE-MsgGUID: zCTwThPeSBu3TeCGlNOmkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15037733"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="15037733"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:36:31 -0700
+X-CSE-ConnectionGUID: Qv+liwW3RqmG1+jP0AhpCA==
+X-CSE-MsgGUID: nvdTq6xyRMCMcg4RPM/Zeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40033609"
+Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:36:21 -0700
+From: Haibo Xu <haibo1.xu@intel.com>
+To: sunilvl@ventanamicro.com,
+	arnd@arndb.de
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Baoquan He <bhe@redhat.com>,
+	Evan Green <evan@rivosinc.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Robert Richter <rrichter@amd.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH v4 0/4] Add ACPI NUMA support for RISC-V
+Date: Thu, 13 Jun 2024 16:54:32 +0800
+Message-Id: <cover.1718268003.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605094843.4141730-1-wenst@chromium.org> <CAFLszTiZ8PUvxHx4kfLZf18RqSczRwxCmCxZ_y6J2rpu03pA=w@mail.gmail.com>
- <CAGXv+5EWqzj3w=KaKBfviBXPms0baKx28S0n+bGZcLc3=fGK+g@mail.gmail.com>
-In-Reply-To: <CAGXv+5EWqzj3w=KaKBfviBXPms0baKx28S0n+bGZcLc3=fGK+g@mail.gmail.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Thu, 13 Jun 2024 16:36:00 +0800
-Message-ID: <CAGXv+5Gt5B35OEvQva7sh=MEHU=QYGD3fWzxbK_ZT-K13pf81w@mail.gmail.com>
-Subject: Re: [PATCH] scripts/make_fit: Support decomposing DTBs
-To: Simon Glass <sjg@chromium.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 3:45=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
-rote:
->
-> On Wed, Jun 12, 2024 at 4:01=E2=80=AFAM Simon Glass <sjg@chromium.org> wr=
-ote:
-> >
-> > Hi Chen-Yu,
-> >
-> > On Wed, 5 Jun 2024 at 03:48, Chen-Yu Tsai <wenst@chromium.org> wrote:
-> > >
-> > > The kernel tree builds some "composite" DTBs, where the final DTB is =
-the
-> > > result of applying one or more DTB overlays on top of a base DTB with
-> > > fdtoverlay.
-> > >
-> > > The FIT image specification already supports configurations having on=
-e
-> > > base DTB and overlays applied on top. It is then up to the bootloader=
- to
-> > > apply said overlays and either use or pass on the final result. This
-> > > allows the FIT image builder to reuse the same FDT images for multipl=
-e
-> > > configurations, if such cases exist.
-> > >
-> > > The decomposition function depends on the kernel build system, readin=
-g
-> > > back the .cmd files for the to-be-packaged DTB files to check for the
-> > > fdtoverlay command being called. This will not work outside the kerne=
-l
-> > > tree. The function is off by default to keep compatibility with possi=
-ble
-> > > existing users.
-> > >
-> > > To facilitate the decomposition and keep the code clean, the model an=
-d
-> > > compatitble string extraction have been moved out of the output_dtb
-> > > function. The FDT image description is replaced with the base file na=
-me
-> > > of the included image.
-> > >
-> > > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> > > ---
-> > > This is a feature I alluded to in my replies to Simon's original
-> > > submission of the make_fit.py script [1].
-> > >
-> > > This is again made a runtime argument as not all firmware out there
-> > > that boot FIT images support applying overlays. Like my previous
-> > > submission for disabling compression for included FDT images, the
-> > > bootloader found in RK3399 and MT8173 Chromebooks do not support
-> > > applying overlays. Another case of this is U-boot shipped by developm=
-ent
-> > > board vendors in binary form (without upstream) in an image or in
-> > > SPI flash on the board that were built with OF_LIBFDT_OVERLAY=3Dn.
-> > > These would fail to boot FIT images with DT overlays. One such
-> > > example is my Hummingboard Pulse. In these cases the firmware is
-> > > either not upgradable or very hard to upgrade.
-> > >
-> > > I believe there is value in supporting these cases. A common script
-> > > shipped with the kernel source that can be shared by distros means
-> > > the distro people don't have to reimplement this in their downstream
-> > > repos or meta-packages. For ChromeOS this means reducing the amount
-> > > of package code we have in shell script.
-> > >
-> > > [1] https://lore.kernel.org/linux-kbuild/20231207142723.GA3187877@goo=
-gle.com/
-> > > [2]
-> > >
-> > >  scripts/Makefile.lib |  1 +
-> > >  scripts/make_fit.py  | 70 ++++++++++++++++++++++++++++++------------=
---
-> > >  2 files changed, 49 insertions(+), 22 deletions(-)
-> >
-> > Reviewed-by: Simon Glass <sjg@chromium.org>
-> >
-> > Some possible nits / changes below
-> >
-> > >
-> > > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> > > index 9f06f6aaf7fc..d78b5d38beaa 100644
-> > > --- a/scripts/Makefile.lib
-> > > +++ b/scripts/Makefile.lib
-> > > @@ -522,6 +522,7 @@ quiet_cmd_fit =3D FIT     $@
-> > >        cmd_fit =3D $(MAKE_FIT) -o $@ --arch $(UIMAGE_ARCH) --os linux=
- \
-> > >                 --name '$(UIMAGE_NAME)' \
-> > >                 $(if $(findstring 1,$(KBUILD_VERBOSE)),-v) \
-> > > +               $(if $(FIT_DECOMPOSE_DTBS),--decompose-dtbs) \
-> > >                 --compress $(FIT_COMPRESSION) -k $< @$(word 2,$^)
-> > >
-> > >  # XZ
-> > > diff --git a/scripts/make_fit.py b/scripts/make_fit.py
-> > > index 263147df80a4..120f13e1323c 100755
-> > > --- a/scripts/make_fit.py
-> > > +++ b/scripts/make_fit.py
-> > > @@ -22,6 +22,11 @@ the entire FIT.
-> > >  Use -c to compress the data, using bzip2, gzip, lz4, lzma, lzo and
-> > >  zstd algorithms.
-> > >
-> > > +Use -d to decompose "composite" DTBs into their base components and
-> > > +deduplicate the resulting base DTBs and DTB overlays. This requires =
-the
-> > > +DTBs to be sourced from the kernel build directory, as the implement=
-ation
-> > > +looks at the .cmd files produced by the kernel build.
-> > > +
-> > >  The resulting FIT can be booted by bootloaders which support FIT, su=
-ch
-> > >  as U-Boot, Linuxboot, Tianocore, etc.
-> > >
-> > > @@ -64,6 +69,8 @@ def parse_args():
-> > >            help=3D'Specifies the architecture')
-> > >      parser.add_argument('-c', '--compress', type=3Dstr, default=3D'n=
-one',
-> > >            help=3D'Specifies the compression')
-> > > +    parser.add_argument('-d', '--decompose-dtbs', action=3D'store_tr=
-ue',
-> > > +          help=3D'Decompose composite DTBs into base DTB and overlay=
-s')
-> >
-> > I wonder if we should reserve -d for --debug? I don't have a strong
-> > opinion though.
->
-> Seems reasonable. I'll make it use the capital -D then.
->
-> > >      parser.add_argument('-E', '--external', action=3D'store_true',
-> > >            help=3D'Convert the FIT to use external data')
-> > >      parser.add_argument('-n', '--name', type=3Dstr, required=3DTrue,
-> > > @@ -140,12 +147,12 @@ def finish_fit(fsw, entries):
-> > >      fsw.end_node()
-> > >      seq =3D 0
-> > >      with fsw.add_node('configurations'):
-> > > -        for model, compat in entries:
-> > > +        for model, compat, files in entries:
-> > >              seq +=3D 1
-> > >              with fsw.add_node(f'conf-{seq}'):
-> > >                  fsw.property('compatible', bytes(compat))
-> > >                  fsw.property_string('description', model)
-> > > -                fsw.property_string('fdt', f'fdt-{seq}')
-> > > +                fsw.property('fdt', b''.join([b'fdt-%d\x00' % x for =
-x in files]))
-> >
-> > This looks right to me. It would be nice to use an f string but I
-> > don't know how to do that with bytes.
->
-> Me neither. Switching the format to an f string doesn't work:
->
->   File "/ssd1/wenst/linux/src/scripts/make_fit.py", line 324, in <module>
->     sys.exit(run_make_fit())
->              ^^^^^^^^^^^^^^
->   File "/ssd1/wenst/linux/src/scripts/make_fit.py", line 298, in run_make=
-_fit
->     out_data, count, size =3D build_fit(args)
->                             ^^^^^^^^^^^^^^^
->   File "/ssd1/wenst/linux/src/scripts/make_fit.py", line 288, in build_fi=
-t
->     finish_fit(fsw, entries)
->   File "/ssd1/wenst/linux/src/scripts/make_fit.py", line 161, in finish_f=
-it
->     fsw.property('fdt', b''.join([f'fdt-%d\x00' % x for x in files]))
->                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> TypeError: sequence item 0: expected a bytes-like object, str found
+This patch series enable RISC-V ACPI NUMA support which was based on
+the recently approved ACPI ECR[1].
 
-    bytes(''.join(f'fdt-{x}\x00' for x in files), "ascii")
+Patch 1/4 add RISC-V specific acpi_numa.c file to parse NUMA information
+from SRAT and SLIT ACPI tables.
+Patch 2/4 add the common SRAT RINTC affinity structure handler.
+Patch 3/4 change the ACPI_NUMA to a hidden option since it would be selected
+by default on all supported platform.
+Patch 4/4 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
+potential boot noise on ACPI platforms that are not NUMA.
 
-Seems to work.
+Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
 
-ChenYu
+[1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/view?usp=sharing
 
-> > But do you need the inner [] ?
->
-> Nope. Will remove.
->
-> >
-> > >                  fsw.property_string('kernel', 'kernel')
-> > >      fsw.end_node()
-> > >
-> > > @@ -193,21 +200,9 @@ def output_dtb(fsw, seq, fname, arch, compress):
-> > >          fname (str): Filename containing the DTB
-> > >          arch: FIT architecture, e.g. 'arm64'
-> > >          compress (str): Compressed algorithm, e.g. 'gzip'
-> > > -
-> > > -    Returns:
-> > > -        tuple:
-> > > -            str: Model name
-> > > -            bytes: Compatible stringlist
-> > >      """
-> > >      with fsw.add_node(f'fdt-{seq}'):
-> > > -        # Get the compatible / model information
-> > > -        with open(fname, 'rb') as inf:
-> > > -            data =3D inf.read()
-> > > -        fdt =3D libfdt.FdtRo(data)
-> > > -        model =3D fdt.getprop(0, 'model').as_str()
-> > > -        compat =3D fdt.getprop(0, 'compatible')
-> > > -
-> > > -        fsw.property_string('description', model)
-> > > +        fsw.property_string('description', os.path.basename(fname))
-> > >          fsw.property_string('type', 'flat_dt')
-> > >          fsw.property_string('arch', arch)
-> > >          fsw.property_string('compression', compress)
-> > > @@ -215,7 +210,6 @@ def output_dtb(fsw, seq, fname, arch, compress):
-> > >          with open(fname, 'rb') as inf:
-> > >              compressed =3D compress_data(inf, compress)
-> > >          fsw.property('data', compressed)
-> > > -    return model, compat
-> > >
-> > >
-> > >  def build_fit(args):
-> > > @@ -235,6 +229,7 @@ def build_fit(args):
-> > >      fsw =3D libfdt.FdtSw()
-> > >      setup_fit(fsw, args.name)
-> > >      entries =3D []
-> > > +    fdts =3D collections.OrderedDict()
-> > >
-> > >      # Handle the kernel
-> > >      with open(args.kernel, 'rb') as inf:
-> > > @@ -243,12 +238,43 @@ def build_fit(args):
-> > >      write_kernel(fsw, comp_data, args)
-> > >
-> > >      for fname in args.dtbs:
-> > > -        # Ignore overlay (.dtbo) files
-> > > -        if os.path.splitext(fname)[1] =3D=3D '.dtb':
-> > > -            seq +=3D 1
-> > > -            size +=3D os.path.getsize(fname)
-> > > -            model, compat =3D output_dtb(fsw, seq, fname, args.arch,=
- args.compress)
-> > > -            entries.append([model, compat])
-> > > +        # Ignore non-DTB (*.dtb) files
-> > > +        if os.path.splitext(fname)[1] !=3D '.dtb':
-> > > +            continue
-> > > +
-> > > +        # Get the compatible / model information
-> > > +        with open(fname, 'rb') as inf:
-> > > +            data =3D inf.read()
-> > > +        fdt =3D libfdt.FdtRo(data)
-> > > +        model =3D fdt.getprop(0, 'model').as_str()
-> > > +        compat =3D fdt.getprop(0, 'compatible')
-> > > +
-> > > +        if args.decompose_dtbs:
-> > > +            # Check if the DTB needs to be decomposed
-> > > +            path, basename =3D os.path.split(fname)
-> > > +            cmd_fname =3D os.path.join(path, f'.{basename}.cmd')
-> > > +            with open(cmd_fname, 'r', encoding=3D'ascii') as inf:
-> > > +                cmd =3D inf.read()
-> > > +
-> > > +            if 'scripts/dtc/fdtoverlay' in cmd:
-> > > +                # This depends on the structure of the composite DTB=
- command
-> > > +                files =3D cmd.split()
-> > > +                files =3D files[files.index('-i')+1:]
-> >
-> > spaces around +
->
-> Will fix.
->
-> > > +            else:
-> > > +                files =3D [fname]
-> > > +        else:
-> > > +            files =3D [fname]
-> >
-> > I do wonder if the code from '# Get the compatible' to here would be
-> > better in a separate, documented function, to keep things easier to
-> > understand?
->
-> I'll see what I can do. In that case I'll drop your Reviewed-by.
->
->
-> Thanks
-> ChenYu
->
-> > > +
-> > > +        for fn in files:
-> > > +            if fn not in fdts:
-> > > +                seq +=3D 1
-> > > +                size +=3D os.path.getsize(fn)
-> > > +                output_dtb(fsw, seq, fn, args.arch, args.compress)
-> > > +                fdts[fn] =3D seq
-> > > +
-> > > +        files_seq =3D [fdts[fn] for fn in files]
-> > > +
-> > > +        entries.append([model, compat, files_seq])
-> > >
-> > >      finish_fit(fsw, entries)
-> > >
-> > > --
-> > > 2.45.1.288.g0e0cd299f1-goog
-> > >
-> >
-> > Regards,
-> > Simon
+Testing:
+Since the ACPI AIA/PLIC support patch set is still under upstream review,
+hence it is tested using the poll based HVC SBI console and RAM disk.
+1) Build latest Qemu with the following patch backported
+   https://github.com/vlsunil/qemu/commit/42bd4eeefd5d4410a68f02d54fee406d8a1269b0
+
+2) Build latest EDK-II
+   https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
+
+3) Build Linux with the following configs enabled
+   CONFIG_RISCV_SBI_V01=y
+   CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+   CONFIG_NONPORTABLE=y
+   CONFIG_HVC_RISCV_SBI=y
+   CONFIG_NUMA=y
+   CONFIG_ACPI_NUMA=y
+
+4) Build buildroot rootfs.cpio
+
+5) Launch the Qemu machine
+   qemu-system-riscv64 -nographic \
+   -machine virt,pflash0=pflash0,pflash1=pflash1 -smp 4 -m 8G \
+   -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+   -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+   -object memory-backend-ram,size=4G,id=m0 \
+   -object memory-backend-ram,size=4G,id=m1 \
+   -numa node,memdev=m0,cpus=0-1,nodeid=0 \
+   -numa node,memdev=m1,cpus=2-3,nodeid=1 \
+   -numa dist,src=0,dst=1,val=30 \
+   -kernel linux/arch/riscv/boot/Image \
+   -initrd buildroot/output/images/rootfs.cpio \
+   -append "root=/dev/ram ro console=hvc0 earlycon=sbi"
+
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0x17fffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x180000000-0x27fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x17fe3bc40-0x17fe3cfff]
+[    0.000000] NUMA: NODE_DATA [mem 0x27fff4c40-0x27fff5fff]
+...
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x0 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x1 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x2 -> Node 1
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x3 -> Node 1
+
+---
+Changes since v3
+  - Rebase to linux-riscv/for-next(Linux 6.10-rc1)
+  - Remove original patch 1/6 since it had been merged through
+    ACPICA pull(commit fe1c408d50604f)
+  - Remove original patch 4/6 since the related changes was
+    introduced in commit 3a785e19f43267
+
+Haibo Xu (4):
+  ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+  ACPI: NUMA: Add handler for SRAT RINTC affinity structure
+  ACPI: NUMA: change the ACPI_NUMA to a hidden option
+  ACPI: NUMA: replace pr_info with pr_debug in arch_acpi_numa_init
+
+ arch/arm64/Kconfig            |   1 -
+ arch/loongarch/Kconfig        |   1 -
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ drivers/acpi/numa/Kconfig     |   5 +-
+ drivers/acpi/numa/srat.c      |  32 ++++++++-
+ drivers/base/arch_numa.c      |   2 +-
+ include/linux/acpi.h          |   6 ++
+ 12 files changed, 187 insertions(+), 18 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
+
+-- 
+2.34.1
+
