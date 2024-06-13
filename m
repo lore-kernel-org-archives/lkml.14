@@ -1,187 +1,76 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC781494A5
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADC114900F;
+	Thu, 13 Jun 2024 15:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290947; cv=none; b=uFzXoP25BZrAAe94qH6MZRreJYn1dBjg6KANRV/0LtpHazFfsyO1GTjlfXHxmdqtn5VuTY6reRBqPsuAiTg4f9jT5byp7Z+gveFb7OceBupGOe8c8GrU6q8jRSNhDAiveE0ofSdjtB/CxJsmQUzjM6U1tEeVYusDbRVpbq5Yc+U=
+	t=1718290970; cv=none; b=ZnbhlLEKlRQ61h8LOdi5d8XQo7gpPBHC7cOWaJevg1u4B2xIK7mn864C71KQh0n21CWacfFiPhJF9ShRqkejqR8W9z9gv5uGww0RnF83vkwqV1nbEUrlMR7JvNrVBHx/7wK6X5R31+VDY14lxKYRwP3oKaFen8PcvQ4jKmVKPg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290947; c=relaxed/simple;
-	bh=V5AteabZhVyZ3nyzkEAKPmkKwl9XMFh6GfZxRBuBQ9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KMkAt0nn1g4DfNz/2qR8z5PCYrcd7cTPvckkk8zWdmQGNXft3enuMK1gmw58r1qOx1gaEg9hxuCyFriWlG97C3FuXxeGKKMl0tpldzwt7dJjkxCt83AWj39XREPFQDs8gqdw/CR8Arr46NnalYkAYzxOpEgi9hsCyhZFn1uiDvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dnRQCXmW; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718290970; c=relaxed/simple;
+	bh=V+fe5XWMSFww4qgqdxA2gm8RTgqpG9cYDlZuGZBpm6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HEJEgUm8TEV8YsYvDua+3u8eL9CeQ0Qk8Rjcp39jc2S0p8eTxiD4nNcU5p1+NFG+U+zOVvD/9f8orcZnPZvNF5uYNwjl9MA9jGJd+dKru+dTfeO30vro20QH+xdDqYs+r+z83aO158gONIqhc0kohXi9FxpIfmpsmC0U76YCxrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZ0i2pg+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dnRQCXmW"
-X-Envelope-To: radhey.shyam.pandey@amd.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718290942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEBRwGHuYYeaiNTmDNEUKdsVRARs0SvHUnnIMjbyCE4=;
-	b=dnRQCXmWGraLUliXWOcCW9NwR9J69w4NkRGqqRYDwsNfThTkQMQDJuIO/PWh2XM9B0pMZ5
-	i0Tdf37wyFJYrle1RU5KtND6cmEm506iyx8qtvQsKI8PVU3I9gwBEp9awJx55G6JGaLJKC
-	qm5hTtyZMNMp2XCXIy23MzRJZpsSp3A=
-X-Envelope-To: laurent.pinchart@ideasonboard.com
-X-Envelope-To: linux-phy@lists.infradead.org
-X-Envelope-To: vkoul@kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: kishon@kernel.org
-Message-ID: <8349516a-84bc-45bf-a84c-ff05d8f50bf7@linux.dev>
-Date: Thu, 13 Jun 2024 11:02:15 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZ0i2pg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D6C4AF1C;
+	Thu, 13 Jun 2024 15:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718290970;
+	bh=V+fe5XWMSFww4qgqdxA2gm8RTgqpG9cYDlZuGZBpm6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JZ0i2pg+nV3+QOCvt7vH2GCl59/M9Fjl4GZ3z/n4vB81JNpgmmTbqhdK26Q1k5Tfg
+	 GFTz3X0TAIz3jwQL3mEZ7xRh9uycEknDSpPyKk7LiJtd8/YLAa3Aqp32L37JtUNs8r
+	 JQKOC6nqkWNgsLB1C+nZIPoNFXGjg0qigBrHK9uNBOoTIkSFbiFWy1JxX4o6VxwA44
+	 EoBpurwB3aTenl5tttvexEoY4SoEIYM92GXgvo4UIM4UlK2e8QxabZmRyUgYNjHGqb
+	 EOJF+cBbzMrbdxNS6ZsFwKeAzcRcQDv6KmlxqMU1V4jqX69FrhQmM5AmS3Hu2ayOFJ
+	 XLbI0oASwiSMg==
+Date: Thu, 13 Jun 2024 16:02:46 +0100
+From: Lee Jones <lee@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Pavel Machek <pavel@ucw.cz>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dustin Howett <dustin@howett.net>
+Subject: Re: [PATCH] leds: triggers: flush pending brightness before
+ activating trigger
+Message-ID: <20240613150246.GI2561462@google.com>
+References: <20240603-led-trigger-flush-v1-1-c904c6e2fb34@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
-To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
-Cc: Vinod Koul <vkoul@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Simek, Michal" <michal.simek@amd.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-References: <20240506170110.2874724-1-sean.anderson@linux.dev>
- <20240506170110.2874724-5-sean.anderson@linux.dev>
- <MN0PR12MB5953519A685A222CC603A2FEB7C12@MN0PR12MB5953.namprd12.prod.outlook.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <MN0PR12MB5953519A685A222CC603A2FEB7C12@MN0PR12MB5953.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240603-led-trigger-flush-v1-1-c904c6e2fb34@weissschuh.net>
 
-On 6/13/24 05:20, Pandey, Radhey Shyam wrote:
->> -----Original Message-----
->> From: Sean Anderson <sean.anderson@linux.dev>
->> Sent: Monday, May 6, 2024 10:31 PM
->> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; linux-
->> phy@lists.infradead.org
->> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
->> linux-kernel@vger.kernel.org; Michal Simek <michal.simek@amd.com>;
->> Kishon Vijay Abraham I <kishon@kernel.org>; Sean Anderson
->> <sean.anderson@linux.dev>
->> Subject: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
->> 
->> Add support for printing some basic status information to debugfs. This
->> is helpful when debugging phy consumers to make sure they are configuring
->> the phy appropriately.
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->> Changes in v2:
->> - Use debugfs_create_devm_seqfile
->> 
->>  drivers/phy/xilinx/phy-zynqmp.c | 40
->> +++++++++++++++++++++++++++++++++
->>  1 file changed, 40 insertions(+)
->> 
->> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-
->> zynqmp.c
->> index b86fe2a249a8..2520c75a4a77 100644
->> --- a/drivers/phy/xilinx/phy-zynqmp.c
->> +++ b/drivers/phy/xilinx/phy-zynqmp.c
->> @@ -13,6 +13,7 @@
->>   */
->> 
->>  #include <linux/clk.h>
->> +#include <linux/debugfs.h>
->>  #include <linux/delay.h>
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->> @@ -123,6 +124,15 @@
->>  #define ICM_PROTOCOL_DP			0x4
->>  #define ICM_PROTOCOL_SGMII		0x5
->> 
->> +static const char *const xpsgtr_icm_str[] = {
->> +	[ICM_PROTOCOL_PD] = "powered down",
+On Mon, 03 Jun 2024, Thomas Weißschuh wrote:
+
+> The race fixed in timer_trig_activate() between a blocking
+> set_brightness() call and trigger->activate() can affect any trigger.
+> So move the call to flush_work() into led_trigger_set() where it can
+> avoid the race for all triggers.
 > 
-> Protocol saying powered down seems confusing.
-> Should we say None or None(power down)?
+> Fixes: 0db37915d912 ("leds: avoid races with workqueue")
+> Fixes: 8c0f693c6eff ("leds: avoid flush_work in atomic context")
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+> Dustin, could you validate that this fixes the issue you encountered in
+> the cros_ec led driver?
+> ---
+>  drivers/leds/led-triggers.c          | 10 ++++++++--
+>  drivers/leds/trigger/ledtrig-timer.c |  5 -----
+>  2 files changed, 8 insertions(+), 7 deletions(-)
 
-Either works I guess. I'm just matching the define.
+This patch clashes with:
 
->> +	[ICM_PROTOCOL_PCIE] = "PCIe",
->> +	[ICM_PROTOCOL_SATA] = "SATA",
->> +	[ICM_PROTOCOL_USB] = "USB",
->> +	[ICM_PROTOCOL_DP] = "DisplayPort",
->> +	[ICM_PROTOCOL_SGMII] = "SGMII",
->> +};
->> +
->>  /* Test Mode common reset control  parameters */
->>  #define TM_CMN_RST			0x10018
->>  #define TM_CMN_RST_EN			0x1
->> @@ -788,6 +798,34 @@ static struct phy *xpsgtr_xlate(struct device *dev,
->>  	return ERR_PTR(-EINVAL);
->>  }
->> 
->> +/*
->> + * DebugFS
->> + */
->> +
->> +static int xpsgtr_status_read(struct seq_file *seq, void *data)
->> +{
->> +	struct device *dev = seq->private;
->> +	struct xpsgtr_phy *gtr_phy = dev_get_drvdata(dev);
->> +	struct clk *clk;
->> +	u32 pll_status;
->> +
->> +	mutex_lock(&gtr_phy->phy->mutex);
-> 
-> Do we see any need for this lock? This function simply read hw register 
-> /phy members and decodes it.
+  https://lore.kernel.org/all/20240531120124.75662-1-hdegoede@redhat.com/
 
-It's to protect against modifications to gtr_phy->refclk and ->instance.
+Please rebase and ensure that your solution doesn't conflict.
 
-These are accessed under lock elsewhere; this is not a fast path and I don't
-want to have to reason about the semantics when using a mutex is definitely
-correct.
-
---Sean
-
->> +	pll_status = xpsgtr_read_phy(gtr_phy, L0_PLL_STATUS_READ_1);
->> +	clk = gtr_phy->dev->clk[gtr_phy->refclk];
->> +
->> +	seq_printf(seq, "Lane:            %u\n", gtr_phy->lane);
->> +	seq_printf(seq, "Protocol:        %s\n",
->> +		   xpsgtr_icm_str[gtr_phy->protocol]);
->> +	seq_printf(seq, "Instance:        %u\n", gtr_phy->instance);
->> +	seq_printf(seq, "Reference clock: %u (%pC)\n", gtr_phy->refclk, clk);
->> +	seq_printf(seq, "Reference rate:  %lu\n", clk_get_rate(clk));
->> +	seq_printf(seq, "PLL locked:      %s\n",
->> +		   pll_status & PLL_STATUS_LOCKED ? "yes" : "no");
->> +
->> +	mutex_unlock(&gtr_phy->phy->mutex);
->> +	return 0;
->> +}
->> +
->>  /*
->>   * Power Management
->>   */
->> @@ -937,6 +975,8 @@ static int xpsgtr_probe(struct platform_device *pdev)
->> 
->>  		gtr_phy->phy = phy;
->>  		phy_set_drvdata(phy, gtr_phy);
->> +		debugfs_create_devm_seqfile(&phy->dev, "status", phy-
->> >debugfs,
->> +					    xpsgtr_status_read);
->>  	}
->> 
->>  	/* Register the PHY provider. */
->> --
->> 2.35.1.1320.gc452695387.dirty
-> 
-
+-- 
+Lee Jones [李琼斯]
