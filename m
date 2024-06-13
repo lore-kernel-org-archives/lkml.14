@@ -1,129 +1,253 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E68A13D607;
-	Thu, 13 Jun 2024 07:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2556F13C9C9;
+	Thu, 13 Jun 2024 07:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718265403; cv=none; b=ti83BvKKKxYTAMK0gxUuL+dWJLFpRpPjpfYqjxvDNFl8FG6axIM5bwXTs1+K2DTR91SaHWzdyX3FSmazvJc/Smom8vRXfxvL0Jxz530nxcRRtQ1H4AzJvbLbYClECWwjR1F5luoLny3gmDEkL5GE4hxEpygsOw/uriol3xpPR2Q=
+	t=1718265439; cv=none; b=o4FZLZPSBzc7g0mSJoKlw7q/GLTPM7cAtWTxBwAk8X57k5HS3rFP7yfZHmly1/9Xo7HJhZjzgcqNuKgEF0LivkFqZ5nTpnq7SvCGAswAaJlxS+qpSxfrtz2jrh5m2D3h2EE1e8Qj86G00XT9MOWfJ3qhzMUHO/igULs6HY+YFJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718265403; c=relaxed/simple;
-	bh=GwtrW5471joAc5Ed4Kj55CjUq75+jsgEdYRndPXtQcg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jp2E41Iv1QCKtf6pdWiwgK1Iv/EBPdPXGa2Znw6SCFiXYKo7cIUUOUnBnLCsKkN/ZDi7yHu+FLa16DDiz6CL0CmA5AnodY5GBFVbciE8sAUagIgEC/mCxMj5PcZ2M1ysT9Gsfj0PCXMl3n49HAVLa2T6YQuodUcYGhLXbCx9TFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=JrGg/6qg; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1718265439; c=relaxed/simple;
+	bh=RmD8W+qERbJFVXWFv0k1jn2sHsDduLfg3wqCJILnzAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iTqvHNIWr4XL1G5VK8oQYET0PrCcT4b6EgddK/T5oi1SLH1J9/QTT7RnAUcBlDubQWeccdAPmdWhvCs8Qjj/WmvboQ9Ndq/RAzF8E2hWcQRc5wwCVdP4yohvP8Jc2YQZ9oUOp/ug1dfJTp6KpiYb7/whbRdxEIAooayHQKPSHVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLwyDk9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JrGg/6qg"
-X-UUID: 740d4c2c295a11efa54bbfbb386b949c-20240613
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=E7llR/RAqOOuOrro8s4iot5nsHsj1Nl6C3DN2LP19uk=;
-	b=JrGg/6qgKHsPdsvdDjKEw5t9fVdphxtQ1zAGkOprHGOhPJIZtJRNcBcd6VF5Seek7GbgupsX+Au6lF1+3njTkEphat+Er179Ua57hMmA+SyLoqVpeglVg4sjY1hQ1HK82PbWhBQ3jr9Dufw7DZxVN3L6lKFuNvEXhWU5fAKjBdA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:81253da8-fe6e-4a1e-863a-6c6866a5b55e,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:393d96e,CLOUDID:7baf8988-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 740d4c2c295a11efa54bbfbb386b949c-20240613
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 815185349; Thu, 13 Jun 2024 15:56:34 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 13 Jun 2024 15:56:32 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 13 Jun 2024 15:56:32 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v3 7/7] media: mediatek: vcodec: remove media request checking
-Date: Thu, 13 Jun 2024 15:55:32 +0800
-Message-ID: <20240613075532.32128-8-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240613075532.32128-1-yunfei.dong@mediatek.com>
-References: <20240613075532.32128-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLwyDk9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C97C4AF5F;
+	Thu, 13 Jun 2024 07:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718265438;
+	bh=RmD8W+qERbJFVXWFv0k1jn2sHsDduLfg3wqCJILnzAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PLwyDk9JvJ8UnzYIqw7zpM7zoe5LKeSGSq6cOz4IIKlaA2rW+C6EeeNNO5UHis+kL
+	 8WGiNXPlGsdau9tTDTRAvEtfs8r/6jo5Sq/Uk2JIqbcQx6Fh4Ztsp7tEb1t3MnUsTy
+	 RaRpbPjIN1vq9JfOl3hBUegoHrjIRW886WtbNfp95ZcsBDhLmQ+DL3lMgZP4JHT42h
+	 tBjiDwWIF3Bb7txy302O9p4hj6J8GtAtd4xmWuY/S6pL23kiNaamDWYVD/54K81LYt
+	 JfaGnJM17s2CEBxopZBGFCAeUA3kC2hHEFBEGE3DlsEaKfKAna2GGpf2qQUMZoyDrf
+	 EshQ7w97yPB3A==
+Date: Thu, 13 Jun 2024 09:57:16 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/9] drm/bridge-connector: switch to using drmm
+ allocations
+Message-ID: <20240613-hospitable-logical-jaguar-fc5b7d@houat>
+References: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
+ <20240607-bridge-hdmi-connector-v5-2-ab384e6021af@linaro.org>
+ <20240610-secret-rottweiler-from-asgard-132f75@houat>
+ <CAA8EJpogi2qm0bhCwumY4zj-xMUkF4zbK-NAPqCeDbLcybFciw@mail.gmail.com>
+ <20240610-smooth-liberal-guan-59853e@houat>
+ <t5pav3up5r6ezs4q37lc7jqlv55ftta7fnntp75b4pjboycwsm@uvs7q6frrzf5>
+ <20240611-zippy-pragmatic-catfish-cceee5@houat>
+ <CAA8EJppcqLm7UbW9n2Y_4mfJv4JFWDkPXJ8=TBL53LiFPADzpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="odli6rndmcobp3e7"
+Content-Disposition: inline
+In-Reply-To: <CAA8EJppcqLm7UbW9n2Y_4mfJv4JFWDkPXJ8=TBL53LiFPADzpQ@mail.gmail.com>
 
-If the media request of each source buffer is NULL, need to
-set the buffer status to error, then schedule again in case
-of access NULL pointer. No need to check again after media
-request pointer is non zero.
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
- .../vcodec/decoder/mtk_vcodec_dec_stateless.c      | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+--odli6rndmcobp3e7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-index 3dba3549000a..43af18df03ea 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-@@ -359,10 +359,14 @@ static void mtk_vdec_worker(struct work_struct *work)
- 			  ctx->id, bs_src->va, &bs_src->dma_addr, bs_src->size, vb2_src);
- 	/* Apply request controls. */
- 	src_buf_req = vb2_src->req_obj.req;
--	if (src_buf_req)
-+	if (src_buf_req) {
- 		v4l2_ctrl_request_setup(src_buf_req, &ctx->ctrl_hdl);
--	else
-+	} else {
- 		mtk_v4l2_vdec_err(ctx, "vb2 buffer media request is NULL");
-+		v4l2_m2m_buf_done(vb2_v4l2_src, VB2_BUF_STATE_ERROR);
-+		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
-+		return;
-+	}
- 
- 	ret = vdec_if_decode(ctx, bs_src, NULL, &res_chg);
- 	if (ret && ret != -EAGAIN) {
-@@ -380,8 +384,7 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	state = ret ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE;
- 	if (!IS_VDEC_LAT_ARCH(dev->vdec_pdata->hw_arch) ||
- 	    ctx->current_codec == V4L2_PIX_FMT_VP8_FRAME) {
--		if (src_buf_req)
--			v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
- 		vb2_v4l2_dst = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
- 		v4l2_m2m_buf_done(vb2_v4l2_dst, state);
- 		v4l2_m2m_buf_done(vb2_v4l2_src, state);
-@@ -398,8 +401,7 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	 */
- 	ctx->last_vb2_v4l2_src = (ret != -EAGAIN) ? NULL : vb2_v4l2_src;
- 	if (ret && ret != -EAGAIN) {
--		if (src_buf_req)
--			v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
- 		v4l2_m2m_buf_done(vb2_v4l2_src, state);
- 	}
- 
--- 
-2.18.0
+On Tue, Jun 11, 2024 at 02:26:12PM GMT, Dmitry Baryshkov wrote:
+> On Tue, 11 Jun 2024 at 11:54, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Mon, Jun 10, 2024 at 08:54:09PM GMT, Dmitry Baryshkov wrote:
+> > > On Mon, Jun 10, 2024 at 02:07:06PM +0200, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > +Hans
+> > > >
+> > > > On Mon, Jun 10, 2024 at 02:46:03PM GMT, Dmitry Baryshkov wrote:
+> > > > > On Mon, 10 Jun 2024 at 11:04, Maxime Ripard <mripard@kernel.org> =
+wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Fri, Jun 07, 2024 at 04:22:59PM GMT, Dmitry Baryshkov wrote:
+> > > > > > > Turn drm_bridge_connector to using drmm_kzalloc() and
+> > > > > > > drmm_connector_init() and drop the custom destroy function. T=
+he
+> > > > > > > drm_connector_unregister() and fwnode_handle_put() are alread=
+y handled
+> > > > > > > by the drm_connector_cleanup() and so are safe to be dropped.
+> > > > > > >
+> > > > > > > Acked-by: Maxime Ripard <mripard@kernel.org>
+> > > > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/drm_bridge_connector.c | 23 +++++-----------=
+-------
+> > > > > > >  1 file changed, 5 insertions(+), 18 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/drm_bridge_connector.c b/drivers=
+/gpu/drm/drm_bridge_connector.c
+> > > > > > > index 982552c9f92c..e093fc8928dc 100644
+> > > > > > > --- a/drivers/gpu/drm/drm_bridge_connector.c
+> > > > > > > +++ b/drivers/gpu/drm/drm_bridge_connector.c
+> > > > > > > @@ -15,6 +15,7 @@
+> > > > > > >  #include <drm/drm_connector.h>
+> > > > > > >  #include <drm/drm_device.h>
+> > > > > > >  #include <drm/drm_edid.h>
+> > > > > > > +#include <drm/drm_managed.h>
+> > > > > > >  #include <drm/drm_modeset_helper_vtables.h>
+> > > > > > >  #include <drm/drm_probe_helper.h>
+> > > > > > >
+> > > > > > > @@ -193,19 +194,6 @@ drm_bridge_connector_detect(struct drm_c=
+onnector *connector, bool force)
+> > > > > > >       return status;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > -static void drm_bridge_connector_destroy(struct drm_connecto=
+r *connector)
+> > > > > > > -{
+> > > > > > > -     struct drm_bridge_connector *bridge_connector =3D
+> > > > > > > -             to_drm_bridge_connector(connector);
+> > > > > > > -
+> > > > > > > -     drm_connector_unregister(connector);
+> > > > > > > -     drm_connector_cleanup(connector);
+> > > > > > > -
+> > > > > > > -     fwnode_handle_put(connector->fwnode);
+> > > > > > > -
+> > > > > > > -     kfree(bridge_connector);
+> > > > > > > -}
+> > > > > > > -
+> > > > > > >  static void drm_bridge_connector_debugfs_init(struct drm_con=
+nector *connector,
+> > > > > > >                                             struct dentry *ro=
+ot)
+> > > > > > >  {
+> > > > > > > @@ -224,7 +212,6 @@ static const struct drm_connector_funcs d=
+rm_bridge_connector_funcs =3D {
+> > > > > > >       .reset =3D drm_atomic_helper_connector_reset,
+> > > > > > >       .detect =3D drm_bridge_connector_detect,
+> > > > > > >       .fill_modes =3D drm_helper_probe_single_connector_modes,
+> > > > > > > -     .destroy =3D drm_bridge_connector_destroy,
+> > > > > > >       .atomic_duplicate_state =3D drm_atomic_helper_connector=
+_duplicate_state,
+> > > > > > >       .atomic_destroy_state =3D drm_atomic_helper_connector_d=
+estroy_state,
+> > > > > > >       .debugfs_init =3D drm_bridge_connector_debugfs_init,
+> > > > > > > @@ -328,7 +315,7 @@ struct drm_connector *drm_bridge_connecto=
+r_init(struct drm_device *drm,
+> > > > > > >       int connector_type;
+> > > > > > >       int ret;
+> > > > > > >
+> > > > > > > -     bridge_connector =3D kzalloc(sizeof(*bridge_connector),=
+ GFP_KERNEL);
+> > > > > > > +     bridge_connector =3D drmm_kzalloc(drm, sizeof(*bridge_c=
+onnector), GFP_KERNEL);
+> > > > > >
+> > > > > > So you make destroy's kfree call unnecessary here ...
+> > > > > >
+> > > > > > >       if (!bridge_connector)
+> > > > > > >               return ERR_PTR(-ENOMEM);
+> > > > > > >
+> > > > > > > @@ -383,9 +370,9 @@ struct drm_connector *drm_bridge_connecto=
+r_init(struct drm_device *drm,
+> > > > > > >               return ERR_PTR(-EINVAL);
+> > > > > > >       }
+> > > > > > >
+> > > > > > > -     ret =3D drm_connector_init_with_ddc(drm, connector,
+> > > > > > > -                                       &drm_bridge_connector=
+_funcs,
+> > > > > > > -                                       connector_type, ddc);
+> > > > > > > +     ret =3D drmm_connector_init(drm, connector,
+> > > > > > > +                               &drm_bridge_connector_funcs,
+> > > > > > > +                               connector_type, ddc);
+> > > > > >
+> > > > > > ... and here of drm_connector_cleanup.
+> > > > > >
+> > > > > > drm_connector_unregister wasn't needed, so can ignore it, but y=
+ou leak a reference to
+> > > > > > connector->fwnode since you don't call fwnode_handle_put anymor=
+e.
+> > > > > >
+> > > > > > We should register a drmm action right below the call to fwnode=
+_handle_get too.
+> > > > >
+> > > > > But drm_connector_cleanup() already contains
+> > > > > fwnode_handle_put(connector->fwnode). Isn't that enough?
+> > > >
+> > > > It does, but now I'm confused.
+> > > >
+> > > > drm_bridge_connector_init takes a reference, drm_connector_init doe=
+sn't.
+> > > > It will call drm_bridge_connector_destroy() that gives back its
+> > > > reference (which makes sense to me), but then why do
+> > > > drm_connector_cleanup() does? None of the drm_connector code even t=
+ook
+> > > > that reference, and we end up with a double-put.
+> > > >
+> > > > It looks like it was introduced by commit 48c429c6d18d ("drm/connec=
+tor:
+> > > > Add a fwnode pointer to drm_connector and register with ACPI (v2)")=
+ from
+> > > > Hans, which does call put, but never gets that reference.
+> > >
+> > > The mentioned patch documents that pretty clearly:
+> > >
+> > > * Drivers can set this to associate a fwnode with a connector, drivers
+> > > * are expected to get a reference on the fwnode when setting this.
+> > > * drm_connector_cleanup() will call fwnode_handle_put() on this.
+> > >
+> > > This is logical. Whoever sets the drm_connector::fwnode pointer, shou=
+ld
+> > > get reference. This way drm_connector_init() doesn't need to play with
+> > > the reference counting. The cleanup code drops the reference (so the
+> > > driver doesn't need to), because cleanup might be assynchronous..
+> >
+> > Right, but it's the cleanup part that isn't logical. It makes total
+> > sense to have the connector that sets connector->fwnode get the
+> > reference itself. It doesn't make sense to have the core give that
+> > reference instead of the driver.
+> >
+> > It's confusing, because if the driver is supposed to handle its
+> > reference itself, then it should handle all of it itself. This bug is
+> > the testament for that: the natural approach is buggy.
+>=20
+> I'd say this is the 'transfer of the ownership'. The base driver gets
+> the reference, and then gives it away to the drm_connecter. But indeed
+> this is not very intuitive.
+>=20
+> I have looked at the original series by Hans/Heikky, but I don't seem
+> to be able to find a good way to solve that. The fwnode can be set
+> after initialising the drm_connector. And at the same time it doesn't
+> make so much sense to put that burden onto the driver. One option
+> might be to add drm_connector_set_fwnode() that will get the reference
+> internally, but that looks a bit like an overkill.
 
+It looks like there's only one driver that actually requires that kind
+of hack: i915. So, imo, the hacks should be in i915 and not cripple the
+core API.
+
+Maxime
+
+--odli6rndmcobp3e7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZmqmWwAKCRDj7w1vZxhR
+xcjzAQDuOeXpsgePlCrhU3r5smgfj3E03ZHXYfWHP71uY61ASgEAodwkgwKkhBri
+T8x1uNmi+gNToVAgRiaOGjTKj5XRNA4=
+=rzeG
+-----END PGP SIGNATURE-----
+
+--odli6rndmcobp3e7--
