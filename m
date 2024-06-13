@@ -1,85 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C22145B3F;
-	Thu, 13 Jun 2024 14:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D770145B12;
+	Thu, 13 Jun 2024 14:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718289596; cv=none; b=mCA2/8N97eYZIxiL1YJe4Peeu+Td4+OD/T54cZDlzyCIRp0iCwyllSBEu+6a4PUZYD7JUx7ZNKuVdU8NheOnU2cKp0Dg/UbOhWPrL6l9SCfruZoYeF/DgB9MzNWovmBYN2jjqDuNPx/vOM72JGy+uWjOBWNorzv84X7zRHB1cWo=
+	t=1718289631; cv=none; b=luqPIfQTjZfpKHEhrLPPDk9804SnuvLNPaMDpEaAz/UvNHBFOXhLK1Be6Z9VKiSD036D15l0r+jRA728QQmm4X2cnULkQ8H/cn8JkqENbZn29++x/VsWagaNuoy9um+XGy+KZ9lFkZb6WnpBQkpUj9dGW59Ng6cZ/F56fAnlWP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718289596; c=relaxed/simple;
-	bh=E524rcct08hz6YUrxdb412RbfB6vmLjWaw3BPmGgUfY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BVl3rb92G6EPGYEV2LyP5z5Gq9vCTZgM5y/7k/vL8JXY7aEkw/RQe7cJMIJ6jYdD0+++uol5FHxoX+8hhnTXP79B2j8SnoGGzpCdOxkW3Psc9LScX1NSxOTkR+DtIff3mV1Q/AM6g1J0KQFuBotikGeJ+WZ3lu4RxCKABlCL71I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjtuT8Xc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718289631; c=relaxed/simple;
+	bh=jSu+K80o4zD8PvDW3KilUShNh/XJlo5qMMpgO2sQ1W8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=NKgE6uuMpl0GdiV3x2cFurlhJyiI0SlMdu8o1+D57vhpBNzHsFWET64Wk8+MCBhQtPFEmAsmqbyOQdA+QzAr3YIsWoNMcMXXYjVEyLxrw4m0bCYlEUE6s5zRwxYXMvNQ4FB/ofE/77VYeFc5lxbN0E6BMOiT+7jtpYmMb9UKXDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqwPFSf+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjtuT8Xc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FEF3C4AF4D;
-	Thu, 13 Jun 2024 14:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqwPFSf+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 38215C4AF49;
+	Thu, 13 Jun 2024 14:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718289596;
-	bh=E524rcct08hz6YUrxdb412RbfB6vmLjWaw3BPmGgUfY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gjtuT8Xcz/yiy2MnxocB2sxoQHKjoPmW/zo//t0zNiZ+atwsq4a2odwxj4K7QUeQb
-	 vdpYwo14D0+Ce4fUCqAcZvmhVEfH9PydKjeIUCEF7Q5GKw9OtQksS0ws/NFGcbHphy
-	 PVyJy+/GPCawa9QHsAbfigFDO3HHS+svFzcF3jun5/nF9e5kGjF4W1Fl+iNXrUeyng
-	 ceMx3dcAlRNqOfHpnC1/xPlXUVoLj1Lu0ID0iWuxhy2dhlYY3Upi7kfr8BJHLwKVkr
-	 D/fNVBbQBi20BKi5EstWse2QH0jQ6TXFLl+bM5Tp5OEQHXr0ip9mq98L3Y3QqId/Xz
-	 KoIFCWN5jlnJA==
-From: Lee Jones <lee@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Andrew Lunn <andrew@lunn.ch>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, UNGLinuxDriver@microchip.com, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Yisen Zhuang <yisen.zhuang@huawei.com>, 
- Salil Mehta <salil.mehta@huawei.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org, 
- netdev@vger.kernel.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20240603131230.136196-2-robh@kernel.org>
-References: <20240603131230.136196-2-robh@kernel.org>
-Subject: Re: (subset) [PATCH v2] dt-bindings: mfd: syscon: Add more simple
- compatibles
-Message-Id: <171828959006.2643902.8308227314531523435.b4-ty@kernel.org>
-Date: Thu, 13 Jun 2024 15:39:50 +0100
+	s=k20201202; t=1718289631;
+	bh=jSu+K80o4zD8PvDW3KilUShNh/XJlo5qMMpgO2sQ1W8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=kqwPFSf+8EUfr/e5BjsNfvlZihqDHFT2p5u/B/7HinLecDqWeh2h7wvKYeiH+H5I7
+	 JALu43/p5tqBahzNhVEH+XqBb/WkFGFeNQYQh4s5CmawMA0J4qeUHmxvrAXFjHY1gX
+	 A0i4DocbkEbjT1vk7DxNvu0MhiBtvjn0xUsrrAGlesy3v/dFwYQlN0kKewXA12B8Ci
+	 JKVJkpjL0JBNwZCeeVv1ob+lNPIfeeLpABWy0xkwdivsnsP4HWSr2tPxpiE/YLcL/r
+	 loNdGoSA2PmOIXBYaOJpPrT6pft4z1yEGkIhOFFMvIzGyFnrR28RKg2CYUT4XSVnGZ
+	 3e2uYjnnqOEpQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 29BBFC4314C;
+	Thu, 13 Jun 2024 14:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Subject: Re: [PATCH net] gve: Clear napi->skb before dev_kfree_skb_any()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171828963116.5991.16090491063036449379.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Jun 2024 14:40:31 +0000
+References: <20240612001654.923887-1-ziweixiao@google.com>
+In-Reply-To: <20240612001654.923887-1-ziweixiao@google.com>
+To: Ziwei Xiao <ziweixiao@google.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
+ pkaligineedi@google.com, shailend@google.com, hramamurthy@google.com,
+ willemb@google.com, rushilg@google.com, bcf@google.com, csully@google.com,
+ linux-kernel@vger.kernel.org, stable@kernel.org, stable@vger.kernel.org
 
-On Mon, 03 Jun 2024 08:12:27 -0500, Rob Herring (Arm) wrote:
-> Add another batch of various "simple" syscon compatibles which were
-> undocumented or still documented with old text bindings. Remove the old
-> text binding docs for the ones which were documented.
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 12 Jun 2024 00:16:54 +0000 you wrote:
+> gve_rx_free_skb incorrectly leaves napi->skb referencing an skb after it
+> is freed with dev_kfree_skb_any(). This can result in a subsequent call
+> to napi_get_frags returning a dangling pointer.
 > 
+> Fix this by clearing napi->skb before the skb is freed.
 > 
+> Fixes: 9b8dd5e5ea48 ("gve: DQO: Add RX path")
+> Cc: stable@vger.kernel.org
+> Reported-by: Shailend Chand <shailend@google.com>
+> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+> Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> Reviewed-by: Shailend Chand <shailend@google.com>
+> Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
+> 
+> [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [net] gve: Clear napi->skb before dev_kfree_skb_any()
+    https://git.kernel.org/netdev/net/c/6f4d93b78ade
 
-[1/1] dt-bindings: mfd: syscon: Add more simple compatibles
-      commit: 234db2775b9eff77b8ec2216cc8a286d1dd2cd65
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
---
-Lee Jones [李琼斯]
 
