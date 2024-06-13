@@ -1,132 +1,113 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104AD130A46
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B11C149C4E;
+	Thu, 13 Jun 2024 16:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296979; cv=none; b=lIPkvs/T6jPDDRybLfyS2omHoglKdSZiiMPHVCCixy88HjZg65bRJKyxirDwHEXB8/HQArpjjnWV/XtTjGSXh2cYtuyU5OJ67tgm77JNpFyTnalJrgCIoIUmvyDP/ZCqbPQ1ZMuF/EKcOYVYqAgwWlmAwId6NKrSi6J3IMGuoUs=
+	t=1718296989; cv=none; b=Aa4F5daOqbO7VrbOrwT7ifkEb4sU+ovS5QMdF7CoZXJzYCAM+8B361l4MEa5qrh5DnHJ8cuw+OHk3pfl3SgR+GRpdU6Q+knMFgOht/Ig38v90S23W702kZgLjzLvwHHHXsf0CP91aDNGyzuWwqQSAXh98GQWaoowwRiVukMOvFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296979; c=relaxed/simple;
-	bh=fdR+HOux0l7slfjVf480YuwNVlVxXAAoX1BpgPIeqh8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfWaJTPnhxofIfFmacRm1YKKlMkmtYbwiTXsMlgOsVEwlR27KCi8Z0KJcjHvm52x20jUA8FSlwgepLjHtBfHBMymNqeRHLGDXslUXfPPlSexEFJnhV3v5sztWXZvRlN8QTDBrsIT0h6U9M7HIykkJHMbPPOgCbBZUy2T009uh1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62a0849f8e5so13246687b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:42:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718296974; x=1718901774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a7eDnx/cZDpbixJmVjvIErbIrnZeY3Xb1qwzBjK+wtI=;
-        b=jibTxUWf9gbjyEtOvOGQ2G7tvh35gugK4sT+D4Lh2o+q+4fFBftJaH0iNUbGda9Nye
-         W9nJT9JCUL1DfPunMb5L+2th1Xx1bW6hLn0S03T7EJKHY5LrTftK/IfSnBiPU7u6+2Wv
-         aYFqk+H1IMP1MGaC/IwCx1Yw9+98URrDt2geQljPBz8ITFV7I3qFHHtSMmRTZMIZTM6T
-         b+S4h/Y930OcpXX5gtKU/qwKAkweSJnJboTlShtKcAEN8gziv+FOpVXsNFBGiUyc3BUg
-         F7BXRKt56pmEA7MqQZ2gM++6kBja/mUv6vIeF53nVEOkraMSILOizuqFMdlHAc0xM76Q
-         K9xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXe+oHKjf7QsqAUMc5K7no8izGvvkDo/EjMoRulTMeSyjYcHpGd+6PrqeYI6G+SEBB4JdtNZ9hz44onZQ8yad0mIwo4LQEUgvQXndWL
-X-Gm-Message-State: AOJu0Yys7r/+R7rnAF3ZwkBJdRzMJ8o5tFustiBWpWoXm1iRBdw/Tbq2
-	YRxBndeZJT6pifWWhDSpKNaxhez/8lCF4sqKV6jvJABcIXMqQYML8EGrt2X4
-X-Google-Smtp-Source: AGHT+IEn07g8Tj/OlFMQwKuoKgS2aoCKtPwBeljYrkvab+mU31GyP/9OxgkUo9Ha7rx87dyaGxCPfQ==
-X-Received: by 2002:a25:2686:0:b0:dfa:94c4:72db with SMTP id 3f1490d57ef6-dff150de489mr59974276.0.1718296973510;
-        Thu, 13 Jun 2024 09:42:53 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff0475defasm245359276.8.2024.06.13.09.42.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 09:42:53 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-63097363e63so14014207b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:42:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnz0tX3ADtleY3gpD6G0tuZbFHI3vwpLQSiJOIBnbEMQkS8lPH9c2OnbY+eRzTZq3TpjTWv7zxifNkQtaAvbSlo8l0rl1cpUUKD7+1
-X-Received: by 2002:a0d:f447:0:b0:61a:e2e4:454d with SMTP id
- 00721157ae682-62fbc5dacc4mr50619227b3.45.1718296971533; Thu, 13 Jun 2024
- 09:42:51 -0700 (PDT)
+	s=arc-20240116; t=1718296989; c=relaxed/simple;
+	bh=5N86/34S9SsY993i4OkYsoiBIKBqPyqnwe4IRziKYTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxfRBSMaclnoUV6hKAbaVBRl4l0p5i6ZXd+P3X8z+DKFDRJmnDGFP+8b1XGDfIH+attj1hirgIkAWDYagJRmiWCpv0KfpV58pXbVz37Chw/pqiBwax6IF11xJuAu1rbWlz9IyM3dXzvx3OsCrCgb9uok6kQsb3GtfQqh7GMjYTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MeCNc+eZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MeCNc+eZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67BFC32786;
+	Thu, 13 Jun 2024 16:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718296988;
+	bh=5N86/34S9SsY993i4OkYsoiBIKBqPyqnwe4IRziKYTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MeCNc+eZYG9ORTjLRsHrCVE8nxJrUu5YEgZ+GmPJIdJL17zuVlPmMEw5NRZ+Hee2u
+	 iyEdpY+bLyH0yoWJj2S0bdZgMpCshE/5SQC78dHWgtcNGWqNVqzCSDVxzufAmc95Up
+	 J92LVZmVkSXO5sy1DSlArRFK2tRL2FDVBwXeJr2tpe/f5lwCLGm2Z16WL3Vy/UQCMp
+	 M/EJYLLqfSi9Qgr4gB6qQtHEckyPmNMcvn4wMBNCyKHWZX4Mtjd0o3rhpx35Y/PC+K
+	 hekuJ2Ab5ob1sqFUtPxx+i2bm14JZPbOzQRXav2bdG/XtZGV37bgqnUy/nPCWJx3AD
+	 6KBcbZ0PteVKA==
+Date: Thu, 13 Jun 2024 17:43:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alisa-Dariana Roman <alisadariana@gmail.com>
+Cc: Alisa-Dariana Roman <alisa.roman@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandru Tachici <alexandru.tachici@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: adc: ad7192: Add clock provider
+Message-ID: <20240613-porthole-hedging-6655d32072a8@spud>
+References: <20240613114001.270233-1-alisa.roman@analog.com>
+ <20240613114001.270233-5-alisa.roman@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240121203009.9257-1-ansuelsmth@gmail.com> <20240121203009.9257-2-ansuelsmth@gmail.com>
-In-Reply-To: <20240121203009.9257-2-ansuelsmth@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 13 Jun 2024 18:42:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX0dpQdZSCJGuOM0MgM3N-8OA29skARvXEkm87eOPEWBA@mail.gmail.com>
-Message-ID: <CAMuHMdX0dpQdZSCJGuOM0MgM3N-8OA29skARvXEkm87eOPEWBA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ARM: decompressor: support memory start validation
- for appended DTB
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
-	Eric DeVolder <eric.devolder@oracle.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@somainline.org>, John Crispin <john@phrozen.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZG98mhyg/OXpjdLh"
+Content-Disposition: inline
+In-Reply-To: <20240613114001.270233-5-alisa.roman@analog.com>
+
+
+--ZG98mhyg/OXpjdLh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 21, 2024 at 9:30=E2=80=AFPM Christian Marangi <ansuelsmth@gmail=
-.com> wrote:
-> There is currently a problem with a very specific sets of kernel config
-> and AUTO_ZRELADDR.
->
-> For the most common case AUTO_ZRELADDR check the PC register and
-> calculate the start of the physical memory. Then fdt_check_mem_start is
-> called to make sure the detected value makes sense by comparing it with
-> what is present in DTB in the memory nodes and if additional fixup are
-> required with the use of linux,usable-memory-range in the chosen node to
-> hardcode usable memory range in case some reserved space needs to be
-> addressed. With the help of this function the right address is
-> calculated and the kernel correctly decompress and loads.
->
-> Things starts to become problematic when in the mix,
-> CONFIG_ARM_APPENDED_DTB is used. This is a particular kernel config is
-> used when legacy systems doesn't support passing a DTB directly and a
-> DTB is appended at the end of the image.
->
-> In such case, fdt_check_mem_start is skipped in AUTO_ZRELADDR iteration
-> as the appended DTB can be augumented later with ATAGS passed from the
-> bootloader (if CONFIG_ARM_ATAG_DTB_COMPAT is enabled).
->
-> The main problem and what this patch address is the fact that
-> fdt_check_mem_start is never called later when the appended DTB is
-> augumented, hence any fixup and validation is not done making AUTO_ZRELAD=
-DR
-> detection inconsistent and most of the time wrong.
->
-> Add support in head.S for this by checking if AUTO_ZRELADDR is enabled
-> and calling fdt_check_mem_start with the appended DTB and the augumented
-> values permitting legacy device to provide info in DTB instead of
-> disabling AUTO_ZRELADDR and hardcoding the physical address offsets.
->
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Jun 13, 2024 at 02:40:00PM +0300, Alisa-Dariana Roman wrote:
+> Internal clock of AD719X devices can be made available on MCLK2 pin. Add
+> clock provider to support this functionality.
+>=20
+> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad7192.yaml       | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> index 3ae2f860d24c..1434d89c2880 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> @@ -42,13 +42,20 @@ properties:
+>      description: |
+>        Optionally, either a crystal can be attached externally between MC=
+LK1 and
+>        MCLK2 pins, or an external CMOS-compatible clock can drive the MCL=
+K2
+> -      pin. If absent, internal 4.92MHz clock is used.
+> +      pin. If absent, internal 4.92MHz clock is used, which can be made
+> +      available on MCLK2 pin.
+> =20
+>    clock-names:
+>      enum:
+>        - xtal
+>        - mclk
+> =20
+> +  "#clock-cells":
+> +    const: 0
+> +
+> +  clock-output-names:
+> +    maxItems: 1
 
-I have been including this series in my local tree for a few months,
-and so far no regressions on any of the Renesas ARM32 platforms
-I regularly test on.
+Why do you need an output name when you have exactly one clock?
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--ZG98mhyg/OXpjdLh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
 
-                        Geert
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmshlwAKCRB4tDGHoIJi
+0rN5AQDwx3OuFGaIq92gAW9SP4SawMqQkqEvdf2NqApMoU8puQD9E/24Paa8Ot5p
+Yw14vSKM8xuL+pvJgvu9QbMx9HMcywE=
+=1M/8
+-----END PGP SIGNATURE-----
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--ZG98mhyg/OXpjdLh--
