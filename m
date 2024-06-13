@@ -1,166 +1,231 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2124.outbound.protection.partner.outlook.cn [139.219.17.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4347DF71;
-	Thu, 13 Jun 2024 01:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718242519; cv=fail; b=qF+U/qF8W+xmJun0HlQ4YqVEJ2Mg9heXQBU9g0hepTbG14OphpF6asZdzUbFjiGIp4VPyKstIOik8lKpRlMklk7sRALlK351HpQl8KdgHcCGHGwjuLMLKFQ25/0IUdirwHgR1TpsbXha6X5D8NSMsLJqyr/AsXbB780zZ3f8/zA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718242519; c=relaxed/simple;
-	bh=icxKrKaZHOI1tt6z74kHrgMC80WHoLmK3l2g8/UYFdg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q0EqBamMY8nS/BKUEFfsibOliDjgtSX33aWSAxqsxaClul7o+1aQ3YRhNR58a/1S5ESkzwTg+Nq/kP9N8UEMEL997OGdrjgioyqsv2vvuJDUbQYcuhyS10tAC8hCcCPD/dIV8wuAgzUfR+Gklgwvq9sO8Mi1J4SyEOnFJcj+PGg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uu5nqCRTUUrRQno3Mt2g/SVpgDEvr0V7CEFBHAKAV/UetEgd/grehl9LzDOLl2aRLPOgF6a/Jf3zF10I4kRyjktfDvnSIEineazv2Xp4gXqKKyLhjuUe4EqhL/HaGb7by6Mz/rI7eKBKwWrpThcYUZtk9Nz47CJEV0JcGN3HwOP6hrOChM/nCY1YJc1KJ73UkHH1ef75epl3KPd6AZa+BWlLjk1mYFNFHM/uov0bkqPKPWjLo2bVcFUri8cFXv2uRk8ltB81zpaR7a9VpOml41Ntl1SfCAe7BVJ5y4bUnJdxoPTokQegQxlPq7L1S6T2LaR52vA64yuyNjkY7e+OzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=icxKrKaZHOI1tt6z74kHrgMC80WHoLmK3l2g8/UYFdg=;
- b=G95FJJvvyNLHoSQJV8V0r3VfZOnG4K+uOx4yV/p99ucBca1gj5nH0SfzcI1UNOPa+an/ZW4eL/iBXeJ50jIsq6FSjH2yNRSUsqHlMrX2hkNoIWdofuO5SFXQ9FaagjBVMLH2i080Fp+F2D5SAy2da10154WeFRR61Ij9VYRTPEls/DGl0cKpBj3XVU2by2AIbrF1g20tinERBG6XovCAV+i/dWczw+vh+LpVnulpQalBbheLY/MI+l4fNrMuYT2XgrEXXIwniMYoDLhnA3oI/d2IqjguVR5pBHLWGOvZo97xKWqVxDWrdJCpZmdu6RU72QS0T0qrlsMG/zIToILA6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0496.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1f::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.39; Thu, 13 Jun
- 2024 01:02:57 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::358e:d57d:439f:4e8a]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::358e:d57d:439f:4e8a%7])
- with mapi id 15.20.7611.039; Thu, 13 Jun 2024 01:02:57 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Rob Herring <robh+dt@kernel.org>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject:
- =?gb2312?B?u9i4tDogUmUgOiBbUEFUQ0ggdjFdIHJpc2N2OiBkdHM6IHN0YXJmaXZlOiBh?=
- =?gb2312?Q?dd_PCIe_dts_configuration_for_JH7110?=
-Thread-Topic: Re : [PATCH v1] riscv: dts: starfive: add PCIe dts configuration
- for JH7110
-Thread-Index: AQHau6H4HWcv0PbsKE2MIzy9iFiWZbHCwFiAgACdwFCAAJ5jgIAA5udg
-Date: Thu, 13 Jun 2024 01:02:57 +0000
-Message-ID:
- <SHXPR01MB0863726042D8AABA83576C4DE6C12@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
-References: <20240611015200.40996-1-minda.chen@starfivetech.com>
- <20240611-irk-hypocrite-a53e98e6c394@spud>
- <SHXPR01MB0863CFE4519C0D69E961620CE6C02@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
- <20240612-italicize-cultural-a10b8a387520@spud>
-In-Reply-To: <20240612-italicize-cultural-a10b8a387520@spud>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0496:EE_
-x-ms-office365-filtering-correlation-id: 918ba0d1-69a3-4f7c-3b2d-08dc8b449042
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230034|1800799018|41320700007|366010|7416008|38070700012;
-x-microsoft-antispam-message-info:
- Xh9EB81nOauQx74tb01n/GbnwiwA7p3oS5ffNSJs3sh0rSjCAwOmXKk9cUO/xTXCy+uH9iozETZL1fZta4QZE4E8Wz4beBr4AYcFRIE5LW4VSZAJZODmDTTqGpDdKyQThgN3g419hCskS7uKi8oYy5pfsQhM7s6U8ZuwRzdW8JrdraYhB/Lg2gE+9TfmnzH39LHr3fUiGNzuNcM3BiOSpoxyz3nxiXVq9+zs89C8wnRXpMF7lKIXMOYTZh2yTdVjl9Es7FFUdDf17FddpijmMVTOWrlY1kuI8sbTSN2TWuvJs6G8s5T411L32pf/OLFgigkmppxH2C4Y/GB2wUUMTFyYS2V+DR3ZSIkCq7DuEX01SUfBVTMAf6VW3EvRw92OZjhPrwKqGEYud7cl+kC5c78GQsfUyxl1XYgqMDZ1Obx38pBGadXoHq4EVacU3pZjE13CRw18BlPbJa/9RXEf/MGRalEleRHwnbvNIaYRWdJ7ZxvNrsv7ztR0IMOg+1yKox7+siYmEnfK4DMcBy1f9qc6Oa5p2/1COwdPj+RVqa4+aS52obsJ9l75dF6do+0BPitm+c/aqK1gA7U5EjsIfEq1DbqldHjU7KHnXhFYrT2XPyNqdL5jJBFm/mpUtqXa
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230034)(1800799018)(41320700007)(366010)(7416008)(38070700012);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?TU5hcUJ4RjlhaE1IZyszQ0pIQkw3WldpdDhjbmYwVjVUb1RmWStLMjhQNmRu?=
- =?gb2312?B?enhqM1RFeEN1YVBvc013bjFBNnRIamJEc0h0ZFlFYldFdlN5cVJsZXhOQzlM?=
- =?gb2312?B?VDhWVzc5ODhxYnZpeHRzVUlCaTdzVHlEOWhlM2hqYnMyWTJTV1V6cmlXaGZ5?=
- =?gb2312?B?ZUpmSFArYWxDcmcweGZqNnp5dUEwY2pJVzVDN3dyRXlBY0Y4Q0NLK0FZeGx5?=
- =?gb2312?B?MHU3cFN0ZFZCSnlzUDEwTlBlVXJOWWRjQVlMSjlEOENNeWtYcTJIaWtjblpr?=
- =?gb2312?B?R3VLRHF6YUVQYzgzc2VKdTVnaWpzR1hKL0tORG1EUW1BWmFKWURLRXJDVkls?=
- =?gb2312?B?VzJrc3o3ME8zT2NDcWFlU1dQTnlKTzdVWWt2dnRQU1Q1Wk5JN0VsUU5zWnpp?=
- =?gb2312?B?eUpGa2tHSThBRzg4bG91VFl0eHUyczhmNEhtWUNZdDU4RC8yNVRLNUF3clpC?=
- =?gb2312?B?YUZudG9NUk1wKzJRbjN2a0RVMEtKcVcyVDJ3VzVpa2lQSDcyUDBKOTY1WVQw?=
- =?gb2312?B?UGpEZmVnYk9aM3NSS3lVRnlWUlV5alB1cE1yempVZVRGYnB3Ry9QQnI1NG92?=
- =?gb2312?B?UWFRc0VESmpHODRXSXB5RDhONWpXSjNoL1JISnFXNitaK29IOEZhWTVJNXV2?=
- =?gb2312?B?RDNxZEdiRUgraXo2OVN4RjJkU3FGYXBKTVNZVjZNMlFtVGRzaXBpRUtaSVBN?=
- =?gb2312?B?VXZKRzBlNEl5eDBQTlVPYzZXMlAxT0lUSXRibVpmU3JkKzlHZC95cGJyckNn?=
- =?gb2312?B?VjhmTmY2M3FXbzFTdmdaSjI0NHNTR1ErMnlNVnNheW1DdTFFMWUxeUllK3Fz?=
- =?gb2312?B?Q1RWT3FQaGVwSnpBTFFtMWZYYzd3MHZjVGtCRUY4QjlGNmxVNlg4NmFJS2cz?=
- =?gb2312?B?QzBKK1BhcnlQT2hUUVFQMC9Kanl2d0NtaitHY3Z4aGhGbGpleHlxdnE2R0VW?=
- =?gb2312?B?b21vVXdMYXZkMUFFcnFrTSt6L1VCb0tIMm9wSWFSc2VJNndMZ1NaRnNwOHdX?=
- =?gb2312?B?RHZUQ3RUUkRWYngyTHczUEY4UlZJTWhPZDJkcDYrMG9VRVlWcUJaY0dpeHlK?=
- =?gb2312?B?ekFpYjFaaHB5MTdGRVMzN1d5TTF0SXpaa1l4K01tcEcwcnI1YnAzcVhpc2lF?=
- =?gb2312?B?WkxOU0JxU0luK09XQWJTRVMvc0NoazY1Mk5ubm0zSXRnT2IwdVhTc05SUkpt?=
- =?gb2312?B?dUlWWmFkMTlUbW9XZW8xYk5wbUVEdzFlSUJhWS9rWkdnMXJPdVZsblNJUnpj?=
- =?gb2312?B?ZjNlYlpqS1lVWC9reENIbUc4enNBbVljSzhIQkM2dExQSXZnbUFjZ3BLQVJq?=
- =?gb2312?B?Uk5ueVFDcHp3TE1FcFg0a2k0TGgxMUQyY0RIckhhSVNvNVNIZXhmYkxZWWJL?=
- =?gb2312?B?VlVRbG5QcmlMZ1NXMGNmZDI5S0gyZFhzcG02eGkxcWNLWi9UZWVEWTBOeGhs?=
- =?gb2312?B?d000bjNMOWVOUVREcml2T2cwdHNKNTVkSFBaNFlFdGE0L1FLWmkrM294MWsv?=
- =?gb2312?B?cENvYVlIaG1sOGYzNWUrMjJpZUVDUGo1NVQ3RjVURWJCdDZVOWwrOEVsMXVF?=
- =?gb2312?B?R0J6K1Bic1p3czVLdXV4anprWllNemQ2eWtMNmtTeHlrbmJmcVFhbS9Kai9V?=
- =?gb2312?B?VXZUdXJVVnUrSkM1RG1tNFZaaFlFMUphVWF1cWFKWGhVYnB4cTB2UHNaaExy?=
- =?gb2312?B?VE1yYTJFV0xuT2RnZWtnRFppcXY4L3dsSHRhYXgwQ3BlaXNmSlhMbXNxdWlU?=
- =?gb2312?B?RWF2Yk42UGtaVnFLYUVIYUtKQzR5SGFtdGdZWmlSRE5jRHlXMTVBVXB0SWJM?=
- =?gb2312?B?NXpSem10T2JLL0JUYkNCUEtHM0c1ZGdwSW14aWp1UDNXUHBjZkJMbGJtQkNF?=
- =?gb2312?B?OVdxdFJ0RVR2T3BmWnlINUFrUnJjT0RlWUU5T3VDSnBjZnZXa2t1Ri94eUl1?=
- =?gb2312?B?amNZc20zS2Z3eTg5dWhKL3BmUGlOVWZ1bnFNditScVdHRzhsZjZFZDEvSUU4?=
- =?gb2312?B?MXpSQVVuMjg2VGNYSE43Q1hKY0JHK0sxbkZ4NjdQZHBQa2ljaStRMDdPWTNj?=
- =?gb2312?B?dDE3UWlReGZFbzE1VnM1VHRsNWpCSkFpS29jRmkvNWJwWDF6MFZGZ0FoK256?=
- =?gb2312?Q?ZK7BZY8tL9AiEpsvz9PCgBxkI?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8FE10A0E
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718242567; cv=none; b=juxu1ay0Lrw4Eukb2O5VZt8uRgaLywl6C0Ibxp9FJdxBYywPIMvtsq/vtelHUdunOigsH4rJtZ9ZYbNwX5+J1U+QO8+cxFSYOpxftBTf8HUBQ1tETR1NG+mz1UGYBOo45MRDio0UVQxb6H975Y9INkQEarifOM9e2LnHBkhnt9k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718242567; c=relaxed/simple;
+	bh=uIb7wnZICX9UPx+noCmwg0Dz4YxJOsZCbS38HSFGt0A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a9hghmsxUWTjcnWQqK3T5BVWChGPEfsaufjzLXTMjufWBy8bp3JU4ARvVX3tAn2maU/V3+8ni8JFCrP9jSE4gcarCQaJWpc8bBn4POm9VYPXt/EqUNQDfYcZlzkfNpQ2cyY2FCJcioYO0mTZhBgjoo1mXxZAhdPLGhsnA0KKL78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xah/RfGs; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xah/RfGs"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfa79b84623so796547276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718242563; x=1718847363; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PukLxFDU0Ot3Jcb8XBqyyI+4uu9g3SHu9LygR/IsHug=;
+        b=xah/RfGsTalUz7Z8Tz5O+W+LEHrEOrccnMX/+MegBXeYH6kdkTDn+CwxioBPFaXT9L
+         oGSsmrKXCUpNcIWTJFykodqJTsHmyuIBnIFuSwSrqn5ffY9vH4Sco6UVnuHNuX6BNyV1
+         aoC9gU2pGI5KAvWKQngvpmsA6SWY+0Cu6F+qEWG3O3LyAKYyQfCLEuO/hM1qMFX0ko0Y
+         jJAoKpPp6uEQZgBZkFTsAmnOQ+yhlF3KpjtxNprFPCFtfZgaV+OjcAlVqMi7qzbYkXdG
+         jUK+7ojUdF2Lyh+cpjQkXsQKBE2nSVY/4bk/8n14JQajhHbFNSSC/gII0bALY2WikLeX
+         DUEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718242563; x=1718847363;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PukLxFDU0Ot3Jcb8XBqyyI+4uu9g3SHu9LygR/IsHug=;
+        b=mA1vd0Tp43oZd9BT+uOE3UBmbJxgnzGc6z/Q0iNeUzSnm8o11/uUvwSq55GNUAR6vx
+         F7HjJjytA7ED11iNiEv03nmV5VOFMB2hCMwWcO8h7gbxMbs6lecXpnhh1Q5NV1PL+wm/
+         VX+UKSKHwQ8CTr80Rx0YSyqrNhcrKi+l0dq2tUwgsqHybox/T5JPp3Wfd2F3mQ37bZ9z
+         /+IDd0p3wyaRJDu9Cgxrp9Ts2hF86ycKmve4yCDFEx9RjmQcgI5xxLTBCksyvZr4fk1f
+         jODyCyPKZDMOy9nYOx/2Vg7s6/kuL+gBp4HrS4ipubgIEH/lCE7VW/vWA0AAhvkrZw09
+         eefg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+rUbFLsgJY0XqiFKpkvXZKCCdlDtym1ZE+IzMMpST6s9qSVuWz2BLenlo2Z95R9WuZZgA7ni57dl6/V+YWdVwJ5eGkx9xrMEtnjek
+X-Gm-Message-State: AOJu0Yx+YLjQqN87rkE1GyQHREjDUmRaYf4hlCEvNGwz60sgJUwMUJS1
+	vCmA6yx0dKJX5ZiikfJQA9lM9+VozTTFV8a2cRyiqyGh9u+iwj/IGUwKLF1yvGrItl6kYMnn1bZ
+	515euHPA3DOaEVZeSp7P6DQ==
+X-Google-Smtp-Source: AGHT+IFy2TNmASaZwB9PzDrtecJeZThDouHy8q/FyAHqDe6Zre6CmczY2Ly4glvBI5TPeNP19mFoaz3HFbFqjZ9VnQ==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:1105:b0:dee:7db6:1109 with
+ SMTP id 3f1490d57ef6-dfe62f15e42mr220490276.0.1718242562404; Wed, 12 Jun 2024
+ 18:36:02 -0700 (PDT)
+Date: Thu, 13 Jun 2024 01:35:38 +0000
+In-Reply-To: <20240613013557.1169171-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 918ba0d1-69a3-4f7c-3b2d-08dc8b449042
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2024 01:02:57.3785
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sNLqm0yuP4o5rYwYHrDvTH0PtOvgwp29ge3N+EuHYLm2OfZC1dMDuKvM+Yo9iU8/K3vGaEqf76mxdK33E1bRN0W+M+neqGDBmDaVDpgesYc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0496
+Mime-Version: 1.0
+References: <20240613013557.1169171-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240613013557.1169171-2-almasrymina@google.com>
+Subject: [PATCH net-next v12 01/13] netdev: add netdev_rx_queue_restart()
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-DQoNCj4gDQo+IE9uIFdlZCwgSnVuIDEyLCAyMDI0IGF0IDAxOjQ4OjU1QU0gKzAwMDAsIE1pbmRh
-IENoZW4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4NCj4gPiA+IE9uIFR1ZSwgSnVuIDExLCAyMDI0
-IGF0IDA5OjUyOjAwQU0gKzA4MDAsIE1pbmRhIENoZW4gd3JvdGU6DQo+ID4gPiA+IEFkZCBQQ0ll
-IGR0cyBjb25maWd1cmFpb24gZm9yIEpINzExMCBTb0MgcGxhdGZvcm0uDQo+ID4gPiA+DQo+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IE1pbmRhIENoZW4gPG1pbmRhLmNoZW5Ac3RhcmZpdmV0ZWNoLmNv
-bT4NCj4gPiA+ID4gUmV2aWV3ZWQtYnk6IEhhbCBGZW5nIDxoYWwuZmVuZ0BzdGFyZml2ZXRlY2gu
-Y29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4uLi9ib290L2R0cy9zdGFyZml2ZS9qaDcxMTAt
-Y29tbW9uLmR0c2kgICAgICB8IDY0ICsrKysrKysrKysrKysrDQo+ID4gPiA+ICBhcmNoL3Jpc2N2
-L2Jvb3QvZHRzL3N0YXJmaXZlL2poNzExMC5kdHNpICAgICAgfCA4Ng0KPiArKysrKysrKysrKysr
-KysrKysrDQo+ID4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE1MCBpbnNlcnRpb25zKCspDQo+ID4g
-PiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL3N0YXJmaXZlL2po
-NzExMC1jb21tb24uZHRzaQ0KPiA+ID4gPiBiL2FyY2gvcmlzY3YvYm9vdC9kdHMvc3RhcmZpdmUv
-amg3MTEwLWNvbW1vbi5kdHNpDQo+ID4gPiA+IGluZGV4IDhmZjZlYTY0ZjA0OC4uMWRhNzM3OWY0
-ZTA4IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL3N0YXJmaXZlL2po
-NzExMC1jb21tb24uZHRzaQ0KPiA+ID4gPiArKysgYi9hcmNoL3Jpc2N2L2Jvb3QvZHRzL3N0YXJm
-aXZlL2poNzExMC1jb21tb24uZHRzaQ0KPiA+ID4gPiBAQCAtMjk0LDYgKzI5NCwyMiBAQA0KPiA+
-ID4gPiAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPiA+ID4gIH07DQo+ID4gPiA+DQo+ID4gPiA+ICsm
-cGNpZTAgew0KPiA+ID4gPiArCXBlcnN0LWdwaW9zID0gPCZzeXNncGlvIDI2IEdQSU9fQUNUSVZF
-X0xPVz47DQo+ID4gPiA+ICsJcGh5cyA9IDwmcGNpZXBoeTA+Ow0KPiA+ID4gPiArCXBpbmN0cmwt
-bmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gPiA+ICsJcGluY3RybC0wID0gPCZwY2llMF9waW5zPjsN
-Cj4gPiA+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsmcGNpZTEgew0KPiA+ID4gPiArCXBlcnN0LWdwaW9zID0gPCZzeXNncGlvIDI4IEdQSU9f
-QUNUSVZFX0xPVz47DQo+ID4gPiA+ICsJcGh5cyA9IDwmcGNpZXBoeTE+Ow0KPiA+ID4gPiArCXBp
-bmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gPiA+ICsJcGluY3RybC0wID0gPCZwY2llMV9w
-aW5zPjsNCj4gPiA+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gPiA+ICt9Ow0KPiA+ID4NCj4g
-PiA+IERvIGFsbCAzIG9mIHRoZSBtYXJzLCBzdGFyNjQgYW5kIHZpc2lvbmZpdmUgMiBoYXZlIGJv
-dGggUENJZSBwb3J0cw0KPiA+ID4gZXhwb3NlZD8gSSBhc3N1bWUgaWYgb25lIGRvZXMsIGFsbCBk
-b2VzLCBzaW5jZSB0aGV5J3JlIGJhc2ljYWxseSBpZGVudGljYWw/DQo+ID4NCj4gPiBWaXNpb25m
-aXZlIDIgYW5kIG1pbGt2IG1hcnMgYXJlIGFsbCB0aGUgc2FtZS4gU3RhcjY0IGRvIE5PVCBlbmFi
-bGUgUENJZTAsDQo+IFBDSWUxIHBpbnMgYXJlIHRoZSBzYW1lLg0KPiANCj4gVGhpcyBwYXRjaCBh
-ZGRzIGJvdGggUENJZSBpbnN0YW5jZXMgZm9yIHRoZSBTdGFyNjQgdGhvdWdoLCBzaW5jZSB0aGF0
-IGFsc28NCj4gaW5jbHVkZXMgamg3MTEwLWNvbW1vbi5kdHNpLiBJIHRoaW5rIHlvdSBuZWVkIHRv
-IGVuYWJsZSB0aGVzZSBpbiB0aGUgYm9hcmQgZHRzDQo+IGZpbGVzIGluc3RlYWQ/DQoNCk9LLiBJ
-IHdpbGwgZW5hYmxlIHRoZW0gaW4gYm9hcmQgZHRzIGZpbGUuIFRoYW5rcy4NCg==
+Add netdev_rx_queue_restart() function to netdev_rx_queue.h
+
+Signed-off-by: David Wei <dw@davidwei.uk>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+
+---
+
+v11:
+- Fix not checking dev->queue_mgmt_ops (Pavel).
+- Fix ndo_queue_mem_free call that passed the wrong pointer (David).
+
+v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+(submitted by David).
+- fixed SPDX license identifier (Simon).
+- Rebased on top of merged queue API definition, and changed
+  implementation to match that.
+- Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+  netlink code where rtnl is already locked.
+
+---
+ include/net/netdev_rx_queue.h |  3 ++
+ net/core/Makefile             |  1 +
+ net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 net/core/netdev_rx_queue.c
+
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index aa1716fb0e53c..e78ca52d67fbf 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+ 	return index;
+ }
+ #endif
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
++
+ #endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 62be9aef25285..f82232b358a2c 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+ 
+ obj-y += net-sysfs.o
+ obj-y += hotdata.o
++obj-y += netdev_rx_queue.o
+ obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+ obj-$(CONFIG_PROC_FS) += net-procfs.o
+ obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+new file mode 100644
+index 0000000000000..de0575cf6df5d
+--- /dev/null
++++ b/net/core/netdev_rx_queue.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/netdevice.h>
++#include <net/netdev_queues.h>
++#include <net/netdev_rx_queue.h>
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
++{
++	void *new_mem, *old_mem;
++	int err;
++
++	if (!dev->queue_mgmt_ops || !dev->queue_mgmt_ops->ndo_queue_stop ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
++	    !dev->queue_mgmt_ops->ndo_queue_start)
++		return -EOPNOTSUPP;
++
++	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
++
++	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!new_mem)
++		return -ENOMEM;
++
++	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!old_mem) {
++		err = -ENOMEM;
++		goto err_free_new_mem;
++	}
++
++	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_free_old_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
++	if (err)
++		goto err_free_new_queue_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_start_queue;
++
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++
++	kvfree(old_mem);
++	kvfree(new_mem);
++
++	return 0;
++
++err_start_queue:
++	/* Restarting the queue with old_mem should be successful as we haven't
++	 * changed any of the queue configuration, and there is not much we can
++	 * do to recover from a failure here.
++	 *
++	 * WARN if the we fail to recover the old rx queue, and at least free
++	 * old_mem so we don't also leak that.
++	 */
++	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
++		WARN(1,
++		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
++		     rxq_idx);
++		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++	}
++
++err_free_new_queue_mem:
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
++
++err_free_old_mem:
++	kvfree(old_mem);
++
++err_free_new_mem:
++	kvfree(new_mem);
++
++	return err;
++}
+-- 
+2.45.2.505.gda0bf45e8d-goog
+
