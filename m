@@ -1,892 +1,223 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF2A1428F0
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 10:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B433142631;
+	Thu, 13 Jun 2024 10:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718275788; cv=none; b=nUtADYtBF1pX4jC+j7TjbqSSI8TunT4suACZ3I6RZfwDdB5nffpaOltLK+NxscqbE4c0HzKyozxyseYN1Vd8EFbyi0AW0KDWjdaS9B4r1hOFJlR6DE1HYUGuhQn7R3FF+pJDe3p8c1+vHf3mERKs62U1U7U0ydH8S/PmKPhcABY=
+	t=1718275848; cv=none; b=V1k6sAotTYnRP2i7c8x98m1nnkSI+UextxQIm/oSp6kIg7gYC3Du8OV/sCrOgrfyjriTAkFt+fv9qKl6JBYtvDBCw3rpM3rDBSWlTSkrfz8+qlhjD7iIZz2KvUmxQvlHb04GS6dYDT1GBMO4oK4rEXyz6i1Kliq377oaWHdKpRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718275788; c=relaxed/simple;
-	bh=W8Z9ariOdTdB4BEP9y5dSPIrqMhesxPnDncFzUaxhYw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OWsSi8t9ZZEN8Sia+JANeeuBZUpPlTpp/O4vR6EIbQA+6xgsxsI0iO4E8wY2tmLkL80tzZ6hOMSxARwxssppKwoIOFJfDIp2ibVzpU5QiVvbl3vOQTZDx/Ew+imJr75rizjtTrbcFvZ6g91DseZlVpt4kbCGAgz6Bj8OduyQT8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=io4VgMQV; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718275848; c=relaxed/simple;
+	bh=5PRbk3AfRxbmJsHY0erLSVKn/uDgUayeXpe4gOIVmlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oIvGN64D/Mo6K1X2HtTjk6vf2BwmLBy3CSZrIespwsZKsZYkgAP5n60Zr433haHwYXBDc8NH/yKKZRLIqRGBY21n7DP2je1cLEzyAR8aSJVJYwRd+WqIKYkO3LyQGrDunFky0vT2TBJe3qXS6OqJeShwfr1c1I15g3OMROg7N4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Suh0MZp8; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="io4VgMQV"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57c83100bd6so876253a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 03:49:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Suh0MZp8"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso863037e87.3;
+        Thu, 13 Jun 2024 03:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718275784; x=1718880584; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U5Dbj2tNPPRmGqfhK6AHzXiGKWxuXHpu/BVao47nlUo=;
-        b=io4VgMQVuk235zsiOK7AEy4bS/lt+MnY15chW/gMwcxgOd08H0VNwUe2prTy5Ogyyf
-         GbqN7IDWzYQMS3csu9FY0mXLgrSy8ZXpsuHA6mlOmS8JzaysYJ618xMQHQ0fO4EEBT5U
-         y5hDsybeN17Vbdzybpp5Ur3ery9GHJ1S1WhxMJlVZMAkKueU/7+0PXcAlk2Xtufs9J6u
-         BVOHq8ndnTdLON6gHa7EuD6JxO30DrPl5qJxXbNLgSAUxIjoBmPt3Um0D5gWFFq0CJsE
-         s8qf16/Q4seWhMkjnHFzZ3U6QnAauLmrHbiN/OXmlxjVN5FXoHkf5iJ9BoI5tCbrVs4P
-         P77w==
+        d=gmail.com; s=20230601; t=1718275844; x=1718880644; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fUOHZLqPwwXewI3YyWEmg6L7w15o022jE/kig0+VapA=;
+        b=Suh0MZp8YF4qHrKXVTrCOdV8n9EPWY7fM2h4RzPB/Gckxu/0f9/RsgSs6k/CXA0Jyb
+         sFX+x3Wc/EYc9qMl1VB3oN6GuFtflBVzhPnBoZIBrGLeFwL0JruSqVN2SyVL0boKWPws
+         fvHoEAmbsepM2PmVOGE2P83PPBvvuxpZnA85++heeXiPztUsyDokSmLbCPzAqeZkyCX6
+         ACtFplHHb38yA413WjLGPWWaN0gBLQnxDJ5FjgoMDHzPzpA+e5EvaWxvanIh7x0W6FrQ
+         GVlLE17z+CByZu4+W9gMnziA6Trnp/uWaK+e2KTWJePI4TPdfwP4udlXU9of6YhRa8Ev
+         WWdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718275784; x=1718880584;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U5Dbj2tNPPRmGqfhK6AHzXiGKWxuXHpu/BVao47nlUo=;
-        b=gl88/GvQ2PCbo3+5tIzwBU36gZdsYzIQymHb4XsK58DVjZKIK5MN9/I4K781eVGAk4
-         SCefZkgZMMYTCeIrJEaw75l6FEv1f0fPN3XZfLw9qaU0ao3WxxYPE63mNCuowsYsXId5
-         Kt0M0yxqCALv9ltBMNk3R6bq1r9VJvPrAGr1dVptqDDys8XyqbP2b9TNRyzTTnL7fnWt
-         q3FMeUjFOG7KR0ELRtViiPLaWwnUnffz299CAj9rTBzwYNALa0naDpNvK5iIKnkdmDuZ
-         KHTiSY+FTirKeZcgzo5+vruQAU04af4gz2v3LQ3CsdNm4dtY7N29/NzSSsnltVJzoGvL
-         Kzaw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9pa52eRAjcJryszod8KjCtXQEEKm8o6Nv1fCYlV4Sdl9Cldm58+bX8liruqzR0xY3EZcIToOdyfgtGjEJ2S6UFoyo3AoRHi9NojEd
-X-Gm-Message-State: AOJu0YwHSZVJ2goU9vIpo8LlyP6DSTC3ubBBbPOKC4i3e3G01NaPKvIA
-	2JfN/QOyvVdqs+uZ4qWv3A8Ke9pfbrUWDLdIqlEBlC1zRuHXFXpLDMrj02sZSpf4W8myM+lFkBw
-	zDp4=
-X-Google-Smtp-Source: AGHT+IE6jbEo6eR9gE1efQOg/KSHJMC7rOyygFVEHaOeFqRsLpmsfS/WwNzk/nMsXNwVOVMJkQq1UQ==
-X-Received: by 2002:a50:cd54:0:b0:57c:5f70:36d2 with SMTP id 4fb4d7f45d1cf-57ca976d543mr2717898a12.15.1718275783912;
-        Thu, 13 Jun 2024 03:49:43 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72cdf2bsm762618a12.17.2024.06.13.03.49.42
+        d=1e100.net; s=20230601; t=1718275844; x=1718880644;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fUOHZLqPwwXewI3YyWEmg6L7w15o022jE/kig0+VapA=;
+        b=VQDoaYVhzUITmCDZMPKZXb2xpxPMaZb2+yUxf29VdsOYzikXbxb7YySVxb85cFMfXf
+         Yz6d3P1DKa5otS3/UIKwKEJB5cyzoPR7UGN/85OcdlpB1Gs1bPs8qQKiW7wyp2l1PT/C
+         I5p/0qstw6Xw2GQ8klcIRHqYr3YN/Hk7Erq329C3HA0XeKH/725HPeapi+w/zL2ZqpUT
+         Zg7Md7GihogsKDLGZrLQkrHv9ShOlTWxTVR+ORPzjQkoi20Lus8ulve1HMNEk0TAoXay
+         Q8yw5ApyqY2BwRrgy6MYNzdZ5CHpFzUNuGJtrWamlaB7mjM4cqYBCkYc3MUbDI2qeXrh
+         R4dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFHxWFtPh4LbYJ0cF81yKk4oVD07u4cmm1kqAX9/flP+Bv9dQDwcPmaPV/XnZZDz59/EXBKp+dZpSITch+1BN3zE/6Lb3vwMFhJGquNmLxjFhRn/lcBXJ1kGlHGXmCV0ZbUBZKWhSq3L4Kaw==
+X-Gm-Message-State: AOJu0Yxw4tSWyDpxFwWwjevQfnkDmvWQI6+g6irwFyOgmd0uJAPdMepQ
+	HHwKgEy62jD9JgTG9uR0pAfwkX1PobY+wZmvEpSysFOl9eiIa9qR
+X-Google-Smtp-Source: AGHT+IH93LYEQhVEqIb57xnnF/55QOQGdtPtYnsX4yJPnd4maXAVHK2AIf1PLyUJrGR3305p67PJKA==
+X-Received: by 2002:a05:6512:34cd:b0:52c:9c33:986b with SMTP id 2adb3069b0e04-52c9c339b6dmr2319972e87.8.1718275843953;
+        Thu, 13 Jun 2024 03:50:43 -0700 (PDT)
+Received: from f (cst-prg-88-61.cust.vodafone.cz. [46.135.88.61])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422869d4f2esm57976275e9.0.2024.06.13.03.50.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 03:49:43 -0700 (PDT)
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Thu, 13 Jun 2024 11:49:32 +0100
-Subject: [PATCH v4 2/3] ASoC: codec: lpass-rx-macro: prepare driver to
- accomdate new codec versions
+        Thu, 13 Jun 2024 03:50:43 -0700 (PDT)
+Date: Thu, 13 Jun 2024 12:50:35 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Jan Kara <jack@suse.cz>, brauner@kernel.org, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH] vfs: add rcu-based find_inode variants for iget ops
+Message-ID: <ly3nx2r4cbnvhlwcficugq7zj62xij54mzuyjowcwaucbvkwns@nuxskfzj6lvc>
+References: <20240606140515.216424-1-mjguzik@gmail.com>
+ <ZmJqyrgPXXjY2Iem@dread.disaster.area>
+ <bujynmx7n32tzl2xro7vz6zddt5p7lf5ultnaljaz2p2ler64c@acr7jih3wad7>
+ <ZmgkLHa6LoV8yzab@dread.disaster.area>
+ <20240611112846.qesh7qhhuk3qp4dy@quack3>
+ <ZmjJCpWKFNZC2YAQ@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240612-lpass-codec-v25-v4-2-f63d3676dbc4@linaro.org>
-References: <20240612-lpass-codec-v25-v4-0-f63d3676dbc4@linaro.org>
-In-Reply-To: <20240612-lpass-codec-v25-v4-0-f63d3676dbc4@linaro.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Banajit Goswami <bgoswami@quicinc.com>
-Cc: neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, 
- krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=31710;
- i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
- bh=W8Z9ariOdTdB4BEP9y5dSPIrqMhesxPnDncFzUaxhYw=;
- b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmas7Da1k0vz6je4pknJbh5yHslifFNsQoGkEI2
- s9hhycKkLaJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZmrOwwAKCRB6of1ZxzRV
- Nw0xB/9r07Mghxu7Gso1moA6ps/T+6WxQ3s9HZQRmwD2vT3s6NWdreInHAFRbbzhIJzCtfrzJfn
- SBj6VFLU8hSKb/SUmyL76o8tGBtiB77DQ6o/00X4ZfXRCehJABowmZXE8JRMK14ap8RDQcft+lO
- W1gHtaoE/z9wRrP/mh1UErynPwaexW6xaEJCK7XiF4CKbAK7RcHX9oYlYGcWn4fzIHM/hjJKS5B
- PxK9o/w/ywzMclBZjqinvX4O2l7YqMDssd4ijbnt1VMjTzTXosLhO/IST2aPUbGQI5d41JLBmoY
- 3hTQ5cL81w1sMZrYh+ixuJkipInZglrtAudM+5DYY0EAjpiQ
-X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
- fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZmjJCpWKFNZC2YAQ@dread.disaster.area>
 
-LPASS Codec v2.5 has significant changes in the rx block register strides.
-This is a preparatory patch to do the required changes in the existing driver
-to be able to accomdate these changes.
+On Wed, Jun 12, 2024 at 08:00:42AM +1000, Dave Chinner wrote:
+> On Tue, Jun 11, 2024 at 01:28:46PM +0200, Jan Kara wrote:
+> > On Tue 11-06-24 20:17:16, Dave Chinner wrote:
+> > > Your patch, however, just converts *some* of the lookup API
+> > > operations to use RCU. It adds complexity for things like inserts
+> > > which are going to need inode hash locking if the RCU lookup fails,
+> > > anyway.
+> > > 
+> > > Hence your patch optimises the case where the inode is in cache but
+> > > the dentry isn't, but we'll still get massive contention on lookup
+> > > when the RCU lookup on the inode cache and inserts are always going
+> > > to be required.
+> > > 
+> > > IOWs, even RCU lookups are not going to prevent inode hash lock
+> > > contention for parallel cold cache lookups. Hence, with RCU,
+> > > applications are going to see unpredictable contention behaviour
+> > > dependent on the memory footprint of the caches at the time of the
+> > > lookup. Users will have no way of predicting when the behaviour will
+> > > change, let alone have any way of mitigating it. Unpredictable
+> > > variable behaviour is the thing we want to avoid the most with core
+> > > OS caches.
+> > 
+> > I don't believe this is what Mateusz's patches do (but maybe I've terribly
+> > misread them). iget_locked() does:
+> > 
+> > 	spin_lock(&inode_hash_lock);
+> > 	inode = find_inode_fast(...);
+> > 	spin_unlock(&inode_hash_lock);
+> > 	if (inode)
+> > 		we are happy and return
+> > 	inode = alloc_inode(sb);
+> > 	spin_lock(&inode_hash_lock);
+> > 	old = find_inode_fast(...)
+> > 	the rest of insert code
+> > 	spin_unlock(&inode_hash_lock);
+> > 
+> > And Mateusz got rid of the first lock-unlock pair by teaching
+> > find_inode_fast() to *also* operate under RCU. The second lookup &
+> > insertion stays under inode_hash_lock as it is now.
+> 
+> Yes, I understand that. I also understand what that does to
+> performance characteristics when memory pressure causes the working
+> set cache footprint to change. This will result in currently 
+> workloads that hit the fast path falling off the fast path and
+> hitting contention and performing no better than they do today.
+> 
+> Remember, the inode has lock is taken when inode are evicted from
+> memory, too, so contention on the inode hash lock will be much worse
+> when we are cycling inodes through the cache compared to when we are
+> just doing hot cache lookups.
+> 
+> > So his optimization is
+> > orthogonal to your hash bit lock improvements AFAICT.
+> 
+> Not really. RCU for lookups is not necessary when hash-bl is used.
+> The new apis and conditional locking changes needed for RCU to work
+> are not needed with hash-bl. hash-bl scales and performs the same
+> regardless of whether the workload is cache hot or cache-cold.
+> 
+> And the work is almost all done already - it just needs someone with
+> time to polish it for merge.
+> 
+> > Sure his optimization
+> > just ~halves the lock hold time for uncached cases (for cached it
+> > completely eliminates the lock acquisition but I agree these are not that
+> > interesting) so it is not a fundamental scalability improvement but still
+> > it is a nice win for a contended lock AFAICT.
+> 
+> Yes, but my point is that it doesn't get rid of the scalability
+> problem - it just kicks it down the road for small machines and
+> people with big machines will continue to suffer from the global
+> lock contention cycling inodes through the inode cache causes...
+> 
+> That's kinda my point - adding RCU doesn't fix the scalability
+> problem, it simply hides a specific symptom of the problem *in some
+> environments* for *some worklaods*. hash-bl works for everyone,
+> everywhere and for all workloads, doesn't require new APIs or
+> conditional locking changes, and th work is mostly done. Why take a
+> poor solution when the same amount of verification effort would
+> finish off a complete solution?
+> 
+> The hash-bl patchset is out there - I don't have time to finish it,
+> so anyone who has time to work on inode hash lock scalability issues
+> is free to take it and work on it. I may have written it, but I
+> don't care who gets credit for getting it merged. Again: why take
+> a poor solution just because the person who wants the scalability
+> problem fixed won't pick up the almost finished work that has all
+> ready been done?
+> 
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
----
- sound/soc/codecs/lpass-rx-macro.c | 397 +++++++++++++++++++++++---------------
- 1 file changed, 244 insertions(+), 153 deletions(-)
+My patch submission explicitly states that it does not fix the
+scalability problem but merely reduces it, so we are in agreement on
+this bit. My primary point being that absent full solutions the
+benefit/effort ratio is pretty good, but people are free to disagree
+with it.
 
-diff --git a/sound/soc/codecs/lpass-rx-macro.c b/sound/soc/codecs/lpass-rx-macro.c
-index f35187d69cac..360c9003a890 100644
---- a/sound/soc/codecs/lpass-rx-macro.c
-+++ b/sound/soc/codecs/lpass-rx-macro.c
-@@ -158,7 +158,7 @@
- #define CDC_RX_INTR_CTRL_LEVEL0		(0x03C0)
- #define CDC_RX_INTR_CTRL_BYPASS0	(0x03C8)
- #define CDC_RX_INTR_CTRL_SET0		(0x03D0)
--#define CDC_RX_RXn_RX_PATH_CTL(n)	(0x0400 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_CTL(rx, n)	(0x0400  + rx->rxn_reg_stride * n)
- #define CDC_RX_RX0_RX_PATH_CTL		(0x0400)
- #define CDC_RX_PATH_RESET_EN_MASK	BIT(6)
- #define CDC_RX_PATH_CLK_EN_MASK		BIT(5)
-@@ -166,45 +166,47 @@
- #define CDC_RX_PATH_PGA_MUTE_MASK	BIT(4)
- #define CDC_RX_PATH_PGA_MUTE_ENABLE	BIT(4)
- #define CDC_RX_PATH_PCM_RATE_MASK	GENMASK(3, 0)
--#define CDC_RX_RXn_RX_PATH_CFG0(n)	(0x0404 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_CFG0(rx, n)	(0x0404  + rx->rxn_reg_stride * n)
- #define CDC_RX_RXn_COMP_EN_MASK		BIT(1)
- #define CDC_RX_RX0_RX_PATH_CFG0		(0x0404)
- #define CDC_RX_RXn_CLSH_EN_MASK		BIT(6)
- #define CDC_RX_DLY_ZN_EN_MASK		BIT(3)
- #define CDC_RX_DLY_ZN_ENABLE		BIT(3)
- #define CDC_RX_RXn_HD2_EN_MASK		BIT(2)
--#define CDC_RX_RXn_RX_PATH_CFG1(n)	(0x0408 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_CFG1(rx, n)	(0x0408  + rx->rxn_reg_stride * n)
- #define CDC_RX_RXn_SIDETONE_EN_MASK	BIT(4)
- #define CDC_RX_RX0_RX_PATH_CFG1		(0x0408)
- #define CDC_RX_RX0_HPH_L_EAR_SEL_MASK	BIT(1)
--#define CDC_RX_RXn_RX_PATH_CFG2(n)	(0x040C + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_CFG2(rx, n)	(0x040C  + rx->rxn_reg_stride * n)
- #define CDC_RX_RXn_HPF_CUT_FREQ_MASK	GENMASK(1, 0)
- #define CDC_RX_RX0_RX_PATH_CFG2		(0x040C)
--#define CDC_RX_RXn_RX_PATH_CFG3(n)	(0x0410 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_CFG3(rx, n)	(0x0410  + rx->rxn_reg_stride * n)
- #define CDC_RX_RX0_RX_PATH_CFG3		(0x0410)
- #define CDC_RX_DC_COEFF_SEL_MASK	GENMASK(1, 0)
- #define CDC_RX_DC_COEFF_SEL_TWO		0x2
--#define CDC_RX_RXn_RX_VOL_CTL(n)	(0x0414 + 0x80 * n)
-+#define CDC_RX_RXn_RX_VOL_CTL(rx, n)	(0x0414  + rx->rxn_reg_stride * n)
- #define CDC_RX_RX0_RX_VOL_CTL		(0x0414)
--#define CDC_RX_RXn_RX_PATH_MIX_CTL(n)	(0x0418 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_MIX_CTL(rx, n)	(0x0418  + rx->rxn_reg_stride * n)
- #define CDC_RX_RXn_MIX_PCM_RATE_MASK	GENMASK(3, 0)
- #define CDC_RX_RXn_MIX_RESET_MASK	BIT(6)
- #define CDC_RX_RXn_MIX_RESET		BIT(6)
- #define CDC_RX_RXn_MIX_CLK_EN_MASK	BIT(5)
- #define CDC_RX_RX0_RX_PATH_MIX_CTL	(0x0418)
- #define CDC_RX_RX0_RX_PATH_MIX_CFG	(0x041C)
--#define CDC_RX_RXn_RX_VOL_MIX_CTL(n)	(0x0420 + 0x80 * n)
-+#define CDC_RX_RXn_RX_VOL_MIX_CTL(rx, n)	(0x0420  + rx->rxn_reg_stride * n)
- #define CDC_RX_RX0_RX_VOL_MIX_CTL	(0x0420)
- #define CDC_RX_RX0_RX_PATH_SEC1		(0x0424)
- #define CDC_RX_RX0_RX_PATH_SEC2		(0x0428)
- #define CDC_RX_RX0_RX_PATH_SEC3		(0x042C)
-+#define CDC_RX_RXn_RX_PATH_SEC3(rx, n)	(0x042c  + rx->rxn_reg_stride * n)
- #define CDC_RX_RX0_RX_PATH_SEC4		(0x0430)
- #define CDC_RX_RX0_RX_PATH_SEC7		(0x0434)
-+#define CDC_RX_RXn_RX_PATH_SEC7(rx, n)	(0x0434  + rx->rxn_reg_stride * n)
- #define CDC_RX_DSM_OUT_DELAY_SEL_MASK	GENMASK(2, 0)
- #define CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE	0x2
- #define CDC_RX_RX0_RX_PATH_MIX_SEC0	(0x0438)
- #define CDC_RX_RX0_RX_PATH_MIX_SEC1	(0x043C)
--#define CDC_RX_RXn_RX_PATH_DSM_CTL(n)	(0x0440 + 0x80 * n)
-+#define CDC_RX_RXn_RX_PATH_DSM_CTL(rx, n)	(0x0440  + rx->rxn_reg_stride * n)
- #define CDC_RX_RXn_DSM_CLK_EN_MASK	BIT(0)
- #define CDC_RX_RX0_RX_PATH_DSM_CTL	(0x0440)
- #define CDC_RX_RX0_RX_PATH_DSM_DATA1	(0x0444)
-@@ -213,6 +215,7 @@
- #define CDC_RX_RX0_RX_PATH_DSM_DATA4	(0x0450)
- #define CDC_RX_RX0_RX_PATH_DSM_DATA5	(0x0454)
- #define CDC_RX_RX0_RX_PATH_DSM_DATA6	(0x0458)
-+/* RX offsets prior to 2.5 codec version */
- #define CDC_RX_RX1_RX_PATH_CTL		(0x0480)
- #define CDC_RX_RX1_RX_PATH_CFG0		(0x0484)
- #define CDC_RX_RX1_RX_PATH_CFG1		(0x0488)
-@@ -598,6 +601,8 @@ struct rx_macro {
- 	int rx_mclk_users;
- 	int clsh_users;
- 	int rx_mclk_cnt;
-+	int codec_version;
-+	int rxn_reg_stride;
- 	bool is_ear_mode_on;
- 	bool hph_pwr_mode;
- 	bool hph_hd2_mode;
-@@ -976,49 +981,6 @@ static const struct reg_default rx_defaults[] = {
- 	{ CDC_RX_RX0_RX_PATH_DSM_DATA4, 0x55 },
- 	{ CDC_RX_RX0_RX_PATH_DSM_DATA5, 0x55 },
- 	{ CDC_RX_RX0_RX_PATH_DSM_DATA6, 0x55 },
--	{ CDC_RX_RX1_RX_PATH_CTL, 0x04 },
--	{ CDC_RX_RX1_RX_PATH_CFG0, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_CFG1, 0x64 },
--	{ CDC_RX_RX1_RX_PATH_CFG2, 0x8F },
--	{ CDC_RX_RX1_RX_PATH_CFG3, 0x00 },
--	{ CDC_RX_RX1_RX_VOL_CTL, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_MIX_CTL, 0x04 },
--	{ CDC_RX_RX1_RX_PATH_MIX_CFG, 0x7E },
--	{ CDC_RX_RX1_RX_VOL_MIX_CTL, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_SEC1, 0x08 },
--	{ CDC_RX_RX1_RX_PATH_SEC2, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_SEC3, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_SEC4, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_SEC7, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_MIX_SEC0, 0x08 },
--	{ CDC_RX_RX1_RX_PATH_MIX_SEC1, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_DSM_CTL, 0x08 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA1, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA2, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA3, 0x00 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA4, 0x55 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA5, 0x55 },
--	{ CDC_RX_RX1_RX_PATH_DSM_DATA6, 0x55 },
--	{ CDC_RX_RX2_RX_PATH_CTL, 0x04 },
--	{ CDC_RX_RX2_RX_PATH_CFG0, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_CFG1, 0x64 },
--	{ CDC_RX_RX2_RX_PATH_CFG2, 0x8F },
--	{ CDC_RX_RX2_RX_PATH_CFG3, 0x00 },
--	{ CDC_RX_RX2_RX_VOL_CTL, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_MIX_CTL, 0x04 },
--	{ CDC_RX_RX2_RX_PATH_MIX_CFG, 0x7E },
--	{ CDC_RX_RX2_RX_VOL_MIX_CTL, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC0, 0x04 },
--	{ CDC_RX_RX2_RX_PATH_SEC1, 0x08 },
--	{ CDC_RX_RX2_RX_PATH_SEC2, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC3, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC4, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC5, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC6, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_SEC7, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_MIX_SEC0, 0x08 },
--	{ CDC_RX_RX2_RX_PATH_MIX_SEC1, 0x00 },
--	{ CDC_RX_RX2_RX_PATH_DSM_CTL, 0x00 },
- 	{ CDC_RX_IDLE_DETECT_PATH_CTL, 0x00 },
- 	{ CDC_RX_IDLE_DETECT_CFG0, 0x07 },
- 	{ CDC_RX_IDLE_DETECT_CFG1, 0x3C },
-@@ -1121,6 +1083,53 @@ static const struct reg_default rx_defaults[] = {
- 	{ CDC_RX_DSD1_CFG2, 0x96 },
- };
- 
-+static const struct reg_default rx_pre_2_5_defaults[] = {
-+	{ CDC_RX_RX1_RX_PATH_CTL, 0x04 },
-+	{ CDC_RX_RX1_RX_PATH_CFG0, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_CFG1, 0x64 },
-+	{ CDC_RX_RX1_RX_PATH_CFG2, 0x8F },
-+	{ CDC_RX_RX1_RX_PATH_CFG3, 0x00 },
-+	{ CDC_RX_RX1_RX_VOL_CTL, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_MIX_CTL, 0x04 },
-+	{ CDC_RX_RX1_RX_PATH_MIX_CFG, 0x7E },
-+	{ CDC_RX_RX1_RX_VOL_MIX_CTL, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_SEC1, 0x08 },
-+	{ CDC_RX_RX1_RX_PATH_SEC2, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_SEC3, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_SEC4, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_SEC7, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_MIX_SEC0, 0x08 },
-+	{ CDC_RX_RX1_RX_PATH_MIX_SEC1, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_CTL, 0x08 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA1, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA2, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA3, 0x00 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA4, 0x55 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA5, 0x55 },
-+	{ CDC_RX_RX1_RX_PATH_DSM_DATA6, 0x55 },
-+	{ CDC_RX_RX2_RX_PATH_CTL, 0x04 },
-+	{ CDC_RX_RX2_RX_PATH_CFG0, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_CFG1, 0x64 },
-+	{ CDC_RX_RX2_RX_PATH_CFG2, 0x8F },
-+	{ CDC_RX_RX2_RX_PATH_CFG3, 0x00 },
-+	{ CDC_RX_RX2_RX_VOL_CTL, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_MIX_CTL, 0x04 },
-+	{ CDC_RX_RX2_RX_PATH_MIX_CFG, 0x7E },
-+	{ CDC_RX_RX2_RX_VOL_MIX_CTL, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC0, 0x04 },
-+	{ CDC_RX_RX2_RX_PATH_SEC1, 0x08 },
-+	{ CDC_RX_RX2_RX_PATH_SEC2, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC3, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC4, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC5, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC6, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_SEC7, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_MIX_SEC0, 0x08 },
-+	{ CDC_RX_RX2_RX_PATH_MIX_SEC1, 0x00 },
-+	{ CDC_RX_RX2_RX_PATH_DSM_CTL, 0x00 },
-+
-+};
-+
- static bool rx_is_wronly_register(struct device *dev,
- 					unsigned int reg)
- {
-@@ -1175,8 +1184,62 @@ static bool rx_is_volatile_register(struct device *dev, unsigned int reg)
- 	return false;
- }
- 
-+static bool rx_pre_2_5_is_rw_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case CDC_RX_RX1_RX_PATH_CTL:
-+	case CDC_RX_RX1_RX_PATH_CFG0:
-+	case CDC_RX_RX1_RX_PATH_CFG1:
-+	case CDC_RX_RX1_RX_PATH_CFG2:
-+	case CDC_RX_RX1_RX_PATH_CFG3:
-+	case CDC_RX_RX1_RX_VOL_CTL:
-+	case CDC_RX_RX1_RX_PATH_MIX_CTL:
-+	case CDC_RX_RX1_RX_PATH_MIX_CFG:
-+	case CDC_RX_RX1_RX_VOL_MIX_CTL:
-+	case CDC_RX_RX1_RX_PATH_SEC1:
-+	case CDC_RX_RX1_RX_PATH_SEC2:
-+	case CDC_RX_RX1_RX_PATH_SEC3:
-+	case CDC_RX_RX1_RX_PATH_SEC4:
-+	case CDC_RX_RX1_RX_PATH_SEC7:
-+	case CDC_RX_RX1_RX_PATH_MIX_SEC0:
-+	case CDC_RX_RX1_RX_PATH_MIX_SEC1:
-+	case CDC_RX_RX1_RX_PATH_DSM_CTL:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA1:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA2:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA3:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA4:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA5:
-+	case CDC_RX_RX1_RX_PATH_DSM_DATA6:
-+	case CDC_RX_RX2_RX_PATH_CTL:
-+	case CDC_RX_RX2_RX_PATH_CFG0:
-+	case CDC_RX_RX2_RX_PATH_CFG1:
-+	case CDC_RX_RX2_RX_PATH_CFG2:
-+	case CDC_RX_RX2_RX_PATH_CFG3:
-+	case CDC_RX_RX2_RX_VOL_CTL:
-+	case CDC_RX_RX2_RX_PATH_MIX_CTL:
-+	case CDC_RX_RX2_RX_PATH_MIX_CFG:
-+	case CDC_RX_RX2_RX_VOL_MIX_CTL:
-+	case CDC_RX_RX2_RX_PATH_SEC0:
-+	case CDC_RX_RX2_RX_PATH_SEC1:
-+	case CDC_RX_RX2_RX_PATH_SEC2:
-+	case CDC_RX_RX2_RX_PATH_SEC3:
-+	case CDC_RX_RX2_RX_PATH_SEC4:
-+	case CDC_RX_RX2_RX_PATH_SEC5:
-+	case CDC_RX_RX2_RX_PATH_SEC6:
-+	case CDC_RX_RX2_RX_PATH_SEC7:
-+	case CDC_RX_RX2_RX_PATH_MIX_SEC0:
-+	case CDC_RX_RX2_RX_PATH_MIX_SEC1:
-+	case CDC_RX_RX2_RX_PATH_DSM_CTL:
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static bool rx_is_rw_register(struct device *dev, unsigned int reg)
- {
-+	struct rx_macro *rx = dev_get_drvdata(dev);
-+
- 	switch (reg) {
- 	case CDC_RX_TOP_TOP_CFG0:
- 	case CDC_RX_TOP_SWR_CTRL:
-@@ -1306,49 +1369,6 @@ static bool rx_is_rw_register(struct device *dev, unsigned int reg)
- 	case CDC_RX_RX0_RX_PATH_DSM_DATA4:
- 	case CDC_RX_RX0_RX_PATH_DSM_DATA5:
- 	case CDC_RX_RX0_RX_PATH_DSM_DATA6:
--	case CDC_RX_RX1_RX_PATH_CTL:
--	case CDC_RX_RX1_RX_PATH_CFG0:
--	case CDC_RX_RX1_RX_PATH_CFG1:
--	case CDC_RX_RX1_RX_PATH_CFG2:
--	case CDC_RX_RX1_RX_PATH_CFG3:
--	case CDC_RX_RX1_RX_VOL_CTL:
--	case CDC_RX_RX1_RX_PATH_MIX_CTL:
--	case CDC_RX_RX1_RX_PATH_MIX_CFG:
--	case CDC_RX_RX1_RX_VOL_MIX_CTL:
--	case CDC_RX_RX1_RX_PATH_SEC1:
--	case CDC_RX_RX1_RX_PATH_SEC2:
--	case CDC_RX_RX1_RX_PATH_SEC3:
--	case CDC_RX_RX1_RX_PATH_SEC4:
--	case CDC_RX_RX1_RX_PATH_SEC7:
--	case CDC_RX_RX1_RX_PATH_MIX_SEC0:
--	case CDC_RX_RX1_RX_PATH_MIX_SEC1:
--	case CDC_RX_RX1_RX_PATH_DSM_CTL:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA1:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA2:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA3:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA4:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA5:
--	case CDC_RX_RX1_RX_PATH_DSM_DATA6:
--	case CDC_RX_RX2_RX_PATH_CTL:
--	case CDC_RX_RX2_RX_PATH_CFG0:
--	case CDC_RX_RX2_RX_PATH_CFG1:
--	case CDC_RX_RX2_RX_PATH_CFG2:
--	case CDC_RX_RX2_RX_PATH_CFG3:
--	case CDC_RX_RX2_RX_VOL_CTL:
--	case CDC_RX_RX2_RX_PATH_MIX_CTL:
--	case CDC_RX_RX2_RX_PATH_MIX_CFG:
--	case CDC_RX_RX2_RX_VOL_MIX_CTL:
--	case CDC_RX_RX2_RX_PATH_SEC0:
--	case CDC_RX_RX2_RX_PATH_SEC1:
--	case CDC_RX_RX2_RX_PATH_SEC2:
--	case CDC_RX_RX2_RX_PATH_SEC3:
--	case CDC_RX_RX2_RX_PATH_SEC4:
--	case CDC_RX_RX2_RX_PATH_SEC5:
--	case CDC_RX_RX2_RX_PATH_SEC6:
--	case CDC_RX_RX2_RX_PATH_SEC7:
--	case CDC_RX_RX2_RX_PATH_MIX_SEC0:
--	case CDC_RX_RX2_RX_PATH_MIX_SEC1:
--	case CDC_RX_RX2_RX_PATH_DSM_CTL:
- 	case CDC_RX_IDLE_DETECT_PATH_CTL:
- 	case CDC_RX_IDLE_DETECT_CFG0:
- 	case CDC_RX_IDLE_DETECT_CFG1:
-@@ -1435,6 +1455,16 @@ static bool rx_is_rw_register(struct device *dev, unsigned int reg)
- 		return true;
- 	}
- 
-+	switch (rx->codec_version) {
-+	case LPASS_CODEC_VERSION_1_0:
-+	case LPASS_CODEC_VERSION_1_1:
-+	case LPASS_CODEC_VERSION_1_2:
-+	case LPASS_CODEC_VERSION_2_0:
-+		return rx_pre_2_5_is_rw_register(dev, reg);
-+	default:
-+		break;
-+	}
-+
- 	return false;
- }
- 
-@@ -1485,14 +1515,12 @@ static bool rx_is_readable_register(struct device *dev, unsigned int reg)
- 	return rx_is_rw_register(dev, reg);
- }
- 
--static const struct regmap_config rx_regmap_config = {
-+static struct regmap_config rx_regmap_config = {
- 	.name = "rx_macro",
- 	.reg_bits = 16,
- 	.val_bits = 32, /* 8 but with 32 bit read/write */
- 	.reg_stride = 4,
- 	.cache_type = REGCACHE_FLAT,
--	.reg_defaults = rx_defaults,
--	.num_reg_defaults = ARRAY_SIZE(rx_defaults),
- 	.max_register = RX_MAX_OFFSET,
- 	.writeable_reg = rx_is_writeable_register,
- 	.volatile_reg = rx_is_volatile_register,
-@@ -1504,16 +1532,17 @@ static int rx_macro_int_dem_inp_mux_put(struct snd_kcontrol *kcontrol,
- {
- 	struct snd_soc_dapm_widget *widget = snd_soc_dapm_kcontrol_widget(kcontrol);
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(widget->dapm);
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
- 	unsigned short look_ahead_dly_reg;
- 	unsigned int val;
- 
- 	val = ucontrol->value.enumerated.item[0];
- 
--	if (e->reg == CDC_RX_RX0_RX_PATH_CFG1)
--		look_ahead_dly_reg = CDC_RX_RX0_RX_PATH_CFG0;
--	else if (e->reg == CDC_RX_RX1_RX_PATH_CFG1)
--		look_ahead_dly_reg = CDC_RX_RX1_RX_PATH_CFG0;
-+	if (e->reg == CDC_RX_RXn_RX_PATH_CFG1(rx, 0))
-+		look_ahead_dly_reg = CDC_RX_RXn_RX_PATH_CFG0(rx, 0);
-+	else if (e->reg == CDC_RX_RXn_RX_PATH_CFG1(rx, 1))
-+		look_ahead_dly_reg = CDC_RX_RXn_RX_PATH_CFG0(rx, 1);
- 
- 	/* Set Look Ahead Delay */
- 	if (val)
-@@ -1567,7 +1596,7 @@ static int rx_macro_set_prim_interpolator_rate(struct snd_soc_dai *dai,
- 			if ((inp0_sel == int_1_mix1_inp + INTn_1_INP_SEL_RX0) ||
- 			    (inp1_sel == int_1_mix1_inp + INTn_1_INP_SEL_RX0) ||
- 			    (inp2_sel == int_1_mix1_inp + INTn_1_INP_SEL_RX0)) {
--				int_fs_reg = CDC_RX_RXn_RX_PATH_CTL(j);
-+				int_fs_reg = CDC_RX_RXn_RX_PATH_CTL(rx, j);
- 				/* sample_rate is in Hz */
- 				snd_soc_component_update_bits(component, int_fs_reg,
- 							      CDC_RX_PATH_PCM_RATE_MASK,
-@@ -1600,7 +1629,7 @@ static int rx_macro_set_mix_interpolator_rate(struct snd_soc_dai *dai,
- 									CDC_RX_INTX_2_SEL_MASK);
- 
- 			if (int_mux_cfg1_val == int_2_inp + INTn_2_INP_SEL_RX0) {
--				int_fs_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(j);
-+				int_fs_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(rx, j);
- 				snd_soc_component_update_bits(component, int_fs_reg,
- 							      CDC_RX_RXn_MIX_PCM_RATE_MASK,
- 							      rate_reg_val);
-@@ -1719,6 +1748,7 @@ static int rx_macro_get_channel_map(struct snd_soc_dai *dai,
- static int rx_macro_digital_mute(struct snd_soc_dai *dai, int mute, int stream)
- {
- 	struct snd_soc_component *component = dai->component;
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 	uint16_t j, reg, mix_reg, dsm_reg;
- 	u16 int_mux_cfg0, int_mux_cfg1;
- 	u8 int_mux_cfg0_val, int_mux_cfg1_val;
-@@ -1729,9 +1759,9 @@ static int rx_macro_digital_mute(struct snd_soc_dai *dai, int mute, int stream)
- 	case RX_MACRO_AIF3_PB:
- 	case RX_MACRO_AIF4_PB:
- 		for (j = 0; j < INTERP_MAX; j++) {
--			reg = CDC_RX_RXn_RX_PATH_CTL(j);
--			mix_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(j);
--			dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(j);
-+			reg = CDC_RX_RXn_RX_PATH_CTL(rx, j);
-+			mix_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(rx, j);
-+			dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(rx, j);
- 
- 			if (mute) {
- 				snd_soc_component_update_bits(component, reg,
-@@ -1748,7 +1778,7 @@ static int rx_macro_digital_mute(struct snd_soc_dai *dai, int mute, int stream)
- 			}
- 
- 			if (j == INTERP_AUX)
--				dsm_reg = CDC_RX_RX2_RX_PATH_DSM_CTL;
-+				dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(rx, 2);
- 
- 			int_mux_cfg0 = CDC_RX_INP_MUX_RX_INT0_CFG0 + j * 8;
- 			int_mux_cfg1 = int_mux_cfg0 + 4;
-@@ -1956,10 +1986,11 @@ static int rx_macro_enable_main_path(struct snd_soc_dapm_widget *w,
- 					int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 	u16 gain_reg, reg;
- 
--	reg = CDC_RX_RXn_RX_PATH_CTL(w->shift);
--	gain_reg = CDC_RX_RXn_RX_VOL_CTL(w->shift);
-+	reg = CDC_RX_RXn_RX_PATH_CTL(rx, w->shift);
-+	gain_reg = CDC_RX_RXn_RX_VOL_CTL(rx, w->shift);
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -1991,7 +2022,7 @@ static int rx_macro_config_compander(struct snd_soc_component *component,
- 	if (comp == INTERP_AUX)
- 		return 0;
- 
--	pcm_rate = snd_soc_component_read(component, CDC_RX_RXn_RX_PATH_CTL(comp)) & 0x0F;
-+	pcm_rate = snd_soc_component_read(component, CDC_RX_RXn_RX_PATH_CTL(rx, comp)) & 0x0F;
- 	if (pcm_rate < 0x06)
- 		val = 0x03;
- 	else if (pcm_rate < 0x08)
-@@ -2002,11 +2033,11 @@ static int rx_macro_config_compander(struct snd_soc_component *component,
- 		val = 0x00;
- 
- 	if (SND_SOC_DAPM_EVENT_ON(event))
--		snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(comp),
-+		snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, comp),
- 					      CDC_RX_DC_COEFF_SEL_MASK, val);
- 
- 	if (SND_SOC_DAPM_EVENT_OFF(event))
--		snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(comp),
-+		snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, comp),
- 					      CDC_RX_DC_COEFF_SEL_MASK, 0x3);
- 	if (!rx->comp_enabled[comp])
- 		return 0;
-@@ -2019,14 +2050,14 @@ static int rx_macro_config_compander(struct snd_soc_component *component,
- 					      CDC_RX_COMPANDERn_SOFT_RST_MASK, 0x1);
- 		snd_soc_component_write_field(component, CDC_RX_COMPANDERn_CTL0(comp),
- 					      CDC_RX_COMPANDERn_SOFT_RST_MASK, 0x0);
--		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG0(comp),
-+		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG0(rx, comp),
- 					      CDC_RX_RXn_COMP_EN_MASK, 0x1);
- 	}
- 
- 	if (SND_SOC_DAPM_EVENT_OFF(event)) {
- 		snd_soc_component_write_field(component, CDC_RX_COMPANDERn_CTL0(comp),
- 					      CDC_RX_COMPANDERn_HALT_MASK, 0x1);
--		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG0(comp),
-+		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG0(rx, comp),
- 					      CDC_RX_RXn_COMP_EN_MASK, 0x0);
- 		snd_soc_component_write_field(component, CDC_RX_COMPANDERn_CTL0(comp),
- 					      CDC_RX_COMPANDERn_CLK_EN_MASK, 0x0);
-@@ -2125,13 +2156,13 @@ static int rx_macro_config_aux_hpf(struct snd_soc_component *component,
- 		/* Update Aux HPF control */
- 		if (!rx->is_aux_hpf_on)
- 			snd_soc_component_update_bits(component,
--				CDC_RX_RX2_RX_PATH_CFG1, 0x04, 0x00);
-+				CDC_RX_RXn_RX_PATH_CFG1(rx, 2), 0x04, 0x00);
- 	}
- 
- 	if (SND_SOC_DAPM_EVENT_OFF(event)) {
- 		/* Reset to default (HPF=ON) */
- 		snd_soc_component_update_bits(component,
--			CDC_RX_RX2_RX_PATH_CFG1, 0x04, 0x04);
-+			CDC_RX_RXn_RX_PATH_CFG1(rx, 2), 0x04, 0x04);
- 	}
- 
- 	return 0;
-@@ -2183,7 +2214,7 @@ static int rx_macro_config_classh(struct snd_soc_component *component,
- 				CDC_RX_CLSH_DECAY_CTRL,
- 				CDC_RX_CLSH_DECAY_RATE_MASK, 0x0);
- 		snd_soc_component_write_field(component,
--				CDC_RX_RX0_RX_PATH_CFG0,
-+				CDC_RX_RXn_RX_PATH_CFG0(rx, 0),
- 				CDC_RX_RXn_CLSH_EN_MASK, 0x1);
- 		break;
- 	case INTERP_HPHR:
-@@ -2199,15 +2230,15 @@ static int rx_macro_config_classh(struct snd_soc_component *component,
- 				CDC_RX_CLSH_DECAY_CTRL,
- 				CDC_RX_CLSH_DECAY_RATE_MASK, 0x0);
- 		snd_soc_component_write_field(component,
--				CDC_RX_RX1_RX_PATH_CFG0,
-+				CDC_RX_RXn_RX_PATH_CFG0(rx, 1),
- 				CDC_RX_RXn_CLSH_EN_MASK, 0x1);
- 		break;
- 	case INTERP_AUX:
- 		snd_soc_component_update_bits(component,
--				CDC_RX_RX2_RX_PATH_CFG0,
-+				CDC_RX_RXn_RX_PATH_CFG0(rx, 2),
- 				CDC_RX_RX2_DLY_Z_EN_MASK, 1);
- 		snd_soc_component_write_field(component,
--				CDC_RX_RX2_RX_PATH_CFG0,
-+				CDC_RX_RXn_RX_PATH_CFG0(rx, 2),
- 				CDC_RX_RX2_CLSH_EN_MASK, 1);
- 		break;
- 	}
-@@ -2218,16 +2249,17 @@ static int rx_macro_config_classh(struct snd_soc_component *component,
- static void rx_macro_hd2_control(struct snd_soc_component *component,
- 				 u16 interp_idx, int event)
- {
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 	u16 hd2_scale_reg, hd2_enable_reg;
- 
- 	switch (interp_idx) {
- 	case INTERP_HPHL:
--		hd2_scale_reg = CDC_RX_RX0_RX_PATH_SEC3;
--		hd2_enable_reg = CDC_RX_RX0_RX_PATH_CFG0;
-+		hd2_scale_reg = CDC_RX_RXn_RX_PATH_SEC3(rx, 0);
-+		hd2_enable_reg = CDC_RX_RXn_RX_PATH_CFG0(rx, 0);
- 		break;
- 	case INTERP_HPHR:
--		hd2_scale_reg = CDC_RX_RX1_RX_PATH_SEC3;
--		hd2_enable_reg = CDC_RX_RX1_RX_PATH_CFG0;
-+		hd2_scale_reg = CDC_RX_RXn_RX_PATH_SEC3(rx, 1);
-+		hd2_enable_reg = CDC_RX_RXn_RX_PATH_CFG0(rx, 1);
- 		break;
- 	}
- 
-@@ -2482,7 +2514,7 @@ static int rx_macro_hphdelay_lutbypass(struct snd_soc_component *component,
- 		if (interp_idx == INTERP_HPHL) {
- 			if (rx->is_ear_mode_on)
- 				snd_soc_component_write_field(component,
--					CDC_RX_RX0_RX_PATH_CFG1,
-+					CDC_RX_RXn_RX_PATH_CFG1(rx, 0),
- 					CDC_RX_RX0_HPH_L_EAR_SEL_MASK, 0x1);
- 			else
- 				snd_soc_component_write_field(component,
-@@ -2499,7 +2531,7 @@ static int rx_macro_hphdelay_lutbypass(struct snd_soc_component *component,
- 
- 	if (hph_lut_bypass_reg && SND_SOC_DAPM_EVENT_OFF(event)) {
- 		snd_soc_component_write_field(component,
--					CDC_RX_RX0_RX_PATH_CFG1,
-+					CDC_RX_RXn_RX_PATH_CFG1(rx, 0),
- 					CDC_RX_RX0_HPH_L_EAR_SEL_MASK, 0x0);
- 		snd_soc_component_update_bits(component, hph_lut_bypass_reg,
- 					CDC_RX_TOP_HPH_LUT_BYPASS_MASK, 0);
-@@ -2516,11 +2548,12 @@ static int rx_macro_enable_interp_clk(struct snd_soc_component *component,
- 	u16 main_reg, dsm_reg, rx_cfg2_reg;
- 	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 
--	main_reg = CDC_RX_RXn_RX_PATH_CTL(interp_idx);
--	dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(interp_idx);
-+	main_reg = CDC_RX_RXn_RX_PATH_CTL(rx, interp_idx);
-+	dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(rx, interp_idx);
- 	if (interp_idx == INTERP_AUX)
--		dsm_reg = CDC_RX_RX2_RX_PATH_DSM_CTL;
--	rx_cfg2_reg = CDC_RX_RXn_RX_PATH_CFG2(interp_idx);
-+		dsm_reg = CDC_RX_RXn_RX_PATH_DSM_CTL(rx, 2);
-+
-+	rx_cfg2_reg = CDC_RX_RXn_RX_PATH_CFG2(rx, interp_idx);
- 
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
- 		if (rx->main_clk_users[interp_idx] == 0) {
-@@ -2587,10 +2620,11 @@ static int rx_macro_enable_mix_path(struct snd_soc_dapm_widget *w,
- 				    struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 	u16 gain_reg, mix_reg;
- 
--	gain_reg = CDC_RX_RXn_RX_VOL_MIX_CTL(w->shift);
--	mix_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(w->shift);
-+	gain_reg = CDC_RX_RXn_RX_VOL_MIX_CTL(rx, w->shift);
-+	mix_reg = CDC_RX_RXn_RX_PATH_MIX_CTL(rx, w->shift);
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-@@ -2621,17 +2655,18 @@ static int rx_macro_enable_rx_path_clk(struct snd_soc_dapm_widget *w,
- 				       struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
- 		rx_macro_enable_interp_clk(component, event, w->shift);
--		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG1(w->shift),
-+		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG1(rx, w->shift),
- 					      CDC_RX_RXn_SIDETONE_EN_MASK, 1);
--		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CTL(w->shift),
-+		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CTL(rx, w->shift),
- 					      CDC_RX_PATH_CLK_EN_MASK, 1);
- 		break;
- 	case SND_SOC_DAPM_POST_PMD:
--		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG1(w->shift),
-+		snd_soc_component_write_field(component, CDC_RX_RXn_RX_PATH_CFG1(rx, w->shift),
- 					      CDC_RX_RXn_SIDETONE_EN_MASK, 0);
- 		rx_macro_enable_interp_clk(component, event, w->shift);
- 		break;
-@@ -2801,20 +2836,22 @@ static int rx_macro_iir_filter_info(struct snd_kcontrol *kcontrol,
- 	return 0;
- }
- 
--static const struct snd_kcontrol_new rx_macro_snd_controls[] = {
--	SOC_SINGLE_S8_TLV("RX_RX0 Digital Volume", CDC_RX_RX0_RX_VOL_CTL,
--			  -84, 40, digital_gain),
-+static const struct snd_kcontrol_new rx_macro_def_snd_controls[] = {
- 	SOC_SINGLE_S8_TLV("RX_RX1 Digital Volume", CDC_RX_RX1_RX_VOL_CTL,
- 			  -84, 40, digital_gain),
- 	SOC_SINGLE_S8_TLV("RX_RX2 Digital Volume", CDC_RX_RX2_RX_VOL_CTL,
- 			  -84, 40, digital_gain),
--	SOC_SINGLE_S8_TLV("RX_RX0 Mix Digital Volume", CDC_RX_RX0_RX_VOL_MIX_CTL,
--			  -84, 40, digital_gain),
- 	SOC_SINGLE_S8_TLV("RX_RX1 Mix Digital Volume", CDC_RX_RX1_RX_VOL_MIX_CTL,
- 			  -84, 40, digital_gain),
- 	SOC_SINGLE_S8_TLV("RX_RX2 Mix Digital Volume", CDC_RX_RX2_RX_VOL_MIX_CTL,
- 			  -84, 40, digital_gain),
-+};
- 
-+static const struct snd_kcontrol_new rx_macro_snd_controls[] = {
-+	SOC_SINGLE_S8_TLV("RX_RX0 Digital Volume", CDC_RX_RX0_RX_VOL_CTL,
-+			  -84, 40, digital_gain),
-+	SOC_SINGLE_S8_TLV("RX_RX0 Mix Digital Volume", CDC_RX_RX0_RX_VOL_MIX_CTL,
-+			  -84, 40, digital_gain),
- 	SOC_SINGLE_EXT("RX_COMP1 Switch", SND_SOC_NOPM, RX_MACRO_COMP1, 1, 0,
- 		rx_macro_get_compander, rx_macro_set_compander),
- 	SOC_SINGLE_EXT("RX_COMP2 Switch", SND_SOC_NOPM, RX_MACRO_COMP2, 1, 0,
-@@ -2931,6 +2968,10 @@ static int rx_macro_enable_echo(struct snd_soc_dapm_widget *w,
- 
- 	return 0;
- }
-+static const struct snd_soc_dapm_widget rx_macro_def_dapm_widgets[] = {
-+	SND_SOC_DAPM_MUX("RX INT1 DEM MUX", SND_SOC_NOPM, 0, 0,
-+			 &rx_int1_dem_inp_mux),
-+};
- 
- static const struct snd_soc_dapm_widget rx_macro_dapm_widgets[] = {
- 	SND_SOC_DAPM_AIF_IN("RX AIF1 PB", "RX_MACRO_AIF1 Playback", 0,
-@@ -3003,8 +3044,6 @@ static const struct snd_soc_dapm_widget rx_macro_dapm_widgets[] = {
- 
- 	SND_SOC_DAPM_MUX("RX INT0 DEM MUX", SND_SOC_NOPM, 0, 0,
- 			 &rx_int0_dem_inp_mux),
--	SND_SOC_DAPM_MUX("RX INT1 DEM MUX", SND_SOC_NOPM, 0, 0,
--			 &rx_int1_dem_inp_mux),
- 
- 	SND_SOC_DAPM_MUX_E("RX INT0_2 MUX", SND_SOC_NOPM, INTERP_HPHL, 0,
- 		&rx_int0_2_mux, rx_macro_enable_mix_path,
-@@ -3399,32 +3438,55 @@ static const struct snd_soc_dapm_route rx_audio_map[] = {
- 
- static int rx_macro_component_probe(struct snd_soc_component *component)
- {
-+	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
- 	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
-+	const struct snd_soc_dapm_widget *widgets;
-+	const struct snd_kcontrol_new *controls;
-+	unsigned int num_controls;
-+	int ret, num_widgets;
- 
- 	snd_soc_component_init_regmap(component, rx->regmap);
- 
--	snd_soc_component_update_bits(component, CDC_RX_RX0_RX_PATH_SEC7,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 0),
- 				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
- 				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
--	snd_soc_component_update_bits(component, CDC_RX_RX1_RX_PATH_SEC7,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 1),
- 				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
- 				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
--	snd_soc_component_update_bits(component, CDC_RX_RX2_RX_PATH_SEC7,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 2),
- 				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
- 				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
--	snd_soc_component_update_bits(component, CDC_RX_RX0_RX_PATH_CFG3,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 0),
- 				      CDC_RX_DC_COEFF_SEL_MASK,
- 				      CDC_RX_DC_COEFF_SEL_TWO);
--	snd_soc_component_update_bits(component, CDC_RX_RX1_RX_PATH_CFG3,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 1),
- 				      CDC_RX_DC_COEFF_SEL_MASK,
- 				      CDC_RX_DC_COEFF_SEL_TWO);
--	snd_soc_component_update_bits(component, CDC_RX_RX2_RX_PATH_CFG3,
-+	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 2),
- 				      CDC_RX_DC_COEFF_SEL_MASK,
- 				      CDC_RX_DC_COEFF_SEL_TWO);
- 
-+	switch (rx->codec_version) {
-+	case LPASS_CODEC_VERSION_1_0:
-+	case LPASS_CODEC_VERSION_1_1:
-+	case LPASS_CODEC_VERSION_1_2:
-+	case LPASS_CODEC_VERSION_2_0:
-+		controls = rx_macro_def_snd_controls;
-+		num_controls = ARRAY_SIZE(rx_macro_def_snd_controls);
-+		widgets = rx_macro_def_dapm_widgets;
-+		num_widgets = ARRAY_SIZE(rx_macro_def_dapm_widgets);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
- 	rx->component = component;
- 
--	return 0;
-+	ret = snd_soc_add_component_controls(component, controls, num_controls);
-+	if (ret)
-+		return ret;
-+
-+	return snd_soc_dapm_new_controls(dapm, widgets, num_widgets);
- }
- 
- static int swclk_gate_enable(struct clk_hw *hw)
-@@ -3523,11 +3585,12 @@ static const struct snd_soc_component_driver rx_macro_component_drv = {
- 
- static int rx_macro_probe(struct platform_device *pdev)
- {
-+	struct reg_default *reg_defaults;
- 	struct device *dev = &pdev->dev;
- 	kernel_ulong_t flags;
- 	struct rx_macro *rx;
- 	void __iomem *base;
--	int ret;
-+	int ret, def_count;
- 
- 	flags = (kernel_ulong_t)device_get_match_data(dev);
- 
-@@ -3566,11 +3629,36 @@ static int rx_macro_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(base);
- 		goto err;
- 	}
-+	rx->codec_version = lpass_macro_get_codec_version();
-+	switch (rx->codec_version) {
-+	case LPASS_CODEC_VERSION_1_0:
-+	case LPASS_CODEC_VERSION_1_1:
-+	case LPASS_CODEC_VERSION_1_2:
-+	case LPASS_CODEC_VERSION_2_0:
-+		rx->rxn_reg_stride = 0x80;
-+		def_count = ARRAY_SIZE(rx_defaults) + ARRAY_SIZE(rx_pre_2_5_defaults);
-+		reg_defaults = kmalloc_array(def_count, sizeof(struct reg_default), GFP_KERNEL);
-+		if (!reg_defaults) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
-+		memcpy(&reg_defaults[0], rx_defaults, sizeof(rx_defaults));
-+		memcpy(&reg_defaults[ARRAY_SIZE(rx_defaults)],
-+				rx_pre_2_5_defaults, sizeof(rx_pre_2_5_defaults));
-+		break;
-+	default:
-+		dev_err(rx->dev, "Unsupported Codec version (%d)\n", rx->codec_version);
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	rx_regmap_config.reg_defaults = reg_defaults;
-+	rx_regmap_config.num_reg_defaults = def_count;
- 
- 	rx->regmap = devm_regmap_init_mmio(dev, base, &rx_regmap_config);
- 	if (IS_ERR(rx->regmap)) {
- 		ret = PTR_ERR(rx->regmap);
--		goto err;
-+		goto err_ver;
- 	}
- 
- 	dev_set_drvdata(dev, rx);
-@@ -3583,7 +3671,7 @@ static int rx_macro_probe(struct platform_device *pdev)
- 
- 	ret = clk_prepare_enable(rx->macro);
- 	if (ret)
--		goto err;
-+		goto err_ver;
- 
- 	ret = clk_prepare_enable(rx->dcodec);
- 	if (ret)
-@@ -3629,6 +3717,7 @@ static int rx_macro_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clkout;
- 
-+	kfree(reg_defaults);
- 	return 0;
- 
- err_clkout:
-@@ -3641,6 +3730,8 @@ static int rx_macro_probe(struct platform_device *pdev)
- 	clk_disable_unprepare(rx->dcodec);
- err_dcodec:
- 	clk_disable_unprepare(rx->macro);
-+err_ver:
-+	kfree(reg_defaults);
- err:
- 	lpass_macro_pds_exit(rx->pds);
- 
+This conversation is going in circles, so how about this as a way
+forward:
 
--- 
-2.25.1
+1. you could isolate the hash-bl parts from your original patchset (+
+rebase) and write a quick rundown what needs to be done for this to be
+committable
+2. if you think you can find the time to do the work yourself in the
+foreseeable future you could state the rough timeline (the thing will
+probably want to miss this merge cycle anyway so there is plenty of
+time)
+3. if you can't commit to the work yourself you can look for someone to
+do it for you. while you suggested that on the list there were no takers
+(for example someone else could have stepped in after I said I'm not
+going to do it, but that did not happen). perhaps you can prod people at
+your dayjob and whatever non-list spots.
 
+If you can't do the work in the foreseeable future (understandable) and
+there are no takers (realistically I suspect there wont be) then you are
+going to have stop opposing my patch on the grounds that hash-bl exists.
+
+I don't know how much work is needed to sort it out, it is definitely
+much more than what was needed for my thing, which is in part why I did
+not go for hash-bl myself.
+
+Of course there may be reasons to not include my patch regardless of the
+state of hash-bl. If you have any then I suggest you state them for the
+vfs folk to consider. If you intend to write it should not go in on the
+because it does not fully fix the problem, then I note the commit
+message both concedes there is a limitation and provides a justification
+for inclusion despite of it. Merely stating there is still a scalability
+ceiling does not address it. Claiming it adds too much complexity for
+the reported benefit is imo not legit, but again it is a judgment call
+to make by the vfs folk.
+
+Right now the v4 landed in a vfs.inode.rcu branch. It really does not
+have to reach master if someone gets hash-bl to a state where the vfs
+cabal is happy with it. I don't know if Christian intends to submit it
+to master in the upcomming merge cycle, it is perfectly fine with me if
+it does not happen. Perhaps it even should not happen if the hash-bl
+gets a sensible timeline. Even so, should my patch land in master and
+hash-bl get work done at a much later date, there is no difficulty added
+to it stemming from my thing -- at worst some trivial editing to resolve
+a merge conflict.
+
+And with this message I'm done with the entire ordeal, with 2 exceptions:
+- if there is a bug reported against my patch i'm going to investigate
+- if my patch is stalled in the vfs.inode.rcu branch for weeks and there
+  is no replacement in sight (hash-bl, rhashtable, ${whatever_else}), I'm
+  going to prod about it
+
+Cheers.
