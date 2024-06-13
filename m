@@ -1,63 +1,63 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5F8132126
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9712713440F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718260207; cv=none; b=aVKoQFlW/wlNdQQjwkkHdx/rQgf+dsdttl4TxiZwG8Qk/ky8bq9ITcU4cwh1pvEJH/5/6BRj5WLWMY7817tyh2uaiFCf8cFD7xOfBzkI9l5WzpulVk7ciNxQu73KBPYCZSvgL9cElhq3hTEHSaazvxaRSd8/DIv65TSX2627YBI=
+	t=1718260215; cv=none; b=SR8GlMKloKLKyiIJCe+zKAIiDzptn/dXB5zFiv6hHzAelQ/pAHB7uzEoFap0HPlStXInnX9Rh3z7sRtam27TJCoFN0sybSeGIoIllqGvy04ZR4+gYi+2lzC5S7qx3naQcxeU7DTEmgwmQjN5HAAouFHRq7Grj3m2tE3x8+WwQOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718260207; c=relaxed/simple;
-	bh=1ITf/IV+XppxHNGuHtacHUabz57Z4Wi5tu39fEnPP/c=;
+	s=arc-20240116; t=1718260215; c=relaxed/simple;
+	bh=Rt9FmsrR6p/DkThfc/9GUVDhdHucLaaLWbor9rDeSuM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WToajPm/4e1gJCv/sgwZS2SagenF17tYGZfnH9brGDfbrPsNVRZskgE/AulZ6FBJraZAq8ainzcgT30mJngSwGO3ukB0jS3/E5RwQxNqPcq/BKqzphL1Kc8ZwiDF4LnDuM11PYslO6PETmFpALG8zlKuevkR8SbMK4EZN/XzeIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WrtBFQHe; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=oiHsxDeq2htK3p0+P12+QgXDEt2SGOMd7lwiX9QLC5Q3FqL6t4jCQoiQWkKtRZW4eyqkAx/ByC+/yDlPPPpo46YNzwNAPQo0JFPJj4OS5vsw8omJDDMjbmT2tAzxWF4HxHxMovUFQ8vYdA80OD0DCcpAjP18vJsoXAMknYeMmtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hU2o6stO; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WrtBFQHe"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D6TVvB060085;
-	Thu, 13 Jun 2024 01:29:31 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hU2o6stO"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D6TpSX114132;
+	Thu, 13 Jun 2024 01:29:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718260171;
-	bh=ePxVqcPlasZvJxLJiNsFZJ3UpFZrVewDI7flKTjFPp0=;
+	s=ti-com-17Q1; t=1718260191;
+	bh=d/tOUKZ8wfwXRT/iUoaNiINnpqWIMwUXk5ll5Lof1Io=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=WrtBFQHeObjdboJ14vlISCC+fvFacefCJMZwAIH2aanbK6sccfbbPc5/FfN89S3Vd
-	 FkRLE+QGmuQh2D469OMM56vz/pBvHnDsSG18iGamkjEMaJkXOcP9JwqJJ+7g7qot96
-	 XleUQsjLJce9RSzEVpCyh/7ZsryTM68+yTPvm6xE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D6TV8P017688
+	b=hU2o6stOjcdK4jDzR4uQ+UTbrMdK7by2zCoUbL164WCoqRjUXRz+ufCSuh15VCV8u
+	 g2bAD+NI6FmD6QAm/v2PG5wsVIMKJKG3+/KFR4km521ZzGDh2QoiYrWgjkU2gkZQCp
+	 OShVevjMYv5Obqt3Nyay+QOjB4W79Os0N6Xxa/Cs=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D6TpZ0122281
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 01:29:31 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 13 Jun 2024 01:29:51 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 01:29:31 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 01:29:51 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 01:29:31 -0500
+ Frontend Transport; Thu, 13 Jun 2024 01:29:51 -0500
 Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D6TPoh129167;
-	Thu, 13 Jun 2024 01:29:26 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D6Tkn7129502;
+	Thu, 13 Jun 2024 01:29:46 -0500
 From: Vignesh Raghavendra <vigneshr@ti.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
         <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
-        <konrad.dybcio@linaro.org>, <shawnguo@kernel.org>,
+        <konrad.dybcio@linaro.org>, <dmitry.baryshkov@linaro.org>,
         <neil.armstrong@linaro.org>, <arnd@arndb.de>,
         <m.szyprowski@samsung.com>, <nfraprado@collabora.com>,
-        <u-kumar1@ti.com>, Nathan Morrisson
-	<nmorrisson@phytec.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <w.egorov@phytec.de>, <upstream@lists.phytec.de>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable TI LP873X PMIC
-Date: Thu, 13 Jun 2024 11:59:03 +0530
-Message-ID: <171826009034.225208.17115144830449712453.b4-ty@ti.com>
+        <u-kumar1@ti.com>, Siddharth Vadapalli
+	<s-vadapalli@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <srk@ti.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable USB2 PHY Driver
+Date: Thu, 13 Jun 2024 11:59:40 +0530
+Message-ID: <171826009031.225208.1151814959113350287.b4-ty@ti.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240606234145.3311068-1-nmorrisson@phytec.com>
-References: <20240606234145.3311068-1-nmorrisson@phytec.com>
+In-Reply-To: <20240607061056.708946-1-s-vadapalli@ti.com>
+References: <20240607061056.708946-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,19 +68,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Nathan Morrisson,
+Hi Siddharth Vadapalli,
 
-On Thu, 06 Jun 2024 16:41:45 -0700, Nathan Morrisson wrote:
-> Enable the TI LP873X PMIC configs for the PHYTEC am642-phyboard-electra
-> board.
+On Fri, 07 Jun 2024 11:40:56 +0530, Siddharth Vadapalli wrote:
+> The USB controller on TI SoCs such as AM65x needs the
+> USB2 PHY driver to communicate with VBUS/ID comparator.
+> So enable the OMAP USB2 PHY driver.
 > 
 > 
 
 I have applied the following to branch ti-k3-config-next on [1].
 Thank you!
 
-[1/1] arm64: defconfig: Enable TI LP873X PMIC
-      commit: e05bc474310336e1ab03ed79112909dd0f74d039
+[1/1] arm64: defconfig: Enable USB2 PHY Driver
+      commit: 8a703a728a745a229cfd2b6ccb2ec68a83bd5d0b
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
