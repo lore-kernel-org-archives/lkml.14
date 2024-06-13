@@ -1,137 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626AE13C90B;
-	Thu, 13 Jun 2024 08:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E25013C90B;
+	Thu, 13 Jun 2024 08:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718265989; cv=none; b=iXmJWgkH+0CnyRrv9uFjFQKt+p+H8Qb+HEJw5ZtxsV8FUttDa3QWd1cFfCqj821KAbPhmuCZbFgmp5wtM70OjGeJ9IWChaYgRrIve17lQqYrDaaRTXaVpZ2NL2JBcV645S9R4aPLwxw43+wYG1KZx64omMu0HGz83E3XA7Z+UCw=
+	t=1718266048; cv=none; b=A9ZWhb9i3DEZfy/q18ibGqF5W/rq91dbTeb78d/j9YjQuEHTLr8i8WdUv/huUibSLE0ung9XtDFm/cUDi9L0KSzQHGxWZrNplL6GVnS62b1V0N+OurAfw9uD6ZMEFnF2tNe2naAHSgaRfkV0NxBqBMSGIEX2YLCEIgm6bp4XaJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718265989; c=relaxed/simple;
-	bh=dRmC8fxGxGymh2AgVLo6sE01C4CxqjhSMs7uPX5cl50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gX/5R+ezl0uLT8yjoBpukVPvydn56gtN6ocKcz1mK51wGGSUv+5Sq2w6HR5loA4pp2nVKTpmu7MNPiMoHMIFJz4+AfkGB8OxPt7HG0kjevLFIBUPvmqgL0g8xIs1Qx60zNqKTYt8RXAbodG9EnAhkCc+cQVISnpvXx7MbpuXVeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LGTuxrcn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718266048; c=relaxed/simple;
+	bh=Xc9hAyyCn4DkrOcITDwEYrgqPgKOnmKW53OP3Af64R4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=h7i6RqBHTvlCWW3MNd54V2UJNlmWND7awbclCpj0j7XbtoBJSJkFWWldNpFcM5/zMuSkR9AwGeeYCrOBBRlwHzTaTylOQRSeclHKO1yfkcB+yBIp/RpFkbeqPXraPszhqqZXR236tjXDUlDyRM44RgDjsfUMNHX/UwHfNewu4B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=U3TIGdS3; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LGTuxrcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C97FAC2BBFC;
-	Thu, 13 Jun 2024 08:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718265989;
-	bh=dRmC8fxGxGymh2AgVLo6sE01C4CxqjhSMs7uPX5cl50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LGTuxrcnW5OQKSBpMHwWupnu3OWCeC/Bbjwa9S+I/Vtb21XhpDMT7ORzXNAyjNXf0
-	 7pfiLx0CnpnzdP6c4lTfbvvSt+ML726WPAATzWby8Mi7bUH7dCGDF55BvzlbJACwHq
-	 atrYOIdz7x0NrXHIdL38kt9o+LZSXK/i52Vn4IkY=
-Date: Thu, 13 Jun 2024 10:06:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Meng Li <Meng.Li@windriver.com>
-Cc: Thinh.Nguyen@synopsys.com, quic_uaggarwa@quicinc.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: dwc3: core: remove lock of otg mode during gadget
- suspend/resume to avoid deadlock
-Message-ID: <2024061313-october-sniff-5b0c@gregkh>
-References: <20240613073959.1939608-1-Meng.Li@windriver.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="U3TIGdS3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718266045;
+	bh=Xc9hAyyCn4DkrOcITDwEYrgqPgKOnmKW53OP3Af64R4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=U3TIGdS3aTXaE5mdWZxJ2vjJCsYGfA8WI7L9VP7KwnZjfaxDstz+sBPHScxluLXHj
+	 j1oC7g6o8sNNO2ffV+OyPzkXwy9YpYVIHHVsfGNIXhfjssb++P19NpFi0o+p+rKBsJ
+	 qsN3k2jOnKqOviAwccP9JgN74Zek20cO7uy7hdQKJ6QZ12pDBb+q+yQI6llMR4sZaU
+	 BOCYU04EGoxcewshXGmNTm+sCZ70k5A6FYwGoGeU+HU31I4qkch8KLLGN5Maaslwpz
+	 fPmFDdGVXs74Fjb2Es6PnRyTPeXyEaTprx2msbc4ouUnNiYZYGnl5tpEvkhPUCy7cb
+	 yIE7gathAmQMg==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2E589378107C;
+	Thu, 13 Jun 2024 08:07:24 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Nicolas Pitre <npitre@baylibre.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Julien Panis <jpanis@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-pm@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor.dooley@microchip.com>
+In-Reply-To: <20240603-mtk-thermal-mt818x-dtsi-v7-0-8c8e3c7a3643@baylibre.com>
+References: <20240603-mtk-thermal-mt818x-dtsi-v7-0-8c8e3c7a3643@baylibre.com>
+Subject: Re: (subset) [PATCH v7 0/6] Mediatek thermal sensor driver support
+ for MT8186 and MT8188
+Message-Id: <171826604410.51825.14935271158174620262.b4-ty@collabora.com>
+Date: Thu, 13 Jun 2024 10:07:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613073959.1939608-1-Meng.Li@windriver.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Thu, Jun 13, 2024 at 03:39:59PM +0800, Meng Li wrote:
-> When config CONFIG_USB_DWC3_DUAL_ROLE is selected, and trigger system
-> to enter suspend status with below command:
-> echo mem > /sys/power/state
-> There will be a deadlock issue occurring. Because dwc3_gadget_suspend() also
-> try to get the lock again when previous invoked dwc3_suspend_common() has
-> got the lock . This issue is introduced by commit c7ebd8149ee5 ("usb: dwc3:
-> gadget: Fix NULL pointer dereference in dwc3_gadget_suspend") that removes
-> the code of checking whether dwc->gadget_driver is NULL or not. It causes the
-> following code is executed and deadlock occurs when trying to get the spinlock.
-> To fix the deadlock issue, refer to commit 5265397f9442("usb: dwc3: Remove
-> DWC3 locking during gadget suspend/resume"), remove lock of otg mode during
-> gadget suspend/resume.
+On Mon, 03 Jun 2024 12:50:47 +0200, Julien Panis wrote:
+> This is a bunch of patches to support the MT8186 and MT8188 thermal
+> sensor configurations.
 > 
-> Fixes: 61a348857e86 ("Fix NULL pointer dereference in dwc3_gadget_suspend")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Meng Li <Meng.Li@windriver.com>
-> ---
->  drivers/usb/dwc3/core.c | 6 ------
->  1 file changed, 6 deletions(-)
+> Since the patches of v3 were applied except those related to the SoC
+> device trees, this series includes mainly patches for 'mt8186.dtsi'
+> and 'mt8188.dtsi'. Due to some thermal zone renaming in these 2 device
+> trees, the related definitions were also renamed in the dt-bindings and
+> in the driver.
 > 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 7ee61a89520b..9d47c3aa5777 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -2250,7 +2250,6 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
->  
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
-> -	unsigned long	flags;
->  	u32 reg;
->  	int i;
->  
-> @@ -2293,9 +2292,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  			break;
->  
->  		if (dwc->current_otg_role == DWC3_OTG_ROLE_DEVICE) {
-> -			spin_lock_irqsave(&dwc->lock, flags);
->  			dwc3_gadget_suspend(dwc);
-> -			spin_unlock_irqrestore(&dwc->lock, flags);
->  			synchronize_irq(dwc->irq_gadget);
->  		}
->  
-> @@ -2312,7 +2309,6 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  
->  static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
->  {
-> -	unsigned long	flags;
->  	int		ret;
->  	u32		reg;
->  	int		i;
-> @@ -2366,9 +2362,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
->  		if (dwc->current_otg_role == DWC3_OTG_ROLE_HOST) {
->  			dwc3_otg_host_init(dwc);
->  		} else if (dwc->current_otg_role == DWC3_OTG_ROLE_DEVICE) {
-> -			spin_lock_irqsave(&dwc->lock, flags);
->  			dwc3_gadget_resume(dwc);
-> -			spin_unlock_irqrestore(&dwc->lock, flags);
->  		}
->  
->  		break;
-> -- 
-> 2.34.1
-> 
-> 
+> [...]
 
-Hi,
+Applied to v6.10-next/dts64, thanks!
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+[3/6] arm64: dts: mediatek: mt8186: add lvts definitions
+      commit: 0c598e50e6c823c1057ddad17c546e368a415d6a
+[4/6] arm64: dts: mediatek: mt8186: add default thermal zones
+      commit: d7c1bde38bf37a59551cfd52cfdb5bd974b17431
+[5/6] arm64: dts: mediatek: mt8188: add lvts definitions
+      commit: 7e3e18f2ed40ea9018590b4533fa148954a725bc
+[6/6] arm64: dts: mediatek: mt8188: add default thermal zones
+      commit: 2f950510411a33d98eea28c22d7880eeb48adb61
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Cheers,
+Angelo
 
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
