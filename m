@@ -1,95 +1,65 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D798413D510
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF6026AE4;
+	Thu, 13 Jun 2024 08:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267950; cv=none; b=QQDMA3XxBZ3w2r9h4VbcaWNW8qmoTFMEXrZN5CS9FkNv6BJCfxT20r3x5/2qA92U2jCOP7edgTZ3XmWSpiOecDS4FD/+WH2M4MxMLgEeAFw+MFNKSuHs0Kaaz94CGINC02IYWNgS/6qn1SRSN9DDWMRArNN03m+kYN7P6xiD1zU=
+	t=1718267953; cv=none; b=JCAYbnrdSJZ7045VVSYcQFav0nJWUZw6P5Fvs+bHP/tLHtTofIgLmn5D0lEVD2I4ShumgKuHN0SrTumJzHcSd5RhH4gp6XwdfgkPZlfoavBPY8VpRyqThwVU1N857CdhZCHTT0/sQFc87pFdsD/ea7ZS701Q+z9pd57qixt+T+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267950; c=relaxed/simple;
-	bh=BrFVqZBE6fRw//oH/EQ+Nbno+gHpRutz6ChIj8eDBd4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I60db70epxwfRBpiyjSM+31je38m83U2CfOcjKAhDDvcNXgLC/rorojXg0oTUx4B28qRQHvaSl/zpgVQdrSw6n3SgPRKRSTD8L5SsaEKXc4T/2u3SEkrKtdB0ubnsRiVofMjuoVHbS4PndzVmAvFAeudVyihGuvVSLT/AF+n0+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QuUhFJxi; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QuUhFJxi"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8cB8t105268;
-	Thu, 13 Jun 2024 03:38:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718267891;
-	bh=hxJaZU3F0uds8Z+Bth/O87cFW5gYslLc+06BhbqZ6Qk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=QuUhFJxiE2fL4CQ6l6BkR+eoJyUYTw1QcGA2ccp6/buNVc5xQDz5PvICV7ssWbmUn
-	 VTHFWmuAKEudymu0ZhzEy4L4BYInwFXl2+BNLfbQipGMPrugP3bmbW1obU+N15Zu3/
-	 uPqgNksBMQ/O5ZSQZ785l4JacZL+8lPjwsA59/aE=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8cBlF094238
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 03:38:11 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 03:38:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 03:38:11 -0500
-Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8cAAV079395;
-	Thu, 13 Jun 2024 03:38:10 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <sui.jingfeng@linux.dev>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <mripard@kernel.org>,
-        <sam@ravnborg.org>, <j-choudhary@ti.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>, <a-bhatia1@ti.com>,
-        <dri-devel@lists.freedesktop.org>
-Subject: [PATCH v5 3/3] drm/bridge: sii902x: Add pixel clock check in atomic_check
-Date: Thu, 13 Jun 2024 14:08:05 +0530
-Message-ID: <20240613083805.439337-4-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240613083805.439337-1-j-choudhary@ti.com>
-References: <20240613083805.439337-1-j-choudhary@ti.com>
+	s=arc-20240116; t=1718267953; c=relaxed/simple;
+	bh=xWH1FslbBwCpFpoPQMjOi0tZqpH79HAY3uCalUU1SGc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=uN0esdAMA4Sc/MOiddeI6+uH3gPyW7WlkuD+FOUkl3vzYGlbjHC0FTG6CjAl/dSEmIUOHrkcMYrRbwev46VDLR1QwomE0oP2npx2d/G/g8uxDk52wJjBNoAqwWsikrr678MLW9SRkXQ53UFzWLnyc+crreDucro0mKrblq+79LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=none smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=114.132.62.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: bizesmtp87t1718267734to2hnf8o
+X-QQ-Originating-IP: vOO0L+he9GGs+Med8jGz1/0GUF6Uuzff+tDBEEZ7Nko=
+Received: from [192.168.3.231] ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 13 Jun 2024 16:35:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7174577849898629138
+Message-ID: <BA2DED4720A37AFC+88e58d9e-6117-476d-8e06-1d1a62037d6d@chenxiaosong.com>
+Date: Thu, 13 Jun 2024 16:35:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: trond.myklebust@hammerspace.com, anna@kernel.org, bcodding@redhat.com,
+ kolga@netapp.com, josef@toxicpanda.com, jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ liuzhengyuan@kylinos.cn, huhai@kylinos.cn, chenxiaosong@kylinos.cn
+From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
+Subject: Question about pNFS documentation
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-Check the pixel clock for the mode in atomic_check and ensure that
-it is within the range supported by the bridge.
+Greetings,
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
- drivers/gpu/drm/bridge/sii902x.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I am very interested in Parallel NFS (pNFS) and want to setup a testing 
+and debugging environment for pNFS. I found some pNFS documentation [1] 
+[2] [3], but I still don't know how to setup Linux environment about 
+file layout, block layout, object layout, and flexible file layout. Some 
+documentation like spNFS(simple pNFS) is unmaintained and was dropped. 
+Can you recommend some other detailed documentation(how to use pNFS in 
+Linux)?
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 00a8c469f553..7f91b0db161e 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -496,6 +496,10 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
- 				       struct drm_crtc_state *crtc_state,
- 				       struct drm_connector_state *conn_state)
- {
-+	if (crtc_state->mode.clock < SII902X_MIN_PIXEL_CLOCK_KHZ ||
-+	    crtc_state->mode.clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
-+		return -EINVAL;
-+
- 	/*
- 	 * There might be flags negotiation supported in future but
- 	 * set the bus flags in atomic_check statically for now.
--- 
-2.25.1
+Thanks,
+ChenXiaoSong.
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-block-server.rst
+
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-scsi-server.rst
+
+[3] https://linux-nfs.org/wiki/index.php/PNFS_Development
 
