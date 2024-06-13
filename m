@@ -1,160 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD7937C;
-	Thu, 13 Jun 2024 06:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD340135A4B;
+	Thu, 13 Jun 2024 06:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718258902; cv=none; b=WiTexwUls+7+FusSgc0MxPZVtW026/A0jlMuR9ZIMo2JccvPcerBeirxzjwL7wJON1lLR9rz4UWiSEVd6QlZcem69bJncBCxnV2EUK0+2EwFpitO6JKpvH7jnqyszMvrOq+fnoJcAM1+Ndpfvz3P3Jw4bt9yxH0tL4E/H9Fx72Y=
+	t=1718258968; cv=none; b=N0Dr9p54C4KgYxJGMdrQL3xDzM7Kti+jP+LMOmutNskEQ2eHkoAMAYXZJcWHKrzIV6D4SlczcxHnmVluIJGs+3QiYNENcC2tOzNbf/09m19kBKw1Ls7TQHpDATOMpMm+LwHfifMSUTzDblyu/pspegPtDQg7Mb96w5RPsmK4c/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718258902; c=relaxed/simple;
-	bh=Cp2n1ms44VPV1wVnQ2RgsVSScJkfyl43lwf7fGOejlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jFKomUGw+jeuPaghMZ0G4duJakmAKx7KGpQkj2CXMwL1khs5CCl2GnKRl4XHzE4KkzxSEj5T678Pwo3IdjvGkFL0ZI92L+a+7mQcpY4Px0tTCxf5HbGv1oxhlxYVavZvG0OPKtjvtAHGkJ02Bsh5/q4YNDtJ8/2qK1KVqjJCLUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4SbOM1v; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718258968; c=relaxed/simple;
+	bh=bbKEWwxPZT1MGbNUJwasQJFcX1zxr/x5+hhhJZnpu2k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X2cyG1DGFmaCClM2fQrbs3raXtxbWTU+mI+xDskWq+P0lFZzrj3SYU8h7xlrLjQ8W3DsgF4hTptBeo5u9JF33Oua/MHCUyVlwOGTkIs6+BpPL8yKzFDzwyDlu4Ry+tiQoJ6DjVZgEwIoFJ45BW4xjIxuL9kLT1cEPuwxpBtQSOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+0pv7QH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4SbOM1v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718258901; x=1749794901;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Cp2n1ms44VPV1wVnQ2RgsVSScJkfyl43lwf7fGOejlU=;
-  b=i4SbOM1v3hysVYmjaQ7AalTPqusdPZr/0n0wuZePFwyZEuCYDr4bS+oJ
-   hgIDs386KNq0oDqTTJNMhLXe4vfdPm/JAq3RVQ0mNeWJ4ZRPYdKNl91sA
-   CIQszs8TB3qLdjqr0WqSziN3DcPk2fdR2YOJlEQ7FhkbkIGBEBVw20Fcb
-   iUDunILxGLVIV0WHJLbYGDrDzwDs3TE5/+eFNWsi4WNRIAW1KERipUMaQ
-   zIQLkG2n5TTaIPnoKDEqb6eeb967ALhOdEuvDzvoxpQDwGLOE0il7BgG7
-   KXIN/MyffX222tzGOrGH//nGHnSb8GqTWpGFN3mITuTvk42RA7Q7d68Ds
-   A==;
-X-CSE-ConnectionGUID: uq+wPOI5TrWL6VKYK2cwgQ==
-X-CSE-MsgGUID: EdiijhlLRfeh5GRUXPGUrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15022224"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="15022224"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:08:20 -0700
-X-CSE-ConnectionGUID: 5/3wytczQAulHmbtaadTCw==
-X-CSE-MsgGUID: e0n0+TiqTPii1AzGUhxCEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="39952987"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:08:17 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	isaku.yamahata@intel.com,
-	dmatlack@google.com,
-	sagis@google.com,
-	erdemaktas@google.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 0/5] Introduce a quirk to control memslot zap behavior
-Date: Thu, 13 Jun 2024 14:06:59 +0800
-Message-ID: <20240613060708.11761-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+0pv7QH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92148C2BBFC;
+	Thu, 13 Jun 2024 06:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718258968;
+	bh=bbKEWwxPZT1MGbNUJwasQJFcX1zxr/x5+hhhJZnpu2k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=l+0pv7QHW3Uo1aG1Nam8Rb0tUCcz94L4ehaSclgjQs0By5gn20C+2G3C/VSfpM6hU
+	 XTRg6JQaIuGV9tXr6N4QXUOL5TQKBlSfLy2k02D5lvBXMuH5p6FwPGAZpQJjPCQ5+9
+	 r23/SEQLrdzzdAK4xK6d6Zvs83RZ0N1M4Ucg12mYTT6mNiZYlnwRWvGMbU/9qzqX28
+	 gSQ/TPSShofnZ0WaVywtGDbYzkSep0O3ZRQD9CYbGJ0PCSY/4ahmN2LFj+RwY8l3n2
+	 0BRgIqlCf7/x9r5DLlK9g1OwHtqjhFNWfnjyyLuf8PnUba8wzuVXeW7O5ZWO6Qvn3V
+	 hB/iAA3r57lMA==
+Message-ID: <3275676c-7392-47ac-8345-808681462003@kernel.org>
+Date: Thu, 13 Jun 2024 08:09:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
+To: joswang <joswang1221@gmail.com>
+Cc: Thinh.Nguyen@synopsys.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, balbi@kernel.org, devicetree@vger.kernel.org,
+ joswang <joswang@lenovo.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
+ <20240603130004.25662-1-joswang1221@gmail.com>
+ <9c665afe-16d7-469e-ac3e-d0d7388a31b7@kernel.org>
+ <CAMtoTm1ojhCSRb4c+MPjuJB+JaeD2ex6B7FpCaJtLvrTj0Q8Cg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <CAMtoTm1ojhCSRb4c+MPjuJB+JaeD2ex6B7FpCaJtLvrTj0Q8Cg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Today "zapping only memslot leaf SPTEs" on moving/deleting a memslot is not
-done. Instead, KVM opts to invalidate all page tables and generate fresh
-new ones based on the new memslot layout (referred to as "zap all" for
-short). This "zap all" behavior is of low overhead for most use cases, and
-is adopted primarily due to a bug which caused VM instability when a VM is
-with Nvidia Geforce GPU assigned (see link in patch 1).
+On 12/06/2024 16:28, joswang wrote:
+> On Tue, Jun 4, 2024 at 2:33 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 03/06/2024 15:00, joswang wrote:
+>>> From: joswang <joswang@lenovo.com>
+>>
+>> Is this your full name or known identity you want to use for all kernel
+>> contributions? Looks like login...
+>>
+>>>
+>>> There is an issue with the DWC31 2.00a and earlier versions
+>>> where the controller link power state transition from
+>>> P3/P3CPM/P4 to P2 may take longer than expected, ultimately
+>>> resulting in the hibernation D3 entering time exceeding the
+>>> expected 10ms.
+>>>
+>>> Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
+>>> for enable the controller transitions directly from phy
+>>> power state P2 to P3 or from state P3 to P2.
+>>>
+>>> Note that this can only be set if the USB3 PHY supports
+>>> direct p3 to p2 or p2 to p3 conversion.
+>>>
+>>> Signed-off-by: joswang <joswang@lenovo.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+>>> index 1cd0ca90127d..721927495887 100644
+>>> --- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+>>> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+>>> @@ -242,6 +242,13 @@ properties:
+>>>        When set, all HighSpeed bus instances in park mode are disabled.
+>>>      type: boolean
+>>>
+>>> +  snps,p2p3tranok-quirk:
+>>
+>> Why this cannot be deduced from compatible? Which upstream SoCs are
+>> affected?
+>>
+>>
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Thanks for your help in reviewing the code
+> DWC31_USB 2.00a and earlier versions IP bug, regardless of platform.
 
-However, the "zap all" behavior is not desired for certain specific
-scenarios. e.g.
-- It's not viable for TDX,
-  a) TDX requires root page of private page table remains unaltered
-     throughout the TD life cycle.
-  b) TDX mandates that leaf entries in private page table must be zapped
-     prior to non-leaf entries.
-  c) TDX requires re-accepting of private pages after page dropping.
-- It's not performant for scenarios involving frequent deletion and
-  re-adding of numerous small memslots.
+So this can be deduced from compatible, then use quirks in the driver
+based on compatible and drop the property.
 
-This series therefore introduces the KVM_X86_QUIRK_SLOT_ZAP_ALL quirk,
-enabling users to control the behavior of memslot zapping when a memslot is
-moved/deleted.
+Best regards,
+Krzysztof
 
-The quirk is turned on by default, leading to invalidation/zapping to all
-SPTEs when a memslot is moved/deleted.
-
-Users have the option to turn off the quirk. Doing so will limit the
-zapping to only leaf SPTEs within the range of memslot being moved/deleted.
-
-This series has been tested with
-- Normal VMs
-  w/ and w/o device assignment, and kvm selftests
-
-- TDX guests.
-  Memslot deletion typically does not occur without device assignment for a
-  TD. Therefore, it is tested with shared device assignment.
-
-Note: For TDX integration, the quirk is currently disabled via TDX code in
-      QEMU rather than being automatically disabled based on VM type in
-      KVM, which is not safe. A malfunctioning QEMU that fails to disable
-      the quirk could result in the shared EPT being invalidated while the
-      private EPT remains unaffected, as kvm_mmu_zap_all_fast() only
-      targets the shared EPT.      
-
-      However, current kvm->arch.disabled_quirks is entirely
-      user-controlled, and there is no mechanism for users to verify if a
-      quirk has been disabled by the kernel.
-      We are therefore wondering which below options are better for TDX:
-
-      a) Add a condition for TDX VM type in kvm_arch_flush_shadow_memslot()
-         besides the testing of kvm_check_has_quirk(). It is similar to
-         "all new VM types have the quirk disabled". e.g.
-
-         static inline bool kvm_memslot_flush_zap_all(struct kvm *kvm)                    
-         {                                                                                
-              return kvm->arch.vm_type != KVM_X86_TDX_VM &&                               
-                     kvm_check_has_quirk(kvm, KVM_X86_QUIRK_SLOT_ZAP_ALL);                
-         }
-         
-      b) Init the disabled_quirks based on VM type in kernel, extend
-         disabled_quirk querying/setting interface to enforce the quirk to
-         be disabled for TDX.
-
-Patch 1:   KVM changes.
-Patch 2-5: Selftests updates. Verify memslot move/deletion functionality
-           with the quirk enabled/disabled.
-
-
-Yan Zhao (5):
-  KVM: x86/mmu: Introduce a quirk to control memslot zap behavior
-  KVM: selftests: Test slot move/delete with slot zap quirk
-    enabled/disabled
-  KVM: selftests: Allow slot modification stress test with quirk
-    disabled
-  KVM: selftests: Test memslot move in memslot_perf_test with quirk
-    disabled
-  KVM: selftests: Test private access to deleted memslot with quirk
-    disabled
-
- Documentation/virt/kvm/api.rst                |  6 ++++
- arch/x86/include/asm/kvm_host.h               |  3 +-
- arch/x86/include/uapi/asm/kvm.h               |  1 +
- arch/x86/kvm/mmu/mmu.c                        | 36 ++++++++++++++++++-
- .../kvm/memslot_modification_stress_test.c    | 19 ++++++++--
- .../testing/selftests/kvm/memslot_perf_test.c | 12 ++++++-
- .../selftests/kvm/set_memory_region_test.c    | 29 ++++++++++-----
- .../kvm/x86_64/private_mem_kvm_exits_test.c   | 11 ++++--
- 8 files changed, 102 insertions(+), 15 deletions(-)
-
-base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
--- 
-2.43.2
