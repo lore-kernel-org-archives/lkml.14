@@ -1,97 +1,201 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0DC146D5A;
-	Thu, 13 Jun 2024 12:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE81474BF;
+	Thu, 13 Jun 2024 12:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718280048; cv=none; b=BIJ8WHBuk+WuocoCiV7uJeJlUDKd/uKM9HArryvt3RwgSNdugi4Ya4KChxm9ylvfRrKaZLm6x8PKPCD+7hvF3RVWA8PziMoJOKhqFoijxUMgHqPjITOwDtjRKQcMFM6yAee+7Dkh+z2lZS3ybpg112KbOwXGTvYF1CsenKV1LOQ=
+	t=1718280084; cv=none; b=PyBmgqTnpoTym01SJxYgOQ7MnWM42ZNSZa4gH8R5XyrOIq9CKTUSuCXyVrWag6tjdi52eTnbrQGVT2iTlvknpKxnywi5036lq414Mp0jcd3qHFRUoDvuoVKGJlxWGl+sNAyNiPovrq4xlQwilJxN/xAgaRjWfvjcFHm8qyL1NrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718280048; c=relaxed/simple;
-	bh=VCaWpKvKsf8aeow+BOy3YcYegLQYBswf/quMQlM7fv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/GBk5CYe6v9AhM4229fYggfZ1bSAAQCKfrHUUJSUM1NMqFoT3x9IjQ2Ka+/TdLG4jO3RuAF7qt/MAPgZEoUYXFunQqBzbLB3Olj60E+em+Ffqdy3odRKaj0DRU48CovUvwKCfSbZlsBLIKlBDdvrVFjQflh77dQ6h4/oCIltUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Foh79bNK; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718280084; c=relaxed/simple;
+	bh=jXKgcxjhp7dP+6RZKb9D/HR5C/E9UziMumLh/FAU1Uc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CgaDvVzDKLk3NkJv9BNm7E9VKSlb7MWb+QsFTjAyFOBR4c5wRn1oUbE0GohCs9mtmz3N3dy2rqNfxmZfp4YCG24wTmD5bS0/SKDYAQy2MR9vJ4ROuzJFNmkIPaYAFoXdMu6tdX6Wi8yr6SgeBPdWy2p14BPKWkd2wNElFuaFqiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xrGNiGgD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UL51kaxd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xrGNiGgD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UL51kaxd; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Foh79bNK"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so118263666b.1;
-        Thu, 13 Jun 2024 05:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718280044; x=1718884844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPRwwOATHBboUMQ5qpsDj8UiGy7DXVjepVSWy0R6Kgg=;
-        b=Foh79bNK7kNRnOsdcwTqmREWyedbK/nJ7hSktP/u5lGtchBNyNP/5+24wmVbU3j5KJ
-         mJjF2us2HF9T2cloAgbd/t10B7hOqmZhhV823tytnQ6EAm21E6iSVk32P5qgbSGhjLv7
-         t62OaZJy5pVBjYhTFeMcL1rKYzqfZzZySGnwsS314sMJClyZ8oI2PJgFuRL2Js6mXLh0
-         RaWEWKmPdhYDcHvwIKJvc+E7H2LFShzgdzwDAfPYkE1vxvN/xUMmjTLicr6lO2HOW3kr
-         smJ8NSwkJ96hA6C/d2Ve9hlqv7nypc/YW54EWXMK+o7BUcM3Xw42e/Hd+1JnBn4S0IKP
-         6ZVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718280044; x=1718884844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZPRwwOATHBboUMQ5qpsDj8UiGy7DXVjepVSWy0R6Kgg=;
-        b=qncoOCJVU57N3QH+RjkBvlQ3NXBRMjjntq7Q/ObIIGQSycVCRqXT8Vd8xJuNP1JLqj
-         TGRXrMk2O5PuRFNKRZDwGxNNXIPb0pt4u7XoIA9G7LgIZEbPlJcebHyuxJHxzO8o0/IF
-         yz6gkkGR1ZiRvWny0SQEgwwhtFoV5hCr+rE9rm85zH6jCc+ko9Oo9LhFo8CmQzPAB5gH
-         m2u8veIK952I9/489KJTqlAFO+sCIzs6yMccHZxOEK0PyriETFCetwrA1mmrAIhofmez
-         cJGn35pPjnChXooAQTfDxUB21ugbifR47MWN/HA+wxuIDmJVR+wPf89y8lpkMbkStfVt
-         fTzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPIvAEKRcV4TgyvXC29xjygua1KkpApPovLlnNrhwJcyjVG+7Ts9Tqqx2JG1R/qLxTcZDeoss8cfpnUJjtxPNIL8W32ORONVEBV5zbECwZJosgYYH4Q08lrKF3PjPeP9E0oSmdMMbz+wfRzHJWURKG0EdU9G9zVQmqh4WTLrDdFQ==
-X-Gm-Message-State: AOJu0YwXa1PB2DvbKFcYdxqTOyyesvIvCSZYxkmNzFL+NeHt2z8CYsia
-	tLe4mDiAdopO76PoC133ikDwolH1P48sGhbhshD3xUumoAbCGTGH
-X-Google-Smtp-Source: AGHT+IGQFim6/LpV7/25BmdBbyWHw3U4AeNU/KDOJXCcHnjGazpE7NDtVGZx1uedscJI9EGp3brLmQ==
-X-Received: by 2002:a17:906:7086:b0:a6f:37b7:52e5 with SMTP id a640c23a62f3a-a6f47d35a2emr286017866b.3.1718280044124;
-        Thu, 13 Jun 2024 05:00:44 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db6201sm64972166b.80.2024.06.13.05.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 05:00:43 -0700 (PDT)
-Date: Thu, 13 Jun 2024 15:00:40 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Martin Schiller <ms@dev.tdt.de>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
-	f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 09/12] net: dsa: lantiq_gswip: Consistently
- use macros for the mac bridge table
-Message-ID: <20240613120040.agc2vlurospupqui@skbuf>
-References: <20240611135434.3180973-1-ms@dev.tdt.de>
- <20240611135434.3180973-1-ms@dev.tdt.de>
- <20240611135434.3180973-10-ms@dev.tdt.de>
- <20240611135434.3180973-10-ms@dev.tdt.de>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xrGNiGgD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UL51kaxd";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xrGNiGgD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UL51kaxd"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BFD345D2D3;
+	Thu, 13 Jun 2024 12:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718280080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
+	b=xrGNiGgDy8HRWNxciUEDQXKJnQCZ80pNeS7f/JveyaFqulrGiw98Qqemnt/UsyYW+teF7e
+	26G2ra/8fhyqn5KABujsb9JCSxH3uVpX6znpcN1Y9e9mJWrXfbusIy7KGFUXcBp5VQczPp
+	PIVBrDVsUwtIebiNzdB90m87+CRX9E4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718280080;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
+	b=UL51kaxdwxNHIILLIGhOIcVcyKPH6EMobRY/mG88l5j2NLV2tQgqJUNo+yrCOWd+MiIfD4
+	VFx5ItzdsGvD1jAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xrGNiGgD;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=UL51kaxd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718280080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
+	b=xrGNiGgDy8HRWNxciUEDQXKJnQCZ80pNeS7f/JveyaFqulrGiw98Qqemnt/UsyYW+teF7e
+	26G2ra/8fhyqn5KABujsb9JCSxH3uVpX6znpcN1Y9e9mJWrXfbusIy7KGFUXcBp5VQczPp
+	PIVBrDVsUwtIebiNzdB90m87+CRX9E4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718280080;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
+	b=UL51kaxdwxNHIILLIGhOIcVcyKPH6EMobRY/mG88l5j2NLV2tQgqJUNo+yrCOWd+MiIfD4
+	VFx5ItzdsGvD1jAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CE5313A87;
+	Thu, 13 Jun 2024 12:01:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zPcrIZDfambFHwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 13 Jun 2024 12:01:20 +0000
+Date: Thu, 13 Jun 2024 14:01:44 +0200
+Message-ID: <87ikydnj9z.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: bo liu <bo.liu@senarytech.com>
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] ALSA: hda/senarytech: add senarytech codec support
+In-Reply-To: <20240606015703.37118-1-bo.liu@senarytech.com>
+References: <20240606015703.37118-1-bo.liu@senarytech.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611135434.3180973-10-ms@dev.tdt.de>
- <20240611135434.3180973-10-ms@dev.tdt.de>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: BFD345D2D3
+X-Spam-Score: -5.51
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Tue, Jun 11, 2024 at 03:54:31PM +0200, Martin Schiller wrote:
-> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, 06 Jun 2024 03:57:03 +0200,
+bo liu wrote:
 > 
-> Only bits [5:0] in mac_bridge.key[3] are reserved for the FID.
-> Also, for dynamic (learned) entries, bits [7:4] in mac_bridge.val[0]
-> represents the port.
+> Add initial Senarytech codec support for SN6186. Note that this hda
+> patch relies on the configuration default registers to be set correctly
+> (normally by BIOS/firmware) in order for it to set up pin widgets
+> properly.
 > 
-> Introduce new macros GSWIP_TABLE_MAC_BRIDGE_KEY3_FID and
-> GSWIP_TABLE_MAC_BRIDGE_VAL0_PORT macro and use it throughout the driver.
-> Also rename and update GSWIP_TABLE_MAC_BRIDGE_VAL1_STATIC to use the
-> BIT() macro. This makes the driver code easier to understand.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-> Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-> ---
+> Signed-off-by: bo liu <bo.liu@senarytech.com>
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+The code looks almost fine, just a few nitpicking:
+
+> --- a/sound/pci/hda/Makefile
+> +++ b/sound/pci/hda/Makefile
+> @@ -24,6 +24,7 @@ snd-hda-codec-cs8409-y :=	patch_cs8409.o patch_cs8409-tables.o
+>  snd-hda-codec-ca0110-y :=	patch_ca0110.o
+>  snd-hda-codec-ca0132-y :=	patch_ca0132.o
+>  snd-hda-codec-conexant-y :=	patch_conexant.o
+> +snd-hda-codec-senarytech-objs :=patch_senarytech.o
+
+Use *-y instead of *-objs.  The other entries have been corrected
+recently.
+
+> +/* parse EAPDs */
+> +static void senary_auto_parse_eapd(struct hda_codec *codec)
+> +{
+> +	struct senary_spec *spec = codec->spec;
+> +	hda_nid_t nid;
+> +
+> +	for_each_hda_codec_node(nid, codec) {
+> +		if (get_wcaps_type(get_wcaps(codec, nid)) != AC_WID_PIN)
+> +			continue;
+> +		if (!(snd_hda_query_pin_caps(codec, nid) & AC_PINCAP_EAPD))
+> +			continue;
+> +		spec->eapds[spec->num_eapds++] = nid;
+> +		if (spec->num_eapds >= ARRAY_SIZE(spec->eapds))
+> +			break;
+> +	}
+> +
+> +	/* NOTE: below is a wild guess; if we have more than two EAPDs,
+> +	 * it's a new chip, where EAPDs are supposed to be associated to
+> +	 * pins, and we can control EAPD per pin.
+> +	 * OTOH, if only one or two EAPDs are found, it's an old chip,
+> +	 * thus it might control over all pins.
+> +	 */
+> +	if (spec->num_eapds > 2)
+> +		spec->dynamic_eapd = 1;
+
+Do you still need to verify this?  This is copied from Conexant
+driver, and they needed this workaround due to different handling per
+chip model.  Unless needed, better to drop (or assuming always true)
+this condition for simplicity.
+
+> +#ifdef CONFIG_PM
+> +static int senary_auto_suspend(struct hda_codec *codec)
+> +{
+> +	senary_auto_shutdown(codec);
+> +	return 0;
+> +}
+> +#endif
+
+The latest code dropped the dependency on CONFIG_PM.  Remove ifdef.
+
+> +static const struct hda_codec_ops senary_auto_patch_ops = {
+> +	.build_controls = snd_hda_gen_build_controls,
+> +	.build_pcms = snd_hda_gen_build_pcms,
+> +	.init = senary_auto_init,
+> +	.free = senary_auto_free,
+> +	.unsol_event = snd_hda_jack_unsol_event,
+> +#ifdef CONFIG_PM
+> +	.suspend = senary_auto_suspend,
+> +	.check_power_status = snd_hda_gen_check_power_status,
+> +#endif
+
+Ditto.
+
+
+thanks,
+
+Takashi
