@@ -1,148 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013DE1494C2;
-	Thu, 13 Jun 2024 16:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E437D149C69
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296919; cv=none; b=luflvezkm7IyY4yohq/SlTXOHQHpjeybyGyPIOWmQlwav1GSoT+g+nGbVUvP/YvDjiEWsbWbAQ7HR8deg11Wgf9oLtZurIHWJgYvoJWAjTCCwAqsThGbIorGIK1fZUhTbZ0ge5U/GsNOLyCi/luI7ZxzWpj6dshkgHaKIWxOguA=
+	t=1718296937; cv=none; b=sqVjUutS6NqILp5Q/lwxBlIlkSo7yj8emS+c1FtlwEbCDwKRdvFIDgyULjrHgHaoIrkrqkZTHDdUXl223SfDgX6iJsOvE/SierR+ua9B5oaoLDUrJf2sU6aMTTgZe0d7xFBgRFS77N2qUHLRSnnKSSZMB5g+jS/pPUkYlYx2qXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296919; c=relaxed/simple;
-	bh=vsXFKBT+cSrkgehHrImlatR7bWrZFbEWVqJGyHEVB8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NI6ahHgD5e3QmkE6/6BxGzRWooGxUiJ7oPp1FRJyeeecMNYkySoh6oKYwGcMtURjZljV6xl/0ModwxiH0esp0y40+NaJmNqNQBiHKxtSs87idlorio6JCNx28anMiw+RbxDlGEA7XUj6w/vHXA2UT7zc5MfFXRDWl72CdqZjbi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kamjskX+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718296937; c=relaxed/simple;
+	bh=d4Zivpa+Kr91lXBluwGJv6NkuP5Fp/Zrezb2fbHpfBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tIUn2D2MYqP7v4F3D6Y8UjKf8YSrnWA47G/La/3gqGZ2bnbHdHCMa4gnBWBvhMubMqQ8ht6Of8IfuzOGoDsdz9oLlSbopDBHD6ON5oAUML6xVwcq7yb6NfPrUNitSZ+JRQ43e4D1srFg0lqU8A45Oxnpo0lpE+XQskQSeqqSluc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z3Pr1YCE; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kamjskX+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41B8C32786;
-	Thu, 13 Jun 2024 16:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718296918;
-	bh=vsXFKBT+cSrkgehHrImlatR7bWrZFbEWVqJGyHEVB8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kamjskX+1DHnEM5Qq8CuMsKFatQSlkozsBYZC9ATYruNzKLVszlk+scp82PsvBcCb
-	 P+UdGu/2EtHqz0I/nJ4wtUwJT5ywO/vPfpDzP5X+gZEbjQfsFmQF3B8C+1q7z9GhmE
-	 gKodOoGMIEHLjmk+fyBqucpN/I3oYLbV8LiCvfgtgqhjDIhyS6hpcK0z3eAQ+qypqr
-	 ZwdvYxFSheCWa/ZYq5WxtwLYtNRvqQe7MMO0vVNIQikg8ZpC1X5vikLlqWCbkiYAAn
-	 B7798lI3ncnzys9kxPNaK4VP43FBIVbbR46FrG0d69snNIRC3JvU+OhSH3zh2bHFEb
-	 xP+fFuyuSz6Fw==
-Date: Thu, 13 Jun 2024 17:41:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alisa-Dariana Roman <alisadariana@gmail.com>
-Cc: Alisa-Dariana Roman <alisa.roman@analog.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandru Tachici <alexandru.tachici@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: adc: ad7192: Update clock config
-Message-ID: <20240613-vineyard-doing-87ada1b7a8ed@spud>
-References: <20240613114001.270233-1-alisa.roman@analog.com>
- <20240613114001.270233-3-alisa.roman@analog.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3Pr1YCE"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52c82101407so2428253e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718296933; x=1718901733; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KxumJDVbsP4QVPvesFB523q6d4QgJEn6x6IfBmiyMhg=;
+        b=z3Pr1YCEhkXBwJrTn7gf9IZ2MzkV5tT+9bpEIjRhcz1ALhzp6dnKrXQvys9HQRX+Hl
+         GN3V9Ozdz7xvT/o1XqnMwsYJK/yXGuJlZTlsByCjAdfbhwlrV75cVKzEMcs8H/nz8cG5
+         H+ttvmSW0AP7FB7IQ/1CQ/6cwTl/Ury2zsOi4+KE9hzEVbjjYHW4B1C8q0/vCUj0hdfw
+         WurKyAElCEWu6s+RiUUMWJWGft4ILwiH+GmQl9yo1SDszcYXEdScQTGuLKNBUy9RkgBg
+         d/kU+CLg0KmNIe3Ny0Va5CYo0jKqCcdgrYGpw2VABqZ7mQStiJX9YTCL+1iQ5tgy/3ia
+         OvWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718296933; x=1718901733;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxumJDVbsP4QVPvesFB523q6d4QgJEn6x6IfBmiyMhg=;
+        b=pLcZY1SNWoZWMd2SekhuKlPyUaMlDJSzfe3QqzM1pygFz2zki/SlxAssePoFveLMH3
+         6QxqqwTATZuNMMdzYjYUeNcBtidOnCtxjzRFQy0uC3O5/5gUVPkIcWDwQbi2A/noG/bN
+         uAyJs92JUIhs+2Zrnctkh0+j7hnvTxqnKWtcvXmw5XiCrDoqMKJGTyVv/TVY/GRP9KQc
+         Qy8xzNliQYwYq3BsLgdezt5dEE7qSk8Xi3ekVCxZzmP7JdwXOLDulLG5FV79O+UTDHQL
+         OMg8YwgQXlmbgwnMR/hkieKHZ91RILJdxHMH18Pei2cLvDUnemssmudyKXufa7oji1zB
+         qTMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcXRTBtWSWSDymhcx0704olyG3yDBa43XvuGHaicTNQnHj0r6HCRboYXI8iGoQbFB+6RhnZ0PlmHuzaC8ZeDBgDT3/wtbdtfTf/pH0
+X-Gm-Message-State: AOJu0Ywj8Kr63HROMXN8lRTsO8KO33rAne9J1IKnyjU8mmrhR1AmQvgn
+	p+zU27qa+e4glHDtiSHiLz15BkeiRT6zC8tNvkGUcA/IqA5o7UH1mNbdYhstd/k=
+X-Google-Smtp-Source: AGHT+IGSM9D0UjKqMRrpwUBDckCv+L+W8oy5sZf9E5Weqo0lZ3R41sisP7y2M9mjYoz1A9XbBfJtww==
+X-Received: by 2002:ac2:57c3:0:b0:52b:bfa7:66a1 with SMTP id 2adb3069b0e04-52ca6e56ed4mr226505e87.5.1718296933016;
+        Thu, 13 Jun 2024 09:42:13 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:900a:a4b1:9ab2:4d92:821a:bb76? ([2a00:f41:900a:a4b1:9ab2:4d92:821a:bb76])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282564dsm282363e87.9.2024.06.13.09.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jun 2024 09:42:12 -0700 (PDT)
+Message-ID: <1cfd671b-a4d1-4edb-a2f6-b91b6edd7b22@linaro.org>
+Date: Thu, 13 Jun 2024 18:42:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="m9XQa0OBbOvIhW8/"
-Content-Disposition: inline
-In-Reply-To: <20240613114001.270233-3-alisa.roman@analog.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: Update sleep_clk frequency to 32000
+ on SA8775P
+To: Taniya Das <quic_tdas@quicinc.com>, Bjorn Andersson
+ <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_jkona@quicinc.com, quic_imrashai@quicinc.com
+References: <20240612-sa8775p-mm-clock-controllers-v1-0-db295a846ee7@quicinc.com>
+ <20240612-sa8775p-mm-clock-controllers-v1-8-db295a846ee7@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240612-sa8775p-mm-clock-controllers-v1-8-db295a846ee7@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---m9XQa0OBbOvIhW8/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 02:39:58PM +0300, Alisa-Dariana Roman wrote:
-> There are actually 4 configuration modes of clock source for AD719X
-> devices. Either a crystal can be attached externally between MCLK1 and
-> MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
-> pin. The other 2 modes make use of the 4.92MHz internal clock.
->=20
-> Add clock name xtal alongside mclk. When an external crystal is
-> attached, xtal should be chosen. When an external clock is used, mclk
-> should be chosen.
-
-This is still missing an explanation of why a new name is needed.
-Hint: do you need to change register settings to use one versus the
-other?
-
->=20
-> The presence of an external clock source is optional, not required. When
-> absent, internal clock is used. Modify required property accordingly and
-> modify second example to showcase this.
->=20
-> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+On 6/12/24 12:47, Taniya Das wrote:
+> The HW supported sleep_clk frequency on SA8775P is 32000, hence
+> update the sleep_clk frequency with the correct value on SA8775P.
+> 
+> Fixes: 603f96d4c9d0 ("arm64: dts: qcom: add initial support for qcom sa8775p-ride")
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad7192.yaml    | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> index a03da9489ed9..3ae2f860d24c 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> @@ -39,11 +39,15 @@ properties:
-> =20
->    clocks:
->      maxItems: 1
-> -    description: phandle to the master clock (mclk)
-> +    description: |
-> +      Optionally, either a crystal can be attached externally between MC=
-LK1 and
-> +      MCLK2 pins, or an external CMOS-compatible clock can drive the MCL=
-K2
-> +      pin. If absent, internal 4.92MHz clock is used.
-> =20
->    clock-names:
-> -    items:
-> -      - const: mclk
-> +    enum:
-> +      - xtal
-> +      - mclk
-> =20
->    interrupts:
->      maxItems: 1
-> @@ -135,8 +139,6 @@ patternProperties:
->  required:
->    - compatible
->    - reg
-> -  - clocks
-> -  - clock-names
->    - interrupts
->    - dvdd-supply
->    - avdd-supply
-> @@ -202,8 +204,6 @@ examples:
->              spi-max-frequency =3D <1000000>;
->              spi-cpol;
->              spi-cpha;
-> -            clocks =3D <&ad7192_mclk>;
-> -            clock-names =3D "mclk";
->              interrupts =3D <25 0x2>;
->              interrupt-parent =3D <&gpio>;
->              aincom-supply =3D <&aincom>;
-> --=20
-> 2.34.1
->=20
 
---m9XQa0OBbOvIhW8/
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmshUAAKCRB4tDGHoIJi
-0j40AQC/5ubIJbIF44JX0Xp18MLiKZANhOQVvlyxU5cJNPT6FwD/clq35TXv6JWP
-NmWCp4wPP5eoWvB4SVNvRsbXOAGxAgs=
-=/uC6
------END PGP SIGNATURE-----
-
---m9XQa0OBbOvIhW8/--
+Konrad
