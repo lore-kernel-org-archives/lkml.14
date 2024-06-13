@@ -1,132 +1,106 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D286425632;
-	Thu, 13 Jun 2024 06:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45A9136997
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718260134; cv=none; b=L9lQDB1TtDjBRNSABIAylAbihFMNZurF+XKaTvmpRtLRQk1jA8ejkKTHbY+v8qATLp//W8p4Iky2zEnaaLTIcQOj4zn5RmqKwNyHaQvxhQ8/5o7LURFgWG9zbNyYjCOXpSYuWH6hr4LYG69Qg9sjqC2jU3qGHRC2Orsb3FlXWXM=
+	t=1718260154; cv=none; b=FyH/qv/DG4JAxpZPaJI25EqxsFz2QPy+mRBClNKBWdLfzVKgyfvzai7Ia2XIuYHP4bC7MgRpWmsl+rC3s/m6Zvrt+I+zlna8u+qWnLP8n7TdFgCPTCe/JQuwsy5/By13UBN6aObo3bAdKN9aL1zAnJ5FEiymp/7XJQwQLa+HEaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718260134; c=relaxed/simple;
-	bh=sElRb+gr2z38VzPOs6tSW0eRkwueqHTVt4PboxtTrbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J4QJG/5GIz+8thDCGvY7sdFIMJroh6KQkRbgV9Y5znTuFtll/El2uirRQpV/wt9taHJLk1kP5YFJwstkbLwu5qMKbHtI4sB2AZ7ca5XU8ucrwBUYOlX8yvFZ8Bp4DLHt/5x+BKOhAMKRyawlUTOZWOZC/rVIbMllf/g84q2mgNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app1 (Coremail) with SMTP id HgEQrAAHD4NckWpm8sXMBw--.61145S2;
-	Thu, 13 Jun 2024 14:27:40 +0800 (CST)
-Received: from [10.12.169.238] (unknown [10.12.169.238])
-	by gateway (Coremail) with SMTP id _____wBnoU5akWpmKZgeAA--.32816S2;
-	Thu, 13 Jun 2024 14:27:39 +0800 (CST)
-Message-ID: <c6da52be-087a-4f28-8a8c-d61196922cb7@hust.edu.cn>
-Date: Thu, 13 Jun 2024 14:27:37 +0800
+	s=arc-20240116; t=1718260154; c=relaxed/simple;
+	bh=L+ZyfYUB/49H7fqqpagn1m4EnCL7bSRVJgQl6qRA0YI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oX5Ta7kRt2epz19bUgEzxvH1LT65uXk1xHsY9KzPv4xwEXSpKI5iCYiRNwG7QufPV+u0XqgiyUBnesSHn9ZIi5kGKnPU14MAiaf7QuLVCct+LiXAaH4fSQoHMv9BY4mCAGnbg9oL20mIot9NfvZQdi0Xkr7emkCzmvE7t1BjmlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gcn2HZfj; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gcn2HZfj"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D6SkiX109449;
+	Thu, 13 Jun 2024 01:28:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718260126;
+	bh=WlUt1b7V47ynFIY0d9uZYsE+QP4W5MiWYbktde2sSqE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=gcn2HZfjiMTrkQD03Lk5WK7Vl04pphCuJqNLJ5rvD7G6lQsUeWH6pynasfwh28RCN
+	 ZbzGJC4GOfavUhlekcejG5+zzPAFqeMBQNyBM4NkOK8BHHxdgU3MwRCrIfLyl5kKlF
+	 PIxyBoDPR3TpyGVr9odD3bto5kwbT+QDnYHkAoFE=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D6Skrh017379
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Jun 2024 01:28:46 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jun 2024 01:28:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jun 2024 01:28:46 -0500
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D6SeYb002306;
+	Thu, 13 Jun 2024 01:28:41 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: <will@kernel.org>, <catalin.marinas@arm.com>,
+        Vaishnav Achath
+	<vaishnav.a@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, <m.szyprowski@samsung.com>,
+        <arnd@arndb.de>, <neil.armstrong@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, <konrad.dybcio@linaro.org>,
+        <krzysztof.kozlowski@linaro.org>, <geert+renesas@glider.be>,
+        <quic_bjorande@quicinc.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <nfraprado@collabora.com>,
+        <u-kumar1@ti.com>, <nm@ti.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable MTD support for Hyperbus
+Date: Thu, 13 Jun 2024 11:58:33 +0530
+Message-ID: <171826009025.225208.12911943453800317987.b4-ty@ti.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240611115820.1269805-1-vaishnav.a@ti.com>
+References: <20240611115820.1269805-1-vaishnav.a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] docs/zh_CN: add process/researcher-guidelines Chinese
- translation
-To: Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <siyanteng@loongson.cn>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240612021845.12036-1-dzm91@hust.edu.cn>
- <87tthxoo3u.fsf@trenco.lwn.net>
-From: Dongliang Mu <dzm91@hust.edu.cn>
-In-Reply-To: <87tthxoo3u.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:HgEQrAAHD4NckWpm8sXMBw--.61145S2
-Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxAr47WryUuFWxWr4fWryfWFg_yoW5GrWfpF
-	y8KF93Ka1xJw1UC3yxur1jgF1fJ3Z7Ca9xtw12qw1Sqrn0yrn2qr9xtrZ8Kas3WrW8Za4U
-	Xr4YgrWUur17Z3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm0b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
-	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
-	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
-	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
-	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVWxJVW8Jr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxAIw28IcV
-	Cjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x07j6VbkUUUUU=
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Hi Vaishnav Achath,
 
-On 2024/6/13 05:19, Jonathan Corbet wrote:
-> Dongliang Mu <dzm91@hust.edu.cn> writes:
->
->> Finish the translation of researcher-guidelines and add it to the
->> index file.
->>
->> Update to commit 27103dddc2da ("Documentation: update mailing list
->> addresses")
->>
->> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
->> ---
->> v1->v2: Revise description suggested by Alex Shi
->>          Add a commit id to keep track of the translation status
->>          Add a new line at the end of researcher-guidelines.rst
->>   .../translations/zh_CN/process/index.rst      |   2 +-
->>   .../zh_CN/process/researcher-guidelines.rst   | 129 ++++++++++++++++++
->>   2 files changed, 130 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/translations/zh_CN/process/researcher-guidelines.rst
->>
->> diff --git a/Documentation/translations/zh_CN/process/index.rst b/Documentation/translations/zh_CN/process/index.rst
->> index 5c6c8ccdd50d..5a5cd7c01c62 100644
->> --- a/Documentation/translations/zh_CN/process/index.rst
->> +++ b/Documentation/translations/zh_CN/process/index.rst
->> @@ -64,6 +64,7 @@ TODOLIST:
->>      management-style
->>      stable-kernel-rules
->>      submit-checklist
->> +   researcher-guidelines
->>   
->>   TODOLIST:
->>   
->> @@ -71,7 +72,6 @@ TODOLIST:
->>   * kernel-docs
->>   * deprecated
->>   * maintainers
->> -* researcher-guidelines
->>   * contribution-maturity-model
->>   
->>   
->> diff --git a/Documentation/translations/zh_CN/process/researcher-guidelines.rst b/Documentation/translations/zh_CN/process/researcher-guidelines.rst
->> new file mode 100644
->> index 000000000000..66e4840f208a
->> --- /dev/null
->> +++ b/Documentation/translations/zh_CN/process/researcher-guidelines.rst
->> @@ -0,0 +1,129 @@
->> +.. SPDX-License-Identifier: GPL-2.0-or-later
->> +
->> +.. include:: ../disclaimer-zh_CN.rst
->> +
->> +.. _cn_submittingpatches:
-> This label here ^^^ adds a new warning to the docs build:
->
->> Documentation/translations/zh_CN/process/researcher-guidelines.rst:7: WARNING: duplicate label cn_submittingpatches, other instance in Documentation/translations/zh_CN/process/submitting-patches.rst
-> This is a fairly obvious error, and one you should have seen when you
-> did your own docs build.  Please be a bit more careful.
+On Tue, 11 Jun 2024 17:28:20 +0530, Vaishnav Achath wrote:
+> TI Jacinto 7 SoCs (J721E, J7200) have Hyperbus controllers present
+> which can be used to interface with Hyperflash and HyperRAM storage
+> devices. Enable the necessary configs for Hyperbus support within
+> the MTD subsystem and the specific Hyperbus controller as module.
+> 
+> 
 
+I have applied the following to branch ti-k3-config-next on [1].
+Thank you!
 
-Sorry about this. I did build documents(make htmldocs) in my local 
-environment. It seems that this warning slipped out of my eyes :(
+[1/1] arm64: defconfig: Enable MTD support for Hyperbus
+      commit: 74aa5704cf194441001f16dfd4d5d90f4d3bf413
 
-I will be more careful about kernel commits in the future. Will send a 
-v3 patch today or tomorrow.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Dongliang Mu
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
->
-> jon
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
 
