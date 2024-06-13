@@ -1,111 +1,175 @@
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.216])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EFD1A269;
-	Thu, 13 Jun 2024 08:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.216
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718265677; cv=pass; b=hBGgzP6GJvVWNXSyq0SnAaBT8ckmFjyVhNxKpJf4vVpURCuEbOBnqaKBoU7vJKiYTIPUM+k/n8FWQLOFjqc8TS5jDTV4b6p+sAfpEazFx2F0O1+17/iElQAo571vUq0c4sth3VxhL/mGSPtA5tGUtBJFar5IOGQ/iK5WvdzvSJE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718265677; c=relaxed/simple;
-	bh=pS21HVE8uRgbz2fiL1iz3vnqzW4M7I1SyMqA7FKr+50=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CPNOR/Utqq89Uy3rVUgGMoLtLL7JkTYU9UfBtNqbsd1Heg0hwHoVcw5fjJtz15h5Ln0ZkV7Sai5bhxbgfixXd3t8Ox1Z67y6HH2djae4d256M8c0uqxXVpLG9hnvOReCwTlvbEy8D4bo7WjS/u0l8XXJJcNX6fddrG1KM83FDwQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ibv-augsburg.net; spf=none smtp.mailfrom=ibv-augsburg.net; dkim=pass (2048-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b=nER13Ggg; dkim=permerror (0-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b=DmiwSiwH; arc=pass smtp.client-ip=81.169.146.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ibv-augsburg.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ibv-augsburg.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b="nER13Ggg";
-	dkim=permerror (0-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b="DmiwSiwH"
-ARC-Seal: i=1; a=rsa-sha256; t=1718265492; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=JuQpNCBFJrD3Aa1UaaCb5zDCqvIJfwYNONKFHn3sGPLYkUUj7S1DuT7V8E9T3l7YcX
-    yaogSkCE45C704I0+maDuVO1Ynnmz5TxilBq6km84qkwehtUqB4HRtZd+Z+5x4Cf0Znr
-    z15aHzyO2lS8XrNYv4nnifil1C2CFdGI1W19KQ5cwOu6uBd2e/ZoZVa49WsFU5nuDu0V
-    WoNgOdmpD6ZOOPeqmDpnmVZaEBm51kmAgmWJx28OuaNgSWwVHXmcLZqvfxJ4nXdIQmfE
-    oUZ90dgWi46f5m/ubjxTY2wj7B6Ht8wfbPSKGcILZ7dBXAMvCVaVPmF0E5SK/iEXoNDy
-    BnFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1718265492;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=ZCOowjRMhthPrCgg0fyGh+uTy362GzG0djWS2ceHoqk=;
-    b=R/kv79GQwqi0uf2JmZISAPcTvKH/3bNzHCX0v3BBOdgoSmg7ZZDlSxPd6r/NfePgC7
-    ZtEqQLlYvBizDCRlluXekwTFLWpLrEGlewfNwY9LjT8VNYPhgBuvQWjKJLHJRpOyUVdQ
-    g04dtwMY/IfjvWIZKjAGNcgSIq7WIa8hHy2EsRca3x+VeRdUJkbY/4l10nKUFuOiQG8d
-    xi5mWvEIQTFaQvtIYs+oR5uQkEOcytNhNew9AX0hg6k+B6AD1atWpnNuqBYyZQbASwRM
-    4dxTy3Y/+bPuMMdznpcmkwIfInj6+SQ1N1SrwHU1iKmbd+BmnIvbXHW0S/C0ZqdYnHbO
-    QzJA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1718265492;
-    s=strato-dkim-0002; d=ibv-augsburg.net;
-    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=ZCOowjRMhthPrCgg0fyGh+uTy362GzG0djWS2ceHoqk=;
-    b=nER13GggdZaz5ClPPzz9G4RHwfXH8VmdHajZSYQMhCnQttz2Q261EPzRBsEtUO6YmD
-    LOncFIPsdw6aQPDuljFgN+Ng+Gl/J7ywbzBXQFdqzX9xu2Uu8G1MpuIqBHQbq4AfzNUe
-    2omEST+P/qIx8rc/+O8I59bjr+R+XHJ8IjAwbhs6A5pIkq0f1/XMGHVN7pktw8DZKO0w
-    GuAgDTBXVJQdvw+erNccMd0dt59BCpg2hzjf6xtFXLDlHDtrvfHPx8+z4bSl4iIFrLqC
-    Ub1YEwDw4j401NEJ6a6g9XWmzg6ThfaN1J2RuCwmZOT4cS2Q/z5RcvCq+oW6WngMC/Mt
-    kl8w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1718265492;
-    s=strato-dkim-0003; d=ibv-augsburg.net;
-    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=ZCOowjRMhthPrCgg0fyGh+uTy362GzG0djWS2ceHoqk=;
-    b=DmiwSiwHKsWy6QI6p/UhcxPsn/DabjiO0Aor5gjual9pUYT5CdB04dglnXJL89jImj
-    JKG8j9OOWyNT0rK4YzBg==
-X-RZG-AUTH: ":KGMJfE6heLGk8b3w7Oa1fDtXwBjeDczIOHPRx8yNRKhFG/cxcP9aLpSo32t1tpzL2/4JjVjHoSYrKRModkCm"
-Received: from [192.168.178.123]
-    by smtp.strato.de (RZmta 50.5.0 DYNA|AUTH)
-    with ESMTPSA id N07c8805D7wBRIf
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 13 Jun 2024 09:58:11 +0200 (CEST)
-Message-ID: <b5c8d134-edcb-4a1a-8940-b26047c9b79d@ibv-augsburg.net>
-Date: Thu, 13 Jun 2024 09:58:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13113CA8D;
+	Thu, 13 Jun 2024 08:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718265683; cv=none; b=Apo05thg5jzCqd/sH2oqy0/ocJWw30fz4+zmY19Heyyfk332wX6iTxR6ueiHkQei4qsCFS/+b1R1Q6DCh+xyg4DtzSLXvHKWII3VwyOEBtCNy8HMWFx41t3ow7PLuoIX8uzt6+EyeFlOrdAUEtqNF95cUn+oN3Ab6sbp1LgMELA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718265683; c=relaxed/simple;
+	bh=ijIgL4trQAoJvWli1jZxpI3we8f18cgQdunh1oh+b3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JFn7AqD7Ebo6+yHfeCEpdRkQmPZ65obgubisJClry1tiO9TQTtqtJqCSIzF6q4nJI185uTmWcPOa8K+3Rbz2m2W2oxoR1TXfzrOtZA8PREYTVj3KW6qTK/mc96YGmqt0ybw9p0V32SQz9+OBEmE0jf0yFKWYHKvM6hmFsUDXJ9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875be5.versanet.de ([83.135.91.229] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sHfOQ-0007fB-G8; Thu, 13 Jun 2024 10:01:10 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jianfeng Liu <liujianfeng1994@gmail.com>,
+ Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+Subject: Re: [PATCH v5 3/5] media: hantro: Add RK3588 VEPU121 support
+Date: Thu, 13 Jun 2024 10:01:09 +0200
+Message-ID: <14943967.O6BkTfRZtg@diego>
+In-Reply-To: <g3zzuwv2pti6oudc5xlab3cdjpqbhjsdxdsphzch4mtcaisqxl@iwkxgillwi2f>
+References:
+ <20240612173213.42827-1-sebastian.reichel@collabora.com>
+ <1739853.izSxrag8PF@diego>
+ <g3zzuwv2pti6oudc5xlab3cdjpqbhjsdxdsphzch4mtcaisqxl@iwkxgillwi2f>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Dominic Rath <dominic.rath@ibv-augsburg.net>
-Subject: Re: [PATCH v2 00/13] OMAP mailbox FIFO removal
-To: Andrew Davis <afd@ti.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Hari Nagalla <hnagalla@ti.com>, Nick Saulnier <nsaulnier@ti.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240410135942.61667-1-afd@ti.com>
-In-Reply-To: <20240410135942.61667-1-afd@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Hello Andrew,
+Am Donnerstag, 13. Juni 2024, 00:44:38 CEST schrieb Sebastian Reichel:
+> Hi,
+>=20
+> On Wed, Jun 12, 2024 at 08:08:51PM GMT, Heiko St=FCbner wrote:
+> > Am Mittwoch, 12. Juni 2024, 19:15:43 CEST schrieb Sebastian Reichel:
+> > > Avoid exposing each of the 4 Hantro H1 cores separately to userspace.
+> > > For now just expose the first one.
+> > >=20
+> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > > ---
+> > >  .../media/platform/verisilicon/hantro_drv.c   | 38 +++++++++++++++++=
+++
+> > >  1 file changed, 38 insertions(+)
+> > >=20
+> > > diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/driver=
+s/media/platform/verisilicon/hantro_drv.c
+> > > index 34b123dafd89..b722a20c5fe3 100644
+> > > --- a/drivers/media/platform/verisilicon/hantro_drv.c
+> > > +++ b/drivers/media/platform/verisilicon/hantro_drv.c
+> > > @@ -722,6 +722,7 @@ static const struct of_device_id of_hantro_match[=
+] =3D {
+> > >  	{ .compatible =3D "rockchip,rk3399-vpu", .data =3D &rk3399_vpu_vari=
+ant, },
+> > >  	{ .compatible =3D "rockchip,rk3568-vepu", .data =3D &rk3568_vepu_va=
+riant, },
+> > >  	{ .compatible =3D "rockchip,rk3568-vpu", .data =3D &rk3568_vpu_vari=
+ant, },
+> > > +	{ .compatible =3D "rockchip,rk3588-vepu121", .data =3D &rk3568_vpu_=
+variant, },
+> > >  	{ .compatible =3D "rockchip,rk3588-av1-vpu", .data =3D &rk3588_vpu9=
+81_variant, },
+> > >  #endif
+> > >  #ifdef CONFIG_VIDEO_HANTRO_IMX8M
+> > > @@ -992,6 +993,39 @@ static const struct media_device_ops hantro_m2m_=
+media_ops =3D {
+> > >  	.req_queue =3D v4l2_m2m_request_queue,
+> > >  };
+> > > =20
+> > > +/*
+> > > + * Some SoCs, like RK3588 have multiple identical Hantro cores, but =
+the
+> > > + * kernel is currently missing support for multi-core handling. Expo=
+sing
+> > > + * separate devices for each core to userspace is bad, since that do=
+es
+> > > + * not allow scheduling tasks properly (and creates ABI). With this =
+workaround
+> > > + * the driver will only probe for the first core and early exit for =
+the other
+> > > + * cores. Once the driver gains multi-core support, the same techniq=
+ue
+> > > + * for detecting the main core can be used to cluster all cores toge=
+ther.
+> > > + */
+> > > +static int hantro_disable_multicore(struct hantro_dev *vpu)
+> > > +{
+> > > +	const char *compatible;
+> > > +	struct device_node *node;
+> > > +	int ret;
+> > > +
+> > > +	/* Intentionally ignores the fallback strings */
+> > > +	ret =3D of_property_read_string(vpu->dev->of_node, "compatible", &c=
+ompatible);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* first compatible node found from the root node is considered the=
+ main core */
+> > > +	node =3D of_find_compatible_node(NULL, NULL, compatible);
+> > > +	if (!node)
+> > > +		return -EINVAL; /* broken DT? */
+> > > +
+> > > +	if (vpu->dev->of_node !=3D node) {
+> > > +		dev_info(vpu->dev, "missing multi-core support, ignoring this inst=
+ance\n");
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int hantro_probe(struct platform_device *pdev)
+> > >  {
+> > >  	const struct of_device_id *match;
+> > > @@ -1011,6 +1045,10 @@ static int hantro_probe(struct platform_device=
+ *pdev)
+> > >  	match =3D of_match_node(of_hantro_match, pdev->dev.of_node);
+> > >  	vpu->variant =3D match->data;
+> > > =20
+> > > +	ret =3D hantro_disable_multicore(vpu);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> >=20
+> > I think this might be better as two patches?
+> >=20
+> > As this patch stands, the disable-multicore handling is done for _all_
+> > hantro variants, so part of me wants this to be labeled as such.
+> >=20
+> > The whole reasoning is completely ok, but somehow having this under
+> > the "add rk3588" umbrella feels strange ;-)
+>=20
+> I can do that, but the 'rockchip,rk3588-vepu121' part is only needed
+> because of the multicore handling. If the kernel already had this bit
+> in the past, the RK3568 compatible could be used for RK3588 (as a
+> fallback compatible), just like for VPU121.
 
-On 10.04.2024 15:59, Andrew Davis wrote:
-> Changes for v2:
->   - Use threaded irq as suggested by Hari and to
->       fix possible "scheduling while atomic" issue
+I meant, you're doing hantro_disable_multicore() here also for everyone
+else (i.MX etc), hence I'd like that to be a separate commit in this
+series like:
 
-sorry for beeing late, I noticed this already got merged.
+=2D---- 8< ------
+media: hantro: Disable multi-core handling for the time being
 
-I was wondering what the reason was for ending up with the
-threaded irq.
+The VSI doc for the Hantro codec describes the grouping of up to 4 instance=
+s.
+The kernel currently doesn't handle multi-core processing .... foo bar ....
+=2D---- 8< ------
 
-In your v1 thread your final conclusion appeared to be
+And then add rk3588 support on top of that.
 
-> So for now I just kept this using the regular IRQ context as before.
 
-We looked into this some time ago, and noticed that the IRQ approach 
-caused problems in the virtio/rpmsg code. I'd like to understand if your 
-change was for the same reason, or something else we missed before.
+Heiko
 
-Regards,
 
-Dominic
