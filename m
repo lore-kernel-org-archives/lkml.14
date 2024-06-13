@@ -1,33 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020FE13698D;
-	Thu, 13 Jun 2024 06:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76E525632;
+	Thu, 13 Jun 2024 06:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718259823; cv=none; b=Wnk2uEjM7ACcqrMvAXh6JuxUUV0S37w6TQHVWHh8cFx4YJbjNZZO+Z25a0fydv0Rcb9P47sstvqEp9CCfJUCcpBHIpVLcRjmNNFe1zvvXyRzkkiwhyLJCUGeukkDwZDwZBrz9KzfRL6YBX+LgjVfejvKiOX8qQXNCmQksyWgfqw=
+	t=1718260069; cv=none; b=XnhGfBz9/NzQFj1w4sZAt1T3Vrm27RQkvO2UdANvVr+LU47TUvo6W7YxJFP5voutkU0aqkJxcY9tHFAKUDt7mG8BZEFH5yCXamLVIcBILxbz31dSUrd6I8PLFppIHg11MjkuX4jKjsSAj2FG2ap3ljDEdXy9n1aH6+UX6AdQYpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718259823; c=relaxed/simple;
-	bh=26I/IHveqqAHAsqcwe1W7jBQ0Cszpg6G1JOITnnQpjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M0i7C5NFqm36nBiJ+eBM4GkDTRsYq+XfboICFhz2uYW3Kj+zNJDMr88iC9UGr3oJ+u4pJlH/8qBAX9cLewLyKI1hkuGvhA/HsnE+6Ke83R+ZAOrU9sCFHqbxLVZgJd01CByfM2SDrp1JAbMyPMbwH7MNhvbPLiCiGJHQl7GTSVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR7/j50+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718260069; c=relaxed/simple;
+	bh=8N05ZrcYdaSdzJIVWtXezJaBbiufobkZ7bPvBszzLLY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qynlrRLB1Oar8VVuFCmvrgb2XD7H8huZfKsZZQg8n5m8Ulqx1umwkBTOZGz9ubJf2oiXymtQJeppE5lMDH+i4h0vkrFkT0tqaP8wISPVfHuoqNyVAM573Ed315Rq7lq9POHQaNGXysgJepddTEFqgJdDHu6VFBH6gz+NwacgpcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OLA4ctHp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D2iIflGZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zrHpMIUm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+c2cjqe6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR7/j50+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F894C2BBFC;
-	Thu, 13 Jun 2024 06:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718259822;
-	bh=26I/IHveqqAHAsqcwe1W7jBQ0Cszpg6G1JOITnnQpjc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QR7/j50+mYWkvtxnF6rH2kkur8xbaE9biOThPGrAnGO01uTM7L7v68qReZzftceUs
-	 MzzirLXR7AhVa8feQ6OYtzhScXj6m07/41XIp5UTmkI854YujXp4nCl8DcuHxP88L9
-	 T/8x5dEMbOc4m7xvwLBesuH2k5GXGHZ2JQudFNTFzib1LLEoEmK/8+eWsBUwtKJg2X
-	 geBSVkel3kF+blvrmGYAvJobLX4dlJuv6z8El5olCla7MHdBzCLezW7vQevKoSayWp
-	 qMMmeHqXTdMIotylZcWwbefkWlwSkFC5lR8SQ+DZyhKNHvpmJEKukOuBWjWwrnlCUU
-	 F03IR/LHA8aYg==
-Message-ID: <e85c4437-ef9d-4b00-8f77-b9cdb8282571@kernel.org>
-Date: Thu, 13 Jun 2024 08:23:34 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OLA4ctHp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D2iIflGZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zrHpMIUm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+c2cjqe6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E4D715CE74;
+	Thu, 13 Jun 2024 06:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718260059; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElbTrtHcGPLHtNQdT2BSZs64OtL7aUUhrtyxF38Z6KQ=;
+	b=OLA4ctHpMgVsIY7659Y2TmEStR5QeQOwX6DN1SZDPndHu5LaCG9bobx7w0gpMVaZxOBdGx
+	38NnCGbw3Wk6VPbLyRi1cqzRt0DI+vjcQnFjJIPe+jgB/YWGalTQ9OzP8LVX0fqeTxR6Da
+	Uw9L6MGOhDp+lZIJmU7Tz/WNljG5ieM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718260059;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElbTrtHcGPLHtNQdT2BSZs64OtL7aUUhrtyxF38Z6KQ=;
+	b=D2iIflGZ9kr/E8yoo8qNacU5cTyGMS2M3hMxo5rVnfEh+Mn4tDchFBVyTXiW3MMaeBsz0R
+	UXUShF5xZIuc0FAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zrHpMIUm;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+c2cjqe6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718260058; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElbTrtHcGPLHtNQdT2BSZs64OtL7aUUhrtyxF38Z6KQ=;
+	b=zrHpMIUm55G0aZmocdojO82sY1ePqvptEYjWoiC/N0e0wBWzWkw3SU59pVrCoyWtoFgHnL
+	VJwiym/BtbcOi6dpOEGu10OeAnKd7IvsZ+US49+34dxbogNUkznqtI9tBW/Hf1S98OcbFK
+	6aTh7N8mx1/qZ1uq7qu0459yntn4hkU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718260058;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElbTrtHcGPLHtNQdT2BSZs64OtL7aUUhrtyxF38Z6KQ=;
+	b=+c2cjqe6JRcTiONrzEPsSzsr/FhSDoBuT+sgDjY4LDIKSp7ykXyw+5t8XC5qSNAplblSmq
+	k+EOksE770AQxDAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AEB4213A7F;
+	Thu, 13 Jun 2024 06:27:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8XdsKFqRambWNwAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 13 Jun 2024 06:27:38 +0000
+Message-ID: <698d4b22-719c-4e57-94ed-f507e425ee12@suse.de>
+Date: Thu, 13 Jun 2024 08:27:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,85 +83,186 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] media: dt-bindings: rk3568-vepu: Add RK3588
- VEPU121
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- devicetree@vger.kernel.org, Nicolas Dufresne
- <nicolas.dufresne@collabora.com>, Jianfeng Liu <liujianfeng1994@gmail.com>,
- linux-rockchip@lists.infradead.org,
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
- Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>, kernel@collabora.com,
- Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor+dt@kernel.org>
-References: <20240612173213.42827-1-sebastian.reichel@collabora.com>
- <20240612173213.42827-2-sebastian.reichel@collabora.com>
- <171821679246.3419351.9732124883795406633.robh@kernel.org>
- <t5yyanxuweou6edj3subsbtndow6nwwexcgkhctfx3mdkoi7dl@zjtqmvklwzz4>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 1/3] scsi: core: Add new helper to iterate all devices
+ of host
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <t5yyanxuweou6edj3subsbtndow6nwwexcgkhctfx3mdkoi7dl@zjtqmvklwzz4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Wenchao Hao <haowenchao22@gmail.com>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240605091731.3111195-1-haowenchao22@gmail.com>
+ <20240605091731.3111195-2-haowenchao22@gmail.com>
+ <3b24ef4a-996b-4a8b-89f3-385872573039@suse.de>
+ <c1ecd21b-7b97-4ef6-94a1-86b2cf520a67@gmail.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <c1ecd21b-7b97-4ef6-94a1-86b2cf520a67@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com,HansenPartnership.com,oracle.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: E4D715CE74
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
+X-Spam-Level: 
 
-On 13/06/2024 00:20, Sebastian Reichel wrote:
-> oops. That's on me for not doing another test and doing something
-> stupid. I obviously wanted this and didn't recheck the bindings
-> after dropping the fallback compatible.
+On 6/12/24 17:06, Wenchao Hao wrote:
+> On 6/12/24 4:33 PM, Hannes Reinecke wrote:
+>> On 6/5/24 11:17, Wenchao Hao wrote:
+>>> shost_for_each_device() would skip devices which is in SDEV_CANCEL or
+>>> SDEV_DEL state, for some scenarios, we donot want to skip these devices,
+>>> so add a new macro shost_for_each_device_include_deleted() to handle it.
+>>>
+>>> Following changes are introduced:
+>>>
+>>> 1. Rework scsi_device_get(), add new helper __scsi_device_get() which
+>>>      determine if skip deleted scsi_device by parameter "skip_deleted".
+>>> 2. Add new parameter "skip_deleted" to __scsi_iterate_devices() which
+>>>      is used when calling __scsi_device_get()
+>>> 3. Update shost_for_each_device() to call __scsi_iterate_devices() with
+>>>      "skip_deleted" true
+>>> 4. Add new macro shost_for_each_device_include_deleted() which call
+>>>      __scsi_iterate_devices() with "skip_deleted" false
+>>>
+>>> Signed-off-by: Wenchao Hao <haowenchao22@gmail.com>
+>>> ---
+>>>    drivers/scsi/scsi.c        | 46 ++++++++++++++++++++++++++------------
+>>>    include/scsi/scsi_device.h | 25 ++++++++++++++++++---
+>>>    2 files changed, 54 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
+>>> index 3e0c0381277a..5913de543d93 100644
+>>> --- a/drivers/scsi/scsi.c
+>>> +++ b/drivers/scsi/scsi.c
+>>> @@ -735,20 +735,18 @@ int scsi_cdl_enable(struct scsi_device *sdev, bool enable)
+>>>        return 0;
+>>>    }
+>>>    -/**
+>>> - * scsi_device_get  -  get an additional reference to a scsi_device
+>>> +/*
+>>> + * __scsi_device_get  -  get an additional reference to a scsi_device
+>>>     * @sdev:    device to get a reference to
+>>> - *
+>>> - * Description: Gets a reference to the scsi_device and increments the use count
+>>> - * of the underlying LLDD module.  You must hold host_lock of the
+>>> - * parent Scsi_Host or already have a reference when calling this.
+>>> - *
+>>> - * This will fail if a device is deleted or cancelled, or when the LLD module
+>>> - * is in the process of being unloaded.
+>>> + * @skip_deleted: when true, would return failed if device is deleted
+>>>     */
+>>> -int scsi_device_get(struct scsi_device *sdev)
+>>> +static int __scsi_device_get(struct scsi_device *sdev, bool skip_deleted)
+>>>    {
+>>> -    if (sdev->sdev_state == SDEV_DEL || sdev->sdev_state == SDEV_CANCEL)
+>>> +    /*
+>>> +     * if skip_deleted is true and device is in removing, return failed
+>>> +     */
+>>> +    if (skip_deleted &&
+>>> +        (sdev->sdev_state == SDEV_DEL || sdev->sdev_state == SDEV_CANCEL))
+>>>            goto fail;
+>>
+>> Nack.
+>> SDEV_DEL means the device is about to be deleted, so we _must not_ access it at all.
+>>
 > 
-> enum:
->   - rockchip,rk3568-vepu
->   - rockchip,rk3588-vepu121
+> Sorry I added SDEV_DEL here at hand without understanding what it means.
+> Actually, just include scsi_device which is in SDEV_CANCEL would fix the
+> issues I described.
 > 
-> I will change it in v6 if people are fine with this solution.
+> The issues are because device removing concurrent with error handle.
+> Normally, error handle would not be triggered when scsi_device is in
+> SDEV_DEL. Below is my analysis, if it is wrong, please correct me.
+> 
+> If there are scsi_cmnd remain unfinished when removing scsi_device,
+> the removing process would waiting for all commands to be finished.
+> If commands error happened and trigger error handle, the removing
+> process would be blocked until error handle finished, because
+> __scsi_remove_device called  del_gendisk() which would wait all
+> requests to be finished. So now scsi_device is in SDEV_CANCEL.
+> 
+> If the scsi_device is already in SDEV_DEL, then no scsi_cmnd has been
+> dispatched to this scsi_device, then error handle would never triggered.
+> 
+> I want to change the new function __scsi_device_get() as following,
+> please help to review.
+> 
+> /*
+>   * __scsi_device_get  -  get an additional reference to a scsi_device
+>   * @sdev:	device to get a reference to
+>   * @skip_canceled: when true, would return failed if device is deleted
+>   */
+> static int __scsi_device_get(struct scsi_device *sdev, bool skip_canceled)
+> {
+> 	/*
+> 	 * if skip_canceled is true and device is in removing, return failed
+> 	 */
+> 	if (sdev->sdev_state == SDEV_DEL ||
+> 	    (sdev->sdev_state == SDEV_CANCEL && skip_canceled))
+> 		goto fail;
+> 	if (!try_module_get(sdev->host->hostt->module))
+> 		goto fail;
+> 	if (!get_device(&sdev->sdev_gendev))
+> 		goto fail_put_module;
+> 	return 0;
+> 
+> fail_put_module:
+> 	module_put(sdev->host->hostt->module);
+> fail:
+> 	return -ENXIO;
+> }
+> 
+I don't think that's required.
+With your above analysis, wouldn't the problem be solved with:
 
-Ack
+diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+index 775df00021e4..911fcfa80d69 100644
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -1470,6 +1470,8 @@ void __scsi_remove_device(struct scsi_device *sdev)
+         if (sdev->sdev_state == SDEV_DEL)
+                 return;
 
-Best regards,
-Krzysztof
++       scsi_block_when_processing_errors(sdev);
++
+         if (sdev->is_visible) {
+                 /*
+                  * If scsi_internal_target_block() is running concurrently,
+
+Hmm?
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
