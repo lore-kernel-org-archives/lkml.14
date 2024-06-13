@@ -1,165 +1,101 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEFF14388E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3885BACF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718277793; cv=none; b=JF+w/OGFX0crsjKvL6OpbTR/+PJgUGI0HYUim5QXT5esc/qONxe1mt2lye3unGIDnpPkQLtzUAKEtcByGVA7wBdqr1TbchUEymqNWJjj9gzxUb2XoAWDC9xwpDeuVFskEBd70PJKP95PqbB0i0Y5K+XNQtWz9NZB/wVJ3Pd9bY4=
+	t=1718277829; cv=none; b=YXUTitsIi4jwcnrVTdMTZKvwJ6h7y/7Sq2aHjzLLkAgK/B6PaYrNAFJQUmMu+hcEngFB6uXDuT6o4vIWk2NeFC6CmvRvosaLZPCOqKM2SAGf88viaZ8pcp7FPtCYVjHrwjN1MqyyI38la7fM2wZQtXxdL2f99fw2dzNrbrd9s8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718277793; c=relaxed/simple;
-	bh=jaoFXH8LP9UDt/CXkteKVcrj10H6yKq54b94OsUOCO0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RzsLBhAxAJzEpO/I2MTKTU6SZWXRGvuE3rILkKBIQkJPTWjSE0xlA6FSp7IdNDFx6UTnddu1RvyF5OLMnnY251LCeI8J7oLcgZsoPAMZIWaWe1WsWTS/pZxETem/d21ku657trwzNha/GMNh/woMvFPAZM2T7OnwyghElOfTOX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FQgCtM44; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1718277829; c=relaxed/simple;
+	bh=sqgBrvb1tQtLs7yqLxnsmPlbQsKBTcgqd4+WVYki8NA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sQh32ssqWVgb8qCFYHeGavKCw06Fw5WOqgGo8TemFdfSL2I+PLJRaA036cpv/lRJurjX6JKy3BF8H9oYH0ZVQ80+N/udS0XE7VoTok7WTZfZKeZHUSKrnHn/cOdYFIVSqYbaATvc/OqGYTgXSe0Vn9a0zrEv82HnIE5uL7cImKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoMHuSLZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FQgCtM44"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebe40673d8so8501341fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718277789; x=1718882589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m7TJj5Nsr7e2H/YfmZt25uBxrUAbjXLqqwNfw8vmDpc=;
-        b=FQgCtM44bXSTZHJrbNNJkSk+4Rr7/rofonrSgMvCtadOg3gPzDFd11roXcEB3QJOGL
-         gfByedx/+patPvYFa8FGIaYsTXMSyxUBMzsHR9lfEd4tWEMFiw1xlsFxlM9oo3tKndig
-         tPCi2qSqymVcNDoRycEFab7uxY+sjQzH1A+K6rN5sdX7OebH/rOLH/JeL8TsO4GWkWtQ
-         jMUYwNkotuQTnzLV15d8e8bgI4Msl0UooEegthC2Pz6XUHk3kAAoihpsX0lL0Lpcg3KH
-         Y7IIfPb/9pnKP2kmNw9T5VQWoDqJGt6b0AkMT42jzNErOiG9d5BgjRT26PZENhIbdmju
-         ZHTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718277789; x=1718882589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m7TJj5Nsr7e2H/YfmZt25uBxrUAbjXLqqwNfw8vmDpc=;
-        b=NblIWBEXPQx3ABRrmYK5zemvrGUHqIjwxVhJWUyeZ4tSlUJoj+UF0tZJjtFMZguVVD
-         S+WPmHuP1JvODjKpo9boLlsicvv6pnIkT5pQM6t/YiCRgg7o1FWSPgXDUpIqkoGm2ijF
-         u0XfmjxLkoTvjbAtDSbUNsp09n6J7STd4sJelgzPpHcNqKN+8GVBGPDKJLksupQs6nCZ
-         3r8zSCppFMITaA/R1fQvAaEU8Wra+lKZS5g9v4aatRqgqRJQxAXSkeAY6BoYe8EcQjYm
-         UnqlunmqNPZ/aFG4B0oDF/S+m6OtJzjdD710WvJ/POJjaO7DkGYENM2KuCrOTDD+KJaK
-         rGZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwtn3a69NeY1pwiMKJvtvKXd7fedXbeZMds5XbwsHhjSH7RZ9a2VHHBmKD0KkDqvZ9v3MTD59N0fabv7qRx/GT9E3S96E+KbMnPTX9
-X-Gm-Message-State: AOJu0YzqsF5MNB+NNisHTk11V6DQt0fw4/aih8AjEW+YdDMdVAqIVUjG
-	FHUy5uNYESCYcrg289akaRraniLq2x3IYsvKLcS1jfTWoXu9XZCoQ218kyzu//XVilcgqV8JGxn
-	HfRdoIV7iQ5zIiqYnrzBg3ZqpdkcoZDyrAgnjFg==
-X-Google-Smtp-Source: AGHT+IFPDV78gV0K/eJed+tkoetTYYLieCZMNDQ/WjGy309Fv/VnP5xP+XDLXlZufMhg5+VZIixjQH3KFqvBu7sAJfY=
-X-Received: by 2002:a05:6512:acb:b0:52c:8a37:6d06 with SMTP id
- 2adb3069b0e04-52c9a3b9b71mr3354441e87.10.1718277789443; Thu, 13 Jun 2024
- 04:23:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoMHuSLZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80EFAC2BBFC;
+	Thu, 13 Jun 2024 11:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718277828;
+	bh=sqgBrvb1tQtLs7yqLxnsmPlbQsKBTcgqd4+WVYki8NA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IoMHuSLZR5RB4BxswtmmHoKCuhmA8LeQyKKu7kjBWRojZcKSGvSAl3zJD70QMsHY7
+	 GUFhpEUG/upkV7fXsNVUY+Armma8CD4dh1xu3ewwcN23nzVSGMnEn1NsXjHrI5IeJl
+	 jbGnNl3AMVn/xzd+ZPwvsNh2p274JM51VV08EMJTJA1HxKLRAr8RIiC46EDux+1J8X
+	 V8c1/ri8+BdyFnGoHvXzrIT3e3UOxqUehJKI+91zuL8MrY0WhuNC2+PwkLko2KNOFj
+	 Niu12/k+oLeM7edwHke4V6CD4rg95qw5R5WUyJUJpXSxcBHOQLNyzOVA0a6o8kEgh0
+	 WuJMouCa/o75A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sHiYU-003Wgr-9U;
+	Thu, 13 Jun 2024 12:23:46 +0100
+Date: Thu, 13 Jun 2024 12:23:46 +0100
+Message-ID: <86y179jdbx.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	mark.rutland@arm.com,
+	ryan.roberts@arm.com,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/mm: Drop ESR_ELx_FSC_TYPE
+In-Reply-To: <20240613094538.3263536-1-anshuman.khandual@arm.com>
+References: <20240613094538.3263536-1-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240613092830.15761-1-brgl@bgdev.pl> <20240613092830.15761-3-brgl@bgdev.pl>
- <2024061356-uptake-ideology-e57b@gregkh>
-In-Reply-To: <2024061356-uptake-ideology-e57b@gregkh>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 13 Jun 2024 13:22:58 +0200
-Message-ID: <CAMRc=MfjQdFR_8ALGibxQnr5tzoHykCBpkBxjH78c5HuD43rBg@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] misc: gpio-virtuser: new virtual testing driver
- for the GPIO API
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, ryan.roberts@arm.com, catalin.marinas@arm.com, will@kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jun 13, 2024 at 12:02=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jun 13, 2024 at 11:28:30AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The GPIO subsystem used to have a serious problem with undefined behavi=
-or
-> > and use-after-free bugs on hot-unplug of GPIO chips. This can be
-> > considered a corner-case by some as most GPIO controllers are enabled
-> > early in the boot process and live until the system goes down but most
-> > GPIO drivers do allow unbind over sysfs, many are loadable modules that
-> > can be (force) unloaded and there are also GPIO devices that can be
-> > dynamically detached, for instance CP2112 which is a USB GPIO expender.
-> >
-> > Bugs can be triggered both from user-space as well as by in-kernel user=
-s.
-> > We have the means of testing it from user-space via the character devic=
-e
-> > but the issues manifest themselves differently in the kernel.
-> >
-> > This is a proposition of adding a new virtual driver - a configurable
-> > GPIO consumer that can be configured over configfs (similarly to
-> > gpio-sim) or described on the device-tree.
-> >
-> > This driver is aimed as a helper in spotting any regressions in
-> > hot-unplug handling in GPIOLIB.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  .../admin-guide/gpio/gpio-virtuser.rst        |  176 ++
-> >  Documentation/admin-guide/gpio/index.rst      |    1 +
->
-> sysfs documentation needs to go in Documentation/ABI/ not in a random
-> .rst file where the tools that check this will not catch it.
->
+On Thu, 13 Jun 2024 10:45:38 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> Fault status codes at page table level 0, 1, 2 and 3 for access, permission
+> and translation faults are architecturally organized in a way, that masking
+> out ESR_ELx_FSC_TYPE, fetches Level 0 status code for the respective fault.
+> 
+> Helpers like esr_fsc_is_[translation|permission|access_flag]_fault() mask
+> out ESR_ELx_FSC_TYPE before comparing against corresponding Level 0 status
+> code as the kernel does not yet care about the page table level, the fault
+> really occurred previously.
+> 
+> This scheme is starting to crumble after FEAT_LPA2 when level -1 got added.
+> Fault status code for translation fault at level -1 is 0x2B which does not
+> follow ESR_ELx_FSC_TYPE, requiring esr_fsc_is_translation_fault() changes.
+> 
+> This changes above helpers to compare against individual fault status code
+> values for each page table level and drop ESR_ELx_FSC_TYPE which is losing
+> its value as a common mask.
 
-This is a testing driver, not representing real hardware. Do we hold
-such modules to the same standard?
+I'd rather we do not drop the existing #defines, for a very
+self-serving reason:
 
-> >  MAINTAINERS                                   |    8 +
-> >  drivers/misc/Kconfig                          |    8 +
-> >  drivers/misc/Makefile                         |    1 +
-> >  drivers/misc/gpio-virtuser.c                  | 1790 +++++++++++++++++
->
-> Why not put this in drivers/gpio/?  Why misc?
->
+NV requires an implementation to synthesise fault syndromes, and these
+definition are extensively used to compose the syndrome information
+(see the NV MMU series at [1]). This is also heavily use to emulate
+the AT instructions (fault reporting in PAR_EL1.FST).
 
-Because it's quite... well "misc". It's not a GPIO chip provider
-(drivers/gpio/ is for GPIO providers), it's only a GPIO consumer. It
-also has an interface that doesn't fit any particular subsystem.
+Having additional helpers is fine. Dropping the base definitions
+isn't, and I'd like to avoid reintroducing them.
 
-> > +Both attributes allow to read and set arrays of GPIO values. User must=
- pass
-> > +exactly the number of values that the array contains in the form of a =
-string
-> > +containing zeroes and ones representing inactive and active GPIO state=
-s
-> > +respectively. In this example: ``echo 11 > values``.
->
-> sysfs is "one value per file", so why are there multiple values here?
->
-> If you want to just use this for testing, and want to put whatever you
-> want in the files, just use debugfs, that's what it is there for, not
-> sysfs.
->
+Thanks,
 
-Debugfs doesn't allow me to attach attributes to a particular device
-which is what I want here.
+	M.
 
-Bart
+[1] http://lore.kernel.org/r/20240529145628.3272630-1-maz@kernel.org
 
-> > +config GPIO_VIRTUSER
-> > +     tristate "GPIO Virtual User Testing Module"
-> > +     select CONFIGFS_FS
-> > +     select IRQ_WORK
-> > +     help
-> > +       This enables the configurable, configfs-based virtual GPIO cons=
-umer
-> > +       testing driver.
-> > +
->
-> module name?
->
-> And you need more documentation here, I have no idea what this means
-> when it shows up in a Kconfig help entry :(
->
-> thanks,
->
-> greg k-h
+-- 
+Without deviation from the norm, progress is not possible.
