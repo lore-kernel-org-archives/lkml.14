@@ -1,139 +1,232 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DF1149E1A;
-	Thu, 13 Jun 2024 19:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34EA2F50;
+	Thu, 13 Jun 2024 19:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718306069; cv=none; b=GqCZgXHjcNehXRKLyL90cfpFY2dXui0pe9woeLOa7cGasi6cvb8rANnXB1X5PYZe0TKqOB9pEigySmOvnJutUKEMdC66iLPwQOvU05D+wt5zs1h/vPAF1nupaP7XV0thd1E8robgjdIjmbLudguJYfvDRnn605DogAZJjlZgRGQ=
+	t=1718306138; cv=none; b=EzuA9AZT/fi1M7WuvgklvfEqFSRnsTpLB2hobTW+XUPt/Ng6E82B+qo4xeMq1FxT3U4JMCzUBcpsf+lWKfLqUuAq03BjfnBBPmZqCzK8gA+pQhqTWtMa3nbEJWp96ligESEBCLUDBjiO8N56H7KqEc8W6tSZxflH6fl+Mt7OgCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718306069; c=relaxed/simple;
-	bh=SInef4o5M1AK1ysJCyquEWbuWWbqBrt9x4MkjqwsuwI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AXGEc5a5QEqpYGcAZ1DtXDW2jsqWamHiZzZUyHNykw+mycbFEmSz8ASBq/mXaw3rkJoKeTTPqZqOe/Z3RmVl95lqL2azrkKqaSrwWv5b07szaiPZaxgpzMn+ws4qqCWqqJgSAO9t6YJJz2z6DUW2xniZe0VaXWQspPEpFdTPe6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=L4RxlyWP; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
+	s=arc-20240116; t=1718306138; c=relaxed/simple;
+	bh=PxaAEnheuEVKucWpehjXgII5Lh2MtTO4KEUYjKFPDkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fvhPNU7EhOb67xRf4bsrKXkVYCTuXNrFTyZcLnTTlv0BUR0DUiKT/Bc8hroNU+izhfe27yF3YHo+8zCF3wJdCxWWLw8JZpBEJPIj08A4p89MUwEJ9Kh1Xs9zpRsTVgO/fq8p+WB9TCUAPMzPlPBbCWL03YWYtbu28QxNkz4QmPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzUl1M7v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="L4RxlyWP"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4W0XCF1gwBz9sxf;
-	Thu, 13 Jun 2024 21:14:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
-	t=1718306057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Y2fqfo34jYOSwwgMfXN35xvUGJse2iPb8SuE0d9SRI=;
-	b=L4RxlyWPdRZoDVbvUgoWt2/kWCnKJ7oAPnbO+v1RwHWV3LF2hCxNYY9N8vjMGTXuouXGBK
-	iphm4wecR/ExSX/HS+R1hFOudMbV8ifHxVucEX5U5phwek+q6L4NNKO0Cjk2P6dY54Mv0S
-	8exe4k+Waxw2CB0qK5agl+NEZG/pxZJSGRDjpw5lhIZSFSvRthHjbKnDhqjN8kJML2r9jT
-	ws2jnB4NgmRYtSCK1gONy5RMpoIEHKYvQU4j60oGZa9wXaUZ9hkdJAzJiwOd5c9ekE64Gr
-	ayP9w+14JxfuicqdivAQiuPAAHOrxbULdqg4p/bM9mSMlv+jYNe75tnrx/SQzw==
-From: Ben Walsh <ben@jubnut.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Benson Leung
- <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/chrome: cros_ec_lpc: Fix error code in
- cros_ec_lpc_mec_read_bytes()
-In-Reply-To: <ZmsvHBrYSpwYLyxx@google.com>
-References: <e0b43fb5-ecc8-4fb4-9b76-c06dea8cc4c4@moroto.mountain>
- <87sexgrdk4.fsf@jubnut.com> <ZmsvHBrYSpwYLyxx@google.com>
-Date: Thu, 13 Jun 2024 20:14:14 +0100
-Message-ID: <87o784ac55.fsf@jubnut.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzUl1M7v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D34C2BBFC;
+	Thu, 13 Jun 2024 19:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718306137;
+	bh=PxaAEnheuEVKucWpehjXgII5Lh2MtTO4KEUYjKFPDkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gzUl1M7vQrd2T8fS4MvHteaVlR1Jg0QGhIBkzYQ8VNBg0lTX2rpjj0pAC/eLgQY/e
+	 6AQ8nRPOww0PlBfjVxVpfPv9MUz/a0mQzYdvhCAdVq8F4IuRuq8llzgQ03mjrSFBMp
+	 +5mY9eOtmwMrpRXlt0ZSoID0xDfxfeHSYywgaxLNGv6CeG735rEWHy6IGMeMIJIypf
+	 oxzJxsAAuj5LA/6v4XLmFfCiKZWRQQi9QIOcrOCZGCcOykdQ8kub+XLk8yPJGzfQuE
+	 hSFCbKTpsZMyLng1o5+VvInMLoNLXzvLGq8w3AV1ghg3gNmXN1ETemlf7jYNXWkpH6
+	 xNhP+d2XQzwLg==
+Date: Thu, 13 Jun 2024 13:15:35 -0600
+From: Rob Herring <robh@kernel.org>
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Tomeu Vizoso <tomeu.vizoso@tomeuvizoso.net>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 3/9] dt-bindings: mailbox: rockchip,rknn: Add bindings
+Message-ID: <20240613191535.GA2319626-robh@kernel.org>
+References: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
+ <20240612-6-10-rocket-v1-3-060e48eea250@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4W0XCF1gwBz9sxf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612-6-10-rocket-v1-3-060e48eea250@tomeuvizoso.net>
 
-Tzung-Bi Shih <tzungbi@kernel.org> writes:
+On Wed, Jun 12, 2024 at 03:52:56PM +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
 
-> On Thu, Jun 13, 2024 at 05:51:39PM +0100, Ben Walsh wrote:
->> 
->> Thanks for fixing this! Unfortunately `in_range` returns -EINVAL if
->> length == 0 (see the definition of `fwk_ec_lpc_mec_in_range`). I'm sure
->> this broke something in my testing, but I can't find what it was now.
->
-> Somewhere like [1] could accidentally get the -EINVAL.
->
-> [1]: https://elixir.bootlin.com/linux/v6.9/source/drivers/platform/chrome/cros_ec_lpc.c#L232
+Subject is wrong. Not a mailbox...
 
-Yes. It turns out I'm getting it in:
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+>  .../devicetree/bindings/npu/rockchip,rknn.yaml     | 123 +++++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/npu/rockchip,rknn.yaml b/Documentation/devicetree/bindings/npu/rockchip,rknn.yaml
+> new file mode 100644
+> index 000000000000..570a4889c11c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/npu/rockchip,rknn.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/npu/rockchip,rknn.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Neural Processing Unit IP from Rockchip, based on NVIDIA's NVDLA
+> +
+> +maintainers:
+> +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> +
+> +description: |+
+> +  Rockchip IP for accelerating inference of neural networks, based on NVIDIA's open source NVDLA IP.
 
-cros_ec_query_all -> cros_ec_proto_info -> ... -> cros_ec_pkt_xfer_lpc
+Wrap at 80.
 
-          /* Read response and update checksum */
-          ret = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PARAM, args.data_size,
-                                                             ^^^^^^^^^^^^^^^
-                                     msg->data);
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - rockchip,rk3588-rknn
+> +      - const: rockchip,rknn
 
-(as Dan suggested in his email).
+Is there any evidence this block is 'the same' on multiple chips?
 
->>   or 2. Put in a check for length == 0.
->> 
->>   or 3. Change the logic in `fwk_ec_lpc_mec_in_range`. Although I'm not
->>   sure what the correct answer is to "zero length is in range?"
->> 
->> I prefer option 2. What do you think?
->
-> How about drop the length check at [2]?
->
-> [2]: https://elixir.bootlin.com/linux/v6.9/source/drivers/platform/chrome/cros_ec_lpc_mec.c#L44
->
+> +
+> +  reg:
+> +    description: Base registers for NPU cores
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clock-rates:
+> +    maxItems: 1
 
-This works, but we still end up calling cros_ec_lpc_io_bytes_mec() with
-zero length. Although this seems to work fine, we could put a length
-check at the top of cros_ec_lpc_read_bytes() to avoid it.
+You don't need assigned-clocks in schemas.
 
->>
->> Dan Carpenter <dan.carpenter@linaro.org> writes:
->> 
->> > We changed these functions to returning negative error codes, but this
->> > first error path was accidentally overlooked.  It leads to a Smatch
->> > warning:
->> >
->> >     drivers/platform/chrome/cros_ec_lpc.c:181 ec_response_timed_out()
->> >     error: uninitialized symbol 'data'.
->> >
->> > Fix this by returning the error code instead of success.
->> >
->> > Fixes: 68dbac0a58ef ("platform/chrome: cros_ec_lpc: MEC access can return error code")
->> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
->> > ---
->> >  drivers/platform/chrome/cros_ec_lpc.c | 4 ++--
->> >  1 file changed, 2 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
->> > index ebe9fb143840..f0470248b109 100644
->> > --- a/drivers/platform/chrome/cros_ec_lpc.c
->> > +++ b/drivers/platform/chrome/cros_ec_lpc.c
->> > @@ -139,7 +139,7 @@ static int cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
->> >  	int in_range = cros_ec_lpc_mec_in_range(offset, length);
->> >  
->> >  	if (in_range < 0)
->> > -		return 0;
->> > +		return in_range;
->> >  
->> >  	return in_range ?
->> >  		cros_ec_lpc_io_bytes_mec(MEC_IO_READ,
->> > @@ -158,7 +158,7 @@ static int cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
->> >  	int in_range = cros_ec_lpc_mec_in_range(offset, length);
->> >  
->> >  	if (in_range < 0)
->> > -		return 0;
->> > +		return in_range;
->> >  
->> >  	return in_range ?
->> >  		cros_ec_lpc_io_bytes_mec(MEC_IO_WRITE,
->> > -- 
->> > 2.43.0
->> 
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  power-domains:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  power-domain-names:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  iommus:
+> +    items:
+> +      - description: IOMMU for all cores
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+
+And never should be required.
+
+> +  - resets
+> +  - reset-names
+> +  - power-domains
+> +  - power-domain-names
+> +  - iommus
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        rknn: npu@fdab0000 {
+> +          compatible = "rockchip,rk3588-rknn", "rockchip,rknn";
+> +          reg = <0x0 0xfdab0000 0x0 0x9000>,
+> +                <0x0 0xfdac0000 0x0 0x9000>,
+> +                <0x0 0xfdad0000 0x0 0x9000>;
+> +          interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                       <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                       <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH 0>;
+> +          interrupt-names = "npu0_irq", "npu1_irq", "npu2_irq";
+
+'irq' is redundant. Names with the index are also kind of pointless
+unless they can be not contiguous.
+
+> +          clocks = <&scmi_clk 0>, <&cru 1>,
+> +                   <&cru 2>, <&cru 3>,
+> +                   <&cru 4>, <&cru 5>,
+> +                   <&cru 6>, <&cru 7>;
+> +          clock-names = "clk_npu",
+
+'clk_' is redundant.
+
+> +                  "aclk0", "aclk1", "aclk2",
+> +                  "hclk0", "hclk1", "hclk2",
+> +                  "pclk";
+
+Assuming 0, 1, 2 are cores and may vary, put all the fixed clocks first 
+and then better to do "aclk0", "hclk0", "aclk1", "hclk1",...
+
+> +          assigned-clocks = <&scmi_clk 0>;
+> +          assigned-clock-rates = <200000000>;
+> +          resets = <&cru 0>, <&cru 1>, <&cru 2>,
+> +                   <&cru 3>, <&cru 4>, <&cru 5>;
+> +          reset-names = "srst_a0", "srst_a1", "srst_a2",
+> +                        "srst_h0", "srst_h1", "srst_h2";
+
+And similar order here.
+
+> +          power-domains = <&power 0>, <&power 1>, <&power 2>;
+> +          power-domain-names = "npu0", "npu1", "npu2";
+> +          iommus = <&rknpu_mmu>;
+> +          status = "disabled";
+> +        };
+> +    };
+> +...
+> 
+> -- 
+> 2.45.2
+> 
