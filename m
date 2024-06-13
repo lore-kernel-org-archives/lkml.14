@@ -1,238 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7BF14B095
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 18:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466071304BA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 18:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718302452; cv=none; b=aDMyUjieFzILmAdjsjdu+nV5JfPL40OKCmP+In04mEE0ka2wg+QJf2OXb+fmy+9a2ivq4GQSW8bNRPSfFZX/2qRX4tm6Vc2UoNuqf325NJICVlKnqyVU1EVkShu8hSx3zVQ9PuzyujcXq+eqA2cx81zEggN8x+Cxh+hH3S0BgyA=
+	t=1718302585; cv=none; b=Ahpqrgi3k7XJx9UVlZs+W4msGDKApRLMaJhLjDrnVMWqXDpHhEhYpxY+mVahNDM3T702p2+sUBDQ9xtANSBhVwfEVizWxwppVJobbFgqPMVZqRRQRA+/vt3KCgtL1KTOjm3xTDd5VkVGOBJHI1ZCqGPTqpyJtzWoiB/RCC0jKrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718302452; c=relaxed/simple;
-	bh=QTgoe2rC6m5D2R0UdgXwABQVHVGYx5A7KnuDEd1sWng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rJWWmRlbQgjY0YL+PN/4wY4JkVUolMXRDbFoZVlGg8JwQbVaPgtbfA8JswQd4uD+TESj7Vq7D+3w26mwK5oPCNC09NZHTm2PvrFkTZRpdvTF0raXmaofOecOdE0snjYcF936Jq16ENop6+EZo4UutzHQ6TquV5Vn7BNyLwMeoik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJujRcj+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718302585; c=relaxed/simple;
+	bh=VMV5npPvx2LlJ/v0Vts5oDRx4jTMhD7qJPkKX8wCExc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dquCKiCTSWeAeDjw0xuZaY5cECvE6hKk0l4fvfN3ANAdC21rsyZP+FaFDAZsfOMKHNGfpZx8G8Fgh9vnCfBrJQaJDfo3vylu9JegdNSsScFSjWXAF6m0n1wYfz9me+91YUOdWc46RBuYLiAirT8vmMUgdZRgME1BCMGgIKMzuC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MHTItqr0; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJujRcj+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718302446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I5BYQUYXcAbpmu8A+u1LM7QSYuiSoXQDDoRECveLdB8=;
-	b=TJujRcj+JlGzj6Okd3ZnUlA8y+Z4xnbn9UjXUZbxhurMBFlD9G+3qaXiwcUcgwRyIbqM4L
-	zKhMaajCzwCPzPIHUgyfp0W/KVXkWGiap+l9DLsmn3a/bMMXKz76cnSHKj+RwKL4kkjkYA
-	3Uj3P3TcJai7oHmhS7bgSAacq66+3Hs=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-QC59XkfyNBeCZ5rpqGVHSw-1; Thu,
- 13 Jun 2024 14:13:59 -0400
-X-MC-Unique: QC59XkfyNBeCZ5rpqGVHSw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15F84195609E;
-	Thu, 13 Jun 2024 18:13:58 +0000 (UTC)
-Received: from RHTRH0061144.redhat.com (unknown [10.22.16.41])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 850411955E74;
-	Thu, 13 Jun 2024 18:13:54 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: netdev@vger.kernel.org
-Cc: dev@openvswitch.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Adrian Moreno <amorenoz@redhat.com>,
-	Stefano Brivio <sbrivio@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>
-Subject: [RFC net-next 6/7] selftests: net: Use the provided dpctl rather than the vswitchd for tests.
-Date: Thu, 13 Jun 2024 14:13:32 -0400
-Message-ID: <20240613181333.984810-7-aconole@redhat.com>
-In-Reply-To: <20240613181333.984810-1-aconole@redhat.com>
-References: <20240613181333.984810-1-aconole@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MHTItqr0"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfeac23fe6eso2442377276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718302583; x=1718907383; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HubYKewLWWkCbdNX6Kwg7NPcQhWO6deKo+vfavaox7o=;
+        b=MHTItqr0GeqGwp1JpLq43jq01LcN4VRBo2IuHaYCbElbTmbcu5vo21tyGQ760OpBDe
+         OwPuKRcDxssUN6/U7pCNfsCzweWVCBgbPITtOsGghjEBpNiJ6zxif7+qbE5C7pnT6FWe
+         yZTOAtnKzMWzuRnlDAaMZlHblH6S5X4Pb5YStYpK+YW8DF+QY0F4xUNxH6QZuxKp3BuM
+         0u+RDEWMzylCRj9KJhXUUeuKmS5eG8BhS5XLRVWfMbwDiBQz2EILzMdcs1ZF67rylWOp
+         5kLP15leUAqStIXqFuEn32fvJU0Wtn2Ex7K04SWC4PN2Dc4OmcYyZEi4sfdBlsKDuQzp
+         mCXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718302583; x=1718907383;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HubYKewLWWkCbdNX6Kwg7NPcQhWO6deKo+vfavaox7o=;
+        b=viitRTWaOdmDSx7ce00ATRKWSL4jsqRBLKKC08kZJCO75JotV0rSE9l1saTjEl4tu2
+         DDoLBAAlMSmqKKXXRMLSHFW+kGD5hOh4F0ALhSRDzjPnAjIG7kVeIb4Ocge4wig0g3Eg
+         DmeVJbulrqUQjuByRiikZP2msoc2fTme7wHZVipbZAEPkukqe7NuuFOdf2tcN9tHzIsT
+         VlhZu9M+9DqpPLQsTkkH9gpoSONyuNPg52/3Br3a5ehyhNkwc8veClgsgH1N3CBH2QPT
+         IiSSWp+d04FYuHdc138kGPhNPGmCCHSkDsQKQIRlrn+9c9/qCYuMGRoaww3R8r/XdgvX
+         KlyQ==
+X-Gm-Message-State: AOJu0YzIXqVviKiu30i7zrIUPwnxPsRd9vUWz27LESazq3nBOwzarPsQ
+	Yuywua8zyPD66L5XBvmfGrfaq6l0iQQdiD5zrarRurC42fx3jj8mbn4eUDuMt6+fJRH7jMSaE25
+	9MQ==
+X-Google-Smtp-Source: AGHT+IEpFkCu5iSBXcf5Bl0AwgjGARJpjeA/2ZZwxq9LggA19KheODvNkc7FkwL6B4GvsjAsggv5UiEcpBo=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:706:b0:dff:ee8:14d6 with SMTP id
+ 3f1490d57ef6-dff15454a8bmr84096276.10.1718302583316; Thu, 13 Jun 2024
+ 11:16:23 -0700 (PDT)
+Date: Thu, 13 Jun 2024 11:16:21 -0700
+In-Reply-To: <20240207172646.3981-19-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-19-xin3.li@intel.com>
+Message-ID: <Zms3dVgcuObZOwRR@google.com>
+Subject: Re: [PATCH v2 18/25] KVM: nVMX: Add a prerequisite to
+ SHADOW_FIELD_R[OW] macros
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin3.li@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	shuah@kernel.org, vkuznets@redhat.com, peterz@infradead.org, 
+	ravi.v.shankar@intel.com, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-The current pmtu test infrastucture requires an installed copy of the
-ovs-vswitchd userspace.  This means that any automated or constrained
-environments may not have the requisite tools to run the tests.  However,
-the pmtu tests don't require any special classifier processing.  Indeed
-they are only using the vswitchd in the most basic mode - as a NORMAL
-switch.
+On Wed, Feb 07, 2024, Xin Li wrote:
+> @@ -32,48 +32,48 @@ BUILD_BUG_ON(1)
+>   */
+>  
+>  /* 16-bits */
+> -SHADOW_FIELD_RW(GUEST_INTR_STATUS, guest_intr_status)
+> -SHADOW_FIELD_RW(GUEST_PML_INDEX, guest_pml_index)
+> -SHADOW_FIELD_RW(HOST_FS_SELECTOR, host_fs_selector)
+> -SHADOW_FIELD_RW(HOST_GS_SELECTOR, host_gs_selector)
+> +SHADOW_FIELD_RW(GUEST_INTR_STATUS, guest_intr_status, cpu_has_vmx_apicv())
+> +SHADOW_FIELD_RW(GUEST_PML_INDEX, guest_pml_index, cpu_has_vmx_pml())
+> +SHADOW_FIELD_RW(HOST_FS_SELECTOR, host_fs_selector, true)
+> +SHADOW_FIELD_RW(HOST_GS_SELECTOR, host_gs_selector, true)
+>  
+>  /* 32-bits */
+> -SHADOW_FIELD_RO(VM_EXIT_REASON, vm_exit_reason)
+> -SHADOW_FIELD_RO(VM_EXIT_INTR_INFO, vm_exit_intr_info)
+> -SHADOW_FIELD_RO(VM_EXIT_INSTRUCTION_LEN, vm_exit_instruction_len)
+> -SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD, idt_vectoring_info_field)
+> -SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE, idt_vectoring_error_code)
+> -SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE, vm_exit_intr_error_code)
+> -SHADOW_FIELD_RO(GUEST_CS_AR_BYTES, guest_cs_ar_bytes)
+> -SHADOW_FIELD_RO(GUEST_SS_AR_BYTES, guest_ss_ar_bytes)
+> -SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL, cpu_based_vm_exec_control)
+> -SHADOW_FIELD_RW(PIN_BASED_VM_EXEC_CONTROL, pin_based_vm_exec_control)
+> -SHADOW_FIELD_RW(EXCEPTION_BITMAP, exception_bitmap)
+> -SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE, vm_entry_exception_error_code)
+> -SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD, vm_entry_intr_info_field)
+> -SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN, vm_entry_instruction_len)
+> -SHADOW_FIELD_RW(TPR_THRESHOLD, tpr_threshold)
+> -SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO, guest_interruptibility_info)
+> -SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE, vmx_preemption_timer_value)
+> +SHADOW_FIELD_RO(VM_EXIT_REASON, vm_exit_reason, true)
+> +SHADOW_FIELD_RO(VM_EXIT_INTR_INFO, vm_exit_intr_info, true)
+> +SHADOW_FIELD_RO(VM_EXIT_INSTRUCTION_LEN, vm_exit_instruction_len, true)
+> +SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE, vm_exit_intr_error_code, true)
+> +SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD, idt_vectoring_info_field, true)
+> +SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE, idt_vectoring_error_code, true)
+> +SHADOW_FIELD_RO(GUEST_CS_AR_BYTES, guest_cs_ar_bytes, true)
+> +SHADOW_FIELD_RO(GUEST_SS_AR_BYTES, guest_ss_ar_bytes, true)
+> +SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL, cpu_based_vm_exec_control, true)
+> +SHADOW_FIELD_RW(PIN_BASED_VM_EXEC_CONTROL, pin_based_vm_exec_control, true)
+> +SHADOW_FIELD_RW(EXCEPTION_BITMAP, exception_bitmap, true)
+> +SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE, vm_entry_exception_error_code, true)
+> +SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD, vm_entry_intr_info_field, true)
+> +SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN, vm_entry_instruction_len, true)
+> +SHADOW_FIELD_RW(TPR_THRESHOLD, tpr_threshold, true)
+> +SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO, guest_interruptibility_info, true)
+> +SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE, vmx_preemption_timer_value, cpu_has_vmx_preemption_timer())
+>  
+>  /* Natural width */
+> -SHADOW_FIELD_RO(EXIT_QUALIFICATION, exit_qualification)
+> -SHADOW_FIELD_RO(GUEST_LINEAR_ADDRESS, guest_linear_address)
+> -SHADOW_FIELD_RW(GUEST_RIP, guest_rip)
+> -SHADOW_FIELD_RW(GUEST_RSP, guest_rsp)
+> -SHADOW_FIELD_RW(GUEST_CR0, guest_cr0)
+> -SHADOW_FIELD_RW(GUEST_CR3, guest_cr3)
+> -SHADOW_FIELD_RW(GUEST_CR4, guest_cr4)
+> -SHADOW_FIELD_RW(GUEST_RFLAGS, guest_rflags)
+> -SHADOW_FIELD_RW(CR0_GUEST_HOST_MASK, cr0_guest_host_mask)
+> -SHADOW_FIELD_RW(CR0_READ_SHADOW, cr0_read_shadow)
+> -SHADOW_FIELD_RW(CR4_READ_SHADOW, cr4_read_shadow)
+> -SHADOW_FIELD_RW(HOST_FS_BASE, host_fs_base)
+> -SHADOW_FIELD_RW(HOST_GS_BASE, host_gs_base)
+> +SHADOW_FIELD_RO(EXIT_QUALIFICATION, exit_qualification, true)
+> +SHADOW_FIELD_RO(GUEST_LINEAR_ADDRESS, guest_linear_address, true)
+> +SHADOW_FIELD_RW(GUEST_RIP, guest_rip, true)
+> +SHADOW_FIELD_RW(GUEST_RSP, guest_rsp, true)
+> +SHADOW_FIELD_RW(GUEST_CR0, guest_cr0, true)
+> +SHADOW_FIELD_RW(GUEST_CR3, guest_cr3, true)
+> +SHADOW_FIELD_RW(GUEST_CR4, guest_cr4, true)
+> +SHADOW_FIELD_RW(GUEST_RFLAGS, guest_rflags, true)
+> +SHADOW_FIELD_RW(CR0_GUEST_HOST_MASK, cr0_guest_host_mask, true)
+> +SHADOW_FIELD_RW(CR0_READ_SHADOW, cr0_read_shadow, true)
+> +SHADOW_FIELD_RW(CR4_READ_SHADOW, cr4_read_shadow, true)
+> +SHADOW_FIELD_RW(HOST_FS_BASE, host_fs_base, true)
+> +SHADOW_FIELD_RW(HOST_GS_BASE, host_gs_base, true)
+>  
+>  /* 64-bit */
+> -SHADOW_FIELD_RO(GUEST_PHYSICAL_ADDRESS, guest_physical_address)
+> -SHADOW_FIELD_RO(GUEST_PHYSICAL_ADDRESS_HIGH, guest_physical_address)
+> +SHADOW_FIELD_RO(GUEST_PHYSICAL_ADDRESS, guest_physical_address, true)
+> +SHADOW_FIELD_RO(GUEST_PHYSICAL_ADDRESS_HIGH, guest_physical_address, true)
 
-However, the ovs-dpctl kernel utility can now program all the needed basic
-flows to allow traffic to traverse the tunnels and provide support for at
-least testing some basic pmtu scenarios.  More complicated flow pipelines
-can be added to the internal ovs test infrastructure, but that is work for
-the future.  For now, enable the most common cases - wide mega flows with
-no other prerequisites.
+This is not a net postive for readability or maintability.  I don't hate the
+idea, it just needs MOAR MACROs :-)  E.g. add a layer for the common case where
+the field unconditionally exists.
 
-Signed-off-by: Aaron Conole <aconole@redhat.com>
----
- tools/testing/selftests/net/pmtu.sh | 87 ++++++++++++++++++++++-------
- 1 file changed, 67 insertions(+), 20 deletions(-)
+#ifndef __SHADOW_FIELD_RO
+#define __SHADOW_FIELD_RO(x, y, c)
+#endif
+#ifndef __SHADOW_FIELD_RW
+#define __SHADOW_FIELD_RW(x, y, c)
+#endif
 
-diff --git a/tools/testing/selftests/net/pmtu.sh b/tools/testing/selftests/net/pmtu.sh
-index cfc84958025a..7f4f35d88dcc 100755
---- a/tools/testing/selftests/net/pmtu.sh
-+++ b/tools/testing/selftests/net/pmtu.sh
-@@ -846,22 +846,73 @@ setup_ovs_vxlan_or_geneve() {
- 	type="${1}"
- 	a_addr="${2}"
- 	b_addr="${3}"
-+	dport="6081"
- 
- 	if [ "${type}" = "vxlan" ]; then
-+		dport="4789"
- 		opts="${opts} ttl 64 dstport 4789"
- 		opts_b="local ${b_addr}"
- 	fi
- 
--	run_cmd ovs-vsctl add-port ovs_br0 ${type}_a -- \
--		set interface ${type}_a type=${type} \
--		options:remote_ip=${b_addr} options:key=1 options:csum=true || return 1
--
-+	run_cmd python3 ./openvswitch/ovs-dpctl.py add-if ovs_br0 ${type}_a -t ${type}
- 	run_cmd ${ns_b} ip link add ${type}_b type ${type} id 1 ${opts_b} remote ${a_addr} ${opts} || return 1
- 
- 	run_cmd ${ns_b} ip addr add ${tunnel4_b_addr}/${tunnel4_mask} dev ${type}_b
- 	run_cmd ${ns_b} ip addr add ${tunnel6_b_addr}/${tunnel6_mask} dev ${type}_b
- 
-+	run_cmd ip link set ${type}_a up
- 	run_cmd ${ns_b} ip link set ${type}_b up
-+
-+	ports=$(python3 ./openvswitch/ovs-dpctl.py show)
-+	br0_port=$(echo "$ports" | grep -E "\sovs_br0" | sed -e 's@port @@' | cut -d: -f1 | xargs)
-+	type_a_port=$(echo "$ports" | grep ${type}_a | sed -e 's@port @@' | cut -d: -f1 | xargs)
-+	veth_a_port=$(echo "$ports" | grep veth_A | sed -e 's@port @@' | cut -d: -f1 | xargs)
-+
-+	v4_a_tun="${prefix4}.${a_r1}.1"
-+	v4_b_tun="${prefix4}.${b_r1}.1"
-+
-+	v6_a_tun="${prefix6}:${a_r1}::1"
-+	v6_b_tun="${prefix6}:${b_r1}::1"
-+
-+	if [ "${v4_a_tun}" == "${a_addr}" ]; then
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0800),ipv4()" \
-+		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-+		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0800),ipv4()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,src=${v4_b_tun},dst=${v4_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0806),arp()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0806),arp(sip=${veth4_c_addr},tip=${tunnel4_b_addr})" \
-+		    "set(tunnel(tun_id=1,dst=${v4_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+	else
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0800),ipv4()" \
-+		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-+		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0800),ipv4()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x86dd),ipv6()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),tunnel(tun_id=1,ipv6_src=${v6_b_tun},ipv6_dst=${v6_a_tun}),in_port(${type_a_port}),eth(),eth_type(0x0806),arp()" \
-+		    "${veth_a_port}"
-+		run_cmd python3 ./openvswitch/ovs-dpctl.py add-flow ovs_br0 \
-+		    "recirc_id(0),in_port(${veth_a_port}),eth(),eth_type(0x0806),arp(sip=${veth4_c_addr},tip=${tunnel4_b_addr})" \
-+		    "set(tunnel(tun_id=1,ipv6_dst=${v6_b_tun},ttl=64,tp_dst=${dport},flags(df|csum))),${type_a_port}"
-+	fi
- }
- 
- setup_ovs_geneve4() {
-@@ -881,7 +932,7 @@ setup_ovs_vxlan6() {
- }
- 
- setup_ovs_bridge() {
--	run_cmd ovs-vsctl add-br ovs_br0 || return $ksft_skip
-+	run_cmd python3 ./openvswitch/ovs-dpctl.py add-dp ovs_br0 || return $ksft_skip
- 	run_cmd ip link set ovs_br0 up
- 
- 	run_cmd ${ns_c} ip link add veth_C-A type veth peer name veth_A-C
-@@ -891,7 +942,7 @@ setup_ovs_bridge() {
- 	run_cmd ${ns_c} ip link set veth_C-A up
- 	run_cmd ${ns_c} ip addr add ${veth4_c_addr}/${veth4_mask} dev veth_C-A
- 	run_cmd ${ns_c} ip addr add ${veth6_c_addr}/${veth6_mask} dev veth_C-A
--	run_cmd ovs-vsctl add-port ovs_br0 veth_A-C
-+	run_cmd python3 ./openvswitch/ovs-dpctl.py add-if ovs_br0 veth_A-C
- 
- 	# Move veth_A-R1 to init
- 	run_cmd ${ns_a} ip link set veth_A-R1 netns 1
-@@ -942,8 +993,10 @@ cleanup() {
- 
- 	ip link del veth_A-C			2>/dev/null
- 	ip link del veth_A-R1			2>/dev/null
--	ovs-vsctl --if-exists del-port vxlan_a	2>/dev/null
--	ovs-vsctl --if-exists del-br ovs_br0	2>/dev/null
-+	# squelch the output of the del-if commands since it can be wordy
-+	python3 ./openvswitch/ovs-dpctl.py del-if ovs_br0 -d true vxlan_a	>/dev/null	2>&1
-+	python3 ./openvswitch/ovs-dpctl.py del-if ovs_br0 -d true geneve_a	>/dev/null	2>&1
-+	python3 ./openvswitch/ovs-dpctl.py del-dp ovs_br0 >/dev/null	2>&1
- 	rm -f "$tmpoutfile"
- }
- 
-@@ -1407,16 +1460,10 @@ test_pmtu_ipvX_over_ovs_vxlanY_or_geneveY_exception() {
- 		exp_mtu=$((${ll_mtu} - 40          - 8          - 8                   - 14))
- 	fi
- 
--	if [ "${type}" = "vxlan" ]; then
--		tun_a="vxlan_sys_4789"
--	elif [ "${type}" = "geneve" ]; then
--		tun_a="genev_sys_6081"
--	fi
--
--	trace ""        "${tun_a}"  "${ns_b}"  ${type}_b \
--	      ""        veth_A-R1   "${ns_r1}" veth_R1-A \
--	      "${ns_b}" veth_B-R1   "${ns_r1}" veth_R1-B \
--	      ""        ovs_br0     ""         veth-A-C  \
-+	trace ""        "${type}_a"  "${ns_b}"  ${type}_b \
-+	      ""        veth_A-R1    "${ns_r1}" veth_R1-A \
-+	      "${ns_b}" veth_B-R1    "${ns_r1}" veth_R1-B \
-+	      ""        ovs_br0      ""         veth-A_C  \
- 	      "${ns_c}" veth_C-A
- 
- 	if [ ${family} -eq 4 ]; then
-@@ -1436,8 +1483,8 @@ test_pmtu_ipvX_over_ovs_vxlanY_or_geneveY_exception() {
- 	mtu "${ns_b}"  veth_B-R1 ${ll_mtu}
- 	mtu "${ns_r1}" veth_R1-B ${ll_mtu}
- 
--	mtu ""        ${tun_a}  $((${ll_mtu} + 1000))
--	mtu "${ns_b}" ${type}_b $((${ll_mtu} + 1000))
-+	mtu ""        ${type}_a  $((${ll_mtu} + 1000))
-+	mtu "${ns_b}" ${type}_b  $((${ll_mtu} + 1000))
- 
- 	run_cmd ${ns_c} ${ping} -q -M want -i 0.1 -c 20 -s $((${ll_mtu} + 500)) ${dst} || return 1
- 
--- 
-2.45.1
-
+#define SHADOW_FIELD_RO(x, y) __SHADOW_FIELD_RO(x, y, true)
+#define SHADOW_FIELD_RW(x, y) __SHADOW_FIELD_RW(x, y, true)
