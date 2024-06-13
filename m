@@ -1,126 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B4817FD;
-	Thu, 13 Jun 2024 16:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E998317FD
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 16:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718297451; cv=none; b=ootZ8MZOEYtomji/NQfHgDx5IdzBLOExjHorgA4mnsuBDQKH4e3cQLlNELQA3sesfLdowIVvkFTWYPevOdL6FCkazIBVjUsQ7szVzUWSIL8x816hE55ey4Cumyl0s5SO2Lefx4tCNYlxBFcsj7JzB4YTYbO7QTBPDnjrTdBnNfg=
+	t=1718297469; cv=none; b=dL69KA2fFtXf+00piYRiUoppva5KbB1XdvOofzOknrxXQ6whapEN5E9DwIipHg845eLn6IoQnUIZcrCtBeesV++M/Zy3AIJLovL4C8dunut78D28y+EmSQ+xUAf9FcxONvHxh890zDPZN4dc/DA198syn638mh2vFjwC76yCwmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718297451; c=relaxed/simple;
-	bh=dMNz9Y8NNsAx8VvRHwF0owWDBLLe2owtWpv0KXJS/oc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Bojy52KnYBg5xncZhWpyWepXe/Kw9WMbu9ijxyqkhXn09bkCawz0pDcjxDe5V68gnCtPIUF1Q8+mVNLr9hX1aEzAXSMy9pdgLP3t/CQMOcoZ4pheDiKkQz934K1fQiFxaVVe/cKEujgedxZDb1pRGyzVHGwUG4/UTWEXGHGSRiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVTL9/aY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718297469; c=relaxed/simple;
+	bh=6NWJFRUxcKND4U4SpQJfsTGcu3XSWWW8WSpW7MTVo7I=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gZ6I26G3QHisIQUXqczKkOVf/m4JkFopNOsJzDj32B5W7MbuJPUFOe48Slq2uEJ/8NUElCLuvO9k1/WeePITQ/5QqDIJTNNP82Q5WrKMx+/tEsGdV2bBXboY4vWhPcmRaoi8f91FhxNsPiBPtHyDduvNsaNKZ+vR0iMD7V/BE3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGm1vR4o; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVTL9/aY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DB9C2BBFC;
-	Thu, 13 Jun 2024 16:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718297451;
-	bh=dMNz9Y8NNsAx8VvRHwF0owWDBLLe2owtWpv0KXJS/oc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cVTL9/aY0yTpLPpLmi52OjRocytiJ5MVfEPOz5Oz2ArYhYqnXMrbplJODQfFgocsK
-	 KWzKurmATtrg71AJ2hXun0mBt5JoG+5eqsfYMIlk5PbmXtfL4gyVeasHYWYNAOu7CG
-	 nWeDlj8uKBHwX9zp05pGXYH/I52VJ3RAWwK4/hGujbLeMQqTTuptf4xNcIKG9BsHxD
-	 fd+wTCdFGdgYuRVM5xcfPMVUnNhb3p0AKi3hiTepEFu0WnU4qtWBFvsw/kEzMNxqzW
-	 y1PTnwSGtEMfu75DVXE7qSRF2JG46wwpP4OEUo7rWRXRWr2r1eyenvyzz33ePRxp3q
-	 8jFdPRQ3FLBlg==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 6.6 000/137] 6.6.34-rc1 review
-Date: Thu, 13 Jun 2024 09:50:47 -0700
-Message-Id: <20240613165047.84916-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240613113223.281378087@linuxfoundation.org>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGm1vR4o"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f2266edd8so969789f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718297466; x=1718902266; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nzzUB/FjhEnH/BYJNIleLEzzp0Ljx1jUDZ5+DBBvWYc=;
+        b=RGm1vR4om7S8Tt++HKPbTOadylz7Tl3DrSPGjokihxTyrBD63tKC0gqow3MtdN65qq
+         +VG4o8PLDTvVGiJYLg4MFDueIWpU8lgQniFDLQ85Hadlyzka4tIylvxQFW8otKusM9b5
+         6xPsyehA3pmLxyjEcUEnUg6I1IGzCrKL1YREzlNCxgV1VlHyAbfos1i3QXSO/0Eq0m5o
+         6/cgaCP6pr6qmwjigYq4lIaS4IHNlmBP/TUlh9lTKvZAuoHe8j/jdGRaBR9QNBdi/TVB
+         4tE4uX1sKOqiHYOqKeXRTy8f88n1xNvEmEx/45AOOwBKuCvnCsOxI3fVWRVCHtIiVlz1
+         ONSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718297466; x=1718902266;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nzzUB/FjhEnH/BYJNIleLEzzp0Ljx1jUDZ5+DBBvWYc=;
+        b=MdZf67muG58wHQOYl3qEmhD/87CTk9pOVmhgnbjAVjDflwzUvQGAFDiHBZLf6GjCvV
+         jwBcxFKRLv3+uWQdu2mOc3S0dKBzkjoO62CTRzmPOa4Fu1SLk639sizgsGOIMRy4a+3f
+         L1sPs7DsIvyxO5touLFrXvtAMLLSNqK8hK+8mITjyx3YOB/MAt5P/uuKZAnSiOAMOB0C
+         Y+bzTPgcJP3EVtN9iiAB+D202hbhUkVOKYogm1vYtTNZjv0cybcIY2ZYUSDNFkmA4Ya1
+         4+0jcBHu45Selr+njgv8grMV0yOxLWnFNC5qPhBCVNejCjmc4es/i3qaM9MMjx0UhGZL
+         doWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCRqveUSxleK4Q/f/c8ht49DZ2IM/NL0Uf6n0Pi1U7b3uRSK/D9+uzLEoUKgrv4+KibN/CWDmpStpGxYN8JJcvenn6e0UYg3y02g1t
+X-Gm-Message-State: AOJu0YyYczjHOYoePC3PcNgKI/hzy9zJPC1ecDLEhRgVLRq1rvPiIP+j
+	631W4C9aWKYKScrp0S/O3boBisWmSZghxHkTQhHi/pMWmU5tfNrt
+X-Google-Smtp-Source: AGHT+IFd44wXWFVM2hw1th+c947IyNuuiuSNQutEgNIYsg030ZErOxFLm+hL+7BwFMhxl6Lwv7yfZQ==
+X-Received: by 2002:a05:6000:128d:b0:35f:2a43:3b11 with SMTP id ffacd0b85a97d-3607a78432cmr194032f8f.67.1718297466026;
+        Thu, 13 Jun 2024 09:51:06 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075093d41sm2248075f8f.16.2024.06.13.09.51.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 09:51:05 -0700 (PDT)
+Message-ID: <666b2379.5d0a0220.c7eec.8b6f@mx.google.com>
+X-Google-Original-Message-ID: <Zmr3VW50gEx2qXah@Ansuel-XPS.>
+Date: Thu, 13 Jun 2024 15:42:45 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v2 0/2] ARM: decompressor: support AUTO_ZRELADDR and
+ appended DTB
+References: <20240121203009.9257-1-ansuelsmth@gmail.com>
+ <65d62b60.050a0220.c7b96.614e@mx.google.com>
+ <666ad6e0.df0a0220.f8b16.4a5e@mx.google.com>
+ <CACRpkdYJoNRpciyQE_A6dkb8f6Jsy4+qwb4w9K3bss2mkZpp1A@mail.gmail.com>
+ <ZmsXdWWidNjXdbSa@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZmsXdWWidNjXdbSa@shell.armlinux.org.uk>
 
-Hello,
-
-On Thu, 13 Jun 2024 13:33:00 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> This is the start of the stable review cycle for the 6.6.34 release.
-> There are 137 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Jun 13, 2024 at 04:59:49PM +0100, Russell King (Oracle) wrote:
+> On Thu, Jun 13, 2024 at 03:50:58PM +0200, Linus Walleij wrote:
+> > On Thu, Jun 13, 2024 at 1:24 PM Christian Marangi <ansuelsmth@gmail.com> wrote:
+> > 
+> > > Sorry for asking again... but any news for this?
+> > >
+> > > I have also added the 2 patch here [1] [2].
+> > >
+> > > Been in incoming from a long time and I have seen other patch getting
+> > > accepted. Did I do something wrong in submitting the 2 patch?
+> > 
+> > Hm Russell must have had some concerns, Russell?
 > 
-> Responses should be made by Sat, 15 Jun 2024 11:31:50 +0000.
-> Anything received after that time might be too late.
+> I've been snowed under for about the last six weeks - with only the
+> occasional day that isn't silly. It's that kind of frustrating snowed
+> under where each problem is a bit like a brick wall placed every 1m
+> and you're supposed to be doing a 100m sprint race - you can't see
+> the next brick wall until you've climbed over the first.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.34-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> Whether I have time to read the mailing lists or not depends entirely
+> on what is happening on any particular day.
+> 
+> > If for nothing else I think some Tested-by:s would be appreciated,
+> > do we have some people who use this that can provide Tested-by
+> > tags?
+> 
+> Yes, tested-by's would be a really good idea, because my gut feeling
+> is that this change has moderate risk of causing regressions. I'm
+> not talking about "it works for me on the setup it's intended for"
+> I'm talking about other platforms.
+> 
+> I'm also wondering about distros, and what they're supposed to do
+> with the config option with their "universal" kernel that's
+> supposed to boot across as many platforms as possible, what they
+> should set the config option to, and what impact it has when enabled
+> on platforms that it isn't originally intended for.
+> 
+> I haven't really read much of the patch because I've been so busy,
+> so I may be being overly cautious. Given that I am quite busy, I
+> would appreciate a summary of the situation rather than being fed
+> with lots of results! In other words, the tested-bys, and "it works
+> on all the xyz platforms that we've testsed, nothing appears to have
+> regressed" would be ideal.
+>
 
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
+The current patch are used downstream on the OpenWrt ipq806x target that
+is a mix of legacy (what this affects) and non legacy targets. (old
+bootloader support loading DTB from the image and older ones require it
+to be appended)
 
-Tested-by: SeongJae Park <sj@kernel.org>
+I think I need some help from the community to test this.
 
-[1] https://github.com/awslabs/damon-tests/tree/next/corr
-[2] 7d633761ea98 ("Linux 6.6.34-rc1")
+I can also move these patches to our "generic" target on OpenWrt so that
+they will be enabled by every arm target we support.
 
-Thanks,
-SJ
+Anyway thanks for the feedback, my only concern was that I messed
+submitting the patch on the tracking system. Hope community can help
+with this since it's a big feature for legacy devices that was broken
+from a looong time (and only solution currently is to hardcode the PHY
+offset values)
 
-[...]
-
----
-
-ok 1 selftests: damon: debugfs_attrs.sh
-ok 2 selftests: damon: debugfs_schemes.sh
-ok 3 selftests: damon: debugfs_target_ids.sh
-ok 4 selftests: damon: debugfs_empty_targets.sh
-ok 5 selftests: damon: debugfs_huge_count_read_write.sh
-ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 7 selftests: damon: debugfs_rm_non_contexts.sh
-ok 8 selftests: damon: sysfs.sh
-ok 9 selftests: damon: sysfs_update_removed_scheme_dir.sh
-ok 10 selftests: damon: reclaim.sh
-ok 11 selftests: damon: lru_sort.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh
-ok 12 selftests: damon-tests: build_m68k.sh
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
+-- 
+	Ansuel
