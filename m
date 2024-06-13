@@ -1,171 +1,86 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F0E14A4DA;
-	Thu, 13 Jun 2024 15:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EACB14198E;
+	Thu, 13 Jun 2024 15:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718293227; cv=none; b=l4t/eYOhoAEzM225mjUYOCrAsqn1OQUWW0yq6kfC/yp7gw6x0garZuRFq+WzBMtDUhRdnseslLT4qaWsctgk/FQk/mRiAIz1gmxyvoB5ZeHnLKcEc6xsCEIkXtFFjaW0be4zVBOkpDI8AdHm/D23uxuTxMHPu0ezbIMrKnmIc1U=
+	t=1718293239; cv=none; b=f3TL4fXryraOuL6KTWmTKULOIYWevkiESLGzk3QbHJO1RBV+wzbxUgCxvEZdRyBHjm2p/vuMrZbvgeuiFIcIUxHzgckqbLgDgh+3F5bcuIgju83wxuFYgNz9UbJWLDP2SLrp+4x+Athg5GVEF/6jN3HgItAGdwXmqKk6Jh+Ei6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718293227; c=relaxed/simple;
-	bh=BsiKZY9S/GYsfm3V21Np67ShZbOMHqW0NL79omlaYkg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rys4u6N92n/CK0YJ1k3PiliIMR5q7+MOvgUHlr8vUKUM+8WdGbO58vi+A4ad/8dbapIRdF4lFW9Yk1kOO+nUUOmLORX+pRLzTs6BXaxJfhlQxLwoqYg5YRGS7KJdA0xa+OXknpMWwJzcKMxofcLm+hAo2+qZaq/7tDwc3vmh5LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IRh013pY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718293239; c=relaxed/simple;
+	bh=PaVcqWpzvUVb5bqFarvjMoq1WONE9j8JGCxJ79pc1j8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FkkK48Wzu1jSR2tU2d4gTYkgKD6ecU7WvN20sGjVX0sBsPSyIrsOPixF5xd+XTOKw3nCBpDUotVDVppHYKwfbpd8yAsSQ4KGgr4taxHyNWgktF6GbkJQDqjJDyFQ1J8KjNT5gi+Y5HS6RoCGb9FmMR2oMDUFw6+KQPiPb92lymQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1Tc42C7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IRh013pY"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DFRpXY006834;
-	Thu, 13 Jun 2024 15:39:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=SGtqtZLhmZTpZ
-	hOs7cGVRXCfbxWX39hF+gqk+Qx83+U=; b=IRh013pYTuUHW/NKXqynYSO+MHC0K
-	eCs3RfsOQP4rIRmQcWWClReFpk2dA9WZqYD/OyQVUoS7iXmQzHEG6GNLSbpcLojr
-	J9IcDXyNMrmu+5cHvUr1rsqPwVn/mnkpVPXQ1X1b/YdBZEr+L4VxHK1CBvG2x85n
-	EbMLcHYYUaTd2agI11o99DVKLnC9na2QYWVi/LxoST90RPo+YdCm288i+SJ18aw5
-	6BFz94Y8RwUatNGckTnbPk6XzwZm5CzsbIcYoNEzWy4pUYM2XoxB7+5HHEWL7OXQ
-	Z2sJc1POfOcU6h5wfZfb8LkO9s9acsG29dwyiCNUIXJwSh2PdsqnpCRIQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqrext12f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:59 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdwis029870;
-	Thu, 13 Jun 2024 15:39:58 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqrext12c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:58 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DEAxec023597;
-	Thu, 13 Jun 2024 15:39:57 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3un0qhr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 15:39:57 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFdpMb55705908
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Jun 2024 15:39:54 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A321720065;
-	Thu, 13 Jun 2024 15:39:51 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2DC672006A;
-	Thu, 13 Jun 2024 15:39:51 +0000 (GMT)
-Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Jun 2024 15:39:51 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v4 34/35] s390: Implement the architecture-specific KMSAN functions
-Date: Thu, 13 Jun 2024 17:34:36 +0200
-Message-ID: <20240613153924.961511-35-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240613153924.961511-1-iii@linux.ibm.com>
-References: <20240613153924.961511-1-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1Tc42C7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2ACC2BBFC;
+	Thu, 13 Jun 2024 15:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718293239;
+	bh=PaVcqWpzvUVb5bqFarvjMoq1WONE9j8JGCxJ79pc1j8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D1Tc42C70PM77KeC0itgIgTLjOly/BlSkyGjkgHZHFYCKI/XleSPPMsbsc53JkgBc
+	 gFVFVfIXHn6b0wnq7+Z6WNswwTGWLg05CFq5RxqmRNFA6jlk6WVJvOZMsIFrDokS2B
+	 Qg1+G9RgdyV/Tvm0OpiQbPYVypQOlb0yis5h29aAh0fjEv4xuczCppnM/MSbXZPZ8K
+	 BLlMNn94XsGg6Qn03ZwvuRyZpuhUY60N1THTSv/nS+EeYAS3TN9MTpiXneeQ+iV0/X
+	 Dltc5nPohmh4VXUTkf+qFuKQl/D5cDzHd12SyfufnnHx56duXSF1g9q/y8GRAPKvAE
+	 wKjzpbeL/F0lQ==
+Date: Thu, 13 Jun 2024 09:40:36 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Nilay Shroff <nilay@linux.ibm.com>, l@kbusch-mbp.dhcp.thefacebook.com,
+	Keith Busch <kbusch@meta.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	hch@lst.de, sagi@grimberg.me, davidgow@google.com,
+	akpm@linux-foundation.org, venkat88@linux.vnet.ibm.com
+Subject: Re: [PATCH 1/2] list: introduce a new cutting helper
+Message-ID: <ZmsS9DZWl8TccvKz@kbusch-mbp.dhcp.thefacebook.com>
+References: <20240612155135.3060667-1-kbusch@meta.com>
+ <f0e4c51c-8227-4f5c-876f-38fbb4a0e1bf@linux.ibm.com>
+ <ZmrscxG51gFRDVlM@kbusch-mbp>
+ <c475f0d8-3bc9-4d65-8fce-586f4b75b4fc@linux.ibm.com>
+ <ZmsD_HDLBQAqOOU3@kbusch-mbp.dhcp.thefacebook.com>
+ <31eb40f9-d68d-4348-b1fd-3cf057939297@paulmck-laptop>
+ <ZmsGfle1aZQauzRb@kbusch-mbp.dhcp.thefacebook.com>
+ <73b994eb-c689-48e0-b09c-a414041a0525@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: EyA2kbsVp8WqCccHu6SjxoBNfiDsWCum
-X-Proofpoint-ORIG-GUID: GZ2-WR2_gP5V6QUvEBJcKL9zIIoL9Eok
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_09,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 spamscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=747 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406130112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73b994eb-c689-48e0-b09c-a414041a0525@paulmck-laptop>
 
-arch_kmsan_get_meta_or_null() finds the lowcore shadow by querying the
-prefix and calling kmsan_get_metadata() again.
+On Thu, Jun 13, 2024 at 08:15:06AM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 13, 2024 at 08:47:26AM -0600, Keith Busch wrote:
+> > > 
+> > > Just make a helper function like this:
+> > > 
+> > > 	static void my_synchronize_srcu(void)
+> > > 	{
+> > > 		synchronize_srcu(&my_srcu_struct);
+> > > 	}
+> > > 
+> > > Or am I missing something subtle here?
+> > 
+> > That would work if we had a global srcu, but the intended usage
+> > dynamically allocates one per device the driver is attached to, so a
+> > void callback doesn't know which one to sync.
+> 
+> Ah, good point!  I suppose that a further suggestion to just JIT the
+> needed function would not be well-received?  ;-)
+> 
+> I cannot resist suggesting placing a pointer to the srcu_struct in
+> the task structure.  /me runs...
+> 
+> Perhaps somewhat more constructively, my usual question:  Is it really
+> necessary to have per-driver SRCU here?  What would break if there was
+> a global srcu_struct that applied to all drivers?
 
-kmsan_virt_addr_valid() delegates to virt_addr_valid().
-
-Reviewed-by: Alexander Potapenko <glider@google.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- arch/s390/include/asm/kmsan.h | 43 +++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 arch/s390/include/asm/kmsan.h
-
-diff --git a/arch/s390/include/asm/kmsan.h b/arch/s390/include/asm/kmsan.h
-new file mode 100644
-index 000000000000..e572686d340c
---- /dev/null
-+++ b/arch/s390/include/asm/kmsan.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_S390_KMSAN_H
-+#define _ASM_S390_KMSAN_H
-+
-+#include <asm/lowcore.h>
-+#include <asm/page.h>
-+#include <linux/kmsan.h>
-+#include <linux/mmzone.h>
-+#include <linux/stddef.h>
-+
-+#ifndef MODULE
-+
-+static inline bool is_lowcore_addr(void *addr)
-+{
-+	return addr >= (void *)&S390_lowcore &&
-+	       addr < (void *)(&S390_lowcore + 1);
-+}
-+
-+static inline void *arch_kmsan_get_meta_or_null(void *addr, bool is_origin)
-+{
-+	if (is_lowcore_addr(addr)) {
-+		/*
-+		 * Different lowcores accessed via S390_lowcore are described
-+		 * by the same struct page. Resolve the prefix manually in
-+		 * order to get a distinct struct page.
-+		 */
-+		addr += (void *)lowcore_ptr[raw_smp_processor_id()] -
-+			(void *)&S390_lowcore;
-+		if (WARN_ON_ONCE(is_lowcore_addr(addr)))
-+			return NULL;
-+		return kmsan_get_metadata(addr, is_origin);
-+	}
-+	return NULL;
-+}
-+
-+static inline bool kmsan_virt_addr_valid(void *addr)
-+{
-+	return virt_addr_valid(addr);
-+}
-+
-+#endif /* !MODULE */
-+
-+#endif /* _ASM_S390_KMSAN_H */
--- 
-2.45.1
-
+There's not a strict need for srcu_struct to be per device that I know
+of. It was just done this way to keep usage localized to the parts that
+need to be protected. The fear being that one device's long running
+reader could prevent another device from quickly tearing down.
