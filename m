@@ -1,275 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9667C8C09;
-	Thu, 13 Jun 2024 00:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581EC811;
+	Thu, 13 Jun 2024 00:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718238893; cv=none; b=qpUSPYzeYxme72usGv0cj/NZJ9yNEB1lJ8TDjMop0Zy1fBYgP5fx5vz8MJ7H7IlgYVwEhg/6aU2WzcFKRsfAzpPWK96tnWOI0+hvO++uhVn5NG25KFCLeJWNXtbdEicnM4vpvj+8WPMWr4aTruA8dL3eG8YiwhAPtrHkxd400Qg=
+	t=1718238907; cv=none; b=LV9b7KVCEmzrKAC8ZhppKnKwLmIjeiXYRjtA6WispQ7XhlBkoBYH998Yq/nCbe9wr2Z1oiLizwdnXp4TUTGNDtpYMp8RDkE1gNOD9lFiGG4s3wZl5eBk/m2rKpHLYrYH6+243slshl3rsQ9AF96NEDGp2yERNEgiVjmcCJhcoT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718238893; c=relaxed/simple;
-	bh=sm99DwASeQO1ECKvTnDxPmJJ6qHTDXWNprQagI7uP4s=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=QAHnADwHgXmG+rGGaFmNuYMetRsO3nrBtMZFP98lLsgwxy5G4LGqInD7Xg9r2XFgvXpJLW8UdLZMP7U/Nu7kXdNEa2sATvmLZ9LKMFNalA9oj65TtC6Apm01LBQELrYOYGTaGg+WWOs+PR0kX1xsWnkzZ0q8QWyPq7ZfZc+igxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C3DC116B1;
-	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sHYQm-00000001eMY-32F3;
-	Wed, 12 Jun 2024 20:35:08 -0400
-Message-ID: <20240613003435.401549779@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 12 Jun 2024 20:34:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v5 0/2] mm/memblock: Add "reserve_mem" to reserved named  memory at boot up
+	s=arc-20240116; t=1718238907; c=relaxed/simple;
+	bh=7aFwdpvO8clQ9xKAqhUlOO2UkMwgfchXYP7k1Pjo6Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R3y3CI8cn8YWvi8Zemhg5+PNh0ezOS9Ty6iH8NSun07yd8yNzz7sQ5ID3J4EcOiU3GtO+UiE+20Ha3dgh0ec42QOQP2GBcu/LBkcqVlzM8/Gmkh8AFwv/zhep/yLFslJiK3HhSxh/PKbJUygY6dXgCEDFMKX23g00DmP+Iykseg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sldmAuZn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sldmAuZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1E7C116B1;
+	Thu, 13 Jun 2024 00:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718238906;
+	bh=7aFwdpvO8clQ9xKAqhUlOO2UkMwgfchXYP7k1Pjo6Vo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sldmAuZnJENedopcvWeRCvrXft2hCUcbTKilyv/5emcLiCG19LtMYKl2vfkT41URe
+	 Sp8F3O0p1RmCg86TkEMCXQIQNIZccbuWGV+5X0lYlqJEl1WejrmCRTNFgR8ZUklchq
+	 WWwMJKU5GKTSJA+bmQtrqcJamBmCJrs0aGUIDYiD34J9+1tkpSQAQSiV1ENjtb5F6B
+	 fFmE/SfBFmXPOkNkxRQQd2ROfKv1cn3Vw2vPyH7vV/bxGa/mpFo19X6p/XyVDt8xMB
+	 u0uup4U0Z5j28elLAuterpisNV/dFHo9yZ4jCowIRUjkXnKYzBNAWDsvEWOCOCk4eb
+	 0HzIqviYZlVQg==
+Date: Wed, 12 Jun 2024 17:35:05 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <andrew@lunn.ch>,
+ <jiri@resnulli.us>, <horms@kernel.org>, <rkannoth@marvell.com>,
+ <pkshih@realtek.com>, <larry.chiu@realtek.com>
+Subject: Re: [PATCH net-next v20 10/13] rtase: Implement ethtool function
+Message-ID: <20240612173505.095c4117@kernel.org>
+In-Reply-To: <20240607084321.7254-11-justinlai0215@realtek.com>
+References: <20240607084321.7254-1-justinlai0215@realtek.com>
+	<20240607084321.7254-11-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Reserve unspecified location of physical memory from kernel command line
+On Fri, 7 Jun 2024 16:43:18 +0800 Justin Lai wrote:
+> Implement the ethtool function to support users to obtain network card
+> information, including obtaining various device settings, Report whether
+> physical link is up, Report pause parameters, Set pause parameters,
+> Return a set of strings that describe the requested objects, Get number
+> of strings that @get_strings will write, Return extended statistics
+> about the device.
 
-Background:
+You don't implement get_strings any more.
 
-In ChromeOS, we have 1 MB of pstore ramoops reserved so that we can extract
-dmesg output and some other information when a crash happens in the field.
-(This is only done when the user selects "Allow Google to collect data for
- improving the system"). But there are cases when there's a bug that
-requires more data to be retrieved to figure out what is happening. We would
-like to increase the pstore size, either temporarily, or maybe even
-permanently. The pstore on these devices are at a fixed location in RAM (as
-the RAM is not cleared on soft reboots nor crashes). The location is chosen
-by the BIOS (coreboot) and passed to the kernel via ACPI tables on x86.
-There's a driver that queries for this to initialize the pstore for
-ChromeOS:
+> +static void rtase_get_drvinfo(struct net_device *dev,
+> +			      struct ethtool_drvinfo *drvinfo)
+> +{
+> +	const struct rtase_private *tp = netdev_priv(dev);
+> +
+> +	strscpy(drvinfo->driver, KBUILD_MODNAME, 32);
 
-  See drivers/platform/chrome/chromeos_pstore.c
+sizeof(drvinfo->driver) instead of the literal 32?
 
-Problem:
+> +	strscpy(drvinfo->bus_info, pci_name(tp->pdev), 32);
 
-The problem is that, even though there's a process to change the kernel on
-these systems, and is done regularly to install updates, the firmware is
-updated much less frequently. Choosing the place in RAM also takes special
-care, and may be in a different address for different boards. Updating the
-size via firmware is a large effort and not something that many are willing
-to do for a temporary pstore size change.
+Can you double check that overwriting these fields is actually needed?
+I think core will fill this in for you in ethtool_get_drvinfo()
 
-Requirement:
+> +	if ((value & (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) ==
+> +	    (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) {
+> +		pause->rx_pause = 1;
+> +		pause->tx_pause = 1;
+> +	} else if ((value & RTASE_FORCE_TXFLOW_EN)) {
 
-Need a way to reserve memory that will be at a consistent location for
-every boot, if the kernel and system are the same. Does not need to work
-if rebooting to a different kernel, or if the system can change the
-memory layout between boots.
+unnecessary parenthesis
 
-The reserved memory can not be an hard coded address, as the same kernel /
-command line needs to run on several different machines. The picked memory
-reservation just needs to be the same for a given machine, but may be
-different for different machines.
+> +		pause->tx_pause = 1;
+> +	} else if ((value & RTASE_FORCE_RXFLOW_EN)) {
 
-Solution:
+same here
 
-The solution I have come up with is to introduce a new "reserve_mem=" kernel
-command line. This parameter takes the following format:
+> +		pause->rx_pause = 1;
+> +	}
+> +}
+> +
+> +static int rtase_set_pauseparam(struct net_device *dev,
+> +				struct ethtool_pauseparam *pause)
+> +{
+> +	const struct rtase_private *tp = netdev_priv(dev);
+> +	u16 value = rtase_r16(tp, RTASE_CPLUS_CMD);
+> +
+> +	if (pause->autoneg)
+> +		return -EOPNOTSUPP;
+> +
+> +	value &= ~(RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN);
+> +
+> +	if (pause->tx_pause)
+> +		value |= RTASE_FORCE_TXFLOW_EN;
+> +
+> +	if (pause->rx_pause)
+> +		value |= RTASE_FORCE_RXFLOW_EN;
+> +
+> +	rtase_w16(tp, RTASE_CPLUS_CMD, value);
+> +	return 0;
+> +}
+> +
+> +static void rtase_get_eth_mac_stats(struct net_device *dev,
+> +				    struct ethtool_eth_mac_stats *stats)
+> +{
+> +	struct rtase_private *tp = netdev_priv(dev);
+> +	const struct rtase_counters *counters;
+> +
+> +	counters = tp->tally_vaddr;
+> +	if (!counters)
 
-  reserve_mem=nn:align:label
+you fail probe if this is NULL, why check if here?
 
-Where nn is the size of memory to reserve, the align is the alignment of
-that memory, and label is the way for other sub-systems to find that memory.
-This way the kernel command line could have:
+> +		return;
+> +
+> +	rtase_dump_tally_counter(tp);
+> +
+> +	stats->FramesTransmittedOK = le64_to_cpu(counters->tx_packets);
+> +	stats->SingleCollisionFrames = le32_to_cpu(counters->tx_one_collision);
+> +	stats->MultipleCollisionFrames =
+> +		le32_to_cpu(counters->tx_multi_collision);
+> +	stats->FramesReceivedOK = le64_to_cpu(counters->rx_packets);
+> +	stats->FrameCheckSequenceErrors = le32_to_cpu(counters->rx_errors);
 
-  reserve_mem=12M:4096:oops   ramoops.mem_name=oops
+You dont report this in rtase_get_stats64() as crc errors, are these
+really CRC / FCS errors or other errors?
 
-At boot up, the kernel will search for 12 megabytes in usable memory regions
-with an alignment of 4096. It will start at the highest regions and work its
-way down (for those old devices that want access to lower address DMA). When
-it finds a region, it will save it off in a small table and mark it with the
-"oops" label. Then the pstore ramoops sub-system could ask for that memory
-and location, and it will map itself there.
+> +	stats->AlignmentErrors = le16_to_cpu(counters->align_errors);
+> +	stats->FramesAbortedDueToXSColls = le16_to_cpu(counters->tx_aborted);
+> +	stats->FramesLostDueToIntMACXmitError =
+> +		le64_to_cpu(counters->tx_errors);
+> +	stats->FramesLostDueToIntMACRcvError =
+> +		le16_to_cpu(counters->rx_missed);
 
-This prototype allows for 8 different mappings (which may be overkill, 4 is
-probably plenty) with 16 byte size to store the label.
+Are you sure this is the correct statistic to report as?
+What's the definition of rx_missed in the datasheet?
 
-I have tested this and it works for us to solve the above problem. We can
-update the kernel and command line and increase the size of pstore without
-needing to update the firmware, or knowing every memory layout of each
-board. I only tested this locally, it has not been tested in the field.
+Also is 16 bits enough for a packet counter at 5Gbps?
+Don't you have to periodically accumulate this counter so that it
+doesn't wrap around?
 
-Changes since v4: https://lore.kernel.org/all/20240611215610.548854415@goodmis.org/
+> +	stats->MulticastFramesReceivedOK = le32_to_cpu(counters->rx_multicast);
+> +	stats->BroadcastFramesReceivedOK = le64_to_cpu(counters->rx_broadcast);
+> +}
+> +
+> +static const struct ethtool_ops rtase_ethtool_ops = {
+> +	.get_drvinfo = rtase_get_drvinfo,
+> +	.get_link = ethtool_op_get_link,
+> +	.get_link_ksettings = rtase_get_settings,
+> +	.get_pauseparam = rtase_get_pauseparam,
+> +	.set_pauseparam = rtase_set_pauseparam,
+> +	.get_eth_mac_stats = rtase_get_eth_mac_stats,
+> +	.get_ts_info = ethtool_op_get_ts_info,
+> +};
+> +
+>  static void rtase_init_netdev_ops(struct net_device *dev)
+>  {
+>  	dev->netdev_ops = &rtase_netdev_ops;
+> +	dev->ethtool_ops = &rtase_ethtool_ops;
+>  }
+>  
+>  static void rtase_reset_interrupt(struct pci_dev *pdev,
 
-[ patch at bottom showing differences ]
-
-- Add all checks about reserve_mem before allocation.
-  This means reserved_mem_add() is now a void function.
-
-- Check for name duplications.
-
-- Fix compare of align to SMP_CACHE_BYTES ("<" instead of "<=")
-
-Changes since v3: https://lore.kernel.org/all/20240611144911.327227285@goodmis.org/
-
-- Changed table type of start and size from unsigned long to phys_addr_t
-  (as well as the parameters to the functions that use them)
-
-- Changed old reference to "early_reserve_mem" to "reserve_mem"
-
-- Check before reservering memory:
-  o Size is non-zero
-  o name has text in it
-
-- If align is less than SMP_CACHE_BYTES, make it SMP_CACHE_BYTES
-
-- Remove the silly check of testing *p == '\0' after a p += strlen(p)
-
-Changes since v2: https://lore.kernel.org/all/20240606150143.876469296@goodmis.org/
-
-- Fixed typo of "reserver"
-
-- Added EXPORT_SYMBOL_GPL() for reserve_mem_find_by_name()
-
-- Removed "built-in" from module description that was changed from v1.
-
-
-Changes since v1: https://lore.kernel.org/all/20240603233330.801075898@goodmis.org/
-
-- Updated the change log of the first patch as well as added an entry
-  into kernel-parameters.txt about how reserve_mem is for soft reboots
-  and may not be reliable. 
-
-
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
-
-----
- Documentation/admin-guide/kernel-parameters.txt |  20 ++++
- fs/pstore/ram.c                                 |  14 +++
- include/linux/mm.h                              |   2 +
- mm/memblock.c                                   | 117 ++++++++++++++++++++++++
- 4 files changed, 153 insertions(+)
-
-
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 044ddce8f085..739d106a9165 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2256,22 +2256,15 @@ static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
- static int reserved_mem_count;
- 
- /* Add wildcard region with a lookup name */
--static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-+static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
- 				   const char *name)
- {
- 	struct reserve_mem_table *map;
- 
--	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
--		return -EINVAL;
--
--	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
--		return -1;
--
- 	map = &reserved_mem_table[reserved_mem_count++];
- 	map->start = start;
- 	map->size = size;
- 	strscpy(map->name, name);
--	return 0;
- }
- 
- /**
-@@ -2280,6 +2273,8 @@ static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-  * @start: If found, holds the start address
-  * @size: If found, holds the size of the address.
-  *
-+ * @start and @size are only updated if @name is found.
-+ *
-  * Returns: 1 if found or 0 if not found.
-  */
- int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
-@@ -2309,11 +2304,15 @@ static int __init reserve_mem(char *p)
- 	phys_addr_t start, size, align;
- 	char *name;
- 	char *oldp;
--	int err;
-+	int len;
- 
- 	if (!p)
- 		return -EINVAL;
- 
-+	/* Check if there's room for more reserved memory */
-+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
-+		return -EBUSY;
-+
- 	oldp = p;
- 	size = memparse(p, &p);
- 	if (!size || p == oldp)
-@@ -2330,11 +2329,14 @@ static int __init reserve_mem(char *p)
- 	 * memblock_phys_alloc() doesn't like a zero size align,
- 	 * but it is OK for this command to have it.
- 	 */
--	if (align <= SMP_CACHE_BYTES)
-+	if (align < SMP_CACHE_BYTES)
- 		align = SMP_CACHE_BYTES;
- 
- 	name = p + 1;
--	if (!strlen(name))
-+	len = strlen(name);
-+
-+	/* name needs to have length but not too big */
-+	if (!len || len >= RESERVE_MEM_NAME_SIZE)
- 		return -EINVAL;
- 
- 	/* Make sure that name has text */
-@@ -2345,15 +2347,15 @@ static int __init reserve_mem(char *p)
- 	if (!*p)
- 		return -EINVAL;
- 
-+	/* Make sure the name is not already used (size is only updated if found) */
-+	if (reserve_mem_find_by_name(name, &start, &size))
-+		return -EBUSY;
-+
- 	start = memblock_phys_alloc(size, align);
- 	if (!start)
- 		return -ENOMEM;
- 
--	err = reserved_mem_add(start, size, name);
--	if (err) {
--		memblock_phys_free(start, size);
--		return err;
--	}
-+	reserved_mem_add(start, size, name);
- 
- 	return 0;
- }
