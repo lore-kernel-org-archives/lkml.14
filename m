@@ -1,170 +1,152 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BBC14AD02;
-	Thu, 13 Jun 2024 15:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92AC149C52;
+	Thu, 13 Jun 2024 15:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718292411; cv=none; b=cd7bcLhmEbcmm4wnivZ//jt5lTGN+TB/d5wdZmbcLG7kq5laXGdHdwkR/xTvGfuk6BWthX7K8pnwDPXUJ8CSjvG1omJFylaAFuNLiYkZFKSkxHCWVhuNRuQkxHeJI6f5T7V786/eajJhxZwJRIz9rFeuQT/7AP+K8XnhyY7pOhY=
+	t=1718292459; cv=none; b=I9+cwDMX38sUsAwRhU5RSgdUVrP5ERPGKPtimJ/yP2MEMM5SmjaEI7HczjlQPIh+xqXXiT+zZtyuMw6egCczB0ZODinq/1mHJqBQ9u2+zqm1tL+sc6Ys75YphtWXjmcDEFnG6/uqvv6dUsNb/h1v37ByHLE8e1G18T+FA2AC9zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718292411; c=relaxed/simple;
-	bh=Wiw4nxajC1kyJl2gW5+gpnIjAk15gII+VvjhLb5ZXnY=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SdET81YjiUZYeS0t3fawoT5P11Y2MDdE1+XLZHJ5QVdUiV3bzVbAUVzp7UiZtI2ECNWKQ6aKfFpVn6eWIxPY9SgB5cSd8tavPw1wDmKT833v81WlaKoRYMnTvSH4kkx0v2paCoWLJyjUKwzKkN3jEj51L5FEJBRh15O6MEeC0OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6TUEAbs; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718292459; c=relaxed/simple;
+	bh=nGyWR1dJ/Cx1/kNOjC/sFq0kgMjjBZAKk9JiNCTt1nU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ie8NWejDKrQszXvnnABekTrmd3b/Um2o6SKKy1+nul9x+u2yEzetG4CFm+sY4YA5Z0dgwXASUlbPuXBAPgYbiL6pahj40jW44pJZENXUhIfI1D4e/1b7dOzYA3DwPB3ynHtVBuXlI1H+4DMnu1zOZb8m5Ydwo0a15AsjzqwByAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZvsXJYxP; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6TUEAbs"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b96a95c5e8so665432eaf.3;
-        Thu, 13 Jun 2024 08:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718292409; x=1718897209; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rwI/HNhW+KLaFfAR0mDxuIlHrsRtZCH23dDOp06Pu+Q=;
-        b=I6TUEAbsiyQs9tSpS8DeWsEnwGqjlPeulMKIiuphZh+pXz6Ld62y9pShs2r1LHIn2L
-         fl1T4aLNiwALDo15NaDSjKtHa7xE1+6UJzBR67VJhkndJw00Ty4YF1WCrR0lx4PU1IVm
-         nHvx2fPfNFR9OdNJf7j+nlQF+9tvMWTcoOv4VZG6PsYMVAG026QS84CQUGax3QG+EyeQ
-         Q6NHu3ApcIG1Wj/tmtaVCtz0QFbWZEDywO++ORcayzubqO5XmQWZYOGY2z2vJqynaJcd
-         w1pySRRn8BSgSO52mgV1hO/prvY17xXe4RnTNeMMH/zlpLBIfcN+ptsW6o2z6ZpHc2tb
-         LYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718292409; x=1718897209;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rwI/HNhW+KLaFfAR0mDxuIlHrsRtZCH23dDOp06Pu+Q=;
-        b=jvlIVA0og/LOSLD7b5vNkb5wdeCPuO56SIDvDvlapmWH/0K1VqdD/qFu86mkXuJWm1
-         U535Mtg6Q5KjYCxhTd+Rz2X+FrepwL/htUkpjeNoH4I6sgh9tWQx0geIQ+RQz9DI97gd
-         vNEt2djZ5T4+qQZJ4hYLofR3vMXOxL4x+A1E7mwEynnss/4iEBO21Ieddt3ZSSweRrHH
-         ocsnyHXlLc/jqcM7CZ9TujdjfnZAb1olOnXLSQcRVJlB5cQyBMBFJZoUQXjegUQfkZYb
-         0WkFW0ZRFaUfUfTzUO7scSm2TPT71bXwywqGqR/AUQIXKWYW0IsyYZ3qe6usomUYQ06w
-         nZlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtplbbtwB1BwL5PQ0sGMZgOcuq/b9ieUiHaLwSYGC17TIhCUKqnV8xVzvC24PwGhvJhQScDNo4EvFk+H/dYmceHss1vweBhB7AHIYeYBfxHwCDNTjQZvL3yEPYM4KV/YAY27VhORaLlw==
-X-Gm-Message-State: AOJu0Yxr+zelej5mDkM1T4B08iMq9NDkAZghZfcCXkc6N9bbIAjRXgyQ
-	HNPr+xj8luEo6fAZG49M7CBR9AzIFr/2yGdlvAjyQSdGLzGpLUhU
-X-Google-Smtp-Source: AGHT+IEb6jZiHrXtDO8lryaRnm7jdVVTAkWt5alb7bZewa05Z+A7qVZBuRcEhv6XaHOnlahOVxqFlA==
-X-Received: by 2002:a05:6359:4c82:b0:19f:4fda:4163 with SMTP id e5c5f4694b2df-19fa9ddf24fmr11457155d.1.1718292409110;
-        Thu, 13 Jun 2024 08:26:49 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fee41663d2sm1198183a12.92.2024.06.13.08.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 08:26:48 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 7/7] ARM: dts: aspeed: Harma: remove pca9546
-Date: Thu, 13 Jun 2024 23:24:25 +0800
-Message-Id: <20240613152425.1582059-8-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240613152425.1582059-1-peteryin.openbmc@gmail.com>
-References: <20240613152425.1582059-1-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZvsXJYxP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LGtsgFmy+c+3jY1klBtEAn+SFOvN7+PibxqK++aoOQw=; b=ZvsXJYxP8UkMA2jQImJwq9hj8k
+	lnMacW7gxkiWWjInImcqZHz6qwzqOxkqqK5ifqaleu1y5CPmgGsrjqjzXgNmwhEr/fBbfxqnMIpQd
+	vza3Ug5c25Bgj8dwzQerlRaE5w/hl0FC2kppP1KTGuZXYymgQPndNEfAvFQiAaGeLJcIwqTntKwj6
+	VimCBobGx4Zds43cmQCEG5jPxWtqeS9hSyj1se5p1KfvJ7+qNL1FUQJHyHu3W6tPH0mUX4D1MrVTM
+	tbBBKbOLZmpABQNmBS0kJSUb+UpJOQeO8Wx8fIPqKWH7nLGgtoGoXk2anaroCu+J7rqqmauuZ8bJn
+	PL3MtXiA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHmMJ-0000000HAMB-4A70;
+	Thu, 13 Jun 2024 15:27:27 +0000
+Date: Thu, 13 Jun 2024 08:27:27 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
+	yang@os.amperecomputing.com, linmiaohe@huawei.com,
+	muchun.song@linux.dev, osalvador@suse.de,
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
+	hare@suse.de, linux-kernel@vger.kernel.org,
+	Zi Yan <zi.yan@sent.com>, linux-xfs@vger.kernel.org,
+	p.raghav@samsung.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
+	gost.dev@samsung.com, cl@os.amperecomputing.com,
+	john.g.garry@oracle.com
+Subject: Re: [PATCH v7 06/11] filemap: cap PTE range to be created to allowed
+ zero fill in folio_map_range()
+Message-ID: <ZmsP36zmg2-hgtak@bombadil.infradead.org>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-7-kernel@pankajraghav.com>
+ <ZmnyH_ozCxr_NN_Z@casper.infradead.org>
+ <ZmqmWrzmL5Wx2DoF@bombadil.infradead.org>
+ <818f69fa-9dc7-4ca0-b3ab-a667cd1fb16d@redhat.com>
+ <ZmqqIrv4Fms-Vi6E@bombadil.infradead.org>
+ <b3fef638-4f4a-4688-8a39-8dfa4ae88836@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3fef638-4f4a-4688-8a39-8dfa4ae88836@redhat.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-remove pca9546 and add Aegis fru device
+On Thu, Jun 13, 2024 at 10:16:10AM +0200, David Hildenbrand wrote:
+> On 13.06.24 10:13, Luis Chamberlain wrote:
+> > On Thu, Jun 13, 2024 at 10:07:15AM +0200, David Hildenbrand wrote:
+> > > On 13.06.24 09:57, Luis Chamberlain wrote:
+> > > > On Wed, Jun 12, 2024 at 08:08:15PM +0100, Matthew Wilcox wrote:
+> > > > > On Fri, Jun 07, 2024 at 02:58:57PM +0000, Pankaj Raghav (Samsung) wrote:
+> > > > > > From: Pankaj Raghav <p.raghav@samsung.com>
+> > > > > > 
+> > > > > > Usually the page cache does not extend beyond the size of the inode,
+> > > > > > therefore, no PTEs are created for folios that extend beyond the size.
+> > > > > > 
+> > > > > > But with LBS support, we might extend page cache beyond the size of the
+> > > > > > inode as we need to guarantee folios of minimum order. Cap the PTE range
+> > > > > > to be created for the page cache up to the max allowed zero-fill file
+> > > > > > end, which is aligned to the PAGE_SIZE.
+> > > > > 
+> > > > > I think this is slightly misleading because we might well zero-fill
+> > > > > to the end of the folio.  The issue is that we're supposed to SIGBUS
+> > > > > if userspace accesses pages which lie entirely beyond the end of this
+> > > > > file.  Can you rephrase this?
+> > > > > 
+> > > > > (from mmap(2))
+> > > > >          SIGBUS Attempted access to a page of the buffer that lies beyond the end
+> > > > >                 of the mapped file.  For an explanation of the treatment  of  the
+> > > > >                 bytes  in  the  page that corresponds to the end of a mapped file
+> > > > >                 that is not a multiple of the page size, see NOTES.
+> > > > > 
+> > > > > 
+> > > > > The code is good though.
+> > > > > 
+> > > > > Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > > > 
+> > > > Since I've been curating the respective fstests test to test for this
+> > > > POSIX corner case [0] I wanted to enable the test for tmpfs instead of
+> > > > skipping it as I originally had it, and that meant also realizing mmap(2)
+> > > > specifically says this now:
+> > > > 
+> > > > Huge page (Huge TLB) mappings
+> > > 
+> > > Confusion alert: this likely talks about hugetlb (MAP_HUGETLB), not THP and
+> > > friends.
+> > > 
+> > > So it might not be required for below changes.
+> > 
+> > Thanks, I had to ask as we're dusting off this little obscure corner of
+> > the universe. Reason I ask, is the test fails for tmpfs with huge pages,
+> > and this patch fixes it, but it got me wondering the above applies also
+> > to tmpfs with huge pages.
+> 
+> Is it tmpfs with THP/large folios or shmem with hugetlb? I assume the tmpfs
+> with THP. There are not really mmap/munmap restrictions to THP and friends
+> (because it's supposed to be "transparent" :) ).
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- .../dts/aspeed/aspeed-bmc-facebook-harma.dts  | 56 +++++++++----------
- 1 file changed, 25 insertions(+), 31 deletions(-)
+The case I tested that failed the test was tmpfs with huge pages (not
+large folios). So should we then have this:
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-index d892e646fced..4ff9e0104bbe 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-@@ -20,10 +20,6 @@ aliases {
- 		i2c21 = &imux21;
- 		i2c22 = &imux22;
- 		i2c23 = &imux23;
--		i2c24 = &imux24;
--		i2c25 = &imux25;
--		i2c26 = &imux26;
--		i2c27 = &imux27;
- 		i2c28 = &imux28;
- 		i2c29 = &imux29;
- 		i2c30 = &imux30;
-@@ -391,33 +387,6 @@ gpio@31 {
- 		"","","","";
- 	};
+diff --git a/mm/filemap.c b/mm/filemap.c
+index ea78963f0956..649beb9bbc6b 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -3617,6 +3617,7 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+ 	vm_fault_t ret = 0;
+ 	unsigned long rss = 0;
+ 	unsigned int nr_pages = 0, mmap_miss = 0, mmap_miss_saved, folio_type;
++	unsigned int align = PAGE_SIZE;
  
--	i2c-mux@71 {
--		compatible = "nxp,pca9546";
--		reg = <0x71>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		imux24: i2c@0 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <0>;
--		};
--		imux25: i2c@1 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <1>;
--		};
--		imux26: i2c@2 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <2>;
--		};
--		imux27: i2c@3 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <3>;
--		};
--	};
- 	// PTTV FRU
- 	eeprom@52 {
- 		compatible = "atmel,24c64";
-@@ -427,6 +396,31 @@ eeprom@52 {
+ 	rcu_read_lock();
+ 	folio = next_uptodate_folio(&xas, mapping, end_pgoff);
+@@ -3636,7 +3637,16 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+ 		goto out;
+ 	}
  
- &i2c11 {
- 	status = "okay";
+-	file_end = DIV_ROUND_UP(i_size_read(mapping->host), PAGE_SIZE) - 1;
++	/*
++	 * As per the mmap(2) mmap(), the offset must be a multiple of the
++	 * underlying huge page size. The system automatically aligns length to
++	 * be a multiple of the underlying huge page size.
++	 */
++	if (folio_test_pmd_mappable(folio) &&
++	    (shmem_mapping(mapping) || folio_test_hugetlb(folio)))
++		align = 1 << folio_order(folio);
 +
-+	gpio@30 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x30>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+	gpio@31 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x31>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		gpio-line-names =
-+		"","","","",
-+		"","","presence-cmm","",
-+		"","","","",
-+		"","","","";
-+	};
-+
-+	// Aegis FRU
-+	eeprom@52 {
-+		compatible = "atmel,24c64";
-+		reg = <0x52>;
-+	};
- };
++	file_end = DIV_ROUND_UP(i_size_read(mapping->host), align) - 1;
+ 	if (end_pgoff > file_end)
+ 		end_pgoff = file_end;
  
- &i2c12 {
--- 
-2.25.1
-
