@@ -1,45 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125EA140388
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C956140391
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267931; cv=none; b=UsE66ktEECPLOS2RVzCP2ONRxalLbGjwyd9yxNuKfGyLS7paXUt7NvMsUdaMuAKU4CsQj8N9a0dfxU9OiZcs+ZwyKWzuXXN8H2ijRO+/Q7fYbe7XH7vznBiEJW5uF3XdBO/OaTz7fKVep49IPyUv3OCiqIMkM/TRCsqfbRYK3Vw=
+	t=1718267932; cv=none; b=f1DlHM5QKwtJq8otB8gUK/PmFfbI6kTFWO07TDzOKXeCkz8Jwjn8M17ZI+JSWPUmcHRAFN1Scila+DIKQurEVGZbDPsJSs5evaWPd7kXOp0qhWO6c5CQtni2twW86twRe+URd9mlxCu6rOpAEXKWdelFgdS0rvhpiYCF+bxEFC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267931; c=relaxed/simple;
-	bh=2lBCoyVSwCfn0+jjzoILCmsqHh6FBjPGpDkiN1EcNSQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L8eCf9RBkCBOnQMzI0lDrHPLWKxScYca3fkqOl+TuqXXBKKDCIHssZy4mL0bO/kG7DxZbDH+ohYPQENCGo8GFiIksSdY0F3hzv6O3iGw8pR8NblaNzZSWW+rAlGZHo9VjHNI+4O2ei1OlE8QGnwvWS41DlVQqMAvQl5Xs+EYIDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XPEd3qwS; arc=none smtp.client-ip=198.47.23.248
+	s=arc-20240116; t=1718267932; c=relaxed/simple;
+	bh=MWNouuqSZvXZjJDbEM92fUobJMR1CVQGZ+VNuoHMRjc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qqeRTn2jjyWUBnGHflPMuApROmfggHdl/jh7zO+l+5BIssAUXYbmxST+p4XaiBwG9LysosYndPAJokDl175oAWdxiIWfVWNpJK5U/3H/sdqifWTd0vVA/BN6UMtC1/EyWXARRrteAo2f6zkzxic13M9elX5EWHWUhNbRH7ALVG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KTAYPLxW; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XPEd3qwS"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c6pA100718;
-	Thu, 13 Jun 2024 03:38:06 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KTAYPLxW"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c9oS013085;
+	Thu, 13 Jun 2024 03:38:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718267886;
-	bh=TjyMmrW2J2r+RcKqfozTMKJxd3RBvb0XNqHfQ8z62jg=;
-	h=From:To:CC:Subject:Date;
-	b=XPEd3qwSH1MVbmbuJI6Y+54FQjNdEelkS9Bac9iU3apsnY/6VdSnkgeATU4kl4fkb
-	 c17jjv1oGnRnFroFTD5G/EL/sBNUFKSIaIgl6pxD1dE40jBD20bXfS8p2K2Jw9Gsp8
-	 b+w7Dvb8sKw7pHF8pUGVo6YfJxyTCyvIwR387qd8=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8c6La021739
+	s=ti-com-17Q1; t=1718267889;
+	bh=rnfhvDvJw5BDb0tI21qEyro5d0f4cvwu1uctUDeRUpc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=KTAYPLxWLKkYWkwONUUxW3pMU9WhDSsscu7nOS6HFs5iZ/o1CudEngNXvmMiZ5QsI
+	 XbagrNcU+LQhsTMQ0sFEn4iFW5n7rZ2Gbw+3515qhWbQNWVV12Jj4c+N5Hr4fdzZQV
+	 sPCTx7amKyAAFrqQg8TBIP1Xcy6TbTtv1eqYEfQs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8c99d094221
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 03:38:06 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 13 Jun 2024 03:38:09 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 03:38:06 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 03:38:09 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 03:38:06 -0500
+ Frontend Transport; Thu, 13 Jun 2024 03:38:09 -0500
 Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c5nn070145;
-	Thu, 13 Jun 2024 03:38:06 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c8hb079355;
+	Thu, 13 Jun 2024 03:38:09 -0500
 From: Jayesh Choudhary <j-choudhary@ti.com>
 To: <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
         <sui.jingfeng@linux.dev>, <andrzej.hajda@intel.com>,
@@ -50,10 +51,12 @@ CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
         <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
         <airlied@gmail.com>, <daniel@ffwll.ch>, <a-bhatia1@ti.com>,
         <dri-devel@lists.freedesktop.org>
-Subject: [PATCH v5 0/3] SII902X HDMI Bridge fixups
-Date: Thu, 13 Jun 2024 14:08:02 +0530
-Message-ID: <20240613083805.439337-1-j-choudhary@ti.com>
+Subject: [PATCH v5 2/3] drm/bridge: sii902x: Support atomic bridge APIs
+Date: Thu, 13 Jun 2024 14:08:04 +0530
+Message-ID: <20240613083805.439337-3-j-choudhary@ti.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240613083805.439337-1-j-choudhary@ti.com>
+References: <20240613083805.439337-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,64 +67,49 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-- Move the mode_valid hook to drm_bridge_funcs structure to take care
-  of the case when the encoder attaches the bridge chain with the
-  DRM_BRIDGE_ATTACH_NO_CONNECTOR flag in which case, the connector is
-  not initialized in the bridge's attach call and mode_valid is not
-  called.
+Change exisitig enable() and disable() bridge hooks to their atomic
+counterparts as the former hooks are deprecated.
 
-- Also add this check to the atomic_check call as suggested by Maxime in
-  v1 patch.
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ drivers/gpu/drm/bridge/sii902x.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-- Move from deprecated enable()/disable() hooks to atomic hooks as
-  suggested in v4 by Sam
-
-Testing has been done on AM62X platform which have SII902X HDMI bridge.
-From the logs we can see the propagated modes and flip test for 1080p
-resolution.
-
-Testlog:
-<https://gist.github.com/Jayesh2000/9bea6840672869337039296bc1145df4>
-
-Changelog v4->v5:
-- Add followup patch to replace deprecated bridge hooks
-- Fix atomic check to return negative value
-- Made commit message for [1/2] in v4 more clear while keeping the R-by and
-  Acked-by tags.
-- Fix commit header for [2/2] in v4
-
-v4 patch:
-<https://lore.kernel.org/all/20240530092930.434026-1-j-choudhary@ti.com/>
-
-Changelog v3->v4:
-- Remove mode_valid hook from connector_helper_funcs as it is not needed.
-
-v3 patch:
-<https://lore.kernel.org/all/20240524093509.127189-1-j-choudhary@ti.com/>
-
-Changelog v2->v3:
-- Remove newline that was introduced in [1/2] and later deleted in [2/2]
-  in v2
-
-v2 patch:
-<https://lore.kernel.org/all/20240524073305.107293-1-j-choudhary@ti.com/>
-
-Changelog v1->v2:
-- Add KHZ suffix in the macros to be more clear
-- Add the hook for drm_bridge_funcs as well
-- Add check in atomic_check dunction call (in a separate patch)
-
-v1 patch:
-<https://lore.kernel.org/all/20240408081435.216927-1-j-choudhary@ti.com/>
-
-Jayesh Choudhary (3):
-  drm/bridge: sii902x: Fix mode_valid hook
-  drm/bridge: sii902x: Support atomic bridge APIs
-  drm/bridge: sii902x: Add pixel clock check in atomic_check
-
- drivers/gpu/drm/bridge/sii902x.c | 46 +++++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index 6a6055a4ccf9..00a8c469f553 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -322,7 +322,8 @@ static const struct drm_connector_helper_funcs sii902x_connector_helper_funcs =
+ 	.get_modes = sii902x_get_modes,
+ };
+ 
+-static void sii902x_bridge_disable(struct drm_bridge *bridge)
++static void sii902x_bridge_atomic_disable(struct drm_bridge *bridge,
++					  struct drm_bridge_state *old_bridge_state)
+ {
+ 	struct sii902x *sii902x = bridge_to_sii902x(bridge);
+ 
+@@ -335,7 +336,8 @@ static void sii902x_bridge_disable(struct drm_bridge *bridge)
+ 	mutex_unlock(&sii902x->mutex);
+ }
+ 
+-static void sii902x_bridge_enable(struct drm_bridge *bridge)
++static void sii902x_bridge_atomic_enable(struct drm_bridge *bridge,
++					 struct drm_bridge_state *old_bridge_state)
+ {
+ 	struct sii902x *sii902x = bridge_to_sii902x(bridge);
+ 
+@@ -520,8 +522,8 @@ sii902x_bridge_mode_valid(struct drm_bridge *bridge,
+ static const struct drm_bridge_funcs sii902x_bridge_funcs = {
+ 	.attach = sii902x_bridge_attach,
+ 	.mode_set = sii902x_bridge_mode_set,
+-	.disable = sii902x_bridge_disable,
+-	.enable = sii902x_bridge_enable,
++	.atomic_disable = sii902x_bridge_atomic_disable,
++	.atomic_enable = sii902x_bridge_atomic_enable,
+ 	.detect = sii902x_bridge_detect,
+ 	.edid_read = sii902x_bridge_edid_read,
+ 	.atomic_reset = drm_atomic_helper_bridge_reset,
 -- 
 2.25.1
 
