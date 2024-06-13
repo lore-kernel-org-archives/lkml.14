@@ -1,116 +1,92 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB34213B2AC;
-	Thu, 13 Jun 2024 20:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A76513958C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 20:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718309740; cv=none; b=rYOGYx/eZHisVEN6NKRxS5IvqAcAjCvsHMiJGWDywiOnoQBiVfqeuteB/+NSwZ9t08rAaw4ONU7R8kG7Lax+8rj00h0Am6FQ/IpPlfAl2kI4EA41ozkBafHUO+qx6uk9IeOdVK1IOL01yet9IXulLJ7ARruJdHRcwNQkKSTQy28=
+	t=1718309786; cv=none; b=bnsGF9WxIKF2uYITEjAFrJ7dPgFF9P+DxKRJLsJVOaQcQ79A8UL8hXs/7khwX3KgBW9VL6K6ir5RgqhszOH3vlFDxHH+bJETNqRMblWgKrIWWug0+3nT0AZqy7QmkhnGtBPFlzCO6F7Khg+H9zylZgrkTP8t9C08flAq6eFhseI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718309740; c=relaxed/simple;
-	bh=uz3G8XwtTUx7pGyHKuMJTv6ZsMZ4E3FM8B10yoRcG+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lmWekFVfQAPtbjteqbk0mR777JZYCnlauPOumIDAcUOEitOjEVcAKQmT/BHqn0cWA4OoDff9g0vhlb1Ky6bdHl+MOZKyv/kBuXLmTmojOiQPbKziLuoeQodzO7FWnh8lzmJxOUKmlCnKdhgz+htNQQCzyIiLFxGvvNy45UOLOB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=s6UXzttw; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1718309786; c=relaxed/simple;
+	bh=GUcMC36tpdSJjeu3d8N7xG6wpiIC/XoAMNEzmVdie0U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=anppF3t++BVc2LG3Im7kMCYJzzS+zzjuZq+OiNTA258A/ARpwpMYlAvAA4oFlwGzr+woe2jYgNZIgg3zlHfu1GjkFHYTXjaL2hcvilvNrot6UCzXB9wJ2yC1OoHM5dAPuXxz1z7xAe+nXzOSneQC6f6/lGNS9snFPj0qNehy9jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TQJNOo1F; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="s6UXzttw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1718309732;
-	bh=uz3G8XwtTUx7pGyHKuMJTv6ZsMZ4E3FM8B10yoRcG+E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=s6UXzttwVWIX3YF/8qTQzMhi4Of/9wP5SpKKBIvpDYcC529qGm6PpxXuTg23mfzRI
-	 Y+5pEBsmKJF96OJdOKY3uovY72jyXLKaC50MF/z7zfFMp8tK/P9ARNGvr9gm0W+anF
-	 aAuQl2T2E0KbTB+QlPFUDpW9yhx7lIYP+DvPfpqE=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 13 Jun 2024 22:15:36 +0200
-Subject: [PATCH 5/5] ACPI: sysfs: remove return value of
- acpi_device_setup_files()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQJNOo1F"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4217990f997so11401175e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718309783; x=1718914583; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=73Ywxe+wInveR8HhNyBX0TlhPQP+xFRquIiA5gYW96M=;
+        b=TQJNOo1FUvvtMyDQDz5a7rX8T4VqdXqyWR6//V2KsvPD2Q6zJqHi7ES8+X0cf+3lyN
+         /IpsbU3d1NkYLbbsd6aGEeU7KCEcznXs7EqJA8zM1GmCmQrm2IeUCmvBArws35HmFgQG
+         huJiIJmitmZEo7eAIoR5inLWMBnTf01vpJNe2St9ttcKUxHTav6VM0WJX4XG0XAUTSoP
+         As3rzCGUo59JHmkstEizSOezVEKWT2VBzEvy23jVn9P5Pr/gRz05UdUY1n4nT6075mKv
+         9plWKhDOkQTaxqSgk6mvj/rvTBE1Xn/OdYq0ad8fyBRspHjJxrAbb1UeBorPzWPl8KJl
+         LoUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718309783; x=1718914583;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=73Ywxe+wInveR8HhNyBX0TlhPQP+xFRquIiA5gYW96M=;
+        b=hujtMLiDxm97S1fnzMVaDqHu9l8NLH6S1Oa4o4DKwi5MTinpkAjY/l6d8oNepWZbST
+         pzZmnWMQZm4V6TrY+GnGU3u2NnoQ+5VHr8wDEw+JG5+KnOjy7S+FNz6aLEl9sCU3v0DF
+         da8vemxBwvjClwcmZhm8Xg0AP7rfy4VG85scbt469pO2XnaKeHt6GrhMTQyAS0HH+OhW
+         agcPR2ffH3eZXMh4bXt8ZEZdLNo/oOEJAlhHO4QKu8hbvyrg6T/OxVkUdXjnMIW8zTJF
+         f3YHzf+cDcIenCEUF5V3q26nW0KFBNuQVGasKeYWEojv8vN3QNBO5v1FL30QwgDYDw23
+         k6JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXF5t04jgfv17C8O+D5AfEh060tjw9CwYuIVTxLw/uHhmiaylpOcnZJGauSY7pAeVSdaIbWopVmiub6xnvT6V4l51uDzYjzRHdA/nKw
+X-Gm-Message-State: AOJu0YxF81SKr1kSRJY+iRkpvZDAFuwQelNwEtQwbEM1pjSuAV/dlZyd
+	fzM2odCGHCQLQWO2RlUXFdR+3e7DLoR3LGEXpxZgPK9/BSfK+4b4cSsiIzmrK/U=
+X-Google-Smtp-Source: AGHT+IE4lcWxBpQZAwuJHavl84PM9M87lK2v8B8FjG0I0G3OWtZcW98MRppDqmbvm9i6wNgeE8QJQA==
+X-Received: by 2002:a05:600c:1f8d:b0:422:70d4:7e96 with SMTP id 5b1f17b1804b1-4230481fac0mr6907645e9.15.1718309783274;
+        Thu, 13 Jun 2024 13:16:23 -0700 (PDT)
+Received: from localhost.localdomain ([31.120.167.14])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de618sm73817195e9.37.2024.06.13.13.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 13:16:22 -0700 (PDT)
+From: Teddy Engel <engel.teddy@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Teddy Engel <engel.teddy@gmail.com>
+Subject: [PATCH v2 0/5] staging: rtl8192e: Cleanup multiple issues
+Date: Thu, 13 Jun 2024 21:15:06 +0100
+Message-Id: <cover.1718309120.git.engel.teddy@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240613-acpi-sysfs-groups-v1-5-665e0deb052a@weissschuh.net>
-References: <20240613-acpi-sysfs-groups-v1-0-665e0deb052a@weissschuh.net>
-In-Reply-To: <20240613-acpi-sysfs-groups-v1-0-665e0deb052a@weissschuh.net>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Robert Moore <robert.moore@intel.com>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- acpica-devel@lists.linux.dev, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718309732; l=2134;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=uz3G8XwtTUx7pGyHKuMJTv6ZsMZ4E3FM8B10yoRcG+E=;
- b=2cu/wdwm0qQfux6dwms8j3LcvJ8gZoJhkLB9ueU/8vGNsIVx3IQACCQxdNND4BTZmwPDWhzpx
- vvds8e2vZ1gD8qGfBYEn7FlQS6upf7abphkvk4/BG0HvVeFCoYzQig7
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The function can not fail anymore, so drop its return value.
+Remove some unused constants, macros, and structs. 
+Capitalize a constant.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/acpi/device_sysfs.c | 6 +-----
- drivers/acpi/internal.h     | 2 +-
- drivers/acpi/scan.c         | 5 +----
- 3 files changed, 3 insertions(+), 10 deletions(-)
+The patch order matters - please apply in order.
 
-diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-index f1e8928254c2..c85ec754931c 100644
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -619,14 +619,10 @@ static const char *devm_acpi_device_str(struct acpi_device *dev)
-  * acpi_device_setup_files - Create sysfs attributes of an ACPI device.
-  * @dev: ACPI device object.
-  */
--int acpi_device_setup_files(struct acpi_device *dev)
-+void acpi_device_setup_files(struct acpi_device *dev)
- {
--	int result = 0;
--
- 	dev->pnp.str = devm_acpi_device_str(dev);
- 	acpi_expose_nondev_subnodes(&dev->dev.kobj, &dev->data);
--
--	return result;
- }
- 
- /**
-diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-index 63dd78d80508..e71fecbf731c 100644
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -118,7 +118,7 @@ void acpi_init_device_object(struct acpi_device *device, acpi_handle handle,
- 			     int type, void (*release)(struct device *));
- int acpi_tie_acpi_dev(struct acpi_device *adev);
- int acpi_device_add(struct acpi_device *device);
--int acpi_device_setup_files(struct acpi_device *dev);
-+void acpi_device_setup_files(struct acpi_device *dev);
- void acpi_device_remove_files(struct acpi_device *dev);
- extern const struct attribute_group *acpi_groups[];
- void acpi_device_add_finalize(struct acpi_device *device);
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index c15fffefca0a..49a8172fe0de 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -766,10 +766,7 @@ int acpi_device_add(struct acpi_device *device)
- 		goto err;
- 	}
- 
--	result = acpi_device_setup_files(device);
--	if (result)
--		pr_err("Error creating sysfs interface for device %s\n",
--		       dev_name(&device->dev));
-+	acpi_device_setup_files(device);
- 
- 	return 0;
- 
+Teddy Engel (5):
+  staging: rtl8192e: Remove unused constants
+  staging: rtl8192e: Remove unused struct phy_ofdm_rx_status_rxsc
+  staging: rtl8192e: Capitalize constant RegC38_TH
+  staging: rtl8192e: Remove unused macro dm_tx_bb_gain_idx_to_amplify
+  staging: rtl8192e: Remove unnecessary pre-declaration of struct
+    net_device
+
+ drivers/staging/rtl8192e/rtl8192e/r8190P_def.h | 9 ---------
+ drivers/staging/rtl8192e/rtl8192e/rtl_cam.h    | 1 -
+ drivers/staging/rtl8192e/rtl8192e/rtl_dm.c     | 4 ++--
+ drivers/staging/rtl8192e/rtl8192e/rtl_dm.h     | 6 +-----
+ drivers/staging/rtl8192e/rtl8192e/rtl_pci.h    | 1 -
+ 5 files changed, 3 insertions(+), 18 deletions(-)
 
 -- 
-2.45.2
+2.39.2
 
