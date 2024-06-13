@@ -1,121 +1,187 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1985D146A67
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC781494A5
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290941; cv=none; b=T+nQ1pJ5VBbACxB/EukfCY35SPXHKfMGJOYa8lGEROmPymtcJtx3xEQOadDasRg9wHzVWsZiOW7JIXxkz91N8fY7Xo57lWip1kGmw6ZO+QaEsUQwa5TkkRzv6I5o1ZqLOf6d+uuCaRWKNd4XQTc+/7ZaPn1s7yNqLD/+5PPKgDs=
+	t=1718290947; cv=none; b=uFzXoP25BZrAAe94qH6MZRreJYn1dBjg6KANRV/0LtpHazFfsyO1GTjlfXHxmdqtn5VuTY6reRBqPsuAiTg4f9jT5byp7Z+gveFb7OceBupGOe8c8GrU6q8jRSNhDAiveE0ofSdjtB/CxJsmQUzjM6U1tEeVYusDbRVpbq5Yc+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290941; c=relaxed/simple;
-	bh=vR9NwaM4K/cYj+QcW2JvRTu9+uSVsH0EXb3Y1Iv1cYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XoLSe4W+d42U+PAJ4JkA7hxWUbBUWss3KaHu7/2k+IN/Sl+2JydFsR65cmX2c3tQaumZ5WkedZDWmZMzU3+AJsSiuFUBp5VaLNlwlMMrwlHTsXg/6y7ukUnFraAOc1h7tkDPZgB7rRrV8ZfrOavjxvDUBZvaK143IgUsfv+lexs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UmEmfmha; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718290947; c=relaxed/simple;
+	bh=V5AteabZhVyZ3nyzkEAKPmkKwl9XMFh6GfZxRBuBQ9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KMkAt0nn1g4DfNz/2qR8z5PCYrcd7cTPvckkk8zWdmQGNXft3enuMK1gmw58r1qOx1gaEg9hxuCyFriWlG97C3FuXxeGKKMl0tpldzwt7dJjkxCt83AWj39XREPFQDs8gqdw/CR8Arr46NnalYkAYzxOpEgi9hsCyhZFn1uiDvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dnRQCXmW; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UmEmfmha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718290937;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dnRQCXmW"
+X-Envelope-To: radhey.shyam.pandey@amd.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718290942;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RsGjIQ/eoSOVrd1/81v2Gd3TZB10IZEXVzo2atMoutM=;
-	b=UmEmfmhalnyQKtbhkezRRuEKDKzuTb0kA4x4vPxz+nnmU4GGLpPl3KXBOWib7Iu9nkcytY
-	LwtQFX4VPEP7F2Q4vNMAdvAqGGZrjqtUIm8tagf0CYTvuAbDURxgdD4RMQJgqGNSuxq1kg
-	W9xSZAqn3Y5dOYTeOw56V8c6C2Je7tk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-toVAdbV7NkupH4EZS3Am9w-1; Thu,
- 13 Jun 2024 11:02:11 -0400
-X-MC-Unique: toVAdbV7NkupH4EZS3Am9w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A268C1955BDF;
-	Thu, 13 Jun 2024 15:01:58 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.233])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1E7D21955E72;
-	Thu, 13 Jun 2024 15:01:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 13 Jun 2024 17:00:17 +0200 (CEST)
-Date: Thu, 13 Jun 2024 17:00:02 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Rachel Menge <rachelmenge@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	Wei Fu <fuweid89@gmail.com>, apais@linux.microsoft.com,
-	Sudhanva Huruli <Sudhanva.Huruli@microsoft.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Joel Granados <j.granados@samsung.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH] zap_pid_ns_processes: don't send SIGKILL to sub-threads
-Message-ID: <20240613150001.GB18218@redhat.com>
-References: <1386cd49-36d0-4a5c-85e9-bc42056a5a38@linux.microsoft.com>
- <20240608154835.GD7947@redhat.com>
- <87msnpov2z.fsf@email.froward.int.ebiederm.org>
+	bh=JEBRwGHuYYeaiNTmDNEUKdsVRARs0SvHUnnIMjbyCE4=;
+	b=dnRQCXmWGraLUliXWOcCW9NwR9J69w4NkRGqqRYDwsNfThTkQMQDJuIO/PWh2XM9B0pMZ5
+	i0Tdf37wyFJYrle1RU5KtND6cmEm506iyx8qtvQsKI8PVU3I9gwBEp9awJx55G6JGaLJKC
+	qm5hTtyZMNMp2XCXIy23MzRJZpsSp3A=
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: linux-phy@lists.infradead.org
+X-Envelope-To: vkoul@kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: kishon@kernel.org
+Message-ID: <8349516a-84bc-45bf-a84c-ff05d8f50bf7@linux.dev>
+Date: Thu, 13 Jun 2024 11:02:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87msnpov2z.fsf@email.froward.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Subject: Re: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
+To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+References: <20240506170110.2874724-1-sean.anderson@linux.dev>
+ <20240506170110.2874724-5-sean.anderson@linux.dev>
+ <MN0PR12MB5953519A685A222CC603A2FEB7C12@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <MN0PR12MB5953519A685A222CC603A2FEB7C12@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 06/13, Eric W. Biederman wrote:
->
-> Oleg Nesterov <oleg@redhat.com> writes:
->
-> > The comment above the idr_for_each_entry_continue() loop tries to explain
-> > why we have to signal each thread in the namespace, but it is outdated.
-> > This code no longer uses kill_proc_info(), we have a target task so we can
-> > check thread_group_leader() and avoid the unnecessary group_send_sig_info.
-> > Better yet, we can change pid_task() to use PIDTYPE_TGID rather than _PID,
-> > this way it returns NULL if this pid is not a group-leader pid.
-> >
-> > Also, change this code to check SIGNAL_GROUP_EXIT, the exiting process /
-> > thread doesn't necessarily has a pending SIGKILL. Either way these checks
-> > are racy without siglock, so the patch uses data_race() to shut up KCSAN.
->
-> You remove the comment but the meat of what it was trying to say remains
-> true.  For processes in a session or processes is a process group a list
-> of all such processes is kept.  No such list is kept for a pid
-> namespace.  So the best we can do is walk through the allocated pid
-> numbers in the pid namespace.
+On 6/13/24 05:20, Pandey, Radhey Shyam wrote:
+>> -----Original Message-----
+>> From: Sean Anderson <sean.anderson@linux.dev>
+>> Sent: Monday, May 6, 2024 10:31 PM
+>> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; linux-
+>> phy@lists.infradead.org
+>> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; Michal Simek <michal.simek@amd.com>;
+>> Kishon Vijay Abraham I <kishon@kernel.org>; Sean Anderson
+>> <sean.anderson@linux.dev>
+>> Subject: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
+>> 
+>> Add support for printing some basic status information to debugfs. This
+>> is helpful when debugging phy consumers to make sure they are configuring
+>> the phy appropriately.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>> Changes in v2:
+>> - Use debugfs_create_devm_seqfile
+>> 
+>>  drivers/phy/xilinx/phy-zynqmp.c | 40
+>> +++++++++++++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>> 
+>> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-
+>> zynqmp.c
+>> index b86fe2a249a8..2520c75a4a77 100644
+>> --- a/drivers/phy/xilinx/phy-zynqmp.c
+>> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+>> @@ -13,6 +13,7 @@
+>>   */
+>> 
+>>  #include <linux/clk.h>
+>> +#include <linux/debugfs.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/io.h>
+>>  #include <linux/kernel.h>
+>> @@ -123,6 +124,15 @@
+>>  #define ICM_PROTOCOL_DP			0x4
+>>  #define ICM_PROTOCOL_SGMII		0x5
+>> 
+>> +static const char *const xpsgtr_icm_str[] = {
+>> +	[ICM_PROTOCOL_PD] = "powered down",
+> 
+> Protocol saying powered down seems confusing.
+> Should we say None or None(power down)?
 
-OK, I'll recheck tomorrow. Yet I think it doesn't make sense to send
-SIGKILL to sub-threads, and the comment looks misleading today. This was
-the main motivation, but again, I'll recheck.
+Either works I guess. I'm just matching the define.
 
-> It would also help if this explains that in the case of SIGKILL
-> complete_signal always sets SIGNAL_GROUP_EXIT which makes that a good
-> check to use to see if the process has been killed (with SIGKILL).
+>> +	[ICM_PROTOCOL_PCIE] = "PCIe",
+>> +	[ICM_PROTOCOL_SATA] = "SATA",
+>> +	[ICM_PROTOCOL_USB] = "USB",
+>> +	[ICM_PROTOCOL_DP] = "DisplayPort",
+>> +	[ICM_PROTOCOL_SGMII] = "SGMII",
+>> +};
+>> +
+>>  /* Test Mode common reset control  parameters */
+>>  #define TM_CMN_RST			0x10018
+>>  #define TM_CMN_RST_EN			0x1
+>> @@ -788,6 +798,34 @@ static struct phy *xpsgtr_xlate(struct device *dev,
+>>  	return ERR_PTR(-EINVAL);
+>>  }
+>> 
+>> +/*
+>> + * DebugFS
+>> + */
+>> +
+>> +static int xpsgtr_status_read(struct seq_file *seq, void *data)
+>> +{
+>> +	struct device *dev = seq->private;
+>> +	struct xpsgtr_phy *gtr_phy = dev_get_drvdata(dev);
+>> +	struct clk *clk;
+>> +	u32 pll_status;
+>> +
+>> +	mutex_lock(&gtr_phy->phy->mutex);
+> 
+> Do we see any need for this lock? This function simply read hw register 
+> /phy members and decodes it.
 
-Well, if SIGNAL_GROUP_EXIT is set we do not care if this process was
-killed or not. It (the whole thread group) is going to exit, that is all.
+It's to protect against modifications to gtr_phy->refclk and ->instance.
 
-We can even remove this check, it is just the optimization, just like
-the current fatal_signal_pending() check.
+These are accessed under lock elsewhere; this is not a fast path and I don't
+want to have to reason about the semantics when using a mutex is definitely
+correct.
 
-Oleg.
+--Sean
+
+>> +	pll_status = xpsgtr_read_phy(gtr_phy, L0_PLL_STATUS_READ_1);
+>> +	clk = gtr_phy->dev->clk[gtr_phy->refclk];
+>> +
+>> +	seq_printf(seq, "Lane:            %u\n", gtr_phy->lane);
+>> +	seq_printf(seq, "Protocol:        %s\n",
+>> +		   xpsgtr_icm_str[gtr_phy->protocol]);
+>> +	seq_printf(seq, "Instance:        %u\n", gtr_phy->instance);
+>> +	seq_printf(seq, "Reference clock: %u (%pC)\n", gtr_phy->refclk, clk);
+>> +	seq_printf(seq, "Reference rate:  %lu\n", clk_get_rate(clk));
+>> +	seq_printf(seq, "PLL locked:      %s\n",
+>> +		   pll_status & PLL_STATUS_LOCKED ? "yes" : "no");
+>> +
+>> +	mutex_unlock(&gtr_phy->phy->mutex);
+>> +	return 0;
+>> +}
+>> +
+>>  /*
+>>   * Power Management
+>>   */
+>> @@ -937,6 +975,8 @@ static int xpsgtr_probe(struct platform_device *pdev)
+>> 
+>>  		gtr_phy->phy = phy;
+>>  		phy_set_drvdata(phy, gtr_phy);
+>> +		debugfs_create_devm_seqfile(&phy->dev, "status", phy-
+>> >debugfs,
+>> +					    xpsgtr_status_read);
+>>  	}
+>> 
+>>  	/* Register the PHY provider. */
+>> --
+>> 2.35.1.1320.gc452695387.dirty
+> 
 
