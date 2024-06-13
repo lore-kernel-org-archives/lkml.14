@@ -1,97 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx2-at.ubimet.com (mx2-at.ubimet.com [141.98.226.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE541B646
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 14:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EC5B646;
+	Thu, 13 Jun 2024 14:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.98.226.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290265; cv=none; b=Xjqm3oXP1saoThqeyTUoeSFBknnQbLi+c2klJduSdc/S/V6SPDk9pBQH1sntmkxTmjEXjwxkqM5O+Jxok6nIxBWw3K3GtxFOM2XZSuqfyIdJBknS16ELCo1h7ygRkFryHF0mXZSIqVlHVG1bFk/vwtC4YHzZiztghyDz5KP2Mhk=
+	t=1718290311; cv=none; b=GEupB5vRTXf+LOTkKGmELNsbl00VcXbIOXfgKAfvIju7H6FT4+88DYPiSGvC6Ep/mZE2x4UPwCuPCKI8DtJImPGfMe4eKCt1M2KuZEA1Fx7cE4hNL7SIJrsbFcWHshw0OvFWsB3+aRFtj2kcXfvM2HCDDD2o1bG+O6RNgjJGZQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290265; c=relaxed/simple;
-	bh=Y0WoLZ5dKwSO1CNiA0o+3a8cM1lM7Z8l0lW7Mgayr54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZZChuGes8OGo/4tIqa8Zty9OZN9kh+67Dsq+RSUXXrh8sjBDsJKAKvy7d3wO8b5qDZHoE+CdgnWa+DoH0WD0/j0bz/pMB3ER4KgBczhB4Zyf5CjcQGkGdtTwQdf3RQ2/lqMcPZXdW9bzuOHBUnenCGeuT+pVvAZTqUa0fEJlAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Racm8eZ+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718290311; c=relaxed/simple;
+	bh=7rakcWxS0PcSIHVBs6vd5F2lWfJa0cr5Bx4OndF8dMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mGBBDB5tT2uGZgdV8efNP6A83eJfwi7t24eg+XbmmEMpP4JSs0Nq170kcKmL8erdYDPkpgtLhOYZHEBAb4+YJtYcOAU7LPIz55CEJqsCvezxudjynaJY1g8U9JDBal2/3iY/RliBgwG8PDJ1GD0f4gi+ZOkH0sLfwgRTfz62OsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com; spf=pass smtp.mailfrom=ubimet.com; dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b=mJj2Amng; arc=none smtp.client-ip=141.98.226.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubimet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Racm8eZ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718290262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y0WoLZ5dKwSO1CNiA0o+3a8cM1lM7Z8l0lW7Mgayr54=;
-	b=Racm8eZ+LTuYGpK9hihgvG7enTEonFAoGw7ThPxDApJPEZxz8VKG6QRKxhQPD7JlnTYa+0
-	zt9CveUh9yPHmAIOoUx6vKiTAKp1YF+Q6gtsFbe3IivQEaSIUEbK3m8Dy1+6ioi5Zd2AW7
-	V6T6EZL49srdoJPkAd7WiP0caC1YwLQ=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-510-1jGJsdWNP2esv4ksrP1ypw-1; Thu,
- 13 Jun 2024 10:50:59 -0400
-X-MC-Unique: 1jGJsdWNP2esv4ksrP1ypw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D14C19560BE;
-	Thu, 13 Jun 2024 14:50:53 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.233])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5DCE819560AF;
-	Thu, 13 Jun 2024 14:50:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 13 Jun 2024 16:49:23 +0200 (CEST)
-Date: Thu, 13 Jun 2024 16:49:13 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Wei Fu <fuweid89@gmail.com>
-Cc: ebiederm@xmission.com, Sudhanva.Huruli@microsoft.com,
-	akpm@linux-foundation.org, apais@linux.microsoft.com,
-	axboe@kernel.dk, boqun.feng@gmail.com, brauner@kernel.org,
-	frederic@kernel.org, j.granados@samsung.com, jiangshanlai@gmail.com,
-	joel@joelfernandes.org, josh@joshtriplett.org,
-	linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	michael.christie@oracle.com, mjguzik@gmail.com,
-	neeraj.upadhyay@kernel.org, paulmck@kernel.org,
-	qiang.zhang1211@gmail.com, rachelmenge@linux.microsoft.com,
-	rcu@vger.kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH] zap_pid_ns_processes: clear TIF_NOTIFY_SIGNAL along with
- TIF_SIGPENDING
-Message-ID: <20240613144913.GA18218@redhat.com>
-References: <87a5jpqamx.fsf@email.froward.int.ebiederm.org>
- <20240613140216.30327-1-fuweid89@gmail.com>
+	dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b="mJj2Amng"
+Received: from localhost (localhost [127.0.0.1])
+	by mx2-at.ubimet.com (Postfix) with ESMTP id DFC5A81188;
+	Thu, 13 Jun 2024 14:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ubimet.com;
+	s=20200131mdel; t=1718290307;
+	bh=7rakcWxS0PcSIHVBs6vd5F2lWfJa0cr5Bx4OndF8dMM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mJj2AmngiAJMOmGOSMOSevprFaHji/y/A0K2lLtFNu8HX1l42DsPM3cYojdznjkzt
+	 v/8GKawjZYoiEf1bZRmtQsNNX/iTi4RBX1p4OlSaWxybhzIZIQlEWtjaNjpYRM3V00
+	 bim2SULXwyZtYN30PKRJHWQIt1GbnrmCBErKSrBUgK1TBvBsS/xJDoxw6tdEZcwfS1
+	 CYyBuizqeWw+ymvQJtNxMQ6j9SlyIDCynv/hClNMjO6j3NVfALn0OJlDYYEsp1V4nT
+	 mlQvgIClztJc0/cLJERcPwhnkEuNEqNmgF97T+R8uMDGgBqmpk+CaYC+S4NlJ9f2fw
+	 3dh6wT9M+LLqw==
+Received: from mx2-at.ubimet.com ([127.0.0.1])
+	by localhost (mx02.dmz.dc.at.ubimet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id mbnHciML1L9Y; Thu, 13 Jun 2024 14:51:47 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com (webmail-dc.at.ubimet.com [10.1.18.22])
+	by mx2-at.ubimet.com (Postfix) with ESMTPS id C845181187;
+	Thu, 13 Jun 2024 14:51:47 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id A7CAE80771;
+	Thu, 13 Jun 2024 14:51:47 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id EdOjm3CKKUYW; Thu, 13 Jun 2024 14:51:46 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id AF61880782;
+	Thu, 13 Jun 2024 14:51:46 +0000 (UTC)
+X-Virus-Scanned: amavis at zimbra-mta01.ext.dc.at.ubimet.com
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id NUGmfzTkUpOF; Thu, 13 Jun 2024 14:51:46 +0000 (UTC)
+Received: from pcn112.wl97.hub.at.ubimet.com (pcn112.it.hub.at.ubimet.com [10.15.66.143])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTPSA id 6C1A080771;
+	Thu, 13 Jun 2024 14:51:46 +0000 (UTC)
+From: =?UTF-8?q?Jo=C3=A3o=20Rodrigues?= <jrodrigues@ubimet.com>
+To: 
+Cc: jrodrigues@ubimet.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org (open list:ETHERNET PHY LIBRARY),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 1/3] net: phy: dp83867: Add SQI support
+Date: Thu, 13 Jun 2024 16:51:51 +0200
+Message-Id: <20240613145153.2345826-2-jrodrigues@ubimet.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240613145153.2345826-1-jrodrigues@ubimet.com>
+References: <20240613145153.2345826-1-jrodrigues@ubimet.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613140216.30327-1-fuweid89@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 06/13, Wei Fu wrote:
->
-> I think there is a case that TIF_NOTIFY_SIGNAL remains set.
+Don't report SQI values for 10 ethernet, since the datasheet
+says MSE values are only valid for 100/1000 ethernet
 
-[...snip...]
+Signed-off-by: Jo=C3=A3o Rodrigues <jrodrigues@ubimet.com>
+---
+ drivers/net/phy/dp83867.c | 51 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-Of course! but please forget about io_uring even if currently io_uring/
-is the only user of TWA_SIGNAL.
-
-Just suppose that the exiting task/thread races with task_workd_add(TWA_SIGNAL),
-TIF_NOTIFY_SIGNAL won't be cleared.
-
-This is fine in that the exiting task T will do exit_task_work() and after that
-task_work_add(T) can't succeed with or without TWA_SIGNAL. So it can't miss the
-pending work.
-
-But I think we can forget about TIF_NOTIFY_SIGNAL. To me, the problem is that
-the state of signal_pending() of the exiting task was never clearly defined, and
-I can't even recall how many times I mentioned this in the previous discussions.
-TIF_NOTIFY_SIGNAL doesn't add more confusion, imo.
-
-Oleg.
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 4120385c5a79..5741f09e29cb 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -53,6 +53,7 @@
+ #define DP83867_RXFSOP2	0x013A
+ #define DP83867_RXFSOP3	0x013B
+ #define DP83867_IO_MUX_CFG	0x0170
++#define DP83867_MSE_REG_1	0x0225
+ #define DP83867_SGMIICTL	0x00D3
+ #define DP83867_10M_SGMII_CFG   0x016F
+ #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+@@ -153,6 +154,9 @@
+ /* FLD_THR_CFG */
+ #define DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK	0x7
+=20
++/* SQI */
++#define DP83867_MAX_SQI	0x07
++
+ #define DP83867_LED_COUNT	4
+=20
+ /* LED_DRV bits */
+@@ -196,6 +200,24 @@ struct dp83867_private {
+ 	bool sgmii_ref_clk_en;
+ };
+=20
++/* Register values are converted to SNR(dB) as suggested by
++ * "How to utilize diagnostic test suite of Ethernet PHY":
++ * SNR(dB) =3D -10 * log10 (VAL/2^17) - 3 dB.
++ * SQI ranges are implemented according to "OPEN ALLIANCE - Advanced dia=
+gnostic
++ * features for 100BASE-T1 automotive Ethernet PHYs"
++ */
++
++static const u16 dp83867_mse_sqi_map[] =3D {
++	0x0411, /* < 18dB */
++	0x033b, /* 18dB =3D< SNR < 19dB */
++	0x0290, /* 19dB =3D< SNR < 20dB */
++	0x0209, /* 20dB =3D< SNR < 21dB */
++	0x019e, /* 21dB =3D< SNR < 22dB */
++	0x0149, /* 22dB =3D< SNR < 23dB */
++	0x0105, /* 23dB =3D< SNR < 24dB */
++	0x0000  /* 24dB =3D< SNR */
++};
++
+ static int dp83867_ack_interrupt(struct phy_device *phydev)
+ {
+ 	int err =3D phy_read(phydev, MII_DP83867_ISR);
+@@ -1015,6 +1037,32 @@ static int dp83867_loopback(struct phy_device *phy=
+dev, bool enable)
+ 			  enable ? BMCR_LOOPBACK : 0);
+ }
+=20
++static int dp83867_get_sqi(struct phy_device *phydev)
++{
++	u16 mse_val;
++	int sqi;
++	int ret;
++
++	if (phydev->speed =3D=3D SPEED_10)
++		return -EOPNOTSUPP;
++
++	ret =3D phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_MSE_REG_1);
++	if (ret < 0)
++		return ret;
++
++	mse_val =3D 0xFFFF & ret;
++	for (sqi =3D 0; sqi < ARRAY_SIZE(dp83867_mse_sqi_map); sqi++) {
++		if (mse_val >=3D dp83867_mse_sqi_map[sqi])
++			return sqi;
++	}
++	return -EINVAL;
++}
++
++static int dp83867_get_sqi_max(struct phy_device *phydev)
++{
++	return DP83867_MAX_SQI;
++}
++
+ static int
+ dp83867_led_brightness_set(struct phy_device *phydev,
+ 			   u8 index, enum led_brightness brightness)
+@@ -1195,6 +1243,9 @@ static struct phy_driver dp83867_driver[] =3D {
+ 		.config_intr	=3D dp83867_config_intr,
+ 		.handle_interrupt =3D dp83867_handle_interrupt,
+=20
++		.get_sqi	=3D dp83867_get_sqi,
++		.get_sqi_max	=3D dp83867_get_sqi_max,
++
+ 		.suspend	=3D dp83867_suspend,
+ 		.resume		=3D dp83867_resume,
+=20
+--=20
+2.25.1
 
