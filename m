@@ -1,148 +1,124 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BE6126F1D;
-	Thu, 13 Jun 2024 02:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025A12AAE0
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 02:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718247464; cv=none; b=lklrBU9lAx6okyrqawuBdJmYLoo1gMLC3WiGtEK/QjPnk7D9H5fqtLfk0frVEKtmWco/xpZHRCQnPv0/fLR7QAz4cZGCGEK8Kn6PL17Ek3/UcOmnsqeCJV9DQiWd9uRGvCBf+zsf64+zmwROxwTZGxRKJr32iRy2SgTtxiCRCWo=
+	t=1718247499; cv=none; b=nNXmEjAFJz7R7IGrEwQVLYqUJgKQ+GQ7BQKxwNKhVh8bSNxmrykK6qdCcR5hZZsSzSSbK9CiaBJkQ07n8rhM0/lVwlcDeixddGXCLUElJj+4VzUI4hwscJj9SRo/xDcx59jO40CTme+PjnzAjtS1NQQdzhj4y5kr3m68avW1wls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718247464; c=relaxed/simple;
-	bh=TLL7Vi4AXjbV0h+Rp+oTDPJbtBaUErrOe9Swh52bSwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R+R4jv2xqZjKxZbpVjqpS0aM0CpjU5EBuvQRTY/rSgvgsoH05pM0VH/1SfwNMR7CwSkBSl1mOV0t6wKpq5t2Pe06A8ksq4RXziE6I1wab94qtIrV9AEW6rUbiIhkCkvroANG3jY7EI0Nqhm0alJ/2HYvV135c5XuL4i7XkmglAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BXBg2aSC; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1718247499; c=relaxed/simple;
+	bh=cudCwVPFY8gj3Xql79RT0/yQoQxsiwHECqig9oVJ5Ek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yek2JZ6d+vGHpaIESll47pHb9HtCMuP+nj4DyuVkpG4dv1nS2XufBKicM3O0eeenQDQEyjugxBmnrVm8T9sfmXk3/eiO1/0oldOx9+rxdAMPKi4x9zOC0zuSo2pO6fOE90xDRWgD2WkIMAdNqC2XlQFGtQnrsf2M4N2FTt3ikuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l6fMNDli; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BXBg2aSC"
-Received: from [0.0.0.0] ([134.134.137.76])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45D2uYQl3987160
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 12 Jun 2024 19:56:35 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45D2uYQl3987160
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1718247397;
-	bh=vQd3vUyfsayygHgkM5vM2MNlvWp19CaBHld+FXf7POM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BXBg2aSCEhzk2RvuSnVO0dJBYl4slJiiWnlYi4TuGGDOoze45N+zfoscff9daak2V
-	 DfThAqiqZwkTySyJ4/LN9SQYQVXgL7MkIYPzNUllsL629ysmcVZBvZfiX7bYQUanp2
-	 Ku9nxoPOLH8u5Zpp9zej6hpAQNKsZASwXvOMNVOdr7GzUJuFYZDPan14Ad/YF2DgeQ
-	 vadXv3MSroQfyBFL2QHM3nQ3QZBeLNYY4TLJLTGQhvvrZtyILLD9vHNfcDp586q4zB
-	 KObZ0/Xq4iiFpiN8Cwq26xUJu4LNTnlkddHfhPtC4Mpq9TYhzYORGujpPUmeAK8j50
-	 5UIGU/oHdxDdQ==
-Message-ID: <7bf64b12-ea59-470c-ac31-8226be4eb496@zytor.com>
-Date: Wed, 12 Jun 2024 19:56:28 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l6fMNDli"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57cad452f8bso359199a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718247496; x=1718852296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cYlALMaSt5bKOLPpkzaQGZT0pfqD9pv8OI0qHYxUheA=;
+        b=l6fMNDliM0xtpewAV1oA3nGowb9jWtg018U2Sgsq5VA8Gt3qu4efvmFiUcT2PBBapM
+         Tq8xS0T3BkgiPPCc+adYOvQ+H+/+cqvqkJlTzyPgT6r7cdd2cbf/Orboq921QiOio6HQ
+         kYMTpBjS1V7Z60/07G7b3YHus6lp1J7qyslVQiI9vqqjlALnKG/eSitVJnztZ5xbkOuf
+         nCemvfWonqDse0N9G+yCe/Sxmu+6cYW6P0bLxv43jp5w18hjsHqxNoWCtPvwlonSRsAi
+         pUTnqK3gF18n1+ukT9P+8LEgNQk1shZkfZZAXU1jdrIUA7WT/82pE4QIL3xizO4J1MOF
+         9+JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718247496; x=1718852296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cYlALMaSt5bKOLPpkzaQGZT0pfqD9pv8OI0qHYxUheA=;
+        b=RSqGpTzNjZ9QK5rBY2aqHN+y2dleuJKPlj+FbJZMf45BXarRdeu+oJ7AS3g0TKyVdX
+         LKA/DHGusoayyzt1Qc7YBqjzQkTOaJ1ZwAJYRWSyxno6GyxrZaCpJCHbae85VLZfIXc3
+         9VIJqtyV1nTW+pXr/z0izXAANWhet8pctXOFfqj6nVgH8q1Jupke92Gq2VZNaW5OdeKS
+         O5EW8E+jU5htWI9YopSt62o8+UasQUd4bo2S2CtHDX19T0NnsMufgCh66GGH2Cx2RVb5
+         v5Zsgz1iz7pQZg0yhhmjm4QmIIc1bVcAwTq0gfICut8UnqEBI/cR+btCbHudfgmp3xgY
+         JjQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfU+62mmIl2HLVdxhSdD10IUXQk516eJXilw0fcQL4Jgn73EcuXCAs5fJWB+M4p/0l+D7EhoDuW8pGjtJ3n+BgWZnE0n073wbw+IOD
+X-Gm-Message-State: AOJu0Yzn8coR3scUYM+Jy3XuWSpoVLHwn7GwIkthzPnhQTX2Cq5hnG3L
+	wwzBCLQDcPOB+v/N4ILKrBdoGp9r5GqTCtIPbe4K2WQrmZ6MHxjeRA3jOyoU57epg06QS1pXIoB
+	jFu679j7vwrEbT2wKYNdu1DkV38+JTOXHdINp
+X-Google-Smtp-Source: AGHT+IF9CciRYK/S+Ij1+KuSCnynD6lav8vXAPrkXMbU5iqPDXNWqrABMnPq8TuNELzKnGWLPQ19ZjeHQ37ywUEgQSE=
+X-Received: by 2002:a17:906:c149:b0:a6f:4d38:f40c with SMTP id
+ a640c23a62f3a-a6f4d391d2amr193732366b.62.1718247495476; Wed, 12 Jun 2024
+ 19:58:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND v1 1/3] x86/cpufeatures: Add {required,disabled} feature
- configs
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, will@kernel.org, peterz@infradead.org,
-        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org
-References: <20240509205340.275568-1-xin@zytor.com>
- <20240509205340.275568-2-xin@zytor.com>
- <20240612133340.GBZmmjtD40dzhsWVyg@fat_crate.local>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <20240612133340.GBZmmjtD40dzhsWVyg@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240608155316.451600-1-flintglass@gmail.com> <20240608155316.451600-2-flintglass@gmail.com>
+ <CAKEwX=P1Ojb71AEJ2gzQTrfWidFPcJZmoNxEwji7TceBN-szCg@mail.gmail.com>
+ <CAPpoddeigM44jhTA8Ua=+J4MC1MikouBZVoPrCW2LZF+9r5YeA@mail.gmail.com>
+ <CAJD7tkYp3GbuXV9G5bAZ1DetMmepV5ynciA+ukae7CKuxpXDJQ@mail.gmail.com>
+ <CAPpoddfj1EdfXfTUT8bLaNxat0hYiE4X9=qG38gPgRgmmVOjcw@mail.gmail.com>
+ <CAJD7tkZTSGz1bpo-pMNP_=11O-7RrhubWonqhUJwrt+TB=Ougg@mail.gmail.com> <CAPpoddcp9rVvg77WapsuiMdMzFrV0UioJ+VbQuJbKNY7-=nvVw@mail.gmail.com>
+In-Reply-To: <CAPpoddcp9rVvg77WapsuiMdMzFrV0UioJ+VbQuJbKNY7-=nvVw@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 12 Jun 2024 19:57:37 -0700
+Message-ID: <CAJD7tkY0=0yKSmEz=E5dL7GLRsO8r6ESWyzF+HdgK0wnMpzLKg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] mm: zswap: fix global shrinker memcg iteration
+To: Takero Funaki <flintglass@gmail.com>
+Cc: Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Shakeel Butt <shakeel.butt@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/2024 6:33 AM, Borislav Petkov wrote:
-> On Thu, May 09, 2024 at 01:53:38PM -0700, Xin Li (Intel) wrote:
->> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
->> index 2a7279d80460..719302d37053 100644
->> --- a/arch/x86/Kconfig.cpu
->> +++ b/arch/x86/Kconfig.cpu
->> @@ -358,6 +358,10 @@ config X86_P6_NOP
->>   	depends on X86_64
->>   	depends on (MCORE2 || MPENTIUM4 || MPSC)
->>   
->> +config X86_REQUIRED_FEATURE_NOPL
-> 
-> Can we keep the X86_{REQUIRED,DISABLED}_ prefixes solely in
-> arch/x86/Kconfig.cpufeatures and not spill them out into the rest of the tree?
+On Wed, Jun 12, 2024 at 7:36=E2=80=AFPM Takero Funaki <flintglass@gmail.com=
+> wrote:
+>
+> 2024=E5=B9=B46=E6=9C=8813=E6=97=A5(=E6=9C=A8) 11:18 Yosry Ahmed <yosryahm=
+ed@google.com>:
+>
+> > > The corrected version of the cleaner should be:
+> > > ```c
+> > > void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg)
+> > > {
+> > >         /* lock out zswap shrinker walking memcg tree */
+> > >         spin_lock(&zswap_shrink_lock);
+> > >         if (zswap_next_shrink =3D=3D memcg) {
+> > >                 do {
+> > >                         zswap_next_shrink =3D mem_cgroup_iter(NULL,
+> > >                                         zswap_next_shrink, NULL);
+> > >                         spin_unlock(&zswap_shrink_lock);
+> > >                         spin_lock(&zswap_shrink_lock);
+> > >                         if (!zswap_next_shrink)
+> > >                                 break;
+> > >                 } while (!mem_cgroup_online(zswap_next_shrink));
+> > >         }
+> > >         spin_unlock(&zswap_shrink_lock);
+> > > }
+> > > ```
+> >
+> > Is the idea here to avoid moving the iterator to another offline memcg
+> > that zswap_memcg_offline_cleanup() was already called for, to avoid
+> > holding a ref on that memcg until the next run of zswap shrinking?
+> >
+> > If yes, I think it's probably worth doing. But why do we need to
+> > release and reacquire the lock in the loop above?
+>
+> Yes, the existing cleaner might leave the offline, already-cleaned memcg.
+>
+> The reacquiring lock is to not loop inside the critical section.
+> In shrink_worker of v0 patch, the loop was restarted on offline memcg
+> without releasing the lock. Nhat pointed out that we should drop the
+> lock after every mem_cgroup_iter() call. v1 was changed to reacquire
+> once per iteration like the cleaner code above.
 
-Good point, let me try.
+I am not sure how often we'll run into a situation where we'll be
+holding the lock for too long tbh. It should be unlikely to keep
+encountering offline memcgs for a long time.
 
-> 
-> This way there will be no confusion between X86_FEATURE_, X86_REQUIRED_FEATURE_,
-> X86_DISABLED_FEATURE_ and so on, and which one I am supposed to use where...
-
-Currently X86_DISABLED_FEATURE_ macros are defined only in:
-arch/x86/Kconfig.cpufeatures. But X86_REQUIRED_FEATURE_ macros are not.
-
-
->> diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
->> new file mode 100644
->> index 000000000000..326a8410ff06
->> --- /dev/null
->> +++ b/arch/x86/Kconfig.cpufeatures
->> @@ -0,0 +1,153 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# x86 feature bits (see arch/x86/include/asm/cpufeatures.h) that are
->> +# either REQUIRED to be enabled, or DISABLED (always ignored) for this
->> +# particular compile-time configuration.  The tests for these features
->> +# are turned into compile-time constants via the generated
->> +# <asm/featuremasks.h>.
->> +#
->> +# The naming of these variables *must* match asm/cpufeatures.h.
-> 
-> I presume they must match X86_FEATURE_<name>?
-
-Right, let me add this.
-
-> 
-> And REQUIRED and DISABLED is manipulated in by the script?
-> 
-> I guess I'll see later.
-
-Yep!
-
-Thanks!
-     Xin
-
+Nhat, do you think this could cause a problem in practice?
