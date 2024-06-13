@@ -1,100 +1,100 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id B7EEB13D892
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 14:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC271448D7;
+	Thu, 13 Jun 2024 14:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290110; cv=none; b=ccuPpi45EtNMWv8bpgnTczfnp1oA5lzQafBNgYJH1sZr3/FaQUSRl6em6+UfqufKYtU5iuRz4FOExiGskry/uPraifsJ5nlsUMHwCqwYL9zbNwhSSHMwVPKA06KtUJwPm5sGgCWvqplGvb5IySA28i/7iLzscLt4EMZpp5B+wj4=
+	t=1718290130; cv=none; b=oohGV54frQSGmaLstGIDhfh8TKDOxjPpHlqz0WOCxEWIF6hbRlaamCXwH2je7yi5V8ykKC4ztPfRHYp5U5hx5a3h6TLNZXCtjBwwdhdtDL7cvmrmKM6Hx8Nryapeo9ML5MltMvCFSO3J+eZVf3UNRunVsRiIgA3yeIpidjkslNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290110; c=relaxed/simple;
-	bh=WJfygxCiIGV+LFOhGdFIBNXZJXjEjMO9dlxerVwEtX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxNVIuv1swe4MTKONhYjI8LcnFdSrb6+dePhFZFsxp8iQv7W7HgoRPZ/Afg85c6XUtHaLr+MkTNnYEHCQXu4m815Mirfb0Wjzdfp74mprfQPSHbK8CQMORGwDkP4MFcJVlT8gdBoi1fYe3JPFMVQyIyya+dFfWCeDQypu6fCIXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 263793 invoked by uid 1000); 13 Jun 2024 10:48:24 -0400
-Date: Thu, 13 Jun 2024 10:48:24 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: syzbot <syzbot+1b2abad17596ad03dcff@syzkaller.appspotmail.com>
-Cc: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-  luiz.dentz@gmail.com, marcel@holtmann.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] [usb?] BUG: soft lockup in hci_cmd_timeout
-Message-ID: <4e155544-60df-42d2-89ea-924ebc9f7057@rowland.harvard.edu>
-References: <000000000000f45085061aa9b37e@google.com>
+	s=arc-20240116; t=1718290130; c=relaxed/simple;
+	bh=xGK5CAoX3hqfJgz9DdqkUhpIVSEo7t/GIW+AAIYvcaw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RlWAYSLqh1m/LKvoVpngUWaaWQGoAX1+rkxEBJ6HCRuNxb4XAioODdCRBK4UF3youLbv4MzF7vMClt+0X5J3cT/Q0oWvc9Q3S8wd9DesvlJx1G8wPE9cU9WHHkLUe3UCmWW/J7ETWK6t2soIF/2JAM8B/Bb//IHLeV3VzbczxD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=EcpfRZ3u; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="EcpfRZ3u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718290120;
+	bh=xGK5CAoX3hqfJgz9DdqkUhpIVSEo7t/GIW+AAIYvcaw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=EcpfRZ3u6p2ellkVSRyC2XKQq+uCEDAN/awKz4RuhuSd7M6r+wLjGNLqEEKl6JPk0
+	 W+SCga4DoL/kque4Vr5ul1j7vfYPrDe2BP+85R0T/7yTyTX6E8Qaw292db1gx40pCl
+	 hGyi62zc53wFrvO70bcFhR6cXdhy/q4LjN/Jz6+k=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Thu, 13 Jun 2024 16:48:38 +0200
+Subject: [PATCH v3 3/5] leds: core: Unexport led_colors[] array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f45085061aa9b37e@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240613-cros_ec-led-v3-3-500b50f41e0f@weissschuh.net>
+References: <20240613-cros_ec-led-v3-0-500b50f41e0f@weissschuh.net>
+In-Reply-To: <20240613-cros_ec-led-v3-0-500b50f41e0f@weissschuh.net>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ chrome-platform@lists.linux.dev, Dustin Howett <dustin@howett.net>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718290119; l=1434;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=xGK5CAoX3hqfJgz9DdqkUhpIVSEo7t/GIW+AAIYvcaw=;
+ b=z65+2JKASgSAQluTrx6XZcnjq4H7Q7ozK0ieb9s0GOlP1gBHSapstFXcUXIojpFv/+gdT9E1o
+ W5jI1R/zxMPDKwR+u5F89s2xqK2fqUDP9MtDuR50QqN7rub8Mo8OWaC
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Tue, Jun 11, 2024 at 09:20:31PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    8867bbd4a056 mm: arm64: Fix the out-of-bounds issue in con..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=112ad20a980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1b2abad17596ad03dcff
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: arm64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1112d2ce980000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c37286980000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/6ea21f50498b/disk-8867bbd4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/e2fed09364aa/vmlinux-8867bbd4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/4860173c7a18/Image-8867bbd4.gz.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+1b2abad17596ad03dcff@syzkaller.appspotmail.com
-> 
-> cdc_wdm 1-1:1.0: nonzero urb status received: -71
-> cdc_wdm 1-1:1.0: wdm_int_callback - 0 bytes
-> cdc_wdm 1-1:1.0: nonzero urb status received: -71
-> cdc_wdm 1-1:1.0: wdm_int_callback - 0 bytes
-> watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [kworker/u9:2:6293]
-> CPU#0 Utilization every 4s during lockup:
-> 	#1:  97% system,	  1% softirq,	  4% hardirq,	  0% idle
-> 	#2:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
-> 	#3:  97% system,	  0% softirq,	  3% hardirq,	  0% idle
-> 	#4:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
-> 	#5:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
-> Modules linked in:
-> irq event stamp: 150196
+There are no external users left, make the array static.
 
-This patch fixed the problem in a different syzbot lockup.  Let's see if 
-it also fixes this one.  The console log output suggests that it will.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/leds/led-core.c | 3 +--
+ drivers/leds/leds.h     | 1 -
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-Alan Stern
-
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git 8867bbd4a056
-
-Index: usb-devel/drivers/usb/class/cdc-wdm.c
-===================================================================
---- usb-devel.orig/drivers/usb/class/cdc-wdm.c
-+++ usb-devel/drivers/usb/class/cdc-wdm.c
-@@ -266,14 +266,14 @@ static void wdm_int_callback(struct urb
- 			dev_err(&desc->intf->dev, "Stall on int endpoint\n");
- 			goto sw; /* halt is cleared in work */
- 		default:
--			dev_err(&desc->intf->dev,
-+			dev_err_ratelimited(&desc->intf->dev,
- 				"nonzero urb status received: %d\n", status);
- 			break;
- 		}
- 	}
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index e0dd2284e84a..f2cea4e094f6 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -25,7 +25,7 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+ LIST_HEAD(leds_list);
+ EXPORT_SYMBOL_GPL(leds_list);
  
- 	if (urb->actual_length < sizeof(struct usb_cdc_notification)) {
--		dev_err(&desc->intf->dev, "wdm_int_callback - %d bytes\n",
-+		dev_err_ratelimited(&desc->intf->dev, "wdm_int_callback - %d bytes\n",
- 			urb->actual_length);
- 		goto exit;
- 	}
+-const char * const led_colors[LED_COLOR_ID_MAX] = {
++static const char * const led_colors[LED_COLOR_ID_MAX] = {
+ 	[LED_COLOR_ID_WHITE] = "white",
+ 	[LED_COLOR_ID_RED] = "red",
+ 	[LED_COLOR_ID_GREEN] = "green",
+@@ -42,7 +42,6 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
+ 	[LED_COLOR_ID_CYAN] = "cyan",
+ 	[LED_COLOR_ID_LIME] = "lime",
+ };
+-EXPORT_SYMBOL_GPL(led_colors);
+ 
+ static int __led_set_brightness(struct led_classdev *led_cdev, unsigned int value)
+ {
+diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
+index 1138e2ab82e5..d7999e7372a4 100644
+--- a/drivers/leds/leds.h
++++ b/drivers/leds/leds.h
+@@ -30,6 +30,5 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+ 
+ extern struct rw_semaphore leds_list_lock;
+ extern struct list_head leds_list;
+-extern const char * const led_colors[LED_COLOR_ID_MAX];
+ 
+ #endif	/* __LEDS_H_INCLUDED */
+
+-- 
+2.45.2
 
