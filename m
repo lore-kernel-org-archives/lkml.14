@@ -1,139 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7548814D6ED;
-	Thu, 13 Jun 2024 19:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF691474A8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718307248; cv=none; b=qvtMmUZJKcwv/e1BDHRUqVxNwQIh0TI4mnleboKKXEmb68H1uoA7/MgLvqBp8bvv49/1NdzlsC/IOL3Po8nnTm0H0Sj/7kd9L9FjMtDDllx/MmXjYuEUwl8b0eQQpP2ll8mmF8lxXSNzaKeFsmKgJcYikfYkqOfrF+25p6Bm6xA=
+	t=1718307260; cv=none; b=s3sPCeEqcOpfEoNdUewsFR1BJgPZq059jpOkUaDVMKcBrcJT1oJFPbP7L8JETv7KsomFIpRFGITU9LfLmNoDhoGter9DqTCy+NxVZ/MF3TJQjADGNardEsC0udSVxhjaOnTNkyd9YIAqGakmPObZ/YfImg3+Gpq6ZAdm+1GJtws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718307248; c=relaxed/simple;
-	bh=bbhYqO6arj3VX7+rFvR2uC0Q/DGG5UGkw2Zn5smw2UQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PAyETDcKcfQ1p53f9kc2GPmolnMDIJigLrhsPVxVrjGZHYQv+xu+hN9gO7GMDGJL4z0zuMrtomFfwXpxgvMB2QYWB5N1h17+HieKEqAfb3LOLWCo1tVCJP8HixrriW3Eyonyi23TL9OMlRCPo5YMJ+/upWDQ/d7W6Wgqw6QY6mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B41kXFrk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718307260; c=relaxed/simple;
+	bh=7aG7kDyVxZ+xKhQ+yxWUmVgAOGSJ6gommzR9sbbVuMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGSQ2iqgMDsTlZOce7asJoZQAX9n5L/3bzPmAa+HIVcimyTASka4lUK9a0OBMX+K8HvMBU3ygyXk4MHTdyr5brDbUyr2CYtQBQKwnZ9QIaD2NdUyzRZYPfwE0fwSDInr+TLhOCUqZJsX7jNr3CLzXkvX1/ECdBr3zjRfjNCzwM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i5QAehiW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B41kXFrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C8BC4AF5F;
-	Thu, 13 Jun 2024 19:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718307248;
-	bh=bbhYqO6arj3VX7+rFvR2uC0Q/DGG5UGkw2Zn5smw2UQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B41kXFrkKcs4UOo8evdjfW2C4ZW/UK3nX+H2W1bKE/9jnhsi9R8uzcuv9pzz6ywsb
-	 6NhZCORscpyhVztgHvNjw3zpk55iVAc1L0EFo/y4foNJrvrcatI3hN81iUWnxfWWqM
-	 dhIxGhrOj6STl5dzuYjwHEDitl/LBsXb/Svl43pRVS2JBt6HEIw/7xVClMj8T5rFT/
-	 JHKdVb6kn36tDqT1mDPflFVMatAdDbR0NlcXUw7HaBP6pvGrVp4usRe/VJjjtZ9hzS
-	 WUQh84AAlYl0fS8jZNieg+F3pi+hcb2rgKQGkpaD42bC3N5LrlMhdhJSl70coKt9Tz
-	 2KHOrsydpjYmg==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3d21c5b48f5so211526b6e.0;
-        Thu, 13 Jun 2024 12:34:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVugk0YH1nqMjWV+m4nZ5RULE7ZhMRc3ACxi5TSllsT6EJpv7vdDEu+hQ+0+8+DA/osDIknL21ySlUIRk7++bxhF1mmoYZORiHkY5HyOOJWLLE8FmVfYjbPPKsCTC92E86x1i7OnZGgpgHulLQ2C7wOfQdNKuzFroD1f/oyJigqdxK9
-X-Gm-Message-State: AOJu0YwxV52g8Oy+BRQTWYPWKsv3MOdlQhr23zOnjLP08M9Yb8HHHAwD
-	+1zd/qldE+cfIYcsFvY1FNpZxNUDk0hkDmrN9CzwtaQwCNsigszq2zP4P7CJ+b1P/Fr8VrrTbE3
-	1HmhxFURNbVLkurbDxISs45I1njQ=
-X-Google-Smtp-Source: AGHT+IG0G9y36mr+Dlfv2THcm6PYAW/FOqGLOg/QX0txRvOhtSWL6wvDXmnU00jM0TAGeT4jIFVoyY40op2reHRrX9s=
-X-Received: by 2002:a4a:e1da:0:b0:5ba:ead2:c742 with SMTP id
- 006d021491bc7-5bdad9f0343mr742290eaf.0.1718307247027; Thu, 13 Jun 2024
- 12:34:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i5QAehiW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718307257;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/IsYvLqgq+E3FY1k2F2Fg9bKLYI4WtRPTLB94zlxiIg=;
+	b=i5QAehiWG9IHpX9BaE6WNpALHW42Wwz/QrUC4TSsqK43fx6MviyVB7r/SsWVus5cXLYrpy
+	6ZS/YMoKauj+hHGu4PFv+yi0HMxJ13zp9riAjBkD2e6m36a3TB+t1VqzdaoP9odCL0TASh
+	xQBRKc47bGDYO4/n+xIz1wOBWR8VEdo=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-gIfM_Ai-N3qrrdUE-CjFCA-1; Thu, 13 Jun 2024 15:34:16 -0400
+X-MC-Unique: gIfM_Ai-N3qrrdUE-CjFCA-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-62f4a731ad4so27420217b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:34:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718307255; x=1718912055;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/IsYvLqgq+E3FY1k2F2Fg9bKLYI4WtRPTLB94zlxiIg=;
+        b=Z1V2+A/lSDwGnOgGI8xC6BYRMEjcm/HZptSQItx25fuppDFE1Rir5Ma2YScaGnakD0
+         rYOO+w4zt5V4Px8rQzSNVO56taR/ehzWT9ZMZ63P+pmz5mliwUNtaOLWq1mPzDN+UcCX
+         dAeOpQGAyUQCsXGi/+BSF+hivm6rrxv845yFt75O1+8WiijNISI0ruq9G5CpMsEKQAC4
+         TlfiQc88C1V1LhHRmdCx5Hrwk6XdXEu8EKGbalxQvwVXmUfqorEJ1xE/pgdLOgSwaJ6B
+         kGOz2stWagkmAtHcc0qL8JNV+mtQSsUzcedI/3JC/Ox65iA04/0yWMt+lgAh/4GFcc2x
+         reCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWvaSSMUa5tVzslnRrqDt0PUBaDE4gbMBX0eCkBHLImmrT+xwF8cqrIQeNTSsccaxxNNhfC4VeYH1l4gYGEsXUH47xeuoIhE6Veuqo
+X-Gm-Message-State: AOJu0YyE2V65QZjXf82PZQl4fMcCI7geYe8p+ZO/eYrYp5/yx1jJtVsp
+	4LMzsQaH9XQbZNfSjS5XPtVXUE4UOYOVyQc1vx6Vw9p+99HqcWpvlOkZVUnOTz6padXU7g1Lh0V
+	khd0EGp7WKomEwbrgH7WmmSFBngJIC2dgkFSqIItTAmeG18W+TdWX3DeACzJyqraAJiuuXA==
+X-Received: by 2002:a25:d041:0:b0:dfb:96e:1f15 with SMTP id 3f1490d57ef6-dff1549168cmr469717276.42.1718307255322;
+        Thu, 13 Jun 2024 12:34:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGr91FD/R6YxAjrE+liHylnQVNjnoxStaUZFpGCZ5A09J3aRTJXCfWk80vcxy79HA4dylVI2Q==
+X-Received: by 2002:a25:d041:0:b0:dfb:96e:1f15 with SMTP id 3f1490d57ef6-dff1549168cmr469682276.42.1718307254907;
+        Thu, 13 Jun 2024 12:34:14 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::33])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c27786sm9995666d6.55.2024.06.13.12.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 12:34:14 -0700 (PDT)
+Date: Thu, 13 Jun 2024 14:34:12 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Joel Slebodnick <jslebodn@redhat.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, peter.wang@mediatek.com, 
+	manivannan.sadhasivam@linaro.org, beanhuo@micron.com
+Subject: Re: [PATCH] scsi: ufs: core: Free memory allocated for model before
+ reinit
+Message-ID: <6krasewc6bps43ivmk6eez2v7clnpoxczpctnp7jhgthpjpaqz@hk2yip3wknsc>
+References: <20240613182728.2521951-1-jslebodn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610-cros_ec-charge-control-v3-0-135e37252094@weissschuh.net> <20240610-cros_ec-charge-control-v3-1-135e37252094@weissschuh.net>
-In-Reply-To: <20240610-cros_ec-charge-control-v3-1-135e37252094@weissschuh.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 13 Jun 2024 21:33:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iUjvrs+57_meCkK7fcokH0j8sTAG3xXai5av_n5OHJwA@mail.gmail.com>
-Message-ID: <CAJZ5v0iUjvrs+57_meCkK7fcokH0j8sTAG3xXai5av_n5OHJwA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] ACPI: battery: add devm_battery_hook_register()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-	Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
-	Dustin Howett <dustin@howett.net>, Stephen Horvath <s.horvath@outlook.com.au>, 
-	Rajas Paranjpe <paranjperajas@gmail.com>, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, Matt Hartley <matt.hartley@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613182728.2521951-1-jslebodn@redhat.com>
 
-On Mon, Jun 10, 2024 at 5:52=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weisss=
-chuh.net> wrote:
->
-> Add a utility function for device-managed registration of battery hooks.
-> The function makes it easier to manage the lifecycle of a hook.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+On Thu, Jun 13, 2024 at 02:27:28PM GMT, Joel Slebodnick wrote:
+> Under the conditions that a device is to be reinitialized within
+> ufshcd_probe_hba, the device must first be fully reset.
+> 
+> Resetting the device should include freeing U8 model (member of
+> dev_info)  but does not, and this causes a memory leak.
+> ufs_put_device_desc is responsible for freeing model.
+> 
+> unreferenced object 0xffff3f63008bee60 (size 32):
+>   comm "kworker/u33:1", pid 60, jiffies 4294892642
+>   hex dump (first 32 bytes):
+>     54 48 47 4a 46 47 54 30 54 32 35 42 41 5a 5a 41  THGJFGT0T25BAZZA
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace (crc ed7ff1a9):
+>     [<ffffb86705f1243c>] kmemleak_alloc+0x34/0x40
+>     [<ffffb8670511cee4>] __kmalloc_noprof+0x1e4/0x2fc
+>     [<ffffb86705c247fc>] ufshcd_read_string_desc+0x94/0x190
+>     [<ffffb86705c26854>] ufshcd_device_init+0x480/0xdf8
+>     [<ffffb86705c27b68>] ufshcd_probe_hba+0x3c/0x404
+>     [<ffffb86705c29264>] ufshcd_async_scan+0x40/0x370
+>     [<ffffb86704f43e9c>] async_run_entry_fn+0x34/0xe0
+>     [<ffffb86704f34638>] process_one_work+0x154/0x298
+>     [<ffffb86704f34a74>] worker_thread+0x2f8/0x408
+>     [<ffffb86704f3cfa4>] kthread+0x114/0x118
+>     [<ffffb86704e955a0>] ret_from_fork+0x10/0x20
+> 
 
-Please feel free to add
+With the following in place:
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    Fixes: 96a7141da332 ("scsi: ufs: core: Add support for reinitializing the UFS device")
+    Cc: stable@vger.kernel.org
 
-to this patch and route it along with the rest of the series as needed.
+feel free to add:
 
-Thanks!
+    Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
 
+> Signed-off-by: Joel Slebodnick <jslebodn@redhat.com>
 > ---
->  drivers/acpi/battery.c | 15 +++++++++++++++
->  include/acpi/battery.h |  2 ++
->  2 files changed, 17 insertions(+)
->
-> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-> index b379401ff1c2..6ea979f76f84 100644
-> --- a/drivers/acpi/battery.c
-> +++ b/drivers/acpi/battery.c
-> @@ -756,6 +756,21 @@ void battery_hook_register(struct acpi_battery_hook =
-*hook)
->  }
->  EXPORT_SYMBOL_GPL(battery_hook_register);
->
-> +static void devm_battery_hook_unregister(void *data)
-> +{
-> +       struct acpi_battery_hook *hook =3D data;
-> +
-> +       battery_hook_unregister(hook);
-> +}
-> +
-> +int devm_battery_hook_register(struct device *dev, struct acpi_battery_h=
-ook *hook)
-> +{
-> +       battery_hook_register(hook);
-> +
-> +       return devm_add_action_or_reset(dev, devm_battery_hook_unregister=
-, hook);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_battery_hook_register);
-> +
->  /*
->   * This function gets called right after the battery sysfs
->   * attributes have been added, so that the drivers that
-> diff --git a/include/acpi/battery.h b/include/acpi/battery.h
-> index 611a2561a014..c93f16dfb944 100644
-> --- a/include/acpi/battery.h
-> +++ b/include/acpi/battery.h
-> @@ -2,6 +2,7 @@
->  #ifndef __ACPI_BATTERY_H
->  #define __ACPI_BATTERY_H
->
-> +#include <linux/device.h>
->  #include <linux/power_supply.h>
->
->  #define ACPI_BATTERY_CLASS "battery"
-> @@ -19,5 +20,6 @@ struct acpi_battery_hook {
->
->  void battery_hook_register(struct acpi_battery_hook *hook);
->  void battery_hook_unregister(struct acpi_battery_hook *hook);
-> +int devm_battery_hook_register(struct device *dev, struct acpi_battery_h=
-ook *hook);
->
->  #endif
->
-> --
-> 2.45.2
->
->
+>  drivers/ufs/core/ufshcd.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 0cf07194bbe8..a0407b9213ca 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -8787,6 +8787,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool init_dev_params)
+>  	    (hba->quirks & UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH)) {
+>  		/* Reset the device and controller before doing reinit */
+>  		ufshcd_device_reset(hba);
+> +		ufs_put_device_desc(hba);
+>  		ufshcd_hba_stop(hba);
+>  		ufshcd_vops_reinit_notify(hba);
+>  		ret = ufshcd_hba_enable(hba);
+> -- 
+> 2.40.1
+> 
+
