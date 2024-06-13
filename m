@@ -1,73 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6B0146A63;
-	Thu, 13 Jun 2024 14:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13BD1448D7;
+	Thu, 13 Jun 2024 14:12:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287906; cv=none; b=JG0MU4eCIyO2w/KRmoDd/C5xf82lYIBX1FDRubn4ZTzChJznngwCi0vOM7tObQXxuW+08EYL/L1KsK3kJRF2l87avXwB9sBvdGoa+t3ws7GQiCslZxPQT2e9sRR0nGi9XM0+rtGnBh3y56+/DZUwPtcOg4dQef3GlyiAMwpbA+A=
+	t=1718287925; cv=none; b=I86ts514cHJIs+9lfKtf0TiX1JFvuCbNzdhoMBmZpePOi72wKEesCNrYrcItQD0zAQUTDBC1oxFj8usSmCQKL9FJiL/4axH8zUfdaNhesFmQHxg2y8FAIV12pzirFCKwSLT3jMHbESn7cxIiW4rXyX00xROF58WTRgI7B7hTGl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287906; c=relaxed/simple;
-	bh=g3mPo55/Gt1FBgk79gnSHReqipxiT916wmvC5/CqQlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qM37Z9TyHePq3o4oBi3CetGr3OZbliRXK0ET7lUxDFP3AkEOc7Nl4eMVnzP741wYPKe9Qo/kGAduwGRiKewPTjbz7ncshqKGDbvUGUInVyEgWTvv0ZwTItS+bUkAZZe+bm+3gHWij57sxI/SYDAbrpaEQktPyAMkRG2Hf54A+5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2+F/1YC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718287925; c=relaxed/simple;
+	bh=BP0dHPKrPu1s5lsp6b2VSCZAPBtD2LfDAGF3nZJ/aYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKPeoTew5K7KAhRH1tBMnRVXgyjWyWh8QRVrrsIeQtRZ5JzmVeU8MNxFkM/EKHGRThz5ddhQJxJ46GWPMv5MapSB6JlctJ1QuHs6FQDDbXY9qGuqfNT7ayWoXVK4CjJc/tHJI5cF2HLNlkJvHMJ3crwShyiQ0r9TgzScHbuP/5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=L2OdeEdD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2+F/1YC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A1F4C2BBFC;
-	Thu, 13 Jun 2024 14:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718287906;
-	bh=g3mPo55/Gt1FBgk79gnSHReqipxiT916wmvC5/CqQlk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=V2+F/1YC3QM+UAga0rqtKPdNgFHTPaW2EKtXOWvRtmwd32p6O2alJ9fzG3HBTegtY
-	 pN9CthUgAaV7LkRjBHpadqfziegxidT6KX5+JyJB+FH3Ht/u+xI9eKDy+uzUJrcGnt
-	 CiQWRGrPytaQyEueoX7BKOtUstryK7qczuZudIx9BJKoJHNEpk3xAkBScApk4qUWTJ
-	 MZeQXYQKjF4bhdAKdRsT0gItmsN51557UxnqivtuzF+yE9d4zULLMX6byvVzHvNpLB
-	 jbHu6tk4XhtQBkZv4sFcUszjl85vJbJM+4BHU9deVo1s+qtSYZQ+nRFDOPE6hcWg5u
-	 w80fLFhGgSH/g==
-Date: Thu, 13 Jun 2024 17:09:36 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jan Beulich <jbeulich@suse.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Narasimhan V <Narasimhan.V@amd.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, stable@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] memblock:fix validation of NUMA coverage
-Message-ID: <Zmr9oBecxdufMTeP@kernel.org>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="L2OdeEdD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414C2C2BBFC;
+	Thu, 13 Jun 2024 14:12:02 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="L2OdeEdD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1718287920;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fjz4ZCmXLkYKy1WwR1BKUB9SOdktn0OQ80YKkl5C07A=;
+	b=L2OdeEdDbAYwCCQIo0q3Y5svBHl6HUoVii7Ipx/YqW9msnW5nLiQCcmVhvT3d2aYbXekmX
+	6vGp/7RezmQfWwaVJxWqE0MwVUi9dk5ylrevWbLPzxAvc9yHIJFCNMr0XP5ij6Ppv2K3la
+	u18h46ekO5C4iutUHhucdp/z23ziWUY=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9cf22b43 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 13 Jun 2024 14:11:58 +0000 (UTC)
+Date: Thu, 13 Jun 2024 16:11:52 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <Zmr-KPG9F6w-uzys@zx2c4.com>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <Zmov7ZaL-54T9GiM@zx2c4.com>
+ <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
+ <Zmrkkel0Fo4_g75a@zx2c4.com>
+ <e06440e2-9121-4c92-8bf2-945977987052@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e06440e2-9121-4c92-8bf2-945977987052@paulmck-laptop>
 
-Hi Linus,
+On Thu, Jun 13, 2024 at 05:46:11AM -0700, Paul E. McKenney wrote:
+> How about a kmem_cache_destroy_rcu() that marks that specified cache
+> for destruction, and then a kmem_cache_destroy_barrier() that waits?
+> 
+> I took the liberty of adding your name to the Google document [1] and
+> adding this section:
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+Cool, though no need to make me yellow!
 
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+> > But then, if that mechanism generally works, we don't really need a new
+> > function and we can just go with the first option of making
+> > kmem_cache_destroy() asynchronously wait. It'll wait, as you described,
+> > but then we adjust the tail of every kfree_rcu batch freeing cycle to
+> > check if there are _still_ any old outstanding kmem_cache_destroy()
+> > requests. If so, then we can splat and keep the old debugging info we
+> > currently have for finding memleaks.
+> 
+> The mechanism can always be sabotaged by memory-leak bugs on the part
+> of the user of the kmem_cache structure in play, right?
+> 
+> OK, but I see your point.  I added this to the existing
+> "kmem_cache_destroy() Lingers for kfree_rcu()" section:
+> 
+> 	One way of preserving this debugging information is to splat if
+> 	all of the slab’s memory has not been freed within a reasonable
+> 	timeframe, perhaps the same 21 seconds that causes an RCU CPU
+> 	stall warning.
+> 
+> Does that capture it?
 
-are available in the Git repository at:
+Not quite what I was thinking. Your 21 seconds as a time-based thing I
+guess could be fine. But I was mostly thinking:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock 
+1) kmem_cache_destroy() is called, but there are outstanding objects, so
+   it defers.
 
-for you to fetch changes up to 3ac36aa7307363b7247ccb6f6a804e11496b2b36:
+2) Sometime later, a kfree_rcu_work batch freeing operation runs.
 
-  x86/mm/numa: Use NUMA_NO_NODE when calling memblock_set_node() (2024-06-06 22:20:39 +0300)
+3) At the end of this batch freeing, the kernel notices that the
+   kmem_cache whose destruction was previously deferred still has
+   outstanding objects and has not been destroyed. It can conclude that
+   there's thus been a memory leak.
 
-----------------------------------------------------------------
-Jan Beulich (2):
-      memblock: make memblock_set_node() also warn about use of MAX_NUMNODES
-      x86/mm/numa: Use NUMA_NO_NODE when calling memblock_set_node()
-
- arch/x86/mm/numa.c | 6 +++---
- mm/memblock.c      | 4 ++++
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
--- 
-Sincerely yours,
-Mike.
+In other words, instead of having to do this based on timers, you can
+just have the batch freeing code ask, "did those pending kmem_cache
+destructions get completed as a result of this last operation?"
