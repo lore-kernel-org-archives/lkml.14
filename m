@@ -1,157 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E107412EBC2;
-	Thu, 13 Jun 2024 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDB126AE4;
+	Thu, 13 Jun 2024 16:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718295345; cv=none; b=Pd0pRY51JGd7w/elX8TELS3J0qt2WurR76KwM40Zt5Vlbvo6LnK5Y7nnO4z89TK0ZknlYCOMfT4KXnUaNT3ICy6QhbQAnpc2U3s4k8eHSWiYMvjmN+bSF0HpO1+OWYMZoy8HdppdsybjkSeNvd6oYyaMHrKkDJpBrVwh4nrZa8o=
+	t=1718295428; cv=none; b=kgIi2R/TzZizIpGY7sDYaOl830nY4As7sAmS3SYdovSlaaLYZIXeRCo3GdpH3IRcOLQTch8LIiUYLcgNqOQklXL/Fo09xu/+y6dWKyMn/Ky8V2YYtl2z3pL7KxCHRaa4lLZVz6OAb1ATwyr8NfepOj6xY8GrYcy/1qDpFoci/BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718295345; c=relaxed/simple;
-	bh=Ir6aMlMU76URUanDBPqAAtxolLoQvV6liNw0P13aboM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IngAD4xabyE1taWjHOTDNavmRublXPGdvhvy1asbX55lJgPG2SMTzJxRjqQaEuK5nFfK51qrUZLAE74zPwamKqwZCPh5O0ngj4cPwxIHcirhR4TmXHsyepZ6qLI7lWS7H1eKew6ghsPsINjwdZzwzyxtb5iuKQ1hApc+ciNEn5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jYumNiry; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718295428; c=relaxed/simple;
+	bh=+Zn4NqoiQn12EaXAgwIxgS81kCXed7v4quHLQTUkZ9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VC2BlETnqd2QIYTj0a/+bqO4QHeNOebFCF2SX1PeB82T3Bq1oODCNjwuNfJW7bbErNHrg0b6YeWJk+JivXEHGvo/lYVOl8ovcc6E9EK+iyVy9I5LoZNP8JvnVUs/MwPvKuum0oV1LDgFvNnE0wQCUhrY0Lb+gxecdS/wvaocaZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwuExW8v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jYumNiry"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718295344; x=1749831344;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ir6aMlMU76URUanDBPqAAtxolLoQvV6liNw0P13aboM=;
-  b=jYumNiryu6jJTEX7heYPQlHnYhz6/ixru7vyDGAEdrjwpl4wrCTp+yBr
-   lcafF2th3gR1jlP8Aert7eE4PbEr5lR0BkC8CnvEBJ9z0uQC4hHK2w6b0
-   yGyYs1EJfTT2Ei+D1639NRrAhAxf75k6N5vQYGN3ihh1N2txzKQeBnbCq
-   k5dLWiGSCcXW7E5xBnH4ar3YYpTeKMEOeB3gg4ojXMdCFl6lcT7oisAXg
-   6zxCVi7rMOXQM/4oopg1bFmq4Wg9V8obz99S21YtJHqk3RBgYdC5ucdBB
-   3Z+QbvdF3CUxqtodwxa6+U2pyXstAq6Uf4zD0nYLyFnbHJ59JXOIYnHd8
-   g==;
-X-CSE-ConnectionGUID: Qkj3zOA6Tee2MFLs+fYjPg==
-X-CSE-MsgGUID: YRaazzxUSCuZCBJ+/8ykPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="25808660"
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="25808660"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:15:30 -0700
-X-CSE-ConnectionGUID: iK6CXFrGTjuYXDdqOyQiGQ==
-X-CSE-MsgGUID: X8YqcHs1T6awowXC7DxeaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="40083225"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:15:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Jun 2024 19:15:23 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Uros Bizjak <ubizjak@gmail.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI: hotplug: Use atomic_{fetch_}andnot() where
- appropriate
-In-Reply-To: <20240613155134.GA1062951@bhelgaas>
-Message-ID: <aa9d3320-d31a-1577-cf55-9473864bd04c@linux.intel.com>
-References: <20240613155134.GA1062951@bhelgaas>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwuExW8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4839AC32789;
+	Thu, 13 Jun 2024 16:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718295428;
+	bh=+Zn4NqoiQn12EaXAgwIxgS81kCXed7v4quHLQTUkZ9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KwuExW8vvBPZVYhFSLETHkkBrNtWdqxvd5CBloj8R6B2SoEvbU929z58l7XKDoBwo
+	 FMmM9x8BNisUvLXWFjnL95U8e7uA1aIMvfAvC3gmVLa/DX0hwfi57XFCzUUo6h4FAY
+	 wfl20vbQsk8L9eJetZLl4Xr919N8Osag1CmSxPNArVLpXH1q7qAQMOLGVRwRuNpZfl
+	 ETcMtOt6lXya2zyCI4zpIzP7QJok3I/ZZpWuq86kvd/PGARjR3XlacBb1mEhzkARS3
+	 mgpahOqDhsIHaSb1/JnZ4hOVuTaAgy9HnSeT7Murp95+J9uTbFQlvXznj80F5/ut6G
+	 nxtMtNqR990cw==
+Date: Thu, 13 Jun 2024 17:17:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+Cc: Mark Brown <broonie@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+	robh@kernel.org, saravanak@google.com, hch@lst.de,
+	m.szyprowski@samsung.com, robin.murphy@arm.com, will@kernel.org,
+	catalin.marinas@arm.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	kernel@quicinc.com
+Subject: Re: [PATCH v6 1/4] of: reserved_mem: Restruture how the reserved
+ memory regions are processed
+Message-ID: <20240613-goldfish-unpicked-1bc9f786aaed@spud>
+References: <20240528223650.619532-1-quic_obabatun@quicinc.com>
+ <20240528223650.619532-2-quic_obabatun@quicinc.com>
+ <20240610213403.GA1697364@thelio-3990X>
+ <Zmd0Zg7oMneJLyHd@finisterre.sirena.org.uk>
+ <cc180d94-6890-4e92-8080-ffd6c1269e6e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zljD9j5WH2t20q2N"
+Content-Disposition: inline
+In-Reply-To: <cc180d94-6890-4e92-8080-ffd6c1269e6e@quicinc.com>
 
-On Thu, 13 Jun 2024, Bjorn Helgaas wrote:
 
-> [+cc Lukas, Ilpo]
-> 
-> On Thu, Jun 13, 2024 at 10:24:24AM +0200, Uros Bizjak wrote:
-> > Use atomic_{fetch_}andnot(i, v) instead of atomic_{fetch_}and(~i, v).
-> 
-> If the purpose is to improve readability, let's mention that here.
-> Since this only touches pciehp, make the subject line "PCI: pciehp:
-> ..." as was done in the past.
-> 
-> It looks like every use of atomic_and() uses a ~value and is hence a
-> candidate for a similar change, but I'm not sure that converting to
-> "andnot" and removing the explicit bitwise NOT is really a readability
-> benefit.
-> 
-> If it were named something like "atomic_clear_bits", I'd be totally in
-> favor since that's a little higher-level description, but that ship
-> has long since sailed.
-> 
-> But I don't really care and if this is the trend, I'm fine with this
-> if Lukas and Ilpo agree.
+--zljD9j5WH2t20q2N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm pretty much aligned with Bjorn, I don't find it clearer but I don't 
-feel too strongly now that I've seen how to interpret this. As he pointed 
-out, there would have been much better names for this operation ("andnot"
-feels similar to using double negations which easily gets confusing unless
-one maps it inside head into positive logic).
+On Thu, Jun 13, 2024 at 09:05:18AM -0700, Oreoluwa Babatunde wrote:
+>=20
+> On 6/10/2024 2:47 PM, Mark Brown wrote:
+> > On Mon, Jun 10, 2024 at 02:34:03PM -0700, Nathan Chancellor wrote:
+> >> On Tue, May 28, 2024 at 03:36:47PM -0700, Oreoluwa Babatunde wrote:
+> >>> fdt_init_reserved_mem() is also now called from within the
+> >>> unflatten_device_tree() function so that this step happens after the
+> >>> page tables have been setup.
+> >>> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+> >> I am seeing a warning when booting aspeed_g5_defconfig in QEMU that I
+> >> bisected to this change in -next as commit a46cccb0ee2d ("of:
+> >> reserved_mem: Restruture how the reserved memory regions are
+> >> processed").
+> > I'm also seeing issues in -next which I bisected to this commit, on the
+> > original Raspberry Pi the cpufreq driver fails to come up and I see
+> > (potentially separate?) backtraces:
+> >
+> > [    0.100390] ------------[ cut here ]------------
+> > [    0.100476] WARNING: CPU: 0 PID: 1 at mm/memory.c:2835 __apply_to_pa=
+ge_range+0xd4/0x2c8
+> > [    0.100637] Modules linked in:
+> > [    0.100665] CPU: 0 PID: 1 Comm: swapper Not tainted 6.10.0-rc2-next-=
+20240607 #1
+> > [    0.100692] Hardware name: BCM2835
+> > [    0.100705] Call trace:=20
+> > [    0.100727]  unwind_backtrace from show_stack+0x18/0x1c
+> > [    0.100790]  show_stack from dump_stack_lvl+0x38/0x48
+> > [    0.100833]  dump_stack_lvl from __warn+0x8c/0xf4
+> > [    0.100888]  __warn from warn_slowpath_fmt+0x80/0xbc
+> > [    0.100933]  warn_slowpath_fmt from __apply_to_page_range+0xd4/0x2c8
+> > [    0.100983]  __apply_to_page_range from apply_to_page_range+0x20/0x28
+> > [    0.101027]  apply_to_page_range from __dma_remap+0x58/0x88
+> > [    0.101071]  __dma_remap from __alloc_from_contiguous+0x6c/0xa8
+> > [    0.101106]  __alloc_from_contiguous from atomic_pool_init+0x9c/0x1c4
+> > [    0.101169]  atomic_pool_init from do_one_initcall+0x68/0x158
+> > [    0.101223]  do_one_initcall from kernel_init_freeable+0x1ac/0x1f0
+> > [    0.101267]  kernel_init_freeable from kernel_init+0x1c/0x140
+> > [    0.101309]  kernel_init from ret_from_fork+0x14/0x28
+> > [    0.101344] Exception stack(0xdc80dfb0 to 0xdc80dff8)
+> > [    0.101369] dfa0:                                     00000000 00000=
+000 00000000 00000000
+> > [    0.101393] dfc0: 00000000 00000000 00000000 00000000 00000000 00000=
+000 00000000 00000000
+> > [    0.101414] dfe0: 00000000 00000000 00000000 00000000 00000013 00000=
+000
+> > [    0.101428] ---[ end trace 0000000000000000 ]---
+> >
+> > Full boot log at:
+> >
+> >    https://lava.sirena.org.uk/scheduler/job/374962
+> >
+> > You can see the report of cpufreq not being loaded in the log.
+> >
+> > NFS boots also fail, apparently due to slowness bringing up a Debian
+> > userspace which may well be due to cpufreq isues:
+> Hi Mark & Nathan,
+>=20
+> Taking a look at this now and will provide a fix soon if
+> needed.
+>=20
+> At first glance, it looks like there are a couple of WARN_ON*
+> function calls in __apply_to_page_range(). Please could
+> you run faddr2line and tell me which of the WARN_ON*
+> cases we are hitting?
 
--- 
- i.
+That shouldn't be needed, right? The line is in the WARNING: mm/memory.c:28=
+35
+which, in next-20240607, is: if (WARN_ON_ONCE(pmd_leaf(*pmd))).
 
-> > No functional changes intended.
-> > 
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > ---
-> >  drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
-> >  drivers/pci/hotplug/pciehp_hpc.c  | 8 ++++----
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> > index dcdbfcf404dd..7c775d9a6599 100644
-> > --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> > +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> > @@ -121,8 +121,8 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
-> >  		msleep(1000);
-> >  
-> >  		/* Ignore link or presence changes caused by power off */
-> > -		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
-> > -			   &ctrl->pending_events);
-> > +		atomic_andnot(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC,
-> > +			      &ctrl->pending_events);
-> >  	}
-> >  
-> >  	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> > index b1d0a1b3917d..6d192f64ea19 100644
-> > --- a/drivers/pci/hotplug/pciehp_hpc.c
-> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> > @@ -307,8 +307,8 @@ int pciehp_check_link_status(struct controller *ctrl)
-> >  
-> >  	/* ignore link or presence changes up to this point */
-> >  	if (found)
-> > -		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
-> > -			   &ctrl->pending_events);
-> > +		atomic_andnot(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC,
-> > +			      &ctrl->pending_events);
-> >  
-> >  	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> >  	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
-> > @@ -568,7 +568,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
-> >  	 * Could be several if DPC triggered multiple times consecutively.
-> >  	 */
-> >  	synchronize_hardirq(irq);
-> > -	atomic_and(~PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
-> > +	atomic_andnot(PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
-> >  	if (pciehp_poll_mode)
-> >  		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
-> >  					   PCI_EXP_SLTSTA_DLLSC);
-> > @@ -702,7 +702,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
-> >  	pci_config_pm_runtime_get(pdev);
-> >  
-> >  	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
-> > -	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
-> > +	if (atomic_fetch_andnot(RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
-> >  		ret = pciehp_isr(irq, dev_id);
-> >  		enable_irq(irq);
-> >  		if (ret != IRQ_WAKE_THREAD)
-> > -- 
-> > 2.45.2
-> > 
-> 
+Thanks,
+Conor.
+
+--zljD9j5WH2t20q2N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmsbYwAKCRB4tDGHoIJi
+0h5WAQC9yGVXEQ/4PpaLiWBf9POXRmxcPkyltH4Dpw4GxbvexAEAnwjjHFr1jTXo
+pCqEvEUvmMl/zQpV0tnzO/nJDlEtyAE=
+=CbD/
+-----END PGP SIGNATURE-----
+
+--zljD9j5WH2t20q2N--
