@@ -1,79 +1,35 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F409C14B08A;
-	Thu, 13 Jun 2024 18:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718302823; cv=fail; b=GySBefZVp7SrgtUslK+AWSZmrrPOsrFCnd85AlBSjPEJvtwzFzn3rtnsy0UIartsQ8gHNLs0EM8YzYpHxraodtZlijiu6xA1qy2C11L0EOgNaCST7VAycUsHiGMrDFAgwLZljNxlGwXDmK/pRl8Fvukd17mxAJAd7BA2bHdK7Mc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718302823; c=relaxed/simple;
-	bh=UkD26qGUOlcbxW/8s97Eb2Dvahx8fBscroVhbsYpork=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WnnAL3U6onKAR0Ug30OYEezdQiIiYxiZMf+5davBtUaM9E+fAz9lKDW5wrpE9zeHk280hAFAwI++uELVWx3+0K39R2XKht+gwgFwk0BgXN7k5B/xyA23CffNNAxUi2Lk4Gom80N6MoXk1uU82Uj+Qh6tmQLywqENXw7flJkHcYc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y5Z63C0k; arc=fail smtp.client-ip=40.107.94.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3983714AD1E;
+	Thu, 13 Jun 2024 18:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718302831; cv=none; b=OCki5gR8nauUdFHkxl7lwNXzn9ZwKRzhznyJOLBGBMSWOcRPNtMIH41czfwBnoBr83tT8NnK5q2teCY7/T9S/WtrKJnWJoAMPyGF6ybKJsphPnFgRCg+LQuEOTYFpfi3zB80o30JlTVv1dEherVouIYWuxbfHo10DnCJtCkuX0E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718302831; c=relaxed/simple;
+	bh=pgSDVWzajqamfEJi3ukbUVIaY2PON1AST8CHsFiaqSU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QoBQy7fNUDPkRicGNEJuuSlM4mImX3vNUMcyAbmwrsVIgC+X3hJJQRIE5+o+LRhQKgHabmcjQht19m/NQGcylie24D/d8uVlTmNM0qO+pfy0Va81aNyv5OP5uxpLgKDh9YmTG43hLODcP54MstOaHl+zi0Qj04Xlvbau9yZ62Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0pOpo0S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y5Z63C0k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mikHzaZEujTr2nRiCyzGQFI8tjoQyhFH3UbRZpTe7OpbKoR/mKeUPtaMCaYbjfALVWbIY/Qw5yPxn/2JibJ9fJzylyKwSMEOyKy302GBuBTA5kuzdNuXiYGD15fDnpoBGjbshp7JE4lOx6dN+E4u9uhbOqXU6sdqYllNd7CnWUNfYF9xtHMIspIQiMndPXMlBFrl1UNmgSw640j8vrgXgWUZcXRhvtTA2vMqhQd02J1OvfygsiH4rErbFFY5Go4+VlPo6eUP162KMD4SNeKEuVmLW36hQNGZhNVPg2ucyxE044P01PAyzDJpIbbQ6X/Buwi0P1ehLTNbZEusAEk5pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tdS/HlgV2qB5FXuFxAuMWLTfcJ3kk8B4HY4EB+i9Fdg=;
- b=HFOdntrp2QHhe9luFIc7NeAcfZ9IvHyBS+oQBacjeP1buEbaP3zPT3RDSN3/E+q8G4s3aRS16Wj0tCV9Q8ssxWlA3fG5kFRMtmk9capJpWYmP9HnXfgx/uBbKp3ILX/s+MioLLs4A9u4aYeoW+BGDPVmv9lekZ/HgQH7G6fHRIr2vBcXDKTLrmOsVUIglfv+n+njl4ZcPyxVn9vtNmhEcCjws5Yo1lN0L2jWnORLoDlSYPqq2GApCjvgI0SFreXMK0gdwMtZb0K0iV98bc9wHHNcYhNtEN6G/tYWLFtP+FfkoUm513GvR4SbfYvmWUYl9nrUdOCZqXgqRctImNzWKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tdS/HlgV2qB5FXuFxAuMWLTfcJ3kk8B4HY4EB+i9Fdg=;
- b=y5Z63C0kMwOjNaJ3oi2fdUE5X9zKgEnglH1v0CnXzhF1QYwFnOcWPBANjg7vsoZ5o1YDE6+tTjICQhiSM2/Nx5MyztOZE5uEQddKzU6jHPP/RznTrdtLIjn6SHOsyGS7RTTa6fW+fR81KJyHRU4oL3ZtmnA1WVYHMTHEuw3hOhI=
-Received: from PH7P220CA0045.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32b::17)
- by MW4PR12MB7381.namprd12.prod.outlook.com (2603:10b6:303:223::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21; Thu, 13 Jun
- 2024 18:20:15 +0000
-Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
- (2603:10b6:510:32b:cafe::5b) by PH7P220CA0045.outlook.office365.com
- (2603:10b6:510:32b::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25 via Frontend
- Transport; Thu, 13 Jun 2024 18:20:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 13 Jun 2024 18:20:14 +0000
-Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Jun
- 2024 13:20:06 -0500
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
-	<kprateek.nayak@amd.com>, Jonas Bonn <jonas@southpole.se>, "Stefan
- Kristiansson" <stefan.kristiansson@saunalahti.fi>, Stafford Horne
-	<shorne@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>, <linux-openrisc@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>
-Subject: [PATCH v2 07/14] openrisc/thread_info: Introduce TIF_NOTIFY_IPI flag
-Date: Thu, 13 Jun 2024 18:16:06 +0000
-Message-ID: <20240613181613.4329-8-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240613181613.4329-1-kprateek.nayak@amd.com>
-References: <20240613181613.4329-1-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0pOpo0S"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BD56DC3277B;
+	Thu, 13 Jun 2024 18:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718302830;
+	bh=pgSDVWzajqamfEJi3ukbUVIaY2PON1AST8CHsFiaqSU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=a0pOpo0S/OlS28H73rxI2e/f9sP4RLVPpzd5GM9w6ccUV8Mv5vRG7gO2y9x1vKt4R
+	 myc3IUGeI60b9v1lfOIrTc4OylxCAZRRSwL8bAnq97qIiXjK/VO/a1Km1JsUhUZf8r
+	 qRVWHSErfQiRgs8+ibu7yAn90y2bk9tk7tInqHJqPu+nFOpmxgL0nqY7ExH51Y08QP
+	 PZby7p9nBxkFkZC1KA3iOlnqDHMxC9A1QWANdqcNmPo0St/7GrwSws4UOFMWIs45ej
+	 0rWPdQQmAiqDpaEFvJKnvb9HzVl+K3NBxm478RbXrsNEDG4Gm/OGGsMcMHE+xyv/k3
+	 YNv7H2XISrulA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B1AE1C43612;
+	Thu, 13 Jun 2024 18:20:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,110 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|MW4PR12MB7381:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59e11ef9-d14e-4b17-2da7-08dc8bd578e3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230035|376009|7416009|1800799019|36860700008|82310400021;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RrxikFt7BOyQQWIew2F9KO19qH6m3C4Hk7nqsmujZYLb5gzSPR4sbHmDK8OA?=
- =?us-ascii?Q?9MA5BDiM7D3D8LJ5lvkYDWcDb8S7L9cmMMFhGD7rO3CjZuhSp7SS+Fy570us?=
- =?us-ascii?Q?yArnOa90z4moVf7URNQkmhnxQNLJ7iPDRc3GpTxGU0U93y7efeuyovkrrsyy?=
- =?us-ascii?Q?xUNapkAFtWdlsLSBE6OJhfcjejqmXnnAGEtPJ0BW5uUEjTGVnerbktsnHc3U?=
- =?us-ascii?Q?c2bpvL8Q7GAisZsX3NyAv0fBFxnoBBV1fVYZNF7LjF5bBDH3D9Pghxyl3nLc?=
- =?us-ascii?Q?EJ9c1aN3oyBLTDfmiS4dMEIAsJoRynAj6c+Bs4UPAz5NZldMlSRltWeNEy7o?=
- =?us-ascii?Q?xKN6bx9ycmfQ3Efu7VoMGAe6eoYNJNA6PVzm4vr25TfkUVvbfvS3tJgMRgvc?=
- =?us-ascii?Q?V+xQokozDQKSuRm1nr+5k0rIDhNW7aW01Tp+RLXqtwAf1EI15Mmmp5XlTdLp?=
- =?us-ascii?Q?8yepQ90xs2IRzBmMjZj9Lq7YqStOtKEbB4TMbXzL9WC+Q5aaMcxlheJ764NO?=
- =?us-ascii?Q?I03v35OMeELSk17MufHhPd2gTwVEky0p1TqoWH7q2WvfejtrAyR5KeNh4Hxb?=
- =?us-ascii?Q?Df7W5JnFEunqP3PQYYTnA+aHO04lDtpCh+oXi1qM3gmAC6ByATE/K4J2sXiX?=
- =?us-ascii?Q?v9eJzUgZ7+nuSCtK6vIfiFzZqeQ41DdSwyTF8oyVV+3E/NxLY//9iDPlA0W+?=
- =?us-ascii?Q?c7fLxsyXUckMmcQBTbes2g495Dc4ieXg75VEfRIZfHYcUR4j+sJ62LvxPFnQ?=
- =?us-ascii?Q?qXtCxqXM7NhLGwpUJZBK9jwje9BSTko6bt7/sxNCNevIuXZFBV4KjbV5n/tE?=
- =?us-ascii?Q?sqtXvNBSu1/+Np+9mBrbQj9jIi86qr+nZuX9drcAgm94oOShcGuZZyA1ob4C?=
- =?us-ascii?Q?qm0qTKwpPm2SDkSq29HeU+v2bbYmQbrfIDgazCE79K5qVI4bkG5OYcIAzh3x?=
- =?us-ascii?Q?+FW+fxJvGzcn5fLau8I8pT9U++5SfaB2dIwXloTuvB27Cnr9piNiJAUQZj2j?=
- =?us-ascii?Q?h595snJ7KsIOuHretMC3smnNAOKWb072Hx7WJcGOk1TgK3HVX7t0gcPgkpOw?=
- =?us-ascii?Q?fBaqfoXKCwC5p9y59Y9WcobNWgfh34YyLmQFK0s17MS8HFtTmHdfYEmnuS6y?=
- =?us-ascii?Q?Gh5Sq4QQwvWVHv+KDdayiqY41DL+WqwU9B45jN5poQbfOUuOBEhO+6YSf4Aa?=
- =?us-ascii?Q?yv3tdy5wYysH9ODm+0LKBwNmtLEnLLafyoC//heenqUmtTfDx0NoMRfPkX/g?=
- =?us-ascii?Q?h+DKuYPTNjVAkDTxBKsW4vI5W6tC/vWagkanODCxmEdy7m3sI3y0aQbf4zaR?=
- =?us-ascii?Q?QoRcEqBJiqyiuZHWpA/aE+EjG92JDOpkAau9AXd7bv875MZPBP8VgiXGKs+q?=
- =?us-ascii?Q?7QEbbXdNvTbMys5eeFaglRn3f9JhJEdPE2cRKdw2qV2kySWeMw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230035)(376009)(7416009)(1800799019)(36860700008)(82310400021);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 18:20:14.9404
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59e11ef9-d14e-4b17-2da7-08dc8bd578e3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7381
+Subject: Re: [PATCH bpf-next 0/2] Fixes for kfunc prototype generation
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171830283072.12313.15051014857766473661.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Jun 2024 18:20:30 +0000
+References: <cover.1718295425.git.dxu@dxuuu.xyz>
+In-Reply-To: <cover.1718295425.git.dxu@dxuuu.xyz>
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: ast@kernel.org, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, , ""@meta.com
 
-Add support for TIF_NOTIFY_IPI on OpenRISC. With TIF_NOTIFY_IPI, a
-sender sending an IPI to an idle CPU in TIF_POLLING mode will set the
-TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
-CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
-avoids spurious calls to schedule_idle() in cases where an IPI does not
-necessarily wake up a task on the idle CPU.
+Hello:
 
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: Stafford Horne <shorne@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: linux-openrisc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
-v1..v2:
-o No changes.
----
- arch/openrisc/include/asm/thread_info.h | 2 ++
- 1 file changed, 2 insertions(+)
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-diff --git a/arch/openrisc/include/asm/thread_info.h b/arch/openrisc/include/asm/thread_info.h
-index 4af3049c34c2..6a386703bc43 100644
---- a/arch/openrisc/include/asm/thread_info.h
-+++ b/arch/openrisc/include/asm/thread_info.h
-@@ -92,6 +92,7 @@ register struct thread_info *current_thread_info_reg asm("r10");
- 					 * mode
- 					 */
- #define TIF_NOTIFY_SIGNAL	5	/* signal notifications exist */
-+#define TIF_NOTIFY_IPI		6	/* Pending IPI on TIF_POLLLING idle CPU */
- #define TIF_SYSCALL_TRACEPOINT  8       /* for ftrace syscall instrumentation */
- #define TIF_RESTORE_SIGMASK     9
- #define TIF_POLLING_NRFLAG	16	/* true if poll_idle() is polling						 * TIF_NEED_RESCHED
-@@ -104,6 +105,7 @@ register struct thread_info *current_thread_info_reg asm("r10");
- #define _TIF_NEED_RESCHED	(1<<TIF_NEED_RESCHED)
- #define _TIF_SINGLESTEP		(1<<TIF_SINGLESTEP)
- #define _TIF_NOTIFY_SIGNAL	(1<<TIF_NOTIFY_SIGNAL)
-+#define _TIF_NOTIFY_IPI		(1<<TIF_NOTIFY_IPI)
- #define _TIF_POLLING_NRFLAG	(1<<TIF_POLLING_NRFLAG)
- 
- 
+On Thu, 13 Jun 2024 10:19:24 -0600 you wrote:
+> This patchset fixes new warnings and errors that kfunc prototype
+> generation caused.
+> 
+> Daniel Xu (2):
+>   bpf: Fix bpf_dynptr documentation comments
+>   bpf: selftests: Do not use generated kfunc prototypes for arena progs
+> 
+> [...]
+
+Here is the summary with links:
+  - [bpf-next,1/2] bpf: Fix bpf_dynptr documentation comments
+    https://git.kernel.org/bpf/bpf-next/c/78746f93e903
+  - [bpf-next,2/2] bpf: selftests: Do not use generated kfunc prototypes for arena progs
+    https://git.kernel.org/bpf/bpf-next/c/6a8260147745
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
