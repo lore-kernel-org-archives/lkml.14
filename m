@@ -1,84 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1089143C67;
-	Thu, 13 Jun 2024 13:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12635144D11
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285378; cv=none; b=J60+33ur3AddKnut2nBptaMLHY97ObqpMxPgEv8uNtnXh9dXyOaYJeV0Es/Yl67/yPIfJMq/5m9X/jo6ZH+TMdFjnMp/zq3xmYnQaki+r+WA8UQYTS2pjRZzlpxgOuJv9/9LnZ1bAqTyDLTth5ysrjsvOOLpo/DSG34L8vykLbM=
+	t=1718285388; cv=none; b=uIVzbrpq3qTisvFHe9DyXaLNZ+KyH4xrn2aW69VTTjdiELEbhm5TfNRE40nhVe+xYwZEcxWcUbZJykqat0TwZbnXVJ/uIuyygXuK8MW2pdtIBwSH4PUIIfyPlrLsASemIIEe0nyQeZH39MpA6SXjJ9Msnff+Vl+oeroMdx2m46o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285378; c=relaxed/simple;
-	bh=Smrfkl4omv8EWaCxAKTIU7F5mdrGTLS/0iCWoIy2Z/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5ECDVl3y/D8YAOBSTAKRF4L2nokk7D5BqfBy8ade80vN0JpMDr4mqDSPpuZ24IBJC+r7KQE+PVC7W78behPLAoqhIWZDw4P2S7IhToet+ty16ggnmXWV30pXWWUbWGw86N+RkBHv1IestzUkIjtek27StDbozqO6vzo/iJ1LaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhM6QfgH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718285388; c=relaxed/simple;
+	bh=9YjZ0mNxtiI0w3TDnF6tuEkwNoMXfJVq5u/FUSPFA1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qZWEfrk7OifXEFxMo2VE/sN0vJpgMyM8WETbIT+nVzr1M5LYsRNlj/xqGwuPqDhSTmtWHJsIU2t9ox9MZNOyRHE/WRQJcA+1Cfdvd/1MsGsNwDmCGKkV6peE5nGFzH43aKrOYBZQ42yoM1XE/OPWSd1PpMwtzbiDsAL4ikdA4M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mDScTybu; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhM6QfgH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8ECAC2BBFC;
-	Thu, 13 Jun 2024 13:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718285378;
-	bh=Smrfkl4omv8EWaCxAKTIU7F5mdrGTLS/0iCWoIy2Z/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZhM6QfgHF2vbPhF8Y/my+EWnMq7v4Km2+YqAqAQtZCPPAnIXGziY8eVImAanMt0Si
-	 YVXeoDfIj1O+uHnOdctu4rE6NP7knrdcXl8nRpU+cXjx9xJHal7UxEhOj8MZDGZcm/
-	 6eSkQWB/URV8uCCr4cWsHWeX9ebeuNLN0Mxoz13rcydsRd1yo4sqV9KPZ9LmNnqpzb
-	 Ee9wV/RCryGa/sfokyMw4zHP5ZnuUilFXXP0KebmD4LvvVh6nfLzVKP9a6klEBLfBy
-	 SlgApLhoj6Z/EeT/k7vTso/ocCeQKh5DSBxJx8upO07u0UMk1YzbItRRUBjCo7JO56
-	 Dk90a4X1ZGrUA==
-Date: Thu, 13 Jun 2024 21:15:41 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Haylen Chu <heylenay@outlook.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDScTybu"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-422df2a81f2so7000645e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718285385; x=1718890185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aj73urKvgW9wZChdKp/grUo5S7WR7EBtNMzzOYz9T24=;
+        b=mDScTybunNOD0tFDls83WMhzu7AdNBqKg7jqHv/XDAi+c/GZTMcWU7F7LhY9c7d0jU
+         Ga6xIg8bYBtdGeklzB8DChca4g7EdX/oDkIZW8onjjTU6x4wDV/B92xhRvRbP/7X4roM
+         5amtZHwwd5gUPjW0BAu/+dQgI5G3EBpL54wMsZq9muplQCz4m+mfXaZo2KbQvvxBrX6G
+         9SVdnP6UYbFqudsu0Yx+0RSA98+qEIWuaVw1guB2ZzFLvOfFU6thn9kSRr+4cCfGOaUY
+         erPQo+W5QmfEnQKqJnnbilF3fWdEPBIbiW3BGcv2dNXNU4MwZVtoK7fzCENVl2MsREE3
+         KJFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718285385; x=1718890185;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aj73urKvgW9wZChdKp/grUo5S7WR7EBtNMzzOYz9T24=;
+        b=ltxvV/+2XL9ZWyuhpV5h0TSpvpVhwYBOcG+yGZsDO8KzMmWTMcxmtwshHsUWDlKtUg
+         /onTRgnc4yELSkn7DF2a/sjEn9JaoI0IhgDQk3Huy3IkiXDlfneWM1/P2E5XYuGYBqZm
+         n6N8tfab7cZe/+Ia8cHWZGnAAtjRIL7+sL3XZbTY8y7TzYVsuUlnOfNnYguK1KGVwsJM
+         dOiqWn2NRM0r0vjkjsYyc8WWNMjVzCXC1t2eS6qj2m9mbZd1MK+VAxilJ688vyt5i5jt
+         mjpKk2rZsBV68Vlykjudf/e5tkJxm/2CNQf25+QX7uvlKC9pjNsKYZLpAZF+UMhZtAkM
+         0H5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXmVzeHIPXThkHv9xOkh2tNb18XwsS4KpKrrC/QwWULPvuKolA5xghYGYE7zh35ad//q5X//sBp4IbMlf7wsb2wb6o4bHtW1pgWKPaj
+X-Gm-Message-State: AOJu0Ywqxa0/BUVXLHMR2LaEEAtI3G9ItSarqystcGfka+Jdjjm5Jv8i
+	n2nsFnLjf3BVMn26/pUrLyRrAko0VJHzusiQauiFKb3euPtuXbXK
+X-Google-Smtp-Source: AGHT+IGN3ewMVPxG6hTEa9MKx/jd9wdA02rG/0ezuJmL2oalAxDGMCY9OKmvZ+w1oQsMikOP8XdAZA==
+X-Received: by 2002:a05:600c:1c83:b0:422:1609:a7db with SMTP id 5b1f17b1804b1-422861ae833mr42397645e9.8.1718285385168;
+        Thu, 13 Jun 2024 06:29:45 -0700 (PDT)
+Received: from localhost.localdomain ([31.120.167.14])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422d0be1424sm29981455e9.12.2024.06.13.06.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 06:29:44 -0700 (PDT)
+From: Teddy Engel <engel.teddy@gmail.com>
+To: Philipp Hortmann <philipp.g.hortmann@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: Use inverted-wp quirk for CV18xx
- and SG200x SoCs
-Message-ID: <Zmrw_egJomoF0Tf3@xhacker>
-References: <SEYPR01MB42219753E4388009470D958DD7FC2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
- <Zmrt-dcPR_ZXlYH-@xhacker>
+Cc: Teddy Engel <engel.teddy@gmail.com>
+Subject: [PATCH v3] staging: vt6656: Remove line from TODO
+Date: Thu, 13 Jun 2024 14:28:53 +0100
+Message-Id: <20240613132853.2249-1-engel.teddy@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zmrt-dcPR_ZXlYH-@xhacker>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 09:03:24PM +0800, Jisheng Zhang wrote:
-> On Fri, May 31, 2024 at 02:13:47PM +0000, Haylen Chu wrote:
-> > MMC controller integrated in Sophgo CV18xx and SG200x SoCs has an
-> > inverted write-protect flag, causing SDCards misdetected as read-only.
-> > So set SDHCI_QURIK_INVERTED_WRITE_PROTECT to make write protection work
-> > correctly.
-> 
-> No, I would rather set cd-inverted property in dts.
+Remove checkpatch.pl line from TODO as no valid checkpatch recommendations
+still present.
 
-wp-inverted
+Signed-off-by: Teddy Engel <engel.teddy@gmail.com>
+---
+v3: Bump version number + add version history changes.
+v2: Revert the parentheses removal changes.
+---
+ drivers/staging/vt6656/TODO | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > 
-> > Fixes: 017199c2849c ("mmc: sdhci-of-dwcmshc: Add support for Sophgo CV1800B and SG2002")
-> > Signed-off-by: Haylen Chu <heylenay@outlook.com>
-> > ---
-> >  drivers/mmc/host/sdhci-of-dwcmshc.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > index 39edf04fedcf..62b7f28de54f 100644
-> > --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > @@ -962,7 +962,8 @@ static const struct sdhci_pltfm_data sdhci_dwcmshc_th1520_pdata = {
-> >  
-> >  static const struct sdhci_pltfm_data sdhci_dwcmshc_cv18xx_pdata = {
-> >  	.ops = &sdhci_dwcmshc_cv18xx_ops,
-> > -	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-> > +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-> > +		  SDHCI_QUIRK_INVERTED_WRITE_PROTECT,
-> >  	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> >  };
-> >  
-> > -- 
-> > 2.45.1
-> > 
+diff --git a/drivers/staging/vt6656/TODO b/drivers/staging/vt6656/TODO
+index e154b2f3b247..876cdccb6948 100644
+--- a/drivers/staging/vt6656/TODO
++++ b/drivers/staging/vt6656/TODO
+@@ -11,7 +11,6 @@ TODO:
+ - switch to use LIB80211
+ - switch to use MAC80211
+ - use kernel coding style
+-- checkpatch.pl fixes
+ - sparse fixes
+ - integrate with drivers/net/wireless
+ 
+-- 
+2.39.2
+
