@@ -1,141 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D199476;
-	Thu, 13 Jun 2024 14:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC499476;
+	Thu, 13 Jun 2024 14:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287440; cv=none; b=ULV9J5qslhr8FZA8bPSwgRb+k68v7l1E32OUOhSRMMbmoEwqEKG0M0aU2+WUwqqDgH1zLzLChS1ZYviNnPl3uhpKjw8cnLDBZPcbHxwvjtYs9coZ5+j8GNFY/YH+OwpgA2wV4JduWIurh8TZjwRjB/6x/YvhjhIvnHW7H4tQ4mM=
+	t=1718287621; cv=none; b=WtpfHOGibS9jz0Vcrj8Kmdl9pgV+1Gd8ZabC+CPOtKfZsDAB69p3e+G8FnTohrv3u7GmqBLX3oDiIyMpjXgA9YLcmJIZwYY1kjCf+AL9Orfmoe0jwntbX1dO3i4J9n3Oz+4raPQDd87jlpiwzRu9aLxS+p9RE4TKaDmEyv3EgCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287440; c=relaxed/simple;
-	bh=tA+ZFQAqpvg+G+t2qduevu+kebIw5Dh4TdqA0ZnOYfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ejZ5Ny8NrosG/FJ/uZBubJeasL7pBASO80w7mqP9E8P3+CVxvIjjjF0fEcAw8PA69OghmRTEuHTNBKYEw0ITERLOC5Ex8UttJgwWIgqfQvF+j+0qDW5ok2YHi+UGy5/iDgv8vHFMIIdPcBJ07LGeSR5Q98fXjViZRvkD+GAKUXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8D84jqD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718287621; c=relaxed/simple;
+	bh=aZq6PN49zE6/crz+f03BWODsiATPJSnT/GYXKHLLVW8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZG/d0x4jx5rkC9xAmj6jWQz0o6GrUPb3LEf/PYAnL3+a6BYi0TCO04CjaLmexQkwqCg8aLzxyD1PgFm8TqQYAWLe/5XD9/ONOv8ukXVc1FGlGV1bwEqW9fPuyC7pjQ++CpD5ko7tvgj+RQJ8B8fXyLl0360tE7DgPqwyR4dz/54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgUp09eo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8D84jqD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7741C2BBFC;
-	Thu, 13 Jun 2024 14:03:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgUp09eo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBDDC4AF55;
+	Thu, 13 Jun 2024 14:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718287439;
-	bh=tA+ZFQAqpvg+G+t2qduevu+kebIw5Dh4TdqA0ZnOYfI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d8D84jqDn1VqJ6IDMYy/UYaGCkftPCPWErfo7X6iFrw4IXqZQkVFwkyLaWEL1vk6A
-	 sIO6xAACuSNLtotedW0ZcqQqylA6gGZH0+HkvDDunK58ixQxEm9FvyAys3DiCHRftf
-	 DpUuHaMGGOGKZ9FZag/bXZPLt15PmT/nL2mV1gZ42y0Q7oe3LPLEmMRiSAUhJ7jFuf
-	 9w2ofJmwB/p7ld+ph0bo9G+TLCWF984gEvEwlc3XGtaCdnWYMCRtfFV8H3nppSehXV
-	 Gn7Dx7OkRLGfZAGo9/m6cezAIp8PC+wkAoMiAFmSsiqy4xrZUqjs6Nbd/FeF6IXlpI
-	 sdmjtt6kbfjbQ==
-Message-ID: <07e242d9-86d5-487d-9d23-8f765219fa59@kernel.org>
-Date: Thu, 13 Jun 2024 16:03:55 +0200
+	s=k20201202; t=1718287620;
+	bh=aZq6PN49zE6/crz+f03BWODsiATPJSnT/GYXKHLLVW8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mgUp09eoHFNiC+e40Sdlx+wV86u6mq28RsjWv5yqW22xAYuD2V4ef6X2PqBlt5Pjx
+	 TAzzT6h4NAeWiW/TE4Gkt11NQs6odaT0AY0/uvykvzEV31/hGUMlnXaoknHbYWvVle
+	 zgBAtmbLLg6iuO+MBqgMmcg9akpbcF2BjvAWNq9y/RbUYe0PsoabxSlI1/xzP7sdpM
+	 D6AQ6C37jNSgmrBzdLlgGcsv8HpLmo2VC5zNv30Sh4hojY8tRvzdDehAFWbIJUNB1m
+	 muhNxpK/NW3yGnVd2dz7sV4/7fLicjxg01bzfKeyuV4LgnQTKFys5rgLjUDGNokCaM
+	 UmKr9iYpm+zIw==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52c8342af5eso1217145e87.3;
+        Thu, 13 Jun 2024 07:07:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZDSxBs8cpr9vIV/+LxVwCgZdYNMH+ouZKaMY0oANjs/RRbQD/Ss/rt7FbkasCq85gx0CTj8lNKX06ZopWVIMK/gM4Yjr1xOr1Vhb9rTiHHJc3fJB8uuRqaT8Fa/7+hlh5IqOt+pJk9inFJh3o+CZbeAc7RZ/klNsst+qUhspb/z7vyT+Kg/mqO5x7GyJ8XCI/
+X-Gm-Message-State: AOJu0YxPlHytryftSagwZnxuazqW9sst3omR87cTtu1U2DqsdCOqYVxe
+	HV4zNvIVi/ino2PFwsx65XePNcL4EdqHtnPE6+N78Cy8YhXTE3Bb24k+AcOmnzvygXIPcti3x77
+	ok47daMhAOZK9ikv2fwReBV95Np4=
+X-Google-Smtp-Source: AGHT+IF9eAs9Xa9DMTH+FguZcJhTpSg8shwf78TXAXIjRoDacPdfR5OXqtb6KahPz38tlgl4i+ur9hrZoV4xDfDGqZ4=
+X-Received: by 2002:a05:6512:3f10:b0:529:b632:ae4e with SMTP id
+ 2adb3069b0e04-52c9a3b7b34mr3721460e87.2.1718287618656; Thu, 13 Jun 2024
+ 07:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
-To: joswang <joswang1221@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, balbi@kernel.org,
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jos Wang <joswang@lenovo.com>
-References: <20240601092646.52139-1-joswang1221@gmail.com>
- <20240612152347.3192-1-joswang1221@gmail.com>
- <21cfeb4c-4ce2-487a-bdd5-45c3ed71bf6f@kernel.org>
- <CAMtoTm1ORiZHhMZRZ9NCq4qD7RB-ZCzAnusdN3PvRUff5zSh3A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAMtoTm1ORiZHhMZRZ9NCq4qD7RB-ZCzAnusdN3PvRUff5zSh3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240611144911.327227285@goodmis.org> <20240611144949.703297941@goodmis.org>
+ <202406121145.8860502D7@keescook> <20240612145228.5bf426e0@rorschach.local.home>
+ <ZmqLejL1mblOikLp@kernel.org> <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
+ <20240613092642.385461d5@rorschach.local.home>
+In-Reply-To: <20240613092642.385461d5@rorschach.local.home>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 13 Jun 2024 16:06:47 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFGnk4vYpTk4PwUg8iYHcbXdrPaYP+OBxHrD5+=jvow+g@mail.gmail.com>
+Message-ID: <CAMj1kXFGnk4vYpTk4PwUg8iYHcbXdrPaYP+OBxHrD5+=jvow+g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
+	Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, wklin@google.com, 
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Suleiman Souhlal <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 13/06/2024 15:19, joswang wrote:
-> On Thu, Jun 13, 2024 at 2:17 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 12/06/2024 17:23, joswang wrote:
->>>
->>> +  snps,p2p3tranok-quirk:
->>> +    description:
->>> +      When set, the controller transitions directly from phy power state
->>> +      P2 to P3 or from state P3 to P2. Note that this can only be set
->>> +      if the USB3 PHY supports direct p3 to p2 or p2 to p3 conversion.
->>> +    type: boolean
->>
->> Hm? You respond to feedback and, without waiting for my answer,
->> immediately send new version?
->>
->> No. Read feedback on your previous version. Drop the quirk.
->>
->> Best regards,
->> Krzysztof
->>
-> 
-> Thank you for your help in reviewing the code.
-> Sorry, I submitted three patches in total. Patch1 (the current patch)
-> and patch2 solve one case, and patch3 solves another case. Because
-> patch3 needs to submit a new version, I resubmitted v3 and v4
-> versions.
-> Patch2 is under review, and there is no clear conclusion. For now,
-> patch1 does not need to be paid attention to. I will notify you when
-> patch2 has a clear conclusion.
+On Thu, 13 Jun 2024 at 15:26, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Thu, 13 Jun 2024 08:11:48 +0200
+> Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > I've added one more comment to v5, with that fixed I can take this.
+> > >
+> >
+> > So how is this supposed to work wrt to the rigid 'no user visible
+> > regressions' rule, given that this whole thing is a best effort thing
+>
+> This has nothing to do with user space. The kernel command line has
+> broken in the past. If you update the kernel, you can update the
+> command line. There's no "no user visible regressions" rule. It's
+> "Don't break user space". This has nothing to do with user space.
+>
+> > to begin with. This needs at least a huge disclaimer that this rule
+> > does not apply, and if this works today, there is no guarantee that it
+> > will keep working on newer kernels. Otherwise, you will be making the
+> > job of the people who work on the boot code significantly more
+> > difficult. And even then, I wonder whether Linus and #regzcop are
+> > going to honour such a disclaimer.
+>
+> Again, this has nothing to do with user space. The rule Linus talks
+> about is breaking user space. This is about kernel debugging. Something
+> *completely different*!
+>
+> >
+> > So this belongs downstream, unless some guarantees can be provided
+> > that this functionality is exempt from the usual regression policies.
+>
+> I disagree. kexec/kdump also has the same issues.
+>
 
-This does no work like this.
-
-Implement feedback and send new version of entire patchset *ONCE* there
-is conclusion. Sending new version of some parts ignoring feedback or
-skipping conclusion is not the way.
-
-Sorry.
-
-Still drop.
-
-Or in case we still have here misunderstanding - so far it looks like: NAK
-
-Best regards,
-Krzysztof
-
+Fair enough. As long as it is documented that there is no guarantee
+that this will keep working over a kernel upgrade, then I have no
+objections.
