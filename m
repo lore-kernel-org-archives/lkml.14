@@ -1,158 +1,70 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B061420A6;
-	Thu, 13 Jun 2024 11:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C6D1420A6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718277110; cv=none; b=AMOo1URJ30VWuJFurafBwqWNDiQLfRyhvlc7pCihVXKTD+oWWtAJNuM4hovH1wQy8FjvBN5ZfXxcg5LPDnuXNS4T85H6sowJOddIVjA2AedAnaDsWctc9/348lkDbGWCn09hYoQh4AJrT7Lsa61SAQB1SDXJKx3HPiijTkYLs3c=
+	t=1718277172; cv=none; b=ULoVxUMUrfgKpakA/xsprh/WDJh9rr7Np4IMqTms24yubOCC3RsvZYfJzEYHHAlOOW0mNqD3Jne/5gErZPOJ4S2830eydaV2rcJPFQf4NQmooxR326oKmQsuPNn5Fn+GbNP7oDlwPvaxjK4FfnVYeLORZO/d7rsbPfc88F1O8sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718277110; c=relaxed/simple;
-	bh=+8Jz6J4KQ6eJ3C1QBfNVhmsduMCjE85NO9/Xvp0C2yU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gsR/2sFQSPGy+fX+2qzOuUVWMRABwdIC4rq1BMXj6WYx4rogZ2heStcLyS1LgkTkFmo0oPLeAM9tu5A49zqxes91xojyDi0/XLYULcGvjGGBQJlP/pR5qFfUbXrzOL5MKMpug0r2YyaznAbojNFrkM9pQY3IVCEDl2ys0ecAzdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W0KSg5bX3zdbqm;
-	Thu, 13 Jun 2024 19:10:11 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61191180AA9;
-	Thu, 13 Jun 2024 19:11:39 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Jun
- 2024 19:11:38 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] trace: riscv: Remove deprecated kprobe on ftrace support
-Date: Thu, 13 Jun 2024 19:13:47 +0800
-Message-ID: <20240613111347.1745379-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718277172; c=relaxed/simple;
+	bh=t5CQpQc7Vv2ve+vpnotE9QVeEItBGO9LCcMOJVX6L8A=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=a6pN7h5pLdswPGzxFeLd7kCVjMzAVTPpz//a+INzWBaJu6prBt501uSS2weupJ0GjrCOsm9OhXupTzBDGapA5rjkOwYDT8wE1LNawDVBHUSBm/9p3w0H57l93dBgUw1M0GmFMCsuL3VkRaCJiZP7WB+GgYXevJVh3nBrB46qNRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7eb7c3b8cf8so84644339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:12:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718277171; x=1718881971;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t5CQpQc7Vv2ve+vpnotE9QVeEItBGO9LCcMOJVX6L8A=;
+        b=IB3kd+/K7uzfBNuaXrRquGkucZoyKAbMEPRj26fTlx5XOOWocYqkJVyXDo5wBxz5gh
+         JpkRy2yCbSp1u/5dMBbB5+AcnhVDNUmvWl0QTcYjmn1pOm3zkxEDDJVnoY3VwF8tzZWx
+         yek+27RJZwOmorrNjDCcDKl8bZdywLnXGbFMfLkJsgRsxYi/hPBcDD9zJzpAuJ0TPM0b
+         kOWaPD/97cMt8vRcEmBKqQWaMMspF+UNgEWN70Mb4hCTTAv0ma8XJeeQHudtNdOwjUVF
+         LXy+jQkntwO8j5Ado3/hHi01LH7cCCgDZnhJjJMrcQDfm7h9KDDkMmmWzygU3xpUECeO
+         9RpA==
+X-Gm-Message-State: AOJu0Yyd8+2keeGIpU12hjzwevrkq2iC9W0P76Qz4AekWRNJKg6lt/b2
+	7NIt3x4ub9845mv4N2HnfXp49GrgNIDyfgsqFpGwv4g3GvDJV7/x7ZZBYHg6FQL1514jBIbKTXV
+	7zGsrliuD2C7nQA/wEE2WH/c5hIIlS5wUNn2y7vZ490f5NB42ZetTMuo=
+X-Google-Smtp-Source: AGHT+IHA1wP0bcOZKgHaW1Ng0VkfpCgVCHZNMBnrnH3A6cEx7ofUUZ8FL03+bLh3QmQneQYeJecSAdh5AvPOC7RouGPtQVEciBPO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+X-Received: by 2002:a05:6638:378d:b0:4b7:ba1f:5449 with SMTP id
+ 8926c6da1cb9f-4b93ee41fa9mr441481173.4.1718277170752; Thu, 13 Jun 2024
+ 04:12:50 -0700 (PDT)
+Date: Thu, 13 Jun 2024 04:12:50 -0700
+In-Reply-To: <0000000000008312ad06163b7225@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000637bab061ac39493@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_lookup_percpu_elem
+From: syzbot <syzbot+1971e47e5210c718db3c@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 7caa9765465f60 ("ftrace: riscv: move from REGS to ARGS"),
-kprobe on ftrace is not supported by riscv, because riscv's support for
-FTRACE_WITH_REGS has been replaced with support for FTRACE_WITH_ARGS, and
-KPROBES_ON_FTRACE will be supplanted by FPROBES. So remove the deprecated
-kprobe on ftrace support, which is misunderstood.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/riscv/Kconfig                |  1 -
- arch/riscv/kernel/probes/Makefile |  1 -
- arch/riscv/kernel/probes/ftrace.c | 65 -------------------------------
- 3 files changed, 67 deletions(-)
- delete mode 100644 arch/riscv/kernel/probes/ftrace.c
+***
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 0525ee2d63c7..a1f2d604c459 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -149,7 +149,6 @@ config RISCV
- 	select HAVE_KERNEL_UNCOMPRESSED if !XIP_KERNEL && !EFI_ZBOOT
- 	select HAVE_KERNEL_ZSTD if !XIP_KERNEL && !EFI_ZBOOT
- 	select HAVE_KPROBES if !XIP_KERNEL
--	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
- 	select HAVE_KRETPROBES if !XIP_KERNEL
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
-diff --git a/arch/riscv/kernel/probes/Makefile b/arch/riscv/kernel/probes/Makefile
-index 8265ff497977..d2129f2c61b8 100644
---- a/arch/riscv/kernel/probes/Makefile
-+++ b/arch/riscv/kernel/probes/Makefile
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o simulate-insn.o
- obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
--obj-$(CONFIG_KPROBES_ON_FTRACE)	+= ftrace.o
- obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o simulate-insn.o
- CFLAGS_REMOVE_simulate-insn.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_rethook.o = $(CC_FLAGS_FTRACE)
-diff --git a/arch/riscv/kernel/probes/ftrace.c b/arch/riscv/kernel/probes/ftrace.c
-deleted file mode 100644
-index a69dfa610aa8..000000000000
---- a/arch/riscv/kernel/probes/ftrace.c
-+++ /dev/null
-@@ -1,65 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <linux/kprobes.h>
--
--/* Ftrace callback handler for kprobes -- called under preepmt disabled */
--void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
--			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
--{
--	struct kprobe *p;
--	struct pt_regs *regs;
--	struct kprobe_ctlblk *kcb;
--	int bit;
--
--	if (unlikely(kprobe_ftrace_disabled))
--		return;
--
--	bit = ftrace_test_recursion_trylock(ip, parent_ip);
--	if (bit < 0)
--		return;
--
--	p = get_kprobe((kprobe_opcode_t *)ip);
--	if (unlikely(!p) || kprobe_disabled(p))
--		goto out;
--
--	regs = ftrace_get_regs(fregs);
--	kcb = get_kprobe_ctlblk();
--	if (kprobe_running()) {
--		kprobes_inc_nmissed_count(p);
--	} else {
--		unsigned long orig_ip = instruction_pointer(regs);
--
--		instruction_pointer_set(regs, ip);
--
--		__this_cpu_write(current_kprobe, p);
--		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
--		if (!p->pre_handler || !p->pre_handler(p, regs)) {
--			/*
--			 * Emulate singlestep (and also recover regs->pc)
--			 * as if there is a nop
--			 */
--			instruction_pointer_set(regs,
--				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
--			if (unlikely(p->post_handler)) {
--				kcb->kprobe_status = KPROBE_HIT_SSDONE;
--				p->post_handler(p, regs, 0);
--			}
--			instruction_pointer_set(regs, orig_ip);
--		}
--
--		/*
--		 * If pre_handler returns !0, it changes regs->pc. We have to
--		 * skip emulating post_handler.
--		 */
--		__this_cpu_write(current_kprobe, NULL);
--	}
--out:
--	ftrace_test_recursion_unlock(bit);
--}
--NOKPROBE_SYMBOL(kprobe_ftrace_handler);
--
--int arch_prepare_kprobe_ftrace(struct kprobe *p)
--{
--	p->ainsn.api.insn = NULL;
--	return 0;
--}
--- 
-2.34.1
+Subject: Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_loo=
+kup_percpu_elem
+Author: wojciech.gladysz@infogain.com
 
+#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux 7=
+8161c936167954351de8125d5e52c9034fd86c8
+The information in this email is confidential and may be legally privileged=
+. It is intended solely for the addressee and access to it by anyone else i=
+s unauthorized. If you are not the intended recipient, any disclosure, copy=
+ing, distribution or any action taken or omitted to be taken based on it, i=
+s strictly prohibited and may be unlawful.
