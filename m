@@ -1,122 +1,195 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C85A12D757;
-	Thu, 13 Jun 2024 16:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8861A130E40;
+	Thu, 13 Jun 2024 16:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296707; cv=none; b=lhtRYlkcIZcPjpKtUTZkT12vOLNyhDn4BWA6zVXv8vJA5pP6j3ML7Oa9w4BWzf/iUeME48ukqSZhHXczhUGgPB88DYcvKYA+SsdzURbb4Ou0p53Oy3k853ig+W6wozVOtnoE021nyj9OVlHMHDSruWG8mZUXkJFK8TMGuWpg7xk=
+	t=1718296731; cv=none; b=lC3kWV4UNcGrTNG7CSkLcojVa5DO+2KV3yImemGzzPqlylzu0aPB23WAGjGIAqt2RbrjuSBshjePX1we3NEJ/pFqNNHQFXnepd6tIGZlUs/oWC6AQIB/9yDrt5tBFgeMdVfyfIWKf/iZKBPKz9u7dgayvTDTgYn5GT+R90KMwTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296707; c=relaxed/simple;
-	bh=aKOhNOdB7ccnzq+ofFI1uzD4Kj+zLwM5PbYdAt6B0RE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sLC+0GJyMO0S8//xNn0ih0i57pxGQRe02D40h3MhIPF+kMu3BDTKXIv8mlUOjSHO6SO8yRtrcRnwCZVU9DZ4XyEkwMGVYDPJZog1JCrU5hzOlrM/ifndMUjxL71yGnnjJ8oPPzsXUOKyqk59a0h06DJ08R1NhdAa30SaHFUuK2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F821FEC;
-	Thu, 13 Jun 2024 09:38:48 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 012363F73B;
-	Thu, 13 Jun 2024 09:38:21 -0700 (PDT)
-Message-ID: <002b6176-41b3-4888-abb1-978399d108b8@arm.com>
-Date: Thu, 13 Jun 2024 17:38:20 +0100
+	s=arc-20240116; t=1718296731; c=relaxed/simple;
+	bh=WIWoLopAa7nL+GTMFCvAMWUmXOkjTNiVhQy5GnVLsQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IfpprU1R4AeVe00ciwo+68oCPirDF8fW3Os9ix+Ge0fuAGoZG5ybVz9C5VCE6iUzQTn5jFnoLIisxcdPIVlDk9HMndWdO8u2bL4JlUJmbsHZIB06EJFzVkS07UeEuZ754LNKMsVdc2Kpntr3sCNgL+9dnSK+2BwWORRyAI7rgs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nqv9h1tq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H4grW3Fo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nqv9h1tq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H4grW3Fo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nqv9h1tq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H4grW3Fo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nqv9h1tq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H4grW3Fo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8541E5D596;
+	Thu, 13 Jun 2024 16:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718296727; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=pg4nUkg9NVlWWxj+lARzOpGjJQ4KFFGWnMZ6IxK3R6c=;
+	b=Nqv9h1tq8d3V5f+og17WGxk/37rb/aEO5qZ5oqjJHZmE5rJZ/SCjLSy53FnJcfEHDXlvOi
+	KQCvgaZI5DsHstd4akI6QisHQUEsVrc4b8z92WwXlLXBv62kyPG/51g80e4oe4jPL1Z5T7
+	ONYqBM8DInf1wItp2EKprryCcRMuoJc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718296727;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=pg4nUkg9NVlWWxj+lARzOpGjJQ4KFFGWnMZ6IxK3R6c=;
+	b=H4grW3FoOR5J/zk+YHBtiilUpvsivCaHAvdqfTocg1FQ5LMlZ09UTE9/lgmQ4VHdU0s42Y
+	amnMoUtJm2js2LBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718296727; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=pg4nUkg9NVlWWxj+lARzOpGjJQ4KFFGWnMZ6IxK3R6c=;
+	b=Nqv9h1tq8d3V5f+og17WGxk/37rb/aEO5qZ5oqjJHZmE5rJZ/SCjLSy53FnJcfEHDXlvOi
+	KQCvgaZI5DsHstd4akI6QisHQUEsVrc4b8z92WwXlLXBv62kyPG/51g80e4oe4jPL1Z5T7
+	ONYqBM8DInf1wItp2EKprryCcRMuoJc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718296727;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=pg4nUkg9NVlWWxj+lARzOpGjJQ4KFFGWnMZ6IxK3R6c=;
+	b=H4grW3FoOR5J/zk+YHBtiilUpvsivCaHAvdqfTocg1FQ5LMlZ09UTE9/lgmQ4VHdU0s42Y
+	amnMoUtJm2js2LBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 74D9713A7F;
+	Thu, 13 Jun 2024 16:38:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 06U5G5cga2Y1dwAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Thu, 13 Jun 2024 16:38:47 +0000
+From: Cyril Hrubis <chrubis@suse.cz>
+To: Christoph Hellwig <hch@infradead.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Cyril Hrubis <chrubis@suse.cz>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH v2] loop: Disable fallocate() zero and discard if not supported
+Date: Thu, 13 Jun 2024 18:38:17 +0200
+Message-ID: <20240613163817.22640-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] of: reserved_mem: Restruture how the reserved
- memory regions are processed
-To: Conor Dooley <conor@kernel.org>,
- Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Cc: Mark Brown <broonie@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- robh@kernel.org, saravanak@google.com, hch@lst.de, m.szyprowski@samsung.com,
- will@kernel.org, catalin.marinas@arm.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev, kernel@quicinc.com
-References: <20240528223650.619532-1-quic_obabatun@quicinc.com>
- <20240528223650.619532-2-quic_obabatun@quicinc.com>
- <20240610213403.GA1697364@thelio-3990X>
- <Zmd0Zg7oMneJLyHd@finisterre.sirena.org.uk>
- <cc180d94-6890-4e92-8080-ffd6c1269e6e@quicinc.com>
- <20240613-goldfish-unpicked-1bc9f786aaed@spud>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240613-goldfish-unpicked-1bc9f786aaed@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[]
 
-On 13/06/2024 5:17 pm, Conor Dooley wrote:
-> On Thu, Jun 13, 2024 at 09:05:18AM -0700, Oreoluwa Babatunde wrote:
->>
->> On 6/10/2024 2:47 PM, Mark Brown wrote:
->>> On Mon, Jun 10, 2024 at 02:34:03PM -0700, Nathan Chancellor wrote:
->>>> On Tue, May 28, 2024 at 03:36:47PM -0700, Oreoluwa Babatunde wrote:
->>>>> fdt_init_reserved_mem() is also now called from within the
->>>>> unflatten_device_tree() function so that this step happens after the
->>>>> page tables have been setup.
->>>>> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
->>>> I am seeing a warning when booting aspeed_g5_defconfig in QEMU that I
->>>> bisected to this change in -next as commit a46cccb0ee2d ("of:
->>>> reserved_mem: Restruture how the reserved memory regions are
->>>> processed").
->>> I'm also seeing issues in -next which I bisected to this commit, on the
->>> original Raspberry Pi the cpufreq driver fails to come up and I see
->>> (potentially separate?) backtraces:
->>>
->>> [    0.100390] ------------[ cut here ]------------
->>> [    0.100476] WARNING: CPU: 0 PID: 1 at mm/memory.c:2835 __apply_to_page_range+0xd4/0x2c8
->>> [    0.100637] Modules linked in:
->>> [    0.100665] CPU: 0 PID: 1 Comm: swapper Not tainted 6.10.0-rc2-next-20240607 #1
->>> [    0.100692] Hardware name: BCM2835
->>> [    0.100705] Call trace:
->>> [    0.100727]  unwind_backtrace from show_stack+0x18/0x1c
->>> [    0.100790]  show_stack from dump_stack_lvl+0x38/0x48
->>> [    0.100833]  dump_stack_lvl from __warn+0x8c/0xf4
->>> [    0.100888]  __warn from warn_slowpath_fmt+0x80/0xbc
->>> [    0.100933]  warn_slowpath_fmt from __apply_to_page_range+0xd4/0x2c8
->>> [    0.100983]  __apply_to_page_range from apply_to_page_range+0x20/0x28
->>> [    0.101027]  apply_to_page_range from __dma_remap+0x58/0x88
->>> [    0.101071]  __dma_remap from __alloc_from_contiguous+0x6c/0xa8
->>> [    0.101106]  __alloc_from_contiguous from atomic_pool_init+0x9c/0x1c4
->>> [    0.101169]  atomic_pool_init from do_one_initcall+0x68/0x158
->>> [    0.101223]  do_one_initcall from kernel_init_freeable+0x1ac/0x1f0
->>> [    0.101267]  kernel_init_freeable from kernel_init+0x1c/0x140
->>> [    0.101309]  kernel_init from ret_from_fork+0x14/0x28
->>> [    0.101344] Exception stack(0xdc80dfb0 to 0xdc80dff8)
->>> [    0.101369] dfa0:                                     00000000 00000000 00000000 00000000
->>> [    0.101393] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->>> [    0.101414] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->>> [    0.101428] ---[ end trace 0000000000000000 ]---
->>>
->>> Full boot log at:
->>>
->>>     https://lava.sirena.org.uk/scheduler/job/374962
->>>
->>> You can see the report of cpufreq not being loaded in the log.
->>>
->>> NFS boots also fail, apparently due to slowness bringing up a Debian
->>> userspace which may well be due to cpufreq isues:
->> Hi Mark & Nathan,
->>
->> Taking a look at this now and will provide a fix soon if
->> needed.
->>
->> At first glance, it looks like there are a couple of WARN_ON*
->> function calls in __apply_to_page_range(). Please could
->> you run faddr2line and tell me which of the WARN_ON*
->> cases we are hitting?
-> 
-> That shouldn't be needed, right? The line is in the WARNING: mm/memory.c:2835
-> which, in next-20240607, is: if (WARN_ON_ONCE(pmd_leaf(*pmd))).
+If fallcate is implemented but zero and discard operations are not
+supported by the filesystem the backing file is on we continue to fill
+dmesg with errors from the blk_mq_end_request() since each time we call
+fallocate() on the loop device the EOPNOTSUPP error from lo_fallocate()
+ends up propagated into the block layer. In the end syscall succeeds
+since the blkdev_issue_zeroout() falls back to writing zeroes which
+makes the errors even more misleading and confusing.
 
-Indeed, and the overall implication there would seem to be that, because 
-the dynamic CMA region wasn't allocated and reserved before we created 
-the pagetables, we thus haven't created the pagetables in a shape which 
-can accommodate chopping it out again later. Note that on arm64 at 
-least, this is liable to be hidden by other options like rodata_full and 
-debug_pagealloc - see can_set_direct_map().
+How to reproduce:
 
-Thanks,
-Robin.
+1. make sure /tmp is mounted as tmpfs
+2. dd if=/dev/zero of=/tmp/disk.img bs=1M count=100
+3. losetup /dev/loop0 /tmp/disk.img
+4. mkfs.ext2 /dev/loop0
+5. dmesg |tail
+
+[710690.898214] operation not supported error, dev loop0, sector 204672 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898279] operation not supported error, dev loop0, sector 522 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898603] operation not supported error, dev loop0, sector 16906 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898917] operation not supported error, dev loop0, sector 32774 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899218] operation not supported error, dev loop0, sector 49674 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899484] operation not supported error, dev loop0, sector 65542 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899743] operation not supported error, dev loop0, sector 82442 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900015] operation not supported error, dev loop0, sector 98310 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900276] operation not supported error, dev loop0, sector 115210 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900546] operation not supported error, dev loop0, sector 131078 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+
+This patch changes the lo_fallocate() to clear the flags for zero and
+discard operations if we get EOPNOTSUPP from the backing file fallocate
+callback, that way we at least stop spewing errors after the first
+unsuccessful try.
+
+CC: Jan Kara <jack@suse.cz>
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+---
+
+v2:
+   - move the code into a separate function
+   - use unlikely() in the condigtion
+
+ drivers/block/loop.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 93780f41646b..1153721bc7c2 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -302,6 +302,21 @@ static int lo_read_simple(struct loop_device *lo, struct request *rq,
+ 	return 0;
+ }
+ 
++static void loop_clear_limits(struct loop_device *lo, int mode)
++{
++	struct queue_limits lim = queue_limits_start_update(lo->lo_queue);
++
++	if (mode & FALLOC_FL_ZERO_RANGE)
++		lim.max_write_zeroes_sectors = 0;
++
++	if (mode & FALLOC_FL_PUNCH_HOLE) {
++		lim.max_hw_discard_sectors = 0;
++		lim.discard_granularity = 0;
++	}
++
++	queue_limits_commit_update(lo->lo_queue, &lim);
++}
++
+ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+ 			int mode)
+ {
+@@ -320,6 +335,14 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+ 	ret = file->f_op->fallocate(file, mode, pos, blk_rq_bytes(rq));
+ 	if (unlikely(ret && ret != -EINVAL && ret != -EOPNOTSUPP))
+ 		return -EIO;
++
++	/*
++	 * We initially configure the limits in a hope that fallocate is
++	 * supported and clear them here if that turns out not to be true.
++	 */
++	if (unlikely(ret == -EOPNOTSUPP))
++		loop_clear_limits(lo, mode);
++
+ 	return ret;
+ }
+ 
+-- 
+2.44.2
+
