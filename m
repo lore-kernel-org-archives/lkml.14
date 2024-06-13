@@ -1,146 +1,127 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540413D608
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125EA140388
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267926; cv=none; b=BpM5v6mZNdkAcnnfUeC4TtTAVFfimLKPMQ1PMRuoRfa60c40ZKeLJUxdszGEGS5q9KJ7+jbPs6lK46+YJaMOd9gqqKoknsvvrsLmCF+yuhCc53l2KD+UCIddJW5O5ikZX5BPGt4nTMcNtdVuJdysMv6f3lZRo5MtLg93rZPaY1I=
+	t=1718267931; cv=none; b=UsE66ktEECPLOS2RVzCP2ONRxalLbGjwyd9yxNuKfGyLS7paXUt7NvMsUdaMuAKU4CsQj8N9a0dfxU9OiZcs+ZwyKWzuXXN8H2ijRO+/Q7fYbe7XH7vznBiEJW5uF3XdBO/OaTz7fKVep49IPyUv3OCiqIMkM/TRCsqfbRYK3Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267926; c=relaxed/simple;
-	bh=9SUeiVi1T9oGrBbo854n3vOCgOUM0D7zt4AESPxaOPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXTcKOdWe7HpW1bC4ZCXxuyhAjGrsqDrX7HhwS8rPCzm380XyIxrCfz0rmL76i/QKWux25Ly13XsSOVHNIy4Y+0WBY/XjB9bAdaxhqcEQuBNf5BS8PVzqRuQ8v1ZdtuGYS8QXiQH9fMoDaFlm/l77hCudENv/4L/mEUCWdzb9Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rCuBfqHf; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718267931; c=relaxed/simple;
+	bh=2lBCoyVSwCfn0+jjzoILCmsqHh6FBjPGpDkiN1EcNSQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L8eCf9RBkCBOnQMzI0lDrHPLWKxScYca3fkqOl+TuqXXBKKDCIHssZy4mL0bO/kG7DxZbDH+ohYPQENCGo8GFiIksSdY0F3hzv6O3iGw8pR8NblaNzZSWW+rAlGZHo9VjHNI+4O2ei1OlE8QGnwvWS41DlVQqMAvQl5Xs+EYIDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XPEd3qwS; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rCuBfqHf"
-X-Envelope-To: shahuang@redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718267919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bowi7EOkTndTQt3cslYbea98TP7rJlt6kYEQxSxfRQU=;
-	b=rCuBfqHfkguMUdlF6u8DRs0d0yksqiHxDzN0PlaV3AhxkrAUcUy96qZD4WDSx8mjOqPEX4
-	Jws3URRCEyxeDtGrSJeDq393+zqy++RBmNHTLS2jgV4plUQozy3596VX4auQ2kFZY3S6H1
-	XR2XCNV1A3JN7SyJMZKf3aMAz5N5Rxg=
-X-Envelope-To: maz@kernel.org
-X-Envelope-To: kvmarm@lists.linux.dev
-X-Envelope-To: eauger@redhat.com
-X-Envelope-To: sebott@redhat.com
-X-Envelope-To: cohuck@redhat.com
-X-Envelope-To: catalin.marinas@arm.com
-X-Envelope-To: james.morse@arm.com
-X-Envelope-To: kvm@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-kselftest@vger.kernel.org
-X-Envelope-To: pbonzini@redhat.com
-X-Envelope-To: shuah@kernel.org
-X-Envelope-To: suzuki.poulose@arm.com
-X-Envelope-To: will@kernel.org
-X-Envelope-To: yuzenghui@huawei.com
-Date: Thu, 13 Jun 2024 01:38:33 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Shaoqin Huang <shahuang@redhat.com>
-Cc: Marc Zyngier <maz@kernel.org>, kvmarm@lists.linux.dev,
-	Eric Auger <eauger@redhat.com>, Sebastian Ott <sebott@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Morse <james.morse@arm.com>, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [RFC PATCH v1 0/2] KVM: arm64: Making BT Field in
- ID_AA64PFR1_EL1 writable
-Message-ID: <ZmqwCbxvBErCZ43v@linux.dev>
-References: <20240612023553.127813-1-shahuang@redhat.com>
- <Zmkyi39Pz6Wqll-7@linux.dev>
- <8634pilbja.wl-maz@kernel.org>
- <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XPEd3qwS"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c6pA100718;
+	Thu, 13 Jun 2024 03:38:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718267886;
+	bh=TjyMmrW2J2r+RcKqfozTMKJxd3RBvb0XNqHfQ8z62jg=;
+	h=From:To:CC:Subject:Date;
+	b=XPEd3qwSH1MVbmbuJI6Y+54FQjNdEelkS9Bac9iU3apsnY/6VdSnkgeATU4kl4fkb
+	 c17jjv1oGnRnFroFTD5G/EL/sBNUFKSIaIgl6pxD1dE40jBD20bXfS8p2K2Jw9Gsp8
+	 b+w7Dvb8sKw7pHF8pUGVo6YfJxyTCyvIwR387qd8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8c6La021739
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Jun 2024 03:38:06 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jun 2024 03:38:06 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jun 2024 03:38:06 -0500
+Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c5nn070145;
+	Thu, 13 Jun 2024 03:38:06 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
+        <sui.jingfeng@linux.dev>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <mripard@kernel.org>,
+        <sam@ravnborg.org>, <j-choudhary@ti.com>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>, <a-bhatia1@ti.com>,
+        <dri-devel@lists.freedesktop.org>
+Subject: [PATCH v5 0/3] SII902X HDMI Bridge fixups
+Date: Thu, 13 Jun 2024 14:08:02 +0530
+Message-ID: <20240613083805.439337-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Jun 13, 2024 at 04:31:45PM +0800, Shaoqin Huang wrote:
-> Hi Marc,
-> 
-> On 6/12/24 18:07, Marc Zyngier wrote:
-> > On Wed, 12 Jun 2024 06:30:51 +0100,
-> > Oliver Upton <oliver.upton@linux.dev> wrote:
-> > > 
-> > > Hi Shaoqin,
-> > > 
-> > > On Tue, Jun 11, 2024 at 10:35:50PM -0400, Shaoqin Huang wrote:
-> > > > Hi guys,
-> > > > 
-> > > > I'm trying to enable migration from MtCollins(Ampere Altra, ARMv8.2+) to
-> > > > AmpereOne(AmpereOne, ARMv8.6+), the migration always fails when migration from
-> > > > MtCollins to AmpereOne due to some register fields differing between the
-> > > > two machines.
-> > > > 
-> > > > In this patch series, we try to make more register fields writable like
-> > > > ID_AA64PFR1_EL1.BT. This is first step towards making the migration possible.
-> > > > Some other hurdles need to be overcome. This is not sufficient to make the
-> > > > migration successful from MtCollins to AmpereOne.
-> > > 
-> > > It isn't possible to transparently migrate between these systems. The
-> > > former has a cntfrq of 25MHz, and the latter has a cntfrq of 1GHz. There
-> > > isn't a mechanism for scaling the counter frequency, and I have zero
-> > > appetite for a paravirt interface.
-> > 
-> > Note that there *is* an architectural workaround in the form of
-> > FEAT_CNTSC. But of course:
+- Move the mode_valid hook to drm_bridge_funcs structure to take care
+  of the case when the encoder attaches the bridge chain with the
+  DRM_BRIDGE_ATTACH_NO_CONNECTOR flag in which case, the connector is
+  not initialized in the bridge's attach call and mode_valid is not
+  called.
 
-Heh, I should've further specified a per-CPU mechanism :)
+- Also add this check to the atomic_check call as suggested by Maxime in
+  v1 patch.
 
-> > - it is optional (and likely not implemented)
-> > - it is global (hence affecting all SW running on the machine)
-> > - it invalidates the requirements of ARMv8.6 (who cares?)
-> > - KVM has nothing to do with it (yay!)
-> > 
-> > So if the two systems (from the same manufacturer) were ever designed
-> > to allow migration between the two, they would have at least baked
-> > some of that in.
-> > 
-> > As for the paravirt interface, I agree that this is a non-starter
-> > (been there, done that, dumped it in the bin).
-> > 
-> > The patch itself is interesting and may be of use once it has been put
-> > to a compiler and not just dumped on the list without any testing.
-> > 
-> > 	M.
-> 
-> Thanks for putting your comments here.
-> 
-> If we don't care about the FEAT_CNTSC right now. Could I fix the compile
-> issue and respin this again without the background of enabling migration
-> between MtCollins and AmpereOne, and just keep the information of the
-> different BT field between different machine?
+- Move from deprecated enable()/disable() hooks to atomic hooks as
+  suggested in v4 by Sam
 
-I don't think cross-platform migration is relevant for the KVM UAPI
-you're trying to augment. We want to give userspace the ability to control
-the visible feature set for a VM, which *could* be used by userspace in such
-a way to transparently migrate VMs.
+Testing has been done on AM62X platform which have SII902X HDMI bridge.
+From the logs we can see the propagated modes and flip test for 1080p
+resolution.
 
-So if you could focus the changelog purely as an improvement upon the
-existing controls we expose to the VMM then the patch is more obviously
-justified.
+Testlog:
+<https://gist.github.com/Jayesh2000/9bea6840672869337039296bc1145df4>
 
-Please do respin.
+Changelog v4->v5:
+- Add followup patch to replace deprecated bridge hooks
+- Fix atomic check to return negative value
+- Made commit message for [1/2] in v4 more clear while keeping the R-by and
+  Acked-by tags.
+- Fix commit header for [2/2] in v4
+
+v4 patch:
+<https://lore.kernel.org/all/20240530092930.434026-1-j-choudhary@ti.com/>
+
+Changelog v3->v4:
+- Remove mode_valid hook from connector_helper_funcs as it is not needed.
+
+v3 patch:
+<https://lore.kernel.org/all/20240524093509.127189-1-j-choudhary@ti.com/>
+
+Changelog v2->v3:
+- Remove newline that was introduced in [1/2] and later deleted in [2/2]
+  in v2
+
+v2 patch:
+<https://lore.kernel.org/all/20240524073305.107293-1-j-choudhary@ti.com/>
+
+Changelog v1->v2:
+- Add KHZ suffix in the macros to be more clear
+- Add the hook for drm_bridge_funcs as well
+- Add check in atomic_check dunction call (in a separate patch)
+
+v1 patch:
+<https://lore.kernel.org/all/20240408081435.216927-1-j-choudhary@ti.com/>
+
+Jayesh Choudhary (3):
+  drm/bridge: sii902x: Fix mode_valid hook
+  drm/bridge: sii902x: Support atomic bridge APIs
+  drm/bridge: sii902x: Add pixel clock check in atomic_check
+
+ drivers/gpu/drm/bridge/sii902x.c | 46 +++++++++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 13 deletions(-)
 
 -- 
-Thanks,
-Oliver
+2.25.1
+
