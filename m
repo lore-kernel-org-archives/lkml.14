@@ -1,46 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C956140391
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741D613D608
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267932; cv=none; b=f1DlHM5QKwtJq8otB8gUK/PmFfbI6kTFWO07TDzOKXeCkz8Jwjn8M17ZI+JSWPUmcHRAFN1Scila+DIKQurEVGZbDPsJSs5evaWPd7kXOp0qhWO6c5CQtni2twW86twRe+URd9mlxCu6rOpAEXKWdelFgdS0rvhpiYCF+bxEFC4=
+	t=1718267932; cv=none; b=ZvHQWhwRw/A5W7fMlBoaU4ftiwwycsCXP9P0D1RLiA4lSLko45R9wIuYTRvFbDBs8nrMpIjn4a5B3CEsaL+Szrsmo/4efythSrJobpZkL9Qev9kwIvn7ynwmDLS7rut+faFbwjgkjje5i6B3fR2P5FNHFRTHhJYNa5DtMP+jTes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718267932; c=relaxed/simple;
-	bh=MWNouuqSZvXZjJDbEM92fUobJMR1CVQGZ+VNuoHMRjc=;
+	bh=Yt1zy1XfRzHpQQLlgxa42nzh9qUkh5kQNqod7piTvQQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qqeRTn2jjyWUBnGHflPMuApROmfggHdl/jh7zO+l+5BIssAUXYbmxST+p4XaiBwG9LysosYndPAJokDl175oAWdxiIWfVWNpJK5U/3H/sdqifWTd0vVA/BN6UMtC1/EyWXARRrteAo2f6zkzxic13M9elX5EWHWUhNbRH7ALVG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KTAYPLxW; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=m2oi4cgQQMz67hS1SN8LeCZnknbzCnvYHTjSOLnkkFZfaGOAzFBgJ1tpmKEKCeDK/6k7U9h/n9MBIz9s4rOw1OLwE64ukBkr+9qZCGjxNXv0tbPTRgYXak2bNsEl+AonbPrQSZ9bWjgUqug0iOClaIrKS52EY5DfBjjLRrzbbHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qvf10RLS; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KTAYPLxW"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c9oS013085;
-	Thu, 13 Jun 2024 03:38:09 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qvf10RLS"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c8QB023308;
+	Thu, 13 Jun 2024 03:38:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718267889;
-	bh=rnfhvDvJw5BDb0tI21qEyro5d0f4cvwu1uctUDeRUpc=;
+	s=ti-com-17Q1; t=1718267888;
+	bh=BY7OHhQbmNI82hBMi2BWuhYz45KvvtmVf4whs4ZENdk=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KTAYPLxWLKkYWkwONUUxW3pMU9WhDSsscu7nOS6HFs5iZ/o1CudEngNXvmMiZ5QsI
-	 XbagrNcU+LQhsTMQ0sFEn4iFW5n7rZ2Gbw+3515qhWbQNWVV12Jj4c+N5Hr4fdzZQV
-	 sPCTx7amKyAAFrqQg8TBIP1Xcy6TbTtv1eqYEfQs=
+	b=qvf10RLSnFcdwKeYKVzZRExDu9dUzzQ3KYQJpYFBTpQoYt6xpMo2K2jQrbf/38Hv4
+	 byAQXvufKZwco6v39JUkP4DBhaBBgWNpwz44xtjbE4zgfFm1YpZFZuhKqe0CkfpN3T
+	 4bdRVuKjL5k3pOE+JJ2bjAqBcyeumsEsvbQmgdpY=
 Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8c99d094221
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8c8N6068476
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Jun 2024 03:38:09 -0500
+	Thu, 13 Jun 2024 03:38:08 -0500
 Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
  (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Jun 2024 03:38:09 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ Jun 2024 03:38:07 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
  (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Jun 2024 03:38:09 -0500
+ Frontend Transport; Thu, 13 Jun 2024 03:38:07 -0500
 Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c8hb079355;
-	Thu, 13 Jun 2024 03:38:09 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8c7f9070256;
+	Thu, 13 Jun 2024 03:38:07 -0500
 From: Jayesh Choudhary <j-choudhary@ti.com>
 To: <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
         <sui.jingfeng@linux.dev>, <andrzej.hajda@intel.com>,
@@ -51,9 +51,9 @@ CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
         <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
         <airlied@gmail.com>, <daniel@ffwll.ch>, <a-bhatia1@ti.com>,
         <dri-devel@lists.freedesktop.org>
-Subject: [PATCH v5 2/3] drm/bridge: sii902x: Support atomic bridge APIs
-Date: Thu, 13 Jun 2024 14:08:04 +0530
-Message-ID: <20240613083805.439337-3-j-choudhary@ti.com>
+Subject: [PATCH v5 1/3] drm/bridge: sii902x: Fix mode_valid hook
+Date: Thu, 13 Jun 2024 14:08:03 +0530
+Message-ID: <20240613083805.439337-2-j-choudhary@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240613083805.439337-1-j-choudhary@ti.com>
 References: <20240613083805.439337-1-j-choudhary@ti.com>
@@ -67,49 +67,88 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Change exisitig enable() and disable() bridge hooks to their atomic
-counterparts as the former hooks are deprecated.
+Currently, mode_valid is defined only in drm_connector_helper_funcs.
+When the bridge is attached with the 'DRM_BRIDGE_ATTACH_NO_CONNECTOR'
+flag, the connector is not initialized, and so is the mode_valid
+hook under connector helper funcs.
+It also returns MODE_OK for all modes without actually checking the
+modes.
+So move the mode_valid hook to drm_bridge_funcs with proper clock
+checks for maximum and minimum pixel clock supported by the bridge.
 
 Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Sui Jingfeng <sui.jingfeng@linux.dev>
 ---
- drivers/gpu/drm/bridge/sii902x.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/bridge/sii902x.c | 32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 6a6055a4ccf9..00a8c469f553 100644
+index 2fbeda9025bf..6a6055a4ccf9 100644
 --- a/drivers/gpu/drm/bridge/sii902x.c
 +++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -322,7 +322,8 @@ static const struct drm_connector_helper_funcs sii902x_connector_helper_funcs =
- 	.get_modes = sii902x_get_modes,
- };
+@@ -163,6 +163,14 @@
  
--static void sii902x_bridge_disable(struct drm_bridge *bridge)
-+static void sii902x_bridge_atomic_disable(struct drm_bridge *bridge,
-+					  struct drm_bridge_state *old_bridge_state)
- {
- 	struct sii902x *sii902x = bridge_to_sii902x(bridge);
+ #define SII902X_AUDIO_PORT_INDEX		3
  
-@@ -335,7 +336,8 @@ static void sii902x_bridge_disable(struct drm_bridge *bridge)
- 	mutex_unlock(&sii902x->mutex);
++/*
++ * The maximum resolution supported by the HDMI bridge is 1080p@60Hz
++ * and 1920x1200 requiring a pixel clock of 165MHz and the minimum
++ * resolution supported is 480p@60Hz requiring a pixel clock of 25MHz
++ */
++#define SII902X_MIN_PIXEL_CLOCK_KHZ		25000
++#define SII902X_MAX_PIXEL_CLOCK_KHZ		165000
++
+ struct sii902x {
+ 	struct i2c_client *i2c;
+ 	struct regmap *regmap;
+@@ -310,17 +318,8 @@ static int sii902x_get_modes(struct drm_connector *connector)
+ 	return num;
  }
  
--static void sii902x_bridge_enable(struct drm_bridge *bridge)
-+static void sii902x_bridge_atomic_enable(struct drm_bridge *bridge,
-+					 struct drm_bridge_state *old_bridge_state)
- {
- 	struct sii902x *sii902x = bridge_to_sii902x(bridge);
+-static enum drm_mode_status sii902x_mode_valid(struct drm_connector *connector,
+-					       struct drm_display_mode *mode)
+-{
+-	/* TODO: check mode */
+-
+-	return MODE_OK;
+-}
+-
+ static const struct drm_connector_helper_funcs sii902x_connector_helper_funcs = {
+ 	.get_modes = sii902x_get_modes,
+-	.mode_valid = sii902x_mode_valid,
+ };
  
-@@ -520,8 +522,8 @@ sii902x_bridge_mode_valid(struct drm_bridge *bridge,
+ static void sii902x_bridge_disable(struct drm_bridge *bridge)
+@@ -504,6 +503,20 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
+ 	return 0;
+ }
+ 
++static enum drm_mode_status
++sii902x_bridge_mode_valid(struct drm_bridge *bridge,
++			  const struct drm_display_info *info,
++			  const struct drm_display_mode *mode)
++{
++	if (mode->clock < SII902X_MIN_PIXEL_CLOCK_KHZ)
++		return MODE_CLOCK_LOW;
++
++	if (mode->clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
++		return MODE_CLOCK_HIGH;
++
++	return MODE_OK;
++}
++
  static const struct drm_bridge_funcs sii902x_bridge_funcs = {
  	.attach = sii902x_bridge_attach,
  	.mode_set = sii902x_bridge_mode_set,
--	.disable = sii902x_bridge_disable,
--	.enable = sii902x_bridge_enable,
-+	.atomic_disable = sii902x_bridge_atomic_disable,
-+	.atomic_enable = sii902x_bridge_atomic_enable,
- 	.detect = sii902x_bridge_detect,
- 	.edid_read = sii902x_bridge_edid_read,
- 	.atomic_reset = drm_atomic_helper_bridge_reset,
+@@ -516,6 +529,7 @@ static const struct drm_bridge_funcs sii902x_bridge_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+ 	.atomic_get_input_bus_fmts = sii902x_bridge_atomic_get_input_bus_fmts,
+ 	.atomic_check = sii902x_bridge_atomic_check,
++	.mode_valid = sii902x_bridge_mode_valid,
+ };
+ 
+ static int sii902x_mute(struct sii902x *sii902x, bool mute)
 -- 
 2.25.1
 
