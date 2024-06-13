@@ -1,66 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE5213D8B4
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F23213D617
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267424; cv=none; b=VGxfZwky0TAZSRwgF1ryPSzNCgpBusC1tlFT31RnA9Vzt0Qykh9/9gh49VT7adnK3p+vkiCyh7c2KcQrEusWItLpQ+778QJ+eAXRPAdh43pcsaO+VJ0qUXtoIkDKe9RG9rIKuvKhcCFp81LTz3NZDhUK+0zE8zAWaTg42xcJ24I=
+	t=1718267516; cv=none; b=jkD5/0tJp9/vlAIR7vTRmpg1ezVC8WjFgrctl0+NftHZzCuZr66jR+1uC2APfiK4hzOcO2+V+afuAoh0pihTmpYL7orEMvPwizA0yvocYAz//i+A74kFs4dsq1TyW6UgOJlVgE8nbn7jmsE0gK9SkX8ET4RXzPuUcNBZjV4K2Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267424; c=relaxed/simple;
-	bh=olYDvaq1sibUVzUMbpKd5cTm6kBqZtlOrcMpTOMa9XE=;
+	s=arc-20240116; t=1718267516; c=relaxed/simple;
+	bh=whSDBIPeQCp4gMTbg1boII8Ecw7cjvT8USnKGbp5wwI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CrSzSPih+DK3X5ZFqGMb5WoWiChJHhA7DOMR6meSPAa9GYbAAqQyv//o3eF8p9yXksPv/5svc8A6ShhVwcizlTsSo3yL/O0u1ojqKmZqdLPllEkVjHgnhzPtd0rmjCKtVr0affyP4A1EQgChmntUjqYDeENWnnV02yZy5meK/R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kgbv4JZ6; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=WpbQdqiTuZeqhnp33tZQY3z9tJY5lapZddDfYi3k/1no4CBWjmIq/0dMDccn1WK+Lzp2R5xnOUt6w2mnH3BGbgVvY0xTOrvNL64dSTL77QrMqV6h1PxZz/5eYbdq/8kylAYjThFquuk9Xx6r/P/ibaSHCEu4/vVLUbZIioAwN3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jrz6ntXs; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kgbv4JZ6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jrz6ntXs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718267421;
+	s=mimecast20190719; t=1718267514;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yAhyS+L6IMUnGJVeQyXFhggpAUPl4/mtNvhZR9+eZ5s=;
-	b=Kgbv4JZ60T5wZiPm/WuqOaU7ZtSofzdQDvG8xQwZkgT4AWKqN4Ac6d+W8VVx5jvlN20kPp
-	M6aWZZwayzZeNEp7gjTvZtmlWU9FWzr/r+yBsO+RRrEH7znN1AKc4/uYYVxYGIEDIihrAG
-	fzxF02zHAWvAvgFlPmVGdxGMaUxctnM=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=y5ofu96uaYHKd8h9JHJ7poUCKR58img+rTZnrw0Den4=;
+	b=Jrz6ntXsJUaeUx2Zio1wYfb1YkPptTDkOFgdXOCb9wahYg+gUzaPCrunf4/pRhfB/KZslu
+	+jUvpWJpaFhWjhuwVvvlOJsUcjJSj6OLnshTTo15AqdMrQ+UecQR0e90QQrL9WtR9rGTYI
+	OIm9QMwrvdsgnGZiigAAFnHk47ybysc=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-HLpET5YfMAasoe92gZSR2A-1; Thu, 13 Jun 2024 04:30:18 -0400
-X-MC-Unique: HLpET5YfMAasoe92gZSR2A-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ebf97174f5so4860641fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:30:18 -0700 (PDT)
+ us-mta-403-EOCkbeipPqOxI8drZBxzdw-1; Thu, 13 Jun 2024 04:31:51 -0400
+X-MC-Unique: EOCkbeipPqOxI8drZBxzdw-1
+Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-5bd28928c4bso53070eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:31:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718267417; x=1718872217;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yAhyS+L6IMUnGJVeQyXFhggpAUPl4/mtNvhZR9+eZ5s=;
-        b=MbGOE1/95iCvEKPn2JBQJf7VhbtI5GU6b86ygQ5ZrxmeSszNTBiJcmDby7n69pqcXN
-         wsdCkfH73I8EPDi/Fu3opvzhTpVC0TeE/45RXeBY5tMaVb9Rb161xXX1WMMatGFPxuRy
-         A/oZYF8fym0ef18HJfayk1bk2rGi/k6GaZA4cBR7fRZFE11f9YQxQImxMYpxwI0nhNMG
-         w6569ydi5fs55vRwS8/qkshFKsMJTM2wYCLTtZF9khs43YnRMTnvkrNNpuXHVQZqrB0G
-         wdRQWeGAhkS24K8MPB8dMI3K+QTN996RnnoAgCGHwKsLbGZKTTi0K4DmyoNrIhCs4Cvt
-         0QqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtF+JEPJtN4eTfNrRZsC3vJUPEZR/3veV62sIeO/d5RU1qm9wDSAHWiz2cz2qc3PsH3PCp5xdp5EnidA5acbC9KT6iuYzQSeOPlLxH
-X-Gm-Message-State: AOJu0YzIZPiYOjNnrLNHo0ApWw7qQUNbGfID8gPicoxEaBLHGRIDMSWr
-	zGq44i1PvJ2tLao0nplPKEUXdSNMmMB1WzYD0MdMfcWspQDF0ACSpWdWMJpK3ZF3ng06JOdSSBp
-	WjqPAswsmL/1POxzYNmT1sPtrbJn34E+4KdiPAtycWo1kpc09oKrZ/z2a0ZP5og==
-X-Received: by 2002:a2e:bc0e:0:b0:2eb:ebc1:f20a with SMTP id 38308e7fff4ca-2ebfc8d622amr31250401fa.20.1718267417410;
-        Thu, 13 Jun 2024 01:30:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJDfD8HHPrKnvA4HVjWp/eNm28R+o0mbxj0GevtUzStggO0dABQW864ExNmwsXcnWw2lEqyg==
-X-Received: by 2002:a2e:bc0e:0:b0:2eb:ebc1:f20a with SMTP id 38308e7fff4ca-2ebfc8d622amr31250011fa.20.1718267416941;
-        Thu, 13 Jun 2024 01:30:16 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c703:fe00:10fe:298:6bf1:d163? (p200300cbc703fe0010fe02986bf1d163.dip0.t-ipconnect.de. [2003:cb:c703:fe00:10fe:298:6bf1:d163])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874e6b63sm53141465e9.39.2024.06.13.01.30.15
+        d=1e100.net; s=20230601; t=1718267511; x=1718872311;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y5ofu96uaYHKd8h9JHJ7poUCKR58img+rTZnrw0Den4=;
+        b=oqymyvexW8fG7zstSRih5s25AkESjbio4a1A60bViIqPe4YF4Gs4GKFITlm0wAIsZn
+         MPXO7Mr1InVXC9m2NfNJT7wP9ga7bneUvtemyauuZoOkyKPhg/ahhhf4yXa7gHy+TIFo
+         FvVW9exKYYXp0aYhg15IqbrOViYOCLE6tp29HT49aMudT++L6Ez4uiAaUUqwiUC9hGrW
+         fv4NQc7B2HasXYVdrVUObgDX6kLhNV0UoWypqc6MhY+sy9LJX5LUgCummDycVJdt7kKi
+         K3bIqihqGZe5+nPoip5l9UT2qCFUwlKFjzRrO4tos5IxFyIaGdKG9cSEQp7sfPSwW42o
+         FGjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXb2xxfJ9/JL7QZYecWo6rjkXJ3jHVMUhqFX6XjIx2YQcsc7J9+2OvRqHmVChJdgBzfshX2di2zTfn96Y9rYCB7RcgSDp8ALck9qpbv
+X-Gm-Message-State: AOJu0Yy74a17JtHx8/MrG6pn4CW/MkT1juCQgQ2xBoknXUrmqfQ4tUf3
+	c4tZdWp7LiZDxEfurRadVFmPIFbLq7BR+uL3ZW2IcKI4n+lmQsWScYdbcl4OMGkCeGwp6Kd0qAK
+	93omcWynF5o9yrVFKChRdwPcTCniMCVGsuLxYvhuzWqFY9DfSIRaumyPvG1x9iQ==
+X-Received: by 2002:a05:6808:1520:b0:3d2:1b8a:be6f with SMTP id 5614622812f47-3d23e1841d5mr4726146b6e.4.1718267510994;
+        Thu, 13 Jun 2024 01:31:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZ4j79H8ujkrU/qWo7O+2rnKVyh0633ZsTv+AwDBtZWDY6NR7eeeLO/kPYWb9bhOY6WZNPLA==
+X-Received: by 2002:a05:6808:1520:b0:3d2:1b8a:be6f with SMTP id 5614622812f47-3d23e1841d5mr4726128b6e.4.1718267510446;
+        Thu, 13 Jun 2024 01:31:50 -0700 (PDT)
+Received: from [10.66.61.39] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cde0dbdcsm726826b3a.147.2024.06.13.01.31.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 01:30:16 -0700 (PDT)
-Message-ID: <b0d551a9-ee70-46a7-a0d6-c422f0baf91e@redhat.com>
-Date: Thu, 13 Jun 2024 10:30:15 +0200
+        Thu, 13 Jun 2024 01:31:49 -0700 (PDT)
+Message-ID: <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
+Date: Thu, 13 Jun 2024 16:31:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,136 +67,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/4] mm/rmap: add helper to restart pgtable walk on
- changes
-To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
-Cc: willy@infradead.org, sj@kernel.org, baolin.wang@linux.alibaba.com,
- maskray@google.com, ziy@nvidia.com, ryan.roberts@arm.com, 21cnbao@gmail.com,
- mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com,
- shy828301@gmail.com, xiehuan09@gmail.com, libang.li@antgroup.com,
- wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com,
- minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240610120209.66311-1-ioworker0@gmail.com>
- <20240610120209.66311-3-ioworker0@gmail.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [RFC PATCH v1 0/2] KVM: arm64: Making BT Field in ID_AA64PFR1_EL1
+ writable
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Cc: kvmarm@lists.linux.dev, Eric Auger <eauger@redhat.com>,
+ Sebastian Ott <sebott@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, James Morse
+ <james.morse@arm.com>, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
+References: <20240612023553.127813-1-shahuang@redhat.com>
+ <Zmkyi39Pz6Wqll-7@linux.dev> <8634pilbja.wl-maz@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240610120209.66311-3-ioworker0@gmail.com>
+From: Shaoqin Huang <shahuang@redhat.com>
+In-Reply-To: <8634pilbja.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 10.06.24 14:02, Lance Yang wrote:
-> Introduce the page_vma_mapped_walk_restart() helper to handle scenarios
-> where the page table walk needs to be restarted due to changes in the page
-> table, such as when a PMD is split. It releases the PTL held during the
-> previous walk and resets the state, allowing a new walk to start at the
-> current address stored in pvmw->address.
+Hi Marc,
+
+On 6/12/24 18:07, Marc Zyngier wrote:
+> On Wed, 12 Jun 2024 06:30:51 +0100,
+> Oliver Upton <oliver.upton@linux.dev> wrote:
+>>
+>> Hi Shaoqin,
+>>
+>> On Tue, Jun 11, 2024 at 10:35:50PM -0400, Shaoqin Huang wrote:
+>>> Hi guys,
+>>>
+>>> I'm trying to enable migration from MtCollins(Ampere Altra, ARMv8.2+) to
+>>> AmpereOne(AmpereOne, ARMv8.6+), the migration always fails when migration from
+>>> MtCollins to AmpereOne due to some register fields differing between the
+>>> two machines.
+>>>
+>>> In this patch series, we try to make more register fields writable like
+>>> ID_AA64PFR1_EL1.BT. This is first step towards making the migration possible.
+>>> Some other hurdles need to be overcome. This is not sufficient to make the
+>>> migration successful from MtCollins to AmpereOne.
+>>
+>> It isn't possible to transparently migrate between these systems. The
+>> former has a cntfrq of 25MHz, and the latter has a cntfrq of 1GHz. There
+>> isn't a mechanism for scaling the counter frequency, and I have zero
+>> appetite for a paravirt interface.
 > 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> ---
->   include/linux/rmap.h | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
+> Note that there *is* an architectural workaround in the form of
+> FEAT_CNTSC. But of course:
 > 
-> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-> index 7229b9baf20d..5f18509610cc 100644
-> --- a/include/linux/rmap.h
-> +++ b/include/linux/rmap.h
-> @@ -710,6 +710,28 @@ static inline void page_vma_mapped_walk_done(struct page_vma_mapped_walk *pvmw)
->   		spin_unlock(pvmw->ptl);
->   }
->   
-> +/**
-> + * page_vma_mapped_walk_restart - Restart the page table walk.
-> + * @pvmw: Pointer to struct page_vma_mapped_walk.
-> + *
-> + * It restarts the page table walk when changes occur in the page
-> + * table, such as splitting a PMD. Ensures that the PTL held during
-> + * the previous walk is released and resets the state to allow for
-> + * a new walk starting at the current address stored in pvmw->address.
-> + */
-> +static inline void
-> +page_vma_mapped_walk_restart(struct page_vma_mapped_walk *pvmw)
-> +{
-> +	WARN_ON_ONCE(!pvmw->pmd);
+> - it is optional (and likely not implemented)
+> - it is global (hence affecting all SW running on the machine)
+> - it invalidates the requirements of ARMv8.6 (who cares?)
+> - KVM has nothing to do with it (yay!)
+> 
+> So if the two systems (from the same manufacturer) were ever designed
+> to allow migration between the two, they would have at least baked
+> some of that in.
+> 
+> As for the paravirt interface, I agree that this is a non-starter
+> (been there, done that, dumped it in the bin).
+> 
+> The patch itself is interesting and may be of use once it has been put
+> to a compiler and not just dumped on the list without any testing.
+> 
+> 	M.
 
-Can we have this more general, like
+Thanks for putting your comments here.
 
-WARN_ON_ONCE(!pvmw->pmd && !pvmw->pte);
+If we don't care about the FEAT_CNTSC right now. Could I fix the compile 
+issue and respin this again without the background of enabling migration 
+between MtCollins and AmpereOne, and just keep the information of the 
+different BT field between different machine?
 
-And then setting both to NULL below?
+Thanks,
+Shaoqin
 
-
-> +	WARN_ON_ONCE(!pvmw->ptl);
-
-This is confusing: you check for ptl below. What would be clearer is
-
-if (likely(pvmw->ptl))
-	spin_unlock(pvmw->ptl);
-else
-	WARN_ON_ONCE(1);
-
-
-> +
-> +	if (pvmw->ptl)
-> +		spin_unlock(pvmw->ptl);
-> +
-> +	pvmw->ptl = NULL;
-> +	pvmw->pmd = NULL;
-> +}
-> +
->   bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw);
->   
->   /*
-
-I'd suggest squashing that into the next patch.
+> 
 
 -- 
-Cheers,
-
-David / dhildenb
+Shaoqin
 
