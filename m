@@ -1,83 +1,76 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E21614198E;
-	Thu, 13 Jun 2024 15:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96371149C4E;
+	Thu, 13 Jun 2024 15:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718293244; cv=none; b=WPGW7YT4TVM3fRcih2Jn5yS7D9uECaOAyWIRNs2fMquz9fmgam9qAiOc6tj5mNsrvgcwKlP80wmmlNonsYhbk8/aYM6BU2mRSgJX5itCPhdmFYwupb9xcTL18BHfcSSelK3EdocqUpHtXzcN0Q55Me1157B34xavcSLT+n+jJlE=
+	t=1718293244; cv=none; b=r25PZ4uUh2tp2BBgjFeMWllVq6TyEIazQJyHIJYErpwVuXOp6wbWOmpYE6R+dpAZ8JEpQJBoOf9z+wj9dRxFkTxQW/jDySUqYXO1omzbM/IKsl3B/ULnqcMKDCHgHVtNE+CnbT3vfm6GaR3kWkBQgT22m2SUgJb6zgGl1JFc9lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718293244; c=relaxed/simple;
-	bh=N+sDX7ZbU5QCuJT6w9YMdnRaDrdkZf5y5viAAmIsDG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mAPN0fhNG/U2WIQWOwP/SKv2yuhXuRC5KV/AeLzX+KKGDNWPxWHvcFY0QhQ8AvpftHbYV5ASR6HR0ExkFJg5TGZVM38t+laPyoaDh29MOxtFyluSYIMUteD4IgvzMOeGD/wRLC4JRZp0Uw0uqtJ05enr2qFFSAyeyVgtosVeecs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ERvfPeDP; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	bh=JcXvOUaKdlxs2Ht40iN7VRSX7BT4jA2+5PBP7oY41xc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FIGmdWiPLePVrw7cuTBlsfdh2wZvEKUWTTuJs4SFe24jWndCMb1vYO5rFApTtZU+Tlvyt4NwWEqbog1fuA3f46a32UNBFyjQ/LIPuVpqDwuuS10CEpjaoGDsfrESUbfQfDGjN8dyQgdWbBgozMBU7ICbd2zSXf4v20Mpx9m+N04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WE9Z1NUn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ERvfPeDP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yzkTNbdD0a2c3NKP5uSb0sKP6o4WHMSdtJob2Y7Lf9Y=; b=ERvfPeDPd5l14AF4yJ+ldt9Nxz
-	7bS1JZiLy38Xf8wDo1A0V82qM67Vcpl4Hd18YEIdOpUE2l68glcOxjLeR/M86injkZp45uVvSyGwB
-	7Ag/sfbWYK4LDA+e6kncbnlWIOp5gMidKClL5x4raeJIt40QGuz0wb8qQx/slJbGswml3lq/zlmQX
-	B13i8h5Xj460i6GnPDJUEGQ8RtYJVZP5fPBsBjxRS0nQ5SkIRy8Pi/WcHqAn9a5oXDNjfmapzJ/Lt
-	C/i9zs92LoKtssDB0DvCPnBXCIbOZKLAHY2YqGxy9Gwk4NKmxB+PiaqN6Rqo1yofXq7sFl8G/2p0e
-	+8LPn/RA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHmYu-0000000Furm-1Tae;
-	Thu, 13 Jun 2024 15:40:28 +0000
-Date: Thu, 13 Jun 2024 16:40:28 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
-	yang@os.amperecomputing.com, linmiaohe@huawei.com,
-	muchun.song@linux.dev, osalvador@suse.de,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
-	brauner@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-	hare@suse.de, linux-kernel@vger.kernel.org,
-	Zi Yan <zi.yan@sent.com>, linux-xfs@vger.kernel.org,
-	p.raghav@samsung.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
-	gost.dev@samsung.com, cl@os.amperecomputing.com,
-	john.g.garry@oracle.com
-Subject: Re: [PATCH v7 06/11] filemap: cap PTE range to be created to allowed
- zero fill in folio_map_range()
-Message-ID: <ZmsS7JipzuBxJm92@casper.infradead.org>
-References: <20240607145902.1137853-1-kernel@pankajraghav.com>
- <20240607145902.1137853-7-kernel@pankajraghav.com>
- <ZmnyH_ozCxr_NN_Z@casper.infradead.org>
- <ZmqmWrzmL5Wx2DoF@bombadil.infradead.org>
- <818f69fa-9dc7-4ca0-b3ab-a667cd1fb16d@redhat.com>
- <ZmqqIrv4Fms-Vi6E@bombadil.infradead.org>
- <b3fef638-4f4a-4688-8a39-8dfa4ae88836@redhat.com>
- <ZmsP36zmg2-hgtak@bombadil.infradead.org>
- <ZmsRC8YF-JEc_dQ0@casper.infradead.org>
- <ZmsSZzIGCfOXPKjj@bombadil.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WE9Z1NUn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63916C32786;
+	Thu, 13 Jun 2024 15:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718293244;
+	bh=JcXvOUaKdlxs2Ht40iN7VRSX7BT4jA2+5PBP7oY41xc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WE9Z1NUnN2yyAnjrE9nBV1RUF+SFyoifvSbOJ4sNgec7xO0QNAaq1qrB4mXpLPnaV
+	 vg3xdmR4KToKvfpGJrei1/MhoJRAv4FBSVh2MuqwZNT7D4GkaLZjR6hg9voDEMssbc
+	 /rka534WIOa/2wRcqXOwGowkNpjoMO+tsbYg6Gy3yIHifMR4KT9iLfuhkk2nLBjRRD
+	 l3TC7i5O+LyB5QuDBWq43PFyb96p6xXCL+V8wLKJODYBcLCiNOZEYOK6Y3e60PQKFX
+	 bQGD8wVrP183595n1vr/JN2azD2QmxcOXWSIz1eo8H/dwCKb5gpChjK7BB/rMmKtmR
+	 SUr0dTvhEoEMg==
+Date: Thu, 13 Jun 2024 08:40:42 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: <intel-wired-lan@lists.osuosl.org>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+ <magnus.karlsson@intel.com>, Michal Kubiak <michal.kubiak@intel.com>
+Subject: Re: [PATCH iwl-net 0/3] ice: fix synchronization between .ndo_bpf()
+ and reset
+Message-ID: <20240613084042.7db4c410@kernel.org>
+In-Reply-To: <ZmsR8F9GFgxgBXfV@lzaremba-mobl.ger.corp.intel.com>
+References: <20240610153716.31493-1-larysa.zaremba@intel.com>
+	<20240611193837.4ffb2401@kernel.org>
+	<ZmlGppe04yuGHvPx@lzaremba-mobl.ger.corp.intel.com>
+	<20240612140935.54981c49@kernel.org>
+	<ZmqztPo6UDIC6gKx@lzaremba-mobl.ger.corp.intel.com>
+	<20240613071343.019e7dca@kernel.org>
+	<ZmsR8F9GFgxgBXfV@lzaremba-mobl.ger.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmsSZzIGCfOXPKjj@bombadil.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 08:38:15AM -0700, Luis Chamberlain wrote:
-> On Thu, Jun 13, 2024 at 04:32:27PM +0100, Matthew Wilcox wrote:
-> > On Thu, Jun 13, 2024 at 08:27:27AM -0700, Luis Chamberlain wrote:
-> > > The case I tested that failed the test was tmpfs with huge pages (not
-> > > large folios). So should we then have this:
+On Thu, 13 Jun 2024 17:36:16 +0200 Larysa Zaremba wrote:
+> > > AFAIK, netif_device_detach() does not affect .ndo_bpf() calls. We were trying 
+> > > such approach with idpf and it does work for ethtool, but not for XDP.  
 > > 
-> > No.
+> > I reckon that's an unintentional omission. In theory XDP is "pure
+> > software" but if the device is running driver will likely have to
+> > touch HW to reconfigure. So, if you're willing, do send a ndo_bpf 
+> > patch to add a detached check.  
 > 
-> OK so this does have a change for tmpfs with huge pages enabled, do we
-> take the position then this is a fix for that?
+> This does not seem that simple. In cases of program/pool detachment, 
+> .ndo_bpf() does not accept 'no' as an answer, so there is no easy existing way 
+> of handling !netif_device_present() either. And we have to notify the driver 
+> that pool/program is no longer needed no matter what. So what is left is somehow 
+> postpone pool/prog removal to after the netdev gets attached again.
 
-You literally said it was a fix just a few messages up thread?
-
-Besides, the behaviour changes (currently) depending on whether
-you specify "within_size" or "always".  This patch makes it consistent.
+I see, thanks for investigating!
