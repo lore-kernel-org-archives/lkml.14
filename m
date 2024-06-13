@@ -1,201 +1,88 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE81474BF;
-	Thu, 13 Jun 2024 12:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87878145A14;
+	Thu, 13 Jun 2024 12:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718280084; cv=none; b=PyBmgqTnpoTym01SJxYgOQ7MnWM42ZNSZa4gH8R5XyrOIq9CKTUSuCXyVrWag6tjdi52eTnbrQGVT2iTlvknpKxnywi5036lq414Mp0jcd3qHFRUoDvuoVKGJlxWGl+sNAyNiPovrq4xlQwilJxN/xAgaRjWfvjcFHm8qyL1NrA=
+	t=1718280094; cv=none; b=EMw1UdIfzWUEkBUyh/QTQi47f1alI2kvRlmp0vF8eOylT83rj249gYS1hrDrFs6P0a3XMB1nV4xidYOjmQTqVCc9km6hxuSu4cJZ/ZnJZpW4MvdjCSmdnXFGF/K0sIXk2K7pqbNHJswOeG2AXRwS4SHYMKXF5PPBCzbJCHlPDCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718280084; c=relaxed/simple;
-	bh=jXKgcxjhp7dP+6RZKb9D/HR5C/E9UziMumLh/FAU1Uc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CgaDvVzDKLk3NkJv9BNm7E9VKSlb7MWb+QsFTjAyFOBR4c5wRn1oUbE0GohCs9mtmz3N3dy2rqNfxmZfp4YCG24wTmD5bS0/SKDYAQy2MR9vJ4ROuzJFNmkIPaYAFoXdMu6tdX6Wi8yr6SgeBPdWy2p14BPKWkd2wNElFuaFqiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xrGNiGgD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UL51kaxd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xrGNiGgD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UL51kaxd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1718280094; c=relaxed/simple;
+	bh=4Lqh1jE2xY516irQXX/1xMbdZu7XXl5X23gAe0VliwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qUhBhJaINvmVqWLNJEbigeEIgw9atkQ6X/tz+To2wuDq6AsH3S5xveVusLv04xGpmUI40PG/6FCYgUU+CFQv5HWQ4no8Q7Y95NzAdxK6zBZD/LNEc4nJdbo0uDoaCdJceL+2j3Fthi34W21bU6155oV5fTFGKDSri9sUQYfS4v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0BwPDCo; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xrGNiGgD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UL51kaxd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xrGNiGgD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UL51kaxd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BFD345D2D3;
-	Thu, 13 Jun 2024 12:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718280080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
-	b=xrGNiGgDy8HRWNxciUEDQXKJnQCZ80pNeS7f/JveyaFqulrGiw98Qqemnt/UsyYW+teF7e
-	26G2ra/8fhyqn5KABujsb9JCSxH3uVpX6znpcN1Y9e9mJWrXfbusIy7KGFUXcBp5VQczPp
-	PIVBrDVsUwtIebiNzdB90m87+CRX9E4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718280080;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
-	b=UL51kaxdwxNHIILLIGhOIcVcyKPH6EMobRY/mG88l5j2NLV2tQgqJUNo+yrCOWd+MiIfD4
-	VFx5ItzdsGvD1jAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xrGNiGgD;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=UL51kaxd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718280080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
-	b=xrGNiGgDy8HRWNxciUEDQXKJnQCZ80pNeS7f/JveyaFqulrGiw98Qqemnt/UsyYW+teF7e
-	26G2ra/8fhyqn5KABujsb9JCSxH3uVpX6znpcN1Y9e9mJWrXfbusIy7KGFUXcBp5VQczPp
-	PIVBrDVsUwtIebiNzdB90m87+CRX9E4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718280080;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ix0hgv8npV79bxIJwCvm11zIiXgCMm13N5u0/ILQj4o=;
-	b=UL51kaxdwxNHIILLIGhOIcVcyKPH6EMobRY/mG88l5j2NLV2tQgqJUNo+yrCOWd+MiIfD4
-	VFx5ItzdsGvD1jAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CE5313A87;
-	Thu, 13 Jun 2024 12:01:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zPcrIZDfambFHwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 13 Jun 2024 12:01:20 +0000
-Date: Thu, 13 Jun 2024 14:01:44 +0200
-Message-ID: <87ikydnj9z.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: bo liu <bo.liu@senarytech.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] ALSA: hda/senarytech: add senarytech codec support
-In-Reply-To: <20240606015703.37118-1-bo.liu@senarytech.com>
-References: <20240606015703.37118-1-bo.liu@senarytech.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0BwPDCo"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52c82101407so1854064e87.3;
+        Thu, 13 Jun 2024 05:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718280090; x=1718884890; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TBJ1ejFH7z7OGpwZgl0po5UnGmqdnLOVmfHOb4vTMGo=;
+        b=a0BwPDCoZifbrca7QkgR+LbyA+EEHGJcNcE1uk6BnVZUQ5+KrZqug8VirEMCPK6/lU
+         /HWEb9qW5mpHGpj64zgGFuGwnj0gfkGJOLJ3KKxSJ8eDYa47vjEOPW9NPfFT0I3yNUmp
+         yWC4Mxo1IlzQTGoRBERuyEol/g2fuqmyZj7vrKXvtvhhBieVhMrJW+i62ysBcrV6RAw+
+         1EoM40uKCB1J0shPli1HDqCIKbnhp9wlDn+nfGDZkKcTSkRC8QAVMt6rVP2TZhNt5I4B
+         YjY14ly02a6i0+aDnOUPE9yreFhINPmPQ8uuRiWZvJbVUOagzcD1jRWW4zqWVpBw5Wd7
+         BRoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718280090; x=1718884890;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TBJ1ejFH7z7OGpwZgl0po5UnGmqdnLOVmfHOb4vTMGo=;
+        b=My88MxMerZUtANmPuYZLD4+5tIKiyLY8xFEqRoF6dYKAYFGHOmZY4X6eTwXHy473cq
+         E2MzCpo6qnLMJg2Eg9n/T7vZ6WhY9ukehepC/Qa7U09qrKtTw3vwXipGV5Lv198ivAOx
+         SW2XwKdR0uuiCJezQN9u4L4L/og2thj6VYXGhUsbuQIgCIREiy9/r5g3TeKp8j5D9a+R
+         E9A1ssJ/fVPiM/I6NfwaWtRysie3WUFEX8ynonOBgxb+ZP0nQUZLzTM1ZGWMadM+V4Rm
+         X04w/YkFxokJL2mE8KXVz7Bx0VBojjkusda2kW6BstAlN+/0JCyYgghWP9/I7OJHdNoW
+         x36g==
+X-Forwarded-Encrypted: i=1; AJvYcCWL+xuX5tGMF2ZsKOcA5wx29hHTJoExRyxtfjs+Go+okojR6vOPzHUhh6koIh7nJQHQsw3P9OtKB76wPSC4wE/fSqmzZ4TAiU6XVrLYyTMbxDUaqAhNpWwA14hjZuSUa3UclRwQlGq+kL6iRzRToYlMhuJutRKeBE38xDI5PL7E7w==
+X-Gm-Message-State: AOJu0YwdfA3T+0jXm3LNqX+hGDgJyEM10BfahnZ8MR7C/X+WHTdtK0rw
+	6IiR6GFO2ZdMIaHl/ESWiT9N5GidRYDn0odfBl9KY/PREp8PAIpmQPCyldPulzc=
+X-Google-Smtp-Source: AGHT+IGpkc3EbBak1wGWckE/c9yRGBYMiFJtNSWMbOvTHQ4iNis5fHFoZkSL6dv0d6j/eGZB0MXt8A==
+X-Received: by 2002:ac2:58d0:0:b0:52c:99ed:4c9b with SMTP id 2adb3069b0e04-52c9a3d1e74mr3286775e87.18.1718280089182;
+        Thu, 13 Jun 2024 05:01:29 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm64042066b.186.2024.06.13.05.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 05:01:28 -0700 (PDT)
+Date: Thu, 13 Jun 2024 15:01:25 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
+	f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 10/12] net: dsa: lantiq_gswip: Remove dead
+ code from gswip_add_single_port_br()
+Message-ID: <20240613120125.yh5vda6dxornaadj@skbuf>
+References: <20240611135434.3180973-1-ms@dev.tdt.de>
+ <20240611135434.3180973-1-ms@dev.tdt.de>
+ <20240611135434.3180973-11-ms@dev.tdt.de>
+ <20240611135434.3180973-11-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: BFD345D2D3
-X-Spam-Score: -5.51
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611135434.3180973-11-ms@dev.tdt.de>
+ <20240611135434.3180973-11-ms@dev.tdt.de>
 
-On Thu, 06 Jun 2024 03:57:03 +0200,
-bo liu wrote:
+On Tue, Jun 11, 2024 at 03:54:32PM +0200, Martin Schiller wrote:
+> The port validation in gswip_add_single_port_br() is superfluous and
+> can be omitted.
 > 
-> Add initial Senarytech codec support for SN6186. Note that this hda
-> patch relies on the configuration default registers to be set correctly
-> (normally by BIOS/firmware) in order for it to set up pin widgets
-> properly.
-> 
-> Signed-off-by: bo liu <bo.liu@senarytech.com>
+> Suggested-by: Vladimir Oltean <olteanv@gmail.com>
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> ---
 
-The code looks almost fine, just a few nitpicking:
-
-> --- a/sound/pci/hda/Makefile
-> +++ b/sound/pci/hda/Makefile
-> @@ -24,6 +24,7 @@ snd-hda-codec-cs8409-y :=	patch_cs8409.o patch_cs8409-tables.o
->  snd-hda-codec-ca0110-y :=	patch_ca0110.o
->  snd-hda-codec-ca0132-y :=	patch_ca0132.o
->  snd-hda-codec-conexant-y :=	patch_conexant.o
-> +snd-hda-codec-senarytech-objs :=patch_senarytech.o
-
-Use *-y instead of *-objs.  The other entries have been corrected
-recently.
-
-> +/* parse EAPDs */
-> +static void senary_auto_parse_eapd(struct hda_codec *codec)
-> +{
-> +	struct senary_spec *spec = codec->spec;
-> +	hda_nid_t nid;
-> +
-> +	for_each_hda_codec_node(nid, codec) {
-> +		if (get_wcaps_type(get_wcaps(codec, nid)) != AC_WID_PIN)
-> +			continue;
-> +		if (!(snd_hda_query_pin_caps(codec, nid) & AC_PINCAP_EAPD))
-> +			continue;
-> +		spec->eapds[spec->num_eapds++] = nid;
-> +		if (spec->num_eapds >= ARRAY_SIZE(spec->eapds))
-> +			break;
-> +	}
-> +
-> +	/* NOTE: below is a wild guess; if we have more than two EAPDs,
-> +	 * it's a new chip, where EAPDs are supposed to be associated to
-> +	 * pins, and we can control EAPD per pin.
-> +	 * OTOH, if only one or two EAPDs are found, it's an old chip,
-> +	 * thus it might control over all pins.
-> +	 */
-> +	if (spec->num_eapds > 2)
-> +		spec->dynamic_eapd = 1;
-
-Do you still need to verify this?  This is copied from Conexant
-driver, and they needed this workaround due to different handling per
-chip model.  Unless needed, better to drop (or assuming always true)
-this condition for simplicity.
-
-> +#ifdef CONFIG_PM
-> +static int senary_auto_suspend(struct hda_codec *codec)
-> +{
-> +	senary_auto_shutdown(codec);
-> +	return 0;
-> +}
-> +#endif
-
-The latest code dropped the dependency on CONFIG_PM.  Remove ifdef.
-
-> +static const struct hda_codec_ops senary_auto_patch_ops = {
-> +	.build_controls = snd_hda_gen_build_controls,
-> +	.build_pcms = snd_hda_gen_build_pcms,
-> +	.init = senary_auto_init,
-> +	.free = senary_auto_free,
-> +	.unsol_event = snd_hda_jack_unsol_event,
-> +#ifdef CONFIG_PM
-> +	.suspend = senary_auto_suspend,
-> +	.check_power_status = snd_hda_gen_check_power_status,
-> +#endif
-
-Ditto.
-
-
-thanks,
-
-Takashi
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
