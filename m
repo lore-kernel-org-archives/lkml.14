@@ -1,205 +1,138 @@
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
+Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC3A13D523
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4013713D51F;
+	Thu, 13 Jun 2024 08:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267550; cv=none; b=g8tdTE6pRlJUcP/WlnNT+xI0/j5NA+tRCJl+cKp69bdkhNsW76sTF+iUI0Yw1LjtXR3ouxjF8jqO1RnqwBrxt8+cKK6Ue2IZiUQKGF71kq85HapxflXa7ObYQIdM8dmUiL6eHQZJh3nOccyUFXo1FhWCVdmp59H7hFrBzKJwluU=
+	t=1718267588; cv=none; b=c31cFa9QTV3dR+U/cyUtoKflU94J29rG9lrt3NIALN13uFrg6atMkYBBU5lDM/Yf1SnPBHdKqE8lu7wyYqbYRCWGRy4puy7xRPnRS2KCvj7EyaRroNkbfHgDsaXPLGfPZtele/mGJ0j3FF1N99BtQAGGfntwkMnAGz+wc814gh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267550; c=relaxed/simple;
-	bh=AZAnKfxnwBNW+uPyKhNRMTErIpxf+m6tfSh8UTj2W3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RQm7VDbAnizX4NmztijWQmdC8wgVB8snW0TXYraqOtPdfo0kKmlLAPmejC4UVrfh6PeHjmy9EYR2VAh54ziYM+X4V5lzbLucdQ287uB5fc0fZIFWOOu+fDBRfbmeLqUUZN52+oF879ZA+GaDlmKVgjkCWV/lmIuuzst4tdLkmw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=xDAnThV9; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1718267588; c=relaxed/simple;
+	bh=WBaYJfUtlcUcFAQlqDG8THMVEzZuOrVh6+fK22tTrDw=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SUvxC4FPHCwjy78M0ibR01D0BdNUK4jT8qXWEoELxyM/3MZ83IXEZsUXPhemfJ9FtuQT8HyRnwo+0UvKRVose0nDQ/arZisiNTRn1HLwKfa06vU56laYs5TSFwao5SESkaTyayYD12CyJFo7s2GarbTaBP17x3bsBAcD1zk5DBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=oVuF5vp6; arc=none smtp.client-ip=91.244.183.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="xDAnThV9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1718267548; x=1749803548;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Tey/d6zZxGXZu3fgrGCAzgcj7YCYLHltajEMKvW5hvU=;
-  b=xDAnThV9+ov2nOn0n9vVILzioI+L6ncfSUrcWb5sxZ40H0g+nw4aYg4a
-   mDqasqiBHD2lbjOJhmMjcKZPRlUPjaX6jJACkaRmlOkfCtddytu7CuDzk
-   cHBvqXqbz1pcejwyd8GCsDRABykyPZp9HFr5WA9PRziZYp+FMSd9bMdms
-   0VLMbnjXpyijjEoZe/qgDoBIDJ5D4zxSyAgj4X3aDjuNZMp+wzIxV9IQp
-   w0368wrFZ+Ouqs53FgRU7Jr0rDSaqtjFZ0Q1f+WWYzfK4Nk9hIMGj1lg3
-   n83WyM64Hi0DYIqdD8KGPjfG7VFzGo9XCJmVNX+S0jPHMxHOCljAg8OFk
-   A==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 17:32:27 +0900
-X-IronPort-AV: E=Sophos;i="6.08,234,1712588400"; 
-   d="scan'208";a="423392383"
-Received: from unknown (HELO LXJ00013166) ([IPv6:2001:cf8:2:f100:2ef0:5dff:fe04:1f0f])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP; 13 Jun 2024 17:32:26 +0900
-Date: Thu, 13 Jun 2024 08:32:26 +0000
-From: Soumya Khasnis <soumya.khasnis@sony.com>
-To: gregkh@linuxfoundation.org, rafael@kernel.org,
-	linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-	festevam@denx.de, lee@kernel.org, benjamin.bara@skidata.com,
-	dmitry.osipenko@collabora.com, ldmldm05@gmail.com,
-	soumya.khasnis@sony.com, srinavasa.nagaraju@sony.com
-Cc: soumya.khasnis@sony.com, srinavasa.nagaraju@sony.com,
-	Madhusudan.Bobbili@sony.com, shingo.takeuchi@sony.com,
-	keita.aihara@sony.com, masaya.takahashi@sony.com
-Subject: [PATCH v5] driver core: Add timeout for device shutdown
-Message-ID: <20240613083226.GA8191@sony.com>
+	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="oVuF5vp6"
+Received: from mx0.infotecs-nt (localhost [127.0.0.1])
+	by mx0.infotecs.ru (Postfix) with ESMTP id 651B81210842;
+	Thu, 13 Jun 2024 11:23:01 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru 651B81210842
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
+	t=1718266981; bh=oo8drzFyG4Hzb+eqS7LNMdqVQKwL1Fiq/olKasRjJWo=;
+	h=From:To:CC:Subject:Date:From;
+	b=oVuF5vp65gdnBm1j1P3aukOUOAOR1R1O/DYw4oebM+tSOvkj0dMXz7lWNMIqwMGD6
+	 VG6aBG6thXtW6oFsTfTTQYcCjI8u3QxrAeuOOWKiabMe45Amneka5+vxg069uIGBf4
+	 nPE6cAH2MvFTDsWIWiU822JMDf7X3+kZVANm/U3k=
+Received: from msk-exch-01.infotecs-nt (msk-exch-01.infotecs-nt [10.0.7.191])
+	by mx0.infotecs-nt (Postfix) with ESMTP id 6106C30633BB;
+	Thu, 13 Jun 2024 11:23:01 +0300 (MSK)
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+To: Ralf Baechle <ralf@linux-mips.org>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+	"linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
+	"syzbot+d327a1f3b12e1e206c16@syzkaller.appspotmail.com"
+	<syzbot+d327a1f3b12e1e206c16@syzkaller.appspotmail.com>
+Subject: [PATCH net] netrom: Fix a memory leak in nr_heartbeat_expiry()
+Thread-Topic: [PATCH net] netrom: Fix a memory leak in nr_heartbeat_expiry()
+Thread-Index: AQHavWrnUklO6dAj90uZJ5G3G/q5DQ==
+Date: Thu, 13 Jun 2024 08:23:00 +0000
+Message-ID: <20240613082300.294668-1-Ilia.Gavrilov@infotecs.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-KLMS-Rule-ID: 5
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Status: not scanned, disabled by settings
+X-KLMS-AntiSpam-Interceptor-Info: not scanned
+X-KLMS-AntiPhishing: Clean, bases: 2024/06/13 06:55:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/06/13 04:40:00 #25585389
+X-KLMS-AntiVirus-Status: Clean, skipped
 
-The device shutdown callbacks invoked during shutdown/reboot
-are prone to errors depending on the device state or mishandling
-by one or more driver. In order to prevent a device hang in such
-scenarios, we bail out after a timeout while dumping a meaningful
-call trace of the shutdown callback to kernel logs, which blocks
-the shutdown or reboot process.
+syzbot reported a memory leak in nr_create() [0].
 
-Signed-off-by: Soumya Khasnis <soumya.khasnis@sony.com>
-Signed-off-by: Srinavasa Nagaraju <Srinavasa.Nagaraju@sony.com>
+Commit 409db27e3a2e ("netrom: Fix use-after-free of a listening socket.")
+added sock_hold() to the nr_heartbeat_expiry() function, where
+a) a socket has a SOCK_DESTROY flag or
+b) a listening socket has a SOCK_DEAD flag.
+
+But in the case "a," when the SOCK_DESTROY flag is set, the file descriptor
+has already been closed and the nr_release() function has been called.
+So it makes no sense to hold the reference count because no one will
+call another nr_destroy_socket() and put it as in the case "b."
+
+nr_connect
+  nr_establish_data_link
+    nr_start_heartbeat
+
+nr_release
+  switch (nr->state)
+  case NR_STATE_3
+    nr->state =3D NR_STATE_2
+    sock_set_flag(sk, SOCK_DESTROY);
+
+                        nr_rx_frame
+                          nr_process_rx_frame
+                            switch (nr->state)
+                            case NR_STATE_2
+                              nr_state2_machine()
+                                nr_disconnect()
+                                  nr_sk(sk)->state =3D NR_STATE_0
+                                  sock_set_flag(sk, SOCK_DEAD)
+
+                        nr_heartbeat_expiry
+                          switch (nr->state)
+                          case NR_STATE_0
+                            if (sock_flag(sk, SOCK_DESTROY) ||
+                               (sk->sk_state =3D=3D TCP_LISTEN
+                                 && sock_flag(sk, SOCK_DEAD)))
+                               sock_hold()  // ( !!! )
+                               nr_destroy_socket()
+
+To fix the memory leak, let's call sock_hold() only for a listening socket.
+
+Found by InfoTeCS on behalf of Linux Verification Center
+(linuxtesting.org) with Syzkaller.
+
+[0]: https://syzkaller.appspot.com/bug?extid=3Dd327a1f3b12e1e206c16
+
+Reported-by: syzbot+d327a1f3b12e1e206c16@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=3Dd327a1f3b12e1e206c16
+Fixes: 409db27e3a2e ("netrom: Fix use-after-free of a listening socket.")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 ---
-Changes v3:
-  - fix review comments
- 1. added help text  
- 2. set configuration by default "y"
- 3. added range for timeout value(DEVICE_SHUTDOWN_TIMEOUT_SEC)
- 4. moved #define's to base.h file
- 5. moved timeout functionality to device_shutdown() driver/base/core.c from reboot.c
-  - updated commit message 
- 1. added information of where call trace is logged.
- 2. changed patch subject from "reboot:" to "driver core:"
+ net/netrom/nr_timer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes v4:
- 1. set configuration by default "n"
- 2. removed range for timeout value(DEVICE_SHUTDOWN_TIMEOUT_SEC)
-
-Changes v5:
- 1. removed "default n" for configuration.
-
- drivers/base/Kconfig | 16 ++++++++++++++++
- drivers/base/base.h  |  8 ++++++++
- drivers/base/core.c  | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+)
-
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 2b8fd6bb7da0..5493d419bdd0 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -243,3 +243,19 @@ config FW_DEVLINK_SYNC_STATE_TIMEOUT
- 	  work on.
- 
- endmenu
-+
-+config DEVICE_SHUTDOWN_TIMEOUT
-+	bool "device shutdown timeout"
-+	help
-+	   Enable timeout for device shutdown. In case of device shutdown is
-+	   broken or device is not responding, system shutdown or restart may hang.
-+	   This timeout handles such situation and triggers emergency_restart or
-+	   machine_power_off. Also dumps call trace of shutdown process.
-+
-+
-+config DEVICE_SHUTDOWN_TIMEOUT_SEC
-+	int "device shutdown timeout in seconds"
-+	default 10
-+	depends on DEVICE_SHUTDOWN_TIMEOUT
-+	help
-+	  sets time for device shutdown timeout in seconds
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 0738ccad08b2..97eea57a8868 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -243,3 +243,11 @@ static inline int devtmpfs_delete_node(struct device *dev) { return 0; }
- 
- void software_node_notify(struct device *dev);
- void software_node_notify_remove(struct device *dev);
-+
-+#ifdef CONFIG_DEVICE_SHUTDOWN_TIMEOUT
-+struct device_shutdown_timeout {
-+	struct timer_list timer;
-+	struct task_struct *task;
-+};
-+#define SHUTDOWN_TIMEOUT CONFIG_DEVICE_SHUTDOWN_TIMEOUT_SEC
-+#endif
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index b93f3c5716ae..dab455054a80 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -35,6 +35,12 @@
- #include "base.h"
- #include "physical_location.h"
- #include "power/power.h"
-+#include <linux/sched/debug.h>
-+#include <linux/reboot.h>
-+
-+#ifdef CONFIG_DEVICE_SHUTDOWN_TIMEOUT
-+struct device_shutdown_timeout devs_shutdown;
-+#endif
- 
- /* Device links support. */
- static LIST_HEAD(deferred_sync);
-@@ -4799,6 +4805,38 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
- }
- EXPORT_SYMBOL_GPL(device_change_owner);
- 
-+#ifdef CONFIG_DEVICE_SHUTDOWN_TIMEOUT
-+static void device_shutdown_timeout_handler(struct timer_list *t)
-+{
-+	pr_emerg("**** device shutdown timeout ****\n");
-+	show_stack(devs_shutdown.task, NULL, KERN_EMERG);
-+	if (system_state == SYSTEM_RESTART)
-+		emergency_restart();
-+	else
-+		machine_power_off();
-+}
-+
-+static void device_shutdown_timer_set(void)
-+{
-+	devs_shutdown.task = current;
-+	timer_setup(&devs_shutdown.timer, device_shutdown_timeout_handler, 0);
-+	devs_shutdown.timer.expires = jiffies + SHUTDOWN_TIMEOUT * HZ;
-+	add_timer(&devs_shutdown.timer);
-+}
-+
-+static void device_shutdown_timer_clr(void)
-+{
-+	del_timer(&devs_shutdown.timer);
-+}
-+#else
-+static inline void device_shutdown_timer_set(void)
-+{
-+}
-+static inline void device_shutdown_timer_clr(void)
-+{
-+}
-+#endif
-+
- /**
-  * device_shutdown - call ->shutdown() on each device to shutdown.
-  */
-@@ -4810,6 +4848,7 @@ void device_shutdown(void)
- 	device_block_probing();
- 
- 	cpufreq_suspend();
-+	device_shutdown_timer_set();
- 
- 	spin_lock(&devices_kset->list_lock);
- 	/*
-@@ -4869,6 +4908,7 @@ void device_shutdown(void)
- 		spin_lock(&devices_kset->list_lock);
- 	}
- 	spin_unlock(&devices_kset->list_lock);
-+	device_shutdown_timer_clr();
- }
- 
- /*
--- 
-2.40.0
-
+diff --git a/net/netrom/nr_timer.c b/net/netrom/nr_timer.c
+index 4e7c968cde2d..5e3ca068f04e 100644
+--- a/net/netrom/nr_timer.c
++++ b/net/netrom/nr_timer.c
+@@ -121,7 +121,8 @@ static void nr_heartbeat_expiry(struct timer_list *t)
+ 		   is accepted() it isn't 'dead' so doesn't get removed. */
+ 		if (sock_flag(sk, SOCK_DESTROY) ||
+ 		    (sk->sk_state =3D=3D TCP_LISTEN && sock_flag(sk, SOCK_DEAD))) {
+-			sock_hold(sk);
++			if (sk->sk_state =3D=3D TCP_LISTEN)
++				sock_hold(sk);
+ 			bh_unlock_sock(sk);
+ 			nr_destroy_socket(sk);
+ 			goto out;
+--=20
+2.39.2
