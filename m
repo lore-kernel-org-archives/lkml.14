@@ -1,295 +1,300 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6FB143867;
-	Thu, 13 Jun 2024 11:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279975; cv=fail; b=WJdh8f/8GiIidYarZwpPLR1vDojJ49r16jkboPiAdw4MOCRk9ZonXw6R/dpz2v9fTwTOoQOxLSJowT8thUAdOhz7pA6e5yyVM6/M2FNC9zryN1bOzdz6OxOFcgjXAg12y5IV9F9vE/vAlX0h3nLAqsM+j0WpApyJCSAx23RDXU0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279975; c=relaxed/simple;
-	bh=Nz7WhG+8x7VKvhRppHRObw87wOqKhiEmL5dFA3dx3r0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=L/mEhI3DJz2OhxkVoL5UIHGGx4oU87bgGOaQ2TuV4t7KzONQHsRla2OJz0decjxpPCqjbYNW4UuCAXjfE+15I8RxgI4pi9sM//Wol9ZxpIc209Q21gslEX0DP/pL3iHLvYSAa+LES7UyuUXHhV2SEdolmnzGr5R4ymvJCM07bZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DARdSX001326;
-	Thu, 13 Jun 2024 11:59:21 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2041.outbound.protection.outlook.com [104.47.73.41])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ymcgwvwwd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 11:59:21 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A31irUzU6XUcxz6IcN5i5vE0iX1taUR3Qftxjg1zwM4JS/ZCuYNDTJKkWMW8MUfL9J7qlheurbHDkjavL6ZAa1jlFEZ9acEhI2dsbM1bp25d9ntoceByQ8J+seYwK0ReIgf26XJuhytkJnLEI1OLvTlLlwlTLLeCQ+VWQ/AW3p3pOynyhwJCVkFawK5bCN7t2o6/h3Rg/mTHLrWYkwkSQYJepOquGrn3Ap60v8Iw1edCfHcamSjFqy1jaEgAA/duMnh/6alQquDVt58UXjkjIElx2A3+xJdQB9jeS9PqesHHgJV6+vZJk+hI5ridqzM4z/uMtnYJpldSg+1PV4xt7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JxqQRWOHcmDCUVzYzo+yoNv7+XhVPKBXbktjkXJrkvQ=;
- b=UPZ+mjFxQaU52TqtbbPG2mLVaySR+ST5XekiMaEVUK9k8rfWEr1NSECe7aQD8jzR42fdtXcrE25v8FPGpJZISKCj3zRjZoVsbz1ch5UZzfIAYD4ksUt4IWZMvOuiSCupVmku/HiNIjdkzwUyDGeC2dxkApvpbTLNi9mTEUGsSsYpcuLMowLFZ6k27brP6yJjjycxcAO+XkfA6zHPktm9iryaA943H9b4md2fnNpDwQyw3Sp+U/1MLhOf2wyM60GoOOWtAJRIqiYKIM2a7QJBgTRLfxNCjaTNj5gBD30RtHZ+LgtdUU9h58WI78qHSlDgSxpqEanP43teoNBNjTgNuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from PH0PR11MB5191.namprd11.prod.outlook.com (2603:10b6:510:3e::24)
- by DM6PR11MB4753.namprd11.prod.outlook.com (2603:10b6:5:2ac::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Thu, 13 Jun
- 2024 11:59:17 +0000
-Received: from PH0PR11MB5191.namprd11.prod.outlook.com
- ([fe80::e9d7:7193:8b2b:f0b9]) by PH0PR11MB5191.namprd11.prod.outlook.com
- ([fe80::e9d7:7193:8b2b:f0b9%3]) with mapi id 15.20.7677.019; Thu, 13 Jun 2024
- 11:59:17 +0000
-From: "Li, Meng" <Meng.Li@windriver.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "Thinh.Nguyen@synopsys.com" <Thinh.Nguyen@synopsys.com>,
-        "quic_uaggarwa@quicinc.com" <quic_uaggarwa@quicinc.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] usb: dwc3: core: remove lock of otg mode during gadget
- suspend/resume to avoid deadlock
-Thread-Topic: [PATCH] usb: dwc3: core: remove lock of otg mode during gadget
- suspend/resume to avoid deadlock
-Thread-Index: AQHavWUpPI1owxfhuU+9LSckBbEJwLHFVmIAgAA+/WA=
-Date: Thu, 13 Jun 2024 11:59:17 +0000
-Message-ID: 
- <PH0PR11MB519103593845FFAA819A92F8F1C12@PH0PR11MB5191.namprd11.prod.outlook.com>
-References: <20240613073959.1939608-1-Meng.Li@windriver.com>
- <2024061313-october-sniff-5b0c@gregkh>
-In-Reply-To: <2024061313-october-sniff-5b0c@gregkh>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR11MB5191:EE_|DM6PR11MB4753:EE_
-x-ms-office365-filtering-correlation-id: d87dac6c-2df3-4a0b-5bca-08dc8ba04097
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230034|376008|1800799018|366010|38070700012;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?nGxDfExzXMStpl6XR9UQU4E5ixvB/cK2wiNLShtz0/mvtLLzMqU9Qtq7Kfv9?=
- =?us-ascii?Q?ufANuZbrUMF5o3CLp0pMyHa2jOveyOfPFKW000KNXJEDA3Kor/wY7f3AtQ7s?=
- =?us-ascii?Q?ML9MjN1mD9KNsUtZr1qafe30XQIEHmS6vkcLAyHBq8yqTd2S6wTSNUkjaFHH?=
- =?us-ascii?Q?vITIPfaSVGHiiqkvb2dCjWUGvajAknka6zU3697m2vlMUSseDo3gpUFTFuX0?=
- =?us-ascii?Q?73f7qjHa1sL+V4WRtHbFZGw8T5LKYTktKu1CXJxUGzUu+p27PTmaNayZe8pS?=
- =?us-ascii?Q?lTQyqEpZatVm0v8uXg5DoadX2QcOiFvqm5oBrAgLDNEa+uSrsOz/ypVolO6s?=
- =?us-ascii?Q?OgmUhypVIznQwjz9wXmBwaOHs1hDOJD5zQgZfJMlBexdaDgarowxGj5Cny+L?=
- =?us-ascii?Q?kVfuwcrvlMFEukzRdqL37pvZUGFjRD6ZARj73Bko8RBL984nPhuIs59NairR?=
- =?us-ascii?Q?Oa5ZrteO86ynDbMouGH7ds8//BhSIYlMdxbe1W2gpTRVAVyyF6bbPOHmb/C6?=
- =?us-ascii?Q?twwLVoWgly3ihGkLddoj/P95sF1uBar9kAz4l5qJNgzMkP+ESIBhi8jLIhrT?=
- =?us-ascii?Q?osldvlLV9oRglHmFzU6kZKFhCqnFYgFqKoTGz4tY9p1A2aRTWx+q90+kEdEX?=
- =?us-ascii?Q?oqeqIQmm15ucc+Uy2rE90jO7ngd/JEr1HpbDeJghGAdsVGK/pNSCChdtBHXV?=
- =?us-ascii?Q?SU90xpLWd3zTk1/XCiHRu6WTiYPmhnHelIciTGR6jUCWHJuedbblWZJKl5xQ?=
- =?us-ascii?Q?Ihnqg4mB9kFP4xrRpYZ1DyclGCR294IuybzZ2+Vf4jki7wkA6yy8kZYRW/Rv?=
- =?us-ascii?Q?Q8WYAxUZOyZK2Pkh9Kb3ftMqvmm79ADQBkefogiuZeBldf/cBp8rplPs9bOt?=
- =?us-ascii?Q?pMX6ozZLAK2hi9b675aoiE/32Y98OY9StIhz5dG4hyUAxPwlyDytQh3USNEY?=
- =?us-ascii?Q?32vKrVnSkydgE1HAB7dRy2J0FSRjbv3FyGpZ3emH6/nSrm51Uhwx3/jK2bhz?=
- =?us-ascii?Q?XfIFn7ByJ/mqQed5WHcqmCzr8rDkVLeGPrv7YF3+fImHQEC1uGHEPYwdRc5B?=
- =?us-ascii?Q?wOHBLbyG1cIqljlnSqkc5cnAP4fmreI1jo2U444KdOp9N6u2EAG3A5aVnV2U?=
- =?us-ascii?Q?ejI9WAC0zhr3iI2efo78nuWfU6+Hsm5BIrx8sAhSH904r4jHsE9OEEx6kBXW?=
- =?us-ascii?Q?xw8wLphAMKSorAviqnFb2WY+MbgcKwFUevUCky9Jibf+aFS6Op/MRedfl7T/?=
- =?us-ascii?Q?M68RAWxzBFKBHVUkbSFP6TpiLMu1WKty5RtqJc+wieT8vIqnCbUeiSijralX?=
- =?us-ascii?Q?MaxJ1pAS1w9gStrI4Wt/met91Xmuc0GyoweU4iw5Yf0ETooMuL2Fe5/1o5hf?=
- =?us-ascii?Q?bd1fu98=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5191.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230034)(376008)(1800799018)(366010)(38070700012);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?FItqdAkz7xe3FhKgzuqseXPB/vkHNhrskrV4UmpMhrLSd6SgdqEmRhV3c5fp?=
- =?us-ascii?Q?e6W8ytJnWj2OuwF809p8sVZrn1dnoixoa1aO3xSZpTIxX5ai0lCx94WmE6Nl?=
- =?us-ascii?Q?SiaRzakTl0e+V0ZQdmk47F31KkXM+AdFFAEfxzoOOSsY2tr3yIU8PIWS+YF1?=
- =?us-ascii?Q?WMIOrq4ch1bWrO9RxwjoCnThbU8zlSO+SayctPqSRAVI+YDNVY1sAWrEPyaK?=
- =?us-ascii?Q?WSpWbqVp/LF/s1PmTSM3rfkyLTjtHMdyQ+R7SHWM0yN8S1m8Q9GHbi9Uf5QK?=
- =?us-ascii?Q?nFpma/+u9wObpxZ8qjHanJTqhjmB1yOVigIwpPUkR8R7go0/M9EyokPrSrXL?=
- =?us-ascii?Q?mqCkSBDZNMpfPdrtf3KgPukHr7v1gp5IU3WgVgLm6fT81J/ZXF+HbhcOUi1x?=
- =?us-ascii?Q?zNgOhceXM6XWniflK6CwkKLUtHStIvV/SamKy/KonLVtGTtfaC1R3q+p5bP4?=
- =?us-ascii?Q?HmyjGixc6qMGUMrzXt8QwNfB/ocZ2n1NRfOTkCQk5rSC1POtsxtrSZuj0v6W?=
- =?us-ascii?Q?J6HWxrb7Z3gyDG870lWd/3htKZz3c5oYm9ds4wRc1bRXPOqWn/cK5PgnE0Au?=
- =?us-ascii?Q?w+ULJkKXe06pVv73Ema9lJXOyLi69t83pnJrxZiJc+EJ695Erkby/rJ4PCUl?=
- =?us-ascii?Q?7r0K7UTREfr3MAxj0EJQ2JqG6SRzYXjhFgklikj1IdzHHe8wvlvV7Tjf4Dhn?=
- =?us-ascii?Q?2AxG16FDUY7y/uVE2upUoTWb4beI+yDtIzciVdEgFYHGkYgLQma03XaAs8TN?=
- =?us-ascii?Q?oST81+pHq+1HxcKdVu/6S9um+nibIVRZvoyahAL95ig2+oz8QNCsdRz/JNvF?=
- =?us-ascii?Q?ZlFZGZKb8QNZIYybBaNctJahSWLzQ1h8CmB4yRO33T5Mi3sEB8d6GG4/yXem?=
- =?us-ascii?Q?RKwJPl4tsx23QkecAcAVbhunxHhGtQMRi654poYl8Mruovw7VIb2EHf9jfsg?=
- =?us-ascii?Q?s/4fM9QNLlcArH/gdO5uyNVFQmbo0jcTYhFCrLleVqfyXwXfHV4xhwugfIrm?=
- =?us-ascii?Q?/8fMPQ+ef2cW9u82Z5KpfOKwbeBdiIwSA6LXbil9Tk9/Vh04ByRExhpnHZJj?=
- =?us-ascii?Q?MenXPZRKYyXpbSRb/ZN/Yi3zJJn1l8F/A3D6+BHkZxHy7yo1grbJFQALED4B?=
- =?us-ascii?Q?NmSYra3M3iSvJfAzUAqM69Z7nTfBzP3gpN+O3clziZGKnJeZYGTABZ5CX5HQ?=
- =?us-ascii?Q?MZ2tU0eF4nZCuOjcVZefxtVdIUeG0C1gZ6L78TLeZpxl2ASvtt8ENtGLa/1S?=
- =?us-ascii?Q?WD24rS8XBNNr627Qbsy+jxwZt8VrdczsaNTIDLs5ycGABN/v+I7qXkpz5Ma5?=
- =?us-ascii?Q?03VW1nEncOHKM+l5qGhHPMRQsBDj/28fuBp8MdEmziiz6P6/0XRvDEquj3GV?=
- =?us-ascii?Q?2fVailDH3WYUim5KmbPh0BIOU2oRMjaohS+dIn4s+i7upJJ24HBeZrnXcbkf?=
- =?us-ascii?Q?heYVQpQ3zeOfI7EITBkaYw3lqx22do6/MZZklY+oKSbUI0BWB41NKPfePl54?=
- =?us-ascii?Q?wr5AT451OXOkLSiqy7rAPihqfOf5+U/1usJVXAhqjf0IdChCAmVW5XEwHzxA?=
- =?us-ascii?Q?/JNSIWDBze0yIyBb+/ZC04PsQxZ0olH160V4e4RP?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3CE146A7D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 11:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718279981; cv=none; b=GXUfFPdOVkt9euKEkesZUsYhX5wymgQarlTjZ+uXTSuo9b7pBQRK02xxj263o0zh/VfXeJ6+1H/ZKQE05pwb+q6QXJF4K7Kimn7sHawuR8PjNGLdPI1hIMAQqWyzGdRSDYUufZK+aDCGLfC48nwdJmy+kBt5h3p+gm6HFpy3ob0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718279981; c=relaxed/simple;
+	bh=o0UKn70cwhSITZY1wYt/53iFXajErut93cW1JbyR9eY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sv7xZjyiT2Z/4f35MIu8gglgzqTo50Jevx1XI/c+cwHjm1owbEckNT8ClLMLzEm091Hc5JjyBziSJu1XTA0koKv8w5olHqnqlwKWrZbAQ/0Of9Sx1RG3Adm0uVpYh2ZA95Tlj+eXQGHk7XfAbgepbc751hXkwl703mVfnEAauUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lWEoEzg+; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lWEoEzg+"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6e316754f65so21344a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 04:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1718279978; x=1718884778; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UVhn3YYdbuI907L2eSwlkSvdhUxxAH/uGHzlYl6KC5E=;
+        b=lWEoEzg+ZscmwBSNMluPxgZnO8uFlZHuOGgU3fAbYOgWA8mPx6wDhdQujB6uV7REyX
+         PHnThKkKI7t8ncjmxQ7lDDIvjCRNI2xsk1MXxgmmHQhRYe7zxO+2ngUXJVbu/kIa6cTB
+         4lWkS4JSUEykFMpQ9/hatk/x9T0sqOwWJf3z1X7EFvy77NkDeWdzqBPgRRf+lTrX8le4
+         8CmdUdUR3x7ZwlnQaKeTNxEn7Ba6Vr+FGXy6hWURhD0bzzCZjbTGCCbRCSK3Qm+9C+Fl
+         eNR0L0rYxPM7BAel29MMGSYwbuQByRguqSI5Pj2vs+Z3q0D/44f23taWhmwF/G+go3ga
+         sQlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718279978; x=1718884778;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UVhn3YYdbuI907L2eSwlkSvdhUxxAH/uGHzlYl6KC5E=;
+        b=GcFyyYsxxAN09QenfneWUmcVhQy2BLpjVy5qCtESAtqf9j5VP6HVcpBPXrD3hXDVAt
+         Ir4d4wV4e3aDEh9TBQHZF/48mdjcpUmowOkHHuskxTJ5RQD0UTlZWxLcmO6JwcYGlSsr
+         eQzVFT3aCq6SsCLuOiUIwesf/oZwLD5vUhkXbaZj1kz4xsieEtU3vyXv5Rhvc9D7ZHWv
+         ZBiBRXuMljEef7bIlj3DwzylEEHezY6PzTQrdtz3KSG2t43MXFTh5nQ32RLdAocNugs2
+         hC+8OZ6ZpoKGA2im7sFrSXHk+bYYeL8YB1obUfzVmMbz9hFrY10Kwl/1/Nbq02ZRXG9O
+         KPxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm6p1LwEeoxwtIzFkSrR+tzcAg9mgqg2ezTgsE9ulGWB9EgQrWWPZc+xxs2Tzz3yvzP+rB6HhZl333gJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdaGx/AtEL2zTEUfa1/KZ37uoKaE80TrP7MuMKgtkj0aJ4oJxt
+	AU53T3KAVRIXOtxXVqA/lAUMtIRmcBAEoYTNXccnDdDGydZ0Q7F6XNdn5lcVQ3c=
+X-Google-Smtp-Source: AGHT+IEoB6ZdWTm9ZhlVYHoAcDjw8or+JbWnKD9N1migDDIY9gWWNfCSV7bx3y3Ea1WyK8sc7ER07w==
+X-Received: by 2002:a05:6a00:6902:b0:6f8:582e:6edf with SMTP id d2e1a72fcca58-705d45076a2mr179381b3a.1.1718279978186;
+        Thu, 13 Jun 2024 04:59:38 -0700 (PDT)
+Received: from [10.84.144.49] ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cde0dbdcsm1083295b3a.147.2024.06.13.04.59.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jun 2024 04:59:37 -0700 (PDT)
+Message-ID: <aadae460-3797-4d10-a380-5d4fe8189e20@bytedance.com>
+Date: Thu, 13 Jun 2024 19:59:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5191.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d87dac6c-2df3-4a0b-5bca-08dc8ba04097
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2024 11:59:17.4235
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ft27JpxUDIf7fL53/ZS2Iq3TsrJnGNEZl5dwc66CJ1umGV0KHNtfpUrhxGhZDIBirrNADmbSfg9asCoHL6pRwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4753
-X-Proofpoint-GUID: h20i_Lmky3MStjsmGHP4cPd-8F9XjqcG
-X-Proofpoint-ORIG-GUID: h20i_Lmky3MStjsmGHP4cPd-8F9XjqcG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_04,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2405170001 definitions=main-2406130085
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/3] asynchronously scan and free empty user PTE pages
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>
+Cc: hughd@google.com, willy@infradead.org, mgorman@suse.de,
+ muchun.song@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1718267194.git.zhengqi.arch@bytedance.com>
+ <02f8cbd0-8b2b-4c2d-ad96-f854d25bf3c2@redhat.com>
+ <efac94f6-2fb3-4682-a894-7c8ffac18d20@bytedance.com>
+ <2cda0af6-8fde-4093-b615-7979744d6898@redhat.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <2cda0af6-8fde-4093-b615-7979744d6898@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+On 2024/6/13 18:25, David Hildenbrand wrote:
+> On 13.06.24 11:32, Qi Zheng wrote:
+>> Hi David,
+>>
+>> Thanks for such a quick reply!
+> 
+> I appreciate you working on this :)
+> 
+>>
+>> On 2024/6/13 17:04, David Hildenbrand wrote:
+>>> On 13.06.24 10:38, Qi Zheng wrote:
+>>>> Hi all,
+>>
+>> [...]
+>>
+>>>
+>>>
+>>>> 3. Implementation
+>>>> =================
+>>>>
+>>>> For empty user PTE pages, we don't actually need to free it
+>>>> immediately, nor do
+>>>> we need to free all of it.
+>>>>
+>>>> Therefore, in this patchset, we register a task_work for the user
+>>>> tasks to
+>>>> asyncronously scan and free empty PTE pages when they return to user
+>>>> space.
+>>>> (The scanning time interval and address space size can be adjusted.)
+>>>
+>>> The question is, if we really have to scan asynchronously, or if would
+>>> be reasonable for most use cases to trigger a madvise(MADV_PT_RECLAIM)
+>>> every now and then. For virtio-mem, and likely most memory allocators,
+>>> that might be feasible, and valuable independent of system-wide
+>>> automatic scanning.
+>>
+>> Agree, I also think it is possible to add always && madvise modes
+>> simliar to THP.
+> 
+> My thinking is, we start with a madvise(MADV_PT_RECLAIM) that will
+> synchronously try to reclaim page tables without any asynchronous work.
+> 
+> Similar to MADV_COLLAPSE that only does synchronous work. Of course,
 
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Thursday, June 13, 2024 4:06 PM
-> To: Li, Meng <Meng.Li@windriver.com>
-> Cc: Thinh.Nguyen@synopsys.com; quic_uaggarwa@quicinc.com; linux-
-> usb@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] usb: dwc3: core: remove lock of otg mode during gadg=
-et
-> suspend/resume to avoid deadlock
->=20
-> CAUTION: This email comes from a non Wind River email account!
-> Do not click links or open attachments unless you recognize the sender an=
-d
-> know the content is safe.
->=20
-> On Thu, Jun 13, 2024 at 03:39:59PM +0800, Meng Li wrote:
-> > When config CONFIG_USB_DWC3_DUAL_ROLE is selected, and trigger
-> system
-> > to enter suspend status with below command:
-> > echo mem > /sys/power/state
-> > There will be a deadlock issue occurring. Because
-> > dwc3_gadget_suspend() also try to get the lock again when previous
-> > invoked dwc3_suspend_common() has got the lock . This issue is introduc=
-ed
-> by commit c7ebd8149ee5 ("usb: dwc3:
-> > gadget: Fix NULL pointer dereference in dwc3_gadget_suspend") that
-> > removes the code of checking whether dwc->gadget_driver is NULL or
-> > not. It causes the following code is executed and deadlock occurs when
-> trying to get the spinlock.
-> > To fix the deadlock issue, refer to commit 5265397f9442("usb: dwc3:
-> > Remove
-> > DWC3 locking during gadget suspend/resume"), remove lock of otg mode
-> > during gadget suspend/resume.
-> >
-> > Fixes: 61a348857e86 ("Fix NULL pointer dereference in
-> > dwc3_gadget_suspend")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Meng Li <Meng.Li@windriver.com>
-> > ---
-> >  drivers/usb/dwc3/core.c | 6 ------
-> >  1 file changed, 6 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c index
-> > 7ee61a89520b..9d47c3aa5777 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -2250,7 +2250,6 @@ static int dwc3_core_init_for_resume(struct
-> dwc3
-> > *dwc)
-> >
-> >  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
-> {
-> > -     unsigned long   flags;
-> >       u32 reg;
-> >       int i;
-> >
-> > @@ -2293,9 +2292,7 @@ static int dwc3_suspend_common(struct dwc3
-> *dwc, pm_message_t msg)
-> >                       break;
-> >
-> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEVICE) {
-> > -                     spin_lock_irqsave(&dwc->lock, flags);
-> >                       dwc3_gadget_suspend(dwc);
-> > -                     spin_unlock_irqrestore(&dwc->lock, flags);
-> >                       synchronize_irq(dwc->irq_gadget);
-> >               }
-> >
-> > @@ -2312,7 +2309,6 @@ static int dwc3_suspend_common(struct dwc3
-> *dwc,
-> > pm_message_t msg)
-> >
-> >  static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)  {
-> > -     unsigned long   flags;
-> >       int             ret;
-> >       u32             reg;
-> >       int             i;
-> > @@ -2366,9 +2362,7 @@ static int dwc3_resume_common(struct dwc3
-> *dwc, pm_message_t msg)
-> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_HOST) {
-> >                       dwc3_otg_host_init(dwc);
-> >               } else if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEV=
-ICE) {
-> > -                     spin_lock_irqsave(&dwc->lock, flags);
-> >                       dwc3_gadget_resume(dwc);
-> > -                     spin_unlock_irqrestore(&dwc->lock, flags);
-> >               }
-> >
-> >               break;
-> > --
-> > 2.34.1
-> >
-> >
->=20
-> Hi,
->=20
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him =
-a
-> patch that has triggered this response.  He used to manually respond to t=
-hese
-> common problems, but in order to save his sanity (he kept writing the sam=
-e
-> thing over and over, yet to different people), I was created.  Hopefully =
-you will
-> not take offence and will fix the problem in your patch and resubmit it s=
-o that
-> it can be accepted into the Linux kernel tree.
->=20
-> You are receiving this message because of the following common error(s) a=
-s
-> indicated below:
->=20
-> - This looks like a new version of a previously submitted patch, but you
->   did not list below the --- line any changes from the previous version.
->   Please read the section entitled "The canonical patch format" in the
->   kernel file, Documentation/process/submitting-patches.rst for what
->   needs to be done here to properly describe this.
->=20
-> If you wish to discuss this problem further, or you have questions about =
-how
-> to resolve this issue, please feel free to respond to this email and Greg=
- will
-> reply once he has dug out from the pending patches received from other
-> developers.
->=20
+This is feasible, but I worry that some user-mode programs may not be 
+able to determine when to call it.
 
-Sorry! I sent the patch of linux-stable version firstly, and then I realize=
- my fault, so send a correct version for mainline upstream.
-So, I think I received this email from patch-bot to remind me to add the --=
-- for change log.
-Let me clarify that this patch is the first version for mainline upstream. =
-And please ignore the previous wrong one for linux-stable.
+My previous idea was to do something similar to madvise(MADV_HUGEPAGE),
+just mark the vma as being able to reclaim the pgtable, and then hand
+it over to the background thread for asynchronous reclaim.
 
-Best Regards,
-Meng
+> if we don't need any heavy locking for reclaim, we might also just
+> try reclaiming during MADV_DONTNEED when spanning a complete page
 
-> thanks,
->=20
-> greg k-h's patch email bot
+I think the lock held by the current solution is not too heavy and
+should be acceptable.
+
+But for MADV_FREE case, it still needs to be handled by
+madvise(MADV_PT_RECLAIM) or asynchronous work.
+
+> table. That won't sort out all cases where reclaim is possible, but
+> with both approaches we could cover quite a lot that were discovered
+> to really result in a lot of emprt page tables.
+
+Yes, agree.
+
+> 
+> On top, we might implement some asynchronous scanning later, This is,
+> of course, TBD. Maybe we could wire up other page table scanners
+> (khugepaged ?) to simply reclaim empty page tables it finds as well?
+
+This is also an idea. Another option may be some pgtable scanning paths,
+such as MGLRU.
+
+> 
+>>
+>>>
+>>>>
+>>>> When scanning, we can filter out some unsuitable vmas:
+>>>>
+>>>>       - VM_HUGETLB vma
+>>>>       - VM_UFFD_WP vma
+>>>
+>>> Why is UFFD_WP unsuitable? It should be suitable as long as you make
+>>> sure to really only remove page tables that are all pte_none().
+>>
+>> Got it, I mistakenly thought pte_none() covered pte marker case until
+>> I saw pte_none_mostly().
+> 
+> I *think* there is one nasty detail, and we might need an arch callback
+> to test if a pte is *really* can be reclaimed: for example, s390x might
+> require us keeping some !pte_none() page tables.
+> 
+> While a PTE might be none, the s390x PGSTE (think of it as another
+> 8byte per PTE entry stored right next to the actual page table
+> entries) might hold data we might have to preserve for our KVM guest.
+
+Oh, thanks for adding this background information!
+
+> 
+> But that should be easy to wire up.
+
+That's good!
+
+> 
+>>
+>>>
+>>>>       - etc
+>>>> And for some PTE pages that spans multiple vmas, we can also skip.
+>>>>
+>>>> For locking:
+>>>>
+>>>>       - use the mmap read lock to traverse the vma tree and pgtable
+>>>>       - use pmd lock for clearing pmd entry
+>>>>       - use pte lock for checking empty PTE page, and release it after
+>>>> clearing
+>>>>         pmd entry, then we can capture the changed pmd in
+>>>> pte_offset_map_lock()
+>>>>         etc after holding this pte lock. Thanks to this, we don't need
+>>>> to hold the
+>>>>         rmap-related locks.
+>>>>       - users of pte_offset_map_lock() etc all expect the PTE page to
+>>>> be stable by
+>>>>         using rcu lock, so use pte_free_defer() to free PTE pages.
+>>>
+>>> I once had a protoype that would scan similar to GUP-fast, using the
+>>> mmap lock in read mode and disabling local IRQs and then walking the
+>>> page table locklessly (no PTLs). Only when identifying an empty page and
+>>> ripping out the page table, it would have to do more heavy locking (back
+>>> when we required the mmap lock in write mode and other things).
+>>
+>> Maybe mmap write lock is not necessary, we can protect it using pmd lock
+>> && pte lock as above.
+> 
+> Yes, I'm hoping we can do that, that will solve a lot of possible issues.
+
+Yes, I think the protection provided by the locks above is enough. Of
+course, it would be better if more people could double-check it.
+
+> 
+>>
+>>>
+>>> I can try digging up that patch if you're interested.
+>>
+>> Yes, that would be better, maybe it can provide more inspiration!
+> 
+> I pushed it to
+>      https://github.com/davidhildenbrand/linux/tree/page_table_reclaim
+> 
+> I suspect it's a non-working version (and I assume the locking is 
+> broken, there
+> are no VMA checks, etc), it's an old prototype. Just to give you an idea 
+> about the
+> lockless scanning and how I started by triggering reclaim only when 
+> kicked-off by
+> user space.
+
+Many thanks! But I'm worried that on some platforms disbaling the IRQ
+might be more expensive than holding the lock, such as arm64? Not sure.
+
+> 
+>>
+>>>
+>>> We'll have to double check whether all anon memory cases can *properly*
+>>> handle pte_offset_map_lock() failing (not just handling it, but doing
+>>> the right thing; most of that anon-only code didn't ever run into that
+>>> issue so far, so these code paths were likely never triggered).
+>>
+>> Yeah, I'll keep checking this out too.
+>>
+>>>
+>>>
+>>>> For the path that will also free PTE pages in THP, we need to recheck
+>>>> whether the
+>>>> content of pmd entry is valid after holding pmd lock or pte lock.
+>>>>
+>>>> 4. TODO
+>>>> =======
+>>>>
+>>>> Some applications may be concerned about the overhead of scanning and
+>>>> rebuilding
+>>>> page tables, so the following features are considered for
+>>>> implementation in the
+>>>> future:
+>>>>
+>>>>       - add per-process switch (via prctl)
+>>>>       - add a madvise option (like THP)
+>>>>       - add MM_PGTABLE_SCAN_DELAY/MM_PGTABLE_SCAN_SIZE control (via
+>>>> procfs file)
+>>>> Perhaps we can add the refcount to PTE pages in the future as well,
+>>>> which would
+>>>> help improve the scanning speed.
+>>>
+>>> I didn't like the added complexity last time, and the problem of
+>>> handling situations where we squeeze multiple page tables into a single
+>>> "struct page".
+>>
+>> OK, except for refcount, do you think the other three todos above are
+>> still worth doing?
+> 
+> I think the question is from where we start: for example, only synchronous
+> reclaim vs. asynchonous reclaim. Synchronous reclaim won't really affect
+> workloads that do not actively trigger it, so it raises a lot less 
+> eyebrows. ...
+> and some user space might have a good idea where it makes sense to try to
+> reclaim, and when.
+> 
+> So the other things you note here rather affect asynchronous reclaim, and
+> might be reasonable in that context. But not sure if we should start 
+> with doing
+> things asynchronously.
+
+I think synchronous and asynchronous have their own advantages and
+disadvantages, and are complementary. Perhaps they can be implemented at
+the same time?
+
+Thanks,
+Qi
+
+> 
