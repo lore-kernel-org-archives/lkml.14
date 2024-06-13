@@ -1,267 +1,251 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6B413DDB8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 09:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07FA381C4;
+	Thu, 13 Jun 2024 09:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718271005; cv=none; b=M2pDl8nuooHCCYgSxqcgViO+Tw/DhICp1B1mGCW+vUnOoW2S6NOa3zQOS1o5BBvNlEZsQesXokox7/WnYoLVKXq57yXwthOZI0xJ/+rKuEBEd09YXQnrYEJfetU0PbuA6C/Gnlb9dRiQi5dgRGyh5aW2opxmE9SuZo2w4bvy2Ig=
+	t=1718271133; cv=none; b=S0w1KgX/ONAVUokQgR2hq8QIgcoiEycCp21Enqk2VQOCU9hdL32JeBsUdnEE//5Vi94/VQD2qTrL2C28+V5b6PzipUMQa6sMS78T0wKhqkF4GEw3bCIK3gimloLl+zSnmtcPtj36Y9OB21kAQRScf9HBsA1wpY2sKz4fWZh8ojg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718271005; c=relaxed/simple;
-	bh=r70M0JfsYwTJ3NX7KJwbL08Y8oQ3NMtqgodl6EYlEYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DHTjas39E5UDD51q1K7TK3gMM/NFu9sZgNp1Vls7Z0yZ20xytvfhLAVqlCv4TucNgcDHBhvO+dCuXdH09gdw5AZakHghCofa6mGvul3Kwu/mKeR9Ec/VoVG4EEEWSUC7sJjR54Uok2dQWRxpmgMle+are9zNeywfwts97aLrBV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=2tZRMBmt; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	s=arc-20240116; t=1718271133; c=relaxed/simple;
+	bh=PaV1/aUONukaNRB9HswUe/iOgOw9sgxe6pBxT6j1JEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u6P2vM7J2ZLiZIt7l9RxAoDGSU1titFVPZbAgEryr/jnkopoRRY46Ec8vyuOmM+E/vc/fogwhQwYKkcbhfXQHFWHB2NE3rVqOeDVXK/x2dWsfHZ1AVMZ8ult2r6qWMMO5DzJYD4Is6vhHqJeGbaepZ7zRKKwlRnyRZ4muo1OmDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPBAMWh4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="2tZRMBmt"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b06b78e716so4997906d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 02:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1718271003; x=1718875803; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5M3ELKqqsvIZfzOpsu+gAgFZkgR2tBXp2Hwr3Ne0u3I=;
-        b=2tZRMBmtyS/sMy5DahrXVexnJrsSbZEaGBuaf9no5PLZAopW+CqaM0ALoKiBcMjZTg
-         mUMoNEVtzLgPMxaBmIDgRjWP9KXjGl6VkYmWLZ+BTVU7hA7UM9bg3XOUOjBiYwsxsmO9
-         MC5EUxnKpm0HsjjPVjWMNWNKGT39728nCD2alMRk3ekiwkqob50tAnkCqMZ1pmPcuoPT
-         fTvfVHgDPAmJ6sr3bxIgXimxEQJ9b+2PamYE/1jYFiBXUMRoVTXy4lIATq6jg/kjlf94
-         F7zKXG86xTVACfXiw6DEQt3N7UO3gWmQRynyToXawQfkvnmNJcDelB9LidyAj6BGlTEo
-         aX+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718271003; x=1718875803;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5M3ELKqqsvIZfzOpsu+gAgFZkgR2tBXp2Hwr3Ne0u3I=;
-        b=Zt5Ejm9sxtBuLjjQYlUl0Tl/ty61t41SvIwnLH9uZKkeR4U4VQ4t3wiCF1sqt/AsQj
-         TUIjD+OAbX0Lep4d55m/jAq/anklFbDA+9F839wxQfEdfqSqp56XW6N4d+A18K9qGorc
-         SvI+VSJeYZIUeHMOJHk2yxlG6mqmNbcJ+uWfaay2SrIaqFUXeInomHnFuLvSMFBEzsml
-         SzMURUfb1UqY2zVGu3L/FKWeq2TOraYpP+F0wTDIXVEAlZW5QqauOuvgHAKbnhYfKuPD
-         v3VSkQbUOahvleev8gPk7O9l/3MfO9OsKK4yi+lM2Fh8U5i7VNWbU1xDxhexfMCWzqQC
-         ysJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmZKYPSkb1Ms1oWgVeiKD90f+oZTr+9Mh8Q5jEOxcLMTG/9hLyA1MBHmadnwBX0uD29Jgthb4rVPu8Ar/SMhQHJbc1RITNNXTvuTzc
-X-Gm-Message-State: AOJu0YzmPtzSDEcxPB9xYwC8HA9w2fDFb+O98C89j8pNSRQ1uxmGcdtG
-	LxN2yXKUlGuExjeW0KJwFzLkVlzLTxI5jC+9yZfQ6vOQ6yte4oFlHmCcw5qPvKMiot3pGqa4JJK
-	Q/jI=
-X-Google-Smtp-Source: AGHT+IGmSpq9YMGFtxsPUpIW0o7k9pJEniFC6iQvWdkCgTN8WIHucjZE3FLxQmGuHABAtJNFPBU+Rw==
-X-Received: by 2002:a05:6214:4487:b0:6b0:90b4:1ca9 with SMTP id 6a1803df08f44-6b191778e7cmr46679026d6.6.1718271002972;
-        Thu, 13 Jun 2024 02:30:02 -0700 (PDT)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com. [209.85.222.171])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c20f53sm4888386d6.52.2024.06.13.02.30.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 02:30:02 -0700 (PDT)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-797f222c9f9so51098585a.3;
-        Thu, 13 Jun 2024 02:30:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1BEnmaqWdxtnW46RtJ0Bb1nQK7kjbEkpYcYIPO+RMClQ9l+TeHajoxXyPJDGtFg15lcsxx4yyEvNx8+oRI5wc6k3/fv+iIRG81YDN0Q6CwJ4D6v5f4DrhXpm2Xce54O2SmKUR3dzZBZdBEKOvQQT22Ax8CCV9VNC2Hn94lmmd14vLL7K1
-X-Received: by 2002:a05:6902:2207:b0:dfe:6002:683 with SMTP id
- 3f1490d57ef6-dfe67063c46mr4743823276.32.1718270658168; Thu, 13 Jun 2024
- 02:24:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPBAMWh4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8250C2BBFC;
+	Thu, 13 Jun 2024 09:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718271133;
+	bh=PaV1/aUONukaNRB9HswUe/iOgOw9sgxe6pBxT6j1JEM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CPBAMWh4wx4yh2ijw91fOQa1Qa7DO5KZr04gK4yZXcfrsYwhZrDqB5LZ/4LGzK/g2
+	 glNJRJ1LGahPnku4c1XwqEuSPsVxQ2gNJ1NHSO3nQ7xXjiEp57Bl5HQW3AXcMz/Yjq
+	 OF0Ana6IjFXKWdmF2PotAve4fUJ3VtXVTMOgpk2hl/MedLoslbeyTZxTZybbkHzxGg
+	 moNxltM0cNdl5sk2kw13tB1uMo4736riZT3cYaWRmyqlVEZW7wakWMfe1lXg6SkjXj
+	 rITQm8sLla1mc2XHgimlAI1ZgHigx4wDJJ1pvHFOwF67iNPSF2CCbvGwemPuoCG5aJ
+	 qPLopIEp/KfHw==
+Message-ID: <74985816-3a3a-490e-b8f0-49f795ab2f07@kernel.org>
+Date: Thu, 13 Jun 2024 11:32:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
- <20240612-6-10-rocket-v1-2-060e48eea250@tomeuvizoso.net> <ffviz6ak6qsn2reg5y35aerzy7wxfx6fzix6xjyminbhfcguus@clszdjakdcjd>
-In-Reply-To: <ffviz6ak6qsn2reg5y35aerzy7wxfx6fzix6xjyminbhfcguus@clszdjakdcjd>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Thu, 13 Jun 2024 11:24:06 +0200
-X-Gmail-Original-Message-ID: <CAAObsKCx+r5UuESnrPem1Rb1-BF4i8FVwu6uozWhABOWoq+M4Q@mail.gmail.com>
-Message-ID: <CAAObsKCx+r5UuESnrPem1Rb1-BF4i8FVwu6uozWhABOWoq+M4Q@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/rockchip: Attach multiple power domains
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Oded Gabbay <ogabbay@kernel.org>, Tomeu Vizoso <tomeu.vizoso@tomeuvizoso.net>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 13, 2024 at 2:05=E2=80=AFAM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
->
-> Hi,
->
-> On Wed, Jun 12, 2024 at 03:52:55PM GMT, Tomeu Vizoso wrote:
-> > IOMMUs with multiple base addresses can also have multiple power
-> > domains.
-> >
-> > The base framework only takes care of a single power domain, as some
-> > devices will need for these power domains to be powered on in a specifi=
-c
-> > order.
-> >
-> > Use a helper function to stablish links in the order in which they are
-> > in the DT.
-> >
-> > This is needed by the IOMMU used by the NPU in the RK3588.
-> >
-> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> > ---
->
-> To me it looks like this is multiple IOMMUs, which should each get
-> their own node. I don't see a good reason for merging these
-> together.
-
-I have made quite a few attempts at splitting the IOMMUs and also the
-cores, but I wasn't able to get things working stably. The TRM is
-really scant about how the 4 IOMMU instances relate to each other, and
-what the fourth one is for.
-
-Given that the vendor driver treats them as a single IOMMU with four
-instances and we don't have any information on them, I resigned myself
-to just have them as a single device.
-
-I would love to be proved wrong though and find a way fo getting
-things stably as different devices so they can be powered on and off
-as needed. We could save quite some code as well.
-
-> I will still review this assuming there is one. That would require
-> to first of all update the DT binding:
->
-> Documentation/devicetree/bindings/iommu/rockchip,iommu.yaml
->
-> 1. It does not allow using "power-domain-names" property
-> 2. It limits the number of allowed power-domains to 1
-> 3. It limits the number of allowed base addresses to 2
->
-> Looking at the DT patch you also add more interrupts and clocks,
-> which are also limited by the binding. You should see a bunch of
-> warnings when you check the DTBS via 'make dtbs_check'
-
-Oops, yeah, I was limiting dtbs_check with DT_SCHEMA_FILES, now I see
-the errors.
-
-> >  drivers/iommu/rockchip-iommu.c | 36 ++++++++++++++++++++++++++++++++++=
-++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-io=
-mmu.c
-> > index f5629515bd78..673b0ebb6262 100644
-> > --- a/drivers/iommu/rockchip-iommu.c
-> > +++ b/drivers/iommu/rockchip-iommu.c
-> > @@ -6,6 +6,8 @@
-> >   *                   Daniel Kurtz <djkurtz@chromium.org>
-> >   */
-> >
-> > +#include "linux/err.h"
-> > +#include "linux/pm_domain.h"
-> >  #include <linux/clk.h>
-> >  #include <linux/compiler.h>
-> >  #include <linux/delay.h>
-> > @@ -115,6 +117,7 @@ struct rk_iommu {
-> >       struct iommu_device iommu;
-> >       struct list_head node; /* entry in rk_iommu_domain.iommus */
-> >       struct iommu_domain *domain; /* domain to which iommu is attached=
- */
-> > +     struct dev_pm_domain_list *pmdomains;
-> >  };
-> >
-> >  struct rk_iommudata {
-> > @@ -1186,6 +1189,7 @@ static int rk_iommu_probe(struct platform_device =
-*pdev)
-> >       struct resource *res;
-> >       const struct rk_iommu_ops *ops;
-> >       int num_res =3D pdev->num_resources;
-> > +     int pm_domain_count;
-> >       int err, i;
-> >
-> >       iommu =3D devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
-> > @@ -1271,6 +1275,35 @@ static int rk_iommu_probe(struct platform_device=
- *pdev)
-> >       if (!dma_dev)
-> >               dma_dev =3D &pdev->dev;
-> >
-> > +     pm_domain_count =3D of_property_count_strings(iommu->dev->of_node=
-, "power-domain-names");
->
-> pm_domain_count =3D device_property_string_array_count(iommu->dev, "power=
--domain-names");
->
-> When possible using device_property_ is prefered, since it allows
-> reusing code for systems not using DT.
->
-> > +     if (pm_domain_count > 0) {
-> > +             const char **pm_domains =3D kvmalloc_array(pm_domain_coun=
-t, sizeof(*pm_domains), GFP_KERNEL);
-> > +             struct dev_pm_domain_attach_data pm_domain_data =3D {
-> > +                     .pd_names =3D pm_domains,
-> > +                     .num_pd_names =3D pm_domain_count,
-> > +                     .pd_flags =3D PD_FLAG_DEV_LINK_ON,
-> > +             };
-> > +             int i;
-> > +
-> > +             if (!pm_domain_data.pd_names) {
-> > +                     err =3D -ENOMEM;
-> > +                     goto err_remove_sysfs;
-> > +             }
-> > +
-> > +             for (i =3D 0; i < pm_domain_count; i++) {
-> > +                     err =3D of_property_read_string_index(iommu->dev-=
->of_node, "power-domain-names", i, &pm_domains[i]);
-> > +                     if (err) {
-> > +                             kfree(pm_domains);
-> > +                             goto err_remove_sysfs;
-> > +                     }
-> > +             }
->
-> There is a helper to read a string array:
->
-> err =3D device_property_read_string_array(iommu->dev, "power-domain-names=
-", pm_domains, pm_domain_count);
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 net-next 14/15] net: Reference bpf_redirect_info via
+ task_struct on PREEMPT_RT.
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Daniel Bristot de Oliveira <bristot@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>,
+ Eric Dumazet <edumazet@google.com>, Frederic Weisbecker
+ <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ Song Liu <song@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+ Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org
+References: <20240612170303.3896084-1-bigeasy@linutronix.de>
+ <20240612170303.3896084-15-bigeasy@linutronix.de>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20240612170303.3896084-15-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Thanks for the review,
 
-Tomeu
+On 12/06/2024 18.44, Sebastian Andrzej Siewior wrote:
+> The XDP redirect process is two staged:
+> - bpf_prog_run_xdp() is invoked to run a eBPF program which inspects the
+>    packet and makes decisions. While doing that, the per-CPU variable
+>    bpf_redirect_info is used.
+> 
+> - Afterwards xdp_do_redirect() is invoked and accesses bpf_redirect_info
+>    and it may also access other per-CPU variables like xskmap_flush_list.
+> 
+> At the very end of the NAPI callback, xdp_do_flush() is invoked which
+> does not access bpf_redirect_info but will touch the individual per-CPU
+> lists.
+> 
+> The per-CPU variables are only used in the NAPI callback hence disabling
+> bottom halves is the only protection mechanism. Users from preemptible
+> context (like cpu_map_kthread_run()) explicitly disable bottom halves
+> for protections reasons.
+> Without locking in local_bh_disable() on PREEMPT_RT this data structure
+> requires explicit locking.
+> 
+> PREEMPT_RT has forced-threaded interrupts enabled and every
+> NAPI-callback runs in a thread. If each thread has its own data
+> structure then locking can be avoided.
+> 
+> Create a struct bpf_net_context which contains struct bpf_redirect_info.
+> Define the variable on stack, use bpf_net_ctx_set() to save a pointer to
+> it, bpf_net_ctx_clear() removes it again.
+> The bpf_net_ctx_set() may nest. For instance a function can be used from
+> within NET_RX_SOFTIRQ/ net_rx_action which uses bpf_net_ctx_set() and
+> NET_TX_SOFTIRQ which does not. Therefore only the first invocations
+> updates the pointer.
+> Use bpf_net_ctx_get_ri() as a wrapper to retrieve the current struct
+> bpf_redirect_info. The returned data structure is zero initialized to
+> ensure nothing is leaked from stack. This is done on first usage of the
+> struct. bpf_net_ctx_set() sets bpf_redirect_info::kern_flags  to 0 to
+> note that initialisation is required. First invocation of
+> bpf_net_ctx_get_ri() will memset() the data structure and update
+> bpf_redirect_info::kern_flags.
+> bpf_redirect_info::nh  is excluded from memset because it is only used
+> once BPF_F_NEIGH is set which also sets the nh member. The kern_flags is
+> moved past nh to exclude it from memset.
+> 
+> The pointer to bpf_net_context is saved task's task_struct. Using
+> always the bpf_net_context approach has the advantage that there is
+> almost zero differences between PREEMPT_RT and non-PREEMPT_RT builds.
+> 
+> Cc: Alexei Starovoitov<ast@kernel.org>
+> Cc: Andrii Nakryiko<andrii@kernel.org>
+> Cc: Eduard Zingerman<eddyz87@gmail.com>
+> Cc: Hao Luo<haoluo@google.com>
+> Cc: Jesper Dangaard Brouer<hawk@kernel.org>
+> Cc: Jiri Olsa<jolsa@kernel.org>
+> Cc: John Fastabend<john.fastabend@gmail.com>
+> Cc: KP Singh<kpsingh@kernel.org>
+> Cc: Martin KaFai Lau<martin.lau@linux.dev>
+> Cc: Song Liu<song@kernel.org>
+> Cc: Stanislav Fomichev<sdf@google.com>
+> Cc: Toke Høiland-Jørgensen<toke@redhat.com>
+> Cc: Yonghong Song<yonghong.song@linux.dev>
+> Cc:bpf@vger.kernel.org
+> Acked-by: Alexei Starovoitov<ast@kernel.org>
+> Reviewed-by: Toke Høiland-Jørgensen<toke@redhat.com>
+> Signed-off-by: Sebastian Andrzej Siewior<bigeasy@linutronix.de>
+> ---
+>   include/linux/filter.h | 56 ++++++++++++++++++++++++++++++++++--------
+>   include/linux/sched.h  |  3 +++
+>   kernel/bpf/cpumap.c    |  3 +++
+>   kernel/bpf/devmap.c    |  9 ++++++-
+>   kernel/fork.c          |  1 +
+>   net/bpf/test_run.c     | 11 ++++++++-
+>   net/core/dev.c         | 26 +++++++++++++++++++-
+>   net/core/filter.c      | 44 +++++++++------------------------
+>   net/core/lwt_bpf.c     |  3 +++
+>   9 files changed, 111 insertions(+), 45 deletions(-)
+> 
 
-> -- Sebastian
->
-> > +
-> > +             err =3D dev_pm_domain_attach_list(iommu->dev, &pm_domain_=
-data, &iommu->pmdomains);
-> > +             kfree(pm_domains);
-> > +             if (err < 0)
-> > +                     goto err_remove_sysfs;
-> > +     }
-> > +
-> >       pm_runtime_enable(dev);
-> >
-> >       for (i =3D 0; i < iommu->num_irq; i++) {
-> > @@ -1292,6 +1325,7 @@ static int rk_iommu_probe(struct platform_device =
-*pdev)
-> >       return 0;
-> >  err_pm_disable:
-> >       pm_runtime_disable(dev);
-> > +     dev_pm_domain_detach_list(iommu->pmdomains);
-> >  err_remove_sysfs:
-> >       iommu_device_sysfs_remove(&iommu->iommu);
-> >  err_unprepare_clocks:
-> > @@ -1310,6 +1344,8 @@ static void rk_iommu_shutdown(struct platform_dev=
-ice *pdev)
-> >               devm_free_irq(iommu->dev, irq, iommu);
-> >       }
-> >
-> > +     dev_pm_domain_detach_list(iommu->pmdomains);
-> > +
-> >       pm_runtime_force_suspend(&pdev->dev);
-> >  }
-> >
-> >
-> > --
-> > 2.45.2
-> >
-> >
+I like it :-)
+
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+
+
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index b02aea291b7e8..0a7f6e4a00b60 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -733,21 +733,59 @@ struct bpf_nh_params {
+>   	};
+>   };
+>   
+> +/* flags for bpf_redirect_info kern_flags */
+> +#define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
+> +#define BPF_RI_F_RI_INIT	BIT(1)
+> +
+>   struct bpf_redirect_info {
+>   	u64 tgt_index;
+>   	void *tgt_value;
+>   	struct bpf_map *map;
+>   	u32 flags;
+> -	u32 kern_flags;
+>   	u32 map_id;
+>   	enum bpf_map_type map_type;
+>   	struct bpf_nh_params nh;
+> +	u32 kern_flags;
+>   };
+>   
+> -DECLARE_PER_CPU(struct bpf_redirect_info, bpf_redirect_info);
+> +struct bpf_net_context {
+> +	struct bpf_redirect_info ri;
+> +};
+>   
+> -/* flags for bpf_redirect_info kern_flags */
+> -#define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
+> +static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_context *bpf_net_ctx)
+> +{
+> +	struct task_struct *tsk = current;
+> +
+> +	if (tsk->bpf_net_context != NULL)
+> +		return NULL;
+> +	bpf_net_ctx->ri.kern_flags = 0;
+> +
+> +	tsk->bpf_net_context = bpf_net_ctx;
+> +	return bpf_net_ctx;
+> +}
+> +
+> +static inline void bpf_net_ctx_clear(struct bpf_net_context *bpf_net_ctx)
+> +{
+> +	if (bpf_net_ctx)
+> +		current->bpf_net_context = NULL;
+> +}
+> +
+> +static inline struct bpf_net_context *bpf_net_ctx_get(void)
+> +{
+> +	return current->bpf_net_context;
+> +}
+> +
+> +static inline struct bpf_redirect_info *bpf_net_ctx_get_ri(void)
+> +{
+> +	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
+> +
+> +	if (!(bpf_net_ctx->ri.kern_flags & BPF_RI_F_RI_INIT)) {
+> +		memset(&bpf_net_ctx->ri, 0, offsetof(struct bpf_net_context, ri.nh));
+> +		bpf_net_ctx->ri.kern_flags |= BPF_RI_F_RI_INIT;
+> +	}
+> +
+> +	return &bpf_net_ctx->ri;
+> +}
+>   
+>   /* Compute the linear packet data range [data, data_end) which
+>    * will be accessed by various program types (cls_bpf, act_bpf,
+> @@ -1018,25 +1056,23 @@ struct bpf_prog *bpf_patch_insn_single(struct bpf_prog *prog, u32 off,
+>   				       const struct bpf_insn *patch, u32 len);
+>   int bpf_remove_insns(struct bpf_prog *prog, u32 off, u32 cnt);
+>   
+> -void bpf_clear_redirect_map(struct bpf_map *map);
+> -
+>   static inline bool xdp_return_frame_no_direct(void)
+>   {
+> -	struct bpf_redirect_info *ri = this_cpu_ptr(&bpf_redirect_info);
+> +	struct bpf_redirect_info *ri = bpf_net_ctx_get_ri();
+>   
+>   	return ri->kern_flags & BPF_RI_F_RF_NO_DIRECT;
+>   }
+>   
+>   static inline void xdp_set_return_frame_no_direct(void)
+>   {
+> -	struct bpf_redirect_info *ri = this_cpu_ptr(&bpf_redirect_info);
+> +	struct bpf_redirect_info *ri = bpf_net_ctx_get_ri();
+>   
+>   	ri->kern_flags |= BPF_RI_F_RF_NO_DIRECT;
+>   }
+>   
+>   static inline void xdp_clear_return_frame_no_direct(void)
+>   {
+> -	struct bpf_redirect_info *ri = this_cpu_ptr(&bpf_redirect_info);
+> +	struct bpf_redirect_info *ri = bpf_net_ctx_get_ri();
+>   
+>   	ri->kern_flags &= ~BPF_RI_F_RF_NO_DIRECT;
+>   }
+> @@ -1592,7 +1628,7 @@ static __always_inline long __bpf_xdp_redirect_map(struct bpf_map *map, u64 inde
+>   						   u64 flags, const u64 flag_mask,
+>   						   void *lookup_elem(struct bpf_map *map, u32 key))
+>   {
+> -	struct bpf_redirect_info *ri = this_cpu_ptr(&bpf_redirect_info);
+> +	struct bpf_redirect_info *ri = bpf_net_ctx_get_ri();
+>   	const u64 action_mask = XDP_ABORTED | XDP_DROP | XDP_PASS | XDP_TX;
