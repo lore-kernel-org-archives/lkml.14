@@ -1,148 +1,81 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401E1144D21;
-	Thu, 13 Jun 2024 14:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76A71459F3;
+	Thu, 13 Jun 2024 14:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287822; cv=none; b=GHm3lIiN+HZ4XXjaEQiHz1X8YIfP1QJfC7D3z3PX91SGP2mjmatjYNK0V3Za2czlZmvzvlilvwp5ka39IKkcbA+dGVDlU7/BMCWulJJxGyYvVBuFhgVq/hYo8KrLsW776Jz78cWspuAhHaIYgh7DXJHS4qTllXT0J5RxWUgIL0k=
+	t=1718287848; cv=none; b=Q2Gl3aJZ2Rxdn2DpW5WzJnZnkHtSYAsN3ThzLa/pwCKZLvaqM5GFp3mBWPN3ccv9wPVwkp3alt/ImBfhT/veitG+lQ2KGAdxNMXlniFZfRZTLEUuAiW8CX6Uailnn3rdTd23NZhcprD7lI3iBMqONxAnqnTTafeyTzSEGvfs/ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287822; c=relaxed/simple;
-	bh=GpFmutC7qNS5D63XKNVZU++STRMERLCcpZP+B831mbs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=abJ/ZOjurIjrspJgkBjYw3OtZzu7Afz4ZVH34Kgmbk1rzVgTuRhbX3hkaNkz6dcS0XHqXbp+LBSGbeMJUlrUVBVs96B6hKHP73/a1m9UvEvWYw5IpgH94cb0/o22Y+Eka6JFoQA0nOlgAwEdbxqvz0ZmQ3lKXu2J3+zxvZKYlrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TXvnPkH9; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718287848; c=relaxed/simple;
+	bh=dv9A01TA9xjZbgc+DNQkcTYDgrGwnMovOaQAcNnXn3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gUYSsYWp+NXdzhXUzQImvbkaLX2zeLrmSzukHLiwL3K2E9RQWT3ZW61HFEsl38I+CQ+ZnAAh+7FZSA8icX+SNox7IMviJ5lmk54RgWCaj4pbUCQyN42cZ3J25lXmnP4SoPdnne+79aEvEiWuvejDAaB2Yn2Sijr78bnSMosyBa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egs4SJDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TXvnPkH9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 697C61BF212;
-	Thu, 13 Jun 2024 14:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718287813;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RClnKQFv64FuSlC1HxBHws576hIZFiDk+emFZ0rBLhM=;
-	b=TXvnPkH95jxbM/0Oh9ooTTmgWKqly+qkpsIe4F8gyGh1TkJMU7P+cIP4hvbi7hBaTudAr2
-	QV4dF3kmbt+bzXGoqQDGMoFjukC49S83olv85zb9wE1B5kX3M+ZQo6mOXw7Pi3nKfNtrDw
-	PEMDi8SMu1rUsVXOGQ4fTlXHQcgnApyhrWnIykBr+qV6WwB+q94i2tkIHzHDJ0J3KDaM7v
-	olvbg+mZRK3rk66BXKyuGtyjBDg+qtsSHllStXNvTT/t+sLeJcJBSFBdaj9ckWcWEN+0N/
-	0Xt+q6Fj49WpMWYVbXob72Dg3CSFa4ffNh6K3Y6RpCY3dnSStDOtCZ8CitgmKw==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Thu, 13 Jun 2024 16:06:44 +0200
-Subject: [PATCH 5/6] wifi: wilc1000: remove suspend/resume from cfg80211
- part
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egs4SJDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D53FC2BBFC;
+	Thu, 13 Jun 2024 14:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718287848;
+	bh=dv9A01TA9xjZbgc+DNQkcTYDgrGwnMovOaQAcNnXn3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egs4SJDumCcvLr8/Jqc+1qr2WuYchZktSRDlH1/iIjL9FbXnK0w3AZt6A+HbeaEKK
+	 KqydAZbU2Bik7JkZCZvfnEA8aRnbPA/ztR2mPbJCkung14wOFpbM2xmHsJfeV3/QrP
+	 hUBJZZc2795HhCLeo/wzKwXATuyl6/BBEWas+N/Q5YmorDTsd02PSLTsyQMxQqFvSY
+	 DaKU4z8JZ5rfDFkM6pAfiouYwy1Mkh4AyQhF6n8jWOdzlwQ5UfAlAjMhWKJ0pg0cUv
+	 q+DqDzcHt8E41sA+6IPwtwsUJpp5+LhaNwaJ6tQgPwdfhmwXd+RjMrqd1y1Nqbq8n5
+	 j2QycU/UMjryw==
+Date: Thu, 13 Jun 2024 11:10:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, mic@digikod.net, gnoack@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v4] perf trace: BTF-based enum pretty printing
+Message-ID: <Zmr94cx8pYvXi9Hj@x1>
+References: <20240613042747.3770204-1-howardchu95@gmail.com>
+ <ZmrqQs64TvAt8XjK@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240613-wilc_suspend-v1-5-c2f766d0988c@bootlin.com>
-References: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
-In-Reply-To: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
-To: linux-wireless@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: alexis.lothore@bootlin.com
+In-Reply-To: <ZmrqQs64TvAt8XjK@x1>
 
-WILC1000 suspend/resume implementation is currently composed of two parts:
-suspend/resume ops implemented in cfg80211 ops, which merely sets a
-flag, and suspend/resume ops in sdio/spi driver which, based on this flag,
-execute or not the suspend/resume mechanism. This dual set of ops is not
-really needed , so keep only the sdio part to implement suspend/resume.
+On Thu, Jun 13, 2024 at 09:47:02AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jun 13, 2024 at 12:27:47PM +0800, Howard Chu wrote:
+> > perf $ ./perf trace -e landlock_add_rule
+> >      0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)                  = -1 EBADFD (File descriptor in bad state)
+> >      0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH)              = -1 EBADFD (File descriptor in bad state)
+> > ```
 
-While doing so, remove the now unused suspend_event flag.
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 19 -------------------
- drivers/net/wireless/microchip/wilc1000/netdev.h   |  1 -
- drivers/net/wireless/microchip/wilc1000/sdio.c     |  6 ++----
- 3 files changed, 2 insertions(+), 24 deletions(-)
+And when someone suggests you do something and you implement it, a
+Suggested-by: tag is as documented in:
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index ba02e6cfd3ae..eb37b228d54e 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1617,23 +1617,6 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
- 	return 0;
- }
- 
--static int wilc_suspend(struct wiphy *wiphy, struct cfg80211_wowlan *wow)
--{
--	struct wilc *wl = wiphy_priv(wiphy);
--
--	if (!wow && wilc_wlan_get_num_conn_ifcs(wl))
--		wl->suspend_event = true;
--	else
--		wl->suspend_event = false;
--
--	return 0;
--}
--
--static int wilc_resume(struct wiphy *wiphy)
--{
--	return 0;
--}
--
- static void wilc_set_wakeup(struct wiphy *wiphy, bool enabled)
- {
- 	struct wilc *wl = wiphy_priv(wiphy);
-@@ -1739,8 +1722,6 @@ static const struct cfg80211_ops wilc_cfg80211_ops = {
- 	.set_power_mgmt = set_power_mgmt,
- 	.set_cqm_rssi_config = set_cqm_rssi_config,
- 
--	.suspend = wilc_suspend,
--	.resume = wilc_resume,
- 	.set_wakeup = wilc_set_wakeup,
- 	.set_tx_power = set_tx_power,
- 	.get_tx_power = get_tx_power,
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.h b/drivers/net/wireless/microchip/wilc1000/netdev.h
-index e59d1b6f5d7d..95bc8b8fe65a 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.h
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.h
-@@ -272,7 +272,6 @@ struct wilc {
- 	const struct firmware *firmware;
- 
- 	struct device *dev;
--	bool suspend_event;
- 
- 	struct workqueue_struct *hif_workqueue;
- 	struct wilc_cfg cfg;
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 21398a3c600b..4e7014670945 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -980,8 +980,7 @@ static int wilc_sdio_suspend(struct device *dev)
- 	if (!IS_ERR(wilc->rtc_clk))
- 		clk_disable_unprepare(wilc->rtc_clk);
- 
--	if (wilc->suspend_event)
--		host_sleep_notify(wilc);
-+	host_sleep_notify(wilc);
- 
- 	ret = wilc_sdio_reset(wilc);
- 	if (ret) {
-@@ -1000,8 +999,7 @@ static int wilc_sdio_resume(struct device *dev)
- 	dev_info(dev, "sdio resume\n");
- 	wilc_sdio_init(wilc, true);
- 
--	if (wilc->suspend_event)
--		host_wakeup_notify(wilc);
-+	host_wakeup_notify(wilc);
- 
- 	return 0;
- }
+⬢[acme@toolbox perf-tools-next]$ grep -A5 Suggested-by Documentation/process/submitting-patches.rst
+Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
+----------------------------------------------------------------------
 
--- 
-2.45.2
+The Reported-by tag gives credit to people who find bugs and report them and it
+hopefully inspires them to help us again in the future. The tag is intended for
+bugs; please do not use it to credit feature requests. The tag should be
+--
+A Suggested-by: tag indicates that the patch idea is suggested by the person
+named and ensures credit to the person for the idea. Please note that this
+tag should not be added without the reporter's permission, especially if the
+idea was not posted in a public forum. That said, if we diligently credit our
+idea reporters, they will, hopefully, be inspired to help us again in the
+future.
+⬢[acme@toolbox perf-tools-next]$
 
+- Arnaldo
