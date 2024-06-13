@@ -1,119 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD54BE7F
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A0811;
+	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718238724; cv=none; b=F5UJqyVm//sDDUe6d7Faj3Q3p6K5dGILY7dHg6Ag64olBtNr7MqWxU9FUaef9yRf9q9qzyUPRH4TE9TKt6NaATstDIJLn+JXOGuD8qWzLWibvsmjgMRx3fML6QWWyPYBIWs0ECFBKwaPS1f6krC1wUlD3a44DuhlWzLmxFqM3Sc=
+	t=1718238893; cv=none; b=dqqsFwt22fTkIV/kIVMQZBNCrtMUY3vSsEMvHHzZO71hGUb9X1BO8znpJ2/dPCF2XrfYL01PmywysnYduRqGycQ66hDsnqBALb4jNGL6FQr04i4ISOZojQuJE3v0C4LmVG+sNM6sqQlXvRA+8UsIlsUBqc8Bf+c3uveHL5NcH10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718238724; c=relaxed/simple;
-	bh=CzUcaUEwid9QP2s+ip8EXYQc/owNHwh0AeSROulmsmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RYAbzm9OOxNh172sfo+WouRtBc4kI7/wll1wDCTiRH1O7AVIZzj4xLdUsTZvnNLvAULdE7YaRn4jNS4+w8i2S+3qp1lhpZJ9vk/9Ew/xiNef/2jckDlieH1OQ3l3hzhaS9H/2tKNzm5dh0hJ4TeSfNG+GsxEGmS/5U+qzou51xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RP3f3zHl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RP3f3zHl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D945DC4AF1D;
-	Thu, 13 Jun 2024 00:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718238723;
-	bh=CzUcaUEwid9QP2s+ip8EXYQc/owNHwh0AeSROulmsmQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RP3f3zHljgB69meR2mgyyG8IzWJoRo8SVqkFr5jfvu+xVTg/9RN/q30+sHnDWuMxl
-	 cOlOAXD7rIeLJKCCvtMVWLt31QrLWRSCcAch7K95GAH7Mnc8G3A4wMkATg977X20iB
-	 B+MLf8f0KbV/kqBoxlbbN6+gSMztY/CT1fFGniRjB+HV6/iIiM38HY0y0dxQJDP2Tn
-	 HCsE9Pp9aryZMOnBs/QgAmmtmWj72asyKJPsBCxG8LAtAv8LJPLxo5rrd0QtPjJBR0
-	 RlRcvvz+zp5UFD2kSU2GUzfqgLdpXX3xs/Egop2Q/h6r7oizsqbu7GbHCqiuDGHOFA
-	 3QXMDfaZ6ZFNg==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/lib: copy_page: s/stnp/stp
-Date: Thu, 13 Jun 2024 08:18:12 +0800
-Message-ID: <20240613001812.2141-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718238893; c=relaxed/simple;
+	bh=RCywxSRqgN9zs+tmyibAJXz51CnsmORFuB06u95Pauw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uJg6vPYzj0wpspl+UxnSGXuYuX/VcScB90bwixTIjXmNzXvQCfcED9hYTsaKN99w+mTCqEcFUbqPD4dOvhdq6cZrKJ3e4avWKXhW/fiQOTg96AiDb3+uVvj45TFrMh0c70sLoa9f6VKEiNjfOXzArefzaufFrrNLN2p0+HMTckU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BC8C4AF1C;
+	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sHYQn-00000001eNW-0G6T;
+	Wed, 12 Jun 2024 20:35:09 -0400
+Message-ID: <20240613003508.918902349@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 12 Jun 2024 20:34:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>,
+ wklin@google.com,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH v5 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240613003435.401549779@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-stnp performs non-temporal store, give a hints to the memory system
-that caching is not useful for this data. But the scenario where
-copy_page() used may not have this implication, although I must admit
-there's such case where stnp helps performance(good). In this good
-case, we can rely on the HW write streaming mechanism in some
-implementations such as cortex-a55 to detect the case and take actions.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-testing with https://github.com/apinski-cavium/copy_page_benchmark
-this patch can reduce the time by about 3% on cortex-a55 platforms.
+Add a method to find a region specified by reserve_mem=nn:align:name for
+ramoops. Adding a kernel command line parameter:
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+  reserve_mem=12M:4096:oops ramoops.mem_name=oops
+
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
+
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
+
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/arm64/lib/copy_page.S | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ fs/pstore/ram.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/lib/copy_page.S b/arch/arm64/lib/copy_page.S
-index 6a56d7cf309d..4c74fe2d8bd6 100644
---- a/arch/arm64/lib/copy_page.S
-+++ b/arch/arm64/lib/copy_page.S
-@@ -32,21 +32,21 @@ SYM_FUNC_START(__pi_copy_page)
- 1:
- 	tst	x0, #(PAGE_SIZE - 1)
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..4311fcbc84f2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,10 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
  
--	stnp	x2, x3, [x0, #-256]
-+	stp	x2, x3, [x0, #-256]
- 	ldp	x2, x3, [x1]
--	stnp	x4, x5, [x0, #16 - 256]
-+	stp	x4, x5, [x0, #16 - 256]
- 	ldp	x4, x5, [x1, #16]
--	stnp	x6, x7, [x0, #32 - 256]
-+	stp	x6, x7, [x0, #32 - 256]
- 	ldp	x6, x7, [x1, #32]
--	stnp	x8, x9, [x0, #48 - 256]
-+	stp	x8, x9, [x0, #48 - 256]
- 	ldp	x8, x9, [x1, #48]
--	stnp	x10, x11, [x0, #64 - 256]
-+	stp	x10, x11, [x0, #64 - 256]
- 	ldp	x10, x11, [x1, #64]
--	stnp	x12, x13, [x0, #80 - 256]
-+	stp	x12, x13, [x0, #80 - 256]
- 	ldp	x12, x13, [x1, #80]
--	stnp	x14, x15, [x0, #96 - 256]
-+	stp	x14, x15, [x0, #96 - 256]
- 	ldp	x14, x15, [x1, #96]
--	stnp	x16, x17, [x0, #112 - 256]
-+	stp	x16, x17, [x0, #112 - 256]
- 	ldp	x16, x17, [x1, #112]
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name, "name of kernel param that holds addr");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +918,16 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
  
- 	add	x0, x0, #128
-@@ -54,14 +54,14 @@ SYM_FUNC_START(__pi_copy_page)
- 
- 	b.ne	1b
- 
--	stnp	x2, x3, [x0, #-256]
--	stnp	x4, x5, [x0, #16 - 256]
--	stnp	x6, x7, [x0, #32 - 256]
--	stnp	x8, x9, [x0, #48 - 256]
--	stnp	x10, x11, [x0, #64 - 256]
--	stnp	x12, x13, [x0, #80 - 256]
--	stnp	x14, x15, [x0, #96 - 256]
--	stnp	x16, x17, [x0, #112 - 256]
-+	stp	x2, x3, [x0, #-256]
-+	stp	x4, x5, [x0, #16 - 256]
-+	stp	x6, x7, [x0, #32 - 256]
-+	stp	x8, x9, [x0, #48 - 256]
-+	stp	x10, x11, [x0, #64 - 256]
-+	stp	x12, x13, [x0, #80 - 256]
-+	stp	x14, x15, [x0, #96 - 256]
-+	stp	x16, x17, [x0, #112 - 256]
- 
- 	ret
- SYM_FUNC_END(__pi_copy_page)
++	if (mem_name) {
++		phys_addr_t start;
++		phys_addr_t size;
++
++		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
 -- 
 2.43.0
+
 
