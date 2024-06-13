@@ -1,105 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5039513DB99
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA7543144;
+	Thu, 13 Jun 2024 08:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268118; cv=none; b=XQArRT+uOkulizqIYMVYaHoi1rF/qfpbqMJNoUmKKkStL+O5YsVCuHwxPwEylWrpjO8KrajhNz7iq7m4kJpO99uu/HpSbsWq2yD7qR5K0QTXWnHhkI8CZbLhI+4xmtUYRva975r1TI1TPSnOtzlaPd034DycIBlnC8aGZAum/Uo=
+	t=1718268136; cv=none; b=nuU0oXaSJzxnwC62DrfZoPCSa1VHvwQToI+7Aj/B9Gc+HiwKL9TwXy9RFJc44PdvIT1VCbAoom13jV4CJX5ZhPq++Lj9FplUxP5aaGw7Ce/+kaILO23CbZ0JxRZePHk10o9moSyc5KY6F4xw9xrKhVEvTLVtRL+dgdxlvW6gxBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268118; c=relaxed/simple;
-	bh=90BPhjxVzkALdKOSEosBfGN4SwwLRfPVDP2EOAxkwVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rdq4+kq7SAIRxzMRnGxBeg3x/ZqfyzwxJdlo4T/58QKGbyKK14kHUoi3qsLZxyJoqvjsLmHtE+YzxCqOUxmQlnJGy30VxaYvbnou/bFZYXN0vypdiYNQN0Zm9I8nUlvyeJ1F2vGqard2u2UU8iWAP+1xRnoo1qgut4PNAg/8Ysw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MV5pg5ma; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718268136; c=relaxed/simple;
+	bh=4DwpPwkA6d/p4ccA/BSLWy4Hrj0gghbBTVqHDH0Z++Q=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wg0gu7hN0JAJlPfGBhyXM5l6Bur5zQjSJXltYs8lAt4pkzJKUbx0S+RjM4mSAuAsnjgo7SJ6HrZjNKpjj56FBR468Xdwc27aTQqEE7WYUM14LXIrML0nbIBiKrx6JXj1Ovj+yH0PkPmN/GyanZrDXWdqZ0dC0Rpt87P4rBuiG94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsEmIpuS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MV5pg5ma"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718268116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vWc82pHy204AzEDhPBKEPpo04KnSaVs2ShuVlzL9t+0=;
-	b=MV5pg5maCruNKdMUNqjkbXIgt283mGhR/hHCxtVegjNYgzfopHnzMkLgAk9PNVmApY0ekS
-	ckaOR3EQKEVTqtULo5LJe4Jokyy44ZXXaNor+uy0Fpo3fknNnQJKYMUySYe+lB25XYNkQB
-	nqSl4Sx9G054cX50KusChqW7zgcxZhM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-481-bY8pvBWrOYGbtQ7EkwnCKA-1; Thu,
- 13 Jun 2024 04:41:44 -0400
-X-MC-Unique: bY8pvBWrOYGbtQ7EkwnCKA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A5B8C19560AF;
-	Thu, 13 Jun 2024 08:41:41 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.37])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3E6E3000219;
-	Thu, 13 Jun 2024 08:41:39 +0000 (UTC)
-Date: Thu, 13 Jun 2024 16:41:34 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Zhaoyang Huang <huangzhaoyang@gmail.com>,
-	"zhaoyang.huang" <zhaoyang.huang@unisoc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	hailong liu <hailong.liu@oppo.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	steve.kang@unisoc.com
-Subject: Re: [Resend PATCHv4 1/1] mm: fix incorrect vbq reference in
- purge_fragmented_block
-Message-ID: <ZmqwvtZQwYLNYf+V@MiWiFi-R3L-srv>
-References: <20240607023116.1720640-1-zhaoyang.huang@unisoc.com>
- <CAGWkznEODMbDngM3toQFo-bgkezEpmXf_qE=SpuYcqsjEJk1DQ@mail.gmail.com>
- <CAGWkznE-HcYBia2HDcHt6trM9oeJ2x6KdyFzR3Jd_-L5HyPxSA@mail.gmail.com>
- <ZmiUgPDjzI32Cqr9@pc636>
- <CAGWkznGnaV8Tz0XrgaVWEVG0ug7dp3w23ygKKmq8SPu_AMBhoA@mail.gmail.com>
- <ZmmGHhUDk5PqSHPB@pc636>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsEmIpuS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078A6C2BBFC;
+	Thu, 13 Jun 2024 08:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718268136;
+	bh=4DwpPwkA6d/p4ccA/BSLWy4Hrj0gghbBTVqHDH0Z++Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GsEmIpuSpzvHxJjmq/ZuB0OjgbYPlf+U7Auma22lPgAsd1ViTHQZIa3XYkeUqURrM
+	 f2LnudOXXDNv15BFUFdWeXjgxjptS7NWx0lP5MslfZ1WxK+KBpJ1SoKovz1EiP0QSe
+	 4FbcVEsd+CQCaoKjx1CuneKkQJ/xrpeDh/5JEgxwac2T2srqM+RqGP8X1693Sp41Z+
+	 1phlJf5D/vj2EU8DFCSSthmofK+r9Q8aEw8Ggy+o8apNcovNvBNi7r17+EQ4EwQTNI
+	 Ez+YB2pwNDIpAaQSwczIZLkk4jWD+/pyblk2Wa3ZIOkIqi9oHA1jorvObl3f3dUdOv
+	 Vtp/IMZfd4LPA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sHg29-003Tbn-Hm;
+	Thu, 13 Jun 2024 09:42:13 +0100
+Date: Thu, 13 Jun 2024 09:42:13 +0100
+Message-ID: <86zfrpjkt6.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Shaoqin Huang <shahuang@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	kvmarm@lists.linux.dev,
+	Eric Auger <eauger@redhat.com>,
+	Sebastian Ott <sebott@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Morse
+ <james.morse@arm.com>,
+	kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [RFC PATCH v1 0/2] KVM: arm64: Making BT Field in ID_AA64PFR1_EL1 writable
+In-Reply-To: <7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
+References: <20240612023553.127813-1-shahuang@redhat.com>
+	<Zmkyi39Pz6Wqll-7@linux.dev>
+	<8634pilbja.wl-maz@kernel.org>
+	<7f1ca739-42f5-4e3a-a0c9-b1eac4522a97@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZmmGHhUDk5PqSHPB@pc636>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: shahuang@redhat.com, oliver.upton@linux.dev, kvmarm@lists.linux.dev, eauger@redhat.com, sebott@redhat.com, cohuck@redhat.com, catalin.marinas@arm.com, james.morse@arm.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, pbonzini@redhat.com, shuah@kernel.org, suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 06/12/24 at 01:27pm, Uladzislau Rezki wrote:
-> On Wed, Jun 12, 2024 at 10:00:14AM +0800, Zhaoyang Huang wrote:
-> > On Wed, Jun 12, 2024 at 2:16 AM Uladzislau Rezki <urezki@gmail.com> wrote:
-> > >
-> > > >
-> > > > Sorry to bother you again. Are there any other comments or new patch
-> > > > on this which block some test cases of ANDROID that only accept ACKed
-> > > > one on its tree.
-> > > >
-> > > I have just returned from vacation. Give me some time to review your
-> > > patch. Meanwhile, do you have a reproducer? So i would like to see how
-> > > i can trigger an issue that is in question.
-> > This bug arises from an system wide android test which has been
-> > reported by many vendors. Keep mount/unmount an erofs partition is
-> > supposed to be a simple reproducer. IMO, the logic defect is obvious
-> > enough to be found by code review.
-> >
-> Baoquan, any objection about this v4?
+On Thu, 13 Jun 2024 09:31:45 +0100,
+Shaoqin Huang <shahuang@redhat.com> wrote:
 > 
-> Your proposal about inserting a new vmap-block based on it belongs
-> to, i.e. not per-this-cpu, should fix an issue. The problem is that
-> such way does __not__ pre-load a current CPU what is not good.
+> If we don't care about the FEAT_CNTSC right now. Could I fix the
+> compile issue and respin this again without the background of enabling
+> migration between MtCollins and AmpereOne, and just keep the
+> information of the different BT field between different machine?
 
-With my understand, when we start handling to insert vb to vbq->xa and
-vbq->free, the vmap_area allocation has been done, it doesn't impact the
-CPU preloading when adding it into which CPU's vbq->free, does it? 
+As I said, I think this patch is valuable. But maybe you should
+consider tackling the full register, rather than only addressing a
+single field.
 
-Not sure if I miss anything about the CPU preloading.
+Thanks,
 
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
