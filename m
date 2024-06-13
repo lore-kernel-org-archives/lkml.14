@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8FC13C9D5;
-	Thu, 13 Jun 2024 09:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B76413E897;
+	Thu, 13 Jun 2024 09:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718269273; cv=none; b=tMatzhqTB2udQBr47Tzw5eBvfAF48qCtKprNq1quB1Csj53usfXlCz2giOTBqU+IAUNu3NdeUmEtlWdxM5zIq0/FOOkJWPvbJZ+Uwr+fRixbjji7q4saPGNjh05smIKX1mTQH+eax8QmIz+lVJ132K4w2PfUeuAJsjDkOD0wv/w=
+	t=1718269275; cv=none; b=ep7t3ULouI4vX+WsAgtaqFOsw9/9FPQ+BUP29oGFallwkwMeZ0YvY+EtT6x/EVK9sr2qkMGtE8DrWdscz60VcvUF2FOJ+21Wh1PMwHe846FAzH71VYTIFBog0AHYZGL5PTfJo4k5LensfaXiaeft2QzJIRpFC5QYiBLTIsRrKTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718269273; c=relaxed/simple;
-	bh=Dk1ccNyqE3+a7Sva3IDjFE76nOjLd/K1QdYciQywgH8=;
+	s=arc-20240116; t=1718269275; c=relaxed/simple;
+	bh=qlgBcelue/cx58rj3054/jng7dtRnGsdILX5JaM24+w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vo9tQ7+QV/XO86UKH8/JLmoR+LHA0jP7lO9D1ckoq0aZ6qBY7uPW/ErESAtisOuKruYFT6VFPI1IxoLXmezzmx+82xB+W/t6lKA5ikXLmSYjqS1CmipQTCBz6+lZUeFuUD9kBNQk+RY673ZYWjOUSxMkmziVRoMHE02LKgahFuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=BjAb9bhQmShdSLWivuzchhgWjpRycI8XGCa0JDR7+UN5GSgsBBugu1GVSRhUhMRqI1XpmAPdJsYxrNDTFx+wri6wVnfSd4lKRNpRXsEQwNAqcv/sNZSrYAkAnX3lUrS2LjSfRSMAV+v3y5AQByhOEt9l58vuSIxWEzSGsWY98rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W0Gbb08ldz4f3jMS;
-	Thu, 13 Jun 2024 17:00:59 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W0Gbg3kBjz4f3kk5;
+	Thu, 13 Jun 2024 17:01:03 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 1A3DE1A0185;
-	Thu, 13 Jun 2024 17:01:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 1FCE61A0568;
+	Thu, 13 Jun 2024 17:01:10 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBFOtWpmHK1uPQ--.16895S9;
-	Thu, 13 Jun 2024 17:01:08 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgBXKBFOtWpmHK1uPQ--.16895S11;
+	Thu, 13 Jun 2024 17:01:09 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
@@ -37,9 +37,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yi.zhang@huaweicloud.com,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com
-Subject: [PATCH -next v5 5/8] xfs: correct the truncate blocksize of realtime inode
-Date: Thu, 13 Jun 2024 17:00:30 +0800
-Message-Id: <20240613090033.2246907-6-yi.zhang@huaweicloud.com>
+Subject: [PATCH -next v5 7/8] xfs: speed up truncating down a big realtime inode
+Date: Thu, 13 Jun 2024 17:00:32 +0800
+Message-Id: <20240613090033.2246907-8-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240613090033.2246907-1-yi.zhang@huaweicloud.com>
 References: <20240613090033.2246907-1-yi.zhang@huaweicloud.com>
@@ -50,14 +50,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBFOtWpmHK1uPQ--.16895S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw4DZr18AryUuFy8WrW3Wrg_yoW8uFW8pF
-	Z7Aa4UGrWkW340k3W0qFn0qw1jka4kAr47ArWrZrn7Xa4kJr13trn2yry0gw43trs7X3WY
-	gF15C3y7Z3W5JaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:cCh0CgBXKBFOtWpmHK1uPQ--.16895S11
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFy5Cry5ZFy8Zw4xAF4fXwb_yoW5Cw17pF
+	Z7Ka45GrWkt3429aykZF4qqw1Y9as2ya1UCrW5XryxA3Z8Jw1Skrn3t34rJw4Utr4vqa4q
+	qF1vk3y7Z3W3XFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
 	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
 	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
 	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
@@ -65,75 +65,89 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7uw4DZr18AryUuFy8WrW3Wrg_yoW8uFW8pF
 	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
 	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF18B
-	UUUUU
+	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUA
+	rcfUUUUU=
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-When unaligned truncating down a realtime file which sb_rextsize is
-bigger than one block, xfs_truncate_page() only zeros out the tail EOF
-block, this could expose stale data since commit '943bc0882ceb ("iomap:
-don't increase i_size if it's not a write operation")'.
+If we truncate down a big realtime inode, zero out the entire aligned
+EOF extent could gets slow down as the rtextsize increases. Fortunately,
+__xfs_bunmapi() would align the unmapped range to rtextsize, split and
+convert the blocks beyond EOF to unwritten. So speed up this by
+adjusting the unitsize to the filesystem blocksize when truncating down
+a large realtime inode, let __xfs_bunmapi() convert the tail blocks to
+unwritten, this could improve the performance significantly.
 
-If we truncate file that contains a large enough written extent:
+ # mkfs.xfs -f -rrtdev=/dev/pmem1s -f -m reflink=0,rmapbt=0, \
+            -d rtinherit=1 -r extsize=$rtextsize /dev/pmem2s
+ # mount -ortdev=/dev/pmem1s /dev/pmem2s /mnt/scratch
+ # for i in {1..1000}; \
+   do dd if=/dev/zero of=/mnt/scratch/$i bs=$rtextsize count=1024; done
+ # sync
+ # time for i in {1..1000}; \
+   do xfs_io -c "truncate 4k" /mnt/scratch/$i; done
 
-     |<    rxext    >|<    rtext    >|
-  ...WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-        ^ (new EOF)      ^ old EOF
-
-Since we only zeros out the tail of the EOF block, and
-xfs_itruncate_extents() unmap the whole ailgned extents, it becomes
-this state:
-
-     |<    rxext    >|
-  ...WWWzWWWWWWWWWWWWW
-        ^ new EOF
-
-Then if we do an extending write like this, the blocks in the previous
-tail extent becomes stale:
-
-     |<    rxext    >|
-  ...WWWzSSSSSSSSSSSSS..........WWWWWWWWWWWWWWWWW
-        ^ old EOF               ^ append start  ^ new EOF
-
-Fix this by zeroing out the tail allocation uint and also make sure
-xfs_itruncate_extents() unmap allocation uint aligned extents.
+ rtextsize       8k      16k      32k      64k     256k     1024k
+ before:       9.601s  10.229s  11.153s  12.086s  12.259s  20.141s
+ after:        9.710s   9.642s   9.958s   9.441s  10.021s  10.526s
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/xfs/xfs_inode.c | 3 ++-
- fs/xfs/xfs_iops.c  | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_inode.c | 10 ++++++++--
+ fs/xfs/xfs_iops.c  |  9 +++++++++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 58fb7a5062e1..92daa2279053 100644
+index 92daa2279053..5e837ed093b0 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -1511,7 +1511,8 @@ xfs_itruncate_extents_flags(
+@@ -1487,6 +1487,7 @@ xfs_itruncate_extents_flags(
+ 	struct xfs_trans	*tp = *tpp;
+ 	xfs_fileoff_t		first_unmap_block;
+ 	int			error = 0;
++	unsigned int		unitsize = xfs_inode_alloc_unitsize(ip);
+ 
+ 	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+ 	if (atomic_read(&VFS_I(ip)->i_count))
+@@ -1510,9 +1511,14 @@ xfs_itruncate_extents_flags(
+ 	 *
  	 * We have to free all the blocks to the bmbt maximum offset, even if
  	 * the page cache can't scale that far.
++	 *
++	 * For big realtime inode, don't aligned to allocation unitsize,
++	 * it'll split the extent and convert the tail blocks to unwritten.
  	 */
--	first_unmap_block = XFS_B_TO_FSB(mp, (xfs_ufsize_t)new_size);
-+	first_unmap_block = XFS_B_TO_FSB(mp,
-+			roundup_64(new_size, xfs_inode_alloc_unitsize(ip)));
+-	first_unmap_block = XFS_B_TO_FSB(mp,
+-			roundup_64(new_size, xfs_inode_alloc_unitsize(ip)));
++	if (xfs_inode_has_bigrtalloc(ip))
++		unitsize = i_blocksize(VFS_I(ip));
++	first_unmap_block = XFS_B_TO_FSB(mp, roundup_64(new_size, unitsize));
++
  	if (!xfs_verify_fileoff(mp, first_unmap_block)) {
  		WARN_ON_ONCE(first_unmap_block > XFS_MAX_FILEOFF);
  		return 0;
 diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 0919a42cceb6..8e7e6c435fb3 100644
+index 8af13fd37f1b..1903c06d39bc 100644
 --- a/fs/xfs/xfs_iops.c
 +++ b/fs/xfs/xfs_iops.c
-@@ -858,7 +858,7 @@ xfs_setattr_truncate_data(
- 	}
- 
+@@ -862,6 +862,15 @@ xfs_setattr_truncate_data(
  	/* Truncate down */
--	blocksize = i_blocksize(inode);
-+	blocksize = xfs_inode_alloc_unitsize(ip);
+ 	blocksize = xfs_inode_alloc_unitsize(ip);
  
++	/*
++	 * If it's a big realtime inode, zero out the entire EOF extent could
++	 * get slow down as the rtextsize increases, speed it up by adjusting
++	 * the blocksize to the filesystem blocksize, let __xfs_bunmapi() to
++	 * split the extent and convert the tail blocks to unwritten.
++	 */
++	if (xfs_inode_has_bigrtalloc(ip))
++		blocksize = i_blocksize(inode);
++
  	/*
  	 * iomap won't detect a dirty page over an unwritten block (or a cow
+ 	 * block over a hole) and subsequently skips zeroing the newly post-EOF
 -- 
 2.39.2
 
