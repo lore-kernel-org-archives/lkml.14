@@ -1,94 +1,110 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E42F13DDB9
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5094739FCE
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267280; cv=none; b=p+7LFWcdEuiBCRaZ0vkN8kLEQZmA1sUg8j7sbIOZDqRWGQm6Qfdt0rRvuByGA1mEIrdDTTc0XFqePeJWp/jQ69zrN2NOlysyyBKw9jGZFDSEh4jGLx6CJz2xZ25sepDsQPsGnr/fdflKMM5vP8SMvhU1/VzhSI8h1vDBd5qilqk=
+	t=1718267291; cv=none; b=Jj+yrI8v2vmV5pTuwDHJ5j9DViQ1GaQkEf2t7RBdahhGdbADNRFknKFFGkIYzzJMnZaiZMUr7ngJJkI450xHWejVgkqFDhxJRY2D7P3qg//kHeVsay3RJuOO/6UOJTQT9ZxvvSbGFQVLMNXgMLtd9vAgHwXlNkCZIMTZy1vWF7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267280; c=relaxed/simple;
-	bh=kgwdFkT5jQVkbTkpifsZnVL3/ED3qR6JJb2HD5RT8aU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c77lZGheAnQ8A80emrzHGBNWgCNrz/I22aTAu5XYc9Pr9XRCcoy2c/VPJjaalLOo3mDdNEeJ7LMvZYy4DLBPSrMFqYf5NhEXdo4g+ULg76RkM4EB7xdrEjTra3ZgnxLVmxLPGRti9wGZmZMiXpH0kJ8AeW/fWr5RYh2N4/5aBww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uGRv3Xdo; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718267291; c=relaxed/simple;
+	bh=HAObrbbzE0TQLfgup3KQTN40gEAzIttEj6AOQZ738lM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uvzHwH4Y3bcQbhZWZPlj/Ii0J/UaUfq/FTQXb8u82ear6A+F7clQBP20dvoWlwz0gPeRvNYHoIC1ZhjqopG3uHJfC0dtrJWw/vkMtFr0qv/88s4t4KSF+bDuOeRJg+XYSE3fWCqp7H7EtrwIYo+JFonZsGmDLzBXiN4BzplyhX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m3qHUrZv; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGRv3Xdo"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaea28868dso8509561fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718267277; x=1718872077; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kgwdFkT5jQVkbTkpifsZnVL3/ED3qR6JJb2HD5RT8aU=;
-        b=uGRv3XdoYYbiI7j635aKGfcIP0UtjnUKUzdm4386EtkGPl804e98RERXJXoqu1IZeK
-         XnTJFLPb+HCWj7Ldw4NhodFPQrJurzisZ5fO5PL1IqbeHg+DHPVYvgXNDA8jGxSxUyB1
-         8eyYMZ+qi3spfpUcJ9dAcovSnAES/h4FcrjwLX3hJ36LKMqpwA8NSVcsSHLrRQ2q3MeG
-         1787AZ3f43fnCX8nCUglolB+skffrqqNA9Ee3/wLhG77KPaSDF5w/r/VjUirX3qr6xND
-         ePrnug4ITFThi/EHSsn/+T2TLxsHEXDfNEseKF+O6pD0tPJ4COgnP3oH3Jnvud0sm6Sx
-         A+cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718267277; x=1718872077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kgwdFkT5jQVkbTkpifsZnVL3/ED3qR6JJb2HD5RT8aU=;
-        b=MguImqm//QTCdJVRd3MAbYj+cRycfOPMrKpwXcNwy0ktAqiCPfKV9GvT3EqXCH1YSl
-         qIbNaS2lvJ9dD0gE2zh+h+aHPK061UMgO04AxuZgjtL7l4wK5Rhh3+1mVby9f+PEum8Y
-         Wx03gLS0jIL9NH4zfp2uInyQTkGIxTgUkcDFhrI35hynKq8dVmcrJb5d2wrS1w2w0+0+
-         6CnnP+ZLi3acuWvxFhqf3OU9b1OZ6U9KpAfnS8Z04fpN/ujcRP+BkRzEothSULSjS/oN
-         Dn840nXM4JLB7GPf+bA2d5/bEYFdBciAl+opYJ6xpFLA4Sgj21YWj26cfWo9iMDuV2df
-         hQLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVE+V3eFfG+MSn4xUKNGPGQGjRXunu747cqZKY+sKyivtTkHBvbQNGOhaFnLqocnSvAJGvDO3211YsuUigtJPKAW9VrFemyqw67Ya4Y
-X-Gm-Message-State: AOJu0Yzn7Kp6Fx47/D5O0Dy2rgPqKyDZu27bFqSWEQ0GxERhv9uk5C6c
-	9sUrYGYEJJjObzsviGF0zwaDoJQG5qviedd7934XcvycjFUxOfqgr5yQLkmtaEBEyZ4Qc/vd8+4
-	IdQ3rR/56hU8PzKN+lgY+nxqSOgsVRUjJfIcPaw==
-X-Google-Smtp-Source: AGHT+IG0JvsAd5xth/BC3tgv5lcQ9QX9U+ULp08rdR1sfnVOy3PCLMQDJg6DqKJ9H0ledN+9SoWOONpzWoG9MmPcd48=
-X-Received: by 2002:a2e:9b19:0:b0:2ea:e2d2:6231 with SMTP id
- 38308e7fff4ca-2ebfca34160mr32949851fa.33.1718267276747; Thu, 13 Jun 2024
- 01:27:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m3qHUrZv"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8R6kK096441;
+	Thu, 13 Jun 2024 03:27:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718267226;
+	bh=6NtxnPB5cbCDF/Wpkq/8aAGbHdXDlZm6OGryzWfh4Q8=;
+	h=From:To:CC:Subject:Date;
+	b=m3qHUrZvtUT/0EGVmM8zXu7fkYUEyab3avZE3nFIjK6h7aRc8kwwaw++77qReR/Jw
+	 ZyGnkFgAETigxm7hpPGU9k+Ny7XJeF5WCpQ4O/cL06/HSJNFnfaUsSlBh4Vs7+GYrH
+	 wKvPT/9gvccyBgP8L0OdBu9tQL5RUDSJdtLCPmlI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8R6YF012520
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Jun 2024 03:27:06 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jun 2024 03:27:06 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jun 2024 03:27:06 -0500
+Received: from lelvsmtp6.itg.ti.com ([10.250.165.138])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8QwPT058785;
+	Thu, 13 Jun 2024 03:26:59 -0500
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>
+CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>,
+        <pierre-louis.bossart@linux.intel.com>, <kevin-lu@ti.com>,
+        <shenghao-ding@ti.com>, <navada@ti.com>, <13916275206@139.com>,
+        <v-hampiholi@ti.com>, <v-po@ti.com>, <niranjan.hy@ti.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <liam.r.girdwood@intel.com>, <yung-chuan.liao@linux.intel.com>,
+        <baojun.xu@ti.com>, <broonie@kernel.org>, <soyer@irl.hu>
+Subject: [PATCH v7 0/1] Add tas2781 driver for SPI.
+Date: Thu, 13 Jun 2024 16:26:32 +0800
+Message-ID: <20240613082633.388-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4> <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 13 Jun 2024 10:27:45 +0200
-Message-ID: <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, 
-	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Jun 13, 2024 at 10:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+This patch was used to add TAS2781 devices on SPI support in sound/pci/hda.
+It use ACPI node descript about parameters of TAS2781 on SPI, it like:
+    Scope (_SB.PC00.SPI0)
+    {
+        Device (GSPK)
+        {
+            Name (_HID, "TXNW2781")  // _HID: Hardware ID
+            Method (_CRS, 0, NotSerialized)
+            {
+                Name (RBUF, ResourceTemplate ()
+                {
+                    SpiSerialBusV2 (...)
+                    SpiSerialBusV2 (...)
+                }
+            }
+        }
+    }
 
-> On second thought
-> though: are you sure drivers/gpio/ is the right place for it?
+And in platform/x86/serial-multi-instantiate.c, those spi devices will be
+added into system as a single SPI device, so TAS2781 SPI driver will
+probe twice for every single SPI device. And driver will also parser
+mono DSP firmware binary and RCA binary for itself.
 
-Actually that is something I requested.
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 
-I think it fits in drivers/gpio as it is such a clear cut usage of GPIO
-lines, and it doesn't really fit into any other subsystem.
+Baojun Xu (1):
+  ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
 
-> May I suggest moving it over to drivers/misc/?
+ drivers/acpi/scan.c                           |    1 +
+ .../platform/x86/serial-multi-instantiate.c   |   12 +
+ sound/pci/hda/Kconfig                         |   14 +
+ sound/pci/hda/Makefile                        |    2 +
+ sound/pci/hda/patch_realtek.c                 |   14 +
+ sound/pci/hda/tas2781-spi.h                   |  148 ++
+ sound/pci/hda/tas2781_hda_spi.c               | 1266 ++++++++++
+ sound/pci/hda/tas2781_spi_fwlib.c             | 2101 +++++++++++++++++
+ 8 files changed, 3558 insertions(+)
+ create mode 100644 sound/pci/hda/tas2781-spi.h
+ create mode 100644 sound/pci/hda/tas2781_hda_spi.c
+ create mode 100644 sound/pci/hda/tas2781_spi_fwlib.c
 
-Misc is a bit...
-messy. I remember Arnd being very sceptical about putting stuff there
-rather than creating new subsystems, so since I've tried to avoid it,
-albeit recently more and more stuff gets merged there again :/
+-- 
+2.40.1
 
-Yours,
-Linus Walleij
