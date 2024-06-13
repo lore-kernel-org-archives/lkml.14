@@ -1,37 +1,38 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA311DFFC;
-	Thu, 13 Jun 2024 14:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B5F144D0B;
+	Thu, 13 Jun 2024 14:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287822; cv=none; b=Wa/o3DlKUizKcMZMBT7qwrnoCj7uMYHIcYbe6AdrmHUJ+/S2gTOgL1wSE7SxcCJctXtY4g7DKQjd0Clcg+93EE/JpqxLh2ozRW+bmOL+oUn3KI/7Xh9Q+9YuKNORH4iMFK1Shz80VQI80ucfSLQqHdotg2nK4pCbdSpLqp4vEWI=
+	t=1718287823; cv=none; b=gM58BlYwNupmwO822rpPTA+9AqJsEt0JUrqFDdkXG80MzP374wHQFUZ/gSuGCH44H1QeYKXWYNk9rGqInIka3/1nKvX81hJjhU2KrGlTr4qkzI5juLgTFvHAW+wXkFUTQhTf/jclrRTSRD1oHcTV7DgQkCt2Olr/PcBB2vgwmb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287822; c=relaxed/simple;
-	bh=ZFaFXJ/5FkNcomE8Riab0CfZAzjtblxo3xgwjf0mA8M=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GW22e7+HY8ZxsWfmlN0Ev5119ScPoW81di2lR0s8qs+kqCionwHm7kLDi5Db/GE2onWS8u9DYPTP7ZoDq6Mc4euEeg7erhv0jW1jXFUocBId4S5NMuNRBz2h4FC6EK5cVIOVX+KxBNfW9zSrVyXxX+kcR0k/xJArGy44snka7Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=URBdQX0v; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1718287823; c=relaxed/simple;
+	bh=efT8/7km08T7pBrO07ujSxmypsAf8sMdycVHcxqyE5Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eehYYU25sVoWgnZySgxuHID9JReQaRC8cLn7fcwC6+C2sidYaJxS2eRys8jjDzj/v7W8dMhPfHRqFAiZj90pW25stVvMyeeyBTODmg9a6rxQLN3eyzBDvNJw+qks5VRltp0IyD978KOKbLwgRDX9tWLBoUbegHhwrackRrduaSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j/sw2DNo; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="URBdQX0v"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6F2CB1BF20F;
-	Thu, 13 Jun 2024 14:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j/sw2DNo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C669B1BF217;
+	Thu, 13 Jun 2024 14:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718287811;
+	t=1718287814;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qMuh+5SjoWabgRcuPKc16rfOCZ4xON70zkQc74UXvbk=;
-	b=URBdQX0vcncG2RMb2tU6slxnjH+jsgZVVVJXMO2Wdk8vQgeXvphD+4EAzqrw4G7RJgjCwv
-	AjWxnm5S1/3v5sdlfzvYT4xziIswciqAH4GDNUGbJqE6FYAs50hgrqXszqHyYw98iD+6+f
-	IdtSx6W45Yj0g2Dp0QitGxs5qpkZh6hMXZbhYLUt6nS0BuAK3zPsps+DwTizglsXcniTbQ
-	yL37AqAiZO/u3TaF8wIjPrlTGw37oWubUdTf4MDJQXsfadlFvL8z/7x1ttL9+x4y0ZiNcG
-	LL6+hNf3ZD6Q3diOse2779aLc9+6PzwCs44NTvk34UmQhd6i56WVhztHGMglFw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjx+jpjANBXkWfNXv0n4w9Dw5J7tAkEhzVptEspIDqs=;
+	b=j/sw2DNo4scE93+h+/6YT6j5G8ntNQmY3MY1vSjbswlG5tTcqpWWpcaTXq1zEw/Ri4e+r4
+	Y/14xT/tqSpncGGuvTdGeuDAbSuGq6OKh+i2yUXd1X/Rxm5k90RzP+31Xkko/KcvFc9T1j
+	c1DsUqCsObAaooXmSJyWmWNXEZSMWICn7LBqGUwRUohunwbSNgKK41PZPWBt88QTwchlxN
+	1Kz27eYuCP3Ap3cJP3lGy2X7zcRGRMtI54GiFNOHJQ4fQ7SZe2APBxlR/I+43fNLTtiwW9
+	V31Z0aqHI2XLtDh1ijQrUK1tkdwiwuK3efmRS7x5B/4MWBJTAcsDeBKfO4duqA==
 From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Subject: [PATCH 0/6] wifi: wilc1000: update power management
-Date: Thu, 13 Jun 2024 16:06:39 +0200
-Message-Id: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
+Date: Thu, 13 Jun 2024 16:06:45 +0200
+Subject: [PATCH 6/6] wifi: wilc1000: disable SDIO func IRQ before suspend
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAO/8amYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDQyNj3fLMnOT44tLigtS8FF0TE8NEU0sTkxRLE0MloJaCotS0zAqwcdG
- xtbUAZzIHZV4AAAA=
+Message-Id: <20240613-wilc_suspend-v1-6-c2f766d0988c@bootlin.com>
+References: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
+In-Reply-To: <20240613-wilc_suspend-v1-0-c2f766d0988c@bootlin.com>
 To: linux-wireless@vger.kernel.org
 Cc: Ajay Singh <ajay.kathat@microchip.com>, 
  Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
@@ -52,62 +53,56 @@ Cc: Ajay Singh <ajay.kathat@microchip.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-Despite being implemented, power management for wilc1000 does not work as
-expected and suffer some issues. Those issues can be observed by
-executing "echo devices > /sys/power/pm_test && echo mem >
-/sys/power/state":
+Issuing a system suspend command raises the following warning:
+WARNING: CPU: 0 PID: 15 at drivers/mmc/core/sdio.c:1042 mmc_sdio_suspend+0xd4/0x19c
+CPU: 0 PID: 15 Comm: kworker/u2:1 Not tainted 6.7.0-rc1-wt+ #710
+Hardware name: Atmel SAMA5
+Workqueue: events_unbound async_run_entry_fn
+ unwind_backtrace from show_stack+0x18/0x1c
+ show_stack from dump_stack_lvl+0x34/0x48
+ dump_stack_lvl from __warn+0x98/0x160
+ __warn from warn_slowpath_fmt+0xcc/0x140
+ warn_slowpath_fmt from mmc_sdio_suspend+0xd4/0x19c
+ mmc_sdio_suspend from mmc_bus_suspend+0x50/0x70
+ mmc_bus_suspend from dpm_run_callback+0xe4/0x248
+ dpm_run_callback from __device_suspend+0x234/0x91c
+ __device_suspend from async_suspend+0x24/0x9c
+ async_suspend from async_run_entry_fn+0x6c/0x210
+ async_run_entry_fn from process_one_work+0x3a0/0x870
+[...]
 
-- system does not resume correctly (at least on my testing platform,
-  sama5d27-wlsom1-evk, either with devices test mode or user button
-  configured as wake up source)
-- warnings are triggered during suspend
-
-This series brings fixes for those issues, and more generally try to
-improve things a bit:
-- implement only one pair of suspend/resume callbacks (those are currently
-  implemented for both 802.11 class and driver, with one depending on the
-  other)
-- fix some warnings (for example, IRQ still being enabled on SDIO func
-  while going to suspend)
-- fix some scenarios leading to chip becoming unresponsive to SDIO
-  re-enumeration (error -110)
-
-With this series the following sequence works:
-  - echo devices > /sys/power/pm_test
-  - echo mem > /sys/power/state
-- chip is properly disconnected from any AP when entering suspend
-- chip properly reconnects on resume
-
-The patches comes both from Microchip internal patches (slightly reworked)
-and new patches based on encountered issues.
-Tested on SAMA5D27 EVK with a WILC 1000 SD module, tested both in SDIO
-mode and SPI mode
+This warning is due to a check in SDIO core ensuring that interrupts do not
+remain enabled for cards being powered down during suspend. WILC driver
+currently does not set the MMC_PM_KEEP_POWER flag, so disable interrupt
+when entering resume.
 
 Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
-Ajay Singh (1):
-      wifi: wilc1000: disable power sequencer
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Alexis Lothoré (5):
-      wifi: wilc1000: let host->chip suspend/resume notifications manage chip wake/sleep
-      wifi: wilc1000: do not keep sdio bus claimed during suspend/resume
-      wifi: wilc1000: move sdio suspend method next to resume and pm ops definition
-      wifi: wilc1000: remove suspend/resume from cfg80211 part
-      wifi: wilc1000: disable SDIO func IRQ before suspend
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 4e7014670945..0043f7a0fdf9 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -982,6 +982,8 @@ static int wilc_sdio_suspend(struct device *dev)
+ 
+ 	host_sleep_notify(wilc);
+ 
++	wilc_sdio_disable_interrupt(wilc);
++
+ 	ret = wilc_sdio_reset(wilc);
+ 	if (ret) {
+ 		dev_err(&func->dev, "Fail reset sdio\n");
+@@ -998,6 +1000,7 @@ static int wilc_sdio_resume(struct device *dev)
+ 
+ 	dev_info(dev, "sdio resume\n");
+ 	wilc_sdio_init(wilc, true);
++	wilc_sdio_enable_interrupt(wilc);
+ 
+ 	host_wakeup_notify(wilc);
+ 
 
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 19 ------
- drivers/net/wireless/microchip/wilc1000/netdev.h   |  1 -
- drivers/net/wireless/microchip/wilc1000/sdio.c     | 74 ++++++++--------------
- drivers/net/wireless/microchip/wilc1000/wlan.c     |  8 +--
- drivers/net/wireless/microchip/wilc1000/wlan.h     |  1 -
- 5 files changed, 30 insertions(+), 73 deletions(-)
----
-base-commit: 3971a5a8f911615f9a816f76c83c37d51ac522a9
-change-id: 20240123-wilc_suspend-441a5944d941
-
-Best regards,
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.45.2
 
