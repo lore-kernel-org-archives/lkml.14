@@ -1,87 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B0A145A12;
-	Thu, 13 Jun 2024 14:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0B4145A02;
+	Thu, 13 Jun 2024 14:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718289662; cv=none; b=ZSCdmdNN2JxfzP+hDDZ4PDqd1BVFFEV9wgTJpR03fn5FSe7LFrvm5eVlOtHdbgrG4c3IGAmZULDVG3WNasg57mO3eZTb+Ga4+EWfTweQjKZ4/3sFW56+vYx4OU5VmfgPV9hFOx3WRClLMcK7uEhlQFg9PkwdaRbEUEizedc+I8o=
+	t=1718289702; cv=none; b=JMkEjKKonIvjP7WCtVFN5FviDxCCIH9WT/1LFr2MGnP8ZgRUZ73HNNCM1+6Pgk6pvHAy5foKqxJo8FDeu9OHtaFnRdWRlNoybeY1Ry/XwXJton4RGF1hzzODuDz9qDys7hacZnaKl4/NIp8Ah0OF7GZejyxQtuLa+M22gDAS7DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718289662; c=relaxed/simple;
-	bh=QudiikszfuUSRm1JTVmyxQn35gCQ8PIjI8z2PL0Fa5g=;
+	s=arc-20240116; t=1718289702; c=relaxed/simple;
+	bh=Y1nxcwMSb+zTs1BaeXHDgxqyBzVPA1iJTb7yBxsR4gw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oqxjyt5aOGXf4Nkf22zYxjIEjPlSgCzDF+OzAldg6Vq3nBlpqn5cNrahzXmc58RnT+rdqqOrlC0NpfLLmZLJ599cTj89JNHwkz/NkysH5LcmHN6jlSQND5BKm4SdYMq+zDZXT6i5Sdy6lYIEuzcPMdkjY7yG+VJoaleb9EXBzNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvNk+DeK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e01pVjp+R/v17Z5wYlI+snFcB24l4qJclPelHH3t477KdUzVHexY4Zq6pQrW5KsblxDwZfh0ruKQExnAh1O9NkledCD6R4JI3jH7w0NoCQFJ66e9mZt+u8f/btbsD9WF5HqEHcjE6Ts72m9vJ6vU6zB+t8BJs4kUPByucnN2cj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6yADqQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvNk+DeK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1BFEC2BBFC;
-	Thu, 13 Jun 2024 14:40:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6yADqQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D208C2BBFC;
+	Thu, 13 Jun 2024 14:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718289662;
-	bh=QudiikszfuUSRm1JTVmyxQn35gCQ8PIjI8z2PL0Fa5g=;
+	s=k20201202; t=1718289702;
+	bh=Y1nxcwMSb+zTs1BaeXHDgxqyBzVPA1iJTb7yBxsR4gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JvNk+DeKUwohEXf2HcghJVK2ISwGC59Kg2oUR4L6l2e34a/gOul8aSiTPUqfoAgFW
-	 f8apKbdebeXia2nTHIAgeqQldDjToUDPysl5NEr0d3VTNCcFu5mp0A5rFo8Gn/GoaM
-	 nVDG9tRVhcn8fn//ryWad9iYqNZBwJpRtSL1udNk7ii0tMocXltDecJXku6yaoS1Cg
-	 /Bl7HfJENXroP0zuSjzEBE7iYKPVCMmUI7srqojPT05SiDrGRz7Pn7uMYQwlRPOZbx
-	 vIp0TDf9Vw3Z8NpEzrjqKNGmq9Dsv7J3UBRT/atm9bPaE1QJTljvaYy9yrlYLTDrF0
-	 6Dka+8PRkVCdQ==
-Date: Thu, 13 Jun 2024 15:40:55 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Evan Green <evan@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Jessica Clarke <jrtc27@jrtc27.com>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] riscv: Add thead and xtheadvector as a vendor
- extension
-Message-ID: <20240613-cofounder-curator-81e53a35dcbc@spud>
-References: <20240610-xtheadvector-v2-0-97a48613ad64@rivosinc.com>
- <20240610-xtheadvector-v2-4-97a48613ad64@rivosinc.com>
+	b=N6yADqQa/bBRMUtbfHabAB0TtXRZRfVHI5RqyYkEDB3OzODghkwDfLsUXFXpkKnIJ
+	 GLu55tuDvw1qbkzaMxcpMBOnb5zr9Tq7YCYB1csGtyGQyNLJJG+bvK6X7Shqva2Tdo
+	 t4hfYXDWb2Z+IKIDC+tTSMsBV/ZVCeE04afmCxtBa39bOts6sOjG/5CPnsiVQSL1S1
+	 xJxIMEtf9sXkRvFkKmMiN2yfqD1ipHVQ+6Jd9BlZ/6dpUZDGvZZ/84INmS7fpMCU9L
+	 A7qkgE6N5OqeS8vzaiSJX3MDGJfpjLfkFOMgsNYVF54BJdfEY5UAxleSV7ROfqIJf8
+	 g+7kI28dnb0EA==
+Date: Thu, 13 Jun 2024 15:41:37 +0100
+From: Lee Jones <lee@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Dustin Howett <dustin@howett.net>, Pavel Machek <pavel@ucw.cz>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 0/5] ChromeOS Embedded Controller LED driver
+Message-ID: <20240613144137.GG2561462@google.com>
+References: <20240531-cros_ec-led-v2-0-6cc34408b40d@weissschuh.net>
+ <CA+BfgNJf1Av7fRVUjpU3r6aRw6DWTHfkCuOYXP2ykhPzGTVzfw@mail.gmail.com>
+ <264dd508-93c5-48d6-ac69-27458acd29c5@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aZez57M5EwwC5uBl"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240610-xtheadvector-v2-4-97a48613ad64@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <264dd508-93c5-48d6-ac69-27458acd29c5@t-8ch.de>
 
+On Mon, 03 Jun 2024, Thomas Weißschuh wrote:
 
---aZez57M5EwwC5uBl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 2024-06-02 18:30:06+0000, Dustin Howett wrote:
+> > On Fri, May 31, 2024 at 11:33 AM Thomas Weißschuh <linux@weissschuh.net> wrote:
+> > >
+> > > Add a LED driver that supports the LED devices exposed by the
+> > > ChromeOS Embedded Controller.
+> > 
+> > I've tested this out on the Framework Laptop 13, 11th gen intel core
+> > and AMD Ryzen 7040 editions.
+> > 
+> > It works fairly well! I found a couple minor issues in day-to-day use:
+> 
+> Thanks!
+> 
+> > - Restoring the trigger to chromeos-auto does not always put the EC
+> > back in control, e.g. the side lights no longer return to reporting
+> > charge status.
+> >   I believe this happens when you move from any trigger except "none"
+> > to chromeos-auto, without first setting "none".
+> 
+> Thanks for the report, I'll investigate that.
 
-On Mon, Jun 10, 2024 at 03:56:41PM -0700, Charlie Jenkins wrote:
-> Add support to the kernel for THead vendor extensions with the target of
-> the new extension xtheadvector.
->=20
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+So am I reviewing this set or waiting for the next version?
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
---aZez57M5EwwC5uBl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmsE9wAKCRB4tDGHoIJi
-0sX3AQCV0JAgjlWHnjFIW32EH6kLNRxnf0K4C7KXnfzG3XGQOQEAp2wE6MnRyV//
-+GtJNdRRVkKDTjAnuHMpsdBXy6n+kQQ=
-=VC5A
------END PGP SIGNATURE-----
-
---aZez57M5EwwC5uBl--
+-- 
+Lee Jones [李琼斯]
