@@ -1,98 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383FA12F5B8;
-	Thu, 13 Jun 2024 16:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D37A23;
+	Thu, 13 Jun 2024 16:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718294508; cv=none; b=eAzEvHYdeTMtJref3kyWY4h5ec2zET6pfegajit/+0n2rL0sqxN2bWfrKMRf1dWGJsMDWdE1OXyCwnO5J6AGfdx6Zh3cp8Ldr8KXrpReUm6StWY8Abde6FSEdKo7ElgmSjTo+SJLHYVYzQ6IJR0caCqOgp/dVueSeOvROC/Y8hY=
+	t=1718294729; cv=none; b=n5FhLUs2m9/OwvIXtfoflWIQaVtH7zmze5muXsY5cRaoDOcVPE9DTDBvsyrbkXXcRMLsGUToef6UACVOynAe4fJ+Y0x0dmZdJ+UqDA2sbjJelyp178CSNzg7WvHQlXkKR4eF5C+QjCQYi33w+J2R1MoX01m+fHvwkohUeF95lPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718294508; c=relaxed/simple;
-	bh=LKy2D6arl+GpL0o3xCQY76R9veCG4oWlZUUz2h91SqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g5+NmHeK1RrokD8hOdsPWSPwJM6QuXkhvXeYOPikCwuTSgHit1889ywXr0r2SXjQJY+lCgqAiVzXhUmu9M+Hr3TBqBGDN1fTDrUrRyikSG2fuJIhsBDXfRWylG+LsnpH4L9ZRI0KA6t9xvQyDofU1LqPONkgCg12NnL+Oc4ibA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWvGEL72; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718294729; c=relaxed/simple;
+	bh=U2DZFhk2lxQx2CBbCuMlAdQcXwrsdEgd+K6QLu2lto8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=l0yAYgsoSRYbzNxQk1jvSnS8hKwFNsKpPjLEFghRB57Ib+UvCC5sUcHtHO9ERqB6M6pT52RXtTp9WLrlXPomFF6rm69gr3y0Fw0yggDy7KAIveneVVnQqcGOfb7q3WGadg9DY+acwz3N/leeOYa48WPKAhwf08mgzOJqx9R2Db0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLeF/HQO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWvGEL72"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1B1C2BBFC;
-	Thu, 13 Jun 2024 16:01:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLeF/HQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A7EC2BBFC;
+	Thu, 13 Jun 2024 16:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718294507;
-	bh=LKy2D6arl+GpL0o3xCQY76R9veCG4oWlZUUz2h91SqE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=BWvGEL72ILqyPUF+a50b+MgblLneW9UZ4U+mwtAbphD3OOWIfcm8diwW/DyAGQRkT
-	 HsOf6n1lx2Wu0+5s+1mYY1lvtMPqImxjd7Tug6v/R2J3dYlrZZ+8uRmhVes/imJVUk
-	 i2LMzNDim98YcN8Vs8K4tb4cVb1E8N+sLWAjhH8aVM95ZI8rY9Tofc4A7fP08WmpNY
-	 q0s5RYjGBiSVbdRq8CLCYwVcIGSS54T144xFSLCQsxPRoxsUixbJcf3TxqMKy2099g
-	 JtNqYySXF+cBKKQRrgcUvDbESpqp3+MPjHATiyWTQg+DaeWpE6FhJcWxrJx+dsUJuN
-	 O6vxSMW6Lgraw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 54042CE04D4; Thu, 13 Jun 2024 09:01:47 -0700 (PDT)
-Date: Thu, 13 Jun 2024 09:01:47 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Nilay Shroff <nilay@linux.ibm.com>, l@kbusch-mbp.dhcp.thefacebook.com,
-	Keith Busch <kbusch@meta.com>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	hch@lst.de, sagi@grimberg.me, davidgow@google.com,
-	akpm@linux-foundation.org, venkat88@linux.vnet.ibm.com
-Subject: Re: [PATCH 1/2] list: introduce a new cutting helper
-Message-ID: <046f42c5-34b5-41a2-9680-5ef86ef25c01@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240612155135.3060667-1-kbusch@meta.com>
- <f0e4c51c-8227-4f5c-876f-38fbb4a0e1bf@linux.ibm.com>
- <ZmrscxG51gFRDVlM@kbusch-mbp>
- <c475f0d8-3bc9-4d65-8fce-586f4b75b4fc@linux.ibm.com>
- <ZmsD_HDLBQAqOOU3@kbusch-mbp.dhcp.thefacebook.com>
- <31eb40f9-d68d-4348-b1fd-3cf057939297@paulmck-laptop>
- <ZmsGfle1aZQauzRb@kbusch-mbp.dhcp.thefacebook.com>
- <73b994eb-c689-48e0-b09c-a414041a0525@paulmck-laptop>
- <ZmsS9DZWl8TccvKz@kbusch-mbp.dhcp.thefacebook.com>
+	s=k20201202; t=1718294728;
+	bh=U2DZFhk2lxQx2CBbCuMlAdQcXwrsdEgd+K6QLu2lto8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=FLeF/HQOtLqo+pJOxkvgP6f+npFza2mYyZEn0wPldijfRnbpDfVvBlsiMK9+xTIXC
+	 ZUoy11AjbJve8ssJKi5C06SrUmfu6Q3N8VNn2kpk+VU83IXfmMjpc5OvJr+pIERiyP
+	 8wNszMDSSDMgD9o+WcT5HG/GYnCh66UG8Xc+HsX/kNu+HJL4Q+Dcs4HBePT7/fogiW
+	 MnFTb5gW+tELGypS7FD35Qawm5vGKvBtZc38gvA0XhL7HwQR0vqO7vMOhcNmkoPjSX
+	 zGJIHjL0hmnho/MBZI9XhhkZvL/F31apm5ptMYAVP6XHulkxRJk6lrHCCcSYuX+rwc
+	 +8tLGzFftnOnA==
+From: Lee Jones <lee@kernel.org>
+To: linux-leds@vger.kernel.org, Abdel Alkuor <alkuor@gmail.com>, 
+ Pavel Machek <pavel@ucw.cz>, Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <5faec5de-fc36-4b38-abcb-c61954a824cd@web.de>
+References: <5faec5de-fc36-4b38-abcb-c61954a824cd@web.de>
+Subject: Re: (subset) [PATCH] leds: ncp5623: Use common error handling code
+ in ncp5623_probe()
+Message-Id: <171829472766.2690295.11956614512841828.b4-ty@kernel.org>
+Date: Thu, 13 Jun 2024 17:05:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmsS9DZWl8TccvKz@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Thu, Jun 13, 2024 at 09:40:36AM -0600, Keith Busch wrote:
-> On Thu, Jun 13, 2024 at 08:15:06AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 13, 2024 at 08:47:26AM -0600, Keith Busch wrote:
-> > > > 
-> > > > Just make a helper function like this:
-> > > > 
-> > > > 	static void my_synchronize_srcu(void)
-> > > > 	{
-> > > > 		synchronize_srcu(&my_srcu_struct);
-> > > > 	}
-> > > > 
-> > > > Or am I missing something subtle here?
-> > > 
-> > > That would work if we had a global srcu, but the intended usage
-> > > dynamically allocates one per device the driver is attached to, so a
-> > > void callback doesn't know which one to sync.
-> > 
-> > Ah, good point!  I suppose that a further suggestion to just JIT the
-> > needed function would not be well-received?  ;-)
-> > 
-> > I cannot resist suggesting placing a pointer to the srcu_struct in
-> > the task structure.  /me runs...
-> > 
-> > Perhaps somewhat more constructively, my usual question:  Is it really
-> > necessary to have per-driver SRCU here?  What would break if there was
-> > a global srcu_struct that applied to all drivers?
+On Wed, 05 Jun 2024 16:30:30 +0200, Markus Elfring wrote:
+> Add a label so that a bit of exception handling can be better reused
+> at the end of this function implementation.
 > 
-> There's not a strict need for srcu_struct to be per device that I know
-> of. It was just done this way to keep usage localized to the parts that
-> need to be protected. The fear being that one device's long running
-> reader could prevent another device from quickly tearing down.
+> 
 
-That is a legitimate concern.
+Applied, thanks!
 
-Is there a way to avoid this issue by making this be a statement parameter
-to a macro?
+[1/1] leds: ncp5623: Use common error handling code in ncp5623_probe()
+      commit: b234df8016fc73468dfff2ea91c5b150bbe6f692
 
-							Thanx, Paul
+--
+Lee Jones [李琼斯]
+
