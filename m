@@ -1,84 +1,97 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7872F14D2A0
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32DF15250F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 19:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718306233; cv=none; b=EOMV8eLZeX/6abpBrfq6tqJ0mQ0t+6xp9X0Y9zbopTvzNWBYbJS20S9vlVX2HFbSUwZOC0JEZACnwkb0qPZ07V4JmR76Rq1nMGntJWt+6BNNiWb3wd9zTmQamWV+skwWEhx+i7O9YBBFBh5BW4LpYw0jvHZR3Ym5pQpk386PNUo=
+	t=1718306241; cv=none; b=aHb1b6BcO0oGdtUILOJ7XFwEZ0ee1pDAzmBQynAgPz742ibPPKFuVtTD5rYALvqFe2CDOzMpW9pH7hERK1eXfR/CSPNzayPMzT7v1AdHvdNsAqc410iSbQsBMdAEPLmX4Y+dfP2XO6g5vOg9tHAxual32hgXAKmIXETzEl8MAZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718306233; c=relaxed/simple;
-	bh=CrA2LbZw2fj1oZQlxW6cbBwREuI1pwVFNKXdbbVw6aE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TAb+E+QL5Oi+iZQ4m6RVhX4NDQrKzfBLa3AX+s4JoyO6Zy9bROwZ4JM+W09IKEZP35woOpzVf229Y9IQr76ZmGhz3elU7d4f9FtLmcvPsHoFEr4qCcNWV4a433lPzoh1l3N9yLbHrxljFTGif3qeX2vK+pPj+f1rXoGDyOaNBY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XtGa5DO3; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1718306241; c=relaxed/simple;
+	bh=+jnJtiUScAEX7YebGNkKf8lf6RqHQioTg5h1y/TviSY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LeEFcyUDoY0WbrwTBiL38NqCbUJVeCKCMWwf2zG57BmQ/KceZwyFoe1byHfys0x9/jnFEd/mkE8UZRucN61icguBKPUBceBZQZDKB7/vbjbDnu9vRR3rAAjGYmBOTiYVQKG0riRHGjT0MzxfgvmArrVEivM6sJJzq+gG8HrEkYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PghC1xDV; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XtGa5DO3"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b06b78e716so9257796d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PghC1xDV"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f64ecb1766so11615125ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 12:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1718306230; x=1718911030; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SqRZVCpbYo2jtcU4VLLPgUkKEV8z0zarA1K4gBzGSZs=;
-        b=XtGa5DO39owFRgz7eiFLh0BKcx+ZaoAoM0nazFe9979KkIrj2TS33fQOBeBFWkt3Us
-         Q4yHnPiKUmHx4iVAolspZgZwAlJ3KyZcy2HN6ng8IRO9ORy3IKXllSZST8ROGxwtywBk
-         dIgcjokRQ0mzaajlLTvC/0kBhAhv8r4+zwp1w=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718306239; x=1718911039; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d2si2x/qxMiiRgx/ptA73I3ih5KSBTyIVIweBGPWOt8=;
+        b=PghC1xDVcvoeRzTkSxuMFXK0jJO/4JFGVDpQCQYwx1JDHGatOuKUhsvMC/T9XTVxZq
+         ts7INWTFFDqwPdVnfDq2EgnnvjRCR6KBm4dKNdeAoWJYGtgmWcWPw9VEQYqxI5slI36m
+         GZfHy72ZjoOaV1e7sU5iZLj2n5pHPe3n5Z/DEhAmykCmkAaK+2qcuPwCAVK9Cw8H5QUL
+         y8Mlvvce2YZVSkw9XsNl9DHOUX+CsSOp4l4rl0Uuo4jvAbHOjVkREnwzTyNgoCD5RCrW
+         yIkGBuD4W1jKiodGmintUg1KaOm9/WwfI7awiv9dje6cXPrTg1vnI8264qAUUK122VnM
+         n+pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718306230; x=1718911030;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SqRZVCpbYo2jtcU4VLLPgUkKEV8z0zarA1K4gBzGSZs=;
-        b=M5dz7r+ukO580FIbfKQ5A3lS80I+IuGOjA2FYpPvw8zhfLL2hQuFM2bfZ1+76D1i4T
-         /H2Y11Kmnh+WKzQTUXR+lGqa4PHEUJwskIeNygeoLMLvVyC/vvVpG5APc1nvQKW9OSrH
-         HQA5H9ZLO0NMCEkz07PP1+p048IRtPZacbDwBUg0A8tyzl+fTZbPy8mSX6c/wGqdnJ0o
-         AuY+PTbtnAF3NIPeprLJVha3yGp/uRTt2W3qJLLbamch+KabiXfWKTrlAQulZhK8w8NW
-         PQKJzTTj8V2zF2+M8dHGhjq0NfmLFC5Rw8fKm/2qe8hVlkGUUK5t+p2cGXuMOO/Xz6xA
-         K5Zw==
-X-Gm-Message-State: AOJu0Yyfuwb0vPvLOLWsBqVrUX3Secvaa0/Va7MIqtW3BwUXHQdm/85Z
-	L8WuHcLE/RaGPJs5MN2v3ktPjyTkbii0Sf9m09rRZiTA2FP/pHOPoyb6hnkb/tyJxpm0Sr3PY/Q
-	ggtMFikPtCLEG0nrxWaaY+aqtmZcMvSpQPSFuEfFW1M0pmfetuA+Fq+hH489u/bBRn/hWbkrEOM
-	lpfsrHKtge1thXfeCFlse/kEKtSb6aKkruR52fDBN77pI94xr7a9Sq
-X-Google-Smtp-Source: AGHT+IFjEHPK4k0l7eyVsilK8yUQTNHgIqYDnv7SJ1An/1VqFCPEcRK7LH9vCsjmYZUTW3mQYOd55w==
-X-Received: by 2002:a0c:f882:0:b0:6b0:839e:ba6b with SMTP id 6a1803df08f44-6b2afd5f040mr5356876d6.43.1718306229909;
-        Thu, 13 Jun 2024 12:17:09 -0700 (PDT)
-Received: from amakhalov-build-vm.eng.vmware.com ([192.19.161.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb47f6sm9714106d6.82.2024.06.13.12.17.04
+        d=1e100.net; s=20230601; t=1718306239; x=1718911039;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d2si2x/qxMiiRgx/ptA73I3ih5KSBTyIVIweBGPWOt8=;
+        b=dUNrHcRudqIkZA73ljW+Cn2ESEi3YOaSn2FnYSnU8utCruA6wTHj3IS31LmLsceTHN
+         E+JI9vukEyrO/RCXoNj/j30zrUsprgs8815XdpY5nhTRLuVpY9byOGa8Ykk82WejYfzT
+         gZB+W+TkRmFBK+Ak/T/5OZbZVmjOVG+rvOQ6inbdB1Yg4yibkzkRlut3Qq8RWo3Q9aDE
+         u0Gu5Imuz/L08Sqtqay+b6WSzTyMFVmqKnlSz0dTd341VMtF0wkgG1/8BrkDDDO1WogM
+         YUpylLV5AHpnKsaGeCPFAK78UeFg5ccZei0dzMIsgxxzgimebjRNVK/vfnuQrYUT+lm0
+         xtKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDlapmLYK32IM/AAuPeyiqHHsXbQChvqrbhkzIQANw5uAyLxqbREmFu2O7XM81e9wSStzuX3Ifd+fm5g8xZztiQ357U32ON4DKnnLO
+X-Gm-Message-State: AOJu0YwalJDYHmfw7cl9Rb8BzcW+xl3SGArIA2sIVMU+jUNCfu1fNL8x
+	L9rtkyLe5wz4NpGyXXgUqQ2x58A5NnyLTt50kQLNsY9UiC2X5oA4VSK3+7FhpnM=
+X-Google-Smtp-Source: AGHT+IEe/pgm4wbdzYk9w01vIQjdm01pqBBmuWzC0VnQ7Vhdd+iuX8Zf6okO8XfjDwZx3EhOCo7asg==
+X-Received: by 2002:a17:903:2341:b0:1f6:7ee8:8935 with SMTP id d9443c01a7336-1f8629fef3bmr7650085ad.59.1718306239110;
+        Thu, 13 Jun 2024 12:17:19 -0700 (PDT)
+Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e7ca78sm17471015ad.106.2024.06.13.12.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 12:17:09 -0700 (PDT)
-From: Alexey Makhalov <alexey.makhalov@broadcom.com>
-To: linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	bp@alien8.de,
-	hpa@zytor.com,
-	dave.hansen@linux.intel.com,
-	mingo@redhat.com,
-	tglx@linutronix.de
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	richardcochran@gmail.com,
-	linux-input@vger.kernel.org,
-	dmitry.torokhov@gmail.com,
-	zackr@vmware.com,
-	linux-graphics-maintainer@vmware.com,
-	pv-drivers@vmware.com,
-	timothym@vmware.com,
-	akaher@vmware.com,
-	dri-devel@lists.freedesktop.org,
-	daniel@ffwll.ch,
-	airlied@gmail.com,
-	tzimmermann@suse.de,
-	mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	horms@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>
-Subject: [PATCH v11 0/8] VMware hypercalls enhancements
-Date: Thu, 13 Jun 2024 12:16:42 -0700
-Message-Id: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
-X-Mailer: git-send-email 2.39.4
+        Thu, 13 Jun 2024 12:17:18 -0700 (PDT)
+From: Jesse Taube <jesse@rivosinc.com>
+To: linux-riscv@lists.infradead.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Erick Archer <erick.archer@gmx.com>,
+	Joel Granados <j.granados@samsung.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 3/6] RISC-V: Check scalar unaligned access on all CPUs
+Date: Thu, 13 Jun 2024 15:16:12 -0400
+Message-ID: <20240613191616.2101821-4-jesse@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240613191616.2101821-1-jesse@rivosinc.com>
+References: <20240613191616.2101821-1-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,116 +100,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-VMware hypercalls invocations were all spread out across the kernel
-implementing same ABI as in-place asm-inline. With encrypted memory
-and confidential computing it became harder to maintain every changes
-in these hypercall implementations.
+Originally, the check_unaligned_access_emulated_all_cpus function
+only checked the boot hart. This fixes the function to check all
+harts.
 
-Intention of this patchset is to introduce arch independent VMware
-hypercall API layer other subsystems such as device drivers can call
-to, while hiding architecture specific implementation behind.
+Check for Zicclsm before checking for unaligned access. This will
+greatly reduce the boot up time as finding the access speed is no longer
+necessary.
 
-First patch introduces the vmware_hypercall low and high bandwidth
-families of functions, with little enhancements there. And the last
-patch adds tdx hypercall support
+Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+---
+V1 -> V2:
+ - New patch
+---
+ arch/riscv/kernel/traps_misaligned.c       | 23 ++++++----------------
+ arch/riscv/kernel/unaligned_access_speed.c | 23 +++++++++++++---------
+ 2 files changed, 20 insertions(+), 26 deletions(-)
 
-arm64 implementation of vmware_hypercalls is in drivers/gpu/drm/
-vmwgfx/vmwgfx_msg_arm64.h and going to be moved to arch/arm64 with
-a separate patchset with the introduction of VMware Linux guest
-support for arm64.
-
-No functional changes in drivers/input/mouse/vmmouse.c and
-drivers/ptp/ptp_vmw.c
-
-v10->v11 changes:
-- Redesign VMware hypercall asm inline. Move slow path to a separate function
-  keeping asm inline alternative small a simple. Suggested by Borislav Petkov.
-- Use existing _ASM_BP instead of introduction of VMW_BP_REG as was suggested
-  by Uros Bizjak.
-- Patch 6: add "Fixes" tag as was suggested by Markus Elfring. 
-
-v9->v10 changes:
-- Restructure the patchset as was suggested by Borislav Petkov to
-  introduce vmware_hypercalls API first, then move callers to use this
-  API, and then remove the old mechanism.  
-- Reduce alternative portion of VMWARE_HYPERCALL by moving common code
-  outside of alternative block. Suggested by Borislav Petkov.
-- Use u32 instead of uint32_t in vmware_hypercall API and across vmware.c
-  as was suggested by Simon Horman.
-- Remove previous Reviewed-by and Acked-by.
-- Fix typos in comments and commit descriptions.
-- No major changes in patches 2,3,4,8 compare to v9.
-
-v8->v9 change:
-First patch "x86/vmware: Move common macros to vmware.h" was split on 2 pieces:
-  "x86/vmware: Move common macros to vmware.h" - just code movement, and
-  "x86/vmware: Correct macro names" - macro renaming.
-
-v7->v8 no functional changes. Updated authors and reviewers emails to
-@broadcom.com
-
-v6->v7 changes (only in patch 7):
-- Addressed comments from H. Peter Anvin:
-  1. Removed vmware_tdx_hypercall_args(), moved args handling inside
-     vmware_tdx_hypercall().
-  2. Added pr_warn_once() for !hypervisor_is_type(X86_HYPER_VMWARE) case.
-- Added ack by Dave Hansen.
-
-v5->v6 change:
-- Added ack by Kirill A. Shutemov in patch 7. 
-
-v4->v5 changes:
-  [patch 2]:
-- Fixed the problem reported by Simon Horman where build fails after
-  patch 2 application. Do not undefine VMWARE_HYPERCALL for now, and
-  update vmwgfx, vmmouse and ptp_vmw code for new VMWARE_HYPERCALL macro.
-- Introduce new patch 6 to undefine VMWARE_HYPERCALL, which is safe to do
-  after patches 3 to 5.
-- [patch 7 (former patch 6)]: Add missing r15 (CPL) initialization.
-
-v3->v4 changes: (no functional changes in patches 1-5)
-  [patch 2]:
-- Added the comment with VMware hypercall ABI description.
-  [patch 6]:
-- vmware_tdx_hypercall_args remove in6/out6 arguments as excessive.
-- vmware_tdx_hypercall return ULONG_MAX on error to mimic bad hypercall
-  command error from the hypervisor.
-- Replaced pr_warn by pr_warn_once as pointed by Kirill Shutemov.
-- Fixed the warning reported by Intel's kernel test robot.
-- Added the comment describing VMware TDX hypercall ABI.
-
-v2->v3 changes: (no functional changes in patches 1-5)
-- Improved commit message in patches 1, 2 and 5 as was suggested by
-  Borislav Petkov.
-- To address Dave Hansen's concern, patch 6 was reorganized to avoid
-  exporting bare __tdx_hypercall and to make exported vmware_tdx_hypercall
-  VMWare guest specific.
-
-v1->v2 changes (no functional changes):
-- Improved commit message in patches 2 and 5.
-- Added Reviewed-by for all patches.
-- Added Ack from Dmitry Torokhov in patch 4. No fixes regarding reported
-  by Simon Horman gcc error in this patch.
-
-Alexey Makhalov (8):
-  x86/vmware: Introduce VMware hypercall API
-  ptp/vmware: Use VMware hypercall API
-  input/vmmouse: Use VMware hypercall API
-  drm/vmwgfx: Use VMware hypercall API
-  x86/vmware: Use VMware hypercall API
-  x86/vmware: Correct macro names
-  x86/vmware: Remove legacy VMWARE_HYPERCALL* macros
-  x86/vmware: Add TDX hypercall support
-
- arch/x86/include/asm/vmware.h             | 336 +++++++++++++++++++---
- arch/x86/kernel/cpu/vmware.c              | 212 ++++++++------
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c       | 173 ++++-------
- drivers/gpu/drm/vmwgfx/vmwgfx_msg_arm64.h | 196 +++++++++----
- drivers/gpu/drm/vmwgfx/vmwgfx_msg_x86.h   | 185 ------------
- drivers/input/mouse/vmmouse.c             |  76 ++---
- drivers/ptp/ptp_vmw.c                     |  12 +-
- 7 files changed, 654 insertions(+), 536 deletions(-)
-
+diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+index b62d5a2f4541..8fadbe00dd62 100644
+--- a/arch/riscv/kernel/traps_misaligned.c
++++ b/arch/riscv/kernel/traps_misaligned.c
+@@ -526,31 +526,17 @@ int handle_misaligned_store(struct pt_regs *regs)
+ 	return 0;
+ }
+ 
+-static bool check_unaligned_access_emulated(int cpu)
++static void check_unaligned_access_emulated(struct work_struct *unused)
+ {
++	int cpu = smp_processor_id();
+ 	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
+ 	unsigned long tmp_var, tmp_val;
+-	bool misaligned_emu_detected;
+ 
+ 	*mas_ptr = RISCV_HWPROBE_MISALIGNED_UNKNOWN;
+ 
+ 	__asm__ __volatile__ (
+ 		"       "REG_L" %[tmp], 1(%[ptr])\n"
+ 		: [tmp] "=r" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
+-
+-	misaligned_emu_detected = (*mas_ptr == RISCV_HWPROBE_MISALIGNED_EMULATED);
+-	/*
+-	 * If unaligned_ctl is already set, this means that we detected that all
+-	 * CPUS uses emulated misaligned access at boot time. If that changed
+-	 * when hotplugging the new cpu, this is something we don't handle.
+-	 */
+-	if (unlikely(unaligned_ctl && !misaligned_emu_detected)) {
+-		pr_crit("CPU misaligned accesses non homogeneous (expected all emulated)\n");
+-		while (true)
+-			cpu_relax();
+-	}
+-
+-	return misaligned_emu_detected;
+ }
+ 
+ bool check_unaligned_access_emulated_all_cpus(void)
+@@ -562,8 +548,11 @@ bool check_unaligned_access_emulated_all_cpus(void)
+ 	 * accesses emulated since tasks requesting such control can run on any
+ 	 * CPU.
+ 	 */
++	schedule_on_each_cpu(check_unaligned_access_emulated);
++
+ 	for_each_online_cpu(cpu)
+-		if (!check_unaligned_access_emulated(cpu))
++		if (per_cpu(misaligned_access_speed, cpu)
++		    != RISCV_HWPROBE_MISALIGNED_EMULATED)
+ 			return false;
+ 
+ 	unaligned_ctl = true;
+diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
+index a9a6bcb02acf..70c1588fc353 100644
+--- a/arch/riscv/kernel/unaligned_access_speed.c
++++ b/arch/riscv/kernel/unaligned_access_speed.c
+@@ -259,23 +259,28 @@ static int check_unaligned_access_speed_all_cpus(void)
+ 	kfree(bufs);
+ 	return 0;
+ }
++#endif /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+ 
+ static int check_unaligned_access_all_cpus(void)
+ {
+-	bool all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
++	bool all_cpus_emulated;
++	int cpu;
+ 
++	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
++		for_each_online_cpu(cpu) {
++			per_cpu(misaligned_access_speed, cpu) = RISCV_HWPROBE_MISALIGNED_FAST;
++		}
++		return 0;
++	}
++
++	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
++
++#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+ 	if (!all_cpus_emulated)
+ 		return check_unaligned_access_speed_all_cpus();
++#endif
+ 
+ 	return 0;
+ }
+-#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+-static int check_unaligned_access_all_cpus(void)
+-{
+-	check_unaligned_access_emulated_all_cpus();
+-
+-	return 0;
+-}
+-#endif
+ 
+ arch_initcall(check_unaligned_access_all_cpus);
 -- 
-2.39.4
+2.43.0
 
