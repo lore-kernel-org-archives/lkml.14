@@ -1,140 +1,149 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6993F13D8A6;
-	Thu, 13 Jun 2024 09:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC4E13D8A6;
+	Thu, 13 Jun 2024 09:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718270622; cv=none; b=emBH0VgRLElteu2d0vZZE58Qb7sy2CvqXjr6Umht0PkepTn3LGs43y5fl8Cbbw1CQtNG4dp/nMV9QRiLo9KiYfDXgJfK6mvDb7+XynJ5xChR6SSjQg6azFWlPgZOj6NlarJdV9RFxRznZVjcnBVOWSmQK0hcNnwiWcCoITJ5iOQ=
+	t=1718270641; cv=none; b=VOClZQ7nuqHA/OrhiObssUl8NjSWG1PlKBJoOxAA7ki/fWPhXgBq5H+ObMqWceUX0CFfWICiTPILafRqWeZBhlFtDw9x0tJKSo1MCJ8hwL0h0gQcDQiYK6hfrIXKy9SeB/n8n/jj2TQKgMlQSEZ3OaydS+6GzZuzX+OUwl/mVjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718270622; c=relaxed/simple;
-	bh=Gg+23UUXLD0QiiaYlgluUVs+RMApwPP3zSxNMn9RCpk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L0ociuFTLLGB2NWWjF0c1Q3VmJG43fkXP+FfcdCO8qsZoFkJGS1vwujGIMLuNYx1RkLloQAqOMnBIGY/MVfHrHABvVvMazjuTgRmrjU30FuuZm715SoSbN2z3xtlOu51QNizrXFVnOF5nuvs1ODps3p+G7sCoTD1jjpDbAA2DFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SItlG2Ri; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718270641; c=relaxed/simple;
+	bh=7fMQpIku4vo8Gr+0QKJESH9aZGoPywmOAdN+PpVROoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ImPIuUWa9Moptb7l04o7IzK2vG2W+3lv2LDYWCkeKvxTVrOLHFFAd5fIKbk8VY2B7C7DUFNIBJ/1sXVvhCng/t0Opu1M24YZYxHP+wda7b11oqZ3nTpokxnJ1Obz0gGe9W5BUxZnnOwrldpiSPziOY1JlFwfBCj7cf4u9bFAM1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STeTf5Nd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SItlG2Ri"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso1123922e87.1;
-        Thu, 13 Jun 2024 02:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718270618; x=1718875418; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gg+23UUXLD0QiiaYlgluUVs+RMApwPP3zSxNMn9RCpk=;
-        b=SItlG2Rion/AxFw875b25LMO0i/gdr8x/fx/Jwm3dqISZ0H1V0h7gdO8CuGdSB7N3L
-         md4NPpaxY8ERJS4ZhP7NjkS/1CE6zz1y0KeYciEyhivEStt0wp6+D2uIll0JBCUtyuc3
-         AMoqcT0AEoQ4Dd0Tytbwf4xR6wrJtxd8xcz7MbPUVcQpWsEI1nVPMmJLohul+X5YiFTg
-         ET2I8rVBB4hDXLAdRin0K5fIDSr4XntYDtpKeVH9E1NxDzidCo1X93w9ebe5JhE9vrqe
-         0YXMi3aljVqzVaPjQTIsanfXIk9FeJeLCwLXTespLQRS6YROGtN9umbve/IpdsLxKg9D
-         tZ5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718270618; x=1718875418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gg+23UUXLD0QiiaYlgluUVs+RMApwPP3zSxNMn9RCpk=;
-        b=JDLntu9+kzNFVw4RXge6eR5rK/u5EkSwZntS9marEev8XcRn6zWXf9RaBnm2GDhm5u
-         ZF6wfM8vhULcgY8Y0ttQza/6+9p2F+p2LPnr8TtXegJvbIrsv7sLFMpiY59LWACh4QpR
-         4XX82sCwu0wfFH3Of+gMAQTXHZcLkl+5lFkl66mPoL8S9d7ttiXs3JZSqU8xgrAaQVm1
-         jZBwG1IfQCXh95hRThERpIYv99kbRC0ovQtWHwzcAJuDLvTe+t7/rEpmaTHsyhX3jA/3
-         vBRmLecmS5lnYhmCJIuR0q7lwwbZrjsJinjR2FtqSyPIl3HLxam8UnH5QJY5JeV7kTx/
-         qsrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKSr5GsCTF/RhSMJVtS7Jhj8YMkRCL3tdfwim7dvU+IofES+84MXgeDjiaIJ/9EMFYaL+khO1fPto2MrrF7E4XXYSdLrS6YdLEI/w3kdIeKRHjm6xR+d73y4hDWXfsGiDVw1pz
-X-Gm-Message-State: AOJu0YxBdy4nD4U7hFgQgYQ+j+F5d7cxRSEU4CcLFfzF5cnGXVNkcQyX
-	cpZJT9SZxv42CPknXmsabiuQ82z2b4qq2xbHXTC3IxF/X53VWOmF9VJRZYcHSPFnfDbxohBb0Iv
-	WWwnwHguyG58987527t7700RHzNg=
-X-Google-Smtp-Source: AGHT+IHNHTBRcHOOmC217Up4Ka0WkhyYvVN+oWQ2WndOVDn1z0YjAqT/Ba384DNdoh/dvoO13r92M/g7kfJ30eTfu7U=
-X-Received: by 2002:a19:ad09:0:b0:529:b79f:ab1d with SMTP id
- 2adb3069b0e04-52c9a3c6cefmr2451182e87.22.1718270618150; Thu, 13 Jun 2024
- 02:23:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STeTf5Nd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C58B5C2BBFC;
+	Thu, 13 Jun 2024 09:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718270640;
+	bh=7fMQpIku4vo8Gr+0QKJESH9aZGoPywmOAdN+PpVROoU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=STeTf5NdCO/DfNOrY4rD3T7+5E74WzYqoE8ZBl/L3nTkHxXCyfnU15HCSUOroIAub
+	 80gCn0TUbcl5ohTymor7dXIsV6TVqebY8RQbPzheqKsiZhUvLcdO5FvT3o/oxDB25A
+	 IfxCRBmLo0mhNxtVMuwsMte64e/aJKhBY75e2nDbnVlDzTWsHaHJx4woMjxYMshftn
+	 YRpVe8lIDWCNM5p5hVNzOzZKpJjgSy7muhFVASOU6RSTY8T8KpQIXH6EyVj5oNMR1d
+	 NqLae79Ifx8Sdsz0Xf8ApWYKhdbt7JPVTKTih/1/Em/uNvo+gVjzpgpMXklIFvLeCP
+	 cp414GqmUpq6Q==
+Message-ID: <0e7bd7f2-b445-4a59-b456-8d03af121a8e@kernel.org>
+Date: Thu, 13 Jun 2024 11:23:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607023116.1720640-1-zhaoyang.huang@unisoc.com>
- <CAGWkznEODMbDngM3toQFo-bgkezEpmXf_qE=SpuYcqsjEJk1DQ@mail.gmail.com>
- <CAGWkznE-HcYBia2HDcHt6trM9oeJ2x6KdyFzR3Jd_-L5HyPxSA@mail.gmail.com>
- <ZmiUgPDjzI32Cqr9@pc636> <CAGWkznGnaV8Tz0XrgaVWEVG0ug7dp3w23ygKKmq8SPu_AMBhoA@mail.gmail.com>
- <ZmmGHhUDk5PqSHPB@pc636> <ZmqwvtZQwYLNYf+V@MiWiFi-R3L-srv> <20240613091106.sfgtmoto6u4tslq6@oppo.com>
-In-Reply-To: <20240613091106.sfgtmoto6u4tslq6@oppo.com>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Thu, 13 Jun 2024 17:23:26 +0800
-Message-ID: <CAGWkznEJgUZ6bsuhb0Q+3-Jny+AGxPpaBnSmJJqoWz-mgU43sQ@mail.gmail.com>
-Subject: Re: [Resend PATCHv4 1/1] mm: fix incorrect vbq reference in purge_fragmented_block
-To: hailong liu <hailong.liu@oppo.com>
-Cc: Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	"zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Hellwig <hch@infradead.org>, Lorenzo Stoakes <lstoakes@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, steve.kang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] dt-bindings: display/msm: Add SM7150 DPU
+To: Danila Tikhonov <danila@jiaxyga.com>, robdclark@gmail.com,
+ quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+ marijn.suijten@somainline.org, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ quic_rmccann@quicinc.com, konrad.dybcio@linaro.org,
+ neil.armstrong@linaro.org, jonathan@marek.ca, swboyd@chromium.org,
+ quic_khsieh@quicinc.com, quic_jesszhan@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240612184336.11794-1-danila@jiaxyga.com>
+ <20240612184336.11794-4-danila@jiaxyga.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240612184336.11794-4-danila@jiaxyga.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 5:11=E2=80=AFPM hailong liu <hailong.liu@oppo.com> =
-wrote:
->
-> On Thu, 13. Jun 16:41, Baoquan He wrote:
-> > On 06/12/24 at 01:27pm, Uladzislau Rezki wrote:
-> > > On Wed, Jun 12, 2024 at 10:00:14AM +0800, Zhaoyang Huang wrote:
-> > > > On Wed, Jun 12, 2024 at 2:16=E2=80=AFAM Uladzislau Rezki <urezki@gm=
-ail.com> wrote:
-> > > > >
-> > > > > >
-> > > > > > Sorry to bother you again. Are there any other comments or new =
-patch
-> > > > > > on this which block some test cases of ANDROID that only accept=
- ACKed
-> > > > > > one on its tree.
-> > > > > >
-> > > > > I have just returned from vacation. Give me some time to review y=
-our
-> > > > > patch. Meanwhile, do you have a reproducer? So i would like to se=
-e how
-> > > > > i can trigger an issue that is in question.
-> > > > This bug arises from an system wide android test which has been
-> > > > reported by many vendors. Keep mount/unmount an erofs partition is
-> > > > supposed to be a simple reproducer. IMO, the logic defect is obviou=
-s
-> > > > enough to be found by code review.
-> > > >
-> > > Baoquan, any objection about this v4?
-> > >
-> > > Your proposal about inserting a new vmap-block based on it belongs
-> > > to, i.e. not per-this-cpu, should fix an issue. The problem is that
-> > > such way does __not__ pre-load a current CPU what is not good.
-> >
-> > With my understand, when we start handling to insert vb to vbq->xa and
-> > vbq->free, the vmap_area allocation has been done, it doesn't impact th=
-e
-> > CPU preloading when adding it into which CPU's vbq->free, does it?
-> >
-> > Not sure if I miss anything about the CPU preloading.
-> >
-> >
->
-> IIUC, if vb put by hashing funcation. and the following scenario may occu=
-r:
->
-> A kthread limit on CPU_x and continuously calls vm_map_ram()
-> The 1 call vm_map_ram(): no vb in cpu_x->free, so
-> CPU_0->vb
-> CPU_1
-> ...
-> CPU_x
->
-> The 2 call vm_map_ram(): no vb in cpu_x->free, so
-> CPU_0->vb
-> CPU_1->vb
-> ...
-> CPU_x
-Yes, this could make the per_cpu vbq meaningless and the VMALLOC area
-be abnormally consumed(like 8KB in 4MB for each allocation)
->
-> --
-> help you, help me,
-> Hailong.
+On 12/06/2024 20:43, Danila Tikhonov wrote:
+> Document the DPU hardware found on the Qualcomm SM7150 platform.
+
+In general, this should be before MDSS, because it defines fully the
+compatibles already used in the MDSS schema. For multi-binding devices
+it always starts with children and ends with parent/top schema.
+
+> 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  .../bindings/display/msm/qcom,sm7150-dpu.yaml | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/qcom,sm7150-dpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm7150-dpu.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-dpu.yaml
+> new file mode 100644
+> index 0000000000000..1a44cad131a72
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-dpu.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/msm/qcom,sm7150-dpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SM7150 Display DPU
+
+What is DPU? Such acronyms should be explained in description or
+expanded here, if there is space.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+> +
+> +maintainers:
+> +  - Danila Tikhonov <danila@jiaxyga.com>
+> +
+> +$ref: /schemas/display/msm/dpu-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm7150-dpu
+> +
+
+
+
+Best regards,
+Krzysztof
+
