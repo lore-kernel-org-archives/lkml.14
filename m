@@ -1,118 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDB3135A4B;
-	Thu, 13 Jun 2024 06:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3681369BF;
+	Thu, 13 Jun 2024 06:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718259128; cv=none; b=M95oN+K1Bz+yPD6coopN4lwOFzopdWhusGFf2DOEaWbV3Qs7AMiNKPIKQ5M3LXs0wGzxOy9zDt5/OCF7O9fl0cdSOTPWUAuDN4/n7OLWoaTllvzFNLbP+Txd5wuwmFULXlf7I7RiTpgAq/5VDBAnErZB6coYqC42D824ycG4aNU=
+	t=1718259244; cv=none; b=TAXAdxTGalqHne2ODjqOBpm3pyKuaOvsFRjSA0JzPWHXx/GJ+Ixv/GAPLfZechZJ/kuFLtaqOUZE187nxc+Iux13/dlVxtawJPwX48r/7wHawyP8n8KA//9oL0t0XDoAwuzrUXme2cg2qTsGfaF0M4AcYONz1QBwXY3V9Dgzu1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718259128; c=relaxed/simple;
-	bh=200iro4Vmpjs5iDslEXl3WgKuWoTIPG9CIIZtZp9mVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hB0se2jEPa6uI1G7Qnwighl8hyUcKOhVMOkN4wkFQNgSbC59jws3/dXfUv7PH6S47ZD2tyUiGpUSLVpXve80mqYe98ofVEUFGlBzNsM3uDCUeDehamM6k/0pWNNCHCv9Catvv+ewIqbRe/cSk5TBAY9XtX6R2cmVwwknzSV05fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPVGPkHM; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718259244; c=relaxed/simple;
+	bh=sNG3UKIpsfSm8/4JJqiv4Qz32HYJ/gfCZQxKzbXJVXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SrSiF3GSSu8RuhnpreTe41bApyJ81d3IChOp8DO4Y3jqzcIIDDYX0KQLpkaBAT0ZRGnm+ju3dCOshN6kp1EmgT0YxEi9v6/nbJKOdOF0UKmV5Xl6gLOUjfEgPSzrJq4iNYOrJUjYooT9e72+4XGDFi8Qx59CH3y8+mLz3EhtmKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6oOm7ce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPVGPkHM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718259127; x=1749795127;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=200iro4Vmpjs5iDslEXl3WgKuWoTIPG9CIIZtZp9mVc=;
-  b=KPVGPkHMPHKJSPU4JslM3u65erR82kLl19jKoiZnUhWgVxytLd5Fq1+D
-   WS9x810lH+wjbOj1zDBckHHU408jG8MPe4Z5xtZMaN7jvxwtNoxmaM/En
-   ytQ4kqsVcQ5ETSkUtO92qO5kooZqQivyk8mYreQwPyjqPalc0RVmx9qJR
-   P+A44FIgA7BFG8VIetjLsVBepxk/zfxg3SYpNC2l0QrwneKNLBevY8MBM
-   a9bKs7C6uA0R79bOQ3dMyynNfM2hjNskuJ6tij9WNhyqvf1y0xugR6wBn
-   b7KyEiRVo8E8wxgFxNuha2fPvM3j+LnC5xk8IQd/LlyfWdV5CHjKAAKR6
-   g==;
-X-CSE-ConnectionGUID: friMxZrJRLeaaBYMdFM7Qg==
-X-CSE-MsgGUID: DaDIW5QmTE6Q8uoJOXLZgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25734269"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="25734269"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:12:07 -0700
-X-CSE-ConnectionGUID: xvVCxiNORzShhmx7pEI/3g==
-X-CSE-MsgGUID: Jh2Q/CkXTNe0fI8K+ti5hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40669223"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:12:03 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	isaku.yamahata@intel.com,
-	dmatlack@google.com,
-	sagis@google.com,
-	erdemaktas@google.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 5/5] KVM: selftests: Test private access to deleted memslot with quirk disabled
-Date: Thu, 13 Jun 2024 14:11:05 +0800
-Message-ID: <20240613061105.11880-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240613060708.11761-1-yan.y.zhao@intel.com>
-References: <20240613060708.11761-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6oOm7ce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E104C2BBFC;
+	Thu, 13 Jun 2024 06:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718259242;
+	bh=sNG3UKIpsfSm8/4JJqiv4Qz32HYJ/gfCZQxKzbXJVXE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p6oOm7ceSN0NpE13akUvm5my33Wo+pbwL2R9Sg7Nd7RlGFkvR32atCQKkRomz+cpd
+	 G9YwboJdH2fsC+Zye72lgebuuvBFm86GCR7ANV6/uT9GwUx563BMOl0dWbrwUr1dEv
+	 OrBsuo1ByyJVrauAUObfByYNBJMsAvvocf700RVtlO6D9OCD18GcpzaGrB4cZY2eLh
+	 EnihWp/kthxyVf408OYVkVjSo0YRAObFA9DBQSAzChogo9amrNEKVTmw4d563cNr4E
+	 sDOfai4YPljnFAJZU4A2x1fRxwHt7z5js6ajn0zPiryU5z95APb306Zc1i4yjIQCy2
+	 XERrLhPjmJAqA==
+Message-ID: <a752a912-a328-49c8-b887-fa95512785cb@kernel.org>
+Date: Thu, 13 Jun 2024 08:13:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXT] Re: [PATCH 1/4] dt-bindings: firmware: secvio: Add device
+ tree bindings
+To: Aisheng Dong <aisheng.dong@nxp.com>, Vabhav Sharma
+ <vabhav.sharma@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Franck Lenormand <franck.lenormand@nxp.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, Varun Sethi <V.Sethi@nxp.com>,
+ Silvano Di Ninno <silvano.dininno@nxp.com>,
+ Pankaj Gupta <pankaj.gupta@nxp.com>, Frank Li <frank.li@nxp.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>
+References: <20240509-secvio-v1-0-90fbe2baeda2@nxp.com>
+ <20240509-secvio-v1-1-90fbe2baeda2@nxp.com>
+ <750f5388-20f9-45a3-a1e6-ceac4b91329f@kernel.org>
+ <AS1PR04MB9358A2457AF05553457DE9B0F3FB2@AS1PR04MB9358.eurprd04.prod.outlook.com>
+ <1486a1b6-4119-4121-b6df-3da21d06add7@kernel.org>
+ <DU0PR04MB929983AB361DB081B44E7AFE80C02@DU0PR04MB9299.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <DU0PR04MB929983AB361DB081B44E7AFE80C02@DU0PR04MB9299.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Update private_mem_kvm_exits_test to make sure private access to deleted
-memslot functional both when quirk KVM_X86_QUIRK_SLOT_ZAP_ALL is enabled
-and disabled.
+On 12/06/2024 09:20, Aisheng Dong wrote:
+> Hi Krzysztof
+> 
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: 2024年6月7日 15:08
+>>
+>> On 07/06/2024 06:58, Vabhav Sharma wrote:
+>>>>
+>>>> Missing SoC compatibles.
+>>> Ok, I will use fsl,imx8dxl-sc-secvio
+>>>>
+>>>> So no, that's just abuse of DT to instantiate driver.
+>>>>
+>>>> NAK. Drop the binding.
+>>> I will detail the dt binding to describe the real hardware
+>>
+>> Still looks like way just to instantiate driver. Why it cannot be part of existing
+>> firmware SCU node?
+>>
+> 
+> Technically yes. But SCU case is a little bit complicated as there're many
+> functions and all of them are already added as sub nodes in SCU node
+> for consistency and handling platform difference.
+> 
+> I guess some of them, e.g. rtc, could be part of SCU node (reuse) while
+> some couldn't. e.g. pinctrl
+> Do you want us to only make secvio reuse existing SCU node? 
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- .../selftests/kvm/x86_64/private_mem_kvm_exits_test.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Yes
 
-diff --git a/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c b/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
-index 13e72fcec8dd..a4d304fce294 100644
---- a/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/private_mem_kvm_exits_test.c
-@@ -44,7 +44,7 @@ const struct vm_shape protected_vm_shape = {
- 	.type = KVM_X86_SW_PROTECTED_VM,
- };
- 
--static void test_private_access_memslot_deleted(void)
-+static void test_private_access_memslot_deleted(bool disable_slot_zap_quirk)
- {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -55,6 +55,9 @@ static void test_private_access_memslot_deleted(void)
- 	vm = vm_create_shape_with_one_vcpu(protected_vm_shape, &vcpu,
- 					   guest_repeatedly_read);
- 
-+	if (disable_slot_zap_quirk)
-+		vm_enable_cap(vm, KVM_CAP_DISABLE_QUIRKS2, KVM_X86_QUIRK_SLOT_ZAP_ALL);
-+
- 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
- 				    EXITS_TEST_GPA, EXITS_TEST_SLOT,
- 				    EXITS_TEST_NPAGES,
-@@ -115,6 +118,10 @@ int main(int argc, char *argv[])
- {
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
- 
--	test_private_access_memslot_deleted();
-+	test_private_access_memslot_deleted(false);
-+
-+	if (kvm_check_cap(KVM_CAP_DISABLE_QUIRKS2) & KVM_X86_QUIRK_SLOT_ZAP_ALL)
-+		test_private_access_memslot_deleted(true);
-+
- 	test_private_access_memslot_not_private();
- }
--- 
-2.43.2
+> This might look a bit strange to the existing sub nodes.
+
+Nothing strange/unusual to me.
+
+> 
+> BTW, even we can reuse SCU node for secvio function, we still need update
+> binding doc to add extra property 'nvmem' for secvio.
+
+Sure.
+
+
+
+Best regards,
+Krzysztof
 
