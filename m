@@ -1,164 +1,104 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7478413E036
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784613E036
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 08:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718268894; cv=none; b=NZ8/MinB5RpJqeq9LXNd83THzjHrM8gMF0C9M/+AtSWgaV/9Q+QfoyrO/Lb3fX+UFMZBuwRmqr+eN2bfjGmvcuAMDnhjokSlMaJAWdmNsR1OAw+d2mKCuJIFBu7u5Txo8nvDnMYpnKQulVfr67WwY73nzOqvEVE8dxKLh557MNs=
+	t=1718268903; cv=none; b=mKWQpcm6ycj+E+xdRYfahhTp0ytSAjbAufwNYvSKmOdJDV9Wx0CvIoBIMMtEl/YNQrwR0XLZzm7dgKHBz/3ayfEPvdbuFP3LExrDCfC3+InzD/ixhnHuf81g2Nhj2+1mjGBw7kxZAiYLJbbS95W0+y9TIFmfnxcI/KMzOrrm11o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718268894; c=relaxed/simple;
-	bh=w3c++bE92mjoUTBy6ui0MjrF7z2S+BQxrMh1kRI8r+o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ixw+T+GAMpbt9/1HD1Lfdh55w7MmM39Kba35Oh3a/fdZ1+GAyREjl9o8VsSzCmsP5BpWGz6j7gYMrF631q1R1qoILmrrPZQvzfWirZP1nFXl+/o2DczGurB2CZRClsA5Bm5QsMwdUh6GLx679yr8M24rzOUPAm9YtZM8hZRz0jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTxXsssk; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718268903; c=relaxed/simple;
+	bh=6Dp5z9ju75aH+FsH4apNpldKWYtpIrXAlWNsBFc7nBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UpgBO8lvc9cunZ7iiEt2iQJDvXsPxwYdRKa+UYx54taPPKuPIF5LFPQaIdsuWVVUHRCfX0bKsb1Ea6wQ2VSmTmfhCfBSYZqZxgOXSjFE3kLDVLvzBt17O3wZcajhH1T+wfoUqgvH38E7/66p0fPuUjAO+CHrAqzs8bh5IeJfH8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ndQ8oFuS; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTxXsssk"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so624691a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718268891; x=1718873691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OBp2kHYj7n2BHev/+gQZZjKm6K2+dc661niSqj6ZNLM=;
-        b=kTxXssskbczZ/Oqk8lCYkHRdhPoh7UQJbAoyULP2seUuLfwJT/00eYBPnwxbHoM7PE
-         l3Ky2BUPnuYJMsaylboNLpZRxnYav9Z7/2VTLeYrn1ETggKppkNLoJJrziNQ3vLPSj3T
-         NVY8nCn+KWkbVa84tbbWJOo7381jehpzd1HzPLTeCWopjBSPxyjl3VAz96yWrQBlEsnb
-         Jb9ngJxGZW5Awi1kpRJZuntt22adguVk0naWg55HudcU7Sx464Kfa+cW7ShH4CtKe+WI
-         VJf8gnMz6aa4xEZ0Ze/fRA6lkLnnu0Tzi0X8UU6uAMR6Ja6HHXpAHSbdGpVIZBLX1Krz
-         ytGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718268891; x=1718873691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OBp2kHYj7n2BHev/+gQZZjKm6K2+dc661niSqj6ZNLM=;
-        b=jv/Ue2+/6iPDRGNl26qv8GllGYe+IWukgsaL6RO0X8mZHZY2eFyn0UdcO4uoU5jGyQ
-         1IVYtOgx32vPx8g/puOv+0zTtUvMjqxAExezX6uaovqTWiskt2AnRiWkJhyEJwWTy/mW
-         CKSQ5lmJq8Z7lvzsNhHTfRHfbJWrC0f92BnZXoHibABBXnDwhg0iBn5ctM5Fb8UOE2I7
-         DDkvyZobviJ+KVXYQ1bGRkollDnHzp5hH3iBLtXQPAJG1d9zOIYmuHOPrUxyTQf1iFVg
-         O4Do+KCUVUpj+04EIlIi6p5IXWCs4+Cw1+Nxv/vaSLVMy07XJ3018P9MPmK351oc3OEY
-         UKPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXG7kYAGFP82pKbs3CH91XuE1NM2IH/gydh4/t3sozIMtIQgbcEf+LQRHP0XMqEdj/DULxToREHu5O6m8ZguSm8bNhyK/zaVtNcMOe
-X-Gm-Message-State: AOJu0Yzu2NFKqWcgMQMXwIrGbpl9ZOGZKsjoDHs0hsvcq8C6s661jHj0
-	m8HGE23zyWXjHptEiJnsI01/HntUVXFNqRCduMqg89/dFv8IijqyAIfd/ggwOlNJoom3RXfSWEp
-	iM7lrq7YnMmzROrp8gFJ4nZ1Q00Y=
-X-Google-Smtp-Source: AGHT+IEwoe0EZaXf2PrzoKl8chusq2h4Z4pgkoaMd1lJq7IJtqO/rZQGTBpSkdFC3XbRdmQJaT5hP993q0PSngJXOS0=
-X-Received: by 2002:a50:9557:0:b0:57c:740a:c4e4 with SMTP id
- 4fb4d7f45d1cf-57ca976ace5mr2623522a12.25.1718268890474; Thu, 13 Jun 2024
- 01:54:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ndQ8oFuS"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45D8sBjH026475;
+	Thu, 13 Jun 2024 03:54:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718268852;
+	bh=7kkBMQaDoeYNzDsRgMfJgiGjbnPVFl+KEhsMxEZwPWY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ndQ8oFuSNEgyU9+O5CrbuDsQgtS1wMbvYEp7/hJEalFISshugd2BiIVI5GONrtid1
+	 of9bejvvcUYkbR/FdokdLT8v08nZgbwzmkjQrh1jANU7txBr8papTo+BgVMp00e02/
+	 CvGkJadgG5XtPU+keiWigbeBfUfSzd+QZ07bHB7I=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45D8sBwV094870
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 13 Jun 2024 03:54:11 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jun 2024 03:54:11 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jun 2024 03:54:11 -0500
+Received: from [10.249.129.248] ([10.249.129.248])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45D8s5Db095270;
+	Thu, 13 Jun 2024 03:54:05 -0500
+Message-ID: <11b01dd4-79f7-432b-8a43-ec653d60a87b@ti.com>
+Date: Thu, 13 Jun 2024 14:24:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610120209.66311-1-ioworker0@gmail.com> <20240610120209.66311-3-ioworker0@gmail.com>
- <b0d551a9-ee70-46a7-a0d6-c422f0baf91e@redhat.com>
-In-Reply-To: <b0d551a9-ee70-46a7-a0d6-c422f0baf91e@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 13 Jun 2024 16:54:39 +0800
-Message-ID: <CAK1f24mZk8hKDSPk+y7fP=cLoTuWxGaju_JqnKd_6BYQbZr6zg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/4] mm/rmap: add helper to restart pgtable walk on changes
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org, 
-	baolin.wang@linux.alibaba.com, maskray@google.com, ziy@nvidia.com, 
-	ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com, 
-	fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com, 
-	xiehuan09@gmail.com, libang.li@antgroup.com, wangkefeng.wang@huawei.com, 
-	songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/3] drm/bridge: sii902x: Add pixel clock check in
+ atomic_check
+Content-Language: en-US
+To: Jayesh Choudhary <j-choudhary@ti.com>, <linux-kernel@vger.kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <sui.jingfeng@linux.dev>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <mripard@kernel.org>, <sam@ravnborg.org>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>
+References: <20240613083805.439337-1-j-choudhary@ti.com>
+ <20240613083805.439337-4-j-choudhary@ti.com>
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+In-Reply-To: <20240613083805.439337-4-j-choudhary@ti.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Jun 13, 2024 at 4:30=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 10.06.24 14:02, Lance Yang wrote:
-> > Introduce the page_vma_mapped_walk_restart() helper to handle scenarios
-> > where the page table walk needs to be restarted due to changes in the p=
-age
-> > table, such as when a PMD is split. It releases the PTL held during the
-> > previous walk and resets the state, allowing a new walk to start at the
-> > current address stored in pvmw->address.
-> >
-> > Suggested-by: David Hildenbrand <david@redhat.com>
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
-> >   include/linux/rmap.h | 22 ++++++++++++++++++++++
-> >   1 file changed, 22 insertions(+)
-> >
-> > diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-> > index 7229b9baf20d..5f18509610cc 100644
-> > --- a/include/linux/rmap.h
-> > +++ b/include/linux/rmap.h
-> > @@ -710,6 +710,28 @@ static inline void page_vma_mapped_walk_done(struc=
-t page_vma_mapped_walk *pvmw)
-> >               spin_unlock(pvmw->ptl);
-> >   }
-> >
-> > +/**
-> > + * page_vma_mapped_walk_restart - Restart the page table walk.
-> > + * @pvmw: Pointer to struct page_vma_mapped_walk.
-> > + *
-> > + * It restarts the page table walk when changes occur in the page
-> > + * table, such as splitting a PMD. Ensures that the PTL held during
-> > + * the previous walk is released and resets the state to allow for
-> > + * a new walk starting at the current address stored in pvmw->address.
-> > + */
-> > +static inline void
-> > +page_vma_mapped_walk_restart(struct page_vma_mapped_walk *pvmw)
-> > +{
-> > +     WARN_ON_ONCE(!pvmw->pmd);
->
-> Can we have this more general, like
->
-> WARN_ON_ONCE(!pvmw->pmd && !pvmw->pte);
 
-Sure, let=E2=80=99s make it more general.
 
->
-> And then setting both to NULL below?
->
->
-> > +     WARN_ON_ONCE(!pvmw->ptl);
->
-> This is confusing: you check for ptl below. What would be clearer is
->
-> if (likely(pvmw->ptl))
->         spin_unlock(pvmw->ptl);
-> else
->         WARN_ON_ONCE(1);
+On 13-Jun-24 14:08, Jayesh Choudhary wrote:
+> Check the pixel clock for the mode in atomic_check and ensure that
+> it is within the range supported by the bridge.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>  drivers/gpu/drm/bridge/sii902x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+> index 00a8c469f553..7f91b0db161e 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -496,6 +496,10 @@ static int sii902x_bridge_atomic_check(struct drm_bridge *bridge,
+>  				       struct drm_crtc_state *crtc_state,
+>  				       struct drm_connector_state *conn_state)
+>  {
+> +	if (crtc_state->mode.clock < SII902X_MIN_PIXEL_CLOCK_KHZ ||
+> +	    crtc_state->mode.clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
+> +		return -EINVAL;
+> +
+>  	/*
+>  	 * There might be flags negotiation supported in future but
+>  	 * set the bus flags in atomic_check statically for now.
 
-Will adjust as you suggested, thanks!
+Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
 
->
->
-> > +
-> > +     if (pvmw->ptl)
-> > +             spin_unlock(pvmw->ptl);
-> > +
-> > +     pvmw->ptl =3D NULL;
-> > +     pvmw->pmd =3D NULL;
-> > +}
-> > +
-> >   bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw);
-> >
-> >   /*
->
-> I'd suggest squashing that into the next patch.
-
-Got it.
-
-Thanks,
-Lance
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+-- 
+Regards
+Aradhya
