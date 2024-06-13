@@ -1,175 +1,207 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE97F143C41
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45422144D0C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284565; cv=none; b=J4+ochZrDEdUwyY+iVCdX62DNF0kfTIwITi8tKV9ryIG/QbSmw0st1Er9OTdQpFwQ5/qTVpK58ZvqedK6gAee3JKIbTfiUGNTh/aUJE/tlXOl37CeJxr9BmvnOKB1rBVKm7u4p3MdW4PjtJ9Ey3L7BJ8P777HlRSk/ZirPelcao=
+	t=1718284580; cv=none; b=PvAl2MLrwTU02w0rm78/5Fbi0+O+wUCBusvdsTIxj0JKe2JD4K1ck3qG/lweoTpXLB4HvCbBAXqtjvLlTlxWVgkK/j83vlRMBMfT5RwclcI7qjCfTHBLMCV+XvZGo6PJ/bhGt9AowvW3QadSSQgqaeBtc1ms3Eh2+JlI0juxViQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284565; c=relaxed/simple;
-	bh=V1MODXg2FeVlGh8cU9j9/KuGFRIBbgRDLnpu/K0rcBE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oE10N0E64WdB9xcHBNpraPJZmkUjw0wt8SnwRTIjirJ+341D1nGvFOoRmXWwtKsjjudFPsA8xCF6PzOEfJhxZTND/s3i1ryiqtWLHBTfBRcYGdXyeuRNO6wtPzyBbnZ36/8stHFOnvQN7x0jEy8zMOgwNgzbvkVlIAnCZyHxOsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RTqqxGE2; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718284580; c=relaxed/simple;
+	bh=IstfidUEVQ9wbdWX1alK/7Z+F5FxlF9bkhh13Vx6gYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PtxjG+qcJS1iEVBZMTj30Gd9C4sgWM7uE2k/wHNOlA4AYibvm+t/P+oumsecyT4xNGoGOu00qaoD5dUfOK9jsdxuGYxZzzX9BCX0U5l/9BMa0BMsVfqNXEDTy0wSQcSnNlqJEX5JDq06niv9w7kZYUU0KAKYIbtWuMCjS1gzis8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRpaWOVp; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RTqqxGE2"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-80b86cd882cso316385241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:16:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRpaWOVp"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-704090c11easo829768b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 06:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718284561; x=1718889361; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=61ouTCt8HWN0ZdDws0+ptI7BCpGd4+Hs5oquQFyzwjk=;
-        b=RTqqxGE2s0C6Rh2eSJivNJPgvREBaGPgTPqX0f/FfDXS8VC7dCKnlOOdi7ecPHGUuR
-         cAE8QhQhsbWp7F02O3v/qhivt5bxsZhzKByveW6sPysDKhw9mp8adFUyI299lyTprIUv
-         y265voJHnkR0ZGfm8oH+COhE3gyrNuOjl0BDHvElmJIEQHVNzECkgmJQWH1gUEdi3D+Q
-         0xO7tDQ2eGbeKQL+41cOg/udJvI/q5NKsmn6rov8tnXeFK2ujsYNjNyYgXA9zX6peqqo
-         +tTOW4aV7LBDvF7Iuh54a9r08lLIxWZ4QIkxTyRBhgKz0mb7ciW1zrhrF8nHmP7XvYaY
-         r3YQ==
+        d=gmail.com; s=20230601; t=1718284578; x=1718889378; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SqEYDO9oGj42N7TM61C5n8gEfRqnJL+KvEJ0e/f8bkA=;
+        b=lRpaWOVpiJXl/Yrnzu9UHAJASMej2HE023vrCDOJHa+arpt+jysC8YrdiWymexQyB6
+         emfe5Q4MzkqxvKq+37TSNTZdByh5sLU3G9wbPXTIZfBk+TzPdk1j44dtTAdlwKF4GauF
+         MioXP4xQ6bKb0Xp5sP0Xs340uBERp3qfkdD74i596NCl8enSeKt20bIqjmT219qzvN9T
+         BlaWD1lVaCkB02O0LgBuz7hUdlIh+/A0YCVwC9KoBMU7KUsJEKkzVONffv7Yie6mmtiP
+         kTaahGxT+s88FkHQ33h+t3SAYpSB9GdJZq22J0FrV8xAULP+CEvwEDjR0AHJKuP4iUsa
+         8IuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718284561; x=1718889361;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61ouTCt8HWN0ZdDws0+ptI7BCpGd4+Hs5oquQFyzwjk=;
-        b=Ow56zgOMrTzVjK29edkXn9pMn4CTGsr+yRG4zUTisE13gx7ZjGTmrKK78E371BFYCN
-         E319m1AJDrhL6fLEJDYC6Iwe7lwkSKcSbBhwucJtX4TVe3x1EM3CU5w07bMdLsS6GFO2
-         YPJK5cY4lMMVTIKK3xOh8te4rpoQjp0/YwP4G4FFZJSqs//O3zRreXypT60DG2jJYL0r
-         kTEhRATENdFyxU/kJlOhTYjbGQ8m09yDzJ75ttmVHmKjBdYbGJm6g1K5MNPmVAhjOXsm
-         fUsReY2WFcl28EKWDsQLXgdQ8TQI+VUcBNIr1XInZqMNSwUCLrg18kEYYrECmtFuCANW
-         ts7A==
-X-Gm-Message-State: AOJu0YzMFpkxe6AC1rhlYIBN8YdTh95IhpLTCU/y3W1RtaO6F+QkvnDD
-	+aq146hqpAbWq8WFTUuRyLtGKJxInftQXg/y7XhWUJ1BQevwVspaedL+kimd2Hz+VcdIz8pzeBz
-	UTzyQUjZVKWXg5to8EuWEVwbgvwRIpY4C5imjTGGBLgitexJvEB8=
-X-Google-Smtp-Source: AGHT+IHv07AcEdT7ldaMS72kgcQ+CTnBQHmRnZDjUaiVpeh19fhu7+o9thMU27bhoaNTxcsaw8QJ+jw+l4h61EPdyUY=
-X-Received: by 2002:a1f:e4c2:0:b0:4ed:f1:e0b7 with SMTP id 71dfb90a1353d-4ed07aad6a4mr4561204e0c.2.1718284560997;
- Thu, 13 Jun 2024 06:16:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718284578; x=1718889378;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SqEYDO9oGj42N7TM61C5n8gEfRqnJL+KvEJ0e/f8bkA=;
+        b=thUbQv3fHZZdxOYftL6tmuKSZF9Dt3VZv/e0jWb/33Dv3lHSNE9s3uH+2WFhVSUaKA
+         PYmKC5Pj39JxDN+w63/I3wlVw4MBp01xYg/wkBzp1pGWdjjmW4L2Vm1yx6gEPlRFCnza
+         ItfksM7sNGxOjmXMX92fUorEZzd/cym90M66mqsN2iTVnUEvrx654kvBbibTLm2iPCxE
+         XltN+lD+mrvpUn5j/IrqkOOLVuD35urazILwc/eIJLi2VY4LYTzU4vfuCxQwXELaWEEF
+         mDmoebAJidP+ojSQbVWzLOnF7cFz1Mllsp0vZ6onve1Srmh9xNWn9NMbuppNY/T97VBh
+         anLg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7vZH9m/EgrX+Pz77h3ZaUyhABF8hUZjDWbjKIf9IKG3Hq9iRBPkILsUwRzzWTEBpj0dRieK8VaLPzsJJLJWik7tgyrQkmr2JKecr+
+X-Gm-Message-State: AOJu0Yw3gl/opJJlzpAPKCD3gHcmXbaIPU2FNFOPZKCZSTssuY2oIXYf
+	Q2K29x+KBCrh58+c7Vx+MHodRknVAFiWih0ZawKAyl0krC4z6FBq
+X-Google-Smtp-Source: AGHT+IGoT23zO6XN5G405lGCR0shNqkjhJQ+rRH9EKRpZY1JDmwkL3NxTFZDsudoeL7RfNpstZTLFQ==
+X-Received: by 2002:a05:6a21:999a:b0:1b7:577c:7180 with SMTP id adf61e73a8af0-1b8a9b6c908mr5301980637.12.1718284578197;
+        Thu, 13 Jun 2024 06:16:18 -0700 (PDT)
+Received: from PC-YLX4GJ2P.company.local (014136220210.static.ctinets.com. [14.136.220.210])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb6c1c7sm1287606b3a.167.2024.06.13.06.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 06:16:17 -0700 (PDT)
+From: Chunxin Zang <spring.cxz@gmail.com>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	yu.c.chen@intel.com
+Cc: dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	linux-kernel@vger.kernel.org,
+	efault@gmx.de,
+	kprateek.nayak@amd.com,
+	jameshongleiwang@126.com,
+	yangchen11@lixiang.com,
+	zangchunxin@lixiang.com,
+	Chunxin Zang <spring.cxz@gmail.com>
+Subject: [PATCH v3] sched/fair: Preempt if the current process is ineligible
+Date: Thu, 13 Jun 2024 21:14:37 +0800
+Message-Id: <20240613131437.9555-1-spring.cxz@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 13 Jun 2024 18:45:49 +0530
-Message-ID: <CA+G9fYveCjzej3SDZR=PBASc=ycdL7xvWENonYCOXCjRJe8+oQ@mail.gmail.com>
-Subject: selftests: ftrace: WARNING: at arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Nianyao Tang <tangnianyao@huawei.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <swboyd@chromium.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The following kernel warning noticed on arm64 qemu-arm64 and rk3399-rock-pi-4
-device while running selftests ftrace tests on Linux next-20240613.
+I found that some tasks have been running for a long enough time and
+have become illegal, but they are still not releasing the CPU. This
+will increase the scheduling delay of other processes. Therefore, we
+can check the ineligible of the current process in update_curr, and if
+it is ineligible, trigger preemption. This modification only takes effect
+when RUN_TO_PARITY is disabled, so as not to break the original
+intention of RUN_TO_PARITY.
 
-This is always reproducible on qemu-arm64 and rock-pi-4 device with
-kselftest merge configs
+I have pasted some test results below.
+I isolated four cores for testing and ran hackbench in the background,
+and observed the test results of cyclictest.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+hackbench -g 4 -l 100000000 &
+cyclictest --mlockall -D 5m -q
 
-Test log:
--------
-kselftest: Running tests in ftrace
-TAP version 13
-1..1
-# timeout set to 0
-# selftests: ftrace: ftracetest-ktap
-# unlink: cannot unlink
-'/opt/kselftests/default-in-kernel/ftrace/logs/latest': No such file
-or directory
-# TAP version 13
-# 1..141
-# ok 1 Basic trace file check
-<4>[   96.183553] ------------[ cut here ]------------
-<4>[ 96.187100] WARNING: CPU: 1 PID: 538 at
-arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:112 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[   96.188005] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
-sha512_ce sha512_arm64 fuse drm backlight dm_mod ip_tables x_tables
-<4>[   96.189034] CPU: 1 PID: 538 Comm: ftracetest Not tainted
-6.10.0-rc3-next-20240613 #1
-<4>[   96.189183] Hardware name: linux,dummy-virt (DT)
-<4>[   96.189366] pstate: 624000c9 (nZCv daIF +PAN -UAO +TCO -DIT
--SSBS BTYPE=--)
-<4>[ 96.189529] pc : arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:112 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[ 96.189562] lr : arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:109 arch/arm64/kernel/stacktrace.c:155
-arch/arm64/kernel/stacktrace.c:172 arch/arm64/kernel/stacktrace.c:243
-arch/arm64/kernel/stacktrace.c:267)
-<4>[   96.189593] sp : ffff80008000bdf0
-<4>[   96.189610] x29: ffff80008000be80 x28: ffff9969bab84000 x27:
-ffff9969b9c53b98
-<4>[   96.189702] x26: ffff9969bb6a60c0 x25: ffff9969b9c53b98 x24:
-0000000082000000
-<4>[   96.189775] x23: 65cf9969b8823ddc x22: ffff9969b882e518 x21:
-ffff9969b8836200
-<4>[   96.189809] x20: ffff80008000bec8 x19: ffff9969b8823d70 x18:
-0000000002000000
-<4>[   96.189842] x17: 0000000000000000 x16: ffff800080008000 x15:
-00001e8480000000
-<4>[   96.189876] x14: 000000000003d090 x13: 0000000000000000 x12:
-003d090000000000
-<4>[   96.189910] x11: ffff9969bb764150 x10: ffff80008000bf30 x9 :
-ffff9969b88b2970
-<4>[   96.189958] x8 : ffff9969b882e518 x7 : 0000000000000000 x6 :
-0000000000000023
-<4>[   96.189990] x5 : 0000000000000000 x4 : ffff80008000bf30 x3 :
-ffff80008000bfe0
-<4>[   96.190021] x2 : ffff9969b882e518 x1 : ffff9969b882e518 x0 :
-ffff9969b882e518
-<4>[   96.190145] Call trace:
-<4>[ 96.190196] arch_stack_walk (arch/arm64/kernel/stacktrace.c:112
-(discriminator 1) arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[ 96.190269] return_address (arch/arm64/kernel/return_address.c:45)
-<4>[ 96.190335] trace_hardirqs_on (kernel/trace/trace_preemptirq.c:56
-(discriminator 1))
-<4>[ 96.190372] handle_softirqs (arch/arm64/include/asm/irqflags.h:26
-arch/arm64/include/asm/irqflags.h:48 kernel/softirq.c:538)
-<4>[   96.190744] ---[ end trace 0000000000000000 ]---
-# ok 2 Basic test for tracers
+                                 EEVDF  EEVDF-NO_PARITY  PATCH-NO_PARITY
 
+                # Min Latencies: 00006      00006      00006
+  LNICE(-19)    # Avg Latencies: 00191      00089      00065
+                # Max Latencies: 15442      14133      11893
 
+                # Min Latencies: 00006      00006      00005
+  LNICE(0)      # Avg Latencies: 00466      00289      00245
+                # Max Latencies: 38917      32665      20238
 
-metadata:
+                # Min Latencies: 00019      00010      00008
+  LNICE(19)     # Avg Latencies: 37151      18293      23177
+                # Max Latencies: 2688299    426196     1953298
+
+Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
+Reviewed-by: Chen Yang <yangchen11@lixiang.com>
+
 ------
-git_describe: next-20240613
-git_ref: master
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-git_sha: 6906a84c482f098d31486df8dc98cead21cce2d0
-git_short_log: 6906a84c482f ("Add linux-next specific files for 20240613")
-arch: arm and arm64
-config: kselftest merge configs
+Changes in v3:
+- Place the evaluation of the current process's ineligible in
+  update_curr.
+- Update the commit message
 
-Links:
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304248/suite/log-parser-test/test/check-kernel-exception/log
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304248/suite/log-parser-test/tests/
-- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2hoMyyk19L9y5Hg3AT2V3yaedPU
+Changes in v2:
+- Make the logic that determines the current process as ineligible and
+  triggers preemption effective only when NO_RUN_TO_PARITY is enabled.
+- Update the commit message
+---
+ kernel/sched/fair.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-Build reproduce:
---
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2hoMxP9HQelutO3feaEW1G9KhDz/tuxmake_reproducer.sh
-- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2hoMyyk19L9y5Hg3AT2V3yaedPU/reproducer
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 03be0d1330a6..21ef610ddb14 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -745,6 +745,15 @@ int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 	return vruntime_eligible(cfs_rq, se->vruntime);
+ }
+ 
++static bool check_entity_need_preempt(struct cfs_rq *cfs_rq, struct sched_entity *se)
++{
++	if (sched_feat(RUN_TO_PARITY) || cfs_rq->nr_running <= 1 ||
++	    entity_eligible(cfs_rq, se))
++		return false;
++
++	return true;
++}
++
+ static u64 __update_min_vruntime(struct cfs_rq *cfs_rq, u64 vruntime)
+ {
+ 	u64 min_vruntime = cfs_rq->min_vruntime;
+@@ -974,11 +983,13 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
+ /*
+  * XXX: strictly: vd_i += N*r_i/w_i such that: vd_i > ve_i
+  * this is probably good enough.
++ *
++ * return true if se need preempt
+  */
+-static void update_deadline(struct cfs_rq *cfs_rq, struct sched_entity *se)
++static bool update_deadline(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+ 	if ((s64)(se->vruntime - se->deadline) < 0)
+-		return;
++		return false;
+ 
+ 	/*
+ 	 * For EEVDF the virtual time slope is determined by w_i (iow.
+@@ -995,10 +1006,7 @@ static void update_deadline(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 	/*
+ 	 * The task has consumed its request, reschedule.
+ 	 */
+-	if (cfs_rq->nr_running > 1) {
+-		resched_curr(rq_of(cfs_rq));
+-		clear_buddies(cfs_rq, se);
+-	}
++	return true;
+ }
+ 
+ #include "pelt.h"
+@@ -1157,6 +1165,7 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ {
+ 	struct sched_entity *curr = cfs_rq->curr;
+ 	s64 delta_exec;
++	bool need_preempt;
+ 
+ 	if (unlikely(!curr))
+ 		return;
+@@ -1166,12 +1175,17 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ 		return;
+ 
+ 	curr->vruntime += calc_delta_fair(delta_exec, curr);
+-	update_deadline(cfs_rq, curr);
++	need_preempt = update_deadline(cfs_rq, curr);
+ 	update_min_vruntime(cfs_rq);
+ 
+ 	if (entity_is_task(curr))
+ 		update_curr_task(task_of(curr), delta_exec);
+ 
++	if (need_preempt || check_entity_need_preempt(cfs_rq, curr)) {
++		resched_curr(rq_of(cfs_rq));
++		clear_buddies(cfs_rq, curr);
++	}
++
+ 	account_cfs_rq_runtime(cfs_rq, delta_exec);
+ }
+ 
+-- 
+2.34.1
 
---
-Linaro LKFT
-https://lkft.linaro.org
