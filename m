@@ -1,108 +1,78 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C15613B7AA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 20:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAEF824A4;
+	Thu, 13 Jun 2024 20:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718309792; cv=none; b=RCTeTKYtzJD5kxmrRCZLhAvCO0cr47b3TcEXSiC/4asMXpTb0vRJmb1+TjmneloWLy8tutdGqzZdqobL13ByQKHnZLo8C3bineg7czleRGOxY7HhnICVtSGPm1QE96w0yavTB9l/oNfF2ieytzIBiK9Wlrq4V6J0ZAVI5Zih+GI=
+	t=1718309880; cv=none; b=NfMYfN3rdNacRJBMhTTdatMZWaNMwsBEvKwcMTtca3L6jK9njH1hpH7UxiYzZdofKq9RZ7wJwI9df3k9IhzeUK8b5ZiNnN3n6CGGLTaBQ7o8iE0FNk9I+84CUqOR8CPf74+4TwSeToPqDkvXFLKvWDSQEf1aFOtLrtMZewRDrGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718309792; c=relaxed/simple;
-	bh=A7Z2pNuahnQTHPxYxgbC81iuG8UWkVYNqmAEGoD+kuA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bGaRfHgPkSatKP7UJfW2M1NXLKTegNLGXNrY7O0L9OA/qNUMdH/LHROjCpXjMTbznHTlUSMbDvPK0P3U6FiwC4V+gcCOATBHANLkha80RW2xDBNNY47X10F8v07j7vK6EUjiSpoXgSGEt2ApRt/FJWJBBYfs8jY3zAqq3y1rP48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+YY3Zke; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718309880; c=relaxed/simple;
+	bh=SeoW3pQUv+7r5hH9UutJVNk3geg6YNYfWR6URRa1t0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTcSgxs1o6g2o2/M+2LUDCnKJ7RCxsR7ZMcdDzdx3ZzOINSxaRo2wdPZOMkMxe96PaXHpQByyNOb/WRDU7mj8+WIRtezt/9cHMlmtydTaakAKRh/ZK9YjnaJdj+ZT7Idtkn4H0b6P/lObKHTMDUVDgxcY/8aHr7ZOojSZTZ714o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sM4I4ZHm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+YY3Zke"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-421757d217aso16169075e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 13:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718309789; x=1718914589; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xPaCGuMACw1TWMHFIb28HSglVp7CXEoBq/vp9txrrWI=;
-        b=R+YY3ZkeH6BrDA/dztKGU1XlDUQ16XzPwXwLzobKn2K5hC9SlMH+8U8Y9YLEk47tq0
-         p7+f6YgPQwKGGcDAXJNzKHDZ2qHTKCKKUkV+RhA0SDDsufB7wmi/M0vgIU5lrQd3lCIt
-         FyLhalmjRrYCARBB3hcoRr2IhWMyH/3lNX7HD42WkLEasnjJQv3UU1m/Fe39hivvVjNI
-         uq0r6917ArnWL58qVJvz2gcQvXkgwXJidPonGXQ8sftWgblM4FNQ5NUz6rV/sv5ImPqE
-         zpZbbWV451e8oIwiHBNfxFIqgLMVeH6tB9NiFPAtxIiVlBOOjsTMTI9j2q9JO32ohcGo
-         YfIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718309789; x=1718914589;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xPaCGuMACw1TWMHFIb28HSglVp7CXEoBq/vp9txrrWI=;
-        b=J8cBSnL4GOQD+sR6ZrGMvQyO6P/tmZ+tiAHUkXprm/WQ6cCm+9uxmWROCI2Lu4d/s+
-         WAUgEsJfXmaTWRP5fz81ZmMSRN6/CL7cj02sr8sPzzzWjUO8cx8lUrEy5NyBLAgag3cA
-         hH2+ok4hOw9OVtk0K8t2ZT3m/Vw5fiA2jias/3WHIRX6HYkX7drMgle0ehttKxs+Ktty
-         lCx3DlRaUfzF2DOTomlg0kqhe6r7KLlSJUJgeGStT/Zahxn1N9i/zA11JTxcryZzvzys
-         hxFHG6gHn0aO1y52OzJiJ1bstPq/0ycaDpllieXdzQthzlGRYNqgMkZJmrCytjfWnmIE
-         D2yg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwPlM7YS/HQ0/lKoh6rXUdjJj1zUaVgqumnkUZMZoawXCKvhrbT1Y9G1jyZ2h86mrfhqfy/nCg372WCyUIqOK2hHX3gEUlLA6ebvfw
-X-Gm-Message-State: AOJu0YxFUyNC3Bwa8LMo+XNrBBvPh2ma7xJ/MjNuuvgL9yV8Pbzm8xYW
-	790Q/i3VVeT0zn8KRc6jbK44sMfd48Exl8tAl1AfZOMqz5Iz9zx+gjlMYmAvnSk=
-X-Google-Smtp-Source: AGHT+IHGJVt1LrU7R8B3h993GSRPSiYf0kLxVvIxoiBJTPpIJskHQcvzdyg9qP0q8strnZvEQsqODQ==
-X-Received: by 2002:a05:600c:1d0f:b0:422:683b:df31 with SMTP id 5b1f17b1804b1-4230481bbe5mr8374605e9.7.1718309789397;
-        Thu, 13 Jun 2024 13:16:29 -0700 (PDT)
-Received: from localhost.localdomain ([31.120.167.14])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de618sm73817195e9.37.2024.06.13.13.16.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 13:16:28 -0700 (PDT)
-From: Teddy Engel <engel.teddy@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Teddy Engel <engel.teddy@gmail.com>
-Subject: [PATCH v2 5/5] staging: rtl8192e: Remove unnecessary pre-declaration of struct net_device
-Date: Thu, 13 Jun 2024 21:15:11 +0100
-Message-Id: <bb7d1aa7b336e4d68a30fd17dae7accfd2d5a26e.1718309120.git.engel.teddy@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1718309120.git.engel.teddy@gmail.com>
-References: <cover.1718309120.git.engel.teddy@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sM4I4ZHm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BA8AC2BBFC;
+	Thu, 13 Jun 2024 20:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718309879;
+	bh=SeoW3pQUv+7r5hH9UutJVNk3geg6YNYfWR6URRa1t0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sM4I4ZHmFl9zudcj8FKpOoM2BO2TXzDlCjiGjrvsIB/y3HVPD3QA5qFQ2X+hnc95u
+	 uxXuKHimDuNs6MAzDAGgA76gZQDldLo7Io2NUxrsana47vNYbWKLxunAQJkE/v2mTa
+	 qEQhNRVHH+rxGhWWsyQX53FgZtIPkKH9jkNNlLuPu1bTJqitdtMvndVJW48q765bUk
+	 NVJhEkUjlmSFkf5skF7sl36kVWMgI2EOA8kKEsM+bQ/Ohth+qVT0AQkhsIpdasJVcG
+	 KNqMBu3nYvly1LKtLOy6tLmprpoFwhwk9OKRJ0wCghMGWbLYAnsSyP7BQQhg+oZonn
+	 VZKRqAERGg72Q==
+Date: Thu, 13 Jun 2024 14:17:58 -0600
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v2 2/3] spi: dt-bindings: fsl-dspi: Convert to yaml format
+Message-ID: <20240613201758.GA2396297-robh@kernel.org>
+References: <20240613-ls_qspi-v2-0-b288f6f5b736@nxp.com>
+ <20240613-ls_qspi-v2-2-b288f6f5b736@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613-ls_qspi-v2-2-b288f6f5b736@nxp.com>
 
-Remove pre-declaration of struct.
+On Thu, Jun 13, 2024 at 03:00:38PM -0400, Frank Li wrote:
+> Convert dt-binding spi-fsl-dspi.txt to yaml format.
+> 
+> Addtional changes during convert:
+> - compatible string "fsl,ls1028a-dspi" can be followed by
+> fsl,ls1021a-v1.0-dspi.
+> - Change "dspi0@4002c000" to "spi@4002c000" in example.
+> - Reorder properties in example.
+> - Use GIC include in example.
+> - Remove fsl,spi-cs-sck-delay and fsl,spi-sck-cs-delay by use common SPI
+> property.
 
-Signed-off-by: Teddy Engel <engel.teddy@gmail.com>
----
- drivers/staging/rtl8192e/rtl8192e/rtl_cam.h | 1 -
- drivers/staging/rtl8192e/rtl8192e/rtl_pci.h | 1 -
- 2 files changed, 2 deletions(-)
+You can't just remove them. These are mature platforms using them and 
+replacing the properties would break kernels without your driver change. 
+The only compatible change would be put both properties in the DT.
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-index 615b84bca9b8..3a5635494385 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-@@ -11,7 +11,6 @@
- #define _RTL_CAM_H
- 
- #include <linux/types.h>
--struct net_device;
- 
- void rtl92e_cam_reset(struct net_device *dev);
- void rtl92e_enable_hw_security_config(struct net_device *dev);
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-index 866e0efbc4fd..c645775b2150 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-@@ -13,7 +13,6 @@
- #include <linux/types.h>
- #include <linux/pci.h>
- 
--struct net_device;
- bool rtl92e_check_adapter(struct pci_dev *pdev, struct net_device *dev);
- 
- #endif
--- 
-2.39.2
+You need to pick up what Vladimir did:
 
+https://lore.kernel.org/linux-spi/20221111224651.577729-1-vladimir.oltean@nxp.com/
+
+> - Use compatible string 'jedec,spi-nor' in example.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/spi/fsl,dspi.yaml          | 115 +++++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-fsl-dspi.txt       |  65 ------------
+>  2 files changed, 115 insertions(+), 65 deletions(-)
