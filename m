@@ -1,95 +1,121 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DFE84A41;
-	Thu, 13 Jun 2024 15:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1985D146A67
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290930; cv=none; b=QtaCQUMuMsF6gb4gdKNg1Z4JYl3qTAiK+HSFV22SJjZ94XnIUf2oi4Cy/OeGY1oYq4rb0TOxdL0xVqhbLb7J6XEIGxFglxER4KCXewH57Toh9gUUcYbkAHHf/h4v8GOEMqlFZQ7KYkjX17x5sRsX34XZT6G4+YVZjm7iLR816X8=
+	t=1718290941; cv=none; b=T+nQ1pJ5VBbACxB/EukfCY35SPXHKfMGJOYa8lGEROmPymtcJtx3xEQOadDasRg9wHzVWsZiOW7JIXxkz91N8fY7Xo57lWip1kGmw6ZO+QaEsUQwa5TkkRzv6I5o1ZqLOf6d+uuCaRWKNd4XQTc+/7ZaPn1s7yNqLD/+5PPKgDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290930; c=relaxed/simple;
-	bh=0vwy+oNU5J1EjAO5qZ9rH2UnBq8fpSIO7ukwd4fnDiY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ANnE6Eyfchk1v/RJNB+tVatFjtDZ7M5a0/u2fQrxOJ9mATIwtZAzzutnrODb2UW0nXVS3xQxh7B50TTxZkXk+9IuhZXo+iRVyDhybY4JVmBdsxlNf068GbQaF0X1qFbVx5pkHjoO2Zbkizu3kKZje1b81VmL/rFiOVcE3PoTxzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxySFIUL; arc=none smtp.client-ip=209.85.216.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718290941; c=relaxed/simple;
+	bh=vR9NwaM4K/cYj+QcW2JvRTu9+uSVsH0EXb3Y1Iv1cYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XoLSe4W+d42U+PAJ4JkA7hxWUbBUWss3KaHu7/2k+IN/Sl+2JydFsR65cmX2c3tQaumZ5WkedZDWmZMzU3+AJsSiuFUBp5VaLNlwlMMrwlHTsXg/6y7ukUnFraAOc1h7tkDPZgB7rRrV8ZfrOavjxvDUBZvaK143IgUsfv+lexs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UmEmfmha; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxySFIUL"
-Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-2c2c6b27428so883025a91.3;
-        Thu, 13 Jun 2024 08:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718290928; x=1718895728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8DQ5VScKhFQSJasWhNy88C3p44N18/s2PVWHrzDJ1M=;
-        b=fxySFIULOcSiU0j8shdFXj0olcsY+r+SysYmEGW/WSrpyngMxwkClo2R3hDh/66jv7
-         Vz6atNia+R0FBl1KpQdniQjZ0Q6T9kzY/W1nCpGJr3+hf75tKezHT0gOsw6a42SqRv17
-         +IbTq0/56LEjj9oAsQVv9snCrcBiT6G2eXPy7uXts9ztF1XV6sKEEY9uJWtYaHsRyYdV
-         ng7MYh0ZfsQ+nVnxtDrMLRYSMLpAVkR0K+cNlGdudrZQuP73jD53RhSlOLHh451RDj27
-         RhdAdLi/FJW2MO1YraGJgfNqlrf/dOViVtxFXiJhcKmIEGzXHNTzGBJ0yEOWEjqqfXgQ
-         Z98w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718290928; x=1718895728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U8DQ5VScKhFQSJasWhNy88C3p44N18/s2PVWHrzDJ1M=;
-        b=psUZgNkoirgXmEE+P5G+nRhWFBupfeAFNRYLgjURP3SCN2S3SKFyClMR/UOiXvlwRg
-         CUrtASxMioLTleGNCc7vcawbQhOlK+fi7IOPvcN9V/v+u5KhGffJ+diDuhIVk3t3F8ts
-         T1clQCwbBWZJDniHbXGQToNkV44jBf4xz2KN72F4fu00jS83ZiNYfONm4McXeBvdaRXy
-         p7w2/PR2TdIOp400HlnbadFOnI8l+ATuuWV8KHSpj+jJeWDYxWjh31gU3mus3QlcSXLC
-         sDwbc2AJ/tYrDglPrYUJPmOPfvDxEKQdB+B6NK8puI3DoLlBM72MmoBTEh6VuDPKqDr1
-         RdQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhwpK1889lJfTwBqv3a0NIEtX7b2NkiWzqGSUM3tBGjS8cTdCgnjZlSfS0AeEFfz/IDXBRk0Ot+9jrQ8lTrLY+/1BjCcON/tykqXX8
-X-Gm-Message-State: AOJu0YzBcvsjGYY7tIj2zYlUZQ6mV4l2LLJZvBv4PNpb25L58zYQ5jxo
-	tAbSKfdSM1SfQ1feFLuND/6I92seEk5PmN5bh2ALM2KAIHvYjoSC
-X-Google-Smtp-Source: AGHT+IGUL6iL63738dYA+yvB1xagrNO9EYkLDn2Qr1lQX9lVpSnql/KaQWLtv98XU96vTEwwOs3YfQ==
-X-Received: by 2002:a17:90b:3c1:b0:2c4:b2d3:6c8d with SMTP id 98e67ed59e1d1-2c4db129158mr13502a91.10.1718290927718;
-        Thu, 13 Jun 2024 08:02:07 -0700 (PDT)
-Received: from localhost.localdomain ([121.139.28.121])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c45ad12bsm1841234a91.7.2024.06.13.08.02.05
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 13 Jun 2024 08:02:07 -0700 (PDT)
-From: Gyeonggeon Choi <gychoi.dev@gmail.com>
-To: robh@kernel.org,
-	saravanak@google.com
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gyeonggeon Choi <gychoi.dev@gmail.com>
-Subject: [PATCH] drivers:of: Add null check for bus in of_match_bus
-Date: Fri, 14 Jun 2024 00:01:34 +0900
-Message-Id: <20240613150134.66329-1-gychoi.dev@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UmEmfmha"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718290937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RsGjIQ/eoSOVrd1/81v2Gd3TZB10IZEXVzo2atMoutM=;
+	b=UmEmfmhalnyQKtbhkezRRuEKDKzuTb0kA4x4vPxz+nnmU4GGLpPl3KXBOWib7Iu9nkcytY
+	LwtQFX4VPEP7F2Q4vNMAdvAqGGZrjqtUIm8tagf0CYTvuAbDURxgdD4RMQJgqGNSuxq1kg
+	W9xSZAqn3Y5dOYTeOw56V8c6C2Je7tk=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-toVAdbV7NkupH4EZS3Am9w-1; Thu,
+ 13 Jun 2024 11:02:11 -0400
+X-MC-Unique: toVAdbV7NkupH4EZS3Am9w-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A268C1955BDF;
+	Thu, 13 Jun 2024 15:01:58 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.233])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1E7D21955E72;
+	Thu, 13 Jun 2024 15:01:33 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 13 Jun 2024 17:00:17 +0200 (CEST)
+Date: Thu, 13 Jun 2024 17:00:02 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Rachel Menge <rachelmenge@linux.microsoft.com>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	Wei Fu <fuweid89@gmail.com>, apais@linux.microsoft.com,
+	Sudhanva Huruli <Sudhanva.Huruli@microsoft.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christian Brauner <brauner@kernel.org>,
+	Mike Christie <michael.christie@oracle.com>,
+	Joel Granados <j.granados@samsung.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: Re: [PATCH] zap_pid_ns_processes: don't send SIGKILL to sub-threads
+Message-ID: <20240613150001.GB18218@redhat.com>
+References: <1386cd49-36d0-4a5c-85e9-bc42056a5a38@linux.microsoft.com>
+ <20240608154835.GD7947@redhat.com>
+ <87msnpov2z.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87msnpov2z.fsf@email.froward.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Added a null check for the bus variable after calling of_match_bus.
-This prevents potential null pointer dereference errors in subsequent
-code, where bus->count_cells could cause a crash if bus is NULL.
+On 06/13, Eric W. Biederman wrote:
+>
+> Oleg Nesterov <oleg@redhat.com> writes:
+>
+> > The comment above the idr_for_each_entry_continue() loop tries to explain
+> > why we have to signal each thread in the namespace, but it is outdated.
+> > This code no longer uses kill_proc_info(), we have a target task so we can
+> > check thread_group_leader() and avoid the unnecessary group_send_sig_info.
+> > Better yet, we can change pid_task() to use PIDTYPE_TGID rather than _PID,
+> > this way it returns NULL if this pid is not a group-leader pid.
+> >
+> > Also, change this code to check SIGNAL_GROUP_EXIT, the exiting process /
+> > thread doesn't necessarily has a pending SIGKILL. Either way these checks
+> > are racy without siglock, so the patch uses data_race() to shut up KCSAN.
+>
+> You remove the comment but the meat of what it was trying to say remains
+> true.  For processes in a session or processes is a process group a list
+> of all such processes is kept.  No such list is kept for a pid
+> namespace.  So the best we can do is walk through the allocated pid
+> numbers in the pid namespace.
 
-Signed-off-by: Gyeonggeon Choi <gychoi.dev@gmail.com>
----
- drivers/of/address.c | 2 ++
- 1 file changed, 2 insertions(+)
+OK, I'll recheck tomorrow. Yet I think it doesn't make sense to send
+SIGKILL to sub-threads, and the comment looks misleading today. This was
+the main motivation, but again, I'll recheck.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index d669ce25b5f9..85f986d25870 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -504,6 +504,8 @@ static u64 __of_translate_address(struct device_node *node,
- 	if (parent == NULL)
- 		return OF_BAD_ADDR;
- 	bus = of_match_bus(parent);
-+	if (bus == NULL)
-+		return OF_BAD_ADDR;
- 
- 	/* Count address cells & copy address locally */
- 	bus->count_cells(dev, &na, &ns);
--- 
-2.39.3 (Apple Git-146)
+> It would also help if this explains that in the case of SIGKILL
+> complete_signal always sets SIGNAL_GROUP_EXIT which makes that a good
+> check to use to see if the process has been killed (with SIGKILL).
+
+Well, if SIGNAL_GROUP_EXIT is set we do not care if this process was
+killed or not. It (the whole thread group) is going to exit, that is all.
+
+We can even remove this check, it is just the optimization, just like
+the current fatal_signal_pending() check.
+
+Oleg.
 
