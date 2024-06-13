@@ -1,110 +1,128 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED98C13CF85;
-	Thu, 13 Jun 2024 15:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0353E31;
+	Thu, 13 Jun 2024 15:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718292171; cv=none; b=eyJiRC0/7nZ3tCSmd7FH8P2tbLQOw2BvtLbyFIJA0Fx2yn4J05fysV30rVxt2CZow0peJhkIYcRBaLdddCeXK8B3hLl5I9mP8c6qeUs7CsBiZEDNY6GziIRNAfhkfq/6iinkDDxc6ewQXNONmg4rPt4kvDJLUHj3xExs0iDLLNw=
+	t=1718292299; cv=none; b=pqblUv7/HGE+djPfyM0du1b7yGi3Ldy3qZAdU2nHt7rmN3p8HjjH3YV7it7wuSOl/owB9gwYVfX0tnyPFBjgpQpVpyfN1afKKp1Nx3NjYR2DB/pcXo0To+oM4EOND/Af/7EQQrM3R2YOx2YBYCBGujIRtS3Xl8Mwvchz34mqDDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718292171; c=relaxed/simple;
-	bh=qLFWh1U9jaUWDO9WRBPcNLWKrgZ7z6IUsDlCbyKOfak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9R+KdV0VOB7bxnI3eXp/9ZGibMxVJxS6zr/+6OKOrWFN5XpsOP1wqwQ8cT2/30OBf055igasNkoKsb3mvdDLhnddDY7g5MRbN7sqVawTzQIuPpH2ZK4wn3iEE/ItEG5IUfPlq8tCJEHDHL2YqO7AuNe3v3eLDU11NyrInHep6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=jQY42aii; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S39dDXl0; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1718292299; c=relaxed/simple;
+	bh=lkr1QctdrwBqiaLGk73+KO5d+sPtA7Bi31a8uXsZvLM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cVOIyj5ueQLQfyeDh+TfFp9KdSZsstSJkAyFjb4fkJKLd91pAyTZWC3pj23K3NcudiSKYGz2Ggl8T5Zb2BueQrDzUu2yJfjxk46p3IUTBZusSdaF38uDwGfSDT9hAYJWUjerzYGq95Y1Fp6JX5Uj+g40rv59SUfW05qhnECUvFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Cnu34rAF; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="jQY42aii";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S39dDXl0"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 046031140151;
-	Thu, 13 Jun 2024 11:22:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 13 Jun 2024 11:22:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718292169; x=1718378569; bh=TulpzQT49Q
-	EA7WtUk72+PFYGe8eurHLi82GVa+TZ26I=; b=jQY42aiiNIoQOBpU7dHLqzO2V9
-	O4+CjZ8K4tcf/LK0i9JT+eWL/jhO90ZbL1+D+ZBcjtyEiXiysZkr7ErSBVEF89VJ
-	IfZgXPEVCijuGi0cQYA8sR59jpvfYLzXsl/hMXRh73hI/LPMU0/S6tcbm9TMzLJ4
-	T/mGMvnxPmMxT3pEuIwjdEJTIYyclnEnzCzU6lADs6P2fy7gqTQJmcpY7L90l6ed
-	8617Q7j3kjyG7jYx6rT/w07i11P3dtlAGbJQFwcA8hOZx7gT7waxZgXleVTcFpsN
-	c7aJld78KA1kmsy2uQIxunfdDZVyH3BDZEpUXjfveGXAlJhijtYcO40zMXIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718292169; x=1718378569; bh=TulpzQT49QEA7WtUk72+PFYGe8eu
-	rHLi82GVa+TZ26I=; b=S39dDXl0m8ySdgkIFWaa4mdR+sW8epKX3LxDuvnXENeh
-	2/VG826/mzcnTmgWqXFT7Vzxy2ez4ndQKnZn41Yza4+7fWpj0l4vuHpvI+rYxzV2
-	yslfJ+U+Z37g5TyZQyedUZ+l6c9WpU7YmFNLyNKjxC1eIQCWLwYAjVt/bKquIIuD
-	UJu8ggSfCWu+uLdVTXDy/PKM5xSef1YVlKTYJA6IjZrVfqfvkBw2OW+i6B/7b3nc
-	KL4/hVZvZ/z6ygDd3UBpif4mxtCrqXpfeDKaMJudsDZxcThHunb8R7IFSvXtUHpJ
-	DROWrjL8Vi7ossYtsDi3JdIBcfingmdgQm/BUIdgdQ==
-X-ME-Sender: <xms:yA5rZjmgN9pVH4nA0yttijF2C0lieS_P_J1IfgwFbTKP9eMkHEwSmA>
-    <xme:yA5rZm2KJE6hkEbWVljnW1OvbWcRix4DW0mafcy6FVKHZv39sWUxoOiO_Tt1MhLM-
-    Xz94PxDTDqUbA3foQ>
-X-ME-Received: <xmr:yA5rZpo2yTN97SK027dENUSXxHIL7ShdyHhOONeOWJR_QZBDCjW25Z9r8MqUoRyQqQYCouD1t0BS9iRBRAhuPFUeXFVau56PBA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedujedgkeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddt
-    tddvnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhesugiguhhuuhdrgiihiieqne
-    cuggftrfgrthhtvghrnhepvdefkeetuddufeeigedtheefffekuedukeehudffudfffffg
-    geeitdetgfdvhfdvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepugiguhesugiguhhuuhdrgiihii
-X-ME-Proxy: <xmx:yA5rZrkHlvo_7veytHQzZyoYXNqh6E-M7qkuOeygVS6B66XDhVNx4w>
-    <xmx:yA5rZh1EoUVTConfGA7Qh4nq615h1kOVv6XHp-jWu_rDterD0BXkqw>
-    <xmx:yA5rZquqfvrGZ80MCkyLrX5cK5KHNAhoawgkjybA7-DUztOs74UObw>
-    <xmx:yA5rZlXehYdwLKcvUhrKssRiz2SP_K8rxDQbC44cSut55FM0zSFBbQ>
-    <xmx:yA5rZqL5-m2Zdry3bflnZDmYnrBBlE9epTy4t3wcUr7PHpLtIoShskkM>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 13 Jun 2024 11:22:47 -0400 (EDT)
-Date: Thu, 13 Jun 2024 09:22:46 -0600
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warnings after merge of the bpf-next tree
-Message-ID: <a4ottbruejm5wssdhgo7tqeopfmpiv7trvc44dogbwuesxwbwi@f22dnl5qxfcf>
-References: <20240613144239.29675ebc@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Cnu34rAF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718292294;
+	bh=lkr1QctdrwBqiaLGk73+KO5d+sPtA7Bi31a8uXsZvLM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Cnu34rAFfuzqEBAV0IjuFq/EN2ECf8/ZV5aHa4+ePvlZH+OKMghnKuChzzvAa2KHX
+	 UsiYq7xIgploRqfmtwYS4diz0VVXq/605mXxHCKZBH7hhOROomK14crNZzvbebMRt+
+	 x7PIp4bW9gApLYTQBdejF38nyGOlAxxgmT7UTq4w=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Thu, 13 Jun 2024 17:24:51 +0200
+Subject: [PATCH v2] leds: triggers: flush pending brightness before
+ activating trigger
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613144239.29675ebc@canb.auug.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240613-led-trigger-flush-v2-1-f4f970799d77@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAEIPa2YC/32NQQqDMBBFryKz7pSYiGBXvUdxUeMkGRAtmagtk
+ rs39QBdvgf//QOEIpPArTog0sbCy1xAXyqw4Tl7Qh4Lg1a6Ua0yONGIKbL3FNFNqwQ0AzmjDA2
+ d0lB2r0iO32fz0RcOLGmJn/Niq3/2X22rsUbbqca2pN1gmvtOLCI2rOE6U4I+5/wFfRGb/rcAA
+ AA=
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dustin Howett <dustin@howett.net>, stable@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718292294; l=2694;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=lkr1QctdrwBqiaLGk73+KO5d+sPtA7Bi31a8uXsZvLM=;
+ b=BeT9bQPIN0S2PP6EGAIJapWFwWehZhBUWYDfHdhDO6u9Gytb+cpAPkWQ7AsdxmI/Gl+AsLJhQ
+ zpM2cThQSCvDSNPdcKU0lKtFti+HZHNHX69XZIXFqyy+9t6B5UZE8pP
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Hi Stephen,
+The race fixed in timer_trig_activate() between a blocking
+set_brightness() call and trigger->activate() can affect any trigger.
+So move the call to flush_work() into led_trigger_set() where it can
+avoid the race for all triggers.
 
-On Thu, Jun 13, 2024 at 02:42:39PM GMT, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the bpf-next tree, today's linux-next build (htmldocs)
-> produced these warnings:
-> 
-> kernel/bpf/helpers.c:2464: warning: Excess function parameter 'ptr' description in 'bpf_dynptr_slice'
-> kernel/bpf/helpers.c:2549: warning: Excess function parameter 'ptr' description in 'bpf_dynptr_slice_rdwr'
-> 
-> Introduced by commit
-> 
->   cce4c40b9606 ("bpf: treewide: Align kfunc signatures to prog point-of-view")
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Fixes: 0db37915d912 ("leds: avoid races with workqueue")
+Fixes: 8c0f693c6eff ("leds: avoid flush_work in atomic context")
+Cc: stable@vger.kernel.org
+Tested-by: Dustin L. Howett <dustin@howett.net>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+Changes in v2:
+- Cc stable
+- Add Dustin's Tested-by
+- Rebase against led/for-leds-next
+- Always execute flush_work(), similar to synchronize_rcu()
+- Link to v1: https://lore.kernel.org/r/20240603-led-trigger-flush-v1-1-c904c6e2fb34@weissschuh.net
+---
 
-Thanks for reporting. I'll send a fix today.
+Commit 7abae7a11fc9 ("leds: trigger: Call synchronize_rcu() before calling trig->activate()")
+alone also solves the issue that the LED stays completely off after
+enabling the trigger.
+But there is a recognizable timeframe where it is disabled in between.
 
-Daniel
+Also from a correctness perspective, this seems like a coincidence and
+the call to flush_work() is the correct fix for that race.
+---
+ drivers/leds/led-triggers.c          | 6 ++++++
+ drivers/leds/trigger/ledtrig-timer.c | 5 -----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 59deadb86335..78eb20093b2c 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -201,6 +201,12 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+ 		 */
+ 		synchronize_rcu();
+ 
++		/*
++		 * If "set brightness to 0" is pending in workqueue,
++		 * we don't want that to be reordered after ->activate()
++		 */
++		flush_work(&led_cdev->set_brightness_work);
++
+ 		ret = 0;
+ 		if (trig->activate)
+ 			ret = trig->activate(led_cdev);
+diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/ledtrig-timer.c
+index b4688d1d9d2b..1d213c999d40 100644
+--- a/drivers/leds/trigger/ledtrig-timer.c
++++ b/drivers/leds/trigger/ledtrig-timer.c
+@@ -110,11 +110,6 @@ static int timer_trig_activate(struct led_classdev *led_cdev)
+ 		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
+ 	}
+ 
+-	/*
+-	 * If "set brightness to 0" is pending in workqueue, we don't
+-	 * want that to be reordered after blink_set()
+-	 */
+-	flush_work(&led_cdev->set_brightness_work);
+ 	led_blink_set(led_cdev, &led_cdev->blink_delay_on,
+ 		      &led_cdev->blink_delay_off);
+ 
+
+---
+base-commit: 005408af25d5550e1bd22a18bf371651969c17ee
+change-id: 20240603-led-trigger-flush-3bef303eb902
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
