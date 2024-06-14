@@ -1,90 +1,68 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9C5148833;
-	Fri, 14 Jun 2024 22:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75A2186E50;
+	Fri, 14 Jun 2024 22:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718405315; cv=none; b=fmsAnzGlYGh7NlMWlTMdGchAtumvHfUF9EJs94Xitk/zWhh34n10p8SJy71M9c1Z/1HYjhM2QMys4ElnVxLuYWZGsULN1JBvAeMsbV2xEyv5xLA2HiYwRKU/fqhShedEeZ7udj5FS+ZLwaZPnj+eTpyoYFzNTzBkL5gIWTQ9lRo=
+	t=1718405339; cv=none; b=olFffoW0bSeNabr2//GrxkgcNdSOEnlOVQo51pyhg3ISypIbIdWKENoYvSeAqk5ZaJUKYdmqnRl896Zy442q650zkly+2UtIAtw2icWg936poUBcq0xiORLgh6JaX7HP9aLhBaLbI/6cPl7ncfbHXsy7JjCFTsWj26dJr0qOCDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718405315; c=relaxed/simple;
-	bh=SHXtMF1agTiwHwUG9oPqeFHuUG5aChlVAFTOFpyBWT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SIItHYbViUBh+BXHZQPtU+/Ffnept9mP5+LL/Tzwn5MFoyBQUbkRYyOsfBTmzZZWK3bkRxy8OHoNNNA/qX7PGeCnubu+Ecq04gC38RaG/zVdGX+xNFMfVpgCljT47m4NO9OrSWw9yQsch8x6GfvfWtrG+XcrO9BvVPmg9AQzGjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIrC8bpO; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718405339; c=relaxed/simple;
+	bh=UB2dyq2YKXi+CwfD4VFvpLWhniVpGZGbq09DF5P2wbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JKi3R/87zzMa5kdUKpJ3ZZXAGweN7dSNNYbHvZF8LjtBhjswMCoCh8JcRitGpxbeg1h/4eVPSJ0kaxGs74FkwDXHMrxmddYKEWxq84B0kUplN6OGNQhyG8SSjwjleLbRH2vkOm0OxWBkhq1QQJeRm9cnM6ayWBs74Tt+4jvKVY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzrzyEjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIrC8bpO"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfef5980a69so3083088276.3;
-        Fri, 14 Jun 2024 15:48:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718405313; x=1719010113; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SHXtMF1agTiwHwUG9oPqeFHuUG5aChlVAFTOFpyBWT8=;
-        b=LIrC8bpOLPWzHqX7j7t1w9JKhXBjcgorbOYfACJKR/KQWwiF8cAfPrUV5tW/JYkuGG
-         DG6LRhPQm1eFmfvaxtYgG3CBQ6x3YHJgnZWCJ5rzCEzUH1KOdr6vBXqj55KgRHRDpvXg
-         RgPBdCLp/jZCf87IaMjEcXckvkoFzeShfFS5y1rwb6AnsWTWyHRHdX65/p3KU3r5tVPB
-         3dfPLj0Cp2RluZSWhjRz0jw1TqXJ0Wl7yLpnISZb9DOiZ4dy2f8owT5ndkLzTUJrQg36
-         POZHvx4Q/S2TWw7E5ggSCN2DS8RrEcWeeVjIqlVgP/bSWu/lVtbgE0su107eZ3AW/7jF
-         4R0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718405313; x=1719010113;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SHXtMF1agTiwHwUG9oPqeFHuUG5aChlVAFTOFpyBWT8=;
-        b=PRW7FZcrKET7+M8btiYY2P6PbHqEZ9HlFlm7d1a6fz2eDoMSQX6hcaGaE3L9GYdU6K
-         yH9KhRut+rtn4R9oYAB98jiV4IPCZuaa3JV4cL66ryi0pNuguAbcFM1crRCMWEUnagfR
-         r9DVN/2ZiVT+ITvZXCFYZ3fWHzFZbndKWtF5IU/bPteaksaJ6ib6OJoTDWs9NMH8AX/w
-         Wj7frnjeGZJ8WQldEwQQOHZVUuoUcP3gqEgYRvc4CNqEkwmIPrKlCrbJyHULaABoPDf4
-         q+tRiTtD7iqVajej265NcUh/CV0sBJwr6B9BkGrz3DFaOp//Za2x3mIOX5nf4eQXhwb9
-         Cx4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWkVi8GiBNVT5xhXdI5z0MOcOwM102lVAvjiC3+arVPBRl96ylytmqmcK2EcM4EdA+CFFwnVGBN7MbNqw/CO7s1+UQXpX5KNYd6gAxVhx09WiehTf+ViuaPNbZM1ZQLX8GdQC6xlJdE
-X-Gm-Message-State: AOJu0YwDOC131lK0nW+xut3fzpX0ChXrzJAlJVJnzVSB27VhTqz1bn3+
-	jzHMHmwMnue6/sJNtnknH71q6fxeN3HpCkOftCZOKxK6UyRuipCdcM9mR1xSe1Kb5IXfjas9fvc
-	kmpvduHyFvaJkV2GvgEPZeYgF4ig=
-X-Google-Smtp-Source: AGHT+IGWlWxi3tGQnFiRjHuRToReH8E/NRFtOQ0NQQ6jRW2qzuRS5EYTxcggkF5vjiY8AQzPyzOUpiEg4eT8KfA8T4M=
-X-Received: by 2002:a25:824e:0:b0:dff:73e:fdf1 with SMTP id
- 3f1490d57ef6-dff1534de11mr3864205276.4.1718405312930; Fri, 14 Jun 2024
- 15:48:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzrzyEjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C20C2BD10;
+	Fri, 14 Jun 2024 22:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718405339;
+	bh=UB2dyq2YKXi+CwfD4VFvpLWhniVpGZGbq09DF5P2wbk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HzrzyEjtTELe122vYtu7ZuY7R5yFv9Q4+hohAQZzKb19Un0DuhGfnGhIRBioqaTXK
+	 pDzCVddIEQXlRUOkIC4lP2NISbEsAGhScXS9bMjEDQ33SgHv7DfmVF3/JMh2MrzRJv
+	 NNXY14PqAz8IOAWv0IdFZn4dcLMAn69uG0MnQuDtebs3TDo4rawgapTpUa4gpsAV29
+	 OueL1arucQ6BgmDwc//EVeZ2LbuEA620ATQ18S6pUQGSYSvuI0ZZ1qWIn5sutdkmMj
+	 ZlNhjPuMIQzPa/BY1OZ5HzocZ1vBvpNd0Q2t/WUnOLtkvxC/g4O8DbmoFsosnZj6ON
+	 WegJHN1KT6XEw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	regressions@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+Date: Fri, 14 Jun 2024 17:48:49 -0500
+Message-ID: <171840533353.102487.16743739137970732641.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240608114529.23060-1-johan+linaro@kernel.org>
+References: <20240608114529.23060-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608155316.451600-1-flintglass@gmail.com> <CAKEwX=PsmuPQUvrsOO7a+JGd=gDmjP5_XDGD+z-0R6dBea+BOg@mail.gmail.com>
- <CAPpoddcgmZs6=s1MrzLgOAJxoVW5_bLa4CGxHq3KhF3GOi8VBw@mail.gmail.com>
-In-Reply-To: <CAPpoddcgmZs6=s1MrzLgOAJxoVW5_bLa4CGxHq3KhF3GOi8VBw@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Fri, 14 Jun 2024 15:48:22 -0700
-Message-ID: <CAKEwX=MusLXFq49HtZnqKAUuZ72fSnuC-9T2p85S2MuVQV00_Q@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] mm: zswap: global shrinker fix and proactive shrink
-To: Takero Funaki <flintglass@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> My intended workload is low-activity services distributed on small
-> system like t2.nano, with 0.5G to 1G of RAM. There are a significant
-> number of pool_limit_hits and the zswap pool usage sometimes stays
-> near 100% filled by background service processes.
->
 
-BTW, I'm curious. Have you experimented with increasing the pool size?
-That 20% number is plenty for our use cases, but maybe yours need a
-different cap?
+On Sat, 08 Jun 2024 13:45:29 +0200, Johan Hovold wrote:
+> Disconnecting an external display triggers a hypervisor reset on the
+> Lenovo ThinkPad X13s since 6.10-rc1 which enabled UCSI. Disable it again
+> until the regression has been fixed properly.
+> 
+> 
 
-Also, have you experimented with the dynamic zswap shrinker? :) I'm
-actually curious how it works out in the small machine regime, with
-whatever workload you are running.
+Applied, thanks!
 
-But yeah, I'd imagine either way zswap would be better than zram for
-this particular scenario, as long as you have a swapfile, some
-proportion of your anonymous memory cold, and/or can tolerate a
-certain amount of latency.
+[1/1] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+      commit: ad3dd9592b2a1d2f9e6ffeedfd81602f91f1ba09
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
