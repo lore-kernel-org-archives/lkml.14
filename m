@@ -1,101 +1,231 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A677185085;
-	Fri, 14 Jun 2024 08:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C33185086;
+	Fri, 14 Jun 2024 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718353403; cv=none; b=fRKExRE8GU6tlScVO/ubHXAgjW7YTivtMmuH4qHdysJ/c4XOrHKie/myTBPcmLhURsIzrTBGliH7FqFg/9crCjcbuuRjyCZ2wicRpUPTQn8HUTh1XfUaHrc6m+7I5i27nzK9Otm8CgkLLohBvD1gyGoFAPWYOHshhurC10PWR+4=
+	t=1718353426; cv=none; b=H/Ggq3YxikW8Tb8RG5Ya/HqSTVGO2eeow2/cSDVIEps4FDdQipPm8jxoHK176gHxjR+krNnXDbgfTsc8BO5KFddfKhwN7Ei0bgUymwQPB4gkz83j30hrdB7DTrjTblGNnhypyDOhAAGTJETmEbZzU3e/ghTg0iupOhYVZ4Etl/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718353403; c=relaxed/simple;
-	bh=WuwY6T3tgfTA3Se9YOsZDTG4En+k8D3HJ77FHQiEq6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QmQ/+SXV+cFbmJHA5WfNoIM0oip6d3Svq5K3wFGdnt1CAA1ly248aE3ygMmqSK/EEpugGZUqLc0s+xLDLRqGU9Ew6jmzT4BWA73hy2VZ3J/9uISfoqJlU5VvI4P5yvPRSQ1UqxmvAkgXD+9q10KM/gvLvi/+1E2KEwffJ9bv8iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EDcFfkSj; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718353426; c=relaxed/simple;
+	bh=I30+svJG/M7AzUfaUajhNLsiziVDSGelWON1BY08RRA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b0Uth3DvHHivK2PdYx0uIAbQ/6anVrfMCYIdob9q9BuQOaeynzmr/ca2NV0mj6oKVwajqPPlPFqj0nxb8+l0smgRtyJSKZqrOT/u8vN7hicI+mE4oQTbXEVggf3uD/3SUuPamjQG+fhD3VcV/J44+b0QrqTAywfz87gd0XPnN4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=TAt6VB/3; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EDcFfkSj"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45E8N3G7059213;
-	Fri, 14 Jun 2024 03:23:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718353383;
-	bh=dyrikqBIHld8qG+NfybdOhRSOUR8nCN2eY444ubtgGg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=EDcFfkSj/GwGC6ZhC62QJ3uFhEbXFqsUpMjz6oo8CB4o7W3LRNVwOIWLeXYh2GYX7
-	 qg8nmwfuxSSsjGVraebW8XiRRulqwoKRkg8nk8kxrXE6R7X78ndYdp6mi6iDvj3IG2
-	 Cq9RmqLE8qj3Pt1xqsrEQYixtutVdqXxwRqTv6Y8=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45E8N3LW084603
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Jun 2024 03:23:03 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Jun 2024 03:23:03 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Jun 2024 03:23:03 -0500
-Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45E8MxPX004736;
-	Fri, 14 Jun 2024 03:23:00 -0500
-Message-ID: <4220a910-b64a-4212-8d29-a4dbedfba735@ti.com>
-Date: Fri, 14 Jun 2024 13:52:59 +0530
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="TAt6VB/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718353424; x=1749889424;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I30+svJG/M7AzUfaUajhNLsiziVDSGelWON1BY08RRA=;
+  b=TAt6VB/3Ywffc6PCn87J4eM6zebeVDQf1/nM7gU3lOUNhB8QaqQEDrzu
+   7muhMQvKwzKyWLzo2qqxaLNHD2qNFjtX/mljPrtZiGoCYKgvxyaCLsyn6
+   ZwLt1FhoegUCyFpylHlA0f7d1lOQAWBKXz971JOuSPmowQUj97GSOJWwY
+   3ETjFowZLSFANNwo0dw45p1bZDHAyUKzhz6XPBJPPA34kPUtCL1LXMlqY
+   GndNOVHt179KUmAnHmXGPyCEoxjTHv2a2Cc3WOF6XcJVwpPa8f9jl8+nu
+   rG2f9b13zI69Z88qH5LgSBPdXOXAf7/Vh0n/CZyRfA/3kJwDf3TKfDabN
+   A==;
+X-CSE-ConnectionGUID: lGiPpL1eRHKZ9zuhk1c1dA==
+X-CSE-MsgGUID: t41bSOBzQEqKWlfjgFpvSQ==
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="asc'?scan'208";a="28158885"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 01:23:42 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 14 Jun 2024 01:23:10 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 14 Jun 2024 01:23:05 -0700
+Date: Fri, 14 Jun 2024 09:22:47 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Jesse Taube <jesse@rivosinc.com>
+CC: <linux-riscv@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Evan Green
+	<evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, Charlie Jenkins
+	<charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu
+	<andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>, Greentime Hu
+	<greentime.hu@sifive.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
+	<bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin
+	<costa.shul@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Baoquan
+ He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>, Zong Li
+	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Ben Dooks
+	<ben.dooks@codethink.co.uk>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Erick Archer
+	<erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 3/6] RISC-V: Check scalar unaligned access on all CPUs
+Message-ID: <20240614-padded-mammal-d956735c1293@wendy>
+References: <20240613191616.2101821-1-jesse@rivosinc.com>
+ <20240613191616.2101821-4-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] serial: 8250_omap: Implementation of Errata i2310
-To: Greg KH <gregkh@linuxfoundation.org>, Udit Kumar <u-kumar1@ti.com>
-CC: <nm@ti.com>, <tony@atomide.com>, <jirislaby@kernel.org>,
-        <u.kleine-koenig@pengutronix.de>, <ronald.wahl@raritan.com>,
-        <thomas.richard@bootlin.com>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>
-References: <20240614061314.290840-1-u-kumar1@ti.com>
- <2024061435-reawake-smoking-f639@gregkh>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <2024061435-reawake-smoking-f639@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5roV/dfZvNvEhY/C"
+Content-Disposition: inline
+In-Reply-To: <20240613191616.2101821-4-jesse@rivosinc.com>
+
+--5roV/dfZvNvEhY/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 13, 2024 at 03:16:12PM -0400, Jesse Taube wrote:
+> Originally, the check_unaligned_access_emulated_all_cpus function
+> only checked the boot hart. This fixes the function to check all
+> harts.
+
+This seems like it should be split out and get a Fixes: tag & a cc:
+stable.
+
+> Check for Zicclsm before checking for unaligned access. This will
+> greatly reduce the boot up time as finding the access speed is no longer
+> necessary.
+>=20
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> ---
+> V1 -> V2:
+>  - New patch
+> ---
+>  arch/riscv/kernel/traps_misaligned.c       | 23 ++++++----------------
+>  arch/riscv/kernel/unaligned_access_speed.c | 23 +++++++++++++---------
+>  2 files changed, 20 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
+ps_misaligned.c
+> index b62d5a2f4541..8fadbe00dd62 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -526,31 +526,17 @@ int handle_misaligned_store(struct pt_regs *regs)
+>  	return 0;
+>  }
+> =20
+> -static bool check_unaligned_access_emulated(int cpu)
+> +static void check_unaligned_access_emulated(struct work_struct *unused)
+>  {
+> +	int cpu =3D smp_processor_id();
+>  	long *mas_ptr =3D per_cpu_ptr(&misaligned_access_speed, cpu);
+>  	unsigned long tmp_var, tmp_val;
+> -	bool misaligned_emu_detected;
+> =20
+>  	*mas_ptr =3D RISCV_HWPROBE_MISALIGNED_UNKNOWN;
+> =20
+>  	__asm__ __volatile__ (
+>  		"       "REG_L" %[tmp], 1(%[ptr])\n"
+>  		: [tmp] "=3Dr" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
+> -
+> -	misaligned_emu_detected =3D (*mas_ptr =3D=3D RISCV_HWPROBE_MISALIGNED_E=
+MULATED);
+> -	/*
+> -	 * If unaligned_ctl is already set, this means that we detected that all
+> -	 * CPUS uses emulated misaligned access at boot time. If that changed
+> -	 * when hotplugging the new cpu, this is something we don't handle.
+> -	 */
+> -	if (unlikely(unaligned_ctl && !misaligned_emu_detected)) {
+> -		pr_crit("CPU misaligned accesses non homogeneous (expected all emulate=
+d)\n");
+> -		while (true)
+> -			cpu_relax();
+> -	}
+> -
+> -	return misaligned_emu_detected;
+>  }
+> =20
+>  bool check_unaligned_access_emulated_all_cpus(void)
+> @@ -562,8 +548,11 @@ bool check_unaligned_access_emulated_all_cpus(void)
+>  	 * accesses emulated since tasks requesting such control can run on any
+>  	 * CPU.
+>  	 */
+> +	schedule_on_each_cpu(check_unaligned_access_emulated);
+> +
+>  	for_each_online_cpu(cpu)
+> -		if (!check_unaligned_access_emulated(cpu))
+> +		if (per_cpu(misaligned_access_speed, cpu)
+> +		    !=3D RISCV_HWPROBE_MISALIGNED_EMULATED)
+>  			return false;
+> =20
+>  	unaligned_ctl =3D true;
+> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kern=
+el/unaligned_access_speed.c
+> index a9a6bcb02acf..70c1588fc353 100644
+> --- a/arch/riscv/kernel/unaligned_access_speed.c
+> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+> @@ -259,23 +259,28 @@ static int check_unaligned_access_speed_all_cpus(vo=
+id)
+>  	kfree(bufs);
+>  	return 0;
+>  }
+> +#endif /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+> =20
+>  static int check_unaligned_access_all_cpus(void)
+>  {
+> -	bool all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
+> +	bool all_cpus_emulated;
+> +	int cpu;
+> =20
+> +	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
+> +		for_each_online_cpu(cpu) {
+> +			per_cpu(misaligned_access_speed, cpu) =3D RISCV_HWPROBE_MISALIGNED_FA=
+ST;
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
+> +
+> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+
+Can we make this an IS_ENABLED() please?
 
 
+Thanks,
+Conor.
 
-On 14/06/24 12:16, Greg KH wrote:
-> On Fri, Jun 14, 2024 at 11:43:14AM +0530, Udit Kumar wrote:
->> As per Errata i2310[0], Erroneous timeout can be triggered,
->> if this Erroneous interrupt is not cleared then it may leads
->> to strom of interrupts, therefore apply Errata i2310 solution.
->>
+>  	if (!all_cpus_emulated)
+>  		return check_unaligned_access_speed_all_cpus();
+> +#endif
+> =20
+>  	return 0;
+>  }
+> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+> -static int check_unaligned_access_all_cpus(void)
+> -{
+> -	check_unaligned_access_emulated_all_cpus();
+> -
+> -	return 0;
+> -}
+> -#endif
+> =20
+>  arch_initcall(check_unaligned_access_all_cpus);
+> --=20
+> 2.43.0
+>=20
 
-s/strom/storm
+--5roV/dfZvNvEhY/C
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> [0] https://www.ti.com/lit/pdf/sprz536 page 23
->>
->> Signed-off-by: Udit Kumar <u-kumar1@ti.com>
->> ---
->>  drivers/tty/serial/8250/8250_omap.c | 25 ++++++++++++++++++++-----
->>  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> Does this need to go to older/stable kernels?  If so, how far back?
-> 
+-----BEGIN PGP SIGNATURE-----
 
-Yes, this seems to be an updated workaround to existing errata.
-Please add below Fixes tag when you respin
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmv91wAKCRB4tDGHoIJi
+0reHAQDJzCDTih2CT5+8AGBLj1gklSGmS/R+h5QMKj0uL8S0zQEAqTT7zZH5px5I
+8XwHyIp3NfUTa9Qm5JgQqXy58YGrLgQ=
+=jw9t
+-----END PGP SIGNATURE-----
 
-Fixes: b67e830d38fa ("serial: 8250: 8250_omap: Fix possible interrupt storm on K3 SoCs")
-
-
-> thanks,
-> 
-> greg k-h
-
--- 
-Regards
-Vignesh
+--5roV/dfZvNvEhY/C--
