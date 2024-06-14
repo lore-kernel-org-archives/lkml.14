@@ -1,177 +1,137 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95891836DE;
-	Fri, 14 Jun 2024 08:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDC018413A;
+	Fri, 14 Jun 2024 08:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718353553; cv=none; b=ntG7A3QZr5hdxsaewNPHR00pyl2YUllKxE296LHQNkSfvSpjCAfd5xtRrDVJPMCFDiRiwjJo3WMV7crPptI2/y6ehYNp0SQo3dIcWCvWJsvoXCIpjg6322+wceGL2Q5eOS/XoWz+QBhgZ8snykz0AtPoDK3C0/6pbBplbJvNYOY=
+	t=1718353564; cv=none; b=Cfo6joHXdFaT94feDMhs6hBngrnTPzgfwxSFbZeIAdT1e8pjOV3qpbeHvTqUyGD39plBnItpWP8Eq0n+0d35/Zy7DJPSTv4UU+GL1u5+5q0j4/+3ODEaU0HMfzJll48TjV1P5qZ1kRsgdo08I7d/t+eJD7fEYKS/57axW/H8sfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718353553; c=relaxed/simple;
-	bh=n5ERbc459S9Htag/xAuMET2+wMLaFjbD6QqIAA6kQCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=udp0lDh22MwrUBVBnY/RjBB+xW3RPpuTyCoVGbO+1PPMroV6p27EXLRh94LEcsrQEfFKpoJIfYdhQvFWn0bHYW3kvB93GfovqY2sBqT+V9wWbWlXbh1GbuyuqR70bpV2Brjmdm1OPdRmb0jl/hl6Txk1YWa1Re+g1MmT+hWlGLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 28AF81A186A;
-	Fri, 14 Jun 2024 10:25:50 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4462F1A1806;
-	Fri, 14 Jun 2024 10:25:49 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 15B99180222A;
-	Fri, 14 Jun 2024 16:25:47 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v2] Bluetooth: btnxpuart: Add handling for boot-signature timeout errors
-Date: Fri, 14 Jun 2024 13:53:38 +0530
-Message-Id: <20240614082338.6530-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718353564; c=relaxed/simple;
+	bh=MnoDPn7esVk0izTPWWobr9ZqeVKg3ab/Yn7Gm5y+UBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XGDrllbiki4i389Y6eYqjV4efzTyXeB3vIE4ZGoMGFC++DDsdBykoMBle2acsHscYU6g1/QVaKDY/PumzEwUqPpX8Nkt1MSatL69i4ElnN2j3DhJyVZf9Mvkoo99d3PBCTo/BNIFSqFvhWTP3CMwgbAmrshahXFY5o8/6cpsYBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBeWzj5h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBeWzj5h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CD0C2BD10;
+	Fri, 14 Jun 2024 08:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718353564;
+	bh=MnoDPn7esVk0izTPWWobr9ZqeVKg3ab/Yn7Gm5y+UBA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fBeWzj5hq3tKjt0bijmfdMota/lHKvhW0efUz66hSe2svOi0f6+vILbmBOo3SC+22
+	 BgdjjhWBGuKeGPaSV8X4j6igyXFUomfxm8pmjohHLUkduGdDsWNbn9iMdI41B8nx5c
+	 1p8JW8G0JSUgYzAiEEkngQfE1VjbtrDSFB+HJZslw81jXbSvYwcgfkD7fG4Ngjl4qP
+	 h3u3wQPFgUcL9DWZGX/MBv4bTh7SQDgPs95EJ0W91i6lMYkmt5qFMCuBKmbBUHx3NJ
+	 oFlgS+WwcDRHnQuTbjtVjRoOGMSEa9ULF50JRLiSP/kjZ9Bk44/xggVbDuY1iomnA6
+	 WHrOyNS/1gfeA==
+Date: Fri, 14 Jun 2024 10:25:58 +0200
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Chris Packham  <Chris.Packham@alliedtelesis.co.nz>, "andrew@lunn.ch"
+ <andrew@lunn.ch>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+ "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "davem@davemloft.net"
+ <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "ericwouds@gmail.com" <ericwouds@gmail.com>
+Subject: Re: [PATCH next-next] net: phy: realtek: add support for rtl8224
+ 2.5Gbps PHY
+Message-ID: <20240614102558.32dcba79@dellmb>
+In-Reply-To: <fbf2be8d31579d1c9305fd961751fc6f0a4b4556.camel@redhat.com>
+References: <20240611053415.2111723-1-chris.packham@alliedtelesis.co.nz>
+	<c3d699a1-2f24-41c5-b0a7-65db025eedbc@alliedtelesis.co.nz>
+	<20240612090707.7da3fc01@dellmb>
+	<fbf2be8d31579d1c9305fd961751fc6f0a4b4556.camel@redhat.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-This handles the timeout error codes sent by the chip as part of the
-bootloader signatures during firmware download process.
+On Fri, 14 Jun 2024 10:18:47 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
 
-When the bootloader does not receive a response packet from the host
-within a specific time, it adds an error code to the bootloader
-signature while requesting for the FW chunk from the same offset.
+> On Wed, 2024-06-12 at 09:07 +0200, Marek Beh=C3=BAn wrote:
+> > On Tue, 11 Jun 2024 20:42:43 +0000
+> > Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+> >  =20
+> > > +cc Eric W and Marek.
+> > >=20
+> > > On 11/06/24 17:34, Chris Packham wrote: =20
+> > > > The Realtek RTL8224 PHY is a 2.5Gbps capable PHY. It only uses the
+> > > > clause 45 MDIO interface and can leverage the support that has alre=
+ady
+> > > > been added for the other 822x PHYs.
+> > > >=20
+> > > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > > ---
+> > > >=20
+> > > > Notes:
+> > > >      I'm currently testing this on an older kernel because the boar=
+d I'm
+> > > >      using has a SOC/DSA switch that has a driver in openwrt for Li=
+nux 5.15.
+> > > >      I have tried to selectively back port the bits I need from the=
+ other
+> > > >      rtl822x work so this should be all that is required for the rt=
+l8224.
+> > > >     =20
+> > > >      There's quite a lot that would need forward porting get a work=
+ing system
+> > > >      against a current kernel so hopefully this is small enough tha=
+t it can
+> > > >      land while I'm trying to figure out how to untangle all the ot=
+her bits.
+> > > >     =20
+> > > >      One thing that may appear lacking is the lack of rate_matching=
+ support.
+> > > >      According to the documentation I have know the interface used =
+on the
+> > > >      RTL8224 is (q)uxsgmii so no rate matching is required. As I'm =
+still
+> > > >      trying to get things completely working that may change if I g=
+et new
+> > > >      information.
+> > > >=20
+> > > >   drivers/net/phy/realtek.c | 8 ++++++++
+> > > >   1 file changed, 8 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> > > > index 7ab41f95dae5..2174893c974f 100644
+> > > > --- a/drivers/net/phy/realtek.c
+> > > > +++ b/drivers/net/phy/realtek.c
+> > > > @@ -1317,6 +1317,14 @@ static struct phy_driver realtek_drvs[] =3D {
+> > > >   		.resume         =3D rtlgen_resume,
+> > > >   		.read_page      =3D rtl821x_read_page,
+> > > >   		.write_page     =3D rtl821x_write_page,
+> > > > +	}, {
+> > > > +		PHY_ID_MATCH_EXACT(0x001ccad0),
+> > > > +		.name		=3D "RTL8224 2.5Gbps PHY",
+> > > > +		.get_features   =3D rtl822x_c45_get_features,
+> > > > +		.config_aneg    =3D rtl822x_c45_config_aneg,
+> > > > +		.read_status    =3D rtl822x_c45_read_status,
+> > > > +		.suspend        =3D genphy_c45_pma_suspend,
+> > > > +		.resume         =3D rtlgen_c45_resume,
+> > > >   	}, {
+> > > >   		PHY_ID_MATCH_EXACT(0x001cc961),
+> > > >   		.name		=3D "RTL8366RB Gigabit Ethernet"   =20
+> >=20
+> > Don't you need rtl822xb_config_init for serdes configuration? =20
+>=20
+> Marek, I read the above as you would prefer to have such support
+> included from the beginning, as such I'm looking forward a new version
+> of this patch.
+>=20
+> Please raise a hand if I read too much in your reply.
 
-The host is expected to clear this error code with a NAK, and reply to
-only those bootloader signatures which have error code 0.
+I am raising my hand :) I just wanted to point it out.
+If this code works for Chris' hardware, it is okay even without the
+.config_init.
 
-However, the driver was ignoring this error code and replying with the
-firmware chunks instead, which is apparently ignored by the chip and the
-chip resends the same bootloader signature with the error code again. This
-happens in a loop until the error code self clears and firmware download
-proceeds ahead, adding a couple of milliseconds to the total firmware
-download time.
-
-Commit 689ca16e5232 was an initial implementation which simply printed
-the following line during driver debug:
-- FW Download received err 0x04 from chip
-
-This commit adds the expected handling to the error codes.
-
-This error handling is valid for data_req bootloader signatures for V3
-and future bootloader versions.
-
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Fixes: 689ca16e5232 ("Bluetooth: NXP: Add protocol support for NXP Bluetooth chipsets")
----
-v2: Improve commit message, avoid type casting (Paul Menzel)
----
- drivers/bluetooth/btnxpuart.c | 52 ++++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 00757a7cd8b5..fd7f25bed5b6 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -189,6 +189,11 @@ struct btnxpuart_dev {
- #define NXP_NAK_V3		0x7b
- #define NXP_CRC_ERROR_V3	0x7c
- 
-+/* Bootloader signature error codes */
-+#define NXP_ACK_RX_TIMEOUT	0x0002	/* ACK not received from host */
-+#define NXP_HDR_RX_TIMEOUT	0x0003	/* FW Header chunk not received */
-+#define NXP_DATA_RX_TIMEOUT	0x0004	/* FW Data chunk not received */
-+
- #define HDR_LEN			16
- 
- #define NXP_RECV_CHIP_VER_V1 \
-@@ -279,6 +284,17 @@ struct nxp_bootloader_cmd {
- 	__be32 crc;
- } __packed;
- 
-+struct nxp_v3_rx_timeout_nak {
-+	u8 nak;
-+	__le32 offset;
-+	u8 crc;
-+} __packed;
-+
-+union nxp_v3_rx_timeout_nak_u {
-+	struct nxp_v3_rx_timeout_nak pkt;
-+	u8 buf[6];
-+};
-+
- static u8 crc8_table[CRC8_TABLE_SIZE];
- 
- /* Default configurations */
-@@ -912,6 +928,32 @@ static int nxp_recv_chip_ver_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	return 0;
- }
- 
-+static void nxp_handle_fw_download_error(struct hci_dev *hdev, struct v3_data_req *req)
-+{
-+	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-+	__u32 offset = __le32_to_cpu(req->offset);
-+	__u16 err = __le16_to_cpu(req->error);
-+	union nxp_v3_rx_timeout_nak_u nak_tx_buf;
-+
-+	switch (err) {
-+	case NXP_ACK_RX_TIMEOUT:
-+	case NXP_HDR_RX_TIMEOUT:
-+	case NXP_DATA_RX_TIMEOUT:
-+		nak_tx_buf.pkt.nak = NXP_NAK_V3;
-+		nak_tx_buf.pkt.offset = __cpu_to_le32(offset);
-+		nak_tx_buf.pkt.crc = crc8(crc8_table, nak_tx_buf.buf,
-+				      sizeof(nak_tx_buf) - 1, 0xff);
-+		serdev_device_write_buf(nxpdev->serdev, nak_tx_buf.buf,
-+					sizeof(nak_tx_buf));
-+		break;
-+	default:
-+		bt_dev_dbg(hdev, "Unknown bootloader error code: %d", err);
-+		break;
-+
-+	}
-+
-+}
-+
- static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-@@ -926,7 +968,12 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	if (!req || !nxpdev->fw)
- 		goto free_skb;
- 
--	nxp_send_ack(NXP_ACK_V3, hdev);
-+	if (!req->error) {
-+		nxp_send_ack(NXP_ACK_V3, hdev);
-+	} else {
-+		nxp_handle_fw_download_error(hdev, req);
-+		goto free_skb;
-+	}
- 
- 	len = __le16_to_cpu(req->len);
- 
-@@ -953,9 +1000,6 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 		wake_up_interruptible(&nxpdev->fw_dnld_done_wait_q);
- 		goto free_skb;
- 	}
--	if (req->error)
--		bt_dev_dbg(hdev, "FW Download received err 0x%02x from chip",
--			   req->error);
- 
- 	offset = __le32_to_cpu(req->offset);
- 	if (offset < nxpdev->fw_v3_offset_correction) {
--- 
-2.34.1
-
+Marek
