@@ -1,61 +1,60 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AEE146D6D;
-	Fri, 14 Jun 2024 05:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECB7146D76;
+	Fri, 14 Jun 2024 05:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718342101; cv=none; b=dMyIHUwJw1lpZsn+7ew+RGhF0KRonwzxnT8W+e/1JCxHVU+VTafz1H0lI/zWEIWpRPmbVflgZ/5Ircyg0nEkzojHBuQOX1Ggx34VivFqrWzXoxiGSQ4zcFhy73hnFbzG00l5hGcyv4zNOxZ0FMVv9+tcTm/mZu4eQPLDly0Fo8Q=
+	t=1718342115; cv=none; b=NwXnMum47pDrCR52L44GHjs1hkOq5JCLRsPwgI73l/eRwhQ44GVlssuqoubKa7MrC/dbxmzwYRdwnzLtSsauvHDmP+k1aK4xtG5qtxF89ZItyu3FW0l/5NxbLd5CxZIYJVMrfbrU1aLtryddmAt84f/lOmjYXJ1zVdVQd0TbNYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718342101; c=relaxed/simple;
-	bh=XUJaffq5gWlrQrUCm8mpwlS/x1y63KiRJJbkpM2PUk4=;
+	s=arc-20240116; t=1718342115; c=relaxed/simple;
+	bh=REPEg95+d+iTc0idDXfd78laK40EBF5beq+k9Ezn8cs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y5W/b0nvfVdpJ4X2/q0+baiW6TsbI7wKuIbzv0ttqZi3zgy0zK2SCeiEt4Tn20GVa3CxFnUiyq6Xyj03DHDemb3SI75VX9zPJyFHSFVeI7/r1IsHZ/1wIa21uyR32HfcC1uLjJ941rq7rfw6CITUtNZPIHYC1tQ1+71tbLxi+b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qo1GS5QL; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=J05Uzvxsphn932btwIScRtHlLZRaueIgotPNOVBiUOywsnaSTN97OkoIhAIDgLCaP3GgxzQEq+atE/5VQhGqW1SUbUsLXgPJgVdbqavb+CEzMbt0ihz1gvq1rPnSKloXiUbO0pnnGARuyGpwCV+XQyI07B4K+GAZyapJyJOmarU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xokVQM8j; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qo1GS5QL"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45E5EelT016520;
-	Fri, 14 Jun 2024 00:14:40 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xokVQM8j"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45E5F7we013061;
+	Fri, 14 Jun 2024 00:15:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718342080;
-	bh=pLZ+J0Uv5wri3Ffm5wOW0FEKQXP4puGs29LO2x/ZLmo=;
+	s=ti-com-17Q1; t=1718342107;
+	bh=ig4vo30RhDa2qdHlP6Cw2HLQ0WlbRQq5FAqPujvx3CE=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=qo1GS5QLlkdt1yh48bAnACPZRm8CyDMRSI+CqMgMn/tdmmlTvF60DKGbTrBtKpcVw
-	 pgbLq95536VNl0FNrXZij5pWrIN43rl90bSxDEofWyiSFeKVDxrM578G38ECW2Jeqz
-	 +/M6DbYf1n/ywQQdp0iC/no3KIzDPFsJxodLMBZ0=
+	b=xokVQM8jTq6zjiPFAvDQbGNF9rPf9HBdFKnppyi6RkwX/Lf3/haHALFUYp43XNmSQ
+	 zchI8+FG069OGqMsyVUU7HYThZcJ9wcFlqwEPzidSFpI3Q41E5ZmtfWsw+NLx/VHxZ
+	 lJx9g3ocxgCMq60R6OEnGW9eXL5rbCsA3H66IAgY=
 Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45E5Ee2M129782
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45E5F7SO121849
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Jun 2024 00:14:40 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+	Fri, 14 Jun 2024 00:15:07 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE101.ent.ti.com
  (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Jun 2024 00:14:39 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 00:15:07 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Jun 2024 00:14:40 -0500
+ Frontend Transport; Fri, 14 Jun 2024 00:15:07 -0500
 Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45E5EZ5N085824;
-	Fri, 14 Jun 2024 00:14:36 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45E5F4OU061708;
+	Fri, 14 Jun 2024 00:15:04 -0500
 From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <francesco@dolcini.it>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <sabiya.d@ti.com>, <u-kumar1@ti.com>, <danishanwar@ti.com>,
-        <srk@ti.com>
-Subject: Re: [PATCH v4 0/4] Add PCIe DT support for TI's J784S4-EVM and AM69-SK
-Date: Fri, 14 Jun 2024 10:44:33 +0530
-Message-ID: <171826022277.240984.16790260886500529482.b4-ty@ti.com>
+To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Bhavya
+ Kapoor <b-kapoor@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <conor+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <robh@kernel.org>, <kristo@kernel.org>,
+        <nm@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-j784s4-evm: Add support for multiple CAN instances
+Date: Fri, 14 Jun 2024 10:45:02 +0530
+Message-ID: <171826022273.240984.17865327503994572008.b4-ty@ti.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240529082259.1619695-1-s-vadapalli@ti.com>
-References: <20240529082259.1619695-1-s-vadapalli@ti.com>
+In-Reply-To: <20240411201747.18697-1-b-kapoor@ti.com>
+References: <20240411201747.18697-1-b-kapoor@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,30 +65,27 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Siddharth Vadapalli,
+Hi Bhavya Kapoor,
 
-On Wed, 29 May 2024 13:52:55 +0530, Siddharth Vadapalli wrote:
-> TI's J784S4 SoC has two x4 Lane and two x2 Lane Gen3 PCIe Controllers.
-> This series adds the device-tree nodes for all 4 PCIe instances in the
-> SoC file (k3-j784s4-main.dtsi). The J784S4-EVM board has only PCIe0 and
-> PCIe1 instances of PCIe brought out while the AM69-SK board has PCIe0,
-> PCIe1 and PCIe3 instances of PCIe brought out. The device-tree overlay
-> to enable PCIe0 and PCIe1 in Endpoint mode of operation on J784S4-EVM is
-> also included in this series.
+On Fri, 12 Apr 2024 01:47:47 +0530, Bhavya Kapoor wrote:
+> CAN instances 0 and 1 in the mcu domain and 16 in the main domain are
+> brought on the evm through headers J42, J43 and J46 respectively. Thus,
+> add their respective transceiver's 0, 1 and 2 dt nodes to add support
+> for these CAN instances.
+> 
+> CAN instance 4 in the main domain is brought on the evm through header
+> J45. The CAN High and Low lines from the SoC are routed through a mux
+> on the evm. The select lines need to be set for the CAN signals to
+> reach to its transceiver on the evm. Therefore, add transceiver 3
+> dt node to add support for this CAN instance.
 > 
 > [...]
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/4] arm64: dts: ti: k3-j784s4-main: Add PCIe nodes
-      commit: 8e05ce691af29db0c7f0d468c8d7c6e13273a9e6
-[2/4] arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
-      commit: 27ce26fe52d4dcb5bf58cdf5527e2f3a498c1fdf
-[3/4] arm64: dts: ti: k3-j784s4-evm: Add overlay for PCIe0 and PCIe1 EP Mode
-      commit: 7c4270de2806f80c06dc80c2cf2c8d6eb7c44c59
-[4/4] arm64: dts: ti: k3-am69-sk: Add PCIe support
-      commit: 2f79e7408ac1b22ce8abc4a22b92793a57a3077d
+[1/1] arm64: dts: ti: k3-j784s4-evm: Add support for multiple CAN instances
+      commit: 4b5156e1a413eaa2094b3281d6ea4e6b31cea01b
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
