@@ -1,115 +1,105 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDAE1922EE
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B61184108;
+	Fri, 14 Jun 2024 12:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718366427; cv=none; b=sokYpQOGEA0l2xUrLEqrkfkBvzqJgw8sNPnChrFgWfMIczlFOQSwlbxdpFZiQXgjiDxTLw2rN4NkXSEeZmVLeHtdVr0sbSpTsh9Nq2wF0EhQZrxkSrHkQdQtUotX4tFpIIwdMVJTXXq3TiCW4Y87vfHfJrLKb+xjPkGdIEyxENI=
+	t=1718366460; cv=none; b=sb5SKsZHw3MqCBqKQhK0tHsYJ64r47H7e9KxMFoVd0CFKsMv+GhnElIs+YmvyW8jpHkGPNJfm5xm3El9rGJikHgQqaWCSmDKWDFHr+LHIj1HykRInwAhYGNUQqABnQOjPhpf5+DCkcCzXbEHfibQ0MB52TozUIaxJEkpwktk+J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718366427; c=relaxed/simple;
-	bh=LPIgAW7ifC+de2M7i4L56r7Bddt6JbpEMPcmEQsL8dQ=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=nICscc1tbvmVMU7X2tEkjd1oV2c17I9qCbsLnoxb6VAiY+f0cjFB5ZAbFVIQTokU3LmfP3e5pkfpzTTehkTHtAgBUg8j2pWppxOaLjaPpCIuS9aZnEp84mJr4l7CwYnT+9LCCSNSz/syyvqciii5ib7aBeVcGFusuExYhxW9uT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=c394cIol; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="c394cIol"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id HfFRsemMirtmgI5bOsuNiU; Fri, 14 Jun 2024 12:00:18 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id I5bNso8c0EEsPI5bOsBknn; Fri, 14 Jun 2024 12:00:18 +0000
-X-Authority-Analysis: v=2.4 cv=COUsXwrD c=1 sm=1 tr=0 ts=666c30d2
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=k_VYlBbNjbJsBR3UXVkA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=U1oTSayNQFpdMvC+joJqaPWd/79bujuvwSuomzHJOMs=; b=c394cIolw4IhKvhi6M2EzjVk9x
-	AE61WNV4rcywswsneGKWFly7ZLCZD2uMqa7lpbYTjc5jEePrNmtuta0kRLESCGwz329uwpYFl4vCx
-	KPFZVcpENXKyyEjPppZKPrydFMMyvA/T7xP9V9rnWth+NMoL4o6GPyjJ5jZFTupqFe3kFm93sa570
-	KHm9Ku6BsXxgt/lUCDY581rZAQtw7VcyBcDigR+O08mgETu/X4JKwT0GOV5Hjlq1SS3y+2XV7fGk0
-	E67AU3ZpAEhsEJWo4RWBk4cApB9cQlerzwjtAfS0Zhm7rwa2iQPPjg0jFyl2uDfjQgEWrLn1VS+EI
-	TDMBozaQ==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:43682 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1sI5bJ-001j6w-0h;
-	Fri, 14 Jun 2024 06:00:13 -0600
-Subject: Re: [PATCH 6.1 00/85] 6.1.94-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240613113214.134806994@linuxfoundation.org>
-In-Reply-To: <20240613113214.134806994@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <14eb0b11-e125-6c86-f9eb-fa41647fe9be@w6rz.net>
-Date: Fri, 14 Jun 2024 05:00:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	s=arc-20240116; t=1718366460; c=relaxed/simple;
+	bh=MgEc7xmF7iEZYhCWJxN5DpXt7Nk1yu973TKHIqqKb3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bev8hN+ZiO0AuW+BfGN75CQtR6Glk0AFIV+pqUjGZofkbemx01DwqjpgaEMBR3DohnEhkJT7qYC4x1nFRu4yeisFXVGEq1RaCC80kEDc7uqFyXpm+9lzJgqYRX+qd+m8i6H4Aln7e/q9o3emOPZHP60CtpFn/Sqh/W6M3OIArBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so2266220a12.1;
+        Fri, 14 Jun 2024 05:00:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718366457; x=1718971257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fx3+tEx/bRO112S5D6MlGbG6rpWnWaRFWOVaBF2ErTo=;
+        b=tWWc7Ol9wb5VHKWwhkimqHDLmcL0XO4HN5WnWBVD1qMjGnL5np5pfQNLUDXX74WTJy
+         YRUfySHCXt2txUzsK73NuE5EnGhNERMjDtPYvY93QwlOv7Jqz6/7SMfwfALZoE5ZNG9Z
+         LusVMlbVu0qbv6GvgtykXwmI0mgVyVeuxh0DeU0QcecJa3SrWhhWI5BT64EWFTjyunFN
+         RaT4UEdkdZckhlFR+oaEAUMqQ7cWfMjhzNQbk1MA4i37TEtZPl/zpRANf0w6lDuYHAik
+         iEvLykAUfh74oT/W4CFp6YWpylNZDqIk7Cb/V5s6LazRx8fHUx1R4yShXoMFQ4OuFlci
+         Fhtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmM6nsfdt1ypXBHKKnOBMvMDTCcuKyKeF30m7CWwq6SzDU+Pul4Tsa7iDJiyS5WZCkexSCGFzs2vFkVCyH1en+LMVLFU1PXXz9Stx+FQr9Y9TczJkklBjNljH5oKNUteLq5IFR0mW0P8TetCy2oWJ+OQ3Ux+OI6jBVE0dLGzDnhOD4Gs3w
+X-Gm-Message-State: AOJu0YxS+NUyKiae3lhQPoCDAirBg1EsHy74UkqRvMSG+ThFbCqN+gm2
+	mmjchU++X/rNC3SkzFNhpsmVJeXOaDdNCZ5Cz5eU7NIpj5WjtZbv
+X-Google-Smtp-Source: AGHT+IHBHm31PZ29e6nEa/Y7XqntiW6RZwljeYbps4cAyXiamfw1DNoVUOfdzjPeP2QRHz/hnFp9FA==
+X-Received: by 2002:a50:d5c2:0:b0:573:555e:6d89 with SMTP id 4fb4d7f45d1cf-57cbd652436mr1663002a12.1.1718366456759;
+        Fri, 14 Jun 2024 05:00:56 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72ce067sm2206196a12.9.2024.06.14.05.00.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 05:00:56 -0700 (PDT)
+Date: Fri, 14 Jun 2024 05:00:54 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] netdevice: define and allocate &net_device
+ _properly_
+Message-ID: <Zmww9tS2eWt3mnj3@gmail.com>
+References: <20240507123937.15364-1-aleksander.lobakin@intel.com>
+ <20240507111035.5fa9b1eb@kernel.org>
+ <3b08e1d0-62be-4fae-9dbb-9161992ee067@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1sI5bJ-001j6w-0h
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:43682
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 4
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOS7oxky+j8GDEPcawfXJCFyKslB64gsOXbjAVcop4Tn7naXDXDyXSSk9ZU/I/04X9ky6vsjiULx/rFJmf5DaiVzqWf6GeFiq1ssgvqZ6cOCuSyv4y+1
- Idck5q44Cot3chR9qgAvkpOCvcBUJ3HAQ/6yv/Nff919/ExCMaPfwmvp+Ls/uE0Ml7D9T3rXJe2ghFGbAH6lVEBm8+rD6C409QA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b08e1d0-62be-4fae-9dbb-9161992ee067@intel.com>
 
-On 6/13/24 4:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.94 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 15 Jun 2024 11:31:50 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.94-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, May 08, 2024 at 11:13:21AM +0200, Alexander Lobakin wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
+> Date: Tue, 7 May 2024 11:10:35 -0700
+> 
+> > On Tue,  7 May 2024 14:39:37 +0200 Alexander Lobakin wrote:
+> >> There are several instances of the structure embedded into other
+> >> structures, but also there's ongoing effort to remove them and we
+> >> could in the meantime declare &net_device properly.
+> > 
+> > Is there a reason you're reposting this before that effort is completed?
+> 
+> To speed up the conversion probably :D
+> 
+> > The warnings this adds come from sparse and you think they should be
+> > ignored?
+> 
+> For now...
+> 
+> > 
+> > TBH since Breno is doing the heavy lifting of changing the embedders 
+> > it'd seem more fair to me if he got to send this at the end. Or at
+> > least, you know, got a mention or a CC.
+> 
+> I was lazy enough to add tags, sorry. The idea of him sending this at
+> the end sounds reasonable.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+I think we are almost at the time to get rid of the last user of
+embedded netdev.
 
-Tested-by: Ron Economos <re@w6rz.net>
+	https://lore.kernel.org/all/20240614115317.657700-1-leitao@debian.org/
 
+Once that patch lands, I will submit this patch on top of that final
+fix.
+
+Let me know if you have any concern.
+
+--breno
