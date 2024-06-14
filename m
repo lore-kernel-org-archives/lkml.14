@@ -1,152 +1,110 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3377A15A861
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B19A14F12C
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718379332; cv=none; b=mXku6cL8DtLoM0SQRtNga+L80wP79GXyLTMLaOZGpP90P8fuP1gvBQ+FEk6+D1JNlNkezQPDAWWcdYgzA1OnUkB6n+bgbv/UIY8qmzcQKBfhytKHxOa32fLLmQ7gbdTLOwJfNEj6Mk4YLWxui0Yr2+SW8qTaYyFJ7ezJfGOoNNo=
+	t=1718379362; cv=none; b=XhOs3E0gAQRIu9EftmwB9pCbRg91HnlD4u9eDFEgFskx/p2vNix/hpAdb10FAcFcFJ8fa6aN2I8TF+ijBcOj9AS/8r4GdR3Npyyj9ZFHfUDXpNL3xycS6vmJcSW9XRyK+LzSN+x5IM3KBoyd0a74W4gZucEIC0GyP+9vV8uGamM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718379332; c=relaxed/simple;
-	bh=e+pZ7eTKAx4VkEW8APS8mrMH/EItOgatnlu+M5ND5W0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CH+jp1EZJf3pWuptpG9Yy8I6XBOycDOiwTih7LRmbNd8+NftYGi75+LFiqnf+c05VNXg29aUFRi5coZj9E35m8m/SD89pAkOiNX7tRLmSBcbusB1gUoSz2xGV3WHwzQM+o/PMl01X9T5Ot56GOdEBxDeucgm4KjAGS1Ax4WWhkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TxhI0YxW; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718379362; c=relaxed/simple;
+	bh=Dh2KtUvAtiglq0b5/QtxJb7/lWsVoYr0FusrI650O/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MKwEATuyCtS3Hj5Ie0qGUZ7yXPsMSEubSII1RsTQZF/RQLm7IGWdVHn5vPCTTS50xWMPyN16iAWQAhlHh9D6IDcIQPPcGf7ZXv5HWkcz2+044LKcXOwrIvSonZOkKzwLHqKiEA0u0djhOdQiYQtjUmBPAg/oIJRuoBfLMJMvQjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=sY3VDxFt; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TxhI0YxW"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dff1eb1c1fcso971203276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718379330; x=1718984130; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dK2lFOmA7MzUYlO9j8YBz7d5Tzn0my7qhQPYijrsljo=;
-        b=TxhI0YxW6xVpd9aAQgKbK9L3KECstPjYk20FHevuHna2SCQFrmeW4DYKhVJ/PESNVu
-         3B93VEiWxa+dEb0ACMlTdCVmlPx4aqoBTVklLB4lJjNt+beBUmhXSAMe8RYs3hfC6qdV
-         iZPBvK0910CYSWXNsBeqjLaeVJVwOJSbrmZQUd4xFk8KY1cEiPhxTOzGyRzl8Qp/tnOd
-         tiwQd1fQpr1vIikiTd4Gj6e73oVkQ1YEWh6k+ABQ2MU4Zpo8u+k54M2MQWkyzyYvBG+D
-         1iiGR6R4I7YrKsK2FiZrBhjmdLzRkAfKwX39Lw7CS3czRKFH/UcUA9hWVP5deiLb+J38
-         uG2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718379330; x=1718984130;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dK2lFOmA7MzUYlO9j8YBz7d5Tzn0my7qhQPYijrsljo=;
-        b=BiYGTbEjEYAjNSJivyzBrUl9lpXPNiA2jotv/+t6rATu7nqLxtH5WiECYA72wDVC0T
-         pmS7wwAecO/u6QgatQbl2lBD5gjKBIi9enAZBeGvnLdMCcuGC7dWwSz2qcvk7e0Hk7gR
-         MToqy1jbUcWZe8NBYzjN+PIo5Dbml6rQI0WKVgTCt816cv8oo/Na5nG/uGPnFx8/GKKC
-         5dLrlAQal2H/T+L4fLSf0WMGtr+gg1JeunOacBbsUcgjNT+wkmbzCb/wfQ5MQnVroztv
-         mE89jesmCiNyIzW0hpQMLM+0XJ9ta7VU/YMyiZ0tumjUTATETxYZ+wJYd89KIW4OeX7L
-         yBDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpvdvt67xQxWDV4bebkvCY+DuTwfOcZQUwBdIzS0Vcz+LgJ2ePAFlUQZ1eezI3G//5fP9Cek+lEOVc/yZjmdv7lKLDHwVRLshC+d54
-X-Gm-Message-State: AOJu0YwY/Q3Ado1jFCuPI5nLwZBi/zEueUb68t3fJyzF7GtzsN1m8/tp
-	aJdTzKheo2py5s3gh5L+sGOAmT1XZwnuKfV2LgJZjFYe9UEmw07ah1GYq6r0okgA/zeUdrLc0kj
-	/eQ==
-X-Google-Smtp-Source: AGHT+IHZ+72AO/j0fqGW0W0xo4ynxvLZU81Wx/9eB8DTQbR+p/iEZtM5Z/d/JmTxJ48EWnz7qRK+kllwhBo=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:18ca:b0:dfe:fca5:2b9c with SMTP id
- 3f1490d57ef6-dff1389defemr890465276.2.1718379330021; Fri, 14 Jun 2024
- 08:35:30 -0700 (PDT)
-Date: Fri, 14 Jun 2024 08:35:23 -0700
-In-Reply-To: <20240614152228.GAZmxgNPmozj7UzRdV@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="sY3VDxFt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Ld6CWp6MvzsfLCexkDmw2gq97DL2MMR6pnNJDMxtfIA=; b=sY3VDxFtjDG94nMWnI8LoODQM/
+	CfwK10xGRc3gV3HrREQ/ZDn40krSt42MQYtXj982F0l8ux8pMREE20+LBaR0YewLAeF9nbb9ohIPm
+	s2Pm6tuAuwFFykGRP7Ex1ez0TFI2chX2sxZExktfwseTjoCbpnHnxbO7s2w6oDKjCCC4zFbA1LxiJ
+	dnlT4+k/NG6nhQyZ9E7zKZVX2w9aj21cdqw0RVTBTw2BYm1ZqYEipwU04VOYHroSIKUa49fTW8dR5
+	FebepwDSkhQXvw7AUtXvrS3mYBA/Zz3yYAzPXYW601GyWph0PSbs4pVaax6RKt5oYB2mEkB05MjC5
+	kH22fqCA==;
+Received: from [179.118.191.115] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sI8y2-003B8v-9T; Fri, 14 Jun 2024 17:35:54 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nouveau@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org
+Cc: kernel-dev@igalia.com,
+	Melissa Wen <mwen@igalia.com>,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Simon Ser <contact@emersion.fr>,
+	Pekka Paalanen <ppaalanen@gmail.com>,
+	daniel@ffwll.ch,
+	Daniel Stone <daniel@fooishbar.org>,
+	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
+	Dave Airlie <airlied@gmail.com>,
+	ville.syrjala@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Joshua Ashton <joshua@froggi.es>,
+	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v6 1/8] drm/atomic: Allow userspace to use explicit sync with atomic async flips
+Date: Fri, 14 Jun 2024 12:35:28 -0300
+Message-ID: <20240614153535.351689-2-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240614153535.351689-1-andrealmeid@igalia.com>
+References: <20240614153535.351689-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <202406141648.jO9qNGLa-lkp@intel.com> <20240614152228.GAZmxgNPmozj7UzRdV@fat_crate.local>
-Message-ID: <ZmxjOxhPy67QOh5Q@google.com>
-Subject: Re: [tip:x86/alternatives 14/14] arch/x86/kvm/kvm.o: warning:
- objtool: .altinstr_replacement+0xc5: call without frame pointer save/setup
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: kernel test robot <lkp@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024, Borislav Petkov wrote:
-> On Fri, Jun 14, 2024 at 04:15:14PM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/alternatives
-> > head:   f776e41fdcc4141876ef6f297318ab04c2382eb7
-> > commit: f776e41fdcc4141876ef6f297318ab04c2382eb7 [14/14] x86/alternative: Replace the old macros
-> > config: x86_64-buildonly-randconfig-r001-20211209 (https://download.01.org/0day-ci/archive/20240614/202406141648.jO9qNGLa-lkp@intel.com/config)
-> > compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240614/202406141648.jO9qNGLa-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202406141648.jO9qNGLa-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> > >> arch/x86/kvm/kvm.o: warning: objtool: .altinstr_replacement+0xc5: call without frame pointer save/setup
-> 
-> That thing comes from:
-> 
-> SYM_FUNC_START(vmx_do_interrupt_irqoff)
->         VMX_DO_EVENT_IRQOFF CALL_NOSPEC _ASM_ARG1
-> SYM_FUNC_END(vmx_do_interrupt_irqoff)
-> 
-> at the end of arch/x86/kvm/vmx/vmenter.S.
-> 
-> I know Sean had a patchset to cleanup that gunk. Sean?
+Allow userspace to use explicit synchronization with atomic async flips.
+That means that the flip will wait for some hardware fence, and then
+will flip as soon as possible (async) in regard of the vblank.
 
-That series was just for the actual VM-Enter/VM-Exit path.  vmx_do_interrupt_irqoff()
-is unrelated, it's just another asm chunk of code that happnes to live in vmenter.S
-(which is obviously is a bit of a misnomer these days).
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+ drivers/gpu/drm/drm_atomic_uapi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> >From reading objtool docs, those functions (vmx_do_nmi_irqoff() too AFAICT)
-> should have FRAME_BEGIN/FRAME_END  but if I do that, objtool bitches
-> differently:
-
-That function does create a stack frame, just without using FRAME_BEGIN/END so
-it's not dependent on using frame pointers.  Ironically, the intent is to try and
-placate objtool.
-
-IIUC, this warning just stared showing up with the alternatives changes?  Does
-CALL_NOSPEC generate different code now?
-
-.macro VMX_DO_EVENT_IRQOFF call_insn call_target
-	/*
-	 * Unconditionally create a stack frame, getting the correct RSP on the
-	 * stack (for x86-64) would take two instructions anyways, and RBP can
-	 * be used to restore RSP to make objtool happy (see below).
-	 */
-	push %_ASM_BP
-	mov %_ASM_SP, %_ASM_BP
-
-#ifdef CONFIG_X86_64
-	/*
-	 * Align RSP to a 16-byte boundary (to emulate CPU behavior) before
-	 * creating the synthetic interrupt stack frame for the IRQ/NMI.
-	 */
-	and  $-16, %rsp
-	push $__KERNEL_DS
-	push %rbp
-#endif
-	pushf
-	push $__KERNEL_CS
-	\call_insn \call_target
-
-	/*
-	 * "Restore" RSP from RBP, even though IRET has already unwound RSP to
-	 * the correct value.  objtool doesn't know the callee will IRET and,
-	 * without the explicit restore, thinks the stack is getting walloped.
-	 * Using an unwind hint is problematic due to x86-64's dynamic alignment.
-	 */
-	mov %_ASM_BP, %_ASM_SP
-	pop %_ASM_BP
-	RET
-.endm
-
-> 
-> arch/x86/kvm/kvm-intel.o: warning: objtool: vmx_do_interrupt_irqoff+0xc: undefined stack state
-> 
-> Suggestions?
-
+diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+index 22bbb2d83e30..2e1d9391febe 100644
+--- a/drivers/gpu/drm/drm_atomic_uapi.c
++++ b/drivers/gpu/drm/drm_atomic_uapi.c
+@@ -1070,7 +1070,9 @@ int drm_atomic_set_property(struct drm_atomic_state *state,
+ 			break;
+ 		}
+ 
+-		if (async_flip && prop != config->prop_fb_id) {
++		if (async_flip &&
++		    prop != config->prop_fb_id &&
++		    prop != config->prop_in_fence_fd) {
+ 			ret = drm_atomic_plane_get_property(plane, plane_state,
+ 							    prop, &old_val);
+ 			ret = drm_atomic_check_prop_changes(ret, old_val, prop_value, prop);
+-- 
+2.45.2
 
