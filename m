@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2898017FAD9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688FB181CEA
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382648; cv=none; b=Y648yzj3eFLGKD+NRX/7vfSP60cLgWHoT536q/fNaI3HcdgWsrZFP5LBxsrQs1pVweyK6dvHvGU5bHJB6mwagje98HOwX2KSrlolmzPWb2IIaTzIV3Rtr2k18tkNiys+T4n13wp26rBcwqFRhmspRIohdRmWeQLjOt8knUPjgas=
+	t=1718382648; cv=none; b=H+ouq27YLrwVA/bNb8ByxAc6/qIHI+puE9lopXspzFvY4sF8q4wC4xuCiDuKxnz/cBTT/nDtb7G3MkoSsz7bUtzrL7Ltu9Zs0oSTGRXTe78B64TZf/ba6uAeop8YQ9VwR8w9z4CuG0lf5mSQERSLQ4ohIKEpzQ5Tq2EaY6ztudU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718382648; c=relaxed/simple;
-	bh=xTYeE42L5DI8hhSQSM33hPzQTwN1lrixTMpt1awuuvo=;
+	bh=rL5BCLoqumiBrg37pfu7fUaDBqOeTFfVVeQuYMXWpTU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=F/OsS95ZhAW61OWPcDQaHPcq/NGt46/GHUbjJuB0aFyRPL+yBL3SAGr87m3udS4CnOl0bjblK/pWn1ReVQ73dKaDU5G5xSLYo2/OLxFpHepXNhDkcN+u5negBMYOFNBttQ8XreV3iwJQsasA9s2sfbKmgzFH+zjkzyQOhNIyCbU=
+	 Content-Type; b=usZsSxQJFDVt/VrYSjsssYxYYzbLc2zemoNy6ZUIUycRr+/b/GrT5aRf+O4CLwjTEbOK2eZgLtsimYpfMmJtTyEy5LCigTANnovXp16PJHQE3gxm7vj6X3Y1ddJz1waV8AfggOUBjGCqOxIqbu0XpUKi4BTEj5WZh+bznDzXyQo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86096C4AF1A;
-	Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDB7C4AF67;
+	Fri, 14 Jun 2024 16:30:48 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sI9pW-00000001rpz-2kZQ;
-	Fri, 14 Jun 2024 12:31:10 -0400
-Message-ID: <20240614163110.525901733@goodmis.org>
+	id 1sI9pX-00000001rrv-1DXR;
+	Fri, 14 Jun 2024 12:31:11 -0400
+Message-ID: <20240614163111.148018348@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Jun 2024 12:30:17 -0400
+Date: Fri, 14 Jun 2024 12:30:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,7 +47,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [for-next][PATCH 02/13] ring-buffer: Add ring_buffer_alloc_range()
+Subject: [for-next][PATCH 06/13] ring-buffer: Add test if range of boot buffer is valid
 References: <20240614163015.456541709@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,25 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-In preparation to allowing the trace ring buffer to be allocated in a
-range of memory that is persistent across reboots, add
-ring_buffer_alloc_range(). It takes a contiguous range of memory and will
-split it up evenly for the per CPU ring buffers.
+Add a test against the ring buffer memory range to see if it has valid
+data. The ring_buffer_meta structure is given a new field called
+"first_buffer" which holds the address of the first sub-buffer. This is
+used to both determine if the other fields are valid as well as finding
+the offset between the old addresses of the sub-buffer from the previous
+boot to the new addresses of the current boot.
 
-If there's not enough memory to handle all CPUs with the minimum size, it
-will fail to allocate the ring buffer.
+Since the values for nr_subbufs and subbuf_size is to be the same, check
+if the values in the meta page match the values calculated.
 
-Link: https://lkml.kernel.org/r/20240612232025.363998725@goodmis.org
+Take the range of the first_buffer and the total size of all the buffers
+and make sure the saved head_buffer and commit_buffer fall in the range.
+
+Iterate through all the sub-buffers to make sure that the values in the
+sub-buffer "commit" field (the field that holds the amount of data on the
+sub-buffer) is within the end of the sub-buffer. Also check the index
+array to make sure that all the indexes are within nr_subbufs.
+
+Link: https://lkml.kernel.org/r/20240612232026.013843655@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -95,391 +105,236 @@ Cc: Ross Zwisler <zwisler@google.com>
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h |  17 +++
- kernel/trace/ring_buffer.c  | 239 ++++++++++++++++++++++++++++++------
- 2 files changed, 220 insertions(+), 36 deletions(-)
+ kernel/trace/ring_buffer.c | 143 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 135 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 96d2140b471e..a50b0223b1d3 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -89,6 +89,11 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
- struct trace_buffer *
- __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *key);
- 
-+struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
-+					       int order, unsigned long start,
-+					       unsigned long range_size,
-+					       struct lock_class_key *key);
-+
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-@@ -100,6 +105,18 @@ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *k
- 	__ring_buffer_alloc((size), (flags), &__key);	\
- })
- 
-+/*
-+ * Because the ring buffer is generic, if other users of the ring buffer get
-+ * traced by ftrace, it can produce lockdep warnings. We need to keep each
-+ * ring buffer's lock class separate.
-+ */
-+#define ring_buffer_alloc_range(size, flags, order, start, range_size)	\
-+({									\
-+	static struct lock_class_key __key;				\
-+	__ring_buffer_alloc_range((size), (flags), (order), (start),	\
-+				  (range_size), &__key);		\
-+})
-+
- typedef bool (*ring_buffer_cond_fn)(void *data);
- int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full,
- 		     ring_buffer_cond_fn cond, void *data);
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index a240bdc0f2d8..6edd70e45807 100644
+index 25b0e61e8c76..588bc057bad7 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -42,6 +42,9 @@
- 
+@@ -45,6 +45,7 @@
  static void update_pages_handler(struct work_struct *work);
  
-+struct ring_buffer_meta {
-+};
-+
- /*
-  * The ring buffer header is special. We must manually up keep it.
-  */
-@@ -342,7 +345,8 @@ struct buffer_page {
- 	local_t		 entries;	/* entries on this page */
- 	unsigned long	 real_end;	/* real end of data */
- 	unsigned	 order;		/* order of the page */
--	u32		 id;		/* ID for external mapping */
-+	u32		 id:30;		/* ID for external mapping */
-+	u32		 range:1;	/* Mapped via a range */
- 	struct buffer_data_page *page;	/* Actual data page */
- };
- 
-@@ -373,7 +377,9 @@ static __always_inline unsigned int rb_page_commit(struct buffer_page *bpage)
- 
- static void free_buffer_page(struct buffer_page *bpage)
- {
--	free_pages((unsigned long)bpage->page, bpage->order);
-+	/* Range pages are not to be freed */
-+	if (!bpage->range)
-+		free_pages((unsigned long)bpage->page, bpage->order);
- 	kfree(bpage);
- }
- 
-@@ -524,6 +530,9 @@ struct trace_buffer {
- 	struct rb_irq_work		irq_work;
- 	bool				time_stamp_abs;
- 
-+	unsigned long			range_addr_start;
-+	unsigned long			range_addr_end;
-+
- 	unsigned int			subbuf_size;
- 	unsigned int			subbuf_order;
- 	unsigned int			max_data_size;
-@@ -1491,9 +1500,70 @@ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
- 	}
+ struct ring_buffer_meta {
++	unsigned long	first_buffer;
+ 	unsigned long	head_buffer;
+ 	unsigned long	commit_buffer;
+ 	__u32		subbuf_size;
+@@ -1618,21 +1619,103 @@ static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
+ 	return (void *)ptr;
  }
  
 +/*
-+ * Take an address, add the meta data size as well as the array of
-+ * array subbuffer indexes, then align it to a subbuffer size.
-+ *
-+ * This is used to help find the next per cpu subbuffer within a mapped range.
++ * See if the existing memory contains valid ring buffer data.
++ * As the previous kernel must be the same as this kernel, all
++ * the calculations (size of buffers and number of buffers)
++ * must be the same.
 + */
-+static unsigned long
-+rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
++static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
++			  struct trace_buffer *buffer, int nr_pages)
 +{
-+	addr += sizeof(struct ring_buffer_meta) +
-+		sizeof(int) * nr_subbufs;
-+	return ALIGN(addr, subbuf_size);
++	int subbuf_size = PAGE_SIZE;
++	struct buffer_data_page *subbuf;
++	unsigned long buffers_start;
++	unsigned long buffers_end;
++	int i;
++
++	/* The subbuffer's size and number of subbuffers must match */
++	if (meta->subbuf_size != subbuf_size ||
++	    meta->nr_subbufs != nr_pages + 1) {
++		pr_info("Ring buffer boot meta [%d] mismatch of subbuf_size/nr_pages\n", cpu);
++		return false;
++	}
++
++	buffers_start = meta->first_buffer;
++	buffers_end = meta->first_buffer + (subbuf_size * meta->nr_subbufs);
++
++	/* Is the head and commit buffers within the range of buffers? */
++	if (meta->head_buffer < buffers_start ||
++	    meta->head_buffer >= buffers_end) {
++		pr_info("Ring buffer boot meta [%d] head buffer out of range\n", cpu);
++		return false;
++	}
++
++	if (meta->commit_buffer < buffers_start ||
++	    meta->commit_buffer >= buffers_end) {
++		pr_info("Ring buffer boot meta [%d] commit buffer out of range\n", cpu);
++		return false;
++	}
++
++	subbuf = rb_subbufs_from_meta(meta);
++
++	/* Is the meta buffers and the subbufs themselves have correct data? */
++	for (i = 0; i < meta->nr_subbufs; i++) {
++		if (meta->buffers[i] < 0 ||
++		    meta->buffers[i] >= meta->nr_subbufs) {
++			pr_info("Ring buffer boot meta [%d] array out of range\n", cpu);
++			return false;
++		}
++
++		if ((unsigned)local_read(&subbuf->commit) > subbuf_size) {
++			pr_info("Ring buffer boot meta [%d] buffer invalid commit\n", cpu);
++			return false;
++		}
++
++		subbuf = (void *)subbuf + subbuf_size;
++	}
++
++	pr_info("Ring buffer meta is from previous boot!\n");
++	return true;
 +}
 +
-+/*
-+ * Return a specific sub-buffer for a given @cpu defined by @idx.
-+ */
-+static void *rb_range_buffer(struct trace_buffer *buffer, int cpu, int nr_pages, int idx)
-+{
-+	unsigned long ptr;
-+	int subbuf_size = buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+	int nr_subbufs;
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ {
+ 	struct ring_buffer_meta *meta;
++	unsigned long delta;
+ 	void *subbuf;
+ 	int cpu;
+ 	int i;
+ 
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		void *next_meta;
 +
-+	/* Include the reader page */
-+	nr_subbufs = nr_pages + 1;
-+
-+	/*
-+	 * The first chunk may not be subbuffer aligned, where as
-+	 * the rest of the chunks are.
-+	 */
-+	ptr = buffer->range_addr_start;
-+	ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
-+	if (cpu) {
-+		unsigned long p;
-+
-+		ptr += subbuf_size * nr_subbufs;
-+
-+		/* Save the beginning of this CPU chunk */
-+		p = ptr;
-+
-+		ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
-+
-+		/* We can use multiplication to find chunks greater than 1 */
-+		if (cpu > 1) {
-+			unsigned long size;
-+
-+			ptr += subbuf_size * nr_subbufs;
-+
-+			/* Now all chunks after this are the same size */
-+			size = ptr - p;
-+			ptr += size * (cpu - 2);
-+
-+			ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
+ 		meta = rb_range_meta(buffer, nr_pages, cpu);
+ 
++		if (rb_meta_valid(meta, cpu, buffer, nr_pages)) {
++			/* Make the mappings match the current address */
++			subbuf = rb_subbufs_from_meta(meta);
++			delta = (unsigned long)subbuf - meta->first_buffer;
++			meta->first_buffer += delta;
++			meta->head_buffer += delta;
++			meta->commit_buffer += delta;
++			continue;
 +		}
++
++		if (cpu < nr_cpu_ids - 1)
++			next_meta = rb_range_meta(buffer, nr_pages, cpu + 1);
++		else
++			next_meta = (void *)buffer->range_addr_end;
++
++		memset(meta, 0, next_meta - (void *)meta);
++
+ 		meta->nr_subbufs = nr_pages + 1;
+ 		meta->subbuf_size = PAGE_SIZE;
+ 
+ 		subbuf = rb_subbufs_from_meta(meta);
+ 
++		meta->first_buffer = (unsigned long)subbuf;
++
+ 		/*
+ 		 * The buffers[] array holds the order of the sub-buffers
+ 		 * that are after the meta data. The sub-buffers may
+@@ -1724,10 +1807,26 @@ int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, in
+ 	return 0;
+ }
+ 
++/* Map the buffer_pages to the previous head and commit pages */
++static void rb_meta_buffer_update(struct ring_buffer_per_cpu *cpu_buffer,
++				  struct buffer_page *bpage)
++{
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++
++	if (meta->head_buffer == (unsigned long)bpage->page)
++		cpu_buffer->head_page = bpage;
++
++	if (meta->commit_buffer == (unsigned long)bpage->page) {
++		cpu_buffer->commit_page = bpage;
++		cpu_buffer->tail_page = bpage;
 +	}
-+	if (ptr + subbuf_size * nr_subbufs > buffer->range_addr_end)
-+		return NULL;
-+	return (void *)ptr;
 +}
 +
  static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
  		long nr_pages, struct list_head *pages)
  {
-+	struct trace_buffer *buffer = cpu_buffer->buffer;
+ 	struct trace_buffer *buffer = cpu_buffer->buffer;
++	struct ring_buffer_meta *meta = NULL;
  	struct buffer_page *bpage, *tmp;
  	bool user_thread = current->mm != NULL;
  	gfp_t mflags;
-@@ -1530,6 +1600,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+@@ -1762,6 +1861,10 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 	 */
+ 	if (user_thread)
  		set_current_oom_origin();
++
++	if (buffer->range_addr_start)
++		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
++
  	for (i = 0; i < nr_pages; i++) {
  		struct page *page;
-+		int cpu = cpu_buffer->cpu;
  
- 		bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
- 				    mflags, cpu_to_node(cpu_buffer->cpu));
-@@ -1538,14 +1609,26 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+@@ -1778,11 +1881,14 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 */
+ 		list_add_tail(&bpage->list, pages);
  
- 		rb_check_bpage(cpu_buffer, bpage);
- 
--		list_add(&bpage->list, pages);
--
--		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
--					mflags | __GFP_COMP | __GFP_ZERO,
--					cpu_buffer->buffer->subbuf_order);
--		if (!page)
--			goto free_pages;
--		bpage->page = page_address(page);
-+		/*
-+		 * Append the pages as for mapped buffers we want to keep
-+		 * the order
-+		 */
-+		list_add_tail(&bpage->list, pages);
-+
-+		if (buffer->range_addr_start) {
-+			/* A range was given. Use that for the buffer page */
-+			bpage->page = rb_range_buffer(buffer, cpu, nr_pages, i + 1);
-+			if (!bpage->page)
-+				goto free_pages;
-+			bpage->range = 1;
-+		} else {
-+			page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
-+						mflags | __GFP_COMP | __GFP_ZERO,
-+						cpu_buffer->buffer->subbuf_order);
-+			if (!page)
-+				goto free_pages;
-+			bpage->page = page_address(page);
-+		}
- 		bpage->order = cpu_buffer->buffer->subbuf_order;
- 		rb_init_page(bpage->page);
- 
-@@ -1627,11 +1710,19 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 
- 	cpu_buffer->reader_page = bpage;
- 
--	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_COMP | __GFP_ZERO,
--				cpu_buffer->buffer->subbuf_order);
--	if (!page)
--		goto fail_free_reader;
--	bpage->page = page_address(page);
-+	if (buffer->range_addr_start) {
-+		bpage->page = rb_range_buffer(buffer, cpu, nr_pages, 0);
-+		if (!bpage->page)
-+			goto fail_free_reader;
-+		bpage->range = 1;
-+	} else {
-+		page = alloc_pages_node(cpu_to_node(cpu),
-+					GFP_KERNEL | __GFP_COMP | __GFP_ZERO,
-+					cpu_buffer->buffer->subbuf_order);
-+		if (!page)
-+			goto fail_free_reader;
-+		bpage->page = page_address(page);
-+	}
- 	rb_init_page(bpage->page);
- 
- 	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
-@@ -1682,22 +1773,14 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	kfree(cpu_buffer);
- }
- 
--/**
-- * __ring_buffer_alloc - allocate a new ring_buffer
-- * @size: the size in bytes per cpu that is needed.
-- * @flags: attributes to set for the ring buffer.
-- * @key: ring buffer reader_lock_key.
-- *
-- * Currently the only flag that is available is the RB_FL_OVERWRITE
-- * flag. This flag means that the buffer will overwrite old data
-- * when the buffer wraps. If this flag is not set, the buffer will
-- * drop data when the tail hits the head.
-- */
--struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
--					struct lock_class_key *key)
-+static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
-+					 int order, unsigned long start,
-+					 unsigned long end,
-+					 struct lock_class_key *key)
+-		if (buffer->range_addr_start) {
++		if (meta) {
+ 			/* A range was given. Use that for the buffer page */
+ 			bpage->page = rb_range_buffer(cpu_buffer, i + 1);
+ 			if (!bpage->page)
+ 				goto free_pages;
++			/* If this is valid from a previous boot */
++			if (meta->head_buffer)
++				rb_meta_buffer_update(cpu_buffer, bpage);
+ 			bpage->range = 1;
+ 			bpage->id = i + 1;
+ 		} else {
+@@ -1844,6 +1950,7 @@ static struct ring_buffer_per_cpu *
+ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
  {
- 	struct trace_buffer *buffer;
- 	long nr_pages;
-+	int subbuf_size;
- 	int bsize;
- 	int cpu;
+ 	struct ring_buffer_per_cpu *cpu_buffer;
++	struct ring_buffer_meta *meta;
+ 	struct buffer_page *bpage;
+ 	struct page *page;
  	int ret;
-@@ -1711,14 +1794,13 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	if (!zalloc_cpumask_var(&buffer->cpumask, GFP_KERNEL))
- 		goto fail_free_buffer;
+@@ -1884,6 +1991,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 		bpage->page = rb_range_buffer(cpu_buffer, 0);
+ 		if (!bpage->page)
+ 			goto fail_free_reader;
++		if (cpu_buffer->ring_meta->head_buffer)
++			rb_meta_buffer_update(cpu_buffer, bpage);
+ 		bpage->range = 1;
+ 	} else {
+ 		page = alloc_pages_node(cpu_to_node(cpu),
+@@ -1902,14 +2011,32 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	if (ret < 0)
+ 		goto fail_free_reader;
  
--	/* Default buffer page size - one system page */
--	buffer->subbuf_order = 0;
--	buffer->subbuf_size = PAGE_SIZE - BUF_PAGE_HDR_SIZE;
-+	buffer->subbuf_order = order;
-+	subbuf_size = (PAGE_SIZE << order);
-+	buffer->subbuf_size = subbuf_size - BUF_PAGE_HDR_SIZE;
- 
- 	/* Max payload is buffer page size - header (8bytes) */
- 	buffer->max_data_size = buffer->subbuf_size - (sizeof(u32) * 2);
- 
--	nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-@@ -1726,10 +1808,6 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
- 	init_waitqueue_head(&buffer->irq_work.waiters);
- 
--	/* need at least two pages */
--	if (nr_pages < 2)
--		nr_pages = 2;
--
- 	buffer->cpus = nr_cpu_ids;
- 
- 	bsize = sizeof(void *) * nr_cpu_ids;
-@@ -1738,6 +1816,54 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	if (!buffer->buffers)
- 		goto fail_free_cpumask;
- 
-+	/* If start/end are specified, then that overrides size */
-+	if (start && end) {
-+		unsigned long ptr;
-+		int n;
-+
-+		size = end - start;
-+		size = size / nr_cpu_ids;
-+
-+		/*
-+		 * The number of sub-buffers (nr_pages) is determined by the
-+		 * total size allocated minus the meta data size.
-+		 * Then that is divided by the number of per CPU buffers
-+		 * needed, plus account for the integer array index that
-+		 * will be appended to the meta data.
-+		 */
-+		nr_pages = (size - sizeof(struct ring_buffer_meta)) /
-+			(subbuf_size + sizeof(int));
-+		/* Need at least two pages plus the reader page */
-+		if (nr_pages < 3)
-+			goto fail_free_buffers;
-+
-+ again:
-+		/* Make sure that the size fits aligned */
-+		for (n = 0, ptr = start; n < nr_cpu_ids; n++) {
-+			ptr += sizeof(struct ring_buffer_meta) +
-+				sizeof(int) * nr_pages;
-+			ptr = ALIGN(ptr, subbuf_size);
-+			ptr += subbuf_size * nr_pages;
+-	cpu_buffer->head_page
+-		= list_entry(cpu_buffer->pages, struct buffer_page, list);
+-	cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
++	/* If the boot meta was valid then this has already been updated */
++	meta = cpu_buffer->ring_meta;
++	if (!meta || !meta->head_buffer ||
++	    !cpu_buffer->head_page || !cpu_buffer->commit_page || !cpu_buffer->tail_page) {
++		if (meta && meta->head_buffer &&
++		    (cpu_buffer->head_page || cpu_buffer->commit_page || cpu_buffer->tail_page)) {
++			pr_warn("Ring buffer meta buffers not all mapped\n");
++			if (!cpu_buffer->head_page)
++				pr_warn("   Missing head_page\n");
++			if (!cpu_buffer->commit_page)
++				pr_warn("   Missing commit_page\n");
++			if (!cpu_buffer->tail_page)
++				pr_warn("   Missing tail_page\n");
 +		}
-+		if (ptr > end) {
-+			if (nr_pages <= 3)
-+				goto fail_free_buffers;
-+			nr_pages--;
-+			goto again;
-+		}
+ 
+-	rb_head_page_activate(cpu_buffer);
+-	if (cpu_buffer->ring_meta) {
+-		struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
+-		meta->commit_buffer = meta->head_buffer;
++		cpu_buffer->head_page
++			= list_entry(cpu_buffer->pages, struct buffer_page, list);
++		cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
 +
-+		/* nr_pages should not count the reader page */
-+		nr_pages--;
-+		buffer->range_addr_start = start;
-+		buffer->range_addr_end = end;
++		rb_head_page_activate(cpu_buffer);
++
++		if (cpu_buffer->ring_meta)
++			meta->commit_buffer = meta->head_buffer;
 +	} else {
-+
-+		/* need at least two pages */
-+		nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
-+		if (nr_pages < 2)
-+			nr_pages = 2;
-+	}
-+
- 	cpu = raw_smp_processor_id();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	buffer->buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
-@@ -1766,8 +1892,49 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	kfree(buffer);
- 	return NULL;
- }
-+
-+/**
-+ * __ring_buffer_alloc - allocate a new ring_buffer
-+ * @size: the size in bytes per cpu that is needed.
-+ * @flags: attributes to set for the ring buffer.
-+ * @key: ring buffer reader_lock_key.
-+ *
-+ * Currently the only flag that is available is the RB_FL_OVERWRITE
-+ * flag. This flag means that the buffer will overwrite old data
-+ * when the buffer wraps. If this flag is not set, the buffer will
-+ * drop data when the tail hits the head.
-+ */
-+struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
-+					struct lock_class_key *key)
-+{
-+	/* Default buffer page size - one system page */
-+	return alloc_buffer(size, flags, 0, 0, 0,key);
-+
-+}
- EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
++		/* The valid meta buffer still needs to activate the head page */
++		rb_head_page_activate(cpu_buffer);
+ 	}
  
-+/**
-+ * __ring_buffer_alloc_range - allocate a new ring_buffer from existing memory
-+ * @size: the size in bytes per cpu that is needed.
-+ * @flags: attributes to set for the ring buffer.
-+ * @start: start of allocated range
-+ * @range_size: size of allocated range
-+ * @order: sub-buffer order
-+ * @key: ring buffer reader_lock_key.
-+ *
-+ * Currently the only flag that is available is the RB_FL_OVERWRITE
-+ * flag. This flag means that the buffer will overwrite old data
-+ * when the buffer wraps. If this flag is not set, the buffer will
-+ * drop data when the tail hits the head.
-+ */
-+struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
-+					       int order, unsigned long start,
-+					       unsigned long range_size,
-+					       struct lock_class_key *key)
-+{
-+	return alloc_buffer(size, flags, order, start, start + range_size, key);
-+}
-+
- /**
-  * ring_buffer_free - free a ring buffer.
-  * @buffer: the buffer to free.
+ 	return cpu_buffer;
 -- 
 2.43.0
 
