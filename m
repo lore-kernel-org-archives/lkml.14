@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9567F19AD48;
-	Fri, 14 Jun 2024 17:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBC519DF5D;
+	Fri, 14 Jun 2024 17:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386375; cv=none; b=b1hYMaLr+xSK/qxE0DNYTADEEMNjx8vH8t/HyIlim/g5SUqRCUm+7dfD0+RkI9eqXs/JTKrYSpfBwZjjyONHIc5xKEmsniOdcG1hoflVEP9dJ4rHQQ0MZiv9Q/JT3cUMZT1w/WO0f2GLB7t4WVkMk3ayZ2u8o7BgW2QJg0NwiwA=
+	t=1718386376; cv=none; b=SaoeFLw/EIX3gk7dgRM76K6lXPh7KWl75yzu5h5B+ui6HqLeVeWe4V335p6yMbh0pgWEQU/U/ELpGRtxofAlcJgQf1DYj0mdyii1kf8rGszFzZKKBNfpUGqI5mWzlavURd0yvCzymfC92mXiAyMVJsWzJ9mJXj6pTE421tVgS9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386375; c=relaxed/simple;
-	bh=zPcEhF7Zbnn9w7HiuIbKexzk/QSSPVuHN85P038ldmE=;
+	s=arc-20240116; t=1718386376; c=relaxed/simple;
+	bh=kEUiQ1CYjLj755ILvY6eux74YH9KYDJzi2RBOyIeGR8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e2WfFSc6N4NvoTU3oukAREW1TJ95qfBTDg65WGMoG83aeH3IUAMDIhi12qeOn+nI0LxlOXVbyW1HuG79TJE4AF8RIou1RzS6d1C+zyJsnpGVbEEg8nP+kxUynKy2KA/goyeOwFxkfga5bJsLeZeWeuZEoQ6/2pDWI4d/KJx7wRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=K4mjauuG; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=E2QLXhKV4tcjp+3erJ5S75JKPLQw90nj//9jmPKCDwHS894jND5gssxPhyuXtUn16LwpgMqlMwi8POrhxtYO+ELqaZpPVjp08s2EV8nobKjKO6fknVbz18riM1hc5Rvl1P/EpEIpF+jlyNNb69WDvRI4tyvdE9tBMHmCyoCq1Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VQBWA83d; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="K4mjauuG"
-Received: by mail.gandi.net (Postfix) with ESMTPA id B4F37FF803;
-	Fri, 14 Jun 2024 17:32:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VQBWA83d"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 2C61DFF80C;
+	Fri, 14 Jun 2024 17:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718386366;
+	t=1718386372;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+CQfiI+Nq1S9v1Nm6K78UW44sXVdGGexG8I5gR9gXYM=;
-	b=K4mjauuGA30E+3QwBWCUnq0ia7ivGj9hrqSLbujhgwzAtgq6x89MuJTpz1udhPcEH+ZIbw
-	nWaJiGSDGdXijQaZn6wMu+fvH4tWrcbD4fHzt5NlQa5Z4ORlpYZqssNWBeACWggtvYZcRc
-	ECER1RTDcsJY30Y+LfW5hSUCGKzMn34/0GNRLQzX377vdW7iXju7rLa3/feML2gMAJFjKv
-	0uUScPaUzURWX9ycbe21cdRoFjbnBjNoNgZRTfq1EPgjfe7cpiMypDSltLKfpiWla9T3OX
-	RSOd5yQIzXU+L8SV5QNM1v9fqXcE1HdDuIEOQJbDKF+5wr5s9x+EzLDEJGBWHw==
+	bh=+NkYxenKEC9OO3jJ3gxAE6moq1UMvEUEbQkI5OAK8Bk=;
+	b=VQBWA83dpargUL4CS6k35jbg8SKlxJAGPHYkzdgEEmtSl5vL1cntkYI6XkIIjtpa9pDh4C
+	Av7cVO9vJakY5eylBEXku6OTiL6KMd2IOoKoyZB1SLoNStAzpyvs85hnVXiKH67aGUg5LB
+	cNwthBjvoeORgsoaoJphzeU0KPfxvLfHwOvCaJdYipR1WwrcdSwhr4lt7trgfKo87JTomj
+	eYlaobYjgGaP/5//iadWWn3YmYO8hWG7wTbkm86mYcq0xYCQouc+z91tocA0gslxRiXzir
+	ZjNP2Vq6LDpRBig9FY/deNx2YTwmjqn037zuEpG0NOWpBeyNn9I+8emIGlKV9A==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Herve Codina <herve.codina@bootlin.com>,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 01/23] irqdomain: Introduce irq_domain_free()
-Date: Fri, 14 Jun 2024 19:32:02 +0200
-Message-ID: <20240614173232.1184015-2-herve.codina@bootlin.com>
+Subject: [PATCH 08/23] irqdomain: Handle domain hierarchy parent in irq_domain_instantiate()
+Date: Fri, 14 Jun 2024 19:32:09 +0200
+Message-ID: <20240614173232.1184015-9-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240614173232.1184015-1-herve.codina@bootlin.com>
 References: <20240614173232.1184015-1-herve.codina@bootlin.com>
@@ -63,53 +63,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-In preparation of the introduction of the irq domain instantiation,
-introduce irq_domain_free() to avoid code duplication on later
-modifications.
+To use irq_domain_instantiate() from irq_domain_create_hierarchy(),
+irq_domain_instantiate() needs to handle the domain hierarchy parent.
 
-This new function is an extraction of the current operations performed
-to free the irq domain. No functional changes are introduced.
+Handle this parent.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- kernel/irq/irqdomain.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ include/linux/irqdomain.h | 6 ++++++
+ kernel/irq/irqdomain.c    | 7 +++++++
+ 2 files changed, 13 insertions(+)
 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 4683b66eded9..e52fd5e5494c 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -276,6 +276,12 @@ struct irq_domain_info {
+ 	int					direct_max;
+ 	const struct irq_domain_ops		*ops;
+ 	void					*host_data;
++#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
++	/**
++	 * @parent: Pointer to the parent irq domain used in a hierarchy domain
++	 */
++	struct irq_domain			*parent;
++#endif
+ };
+ 
+ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info);
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 86f8b91b0d3a..95eda206367f 100644
+index 34acc2ccfee7..7e4a1da63549 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -241,6 +241,15 @@ static void __irq_domain_publish(struct irq_domain *domain)
- 	pr_debug("Added domain %s\n", domain->name);
- }
+@@ -265,6 +265,13 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info)
  
-+static void irq_domain_free(struct irq_domain *domain)
-+{
-+	fwnode_dev_initialized(domain->fwnode, false);
-+	fwnode_handle_put(domain->fwnode);
-+	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
-+		kfree(domain->name);
-+	kfree(domain);
-+}
+ 	domain->flags |= info->domain_flags;
+ 
++#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
++	if (info->parent) {
++		domain->root = info->parent->root;
++		domain->parent = info->parent;
++	}
++#endif
 +
- /**
-  * __irq_domain_add() - Allocate a new irq_domain data structure
-  * @fwnode: firmware node for the interrupt controller
-@@ -296,12 +305,7 @@ void irq_domain_remove(struct irq_domain *domain)
- 	mutex_unlock(&irq_domain_mutex);
+ 	__irq_domain_publish(domain);
  
- 	pr_debug("Removed domain %s\n", domain->name);
--
--	fwnode_dev_initialized(domain->fwnode, false);
--	fwnode_handle_put(domain->fwnode);
--	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
--		kfree(domain->name);
--	kfree(domain);
-+	irq_domain_free(domain);
- }
- EXPORT_SYMBOL_GPL(irq_domain_remove);
- 
+ 	return domain;
 -- 
 2.45.0
 
