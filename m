@@ -1,34 +1,34 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A2C18309C
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0741850AA
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352775; cv=none; b=h62Om50/8OV1ARNun5/fqPWr3UwFePxjUt9UmYJdbLVuKFwRul/ZuK3hMZkTPty8YvuN0qSH4LYfZqi3rQBZpRWkHfxUdgeK21DfLy9iC341FlnZTIXlujjMXKZSsgwNJkpXhQg6ZqrfduBf7FODJ/hKAtIkFsG9yxUapOFRgbk=
+	t=1718352777; cv=none; b=lYEyFUKyjQrgcAPiAGD4EA48E66RhJoYPkTGkvEY737L4tXcEmzsf+EzuSp2bahtCF72NVzpbG6BHNYWbUW2fY19Q7Uv8Qtd2fleMl+18efQej1lLQmtXdMcnrwsaCZYP6kYiTi1M8bIOn7LmNUgI9BpeFqtNf2vA/ULMQ1yKQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352775; c=relaxed/simple;
-	bh=AaeKWFy6+MhJUSVDuiArePmxqwjpDms46lje4lfg78Y=;
+	s=arc-20240116; t=1718352777; c=relaxed/simple;
+	bh=tH0NOSAY7BDUS/VNB/ZGWgSpJi45DZYDHlrsL1Okdl4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdPatO6ptexSwVNFPPJxYH9pl+sgZGNkYtsMFubJ+JXmK8NluNQXCR7WXxHULEn9xLAo2weaRXrMa1ib3irquosXznmEpAB2rIEi1B5cKeyJVtjCn0exIJqr0aaeuGRLLchRioqlXqbW1vZO3GVkRq6NFEqaLc2ErYeGlHP6430=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QNj1E+Ck; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=lyjCYmUCXT8PHQhe1DfKR9cf2FxJvpiagWJoDQ3lP1Ilj+j36C/uDtzpM6wnz1LraVcau2qmgourX0nKfz+IF2a7H2k7OIgFHA48lhnqRJiihSNkljNFwYlSg47mcFa/kMYLMCZ3eioshLSafGpmx/DoG2YWbax44HEPpiS6A08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eXsONqg9; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QNj1E+Ck"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eXsONqg9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-type
-	:content-transfer-encoding; s=k1; bh=QxN9/peWzKBlFqRmDXEKD0iHTiZ
-	lunJFWOblMthWaXk=; b=QNj1E+CkJ3mLavkzjyqlaUk5ZBhONnhZkCVyWtWsVkv
-	8IJEyytDimK6oFSAXFdmsyvTfXH/Kq05EJSKxZ+OVu7I55RqJEDYk1wl96ATg8Rc
-	PAG9R2xLDwKm7NSy1bLsSdI+0TLAyh1BTz2MYVJw1KYOO54fpS2/S+FJnoSzSCEj
-	z55lf+tinSvKMV+QhaU8WAlCD3xtQ6Mgm5sVmjPIHRCUY/50kMHTAxAKZDZ1c6XK
-	cSYxaA07PQK30TwolJUF4o81ygTHz7YxR57JvWO9UTcqH1uvBAq1wYKuc5oiFQsd
-	PDO6mSU0+vWc945iWMyyGNSjUCHNmDI0eat3ZqH9XIA==
-Received: (qmail 1438092 invoked from network); 14 Jun 2024 10:12:48 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jun 2024 10:12:48 +0200
-X-UD-Smtp-Session: l3s3148p1@N0RbLtUaAoIgAwDPXzjQABqqX1QYyOSW
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=ixLUA05ywsqk+tUJDK/loDg53P2byoU2nyRRhw8H0ik=; b=eXsONq
+	g9QUb+CQ4DgkaBNkWvnWuLq4yVor1Lzj1BCEgEwTG3emRhyxeucfcKqlgSqCtNiO
+	xoLRx+fnR5kNGfbw2w7Chux/LpyKy7n//O1aLDjC0PpcbVRXqiGPDCjJqTVvfqsH
+	2kGxG2w4fzcipDOk/h7CjkBw5hLdnIk4Bb4LAc0hP3TkYt1aybBt6A+pa+t+mUiy
+	psNtU3TezTWrRbSUXBTRcCGcQUJaR+Dws0nKmxMtN9pg4QcajMzA4X8SV3nMVpFc
+	OCC2UYmfTU/3BIsMKb6pv5ZE1JnIRYU+NCv0AYLukFgxxJ+15nozUGFDAczI+LiV
+	DfgG7ZsQ02GkiOnw==
+Received: (qmail 1438195 invoked from network); 14 Jun 2024 10:12:50 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jun 2024 10:12:50 +0200
+X-UD-Smtp-Session: l3s3148p1@yE91LtUaJoIgAwDPXzjQABqqX1QYyOSW
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
@@ -36,9 +36,9 @@ Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
 	linux-kernel@vger.kernel.org,
 	Andi Shyti <andi.shyti@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH v3 1/6] docs: i2c: summary: start sentences consistently.
-Date: Fri, 14 Jun 2024 10:12:39 +0200
-Message-ID: <20240614081239.7128-9-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v3 4/6] docs: i2c: summary: document use of inclusive language
+Date: Fri, 14 Jun 2024 10:12:42 +0200
+Message-ID: <20240614081239.7128-12-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240614081239.7128-8-wsa+renesas@sang-engineering.com>
 References: <20240614081239.7128-8-wsa+renesas@sang-engineering.com>
@@ -48,54 +48,134 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Change the first paragraphs to contain only one space after the end of
-the previous sentence like in the rest of the document.
+We now have the updated I2C specs and our own Code of Conduct, so we
+have all we need to switch over to the inclusive terminology. Define
+them here.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 ---
- Documentation/i2c/summary.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Documentation/i2c/i2c_bus.svg | 15 ++++++++-------
+ Documentation/i2c/summary.rst | 23 +++++++++++++++++------
+ 2 files changed, 25 insertions(+), 13 deletions(-)
 
+diff --git a/Documentation/i2c/i2c_bus.svg b/Documentation/i2c/i2c_bus.svg
+index 3170de976373..45801de4af7d 100644
+--- a/Documentation/i2c/i2c_bus.svg
++++ b/Documentation/i2c/i2c_bus.svg
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+ <!-- Created with Inkscape (http://www.inkscape.org/) -->
++<!-- Updated to inclusive terminology by Wolfram Sang -->
+ 
+ <svg
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+@@ -1120,7 +1121,7 @@
+     <rect
+        style="opacity:1;fill:#ffb9b9;fill-opacity:1;stroke:#f00000;stroke-width:2.8125;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        id="rect4424-3-2-9-7"
+-       width="112.5"
++       width="134.5"
+        height="113.75008"
+        x="112.5"
+        y="471.11221"
+@@ -1133,15 +1134,15 @@
+        y="521.46259"
+        id="text4349"><tspan
+          sodipodi:role="line"
+-         x="167.5354"
++         x="178.5354"
+          y="521.46259"
+          style="font-size:25px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+          id="tspan1273">I2C</tspan><tspan
+          sodipodi:role="line"
+-         x="167.5354"
++         x="178.5354"
+          y="552.71259"
+          style="font-size:25px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle"
+-         id="tspan1285">Master</tspan></text>
++         id="tspan1285">Controller</tspan></text>
+     <rect
+        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#b9ffb9;fill-opacity:1;fill-rule:nonzero;stroke:#006400;stroke-width:2.8125;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+        id="rect4424-3-2-9-7-3-3-5-3"
+@@ -1171,7 +1172,7 @@
+          x="318.59131"
+          y="552.08752"
+          style="font-size:25.00000191px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:1px"
+-         id="tspan1287">Slave</tspan></text>
++         id="tspan1287">Target</tspan></text>
+     <path
+        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.99968767;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        d="m 112.49995,677.36223 c 712.50005,0 712.50005,0 712.50005,0"
+@@ -1233,7 +1234,7 @@
+          x="468.59131"
+          y="552.08746"
+          style="font-size:25.00000191px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:1px"
+-         id="tspan1287-6">Slave</tspan></text>
++         id="tspan1287-6">Target</tspan></text>
+     <rect
+        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#b9ffb9;fill-opacity:1;fill-rule:nonzero;stroke:#006400;stroke-width:2.8125;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+        id="rect4424-3-2-9-7-3-3-5-3-1"
+@@ -1258,7 +1259,7 @@
+          x="618.59131"
+          y="552.08746"
+          style="font-size:25.00000191px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:1px"
+-         id="tspan1287-9">Slave</tspan></text>
++         id="tspan1287-9">Target</tspan></text>
+     <path
+        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.99968743;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#DotM)"
+        d="m 150,583.61221 v 93.75"
 diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
-index 786c618ba3be..28ff80a2302b 100644
+index a1e5c0715f8b..a6da1032fa06 100644
 --- a/Documentation/i2c/summary.rst
 +++ b/Documentation/i2c/summary.rst
-@@ -4,10 +4,10 @@ Introduction to I2C and SMBus
+@@ -31,15 +31,16 @@ implement all the common SMBus protocol semantics or messages.
+ Terminology
+ ===========
  
- I²C (pronounce: I squared C and written I2C in the kernel documentation) is
- a protocol developed by Philips. It is a slow two-wire protocol (variable
--speed, up to 400 kHz), with a high speed extension (3.4 MHz).  It provides
-+speed, up to 400 kHz), with a high speed extension (3.4 MHz). It provides
- an inexpensive bus for connecting many types of devices with infrequent or
--low bandwidth communications needs.  I2C is widely used with embedded
--systems.  Some systems use variants that don't meet branding requirements,
-+low bandwidth communications needs. I2C is widely used with embedded
-+systems. Some systems use variants that don't meet branding requirements,
- and so are not advertised as being I2C but come under different names,
- e.g. TWI (Two Wire Interface), IIC.
+-Using the terminology from the official documentation, the I2C bus connects
+-one or more *master* chips and one or more *slave* chips.
++The I2C bus connects one or more *controller* chips and one or more *target*
++chips.
++
  
-@@ -18,14 +18,14 @@ access the PDF. An older version of the specification (revision 6) is archived
- `here <https://web.archive.org/web/20210813122132/https://www.nxp.com/docs/en/user-guide/UM10204.pdf>`_.
+ .. kernel-figure::  i2c_bus.svg
+-   :alt:    Simple I2C bus with one master and 3 slaves
++   :alt:    Simple I2C bus with one controller and 3 targets
  
- SMBus (System Management Bus) is based on the I2C protocol, and is mostly
--a subset of I2C protocols and signaling.  Many I2C devices will work on an
-+a subset of I2C protocols and signaling. Many I2C devices will work on an
- SMBus, but some SMBus protocols add semantics beyond what is required to
--achieve I2C branding.  Modern PC mainboards rely on SMBus.  The most common
-+achieve I2C branding. Modern PC mainboards rely on SMBus. The most common
- devices connected through SMBus are RAM modules configured using I2C EEPROMs,
- and hardware monitoring chips.
+    Simple I2C bus
  
- Because the SMBus is mostly a subset of the generalized I2C bus, we can
--use its protocols on many I2C systems.  However, there are systems that don't
-+use its protocols on many I2C systems. However, there are systems that don't
- meet both SMBus and I2C electrical constraints; and others which can't
- implement all the common SMBus protocol semantics or messages.
+-A **master** chip is a node that starts communications with slaves. In the
++A **controller** chip is a node that starts communications with targets. In the
+ Linux kernel implementation it is called an **adapter** or bus. Adapter
+ drivers are in the ``drivers/i2c/busses/`` subdirectory.
  
+@@ -48,8 +49,8 @@ whole class of I2C adapters. Each specific adapter driver either depends on
+ an algorithm driver in the ``drivers/i2c/algos/`` subdirectory, or includes
+ its own implementation.
+ 
+-A **slave** chip is a node that responds to communications when addressed
+-by the master. In Linux it is called a **client**. Client drivers are kept
++A **target** chip is a node that responds to communications when addressed
++by the controller. In Linux it is called a **client**. Client drivers are kept
+ in a directory specific to the feature they provide, for example
+ ``drivers/media/gpio/`` for GPIO expanders and ``drivers/media/i2c/`` for
+ video-related chips.
+@@ -57,3 +58,13 @@ video-related chips.
+ For the example configuration in figure, you will need a driver for your
+ I2C adapter, and drivers for your I2C devices (usually one driver for each
+ device).
++
++Outdated terminology
++--------------------
++
++In earlier I2C specifications, controller was named "master" and target was
++named "slave". These terms have been obsoleted with v7 of the specification and
++their use is also discouraged by the Linux Kernel Code of Conduct. You may
++still find them in references to documentation which has not been updated. The
++general attitude, however, is to use the inclusive terms: controller and
++target. Work to replace the old terminology in the Linux Kernel is on-going.
 -- 
 2.43.0
 
