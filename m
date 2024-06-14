@@ -1,133 +1,85 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E59185084
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A218FC6B;
+	Fri, 14 Jun 2024 08:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718353221; cv=none; b=gG5CoxcSQPJmKSYb4gcpMFrZ1GymnE3nTqi3uX7oy8VGIzlzYv7AtOU5UgzUG26+bLVd/E437/uJnncHNV1OuiuHzOkkx1z1hUvOlB7p9rHbO1i1sQvoZvylqWdURv0Rl2q14P4CJk6cZUTWAWF1tTZSTUDtOxh1Ak2hbyD3kEM=
+	t=1718353371; cv=none; b=tvmRDEL070xB2GiowIH7cc7eSWVPaDV3zrkHrXT9+NiqMuUx+4GaEB+P/w4CSDUVKmbc6leNZCPPQNsPe4bOMSHTKrt3vNzMUGWzgeBLu13NQopn5WnZlZ0kmbHp2gcKgZv7irn0sPy7yrDwk4kOZjWG9rbN7uQBbalB2bNvJmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718353221; c=relaxed/simple;
-	bh=ISPOFElUhPfORR5OTgaw5Rb0UncyFlwjMM+BnZW/tY0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Herr5qbbpWSLjdkvSEJV04UGazu1M7Dei3eM/fh2cdqcfYq81QyYMKCUJrpR+YUs39GXe2hL8h4m/finpQhwhOkBCe11hba3jK65jGAEgfXX0k+RXZz6bKSO1/9I0vXtF2yDt4CgeTuQxInkr8K+iwdSO8ZlClK3FFiaEhSy35o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7eb4c4378c0so196103839f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 01:20:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718353219; x=1718958019;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uyixLgySkZFyTY3mdGYpcbq5ugcacH5aYgYfssaBYrk=;
-        b=NY2LUSnH9Xn4TfPvJGdSPhZjbFjrefE9lb1WLVDaF8Hk5968kPge/DuQX20C00+c+g
-         htqaHt1vBCfRsLoRvc4FQokkJg9Ms7t1y7OIR4OsT+Pff4O3D1GXrkJllBp8Ez7cnQTk
-         yFkuWnrDB5fjPsAKymrI66/1QxfMzOwJgcjPWmEXgMCkR7p5aFGYPNbmsQDIFmAfGJgf
-         WOC62XkvuNqj/z0DHcDitXX3NKVDOySk5TWmcIlGj5lnJ+3iE6n0+5obp61kMA3ZtMvn
-         NemGLifUUnntdN+MXYmW5cHG/TaxiKvr6oKTGoDGGAS0yvF0MLKTP44arLBdU+TeuRmk
-         YTDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVByHAv09bzxTqDWf7Ts4ArfladQdHu3/do50KqXUWWZ8aypqXsA9KVRbERiMGD4M62oblwYWhstt1LrumdQJ7Xt3hVkrqd2COuU8Ra
-X-Gm-Message-State: AOJu0Yyqa0qsXOZ7/tjzeLH2YtDdJXAyu613dxn5fGE+k8rxuNJrKxXo
-	3VbMD4pCHLLVIyjGxGmq8O5NzCPkbskCH5/2b/tnpbAG/Cic/WEz/MWCasxEsMpw23gv5h+r8yI
-	6jX0Hbwqg7zDmtEO4Hhob2nVkSUA2Svs5fCFiSOgws/6qDdjeZz86veg=
-X-Google-Smtp-Source: AGHT+IHeQ4/CpDpeiPcPyxbqwa8q2xOsL6kEA4Mhc/1f2HelZdksUCn4qpOO7MZ52eZ3zLI2EVkJQJ19VPbxYScJ/QNdCjOee6Qc
+	s=arc-20240116; t=1718353371; c=relaxed/simple;
+	bh=DN8MJhZE/6ABuaOgDNbrslUWBDHWkr4DQN1q02HGp+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E5lUOc3G4eHKxAdag2aETPAp1z8ExdaKNRKaxqgHT/lRFbz+pJgt7uE55Ccx+AJOKzjSG4O+SHuUOgQHzjClwqWJtBd/RCKZNH2iUQD0mIv1m8KeFdNI3SiF5Y7aCFq5WDx4xVieeyCZplyi5N12o06rmi1IBlbcufNI3dRObhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DEA92201744;
+	Fri, 14 Jun 2024 10:22:47 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A202201742;
+	Fri, 14 Jun 2024 10:22:47 +0200 (CEST)
+Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 2E67D183ACAD;
+	Fri, 14 Jun 2024 16:22:46 +0800 (+08)
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	rohit.fule@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	sherry.sun@nxp.com,
+	ziniu.wang_1@nxp.com,
+	haibo.chen@nxp.com,
+	LnxRevLi@nxp.com
+Subject: [PATCH v2] Bluetooth: btnxpuart: Enable Power Save feature on startup
+Date: Fri, 14 Jun 2024 13:50:39 +0530
+Message-Id: <20240614082039.6465-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3fd5:b0:7eb:99c1:373c with SMTP id
- ca18e2360f4ac-7ebeaeff0eemr3926039f.0.1718353217830; Fri, 14 Jun 2024
- 01:20:17 -0700 (PDT)
-Date: Fri, 14 Jun 2024 01:20:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000025d569061ad54981@google.com>
-Subject: [syzbot] [netfilter?] upstream test error: WARNING: suspicious RCU
- usage in _destroy_all_sets
-From: syzbot <syzbot+b62c37cdd58103293a5a@syzkaller.appspotmail.com>
-To: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com, 
-	kadlec@netfilter.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, pabeni@redhat.com, 
-	pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Hello,
+This sets the default power save mode setting to enabled.
 
-syzbot found the following issue on:
+The power save feature is now stable and stress test issues, such as the
+TX timeout error, have been resolved.
+commit c7ee0bc8db32 ("Bluetooth: btnxpuart: Resolve TX timeout error in
+power save stress test")
 
-HEAD commit:    d20f6b3d747c Merge tag 'net-6.10-rc4' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1720df36980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-dashboard link: https://syzkaller.appspot.com/bug?extid=b62c37cdd58103293a5a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+With this setting, the driver will send the vendor command to FW at
+startup, to enable power save feature.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/682e40151249/disk-d20f6b3d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5b5e6dd23e74/vmlinux-d20f6b3d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/08385974a61e/bzImage-d20f6b3d.xz
+User can disable this feature using the following vendor command:
+hcitool cmd 3f 23 03 00 00 (HCI_NXP_AUTO_SLEEP_MODE)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b62c37cdd58103293a5a@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.10.0-rc3-syzkaller-00099-gd20f6b3d747c #0 Not tainted
------------------------------
-net/netfilter/ipset/ip_set_core.c:1200 suspicious rcu_dereference_protected() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by kworker/u8:13/2892:
- #0: ffff888015ed5948 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
- #0: ffff888015ed5948 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
- #1: ffffc90009bcfd00 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
- #1: ffffc90009bcfd00 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
- #2: ffffffff8f5db250 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x16a/0xcc0 net/core/net_namespace.c:594
-
-stack backtrace:
-CPU: 1 PID: 2892 Comm: kworker/u8:13 Not tainted 6.10.0-rc3-syzkaller-00099-gd20f6b3d747c #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: netns cleanup_net
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- _destroy_all_sets+0x232/0x5f0 net/netfilter/ipset/ip_set_core.c:1200
- ip_set_net_exit+0x20/0x50 net/netfilter/ipset/ip_set_core.c:2396
- ops_exit_list net/core/net_namespace.c:173 [inline]
- cleanup_net+0x802/0xcc0 net/core/net_namespace.c:640
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v2: Corrected subject line. Added commit reference. (Paul Menzel)
+ drivers/bluetooth/btnxpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index 7f88b6f52f26..42e929f0d141 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -281,7 +281,7 @@ static u8 crc8_table[CRC8_TABLE_SIZE];
+ 
+ /* Default configurations */
+ #define DEFAULT_H2C_WAKEUP_MODE	WAKEUP_METHOD_BREAK
+-#define DEFAULT_PS_MODE		PS_MODE_DISABLE
++#define DEFAULT_PS_MODE		PS_MODE_ENABLE
+ #define FW_INIT_BAUDRATE	HCI_NXP_PRI_BAUDRATE
+ 
+ static struct sk_buff *nxp_drv_send_cmd(struct hci_dev *hdev, u16 opcode,
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
