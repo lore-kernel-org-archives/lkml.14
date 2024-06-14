@@ -1,119 +1,109 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1606D801;
-	Fri, 14 Jun 2024 02:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D2314533F;
+	Fri, 14 Jun 2024 03:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333898; cv=none; b=s4BVW3oOg7fUduZ8LmGZ7p9VDR8Zpyi4Gq35oQN4Z1p2W2Dogtpdv/iC9YNK01VvHWQ5lSqvGpO6pw9Z58UwbhYJzkbRf/S5cHzFdKmTD2lYDO17vuA8GIm5XGliqZ/DoS4EugW6+JVBWEZ4+0mrAsb6Gm+NnNFhDNid/bRNoTU=
+	t=1718334023; cv=none; b=D+E9aqw+LkOWawf0t5G/wUJpXSikOKzGTKnyn6swUIMOAHKzFwrEjY/fCM+qxSfivy8lg4B1Qf619rEZFQBvtpAYRXkdzxoT4CyIWIqclQIa2tN784wHDA2NuLZwN3TI5eOWlxdp7/KwTouWi/nQ9hCP47Rlkx2MilR6F1ECPRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333898; c=relaxed/simple;
-	bh=/qaUwTmFTohtImbhL/sGW1eeZWtwNzwPZFtjccd2G7s=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YLWzsc1gYdlK64nb3o25vf9vmvwUbJTKOS96JcLKKZ/4n3PK1K+yW9l2LYYXATKzpeOTdfS4X3pOOeVOGvTIXPE5aFvQathPrpWHwJdU3kQjSHNGIghoARmsezhIBbBEHtTWeyOxQhRbdff1ZuGnZkRUR/S+domw55xwr5q1qGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxvOrDsWtmKMEGAA--.27070S3;
-	Fri, 14 Jun 2024 10:58:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMfBsWtmRakfAA--.12078S3;
-	Fri, 14 Jun 2024 10:58:11 +0800 (CST)
-Subject: Re: [PATCH] KVM: Discard zero mask with function kvm_dirty_ring_reset
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240613122803.1031511-1-maobibo@loongson.cn>
- <Zmsg8ciwSp1a_864@google.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <3cf851a2-be51-f227-82a4-090de01bc8be@loongson.cn>
-Date: Fri, 14 Jun 2024 10:58:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1718334023; c=relaxed/simple;
+	bh=zH9/26bCnqQ1D4kgrGaATCsRHHQL0Yv8+lKkx1Ua+NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N4+HLK/WcWzsd3WYPcdgiKA+rgQvXZepmk4ZgJPH+tOjtMSdlnKdwyk7KInZETn9BdrtcaMJEDIVMyBTzaVqD7iW7VVqAwl4n60zXwchGetfP4W5nJ8F7x/c34rts3w6k9rxxr8anJ6uxuVCs6Z8MfsyQXR14SiTVyMb1d72Zaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-2a-666bb2426825
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gregory Price <gregory.price@memverge.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH v6 1/7] mm: make alloc_demote_folio externally invokable for migration
+Date: Fri, 14 Jun 2024 12:00:03 +0900
+Message-ID: <20240614030010.751-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240614030010.751-1-honggyu.kim@sk.com>
+References: <20240614030010.751-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zmsg8ciwSp1a_864@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxDMfBsWtmRakfAA--.12078S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF4fKr43CFWxAF1xWF47Jrc_yoW8Cw17pF
-	s3t3WkGF4Svas0g39xAw1DXrnIv392qFykJFyDGw4DK3sIyr15W3WUta40vrnruF1xAFyf
-	AF4aqF47ZF17CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7Mmh
-	UUUUU
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsXC9ZZnka7Tpuw0g0V3eS0m9hhYzFm/hs3i
+	/oPX7BZP/v9mtWhoesRicXnXHDaLe2v+s1ocWX+WxWLz2TPMFouXq1ns63jAZHH46xsmBx6P
+	paffsHnsnHWX3aNl3y12j02rOtk8Nn2axO5xYsZvFo8Xm2cyemz8+J/d4/MmuQDOKC6blNSc
+	zLLUIn27BK6MKacPMhd0clf8nbqavYFxPmcXIyeHhICJxM7Zz5hg7BsT/rCC2GwCahJXXk4C
+	inNwiAhYSUzbEdvFyMXBLLCBWWLSuRdg9cICYRIrNq4Eq2ERUJV4NzEZJMwrYCrxbMFZqJGa
+	Eo+3/2QHsTkFzCSmH7sHFhcCqrlwZSsTRL2gxMmZT1hAbGYBeYnmrbOZQXZJCDxnk/i8/R3U
+	IEmJgytusExg5J+FpGcWkp4FjEyrGIUy88pyEzNzTPQyKvMyK/SS83M3MQJjYFntn+gdjJ8u
+	BB9iFOBgVOLh9XiWlSbEmlhWXJl7iFGCg1lJhHfWQqAQb0piZVVqUX58UWlOavEhRmkOFiVx
+	XqNv5SlCAumJJanZqakFqUUwWSYOTqkGxmV6skvDtzLGMOz+uGr2JY8d1719w2L+Ji/lCZZL
+	yuM8ceKh3a/VgoUlbHMy41+WXjw2d1bjqUsnO+q6Hn9IYyu1ULVZ9nBfcwFX6LbjB3fK/dQ3
+	aZ4gYu5yfKWCaSzrOYnS57efP31Zv+Swy4HTR2u2LZqdPut87JQ/TAYPjm4uZWXa7HKq96IS
+	S3FGoqEWc1FxIgA2o4WdfQIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNLT9dxU3aawbfpNhYTewws5qxfw2Zx
+	/8Frdosn/3+zWjQ0PWKx+PzsNbPF4bknWS0u75rDZnFvzX9WiyPrz7JYbD57htli8XI1i30d
+	D5gsDn99w+TA57H09Bs2j52z7rJ7tOy7xe6xaVUnm8emT5PYPU7M+M3i8WLzTEaPjR//s3t8
+	u+3hsfjFByaPz5vkArijuGxSUnMyy1KL9O0SuDKmnD7IXNDJXfF36mr2Bsb5nF2MnBwSAiYS
+	Nyb8YQWx2QTUJK68nMTUxcjBISJgJTFtR2wXIxcHs8AGZolJ514wgdQIC4RJrNi4EqyGRUBV
+	4t3EZJAwr4CpxLMFZ5kgRmpKPN7+kx3E5hQwk5h+7B5YXAio5sKVrUwQ9YISJ2c+YQGxmQXk
+	JZq3zmaewMgzC0lqFpLUAkamVYwimXlluYmZOaZ6xdkZlXmZFXrJ+bmbGIEhvqz2z8QdjF8u
+	ux9iFOBgVOLh9XiWlSbEmlhWXJl7iFGCg1lJhHfWQqAQb0piZVVqUX58UWlOavEhRmkOFiVx
+	Xq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDY/J99qDw/+uES49InijWWbLsYtnezvwkYDQVZl5k
+	LvQvO7rwyrQ5mxad5b4hoTDtnqFJ+I3cHw279vzY9GXff/NKI5nltdOfiHtkyHpfzj0rtD3I
+	74FSc+Oat85tT4O67hnPnTe/QCrjVVX8PFb+2KjZ67pD/n3clrNU69mkM2+0oi4da+R/osRS
+	nJFoqMVcVJwIANCeqNZtAgAA
+X-CFilter-Loop: Reflected
 
+The alloc_demote_folio can be used out of vmscan.c so it'd be better to
+remove static keyword from it.
 
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ mm/internal.h | 1 +
+ mm/vmscan.c   | 3 +--
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-On 2024/6/14 上午12:43, Sean Christopherson wrote:
-> On Thu, Jun 13, 2024, Bibo Mao wrote:
->> Function kvm_reset_dirty_gfn may be called with parameters cur_slot /
->> cur_offset / mask are all zero, it does not represent real dirty page.
->> It is not necessary to clear dirty page in this condition. Also return
->> value of macro __fls() is undefined if mask is zero which is called in
->> funciton kvm_reset_dirty_gfn(). Here just discard it.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   virt/kvm/dirty_ring.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
->> index 86d267db87bb..05f4c1c40cc7 100644
->> --- a/virt/kvm/dirty_ring.c
->> +++ b/virt/kvm/dirty_ring.c
->> @@ -147,14 +147,16 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
->>   				continue;
->>   			}
->>   		}
->> -		kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
->> +		if (mask)
->> +			kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
->>   		cur_slot = next_slot;
->>   		cur_offset = next_offset;
->>   		mask = 1;
->>   		first_round = false;
->>   	}
->>   
->> -	kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
->> +	if (mask)
->> +		kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
-> 
-> Given that mask must be checked before __fls(), just do:
-That is ok for me. To be frankly I am not familiar with kvm common code,
-I submit this patch just when I look through the migration source code.
-
-Regards
-Bibo Mao
-> 
-> diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-> index 86d267db87bb..7bc74969a819 100644
-> --- a/virt/kvm/dirty_ring.c
-> +++ b/virt/kvm/dirty_ring.c
-> @@ -55,6 +55,9 @@ static void kvm_reset_dirty_gfn(struct kvm *kvm, u32 slot, u64 offset, u64 mask)
->          struct kvm_memory_slot *memslot;
->          int as_id, id;
->   
-> +       if (!mask)
-> +               return;
-> +
->          as_id = slot >> 16;
->          id = (u16)slot;
-> 
+diff --git a/mm/internal.h b/mm/internal.h
+index b2c75b12014e..b3ca996a4efc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1052,6 +1052,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+         unsigned long, unsigned long);
+ 
+ extern void set_pageblock_order(void);
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private);
+ unsigned long reclaim_pages(struct list_head *folio_list);
+ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 					    struct list_head *folio_list);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2e34de9cd0d4..2f4406872f43 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -916,8 +916,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
+ 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
+ }
+ 
+-static struct folio *alloc_demote_folio(struct folio *src,
+-		unsigned long private)
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private)
+ {
+ 	struct folio *dst;
+ 	nodemask_t *allowed_mask;
+-- 
+2.34.1
 
