@@ -1,96 +1,134 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9CC19A29F;
-	Fri, 14 Jun 2024 12:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE09196D8F;
+	Fri, 14 Jun 2024 12:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718368543; cv=none; b=ACb9D6srCIZoucG4KL+7vXpHPEno/gwfbQyKT8RFCuThBVPfUfC72iHoZvJnaV20NNvN4cu/xVJxG70gBsbd2iQOGhrF/BlPA8H5D4zUdFDwosMaQxxvke8OC/eL827KOOXF/DQnQvVVyaHwpO6eT/0DzRIJr5b5Xf7EuHIlpaU=
+	t=1718368801; cv=none; b=XpuVmds3q+sli4hl3zx6PlVbWn4HAs7AfIbz6eY9mtJkt3sAloB0vYtvQPM9XJbMpvyO8RYK+CSdEaJo6spob01klWz2YOCbKzyb3kaX/LFcsq8WSaB7f2TK9bALEajr4tDmbxuXnKW+sNXOhKSDZZ+OUpGTepHJg3aPLCQAb1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718368543; c=relaxed/simple;
-	bh=IbtBPRoyFXCs87LWeIWDZbEJ9oo6tXVOgMrbPvuKucw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AsEuCj7nuIvj9YwC1/HeIsh3u3ewoV9wKPfl9TvYTtYygbhyejyIx012sez2ssxbWv2zapAgvRFTZvSLOKXZQUsccSCK5ClAHiW9uVqUwOnZDR7BU8QZLgfQMRCqTjL9q/0hbTmKkbQO5fvPGpG0A5RpOs+txrRRH9Xe+6TMjOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EetvqcnY; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718368801; c=relaxed/simple;
+	bh=ZLc0yPpliN5ipWg1U4qUS0H/B/YW0qMTnMAsbBcTLeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fgid4BDK359oTGkqQ/4LQ6UluMwb1raa+DBcjXQxo5RpkhTbt4wK+TtLZaVc7F3ZCzLgJ8hpRaxZH9OXUXafTJx+8RWccOMVYdjZp9L0W/4OR8C3DySZJ/LjJuGSOI9250ZvrL6kKHJzVn6JkrkXu2JAOnap144lDpOmry26IaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qH5E5v2d; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EetvqcnY"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45ECZY15124199;
-	Fri, 14 Jun 2024 07:35:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718368534;
-	bh=Xvl6MWSzL1Ip/Pwqt0EGpSh5XBn8DsBko9UP4NmzQwA=;
-	h=From:To:CC:Subject:Date;
-	b=EetvqcnYjxvohUSjpC/3DGcV5O6Ru1yclR7O9I8A9nvdHcvxMBm2Wz1kmjFtkqpBU
-	 iR9KTk2C4xDGlFi2wiwTaMqF+r1GB15yZzrnlj/1dfBlnGC/XZQ3YtFNaBX5cdIYKF
-	 gZp/W1MwDmKWGbRhp59y/qyrRHNZceu1IruqTA78=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45ECZY8B039985
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Jun 2024 07:35:34 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Jun 2024 07:35:34 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Jun 2024 07:35:34 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45ECZXaD130405;
-	Fri, 14 Jun 2024 07:35:33 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <devarsht@ti.com>, <d-gole@ti.com>, <bb@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-am62x-sk-common: Add bootph-all for I2C1 instance pinmux
-Date: Fri, 14 Jun 2024 18:05:32 +0530
-Message-ID: <20240614123532.203983-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qH5E5v2d"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EC2uNN002257;
+	Fri, 14 Jun 2024 12:39:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=pp1; bh=
+	VX3aciam6kqMjG8tdMnlKZNkMvaEskECdhcLJFjvzhA=; b=qH5E5v2dJFWsMHot
+	ZpSnerqh8TauZS3HPat74R7e4G00wtSWoxOvdJ3/W0RjyBCcSBrO243xg9/hz7hC
+	niIQ2ypabK/eG8UNHw6AdO4bcd7pm8EQoUaSx9QIYviCju1uhbxB+Zi3K2MO6viy
+	6VArCQiVuw5fmP4xEE/rRUarY6i71QdeNuUyILBq1rWDZYu5Qz5Sg42XJ4q/YPOs
+	7GW0ojSeLp82QU+yAzg9+euXAHTz/LcvdY0ZKGWrDRDZgC96Ik36CN5YxqHIB6H1
+	+WF48ZqAVHVpe0DSzZu6zOi1otse6rBCfdNlOLzTBvBLegVWX6id0vk/tvggQl2i
+	WQOwKQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrjtrghap-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 12:39:56 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45ECdu3o025813;
+	Fri, 14 Jun 2024 12:39:56 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrjtrghak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 12:39:56 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45ECXsTB003881;
+	Fri, 14 Jun 2024 12:39:55 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mqhgn2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 12:39:55 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45ECdn2n56492394
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 12:39:51 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6E4492004E;
+	Fri, 14 Jun 2024 12:39:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B59920043;
+	Fri, 14 Jun 2024 12:39:49 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Jun 2024 12:39:49 +0000 (GMT)
+Date: Fri, 14 Jun 2024 14:39:47 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>
+Cc: linux-doc@vger.kernel.org,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Sven
+ Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH] Documentation: Add "S390" to the swiotlb kernel
+ parameter
+Message-ID: <20240614143947.6384b673@p-imbrenda.boeblingen.de.ibm.com>
+In-Reply-To: <20240614081438.553160-1-thuth@redhat.com>
+References: <20240614081438.553160-1-thuth@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: L3ZCK8s3FUgb_xX9nsmRbBbdijZvuXPQ
+X-Proofpoint-GUID: rFe0PdVOAZd20twhdV7jPuhTp8oDRunT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_09,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ adultscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=834
+ clxscore=1011 malwarescore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406140085
 
-I2C1 controller controls io-expander which provides power to voltage
-regulator vdd_mmc1 for MMC SD using a gpio line.
+On Fri, 14 Jun 2024 10:14:38 +0200
+Thomas Huth <thuth@redhat.com> wrote:
 
-Add bootph-all to the pinmux node for this instance, as this is used during
-SPL stage too by the bootloader while using SD boot mode as without this
-the SD boot mode fails with below error when using this device-tree in
-u-boot:
+> The "swiotlb" kernel parameter is used on s390 for protected virt since
+> commit 64e1f0c531d1 ("s390/mm: force swiotlb for protected virtualization")
+> and thus should be marked in kernel-parameters.txt accordingly.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
 
-"Timed out in wait_for_event: status=0000
-Check if pads/pull-ups of bus are properly configured
-Timed out in wait_for_event: status=0000
-Check if pads/pull-ups of bus are properly configured
-"
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-index 52231bfe60fe..ec32fd9791f8 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-@@ -168,6 +168,7 @@ AM62X_IOPAD(0x1e4, PIN_INPUT_PULLUP, 0) /* (A16/D14) I2C0_SDA */
- 	};
- 
- 	main_i2c1_pins_default: main-i2c1-default-pins {
-+		bootph-all;
- 		pinctrl-single,pins = <
- 			AM62X_IOPAD(0x1e8, PIN_INPUT_PULLUP, 0) /* (B17/A17) I2C1_SCL */
- 			AM62X_IOPAD(0x1ec, PIN_INPUT_PULLUP, 0) /* (A17/A16) I2C1_SDA */
--- 
-2.39.1
+> ---
+>  PS: I wonder whether we could remove IA-64 nowadays...?
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index b600df82669d..423427bf6e49 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6548,7 +6548,7 @@
+>  			This parameter controls use of the Protected
+>  			Execution Facility on pSeries.
+>  
+> -	swiotlb=	[ARM,IA-64,PPC,MIPS,X86,EARLY]
+> +	swiotlb=	[ARM,IA-64,PPC,MIPS,X86,S390,EARLY]
+>  			Format: { <int> [,<int>] | force | noforce }
+>  			<int> -- Number of I/O TLB slabs
+>  			<int> -- Second integer after comma. Number of swiotlb
 
