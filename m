@@ -1,88 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E73E572;
-	Fri, 14 Jun 2024 14:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF5945A
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 14:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718374586; cv=none; b=hxNlyp5uxODEXsQ46Q8NYzRFZfdjB+lW0E1CbAxDq7cJyUFUHJq5AUEL+1dL5XvTQIy+AypRzeAQXjgZGcHBXI3FANujhJBgndUHDiKbE7YwmpoIHKmB78wdmhqg2g0+ihjGOWDQnjgBqDaS6POXD35XS7j03qdigsX6Eq7K89o=
+	t=1718374613; cv=none; b=od5vNURnbkvEgn5z0gFs0FFamQSn8cBU7eZ9UMfoTFXiPYctGcuYSsYvHbRKHgi8B5O8qHDTWztjBWyvY5pv8mQIfXP/OHpar+ggHhYNaKdPTRd1cs0MjCkf4HqU2od98FmHroPin8i5hoP2w+QHsCfWPzGz2LLb/QR6XRcF1yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718374586; c=relaxed/simple;
-	bh=6R9ZMbkYsJZ955kACqq1l0DH62D8qVmR/4/LNTbdJ4w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gIDW6ZaD7ZkRHH0Jc1G0PjbR40E5R9RW6U32m6sr8tWzMT7t25d3w6z1F+n2VrD4uiUE0NoTUuEV2sse6o7sVGXQp3Ej4vWqimdDU/mAmCaI/EAi/oBlqF6dIx69v3/m5dtcTL01SFcpcS9Su+J+/NLDLr/YcGM314YJUrIFATw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1I5oR7K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718374613; c=relaxed/simple;
+	bh=jpTO11Zs6ARpgn9DdGfpY+ts6ppb84MF/J8UwwtQ6M0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Agc90Lx/J4OudrksdiGz013kkPsOPjSoDxRUMcb99YCyrcLS6ESbZD6cI60Rzh519dEZDGsXFg9N0qFgiF5YI16sUVoQe2SKfD3LDaeesD3odN52FvL0dcgaMVe/NSQr+0fP/WmY4JeXYrm3JS8sqYz4xLnjqJjFNpG0hP+5kHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=u3XAwKX/; arc=none smtp.client-ip=91.218.175.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1I5oR7K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 806B9C2BD10;
-	Fri, 14 Jun 2024 14:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718374586;
-	bh=6R9ZMbkYsJZ955kACqq1l0DH62D8qVmR/4/LNTbdJ4w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=I1I5oR7KuqxJI2jT2XNyK8JdeRpcUougiJ8XG55kXxd+BGI91ngl2V6ZiJMxY1Y+c
-	 PD9/l2+PbYkbMSnowZSjbrvLr8PgAC6clPokvoeZiVdEJzA9rCYU0XQg9zOhWyLx1N
-	 jPHyFL+rhY82ntteNOR0lXoTgT4DCcjhkwZuOK7hZmh/1IYX+DeSBfKFnGKoXa1cPT
-	 yi6rJLij6m8CODvk+qyk/oMYBiISdDdrsnOVNwM6mq8dXl13UYeihil2UzfnUs/YML
-	 3YFZiNqCcxdphdIrVw8HHsck03uANenksXCd+XhaBJ5u6Y/h/qQO3tj3iavU+WPmpR
-	 OvCrlaxCwRhNA==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <20240612-md-sound-soc-amd-v1-1-ad1de0409c11@quicinc.com>
-References: <20240612-md-sound-soc-amd-v1-1-ad1de0409c11@quicinc.com>
-Subject: Re: [PATCH] ASoC: amd: add missing MODULE_DESCRIPTION() macros
-Message-Id: <171837458415.276136.6658354106882020187.b4-ty@kernel.org>
-Date: Fri, 14 Jun 2024 15:16:24 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="u3XAwKX/"
+X-Envelope-To: akpm@linux-foundation.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718374607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w8jKgK+1dz6W9hZOwl0Mk0auD1tYCqkT+HhvW1YvPYs=;
+	b=u3XAwKX/k1yalv9l/B8981lwLsSxoU4TtJpZgfX2Otb4VYYyX1hxOsRJh/L3oDSXPcZ4TR
+	DZcGeXteZmuoatFYJvHwCHBAZlRUb5lP2bfeGQIQ+HBKDtoPhS1ZCGuRWg+1RMKPRzoPJN
+	tvFUngscgmmwJM1LKcwM8NNXzKcP0/Q=
+X-Envelope-To: andreyknvl@gmail.com
+X-Envelope-To: elver@google.com
+X-Envelope-To: glider@google.com
+X-Envelope-To: dvyukov@google.com
+X-Envelope-To: ryabinin.a.a@gmail.com
+X-Envelope-To: kasan-dev@googlegroups.com
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: spender@grsecurity.net
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: andrey.konovalov@linux.dev
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	Brad Spengler <spender@grsecurity.net>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] kasan: fix bad call to unpoison_slab_object
+Date: Fri, 14 Jun 2024 16:16:40 +0200
+Message-Id: <20240614141640.59324-1-andrey.konovalov@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-0bd45
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 12 Jun 2024 20:26:26 -0700, Jeff Johnson wrote:
-> With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/renoir/snd-acp3x-rn.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/yc/snd-soc-acp6x-mach.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/acp/snd-acp-i2s.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/acp/snd-acp-pdm.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/acp/snd-acp-legacy-common.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/acp/snd-acp-pci.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/amd/ps/snd-soc-ps-mach.o
-> 
-> [...]
+From: Andrey Konovalov <andreyknvl@gmail.com>
 
-Applied to
+Commit 29d7355a9d05 ("kasan: save alloc stack traces for mempool") messed
+up one of the calls to unpoison_slab_object: the last two arguments are
+supposed to be GFP flags and whether to init the object memory.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Fix the call.
 
-Thanks!
+Without this fix, unpoison_slab_object provides the object's size as
+GFP flags to unpoison_slab_object, which can cause LOCKDEP reports
+(and probably other issues).
 
-[1/1] ASoC: amd: add missing MODULE_DESCRIPTION() macros
-      commit: fe833e4397fbdc3ae13a60202dfc7c335b032499
+Fixes: 29d7355a9d05 ("kasan: save alloc stack traces for mempool")
+Reported-by: Brad Spengler <spender@grsecurity.net>
+Signed-off-by: Andrey Konovalov <andreyknvl@gmail.com>
+---
+ mm/kasan/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index e7c9a4dc89f8..85e7c6b4575c 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -532,7 +532,7 @@ void __kasan_mempool_unpoison_object(void *ptr, size_t size, unsigned long ip)
+ 		return;
+ 
+ 	/* Unpoison the object and save alloc info for non-kmalloc() allocations. */
+-	unpoison_slab_object(slab->slab_cache, ptr, size, flags);
++	unpoison_slab_object(slab->slab_cache, ptr, flags, false);
+ 
+ 	/* Poison the redzone and save alloc info for kmalloc() allocations. */
+ 	if (is_kmalloc_cache(slab->slab_cache))
+-- 
+2.25.1
 
