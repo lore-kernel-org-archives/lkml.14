@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B916C878;
-	Fri, 14 Jun 2024 15:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2957314A90
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718379974; cv=none; b=LVRveq+Pm4ahFZ2ed2Rr/6gJow6XIPpdWSf1L5kZ+C6ZEKI8QRoU0p5HMbHN0XAdrBsaoO7fo4L1KWlP2bPor2/tjVinqTQOPpBLyKGudLaZVYlCFDohYtP0xSRINCWKbygqfd9wzGMuTJSo1o4IGsoLt3k4J64VXqlUV9WPe28=
+	t=1718380122; cv=none; b=asUc4wpWhNwNAjqwWqrKX5U+gZ0Ea9BFvhSFMCRAutHdnomPrH+fltCtVM389xKWN/O11HTFABEcsupzOMNl+V2wwEWkKsqmufmPt6ko/S54mti6IEWJJ1NgAlUlanSk7NLLEjiS6+QSkxUt/o1CoyprmnNcnj7noNJM8sz/jHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718379974; c=relaxed/simple;
-	bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jLIRPF1v8XFwGznYtNzUthvi2Fa922JgVpbYbq/vsPhorkDW+S6Gf1wZB7d+vfoZTZFB3q2P5j2+xqjBFlNjH6pDfUjKgnYL40FL/I1HbwRwM7taXrzPDgq1hfCS4NTGglT2/lubtWIMmOprkVDCdVfpiIuweD+VIJmVeEHCcCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMP75Ftt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718380122; c=relaxed/simple;
+	bh=jO7Dzw5P4v+LVE4NQ3h4pjMq0kf48JMKykV7530/mdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zs7z1LXRTJh2RYG89jXAWMtM09Wj9NX9whkrkazMy82XQBDgFVewPy2jLXe27iS6WfIjC+p2KSqkGkS4QcgsXkRpiEj91nvXuCF7GESQCI3MpW/2ycSiizmfxklJYyrMhwRewLMa9cHUMYSFKHbl0HNH+FhJOOWlNNEdTz64IyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gErbsjQX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMP75Ftt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44A2EC4AF1A;
-	Fri, 14 Jun 2024 15:46:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gErbsjQX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EF0C2BD10;
+	Fri, 14 Jun 2024 15:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718379974;
-	bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=;
+	s=k20201202; t=1718380121;
+	bh=jO7Dzw5P4v+LVE4NQ3h4pjMq0kf48JMKykV7530/mdk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=KMP75FtteaGZ46C996OXqSGmqE8rWWkj1b09SMD1m7ZkuO+h+D9jFg3FzgpqRMBey
-	 HkpEFBQC4TEBD32vbqGt4lh5UB2RQat0ogmEy+he9JH5tEnOyKub8ZBxNoxRXksbtx
-	 J3we+RxnWNyrzDYh1PmqUZOijLVeGmmvYxwn+ZVIoI5Gdj/dDESavn4EZ7vMgfCn1Z
-	 +NDhG7qOp/3PRGxVS8NEvgmned3x+Ov0As130rdvKUoAXXva/MoiHZlqYwwTY1rl70
-	 mrwEvxQXe+2elBeW2NL/yMjVfW64yXBndY8ex+UpKRTXP3A9qK/hBPknsKf0x3oGu7
-	 6f+tz1lGsi/zw==
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: linux-pwm@vger.kernel.org
+	b=gErbsjQXHDwJOe8wCzAChDDl0ZuO/k8RfNsD1cODyzEJKV2xE1QFWNBBnKdDlNmSr
+	 SiuXFB4w7G0v1KVfZ/yhiXJP+eKTjfR8xqnZJQMZiffWcsepQc6zHdeseXNFDOQlXw
+	 qsZvF6iKuWEPWIsXmVW3ANQ/sSllcFRAdY0oudiKu/JDAuHpic1Eil3dmzhRGM0fKw
+	 cUPrushCS6DNBd7omHy/d81U0PjLZbeXLw7JEWOcMB7FzB1HYnJkHEUGs8G4Z+bad7
+	 dZ+1TRbBw7OrgKJRJIJc5hkJffYgj3Lit9DczbG3so8hwL/2sZnFwHqtxCLNtWDGe/
+	 V9B0X01H9rHNA==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org,
-	Sean Young <sean@mess.org>
-Subject: [PATCH] pwm: Drop pwm_apply_state()
-Date: Fri, 14 Jun 2024 17:46:02 +0200
-Message-ID: <20240614154603.689727-2-ukleinek@kernel.org>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] irqchip/dw-apb-ictl: Support building as module
+Date: Fri, 14 Jun 2024 23:34:49 +0800
+Message-ID: <20240614153449.2083-1-jszhang@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,54 +39,64 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=ukleinek@kernel.org; h=from:subject; bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmbGW7KFhB2Q7K6dl9fzXu5zx+pBZf8bDUzkSMX OwwDuUdYVCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZmxluwAKCRCPgPtYfRL+ ThJZB/wPEdpuBE33pkjryetp2yEAreWO2n1W+2RNBdfHjUy91IOZlfClP+FWvYkQCGsby3xdh68 bGItAR4Vgo0Gj4PURZUQHOKN8mqze78WlEaVx3ygvw3YzMkMBVbnkGnYB4pa9MY5YEE7sxQrZJ1 PlLOjyiOoA6sPQsBah6vDaNvGBA+sY8nS8/kZeCejgweh3HNgcQCpWIVMH6T6ZRrKRQhx4n97Uc VbyrI882j9OEGCMnPdjN3tTVedkulQGDRF47b806S3ueK6KjYFYyV90MP0QFX4e01K/DqLOQdtC gsage3RfW/NGkOuOfy9174TanWsmWixWP4rEcYL53TGLMrWK
-X-Developer-Key: i=ukleinek@kernel.org; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-This function is not supposed to be used any more since commit
-c748a6d77c06 ("pwm: Rename pwm_apply_state() to
-pwm_apply_might_sleep()") that is included in v6.8-rc1. Two kernel
-releases should be enough for everyone to adapt, so drop the old
-function that was introduced as a compatibility stub for the transition.
+Allow the user selection and building of this interrupt controller
+driver as a module, for example, in some synaptics arm64 SoCs it is
+used as a second level interrupt controller hanging off the ARM GIC
+and is therefore loadable during boot.
 
-Signed-off-by: Uwe Kleine-König <ukleinek@kernel.org>
+However, this interrupt controller can also be used as the main
+interrupt controller by other platforms, so we must keep this kind
+of support by checking whether DW_APB_ICTL is builtin or not.
+
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
-Hello,
+ drivers/irqchip/Kconfig           |  2 +-
+ drivers/irqchip/irq-dw-apb-ictl.c | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-with Sean patch fixing ts-nbus[1], the last user of pwm_apply_state() is
-gone, so pwm_apply_state() can be dropped now.
-
-Thanks for reminding me of this task.
-
-Best regards
-Uwe
-
-[1] https://lore.kernel.org/linux-pwm/20240614090829.560605-1-sean@mess.org
- include/linux/pwm.h | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 75ad0d2fd949..f8c2dc12dbd3 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -563,13 +563,6 @@ static inline void pwm_apply_args(struct pwm_device *pwm)
- 	pwm_apply_might_sleep(pwm, &state);
- }
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 14464716bacb..cfd1102eb273 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -145,7 +145,7 @@ config DAVINCI_CP_INTC
+ 	select IRQ_DOMAIN
  
--/* only for backwards-compatibility, new code should not use this */
--static inline int pwm_apply_state(struct pwm_device *pwm,
--				  const struct pwm_state *state)
--{
--	return pwm_apply_might_sleep(pwm, state);
--}
--
- struct pwm_lookup {
- 	struct list_head list;
- 	const char *provider;
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-prerequisite-patch-id: 51738c9613a88df12ce0963aa6bdb92fa15262e1
+ config DW_APB_ICTL
+-	bool
++	tristate "DesignWare APB Interrupt Controller"
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN_HIERARCHY
+ 
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+index d5c1c750c8d2..5eda6c4689cf 100644
+--- a/drivers/irqchip/irq-dw-apb-ictl.c
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -122,7 +122,7 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	int ret, nrirqs, parent_irq, i;
+ 	u32 reg;
+ 
+-	if (!parent) {
++	if (!parent && IS_BUILTIN(CONFIG_DW_APB_ICTL)) {
+ 		/* Used as the primary interrupt controller */
+ 		parent_irq = 0;
+ 		domain_ops = &dw_apb_ictl_irq_domain_ops;
+@@ -214,5 +214,12 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	release_mem_region(r.start, resource_size(&r));
+ 	return ret;
+ }
+-IRQCHIP_DECLARE(dw_apb_ictl,
+-		"snps,dw-apb-ictl", dw_apb_ictl_init);
++#if IS_BUILTIN(CONFIG_DW_APB_ICTL)
++IRQCHIP_DECLARE(dw_apb_ictl, "snps,dw-apb-ictl", dw_apb_ictl_init);
++#else
++IRQCHIP_PLATFORM_DRIVER_BEGIN(dw_apb_ictl)
++IRQCHIP_MATCH("snps,dw-apb-ictl", dw_apb_ictl_init)
++IRQCHIP_PLATFORM_DRIVER_END(dw_apb_ictl)
++MODULE_DESCRIPTION("DesignWare APB Interrupt Controller");
++MODULE_LICENSE("GPL v2");
++#endif
 -- 
 2.43.0
 
