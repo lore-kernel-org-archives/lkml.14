@@ -1,108 +1,99 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833A514532B;
-	Fri, 14 Jun 2024 02:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094A114532B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718331895; cv=none; b=kxFDdsMAoD0ZuOETKkGm3lMTgX3w8ObOk8KBOIQ4w+yaxwi2wizS/Nmu36Zifz1Gk+xXjzr1Vxfl7DAxHX0673AkaTZfHEkN23+H9pDaXv2mU0PKkdBlV7MeCAb8fFAGgzOw6KjiVPDs/7c70U5EwcQ9pU59G2r3wUBrw6t5MB4=
+	t=1718331901; cv=none; b=IQB5HzFnz5rohIDPm40uC007D/zF++fw2WpY56hLxvxcEkc1DLkai+KPVwZxFloclcwUixdaW/5zENDUU3cWddXTn1vxWk4G6W6OOlvmu1+KpaZRr4Gh3CQXpEWbGR42kGCe7lMHAKwtRUMerbBTnQZN9baorD1qkXrVdZ16eyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718331895; c=relaxed/simple;
-	bh=ytMZoWlY3T6/1y4PZKJPCyJB9wfqD73M1b9fAST+Qj8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SGox4qx55usvFDu5eALkAWG/q12pvLZISaUMpcM3q92qZRgDUNi0/DxLROLjli92JJqb/fJOzWUYKktdCO8aKG9xNd+HfQOt3Nud+yjqEvCO3cb6mvX8hEVWtLVGUwhWDt7RLLVGliQOSyUiaqLgyphhmBQC/y36XHtbWx/1ikk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=T+K02XZr; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T+K02XZr"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45E1fTHS022852;
-	Fri, 14 Jun 2024 02:24:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	corp-2023-11-20; bh=XrfRu0md5jJhhvMuPZJR9e3AV5ULPx1ilpLbNcmqO3Y=; b=
-	T+K02XZrtCGpUc1KGgq1YxzQiqb35Uip9zG6ujKMV+sd2fPo3XWA5/kensfV1xuX
-	+YIjItNgQTStyBPIs30tbzPAryHnHWa+5JW78wYcF3Q96F1yIf6RmaIGpfc/gFvn
-	R+pddzjcICOslcbW/5nyjxxyfeo8Yzay45xttuLIw/hlp3voUyk5Vz8jCsxcyaAL
-	kdMweBEEV6Zpqro4U2k4wfjCm+lL6MZoa7NWwtHuzbwKtVMJ+caUtzVDP0d9ZBxJ
-	5mXMVMUzY9nFUVPIiiubJst83gDrmwNssy+li4f5dhgM85NggjU/F+5dNCkqo/en
-	F2tWhMrAp3vqqrRfJEXXHQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh7dttbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 02:24:35 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45E2IZuB012523;
-	Fri, 14 Jun 2024 02:24:35 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ynca1vs2h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 02:24:35 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45E2OY1g011090;
-	Fri, 14 Jun 2024 02:24:34 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3ynca1vs1v-1;
-	Fri, 14 Jun 2024 02:24:34 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Khalid Aziz <khalid@gonehiking.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Matthew Wilcox <willy@infradead.org>, Hannes Reinecke <hare@suse.com>,
-        Finn Thain <fthain@linux-m68k.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        James Smart <james.smart@broadcom.com>,
-        Ram Vegesna <ram.vegesna@broadcom.com>,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        "Juergen E. Fischer" <fischer@norbit.de>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: add missing MODULE_DESCRIPTION() macros
-Date: Thu, 13 Jun 2024 22:23:58 -0400
-Message-ID: <171833163028.268988.11962134341142261590.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240610-md-drivers-scsi-v3-1-055da78d66b2@quicinc.com>
-References: <20240610-md-drivers-scsi-v3-1-055da78d66b2@quicinc.com>
+	s=arc-20240116; t=1718331901; c=relaxed/simple;
+	bh=/Xs1YwUSUUPtBTM3JJOUhEixbPf3wiUKxyU+gNVx/Uw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnI58idG483xn/U2tSzcqdU6o7VAFVnUNAVVCzukclQmPzHb2sXn64JEuamfZC9mAUJE+qpUmW5bP3ujAQ/kA+Y3SaVi4rFe9Oa2Uz8wayIRnzCE4HcLx5htBTWcDLW0QuXfaPVu2Zjcmdcgqm6GGmMCnhxq/C+WxzjFP0cr9Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DB4DFEC;
+	Thu, 13 Jun 2024 19:25:22 -0700 (PDT)
+Received: from [10.162.16.42] (a077893.blr.arm.com [10.162.16.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FFCA3F73B;
+	Thu, 13 Jun 2024 19:24:55 -0700 (PDT)
+Message-ID: <ca66f7ac-97d5-474d-bec4-d0ff79c08eaa@arm.com>
+Date: Fri, 14 Jun 2024 07:54:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_15,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406140014
-X-Proofpoint-GUID: weQJtNGLWCFQrvm7HXFkpHw9QzmCh-v5
-X-Proofpoint-ORIG-GUID: weQJtNGLWCFQrvm7HXFkpHw9QzmCh-v5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Drop ESR_ELx_FSC_TYPE
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+ ryan.roberts@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240613094538.3263536-1-anshuman.khandual@arm.com>
+ <86y179jdbx.wl-maz@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <86y179jdbx.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Jun 2024 09:16:15 -0700, Jeff Johnson wrote:
 
-> On x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/scsi_common.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/advansys.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/BusLogic.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/aha1740.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/isci/isci.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/elx/efct.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/atp870u.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/ppa.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/scsi/imm.o
+
+On 6/13/24 16:53, Marc Zyngier wrote:
+> On Thu, 13 Jun 2024 10:45:38 +0100,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>> Fault status codes at page table level 0, 1, 2 and 3 for access, permission
+>> and translation faults are architecturally organized in a way, that masking
+>> out ESR_ELx_FSC_TYPE, fetches Level 0 status code for the respective fault.
+>>
+>> Helpers like esr_fsc_is_[translation|permission|access_flag]_fault() mask
+>> out ESR_ELx_FSC_TYPE before comparing against corresponding Level 0 status
+>> code as the kernel does not yet care about the page table level, the fault
+>> really occurred previously.
+>>
+>> This scheme is starting to crumble after FEAT_LPA2 when level -1 got added.
+>> Fault status code for translation fault at level -1 is 0x2B which does not
+>> follow ESR_ELx_FSC_TYPE, requiring esr_fsc_is_translation_fault() changes.
+>>
+>> This changes above helpers to compare against individual fault status code
+>> values for each page table level and drop ESR_ELx_FSC_TYPE which is losing
+>> its value as a common mask.
 > 
-> [...]
+> I'd rather we do not drop the existing #defines, for a very
+> self-serving reason:
+> 
+> NV requires an implementation to synthesise fault syndromes, and these
+> definition are extensively used to compose the syndrome information
+> (see the NV MMU series at [1]). This is also heavily use to emulate
+> the AT instructions (fault reporting in PAR_EL1.FST).
+> 
+> Having additional helpers is fine. Dropping the base definitions
+> isn't, and I'd like to avoid reintroducing them.
 
-Applied to 6.11/scsi-queue, thanks!
+You would like to just leave behind all the existing level 0 syndrome macro
+definitions in place ?
 
-[1/1] scsi: add missing MODULE_DESCRIPTION() macros
-      https://git.kernel.org/mkp/scsi/c/95f8bf932b46
+#define ESR_ELx_FSC_ACCESS	(0x08)
+#define ESR_ELx_FSC_FAULT	(0x04)
+#define ESR_ELx_FSC_PERM	(0x0C)
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Or which are rather
+
+#define ESR_ELx_FSC_ACCESS	ESR_ELx_FSC_ACCESS_L0
+#define ESR_ELx_FSC_FAULT	ESR_ELx_FSC_FAULT_L0
+#define ESR_ELx_FSC_PERM	ESR_ELx_FSC_PERM_L0
+
+But just wondering why cannot ESR_ELx_FSC_[ACCESS|FAULT|PERM]_L0 definitions
+be used directly in new use cases ?
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> [1] http://lore.kernel.org/r/20240529145628.3272630-1-maz@kernel.org
+> 
