@@ -1,17 +1,18 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4AFD2C861;
-	Fri, 14 Jun 2024 03:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDDD18309B;
+	Fri, 14 Jun 2024 03:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718334022; cv=none; b=gqbN3nS2pJl6QXn3xfqii3PNMY/+vDtgIJfCS9WvmzKssO8HsvN9TkmLHvcIuDK2/7qLCamguj4Ctb4dImz3ZeccTGAeRJYe35hOtxIhiqvShpRm/wFWVn2o4f3NKfosvhsDQMMeC6cet6eD06ZPtCZLvk5ONF4LZ4UlEAXTzok=
+	t=1718334025; cv=none; b=O7bw80QaXibE0mJkbWgKlVhcBFfrUrZ/Ng9oSxnmbtAypWQwYW4gZAJycD83tZS4unqykxfU81uPTRmb+id0MZKT9wuySnxYeaWk8Xki5a1dtskn/xbu1rWG2Tt4LJAt9SXlkT/KuVXVIDtS9NX7X3rWRkd02qoPW/gjw6A7qCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718334022; c=relaxed/simple;
-	bh=rIW7jr2H6dFQe4qLz0IaIuzC0bcOzmGyc4dtx6VWRSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZGEsSAXYVDLshJ3qKybr/pwiw3oR4At4EPNpFgfZbReJQxreCFneDqNAdtF1TuzSPiFXvW0UEbc/Ax8TKuESbyPDXO7U231f6OEBxZdQtjGkrFWNDSiRWkCmfxdm6CWZspn4UTmeVLo1EK+80RUumc+alTYAhfgiZceSfc3WSA=
+	s=arc-20240116; t=1718334025; c=relaxed/simple;
+	bh=PBLigDFeoVj/3sesODDma7eu2K0yE9gUuHQjzZnRg4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=keyOmETsLNvdurmd3XN9zyC6gzEkwtohpoy473jkyYulGgqgCbY7CDidTx7rGKFIZkWSUglm1B+rea45zfK8o47WbMFGRw6PKNMwGRnJBGw6nsOdcz/hCb1NJodf39lMF7xz+70XFM2FZv1C48D/5jDgZfwhzwAJK/ruJljzir0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-23-666bb23f4385
+X-AuditID: a67dfc5b-d85ff70000001748-35-666bb2448c76
 From: Honggyu Kim <honggyu.kim@sk.com>
 To: SeongJae Park <sj@kernel.org>,
 	damon@lists.linux.dev
@@ -26,14 +27,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	42.hyeyoo@gmail.com,
 	art.jeongseob@gmail.com,
 	kernel_team@skhynix.com,
-	Honggyu Kim <honggyu.kim@sk.com>,
 	Hyeongtak Ji <hyeongtak.ji@sk.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Yunjeong Mun <yunjeong.mun@sk.com>
-Subject: [PATCH v6 0/7] DAMON based tiered memory management for CXL memory
-Date: Fri, 14 Jun 2024 12:00:02 +0900
-Message-ID: <20240614030010.751-1-honggyu.kim@sk.com>
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH v6 3/7] mm/damon/sysfs-schemes: add target_nid on sysfs-schemes
+Date: Fri, 14 Jun 2024 12:00:05 +0900
+Message-ID: <20240614030010.751-4-honggyu.kim@sk.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240614030010.751-1-honggyu.kim@sk.com>
+References: <20240614030010.751-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,363 +42,248 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnka79puw0gz+NGhYTewws5qxfw2Zx
-	/8Frdosn/3+zWjQ0PWKxuLxrDpvFvTX/WS2OrD/LYrH57Blmi8XL1Sz2dTxgsjj89Q2TA4/H
-	0tNv2Dx2zrrL7tGy7xa7x6ZVnWwemz5NYvc4MeM3i8eLzTMZPTZ+/M/u8XmTXABnFJdNSmpO
-	Zllqkb5dAlfG9It72AqedjBWNF5Zy9rAuD6ji5GTQ0LARGJb10/2LkYOMLvpARtImE1ATeLK
-	y0lMIGERASuJaTtiuxi5OJgF5rBIbHzRwQhSIyzgLbHvwxFWEJtFQFVi+oVt7CA2r4CpxIOl
-	DxghxmtKPN7+EyouKHFy5hMWEJtZQF6ieetsZpChEgLP2SQ27OtmhmiQlDi44gbLBEbeWUh6
-	ZiHpWcDItIpRKDOvLDcxM8dEL6MyL7NCLzk/dxMjMKiX1f6J3sH46ULwIUYBDkYlHl6PZ1lp
-	QqyJZcWVuYcYJTiYlUR4Zy0ECvGmJFZWpRblxxeV5qQWH2KU5mBREuc1+laeIiSQnliSmp2a
-	WpBaBJNl4uCUamAsnPS85c7W/8s4fzIny7+sd/E4bRrzKaFd7iXH9r098Sf/Xw4+6emQXjHR
-	+OeLllVnjFIe5QtylrQ8PLLupFKtTVffAaObuetUe9del9mc+nvRTB/Pnjcd7RN7a5qF+SvZ
-	z67IY7s4t/4gt1Owxbqueo3f8VtXN4Vla6w6bCLgyClf8vLSHSUlluKMREMt5qLiRAD8SUjt
-	ZgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsXCNUNLT9d+U3aaQfdKKYuJPQYWc9avYbO4
-	/+A1u8WT/79ZLRqaHrFYfH72mtmi88l3RovDc0+yWlzeNYfN4t6a/6wWR9afZbHYfPYMs8Xi
-	5WoWh649Z7XY1/GAyeLw1zdMFr+3rWBzEPRYevoNm8fOWXfZPVr23WL32LSqk81j06dJ7B4n
-	Zvxm8XixeSajx8aP/9k9vt328Fj84gOTx+dNcgHcUVw2Kak5mWWpRfp2CVwZ0y/uYSt42sFY
-	0XhlLWsD4/qMLkYODgkBE4mmB2xdjJwcbAJqEldeTmICCYsIWElM2xHbxcjFwSwwh0Vi44sO
-	RpAaYQFviX0fjrCC2CwCqhLTL2xjB7F5BUwlHix9AFYjIaAp8Xj7T6i4oMTJmU9YQGxmAXmJ
-	5q2zmScwcs1CkpqFJLWAkWkVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZGYEgvq/0zcQfjl8vu
-	hxgFOBiVeHg9nmWlCbEmlhVX5h5ilOBgVhLhnbUQKMSbklhZlVqUH19UmpNafIhRmoNFSZzX
-	Kzw1QUggPbEkNTs1tSC1CCbLxMEp1cA4ITPp2+rY813Lkh/HLdHlquksv7E5ycBoXs0N2x0y
-	fSmNMQrRX5+VXtqo+aBl8yGX62EVskmpi1tea9QYWix9yKARueKF/gfWr8d+5C6R/POe8b3F
-	6sqN/s/FtzVcuTRt3t+PHA5OIgIb+rcwWL4/e1mpsYazOinl+5FLl/xXMWkKLz5nu19biaU4
-	I9FQi7moOBEACyieFWUCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsXC9ZZnka7Lpuw0g8l/eCwm9hhYzFm/hs3i
+	/oPX7BZP/v9mtWhoesRicXnXHDaLe2v+s1ocWX+WxWLz2TPMFouXq1ns63jAZHH46xsmBx6P
+	paffsHnsnHWX3aNl3y12j02rOtk8Nn2axO5xYsZvFo8Xm2cyemz8+J/d4/MmuQDOKC6blNSc
+	zLLUIn27BK6M4+vbWAouW1U82vGIsYFxo0EXIyeHhICJxPHzneww9qVHJxlBbDYBNYkrLycx
+	dTFycIgIWElM2xHbxcjFwSxwjVlid/dJZpAaYQF/ibOPVoLVsAioSqy65goS5hUwlfh3fQIb
+	xEhNicfbf4KN5xQwk5h+7B4TiC0EVHPhylYmiHpBiZMzn7CA2MwC8hLNW2czg+ySEHjPJvF7
+	/m8WiEGSEgdX3GCZwMg/C0nPLCQ9CxiZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIExsCy2j/R
+	Oxg/XQg+xCjAwajEw+vxLCtNiDWxrLgy9xCjBAezkgjvrIVAId6UxMqq1KL8+KLSnNTiQ4zS
+	HCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYxam9TsTtimGdXsfeqbMl24QO/QWclZ5mmJ
+	EnOyTyR37npz9Kj8uzcRrwW3OWx41fP0xiOOqe+lrs2udf+nlPGP9WLsgaRSy49qP4zMG+tc
+	OdL31X2w7LXz2Xz6a/CRmUo2H5OO2N20VI2ek+FcaVKud/3uM5GvTyy0olXKHM7LLmbTsnAo
+	m6LEUpyRaKjFXFScCADJ3Mu7fQIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXCNUNLT9d5U3aawe7p1hYTewws5qxfw2Zx
+	/8Frdosn/3+zWjQ0PWKx+PzsNbNF55PvjBaH555ktbi8aw6bxb01/1ktjqw/y2Kx+ewZZovF
+	y9Us9nU8YLI4/PUNkwO/x9LTb9g8ds66y+7Rsu8Wu8emVZ1sHps+TWL3ODHjN4vHi80zGT02
+	fvzP7vHttofH4hcfmDw+b5IL4I7isklJzcksSy3St0vgyji+vo2l4LJVxaMdjxgbGDcadDFy
+	ckgImEhcenSSEcRmE1CTuPJyElMXIweHiICVxLQdsV2MXBzMAteYJXZ3n2QGqREW8Jc4+2gl
+	WA2LgKrEqmuuIGFeAVOJf9cnsEGM1JR4vP0nO4jNKWAmMf3YPSYQWwio5sKVrUwQ9YISJ2c+
+	YQGxmQXkJZq3zmaewMgzC0lqFpLUAkamVYwimXlluYmZOaZ6xdkZlXmZFXrJ+bmbGIHBvqz2
+	z8QdjF8uux9iFOBgVOLh9XiWlSbEmlhWXJl7iFGCg1lJhHfWQqAQb0piZVVqUX58UWlOavEh
+	RmkOFiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDo77Msjnbui94CDIE7/oeziMs++led6bc
+	Ro0DIawSF9bPMP7E8srh5Op9PRUWnssv7bJWW/B0ubc7Ewvred6OgAnNu094Ps7ZuDH5xVav
+	b5u37vne+/+z6Uk3J89Nrp/ruFbKPz3EMe1DugKXwuuQW3+KpweYB2vKqj7aXxUuv507qSu8
+	lJF3vRJLcUaioRZzUXEiAOpKILpyAgAA
 X-CFilter-Loop: Reflected
 
-There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
-posted at [1].
+From: Hyeongtak Ji <hyeongtak.ji@sk.com>
 
-It says there is no implementation of the demote/promote DAMOS action
-are made.  This patch series is about its implementation for physical
-address space so that this scheme can be applied in system wide level.
+This patch adds target_nid under
+  /sys/kernel/mm/damon/admin/kdamonds/<N>/contexts/<N>/schemes/<N>/
 
-Changes from v5:
-https://lore.kernel.org/20240613132056.608-1-honggyu.kim@sk.com
-  1. Remove new actions in usage document as its for debugfs
-  2. Apply minor fixes on cover letter
+The 'target_nid' can be used as the destination node for DAMOS actions
+such as DAMOS_MIGRATE_{HOT,COLD} in the follow up patches.
 
-Changes from RFC v4:
-https://lore.kernel.org/20240512175447.75943-1-sj@kernel.org
-  1. Add usage and design documents
-  2. Rename alloc_demote_folio to alloc_migrate_folio
-  3. Add evaluation results with "demotion_enabled" true
-  4. Rebase based on v6.10-rc3
-
-Changes from RFC v3:
-https://lore.kernel.org/20240405060858.2818-1-honggyu.kim@sk.com
-  0. updated from v3 and posted by SJ on behalf of Honggyu under his
-     approval.
-  1. Do not reuse damon_pa_pageout() and drop 'enum migration_mode'
-  2. Drop vmstat change
-  3. Drop unnecessary page reference check
-
-Changes from RFC v2:
-https://lore.kernel.org/20240226140555.1615-1-honggyu.kim@sk.com
-  1. Rename DAMOS_{PROMOTE,DEMOTE} actions to DAMOS_MIGRATE_{HOT,COLD}.
-  2. Create 'target_nid' to set the migration target node instead of
-     depending on node distance based information.
-  3. Instead of having page level access check in this patch series,
-     delegate the job to a new DAMOS filter type YOUNG[2].
-  4. Introduce vmstat counters "damon_migrate_{hot,cold}".
-  5. Rebase from v6.7 to v6.8.
-
-Changes from RFC:
-https://lore.kernel.org/20240115045253.1775-1-honggyu.kim@sk.com
-  1. Move most of implementation from mm/vmscan.c to mm/damon/paddr.c.
-  2. Simplify some functions of vmscan.c and used in paddr.c, but need
-     to be reviewed more in depth.
-  3. Refactor most functions for common usage for both promote and
-     demote actions and introduce an enum migration_mode for its control.
-  4. Add "target_nid" sysfs knob for migration destination node for both
-     promote and demote actions.
-  5. Move DAMOS_PROMOTE before DAMOS_DEMOTE and move then even above
-     DAMOS_STAT.
-
-Introduction
-============
-
-With the advent of CXL/PCIe attached DRAM, which will be called simply
-as CXL memory in this cover letter, some systems are becoming more
-heterogeneous having memory systems with different latency and bandwidth
-characteristics.  They are usually handled as different NUMA nodes in
-separate memory tiers and CXL memory is used as slow tiers because of
-its protocol overhead compared to local DRAM.
-
-In this kind of systems, we need to be careful placing memory pages on
-proper NUMA nodes based on the memory access frequency.  Otherwise, some
-frequently accessed pages might reside on slow tiers and it makes
-performance degradation unexpectedly.  Moreover, the memory access
-patterns can be changed at runtime.
-
-To handle this problem, we need a way to monitor the memory access
-patterns and migrate pages based on their access temperature.  The
-DAMON(Data Access MONitor) framework and its DAMOS(DAMON-based Operation
-Schemes) can be useful features for monitoring and migrating pages.
-DAMOS provides multiple actions based on DAMON monitoring results and it
-can be used for proactive reclaim, which means swapping cold pages out
-with DAMOS_PAGEOUT action, but it doesn't support migration actions such
-as demotion and promotion between tiered memory nodes.
-
-This series supports two new DAMOS actions; DAMOS_MIGRATE_HOT for
-promotion from slow tiers and DAMOS_MIGRATE_COLD for demotion from fast
-tiers.  This prevents hot pages from being stuck on slow tiers, which
-makes performance degradation and cold pages can be proactively demoted
-to slow tiers so that the system can increase the chance to allocate
-more hot pages to fast tiers.
-
-The DAMON provides various tuning knobs but we found that the proactive
-demotion for cold pages is especially useful when the system is running
-out of memory on its fast tier nodes.
-
-Our evaluation result shows that it reduces the performance slowdown
-compared to the default memory policy from 11% to 3~5% when the
-system runs under high memory pressure on its fast tier DRAM nodes.
-
-DAMON configuration
-===================
-
-The specific DAMON configuration doesn't have to be in the scope of this
-patch series, but some rough idea is better to be shared to explain the
-evaluation result.
-
-The DAMON provides many knobs for fine tuning but its configuration file
-is generated by HMSDK[3].  It includes gen_config.py script that
-generates a json file with the full config of DAMON knobs and it creates
-multiple kdamonds for each NUMA node when the DAMON is enabled so that
-it can run hot/cold based migration for tiered memory.
-
-Evaluation Workload
-===================
-
-The performance evaluation is done with redis[4], which is a widely used
-in-memory database and the memory access patterns are generated via
-YCSB[5].  We have measured two different workloads with zipfian and
-latest distributions but their configs are slightly modified to make
-memory usage higher and execution time longer for better evaluation.
-
-The idea of evaluation using these migrate_{hot,cold} actions covers
-system-wide memory management rather than partitioning hot/cold pages of
-a single workload.  The default memory allocation policy creates pages
-to the fast tier DRAM node first, then allocates newly created pages to
-the slow tier CXL node when the DRAM node has insufficient free space.
-Once the page allocation is done then those pages never move between
-NUMA nodes.  It's not true when using numa balancing, but it is not the
-scope of this DAMON based tiered memory management support.
-
-If the working set of redis can be fit fully into the DRAM node, then
-the redis will access the fast DRAM only.  Since the performance of DRAM
-only is faster than partially accessing CXL memory in slow tiers, this
-environment is not useful to evaluate this patch series.
-
-To make pages of redis be distributed across fast DRAM node and slow
-CXL node to evaluate our migrate_{hot,cold} actions, we pre-allocate
-some cold memory externally using mmap and memset before launching
-redis-server.  We assumed that there are enough amount of cold memory in
-datacenters as TMO[6] and TPP[7] papers mentioned.
-
-The evaluation sequence is as follows.
-
-1. Turn on DAMON with DAMOS_MIGRATE_COLD action for DRAM node and
-   DAMOS_MIGRATE_HOT action for CXL node.  It demotes cold pages on DRAM
-   node and promotes hot pages on CXL node in a regular interval.
-2. Allocate a huge block of cold memory by calling mmap and memset at
-   the fast tier DRAM node, then make the process sleep to make the fast
-   tier has insufficient space for redis-server.
-3. Launch redis-server and load prebaked snapshot image, dump.rdb.  The
-   redis-server consumes 52GB of anon pages and 33GB of file pages, but
-   due to the cold memory allocated at 2, it fails allocating the entire
-   memory of redis-server on the fast tier DRAM node so it partially
-   allocates the remaining on the slow tier CXL node.  The ratio of
-   DRAM:CXL depends on the size of the pre-allocated cold memory.
-4. Run YCSB to make zipfian or latest distribution of memory accesses to
-   redis-server, then measure its execution time when it's completed.
-5. Repeat 4 over 50 times to measure the average execution time for each
-   run.
-6. Increase the cold memory size then repeat goes to 2.
-
-For each test at 4 took about a minute so repeating it 50 times almost
-took about 1 hour for each test with a specific cold memory from 440GB
-to 500GB in 10GB increments for each evaluation.  So it took about more
-than 10 hours for both zipfian and latest workloads to get the entire
-evaluation results.  Repeating the same test set multiple times doesn't
-show much difference so I think it might be enough to make the result
-reliable.
-
-Evaluation Results
-==================
-
-All the result values are normalized to DRAM-only execution time because
-the workload cannot be faster than DRAM-only unless the workload hits
-the peak bandwidth but our redis test doesn't go beyond the bandwidth
-limit.
-
-So the DRAM-only execution time is the ideal result without affected by
-the gap between DRAM and CXL performance difference.  The NUMA node
-environment is as follows.
-
-  node0 - local DRAM, 512GB with a CPU socket (fast tier)
-  node1 - disabled
-  node2 - CXL DRAM, 96GB, no CPU attached (slow tier)
-
-The following is the result of generating zipfian distribution to
-redis-server and the numbers are averaged by 50 times of execution.
-
-  1. YCSB zipfian distribution read only workload
-  memory pressure with cold memory on node0 with 512GB of local DRAM.
-  ====================+================================================+=========
-                      |       cold memory occupied by mmap and memset  |
-                      |   0G  440G  450G  460G  470G  480G  490G  500G |
-  ====================+================================================+=========
-  Execution time normalized to DRAM-only values                        | GEOMEAN
-  --------------------+------------------------------------------------+---------
-  DRAM-only           | 1.00     -     -     -     -     -     -     - | 1.00
-  CXL-only            | 1.19     -     -     -     -     -     -     - | 1.19
-  default             |    -  1.00  1.05  1.08  1.12  1.14  1.18  1.18 | 1.11
-  DAMON tiered        |    -  1.03  1.03  1.03  1.03  1.03  1.07 *1.05 | 1.04
-  DAMON lazy          |    -  1.04  1.03  1.04  1.05  1.06  1.06 *1.06 | 1.05
-  ====================+================================================+=========
-  CXL usage of redis-server in GB                                      | AVERAGE
-  --------------------+------------------------------------------------+---------
-  DRAM-only           |  0.0     -     -     -     -     -     -     - |  0.0
-  CXL-only            | 51.4     -     -     -     -     -     -     - | 51.4
-  default             |    -   0.6  10.6  20.5  30.5  40.5  47.6  50.4 | 28.7
-  DAMON tiered        |    -   0.6   0.5   0.4   0.7   0.8   7.1   5.6 |  2.2
-  DAMON lazy          |    -   0.5   3.0   4.5   5.4   6.4   9.4   9.1 |  5.5
-  ====================+================================================+=========
-
-Each test result is based on the execution environment as follows.
-
-  DRAM-only:           redis-server uses only local DRAM memory.
-  CXL-only:            redis-server uses only CXL memory.
-  default:             default memory policy(MPOL_DEFAULT).
-                       numa balancing disabled.
-  DAMON tiered:        DAMON enabled with DAMOS_MIGRATE_COLD for DRAM
-                       nodes and DAMOS_MIGRATE_HOT for CXL nodes.
-  DAMON lazy:          same as DAMON tiered, but turn on DAMON just
-                       before making memory access request via YCSB.
-
-The above result shows the "default" execution time goes up as the size
-of cold memory is increased from 440G to 500G because the more cold
-memory used, the more CXL memory is used for the target redis workload
-and this makes the execution time increase.
-
-However, "DAMON tiered" and other DAMON results show less slowdown
-because the DAMOS_MIGRATE_COLD action at DRAM node proactively demotes
-pre-allocated cold memory to CXL node and this free space at DRAM
-increases more chance to allocate hot or warm pages of redis-server to
-fast DRAM node.  Moreover, DAMOS_MIGRATE_HOT action at CXL node also
-promotes hot pages of redis-server to DRAM node actively.
-
-As a result, it makes more memory of redis-server stay in DRAM node
-compared to "default" memory policy and this makes the performance
-improvement.
-
-Please note that the result numbers of "DAMON tiered" and "DAMON lazy"
-at 500G are marked with * stars, which means their test results are
-replaced with reproduced tests that didn't have OOM issue.
-
-That was needed because sometimes the test processes get OOM when DRAM
-has insufficient space.  The DAMOS_MIGRATE_HOT doesn't kick reclaim but
-just gives up migration when there is not enough space at DRAM side.
-The problem happens when there is competition between normal allocation
-and migration and the migration is done before normal allocation, then
-the completely unrelated normal allocation can trigger reclaim, which
-incurs OOM.
-
-Because of this issue, I have also tested more cases with
-"demotion_enabled" flag enabled to make such reclaim doesn't trigger
-OOM, but just demote reclaimed pages.  The following test results show
-more tests with "kswapd" marked.
-
-  2. YCSB zipfian distribution read only workload (with demotion_enabled true)
-  memory pressure with cold memory on node0 with 512GB of local DRAM.
-  ====================+================================================+=========
-                      |       cold memory occupied by mmap and memset  |
-                      |   0G  440G  450G  460G  470G  480G  490G  500G |
-  ====================+================================================+=========
-  Execution time normalized to DRAM-only values                        | GEOMEAN
-  --------------------+------------------------------------------------+---------
-  DAMON tiered        |    -  1.03  1.03  1.03  1.03  1.03  1.07  1.05 | 1.04
-  DAMON lazy          |    -  1.04  1.03  1.04  1.05  1.06  1.06  1.06 | 1.05
-  DAMON tiered kswapd |    -  1.03  1.03  1.03  1.03  1.02  1.02  1.03 | 1.03
-  DAMON lazy kswapd   |    -  1.04  1.04  1.04  1.03  1.05  1.04  1.05 | 1.04
-  ====================+================================================+=========
-  CXL usage of redis-server in GB                                      | AVERAGE
-  --------------------+------------------------------------------------+---------
-  DAMON tiered        |    -   0.6   0.5   0.4   0.7   0.8   7.1   5.6 |  2.2
-  DAMON lazy          |    -   0.5   3.0   4.5   5.4   6.4   9.4   9.1 |  5.5
-  DAMON tiered kswapd |    -   0.0   0.0   0.4   0.5   0.1   0.8   1.0 |  0.4
-  DAMON lazy kswapd   |    -   4.2   4.6   5.3   1.7   6.8   8.1   5.8 |  5.2
-  ====================+================================================+=========
-
-Each test result is based on the exeuction environment as follows.
-
-  DAMON tiered:        same as before
-  DAMON lazy:          same as before
-  DAMON tiered kswapd: same as DAMON tiered, but turn on
-                       /sys/kernel/mm/numa/demotion_enabled to make
-                       kswapd or direct reclaim does demotion.
-  DAMON lazy kswapd:   same as DAMON lazy, but turn on
-                       /sys/kernel/mm/numa/demotion_enabled to make
-                       kswapd or direct reclaim does demotion.
-
-The "DAMON tiered kswapd" and "DAMON lazy kswapd" didn't trigger OOM at
-all unlike other tests because kswapd and direct reclaim from DRAM node
-can demote reclaimed pages to CXL node independently from DAMON actions
-and their results are slightly better than without having
-"demotion_enabled".
-
-In summary, the evaluation results show that DAMON memory management
-with DAMOS_MIGRATE_{HOT,COLD} actions reduces the performance slowdown
-compared to the "default" memory policy from 11% to 3~5% when the system
-runs with high memory pressure on its fast tier DRAM nodes.
-
-Having these DAMOS_MIGRATE_HOT and DAMOS_MIGRATE_COLD actions can make
-tiered memory systems run more efficiently under high memory pressures.
-
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
 Signed-off-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
 Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/linux/damon.h    | 11 ++++++++++-
+ mm/damon/core.c          |  5 ++++-
+ mm/damon/dbgfs.c         |  2 +-
+ mm/damon/lru_sort.c      |  3 ++-
+ mm/damon/reclaim.c       |  3 ++-
+ mm/damon/sysfs-schemes.c | 33 ++++++++++++++++++++++++++++++++-
+ 6 files changed, 51 insertions(+), 6 deletions(-)
 
-[1] https://lore.kernel.org/damon/20231112195602.61525-1-sj@kernel.org
-[2] https://lore.kernel.org/damon/20240311204545.47097-1-sj@kernel.org
-[3] https://github.com/skhynix/hmsdk
-[4] https://github.com/redis/redis/tree/7.0.0
-[5] https://github.com/brianfrankcooper/YCSB/tree/0.17.0
-[6] https://dl.acm.org/doi/10.1145/3503222.3507731
-[7] https://dl.acm.org/doi/10.1145/3582016.3582063
-
-Honggyu Kim (5):
-  mm: make alloc_demote_folio externally invokable for migration
-  mm: rename alloc_demote_folio to alloc_migrate_folio
-  mm/migrate: add MR_DAMON to migrate_reason
-  mm/damon/paddr: introduce DAMOS_MIGRATE_COLD action for demotion
-  Docs/damon: document damos_migrate_{hot,cold}
-
-Hyeongtak Ji (2):
-  mm/damon/sysfs-schemes: add target_nid on sysfs-schemes
-  mm/damon/paddr: introduce DAMOS_MIGRATE_HOT action for promotion
-
- Documentation/admin-guide/mm/damon/usage.rst |   4 +
- Documentation/mm/damon/design.rst            |   4 +
- include/linux/damon.h                        |  15 +-
- include/linux/migrate_mode.h                 |   1 +
- include/trace/events/migrate.h               |   3 +-
- mm/damon/core.c                              |   5 +-
- mm/damon/dbgfs.c                             |   2 +-
- mm/damon/lru_sort.c                          |   3 +-
- mm/damon/paddr.c                             | 157 +++++++++++++++++++
- mm/damon/reclaim.c                           |   3 +-
- mm/damon/sysfs-schemes.c                     |  35 ++++-
- mm/internal.h                                |   1 +
- mm/vmscan.c                                  |   5 +-
- 13 files changed, 228 insertions(+), 10 deletions(-)
-
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index f7da65e1ac04..21d6b69a015c 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -374,6 +374,7 @@ struct damos_access_pattern {
+  * @apply_interval_us:	The time between applying the @action.
+  * @quota:		Control the aggressiveness of this scheme.
+  * @wmarks:		Watermarks for automated (in)activation of this scheme.
++ * @target_nid:		Destination node if @action is "migrate_{hot,cold}".
+  * @filters:		Additional set of &struct damos_filter for &action.
+  * @stat:		Statistics of this scheme.
+  * @list:		List head for siblings.
+@@ -389,6 +390,10 @@ struct damos_access_pattern {
+  * monitoring context are inactive, DAMON stops monitoring either, and just
+  * repeatedly checks the watermarks.
+  *
++ * @target_nid is used to set the migration target node for migrate_hot or
++ * migrate_cold actions, which means it's only meaningful when @action is either
++ * "migrate_hot" or "migrate_cold".
++ *
+  * Before applying the &action to a memory region, &struct damon_operations
+  * implementation could check pages of the region and skip &action to respect
+  * &filters
+@@ -410,6 +415,9 @@ struct damos {
+ /* public: */
+ 	struct damos_quota quota;
+ 	struct damos_watermarks wmarks;
++	union {
++		int target_nid;
++	};
+ 	struct list_head filters;
+ 	struct damos_stat stat;
+ 	struct list_head list;
+@@ -726,7 +734,8 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
+ 			enum damos_action action,
+ 			unsigned long apply_interval_us,
+ 			struct damos_quota *quota,
+-			struct damos_watermarks *wmarks);
++			struct damos_watermarks *wmarks,
++			int target_nid);
+ void damon_add_scheme(struct damon_ctx *ctx, struct damos *s);
+ void damon_destroy_scheme(struct damos *s);
+ 
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 6392f1cc97a3..c0ec5be4f56e 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -354,7 +354,8 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
+ 			enum damos_action action,
+ 			unsigned long apply_interval_us,
+ 			struct damos_quota *quota,
+-			struct damos_watermarks *wmarks)
++			struct damos_watermarks *wmarks,
++			int target_nid)
+ {
+ 	struct damos *scheme;
+ 
+@@ -381,6 +382,8 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
+ 	scheme->wmarks = *wmarks;
+ 	scheme->wmarks.activated = true;
+ 
++	scheme->target_nid = target_nid;
++
+ 	return scheme;
+ }
+ 
+diff --git a/mm/damon/dbgfs.c b/mm/damon/dbgfs.c
+index 2461cfe2e968..51a6f1cac385 100644
+--- a/mm/damon/dbgfs.c
++++ b/mm/damon/dbgfs.c
+@@ -281,7 +281,7 @@ static struct damos **str_to_schemes(const char *str, ssize_t len,
+ 
+ 		pos += parsed;
+ 		scheme = damon_new_scheme(&pattern, action, 0, &quota,
+-				&wmarks);
++				&wmarks, NUMA_NO_NODE);
+ 		if (!scheme)
+ 			goto fail;
+ 
+diff --git a/mm/damon/lru_sort.c b/mm/damon/lru_sort.c
+index 3de2916a65c3..3775f0f2743d 100644
+--- a/mm/damon/lru_sort.c
++++ b/mm/damon/lru_sort.c
+@@ -163,7 +163,8 @@ static struct damos *damon_lru_sort_new_scheme(
+ 			/* under the quota. */
+ 			&quota,
+ 			/* (De)activate this according to the watermarks. */
+-			&damon_lru_sort_wmarks);
++			&damon_lru_sort_wmarks,
++			NUMA_NO_NODE);
+ }
+ 
+ /* Create a DAMON-based operation scheme for hot memory regions */
+diff --git a/mm/damon/reclaim.c b/mm/damon/reclaim.c
+index 9bd341d62b4c..a05ccb41749b 100644
+--- a/mm/damon/reclaim.c
++++ b/mm/damon/reclaim.c
+@@ -177,7 +177,8 @@ static struct damos *damon_reclaim_new_scheme(void)
+ 			/* under the quota. */
+ 			&damon_reclaim_quota,
+ 			/* (De)activate this according to the watermarks. */
+-			&damon_reclaim_wmarks);
++			&damon_reclaim_wmarks,
++			NUMA_NO_NODE);
+ }
+ 
+ static void damon_reclaim_copy_quota_status(struct damos_quota *dst,
+diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
+index bea5bc52846a..0632d28b67f8 100644
+--- a/mm/damon/sysfs-schemes.c
++++ b/mm/damon/sysfs-schemes.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/slab.h>
++#include <linux/numa.h>
+ 
+ #include "sysfs-common.h"
+ 
+@@ -1445,6 +1446,7 @@ struct damon_sysfs_scheme {
+ 	struct damon_sysfs_scheme_filters *filters;
+ 	struct damon_sysfs_stats *stats;
+ 	struct damon_sysfs_scheme_regions *tried_regions;
++	int target_nid;
+ };
+ 
+ /* This should match with enum damos_action */
+@@ -1470,6 +1472,7 @@ static struct damon_sysfs_scheme *damon_sysfs_scheme_alloc(
+ 	scheme->kobj = (struct kobject){};
+ 	scheme->action = action;
+ 	scheme->apply_interval_us = apply_interval_us;
++	scheme->target_nid = NUMA_NO_NODE;
+ 	return scheme;
+ }
+ 
+@@ -1692,6 +1695,28 @@ static ssize_t apply_interval_us_store(struct kobject *kobj,
+ 	return err ? err : count;
+ }
+ 
++static ssize_t target_nid_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damon_sysfs_scheme *scheme = container_of(kobj,
++			struct damon_sysfs_scheme, kobj);
++
++	return sysfs_emit(buf, "%d\n", scheme->target_nid);
++}
++
++static ssize_t target_nid_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damon_sysfs_scheme *scheme = container_of(kobj,
++			struct damon_sysfs_scheme, kobj);
++	int err = 0;
++
++	/* TODO: error handling for target_nid range. */
++	err = kstrtoint(buf, 0, &scheme->target_nid);
++
++	return err ? err : count;
++}
++
+ static void damon_sysfs_scheme_release(struct kobject *kobj)
+ {
+ 	kfree(container_of(kobj, struct damon_sysfs_scheme, kobj));
+@@ -1703,9 +1728,13 @@ static struct kobj_attribute damon_sysfs_scheme_action_attr =
+ static struct kobj_attribute damon_sysfs_scheme_apply_interval_us_attr =
+ 		__ATTR_RW_MODE(apply_interval_us, 0600);
+ 
++static struct kobj_attribute damon_sysfs_scheme_target_nid_attr =
++		__ATTR_RW_MODE(target_nid, 0600);
++
+ static struct attribute *damon_sysfs_scheme_attrs[] = {
+ 	&damon_sysfs_scheme_action_attr.attr,
+ 	&damon_sysfs_scheme_apply_interval_us_attr.attr,
++	&damon_sysfs_scheme_target_nid_attr.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(damon_sysfs_scheme);
+@@ -2031,7 +2060,8 @@ static struct damos *damon_sysfs_mk_scheme(
+ 	};
+ 
+ 	scheme = damon_new_scheme(&pattern, sysfs_scheme->action,
+-			sysfs_scheme->apply_interval_us, &quota, &wmarks);
++			sysfs_scheme->apply_interval_us, &quota, &wmarks,
++			sysfs_scheme->target_nid);
+ 	if (!scheme)
+ 		return NULL;
+ 
+@@ -2068,6 +2098,7 @@ static void damon_sysfs_update_scheme(struct damos *scheme,
+ 
+ 	scheme->action = sysfs_scheme->action;
+ 	scheme->apply_interval_us = sysfs_scheme->apply_interval_us;
++	scheme->target_nid = sysfs_scheme->target_nid;
+ 
+ 	scheme->quota.ms = sysfs_quotas->ms;
+ 	scheme->quota.sz = sysfs_quotas->sz;
 -- 
 2.34.1
 
