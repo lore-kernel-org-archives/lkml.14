@@ -1,106 +1,140 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901E017C96
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 14:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145C410979;
+	Fri, 14 Jun 2024 14:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718376105; cv=none; b=UKiIPK/A+zY8RB4O/haV44ZYeRKGi1O5fK54ezrpsy9CO5AYS4osUF3ON1KuGhWH2k6UZqJlLLUQVVaOtqJUZagMTrfpGs1AIrX8IHLoTXKC+yGaF6FLQYe2j7tke7EPJ2Av1AGZE+SylAjRDPeUiKD1S/5TMiO2B3PzbfD5Zu4=
+	t=1718376164; cv=none; b=c2TDKAzAdt28vULlh8Ajxa446pBAlp3lkNmOvBlMenuL0oe17wFN0z5594kQqDGCSb2+tNnByN7gBPAFyoqKffKlK5CnyQqlHocQbalVWEVMPoi+tf+goB2kV/JPRiABJA5hoIl5OJGEvASFNhW0/XQlXXwN/V72snYIxJsvL9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718376105; c=relaxed/simple;
-	bh=y9OQe3qr0Gx7VmAgMDXRnMq83su/FNL55wFDYVVmHu8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EYDlskrVTHszlhxVCvAFGhqLGML7hdabNpdI2Gye0SLcG9UGh2z5AOxioM3ZniG2fCmWWC0vd/7IOD4a8XKLbIeva5AW7T8EUzbNn3aFt8m38nCzbm/AKJ6Xt2urQr9SvDYz6j3BeVfd2BtM34o8YDMMNSQBYrbvo+Sew7e6gjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhZLySUa; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718376164; c=relaxed/simple;
+	bh=ik6eDWIdgCDqW3F4a+Pfi6+wrVRqwMCzQ5VGXi2oxi0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dJlq/SawedwCD+U/LpoUyTtJVakoOu1Ax+LiKhi35kdXC7Kz2ElU8dqFhIpCAcs/paT1fB42Vy33QO7FqUz/Qva7bAbapSSaTe3FI7Ejc2OPrzOiFoluy+H75rwhj4cqEdPpKkgEwFdOIHDb0GI3nECJ+g8QvohVajXx8a8anO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLcVV5Op; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhZLySUa"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so2826531a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718376102; x=1718980902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=COgeoGHN66/htY8IBJh9awShJLxDqgPRVGYjDpSp0Z8=;
-        b=XhZLySUaFgkMWQE8tOOuW6HyrFbE3oxv5k3s09gf6L+oBqXMfJfj0qu8V2UhrpEAhR
-         pGt1JcQ3PYaL3J+4fsbWxlMJgJ01IpHVntEStS+K0TKKRZepmXNxP52GyrQQygJfPL4J
-         FnDaJoRmQv7kijQdH4BSdEGoNwj98uuVCfAA0hyHoiwkspaszhp0+fn683oMSqciUo8I
-         iJCmJW5N/5wBxZba2SVyiyfOOs2ZBos5PtBd6Rm83+7J9Hd2JBuq4KoGrpweYU1WTlGG
-         qKm2wigoJJFLtHlBaRxxDDAbQY49zSAFNdC1roH3XIdHlulEshz/9lAoL308sNDkrJT5
-         jDFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718376102; x=1718980902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=COgeoGHN66/htY8IBJh9awShJLxDqgPRVGYjDpSp0Z8=;
-        b=wB/z+6+D+wKeBNWQl4aJ982C1uogHaBaFGCFgLpoxjEM1fTNuP6QLHTfqe54LxxAYZ
-         9cB+FbFU42F8PDr+FCeyrYY+x5R66qz30X28UO/y1RclrIb06NgIQzBRUNo+9whi3R2U
-         xRTDaAGHiEoiynyvtpfLlzXlUqL4wffSyaVt9QXUfiROMMBrL/1i+C+z4DmR9+3a6ez7
-         hwGE/VTSPZ4Yc4ybA4cKxNuW9anA3uPNPgqhO3Fzw/r5aqmHKydRzmCoX98M74niIlNA
-         z8TMEPdUnxhM6P5pctaAVdMmO6tfZ0YqBqMLXkpvyUSxKSysKMDRJb+nVkzRAMwr+dRd
-         EUiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUbwReSudgoLjUNF+UITFqVv4tuSCkkSdRLc524QF6AUzS7chcYrphR7oVuwJQqMuTdRXWUlie8NQXlST+G2SR9wwki+Cf8v3Gzh+k
-X-Gm-Message-State: AOJu0YxCX4WjJZeflkwjsWYlMZ6VlVwrw0rnsM58n4nyniG5emewfQE1
-	faXn9yvSDOgs1uRmoJ8/xxazTOTGxjvoWPcMudnnvTw0sfzmcVkfwItIRjU2sOHSIIZfx16CpzE
-	bQykVkAehrn3nPv9A/oim6mbko0w=
-X-Google-Smtp-Source: AGHT+IHKnx5pwExZmiV5+F1hrfOVQZ5WnJv4drqjDxmRh5En5uNxZYiys302f0rNtLAOKTP99lAsXaV87+xm2u5vNp8=
-X-Received: by 2002:a50:d59e:0:b0:57c:9d54:67d5 with SMTP id
- 4fb4d7f45d1cf-57cbd8f2946mr1852528a12.29.1718376101681; Fri, 14 Jun 2024
- 07:41:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLcVV5Op"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E3AC2BD10;
+	Fri, 14 Jun 2024 14:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718376163;
+	bh=ik6eDWIdgCDqW3F4a+Pfi6+wrVRqwMCzQ5VGXi2oxi0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SLcVV5OpkHueAsHO2Ad89RqJHZ2FixV5j8RR9/p/yJ0dqGTXajrjucrv9x1ghOF4P
+	 ir4RVlTKyF0ye2ciO5/REyILPxF0uWRqs0S3/1cEc4a0Af4UIJjTIK0+gXt76Ipxl2
+	 x8T5f7KYo1kPfMXdrgrxtMw5aKEGmuHChvsjXSIbI0M2TWIWVwl9wDtmJ5h/0bjsz4
+	 5cGhrs+p4NMuNSCjsCGuFH+WsziNUOTdvDJvU5cv85pLLzq7CmSogcAwSyp8N1BJ7p
+	 ALsaTEeAEI5YqcJElCwQuhcStfF5Q3y3wqOYgMwAjWk4lzBKgrT5nVqA8lxw4e1X5O
+	 FZNeEZPiRBclA==
+Message-ID: <54e9c949-da29-4a19-af29-55aac52afbf9@kernel.org>
+Date: Fri, 14 Jun 2024 16:42:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614015138.31461-1-ioworker0@gmail.com> <20240614015138.31461-3-ioworker0@gmail.com>
- <222F10CF-99B0-41F5-AB59-5E65F38B4AEF@nvidia.com>
-In-Reply-To: <222F10CF-99B0-41F5-AB59-5E65F38B4AEF@nvidia.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 14 Jun 2024 22:41:27 +0800
-Message-ID: <CAK1f24m7uHpPa75acP_-hHh5bcStegtQJY_2rDqpKeviUhBdzg@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] mm/rmap: integrate PMD-mapped folio splitting into
- pagewalk loop
-To: Zi Yan <ziy@nvidia.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org, 
-	baolin.wang@linux.alibaba.com, maskray@google.com, ryan.roberts@arm.com, 
-	david@redhat.com, 21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com, 
-	zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com, 
-	libang.li@antgroup.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
-	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next 2/6] selftests: net: lib: remove ns from list
+ after clean-up
+To: Simon Horman <horms@kernel.org>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
+ <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-2-e36986faac94@kernel.org>
+ <20240614104006.GC8447@kernel.org>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240614104006.GC8447@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 14, 2024 at 10:26=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 13 Jun 2024, at 21:51, Lance Yang wrote:
->
-> > In preparation for supporting try_to_unmap_one() to unmap PMD-mapped
-> > folios, start the pagewalk first, then call split_huge_pmd_address() to
-> > split the folio.
-> >
-> > Suggested-by: David Hildenbrand <david@redhat.com>
-> > Suggested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
-> >  include/linux/huge_mm.h |  6 ++++++
-> >  include/linux/rmap.h    | 24 +++++++++++++++++++++++
-> >  mm/huge_memory.c        | 42 +++++++++++++++++++++--------------------
-> >  mm/rmap.c               | 21 +++++++++++++++------
-> >  4 files changed, 67 insertions(+), 26 deletions(-)
->
-> Thanks.
->
-> Acked-by: Zi Yan <ziy@nvidia.com>
+Hi Simon,
 
-Thanks for taking time to review!
-Lance
+Thank you for your reply!
 
->
-> --
-> Best Regards,
-> Yan, Zi
+On 14/06/2024 12:40, Simon Horman wrote:
+> On Fri, Jun 07, 2024 at 06:31:03PM +0200, Matthieu Baerts (NGI0) wrote:
+>> Instead of only appending items to the list, removing them when the
+>> netns has been deleted.
+>>
+>> By doing that, we can make sure 'cleanup_all_ns()' is not trying to
+>> remove already deleted netns.
+> 
+> I do wonder if we can go a step further and use an associative array for
+> ns_list (maybe renamed).  I think this would reduce remove_ns_list to
+> something like:
+> 
+> 	unset ns_list["$item"]
+
+I agree that it would ease the removal of one item -- which is not
+complex to deal with the new helper :) -- but do you see any other benefits?
+
+For the moment, there is no other value to associate with, so we would
+do something like NS_MAP["$ns"]=1. We could link the name of the global
+variable, but that's not needed for the tests for the moment.
+
+Also, I don't know if it is important, but when we will iterate over the
+list of netns, it will not be done following the same order items have
+been added into the hashmap. So we will change the order in which items
+are deleted.
+
+> OTOH, perhaps this breaks with older versions of bash that we still
+> care about.
+
+Good point. I don't have the answer, but associative arrays are starting
+to be quite old now :)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
