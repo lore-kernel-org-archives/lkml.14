@@ -1,122 +1,118 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAB11836DE;
-	Fri, 14 Jun 2024 08:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494BD1822F8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352598; cv=none; b=PBsPWHx0S5m8nFiTC43JuNmPFmQLkhC05QODi+wnbdnrbedMt7bey2zTwTrUjEsSEg5ki/+Z+ZL+dqj7THP6OmznYmhRt5Pm2Csd+pgFSz96C41CNp3bsOU4hI5stvSVTLs2a3xZYsDZQPTyw+FzIGJBFiN/LWSNWzKDVkKBmd8=
+	t=1718352644; cv=none; b=otk1wefj2X4VCd5HZliiGYZ8hPlIXJ9ISCOinHRN+CyVfTq5bXj2er3y0KCIuHqUDd4JcBezPU2lonmH+r5FFi0GDgvsVXiUKyfbGdQTQSkeYINc9K1Ekq1WDBmMAVMq2UhHHqKbpckd4lFMir5pGj4VoDGgDF6o5YF2aIjZe70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352598; c=relaxed/simple;
-	bh=tdyxMi9MCtjeyNj6V3YguqessosZYjypEXDKgngR3k4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQaqpjaspWA92HgrpAkmLqCoWeb6BJUcJUUCWHea1pegZIn8qc6D+4ntVS2Y/SyjKgkye31L37ZNw5fW/rh/6Zb5/B+EE+7G2dSDQThoM+TgKOC3aaZTWpt1DUDhkPQ+mfdd3v1OjN+J74eTq8EGXY2HR5fQ+m449XklB8hAZ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CpGYsKCo; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718352644; c=relaxed/simple;
+	bh=XtY06yQNqFNmqjsRt6dtXpp7Ga45DKbLPLwoxJXu+Kk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D147PICi7x5WWTJvMXjmkT1gewfKRaBaFzjiwS2CmzPka39W+LsSNxSB6R1Sb/rHHQnIpkRwKRrMrOwNEuBnJ0fXlh+3Ur9YJcJW2K376JtYvZb4awDeunK6/tZOGHMPNsxeVSJ1G/gNyjaAG9nG/fSIz1YuUzlNopZSoyGKqHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uf49o4YU; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CpGYsKCo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718352596; x=1749888596;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tdyxMi9MCtjeyNj6V3YguqessosZYjypEXDKgngR3k4=;
-  b=CpGYsKCoW4PGUZpLpT7vHazzPvsz70Vi+l44fuLr234xepsHKyQJGlyM
-   NsgcbgvwJwEAgMKvr11Fa4fcCAhePZHKD9ME7jEpTZYmafq0aHzi4vWFJ
-   yva9mD2X9zAL8rcNhLNpUCzAWhpFDfo0Xw/WhorH85quBqMaUb22xgJFr
-   QUsjL1n0HEoxqNMWTqvE+cVLXfeHdowDaa+h+43i7xoAAQsX3W0LRRJmT
-   pJb7kYsdujmXacIlfnhh9GvBpTpqMmDBTEyhV0n5KlDpLH5FFwHCvF+M4
-   BotzoBLk6PmnEmldqkngkJEzBAEIlxI/U6mJfadA6M45AS6Bkj//0vuQX
-   w==;
-X-CSE-ConnectionGUID: MPaymeoARIu6VK5pumub+w==
-X-CSE-MsgGUID: Uq74KbUuSymUnT1JBSATOA==
-X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="asc'?scan'208";a="29987298"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 01:09:54 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Jun 2024 01:09:38 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 14 Jun 2024 01:09:33 -0700
-Date: Fri, 14 Jun 2024 09:09:15 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Jesse Taube <jesse@rivosinc.com>
-CC: <linux-riscv@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Evan Green
-	<evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, Charlie Jenkins
-	<charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu
-	<andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>, Greentime Hu
-	<greentime.hu@sifive.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
-	<bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin
-	<costa.shul@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Baoquan
- He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>, Zong Li
-	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Ben Dooks
-	<ben.dooks@codethink.co.uk>, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Erick Archer
-	<erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] RISC-V: Add Zicclsm to cpufeature and hwprobe
-Message-ID: <20240614-oyster-ditch-80e8f00fd91b@wendy>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
- <20240613191616.2101821-2-jesse@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uf49o4YU"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a63359aaaa6so266507666b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 01:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718352639; x=1718957439; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dQuauHWW6Nhu7VIVhyecgZ9pWHe1Gm4RQ6VrtSN+/jk=;
+        b=uf49o4YUdtYRC1cuqd6I16NAWak3ezlI4cAE146EJbpl/BVrXJeSgOFS62OQQVW50x
+         gebiV6kpFAZsaJHGU9oXcqXKlxSxvC3ZS8sJURtvAp3gDbDbhxuYxJBM1f3w7wSrpLEU
+         Pf7foYSk0RMA4zsQqIjlJrsd2Q+eep0myrxeot6iMIP/8tkKTsbsc+PpTbHRLNCr161Q
+         rlYElRqPr8Yl/D78q5OE7kPADRdLxtXnHqiGbfmgvTm11h/3SDaqPrWUJ8r0D2pCBsIw
+         R4TWlyLn7s0WcMxaewb6eZRli6ob7eyNGrcsNZp6DMX+m4lNJd5VSsfeqOAYDLU2JTpJ
+         sVKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718352639; x=1718957439;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dQuauHWW6Nhu7VIVhyecgZ9pWHe1Gm4RQ6VrtSN+/jk=;
+        b=hcdwv5y7vaLKZp55weHS2HcM1uHw96yVk4ainUZEjJSEkb6IWnEGmdYyKsEt/7xDZR
+         wH53SM6bysM4Xvim7EJrVe8r177dxqH9D/gdGbE028BAXEJdRtSin8x/pKzUa7mdssnA
+         0T2kLjPIdcsR9cKpWoDdaKJ1kJUJxXBZ/fULvEwTQ2JvMVgVHEh6lNFXNwi6gKlOxRsz
+         seiyvl4aVw/zl4Xaz11JLUKCLW6yI8vp95ysWCIkl0zFMyGDvpAb2VQhyXfP8DQVRucQ
+         4ZUmkisTm2qzVxOGmb4ZEjUC3djSCr0I58Ej2s31hmlwZGaSN+x+iUfJk2SJItM3K1jk
+         oE4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXWXlKpKXYZWh43P+Oro0PLE5oDOLKPyWnD7sYDiJNPjYbCszwhit3u8wnWoe8wU7OuVw08EWsmg7UQCg7TgyBEOecehG5/iG4hYFIi
+X-Gm-Message-State: AOJu0YyMtW6rG20cEtiRL3X+2JczVWt7Q8DKeTqacdMrk2SIvcxF2ggC
+	aX4VW6e0VJCLHjiRNTeZit072vQy4HBV8364zKsSNrmXjKZSUFbpQtFJWlmMrzK3vAeh/I0ZR4w
+	+1x8=
+X-Google-Smtp-Source: AGHT+IG4iAQVA130APkrQA/MPvG/bMQvQuYj4vQDeEupKxmjnm9Px/TgUM87w6xgfYjGLI7F60ewqw==
+X-Received: by 2002:a17:906:138c:b0:a6f:2e28:4008 with SMTP id a640c23a62f3a-a6f60dc572cmr131844766b.54.1718352639612;
+        Fri, 14 Jun 2024 01:10:39 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f988f9sm156627466b.197.2024.06.14.01.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 01:10:39 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Lee Jones <lee@kernel.org>
+Cc: linux-iio@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] mfd: stm32-timers: Make register definition more flexible
+Date: Fri, 14 Jun 2024 10:10:10 +0200
+Message-ID: <cover.1718352022.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OQKmvcs8HRT7+PY2"
-Content-Disposition: inline
-In-Reply-To: <20240613191616.2101821-2-jesse@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=XtY06yQNqFNmqjsRt6dtXpp7Ga45DKbLPLwoxJXu+Kk=; b=owGbwMvMwMXY3/A7olbonx/jabUkhrTsX48f8qn9z6i3nvpq/lb/5wZuPQ5SHKzvz7qb9x8N2 OCYfYOpk9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJSDBwMLTPlr2rVuUWNW+2 8t08vd2+dll7nn3JkzF4Uy+rPeVf0M0809/RBawrGJvKSvns6tS/l9gtbbgc/kcqjSnUaFKfDqP Lyikbf8Q+cd4sc/8VpyO7nf6mCX3zZkmYd3JJcxUocLjd4ngeHHTF2k28TLBdnf1JqfCj7L6mZv eEMxyTZpsHa6crfLSOuXp/6aFG5Yu+86r+GGfnrlh3145Jt/6gPXeju/zea76OlX3TZz1PNdj8N v9Eef4cFrkH27ffUTmXuH1vs3MN48tVeY8P7u15pW5/Lo7Hu8jgzJ6D1p7zP24JmNPb2KXcVDwp k/nZZ9N1mxmeeWj4sNi1H3nva3+p5aDdXJemjzuuF3MCAA==
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
---OQKmvcs8HRT7+PY2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On Thu, Jun 13, 2024 at 03:16:10PM -0400, Jesse Taube wrote:
-> > Zicclsm Misaligned loads and stores to main memory regions with both
-> > the cacheability and coherence PMAs must be supported.
-> > Note:
-> > This introduces a new extension name for this feature.
-> > This requires misaligned support for all regular load and store
-> > instructions (including scalar and vector) but not AMOs or other
-> > specialized forms of memory access. Even though mandated, misaligned
-> > loads and stores might execute extremely slowly. Standard software
-> > distributions should assume their existence only for correctness,
-> > not for performance.
->=20
-> Detecing zicclsm allows the kernel to report if the
-> hardware supports misaligned accesses even if support wasn't probed.
->=20
-> This is useful for usermode to know if vector misaligned accesses are
-> supported.
->=20
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+I'm not sure that everyone will agree the changes in here are
+worthwhile, but I like them. One surprise is that this makes the
+generated code for drivers/pwm/pwm-stm32.c more compact (see patch 4 for
+a bloat-o-meter statistic). I'm surprised because it boils down to gcc
+not noticing that
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+	mask = ((((1UL))) << (1 + 4 * ((1) - 1))) << (ch * 4);
 
---OQKmvcs8HRT7+PY2
-Content-Type: application/pgp-signature; name="signature.asc"
+is equivalent to
 
------BEGIN PGP SIGNATURE-----
+	mask = ((((1UL))) << (1 + 4 * ((ch + 1) - 1)));
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmv6qwAKCRB4tDGHoIJi
-0mzaAP9YBq9BuQ1DEPPsxpTTaIEq91WxQdesurCAlXQCERPNnQEA5hS94j7obJ9J
-hv52wvk6In81vYzmCTh9UFDBJVVc9gw=
-=TSBq
------END PGP SIGNATURE-----
+.
 
---OQKmvcs8HRT7+PY2--
+I'm unsure what to suggest for how to merge this series. I have some
+further changes on my agenda to drivers/pwm/pwm-stm32.c, so either
+merging this via pwm or a stable branch would be great for me.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (4):
+  mfd: stm32-timers: Unify alignment of register definition
+  mfd: stm32-timers: Add some register definitions with a parameter
+  mfd: stm32-timers: Drop TIM_DIER_CC_IE(x) in favour of
+    TIM_DIER_CCxIE(x)
+  pwm-stm32: Make use of parametrised register definitions
+
+ drivers/counter/stm32-timer-cnt.c |   4 +-
+ drivers/pwm/pwm-stm32.c           |  22 ++--
+ include/linux/mfd/stm32-timers.h  | 179 ++++++++++++++++--------------
+ 3 files changed, 107 insertions(+), 98 deletions(-)
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.43.0
+
