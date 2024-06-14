@@ -1,44 +1,45 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236E219D8A2;
-	Fri, 14 Jun 2024 21:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF501836F7;
+	Fri, 14 Jun 2024 21:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718399425; cv=none; b=OpSSw7H7j/e9L4HULgB6GXPsNzh91Aohtlcj7csuV8zFiYRFd/REKCwvKIQvH2txYqZuulJ28RXQvB2yvVHn+tfBqUAztcNbEQRKAoB9PJxOyt5cW60+DN1aH67XrMdK54OMrGn9Ov9/JnzX9ZTQDaoL57wnIjTH8xzlbtCVgQ4=
+	t=1718399428; cv=none; b=o3/tzsV10xcrMEInoOA7C5NDL557+9CFZSjL/xKoiuMlLz4j0qmS9hONd0bXjlh1VI1OyI8eYk+FyeBYlqbpknes36UVibmabuFLDFfTfqfW3GEiCzlhvI+oEhkGqBax/I/2F44z/7OS2EFQkhRrOVr4n2bDjyqpSUjhgr9TDIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718399425; c=relaxed/simple;
-	bh=4mjMC/xDz9CA4GaT7S07dgppyXWHHGmuedBGK3qo/Ss=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=JKldWAA7j2nevFxyVdWDPlWj4PH+BZ3/ijch+1LCAoms1weAewi4w9sxTdYjKlVjCyWk48ZDhWUcYLCwE91or/213ItH5J1LJsBtWDxiSMKwEOthcUhchiUwTff3v7lRhKFsSfwt9ms9UlVt1HZ4vwF0/z+x4U9+xIzPKYsi9D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3tf/jKJ; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1718399428; c=relaxed/simple;
+	bh=JRveOb1aR/lPnUmEJO3eKUrxatx2cKtoGqOUJhUROAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FF8YBKYEwNxHmq/lK6Hs9RSLNWH2WvZorhwgkhNYgqXw9+h4tqI8WwGXRGME0Qs4ndVe6sTxtyT6niQS7RvWX2rPV0PQ/AID47QTTDc5Nfuqq42FRF0+Kyw7kGE7GG703+wE2GuNcDBWNbXd6iFsue8wSJetEiFmgTzEw/6+hnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJtH3vFp; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3tf/jKJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJtH3vFp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718399424; x=1749935424;
-  h=from:to:cc:subject:date:message-id;
-  bh=4mjMC/xDz9CA4GaT7S07dgppyXWHHGmuedBGK3qo/Ss=;
-  b=i3tf/jKJFB1J/KKHpZ7caLpbMAcIxm9VCBlQ+KsUlv759VJlzGemo9p9
-   D2PIZsnJ7S3NogT4rLFs/W+kQp2sMBR10NAFj0Yuai5JZWQE5FklvpjP8
-   XrG7HLqPIvoXeXcYzZB0XEqEpiXwX34z2dE/tUvcDNmZe2H1xiiKGVGDb
-   0y8h1ke5xVNb4RupJYvJhixlEGOPLRtJ4wK0fckEjjJCFbdF5SRIplBiK
-   b9kljmB4w2CPy9FjTtYIDdmKAlDjYjG2BNcBcQGh6891OzoMSjMy7ItOO
-   HJB7aaUfJGTWvW1RUpnt67gYo51+HLzhZ320xduOZPhBucO4LzkK3c+2R
-   Q==;
-X-CSE-ConnectionGUID: nAlgoZLBQpqZ6qmf11vqCQ==
-X-CSE-MsgGUID: 9o5V90u5T/ONh/dtX3ohYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="18230024"
+  t=1718399426; x=1749935426;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=JRveOb1aR/lPnUmEJO3eKUrxatx2cKtoGqOUJhUROAs=;
+  b=fJtH3vFpd2ayBrtYOm4X8c0pDCMiyhy6UIdPYOQ5YexijamQgxuJg+Ec
+   TAfrWpLf6/MwfyHMJ415FIkg2yNxqlrAJU6393CCMc5kBH6LPF844Nnjl
+   bn6CN1EeUakIxD1sYAfhZS0UfoaidEAU1Gds5vOkRJSivYi40iFPX7zdl
+   euqVbZ3DpyY0Kh8TXKyMPnNkbzKwp/23lHtMvJFfuFos1PL2s4rEeLy+B
+   As419gaMCTncoayFF1J6kgZesFiZ+G7ccmSlSHczQv0wziIQZ5NszwtAA
+   eAG5T1m1AaDLqhcVXQipfmvFlPaA02VAb+l3DhxO/2TMhF6pwEzSPv+0I
+   g==;
+X-CSE-ConnectionGUID: hhZZYflJSvm9CJKSt9Jnzw==
+X-CSE-MsgGUID: vAEbKV1ZTumJC+yOwMYjug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="18230029"
 X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="18230024"
+   d="scan'208";a="18230029"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 14:10:23 -0700
-X-CSE-ConnectionGUID: o/AQPzhzQWq3ekGEt7+Euw==
-X-CSE-MsgGUID: SRqBPx19QreJiw5BDTlpSw==
+X-CSE-ConnectionGUID: 9jf+LWzLSsi6qzQAnR2bGg==
+X-CSE-MsgGUID: CdIBmVGtRFWTjyuNk4wbxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="44992970"
+   d="scan'208";a="44992977"
 Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
   by fmviesa003.fm.intel.com with ESMTP; 14 Jun 2024 14:10:23 -0700
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
@@ -50,53 +51,55 @@ Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ricardo Neri <ricardo.neri@intel.com>
-Subject: [PATCH v3 0/2] drivers: thermal: intel: Use model-specific bitmasks for temperature registers
-Date: Fri, 14 Jun 2024 14:16:04 -0700
-Message-Id: <20240614211606.5896-1-ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v3 2/2] thermal: intel: intel_tcc_cooling: Use a model-specific bitmask for TCC offset
+Date: Fri, 14 Jun 2024 14:16:06 -0700
+Message-Id: <20240614211606.5896-3-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240614211606.5896-1-ricardo.neri-calderon@linux.intel.com>
+References: <20240614211606.5896-1-ricardo.neri-calderon@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Hi,
+The TCC offset field in the register MSR_TEMPERATURE_TARGET is not
+architectural. The TCC library provides a model-specific bitmask. Use it to
+determine the maximum TCC offset.
 
-Here is v3 of the patchset to use model-specific bitmasks to read TCC
-offset and the digital temperature readout of IA32_[PACKAGE]_THERM_STATUS.
-
-You can read the details and motivation in the cover letter of v1[1]. V2
-is here [2].
-
+Suggested-by: Zhang Rui <rui.zhang@intel.com>
+Reviewed-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # v6.7+
+---
 Changes since v2:
- * Dropped patch 3/3 ("hwmon: (coretemp) Extend the bitmask to read
-   temperature to 0xff") as it has been merged in v6.10-rc1.
- * Used the new X86_MATCH_VFM() macro. (Rafael)
- * Added Reviewed-by tags from Rui. Thanks!
- * Rebased on Rafael's testing branch (based on v6.10-rc3).
+ * None
 
-I have tested these patches on Alder Lake, Meteor Lake, and Grand Ridge
-systems.
+Changes since v1:
+ * Used renamed function intel_tcc_get_offset_mask().
+---
+ drivers/thermal/intel/intel_tcc_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-These patches apply cleanly on top of the `testing` branch of the linux-pm
-repository.
-
-Thanks and BR,
-Ricardo
-
-[1]. https://lore.kernel.org/linux-pm/20240406010416.4821-1-ricardo.neri-calderon@linux.intel.com/
-[2]. https://lore.kernel.org/all/20240425171311.19519-1-ricardo.neri-calderon@linux.intel.com/
-
-Ricardo Neri (2):
-  thermal: intel: intel_tcc: Add model checks for temperature registers
-  thermal: intel: intel_tcc_cooling: Use a model-specific bitmask for
-    TCC offset
-
- drivers/thermal/intel/intel_tcc.c         | 177 +++++++++++++++++++++-
- drivers/thermal/intel/intel_tcc_cooling.c |   2 +-
- include/linux/intel_tcc.h                 |   1 +
- 3 files changed, 174 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/thermal/intel/intel_tcc_cooling.c b/drivers/thermal/intel/intel_tcc_cooling.c
+index 63696e7d7b3c..17110ffa80bb 100644
+--- a/drivers/thermal/intel/intel_tcc_cooling.c
++++ b/drivers/thermal/intel/intel_tcc_cooling.c
+@@ -20,7 +20,7 @@ static struct thermal_cooling_device *tcc_cdev;
+ static int tcc_get_max_state(struct thermal_cooling_device *cdev, unsigned long
+ 			     *state)
+ {
+-	*state = 0x3f;
++	*state = intel_tcc_get_offset_mask();
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
