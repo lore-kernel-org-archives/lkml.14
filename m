@@ -1,181 +1,120 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2044.outbound.protection.outlook.com [40.107.102.44])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA4019DF51;
-	Fri, 14 Jun 2024 17:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718384656; cv=fail; b=qvJz+kd6unjsVvgppJeNjekb4n9Sl9BLUxc2LCuZonjiD6XyyKPoTuU+3Q/UOqpW443CtA/42Y2zCWL9idiuCNfzjftsjM0oWKURf5rVOEZg2wou4rpX8CvAzVg94rJJ18AMeLN63HnpBVNiSpvNLJxPnE2PcFhrg2Oe+nmx6yA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718384656; c=relaxed/simple;
-	bh=M2ak/LSLb+B8I469JvviS3NsTTEk+X0B+Hf+++h1qjI=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=XCgUCbWtFqiqzN67RdBoLX9KmcC7wjPnqNr/3CKRT2E1W91ceGRWvJ1utu1GRgIp94reM9W+aOgL3D2nZZV/zepqvzM8MmBSIvysHlEh5/r9zvKgIVaK1n+LL0canxulLR0g41B+Ibju3Xiie/8GlDOdKRxxm3odhGuEt3Dl2fY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cllw9NX+; arc=fail smtp.client-ip=40.107.102.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EB19E7C9;
+	Fri, 14 Jun 2024 17:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718384659; cv=none; b=BG9HUBU9p7FBpEw8MH7NTySwIIF95PXx72HZvgyiGk6cI/+ph+QNiITOQsMxclWhjkuusrZf2Mkv9wAnveHv68QHcA8RwuO1IVNAbEhg+PvA4lhjMwE9oU8WMOMSMqEdSc8UCReEYOnX1UMS885dqinqcANVTuJNH62PZBjPDB0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718384659; c=relaxed/simple;
+	bh=i3dW+XOUEduNdz79toCEAaPY/9cClVwXoiAgL+aKmUI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P4V5nQRNInythQyiO8rJs7BrA1unbKvmUP3JUmVgJ8ZEV8Qh2oz1Iq4nXbkBtDp5LCT2wAQJp6ocqHZPJvfy5GFZaNRf/aM+PVRIICpu8taWFqzlB/llLU5RZDOikitpeIhYVk90+WKDKtidC//Cm1hxngzIert1LHEZjvIgrlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wfazeYk4; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cllw9NX+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fsQnPXm4TfaZdFqDX2Z7+qSZ/AFg396esxPjOxZlkgKZyO8Len4jYsM3zi2qsstClMMXohB0z5RD1oU7dRf7yRAj+j22s59NyN+2Nc9qb4M07OLimExw8OJhDNyYZQfWz0nntuWtiDxryRSpbaiesazbKFbc0S0TyZcK5a6bZUlYbozwEqskIsqmKigqyiGR+o3/gHULPKs4KJwPWYVl6Dev1WUwIdYSfnz04KnmkWaP7z86+TJlmMi0FDLGDNy6E9gKzpZ5S6Uvyh+dhSCgljVQTZHh2TyMTet6C8K8BfkM+STq3c1klmI8pbtrenvmiByekgmiPrdLzwDMQr43Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mNjtjJbgur8V6MnykxyLHqYi48L/nLAgsubQxFxS4iY=;
- b=noXu/p5cNWUwdtco0lWHLYzdX/y+xHbtfbGXPAoEyhgaesfBbLfhKdMEyLm19EyYMEvgNfYhFnSiit2qDTPiTRsvh7c+EfRYUv0NhiX4D8oL4LzHM+i+YaBc+0a5jhv2OcR7wMdEtTUJOaoCoztWMEcC8G4d0FVd0N1AHMkTmvitoshJwyXZgGZQZgqf62/EvkCb5Mtru566RFPh9CIZ76W2I3Q0lX3C6jCwuVB4sGePvp83BXp0Y0cUI9GUCx+RdALvOPs46tVP5k9KLRjZrqipWNsNWt6ZxNTtt2GGafz3VihAaFedlXxr45iurJqd9DTjSwGPpZ27C8mLLDHl8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mNjtjJbgur8V6MnykxyLHqYi48L/nLAgsubQxFxS4iY=;
- b=cllw9NX+Vda9OvHJPVEAerl1lpY/cbfFN85oVGIQkFWYpCGIL97Tk2QuNVZHT/5czJMJeHmluF7PA49UVmFwrfQXxHvzoseh6gRJrcMRgFvJTQlAI4P95SaSSdOQB4ZA2gqpuGh6jm3gP4mmTWHudd1vR83+OIxgHiPu1dn/yNGN8PbPx3oVjTZ2mh0jqwLqtYtvE8xGYMpcNSlPgUXbKb5wQQU8DLyv1abyHCmRKK0y/YuSDdNSVDFtgD/3N2NMfgqx/oJSIvbu6+UlmcXto768pMBcF8EvWoK4dq82tlIQCmDSaeKOC0M2k1t/VWsXTLur1DTOvwU+5ufWXvstfg==
-Received: from MN2PR05CA0037.namprd05.prod.outlook.com (2603:10b6:208:236::6)
- by MN2PR12MB4223.namprd12.prod.outlook.com (2603:10b6:208:1d3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.22; Fri, 14 Jun
- 2024 17:04:11 +0000
-Received: from BL6PEPF00020E62.namprd04.prod.outlook.com
- (2603:10b6:208:236:cafe::38) by MN2PR05CA0037.outlook.office365.com
- (2603:10b6:208:236::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21 via Frontend
- Transport; Fri, 14 Jun 2024 17:04:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- BL6PEPF00020E62.mail.protection.outlook.com (10.167.249.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Fri, 14 Jun 2024 17:04:11 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
- 2024 10:03:58 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 14 Jun 2024 10:03:57 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
- Transport; Fri, 14 Jun 2024 10:03:57 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.6 000/137] 6.6.34-rc1 review
-In-Reply-To: <20240613113223.281378087@linuxfoundation.org>
-References: <20240613113223.281378087@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wfazeYk4"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45EH49WD015961;
+	Fri, 14 Jun 2024 12:04:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718384649;
+	bh=eEPUkKY3qAW3GGWu9H1hXTPI1btWQRwTgAte3nVNCnA=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=wfazeYk43i1BVHKqoxqLYgFTiUBASlAd9S9uWphNiwlLdJYNRJOcWVuNnrQf4NGnc
+	 o6OkbBQ4HaFycGgdRm/3DW89DyLuBTBFXeJy8UQbwDeM8xIldkeEE4PCzKIqhwAA+f
+	 IHtgddRSPhXBVarNSW2y+jjEJRbvRLND37ep8e48=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45EH49O6076663
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 14 Jun 2024 12:04:09 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
+ Jun 2024 12:04:09 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 14 Jun 2024 12:04:09 -0500
+Received: from localhost (udba0500997.dhcp.ti.com [128.247.81.249])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45EH49ZW067095;
+	Fri, 14 Jun 2024 12:04:09 -0500
+Date: Fri, 14 Jun 2024 12:04:09 -0500
+From: Brandon Brnich <b-brnich@ti.com>
+To: Devarsh Thakkar <devarsht@ti.com>
+CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <praneeth@ti.com>, <a-bhatia1@ti.com>,
+        <j-luthra@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>
+Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-am62p5-sk: Reserve 576 MiB of
+ global CMA
+Message-ID: <20240614170409.zu4vaatdac4o6w2o@udba0500997>
+References: <20240613150902.2173582-1-devarsht@ti.com>
+ <20240613150902.2173582-4-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <ac0e92e5-0581-4897-a679-270d6630463f@drhqmail203.nvidia.com>
-Date: Fri, 14 Jun 2024 10:03:57 -0700
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E62:EE_|MN2PR12MB4223:EE_
-X-MS-Office365-Filtering-Correlation-Id: d32144f7-006d-4e60-ca01-08dc8c940363
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|82310400023|36860700010|7416011|376011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZGpXcXYrbDN6OUMvb3FCS0ZKZ2xoZURSS25DQ0o0Wkg0T1Z1QVExYjJmYUNs?=
- =?utf-8?B?cWRVTEY2dHFnVGF5UHBSUjFkM2FlOVM1VGkzaGVhcFIzaGtYUFdrTDhZdnFO?=
- =?utf-8?B?Z1Y4TEVzR054WHRaZEhQSmdNQjR2R0FqaWpweVhYbC9qQjV5RGJhWkw4Zlc5?=
- =?utf-8?B?K3gzTnZFT0JPNG9iZXdMVG01NTA1K2lXVTlZeVoyNWRhZkRBUHNVdGpmblZN?=
- =?utf-8?B?YXpTUURqK1VXTnplRm5DdFhlS2ZoVU5qYmFvcjZvVURxRmk2b2F1VVB1SzB5?=
- =?utf-8?B?VDBlOUF1S3ovSWtZOG9wQytOM3ovdDJXVExESzhZMnJSTWFzS0JmaDZpckt6?=
- =?utf-8?B?anZVckhNc2pRUWp2M2xHeFFaNDNYbDFUU2pQQlhhTUR2NXJzZkJ1dzdFeHhS?=
- =?utf-8?B?SlVwc09HV25RejRqM2NJN0dENTVnUHJoWG45V3hkN0pZMVZvTHVoSkF6Vmhw?=
- =?utf-8?B?d0NzQ1ExTDB3RDBHZXVSOVVwL0RwbHk4YXRYa1plSThOb3lTbGVKZHkyMkRs?=
- =?utf-8?B?Wm5NUjFTenJ3MEZkL3VXdHdyZ0JEZzJSMkpoZUtYZmp2ZldQYVR4YjVaM2ZK?=
- =?utf-8?B?dTY4V0ZsN1V4Sm5xekttdXZMalFBTEc4M2lVYXB5c1FSOEErWVdRUVZZK2do?=
- =?utf-8?B?NFVXWlBuKyt4WFBvRVhRZCtxbkNmaEJNYllwSjl5REFXTGYwQ2Z0ZGVwakVx?=
- =?utf-8?B?TGJjRlEvdW9ENktJWGUwYTZqOXkrUzI1ZVoxNWxURHUzekc3Ump5NDduMElx?=
- =?utf-8?B?N1hXSUJzWmhsK1R2QUoyaUFoTXpkVFJuNG1FSnNqQmx3Qmsvcnh4c1NqbE9y?=
- =?utf-8?B?ZE1iaW9iZHcxMTBhMUt3bmkzbzNCelpFaGNpZkMrRDNkcktxaGxiQmYyWDBi?=
- =?utf-8?B?M05IT2UxUDMvRTErYm5JWTJ2b0MvY2owTVdYUVYvakhRcUxCZXVmWHZKbE9R?=
- =?utf-8?B?NitpQ1IzV1MvL0FFTmVFQ09oSW01TFB1NlZlcjVmVHdzc0hWcFkvMVM4VlNC?=
- =?utf-8?B?UTRETXZKQ3BlaWlGYVFuUk9UQ2xjL1RNK2lSUnZpWVZhSUNUZUZ2ZjhicUw0?=
- =?utf-8?B?bkt3ek1rUW1HZmV6RUExYkNrTklVSVBjWk1Dd1lZV1JUZnljUnhHSlJiZGZm?=
- =?utf-8?B?NEdrOUxBOGpyYnQrenVqdHpYb2laTUU2Z1o4UXhDdEptZWQ5TTlLZFR3eHFX?=
- =?utf-8?B?NjdPMmZ6cDhOQy9EUWNWcGxFZlVKNFBCQVUvcm1rNVFnQnZQdVFkMS9SbGtq?=
- =?utf-8?B?M3lXY0ozV0t2NUN3a0QrRC84RkZDK0VPa3lNOHFmWmRoNFJ1TVl0emFMZXcx?=
- =?utf-8?B?V2pxb0dBRFg5S1ZnbGJ1a00xTDVUVTVBQ2lQdG5HczB2NUJPdWlOTzl3cHVy?=
- =?utf-8?B?OWtScExUSmVIVFdLTEFrNStkVVRiTDN4ZzU1RHhtVGt0a3NVaEJZOXRqaWtw?=
- =?utf-8?B?VitUWkNDb3FaZjJoME1NWVZzQlg5bW5kYWxTeTNCU2FHcG5jODBEU3BMMlVQ?=
- =?utf-8?B?cGhPNXBGQ1ZZOGZZSURoMHE3cXVNM3JGNG1FR1BzaVZ6QVVQanluakZYbVRa?=
- =?utf-8?B?Qmt2QzhBTHVCU2c0VCsxLzVxbVpCRmFITXZnUFB2cEZaUXpmbktiaGVFUTVE?=
- =?utf-8?B?VFN3NUJ3clVySFlZeitwckhMNlUrMExmMHFCN2FEQkhjTVZPMXVDNGs3YTZK?=
- =?utf-8?B?V25qcUxLbHBkM292Yjl4QnBSemhmWG02YUZqQzJGbXVueHZEQlZUZGZxNHkw?=
- =?utf-8?B?VSt0bW94aHQvUEpLR0J4ZUczNHhFVDdlN00wQjVRNUZjbUZTSVI1UlRxV003?=
- =?utf-8?B?Qy9IYXVvS0dnM25ZNEk0RXhFVkpLdUxZYStqbE5xY0FLWFFBV3VET2pEMHRn?=
- =?utf-8?B?TU9Ic0dCVzFMUktybXg4TmFOaWRvYzEwZ3RFSlUxdktYN1E9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230037)(1800799021)(82310400023)(36860700010)(7416011)(376011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 17:04:11.7656
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d32144f7-006d-4e60-ca01-08dc8c940363
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E62.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4223
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240613150902.2173582-4-devarsht@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, 13 Jun 2024 13:33:00 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.34 release.
-> There are 137 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Devarsh, 
+
+
+On 20:39-20240613, Devarsh Thakkar wrote:
+> From: Brandon Brnich <b-brnich@ti.com>
 > 
-> Responses should be made by Sat, 15 Jun 2024 11:31:50 +0000.
-> Anything received after that time might be too late.
+> AM62p has different multimedia components such as Camera, Display, H264
+> Video Codec which uses CMA for buffer allocations. We require 576MiB for 12
+> channel decode-to-encode 720x480@30FPS use case.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.34-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> Signed-off-by: Brandon Brnich <b-brnich@ti.com>
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> thanks,
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> index fb980d46e304..5ef74d9f8eea 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> @@ -48,6 +48,13 @@ reserved-memory {
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			size = <0x00 0x24000000>;
+> +			linux,cma-default;
+> +		};
+
+Since AM62p has 8gb memory, this allocation can come from upper portion.
+Doing so breaks Wave5 encoding/decoding as the driver can not yet handle
+48 bit addressing. 48bit support is scheduled to be upstreamed, but unsure of
+when this will actually make it in.  
+
+Could we force this into lower 32bits using same
+alloc-ranges as done in your AM62a patch[0]?
+
+
+[0]: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240613150902.2173582-3-devarsht@ti.com/
+
+Best,
+Brandon
+
+> +
+>  		secure_tfa_ddr: tfa@9e780000 {
+>  			reg = <0x00 0x9e780000 0x00 0x80000>;
+>  			no-map;
+> -- 
+> 2.39.1
 > 
-> greg k-h
-
-All tests passing for Tegra ...
-
-Test results for stable-v6.6:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    116 tests:	116 pass, 0 fail
-
-Linux version:	6.6.34-rc1-g8429fc3308da
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
-
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
