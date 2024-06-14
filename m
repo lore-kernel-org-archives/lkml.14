@@ -1,88 +1,113 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from mx2-at.ubimet.com (mx2-at.ubimet.com [141.98.226.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D9B16DEB8;
-	Fri, 14 Jun 2024 16:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A64E17C211;
+	Fri, 14 Jun 2024 16:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.98.226.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718383264; cv=none; b=TGzftrV6G6Qjj9Ou43PyBuJITD5IWzhi8Lyg0murnZIWx1n+oU1gyOwtJU6t7Ic3yirRwpa4TvjZ5DbxFyXC69bNx4XVOeachLTjwBQMeM49LsrT267ToOphWd8nAxuIQu8/pw8NQJVrKP4DOOyH7RzYVBC22y7wZuXhqQYNh9w=
+	t=1718383298; cv=none; b=QfeL5yEZR3T0O8/GNK5BlEeyM+qqgsb2kbgjDGdjRInIkvYoXNYsoAwY3sVtSz9F69KfT3emHh8DiuBwXfrVdP7OWtCvQ06hDMz6RUdB4g9sVVghoVoZGwil6faaKcSz/u3e52XVtkUCeo62MdE3mJwgFJIb81y46nJ38d7/S4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718383264; c=relaxed/simple;
-	bh=wIraPb9VQXYm5SoNAvp0k7o3Dy4+lK3Cw/Pmy1Hz3GU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BlcfqFue4k2mOYT6o2MdcMGJu26JYwqpTKl+PFPTi0wEVRX/G5KCj2+UxKq/eJU5V//80MUWeJjUsd64oJeq/pkNTnBq+V/YWShKb9WVKdmhQ1beYRRGm+rmEU6rVpdqe35lJWmB6rmOoRoZCfCOdiiVUE7L8t0Yq6bnsBvNTFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=VfoSh5vt; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1718383298; c=relaxed/simple;
+	bh=u0CLUF9D8xF20KbrpNAnEsmDnRC0WgC8ES3TgUkb6M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sYFtb3LqEzVaaCynMwyYzs5jGLRB7CyHSjmp3x6mYvIBxZSSLnBsgqTDs5KGepU2EXNOd5403ylPFv/RyzGCbb2mnjubotkkPYEHV7slmRB/Nq/yPuXCNioWPjdBIEjtCEEIyfOLoXZQPiqc7BTDU9O9fNxSelyDkdSSSUJLnhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com; spf=pass smtp.mailfrom=ubimet.com; dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b=Yk7mdXjD; arc=none smtp.client-ip=141.98.226.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ubimet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubimet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="VfoSh5vt"
+	dkim=pass (2048-bit key) header.d=ubimet.com header.i=@ubimet.com header.b="Yk7mdXjD"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4W14ly4QbCzlgMVX;
-	Fri, 14 Jun 2024 16:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1718383258; x=1720975259; bh=vJEHFGnp4hZ969Zf9Go58Qtf
-	Z40TWQLEFE9qlxIOIMQ=; b=VfoSh5vtrT6+iBjkBnbhHkhykAykC4tL1yLzj/pT
-	8OBoOwmoi8es/CB1s/6ki8jqRWNJRG+x9QCv01ZG4KEkKXe9cNq6qGEB/0rzmNjd
-	cUuFFLskqQvLtI6/u74H7AZEsmpEu4QZiH09cnQeQ9s7hMRq3NXuptoMEz2JHtCb
-	1/yYXYt7+uGHcJCYmJuny7TLGyc6GzuGnAuuwn50t9YY3P/KzFcXwtSWHnpITCKj
-	iavDlFfz1OfVPgUZCCTGpmrHIfGz/XWuDcKrc0auZ8EfBVkuYyCaUlqoP8eLOzcH
-	k6mMyfBLp+XjW4ZM7dGIYVbXDg0l0aKuTgN45JlInj7scg==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id FPHsg5PxlvJu; Fri, 14 Jun 2024 16:40:58 +0000 (UTC)
-Received: from [100.96.154.26] (unknown [104.132.0.90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4W14lr720fzlgMVV;
-	Fri, 14 Jun 2024 16:40:56 +0000 (UTC)
-Message-ID: <7d0f68b8-ecdb-45fb-ae10-954eac5ed32c@acm.org>
-Date: Fri, 14 Jun 2024 09:40:56 -0700
+	by mx2-at.ubimet.com (Postfix) with ESMTP id BD5EC811C3;
+	Fri, 14 Jun 2024 16:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ubimet.com;
+	s=20200131mdel; t=1718383288;
+	bh=u0CLUF9D8xF20KbrpNAnEsmDnRC0WgC8ES3TgUkb6M0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Yk7mdXjDeMN/IoiKDiGHorP6DgWn/0j+jo+l3JlQHrgaR4QZzyZu3qgfBpZL53Djk
+	 AdbAytUNn1PJpQaj0smAQ5GhPrerfe36wIFXa6CWtu8bJMCl6nmih1uWrXUZvHVlcY
+	 TDPmg7dd6Y7Yw+q6Sd3cUbySjZuMYOuMIfDQUrSOjlYzP0OlAIDQOcRm3e6J3krihC
+	 kWf6VGAA2rOnTCRExMP/hmp0aK1CFNH23steS7ZnzH3rDqD/kVHj589j761TJEajMs
+	 yH0Rmj7/+eK7cht5NYVKjFM/IROj7gEK9VeWhYg0UP9d6w9F3MoqjthxVL+iaMjTc6
+	 BH6Uv7JElYsVw==
+Received: from mx2-at.ubimet.com ([127.0.0.1])
+	by localhost (mx02.dmz.dc.at.ubimet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id vns50stZxRDz; Fri, 14 Jun 2024 16:41:28 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com (zimbra-mta01.ext.dc.at.ubimet.com [10.1.18.22])
+	by mx2-at.ubimet.com (Postfix) with ESMTPS id AAAEB80C5D;
+	Fri, 14 Jun 2024 16:41:28 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id 8C28A80762;
+	Fri, 14 Jun 2024 16:41:28 +0000 (UTC)
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id OY7OjSXvoVcD; Fri, 14 Jun 2024 16:41:27 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTP id A2C8A807F2;
+	Fri, 14 Jun 2024 16:41:27 +0000 (UTC)
+X-Virus-Scanned: amavis at zimbra-mta01.ext.dc.at.ubimet.com
+Received: from zimbra-mta01.ext.dc.at.ubimet.com ([127.0.0.1])
+ by localhost (zimbra-mta01.ext.dc.at.ubimet.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id k-y1-UAd74-6; Fri, 14 Jun 2024 16:41:27 +0000 (UTC)
+Received: from pcn112 (pcn112.it.hub.at.ubimet.com [10.15.66.143])
+	by zimbra-mta01.ext.dc.at.ubimet.com (Postfix) with ESMTPSA id 56EF480762;
+	Fri, 14 Jun 2024 16:41:27 +0000 (UTC)
+Date: Fri, 14 Jun 2024 18:42:09 +0200
+From: =?UTF-8?B?Sm/Do28=?= Rodrigues <jrodrigues@ubimet.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, "open list:ETHERNET PHY LIBRARY"
+ <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 1/3] net: phy: dp83867: Add SQI support
+Message-ID: <20240614184209.2ea5c9a4@pcn112>
+In-Reply-To: <0f7cef0d-b5ef-4feb-981e-c587e08de0e9@lunn.ch>
+References: <20240613145153.2345826-1-jrodrigues@ubimet.com>
+	<20240613145153.2345826-2-jrodrigues@ubimet.com>
+	<0f7cef0d-b5ef-4feb-981e-c587e08de0e9@lunn.ch>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] block: Add ioprio to block_rq tracepoint
-To: Dongliang Cui <dongliang.cui@unisoc.com>, axboe@kernel.dk,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- ebiggers@kernel.org
-Cc: ke.wang@unisoc.com, hongyu.jin.cn@gmail.com, niuzhiguo84@gmail.com,
- hao_hao.wang@unisoc.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, akailash@google.com, cuidongliang390@gmail.com
-References: <20240614074936.113659-1-dongliang.cui@unisoc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240614074936.113659-1-dongliang.cui@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/14/24 12:49 AM, Dongliang Cui wrote:
-> -	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-> +	TP_printk("%d,%d %s (%s) %llu + %u %s,%u,%u [%d]",
->   		  MAJOR(__entry->dev), MINOR(__entry->dev),
->   		  __entry->rwbs, __get_str(cmd),
-> -		  (unsigned long long)__entry->sector,
-> -		  __entry->nr_sector, 0)
-> +		  (unsigned long long)__entry->sector, __entry->nr_sector,
-> +		  __print_symbolic(IOPRIO_PRIO_CLASS(__entry->ioprio),
-> +				   IOPRIO_CLASS_STRINGS),
-> +		  IOPRIO_PRIO_HINT(__entry->ioprio),
-> +		  IOPRIO_PRIO_LEVEL(__entry->ioprio),  0)
->   );
+On Thu, 13 Jun 2024 19:13:27 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-Do we really want to include the constant "[0]" in the tracing output?
+> On Thu, Jun 13, 2024 at 04:51:51PM +0200, Jo=C3=A3o Rodrigues wrote:
+> > Don't report SQI values for 10 ethernet, since the datasheet
+> > says MSE values are only valid for 100/1000 ethernet =20
+>=20
+> The commit message could be better. Something like:
+>=20
+> Don't report the SQI value when the link speed is 10Mbps, since the
+> datasheet says MSE values are only valid for 100/1000 links.
+>=20
 
-Otherwise this patch looks good to me.
+Thank you, I will use your wording on the next version.
 
-Thanks,
+> > +static int dp83867_get_sqi(struct phy_device *phydev)
+> > +{
+> > +	u16 mse_val;
+> > +	int sqi;
+> > +	int ret;
+> > +
+> > +	if (phydev->speed =3D=3D SPEED_10)
+> > +		return -EOPNOTSUPP; =20
+>=20
+> What does the datasheet say about MSE where there is no link at all?
+> Maybe you need to expand this test to include SPEED_UNKNOWN?
+>=20
+The datasheet does not have any information regarding this register
+(or the related 0x265, 0x2A5 and 0x2E5, for the other pairs).
+The information from these registers come from the "DP83867
+Troubleshooting Guide (Rev. B)".
 
-Bart.
+I will add the additional check for SPEED_UNKNOWN in the next
+version.
 
+Jo=C3=A3o
