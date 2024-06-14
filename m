@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA04D1AB8E1;
-	Fri, 14 Jun 2024 17:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75FA1AC428;
+	Fri, 14 Jun 2024 17:32:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386380; cv=none; b=YHjsdDXya0YexV/fESHeB/osYm9/s+/VhvWCGO5KysaliHNME+MU911LADHhBdOwAdU6BGYjZOazxRdU9CabXQJmzuWLXAqOEgxD1I75cXpmkznX6uo1gVt4sJTQjblO4Ii3lP5+pCa1ihOrrorKY3kdm1LC73kay3z503+P5Co=
+	t=1718386381; cv=none; b=k7Byte/PfpeFAMN5i5XUKap14Y55el8269vvd1uQ4GHUYmkfDHBqEUcDq9uSYUzCBbaPBJPQ1NXdKY546JCzLrSkImBf4C9YEVzitmjcioKpzTOMJXf/2ELBagSdyIlwnrQWCgOe9WjV/9c65rGd3z2UuI6e6CeMSiM9dUtb6iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386380; c=relaxed/simple;
-	bh=3/cVlx907MzcG9vrQ3DE0pKe7Qu2ZlekB/sarfJHvP0=;
+	s=arc-20240116; t=1718386381; c=relaxed/simple;
+	bh=POM7os4HoVZHRg5XSLcg+COGEEvpKUYrm59+XwBZGEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ard8EhuXeZAT80Syc27U5u34DV8CMIc/LgpQnBYpDgnXQOpVwgOiggNhY4CZX4IJJ3t73Ioq+Jvi8iTbJ7ZQh7fR4lVEbnhO7rAiIYbNdXtaO2XKjPkalbaYP6IKEYONnyVBxhpg90i8vkqXFOuMzu0oyuPz/S68CPDC6/2r/cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lKjvYVPR; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=DbhhzilRB47H18bVVCw2i4UUTjxCEpBjjRZZqoG19A7oKj/03RYXAiyb/+W3zgXrLDO8oDY2Tnpei/b8VZUbfhRM6HmmaqNCiHIkKhHWa5uwCa4phrFt4hBy3KFyWR/78hj4KaaLwgDEiCRueSSLjlQxICm2mYRgBpOElskJHWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aspKBPe6; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lKjvYVPR"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 97823FF805;
-	Fri, 14 Jun 2024 17:32:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aspKBPe6"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 64542FF804;
+	Fri, 14 Jun 2024 17:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718386376;
+	t=1718386378;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bCrIqBOqgd8IhI1XvRqpnH65nvLXt6DnzPIXbQl0ooU=;
-	b=lKjvYVPRbwgWGiXtVyYKgzayJgQnlEq99TCZ2S90A2zRcZKPLUMG57o2C+Bqs3YVLxQ75b
-	v+mbvSRxvEw60jOeDANphC7wTr/NggD0ZQaLgOdLB7V2PRg4OoueEPT44gRJ4xpam0WoP6
-	BzIuaxb8+IZ0T4rV4St3oiO1tpkW8YbOH+if7Jrj0qK3AgM7PeU76pb9Tz44jySjHBnBbp
-	Ew+xB06m7amr/lpmIqo4yWNv/TLS+T4ru/C1bPNW0mEPdslWQFgO1IDzmruDmQ0BeSeu9i
-	/a3z35N9d0ECq9wDzBOBAWMtVxq7jI0cx/nLbt9Zd7LBHpejcrS3PdBgZ+4vEA==
+	bh=gbvgscye7X8+RemWHl+jq7TxdKmm/D41gcDp9jZK0oo=;
+	b=aspKBPe6SV6vCwYniMfxh+fFuWqoqZcKl9dbM11gV0d4QwGndS1/VUvkhAsDIADTanaOnS
+	B77RKSGsYZxRjpWRNVNBO6eEmVrXySk47PSkxOOrB0AbGOe2u5a2/SEzWi4Q/876Rb2fzb
+	oOeSsFi4g3L1RyEwJBBxPUzUyuZFGIrJLSGx+d37v7NYP0KjEKX8qFtmbMWsfmszg5ULob
+	6dnFyDwcB2qWRMJptXwnt+ly0z7QUPz1Ix49vdBomtfgXMwPA3bptSTVyw39aBYqbT0ZRN
+	R06P9ogRgs/BNs2OznRo71+RFdwcf6ReaRgUw+Onog+8tI8im+ODYwEH7hTRjg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Herve Codina <herve.codina@bootlin.com>,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 12/23] irqdomain: Introduce init() and exit() hooks
-Date: Fri, 14 Jun 2024 19:32:13 +0200
-Message-ID: <20240614173232.1184015-13-herve.codina@bootlin.com>
+Subject: [PATCH 14/23] genirq/generic_chip: Introduce init() and exit() hooks
+Date: Fri, 14 Jun 2024 19:32:15 +0200
+Message-ID: <20240614173232.1184015-15-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240614173232.1184015-1-herve.codina@bootlin.com>
 References: <20240614173232.1184015-1-herve.codina@bootlin.com>
@@ -63,111 +63,130 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The current API does not allow additional initialization before the
-domain is published. This can lead to a race condition between consumers
-and supplier as a domain can be available for consumers before being
-fully ready.
+Most of generic chip drivers need to perform some more additional
+initializations on the generic chips allocated before they can be fully
+ready.
 
-Introduce the init() hook to allow additional initialization before
-plublishing the domain. Also introduce the exit() hook to revert
-operations done in init() on domain removal.
+These additional initializations need to be performed before the IRQ
+domain is published to avoid a race condition between IRQ consumers and
+suppliers.
+
+Introduce the init() hook to perform these initializations at the right
+place just after the generic chip creation. Also introduce the exit()
+hook to allow reververting operations done by the init() hook just
+before the generic chip is destroyed.
 
 Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- include/linux/irqdomain.h |  8 ++++++++
- kernel/irq/irqdomain.c    | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
+ include/linux/irq.h       |  8 ++++++++
+ kernel/irq/generic-chip.c | 24 ++++++++++++++++++++++--
+ 2 files changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 52bed23e5c61..2c927edc4d43 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -141,6 +141,7 @@ struct irq_domain_chip_generic;
-  *		purposes related to the irq domain.
-  * @parent:	Pointer to parent irq_domain to support hierarchy irq_domains
-  * @msi_parent_ops: Pointer to MSI parent domain methods for per device domain init
-+ * @exit:	Function called when the domain is destroyed
-  *
-  * Revmap data, used internally by the irq domain code:
-  * @revmap_size:	Size of the linear map table @revmap[]
-@@ -169,6 +170,7 @@ struct irq_domain {
- #ifdef CONFIG_GENERIC_MSI_IRQ
- 	const struct msi_parent_ops	*msi_parent_ops;
- #endif
-+	void				(*exit)(struct irq_domain *d);
- 
- 	/* reverse map data. The linear map gets appended to the irq_domain */
- 	irq_hw_number_t			hwirq_max;
-@@ -268,6 +270,10 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-  * @bus_token:		Domain bus token
-  * @ops:		Domain operation callbacks
-  * @host_data:		Controller private data pointer
-+ * @init:		Function called when the domain is created.
-+ *			Allow to do some additional domain initialisation.
-+ * @exit:		Function called when the domain is destroyed.
-+ *			Allow to do some additional cleanup operation.
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 58264b236cbf..712bcee56efc 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -1106,6 +1106,7 @@ enum irq_gc_flags {
+  * @irq_flags_to_set:	IRQ* flags to set on irq setup
+  * @irq_flags_to_clear:	IRQ* flags to clear on irq setup
+  * @gc_flags:		Generic chip specific setup flags
++ * @exit:		Function called on each chip when they are destroyed.
+  * @gc:			Array of pointers to generic interrupt chips
   */
- struct irq_domain_info {
- 	struct fwnode_handle			*fwnode;
-@@ -284,6 +290,8 @@ struct irq_domain_info {
- 	 */
- 	struct irq_domain			*parent;
- #endif
-+	int					(*init)(struct irq_domain *d);
-+	void					(*exit)(struct irq_domain *d);
+ struct irq_domain_chip_generic {
+@@ -1114,6 +1115,7 @@ struct irq_domain_chip_generic {
+ 	unsigned int		irq_flags_to_clear;
+ 	unsigned int		irq_flags_to_set;
+ 	enum irq_gc_flags	gc_flags;
++	void			(*exit)(struct irq_chip_generic *gc);
+ 	struct irq_chip_generic	*gc[];
  };
  
- struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index d05aeb9c0a67..9efc9f180308 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -276,12 +276,14 @@ static void irq_domain_free(struct irq_domain *domain)
- struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info)
- {
- 	struct irq_domain *domain;
-+	int err;
- 
- 	domain = __irq_domain_create(info);
- 	if (IS_ERR(domain))
- 		return ERR_CAST(domain);
- 
- 	domain->flags |= info->domain_flags;
-+	domain->exit = info->exit;
- 
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- 	if (info->parent) {
-@@ -290,9 +292,19 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info)
- 	}
- #endif
- 
-+	if (info->init) {
-+		err = info->init(domain);
-+		if (err)
-+			goto err_domain_free;
-+	}
-+
- 	__irq_domain_publish(domain);
- 
- 	return domain;
-+
-+err_domain_free:
-+	irq_domain_free(domain);
-+	return ERR_PTR(err);
- }
- EXPORT_SYMBOL_GPL(irq_domain_instantiate);
- 
-@@ -339,6 +351,9 @@ EXPORT_SYMBOL_GPL(__irq_domain_add);
+@@ -1127,6 +1129,10 @@ struct irq_domain_chip_generic {
+  * @irq_flags_to_clear:	IRQ_* bits to clear in the mapping function
+  * @irq_flags_to_set:	IRQ_* bits to set in the mapping function
+  * @gc_flags:		Generic chip specific setup flags
++ * @init:		Function called on each chip when they are created.
++ *			Allow to do some additional chip initialisation.
++ * @exit:		Function called on each chip when they are destroyed.
++ *			Allow to do some chip cleanup operation.
   */
- void irq_domain_remove(struct irq_domain *domain)
- {
-+	if (domain->exit)
-+		domain->exit(domain);
-+
- 	mutex_lock(&irq_domain_mutex);
- 	debugfs_remove_domain_dir(domain);
+ struct irq_domain_chip_generic_info {
+ 	const char		*name;
+@@ -1136,6 +1142,8 @@ struct irq_domain_chip_generic_info {
+ 	unsigned int		irq_flags_to_clear;
+ 	unsigned int		irq_flags_to_set;
+ 	enum irq_gc_flags	gc_flags;
++	int			(*init)(struct irq_chip_generic *gc);
++	void			(*exit)(struct irq_chip_generic *gc);
+ };
  
+ /* Generic chip callback functions */
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index d9696f5dcc38..32ffcbb87fa1 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -293,6 +293,7 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 	size_t gc_sz;
+ 	size_t sz;
+ 	void *tmp;
++	int ret;
+ 
+ 	if (d->gc)
+ 		return -EBUSY;
+@@ -314,6 +315,7 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 	dgc->irq_flags_to_set = info->irq_flags_to_set;
+ 	dgc->irq_flags_to_clear = info->irq_flags_to_clear;
+ 	dgc->gc_flags = info->gc_flags;
++	dgc->exit = info->exit;
+ 	d->gc = dgc;
+ 
+ 	/* Calc pointer to the first generic chip */
+@@ -331,6 +333,12 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 			gc->reg_writel = &irq_writel_be;
+ 		}
+ 
++		if (info->init) {
++			ret = info->init(gc);
++			if (ret)
++				goto err;
++		}
++
+ 		raw_spin_lock_irqsave(&gc_lock, flags);
+ 		list_add_tail(&gc->list, &gc_list);
+ 		raw_spin_unlock_irqrestore(&gc_lock, flags);
+@@ -338,6 +346,16 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 		tmp += gc_sz;
+ 	}
+ 	return 0;
++
++err:
++	while (i--) {
++		if (dgc->exit)
++			dgc->exit(dgc->gc[i]);
++		irq_remove_generic_chip(dgc->gc[i], ~0U, 0, 0);
++	}
++	d->gc = NULL;
++	kfree(dgc);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_alloc_generic_chips);
+ 
+@@ -353,9 +371,11 @@ void irq_domain_remove_generic_chips(struct irq_domain *d)
+ 	if (!dgc)
+ 		return;
+ 
+-	for (i = 0; i < dgc->num_chips; i++)
++	for (i = 0; i < dgc->num_chips; i++) {
++		if (dgc->exit)
++			dgc->exit(dgc->gc[i]);
+ 		irq_remove_generic_chip(dgc->gc[i], ~0U, 0, 0);
+-
++	}
+ 	d->gc = NULL;
+ 	kfree(dgc);
+ }
 -- 
 2.45.0
 
