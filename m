@@ -1,209 +1,82 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98319460
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 14:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE96C152;
+	Fri, 14 Jun 2024 14:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718374508; cv=none; b=GSshKBCEAhXZyTbBLnwfHUkCRv/rbqXThmDXsnwjNKgYfEBfJsNdFLdtuD93A6pRJMPgOdqkMv/pOSifYmZGeMBawaL85X7X88GPKlyUAi9xs6TKeTiOa7iSk1QB9A2cZ4Q0JuP2+kPjZ31KQtEsGgbk8E/d/jfoqvNwE4h3uyI=
+	t=1718374548; cv=none; b=QSIJvZNddtSmCYqcRitMhzr/F3XiUZmMXSYf93Yp6vIT+nK1Kigef4JNnyY8oSbmn6MMEJOM1SIUY63BQfMZd+8MBei+QagXlcBw7PN1SC6K9BCTLE4zy5cIJ0IZQbz/xxBtECzPiH4E/NCQrM2oHilFGPfkzGe9OIOFHHd12k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718374508; c=relaxed/simple;
-	bh=GdMJCTJPK6ZUOBTwouwEkqIoqIipuR0n2OyhocBfnN8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O6dJHDIbRGgcH4iAFjXAxEJanrqVZnqvkqmwBC8Ldkr46nPTJ9uBhQh5srXkshplXjzdmusLrWkBn+Wr+se9WN4WSSn8sbWdESHa3PfZevCfRA3bEcAuqzzI95+WRbt6clojGTTmhySAUDljaPv1Muomqvb7u7rPdjRqs6M1s4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GhC/vQi3; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1718374548; c=relaxed/simple;
+	bh=PFOfSpSLDRx7rYM9hoqorQDF3eIWLsTrs6bo/cIrGzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lm5Ppqi9Sl4tvPNFl0R1aod8ffLaOqgG2tA63aawu3VbK5jmUWePeOoWFX/6o+RxIYIUH4NjaYO1hyDnjH5KIiMz9Qp/cgdROGcL+rWZyhjfWcatVTseDDFBLHMGMGr/gYH4ASgHgzpQvatSRZJg9Znk0snigZ1hpx8SO4Bfqno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qprxGz4h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GhC/vQi3"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57c923e03caso2491557a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718374504; x=1718979304; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QR9tmd+yNNNniijbyRPGMlyIsNhlrnteAwcBJgKWpb4=;
-        b=GhC/vQi35vCRnwHiG6wc3dV4jR0tg1UqwQ1rbMn9GlurauP07W2/uFOd3yEdrn3zPU
-         hPoGhLEysYvN6qKJ6c0jEYj4Ui0W/wDVeYk7ElM7+FrWgpHiX+Orva6cZOsg9FWLlWcV
-         GzG5thr7XA11pUF9Tmu4zBJX9tHcFqGolhZlbnmte+YmjWDEHfiYB/7oHQBD06Z3c6Zo
-         uqJ9tt+ExDpV4N0P5rpdgBo84ofRH7P6Und9FG702mQ01iCkNPSk78nHl0OZCmgLpKDE
-         zZKbJiu6IUYfKsmE5i8a0L+q/CJ24/bOhLJsxOOjRWFEMkwZxrRzQYYVJCZlLTyOznj2
-         IrmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718374504; x=1718979304;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QR9tmd+yNNNniijbyRPGMlyIsNhlrnteAwcBJgKWpb4=;
-        b=emKO8V48q0T3ZeIknxksmUTDXL3J+96A0l1AMrTP9M0t8HQdNbB/PCej1K6NJvhHix
-         Nbzfp95hiLUXCLZestT69d/dpVYYN236GGCWIagfMMc8TpmPGF7GHHQLx4VKoMnU1+LV
-         iDClx+pknjBOsnnX1A5TkRtqPm+1dCNoMsziIRuCfMXh/jE5tiB9Oh7E6CImyUfC46c9
-         SYbNVgla5pl8CZRvMC4MkX4s1Z/194VwqYyyiUoVpMbcKSUOkoDS8bt7Z2/janu7anY0
-         qIouritYZX6eXkTBbXmoVaPvWgqego4V0RydrQAFHIGA9T7vPy5bYBQtAY6jf+nt1rhq
-         pdEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJHFqhs4EUeQvYIC0iztXWusF6lBIXQywdskLhXTH8qXc62b7WtRAjrtvEhEKfL7b6msgYsH1VQqQJYplJS3lEZcJoyQOe3BkRBRZT
-X-Gm-Message-State: AOJu0Yw5WzvIlRHbBMSafjmsMsRWz2Cz++/2WZh03sv+AbLlXY+8krur
-	JP6JQwNE+gF1h9po5u7UTCegx5DvmdJu9P4PEWve6dZfR5RjjRGLLtT9Mo29h/S1gshvtQBY8fk
-	Bc3HyfU3rC764Q7xCp7iJdCOM4QzsZny4K6IscQ==
-X-Google-Smtp-Source: AGHT+IGcfTO/OhWSnVz2aND6Cyuzd7ym0of3S6kctgW5UO9hM206VYdzcBCkxxrr6TybHlFMyjilw6ZJrQYVoc1c1uI=
-X-Received: by 2002:a17:906:34d9:b0:a6f:15a3:b085 with SMTP id
- a640c23a62f3a-a6f60dc5539mr173229766b.51.1718374503888; Fri, 14 Jun 2024
- 07:15:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qprxGz4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C39C2BD10;
+	Fri, 14 Jun 2024 14:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718374547;
+	bh=PFOfSpSLDRx7rYM9hoqorQDF3eIWLsTrs6bo/cIrGzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qprxGz4hHQa9jNqFM9iV3afMEpRhCD3zf6fyN+lOQ7FZIEIOwyfZXOmY0QnbsVZ5I
+	 l3t4rMnppKFoDOYadYcKmGNIpH2VqkMrcsubR+ajyaiHg/orC9/exbbQekY7KdFGDH
+	 I6QdsXJqDUyBWnowlfiN4cHtToAxWayrQbYjLlxb+9cvvvLpFce/StJc9uEieLohRh
+	 PmvtByruR34BBo94pzfdO2dUzLbzAc41h0Sq8s3XiW7J8kWm5i2hXybewaCgr4wA/L
+	 sNBtNWu4zj1SghVXP2PU6Bb3xOBF5Sc87jzA+ZogYCNsHsBOixW4xlXQT6BV2DDlh8
+	 nWvXSQEa1pyNQ==
+Date: Fri, 14 Jun 2024 15:15:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 5.15 000/402] 5.15.161-rc1 review
+Message-ID: <ZmxQkO6O3QX6gcp4@finisterre.sirena.org.uk>
+References: <20240613113302.116811394@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110141443.364655-1-jstephan@baylibre.com>
- <20240110141443.364655-4-jstephan@baylibre.com> <3c2bee40-3792-409c-b42f-f8b013ff641c@collabora.com>
- <CAEHHSvaT_U+HNzWQUoK9EuqGuqEd11+Lu0CLz_rL7uQf0Q5isw@mail.gmail.com>
- <53838e76-bfa4-41f5-a015-a37472e98991@collabora.com> <CAEHHSvaRqZM9c8oD05WKkhOHdjKLBkR6tXp2Q1b8OMiDxDsDhQ@mail.gmail.com>
- <20240614123345.GN6019@pendragon.ideasonboard.com>
-In-Reply-To: <20240614123345.GN6019@pendragon.ideasonboard.com>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Fri, 14 Jun 2024 16:14:52 +0200
-Message-ID: <CAEHHSvaWO7m=n5_f0BM7gwuDMfh_GMX=x3DknG28PnmtZbrGQw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] media: platform: mediatek: isp_30: add mediatek
- ISP3.0 sensor interface
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Louis Kuo <louis.kuo@mediatek.com>, Phi-bang Nguyen <pnguyen@baylibre.com>, 
-	Florian Sylvestre <fsylvestre@baylibre.com>, Andy Hsieh <andy.hsieh@mediatek.com>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-media@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Elder <paul.elder@ideasonboard.com>, 
-	Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PfN2e3JWgo2v2Gv6"
+Content-Disposition: inline
+In-Reply-To: <20240613113302.116811394@linuxfoundation.org>
+X-Cookie: Your love life will be... interesting.
 
-Le ven. 14 juin 2024 =C3=A0 14:34, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> a =C3=A9crit :
->
-> On Fri, Jun 14, 2024 at 12:38:15PM +0200, Julien Stephan wrote:
-> > Le mer. 12 juin 2024 =C3=A0 10:06, AngeloGioacchino Del Regno a =C3=A9c=
-rit :
-> > >
-> > > Il 10/06/24 16:39, Julien Stephan ha scritto:
-> > [...]
-> > > >>
-> > > >>> +     writel(0x10001, input->base + SENINF_TG1_SEN_CK);
-> > > >>
-> > > >> Unroll this one... this is the TG1 sensor clock divider.
-> > > >>
-> > > >> CLKFL GENMASK(5, 0)
-> > > >> CLKRS GENMASK(13, 8)
-> > > >> CLKCNT GENMASK(21,16)
-> > > >>
-> > > >> Like this, I don't get what you're trying to set, because you're u=
-sing a fixed
-> > > >> sensor clock rate, meaning that only a handful of camera sensors w=
-ill be usable.
-> > > >>
-> > > >> Is this 8Mhz? 16? 24? what? :-)
-> > > >>
-> > > >> Two hints:
-> > > >>    - sensor_clk =3D clk_get_rate(isp_clk) / (tg1_sen_ck_clkcnt + 1=
-);
-> > > >>    - int mtk_seninf_set_sensor_clk(u8 rate_mhz);
-> > > >>
-> > > >> Please :-)
-> > > >
-> > > > Hi Angelo,
-> > > >
-> > > > I think I get your point about not hardcoding the sensor rate, but =
-I
-> > > > am not sure how to use
-> > > > a mtk_seninf_set_sensor_clk(u8 rate_mhz); function.
-> > > >
-> > > > Where would it be called? How is it exposed to the user?
-> > > >
-> > >
-> > > As for where: setup, streaming start, resolution change (which may be=
- covered
-> > > by streaming start anyway, as a change should be calling stop->start =
-anyway).
-> > >
-> > > And for the how is it exposed to the user - well, depends what you me=
-an for user,
-> > > but it's all standard V4L2 API :-)
-> > >
-> > > Last but not least, I can give you another hint....
-> > >
-> > > struct media_entity *entity =3D (something_here);
-> > > struct media_pad *mpad;
-> > > struct v4l2_subdev *cam_subdev;
-> > > struct v4l2_ctrl *ctl;
-> > > s64 link_frequency, pixel_clock;
-> > >
-> > > if (entity->pads[0].flags & MEDIA_PAD_FL_SINK)
-> > >     return -E_NOT_A_CAMERA_SENSOR_WE_IGNORE_THIS_ONE;
-> > >
-> > > pad =3D media_pad_remote_pad_first(&entity->pads[0]);
-> > > if (!pad)
-> > >    return -ENOENT;
-> > >
-> > > if (!is_media_entity_v4l2_subdev(pad->entity))
-> > >    return -ENOENT;
-> > >
-> > > if (pad->entity->function !=3D MEDIA_ENT_F_CAM_SENSOR)
-> > >    return -ENOENT;
-> > >
-> >
-> > Hi Angelo,
-> >
-> > Thank you for the detailed explanation :)
-> > However, I can't make it work because in my case, seninf is connected
-> > to an external ISP
-> > so pad->entity->function =3D=3D MEDIA_ENT_F_PROC_VIDEO_ISP.
-> >
-> > How can I get the pad corresponding to the sensor?
->
-> You don't have to. You can drop that check, and get the link frequency
-> of the source subdev with v4l2_get_link_freq(), whatever it is.
->
-> > > cam_subdev =3D media_entity_to_v4l2_subdev(pad->entity);
-> > > ctl =3D v4l2_ctrl_find(subdev->ctrl_handler, V4L2_CID_PIXEL_RATE);
-> >
-> > Is this mandatory to implement V4L2_CID_PIXEL_RATE ?
-> > Should I return an error if not found?
->
-> Does SENINF need to know both the pixel rate and link frequency ?
-> V4L2_CID_PIXEL_RATE is very ill-defined, at the moment it only makes
-> sense as a value relative to the sensor pixel array, and doesn't really
-> apply further down in the pipeline. What information do you need to
-> program the SENINF ?
->
 
-Hi Laurent,
+--PfN2e3JWgo2v2Gv6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I need to know the clock divider for the sensor
+On Thu, Jun 13, 2024 at 01:29:17PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.161 release.
+> There are 402 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Cheers
-Julien
+Tested-by: Mark Brown <broonie@kernel.org>
 
-> > > /* multiplier is usually bits per pixel, divider is usually num of la=
-nes */
-> > > link_frequency =3D v4l2_get_link_freq(cam_subdev->ctrl_handler, multi=
-plier, divider);
-> > > pixel_clock =3D v4l2_ctrl_g_ctrl_int64(ctl);
-> >
-> > How to know the sensor clock given link_frequency and pixel_clock?
-> > Can you point me to drivers doing something similar?
-> >
-> > >
-> > > ....now you know what the sensor wants, set the seninf sensor clock a=
-ccordingly.
-> > >
-> > > Cheers
-> > > Angelo
-> > >
-> > [...]
->
-> --
-> Regards,
->
-> Laurent Pinchart
+--PfN2e3JWgo2v2Gv6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZsUJAACgkQJNaLcl1U
+h9CHbQf/X2dR0nNcURuD+OX5l6WtCMsOosr1rHOV952vVOSr5iEM+/SwytrSUx64
+6k6UijijDjcamJ4mHTfJk3SDULKgBtcda7aaRIAQB52f0L6BAfmWx8mqweGE6yLb
+yH6lbFYjmqYKkWdUZOZSnBlVlRAj9fCV8o9EhK7hcCuRxWZUbB3sKV72+0gJK6ib
+cSvIrQzTgQva1HdMvivwWQskhmN5EbCwcE30V3nCB3p22L3dX3EoTpqRCyrWB0Iw
+0XRXEpvQL/fNTY43zxuanHb8aHUOF2GIpYfzCpQEmae4QRY5J/NrFaBlPoIvQPQT
+EE+WH9fDHfC9T7TtnRS7/JSHSw1PHA==
+=yliv
+-----END PGP SIGNATURE-----
+
+--PfN2e3JWgo2v2Gv6--
