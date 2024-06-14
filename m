@@ -1,216 +1,303 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F0D197540;
-	Fri, 14 Jun 2024 17:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718385434; cv=fail; b=fwWhtLpDm/q6PgEnW47EjRLB+iq46IKKVwh2SRqiytlXyAxRn0xRFHe5sctmQrC7CHQ+yCaubBDN/sSVLhiLNIXBqnCZp08xIVjb91iDWkeolL1OWFqvCT2Lx/hjFVIgy47nYgso999nA8txJUW/hfX5H/WOkWJyIWWE+HXa7FE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718385434; c=relaxed/simple;
-	bh=QuS6WMnSSlL4Il3oYMHeHFThcVFKJSY0JzlJXykTIyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J3AUuEeKUpI09y1P9rG6GYSpYmpKUGzaDSeSlFQmAmz9iks7mlezWSeuQFIaY2PQs60qLqZmhwnSnyS12tmBaE+33VhH23eh9k7saUXQU7yBgL9CK2wyVIUcnnQqW//rlAkW/In67E3ks5XOuePGIIdI2NsooL8R6n1luBpNbls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=om71gJYa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Y8ukbbR5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539DF1A0AE5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718385446; cv=none; b=s8IeYy2X140jFJoAEMl+hEaYjl8vYFN7P0cKKKEcQoDHd0cidNF4+mKPExuku98y5v1qVcGmM5E/vX8RQrHzIlGJ7P5U0pPUaFK/wsbB3iUHdPp9MMj3HF+6hQ4Xgxkbn6R9BR5QwH4tGs3tSXKQFMMnOYkbjUA4dOdER3jHhE8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718385446; c=relaxed/simple;
+	bh=HCYPoefMJuvnLICEcsjkvKE9RgjD/qUfnxq3sUrdD4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWswhZmSyu/hompzz1OY11Ig64XHwekrSob4+5u0NHTlUSkw5B5AoEPHl0vuip1Q/RQwU1pdS7NPQrEr6UkU40MlPMfl/0b26gSU60v4xJjmFV+eBidFwW9qopzalPxfCfSW65MZ1bmFRQaZB75WehcvA9DFEGebKxClDdyJ59k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Af/p5VQ4; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="om71gJYa";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Y8ukbbR5"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EDGw24007171;
-	Fri, 14 Jun 2024 17:17:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=AiRDg7YNI4oMlVkXR84xXsK2YP+xq0+cqswv/87H5ig=; b=
-	om71gJYajzUauqWeMhABdxewLnSrl1VXyX+DDyo761rMpMqnlLawfB0Ze7BF5jv9
-	K4Wl8swov5gBTlQ0P36IgwJ7nXGm2FEynNYtVoxO5RT6TTtMXMmhNw7y6nrc+a+A
-	2B1S862pLcr8WFxBbUoRrgp8+IPIOfRwWWxrZsiouRtr3057/tASG3PYknDKco2e
-	ciFZFIzQ/zgWXm9W8j2Os6SrWcDzBHT45KrMq3jDwD9Ug9a9CoFE35y1Xz5k2d86
-	ed8ftpEaVHo+FzANDEuSWoH9znVYLY/ajHR9ojcsKKPVglg0MIuwpoEA8XL4C4Kn
-	K7h67PttvRvmu+9IOZFLaw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh19c3yc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:17:04 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45EG0WOW020600;
-	Fri, 14 Jun 2024 17:17:03 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yncb06yvv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:17:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cucvfSX+IwZVq0ybv8sq4CXml3KqaU80WuaWZOOY7SeMe0ImuM3UyW2HmJt7RKS+cj/LSf+Pcluqxsl4E5zfE044oZyrw2aM3yCL9MIaTJ9JVSDXn9fjrvsj2bX8pDFmARIe8No+bdWIZs5qAH4XsKuGJ5h6IJ81JaPXoK2/ED47SWJesnYvhO8hOPd9PsCyo4prm//ZifN23+myni+6WuAMDd/vtOVenYdmHw/2qOd3bdHEaYP2WMmnfnqgsYG/uEuk5C0RASr9ua33r1VurfdzX2rRZqTwnA9VkoMpnumKEibtTqM8nCHLLXrB1OqAAoBQVn98FYBb2Ri4R81HzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AiRDg7YNI4oMlVkXR84xXsK2YP+xq0+cqswv/87H5ig=;
- b=hqMW40q1AEWnnU5x0XC/lSCXSkXztIDywqiXKtNyZk+EWggs9ci6dk/AbcazWS1eH4wW0GxF6E0j0A3AIP0MqiaBdUkXtrQ5VeQnr2zCC4w+bGwmAP3t2CHWibWuWKwtPvNIp5EMZRfYsMXe03UH+l0nwGACFAN2p68B1JifpCJOGMjoKvjm1rQhbNI6GVQnfDGyLFZ8uy83m7Ay9ZVHAiaMIpGYUF9vr2DH2OxMEKLmGnz7vXpsFbsKhqO+madkr4q7vJAcKpwzXIBUEBAZFNqtQGTmNODmullcfsW9/+ztP8QcvrSR1OZMCAApWHnIYgFDNNtbdU3hKCI1X1l/kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Af/p5VQ4"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f13dddf7eso317763966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AiRDg7YNI4oMlVkXR84xXsK2YP+xq0+cqswv/87H5ig=;
- b=Y8ukbbR5orqjnttCaSTbCJCC8+lpQ68yaqwJlVWKDuVWK5vZmIQr52HLtKA2iBgD0E3yTIn0WVOhQx3P/J54xO/30zdlS5kzsrxh6gQ74Z8JzwNRb5b7mTto/d8ZJIqXYFVA4BI+vY9WXnue3MBIZg90eaKdAmRLmiGDryAXGd8=
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com (2603:10b6:806:26d::14)
- by DS0PR10MB8176.namprd10.prod.outlook.com (2603:10b6:8:201::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.24; Fri, 14 Jun
- 2024 17:17:01 +0000
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29]) by SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29%6]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 17:17:01 +0000
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Kris Van Hees <kris.van.hees@oracle.com>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Elena Zannoni <elena.zannoni@oracle.com>
-Subject: [PATCH v4 3/3] module: add install target for modules.builtin.ranges
-Date: Fri, 14 Jun 2024 13:14:28 -0400
-Message-ID: <20240614171428.968174-4-kris.van.hees@oracle.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240614171428.968174-1-kris.van.hees@oracle.com>
-References: <20240614171428.968174-1-kris.van.hees@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1P221CA0003.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:2c5::9) To SN7PR10MB6287.namprd10.prod.outlook.com
- (2603:10b6:806:26d::14)
+        d=suse.com; s=google; t=1718385442; x=1718990242; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Redv4EIrxDLFGUnzlh3BgiGC6w3p9xU8N5sr8hyRmTw=;
+        b=Af/p5VQ4HZNM6QUkbf4kl/Fg/qgCa1wXKX8L6FCL2G2WIP046T8hasDFfT2C8yLCr+
+         dvhbez6G7NvARreziRWBfgCTl7fM3h+/PHkm93ec13sMUQj0gVno8mVaFX7xcopFFOJk
+         NAOjGl4/yWsHInbNWEAOzPZq4R4m1I4Kw5HHsREGVq/HvkTlN2i9HbPY7w/8wlnOEq0A
+         3ULUANLhyaWjrEdv9UGnUhbwwsJpX4Y94Ok4v/Njv1k8+5WK8AJ4bGOh+tst4vixmg5g
+         IORewSB7Hcv0gaO+RyPnpJEhLVpGmqQoHYhXqzydqWvgdXSGYx3iIDHZrZFM3WMvOTEa
+         GdWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718385442; x=1718990242;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Redv4EIrxDLFGUnzlh3BgiGC6w3p9xU8N5sr8hyRmTw=;
+        b=EsrE4Hd2bgoR+6Mwh+esCmIyDHAp0M+4g2iM4z09z8SX2FlUHCLS+31FN+Sd+swlFi
+         VDFVs7sZU7tM5G9ZkkmOcJo7agtx9UY9i3bA87gEwlkZcDkZ1N+r4Smqt4gi96Qd13CK
+         pSworI5QYHSrfdMLnG5Jh71Ey/FiOa9rpCio180PGXEakZ/k+uxsVFrkP5nPUZaR5iCg
+         6r8A7/eT8i1EzFEHAkoxGpX3WYjXso1VAKZLJyOH8+98UXqzxv6wzTM/t6po2S1ewSSC
+         +mfGGZLgcSoNnFdwWmi6GmH/k35AzhdMtyR5jn4R4aP+cKgyPgtlNtkDHA1j9DxLuzgZ
+         fUtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtduJIlPdbfZMOYBKysK9DAo1ONAv98AYmyjoO4lY3Q1Wuxwz8DT/WRKQtXLNcgNO9MSzEgFEgbYn9XU6BsdlM5GxSNQPyBFyKAn5L
+X-Gm-Message-State: AOJu0Ywm/f9FZy3VH6PdKUzyZuLndnhGnpN2IucPUVrEfvxdHXfY8DYT
+	qQCQ4mQFXtlhB0Ra7XFGNX3Ps1DbXXwHBa5oarIGoxGqevfV/mg7vpbSONZkmPM=
+X-Google-Smtp-Source: AGHT+IGbKvAzNhBrqGh9T8tnWby88aNyE8nSpywOnAj2Knqo/DlxbowgUdtx0FAOQoO9jPadTiyEuQ==
+X-Received: by 2002:a17:906:c194:b0:a6f:1e97:b177 with SMTP id a640c23a62f3a-a6f60de1094mr241550266b.64.1718385442488;
+        Fri, 14 Jun 2024 10:17:22 -0700 (PDT)
+Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56da3f41sm204791566b.33.2024.06.14.10.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 10:17:22 -0700 (PDT)
+Date: Fri, 14 Jun 2024 19:17:20 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Tony Lindgren <tony.lindgren@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] printk: Add update_preferred_console()
+Message-ID: <Zmx7IPQX4FVdSe1J@pathway.suse.cz>
+References: <20240613125113.219700-1-tony.lindgren@linux.intel.com>
+ <20240613125113.219700-3-tony.lindgren@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR10MB6287:EE_|DS0PR10MB8176:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c276b3e-1b91-4760-8956-08dc8c95ce1d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|7416011|376011;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?DgYs6cJ/73+KLioDKE5XyvnSb9dajkEC4ELrcYaLlbgUCXF9ZzV5ALWeO29M?=
- =?us-ascii?Q?aeikYKUgTOmgf7axp/X1gFDx3YqTyS9xPwADyis5DZv5q0MxnqSi8ivcz9nw?=
- =?us-ascii?Q?eo9V3VOt/r1YV4unpODdNQaFqAjQmOmY/sZ6ZLw9V2ASVUZtN4S4WicvA/Za?=
- =?us-ascii?Q?stAzHAtOCZVajnHGf2lZd43hIBDgdiofO5T6BTnSUdyi47wiHxVC4pJbvTG9?=
- =?us-ascii?Q?Lbfz/wGWPgyUw13VP9E6pIHGnKoveTtJhC83zAMwsUt0pqD/NR6EfI7z4Rry?=
- =?us-ascii?Q?oHpbU+yUgLxUO0k7KSg6PFzVtE9vOScmIPjBjdNgEKU5TUgtvy2QG5ZB0JBE?=
- =?us-ascii?Q?6I48b88t6lZUB5ESqu/HZGF6xY1s8HR9sZnqWeGzxVSxpvxSspg8QECMUvPX?=
- =?us-ascii?Q?FCgT2T5vue75KmuMSSlsms/pb7hMZjyBhunxfAQQI4r1fJL0MIkxmj4P2AOK?=
- =?us-ascii?Q?gg6z0DQS4zAG8ezmFfDKFvk4tTy6uZeO9k1O8lHJwYdmj4BjcyNmqxMv8dLx?=
- =?us-ascii?Q?TtV10KVg2bi6Tb07hVqw66SrJN9d4O/t9VhHZ34ltuS42urXP5AzM57nc+vu?=
- =?us-ascii?Q?MMOCqnaQTxr0C5sIoqT3z9awtO7Tp0SPSXhLTVAAYSFxlNzLCKgURzsXdOEL?=
- =?us-ascii?Q?i2xtLi3WCf3kAaBSVOs9+S9h1JYo9yOwHYnoMHVEqxg+ILbZ9n5/lTu9PI8U?=
- =?us-ascii?Q?xQGQ2uiA1AD3ybFD4oc/keq3wmk2wXQm7rXHigK08uuC7bHLYkOFa8r9RWQE?=
- =?us-ascii?Q?ObGQGPtLac5MvAGkZi0xdNylFWO9Yk2ipFMNGkYDfzNxCJr5XFJ0kA4l+irY?=
- =?us-ascii?Q?7ymL2IXIrYe+rJFcL8y6jte/GL0UKd3xjnLQWqTiICI/2sAlmOh5Setr37WV?=
- =?us-ascii?Q?0rKiK486KAjbcvgVshAYVgWnglhYpZ7w3byK96Nuho+f9FP2Cc5N/k3tUPMQ?=
- =?us-ascii?Q?cONmT2rfq1WJTHWIQ/nIwzSdbl0KPkx1EYxUsBSdrSmme2Dfw6wjIrq0YcjA?=
- =?us-ascii?Q?EvSOsnBgfnVWkEj9ic9ExNWhRFlDvmuFOAJF4H1i2pz0YmZR5NaRla2Xvkkb?=
- =?us-ascii?Q?/6onhpsGRbSQOl+bajeZAiNf2yavfN/cUsNI1GYtcfbZg8bWH7kz3WKYTQ9Y?=
- =?us-ascii?Q?tIetGLsaf00g6hKQ5IsEMglgSVbGHOnf+YzXOpDHrO+ejEt3G7wbP6+drq3d?=
- =?us-ascii?Q?PvYE7nWkKCE4pz3Khwly5g5O+kmInFMIitQGmHDsvK9qBhQJ/ZowGjBeqdFx?=
- =?us-ascii?Q?N7HSJnJSA67Ci3Ko7t4/adL8gnVEUbKuAewjRn4K0EHAL++2EgrjnT+FdS8/?=
- =?us-ascii?Q?XyidP2KXaSDd9kGhX1ExnLGK?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR10MB6287.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(7416011)(376011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?q3rVf7tXsNR/CdTWSn5UeNEhTXYT/c41H1EjFvi8XhpNpTBPi0m4WjcwTqiX?=
- =?us-ascii?Q?D08jRZZFUkhpmuYONRJvflBqijSlKR2UHwRo+r1navB5yeYs2/reutfblxQt?=
- =?us-ascii?Q?1AvA3oJsetmhfLUegxLhpaUI5Z4BFcLaRGqoK2MN3yl9MbwMX8CjalF0I6CX?=
- =?us-ascii?Q?XP7NPosfALwrNmOgQmU7JCfMse/CSzaE7laEEDaKLe9EemXHG3iJLnLYL69r?=
- =?us-ascii?Q?3+IJjsL6mhotTrfr1Q9HmIpZ/PAK9uQupuaxLEitT0Se4IbwXJhJrYntXrp6?=
- =?us-ascii?Q?bOuKshc2g5GuEpBvy8fZhZaDekd9OxBHhAVQ8Mbca9+N3NfVXE9+Cf35ddOQ?=
- =?us-ascii?Q?1PSb3j5+UIMMCgpafp6SRuZtZ0oUflC/N3NYYWa37j540vPCCl+ANqPHKjVx?=
- =?us-ascii?Q?eSG0oXiBO8hDYXfQJzv3SUfuXpPDuAU7xGL7I0kbePQAHE/4CTaVeRW3PkC8?=
- =?us-ascii?Q?f0TLdHMjT8Lv3W21hOoAvi1kG5bf4OZ3TCoaLLqgwt22GBum/sJNTcgFb+An?=
- =?us-ascii?Q?hAehJdE3pzEi9tRRvN4ek1uXXB5vvGPxBY+bBpyKcra7hStbjg0bIQlhLj5Q?=
- =?us-ascii?Q?DEODTt625u7wZ2uXGWtKM2KaWIJ1C38ek+gDQUPpYbAahmyGmVxOX1eZYiby?=
- =?us-ascii?Q?oOUXkJn4WT4goBdh5olbxQXalkqb5tRhFPDppjZmne/+sSRMEw8KavqZP3bO?=
- =?us-ascii?Q?z9ZRVu1PlWG6D/28VDONWF/cxFNkXPZQHhWp1mHTL+wuhMNsSdZmdV7iOjkM?=
- =?us-ascii?Q?ofNjfTmEytVEEVkMWvQkhucRYFUrWOM4iztcX1XeWXCMSNcOznEddAFvg6pU?=
- =?us-ascii?Q?exNcIFpY6MGrk9aZ00HVo5V2IqjaM0VyyXOve3MnhEEA9gsZIRLKZOVmLaK9?=
- =?us-ascii?Q?fAf51wMdVdq7AZn0e0sasg6MZielsNkrrtRibx6ky8Q40Jjl4fNsG1nLVjBC?=
- =?us-ascii?Q?NnK22qp9sT3WwWsspP5HmdEVOVWDHkrGRzA8pYIKAHhjmUyDumecw7NA476d?=
- =?us-ascii?Q?oXoKjYJMHEEe6xss/p0IkqEraOi4L1Wg9fsQBpBMd0b1elZWj/+/y4g3FAuH?=
- =?us-ascii?Q?dXoRFOt654da6PecrGrzOYGFQBuhvI6m8GBQ6bry06sE4Mb8c32jHGS6sLKv?=
- =?us-ascii?Q?3sUtg+zksQM8nhyHqkc+ffojJ6UrQLjAJnlUZJ6KEMF2ydsUhyHrRgwFWoS3?=
- =?us-ascii?Q?jAgZjG32HjlrQZ+tGOce/t923JfmRoZNSgL3WNo+w4mRlbw5Cnny1KwKHrBp?=
- =?us-ascii?Q?+HBl4KWNPpbdYfDuxQQlnYOabwJShzS8iG//KgVG5WbYkp3N0jJL/1sOzx06?=
- =?us-ascii?Q?/LVkyDtonw4MJehmwNK6XZM+Vy4txG5Y+ILBEr6+ZixDwpHrcHbocYDMjtfs?=
- =?us-ascii?Q?kqOF1M71SE2U18P/mmIigrh7vwd0M4lNpYaXd8t7Kp3MiwAdjm+nsKb9yNm4?=
- =?us-ascii?Q?801jwj8TRGlvyGnC7KsNfACI+bDs+nEhNbekGW7L/nBfOovHXTOLtrCsEznE?=
- =?us-ascii?Q?BW8woBe+T8Npw0TNklMPYK3oME59fMW7hisgMWSJ9fPXeUA+F6u2x5JZQmeZ?=
- =?us-ascii?Q?UQAcqOMCG+OaZKfim68tm+uA80t09X2ZI249cj6aRqYjVE64SkbjXJezKPEm?=
- =?us-ascii?Q?sg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	+dDwP8ptQzkppY15NxVabOuDY3e42RhtXP4wmReaDtCQCZfyxTqF9bzRdqdhNa26nwCZaGniJuGXKEtkMOwfzz5M8L9HUumc9Qf84uwRn4qL21stiZxQQ0fyqh9CTQnhikp1IUe9VNZl/fNi4frZLNXmhCd6pJfrM9YlQRJvyJek2rXAsJKYzMd/lhu1XbVnPnQmO1spQRRc7gksWq15IHeqwbTxvbPuy/INKFwqKVVz6eW34+m+Leb8olEABJbmjb3F4lqXhupme/60FzSuzhmalZXRHgt8SMfNxgtvDXb8B78c6iZY8jThs3d0fDXhVHbrDUI6brfysoWtreumAsKS25Yy5LjxA4Y8ZxmogHeYtuAC2ZqvkCLBQGBzhKKwxlKXgXoC6gZ6fcEgk2YD9Q0+ogHbHbedIRbVeH/sGa+YHTjMnfY6iaV13/BCtsgSkzid98lMVRiM8tmu5gmfRAe6jL87+/nK05WZXTvt17Zxnbw0TiB1G38hNc8QO7ExIRgfaAwgJhAB8uFtn/fJ+QJrVcZOhsmP6icamFhRljE/n4JEWG1/NgjuJReTQqTiVtStOOvrinBIshYf5bkzOsoFkrYLMZXzOF6LSiwo9GA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c276b3e-1b91-4760-8956-08dc8c95ce1d
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR10MB6287.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 17:17:01.6666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Zu9KFrUo5RgW0Igmp6lyWOffCzIUK+7aFM5oQ9o92/lhK4FDBAMg6QmfD7LXxwoSGDSOEQXlGQXihe12cdcEJPdruXli2KmKF9/JkAKoIww=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8176
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406140118
-X-Proofpoint-GUID: l3YaTr6CDcep0jLCGi63rtYayDKUysdl
-X-Proofpoint-ORIG-GUID: l3YaTr6CDcep0jLCGi63rtYayDKUysdl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613125113.219700-3-tony.lindgren@linux.intel.com>
 
-When CONFIG_BUILTIN_MODULE_RANGES is enabled, the modules.builtin.ranges
-file should be installed in the module install location.
+On Thu 2024-06-13 15:51:08, Tony Lindgren wrote:
+> Let's add update_preferred_console() for driver subsystems to call during
+> init when the console is ready, and it's character device name is known.
+> For now, we use it only for the serial layer to allow console=DEVNAME:0.0
+> style hardware based addressing for consoles.
+> 
+> The earlier attempt on doing this caused a regression with the kernel
+> command line console order as it added calling __add_preferred_console()
+> again later on during init. A better approach was suggested by Petr where
+> we add the deferred console to the console_cmdline[] and update it later
+> on when the console is ready.
 
-Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
----
-Changes since v3:
- - Only install modules.builtin.ranges if CONFIG_BUILTIN_MODULE_RANGES=y
----
- scripts/Makefile.modinst | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The patch seems to work well. And I am surprised that it is so small ;-)
+I have some rather cosmetic comments.
 
-diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-index 0afd75472679..c38bf63a33be 100644
---- a/scripts/Makefile.modinst
-+++ b/scripts/Makefile.modinst
-@@ -30,10 +30,12 @@ $(MODLIB)/modules.order: modules.order FORCE
- quiet_cmd_install_modorder = INSTALL $@
-       cmd_install_modorder = sed 's:^\(.*\)\.o$$:kernel/\1.ko:' $< > $@
- 
--# Install modules.builtin(.modinfo) even when CONFIG_MODULES is disabled.
-+# Install modules.builtin(.modinfo,.ranges) even when CONFIG_MODULES is disabled.
- install-y += $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo)
- 
--$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo): $(MODLIB)/%: % FORCE
-+install-$(CONFIG_BUILTIN_MODULE_RANGES) += $(MODLIB)/modules.builtin.ranges
-+
-+$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.builtin.ranges): $(MODLIB)/%: % FORCE
- 	$(call cmd,install)
- 
- endif
--- 
-2.45.1
+> diff --git a/drivers/tty/serial/serial_base_bus.c b/drivers/tty/serial/serial_base_bus.c
+> index 5ebacb982f9e..a34f55ef6f37 100644
+> --- a/drivers/tty/serial/serial_base_bus.c
+> +++ b/drivers/tty/serial/serial_base_bus.c
+> @@ -210,7 +210,13 @@ void serial_base_port_device_remove(struct serial_port_device *port_dev)
+>  static int serial_base_add_one_prefcon(const char *match, const char *dev_name,
+>  				       int port_id)
 
+I would suggest to rename also functions on the serial_base side.
+The function is not adding prefcon. It is doing some match_and_update
+job.
+
+>  {
+> -	return 0;
+> +	int ret;
+> +
+> +	ret = update_preferred_console(match, dev_name, port_id);
+> +	if (ret == -ENOENT)
+> +		return 0;
+> +
+> +	return ret;
+>  }
+>  
+>  #ifdef __sparc__
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2486,8 +2495,8 @@ __setup("console_msg_format=", console_msg_format_setup);
+>   */
+>  static int __init console_setup(char *str)
+>  {
+> -	char buf[sizeof(console_cmdline[0].name) + 4]; /* 4 for "ttyS" */
+> -	char *s, *options, *brl_options = NULL;
+
+I would add
+
+	static_assert(sizeof(console_cmdline[0].devname) >= sizeof(console_cmdline[0].name));
+
+> +	char buf[sizeof(console_cmdline[0].devname)]; /* name with "ttyS" prefix or devname */
+> +	char *s, *options, *brl_options = NULL, *chardev = NULL, *devname = NULL;
+
+The name "chardev" sounds as generic as "devname". I would use one of
+
+   + "name" like the parameter in __add_preferred_console
+   + "ttyname" as it is mostly used for "tty*" console names
+   + "conname" like a name in struct console.
+
+Also please split the variables per-line so that future diff's are
+easier to follow. Something like:
+
+	static_assert(sizeof(console_cmdline[0].devname) >= sizeof(console_cmdline[0].name));
+	char buf[sizeof(console_cmdline[0].devname)];
+	char *brl_options = NULL;
+	char *ttyname = NULL;
+	char *devname = NULL;
+	char *options;
+	char *s;
+	int idx;
+
+>  	int idx;
+>  
+>  	/*
+> @@ -2496,17 +2505,23 @@ static int __init console_setup(char *str)
+>  	 * for exactly this purpose.
+>  	 */
+>  	if (str[0] == 0 || strcmp(str, "null") == 0) {
+> -		__add_preferred_console("ttynull", 0, NULL, NULL, true);
+> +		__add_preferred_console("ttynull", 0, NULL, NULL, NULL, true);
+>  		return 1;
+>  	}
+>  
+>  	if (_braille_console_setup(&str, &brl_options))
+>  		return 1;
+>  
+> +	/* For a DEVNAME:0.0 style console the character device is unknown early */
+> +	if (strchr(str, ':'))
+> +		devname = buf;
+> +	else
+> +		chardev = buf;
+> +
+>  	/*
+>  	 * Decode str into name, index, options.
+>  	 */
+> -	if (isdigit(str[0]))
+> +	if (chardev && isdigit(str[0]))
+>  		scnprintf(buf, sizeof(buf), "ttyS%s", str);
+>  	else
+>  		strscpy(buf, str);
+> @@ -2523,12 +2538,12 @@ static int __init console_setup(char *str)
+>  #endif
+>  
+>  	for (s = buf; *s; s++)
+> -		if (isdigit(*s) || *s == ',')
+> +		if ((chardev && isdigit(*s)) || *s == ',')
+>  			break;
+>  	idx = simple_strtoul(s, NULL, 10);
+
+The @idx value is not really important when @devname is used.
+But it still would be more clear to set it to -1.
+
+	/* @idx will get defined when devname matches. */
+	if (devname)
+		idx=-1;
+	else
+		idx = simple_strtoul(s, NULL, 10);
+
+>  	*s = 0;
+>  
+> -	__add_preferred_console(buf, idx, options, brl_options, true);
+> +	__add_preferred_console(chardev, idx, devname, options, brl_options, true);
+>  	return 1;
+>  }
+>  __setup("console=", console_setup);
+> @@ -2548,7 +2563,38 @@ __setup("console=", console_setup);
+>   */
+>  int add_preferred_console(const char *name, const short idx, char *options)
+>  {
+> -	return __add_preferred_console(name, idx, options, NULL, false);
+> +	return __add_preferred_console(name, idx, NULL, options, NULL, false);
+> +}
+> +
+> +/**
+> + * update_preferred_console - Updates a preferred console if a match is found
+> + * @devname: Expected console on kernel command line, such as console=DEVNAME:0.0
+> + * @name: Name of the console character device to add such as ttyS
+> + * @idx: Index for the console
+> + *
+> + * Allows driver subsystems to update a console after translating the command
+> + * line name to the character device name used for the console.
+
+I am not sure what the above sentence exactly means.
+IMHO, the character device is too generic term.
+
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+
+My proposal might be kind of naive. Some people might say that
+it describes obvious things. But the API is for device driver
+users which do not know much about how printk handles
+the console command line and the registration.
+
+<proposal>
+/**
+ * match_devname_and_update_preferred_console - Update a preferred console
+ *	when matching devname is found.
+ * @devname: DEVNAME:0.0 style device name
+ * @name: Name of the corresponding console driver, e.g. "ttyS"
+ * @idx: Console index, e.g. port number.
+ *
+ * The function checks whether a device with the given @devname is
+ * preferred via the console=DEVNAME:0.0 command line option.
+ * It fills the missing console driver name and console index
+ * so that a later register_console() call could find (match)
+ * and enable this device.
+ *
+ * It might be used when a driver subsystem initializes particular
+ * devices with already known DEVNAME:0.0 style names. And it
+ * could predict which console driver name and index this device
+ * would later get associated with.
+ *
+ * Return: 0 on success, negative error code on failure.
+ */
+</proposal>
+
+At least, this is my understanding of how this works.
+
+I do not know the whole history. And maybe I get something wrong.
+IMHO, the main problem is that the printk console code
+historically uses TTY device names. But we want to register/enable
+the consoles ASAP when the HW devices are ready for writing().
+It happens before the TTY subsystem gets initialized so
+that we could not use the sysfs kobjects for matching
+the tty device driver names with HW device driver names.
+And we need this kind of hacks.
+
+But maybe I do not have the right picture about the initialization
+and the names of the pieces.
+
+
+> +int update_preferred_console(const char *devname, const char *name, const short idx)
+> +{
+> +	struct console_cmdline *c = console_cmdline;
+> +	int i;
+> +
+> +	if (!devname || !strlen(devname) || !name || !strlen(name) || idx < 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < MAX_CMDLINECONSOLES && (c->name[0] || c->devname[0]);
+> +	     i++, c++) {
+> +		if (!strcmp(devname, c->devname)) {
+
+I would add here:
+
+			pr_info("associate the preferred console \"%s\" with \"%s%d\"\n",
+				devname, name, idx);
+
+> +			strscpy(c->name, name);
+> +			c->index = idx;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -ENOENT;
+>  }
+>  
+>  bool console_suspend_enabled = true;
+
+Best Regards,
+Petr
