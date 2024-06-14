@@ -1,157 +1,140 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C139E192B7A;
-	Fri, 14 Jun 2024 09:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B78B81AC7
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718358277; cv=none; b=ZcOb/iLCYaVXMFjA9W86PGdgfaRlyc7YRSuWZmH2N1xHmtHnByxyBH5iPv6LL6AIZeOodqyLBbw+N4PXrl5gHEC/KtJMKAHEzPl07ANE0+cbpvSvwtsB9e+Gu1GsicYJSiEctDzp+NY/DTSjuOXlV30kHNWAhLJ1xuyKHO3Jh+k=
+	t=1718358336; cv=none; b=OlXoTZwJI3NX3L2SlloaXszhYqGo6MyQt9Djf8Jy7Y7BnvuTLPG7mriZ9yfdnknU7/VjWLiCxA9roiDYuGT/tTBdt5H7hOa40mYyJCEYSWEL3W76c5JNGOcgqAXwYh5n/xKSbL18XDTkfWELvmoKNDU2N8BGde0NQiVDspwM0Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718358277; c=relaxed/simple;
-	bh=B01cdTgSZj6VsubUNOviOQvnIDrEGMdwa+83FJVG9cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HquQsfU8K1dEhD1SxF8OPF9EgLSiQwSE9n6bN2tqUOTdl1BQ14pLUzd22412yKPi9/j1xcOcesby3Ojt63rt8oZLZEQdQ4143R0YFn6oWjqmSez9FD/gxJRPF85FtvsKSpHYVo86xXjVttBnTsmRfZjH81xKb49AL+ps13EyHhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jc1jMM5s; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jc1jMM5s"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso31857541fa.1;
-        Fri, 14 Jun 2024 02:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718358274; x=1718963074; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lY/67/dJvO2Ri5VC5Y1MEBaOkJ+Rmx2YeXrE0VIx7gw=;
-        b=Jc1jMM5sdB1TeWCTn8wr0s8MG9kWaC4RWXxVXuoNjUCxklqwqLHR0Rfrjve0KtaGBs
-         D6Lg0P1gEzNyNG1SIpAoGbxbGhq4KRVAdOfNiGz40WltdVaVqvCid+efPjfs/w9qFH5R
-         aq3wvPetDsPaWxTQNW/Zl08Ha2WwZUXmJcCFb95lsjBCA/LsFX5iSApuKwPvJF0Z+8BC
-         aWJYSWCcrwLun+ri+c0uZ8LenUWACEnv9267MsCAh0rmEr1PQa3d5IXMayDlAzSQIJ2D
-         6IyM2hKPr5iCyfxhADjfEb3EzbrTjlJ7UnOMncwWYV9cSPfcvFKZlVyacjBSLoLL/JDU
-         AmAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718358274; x=1718963074;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lY/67/dJvO2Ri5VC5Y1MEBaOkJ+Rmx2YeXrE0VIx7gw=;
-        b=cSHvr8a+M7zjx8lZnIealbTOFtVrEReJzX1YmL8yfcMIAuGIwHJWEAE+E+38dyQyPV
-         Anc6OSSw2Z1inI3bEktKiy5ogvfYNKnPRJh9C0R/btXVKnjJcOCJv8RqcRo4var7wrj/
-         Ld7O9pwtBTpekeZAMVm6OZSgjtWV4iEtUaVoeXKoVHMB3Ida3OaNptVhbs+mtG5QRokL
-         VrR5mBYQ3pQVawRKfeTxveSYPN7uqBLec1Uw0O28ftIN2MC2YxF0NvUvE8i7iG2LmLqP
-         gKzBqE6AoxQ6lqE02OqgHzy+UbQhU8uGKYfDKaRYRupcHUOdOUkbn44Te5fG5PlimeAT
-         R3WA==
-X-Forwarded-Encrypted: i=1; AJvYcCULGD0Z4PEom3gdm6xEWuTP2r9YAwKA27NRGU+Z31pyP9b/tnM8ABWNrusY9lrRUhKIRBJaSWrE+GpBc1mkWXJP6qZvuC5NNqdBvw+LF9wkHueo+noC4E5nzt3wJMhvWl5yQaCljqnHTMU+YE1s9cd9oDO3yl5NtCom3/+qPthTUzrspaWa9ejN
-X-Gm-Message-State: AOJu0YxoGlIcro+6S7WDlJTmsPfBCFW3hZjb56KTtY4MbKciVuzrzMfW
-	/4WxQo7xlGZrNzJKI7Y2GCcITWi5+WZ30gIQx97ZJzm9Guzx3STD
-X-Google-Smtp-Source: AGHT+IEAeXLR+EZ0Tq9ukGQmi3la3w5foxvNKrKYs8Vbmxx6EakkdntGvBUuLpNWE41IxUL6R/n2YA==
-X-Received: by 2002:a2e:2410:0:b0:2ec:1779:fd5d with SMTP id 38308e7fff4ca-2ec1779fe9fmr10467711fa.19.1718358273745;
-        Fri, 14 Jun 2024 02:44:33 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c99f41sm4991861fa.129.2024.06.14.02.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 02:44:32 -0700 (PDT)
-Date: Fri, 14 Jun 2024 12:44:29 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v4 6/6] MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
-Message-ID: <439a8a267af682800b45387cd23a636c0e689146.1718356964.git.mazziesaccount@gmail.com>
-References: <cover.1718356964.git.mazziesaccount@gmail.com>
+	s=arc-20240116; t=1718358336; c=relaxed/simple;
+	bh=UGXeGLWZTsXFSCEt0SvKoZJVAG3H9kZuD88qPQGsr9E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iI7hc2eZJctFt6FPqz33meOaPRnIGoChPwBrBz0cuLp1r3f7KBLOka5Z/DoHkp3ZWHojkDraE77ixRy7MyGFuO22vQDN1k/DNwnvyoasgb/OxAZZjJ6P5P98nTr12G4E6zSASvoTxIHc3bhhy1BGQ83R95kxxM0Zn4TwFgWe+3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sI3Ul-0000Su-E4; Fri, 14 Jun 2024 11:45:19 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sI3Uj-002Elw-Ox; Fri, 14 Jun 2024 11:45:17 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sI3Uj-006DOn-2E;
+	Fri, 14 Jun 2024 11:45:17 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	stable@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net v2 2/2] net: phy: dp83tg720: get master/slave configuration in link down state
+Date: Fri, 14 Jun 2024 11:45:16 +0200
+Message-Id: <20240614094516.1481231-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240614094516.1481231-1-o.rempel@pengutronix.de>
+References: <20240614094516.1481231-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cq8TJ8Uc7Eur0vs2"
-Content-Disposition: inline
-In-Reply-To: <cover.1718356964.git.mazziesaccount@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Get master/slave configuration for initial system start with the link in
+down state. This ensures ethtool shows current configuration.  Also
+fixes link reconfiguration with ethtool while in down state, preventing
+ethtool from displaying outdated configuration.
 
---cq8TJ8Uc7Eur0vs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Even though dp83tg720_config_init() is executed periodically as long as
+the link is in admin up state but no carrier is detected, this is not
+sufficient for the link in admin down state where
+dp83tg720_read_status() is not periodically executed. To cover this
+case, we need an extra read role configuration in
+dp83tg720_config_aneg().
 
-Add maintainer entries for ROHM BD96801 a.k.a 'scalable PMIC'
-drivers to be reviewed by ROHM people.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-
+Fixes: cb80ee2f9bee1 ("net: phy: Add support for the DP83TG720S Ethernet PHY")
+Cc: stable@vger.kernel.org
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-Revision history:
-RFC1 =3D>:
-- No changes
+changes v2:
+- add genphy_c45_pma_baset1_read_master_slave() to .config_aneg
+- add comments
 ---
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/dp83tg720.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..dc79a45c763e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19446,17 +19446,21 @@ F:	drivers/gpio/gpio-bd71828.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
-+F:	drivers/mfd/rohm-bd96801.c
- F:	drivers/regulator/bd71815-regulator.c
- F:	drivers/regulator/bd71828-regulator.c
- F:	drivers/regulator/bd718x7-regulator.c
- F:	drivers/regulator/bd9576-regulator.c
-+F:	drivers/regulator/bd96801-regulator.c
- F:	drivers/regulator/rohm-regulator.c
- F:	drivers/rtc/rtc-bd70528.c
- F:	drivers/watchdog/bd9576_wdt.c
-+F:	drivers/watchdog/bd96801_wdt.c
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
- F:	include/linux/mfd/rohm-bd957x.h
-+F:	include/linux/mfd/rohm-bd96801.h
- F:	include/linux/mfd/rohm-generic.h
- F:	include/linux/mfd/rohm-shared.h
-=20
---=20
-2.45.1
+diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
+index 1186dfc70fb3c..c706429b225a2 100644
+--- a/drivers/net/phy/dp83tg720.c
++++ b/drivers/net/phy/dp83tg720.c
+@@ -36,11 +36,20 @@
+ 
+ static int dp83tg720_config_aneg(struct phy_device *phydev)
+ {
++	int ret;
++
+ 	/* Autoneg is not supported and this PHY supports only one speed.
+ 	 * We need to care only about master/slave configuration if it was
+ 	 * changed by user.
+ 	 */
+-	return genphy_c45_pma_baset1_setup_master_slave(phydev);
++	ret = genphy_c45_pma_baset1_setup_master_slave(phydev);
++	if (ret)
++		return ret;
++
++	/* Re-read role configuration to make changes visible even if
++	 * the link is in administrative down state.
++	 */
++	return genphy_c45_pma_baset1_read_master_slave(phydev);
+ }
+ 
+ static int dp83tg720_read_status(struct phy_device *phydev)
+@@ -69,6 +78,8 @@ static int dp83tg720_read_status(struct phy_device *phydev)
+ 			return ret;
+ 
+ 		/* After HW reset we need to restore master/slave configuration.
++		 * genphy_c45_pma_baset1_read_master_slave() call will be done
++		 * by the dp83tg720_config_aneg() function.
+ 		 */
+ 		ret = dp83tg720_config_aneg(phydev);
+ 		if (ret)
+@@ -168,8 +179,15 @@ static int dp83tg720_config_init(struct phy_device *phydev)
+ 	/* In case the PHY is bootstrapped in managed mode, we need to
+ 	 * wake it.
+ 	 */
+-	return phy_write_mmd(phydev, MDIO_MMD_VEND2, DP83TG720S_LPS_CFG3,
+-			     DP83TG720S_LPS_CFG3_PWR_MODE_0);
++	ret = phy_write_mmd(phydev, MDIO_MMD_VEND2, DP83TG720S_LPS_CFG3,
++			    DP83TG720S_LPS_CFG3_PWR_MODE_0);
++	if (ret)
++		return ret;
++
++	/* Make role configuration visible for ethtool on init and after
++	 * rest.
++	 */
++	return genphy_c45_pma_baset1_read_master_slave(phydev);
+ }
+ 
+ static struct phy_driver dp83tg720_driver[] = {
+-- 
+2.39.2
 
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---cq8TJ8Uc7Eur0vs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZsEP0ACgkQeFA3/03a
-ocVoNggAv6tEE8qrcPAlZH9YmpKYIB8tsBrrVtYQTW/Yl5qhe3+tAPgLv8vE+SPW
-Jj/7rAIU0MeiN/Fx62Rqsc/mOEJhK2t0zbBCwqUtMvcvYhH1r5TBHthgR9+pcD5T
-bMoTxKYiZAFv5YhL3trz525CW0nht016h8TrmJIRKlOSXeG1+kNYZKGhhetJymU7
-jHclzyKQ7i32U19ju68hpTcSxAwpZtNzlNRmunF/PJmwGobI++yO7gYUHH91e3XS
-VR4LigLQq3DKKrT2I7tKbch50KKPjnBXGQHWb8X4zGRMKbyUYoBR0hAg0zSveYgf
-E8lpfI/JXf3JmVEqFXptJYMXH3DVng==
-=FgvX
------END PGP SIGNATURE-----
-
---cq8TJ8Uc7Eur0vs2--
