@@ -1,79 +1,144 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEB016F0EA;
-	Fri, 14 Jun 2024 16:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C66E16D9CF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382183; cv=none; b=ZkFEZjepLIWZgo2TfJjwrjLbXqpit1RvdTO1qiblumR0AQxKcU3EUmSywYwEUQC7QzpbNsfTElBnhuMyTQ33rrpTgPkfiBDzHhuPBQQeVLCbEC2sqDojkxI4UbPi+ef3CosqLJMuMchnF9W9JOR10pXeoJ/lJl2tB23EOL6oIjs=
+	t=1718382252; cv=none; b=gFz/teq4D8gq+8TEShuw6EuHbVYTwP3sffGC5f6Z/vPCpF9loB0gR+rQG2gDUFSrjnlnXrg33ktpv9FuvIJ73ikD5QJL6GsSiB7NbKh2JZH0Ku0YwpciBDgh/rea6+mexaq/hgns1x99I0ZtwqkNuGZTZlK+mVdYmX22nYxNHC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382183; c=relaxed/simple;
-	bh=9xVj2HYRLM1Bn9KcJv/C/fPJ9SREflQWxolwgh3d9DE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPWSF3loIIPvJuuBv0WJAZ6ABcHpBoOSf4KyvnagIioR9JGn93Ewagux4u3z+MBx51os3R5Ardp+KWb3SMzO5VuEiJsC4CH5xYGltLrAYwbnq/nxTPKYHIJ//PUZlkrBxkGNYQjcqBpEOkXqlV48BHRFPzW7shsoWxO18a3KC8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=VwKhLnNI; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1718382252; c=relaxed/simple;
+	bh=rLr1JBmyf4h8ZfpUwJNjeawg01+mTkoSSeFi6OYtlE4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ToF6uGxow1HTtgnqWiHlcGjhhjFIWDNv1W9aJ3AWCHsHaqTVz6HLLiumjjqXwJbpwZ+wSmpos7FKYSFp6AwJ0VTe5yGxeyrkCbh8/j4f7IeSmkBMxWTPO1G77L/erUFnFPH+6Xszrc9mdVPhTRrMyxkhnTXTJ2EaqP6u/H2fAgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h7IwX6O5; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="VwKhLnNI"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4W14M55CTXz9syZ;
-	Fri, 14 Jun 2024 18:22:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1718382177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o4kmNllycobnJxPSc+JrUUAyzHlN3JuewkPkueoOCrQ=;
-	b=VwKhLnNIcoz0lhgP5s9Dt41KUzMS3nCkiikd6WnFm31u+xsqgcNudNVsj4mLs2hL3Qtu7+
-	LVrxuT2v/f+Fweo6AMqI2r76xJTXs4pYg5LaRPAsX0F54HbV6lLv1qOMeGu3IJre5Mc5c/
-	bFLE0Ty0nZ+f3nFBVuUoVYiynvcy4818IZxxcSGPlx75ElOEHEBuh6zdXho+jz+m4j1wDZ
-	YQ8Y4C7pnhjGka0ckIrJV8Z4UzHYzwKVvLhOVd4M7DOAhYm0HH+pN7Yd/sTsfj9cd16tlI
-	Afi89iaRp/qS9FgYI7669RBHxgoGBnvBio0/youFmba1UXsETdqfR5kDaHRiaw==
-Date: Fri, 14 Jun 2024 16:22:54 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Brian Foster <bfoster@redhat.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH 1/2] bcachefs: use FGP_WRITEBEGIN instead of combining
- individual flags
-Message-ID: <20240614162254.wwuoftv6cbm5x5t7@quentin>
-References: <20240614105031.57032-1-kernel@pankajraghav.com>
- <20240614105031.57032-2-kernel@pankajraghav.com>
- <ZmxVZiveDdzyByTQ@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h7IwX6O5"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f188e09a8so1886189f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718382249; x=1718987049; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UqVF7q4lvJozPubshiqMpT2VHbao70PEnYzL/muuYWc=;
+        b=h7IwX6O5hqbPbjR7weIBMCINK4JZ55qaDqhx9RiBoAUVDQeNy2tWrIausVy+yyNH5g
+         8Rhij/LFl093+tXRyLPcweDHxApZpH8Yyd8GmhgM8QCPf8zTifpG2MbvjulN2Joj/7Up
+         gAwPy6AnWdgXfxUp3Ga2/eN/j6bMMko+RudOkUWWN50KtaXMEySqzw9HdUh65Q/mQa3o
+         YHDRo51BP1CgeJ/tDtPJDS6kemG+IhKpogNAXXpdFQPkjziRBHUhm4DBVFfE/4moM9a6
+         eK6P7gv3fT7uYxSzeGsnP/nqFsGZNMtpvF8y1CFAV55Smm5eXv7M9g3IHsg79BLOrTeV
+         9aaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718382249; x=1718987049;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UqVF7q4lvJozPubshiqMpT2VHbao70PEnYzL/muuYWc=;
+        b=WsFZ3fB6z5NYr7Y3m6cQcG8qo2/Gqjho3Yc5F1qKqCi2moyuFE2Wh7tKjHpvPc5NB0
+         AOQsKE1i8cdDIqChS2F0zayQ6kQSr7KCOcEX95Rrpv+e96Mx5izKTXHs36NBUCTWCwDJ
+         tJ2pZmXi2D7RRY7qrRmmuukL/KIjz98G55+gZtl+8vgD33DC+Tegz7oiESivUa0go7wN
+         8UIsTvqKqgAvpnwGS/JJ//aBCKio5CMfWm4eH8z3IGpn9Opmv7J3o5iKG2jrExsHdmRf
+         3znXwO4HZFVkqdMUboN1D908ZQL4rXAaGE8gLUmIWTn2oY1MwMFpAiIqz+FdRcGubDes
+         oBuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK/0D9ccBnBz60rWpZNt9CtY4F9GmLIaImuD4brqnEUL/d7QDmSkOq60BofbnljjEDQdMOAl2SFP//UOXDSbJ1Z/u+tPg2QoPgME2x
+X-Gm-Message-State: AOJu0YwJMEnbvW+1PgCj3xZH6aXrzFwWHohVjmYfidS9omCVY7oRi6iV
+	qPVxZ3oVZYlZZxJaCMlidD3SL8qf12dbsmE10DD4t5PmlKMbFFcRdbWe0RcKiiQ=
+X-Google-Smtp-Source: AGHT+IFYnaf+5rgZ/sPcEHKeTUBhGa2azbnMx/BRcFPt7SXvume6qlcEccJaQcz/vaaoWoci1eBpqQ==
+X-Received: by 2002:adf:f60f:0:b0:35f:fa2:3e81 with SMTP id ffacd0b85a97d-3607a788b79mr2258337f8f.63.1718382248812;
+        Fri, 14 Jun 2024 09:24:08 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36074e0e5adsm4931165f8f.0.2024.06.14.09.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 09:24:08 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Fri, 14 Jun 2024 18:24:01 +0200
+Subject: [PATCH RFC 1/3] ASoC: dt-bindings: amlogic,axg-sound-card:
+ document clocks and clock-names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmxVZiveDdzyByTQ@casper.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240614-topic-amlogic-upstream-bindings-fixes-audio-snd-card-v1-1-9f57d9e01834@linaro.org>
+References: <20240614-topic-amlogic-upstream-bindings-fixes-audio-snd-card-v1-0-9f57d9e01834@linaro.org>
+In-Reply-To: <20240614-topic-amlogic-upstream-bindings-fixes-audio-snd-card-v1-0-9f57d9e01834@linaro.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1805;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=rLr1JBmyf4h8ZfpUwJNjeawg01+mTkoSSeFi6OYtlE4=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmbG6lCW1GD+c0W2D0RrxQxor4he3SKfOwZ9JUq1nF
+ DUdxVXeJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZmxupQAKCRB33NvayMhJ0fruEA
+ DFKaDVhm7fVnRtNa7JkVplIkxqGF3hliySL3tbgXY+vz/HCL4fngWPHV976mpGon3TfA5W+EysGlla
+ nw5NDStdSWFSTjcHLnOc6ax8XkQNPH0zoXPL93wiC0zhxr122GCvP+1EBeMUpBZmSAMKJKwiuUVASd
+ RPWI71tJnoDH8W3SVzNktQ8NiRwKME13v8TTjsdmtgRR+w/vH3ia8MpcZpeQDMknfz8iYTlvhtgRIj
+ DIS41nwxGxHdBQaZoomdcnIsJ7Ep79AUurh9Ef0bbEzNixGtNTr+D4pAJp4OvVAwVC5Z+fYKICgUD+
+ 7bAcLO9uexscPpdyq7swOjyG7JNeshoFZPYrpUuYeFBSYJ+Mh5gftd969ZuopkWTgO0klX1j8GKkTS
+ l85hXiWFO78C/oKzGQYQZuYKucBLmCH436zbv7HmOYqml1H9jwYuAGh2w9EMRHdu482t1lNXWy/2QN
+ Q1SQ2L0Mq2gsXfDdE2Lcpn3GFPo0i5fU71KbthJSX1pxx/snCDyteRFDNdD5kPjvxgO5I00Gs0v1Ty
+ NeUhnY9GKWpW+uZnrc497yhY24lNEyjqW768Ydg1b3IdFP1Dzq/R2hynSXb8CPLYc6dZDpNaaZTjsz
+ MrAGh0hnHcLVd7DQ6b7X9fn1zk3ngFzeTY/jx+96G0XVQea3sxULd/8/8W2A==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Fri, Jun 14, 2024 at 03:36:22PM +0100, Matthew Wilcox wrote:
-> On Fri, Jun 14, 2024 at 10:50:30AM +0000, Pankaj Raghav (Samsung) wrote:
-> >  	ret = bch2_filemap_get_contig_folios_d(mapping, pos, end,
-> > -				   FGP_LOCK|FGP_WRITE|FGP_STABLE|FGP_CREAT,
-> > -				   mapping_gfp_mask(mapping),
-> > -				   &fs);
-> > +					       FGP_WRITEBEGIN,
-> > +					       mapping_gfp_mask(mapping), &fs);
-> 
-> Don't change the indentation here.  In the next patch it makes the
-> lines too long.
+The sound card design is based on 3 reference PLL frequencies that
+are the root of all clock rates calculations.
 
-I used clangd to do the formatting. I will probably stick without
-changing the format in this patch
+Today, those 3 frequencies are specified in DT via assigned-clocks,
+because they correspond to the basic audio use-case.
 
-Thanks.
-> 
-> In general, don't change the indentation.  It's been one of the biggest
-> pains of the folio conversion.  "Oh, you changed the name of this
-> function and now the arguments don't line up".  Don't line up the
-> arguments with the opening paren.
+It makes no sense to setup clock rates for a sound card without
+referencing the clocks for the sound card, mainly because at
+some point more complex audio use cases will be supported
+and those root rates would need to change.
+
+To solve this situation, let's legitimize the presence of assigned-clocks
+in the sound card by documenting those clocks, as it describes a true
+dependency of the sound card and paths the way of more complex
+audio uses-cases involving those root frequencies.
+
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ .../devicetree/bindings/sound/amlogic,axg-sound-card.yaml    | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
+index 5db718e4d0e7..676ff2731b86 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
+@@ -26,6 +26,18 @@ properties:
+       A list off component DAPM widget. Each entry is a pair of strings,
+       the first being the widget type, the second being the widget name
+ 
++  clocks:
++    maxItems: 3
++    description:
++      Base PLL clocks of audio susbsytem, used to configure base clock
++      frequencies for different audio use-cases.
++
++  clock-names:
++    items:
++      - const: mpll0
++      - const: mpll1
++      - const: mpll2
++
+ patternProperties:
+   "^dai-link-[0-9]+$":
+     type: object
+
+-- 
+2.34.1
+
