@@ -1,125 +1,145 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040721C3D
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53D944D
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718326141; cv=none; b=Mv5eMwJqp9kW8x6LqaeOrM4MHydp3c5i0TbceE1Oh2d/dKHMBjNcMWTLrk+ZmYSuTIVo9M832AvNpIjdFD0hEVtwUetYOY606ijtbt+FEaKdpWmATpa+ae9Fqb8zwxZ0uBi0TGHtg++a18RCWK1+GOCBjREkzxAI6ThgtMg4d1E=
+	t=1718326172; cv=none; b=hXDMXbPpjChO+vK9ggx0gtaNHU2O7y0sj2jRTGXJHed0WvDySwN4zOHv/V1JxYgT1ma/yKAFaMkNiuhJ4TCaDZwOw1T9Zi3CDJzqJ0xWGBQppfLxWVV5N0PfdrfTYPqEOgTKh9IN/KY/vsZ/v0u55gfqbRPV9ubdEWfnrMoErN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718326141; c=relaxed/simple;
-	bh=EzpkdrF+lhKU70e/G955Esb8W0Pby1fF9pS1lclAB+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UtzPJ/DlIxp973YODyd38NGpWeh07z3UK+4U6c04zYc4q7Q0i0dWrgAH8ijCJogoYC+Bht+gnPuVXQahHJ2O+nDp1HNAcI9/4atuQ35Nxo7T3WZyDqTW8XQxE1uMr+KT6Lg9Nw0wIgCFhh7Ng9OY/XTO7YK5E3WoOHFLj11QVs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dtrXvUsG; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718326172; c=relaxed/simple;
+	bh=aaWDe96vVioWhU+xKeHBvUHBjwpG2ejuj+COdT3SqGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TM6uxaRGCjGEnF4OJY6m0t+OwQEZ+rn4pJlxkDagccJi3TxeSeCRf1O5VWAwSV8j+Ac0hNEEXg6XgLVazQma8zc+DklfYfrA/cVgSzdZ3qT017UI3URAYrU0y1XvdigZYEgSztnxqBKn7XI9C7TffYPgJWPyUmHXln7omWCTTh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dvNwvf77; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dtrXvUsG"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso85875ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 17:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718326139; x=1718930939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cs3I7xb2JkPfyVWwhfDDItDBDpUbWjmYdCsu/iDXVRE=;
-        b=dtrXvUsGBzM1zr29vh5hOYKxdIP6P+az+QDjYj+sTaJISBKwtwTBtLAaSW0OmGlF/Z
-         EQwiVPrASgXAUNZ/Zn4NrHLj4zZPIQDEhEZCW7lOePlu+P6BsECJWwVWkQQjHNoy4LFB
-         09iHDkeUqcqg3O3mTZLt+MpPvnmo38wmcLDhOezFRdBPWz3pJFkOYpFNd0IpBZ6GTi1o
-         AXlKf5kAHprVLwYwzFpOz2LbPDTUJKISjGugc2fmVKP7CQTH7vrN3RNJ2klO6j7FsVFC
-         4UotxyN4r+/4trESUfUfFS8rUxCVU65xmMUAViiz0EM342z6iHz4I6WW/0W20Tk1oCbU
-         4Q1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718326139; x=1718930939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cs3I7xb2JkPfyVWwhfDDItDBDpUbWjmYdCsu/iDXVRE=;
-        b=ZRXrhyKOlpoAKDTV30CZOAh2YPLsaBeNPnps7POhAtY1Wfi1xb9lRlyKEFBZS0oz/b
-         mMyQFEq7X1u/L/2NfWJQnZlCIV92rZLtBtYGWhlYf0Z/dXBZvpvrC2dYQN8cc0TbATJ5
-         m9XV6ewhFZp1M5z24Djtx3+D6cLBmXwfroFh0A/v10TZ7HTOCLU9mr4ODc1f4oMfORB5
-         PkLJ2mLSePd4RRXEwCsSSHGeqV7Cg/x9OJz1jRLEAjqzHaNF4eQS5wE7c/oTmMYKxCva
-         V52ECOoSA5Wqqk8VgxxjsuDa3CkZKflH0P8lusFNsGhgyaeAuOraPxO2XcXXJGtszI3c
-         4DbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNRvwbrIDAguK1oj2Q4oJ/nVm3HqS5SKXDWJ06Fyf9+DzbV1ZxV4BPKndsuAi2OErv3aBdcfKYEsIzT6ue4XgA+qyIZaMVLmbAQ8KS
-X-Gm-Message-State: AOJu0YxfHjRq6Nzh8KSIrsWlTYZ7eU4FySkDMQdMQFAKok/UkE71Y8ov
-	Ea74XtoRgnIfY5AA7k0aB1IIKzB5dK4Zvv9hii/VeaFFAY60LXl/8/yQSefaJAaihVHHfaEI3XL
-	QlvQ+I5XDuIniU9pIdjnjO5bODmXjaBcvitym
-X-Google-Smtp-Source: AGHT+IG4rh9cysMLIjJvQTQbAGIfEWjp8FbFtGimlgyhxAwv6QoKwTYp7w2DNRBP89lE6kBTdOWPtAittybnD94st7Y=
-X-Received: by 2002:a17:902:b782:b0:1e4:35b9:cce0 with SMTP id
- d9443c01a7336-1f86777297bmr804415ad.9.1718326138884; Thu, 13 Jun 2024
- 17:48:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dvNwvf77"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718326167; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Z6jkMmRB8swkEwPnU1U4t7PuL8OFWR4mPrX+ypimZlA=;
+	b=dvNwvf773JjfCvO+aAxAlI9di289/q/85tyExmEB1LIaWyy6ym8mCU00F5oGMhp4A6eELycXMgySKSjZvj1C1ZxJD2kg1SybJh21KUYY+hRueHJE9HSH0TVvI2Je6J0QzCbKe5WF28GNZtBejscRo/YKCoyRUEgHnVCzmfKvEhQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W8PHTzl_1718326165;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8PHTzl_1718326165)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Jun 2024 08:49:26 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	hannes@cmpxchg.org,
+	nphamcs@gmail.com,
+	yosryahmed@google.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm: shmem: fix getting incorrect lruvec when replacing a shmem folio
+Date: Fri, 14 Jun 2024 08:49:13 +0800
+Message-Id: <5ab860d8ee987955e917748f9d6da525d3b52690.1718326003.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611002145.2078921-1-jthoughton@google.com>
- <20240611002145.2078921-5-jthoughton@google.com> <CAOUHufYGqbd45shZkGCpqeTV9wcBDUoo3iw1SKiDeFLmrP0+=w@mail.gmail.com>
- <CADrL8HVHcKSW3hiHzKTit07gzo36jtCZCnM9ZpueyifgNdGggw@mail.gmail.com>
- <ZmidYAWKU1HANKU6@linux.dev> <ZmiqXUwMXtUGanQc@google.com> <ZmqXRhFSoE38foh6@linux.dev>
-In-Reply-To: <ZmqXRhFSoE38foh6@linux.dev>
-From: James Houghton <jthoughton@google.com>
-Date: Thu, 13 Jun 2024 17:48:22 -0700
-Message-ID: <CADrL8HXhGFWwHt728Bg15x1YxJmS=WD8z=KJc_Koaah=OvHDwg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/9] mm: Add test_clear_young_fast_only MMU notifier
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Sean Christopherson <seanjc@google.com>, Yu Zhao <yuzhao@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, James Morse <james.morse@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Shaoqin Huang <shahuang@redhat.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Wei Xu <weixugc@google.com>, Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 12, 2024 at 11:53=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
-ev> wrote:
->
-> On Tue, Jun 11, 2024 at 12:49:49PM -0700, Sean Christopherson wrote:
-> > On Tue, Jun 11, 2024, Oliver Upton wrote:
-> > > On Tue, Jun 11, 2024 at 09:49:59AM -0700, James Houghton wrote:
-> > > > I think consolidating the callbacks is cleanest, like you had it in
-> > > > v2. I really wasn't sure about this change honestly, but it was my
-> > > > attempt to incorporate feedback like this[3] from v4. I'll consolid=
-ate
-> > > > the callbacks like you had in v2.
-> > >
-> > > My strong preference is to have the callers expectations of the
-> > > secondary MMU be explicit. Having ->${BLAH}_fast_only() makes this
-> > > abundantly clear both at the callsite and in the implementation.
-> >
-> > Partially agreed.  We don't need a dedicated mmu_notifier API to achiev=
-e that
-> > for the callsites, e.g. ptep_clear_young_notify() passes fast_only=3Dfa=
-lse, and a
-> > new ptep_clear_young_notify_fast_only() does the obvious.
-> >
-> > On the back end, odds are very good KVM is going to squish the "fast" a=
-nd "slow"
-> > paths back into a common helper, so IMO having dedicated fast_only() AP=
-Is for the
-> > mmu_notifier hooks doesn't add much value in the end.
-> >
-> > I'm not opposed to dedicated hooks, but I after poking around a bit, I =
-suspect
-> > that passing a fast_only flag will end up being less cleaner for all pa=
-rties.
->
-> Yeah, I think I'm headed in the same direction after actually reading
-> the MM side of this, heh.
+When testing shmem swapin, I encountered the warning below on my machine.
+The reason is that replacing an old shmem folio with a new one causes
+mem_cgroup_migrate() to clear the old folio's memcg data. As a result,
+the old folio cannot get the correct memcg's lruvec needed to remove itself
+from the LRU list when it is being freed. This could lead to possible serious
+problems, such as LRU list crashes due to holding the wrong LRU lock, and
+incorrect LRU statistics.
 
-Yeah, I agree. What I have now for v6 is that the test_young() and
-clear_young() notifiers themselves now take a `bool fast_only`. When
-called with the existing helpers (e.g. `mmu_notifier_test_young()`,
-`fast_only` is false, and I have new helpers (e.g.
-`mmu_notifier_test_young_fast_only()`) that will set `fast_only` to
-true. Seems clean to me. Thanks!
+To fix this issue, we can fallback to use the mem_cgroup_replace_folio()
+to replace the old shmem folio.
+
+[ 5241.100311] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5d9960
+[ 5241.100317] head: order:4 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[ 5241.100319] flags: 0x17fffe0000040068(uptodate|lru|head|swapbacked|node=0|zone=2|lastcpupid=0x3ffff)
+[ 5241.100323] raw: 17fffe0000040068 fffffdffd6687948 fffffdffd69ae008 0000000000000000
+[ 5241.100325] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+[ 5241.100326] head: 17fffe0000040068 fffffdffd6687948 fffffdffd69ae008 0000000000000000
+[ 5241.100327] head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+[ 5241.100328] head: 17fffe0000000204 fffffdffd6665801 ffffffffffffffff 0000000000000000
+[ 5241.100329] head: 0000000a00000010 0000000000000000 00000000ffffffff 0000000000000000
+[ 5241.100330] page dumped because: VM_WARN_ON_ONCE_FOLIO(!memcg && !mem_cgroup_disabled())
+[ 5241.100338] ------------[ cut here ]------------
+[ 5241.100339] WARNING: CPU: 19 PID: 78402 at include/linux/memcontrol.h:775 folio_lruvec_lock_irqsave+0x140/0x150
+[...]
+[ 5241.100374] pc : folio_lruvec_lock_irqsave+0x140/0x150
+[ 5241.100375] lr : folio_lruvec_lock_irqsave+0x138/0x150
+[ 5241.100376] sp : ffff80008b38b930
+[...]
+[ 5241.100398] Call trace:
+[ 5241.100399]  folio_lruvec_lock_irqsave+0x140/0x150
+[ 5241.100401]  __page_cache_release+0x90/0x300
+[ 5241.100404]  __folio_put+0x50/0x108
+[ 5241.100406]  shmem_replace_folio+0x1b4/0x240
+[ 5241.100409]  shmem_swapin_folio+0x314/0x528
+[ 5241.100411]  shmem_get_folio_gfp+0x3b4/0x930
+[ 5241.100412]  shmem_fault+0x74/0x160
+[ 5241.100414]  __do_fault+0x40/0x218
+[ 5241.100417]  do_shared_fault+0x34/0x1b0
+[ 5241.100419]  do_fault+0x40/0x168
+[ 5241.100420]  handle_pte_fault+0x80/0x228
+[ 5241.100422]  __handle_mm_fault+0x1c4/0x440
+[ 5241.100424]  handle_mm_fault+0x60/0x1f0
+[ 5241.100426]  do_page_fault+0x120/0x488
+[ 5241.100429]  do_translation_fault+0x4c/0x68
+[ 5241.100431]  do_mem_abort+0x48/0xa0
+[ 5241.100434]  el0_da+0x38/0xc0
+[ 5241.100436]  el0t_64_sync_handler+0x68/0xc0
+[ 5241.100437]  el0t_64_sync+0x14c/0x150
+[ 5241.100439] ---[ end trace 0000000000000000 ]---
+
+Fixes: 85ce2c517ade ("memcontrol: only transfer the memcg data for migration")
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+Changes from v1:
+ - Add reviewed tag from Shakeel.
+ - Update related comments, per Yosry.
+---
+ mm/memcontrol.c | 5 +++--
+ mm/shmem.c      | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index a811dfff10cd..4d9fda1d84a0 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -7780,8 +7780,9 @@ void __mem_cgroup_uncharge_folios(struct folio_batch *folios)
+  * @new: Replacement folio.
+  *
+  * Charge @new as a replacement folio for @old. @old will
+- * be uncharged upon free. This is only used by the page cache
+- * (in replace_page_cache_folio()).
++ * be uncharged upon free. This is used by the page cache
++ * and shmem (in replace_page_cache_folio() and
++ * shmem_replace_folio()).
+  *
+  * Both folios must be locked, @new->mapping must be set up.
+  */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 99bd3c34f0fb..4acaf02bfe44 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1908,7 +1908,7 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 	xa_lock_irq(&swap_mapping->i_pages);
+ 	error = shmem_replace_entry(swap_mapping, swap_index, old, new);
+ 	if (!error) {
+-		mem_cgroup_migrate(old, new);
++		mem_cgroup_replace_folio(old, new);
+ 		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, 1);
+ 		__lruvec_stat_mod_folio(new, NR_SHMEM, 1);
+ 		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -1);
+-- 
+2.39.3
+
