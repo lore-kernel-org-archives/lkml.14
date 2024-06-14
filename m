@@ -1,127 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FEA19D8B1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 14:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B27419D88F;
+	Fri, 14 Jun 2024 14:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718373733; cv=none; b=mEtLAOhqejpaM1RdqghgDgK44PfV+sFiK3rVv6KHKBL5PSvUSFpJLkLCAD03VXwYnec7xsyNABdAiZShEveTeGWIvPkN+J9eB5BF17M6sPoOb058jQPq2gy+bF+oNk4ArtpbsTKwYHU518dACOU6s27MvtzAggdOFfJxMMLlZ2A=
+	t=1718373845; cv=none; b=mIINQYPJyGhp3D4rJTuerzmW4Oc3A5EleGH8RBXnkFe5v67RxiNQ4Jgid8hzTLd2J26h/07rHU3rVRqKQU2/Kz+V1gg2nYzvIh/2cCAN1wHJVzkYsqMN+q+4eK+OUez2sBNTPGw5MnXdZRBXN68DBw12PZROLuhuxz89BuHOvyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718373733; c=relaxed/simple;
-	bh=anbwLZ+/x4UBKUX8R3pUxwBpbmKl5o+iEdlxAliw6g0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OR7yr3p8wTxOTbMnFaorBtzLFGGI9OVr+BF3aBVhZmtgj61hiFMoB13hoFExxDSneuiDBOmBbeYqj4CwSbBZx1/rL/TUgT/QfXmGFwVZ/s7u1ewuu3IsEktumTacTQh1AaomFd/sMtvMHnRpRVrw2OXBidAe02M/WOeA5ZZQFxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1Wepc10; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1Wepc10"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718373730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=anbwLZ+/x4UBKUX8R3pUxwBpbmKl5o+iEdlxAliw6g0=;
-	b=f1Wepc109sWcayfCBHcJGS6IM244ZZGdbbop3C7+mlJ9YmURSeTXfquCoOSDN17oo2q5/F
-	ab+mrY7lkL5F6EeOvfrzpnkpt2KqbG6MEatMeabEVGrzlsIr+oh1WBSvNDg2gJC3JLXWyL
-	KrUiGLrO89CyNPf6MAlPMqA/RYJ9nsE=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-386-5ES7vn5tMx-LuKrxwJ7dtQ-1; Fri, 14 Jun 2024 10:02:09 -0400
-X-MC-Unique: 5ES7vn5tMx-LuKrxwJ7dtQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ebdb800692so3834241fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:02:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718373727; x=1718978527;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=anbwLZ+/x4UBKUX8R3pUxwBpbmKl5o+iEdlxAliw6g0=;
-        b=BSwkcR+W39572x7eYu9hwABcY02Kw9yRJstex8h+qr85F9jDn4mSEVDPjwpr9YOPwm
-         WKLDOFAioD0JNoBhBSBNy8O7k4PNG/Jjwq/g/5h2dTEBV8G8AmHuqHtAuOre82xbb+wh
-         J8gHW+YWikrdGPnYQQtBDnbNnVbJKQAmsOJooU+tCU26I+m+FVObvBLWw1lCqOf05tLV
-         xUV7YexKDE02FHVmkcOR+2vN0BK47qNMGsd7EUSfPyezWumxpSD6tjrQxAhd36k99/Ar
-         lVBi06SNfUl/eIoJTVF5EHzkDnojYqFcuJvZcWBPI/LGbxWG7p0nKS1zuDX3BrAs/1FB
-         77Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl1R+jVBgM1nivJg0F07n9ymZux2ntw5AM9OzaL1VhvG/z43wPQGbiv6HNJi53xA4j1sfy2WX7uIQGBw69UzH6F7h/EcXUDJLa8YFC
-X-Gm-Message-State: AOJu0YyYC/XGml7za0emLbnjsYO0HX2AuqWkT6p97VTO7ZeqWiprHOiw
-	06DYOUucYV3BdYw6bhyXawVW7giVc3hhRudLh2HsVhgGNSCbQkrfvgPYZSrvEzzMLHO4sAPSoK8
-	odZvd3KbHbMZYwrHl08667W1u183W+/YAwDLPVVUBNEzEKmcHf247TiuVRfdLhw==
-X-Received: by 2002:a2e:9345:0:b0:2ec:16c4:ead5 with SMTP id 38308e7fff4ca-2ec16c4effcmr12087081fa.2.1718373727510;
-        Fri, 14 Jun 2024 07:02:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEnU/z6eLVQ0/KxHj5HUq6R9ZLaDlLh9RgnxK4ijvqXqB+GEr6xsPokGFWCGWgPzMx8gWc8uQ==
-X-Received: by 2002:a2e:9345:0:b0:2ec:16c4:ead5 with SMTP id 38308e7fff4ca-2ec16c4effcmr12086741fa.2.1718373727024;
-        Fri, 14 Jun 2024 07:02:07 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b083:7210::f71])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750ad0b7sm4421880f8f.53.2024.06.14.07.02.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 07:02:06 -0700 (PDT)
-Message-ID: <19d5b8f250979c7c244e7b5b08d12783667576ee.camel@redhat.com>
-Subject: Re: [PATCH net-next v15 07/14] net: Add struct
- kernel_ethtool_ts_info
-From: Paolo Abeni <pabeni@redhat.com>
-To: Kory Maincent <kory.maincent@bootlin.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,  Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>,
-  Shannon Nelson <shannon.nelson@amd.com>, Alexandra Winter
- <wintera@linux.ibm.com>
-Date: Fri, 14 Jun 2024 16:02:04 +0200
-In-Reply-To: <20240612-feature_ptp_netnext-v15-7-b2a086257b63@bootlin.com>
-References: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
-	 <20240612-feature_ptp_netnext-v15-7-b2a086257b63@bootlin.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1718373845; c=relaxed/simple;
+	bh=rkF0k1RwPPKSYFrEbPqHA/ISHzb5dgdUG2YoZmRGpOs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=krUqAYtIL50u8YAygdQtws5oJup16iTn0ryULR/Ie2pWKY9YEZO3AXA2xuF+OBStsnbSsIXRfuj79r2O1sALWnOxKJC2qvYyNSY85HQJEvFccMOQ7w4VoEPplUlT8lFBEy9YKot1wZpAiGIKW+8rGA+VM91kvWbr4yu6Oco174E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=52.237.72.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrAB3eyqyTWxmpTbhBw--.18080S2;
+	Fri, 14 Jun 2024 22:03:30 +0800 (CST)
+Received: from pride-PowerEdge-R740.. (unknown [222.20.126.129])
+	by gateway (Coremail) with SMTP id _____wBXbyWxTWxm3_gXAQ--.29981S2;
+	Fri, 14 Jun 2024 22:03:30 +0800 (CST)
+From: Dongliang Mu <dzm91@hust.edu.cn>
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dongliang Mu <dzm91@hust.edu.cn>,
+	Qing Zhang <zhangqing@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs/zh_CN: add back the missing part in the English version
+Date: Fri, 14 Jun 2024 22:03:20 +0800
+Message-ID: <20240614140326.3028384-1-dzm91@hust.edu.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrAB3eyqyTWxmpTbhBw--.18080S2
+Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF4UZw4DJFyxXr4UJF4UCFg_yoW8Zw4Dpr
+	97GryxJFy8Zry3Jry3CF4DGFyUAF1xGayUCFySgw1avr1UJrW7tr42kF98KFyxWry0yFyj
+	9F4FkFWUCr1qy3JanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQIb7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
+	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
+	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26F
+	4j6r4UJwAv7VCjz48v1sIEY20_GFW3Jr1UJwAv7VCY1x0262k0Y48FwI0_Gr1j6F4UJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42
+	xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbW89tUUUUU==
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-On Wed, 2024-06-12 at 17:04 +0200, Kory Maincent wrote:
-> In prevision to add new UAPI for hwtstamp we will be limited to the struc=
-t
-> ethtool_ts_info that is currently passed in fixed binary format through t=
-he
-> ETHTOOL_GET_TS_INFO ethtool ioctl. It would be good if new kernel code
-> already started operating on an extensible kernel variant of that
-> structure, similar in concept to struct kernel_hwtstamp_config vs struct
-> hwtstamp_config.
->=20
-> Since struct ethtool_ts_info is in include/uapi/linux/ethtool.h, here
-> we introduce the kernel-only structure in include/linux/ethtool.h.
-> The manual copy is then made in the function called by ETHTOOL_GET_TS_INF=
-O.
->=20
-> Acked-by: Shannon Nelson <shannon.nelson@amd.com>
-> Acked-by: Alexandra Winter <wintera@linux.ibm.com>
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+The zh_CN kasan document misses the code change in commit eefe68280c94
+("kasan: Add documentation for CONFIG_KASAN_EXTRA_INFO").
 
-I think it would be nice if a few more vendors could actually step-in
-and test/ack the driver specific bits.
+Fix this by adding the translation of the missing part.
 
-Thanks,
+Note that this missing commit is found by checktransupdate.py
 
-Paolo
+Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+---
+ .../translations/zh_CN/dev-tools/kasan.rst     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/Documentation/translations/zh_CN/dev-tools/kasan.rst b/Documentation/translations/zh_CN/dev-tools/kasan.rst
+index 2b1e8f74904b..4491ad2830ed 100644
+--- a/Documentation/translations/zh_CN/dev-tools/kasan.rst
++++ b/Documentation/translations/zh_CN/dev-tools/kasan.rst
+@@ -235,6 +235,24 @@ slab对象的描述以及关于访问的内存页的信息。
+ 通用KASAN还报告两个辅助调用堆栈跟踪。这些堆栈跟踪指向代码中与对象交互但不直接
+ 出现在错误访问堆栈跟踪中的位置。目前，这包括 call_rcu() 和排队的工作队列。
+ 
++CONFIG_KASAN_EXTRA_INFO
++~~~~~~~~~~~~~~~~~~~~~~~
++
++启用 CONFIG_KASAN_EXTRA_INFO 选项允许 KASAN 记录和报告更多信息。目前支持的
++额外信息包括分配和释放时的 CPU 编号和时间戳。更多的信息可以帮助找到内核错误的原因，
++并将错误与其他系统事件关联起来，但代价是用额外的内存来记录更多信息（有关更多
++开销的细节，请参见 CONFIG_KASAN_EXTRA_INFO 选项的帮助文本）。
++
++以下为 CONFIG_KASAN_EXTRA_INFO 开启后的报告（仅显示不同部分）::
++
++    ==================================================================
++    ...
++    Allocated by task 134 on cpu 5 at 229.133855s:
++    ...
++    Freed by task 136 on cpu 3 at 230.199335s:
++    ...
++    ==================================================================
++
+ 实施细则
+ --------
+ 
+-- 
+2.43.0
 
