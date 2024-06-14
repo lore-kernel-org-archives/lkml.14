@@ -1,135 +1,193 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2D116DEB8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E5219E7C0;
+	Fri, 14 Jun 2024 16:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382788; cv=none; b=XaXKvL4nE6BLK1A2rph9GDryMaPnZM1qWBHA/8ce1GwQ4j1myxcK7LJg9Ojs38T+vmY3+eJoNvXCZnrZTaJPaXIvU/6BEPnHN75j9lmCwtgfbm3n+xrOIuPMV+gYmTtkA3D13ZdgYsWRMNUehLsnmeKGfl1D0SQHWBhuKwxT6/Q=
+	t=1718382824; cv=none; b=WGZR4mifcyoTqLoIHPBVzZHmyCnZahHEI2KlLX00S4nEzTwjVDa6nrzGHGEQgX4uFhGjnpuCuZ1pcw0NIvPXYDh2YcgRmljhNXp5JI3yabYkrjoFRli9ykGnz2X1oPXjotiBd8WnIJYHd+JfTaAAjz5mQ9QN99+wDK5ZkRxr1YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382788; c=relaxed/simple;
-	bh=Ce7aQQMMm7to8UHvxdl22nE43n7aWPIstOM/RKSjPnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L69+uOwWZHoNxZC0R/wMTPIU3VeIfYE2Xs8k/ZlmxVm2CAgp4K86TYe38GHjAZ+mZ05m8MJRGLXABW2oXr8PYfk2u+Qyap2Qa5orF3o9OCWvFtohF5IFUkOX/yANpYEI5Gvqv9ZAPletSYG5rVGCKMILAFDKHBEGgJmINLwUsWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=lNuW0Y5b; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1718382824; c=relaxed/simple;
+	bh=1JP+d9DTdvRLjHMvjKA/7X/zFiYpxE5Qp6pWEK6Iypg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l+Eaa56H4OuHOrqXlTHzf5CS3hPHHRyw2+SJ65s84dUvGf9xjhlhCXwAS5wIovxZiMLtyLIlRd6RFJ0+iwr713o394sf+HnpvDzKCt402pdrdBAgKNuuCmuQbHLpGZWcm6V3pq4I8cTarLamXmonWTxL5zqaq3i18xI37YcyBCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=NtWiVGJR; arc=none smtp.client-ip=80.12.242.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="lNuW0Y5b"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-6c4f3e0e3d2so1867232a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1718382786; x=1718987586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AmANL2aAdKz6zDNX67dUWd/cwt7M50wQJ2zAXtthGTw=;
-        b=lNuW0Y5b4W0WDuWkLXhclqE59b63A9+9Y0+xDYMMzpX58vX9RtseD5aL0tTG5El1oi
-         oMW22vQQRF440pOlNL4fstdNSNskhHYuEpxUOIjxpca1q/xo9eh6zh/5xjk1gbgwlUYC
-         1FBc7OO39jtYdOsml5JnPH9vQygGr2j19UMJt+ny+pRr9XaUqqccuoVUBkeKmfx5LZF9
-         smBfUq2AOPeWus2B6GUzoZvvKEN7Vtt9ob+7yAEUUaIVXtHL6UOzIAjjj28lYQAwmzsE
-         bAIymYQ26l1LYwcNtrO/pgXrqbuA0xOYolMHHzZPd/6vu3cRS7f8IGbhVyViURcuKjv8
-         ufdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718382786; x=1718987586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AmANL2aAdKz6zDNX67dUWd/cwt7M50wQJ2zAXtthGTw=;
-        b=jyjW0P5SRr1/aTfo90fJU/S3+/f0qmZMEHTYE6pzakeBqcC0QI96EoWkNCAYerG3zW
-         fM36enyHFrN0sgmY4v/xvJnoD+l+tbLdOWXaT/iwid0UYbMV0DXA18jClrBuq/gAuCEa
-         w5bakzzAHyUC/ui1K/KmqfJp0B65pjWZpQkGg2IsMusORfBF47vXIYbnLXRJ+/7phBci
-         o6Fhs8YH/pJFnZqgs3RYhIqyhcx2ADNUf9G3fraL3WryNCMIPeS0MjdsdyBA4k2UlyNy
-         2fh19zYeIxA2Ux/Va1cHcRwrrHwkHBdbr9mm5oW6Z/XsaLjcpq/NSBp9yINuw2haOPRL
-         /tkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNaHWlMS+xaItqRSnTKapGhBywCAICGrdZg18Blw9VHHPLlzhytyHcwDQ20uppa1L9mWHJIb7mdOrzQGpQ5WD+0m9cHqCwbYQwMw0W
-X-Gm-Message-State: AOJu0Ywqe0l6aoNAK5klT/Nfr380ruRza4MjXX6F0WJ/LNE6aGr0hqy0
-	x023E3nAeJ+6hKvv8CSPjhdpmH527v1jycQrUmyeFXFOBRtrB5mKO2m+yAk5Obk/s7o2SNf2pko
-	iCZi/6eu42/xiIm+rHShaH8xm3jCtdHSnuIhqCA==
-X-Google-Smtp-Source: AGHT+IEsB3qM/Oj0kPu1JXFIcCWyvaMDZToK1L7g/QZz8kOHLrMykq6jJMeOHC666aJoGrouLk9SPQrV4Ei7lkVn1oc=
-X-Received: by 2002:a17:90a:af90:b0:2c3:195b:dc36 with SMTP id
- 98e67ed59e1d1-2c4db12bb3fmr3373710a91.10.1718382786244; Fri, 14 Jun 2024
- 09:33:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="NtWiVGJR"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id I9qmsh97rXS9AI9qmsrRKe; Fri, 14 Jun 2024 18:32:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718382752;
+	bh=bro9slh5+EDW+lc1vukt0zA8l5VUvTm2syfdLEd7QbY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=NtWiVGJRnX0N0vQRD/f8okKtk/cYLhfwJ1ZBBbg+NPe/J9u0xszloqPqDHZ6Y26bY
+	 swjKE/40tm8cSteBDJq/gwM/zH3uZ0iHv/lyqMIarMV+zXbRQUgj3H0+6XdrjWEzY0
+	 2VGQX5SjonUd663BMB6b9r4MCmKKuhLudv3WC40pQMjuvA3fFbv6EcfuNidTiBenkD
+	 XkW5L8TxLrluteVX/W6gdnN5geuB6kKZYLxLZlIEbQSP1Xw1DNxCoNjXXuVyBlA1/I
+	 63W/IxDzYC35goyKZICQx7QsCx5hAD3Lo1sNeALCQ5KnuQYIfNxVmGsvmzwHWHLBBR
+	 jvxljyd8OZOdw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 14 Jun 2024 18:32:32 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	ocfs2-devel@lists.linux.dev
+Subject: [PATCH] ocfs2: Constify struct ocfs2_lock_res_ops
+Date: Fri, 14 Jun 2024 18:25:07 +0200
+Message-ID: <43d3e2ae3a97d3cbe93d6ba6ce48ae5ec04d7526.1718382288.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614151955.1949-1-jszhang@kernel.org>
-In-Reply-To: <20240614151955.1949-1-jszhang@kernel.org>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 14 Jun 2024 22:02:54 +0530
-Message-ID: <CAAhSdy0b16f8JAZ3r=drSuRA+hmWfGgAcX_scnH+=OOaaUh+dw@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/riscv-intc: Remove asmlinkage
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024 at 9:03=E2=80=AFPM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
->
-> The two functions riscv_intc_aia_irq() and riscv_intc_irq()
-> are only called by C functions.
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->
-> Hi riscv maintainers and all,
->
-> Related question:
->
-> I believe the asmlinkage in riscv is a nop, is it OK to
-> remove asmlinkage from all riscv code?
->
-> Anyway, no matter what will be the decision, it's correct to
-> remove asmlinkage in riscv intc driver as this patch does.
->
-> thanks
->
->  drivers/irqchip/irq-riscv-intc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
--intc.c
-> index 4f3a12383a1e..47f3200476da 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -26,7 +26,7 @@ static unsigned int riscv_intc_nr_irqs __ro_after_init =
-=3D BITS_PER_LONG;
->  static unsigned int riscv_intc_custom_base __ro_after_init =3D BITS_PER_=
-LONG;
->  static unsigned int riscv_intc_custom_nr_irqs __ro_after_init;
->
-> -static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
-> +static void riscv_intc_irq(struct pt_regs *regs)
->  {
->         unsigned long cause =3D regs->cause & ~CAUSE_IRQ_FLAG;
->
-> @@ -34,7 +34,7 @@ static asmlinkage void riscv_intc_irq(struct pt_regs *r=
-egs)
->                 pr_warn_ratelimited("Failed to handle interrupt (cause: %=
-ld)\n", cause);
->  }
->
-> -static asmlinkage void riscv_intc_aia_irq(struct pt_regs *regs)
-> +static void riscv_intc_aia_irq(struct pt_regs *regs)
->  {
->         unsigned long topi;
->
-> --
-> 2.43.0
->
+"struct ocfs2_lock_res_ops" are not modified in this driver.
 
-Yes, these asmlinkage can be removed.
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-Previously, we used to call these handlers from low-level trap handlers
-which is not true anymore.
+In order to do it, "struct ocfs2_lock_res" also needs to be adjusted to
+this new const qualifier.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  83038	   2632	    400	  86070	  15036	fs/ocfs2/dlmglue.o
 
-Regards,
-Anup
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  83806	   1992	    272	  86070	  15036	fs/ocfs2/dlmglue.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ fs/ocfs2/dlmglue.c | 28 ++++++++++++++--------------
+ fs/ocfs2/ocfs2.h   |  2 +-
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index cb40cafbc062..da78a04d6f0b 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -221,12 +221,12 @@ struct ocfs2_lock_res_ops {
+  */
+ #define LOCK_TYPE_USES_LVB		0x2
+ 
+-static struct ocfs2_lock_res_ops ocfs2_inode_rw_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_inode_rw_lops = {
+ 	.get_osb	= ocfs2_get_inode_osb,
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_inode_inode_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_inode_inode_lops = {
+ 	.get_osb	= ocfs2_get_inode_osb,
+ 	.check_downconvert = ocfs2_check_meta_downconvert,
+ 	.set_lvb	= ocfs2_set_meta_lvb,
+@@ -234,50 +234,50 @@ static struct ocfs2_lock_res_ops ocfs2_inode_inode_lops = {
+ 	.flags		= LOCK_TYPE_REQUIRES_REFRESH|LOCK_TYPE_USES_LVB,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_super_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_super_lops = {
+ 	.flags		= LOCK_TYPE_REQUIRES_REFRESH,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_rename_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_rename_lops = {
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_nfs_sync_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_nfs_sync_lops = {
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_trim_fs_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_trim_fs_lops = {
+ 	.flags		= LOCK_TYPE_REQUIRES_REFRESH|LOCK_TYPE_USES_LVB,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_orphan_scan_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_orphan_scan_lops = {
+ 	.flags		= LOCK_TYPE_REQUIRES_REFRESH|LOCK_TYPE_USES_LVB,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_dentry_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_dentry_lops = {
+ 	.get_osb	= ocfs2_get_dentry_osb,
+ 	.post_unlock	= ocfs2_dentry_post_unlock,
+ 	.downconvert_worker = ocfs2_dentry_convert_worker,
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_inode_open_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_inode_open_lops = {
+ 	.get_osb	= ocfs2_get_inode_osb,
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_flock_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_flock_lops = {
+ 	.get_osb	= ocfs2_get_file_osb,
+ 	.flags		= 0,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_qinfo_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_qinfo_lops = {
+ 	.set_lvb	= ocfs2_set_qinfo_lvb,
+ 	.get_osb	= ocfs2_get_qinfo_osb,
+ 	.flags		= LOCK_TYPE_REQUIRES_REFRESH | LOCK_TYPE_USES_LVB,
+ };
+ 
+-static struct ocfs2_lock_res_ops ocfs2_refcount_block_lops = {
++static const struct ocfs2_lock_res_ops ocfs2_refcount_block_lops = {
+ 	.check_downconvert = ocfs2_check_refcount_downconvert,
+ 	.downconvert_worker = ocfs2_refcount_convert_worker,
+ 	.flags		= 0,
+@@ -510,7 +510,7 @@ static inline void ocfs2_init_start_time(struct ocfs2_mask_waiter *mw)
+ static void ocfs2_lock_res_init_common(struct ocfs2_super *osb,
+ 				       struct ocfs2_lock_res *res,
+ 				       enum ocfs2_lock_type type,
+-				       struct ocfs2_lock_res_ops *ops,
++				       const struct ocfs2_lock_res_ops *ops,
+ 				       void *priv)
+ {
+ 	res->l_type          = type;
+@@ -553,7 +553,7 @@ void ocfs2_inode_lock_res_init(struct ocfs2_lock_res *res,
+ 			       unsigned int generation,
+ 			       struct inode *inode)
+ {
+-	struct ocfs2_lock_res_ops *ops;
++	const struct ocfs2_lock_res_ops *ops;
+ 
+ 	switch(type) {
+ 		case OCFS2_LOCK_TYPE_RW:
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 8fe826143d7b..51c52768132d 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -154,7 +154,7 @@ struct ocfs2_lock_stats {
+ 
+ struct ocfs2_lock_res {
+ 	void                    *l_priv;
+-	struct ocfs2_lock_res_ops *l_ops;
++	const struct ocfs2_lock_res_ops *l_ops;
+ 
+ 
+ 	struct list_head         l_blocked_list;
+-- 
+2.45.2
+
