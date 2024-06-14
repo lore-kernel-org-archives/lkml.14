@@ -1,137 +1,147 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787091B0118
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EB81B1401;
+	Fri, 14 Jun 2024 17:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386385; cv=none; b=Yqca2xo5xTMcvW1yC+/OtVqMAYmV4c9Tu42aEGhXJukR2vXJKI96P9z5sWhhzOc6SHHAopn299aVXJLVViVbVshFZm3SoDuIgUlwOTTeT2Wo0STSdTXEJRkoQRXEwDXyfVS+Ufg2alFbNKsEz1ljNACwaVu2+DzjhMMfIlQ68eA=
+	t=1718386386; cv=none; b=USb3Lp11R2rF0Q+ZcLxYPffUiUNo/FvN4VlFJo2o6aor6TxR0f+thCePbQwi6TEhv/JDAYbTE0iWclCkQpqKZKJU+WNzmrVmz1yqqsof1HzaMOBBoFyp/dghLY8mDpSYyPvdgEud0puvQHPSnqBgXeEtG5IpdgD4PtxOz/t+q+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386385; c=relaxed/simple;
-	bh=5JfwGvXC3wQ1kOI8Zh+NA4+SfUuzSprZAy/CCQ3H0sU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKWEj7zinPBV+qNBo0XMwWJmI7dLcBOzF0EGAoTL50xcYvGmYV4Lf9h3iAGTe2uxbGHBFJkOlKoXypsc3mpLF4N1uUbj6sEjh6WXTLVGMH8Q8cNI0tTwuMoImflsrh6LdHnMMumaZzCZMiBYl3hBzMN8QCbFTH3cmsDVCiB2Yo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k0bI5cyJ; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718386386; c=relaxed/simple;
+	bh=ibBd7ERnfqbQWTRVTjNpVFAoM7EyN189jsy3QZ3LOgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mNSVXhchbTRrd82k7nRloGCz/IxZSqLnzKU2NFFCJCV805Y2s2LIH6Nsla5JHpk9caAvxttdG2Sbo8bl6Vtb6k65YSdyT6CEOYwsW/G7+M8pPluTCfVvDyWxK44canoujNZ2jWD9tYfrrVgwiuprE8ltxxxy4UHHQT9LqA/CiAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JwwhzYuM; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k0bI5cyJ"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ebeefb9a6eso24038181fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718386381; x=1718991181; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6A2ldgCGRbiaAOg5pCXVmpJrxkciuNJ03uPiR1OSrWk=;
-        b=k0bI5cyJ2RWxOTjr3j4LCy4mtrzAM7so5zwcCWFMg4VBkr2kmFAwaKAlFDUq0QCaoi
-         gGAYCaveZxfLEVw5aVNaNds0zgf0HRpn7hgH5OG2zQ5rsn4ytzE2yq6xLB6hqMHj4QUm
-         fqG0C4bq+c3jruCIh3JpdFZkizSZvMCLMAK+As1d/yGfzJDSf2uSXQ/g9C1HaOwRhWDo
-         3vZeVr5K7veTuO4PiwAj+9kJTGOyi/a/zjeiEb1LrtV4QhXNUNNRg3YtaSokPm92PMPa
-         3oSBQ0K3pm6nJf+jB6IpMJkTzM3gOCdiGGzgUaHyyZot75cX/YZujXaxZqoNF2ygWdxW
-         vM2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718386381; x=1718991181;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6A2ldgCGRbiaAOg5pCXVmpJrxkciuNJ03uPiR1OSrWk=;
-        b=UdWIgFiU76CT8e8EZrVHdo0otdYCqXAEpwce7v+PfiEeLQynwhqovTcrnkbCuqw6Lj
-         VtVQ2S0FaL5kwc29UWuo0WBfBXUR3zVfC9bWgmxQOkJroQ/pNuV6/tuzNETQeZAazM/x
-         4z7gcuCIs3MEmT/2j7CLsIFLwFQ61IcL6K+E7YKB7XdidqM8mC/RmNgCZ5JdjhIsYvgj
-         RWdO5vJ7C2avQWfklt3tWg73ESc4yDi2JrEy9MVfd3DQxdhJqM1CGkgqzkVckBXbD1XE
-         NzILrJ4SmgsivNX5kXbdJtyIqXzsf0mvSqn/g2d2Z5mymti2xuZ+au+/PLqvvuk9RB88
-         UcOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVAVBIoPitkoVB41na0YpgoUwz0ft/J9KfAGM4hj7SEsdlBBm9jFtW8ZzZsEkoRXHOUmEB7g4H5j/daSAtZGfwY2k6Wt9gWmx6PIQC
-X-Gm-Message-State: AOJu0YxYXTZZ3LK8wAOv85mGs+GqX8pRGVPfAcSTjgAyhYaSpcjAkJy8
-	ltX+Dk/8F2YhO8oqkjT2A9JX3MlauBj490mrlY6JA68KgvaEBdLoNk49BRp4c1I=
-X-Google-Smtp-Source: AGHT+IGGflvW9k9jMoe4a2j7bLc5DjsbVsi5TuTQwGN5Sq94prukV63YQPojspKpGvkvTN5wWda3rw==
-X-Received: by 2002:a05:651c:220b:b0:2ec:165a:2250 with SMTP id 38308e7fff4ca-2ec165a2453mr18905411fa.6.1718386381498;
-        Fri, 14 Jun 2024 10:33:01 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c06fecsm5894881fa.49.2024.06.14.10.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 10:33:01 -0700 (PDT)
-Date: Fri, 14 Jun 2024 20:32:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, kernel-dev@igalia.com, 
-	Melissa Wen <mwen@igalia.com>, alexander.deucher@amd.com, christian.koenig@amd.com, 
-	Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>, daniel@ffwll.ch, 
-	Daniel Stone <daniel@fooishbar.org>, 'Marek =?utf-8?B?T2zFocOhayc=?= <maraeo@gmail.com>, 
-	Dave Airlie <airlied@gmail.com>, ville.syrjala@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>, 
-	Joshua Ashton <joshua@froggi.es>, Michel =?utf-8?Q?D=C3=A4nzer?= <michel.daenzer@mailbox.org>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>
-Subject: Re: [PATCH v6 0/8] drm: Support per-plane async flip configuration
-Message-ID: <lxfxqbax6azdpeamwm2qqv2tulgxrb7y3qzb4ir4myt6x5sqez@imd3yd5mbk7u>
-References: <20240614153535.351689-1-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JwwhzYuM"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 7DC07FF80A;
+	Fri, 14 Jun 2024 17:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718386383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F4UTRwPoFTKHJqdbzIHC3NBEYq/X/HYViIjDNKKF0PI=;
+	b=JwwhzYuMC8Ol30/NGIcS3ArYrXZ4xbLT093w7YISLo/DU4gvnghJ+scUFMWBB5DlfW+9ke
+	SwSo9g14jsySVjdYBqOqF/fJhd5GQHzTOpc2QQVIET9bKEPya7d7dmevq/G2adZhDUWqTc
+	OUZrpK2Xp7l8ABxLrenaUHRuEO8ykLlMMepEGUhoigjQMcQKHMTSY0YzzdL0BlKuQIjYUy
+	18CPFExQFfRu9GWxlCn0OTU8tp17qyWGPY3i0CC1aTKc99JCAG+WcACcuhZCGTXgUcKH+J
+	rGOGUdk9uPI4n1rwhiccdOm4XYj7EbTOPtBsAessVOqc37LtNU9Lc96wqJbN0g==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 20/23] irqdomain: Remove __irq_domain_add()
+Date: Fri, 14 Jun 2024 19:32:21 +0200
+Message-ID: <20240614173232.1184015-21-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240614173232.1184015-1-herve.codina@bootlin.com>
+References: <20240614173232.1184015-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240614153535.351689-1-andrealmeid@igalia.com>
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, Jun 14, 2024 at 12:35:27PM GMT, André Almeida wrote:
-> AMD hardware can do async flips with overlay planes, but currently there's no
-> easy way to enable that in DRM. To solve that, this patchset creates a new
-> drm_plane field, bool async_flip, that allows drivers to choose which plane can
-> or cannot do async flips. This is latter used on drm_atomic_set_property when
-> users want to do async flips.
-> 
-> Patch 1 allows async commits with IN_FENCE_ID in any driver.
-> 
-> Patches 2 to 7 have no function change. As per current code, every driver that
-> allows async page flips using the atomic API, allows doing it only in the
-> primary plane. Those patches then enable it for every driver.
-> 
-> Patch 8 finally enables async flip on overlay planes for amdgpu.
-> 
-> Changes from v5:
-> - Instead of enabling plane->async_flip in the common code, move it to driver
-> code.
-> - Enable primary plane async flip on every driver
-> https://lore.kernel.org/dri-devel/20240612193713.167448-1-andrealmeid@igalia.com/
-> 
-> André Almeida (8):
->   drm/atomic: Allow userspace to use explicit sync with atomic async
->     flips
->   drm: Support per-plane async flip configuration
->   drm/amdgpu: Enable async flips on the primary plane
->   drm: atmel-hlcdc: Enable async flips on the primary plane
->   drm/i915: Enable async flips on the primary plane
->   drm/nouveau: Enable async flips on the primary plane
->   drm/vc4: Enable async flips on the primary plane
->   drm/amdgpu: Make it possible to async flip overlay planes
-> 
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 2 ++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c         | 3 +++
->  drivers/gpu/drm/drm_atomic_uapi.c                       | 8 +++++---
->  drivers/gpu/drm/i915/display/i9xx_plane.c               | 3 +++
->  drivers/gpu/drm/nouveau/dispnv04/crtc.c                 | 4 ++++
->  drivers/gpu/drm/nouveau/dispnv50/wndw.c                 | 4 ++++
->  drivers/gpu/drm/vc4/vc4_plane.c                         | 4 +++-
+__irq_domain_add() has been replaced by irq_domain_instanciate() and so,
+it is no more used.
 
-The main question is why only these drivers were updated.
+Simply remove it.
 
->  include/drm/drm_plane.h                                 | 5 +++++
->  8 files changed, 29 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.45.2
-> 
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+---
+ include/linux/irqdomain.h |  6 +-----
+ kernel/irq/irqdomain.c    | 33 ---------------------------------
+ 2 files changed, 1 insertion(+), 38 deletions(-)
 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 1cd1cbf57736..401dca796633 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -184,7 +184,7 @@ enum {
+ 	/* Irq domain is hierarchical */
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
+ 
+-	/* Irq domain name was allocated in __irq_domain_add() */
++	/* Irq domain name was allocated internally */
+ 	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+ 
+ 	/* Irq domain is an IPI domain with virq per cpu */
+@@ -307,10 +307,6 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info);
+ struct irq_domain *devm_irq_domain_instantiate(struct device *dev,
+ 					       const struct irq_domain_info *info);
+ 
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+-				    irq_hw_number_t hwirq_max, int direct_max,
+-				    const struct irq_domain_ops *ops,
+-				    void *host_data);
+ struct irq_domain *irq_domain_create_simple(struct fwnode_handle *fwnode,
+ 					    unsigned int size,
+ 					    unsigned int first_irq,
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index e1ceb2ba2699..53c38f951348 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -317,39 +317,6 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info)
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_instantiate);
+ 
+-/**
+- * __irq_domain_add() - Allocate a new irq_domain data structure
+- * @fwnode: firmware node for the interrupt controller
+- * @size: Size of linear map; 0 for radix mapping only
+- * @hwirq_max: Maximum number of interrupts supported by controller
+- * @direct_max: Maximum value of direct maps; Use ~0 for no limit; 0 for no
+- *              direct mapping
+- * @ops: domain callbacks
+- * @host_data: Controller private data pointer
+- *
+- * Allocates and initializes an irq_domain structure.
+- * Returns pointer to IRQ domain, or NULL on failure.
+- */
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+-				    irq_hw_number_t hwirq_max, int direct_max,
+-				    const struct irq_domain_ops *ops,
+-				    void *host_data)
+-{
+-	struct irq_domain_info info = {
+-		.fwnode = fwnode,
+-		.size = size,
+-		.hwirq_max = hwirq_max,
+-		.direct_max = direct_max,
+-		.ops = ops,
+-		.host_data = host_data,
+-	};
+-	struct irq_domain *d;
+-
+-	d = irq_domain_instantiate(&info);
+-	return IS_ERR(d) ? NULL : d;
+-}
+-EXPORT_SYMBOL_GPL(__irq_domain_add);
+-
+ /**
+  * irq_domain_remove() - Remove an irq domain.
+  * @domain: domain to remove
 -- 
-With best wishes
-Dmitry
+2.45.0
+
