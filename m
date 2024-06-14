@@ -1,37 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E971107B6;
-	Fri, 14 Jun 2024 14:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77D910979;
+	Fri, 14 Jun 2024 14:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718375611; cv=none; b=EG4vzG9iRUmzGZMcFmjQ8d0Ml2cwhzXYuDl6wHM0Kl6LYlxP5b7W0bbeAavKtFOjdQzHK4jbBN4+Kk0MT1pxRBM2YO6Qqb7QSJXRJrxbWICeBDzGXl2bB9olPND4JwVzzHgVrnXU3eQeW68PnCtGZ7gTEjAEeL1CnnkJkmoULyg=
+	t=1718375611; cv=none; b=KT7c05h5aFb8bmDdCShk3cNCz1SPNez/nzMMauCxNAik0h6xcu6YQA5QKoeTnRWGFPHfPAL+tsxfKIyfhu/RwVl2zrBe1CHKMzP9Njno/146fA+tBDceKYOl9pS0/BHO3kMc+PXmxDKLthKYHJR/C9/IhKpY/oDowb5p78eMAQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718375611; c=relaxed/simple;
-	bh=AcRAxAoyH4WPbHLe0vulxYJCcAVateoH9C9veYtFfgY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U3wZAqpEwE/mJ36BYCh9oFpg0BU3DLt2vyTM/QX91DGSwQuEoZ0F/fBUjJYTw2pi52qK94pt7c+WJkFjL+GqCnphR9vY0i1xTROL4x0pL3sGuSo1Gw4a1OhgFtKxLc7B5vOSJ6NvIkGOQpp7dfsYQItQipn81ZT+CFA9Zend1DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VLtPlm38; arc=none smtp.client-ip=217.70.183.197
+	bh=NEu+v449TWFePr40Prcd/PKsp0nXuwloceBfUZn5F9Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DzlyS16Ju5+j+4pHGhBIYfoHLb/KcHazNJ4e5z8HgOJ69ukHCQyVKbYrF44zyRiZ6xCskBUQL8uuPYL8ISRDylMCuYS4x/pE141SuNB3mD2LG1R1MqNmbImkVrUxAHiJKKkJwgxGWo5OmD6Mjm0KuqYMuixsqc1AxeMCqBPyCoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RpzXopFn; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VLtPlm38"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F01741C000B;
-	Fri, 14 Jun 2024 14:33:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RpzXopFn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C145D1C000D;
+	Fri, 14 Jun 2024 14:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718375600;
+	t=1718375602;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=95y7WBvw2tiKz2nNdi0RVJ6/9i6j6Kbk35j2uEz1F7A=;
-	b=VLtPlm38x+P3jJSZHGFw2EZIr6P4YePooxycATz7/YcjXwOML1LvrK11LSLRSDY5vOKc48
-	z/EOHb5QfHYpnMYndf1dyxR/K4RgsODA+vIe3WJUymFilsNJ4m87Ywf2WPr3vkxyeJQTN6
-	pkO/hu9laBrgM7auzFL3gDBWEaF9rT8+l0ML4+udoLjPFMCf96vQ+MVRKI5v/JHoQ97Bcg
-	vBtR0qz/cqiwzlswYjTWBqyoYCWsZQX2168f7u6zAMDeNzKEu8vCKM0bmb29BAcNWjBUKa
-	t4MZbR+hsz3nu7MbM0AvUiYw65YM+dh3MtMpUuY9TImWgQ9NhcPPtQZsFegedw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rsc210g2S3Of6rk4P/OtxrijW8772bJQXkzbN2fK+Tk=;
+	b=RpzXopFnHWccf3OV0pXRiLhSCpdV8GkItgXASkuBf7QMCaZHq3NhEPFn4HsYV6S4UTom2t
+	6qFozCt+XaDdqlB0k6M9MMp3H4LsFfoCTmPWpkEmJoBcKK9n4mBSyqs4bJqgZAaIS0XO24
+	+PQ4IbZ2xczZ7qD9xo17F+XPTbxT40CPTzmmYNKFajpYMe3XPZNZx37njy4iidTIJMMAfJ
+	nier5khqA3CQqSpruWI58lV0opPLXOiDXEDxIrTuTQHvMIvtxOVg2Tk6S17Tm95lyO2jQq
+	IKCJcX72Pa+HWGV1pp4gcUi7vMY2/GcQQEtJdqvytJOZ2jodg8J2jlKGCcYDag==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net-next v3 0/7] net: pse-pd: Add new PSE c33 features
-Date: Fri, 14 Jun 2024 16:33:16 +0200
-Message-Id: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+Date: Fri, 14 Jun 2024 16:33:18 +0200
+Subject: [PATCH net-next v3 2/7] netlink: specs: Expand the PSE netlink
+ command with C33 new features
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,11 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAKxUbGYC/3XNTQ7CIBAF4Ks0rMVQfmzrynsY0wCdWhKFBhBrm
- t5dZGNcuJjFy8v7ZkUBvIGAjtWKPCQTjLM5sF2F9CTtFbAZckaUUE44FXgEGR8e+tl97gm+13L
- GdQsdUbKhHVcob2cPo1mKe0YWIrawRHTJzWRCdP5VHqa69MUWtPtjpxoTTDRX9SA6wVR7Us7Fm
- 7F77e7FTPTrHEjzz6HZ0YRpOoBqmVS/zrZtb8Bka3wOAQAA
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240614-feature_poe_power_cap-v3-2-a26784e78311@bootlin.com>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+In-Reply-To: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
@@ -57,53 +58,96 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This patch series adds new c33 features to the PSE API.
-- Expand the PSE PI informations status with power, class and failure
-  reason
-- Add the possibility to get and set the PSE PIs power limit
+Expand the c33 PSE attributes with PSE class, extended state information
+and power consumption.
 
-Changes in v3:
-- Use u32 instead of u8 size for c33 pse extended state and substate.
-- Reformat the state and substate enumeration to follow Oleksij proposal which
-  is more IEEE 802.3 standard compliant
-- Sent the first patch standalone in net.
-- Link to v2: https://lore.kernel.org/r/20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-get
+	     --json '{"header":{"dev-name":"eth0"}}'
+{'c33-pse-actual-pw': 1700,
+ 'c33-pse-admin-state': 3,
+ 'c33-pse-pw-class': 4,
+ 'c33-pse-pw-d-status': 4,
+ 'header': {'dev-index': 4, 'dev-name': 'eth0'}}
 
-Changes in v2:
-- Use uA and uV instead of mA and mV to have more precision in the power
-  calculation. Need to use 64bit variables for the calculation.
-- Modify the pd-92x0behavior in case of setting the current out of the
-  available ranges. Report an error now.
-- Link to v1: https://lore.kernel.org/r/20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-get
+	     --json '{"header":{"dev-name":"eth0"}}'
+{'c33-pse-admin-state': 3,
+ 'c33-pse-ext-state': 5,
+ 'c33-pse-ext-substate': 5,
+ 'c33-pse-pw-d-status': 2,
+ 'header': {'dev-index': 4, 'dev-name': 'eth0'}}
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Kory Maincent (7):
-      net: ethtool: pse-pd: Expand C33 PSE status with class, power and extended state
-      netlink: specs: Expand the PSE netlink command with C33 new features
-      net: pse-pd: pd692x0: Expand ethtool status message
-      net: pse-pd: Add new power limit get and set c33 features
-      net: ethtool: Add new power limit get and set features
-      netlink: specs: Expand the PSE netlink command with C33 pw-limit attributes
-      net: pse-pd: pd692x0: Enhance with new current limit and voltage read callbacks
 
- Documentation/netlink/specs/ethtool.yaml     |  40 ++++
- Documentation/networking/ethtool-netlink.rst |  45 +++++
- drivers/net/pse-pd/pd692x0.c                 | 292 ++++++++++++++++++++++++++-
- drivers/net/pse-pd/pse_core.c                | 172 +++++++++++++++-
- include/linux/ethtool.h                      |  16 ++
- include/linux/pse-pd/pse.h                   |  42 ++++
- include/uapi/linux/ethtool.h                 | 212 +++++++++++++++++++
- include/uapi/linux/ethtool_netlink.h         |   5 +
- net/ethtool/pse-pd.c                         |  69 ++++++-
- 9 files changed, 874 insertions(+), 19 deletions(-)
+Change in v3:
+- Update c33-pse-ext-state and c33-pse-ext-substate to u32
+- Add enum for listing c33-pse-ext-state
 ---
-base-commit: 94720a40bd1c6de0780f90f4f68d76be1d2c6bd8
-change-id: 20240425-feature_poe_power_cap-18e90ba7294b
+ Documentation/netlink/specs/ethtool.yaml | 35 ++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Best regards,
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 00dc61358be8..0ff27319856c 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -20,6 +20,20 @@ definitions:
+     name: header-flags
+     type: flags
+     entries: [ compact-bitsets, omit-reply, stats ]
++  -
++    name: c33-pse-ext-state
++    enum-name:
++    type: enum
++    entries: [ none,
++               ethtool_c33_pse_ext_state_class_num_events,
++               ethtool_c33_pse_ext_state_error_condition,
++               ethtool_c33_pse_ext_state_mr_pse_enable,
++               ethtool_c33_pse_ext_state_option_detect_ted,
++               ethtool_c33_pse_ext_state_option_vport_lim,
++               ethtool_c33_pse_ext_state_ovld_detected,
++               ethtool_c33_pse_ext_state_pd_dll_power_type,
++               ethtool_c33_pse_ext_state_power_not_available,
++               ethtool_c33_pse_ext_state_short_detected ]
+ 
+ attribute-sets:
+   -
+@@ -922,6 +936,23 @@ attribute-sets:
+         name: c33-pse-pw-d-status
+         type: u32
+         name-prefix: ethtool-a-
++      -
++        name: c33-pse-pw-class
++        type: u32
++        name-prefix: ethtool-a-
++      -
++        name: c33-pse-actual-pw
++        type: u32
++        name-prefix: ethtool-a-
++      -
++        name: c33-pse-ext-state
++        type: u32
++        name-prefix: ethtool-a-
++        enum: c33-pse-ext-state
++      -
++        name: c33-pse-ext-substate
++        type: u32
++        name-prefix: ethtool-a-
+   -
+     name: rss
+     attributes:
+@@ -1611,6 +1642,10 @@ operations:
+             - c33-pse-admin-state
+             - c33-pse-admin-control
+             - c33-pse-pw-d-status
++            - c33-pse-pw-class
++            - c33-pse-actual-pw
++            - c33-pse-ext-state
++            - c33-pse-ext-substate
+       dump: *pse-get-op
+     -
+       name: pse-set
+
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.34.1
 
