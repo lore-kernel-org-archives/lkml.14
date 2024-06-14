@@ -1,131 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BDC1849;
-	Fri, 14 Jun 2024 08:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05BC190066;
+	Fri, 14 Jun 2024 08:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718354253; cv=none; b=qVpHxb06o/CNv/e/wjbAAra23FA5c9GHQyuDkZ2S4KGl5Rl3Ly/PfLJa2shkh9MN4DhAiCBSiSe9hR4XEGHdCMfYOKKdOzMYrAgBqQd0vw5btQykblkY/PEb1n1UjjJx9SmbpFHkL+e1hRwKM70NcszWAyDIvNTUaOYlwjoLENo=
+	t=1718354286; cv=none; b=qOvnkT1PtTsRwAzp9OjAqsiPlehnp4gIXP/T97L3TUMvO2HgJvje6XyBmuyTwYCnmIS7AbLle/MYG51ySl4fRsEsiXPKBwuB243ADrdHU5/hHzdctIPZ62MmEDNyGpk0GAARpnPAyyhDTOnZozZn6pWMdZHGfgnkjPxx932jJPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718354253; c=relaxed/simple;
-	bh=IE56RPoqKyRQy8bsSYTv0dvMwFiHl4QLf2TB7HaBQLQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu7t63/NqJwZnhLfduzfD0JvGcSlHoRjgwFni/WMEGnBTrsnKC9qhoGb4R5oqGohz4uLAe/Er3bpRPU/g1RL29c1moApE9nsDK+bK+ihJ8P+d3d69hI7O56VRo76IWi9B02WM65dcCzNYkTSadnp4+kd9YJczXaIEC0q1Y5A3XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=YW2yeP5p; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718354286; c=relaxed/simple;
+	bh=ivcQjGPwDsRL7TjnjALyJ+4Yl01a48suFxsWagd9HTs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WBoD8T0i6OP3jlgPs775bz8XcjkwdYI6GbnihpSK9CDgR/WHA/7GZzcZiPcq/IjQC0dkSyRySgYMIuNa0LbG5Zl17sWtVxZdIJUcfpX1sOO1SDfbK13OuIWhMoA68xKlY124F0lQHivlAV5mkO6NO9W+GmgKKXm96DvllXPn6IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=tTgNOnuY; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YW2yeP5p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718354251; x=1749890251;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IE56RPoqKyRQy8bsSYTv0dvMwFiHl4QLf2TB7HaBQLQ=;
-  b=YW2yeP5pZzSts/P3luQ0AgIei6MKe5tpWM8hJQ+kw8c6ATsNU6apzhIu
-   h7DM5EHCLKgPNQz8clwUulwuJRbIc/Qg2yhzHj6O6JaeBebqclx4mODHV
-   32AAQ5nJIUIBzcKhETJO/sB04O2ysehK8Ptb+1J+YBboh6kfrSdncuFuu
-   3H1/fsocS4RyHltLqWbq2lMRhBB2Er6EHPz2kOHtLJ6CF0TkRS6hUca4o
-   7cDFsxnz0JvYE8LldRGeW1eSVoES9iAwC+pIJ8kSiqgrVdn2KAJiw3d6C
-   pp5q8Bv62572VXlW5kj94xxkeYgq86PPKQxJhDOEYEy3xUKSLNHqnHGMA
-   Q==;
-X-CSE-ConnectionGUID: NG7Mft5MRmOGOwVcOw10MA==
-X-CSE-MsgGUID: T/1ZNyhISGCswnvApzi+sQ==
-X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="asc'?scan'208";a="194925024"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 01:37:28 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Jun 2024 01:37:19 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 14 Jun 2024 01:37:13 -0700
-Date: Fri, 14 Jun 2024 09:36:55 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Jesse Taube <jesse@rivosinc.com>
-CC: <linux-riscv@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Evan Green
-	<evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, Charlie Jenkins
-	<charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu
-	<andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>, Greentime Hu
-	<greentime.hu@sifive.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
-	<bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin
-	<costa.shul@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Baoquan
- He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>, Zong Li
-	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Ben Dooks
-	<ben.dooks@codethink.co.uk>, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Erick Archer
-	<erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] RISC-V: Detect unaligned vector accesses
- supported.
-Message-ID: <20240614-viral-dinghy-71d5f6585a55@wendy>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
- <20240613191616.2101821-5-jesse@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="tTgNOnuY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718354268; x=1718959068; i=spasswolf@web.de;
+	bh=J2MGAZdIrgD9+Bzu7JaNXHJzpLQMTsnyYBIuffMdmcg=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:Reply-To:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=tTgNOnuY/3VeNmyH6sgKjfnby59kCnHstjO295eoL0ONf4BARwWYgjH9TzEx1EHp
+	 wvbepV0+SltAy5vol6tFW78AoZ7m7jMiu1DsIeO/4Umaz2HsMQM+qzv92SIJOTjYB
+	 InMCPsDTdiQZ7n19DIyjFJopORdRFeB38aTpTZhc1TtqSb2bK7Rgr1qq4TglLViNR
+	 CPBxTn5r2c9XbXFcoJb5YgPJgQWnM+dFBMr0qxEhWFV+6OHwxjAVivlY74ch1F3kY
+	 mW9SAS76XJYi1hzwKjpcRwZluETtW1G9wtTT2ZU5XKQlycbw949f5TBE3cm4EW53N
+	 66fzmsFUU6Jhzj9l1g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([84.119.92.193]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mx0N5-1sctZX2HF5-0149fu; Fri, 14
+ Jun 2024 10:37:48 +0200
+Message-ID: <e18bac6a57a4a45260e7282a70173fa6226955bc.camel@web.de>
+Subject: Re: commit 1c29a32ce65f4cd0f1c causes Bad rss-counter state and
+ firefox-esr crash in linux-next-20240613
+From: Bert Karwatzki <spasswolf@web.de>
+Reply-To: 20240613170351.cc3e7ccfa1bb198b57f31352@linux-foundation.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Date: Fri, 14 Jun 2024 10:37:48 +0200
+In-Reply-To: <20240613170351.cc3e7ccfa1bb198b57f31352@linux-foundation.org>
+References: <f4ea65e28ac47e6acb13f401f46a414a2f50f7bf.camel@web.de>
+	 <20240613170351.cc3e7ccfa1bb198b57f31352@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.2-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Ytzm/oHaDkbsSGqU"
-Content-Disposition: inline
-In-Reply-To: <20240613191616.2101821-5-jesse@rivosinc.com>
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:mWMPKDUBfStEkePPwT5f6bujc2xmxGr7EJ1wcXZs4QQMK9Z4MoH
+ vcJym9ih6ks5ieaFZXNNJ53lo3r+Q3SYt5EdHgoT0H62YF/aYgx/qycDUDCEYED/UaOA4DQ
+ i7e+qjpTiO6UYMPeApp7NtwcWSWFji2j6LVi1MN3FOwhQlH8wOwSgQUnpvxn7Qt97pF/Rii
+ GtsDg1UkOB1DIos8OMYAw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sdtRHhsobkg=;/Qnt+Ms2qsdIGjv5ehDrLNShe4I
+ N+AFcFsQkKTJHFZ7WiExMxA1TNNSnl3Y/LWUqV8y3hmbRAXNTYIyR/X9sAfpYiHMpPGxu72Qu
+ C8Z1AFizngbn49PE3pbsMm9KTwMq6TB8hgTPVxSZCUuRo4ZKoffbuDVOdDK2Fc+/6CMFwx4fq
+ o9JADdq/v1WRkAV4F35aCdZyRHk2aZfLl3pQbMxytobKLANwoQo9PVfJBVGKr1him+U4LyrYN
+ 0GpznwqXIjjw39VW21y/Yc9MI/XO3lYF6AdBHJ9mZlBdqyB1bqUDLFPWIriBsXCwl2pybbjf4
+ XHI+CTaxNwuTqA7T5XnQklovUXFSBObFN4j/0kYvRw8Dtc0hArsvRaV0Wn730c6AfzKrEhUx9
+ XtmS7gZ2V6hkhh9fgPKxugzCnO1UX5amgTwRp7bG01Clsf8u0wa9YAgCucz0tTOtoWBqqCCVF
+ JQmCnPUSHF01TUFtwhk56T+Zj9wmNypBrJ5Ft1YNbS0NszjgZFftBuZ+w3K4L21rkm6AjEYXC
+ eLJhda/EFgFsR7icGy7Xs93tyP5C64JZstMVsKr7Y5Wn80Gf6dGzScMe2pk8MwTMc6sM9Aidw
+ aU4APhNaK3AVVTX7gTTfqjE7IHG8JBV+UibNVT7pNemiWb5yQPoMEkQBtKQZ9yQ43wlb99qT2
+ JmNa87iD2Hk8YR69CL0h9Jn6X0ofverAHUXfkSCeBq1pUJwBpRXR1OisdMFuhFItPovOlwz2G
+ LKMiGj3qVnbfJHUr1rIpu9WxKGSqLNsKtFqwDwKL7TaVQG8KRqY2lNNqn0I5g7/7u8WG5ab8+
+ l1OhfOicoqrAU0X5ct0NSt64TXhhfKMhTGyA9tLnaGMJA=
 
---Ytzm/oHaDkbsSGqU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am Donnerstag, dem 13.06.2024 um 17:03 -0700 schrieb Andrew Morton:
+> Let's hope Linus doesn't read this.  Why are we nuking the entire
+> planet just because some counter went wonky?
 
-On Thu, Jun 13, 2024 at 03:16:13PM -0400, Jesse Taube wrote:
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -19,7 +19,8 @@
->  #define MISALIGNED_BUFFER_ORDER get_order(MISALIGNED_BUFFER_SIZE)
->  #define MISALIGNED_COPY_SIZE ((MISALIGNED_BUFFER_SIZE / 2) - 0x80)
-> =20
-> -DEFINE_PER_CPU(long, misaligned_access_speed);
-> +DEFINE_PER_CPU(long, misaligned_access_speed) =3D RISCV_HWPROBE_MISALIGN=
-ED_UNKNOWN;
-> +DEFINE_PER_CPU(long, vector_misaligned_access) =3D RISCV_HWPROBE_VEC_MIS=
-ALIGNED_UNSUPPORTED;
-> =20
->  #ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
->  static cpumask_t fast_misaligned_access;
-> @@ -268,12 +269,18 @@ static int check_unaligned_access_all_cpus(void)
-> =20
->  	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
->  		for_each_online_cpu(cpu) {
-> +#ifdef CONFIG_RISCV_VECTOR_MISALIGNED
-> +			per_cpu(vector_misaligned_access, cpu) =3D RISCV_HWPROBE_VEC_MISALIGN=
-ED_FAST;
-> +#endif
-> +#ifdef CONFIG_RISCV_MISALIGNED
->  			per_cpu(misaligned_access_speed, cpu) =3D RISCV_HWPROBE_MISALIGNED_FA=
-ST;
-> +#endif
+It's not just the wonky counter, the error always comes with a segfault which
+causes a firefox tab to crash, though I've not yet figured out how this is
+related to the BUG message or commit 1c29a32ce.
 
-Can you IS_ENABLED()-ify these two as well please?
+[  179.393488] [   T2278] show_signal_msg: 16 callbacks suppressed
+[  179.393492] [   T2278] Privileged Cont[2278]: segfault at 22cddf91d3a0 ip
+000022cde1aad010 sp 00007ffc616851a8 error 7 likely on CPU 15 (core 7, socket 0)
+[  179.393504] [   T2278] Code: Unable to access opcode bytes at 0x22cde1aacfe6.
+[  179.498173] [   T2289] BUG: Bad rss-counter state mm:00000000d0a3f682
+type:MM_ANONPAGES val:1885
 
---Ytzm/oHaDkbsSGqU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmwBJwAKCRB4tDGHoIJi
-0o83AP4l3yMCtJznhon+dFQUAVsO6wRiQb2NfRzHzaOsUmMyyQEA3rLtvEQrCOU7
-yZz/D4drHvHR3eCHR57Lvgb+yeiQJww=
-=ToT+
------END PGP SIGNATURE-----
-
---Ytzm/oHaDkbsSGqU--
+Bert Karwatzki
