@@ -1,147 +1,221 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DBF144D12
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 20:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B681EB25;
+	Fri, 14 Jun 2024 21:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718398461; cv=none; b=V68Zz9WJXQPT/n1ucxmZrCs1G0s6h5ocKHy8flLyQ5PylnoLzimTiaRh3ojaPGMzXlSwiSGLJ7vv7sbmd0bP375RKrx/mnNBq1iQ7dxuB8d1VHA/bm2H5r2WjIMuQgSt9JCpZtROnz8VLyOgwfU/xm+2mh0pKoand/MqRWMIyUs=
+	t=1718398824; cv=none; b=bXd7twWq6PAlKS6bkHwjIVE3y350++BGMmby7byu4O5vlF41yCArRmgplPBGtylcK+O9YVKJVCxKBdhVhtZQPVpnaCG+/0Ym3vEd6OCNgtpx6UONjfiq2/ysuE3/7EU/76j1O3cIGD+XPEmDCzExRcddPWT5IbzqRvcCNrA9EEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718398461; c=relaxed/simple;
-	bh=5tFnLSP33aYSES0MD32VcfyfckmdVgkIQ7KT4ZPO6QE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ifU4opdaVmQsweQxNqYjdBKvug20QBJBASYi7a+dJZ6RKdL81GBo1Q1Su43bJTdgKMepahv32H+cmoPtd+jK7DCwSIodSXShqwO7CuowUHFo6KJrQ5ULXf/MKfHf6TsB8dx8VTSyTF8jokCKLrPoYYJWdq44i3bBRIif3jNPhs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Fq43c13W; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718398824; c=relaxed/simple;
+	bh=oQ6arAMIY4W8JlFuhCva0WASFpdOy6AaDFmh/dcfYng=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nTvqXLYjzVDi/b5K4tTz1wfyUu54A099KY5OggHRi2/L4O9gNyTTgYl11Qu4ODdmq3Av9DnmAtwYANPUVcmhFgdHMEn5fJ716neVZ5UP3G35BGVGV/O7+rG/JDGFTk11prxIvLjQtVDWzCYW7mrjKOrgzzZ2NHY7JpilZiCdFCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VKkGHVxY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Fq43c13W"
-X-Envelope-To: horms@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718398457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c+Snf0whftzfpHgqudrfGK4VVlgcRO8EISXLh2sXflY=;
-	b=Fq43c13WJaFpPaFsTzFOH0sjUUwEp7vNoWiYtvMmNX7gB8YQRYxqQjqH+ck51zL4x8uC4s
-	cFPbkJcKNS/Cglkq+EJcwITZL9gZY4g0uKV8/DnFvSuqTWO7FjxrkB41kDE6pW1w554mSn
-	TZlA3LKhvrg3FZneLZ//nIHMAPI5BC8=
-X-Envelope-To: radhey.shyam.pandey@amd.com
-X-Envelope-To: netdev@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: kuba@kernel.org
-X-Envelope-To: linux@armlinux.org.uk
-X-Envelope-To: pabeni@redhat.com
-X-Envelope-To: edumazet@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: davem@davemloft.net
-Message-ID: <b06f648c-927e-4eee-9934-e549fbd3c3b9@linux.dev>
-Date: Fri, 14 Jun 2024 16:54:12 -0400
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VKkGHVxY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718398820;
+	bh=oQ6arAMIY4W8JlFuhCva0WASFpdOy6AaDFmh/dcfYng=;
+	h=From:Date:Subject:To:Cc:From;
+	b=VKkGHVxY9SmUApWtxMiW8ZEBIhXb8eOgsRjdZAREYrvedg2cYTfIYkmILJwbKjyLB
+	 CVB0uCFj5pR6xskzzJjI3h2qeng3CMg4+xRrfD5KZOtKlCt6MAY7+SyjyjWPwrOlSq
+	 5lLerL0SDi4nQVKFDnIXEssz/om3YYhM9b4wgVi3OAChLuAsDVMDPBa+xdPlS6qwzX
+	 vhCp3htC5Fb7GzP7GMHnkf9xNauu9tStyXf888EC2Iw5s9FvP3JxX+69jScrJKXzGD
+	 9ywo3pHbpNb6he+j11iq7+AuNixKkIAn1wmZtsvySalgs3M6mi97A3AYKnhtDhNDQ3
+	 pRhTuICunZZBg==
+Received: from [192.168.1.207] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E00F337804CF;
+	Fri, 14 Jun 2024 21:00:16 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Fri, 14 Jun 2024 16:59:36 -0400
+Subject: [PATCH] arm64: dts: qcom: sc7180-trogdor: Disable pwmleds node
+ where unused
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next 3/3] net: xilinx: axienet: Add statistics support
-To: Simon Horman <horms@kernel.org>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Michal Simek <michal.simek@amd.com>, Jakub Kicinski <kuba@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, linux-kernel@vger.kernel.org,
- "David S . Miller" <davem@davemloft.net>
-References: <20240610231022.2460953-1-sean.anderson@linux.dev>
- <20240610231022.2460953-4-sean.anderson@linux.dev>
- <20240614163050.GV8447@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20240614163050.GV8447@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240614-sc7180-pwmleds-probe-v1-1-e2c3f1b42a43@collabora.com>
+X-B4-Tracking: v=1; b=H4sIADevbGYC/x3MTQqAIBBA4avErBtQMYuuEi0qxxroRxyoILp70
+ vJbvPeAUGISaIsHEp0sfOwZuixgWoZ9JmSfDUYZq5y2KFOtG4Xx2lbygjEdI6FprKsrP4xBWch
+ pTBT4/rdd/74fWbRaKWYAAAA=
+To: cros-qcom-dts-watchers@chromium.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Clark <robdclark@chromium.org>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Stephen Boyd <swboyd@chromium.org>
+Cc: kernel@collabora.com, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-On 6/14/24 12:30, Simon Horman wrote:
-> On Mon, Jun 10, 2024 at 07:10:22PM -0400, Sean Anderson wrote:
->> Add support for reading the statistics counters, if they are enabled.
->> The counters may be 64-bit, but we can't detect this as there's no
->> ability bit for it and the counters are read-only. Therefore, we assume
->> the counters are 32-bits. To ensure we don't miss an overflow, we need
->> to read all counters at regular intervals, configurable with
->> stats-block-usecs. This should be often enough to ensure the bytes
->> counters don't wrap at 2.5 Gbit/s.
->> 
->> Another complication is that the counters may be reset when the device
->> is reset (depending on configuration). To ensure the counters persist
->> across link up/down (including suspend/resume), we maintain our own
->> 64-bit versions along with the last counter value we saw. Because we
->> might wait up to 100 ms for the reset to complete, we use a mutex to
->> protect writing hw_stats. We can't sleep in ndo_get_stats64, so we use a
->> u64_stats_sync to protect readers.
->> 
->> We can't use the byte counters for either get_stats64 or
->> get_eth_mac_stats. This is because the byte counters include everything
->> in the frame (destination address to FCS, inclusive). But
->> rtnl_link_stats64 wants bytes excluding the FCS, and
->> ethtool_eth_mac_stats wants to exclude the L2 overhead (addresses and
->> length/type).
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->>  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  81 ++++++
->>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 267 +++++++++++++++++-
->>  2 files changed, 345 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> 
-> ...
-> 
->> @@ -434,6 +502,11 @@ struct skbuf_dma_descriptor {
->>   * @tx_packets: TX packet count for statistics
->>   * @tx_bytes:	TX byte count for statistics
->>   * @tx_stat_sync: Synchronization object for TX stats
->> + * @hw_last_counter: Last-seen value of each statistic
->> + * @hw_stats: Interface statistics periodically updated from hardware counters
->> + * @hw_stats_sync: Synchronization object for @hw_stats
-> 
-> nit: s/hw_stats_sync/hw_stat_sync/
-> 
->      Flagged by kernel-doc -none
+Currently the keyboard backlight is described in the common
+sc7180-trogdor dtsi as an led node below a pwmleds node, and the led
+node is set to disabled. Only the boards that have a keyboard backlight
+enable it.
 
-I think I will rename the member instead.
+However, since the parent pwmleds node is still enabled everywhere, even
+on boards that don't have keyboard backlight it is probed and fails,
+resulting in an error:
 
---Sean
+  leds_pwm pwmleds: probe with driver leds_pwm failed with error -22
 
->> + * @stats_lock: Lock for writing @hw_stats and @hw_last_counter
->> + * @stats_work: Work for reading the hardware statistics counters
->>   * @dma_err_task: Work structure to process Axi DMA errors
->>   * @tx_irq:	Axidma TX IRQ number
->>   * @rx_irq:	Axidma RX IRQ number
->> @@ -452,6 +525,7 @@ struct skbuf_dma_descriptor {
->>   * @coalesce_usec_rx:	IRQ coalesce delay for RX
->>   * @coalesce_count_tx:	Store the irq coalesce on TX side.
->>   * @coalesce_usec_tx:	IRQ coalesce delay for TX
->> + * @coalesce_usec_stats: Delay between hardware statistics refreshes
->>   * @use_dmaengine: flag to check dmaengine framework usage.
->>   * @tx_chan:	TX DMA channel.
->>   * @rx_chan:	RX DMA channel.
->> @@ -505,6 +579,12 @@ struct axienet_local {
->>  	u64_stats_t tx_bytes;
->>  	struct u64_stats_sync tx_stat_sync;
->>  
->> +	u32 hw_last_counter[STAT_COUNT];
->> +	u64_stats_t hw_stats[STAT_COUNT];
->> +	struct u64_stats_sync hw_stat_sync;
->> +	struct mutex stats_lock;
->> +	struct delayed_work stats_work;
->> +
->>  	struct work_struct dma_err_task;
->>  
->>  	int tx_irq;
-> 
-> ...
+as well as a failure in the DT kselftest:
+
+  not ok 45 /pwmleds
+
+Fix this by controlling the status of the parent pwmleds node instead of
+the child led, based on the presence of keyboard backlight. This is what
+is done on sc7280 already.
+
+While at it add a missing blank line before the child node to follow the
+coding style.
+
+Fixes: 7ec3e67307f8 ("arm64: dts: qcom: sc7180-trogdor: add initial trogdor and lazor dt")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts   | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts  | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dts  | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dts | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dts   | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dts  | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dts   | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dts  | 2 +-
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi              | 5 +++--
+ 9 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
+index 919bfaea6189..340cb119d0a0 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
+@@ -12,6 +12,6 @@ / {
+ 	compatible = "google,lazor-rev1-sku2", "google,lazor-rev2-sku2", "qcom,sc7180";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+index eb20157f6af9..d45e60e3eb9e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+@@ -17,6 +17,6 @@ &ap_sar_sensor_i2c {
+ 	status = "okay";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dts
+index 45d34718a1bc..e906ce877b8c 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dts
+@@ -18,6 +18,6 @@ / {
+ 	compatible = "google,lazor-sku2", "qcom,sc7180";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dts
+index 79028d0dd1b0..4b9ee15b09f6 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dts
+@@ -22,6 +22,6 @@ &ap_sar_sensor_i2c {
+ 	status = "okay";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dts
+index 3459b81c5628..a960553f3994 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dts
+@@ -21,6 +21,6 @@ / {
+ 		"qcom,sc7180";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dts
+index ff8f47da109d..82bd9ed7e21a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dts
+@@ -25,6 +25,6 @@ &ap_sar_sensor_i2c {
+ 	status = "okay";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dts
+index faf527972977..6278c1715d3f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dts
+@@ -18,6 +18,6 @@ / {
+ 	compatible = "google,lazor-rev9-sku2", "qcom,sc7180";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dts
+index d737fd0637fb..0ec1697ae2c9 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dts
+@@ -22,6 +22,6 @@ &ap_sar_sensor_i2c {
+ 	status = "okay";
+ };
+ 
+-&keyboard_backlight {
++&pwmleds {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+index 4d33c3fbedff..74ab321d3333 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+@@ -356,10 +356,11 @@ max98360a: audio-codec-0 {
+ 		#sound-dai-cells = <0>;
+ 	};
+ 
+-	pwmleds {
++	pwmleds: pwmleds {
+ 		compatible = "pwm-leds";
++		status = "disabled";
++
+ 		keyboard_backlight: led-0 {
+-			status = "disabled";
+ 			label = "cros_ec::kbd_backlight";
+ 			function = LED_FUNCTION_KBD_BACKLIGHT;
+ 			pwms = <&cros_ec_pwm 0>;
+
+---
+base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+change-id: 20240614-sc7180-pwmleds-probe-284675dabf04
+
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
