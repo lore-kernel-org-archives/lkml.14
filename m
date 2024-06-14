@@ -1,134 +1,131 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B76B190065
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BDC1849;
+	Fri, 14 Jun 2024 08:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718354142; cv=none; b=BPS6NfwSoCQFJy0JOeOSujcHXxKIJjv8DA0yK/6sI9wd1M6ydtVenMVj1ch76bxmt7Irxa+f78oLjS2LCib0EXox2ZBVoUtufmrAkE9V11992I3zy21sHNLXXO35O7kLiCXfqtVNbpLDIdUngNKWRU0yUJoJ8n63CVEw4Pc+Tn8=
+	t=1718354253; cv=none; b=qVpHxb06o/CNv/e/wjbAAra23FA5c9GHQyuDkZ2S4KGl5Rl3Ly/PfLJa2shkh9MN4DhAiCBSiSe9hR4XEGHdCMfYOKKdOzMYrAgBqQd0vw5btQykblkY/PEb1n1UjjJx9SmbpFHkL+e1hRwKM70NcszWAyDIvNTUaOYlwjoLENo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718354142; c=relaxed/simple;
-	bh=T3DjvXEe+sumQ+ecA/DCNSeChO1xZMZY4sezj86K88Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X20IPB6jUFV2kDCDdCzGumjsvl4PM8zS4F2VDCr2MBcY1LPXYviBvbH/weHTHURNK5kVbzCtLwG/nZ6uGZ/Td/V21RK3xRxgwVlzMa9Vx4mjY/Z/Z2xZViFtwXyMhkXh86sa+l9vzmc0MSVesVC6dQcxhNVBg36iQRQPrpGYexw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n1I4Hk7G; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718354253; c=relaxed/simple;
+	bh=IE56RPoqKyRQy8bsSYTv0dvMwFiHl4QLf2TB7HaBQLQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iu7t63/NqJwZnhLfduzfD0JvGcSlHoRjgwFni/WMEGnBTrsnKC9qhoGb4R5oqGohz4uLAe/Er3bpRPU/g1RL29c1moApE9nsDK+bK+ihJ8P+d3d69hI7O56VRo76IWi9B02WM65dcCzNYkTSadnp4+kd9YJczXaIEC0q1Y5A3XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=YW2yeP5p; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1I4Hk7G"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c84a21c62so2204381e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 01:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718354138; x=1718958938; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cu/gvkK5JV8o/AwZTjhXVurT12iJLCtsIO6X1RdbaeU=;
-        b=n1I4Hk7GwxQxiFbTZ17I/x9BWP1h/ZUsKN6tUPFMqLFavnr9/rpS/+pQgeYrpsPmBb
-         AGxjNJqwt9pQo5AthIB2pwAyM5fPnz606ON7ChvyiJOIPGhG0cARN2g2g7Bvd0jKpyOp
-         +8CkO57+0jcjrGrH6jtLqwzTLkH5P5f8qz79GR0LpHPTeHy8AP1M31YT4YCg7orF+6MT
-         quwQjC3biSpNPMWbF7IYC4SBndGSAmQArkwWzMeIcWKp6CCpixKPP1XRuHQx1IonaMn9
-         phlx4sNP5okSFc4Fysaqx8/YeHqt1Qy6/jPYbsU1LZgGAy7S3odX+wIZe3H480H20kji
-         b9yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718354138; x=1718958938;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cu/gvkK5JV8o/AwZTjhXVurT12iJLCtsIO6X1RdbaeU=;
-        b=QVNqxBXcoE9/VutKnDGEUWvQcIGxvoz0XW0WK2VDn8Gd8SSq6Hw/fjJoQ4n+Z1f/8V
-         dn7KrhUI5SPMXVQdrfcBEk5fENdR5+2SlDN1EB6zFrEKeQ8B/qQwiWqMTXqLWzLDJsLn
-         YZPkaA7BMK2MTwwmomYEWGGDmXVqM0MSXwS8P+EW9TY17W++FQpCpeGablH9sIZADXA4
-         jkmjWVMvPfkniq5FJxFsbonhkonfIq4HfofPNafaOMAik36XZ39K4/JzwwyBgdGa7qXW
-         SStRKaEjPAIlFa3uXh7NJgIKUuFXReAtk09MuBIcGGjzalr4x+VtVaJLgHKsEe/8Cw/+
-         JwRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGwmJV8QzIjBow+3d97FWBCBGNlKbYOtnrPoR+UcZdOHTEbqPRghEa1+QYUp1JqCqJmO40zfFQBqCqy8682dk+pXHIecFRlmqhFeTp
-X-Gm-Message-State: AOJu0YyGiwgBm+4fSz7QX3aRtmAN1H2W1gU0NF2Q4/6IEoKgEYdQmzXX
-	WxooGKK99HkyFoVrqtFlRVJXVqlUZq/rkny8u5M+3Jfm8Wu3bAZokU0PoSSM1vQ=
-X-Google-Smtp-Source: AGHT+IGBwQeeRTRpx3tVIDNf6sTLyuMyd/F9sOxQ2WN+C8rxDT7QywHo76mQERX8zghGcWanjbYHag==
-X-Received: by 2002:a19:5f1c:0:b0:52c:1e37:92c7 with SMTP id 2adb3069b0e04-52ca6e99f9dmr1335311e87.59.1718354137822;
-        Fri, 14 Jun 2024 01:35:37 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282f1dbsm444776e87.110.2024.06.14.01.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 01:35:37 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 14 Jun 2024 11:35:34 +0300
-Subject: [PATCH v2 1/2] phy: qcom: qmp-pcie: restore compatibility with
- existing DTs
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YW2yeP5p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718354251; x=1749890251;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IE56RPoqKyRQy8bsSYTv0dvMwFiHl4QLf2TB7HaBQLQ=;
+  b=YW2yeP5pZzSts/P3luQ0AgIei6MKe5tpWM8hJQ+kw8c6ATsNU6apzhIu
+   h7DM5EHCLKgPNQz8clwUulwuJRbIc/Qg2yhzHj6O6JaeBebqclx4mODHV
+   32AAQ5nJIUIBzcKhETJO/sB04O2ysehK8Ptb+1J+YBboh6kfrSdncuFuu
+   3H1/fsocS4RyHltLqWbq2lMRhBB2Er6EHPz2kOHtLJ6CF0TkRS6hUca4o
+   7cDFsxnz0JvYE8LldRGeW1eSVoES9iAwC+pIJ8kSiqgrVdn2KAJiw3d6C
+   pp5q8Bv62572VXlW5kj94xxkeYgq86PPKQxJhDOEYEy3xUKSLNHqnHGMA
+   Q==;
+X-CSE-ConnectionGUID: NG7Mft5MRmOGOwVcOw10MA==
+X-CSE-MsgGUID: T/1ZNyhISGCswnvApzi+sQ==
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="asc'?scan'208";a="194925024"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 01:37:28 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 14 Jun 2024 01:37:19 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 14 Jun 2024 01:37:13 -0700
+Date: Fri, 14 Jun 2024 09:36:55 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Jesse Taube <jesse@rivosinc.com>
+CC: <linux-riscv@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Evan Green
+	<evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, Charlie Jenkins
+	<charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu
+	<andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>, Greentime Hu
+	<greentime.hu@sifive.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
+	<bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin
+	<costa.shul@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Baoquan
+ He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>, Zong Li
+	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Ben Dooks
+	<ben.dooks@codethink.co.uk>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Erick Archer
+	<erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] RISC-V: Detect unaligned vector accesses
+ supported.
+Message-ID: <20240614-viral-dinghy-71d5f6585a55@wendy>
+References: <20240613191616.2101821-1-jesse@rivosinc.com>
+ <20240613191616.2101821-5-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240614-fix-pcie-phy-compat-v2-1-990863ea53bf@linaro.org>
-References: <20240614-fix-pcie-phy-compat-v2-0-990863ea53bf@linaro.org>
-In-Reply-To: <20240614-fix-pcie-phy-compat-v2-0-990863ea53bf@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- devicetree@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1592;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=T3DjvXEe+sumQ+ecA/DCNSeChO1xZMZY4sezj86K88Y=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmbADX9AHnjH9hkGD+TdBoOGvwKBB1HxpP+V47g
- 6dSXZoIDJWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZmwA1wAKCRCLPIo+Aiko
- 1TGDB/kBg91USYnSDUl0V2b7SQdGOrrO6lVRza608UE+7V9XzzUpvCNA+vSyfU5EW2MtqBoF3AM
- 7R+FpS0MkVTEGJj7oHOlANKSQ2cPtCRBBA0KoV8z/hfknL0D0Y3fz59bpOQzNHhXF32BWr3n9jK
- SBSUcy/FIAyNfFoAfLswcIHBYAQk4c/0wkLRjp7uBZOTZh0vaNpiiUYlCAvHWATPn9+UTLJtXFQ
- IZIHCPAt0Il/PLlU43ksakMCOh+oadeb86fsyvzpcCmd3kpBc0jG5ITaJx7YBQZz3zp5yGDpSLn
- RYDl05RAjlWX1oVd08XcDyMJ6knwbRlmkH6THH/sJ63+CqKk
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Ytzm/oHaDkbsSGqU"
+Content-Disposition: inline
+In-Reply-To: <20240613191616.2101821-5-jesse@rivosinc.com>
 
-Existing device trees specify only a single clock-output-name for the
-PCIe PHYs. The function phy_aux_clk_register() expects a second entry in
-that property. When it doesn't find it, it returns an error, thus
-failing the probe of the PHY and thus breaking support for the
-corresponding PCIe host.
+--Ytzm/oHaDkbsSGqU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Follow the approach of the combo USB+DT PHY and generate the name for
-the AUX clocks instead of requiring it in DT.
+On Thu, Jun 13, 2024 at 03:16:13PM -0400, Jesse Taube wrote:
+> --- a/arch/riscv/kernel/unaligned_access_speed.c
+> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+> @@ -19,7 +19,8 @@
+>  #define MISALIGNED_BUFFER_ORDER get_order(MISALIGNED_BUFFER_SIZE)
+>  #define MISALIGNED_COPY_SIZE ((MISALIGNED_BUFFER_SIZE / 2) - 0x80)
+> =20
+> -DEFINE_PER_CPU(long, misaligned_access_speed);
+> +DEFINE_PER_CPU(long, misaligned_access_speed) =3D RISCV_HWPROBE_MISALIGN=
+ED_UNKNOWN;
+> +DEFINE_PER_CPU(long, vector_misaligned_access) =3D RISCV_HWPROBE_VEC_MIS=
+ALIGNED_UNSUPPORTED;
+> =20
+>  #ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+>  static cpumask_t fast_misaligned_access;
+> @@ -268,12 +269,18 @@ static int check_unaligned_access_all_cpus(void)
+> =20
+>  	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
+>  		for_each_online_cpu(cpu) {
+> +#ifdef CONFIG_RISCV_VECTOR_MISALIGNED
+> +			per_cpu(vector_misaligned_access, cpu) =3D RISCV_HWPROBE_VEC_MISALIGN=
+ED_FAST;
+> +#endif
+> +#ifdef CONFIG_RISCV_MISALIGNED
+>  			per_cpu(misaligned_access_speed, cpu) =3D RISCV_HWPROBE_MISALIGNED_FA=
+ST;
+> +#endif
 
-Fixes: 583ca9ccfa80 ("phy: qcom: qmp-pcie: register second optional PHY AUX clock")
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Can you IS_ENABLED()-ify these two as well please?
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index 8cb91b9114d6..5b36cc7ac78b 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -4033,14 +4033,11 @@ static int phy_aux_clk_register(struct qmp_pcie *qmp, struct device_node *np)
- {
- 	struct clk_fixed_rate *fixed = &qmp->aux_clk_fixed;
- 	struct clk_init_data init = { };
--	int ret;
-+	char name[64];
- 
--	ret = of_property_read_string_index(np, "clock-output-names", 1, &init.name);
--	if (ret) {
--		dev_err(qmp->dev, "%pOFn: No clock-output-names index 1\n", np);
--		return ret;
--	}
-+	snprintf(name, sizeof(name), "%s::phy_aux_clk", dev_name(qmp->dev));
- 
-+	init.name = name;
- 	init.ops = &clk_fixed_rate_ops;
- 
- 	fixed->fixed_rate = qmp->cfg->aux_clock_rate;
+--Ytzm/oHaDkbsSGqU
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-2.39.2
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmwBJwAKCRB4tDGHoIJi
+0o83AP4l3yMCtJznhon+dFQUAVsO6wRiQb2NfRzHzaOsUmMyyQEA3rLtvEQrCOU7
+yZz/D4drHvHR3eCHR57Lvgb+yeiQJww=
+=ToT+
+-----END PGP SIGNATURE-----
+
+--Ytzm/oHaDkbsSGqU--
