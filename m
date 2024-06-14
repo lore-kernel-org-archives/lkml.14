@@ -1,107 +1,84 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from EXCEDGE02.prodrive.nl (mail.prodrive-technologies.com [212.61.153.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777A71836DE;
-	Fri, 14 Jun 2024 08:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4C31836DE;
+	Fri, 14 Jun 2024 08:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718354425; cv=none; b=O8+GAzonR097uK+BZ8saqzmKJ4GURYZ6IqfWpWHursY0sEA59pmXVimVsyPEVLOl+dtxIP51mRpWU7vWgsCPeVy5MPpZmkNPag7E8kNn4EVfB3CQXB31cLgXQHxoMgiQoyliDXtdTSBW/PDiApwsC1K96KC7Ojk70j8pid76m44=
+	t=1718354457; cv=none; b=rKAmObHBtcCO3rffOCjQ8DvGufwAonI6P0Icc+YzQtnJ7kQOgT+cZtDCRbstSe9HbmqVRZ/UKawRi8rzD8LcxRa8/5oAYgdjiG4uHLuU899Cu99IUD0tey/ePLdlTSc47GG9xQPxAD43Jvg6j6wvv/YQKU30MGyeRINxfbE+up8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718354425; c=relaxed/simple;
-	bh=fUz6PrtFBHmdSanceP4rEnElFSeTVqazvmJwnBn6bg8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OxWcqTeG85nviXwhRoja5wS+TJUgYc1lfV+t+08vup9zBJywIpBNW5uw20ZRyUVXs+xNo/kEVNjU5OmbnsZ7C7li22tPRi7GXdrIAEK4BQFEBRzXwiKOiWE0M13TANjlB93E3BYNekp3zFJMQ0MEEdnQsgyPAtTKgKNlc8lO/q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: bizesmtpsz10t1718354248tjm52n
-X-QQ-Originating-IP: qslyn0oMXcpOJEcFPvUvJm0egT/cIEGM1bOAZQB2Bz0=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Jun 2024 16:37:25 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8925404822079021439
-Message-ID: <93D6D58053EB522F+de1c8896-65e1-442d-99f6-c5b222c0a816@chenxiaosong.com>
-Date: Fri, 14 Jun 2024 16:37:24 +0800
+	s=arc-20240116; t=1718354457; c=relaxed/simple;
+	bh=jLxkqDgK66uSESkHcfpgG41Y+W1bF9Kp28hKCuGXkno=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FHKjPzKmgfzaP2S4Xkw+nx8T0ipSt9wPpNHIqS2Mmm+D4gzF/7Ab1uXXoDBLLICMnoa0cHKBg6wy9mxWa2n9WKk3hYTdllgnUn+gqS7kIbF22gG4wdxP8NqFC78UVHzVrBpzICi73xsB9wxM9HpjiYbMDGCnpR0nYt+xoL3ZmVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by webmail.prodrive.nl
+ (192.168.102.63) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Jun
+ 2024 10:40:47 +0200
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
+ 2024 10:40:52 +0200
+Received: from lnxdevrm02.bk.prodrive.nl (10.1.1.121) by
+ EXCOP01.bk.prodrive.nl (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4
+ via Frontend Transport; Fri, 14 Jun 2024 10:40:52 +0200
+Received: from paugeu by lnxdevrm02.bk.prodrive.nl with local (Exim 4.94.2)
+	(envelope-from <paul.geurts@prodrive-technologies.com>)
+	id 1sI2UO-0053sY-58; Fri, 14 Jun 2024 10:40:52 +0200
+From: Paul Geurts <paul.geurts@prodrive-technologies.com>
+To: <andrew@lunn.ch>
+CC: <wei.fang@nxp.com>, <shenwei.wang@nxp.com>, <xiaoning.wang@nxp.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Paul Geurts
+	<paul.geurts@prodrive-technologies.com>
+Subject: Re: [PATCH] fec_main: Register net device before initializing the MDIO bus
+Date: Fri, 14 Jun 2024 10:40:50 +0200
+Message-ID: <20240614084050.1205641-1-paul.geurts@prodrive-technologies.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <51faeed2-6a6b-439b-80e6-8cf2b5ce401a@lunn.ch>
+References: <51faeed2-6a6b-439b-80e6-8cf2b5ce401a@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Question about pNFS documentation
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, Benjamin Coddington <bcodding@redhat.com>,
- Olga Kornievskaia <kolga@netapp.com>, Josef Bacik <josef@toxicpanda.com>,
- Jeff Layton <jlayton@kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "liuzhengyuan@kylinos.cn" <liuzhengyuan@kylinos.cn>,
- "huhai@kylinos.cn" <huhai@kylinos.cn>,
- "chenxiaosong@kylinos.cn" <chenxiaosong@kylinos.cn>
-References: <BA2DED4720A37AFC+88e58d9e-6117-476d-8e06-1d1a62037d6d@chenxiaosong.com>
- <08BB98A6-FA14-4551-B977-8BC4029DB0E1@oracle.com>
-Content-Language: en-US
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <08BB98A6-FA14-4551-B977-8BC4029DB0E1@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+Content-Type: text/plain
 
-Thanks for your reply. By the way, are there any plans for the Linux NFS 
-server to implement the file, flexfile and object layout?
+> On Thu, Jun 13, 2024 at 04:41:11PM +0200, Paul Geurts wrote:
+> > Registration of the FEC MDIO bus triggers a probe of all devices
+> > connected to that bus. DSA based Ethernet switch devices connect to the
+> > uplink Ethernet port during probe. When a DSA based, MDIO controlled
+> > Ethernet switch is connected to FEC, it cannot connect the uplink port,
+> > as the FEC MDIO port is registered before the net device is being
+> > registered. This causes an unnecessary defer of the Ethernet switch
+> > driver probe.
+> > 
+> > Register the net device before initializing and registering the MDIO
+> > bus.
+> 
+> The problem with this is, as soon as you call register_netdev(), the
+> device is alive and sending packets. It can be sending packets even
+> before register_netdev() returns, e.g. in the case of NFS root. So
+> fec_enet_open() gets called, and tried to find its PHY. But the MDIO
+> bus is not registered yet....
 
-Thanks,
-ChenXiaoSong.
+Valid argument there. I was trying to make the initialization more efficient,
+but you are correct.
 
-在 2024/6/13 23:31, Chuck Lever III 写道:
-> Hi-
 > 
->> On Jun 13, 2024, at 4:35 AM, ChenXiaoSong <chenxiaosong@chenxiaosong.com> wrote:
->>
->> Greetings,
->>
->> I am very interested in Parallel NFS (pNFS) and want to setup a testing and debugging environment for pNFS. I found some pNFS documentation [1] [2] [3], but I still don't know how to setup Linux environment about file layout, block layout, object layout, and flexible file layout. Some documentation like spNFS(simple pNFS) is unmaintained and was dropped. Can you recommend some other detailed documentation(how to use pNFS in Linux)?
->>
->> Thanks,
->> ChenXiaoSong.
->>
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-block-server.rst
->>
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/nfs/pnfs-scsi-server.rst
->>
->> [3] https://linux-nfs.org/wiki/index.php/PNFS_Development
+> So yes, DSA ends up doing an EPROBE_DEFER cycle. Not much we can do
+> about that. We can try to keep the DSA probe functions as cheap as
+> possible, and put all the expensive stuff in setup(), which will only
+> be called once we have all the needed resources.
 > 
-> I'm not aware of recent documentation other than what you
-> have listed here.
+>     Andrew
 > 
-> Note that the Linux NFS client implements the file, block,
-> and flexfile layout types, but the Linux NFS server
-> implements only the pNFS block layout type.
+> ---
+> pw-bot: cr
 > 
-> I've been building out testing that we can run for each
-> release of NFSD that will exercise pNFS block layout
-> support in the Linux NFS server and client, since pNFS
-> block is the common denominator between our client and
-> server.
-> 
-> Look at the 9 commits at the tip of [1]. These contain
-> changes to kdevops that add the ability for it to set up
-> an iSCSI target and enable pNFS on its local NFS server.
-> If you can read Ansible scripts, these might help you
-> form recipes for you to set up your own environment
-> using the Linux NFS implementation and its iSCSI target
-> and initiator.
-> 
-> Admin documentation (outside of kdevops) is on the to-do
-> list, but hasn't been started.
-> 
-> 
-> --
-> Chuck Lever
-> 
-> [1] https://github.com/chucklever/kdevops/tree/pnfs-block-testing
