@@ -1,199 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5AD199398
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B901AB52F;
+	Fri, 14 Jun 2024 16:30:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382649; cv=none; b=h5c5pDDJAqjyMjM5V4GQO6nt7v2XP8VHLLT3fWe9T2w2FRSgIbwn6cetah81MaxXn8Nbl9Mpoyo3nvOHLxc7yXLqkpjTjFC7/EU6GXBo7cJ8+8sF9GobGeN6LhpeA10wMItQq6rRffFBz6JkuMgPL+c2CX656grSsg00Jl9Rtlg=
+	t=1718382655; cv=none; b=Q6bdb/J6At1354OROgt0A8OnqSAAI0zfcO9RlMm5wPud8Tz5t8kcqFwZiuv98bdGAyriIQh3gosjIzzpzXAON6PqJe4wfm47u893Q5bNQvCg2AvccSHn4d6PNrdFpajR6YOj0guSlArhnyeA+DW/AkETswuuC6mSB5Vau6E93oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382649; c=relaxed/simple;
-	bh=ZHBXI+jB6jbRohzJeTq5RKkD6KRiROjXJbEJFW5LzTw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=G22ANm0H/8UDSVJQDKU9UQLbm03HqtTvg47qI11exvy9N+CuGb+/cRsFXFHrFWdNll1FjJRkIIkaaNRFRd7IL+F8Mfd4/dmOZ+UwN7FFpaCGk1B7CGTwO2bOjYgtZb0uxSLWGGW+gKBKEqgYgWzg/w1oOs86Mh08LzAZRalktDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053E0C4AF48;
-	Fri, 14 Jun 2024 16:30:49 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sI9pY-00000001ruQ-0PDS;
-	Fri, 14 Jun 2024 12:31:12 -0400
-Message-ID: <20240614163111.956572328@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 14 Jun 2024 12:30:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [for-next][PATCH 11/13] tracing: Handle old buffer mappings for event strings and functions
-References: <20240614163015.456541709@goodmis.org>
+	s=arc-20240116; t=1718382655; c=relaxed/simple;
+	bh=4uMCD3nfnmamh+k914AZ9iNaZiZ2iLQY8YW/o+RixDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5C52zVAxnSjtw0PQkxovg0AsF3Jg0x9KEz7INN9x4veFoOPKHrrEAzPXFM5Vb0ZQvHY/CduEiS/mH8RCacivftLbVmFCmb2ewJHaPZqe8EbnJHUQU01RP3KJJ+l3wtBRqWA7xZGqb9TcWzpDyPWA61ZXG5sIsj1toXfQ7MvboQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G97+Wiom; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G97+Wiom"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE24C2BD10;
+	Fri, 14 Jun 2024 16:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718382654;
+	bh=4uMCD3nfnmamh+k914AZ9iNaZiZ2iLQY8YW/o+RixDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G97+WiomIY+D1ScJvy+hWtvGznEx91P7NiLKw1qcgJ99tAQHrmn62kfqKjwz4Huqw
+	 zaXjNqnM0oar5JZ7AMC7V/J1HJUrYj7k1XtSqxMtS10HyfX75UoUSU8Sx/Ikv000nE
+	 MlJ6HJG/MCsjPIbCra2j5XPn6Boxj+1YQHyWsoEVTjgPX8t0JH42QF1DjbXySDIz2Z
+	 YzkOil7NFjfE8zjaqOoWuhUYqNFp6ayy36oq0G3/WAQ4HDQ9fjwrIsMfqZQpBGtAoC
+	 bas4pGTLt4b9shevSwSOMi1ixt4IUQS11CBozeMN9sOKI9bRwP5/OQDu8mAPTIaw/i
+	 Chgx66MC+MT1Q==
+Date: Fri, 14 Jun 2024 17:30:50 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Michal Simek <michal.simek@amd.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	linux-kernel@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: xilinx: axienet: Add statistics support
+Message-ID: <20240614163050.GV8447@kernel.org>
+References: <20240610231022.2460953-1-sean.anderson@linux.dev>
+ <20240610231022.2460953-4-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610231022.2460953-4-sean.anderson@linux.dev>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Jun 10, 2024 at 07:10:22PM -0400, Sean Anderson wrote:
+> Add support for reading the statistics counters, if they are enabled.
+> The counters may be 64-bit, but we can't detect this as there's no
+> ability bit for it and the counters are read-only. Therefore, we assume
+> the counters are 32-bits. To ensure we don't miss an overflow, we need
+> to read all counters at regular intervals, configurable with
+> stats-block-usecs. This should be often enough to ensure the bytes
+> counters don't wrap at 2.5 Gbit/s.
+> 
+> Another complication is that the counters may be reset when the device
+> is reset (depending on configuration). To ensure the counters persist
+> across link up/down (including suspend/resume), we maintain our own
+> 64-bit versions along with the last counter value we saw. Because we
+> might wait up to 100 ms for the reset to complete, we use a mutex to
+> protect writing hw_stats. We can't sleep in ndo_get_stats64, so we use a
+> u64_stats_sync to protect readers.
+> 
+> We can't use the byte counters for either get_stats64 or
+> get_eth_mac_stats. This is because the byte counters include everything
+> in the frame (destination address to FCS, inclusive). But
+> rtnl_link_stats64 wants bytes excluding the FCS, and
+> ethtool_eth_mac_stats wants to exclude the L2 overhead (addresses and
+> length/type).
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+>  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  81 ++++++
+>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 267 +++++++++++++++++-
+>  2 files changed, 345 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
 
-Use the saved text_delta and data_delta of a persistent memory mapped ring
-buffer that was saved from a previous boot, and use the delta in the trace
-event print output so that strings and functions show up normally.
+...
 
-That is, for an event like trace_kmalloc() that prints the callsite via
-"%pS", if it used the address saved in the ring buffer it will not match
-the function that was saved in the previous boot if the kernel remaps
-itself between boots.
+> @@ -434,6 +502,11 @@ struct skbuf_dma_descriptor {
+>   * @tx_packets: TX packet count for statistics
+>   * @tx_bytes:	TX byte count for statistics
+>   * @tx_stat_sync: Synchronization object for TX stats
+> + * @hw_last_counter: Last-seen value of each statistic
+> + * @hw_stats: Interface statistics periodically updated from hardware counters
+> + * @hw_stats_sync: Synchronization object for @hw_stats
 
-For RCU events that point to saved static strings where only the address
-of the string is saved in the ring buffer, it too will be adjusted to
-point to where the string is on the current boot.
+nit: s/hw_stats_sync/hw_stat_sync/
 
-Link: https://lkml.kernel.org/r/20240612232026.821020753@goodmis.org
+     Flagged by kernel-doc -none
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vineeth Pillai <vineeth@bitbyteword.org>
-Cc: Youssef Esmat <youssefesmat@google.com>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Ross Zwisler <zwisler@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 42 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+> + * @stats_lock: Lock for writing @hw_stats and @hw_last_counter
+> + * @stats_work: Work for reading the hardware statistics counters
+>   * @dma_err_task: Work structure to process Axi DMA errors
+>   * @tx_irq:	Axidma TX IRQ number
+>   * @rx_irq:	Axidma RX IRQ number
+> @@ -452,6 +525,7 @@ struct skbuf_dma_descriptor {
+>   * @coalesce_usec_rx:	IRQ coalesce delay for RX
+>   * @coalesce_count_tx:	Store the irq coalesce on TX side.
+>   * @coalesce_usec_tx:	IRQ coalesce delay for TX
+> + * @coalesce_usec_stats: Delay between hardware statistics refreshes
+>   * @use_dmaengine: flag to check dmaengine framework usage.
+>   * @tx_chan:	TX DMA channel.
+>   * @rx_chan:	RX DMA channel.
+> @@ -505,6 +579,12 @@ struct axienet_local {
+>  	u64_stats_t tx_bytes;
+>  	struct u64_stats_sync tx_stat_sync;
+>  
+> +	u32 hw_last_counter[STAT_COUNT];
+> +	u64_stats_t hw_stats[STAT_COUNT];
+> +	struct u64_stats_sync hw_stat_sync;
+> +	struct mutex stats_lock;
+> +	struct delayed_work stats_work;
+> +
+>  	struct work_struct dma_err_task;
+>  
+>  	int tx_irq;
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dc4eee33d920..71cca10581d6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3671,8 +3671,11 @@ static void test_can_verify(void)
- void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 			 va_list ap)
- {
-+	long text_delta = iter->tr->text_delta;
-+	long data_delta = iter->tr->data_delta;
- 	const char *p = fmt;
- 	const char *str;
-+	bool good;
- 	int i, j;
- 
- 	if (WARN_ON_ONCE(!fmt))
-@@ -3691,7 +3694,10 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 
- 		j = 0;
- 
--		/* We only care about %s and variants */
-+		/*
-+		 * We only care about %s and variants
-+		 * as well as %p[sS] if delta is non-zero
-+		 */
- 		for (i = 0; p[i]; i++) {
- 			if (i + 1 >= iter->fmt_size) {
- 				/*
-@@ -3720,6 +3726,11 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 				}
- 				if (p[i+j] == 's')
- 					break;
-+
-+				if (text_delta && p[i+1] == 'p' &&
-+				    ((p[i+2] == 's' || p[i+2] == 'S')))
-+					break;
-+
- 				star = false;
- 			}
- 			j = 0;
-@@ -3733,6 +3744,24 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 		iter->fmt[i] = '\0';
- 		trace_seq_vprintf(&iter->seq, iter->fmt, ap);
- 
-+		/* Add delta to %pS pointers */
-+		if (p[i+1] == 'p') {
-+			unsigned long addr;
-+			char fmt[4];
-+
-+			fmt[0] = '%';
-+			fmt[1] = 'p';
-+			fmt[2] = p[i+2]; /* Either %ps or %pS */
-+			fmt[3] = '\0';
-+
-+			addr = va_arg(ap, unsigned long);
-+			addr += text_delta;
-+			trace_seq_printf(&iter->seq, fmt, (void *)addr);
-+
-+			p += i + 3;
-+			continue;
-+		}
-+
- 		/*
- 		 * If iter->seq is full, the above call no longer guarantees
- 		 * that ap is in sync with fmt processing, and further calls
-@@ -3751,6 +3780,14 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 		/* The ap now points to the string data of the %s */
- 		str = va_arg(ap, const char *);
- 
-+		good = trace_safe_str(iter, str, star, len);
-+
-+		/* Could be from the last boot */
-+		if (data_delta && !good) {
-+			str += data_delta;
-+			good = trace_safe_str(iter, str, star, len);
-+		}
-+
- 		/*
- 		 * If you hit this warning, it is likely that the
- 		 * trace event in question used %s on a string that
-@@ -3760,8 +3797,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 		 * instead. See samples/trace_events/trace-events-sample.h
- 		 * for reference.
- 		 */
--		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
--			      "fmt: '%s' current_buffer: '%s'",
-+		if (WARN_ONCE(!good, "fmt: '%s' current_buffer: '%s'",
- 			      fmt, seq_buf_str(&iter->seq.seq))) {
- 			int ret;
- 
--- 
-2.43.0
-
-
+...
