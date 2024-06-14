@@ -1,73 +1,77 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB3216D4FC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247A72B9A5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381886; cv=none; b=FSLzrSI6759d7mjzXd85ktPYDCh9Lnms0tGNZcawzwUO0qgnKxw5M453maPwGeZLKvaytqqnyS9Q5gZxU6bKqLQR3GIPzcJfHU0hyjNwejJW+LfoQ34zVBGVztU3EsXUxMHNvg3x9qtlh2IHoCCwZTSKrg9NPamOdcxfJIn15Vk=
+	t=1718381920; cv=none; b=BM4MN2xYDCMgDmEZ1KRxXEfwvOh/LKlQFeuapzvXa7CFDYkjaXOiAoir5wvug24cvUjEnH2EpPhYzFtmL5z6NEFrn5/melCTOR95jQt7icR6H9m+Jm4Huf3afRflj1awiI+3k0afVUN9K0Nok3Q7kj/HAtsxjco8ISsrPOAv0wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381886; c=relaxed/simple;
-	bh=k2rX1sGAzRLLcsSbTagcuZYrp3EpVKtgxQIopbhRJs8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OEX1B//dz1T1fJmfMNm5QUw6AotY7sFeU6D5lBXfpwFL7pNEpKYvMofSxGb8ELn8E89y2Gap2oBjWU1YDitkRF6Ij6SMwwkHXJuxN26DdXVTshkzsWOCpgNa7aF/j1K+ZsJbDBSElo2PPtSLIeVh8xyxoWBBBCVe3HiGaZvFTaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7ebeebdc580so96892439f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:18:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718381884; x=1718986684;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGoN0m1iTucOXtjke0ncEJnnrAPBlXJ70PprLdh+wbI=;
-        b=YvAoWrukqCecIjhb0iqarDkieQqQy6ytjVE5VkjxQFnSaI0pdOUL8gTwWFPsg2LnrA
-         9m1NMOEqduIQR/I3/dEFI5k26FnhNPkJfWP5NPgRhyvZLXQIwC8V03opbBde1vJPav9J
-         zchUbIzwMQSNe9rpvcYivRtFeNkgEBamzPmcnnU7Ui4HYhKNI+RGEUNuVc4cuIjjoygg
-         Ow/7jkG9ER0KR4NfzoSYKLgobeDNImq0ke6R/CEZT7MBbsqwQLYPSQQPsZHHp7bIHD7S
-         FqibiaH/pNKaE+6UJVJc9IzgSDFDTcnnXgcBw4N8DuOXnqcyAjIHG0u3ew1KLWSk/YMw
-         QAVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAULyl48JHzL8to/biyuao38B4/gKFwFbsrOnkHsLH13Gwefw1ip1JUwuKnWlRUMk19rGE0dSxcVHiUn80SjENkzo3fKtG1QW3gpgV
-X-Gm-Message-State: AOJu0Yyq5EBwObCdcCcF2OdfawBjkTerZcOu2TqlXiifZrWz7oMaOdd8
-	n6wzvGxa5+yveqdGNiMdUGPzx7U1q10ZOCSH+BGA8IGOa5t+v91ShQ7TY0xv5ss1E/O8Siak/T0
-	7YVn7E9mgaIN3L3J7LAPBcuGZ3PQvv4T//P75g9KtGQ70yAOrwqm4ehM=
-X-Google-Smtp-Source: AGHT+IGhzLD1XcV3ejk8zkw0+64ic7JKIJ42YMF77eoj27g4fw0gCyw7No0lHJmuuLUmWowjFPP8RpyqtqtwmyhtcUYGRSeuzvsj
+	s=arc-20240116; t=1718381920; c=relaxed/simple;
+	bh=d9q8NhmHT7fhQbN8sORGWV+zeXsbe/oYJmEtluU60qA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=P+giBfbrRngZ9NV0EZZF8W/ndvFt8mAhkNIi3xsZ7BCYbo+UYcFHBwuWJX2f66nYcfLy8ihTm1TldA2DkYsKcUp34NExHQamxtj4qThsZJvepiw752o1POgSHT/DxdFViezpXPcfPI2PHIBhZVZHh4Zq15EG/otA6OJ8jywJpkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav116.sakura.ne.jp (fsav116.sakura.ne.jp [27.133.134.243])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 45EFFQvn027838;
+	Sat, 15 Jun 2024 00:15:26 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav116.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav116.sakura.ne.jp);
+ Sat, 15 Jun 2024 00:15:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav116.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 45EFFQEA027835
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 15 Jun 2024 00:15:26 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <52d3d784-47ad-4190-920b-e5fe4673b11f@I-love.SAKURA.ne.jp>
+Date: Sat, 15 Jun 2024 00:15:24 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3488:b0:4b9:6c10:36a9 with SMTP id
- 8926c6da1cb9f-4b96c103ff0mr25393173.1.1718381883922; Fri, 14 Jun 2024
- 09:18:03 -0700 (PDT)
-Date: Fri, 14 Jun 2024 09:18:03 -0700
-In-Reply-To: <4fc95571-7815-458f-9d34-5109b1be7399@linux.alibaba.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c7ad34061adbf5d8@google.com>
-Subject: Re: [syzbot] BUG: Bad rss-counter state (5)
-From: syzbot <syzbot+f2bbbb592debc978d46d@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bpf: don't call mmap_read_trylock() from IRQ context
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To: Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <4b875158-1aa7-402e-8861-860a493c49cd@I-love.SAKURA.ne.jp>
+ <3e9b2a54-73d4-48cb-a510-d17984c97a45@I-love.SAKURA.ne.jp>
+Content-Language: en-US
+In-Reply-To: <3e9b2a54-73d4-48cb-a510-d17984c97a45@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 2024/06/08 20:04, Tetsuo Handa wrote:
+> On 2024/06/08 19:53, Tetsuo Handa wrote:
+>> inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
+> 
+> Oops, "inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage." example was
+> found at https://syzkaller.appspot.com/text?tag=CrashReport&x=14f0179a980000 .
+> 
+> Then, do we want to
+> 
+> -	if (in_hardirq()) {
+> +	if (!in_task()) {
+> 
+> instead?
+> 
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+"inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage." upon unlock from IRQ work
+was reported at https://syzkaller.appspot.com/bug?extid=40905bca570ae6784745 .
 
-Reported-and-tested-by: syzbot+f2bbbb592debc978d46d@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         8d0a686e mm: add swappiness= arg to memory.reclaim
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-unstable
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d4e154980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fba40c4590d687b
-dashboard link: https://syzkaller.appspot.com/bug?extid=f2bbbb592debc978d46d
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
