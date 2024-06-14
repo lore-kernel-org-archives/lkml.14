@@ -1,107 +1,143 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5776D190071;
-	Fri, 14 Jun 2024 09:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB56D18C33A;
+	Fri, 14 Jun 2024 09:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718357139; cv=none; b=LEC9qKnEFj9gmUc6WA2A4sdrWblUrMnSi59AlO8KeekBYsX4toYzHUo7ZUWgE/rAISD/Ck+aTYFtI41bFu5apXNlGu4MBzpA90vgK9vaeQDxwk4zUsqY88hTj5MTpMT0ggDiIBaxGVujj8sf3oOGFrFQ3wm5g8JAh0pJdYa5zQo=
+	t=1718357176; cv=none; b=Y3yMtueTFv58uaUdIdEJ9q8XoPzq8v/UgZRUCtMhW8mKCkp4IaXIYpIiP4KKI/O+9EHM6TyQjgvprPW198FGMpaQVPRKvMpfiG0BWiXTx86C+CEdSzAeHaGeLBF7OZ/x1vi2g57aThOaSqRoPBwh5ZcFpE5Tc2gYcSUp087lLGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718357139; c=relaxed/simple;
-	bh=UWWGN8rwUhoUf3ASge4Yp7b3xfivuopyY+SUJKZCE1A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qb/aqr59DYVY7axhjF6T0eaZOlz8JMtpAOAIvcHJCeA/WdrW3Qu56IH0mvHMkVijQkAEP4BdHb5nzfk54oEdIL0nolB84K4xTxFeiO9Ad8Ld8nd4H/mRhQaANifkq8vfX+/31E12GJYX0P+5zmOCCG1Q9D3Ye57nDDlTwXtoF9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0Myv6I2; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718357176; c=relaxed/simple;
+	bh=9fe6/Skaw9o24Cn2omAm3tlR/7pTqWyvJNce2Q08LBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OlS8IAhHmoXH/jY4yyWv+vzslLyH58gUKLb+hgKDPtEKiQnt13xg2WtboUKrYJYtb7eSlXQFQzW4tu8RBMNNTfEmDStt3YQq2pgysfn381HdOR0pMzfjmGI2f/d1MOsl/qEX15RWZvijiTOMLIbbugKi82oSEjbEUtpMN+VMBnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ZZR1KZsB; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Myv6I2"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f6a837e9a3so13420905ad.1;
-        Fri, 14 Jun 2024 02:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718357137; x=1718961937; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=14sEE7yn1U0eUXYZByRzOLPuXHbmQOHSDN3TIPlXPVQ=;
-        b=T0Myv6I2BnJVbzZXvWXYaHWfl25aWDGkBD5i+En8peaOCvxc63R5/R1s/26WhF+ZKu
-         LaUaB10jGCWSG3gO/o9AMAf0VEFW72gafj+JfH9ToxSzyZRJsPJsEwO2SGTNUOJtkAcG
-         xU0/h7epuUBDUXsLur/R/py8wZhGNKuI/XPtgDnTLUg6lwZ2u4CklMwfIMzbyZGB5u04
-         lT+IIMl+3n5+xkXHYPKAEXcmBfZOiouLApN7gnhSlRvV4rJ53CtfYfSfMpftlFq3KP0B
-         pSDMUTdtIcwH2P3FM0qa6/jAOIAJh23y8ihbBtgtV5MeRcarAladCWseEJNC3IDp2KIz
-         el/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718357137; x=1718961937;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=14sEE7yn1U0eUXYZByRzOLPuXHbmQOHSDN3TIPlXPVQ=;
-        b=cCpNW5E+49QqJfNkl6RiDxk0e7tsmVCVODD4nW+VDlWNn1JcUGyPvstqxTVKNis8Qd
-         mc05y2cX3HEGPADBovWhXkUb6Pi7g7D+Rt7lxksbGrf0mGSACGi1Ff2ITtjMhvVoUe+u
-         fT6Y9lZCJZOY5jyyxDRkAhV+jirY1weo43rV0hRI8U9oCY1p7qMho798CJ8gYiAi+LhA
-         4dYqqYVShiEcZNj/e4j8DdkJgLTG64lREubDu2SqAIZxCd3NCPyqDPw122t22s7QAc3c
-         2xl6gADp1QmqqRvPZFtI+NQri1Q3MfbJsAe8dS2NIdxNcnDrimjaILPux50FYJtv1Dp+
-         IOSg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1m3/ICls1w+d8n0oH/WemVA6kkPgRd7gbTgt7aODi079r8HJqXq1WLNtWa2wku+iO9lJHDRmxh53Zq/Refhe7P3WdLo8Lm6GG1pQg
-X-Gm-Message-State: AOJu0YyVDFcK6mtDAG+CXjU7f5eBjdfpJtdjYyd+BqyUZitFYGOqP5rO
-	e0n6i2cQXhVfz06LalELbuDw5jjn4REt/fgwF5di+O/tA9hssWqs
-X-Google-Smtp-Source: AGHT+IGXeLZqqIbJyrkcAeI6rs6MxGVpjuOg2DOfz3FZfPTUzzQbVXdgdEp5ZcrINQBEE8kr/RsKmQ==
-X-Received: by 2002:a17:903:1250:b0:1f7:13ac:e80e with SMTP id d9443c01a7336-1f8625c1578mr24880735ad.4.1718357137473;
-        Fri, 14 Jun 2024 02:25:37 -0700 (PDT)
-Received: from localhost.localdomain ([106.13.248.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855eff755sm27800365ad.184.2024.06.14.02.25.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 02:25:37 -0700 (PDT)
-From: Yusong Gao <a869920004@gmail.com>
-To: mcgrof@kernel.org
-Cc: linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	a869920004@gmail.com
-Subject: [PATCH] module: Add log information for loading module failures
-Date: Fri, 14 Jun 2024 09:25:19 +0000
-Message-Id: <20240614092519.1611533-1-a869920004@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ZZR1KZsB"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4W0v691D0Xz9svV;
+	Fri, 14 Jun 2024 11:26:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1718357169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wKdlyvSF7pCAKamuIrCSdc2r5zUKZ+TWhLzB5NWF7sE=;
+	b=ZZR1KZsBATXt8TUkNrnhy8NPhWZ9HUbnl97kMLnlKWta4bA6DEM9xTjmRsLAywUnIo1+uJ
+	WmIdOXXLqbhBqN4yKShp/3Jh4Vhh9ndbSK8s2AuJ/UjPiX17lfrdZQLDjQFp7B247DGzAT
+	FJeiStNCfo/wUbsWMrDsISWpyYt9wM+6aWeE+RoOaEO254zxRcT3NKpjM9Kr+R5TCZvy1p
+	3WfAK7OyQnxP+oo6W/CZ6OFyullms/6FRAX5KX+IeEFQMc5iEEyd/1GPX36S+ja3om8hH7
+	UsonYuuQWcaKM09pD9TVtUdBShHkBQRK51vqaAk5F3JUfHvoRXI76i61GMpWmQ==
+Date: Fri, 14 Jun 2024 09:26:02 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org, mcgrof@kernel.org,
+	linux-mm@kvack.org, hare@suse.de, linux-kernel@vger.kernel.org,
+	yang@os.amperecomputing.com, Zi Yan <zi.yan@sent.com>,
+	linux-xfs@vger.kernel.org, p.raghav@samsung.com,
+	linux-fsdevel@vger.kernel.org, hch@lst.de, gost.dev@samsung.com,
+	cl@os.amperecomputing.com, john.g.garry@oracle.com
+Subject: Re: [PATCH v7 04/11] readahead: allocate folios with
+ mapping_min_order in readahead
+Message-ID: <20240614092602.jc5qeoxy24xj6kl7@quentin>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-5-kernel@pankajraghav.com>
+ <ZmnuCQriFLdHKHkK@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmnuCQriFLdHKHkK@casper.infradead.org>
+X-Rspamd-Queue-Id: 4W0v691D0Xz9svV
 
-Add log information in kernel-space when loading module failures.
-Try to load the unsigned module and the module with bad signature
-when set 1 to /sys/module/module/parameters/sig_enforce.
+On Wed, Jun 12, 2024 at 07:50:49PM +0100, Matthew Wilcox wrote:
+> On Fri, Jun 07, 2024 at 02:58:55PM +0000, Pankaj Raghav (Samsung) wrote:
+> > @@ -230,7 +247,9 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+> >  		struct folio *folio = xa_load(&mapping->i_pages, index + i);
+> >  		int ret;
+> >  
+> > +
+> 
+> Spurious newline
+Oops.
+> 
+> >  		if (folio && !xa_is_value(folio)) {
+> > +			long nr_pages = folio_nr_pages(folio);
+> 
+> Hm, but we don't have a reference on this folio.  So this isn't safe.
+> 
 
-Unsigned module case:
-(linux) insmod unsigned.ko
-[   18.714661] Loading of unsigned module is rejected
-insmod: can't insert 'unsigned.ko': Key was rejected by service
-(linux)
+That is why I added a check for mapping after read_pages(). You are
+right, we can make it better.
 
-Bad signature module case:
-(linux) insmod bad_signature.ko
-insmod: can't insert 'bad_signature.ko': Key was rejected by service
-(linux)
+> > @@ -240,12 +259,24 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+> >  			 * not worth getting one just for that.
+> >  			 */
+> >  			read_pages(ractl);
+> > -			ractl->_index += folio_nr_pages(folio);
+> > +
+> > +			/*
+> > +			 * Move the ractl->_index by at least min_pages
+> > +			 * if the folio got truncated to respect the
+> > +			 * alignment constraint in the page cache.
+> > +			 *
+> > +			 */
+> > +			if (mapping != folio->mapping)
+> > +				nr_pages = min_nrpages;
+> > +
+> > +			VM_BUG_ON_FOLIO(nr_pages < min_nrpages, folio);
+> > +			ractl->_index += nr_pages;
+> 
+> Why not just:
+> 			ractl->_index += min_nrpages;
 
-There have different logging behavior the bad signature case only log
-in user-space, add log info for fatal errors in module_sig_check().
+Then we will only move min_nrpages even if the folio we found had a
+bigger order. Hannes patches (first patch) made sure we move the
+ractl->index by folio_nr_pages instead of 1 and making this change will
+defeat the purpose because without mapping order set, min_nrpages will
+be 1.
 
-Signed-off-by: Yusong Gao <a869920004@gmail.com>
----
- kernel/module/signing.c | 1 +
- 1 file changed, 1 insertion(+)
+What I could do is the follows:
 
-diff --git a/kernel/module/signing.c b/kernel/module/signing.c
-index a2ff4242e623..6a6493c8f7e4 100644
---- a/kernel/module/signing.c
-+++ b/kernel/module/signing.c
-@@ -113,6 +113,7 @@ int module_sig_check(struct load_info *info, int flags)
- 		 * unparseable signatures, and signature check failures --
- 		 * even if signatures aren't required.
- 		 */
-+		pr_notice("Loading module failed (errno=%d)\n", -err);
- 		return err;
- 	}
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 389cd802da63..92cf45cdb4d3 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -249,7 +249,7 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
  
--- 
-2.34.1
+ 
+                if (folio && !xa_is_value(folio)) {
+-                       long nr_pages = folio_nr_pages(folio);
++                       long nr_pages;
+                        /*
+                         * Page already present?  Kick off the current batch
+                         * of contiguous pages before continuing with the
+@@ -266,10 +266,8 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+                         * alignment constraint in the page cache.
+                         *
+                         */
+-                       if (mapping != folio->mapping)
+-                               nr_pages = min_nrpages;
++                       nr_pages = max(folio_nr_pages(folio), (long)min_nrpages);
+ 
+-                       VM_BUG_ON_FOLIO(nr_pages < min_nrpages, folio);
+                        ractl->_index += nr_pages;
+                        i = ractl->_index + ractl->_nr_pages - index;
+                        continue;
 
+Now we will still move respecting the min order constraint but if we had
+a bigger folio and we do have a reference, then we move folio_nr_pages.
+> 
+> like you do below?
+Below we add a folio of min_order, so if that fails for some reason, we
+can unconditionally move min_nrpages.
