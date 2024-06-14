@@ -1,191 +1,130 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5717C192B7D;
-	Fri, 14 Jun 2024 10:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C32181AC7
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359480; cv=none; b=Z5df6HCpr3ojH8Sw5qFiKsOotQJefgxYDSxKx2lEdn78yB4D5Yapk5QQAFnjlyirVKFMDXOqKbUsptxBho/G/KzHoXMvyTfWtX4iryWcCr9LmBBi6Wo7k3aPJOaSaBbNa6ccCGFtOIjfI5UF7ZaLTGjpY/9hxutqH0RGCL/HZQ0=
+	t=1718359570; cv=none; b=ctGBTWFm5N94Gtbr9SmeymSprGYSJGRCl2OOh4Wq66rv2S5TGo7AhReizMwDCrslejUm6LIbX/u//UwfPrLVg90aoRFv2lXrsUr21ZP+ffSa+Ta+tU9yuY07qh72vr5Q2yi1Yc0G2pV1qnUGwcPKQv2YbezU7vueMzuTBywZJzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359480; c=relaxed/simple;
-	bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Tn5OHkzJBKXjwrNocmoHHQLDwdjGzGzTLdbVE1aCP/dowy3W/JAdXcbo8zbT2b0FedPZizOI9sQnCDmOBJr6HK7r2gh0R8CT9GGJFPddI0A/KIqJRnUd5xbN+bFVwCb253cC5YXw2Xmuoe0H6EEua4gsbhBDG54L+WScg3kYHY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=alvdrXnc; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1718359570; c=relaxed/simple;
+	bh=VLNaXn/lm7t6E5mAaLknHXlsRSaNaczlupRMV67F4k4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pySx8xs9Sp13L2Qcum2HcdL3ix/o9Ma6x0W3+Ogjn5xnUAQ2vktuEYMcLsmkGyOrIhaRdBSg6MfoAaOQXr++jn+OE06HvBFVlrYY5Uv7XRNQjvnrZIlcXNr53DIEn59WoiX9CnUnHsV/QDV0Dq52wYzyRdfIay74ZQ4Adw28BBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fOO6itz1; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="alvdrXnc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1718359476;
-	bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=alvdrXncrJYx/H4SKHJ+FwREHFnwadGfM/9/k7tCPI8KM6OAKkvg1E6NjhtahnJcW
-	 dLYTa1qt8ITwUDFn7wL4CFmESI0OW9fymJhkU/SOPTJEmP/EUXsYKsbcLUPBU/Xi+2
-	 6RIf7t3FQ5WPsmN3xvR3r1vHvrploSS32H/kEwAQ=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 14 Jun 2024 12:04:29 +0200
-Subject: [PATCH] leds: cros_ec: Implement review comments from Lee
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fOO6itz1"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so2361675a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 03:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718359565; x=1718964365; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
+        b=fOO6itz1JGVm+jifQifYwXqfsKjeYsHHIZm/6CALtts4/ag6IXCshseaMwRdxbXnWg
+         8nF2XTkkuPBKnAVRVA2wnaJwd4eYfZlaz9sa+ByMzDF4g5mUwB1lZGKPQbhtReHMXck2
+         3d6u5NyR4XtuKVNK/FIFnRBZuNFqlBB3pkIJUByG9G69bdn+jDcxT/fVwyK+EsCEcDo1
+         Lwpr3rgV/FRZ8OFyvk2tQwtiV65I1UpzSmGyUQIxVCla4iKSI0Z0BVgmBZaNN1168zkS
+         2InG0OOO1L2BZX+WsEW1k5h2Fdx1eNSX9tk4qwH+BOsZ4IBkoA6kMhubpj1Nxv2Bo1rf
+         Lseg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718359565; x=1718964365;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
+        b=YxkDIHSlUiqc+S/ppfbFvHh6D1Aoq1EgHJaQ7nSjHobecMp8mNYov7VBAcMP+KSRr/
+         BfzUwzEN2J5ijVzUJ4HPt7p1cRk3M0ghTEqhwjnOvo8lXDbKVIrhbBv/UrGBDIAthA25
+         r1h1dSf53neI7tQJJL/oCZTNyI9JAPxONBmzWlEN2qity/Jz+wCNbvVFtGwxbQikhCKE
+         uoYyVsx8NCzwnGNkbqrcS0ECGb2srEC867k+SBVS6507byaQMVhilmq58vsr14xVh2ge
+         +cEvc4t1NRefbBnuQ7fLuP+mJY2VfJIiRR55kp4yNQJh5nc/wNrjxA34RKhCK4FN/oke
+         3/0A==
+X-Gm-Message-State: AOJu0YyRdda2YwKMRiZAW9r/TWOxBhO3tAQW6XRf2jHl91h4DAcPNyiz
+	Pa2+Axl6SZRxhYyXfSTvh+JnvMfxRHzdJaUD3HBRDX9StMUYRpspHWe9pLSp0tQ=
+X-Google-Smtp-Source: AGHT+IEBKcircL4D5yvI1Uh0Bdlj+m1RTUCtN9vKd4L45BNE7heuj8fMqHurvRePVoeMMv4jFlhDyw==
+X-Received: by 2002:a17:906:184a:b0:a6f:5a9d:37f9 with SMTP id a640c23a62f3a-a6f60dc5128mr122290766b.48.1718359565241;
+        Fri, 14 Jun 2024 03:06:05 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecb46fsm167018666b.129.2024.06.14.03.06.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 03:06:04 -0700 (PDT)
+Date: Fri, 14 Jun 2024 12:06:03 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Sean Young <sean@mess.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
+Message-ID: <xj5mqnte5dgs4yzuku6g7gnprgm43tdbunxmo6o4thzreyraok@kttvkz5dhaei>
+References: <20240614090829.560605-1-sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240614-cros_ec-led-review-v1-1-946f2549fac2@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAKwVbGYC/x3M0QpAQBBG4VfRXJvCongVSWv8mBLaLZS8u+XyX
- HznJg+n8FRHNzkc6nVbQ6RxRDLbdQLrEJqyJMuTMs1Z3OY7CC8Y+AM4GVIZ20tZVMZQgLvDqNc
- /bdrneQHG9gOxZAAAAA==
-To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>
-Cc: linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718359476; l=4274;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
- b=uiD9pGnNZpgmiwedlFEzAECWQGAArHZE2wsPQAYu6qGS7H/vXYgZO0fDn0T+g3JB6IlMH67hO
- cMAHGEqL/dgCM9YsqvSGinGeo9eDksCEclZj9obm1pG9aRzX09ZrhN7
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="56vgrc46vq6e7trh"
+Content-Disposition: inline
+In-Reply-To: <20240614090829.560605-1-sean@mess.org>
 
-Implement review comments from Lee as requested in [0] for
-"leds: Add ChromeOS EC driver".
 
-Changes:
-* Inline DRV_NAME string constant.
-* Use dev_err() instead of dev_warn() to report errors.
-* Rename cros_ec_led_probe_led() to cros_ec_led_probe_one().
-* Make loop variable "int" where they belong.
-* Move "Unknown LED" comment to where it belongs.
-* Register trigger during _probe().
-* Use module_platform_driver() and drop all the custom boilerplate.
+--56vgrc46vq6e7trh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[0] https://lore.kernel.org/lkml/20240614093445.GF3029315@google.com/T/#m8750abdef6a968ace765645189170814196c9ce9
+Hello,
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/leds/leds-cros_ec.c | 50 +++++++++++++--------------------------------
- 1 file changed, 14 insertions(+), 36 deletions(-)
+[To: +=3D Arnd]
 
-diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
-index 7bb21a587713..275522b81ea5 100644
---- a/drivers/leds/leds-cros_ec.c
-+++ b/drivers/leds/leds-cros_ec.c
-@@ -14,8 +14,6 @@
- #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
- 
--#define DRV_NAME	"cros-ec-led"
--
- static const char * const cros_ec_led_functions[] = {
- 	[EC_LED_ID_BATTERY_LED]            = LED_FUNCTION_CHARGING,
- 	[EC_LED_ID_POWER_LED]              = LED_FUNCTION_POWER,
-@@ -152,7 +150,7 @@ static int cros_ec_led_count_subleds(struct device *dev,
- 
- 		if (common_range != range) {
- 			/* The multicolor LED API expects a uniform max_brightness */
--			dev_warn(dev, "Inconsistent LED brightness values\n");
-+			dev_err(dev, "Inconsistent LED brightness values\n");
- 			return -EINVAL;
- 		}
- 	}
-@@ -176,22 +174,21 @@ static const char *cros_ec_led_get_color_name(struct led_classdev_mc *led_mc_cde
- 	return led_get_color_name(color);
- }
- 
--static int cros_ec_led_probe_led(struct device *dev, struct cros_ec_device *cros_ec,
-+static int cros_ec_led_probe_one(struct device *dev, struct cros_ec_device *cros_ec,
- 				 enum ec_led_id id)
- {
- 	union cros_ec_led_cmd_data arg = {};
- 	struct cros_ec_led_priv *priv;
- 	struct led_classdev *led_cdev;
- 	struct mc_subled *subleds;
--	int ret, num_subleds;
--	size_t i, subled;
-+	int i, ret, num_subleds;
-+	size_t subled;
- 
- 	arg.req.led_id = id;
- 	arg.req.flags = EC_LED_FLAGS_QUERY;
- 	ret = cros_ec_led_send_cmd(cros_ec, &arg);
--	/* Unknown LED, skip */
- 	if (ret == -EINVAL)
--		return 0;
-+		return 0; /* Unknown LED, skip */
- 	if (ret == -EOPNOTSUPP)
- 		return -ENODEV;
- 	if (ret < 0)
-@@ -247,11 +244,14 @@ static int cros_ec_led_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
- 	struct cros_ec_device *cros_ec = ec_dev->ec_dev;
--	int ret = 0;
--	size_t i;
-+	int i, ret = 0;
-+
-+	ret = devm_led_trigger_register(dev, &cros_ec_led_trigger);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < EC_LED_ID_COUNT; i++) {
--		ret = cros_ec_led_probe_led(dev, cros_ec, i);
-+		ret = cros_ec_led_probe_one(dev, cros_ec, i);
- 		if (ret)
- 			break;
- 	}
-@@ -260,38 +260,16 @@ static int cros_ec_led_probe(struct platform_device *pdev)
- }
- 
- static const struct platform_device_id cros_ec_led_id[] = {
--	{ DRV_NAME, 0 },
-+	{ "cros-ec-led", 0 },
- 	{}
- };
- 
- static struct platform_driver cros_ec_led_driver = {
--	.driver.name	= DRV_NAME,
-+	.driver.name	= "cros-ec-led",
- 	.probe		= cros_ec_led_probe,
- 	.id_table	= cros_ec_led_id,
- };
--
--static int __init cros_ec_led_init(void)
--{
--	int ret;
--
--	ret = led_trigger_register(&cros_ec_led_trigger);
--	if (ret)
--		return ret;
--
--	ret = platform_driver_register(&cros_ec_led_driver);
--	if (ret)
--		led_trigger_unregister(&cros_ec_led_trigger);
--
--	return ret;
--};
--module_init(cros_ec_led_init);
--
--static void __exit cros_ec_led_exit(void)
--{
--	platform_driver_unregister(&cros_ec_led_driver);
--	led_trigger_unregister(&cros_ec_led_trigger);
--};
--module_exit(cros_ec_led_exit);
-+module_platform_driver(cros_ec_led_driver);
- 
- MODULE_DEVICE_TABLE(platform, cros_ec_led_id);
- MODULE_DESCRIPTION("ChromeOS EC LED Driver");
+On Fri, Jun 14, 2024 at 10:08:29AM +0100, Sean Young wrote:
+> pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm: Rename
+> pwm_apply_state() to pwm_apply_might_sleep()").
+>=20
+> Signed-off-by: Sean Young <sean@mess.org>
+> ---
+>  drivers/bus/ts-nbus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+> index baf22a82c47a7..b8af44c5cdbd0 100644
+> --- a/drivers/bus/ts-nbus.c
+> +++ b/drivers/bus/ts-nbus.c
+> @@ -294,7 +294,7 @@ static int ts_nbus_probe(struct platform_device *pdev)
+>  	state.duty_cycle =3D state.period;
+>  	state.enabled =3D true;
+> =20
+> -	ret =3D pwm_apply_state(pwm, &state);
+> +	ret =3D pwm_apply_might_sleep(pwm, &state);
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret, "failed to configure PWM\n");
 
----
-base-commit: b6774dd948171c478c7aa19318b1d7ae9cf6d7a4
-change-id: 20240614-cros_ec-led-review-ec93abc65933
+Thanks. I guess the patch becoming
+8129d25e32b7fd0f77bc664252321f3a16bb26b8 was created a while before
+pwm_apply_might_sleep() was a thing.
 
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
+Arnd, you merged the last changes to that driver. Do you want to care
+for that one, too? If not I can apply it via my pwm tree.
+
+Best regards
+Uwe
+
+--56vgrc46vq6e7trh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZsFgcACgkQj4D7WH0S
+/k6Ciwf/V640UlA3t7jmkjfZ8cO8YihHm54XgFoqLTh48Akc4MU9mW4UaZWM+IC3
+3hMfpLUzyPmUGsupnsfcyKOWa8trOtzTaiwB6M33NqO6qkdnQfPlOUzSLoYzwXqX
+xUMlUF9MKxCu0BoOiqgRq+AJLn5Egurwt3MmTSfqolf3dZd7GijmIzVCUh/KM6bq
+vt/NoG2nks4bUURM4Kn+jz2yNoSIVmFZx7IwEeekV5NpxMldCbJQ5LdK6opvnyRR
+0ebjw1qXO2wxucowDaXYNJcC6K2qOlwvxlONZFiO7E/7H/tmWnD6f7KM/fEG1hvC
+r+D+dyMoPviFNgnheoCEVCqjKGcm1w==
+=6gnx
+-----END PGP SIGNATURE-----
+
+--56vgrc46vq6e7trh--
