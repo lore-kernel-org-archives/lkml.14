@@ -1,61 +1,59 @@
-Received: from njjs-sys-mailin01.njjs.baidu.com (mx315.baidu.com [180.101.52.204])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DA626ADE
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.101.52.204
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171A2132103;
+	Fri, 14 Jun 2024 05:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718342765; cv=none; b=SRwUVK1Uh+v5u4gRHGFvI9eiIs7HErPDEl2AA78fk8agw2Kc5b3fz6hfm0XXEc69pOMOb2xOoMD2u1QMCovORn5Dmuu147ieCZavQbL8710+4Ceq1G7wxQ1zKhEw4ICbQgxLOn9SI7LVngq+shF7deunJWEfAiEWhChWIERxvsw=
+	t=1718342784; cv=none; b=oqNeIyfMXzK3DAvwAMbonWWEA3pCbg2L34ZCvveEytYRqtAoKISpcQeQj3nAkwGRUrxmiUbmTmsITVN2TJls3kfUsdj06NHNqcTP7ahqkDe3/RK+AAHoVt1Bcl+aPNzp4oXhb2w7hk89cXDLs+6AzHD6xaBSZ3EmCm83kH+y11s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718342765; c=relaxed/simple;
-	bh=hlAC+liJwlMTETxKRDMCL6af/9a3p3shTmSwAKBxmgw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=IKsCIw9iCQqNtLAZBeq31PKPhNF/8NJ8AUJtteD3RCbaTy9jkhY6ujYtRvJL1JdchsGkurfMQ2bshySYAozX5lE+Wc9NHXa9vjjThdx0OqVxpP6ArmJ4/FnKGZ5ASrUhQXWf5PyAaXaVf/A83WafCSKXs4iwwPOI91/FGrXMqHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=180.101.52.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-Received: from localhost (bjhw-sys-rpm015653cc5.bjhw.baidu.com [10.227.53.39])
-	by njjs-sys-mailin01.njjs.baidu.com (Postfix) with ESMTP id 814067F0003D;
-	Fri, 14 Jun 2024 13:10:38 +0800 (CST)
-From: Li RongQing <lirongqing@baidu.com>
-To: thomas.lendacky@amd.com,
-	dan.j.williams@intel.com,
-	bp@alien8.de,
-	linux-kernel@vger.kernel.org
-Cc: Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH] virt/coco/sev-guest: Don't free decrypted memory
-Date: Fri, 14 Jun 2024 13:10:36 +0800
-Message-Id: <20240614051036.41983-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.9.4
+	s=arc-20240116; t=1718342784; c=relaxed/simple;
+	bh=jr7Ap2IP3QYunItd2NlDGtEVWiPNSAmvpepfyuZkA9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oavYwQD7SpFf+3nYfC52UIwuLuQsYty6in9WHilWI6rEJjZjiVnMXSK2x9CGmDsnARIk6Vq9bGi8xHPH6R99wXf1DqYbG359g+f5i5CjwoMlAZLZMPpnAJJ12zL2oFsFn9bEpZiQxRP0mwEMfeylwsrglf/ZmtzmbPeIqnek0x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EWtWXOa9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EWtWXOa9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=scQGN4oo9DV9/0Yr3EcBEalr/rggPy0NTj8kWFOcDvk=; b=EWtWXOa91hHymd7bkisEdPPxDn
+	gj8Gfvk1HeBvlxvt6GK7Vhua6lVat6Fy3FPJuLoN1BGIKo56TXGEgBB7GiDOpzU7iwJhbXfdRwv+Y
+	1rRJz5e/9qLGe1NXHJe0CgLmiHbw8bwftGr+zW3jWfmXQLW2vFc1w7ynFAOmkpZRgS5I6XFfcVE4+
+	4SDSEoNRdk7HKMkCf45r4rIK4VW4vEfBHPGnvJ4HdR/jBuBY/Jre5WyZwFXHJsyDyrqsH+k3I+fmc
+	0DLkfAN4vyFJ/LHgDOkgyBitv5k+0S86qunFg5s4b6UST4eH+QNeQr4/PuLgyVz8B447agj4pVf+S
+	dcdciC4w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHzS4-00000001VFj-2DOJ;
+	Fri, 14 Jun 2024 05:26:16 +0000
+Date: Thu, 13 Jun 2024 22:26:16 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, tj@kernel.org, josef@toxicpanda.com,
+	gregkh@linuxfoundation.org, lizefan.x@bytedance.com,
+	hannes@cmpxchg.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH RFC -next 0/7] blk-iocost: support to build iocost as
+ kernel module
+Message-ID: <ZmvUeNI4jF3f_seK@infradead.org>
+References: <20240613014937.1326020-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613014937.1326020-1-yukuai1@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-In CoCo VMs, it is possible for the untrusted host to cause
-set_memory_decrypted() to fail such that an error is returned
-and the resulting memory is shared. Callers need to take care
-to handle these errors to avoid returning decrypted (shared)
-memory to the page allocator, which could lead to functional
-or security issues. so don't free decrypted memory
+This cover letter is a little, erm, sparse.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- drivers/virt/coco/sev-guest/sev-guest.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
-index 654290a8e..799563a 100644
---- a/drivers/virt/coco/sev-guest/sev-guest.c
-+++ b/drivers/virt/coco/sev-guest/sev-guest.c
-@@ -730,8 +730,7 @@ static void *alloc_shared_pages(struct device *dev, size_t sz)
- 
- 	ret = set_memory_decrypted((unsigned long)page_address(page), npages);
- 	if (ret) {
--		dev_err(dev, "failed to mark page shared, ret=%d\n", ret);
--		__free_pages(page, get_order(sz));
-+		dev_err(dev, "failed to mark page shared, leak page, ret=%d\n", ret);
- 		return NULL;
- 	}
- 
--- 
-2.9.4
+Please explain why you want iocost as a module.  This adds a whole
+lot of infrastructure for no obvious reason.
 
