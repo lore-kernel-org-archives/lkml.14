@@ -1,282 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2052.outbound.protection.outlook.com [40.107.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB4D19D061;
-	Fri, 14 Jun 2024 15:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718377625; cv=none; b=HwlGrlAufwP6UqWuUQZBNYMHffP/271zjm6Fewiy+t7b9inlzHU3c1HFanthvcLTqGZIr5yhV8vGUHB3AHL6o9/3QIJ+Wagvq3ORK7xXBnKw93WQLnlTHLh8+yZNr+pSAhSccavuQRmwgDh7HPRXfBNzrt2hQ/Br5jX6kkRbm2M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718377625; c=relaxed/simple;
-	bh=hpoHWJt3egyQFh0Gazxv9GuLmYmR3LEPSoex7+OZMRc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qkeAz50h8cJkAOG9nymDN8Mx48uQZl5pX8+lYUggQ55v03/9XdKXI3fGCgVwy4ilVCV56eUzSGgVAp+8r6m/lIdfMtsKpjirA8txoNX3WsQVY5PINXkhNhZd4YgpviqwVpgjtS8lwPSOw+QMFLKkUmMfyLHdoy+vhrafN5tDepc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atZux+0d; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6006719E7D3;
+	Fri, 14 Jun 2024 15:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718377626; cv=fail; b=s/7NuM3G4PCDNJKlHjdVHf/WMIakeLpZPrbou/0y4oazgkYCivTU0d3c3YEcEXKq0VnxMo6eMXGRfvgf/dxCGnsQXEoeMEHRinJHWFhQeFpPQBCFMU/4cG1YD3z5vdchnJRicGG7LkBiFjjNdicAr2RC+eSuAKUX9nmSPTHIVFM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718377626; c=relaxed/simple;
+	bh=GyyQFBwQxEU9iU2kiD5JCDDv7dPwtt10eTEDTb0pmFw=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=Nkm3r/h/IatTs+BZwoXCwKt1zJIC6AG+lbyBeuEWe2oDTFUTkHr8pwk8ZZc5XUTOULcvx8dujsWX2hG50Ta2U2Ds/aLgXKfaSQJxoSOMFvghGmQKedKMGgoBLHxj6W1U3N3mI5UK3aAWAiGdO5xQPoC0ggGDYGRVIWyTJKj/Yfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AOywZidH; arc=fail smtp.client-ip=40.107.6.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atZux+0d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFAABC4AF1D;
-	Fri, 14 Jun 2024 15:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718377624;
-	bh=hpoHWJt3egyQFh0Gazxv9GuLmYmR3LEPSoex7+OZMRc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=atZux+0dys4cPdjH4/6iGX8tS7c6crpf2Apwmihrykn+cdJOtu/jMSssn9I9n7X2T
-	 h7nhLdnN49IyE9UoJygQOOnWZf8dTuJr8GH0SPYsi6Liua1nyUkvUCxAhNScA34bhn
-	 N3/1CGzGWrrunvzla9fX2b4nyo1kkPMy7pZOD0rz2v5BQqX0QE5FpcA9pSo4zfM61R
-	 CNs6hYNNvUzaraBZ4am11VnEXn5KDhrRagX8Kgyf1OVZaNddT+Sz2hVJl2r0LNCkS8
-	 v+PuvwobfLYq2KU3ZE0zoxudM5IsqDsu9ZcdVC4QQbeQr+PUqAADp2uavbx0LNO3mI
-	 q2emmGVm5d39w==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Fri, 14 Jun 2024 18:06:42 +0300
-Subject: [PATCH v5] arm64: dts: ti: am642-evm: Add overlay for NAND
- expansion card
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AOywZidH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DbwfFLUpjLMtXgBDaPbql/2tXnIAuwHLdcLel/cXcMPieiAU8HtJ2ZSRwYs+cz3DLQjV+GtxqSGB4CXTLVhCWUGGMTzqfEhm4LFLhYKm5Fd/YlXDyE1ammI01rtizvyAXFM1WFyNFQ8xxhfNojl+vpOCT0q3PxsRunHlCC1LJbCRoMfGU5rRLcQp6SBzt5viaUwn32Oz23moiT1n72uL/rRV5qGXYBKQbOKxCIP6LkyzkaLX8WaikL073jU8bN8JrJ2H/TkOGOcnVzc0OQC0K3YCrkWHQ+U2Q0xW4nnOSU5JGIvJdYfwL4nWwGCaOmZwG02Lg/xG7urKPi50g9mpiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e8QyXFldvojdWrKZneAZxjwtFdGbAS4u4yutJCttA14=;
+ b=Jl4/DKf8FX1mBYrqU/a5SHwRA0wz+jbehdbuz0ADupaicKCpRlydfSJHtWcPIQpOyIefYfn6p5KeuIhlKmq615eVoGdK12DGPEII3TYEWhQ140Ai1CLq1lVsLTz3YH1745puwiZKT3Ev+ueY5/xnYMmc/scSpQC4vYL3OeBIjbhvZOy4zzCfWiGdOk2zwBl/gcVsbawQL7afWGn/4f8IdfRAvs8qYzV09BlFge6peF702qQkc8CzbahKIUR5C9me6tLZocJZXvpZQORdtU3EL0e1nGG3Eduu+cCHYU5FxXXzAEm3H5UbN0bKjgqSScQ/HoHVW6LaQeMbCITa9TJvuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8QyXFldvojdWrKZneAZxjwtFdGbAS4u4yutJCttA14=;
+ b=AOywZidHvJkZ7fOg833CSP4bzcJUWrBIRrGMG7uSXe15Y0FzsFE+HWAuNfqShyBmbgj7LTL5mCh7EisrJpJ/7+0j3AakYdK6A5lT7PD5fh0tufZhQK1mSdVIUDwqULhSxE5yUMKO2XzdolpHF3EZ7msAdHzFg1cAesCLZHOHnwU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8215.eurprd04.prod.outlook.com (2603:10a6:20b:3b3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25; Fri, 14 Jun
+ 2024 15:07:01 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
+ 15:07:01 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Date: Fri, 14 Jun 2024 11:06:28 -0400
+Subject: [PATCH v3 4/9] arm64: dts: imx8qm: add mipi subsystem
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240614-imx8qm-dts-usb-v3-4-8ecc30678e1c@nxp.com>
+References: <20240614-imx8qm-dts-usb-v3-0-8ecc30678e1c@nxp.com>
+In-Reply-To: <20240614-imx8qm-dts-usb-v3-0-8ecc30678e1c@nxp.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718377604; l=2369;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=GyyQFBwQxEU9iU2kiD5JCDDv7dPwtt10eTEDTb0pmFw=;
+ b=DtvR8GUHILjCrK3sMvfs+102qf0ASw2z0IYnvIme4i/9VdlzrdhOb/DhXTo/36aABFXzKB0Uh
+ ow+LwLtcBZiAhpcDYlOfh4HHt7thDPqINYUdWiSgicblFD91L08604R
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR03CA0032.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::7) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240614-am642-evm-nand-v5-1-acf760896239@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIFcbGYC/x3MQQqAIBBA0avErBuwSS26SrSwnGoWWShIEN09a
- fkW/z+QOAonGKoHImdJcoYCU1ew7C5sjOKLgRRpZRuN7rCakPOBwQWPZp2pddRrbzoo0RV5lfs
- fjtP7fs+NdCZgAAAA
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: afd@ti.com, srk@ti.com, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7443; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=hpoHWJt3egyQFh0Gazxv9GuLmYmR3LEPSoex7+OZMRc=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBmbFyNT40p3B72AyVUT8OxMfjQcPPygO85xzRbT
- ySNByUw9mOJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZmxcjQAKCRDSWmvTvnYw
- kwf0EACAFuD1Gx24Ue+BJxG+ZTeNwQhVEQxQWcuBSr/YdMZzLXDmwJFnz1zpK6MwZLEispdosx1
- B1AuR/tsX6gJ9rVwfpCNxddaQ6XwLuIXdoI/j0nfxKxjiLWnTBiT9PNaAJ+K2Qua5j+/vCEMk2N
- 0j6rpTWHTnlf8gTEtZZNDHCqnganTT1sceNm81Kn5vXfGX7BKurGOZERrmhHH19I5vcNBeBY7jk
- r6XWdCW6/JyIiUqJFFh4lHPVa9Ru3YW5ptc74UTmKCeYBr/XDJvCXl5PIYIWWAZB5NHb2JsETFk
- tyscFAhQ5SJghqFhnDt9erIMqHU1KG/0biDW9ulX80FBtQD3YGUmaU0nIBSfZLI1v2vsJ6JZqMc
- WdlTOM0PaW/BwWvlsBRDzpwee+2eiQAMqXFTINikMT3mxgWYKaMQkqPU/cz3UTEAWC2QMyyyFqF
- hNahnPHVNN01xRxyAuWAWhYuVgbtJ3urJaXtOLwKp/ZhfGil2Z4vqpXExYTA8Qr8XVwnluYv+gf
- O6vlY1e7zb97A0q/ziog9zd0bE0Wz3hzcS5xzzbEp3Klr3jf69OzMheFn/XmA+QfGRgEAIBAKnq
- betiqZpY2JdDmpTtTc1UqkyGCcUTU1bFyyVSa2ESaxXubDYbGAocggcLIcaVm4ZC9X88uxU4r8c
- 5s7ouHBWZWJUlaQ==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22ac3b22-acba-41e0-8be0-08dc8c83a4cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|376011|7416011|52116011|1800799021|38350700011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SGRXVjJUeTZRajhPeUJYWEFQVk1OVWpybXZ6SnBtYXNFSGN2UDdtSHIvSGZq?=
+ =?utf-8?B?cVpZWHFVRkZUNVd1azE0UGFpL0xoY0RMM0hXbHdXaVpkOElFVTNTV01GVjhr?=
+ =?utf-8?B?eG9vMitacS9nQjVPWWNOcnJSSTg2Mm9wNmt2SlFtU1o0VWV1RndubjNmcGkw?=
+ =?utf-8?B?dFI2cnhRMmpQdlU0MzJINndmZ0xsV3llbW1FOGI4TWY3UnNDaFdXWGVwM1Fk?=
+ =?utf-8?B?dEtjbEtZSkN2QytQRHppTVBFaDJrclYremFpcEdzd2dRZ2xPaUFvZGpnd3lL?=
+ =?utf-8?B?emdoL2VZNzBYSjFYZkRVWnZ3N3N5QUNFQmpnSmMzMzRLVUE0ZnBDVGg3SDY2?=
+ =?utf-8?B?cFJrbGErbUhLZ2QwUmI1UzFXTHoxR3NTbVRVcVNVRjFTYkM1ZGdpZldkU1Mw?=
+ =?utf-8?B?QzY0Ny9BN3o3TWxnYzRKZ3JlYTZGYkpoWDlWOUNmNFQxaTd6V0psTDJLUHlY?=
+ =?utf-8?B?OEV0dDh3OEpyb2FISGUweXFtZlVYb1dnWUpBbnloWTdzcUliM0pka0lJOWRN?=
+ =?utf-8?B?b2FjaDNnZlhtcTYvUjV3WEVnS3ZaaVB0VEhlSjdTVitmeloxLzErd1UxbWhQ?=
+ =?utf-8?B?MUlOVmFVRmxtZlM3MjdFZkovdkFmQTVONGlnZzMzYzFLbVZqWnplZHZKVFlS?=
+ =?utf-8?B?UEZoYUJEcnJxVFJUdkE3L0daSDVCbmozbVdweFR2TkZ1bGd4b1M0b3EraG9N?=
+ =?utf-8?B?Ump5SUpkSHp1N0xOd1o4eG5jdDZ0UURPc29oQzZhNGp1S1hsK0o0eUI5U1lO?=
+ =?utf-8?B?Ti9UZ2R4bDRHQklMaklYcFoyT3BFZWgraTNKKzZzREZzQUxKZGtQS3ZKNFl5?=
+ =?utf-8?B?bjBrMC80NlkzeGNaRXhZNGlvYmZUSzd4RUNwWkhTemZoenFGNE1jY29TRzAv?=
+ =?utf-8?B?Z3pHLzgyd1hvZWZsM1dKbll3MjFDdnNFSUY0Y2pNcmtvdHJLNWVjT1Zwemcv?=
+ =?utf-8?B?czk0MWZjK3dIYWViWEJSNXRicXVxdktKbzFRRzNiRWFMQlE5Sk9ERVJ3Mm95?=
+ =?utf-8?B?dGJLbCtaaGFFdnp4VWN3cDA5Kzh6WXJxMHpYanBMSVRLM1ZBQ0lQWUJKWFdS?=
+ =?utf-8?B?bDQ4RW55TiswTmFyaGNMVktCQ3R4TkJ5ektkZFFZQ1BwbmY0aUl4elozZlk4?=
+ =?utf-8?B?TjlYazZwRWpkNSt3WjNBZVF1U1czbWtldnFUMzR0UmgxczQzYndpSVZEQ25y?=
+ =?utf-8?B?OWovRDlIemEyWFJhNGwxTEVmQVR3QWpqTVUxNGtlUmlsU2RSRDg2UU5sVmVt?=
+ =?utf-8?B?OTdtRk4vK0VPWFNlam9vRloyclVsSHRxZHpLOWN0amtvWDJ4R0dxd3ovTHVy?=
+ =?utf-8?B?QnN0UTFHcDlKT2dxdnROaFZqYnA2aWpMczhGamh3NTVqdWRWWkZjaDRXcW9S?=
+ =?utf-8?B?ZGZmdkdWbm81NDEyZEwwTHlSY2lBbXBpbUpvRjhtZFM3a1RIR2NnV0NkSUhn?=
+ =?utf-8?B?MGtHQUNta3FobmljdXFFcUpvVFFqVGtjRFdNbGgwZ1p3eUxIaWc3ZlpibytI?=
+ =?utf-8?B?UHo4bnhwRnJrYU9yR3NOUGZKcWRJb0djbWV2cHY3ZEtPWDJ0S2w3NlNWM3p5?=
+ =?utf-8?B?ZW1wY0w3RkRRd09sbVA0Q2ZaenFVUW1aK3IrY0hDVjBVS1EvdFRCNDg4a2hm?=
+ =?utf-8?B?QlljekU2N1FGSXRvTHVSc3Z1Um9aSTZpV3J2eWF1T1E3Z3N5QlhocUZlZ01N?=
+ =?utf-8?B?d2dFQzh6SENiNC82LzBuN3RvOUdpQnRDL0VWZXhYL1g0blZGV1FHTm1IZmFD?=
+ =?utf-8?B?cFdSdUswS2VnRVNTVzlCcmJ0VG80VUwrajhMZTVwSGVVOVZUYWFiYnlYcUtq?=
+ =?utf-8?Q?Zvy7BAzhvmU/JYvcAFAC6/80Vaq8AxYhKntLU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(52116011)(1800799021)(38350700011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RWV3Z29vdHpxK1dtaGJkcEhsNjUwOUlnbnVjMFd5RkkvTkxRU0tqK2FTM1hK?=
+ =?utf-8?B?Ri9CWHRydmE3K3llMmhiNld2TTlJVlArU1d0dW5QbWkzY2t0S3IySGJlOHBH?=
+ =?utf-8?B?djFoendEWHBZSnBOQkZ0RlJRZHd3MXMrWWo5ekJGQ1hTRWwxUzBPVUp5S0JH?=
+ =?utf-8?B?WnovanpyWFJSZ2lwdDRQMlJGMEQrclNCVWx6dit0aWkzb0xwd2JOcGJUS245?=
+ =?utf-8?B?RTBteXlES2pHWlJjRzMzVW8wV2t6YUVVNnNRbFJEbmtQaTltbnZQR1R4dDBx?=
+ =?utf-8?B?cFBNU2xZc3AzTmVZenduWkNVUXFYL0JoODB0eTZwSmYrTXVRWS9qUWtaVUta?=
+ =?utf-8?B?eXRPZ2NOdDQ5SXFIMTlKY0Z3ZHQyc01ydVhCdGk3TmdCeWRiYndBV1NWV2p4?=
+ =?utf-8?B?cmQ3R2JhUnlQU2ZUbHdyTmg4a2Y3ck9MZGNxNnNmYmU3VWltVWxJRnRhQnFF?=
+ =?utf-8?B?SzR2UnhVaGVnZjZSTm9oZkJaOWpQSTY5bXFEaXVaUTFySU1sM3ZNTmhmdVk5?=
+ =?utf-8?B?REhmTXdqYkdqQ3Z4UzNhbEYxQnlJWXFYVStrNHFGL1dBblpiTUtQNUZ2YzFU?=
+ =?utf-8?B?VmFRNnNZUjFjMzRCaXIwMnAwWHpNMGJvWndWUDZuaXhCUGJUR2RCR0FlK1Fw?=
+ =?utf-8?B?N2Y0VGx1cGtsVEVRTFk4d3IvVEI1R21qM0F4cHhjVEwveEJnS2hRNmQvRU9B?=
+ =?utf-8?B?V2RqUTdSaHphZmk3TDl4NjJaeTVoMldkUEI0MHlsdzhkZU1qd2VaMDFPejBT?=
+ =?utf-8?B?Tnc0N0RxL0todFIveUNCMk9tcmxIZ0RxNWJHM280ZEs0aUcxcFdMSG5WMGlH?=
+ =?utf-8?B?bmJYQjdOVlVmTHV4SllBbm0vVmFHVytVU2RiTmJMZDNqd29FWjlUd1dzQW8x?=
+ =?utf-8?B?K1lyMzE1TWt0YVVTeDZJREM4THhaUmJSaVFmUkRaSjBjWnNrelFPaDNTc2ky?=
+ =?utf-8?B?MStoR0JBaG9NTXRHd2E5UVR2VjZEejUweHNyb1dLRFlOcXkyZkMyTFVIVHpw?=
+ =?utf-8?B?Tm94YXAxSzBlYS94RU9Lb0I3aTY0NmZSZXdsalhKc0pZQWtFTUdSVDAvMERy?=
+ =?utf-8?B?cmtwcUFPQ2lPNFFUbVBSR2Ftc3NRNjErSmNrTElDeXgrR2NJVCtRQUR3T0pX?=
+ =?utf-8?B?a1hDVk1rd0lub3JXTVA2QWJzVjg5RXpZRFlpVHdsVGg1UnYxVS83bTdQL294?=
+ =?utf-8?B?aEY1SWxWMkY3R3M0S2QvUVh0YlBmdE4yazVWbzVsS3kzbHlvcFFneDVGa1k3?=
+ =?utf-8?B?K1lIRk9WMEJUOGtybkVZc2Q4QnVRWUU2ZERyNGpFU25zT0NCczgzTWdMWmhl?=
+ =?utf-8?B?RThFR3E1dFNhbEpQSkZndDU0d1YrYzJCS29HREtCT1RQekhyRUdjeDkxYnFB?=
+ =?utf-8?B?b3Vqd0JlbHFrRlFSTmZxT2VrbHhEYi95bDhoT0JER0paemVLUFdhNEtGdjhW?=
+ =?utf-8?B?dmVOQ3JDNWcwS1QzOGNBcU1LOXU2Z1Z6eDJLdm5VQ2J5eTZ2c09weWppTi9w?=
+ =?utf-8?B?dTNwaVMwUjlaTjErRTFBaTRFRUhkdWUvaHRhNElheCtseVlBVUpSdFpSSHcw?=
+ =?utf-8?B?aSsrU2wzelo4dmpwRFJYSlc2aGV3MUtrZVZkNTAyMWVrNHJ1SkhQemVvN05K?=
+ =?utf-8?B?bDVWeVg4TGU5alFvYk9SbnNoUEJNbEZxOVVFSXdyU00veEdBUDE4QjBQRnhD?=
+ =?utf-8?B?OC9uVlZzcTRYMjBXUGt4bCtiU1d1dG8xZmwvUlFqMldFbVlINkdFOXBqenV2?=
+ =?utf-8?B?SnhxM29MR01ZUThhS3kxSFg4Z2ZIWWxtTU12YzBMbEhBanlLaUZkTXkvYmg5?=
+ =?utf-8?B?SkdBWDFWQVVYNnZvcGdIYzF2bmNvLzQwSmRyc1hjc0tqZWZyeGEvYjdrMUtO?=
+ =?utf-8?B?SzNKU21sWTZVeVI1bUxPT0RVSWZWdS9NYWZzd21oYWpwQUJucUlFbjJwTzZx?=
+ =?utf-8?B?K2VSOGZpcmdrdmhzTkcyL3pXbnB1S2ltUjRBY3I5L2hrWVYvRENSZmJwdzJv?=
+ =?utf-8?B?OXZEblVydjhIYlFaMkxXUURsTzBiZjBoNmd1OHBtQVQyb1pwRml6TEErckdY?=
+ =?utf-8?B?c3Z1QUY4aTJIczB5RjhRRVh2QzdBemRUSVJhS1RBQnEyQWg0Tjlvakp4bWl3?=
+ =?utf-8?Q?EhjwzJJ5YC+EpDyPfLi8WqYw1?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22ac3b22-acba-41e0-8be0-08dc8c83a4cd
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 15:07:01.4617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /6J/dtfb/HM2ZRbgrV0Dr79TPyXe9wX0U6iZ3fShzyj3Afzo98JElykh/WDTAp4VqUw40f8Hus3HlBmazxOWAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8215
 
-The NAND expansion card plugs in over the HSE (High Speed Expansion)
-connector. Add support for it.
+Include common imx8-ss-mipi0.dtsi and imx8-ss-mipi1.dtsi.
 
-We add the ranges property to the GPMC node instead of the NAND
-overlay file to prevent below warnings.
-
-/fragment@3/__overlay__: Relying on default #address-cells value
-/fragment@3/__overlay__: Relying on default #size-cells value
-
-As GPMC is dedicated for NAND use on this board, it should be OK.
-
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
-Changelog:
-v5:
-- Rebased on ti-next/ti-k3-dts-next
+ arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi | 19 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi         | 17 +++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-v4:
-- Rebased on ti-next/ti-k3-dt-for-v6.9
-
-v3:
-https://lore.kernel.org/all/20240123201312.23187-1-rogerq@kernel.org/
-- Fix dtc warning by moving ranges property into the GPMC node
-- update licence to GPL-2.0-only OR MIT and Copyright year to 2024
-- don't drop k3-am642-evm.dtb target from Makefile
-
-v2:
-- Don't leave k3-am642-evm-nand.dtbo as an orphan. Make k3-am642-evm-nand.dtb
-with the overlay applied on the base board.
----
- arch/arm64/boot/dts/ti/Makefile               |   2 +
- arch/arm64/boot/dts/ti/k3-am642-evm-nand.dtso | 139 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am642-evm.dts       |   4 +
- 3 files changed, 145 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index d956372a7163..f5ff9ef6d70c 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -49,6 +49,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-am642-evm-icssg1-dualemac-mii.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-pcie.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-hummingboard-t-usb3.dtb
-+k3-am642-evm-nand-dtbs := k3-am642-evm.dtb k3-am642-evm-nand.dtbo
-+dtb-$(CONFIG_ARCH_K3) += k3-am642-evm-nand.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-phyboard-electra-rdk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-phyboard-electra-gpio-fan.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-nand.dtso b/arch/arm64/boot/dts/ti/k3-am642-evm-nand.dtso
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi b/arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi
 new file mode 100644
-index 000000000000..3d1c2111ec88
+index 0000000000000..f4c393fe72044
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm-nand.dtso
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/**
-+ * DT overlay for HSE NAND expansion card on AM642 EVM
-+ *
-+ * Copyright (C) 2021-2024 Texas Instruments Incorporated - https://www.ti.com/
++++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++/*
++ * Copyright 2024 NXP
 + */
 +
-+/dts-v1/;
-+/plugin/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "k3-pinctrl.h"
-+
-+&main_pmx0 {
-+	gpmc0_pins_default: gpmc0-pins-default {
-+		pinctrl-single,pins = <
-+			AM64X_IOPAD(0x0094, PIN_INPUT, 7) /* (T19) GPMC0_BE1n.GPIO0_36 */
-+
-+			AM64X_IOPAD(0x003c, PIN_INPUT, 0) /* (T20) GPMC0_AD0 */
-+			AM64X_IOPAD(0x0040, PIN_INPUT, 0) /* (U21) GPMC0_AD1 */
-+			AM64X_IOPAD(0x0064, PIN_INPUT, 0) /* (R16) GPMC0_AD10 */
-+			AM64X_IOPAD(0x0068, PIN_INPUT, 0) /* (W20) GPMC0_AD11 */
-+			AM64X_IOPAD(0x006c, PIN_INPUT, 0) /* (W21) GPMC0_AD12 */
-+			AM64X_IOPAD(0x0070, PIN_INPUT, 0) /* (V18) GPMC0_AD13 */
-+			AM64X_IOPAD(0x0074, PIN_INPUT, 0) /* (Y21) GPMC0_AD14 */
-+			AM64X_IOPAD(0x0078, PIN_INPUT, 0) /* (Y20) GPMC0_AD15 */
-+			AM64X_IOPAD(0x0044, PIN_INPUT, 0) /* (T18) GPMC0_AD2 */
-+			AM64X_IOPAD(0x0048, PIN_INPUT, 0) /* (U20) GPMC0_AD3 */
-+			AM64X_IOPAD(0x004c, PIN_INPUT, 0) /* (U18) GPMC0_AD4 */
-+			AM64X_IOPAD(0x0050, PIN_INPUT, 0) /* (U19) GPMC0_AD5 */
-+			AM64X_IOPAD(0x0054, PIN_INPUT, 0) /* (V20) GPMC0_AD6 */
-+			AM64X_IOPAD(0x0058, PIN_INPUT, 0) /* (V21) GPMC0_AD7 */
-+			AM64X_IOPAD(0x005c, PIN_INPUT, 0) /* (V19) GPMC0_AD8 */
-+			AM64X_IOPAD(0x0060, PIN_INPUT, 0) /* (T17) GPMC0_AD9 */
-+			AM64X_IOPAD(0x0098, PIN_INPUT_PULLUP, 0) /* (W19) GPMC0_WAIT0 */
-+			AM64X_IOPAD(0x009c, PIN_INPUT_PULLUP, 0) /* (Y18) GPMC0_WAIT1 */
-+			AM64X_IOPAD(0x00a8, PIN_OUTPUT_PULLUP, 0) /* (R19) GPMC0_CSn0 */
-+			AM64X_IOPAD(0x00ac, PIN_OUTPUT_PULLUP, 0) /* (R20) GPMC0_CSn1 */
-+			AM64X_IOPAD(0x00b0, PIN_OUTPUT_PULLUP, 0) /* (P19) GPMC0_CSn2 */
-+			AM64X_IOPAD(0x00b4, PIN_OUTPUT_PULLUP, 0) /* (R21) GPMC0_CSn3 */
-+			AM64X_IOPAD(0x007c, PIN_OUTPUT, 0) /* (R17) GPMC0_CLK */
-+			AM64X_IOPAD(0x0084, PIN_OUTPUT, 0) /* (P16) GPMC0_ADVn_ALE */
-+			AM64X_IOPAD(0x0088, PIN_OUTPUT, 0) /* (R18) GPMC0_OEn_REn */
-+			AM64X_IOPAD(0x008c, PIN_OUTPUT, 0) /* (T21) GPMC0_WEn */
-+			AM64X_IOPAD(0x0090, PIN_OUTPUT, 0) /* (P17) GPMC0_BE0n_CLE */
-+			AM64X_IOPAD(0x00a0, PIN_OUTPUT_PULLUP, 0) /* (N16) GPMC0_WPn */
-+			AM64X_IOPAD(0x00a4, PIN_OUTPUT, 0) /* (N17) GPMC0_DIR */
-+		>;
-+	};
++&mipi0_lis_lpcg {
++	clocks = <&dsi_ipg_clk>;
++	clock-indices = <IMX_LPCG_CLK_0>;
++	clock-output-names = "mipi0_lis_lpcg_ipg_clk";
 +};
 +
-+&main_gpio0 {
-+	gpio0-36 {
-+		gpio-hog;
-+		gpios = <36 0>;
-+		input;
-+		line-name = "GPMC0_MUX_DIR";
-+	};
++&mipi0_pwm_lpcg {
++	clocks = <&clk IMX_SC_R_MIPI_0_PWM_0 IMX_SC_PM_CLK_PER>,
++		 <&dsi_ipg_clk>;
++	clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
++	clock-output-names = "mipi0_pwm_lpcg_clk",
++			     "mipi0_pwm_lpcg_ipg_clk";
 +};
-+
-+&elm0 {
-+	status = "okay";
-+};
-+
-+&gpmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gpmc0_pins_default>;
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+
-+	nand@0,0 {
-+		compatible = "ti,am64-nand";
-+		reg = <0 0 64>;		/* device IO registers */
-+		interrupt-parent = <&gpmc0>;
-+		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
-+			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc0 0 GPIO_ACTIVE_HIGH>;	/* gpmc_wait0 */
-+		ti,nand-xfer-type = "prefetch-polled";
-+		ti,nand-ecc-opt = "bch8";	/* BCH8: Bootrom limitation */
-+		ti,elm-id = <&elm0>;
-+		nand-bus-width = <8>;
-+		gpmc,device-width = <1>;
-+		gpmc,sync-clk-ps = <0>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <40>;
-+		gpmc,cs-wr-off-ns = <40>;
-+		gpmc,adv-on-ns = <0>;
-+		gpmc,adv-rd-off-ns = <25>;
-+		gpmc,adv-wr-off-ns = <25>;
-+		gpmc,we-on-ns = <0>;
-+		gpmc,we-off-ns = <20>;
-+		gpmc,oe-on-ns = <3>;
-+		gpmc,oe-off-ns = <30>;
-+		gpmc,access-ns = <30>;
-+		gpmc,rd-cycle-ns = <40>;
-+		gpmc,wr-cycle-ns = <40>;
-+		gpmc,bus-turnaround-ns = <0>;
-+		gpmc,cycle2cycle-delay-ns = <0>;
-+		gpmc,clk-activation-ns = <0>;
-+		gpmc,wr-access-ns = <40>;
-+		gpmc,wr-data-mux-bus-ns = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "NAND.tiboot3";
-+				reg = <0x00000000 0x00200000>;	/* 2M */
-+			};
-+			partition@200000 {
-+				label = "NAND.tispl";
-+				reg = <0x00200000 0x00200000>;	/* 2M */
-+			};
-+			partition@400000 {
-+				label = "NAND.tiboot3.backup";	/* 2M */
-+				reg = <0x00400000 0x00200000>;	/* BootROM looks at 4M */
-+			};
-+			partition@600000 {
-+				label = "NAND.u-boot";
-+				reg = <0x00600000 0x00400000>;	/* 4M */
-+			};
-+			partition@a00000 {
-+				label = "NAND.u-boot-env";
-+				reg = <0x00a00000 0x00040000>;	/* 256K */
-+			};
-+			partition@a40000 {
-+				label = "NAND.u-boot-env.backup";
-+				reg = <0x00a40000 0x00040000>;	/* 256K */
-+			};
-+			partition@a80000 {
-+				label = "NAND.file-system";
-+				reg = <0x00a80000 0x3f580000>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index e20e4ffd0f1f..9f691ed97791 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -817,3 +817,7 @@ icssg1_phy1: ethernet-phy@f {
- 		rx-internal-delay-ps = <2000>;
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+index 1e8511e8d8577..3ee6e2869e3cf 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+@@ -567,12 +567,28 @@ lvds_ipg_clk: clock-controller-lvds-ipg {
+ 		clock-output-names = "lvds0_ipg_clk";
  	};
- };
+ 
++	dsi_ipg_clk: clock-controller-dsi-ipg {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <120000000>;
++		clock-output-names = "dsi_ipg_clk";
++	};
 +
-+&gpmc0 {
-+	ranges = <0 0 0x00 0x51000000 0x01000000>; /* CS0 space. Min partition = 16MB */
-+};
++	mipi_pll_div2_clk: clock-controller-mipi-div2-pll {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <432000000>;
++		clock-output-names = "mipi_pll_div2_clk";
++	};
++
+ 	/* sorted in register address */
+ 	#include "imx8-ss-cm41.dtsi"
+ 	#include "imx8-ss-audio.dtsi"
+ 	#include "imx8-ss-vpu.dtsi"
+ 	#include "imx8-ss-gpu0.dtsi"
++	#include "imx8-ss-mipi0.dtsi"
+ 	#include "imx8-ss-lvds0.dtsi"
++	#include "imx8-ss-mipi1.dtsi"
+ 	#include "imx8-ss-lvds1.dtsi"
+ 	#include "imx8-ss-img.dtsi"
+ 	#include "imx8-ss-dma.dtsi"
+@@ -586,3 +602,4 @@ lvds_ipg_clk: clock-controller-lvds-ipg {
+ #include "imx8qm-ss-lsio.dtsi"
+ #include "imx8qm-ss-audio.dtsi"
+ #include "imx8qm-ss-lvds.dtsi"
++#include "imx8qm-ss-mipi.dtsi"
 
----
-base-commit: 2f79e7408ac1b22ce8abc4a22b92793a57a3077d
-change-id: 20240614-am642-evm-nand-5fb23a284d57
-
-Best regards,
 -- 
-Roger Quadros <rogerq@kernel.org>
+2.34.1
 
