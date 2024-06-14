@@ -1,172 +1,214 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FE118308F;
-	Fri, 14 Jun 2024 02:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E3E374FE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333098; cv=none; b=jfoc+DUEC3KVENrVGLlJuHn7vryPoI8uSQ7xC7gxA806PFlumuHvAUARIllWl6DbvsvmDfXEcDw84qoqgOtFChBSDjW6Y4p8nF2gkbLdjbO4zDEW63+ykesSVXzjnXcMI+u4o/mr7Ab23j3dloq5dnMwLaKSY3fdFNzoDefXLLo=
+	t=1718333132; cv=none; b=Q17+FlDbZpvyQeFYxEPuC1lynngB5eU6VUzKJxp5YVy8Z5HZ1eSbSLGVwF5HhKP2jL92XVZXDjltPekdGs7NDzR4LP9zWfWVJ2Au/4pBckJJug0/P9OfvsdkFpdFuVOZEtb+J0U613jlc4K4Ma59sZed2bJ0ryO7Z/asGHSk4ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333098; c=relaxed/simple;
-	bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=lLb0AIiguhoM7oHMLrfFymY6YyFFM++TRdGoDmI5OHhwAJnMXHgN0AZ0DxK2thhJKUpyGEuUchIsGg8osC1p15xVEM/8PJfLH04FDlz4JRhdAMcpvm+bq7EEOimkmw4XJdGTQna8vzWFIoo4gXxB1KFMwgfZJGhtiMAQ/76yJyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=JvoDMu8G; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qtefudHW; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JvoDMu8G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qtefudHW"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 8CE1013801A4;
-	Thu, 13 Jun 2024 22:44:56 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 13 Jun 2024 22:44:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1718333096;
-	 x=1718419496; bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=; b=
-	JvoDMu8GtVyp/R7dzBMEhsJaWn3rMv3yGKSDsQgoC6JYmqsVf92GxAs9qnrgt5h9
-	VW9YbiNmkCV2aX8alm6YUmmMoueg/A7epiVr1dX64dwYU9cF8fNJTMcoxmpX+YeQ
-	8QghXkxTGa79NXx73/4+Ch5n2PDhy/LkyZKwDX/J37sYxBqBTmnV33ZaqjhBgUYN
-	W4UBysPQTeyYqc0OZ517U20coAKhUBztawapEs3gJEBAj+MTFagqov5f0cWdGxu0
-	Aag6RjR4aDvJCxdYsr9bDw08Mb6cVAO+ESCbT2Z/IGkSQi6pUnaMtT+++QGQb9NR
-	IKRlj4lhI+mWf8D3CDcqnw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718333096; x=
-	1718419496; bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=; b=q
-	tefudHW7BEfc2lKY1jot8DKvoh/aWDHpoooOZ6nLjPh5Kp9dOPkAXIT7yl2BNqj8
-	r9cf5XMeFyPYGjtzDtKmb6EfA6piN4wyKWIXLezFOUxVgZ6RhPYN4lCIJsoukR+y
-	rsLUbIUrmtMVT4enAJmKBwBqR36XKWewROK7r1GusvAghyrOpQ45tXYT7Um1KyGg
-	6SFqW2GvkjY9o7Lci2mxne9/49EpndNNsu5xdb1DI4dhBwXJL5wMylz8EArUBcNZ
-	dHB0b67YxHzEtivCh2W93ezpFj9PyPF9SwvL4Ud1Eb26fBe5WDpPI5LIp13f8t7O
-	kKMrD63HeIOifT5wAlmzA==
-X-ME-Sender: <xms:p65rZkaoNjTqCbbZ3Sug1tiOFOnXeuTgcmAdY3epW_qAnyVkYN1L6A>
-    <xme:p65rZval8nKRirZVmf_Qt_8PNyI9FjIWNyFWt0s1vPMkbMbk3V2XmWeVb20_cq8Xf
-    TZETmVH9_c_qXq7cnA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedukedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpeeivdefffdvgfegfeehjeelteevheehkeefvdffhfej
-    tdejvdeuhedtgfekudelleenucffohhmrghinhepuhgvfhhirdhorhhgnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghn
-    ghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:p65rZu8FlDxiVciJ_zDD0QoyOPXA0n-lXt01u8LwwJcSTG5SYPPOCQ>
-    <xmx:p65rZuqsksdVJS75a0FmCS5YppWoVR09e58MJKIfE_Tm_8sA3d88ow>
-    <xmx:p65rZvqfyVAbXQGGN7MQ9inGhime7gp38GsvuowIMNIjb9NNiTn_Zg>
-    <xmx:p65rZsRV8lIXX0pusjCTQW-eBGT4ZddX9GDNlbhdHMDzs6i9x0GW3w>
-    <xmx:qK5rZgCqWFyz6uaU_fkMXgz11HdQCElhJoY5FVPoouK_ceiyJUIieaFy>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 676B736A0074; Thu, 13 Jun 2024 22:44:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	s=arc-20240116; t=1718333132; c=relaxed/simple;
+	bh=Q6drMV6EJgFGpI9rIuu/40gnRhRRxuf/lwLuY6sM5tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSPXqDCdgUPH9kmpYKUA6tQ+nWZaJMrStFx79E+h94v7RNQY8R+kijgn7sWzLoI0rI8nXhq19pk8eBYFJpl6USnugqN3/TTZ5jUU9JtAwqx/KRSOiOdrtUYwv1mQH2gwEcnSBIUTHPwV3wOhJCz59HYrjLMLgSAZKipRNexTZJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-18-666baec31553
+Date: Fri, 14 Jun 2024 11:45:18 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Dave Hansen <dave.hansen@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Byungchul Park <lkml.byungchul.park@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, akpm@linux-foundation.org,
+	ying.huang@intel.com, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, peterz@infradead.org,
+	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v11 09/12] mm: implement LUF(Lazy Unmap Flush) defering
+ tlb flush when folios get unmapped
+Message-ID: <20240614024518.GB47085@system.software.com>
+References: <26dc4594-430b-483c-a26c-7e68bade74b0@redhat.com>
+ <20240603093505.GA12549@system.software.com>
+ <d650c29b-129f-4fac-9a9d-ea1fbdae2c3a@intel.com>
+ <35866f91-7d96-462a-aa0a-ac8a6b8cbcf8@redhat.com>
+ <196481bb-b86d-4959-b69b-21fda4daae77@intel.com>
+ <Zl320dWODSYw-PgV@casper.infradead.org>
+ <20240604003448.GA26609@system.software.com>
+ <Zmb-ZZHbeNNjcs68@tiehlicka>
+ <20240611005523.GA4384@system.software.com>
+ <Zmg7GXK1SGFJNdge@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <b291e5fb-bf3a-4129-96a0-99182e11f506@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H5C0rn-bY11FxoGANX+hEFrrbpj095ZAEbjC0ksQGuWpA@mail.gmail.com>
-References: <20240613-loongarch64-sleep-v1-0-a245232af5e4@flygoat.com>
- <20240613-loongarch64-sleep-v1-2-a245232af5e4@flygoat.com>
- <CAAhV-H7VKGMAH10S4sOZLkbgkUSMAYzpYt-dL83S0Vg286PsaQ@mail.gmail.com>
- <f9a0d11e-53c7-4a15-a7b3-209da8bcf52d@app.fastmail.com>
- <CAAhV-H5C0rn-bY11FxoGANX+hEFrrbpj095ZAEbjC0ksQGuWpA@mail.gmail.com>
-Date: Fri, 14 Jun 2024 03:44:36 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, "Xuerui Wang" <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] LoongArch: Fix ACPI standard register based S3 support
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmg7GXK1SGFJNdge@tiehlicka>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsXC9ZZnke7hddlpBtOWWFnMWb+GzeLzhn9s
+	Fp9ePmC0eLGhndHi6/pfzBZPP/WxWFzeNYfN4t6a/6wWRzs3MVuc37WW1WLH0n1MFvf7HCwu
+	HVjAZHG89wCTxfx7n9ksNm+aymxxfMpURovfP4C6Ts6azOIg7PG9tY/FY+esu+weCzaVemxe
+	oeWxeM9LJo9NqzrZPDZ9msTu8e7cOXaPEzN+s3jMOxno8X7fVTaP9Vuusnhs/WXn0Tj1GpvH
+	501yAfxRXDYpqTmZZalF+nYJXBnTj7xnLjilUrH4zEWWBsY7kl2MnBwSAiYSc3r62GDsDx2d
+	LCA2i4CqRNv7CWBxNgF1iRs3fjKD2CICShJdm3cCxbk4mAX+M0v8mHcMrEhYoEDi1YRJ7CA2
+	r4CFxPXW9WCDhAROM0vcf2oIEReUODnzCVicWUBL4sa/l0xdjBxAtrTE8n8cIGFOAU2Jy58/
+	g40RFVCWOLDtOBPILgmBY+wS805PYoY4VFLi4IobLBMYBWYhGTsLydhZCGMXMDKvYhTKzCvL
+	TczMMdHLqMzLrNBLzs/dxAiM12W1f6J3MH66EHyIUYCDUYmH1+NZVpoQa2JZcWXuIUYJDmYl
+	Ed5ZC4FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGDec
+	UHJfuOXayzvaD5SnxS4+YlmesyF1u/nr2EqxyG/LwlbqfOgO2rORg7NBd+nKn7J3LuVqqTXs
+	+N+6XiWKhefaK1/Ri4fmOPc9ft0f8qz0i5qdEPu7+a561wz+P9x0aSlr+s8mqTz5mUx7E83M
+	nre/3OOocl5A5PDKg9+mXJr1JX7plNWfHvEpsRRnJBpqMRcVJwIAdm4/+9MCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsXC5WfdrHt4XXaawY8ZMhZz1q9hs/i84R+b
+	xaeXDxgtXmxoZ7T4uv4Xs8XTT30sFofnnmS1uLxrDpvFvTX/WS2Odm5itji/ay2rxY6l+5gs
+	7vc5WFw6sIDJ4njvASaL+fc+s1ls3jSV2eL4lKmMFr9/AHWdnDWZxUHE43trH4vHzll32T0W
+	bCr12LxCy2PxnpdMHptWdbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8li/5SqL
+	x9Zfdh6NU6+xeXzeJBcgEMVlk5Kak1mWWqRvl8CVMf3Ie+aCUyoVi89cZGlgvCPZxcjJISFg
+	IvGho5MFxGYRUJVoez+BDcRmE1CXuHHjJzOILSKgJNG1eSdQnIuDWeA/s8SPecfAioQFCiRe
+	TZjEDmLzClhIXG9dDzZISOA0s8T9p4YQcUGJkzOfgMWZBbQkbvx7ydTFyAFkS0ss/8cBEuYU
+	0JS4/Pkz2BhRAWWJA9uOM01g5J2FpHsWku5ZCN0LGJlXMYpk5pXlJmbmmOoVZ2dU5mVW6CXn
+	525iBEbfsto/E3cwfrnsfohRgINRiYfX41lWmhBrYllxZe4hRgkOZiUR3lkLgUK8KYmVValF
+	+fFFpTmpxYcYpTlYlMR5vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2M+htj9DeExnqxHKh+sc5a
+	53exN8deDsc1V+uYjy8Vj5Baz3GLNfj0s+0HV994E2nceJPPKlrtY9n9ZbW3RDNcQidVTLOf
+	+bub71SHj9PPyzJ9/2/vPfAoXeHx4gQnr51vJzdt1/65LWb77sIFhbr7rpdzJC55cq5CWmHS
+	3MU8O83qNB9zT9jfrcRSnJFoqMVcVJwIAB6WDw66AgAA
+X-CFilter-Loop: Reflected
 
+On Tue, Jun 11, 2024 at 01:55:05PM +0200, Michal Hocko wrote:
+> On Tue 11-06-24 09:55:23, Byungchul Park wrote:
+> > On Mon, Jun 10, 2024 at 03:23:49PM +0200, Michal Hocko wrote:
+> > > On Tue 04-06-24 09:34:48, Byungchul Park wrote:
+> > > > On Mon, Jun 03, 2024 at 06:01:05PM +0100, Matthew Wilcox wrote:
+> > > > > On Mon, Jun 03, 2024 at 09:37:46AM -0700, Dave Hansen wrote:
+> > > > > > Yeah, we'd need some equivalent of a PTE marker, but for the page cache.
+> > > > > >  Presumably some xa_value() that means a reader has to go do a
+> > > > > > luf_flush() before going any farther.
+> > > > > 
+> > > > > I can allocate one for that.  We've got something like 1000 currently
+> > > > > unused values which can't be mistaken for anything else.
+> > > > > 
+> > > > > > That would actually have a chance at fixing two issues:  One where a new
+> > > > > > page cache insertion is attempted.  The other where someone goes to look
+> > > > > > in the page cache and takes some action _because_ it is empty (I think
+> > > > > > NFS is doing some of this for file locks).
+> > > > > > 
+> > > > > > LUF is also pretty fundamentally built on the idea that files can't
+> > > > > > change without LUF being aware.  That model seems to work decently for
+> > > > > > normal old filesystems on normal old local block devices.  I'm worried
+> > > > > > about NFS, and I don't know how seriously folks take FUSE, but it
+> > > > > > obviously can't work well for FUSE.
+> > > > > 
+> > > > > I'm more concerned with:
+> > > > > 
+> > > > >  - page goes back to buddy
+> > > > >  - page is allocated to slab
+> > > > 
+> > > > At this point, tlb flush needed will be performed in prep_new_page().
+> > > 
+> > > But that does mean that an unaware caller would get an additional
+> > > overhead of the flushing, right? I think it would be just a matter of
+> > 
+> > pcp for locality is already a better source of side channel attack.  FYI,
+> > tlb flush gets barely performed only if pending tlb flush exists.
+> 
+> Right but rare and hard to predict latencies are much worse than
+> consistent once.
 
+No doubt it'd be the best if we keep things consistent as long as
+possible.  How consistent *we require* it would be, matters.  Lemme know
+criteria for that if any.  I will check it.
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=883:32=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Fri, Jun 14, 2024 at 10:25=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flyg=
-oat.com> wrote:
->>
->>
->>
->> =E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=
-=E5=8D=883:11=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> > Hi, Jiaxun,
->> >
->> > On Fri, Jun 14, 2024 at 12:41=E2=80=AFAM Jiaxun Yang <jiaxun.yang@f=
-lygoat.com> wrote:
->> >>
->> >> Most LoongArch 64 machines are using custom "SADR" ACPI extension
->> >> to perform ACPI S3 sleep. However the standard ACPI way to perform
->> >> sleep is to write a value to ACPI PM1/SLEEP_CTL register, and this
->> >> is never supported properly in kernel.
->> > Maybe our hardware is insane so we need "SADR", if so, this patch m=
-ay
->> > break real hardware. What's your opinion, Jianmin?
->>
->> I understand why your hardware need SADR. Most systems DDR self-refre=
-sh
->> mode needs to be setup by firmware.
-> _S3 is also a firmware method, why we can't use it to setup self-refre=
-sh?
+> > > time before somebody can turn that into a side channel attack, not to
+> > > mention unexpected latencies introduced.
+> > 
+> > Nope.  The pending tlb flush performed in prep_new_page() is the one
+> > that would've done already with the vanilla kernel.  It's not additional
+> > tlb flushes but it's subset of all the skipped ones.
+> 
+> But those skipped once could have happened in a completely different
+> context (e.g. a different process or even a diffrent security domain),
+> right?
 
-That's the problem from ACPI spec. As per ACPI spec _S3 method only tells
-you what should you write into PM1 or SLEEP_CTL register, it will NOT pe=
-rform
-actual task to enter sleeping. (See 16.1.3.1 [1])
+Right.
 
-On existing LoongArch hardware _S3 method is only used to mark presence =
-of S3
-state. This is violating ACPI spec, but I guess we must live with it.
+> > It's worth noting all the existing mm reclaim mechaisms have already
+> > introduced worse unexpected latencies.
+> 
+> Right, but a reclaim, especially direct reclaim, are expected to be
+> slow. It is much different to see spike latencies on system with a lot
+> of memory.
 
-Furthermore, on Loongson hardware you have to disable access to DDR memo=
-ry
-to access DDR controller's configuration registers. Which means self-ref=
-resh
-code must run from BIOS ROM.
+Talking about rt system?  In rt system, the system should prevent its
+memory from being reclaimed, IMHO, since these will add unexpected
+latencies.
 
-[1]: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/16_Waking_and_Sleepin=
-g/sleeping-states.html
+Reclaim and migrations alreay introduce unexpected latencies themselves.
+Why does only latencies by luf matter?  I'm asking to understand what
+you mean, in order to fix luf if any.
 
-Thanks
-- Jiaxun
+   vanilla
+   -------
+   alloc_page() {
+      ...
+      preempted by kswapd or direct reclaim {
+         ...
+         reclaim
+            unmap file pages
+   	 tlb shootdown
+         ...
+         migration
+            unmap pages
+   	 tlb shootdown
+         ...
+      }
+      ...
+      interrupted by tlb shootdown from other CPUs {
+         ...
+      }
+      ...
+      prep_new_page() {
+         ...
+      }
+   }
+   
+   with luf
+   --------
+   alloc_page() {
+      ...
+      preempted by kswapd or direct reclaim {
+         ...
+         reclaim
+            unmap file pages
+   	 (skip tlb shootdown)
+         ...
+         migration
+            unmap pages
+   	 (skip tlb shootdown)
+         ...
+      }
+      ...
+      interrupted by tlb shootdown from other CPUs {
+         ...
+      }
+      ...
+      prep_new_page() {
+         ...
+         /*
+          * This can be tlb shootdown skipped in this context or others.
+          */
+         tlb shootdown with much smaller cpumask
+         ...
+      }
+   }
 
->
-> Huacai
->
->>
->> There is no chance that it may break real hardware. When firmware sup=
-plied
->> SADR it will always use SADR. The fallback only happens when _S3 meth=
-od exist
->> but no SADR supplied, which won't happen on real hardware.
->>
->> For QEMU we don't have stub firmware but standard compliant SEEP_CTL =
-is
->> sufficient for entering sleep mode, thus we need this fallback path.
->>
->> Thanks
->>
->> >
->> > Huacai
->> >
->> >>
->>
->> --
->> - Jiaxun
->>
+I really want to understand why only latentcies introduced in luf
+matter?  Why does not latencies already introduced in vanilla matter?
 
---=20
-- Jiaxun
+	Byungchul
+
+> -- 
+> Michal Hocko
+> SUSE Labs
