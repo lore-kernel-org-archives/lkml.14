@@ -1,258 +1,105 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A782195F0D
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2EA811FE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718366878; cv=none; b=DfLLELCycn0WQEE1HifwGz020VSC9s/8H2qigZ71F+8zBjs0Uoc6ThRjXBwuHj0qYWZJCh7M5YCqZi9iHTJz/1vnyBOglVS3dAyjM+9NiFmKkGqDVaCzlJoQVGi00jNu4LnvU947R7cmCUP2KGgsCbUDNboExbrMYQJuxtGICUQ=
+	t=1718367020; cv=none; b=rwnon7fFoLLAU9g/5wGUJ5aK5rPGnbRZJ6mctu23cLyKdZKjRKjSaWpTEHpXjKrwU7VBUMWfgpGj8GxkJAfdYsejvKcLOfM/8Ufpfgzh5dYoqkFRQINUzOFmV6v09Zk8Nxeb1aIr8ip1hzFDauPFWybdptD+aCPFd0n1xPIuZvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718366878; c=relaxed/simple;
-	bh=lcFtH23e9Rt5eW1X9f2TiDWQqZjY+r2KCNmf9AiRlI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qj1XO0UqNW8//66/BeqKQ36JYvdqLMz1SASo6N9J4/dNJVROvJwxLN7SV6zNmG6Ql+arH8M5RPc6SQhswUdlOOzYCFexnyS5hFjqd1ZsQ8r3HX5wc1FpUnwS7/j9v1a0DQbuiBQf/hqfWWm03EFDRhpac+4Fubg5J0jtCVGLXng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kucfFyQm; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kucfFyQm"
-X-Envelope-To: usamaarif642@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718366874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=peu4HYA3Smy92EmNKG1/7ckvk78sjW9rJi3oNPg4ZUo=;
-	b=kucfFyQmn6AtisEDi9oL9J/EEUkUwEDe1iYX6QGTVV4LtG5BwKBsQZiYHUteBMNWJYdbAT
-	AgXU5y2Gefqn8NKIbsluwNMhvBHGy7TXurwbuOnpaochqFRlqZt5meEyu5ObJDxYntchub
-	2Ft5EVjMO50Q7jllRRqnPBVhxnrvK5E=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: shakeel.butt@linux.dev
-X-Envelope-To: david@redhat.com
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: hughd@google.com
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: yosryahmed@google.com
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: kernel-team@meta.com
-Message-ID: <0e17c634-842b-40f6-b3bd-e4b98ed1dc8f@linux.dev>
-Date: Fri, 14 Jun 2024 20:07:25 +0800
+	s=arc-20240116; t=1718367020; c=relaxed/simple;
+	bh=NFyPsrA6jdLOEig7pGgzBt++SapvFKggz+7IsJWuL/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MvLRvZDgTc/B4GWRV5TPCJo54WI1yttMmUFFJ4qJXEObozugyXARlfyN6MAnGvk+YCZzbC69eA45+b7OG6A6BnepLuiFxUWKn4QnAACuOSDHno2horrUdw/rMmVzziqaTxToXfHB9KglPWXJhLGjY0D+7mnOQaV6IJrT9NuOgKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6319bf71f28so15000897b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:10:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718367017; x=1718971817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uCUg8QYCKMVfa4NHNqKto50dVwiO8FLSnVupggLvSyg=;
+        b=LzZIyqQaGm7DWUb1uZvgdYiz+olnBLgqmpjf8AhKxsAdp2AnYjs6GPG8ZjYzehWu4t
+         zQdZJq83AXYYV+b5+6S4MnJ5D0vGyQ8M9kfFjCEnfUVekemo2uE4g7Vv49nAXsU2Hcm5
+         mNAk4rHj0h+lV4XztzPLpcfVuioBKadM/JF/Fat712lToEDtYk0UkeSiRal3/JQpr3Oi
+         0u9EGpGOYQr6AsXZbV/geYAMo3WIWj4fT/gk8uRrhalFBUby2Co0URXnISQSD5cpGOOb
+         iej3zHEMpPPvy0uz7QZWcOkBGx6I0gAVlfsOxECe3401E1EBwJmp3+bhRrb/jXSm9IzO
+         UzDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQBy4vHUB+vwj7DyW1NmrrmUus6vwUICUd5Wv1qdFR4w6r/ERyHZ87zfKxUOAmHZHIJyELPvutqTxdke0yFWOOBxqguDiEgaTayoFP
+X-Gm-Message-State: AOJu0Yyi3Mj1QVRnyvKQVTGsRQZzkQl/xvYQ8SikZubWOILMuT2dwJC+
+	fV5BRJS+XumllObGfOtlLXcM+H+zH1jNL6FYgosXrAH/at9PMNhTyGipvixx
+X-Google-Smtp-Source: AGHT+IES0gvRcuf4TlLfK+QlUXE7llzGRWqKIT5QuQLv1mPBjJUDZAyecHsC9YVytnmKGJUD9Zienw==
+X-Received: by 2002:a05:690c:3:b0:62d:1eb6:87bf with SMTP id 00721157ae682-63222455d4emr25091077b3.5.1718367016015;
+        Fri, 14 Jun 2024 05:10:16 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6327f50f18dsm1295967b3.131.2024.06.14.05.10.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 05:10:15 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dfe43dca3bfso2546416276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:10:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpwgIlsU2sRYKPmLSu77uzvD6GuekVbSvLCaMo9yPjRFkUGhDb130QwKJuS+paJCkzlGDKTKv5WD6rmbUT/0Ul+pTcgK5G5+qJUM15
+X-Received: by 2002:a25:ad5c:0:b0:dfb:2cf2:cc23 with SMTP id
+ 3f1490d57ef6-dff154917f1mr2306806276.42.1718367015107; Fri, 14 Jun 2024
+ 05:10:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 2/2] mm: remove code to handle same filled pages
-Content-Language: en-US
-To: Usama Arif <usamaarif642@gmail.com>, akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, david@redhat.com,
- ying.huang@intel.com, hughd@google.com, willy@infradead.org,
- yosryahmed@google.com, nphamcs@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20240614100902.3469724-1-usamaarif642@gmail.com>
- <20240614100902.3469724-3-usamaarif642@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240614100902.3469724-3-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <cover.1718311756.git.u.kleine-koenig@baylibre.com>
+ <85a3d444f2943ebe9d64e722b1717a5f7d06ed48.1718311756.git.u.kleine-koenig@baylibre.com>
+ <CAMuHMdUHi0Yu2Giccp7pHqpjLWG2CjkGFWehLV0iWBHB_V4oGw@mail.gmail.com> <7xnzx6dlim2r5oujon3csocrljcvtvwz46yvmik62hpn4a2rlj@tiqrzlol7l5u>
+In-Reply-To: <7xnzx6dlim2r5oujon3csocrljcvtvwz46yvmik62hpn4a2rlj@tiqrzlol7l5u>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 14 Jun 2024 14:10:03 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUzj2Wa=HNk44L3G0S40XxZmwAYNd0nv9J_UsH478CHNg@mail.gmail.com>
+Message-ID: <CAMuHMdUzj2Wa=HNk44L3G0S40XxZmwAYNd0nv9J_UsH478CHNg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 2/2] driver core: Don't allow passing a -ENOMEM to dev_err_probe()
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Petr Mladek <pmladek@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Xiubo Li <xiubli@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/6/14 18:07, Usama Arif wrote:
-> With an earlier commit to handle zero-filled pages in swap directly,
-> and with only 1% of the same-filled pages being non-zero, zswap no
-> longer needs to handle same-filled pages and can just work on compressed
-> pages.
-> 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+Hi Uwe,
 
-Looks good to me, thanks.
+On Fri, Jun 14, 2024 at 11:15=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+> On Fri, Jun 14, 2024 at 09:26:52AM +0200, Geert Uytterhoeven wrote:
+> > Looks like dev_err_probe() does not have a dummy for the !CONFIG_PRINTK
+> > case yet, while it could definitely use one.
+>
+> Would you want to drop
+>
+>         device_set_deferred_probe_reason(dev, &vaf);
+>
+> from dev_err_probe() for !CONFIG_PRINTK, too? If not, you can throw away
+> the string only if __builtin_constant_p(__err !=3D -EPROBE_DEFER) && __er=
+r
+> !=3D -EPROBE_DEFER. I agree such an improvement would be nice, but that's
+> orthogonal to this series.
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+I would drop it. CONFIG_PRINTK=3Dn is only intended for production
+systems where no console is available, and the full behavior of the system
+is understood well.
 
-> ---
->  mm/zswap.c | 86 +++++-------------------------------------------------
->  1 file changed, 8 insertions(+), 78 deletions(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index a546c01602aa..e25a6808c2ed 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -44,8 +44,6 @@
->  **********************************/
->  /* The number of compressed pages currently stored in zswap */
->  atomic_t zswap_stored_pages = ATOMIC_INIT(0);
-> -/* The number of same-value filled pages currently stored in zswap */
-> -static atomic_t zswap_same_filled_pages = ATOMIC_INIT(0);
->  
->  /*
->   * The statistics below are not protected from concurrent access for
-> @@ -188,11 +186,9 @@ static struct shrinker *zswap_shrinker;
->   *
->   * swpentry - associated swap entry, the offset indexes into the red-black tree
->   * length - the length in bytes of the compressed page data.  Needed during
-> - *          decompression. For a same value filled page length is 0, and both
-> - *          pool and lru are invalid and must be ignored.
-> + *          decompression.
->   * pool - the zswap_pool the entry's data is in
->   * handle - zpool allocation handle that stores the compressed page data
-> - * value - value of the same-value filled pages which have same content
->   * objcg - the obj_cgroup that the compressed memory is charged to
->   * lru - handle to the pool's lru used to evict pages.
->   */
-> @@ -200,10 +196,7 @@ struct zswap_entry {
->  	swp_entry_t swpentry;
->  	unsigned int length;
->  	struct zswap_pool *pool;
-> -	union {
-> -		unsigned long handle;
-> -		unsigned long value;
-> -	};
-> +	unsigned long handle;
->  	struct obj_cgroup *objcg;
->  	struct list_head lru;
->  };
-> @@ -820,13 +813,9 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
->   */
->  static void zswap_entry_free(struct zswap_entry *entry)
->  {
-> -	if (!entry->length)
-> -		atomic_dec(&zswap_same_filled_pages);
-> -	else {
-> -		zswap_lru_del(&zswap_list_lru, entry);
-> -		zpool_free(zswap_find_zpool(entry), entry->handle);
-> -		zswap_pool_put(entry->pool);
-> -	}
-> +	zswap_lru_del(&zswap_list_lru, entry);
-> +	zpool_free(zswap_find_zpool(entry), entry->handle);
-> +	zswap_pool_put(entry->pool);
->  	if (entry->objcg) {
->  		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
->  		obj_cgroup_put(entry->objcg);
-> @@ -1268,11 +1257,6 @@ static unsigned long zswap_shrinker_count(struct shrinker *shrinker,
->  	 * This ensures that the better zswap compresses memory, the fewer
->  	 * pages we will evict to swap (as it will otherwise incur IO for
->  	 * relatively small memory saving).
-> -	 *
-> -	 * The memory saving factor calculated here takes same-filled pages into
-> -	 * account, but those are not freeable since they almost occupy no
-> -	 * space. Hence, we may scale nr_freeable down a little bit more than we
-> -	 * should if we have a lot of same-filled pages.
->  	 */
->  	return mult_frac(nr_freeable, nr_backing, nr_stored);
->  }
-> @@ -1376,42 +1360,6 @@ static void shrink_worker(struct work_struct *w)
->  	} while (zswap_total_pages() > thr);
->  }
->  
-> -/*********************************
-> -* same-filled functions
-> -**********************************/
-> -static bool zswap_is_folio_same_filled(struct folio *folio, unsigned long *value)
-> -{
-> -	unsigned long *data;
-> -	unsigned long val;
-> -	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*data) - 1;
-> -	bool ret = false;
-> -
-> -	data = kmap_local_folio(folio, 0);
-> -	val = data[0];
-> -
-> -	if (val != data[last_pos])
-> -		goto out;
-> -
-> -	for (pos = 1; pos < last_pos; pos++) {
-> -		if (val != data[pos])
-> -			goto out;
-> -	}
-> -
-> -	*value = val;
-> -	ret = true;
-> -out:
-> -	kunmap_local(data);
-> -	return ret;
-> -}
-> -
-> -static void zswap_fill_folio(struct folio *folio, unsigned long value)
-> -{
-> -	unsigned long *data = kmap_local_folio(folio, 0);
-> -
-> -	memset_l(data, value, PAGE_SIZE / sizeof(unsigned long));
-> -	kunmap_local(data);
-> -}
-> -
->  /*********************************
->  * main API
->  **********************************/
-> @@ -1423,7 +1371,6 @@ bool zswap_store(struct folio *folio)
->  	struct zswap_entry *entry, *old;
->  	struct obj_cgroup *objcg = NULL;
->  	struct mem_cgroup *memcg = NULL;
-> -	unsigned long value;
->  
->  	VM_WARN_ON_ONCE(!folio_test_locked(folio));
->  	VM_WARN_ON_ONCE(!folio_test_swapcache(folio));
-> @@ -1456,13 +1403,6 @@ bool zswap_store(struct folio *folio)
->  		goto reject;
->  	}
->  
-> -	if (zswap_is_folio_same_filled(folio, &value)) {
-> -		entry->length = 0;
-> -		entry->value = value;
-> -		atomic_inc(&zswap_same_filled_pages);
-> -		goto store_entry;
-> -	}
-> -
->  	/* if entry is successfully added, it keeps the reference */
->  	entry->pool = zswap_pool_current_get();
->  	if (!entry->pool)
-> @@ -1480,7 +1420,6 @@ bool zswap_store(struct folio *folio)
->  	if (!zswap_compress(folio, entry))
->  		goto put_pool;
->  
-> -store_entry:
->  	entry->swpentry = swp;
->  	entry->objcg = objcg;
->  
-> @@ -1528,13 +1467,9 @@ bool zswap_store(struct folio *folio)
->  	return true;
->  
->  store_failed:
-> -	if (!entry->length)
-> -		atomic_dec(&zswap_same_filled_pages);
-> -	else {
-> -		zpool_free(zswap_find_zpool(entry), entry->handle);
-> +	zpool_free(zswap_find_zpool(entry), entry->handle);
->  put_pool:
-> -		zswap_pool_put(entry->pool);
-> -	}
-> +	zswap_pool_put(entry->pool);
->  freepage:
->  	zswap_entry_cache_free(entry);
->  reject:
-> @@ -1597,10 +1532,7 @@ bool zswap_load(struct folio *folio)
->  	if (!entry)
->  		return false;
->  
-> -	if (entry->length)
-> -		zswap_decompress(entry, folio);
-> -	else
-> -		zswap_fill_folio(folio, entry->value);
-> +	zswap_decompress(entry, folio);
->  
->  	count_vm_event(ZSWPIN);
->  	if (entry->objcg)
-> @@ -1703,8 +1635,6 @@ static int zswap_debugfs_init(void)
->  			    zswap_debugfs_root, NULL, &total_size_fops);
->  	debugfs_create_atomic_t("stored_pages", 0444,
->  				zswap_debugfs_root, &zswap_stored_pages);
-> -	debugfs_create_atomic_t("same_filled_pages", 0444,
-> -				zswap_debugfs_root, &zswap_same_filled_pages);
->  
->  	return 0;
->  }
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
