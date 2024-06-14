@@ -1,130 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB7B14D29B;
-	Fri, 14 Jun 2024 08:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F75E18308F
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352771; cv=none; b=UVLVWbD4R2XYuzcE2m8Sm9ZuaxTKlsUwM1AQEh13z6l0wmips+VgO2xibuqlOZc6+jRCZw2bOK/K44MWpCHospqpB1A00NqnBDR5Ho0hbnKrErLyCYjURZ3PVi5kLLjeLrCh54yLg1EYFRi3TioTEAYu9l0T37c5+HoA6n21at8=
+	t=1718352774; cv=none; b=N8spb3JA2Zjxyck+/R4kGCiqLWFrIG+UIbulTsEqWsqrrXMbX4FHOZS52l+odlt0V5TPlAnWZ7S+GZRxsreOwrSHbex6QmebUf1LhRNyLK2RzPwHn4z5Gi5kfczP4xZuZrrm1zi1XTCgTzU2OwAbH/0KAL2ipIsBwUiX3AVAK1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352771; c=relaxed/simple;
-	bh=2ZTabV3c4BBnJzAHzGR8waPJfZiXnxWuq8d6jVuz5Co=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObygXGZS8b6yNSmFUfQR6eU/77u036t9ulVxb8effBJwIKcbBPqo3tIk4mnGAw6YgasP18KyBhQ84Sk/uyMsEQTN3BcAiK+Nu3qsGuLdGxrKwpS0NGj1BSlxiFIwH9n+dQgMLUN1/Z77t71WZKGq1dKjSZBvVULM3XUOeNB+xAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpnn7APQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718352774; c=relaxed/simple;
+	bh=XhzeoMaRN/6jo3S8xUdtyMUKaNt8zhwUmh3qU0Jhlcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bYrES8vzawE290bkX3IcBVT5R1ImsXF3rvBdeF93h8YToDzvz4IWWzIRtmobv8WB1QmjNhb/Ghji1mB3zA5nE0qR3RGwOAszF0qVumNeFCBjV7M3+IMFFGfVcd+E7iz6YdUm3Eft9DoVCO33fLv0gEgdrgUcFF0Bl969+tepqaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ByD4G24s; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpnn7APQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE2BC2BD10;
-	Fri, 14 Jun 2024 08:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718352770;
-	bh=2ZTabV3c4BBnJzAHzGR8waPJfZiXnxWuq8d6jVuz5Co=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rpnn7APQdCEE9qm1WL1CTZq1DXcuvuGnlelGk/SI81FRn+gkaouXOHhBTQXSg1wpA
-	 C7jACT6TOiPLZoJ+/fnaH8DwpSKoXn2yla0WFdiyEpg0XWIUe5YrM5RUpHP2E2h70G
-	 YLs5e5tenQf6+vefZM3dnfJZdObPKO919r1UzsWb3BZxqORSLo2Wx2xJQy6F8DL8tA
-	 iBZsOX9mE9sRENwi280IPjZbxpouBPjAKG8Mh2k8py+kWN6YDoFBJZ/KN5mMja8elX
-	 Hz9Ffpyp+x2vJ5kRuatbk6JiK8xXT1jNRVzPlXoOhF+HAq8mQ45t8zsIxkI2JGmzAt
-	 Pd13uTu1DoWfQ==
-Message-ID: <0f244c2e-eeae-4519-93bc-8dafd56d3299@kernel.org>
-Date: Fri, 14 Jun 2024 10:12:46 +0200
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ByD4G24s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-type:content-transfer-encoding; s=k1; bh=g
+	pxaUrsENm6FiIcetDaXvTR6fi8XFR89MzCUZTB7YZs=; b=ByD4G24sgqSreVT9J
+	wglnj+uAiZmxu+QI7VuSFsTRMsJ14Vk4P6IO7R8HbFgIbfqUIKZ3mxgL2LHb1KYx
+	TR4+hm8ab/xRYLQr4KGmiq1Rn64SnHLqNEedtEjDN9nnJ5tu1fJ2ie5FtyikYseZ
+	kZNozCJkBFHSwBOKNSuU/ieXC78XCkhpb/ANByXN3hxP+U7eXxqszSVawlV04xyE
+	AHiFA4W6VM/J8PBgNC5bgDpnng4i4mM8ybT0gFmXEIdcjHnWlo+1DvIwtTvc1Yo1
+	WOgZeLxej3Lu4fYl+PHt4h1t5j6nmYoZswQo3s6O9pCsGER8jr0uc3+RuZH6Th6h
+	V4jOw==
+Received: (qmail 1438057 invoked from network); 14 Jun 2024 10:12:48 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jun 2024 10:12:48 +0200
+X-UD-Smtp-Session: l3s3148p1@9NZSLtUa8oEgAwDPXzjQABqqX1QYyOSW
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-i2c@vger.kernel.org
+Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH v3 0/6] docs: i2c: summary: update and use inclusive wording
+Date: Fri, 14 Jun 2024 10:12:38 +0200
+Message-ID: <20240614081239.7128-8-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/4] dt-bindings: ethernet-phy: add optional brr-mode
- flag
-To: =?UTF-8?Q?Kamil_Hor=C3=A1k_-_2N?= <kamilh@axis.com>,
- florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- andrew@lunn.ch, hkallweit1@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240613132055.49207-1-kamilh@axis.com>
- <20240613132055.49207-4-kamilh@axis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240613132055.49207-4-kamilh@axis.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 13/06/2024 15:20, Kamil Horák - 2N wrote:
-> There is a group of PHY chips supporting BroadR-Reach link modes in
-> a manner allowing for more or less identical register usage as standard
-> Clause 22 PHY.
-> These chips support standard Ethernet link modes as well, however, the
-> circuitry is mutually exclusive and cannot be auto-detected.
-> The link modes in question are 100Base-T1 as defined in IEEE802.3bw,
-> based on Broadcom's 1BR-100 link mode, and newly defined 10Base-T1BRR
-> (1BR-10 in Broadcom documents).
-> 
-> Add optional brr-mode flag to switch the PHY to BroadR-Reach mode.
+The main motivation for this series is patch 4: switching to
+"controller/master" when defining the I2C terminology. This sets the
+base for further improvements to inclusive language within the Linux
+Kernel. The other patches are improvements found on the way.
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+Changes since v2:
+* improve patch 6 to be more clear wrt to the synonyms 'adapter/client'
+* fix the faulty 'drivers/media/gpio' path
+* slight rewording in patches 4 and 5
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline), work on fork of kernel
-(don't, instead use mainline) or you ignore some maintainers (really
-don't). Just use b4 and everything should be fine, although remember
-about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+Wolfram Sang (6):
+  docs: i2c: summary: start sentences consistently.
+  docs: i2c: summary: update I2C specification link
+  docs: i2c: summary: update speed mode description
+  docs: i2c: summary: document use of inclusive language
+  docs: i2c: summary: document 'local' and 'remote' targets
+  docs: i2c: summary: be clearer with 'controller/target' and
+    'adapter/client' pairs
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time, thus I will skip this patch entirely till you follow
-the process allowing the patch to be tested.
+ Documentation/i2c/i2c_bus.svg | 15 +++----
+ Documentation/i2c/summary.rst | 79 ++++++++++++++++++++++-------------
+ 2 files changed, 58 insertions(+), 36 deletions(-)
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
-
-Best regards,
-Krzysztof
+-- 
+2.43.0
 
