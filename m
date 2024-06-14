@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB69916F845;
-	Fri, 14 Jun 2024 16:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8F16CDB3;
+	Fri, 14 Jun 2024 16:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381634; cv=none; b=t5IU1qglfwY9jG85kEvG+KPL0KBccvF5anPJF9Tmw8go+SnPvz7ljojVO5CE0+WwtzFv6jKqz7fSntejPPQKBxPA9zTq1omYdaM/dTB/8DRDz8AxDhUk0fNIXSXdBYcM4JVe+fLtTBchKntjiVL1isb5MG+Ex/wjiIaqcmCzo28=
+	t=1718381650; cv=none; b=WhYIDgN4bZpHT8tLi4iFBN93+lhWOtB4rhm5eMtnVFDx892wG2E91IjjtMw2dJmHfSgaPxJAzMFN+jveGWq7NDAx66GM4JdIl3JYJkTe1E2Q3bDoWvMrQbiWKviY6Mph/jQCtLZJ5VOZXQbEu1iMGiK/0r929dh2eyBbISsjci4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381634; c=relaxed/simple;
-	bh=XGt1Rpkng6ZxVlcYUCQn0/doZgfhqaFZdyt4RE3G0mA=;
+	s=arc-20240116; t=1718381650; c=relaxed/simple;
+	bh=8hlqOeoJesdrM/kznHbtxymhcdzkztPlTxq5hmHvQlg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SbRz73HtMrVWcyCd2CyS7m/FR+jSLOAUBvTWwj9XCzrjosG2cJvyO3YLZhlVjvn33S2dE5fc/JUwizi6EKE1h+2k4ICR8I3+cyoGIQ0bBjjfjnRv3VOjfdg4xa72spBBnZxYXh/YUN85sNaUdqNegJsGROuZVVxEiNDw3UimjmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMTOTLv8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNFle4RGdWJrTJAT5yTIJkSLMUQ/DGU8V7bsaHa4yj/gOfh7fzLpACMFGBQwc81SZszd5ShoxO8ieQL3nMfISwdoJA5OrqkapmMVx044kmQx49fuzusyBrrrzS9ceo4XZsK9pA3kb136F1mZi/gUoKxofFkabNzSwmhMZHkK6zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHPu368e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMTOTLv8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1B0C32786;
-	Fri, 14 Jun 2024 16:13:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHPu368e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EC6C2BD10;
+	Fri, 14 Jun 2024 16:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718381634;
-	bh=XGt1Rpkng6ZxVlcYUCQn0/doZgfhqaFZdyt4RE3G0mA=;
+	s=k20201202; t=1718381649;
+	bh=8hlqOeoJesdrM/kznHbtxymhcdzkztPlTxq5hmHvQlg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dMTOTLv8tqRjZUEUi3J9KViKHB1KAv3OnWmjvaHxp1Ogfe/bx8MYDT0Xr9vTJy9J/
-	 STdAS7h2efv+fa3fITvgohFq9OOS667p72vksyQFZ/UmWx6PROkjNbGlxwCIxUoWPP
-	 Tr8YHQZl8V3IYwY3KmaGwRZuq6RTVSemBqvATcirlrrzVNj7hmA+G/X0iBFylUHDg+
-	 PCZC8vt7MCqIW3dxWmHDBvA4SM6OAPI4rTjp7uy21U/aH5f5BwnFuVpDmeMMUVTAki
-	 FAWHEsbCuvUq1ld72hzZ04Dszig8gzVKLHo1Z7X/Th8igcn/lUO3sb6sFVWcKtye5H
-	 6kXukovzqgz1g==
-Date: Fri, 14 Jun 2024 17:13:49 +0100
+	b=DHPu368eBj4oxKcJlzs7NZzauYfn+j/NAjlcGAlQa3jM6ELI1pqpWmQ8GeUhNuimn
+	 mqRhjtdDP47FA6nds9JXRTbo9cank1WWDwcrNg58ugiiN8HkzAWEG8gdYxSVhU3hHI
+	 OAOd+SI9x0dYK46AxDEDhMaooi4i7hKAwOJyWj6ZH/dQl9yWbhJKyO/9poIZvxUmgI
+	 DZhIB/rL/sLCUlz187TLy3EWEFwOFE82luweUNbX55Qyu5d/FsWF95J/zukQM6jWXk
+	 tHML+8mBY3vzud6Z6IwyPS58ofq27aoUvomQp+U9cJYv5OcWg3xnQwdjxGCcZKG8NZ
+	 QC5JUeE0GZasQ==
+Date: Fri, 14 Jun 2024 17:14:04 +0100
 From: Simon Horman <horms@kernel.org>
 To: Adrian Moreno <amorenoz@redhat.com>
 Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com,
 	i.maximets@ovn.org, dev@openvswitch.org,
-	Yotam Gigi <yotam.gi@gmail.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/9] net: psample: add user cookie
-Message-ID: <20240614161349.GR8447@kernel.org>
+Subject: Re: [PATCH net-next v2 2/9] net: sched: act_sample: add action
+ cookie to sample
+Message-ID: <20240614161404.GS8447@kernel.org>
 References: <20240603185647.2310748-1-amorenoz@redhat.com>
- <20240603185647.2310748-2-amorenoz@redhat.com>
+ <20240603185647.2310748-3-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,17 +50,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240603185647.2310748-2-amorenoz@redhat.com>
+In-Reply-To: <20240603185647.2310748-3-amorenoz@redhat.com>
 
-On Mon, Jun 03, 2024 at 08:56:35PM +0200, Adrian Moreno wrote:
-> Add a user cookie to the sample metadata so that sample emitters can
-> provide more contextual information to samples.
-> 
-> If present, send the user cookie in a new attribute:
-> PSAMPLE_ATTR_USER_COOKIE.
+On Mon, Jun 03, 2024 at 08:56:36PM +0200, Adrian Moreno wrote:
+> If the action has a user_cookie, pass it along to the sample so it can
+> be easily identified.
 > 
 > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-
 
 Reviewed-by: Simon Horman <horms@kernel.org>
 
