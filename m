@@ -1,146 +1,205 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA1819E7CC;
-	Fri, 14 Jun 2024 15:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DAD1A0AFF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718377324; cv=none; b=Yji2nVV/WvJfJSsqO6oYHlEc939HO7BS+G9/ameJ7MfmUAwHpIqhntYVzUNM+4CUO6bs/v6pBwsuB1Cx+pWr/sR7YbtQYv9alQBg2PtJcKpVktalU8Xh3Qdf06almce1Q1hE0podUxjRlG1ZXirACNZHO+nDM/zJSgs6esns+Bk=
+	t=1718377327; cv=none; b=cVwyNwq5cQge3Fttq3Na3H4dFGcVYjh6qisLMfcLz6W5BkNTMoMc0bUCVpkjrWvq91xjaWEy48UG0xmk1NR0bb42j9FS0APvjWM0f7JX76Ujhg29y2+dVWgai5VAzckHEYO94j6aJqyQMbBLasvkDt9ZsuF80YAw1e59yFHdLKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718377324; c=relaxed/simple;
-	bh=qkWL93xJiBFm741aewrWA5fb6uRq1PuR7yWIPq9P0T8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AuWo4J0VA2JpOmmf5KCmVp1+Qb9iQKyzzU3m20ZXGahkkgQ5L6cHTZDx/zzIQ9zG32h63Ls4poAjmLEfuQHMMc/avA4Gj7oPqr8kzza8Doyn5TKnb1JbTCAIoxPaY5g7TWk5NuXR32566u7bBdPP8O9hByF29Yi43pzwHlsTY1g=
+	s=arc-20240116; t=1718377327; c=relaxed/simple;
+	bh=BiKZ3Yg2ou3GMUcLcOoDbajbNdClONDCeK7On16AeL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HgTFGIcL8Mt67ELV5YGSWWuM09sx9fVh9CBlrmSjIrRMQtad4wzgiK6uttCca/mPA2EjYsjJv/gMUVoKfgCuWZZUbqdLvytZEw4LV3HTAC6FFrvsVPvV9y8taA9c1z69+tMuUpckrvDyyOMFvePd7l/WQBUfCnjfGqu0lQv8qIo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD06176B;
-	Fri, 14 Jun 2024 08:02:27 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C06023F8A4;
-	Fri, 14 Jun 2024 08:02:00 -0700 (PDT)
-Date: Fri, 14 Jun 2024 16:01:55 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com,
-	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4810419F0;
+	Fri, 14 Jun 2024 08:02:30 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 783DE3F5A1;
+	Fri, 14 Jun 2024 08:02:02 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V18 3/9] drivers: perf: arm_pmu: Add infrastructure for
- branch stack sampling
-Message-ID: <ZmxbYxE5PBl4CHzE@J2N7QTR9R3.cambridge.arm.com>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
- <20240613061731.3109448-4-anshuman.khandual@arm.com>
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Subject: [PATCH v3 17/38] x86/resctrl: Stop using the for_each_*_rdt_resource() walkers
+Date: Fri, 14 Jun 2024 15:00:12 +0000
+Message-Id: <20240614150033.10454-18-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240614150033.10454-1-james.morse@arm.com>
+References: <20240614150033.10454-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613061731.3109448-4-anshuman.khandual@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 11:47:25AM +0530, Anshuman Khandual wrote:
-> @@ -289,6 +289,23 @@ static void armpmu_start(struct perf_event *event, int flags)
->  {
->  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
->  	struct hw_perf_event *hwc = &event->hw;
-> +	struct pmu_hw_events *cpuc = this_cpu_ptr(armpmu->hw_events);
-> +	int idx;
-> +
-> +	/*
-> +	 * Merge all branch filter requests from different perf
-> +	 * events being added into this PMU. This includes both
-> +	 * privilege and branch type filters.
-> +	 */
-> +	if (armpmu->has_branch_stack) {
-> +		cpuc->branch_sample_type = 0;
-> +		for (idx = 0; idx < ARMPMU_MAX_HWEVENTS; idx++) {
-> +			struct perf_event *event_idx = cpuc->events[idx];
-> +
-> +			if (event_idx && has_branch_stack(event_idx))
-> +				cpuc->branch_sample_type |= event_idx->attr.branch_sample_type;
-> +		}
-> +	}
+The for_each_*_rdt_resource() helpers walk the architecture's array
+of structures, using the resctrl visible part as an iterator. These
+became over-complex when the structures were split into a
+filesystem and architecture-specific struct. This approach avoided
+the need to touch every call site.
 
-When we spoke about this, I meant that we should do this under armpmu::start(),
-or a callee or caller thereof once we know all the events are configured, just
-before we actually enable the PMU.
+Once the filesystem parts of resctrl are moved to /fs/, both the
+architecture's resource array, and the definition of those structures
+is no longer accessible. To support resctrl, each architecture would
+have to provide equally complex macros.
 
-For example, this could live in armv8pmu_branch_enable(), which'd allow
-all the actual logic to be added in the BRBE enablement patch.
+Change the resctrl code that uses these to walk through the resource_level
+enum and check the mon/alloc capable flags instead. Instances in core.c,
+and resctrl_arch_reset_resources() remain part of x86's architecture
+specific code.
 
-Doing this in armpmu_start() doesn't work as well because it won't handle
-events being removed.
+Co-developed-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+---
+Changes since v1:
+ * [Whitespace only] Fix bogus whitespace introduced in
+   rdtgroup_create_info_dir().
 
-[...]
+ * [Commit message only] Typo fix:
+   s/architectures/architecture's/g
+---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  7 +++++-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 28 +++++++++++++++++++----
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index b3b34f6670cf..9eda16dd684e 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -46,6 +46,18 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_63BIT) == ARMPMU_EVT_63BIT);
->  	},								\
->  }
->  
-> +/*
-> + * Maximum branch record entries which could be processed
-> + * for core perf branch stack sampling support, regardless
-> + * of the hardware support available on a given ARM PMU.
-> + */
-> +#define MAX_BRANCH_RECORDS 64
-> +
-> +struct branch_records {
-> +	struct perf_branch_stack	branch_stack;
-> +	struct perf_branch_entry	branch_entries[MAX_BRANCH_RECORDS];
-> +};
-> +
->  /* The events for a given PMU register set. */
->  struct pmu_hw_events {
->  	/*
-> @@ -66,6 +78,17 @@ struct pmu_hw_events {
->  	struct arm_pmu		*percpu_pmu;
->  
->  	int irq;
-> +
-> +	struct branch_records	*branches;
-> +
-> +	/* Active context for task events */
-> +	void			*branch_context;
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index aacf236dfe3b..ad20822bb64e 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -840,6 +840,7 @@ bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_domain *d, unsigned long cbm
+ bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d)
+ {
+ 	cpumask_var_t cpu_with_psl;
++	enum resctrl_res_level i;
+ 	struct rdt_resource *r;
+ 	struct rdt_domain *d_i;
+ 	bool ret = false;
+@@ -854,7 +855,11 @@ bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d)
+ 	 * First determine which cpus have pseudo-locked regions
+ 	 * associated with them.
+ 	 */
+-	for_each_alloc_capable_rdt_resource(r) {
++	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
++		r = resctrl_arch_get_resource(i);
++		if (!r->alloc_capable)
++			continue;
++
+ 		list_for_each_entry(d_i, &r->domains, list) {
+ 			if (d_i->plr)
+ 				cpumask_or(cpu_with_psl, cpu_with_psl,
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 9c03e973a5f6..d9513d7b5157 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -98,12 +98,17 @@ void rdt_last_cmd_printf(const char *fmt, ...)
+ 
+ void rdt_staged_configs_clear(void)
+ {
++	enum resctrl_res_level i;
+ 	struct rdt_resource *r;
+ 	struct rdt_domain *dom;
+ 
+ 	lockdep_assert_held(&rdtgroup_mutex);
+ 
+-	for_each_alloc_capable_rdt_resource(r) {
++	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
++		r = resctrl_arch_get_resource(i);
++		if (!r->alloc_capable)
++			continue;
++
+ 		list_for_each_entry(dom, &r->domains, list)
+ 			memset(dom->staged_config, 0, sizeof(dom->staged_config));
+ 	}
+@@ -2192,6 +2197,7 @@ static u32 fflags_from_resource(struct rdt_resource *r)
+ 
+ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
+ {
++	enum resctrl_res_level i;
+ 	struct resctrl_schema *s;
+ 	struct rdt_resource *r;
+ 	unsigned long fflags;
+@@ -2216,7 +2222,11 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
+ 			goto out_destroy;
+ 	}
+ 
+-	for_each_mon_capable_rdt_resource(r) {
++	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
++		r = resctrl_arch_get_resource(i);
++		if (!r->mon_capable)
++			continue;
++
+ 		fflags =  fflags_from_resource(r) | RFTYPE_MON_INFO;
+ 		sprintf(name, "%s_MON", r->name);
+ 		ret = rdtgroup_mkdir_info_resdir(r, name, fflags);
+@@ -2637,10 +2647,15 @@ static int schemata_list_add(struct rdt_resource *r, enum resctrl_conf_type type
+ 
+ static int schemata_list_create(void)
+ {
++	enum resctrl_res_level i;
+ 	struct rdt_resource *r;
+ 	int ret = 0;
+ 
+-	for_each_alloc_capable_rdt_resource(r) {
++	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
++		r = resctrl_arch_get_resource(i);
++		if (!r->alloc_capable)
++			continue;
++
+ 		if (resctrl_arch_get_cdp_enabled(r->rid)) {
+ 			ret = schemata_list_add(r, CDP_CODE);
+ 			if (ret)
+@@ -3181,6 +3196,7 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
+ 			     struct rdtgroup *prgrp,
+ 			     struct kernfs_node **dest_kn)
+ {
++	enum resctrl_res_level i;
+ 	struct rdt_resource *r;
+ 	struct kernfs_node *kn;
+ 	int ret;
+@@ -3199,7 +3215,11 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
+ 	 * Create the subdirectories for each domain. Note that all events
+ 	 * in a domain like L3 are grouped into a resource whose domain is L3
+ 	 */
+-	for_each_mon_capable_rdt_resource(r) {
++	for (i = 0; i < RDT_NUM_RESOURCES; i++) {
++		r = resctrl_arch_get_resource(i);
++		if (!r->mon_capable)
++			continue;
++
+ 		ret = mkdir_mondata_subdir_alldom(kn, r, prgrp);
+ 		if (ret)
+ 			goto out_destroy;
+-- 
+2.39.2
 
-Using 'void *' here makes this harder to reason about and hides type
-safety issues.
-
-Give this a real type. IIUC it should be 'perf_event_context *'.
-
-> +
-> +	/* Active events requesting branch records */
-> +	unsigned int		branch_users;
-> +
-> +	/* Active branch sample type filters */
-> +	unsigned long		branch_sample_type;
->  };
->  
->  enum armpmu_attr_groups {
-> @@ -96,8 +119,15 @@ struct arm_pmu {
->  	void		(*stop)(struct arm_pmu *);
->  	void		(*reset)(void *);
->  	int		(*map_event)(struct perf_event *event);
-> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
-> +	bool		(*branch_stack_init)(struct perf_event *event);
-> +	void		(*branch_stack_add)(struct perf_event *event, struct pmu_hw_events *cpuc);
-> +	void		(*branch_stack_del)(struct perf_event *event, struct pmu_hw_events *cpuc);
-> +	void		(*branch_stack_reset)(void);
-
-The reset callback isn't used in this series; s
-
-Subsequent patches call armv8pmu_branch_stack_reset() directly from
-PMUv3 and the BRBE driver, and arm_pmu::branch_stack_reset() is never
-used, so we can delete it.
-
-Mark.
