@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35237180A62
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301716D9D5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382648; cv=none; b=Un8TRkqMBEKWwNqF/EnjP1mWd05pw8SZvoc5zr1EsSHckPEevHuXoAv2qHaYx8VGG7HWMvY2Z1PHI9K5ZyD/6bRmRocZnpsjgtn65+BRa5JPlEv3Rb9cxNCSiVQfhR1tmM5GYskxFUC5XT3cNC8YOlklNiEmuG+qgLg6sY23ONQ=
+	t=1718382648; cv=none; b=kEFX1qBNHlxzA0yrw+R65bwe17QPfkTXsW6z/IZkSbZFMRKj1fNOH7TQbfjcizHr4YiCGGQ2AkkuQ6GItjMAvOe2C6YCCQvXD5TNyVQUoc/nQSEDUZ9OXJaWa22K1/xbBKKC6BPSHob+mIJ/fUU11CqlqRbR+LUxPpn1qwADZB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718382648; c=relaxed/simple;
-	bh=fCPmXMT3aB4IJwdM6fzKMEvkYFFB7mz8RlBdKCUh5BY=;
+	bh=8F0yiwop3x+Zoj5zEZ8xdusj200WJfL5VE1BBPZXroY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=UuLvOlk/bFjlrnEwVwLJEvGj/x8MCm5V7TquaCZEytxG8LSRW4/+sQq9wEkeOl7AtwgXd+4wYRP4poljY28aJov0Huptpm2+d2+AUVZd+msTyWP/nMgGlon5iUm6vVWXh9wIzi2IHLtZeA240qJTVwyIAcaBdBtzuBjyyQ24Ao8=
+	 Content-Type; b=AN0DhRQfqCcnvKBYwPtQvUUdIcYFSZKCs355WAW7bMiJ8henQ2gcw2+n2kR5amMETrk5P1tYo4Fj8ZWkOtzxgr23ykFT4t/xughGjQ8CdUG6lKyDmWPwnMYhaYxZ6fojaKK3I6QR4f7cPrhvHUM3Azh/Qo9unBbZ5VcVwc73elU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB55C4AF60;
-	Fri, 14 Jun 2024 16:30:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2EB5C4AF51;
+	Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sI9pX-00000001rrR-0X0Z;
-	Fri, 14 Jun 2024 12:31:11 -0400
-Message-ID: <20240614163110.988739295@goodmis.org>
+	id 1sI9pW-00000001rqT-3OLg;
+	Fri, 14 Jun 2024 12:31:10 -0400
+Message-ID: <20240614163110.676178724@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Jun 2024 12:30:20 -0400
+Date: Fri, 14 Jun 2024 12:30:18 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,7 +47,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [for-next][PATCH 05/13] ring-buffer: Add output of ring buffer meta page
+Subject: [for-next][PATCH 03/13] ring-buffer: Add ring_buffer_meta data
 References: <20240614163015.456541709@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a buffer_meta per-cpu file for the trace instance that is mapped to
-boot memory. This shows the current meta-data and can be used by user
-space tools to record off the current mappings to help reconstruct the
-ring buffer after a reboot.
+Populate the ring_buffer_meta array. It holds the pointer to the
+head_buffer (next to read), the commit_buffer (next to write) the size of
+the sub-buffers, number of sub-buffers and an array that keeps track of
+the order of the sub-buffers.
 
-It does not expose any virtual addresses, just indexes into the sub-buffer
-pages.
+This information will be stored in the persistent memory to help on reboot
+to reconstruct the ring buffer.
 
-Link: https://lkml.kernel.org/r/20240612232025.854471446@goodmis.org
+Link: https://lkml.kernel.org/r/20240612232025.530733577@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -95,188 +95,370 @@ Cc: Ross Zwisler <zwisler@google.com>
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 77 ++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.c       | 30 ++++++++++++++-
- kernel/trace/trace.h       |  2 +
- 3 files changed, 107 insertions(+), 2 deletions(-)
+ kernel/trace/ring_buffer.c | 209 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 184 insertions(+), 25 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0e3ed7f1cc5d..25b0e61e8c76 100644
+index 6edd70e45807..0e3ed7f1cc5d 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -32,6 +32,8 @@
- #include <asm/local64.h>
- #include <asm/local.h>
+@@ -43,6 +43,11 @@
+ static void update_pages_handler(struct work_struct *work);
  
-+#include "trace.h"
-+
+ struct ring_buffer_meta {
++	unsigned long	head_buffer;
++	unsigned long	commit_buffer;
++	__u32		subbuf_size;
++	__u32		nr_subbufs;
++	int		buffers[];
+ };
+ 
  /*
-  * The "absolute" timestamp in the buffer is only 59 bits.
-  * If a clock has the 5 MSBs set, it needs to be saved and
-@@ -1647,6 +1649,81 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
- 	}
+@@ -501,6 +506,7 @@ struct ring_buffer_per_cpu {
+ 	struct mutex			mapping_lock;
+ 	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
+ 	struct trace_buffer_meta	*meta_page;
++	struct ring_buffer_meta		*ring_meta;
+ 
+ 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+ 	long				nr_pages_to_update;
+@@ -1261,6 +1267,11 @@ static void rb_head_page_activate(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 * Set the previous list pointer to have the HEAD flag.
+ 	 */
+ 	rb_set_list_to_head(head->list.prev);
++
++	if (cpu_buffer->ring_meta) {
++		struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++		meta->head_buffer = (unsigned long)head->page;
++	}
  }
  
-+static void *rbm_start(struct seq_file *m, loff_t *pos)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val;
+ static void rb_list_head_clear(struct list_head *list)
+@@ -1515,51 +1526,127 @@ rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
+ }
+ 
+ /*
+- * Return a specific sub-buffer for a given @cpu defined by @idx.
++ * Return the ring_buffer_meta for a given @cpu.
+  */
+-static void *rb_range_buffer(struct trace_buffer *buffer, int cpu, int nr_pages, int idx)
++static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
+ {
+-	unsigned long ptr;
+ 	int subbuf_size = buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
++	unsigned long ptr = buffer->range_addr_start;
++	struct ring_buffer_meta *meta;
+ 	int nr_subbufs;
+ 
+-	/* Include the reader page */
+-	nr_subbufs = nr_pages + 1;
++	if (!ptr)
++		return NULL;
 +
++	/* When nr_pages passed in is zero, the first meta has already been initialized */
++	if (!nr_pages) {
++		meta = (struct ring_buffer_meta *)ptr;
++		nr_subbufs = meta->nr_subbufs;
++	} else {
++		meta = NULL;
++		/* Include the reader page */
++		nr_subbufs = nr_pages + 1;
++	}
+ 
+ 	/*
+ 	 * The first chunk may not be subbuffer aligned, where as
+ 	 * the rest of the chunks are.
+ 	 */
+-	ptr = buffer->range_addr_start;
+-	ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
+ 	if (cpu) {
+-		unsigned long p;
+-
+-		ptr += subbuf_size * nr_subbufs;
+-
+-		/* Save the beginning of this CPU chunk */
+-		p = ptr;
+-
+ 		ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
++		ptr += subbuf_size * nr_subbufs;
+ 
+ 		/* We can use multiplication to find chunks greater than 1 */
+ 		if (cpu > 1) {
+ 			unsigned long size;
++			unsigned long p;
+ 
++			/* Save the beginning of this CPU chunk */
++			p = ptr;
++			ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
+ 			ptr += subbuf_size * nr_subbufs;
+ 
+ 			/* Now all chunks after this are the same size */
+ 			size = ptr - p;
+ 			ptr += size * (cpu - 2);
+-
+-			ptr = rb_range_align_subbuf(ptr, subbuf_size, nr_subbufs);
+ 		}
+ 	}
+-	if (ptr + subbuf_size * nr_subbufs > buffer->range_addr_end)
++	return (void *)ptr;
++}
++
++/* Return the start of subbufs given the meta pointer */
++static void *rb_subbufs_from_meta(struct ring_buffer_meta *meta)
++{
++	int subbuf_size = meta->subbuf_size;
++	unsigned long ptr;
++
++	ptr = (unsigned long)meta;
++	ptr = rb_range_align_subbuf(ptr, subbuf_size, meta->nr_subbufs);
++
++	return (void *)ptr;
++}
++
++/*
++ * Return a specific sub-buffer for a given @cpu defined by @idx.
++ */
++static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
++{
++	struct ring_buffer_meta *meta;
++	unsigned long ptr;
++	int subbuf_size;
++
++	meta = rb_range_meta(cpu_buffer->buffer, 0, cpu_buffer->cpu);
 +	if (!meta)
 +		return NULL;
 +
-+	if (*pos > meta->nr_subbufs)
++	if (WARN_ON_ONCE(idx >= meta->nr_subbufs))
+ 		return NULL;
++
++	subbuf_size = meta->subbuf_size;
++
++	/* Map this buffer to the order that's in meta->buffers[] */
++	idx = meta->buffers[idx];
++
++	ptr = (unsigned long)rb_subbufs_from_meta(meta);
++
++	ptr += subbuf_size * idx;
++	if (ptr + subbuf_size > cpu_buffer->buffer->range_addr_end)
 +		return NULL;
 +
-+	val = *pos;
-+	val++;
-+
-+	return (void *)val;
-+}
-+
-+static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
+ 	return (void *)ptr;
+ }
+ 
++static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
 +{
-+	(*pos)++;
++	struct ring_buffer_meta *meta;
++	void *subbuf;
++	int cpu;
++	int i;
 +
-+	return rbm_start(m, pos);
-+}
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		meta = rb_range_meta(buffer, nr_pages, cpu);
 +
-+static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
++		meta->nr_subbufs = nr_pages + 1;
++		meta->subbuf_size = PAGE_SIZE;
 +
-+static int rbm_show(struct seq_file *m, void *v)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val = (unsigned long)v;
++		subbuf = rb_subbufs_from_meta(meta);
 +
-+	if (val == 1) {
-+		seq_printf(m, "head_buffer:   %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->head_buffer));
-+		seq_printf(m, "commit_buffer: %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->commit_buffer));
-+		seq_printf(m, "subbuf_size:   %d\n", meta->subbuf_size);
-+		seq_printf(m, "nr_subbufs:    %d\n", meta->nr_subbufs);
-+		return 0;
++		/*
++		 * The buffers[] array holds the order of the sub-buffers
++		 * that are after the meta data. The sub-buffers may
++		 * be swapped out when read and inserted into a different
++		 * location of the ring buffer. Although their addresses
++		 * remain the same, the buffers[] array contains the
++		 * index into the sub-buffers holding their actual order.
++		 */
++		for (i = 0; i < meta->nr_subbufs; i++) {
++			meta->buffers[i] = i;
++			rb_init_page(subbuf);
++			subbuf += meta->subbuf_size;
++		}
 +	}
-+
-+	val -= 2;
-+	seq_printf(m, "buffer[%ld]:    %d\n", val, meta->buffers[val]);
-+
-+	return 0;
-+}
-+
-+static void rbm_stop(struct seq_file *m, void *p)
-+{
-+}
-+
-+static const struct seq_operations rb_meta_seq_ops = {
-+	.start		= rbm_start,
-+	.next		= rbm_next,
-+	.show		= rbm_show,
-+	.stop		= rbm_stop,
-+};
-+
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu)
-+{
-+	struct seq_file *m;
-+	int ret;
-+
-+	ret = seq_open(file, &rb_meta_seq_ops);
-+	if (ret)
-+		return ret;
-+
-+	m = file->private_data;
-+	m->private = buffer->buffers[cpu];
-+
-+	return 0;
 +}
 +
  static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
  		long nr_pages, struct list_head *pages)
  {
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ff2b504fbe00..622fe670949d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5018,7 +5018,7 @@ static int show_traces_open(struct inode *inode, struct file *file)
- 	return 0;
+@@ -1600,7 +1687,6 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		set_current_oom_origin();
+ 	for (i = 0; i < nr_pages; i++) {
+ 		struct page *page;
+-		int cpu = cpu_buffer->cpu;
+ 
+ 		bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+ 				    mflags, cpu_to_node(cpu_buffer->cpu));
+@@ -1617,10 +1703,11 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 		if (buffer->range_addr_start) {
+ 			/* A range was given. Use that for the buffer page */
+-			bpage->page = rb_range_buffer(buffer, cpu, nr_pages, i + 1);
++			bpage->page = rb_range_buffer(cpu_buffer, i + 1);
+ 			if (!bpage->page)
+ 				goto free_pages;
+ 			bpage->range = 1;
++			bpage->id = i + 1;
+ 		} else {
+ 			page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
+ 						mflags | __GFP_COMP | __GFP_ZERO,
+@@ -1628,9 +1715,9 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 			if (!page)
+ 				goto free_pages;
+ 			bpage->page = page_address(page);
++			rb_init_page(bpage->page);
+ 		}
+ 		bpage->order = cpu_buffer->buffer->subbuf_order;
+-		rb_init_page(bpage->page);
+ 
+ 		if (user_thread && fatal_signal_pending(current))
+ 			goto free_pages;
+@@ -1711,7 +1798,13 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	cpu_buffer->reader_page = bpage;
+ 
+ 	if (buffer->range_addr_start) {
+-		bpage->page = rb_range_buffer(buffer, cpu, nr_pages, 0);
++		/*
++		 * Range mapped buffers have the same restrictions as memory
++		 * mapped ones do.
++		 */
++		cpu_buffer->mapped = 1;
++		cpu_buffer->ring_meta = rb_range_meta(buffer, nr_pages, cpu);
++		bpage->page = rb_range_buffer(cpu_buffer, 0);
+ 		if (!bpage->page)
+ 			goto fail_free_reader;
+ 		bpage->range = 1;
+@@ -1722,8 +1815,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 		if (!page)
+ 			goto fail_free_reader;
+ 		bpage->page = page_address(page);
++		rb_init_page(bpage->page);
+ 	}
+-	rb_init_page(bpage->page);
+ 
+ 	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
+ 	INIT_LIST_HEAD(&cpu_buffer->new_pages);
+@@ -1737,6 +1830,10 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
+ 
+ 	rb_head_page_activate(cpu_buffer);
++	if (cpu_buffer->ring_meta) {
++		struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++		meta->commit_buffer = meta->head_buffer;
++	}
+ 
+ 	return cpu_buffer;
+ 
+@@ -1856,6 +1953,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 		nr_pages--;
+ 		buffer->range_addr_start = start;
+ 		buffer->range_addr_end = end;
++
++		rb_range_meta_init(buffer, nr_pages);
+ 	} else {
+ 
+ 		/* need at least two pages */
+@@ -2544,6 +2643,52 @@ static void rb_inc_iter(struct ring_buffer_iter *iter)
+ 	iter->next_event = 0;
  }
  
--static int show_traces_release(struct inode *inode, struct file *file)
-+static int tracing_seq_release(struct inode *inode, struct file *file)
- {
- 	struct trace_array *tr = inode->i_private;
- 
-@@ -5059,7 +5059,7 @@ static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
--	.release	= show_traces_release,
-+	.release	= tracing_seq_release,
- };
- 
- static ssize_t
-@@ -6860,6 +6860,22 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
-+static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
++/* Return the index into the sub-buffers for a given sub-buffer */
++static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf)
 +{
-+	struct trace_array *tr = inode->i_private;
-+	int cpu = tracing_get_cpu(inode);
-+	int ret;
++	void *subbuf_array;
 +
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
-+
-+	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
-+	if (ret < 0)
-+		__trace_array_put(tr);
-+	return ret;
++	subbuf_array = (void *)meta + sizeof(int) * meta->nr_subbufs;
++	subbuf_array = (void *)ALIGN((unsigned long)subbuf_array, meta->subbuf_size);
++	return (subbuf - subbuf_array) / meta->subbuf_size;
 +}
 +
- static ssize_t
- tracing_free_buffer_write(struct file *filp, const char __user *ubuf,
- 			  size_t cnt, loff_t *ppos)
-@@ -7436,6 +7452,13 @@ static const struct file_operations tracing_entries_fops = {
- 	.release	= tracing_release_generic_tr,
- };
- 
-+static const struct file_operations tracing_buffer_meta_fops = {
-+	.open		= tracing_buffer_meta_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= tracing_seq_release,
-+};
++static void rb_update_meta_head(struct ring_buffer_per_cpu *cpu_buffer,
++				struct buffer_page *next_page)
++{
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++	unsigned long old_head = (unsigned long)next_page->page;
++	unsigned long new_head;
 +
- static const struct file_operations tracing_total_entries_fops = {
- 	.open		= tracing_open_generic_tr,
- 	.read		= tracing_total_entries_read,
-@@ -8668,6 +8691,9 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
- 				tr, cpu, &tracing_entries_fops);
- 
-+	if (tr->range_addr_start)
-+		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &tracing_buffer_meta_fops);
- #ifdef CONFIG_TRACER_SNAPSHOT
- 	if (!tr->range_addr_start) {
- 		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 5dd48932509c..3e56d3b22212 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -645,6 +645,8 @@ trace_buffer_lock_reserve(struct trace_buffer *buffer,
- 			  unsigned long len,
- 			  unsigned int trace_ctx);
- 
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu);
++	rb_inc_page(&next_page);
++	new_head = (unsigned long)next_page->page;
 +
- struct trace_entry *tracing_get_trace_entry(struct trace_array *tr,
- 						struct trace_array_cpu *data);
++	/*
++	 * Only move it forward once, if something else came in and
++	 * moved it forward, then we don't want to touch it.
++	 */
++	(void)cmpxchg(&meta->head_buffer, old_head, new_head);
++}
++
++static void rb_update_meta_reader(struct ring_buffer_per_cpu *cpu_buffer,
++				  struct buffer_page *reader)
++{
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++	void *old_reader = cpu_buffer->reader_page->page;
++	void *new_reader = reader->page;
++	int id;
++
++	id = reader->id;
++	cpu_buffer->reader_page->id = id;
++	reader->id = 0;
++
++	meta->buffers[0] = rb_meta_subbuf_idx(meta, new_reader);
++	meta->buffers[id] = rb_meta_subbuf_idx(meta, old_reader);
++
++	/* The head pointer is the one after the reader */
++	rb_update_meta_head(cpu_buffer, reader);
++}
++
+ /*
+  * rb_handle_head_page - writer hit the head page
+  *
+@@ -2593,6 +2738,8 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 		local_sub(rb_page_commit(next_page), &cpu_buffer->entries_bytes);
+ 		local_inc(&cpu_buffer->pages_lost);
  
++		if (cpu_buffer->ring_meta)
++			rb_update_meta_head(cpu_buffer, next_page);
+ 		/*
+ 		 * The entries will be zeroed out when we move the
+ 		 * tail page.
+@@ -3154,6 +3301,10 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+ 		local_set(&cpu_buffer->commit_page->page->commit,
+ 			  rb_page_write(cpu_buffer->commit_page));
+ 		rb_inc_page(&cpu_buffer->commit_page);
++		if (cpu_buffer->ring_meta) {
++			struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++			meta->commit_buffer = (unsigned long)cpu_buffer->commit_page->page;
++		}
+ 		/* add barrier to keep gcc from optimizing too much */
+ 		barrier();
+ 	}
+@@ -4771,6 +4922,9 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	if (!ret)
+ 		goto spin;
+ 
++	if (cpu_buffer->ring_meta)
++		rb_update_meta_reader(cpu_buffer, reader);
++
+ 	/*
+ 	 * Yay! We succeeded in replacing the page.
+ 	 *
+@@ -5451,11 +5605,16 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ 	cpu_buffer->lost_events = 0;
+ 	cpu_buffer->last_overrun = 0;
+ 
+-	if (cpu_buffer->user_mapped)
+-		rb_update_meta_page(cpu_buffer);
+-
+ 	rb_head_page_activate(cpu_buffer);
+ 	cpu_buffer->pages_removed = 0;
++
++	if (cpu_buffer->mapped) {
++		rb_update_meta_page(cpu_buffer);
++		if (cpu_buffer->ring_meta) {
++			struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++			meta->commit_buffer = meta->head_buffer;
++		}
++	}
+ }
+ 
+ /* Must have disabled the cpu buffer then done a synchronize_rcu */
 -- 
 2.43.0
 
