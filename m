@@ -1,146 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72887B646
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E37D12D760
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718341213; cv=none; b=uJm6nN+9eAwxWGGmv2Q9VhJPrX7snzQhIhdBbCd1QC2Qos6vKHh2UfiQDVw5OkaMyLxw96+N+lMkA6V3sTztouyyq9jKO8+F+R+jjEX5IQ3zKzR2FoWmYJs6X95ICn7OEdWS73bbBpCQT8BH7kqLRWKnhUHnVl4+4/uLDpxUKyM=
+	t=1718341263; cv=none; b=B02KXY4rYVNfV+GvqwMeWIR2I90Hrzu36ISia1CZFhIaUCJmskTkPJCzsBpSA7cBD2ivo9Z2VqTjMl+H0uoTnky/+MWXZsWIC4b9eCCGS7DRUvEfOIUSofAiBdL/XB+g8oig7W28F8ZoKOmaceKTM7ZU2NHXz6THCCz5kFzsM8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718341213; c=relaxed/simple;
-	bh=16fyQeZoY7zldfy9Xr/pGTCm6ymupo3MzZjwBmtfuQo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XEAbAJIFwOrXOxh4wAt9n1305R3B9FlugouyMU+P47hAnDiF9NRUaX4tOVdJVoXyf3+EuyVbid8rhkqtju1XRj0rgm9/HF90qSXz2XB5NdZEGwtKMihSCFVMi+/zrosaoRaAQ7aDz/EmJXN3KYRcixFsJflvqbK0DO8MCTqE7K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iCIaFI1P; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718341263; c=relaxed/simple;
+	bh=unI3L0rqP6h/sPw8j/2gQP67uQSqdIefSCxe/Ukecx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1EVv1AthIMh4+t/6ypnV10qa+kBccG3t2veaaLDKJUbXDSyy0i4lM95OGBkhNdvrkPJiJM8cEubOWZVdRGReEP63mjOWDfDHzAFvrg2aDz0ANo33lCZ2RcXvqBIHg/tCFM5+V8frxa4WQmxQf9P4y7sXxv0Y7sBl1BmaISXaw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RSDsRTdp; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iCIaFI1P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718341212; x=1749877212;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=16fyQeZoY7zldfy9Xr/pGTCm6ymupo3MzZjwBmtfuQo=;
-  b=iCIaFI1PXiS+DETK3YlOdtp+PSKxniIWu0rn+1wWLF0aXezGhxx4Rnl2
-   h8QiIuXQyBAfRP5mf7t4jWyYQ9MxkeYP3AiCUAp3kQAegnBwZVwb1pseI
-   yNqBkQk8V/FFVXWfFPnlF9F8UqK4SXzlFzWRF+MjqfFD3fooNfWqUEK0b
-   q0dFtqbucJdxfGyBvUp51Wf37hshftLai5eVbZCV/FiGBwl/sDQJXZOJA
-   +UC9zo3/AnxTYhNiJ6qbf7Vce141Mpi0zKuothpffi23kpI2M+PLdeVud
-   sl6P+W1/fad74WARMe5xOsgz61EFWjoTOwAA3AUsgEiA62wDiLkl4jEmo
-   g==;
-X-CSE-ConnectionGUID: c4BXLBj+QTOidrKso905EQ==
-X-CSE-MsgGUID: vmiIOQhVQuKFzWYcKWaYSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="12069247"
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="12069247"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 22:00:10 -0700
-X-CSE-ConnectionGUID: APaAOoNaSrG7gfwnS2LS7A==
-X-CSE-MsgGUID: 9N3Ko1OcT8y3t4ShvKdcig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="71593883"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.164])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Jun 2024 22:00:05 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Raghavendra K T <raghavendra.kt@amd.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Chen Yu <yu.chen.surf@gmail.com>,
-	Tim Chen <tim.c.chen@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Yujie Liu <yujie.liu@intel.com>,
-	Xiaoping Zhou <xiaoping.zhou@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC PATCH] sched/numa: scan the vma if it has not been scanned for a while
-Date: Fri, 14 Jun 2024 12:56:49 +0800
-Message-Id: <20240614045649.133878-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RSDsRTdp"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42179dafd6bso17656325e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 22:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718341260; x=1718946060; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v0HUgUlG9vEDCQkG97tpkj3YnGaT01iQTHtx0RmuTwc=;
+        b=RSDsRTdpraAHdlblduBVTZ3l5XTrk+dkZzw4Hbep7eEcs7bo0VWeMM11YK2pIo31No
+         B87c/Nr4dReiOGGnz7/mWZbZdF7jWuGbKS4Q/L0FcTqpx3kAioCp6CEYu9UJTkM1iTJp
+         uED3KbETZMsn2f0QkItVuAf3aa+n46p5UYkSlg4tJYPziKXgKR6HMmWY8abVsZ9bjhvK
+         HbB7ckrA1AdxJMndCA0hVVyDt9cxRMTEUbC7mRdASNOWC+oFF9Eex8BsASZSkyhERBCo
+         MV8oBY4rYWaa8qDaw5ZTAV9KW6/wZ8G71lzGHZpQ8jCNIl1Cd2VtR2FnQSlKLd65Vqmq
+         KZWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718341260; x=1718946060;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v0HUgUlG9vEDCQkG97tpkj3YnGaT01iQTHtx0RmuTwc=;
+        b=SY1WeV+Td2jq04+mqB8jrEiLzVmpgPr8B8z47z6plHNeBBq/5/ntk5sI3bXlQVf04h
+         a9TnsYv7DA9qB+1loEcJtuESwg4zNMcB1llR3iTZ0zHcns6jdFcX6JO9exbfh+TxMhaR
+         4dSidNY54DM9lZ8QcQHHXFSzFftSVsVCSGp+G0bXzdT71UXRHLptzMDJtophASySfWKk
+         mUVWa+DPyb7LfgUED6VFIbykbOOtzG2ZpBrZF8n2g1G5U2t+OwFumttqJGdUFQhf6PjA
+         vUj05Xb38UO06Vmr34/cQuwO08dpG4pIIypyTVfyERWQ6q8NvY9d3/y+arbSj5QidyJa
+         oh2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXomJlpFwaPVdO6hhHcfUdkxsvihpAfXNZfRxSa6y+6IHchyVGH47Qfkdy4NawNtdDSZd9fpQOtNkJLr4Z+atW4UTUrqCe4Lm9m82Cp
+X-Gm-Message-State: AOJu0YzFLgqYRYx0pduo3Bss1gN1Aa6rKdxno2l9NeNzndhS8fTGKaDR
+	WWo4aIeVKqMTCXpoInsjvvUW3bDochzcjJ7tKvGqp7z271mC2YyWxkkHHkVcTCc=
+X-Google-Smtp-Source: AGHT+IGPB1MGLUnBZL8a7B9fGtRl0d/bVZarsDuhFdm934/bCtuNxQOG73AJASrw6TwdGPdoAQ405A==
+X-Received: by 2002:a5d:6e10:0:b0:360:728d:8439 with SMTP id ffacd0b85a97d-3607a4c864fmr1464554f8f.2.1718341260141;
+        Thu, 13 Jun 2024 22:01:00 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075104954sm3274027f8f.99.2024.06.13.22.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 22:00:59 -0700 (PDT)
+Date: Fri, 14 Jun 2024 08:00:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Yi Wang <foxywang@tencent.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] KVM: fix an error code in kvm_create_vm()
+Message-ID: <29ed61a4-5f06-4c27-aed4-5ac3de3f45ae@moroto.mountain>
+References: <02051e0a-09d8-49a2-917f-7c2f278a1ba1@moroto.mountain>
+ <ZmuF2PsVot33fS1x@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmuF2PsVot33fS1x@google.com>
 
-From: Yujie Liu <yujie.liu@intel.com>
+On Thu, Jun 13, 2024 at 04:50:48PM -0700, Sean Christopherson wrote:
+> On Thu, Jun 13, 2024, Dan Carpenter wrote:
+> > This error path used to return -ENOMEM from the where r is initialized
+> > at the top of the function.  But a new "r = kvm_init_irq_routing(kvm);"
+> > was introduced in the middle of the function so now the error code is
+> > not set and it eventually leads to a NULL dereference.  Set the error
+> > code back to -ENOMEM.
+> > 
+> > Fixes: fbe4a7e881d4 ("KVM: Setup empty IRQ routing when creating a VM")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> >  virt/kvm/kvm_main.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 07ec9b67a202..ea7e32d722c9 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -1212,8 +1212,10 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
+> >  	for (i = 0; i < KVM_NR_BUSES; i++) {
+> >  		rcu_assign_pointer(kvm->buses[i],
+> >  			kzalloc(sizeof(struct kvm_io_bus), GFP_KERNEL_ACCOUNT));
+> > -		if (!kvm->buses[i])
+> > +		if (!kvm->buses[i]) {
+> > +			r = -ENOMEM;
+> >  			goto out_err_no_arch_destroy_vm;
+> > +		}
+> >  	}
+> 
+> Drat.  Any objection to tweaking this slightly to guard against similar bugs in
+> the future?  If not, I'll apply+push the below.
 
-Problem statement:
-Since commit fc137c0ddab2 ("sched/numa: enhance vma scanning logic"), the
-Numa vma scan overhead has been reduced a lot. Meanwhile, it could be
-a double-sword that, the reducing of the vma scan might create less Numa
-page fault information. The insufficient information makes it harder for
-the Numa balancer to make decision. Later,
-commit b7a5b537c55c08 ("sched/numa: Complete scanning of partial VMAs
-regardless of PID activity") and commit 84db47ca7146d7 ("sched/numa: Fix
-mm numa_scan_seq based unconditional scan") are found to bring back part
-of the performance.
+No objections from me.  :)
 
-Recently when running SPECcpu on a 320 CPUs/2 Sockets system, a long
-duration of remote Numa node read was observed by PMU events. It causes
-high core-to-core variance and performance penalty. After the
-investigation, it is found that many vmas are skipped due to the active
-PID check. According to the trace events, in most cases, vma_is_accessed()
-returns false because both pids_active[0] and pids_active[1] have been
-cleared.
-
-As an experiment, if the vma_is_accessed() is hacked to always return true,
-the long duration remote Numa access is gone.
-
-Proposal:
-The main idea is to adjust vma_is_accessed() to let it return true easier.
-
-solution 1 is to extend the pids_active[] from 2 to N, which has already
-been proposed by Peter[1]. And how to decide N needs investigation.
-
-solution 2 is to compare the diff between mm->numa_scan_seq and
-vma->numab_state->prev_scan_seq. If the diff has exceeded the threshold,
-scan the vma.
-
-solution 2 can be used to cover process-based workload(SPECcpu eg). The
-reason is: There is only 1 thread within this process. If this process
-access the vma at the beginning, then sleeps for a long time, the
-pid_active array will be cleared. When this process is woken up, it will
-never get a chance to set prot_none anymore. Because only the first 2
-times of access is regarded as accessed:
-(current->mm->numa_scan_seq) - vma->numab_state->start_scan_seq) < 2
-and no other threads can help set this prot_none.
-
-This patch is mainly to raise this question, and seek for suggestion from
-the community to handle it properly. Thanks in advance for any suggestion.
-
-Link: https://lore.kernel.org/lkml/Y9zxkGf50bqkucum@hirez.programming.kicks-ass.net/ #1
-Reported-by: Xiaoping Zhou <xiaoping.zhou@intel.com>
-Co-developed-by: Chen Yu <yu.c.chen@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
----
- kernel/sched/fair.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8a5b1ae0aa55..2b74fc06fb95 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3188,6 +3188,14 @@ static bool vma_is_accessed(struct mm_struct *mm, struct vm_area_struct *vma)
- 		return true;
- 	}
- 
-+	/*
-+	 * This vma has not been accessed for a while, and has limited number of threads
-+	 * within the current task can help.
-+	 */
-+	if (READ_ONCE(mm->numa_scan_seq) >
-+	   (vma->numab_state->prev_scan_seq + get_nr_threads(current)))
-+		return true;
-+
- 	return false;
- }
- 
--- 
-2.25.1
+regards,
+dan carpenter
 
