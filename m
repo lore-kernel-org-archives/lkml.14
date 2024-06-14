@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7BA19AA63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5AD199398
 	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382649; cv=none; b=mlp4pPbWuLpd30qFTYPcLyDnBOElsdW4vqSHJlBX1IAaSRjUsrM7vzkJfP6FnsB/Rj6E4cbpwA7wYm46RFuglX6snnKeoDShrJaCBxo0dUX5MWYIZvi9tAsc+CAHQ4qLl48yCCLBgwel21PBjeQ7gWwJj1XcH3HCrRkchZlh7Ec=
+	t=1718382649; cv=none; b=h5c5pDDJAqjyMjM5V4GQO6nt7v2XP8VHLLT3fWe9T2w2FRSgIbwn6cetah81MaxXn8Nbl9Mpoyo3nvOHLxc7yXLqkpjTjFC7/EU6GXBo7cJ8+8sF9GobGeN6LhpeA10wMItQq6rRffFBz6JkuMgPL+c2CX656grSsg00Jl9Rtlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718382649; c=relaxed/simple;
-	bh=38sgmhfaC11CHfg5sJR54fmYseuWqVfHviXjrc4UeHQ=;
+	bh=ZHBXI+jB6jbRohzJeTq5RKkD6KRiROjXJbEJFW5LzTw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=QAfw+A58mqR1X8L3VQ6Rjuky4fF3RN0ejcBL0Fu72FuBgk4vQW5Rmz+WUpwR4o2J+eys3/VN0mYMWR8MSUeB+2kzmGCqtSfr0cIYkX9O+2UOaIndUlvrNQ47efOQFsyHZDmwwE/bTTq2OktOpu1NFQEkRd9ZE9NXvBNiKa9K7Hk=
+	 Content-Type; b=G22ANm0H/8UDSVJQDKU9UQLbm03HqtTvg47qI11exvy9N+CuGb+/cRsFXFHrFWdNll1FjJRkIIkaaNRFRd7IL+F8Mfd4/dmOZ+UwN7FFpaCGk1B7CGTwO2bOjYgtZb0uxSLWGGW+gKBKEqgYgWzg/w1oOs86Mh08LzAZRalktDg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2389FC4AF66;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053E0C4AF48;
 	Fri, 14 Jun 2024 16:30:49 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sI9pY-00000001ruv-16o7;
+	id 1sI9pY-00000001ruQ-0PDS;
 	Fri, 14 Jun 2024 12:31:12 -0400
-Message-ID: <20240614163112.116777739@goodmis.org>
+Message-ID: <20240614163111.956572328@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Jun 2024 12:30:27 -0400
+Date: Fri, 14 Jun 2024 12:30:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,7 +47,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [for-next][PATCH 12/13] tracing: Update function tracing output for previous boot buffer
+Subject: [for-next][PATCH 11/13] tracing: Handle old buffer mappings for event strings and functions
 References: <20240614163015.456541709@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,20 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-For a persistent ring buffer that is saved across boots, if function
-tracing was performed in the previous boot, it only saves the address of
-the functions and uses "%pS" to print their names. But the current boot,
-those functions may be in different locations. The persistent meta-data
-saves the text delta between the two boots and can be used to find the
-address of the saved function of where it is located in the current boot.
+Use the saved text_delta and data_delta of a persistent memory mapped ring
+buffer that was saved from a previous boot, and use the delta in the trace
+event print output so that strings and functions show up normally.
 
-Link: https://lkml.kernel.org/r/20240612232026.988226055@goodmis.org
+That is, for an event like trace_kmalloc() that prints the callsite via
+"%pS", if it used the address saved in the ring buffer it will not match
+the function that was saved in the previous boot if the kernel remaps
+itself between boots.
+
+For RCU events that point to saved static strings where only the address
+of the string is saved in the ring buffer, it too will be adjusted to
+point to where the string is on the current boot.
+
+Link: https://lkml.kernel.org/r/20240612232026.821020753@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -94,44 +100,99 @@ Cc: Ross Zwisler <zwisler@google.com>
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_output.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ kernel/trace/trace.c | 42 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index d8b302d01083..b9d2c64c0648 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
- }
- 
- static void print_fn_trace(struct trace_seq *s, unsigned long ip,
--			   unsigned long parent_ip, int flags)
-+			   unsigned long parent_ip, long delta, int flags)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index dc4eee33d920..71cca10581d6 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3671,8 +3671,11 @@ static void test_can_verify(void)
+ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 			 va_list ap)
  {
-+	ip += delta;
-+	parent_ip += delta;
++	long text_delta = iter->tr->text_delta;
++	long data_delta = iter->tr->data_delta;
+ 	const char *p = fmt;
+ 	const char *str;
++	bool good;
+ 	int i, j;
+ 
+ 	if (WARN_ON_ONCE(!fmt))
+@@ -3691,7 +3694,10 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 
+ 		j = 0;
+ 
+-		/* We only care about %s and variants */
++		/*
++		 * We only care about %s and variants
++		 * as well as %p[sS] if delta is non-zero
++		 */
+ 		for (i = 0; p[i]; i++) {
+ 			if (i + 1 >= iter->fmt_size) {
+ 				/*
+@@ -3720,6 +3726,11 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 				}
+ 				if (p[i+j] == 's')
+ 					break;
 +
- 	seq_print_ip_sym(s, ip, flags);
++				if (text_delta && p[i+1] == 'p' &&
++				    ((p[i+2] == 's' || p[i+2] == 'S')))
++					break;
++
+ 				star = false;
+ 			}
+ 			j = 0;
+@@ -3733,6 +3744,24 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		iter->fmt[i] = '\0';
+ 		trace_seq_vprintf(&iter->seq, iter->fmt, ap);
  
- 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
-@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
++		/* Add delta to %pS pointers */
++		if (p[i+1] == 'p') {
++			unsigned long addr;
++			char fmt[4];
++
++			fmt[0] = '%';
++			fmt[1] = 'p';
++			fmt[2] = p[i+2]; /* Either %ps or %pS */
++			fmt[3] = '\0';
++
++			addr = va_arg(ap, unsigned long);
++			addr += text_delta;
++			trace_seq_printf(&iter->seq, fmt, (void *)addr);
++
++			p += i + 3;
++			continue;
++		}
++
+ 		/*
+ 		 * If iter->seq is full, the above call no longer guarantees
+ 		 * that ap is in sync with fmt processing, and further calls
+@@ -3751,6 +3780,14 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		/* The ap now points to the string data of the %s */
+ 		str = va_arg(ap, const char *);
  
- 	trace_assign_type(field, iter->ent);
++		good = trace_safe_str(iter, str, star, len);
++
++		/* Could be from the last boot */
++		if (data_delta && !good) {
++			str += data_delta;
++			good = trace_safe_str(iter, str, star, len);
++		}
++
+ 		/*
+ 		 * If you hit this warning, it is likely that the
+ 		 * trace event in question used %s on a string that
+@@ -3760,8 +3797,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		 * instead. See samples/trace_events/trace-events-sample.h
+ 		 * for reference.
+ 		 */
+-		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
+-			      "fmt: '%s' current_buffer: '%s'",
++		if (WARN_ONCE(!good, "fmt: '%s' current_buffer: '%s'",
+ 			      fmt, seq_buf_str(&iter->seq.seq))) {
+ 			int ret;
  
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_putc(s, '\n');
- 
- 	return trace_handle_return(s);
-@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
- 	trace_print_time(s, iter,
- 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.43.0
 
