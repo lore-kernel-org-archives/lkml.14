@@ -1,130 +1,131 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D09F7E574;
-	Fri, 14 Jun 2024 12:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B627E574
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718367375; cv=none; b=Akhok917LSLoYcl0LDh3RijeCeYWjBUWm4mKszbx5+CSCcEN9imc0CxwZxQ17AobhNIYTo0Ur740xbKKDZB9Y/i2u2InlkW/FCZsuPSzHr53mwCcsF1Y89rq0FdiGN9NslJ/bgJ6H9p47qGg6egUxcf+EXt2qERsH+D6794pXwY=
+	t=1718367383; cv=none; b=Ron7aQ7f5biPWbmJtGIgQ8lrR9ghPmjoPPg8Hgnd0NMoJjb+DhiiXlM7AZcyh474GJXDKIoPDoiEMccV6JVA3ngQHm+j6H1llA1q2sQ72UHAR3VvIfDr7nXgGcJwKtluwfmVEqKX+LXOdcz2EHbzGUyDyLBJ8r+9vLA43HrOCtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718367375; c=relaxed/simple;
-	bh=Ps4yzlJj46zlYDyUqMItoKQ4FlnhM83zVNa6dGVP1Ug=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fkpz014ROawO5WqGf+eNRvmgzEDY8Hxw2d8Wi2YEDWSv2ucv43sIpjTKBU4vdXcSGYylssRaFkXFDIfDTdwuMz8JBVeUgqUh1FXEt8Z2ySeGUzSbNcLQhqUkW9YwcKsYTctjUosML4ltAtr5Mz5XnmzJc6pnGIjF82FCar1dPuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WG4wYHyu; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WG4wYHyu"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f6f1677b26so15564595ad.0;
-        Fri, 14 Jun 2024 05:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718367373; x=1718972173; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QGHxgml8hcdcdb7mDnofu27pKzVqx2k7oj3EyGb/EcE=;
-        b=WG4wYHyue+z5Pjmc42pQJApXZcYiCFSx4vQ3cRQmLgMSXz3LDGqOe1V8GhBQIT1n7M
-         S+3QuQzDxI90GrFspGT7ORD6silsoiysLPtJaKiZuB5VRscytVqkOc/piaHXqO8G5imy
-         OeLFGQV6iZ6zgyk5FgiMf8JTg5dK5Iync7BbptjBR6wNcEp7i7ksedOGe9RamYUw/BXN
-         zOVdESPsMegBuCTnY6ADJkP6fHftEtruyYgUeavCw/EuSnpT90wOUvST/IpVkXwzDHnF
-         uujU7B4mYhj8CatRtWTzVt9H1lwU0oGyoXGhwP31RgIc80RBdxr24HsKoZpZp4kZ/w12
-         TxaA==
+	s=arc-20240116; t=1718367383; c=relaxed/simple;
+	bh=U8YWLxmPHt5Hzr/gUvcjRRL+ThBnjct/4VL62UVYJeo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Nw9LdbeLIyCo2RvRVTQZ7A8A+u3bP5DWy23E5FcL+xUaX22R7qa5tkJLpSTtP0MdIo3DMxb5JdI6JwdGe2ZPh41nPdJAJ+vNv3qB1Nltmlc8wA9uzUT+3FdXmnfXkEeVdKZhX04Q1sLtVggunzaHOaGh5+xibo54RQuJY/F1bo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-375e45a4110so6161015ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:16:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718367373; x=1718972173;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QGHxgml8hcdcdb7mDnofu27pKzVqx2k7oj3EyGb/EcE=;
-        b=dIEVkx3u5O6dOUeuJBcTI3e/dgNYwLZ7Bgd2mig1OmChY/5MHQwLDhJxXljXc30DmL
-         zQCHf3usvCwGS1MPcqmlkLa7kkSL/bmB204fWVPVvYcMl3C6IrDmBlLhDHQequxLp61V
-         nlm3Z6k5buAn9NCHfQlVGw1qHdo/9a0YxVkm1849cjDaFR0go3bu4zw0K6o83jOmtAkH
-         VEkXyw5Ld8abt/41Tp7eKjvddC+kWfSqpLVh2bz9PTzkPfNqi6UzOORHUnIvUq/wL6cB
-         iqIJMRCXw78ATVWRvvV4FaOSWMkFBNKIUap2JlFm2maKgwR+NfWYqAvDuW7NP5AzPvwj
-         0izQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyZ3QDqKsbFZQ0nZZ7LgbGiXlTMLtYJqPJTTdl2u0Vlujd1OVmazeWYtNWzRhB9r3QTXP2oZ2EPcjxuEeqVWV/fwpQRXLrEIhEMSRwebrzh7TeLCGtMLUDoWOeVQG2E86IMLRB3NXpNfgT+tsa/vjByLjB1BEIKl2XC0nbAC8CTEOjjtjE
-X-Gm-Message-State: AOJu0YzX7SO56R2QrhogNJmlRqlB3aJdviuzg/77WK43UgTwZJR5m0pW
-	rTXnGZ7ErfwPdbArGOFLUzIfu9Y+vzIR0ocYYr/Gyv/33nt04sW0
-X-Google-Smtp-Source: AGHT+IEcFQIQALjZZYIlLzFNO+0F/teNjM8HvJw8bIuyvtB88qrthPk5Y0en6xbe0ZHm3ml52Z8+Iw==
-X-Received: by 2002:a17:902:db07:b0:1f4:6fad:ba59 with SMTP id d9443c01a7336-1f8620c121fmr40778825ad.14.1718367373481;
-        Fri, 14 Jun 2024 05:16:13 -0700 (PDT)
-Received: from ux-UP-WHL01.. ([120.237.109.178])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f40947sm30476035ad.276.2024.06.14.05.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 05:16:13 -0700 (PDT)
-From: Charles Wang <charles.goodix@gmail.com>
-To: dmitry.torokhov@gmail.com,
-	dan.carpenter@linaro.org
-Cc: dianders@chromium.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	hbarnor@chromium.org,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Charles Wang <charles.goodix@gmail.com>
-Subject: [PATCH v4 0/2] HID: add initial support for Goodix HID-over-SPI touchscreen
-Date: Fri, 14 Jun 2024 20:15:36 +0800
-Message-ID: <20240614121538.236727-1-charles.goodix@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1718367381; x=1718972181;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y+dI/iBtYvYG57frDDmvIwI4ngnHcMQbLtHXu3/qXnA=;
+        b=IF8vh0prnHq7R05q9BxkKZ5CgSdcyWjlzwXi8Q0HhDbx8UyTBUBLx2gSgm/I0YufQZ
+         bNT+ZuK7RFH9wv+rPhf+O0AUzCwdWchaT9Y61EFOjMLEP/R5glQ6A0Sv00lt6zyK7hqi
+         B9IVWH+6kx+RUf8QtMtRya0kP+5hngKd28edwT1unNnIqO0ZMUj8pHqzspMzb5yyC0Kt
+         ZeR+oOTCUdQGM1bhNuiT0WRbXLBHvBJNXggWRT/uzoWBBQ1HpV+1TcPj7WzIa7Zx4iBA
+         qJNzjLbKovrAWoyvJWGxEKEk8l1vbknPInqERGuxLZLvl7gMtlzrtmxYF3xQdAYt5l1G
+         fX2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXN09pCJIAVq6deemBr5xaFchrVy5myBp+3BNVHudk14gIaFvOKgzzpmcfy07fu3OFe1IP3hcf/qfbCxG0aglYPaLmeY21UFKx6Zuqd
+X-Gm-Message-State: AOJu0Yytq5lzPHtbavfyyQd7jfPuDNl/Cf4zciPYx+9j8x/Bkf8eNPkU
+	UQXyHw/wI2SjzZ/jcPpKUL4JHf2bWFZPPNf261oEz+NtWxKNAHPw5nqRgvZZdzWZVcq0Cn070UX
+	FHxkLRGnX+unWtFNI2HhneKp+cMgsauOzFbuL22l6OXomsWkH5E+KLLU=
+X-Google-Smtp-Source: AGHT+IHD+LQvL5CaBGJGu/9sgUT8gCJ5Ym9xdoCgM/kAwzi9aM1Uw6yhF96jJSrvTq8cL1NHa96B5wGdYw/a0Crk7p+qJwtlewwk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a85:b0:36c:5520:9597 with SMTP id
+ e9e14a558f8ab-375e10df572mr1037025ab.6.1718367380815; Fri, 14 Jun 2024
+ 05:16:20 -0700 (PDT)
+Date: Fri, 14 Jun 2024 05:16:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000053e574061ad89521@google.com>
+Subject: [syzbot] [bcachefs?] WARNING in bch2_fs_read_write_early
+From: syzbot <syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This patch introduces a new driver to support the Goodix GT7986U
-touch controller. This device is not compatible with Microsoft's
-HID-over-SPI protocol and therefore needs to implement its own
-flavor. The data reported is packaged according to the HID
-protocol but uses SPI for communication to improve speed. This
-enables the device to transmit not only coordinate data but also
-corresponding raw data that can be accessed by user-space programs
-through the hidraw interface. The raw data can be utilized for
-functions like palm rejection, thereby improving the touch experience.
+Hello,
 
-Key features:
-- Device connection confirmation and initialization
-- IRQ-based event reporting to the input subsystem
-- Support for HIDRAW operations (GET_REPORT and SET_REPORT)
+syzbot found the following issue on:
 
-Signed-off-by: Charles Wang <charles.goodix@gmail.com>
+HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1689a256980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b8786f381e62940f
+dashboard link: https://syzkaller.appspot.com/bug?extid=4366624c0b5aac4906cf
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110cda0e980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164f91fe980000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-2ccbdf43.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c40c1cd990d2/vmlinux-2ccbdf43.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a2a94050804e/bzImage-2ccbdf43.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/a79f654b4644/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 10 at fs/bcachefs/super.c:525 bch2_fs_read_write_early+0x8a/0xa0 fs/bcachefs/super.c:525
+Modules linked in:
+CPU: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Workqueue: bcachefs_write_ref bch2_delete_dead_snapshots_work
+RIP: 0010:bch2_fs_read_write_early+0x8a/0xa0 fs/bcachefs/super.c:525
+Code: ac b8 76 fd 48 8d bb 78 02 00 00 be ff ff ff ff e8 0b cd d0 06 31 ff 89 c5 89 c6 e8 90 b3 76 fd 85 ed 75 c7 e8 87 b8 76 fd 90 <0f> 0b 90 eb bc 48 c7 c7 58 a2 e4 8f e8 c5 8b d2 fd eb 9b 0f 1f 00
+RSP: 0018:ffffc900000d7910 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff888041080000 RCX: ffffffff84172cc0
+RDX: ffff888017e90000 RSI: ffffffff84172cc9 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000000 R11: 1ffffffff272c7ee R12: ffff8880410801a8
+R13: ffff888041080ae0 R14: 0000000000000001 R15: ffff88801f971800
+FS:  0000000000000000(0000) GS:ffff88806b000000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555581085788 CR3: 0000000025a9e000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_delete_dead_snapshots+0xfdc/0x4e50 fs/bcachefs/snapshot.c:1569
+ bch2_delete_dead_snapshots_work+0x20/0x160 fs/bcachefs/snapshot.c:1690
+ process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
 ---
-Changes in v4:
-- Allocate memory based on the report information.
-- Added a new function goodix_get_event_report() to retrieve report data,
-  reducing memory copy operations and avoiding the use of reg_rw_lock.
-- Add low power control operations.
-- Implemented power management operations.
-- Introduced GOODIX_HID_STARTED to record the current device operating state.
-- Add OF match table.
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes in v3:
-- Renamed the driver file to hid-goodix-spi.c.
-- Mentioned in the commit message that this implementation is not compatible with
-  Microsoft's HID-over-SPI protocol.
-- Modified the driver to fetch the GOODIX_HID_REPORT_ADDR from device properties.
-- Add a lock to prevent concurrent hid feature request operations.
-- Optimized the SPI read/write functions by reducing the number of malloc calls.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Changes in v2:
-- Fixed build warnings reported by kernel test robot
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
----
-Charles Wang (2):
-  HID: hid-goodix: Add Goodix HID-over-SPI driver
-  dt-bindings: input: Goodix SPI HID Touchscreen
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
- .../bindings/input/goodix,gt7986u.yaml        |  65 ++
- drivers/hid/Kconfig                           |   6 +
- drivers/hid/Makefile                          |   1 +
- drivers/hid/hid-goodix-spi.c                  | 812 ++++++++++++++++++
- 4 files changed, 884 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
- create mode 100644 drivers/hid/hid-goodix-spi.c
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
--- 
-2.43.0
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
