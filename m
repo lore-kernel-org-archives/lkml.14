@@ -1,47 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4D11850A2
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF818187547
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333194; cv=none; b=MgBplvjJQl21pYcUAKXpZ8LqNj/jGiRTRNu97rSvWNn+QrNJPF4Ml+lvbs5PXGmPiOaiEPvDAt7A5rh9y2e3cWqBwoIz4/HFlP7HbHwaZeoI55q8TugiQIueVqP2dmWq/0mKWm0BQfwc807tAjs6g1Z2marAbdrZP4dbW/3OvRc=
+	t=1718333196; cv=none; b=hGfraQ7F/PUpLe6cN8NzZPf9GBNbH3uf/HFbld2yjJnU6GnfEPDyDCTkgRJ3BVddtabPoEBHkANZxo2/lpX35xWVef5Cqqo7+/X0GooKyaLAt5k3LwKjoS5emdBcuE9WxFjlo6yejYa0zkt8VELO2ABMXz4mMikkU9w/J2XWcmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333194; c=relaxed/simple;
-	bh=icNmAID2EvMQTKejkkvoyVXTnXQaUa5EIvyMHjLlbUo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=incD/xtyVbk0K1dJV3oZHdAAMVGM7cIs311QgxADJ8ttmSZiovhTAI3Kg7q7WXH85lsb7RRQ8L59q+8A4mEN0RYq+ZKZ7idAKq6MTa0JqOG2Qu0uf/KyODL+4Q9B8HyYXkxH7cLNXDpDaQSLXZUkZxDqI6AtEk4TFkTqjTTsIQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=D08jlQ2t; arc=none smtp.client-ip=210.61.82.184
+	s=arc-20240116; t=1718333196; c=relaxed/simple;
+	bh=REYsVMNMXZTTP7/Vw8gaZi+NbCMSXNkwGH5ntrVRidk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eZxTIMT4zK3vJn7fF04qCg+ra7h2hBtH7cSlxL4Y7Ava9YFS8wR4rYbMHhndpFXMkqA/pxsBEZoF6EV2SK76g7RcvabrlkyVe2kb/R0ZwooSGMmJoYq5SbqWVsWyRI3LDbRK4Izj/KmR1fSGjXeQfJmaUTkFVP9tBJiQLxguX4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jUVWhhfP; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D08jlQ2t"
-X-UUID: 49665bf029f811efa22eafcdcd04c131-20240614
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jUVWhhfP"
+X-UUID: 4ab5dd4629f811efa54bbfbb386b949c-20240614
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=FBOTipKdhwPMUM/fdFD0D1fdazLJkTD6AhWAkm3itOg=;
-	b=D08jlQ2tDnRUdqrPtjpl9gnTl+U/4Jl6pofBxfsaIaoW5QFwvYmQYJMvGuqFDxP1EsnpEQhahE1E9p27/+x5B/D9o7hgLHnTSRrbsHxmrOO8TLSeFXiGZKjSIf67CI6H2kfKcs2qWoQ0HbXR+YU+E5gVXo0qo9wzuhamdS4tPxc=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=toZI1eMYvUVCsfzTbCuF8F4eC4xSRVwzzC5k4uSZ54g=;
+	b=jUVWhhfPWTuWsQvuAbwaorZRfe2HQbN60Sd77eYtsjsAUWqHw+pPiLFr6D6gWE+HUkokZxpINj5I6TDV6xB//wJ4mH3lur4I3wgrQJJyrcYQ4FSPGGdc5NvNaeiNMirb0+bfk+lHyMKyp4vfGD10YOdgHaFt61JzQE2NkEJpsa4=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:26bed175-b0fd-4b89-af8c-5d31ab207883,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:95df9188-8d4f-477b-89d2-1e3bdbef96d1,B
+X-CID-O-INFO: VERSION:1.1.39,REQID:c76c087d-8acc-4430-918c-f814330720d1,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:393d96e,CLOUDID:e9fe1185-4f93-4875-95e7-8c66ea833d57,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
 	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 49665bf029f811efa22eafcdcd04c131-20240614
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+X-UUID: 4ab5dd4629f811efa54bbfbb386b949c-20240614
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1415769070; Fri, 14 Jun 2024 10:46:23 +0800
+	with ESMTP id 251409021; Fri, 14 Jun 2024 10:46:25 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 14 Jun 2024 10:46:21 +0800
+ 15.2.1118.26; Fri, 14 Jun 2024 10:46:24 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 10:46:21 +0800
+ 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 10:46:24 +0800
 From: Shawn Sung <shawn.sung@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
@@ -53,11 +54,13 @@ CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	<fshao@chromium.org>, <dri-devel@lists.freedesktop.org>,
 	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Hsiao Chien Sung
-	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v9 00/21] Support IGT in display driver
-Date: Fri, 14 Jun 2024 10:45:59 +0800
-Message-ID: <20240614024620.19011-1-shawn.sung@mediatek.com>
+	<shawn.sung@mediatek.com>
+Subject: [PATCH v9 14/21] drm/mediatek: Support "None" blending in OVL
+Date: Fri, 14 Jun 2024 10:46:13 +0800
+Message-ID: <20240614024620.19011-15-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240614024620.19011-1-shawn.sung@mediatek.com>
+References: <20240614024620.19011-1-shawn.sung@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,89 +70,37 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK: N
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-This series adds support for running IGT (Intel GPU Tool) tests with
-MediaTek display driver. The following changes will be applied:
+Support "None" alpha blending mode on MediaTek's chips.
 
-1. Add a new API for creating GCE thread loop to retrieve CRCs
-   from the hardware component
-2. Support hardware CRC calculation in both VDOSYS0 and VDOSYS1
-3. Support alpha blending in both VDOSYS0 and VDOSYS1
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes in v9:
-- Separate the patch into smaller ones
-
-Changes in v8:
-- Start/Stop CRC CMDQ thread on when needed
-- Squash and rearrange the commits
-- Add more information to the commit message and comments
-
-Changes in v7:
-- Separate the patch into smaller ones
-
-Changes in v6:
-- Use drm_vblank_work to deffer the CRC work into bottom halves
-- Separate the patches for "Premultiplied" and "None" alpha blending
-
-Changes in v5:
-- Add more descriptions to the codes
-- Add DRM mode configs to the driver data
-- Squash and rearrange the commits
-
-Changes in v4:
-- Separate the patch into smaller ones
-- Change the title of some patches
-- Revert the changes that are not related to the series
-
-Changes in v3:
-- Modify the dt-binding document of Mediatek OVL
-- Set DRM mode configs accroding to the hardware capabilities
-- Replace cmdq_pkt_jump_absolute() with cmdq_pkt_jump()
-
-Changes in v2:
-- Simplify CMDQ by adding commands that are currently used only
-- Integrate CRC related codes into new APIs for Mixer and OVL to reuse
-- Add CPU version CRC retrieval when CMDQ is disabled
-
-Hsiao Chien Sung (21):
-  soc: mediatek: Disable 9-bit alpha in ETHDR
-  drm/mediatek: Add OVL compatible name for MT8195
-  drm/mediatek: Add missing plane settings when async update
-  drm/mediatek: Add DRM_MODE_ROTATE_0 to rotation property
-  drm/mediatek: Set DRM mode configs accordingly
-  drm/mediatek: Turn off the layers with zero width or height
-  drm/mediatek: Support more 10bit formats in OVL
-  drm/mediatek: Support RGBA8888 and RGBX8888 in OVL on MT8195
-  drm/mediatek: Fix XRGB setting error in OVL
-  drm/mediatek: Fix XRGB setting error in Mixer
-  drm/mediatek: Add new color format MACROs in OVL
-  drm/mediatek: Support DRM plane alpha in OVL
-  drm/mediatek: Support DRM plane alpha in Mixer
-  drm/mediatek: Support "None" blending in OVL
-  drm/mediatek: Support "None" blending in Mixer
-  drm/mediatek: Support "Pre-multiplied" blending in OVL
-  drm/mediatek: Support "Pre-multiplied" blending in Mixer
-  drm/mediatek: Support alpha blending in display driver
-  drm/mediatek: Support CRC in display driver
-  drm/mediatek: Support CRC in OVL
-  drm/mediatek: Support CRC in OVL adaptor
-
- drivers/gpu/drm/mediatek/mtk_crtc.c           | 279 +++++++++++++++
- drivers/gpu/drm/mediatek/mtk_crtc.h           |  38 ++
- drivers/gpu/drm/mediatek/mtk_ddp_comp.c       |  10 +
- drivers/gpu/drm/mediatek/mtk_ddp_comp.h       |  11 +-
- drivers/gpu/drm/mediatek/mtk_disp_drv.h       |  10 +
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c       | 330 +++++++++++++++---
- .../gpu/drm/mediatek/mtk_disp_ovl_adaptor.c   |  37 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  24 ++
- drivers/gpu/drm/mediatek/mtk_drm_drv.h        |   4 +
- drivers/gpu/drm/mediatek/mtk_ethdr.c          | 110 +++++-
- drivers/gpu/drm/mediatek/mtk_ethdr.h          |   7 +
- drivers/gpu/drm/mediatek/mtk_plane.c          |  15 +-
- drivers/soc/mediatek/mtk-mmsys.c              |   1 +
- 13 files changed, 826 insertions(+), 50 deletions(-)
-
---
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 2316d4a6dca7..6567806cf4e2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -431,6 +431,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	unsigned int fmt = pending->format;
+ 	unsigned int offset = (pending->y << 16) | pending->x;
+ 	unsigned int src_size = (pending->height << 16) | pending->width;
++	unsigned int blend_mode = state->base.pixel_blend_mode;
+ 	unsigned int ignore_pixel_alpha = 0;
+ 	unsigned int con;
+ 	bool is_afbc = pending->modifier != DRM_FORMAT_MOD_LINEAR;
+@@ -460,7 +461,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
+ 	 * affect the result. Therefore we use !has_alpha as the condition.
+ 	 */
+-	if (state->base.fb && !state->base.fb->format->has_alpha)
++	if ((state->base.fb && !state->base.fb->format->has_alpha) ||
++	    blend_mode == DRM_MODE_BLEND_PIXEL_NONE)
+ 		ignore_pixel_alpha = OVL_CONST_BLEND;
+ 
+ 	if (pending->rotation & DRM_MODE_REFLECT_Y) {
+-- 
 2.18.0
 
