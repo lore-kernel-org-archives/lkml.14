@@ -1,144 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DA51854;
-	Fri, 14 Jun 2024 18:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B458A2CCD0
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 18:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718389220; cv=none; b=KJg0pSwR+BqBDBkuYwD7BHNkieDmO7vf41FlfmXFTjvGXsRA0PFhYy01zQRAAdIo0AY9dL+ps4GcQWkQGZmsRFQjM/kpDd3GAMggPuJZrV09/WGDngKyyyYsEqSfviC73HZEGktUukSg/tvD8hjNGqaq1GXYGyQguOtregC31FI=
+	t=1718389440; cv=none; b=eHLo//5CBsV5RmfC6reC7nUWq6cFruDZC25cFTrYPrEXECSvIM/vF2zFxUE1Tm5cV30b213Y8XaV3RxnZE/Y16zBBo88rh71jxjq7n9tKlmyotoNVWIoLPH35TPdbScjwxwPU/ISrT7XDn/FcRSji0G4EcXr7abcenL1keCoSSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718389220; c=relaxed/simple;
-	bh=loCV41uufcUxVbIBke73AHmqNwkG7/6xmqlzylzRWQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MyvWJYeOuodwSvw1OdJUzVxcaznTLQ1OluUTUsmQuHSQXPrzTWLeTVkDn1VF31mae8vEA2rtb/jag4Tju/jbpd3VIZNnAkt+HvsmfFdP6znXzX1RjNj72JEzaWb5jwy1YhYFvUXoP+774GH0NW1z1lrZoepuDmceOBqNB0yf7IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KEW7y6MH; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718389440; c=relaxed/simple;
+	bh=T9Lemwfn1DLC+FC//MnJvqr6mTgC0I5LdcfhGplrckE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ULjKIV86UFkltcbzlKmuamqs8t1MUFyi1SqF3OfhaHkXwCMmiuKm44gP3CzDLla/WMPp4zHNEUdeE+A6O0GvRxR4dkPVOgPrsukbiokUXTJOiEeaGOEPT7BmDQ3MmVrJ2ZY2fl//Nyb1Ao5USZJ4ecIZjrEDKKRutbFnZ7+t/+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YW2pxOYc; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KEW7y6MH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718389219; x=1749925219;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=loCV41uufcUxVbIBke73AHmqNwkG7/6xmqlzylzRWQI=;
-  b=KEW7y6MHvboZ4e7wDyesUi+EqHtMXb/z8KeA/g/r0O04caj/AEj5p6VD
-   UOlAuQg58nD+U4KORikOc1ZgKs/gccGd9C7En/c1LOVWTMoYqNe/EdT50
-   MXHgNBJfhv7xfdKHoZlwITvLwtBe4LFpbubkE+g41Cdbe3S66nNr1Kzvv
-   vs4qfkmRBjBK60LXLUFwgBKqoS/vzNa7vRyl0cdWCmmC7V8X97gZhBQ1P
-   3Q8DXgFG+sr0iTJ+4u80+44k2PAojoeftrosyzSMFG7fUmkqiUmwGXXgR
-   s4L5IfF78gu/KyxYHfBK9OnWv7HZR1KNhbwiUWgZ8oIHIjttCUACjf6tV
-   Q==;
-X-CSE-ConnectionGUID: /mGVgu4mSH+JURRMm1hYHg==
-X-CSE-MsgGUID: jsPITykcQA+fvcNi5mUwQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="32833274"
-X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="32833274"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 11:20:18 -0700
-X-CSE-ConnectionGUID: NgrLhIalQlyBtIDbxfhV8Q==
-X-CSE-MsgGUID: 3GUQ2JlbS8Wb5b0qMHyZFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="41253636"
-Received: from lkp-server01.sh.intel.com (HELO 9e3ee4e9e062) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 14 Jun 2024 11:20:14 -0700
-Received: from kbuild by 9e3ee4e9e062 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sIBX2-0001dD-2B;
-	Fri, 14 Jun 2024 18:20:12 +0000
-Date: Sat, 15 Jun 2024 02:20:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Animesh Agarwal <animeshagarwal28@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: dt-bindings: realtek,rt5514: Convert to
- dtschema
-Message-ID: <202406150259.fFugFRJx-lkp@intel.com>
-References: <20240614033812.51312-2-animeshagarwal28@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YW2pxOYc"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-656d8b346d2so1840278a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 11:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718389438; x=1718994238; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RZn50d8R/xT+6kVKruGSleyZqMbn5U8/mQpLLULuLpU=;
+        b=YW2pxOYcTnjDFBNrmFi5CmJ2R1uZVzwY9BXuEswfKAfiWOPaP32xZ5tU/OHaj53Psv
+         S7WbtLNZY48l65KTbN14dhSCLhYmcGGPUFM2jpmM6DYPS5p62NuMSazwk46esy6SK1sJ
+         BSI1sSCGEjtogOjVee8PAATcLhMFPvwTlWgWs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718389438; x=1718994238;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RZn50d8R/xT+6kVKruGSleyZqMbn5U8/mQpLLULuLpU=;
+        b=UBaNDnB+Z1eUjOmgZhYIIzB74esZUiQ5/TuY26BXzGppFaiE0242ZsvSM181Z1G60b
+         1Zt2gv6t9afa40Bh9v27mBP5S24ECJC+sWhwQsL/kmzwdFxuRRGBlAJF0ClGJea/ruPo
+         60zx1SLVhNcDo+EE5ybYsVNhE0pCzYxoU+ZsBUzl31YKW7qo04mwsilBhxvBUnZZqxF6
+         9+WZhQsrLHCERCtvGefFZf6Evmgg1VwBNDf7up7xZhHHs6lpMVC0pqb3mmkWRGhScvP9
+         mewoIvbZz2oG1btvUa7E06xRIYogUJvjlLYBlIkGvAK6BWx32yW/F3oWfr0P5RtaJBpe
+         qhtw==
+X-Gm-Message-State: AOJu0Yx63AAeclTBwsQInchy6VukY56jb9/aVfJI5JwYpJvb6ONiFFYI
+	yAnVQ3kLFgTctGiZcwhoiY3LXp+mWVPudAisxgoNikCDqX4wdHWWs3SeZb8l3w==
+X-Google-Smtp-Source: AGHT+IHEEim3bmh4/sD50G3DI5iFGIOyghrjMg4i8a0ncmlm0TwXaT/62REOeJ0qTU8r05Cp5Xrgyg==
+X-Received: by 2002:a17:902:e546:b0:1f8:3b7c:dff6 with SMTP id d9443c01a7336-1f862a0ab3bmr36880735ad.65.1718389437750;
+        Fri, 14 Jun 2024 11:23:57 -0700 (PDT)
+Received: from localhost (213.126.145.34.bc.googleusercontent.com. [34.145.126.213])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1f855f394desm35130775ad.266.2024.06.14.11.23.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 11:23:57 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	jannh@google.com,
+	sroettger@google.com,
+	rdunlap@infradead.org,
+	david@redhat.com,
+	adhemerval.zanella@linaro.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	keescook@chromium.org,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v1 0/1] add mseal to /proc/pid/smaps
+Date: Fri, 14 Jun 2024 18:23:26 +0000
+Message-ID: <20240614182327.752156-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614033812.51312-2-animeshagarwal28@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Animesh,
+From: Jeff Xu <jeffxu@chromium.org>
 
-kernel test robot noticed the following build warnings:
+Add mseal information in /proc/pid/smaps to indicate the VMA is sealed.
 
-[auto build test WARNING on broonie-sound/for-next]
-[also build test WARNING on linus/master v6.10-rc3 next-20240613]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I appreicate Adhemerval Zanella Netto to bring this to my attention. [1]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Animesh-Agarwal/ASoC-dt-bindings-realtek-rt5514-Convert-to-dtschema/20240614-114128
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-patch link:    https://lore.kernel.org/r/20240614033812.51312-2-animeshagarwal28%40gmail.com
-patch subject: [PATCH 1/2] ASoC: dt-bindings: realtek,rt5514: Convert to dtschema
-config: arm64-randconfig-051-20240614 (https://download.01.org/0day-ci/archive/20240615/202406150259.fFugFRJx-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-dtschema version: 2024.6.dev1+g833054f
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240615/202406150259.fFugFRJx-lkp@intel.com/reproduce)
+[1] https://public-inbox.org/libc-alpha/743ac2ce-817b-42ef-a0a1-7edf9a85d8e5@linaro.org/#t
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406150259.fFugFRJx-lkp@intel.com/
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: pcie@0,0: wifi@0,0:interrupts:0:0: 8 is not one of [1, 2, 3, 4]
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: pcie@0,0: wifi@0,0:interrupts:0: [8, 8] is too long
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: usb@fe800000: 'extcon' does not match any of the regexes: '^usb@', 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: usb@fe900000: 'extcon' does not match any of the regexes: '^usb@', 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /dp@fec00000: failed to match any schema with compatible: ['rockchip,rk3399-cdn-dp']
->> arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: spi2@0: 'spi-max-frequency', 'wakeup-source' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5514.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: da7219@1a: da7219_aad:dlg,jack-det-rate:0: '32ms_64ms' is not one of ['32_64', '64_128', '128_256', '256_512']
-   	from schema $id: http://devicetree.org/schemas/sound/dialog,da7219.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /syscon@ff770000/phy@f780: failed to match any schema with compatible: ['rockchip,rk3399-emmc-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /ppvar-bigcpu: failed to match any schema with compatible: ['vctrl-regulator']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /ppvar-litcpu: failed to match any schema with compatible: ['vctrl-regulator']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb: /ppvar-gpu: failed to match any schema with compatible: ['vctrl-regulator']
---
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: pcie@0,0: wifi@0,0:interrupts:0:0: 8 is not one of [1, 2, 3, 4]
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: pcie@0,0: wifi@0,0:interrupts:0: [8, 8] is too long
-   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: usb@fe800000: 'extcon' does not match any of the regexes: '^usb@', 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: usb@fe900000: 'extcon' does not match any of the regexes: '^usb@', 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/usb/rockchip,rk3399-dwc3.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /dp@fec00000: failed to match any schema with compatible: ['rockchip,rk3399-cdn-dp']
->> arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: spi2@0: 'spi-max-frequency', 'wakeup-source' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5514.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: da7219@1a: da7219_aad:dlg,jack-det-rate:0: '32ms_64ms' is not one of ['32_64', '64_128', '128_256', '256_512']
-   	from schema $id: http://devicetree.org/schemas/sound/dialog,da7219.yaml#
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /syscon@ff770000/phy@f780: failed to match any schema with compatible: ['rockchip,rk3399-emmc-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /ppvar-bigcpu: failed to match any schema with compatible: ['vctrl-regulator']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /ppvar-litcpu: failed to match any schema with compatible: ['vctrl-regulator']
-   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb: /ppvar-gpu: failed to match any schema with compatible: ['vctrl-regulator']
+Jeff Xu (1):
+  /proc/pid/smaps: add mseal info for vma
+
+ Documentation/filesystems/proc.rst | 1 +
+ fs/proc/task_mmu.c                 | 3 +++
+ include/linux/mm.h                 | 5 +++++
+ mm/internal.h                      | 5 -----
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2.627.g7a2c4fd464-goog
+
