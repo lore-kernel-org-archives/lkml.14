@@ -1,98 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD33619D880;
-	Fri, 14 Jun 2024 03:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B466D19D880;
+	Fri, 14 Jun 2024 03:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718334501; cv=none; b=YWvP1JUaQEmRUFSNkkDUOOx7wEe0O0PQl1bGbm4evIzl7VrZCCVwosVxKYjSd3JAHsPB5bZTqUUdEwXfVZExT/Bp0o6DPJKcep13ki244Lc2noayR5N7V3j+yIEigenHDdDWtsVmVMvfvN9aZmFaUtrNwWoc9djlElG3ScxRNUg=
+	t=1718334575; cv=none; b=c6uqGqtxO5ZePCFFTFBt8ARh/zglaT5jxnHpxVdyJmmWN0xjEESREKibyrjl/Gx4e07dCS2lxL7ogxXRnSbcufnFX9iDrD/NpiVni+otkF3XKh5f56qpvvcZSSVdRtC1Zt24F7Z6WleqypgWrJCxGPLyvIaqej10oSCgbCLP65c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718334501; c=relaxed/simple;
-	bh=jZoKqNduJ5SaJerRXkWZiTOxBSPCWwWsZ1MKWUW5LFw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Qeuie3AsMxgU+9sXT98yrUekFjvUHZs+xHWJjNsOcag2N8ijAr4YBmXEul390xq+rl+lPFY7I2zH16CjhzEogZ0f27m6DM3TqY1seu1btmfhhavj7LPmCwnV0RvH/gQ092YziO8MdFgf36mQFpd40qADbiJ1Rk0NTZTrSXN7RMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXoppFcU; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718334575; c=relaxed/simple;
+	bh=IYxjgh7/LE5H5j2kwnXPw+yk3TPEBGp/icxY41gHRPc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=heqgJcEbpeJxvwm+IehXZFcxJFTJKJNlHVXUyTVv/thgnUTtRIn9VmzAsGeqQkkNbR6lOrwCjRJwnPRmGxTlKJdlXshHMqxfkbCNyLFCnKeEL5dYm6kBiD/aybHxx+ttNv+OXfYYVTTdOCqXiuIUcV5qKBALxad3SIzudsaP9fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XnYuqO4s; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXoppFcU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718334500; x=1749870500;
-  h=from:to:cc:subject:date:message-id;
-  bh=jZoKqNduJ5SaJerRXkWZiTOxBSPCWwWsZ1MKWUW5LFw=;
-  b=mXoppFcU/Geyo29EH9l1BhZW97TxoFVj/D7DcCHYlGzxU/60m5VOficX
-   YfTpb2q5EneGx3d2uatVw3m6noA4LZTi0rsRT4kdXn7VlTCHP/FRm88xT
-   eSMoC0p3Ako5lQQ3oG98iw0Ml8s2qsKy4jNilP00fygEg3iHpjaTgW9Wp
-   1MQVbPxiOC2Z4slypvMNP31Ojd+w2EP6w0CkSTDSP/S08GGpsswnOUDew
-   T0+J5gIQOFGq9HOVyUHt7hwZVSaTFr/fDkvoEFDCzGXXqZgA7KYE1c3HU
-   2Ln1uSCH/I8Jidz5G+asyynelHDKa30gDDJM4vrzE61m3ccz3F4vvmZgW
-   w==;
-X-CSE-ConnectionGUID: 9nsNSbz9Q4q4lbIM50WBig==
-X-CSE-MsgGUID: sO8pvDVBTqqNo+gNVmZJtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="40616513"
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="40616513"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 20:08:14 -0700
-X-CSE-ConnectionGUID: LK/H5JbsQmqcjN8IpX4MSw==
-X-CSE-MsgGUID: aCzzxsRXQnKUuKEDX/Fz9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="40327257"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 20:08:13 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Aristeu Rozanski <aris@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] EDAC/igen6: Add Intel Arrow Lake-U/H SoCs support
-Date: Fri, 14 Jun 2024 11:03:54 +0800
-Message-Id: <20240614030354.69180-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XnYuqO4s"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718334568; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=LCHH8k0Vzj7aV9fD1q+oRGks/zIwhE/GlbzHdKlJQNU=;
+	b=XnYuqO4s1bRzzqr22DG3DCU/kP4v0MuTgh+97LHpLZ7eQbKYL078Yw6yehv+d6BDxbGmGRuhiEIlhIpJedGgT//IAmVOVbhV1oCoZouJPHWiYdwfkbw1nc54PB5lPqhoBFNasFuhg+Cb9mvVhBB6XIITbYAcXW2o6WM9dwC7FLQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W8PpsAh_1718334554;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W8PpsAh_1718334554)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Jun 2024 11:09:28 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: herbert@gondor.apana.org.au
+Cc: davem@davemloft.net,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] crypto: lib/mpi - Use swap() in mpi_ec_mul_point()
+Date: Fri, 14 Jun 2024 11:09:11 +0800
+Message-Id: <20240614030912.10736-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Arrow Lake-U/H SoCs share same IBECC registers with Meteor Lake-P
-SoCs. Add Arrow Lake-U/H SoC compute die IDs for EDAC support.
+Use existing swap() function rather than duplicating its implementation.
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+./lib/crypto/mpi/ec.c:1291:20-21: WARNING opportunity for swap().
+./lib/crypto/mpi/ec.c:1292:20-21: WARNING opportunity for swap().
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9328
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- drivers/edac/igen6_edac.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ lib/crypto/mpi/ec.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
-index dbe9fe5f2ca6..0fe75eed8973 100644
---- a/drivers/edac/igen6_edac.c
-+++ b/drivers/edac/igen6_edac.c
-@@ -258,6 +258,11 @@ static struct work_struct ecclog_work;
- #define DID_MTL_P_SKU2	0x7d02
- #define DID_MTL_P_SKU3	0x7d14
+diff --git a/lib/crypto/mpi/ec.c b/lib/crypto/mpi/ec.c
+index e16dca1e23d5..4781f00982ef 100644
+--- a/lib/crypto/mpi/ec.c
++++ b/lib/crypto/mpi/ec.c
+@@ -1285,14 +1285,12 @@ void mpi_ec_mul_point(MPI_POINT result,
+ 		sum = &p2_;
  
-+/* Compute die IDs for Arrow Lake-UH with IBECC */
-+#define DID_ARL_UH_SKU1	0x7d06
-+#define DID_ARL_UH_SKU2	0x7d20
-+#define DID_ARL_UH_SKU3	0x7d30
-+
- static int get_mchbar(struct pci_dev *pdev, u64 *mchbar)
- {
- 	union  {
-@@ -597,6 +602,9 @@ static const struct pci_device_id igen6_pci_tbl[] = {
- 	{ PCI_VDEVICE(INTEL, DID_MTL_P_SKU1), (kernel_ulong_t)&mtl_p_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_MTL_P_SKU2), (kernel_ulong_t)&mtl_p_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_MTL_P_SKU3), (kernel_ulong_t)&mtl_p_cfg },
-+	{ PCI_VDEVICE(INTEL, DID_ARL_UH_SKU1), (kernel_ulong_t)&mtl_p_cfg },
-+	{ PCI_VDEVICE(INTEL, DID_ARL_UH_SKU2), (kernel_ulong_t)&mtl_p_cfg },
-+	{ PCI_VDEVICE(INTEL, DID_ARL_UH_SKU3), (kernel_ulong_t)&mtl_p_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(pci, igen6_pci_tbl);
+ 		for (j = nbits-1; j >= 0; j--) {
+-			MPI_POINT t;
+-
+ 			sw = mpi_test_bit(scalar, j);
+ 			point_swap_cond(q1, q2, sw, ctx);
+ 			montgomery_ladder(prd, sum, q1, q2, point->x, ctx);
+ 			point_swap_cond(prd, sum, sw, ctx);
+-			t = q1;  q1 = prd;  prd = t;
+-			t = q2;  q2 = sum;  sum = t;
++			swap(q1, prd);
++			swap(q2, sum);
+ 		}
+ 
+ 		mpi_clear(result->y);
 -- 
-2.17.1
+2.20.1.7.g153144c
 
