@@ -1,89 +1,73 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAB5194153;
-	Fri, 14 Jun 2024 10:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA521946A4
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359330; cv=none; b=bB6j4x5qZlTG0TtxCHXf22llBfHgyRNF2kmVWb06qIqQkEafp0M4vDN1MjhwL1B5Lg7RIFcSDuGTaEPwlaiU7quE9lELYQY7FTZku0ap7XxYfpQuxxXbRkKmX8Fsnt9SNAE2Bkj9fSjmYT7lLtnty11bnNEsnPyzdWejB46gc3E=
+	t=1718359384; cv=none; b=I5ynTVVDDcEeyrODoinQURYHTxk8fmz4XyUlM5juoJktjAqL4xxl3pto1+Qi8+IA2wcj+7NhyChxo1P7vPIDmSmDrTuJKhXZwFgdGGJaTLRz9xUAg/a5UE9wrIw6hjmeijePZVdgEwM7g3YKsGIu91Y+rET5IAJ9AlYJomj9UBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359330; c=relaxed/simple;
-	bh=h+C+mpAk7vxV3inJhnDBH59Xi0o0Ki586l+o5iTAv6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XM8cTblLiJxsHKPoht3jTutdi9K5s6dtXmTAC9WkhdT4lleRmu+8EwE/4cqIodg4ZbsqdmFKyWqf6kV7zbk1oBKnd1XT15L6wHz4XTEN7wRzBZPjHFdESlhz46/uyf0bfE/squedK7yxpNU/Mxv//9R8SaP9f9l3bIdAPmx+baM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9E52DA7;
-	Fri, 14 Jun 2024 03:02:32 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D90973F5A1;
-	Fri, 14 Jun 2024 03:02:05 -0700 (PDT)
-Date: Fri, 14 Jun 2024 11:01:56 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Lee Jones <lee@kernel.org>, Philippe Simons <simons.philippe@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Ryan
- Walklin <ryan@testtoast.com>, Chris Morgan <macroalpha82@gmail.com>
-Subject: Re: [PATCH v2 2/5] regulator: axp20x: AXP717: fix LDO supply rails
- and off-by-ones
-Message-ID: <20240614110156.230f5109@donnerap.manchester.arm.com>
-In-Reply-To: <20240614081224.GD2561462@google.com>
-References: <20240418000736.24338-1-andre.przywara@arm.com>
-	<20240418000736.24338-3-andre.przywara@arm.com>
-	<f685b49a-36b1-46c9-a0a3-734bca8bd968@arm.com>
-	<20240614081224.GD2561462@google.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1718359384; c=relaxed/simple;
+	bh=mAE1KXWMeF5E0ygvYIsll/84cv6zEcHwSDnICwAJGSs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gU8x2vP/n2MLUytVv1ivGGLnboP5Kc/b9IyyUq3GUJG4Fcue81BQG8e1zrlvzB1vccLeQBTiiaxJvh1OKtV3gh70cc2LUaHT6Aa9/bPNXODkPQ+2uh4Mg1UH3QUipMUxZfromQBjCL0g1EawgPmdkt3riYyG/FMr4pAjE7oDhlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-375d074398bso19191705ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 03:03:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718359382; x=1718964182;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jde5MK0jeNOUc20kGI8HANdozM3inJTWkjenhEiT3+k=;
+        b=ZE9FL4EmyU2P8+0OvEJXcbZtxZVZeZWWJJfiggFgjEJl29ma6BlJxsadK5JwmZK7Zi
+         LEYns/jIsXchXjGmkxgX7CFiQeaNn03qCHr1nMxaCCrHKPJ+SaabNihJkpejDAj3obQT
+         grJl1Nmfju102CIC3cTE6CDFvdH4HCBuKuyzCMIhZzFO0YUzCKWyhwr6WgHPn7FU7zG6
+         apgK4SzQJ9WHT040AiiRcCDe6MiYZPr5UMd+ufQ7ziD+G8i7DPbs+tPjq0Zf66mFHD4Q
+         dMGGR/SWhOxfmJpzct/hNAEkLyH54fn6vhFDtoC8m7LBKI64q+6amIONNz5wdmwOnlLb
+         yPUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVU/I0U6CgtbsQgxlVoJDGlhQbDi7DWs3Zbk0ld+k9DDUGWGvwk9fGKzsFX8aCM7+jNKdtM89z6QLGHMp6wwSiw0jdXR7dD++OIWocd
+X-Gm-Message-State: AOJu0YxedeKA3Oq/KIADYRbie23dK9mf73w0GMJA0tNdgmaldDEnNhE7
+	tJ8H6JVVHiSpZn5+hn9cS5Vr9gV/CE5py5aX8KCljuqbaKMmc2Ohwf2NFmItRexMb2Sr/vs5CIH
+	yVEr2QhD8k2vi2H50AzanP8RyvJKF8Oe5buHT8UplVuxTGfX1AOBlVus=
+X-Google-Smtp-Source: AGHT+IFarjCZuN2u9mRextQbq5uR/kQaYkHfkbZjhlVbX5SwH+w4XzDvaFS19ZCcmljAghs1gZTYlNT90LjLebJNrYXhVs7FRrmz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1c29:b0:375:a202:2548 with SMTP id
+ e9e14a558f8ab-375e0e1430dmr1120485ab.1.1718359382147; Fri, 14 Jun 2024
+ 03:03:02 -0700 (PDT)
+Date: Fri, 14 Jun 2024 03:03:02 -0700
+In-Reply-To: <3edac706-efb7-946a-ec72-02445ffb8ea4@netfilter.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000091d4e5061ad6b88d@google.com>
+Subject: Re: [syzbot] [netfilter?] net-next test error: WARNING: suspicious
+ RCU usage in _destroy_all_sets
+From: syzbot <syzbot+cfbe1da5fdfc39efc293@syzkaller.appspotmail.com>
+To: kadlec@netfilter.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 14 Jun 2024 09:12:24 +0100
-Lee Jones <lee@kernel.org> wrote:
+Hello,
 
-Hi Lee,
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> On Wed, 12 Jun 2024, Andre Przywara wrote:
-> 
-> > Hi Broonie,
-> > 
-> > On 18/04/2024 01:07, Andre Przywara wrote:  
-> > > The X-Powers AXP717 PMIC has separate input supply pins for each group
-> > > of LDOs, so they are not all using the same DCDC1 input, as described
-> > > currently.
-> > > 
-> > > Replace the "supply" member of each LDO description with the respective
-> > > group supply name, so that the supply dependencies can be correctly
-> > > described in the devicetree.
-> > > 
-> > > Also fix two off-by-ones in the regulator macros, after some double
-> > > checking the numbers against the datasheet. This uncovered a bug in the
-> > > datasheet: add a comment to document this.
-> > > 
-> > > Fixes: d2ac3df75c3a ("regulator: axp20x: add support for the AXP717")
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>  
-> > 
-> > Can you please take (at least) this one patch as a fix for 6.10? Applies
-> > cleanly on top of v6.10-rc3. The changes are not super-critical, but worth
-> > fixing nevertheless.  
-> 
-> FWIW, I have no idea what's going on with this set now.
-> 
-> Once all of the necessary patches have been expedited, please gather
-> together what's left and I'll take them via MFD.
+failed to checkout kernel repo git://blackhole.kfki.hu/nf/main: failed to run ["git" "fetch" "--force" "e800a3db89c700d4929431441d645bfd641d2d3c" "main"]: exit status 128
+fatal: unable to look up blackhole.kfki.hu (port 9418) (No address associated with hostname)
 
-Yes, we dropped the ball on this one a bit, apologies.
-Broonie just took 2/5, so I will resend 3/5-5/5 as a new series, targeting
-6.11.
 
-Cheers,
-Andre.
+
+Tested on:
+
+commit:         [unknown 
+git tree:       git://blackhole.kfki.hu/nf main
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7266aeba025a54a4
+dashboard link: https://syzkaller.appspot.com/bug?extid=cfbe1da5fdfc39efc293
+compiler:       
+
+Note: no patches were applied.
