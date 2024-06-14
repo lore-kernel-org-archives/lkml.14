@@ -1,143 +1,451 @@
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5B619FA84;
-	Fri, 14 Jun 2024 18:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17DC1474B1;
+	Fri, 14 Jun 2024 18:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718391233; cv=none; b=DOAJNA+ZleYzPrrThFzs5AtaWs53B/vVL5c9+LUOLws3KnYnI3L8QLo2U+VJn4yzXkmjkIMDHm8bpMJjByLBf2qUI5zDtyWwXfnO84e11TTkQkf1TmLaoletKINU//BK/UQiCYAqFZ4HyV50kgniKCMHETXmFJENN9tLr+6dhrQ=
+	t=1718391442; cv=none; b=IXMGNXdYt2jZRfHape57AVxTUllD9YGZMeSrjOSWk5k1Mm8rF9jMFY4gI5obrovhwRKoHDYN0KSzPWu4U0zPJacOAHRz1OneX/nYrxsOWX5G1W4ih5daNk886HaF/HkxNfLk3RtCVutlOkOnpJgU8Lbk12DHeqKStQok2+sJLJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718391233; c=relaxed/simple;
-	bh=X4on6X+88uTtA052hLd8IsojhN2ZO9yOasjMNwEvFjo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=CHPL8eQeLcuf+xxTbOFsQfEYrv80dh2pS7Bw3rh3Y2U7xelZtsWtQRVj5295cu8/ZCbIQ6fBlj7hwSBzL8DspQyZnvLxIIvTJUdBS/7SnLmE354EtzlXLU+89bRSw8DpRZ44XbFNKQqrh3FcqSk5MElz+1R7thizGpzNDFQYPZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=D1SQpY5Q; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="D1SQpY5Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:To:From:Cc:
-	Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
-	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=QENhb9HFgTzguovvznEeWYIHmMFEH/ZbGTpLCqvvbY0=; b=D1SQpY5Q3iU5y6hS8x3yCA2fCw
-	Xefzm8C0+45Bsx/hdgDkRNbsSx/QEswS5UQ34JGXS6GhfYViD98oyeBpeza3esE6hVmq+sMfSpn8T
-	MJJI+G8UJ9YF3ttwRvN2GliXh7gTihyr1Teipx7qAcKSLC9+xmPwqQ3M4P902G7Q4kAbEikSprWDp
-	e8SrOyC+SUT00xqTD9EEtEC3l5gsMjEhnROTiPfNaL+m4kFPdK9Qw69K0E4pVp5Kbca6f05ZV1gNU
-	Yp3CcMz1SO/a4C5cqCgerfhV3SGCbSYwDnIxP5DmaKdXcDjCMjkPzH9zKrlNe0dUYFb8725cOivwN
-	3AkQUWVQ==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1sIBkj-000LiY-5F; Fri, 14 Jun 2024 20:34:21 +0200
-Received: from [185.213.155.213] (helo=localhost)
-	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1sIBkh-000GCY-3A;
-	Fri, 14 Jun 2024 20:34:20 +0200
+	s=arc-20240116; t=1718391442; c=relaxed/simple;
+	bh=iDPcJaA7xeFloUdvPGvsZvDIj62pzgEpRyrRvAp9jk0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S+Ei/pi64bnB87VbhMjXpBfgfSzbNaJfF0rvmschozupc9wSHE0YIDrh2Cv26Pe8G+RtzlZ61fx17oca2OFNZaDsybAiFjoN9l3CRG2ylYnYtyl3ErlPMhocrjqdS61Wrs33EBsVuihd+l5q1w5QfIkYjrIZGtR2Gi+HtqI+65U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D1D9FEC;
+	Fri, 14 Jun 2024 11:57:42 -0700 (PDT)
+Received: from [10.57.72.20] (unknown [10.57.72.20])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3BEE3F73B;
+	Fri, 14 Jun 2024 11:57:14 -0700 (PDT)
+Message-ID: <6bdb0ff9-dba0-408c-9472-ef03339bfa7a@arm.com>
+Date: Fri, 14 Jun 2024 19:57:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 14 Jun 2024 18:34:19 +0000
-Message-Id: <D1ZYFRA8S0KC.3GG78DB9BA5AG@folker-schwesinger.de>
-Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe
- line
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Kishon Vijay Abraham I"
- <kishon@kernel.org>, "Chris Ruehl" <chris.ruehl@gtsys.com.hk>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Christopher Obbard" <chris.obbard@collabora.com>, "Doug Anderson"
- <dianders@chromium.org>, "Brian Norris" <briannorris@chromium.org>, "Jensen
- Huang" <jensenhuang@friendlyarm.com>, <linux-phy@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-To: "Alban Browaeys" <alban.browaeys@gmail.com>,
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "Conor Dooley"
- <conor@kernel.org>
-X-Mailer: aerc 0.17.0-152-g73bcb4661460
-References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de> <313d5a24b6cffa1a9160e624bb6855aa7f66589e.camel@gmail.com> <20240411-mushily-pucker-732583c1d340@spud> <2192003.Icojqenx9y@diego> <2427291970ac0962bf56b2455e5cb26e49d42c51.camel@gmail.com>
-In-Reply-To: <2427291970ac0962bf56b2455e5cb26e49d42c51.camel@gmail.com>
-X-Authenticated-Sender: dev@folker-schwesinger.de
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27306/Fri Jun 14 10:28:44 2024)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/14] arm64: Detect if in a realm and set RIPAS RAM
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+References: <20240605093006.145492-1-steven.price@arm.com>
+ <20240605093006.145492-3-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240605093006.145492-3-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Alban,
+Hi Steven
 
-thanks for aggregating all the background information about the issue.
+On 05/06/2024 10:29, Steven Price wrote:
+> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> Detect that the VM is a realm guest by the presence of the RSI
+> interface.
+> 
+> If in a realm then all memory needs to be marked as RIPAS RAM initially,
+> the loader may or may not have done this for us. To be sure iterate over
+> all RAM and mark it as such. Any failure is fatal as that implies the
+> RAM regions passed to Linux are incorrect - which would mean failing
+> later when attempting to access non-existent RAM.
+> 
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Co-developed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v2:
+>   * Use DECLARE_STATIC_KEY_FALSE rather than "extern struct
+>     static_key_false".
+>   * Rename set_memory_range() to rsi_set_memory_range().
+>   * Downgrade some BUG()s to WARN()s and handle the condition by
+>     propagating up the stack. Comment the remaining case that ends in a
+>     BUG() to explain why.
+>   * Rely on the return from rsi_request_version() rather than checking
+>     the version the RMM claims to support.
+>   * Rename the generic sounding arm64_setup_memory() to
+>     arm64_rsi_setup_memory() and move the call site to setup_arch().
+> ---
+>   arch/arm64/include/asm/rsi.h      | 48 +++++++++++++++++++++
+>   arch/arm64/include/asm/rsi_cmds.h | 22 ++++++++++
+>   arch/arm64/kernel/Makefile        |  3 +-
+>   arch/arm64/kernel/rsi.c           | 69 +++++++++++++++++++++++++++++++
+>   arch/arm64/kernel/setup.c         |  8 ++++
+>   arch/arm64/mm/init.c              |  1 +
+>   6 files changed, 150 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm64/include/asm/rsi.h
+>   create mode 100644 arch/arm64/kernel/rsi.c
+> 
+> diff --git a/arch/arm64/include/asm/rsi.h b/arch/arm64/include/asm/rsi.h
+> new file mode 100644
+> index 000000000000..ce2cdb501d84
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/rsi.h
+> @@ -0,0 +1,48 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2024 ARM Ltd.
+> + */
+> +
+> +#ifndef __ASM_RSI_H_
+> +#define __ASM_RSI_H_
+> +
+> +#include <linux/jump_label.h>
+> +#include <asm/rsi_cmds.h>
+> +
+> +DECLARE_STATIC_KEY_FALSE(rsi_present);
+> +
+> +void __init arm64_rsi_init(void);
+> +void __init arm64_rsi_setup_memory(void);
+> +static inline bool is_realm_world(void)
+> +{
+> +	return static_branch_unlikely(&rsi_present);
+> +}
+> +
+> +static inline int rsi_set_memory_range(phys_addr_t start, phys_addr_t end,
+> +				       enum ripas state)
+> +{
+> +	unsigned long ret;
+> +	phys_addr_t top;
+> +
+> +	while (start != end) {
+> +		ret = rsi_set_addr_range_state(start, end, state, &top);
+> +		if (WARN_ON(ret || top < start || top > end))
+> +			return -EINVAL;
+> +		start = top;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int rsi_set_memory_range_protected(phys_addr_t start,
+> +						 phys_addr_t end)
+> +{
+> +	return rsi_set_memory_range(start, end, RSI_RIPAS_RAM);
+> +}
+> +
+> +static inline int rsi_set_memory_range_shared(phys_addr_t start,
+> +					      phys_addr_t end)
+> +{
+> +	return rsi_set_memory_range(start, end, RSI_RIPAS_EMPTY);
+> +}
+> +#endif
+> diff --git a/arch/arm64/include/asm/rsi_cmds.h b/arch/arm64/include/asm/rsi_cmds.h
+> index ad425c5d6f1b..ab8ad435f10e 100644
+> --- a/arch/arm64/include/asm/rsi_cmds.h
+> +++ b/arch/arm64/include/asm/rsi_cmds.h
+> @@ -10,6 +10,11 @@
+>   
+>   #include <asm/rsi_smc.h>
+>   
+> +enum ripas {
+> +	RSI_RIPAS_EMPTY,
+> +	RSI_RIPAS_RAM,
+> +};
+> +
+>   static inline void invoke_rsi_fn_smc_with_res(unsigned long function_id,
+>   					      unsigned long arg0,
+>   					      unsigned long arg1,
+> @@ -44,4 +49,21 @@ static inline unsigned long rsi_get_realm_config(struct realm_config *cfg)
+>   	return res.a0;
+>   }
+>   
+> +static inline unsigned long rsi_set_addr_range_state(phys_addr_t start,
+> +						     phys_addr_t end,
+> +						     enum ripas state,
+> +						     phys_addr_t *top)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	invoke_rsi_fn_smc_with_res(SMC_RSI_IPA_STATE_SET,
+> +				   start, end, state, RSI_NO_CHANGE_DESTROYED,
 
-On Tue Jun 11, 2024 at 9:38 PM CEST, Alban Browaeys wrote:
->
-> Could you test the enable-strobe property on all the dts that  disabled
-> hs400es due to this new default (I lack the hardware to test the
-> patches).
-> At least arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-> arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-> arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-> and ping the board tester for other boards to test if they require
-> "rockchip,enable-strobe-pulldown" for EMMC HS400 write support (read is
-> fine even with the new default).
->
+Though this is fine from the KVM as NS Host perspective, it may be 
+unnecessarily restrictive in general for a Host implementation. We only
+need that RSI_NO_CHANGE_DESTROYED flag for "init all DRAM range as RAM"
+(where we want to prevent a host from "destroying pages" that were
+populated before activation, without consent). But in all other cases
+where we do not rely on the content of the "newly" encrypted page,
+we could drop the flag.
 
-I tested some of the boards that include rk3399-rock-pi-4.dtsi (see
-below).
+I think we need could have variants of this helper one which allows 
+"DESTROYED" granules to be converted, which must be only used while 
+"transitioning" a page to encrypted, where we don't rely on the contents 
+of the page.
 
-> On Tue, 2024-02-27 at 10:11 +0000, Folker Schwesinger wrote:
-> > with the following applied, the EMMC related errors are gone. dmesg
-> > only
-> > shows "Purging ... bytes" during my tests:
-> >=20
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-> > b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-> > index f2279aa6ca9e..ae0fb87e1a8b 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-> > @@ -647,8 +647,10 @@ &saradc {
-> >  &sdhci {
-> >         max-frequency =3D <150000000>;
-> >         bus-width =3D <8>;
-> > -       mmc-hs200-1_8v;
-> > +       mmc-hs400-1_8v;
-> > +       mmc-hs400-enhanced-strobe;
-> >         non-removable;
-> > +       rockchip,enable-strobe-pulldown;
-> >         status =3D "okay";
-> >  };
-> >=20
-> > For testing I ran dd three times in a row:
-> >=20
-> > dd if=3D/dev/zero of=3D./zero.bin bs=3D1M count=3D5000
-> >=20
-> > I tested this on both a Rock 4SE board and a Rock Pi 4B+ board with
-> > the
-> > same results.
->
-> Folker, are you confident "Rock 4SE board and Rock Pi 4B+" were fixed
-> with above patch?
-> Ie the "rockchip,enable-strobe-pulldown;" should be under an
-> "rockchip,rk3399-emmc-phy" compaible node, that is &emmc_phy in
-> arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi, not sdhci.
->
+Something like :
 
-The above diff was just a quick shot at testing the
-"rockchip,enable-strobe-pulldown" property when I first learned about
-it. I later realized that the property belongs under the &emmc_phy node
-as you suggested. That's what I did in the other patchset I sent a bit
-later, which was accepted and applied:
+rsi_set_memory_range_protected_safe() : Do not allow DESTROYED contents 
+to be converted.
 
-https://lists.infradead.org/pipermail/linux-rockchip/2024-March/045723.html
-f720dd9b8b6d8b2160beda789429d5489ce8a099
-c1b1f340dd7db11f273e426e110697551c9f501f
+rsi_set_memory_range_protected().
 
-So yes, the Rock 4SE, Rock Pi 4B and Rock Pi 4B+ boards all were fixed
-with the patch. I regularly have the Rock 4SE and Rock 4B running from
-EMMC, always with the patch applied since I sent it.
+Something like:
+
+---8>---
+
+diff --git a/arch/arm64/include/asm/rsi.h b/arch/arm64/include/asm/rsi.h
+index ce2cdb501d84..dea2ed99f6d1 100644
+--- a/arch/arm64/include/asm/rsi.h
++++ b/arch/arm64/include/asm/rsi.h
+@@ -19,13 +19,13 @@ static inline bool is_realm_world(void)
+  }
+
+  static inline int rsi_set_memory_range(phys_addr_t start, phys_addr_t end,
+-				       enum ripas state)
++				       enum ripas state, unsigned long flags)
+  {
+  	unsigned long ret;
+  	phys_addr_t top;
+
+  	while (start != end) {
+-		ret = rsi_set_addr_range_state(start, end, state, &top);
++		ret = rsi_set_addr_range_state(start, end, state, flags, &top);
+  		if (WARN_ON(ret || top < start || top > end))
+  			return -EINVAL;
+  		start = top;
+@@ -34,15 +34,29 @@ static inline int rsi_set_memory_range(phys_addr_t 
+start, phys_addr_t end,
+  	return 0;
+  }
+
++/*
++ * Convert the specified range to RAM. Do not use this if you rely on 
+the contents
++ * of a page that may already be in RAM state.
++ */
+  static inline int rsi_set_memory_range_protected(phys_addr_t start,
+  						 phys_addr_t end)
+  {
+-	return rsi_set_memory_range(start, end, RSI_RIPAS_RAM);
++	return rsi_set_memory_range(start, end, RSI_RIPAS_RAM, 0);
++}
++
++/*
++ * Convert the specified range to RAM. Do not convert any pages that 
+may have
++ * been DESTROYED, without our permission.
++ */
++static inline int rsi_set_memory_range_protected_safe(phys_addr_t start,
++						      phys_addr_t end)
++{
++	return rsi_set_memory_range(start, end, RSI_RIPAS_RAM, 
+RSI_NO_CHANGE_DESTROYED);
+  }
+
+  static inline int rsi_set_memory_range_shared(phys_addr_t start,
+  					      phys_addr_t end)
+  {
+-	return rsi_set_memory_range(start, end, RSI_RIPAS_EMPTY);
++	return rsi_set_memory_range(start, end, RSI_RIPAS_EMPTY, 0);
+  }
+  #endif
+diff --git a/arch/arm64/include/asm/rsi_cmds.h 
+b/arch/arm64/include/asm/rsi_cmds.h
+index ab8ad435f10e..466615ff90de 100644
+--- a/arch/arm64/include/asm/rsi_cmds.h
++++ b/arch/arm64/include/asm/rsi_cmds.h
+@@ -52,12 +52,13 @@ static inline unsigned long 
+rsi_get_realm_config(struct realm_config *cfg)
+  static inline unsigned long rsi_set_addr_range_state(phys_addr_t start,
+  						     phys_addr_t end,
+  						     enum ripas state,
++						     unsigned long flags,
+  						     phys_addr_t *top)
+  {
+  	struct arm_smccc_res res;
+
+  	invoke_rsi_fn_smc_with_res(SMC_RSI_IPA_STATE_SET,
+-				   start, end, state, RSI_NO_CHANGE_DESTROYED,
++				   start, end, state, flags,
+  				   &res);
+
+  	if (top)
+diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+index 3a992bdfd6bb..e6a6681524a0 100644
+--- a/arch/arm64/kernel/rsi.c
++++ b/arch/arm64/kernel/rsi.c
+@@ -46,8 +46,9 @@ void __init arm64_rsi_setup_memory(void)
+  		return;
+
+  	/*
+-	 * Iterate over the available memory ranges
+-	 * and convert the state to protected memory.
++	 * Iterate over the available memory ranges and convert the state to
++	 * protected memory. We should take extra care to ensure that we DO NOT
++	 * permit any "DESTROYED" pages to be converted to "RAM".
+  	 *
+  	 * BUG_ON is used because if the attempt to switch the memory to
+  	 * protected has failed here, then future accesses to the memory are
+@@ -55,7 +56,7 @@ void __init arm64_rsi_setup_memory(void)
+  	 * Bailing out early prevents the guest limping on and dieing later.
+  	 */
+  	for_each_mem_range(i, &start, &end) {
+-		BUG_ON(rsi_set_memory_range_protected(start, end));
++		BUG_ON(rsi_set_memory_range_protected_safe(start, end));
+  	}
+  }
+
+
+
+Kind regards
+
+
+Suzuki
+
+
+> +				   &res);
+> +
+> +	if (top)
+> +		*top = res.a1;
+> +
+> +	return res.a0;
+> +}
+> +
+>   #endif
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 763824963ed1..a483b916ed11 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -33,7 +33,8 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
+>   			   return_address.o cpuinfo.o cpu_errata.o		\
+>   			   cpufeature.o alternative.o cacheinfo.o		\
+>   			   smp.o smp_spin_table.o topology.o smccc-call.o	\
+> -			   syscall.o proton-pack.o idle.o patching.o pi/
+> +			   syscall.o proton-pack.o idle.o patching.o pi/	\
+> +			   rsi.o
+>   
+>   obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
+>   					   sys_compat.o
+> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+> new file mode 100644
+> index 000000000000..3a992bdfd6bb
+> --- /dev/null
+> +++ b/arch/arm64/kernel/rsi.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +
+> +#include <linux/jump_label.h>
+> +#include <linux/memblock.h>
+> +#include <asm/rsi.h>
+> +
+> +DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
+> +EXPORT_SYMBOL(rsi_present);
+> +
+> +static bool rsi_version_matches(void)
+> +{
+> +	unsigned long ver_lower, ver_higher;
+> +	unsigned long ret = rsi_request_version(RSI_ABI_VERSION,
+> +						&ver_lower,
+> +						&ver_higher);
+> +
+> +	if (ret == SMCCC_RET_NOT_SUPPORTED)
+> +		return false;
+> +
+> +	if (ret != RSI_SUCCESS) {
+> +		pr_err("RME: RMM doesn't support RSI version %u.%u. Supported range: %lu.%lu-%lu.%lu\n",
+> +		       RSI_ABI_VERSION_MAJOR, RSI_ABI_VERSION_MINOR,
+> +		       RSI_ABI_VERSION_GET_MAJOR(ver_lower),
+> +		       RSI_ABI_VERSION_GET_MINOR(ver_lower),
+> +		       RSI_ABI_VERSION_GET_MAJOR(ver_higher),
+> +		       RSI_ABI_VERSION_GET_MINOR(ver_higher));
+> +		return false;
+> +	}
+> +
+> +	pr_info("RME: Using RSI version %lu.%lu\n",
+> +		RSI_ABI_VERSION_GET_MAJOR(ver_lower),
+> +		RSI_ABI_VERSION_GET_MINOR(ver_lower));
+> +
+> +	return true;
+> +}
+> +
+> +void __init arm64_rsi_setup_memory(void)
+> +{
+> +	u64 i;
+> +	phys_addr_t start, end;
+> +
+> +	if (!is_realm_world())
+> +		return;
+> +
+> +	/*
+> +	 * Iterate over the available memory ranges
+> +	 * and convert the state to protected memory.
+> +	 *
+> +	 * BUG_ON is used because if the attempt to switch the memory to
+> +	 * protected has failed here, then future accesses to the memory are
+> +	 * simply going to be reflected as a fault which we can't handle.
+> +	 * Bailing out early prevents the guest limping on and dieing later.
+> +	 */
+> +	for_each_mem_range(i, &start, &end) {
+> +		BUG_ON(rsi_set_memory_range_protected(start, end));
+> +	}
+> +}
+> +
+> +void __init arm64_rsi_init(void)
+> +{
+> +	if (!rsi_version_matches())
+> +		return;
+> +
+> +	static_branch_enable(&rsi_present);
+> +}
+> +
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index a096e2451044..143f87615af0 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -43,6 +43,7 @@
+>   #include <asm/cpu_ops.h>
+>   #include <asm/kasan.h>
+>   #include <asm/numa.h>
+> +#include <asm/rsi.h>
+>   #include <asm/scs.h>
+>   #include <asm/sections.h>
+>   #include <asm/setup.h>
+> @@ -293,6 +294,11 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+>   	 * cpufeature code and early parameters.
+>   	 */
+>   	jump_label_init();
+> +	/*
+> +	 * Init RSI before early param so that "earlycon" console uses the
+> +	 * shared alias when in a realm
+> +	 */
+> +	arm64_rsi_init();
+>   	parse_early_param();
+>   
+>   	dynamic_scs_init();
+> @@ -328,6 +334,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+>   
+>   	arm64_memblock_init();
+>   
+> +	arm64_rsi_setup_memory();
+> +
+>   	paging_init();
+>   
+>   	acpi_table_upgrade();
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 9b5ab6818f7f..9d8d38e3bee2 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -41,6 +41,7 @@
+>   #include <asm/kvm_host.h>
+>   #include <asm/memory.h>
+>   #include <asm/numa.h>
+> +#include <asm/rsi.h>
+>   #include <asm/sections.h>
+>   #include <asm/setup.h>
+>   #include <linux/sizes.h>
 
