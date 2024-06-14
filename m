@@ -1,37 +1,72 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2CE26ACA;
-	Fri, 14 Jun 2024 13:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784111991B3;
+	Fri, 14 Jun 2024 13:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718370631; cv=none; b=frmhxxoqsck0gHU8Oek7YTxHzpKTXEHM+QTrQL3WtPm1MS7w2wppVJfKdCN5OB6Dn5racH2FPwY6KAxFIF9TkBm/XxCq+G24nChfxs4mwVuTFfAHeyJfc+8DZSlFlLpXSsqw+ctH0hMu4YBW8C9p4b7Uj/hQ6soc2aamGa/0l10=
+	t=1718370639; cv=none; b=Qfbkibdc8aQFU0Kz0IFTQKqqHiPH1yh899xNI83ir5Opqgz2fN2Wy/j2foddKyCIiy/MLR7Evg0DmVTp9Ys5CD7GJqLz2HCPrm08pd3fl/4TJ2L7FqgF8ByssHiys4F6m3PqAvRFZMm8CwTbXtj0uK2SkCih4i3G2aOQ8JDH684=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718370631; c=relaxed/simple;
-	bh=t6/aZbBkHavmNxAjU9DaKNPdfyzRr5nCb9srEUp31QI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qRN4MqeoldQ1LtJYW/y8V8BSjAfyyJsW5QpEDUdP8k5M4JFVEnGIfpMJtJYwXgBAcJ4bXpjceHxghsFx1VA4e7rLf8BmlNSfsGKmG3h0xghTANANBtQocsIQiFgFnwdQJFra4kPCo5kl7/CW2/xzSqQYWOO93b15miSKJI2XWuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W10033k6XzwSSq;
-	Fri, 14 Jun 2024 21:06:11 +0800 (CST)
-Received: from canpemm500007.china.huawei.com (unknown [7.192.104.62])
-	by mail.maildlp.com (Postfix) with ESMTPS id 24AF5180081;
-	Fri, 14 Jun 2024 21:10:20 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by canpemm500007.china.huawei.com
- (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Jun
- 2024 21:10:19 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <tkhai@ya.ru>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>
-Subject: [PATCH] netns: Make get_net_ns() handle zero refcount net
-Date: Fri, 14 Jun 2024 21:13:02 +0800
-Message-ID: <20240614131302.2698509-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718370639; c=relaxed/simple;
+	bh=jzwkfggLDXFJDcRbziWhvAco8PbVOMWsz0rQYdDWX58=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pM22Q8wyBwMvHlKjs3jjYUoSV6xQJOtBMc8c1Dfaro/OfTuqnoRfZDQzd3Cuw+qlV8/Oue58JqfsPZ5p+OZ2t4Sxiz5p/82OY/oyQre4HzKXCB4No5eQfvZu82jeH0MR87G0LGmDQFhOXuwagPVJEU5ehdG1gCMu73pOfZaCBdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=U8DNlf1x; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="U8DNlf1x"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EAWa9V026928;
+	Fri, 14 Jun 2024 15:09:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=u88B3uHAwNfzN7+owQRQcC
+	LwIQp1OrA8QpebdDFwe/o=; b=U8DNlf1xzJ9iYyIiP7Tljjc9V/cK9rd5fi4d3s
+	ofUxQYPsWHbPI9MSpuxKqZrO69BT++q+9wgWGixTiulNdmAzqtToXWJYVtSIghSr
+	Lx6TTkbIdfvKhAoMRXZoDvGce4n8FXHgqKrLXau5WoEPFK+0KnpV2vBl5mmvownB
+	qGGo3jucZA5n92qOwjdXmBLegW/5TO46SpZgA0ps15i2wRAaz/TYiNOfylHc6TZe
+	kKi0v7/QPcJBWyp9ZDnRJ6Kh4bPRrdDcmIJK51geVm9aenUuTFNUtk8oAoDFsU3X
+	s8HHBu8s0N5W89IXmkAuUAggmz4MstLdxhyq8CXt35Z+diIQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yrfuj9wsb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 15:09:54 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 112AE40046;
+	Fri, 14 Jun 2024 15:09:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D14D3214D2E;
+	Fri, 14 Jun 2024 15:08:24 +0200 (CEST)
+Received: from localhost (10.252.5.68) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 14 Jun
+ 2024 15:08:21 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [net-next,PATCH 0/2] Series to deliver Ethernet for STM32MP25
+Date: Fri, 14 Jun 2024 15:08:10 +0200
+Message-ID: <20240614130812.72425-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,107 +75,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500007.china.huawei.com (7.192.104.62)
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_10,2024-06-14_03,2024-05-17_01
 
-Syzkaller hit a warning:
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 3 PID: 7890 at lib/refcount.c:25 refcount_warn_saturate+0xdf/0x1d0
-Modules linked in:
-CPU: 3 PID: 7890 Comm: tun Not tainted 6.10.0-rc3-00100-gcaa4f9578aba-dirty #310
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0xdf/0x1d0
-Code: 41 49 04 31 ff 89 de e8 9f 1e cd fe 84 db 75 9c e8 76 26 cd fe c6 05 b6 41 49 04 01 90 48 c7 c7 b8 8e 25 86 e8 d2 05 b5 fe 90 <0f> 0b 90 90 e9 79 ff ff ff e8 53 26 cd fe 0f b6 1
-RSP: 0018:ffff8881067b7da0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff811c72ac
-RDX: ffff8881026a2140 RSI: ffffffff811c72b5 RDI: 0000000000000001
-RBP: ffff8881067b7db0 R08: 0000000000000000 R09: 205b5d3730353139
-R10: 0000000000000000 R11: 205d303938375420 R12: ffff8881086500c4
-R13: ffff8881086500c4 R14: ffff8881086500b0 R15: ffff888108650040
-FS:  00007f5b2961a4c0(0000) GS:ffff88823bd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055d7ed36fd18 CR3: 00000001482f6000 CR4: 00000000000006f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ? show_regs+0xa3/0xc0
- ? __warn+0xa5/0x1c0
- ? refcount_warn_saturate+0xdf/0x1d0
- ? report_bug+0x1fc/0x2d0
- ? refcount_warn_saturate+0xdf/0x1d0
- ? handle_bug+0xa1/0x110
- ? exc_invalid_op+0x3c/0xb0
- ? asm_exc_invalid_op+0x1f/0x30
- ? __warn_printk+0xcc/0x140
- ? __warn_printk+0xd5/0x140
- ? refcount_warn_saturate+0xdf/0x1d0
- get_net_ns+0xa4/0xc0
- ? __pfx_get_net_ns+0x10/0x10
- open_related_ns+0x5a/0x130
- __tun_chr_ioctl+0x1616/0x2370
- ? __sanitizer_cov_trace_switch+0x58/0xa0
- ? __sanitizer_cov_trace_const_cmp2+0x1c/0x30
- ? __pfx_tun_chr_ioctl+0x10/0x10
- tun_chr_ioctl+0x2f/0x40
- __x64_sys_ioctl+0x11b/0x160
- x64_sys_call+0x1211/0x20d0
- do_syscall_64+0x9e/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5b28f165d7
-Code: b3 66 90 48 8b 05 b1 48 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 8
-RSP: 002b:00007ffc2b59c5e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f5b28f165d7
-RDX: 0000000000000000 RSI: 00000000000054e3 RDI: 0000000000000003
-RBP: 00007ffc2b59c650 R08: 00007f5b291ed8c0 R09: 00007f5b2961a4c0
-R10: 0000000029690010 R11: 0000000000000246 R12: 0000000000400730
-R13: 00007ffc2b59cf40 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Kernel panic - not syncing: kernel: panic_on_warn set ...
+STM32MP25 is STM32 SOC with 2 GMACs instances.
+    GMAC IP version is SNPS 5.3x.
+    GMAC IP configure with 2 RX and 4 TX queue.
+    DMA HW capability register supported
+    RX Checksum Offload Engine supported
+    TX Checksum insertion supported
+    Wake-Up On Lan supported
+    TSO supported
 
-This is trigger as below:
-          ns0                                    ns1
-tun_set_iff() //dev is tun0
-   tun->dev = dev
-//ip link set tun0 netns ns1
-                                       put_net() //ref is 0
-__tun_chr_ioctl() //TUNGETDEVNETNS
-   net = dev_net(tun->dev);
-   open_related_ns(&net->ns, get_net_ns); //ns1
-     get_net_ns()
-        get_net() //addition on 0
+Christophe Roullier (2):
+  dt-bindings: net: add STM32MP25 compatible in documentation for stm32
+  net: stmmac: dwmac-stm32: stm32: add management of stm32mp25 for stm32
 
-Use maybe_get_net() in get_net_ns in case net's ref is zero to fix this
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |   6 +
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 121 +++++++++++++++---
+ 2 files changed, 110 insertions(+), 17 deletions(-)
 
-Fixes: 0c3e0e3bb623 ("tun: Add ioctl() TUNGETDEVNETNS cmd to allow obtaining real net ns of tun device")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- net/core/net_namespace.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 4f7a61688d18..6a823ba906c6 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -693,11 +693,16 @@ EXPORT_SYMBOL_GPL(__put_net);
-  * get_net_ns - increment the refcount of the network namespace
-  * @ns: common namespace (net)
-  *
-- * Returns the net's common namespace.
-+ * Returns the net's common namespace or ERR_PTR() if ref is zero.
-  */
- struct ns_common *get_net_ns(struct ns_common *ns)
- {
--	return &get_net(container_of(ns, struct net, ns))->ns;
-+	struct net *net;
-+
-+	net = maybe_get_net(container_of(ns, struct net, ns));
-+	if (net)
-+		return &net->ns;
-+	return ERR_PTR(-EINVAL);
- }
- EXPORT_SYMBOL_GPL(get_net_ns);
- 
+base-commit: 404dbd26322f50c8123bf5bff9a409356889035f
 -- 
-2.34.1
+2.25.1
 
