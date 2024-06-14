@@ -1,53 +1,55 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B627E574
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DD118F2D2
 	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718367383; cv=none; b=Ron7aQ7f5biPWbmJtGIgQ8lrR9ghPmjoPPg8Hgnd0NMoJjb+DhiiXlM7AZcyh474GJXDKIoPDoiEMccV6JVA3ngQHm+j6H1llA1q2sQ72UHAR3VvIfDr7nXgGcJwKtluwfmVEqKX+LXOdcz2EHbzGUyDyLBJ8r+9vLA43HrOCtc=
+	t=1718367383; cv=none; b=Sb1BdHHEEgUnhf2fc8B98He96tAJxzBBG1y5ki+l+rvBYJa2urZ7UOkjK3RTVDZxNS5z2eYXvOI8F+OKZdgfB+G9CDKKk5ywr1JIsA33hpk0Y4TJEHTnP/0xljyvtul8o2vY1Zn1+fbYWYjKPXDbCDpHYZyWCdJQmULBt1mhKpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718367383; c=relaxed/simple;
-	bh=U8YWLxmPHt5Hzr/gUvcjRRL+ThBnjct/4VL62UVYJeo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Nw9LdbeLIyCo2RvRVTQZ7A8A+u3bP5DWy23E5FcL+xUaX22R7qa5tkJLpSTtP0MdIo3DMxb5JdI6JwdGe2ZPh41nPdJAJ+vNv3qB1Nltmlc8wA9uzUT+3FdXmnfXkEeVdKZhX04Q1sLtVggunzaHOaGh5+xibo54RQuJY/F1bo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+	bh=/Rujk8DjihECRgTxY5K/o9PR1gx2ryqyCsAZfVNkkS4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qvjilU8K3q1CfI2IO4zYNxwv/XeBElwW+SlaaR2E0S9S50/nuoN1P8oC8SewaftzOUdUnTE5sZNxrRpvgddWM7w5/rvBxTbf1Yf4pq97o7SvQL/2gIz6Kel7PqSdgSiAn8aRF5hPvcJSo9ZZ6okkvDz41ScObBfEhngJEKezubU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-375e45a4110so6161015ab.1
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e8dc9db8deso207701239f.1
         for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:16:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1718367381; x=1718972181;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+dI/iBtYvYG57frDDmvIwI4ngnHcMQbLtHXu3/qXnA=;
-        b=IF8vh0prnHq7R05q9BxkKZ5CgSdcyWjlzwXi8Q0HhDbx8UyTBUBLx2gSgm/I0YufQZ
-         bNT+ZuK7RFH9wv+rPhf+O0AUzCwdWchaT9Y61EFOjMLEP/R5glQ6A0Sv00lt6zyK7hqi
-         B9IVWH+6kx+RUf8QtMtRya0kP+5hngKd28edwT1unNnIqO0ZMUj8pHqzspMzb5yyC0Kt
-         ZeR+oOTCUdQGM1bhNuiT0WRbXLBHvBJNXggWRT/uzoWBBQ1HpV+1TcPj7WzIa7Zx4iBA
-         qJNzjLbKovrAWoyvJWGxEKEk8l1vbknPInqERGuxLZLvl7gMtlzrtmxYF3xQdAYt5l1G
-         fX2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXN09pCJIAVq6deemBr5xaFchrVy5myBp+3BNVHudk14gIaFvOKgzzpmcfy07fu3OFe1IP3hcf/qfbCxG0aglYPaLmeY21UFKx6Zuqd
-X-Gm-Message-State: AOJu0Yytq5lzPHtbavfyyQd7jfPuDNl/Cf4zciPYx+9j8x/Bkf8eNPkU
-	UQXyHw/wI2SjzZ/jcPpKUL4JHf2bWFZPPNf261oEz+NtWxKNAHPw5nqRgvZZdzWZVcq0Cn070UX
-	FHxkLRGnX+unWtFNI2HhneKp+cMgsauOzFbuL22l6OXomsWkH5E+KLLU=
-X-Google-Smtp-Source: AGHT+IHD+LQvL5CaBGJGu/9sgUT8gCJ5Ym9xdoCgM/kAwzi9aM1Uw6yhF96jJSrvTq8cL1NHa96B5wGdYw/a0Crk7p+qJwtlewwk
+        bh=vB05HPijVVK+UzmnMPGdCm9HQMlq2U20Ujta3yugVqY=;
+        b=cQDfsdjztWBXTBJ1LqcdYFaZThzWZaor2dvGmI581AQsW0X0/VniafAiyIPdUOQ4VA
+         SU59CLIkV8QTvBVIDRqMstQAJ3wQwbvDIiRVok7pFryTa1bANQa/61/evOEuL0Z3OHU2
+         Xyw2qUDwlYvX+egb9grG0h3XXoNxOvtsqtsBHziEnFLgo8MuNzBCe4KiW7+i8zX/4+jM
+         xpeYfocODQtM0FMtQaRYiLDEd3MPJdvWxRfBIWnD+LeXcxdVl8YtWBORz9IZ9Orgrk6p
+         yQW1KLM1NsaElE1gEHsnxTBvNDPg1jRJnHHuCvl5iCAA2Xozk7XJRfnoKKP4puUddX2z
+         50Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0cuRYHS93HZpJXRsw2YkmKKrWMAardIJHvrzDRJJLZXJfPM0DakuRz5t5Tt042wkf32/kcMhN2dR3yvNSidE7QKEtaM+hcE3jM5t4
+X-Gm-Message-State: AOJu0YxqylvuQIA13N+v/T6915/zX1e+9tPbj0clXeD2CuewMlQsTWlX
+	GK0Yb/047wioink9kUgtWc8mXZmq7JiCsM6Pp2SYX62Wi/x9FSwFjvZ5YKnLGXDN0TpkBEk+TPp
+	QpesmGN1ONXK9h6e6Mtvtn8OcYKMdN3RvuCb9iyscdIgR4NNso9KTCao=
+X-Google-Smtp-Source: AGHT+IHYFcJnb+5OofRIeaS8UT7bfdq2MIZHDD2qTc1tn/r5bWzluutMriZZLOcTtb6uxQDEremSBv/cJ6sTbA3fgsPNbWm3BkCT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a85:b0:36c:5520:9597 with SMTP id
- e9e14a558f8ab-375e10df572mr1037025ab.6.1718367380815; Fri, 14 Jun 2024
- 05:16:20 -0700 (PDT)
-Date: Fri, 14 Jun 2024 05:16:20 -0700
+X-Received: by 2002:a92:ca4e:0:b0:36c:4c63:9c93 with SMTP id
+ e9e14a558f8ab-375e02b6954mr1413495ab.3.1718367381068; Fri, 14 Jun 2024
+ 05:16:21 -0700 (PDT)
+Date: Fri, 14 Jun 2024 05:16:21 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000053e574061ad89521@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in bch2_fs_read_write_early
-From: syzbot <syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-ID: <00000000000057a891061ad8951a@google.com>
+Subject: [syzbot] [crypto?] [bcachefs?] BUG: unable to handle kernel paging
+ request in crypto_skcipher_encrypt
+From: syzbot <syzbot+026f1857b12f5eb3f9e9@syzkaller.appspotmail.com>
+To: davem@davemloft.net, herbert@gondor.apana.org.au, 
+	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
@@ -55,54 +57,101 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1689a256980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8786f381e62940f
-dashboard link: https://syzkaller.appspot.com/bug?extid=4366624c0b5aac4906cf
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110cda0e980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164f91fe980000
+HEAD commit:    ac2193b4b460 Merge branches 'for-next/misc', 'for-next/kse..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=120a2a56980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2ce2e16ea9422f82
+dashboard link: https://syzkaller.appspot.com/bug?extid=026f1857b12f5eb3f9e9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e534a2980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e15446980000
 
 Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-2ccbdf43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c40c1cd990d2/vmlinux-2ccbdf43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a2a94050804e/bzImage-2ccbdf43.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/a79f654b4644/mount_0.gz
+disk image: https://storage.googleapis.com/syzbot-assets/1a058064a7f1/disk-ac2193b4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/71fd113f4bcf/vmlinux-ac2193b4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a4603f3a4756/Image-ac2193b4.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/ea4906e9262d/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
+Reported-by: syzbot+026f1857b12f5eb3f9e9@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 10 at fs/bcachefs/super.c:525 bch2_fs_read_write_early+0x8a/0xa0 fs/bcachefs/super.c:525
+loop0: detected capacity change from 0 to 32768
+bcachefs (loop0): mounting version 1.7: mi_btree_bitmap opts=compression=lz4,nojournal_transaction_names
+bcachefs (loop0): recovering from clean shutdown, journal seq 7
+Unable to handle kernel paging request at virtual address dfff800000000004
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+Mem abort info:
+  ESR = 0x0000000096000005
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x05: level 1 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[dfff800000000004] address between user and kernel address ranges
+Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
 Modules linked in:
-CPU: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Workqueue: bcachefs_write_ref bch2_delete_dead_snapshots_work
-RIP: 0010:bch2_fs_read_write_early+0x8a/0xa0 fs/bcachefs/super.c:525
-Code: ac b8 76 fd 48 8d bb 78 02 00 00 be ff ff ff ff e8 0b cd d0 06 31 ff 89 c5 89 c6 e8 90 b3 76 fd 85 ed 75 c7 e8 87 b8 76 fd 90 <0f> 0b 90 eb bc 48 c7 c7 58 a2 e4 8f e8 c5 8b d2 fd eb 9b 0f 1f 00
-RSP: 0018:ffffc900000d7910 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888041080000 RCX: ffffffff84172cc0
-RDX: ffff888017e90000 RSI: ffffffff84172cc9 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000000 R11: 1ffffffff272c7ee R12: ffff8880410801a8
-R13: ffff888041080ae0 R14: 0000000000000001 R15: ffff88801f971800
-FS:  0000000000000000(0000) GS:ffff88806b000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555581085788 CR3: 0000000025a9e000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_delete_dead_snapshots+0xfdc/0x4e50 fs/bcachefs/snapshot.c:1569
- bch2_delete_dead_snapshots_work+0x20/0x160 fs/bcachefs/snapshot.c:1690
- process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
- process_scheduled_works kernel/workqueue.c:3312 [inline]
- worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+CPU: 0 PID: 6250 Comm: syz-executor983 Tainted: G        W          6.10.0-rc3-syzkaller-gac2193b4b460 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : crypto_skcipher_alg include/crypto/skcipher.h:375 [inline]
+pc : crypto_skcipher_encrypt+0x48/0x124 crypto/skcipher.c:637
+lr : crypto_skcipher_encrypt+0x24/0x124 crypto/skcipher.c:635
+sp : ffff80009a2759d0
+x29: ffff80009a2759d0 x28: 0000000000000000 x27: dfff800000000000
+x26: ffff80009a275fe0 x25: ffff80009a275a80 x24: ffff80009a275a60
+x23: ffff0000c8482a80 x22: 0000000000000020 x21: dfff800000000000
+x20: 0000000000000008 x19: ffff80009a275a80 x18: ffff0000d67d9a30
+x17: 2065657274622074 x16: ffff80008ae35f00 x15: 0000000000000002
+x14: 1ffff0001344eb56 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff70001344eb58 x10: 0000000000ff0100 x9 : 0000000000000000
+x8 : 0000000000000004 x7 : 0000000000000000 x6 : 000000000000003f
+x5 : 0000000000000040 x4 : 0000000000000000 x3 : 0000000000000010
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000020
+Call trace:
+ crypto_skcipher_alg include/crypto/skcipher.h:375 [inline]
+ crypto_skcipher_encrypt+0x48/0x124 crypto/skcipher.c:637
+ do_encrypt_sg fs/bcachefs/checksum.c:108 [inline]
+ do_encrypt+0x558/0x6a0 fs/bcachefs/checksum.c:150
+ gen_poly_key fs/bcachefs/checksum.c:191 [inline]
+ bch2_checksum+0x1c0/0x784 fs/bcachefs/checksum.c:227
+ bch2_btree_node_read_done+0x119c/0x4ac8 fs/bcachefs/btree_io.c:1074
+ btree_node_read_work+0x50c/0xe04 fs/bcachefs/btree_io.c:1345
+ bch2_btree_node_read+0x1f50/0x280c fs/bcachefs/btree_io.c:1730
+ __bch2_btree_root_read fs/bcachefs/btree_io.c:1769 [inline]
+ bch2_btree_root_read+0x2a8/0x534 fs/bcachefs/btree_io.c:1793
+ read_btree_roots+0x21c/0x730 fs/bcachefs/recovery.c:475
+ bch2_fs_recovery+0x31c4/0x5488 fs/bcachefs/recovery.c:803
+ bch2_fs_start+0x30c/0x53c fs/bcachefs/super.c:1031
+ bch2_fs_open+0x8b4/0xb64 fs/bcachefs/super.c:2123
+ bch2_mount+0x4fc/0xe18 fs/bcachefs/fs.c:1917
+ legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
+ vfs_get_tree+0x90/0x288 fs/super.c:1780
+ do_new_mount+0x278/0x900 fs/namespace.c:3352
+ path_mount+0x590/0xe04 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+Code: 977849b2 f9400294 91006280 d343fc08 (38756908) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	977849b2 	bl	0xfffffffffde126c8
+   4:	f9400294 	ldr	x20, [x20]
+   8:	91006280 	add	x0, x20, #0x18
+   c:	d343fc08 	lsr	x8, x0, #3
+* 10:	38756908 	ldrb	w8, [x8, x21] <-- trapping instruction
 
 
 ---
