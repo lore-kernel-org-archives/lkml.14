@@ -1,49 +1,43 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4CA192B76
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE25190477;
+	Fri, 14 Jun 2024 09:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718358344; cv=none; b=kIPpfVmVu5SjUIUbCe954iipTtZMsa+095Qo3FItvkuGg/RFUBUgauRuZLcTzjC+p49XJyTfQKct+4Vp314OnYVkGnvtYzNoJEXxuNHCzEQ0HQutn4jsvAJeTGv0ye2Nd/AhQUTAZtIZ7WXmXBdchv/I8ETE9TT6Qx2E9lNAXpc=
+	t=1718358373; cv=none; b=Li4xsMSJUkjxvCG+0HTNZkqScutCDh0rb8n/sY9C/IqY0QLl+3yM4hNXFSW/C/3UtHtYvjjrKw7NiBMAmK3hrmOckf7heNESEhio1CjhHsLFj3FsgWVCiKUxHIZbYvOUz1wEtqAKShZ/8rWM6/uyzgD8o9j/1HqhiuqTBy5x3MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718358344; c=relaxed/simple;
-	bh=L+BkJHJ93ZoZnAv3yF+VnHGw4NT9HnFM5BeOcKm1xfQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vCjcBFOpYI1lX/aF8TjeaZk0I6L3tvrEtDGOtVRz4eaEgAb25JvrjMgAYid94cNTpxMC+BsuAn4awk6D6o/Wu0KMS9xZT7PvF8fDr4pCKR1jsr6xD3rPGpAyEva39cmqGrH28rJM4RWKKzHgj4Lf/5M3zH4xUN2qnFNEdW+b3J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI3Ul-0000Sv-E2; Fri, 14 Jun 2024 11:45:19 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI3Uj-002Elv-Pu; Fri, 14 Jun 2024 11:45:17 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI3Uj-006DOY-24;
-	Fri, 14 Jun 2024 11:45:17 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	stable@vger.kernel.org,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net v2 1/2] net: phy: dp83tg720: wake up PHYs in managed mode
-Date: Fri, 14 Jun 2024 11:45:15 +0200
-Message-Id: <20240614094516.1481231-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718358373; c=relaxed/simple;
+	bh=BUESmvx+Cq07zK8KsbYwgMGM/ijq7/n/y0539SFZ2F4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sfVrox+/gF8Tg7XuySMgI4x19hm3iWgLkNcBayjxPRsTrdpjwDwOaTnIVXM9sGsR2yzfilQwAHD+g0NkZy2RxGcKFHKJt+jMqHck1nVHtc0VszUfJHKK54CibBLz3F/en/biqiYPz9+0Fgz1VEkHytDn/7snpKrDDDsPSdrQcQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W0vSp5Vt1z2Ck6M;
+	Fri, 14 Jun 2024 17:42:18 +0800 (CST)
+Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A5BF1A0188;
+	Fri, 14 Jun 2024 17:46:08 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 14 Jun 2024 17:46:07 +0800
+From: Junhao He <hejunhao3@huawei.com>
+To: <peterz@infradead.org>, <acme@redhat.com>, <irogers@google.com>
+CC: <jonathan.cameron@huawei.com>, <yangyicong@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <hejunhao3@huawei.com>,
+	<adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
+	<cuigaosheng1@huawei.com>, <mingo@redhat.com>, <james.clark@arm.com>,
+	<renyu.zj@linux.alibaba.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
+	<kjain@linux.ibm.com>, <kan.liang@linux.intel.com>, <mark.rutland@arm.com>,
+	<namhyung@kernel.org>, <ravi.bangoria@amd.com>, <robh@kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+Subject: [PATCH] perf pmus: Fixes always false when compare duplicates aliases
+Date: Fri, 14 Jun 2024 17:43:18 +0800
+Message-ID: <20240614094318.11607-1-hejunhao3@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,58 +45,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500002.china.huawei.com (7.185.36.158)
 
-In case this PHY is bootstrapped for managed mode, we need to manually
-wake it. Otherwise no link will be detected.
+In the previous loop, all the members in the aliases[j-1] have been freed
+and set to NULL. But in this loop, the function pmu_alias_is_duplicate()
+compares the aliases[j] with the aliases[j-1] that has already been
+disposed, so the function will always return false and duplicate aliases
+will never be discarded.
 
-Cc: stable@vger.kernel.org
-Fixes: cb80ee2f9bee1 ("net: phy: Add support for the DP83TG720S Ethernet PHY")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+If we find duplicate aliases, it skips the zfree aliases[j], which is
+accompanied by a memory leak.
+
+We can use the next aliases[j+1] to theck for duplicate aliases to
+fixes the aliases NULL pointer dereference, then goto zfree code snippet
+to release it.
+
+After patch testing:
+ $ perf list --unit=hisi_sicl,cpa pmu
+
+ uncore cpa:
+   cpa_p0_rd_dat_32b
+        [Number of read ops transmitted by the P0 port which size is 32 bytes.
+         Unit: hisi_sicl,cpa]
+   cpa_p0_rd_dat_64b
+        [Number of read ops transmitted by the P0 port which size is 64 bytes.
+         Unit: hisi_sicl,cpa]
+
+Fixes: c3245d2093c1 ("perf pmu: Abstract alias/event struct")
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
 ---
- drivers/net/phy/dp83tg720.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ tools/perf/util/pmus.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
-index 326c9770a6dcc..1186dfc70fb3c 100644
---- a/drivers/net/phy/dp83tg720.c
-+++ b/drivers/net/phy/dp83tg720.c
-@@ -17,6 +17,11 @@
- #define DP83TG720S_PHY_RESET			0x1f
- #define DP83TG720S_HW_RESET			BIT(15)
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index b9b4c5eb5002..6907e3e7fbd1 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -477,8 +477,8 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+ 	for (int j = 0; j < len; j++) {
+ 		/* Skip duplicates */
+-		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
+-			continue;
++		if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j], &aliases[j + 1]))
++			goto free;
  
-+#define DP83TG720S_LPS_CFG3			0x18c
-+/* Power modes are documented as bit fields but used as values */
-+/* Power Mode 0 is Normal mode */
-+#define DP83TG720S_LPS_CFG3_PWR_MODE_0		BIT(0)
-+
- #define DP83TG720S_RGMII_DELAY_CTRL		0x602
- /* In RGMII mode, Enable or disable the internal delay for RXD */
- #define DP83TG720S_RGMII_RX_CLK_SEL		BIT(1)
-@@ -154,10 +159,17 @@ static int dp83tg720_config_init(struct phy_device *phydev)
- 	 */
- 	usleep_range(1000, 2000);
- 
--	if (phy_interface_is_rgmii(phydev))
--		return dp83tg720_config_rgmii_delay(phydev);
-+	if (phy_interface_is_rgmii(phydev)) {
-+		ret = dp83tg720_config_rgmii_delay(phydev);
-+		if (ret)
-+			return ret;
-+	}
- 
--	return 0;
-+	/* In case the PHY is bootstrapped in managed mode, we need to
-+	 * wake it.
-+	 */
-+	return phy_write_mmd(phydev, MDIO_MMD_VEND2, DP83TG720S_LPS_CFG3,
-+			     DP83TG720S_LPS_CFG3_PWR_MODE_0);
- }
- 
- static struct phy_driver dp83tg720_driver[] = {
+ 		print_cb->print_event(print_state,
+ 				aliases[j].pmu_name,
+@@ -491,6 +491,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 				aliases[j].desc,
+ 				aliases[j].long_desc,
+ 				aliases[j].encoding_desc);
++free:
+ 		zfree(&aliases[j].name);
+ 		zfree(&aliases[j].alias);
+ 		zfree(&aliases[j].scale_unit);
 -- 
-2.39.2
+2.33.0
 
