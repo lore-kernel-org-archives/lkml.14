@@ -1,121 +1,191 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC7E1946A6
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5717C192B7D;
+	Fri, 14 Jun 2024 10:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359385; cv=none; b=aLOk4eCv95MGEQD9I72YHoXAq05p6nU7yK9vpllhRrFm9+LFzmCluhnnD8WK7e7LaVSkob95IK5RN8V5+l1+9ZUdUDhwJxAKe2DQ8xWH10KTwi2LqBuZt3DAS6vss5Os8tCzKsJzC+cfT57D5v68/xhgaiZ/37IitTpZhyM8k/o=
+	t=1718359480; cv=none; b=Z5df6HCpr3ojH8Sw5qFiKsOotQJefgxYDSxKx2lEdn78yB4D5Yapk5QQAFnjlyirVKFMDXOqKbUsptxBho/G/KzHoXMvyTfWtX4iryWcCr9LmBBi6Wo7k3aPJOaSaBbNa6ccCGFtOIjfI5UF7ZaLTGjpY/9hxutqH0RGCL/HZQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359385; c=relaxed/simple;
-	bh=pAHj4WCEYsPaZ7guGi86eSiZcgNHGNgnhFZ2CmMHITg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILtBdm7zu4ncRrnr97SC0BAosfl8gVdWnDRHA4GWmz1O2IQKAqREJD9a4P42pwc/rC4Bp1JEGLFPq+XfIIWs6bYNhmV+Ur6QD5eUQCmkTUCs6RFDNSs9AF3efUWtGHtIZ+jV+luWaKfw8/WAqvYtKuU2lgKZy1isPHeJLnD6zKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=RVVKhdFD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1718359480; c=relaxed/simple;
+	bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Tn5OHkzJBKXjwrNocmoHHQLDwdjGzGzTLdbVE1aCP/dowy3W/JAdXcbo8zbT2b0FedPZizOI9sQnCDmOBJr6HK7r2gh0R8CT9GGJFPddI0A/KIqJRnUd5xbN+bFVwCb253cC5YXw2Xmuoe0H6EEua4gsbhBDG54L+WScg3kYHY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=alvdrXnc; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="RVVKhdFD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=loN7
-	xuHi36pMgxaqPgnIzslD2U5A+TOaD28E3/1x6Ds=; b=RVVKhdFD+NkRoGgOVfhE
-	QZUxLm2TrdYiGbmJySXLGpCK5h8caN2C3vQtXw13AY0A/nAqRQB+IJWAuW0W9xrK
-	qpNV2hqOxEz8mEOaAqwWlq+oBH9d6fYTqUEaXKdHj32+eRq3BKjudgPWAel9qQdV
-	FsjQmxZ+ttJymHjkOdq7747/GmyBF+Ses+umqrOj7jpgTvRLQSFQaWwpAUfMiZFl
-	yzwQVvLtpXrRzmkIbEpt2fWBXn6shhJBPsRY9PQdgehA/G1wrHQ5pAmS6hSzMfvv
-	o4VuZjQeZ1m1+y/xrKiuRxPFhfnFTe8xSX9cGa5SaNM2JU3lzvt90jYPJUsdKiZN
-	Lw==
-Received: (qmail 1473055 invoked from network); 14 Jun 2024 12:03:01 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jun 2024 12:03:01 +0200
-X-UD-Smtp-Session: l3s3148p1@jqF7uNYavs4gAwDPXzjQABqqX1QYyOSW
-Date: Fri, 14 Jun 2024 12:03:00 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <slpwvai5q24qwymh7nktihvykmlhi5j3nhqjxruxb6yacruu47@27b7rhykw2f3>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
- <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
- <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
- <CACRpkdYtLDA3518uSYiTpu1PJuqNErHr9YMAKuar0CeFbfECPA@mail.gmail.com>
- <CAMRc=Mem6HN13FOA_Ru8zC-GqGGLTsQiktLWs5bN4JD1aM3gHQ@mail.gmail.com>
- <a7463c6e-2801-4d0e-b723-fc1cf77a04ed@app.fastmail.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="alvdrXnc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718359476;
+	bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=alvdrXncrJYx/H4SKHJ+FwREHFnwadGfM/9/k7tCPI8KM6OAKkvg1E6NjhtahnJcW
+	 dLYTa1qt8ITwUDFn7wL4CFmESI0OW9fymJhkU/SOPTJEmP/EUXsYKsbcLUPBU/Xi+2
+	 6RIf7t3FQ5WPsmN3xvR3r1vHvrploSS32H/kEwAQ=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 14 Jun 2024 12:04:29 +0200
+Subject: [PATCH] leds: cros_ec: Implement review comments from Lee
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pliq7sursgqwq3ih"
-Content-Disposition: inline
-In-Reply-To: <a7463c6e-2801-4d0e-b723-fc1cf77a04ed@app.fastmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240614-cros_ec-led-review-v1-1-946f2549fac2@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAKwVbGYC/x3M0QpAQBBG4VfRXJvCongVSWv8mBLaLZS8u+XyX
+ HznJg+n8FRHNzkc6nVbQ6RxRDLbdQLrEJqyJMuTMs1Z3OY7CC8Y+AM4GVIZ20tZVMZQgLvDqNc
+ /bdrneQHG9gOxZAAAAA==
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Cc: linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718359476; l=4274;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=G7HAy6RB0CVVPe1ouzdeSx44OWMoH2sLvWjILX5aMx4=;
+ b=uiD9pGnNZpgmiwedlFEzAECWQGAArHZE2wsPQAYu6qGS7H/vXYgZO0fDn0T+g3JB6IlMH67hO
+ cMAHGEqL/dgCM9YsqvSGinGeo9eDksCEclZj9obm1pG9aRzX09ZrhN7
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
+Implement review comments from Lee as requested in [0] for
+"leds: Add ChromeOS EC driver".
 
---pliq7sursgqwq3ih
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes:
+* Inline DRV_NAME string constant.
+* Use dev_err() instead of dev_warn() to report errors.
+* Rename cros_ec_led_probe_led() to cros_ec_led_probe_one().
+* Make loop variable "int" where they belong.
+* Move "Unknown LED" comment to where it belongs.
+* Register trigger during _probe().
+* Use module_platform_driver() and drop all the custom boilerplate.
 
-Hi Arnd, everyone,
+[0] https://lore.kernel.org/lkml/20240614093445.GF3029315@google.com/T/#m8750abdef6a968ace765645189170814196c9ce9
 
-> I could imagine treating both gpio-virtuser and this code as
-> a gpiolib extension rather than a consumer (which is usually
-> part of some other subsystem's driver).
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/leds/leds-cros_ec.c | 50 +++++++++++++--------------------------------
+ 1 file changed, 14 insertions(+), 36 deletions(-)
 
-I have difficulties seeing this. For the analyzer, at least. It does not
-extend gpiolib in a way another consumer could make use of it?
+diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+index 7bb21a587713..275522b81ea5 100644
+--- a/drivers/leds/leds-cros_ec.c
++++ b/drivers/leds/leds-cros_ec.c
+@@ -14,8 +14,6 @@
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
+ 
+-#define DRV_NAME	"cros-ec-led"
+-
+ static const char * const cros_ec_led_functions[] = {
+ 	[EC_LED_ID_BATTERY_LED]            = LED_FUNCTION_CHARGING,
+ 	[EC_LED_ID_POWER_LED]              = LED_FUNCTION_POWER,
+@@ -152,7 +150,7 @@ static int cros_ec_led_count_subleds(struct device *dev,
+ 
+ 		if (common_range != range) {
+ 			/* The multicolor LED API expects a uniform max_brightness */
+-			dev_warn(dev, "Inconsistent LED brightness values\n");
++			dev_err(dev, "Inconsistent LED brightness values\n");
+ 			return -EINVAL;
+ 		}
+ 	}
+@@ -176,22 +174,21 @@ static const char *cros_ec_led_get_color_name(struct led_classdev_mc *led_mc_cde
+ 	return led_get_color_name(color);
+ }
+ 
+-static int cros_ec_led_probe_led(struct device *dev, struct cros_ec_device *cros_ec,
++static int cros_ec_led_probe_one(struct device *dev, struct cros_ec_device *cros_ec,
+ 				 enum ec_led_id id)
+ {
+ 	union cros_ec_led_cmd_data arg = {};
+ 	struct cros_ec_led_priv *priv;
+ 	struct led_classdev *led_cdev;
+ 	struct mc_subled *subleds;
+-	int ret, num_subleds;
+-	size_t i, subled;
++	int i, ret, num_subleds;
++	size_t subled;
+ 
+ 	arg.req.led_id = id;
+ 	arg.req.flags = EC_LED_FLAGS_QUERY;
+ 	ret = cros_ec_led_send_cmd(cros_ec, &arg);
+-	/* Unknown LED, skip */
+ 	if (ret == -EINVAL)
+-		return 0;
++		return 0; /* Unknown LED, skip */
+ 	if (ret == -EOPNOTSUPP)
+ 		return -ENODEV;
+ 	if (ret < 0)
+@@ -247,11 +244,14 @@ static int cros_ec_led_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
+ 	struct cros_ec_device *cros_ec = ec_dev->ec_dev;
+-	int ret = 0;
+-	size_t i;
++	int i, ret = 0;
++
++	ret = devm_led_trigger_register(dev, &cros_ec_led_trigger);
++	if (ret)
++		return ret;
+ 
+ 	for (i = 0; i < EC_LED_ID_COUNT; i++) {
+-		ret = cros_ec_led_probe_led(dev, cros_ec, i);
++		ret = cros_ec_led_probe_one(dev, cros_ec, i);
+ 		if (ret)
+ 			break;
+ 	}
+@@ -260,38 +260,16 @@ static int cros_ec_led_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct platform_device_id cros_ec_led_id[] = {
+-	{ DRV_NAME, 0 },
++	{ "cros-ec-led", 0 },
+ 	{}
+ };
+ 
+ static struct platform_driver cros_ec_led_driver = {
+-	.driver.name	= DRV_NAME,
++	.driver.name	= "cros-ec-led",
+ 	.probe		= cros_ec_led_probe,
+ 	.id_table	= cros_ec_led_id,
+ };
+-
+-static int __init cros_ec_led_init(void)
+-{
+-	int ret;
+-
+-	ret = led_trigger_register(&cros_ec_led_trigger);
+-	if (ret)
+-		return ret;
+-
+-	ret = platform_driver_register(&cros_ec_led_driver);
+-	if (ret)
+-		led_trigger_unregister(&cros_ec_led_trigger);
+-
+-	return ret;
+-};
+-module_init(cros_ec_led_init);
+-
+-static void __exit cros_ec_led_exit(void)
+-{
+-	platform_driver_unregister(&cros_ec_led_driver);
+-	led_trigger_unregister(&cros_ec_led_trigger);
+-};
+-module_exit(cros_ec_led_exit);
++module_platform_driver(cros_ec_led_driver);
+ 
+ MODULE_DEVICE_TABLE(platform, cros_ec_led_id);
+ MODULE_DESCRIPTION("ChromeOS EC LED Driver");
 
-> It would also make sense to me to separate gpio providers
-> from gpiolib in a way, moving one or both of them into a
-> subdirectory of drivers/gpio/.
+---
+base-commit: b6774dd948171c478c7aa19318b1d7ae9cf6d7a4
+change-id: 20240614-cros_ec-led-review-ec93abc65933
 
-I'd also like 'drivers/gpio/providers' and leave the core stuff (incl.
-the analyzer) in 'drivers/gpio'. But I am biased, I2C looks like this :)
-And yes, this is some churn and git-history spoiling.
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-> gpiolib-virtuser.c and gpiolib-sloppy-logic-analyzer.c
-
-'gpio-tool-sloppy-logic-analyzer.c' ? Based on what gets added to
-Kconfig with this patch:
-
-	+menu "GPIO hardware hacking tools"
-
-Happy hacking,
-
-   Wolfram
-
-
---pliq7sursgqwq3ih
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZsFVAACgkQFA3kzBSg
-Kba/oxAAoALsBaGmooDy9SxIKUxN/zuU3Fqq20YNihd6wcLFYb1sKfj7o8UvACJ5
-6b/QdYLkdZ3hKhgzsOZjwkAMzTDuf2p4imhUHqlPqIeN6JApeARFqdPtYqZN9uo6
-zc/x4zM0ilGB0vRqgDfbqLLoBeCHDsthPesjZ2tyxGVkpG0hj0VtSf9zXQrRgm7Z
-aQ/Sh4w+yRocVIp7oEAR2Zpr6oCF0ftwEf+3XXL178KqPBrcgzDYX3vC+gxL+fcE
-7lu88kOEygxT9J7cJXBexLiLv3vaw0uQUPVtsQilf0ia1ncTg0JQ0G/uyr4qlzng
-m7rhL4XazEGwt/P+AipoKxLG+zGnH11OaCwPlsmIJLYz0U3+d6IjSb8t7pYef/3n
-RRkDxAR6vlc0r/jOJXnRR0OEasGN/6euX5mNaTFU8zZ0blSHG70w6x0tnHjY49ps
-H4Z4iCWQF93/j8Lfrt0lnNqRswD8NJMubpoLFF+pJbR/Os0/2BPBC4OT1aa9xmdK
-xJsYU3/h2ZNcY9s1DYm6+F8yYIgsw6ONIhHKV/pKP0bJ1GAdnt3sRt7DHdXtrvea
-WppKuPaEcz+Y9bV8u9GbUVjx64iZyNvWM/KcYBM3yi5PzXtUt2wrVGiUqYNo5ohG
-K0zTz++edy/WL49/uJKw02dWILZgY7kTARC3IZ2+CiYDS4RHZbk=
-=OEh3
------END PGP SIGNATURE-----
-
---pliq7sursgqwq3ih--
