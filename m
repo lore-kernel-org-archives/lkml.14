@@ -1,181 +1,215 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F161415FA96;
-	Fri, 14 Jun 2024 15:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575815FA88
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378804; cv=none; b=acIUPJ/zfILVQJrJiRpt+J7VVcFZi8mVr/9mTEvSyrD9gtmBMvxg/kpzsXqNPygVP/gUpvna8rFQuol4BZLT9K6vMwFZYsAcj1KRmxm2gbvdzvCZ3rEe7TSy9fYYI+fDoP/19zHyCXyxd3z+O6MGNri/4vP2xPndaUcMn6WXj/s=
+	t=1718378820; cv=none; b=p9c3p+Rs/21JWu5+wcYLqloTkl0tO0rGf9rNShE+Yywl77QcfBNj3g+x5Enfc4HKKJs3eVQ54mT0deb6u6FvFQMPl+ASo97SLeAjksNbaftY1vhJDo3wlSWT6i1B8oJxoHXvXMiXcGUhd9IOcEEBpn7pxlkEmO6QiqnUPTHwqE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378804; c=relaxed/simple;
-	bh=xkm7TOfE+0Lij82Nq9O/l46tHzduMTcUqYKjBJC6MeQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jiI4aLsCh0/2Xmv8mwluj3ve9yTpm7CDBfS/QqP2IE72JL4iUbOXXm8+9v+eUcX3wFi0fRf+Bcd97C0RtdAZMwJucWe50MROy0fgyVjPSRyxqN2Kx/pPfYBSLpIeRjzdVZFabsbswEFASRclLizESgAvs8h9oYI+NsT5Esj7meg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=VZJkEp42 reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1718378820; c=relaxed/simple;
+	bh=0PN65MmsR+htu37pTDhkS0LTAlSWpb6BKZcBN7KpIEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pcw4dp8xfjJ1J2/k2g9mipPYjcmhdoxjLBDUVUBQvzvF+ZynYQEXx290tc6O+shp8c9nPXIThbsJlMFmXgz6O/LqMqJYXuQvyY9WrLF1+6B+wevgmSU5gF2AH78UCp1Wkxt6JQk2fH30RBJ1+x3zDGXuLt1zjXmFFf26yfQxcJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=THWCA3N2; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="VZJkEp42"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
- id 6ef55ecccd86ff32; Fri, 14 Jun 2024 17:26:34 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1FAF16A741D;
-	Fri, 14 Jun 2024 17:26:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1718378793;
-	bh=xkm7TOfE+0Lij82Nq9O/l46tHzduMTcUqYKjBJC6MeQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VZJkEp42w9TC/S8Rmws36AZO7ucAbv4I8RhKoVaPLOX7BDIG+Mr9YTAypBQU4veyD
-	 9WJjfoWId0GpByicz++c5PTi7NdE9lzFfMjMEXd9NpisXBUcBjNX4ltB9R0BGz5Wjh
-	 9qrHh8aWQ06RXhvOiZamqWexjK6qG1Ka9LBsIjwy/usdSTu1LBIryaVf3vlKjmtVkc
-	 1tcvw66mXV58JbHrCsWBmL1/E/d/T1G9WI3diB/AY+wMS/cpQjvGN8N5aZWkkA27+z
-	 i5ai4+PJF7Tla2ZfyVO1TBauaYEwLlm4Dfyk0dN380RLv1yBZA+G9rBT/niano/afB
-	 8ZeAcJq91hzfg==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>
-Subject:
- [PATCH v1 1/2] thermal: core: Synchronize suspend-prepare and post-suspend
- actions
-Date: Fri, 14 Jun 2024 17:22:25 +0200
-Message-ID: <2202941.irdbgypaU6@kreacher>
-In-Reply-To: <6070114.lOV4Wx5bFT@kreacher>
-References: <6070114.lOV4Wx5bFT@kreacher>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="THWCA3N2"
+X-Envelope-To: radhey.shyam.pandey@amd.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718378816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TXCpsE3uBw5k6En53chHC9Gf+7Ep3SP7s2xEngR0z4g=;
+	b=THWCA3N25762o3/3Wh9g0jPwUIWE4zEm7T3fR/jF/wFucH4XnGdgCrfKZIFmR9FIx/L2Xl
+	Id4S+ajhyHaBDg4DdUyZVFYl92CadaAeadcmlRdwCA2SYTbkC3ONM2LOXei7OKJEmymnpO
+	CG9tOeW7Cxe1FpJRvbEZvryCWjNX0ik=
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: linux-phy@lists.infradead.org
+X-Envelope-To: vkoul@kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: kishon@kernel.org
+Message-ID: <622a76b7-3b1f-4909-b2bd-f5e45776aedc@linux.dev>
+Date: Fri, 14 Jun 2024 11:26:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeduledgkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Subject: Re: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
+To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+References: <20240506170110.2874724-1-sean.anderson@linux.dev>
+ <20240506170110.2874724-5-sean.anderson@linux.dev>
+ <MN0PR12MB5953519A685A222CC603A2FEB7C12@MN0PR12MB5953.namprd12.prod.outlook.com>
+ <8349516a-84bc-45bf-a84c-ff05d8f50bf7@linux.dev>
+ <MN0PR12MB595380A6FBC3B67B312E440CB7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <MN0PR12MB595380A6FBC3B67B312E440CB7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 6/14/24 01:16, Pandey, Radhey Shyam wrote:
+>> -----Original Message-----
+>> From: Sean Anderson <sean.anderson@linux.dev>
+>> Sent: Thursday, June 13, 2024 8:32 PM
+>> To: Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>; Laurent
+>> Pinchart <laurent.pinchart@ideasonboard.com>; linux-
+>> phy@lists.infradead.org
+>> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>;
+>> Kishon Vijay Abraham I <kishon@kernel.org>
+>> Subject: Re: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
+>> 
+>> On 6/13/24 05:20, Pandey, Radhey Shyam wrote:
+>> >> -----Original Message-----
+>> >> From: Sean Anderson <sean.anderson@linux.dev>
+>> >> Sent: Monday, May 6, 2024 10:31 PM
+>> >> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; linux-
+>> >> phy@lists.infradead.org
+>> >> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
+>> >> linux-kernel@vger.kernel.org; Michal Simek <michal.simek@amd.com>;
+>> >> Kishon Vijay Abraham I <kishon@kernel.org>; Sean Anderson
+>> >> <sean.anderson@linux.dev>
+>> >> Subject: [PATCH v2 4/4] phy: zynqmp: Add debugfs support
+>> >>
+>> >> Add support for printing some basic status information to debugfs. This
+>> >> is helpful when debugging phy consumers to make sure they are
+>> configuring
+>> >> the phy appropriately.
+>> >>
+>> >> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> >> ---
+>> >>
+>> >> Changes in v2:
+>> >> - Use debugfs_create_devm_seqfile
+>> >>
+>> >>  drivers/phy/xilinx/phy-zynqmp.c | 40
+>> >> +++++++++++++++++++++++++++++++++
+>> >>  1 file changed, 40 insertions(+)
+>> >>
+>> >> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-
+>> >> zynqmp.c
+>> >> index b86fe2a249a8..2520c75a4a77 100644
+>> >> --- a/drivers/phy/xilinx/phy-zynqmp.c
+>> >> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+>> >> @@ -13,6 +13,7 @@
+>> >>   */
+>> >>
+>> >>  #include <linux/clk.h>
+>> >> +#include <linux/debugfs.h>
+>> >>  #include <linux/delay.h>
+>> >>  #include <linux/io.h>
+>> >>  #include <linux/kernel.h>
+>> >> @@ -123,6 +124,15 @@
+>> >>  #define ICM_PROTOCOL_DP			0x4
+>> >>  #define ICM_PROTOCOL_SGMII		0x5
+>> >>
+>> >> +static const char *const xpsgtr_icm_str[] = {
+>> >> +	[ICM_PROTOCOL_PD] = "powered down",
+>> >
+>> > Protocol saying powered down seems confusing.
+>> > Should we say None or None(power down)?
+>> 
+>> Either works I guess. I'm just matching the define.
+> 
+> None seems fine - we can respin if there are no objections.
+>> 
+>> >> +	[ICM_PROTOCOL_PCIE] = "PCIe",
+>> >> +	[ICM_PROTOCOL_SATA] = "SATA",
+>> >> +	[ICM_PROTOCOL_USB] = "USB",
+>> >> +	[ICM_PROTOCOL_DP] = "DisplayPort",
+>> >> +	[ICM_PROTOCOL_SGMII] = "SGMII",
+>> >> +};
+>> >> +
+>> >>  /* Test Mode common reset control  parameters */
+>> >>  #define TM_CMN_RST			0x10018
+>> >>  #define TM_CMN_RST_EN			0x1
+>> >> @@ -788,6 +798,34 @@ static struct phy *xpsgtr_xlate(struct device *dev,
+>> >>  	return ERR_PTR(-EINVAL);
+>> >>  }
+>> >>
+>> >> +/*
+>> >> + * DebugFS
+>> >> + */
+>> >> +
+>> >> +static int xpsgtr_status_read(struct seq_file *seq, void *data)
+>> >> +{
+>> >> +	struct device *dev = seq->private;
+>> >> +	struct xpsgtr_phy *gtr_phy = dev_get_drvdata(dev);
+>> >> +	struct clk *clk;
+>> >> +	u32 pll_status;
+>> >> +
+>> >> +	mutex_lock(&gtr_phy->phy->mutex);
+>> >
+>> > Do we see any need for this lock? This function simply read hw register
+>> > /phy members and decodes it.
+>> 
+>> It's to protect against modifications to gtr_phy->refclk and ->instance.
+> 
+> Refclock and instance is assigned in xlate which is not protected by any
+> Lock.  Also xpsgtr_phy_init () uses a different gtr_mutex. So want
+> to understand this phy->mutex need.
 
-After commit 5a5efdaffda5 ("thermal: core: Resume thermal zones
-asynchronously") it is theoretically possible that, if a system suspend
-starts immediately after a system resume, thermal_zone_device_resume()
-spawned by the thermal PM notifier for one of the thermal zones at the
-end of the system resume will run after the PM thermal notifier for the
-suspend-prepare action.  If that happens, tz->suspended set by the latter
-will be reset by the former which may lead to unexpected consequences.
+Ah, well then we should take this lock in xlate.
 
-To avoid that race, synchronize thermal_zone_device_resume() with the
-suspend-prepare thermal PM notifier with the help of additional bool
-field and completion in struct thermal_zone_device.
+--Sean
 
-Note that this also ensures running __thermal_zone_device_update() at
-least once for each thermal zone between system resume and the following
-system suspend in case it is needed to start thermal mitigation.
-
-Fixes: 5a5efdaffda5 ("thermal: core: Resume thermal zones asynchronously")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/thermal/thermal_core.c |   21 +++++++++++++++++++++
- drivers/thermal/thermal_core.h |    4 ++++
- 2 files changed, 25 insertions(+)
-
-Index: linux-pm/drivers/thermal/thermal_core.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_core.c
-+++ linux-pm/drivers/thermal/thermal_core.c
-@@ -1406,6 +1406,7 @@ thermal_zone_device_register_with_trips(
- 	ida_init(&tz->ida);
- 	mutex_init(&tz->lock);
- 	init_completion(&tz->removal);
-+	init_completion(&tz->resume);
- 	id = ida_alloc(&thermal_tz_ida, GFP_KERNEL);
- 	if (id < 0) {
- 		result = id;
-@@ -1652,6 +1653,9 @@ static void thermal_zone_device_resume(s
- 	thermal_zone_device_init(tz);
- 	__thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
- 
-+	complete(&tz->resume);
-+	tz->resuming = false;
-+
- 	mutex_unlock(&tz->lock);
- }
- 
-@@ -1669,6 +1673,20 @@ static int thermal_pm_notify(struct noti
- 		list_for_each_entry(tz, &thermal_tz_list, node) {
- 			mutex_lock(&tz->lock);
- 
-+			if (tz->resuming) {
-+				/*
-+				 * thermal_zone_device_resume() queued up for
-+				 * this zone has not acquired the lock yet, so
-+				 * release it to let the function run and wait
-+				 * util it has done the work.
-+				 */
-+				mutex_unlock(&tz->lock);
-+
-+				wait_for_completion(&tz->resume);
-+
-+				mutex_lock(&tz->lock);
-+			}
-+
- 			tz->suspended = true;
- 
- 			mutex_unlock(&tz->lock);
-@@ -1686,6 +1704,9 @@ static int thermal_pm_notify(struct noti
- 
- 			cancel_delayed_work(&tz->poll_queue);
- 
-+			reinit_completion(&tz->resume);
-+			tz->resuming = true;
-+
- 			/*
- 			 * Replace the work function with the resume one, which
- 			 * will restore the original work function and schedule
-Index: linux-pm/drivers/thermal/thermal_core.h
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_core.h
-+++ linux-pm/drivers/thermal/thermal_core.h
-@@ -55,6 +55,7 @@ struct thermal_governor {
-  * @type:	the thermal zone device type
-  * @device:	&struct device for this thermal zone
-  * @removal:	removal completion
-+ * @resume:	resume completion
-  * @trip_temp_attrs:	attributes for trip points for sysfs: trip temperature
-  * @trip_type_attrs:	attributes for trip points for sysfs: trip type
-  * @trip_hyst_attrs:	attributes for trip points for sysfs: trip hysteresis
-@@ -89,6 +90,7 @@ struct thermal_governor {
-  * @poll_queue:	delayed work for polling
-  * @notify_event: Last notification event
-  * @suspended: thermal zone suspend indicator
-+ * @resuming:	indicates whether or not thermal zone resume is in progress
-  * @trips:	array of struct thermal_trip objects
-  */
- struct thermal_zone_device {
-@@ -96,6 +98,7 @@ struct thermal_zone_device {
- 	char type[THERMAL_NAME_LENGTH];
- 	struct device device;
- 	struct completion removal;
-+	struct completion resume;
- 	struct attribute_group trips_attribute_group;
- 	struct thermal_attr *trip_temp_attrs;
- 	struct thermal_attr *trip_type_attrs;
-@@ -123,6 +126,7 @@ struct thermal_zone_device {
- 	struct delayed_work poll_queue;
- 	enum thermal_notify_event notify_event;
- 	bool suspended;
-+	bool resuming;
- #ifdef CONFIG_THERMAL_DEBUGFS
- 	struct thermal_debugfs *debugfs;
- #endif
-
-
+>> 
+>> These are accessed under lock elsewhere; this is not a fast path and I don't
+>> want to have to reason about the semantics when using a mutex is definitely
+>> correct.
+>> 
+>> --Sean
+>> 
+>> >> +	pll_status = xpsgtr_read_phy(gtr_phy, L0_PLL_STATUS_READ_1);
+>> >> +	clk = gtr_phy->dev->clk[gtr_phy->refclk];
+>> >> +
+>> >> +	seq_printf(seq, "Lane:            %u\n", gtr_phy->lane);
+>> >> +	seq_printf(seq, "Protocol:        %s\n",
+>> >> +		   xpsgtr_icm_str[gtr_phy->protocol]);
+>> >> +	seq_printf(seq, "Instance:        %u\n", gtr_phy->instance);
+>> >> +	seq_printf(seq, "Reference clock: %u (%pC)\n", gtr_phy->refclk, clk);
+>> >> +	seq_printf(seq, "Reference rate:  %lu\n", clk_get_rate(clk));
+>> >> +	seq_printf(seq, "PLL locked:      %s\n",
+>> >> +		   pll_status & PLL_STATUS_LOCKED ? "yes" : "no");
+>> >> +
+>> >> +	mutex_unlock(&gtr_phy->phy->mutex);
+>> >> +	return 0;
+>> >> +}
+>> >> +
+>> >>  /*
+>> >>   * Power Management
+>> >>   */
+>> >> @@ -937,6 +975,8 @@ static int xpsgtr_probe(struct platform_device
+>> *pdev)
+>> >>
+>> >>  		gtr_phy->phy = phy;
+>> >>  		phy_set_drvdata(phy, gtr_phy);
+>> >> +		debugfs_create_devm_seqfile(&phy->dev, "status", phy-
+>> >> >debugfs,
+>> >> +					    xpsgtr_status_read);
+>> >>  	}
+>> >>
+>> >>  	/* Register the PHY provider. */
+>> >> --
+>> >> 2.35.1.1320.gc452695387.dirty
+>> >
+> 
 
