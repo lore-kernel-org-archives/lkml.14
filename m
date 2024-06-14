@@ -1,157 +1,162 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A854915FCF5;
-	Fri, 14 Jun 2024 15:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C84715FA93
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378219; cv=none; b=TjoBqzjzHSZO2tAueHwgEPRRmbQm+0oNtHA/QON1lJEaL5nuh3xIEAnCgheIr5DNerc5OD9+hM9+EBkCDQ6bJUkH+D4VBsUdT3a8jkZAsbYCgWMUt4jqZuG4XzyUpeM65y9ioEnyXmlAUeqi2Ic3uMR3M8ZtpYJ548umZJ8iN0I=
+	t=1718378267; cv=none; b=Iw14SI3OiZn1nRwKNHu1ux8NDBNzOQAl2LkeplqsI2MrdoYTYn+6ebM7YKLmvxrBk8gDuM5tTIMdaOpCzgZ3g9LpZBp5l7mKRFGHi/RRP0266fNEZ8fTOJglNHOcNtMm5vyKSt3LleeWmRb+xjj477Xa7WLmZhHK2viKyCMwxpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378219; c=relaxed/simple;
-	bh=wfF3eyJb5WVxp0pdUbvydfRYm3OMUH23BOWLH9SrP20=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EfoybNDjjXtLnxg/lYEhSE9GKL5Gp6q93h6r4/a6byoCrqpv/p0HfNGiZLnxxt5EFEd9ds0FovmZIgv8B8slZWMfyQYLHmeHGJEG48rjPj9HKa70g5z6M2XS+KFscKUt3p00LCz/ipT/QTjXleDQU9LBe1m4aQebBeOKJdXmLwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMVpz6ze; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718378267; c=relaxed/simple;
+	bh=/8YTxGv/qHRDce0zKq4WiqsRJNX/QIeidL1MxQCvHKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CXii51QQZPzM2sV+DpBMn7vrwihiFMQkpkHztwLhW6hlJ5UDO4uvMU8mv/g6PWtoB1Hpe0NJBAPhoVBcFoZQCw8MVXEbD/QpQfRBJEq35QWMx6wk0BIWHXT33I575SaxCLSjv9VgjfdGMgRFJKdpF12/CkK/YBqUay1RQmjf0T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AO5LPneH; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMVpz6ze"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6267778b3aso239217966b.3;
-        Fri, 14 Jun 2024 08:16:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718378216; x=1718983016; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C7S7pt9HLWWUbZf3EN93FAMsSGCaHaMxwShIY3NqFV8=;
-        b=bMVpz6ze4dDnoujeqBpPRCTZhcXY6/+cVKaB6U6ZfC271YUuNlGwHf/K+pER0iooSE
-         IqfkxVMYz1vGFuKO++ohdAxb0mVU//e1HpmLNxSkGWt3AxdfLUvKZze2Iehqiv7qBbeW
-         7j3gPGdRQOQekNWn3WH7Ux+ZZe9Ax1jzcJ3z1HnivQboVPfQ3UgjObtguXC5ExtWRbgl
-         lJRKjaeuFsbeyxzoz0LpmsI3RaDvCgH8FrL6u1qXhncKcusFg+1Cc6K/qbjo3DopXA0N
-         KIMCigHlKGIXCcAYP9phxbn9gcuA6TapswoGvdnAmKfL57m0nZTNrLBza88F/tHqE6qU
-         iKQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718378216; x=1718983016;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C7S7pt9HLWWUbZf3EN93FAMsSGCaHaMxwShIY3NqFV8=;
-        b=Tbyl7LE15NyI8Qyl2f2lx7AH4f7WF1mj0GK9KiJ8+w7AcQwEM8tfi8KGRSNN6RJOXn
-         vQfE2PstTW2+kgKKJU0dCeAl3hEPpSCyKdpsGNHuoATEqXx6hWXDH+fgG4Oc1SbVycrL
-         l3C3a2TEWlXngrodMXXR9I8FXN6objFJUmsLLo2YXVMCGeJrxu0X4CgW0ghvnG2N5lZW
-         TweRMAc1x5g5Nano/fnXYAz2exwz0V7g1nKy+Lj90XGk4LfHCx7UXVH2oKtzuWRC7vrE
-         N6I2FQpeV2G1IWdx+PR0sT9W1W6XqGZEt0MDefRzFvDrookdIdmhQzef1Y+5qZQ0VfW/
-         i/Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXUbGnB0KJyAZm1psudey5xv44FmY8pnGts/H5kR9w93lwo+b7HVX0TTT2oXPUVAFnHjYX3kpjyM2IfwwygZrBPWpW6V3qpbdzXj7ZcD/643lNXiWs0KayKeXSF7G/gbwa92lPxl68
-X-Gm-Message-State: AOJu0YxbNYbqG3ITNwvQ1hmC5ncBfvngefV5JYzBY1U5Y2bJ7cWUl0R9
-	/Nr/rTAslN6HxofJ288n7+glSrJ76YNRsg9+Tyi3SQAmo+KzAYIJ
-X-Google-Smtp-Source: AGHT+IGTtChzPwQH9JRX8tAUlDyLltu2dFUtHVDHqw/X3rkDaMWDF0d5Ea96XyV4HmSs2CNLZzLStg==
-X-Received: by 2002:a17:906:528a:b0:a6f:4c39:8aea with SMTP id a640c23a62f3a-a6f60ced3efmr197255966b.15.1718378215493;
-        Fri, 14 Jun 2024 08:16:55 -0700 (PDT)
-Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db6182sm194949566b.51.2024.06.14.08.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 08:16:55 -0700 (PDT)
-Message-ID: <6f607e60a781f74b3cde2405c8c6659d0e304c96.camel@gmail.com>
-Subject: Re: [PATCH v2 5/5] iio: adc: ad7944: use
- devm_regulator_get_enable_read_voltage
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- linux-iio@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 14 Jun 2024 17:16:54 +0200
-In-Reply-To: <20240612-iio-adc-ref-supply-refactor-v2-5-fa622e7354e9@baylibre.com>
-References: 
-	<20240612-iio-adc-ref-supply-refactor-v2-0-fa622e7354e9@baylibre.com>
-	 <20240612-iio-adc-ref-supply-refactor-v2-5-fa622e7354e9@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AO5LPneH"
+X-Envelope-To: radhey.shyam.pandey@amd.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718378262;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EK/My33etlwM5NxXlcqrJJJAuLZlZ53SGlM1Z/KkM/w=;
+	b=AO5LPneHUK8kRzcznQSE74VYKBs3yjWR7bbqeINnWEMZSQ8lc97BsqLBQh2egQqaU+kul4
+	O5lSdr/zjbDnTNeb9e8DeHsBDAxGibylHKPdFu5z+ds2lP3Y2oph5JCzQC4mo04zC2Pgig
+	7I85gJPe5Sxn7xqhx/rJDmJphzr+t1U=
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: linux-phy@lists.infradead.org
+X-Envelope-To: vkoul@kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: kishon@kernel.org
+Message-ID: <f8a5307a-ab9a-4b9a-9cf5-1b88f912b201@linux.dev>
+Date: Fri, 14 Jun 2024 11:17:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2 1/4] phy: zynqmp: Enable reference clock correctly
+To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+References: <20240506170110.2874724-1-sean.anderson@linux.dev>
+ <20240506170110.2874724-2-sean.anderson@linux.dev>
+ <MN0PR12MB59531E522EC62B160EEC35E5B7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <MN0PR12MB59531E522EC62B160EEC35E5B7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 2024-06-12 at 16:03 -0500, David Lechner wrote:
-> This makes use of the new devm_regulator_get_enable_read_voltage()
-> function to reduce boilerplate code.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->=20
-> v2 changes:
-> - don't read voltage from refin regulator
-> - avoid else in return value checks
-> ---
-> =C2=A0drivers/iio/adc/ad7944.c | 54 +++++++++++--------------------------=
------------
-> =C2=A01 file changed, 12 insertions(+), 42 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-> index e2cb64cef476..f8bf03feba07 100644
-> --- a/drivers/iio/adc/ad7944.c
-> +++ b/drivers/iio/adc/ad7944.c
-> @@ -464,23 +464,17 @@ static const char * const ad7944_power_supplies[] =
-=3D {
-> =C2=A0	"avdd",	"dvdd",	"bvdd", "vio"
-> =C2=A0};
-> =C2=A0
-> -static void ad7944_ref_disable(void *ref)
-> -{
-> -	regulator_disable(ref);
-> -}
-> -
-> =C2=A0static int ad7944_probe(struct spi_device *spi)
-> =C2=A0{
-> =C2=A0	const struct ad7944_chip_info *chip_info;
-> =C2=A0	struct device *dev =3D &spi->dev;
-> =C2=A0	struct iio_dev *indio_dev;
-> =C2=A0	struct ad7944_adc *adc;
-> -	bool have_refin =3D false;
-> -	struct regulator *ref;
-> +	bool have_refin;
-> =C2=A0	struct iio_chan_spec *chain_chan;
-> =C2=A0	unsigned long *chain_scan_masks;
-> =C2=A0	u32 n_chain_dev;
-> -	int ret;
-> +	int ret, ref_mv;
-> =C2=A0
-> =C2=A0	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*adc));
-> =C2=A0	if (!indio_dev)
-> @@ -531,47 +525,23 @@ static int ad7944_probe(struct spi_device *spi)
-> =C2=A0	 * - external reference: REF is connected, REFIN is not connected
-> =C2=A0	 */
-> =C2=A0
-> -	ref =3D devm_regulator_get_optional(dev, "ref");
-> -	if (IS_ERR(ref)) {
-> -		if (PTR_ERR(ref) !=3D -ENODEV)
-> -			return dev_err_probe(dev, PTR_ERR(ref),
-> -					=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get REF supply\n");
-> +	ret =3D devm_regulator_get_enable_read_voltage(dev, "ref");
-> +	if (ret < 0 && ret !=3D -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to get REF voltage\n");
-> =C2=A0
-> -		ref =3D NULL;
-> -	}
-> +	ref_mv =3D ret =3D=3D -ENODEV ? 0 : ret / 1000;
-> =C2=A0
-> =C2=A0	ret =3D devm_regulator_get_enable_optional(dev, "refin");
-> -	if (ret =3D=3D 0)
-> -		have_refin =3D true;
-> -	else if (ret !=3D -ENODEV)
-> -		return dev_err_probe(dev, ret,
-> -				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get and enable REFIN supply\n");
-> +	if (ret < 0 && ret =3D=3D -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to get REFIN voltage\n");
-> +
+On 6/14/24 01:30, Pandey, Radhey Shyam wrote:
+>> -----Original Message-----
+>> From: Sean Anderson <sean.anderson@linux.dev>
+>> Sent: Monday, May 6, 2024 10:31 PM
+>> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; linux-
+>> phy@lists.infradead.org
+>> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; Michal Simek <michal.simek@amd.com>;
+>> Kishon Vijay Abraham I <kishon@kernel.org>; Sean Anderson
+>> <sean.anderson@linux.dev>
+>> Subject: [PATCH v2 1/4] phy: zynqmp: Enable reference clock correctly
+>> 
+>> Lanes can use other lanes' reference clocks, as determined by refclk.
+>> Use refclk to determine the clock to enable/disable instead of always
+>> using the lane's own reference clock. This ensures the clock selected in
+>> xpsgtr_configure_pll is the one enabled.
+>> 
+>> For the other half of the equation, always program REF_CLK_SEL even when
+>> we are selecting the lane's own clock. This ensures that Linux's idea of
+>> the reference clock matches the hardware. We use the "local" clock mux
+>> for this instead of going through the ref clock network.
+>> 
+>> Fixes: 25d700833513 ("phy: xilinx: phy-zynqmp: dynamic clock support for
+>> power-save")
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>> Changes in v2:
+>> - New
+>> 
+>>  drivers/phy/xilinx/phy-zynqmp.c | 14 +++++++++-----
+>>  1 file changed, 9 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-
+>> zynqmp.c
+>> index f72c5257d712..5a434382356c 100644
+>> --- a/drivers/phy/xilinx/phy-zynqmp.c
+>> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+>> @@ -80,7 +80,8 @@
+>> 
+>>  /* Reference clock selection parameters */
+>>  #define L0_Ln_REF_CLK_SEL(n)		(0x2860 + (n) * 4)
+>> -#define L0_REF_CLK_SEL_MASK		0x8f
+>> +#define L0_REF_CLK_LCL_SEL		BIT(7)
+>> +#define L0_REF_CLK_SEL_MASK		0x9f
+>> 
+>>  /* Calibration digital logic parameters */
+>>  #define L3_TM_CALIB_DIG19		0xec4c
+>> @@ -349,11 +350,14 @@ static void xpsgtr_configure_pll(struct xpsgtr_phy
+>> *gtr_phy)
+>>  		       PLL_FREQ_MASK, ssc->pll_ref_clk);
+>> 
+>>  	/* Enable lane clock sharing, if required */
+>> -	if (gtr_phy->refclk != gtr_phy->lane) {
+>> +	if (gtr_phy->refclk == gtr_phy->lane)
+>> +		/* Lane3 Ref Clock Selection Register */
+> 
+> This is common ref clock selection and not lane 3?
 
-ret !=3D -ENODEV right?
+This is copied from the existing comment. I will remove it.
 
-- Nuno S=C3=A1
+--Sean
 
+>> +		xpsgtr_clr_set(gtr_phy->dev, L0_Ln_REF_CLK_SEL(gtr_phy-
+>> >lane),
+>> +			       L0_REF_CLK_SEL_MASK, L0_REF_CLK_LCL_SEL);
+>> +	else
+>>  		/* Lane3 Ref Clock Selection Register */
+>>  		xpsgtr_clr_set(gtr_phy->dev, L0_Ln_REF_CLK_SEL(gtr_phy-
+>> >lane),
+>>  			       L0_REF_CLK_SEL_MASK, 1 << gtr_phy->refclk);
+>> -	}
+>> 
+>>  	/* SSC step size [7:0] */
+>>  	xpsgtr_clr_set_phy(gtr_phy, L0_PLL_SS_STEP_SIZE_0_LSB,
+>> @@ -573,7 +577,7 @@ static int xpsgtr_phy_init(struct phy *phy)
+>>  	mutex_lock(&gtr_dev->gtr_mutex);
+>> 
+>>  	/* Configure and enable the clock when peripheral phy_init call */
+>> -	if (clk_prepare_enable(gtr_dev->clk[gtr_phy->lane]))
+>> +	if (clk_prepare_enable(gtr_dev->clk[gtr_phy->refclk]))
+>>  		goto out;
+>> 
+>>  	/* Skip initialization if not required. */
+>> @@ -625,7 +629,7 @@ static int xpsgtr_phy_exit(struct phy *phy)
+>>  	gtr_phy->skip_phy_init = false;
+>> 
+>>  	/* Ensure that disable clock only, which configure for lane */
+>> -	clk_disable_unprepare(gtr_dev->clk[gtr_phy->lane]);
+>> +	clk_disable_unprepare(gtr_dev->clk[gtr_phy->refclk]);
+>> 
+>>  	return 0;
+>>  }
+>> --
+>> 2.35.1.1320.gc452695387.dirty
+> 
 
