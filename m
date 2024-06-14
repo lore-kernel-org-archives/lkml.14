@@ -1,269 +1,299 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57327383;
-	Fri, 14 Jun 2024 17:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718385329; cv=fail; b=irITZbUi6bp8mNT7BD/o+i0XBbVOuWpqbikFgvVpsL5k9xi8ELKwTzMLh0m+JfnEm9dFuAxGQDRv3l3aM/B1Q1aBPpABkGkxcjejZSNqJlXDsrWfVoGOvz2q6mERoqT1LoCNq1w9sXZZmJz8WWVKEEQ7hIXHjrhT0UZgyqdko18=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718385329; c=relaxed/simple;
-	bh=LIw19/W0AsWw+2KIkmIp64YFJICr9dMEkd6nfiY3Rgc=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=B+6A41kV+jpNgrMRnSaIpNk0Gro/mL6WMveixzEA0xWqs5nFk84KEkO4C03sZcsTaTtj32Og9EYnP+4NBdCfei/JpRrv3+WBS6Bt6HUmdfqvK7xvC9eJz2wD6ZXCaq3DhY+pc4JA3i0idSvAlf8BbSDPpKnc1I/adZMi5wmLDV4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EvO1HJEC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xKJ3ZP5Y; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A517816D4EB;
+	Fri, 14 Jun 2024 17:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718385353; cv=none; b=HHvFv/CKCYbSWrNLoqXcesHaobZb5fQltrmEZpPLm+nf1qa3T4Z6+xRZpkeegTej/KxZlZh4oA0BADzaVAyQvzDQetBuV7w2egIg/bvxvv2i6DXZT/UF7aCe7h29ZgEyWeqNG55vPpzS8Biu77UVikKuTFwfY9kJJxWLRHpB6Zc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718385353; c=relaxed/simple;
+	bh=YZhKL9A/66/JtXeNBaJHZPe3vflt/TP5n7Ycw1491iQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=V6B/lG8SXMMtIRCDIEVFq8sPXQRsNyNGlXm4p0mgcsAVDpmeDkhl0eFhHI16IdUCsQS50OYwBF9BznpnncXL+14mjr2p7jSuW8mhejrI1Cj9K3D3lNiUs588c/zDN+jW//LObqEhQgAPKnjUAsW16rH6ssL0JxTsmNIQyJEv820=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNtvNz/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EvO1HJEC";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xKJ3ZP5Y"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EDH0P6028782;
-	Fri, 14 Jun 2024 17:15:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:content-transfer-encoding
-	:content-type:mime-version; s=corp-2023-11-20; bh=0JFNBEkLZW8r7K
-	4oJpk46+a0al5+I+dbtX3rZEu/tHw=; b=EvO1HJEC6ZPgEVULxUIr5MlkX5k/WO
-	KDoutnMdlbtv77/74k+8csKABHGQClYrZ3ZtKnkeHDBPZNkPlAC+yNF7PFN/441j
-	cR3nHpo+R3SaPVosFcC0TVY472rYbhPEGIlQh00VAT1ohhk0mfACtugzab7Xz84c
-	2Bo41FM6Des5r4H+fhgjk9CaE3/FgUDLti6VQKzkJmVJ6qOs+ySD5/OiNzIB/Xt6
-	Pm5BHhI4LaiiPkkMtG7YB3auYnYCPSChnTXqFGFbox+IoiU46yUvgsKZagwE6LMv
-	/ombWh3GMvqMJP97YatqbqKyqGn7aybVMJi5q0SzwsWNdywzG8jf97rg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh3pc2b3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:15:17 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGjI3d012525;
-	Fri, 14 Jun 2024 17:15:16 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ynca2srhu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:15:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e21AUgsF+Hq/PN6pEh4md30s5a5yzfzKNGK1j8eG/6wraKRxWfFv7c7qofgQSRbHi+oTm5NYjlpn89XXtZWYJGKMCfExXDpTenlyIohaVN51UhJ3Hux4RC8s0KJ4IJffLbZ19Xtrqs0nVFtCIPK7gr2Ye195HXlHgDjemDDvbIwWYbGZHHfH57TeijUkKev9RhcuDiVclFOVi9xeD8ebe8+pdlJVChIICTk+8WzuQuXhnveJPgSuVblJUXP0QeegfKY6xmiFcSgMBKQB9+K+Tlwd/ttZloe2KgqTqBMrDYQtoXiwszvPQfOI7K9eIxUInjdestU3MYux4I1gX3J7SA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0JFNBEkLZW8r7K4oJpk46+a0al5+I+dbtX3rZEu/tHw=;
- b=USpwg+cIavWlthOMv51h74gKmnDJ8HhhikOw+isz+pLjE3rmLltuwE0Dp5HoUDoeTbnTRYqWt2BGiqgCLR7dVCmgfSfNZkMYZW/Yqtdd77reMcR89v/r68neBtvSdLzTa56zvQ20rALkGOEUY7E4lHc/oGGdQU34iW/vRajVKG5o16uRDkE6ulrTiRR42y1RMwoymRvioNbUhzsk/doIBc6WTLjuxQc7vN/mqUzKLJRZXNtwY3PPObu6lzN/GCmvonE3VLfit75eCr2yBEW1guBoxgP4UHm4pF1wFUyjmzoVtifMh+dhWoRYfxISObcVBlAmu6VKxGVphmBPscPKxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0JFNBEkLZW8r7K4oJpk46+a0al5+I+dbtX3rZEu/tHw=;
- b=xKJ3ZP5YCXO69tFRYFc59yZYgOz8gsloMu7ZyzSMfA0JbA2nj91L53h2pM7kwcXR7fxyUHgvZxMZdkQ4EFYQ+xyw3wjnDbOWAQ/gDUKof5ZFpTxAP2Wp/2WLcf4LxMyj7cX3U2w+wPD6p4kVY51cgvpXgC4+daRWq+CfZkjQJXo=
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com (2603:10b6:806:26d::14)
- by DM4PR10MB7404.namprd10.prod.outlook.com (2603:10b6:8:180::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Fri, 14 Jun
- 2024 17:15:13 +0000
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29]) by SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29%6]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 17:15:13 +0000
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: Kris Van Hees <kris.van.hees@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Elena Zannoni <elena.zannoni@oracle.com>
-Subject: [PATCH v4 0/3] Generate address range data for built-in modules
-Date: Fri, 14 Jun 2024 13:14:25 -0400
-Message-ID: <20240614171428.968174-1-kris.van.hees@oracle.com>
-X-Mailer: git-send-email 2.45.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR13CA0024.namprd13.prod.outlook.com
- (2603:10b6:208:160::37) To SN7PR10MB6287.namprd10.prod.outlook.com
- (2603:10b6:806:26d::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNtvNz/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC0FC2BD10;
+	Fri, 14 Jun 2024 17:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718385353;
+	bh=YZhKL9A/66/JtXeNBaJHZPe3vflt/TP5n7Ycw1491iQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=DNtvNz/Fsr5M7bREgRQH9qR24NkZ29Qno1ESJjO037HIDQQNfH/1UBQAsWlZdwtty
+	 f+DFyg6fPNUPzOda5XuDhz8wCh8dYgqPbe/YQ066xq+f3AuXWp5UenvrLJFWV5h1AZ
+	 jzbdIq/SeUc0fj0lNuUc6kEU4e1VEdnZOqhjjXPuVR2Ky5W3uE8VBDWneZ3e8QbT0M
+	 C2L3/WzD5e45TOGI8vyuf08VJsIDibMh6Mo+jeh/+gt9H8PEyfiJ1q429HTYgf0OaH
+	 GjuX2Z3HjGRK9QekfVSp94R4Zds1FQa82mXaY09FvYw/DrMyrirv09qWG9PRpAIB97
+	 yRPBTAqfkFWug==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 14 Jun 2024 19:15:29 +0200
+Subject: [PATCH net] selftests: mptcp: userspace_pm: fixed subtest names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR10MB6287:EE_|DM4PR10MB7404:EE_
-X-MS-Office365-Filtering-Correlation-Id: e127c39a-849f-48f0-32c7-08dc8c958dd1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|7416011|376011;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?l42oqv02NeiMrqlCi9Ywf90yXWCqlkeRMlqtPbdYx9oxG76lViTnADeYYqWA?=
- =?us-ascii?Q?R8xvEL01RHANtfowBxMw5McXoMic7uRxOG1ZcyRS/gwygNzp8gUFwCUlcwb9?=
- =?us-ascii?Q?8+XhhUUNTt+tKZpy44C7BOPQ/602HnkDAs4Dri2ZAjT+3dPfoPC/xOSH33mY?=
- =?us-ascii?Q?3KsQi+aaXyv7sI/zvOHXSVMsSfQg3atzS0X4+q3AdkiYb8uWXVpcw8qyO7yD?=
- =?us-ascii?Q?r2DRZHpjsMbT7pa1kq/qQMFipcphDCqiK15EjDlBkffmWC/WrDmiviUnIqnc?=
- =?us-ascii?Q?w05GSje/K/Ct3+LFCpx2l30CdYvT/CsAH1cOOFPSGZsoL5rv17YtTdWCM7ww?=
- =?us-ascii?Q?g0JuNlDeMKBsQnQpRjdR94XZCQ0Y5HyfWc3MCww+9YwAPUpYnI2yU/ceAY2T?=
- =?us-ascii?Q?VnDL7bYM6p/9glYiNIMPBk+oHI5Ixz1sVGLe/61SPB81ANSB2H2jWkmYMom3?=
- =?us-ascii?Q?2bwPTT4pJbsyk0SDgOegoJqSbYJJiU0LyHOAa93MFycH09pEaTQ22BPWjz8h?=
- =?us-ascii?Q?hFZFYOYIwHA+Pgbsk8Jd9+s8BJRKsVtH/z9EAxnhbD7/YAT1ECXc3E4wjfPm?=
- =?us-ascii?Q?JdXX9rihkT5+5TAO8nkAeka3uJuED6cP9iwis6h1uVQpfbnyCrZuIgd0q/jN?=
- =?us-ascii?Q?GYmcnSdRGYHgfDAfQwKX7hVvYoXR097g8Nro/ZBeBFwdyP9QW9TWl1PeLTlA?=
- =?us-ascii?Q?pO63xYNKERJu6p5QrsIV6+ereApG05Hmgg4xJuAgepMWKRV95sxKGlgC1U2k?=
- =?us-ascii?Q?DHcUaUB2wdWwK8n4iwRilcGV8zACYmQU/7RRXmv6AVBal/uFq8suRMeucslS?=
- =?us-ascii?Q?zNstO2xVpWHHpiL6zOKNJSPdwSooiB9/h4Ryx5tNbXRdUlrzrU5cfxeawDtJ?=
- =?us-ascii?Q?G/GsHbNe53r4zlbtp1Z7ijdS89p7XWIvz9PAKAGMGCo/VXTRBH9JQYdNEec3?=
- =?us-ascii?Q?YEtL5YGi0hOU477TNZQaWvMX+XVgjsnIbXMG3mCPOXuAOfCQSxABKcavTZHa?=
- =?us-ascii?Q?r1ig3BevGjNI2UrwMAvGXw9RpXbFVnzy7kfGsk3gHb65DchqpIL4gSzMpZF+?=
- =?us-ascii?Q?1as+5+Z/TBJYwMCKxhHZusHoZxTZwPUZqlH6Bq43P2BR4tHztXNJq3McOfS1?=
- =?us-ascii?Q?M7c7lxVmra2kW9iROPTYciTmr1hbAmTtGbkNCD50lRPZWa1fdWL1QoO3/5C2?=
- =?us-ascii?Q?ul5MtG+Kvd1Lwfi/KL98JigxJDgKfQJY0gZkx0f7YFWnmCOHDqF+PNHs4xjR?=
- =?us-ascii?Q?J5dFCqgo+98DekzvTFftALEpoYsQvf2/VLLGOV0LLoj2X8FnqkoDCIxyeUFt?=
- =?us-ascii?Q?I3hW4NtYM5VLVcsfU/J4vDlQ?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR10MB6287.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(7416011)(376011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?wnSrmRKyel8lFNLvduqhIR+5Qx3HUYQQnEm3ZXkrObBRN880XxJsvpBnmbxH?=
- =?us-ascii?Q?nwf4KSm4ggWc5PoruI1s1a2f5aAVTsqATc3oeLe0Im4m6/e0p0OEQNai6Gpl?=
- =?us-ascii?Q?jblHtWpTZSFXhOtn4rlKhrkKsYzPM6pB0mTyNcMIM3k+cfaZlBs0oNFqO07k?=
- =?us-ascii?Q?FcV1HmUC8DZ6HG6t1hAioLCQahNf/4/4Kbike8QYRqJ8ZPWvikOHTFcUi001?=
- =?us-ascii?Q?ZFyZyFeXzkoFIybI/+DfI/xPedbFmsplMiVK0ru48iUg3BEGCLHIi9xg8QGy?=
- =?us-ascii?Q?ryegVQbjiT5Xq5wBimNZISCN0oo2J1wq8A/sdlmX2t6icum/tp3fR45D23j+?=
- =?us-ascii?Q?mkKvyynubIiF63/SC/jiqYfoXksqCuhdWXr7fE+RXEBGaIlmHboyOrDTn2mZ?=
- =?us-ascii?Q?VjxV5SqeQp6D1nL1F1znLRZByYLl4ZMHlKMBk7he1sN+GP/S36z9UGdncCno?=
- =?us-ascii?Q?HCwbu5y3PN+l2NbXGbEbB6IZDLBQAbXCXsE2jCy1AFynm+Bc5qTunu3j6dCs?=
- =?us-ascii?Q?URts4z8rB154Uw21G/XRCkq6Uz6NX6KeTM/c9WtvVx+sf6scGoSvY27IaI5+?=
- =?us-ascii?Q?/Vj/aixD8zQjqxiyIwe/yeolYS0jz5qSD/luu3ixrFIwTd8lvf99TV0JXR9f?=
- =?us-ascii?Q?3VMeUzA6QeAViDzd8E1WyAp7XcR4x9tDwYAuF/VKILK9EhPTUm+Abua4J/nZ?=
- =?us-ascii?Q?TkaFoBjb9iA/ZXVOMYud8lJXOWEo0MaVFsRFyh9cr9+tiq2Nutd0nBTapIRF?=
- =?us-ascii?Q?e084eepkmT2rNW4DR5D2Au0yV5mCU7QmYLQ2SANHHnJqlfAaO83q66GxGRq7?=
- =?us-ascii?Q?T06yA1jxtmMeY0w0JsUR1qTv8Kf1+JHIMRsId4S4cZOA9BY7x9bAJE5aaJIz?=
- =?us-ascii?Q?a+s2Vp0Vc0nTuEHrpPcRmQ0WptL9Yw7LXFBpRDFXqkUIxEVNJGpFOtbpXZxN?=
- =?us-ascii?Q?rRzmi4MvvFJSfXcYy/PXfXrx0IwLpoMGmlCatonrNL7OjPGnDOapT6joRjZj?=
- =?us-ascii?Q?7BtCsCQ6Zs7/ObCQx9T4UXmG3fyUWGi8V0c4sjCoAV8zim0pM9e6spM9+hPP?=
- =?us-ascii?Q?c6hY7he15sa73Z8ZCLMYQz5m4pFlWKcWlm4WEECoG1QDJmAkV9jg2cgze0uy?=
- =?us-ascii?Q?wVsGxDOjdlkYmacFHHNzKTXEyUfhx/njP/3ke2zt+CFpkxpVoT46PLLf/EuG?=
- =?us-ascii?Q?xwltRHywjQjOWXwr17/L591obHGnPE8FZmov5XVa2Hl0EkYzih//brp7PDHL?=
- =?us-ascii?Q?uJq4Dzei8QRUu4Ui+vEIBB8/dN545QkTUx72LOaP39lQwBH4epe28ushI3qc?=
- =?us-ascii?Q?AkQiX0GHzsjxjg0JUHlvvX/KXQ/zhR08Ya7pkNbSGC6aXhMW7uv4vx/3pQJy?=
- =?us-ascii?Q?/McotEGpjTWBaeprCasLQDe2Rhar4cbMXFjTT0qtdqL7IFQ9+YA5t6/VEwhg?=
- =?us-ascii?Q?Awzj+VLK1Z/xRpGrvo8THMplvgeBh3fr+1R5iQrU6bYdqZb4PJGxHq3SNcVr?=
- =?us-ascii?Q?zBV53uty0vJ3PpO7ZLiXDMapM2Hk1mj2ktdqOGuROOH1bIF47e0eOaJSoYev?=
- =?us-ascii?Q?THwq5m1R6lTCoi9j1ZQ6fL9yT9y4A5FNTtL+YQ+4oQfudkTE5V9CZMsSqEH5?=
- =?us-ascii?Q?TQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	Q1dkl50D84E3sQ/pIpkQFPNJgvdxAA8hYSIbPpBtQEc44lU3FAlt1OV3Y1fZcXU1WD6ngKQybbF8yh3DQ1nUudjCv1aG5HtCPk0QOOaI+PQ+vELCUME/VtCRXwyjVD/zxGlZozsZQxOrT8xXG9UbuQOJSwv5yA/u24wpR68GzgOGRmpMg3QAArr6IPFcGmREbsuf63if1TwPHE/hrzMOKvmDg6GMxGpdAFVzKF3Z/fMpJ/CIM5VdRxLW1lYqub8OZLfWHuQjAhYqewxGLzDPLNzlr616w88o4bEPFFaM0Q+VsUz/YYvRBABj47siPFd5rp++cQMn2SDE9SgSqD0ztCBjX0flSXzeKUoZbpC2E37jFNiavOJPhS7QyHI8X+U3lL8st8JyG/RaeCvHcTJrG11T5AvLrxYJltM979L06JhMhSEaYSOLvMMb8u2up4cwtQmY2WQkm9XEeF7ncI8dWE1rhm3rjUqaKYQxxJlCvjn83Tqx4keyAEh6c5dHXyutfbzXQwKdELCSg0zUx9gIZ5cwzRLqq5yYpP8IUHhmgW1erxoSzrs8MwPFR0AtfY4vr+w3bCiPv0KilRB6PBvdJejPAyF763he3jQcqtbP0XU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e127c39a-849f-48f0-32c7-08dc8c958dd1
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR10MB6287.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 17:15:13.7916
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hJav076B6SwZ70QcRfLuOKaH75qKClhPxcSFMSJz2uvGu5TflYEhdBb+aP+ljVWM8HCvRBr89WM2fbbQem9RXc+cnVtDVX20jwCtusYJJVE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7404
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406140118
-X-Proofpoint-GUID: PeRYQPy_idNK0TnRsnZ-qCPbibuH2Izl
-X-Proofpoint-ORIG-GUID: PeRYQPy_idNK0TnRsnZ-qCPbibuH2Izl
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240614-upstream-net-20240614-selftests-mptcp-uspace-pm-fixed-test-names-v1-1-460ad3edb429@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALB6bGYC/z2OQQrDIBRErxL+uh/UhFB6ldKF1bEVqhW/KYWQu
+ 1c3Xb6ZYWZ2EtQIocu0U8UnSnznDvo0kXva/ABH35mMMota9cJbkVZhE2c0/quCV2iQJpxKc4U
+ 3KdaBS+IQv/A8PM42QXhez5i1scGrO/WZUjEy48KVeindjuMH6kJVSJcAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9913; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=YZhKL9A/66/JtXeNBaJHZPe3vflt/TP5n7Ycw1491iQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmbHrG24X5OpyXeAeAsxuyddqhL81YkDuBRmseX
+ RS5SalZy92JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmx6xgAKCRD2t4JPQmmg
+ czUMEADQBfsk102Kt+GlOHG+mbGMNr5bv8dSCR03oVvrlfHqnjsOhO9IL6+fQ8lbdz3ylCGfPKK
+ /qPlj/ino1O6GENZ1FYWSD1QdCEWvjkSgyZmvIa4hJ2KvuQ+G9bag82rHiVFl3G2QzpCSgok6qK
+ Dm5aayH6kAUosACXCHTWxJodtFZ8opcH/O0+JPS8wpGa6fM12NNgFZBPwYoOabwfHZDRZQb9riK
+ FwV0CHVDKdTFnGcNXqUmc85fuG0l2P00y18lozFYxvIYwh2kX8B0dNAg/S97vh6SF1TOP5Uaj7B
+ PnR/+iVA/iHnFEE+tLTKNszUo+6PGv90oeIAfhmH4XUyQYujLR035mJEipo4ykCnBF+aCsqeHFe
+ 2dAv6EDsf+jekzkzPHyNnKaSLOKvXXuoyEX9KSrEUc8POhPnjTa8aL57zqSwgZRUFKDjVKIDVPZ
+ TSyVjPagUbL6qxkDR8sJqURRJlzirreAWkMFIdNl8seU3vraBkSZU9yp11Uw2vlOv2jgRl8msTz
+ RvLyedbLfSuC47FpsZkqV3rPxjGOPTG5Dj4UciSi7Xl84KKmm8IkK+gEPwtzW3sdZ9xPc5fbZVC
+ ym0MGODHtmcnYmbG1o7H0vbd1+EheYXyjgc3Fvfplfz/t1L235II4RY3gIg7nEk2Nm3GPAqKV/g
+ t3OEY1FtJ6SE5tQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Especially for tracing applications, it is convenient to be able to
-refer to a symbol using a <module name, symbol name> pair and to be able
-to translate an address into a <nodule mname, symbol name> pair.  But
-that does not work if the module is built into the kernel because the
-object files that comprise the built-in module implementation are simply
-linked into the kernel image along with all other kernel object files.
+It is important to have fixed (sub)test names in TAP, because these
+names are used to identify them. If they are not fixed, tracking cannot
+be done.
 
-This is especially visible when providing tracing scripts for support
-purposes, where the developer of the script targets a particular kernel
-version, but does not have control over whether the target system has
-a particular module as loadable module or built-in module.  When tracing
-symbols within a module, referring them by <module name, symbol name>
-pairs is both convenient and aids symbol lookup.  But that naming will
-not work if the module name information is lost if the module is built
-into the kernel on the target system.
+Some subtests from the userspace_pm selftest were using random numbers
+in their names: the client and server address IDs from $RANDOM, and the
+client port number randomly picked by the kernel when creating the
+connection. These values have been replaced by 'client' and 'server'
+words: that's even more helpful than showing random numbers. Note that
+the addresses IDs are incremented and decremented in the test: +1 or -1
+are then displayed in these cases.
 
-Earlier work addressing this loss of information for built-in modules
-involved adding module name information to the kallsyms data, but that
-required more invasive code in the kernel proper.  This work never did
-get merged into the kernel tree.
+Not to loose info that can be useful for debugging in case of issues,
+these random numbers are now displayed at the beginning of the test.
 
-All that is really needed is knowing whether a given address belongs to
-a particular module (or multiple modules if they share an object file).
-Or in other words, whether that address falls within an address range
-that is associated with one or more modules.
+Fixes: f589234e1af0 ("selftests: mptcp: userspace_pm: format subtests results in TAP")
+Cc: stable@vger.kernel.org
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 46 ++++++++++++++---------
+ 1 file changed, 28 insertions(+), 18 deletions(-)
 
-Objects can be identified as belonging to a particular module (or
-modules) based on defines that are passed as flags to their respective
-compilation commands.  The data found in modules.builtin is used to
-determine what modules are built into the kernel proper.  Then,
-vmlinux.o.map and vmlinux.map can be parsed in a single pass to generate
-a modules.buitin.ranges file with offset range information (relative to
-the base address of the associated section) for built-in modules.  This
-file gets installed along with the other modules.builtin.* files.
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 9e2981f2d7f5..9cb05978269d 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -160,10 +160,12 @@ make_connection()
+ 	local is_v6=$1
+ 	local app_port=$app4_port
+ 	local connect_addr="10.0.1.1"
++	local client_addr="10.0.1.2"
+ 	local listen_addr="0.0.0.0"
+ 	if [ "$is_v6" = "v6" ]
+ 	then
+ 		connect_addr="dead:beef:1::1"
++		client_addr="dead:beef:1::2"
+ 		listen_addr="::"
+ 		app_port=$app6_port
+ 	else
+@@ -206,6 +208,7 @@ make_connection()
+ 		   [ "$server_serverside" = 1 ]
+ 	then
+ 		test_pass
++		print_title "Connection info: ${client_addr}:${client_port} -> ${connect_addr}:${app_port}"
+ 	else
+ 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
+ 		mptcp_lib_result_print_all_tap
+@@ -297,7 +300,7 @@ test_announce()
+ 	ip netns exec "$ns2"\
+ 	   ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id $client_addr_id dev\
+ 	   ns2eth1
+-	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, reuse port"
++	print_test "ADD_ADDR id:client 10.0.2.2 (ns2) => ns1, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event $server_evts $ANNOUNCED $server4_token "10.0.2.2" $client_addr_id \
+ 			      "$client4_port"
+@@ -306,7 +309,7 @@ test_announce()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann\
+ 	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
+-	print_test "ADD_ADDR6 id:${client_addr_id} dead:beef:2::2 (ns2) => ns1, reuse port"
++	print_test "ADD_ADDR6 id:client dead:beef:2::2 (ns2) => ns1, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
+ 			      "$client_addr_id" "$client6_port" "v6"
+@@ -316,7 +319,7 @@ test_announce()
+ 	client_addr_id=$((client_addr_id+1))
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
+ 	   $client_addr_id dev ns2eth1 port $new4_port
+-	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, new port"
++	print_test "ADD_ADDR id:client+1 10.0.2.2 (ns2) => ns1, new port"
+ 	sleep 0.5
+ 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
+ 			      "$client_addr_id" "$new4_port"
+@@ -327,7 +330,7 @@ test_announce()
+ 	# ADD_ADDR from the server to client machine reusing the subflow port
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+ 	   $server_addr_id dev ns1eth2
+-	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
++	print_test "ADD_ADDR id:server 10.0.2.1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
+ 			      "$server_addr_id" "$app4_port"
+@@ -336,7 +339,7 @@ test_announce()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
+ 	   $server_addr_id dev ns1eth2
+-	print_test "ADD_ADDR6 id:${server_addr_id} dead:beef:2::1 (ns1) => ns2, reuse port"
++	print_test "ADD_ADDR6 id:server dead:beef:2::1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
+ 			      "$server_addr_id" "$app6_port" "v6"
+@@ -346,7 +349,7 @@ test_announce()
+ 	server_addr_id=$((server_addr_id+1))
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+ 	   $server_addr_id dev ns1eth2 port $new4_port
+-	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, new port"
++	print_test "ADD_ADDR id:server+1 10.0.2.1 (ns1) => ns2, new port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
+ 			      "$server_addr_id" "$new4_port"
+@@ -380,7 +383,7 @@ test_remove()
+ 	local invalid_token=$(( client4_token - 1 ))
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token $invalid_token id\
+ 	   $client_addr_id > /dev/null 2>&1
+-	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1, invalid token"
++	print_test "RM_ADDR id:client ns2 => ns1, invalid token"
+ 	local type
+ 	type=$(mptcp_lib_evts_get_info type "$server_evts")
+ 	if [ "$type" = "" ]
+@@ -394,7 +397,7 @@ test_remove()
+ 	local invalid_id=$(( client_addr_id + 1 ))
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
+ 	   $invalid_id > /dev/null 2>&1
+-	print_test "RM_ADDR id:${invalid_id} ns2 => ns1, invalid id"
++	print_test "RM_ADDR id:client+1 ns2 => ns1, invalid id"
+ 	type=$(mptcp_lib_evts_get_info type "$server_evts")
+ 	if [ "$type" = "" ]
+ 	then
+@@ -407,7 +410,7 @@ test_remove()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
+ 	   $client_addr_id
+-	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
++	print_test "RM_ADDR id:client ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
+ 
+@@ -416,7 +419,7 @@ test_remove()
+ 	client_addr_id=$(( client_addr_id - 1 ))
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
+ 	   $client_addr_id
+-	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
++	print_test "RM_ADDR id:client-1 ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
+ 
+@@ -424,7 +427,7 @@ test_remove()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
+ 	   $client_addr_id
+-	print_test "RM_ADDR6 id:${client_addr_id} ns2 => ns1"
++	print_test "RM_ADDR6 id:client-1 ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
+ 
+@@ -434,7 +437,7 @@ test_remove()
+ 	# RM_ADDR from the server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
+ 	   $server_addr_id
+-	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
++	print_test "RM_ADDR id:server ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
+ 
+@@ -443,7 +446,7 @@ test_remove()
+ 	server_addr_id=$(( server_addr_id - 1 ))
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
+ 	   $server_addr_id
+-	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
++	print_test "RM_ADDR id:server-1 ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
+ 
+@@ -451,7 +454,7 @@ test_remove()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
+ 	   $server_addr_id
+-	print_test "RM_ADDR6 id:${server_addr_id} ns1 => ns2"
++	print_test "RM_ADDR6 id:server-1 ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
+ }
+@@ -479,8 +482,14 @@ verify_subflow_events()
+ 	local locid
+ 	local remid
+ 	local info
++	local e_dport_txt
+ 
+-	info="${e_saddr} (${e_from}) => ${e_daddr}:${e_dport} (${e_to})"
++	# only display the fixed ports
++	if [ "${e_dport}" -ge "${app4_port}" ] && [ "${e_dport}" -le "${app6_port}" ]; then
++		e_dport_txt=":${e_dport}"
++	fi
++
++	info="${e_saddr} (${e_from}) => ${e_daddr}${e_dport_txt} (${e_to})"
+ 
+ 	if [ "$e_type" = "$SUB_ESTABLISHED" ]
+ 	then
+@@ -766,7 +775,7 @@ test_subflows_v4_v6_mix()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server6_token" id\
+ 	   $server_addr_id dev ns1eth2
+-	print_test "ADD_ADDR4 id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
++	print_test "ADD_ADDR4 id:server 10.0.2.1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
+ 			      "$server_addr_id" "$app6_port"
+@@ -861,7 +870,7 @@ test_listener()
+ 	local listener_pid=$!
+ 
+ 	sleep 0.5
+-	print_test "CREATE_LISTENER 10.0.2.2:$client4_port"
++	print_test "CREATE_LISTENER 10.0.2.2 (client port)"
+ 	verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2.2 $client4_port
+ 
+ 	# ADD_ADDR from client to server machine reusing the subflow port
+@@ -878,13 +887,14 @@ test_listener()
+ 	mptcp_lib_kill_wait $listener_pid
+ 
+ 	sleep 0.5
+-	print_test "CLOSE_LISTENER 10.0.2.2:$client4_port"
++	print_test "CLOSE_LISTENER 10.0.2.2 (client port)"
+ 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
+ }
+ 
+ print_title "Make connections"
+ make_connection
+ make_connection "v6"
++print_title "Will be using address IDs ${client_addr_id} (client) and ${server_addr_id} (server)"
+ 
+ test_announce
+ test_remove
 
-The impact on the kernel build is minimal because everything is done
-using a single-pass AWK script.  The generated data size is minimal as
-well, (depending on the exact kernel configuration) usually in the range
-of 500-700 lines, with a file size of 20-40KB (if all modules are built
-in, the file contains about 8000 lines, with a file size of about 285KB).
+---
+base-commit: 89aa3619d141d6cfb6040a561aebb6d99d3e2285
+change-id: 20240614-upstream-net-20240614-selftests-mptcp-uspace-pm-fixed-test-names-368e312afd0b
 
-Changes since v3:
- - Consolidated patches 2 through 5 into a single patch
- - Move CONFIG_BUILTIN_MODULE_RANGES to Kconfig.debug
- - Make CONFIG_BUILTIN_MODULE_RANGES select CONFIG_VMLINUX_MAP
- - Disable CONFIG_BUILTIN_MODULE_RANGES if CONFIG_LTO_CLANG_(FULL|THIN)=y
- - Support LLVM (lld) compiles in generate_builtin_ranges.awk
- - Support CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
- - Only install modules.builtin.ranges if CONFIG_BUILTIN_MODULE_RANGES=y
-
-Changes since v2:
- - Switched from using modules.builtin.objs to parsing .*.cmd files
- - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
- - 1st arg to generate_builtin_ranges.awk is now modules.builtin.modinfo
- - Parse data from .*.cmd in generate_builtin_ranges.awk
- - Use $(real-prereqs) rather than $(filter-out ...)
- - Include modules.builtin.ranges in modules install target
-
-Changes since v1:
- - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
- - Moved the config option to the tracers section
- - 2nd arg to generate_builtin_ranges.awk should be vmlinux.map
-
-Kris Van Hees (5):
-  trace: add CONFIG_BUILTIN_MODULE_RANGES option
-  kbuild: generate a linker map for vmlinux.o
-  module: script to generate offset ranges for builtin modules
-  kbuild: generate modules.builtin.ranges when linking the kernel
-  module: add install target for modules.builtin.ranges
-
-Luis Chamberlain (1):
-  kbuild: add modules.builtin.objs
-
- .gitignore                          |   2 +-
- Documentation/dontdiff              |   2 +-
- Documentation/kbuild/kbuild.rst     |   5 ++
- Makefile                            |   8 +-
- include/linux/module.h              |   4 +-
- kernel/trace/Kconfig                |  17 ++++
- scripts/Makefile.lib                |   5 +-
- scripts/Makefile.modinst            |  11 ++-
- scripts/Makefile.vmlinux            |  17 ++++
- scripts/Makefile.vmlinux_o          |  18 ++++-
- scripts/generate_builtin_ranges.awk | 149 ++++++++++++++++++++++++++++++++++++
- 11 files changed, 228 insertions(+), 10 deletions(-)
- create mode 100755 scripts/generate_builtin_ranges.awk
-
-
-base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
+Best regards,
 -- 
-2.42.0
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
