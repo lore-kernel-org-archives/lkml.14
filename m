@@ -1,91 +1,65 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C47F16F0D1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01F41756A
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382514; cv=none; b=ENJeA/tZTbWLDuw6TrArrx3UZfysmHXDpjd9NsHevTsK4Hx3PhKJj24Aj7+xBpba/IiyDnkQNK9ZiG9Zh0FvOgP/bBNQ87lCJF4JBi29bhM9REBk4sLswspYyJVzG1erzNuH1LW+W8gWDqYnrSHkYcdl6PDWQNLQThmZRST9BYY=
+	t=1718382647; cv=none; b=Gkqq5Gd2ctvI9tXqjwEQ0EXUh5yiNPo0sgFfzfbpJ7vBOhfiZ6T6ttq7Tk+viK1mgUG9rxblPB9G2jD7i3zgOccoXGI2lmxS4fn8FjHJOWiHqN3bFJuJGJwLp7V86V6So2KYkwAUTc7z8AmquxYJZX8xi9Swl7ioYfdck/v3V8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382514; c=relaxed/simple;
-	bh=8esRhZr5t++HylGupLX6lyRpqHu8zZM1p1WN0/F8Ko0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sz6KOazhKMcujNpfC68x8A00dxTWYS+eOK+EyTeppuQIOfjKqL0DP5dBVN2kM7NAo9QOACNnw77yg9/dOTfmglsz9nkKiZuDJiJkORPhCrv1fAPMvkQKKfkIr4NVX8D9WINt6Sh/ITS/gRO0uQbnFQeLHk95PebQdHal+svuGWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=V4Cv8gkK; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="V4Cv8gkK"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a63359aaaa6so359113366b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718382509; x=1718987309; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bjciShuEmN4FOttkz3Fru1iIAynJFsivm4utVaX4RDQ=;
-        b=V4Cv8gkK56l5oxvYJmamzusDkfTD9NKIE2ExJ8mmzsfLMSKroCdM81ez60zXOX6Z/l
-         W9RUQvJgzWgpspSnrBbvuLelHj4iZDi/boFiV4q4y+UFpNx/TjoWqjWt00xN1CPzmFBU
-         lEuOT2v2ZDDBb10QVDf5o1BupcO0ZVKsLZeLo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718382509; x=1718987309;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bjciShuEmN4FOttkz3Fru1iIAynJFsivm4utVaX4RDQ=;
-        b=Ex3vQur8wYNZynMMmMjys8PYHqG96r3IJ8hbWX93OOlMpKGy5k8iKWZWkaSWu2A1in
-         OQxX+D0vvL5SjWFRld7MVOwDGziHyL/Kb2boQHJ79nkG1znGSA9ZotS3t801/JHoX5P1
-         258T8bv84vFbp4rPvH9JERtuMJ50UMSrNAveAvCjI1u3nsf2MhwHvgsd0Ed9WzeDFotF
-         2kIwB65aJtD/enPShbkpNvM/JKmksmkn3EumhLYplm41qAREXaVnuSHw34wKDpIWF7AB
-         lIrtSJlnqsGmHFIyFeHK66TvMuUThbjdXGDGq76OFLHKoyBZ4fRX01SXR04GzZEcD641
-         ReDw==
-X-Forwarded-Encrypted: i=1; AJvYcCW17u3GB8vdrPwXyLOQe1WYDbp4D0vwFfzq/1yunsTEpz5ZIOjZmwD6cf2lU7yL3A5mc5HmDluALfpk43O+EI3BfQqchF1ebX+J2B9D
-X-Gm-Message-State: AOJu0YzWoQ6vS44Bs4RxZLeU4Yo7GIPQiLj2ln5o+R0IV6XByTJYK7aW
-	S6wXwFMifDl7ZooIZCqhsSDZpKv3dXArIv+eMc/hTuzMYyuIEy1NH3MQEjpdJ3YGWAV01YjEaq2
-	S9e4pkw==
-X-Google-Smtp-Source: AGHT+IEKthR36x2Snann5nXIajzwgBNQnDjkwy8ej0RDcip52cS6ivp9tRoTkM69PFhIPBga+jmEvg==
-X-Received: by 2002:a17:906:40d7:b0:a6f:585d:626d with SMTP id a640c23a62f3a-a6f60dc896amr185376766b.48.1718382509442;
-        Fri, 14 Jun 2024 09:28:29 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f41737sm198865866b.160.2024.06.14.09.28.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jun 2024 09:28:28 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00b97so1033894a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:28:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5dcLrV7gW7eCTAgtEtcKHvcVhEyQBuEezjr9v6fAcgPON3wb8bfL+eIrs7QZxhyX5ES1TKEFxklgmMO/ZvwwvfJF/aD3DCAaIQYnw
-X-Received: by 2002:a50:c357:0:b0:57c:7594:4436 with SMTP id
- 4fb4d7f45d1cf-57cbd6642ebmr2048528a12.12.1718382507928; Fri, 14 Jun 2024
- 09:28:27 -0700 (PDT)
+	s=arc-20240116; t=1718382647; c=relaxed/simple;
+	bh=NP/w9eF1odFhNih4JuDBdoZkpi6HfrXoTgiTK2coqdY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=bZ1+5/kG6vjCKa9vzK69e2lJCoupQK9w2RautUsQyA1jn39UWeI9mho7GWVHIZ0phrHDG16XgVUoWuJhdFL6+oymTKOjRVFYcn5Bl1fGjXWANloolp64D39eKgBO37GIDQXtffVVS7pY5rD9422458jGk39Dk6C14PwyrZoNkWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697DAC2BD10;
+	Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sI9pW-00000001roz-1Q7d;
+	Fri, 14 Jun 2024 12:31:10 -0400
+Message-ID: <20240614163015.456541709@goodmis.org>
+User-Agent: quilt/0.68
+Date: Fri, 14 Jun 2024 12:30:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 00/13] tracing/ring-buffer: Persistent traces across a reboot or crash
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <Zmr9oBecxdufMTeP@kernel.org> <CAHk-=wickw1bAqWiMASA2zRiEA_nC3etrndnUqn_6C1tbUjAcQ@mail.gmail.com>
- <CAHk-=wgOMcScTviziAbL9Z2RDduaEFdZbHsESxqUS2eFfUmUVg@mail.gmail.com> <Zmv8sMMGS8uosLQD@kernel.org>
-In-Reply-To: <Zmv8sMMGS8uosLQD@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 14 Jun 2024 09:28:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiOwJD6sp6mdFg+6Ab8shcB0+qD8=m6MFBA-ExxBnYG5A@mail.gmail.com>
-Message-ID: <CAHk-=wiOwJD6sp6mdFg+6Ab8shcB0+qD8=m6MFBA-ExxBnYG5A@mail.gmail.com>
-Subject: Re: [GIT PULL] memblock:fix validation of NUMA coverage
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jan Beulich <jbeulich@suse.com>, Narasimhan V <Narasimhan.V@amd.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, stable@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 14 Jun 2024 at 01:20, Mike Rapoport <rppt@kernel.org> wrote:
->
-> A single constant is likely to backfire because I remember seeing checks
-> like 'if (nid < 0)' so redefining NUMA_NO_NODE will require auditing all
-> those.
 
-Yeah, fair enough.
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ring-buffer/for-next
 
-> But a helper function works great.
+Head SHA1: a62b4f6fbdffa8e90959da485b68f844241d300f
 
-Thanks, that patch looks like a nice improvement to me.
 
-                Linus
+Steven Rostedt (Google) (13):
+      ring-buffer: Allow mapped field to be set without mapping
+      ring-buffer: Add ring_buffer_alloc_range()
+      ring-buffer: Add ring_buffer_meta data
+      tracing: Implement creating an instance based on a given memory region
+      ring-buffer: Add output of ring buffer meta page
+      ring-buffer: Add test if range of boot buffer is valid
+      ring-buffer: Validate boot range memory events
+      tracing: Add option to use memmapped memory for trace boot instance
+      ring-buffer: Save text and data locations in mapped meta data
+      tracing/ring-buffer: Add last_boot_info file to boot instance
+      tracing: Handle old buffer mappings for event strings and functions
+      tracing: Update function tracing output for previous boot buffer
+      tracing: Add last boot delta offset for stack traces
+
+----
+ Documentation/admin-guide/kernel-parameters.txt |   9 +
+ include/linux/ring_buffer.h                     |  20 +
+ kernel/trace/ring_buffer.c                      | 878 +++++++++++++++++++++---
+ kernel/trace/trace.c                            | 242 ++++++-
+ kernel/trace/trace.h                            |  10 +-
+ kernel/trace/trace_output.c                     |  12 +-
+ 6 files changed, 1056 insertions(+), 115 deletions(-)
