@@ -1,111 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA43919D8B2
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1059619D8B2;
+	Fri, 14 Jun 2024 15:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378316; cv=none; b=LCC8QM5yuDrqUnGFPUph9kO06yTO1Nk34ALgq/LKbzI7klSU3DRMLaAjDyIBclgGF1+XovifE8YER/xkWSlOeJTdtdkXWR91guBlJkAnbduuIV4y2sTTepjoql6ty8sQnZKUljvDpQ7ss22vQQ6FnDArEyavHPBHfLdM5fYH9pc=
+	t=1718378336; cv=none; b=rHC3zXZhysTTVnm32hHNBO9ecM9V+rpSPa+TpMixQcHH37HUZZ+vi7wZu/QIN0R5fiEuyemOW4bKzHGTZcD2NQa04GjqEREMhs5TxGXua0gAfsBQH4TfdS2zUzz74F/ZbM7aj3b+AYaFUkmqBKT6lejiWxoYIbnhTqeZulcfU1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378316; c=relaxed/simple;
-	bh=c/Yb0F0WHCXYlkdOM9UYtspRJ0q02tFTEdH4RZ88v0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HiAo7PiK26huEc2YaN9U+KQSNyGYtJ+W8M7IWsrtIXnL2/+2Cc0IR2Tc6xVvMJFfBzppq4m/vwUNcEkkYiHr9LadM65XcFtKn7DhFBk5scBrRBDM4vIBI30bP84bwEvP38jf97BcXqeLmZI8hWCK35AdgodsteXbuFivjvRz7yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ds/wFUcH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718378336; c=relaxed/simple;
+	bh=n0VXXCfPmou8uH9QZpI7EsxDFETVqYEtAGTVK8+9SMs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dd+yRB7A5nLCpwSL//yOUKcFu76WPalcD9okGOKuu4fBOWh6/woSsaKk5HDxft58SPYk5mjnpnpDx0/qrc+5+YWijmu0ijgFbK6s/812nxXM+Tgwyk2lHeJcLyFl0NcW56/iInETAJ+TWDB6pJvVziEXZHU2TpcRYE7EQeZyRYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SAsTP2B0; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ds/wFUcH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718378314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ShPU3+qy8bdD0vwOsgy2HhMz94KcM4uraJBHpdUlzug=;
-	b=ds/wFUcHGT4fBfEYhEoSl5/LqZm8QeJskw7we+bmsZ6/4fw/C8M8twQc+Rf57Qly1Xj8ZR
-	1StTeLpyv/oug5EGNLehY4V+sgwV5E/h1tNchJVmALuIghLpiWphyleZYsMKBUzVm3aehl
-	InxQPtWk3/2nCjtOr5mRKnvVjzxC/IE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-al5Z-aAcP0Okb7wLXN7gOg-1; Fri,
- 14 Jun 2024 11:18:27 -0400
-X-MC-Unique: al5Z-aAcP0Okb7wLXN7gOg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D45D319560B9;
-	Fri, 14 Jun 2024 15:18:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.80])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 02A713000222;
-	Fri, 14 Jun 2024 15:18:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 14 Jun 2024 17:16:53 +0200 (CEST)
-Date: Fri, 14 Jun 2024 17:16:47 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 10/9] x86/fpu: Fix 'struct fpu' misalignment on 32-bit
- kernels
-Message-ID: <20240614151404.GA27644@redhat.com>
-References: <20240608073134.264210-1-mingo@kernel.org>
- <20240608073134.264210-4-mingo@kernel.org>
- <20240610211350.GA1613053@thelio-3990X>
- <20240611124145.GA26798@redhat.com>
- <ZmlZiHVF8w09mExw@gmail.com>
- <20240612184148.GB23973@redhat.com>
- <Zmq9ppuIZJ9IMZDr@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAsTP2B0"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42179dafd6bso21337675e9.0;
+        Fri, 14 Jun 2024 08:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718378333; x=1718983133; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n0VXXCfPmou8uH9QZpI7EsxDFETVqYEtAGTVK8+9SMs=;
+        b=SAsTP2B0oHgnyFVSOeQTdxlxg0USJ23E423f3VJ95OsDre7/e4orPD5fBLIVbcouBm
+         uP7IThX6j+mUKz574SBhHBtlLpuQel3puLal0rKnIQF+f8gQAr4L1mi1Zxav6E/XLwny
+         6I6JhvhimOHksj8ZTR7g02PBzEFA/fmLhSlVHTL5HoSCKF7D10LJKEkHihxI1qsT+qdt
+         Izr+kyd2EebynW2eeQ6NUCJ5DTUiMVGbWlLQs/G8M98/7CQD9b9jZ28bunthXMKCou4m
+         ZftRxwpPK3taMqfD3zbgt/nsNLnRZJ91vhONl1wtXHJWec8Lv4tSNqZTUeiHeKtuBzHM
+         z8YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718378333; x=1718983133;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n0VXXCfPmou8uH9QZpI7EsxDFETVqYEtAGTVK8+9SMs=;
+        b=dMzHksBnELvD+koImr9PvB9Nsvo6fglA6hdscE/KWA/rDkIjQ+SCf9UXkXnmnEaxGx
+         30kYzTsT0iPqDv+fRhaMogn7D7iFUtHBEPuE/9ZL1MX4o3Iw8libPZIxDEurmLxNeiAo
+         PvIrDruN9jPQ50kzlUordPwNfQVtyRDuPDowZOWuS/cBfyvAuX9QCcYJdA+4yhTrb5+K
+         KwdNv0j9QoRVsSkcke/Hat2rk5ETh4T9yl/LE7A2zav5xjpdJSPeeW/2m9OPxO+MGY3Q
+         Ie5hG50wul3B0a9UJITKTdJDge9OTxyoV20/k+dyR+CNp9F44ReEc/1zHQiLFJ/TCdQp
+         r0ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0sKeWJLesPQVrgx1+CI8r1qNTbfa3K1Vzu1/o8CgTFKzZ/kWCuajlodqF+o4dN2vtosK82lIwmC6M5UAZxUgaG6/zZbZEHzDo6LB6v2n/Z8B2S6olOGAUIUUnGw7F0cEdRxBmDhqt
+X-Gm-Message-State: AOJu0YyAxIu0gIztOQdi5x4tKNEfBS4VedmcdJI8KHEDr8/JPrub2P1W
+	TaoiQ4yRN48Cd6EWYNpdgjxgyUUyZAkjouoOpZrCDDKKatuv4CV8
+X-Google-Smtp-Source: AGHT+IF1nYDfi4kUMdMPKte9fw+UfwhCCfql8Q9Sz16z3yWy1yf0BeeKwkONyjVHSR28hmQ0vzd/xQ==
+X-Received: by 2002:a5d:6e10:0:b0:360:728d:8439 with SMTP id ffacd0b85a97d-3607a4c864fmr3011348f8f.2.1718378333023;
+        Fri, 14 Jun 2024 08:18:53 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360751037absm4606529f8f.91.2024.06.14.08.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 08:18:52 -0700 (PDT)
+Message-ID: <c1b4fa5da3a28cc3c1eef1701015a8f21231cf17.camel@gmail.com>
+Subject: Re: [PATCH v2 0/5] iio: adc: use
+ devm_regulator_get_enable_read_voltage round 1
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-iio@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Fri, 14 Jun 2024 17:18:52 +0200
+In-Reply-To: <20240612-iio-adc-ref-supply-refactor-v2-0-fa622e7354e9@baylibre.com>
+References: 
+	<20240612-iio-adc-ref-supply-refactor-v2-0-fa622e7354e9@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmq9ppuIZJ9IMZDr@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi Ingo, sorry for delay.
+On Wed, 2024-06-12 at 16:03 -0500, David Lechner wrote:
+> Following up from [1], this is the first round of patches to convert the
+> ADC drivers to use devm_regulator_get_enable_read_voltage().
+>=20
+> Some of these are trivial but some aren't so I'm breaking them up into
+> smaller series to spread out the review load (and my work load).
+>=20
+> [1]:
+> https://lore.kernel.org/linux-iio/20240429-regulator-get-enable-get-votla=
+ge-v2-0-b1f11ab766c1@baylibre.com
+>=20
+> ---
 
-On 06/13, Ingo Molnar wrote:
->
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -1562,7 +1562,7 @@ struct task_struct {
-> >  	 * they are included in the randomized portion of task_struct.
-> >  	 */
-> >  	randomized_struct_fields_end
-> > -};
-> > +} __attribute__ ((aligned (64)));
+Just two things that look like typos... With that:
 
-I guess __aligned(64) will look a bit better, but this is minor.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-> What happened is that due to my series 'struct task_struct' lost its
-> 64-byte alignment attribute, which broke the fpu struct allocation code on
-> 32-bit kernels and made the 64-bit one probably unrobust as well.
-
-Yes, and note that struct fpstate has the same __aligned(64), that is
-how I noticed the potential problem and decided to check.
-
-But Ingo, it was a shot in the dark ;) I still don't really understand
-what exactly should be aligned. Is it the fpstate->regs member? Or what?
-If yes, perhaps this member needs __aligned(64) too to be safe?
-
-> ... and would appreciate your Acked-by or Reviewed-by for the eventual
-> final version of the series, but I don't insist. ;-)
-
-Thanks ;) will do.
-
-Oleg.
 
