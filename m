@@ -1,129 +1,212 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F141D13B5AC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191682AEE9;
+	Fri, 14 Jun 2024 10:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718361140; cv=none; b=IFM7lF5GaBbEfJPJlu+WeOVHesvEYG2kPdyhNgF7H0Iz44Z3Zqziu0W0NdRiaW0hdMScoEY71xTtcKX+2bD6vmiMmXSYKYOdsBMDi5stwr5qs/UpmtmQwn977Y7rJePfvLONYyu4GWUBfw/W80EA6MNAyOxw35jXoTtQucvbCcg=
+	t=1718361205; cv=none; b=WYFqlK6worFwvrdHOTgbxVZzOTEeG4MIk6deTvXwFQVrLQXiJ9nX8tkiaxA9Smx69jVOaKXao4s9CqYnmPsZhaYT1SUhrVlIbEK/bY6vVDZ6R73OK6I5Cs6sXlFmiIWCcSga0eR1dRwg3rcmeMrmgt7OrJuFMHUx4jaCNdVRFDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718361140; c=relaxed/simple;
-	bh=CfpSNYRxPzF3eP5B/0FeJ6z/uAilyYbezSPoYSHcqWI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qGdtnmTu8MgjHz3FcgTQhTA684pUAISgSn6GEngoGySNVx4Y0r+aNQT9WpldbxW2ICPu2v5oZofKoZlAtppDou74Bj/XzEJP2KiCkOLKiK+cssy5vIP97GPQjVqPHkoSXkQkaaNloeIDf3uMc1o/Ckrn0Q3HrQA0mCTes4bdG2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=a1D3eZ6X; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718361205; c=relaxed/simple;
+	bh=E/xEtRlIojGJ4rk2DeNsa98B5Haa8Oxs9KK7LwLX9Lw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CnmjQEs0/OtrRp44VTMNrG3vAl7x0g1fFtwF5bbYPJJf5coVdAWoZN58pZ4ztsT9FRUxs2ZqHSqBQU1SE+lNiVyjpBgZS65TJzM0J4e59HR+3Juy2sdwMcn6tfcZMxG3xv5NBmetIjzk67IYtvAowQFHMJlAZtc7z3hXY+0b+kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JzMQl+Yc; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="a1D3eZ6X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JzMQl+Yc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718361139; x=1749897139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CfpSNYRxPzF3eP5B/0FeJ6z/uAilyYbezSPoYSHcqWI=;
-  b=a1D3eZ6XRytd7y+a1Gf/k49h3xNY71SpOicXuV2EqKiiWPHpHlO9RiOJ
-   fEqZjU1LPhaFISqOEifCrp88q7ZGGGJnbQpwacosrOfY8+ogA6x6S51Bj
-   VHFqkKByzR1r2ZFsGOMjDqj/EunLo1ucU9bvSdK/zGkaYu+YfdOfdEJFv
-   B3Z2tJKHCCI1FWUOGhtKlNz1CBXleeObdTxETUsk2YXXmZXHoiCB/JSEz
-   5TbRkQG1rvYj7eSJSCIV2EZFrQkTt0aqq1Y4gSlu5KZH2xs+94D0EhsD8
-   QRgRyPt2RdViqYtvszdD00cklw/hM45u2A2kzsKHBdK705/B46WGKlPkT
-   g==;
-X-CSE-ConnectionGUID: nFBF+wvcSOK6O7fDHKZSVQ==
-X-CSE-MsgGUID: F2wRbsnVRvqFmTnNJb1XtA==
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718361204; x=1749897204;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E/xEtRlIojGJ4rk2DeNsa98B5Haa8Oxs9KK7LwLX9Lw=;
+  b=JzMQl+YcbmvpM7b8YxZcBMhvm/JAf8QT5w6bNTIKY2nX9nw/Q5GhJBMz
+   QQICgePbpXHhW+BVJWZzn+DIqo8yFx+YKiGw6aIS5VbpnK6Pj8RrA+CO7
+   JtHWIv8FLZvUc2e+nx50mQWhLAEMuF4Xc5mAmAkev70akr5nX2OM4FJtU
+   /M82Lrk69tUBHfoahU3eTERPVtzgW3EPKfPbbVTD+GzWb1NnbCtM8fYCw
+   MOtOGGgEwb/Ar9jTOJRJ+KhsRrtqfnp6QFEGeH9/896SBD7ujSUdkDD0d
+   GZorR8B8dGN3fU+EmXQEfCkTtH65kMPqyVf2KtuM0UNilvv5Myf7fwY4N
+   w==;
+X-CSE-ConnectionGUID: aLZVAuHOSpa4maGK/bw98A==
+X-CSE-MsgGUID: rEx88AWFQQOnkIwIGKJmlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="25815875"
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="asc'?scan'208";a="27543976"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 03:32:17 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Jun 2024 03:31:46 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 14 Jun 2024 03:31:44 -0700
-Date: Fri, 14 Jun 2024 11:31:27 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-CC: <linux-riscv@lists.infradead.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Jones <ajones@ventanamicro.com>, Conor Dooley <conor@kernel.org>,
-	<linux-kernel@vger.kernel.org>, Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCH v2 1/3] riscv: Enable cbo.zero only when all harts
- support Zicboz
-Message-ID: <20240614-parasail-lived-b771878e869b@wendy>
-References: <20240613171447.3176616-1-samuel.holland@sifive.com>
- <20240613171447.3176616-2-samuel.holland@sifive.com>
+   d="scan'208";a="25815875"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:33:23 -0700
+X-CSE-ConnectionGUID: akj9vkTiR5SLcyTW/t0a8A==
+X-CSE-MsgGUID: q5T9PPhnScCPeBNgyLGWuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="71230947"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.248.10])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:33:15 -0700
+Message-ID: <9490cba1-1fa3-4a00-bab8-aa4a07a418f5@intel.com>
+Date: Fri, 14 Jun 2024 13:33:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="z5ZL1EgnfI55oztK"
-Content-Disposition: inline
-In-Reply-To: <20240613171447.3176616-2-samuel.holland@sifive.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] mmc: sdhci-of-dwcmshc: extract init function for
+ rk35xx/th1520
+To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
+ conor+dt@kernel.org, guoren@kernel.org, inochiama@outlook.com,
+ jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, robh@kernel.org, ulf.hansson@linaro.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com,
+ tingzhu.wang@sophgo.com
+Cc: Chen Wang <unicorn_wang@outlook.com>
+References: <cover.1718241495.git.unicorn_wang@outlook.com>
+ <459e341a32128ffbae5acdc77a1c835cbee582e6.1718241495.git.unicorn_wang@outlook.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <459e341a32128ffbae5acdc77a1c835cbee582e6.1718241495.git.unicorn_wang@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---z5ZL1EgnfI55oztK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13/06/24 04:43, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Extract init function for rk35xx/th1520, which is an intermediate
+> process before further optimization.
+> 
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 83 ++++++++++++++++-------------
+>  1 file changed, 46 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index 346d2d323a05..38ab755aa044 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -749,10 +749,19 @@ static void rk35xx_sdhci_reset(struct sdhci_host *host, u8 mask)
+>  	sdhci_reset(host, mask);
+>  }
+>  
+> -static int rk35xx_init(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+> +static int rk35xx_init(struct device *dev, struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+>  {
+>  	int err;
+> -	struct rk35xx_priv *priv = dwc_priv->priv;
+> +	struct rk35xx_priv *priv;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(struct rk35xx_priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	if (of_device_is_compatible(dev->of_node, "rockchip,rk3588-dwcmshc"))
+> +		priv->devtype = DWCMSHC_RK3588;
+> +	else
+> +		priv->devtype = DWCMSHC_RK3568;
+>  
+>  	priv->reset = devm_reset_control_array_get_optional_exclusive(mmc_dev(host->mmc));
+>  	if (IS_ERR(priv->reset)) {
+> @@ -787,6 +796,8 @@ static int rk35xx_init(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+>  	sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_TXCLK);
+>  	sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_STRBIN);
+>  
+> +	dwc_priv->priv = priv;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -915,6 +926,35 @@ static void th1520_sdhci_reset(struct sdhci_host *host, u8 mask)
+>  	}
+>  }
+>  
+> +static int th1520_init(struct device *dev,
+> +		       struct sdhci_host *host,
+> +		       struct dwcmshc_priv *dwc_priv)
+> +{
+> +	dwc_priv->delay_line = PHY_SDCLKDL_DC_DEFAULT;
+> +
+> +	if (device_property_read_bool(dev, "mmc-ddr-1_8v") ||
+> +	    device_property_read_bool(dev, "mmc-hs200-1_8v") ||
+> +	    device_property_read_bool(dev, "mmc-hs400-1_8v"))
+> +		dwc_priv->flags |= FLAG_IO_FIXED_1V8;
+> +	else
+> +		dwc_priv->flags &= ~FLAG_IO_FIXED_1V8;
+> +
+> +	/*
+> +	 * start_signal_voltage_switch() will try 3.3V first
+> +	 * then 1.8V. Use SDHCI_SIGNALING_180 rather than
+> +	 * SDHCI_SIGNALING_330 to avoid setting voltage to 3.3V
+> +	 * in sdhci_start_signal_voltage_switch().
+> +	 */
+> +	if (dwc_priv->flags & FLAG_IO_FIXED_1V8) {
+> +		host->flags &= ~SDHCI_SIGNALING_330;
+> +		host->flags |=  SDHCI_SIGNALING_180;
+> +	}
+> +
+> +	sdhci_enable_v4_mode(host);
+> +
+> +	return 0;
+> +}
+> +
+>  static void cv18xx_sdhci_reset(struct sdhci_host *host, u8 mask)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -1230,46 +1270,15 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>  	host->mmc_host_ops.execute_tuning = dwcmshc_execute_tuning;
+>  
+>  	if (pltfm_data == &sdhci_dwcmshc_rk35xx_pdata) {
+> -		rk_priv = devm_kzalloc(&pdev->dev, sizeof(struct rk35xx_priv), GFP_KERNEL);
+> -		if (!rk_priv) {
+> -			err = -ENOMEM;
+> -			goto err_clk;
+> -		}
+> -
+> -		if (of_device_is_compatible(pdev->dev.of_node, "rockchip,rk3588-dwcmshc"))
+> -			rk_priv->devtype = DWCMSHC_RK3588;
+> -		else
+> -			rk_priv->devtype = DWCMSHC_RK3568;
+> -
+> -		priv->priv = rk_priv;
+> -
+> -		err = rk35xx_init(host, priv);
+> +		err = rk35xx_init(&pdev->dev, host, priv);
 
-On Thu, Jun 13, 2024 at 10:14:39AM -0700, Samuel Holland wrote:
-> Currently, we enable cbo.zero for usermode on each hart that supports
-> the Zicboz extension. This means that the [ms]envcfg CSR value may
-> differ between harts. Other features, such as pointer masking and CFI,
-> require setting [ms]envcfg bits on a per-thread basis. The combination
-> of these two adds quite some complexity and overhead to context
-> switching, as we would need to maintain two separate masks for the
-> per-hart and per-thread bits. Andrew Jones, who originally added Zicboz
-> support, writes[1][2]:
->=20
->   I've approached Zicboz the same way I would approach all
->   extensions, which is to be per-hart. I'm not currently aware of
->   a platform that is / will be composed of harts where some have
->   Zicboz and others don't, but there's nothing stopping a platform
->   like that from being built.
->=20
->   So, how about we add code that confirms Zicboz is on all harts.
->   If any hart does not have it, then we complain loudly and disable
->   it on all the other harts. If it was just a hardware description
->   bug, then it'll get fixed. If there's actually a platform which
->   doesn't have Zicboz on all harts, then, when the issue is reported,
->   we can decide to not support it, support it with defconfig, or
->   support it under a Kconfig guard which must be enabled by the user.
->=20
-> Let's follow his suggested solution and require the extension to be
-> available on all harts, so the envcfg CSR value does not need to change
-> when a thread migrates between harts. Since we are doing this for all
-> extensions with fields in envcfg, the CSR itself only needs to be saved/
-> restored when it is present on all harts.
->=20
-> This should not be a regression as no known hardware has asymmetric
-> Zicboz support, but if anyone reports seeing the warning, we will
-> re-evaluate our solution.
->=20
-> Link: https://lore.kernel.org/linux-riscv/20240322-168f191eeb8479b2ea169a=
-5e@orel/ [1]
-> Link: https://lore.kernel.org/linux-riscv/20240323-28943722feb57a41fb0ff4=
-88@orel/ [2]
-> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+rk_priv is used further on, but it is not assigned anymore.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>  		if (err)
+>  			goto err_clk;
+>  	}
+>  
+>  	if (pltfm_data == &sdhci_dwcmshc_th1520_pdata) {
+> -		priv->delay_line = PHY_SDCLKDL_DC_DEFAULT;
+> -
+> -		if (device_property_read_bool(dev, "mmc-ddr-1_8v") ||
+> -		    device_property_read_bool(dev, "mmc-hs200-1_8v") ||
+> -		    device_property_read_bool(dev, "mmc-hs400-1_8v"))
+> -			priv->flags |= FLAG_IO_FIXED_1V8;
+> -		else
+> -			priv->flags &= ~FLAG_IO_FIXED_1V8;
+> -
+> -		/*
+> -		 * start_signal_voltage_switch() will try 3.3V first
+> -		 * then 1.8V. Use SDHCI_SIGNALING_180 rather than
+> -		 * SDHCI_SIGNALING_330 to avoid setting voltage to 3.3V
+> -		 * in sdhci_start_signal_voltage_switch().
+> -		 */
+> -		if (priv->flags & FLAG_IO_FIXED_1V8) {
+> -			host->flags &= ~SDHCI_SIGNALING_330;
+> -			host->flags |=  SDHCI_SIGNALING_180;
+> -		}
+> -
+> -		sdhci_enable_v4_mode(host);
+> +		err = th1520_init(&pdev->dev, host, priv);
+> +		if (err)
+> +			goto err_clk;
+>  	}
+>  
+>  #ifdef CONFIG_ACPI
 
---z5ZL1EgnfI55oztK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmwb/wAKCRB4tDGHoIJi
-0ldKAQDTQ/APmkNX8IRH/02s56jNsFUXa0qY9IeWFnaEdYB/GgD/Z0+wxcrVz8Xs
-/vyJ79gnZtJJN6bFUsf3dif12uOlPgk=
-=oFvk
------END PGP SIGNATURE-----
-
---z5ZL1EgnfI55oztK--
