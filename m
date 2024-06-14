@@ -1,102 +1,142 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B9719AD48
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD08319AD48
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386348; cv=none; b=Vn89H6tGbyJJu5XSmo/uEIznhjMDfQ8dZttCc6QMGx19+sGO6IsSQHp03LAQPEy/UPFGeVT4p1foEI1g2O4LqvFKNUOcRaRkGG22Mb3A+o+wawVrk3L5lgC0VPOnKOxF7gGG2nSFPQ2VuLFaqiyIMqYzXqQRugk+6xeX5mqXfek=
+	t=1718386353; cv=none; b=fQ9YYuqWla7KHcMxGssH+dYsEH6bLc2cqiAUx0zSHXXkEFxiXLN+oNimrHXPxaLRI+cFRlTPueBZxCYnNq7k9kJg/SIq9Pib1ShAjtCJbRTHLnSrOlTFhQmDwF3T31/oHkJIdq6dB9Ga6nCGB+DOcEIV37L4lbtmf+5dEoreDUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386348; c=relaxed/simple;
-	bh=BTDfLj4AnRVLzvSB2sl6u/qP7TFE0iMJBw7H91ZibCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KGk5RAud66rHw+AuvGSYlIl4vcjJ6mid9lND95EDNo3OhDeqnVaMDnHC2hKNII/V71reSTZLd2qhcJGb0lvD4TadwoCsxgokJ6oVgJzhhe4g3D8jOqFNJNH4U/WoWpDeo17f53b7PFGXaJUK0Vp3s+QX5UO8R3uAzeMRVwAHslE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g/ng1T67; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1718386353; c=relaxed/simple;
+	bh=Fyx4oZXYXOt7r5Bmb0RLqriW4Wv4h4xJOeKr4CmCXf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BwUFno+v15fRIlbfBpdjgKJFLosFU2DXMsSoMQrsYj8ELkd/3QJCX1GjiM1VnpJkztNDyMmq/4kOO9wwwlt7egtI5e4FjriTJYM912b+Lr3nDcfii59a86Aq6rVLRytw6z3CCDmbE3NWLuUwKZfxyaCDXjm10OWB0CDsBm3jGVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bZWXR3Xo; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g/ng1T67"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3608545debbso528078f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:32:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZWXR3Xo"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso40268301fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718386344; x=1718991144; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hHcGiX8UBCwxh//a18tmbSzvIIZ91QoZrb+Pr6rgKAk=;
-        b=g/ng1T67W+kDlprcUiw4C9+Y39g//0l3cpj/cSFFq29jpPtW6mGSYCMwvn60vBFZ25
-         o43MOKo6N7MOZT4Ehc+vMhpm2IyH/ttDd9D4F3SYEjw9R9oRXx2rdJSil9FB5XUVPcvz
-         6va+q3CMF4gvUzXAHWPUbZ/YPrUAIhf7dunxs9SSk5Pu5cd15KkXNjvXeQiOIMigGXzl
-         Xbz3Y4WXHmkK22gayNEbIX5Ml3/MuXXp0YraotsjYKwArZ5aeAEYGxjC+ubJnRIxhDEZ
-         Mf3nOgguXsmIOpDckPgJsOp8zpyvK7WSB4ruYyoZfUEjV/T57YzDJmaQTlrpvJWhxcmz
-         RrZw==
+        d=linaro.org; s=google; t=1718386350; x=1718991150; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aesDOEiRaG9Aa3dzWhXp6jZ8a3i1f0OGXi6kYr7Lp3g=;
+        b=bZWXR3XoxcBYX2qbpkUlX6hYdeLu6aDU0xDCpZU3VQhA1ZWugr0ArTmPA49w3NZ8DJ
+         5HykVNTGAKZMuQDgL5/tpZWnNMR/nQPaszPfxaZB56hFEb/LQ0HTRRJhuncB7t76Pn/F
+         beGT8c2mt35SkyAp4/HPcUssNMwpcQtkQGPOSpGOzTMPjASldWFmznZL2J/ALZoo0UWm
+         j9nwZFcbFVd/ptGQ3sTKe8lGIoJlL3k/+yRYtAT1Bs25+dP4Yaa0Uc/6d1LEMPXyIikz
+         9z5cx7s0afJoZTMQcYw5e55tOep1lupWuJfF3bbmG8LZJmjHtkht7FgN9RV/w8kcjzYE
+         vq9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718386344; x=1718991144;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1718386350; x=1718991150;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hHcGiX8UBCwxh//a18tmbSzvIIZ91QoZrb+Pr6rgKAk=;
-        b=ObYjYPzENvB+zZkBFb1eXEQNIgjrbiTkvGN/nUhSsNqML76Td/PfLg/9UmUQristAh
-         LflKJNTT/EUELXM7QsgR4FIi9cRbQv60FZ2QIgNHtf3aGELl16jnryMLZwiBS70eE0Fn
-         UBwijtlLDtllkea+ZCqWwAoflIHqyaRyAiuUzun7dOEdl9G818/LkmBYdHlfM1WkLhCV
-         hQKZS+jh1z5RaUko7H2umZ7Ex/VPCtDc+oJid0phfhEKeTVEwLMMdAFLJ0ogGyWvB+QX
-         +pexoOK07kHPo10xNub4y3HPii/zIbksN11WLl0OOXNJB1Y3EJntva1ZGXZMCxHW1JXk
-         hqnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvVVDvVkOrPYBdfHJrjZTHeCxOXnqw+XRRHdtJ0JAfVO4CIHv5T8whTZbaKgtJAtobj8SJcOKw52q0hQ2K8IBG7Crat972s8ov3Pyt
-X-Gm-Message-State: AOJu0YyfbipQeKjGMMJonIzZBxLooq2beBMwSn3XigHjZnTReUAuCIVm
-	BeSMptwROhk/9iJqDYXScUsP2oSryXUJfbWqwZ8MfaQbCjPxTMiVOzVDe6cUiBA=
-X-Google-Smtp-Source: AGHT+IHsxqX+vfK6OLdZouSmAaBnwPbFYWG7SuDtV+LLd1ZQ2QpbCa6D9qdoNvt9IQdsKez/NQ86Ww==
-X-Received: by 2002:a5d:6da6:0:b0:360:83cd:ea2d with SMTP id ffacd0b85a97d-36083cded29mr2374785f8f.24.1718386344226;
-        Fri, 14 Jun 2024 10:32:24 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360751152d9sm5045341f8f.116.2024.06.14.10.32.23
+        bh=aesDOEiRaG9Aa3dzWhXp6jZ8a3i1f0OGXi6kYr7Lp3g=;
+        b=Squg33nYPFQH2jVrw/QKDvdHHe75bPSHY3ra54ptCJ9hHgyBis3POwmg+bBui+uw01
+         16J2QBb6ySv3GjvlLnHjVAyknHicZIlKRUst9kBjcXknA9z4vVRqT7GbzWgg6cxHOpMH
+         PlyblFR8GPZdP1ALPgNFu17l44zyKn3rs9CmVFqvlzEJVrG+x7+Xh0EfZbP1T4H0PUPi
+         FwlFJ+CQdae+v0y7GeuwTyt25oDslOiswE2XP8jC55H6gIVkuoEaLKnfXFYJ6cmiXOV7
+         tds7TPK3TcohwLCN+z5+H0ieYlsO/xJk1olGAgOlnSbb6y3gPrI02fP9ma88CY3ZsjiO
+         ynEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGMaPQ+xLQDaZN2/fwAz77BM4UGYT87pOnEoXHEhtnErAJrKteNFTdWWo3mZco7fRB+PFVQvt2vfPCeD0JoPymbTiyWF/NoOffyhsi
+X-Gm-Message-State: AOJu0YzDJgNsT/nsvvdiS7pJIQwhjPch43ODZ96OH5i+/CNTTITZEsJ7
+	ZKOp3xZe7w68Ci3FycjEQ8qJqvYVefHHv5tkg9czj/HH5f+NlxefjV5MxY26rBQ=
+X-Google-Smtp-Source: AGHT+IGLrcrZDaWk6pfDosOul/t/KBqIO2jt9kIWRmffUF1VJ4nmfE1a3L0RBgRcNwyxpKBRaxNgSA==
+X-Received: by 2002:a2e:8681:0:b0:2ec:18bc:c455 with SMTP id 38308e7fff4ca-2ec18bcc6a3mr19931571fa.10.1718386349908;
+        Fri, 14 Jun 2024 10:32:29 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05d08470sm5669821fa.60.2024.06.14.10.32.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 10:32:23 -0700 (PDT)
-Date: Fri, 14 Jun 2024 20:32:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Pradeep Kumar Chitrapu <quic_pradeepc@quicinc.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] wifi: ath12k: fix potential NULL dereference
-Message-ID: <4428a7ab-eb67-4f0e-992f-35577ea2b564@moroto.mountain>
+        Fri, 14 Jun 2024 10:32:29 -0700 (PDT)
+Date: Fri, 14 Jun 2024 20:32:27 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, kernel-dev@igalia.com, 
+	Melissa Wen <mwen@igalia.com>, alexander.deucher@amd.com, christian.koenig@amd.com, 
+	Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>, daniel@ffwll.ch, 
+	Daniel Stone <daniel@fooishbar.org>, 'Marek =?utf-8?B?T2zFocOhayc=?= <maraeo@gmail.com>, 
+	Dave Airlie <airlied@gmail.com>, ville.syrjala@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>, 
+	Joshua Ashton <joshua@froggi.es>, Michel =?utf-8?Q?D=C3=A4nzer?= <michel.daenzer@mailbox.org>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>
+Subject: Re: [PATCH v6 2/8] drm: Support per-plane async flip configuration
+Message-ID: <ycgax5ulfcdho2ocrqhzwuvrtwjkwuzi4ghnutl72e5ye3wkxf@ajirwgg7ozwp>
+References: <20240614153535.351689-1-andrealmeid@igalia.com>
+ <20240614153535.351689-3-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240614153535.351689-3-andrealmeid@igalia.com>
 
-In this condition if "sband" is NULL then it leads to a NULL dereference
-on the next line when it does "idx -= sband->n_channels;".
+On Fri, Jun 14, 2024 at 12:35:29PM GMT, André Almeida wrote:
+> Drivers have different capabilities on what plane types they can or
+> cannot perform async flips. Create a plane::async_flip field so each
+> driver can choose which planes they allow doing async flips.
+> 
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> ---
+>  drivers/gpu/drm/drm_atomic_uapi.c | 4 ++--
+>  include/drm/drm_plane.h           | 5 +++++
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+> index 2e1d9391febe..ed1af3455477 100644
+> --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> @@ -1079,9 +1079,9 @@ int drm_atomic_set_property(struct drm_atomic_state *state,
+>  			break;
+>  		}
+>  
+> -		if (async_flip && plane_state->plane->type != DRM_PLANE_TYPE_PRIMARY) {
+> +		if (async_flip && !plane->async_flip) {
 
-The condition can just be deleted, because if "sband" is NULL or the
-"idx" is out of bounds, then the correct thing is to at this point is to
-return -ENOENT.  There are no additional sbands available to try.
+So, after this patch async flips becomes disabled until the driver
+enables that manually. Whether that's desired or not is a separate
+topic, but this definitely should be explicitly mentioned in the commit
+message.
 
-Fixes: 70e3be54bbdd ("wifi: ath12k: fix survey dump collection in 6 GHz")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/net/wireless/ath/ath12k/mac.c | 5 -----
- 1 file changed, 5 deletions(-)
+>  			drm_dbg_atomic(prop->dev,
+> -				       "[OBJECT:%d] Only primary planes can be changed during async flip\n",
+> +				       "[PLANE:%d] does not support async flips\n",
+>  				       obj->id);
+>  			ret = -EINVAL;
+>  			break;
+> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
+> index 9507542121fa..0bebc72af5c3 100644
+> --- a/include/drm/drm_plane.h
+> +++ b/include/drm/drm_plane.h
+> @@ -786,6 +786,11 @@ struct drm_plane {
+>  	 * @kmsg_panic: Used to register a panic notifier for this plane
+>  	 */
+>  	struct kmsg_dumper kmsg_panic;
+> +
+> +	/**
+> +	 * @async_flip: indicates if a plane can do async flips
+> +	 */
+> +	bool async_flip;
+>  };
+>  
+>  #define obj_to_plane(x) container_of(x, struct drm_plane, base)
+> -- 
+> 2.45.2
+> 
 
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 509c02bffdae..e5456383dabd 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -8314,11 +8314,6 @@ static int ath12k_mac_op_get_survey(struct ieee80211_hw *hw, int idx,
- 
- 	if (!sband)
- 		sband = hw->wiphy->bands[NL80211_BAND_6GHZ];
--	if (!sband || idx >= sband->n_channels) {
--		idx -= sband->n_channels;
--		sband = NULL;
--	}
--
- 	if (!sband || idx >= sband->n_channels)
- 		return -ENOENT;
- 
 -- 
-2.43.0
-
+With best wishes
+Dmitry
