@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96EC12E61
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 23:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB9F187565
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 23:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718408893; cv=none; b=MNe0OIbDLTveYKYgzg9cgZTHooK7hv1VBTpXKUCmgTSofwSw7J8r63/7GeytVcOkFt9f1K65k6oJqjPC3ToObgUA0eENPCtd2T8HMKShlPv7W3SfJKggtEkCSr5G7K6jc/IJFdI/mcZwaImzOAt/FJ00RaJpTWNeqolFnPCEP2k=
+	t=1718408894; cv=none; b=Jnzi/y3UFjA3DBK/VSazuhw/99df53It9NzRqqk3Vvtyke1V6b9xN87XLmJLR0S/vDgFbC3wEqiBv5XcYHFwJw0sPcobqGksymicu2yI55EI5vzfflXMp3Dg4utxphYAX5jtbgq9OogYUQHM3XFhHivceqlWYDEC8lsmCEWBItY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718408893; c=relaxed/simple;
-	bh=7rZ0unu2/SVRtrNWYASpCkCRRJyZVysK1s+WYY0kNN4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gkz1U1sufQdbEjv1eknAizTA9nhlBLYLWehB91LWzEDiWJcHzS3kmucBUFL/gt1F4LtlIZ+HdV945wCT1SWqV+i5YG28W8d/iC+p6kVG70KWq5CfUS8Awrip4UgboZajp8DZN9G4KG3RIxdSkwSGyy8Mj+O/Zomds6t+Si46w7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r55ZX3Wn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718408894; c=relaxed/simple;
+	bh=uzaDyQbVWdU/yPUf+0A3dOmYPMQFRQEdZUccMpk/Tp8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ulcxOEQ6TOzQj9OOKNm+yiMKvMD7lyUEL6NnU+VxBOIOfQdnDSt93cyRFbqqwCrJ/Mdyi8vVSnIU28T8EBEUatq90HTNyxsyjTBoZUhUiAMDcjnnpx7KMCvbiAThXM3nMUftvvKi5RRgp/tTD48k2mPWSJbECApKerxnLwetqsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SmxxD1r2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r55ZX3Wn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17185C2BD10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SmxxD1r2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C7BC4AF49;
 	Fri, 14 Jun 2024 23:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718408893;
-	bh=7rZ0unu2/SVRtrNWYASpCkCRRJyZVysK1s+WYY0kNN4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=r55ZX3WnPgw2PioxOEVDpxu2C4ufHfovPXKCkdh5qkWsOcbcLhfaPy/AmT3ZYC8wQ
-	 yNdArvsz71CUMzj/iLraHfGW+rDJtCYN4UxzgN6ejlJsKgjC/opaar//dpgBeWqboI
-	 hl9iPNBCR4XV3/SccizoJ5jkHftRub5y+D7kQXFi00ob139M7DV7uB+7DCWTeGW3gE
-	 3/T7kOY9UQ0IIjKr1pR7WD7BPt+PZT7qgEeA4PR6P5HfJfHpnorWgZZOOMHYGYSZuT
-	 69xjzQoboPiPj/+D9AuN4zGgOzXqeJFLNyfOiJxU3OAfPWKcwt6gHvz2efk36XBZh7
-	 slo3mnfMM77JQ==
+	s=k20201202; t=1718408894;
+	bh=uzaDyQbVWdU/yPUf+0A3dOmYPMQFRQEdZUccMpk/Tp8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SmxxD1r2JehMSaGbsPEe2zZ9wuu30o7zHZp26vWiDGo59UpYQeaZs+f/DDbA/Izu9
+	 tw81hvy8NKtK8dsGW592yHXtzwDbe/126ckg/a4ke9xJMz/v9TU/INheZk/yr15n7+
+	 S6cJk52inMqBK2wODihGxU5Nvsk49qvS3lVOiFVwbZe+6Ex0jECxJl/scpmIZKsU9A
+	 LtjqdWrLQrAQKYTqnkEDsTK7Bll3T8Dp6CGSh+iSrpMfL6H1Z6clqlsCKAzk9orubu
+	 PB27De6gBxw1tHjjb2AENdoLOozCDVqBFE7WdZA13Kkw/a6lV/spEHdfzyk0p4dlQZ
+	 DQuqJne/ub1Uw==
 From: Chris Li <chrisl@kernel.org>
-Subject: [PATCH v2 0/2] mm: swap: mTHP swap allocator base on swap cluster
- order
-Date: Fri, 14 Jun 2024 16:48:06 -0700
-Message-Id: <20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org>
+Date: Fri, 14 Jun 2024 16:48:08 -0700
+Subject: [PATCH v2 2/2] mm: swap: mTHP allocate swap entries from nonfull
+ list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,10 +38,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALbWbGYC/13MTQrCMBCG4auUWRvJz7QWV72HdJHGsQ2GpCQSl
- ZK7GwtuXL7DfM8GiaKlBOdmg0jZJht8DXlowCzaz8TstTZILpG3UrH01CvTzgWjHyEy0So02HM
- yhFBHa6Sbfe3gZay92FTf3rufxff6o/CfyoJxhqe+ExNKNcluuFP05I4hzjCWUj5nyDiUrQAAA
- A==
+Message-Id: <20240614-swap-allocator-v2-2-2a513b4a7f2f@kernel.org>
+References: <20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org>
+In-Reply-To: <20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Kairui Song <kasong@tencent.com>, Ryan Roberts <ryan.roberts@arm.com>, 
  "Huang, Ying" <ying.huang@intel.com>, Kairui Song <kasong@tencent.com>, 
@@ -50,59 +49,173 @@ Cc: Kairui Song <kasong@tencent.com>, Ryan Roberts <ryan.roberts@arm.com>,
  Barry Song <baohua@kernel.org>
 X-Mailer: b4 0.13.0
 
-This is the short term solutiolns "swap cluster order" listed
-in my "Swap Abstraction" discussion slice 8 in the recent
-LSF/MM conference.
+Track the nonfull cluster as well as the empty cluster
+on lists. Each order has one nonfull cluster list.
 
-When commit 845982eb264bc "mm: swap: allow storage of all mTHP
-orders" is introduced, it only allocates the mTHP swap entries
-from new empty cluster list.  It has a fragmentation issue
-reported by Barry.
+The cluster will remember which order it was used during
+new cluster allocation.
 
-https://lore.kernel.org/all/CAGsJ_4zAcJkuW016Cfi6wicRr8N9X+GJJhgMQdSMp+Ah+NSgNQ@mail.gmail.com/
+When the cluster has free entry, add to the nonfull[order]
+list. Allocation use the nonfull cluster list before using
+the the free cluster list.
 
-The mTHP allocation failure rate raises to almost 100% after a few
-hours in Barry's test run.
+This improves the mTHP swap allocation success rate.
 
-The reason is that all the empty cluster has been exhausted while
-there are planty of free swap entries to in the cluster that is
-not 100% free.
+There are limitations if the distribution of numbers of
+different orders of mTHP changes a lot. e.g. there are a lot
+of nonfull cluster assign to order A while later time there
+are a lot of order B allocation while very little allocation
+in order A. Currently the cluster used by order A will not
+reused by order B unless the cluster is 100% empty.
 
-Remember the swap allocation order in the cluster.
-Keep track of the per order non full cluster list for later allocation.
-
-This greatly improve the sucess rate of the mTHP swap allocation.
-
-There is some test number in the V1 thread of this series:
-https://lore.kernel.org/r/20240524-swap-allocator-v1-0-47861b423b26@kernel.org
-
-Reported-by: Barry Song <21cnbao@gmail.com>
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
-Changes in v2:
-- Add the cluster state field to track the different phases of
-  cluster allocations.
-- Rename "next" to "list" for the list field, suggested by Ying.
-- Update comment for the locking rules for cluster fields and listi,
-  suggested by Ying.
-- Nonfull list avoid cluster on the per cpu active cluster.
-- Allocate from the nonfull list before attempting free list, suggested
-  by Kairui.
-- Link to v1: https://lore.kernel.org/r/20240524-swap-allocator-v1-0-47861b423b26@kernel.org
+ include/linux/swap.h |  9 +++++++--
+ mm/swapfile.c        | 49 ++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 43 insertions(+), 15 deletions(-)
 
----
-Chris Li (2):
-      mm: swap: swap cluster switch to double link list
-      mm: swap: mTHP allocate swap entries from nonfull list
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index cd9154a3e934..fcb21f9883a5 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -245,18 +245,21 @@ enum {
+  */
+ struct swap_cluster_info {
+ 	spinlock_t lock;	/*
+-				 * Protect swap_cluster_info count and state
+-				 * field and swap_info_struct->swap_map
++				 * Protect swap_cluster_info bitfields
++				 * and swap_info_struct->swap_map
+ 				 * elements correspond to the swap
+ 				 * cluster
+ 				 */
+ 	unsigned int count:12;
+ 	unsigned int state:3;
++	unsigned int order:4;
+ 	struct list_head list;	/* Protected by swap_info_struct->lock */
+ };
+ 
+ #define CLUSTER_STATE_FREE	1 /* This cluster is free */
+ #define CLUSTER_STATE_PER_CPU	2 /* This cluster on per_cpu_cluster  */
++#define CLUSTER_STATE_SCANNED	3 /* This cluster off per_cpu_cluster */
++#define CLUSTER_STATE_NONFULL	4 /* This cluster is on nonfull list */
+ 
+ 
+ /*
+@@ -295,6 +298,8 @@ struct swap_info_struct {
+ 	unsigned char *swap_map;	/* vmalloc'ed array of usage counts */
+ 	struct swap_cluster_info *cluster_info; /* cluster info. Only for SSD */
+ 	struct list_head free_clusters; /* free clusters list */
++	struct list_head nonfull_clusters[SWAP_NR_ORDERS];
++					/* list of cluster that contains at least one free slot */
+ 	unsigned int lowest_bit;	/* index of first free in swap_map */
+ 	unsigned int highest_bit;	/* index of last free in swap_map */
+ 	unsigned int pages;		/* total of usable pages of swap */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 2f878b374349..85a96178fd27 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -361,8 +361,12 @@ static void swap_cluster_schedule_discard(struct swap_info_struct *si,
+ 
+ static void __free_cluster(struct swap_info_struct *si, struct swap_cluster_info *ci)
+ {
++	if (ci->state == CLUSTER_STATE_NONFULL)
++		list_move_tail(&ci->list, &si->free_clusters);
++	else
++		list_add_tail(&ci->list, &si->free_clusters);
+ 	ci->state = CLUSTER_STATE_FREE;
+-	list_add_tail(&ci->list, &si->free_clusters);
++	ci->order = 0;
+ }
+ 
+ /*
+@@ -484,7 +488,12 @@ static void dec_cluster_info_page(struct swap_info_struct *p, struct swap_cluste
+ 	ci->count--;
+ 
+ 	if (!ci->count)
+-		free_cluster(p, ci);
++		return free_cluster(p, ci);
++
++	if (ci->state == CLUSTER_STATE_SCANNED) {
++		list_add_tail(&ci->list, &p->nonfull_clusters[ci->order]);
++		ci->state = CLUSTER_STATE_NONFULL;
++	}
+ }
+ 
+ /*
+@@ -535,17 +544,25 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	unsigned int nr_pages = 1 << order;
+ 	struct percpu_cluster *cluster;
+ 	struct swap_cluster_info *ci;
+-	unsigned int tmp, max;
++	unsigned int tmp, max, found = 0;
+ 
+ new_cluster:
+ 	cluster = this_cpu_ptr(si->percpu_cluster);
+ 	tmp = cluster->next[order];
+ 	if (tmp == SWAP_NEXT_INVALID) {
+-		if (!list_empty(&si->free_clusters)) {
++		if (!list_empty(&si->nonfull_clusters[order])) {
++			ci = list_first_entry(&si->nonfull_clusters[order], struct swap_cluster_info, list);
++			list_del(&ci->list);
++			spin_lock(&ci->lock);
++			ci->state = CLUSTER_STATE_PER_CPU;
++			spin_unlock(&ci->lock);
++			tmp = (ci - si->cluster_info) * SWAPFILE_CLUSTER;
++		} else if (!list_empty(&si->free_clusters)) {
+ 			ci = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
+ 			list_del(&ci->list);
+ 			spin_lock(&ci->lock);
+ 			ci->state = CLUSTER_STATE_PER_CPU;
++			ci->order = order;
+ 			spin_unlock(&ci->lock);
+ 			tmp = (ci - si->cluster_info) * SWAPFILE_CLUSTER;
+ 		} else if (!list_empty(&si->discard_clusters)) {
+@@ -570,21 +587,24 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	max = min_t(unsigned long, si->max, ALIGN(tmp + 1, SWAPFILE_CLUSTER));
+ 	if (tmp < max) {
+ 		ci = lock_cluster(si, tmp);
+-		while (tmp < max) {
++		while (!found && tmp < max) {
+ 			if (swap_range_empty(si->swap_map, tmp, nr_pages))
+-				break;
++				found = tmp;
+ 			tmp += nr_pages;
+ 		}
++		if (tmp >= max) {
++			ci->state = CLUSTER_STATE_SCANNED;
++			cluster->next[order] = SWAP_NEXT_INVALID;
++		} else
++			cluster->next[order] = tmp;
++		WARN_ONCE(ci->order != order, "expecting order %d got %d", order, ci->order);
+ 		unlock_cluster(ci);
+ 	}
+-	if (tmp >= max) {
+-		cluster->next[order] = SWAP_NEXT_INVALID;
++	if (!found)
+ 		goto new_cluster;
+-	}
+-	*offset = tmp;
+-	*scan_base = tmp;
+-	tmp += nr_pages;
+-	cluster->next[order] = tmp < max ? tmp : SWAP_NEXT_INVALID;
++
++	*offset = found;
++	*scan_base = found;
+ 	return true;
+ }
+ 
+@@ -2896,6 +2916,9 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 	INIT_LIST_HEAD(&p->free_clusters);
+ 	INIT_LIST_HEAD(&p->discard_clusters);
+ 
++	for (i = 0; i < SWAP_NR_ORDERS; i++)
++		INIT_LIST_HEAD(&p->nonfull_clusters[i]);
++
+ 	for (i = 0; i < swap_header->info.nr_badpages; i++) {
+ 		unsigned int page_nr = swap_header->info.badpages[i];
+ 		if (page_nr == 0 || page_nr > swap_header->info.last_page)
 
- include/linux/swap.h |  31 +++---
- mm/swapfile.c        | 270 ++++++++++++++++++---------------------------------
- 2 files changed, 107 insertions(+), 194 deletions(-)
----
-base-commit: 19b8422c5bd56fb5e7085995801c6543a98bda1f
-change-id: 20240523-swap-allocator-1534c480ece4
-
-Best regards,
 -- 
-Chris Li <chrisl@kernel.org>
+2.45.2.627.g7a2c4fd464-goog
 
