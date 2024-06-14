@@ -1,64 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895F31AB527;
-	Fri, 14 Jun 2024 17:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4574E1AC22C;
+	Fri, 14 Jun 2024 17:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386049; cv=none; b=gBbwf7JJIyUmdOlUx+yQekJdjOmTKaL8kQ1Qv95xk0MeaGf4zc/TjGsN+5ywaMPFM664PAazecxjuaFWcuVkaxZ7Yd8jaBaYB0zefyjnQFtzgaWZbHplsXnYz4Di8XsAX38it+CCpEAHqo0Z/RmdM96/PZRpgMqdBYI7kj6PRpg=
+	t=1718386055; cv=none; b=G9Cn/rm7E9tBqK4zy025NRBoQ4m/3Pwe3J3e/u+J3Z48ahzylCbikRpv/Lp3gSFlxIwtha8KZVFVIKEMMi8Eu1itXvPYTkCPaZDU2ghUJSr/3laUrqaQj33XjZhuD2T1hGBOd3+M4J+VD9M8zLfkxYACGRIhggj3H3Q9rZUp13E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386049; c=relaxed/simple;
-	bh=ZuE2JddC616kBHqsLtC1jWKaZ1XyOKQ1AHFjJjGogp4=;
+	s=arc-20240116; t=1718386055; c=relaxed/simple;
+	bh=Joi+isDm2dKXUoWM6CL7XIZZlTZxY25G/RXQiGFKo7w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gBDwoq4gHGMNT4X1AK+gVYG2hMQKpGrJm7YLTTn2XjE0dgtwiujPAijw4iQvcREbGx8XvR6PfdLqm1laQTWvNTIBmrnMe9CoQQEGGovdajiin/5pcNtdAsB7AX/cWFUDin97P1YgfM3mFl0SiiQz8LQoTC3a8UHbJPIcbgWaXDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nf3yFR89; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=lWrmo/jJlf2bi+2R14MElTCIHst9C/vFKLHMQtKpx1QO158F3oEHVuiWikMzoTETty8dmw2o4rJJGXM2IZ4xxH88RSoOc6ALZw05bx/Zl/lTyy3jN2Hzj6IsZNbVzKiGLW8mHFq9wpZwzpHM95W512FFkMXkGf0lGl8BQcO5Ab8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rf0dWnzv; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nf3yFR89"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EEu3iF009502;
-	Fri, 14 Jun 2024 17:27:10 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rf0dWnzv"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EHKWdT005098;
+	Fri, 14 Jun 2024 17:27:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=MRvo+DJHmdUX1
-	3CKwbtu7Mhcw+avdYVm9NmGEpHKYvI=; b=nf3yFR89WOoix/ec/COkc3F4gJWQx
-	Y5tbYCFsO0SO0ayr1Cnjic0Ih1/1Y4z4KnRuwkrQbd42iBEpJu//e5vZP1f9gbtG
-	FZGDX1sqvY6XgB1X1gOt40z0Qh6T3rxGesEtfK6sHYoZk3HyRcf9WH+0Fi2VcKgU
-	QJTh2cPNBkHZiHMjVA+IIY+MQnVrTN9rsum2yiJgA154cJMec2TikNnFdFsNU/jM
-	FroUvByC8LWBAu3WyPURS2/gB4TQeJmkZTwrGkg92NdOYbxdaL1Be2nXIs96ArRF
-	NN3LMIbFpRHOYIsqiQ+YK6aU2Op0GLIzJlGDE7RMolRoatGalGVpuNHAA==
+	:mime-version:content-transfer-encoding; s=pp1; bh=o7G5hpnq/gQzT
+	zw7p3WmdeWsvSt7nwFZetxlF8kUpvM=; b=rf0dWnzv0MBCi5J3q/J0dCHsQCw4G
+	2EHhw5xlYSFMXwl+W1LEXnwd2DCyZzO3a/zGgOCkF+/0vMDS/N3qpX1BlulycAbK
+	os7GCUUeL+HMti/0iDY8aOT2NSkSbR+/3ht1PYbBffCUpz8ov4yscJ4hRFu5rPCf
+	atUQjmtfKS90tArdWWE2OyDIWpaJ/KsZ4uGN/Ybt1AZJuaK0KtqFu0r8fi7nqJqN
+	AZGIpqyRbapQGZA2MNspK8xwuIcnVYwxouimHyM9bw67F7dvkIhsFv5YJEx3EvgW
+	MPEZnQIlL1pwLqmpUXa5mRkrAZ11nDPpsgYjMRlcvpQm3tt/carAjdB0Q==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrq7crhh7-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0dmy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:10 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHR93g018257;
-	Fri, 14 Jun 2024 17:27:09 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrq7crhh3-1
+	Fri, 14 Jun 2024 17:27:22 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHRMEf014222;
+	Fri, 14 Jun 2024 17:27:22 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0dmw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:09 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGeo7m003916;
-	Fri, 14 Jun 2024 17:27:08 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mqkeya-1
+	Fri, 14 Jun 2024 17:27:22 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGMM2A028808;
+	Fri, 14 Jun 2024 17:27:21 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn1mv3p48-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:08 +0000
+	Fri, 14 Jun 2024 17:27:21 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHR3Zt56426846
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHRFxw33161752
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:27:05 GMT
+	Fri, 14 Jun 2024 17:27:17 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 199D520040;
-	Fri, 14 Jun 2024 17:27:03 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9A84620040;
+	Fri, 14 Jun 2024 17:27:15 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4C3D420043;
-	Fri, 14 Jun 2024 17:27:00 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C49622004B;
+	Fri, 14 Jun 2024 17:27:12 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.82.18])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Jun 2024 17:27:00 +0000 (GMT)
+	Fri, 14 Jun 2024 17:27:12 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
@@ -67,9 +67,9 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [V4 07/16] tools/perf: Add support to identify memory instructions of opcode 31 in powerpc
-Date: Fri, 14 Jun 2024 22:56:22 +0530
-Message-Id: <20240614172631.56803-8-atrajeev@linux.vnet.ibm.com>
+Subject: [V4 11/16] tools/perf: Make capstone_init non-static so that it can be used during symbol disassemble
+Date: Fri, 14 Jun 2024 22:56:26 +0530
+Message-Id: <20240614172631.56803-12-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
 References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
@@ -81,183 +81,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _1rN30nsA2byuAO1A7lW7v6h5rXvjEPM
-X-Proofpoint-ORIG-GUID: MgovDfTClnqBrm1MF-6jncfSnW_VDBAf
+X-Proofpoint-GUID: rKHq3aMfZEPaoPALjlpRJ2za112XeOjb
+X-Proofpoint-ORIG-GUID: j_SO7i74_U5FLsCsw7-T1Id_Y4XnXFFK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=886
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=822 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406140119
 
-There are memory instructions in powerpc with opcode as 31.
-Example: "ldx RT,RA,RB" , Its X form is as below:
+symbol__disassemble_capstone in util/disasm.c calls function
+open_capstone_handle to open/init the capstone. We already have a
+capstone_init function in "util/print_insn.c". But capstone_init
+is defined as a static function in util/print_insn.c. Change this and
+also add the function in print_insn.h
 
-  ______________________________________
-  | 31 |  RT  |  RA |  RB |   21     |/|
-  --------------------------------------
-  0    6     11    16    21         30 31
-
-The opcode for "ldx" is 31. There are other instructions also with
-opcode 31 which are memory insn like ldux, stbx, lwzx, lhaux
-But all instructions with opcode 31 are not memory. Example is add
-instruction: "add RT,RA,RB"
-
-The value in bit 21-30 [ 21 for ldx ] is different for these
-instructions. Patch uses this value to assign instruction ops for these
-cases. The naming convention and value to identify these are picked from
-defines in "arch/powerpc/include/asm/ppc-opcode.h"
+The open_capstone_handle checks the disassembler_style option from
+annotation_options to decide whether to set CS_OPT_SYNTAX_ATT.
+Add that logic in capstone_init also and by default set it to true.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- .../perf/arch/powerpc/annotate/instructions.c | 107 +++++++++++++++++-
- tools/perf/util/disasm.c                      |   3 +
- 2 files changed, 108 insertions(+), 2 deletions(-)
+ tools/perf/util/print_insn.c | 12 +++++++++---
+ tools/perf/util/print_insn.h |  5 +++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index 10fea5e5cf4c..4ee959a24738 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -49,18 +49,121 @@ static struct ins_ops *powerpc__associate_instruction_ops(struct arch *arch, con
- 	return ops;
- }
+diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+index a950e9157d2d..a76aae81d7a0 100644
+--- a/tools/perf/util/print_insn.c
++++ b/tools/perf/util/print_insn.c
+@@ -32,7 +32,7 @@ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ #include <capstone/capstone.h>
  
--#define PPC_OP(op)      (((op) >> 26) & 0x3F)
-+#define PPC_OP(op)	(((op) >> 26) & 0x3F)
-+#define PPC_21_30(R)	(((R) >> 1) & 0x3ff)
-+
-+struct insn_offset {
-+	const char	*name;
-+	int		value;
-+};
-+
-+/*
-+ * There are memory instructions with opcode 31 which are
-+ * of X Form, Example:
-+ * ldx RT,RA,RB
-+ * ______________________________________
-+ * | 31 |  RT  |  RA |  RB |   21     |/|
-+ * --------------------------------------
-+ * 0    6     11    16    21         30 31
-+ *
-+ * But all instructions with opcode 31 are not memory.
-+ * Example: add RT,RA,RB
-+ *
-+ * Use bits 21 to 30 to check memory insns with 31 as opcode.
-+ * In ins_array below, for ldx instruction:
-+ * name => OP_31_XOP_LDX
-+ * value => 21
-+ */
-+
-+static struct insn_offset ins_array[] = {
-+	{ .name = "OP_31_XOP_LXSIWZX",  .value = 12, },
-+	{ .name = "OP_31_XOP_LWARX",	.value = 20, },
-+	{ .name = "OP_31_XOP_LDX",	.value = 21, },
-+	{ .name = "OP_31_XOP_LWZX",	.value = 23, },
-+	{ .name = "OP_31_XOP_LDUX",	.value = 53, },
-+	{ .name = "OP_31_XOP_LWZUX",	.value = 55, },
-+	{ .name = "OP_31_XOP_LXSIWAX",  .value = 76, },
-+	{ .name = "OP_31_XOP_LDARX",    .value = 84, },
-+	{ .name = "OP_31_XOP_LBZX",	.value = 87, },
-+	{ .name = "OP_31_XOP_LVX",      .value = 103, },
-+	{ .name = "OP_31_XOP_LBZUX",    .value = 119, },
-+	{ .name = "OP_31_XOP_STXSIWX",  .value = 140, },
-+	{ .name = "OP_31_XOP_STDX",	.value = 149, },
-+	{ .name = "OP_31_XOP_STWX",	.value = 151, },
-+	{ .name = "OP_31_XOP_STDUX",	.value = 181, },
-+	{ .name = "OP_31_XOP_STWUX",	.value = 183, },
-+	{ .name = "OP_31_XOP_STBX",	.value = 215, },
-+	{ .name = "OP_31_XOP_STVX",     .value = 231, },
-+	{ .name = "OP_31_XOP_STBUX",	.value = 247, },
-+	{ .name = "OP_31_XOP_LHZX",	.value = 279, },
-+	{ .name = "OP_31_XOP_LHZUX",	.value = 311, },
-+	{ .name = "OP_31_XOP_LXVDSX",   .value = 332, },
-+	{ .name = "OP_31_XOP_LWAX",	.value = 341, },
-+	{ .name = "OP_31_XOP_LHAX",	.value = 343, },
-+	{ .name = "OP_31_XOP_LWAUX",	.value = 373, },
-+	{ .name = "OP_31_XOP_LHAUX",	.value = 375, },
-+	{ .name = "OP_31_XOP_STHX",	.value = 407, },
-+	{ .name = "OP_31_XOP_STHUX",	.value = 439, },
-+	{ .name = "OP_31_XOP_LXSSPX",   .value = 524, },
-+	{ .name = "OP_31_XOP_LDBRX",	.value = 532, },
-+	{ .name = "OP_31_XOP_LSWX",	.value = 533, },
-+	{ .name = "OP_31_XOP_LWBRX",	.value = 534, },
-+	{ .name = "OP_31_XOP_LFSUX",    .value = 567, },
-+	{ .name = "OP_31_XOP_LXSDX",    .value = 588, },
-+	{ .name = "OP_31_XOP_LSWI",	.value = 597, },
-+	{ .name = "OP_31_XOP_LFDX",     .value = 599, },
-+	{ .name = "OP_31_XOP_LFDUX",    .value = 631, },
-+	{ .name = "OP_31_XOP_STXSSPX",  .value = 652, },
-+	{ .name = "OP_31_XOP_STDBRX",	.value = 660, },
-+	{ .name = "OP_31_XOP_STXWX",	.value = 661, },
-+	{ .name = "OP_31_XOP_STWBRX",	.value = 662, },
-+	{ .name = "OP_31_XOP_STFSX",	.value = 663, },
-+	{ .name = "OP_31_XOP_STFSUX",	.value = 695, },
-+	{ .name = "OP_31_XOP_STXSDX",   .value = 716, },
-+	{ .name = "OP_31_XOP_STSWI",	.value = 725, },
-+	{ .name = "OP_31_XOP_STFDX",	.value = 727, },
-+	{ .name = "OP_31_XOP_STFDUX",	.value = 759, },
-+	{ .name = "OP_31_XOP_LXVW4X",   .value = 780, },
-+	{ .name = "OP_31_XOP_LHBRX",	.value = 790, },
-+	{ .name = "OP_31_XOP_LXVD2X",   .value = 844, },
-+	{ .name = "OP_31_XOP_LFIWAX",	.value = 855, },
-+	{ .name = "OP_31_XOP_LFIWZX",	.value = 887, },
-+	{ .name = "OP_31_XOP_STXVW4X",  .value = 908, },
-+	{ .name = "OP_31_XOP_STHBRX",	.value = 918, },
-+	{ .name = "OP_31_XOP_STXVD2X",  .value = 972, },
-+	{ .name = "OP_31_XOP_STFIWX",	.value = 983, },
-+};
-+
-+static int cmp_offset(const void *a, const void *b)
-+{
-+	const struct insn_offset *val1 = a;
-+	const struct insn_offset *val2 = b;
-+
-+	return (val1->value - val2->value);
-+}
- 
- static struct ins_ops *check_ppc_insn(int raw_insn)
+-static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
++int capstone_init(struct machine *machine, csh *cs_handle, bool is64, bool disassembler_style)
  {
- 	int opcode = PPC_OP(raw_insn);
-+	int mem_insn_31 = PPC_21_30(raw_insn);
-+	struct insn_offset *ret;
-+	struct insn_offset mem_insns_31_opcode = {
-+		"OP_31_INSN",
-+		mem_insn_31
-+	};
+ 	cs_arch arch;
+ 	cs_mode mode;
+@@ -62,7 +62,13 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+ 	}
  
- 	/*
- 	 * Instructions with opcode 32 to 63 are memory
- 	 * instructions in powerpc
- 	 */
--	if ((opcode & 0x20))
-+	if ((opcode & 0x20)) {
- 		return &load_store_ops;
-+	} else if (opcode == 31) {
-+		/* Check for memory instructions with opcode 31 */
-+		ret = bsearch(&mem_insns_31_opcode, ins_array, ARRAY_SIZE(ins_array), sizeof(ins_array[0]), cmp_offset);
-+		if (ret != NULL)
-+			return &load_store_ops;
-+	}
+ 	if (machine__normalized_is(machine, "x86")) {
+-		cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
++		/*
++		 * In case of using capstone_init while symbol__disassemble
++		 * setting CS_OPT_SYNTAX_ATT depends if disassembler_style opts
++		 * is set via annotation args
++		 */
++		if (disassembler_style)
++			cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+ 		/*
+ 		 * Resolving address operands to symbols is implemented
+ 		 * on x86 by investigating instruction details.
+@@ -122,7 +128,7 @@ ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpum
+ 	int ret;
  
- 	return NULL;
- }
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 8428df0b9c17..4e605d082a02 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -696,6 +696,9 @@ static int load_store__parse(struct arch *arch __maybe_unused, struct ins_operan
- {
- 	ops->source.mem_ref = true;
- 	ops->source.multi_regs = false;
-+	/* opcode 31 is of X form */
-+	if (PPC_OP(dl->raw.raw_insn) == 31)
-+		ops->source.multi_regs = true;
+ 	/* TODO: Try to initiate capstone only once but need a proper place. */
+-	ret = capstone_init(machine, &cs_handle, is64bit);
++	ret = capstone_init(machine, &cs_handle, is64bit, true);
+ 	if (ret < 0)
+ 		return ret;
  
- 	ops->target.mem_ref = false;
- 	ops->target.multi_regs = false;
+diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+index 07d11af3fc1c..2c8ee41c4a5d 100644
+--- a/tools/perf/util/print_insn.h
++++ b/tools/perf/util/print_insn.h
+@@ -19,4 +19,9 @@ ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpum
+ 			 bool is64bit, const uint8_t *code, size_t code_size,
+ 			 uint64_t ip, int *lenp, int print_opts, FILE *fp);
+ 
++#ifdef HAVE_LIBCAPSTONE_SUPPORT
++#include <capstone/capstone.h>
++int capstone_init(struct machine *machine, csh *cs_handle, bool is64, bool disassembler_style);
++#endif
++
+ #endif /* PERF_PRINT_INSN_H */
 -- 
 2.43.0
 
