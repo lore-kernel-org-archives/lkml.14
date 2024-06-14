@@ -1,83 +1,100 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDD71474B1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 18:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABD125601;
+	Fri, 14 Jun 2024 18:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718390555; cv=none; b=ZnwmlNFYrSsrUwYhdKJxN9d1PNLqCS7FxVQkH/WJ/lKqu6Iy+D59hHbd3/sM2KAlwaXTsHtiLN65hFs/3eJ7Tgq8+AgRoxoLCP3LKINWUOqaVK1SJEqmmh+cvSK7C8bLZ8J86KyIf2H362J2eCfxafn+dfsbrvM+hDkU4sTcHBg=
+	t=1718390568; cv=none; b=OZEbl+JzZXxNBpr0pmp+nvLVqIqWdqgyHLmfWBCqyq5uQJ8ZNAbLpDhHm0NN5GtDAYt9w4spvK7PpKBWM3zGdtz3B/mLL+m/opqUpQgryLzZTYDs3bi3/xbCq/U+QEu8OXhk0Llie3vzeD1v5HZoLhIlRL4trly0dar0S8ZQ6wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718390555; c=relaxed/simple;
-	bh=a/UxaEVcroxG1QVJdfP5cPNh0XmseYFuN6DDvYS1rDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KusamyBJ3LzPeNwdcHqt80wGa2Gf/8HleM60e18wwmNLogPiaOg5D25N5L+4LGxlowOzgEJTQB8BAz7Qr5A1iABKbEBvh5dDxqfjV1G65Eu3stbwO2L6bqsg3VVSBDgryIphTdpod7dkQ9TRgrpFmmg8xjRLHdI1ki7fEp7d/pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4lu+ZzzM; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718390568; c=relaxed/simple;
+	bh=r3V8uORqgOShk02c6OFxElT3YBFjzYzIlhjvqyeiKeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cT0aUcCQdHKJ/zhaCMD/sOVOUlGBwJs2wjEgAmR4bpW7MZhNSJh3Lb8J2yuXIU67H7jAzxC5f7cst/oNkuaD8Wwbt+5hFhVmSI3RNR37ZKHrNAMXcvvgh1U9+ElLs2e6dMBp80YvI1/8pfauDbfO6aaF/OeMVOip9LCQ+tq1fLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvU8f1C3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4lu+ZzzM"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a63359aaaa6so378079566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 11:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718390552; x=1718995352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/UxaEVcroxG1QVJdfP5cPNh0XmseYFuN6DDvYS1rDU=;
-        b=4lu+ZzzMD/JPufdS7iXYX/k9KyOOZHGERk7jZSNvF6z/RLM/o2JMtRSWYxxp0KA5WO
-         eHNacCw9UsOMeE7/8YMTD4S+2coGuSJA7Zn2JXv2jOv0Kfx+xzys8cE8r9ufFJopZTzZ
-         wir5tgtYOJ0dyuFY1QR+ZgAEZUjJUKbq1ShlOA8YLzaEH8n+15vVhBUT3lMxmeDnjndb
-         vapyAIRJ1lE4znLERuj+RxHe8nXeZMxZBPp9BDkRe8vjmuaaNGfgDOHYgGQxt360B2Qk
-         KAnFqe5Ial0lTLx8SMBZybiG8CUTVsfPAG/3SnFljZeSmZzaXQkBIPkQATmRMOUmtF4J
-         nDVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718390552; x=1718995352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a/UxaEVcroxG1QVJdfP5cPNh0XmseYFuN6DDvYS1rDU=;
-        b=BC1eIuD1qY9g26EvmAPUN0df+/Ia4/MYrpCbWDpy3qDbtjhM9wzsqc7dvpSEnRW2mN
-         pW1wQBKKYRBZJcJhage/I9rpoim83avwpwhK0Icb8PrYJEvWILzycyCaGvKEll+Ver3m
-         G5LXxjc9P6Q8yAp18qfo8MlFBJ2caRy+Q+e1oTPWSCfAH60OZVfphT0tr1CglReeA7Tb
-         eGEc2zWvarD5scK9Kf+GLPsZ9f25bjCyFNSViKCfxthGw22JNp2RxFw0CQT5y7KeWCD+
-         QNzJkfG2wfyduK/lqUcONr1y49A5qPzf4fdcmg/5FZbdYWQ/xi2g7G/qZunKottIZ6F2
-         PMNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhky9FyNKzayplBVg3CiK4ER5ysreauvIYMwwCnWSA7JrVB8UumfigJRXPqP9fBOaL+y1yPxoXqElm097ns7Sd7iBbVIKw12EbGQCZ
-X-Gm-Message-State: AOJu0YxhTM8Z3IJCUHUkCBpk1r/qLpI2usi1XRuoOQk3t5OOux8WVkX9
-	ajIWz31p4/IqfDvN+2H2wLP+gHeE5bmVtNm1QWvsoL/PG0UwcJkG5HYYweE5FHidZQR5MKBzwhH
-	Un5hvcBVS/2Iy1VmIhuiyR1MAJo9ljTAl1dp5
-X-Google-Smtp-Source: AGHT+IHOOpeJcqd3IfM1VEgoZAwXJPZxS0HdO/1gl5N7qt3GYy/MwHrpmX/VBM37nSpV9/ehuJ8LRxZvIoDZy3Xugbc=
-X-Received: by 2002:a17:906:cb99:b0:a6e:fd41:6315 with SMTP id
- a640c23a62f3a-a6f60de6421mr220583466b.69.1718390551624; Fri, 14 Jun 2024
- 11:42:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvU8f1C3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA22BC2BD10;
+	Fri, 14 Jun 2024 18:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718390568;
+	bh=r3V8uORqgOShk02c6OFxElT3YBFjzYzIlhjvqyeiKeE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SvU8f1C3HJ9SSrYwuhffp9UEDc4x9qJIVsqb6Os26CMYNefSixh2EtYTwr7O7VAWc
+	 1dNaUxYLtJoDgPbpIcGdFSV6nJ/quG4kuIeP+VkvTslQjfoz5L5bjsPTsl2AjEW1/u
+	 905s7Zo7dg8T1C1PBrgoLhELthL1rMv5bOKpsTuabukAUnVhMUguUGRPAy7x66C6Nw
+	 c+MGbaELnbrs8ewiKPP6thQCJgtthNHS3Py9fdheQN0Y/n4HunywKw7hNK6BQ5l1Wb
+	 Bch0NCjLskk9ii/XfStNKB6dCnKZ101b7h9HcRfoUsR6hWZdll1HG8XIzypiSmjaKu
+	 FKKmtt/t891ww==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: ksummit@lists.linux.dev,
+	damon@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Fwd: [TECH TOPIC] DAMON: Updates and Plans
+Date: Fri, 14 Jun 2024 11:42:45 -0700
+Message-Id: <20240614184245.88080-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240614175504.87365-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614100902.3469724-1-usamaarif642@gmail.com> <20240614100902.3469724-3-usamaarif642@gmail.com>
-In-Reply-To: <20240614100902.3469724-3-usamaarif642@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Fri, 14 Jun 2024 11:41:55 -0700
-Message-ID: <CAJD7tkbZjqybeg4sjQ5S9fqgUmLRM2fT8PoUz82AR0nvyNTpmw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] mm: remove code to handle same filled pages
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, shakeel.butt@linux.dev, 
-	david@redhat.com, ying.huang@intel.com, hughd@google.com, willy@infradead.org, 
-	nphamcs@gmail.com, chengming.zhou@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024 at 3:09=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
- wrote:
->
-> With an earlier commit to handle zero-filled pages in swap directly,
-> and with only 1% of the same-filled pages being non-zero, zswap no
-> longer needs to handle same-filled pages and can just work on compressed
-> pages.
->
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+I made a typo on the mail address for linux-mm@, on the original mail.  So
+forwarding to linux-mm@ as a reply-to-all.  Sorry for making noise.
 
-Acked-by: Yosry Ahmed <yosryahmed@google.com>
+================================= >8 ========================================
+
+Hello all,
+
+
+I'm posting my Kernel Summit topic suggestion below.  I will also submit it to
+the LPC site.
+
+
+DAMON[1,2] is a Linux kernel subsystem that provides efficient data access
+monitoring and access-aware system operations (DAMON-based Operation Schemes,
+a.k.a DAMOS).  From multiple use cases of it including multiple years of real
+world products' usage, it is proven to be useful for improving memory
+efficiency.
+
+Like many other Linux kernel projects, DAMON is developed by the community.  We
+proactively present the status and discuss future plans of DAMON with the
+community.  As a major part of the effort, we had a DAMON session every year at
+Kernel Summit[3-7].  Those sessions have been one of the most essential and
+effectful fuels of the project.
+
+This session will continue the sharing and discussion at the kernel summit of
+2024.  We will share what feedback we received, what patches have been
+developed or are under development, what requests are still in the planning
+stage, and what the plans are.  With that, hopefully we will have discussions
+that will be helpful for improving and prioritizing the plans and specific
+tasks, and finding new requirements.
+
+Specific sub-topics would include, but are not limited to:
+
+- Fine-grained DAMOS control
+- Automated tuning of DAMOS
+- Tiered-memory management
+- Access/Contiguity-aware Memory Auto-scaling
+- Write-only monitoring and live migration
+
+Based on the progress until the summit, some items can be added or dropped.
+
+[1] project homepage, https://damonitor.github.io
+[2] official doc, https://docs.kernel.org/mm/damon/index.html
+[3] ksummit 2019, https://linuxplumbersconf.org/event/4/contributions/548/
+[4] ksummit 2020, https://www.linuxplumbersconf.org/event/7/contributions/659/
+[5] ksummit 2021, https://linuxplumbersconf.org/event/11/contributions/984/
+[6] ksummit 2022, https://lpc.events/event/16/contributions/1224/
+[7] ksummit 2023, https://lpc.events/event/17/contributions/1624/
+
+
+Thanks,
+SJ
