@@ -1,91 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5068148844
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5724618C32B;
+	Fri, 14 Jun 2024 09:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718355801; cv=none; b=CZHbvAFlJKWbYB8OBR+xDjO82Oc7vTtdfVe2cF/r5fAOc0HuF/Tp41ym2PDovIwoHm1K7mTy5uOxd0bVMMerGIaIWcHkvQnBP+k6fB9rZ00083LeU3b+sRCfV++zEBn8/XaKCYbExcEMC0kJaC7HQtQ6BqHaPVQG9HhC/UyoyQI=
+	t=1718355815; cv=none; b=igp5E/6ndiU1rLjplTibsx2wZG9QKoRlqGDMSsjmqjFV8f5KXtSYwRJ/cWUH/p09e18mxfT297lqsNqRZl/X/94MpEmGBDa/8DfOyOvbgaIyMSZWh8NgLkg6bFp1oPETEg1HOZcrFKAQ7oLkEE2OAJgV15A2xis+8WpbT3ZX9YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718355801; c=relaxed/simple;
-	bh=b7I5Tl0JW4uTtQ7s9QjyAYW5T4OAzZ3xsuUADWTLiiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r2sCUrwf8FcoZ3geiZQZnbpJFMpp7GIpk1gdmve9QMkEh8VUhHnUuTh/0lccvgshitd5nFHuTBSeagr6RB/wSxthpGqUCi0PjM6S3GI1J/nW+VbFGBEZW5FFyNjxfSQUe1zsx4DZ7ZtzqcNMH0VclfT77RoUAnInV4M92UzQF+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BU5n25U7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718355815; c=relaxed/simple;
+	bh=IXf7OaCEeko5i37eEx/0V2OWZm0hqdsVhR6bCTAEggg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=J5h3ULZiF/36wwLP07Kun96L9S3g4mz3HFsbyzs6U4svcxiP/4Zl8pJoach1bjr+yLYNybdJ/Hz5wRO2wdzTyv9H/e98MX23aQelhpJ79AECsgzc5Mkfyo4tL/BtKEC6stxMsxj1ggPkTGYusg9kKVt5NxsIUuSMO+1HZb7LjCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwYMP21H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BU5n25U7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718355798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=a4dxEa+doWbUECdCauPFkZSumhcXdmc3uGpssQtnBUc=;
-	b=BU5n25U7S692DGmKOwfM15gllbVt5BrOF+ZACf0whPkODkZ3ZJUzMn2L4sD4RTtOgmOItP
-	LN8/TaMGM0TngGr/mYetwffGny8cd19lh2VY1nT4WidPghMqZvJTxPm0kUeCb0sOyOfBQq
-	mcJ0RBSlaXi5CzT6UQ6DYxO9dQ5FSgY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-B7-KTaEjNmuUKWuw__1JbQ-1; Fri,
- 14 Jun 2024 05:03:17 -0400
-X-MC-Unique: B7-KTaEjNmuUKWuw__1JbQ-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5D5A195608F;
-	Fri, 14 Jun 2024 09:03:14 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.39.193.73])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ECA9C1956050;
-	Fri, 14 Jun 2024 09:03:08 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-doc@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] Documentation: Remove "mfgpt_irq=" from the kernel-parameters.txt file
-Date: Fri, 14 Jun 2024 11:03:06 +0200
-Message-ID: <20240614090306.561464-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwYMP21H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D33C2BD10;
+	Fri, 14 Jun 2024 09:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718355814;
+	bh=IXf7OaCEeko5i37eEx/0V2OWZm0hqdsVhR6bCTAEggg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=RwYMP21HQqQyNsVooWvWJpGf4JNRJhGUkLayh+5ASpySgNQ1Jbi23usndLS4swIVl
+	 uXq5elkO/YlfRQSbHiZD41uUD6U774XVNUUBhipQI4AmAGfsqZlBqG/dU4d4EZQUWg
+	 EsXI0xCDvZpPedP3ufm6bVOwqw7aklqSwQs7XQgbU5xp+Fhbj1TNJZA/K5r27tLksU
+	 rs7dsTmMfeGNZhFp74+RDS++hetdU4FH5lXwoLrGjefK1W4Zach+I+hrHUhGAbdfd9
+	 zyOc7xDwfh/yZisIx+qPJTavPNyT53ew/jUQBRxAz7VWYj74qC1WcYib+Uw2ZDeTT6
+	 3Z6AKOPWtnRXg==
+From: Lee Jones <lee@kernel.org>
+To: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ Sebastian Reichel <sre@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+ Dustin Howett <dustin@howett.net>, 
+ Stephen Horvath <s.horvath@outlook.com.au>, 
+ Rajas Paranjpe <paranjperajas@gmail.com>
+In-Reply-To: <20240528-cros_ec-charge-control-v2-3-81fb27e1cff4@weissschuh.net>
+References: <20240528-cros_ec-charge-control-v2-0-81fb27e1cff4@weissschuh.net>
+ <20240528-cros_ec-charge-control-v2-3-81fb27e1cff4@weissschuh.net>
+Subject: Re: (subset) [PATCH v2 3/3] mfd: cros_ec: Register charge control
+ subdevice
+Message-Id: <171835581255.3023088.4972914168728771366.b4-ty@kernel.org>
+Date: Fri, 14 Jun 2024 10:03:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mailer: b4 0.13.0
 
-The kernel parameter mfgpt_irq has been removed in 2009 already in the
-commit c95d1e53ed89 ("cs5535: drop the Geode-specific MFGPT/GPIO code").
-Time to remove it from the documentation now, too.
+On Tue, 28 May 2024 22:04:12 +0200, Thomas Weißschuh wrote:
+> Add ChromeOS EC-based charge control as EC subdevice.
+> 
+> 
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 4 ----
- 1 file changed, 4 deletions(-)
+Applied, thanks!
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a9b905bbc8ca..756ac1e22813 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3426,10 +3426,6 @@
- 			deep    - Suspend-To-RAM or equivalent (if supported)
- 			See Documentation/admin-guide/pm/sleep-states.rst.
- 
--	mfgpt_irq=	[IA-32] Specify the IRQ to use for the
--			Multi-Function General Purpose Timers on AMD Geode
--			platforms.
--
- 	mfgptfix	[X86-32] Fix MFGPT timers on AMD Geode platforms when
- 			the BIOS has incorrectly applied a workaround. TinyBIOS
- 			version 0.98 is known to be affected, 0.99 fixes the
--- 
-2.45.2
+[3/3] mfd: cros_ec: Register charge control subdevice
+      commit: c353be492fbfe7d1c77af6e18891183141c36f98
+
+--
+Lee Jones [李琼斯]
 
