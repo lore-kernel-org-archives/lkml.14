@@ -1,64 +1,67 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6931A19754A;
-	Fri, 14 Jun 2024 10:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110671922DF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718360317; cv=none; b=TcBuutl1YVmPWCtJnw5ayQIsPoD22u9sjgV5d0dkbMGRFlnrSBuimBsTpYQdjr6CBegr1ecQCYKs3S6dNIxiLj1OnLDriDxiZUX7hvnBJnPmwusHnKj5jcxWKSzFSHVpeWpkn+Yb7rNFqD8qYT43IaV/6PeLBisUwKGnvGQDf6w=
+	t=1718360485; cv=none; b=ebCQgcNvCtu5zIxLUB25NaLibTdUIPIzEaXwrXrNQn6J7XTQyzATDccOB1czE+/k1AcCNqsejdW5FYWYEL0mP+IxdVRp06owqe7ksPgRsCTVGSae69ZkhLCnXJMRC4ThTvjjzBnapps9qkndJvaqjqJ7EA8B5jOo3pBytX0y8Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718360317; c=relaxed/simple;
-	bh=9sQxTcB4tQcicv3SgwJlLxCQ8Gwg5BkPrUfSOqMLj5Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ocC6yR80i4xv0lJ0CdL6UJFGn0gqdT84Ffw8/RnUFYlCnhYZUKEuUq8aH8vOE2OmKVxXqj78qdimn0auvXRDDIb+EesWSvCddRD34HMQLAJaCGGdcU+APePGuR/VraGQNIvc7b8ofJ8xdTaf86IDA4iqXbtQ1snohZYfZ5gPusA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=OFslIQ+A; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="OFslIQ+A"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1718360306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xG1AQXuw8xV0an8P6VCKByYew/mF3CYP7qNVxhJkJ7A=;
-	b=OFslIQ+AwLcdrvdVlRhus0hfY038/oT5zqHecaJhOhY9lt6uI87bTL1iOey3o52ki1ZfDF
-	gD6WOhSiAxm9ZNmhg+DKmw5Cczm5h8vkHv7Hso2m3nA0tdVm70LD6/2Csf+sFx1LDR+wk5
-	xktdnReIjxLOvnEzl18u0YK+d7Xs4Qw=
-To: jiri@resnulli.us
-Cc: arefev@swemel.ru,
-	edumazet@google.com,
-	eperezma@redhat.com,
-	jasowang@redhat.com,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	xuanzhuo@linux.alibaba.com
-Subject: [PATCH v2] net: missing check virtio
-Date: Fri, 14 Jun 2024 13:18:26 +0300
-Message-Id: <20240614101826.30518-1-arefev@swemel.ru>
-In-Reply-To: <ZmsG41ezsAfok_fs@nanopsycho.orion>
-References: <ZmsG41ezsAfok_fs@nanopsycho.orion>
+	s=arc-20240116; t=1718360485; c=relaxed/simple;
+	bh=zYOQ+8E92CNIY55or+VRKSngS3bnldwsdHuCQmj0Y7k=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bRWd3A312F/VTO6ArldErBvvadKEeK1Tm8hvlNHYXnEb0/qnoiOnjVxmq4kZOVPrsY3+agLW+fDF1sSfE1sJUykdyXqFJwVSasXsoPuqlIH/R05r22nhKUpipwRr2GzCLD3hy52x2eX49/r4vYY1mIw6JJgT2NwL8qFZW4HZ6Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-375da99c867so14787805ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 03:21:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718360483; x=1718965283;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oFHwp0b+eRNT9O6SHAoR/Wg4aQCOw85BNCwLlUxmQOQ=;
+        b=WdzNTHxWVFQnGtle1NPumWEhQOBeUEGRESCAgVyEHK+BPSMWl737vL6tKpkQm5MNIV
+         0ERZT/KlexOZYwoaNqqN1H48jP/x4uEUTS3HlmplCquYo4od2FuRItYcyRLW5S8obvWv
+         f+lg7YO5TaBbF8pDfbhykBkkUKMn+2gfFGkJ95fFfsd0L/23AoEpGy6XSs5KkrhNi5fU
+         IN74c2QVa4+PROi9mQsIv7NEOfs8bIa/1a3iMVrV7nsLSlEIvlJiWxbGmZL04NYMykf/
+         K7akX2LNuSzfMjLnQwwjUZBVtn48xFuPSlKcDDCLgwQv+Qv8uBZ4XTD8mOdxkRO6wo44
+         B+ZA==
+X-Gm-Message-State: AOJu0Yzj+BjGOOHPA9UlaAlVuAyF8Sv7Mcel7xEuZHgX2EHZOD7sQJBg
+	gcF7DW3rTQ7kg9oB6m2vrhax+TjI2YDiFXa0hHDSAKNvLWgJiziDgvJp7WUrGMtTedphdKaEY9W
+	rRfEsWOBodoDR6dMRpEQQbL09tWSBGxJqDY4DY6jqtZTaGxdqfLKdfkg=
+X-Google-Smtp-Source: AGHT+IGSuwO39Ov/5dHTb4IJheo7B74HPtrFoZ0clJMlm2SgI0b5ES7SMJ4AuFhTYEOS0mv5Jo5ZzU+8ecIAW40UgLD/ecsufykp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:164e:b0:375:9f67:6e7d with SMTP id
+ e9e14a558f8ab-375e1021197mr1697835ab.4.1718360481157; Fri, 14 Jun 2024
+ 03:21:21 -0700 (PDT)
+Date: Fri, 14 Jun 2024 03:21:21 -0700
+In-Reply-To: <0000000000002d4832061ad549c9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001365e2061ad6fae8@google.com>
+Subject: Re: [syzbot] #syz test: git://blackhole.szhk.kfki.hu/nf main
+From: syzbot <syzbot+cfbe1da5fdfc39efc293@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Yeah, I was thinking of adding Fixes: 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-But this code is new, it complements what is done.
-1. check (!(ret && (hdr->gso_size > needed) &&
-               ((remainder > needed) || (remainder == 0)))) 
- complements comit 0f6925b3e8da0
+***
 
-2. The setting of the SKBFL_SHARED_FRAG flag can be associated with this comit cef401de7be8c.
-In the skb_checksum_help function, a check for skb_has_shared_frag has been added.
-If the flag is not set, the skb buffer will remain non-linear, which is not good. 
+Subject: #syz test: git://blackhole.szhk.kfki.hu/nf main
+Author: kadlec@netfilter.org
 
+#syz test: git://blackhole.szhk.kfki.hu/nf main
+
+-- 
+E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
+PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
+Address : Wigner Research Centre for Physics
+          H-1525 Budapest 114, POB. 49, Hungary
