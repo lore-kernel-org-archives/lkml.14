@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67F41B143F;
-	Fri, 14 Jun 2024 17:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DAE1B29AA;
+	Fri, 14 Jun 2024 17:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386387; cv=none; b=Hd28vq/CTzJnJJUhGLhctyu7FOU1vamOZP+6HDrNuuLDVJ6yqpnieEsc5+Bp36g7BENyoP01t/dXrPx+41hSj2sdaMwIvgyziB1V3WKnv1dlCNYuhshsQ30JrhTvSOl4HDaV4dfb3vGjyPQLk1qTDC81dJEulxMPnKWPGTbk1XY=
+	t=1718386389; cv=none; b=XZFkIi/QQ7ld2lMC/Qe4pk+Khomnl2Bp/m7RovCk/hMoIRpm1hwDcPxJuOxikpsobdcHtiNtuKuptPt5ZOkRKyo/Zzvjy5LX/f07cjriRxBtYgUi4F5huMUczxTWs4sobOwqrMAdORzexqV0KCn7Yv5eVEcJUWEFrm4SWJGeDTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386387; c=relaxed/simple;
-	bh=/RI6whJcmrvhiRO7t2XvDhnsZ9qXtW9I/fr2BpEIl5U=;
+	s=arc-20240116; t=1718386389; c=relaxed/simple;
+	bh=CFOBUXD7jTvQ0DUMWL0UDE8CpiU/yP+TFleNjxWwLxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bdndIIPzkvFa2xUUSbkm8zDM31ppz76QIPAOgnq7Q46sQrnI0tbk5EVf4iSn6sHIt3qoeglItUOtmTe1iIuJnFt9kRnZgGVUXmIwijsjOQkjnOnHCzAdoU+gY3WNU+CQXUxjvLcU7LZKkFQFzsJwiLUxzv+EqDKb1ANTKwjOQyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mu2HR3Dw; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=hQZLjWqbuLAM9imCb7PyxEbq17oZMSSri/gV9j5WvLTxJNDWYSGNNY0vqfV3whvLJZnD4e1JC7PcHRWAjB0/sqdR4+7L1M274SCSfKJxM0Qav8QzRI6JnLJ0qcvBNOV37lzDXKThp1g3AnUrHnacm5WSlsARrcE8zwhZjgn5klo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T+mQ/YfD; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mu2HR3Dw"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 69CB4FF814;
-	Fri, 14 Jun 2024 17:33:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T+mQ/YfD"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 2C54AFF811;
+	Fri, 14 Jun 2024 17:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718386384;
+	t=1718386385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1poOcFigCzvNGw/WIJa8uOgiTHrPvQYSCIrCvjonocA=;
-	b=mu2HR3Dw1aITM193U1cexzdtb8QKZ1a9PXL2MG0TOKyhwi6f3LpCeGx4rLg+ikykvEZ4ZL
-	Ai+WTcy1wgQ/ZjwhBbRR8Qt3773gme4HCDzrlLejQDXlZ68xQzYN271k4qXHAfVfGn//ub
-	ToNiozd/fv3C04ZAsWOXK4JYqDOqLkkLAur7fAZ1+rDqLVem3bRtxw3tfbJddf1PoIIm4Z
-	mJDVmK1rlTjkdn3x7lxT2Ku72BcXS1ReAh0cyH5dQjOA0N/gar2lXB05dffSvLPnpLrRoS
-	FyGIZGylTrDGDa6hMQfj1pQR847YhNRmdacYBGpihMiqmFngY2he87fXGncYhQ==
+	bh=JtCflf5DaqbhOm9L/XxD0yo5M1odlrsrVmdrUVelr04=;
+	b=T+mQ/YfDW76Ir33ovd2mMbE/wy/n+Lioh//KKzIjrcUfQ+YWbPCBJJrN3TSzvNE/ZKAQ6q
+	oDJ6ais8BaG6r0qxRkjs82DqIeSyqEMu6zJUTxWDI+sxIEs3pAaKFTrlyjfosvaUTGuKVI
+	LPO3z2+qbyxyUM4/Ps7CNml66YUyGBTVpJtD8B4EGT1k4WtyeaMq/5k2+7fHhIS5B9KKu9
+	k1DQTwKQy7+xfEW8vyjfkYne6wvaLt7I4NTdSAICcX9Lu9dNlCusETzRm5OQ9InqfjQo0j
+	BhV9u2/tRY43ouYgUyQHVWsx5GgM/gFFTzLSKOylqw+JJ3b8GrtJCPZCYNh0eQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Herve Codina <herve.codina@bootlin.com>,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 21/23] dt-bindings: interrupt-controller: Add support for Microchip LAN966x OIC
-Date: Fri, 14 Jun 2024 19:32:22 +0200
-Message-ID: <20240614173232.1184015-22-herve.codina@bootlin.com>
+Subject: [PATCH 23/23] MAINTAINERS: Add the Microchip LAN966x OIC driver entry
+Date: Fri, 14 Jun 2024 19:32:24 +0200
+Message-ID: <20240614173232.1184015-24-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240614173232.1184015-1-herve.codina@bootlin.com>
 References: <20240614173232.1184015-1-herve.codina@bootlin.com>
@@ -63,80 +63,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The Microchip LAN966x outband interrupt controller (OIC) maps the
-internal interrupt sources of the LAN966x device to an external
-interrupt.
-When the LAN966x device is used as a PCI device, the external interrupt
-is routed to the PCI interrupt.
+After contributing the driver, add myself as the maintainer for the
+Microchip LAN966x OIC driver.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
-new file mode 100644
-index 000000000000..b2adc7174177
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/microchip,lan966x-oic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..baeb307344cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14727,6 +14727,12 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/ethernet/microchip/lan966x/*
+ 
++MICROCHIP LAN966X OIC DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
++F:	drivers/irqchip/irq-lan966x-oic.c
 +
-+title: Microchip LAN966x outband interrupt controller
-+
-+maintainers:
-+  - Herve Codina <herve.codina@bootlin.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+description: |
-+  The Microchip LAN966x outband interrupt controller (OIC) maps the internal
-+  interrupt sources of the LAN966x device to an external interrupt.
-+  When the LAN966x device is used as a PCI device, the external interrupt is
-+  routed to the PCI interrupt.
-+
-+properties:
-+  compatible:
-+    const: microchip,lan966x-oic
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - '#interrupt-cells'
-+  - interrupt-controller
-+  - interrupts
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@e00c0120 {
-+        compatible = "microchip,lan966x-oic";
-+        reg = <0xe00c0120 0x190>;
-+        #interrupt-cells = <2>;
-+        interrupt-controller;
-+        interrupts = <0>;
-+        interrupt-parent = <&intc>;
-+    };
-+...
+ MICROCHIP LCDFB DRIVER
+ M:	Nicolas Ferre <nicolas.ferre@microchip.com>
+ L:	linux-fbdev@vger.kernel.org
 -- 
 2.45.0
 
