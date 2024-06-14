@@ -1,100 +1,94 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F9217C72
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8491B17C72
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718348498; cv=none; b=Gc0pHbBYyJtrYWppwHCjX3bX/bTtz03wGoGB8ZTdQEdkX9c1OJ/DVwn2nd/tXXyh/3+hDH8JXjx0rPVTCTReRLiUQW3uiYtMtXdHohEGOQBuObXcrtLeF4wSHfZzOSfLdb3M0muz/0I7wuK8SSHcHEv8hneFc4FrsygfzsKDHOo=
+	t=1718348550; cv=none; b=a7mKqD+1oZUama8qdYn4N8ODCqZKinUw7hqzba1ATFVDnUwLsL4vGxBkHfeKXF4JPDpWz0YtFiJDK8QBw5SKZLLBGTKXLUjjb9MO7LHjgQbD2j/F4p9whTv1tFRJ10Za/ZT5EMiEyashN/YusgKCRMqaGGvdrCuNEcgdz8DtlCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718348498; c=relaxed/simple;
-	bh=f+47wVGcuysOXwCj/07vA1XG0M+Mix+78gdu2z03d+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UsNbz88Oq9Lcchp+70LXfJIUFExQsn/kt05s/1J9nNM9yMFVLIFFIfACI2qnq9PO0Im8yWwZppV9e8MvPtlfLrWId13+ne2p8Ms8j4J/rf9nbpJWE5u8Q/ZnAUDzlXJMU29HkebKSK+Tn7z4CElVBC2dC6voK+WCYJhmk8EwkgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI0w9-0004Jv-JE; Fri, 14 Jun 2024 09:01:25 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI0w7-002Cwf-Q0; Fri, 14 Jun 2024 09:01:23 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sI0w7-00ALq4-2I;
-	Fri, 14 Jun 2024 09:01:23 +0200
-Date: Fri, 14 Jun 2024 09:01:23 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	stable@vger.kernel.org, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net v1 2/2] net: phy: dp83tg720: get initial master/slave
- configuration
-Message-ID: <Zmvqw-GtKsSNFQsr@pengutronix.de>
-References: <20240613183034.2407798-1-o.rempel@pengutronix.de>
- <20240613183034.2407798-2-o.rempel@pengutronix.de>
- <f88abfe3-a66c-4e65-b627-7adf7f04580f@lunn.ch>
- <ZmvTS9YI8LACJOND@pengutronix.de>
+	s=arc-20240116; t=1718348550; c=relaxed/simple;
+	bh=UFvYcOWtqBhQmd0pRfoVeLky4JvY5AEr/8VDTEL9BZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S+8MbXY/aKz2wUHq5sifbY+ge0/uzxk92uLRMtuEowXgCr4w+Q6AoC+tlSED+Tjud6WC8YpA671ZLiXRnBzDzRSWVzfZkqrv/+Pp23X9pZa4Ls0zF+nZraUslx/TdyLi3kML/YUc5S6jqM+D8K7uSJUvN3XlZmxdGbxfIrg0kL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-627ebbefd85so21879817b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:02:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718348546; x=1718953346;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ocVyg2V3e0HzMdfCsFB/9doeEeEqC8oyUzYXLqjfcnA=;
+        b=fk3ItoWSave4XiDtbVn483yIu1MfbdcRzh1BdlZG/wWbj6nwlUGXeiktIjBV+erOCq
+         laGFewiQEyMcQ25WDOIY2f/+Q+R4suHbCKB5g7cNWyKfL+VR1fdq4SfyEoAQqL31SkJw
+         INrOpkImKZYoEi8ZD6t0GHxlVEWc4agvSyOlPD/qPWfKYqcPibIaLQAkLgJbIYFGXf8i
+         vjk8WQA1iIl5FYzDnmPL0RfmwTUvdwHzYi5Lps5r0XBd3QIDSiGmHTIc8ca0uRfLGcwp
+         t9naTxFJ4ymHCofbdfrGgqv5lRp+TGqqjAo3NjzgmOUXw4IFzYNVBQduDC6BtDJaQt+L
+         CbjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHMmOano6ro1ZqxGp7QyYBstUCkgdCN4XRMnuCF0lUCFcWmJMNvwRN36KA/oZhmYoUvkC0C+r7euyksQDUml5017QpBBtRHirj1cVp
+X-Gm-Message-State: AOJu0YzB+nnzQ5GrK4GXTkk8c+DxQGlSIst0XcdrFtR7qpTQ7XdXpZdl
+	goR4DU/v9607kUmVwiBt3354DfFL3V3BVXrcDJa699qGLYgEb3ZOul/1EyEq
+X-Google-Smtp-Source: AGHT+IG8trqBJwK78ay9OFCYodpGygojakhMJXQVIstyraP2stww0Aos/JEcdFnsrcryBsBcvEpD2w==
+X-Received: by 2002:a05:690c:385:b0:62f:aaaa:187a with SMTP id 00721157ae682-63222856cfbmr16349527b3.14.1718348545660;
+        Fri, 14 Jun 2024 00:02:25 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-631189a783fsm4003947b3.35.2024.06.14.00.02.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 00:02:25 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6312dc52078so17746577b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:02:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXmXhGQlTdLgad89tbgsC7J1UeT0WP95v0wUgaBcoVPi2A9b4LinBmQbocAkBFtOmubitS2YuVyyHdRDfixViI3yry0W1sdtQu8N14U
+X-Received: by 2002:a05:690c:fc5:b0:62c:c660:72af with SMTP id
+ 00721157ae682-63222e599efmr22276357b3.24.1718348544784; Fri, 14 Jun 2024
+ 00:02:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZmvTS9YI8LACJOND@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <cover.1718311756.git.u.kleine-koenig@baylibre.com> <3d1e308d45cddf67749522ca42d83f5b4f0b9634.1718311756.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <3d1e308d45cddf67749522ca42d83f5b4f0b9634.1718311756.git.u.kleine-koenig@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 14 Jun 2024 09:02:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWxM49PiAeoz1R=FnPEEmwMimbkXBuO-N2mF6pRzHummA@mail.gmail.com>
+Message-ID: <CAMuHMdWxM49PiAeoz1R=FnPEEmwMimbkXBuO-N2mF6pRzHummA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] driver core: Make dev_err_probe() silent for -ENOMEM
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Petr Mladek <pmladek@suse.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Xiubo Li <xiubli@redhat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 14, 2024 at 07:21:15AM +0200, Oleksij Rempel wrote:
-> On Thu, Jun 13, 2024 at 09:33:01PM +0200, Andrew Lunn wrote:
-> > On Thu, Jun 13, 2024 at 08:30:34PM +0200, Oleksij Rempel wrote:
-> > > Get initial master/slave configuration, otherwise ethtool
-> > > wont be able to provide this information until link is
-> > > established. This makes troubleshooting harder, since wrong
-> > > role configuration would prevent the link start.
-> > 
-> > I looked at how genphy_c45_read_status() works. If we have
-> > phydev->autoneg == AUTONEG_ENABLE then genphy_c45_baset1_read_status()
-> > is called which sets phydev->master_slave_get. If not AUTONEG_ENABLE
-> > it calls genphy_c45_read_pma() which ends up calling
-> > genphy_c45_pma_baset1_read_master_slave().
-> > 
-> > So it seems like the .read_status op should be setting master/slave
-> > each time it is called, and not one time during .config_init.
-> > 
-> > What do you think?
-> 
-> Yes, you are right. I verified it:
-> In case of this driver, .config_init will be executed every time no link
-> is detected over phy_init_hw() call. If link is detected
-> genphy_c45_pma_baset1_read_master_slave() is called directly.
-> It is not directly visible but read_master_slave() will be executed on
-> every  .read_status.
+On Thu, Jun 13, 2024 at 11:24=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
+rnel.org> wrote:
+> From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+>
+> For an out-of-memory error there should be no additional output. Adapt
+> dev_err_probe() to not emit the error message when err is -ENOMEM.
+> This simplifies handling errors that might among others be -ENOMEM.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
 
-Hm.. on other hand. Since the configuration state is readed only on
-init and reset, we will see on user space side only default state not updated
-after config_aneg().
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
