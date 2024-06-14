@@ -1,125 +1,263 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC49319DF51;
-	Fri, 14 Jun 2024 17:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4819CCE9;
+	Fri, 14 Jun 2024 17:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386030; cv=none; b=Pm1Yzq4ns1xp4IPmdA1TML0rJ/f5DtobiBZmz6Y3nki1itqAR1qWo4/Xqkze+e1i23Jb3iFvDpiRUpC2Xf1qqMeQ5fb7+bWHJbZyXxuUWPys10Cx11ATKH9uHk8GnhPdwkmloQkHH/382BhVVxfi80BkZz/58I+MwyUuYuUXJzY=
+	t=1718386029; cv=none; b=YEt6rIqZU+wkX7U0k4AZeuv6k1lNmZA3/Px71AC5aYJ+lAvbBVcc8b/NwH5500nFCEPfYi12LHl8W/NesggfIIUyzgi3tyLFAQLWs+luJ7vNLSElXUz8+0UoqLxUzEFdI7+yPt1b8l8JgN1Ordl2M2WNuO/wZ3eHgrd/h7NDHmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386030; c=relaxed/simple;
-	bh=m1lLm+WZC4v+Y35S1XB9lWwlw3k4bRL9Y21+zCpCDBQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Um1D4tgXWZ+RiGGxwS5csYJY3/xlJNIFMuCsmatRkIQKwcZl4sErfT8WwNnnyuq+HtXN5MFqR3SJfdNW0UE4Hv81evHmJQquZyoVB7LQDOkYmtc3UFH5YqbR4ztjsvjf5jsYrKLyc3Dg7cYTXB7uONgUcgfT2lsAokLmSDImxe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ctEn4gJS; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718386029; c=relaxed/simple;
+	bh=VwQEjpvbrgC4ij4kAyO2nlIKkFx8XCcxzHH6k0U1M7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GMEwyp9SFj9up6tQ1++AEWqkXgM+ZF1p7S3KiI9fnerx8LcNT6NGUKuxzB7FYc3tdy/d6xGVOGCQULuAeUjnHyMOjH0xsUqBIRzDk7cfeUcARIaReJR0vlb0UctxdeC4W6LZKmXJ3HA3BcmXlaKxWsjAEVyl3APgmNbiTwxMwEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZE1pRZIl; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ctEn4gJS"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45EHR2TK020312;
-	Fri, 14 Jun 2024 12:27:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718386022;
-	bh=XewSngMq7bNS3KBsgmr6l1N/bnY3ToVln2WUXlo0Z6k=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ctEn4gJSX5tYMgvzBRYJ6xnk2sDRV91wXRcrNTf5ZQZNAt70ruXZWxlT/miB39qNA
-	 brez0qungSVOWIwhxbd6L5/IBP2y2kr6hinh7sp+RzwgAIc6UvNJrujtORIpzbntgT
-	 WEDzoF35fLrbt7lEQvTPBP41UtqrZzzz79d4UAc0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45EHR2l5010617
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Jun 2024 12:27:02 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Jun 2024 12:27:01 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Jun 2024 12:27:01 -0500
-Received: from localhost (udba0500997.dhcp.ti.com [128.247.81.249])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45EHR1gJ066390;
-	Fri, 14 Jun 2024 12:27:01 -0500
-Date: Fri, 14 Jun 2024 12:27:01 -0500
-From: Brandon Brnich <b-brnich@ti.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <praneeth@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of
- global CMA
-Message-ID: <20240614172701.3xxs2ydagj3sjrwo@udba0500997>
-References: <20240613150902.2173582-1-devarsht@ti.com>
- <20240613150902.2173582-3-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZE1pRZIl"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EHQwEW029727;
+	Fri, 14 Jun 2024 17:26:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=nMhp8ksQP47hN
+	oOLyKczGfyhfX0UNSuKW/1x8tc/LWo=; b=ZE1pRZIlhz8edJM2E6tLkv7sq+09V
+	nLRyaMNCb6d3RHLcO3UnTua3iLZX1xcLWUP6vGvgnF5P+HmCAYFw953dSHvGlnII
+	HOgHPqYTu0HwQGO1RjSwFADlqgAbWo86B3mayEslXb4ESGbqc5HQ30JowB0r4slR
+	fkQTM8dApR5NauLB12WfNqTTH57Hngxb9+sIQ6nChjTzeN8lDRI/KuEChndBk5E+
+	ATNx5kMNUtoS+D8MkvPcDacb5QYVswZpxYHsekgjA5/OqQzl3Cj0rIs7DL1B+Jok
+	U8p/F7T2IW2sb0FsGooWK6qQ2hOnL+s7aSZnfrAH3RPapGiXEiaqJWJzQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05m1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:58 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHQvFK029708;
+	Fri, 14 Jun 2024 17:26:57 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05kv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:57 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EH0GEC020066;
+	Fri, 14 Jun 2024 17:26:56 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn34nud3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:56 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQolf30409400
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 17:26:52 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 80DC620040;
+	Fri, 14 Jun 2024 17:26:50 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B378D20043;
+	Fri, 14 Jun 2024 17:26:47 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.82.18])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Jun 2024 17:26:47 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
+        christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [V4 03/16] tools/perf: Add support to capture and parse raw instruction in powerpc using dso__data_read_offset utility
+Date: Fri, 14 Jun 2024 22:56:18 +0530
+Message-Id: <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240613150902.2173582-3-devarsht@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: xwj9z1BnmB5dP9fXttT3RN-6pJyr9K12
+X-Proofpoint-ORIG-GUID: -fMqKB81Jv7XvQj0ZoPR_epoGfPe9fBF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 adultscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406140119
 
-Hi Devarsh,
+Add support to capture and parse raw instruction in powerpc.
+Currently, the perf tool infrastructure uses two ways to disassemble
+and understand the instruction. One is objdump and other option is
+via libcapstone.
 
-On 20:39-20240613, Devarsh Thakkar wrote:
-> Reserve 576MiB of CMA as global CMA pool starting after initial 1GiB of
-> DDR.
-> 
-> AM62ax has different multimedia components such as Camera, Display, H.264
-> VPU and JPEG Encoder which use CMA for buffer allocations.
-> 
-> The 12x 720x480 realtime VPU decode use-case requires 544MiB of CMA,
-> additional 32MiB is kept as buffer in case some other peripheral also
-> require it while VPU is running.
-> 
-> The reason to choose latter 1GiB is to not overlap with existing memory map
-> which is utilizing initial 1GiB for remoteproc firmwares as shared here
-> [1].
-> 
-> Also some drivers such as JPEG require 32bit addressing so not allocating
-> from higher DDR address.
-> 
-> Link: https://lore.kernel.org/all/20240605124859.3034-5-hnagalla@ti.com [1]
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
+with "objdump" while disassemble. Example from powerpc with this option
+for an instruction address is:
 
-I have validated that this patch works with VPU. 
+Snippet from:
+objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
 
-Tested-by: Brandon Brnich <b-brnich@ti.com>
+c0000000010224b4:	lwz     r10,0(r9)
 
-Best,
-Brandon
+This line "lwz r10,0(r9)" is parsed to extract instruction name,
+registers names and offset. Also to find whether there is a memory
+reference in the operands, "memory_ref_char" field of objdump is used.
+For x86, "(" is used as memory_ref_char to tackle instructions of the
+form "mov  (%rax), %rcx".
 
-> ---
->  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> index e026f65738b3..67faf46d7a35 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> @@ -40,6 +40,15 @@ reserved-memory {
->  		#size-cells = <2>;
->  		ranges;
->  
-> +		/* global cma region */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x00 0x24000000>;
-> +			alloc-ranges = <0x00 0xc0000000 0x00 0x24000000>;
-> +			linux,cma-default;
-> +		};
-> +
->  		secure_tfa_ddr: tfa@9e780000 {
->  			reg = <0x00 0x9e780000 0x00 0x80000>;
->  			alignment = <0x1000>;
-> -- 
-> 2.39.1
-> 
+In case of powerpc, not all instructions using "(" are the only memory
+instructions. Example, above instruction can also be of extended form (X
+form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+and extract the source/target registers, patch adds support to use raw
+instruction for powerpc. Approach used is to read the raw instruction
+directly from the DSO file using "dso__data_read_offset" utility which
+is already implemented in perf infrastructure in "util/dso.c".
+
+Example:
+
+38 01 81 e8     ld      r4,312(r1)
+
+Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+this translates to instruction form: "ld RT,DS(RA)" and binary code
+as:
+
+   | 58 |  RT  |  RA |      DS       | |
+   -------------------------------------
+   0    6     11    16              30 31
+
+Function "symbol__disassemble_dso" is updated to read raw instruction
+directly from DSO using dso__data_read_offset utility. In case of
+above example, this captures:
+line:    38 01 81 e8
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/util/disasm.c | 98 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index b5fe3a7508bb..f19496133bf0 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ }
+ #endif
+ 
++static int symbol__disassemble_dso(char *filename, struct symbol *sym,
++					struct annotate_args *args)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	struct map *map = args->ms.map;
++	struct dso *dso = map__dso(map);
++	u64 start = map__rip_2objdump(map, sym->start);
++	u64 end = map__rip_2objdump(map, sym->end);
++	u64 len = end - start;
++	u64 offset;
++	int i, count;
++	u8 *buf = NULL;
++	char disasm_buf[512];
++	struct disasm_line *dl;
++	u32 *line;
++
++	/* Return if objdump is specified explicitly */
++	if (args->options->objdump_path)
++		return -1;
++
++	pr_debug("Reading raw instruction from : %s using dso__data_read_offset\n", filename);
++
++	buf = malloc(len);
++	if (buf == NULL)
++		goto err;
++
++	count = dso__data_read_offset(dso, NULL, sym->start, buf, len);
++
++	line = (u32 *)buf;
++
++	if ((u64)count != len)
++		goto err;
++
++	/* add the function address and name */
++	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
++		  start, sym->name);
++
++	args->offset = -1;
++	args->line = disasm_buf;
++	args->line_nr = 0;
++	args->fileloc = NULL;
++	args->ms.sym = sym;
++
++	dl = disasm_line__new(args);
++	if (dl == NULL)
++		goto err;
++
++	annotation_line__add(&dl->al, &notes->src->source);
++
++	/* Each raw instruction is 4 byte */
++	count = len/4;
++
++	for (i = 0, offset = 0; i < count; i++) {
++		args->offset = offset;
++		sprintf(args->line, "%x", line[i]);
++		dl = disasm_line__new(args);
++		if (dl == NULL)
++			goto err;
++
++		annotation_line__add(&dl->al, &notes->src->source);
++		offset += 4;
++	}
++
++	/* It failed in the middle */
++	if (offset != len) {
++		struct list_head *list = &notes->src->source;
++
++		/* Discard all lines and fallback to objdump */
++		while (!list_empty(list)) {
++			dl = list_first_entry(list, struct disasm_line, al.node);
++
++			list_del_init(&dl->al.node);
++			disasm_line__free(dl);
++		}
++		count = -1;
++	}
++
++out:
++	free(buf);
++	return count < 0 ? count : 0;
++
++err:
++	count = -1;
++	goto out;
++}
+ /*
+  * Possibly create a new version of line with tabs expanded. Returns the
+  * existing or new line, storage is updated if a new line is allocated. If
+@@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		strcpy(symfs_filename, tmp);
+ 	}
+ 
++	/*
++	 * For powerpc data type profiling, use the dso__data_read_offset
++	 * to read raw instruction directly and interpret the binary code
++	 * to understand instructions and register fields. For sort keys as
++	 * type and typeoff, disassemble to mnemonic notation is
++	 * not required in case of powerpc.
++	 */
++	if (arch__is(args->arch, "powerpc")) {
++		err = symbol__disassemble_dso(symfs_filename, sym, args);
++		if (err == 0)
++			goto out_remove_tmp;
++	}
++
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
+ 	if (err == 0)
+-- 
+2.43.0
+
