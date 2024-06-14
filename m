@@ -1,112 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB8317BA2
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 06:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F1A3D60;
+	Sat, 15 Jun 2024 06:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718433135; cv=none; b=J6KPFDxp+ezFWjsYS4pb2T0rRd6j+mNdR3ocPNcJ3A1tAn9Tr6pTevytxBL5SQDsBSu8cHwWu/rNNEZb5lfwEL9nhvU50x3lNC1MJfsSDamU4CQIz6MocissVRXMYI06a7oD9wL5H4pN43s1IqemjiOtfR2BSwP6I9SosuJ4dQY=
+	t=1718433489; cv=none; b=TIm32EBYSwS4i7xNjk7zcUuB4csIIXOL2vPoOtR5ILmqEDrUAjnNA0n3JgneaTf0OIGUMVLyGszkjXyQqictNrTeYl+Mm/vLwjXZnIrdEwfq2cIXW1gtL46h7ELSYVCvAgVs6na7MH3lqhJ+J8PpI3httV4gPvHDgbM3YhsuxrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718433135; c=relaxed/simple;
-	bh=tDuObTQNohrxi3Di5MxkNEgF1UteDJXO8ZGJ0znwqRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B7eM0eoYJbmlgWZsXEd/xzrX6V3aOkyFTA3yFZESsHEeOAqFNfx6COPYky0dWc451uH3BVna6hye3QbdDIbXW2hcP3hpcPXwdpuwIMjiYVGDUG7t9cP1dbY8raOFmlmhYph2iaIOWzSvG4sq8z60XSuGJ47SV8Phb2I/hmLpiY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OQj5mueM; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718433489; c=relaxed/simple;
+	bh=3KCfEoLSbRk49SE6hTMUSazt4vE30jZwifvmCko0MxI=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=J+HkJrq66N69ray4HfiFjLl1eJtCjoNJtPwN3JOZ7SP+LNH6RBI6OqCLY+Ink1JZHffHoKDStDSqDK/rIUyAm+ixGx3P0lxE/llgdAOHnhTRAU5BvjmC+OG+EXvfaXPfNavOiUPh/QCO3H+xbqsxK+/OMGuDDyjHOqA638Q4ZIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZqRx9WEW; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OQj5mueM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718433134; x=1749969134;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tDuObTQNohrxi3Di5MxkNEgF1UteDJXO8ZGJ0znwqRk=;
-  b=OQj5mueMPYnJLsLg1dHMCg6iNswXTyXKZ3nf4UL4T2gv/BRZYUuv1+tB
-   7ex2jwjp5UJKI4tgP/hendm8ANSFwODT3+BqsFNtNPLGDj+1VlEiSt/q/
-   RwgcMmaByPrNgSi57D2gVvlprdaNSIg+SvDzwLRAQZTQXU5Jx06d5LT3a
-   iYYWsqL9WgGQdOwUKGu5BCI5MsR/0pZrjbzzRq2KA2bnhSX3LAOfmJCek
-   GsMGxiqYKzCjMvFElOOdLEFg2/007kBDwod1JuF9lBG6dkwMAwSpRZE+L
-   89yOL1mBDXV89crW9H+piD3Ka1kGwX3etBYoS06SCSPqTnBdSGDPEXvOR
-   A==;
-X-CSE-ConnectionGUID: YWgRuzchTaq/Z+bGCeKOhg==
-X-CSE-MsgGUID: YgullBehTGujHsckA6hWuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="18255628"
-X-IronPort-AV: E=Sophos;i="6.08,239,1712646000"; 
-   d="scan'208";a="18255628"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 23:32:13 -0700
-X-CSE-ConnectionGUID: T825KSTvTcCXQOdgWavPfg==
-X-CSE-MsgGUID: Sb4OFn+ZTsaPvQrQeYGOsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,239,1712646000"; 
-   d="scan'208";a="71498047"
-Received: from twinkler-lnx.jer.intel.com ([10.12.231.216])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 23:32:11 -0700
-From: Tomas Winkler <tomas.winkler@intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Usyskin <alexander.usyskin@intel.com>,
-	Vitaly Lubart <vitaly.lubart@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: bus-fixup: set timeout for MKHI send operations
-Date: Sat, 15 Jun 2024 09:31:59 +0300
-Message-ID: <20240615063159.1460290-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZqRx9WEW"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240615063802epoutp03937665879767c7bb38a494fd9922b629~ZGiW7zCER1672516725epoutp03U;
+	Sat, 15 Jun 2024 06:38:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240615063802epoutp03937665879767c7bb38a494fd9922b629~ZGiW7zCER1672516725epoutp03U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1718433482;
+	bh=vIwSYtTFXPS3sO38FNNQ6oJ71Y0bLvlrMHrlSuad46E=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=ZqRx9WEWTrFB0xPY+AKKfrl5bDsclQ3TWzUHUdAxvTY441omquggL+KXasoOMm0vb
+	 TT+Pz6KIgcBpV+kxr0393uI0VDMBX9ZwbarTNJXaWh2vxCh9xsvWvGFQaMHx8xlyGI
+	 iz4oghNbkk5GDaB2b8OoCpIX7Wn+XVPM7Cal+B2Q=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240615063801epcas5p14a1910659716b444f56195a7b2ec983b~ZGiWWyQ_Y0633306333epcas5p1F;
+	Sat, 15 Jun 2024 06:38:01 +0000 (GMT)
+Received: from epcpadp4 (unknown [182.195.40.18]) by epsnrtp4.localdomain
+	(Postfix) with ESMTP id 4W1RKj3gpKz4x9Px; Sat, 15 Jun 2024 06:38:01 +0000
+	(GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240614142920epcas5p15f5887136072ebf6c2e23275dd872861~Y5Uk66YwW0344703447epcas5p15;
+	Fri, 14 Jun 2024 14:29:20 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240614142920epsmtrp2e40951f54cedb283a63bd26a75890a5d~Y5Uk39wd62550925509epsmtrp2Y;
+	Fri, 14 Jun 2024 14:29:20 +0000 (GMT)
+X-AuditID: b6c32a2a-73fff70000004a71-de-666c53c04e95
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	FD.07.19057.0C35C666; Fri, 14 Jun 2024 23:29:20 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.12.5]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240614142913epsmtip17b1c18bda36c53de5d30099c1e4afd13~Y5UeC7Xu-3016230162epsmtip1U;
+	Fri, 14 Jun 2024 14:29:13 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>, "'Daniel
+ Lezcano'" <daniel.lezcano@linaro.org>, "'Zhang Rui'" <rui.zhang@intel.com>,
+	"'Lukasz Luba'" <lukasz.luba@arm.com>, "'Rob Herring'" <robh@kernel.org>,
+	"'Conor Dooley'" <conor+dt@kernel.org>, "'Guillaume La Roque'"
+	<glaroque@baylibre.com>, "'Krzysztof Kozlowski'" <krzk+dt@kernel.org>,
+	"'Vasily Khoruzhick'" <anarsoul@gmail.com>, "'Chen-Yu Tsai'"
+	<wens@csie.org>, "'Jernej Skrabec'" <jernej.skrabec@gmail.com>, "'Samuel
+ Holland'" <samuel@sholland.org>, "'Shawn Guo'" <shawnguo@kernel.org>,
+	"'Sascha Hauer'" <s.hauer@pengutronix.de>, "'Pengutronix	Kernel Team'"
+	<kernel@pengutronix.de>, "'Fabio Estevam'" <festevam@gmail.com>, "'Anson
+ Huang'" <Anson.Huang@nxp.com>, "'Thierry Reding'"
+	<thierry.reding@gmail.com>, "'Jonathan Hunter'" <jonathanh@nvidia.com>,
+	"'Dmitry	Baryshkov'" <dmitry.baryshkov@linaro.org>, "'Amit Kucheria'"
+	<amitk@kernel.org>, =?utf-8?Q?'Niklas_S=C3=B6derlund'?=
+	<niklas.soderlund@ragnatech.se>, "'Heiko	Stuebner'" <heiko@sntech.de>,
+	"'Biju Das'" <biju.das.jz@bp.renesas.com>, "'Orson	Zhai'"
+	<orsonzhai@gmail.com>, "'Baolin Wang'" <baolin.wang@linux.alibaba.com>,
+	"'Chunyan Zhang'" <zhang.lyra@gmail.com>, "'Alexandre Torgue'"
+	<alexandre.torgue@foss.st.com>, "'Pascal Paillet'" <p.paillet@foss.st.com>,
+	"'Keerthy'" <j-keerthy@ti.com>, "'Broadcom internal kernel review list'"
+	<bcm-kernel-feedback-list@broadcom.com>, "'Florian Fainelli'"
+	<florian.fainelli@broadcom.com>, "'Scott Branden'" <sbranden@broadcom.com>,
+	"'zhanghongchen'" <zhanghongchen@loongson.cn>, "'Matthias Brugger'"
+	<matthias.bgg@gmail.com>, "'AngeloGioacchino Del Regno'"
+	<angelogioacchino.delregno@collabora.com>, "'Bjorn Andersson'"
+	<andersson@kernel.org>, "'Geert Uytterhoeven'" <geert+renesas@glider.be>
+Cc: <linux-pm@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <imx@lists.linux.dev>,
+	<linux-tegra@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+	<linux-stm32@st-md-mailman.stormreply.com>, "'Florian Fainelli'"
+	<f.fainelli@gmail.com>, <linux-rpi-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <cpgs@samsung.com>
+In-Reply-To: <20240614-dt-bindings-thermal-allof-v1-1-30b25a6ae24e@linaro.org>
+Subject: RE: [PATCH 01/22] dt-bindings: thermal: samsung,exynos: specify
+ cells
+Date: Fri, 14 Jun 2024 19:59:11 +0530
+Message-ID: <1891546521.01718433481489.JavaMail.epsvc@epcpadp4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGhCdcVAXQc0tvKk5x9QOKQ/J0WewGh/L0BAiWHCW6yHH4lsA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTdxTG97+9vbfQ1ZSXyQUFTaPZgJXBNtlxGLLgy+6mEYxzyUwUGriC
+	jJbaikPjMuhaMmA4wAn2dhRQxgoUcDBoQd5Sist0QMTZzTgQkAJdE/BtaN2gA7otfPudc57n
+	OefD4XF89UQQ77jsJKOQSTJEhDfe3i8KEfcdzDgWWdPnAy5HGYL+ymzQXJtG0P7FDhipo8Ck
+	TQZ39zUEjUUDOOjNCxgYu4cwcFhCQf84GCqtQ1woGXYR8HzOSsLE7Xhoah/jQIWuFEH1+QoC
+	3JNOLmjHNARcN6kwmKlsQqBmL+FQf6EDBwc7RkC3s42EKh0fWu7bltN6B0m41fkNAbc+v4ng
+	cZEVQZtjDoNH424OlNy9QsLF4R4MCmxTXPi6p5OA/CcsAdUqNQkq9RvwY9k5LpQ/0CHos5/H
+	wd1lJmFq4hwBi6YWHGYm8wmYa5hCMPtDALg69Ti4LMMYfDfeScKCzcR55y3aqDciev43DUnX
+	zepImr03SNDm0RpEX5ls4NL2r9pIumRQTHewoyR9ucuB0S31+QT9u62LoDsmttOtNZ/Rs61a
+	ROeqLmEJQYe9d6QwGcdPMYrXYpO80yomj8ivCrK1PY2cHKTmFyAvHiV8kypW9RMr7Cu8iqie
+	waOe/gbq1++LSQ/7UXVLM8vsvayZRlRtccmqgRCKKfPlPGJl4C80rqOeOn9eLTjCP3Cqdc7A
+	9VgmEPW3NhdfsXgJ91P6R2pshf1WuHBqtY8Lt1JLzabVfQLhdupGo/Zf9qF+0no0HGE4Zb9j
+	/59rq50cz32bKZe9dnkZb/mMOCq3GfNIAijHgJUsRn7smiR2TRK7JoldY6lCeD0KZORKaapU
+	GSV/XcZ8EqGUSJVZstSI5ExpC1p94bAwM+qqfxBhQRgPWRDF44j8BWx1+jFfQYrk9BlGkZmo
+	yMpglBa0gYeLAgQLzqIUX2Gq5CTzMcPIGcV/U4znFZSDiQsTbvzlGnCM2y9aXnSx3dh6d7D6
+	thR921tqijm4N6r29FhDsnSbIeTILxttWXuHN/Gt9HO+7NShkS7/P63vvvrpfLugPjXOp9v8
+	5QvwbGuVMyx8PPSjs+u8AqufGD7Aoj8M7Y8/Ec8e2FnObrHmtRXMzHTwRfO2QEfMdHJ4+qH7
+	0YbBhUneotEwlLfNELm060xp2tMmjbJVoyPfbiu7uSt9T8zRVyLxu2HiskJL9Nl7vUEJUnq9
+	vfA6P1E8nXnBbizdnb14J5jYJHsWm4UnvfRQRJa35ry/f+dS/3ujMXHNcjIEP6yPzdVAxImR
+	Lfucs/LNOvW+AxUPX87anZS4MUOEK9MkUWEchVLyD7bfoqExBAAA
+X-CMS-MailID: 20240614142920epcas5p15f5887136072ebf6c2e23275dd872861
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20240614094638epcas5p115d52130f45e130652b6f1d946358d19
+References: <20240614-dt-bindings-thermal-allof-v1-0-30b25a6ae24e@linaro.org>
+	<CGME20240614094638epcas5p115d52130f45e130652b6f1d946358d19@epcas5p1.samsung.com>
+	<20240614-dt-bindings-thermal-allof-v1-1-30b25a6ae24e@linaro.org>
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+Hi Krzysztof,
 
-Set a timeout for MKHI client send operations in the bus fixup routines
-to prevent potential lock-ups on the cl_bus_lock mutex.
-In rare conditions, such as when the i915 or Xe driver is stopping and
-not routing interrupts or when GSC FW is in unexpectedly reset the fixup
-routines can get stuck.
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Sent: Friday, June 14, 2024 3:16 PM
+> To: Daniel Lezcano <daniel.lezcano@linaro.org
+.stormreply.com;
+> Subject: [PATCH 01/22] dt-bindings: thermal: samsung,exynos: specify cell=
+s
+>=20
+> All Samsung Exynos SoCs Thermal Management Units have only one sensor, so
+> make '#thermal-sensor-cells' fixed at 0.
+>=20
+This is not entirely true, there are SoCs which have multiple temp sensors.
+It is true that currently only one sensor support is added though.
 
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/bus-fixup.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+So we can leave this as is or you suggest to make it to support only one se=
+nsor
+(to match the current DT support), and later (in near future) change it aga=
+in to
+match what HW actually support?
 
-diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
-index 2733070acf39eabfd606da38..9eebeffcd8fd0645cecba167 100644
---- a/drivers/misc/mei/bus-fixup.c
-+++ b/drivers/misc/mei/bus-fixup.c
-@@ -80,6 +80,8 @@ static void whitelist(struct mei_cl_device *cldev)
- 	cldev->do_match = 1;
- }
- 
-+#define MKHI_SEND_MAX_TIMEOUT_MSEC 4000
-+
- #define OSTYPE_LINUX    2
- struct mei_os_ver {
- 	__le16 build;
-@@ -128,7 +130,7 @@ static int mei_osver(struct mei_cl_device *cldev)
- 	os_ver = (struct mei_os_ver *)fwcaps->data;
- 	os_ver->os_type = OSTYPE_LINUX;
- 
--	return __mei_cl_send(cldev->cl, buf, size, 0, mode);
-+	return __mei_cl_send_timeout(cldev->cl, buf, size, 0, mode, MKHI_SEND_MAX_TIMEOUT_MSEC);
- }
- 
- #define MKHI_FWVER_BUF_LEN (sizeof(struct mkhi_msg_hdr) + \
-@@ -148,8 +150,8 @@ static int mei_fwver(struct mei_cl_device *cldev)
- 	req.hdr.group_id = MKHI_GEN_GROUP_ID;
- 	req.hdr.command = MKHI_GEN_GET_FW_VERSION_CMD;
- 
--	ret = __mei_cl_send(cldev->cl, (u8 *)&req, sizeof(req), 0,
--			    MEI_CL_IO_TX_BLOCKING);
-+	ret = __mei_cl_send_timeout(cldev->cl, (u8 *)&req, sizeof(req), 0,
-+				    MEI_CL_IO_TX_BLOCKING, MKHI_SEND_MAX_TIMEOUT_MSEC);
- 	if (ret < 0) {
- 		dev_info(&cldev->dev, "Could not send ReqFWVersion cmd ret = %d\n", ret);
- 		return ret;
--- 
-2.45.0
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.yaml | =
+3
+> ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/thermal/samsung,exynos-
+> thermal.yaml b/Documentation/devicetree/bindings/thermal/samsung,exynos-
+> thermal.yaml
+> index 1344df708e2d..29a08b0729ee 100644
+> --- a/Documentation/devicetree/bindings/thermal/samsung,exynos-
+> thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/samsung,exynos-thermal.y
+> +++ aml
+> @@ -61,7 +61,8 @@ properties:
+>            TRIMINFO at 0x10068000 contains data for TMU channel 2
+>      minItems: 1
+>=20
+> -  '#thermal-sensor-cells': true
+> +  '#thermal-sensor-cells':
+> +    const: 0
+>=20
+>    vtmu-supply:
+>      description: The regulator node supplying voltage to TMU.
+>=20
+> --
+> 2.43.0
+
+
 
