@@ -1,71 +1,46 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E940416C692;
-	Fri, 14 Jun 2024 16:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0491802BF;
+	Fri, 14 Jun 2024 16:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381684; cv=none; b=eNtxVMArnn/KDqxj5uEqDhxpiabtaUGHHPAA/j70Jzv8phi1iSH5aMn0yyCG+daTb5tRNCSzyF65oX4QqIsSxnKNmfBmqc8se7/uqu5MyWlANV/vcJvMQtYID/dRzuTDV543NHpytUzCMy3d1e8TDx924mI91oRZm5NjtqSqsv4=
+	t=1718381685; cv=none; b=IpD8Tv/kzVg4DU7yj3L/WnKIIrwgTAWDWHJSS8Raj5T0ZVCbFwHexx3KAycFkrW0i/FZw14cQNPYvC37CLr9hst1cCkKUodEVc4fsG4Nmlb8ipkcrwEf6wyMEnZVb8SYeAUgGhLOGF0eNxoGJznbOkgRHfzHOmx+wfbkCNDZ/UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381684; c=relaxed/simple;
-	bh=LMw3EUTdmoUsLVtEEpSfoba4SLHWBjDgCwfZRp5X+e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YfWYHO+Ab+kcOGl4pbWoNJedn4ZpSoWjG7LmpjmqHE+yci3mfuX1ouLBpc8DwcXpkO8oSoVA5/3NWU0twcF2yOd3gf+3iG7STfqjC6CBx+ddgj9lo6m1Gd9TXI/xQGDnjBl1NVPZKAov8BfFTYDR9XaO87zk3IAhxceU4682XYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iZBd8+jP; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718381685; c=relaxed/simple;
+	bh=6/hK32YyxB/oulfz7g+LC1o7De7LeZULQu3LvuNUbpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mOAkbbAHTHnOQ5mNreM2Ai9R7aYD28JRi8fxyFdRUGm7TG5F01H58rRFL4o/ukIprEpz1EqA/LwzI9qzSQJf6vQFRiMo9kxuKTA0pq2RFPLr328rXb/x4VSN3GHZXKEJoQE4OJpDalNJ/563JFijYu/NUeXq9Frr1m88Wlg1+Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=encO+XLL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iZBd8+jP"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2FE7A40E019F;
-	Fri, 14 Jun 2024 16:14:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6wf_wZH5Ifv4; Fri, 14 Jun 2024 16:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718381677; bh=i2Oov2b/x7FRTX2KE+EloDSI1YULDDwDpYnfJIwHGJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iZBd8+jPngmiZb77P8mi6r7eRQtBh4h9gbPdm6FJabEDpaE6/+HzqqWZJw5Thr2GN
-	 Vj+ctIZT7b+eEvcBV4iqtgJsFoo39TWSCZJlGVELqkLcmGXi6zp4YbzqinkqBHrasA
-	 /+nuxMuwHR2gClm3uYzPTVwXzDrjVPOH7s8nqZk0eUQ0tRWo9Y84kOWt3RVz7MZPvq
-	 EypI+ADjwmqcT3if6YAYnQGldPMWQ3qM91lVdQKJYemC2e6ySo7sXeU0AvCOYSzfRJ
-	 QqMvDkOun8hGXfLPutsqMekWnqgsffzsLaGPSV8nSZhL4hAYrdnlfmswwvDYmCEeBm
-	 oNV6lsqmFV5TwQXrpu7OA4hgze+qjHgJ5yQnLFoOdmZQIiyW7wFzrbL4hO1qme6FZ4
-	 VhN2d6eUULdMgP6Y+6A/Yw3Ex0Cfc3r0pUIMk0oacL9T8dQtQ1Q/2S+dvnkTVvwH12
-	 BlRrX+ALNJMmw6dDAPemqvDUWrc4an16PRliARVl6VFGT3K9UcZFEQED5blrBfu2sn
-	 SDIzmIppS5IQzJjy5a7IbGoHR5zjeEshCmHz8oKq5nOR6340YfM/tcEsS0Ov8dM0l0
-	 Gqm1qYxxDVqAvB3HoOo965IKG/AKtBdPNrK2rdYkjMitOo4O2MpCyUkmCstYJ5Uo7e
-	 pWxN9W+gGhj1uFhFunJqQjjw=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9990440E00C9;
-	Fri, 14 Jun 2024 16:14:09 +0000 (UTC)
-Date: Fri, 14 Jun 2024 18:14:04 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com,
-	tglx@linutronix.de, x86@kernel.org, netdev@vger.kernel.org,
-	richardcochran@gmail.com, linux-input@vger.kernel.org,
-	dmitry.torokhov@gmail.com, zackr@vmware.com,
-	linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-	timothym@vmware.com, akaher@vmware.com,
-	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
-	tzimmermann@suse.de, mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com, horms@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	Tim Merrifield <tim.merrifield@broadcom.com>
-Subject: Re: [PATCH v11 8/8] x86/vmware: Add TDX hypercall support
-Message-ID: <20240614161404.GCZmxsTNLSoYTqoRoj@fat_crate.local>
-References: <20240613191650.9913-1-alexey.makhalov@broadcom.com>
- <20240613191650.9913-9-alexey.makhalov@broadcom.com>
- <844ef200-aabe-4497-85c9-44fc46c9133a@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="encO+XLL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D12C2BD10;
+	Fri, 14 Jun 2024 16:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718381685;
+	bh=6/hK32YyxB/oulfz7g+LC1o7De7LeZULQu3LvuNUbpA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=encO+XLLfhclLh17ucfRA+1G9aZik3WtQrNyy4rlKnHJu4hNRHt4R43pIB5q86mHn
+	 6YmT4CewVfuozNLkvqBo1uinKkkObS+JYNQvYZq+sjtQWW7QR+f1sbZcXCXXUqygM+
+	 3vapXlNKDHrMWWyDRx+ogl/wc5ZpYMAt5lPYLAmvvnwJE5BhZN0rARQZvm2+H1pmOl
+	 Zp5D5IqmLygidHzHDYSuOeQl5JqXu6Vs4wtV5AtqScgYEnqmGmS/fpGqlktvgJ4zOi
+	 I9nuLYjzcIVwJHDH6s5PAz98cIgtmygUQIkUPEbvPhvjrWhhuPSn0qiIvjBQ9Fkbdn
+	 /VFthmuytJ4RQ==
+Date: Fri, 14 Jun 2024 11:14:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 10/13] PCI: Give pci_intx() its own devres callback
+Message-ID: <20240614161443.GA1115997@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,51 +49,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <844ef200-aabe-4497-85c9-44fc46c9133a@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d38858130e129fd3568e97d466a4b905e864f8f.camel@redhat.com>
 
-On Fri, Jun 14, 2024 at 09:03:22AM -0700, Dave Hansen wrote:
-> On 6/13/24 12:16, Alexey Makhalov wrote:
-> > +unsigned long vmware_tdx_hypercall(unsigned long cmd,
-> > +				   unsigned long in1, unsigned long in3,
-> > +				   unsigned long in4, unsigned long in5,
-> > +				   u32 *out1, u32 *out2, u32 *out3,
-> > +				   u32 *out4, u32 *out5)
-> > +{
-> > +	struct tdx_module_args args;
-> > +
-> > +	if (!hypervisor_is_type(X86_HYPER_VMWARE)) {
-> > +		pr_warn_once("Incorrect usage\n");
-> > +		return ULONG_MAX;
-> > +	}
-> > +
-> > +	if (cmd & ~VMWARE_CMD_MASK) {
-> > +		pr_warn_once("Out of range command %lx\n", cmd);
-> > +		return ULONG_MAX;
-> > +	}
-> > +
-> > +	args.rbx = in1;
-> > +	args.rdx = in3;
-> > +	args.rsi = in4;
-> > +	args.rdi = in5;
-> > +	args.r10 = VMWARE_TDX_VENDOR_LEAF;
-> > +	args.r11 = VMWARE_TDX_HCALL_FUNC;
-> > +	args.r12 = VMWARE_HYPERVISOR_MAGIC;
-> > +	args.r13 = cmd;
-> > +	args.r15 = 0; /* CPL */
+On Fri, Jun 14, 2024 at 10:09:46AM +0200, Philipp Stanner wrote:
+> On Thu, 2024-06-13 at 16:06 -0500, Bjorn Helgaas wrote:
+> > On Thu, Jun 13, 2024 at 01:50:23PM +0200, Philipp Stanner wrote:
+> > > pci_intx() is one of the functions that have "hybrid mode" (i.e.,
+> > > sometimes managed, sometimes not). Providing a separate pcim_intx()
+> > > function with its own device resource and cleanup callback allows
+> > > for
+> > > removing further large parts of the legacy PCI devres
+> > > implementation.
+> > > 
+> > > As in the region-request-functions, pci_intx() has to call into its
+> > > managed counterpart for backwards compatibility.
+> > > 
+> > > As pci_intx() is an outdated function, pcim_intx() shall not be
+> > > made
+> > > visible to drivers via a public API.
+> > 
+> > What makes pci_intx() outdated?  If it's outdated, we should mention
+> > why and what the 30+ callers (including a couple in drivers/pci/)
+> > should use instead.
 > 
-> I believe this leaks stack data into the hypervisor.  Or did I miss the
-> zeroing of rcx/r8/r9/r14?
+> That is 100% based on Andy Shevchenko's (+CC) statement back from
+> January 2024 a.D. [1]
 > 
-> You need to zero out all of 'args' somehow.
+> Apparently INTx is "old IRQ management" and should be done through
+> pci_alloc_irq_vectors() nowadays.
 
-You mean like this:
+Do we have pcim_ support for pci_alloc_irq_vectors()?
 
-	struct tdx_module_args args = {};
-
-?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> [1] https://lore.kernel.org/all/ZabyY3csP0y-p7lb@surfacebook.localdomain/
