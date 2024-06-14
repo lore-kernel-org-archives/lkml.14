@@ -1,158 +1,172 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB4F171082;
-	Fri, 14 Jun 2024 15:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614AA15ECCF;
+	Fri, 14 Jun 2024 15:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378621; cv=none; b=c0Kvw69hJT3944ltd0LBR/Fw6MNAimCTYCrZCocIjazQByUl6J4rjk3iNeCuwo5fQ67wx40jjzPrARM4Kk3zz08irZJGaRJ6MY/RPS63OzoFLf+Iqj+IVi2DhWsK1R3QWd1RATtzcpz/aYwExyCP4ACAYdkxkIJwpSjevtCOF3g=
+	t=1718378788; cv=none; b=VUBYqmBCIQhgjG635kNT7Rqz7Ws/XzXtAbzXan8XC0Yf6iADmO4+Q1jAdfsIaHMFm37M9axMcULYn4l/9amcU3pmXHQzkeodvsbAbOsm92t10umHkh5Af4YdZnPEj0p0DVOJnJkd1j3R+dTCoAflfKcJZ5vbdFrHV5D20KFEGfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378621; c=relaxed/simple;
-	bh=rE3BnVtzjXG1HQP7KK8YhqFpU0yRwgn4LRCh3pJlmjQ=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r6kw4fobGjd1ac0J1MLwoJcLtlUP5lkJ8SARJp8597xPlPQ3+ke0k+4KPYspxgFf1YQkZAB3LFgQtyxTJfpBmxADAgcjt6It9v0JYXPc1chnBGwKd7CswsVNOOCJ5leeNY0WYHZUFWfnKTF5qa8UUvbZCpA2Hau+1/uOstOPuxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S9M/a33n; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718378788; c=relaxed/simple;
+	bh=4NLhjLagJehuTOmWaUKeGAJfqt2/4rzGpxd/ChCEB5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bb3tviDNpeqqHp53bGboPbmEds70s5Ht/M3ZzTgYof8WFJR0ZHYx0UVw2WCkm31Z4Bm0xcOun/61ufMyCDqD9sEu0f6oayKlp1LmVdQ9MgovXr0w2tYs1FgOdCrPppzZsB8y+QEk7FsCIk8qWQOAvHBcWD92XW2Nyn7JKwKBR+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGyqQvfg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9M/a33n"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso3083897a12.0;
-        Fri, 14 Jun 2024 08:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718378618; x=1718983418; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h9OdnYF4UyN/cVgcAYpH96GtKoeiuqLKBw2Oa4MGr/I=;
-        b=S9M/a33nOlLwcomjzWg0IpGtxXhBPLtnzQPGGq40swiGATlKFrlHF0Xb1/1DgcgHC/
-         MyCZ48nKHTSsHrk1YhwuZ51chRc9xWxWpTtDsa+9D/zLb4eDul99ESC24mPhTfwfH0UR
-         dT7R95g1pzINdEMKmaKNG+RGwr/G3ORUNSO8LyYdHonXlodhuvHLvKPl8gPgiY/TkR5E
-         ZPKRu+Id1pzjbLDgknOYUA4usWcTk5CNyq1Ft0O384XsV6CjoLRgnW9Ugx66Vv84z54E
-         J12rmV87X8Gdr9H3+eUn5lw+hrz2NsXgn2pjAqBqm9xH7w+UFLBUG/ZgvqC7wOU60SCc
-         4kVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718378618; x=1718983418;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=h9OdnYF4UyN/cVgcAYpH96GtKoeiuqLKBw2Oa4MGr/I=;
-        b=rNgGeij0P+3xfhO5hzM5Ui75mzlcvz1FDH4C789LVXMsClhJrp3QchWXC9EjX/8zcL
-         bGogIhXCWw9TYI0rouPb4PD1BOuXqjNTD+wwbAMjuHqZpFqnXy5IVV7UzUtAJGDGg9Ym
-         Oum8fbBBSbSgG0wXafzpkm+AG5H67oM6qZUE3VAFa0+KSghf91B9ECOiBaYCIVjXnfcw
-         8MaOT9NBy8zmX37XDDK49IeWKus8YdkBQvoQfC5LuMJGbdEfDSXRA/jAEHrukFgYS3H2
-         Hgb+1eoQIhb8PpVcYioTfuZ5RmQs7FSQJxyj2RG2M9kpZH+PyMRJnkfld0SHiNyzAAM7
-         OJ2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXoGBHwHYgWbdxprFWsu2E1YoBxDFr2oeOHrsOyR9yZ3n58d0fbGDAC2hbEHh00HaJ2IJMr8VmXHkcfHqsvhJ91Ar6Ha0Fp5l94EsLsU01aNrpEgldykc7AnQrfBABMpgE1sBgkR9/xE+cbxr/fLBxjCVuVraMwTHEKJIQbo35SoCsZgw==
-X-Gm-Message-State: AOJu0YwqILHcCVdOPQqXb0p0I92OPBslrwSVSmX2VB7IDYh5nFnghZ15
-	9r6cHizIvrPLO8Bt3cDnWIzjZnv0AVHFwHMn5LkKXy32f9tx43YQ
-X-Google-Smtp-Source: AGHT+IEjPDg40yfrzw//2lH7maNSEzK9o2sIQhEYuRNrAZF+ikJvot6sYR/NC4ZQqOamvU0MomxEXw==
-X-Received: by 2002:a50:ab15:0:b0:57a:31eb:83da with SMTP id 4fb4d7f45d1cf-57cbd69c3b5mr2654930a12.30.1718378618109;
-        Fri, 14 Jun 2024 08:23:38 -0700 (PDT)
-Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da708sm2408125a12.37.2024.06.14.08.23.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 08:23:37 -0700 (PDT)
-Message-ID: <4e7e3080857b5822011734776de7456787dda546.camel@gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: frequency: adf4350: add clk provider
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, Lars-Peter Clausen
-	 <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron
-	 <jic23@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGyqQvfg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0A6C4AF51;
+	Fri, 14 Jun 2024 15:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718378787;
+	bh=4NLhjLagJehuTOmWaUKeGAJfqt2/4rzGpxd/ChCEB5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iGyqQvfgCKL29czXdLpI26pg+vOmhaS4MR18JazX3SZMzYsUam/IWoTAfgbTupIAf
+	 fpzu7hlTKxc78qkMSxp476JG5DD1XlI0o43+E4Ed9BTXHijTaHLn/S3lANfMuxGMlI
+	 k72u7fp3PSi3NsI2+ZBl96yfgelboWNj7AquyRSkbzHrzF0lUD0a8vaJdZPqP2wN8f
+	 DRKrLPoz2NEZOTCN4OoN3BpU1xST19LNQWAUv5NAC3XL65TsM0KOOaCbi5fKA7uJ2j
+	 sc2T9qtK3i3tH9yfBzWPWBMCRF1OYxqoSVM6G50ltrWI3GepJgdg8fJOlXP+ApV9om
+	 vDi4VotHx0TkQ==
+Date: Fri, 14 Jun 2024 16:26:22 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Charles Wang <charles.goodix@gmail.com>
+Cc: dmitry.torokhov@gmail.com, dan.carpenter@linaro.org,
+	dianders@chromium.org, robh@kernel.org, krzk+dt@kernel.org,
+	jikos@kernel.org, bentiss@kernel.org, hbarnor@chromium.org,
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Date: Fri, 14 Jun 2024 17:23:37 +0200
-In-Reply-To: <20240612130232.7692-2-antoniu.miclaus@analog.com>
-References: <20240612130232.7692-1-antoniu.miclaus@analog.com>
-	 <20240612130232.7692-2-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
+Subject: Re: [PATCH v4 2/2] dt-bindings: input: Goodix SPI HID Touchscreen
+Message-ID: <20240614-renewably-snowless-861ca2ab9c93@spud>
+References: <20240614121538.236727-1-charles.goodix@gmail.com>
+ <20240614121538.236727-3-charles.goodix@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sIpVdyPJbqU7YAg0"
+Content-Disposition: inline
+In-Reply-To: <20240614121538.236727-3-charles.goodix@gmail.com>
 
-On Wed, 2024-06-12 at 16:02 +0300, Antoniu Miclaus wrote:
-> Add clk provider feature for the adf4350.
+
+--sIpVdyPJbqU7YAg0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 14, 2024 at 08:15:38PM +0800, Charles Wang wrote:
+> The Goodix GT7986U touch controller report touch data according to the
+> HID protocol through the SPI bus. However, it is incompatible with
+> Microsoft's HID-over-SPI protocol.
 >=20
-> Even though the driver was sent as an IIO driver in most cases the
-> device is actually seen as a clock provider.
->=20
-> This patch aims to cover actual usecases requested by users in order to
-> completely control the output frequencies from userspace.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Signed-off-by: Charles Wang <charles.goodix@gmail.com>
 > ---
-> changes in v4:
-> =C2=A0- rename macro to `to_adf4350_state`
-> =C2=A0- do not expose ADF4350_FREQ and ADF4350_FREQ_REFIN if driver is us=
-ed as clk
-> =C2=A0=C2=A0 provider.
-> =C2=A0- initialize flags with CLK_SET_RATE_PARENT
-> =C2=A0drivers/iio/frequency/adf4350.c | 134 +++++++++++++++++++++++++++++=
-++-
-> =C2=A01 file changed, 133 insertions(+), 1 deletion(-)
+>  .../bindings/input/goodix,gt7986u.yaml        | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/goodix,gt7986=
+u.yaml
 >=20
-> diff --git a/drivers/iio/frequency/adf4350.c b/drivers/iio/frequency/adf4=
-350.c
-> index 4abf80f75ef5..8309ddfca9af 100644
-> --- a/drivers/iio/frequency/adf4350.c
-> +++ b/drivers/iio/frequency/adf4350.c
-> @@ -19,6 +19,7 @@
-> =C2=A0#include <linux/gpio/consumer.h>
-> =C2=A0#include <asm/div64.h>
-> =C2=A0#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> =C2=A0
-> =C2=A0#include <linux/iio/iio.h>
-> =C2=A0#include <linux/iio/sysfs.h>
-> @@ -36,6 +37,9 @@ struct adf4350_state {
-> =C2=A0	struct gpio_desc		*lock_detect_gpiod;
-> =C2=A0	struct adf4350_platform_data	*pdata;
-> =C2=A0	struct clk			*clk;
-> +	struct clk			*clkout;
-> +	const char			*clk_out_name;
-> +	struct clk_hw			hw;
-> =C2=A0	unsigned long			clkin;
-> =C2=A0	unsigned long			chspc; /* Channel Spacing */
-> =C2=A0	unsigned long			fpfd; /* Phase Frequency Detector */
-> @@ -61,6 +65,8 @@ struct adf4350_state {
-> =C2=A0	__be32				val __aligned(IIO_DMA_MINALIGN);
-> =C2=A0};
-> =C2=A0
-> +#define to_adf4350_state(_hw) container_of(_hw, struct adf4350_state, hw=
-)
+> diff --git a/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml =
+b/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
+> new file mode 100644
+> index 000000000..1c518d03b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/goodix,gt7986u.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> =C2=A0static struct adf4350_platform_data default_pdata =3D {
-> =C2=A0	.channel_spacing =3D 10000,
-> =C2=A0	.r2_user_settings =3D ADF4350_REG2_PD_POLARITY_POS |
-> @@ -370,6 +376,12 @@ static const struct iio_chan_spec_ext_info adf4350_e=
-xt_info[]
-> =3D {
-> =C2=A0	{ },
-> =C2=A0};
-> =C2=A0
-> +static const struct iio_chan_spec_ext_info adf4350_clk_ext_info[] =3D {
-> +	_ADF4350_EXT_INFO("frequency_resolution", ADF4350_FREQ_RESOLUTION),
-> +	_ADF4350_EXT_INFO("powerdown", ADF4350_PWRDOWN),
-> +	{ },
+> +title: GOODIX GT7986U SPI HID Touchscreen
+> +
+> +maintainers:
+> +  - Charles Wang <charles.goodix@gmail.com>
+> +
+> +description:
+> +  Supports the Goodix GT7986U touchscreen.
+> +  This touch controller reports data packaged according to the HID proto=
+col,
+> +  but is incompatible with Microsoft's HID-over-SPI protocol.
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - goodix,gt7986u
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: reset gpio the chip is connected to.
+> +
+> +  goodix,hid-report-addr:
+> +    description: the register address for retrieving HID report data.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +additionalProperties: false
 
-Do we really need powerdown? Dunno :). I would expect one of unprepare/disa=
-ble to
-take care of that. Moreover, imagine userspace powers down the device while=
- an in
-kernel consumer was using it? Not cool right ehhe?
+unevaluatedProperties: false.
 
-Even the frequency_resolution is arguable as that is also a DT property but=
- to keep
-consistency why not? That one I can live with...
+Please test your binding w/ dt_binding_check.
 
-Also note that you're still not including the clock maintainers in the loop=
-.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - goodix,hid-report-addr
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +      num-cs =3D <1>;
+> +      cs-gpios =3D <&gpio 2 GPIO_ACTIVE_HIGH>;
 
-- Nuno S=C3=A1
+cs-gpios shouldn't be needed for a basic example.
 
+Blank line here before the child node please.
+
+Thanks,
+Conor.
+
+> +      touchscreen@0 {
+> +        compatible =3D "goodix,gt7986u";
+> +        reg =3D <0>;
+> +        interrupt-parent =3D <&gpio>;
+> +        interrupts =3D <25 IRQ_TYPE_LEVEL_LOW>;
+> +        reset-gpios =3D <&gpio1 1 GPIO_ACTIVE_LOW>;
+> +        spi-max-frequency =3D <10000000>;
+> +        goodix,hid-report-addr =3D <0x22c8c>;
+> +      };
+> +    };
+> --=20
+> 2.43.0
+>=20
+>=20
+
+--sIpVdyPJbqU7YAg0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmxhHgAKCRB4tDGHoIJi
+0jvDAQDDtZyVi/8NgabB8fDEa1enuIUIT8ggVNgMugIqpQnRNAEA+oBaBQsso5Pk
+mO2mB6FIEIQiIEctAIhGz5QpwWq+aAQ=
+=Ez+U
+-----END PGP SIGNATURE-----
+
+--sIpVdyPJbqU7YAg0--
