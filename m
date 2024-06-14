@@ -1,100 +1,124 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD48E154457;
-	Fri, 14 Jun 2024 15:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8A3B1AB
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718379278; cv=none; b=BcKSd4HsqWqPjGBECwzxDLVfQDrRNrocZhx857RamzB34tx3R5uGWwCiQbSYk1kFczzaNBHYiJMqzYc5Qq5ZGx2fHvc83TpH0r36VzXi9hxEoxXp02gCpOXrsF1+f4mtrL/UIrT12yWYI5fG/AqvToA38g4n/84MfAtauwVh5iQ=
+	t=1718379313; cv=none; b=o/StxEFVCAnhOVQTERrqjeuRUwHYU+EGUFrMYT1U4EWNvxO/xObB9XnpM1jcqFN9LWbPEfOCA3l6Y8YjLRP/v9nas8fdDS7qzfcnPtWlF0A0DvE9mGnCjhK8xLctykhYIG+dVGsr0YUqT6+cdDz2wyIiOtePGieN8FKdf0PIXuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718379278; c=relaxed/simple;
-	bh=v18banXTYDVpix+KbeN27Ilvj7iKBjNLDKFcfhurzgI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kkrB0bkE1SGxHMhDC1Hx9ABSQM6unGfS9zmblhDsdjSkNDo3N3KloXWUwXJVQlm/gfKYRYMffcE9UmhvNvQMw6KuoIBHMuWCsdpzr4RA5QEafgHvVIMp0jVfuU6feqen158JOUC9jdzt3q1gv6I1Hg8srnShCz2AYt1l1sywyew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8ba0C/x7; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718379313; c=relaxed/simple;
+	bh=By+OoUK9phjDxFni9NpDYhaOStLT4N1Ufyg/V2rZsuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aWxxd+eki2QscaCdksrAH3Fdxtm4Xs9Cwgi9adjB0DMvPwJVONOZBp1BmL+9/e6hR9LUo2uLjw4Bl4vDrU6G0jCTjafNlK/tnmRep5ykJ2wKbF4yYkhwYzbkTe6ivBjJCalRBH1WKzJn6oOzSzSybVGdTLu4Gy9Ni7C7Vu7zQFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nLsPPILe; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8ba0C/x7"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EAWaU2026928;
-	Fri, 14 Jun 2024 17:34:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=7riLuqz+hA84DWBGx6XOwv
-	cbfBzybdq7BcM57HkoHGI=; b=8ba0C/x7jRpXKP5819oyrl616VIvttD7d6J5v9
-	uZmCs2/oH5B2J2y131VZ4vxKo7eI4ZczmOZA8BgtuKI3l4BtiW5Pp4sbptRlU/87
-	zKdU0IKeeZv0wEeS+OnsuEJy1UX4KMrYgxLjvmT2s/yd7CBIlosdZSEU0Plfubox
-	kcIX4jxZ1PLUkLKnYzFHki4xWwzC2E5tOz6fd851+zjO2MhoQ3ClML6ODa8e3cMb
-	9x1GX3fxG8BfpjzUPEe5kg7x068CGB3KB59s3mVi2A4TD8aei++7idxPZfU+OERE
-	ss8ZQy4Rkv97DuO6bv4+939qMwonF90NF/fzaz0gTcTKeQ2g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yrfujae6f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:34:23 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 04E884002D;
-	Fri, 14 Jun 2024 17:34:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 215AB2171F3;
-	Fri, 14 Jun 2024 17:33:48 +0200 (CEST)
-Received: from localhost (10.48.86.128) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 14 Jun
- 2024 17:33:47 +0200
-From: Etienne Carriere <etienne.carriere@foss.st.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <devicetree@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, "Lee
- Jones" <lee@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>,
-        Etienne Carriere
-	<etienne.carriere@foss.st.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH] dt-bindings: mfd: dual licensing for st,stpmic1 bindings
-Date: Fri, 14 Jun 2024 17:33:46 +0200
-Message-ID: <20240614153346.2656871-1-etienne.carriere@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nLsPPILe"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso38163611fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718379309; x=1718984109; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=By+OoUK9phjDxFni9NpDYhaOStLT4N1Ufyg/V2rZsuM=;
+        b=nLsPPILey2jD3seYmP68z6SLyndCASGyfQre4fy54xmJm+Suif8hg/mcv4Gi029hpp
+         vu2iBc4QYZvm6EMN4RCySgNJwp3+VZptNtAVTNU00Zo2enINoAaoWwRAFWLMcub7v+cJ
+         XQMMEqffUgP27ooAmFUX/BKpkDGnvYhwTTj/oomMY1oQtcAu8RjjKh9+LdTsnA7+48j5
+         4JwEi95WscZoDmLadMY2OFTqVaci8B9c8W4VNtnDdtaRjE85E6l2eLm7vzCIkDvNTTyC
+         vtxMImDmCVOHj8oO1RpIcFv4mZQX5x7XyHiy50o6u+zo/fqa75O4ZuFJxEfNRbl544QB
+         DMaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718379309; x=1718984109;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=By+OoUK9phjDxFni9NpDYhaOStLT4N1Ufyg/V2rZsuM=;
+        b=C4t6UhvOJL2Q/N+X0PGOUL6fWAc3jahgE3MDnCaYlqqppAwyCRSurwhTFsYAphfgoN
+         +9/HHmbeROei6nt6JRNa6O1B4YYPG1bd1u1i76JnVNPdWjLTMjUcd/KXs/Ga42J+BD71
+         0Nc+sr2GbtclyVACS7O8yFWUhtTHfjoEgHvjkCRoe/TDtqzyjL8AJgtN4d5T/KAdN148
+         BUI+EmdYb6OFRSuXTUe7edFfuv7Klm2q+CWMxzT9pPFtotGWA3ajFMK5SAGbt/mOf1gD
+         rggEMpRmliSByCWigJCGOLyDOKxHTee6++aTjuilnvaej/2uSUlhLGvjQyRGO8EyXE3v
+         M9IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRQxG+Ro1xdIXlGKS/nnDwde5xTznf8iKW6LqUHV+RZY70gr8nqoduoRZy3t/XAam0bVcZSKhoIEimnk2XQrOq167Xi7s7Tk4zLo3+
+X-Gm-Message-State: AOJu0YxCb+mMCvMO4omva3L4yPq+WzkXBz2/e5JXjwrP0a949uFZESli
+	Sve/UFiTsJrRQic/fAeBy0Woo02ebqwLyG9x3pq5sjEXBdtPSfZUp5iBOCdw+Rw=
+X-Google-Smtp-Source: AGHT+IEZFCe/X0dPZ4UuhbZeK/Ijt1BLha/MawlM++zT52lImv6xyoOojlWTAYxhTmOdMBbXtX4hig==
+X-Received: by 2002:ac2:44a2:0:b0:52c:a5cc:27e7 with SMTP id 2adb3069b0e04-52ca6e9dafcmr2324082e87.66.1718379309156;
+        Fri, 14 Jun 2024 08:35:09 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f40fe2sm200252766b.148.2024.06.14.08.35.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 08:35:08 -0700 (PDT)
+Date: Fri, 14 Jun 2024 17:35:07 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
+Message-ID: <rlpicrfrp4nsftgj24oakn6urj7axi2gptrlzpdk3f2scvmzqb@5caoklb74wvm>
+References: <20240614090829.560605-1-sean@mess.org>
+ <xj5mqnte5dgs4yzuku6g7gnprgm43tdbunxmo6o4thzreyraok@kttvkz5dhaei>
+ <1f13c705-dec7-48f6-a6d7-4a9000eedf7d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-14_13,2024-06-14_03,2024-05-17_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c5ub5pa2ooxsz7dl"
+Content-Disposition: inline
+In-Reply-To: <1f13c705-dec7-48f6-a6d7-4a9000eedf7d@app.fastmail.com>
 
-Change include/dt-bindings/mfd/st,stpmic1.h license model from GPLv2.0
-only to dual GPLv2.0 or BSD-3-Clause. I have every legitimacy to request
-this change on behalf of STMicroelectronics. This change clarifies that
-this DT binding header file can be shared with software components as
-bootloaders and OSes that are not published under GPLv2 terms.
 
-In CC are all the contributors to this header file.
+--c5ub5pa2ooxsz7dl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Pascal Paillet <p.paillet@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Etienne Carriere <etienne.carriere@foss.st.com>
----
- include/dt-bindings/mfd/st,stpmic1.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello Arnd,
 
-diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
-index 321cd08797d9..957c48300cd4 100644
---- a/include/dt-bindings/mfd/st,stpmic1.h
-+++ b/include/dt-bindings/mfd/st,stpmic1.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
- /*
-  * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-  * Author: Philippe Peurichard <philippe.peurichard@st.com>,
--- 
-2.25.1
+On Fri, Jun 14, 2024 at 01:38:05PM +0200, Arnd Bergmann wrote:
+> On Fri, Jun 14, 2024, at 12:06, Uwe Kleine-K=F6nig wrote:
+> > On Fri, Jun 14, 2024 at 10:08:29AM +0100, Sean Young wrote:
+> >
+> > Thanks. I guess the patch becoming
+> > 8129d25e32b7fd0f77bc664252321f3a16bb26b8 was created a while before
+> > pwm_apply_might_sleep() was a thing.
+> >
+> > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> >
+> > Arnd, you merged the last changes to that driver. Do you want to care
+> > for that one, too? If not I can apply it via my pwm tree.
+>=20
+> Whichever works best for you. I generally take drivers/bus
+> and drivers/soc fixes through the soc tree, but if this is
+> a PWM related change then having it in the pwm tree makes
+> sense as well.
+>=20
+> If you like me to pick it up through the soc tree, please
+> forward the fix to soc@kernel.org.
 
+OK, then I pick it up and consider it done. Thanks.
+
+Best regards
+Uwe
+
+--c5ub5pa2ooxsz7dl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZsYykACgkQj4D7WH0S
+/k4xQwf/RPjgnr71cDGKDmyjNofEfiQ1ZhYO5iXTl8+UCZqHHQ+9E5JiswnpxUDi
+nLBXz3EHObg2h+x0f7HpDn4TLGgn0zLCJ5R1mUhtJXgYU0v61Xs4XJDGhTQ075zM
++7GoRqdNAhtsycqHhXRy5Dkgr0nTMhQjhpSpVfrWFImvy4CV4FfWuWB6k60aFKvC
+mNJPJhu+9jrs2P2HGu4rxv6IHhgUJrB2uC4Rp/rJoh6bHOls5usy1OTffCkvndTi
+TOGz/D8L0qabV5zpOyoBt/VygYr9lbu3WY8Bs6bnfPMF8miWptTIiJ6X+pIyAMJf
+kqBUuTD9Ri+GtNUMWxwviNJVVx1AnQ==
+=49MG
+-----END PGP SIGNATURE-----
+
+--c5ub5pa2ooxsz7dl--
