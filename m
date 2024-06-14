@@ -1,214 +1,446 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0C12EBD7
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0F4185082
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352949; cv=none; b=Lh9+lJe53px4r6kjETOaH6jalCvvb/cme5WZdUhqbj7iaVPxT2GE+m3hktS3M6Y4rmb/qDfG/3MZT1Dy3nexhhOwsUoLR5zu/1ugAaF5x5G8E75piK0cGRVHITXd8+dzDZXjrPFHuEBU22SHH47qwyibAVZltp17oyW7Q69v5Oo=
+	t=1718352965; cv=none; b=NWbNFKNqSUGzOHDDV2LD4MqAjH+BOrRfIva9OCTZsscALo1Fk+h54RNPoCAt4HxLycQhkdb3YKJBlwj+m2fB22jOcLbUpQkNxZrW86uM0mVcfzxBc6/Iu7eYEN9Omq2kHebrfkPKLC9UsECbzV7C7ViLEhNc/JM6CnmfB9Ap9ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352949; c=relaxed/simple;
-	bh=4mnjHBMloQMjDPRIX8P2PWaHjyUmlgF71dog2aQTlQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A+ifGNQGZol72ySU1g/YPiarOsE9lFvKeLrMEpUigpgu3RqVHPDdcM3DqWZY1DgovtPWVXpXmReOvSvsREUv3FsEQbYaP/gGUv7h8RnCluIrsuUdUsLfMG6+JVAB5JNijgkglQ1CTUB7kb6TjF9sYs89FIq9m++2Xq5DFR/IM88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1ysXAkv; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718352965; c=relaxed/simple;
+	bh=wcehNLrpht/MugdmYesfBf1F3dAm2Titz8hi7VGBa8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VksfPD1cA4R6t9otqkirBAAR6i5JDemLqhJgeP754kzsGqCntjisvp9zb72NYOEwoSEpm0Pi+o6lNrwg6MkUgyBVoDEVIhEB/WiN+BA+AU8kyamMW5s6eQ9q93HxupSYCNxXOB2KhoXmB8aeQGJxgXJMB2fKFx5MKUPZFLC2/ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SF+M5d3L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=21yxkPuf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=b4I9Hbjx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vVTOJreZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1ysXAkv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718352948; x=1749888948;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4mnjHBMloQMjDPRIX8P2PWaHjyUmlgF71dog2aQTlQw=;
-  b=m1ysXAkvOj56x2o8LpcH6vBrb9FukAcUsBIUiX2CaXlJK/XbUspdn+GH
-   RJbdR/9kdbNNk9WEUBDprcrEUnN2waTxim56GoUHDFbrDIhCfJTDlgkP4
-   Ca68mlMQYGlAzkGZwV8BnZP0wNf5+Gyg48OH3CswkwYeKixC8YYH8iOKf
-   wzwNzWz/AJfC7hTGwdmgp+P8+G698xWu/83H4fpuzrnM/gL5w2GGZSluR
-   HwOqUx9ZbVbOjNanxpCVAX67Oy9SidysRQbSqlGnOcPwSomcNx6ErVNgg
-   7egD5gI3twqUBPpHD9UEqGgMc9G5Zm9ABhbO6Wke/JJ5M3fKKxPtDWLe9
-   g==;
-X-CSE-ConnectionGUID: Lv9CqwNaSIyQBh2asWAgoQ==
-X-CSE-MsgGUID: y8F9juBoR5+jedmm2nTKrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="15010635"
-X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="15010635"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 01:15:47 -0700
-X-CSE-ConnectionGUID: +i/04Hn1SFKRCOHFoUukKA==
-X-CSE-MsgGUID: OR5/AC3cSCSjSjQHxoDwKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="40316906"
-Received: from lkp-server01.sh.intel.com (HELO 9e3ee4e9e062) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2024 01:15:45 -0700
-Received: from kbuild by 9e3ee4e9e062 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sI263-00011C-1I;
-	Fri, 14 Jun 2024 08:15:43 +0000
-Date: Fri, 14 Jun 2024 16:15:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: arch/arm64/boot/dts/qcom/pmi632.dtsi:155.19-163.5: Warning
- (avoid_unnecessary_addr_size): /soc@0/spmi@200f000/pmic@3/pwm: unnecessary
- #address-cells/#size-cells without "ranges" or child "reg" property
-Message-ID: <202406141648.ezZLgHWo-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SF+M5d3L";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="21yxkPuf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="b4I9Hbjx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vVTOJreZ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 15AC020201;
+	Fri, 14 Jun 2024 08:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718352955; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6LoGxfJP3NSybvTfW3xLIcUrYqsNTqARgsCRE4cnrlA=;
+	b=SF+M5d3LtRJ6D/3p9qaVV+TV37UVt09yV+VBF1Wbt70WWQPE32EJBJe7G/iIHIBkcGZcCD
+	iFTgOBBCNDUaVfYT9nCWGEQlWxhf2C26X25w1i+AT5oT607pBsYVkJ10ztz8yRtb3L8P18
+	A6mcvQ2B75E/0T/ue/1TLLj/A/BlNIU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718352955;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6LoGxfJP3NSybvTfW3xLIcUrYqsNTqARgsCRE4cnrlA=;
+	b=21yxkPufH1IMmaiPDmGmFpzvMf1+IshWnmfGpdXWoqE2owZJstd6B0f+lADvjMz2CbEgZj
+	YN7pJgMwoKlZitAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718352954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6LoGxfJP3NSybvTfW3xLIcUrYqsNTqARgsCRE4cnrlA=;
+	b=b4I9Hbjxr+091JDb8ZlMY+qoW5zOpV5YamNIwyo/Ya4M4Aa8LVYNcYAREa8JLgoam0pJ3+
+	n9hl0SEdixKwLyimOA56KwXDIHLzEj/Nw1Uk01coWjjfCGFzEE+qxBRRbwCBXU2S/Uklep
+	8pWGzc+2gDKtvirzBaCVEn2xCKLmZ2k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718352954;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6LoGxfJP3NSybvTfW3xLIcUrYqsNTqARgsCRE4cnrlA=;
+	b=vVTOJreZGK0vaOT/BaQVi2Ff1kpu/TTHdCWjmY50O9U5q7HVbMZlT1yO94eI/+l6wib3dr
+	w/pEG9CO5hkf1eDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C7E6713AB1;
+	Fri, 14 Jun 2024 08:15:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LxHtLjn8a2YVYAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 14 Jun 2024 08:15:53 +0000
+Message-ID: <f5485db8-9e1d-4b95-a0ec-25ee8551795d@suse.de>
+Date: Fri, 14 Jun 2024 10:15:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] drm/fb-helper: Detect when lid is closed during
+ initialization
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Chris Bainbridge <chris.bainbridge@gmail.com>
+References: <20240613051700.1112-1-mario.limonciello@amd.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240613051700.1112-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.79
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,gitlab.freedesktop.org:url,amd.com:email]
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d20f6b3d747c36889b7ce75ee369182af3decb6b
-commit: 0c4f10917d22e6f36080617bfe71de1ae854ee58 arm64: dts: qcom: sdm632-fairphone-fp3: Add notification LED
-date:   1 year, 1 month ago
-config: arm64-randconfig-r113-20240606 (https://download.01.org/0day-ci/archive/20240614/202406141648.ezZLgHWo-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce: (https://download.01.org/0day-ci/archive/20240614/202406141648.ezZLgHWo-lkp@intel.com/reproduce)
+Hi Mario
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406141648.ezZLgHWo-lkp@intel.com/
+Am 13.06.24 um 07:17 schrieb Mario Limonciello:
+> If the lid on a laptop is closed when eDP connectors are populated
+> then it remains enabled when the initial framebuffer configuration
+> is built.
+>
+> When creating the initial framebuffer configuration detect the
+> lid status and if it's closed disable any eDP connectors.
+>
+> Also set up a workqueue to monitor for any future lid events.
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/qcom/msm8953.dtsi:175.9-179.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm64/boot/dts/qcom/msm8953.dtsi:865.22-915.6: Warning (avoid_unnecessary_addr_size): /soc@0/display-subsystem@1a00000/dsi@1a94000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
-   arch/arm64/boot/dts/qcom/pmi632.dtsi:149.9-164.4: Warning (avoid_unnecessary_addr_size): /soc@0/spmi@200f000/pmic@3: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
->> arch/arm64/boot/dts/qcom/pmi632.dtsi:155.19-163.5: Warning (avoid_unnecessary_addr_size): /soc@0/spmi@200f000/pmic@3/pwm: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+After reading through this patchset, I think fbdev emulation is not the 
+right place for this code, as lid state is global.
 
-vim +155 arch/arm64/boot/dts/qcom/pmi632.dtsi
-
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   40  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   41  &spmi_bus {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   42  	pmic@2 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   43  		compatible = "qcom,pmi632", "qcom,spmi-pmic";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   44  		reg = <0x2 SPMI_USID>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   45  		#address-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   46  		#size-cells = <0>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   47  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   48  		pmi632_temp: temp-alarm@2400 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   49  			compatible = "qcom,spmi-temp-alarm";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   50  			reg = <0x2400>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   51  			interrupts = <0x2 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   52  			#thermal-sensor-cells = <0>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   53  		};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   54  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   55  		pmi632_adc: adc@3100 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   56  			compatible = "qcom,spmi-adc5";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   57  			reg = <0x3100>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   58  			#address-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   59  			#size-cells = <0>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   60  			#io-channel-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   61  			interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   62  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   63  			channel@0 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   64  				reg = <ADC5_REF_GND>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   65  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   66  				label = "ref_gnd";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   67  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   68  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   69  			channel@1 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   70  				reg = <ADC5_1P25VREF>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   71  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   72  				label = "vref_1p25";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   73  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   74  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   75  			channel@6 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   76  				reg = <ADC5_DIE_TEMP>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   77  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   78  				label = "die_temp";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   79  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   80  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   81  			channel@7 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   82  				reg = <ADC5_USB_IN_I>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   83  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   84  				label = "usb_in_i_uv";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   85  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   86  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   87  			channel@8 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   88  				reg = <ADC5_USB_IN_V_16>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   89  				qcom,pre-scaling = <1 16>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   90  				label = "usb_in_v_div_16";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   91  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   92  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   93  			channel@9 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   94  				reg = <ADC5_CHG_TEMP>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   95  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   96  				label = "chg_temp";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   97  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   98  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23   99  			channel@4b {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  100  				reg = <ADC5_BAT_ID_100K_PU>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  101  				qcom,hw-settle-time = <200>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  102  				qcom,pre-scaling = <1 1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  103  				qcom,ratiometric;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  104  				label = "bat_id";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  105  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  106  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  107  			channel@83 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  108  				reg = <ADC5_VPH_PWR>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  109  				qcom,pre-scaling = <1 3>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  110  				label = "vph_pwr";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  111  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  112  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  113  			channel@84 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  114  				reg = <ADC5_VBAT_SNS>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  115  				qcom,pre-scaling = <1 3>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  116  				label = "vbat_sns";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  117  			};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  118  		};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  119  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  120  		pmi632_adc_tm: adc-tm@3500 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  121  			compatible = "qcom,spmi-adc-tm5";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  122  			reg = <0x3500>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  123  			interrupts = <0x2 0x35 0x0 IRQ_TYPE_EDGE_RISING>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  124  			#thermal-sensor-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  125  			#address-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  126  			#size-cells = <0>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  127  			status = "disabled";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  128  		};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  129  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  130  		pmi632_sdam_7: nvram@b600 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  131  			compatible = "qcom,spmi-sdam";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  132  			reg = <0xb600>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  133  			#address-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  134  			#size-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  135  			ranges = <0 0xb600 0x100>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  136  		};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  137  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  138  		pmi632_gpios: gpio@c000 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  139  			compatible = "qcom,pmi632-gpio", "qcom,spmi-gpio";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  140  			reg = <0xc000>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  141  			gpio-controller;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  142  			gpio-ranges = <&pmi632_gpios 0 0 8>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  143  			#gpio-cells = <2>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  144  			interrupt-controller;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  145  			#interrupt-cells = <2>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  146  		};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  147  	};
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  148  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  149  	pmic@3 {
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  150  		compatible = "qcom,pmi632", "qcom,spmi-pmic";
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  151  		reg = <0x3 SPMI_USID>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  152  		#address-cells = <1>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  153  		#size-cells = <0>;
-a1f0f2ebb044c7 Luca Weiss 2023-05-23  154  
-a1f0f2ebb044c7 Luca Weiss 2023-05-23 @155  		pmi632_lpg: pwm {
-
-:::::: The code at line 155 was first introduced by commit
-:::::: a1f0f2ebb044c7248c3f30b98de0f151505bd4bd arm64: dts: qcom: Add PMI632 PMIC
-
-:::::: TO: Luca Weiss <luca@z3ntu.xyz>
-:::::: CC: Bjorn Andersson <andersson@kernel.org>
+You could put this into drm_client_modeset.c and track lid state per 
+client. drm_fb_helper_lid_work() would call the client's hotplug 
+callback. But preferable, lid state should be tracked per DRM device in 
+struct drm_mode_config and call drm_client_dev_hotplug() on each 
+lid-state event. Thoughts? Best regards Thomas
+>
+> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3349
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v2->v3:
+>   * Use input device instead of ACPI device
+>   * Detect lid open/close events
+> ---
+>   drivers/gpu/drm/drm_client_modeset.c |  29 ++++++
+>   drivers/gpu/drm/drm_fb_helper.c      | 132 +++++++++++++++++++++++++++
+>   include/drm/drm_device.h             |   6 ++
+>   include/drm/drm_fb_helper.h          |   2 +
+>   4 files changed, 169 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+> index 31af5cf37a09..b8adfe87334b 100644
+> --- a/drivers/gpu/drm/drm_client_modeset.c
+> +++ b/drivers/gpu/drm/drm_client_modeset.c
+> @@ -257,6 +257,34 @@ static void drm_client_connectors_enabled(struct drm_connector **connectors,
+>   		enabled[i] = drm_connector_enabled(connectors[i], false);
+>   }
+>   
+> +static void drm_client_match_edp_lid(struct drm_device *dev,
+> +				     struct drm_connector **connectors,
+> +				     unsigned int connector_count,
+> +				     bool *enabled)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < connector_count; i++) {
+> +		struct drm_connector *connector = connectors[i];
+> +
+> +		switch (connector->connector_type) {
+> +		case DRM_MODE_CONNECTOR_LVDS:
+> +		case DRM_MODE_CONNECTOR_eDP:
+> +			if (!enabled[i])
+> +				continue;
+> +			break;
+> +		default:
+> +			continue;
+> +		}
+> +
+> +		if (dev->lid_closed) {
+> +			drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is closed, disabling\n",
+> +				    connector->base.id, connector->name);
+> +			enabled[i] = false;
+> +		}
+> +	}
+> +}
+> +
+>   static bool drm_client_target_cloned(struct drm_device *dev,
+>   				     struct drm_connector **connectors,
+>   				     unsigned int connector_count,
+> @@ -844,6 +872,7 @@ int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width,
+>   		memset(crtcs, 0, connector_count * sizeof(*crtcs));
+>   		memset(offsets, 0, connector_count * sizeof(*offsets));
+>   
+> +		drm_client_match_edp_lid(dev, connectors, connector_count, enabled);
+>   		if (!drm_client_target_cloned(dev, connectors, connector_count, modes,
+>   					      offsets, enabled, width, height) &&
+>   		    !drm_client_target_preferred(dev, connectors, connector_count, modes,
+> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+> index d612133e2cf7..41dd5887599a 100644
+> --- a/drivers/gpu/drm/drm_fb_helper.c
+> +++ b/drivers/gpu/drm/drm_fb_helper.c
+> @@ -30,6 +30,8 @@
+>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>   
+>   #include <linux/console.h>
+> +#include <linux/input.h>
+> +#include <linux/mod_devicetable.h>
+>   #include <linux/pci.h>
+>   #include <linux/sysrq.h>
+>   #include <linux/vga_switcheroo.h>
+> @@ -413,6 +415,128 @@ static void drm_fb_helper_damage_work(struct work_struct *work)
+>   	drm_fb_helper_fb_dirty(helper);
+>   }
+>   
+> +static void drm_fb_helper_lid_event(struct input_handle *handle, unsigned int type,
+> +				    unsigned int code, int value)
+> +{
+> +	if (type == EV_SW && code == SW_LID) {
+> +		struct drm_fb_helper *fb_helper = handle->handler->private;
+> +
+> +		if (value != fb_helper->dev->lid_closed) {
+> +			fb_helper->dev->lid_closed = value;
+> +			queue_work(fb_helper->input_wq, &fb_helper->lid_work);
+> +		}
+> +	}
+> +}
+> +
+> +struct drm_fb_lid {
+> +	struct input_handle handle;
+> +};
+> +
+> +static int drm_fb_helper_lid_connect(struct input_handler *handler,
+> +				     struct input_dev *dev,
+> +				     const struct input_device_id *id)
+> +{
+> +	struct drm_fb_helper *fb_helper = handler->private;
+> +	struct drm_fb_lid *lid;
+> +	char *name;
+> +	int error;
+> +
+> +	lid = kzalloc(sizeof(*lid), GFP_KERNEL);
+> +	if (!lid)
+> +		return -ENOMEM;
+> +
+> +	name = kasprintf(GFP_KERNEL, "drm-fb-helper-lid-%s", dev_name(&dev->dev));
+> +	if (!name) {
+> +		error = -ENOMEM;
+> +		goto err_free_lid;
+> +	}
+> +
+> +	lid->handle.dev = dev;
+> +	lid->handle.handler = handler;
+> +	lid->handle.name = name;
+> +	lid->handle.private = lid;
+> +
+> +	error = input_register_handle(&lid->handle);
+> +	if (error)
+> +		goto err_free_name;
+> +
+> +	error = input_open_device(&lid->handle);
+> +	if (error)
+> +		goto err_unregister_handle;
+> +
+> +	fb_helper->dev->lid_closed = dev->sw[SW_LID];
+> +	drm_dbg_kms(fb_helper->dev, "initial lid state is set to %d\n", fb_helper->dev->lid_closed);
+> +
+> +	return 0;
+> +
+> +err_unregister_handle:
+> +	input_unregister_handle(&lid->handle);
+> +err_free_name:
+> +	kfree(name);
+> +err_free_lid:
+> +	kfree(lid);
+> +	return error;
+> +}
+> +
+> +static void drm_fb_helper_lid_disconnect(struct input_handle *handle)
+> +{
+> +	struct drm_fb_lid *lid = handle->private;
+> +
+> +	input_close_device(handle);
+> +	input_unregister_handle(handle);
+> +
+> +	kfree(handle->name);
+> +	kfree(lid);
+> +}
+> +
+> +static const struct input_device_id drm_fb_helper_lid_ids[] = {
+> +	{
+> +		.flags = INPUT_DEVICE_ID_MATCH_EVBIT | INPUT_DEVICE_ID_MATCH_SWBIT,
+> +		.evbit = { BIT_MASK(EV_SW) },
+> +		.swbit = { [BIT_WORD(SW_LID)] = BIT_MASK(SW_LID) },
+> +	},
+> +	{ },
+> +};
+> +
+> +static struct input_handler drm_fb_helper_lid_handler = {
+> +	.event =	drm_fb_helper_lid_event,
+> +	.connect =	drm_fb_helper_lid_connect,
+> +	.disconnect =	drm_fb_helper_lid_disconnect,
+> +	.name =		"drm-fb-helper-lid",
+> +	.id_table =	drm_fb_helper_lid_ids,
+> +};
+> +
+> +static void drm_fb_helper_lid_work(struct work_struct *work)
+> +{
+> +	struct drm_fb_helper *fb_helper = container_of(work, struct drm_fb_helper,
+> +						       lid_work);
+> +	drm_fb_helper_hotplug_event(fb_helper);
+> +}
+> +
+> +static int drm_fb_helper_create_lid_handler(struct drm_fb_helper *fb_helper)
+> +{
+> +	int ret = 0;
+> +
+> +	if (fb_helper->deferred_setup)
+> +		return 0;
+> +
+> +	fb_helper->input_wq = create_singlethread_workqueue("drm-fb-lid");
+> +	if (fb_helper->input_wq == NULL)
+> +		return -ENOMEM;
+> +
+> +	drm_fb_helper_lid_handler.private = fb_helper;
+> +	ret = input_register_handler(&drm_fb_helper_lid_handler);
+> +	if (ret)
+> +		goto remove_wq;
+> +
+> +	return 0;
+> +
+> +remove_wq:
+> +	destroy_workqueue(fb_helper->input_wq);
+> +	fb_helper->input_wq = NULL;
+> +	return ret;
+> +}
+> +
+>   /**
+>    * drm_fb_helper_prepare - setup a drm_fb_helper structure
+>    * @dev: DRM device
+> @@ -445,6 +569,7 @@ void drm_fb_helper_prepare(struct drm_device *dev, struct drm_fb_helper *helper,
+>   	spin_lock_init(&helper->damage_lock);
+>   	INIT_WORK(&helper->resume_work, drm_fb_helper_resume_worker);
+>   	INIT_WORK(&helper->damage_work, drm_fb_helper_damage_work);
+> +	INIT_WORK(&helper->lid_work, drm_fb_helper_lid_work);
+>   	helper->damage_clip.x1 = helper->damage_clip.y1 = ~0;
+>   	mutex_init(&helper->lock);
+>   	helper->funcs = funcs;
+> @@ -593,6 +718,9 @@ void drm_fb_helper_fini(struct drm_fb_helper *fb_helper)
+>   	if (!drm_fbdev_emulation)
+>   		return;
+>   
+> +	input_unregister_handler(&drm_fb_helper_lid_handler);
+> +	destroy_workqueue(fb_helper->input_wq);
+> +
+>   	cancel_work_sync(&fb_helper->resume_work);
+>   	cancel_work_sync(&fb_helper->damage_work);
+>   
+> @@ -1842,6 +1970,10 @@ __drm_fb_helper_initial_config_and_unlock(struct drm_fb_helper *fb_helper)
+>   	width = dev->mode_config.max_width;
+>   	height = dev->mode_config.max_height;
+>   
+> +	ret = drm_fb_helper_create_lid_handler(fb_helper);
+> +	if (ret)
+> +		return ret;
+> +
+>   	drm_client_modeset_probe(&fb_helper->client, width, height);
+>   	ret = drm_fb_helper_single_fb_probe(fb_helper);
+>   	if (ret < 0) {
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index 63767cf24371..619af597784c 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -316,6 +316,12 @@ struct drm_device {
+>   	 * Root directory for debugfs files.
+>   	 */
+>   	struct dentry *debugfs_root;
+> +
+> +	/**
+> +	 * @lid_closed: Flag to tell the lid switch state
+> +	 */
+> +	bool lid_closed;
+> +
+>   };
+>   
+>   #endif
+> diff --git a/include/drm/drm_fb_helper.h b/include/drm/drm_fb_helper.h
+> index 375737fd6c36..7fb36c10299d 100644
+> --- a/include/drm/drm_fb_helper.h
+> +++ b/include/drm/drm_fb_helper.h
+> @@ -143,6 +143,8 @@ struct drm_fb_helper {
+>   	spinlock_t damage_lock;
+>   	struct work_struct damage_work;
+>   	struct work_struct resume_work;
+> +	struct work_struct lid_work;
+> +	struct workqueue_struct *input_wq;
+>   
+>   	/**
+>   	 * @lock:
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
