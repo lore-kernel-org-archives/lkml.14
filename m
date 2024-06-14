@@ -1,162 +1,111 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C84715FA93
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA43919D8B2
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378267; cv=none; b=Iw14SI3OiZn1nRwKNHu1ux8NDBNzOQAl2LkeplqsI2MrdoYTYn+6ebM7YKLmvxrBk8gDuM5tTIMdaOpCzgZ3g9LpZBp5l7mKRFGHi/RRP0266fNEZ8fTOJglNHOcNtMm5vyKSt3LleeWmRb+xjj477Xa7WLmZhHK2viKyCMwxpo=
+	t=1718378316; cv=none; b=LCC8QM5yuDrqUnGFPUph9kO06yTO1Nk34ALgq/LKbzI7klSU3DRMLaAjDyIBclgGF1+XovifE8YER/xkWSlOeJTdtdkXWR91guBlJkAnbduuIV4y2sTTepjoql6ty8sQnZKUljvDpQ7ss22vQQ6FnDArEyavHPBHfLdM5fYH9pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378267; c=relaxed/simple;
-	bh=/8YTxGv/qHRDce0zKq4WiqsRJNX/QIeidL1MxQCvHKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CXii51QQZPzM2sV+DpBMn7vrwihiFMQkpkHztwLhW6hlJ5UDO4uvMU8mv/g6PWtoB1Hpe0NJBAPhoVBcFoZQCw8MVXEbD/QpQfRBJEq35QWMx6wk0BIWHXT33I575SaxCLSjv9VgjfdGMgRFJKdpF12/CkK/YBqUay1RQmjf0T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AO5LPneH; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718378316; c=relaxed/simple;
+	bh=c/Yb0F0WHCXYlkdOM9UYtspRJ0q02tFTEdH4RZ88v0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HiAo7PiK26huEc2YaN9U+KQSNyGYtJ+W8M7IWsrtIXnL2/+2Cc0IR2Tc6xVvMJFfBzppq4m/vwUNcEkkYiHr9LadM65XcFtKn7DhFBk5scBrRBDM4vIBI30bP84bwEvP38jf97BcXqeLmZI8hWCK35AdgodsteXbuFivjvRz7yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ds/wFUcH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AO5LPneH"
-X-Envelope-To: radhey.shyam.pandey@amd.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718378262;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ds/wFUcH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718378314;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EK/My33etlwM5NxXlcqrJJJAuLZlZ53SGlM1Z/KkM/w=;
-	b=AO5LPneHUK8kRzcznQSE74VYKBs3yjWR7bbqeINnWEMZSQ8lc97BsqLBQh2egQqaU+kul4
-	O5lSdr/zjbDnTNeb9e8DeHsBDAxGibylHKPdFu5z+ds2lP3Y2oph5JCzQC4mo04zC2Pgig
-	7I85gJPe5Sxn7xqhx/rJDmJphzr+t1U=
-X-Envelope-To: laurent.pinchart@ideasonboard.com
-X-Envelope-To: linux-phy@lists.infradead.org
-X-Envelope-To: vkoul@kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: kishon@kernel.org
-Message-ID: <f8a5307a-ab9a-4b9a-9cf5-1b88f912b201@linux.dev>
-Date: Fri, 14 Jun 2024 11:17:39 -0400
+	bh=ShPU3+qy8bdD0vwOsgy2HhMz94KcM4uraJBHpdUlzug=;
+	b=ds/wFUcHGT4fBfEYhEoSl5/LqZm8QeJskw7we+bmsZ6/4fw/C8M8twQc+Rf57Qly1Xj8ZR
+	1StTeLpyv/oug5EGNLehY4V+sgwV5E/h1tNchJVmALuIghLpiWphyleZYsMKBUzVm3aehl
+	InxQPtWk3/2nCjtOr5mRKnvVjzxC/IE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-al5Z-aAcP0Okb7wLXN7gOg-1; Fri,
+ 14 Jun 2024 11:18:27 -0400
+X-MC-Unique: al5Z-aAcP0Okb7wLXN7gOg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D45D319560B9;
+	Fri, 14 Jun 2024 15:18:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.80])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 02A713000222;
+	Fri, 14 Jun 2024 15:18:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 14 Jun 2024 17:16:53 +0200 (CEST)
+Date: Fri, 14 Jun 2024 17:16:47 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	Andy Lutomirski <luto@amacapital.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH 10/9] x86/fpu: Fix 'struct fpu' misalignment on 32-bit
+ kernels
+Message-ID: <20240614151404.GA27644@redhat.com>
+References: <20240608073134.264210-1-mingo@kernel.org>
+ <20240608073134.264210-4-mingo@kernel.org>
+ <20240610211350.GA1613053@thelio-3990X>
+ <20240611124145.GA26798@redhat.com>
+ <ZmlZiHVF8w09mExw@gmail.com>
+ <20240612184148.GB23973@redhat.com>
+ <Zmq9ppuIZJ9IMZDr@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/4] phy: zynqmp: Enable reference clock correctly
-To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
-Cc: Vinod Koul <vkoul@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Simek, Michal" <michal.simek@amd.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-References: <20240506170110.2874724-1-sean.anderson@linux.dev>
- <20240506170110.2874724-2-sean.anderson@linux.dev>
- <MN0PR12MB59531E522EC62B160EEC35E5B7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <MN0PR12MB59531E522EC62B160EEC35E5B7C22@MN0PR12MB5953.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmq9ppuIZJ9IMZDr@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 6/14/24 01:30, Pandey, Radhey Shyam wrote:
->> -----Original Message-----
->> From: Sean Anderson <sean.anderson@linux.dev>
->> Sent: Monday, May 6, 2024 10:31 PM
->> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; linux-
->> phy@lists.infradead.org
->> Cc: Vinod Koul <vkoul@kernel.org>; linux-arm-kernel@lists.infradead.org;
->> linux-kernel@vger.kernel.org; Michal Simek <michal.simek@amd.com>;
->> Kishon Vijay Abraham I <kishon@kernel.org>; Sean Anderson
->> <sean.anderson@linux.dev>
->> Subject: [PATCH v2 1/4] phy: zynqmp: Enable reference clock correctly
->> 
->> Lanes can use other lanes' reference clocks, as determined by refclk.
->> Use refclk to determine the clock to enable/disable instead of always
->> using the lane's own reference clock. This ensures the clock selected in
->> xpsgtr_configure_pll is the one enabled.
->> 
->> For the other half of the equation, always program REF_CLK_SEL even when
->> we are selecting the lane's own clock. This ensures that Linux's idea of
->> the reference clock matches the hardware. We use the "local" clock mux
->> for this instead of going through the ref clock network.
->> 
->> Fixes: 25d700833513 ("phy: xilinx: phy-zynqmp: dynamic clock support for
->> power-save")
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->> Changes in v2:
->> - New
->> 
->>  drivers/phy/xilinx/phy-zynqmp.c | 14 +++++++++-----
->>  1 file changed, 9 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-
->> zynqmp.c
->> index f72c5257d712..5a434382356c 100644
->> --- a/drivers/phy/xilinx/phy-zynqmp.c
->> +++ b/drivers/phy/xilinx/phy-zynqmp.c
->> @@ -80,7 +80,8 @@
->> 
->>  /* Reference clock selection parameters */
->>  #define L0_Ln_REF_CLK_SEL(n)		(0x2860 + (n) * 4)
->> -#define L0_REF_CLK_SEL_MASK		0x8f
->> +#define L0_REF_CLK_LCL_SEL		BIT(7)
->> +#define L0_REF_CLK_SEL_MASK		0x9f
->> 
->>  /* Calibration digital logic parameters */
->>  #define L3_TM_CALIB_DIG19		0xec4c
->> @@ -349,11 +350,14 @@ static void xpsgtr_configure_pll(struct xpsgtr_phy
->> *gtr_phy)
->>  		       PLL_FREQ_MASK, ssc->pll_ref_clk);
->> 
->>  	/* Enable lane clock sharing, if required */
->> -	if (gtr_phy->refclk != gtr_phy->lane) {
->> +	if (gtr_phy->refclk == gtr_phy->lane)
->> +		/* Lane3 Ref Clock Selection Register */
-> 
-> This is common ref clock selection and not lane 3?
+Hi Ingo, sorry for delay.
 
-This is copied from the existing comment. I will remove it.
+On 06/13, Ingo Molnar wrote:
+>
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1562,7 +1562,7 @@ struct task_struct {
+> >  	 * they are included in the randomized portion of task_struct.
+> >  	 */
+> >  	randomized_struct_fields_end
+> > -};
+> > +} __attribute__ ((aligned (64)));
 
---Sean
+I guess __aligned(64) will look a bit better, but this is minor.
 
->> +		xpsgtr_clr_set(gtr_phy->dev, L0_Ln_REF_CLK_SEL(gtr_phy-
->> >lane),
->> +			       L0_REF_CLK_SEL_MASK, L0_REF_CLK_LCL_SEL);
->> +	else
->>  		/* Lane3 Ref Clock Selection Register */
->>  		xpsgtr_clr_set(gtr_phy->dev, L0_Ln_REF_CLK_SEL(gtr_phy-
->> >lane),
->>  			       L0_REF_CLK_SEL_MASK, 1 << gtr_phy->refclk);
->> -	}
->> 
->>  	/* SSC step size [7:0] */
->>  	xpsgtr_clr_set_phy(gtr_phy, L0_PLL_SS_STEP_SIZE_0_LSB,
->> @@ -573,7 +577,7 @@ static int xpsgtr_phy_init(struct phy *phy)
->>  	mutex_lock(&gtr_dev->gtr_mutex);
->> 
->>  	/* Configure and enable the clock when peripheral phy_init call */
->> -	if (clk_prepare_enable(gtr_dev->clk[gtr_phy->lane]))
->> +	if (clk_prepare_enable(gtr_dev->clk[gtr_phy->refclk]))
->>  		goto out;
->> 
->>  	/* Skip initialization if not required. */
->> @@ -625,7 +629,7 @@ static int xpsgtr_phy_exit(struct phy *phy)
->>  	gtr_phy->skip_phy_init = false;
->> 
->>  	/* Ensure that disable clock only, which configure for lane */
->> -	clk_disable_unprepare(gtr_dev->clk[gtr_phy->lane]);
->> +	clk_disable_unprepare(gtr_dev->clk[gtr_phy->refclk]);
->> 
->>  	return 0;
->>  }
->> --
->> 2.35.1.1320.gc452695387.dirty
-> 
+> What happened is that due to my series 'struct task_struct' lost its
+> 64-byte alignment attribute, which broke the fpu struct allocation code on
+> 32-bit kernels and made the 64-bit one probably unrobust as well.
+
+Yes, and note that struct fpstate has the same __aligned(64), that is
+how I noticed the potential problem and decided to check.
+
+But Ingo, it was a shot in the dark ;) I still don't really understand
+what exactly should be aligned. Is it the fpstate->regs member? Or what?
+If yes, perhaps this member needs __aligned(64) too to be safe?
+
+> ... and would appreciate your Acked-by or Reviewed-by for the eventual
+> final version of the series, but I don't insist. ;-)
+
+Thanks ;) will do.
+
+Oleg.
 
