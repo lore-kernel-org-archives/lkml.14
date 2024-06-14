@@ -1,258 +1,98 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CFC1487ED
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 22:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97951146A8E;
+	Fri, 14 Jun 2024 22:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718402760; cv=none; b=tjW8riWRYv26sQ1DgDpls4MlTtxEFn6byvrq0cRXoA9VV/6yDe0AZ2m/BGbod40IFe9kfk0wjwXZc8R66TUMrOP99Kqu+Cg/v3a7nvOVsuB3mrMJT9L0tyXfbZX6DPueGTjlTE85Yny5PyLfVUId3ApLYpenxkVFv7prPki9bEk=
+	t=1718403319; cv=none; b=ixUP5L/by4ax/J98AUE6/wD6gHivHr6PU3YOLHzK260g4Ux6hhx0ZQ74HwjyGK0en4UKkISBqC9gB1nspXETfKqqoL+ZMufFgL75s8GEOBH93Yq3MmSnurY1adLWwR6z4pcJq7e7m/ofZ9bdejf6931K8wERnQjWyfcz8Wa3hIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718402760; c=relaxed/simple;
-	bh=l+hkOlIOckNGSbjbSDsoJE132cFGlCp3v1uR5gDDpUA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SeXPcgeImfDgD1aPDwhometdNAgj/DFfm5xvH4msh/bQRuEq+FjD4U4r71A7ikJA6D7nz4i9bxcwKvPFbcXy23vcs33MZ5edbGqVANryYYQScnOA3tJnqUI7ko7o0bVAV4IH7ybztK4nTB6LJjDEZAoH0w4wk6cGQZ07H4zIdJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/kt2/mZ; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718403319; c=relaxed/simple;
+	bh=1cjEIBWjtesSOy+Z3gVYh6H7ZTdBXSafNwRgGrntRso=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=lZu+C0Rb1ca4+Q4iuWYykNaCJRp+0YdQbPr8xht8NAnvPq+l1EcOIj5vIHDZzzhDj171+o9NH0C6mmjbXYf2Zgm2dGc21AaaLkZWMStPFKMfkrV3vBWWgGjBODrgiG4zilccJM41aQW6NYj9Pa/4gW3S1r6dFtU4N0XWu1C600s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evd8s+CA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/kt2/mZ"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso404712066b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718402756; x=1719007556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NKpnQ84zxi9g2DKsrp6paIKuEaCxz0JVSsufLK/lNo=;
-        b=K/kt2/mZ2gCvHXr0eWntuXdB3UivroutgIjYZb6NSwNpMt5twn8hMsJ5L3GtSAieZL
-         VDikTlLeF74Gy/zcl+9Zb7es5At4KEgpHNPFCWEEO+ORgvE759IoXCStfsw2mXeQONU7
-         vMzUWKaMtLsrOfZ5S7e9UCXTD7om25oRni63Zo689DLKH44UvI936Pz/+XW5SWSiHHYt
-         8YqcTqVmsPeTO8CwTwCYAm28eURRIGn65hufF46HvYytwEs+1yk7ouN2CFoeYM19dT+T
-         TH2dZpUWDSlcApqgrZxFhyaPA+Zu5WCRxoslsJbsJ9dmWTZS9UsfSjSH0HgoZ8j8L39S
-         XAWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718402756; x=1719007556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9NKpnQ84zxi9g2DKsrp6paIKuEaCxz0JVSsufLK/lNo=;
-        b=C6uHPu2CCyfk2yhwfH21DeIBg/Ol/Gk8z0SRWwRj5B1LECJ+pwNczCXV9AAjzYOQrU
-         TFTBEipnbrNec8uJcn2UVzJNsc0BFdJdkxzVYSMR5vQpW4vlQMjqI4SIwJRJCEzQAwx0
-         nulq243MsEhfu16PdLPv0in3psvowWabzcHm0uDp+BLBxyQeXugDSpK4a1FJxds5tVdS
-         +Rxm0X9isJS8+hrikKrp8fcac6x0IPaog4XQaK4pfwo3jIG4UGAHuSeQZTqMEmYcn/4h
-         bvib4KHcSHoTwwPI2tvj7eZtccQZ3aBvB0XiLq2kLIDGTYJDGpQF4QrBwNgieIejodPX
-         ZBqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqdsOeCBusiO+cpnl3FVxprLg3q/m9zpg1IBBJEh3NQrsxHvc6wmDVwAevyJykil3Qb+XKlSmW2Cw5lmg8lMIwNOUo8DfFr+HaBwfq
-X-Gm-Message-State: AOJu0YxKfXJR0pQEXklgjI5sUTzYzdgLrIGAXAjIG41pJOzzAy+NwM+F
-	IAM04fCvqME2AEJx/XQQRJdigX6JJldmbexnm69B5U2JLXF7JAnqtQxSvtCxF3DOHoKBFgDSJoT
-	1FQ59h+21mXpGAypOj8u/+y9dgLA=
-X-Google-Smtp-Source: AGHT+IE+b6gM0omkmI2wHLa+MByqftBT92VyZN7nayii8T/REdVaTUWrLOvSqVsXzjNF0/QTWDMl4C/8m+idjGvgN50=
-X-Received: by 2002:a17:906:c29a:b0:a6f:5698:ab61 with SMTP id
- a640c23a62f3a-a6f60cef734mr249722066b.11.1718402756064; Fri, 14 Jun 2024
- 15:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evd8s+CA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18A5C2BD10;
+	Fri, 14 Jun 2024 22:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718403319;
+	bh=1cjEIBWjtesSOy+Z3gVYh6H7ZTdBXSafNwRgGrntRso=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=evd8s+CAnFVf2kS1uuD2kMPKo1GZREY2x3ChpfAf7EScQiNCzRbjew9KHw0VYPmOi
+	 N/LL2sCs1HvdySJ3SGyxrRb4DAB5R1y3PKxFPtBQ6bzonydYfp5RRBbIlIO+e6yBGG
+	 m0MmPCAC9SmrVfKjf4VTF9wAk59Oto5YMXBTGXPWtBkCjHHR3cVwsEEI5PFs5yLSra
+	 VqWuJDOutbFEsEk8HpW8u38oXDHxq9FJiJ4UAYmvGpb9u8cVyT0C40uvpqByeq76zL
+	 m/23duFipAqg7oTvCLvMfiw9U9X2oxSsEPvd8WqKYwFAGdh1XTw4iHY05kTDnOlKLa
+	 zvdyYmyQITYEQ==
+Date: Fri, 14 Jun 2024 16:15:17 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 15 Jun 2024 08:05:44 +1000
-Message-ID: <CAPM=9tw_3xzMPo46mPYfkPpnxy8jgeBy1Q5Ep1pH8Ws2BdA87g@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.10-rc4
-To: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, 
+ Stuart Yoder <stuyoder@gmail.com>, Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240614213109.2518797-1-Frank.Li@nxp.com>
+References: <20240614213109.2518797-1-Frank.Li@nxp.com>
+Message-Id: <171840331790.1657462.8424849531522839529.robh@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: misc: fsl,qoriq-mc: convert to yaml
+ format
 
-Hey Linus,
 
-Weekly fixes pull, seems a little quieter than usual, but still a
-bunch of stuff across the board. Mostly xe, some exynos and nouveau
-fixes. There is the fixup for the WERROR that you pointed out
-previously, hopefully it does what you expect now.
+On Fri, 14 Jun 2024 17:31:03 -0400, Frank Li wrote:
+> Convert fsl,qoriq-mc from txt to yaml format.
+> 
+> Addition changes:
+> - Child node name allow 'ethernet'.
+> - Use 32bit address in example.
+> - Fixed missed ';' in example.
+> - Allow dma-coherent.
+> - Remove smmu, its part in example.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/misc/fsl,qoriq-mc.txt | 196 ------------------
+>  .../bindings/misc/fsl,qoriq-mc.yaml           | 187 +++++++++++++++++
+>  2 files changed, 187 insertions(+), 196 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>  create mode 100644 Documentation/devicetree/bindings/misc/fsl,qoriq-mc.yaml
+> 
 
-Dave.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-drm-fixes-2024-06-15:
-drm fixes for 6.10-rc4
+yamllint warnings/errors:
 
-core:
-- Werror Kconfig fix
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.example.dtb: dpmac@1: $nodename:0: 'dpmac@1' does not match '^ethernet(@.*)?$'
+	from schema $id: http://devicetree.org/schemas/net/fsl,qoriq-mc-dpmac.yaml#
 
-panel:
-- add orientation quirk for Aya Neo KUN
-- fix runtime warning on panel/bridge release
+doc reference errors (make refcheckdocs):
+Warning: Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt*
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt*
+MAINTAINERS: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
 
-nouveau:
-- remove unused struct
-- fix wq crash on cards with no display
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240614213109.2518797-1-Frank.Li@nxp.com
 
-amdgpu:
-- fix bo release clear page warning
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-xe:
-- update MAINTAINERS
-- Use correct forcewake assertions.
-- Assert that VRAM provisioning is only done on DGFX.
-- Flush render caches before user-fence signalling on all engines.
-- Move the disable_c6 call since it was sometimes never called.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-exynos:
-- fix regression with fallback mode
-- fix EDID related memory leak
-- remove redundant code
+pip3 install dtschema --upgrade
 
-komeda:
-- fix debugfs conditional compilations
-- check pointer error value
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-renesas:
-- atomic shutdown fix
-
-mediatek:
-- atomic shutdown fix
-The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670=
-:
-
-  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2024-06-15
-
-for you to fetch changes up to 9f0a86492ac4de4d1db718986a91833fdc914a54:
-
-  Merge tag 'drm-misc-fixes-2024-06-14' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-(2024-06-15 06:52:56 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.10-rc4
-
-core:
-- Werror Kconfig fix
-
-panel:
-- add orientation quirk for Aya Neo KUN
-- fix runtime warning on panel/bridge release
-
-nouveau:
-- remove unused struct
-- fix wq crash on cards with no display
-
-amdgpu:
-- fix bo release clear page warning
-
-xe:
-- update MAINTAINERS
-- Use correct forcewake assertions.
-- Assert that VRAM provisioning is only done on DGFX.
-- Flush render caches before user-fence signalling on all engines.
-- Move the disable_c6 call since it was sometimes never called.
-
-exynos:
-- fix regression with fallback mode
-- fix EDID related memory leak
-- remove redundant code
-
-komeda:
-- fix debugfs conditional compilations
-- check pointer error value
-
-renesas:
-- atomic shutdown fix
-
-mediatek:
-- atomic shutdown fix
-
-----------------------------------------------------------------
-Adam Miotk (1):
-      drm/bridge/panel: Fix runtime warning on panel bridge release
-
-Amjad Ouled-Ameur (1):
-      drm/komeda: check for error-valued pointer
-
-Andrzej Hajda (1):
-      drm/xe: flush engine buffers before signalling user fence on all engi=
-nes
-
-Arunpravin Paneer Selvam (1):
-      drm/amdgpu: Fix the BO release clear memory warning
-
-Dave Airlie (3):
-      Merge tag 'exynos-drm-fixes-for-v6.10-rc4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into
-drm-fixes
-      Merge tag 'drm-xe-fixes-2024-06-13' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-      Merge tag 'drm-misc-fixes-2024-06-14' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-
-Douglas Anderson (2):
-      drm: renesas: shmobile: Call drm_atomic_helper_shutdown() at shutdown=
- time
-      drm/mediatek: Call drm_atomic_helper_shutdown() at shutdown time
-
-Dr. David Alan Gilbert (1):
-      drm/nouveau: remove unused struct 'init_exec'
-
-Jani Nikula (2):
-      drm: have config DRM_WERROR depend on !WERROR
-      drm/exynos/vidi: fix memory leak in .get_modes()
-
-Krzysztof Kozlowski (1):
-      drm/exynos: dp: drop driver owner initialization
-
-Marek Szyprowski (1):
-      drm/exynos: hdmi: report safe 640x480 mode as a fallback when no
-EDID found
-
-Maxime Ripard (1):
-      Merge drm/drm-fixes into drm-misc-fixes
-
-Michal Wajdeczko (1):
-      drm/xe/pf: Assert LMEM provisioning is done only on DGFX
-
-Oded Gabbay (1):
-      MAINTAINERS: update Xe driver maintainers
-
-Riana Tauro (2):
-      drm/xe/xe_gt_idle: use GT forcewake domain assertion
-      drm/xe: move disable_c6 call
-
-Thomas Hellstr=C3=B6m (1):
-      MAINTAINERS: Update Xe driver maintainers
-
-Tobias Jakobi (1):
-      drm: panel-orientation-quirks: Add quirk for Aya Neo KUN
-
-Vasily Khoruzhick (1):
-      drm/nouveau: don't attempt to schedule hpd_work on headless cards
-
-pengfuyuan (1):
-      arm/komeda: Remove all CONFIG_DEBUG_FS conditional compilations
-
- MAINTAINERS                                            |  2 +-
- drivers/gpu/drm/Kconfig                                |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c                |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c             |  2 --
- drivers/gpu/drm/arm/display/komeda/komeda_dev.c        |  8 --------
- .../gpu/drm/arm/display/komeda/komeda_pipeline_state.c |  2 +-
- drivers/gpu/drm/bridge/panel.c                         |  7 +++++--
- drivers/gpu/drm/drm_panel_orientation_quirks.c         |  6 ++++++
- drivers/gpu/drm/exynos/exynos_dp.c                     |  1 -
- drivers/gpu/drm/exynos/exynos_drm_vidi.c               |  7 ++++++-
- drivers/gpu/drm/exynos/exynos_hdmi.c                   |  7 +++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.c                 |  8 ++++++++
- drivers/gpu/drm/nouveau/dispnv04/disp.c                |  2 +-
- drivers/gpu/drm/nouveau/dispnv50/disp.c                |  2 +-
- drivers/gpu/drm/nouveau/nouveau_bios.c                 |  5 -----
- drivers/gpu/drm/nouveau/nouveau_display.c              |  6 +++++-
- drivers/gpu/drm/nouveau/nouveau_drv.h                  |  1 +
- drivers/gpu/drm/renesas/shmobile/shmob_drm_drv.c       |  8 ++++++++
- drivers/gpu/drm/xe/xe_gt_idle.c                        |  9 ++++++++-
- drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c             | 15 +++++++++++++-=
--
- drivers/gpu/drm/xe/xe_guc_pc.c                         |  6 ------
- drivers/gpu/drm/xe/xe_ring_ops.c                       | 18 ++++++++++++++=
-++--
- 22 files changed, 87 insertions(+), 37 deletions(-)
