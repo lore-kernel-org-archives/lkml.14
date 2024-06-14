@@ -1,130 +1,105 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C32181AC7
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8636148319;
+	Fri, 14 Jun 2024 10:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359570; cv=none; b=ctGBTWFm5N94Gtbr9SmeymSprGYSJGRCl2OOh4Wq66rv2S5TGo7AhReizMwDCrslejUm6LIbX/u//UwfPrLVg90aoRFv2lXrsUr21ZP+ffSa+Ta+tU9yuY07qh72vr5Q2yi1Yc0G2pV1qnUGwcPKQv2YbezU7vueMzuTBywZJzc=
+	t=1718359581; cv=none; b=kyHQFZ08F9eGoPnWBccgrFmBlV6upF93qBIQ0TdqPcN63qXrPNui706iXPARmCDHn0e74HStsw01rSUleqA205fciCnTjX0BJa4OeQkqQs9JGIBvhYOpm/yMw0VG7F1MEMpG5z0i00DZUrENQh2DBTfc/eQeSHktHiCmJ77KtU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359570; c=relaxed/simple;
-	bh=VLNaXn/lm7t6E5mAaLknHXlsRSaNaczlupRMV67F4k4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pySx8xs9Sp13L2Qcum2HcdL3ix/o9Ma6x0W3+Ogjn5xnUAQ2vktuEYMcLsmkGyOrIhaRdBSg6MfoAaOQXr++jn+OE06HvBFVlrYY5Uv7XRNQjvnrZIlcXNr53DIEn59WoiX9CnUnHsV/QDV0Dq52wYzyRdfIay74ZQ4Adw28BBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fOO6itz1; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1718359581; c=relaxed/simple;
+	bh=M+wudfRew0zZ0o2jEhGKUvusyJLRH89lvhLCPTPKDJc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jdAYE9vjqhtGx51YLDic+6gXif9YSVLfzP+ftu91XuC4/OIrqNE+L00XcRmYpAcbx9LHlUPe2yKj6msQS9U3JwiQ8SKwqC31QsUhasfGcf5PR5ck0Dq6V5CvFmRjbm969VwCuW3orw56LQjk3F8hHV+GkDommj8xD5FLvv+Qt7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iayTsd34; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fOO6itz1"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so2361675a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 03:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718359565; x=1718964365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
-        b=fOO6itz1JGVm+jifQifYwXqfsKjeYsHHIZm/6CALtts4/ag6IXCshseaMwRdxbXnWg
-         8nF2XTkkuPBKnAVRVA2wnaJwd4eYfZlaz9sa+ByMzDF4g5mUwB1lZGKPQbhtReHMXck2
-         3d6u5NyR4XtuKVNK/FIFnRBZuNFqlBB3pkIJUByG9G69bdn+jDcxT/fVwyK+EsCEcDo1
-         Lwpr3rgV/FRZ8OFyvk2tQwtiV65I1UpzSmGyUQIxVCla4iKSI0Z0BVgmBZaNN1168zkS
-         2InG0OOO1L2BZX+WsEW1k5h2Fdx1eNSX9tk4qwH+BOsZ4IBkoA6kMhubpj1Nxv2Bo1rf
-         Lseg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718359565; x=1718964365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
-        b=YxkDIHSlUiqc+S/ppfbFvHh6D1Aoq1EgHJaQ7nSjHobecMp8mNYov7VBAcMP+KSRr/
-         BfzUwzEN2J5ijVzUJ4HPt7p1cRk3M0ghTEqhwjnOvo8lXDbKVIrhbBv/UrGBDIAthA25
-         r1h1dSf53neI7tQJJL/oCZTNyI9JAPxONBmzWlEN2qity/Jz+wCNbvVFtGwxbQikhCKE
-         uoYyVsx8NCzwnGNkbqrcS0ECGb2srEC867k+SBVS6507byaQMVhilmq58vsr14xVh2ge
-         +cEvc4t1NRefbBnuQ7fLuP+mJY2VfJIiRR55kp4yNQJh5nc/wNrjxA34RKhCK4FN/oke
-         3/0A==
-X-Gm-Message-State: AOJu0YyRdda2YwKMRiZAW9r/TWOxBhO3tAQW6XRf2jHl91h4DAcPNyiz
-	Pa2+Axl6SZRxhYyXfSTvh+JnvMfxRHzdJaUD3HBRDX9StMUYRpspHWe9pLSp0tQ=
-X-Google-Smtp-Source: AGHT+IEBKcircL4D5yvI1Uh0Bdlj+m1RTUCtN9vKd4L45BNE7heuj8fMqHurvRePVoeMMv4jFlhDyw==
-X-Received: by 2002:a17:906:184a:b0:a6f:5a9d:37f9 with SMTP id a640c23a62f3a-a6f60dc5128mr122290766b.48.1718359565241;
-        Fri, 14 Jun 2024 03:06:05 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecb46fsm167018666b.129.2024.06.14.03.06.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 03:06:04 -0700 (PDT)
-Date: Fri, 14 Jun 2024 12:06:03 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Sean Young <sean@mess.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
-Message-ID: <xj5mqnte5dgs4yzuku6g7gnprgm43tdbunxmo6o4thzreyraok@kttvkz5dhaei>
-References: <20240614090829.560605-1-sean@mess.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iayTsd34"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718359580; x=1749895580;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M+wudfRew0zZ0o2jEhGKUvusyJLRH89lvhLCPTPKDJc=;
+  b=iayTsd348RioBTVogaMcGVtwRvwKQ6zbb5ZY0+VfC4yUFROfPVnN4oB7
+   NlSVfMUQFkCUTu9DHcDfUXjAgYeXx9TXgHgIK5EEzUE1tq9hbcEeqUkqr
+   vGBGvMPdF+unkysdNgZ4Iu4XAYfBeMOlNbF0mlfu6qk8SqmSdw2hSUq7J
+   6dsSOhdX9034V8Z0nCELKCrM4K8gMsMtPG2xBuzrbTWak3Sb3uJazWIF3
+   AIrg4qtD2GDGpz8YhPAuG8cwRTLyawoJKl8jnbJh+0WjJ1NS+vOH3BPDR
+   sTlA/46g3p9URsyeIYSmwOf/yf5pXQyXW7l1etj6PQbflCPoDFNQ2ZxAS
+   g==;
+X-CSE-ConnectionGUID: Dfyh1Pw4RFWffGyXK7JNuw==
+X-CSE-MsgGUID: ECsfw+lMSTChVR3HS+si3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="32715804"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="32715804"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:06:19 -0700
+X-CSE-ConnectionGUID: Swo5ctbJQEaxpmynKRoqug==
+X-CSE-MsgGUID: GnEecZIsRhGB7Xm97YsUMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="45575859"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:06:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-kernel@vger.kernel.org,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-tegra@vger.kernel.org,
+	Robert Richter <rric@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 0/4] PCI: Resource helper improvements
+Date: Fri, 14 Jun 2024 13:06:02 +0300
+Message-Id: <20240614100606.15830-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="56vgrc46vq6e7trh"
-Content-Disposition: inline
-In-Reply-To: <20240614090829.560605-1-sean@mess.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This series introduces resource_set_{range,size}() helpers to replace
+often repeated code fragments to set resource start and end addresses.
+The last two patches clean up nearby code.
 
---56vgrc46vq6e7trh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For now, this series only converts PCI subsystem. There are plenty of
+resource start/end setting code elsewhere in the kernel but those can
+be converted once the helpers reach Linus' tree.
 
-Hello,
+--
+v2:
+- Improved commit message
+- Added patch to introduce ALIGN_DOWN_IF_NONZERO()
 
-[To: +=3D Arnd]
+Ilpo Järvinen (4):
+  resource: Add resource set range and size helpers
+  PCI: Use resource_set_{range,size}() helpers
+  PCI: Use align and resource helpers, and SZ_* in quirk_s3_64M()
+  PCI: Introduce ALIGN_DOWN_IF_NONZERO() helper locally
 
-On Fri, Jun 14, 2024 at 10:08:29AM +0100, Sean Young wrote:
-> pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm: Rename
-> pwm_apply_state() to pwm_apply_might_sleep()").
->=20
-> Signed-off-by: Sean Young <sean@mess.org>
-> ---
->  drivers/bus/ts-nbus.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-> index baf22a82c47a7..b8af44c5cdbd0 100644
-> --- a/drivers/bus/ts-nbus.c
-> +++ b/drivers/bus/ts-nbus.c
-> @@ -294,7 +294,7 @@ static int ts_nbus_probe(struct platform_device *pdev)
->  	state.duty_cycle =3D state.period;
->  	state.enabled =3D true;
-> =20
-> -	ret =3D pwm_apply_state(pwm, &state);
-> +	ret =3D pwm_apply_might_sleep(pwm, &state);
->  	if (ret < 0)
->  		return dev_err_probe(dev, ret, "failed to configure PWM\n");
+ drivers/pci/controller/pci-tegra.c       |  2 +-
+ drivers/pci/controller/pci-thunder-pem.c |  4 +--
+ drivers/pci/ecam.c                       |  2 +-
+ drivers/pci/iov.c                        |  6 ++--
+ drivers/pci/pci.c                        |  3 +-
+ drivers/pci/quirks.c                     | 23 +++++++---------
+ drivers/pci/setup-bus.c                  | 35 ++++++++++--------------
+ drivers/pci/setup-res.c                  |  7 ++---
+ include/linux/ioport.h                   | 32 ++++++++++++++++++++++
+ 9 files changed, 68 insertions(+), 46 deletions(-)
 
-Thanks. I guess the patch becoming
-8129d25e32b7fd0f77bc664252321f3a16bb26b8 was created a while before
-pwm_apply_might_sleep() was a thing.
+-- 
+2.39.2
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-
-Arnd, you merged the last changes to that driver. Do you want to care
-for that one, too? If not I can apply it via my pwm tree.
-
-Best regards
-Uwe
-
---56vgrc46vq6e7trh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZsFgcACgkQj4D7WH0S
-/k6Ciwf/V640UlA3t7jmkjfZ8cO8YihHm54XgFoqLTh48Akc4MU9mW4UaZWM+IC3
-3hMfpLUzyPmUGsupnsfcyKOWa8trOtzTaiwB6M33NqO6qkdnQfPlOUzSLoYzwXqX
-xUMlUF9MKxCu0BoOiqgRq+AJLn5Egurwt3MmTSfqolf3dZd7GijmIzVCUh/KM6bq
-vt/NoG2nks4bUURM4Kn+jz2yNoSIVmFZx7IwEeekV5NpxMldCbJQ5LdK6opvnyRR
-0ebjw1qXO2wxucowDaXYNJcC6K2qOlwvxlONZFiO7E/7H/tmWnD6f7KM/fEG1hvC
-r+D+dyMoPviFNgnheoCEVCqjKGcm1w==
-=6gnx
------END PGP SIGNATURE-----
-
---56vgrc46vq6e7trh--
