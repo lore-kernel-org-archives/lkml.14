@@ -1,127 +1,87 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from 3.mo576.mail-out.ovh.net (3.mo576.mail-out.ovh.net [188.165.52.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EA613B2AD;
-	Fri, 14 Jun 2024 11:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BAF13B2AD
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 11:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.52.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718364315; cv=none; b=XGDiL6BS6hGwktF6JTphOyqnEPHavp8Z3/QFko2FN/Ii0SA95mqooCtwXiMigp8178nxgpTB6QqRDF6kLWWppIQGoTwVZr5L5Ov81ji/hMTt21Y5gyxf/vqQRSVF5MMIZpNkdMg3qT3yipM3iwHdQDpAB1IuYtzYVsTnidhCRXo=
+	t=1718364409; cv=none; b=F3arIHc3JyUxOvIckm5b+U1Wh0U0oTHIIk++CeNfUsd98zLZVtcIVqLLLQbMvU+SGk5hQNh4mtSesKd4vExhnUVZkvbM0TUPKYaXu+dbpWs7LuPMZAxzW4JHoDWRZigjUmxAsoFwJYWTUbwCioQrse8qmIgDQYDPfdL/0yDPqh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718364315; c=relaxed/simple;
-	bh=FfcqpBVds2UvXxczWh5DMlzHAA+FEwzBbmT5gv1mKE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kgNlnbIXkwGtMJYT/sUHdGav8lvUHGbvS5CMqMeoFbYK3kdfOn1YqicMR7/WdD/FWJS7gShEfIY+4B85rJbRZBpzwA3ANC1WE9COV6SKFmik5UsS5iTdLRbcJIt/qRoIt2cYSxR2qb0+QXOPSyNvVUMyJRrYAQ52jqF+JTtFOTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=r8603sDw; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="r8603sDw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718364310; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=u8iAIlbQi0tUJ3qu8xocmxzckhx265PFdpBlcy4mJCQ=;
-	b=r8603sDwbINXztjW836pPhPVJnatY87ChFFiRmOwMcxVc8fOWPKJA45fJo0TwC3/HwUfS4z/AQlPqSgxXx7Ti9U8nP+1LPTYjDHukj4GTHGC0rarwunzFJhr8cONLubCG1TLDfCS0/OWe9QlpunZFOSwJ08PiWR6lq7GIK5yf40=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=54;SR=0;TI=SMTPD_---0W8R3gfJ_1718364305;
-Received: from 192.168.0.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8R3gfJ_1718364305)
-          by smtp.aliyun-inc.com;
-          Fri, 14 Jun 2024 19:25:07 +0800
-Message-ID: <f764133b-1aaf-4f4b-9a2e-d04ab35d660f@linux.alibaba.com>
-Date: Fri, 14 Jun 2024 19:25:04 +0800
+	s=arc-20240116; t=1718364409; c=relaxed/simple;
+	bh=2WQlCiqaq3O7GAO7I86Mkd8Y6gJco5eKLlFWHR+F8P8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iFz5nrHDSFQDDxFud/Eyen5S+kKs1Pj5IQiJl912aWc4lTo5PvgwuSRR5iObA1Wdv5IsSUjDYO7Zgh7qqH8VZpW3KNnlip12XJmTUFJtqNamPqvQbp4Nn5nRJxn59PDWRtjOmY/8NDZg6MzTZwGeHGDjqKa54OhtXOwXTRTf1SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.52.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director8.ghost.mail-out.ovh.net (unknown [10.109.176.128])
+	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4W0w1Q0HxWz1byw
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:07:05 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-9qg8m (unknown [10.108.42.28])
+	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 50FEB1FEC2;
+	Fri, 14 Jun 2024 10:07:03 +0000 (UTC)
+Received: from etezian.org ([37.59.142.101])
+	by ghost-submission-6684bf9d7b-9qg8m with ESMTPSA
+	id w4LqDkcWbGbfGwAALME0rQ
+	(envelope-from <andi@etezian.org>); Fri, 14 Jun 2024 10:07:03 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-101G004c23ccfb9-6d11-4112-99e6-9496b632ab70,
+                    0BE8417D4949A2B9C3DC4A53BA17F3B68AA5397D) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+ Thomas Richard <thomas.richard@bootlin.com>
+Cc: linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com>
+References: <20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com>
+Subject: Re: [PATCH 0/2] Wakeup the i2c-omap controller during suspend
+ stage
+Message-Id: <171835962034.690946.5223670414905950648.b4-ty@kernel.org>
+Date: Fri, 14 Jun 2024 12:07:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/22] dt-bindings: thermal: sprd: reference
- thermal-sensor schema
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Guillaume La Roque <glaroque@baylibre.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Amit Kucheria <amitk@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Heiko Stuebner <heiko@sntech.de>, Biju Das <biju.das.jz@bp.renesas.com>,
- Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Pascal Paillet <p.paillet@foss.st.com>, Keerthy <j-keerthy@ti.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- zhanghongchen <zhanghongchen@loongson.cn>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-sunxi@lists.linux.dev, imx@lists.linux.dev,
- linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com,
- Florian Fainelli <f.fainelli@gmail.com>,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240614-dt-bindings-thermal-allof-v1-0-30b25a6ae24e@linaro.org>
- <20240614-dt-bindings-thermal-allof-v1-17-30b25a6ae24e@linaro.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240614-dt-bindings-thermal-allof-v1-17-30b25a6ae24e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 1605814746184223393
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeduledgvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeeipdhmohguvgepshhmthhpohhuth
 
+Hi
 
-
-On 2024/6/14 17:46, Krzysztof Kozlowski wrote:
-> Device is a thermal sensor and it requires '#thermal-sensor-cells', so
-> reference the thermal-sensor.yaml to simplify it and bring the
-> common definition of '#thermal-sensor-cells' property.
+On Thu, 13 Jun 2024 15:13:26 +0200, Thomas Richard wrote:
+> The patches of this series were originally in the series "Add suspend to
+> ram support for PCIe on J7200" [1].
+> There is no changes compared to the patches in the series [1].
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-LGTM. Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   Documentation/devicetree/bindings/thermal/sprd-thermal.yaml | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+> The goal is to wakeup the controller during the suspend stage to be able
+> to use it during suspend_noirq stage.
+> As autosuspend is enabled, the controller can be suspended at suspend_noirq
+> stage. But runtime pm is disabled in suspend_late stage. So it's not
+> possible to wakeup the controller during suspend_noirq.
+> The trick is to force the wakeup of the controller during suspend stage.
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> index 76aaa004c8ac..f65076fc68f9 100644
-> --- a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> @@ -11,6 +11,8 @@ maintainers:
->     - Baolin Wang <baolin.wang7@gmail.com>
->     - Chunyan Zhang <zhang.lyra@gmail.com>
->   
-> +$ref: thermal-sensor.yaml#
-> +
->   properties:
->     compatible:
->       const: sprd,ums512-thermal
-> @@ -77,11 +79,10 @@ required:
->     - clock-names
->     - nvmem-cells
->     - nvmem-cell-names
-> -  - "#thermal-sensor-cells"
->     - "#address-cells"
->     - "#size-cells"
->   
-> -additionalProperties: false
-> +unevaluatedProperties: false
->   
->   examples:
->     - |
-> 
+> [...]
+
+Applied to i2c/i2c-host on
+
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+
+Thank you,
+Andi
+
+Patches applied
+===============
+[1/2] i2c: omap: switch to NOIRQ_SYSTEM_SLEEP_PM_OPS() and RUNTIME_PM_OPS()
+      commit: 659eb16247d04f442a014fe2dd8b7fa936dfccb5
+[2/2] i2c: omap: wakeup the controller during suspend() callback
+      commit: 8a2ebb775a497a95a79a8ac83027a4f159c36f32
+
