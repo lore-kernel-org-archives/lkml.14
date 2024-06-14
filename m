@@ -1,124 +1,127 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E112137905
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 22:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E82481D0;
+	Fri, 14 Jun 2024 23:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718405997; cv=none; b=lt42SfjxW19miX1vYabzPs+8kqkSqSVAJ4+UD/7VH/0JK36Vb1q1LZQyEkmVHaAHKFMtUXHwWLiNb1IyNgpLq9nROztuMjFrEn74KFjmxsjru8Z/+gACE6QYjst1kc06JiQ2jebRhLMeRjmmiKVKAlzImbR5bUr+2B+r6Myhj8Y=
+	t=1718406135; cv=none; b=c6uKz5eD2Plm89j1ThBXETuyu5zRLdmNUJKwTNYoslQygBQAzwWolwuTGZSlbLq7SPKkGUsgncK+qjMAMaLYCE3HzTZosYrBoRsJGPYD8GXyQHuiaLMz0gaFPHYE9WjMpSQgGyOZxhhp+LJ1hOnwqxjD7PSUUSlBpzP3pCeo4bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718405997; c=relaxed/simple;
-	bh=Jvx/D00bdKpscL8H+BgKzqSrJpNVmyQG4WGp2oeFAFk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qiGlxiF/ywdWGTUTeGqabKtenwvECRz0nL6nWkWOIDmo1nwn8EZ11JEQ07AHWRzTY0un6idsGcUcoCucsxA5ntaQmJHfU+nsyQ9iWhUoru0/bm6bhmNRMfJ2g/HNmcSUmJe5SjfU2U27D7ZCQbDd7+XVdo0Fgwbqb8LM0toZpnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qmiMiqut; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1718406135; c=relaxed/simple;
+	bh=hZeBpYPqthNjGLmgXQlqe9y50Nl0NheaVfpuNnURqkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=ouiRhvRYiiWPqqCTxq76msFa3YhuMK5PXaqa44CsXXvULgwKCUCxLD1RRR4oXtCi2T0HpXBE0ePSKhqBN9KOf+fLd6+j+zw8WaQ42v6/5o6rc7kP5AOF3j4LllMYtL78ps/qYeN3P+WPFlSZFzCckThlGXumkY09yIjThmTZjzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Z4B9lWOg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmiMiqut"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627f43bec13so45549817b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718405995; x=1719010795; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ov9SboQQfNn2c9IqfdAPrbvWYYp8I7N4DcF5qw+Lk1g=;
-        b=qmiMiqutFLkbD5UP0baGkarHdQ1YH/T/2Y3NvnD+oCgb1OHe0NcQohwPKiMUP0Rt0v
-         i03StLSzwlZo7ZdE5i1IPprvGV/i5e1heegE/fb0mGE6OW2VHKqubiy5Oa3oXRi17+4z
-         xUnbJdeAXDX2A47CW+RGCC3LOGV4OGsbCJLe/+n2fe/OY8vPCkc/bcDjoLUd8JOfMQ53
-         a2qid7+s1VLEFuHr9P3Stg+4lzh/P0xaebX/HbXIRvmyrqRbYEsat7fkxKWdMiX5hW6y
-         6+OTy9y9C7yf+ny7IiwEELPaAMAy/hHqqoz7NlVpkps/GkKEOMjn0vH6tsTApsqHpBak
-         3wQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718405995; x=1719010795;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ov9SboQQfNn2c9IqfdAPrbvWYYp8I7N4DcF5qw+Lk1g=;
-        b=Wa4+VYqgOv8BXa8jP+DOPwoqwF+oKy2phR2PqmqVJecjR05ZPwS1CugMMhzxG9YbUn
-         3PhTqJbIyKM1q4aieflHBSswIJT3wa58thVmIgf+BylHYdIbaQl6dJDvWc4VcdOCeSJ6
-         e9Z9YgNsGicjRhh9DzV/GvabZfuDIXJfLXeX+4+3ji4BlsEHvUQTGEGYELEDwAih/MCY
-         UuG7cRx6y7rUFRIaozISl56crw6UiaF0ZWIcSC0OJH6/BytiI//MArU8L7yQKTNBoZfM
-         OJI0itudzuc1dRl7uHikBeg2TAmZj+1OPNPNEHn+YH5iQC3Xr0prunbHZrJHsq+5quna
-         EopA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5OdR9z+Kdd4qh6nvMjt2/ZqXlb0LSlPCg0egPZngwz+9JSBqgIZzTKIl7MRFAqiGQIg9wIYELRv1GXts17PD326Ygxv/2Q2VFPcfL
-X-Gm-Message-State: AOJu0YysQ2WuteG1B0usP/TB9oYpd/9dc53azr1g6NHSRBhtXhpIiRmZ
-	FvUluv0SqtY2ONXLhFugdyAw3pV6T11dMPYafNdnprUGCSkGnmGNZTElfFxHFa48KpPQCX2JYTs
-	eDQ==
-X-Google-Smtp-Source: AGHT+IHrPdYXJQ88SIVzQ5uVnIDoZr8qnm3pGhWwZruCCZDr6O/84844meKb98AqqszmQhjmVqBN2EZJARI=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:92f9:5432:a95e:d0e8])
- (user=surenb job=sendgmr) by 2002:a05:690c:d87:b0:61b:791a:9850 with SMTP id
- 00721157ae682-6322480e75dmr10421527b3.9.1718405995393; Fri, 14 Jun 2024
- 15:59:55 -0700 (PDT)
-Date: Fri, 14 Jun 2024 15:59:51 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z4B9lWOg"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EMokmK013359;
+	Fri, 14 Jun 2024 23:02:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:content-type:mime-version; s=pp1;
+	 bh=MbVQgVNhZ9lQsiVH5Q356oJewXvGRo/rfiDLIfEXhiI=; b=Z4B9lWOg6eE0
+	xTMalYsaEBhPZeNR+CJOlH1h91EAgROfyDqB7HpW+8fr1UrszJfvXg+Y4txwFGg5
+	xXsGWWUUvRl5kKbTa2uGiUGHfjVM0mPC0lMpdIui0KYXrg2W0WHEWNJtywlKc4Dx
+	Bf6/tY8psAacAxyn2dTw40aLZYzG6hM8DGYPAyah+0NQhLkwf9Rqc1q2ycG8zJwR
+	Q9we2BpKb7OIupBtqzY7hQUMAt0vIVPY43R5pAO7o35rIgkLCwG3d8JO3jYWAe9G
+	R39c3nKpmLV2ILIeNUKI/dhLhl1Tg8VsTrs/r1lHJY4f7VBP/xcNBZ9OnvVTMorW
+	DwlWqoEgkA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrxpcr1kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 23:02:10 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45ELAWPc027243;
+	Fri, 14 Jun 2024 23:02:09 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn211nnf5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 23:02:09 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EN23Mn55181750
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 23:02:05 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9450A2004F;
+	Fri, 14 Jun 2024 23:02:03 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 36ECC2004E;
+	Fri, 14 Jun 2024 23:02:03 +0000 (GMT)
+Received: from localhost (unknown [9.171.18.71])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 14 Jun 2024 23:02:03 +0000 (GMT)
+Date: Sat, 15 Jun 2024 01:02:01 +0200
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 6.10-rc4
+Message-ID: <your-ad-here.call-01718406121-ext-7930@work.hours>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SZM1ukOTbvgyoNgLWqfQ3NnLEl-D6kke
+X-Proofpoint-ORIG-GUID: SZM1ukOTbvgyoNgLWqfQ3NnLEl-D6kke
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <20240614225951.3845577-1-surenb@google.com>
-Subject: [PATCH 1/1] mm/slab: fix 'variable obj_exts set but not used' warning
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, vbabka@suse.cz, pasha.tatashin@soleen.com, 
-	souravpanda@google.com, keescook@chromium.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_17,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=486 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 phishscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406140161
 
-slab_post_alloc_hook() uses prepare_slab_obj_exts_hook() to obtain
-slabobj_ext object. Currently the only user of slabobj_ext object in
-this path is memory allocation profiling, therefore when it's not enabled
-this object is not needed. This also generates a warning when compiling
-with CONFIG_MEM_ALLOC_PROFILING=n. Move the code under this configuration
-to fix the warning. If more slabobj_ext users appear in the future, the
-code will have to be changed back to call prepare_slab_obj_exts_hook().
+Hello Linus,
 
-Fixes: 4b8736964640 ("mm/slab: add allocation accounting into slab allocation and free paths")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406150444.F6neSaiy-lkp@intel.com/
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- mm/slub.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+please pull s390 changes for 6.10-rc4.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 1373ac365a46..4927edec6a8c 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3902,7 +3902,6 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
- 			  unsigned int orig_size)
- {
- 	unsigned int zero_size = s->object_size;
--	struct slabobj_ext *obj_exts;
- 	bool kasan_init = init;
- 	size_t i;
- 	gfp_t init_flags = flags & gfp_allowed_mask;
-@@ -3945,9 +3944,11 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
- 		kmemleak_alloc_recursive(p[i], s->object_size, 1,
- 					 s->flags, init_flags);
- 		kmsan_slab_alloc(s, p[i], init_flags);
-+#ifdef CONFIG_MEM_ALLOC_PROFILING
- 		if (need_slab_obj_ext()) {
-+			struct slabobj_ext *obj_exts;
-+
- 			obj_exts = prepare_slab_obj_exts_hook(s, flags, p[i]);
--#ifdef CONFIG_MEM_ALLOC_PROFILING
- 			/*
- 			 * Currently obj_exts is used only for allocation profiling.
- 			 * If other users appear then mem_alloc_profiling_enabled()
-@@ -3955,8 +3956,8 @@ bool slab_post_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
- 			 */
- 			if (likely(obj_exts))
- 				alloc_tag_add(&obj_exts->ref, current->alloc_tag, s->size);
--#endif
- 		}
-+#endif
- 	}
- 
- 	return memcg_slab_post_alloc_hook(s, lru, flags, size, p);
+Thank you,
+Vasily
 
-base-commit: c286c21ff94252f778515b21b6bebe749454a852
--- 
-2.45.2.627.g7a2c4fd464-goog
+The following changes since commit 01c51a32dc18f128d2e55a7b2128b77fc01a2285:
 
+  KVM: s390x: selftests: Add shared zeropage test (2024-06-05 17:03:24 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.10-4
+
+for you to fetch changes up to 693d41f7c938f92d881e6a51525e6c132a186afd:
+
+  s390/mm: Restore mapping of kernel image using large pages (2024-06-11 16:20:40 +0200)
+
+----------------------------------------------------------------
+s390 updates for 6.10-rc4
+
+- A couple of fixes for regressions resulting from the uncoupling of
+  physical vs virtual kernel address spaces: fix the mapping of the
+  kernel image using large pages; enforce alignment checks on physical
+  addresses before creating large pages
+
+- Update defconfigs
+
+----------------------------------------------------------------
+Alexander Gordeev (2):
+      s390/mm: Allow large pages only for aligned physical addresses
+      s390/mm: Restore mapping of kernel image using large pages
+
+Heiko Carstens (1):
+      s390: Update defconfigs
+
+ arch/s390/boot/startup.c             | 27 +++++++++++++++++++---
+ arch/s390/boot/vmem.c                | 12 +++++++---
+ arch/s390/boot/vmlinux.lds.S         |  1 +
+ arch/s390/configs/debug_defconfig    | 43 ++++++++++++++++++++++++++++--------
+ arch/s390/configs/defconfig          | 40 ++++++++++++++++++++++++++++-----
+ arch/s390/configs/zfcpdump_defconfig |  5 +----
+ 6 files changed, 103 insertions(+), 25 deletions(-)
