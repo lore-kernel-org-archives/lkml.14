@@ -1,119 +1,122 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E563201;
-	Fri, 14 Jun 2024 02:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6BA3201
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333185; cv=none; b=fQsbQZFj1oA9gMS17QFf5nN0IS6cA8SGHDvr5jmMOeLQ1Mi1YtUwSgX/okX6E/sKN5GjGY28JECQppj8O0HfcB8IIucI0/veKH9Q5BLMn94qLME80laiIla/8k+BiT28+P2W264ePoqqB14SgSQM3yo5LekjDCpeA6wyp8MqTKg=
+	t=1718333189; cv=none; b=GtwfH6dueGkq7Zr3mRHBmof966G7H+ZFYedb/T2c/bu886wW2EvjrI1mwMUBktVANQASqf1noEafws30iQ9d7A3QJQwNthjDnN+kPeXb03VXS3I7Gm0BzmZzGMQzNvAGW9IxopCPdVRjazmaGZ9mYSctFch4XLZxx+tCYCZqk+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333185; c=relaxed/simple;
-	bh=zPvvfcrWiryVVmbdckHsbGSqcaJy4UzIjFMflqZUQQE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YzqAGjjgkMkmATEfxfjjk9eZzbOEV43y2el05vu66lp5IbNJ2kmkba6JlwVu5HBHV+5WLs/SsxIHsqaLOXRg0XQJ4VIY2xApf3rFHfVeXjSQcdpQNb51+6wIpiM4astxfcsE6S81vmIFgBH4J9tLmCSfATLOiJG44N8u5XEnkfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxW+rnrmtmN8AGAA--.27338S3;
-	Fri, 14 Jun 2024 10:46:00 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx28bkrmtmnKUfAA--.11909S3;
-	Fri, 14 Jun 2024 10:45:59 +0800 (CST)
-Subject: Re: [PATCH] KVM: Remove duplicated zero clear with dirty_bitmap
- buffer
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240613125407.1126587-1-maobibo@loongson.cn>
- <115973a9-caa6-4d53-a477-dea2d2291598@wanadoo.fr>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <fb2da53e-791d-aef7-4dbb-dcf054675f9b@loongson.cn>
-Date: Fri, 14 Jun 2024 10:45:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1718333189; c=relaxed/simple;
+	bh=TI9GKcx7TMqGRUXhEOhVdRzcCG1/S1/FTau2nYfb+p0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t+lWir/ttFAlpuZv2esAXp4LtJwBU4t1U5Oomz+x9KTH+jcRdz2XTggH4VIqz+HE69cl8tiRT5xg4ssf2OxIFgssiOQcQc9HW+HJvG8CWpSshXLl7pnuclQciIVGpKeSK23Iq9x3Sk8ptUGPDStqaYovvw3og+tnO0JuRgdoQTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=iJ3hBxiL; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iJ3hBxiL"
+X-UUID: 4982f0f829f811efa22eafcdcd04c131-20240614
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VrnEiZMzhbeTqsOlS9Sgz5XKj3UyAknKvFxKQ7N/8V0=;
+	b=iJ3hBxiLYXUqC3cZkmzoswl0C9cEurBhmkuQ4/kWLk4TrOPfCj0jEWs473ShFMLmlPcdho9x7GE66F+N92jHsBwVhEKxa3RIRhfloyssbWJJunZBguZvNszvD2vuBXRTP+8q6+jWWWoVPDBPRLpQZ/rfc+fQyjnbl6fnZCOEeG0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:0bbb7623-0ebd-4bb1-bf43-8a44db40fa33,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-30
+X-CID-META: VersionHash:393d96e,CLOUDID:a1fe1185-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4982f0f829f811efa22eafcdcd04c131-20240614
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
+	(envelope-from <shawn.sung@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1638844803; Fri, 14 Jun 2024 10:46:23 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 14 Jun 2024 10:46:22 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 10:46:22 +0800
+From: Shawn Sung <shawn.sung@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Bibby
+ Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
+	<nancy.lin@mediatek.com>, Sean Paul <sean@poorly.run>, Jason Chen
+	<jason-ch.chen@mediatek.corp-partner.google.com>, Fei Shao
+	<fshao@chromium.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Hsiao Chien Sung
+	<shawn.sung@mediatek.com>
+Subject: [PATCH v9 01/21] soc: mediatek: Disable 9-bit alpha in ETHDR
+Date: Fri, 14 Jun 2024 10:46:00 +0800
+Message-ID: <20240614024620.19011-2-shawn.sung@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240614024620.19011-1-shawn.sung@mediatek.com>
+References: <20240614024620.19011-1-shawn.sung@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <115973a9-caa6-4d53-a477-dea2d2291598@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx28bkrmtmnKUfAA--.11909S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrW7urWrGr1fGw4furyxXrc_yoW8Zr13pF
-	s3tFWUGrW5Jw18Cw17Cwn8W348t3yDtwn7Gr1UJFyUXr1kJr1vqr4IgF10g3WUZr4Iy3Wr
-	JF4jqFyUuF1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwmhF
-	DUUUU
+Content-Type: text/plain
+X-MTK: N
 
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
+When 9-bit alpha is enabled, its value will be converted from 0-255 to
+0-256 (255 = not defined). This is designed for special HDR related
+calculation, which should be disabled by default, otherwise, alpha
+blending will not work correctly.
 
-On 2024/6/14 上午3:25, Christophe JAILLET wrote:
-> Le 13/06/2024 à 14:54, Bibo Mao a écrit :
->> Since dirty_bitmap pointer is allocated with function __vcalloc(),
->> there is __GFP_ZERO flag set in the implementation about this function
->> __vcalloc_noprof(). It is not necessary to clear dirty_bitmap buffer
->> with zero again.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   virt/kvm/kvm_main.c | 3 ---
->>   1 file changed, 3 deletions(-)
->>
-> 
-> Hi,
-> 
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index 14841acb8b95..c7d4a041dcfa 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -1669,9 +1669,6 @@ static int kvm_prepare_memory_region(struct kvm 
->> *kvm,
->>               r = kvm_alloc_dirty_bitmap(new);
->>               if (r)
->>                   return r;
->> -
->> -            if (kvm_dirty_log_manual_protect_and_init_set(kvm))
->> -                bitmap_set(new->dirty_bitmap, 0, new->npages);
-> 
-> unless I miss something obvious, this does not clear anything, but set 
-> all bits to 1.
-> 
-> 0 is not for "write 0" (i.e. clear), but for "start at offset 0".
-> So all bits are set to 1 in this case.
-you are right, I had thought it is to write 0 :(
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_ethdr.c | 3 +--
+ drivers/soc/mediatek/mtk-mmsys.c     | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I do not know whether KVM_DIRTY_LOG_INITIALLY_SET should be enabled on 
-LoongArch. If it is set, write protection for second MMU will start one 
-by one in function kvm_arch_mmu_enable_log_dirty_pt_masked() when dirty 
-log is cleared if it is set, else write protection will start in 
-function kvm_arch_commit_memory_region() when flag of memslot is changed.
-
-I do not see the obvious benefits between these two write protect 
-stages. Can anyone give me any hints?
-
-Regards
-Bibo Mao
-
-> 
-> CJ
-> 
->>           }
->>       }
->>
->> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+index ac4132210585..29673611fa75 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
++++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+@@ -50,7 +50,6 @@
+ 
+ #define MIXER_INX_MODE_BYPASS			0
+ #define MIXER_INX_MODE_EVEN_EXTEND		1
+-#define DEFAULT_9BIT_ALPHA			0x100
+ #define	MIXER_ALPHA_AEN				BIT(8)
+ #define	MIXER_ALPHA				0xff
+ #define ETHDR_CLK_NUM				13
+@@ -169,7 +168,7 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
+ 		alpha_con = MIXER_ALPHA_AEN | MIXER_ALPHA;
+ 
+ 	mtk_mmsys_mixer_in_config(priv->mmsys_dev, idx + 1, alpha_con ? false : true,
+-				  DEFAULT_9BIT_ALPHA,
++				  MIXER_ALPHA,
+ 				  pending->x & 1 ? MIXER_INX_MODE_EVEN_EXTEND :
+ 				  MIXER_INX_MODE_BYPASS, align_width / 2 - 1, cmdq_pkt);
+ 
+diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+index afb2c40c85c1..00eff18a3bce 100644
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -236,6 +236,7 @@ void mtk_mmsys_mixer_in_config(struct device *dev, int idx, bool alpha_sel, u16
+ 
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_MIXER_IN1_ALPHA + (idx - 1) * 4, ~0,
+ 			      alpha << 16 | alpha, cmdq_pkt);
++	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_HDR_TOP_CFG, BIT(15 + idx), 0, cmdq_pkt);
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_HDR_TOP_CFG, BIT(19 + idx),
+ 			      alpha_sel << (19 + idx), cmdq_pkt);
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_MIXER_IN1_PAD + (idx - 1) * 4,
+-- 
+2.18.0
 
