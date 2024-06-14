@@ -1,180 +1,79 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B3A1474BC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB8D1474BC
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 07:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718350030; cv=none; b=QWCxLMqL6rAjN75+JHT5UKqDnu0VxFyRA4Am9isOOkSK8yg6bWTTJ3WgmVTDnl/OM30tS8vzLXkbuDdRNLhecC/zdvsi8iRh68WdXXGobAA5sUFwX3R4zG2jchdtJn8M5BJq8EZy4QnIIRE08XSdqKTqQPBUMw8dssL0wCSdvmU=
+	t=1718350065; cv=none; b=WPG7zYurO2aDQh/2IYhOGfhJuVTBI5lpcMwc5TwATrEyaN7MAGsPdA285iX9XMqKK8pTEKEUhBRRG4zpvnH9sFm5RQV8OEkIvK0uf9uAPl7NFCKdpPP4jTkL8yRgXywSWET00uDoKt1Gdye5JoGRLmPOWSmxT6MvPtUM5o/GcXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718350030; c=relaxed/simple;
-	bh=Cqj4d0kwFRq1hg1FkKe8Prs7jh1IqdC7dNUqMr0VaLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XtUEiJi63UOmqZgVvdl3TJieLfb35WH5Vz2ZOIuUSLZE/ud3MP4ttlpOlyOyYkDOtYHKdBZqepOJvxFl+MJVJSdk1qotNE8T0jSznozOZAA+z4x0Wx0csS3/c2NrntlilLb7C9n1+jo5oLSJvvd5kJdbtGQs909A1mEbvlnI+IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dfa48f505dfso2031577276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:27:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718350027; x=1718954827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bOhhydEb/pokB6Vjqx+FIu1ujuk/gkIge04R2bCG1hQ=;
-        b=Ka9MEZ9rcsGfW//TkZsIsWX439wNWhouWC50VBjXOZqJu5Jw4dBTQhA1NLb8vS/137
-         di507a5L6PpPmjby5Ef1LxBmmPIT4OK7v/bc7Ta9GlwTXgV+lTxXoEk5dyT1c/NmKP4o
-         W2C/gryW0X85WQPuam7o9ZZgM52tbr/1ovW3Psb9rTtRf6k5Oidd4PLbryr9s/SOVoIW
-         Y1UbB+NGmlPaPWGYWtvftbmDNhf6pQgUFn2tZj0OuzphUmGiqac4nFqMfttGF7zDAvCo
-         ZTK7BNWb5fuJHA5Op67ahu7p1HqE/LQ1blXaHFgAF5Qu+8+DUhExazPBlptD/5o+vLRo
-         qB3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUx5Hrzcfo2UyzC/NHJjPFgp5bwySYJhMW3FmhdPuKLW3KdWqbAuyGWXYFAbCXVF4XxvfEVStimynEBPjXZ87yfctlJ8tRmMF3aKekO
-X-Gm-Message-State: AOJu0YzUqkQh7D86yiegZaqiuF7UGHmOlXr4YUw/Ml4n6p5PvkrUw3ho
-	1XbXrZjI0YHC/8Hic0m9YGdxvUGcWtJKmRFZGoIR7JpbIGHEHYVKRRMqF/Ny
-X-Google-Smtp-Source: AGHT+IFYcblDFxmHlCv8//2I5OuZGfAROknRuWJOfoV4sT8W46seALEEINBfzijys9B021SdLCKfqw==
-X-Received: by 2002:a25:800d:0:b0:de8:c277:1e72 with SMTP id 3f1490d57ef6-dff153462c2mr1719111276.1.1718350026674;
-        Fri, 14 Jun 2024 00:27:06 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff046690dcsm445042276.11.2024.06.14.00.27.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jun 2024 00:27:06 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a2424ed00so23902667b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 00:27:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVL0sIl5+9+yAW7wLq1378ILjy3OItbZe3w21GRvf+KLfahdO4sbje8dwZMkn+hQKaxDj+9TyvGE5MVSXZaxH0WjTstzk/vd+EMhNP4
-X-Received: by 2002:a25:8284:0:b0:dfa:85e4:c8bc with SMTP id
- 3f1490d57ef6-dff1534634emr1778123276.6.1718350025611; Fri, 14 Jun 2024
- 00:27:05 -0700 (PDT)
+	s=arc-20240116; t=1718350065; c=relaxed/simple;
+	bh=EZcrKg2HdRtyxUW9ZShduOq06Xb0EKs/BKL46PbHROE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FO4WW67YPhmH1GhJ2ZKLZQsIdygHNvtI+8S/NjdmoGWjm7DFwTM2KZ98jKrW8tTwJ4HD/LL59VyxVK8N9j7U+bT/pDKbuA9CJtXLa5qtnMLm+6X0IZ+51ikSGneZ6DXuY+G19uzCKapeQW5N5vFsS82jXNb2XiZnPlHqSDnEFmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from ubt.. (unknown [124.16.141.243])
+	by APP-03 (Coremail) with SMTP id rQCowAB3mSb+7mtmfoSYEA--.19275S2;
+	Fri, 14 Jun 2024 15:19:26 +0800 (CST)
+From: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Orson Zhai <orsonzhai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Move myself from SPRD Maintainer to Reviewer
+Date: Fri, 14 Jun 2024 15:19:16 +0800
+Message-Id: <20240614071916.1927791-1-zhangchunyan@iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718311756.git.u.kleine-koenig@baylibre.com> <85a3d444f2943ebe9d64e722b1717a5f7d06ed48.1718311756.git.u.kleine-koenig@baylibre.com>
-In-Reply-To: <85a3d444f2943ebe9d64e722b1717a5f7d06ed48.1718311756.git.u.kleine-koenig@baylibre.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 14 Jun 2024 09:26:52 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUHi0Yu2Giccp7pHqpjLWG2CjkGFWehLV0iWBHB_V4oGw@mail.gmail.com>
-Message-ID: <CAMuHMdUHi0Yu2Giccp7pHqpjLWG2CjkGFWehLV0iWBHB_V4oGw@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 2/2] driver core: Don't allow passing a -ENOMEM to dev_err_probe()
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Xiubo Li <xiubli@redhat.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAB3mSb+7mtmfoSYEA--.19275S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr4UAFykJFW5CF45Jw18Krg_yoW3trg_G3
+	WkXrWxWrWkJF9rA34kZF9rCa1Fv3yUWr4Fg3ZYqwn8Aay5ArykKFnFq3WxXw18Gr43KrZr
+	KF98AFZagr1avjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7AYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8CwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ya0PUUUUU==
+X-CM-SenderInfo: x2kd0wxfkx051dq6x2xfdvhtffof0/1tbiBwsIB2Zr151IAQAAsN
 
-Hi Uwe,
+I've resigned from Unisoc (formerly Spreadtrum) and cannot access
+internal HW specifications any more, also cannot commit much
+time for maintaining sprd code, especially DTS.
 
-On Thu, Jun 13, 2024 at 11:24=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
-rnel.org> wrote:
-> From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
->
-> If a function returns the error code -ENOMEM, there should be no error
-> output, because a failing allocation is already quite talkative and
-> adding another indication only makes it harder to determine the actual
-> problem.
->
-> So the construct:
->
->         ret =3D some_function(...);
->         if (ret)
->                 return dev_err_probe(dev, ret, ...);
->
-> is questionable if some_function() can only succeed or return -ENODEV.
->
-> Catch some of these failures during compile time.
->
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+While I'm happy to help review the sprd drivers I wrote before.
 
-Thanks for your patch!
+Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I have some concerns about this patch, I only implemented it because in
-> reply to the first submission of patch #1 Andy wrote that he thinks this
-> should be done, too. So the idea of this patch is only to keep the
-> discussion about handling a constant -ENOMEM to dev_err_probe() away
-> from patch 1, in the hope to make application of patch 1 more likely :-)
->
-> So, I think this patch 2/2 is a bad idea, because:
->
->  - Let's assume there are functions, that return either success or
->    -ENOMEM. (I'm not aware of such a function, but I didn't search for
->    one and probably something like that exists.) Probably the compiler
->    won't be able to know that, and so doesn't catch that "problem".
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..d0d7711f05a2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2893,7 +2893,7 @@ F:	drivers/edac/altera_edac.[ch]
+ ARM/SPREADTRUM SoC SUPPORT
+ M:	Orson Zhai <orsonzhai@gmail.com>
+ M:	Baolin Wang <baolin.wang7@gmail.com>
+-M:	Chunyan Zhang <zhang.lyra@gmail.com>
++R:	Chunyan Zhang <zhang.lyra@gmail.com>
+ S:	Maintained
+ F:	arch/arm64/boot/dts/sprd
+ N:	sprd
+-- 
+2.34.1
 
-You can find several in public header files:
-
-    git grep -W "return\s*-ENOMEM\>" -- include/
-
-I expect there are more in static code all over the place.
-
->  - Using dev_err_probe() to handle the return code of some_function() is
->    convenient. First to make error handling in the calling function
->    uniform, and second, to not create a patch opportunity for all
->    callers when some_function() might return another error code in the
->    future. So dev_err_probe() can just be used without caring for the
->    details of the handled error.
-
-IMHO this is the only drawback.
-And things may change: a static (inline) function that can only return
-zero or -ENOMEM now, can return other error codes tomorrow.
-Also, some dummies (e.g. dma_mapping_error()) return -ENOMEM, so it
-depends on kernel configuration too.
-
->  - In the presence of patch #1, there is no real problem with calling
->    dev_err_probe(dev, -ENOMEM, ...), because this is an error path and
->    so not performance critical, and no error message is emitted.
-
-There's still the issue of increased kernel size, mainly due to the
-presence of the error message string.
-
-> Given these, the more complicated implementation for dev_err_probe()
-> isn't really justified IMHO.
-
-My initial reaction was quite positive, until I discovered the dummies...
-
-> --- a/include/linux/dev_printk.h
-> +++ b/include/linux/dev_printk.h
-> @@ -275,6 +275,12 @@ do {                                                =
-                       \
->         WARN_ONCE(condition, "%s %s: " format, \
->                         dev_driver_string(dev), dev_name(dev), ## arg)
->
-> -__printf(3, 4) int dev_err_probe(const struct device *dev, int err, cons=
-t char *fmt, ...);
-> +__printf(3, 4) int __dev_err_probe(const struct device *dev, int err, co=
-nst char *fmt, ...);
-> +#define dev_err_probe(dev, err, ...)                                    =
-       \
-> +       ({                                                               =
-       \
-> +               int __err =3D (err);                                     =
-         \
-> +               BUILD_BUG_ON(__builtin_constant_p(__err) && __err =3D=3D =
--ENOMEM);  \
-> +               __dev_err_probe((dev), __err, __VA_ARGS__);              =
-       \
-> +        })
->
->  #endif /* _DEVICE_PRINTK_H_ */
-
-Looks like dev_err_probe() does not have a dummy for the !CONFIG_PRINTK
-case yet, while it could definitely use one.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
