@@ -1,122 +1,118 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD471465AA
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6410D181B91
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382857; cv=none; b=TYfeKmrms/+cv7u1FTsFiTVmq81YZ9CLzJVTgp1rOaUIY250XP+aAKQRQpCxQZFscIH18Ao2EUlKcGaTn3T3pJvXCljrLgfjdge9lJXKLvDciTkNWPl/xh/XzyNPJCMP8WlYIdNH1TEsRXsHM+9H2gVSz86yzWXDbY9icNzNPLA=
+	t=1718382920; cv=none; b=RgdTUoTwAOVjR14gPba7a2FMsvPIjLETs7Nf7g51qat1lc4s7r2FoKV7UmglyKUxQU/tlLyXtQflFs2TiaAvf2qSIE/F5bLwFv3Ar7LogbKD4etU6DUsoNhujQGwgJjRSZJXkuypb79PNiGeunGiv/OkDeti5MYBxzM33bKj144=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382857; c=relaxed/simple;
-	bh=0nEb3gSfbpNCQF05a2LHM3iK60Zt11N7GPw8rCKzca0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZn1AqoB5YKVdJiSNaqh0XpIZqBagU8wCGZszGBp/SWexcTqxm3B69BF3F+U+MlSB0R3ZPRFsVtEojRsToB2g1aR25WWlWxBSMr4V58Yl79KEyQeNzpq+Uu82IyBYVBIKD7xg3EfTfUMXWGEM7wEpklpnN7KIPWnqVdT2G7RLeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dYBtm24e; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718382920; c=relaxed/simple;
+	bh=LuXmN9tx1+9vM/aOgvWFhrlm3ooXyRad8K9vUy2MI7U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FbBFcFmvetkbzVszAlXT+/dFkucmrV6E91ssny10Op5Mvq4QuK7PLgc+NLFMS+DYZV8IhEBk7ccLvlOW9zPdyJmoJ0EUP3xH5VA8s0Mhfyh+zd/e2NtrLncRKOi70TbFhsDiZte7fydf5Ed/T6J/sFfqIVZJXT8+RCCFHmfENYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=muRdsBAD; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dYBtm24e"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec0f3b9cfeso12885911fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:34:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="muRdsBAD"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c83100c5fso2609682a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718382854; x=1718987654; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GsvUggwl2iaq+7ID95/kPZJoKFES9T3PhHRwe3ICtG8=;
-        b=dYBtm24egFiBj0gwws5FWLCaNWd7UtbuWBrunGND0YKQZXWDOOTrym7iqQyckKwjJr
-         Kse4W5zUV9b7VweGY/BQA+vIxNzaeKVnE6V9YHDDYf+vgRS/1t4YakziDHwqNmJF2zwY
-         zDBcHFCTkJksu1+No9el17BfQFkGeEW07QFHR6yPew+Ema2ucWCVocpfY37NZ/wDhx09
-         U9BA+82G4HAEADtVQEbysfgOse3DqAgPJXzZvXx9iQ1kChEuBFJLLvBauSi+mm0T9zWT
-         I4jO8iZeFH71Lc9326yDnRK5QwKudpb9X7xTLlwjOtCEkFUeRIDA/ntm8fDmkdpdBTrl
-         2Reg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718382854; x=1718987654;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718382916; x=1718987716; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GsvUggwl2iaq+7ID95/kPZJoKFES9T3PhHRwe3ICtG8=;
-        b=pc1omqKY85zucfwTMUnvMlw38Cfo6nJ0A0x3cRADX17cqz8M983xcBoDSOgE7W79sJ
-         EekKWAhscIgjl4vmQgQtWiuUoZ67cTJAUEZAuho7kfSGDEB5EzNQ05MF8Uj1Xh/o4k1u
-         b5esRAYmS4v+BiOlXMXRjLQ/Oqg4mEaCbsC6DfyWVJcA45pRinw7sGgr8lfvgckx8FPV
-         1ZxBhRRKMz6B2hu8AslTODcEZ64g6RiJvDIGo8BcMukk9oIzP3lqRREs81dnLuPRiAK1
-         WUgyjs873iYT+n4DkJLWEvrfjalH/enqocU3B9NFUwcRMxSnarN0cxS+qsS8wSxeEwUL
-         FolA==
-X-Forwarded-Encrypted: i=1; AJvYcCXS8y78kLn/PU+EhpIA6sSBk/w1WUPVfbCZV+g3uNbu4+c3z6O+82Yp2e0gPHPOKuOO/b5dag2Ih/+bOmkNkxcLNG0WjD6j4bszcU/1
-X-Gm-Message-State: AOJu0YzqsaUXBcUEDorFqUv/L5yJ08AzRqlqP6wH3bHIWTdKWb4SrnLW
-	kAYZVL2qwTOfDeTCex97G5Ve2NCvIoHH9PB79tMTK8pYIZgLhgPgb2XcNoq/H2w=
-X-Google-Smtp-Source: AGHT+IGWO/+8GdkVi0zVWi4kRTQ+VAxP+yfG1FPOfEgKx9zHhcN/3noH2wJkYSc+zOPvMmPFAKBvSA==
-X-Received: by 2002:a2e:2281:0:b0:2ec:ff6:3bcc with SMTP id 38308e7fff4ca-2ec0ff64128mr16860701fa.5.1718382854165;
-        Fri, 14 Jun 2024 09:34:14 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c061d3sm5763841fa.50.2024.06.14.09.34.13
+        bh=SYP4VucbC2/Jnuz/5Y5TpJxKEc0YEshxNGoLKrFr67Y=;
+        b=muRdsBAD40yg3pIdz7aI5D2k7rPYq8ypP30XjfXYzXS5ci/sRYOzA0IbQ3+S/1qFkP
+         GTRaOd9/7i1tvpIAl7AaoR7f5KSeJARSlroMnSTdwwG8gdJ5jqkgHBVW6pmiBvX0SUvN
+         Z8aXuyovSKsEQPhwYBdPQId7K5lnajZ/6tOzJa7TuZBcVWEafAESHRekXYyXr459OK9b
+         ej9BWggbnW76MlNccbbWFRQyslWJqLsBwGMoRoVl7uGoVb/YqTxb4gqkHlZTDk1ubA2p
+         qrCZQlvzBJnVHz0N+zZEUWTSai+ZYrEzYWtU1XDErVuL82Pe9ooPk1fHNY7AnbwzgAXo
+         qYcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718382916; x=1718987716;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SYP4VucbC2/Jnuz/5Y5TpJxKEc0YEshxNGoLKrFr67Y=;
+        b=MFDTLmsSRKqrMA3wSVVVtdY7wO54SRAzer69pZlVWdMGr7t7Oeni9Gd8v43BVHnhS5
+         DCqU0CQRarluicRbsBpCeqMyoq4Bq1er7Y1C4wCqyhXXlMrWb4GNCO7Fz1/28rBdptLQ
+         VSYnVnLmf/OYG2w5U542xcww6VO1uTgHs5CLKAc0Jg9Wp5n6BU9FHgcGUBiXW90pRqz2
+         FN0F2R5vvBhubNMC1AaUVqzrG7nqFvmQDZUI889OncvP4McCSVXxmjapZ1/303Fsn95L
+         ZvJzcgpgK27FU+5516AzLpkiUelbcoUDdAW9OpYWLf2GkjcJKOHHf5jryJZY7jfhkmit
+         Ek1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUS9sxu86xTfmtZTYm0r40VB8l13kBBWw0Ba4nl+R43txBAG787tiq4B7d4ezJB3Y4kjlDsN7xHufvKIOKxnUQom5AXDJn+GcaUEsmO
+X-Gm-Message-State: AOJu0Yx+MiPe4nSB5rPRsiA6Fk5FhKNHUfRzUSfK9hOsRz6lCe1eBNyW
+	plMkwVdY5clW5f7uYAV6TeI1wf43zQ6SreKto+Zz5ge5gezKhCUo/0npFuqZPN0=
+X-Google-Smtp-Source: AGHT+IFQDhA6L9B70v4e6G80Nc6QL8RMeX1jv/kC5wcXSX1xgpnIA6zLuA7OULi82c0Ut96o3OIgbQ==
+X-Received: by 2002:a50:a6ca:0:b0:579:e7c5:1001 with SMTP id 4fb4d7f45d1cf-57cbd68ffe3mr1913077a12.23.1718382915504;
+        Fri, 14 Jun 2024 09:35:15 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm2462893a12.22.2024.06.14.09.35.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 09:34:13 -0700 (PDT)
-Date: Fri, 14 Jun 2024 19:34:12 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jikos@kernel.org, 
-	benjamin.tissoires@redhat.co, dianders@google.com, hsinyi@google.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: display: panel: Add compatible for
- kingdisplay-kd101ne3
-Message-ID: <plucbf66gjhmt7bmtalqiopunqxnfjxljbt5flvjy3ssntx2vr@ou2pnejbvpg2>
-References: <20240614145510.22965-1-lvzhaoxiong@huaqin.corp-partner.google.com>
- <20240614145510.22965-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+        Fri, 14 Jun 2024 09:35:15 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: 
+Cc: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v3 0/4] Add audio support for LPC32XX CPUs
+Date: Fri, 14 Jun 2024 18:34:48 +0200
+Message-Id: <20240614163500.386747-1-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
+References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614145510.22965-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024 at 10:55:08PM GMT, Zhaoxiong Lv wrote:
-> The kingdisplay-kd101ne3 is a 10.1" WXGA TFT-LCD panel with
-> jadard-jd9365da controller. Hence, we add a new compatible
-> with panel specific config.
-> 
-> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-> ---
-> Chage since V3:
-> 
-> - 1. Abandon the V2 patch and add kingdisplay kd101ne3-40ti binding to 
-> -    jadard,jd9365da-h3.yaml again.
-> 
-> V2:https://lore.kernel.org/all/20240601084528.22502-2-lvzhaoxiong@huaqin.corp-partner.google.com/
-> 
-> Chage since V2:
-> 
-> -  Drop some properties that have already been defined in panel-common.
-> -  The header file 'dt-bindings/gpio/gpio.h' is not used, delete it
-> 
-> V1: https://lore.kernel.org/all/20240418081548.12160-2-lvzhaoxiong@huaqin.corp-partner.google.com/
-> 
-> ---
->  .../devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml    | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml b/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-> index 41eb7fbf7715..6138d853a15b 100644
-> --- a/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
-> @@ -19,6 +19,7 @@ properties:
->            - chongzhou,cz101b4001
->            - radxa,display-10hd-ad001
->            - radxa,display-8hd-ad002
-> +          - kingdisplay,kd101ne3-40ti
+This pach set is to bring back audio to machines with a LPC32XX CPU.
+The legacy LPC32XX SoC used to have audio spport in linux 2.6.27.
+The support was dropped due to lack of interest from mainaeners.
 
-I think the list was sorted. Please keep it this way.
+Piotr Wojtaszczyk (4):
+  ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
+  ARM: dts: lpc32xx: Add missing properties for the i2s interfaces
+  ARM: lpc32xx: Add pl08x virtual dma channels for spi and i2s
+  ASoC: fsl: Add i2s and pcm drivers for LPC32xx CPUs
 
->        - const: jadard,jd9365da-h3
->  
->    reg: true
-> -- 
-> 2.17.1
-> 
+ .../bindings/sound/nxp,lpc3220-i2s.yaml       |  69 +++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi        |   8 +
+ arch/arm/mach-lpc32xx/phy3250.c               | 111 ++++-
+ sound/soc/fsl/Kconfig                         |   7 +
+ sound/soc/fsl/Makefile                        |   2 +
+ sound/soc/fsl/lpc3xxx-i2s.c                   | 393 ++++++++++++++++++
+ sound/soc/fsl/lpc3xxx-i2s.h                   |  79 ++++
+ sound/soc/fsl/lpc3xxx-pcm.c                   |  74 ++++
+ 9 files changed, 750 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+ create mode 100644 sound/soc/fsl/lpc3xxx-i2s.c
+ create mode 100644 sound/soc/fsl/lpc3xxx-i2s.h
+ create mode 100644 sound/soc/fsl/lpc3xxx-pcm.c
 
 -- 
-With best wishes
-Dmitry
+2.25.1
+
