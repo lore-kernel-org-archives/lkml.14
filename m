@@ -1,63 +1,63 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7753A8479
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20621184126
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 02:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333191; cv=none; b=IfbtH+/t6TTT6xRwWNhoJGxLPkGocSq7LwB5m81O8b0dt66/agccEfF8gATQKQGTuzFrGzHWMmyCkm/hKv66UY4+HbdWQCAB5R+z+KkMHTdeIC2t9/2k2BeHzxBoq1aRHsVWm70EP8+3nAzFAVf6VAPxtN3X/fbF2ajU+iPFatM=
+	t=1718333193; cv=none; b=d/kaXBhcFpX5G/zMhCKrNFAUio+DvuaAa4lop4zf94bXEahga04T5R/JIs77bUbhjzYdbXkTA4arqfbKImPMw1GuMVYodl2rD8p9MUq3U+b4r0+95ALPcWzaN5PZTgsmiHHCkXewt2JsSeNHMx7TWYjY+LinO+T60rf/0m+PsLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333191; c=relaxed/simple;
-	bh=tfjkj69BggKWDl+q/ro2eSVEK/2D4jjeS09uuO622yY=;
+	s=arc-20240116; t=1718333193; c=relaxed/simple;
+	bh=Dbgk/yS5uy6GQVFaPI5W8rBUT0ppa+EieurkgWDxeac=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gAVppJy43wkmEZkX2PzzJqQAcI4hnNL7TErPwv2CKTT1kjVOJfxJ59bdDW9ZRYwSEAkVg6DECak9NVJJb+7Uzhvp65FvNFg7dE9DF7//dvuJ7BePDdRcJyossTtFQGG19cpdTSPpHdlWAQZKcmbQsrsr6BVyTPm2Lze7sNFJR94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=kSjehm1+; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=tEhCRK+cVa/KjiZ+mPg4eVTVqTIH6KSO4RCd928qXSNfgyt15jVAnmdI8PWWgnYMM6q3/wEPGqBT4tj/v4/IEFut7QZHf5jqF1k18BYORohmjjdWNbkN2vgU3EQbs8KZyexAUdt18h0yU8UPFfuVMV1eUcGHBtLh2bi9w1OzGIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=G6YRFFYs; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kSjehm1+"
-X-UUID: 4a9bee3629f811efa22eafcdcd04c131-20240614
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G6YRFFYs"
+X-UUID: 4a84278829f811efa54bbfbb386b949c-20240614
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=yLcR7dlAVQjyDe78JGuc6xnOX1NF7kqNFRhfDq58KqU=;
-	b=kSjehm1+1zbe7p+r+MoMETl5PuoTGac0VZow/kZrpVZE/Mm1AtRD63sxkwd8hZKgcM7EhfcBYH1rbifNJKcvN+T2P3pneTTxk9VePPK7pisOVTghO8IzMUt8paEEmSyexD67H2HV5qVVW+6Rieoc9Bc6MAn5iisDNPdnblTcImA=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=P2qkrOr5qvVcuU8Akj5R1+oKaguq9iNgCCld5Y8r5lk=;
+	b=G6YRFFYshJCf9sCTTFJt+9P3OcFG/6hjS4G8gmIGrp8FCreMN/qQPnCXBC3dpTKpnjmUpl4SoX2qBLCopIKVEDBiiFsrP1k5xTTzGp6+tI/14ExTJHodH6LwYTmiL/LfeRvCT7geWjGv64nbFaIZD5t/9yMEXlImQDlejNcrakc=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:ec429377-136a-40b4-94bf-4609d2fe0b13,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-30
-X-CID-META: VersionHash:393d96e,CLOUDID:a0c6f893-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
-	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.1.39,REQID:72fc24cc-9937-4d39-9ceb-496567f4fcee,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:c5df9188-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 4a9bee3629f811efa22eafcdcd04c131-20240614
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4a84278829f811efa54bbfbb386b949c-20240614
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 907890850; Fri, 14 Jun 2024 10:46:25 +0800
+	with ESMTP id 720227250; Fri, 14 Jun 2024 10:46:25 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 14 Jun 2024 10:46:22 +0800
+ 15.2.1118.26; Fri, 14 Jun 2024 10:46:23 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 10:46:22 +0800
+ 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 10:46:23 +0800
 From: Shawn Sung <shawn.sung@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, "Bibby
- Hsieh" <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Bibby
+ Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
 	<nancy.lin@mediatek.com>, Sean Paul <sean@poorly.run>, Jason Chen
 	<jason-ch.chen@mediatek.corp-partner.google.com>, Fei Shao
 	<fshao@chromium.org>, <dri-devel@lists.freedesktop.org>,
 	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Hsiao Chien Sung
 	<shawn.sung@mediatek.com>
-Subject: [PATCH v9 06/21] drm/mediatek: Turn off the layers with zero width or height
-Date: Fri, 14 Jun 2024 10:46:05 +0800
-Message-ID: <20240614024620.19011-7-shawn.sung@mediatek.com>
+Subject: [PATCH v9 12/21] drm/mediatek: Support DRM plane alpha in OVL
+Date: Fri, 14 Jun 2024 10:46:11 +0800
+Message-ID: <20240614024620.19011-13-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240614024620.19011-1-shawn.sung@mediatek.com>
 References: <20240614024620.19011-1-shawn.sung@mediatek.com>
@@ -68,69 +68,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--1.321300-8.000000
-X-TMASE-MatchedRID: bu1PPMrU5TklLXaRonFeEbttJwl7IC+W5TbwqVVpF+NiOMENWKv3dMm/
-	fWkgSnuR6eam2BAjyzTnYcKpCyR3r6XzgcphDfm8H5YQyOg71ZZMkOX0UoduuX5h6y4KCSJc+xj
-	xs2OXeAZguHEjDCmmHgPWoj/mrDhSVWO7fs8MQC7Da1qWPNOExvpV/0XEKBthmyiLZetSf8nyb6
-	HMFK1qe3YJEUfDojP/WBd6ltyXuvuU+BjJn6Gia+aEGiPC9uneL0I2I+zGN0c+m7Q7PraiUqTxT
-	2MLk80ywwkbURPDer405wrSJuSig8jyq973Zc05gc5QdoR+jv6AhOcaQrQ0U1GyRcoeF18qmKP0
-	zzpTAeGwod8xOMKmvMCBO+zxAW5pftwZ3X11IV0=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--1.321300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 436BB31C2E4532709AA393D704F92811D184E1352C434136C5CF94B0AA1D23F22000:8
 X-MTK: N
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-We found that IGT (Intel GPU Tool) will try to commit layers with
-zero width or height and lead to undefined behaviors in hardware.
-Disable the layers in such a situation.
+Set the plane alpha according to DRM plane property.
 
-Fixes: 777b7bc86a0a ("UPSTREAM: drm/mediatek: Add ovl_adaptor support for MT8195")
-Fixes: fa97fe71f6f9 ("UPSTREAM: drm/mediatek: Add ETHDR support for MT8195")
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c | 2 +-
- drivers/gpu/drm/mediatek/mtk_ethdr.c            | 7 ++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-index ecb8246833a7..39bcc73326f0 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-@@ -158,7 +158,7 @@ void mtk_ovl_adaptor_layer_config(struct device *dev, unsigned int idx,
- 	merge = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_MERGE0 + idx];
- 	ethdr = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_ETHDR0];
- 
--	if (!pending->enable) {
-+	if (!pending->enable || !pending->width || !pending->height) {
- 		mtk_merge_stop_cmdq(merge, cmdq_pkt);
- 		mtk_mdp_rdma_stop(rdma_l, cmdq_pkt);
- 		mtk_mdp_rdma_stop(rdma_r, cmdq_pkt);
-diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index 29673611fa75..9796fd1d51f2 100644
---- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -159,7 +159,12 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 	if (idx >= 4)
- 		return;
- 
--	if (!pending->enable) {
-+	if (!pending->enable || !pending->width || !pending->height) {
-+		/*
-+		 * instead of disabling layer with MIX_SRC_CON directly
-+		 * set the size to 0 to avoid screen shift due to mixer
-+		 * mode switch (hardware behavior)
-+		 */
- 		mtk_ddp_write(cmdq_pkt, 0, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_SIZE(idx));
- 		return;
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 1923bbd96014..2316d4a6dca7 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -450,8 +450,10 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
  	}
+ 
+ 	con = ovl_fmt_convert(ovl, fmt);
+-	if (state->base.fb && state->base.fb->format->has_alpha)
+-		con |= OVL_CON_AEN | OVL_CON_ALPHA;
++	if (state->base.fb) {
++		con |= OVL_CON_AEN;
++		con |= state->base.alpha & OVL_CON_ALPHA;
++	}
+ 
+ 	/* CONST_BLD must be enabled for XRGB formats although the alpha channel
+ 	 * can be ignored, or OVL will still read the value from memory.
 -- 
 2.18.0
 
