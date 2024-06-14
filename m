@@ -1,122 +1,162 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B478817C72;
-	Fri, 14 Jun 2024 21:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D5E13C671
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 21:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718399215; cv=none; b=HA4JHa39MHJxxYMz1dqhBxij+vSj/pvq//QTyEambWGqG5GFB/qXQv4kAtYY6M5NNJxNQmDDD6dnccVXURmFV2Hlte4V7GZj02HTlQqjYw0f1eLWCfX0IMgsGBnscm4B7gqZkg/WU/Q3YIl3fpP0ydR2AJeLP9P39f0zeE5TKsk=
+	t=1718399367; cv=none; b=o+Z7KkQGmvuabNrgCDdQwYDVG7M02VItEH7AZwrke3TQOP+kmQbSFmM0ynpKIDIj7PsQwrfzBcTLx6w1o0tUpRDRahp90YlXdwRWNtCDcBKQ84spwVB/xG+I5hg+L+iobJlhumE+bzv2TUVDyHetKaw7LKdcz9LwDY/aDoeGW/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718399215; c=relaxed/simple;
-	bh=KMO7Zfugy9M15xMn9DWM7ExCCPIjAnsh8V/2u166Wjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I9xWoC9sRYCSRNQg8CTzF4VlQmOBkCb6HSjWx4WP1KYm7rPic+82J6LHgrBi66obxR7DpFaTP3YVBaBW7Ce9CgK6k6qfB0735qOv3mpMazosXwU6rAXC5FF4Orx0wjxhOdS7jyqljo8nqrca2+pcuiTaUS4mzTGLgLO6c6ftIDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=c7RwiNFj; arc=none smtp.client-ip=80.12.242.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718399367; c=relaxed/simple;
+	bh=FNq86m2+L/Y8MguLbUnC6HoD3GqL1CauBRcwa9sF4GA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=O83UKltNzQUSQxFyTMyQ59uUtIHV00GAJUvors/7/7IIkfaC31WvrCLlhaGpU5l2PFViXkNXNn1ZCLwO53yOKhAdH17Oh2zPAByz2THKlHzjQ91zOh0yxRrBc3gLeoDIyAVGRYl8l0XxGll4uUGKkjNtrY37znzmz3o7EPQ9DWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NTeplea4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="c7RwiNFj"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id IDz0sVzold4AbIDz0shQqo; Fri, 14 Jun 2024 22:57:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718398641;
-	bh=0gqOmh8tdr4J+MkHrhErZNEY+dxRqhfQP+7M6D3WdV0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=c7RwiNFjjLHdqSblMkJBWPJfoTE6MCtHwN7i+OaI4OZa6UlluTrA+5uRTcpd34uS3
-	 U4mdmvU/04dh4Sn6aHNgHbaQn0B28XF/pi9hZIl3S8DVwxQmyDL9Sp+0s6wMtk6aVU
-	 xubrZyUSzfvHM4O1wZH6PVY6wVR3b0oF4JzdRyzqTDuKM0abKgxuWvOdv+sXg7nGr9
-	 Xvp5WeG5DoI6b+iONI4HyFCrOOF990Af8cednrtrIuAGXDa4La5mO0h5nEqlkd/VIb
-	 iI0wTGpOszyubW8KXjjCC7YdpZelgqMIttaAnsJnQUuG2+1KZT1SkdK/v4anT5Kwiz
-	 mb3ZTiGR/9xhg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 14 Jun 2024 22:57:21 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	ocfs2-devel@lists.linux.dev
-Subject: [PATCH] ocfs2: Constify struct ocfs2_stack_operations
-Date: Fri, 14 Jun 2024 22:57:09 +0200
-Message-ID: <f52dab89ee0049ec6271de29183a781efbb275ab.1718398605.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NTeplea4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718399366; x=1749935366;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=FNq86m2+L/Y8MguLbUnC6HoD3GqL1CauBRcwa9sF4GA=;
+  b=NTeplea42uiwz8vJlAiUC1/+6PWWBtGbQFZTcfb8mtCu+4iVVyL2Feff
+   VqckqmjQZr0YVjTYLlhkjPqt362Lx3yk/qWBBs2UO7iNsdkzmo8YJ2EWP
+   mSy/kySl6Q4BmVwg6NhrDsEjLeVo7nGVg3TjZH6e0P8w7D080Mblfc9DR
+   XTib99iKep4EEVzZgzJvmMaOTe25sfksNFQ/dv/AmOxJWRyVsf6FlfilA
+   qbyWyiC2Ij2HarFR2ylGbdOmIsHbZ2lj1iHTi46TC2IlylzbnSq/wajAD
+   KZeEfDXVExZz/HeTKSEguCNWtubi7yy2nhhAvQkrl6cm1TrC8PpUF5XML
+   A==;
+X-CSE-ConnectionGUID: hjk1VbPfSVSWflf/N+Al5g==
+X-CSE-MsgGUID: Dp3HtxdyTOGj60o/4fx2uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="15141717"
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="15141717"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 14:09:26 -0700
+X-CSE-ConnectionGUID: FBxTe8TwQ5OCB8N3E2Vs9g==
+X-CSE-MsgGUID: JDLnadtmSGipZJW8EiIzWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="78095555"
+Received: from lkp-server01.sh.intel.com (HELO 9e3ee4e9e062) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 14 Jun 2024 14:09:23 -0700
+Received: from kbuild by 9e3ee4e9e062 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sIEAi-0001nZ-2L;
+	Fri, 14 Jun 2024 21:09:20 +0000
+Date: Sat, 15 Jun 2024 05:08:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+Subject: mm/slub.c:3905:29: error: variable 'obj_exts' set but not used
+Message-ID: <202406150444.F6neSaiy-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-"struct ocfs2_stack_operations" are not modified in this driver.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   c286c21ff94252f778515b21b6bebe749454a852
+commit: 4b8736964640fe160724e7135dc62883bddcdace mm/slab: add allocation accounting into slab allocation and free paths
+date:   7 weeks ago
+config: x86_64-sof-customedconfig-atom-defconfig (https://download.01.org/0day-ci/archive/20240615/202406150444.F6neSaiy-lkp@intel.com/config)
+compiler: gcc-11 (Ubuntu 11.4.0-4ubuntu1) 11.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240615/202406150444.F6neSaiy-lkp@intel.com/reproduce)
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406150444.F6neSaiy-lkp@intel.com/
 
-In order to do it, "struct ocfs2_stack_plugin" also needs to be adjusted to
-this new const qualifier.
+All errors (new ones prefixed by >>):
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-   6241	    644	      0	   6885	   1ae5	fs/ocfs2/stack_o2cb.o
+   mm/slub.c: In function 'slab_post_alloc_hook':
+>> mm/slub.c:3905:29: error: variable 'obj_exts' set but not used [-Werror=unused-but-set-variable]
+    3905 |         struct slabobj_ext *obj_exts;
+         |                             ^~~~~~~~
+   cc1: all warnings being treated as errors
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-   6337	    548	      0	   6885	   1ae5	fs/ocfs2/stack_o2cb.o
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- fs/ocfs2/stack_o2cb.c | 2 +-
- fs/ocfs2/stack_user.c | 2 +-
- fs/ocfs2/stackglue.h  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+vim +/obj_exts +3905 mm/slub.c
 
-diff --git a/fs/ocfs2/stack_o2cb.c b/fs/ocfs2/stack_o2cb.c
-index c973c03f6fd8..10157d9d7a9c 100644
---- a/fs/ocfs2/stack_o2cb.c
-+++ b/fs/ocfs2/stack_o2cb.c
-@@ -404,7 +404,7 @@ static int o2cb_cluster_this_node(struct ocfs2_cluster_connection *conn,
- 	return 0;
- }
- 
--static struct ocfs2_stack_operations o2cb_stack_ops = {
-+static const struct ocfs2_stack_operations o2cb_stack_ops = {
- 	.connect	= o2cb_cluster_connect,
- 	.disconnect	= o2cb_cluster_disconnect,
- 	.this_node	= o2cb_cluster_this_node,
-diff --git a/fs/ocfs2/stack_user.c b/fs/ocfs2/stack_user.c
-index c11406cd87a8..77edcd70f72c 100644
---- a/fs/ocfs2/stack_user.c
-+++ b/fs/ocfs2/stack_user.c
-@@ -1065,7 +1065,7 @@ static int user_cluster_this_node(struct ocfs2_cluster_connection *conn,
- 	return 0;
- }
- 
--static struct ocfs2_stack_operations ocfs2_user_plugin_ops = {
-+static const struct ocfs2_stack_operations ocfs2_user_plugin_ops = {
- 	.connect	= user_cluster_connect,
- 	.disconnect	= user_cluster_disconnect,
- 	.this_node	= user_cluster_this_node,
-diff --git a/fs/ocfs2/stackglue.h b/fs/ocfs2/stackglue.h
-index 3636847fae19..02ab072c528a 100644
---- a/fs/ocfs2/stackglue.h
-+++ b/fs/ocfs2/stackglue.h
-@@ -223,7 +223,7 @@ struct ocfs2_stack_operations {
-  */
- struct ocfs2_stack_plugin {
- 	char *sp_name;
--	struct ocfs2_stack_operations *sp_ops;
-+	const struct ocfs2_stack_operations *sp_ops;
- 	struct module *sp_owner;
- 
- 	/* These are managed by the stackglue code. */
+  3898	
+  3899	static __fastpath_inline
+  3900	void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
+  3901				  gfp_t flags, size_t size, void **p, bool init,
+  3902				  unsigned int orig_size)
+  3903	{
+  3904		unsigned int zero_size = s->object_size;
+> 3905		struct slabobj_ext *obj_exts;
+  3906		bool kasan_init = init;
+  3907		size_t i;
+  3908		gfp_t init_flags = flags & gfp_allowed_mask;
+  3909	
+  3910		/*
+  3911		 * For kmalloc object, the allocated memory size(object_size) is likely
+  3912		 * larger than the requested size(orig_size). If redzone check is
+  3913		 * enabled for the extra space, don't zero it, as it will be redzoned
+  3914		 * soon. The redzone operation for this extra space could be seen as a
+  3915		 * replacement of current poisoning under certain debug option, and
+  3916		 * won't break other sanity checks.
+  3917		 */
+  3918		if (kmem_cache_debug_flags(s, SLAB_STORE_USER | SLAB_RED_ZONE) &&
+  3919		    (s->flags & SLAB_KMALLOC))
+  3920			zero_size = orig_size;
+  3921	
+  3922		/*
+  3923		 * When slab_debug is enabled, avoid memory initialization integrated
+  3924		 * into KASAN and instead zero out the memory via the memset below with
+  3925		 * the proper size. Otherwise, KASAN might overwrite SLUB redzones and
+  3926		 * cause false-positive reports. This does not lead to a performance
+  3927		 * penalty on production builds, as slab_debug is not intended to be
+  3928		 * enabled there.
+  3929		 */
+  3930		if (__slub_debug_enabled())
+  3931			kasan_init = false;
+  3932	
+  3933		/*
+  3934		 * As memory initialization might be integrated into KASAN,
+  3935		 * kasan_slab_alloc and initialization memset must be
+  3936		 * kept together to avoid discrepancies in behavior.
+  3937		 *
+  3938		 * As p[i] might get tagged, memset and kmemleak hook come after KASAN.
+  3939		 */
+  3940		for (i = 0; i < size; i++) {
+  3941			p[i] = kasan_slab_alloc(s, p[i], init_flags, kasan_init);
+  3942			if (p[i] && init && (!kasan_init ||
+  3943					     !kasan_has_integrated_init()))
+  3944				memset(p[i], 0, zero_size);
+  3945			kmemleak_alloc_recursive(p[i], s->object_size, 1,
+  3946						 s->flags, init_flags);
+  3947			kmsan_slab_alloc(s, p[i], init_flags);
+  3948			if (need_slab_obj_ext()) {
+  3949				obj_exts = prepare_slab_obj_exts_hook(s, flags, p[i]);
+  3950	#ifdef CONFIG_MEM_ALLOC_PROFILING
+  3951				/*
+  3952				 * Currently obj_exts is used only for allocation profiling.
+  3953				 * If other users appear then mem_alloc_profiling_enabled()
+  3954				 * check should be added before alloc_tag_add().
+  3955				 */
+  3956				if (likely(obj_exts))
+  3957					alloc_tag_add(&obj_exts->ref, current->alloc_tag, s->size);
+  3958	#endif
+  3959			}
+  3960		}
+  3961	
+  3962		memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
+  3963	}
+  3964	
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
