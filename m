@@ -1,269 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0975D149C44;
-	Fri, 14 Jun 2024 08:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3751836C9;
+	Fri, 14 Jun 2024 08:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718353201; cv=none; b=tCr8ED9pwzeFsUVPibihmIGJjc+R/510Xj/RkxW0zcbSRuEgCpH4ayyFyNBuhHa/kCTVMB+WmhFAIZE20otA/KWfD9QSJ3alNpcgRjD5kc/aGmztxD3/94WVbpQsjlLJ98XwLGLiAfS88bnER5dIhXkN005OPlhjRUaU7R3scZc=
+	t=1718353203; cv=none; b=KqT6fsp/hwn8QJ3xz4utDEghpPbju+6gdd/Nt+KM++7Bh/bGXPloAEndFG+P0acSk31sN/X6qaaHzK/5lGV1bS3ROhxXo4uOLIRii7SK4mg7E7aSjZ1YARgFnJhZL50fNmnyvsa2SWXeQrm4hv3GT8/kpalZLLuKy6So4lS2ygw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718353201; c=relaxed/simple;
-	bh=TfxsNSJanNhH9ZFOQCKMNV6ScMRC1YpRzhWw8GYJeO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H/9xPHpqNHNs0A8slQAQ0nqZaUs6eG9gbt139o/ZzlawsubfmKZGivL6Q0AwMNVcK//fTNfnGdAttmuM2rT3afSmkaYfHFRezPH+SZRg4jyfduToRBPd6b1niUHTMYxmirsuMlRAkeqvxeH38VpYHHBwXgpZ/n3+49+oRsf15Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsaKF8hx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718353203; c=relaxed/simple;
+	bh=c87zkrYQathqmL08Ikj+Bp9MMl6Lx+n8tveNEu7A9fY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ELnCNzXqrM6qrGpvGED9OJN0gX8lkeqKFSuRgV81b4YHYvNCpjMeUPNa/EvdJ+Yr0mJPpc06xy/gfUANcxXGRk82IRpeqmq6LTgmc1a2KjpwHUaJpYPgGKIsb7Iim0y/iskuj9gJROfHth8+CzdzoopV8O8U7D8wFlxFyRBY10U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=WRLQrdaF; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsaKF8hx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA18C2BD10;
-	Fri, 14 Jun 2024 08:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718353200;
-	bh=TfxsNSJanNhH9ZFOQCKMNV6ScMRC1YpRzhWw8GYJeO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OsaKF8hxEn4ezvshOUa7jmZq4TwH2/vyh3QvveaZyX2trfbpmpapKC1xpwjtAqu36
-	 Q5wa02/1/cKX9/nlO2xSx5bD6yCnH2AoyiAjNVtOrukBB9qzXU0WtDc4mIhDxLd0/m
-	 jUar4GCbOyfc859tCNKgcJ1a6R/aDZPdRe6Qk44zIwgHyu85LmLQQcwdKt67+ze7cE
-	 RCXvs4jYaALFRbt+m7TVY2lLePkdTmnZh+6GEtleonUjjdH7roNuSvZJh4t7q54oKK
-	 iRoaRzEPwdI1lq8kRLL3zAvJ1J0LaNFhnlFC0eBcUAuwQfW2h2dK+doaV86COI59Eq
-	 yOkPNK7ShDU+A==
-Date: Fri, 14 Jun 2024 11:17:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jan Beulich <jbeulich@suse.com>,
-	Narasimhan V <Narasimhan.V@amd.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, stable@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] memblock:fix validation of NUMA coverage
-Message-ID: <Zmv8sMMGS8uosLQD@kernel.org>
-References: <Zmr9oBecxdufMTeP@kernel.org>
- <CAHk-=wickw1bAqWiMASA2zRiEA_nC3etrndnUqn_6C1tbUjAcQ@mail.gmail.com>
- <CAHk-=wgOMcScTviziAbL9Z2RDduaEFdZbHsESxqUS2eFfUmUVg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="WRLQrdaF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
+	Resent-Message-ID:In-Reply-To:References;
+	bh=6QB6APzgPEir2tuJKv/0C3N2LXOxzygezOBO8QcTSh8=; t=1718353201; x=1719562801; 
+	b=WRLQrdaFiF6y+3AxT2kT9kK6RN+rJo1YthqNQYz5MzJ4PLy77f7SsNqcn07JwSTam5CQ/OrB7p2
+	r91pv6C7KtP8yWOSafLBMpGMl52z0c9ZR9Qx0Q16T++YEyhLxiravzxkZUo6Va9H5kG58Eububzbr
+	ydmhGxjfrOIqivYNSlRGacFU596GN1HiyAfC7cSyN1NGiRTWOrKsEof3YRpwX2AIGVzNjARvEX83L
+	Z5oh2e/CgnpIzd9f/yU3OX5EYPhdlA9J3Uf+Uy7M45j3KoS1OAw/jUsBd+47LAgolnqvHHm0KVMI9
+	FnZRvUyNbVYhID6jd9NKdKWcmhEAZfQnElBg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sI2AA-0000000DZpq-2Rhg;
+	Fri, 14 Jun 2024 10:19:58 +0200
+From: Johannes Berg <johannes@sipsolutions.net>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH v5 0/4] tracing: improve symbolic printing
+Date: Fri, 14 Jun 2024 10:19:12 +0200
+Message-ID: <20240614081956.19832-6-johannes@sipsolutions.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgOMcScTviziAbL9Z2RDduaEFdZbHsESxqUS2eFfUmUVg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 10:38:28AM -0700, Linus Torvalds wrote:
-> On Thu, 13 Jun 2024 at 10:09, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Is there some broken scripting that people have started using (or have
-> > been using for a while and was recently broken)?
-> 
-> ... and then when I actually pull the code, I note that the problem
-> where it checked _one_ bogus value has just been replaced with
-> checking _another_ bogus value.
-> 
-> Christ.
-> 
-> What if people use a node ID that is simply outside the range
-> entirely, instead of one of those special node IDs?
-> 
-> And now for memblock_set_node() you should apparently use NUMA_NO_NODE
-> to not get a warning, but for memblock_set_region_node() apparently
-> the right random constant to use is MAX_NUMNODES.
-> 
-> Does *any* of this make sense? No.
-> 
-> How about instead of having two random constants - and not having any
-> range checking that I see - just have *one* random constant for "I
-> have no range", call that NUMA_NO_NODE, and then have a simple helper
-> for "do I have a valid range", and make that be
-> 
->    static inline bool numa_valid_node(int nid)
->    { return (unsigned int)nid < MAX_NUMNODES; }
-> 
-> or something like that? Notice that now *all* of
-> 
->  - NUMA_NO_NODE (explicitly no node)
-> 
->  - MAX_NUMNODES (randomly used no node)
-> 
->  - out of range node (who knows wth firmware tables do?)
-> 
-> will get the same result from that "numa_valid_node()" function.
-> 
-> And at that point you don't need to care, you don't need to warn, and
-> you don't need to have these insane rules where "sometimes you *HAVE*
-> to use NUMA_NO_NODE, or we warn, in other cases MAX_NUMNODES is the
-> thing".
-> 
-> Please? IOW, instead of adding a warning for fragile code, then change
-> some caller to follow the new rules, JUST FIX THE STUPID FRAGILITY!
-> 
-> Or hey, just do
-> 
->     #define NUMA_NO_NODE MAX_NUMNODES
-> 
-> and have two names for the *same* constant, instead fo having two
-> different constants with strange semantic differences that seem to
-> make no sense and where the memblock code itself seems to go
-> back-and-forth on it in different contexts.
+v2 was:
+ - rebased on 6.9-rc1
+ - always search for __print_sym() and get rid of the DYNPRINT flag
+   and associated code; I think ideally we'll just remove the older
+   __print_symbolic() entirely
+ - use ':' as the separator instead of "//" since that makes searching
+   for it much easier and it's still not a valid char in an identifier
+ - fix RCU
 
-A single constant is likely to backfire because I remember seeing checks
-like 'if (nid < 0)' so redefining NUMA_NO_NODE will require auditing all
-those.
+v3:
+ - fix #undef issues
+ - fix drop_monitor default
+ - rebase on linux-trace/for-next (there were no conflicts)
+ - move net patches to 3/4
+ - clarify symbol name matching logic (and remove ")" from it)
 
-But a helper function works great.
-I could only lightly test it as I don't have a fleet of machines with
-variety of memory layouts, so I'm planning to push it into -next early next
-week (with subject replaced by a more informative one)
+v4:
+ - fix non-module build and possibly dynamic event handling
 
-From 319eddd74b372cae840782c7d53832ab30533a6b Mon Sep 17 00:00:00 2001
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-Date: Fri, 14 Jun 2024 11:05:43 +0300
-Subject: [PATCH] memblock: FIX THE STUPID FRAGILITY
+v5:
+ - fix build warning in non-module build
 
-Introduce numa_valid_node(nid) that verifies that nid is a valid node ID
-and use that instead of comparing nid parameter with either NUMA_NO_NODE
-or MAX_NUMNODES.
+To recap, it's annoying to have
 
-This makes the checks for valid node IDs consistent and more robust and
-allows to get rid of multiple WARNings.
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: 0x20000
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- include/linux/numa.h |  5 +++++
- mm/memblock.c        | 28 +++++++---------------------
- 2 files changed, 12 insertions(+), 21 deletions(-)
+and much nicer to see
 
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 1d43371fafd2..eb19503604fe 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -15,6 +15,11 @@
- #define	NUMA_NO_NODE	(-1)
- #define	NUMA_NO_MEMBLK	(-1)
- 
-+static inline bool numa_valid_node(int nid)
-+{
-+	return nid >= 0 && nid < MAX_NUMNODES;
-+}
-+
- /* optionally keep NUMA memory info available post init */
- #ifdef CONFIG_NUMA_KEEP_MEMINFO
- #define __initdata_or_meminfo
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 08e9806b1cf9..e81fb68f7f88 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -754,7 +754,7 @@ bool __init_memblock memblock_validate_numa_coverage(unsigned long threshold_byt
- 
- 	/* calculate lose page */
- 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
--		if (nid == NUMA_NO_NODE)
-+		if (!numa_valid_node(nid))
- 			nr_pages += end_pfn - start_pfn;
- 	}
- 
-@@ -1061,7 +1061,7 @@ static bool should_skip_region(struct memblock_type *type,
- 		return false;
- 
- 	/* only memory regions are associated with nodes, check it */
--	if (nid != NUMA_NO_NODE && nid != m_nid)
-+	if (numa_valid_node(nid) && nid != m_nid)
- 		return true;
- 
- 	/* skip hotpluggable memory regions if needed */
-@@ -1118,10 +1118,6 @@ void __next_mem_range(u64 *idx, int nid, enum memblock_flags flags,
- 	int idx_a = *idx & 0xffffffff;
- 	int idx_b = *idx >> 32;
- 
--	if (WARN_ONCE(nid == MAX_NUMNODES,
--	"Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
--		nid = NUMA_NO_NODE;
--
- 	for (; idx_a < type_a->cnt; idx_a++) {
- 		struct memblock_region *m = &type_a->regions[idx_a];
- 
-@@ -1215,9 +1211,6 @@ void __init_memblock __next_mem_range_rev(u64 *idx, int nid,
- 	int idx_a = *idx & 0xffffffff;
- 	int idx_b = *idx >> 32;
- 
--	if (WARN_ONCE(nid == MAX_NUMNODES, "Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
--		nid = NUMA_NO_NODE;
--
- 	if (*idx == (u64)ULLONG_MAX) {
- 		idx_a = type_a->cnt - 1;
- 		if (type_b != NULL)
-@@ -1303,7 +1296,7 @@ void __init_memblock __next_mem_pfn_range(int *idx, int nid,
- 
- 		if (PFN_UP(r->base) >= PFN_DOWN(r->base + r->size))
- 			continue;
--		if (nid == MAX_NUMNODES || nid == r_nid)
-+		if (!numa_valid_node(nid) || nid == r_nid)
- 			break;
- 	}
- 	if (*idx >= type->cnt) {
-@@ -1339,10 +1332,6 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
- 	int start_rgn, end_rgn;
- 	int i, ret;
- 
--	if (WARN_ONCE(nid == MAX_NUMNODES,
--		      "Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
--		nid = NUMA_NO_NODE;
--
- 	ret = memblock_isolate_range(type, base, size, &start_rgn, &end_rgn);
- 	if (ret)
- 		return ret;
-@@ -1452,9 +1441,6 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 	enum memblock_flags flags = choose_memblock_flags();
- 	phys_addr_t found;
- 
--	if (WARN_ONCE(nid == MAX_NUMNODES, "Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead\n"))
--		nid = NUMA_NO_NODE;
--
- 	if (!align) {
- 		/* Can't use WARNs this early in boot on powerpc */
- 		dump_stack();
-@@ -1467,7 +1453,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 	if (found && !memblock_reserve(found, size))
- 		goto done;
- 
--	if (nid != NUMA_NO_NODE && !exact_nid) {
-+	if (numa_valid_node(nid) && !exact_nid) {
- 		found = memblock_find_in_range_node(size, align, start,
- 						    end, NUMA_NO_NODE,
- 						    flags);
-@@ -1987,7 +1973,7 @@ static void __init_memblock memblock_dump(struct memblock_type *type)
- 		end = base + size - 1;
- 		flags = rgn->flags;
- #ifdef CONFIG_NUMA
--		if (memblock_get_region_node(rgn) != MAX_NUMNODES)
-+		if (numa_valid_node(memblock_get_region_node(rgn)))
- 			snprintf(nid_buf, sizeof(nid_buf), " on node %d",
- 				 memblock_get_region_node(rgn));
- #endif
-@@ -2181,7 +2167,7 @@ static void __init memmap_init_reserved_pages(void)
- 			start = region->base;
- 			end = start + region->size;
- 
--			if (nid == NUMA_NO_NODE || nid >= MAX_NUMNODES)
-+			if (!numa_valid_node(nid))
- 				nid = early_pfn_to_nid(PFN_DOWN(start));
- 
- 			reserve_bootmem_region(start, end, nid);
-@@ -2272,7 +2258,7 @@ static int memblock_debug_show(struct seq_file *m, void *private)
- 
- 		seq_printf(m, "%4d: ", i);
- 		seq_printf(m, "%pa..%pa ", &reg->base, &end);
--		if (nid != MAX_NUMNODES)
-+		if (numa_valid_node(nid))
- 			seq_printf(m, "%4d ", nid);
- 		else
- 			seq_printf(m, "%4c ", 'x');
--- 
-2.43.0
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: RX_DROP_MONITOR
 
- 
->               Linus
+but this doesn't work now because __print_symbolic() can only
+deal with a hard-coded list (which is actually really big.)
 
--- 
-Sincerely yours,
-Mike.
+So here's __print_sym() which doesn't build the list into the
+kernel image, but creates it at runtime. For userspace, it
+will look the same as __print_symbolic() (it literally shows
+__print_symbolic() to userspace) so no changes are needed,
+but the actual list of values exposed to userspace in there
+is built dynamically. For SKB drop reasons, this then has all
+the reasons known when userspace queries the trace format.
+
+I guess patch 3/4 should go through net-next, so not sure
+how to handle this patch series. Or perhaps, as this will not
+cause conflicts, in fact I've been rebasing it for a long time,
+go through tracing anyway with an Ack from netdev? But I can
+also just wait for the trace patch(es) to land and resubmit the
+net patches after. Assuming this looks good at all :-)
+
+Thanks,
+johannes
+
