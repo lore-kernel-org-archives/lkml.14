@@ -1,159 +1,295 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A0E9460;
-	Fri, 14 Jun 2024 13:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C16919D896
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 13:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718372875; cv=none; b=hh2Bd+9dr5IrY01aPF43nIlB5KnjEnfO5uhBDhYuw2K63naK9h8qC4SK87y0CMsFuUR7fljr9Y89hSE23hsGcAzvcKues8+70k9usO5x7nmL3TGY6ZNdLFNK3IGO+qz6lx+/3yCLo7QJDNIPaAwD9U8pVftMY+kihbG3FNN6/ZE=
+	t=1718372873; cv=none; b=ngom3A1O90Eb5NoTCgQr8OVl9vvyRluyPbUQOYnxiTTBZuItJs2uogLZELwSzFlEUfXtM7mQgJdLv0VP4Fb9VtqvbY51GjqG2RMBLr4xsW1THd2aKSBbX8saa9eRRnGHA1aD4vTrnNhPeEtg2siuqm7Sa5Vv5xpK43MDQdq0Bo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718372875; c=relaxed/simple;
-	bh=1aZksGUp8fLgwOWNQFUHylne4EqFbmCyrS3QmoLiH8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RozzewteCF+/KazmlGGh0THZcA7lfQkpTRnJlQYuOjc12jG7UZUV2l4QBSjvs4a/9lEPgaXBsLYsYtiqbPBvEULwcr+VLWoha4GAeY01RtYqzmHMfhbfvk6eBmeUlYePLFOX2vi3lwuntz7oGa4o5VsIFRKHGAzNVizcGPqq0UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f70c457823so18282125ad.3;
-        Fri, 14 Jun 2024 06:47:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718372873; x=1718977673;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FZPLXCovA6tOx8EtxF21Zr80qSMU7lHz0lsliYvpAQ4=;
-        b=IfAcvIQi4jYHMKctQtoR9O+3zGM5oiyhus+mrGWf53vFLXddc3SShIos56Ak4t716E
-         dYTQ3Xi+CPt88Ig9NKevroEhf3DRUJO2taXo8+PnhBiUh2teyQPpZDszRVqJN29ydtwP
-         p53Fsa9Iu4ZO7E09hHscZPUA6H1JVjWMKdvHvZS7V+cVihkpJNZTBLjmhoyKLMqnOhDq
-         Gsb79m//yAjACrGNR7yhgWV3+9ayYyLCLWmMQSB2S2GdKJvDOEWSmg7YMVDzucQOzbhJ
-         a7I/udXyLvWEOA61o92fBB61XI2pF6VGhug8SO20v+rtiubkL2KCceTLkM2zPItMgTZv
-         fhoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRyaYisizilA5uff/hkx15cdESbAXHLcTSJLIR3ZuO/RTbrsEKr/n/dcHisBqRSXRIkdJraG+hpi69mbbZ8DvbV22k3Uk3lfqJgCdw
-X-Gm-Message-State: AOJu0Yy6KPAQ62LBiomGE7j47o/XhAU7rqDiGJli64zpuhwZBCWjpvnA
-	bdQdhuCyhCsMlSq28aFMfbspQhW4QqBeraNtaZc0192s7FDrYO1avBhcPJ7sHRiP2iphA+hjebD
-	EI/TFW8TOcR35ILIUDr1HeOlrWJY=
-X-Google-Smtp-Source: AGHT+IGqYisqr6N/qTpubTKsyCIzPOsj+J+8M/m56EvEBdCWAjklU3BuWRyrgT55xP61Z2DfTNgcC5zBXsBcwmTctBc=
-X-Received: by 2002:a17:90a:b00f:b0:2c2:d813:bffa with SMTP id
- 98e67ed59e1d1-2c4dbd431b5mr2778121a91.43.1718372873526; Fri, 14 Jun 2024
- 06:47:53 -0700 (PDT)
+	s=arc-20240116; t=1718372873; c=relaxed/simple;
+	bh=dSRu79zPsFMjSz7soAdAwuKfJ58eR3YhLRJFc8yq9m4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fkZ7UsdHICVXKDJ9Me5D4m9VwjXWHKLcg+95z0a8m/oyPRrg6zCapLrY4dcPvJ/bYZuCPtAVuIvsy4UMqRoksyKjFi1/ipoJvJUCmZKqSIdW929xHMv3XWWheysH5UWWWkan1QiUG8ZVbEZpToHFVZJybHdzzfJIua0KYVb2XxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vp8oSRDD; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vp8oSRDD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718372872; x=1749908872;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dSRu79zPsFMjSz7soAdAwuKfJ58eR3YhLRJFc8yq9m4=;
+  b=Vp8oSRDDjHaUNrUUuMJkj7Ng/5hP+pq0kgxNjpcxRajrLk9EExizmSyD
+   0eSfv+qAyR7oh35sqNENm9oQlTZ8oxqYsTWQ0ba28SwA2O/pnHZl042Fo
+   OmZENZWjKPCXkbIz9IO5ofbIEECYHbuVbnF0ic4Z2h7gsqkOk6YTnhopI
+   gyALBTVTj0cZJtUAMTecilCA50BnY6q/vp2k5mTzDuHO3z/NgEEN1+NHt
+   nyurxttyelgzzJfTgUEHOI20inKIliXplitySqV6oxiRSWWFA5y7N21zg
+   W1t8BuAqIsUhopcNWiUmjTxWO6QmpX24BRiXDI3SMmCVwr01gY46hpsDk
+   A==;
+X-CSE-ConnectionGUID: ltnUYSnZR1W6iqGD/7LBng==
+X-CSE-MsgGUID: bcxGcsGUSg+hEUgfgAvGjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="19079147"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="19079147"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 06:47:51 -0700
+X-CSE-ConnectionGUID: bwb/n8h4Svy/LrE+iGQ9cQ==
+X-CSE-MsgGUID: Xi9mFQNDToeOD2LNcGvQTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="40386664"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2024 06:47:50 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	eranian@google.com,
+	ak@linux.intel.com,
+	yunying.sun@intel.com,
+	tim.c.chen@linux.intel.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 1/8] perf/x86/uncore: Save the unit control address of all units
+Date: Fri, 14 Jun 2024 06:46:24 -0700
+Message-Id: <20240614134631.1092359-2-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240614134631.1092359-1-kan.liang@linux.intel.com>
+References: <20240614134631.1092359-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614073517.94974-1-sieberf@amazon.com>
-In-Reply-To: <20240614073517.94974-1-sieberf@amazon.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 14 Jun 2024 06:47:42 -0700
-Message-ID: <CAM9d7ciYQ9C0_zgwWYt505+Mv56EC7byqxBXkPgGydomrzTHcw@mail.gmail.com>
-Subject: Re: [PATCH] perf: sched map skips redundant lines with cpu filters
-To: Fernand Sieber <sieberf@amazon.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On Fri, Jun 14, 2024 at 12:49=E2=80=AFAM Fernand Sieber <sieberf@amazon.com=
-> wrote:
->
-> perf sched map supports cpu filter.
-> However, even with cpu filters active, any context switch currently
-> corresponds to a separate line.
-> As result, context switches on irrelevant cpus result to redundant lines,
-> which makes the output particlularly difficult to read on wide
-> architectures.
->
-> Fix it by skipping printing for irrelevant CPUs.
->
-> Example snippet of output before fix:
->
->   *B0       1.461147 secs
->    B0
->    B0
->    B0
->   *G0       1.517139 secs
->
-> After fix:
->
->   *B0       1.461147 secs
->   *G0       1.517139 secs
->
-> Signed-off-by: Fernand Sieber <sieberf@amazon.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+The unit control address of some CXL units may be wrongly calculated
+under some configuration on a EMR machine.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+The current implementation only saves the unit control address of the
+units from the first die, and the first unit of the rest of dies. Perf
+assumed that the units from the other dies have the same offset as the
+first die. So the unit control address of the rest of the units can be
+calculated. However, the assumption is wrong, especially for the CXL
+units.
 
-Thanks,
-Namhyung
+Introduce an RB tree for each uncore type to save the unit control
+address and three kinds of ID information (unit ID, PMU ID, and die ID)
+for all units.
+The unit ID is a physical ID of a unit.
+The PMU ID is a logical ID assigned to a unit. The logical IDs start
+from 0 and must be contiguous. The physical ID and the logical ID are
+1:1 mapping. The units with the same physical ID in different dies share
+the same PMU.
+The die ID indicates which die a unit belongs to.
 
-> ---
->  tools/perf/builtin-sched.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 7422c930abaf..aa59f763ca46 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1594,8 +1594,6 @@ static int map_switch_event(struct perf_sched *sche=
-d, struct evsel *evsel,
->
->         sched->curr_thread[this_cpu.cpu] =3D thread__get(sched_in);
->
-> -       printf("  ");
-> -
->         new_shortname =3D 0;
->         if (!tr->shortname[0]) {
->                 if (!strcmp(thread__comm_str(sched_in), "swapper")) {
-> @@ -1622,6 +1620,11 @@ static int map_switch_event(struct perf_sched *sch=
-ed, struct evsel *evsel,
->                 new_shortname =3D 1;
->         }
->
-> +       if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_c=
-pu))
-> +               goto out;
-> +
-> +       printf("  ");
-> +
->         for (i =3D 0; i < cpus_nr; i++) {
->                 struct perf_cpu cpu =3D {
->                         .cpu =3D sched->map.comp ? sched->map.comp_cpus[i=
-].cpu : i,
-> @@ -1656,9 +1659,6 @@ static int map_switch_event(struct perf_sched *sche=
-d, struct evsel *evsel,
->                         color_fprintf(stdout, color, "   ");
->         }
->
-> -       if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_c=
-pu))
-> -               goto out;
-> -
->         timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestam=
-p));
->         color_fprintf(stdout, color, "  %12s secs ", stimestamp);
->         if (new_shortname || tr->comm_changed || (verbose > 0 && thread__=
-tid(sched_in))) {
-> @@ -1675,9 +1675,9 @@ static int map_switch_event(struct perf_sched *sche=
-d, struct evsel *evsel,
->         if (sched->map.comp && new_cpu)
->                 color_fprintf(stdout, color, " (CPU %d)", this_cpu);
->
-> -out:
->         color_fprintf(stdout, color, "\n");
->
-> +out:
->         thread__put(sched_in);
->
->         return 0;
-> --
-> 2.40.1
->
->
+The RB tree can be searched by two different keys (unit ID or PMU ID +
+die ID). During the RB tree setup, the unit ID is used as a key to look
+up the RB tree. The perf can create/assign a proper PMU ID to the unit.
+Later, after the RB tree is setup, PMU ID + die ID is used as a key to
+look up the RB tree to fill the cpumask of a PMU. It's used more
+frequently, so PMU ID + die ID is compared in the unit_less().
+The uncore_find_unit() has to be O(N). But the RB tree setup only occurs
+once during the driver load time. It should be acceptable.
+
+Compared with the current implementation, more space is required to save
+the information of all units. The extra size should be acceptable.
+For example, on EMR, there are 221 units at most. For a 2-socket machine,
+the extra space is ~6KB at most.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/intel/uncore_discovery.c | 79 +++++++++++++++++++++++-
+ arch/x86/events/intel/uncore_discovery.h | 10 +++
+ 2 files changed, 87 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 9a698a92962a..ce520e69a3c1 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -93,6 +93,8 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
+ 	if (!type->box_ctrl_die)
+ 		goto free_type;
+ 
++	type->units = RB_ROOT;
++
+ 	type->access_type = unit->access_type;
+ 	num_discovered_types[type->access_type]++;
+ 	type->type = unit->box_type;
+@@ -120,10 +122,59 @@ get_uncore_discovery_type(struct uncore_unit_discovery *unit)
+ 	return add_uncore_discovery_type(unit);
+ }
+ 
++static inline bool unit_less(struct rb_node *a, const struct rb_node *b)
++{
++	struct intel_uncore_discovery_unit *a_node, *b_node;
++
++	a_node = rb_entry(a, struct intel_uncore_discovery_unit, node);
++	b_node = rb_entry(b, struct intel_uncore_discovery_unit, node);
++
++	if (a_node->pmu_idx < b_node->pmu_idx)
++		return true;
++	if (a_node->pmu_idx > b_node->pmu_idx)
++		return false;
++
++	if (a_node->die < b_node->die)
++		return true;
++	if (a_node->die > b_node->die)
++		return false;
++
++	return 0;
++}
++
++static inline struct intel_uncore_discovery_unit *
++uncore_find_unit(struct rb_root *root, unsigned int id)
++{
++	struct intel_uncore_discovery_unit *unit;
++	struct rb_node *node;
++
++	for (node = rb_first(root); node; node = rb_next(node)) {
++		unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
++		if (unit->id == id)
++			return unit;
++	}
++
++	return NULL;
++}
++
++static void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
++				 struct rb_root *root, u16 *num_units)
++{
++	struct intel_uncore_discovery_unit *unit = uncore_find_unit(root, node->id);
++
++	if (unit)
++		node->pmu_idx = unit->pmu_idx;
++	else if (num_units)
++		node->pmu_idx = (*num_units)++;
++
++	rb_add(&node->node, root, unit_less);
++}
++
+ static void
+ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+ 		       int die, bool parsed)
+ {
++	struct intel_uncore_discovery_unit *node;
+ 	struct intel_uncore_discovery_type *type;
+ 	unsigned int *ids;
+ 	u64 *box_offset;
+@@ -136,14 +187,26 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+ 		return;
+ 	}
+ 
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
++	if (!node)
++		return;
++
++	node->die = die;
++	node->id = unit->box_id;
++	node->addr = unit->ctl;
++
+ 	if (parsed) {
+ 		type = search_uncore_discovery_type(unit->box_type);
+ 		if (!type) {
+ 			pr_info("A spurious uncore type %d is detected, "
+ 				"Disable the uncore type.\n",
+ 				unit->box_type);
++			kfree(node);
+ 			return;
+ 		}
++
++		uncore_find_add_unit(node, &type->units, &type->num_units);
++
+ 		/* Store the first box of each die */
+ 		if (!type->box_ctrl_die[die])
+ 			type->box_ctrl_die[die] = unit->ctl;
+@@ -152,16 +215,18 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+ 
+ 	type = get_uncore_discovery_type(unit);
+ 	if (!type)
+-		return;
++		goto free_node;
+ 
+ 	box_offset = kcalloc(type->num_boxes + 1, sizeof(u64), GFP_KERNEL);
+ 	if (!box_offset)
+-		return;
++		goto free_node;
+ 
+ 	ids = kcalloc(type->num_boxes + 1, sizeof(unsigned int), GFP_KERNEL);
+ 	if (!ids)
+ 		goto free_box_offset;
+ 
++	uncore_find_add_unit(node, &type->units, &type->num_units);
++
+ 	/* Store generic information for the first box */
+ 	if (!type->num_boxes) {
+ 		type->box_ctrl = unit->ctl;
+@@ -201,6 +266,8 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
+ free_box_offset:
+ 	kfree(box_offset);
+ 
++free_node:
++	kfree(node);
+ }
+ 
+ static bool
+@@ -339,8 +406,16 @@ bool intel_uncore_has_discovery_tables(int *ignore)
+ void intel_uncore_clear_discovery_tables(void)
+ {
+ 	struct intel_uncore_discovery_type *type, *next;
++	struct intel_uncore_discovery_unit *pos;
++	struct rb_node *node;
+ 
+ 	rbtree_postorder_for_each_entry_safe(type, next, &discovery_tables, node) {
++		while (!RB_EMPTY_ROOT(&type->units)) {
++			node = rb_first(&type->units);
++			pos = rb_entry(node, struct intel_uncore_discovery_unit, node);
++			rb_erase(node, &type->units);
++			kfree(pos);
++		}
+ 		kfree(type->box_ctrl_die);
+ 		kfree(type);
+ 	}
+diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+index 22e769a81103..5190017aba51 100644
+--- a/arch/x86/events/intel/uncore_discovery.h
++++ b/arch/x86/events/intel/uncore_discovery.h
+@@ -113,17 +113,27 @@ struct uncore_unit_discovery {
+ 	};
+ };
+ 
++struct intel_uncore_discovery_unit {
++	struct rb_node	node;
++	unsigned int	pmu_idx;	/* The idx of the corresponding PMU */
++	unsigned int	id;		/* Unit ID */
++	unsigned int	die;		/* Die ID */
++	u64		addr;		/* Unit Control Address */
++};
++
+ struct intel_uncore_discovery_type {
+ 	struct rb_node	node;
+ 	enum uncore_access_type	access_type;
+ 	u64		box_ctrl;	/* Unit ctrl addr of the first box */
+ 	u64		*box_ctrl_die;	/* Unit ctrl addr of the first box of each die */
++	struct rb_root	units;		/* Unit ctrl addr for all units */
+ 	u16		type;		/* Type ID of the uncore block */
+ 	u8		num_counters;
+ 	u8		counter_width;
+ 	u8		ctl_offset;	/* Counter Control 0 offset */
+ 	u8		ctr_offset;	/* Counter 0 offset */
+ 	u16		num_boxes;	/* number of boxes for the uncore block */
++	u16		num_units;	/* number of units */
+ 	unsigned int	*ids;		/* Box IDs */
+ 	u64		*box_offset;	/* Box offset */
+ };
+-- 
+2.35.1
+
