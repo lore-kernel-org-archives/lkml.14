@@ -1,66 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4A81487E9;
-	Fri, 14 Jun 2024 09:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C968146A7A;
+	Fri, 14 Jun 2024 09:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718356053; cv=none; b=Zj0uqZ+vq1otNQ1wQcNQoo2qomHqGgsJ+DLTWVEtpJVJp1ke42ocyaAMr1dsq3uIQ9P6JJ1g3usHph311jy8WutZc1x6LZxQokHK9kwcYPyp2Tyb4WRMJwUrLGMH+SFM/xwe/NMwh4G2/U9RG8FAJ/cB/R5FcXytucyy3RzSdQg=
+	t=1718356132; cv=none; b=HKJLJ+0Ww5HZ5RleMUI8TGjth482wbw6tbDuNgW2iovRsYXdF+ILj1huOUGSDJl2VXrleAHZYWqr9kpSrbFFxPcdVxu7+duRnr0mXmSNZB9XCzwJEMuNSJ5Mt3tXvPLuwS4abbH3WDRFKD+E5l5Ai1X2GI86+nInvGley/EHmnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718356053; c=relaxed/simple;
-	bh=YzndSkdmYyM1m4OnS6tSHoY/XZcUglagXcQvICViWYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mDtIbQLkPi+i9YMJzddNCilGlAIn6i6PTPu6MSfK9jjfB5FqJ5eiioaL51zsLgZHoI18VC8O1PgEqGXLdRBm/KuAXJ/CVcTM8AqGN6zZ4ZFnnb/70QV4LqpirvfW5PapYqJTSOwVw/MpvnpzaWzyvacNSznh+NrN3Q6+xAn3nOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EijsRRR3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718356132; c=relaxed/simple;
+	bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sIrZXYl/E8+gzfcoGDAidRCEu6b3Jzoj615NmxsSR6Er6wjIeyF9dxEv/EUIJ4dJ0j+VAFndSuNEt1QvHPiAHceML9m7N8Ui/ChkvY4/vVbPONKUB6P63o6a5okw9X2+JxYuKlb44y3Fzqw/z/hpEIUPj7Q1J/13ixZNaflR72I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=MXZx04ZT; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=MXZx04ZT; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EijsRRR3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F3A9C32786;
-	Fri, 14 Jun 2024 09:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718356052;
-	bh=YzndSkdmYyM1m4OnS6tSHoY/XZcUglagXcQvICViWYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EijsRRR3G0TXmpDeNS2FYgGYt/aKTBB3SxmvWFz5ws+djrSzomZqXeAMri2G+ftCg
-	 S9uswQ1nIIJsLER8DLLucQITw5+SkVnSXvapO3+Mx/OKVj15/Ev5xQMHXVnNX2uk5S
-	 9za9m3b3RunIl2UzkourNWQZlEMkpxaR3olwW/k8=
-Date: Fri, 14 Jun 2024 11:07:29 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Crescent Hsieh <crescentcy.hsieh@moxa.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] tty: serial: 8250: Fixes: Fix port count mismatch with
- the device
-Message-ID: <2024061406-simmering-sanded-17ef@gregkh>
-References: <20240614090322.2303-1-crescentcy.hsieh@moxa.com>
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="MXZx04ZT";
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="MXZx04ZT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1718356122; bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MXZx04ZT9AN/P9rPEhdb4IzqE9vw6PolRAzCn9RBYYZQ7rklCBDnkxpE69XPsfsYz
+	 f9aXNX/D7Nqts+sHoBiOuNYvSGu36dQQGJ9tSekm22IDc+w+KDTtY/FYLcSAl8gGea
+	 +gUVACLvv849XtfBipBT+YT1bQkZ3NsW+Vb7gFT9/Jg/67lXlcZatOkAqiWc2FN+w6
+	 CUYcvP/Tg60cqNqm8xozqhb8VPASqD6Og8DSSB1LByifj1idQ/ODHqgzKssbPtIfpq
+	 wueVc0ZBPZ6XKnKEsCcJ8c9MpbhrZ6QHez5/u1QBHLipuB3acKyp5Qrs3xKii20Gsx
+	 MUlgaacYc1V+g==
+Received: by gofer.mess.org (Postfix, from userid 501)
+	id CB8BE1007EE; Fri, 14 Jun 2024 10:08:42 +0100 (BST)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1718356122; bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MXZx04ZT9AN/P9rPEhdb4IzqE9vw6PolRAzCn9RBYYZQ7rklCBDnkxpE69XPsfsYz
+	 f9aXNX/D7Nqts+sHoBiOuNYvSGu36dQQGJ9tSekm22IDc+w+KDTtY/FYLcSAl8gGea
+	 +gUVACLvv849XtfBipBT+YT1bQkZ3NsW+Vb7gFT9/Jg/67lXlcZatOkAqiWc2FN+w6
+	 CUYcvP/Tg60cqNqm8xozqhb8VPASqD6Og8DSSB1LByifj1idQ/ODHqgzKssbPtIfpq
+	 wueVc0ZBPZ6XKnKEsCcJ8c9MpbhrZ6QHez5/u1QBHLipuB3acKyp5Qrs3xKii20Gsx
+	 MUlgaacYc1V+g==
+Received: from localhost.localdomain (bigcore.local [IPv6:2a02:8011:d000:212:bc3c:1b4a:a6fa:362f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gofer.mess.org (Postfix) with ESMTPSA id EEEC91000B8;
+	Fri, 14 Jun 2024 10:08:41 +0100 (BST)
+From: Sean Young <sean@mess.org>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
+Date: Fri, 14 Jun 2024 10:08:29 +0100
+Message-ID: <20240614090829.560605-1-sean@mess.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614090322.2303-1-crescentcy.hsieh@moxa.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024 at 05:03:22PM +0800, Crescent Hsieh wrote:
-> Normally, the number of ports is indicated by the third digit of the
-> device ID on Moxa PCI serial boards. For example, `0x1121` indicates a
-> device with 2 ports.
-> 
-> However, `CP116E_A_A` and `CP116E_A_B` are exceptions; they have 8
-> ports, but the third digit of the device ID is `6`.
-> 
-> This patch introduces a function to retrieve the number of ports on Moxa
-> PCI serial boards, addressing the issue described above.
-> 
-> Signed-off-by: Crescent Hsieh <crescentcy.hsieh@moxa.com>
-> ---
->  drivers/tty/serial/8250/8250_pci.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm: Rename
+pwm_apply_state() to pwm_apply_might_sleep()").
 
-What commit id does this fix?
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/bus/ts-nbus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+index baf22a82c47a7..b8af44c5cdbd0 100644
+--- a/drivers/bus/ts-nbus.c
++++ b/drivers/bus/ts-nbus.c
+@@ -294,7 +294,7 @@ static int ts_nbus_probe(struct platform_device *pdev)
+ 	state.duty_cycle = state.period;
+ 	state.enabled = true;
+ 
+-	ret = pwm_apply_state(pwm, &state);
++	ret = pwm_apply_might_sleep(pwm, &state);
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "failed to configure PWM\n");
+ 
+-- 
+2.45.2
 
-greg k-h
