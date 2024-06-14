@@ -1,76 +1,97 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489392107
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 15:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4AC2107;
+	Fri, 14 Jun 2024 15:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718380158; cv=none; b=q6mSu3g9I0oIS1riwzUjlDBrWhl5EsQxMrF23lBtOK847HMZg6cPKP3E9HxtGIeut3DZwpsh277U8z4MYFW8t6uxdze6mrwQmo7ritYSBuOF14ayNBwA10Ntq/dAZEUuQpXcWK54KX2fFKC/knMF/N3SIpqEoA5esMOs9yxcKu8=
+	t=1718380201; cv=none; b=t2aIKhtMaI+moobqnLJE24z/4qyqvyp/J8LDKHYJBbWe6rgWn0GSLttT5kJHE8SDwVRhaai2+1API4+ULPq73qTKBTD2DGW9eer1MeYm77If8uTSQKiYfZkqamdj6krXBRYlY72L5sqqktHkVt2hb69aSeWBzCigfC9XeplBZcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718380158; c=relaxed/simple;
-	bh=9PmR7F+Bi1g+pVCwXJrtc90gmS5iJmU+BBoImjZ5fnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hSFA5KQtENM7r86pZSI5X2XsI8bFxzVjxgP6yU/z494UDlSh2cSvsCm8EIc9nY0+M0I48y/v06HZue6rgtE2uQbRXlXiNs6IdhKho8vuGtNdvBEkw1p0sleTyNd2NrJCnSI12U0RkrEe9FGy98AazMB1R/mPadsRZo8kQaUVsNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZMXjFftJ; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1718380201; c=relaxed/simple;
+	bh=YJ+EFdoyuOpNEW4FtSMDEZLjKlxpUCgBoyg6TuEMSHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKLfx1QEFVgd1MJlqsVXSnFZ3YdcBFXnhkwvYM6tCs7mKr15Rq0PHJb7sn5G+zu2tfI0YEV1ep9gX6+9CeggqudGhIqFf0mSucW7BhQNHfxRAQfUY8DwpWsyyUsYYxZbHfWG213yEX85pJMW0jAdXKnH//KvwfvIs1NBEAsabXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jps9P6/I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZMXjFftJ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718380146; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6xVGwp8iy7Y73XJ/FZxwAl9aWZGWYwT3YWwofkeVyjA=;
-	b=ZMXjFftJFWpdCRaUkD9Kems6qqjbZdgStp7pXqzjk3CM1hLFxSK6q25OOOIlIF1Vlk+c08sDYdL9L9XRfrs1O0g5EhU9OJdCkPr5T5iPTWEGry13FklpBakQ1DnE191coh8WICkm2iaGew3m0mcW+rrhjmwEaobVbETD6f117e4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W8RY7Sm_1718380145;
-Received: from 192.168.0.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8RY7Sm_1718380145)
-          by smtp.aliyun-inc.com;
-          Fri, 14 Jun 2024 23:49:06 +0800
-Message-ID: <4dce1443-276b-460c-81a8-53a8008307bc@linux.alibaba.com>
-Date: Fri, 14 Jun 2024 23:49:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jps9P6/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D4CC2BD10;
+	Fri, 14 Jun 2024 15:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718380201;
+	bh=YJ+EFdoyuOpNEW4FtSMDEZLjKlxpUCgBoyg6TuEMSHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jps9P6/ICpMRqAWPhUlWkOO49LcPbD7VCq+JNHkiMo2wRxg2gN8ZVlV1fYM4VLjUm
+	 ihZCga9heUXbARC41hrlm0DOvYOqbyztYONbBtQUrsKoRP0Su5LHxf+eoeS6suJLd1
+	 HpLw1WlBgKt5WLECAhdVxnhaJUsuamxdLQQcoWsYC5q+PFDzk1OnId5eZIEA2IJkk+
+	 It0UJqrbq1oR6TW71hq/3HjrW7zUDtjk48I77Csaed13ClQoT3VIMupDXLwiFv8Gmy
+	 +kRLxWCnMM0T9k4o3/n1nwqWd4oJOUwUDy0Z4G8ShQRIotqrxOwt84sj+Os3A5tZeM
+	 XQdj1lRBrA4kw==
+Date: Fri, 14 Jun 2024 21:19:47 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] phy: qcom: qmp-pcie: drop second
+ clock-output-names entry
+Message-ID: <20240614154947.GC59574@thinkpad>
+References: <20240614-fix-pcie-phy-compat-v2-0-990863ea53bf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] BUG: Bad rss-counter state (5)
-To: syzbot <syzbot+f2bbbb592debc978d46d@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- syzkaller-bugs@googlegroups.com
-References: <000000000000c2c1fd061adb09d1@google.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <000000000000c2c1fd061adb09d1@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240614-fix-pcie-phy-compat-v2-0-990863ea53bf@linaro.org>
 
+On Fri, Jun 14, 2024 at 11:35:33AM +0300, Dmitry Baryshkov wrote:
+> While testing the linux-next on SM8450-HDK I noticed that one of the
+> PCIe hosts stays in the deferred state, because the corresponding PHY
+> isn't probed. A quick debug pointed out that while the patches that
+> added support for the PIPE AUX clock to the PHY driver have landed,
+> corresponding DT changes were not picked up for 6.10. Restore the
+> compatibility with the existing DT files by dropping the second entry in
+> the clock-output-names array and always generating the corresponding
+> name on the fly.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On 2024/6/14 23:12, syzbot wrote:
-> syzbot has bisected this issue to:
-> 
-> commit 1c05047ad01693ad92bdf8347fad3b5c2b25e8bb
-> Author: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Date:   Tue Jun 4 10:17:45 2024 +0000
-> 
->      mm: memory: extend finish_fault() to support large folio
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=106e8e56980000
-> start commit:   d35b2284e966 Add linux-next specific files for 20240607
-> git tree:       linux-next
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=126e8e56980000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=146e8e56980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d8bf5cd6bcca7343
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f2bbbb592debc978d46d
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f57a36980000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10a57696980000
-> 
-> Reported-by: syzbot+f2bbbb592debc978d46d@syzkaller.appspotmail.com
-> Fixes: 1c05047ad016 ("mm: memory: extend finish_fault() to support large folio")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+- Mani
 
-Thanks. Please try the fix in mm-unstable branch
+> ---
+> Changes in v2:
+> - Fixed generated AUX clock name (Neil)
+> - Link to v1: https://lore.kernel.org/r/20240521-fix-pcie-phy-compat-v1-0-8aa415b92308@linaro.org
+> 
+> ---
+> Dmitry Baryshkov (2):
+>       phy: qcom: qmp-pcie: restore compatibility with existing DTs
+>       dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: drop second output clock name
+> 
+>  .../devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml      | 7 +------
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c                         | 9 +++------
+>  2 files changed, 4 insertions(+), 12 deletions(-)
+> ---
+> base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+> change-id: 20240521-fix-pcie-phy-compat-b0fd4eb46bda
+> 
+> Best regards,
+> -- 
+> Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> 
 
-#syz test: 
-https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-unstable&id=4135d2688b42f097f78062ef328f3056db32e3a0
+-- 
+மணிவண்ணன் சதாசிவம்
