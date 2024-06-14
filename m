@@ -1,273 +1,241 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596A7145B34
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718344201; cv=fail; b=c4WfMRdfouKpLnH7L3+As5ij9PRaJjJr3e4guvT3LKM1OvAaseXtzV49Nw61WPNbol6GrIbJyKD+KexHsPe1GXS96RyXtelTiyjCCZ/EoLeFhI33LdjHZpmV2iy/QOFlnvgVSMfNFaFBZqeZBxakvFH/BW9PLeGRPwaHzVuw1v0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718344201; c=relaxed/simple;
-	bh=Ry1ahNJEJO/kyu1b2JMC9eAQKK7fuNVYsFPYtleHUZA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mjN1LEjTmZAkTQAMGSnujLVrdbCk18DzhkdCh4G/DQTckYkMxAY+yYpZD9+VKm6ncIghaIc3nuAYfm+C2Urd14yXz/zLqb3UPFeX0o5GyKqwVEGzU1e0+F7F0SVOdX5QlVykzS0GZSIJqAdqLAqr5zlr5lQl3eI8nVUHU43vHkQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=eZlChZ8D; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=O+6anEja; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eZlChZ8D";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="O+6anEja"
-X-UUID: ebe134d62a1111efa54bbfbb386b949c-20240614
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=Ry1ahNJEJO/kyu1b2JMC9eAQKK7fuNVYsFPYtleHUZA=;
-	b=eZlChZ8D08U6xKoEsTC2TdZEDSbzv4hvdDTapvFdP4gOCx85bUq/wY71K+yDeIQwcqb4uwvPqOvlj0slSU54kvaOD4zN2VAVkCjSz1y0G6rvjJPzL6bxdNa8F795gG7yG9YK9r6HbxMO1YuIpY6MCk7yPrMxk5wZ4MdMFeC/m5A=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:e76807e3-b136-490f-9171-6f983a4b7405,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:ceda9388-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ebe134d62a1111efa54bbfbb386b949c-20240614
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <ck.hu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 927733411; Fri, 14 Jun 2024 13:49:53 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 14 Jun 2024 13:49:52 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 14 Jun 2024 13:49:51 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VLdByBX36lo5FzzSsn64t3jnwQ681ukx1WeNx2XfNeaMHwu8gjiPiuGXo3ews85/XBoGOnxNj8INO/myB72YFSfTcSz/wUzWuLjbi2BwcD8+sfesINqG6j7hvGIqsiJfS3DmTWgvG2or2WJu5bvlK2bHDRe3M39ASf68upyqQbNUKhhFxFAV/6mPM+xGa6TZAg/6SOSbDImZ5yoWVz+fQwpnKoIe1glV3TMO187o+fs/ba9UTyla4UA3oNYQE2Lwz4+C5ftOSBgZZV2shmzZ1+qWUcYeXlopx6ZwkILlQhrEuq63li/IqpjhdHpqexcvvP1RuaFIyg3YsCajpRi1cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ry1ahNJEJO/kyu1b2JMC9eAQKK7fuNVYsFPYtleHUZA=;
- b=C0H+ZfvtbkqH2i6PpKfiQHXKHImdD56NbuVIIZwl1m2Id+aHvcnLdkZcZ/UAlRAigAfwHEcFlyUtN6tvMH5n9XNGIFJqBEGC/p+Zak2S/jPpGL6o6+tYrruiyVRE8YJfJhGVYcdGKIqA4PfgFPC0fB3k00xscaprViOf3j6+8jr+VesjyzsIHS1v72EaO5SeGh2ZbOsXpIfTd5skUC/UQNcgdW5SKm0llhxeGH/9IF+CjoG3OgQkvxvlW1+NLnooLZ1aM4pU9RnnpF2ry9CNs9TcbRotgvyM3TnMMHnQzO3s/sxSgk3gBJLrmlQtCJa3ndI7wFbKhOgBc3t4hI38pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ry1ahNJEJO/kyu1b2JMC9eAQKK7fuNVYsFPYtleHUZA=;
- b=O+6anEja9Dmn3fLVD9J5LKIJg4pRBrIdz2rchwWx30DWcV6IkLi99XWSsiE+7PMiJ+/cRq5hOGvB/oDHNrra0xvFhOjTbGSjpKusmGOFGabswRFVrMgjbWbmigFEfLuxO58kz0aveQbANNcB7iFqAOxo8/tVecO4rD7B7A0zgH0=
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
- by TYZPR03MB7318.apcprd03.prod.outlook.com (2603:1096:400:424::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25; Fri, 14 Jun
- 2024 05:49:49 +0000
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::9ce6:1e85:c4a7:2a54]) by TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::9ce6:1e85:c4a7:2a54%6]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 05:49:48 +0000
-From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-To: =?utf-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?= <Shawn.Sung@mediatek.com>,
-	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
-CC: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= <Bibby.Hsieh@mediatek.com>,
-	"jason-ch.chen@mediatek.corp-partner.google.com"
-	<jason-ch.chen@mediatek.corp-partner.google.com>,
-	=?utf-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "airlied@gmail.com" <airlied@gmail.com>,
-	"sean@poorly.run" <sean@poorly.run>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "fshao@chromium.org" <fshao@chromium.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v9 16/21] drm/mediatek: Support "Pre-multiplied" blending
- in OVL
-Thread-Topic: [PATCH v9 16/21] drm/mediatek: Support "Pre-multiplied" blending
- in OVL
-Thread-Index: AQHavgUxkv27uBRE70eZOpVJTFpNt7HGwUoA
-Date: Fri, 14 Jun 2024 05:49:48 +0000
-Message-ID: <b4e56c9b43031cb7cc9bb67b8114d68d2701c155.camel@mediatek.com>
-References: <20240614024620.19011-1-shawn.sung@mediatek.com>
-	 <20240614024620.19011-17-shawn.sung@mediatek.com>
-In-Reply-To: <20240614024620.19011-17-shawn.sung@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|TYZPR03MB7318:EE_
-x-ms-office365-filtering-correlation-id: bd18192d-afaa-48de-11ab-08dc8c35cd86
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230035|1800799019|366011|376009|7416009|38070700013;
-x-microsoft-antispam-message-info: =?utf-8?B?clBxMFZGSlp5dWpYU2w1U0VkeTh3NkY1V1hwbys1VE9IK202b3FjV3d2bS90?=
- =?utf-8?B?RXd4OUpFNmlHWnUxdklLa3FXaDlzQ0psZXpZSnVMZk5oVXBUMnQ0S3lIUStO?=
- =?utf-8?B?V1VOQUY3YndxMWJEVzNjOU84SW0ySlNvbnhSeTdsUXlxQ3lLNkFnWmNtenpo?=
- =?utf-8?B?VmdWRk9XM09rczdYaElQVzBJU0pwczhTZk8wSFZUeFl0Qmg0VktjczFTNFRr?=
- =?utf-8?B?T2plUVkzTkdNbk9mOE45UzdNWHNUOVpHRlhGOERmSisrN2NMSzR3YUthWTAx?=
- =?utf-8?B?MjdwcURlQkZaVjZUcXdDREdoVFU2M1hFVEhKaTRlV3hKcms4WHdKenlHQ29Q?=
- =?utf-8?B?M0RkTnJDT0hUWE8ydVRtQVBpRjZ3d05mRHo4S1kyY3RxeFBLZ3lSazFSNGxY?=
- =?utf-8?B?VWVWVjlPRytKU21WajNCWTRQSkJlSjlrSGhMYmZjZWw4WnVWVDVZT1R0Nndh?=
- =?utf-8?B?V0ZRMC9EWTBGZW5jMGIvUEFBaEZiOHdWUUdaSkJJZHNFU1pWbFYzR1hjTkNC?=
- =?utf-8?B?RjRmSWF5Tnczb2FEbSs5M1lWZ1UwTDZJblhxUnIrcURlODBXdktoZ3BxcGlH?=
- =?utf-8?B?MlN5ZFU2VityQ1RKUlpCQ3FIRG8yOUR5RTMwbW9XR3FtMHRYWGg4OXBrdHNy?=
- =?utf-8?B?WjVyNHB6OE9id2s5VVVwRXpudjQ0L3JjLzlBZjZnUnVrTUxFSmFERkZXQTd3?=
- =?utf-8?B?WDFzMHBMUEdiNEJ5V3dUT0tOMjBNTXdhRVMrUFcyWFdaK21MQnJ0ZUZ4MCtU?=
- =?utf-8?B?ZXlsK3E3ZUJpUTg0b290VVMvRXBFWXUvanNwajZzZU1jZE0yNVlzYVI4cDBN?=
- =?utf-8?B?LzY5ZnpBZ1BEV2ZlMmdrRlpWM0xuVzBhL3Z1aWlLTmZaQ3M3bENEQkRvTGR1?=
- =?utf-8?B?dlMyZ2dmM1BUT0FKcmpFajExNmdLMUNtSEtXZTFkMkxsUlI3THBFa29wVmFJ?=
- =?utf-8?B?c2NEb3hhU2RuZUsrSDJiVnByR0Vld2ZGUjR2YWVidzYzN21DT2ZsM0V5WUNj?=
- =?utf-8?B?NGo5djM5SWJha0NPejZUKy9kVjMwTTE2TWxpWFpTaW1INnBhSmtCUVBwdll2?=
- =?utf-8?B?TE5BbXhjQmM0c1V2U0tJdXJ5NVBkSUFmZEpXaXBYZEN3L2xpN3RCNTYyYTda?=
- =?utf-8?B?RzBZZHFtQWVJREFkU0hqNTlUYlQ5WVFyUXBiZ3c1alZPUkNybHRSc1Y5SVJK?=
- =?utf-8?B?RG5ZSWFVTG1PWHZBME5VdXpnYUtZL0hjS0RnbWgxai9ERm1HSlcvT0xwR1Mz?=
- =?utf-8?B?cm1vUmtvcG80SDg4andzUHcwN1NsZ3hGSzR2dnFIRVJsM2JGUG5RSmgwbFRI?=
- =?utf-8?B?MEtPVVlXb0dEeVh1SVljd3p1TU9NWnhaSzFTZFVtenp6N0E0SkZsb0xPZWpw?=
- =?utf-8?B?R2FYQUk0bHZVN0FuUCtxNzRwaHRrU0c2d2o0OHliTmtkRFN5dnorVCtsbjVY?=
- =?utf-8?B?dWROL01SeitPU2NjcStNeE9kUStEM3k1ZStBWEFkNXNYMTBIUW9NWFVuN0dI?=
- =?utf-8?B?aHdGY0JzYzQzYm1VZ1c4MjYwbFBNZWdvSGtvdmNnQXhmZklOeHpjZzNyQmhz?=
- =?utf-8?B?Ull2VjQ4UUxGcEdXUlhqU2ZNVzNLOWVBUjdWWUlhcWxXSmNDZ1AySEFnRjRN?=
- =?utf-8?B?MHFETHlFemdPazRMTlh0OEFub1Q1Zk9xeHlvaFY2V2UyTVVtUGpJWDJmVmli?=
- =?utf-8?B?ZmlBQlRCRk12RUphQ3Y0ZFQzQTFtN2tERWhFN2Q5amVFWHJRdUtPVHpQT3oy?=
- =?utf-8?B?c2QwTStjNVN0b3lqU0hsczhCT2lEYU8zQ0NPMExyS3E5MEhrRysxUzhva09C?=
- =?utf-8?Q?AbxmcYZBnGfdD6/90SSxVpEaLStuwapSYDano=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(1800799019)(366011)(376009)(7416009)(38070700013);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q1VsKy9VL2ErRHcrTjZQWDVyRmF5QWdhM3lBWmpmOTZWb1F3Yi9LOGtrWjBj?=
- =?utf-8?B?ejkydmJUS1hLUTJNMXhpRU5SaEluTFpDVXA3VFprY01CTm9qWHo5Rkh3aGND?=
- =?utf-8?B?YjdQZ0I0VnI4cFBYOUduNjdKRk9ZYnlucFRrZzY5eE9ydjFPRFJ4d2ZmODUz?=
- =?utf-8?B?UTRaTEJORjFwZ2ptUStvdmZMQUJjb0ZCWVRQRWtnM1BWUlA2Y2xIRnJsQWRw?=
- =?utf-8?B?cm1zWmZYSkRuSTVnQmpXbFhud1RvRVNsYXg0ZmJrR2ZidXBUeERNREwyNnAy?=
- =?utf-8?B?YVFXWnBVbDh2M3hLS0NRNEpvd1Bwa0MyeW5EdVYxd2F6UnVYdituUzg3QUdQ?=
- =?utf-8?B?STdNazVqUnRmbGcrRXh6aXo2dXVnMTRHaWhQRkhwQ2paS0pKRjhHNHk4SHlp?=
- =?utf-8?B?cmlrZTVLWEd2VGd3RmpKaXVYYkpneUU2eHRiRm9MK1Bid0hTWW5EU243U0Vq?=
- =?utf-8?B?VGJ6ZlBLZExjdkFMTG5IODZLdTNFQys1cks1S052V3MrZWdCbldYWXJvOVpD?=
- =?utf-8?B?RDFlMmtmTHl5eEtYU2lodGtyeW5pMWFRSS9PaVI1TVpudUVZdjBvd3pQbFBk?=
- =?utf-8?B?QVZ1MFNLZHRhWEJBNWJFUEpFYlk2cXFXNDBiMnRtUFZzc0E4SGNtc000dUly?=
- =?utf-8?B?dXFpUm5LczFlaitNVjJQcFc0NmkzdVpBdVRUdERWYkxNZjJjeXcyOVFGZzlJ?=
- =?utf-8?B?ZmI3UVlwTzE0ZS96clFWcnJobnVXYTIvbmtZd1B6NmNRNDdLOEVKY0l3YS9L?=
- =?utf-8?B?SWtJd0MvNFB6a0gzTHRzL09Na2pUS1NldUxOc1NWZ1loTFhQb0wyQTlxOUNa?=
- =?utf-8?B?VC9mMkR0eTliSnZReWtuRElHRlM3bkY2eWdQTk1GajNDWkNRc2VnUFFhVHZa?=
- =?utf-8?B?bXBkeitCUkM0cWFUZ1pheGxvM1hRYzVTclhRSWFFRnF1R2FKZFhFVkJjYXUz?=
- =?utf-8?B?T0ZjcWI5RGMreEZMc1ZpRFp3YVpJL0ZoSGVjN3I5NmJraWRSQzEweXd4OTFl?=
- =?utf-8?B?RmhEQjFWTFgrejh5UGZZTGlWQ011a1NOMHVpUVh0TzBhaVhCR0N3RER0R2dm?=
- =?utf-8?B?K1pXam1CMWx4dmtBS1pjMXgxUXdWYkt0NGZCaytmMk1TYnhCUnNuaEIvTjZr?=
- =?utf-8?B?ODRRMU1BWHRtUnJWSFkwZGZid3R0K3kzTm5QOHpMYlJFcWNxQk54TUMrcnov?=
- =?utf-8?B?T3hvYTlDUDJuT2VxZ3FqRHh4WXN0OWN6b3BTRW5paDlmR1BTYW0yT3VyampK?=
- =?utf-8?B?K0NKRVpiMlVsei8xTFdjdExyZFd4ODk1N3J4d3Y4eDdUbXAyaHJJTEtka1pR?=
- =?utf-8?B?TjFUZEJCUmR5UUpRY3B6ZlpSb2YvTDRvb0xETXhLRTFWZzcwRUErRE1uK2tm?=
- =?utf-8?B?TFF4R2NBT1EySFBZWGVnR3FXdDlkUklTaUtHTHBLMitMcGNQQm9McVhWMFhO?=
- =?utf-8?B?Zlh6RHNjdmpHaGlYeC9hV2VXZDQzQkMwOUplQzVtaWZaM0ZOMWhIbFQraHh5?=
- =?utf-8?B?U3VLNWltZXp3UmRoYnN4RVZ0c1ZDUDRONS9weWthVDlWb1hXcmF0blBmbk91?=
- =?utf-8?B?elhLeXFTckpNYTh6R1ZFM01meWxQU1BmR3V6K2J3dElSZElGY3dWWVZwVnli?=
- =?utf-8?B?RFh2U2tXcUsrV0h2eWpSMGRJL0RtMjI5OFBVdUFhUmFCWFljM25MTVhKRXE0?=
- =?utf-8?B?b2QweE5xc2hJMWN1UTNTaVkzbSs2NS96K0F3Qkp1YlpzZDE4ODFPU3N2UUNZ?=
- =?utf-8?B?NnNOYXU5Zy9xVGFrQjVMcmp5amhRcU52R3cvOHBVbUEvWFJ1Q0RVYTBXTnl1?=
- =?utf-8?B?cGUwdEZ0Ylg0clBjaURyeng3QURNR1kwWmliSlZHbzF1TElVZFUzcHVSNVND?=
- =?utf-8?B?ZWl1cUJrM1FLS2xPVk5rOWFaTTBUQWRJL1UwcFY4cEcxQkNsOWsyUGYwSHBK?=
- =?utf-8?B?ejB1Q21vVEU0Y1l3Tm13NWdPd0l6enUydEIrVjY5YS9FRGpEaDBmTUFyVUZZ?=
- =?utf-8?B?RE9meXdEK3orMnRKUTNYeEM0cUNpSG0vNlpkZXJoUU9VSFB0aS93SmdyZHlx?=
- =?utf-8?B?NE12WG80SUdnQTR6dTVQay9EOHRrOWg3dTJuYUZoZ0dyUEgzeVJMRTRNN1RB?=
- =?utf-8?Q?U2pYBTa9olGrXDoGs/JAZz4al?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6A41332CFBCD4D45B59FAE2906E0EBAA@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from hust.edu.cn (unknown [202.114.0.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B665145B34;
+	Fri, 14 Jun 2024 05:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.114.0.240
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718344493; cv=none; b=HiKFrCJY8FkCOkqLLSQhLMAza8GnDcCrsyaRkRZE2WhKRM5W0wN+DeD62CoSTycexEq5wBqvA+43XH6wl0EcKpy+G20nc0ROIqZpdT9pzzPhlyKL1ylcz1Ks0SvdOK/8nLj8PyZR0qBFUTtoxY0tnhbwgFTzgHUUfV+SugO/txE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718344493; c=relaxed/simple;
+	bh=melpIGiybzqIL7gUJqXh2BV13U6xWySUjgQnFJKEXy8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y2mbMJU5k88DXKqkyIBBZUCJnk28fQn0kn/zz1vuamrP05Q05u5Rf1v0PSvdyn4q9bF6cTF7z65Z8ImAk6gM8AUMCPR8THJsu4oN2nlwsXGtEsc+BXzmoBnBfcvjXkMOQaqV901ig11NOu3NBXDKlKDLlKKMGJSuhGlXA9BoFl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=202.114.0.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.50])
+	by app2 (Coremail) with SMTP id HwEQrAD3Tsf_2mtmX6tzAQ--.23480S2;
+	Fri, 14 Jun 2024 13:54:07 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.12.164.29])
+	by gateway (Coremail) with SMTP id _____wCnMN_k2mtmS_QkAA--.8520S3;
+	Fri, 14 Jun 2024 13:54:04 +0800 (CST)
+From: Dongliang Mu <dzm91@hust.edu.cn>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Dongliang Mu <dzm91@hust.edu.cn>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] doc-guide: add help documention checktransupdate.rst
+Date: Fri, 14 Jun 2024 13:53:21 +0800
+Message-Id: <20240614055328.778041-2-dzm91@hust.edu.cn>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240614055328.778041-1-dzm91@hust.edu.cn>
+References: <20240614055328.778041-1-dzm91@hust.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd18192d-afaa-48de-11ab-08dc8c35cd86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2024 05:49:48.8485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H0umY/mxfcxRLY4lI+C0UyEcSroJK4L840jX67l++mG7OcFeCPTTQOyulH3e5hGsK8QMDy2qGWf0QHLJYPjPAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB7318
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HwEQrAD3Tsf_2mtmX6tzAQ--.23480S2
+Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gw1DWr4DXw1fZw1UZFWUurg_yoWxCry7pa
+	43KryxJ3WkK34jyr1fK34DZr15Aa1xCa12gF1Iq3ZYqrn8AwnYqrW7t34rKrWDGryrZayY
+	qFWYkrW0krWSva7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_tr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
+	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
+	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
+	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
+	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVWxJVW8Jr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxAIw2
+	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jq1v3UUUUU=
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-SGksIFNoYXduOg0KDQpPbiBGcmksIDIwMjQtMDYtMTQgYXQgMTA6NDYgKzA4MDAsIFNoYXduIFN1
-bmcgd3JvdGU6DQo+IEZyb206IEhzaWFvIENoaWVuIFN1bmcgPHNoYXduLnN1bmdAbWVkaWF0ZWsu
-Y29tPg0KPiANCj4gU3VwcG9ydCAiUHJlLW11bHRpcGxpZWQiIGFscGhhIGJsZW5kaW5nIG1vZGUg
-b24gaW4gT1ZMLg0KPiBCZWZvcmUgdGhpcyBwYXRjaCwgb25seSB0aGUgImNvdmVyYWdlIiBtb2Rl
-IGlzIHN1cHBvcnRlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhzaWFvIENoaWVuIFN1bmcgPHNo
-YXduLnN1bmdAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZGlzcF9vdmwuYyB8IDQyICsrKysrKysrKysrKysrKysrKysrLS0tLS0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYw0KPiBpbmRleCA2NTY3ODA2Y2Y0ZTIuLjQ3
-ZDBiMDM5YTYxNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-aXNwX292bC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwu
-Yw0KPiBAQCAtNTIsOCArNTIsMTIgQEANCj4gICNkZWZpbmUgR01DX1RIUkVTSE9MRF9ISUdICSgo
-MSA8PCBHTUNfVEhSRVNIT0xEX0JJVFMpIC8gNCkNCj4gICNkZWZpbmUgR01DX1RIUkVTSE9MRF9M
-T1cJKCgxIDw8IEdNQ19USFJFU0hPTERfQklUUykgLyA4KQ0KPiAgDQo+ICsjZGVmaW5lIE9WTF9D
-T05fQ0xSRk1UX01BTglCSVQoMjMpDQo+ICAjZGVmaW5lIE9WTF9DT05fQllURV9TV0FQCUJJVCgy
-NCkNCj4gLSNkZWZpbmUgT1ZMX0NPTl9NVFhfWVVWX1RPX1JHQgkoNiA8PCAxNikNCj4gKw0KPiAr
-LyogT1ZMX0NPTl9SR0JfU1dBUCB3b3JrcyBvbmx5IGlmIE9WTF9DT05fQ0xSRk1UX01BTiBpcyBl
-bmFibGVkICovDQo+ICsjZGVmaW5lIE9WTF9DT05fUkdCX1NXQVAJQklUKDI1KQ0KPiArDQo+ICAj
-ZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1JHQgkoMSA8PCAxMikNCj4gICNkZWZpbmUgT1ZMX0NPTl9D
-TFJGTVRfQVJHQjg4ODgJKDIgPDwgMTIpDQo+ICAjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1JHQkE4
-ODg4CSgzIDw8IDEyKQ0KPiBAQCAtNjEsNiArNjUsMTEgQEANCj4gICNkZWZpbmUgT1ZMX0NPTl9D
-TFJGTVRfQkdSQTg4ODgJKE9WTF9DT05fQ0xSRk1UX0FSR0I4ODg4IHwgT1ZMX0NPTl9CWVRFX1NX
-QVApDQo+ICAjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1VZVlkJKDQgPDwgMTIpDQo+ICAjZGVmaW5l
-IE9WTF9DT05fQ0xSRk1UX1lVWVYJKDUgPDwgMTIpDQo+ICsjZGVmaW5lIE9WTF9DT05fTVRYX1lV
-Vl9UT19SR0IJKDYgPDwgMTYpDQo+ICsjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1BBUkdCODg4OCAo
-KDMgPDwgMTIpIHwgT1ZMX0NPTl9DTFJGTVRfTUFOKQ0KPiArI2RlZmluZSBPVkxfQ09OX0NMUkZN
-VF9QQUJHUjg4ODggKE9WTF9DT05fQ0xSRk1UX1BBUkdCODg4OCB8IE9WTF9DT05fUkdCX1NXQVAp
-DQo+ICsjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1BCR1JBODg4OCAoT1ZMX0NPTl9DTFJGTVRfUEFS
-R0I4ODg4IHwgT1ZMX0NPTl9CWVRFX1NXQVApDQo+ICsjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1BS
-R0JBODg4OCAoT1ZMX0NPTl9DTFJGTVRfUEFCR1I4ODg4IHwgT1ZMX0NPTl9CWVRFX1NXQVApDQo+
-ICAjZGVmaW5lIE9WTF9DT05fQ0xSRk1UX1JHQjU2NShvdmwpCSgob3ZsKS0+ZGF0YS0+Zm10X3Jn
-YjU2NV9pc18wID8gXA0KPiAgCQkJCQkwIDogT1ZMX0NPTl9DTFJGTVRfUkdCKQ0KPiAgI2RlZmlu
-ZSBPVkxfQ09OX0NMUkZNVF9SR0I4ODgob3ZsKQkoKG92bCktPmRhdGEtPmZtdF9yZ2I1NjVfaXNf
-MCA/IFwNCj4gQEAgLTc0LDYgKzgzLDggQEANCj4gICNkZWZpbmUJT1ZMX0NPTl9WSVJUX0ZMSVAJ
-QklUKDkpDQo+ICAjZGVmaW5lCU9WTF9DT05fSE9SWl9GTElQCUJJVCgxMCkNCj4gIA0KPiANCg0K
-W3NuaXBdDQoNCj4gIA0KPiAtc3RhdGljIHVuc2lnbmVkIGludCBvdmxfZm10X2NvbnZlcnQoc3Ry
-dWN0IG10a19kaXNwX292bCAqb3ZsLCB1bnNpZ25lZCBpbnQgZm10KQ0KPiArc3RhdGljIHVuc2ln
-bmVkIGludCBvdmxfZm10X2NvbnZlcnQoc3RydWN0IG10a19kaXNwX292bCAqb3ZsLCB1bnNpZ25l
-ZCBpbnQgZm10LA0KPiArCQkJCSAgICB1bnNpZ25lZCBpbnQgYmxlbmRfbW9kZSkNCj4gIHsNCj4g
-IAkvKiBUaGUgcmV0dXJuIHZhbHVlIGluIHN3aXRjaCAiTUVNX01PREVfSU5QVVRfRk9STUFUX1hY
-WCINCj4gIAkgKiBpcyBkZWZpbmVkIGluIG1lZGlhdGVrIEhXIGRhdGEgc2hlZXQuDQo+IEBAIC0z
-OTUsMjIgKzQxMywzMCBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG92bF9mbXRfY29udmVydChzdHJ1
-Y3QgbXRrX2Rpc3Bfb3ZsICpvdmwsIHVuc2lnbmVkIGludCBmbXQpDQo+ICAJY2FzZSBEUk1fRk9S
-TUFUX1JHQkE4ODg4Og0KPiAgCWNhc2UgRFJNX0ZPUk1BVF9SR0JYMTAxMDEwMjoNCj4gIAljYXNl
-IERSTV9GT1JNQVRfUkdCQTEwMTAxMDI6DQo+IC0JCXJldHVybiBPVkxfQ09OX0NMUkZNVF9SR0JB
-ODg4ODsNCj4gKwkJcmV0dXJuIGJsZW5kX21vZGUgPT0gRFJNX01PREVfQkxFTkRfQ09WRVJBR0Ug
-Pw0KPiArCQkgICAgICAgT1ZMX0NPTl9DTFJGTVRfUkdCQTg4ODggOg0KPiArCQkgICAgICAgT1ZM
-X0NPTl9DTFJGTVRfUFJHQkE4ODg4Ow0KPiAgCWNhc2UgRFJNX0ZPUk1BVF9CR1JYODg4ODoNCj4g
-IAljYXNlIERSTV9GT1JNQVRfQkdSQTg4ODg6DQo+ICAJY2FzZSBEUk1fRk9STUFUX0JHUlgxMDEw
-MTAyOg0KPiAgCWNhc2UgRFJNX0ZPUk1BVF9CR1JBMTAxMDEwMjoNCj4gLQkJcmV0dXJuIE9WTF9D
-T05fQ0xSRk1UX0JHUkE4ODg4Ow0KPiArCQlyZXR1cm4gYmxlbmRfbW9kZSA9PSBEUk1fTU9ERV9C
-TEVORF9DT1ZFUkFHRSA/DQo+ICsJCSAgICAgICBPVkxfQ09OX0NMUkZNVF9CR1JBODg4OCA6DQo+
-ICsJCSAgICAgICBPVkxfQ09OX0NMUkZNVF9QQkdSQTg4ODg7DQo+ICAJY2FzZSBEUk1fRk9STUFU
-X1hSR0I4ODg4Og0KPiAgCWNhc2UgRFJNX0ZPUk1BVF9BUkdCODg4ODoNCj4gIAljYXNlIERSTV9G
-T1JNQVRfWFJHQjIxMDEwMTA6DQo+ICAJY2FzZSBEUk1fRk9STUFUX0FSR0IyMTAxMDEwOg0KPiAt
-CQlyZXR1cm4gT1ZMX0NPTl9DTFJGTVRfQVJHQjg4ODg7DQo+ICsJCXJldHVybiBibGVuZF9tb2Rl
-ID09IERSTV9NT0RFX0JMRU5EX0NPVkVSQUdFID8NCj4gKwkJICAgICAgIE9WTF9DT05fQ0xSRk1U
-X0FSR0I4ODg4IDoNCj4gKwkJICAgICAgIE9WTF9DT05fQ0xSRk1UX1BBUkdCODg4ODsNCj4gIAlj
-YXNlIERSTV9GT1JNQVRfWEJHUjg4ODg6DQo+ICAJY2FzZSBEUk1fRk9STUFUX0FCR1I4ODg4Og0K
-PiAgCWNhc2UgRFJNX0ZPUk1BVF9YQkdSMjEwMTAxMDoNCj4gIAljYXNlIERSTV9GT1JNQVRfQUJH
-UjIxMDEwMTA6DQo+IC0JCXJldHVybiBPVkxfQ09OX0NMUkZNVF9BQkdSODg4ODsNCj4gKwkJcmV0
-dXJuIGJsZW5kX21vZGUgPT0gRFJNX01PREVfQkxFTkRfQ09WRVJBR0UgPw0KPiArCQkgICAgICAg
-T1ZMX0NPTl9DTFJGTVRfQUJHUjg4ODggOg0KPiArCQkgICAgICAgT1ZMX0NPTl9DTFJGTVRfUEFC
-R1I4ODg4Ow0KPiAgCWNhc2UgRFJNX0ZPUk1BVF9VWVZZOg0KPiAgCQlyZXR1cm4gT1ZMX0NPTl9D
-TFJGTVRfVVlWWSB8IE9WTF9DT05fTVRYX1lVVl9UT19SR0I7DQo+ICAJY2FzZSBEUk1fRk9STUFU
-X1lVWVY6DQo+IEBAIC00NTAsNyArNDc2LDcgQEAgdm9pZCBtdGtfb3ZsX2xheWVyX2NvbmZpZyhz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBpZHgsDQo+ICAJCXJldHVybjsNCj4gIAl9
-DQo+ICANCj4gLQljb24gPSBvdmxfZm10X2NvbnZlcnQob3ZsLCBmbXQpOw0KPiArCWNvbiA9IG92
-bF9mbXRfY29udmVydChvdmwsIGZtdCwgYmxlbmRfbW9kZSk7DQoNClRoZSBzaW1wbGUgd2F5IGlz
-DQoNCmNvbiB8PSBibGVuZF9tb2RlID09IERSTV9NT0RFX0JMRU5EX1BSRU1VTFRJID8gT1ZMX0NP
-Tl9DTFJGTVRfTUFOIDogMDsNCg0KUmVnYXJkcywNCkNLDQoNCg0KPiAgCWlmIChzdGF0ZS0+YmFz
-ZS5mYikgew0KPiAgCQljb24gfD0gT1ZMX0NPTl9BRU47DQo+ICAJCWNvbiB8PSBzdGF0ZS0+YmFz
-ZS5hbHBoYSAmIE9WTF9DT05fQUxQSEE7DQo=
+This commit adds help documents - Documentation/doc-guide/checktransupdate.rst
+for scripts/checktransupdate.py, including English and Chinese versions
+
+Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+---
+ Documentation/doc-guide/checktransupdate.rst  | 63 +++++++++++++++++++
+ Documentation/doc-guide/index.rst             |  1 +
+ .../zh_CN/doc-guide/checktransupdate.rst      | 62 ++++++++++++++++++
+ .../translations/zh_CN/doc-guide/index.rst    |  1 +
+ 4 files changed, 127 insertions(+)
+ create mode 100644 Documentation/doc-guide/checktransupdate.rst
+ create mode 100644 Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+
+diff --git a/Documentation/doc-guide/checktransupdate.rst b/Documentation/doc-guide/checktransupdate.rst
+new file mode 100644
+index 000000000000..ec218c883b31
+--- /dev/null
++++ b/Documentation/doc-guide/checktransupdate.rst
+@@ -0,0 +1,63 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++Check translation update
++==========================
++
++This script helps track the translation status of the documentation in
++different locales, i.e., whether the documentation is update-to-date with
++the English conterpart.
++
++How it works
++------------
++
++It uses ``git log`` command to track the latest English commit from the
++translation commit (order by author date) and the latest English commits
++from HEAD. If any differences occur, the file is considered as out-of-date,
++then commits that need to be updated will be collected and reported.
++
++Features implemented
++--------------------
++
++-  check all files in a certain locale
++-  check a single file or a set of files
++-  provide options to change output format
++
++Usage
++-----
++
++::
++
++   checktransupdate.py [-h] [-l LOCALE] [--print-commits | --no-print-commits] [--print-updated-files | --no-print-updated-files] [--debug | --no-debug] [files ...]
++
++Options
++~~~~~~~
++
++-  ``-l``, ``--locale``: locale to check when file is not specified
++-  ``--[no-]print-commits``: whether to print commits between origin and
++   translation
++-  ``--[no-]print-updated-files``: whether to print files that do no
++   need to be updated
++-  ``files``: files to check, if this option is specified, the locale
++   option will be ignored.
++
++Samples
++~~~~~~~
++
++-  ``./scripts/checktransupdate.py -l zh_CN``
++   This will print all the files that need to be updated in the zh_CN locale.
++-  ``./scripts/checktransupdate.py Documentation/translations/zh_CN/process/coding-style.rst``
++   This will only print the status of the specified file.
++
++Then the output is something like:
++
++::
++
++    Documentation/translations/zh_CN/process/coding-style.rst       (2 commits)
++    commit 6813216bbdba ("Documentation: coding-style: ask function-like macros to evaluate parameters")
++    commit 185ea7676ef3 ("Documentation: coding-style: Update syntax highlighting for code-blocks")
++
++Features to be implemented
++----------------------------
++
++- track the translation status of files that have no translation
++- files can be a folder instead of only a file
+\ No newline at end of file
+diff --git a/Documentation/doc-guide/index.rst b/Documentation/doc-guide/index.rst
+index 7c7d97784626..24d058faa75c 100644
+--- a/Documentation/doc-guide/index.rst
++++ b/Documentation/doc-guide/index.rst
+@@ -12,6 +12,7 @@ How to write kernel documentation
+    parse-headers
+    contributing
+    maintainer-profile
++   checktransupdate
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst b/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+new file mode 100644
+index 000000000000..ce1165de1343
+--- /dev/null
++++ b/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+@@ -0,0 +1,62 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: Documentation/doc-guide/checktransupdate.rst
++
++:译者: 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
++
++检查翻译更新
++=============
++
++这个脚本帮助跟踪不同语言的文档翻译状态，即文档是否与对应的英文版本保持更新。
++
++工作原理
++------------
++
++它使用 ``git log`` 命令来跟踪翻译提交的最新英文提交（按作者日期排序）和英文文档的
++最新提交。如果有任何差异，则该文件被认为是过期的，然后需要更新的提交将被收集并报告。
++
++实现的功能
++--------------------
++
++- 检查特定语言中的所有文件
++- 检查单个文件或一组文件
++- 提供更改输出格式的选项
++
++用法
++-----
++
++::
++
++   checktransupdate.py [-h] [-l LOCALE] [--print-commits | --no-print-commits] [--print-updated-files | --no-print-updated-files] [--debug | --no-debug] [files ...]
++
++选项
++~~~~~~~
++
++-  ``-l``, ``--locale``: 检查指定的文件语言，如果未指定文件
++-  ``--[no-]print-commits``: 是否打印英文原始版本和翻译版本之间的提交
++-  ``--[no-]print-updated-files``: 是否打印无需更新的文件
++-  ``files``: 要检查的文件，如果指定了此选项，将忽略语言选项
++
++示例
++~~~~~~~
++
++-  ``./scripts/checktransupdate.py -l zh_CN``
++   这将打印 zh_CN 语言中需要更新的所有文件。
++-  ``./scripts/checktransupdate.py Documentation/translations/zh_CN/process/coding-style.rst``
++   这将只打印指定文件的状态。
++
++然后输出类似如下的内容：
++
++::
++
++    Documentation/translations/zh_CN/process/coding-style.rst       (2 commits)
++    commit 6813216bbdba ("Documentation: coding-style: ask function-like macros to evaluate parameters")
++    commit 185ea7676ef3 ("Documentation: coding-style: Update syntax highlighting for code-blocks")
++
++待实现的功能
++-------------
++
++- 跟踪没有翻译过的文件的翻译状态
++- 文件参数可以是文件夹而不仅仅是单个文件
+\ No newline at end of file
+diff --git a/Documentation/translations/zh_CN/doc-guide/index.rst b/Documentation/translations/zh_CN/doc-guide/index.rst
+index 78c2e9a1697f..0ac1fc9315ea 100644
+--- a/Documentation/translations/zh_CN/doc-guide/index.rst
++++ b/Documentation/translations/zh_CN/doc-guide/index.rst
+@@ -18,6 +18,7 @@
+    parse-headers
+    contributing
+    maintainer-profile
++   checktransupdate
+ 
+ .. only::  subproject and html
+ 
+-- 
+2.39.2
+
