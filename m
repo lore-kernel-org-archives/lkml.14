@@ -1,133 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FC219D068;
-	Fri, 14 Jun 2024 16:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF9BD512;
+	Fri, 14 Jun 2024 16:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381342; cv=none; b=Db4qomzak/+95p8h0TK9JuZjJD9cMzLLZuX/qIF/sBoATsvSLH7SWND0/XT4E3jQA9/vSmnLmnkVNzjAYHGz/tLLL1FggCNiOT4UJZrhwu4tXn6kJdG79m6WJU1GCP/tOq/Yym/Khwu04QdjilquZmVa/vjBnGPY3xcEfeHhMdk=
+	t=1718381384; cv=none; b=J5HTkjUCwn58L5CSSujvQDNZSbPqiWlFJ3acJvla1g/z2qOpsKdaUymuHj9vYvnzUvtA+lfZW877fkdWr249z79B9uI/OwqqWW2x3seK8gaFgcpX3ax77TTIq7uowVCLGNPm9lfkOr/nk9FAXNnmLUjlLh63mWlLSe/7BF1jXtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381342; c=relaxed/simple;
-	bh=7j/faoRXzWh8uYOzQ7IXFB9d5L6kjkr5xK99YDrC7To=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QF/pk05xc1Y9bgz27SK+yD9gSzQfrGjxGuFQQ+8MicztL7WoWuotsD7uryKBgSi3GHH14chE/3dXWPfM+fCs+3jne5TjmTPrOHDyziZQlerYODWsXbmz1Inw+XTXVUiGfyzkFcFEOKaKmELvu9vnPNnD/UOuIA5KhWMCbSFtt0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VB20f3hC; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718381384; c=relaxed/simple;
+	bh=i6G4moCMnqhzFyyBB6tQeSxoa8cndGODhPD7vUB4a4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Pnd5xVdikUb8LKcJ6vBhcP8zkTuaxUmaDe5m4mY8g8ZEl9GrNAN8NTEymyqm6yWeT8Anshm3ruMK/1mTWXmOlw6CEM5CcBoDg+CJ5nDemcnfpJ2IS64fbkVysO2r//rTKnZptqFfGMKnkl6NrdRg6Ea6+lbzO5uihwvx2xg1PCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCAnvxS1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VB20f3hC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718381341; x=1749917341;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7j/faoRXzWh8uYOzQ7IXFB9d5L6kjkr5xK99YDrC7To=;
-  b=VB20f3hCKJcgOMYIFt4PpDglZ4g2NbLrdeQ4Ok27fSkFjrq9Tno+dNx7
-   Twzvxth4nNgcUfBNu8J5z4Lp7ekB4PyNkDFKsRISSconfl40Xlm/uIreJ
-   rx6n/h+iR5YEiNjVk0SRieRWW4FvGux98+AKqAKNJVpD7LauFaq58kN27
-   npclSeVZuSCFUkut7pR1vxX72eq3uJPZkiWcF8zqBmQ0Yl9Z86gojCoLc
-   Bkc0gNFF1Fc23EWgODtAwPhXj4brmPnfNRM8mNPnTsy7fSvE4xk+71kBX
-   uHcNAqsLFI3Cf/n+NBUJwVz6PprqvauBDrr9XPzHeXIr8+vXVrfXC4pJh
-   w==;
-X-CSE-ConnectionGUID: rur5bjjARpSF1Z+kfpxQRA==
-X-CSE-MsgGUID: aiTmifgOSJSUm6/oEbx1Pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="15399431"
-X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="15399431"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 09:09:00 -0700
-X-CSE-ConnectionGUID: Y2zZfm5BTlukoOmsTXo3aA==
-X-CSE-MsgGUID: koUQl62rTAqdHC4GeeJaBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="71741096"
-Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
-  by fmviesa001.fm.intel.com with ESMTP; 14 Jun 2024 09:08:58 -0700
-From: Yu Ma <yu.ma@intel.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tim.c.chen@linux.intel.com,
-	tim.c.chen@intel.com,
-	pan.deng@intel.com,
-	tianyou.li@intel.com,
-	yu.ma@intel.com
-Subject: [PATCH 3/3] fs/file.c: move sanity_check from alloc_fd() to put_unused_fd()
-Date: Fri, 14 Jun 2024 12:34:16 -0400
-Message-ID: <20240614163416.728752-4-yu.ma@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240614163416.728752-1-yu.ma@intel.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCAnvxS1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8B3C2BD10;
+	Fri, 14 Jun 2024 16:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718381384;
+	bh=i6G4moCMnqhzFyyBB6tQeSxoa8cndGODhPD7vUB4a4Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GCAnvxS16+wFmkgOlsKpHUFr0GxQY+1IH7051TFHP+y8chtyCdRQ6URBbZTj4GRMp
+	 TiLUDs+dq0ihSVDDozhG6Q43TtwjOVIZ0kvyDrns5Wh4wO2NXOriUpKZw8WueFBQaG
+	 4m6/3bKGGhWuh51mQxiq/q+y6LazAKFyJC2hLpBMaWTZ/72yB2gMjGG0Jwr12wXzke
+	 Hvw/h18FfHXppTfW4KkX+OWwzY9JaD/mpbjZQutYJt+sd3OVFuS7QnLwlQ3g+bsA+M
+	 vghRkD9ubmqFr7wc1Onm7x6r+NpUCEIzRMXo55H2YceUqHnuNWuo4scooIiAdCfyfY
+	 xuTd8/yy6slYw==
+Date: Fri, 14 Jun 2024 11:09:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org, maz@kernel.org, tglx@linutronix.de,
+	anna-maria@linutronix.de, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
+	rdunlap@infradead.org, vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com,
+	kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp,
+	andrew@lunn.ch, gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
+	rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
+	lorenzo.pieralisi@arm.com, jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org, robin.murphy@arm.com,
+	lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
+	vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
+	andersson@kernel.org, mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+Subject: Re: [PATCH v3 03/24] PCI/MSI: Provide MSI_FLAG_PCI_MSI_MASK_PARENT
+Message-ID: <20240614160942.GA1114672@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614102403.13610-4-shivamurthy.shastri@linutronix.de>
 
-alloc_fd() has a sanity check inside to make sure the FILE object mapping to the
-allocated fd is NULL. Move the sanity check from performance critical alloc_fd()
-path to non performance critical put_unused_fd() path.
+On Fri, Jun 14, 2024 at 12:23:42PM +0200, Shivamurthy Shastri wrote:
+> Most ARM(64) PCI/MSI domains mask and unmask in the parent domain after or
+> before the PCI mask/unmask operation takes place. So there are more than a
+> dozen of the same wrapper implementation all over the place.
 
-As the initial NULL FILE object condition can be assured by zero initialization
-in init_file, we just need to make sure that it is NULL when recycling fd back.
-There are 3 functions call __put_unused_fd() to return fd,
-file_close_fd_locked(), do_close_on_exec() and put_unused_fd(). For
-file_close_fd_locked() and do_close_on_exec(), they have implemented NULL check
-already. Adds NULL check to put_unused_fd() to cover all release paths.
+Is this an opportunity to clean up all these wrappers?  If you could
+mention an example or two here, maybe somebody would be motivated to
+come back and simplify the existing wrappers to take advantage of this
+new flag?
 
-Combined with patch 1 and 2 in series, pts/blogbench-1.1.0 read improved by
-32%, write improved by 15% on Intel ICX 160 cores configuration with v6.8-rc6.
+> Don't make the same mistake with the new per device PCI/MSI domains and
+> provide a new MSI feature flag, which lets the domain implementation
+> enable this sequence in the PCI/MSI code.
+> 
+> Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
 
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Yu Ma <yu.ma@intel.com>
----
- fs/file.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+I assume you'll merge this series via some other tree, so:
 
-diff --git a/fs/file.c b/fs/file.c
-index a0e94a178c0b..59d62909e2e3 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -548,13 +548,6 @@ static int alloc_fd(unsigned start, unsigned end, unsigned flags)
- 	else
- 		__clear_close_on_exec(fd, fdt);
- 	error = fd;
--#if 1
--	/* Sanity check */
--	if (rcu_access_pointer(fdt->fd[fd]) != NULL) {
--		printk(KERN_WARNING "alloc_fd: slot %d not NULL!\n", fd);
--		rcu_assign_pointer(fdt->fd[fd], NULL);
--	}
--#endif
- 
- out:
- 	spin_unlock(&files->file_lock);
-@@ -572,7 +565,7 @@ int get_unused_fd_flags(unsigned flags)
- }
- EXPORT_SYMBOL(get_unused_fd_flags);
- 
--static void __put_unused_fd(struct files_struct *files, unsigned int fd)
-+static inline void __put_unused_fd(struct files_struct *files, unsigned int fd)
- {
- 	struct fdtable *fdt = files_fdtable(files);
- 	__clear_open_fd(fd, fdt);
-@@ -583,7 +576,12 @@ static void __put_unused_fd(struct files_struct *files, unsigned int fd)
- void put_unused_fd(unsigned int fd)
- {
- 	struct files_struct *files = current->files;
-+	struct fdtable *fdt = files_fdtable(files);
- 	spin_lock(&files->file_lock);
-+	if (unlikely(rcu_access_pointer(fdt->fd[fd]))) {
-+		printk(KERN_WARNING "put_unused_fd: slot %d not NULL!\n", fd);
-+		rcu_assign_pointer(fdt->fd[fd], NULL);
-+	}
- 	__put_unused_fd(files, fd);
- 	spin_unlock(&files->file_lock);
- }
--- 
-2.43.0
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
+> ---
+> v3: new patch to replace the global static key - Marc Zyngier
+> ---
+>  drivers/pci/msi/irqdomain.c | 21 +++++++++++++++++++++
+>  include/linux/msi.h         |  2 ++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> index 03d2dd25790d..112c2ff3035c 100644
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -148,17 +148,35 @@ static void pci_device_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *d
+>  	arg->hwirq = desc->msi_index;
+>  }
+>  
+> +static __always_inline void cond_mask_parent(struct irq_data *data)
+> +{
+> +	struct msi_domain_info *info = data->domain->host_data;
+> +
+> +	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
+> +		irq_chip_mask_parent(data);
+> +}
+> +
+> +static __always_inline void cond_unmask_parent(struct irq_data *data)
+> +{
+> +	struct msi_domain_info *info = data->domain->host_data;
+> +
+> +	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
+> +		irq_chip_unmask_parent(data);
+> +}
+> +
+>  static void pci_irq_mask_msi(struct irq_data *data)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+>  	pci_msi_mask(desc, BIT(data->irq - desc->irq));
+> +	cond_mask_parent(data);
+>  }
+>  
+>  static void pci_irq_unmask_msi(struct irq_data *data)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+> +	cond_unmask_parent(data);
+>  	pci_msi_unmask(desc, BIT(data->irq - desc->irq));
+>  }
+>  
+> @@ -170,6 +188,7 @@ static void pci_irq_unmask_msi(struct irq_data *data)
+>  
+>  #define MSI_COMMON_FLAGS	(MSI_FLAG_FREE_MSI_DESCS |	\
+>  				 MSI_FLAG_ACTIVATE_EARLY |	\
+> +				 MSI_FLAG_PCI_MSI_MASK_PARENT |	\
+>  				 MSI_FLAG_DEV_SYSFS |		\
+>  				 MSI_REACTIVATE)
+>  
+> @@ -195,10 +214,12 @@ static const struct msi_domain_template pci_msi_template = {
+>  static void pci_irq_mask_msix(struct irq_data *data)
+>  {
+>  	pci_msix_mask(irq_data_get_msi_desc(data));
+> +	cond_mask_parent(data);
+>  }
+>  
+>  static void pci_irq_unmask_msix(struct irq_data *data)
+>  {
+> +	cond_unmask_parent(data);
+>  	pci_msix_unmask(irq_data_get_msi_desc(data));
+>  }
+>  
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index dc27cf3903d5..04f33e7f6f8b 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -556,6 +556,8 @@ enum {
+>  	MSI_FLAG_USE_DEV_FWNODE		= (1 << 7),
+>  	/* Set parent->dev into domain->pm_dev on device domain creation */
+>  	MSI_FLAG_PARENT_PM_DEV		= (1 << 8),
+> +	/* Support for parent mask/unmask */
+> +	MSI_FLAG_PCI_MSI_MASK_PARENT	= (1 << 9),
+>  
+>  	/* Mask for the generic functionality */
+>  	MSI_GENERIC_FLAGS_MASK		= GENMASK(15, 0),
+> -- 
+> 2.34.1
+> 
