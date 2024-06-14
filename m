@@ -1,108 +1,92 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1EF183091;
-	Fri, 14 Jun 2024 07:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A8C183091;
+	Fri, 14 Jun 2024 07:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718351960; cv=none; b=RfD9g5mm/WI139/k29sWLoV+FMmlrXE+XHdmxNBEAEx3+BA+0EeKDtMwgzk6DRfL9eiFl7k+TYPyiQr4cg6b4MSD9fIobNBtSzEA2vw2avz97x5x4jGWCnY1WmqeRofOeatFlisEgfgpPJWngr290Of1ly83CQal+61GpMwdWH8=
+	t=1718351968; cv=none; b=M/hHx4Q5P3/L+rZLcC7DUel7I1RU/dZoG8GSi1Z/CZHLvrjm9D84OqPVZbFYPXE0hFRpJKB2ab8XlDXNngZj6d3f2dvrLcHR+nfw5Y01mL+PDdgc4cSawIr7vQqVpwOum4FKeAyXOOuGrqT37D3/Q+DiLCazdMTGfwV/4SoZWVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718351960; c=relaxed/simple;
-	bh=sbl5X0446SNrZyzdSpjYqjhRmR8nZOs6R/E130gj5SI=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=o360nF/vhNt4zFMKj4y2HgDyuuwOV5djhqRMwkMR6PoCwvI3Pb3hBkIGKK9lwNA95aMHbs8d9QaKzlEDbCep01QPYHwK+soa0mNEUR0KzRu8NLHXgE+UuMwymUw6e3V2SitFX32YhTBGk5EjpAZt2DWu+C1fy3DUV7U2BBQIkls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3661D2016E3;
-	Fri, 14 Jun 2024 09:59:12 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DDB562016E6;
-	Fri, 14 Jun 2024 09:59:11 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1896C1820F77;
-	Fri, 14 Jun 2024 15:59:10 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: p.zabel@pengutronix.de,
-	abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	marex@denx.de,
-	linux-clk@vger.kernel.org,
-	imx@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH v8 4/5] clk: imx: clk-audiomix: Add CLK_SET_RATE_PARENT flags for clocks
-Date: Fri, 14 Jun 2024 15:42:02 +0800
-Message-Id: <1718350923-21392-5-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1718350923-21392-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1718350923-21392-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1718351968; c=relaxed/simple;
+	bh=WLsQLfSBgdrbdcbL23bGEE1GXt0r8cyRHZPC0kRFL0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZA/dlE74pLPC46v4Tu7do5vGGNDuMurJ6L2iCFfr4nv93WSiL3K+tzaBmaKmspd2PQqFAT0RdiCgWXA4zq/EHR06zMAMpHo582/SzIx2pTz5AD4M6gXPH0iSUPtoOJ7jTrBdNi9UeNchQvyaEdlXPZQT3Jbi8o2oA+SSmq8jtMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=NVpPFKIm; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="NVpPFKIm"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 5B1F0A0B23;
+	Fri, 14 Jun 2024 09:59:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=X48ANnpZpKQn6FVdiODA
+	epUqBqw7Ho8W5zl8HyAQNVc=; b=NVpPFKImG4zlvpc1bIohpS/M7Xqwa8TSwhOw
+	gNVjxwUFXZ47igNHo3g9dBEKYZvfJ0FFAHVsIv0UNEl3SKcnj6FMh7l5AzC/z9Yj
+	PWyEnh6AhgOpUQFB1PxzQmmn1GMulv0Dp+6gA1hp+HCnutYaiAIHiKhJCHPZq/da
+	Vac1yBJexCezUxn5Zfnp/WBVzH4/nRc17FzNfZZ6CFjKJa9ss2I2bKG54V2QCtO7
+	bQ6Hvj7J5t3eRy1oMcw2JGOOmsPMFlsMHMb/ax4qB8l315qwz5ej6TN2n58LmunO
+	jBrpuepeu3kpPMbTHmCxyVyUB83lRgu5rpGIRMNa1oaLASg2+pJfJ+EVQgAIB/ov
+	CPhGrb5BpQnK/8awvkLPoxyy3DixzcKMgpvB3CRguL9WPAsMEzDlcRfnAGUXBREK
+	NzOIrYuWfZy1WD498MizZUCRZXsjBL7wdySb270PGa4yrARS1zjJ2y/+7ZzYlyCV
+	EGvWm+0XppGCTObxgVEOBKaDkJrKgkDNjJJ8s8pcYPop2e27sI8oKyJyKtcifY3+
+	XNJhFPjWy9HWyiF4UuJl4IvmgnkYROKYZ0XUUQjGk52J9Sk7FupsLhkouE/9DQFg
+	6YwL4E8anHC7CioF2OF5AxSua96H39aBNC8dLmTIQgpJl5Tko+qp97tdqDZUdgns
+	nl0+MoM=
+Message-ID: <0f315501-e8cb-4904-8c43-d9721fdef846@prolan.hu>
+Date: Fri, 14 Jun 2024 09:59:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH resubmit 2] net: fec: Fix FEC_ECR_EN1588 being cleared on
+ link-down
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Frank Li <Frank.Li@freescale.com>, "David S. Miller"
+	<davem@davemloft.net>, <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang
+	<xiaoning.wang@nxp.com>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>
+References: <20240611080405.673431-1-csokas.bence@prolan.hu>
+ <20240613081233.6ff570cd@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <20240613081233.6ff570cd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2945A129576D776B
 
-Add CLK_SET_RATE_PARENT flags that when the device driver sets the
-child clock rate, parent clock frequency can be refined accordingly.
+On 6/13/24 17:12, Jakub Kicinski wrote:
+> On Tue, 11 Jun 2024 10:04:05 +0200 Csókás, Bence wrote:
+>> +	if (fep->bufdesc_ex) {
+>> +		val = readl(fep->hwp + FEC_ECNTRL);
+>> +		val |= FEC_ECR_EN1588;
+>> +		writel(val, fep->hwp + FEC_ECNTRL);
+> 
+> FEC_ECNTRL gets written multiple times in this function,
+> including with 0, and then you RMW it to add this flag.
+> 
+> Is this intentional? It really seems like you should be
+> adding this flag more consistently or making sure its
+> not cleared, rather than appending "add it back" at the
+> end of the function...
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk-imx8mp-audiomix.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+It only writes 0 if WOL is disabled AND the device has the MULTI_QUEUES 
+quirk. Otherwise, we either write FEC_ECR_RESET, which resets the device 
+(and the HW changes ECNTRL to its reset value), OR we RMW set the WOL 
+sleep bits. And then, if some more quirks are set, we set ETHEREN.
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index 517b1f88661b..7fd336a96cfe 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -328,12 +328,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
- 		if (sels[i].num_parents == 1) {
- 			hw = devm_clk_hw_register_gate_parent_data(dev,
--				sels[i].name, &sels[i].parent, 0,
-+				sels[i].name, &sels[i].parent, CLK_SET_RATE_PARENT,
- 				base + sels[i].reg, sels[i].shift, 0, NULL);
- 		} else {
- 			hw = devm_clk_hw_register_mux_parent_data_table(dev,
- 				sels[i].name, sels[i].parents,
--				sels[i].num_parents, 0,
-+				sels[i].num_parents, CLK_SET_RATE_PARENT,
- 				base + sels[i].reg,
- 				sels[i].shift, sels[i].width,
- 				0, NULL, NULL);
-@@ -376,7 +376,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
- 
- 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
--				       0, base + SAI_PLL_GNRL_CTL, 13,
-+				       CLK_SET_RATE_PARENT,
-+				       base + SAI_PLL_GNRL_CTL, 13,
- 				       0, NULL);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -385,7 +386,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
- 
- 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
--					       "sai_pll_out", 0, 1, 2);
-+					       "sai_pll_out",
-+					       CLK_SET_RATE_PARENT, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
- 		goto err_clk_register;
--- 
-2.34.1
+So I think RMW is the safest route here, instead of trying to keep track 
+of all these different branches, re-read ECNTRL after reset etc.
+
+Bence
 
