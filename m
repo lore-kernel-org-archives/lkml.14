@@ -1,87 +1,78 @@
-Received: from 3.mo576.mail-out.ovh.net (3.mo576.mail-out.ovh.net [188.165.52.203])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BAF13B2AD
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 11:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.52.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0296D78C90;
+	Fri, 14 Jun 2024 11:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718364409; cv=none; b=F3arIHc3JyUxOvIckm5b+U1Wh0U0oTHIIk++CeNfUsd98zLZVtcIVqLLLQbMvU+SGk5hQNh4mtSesKd4vExhnUVZkvbM0TUPKYaXu+dbpWs7LuPMZAxzW4JHoDWRZigjUmxAsoFwJYWTUbwCioQrse8qmIgDQYDPfdL/0yDPqh4=
+	t=1718364632; cv=none; b=HfYKnvstb+82UyzLCXhMliN72S0Dgoxy04NucrMel6JZj69jfVpcWOKZWj9ynYA1f1PFXqFK1A9+dPC5uODteJG/ilVrk7O1YhSnMec7tIyrJxzVyINT2aLQ7+6zHGuREgj8eX8fI4+IOnAPwIPOElgg7qgCE984OBJRxAQxnwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718364409; c=relaxed/simple;
-	bh=2WQlCiqaq3O7GAO7I86Mkd8Y6gJco5eKLlFWHR+F8P8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iFz5nrHDSFQDDxFud/Eyen5S+kKs1Pj5IQiJl912aWc4lTo5PvgwuSRR5iObA1Wdv5IsSUjDYO7Zgh7qqH8VZpW3KNnlip12XJmTUFJtqNamPqvQbp4Nn5nRJxn59PDWRtjOmY/8NDZg6MzTZwGeHGDjqKa54OhtXOwXTRTf1SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.52.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director8.ghost.mail-out.ovh.net (unknown [10.109.176.128])
-	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4W0w1Q0HxWz1byw
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 10:07:05 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-9qg8m (unknown [10.108.42.28])
-	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 50FEB1FEC2;
-	Fri, 14 Jun 2024 10:07:03 +0000 (UTC)
-Received: from etezian.org ([37.59.142.101])
-	by ghost-submission-6684bf9d7b-9qg8m with ESMTPSA
-	id w4LqDkcWbGbfGwAALME0rQ
-	(envelope-from <andi@etezian.org>); Fri, 14 Jun 2024 10:07:03 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-101G004c23ccfb9-6d11-4112-99e6-9496b632ab70,
-                    0BE8417D4949A2B9C3DC4A53BA17F3B68AA5397D) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
- Thomas Richard <thomas.richard@bootlin.com>
-Cc: linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, gregory.clement@bootlin.com, 
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com>
-References: <20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com>
-Subject: Re: [PATCH 0/2] Wakeup the i2c-omap controller during suspend
- stage
-Message-Id: <171835962034.690946.5223670414905950648.b4-ty@kernel.org>
-Date: Fri, 14 Jun 2024 12:07:00 +0200
+	s=arc-20240116; t=1718364632; c=relaxed/simple;
+	bh=lfRCLHPC8Ch+I0PcReVwhlTRxiD9uf5JH4scsOMzT+A=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hRqROMxMqtIhrlOq26TobRvgVyB3H8NQ33k2GGMd2ybJznnK2jcgsbW+Z36jb6g62QNjPaC8yQ6McjHY3oo9Mq6XvtUFEeIakbS0ip6zWj9k+zyRdwj7KENLrQ3Mcick1ns3OHEGm26T5Mb3P4DIEGTCQqLp///GRP/Mx5RGooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQFTM64h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQFTM64h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C7802C4AF1C;
+	Fri, 14 Jun 2024 11:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718364631;
+	bh=lfRCLHPC8Ch+I0PcReVwhlTRxiD9uf5JH4scsOMzT+A=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=OQFTM64hcf6EdmMTMzW250pNQbG8uVZnoZqQjBetPDqDwctfpfO+GQVAdqm4UpTFk
+	 PGCZRMyvPiIOUOuuwPqYgcdA4ezKWKI2RL5QBwtwg0AomwmMxLvNgslDVEfMoOMwkt
+	 stBTrkE92SrwQ5Ymqh/6bL2FjX9zDcimxYoGQPfvvKaRvr5ALU7dvGn4m6UQKdDyJq
+	 1ig2I9Rpi73LXjmaMTr+yaCmdyd7nUic4Xc5NvGjqpFV7mDWXnMIcq6QPiD5dK3QyL
+	 hCtZksP9Lmgji9VDQ5MooTNtiOKIha8Iix/HK2o3XnuYdnocp0rW20eh46YrbZdw+5
+	 FHpdlITrJzL9A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B1FEFC43612;
+	Fri, 14 Jun 2024 11:30:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 1605814746184223393
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeduledgvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeeipdhmohguvgepshhmthhpohhuth
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH V2] net: qrtr: ns: Ignore ENODEV failures in ns
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171836463172.3341.2623972340502158266.git-patchwork-notify@kernel.org>
+Date: Fri, 14 Jun 2024 11:30:31 +0000
+References: <20240612063156.1377210-1-quic_sarannya@quicinc.com>
+In-Reply-To: <20240612063156.1377210-1-quic_sarannya@quicinc.com>
+To: Sarannya S <quic_sarannya@quicinc.com>
+Cc: quic_bjorande@quicinc.com, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ quic_clew@quicinc.com, horms@kernel.org, manivannan.sadhasivam@linaro.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org
 
-Hi
+Hello:
 
-On Thu, 13 Jun 2024 15:13:26 +0200, Thomas Richard wrote:
-> The patches of this series were originally in the series "Add suspend to
-> ram support for PCIe on J7200" [1].
-> There is no changes compared to the patches in the series [1].
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 12 Jun 2024 12:01:56 +0530 you wrote:
+> From: Chris Lew <quic_clew@quicinc.com>
 > 
-> The goal is to wakeup the controller during the suspend stage to be able
-> to use it during suspend_noirq stage.
-> As autosuspend is enabled, the controller can be suspended at suspend_noirq
-> stage. But runtime pm is disabled in suspend_late stage. So it's not
-> possible to wakeup the controller during suspend_noirq.
-> The trick is to force the wakeup of the controller during suspend stage.
+> Ignore the ENODEV failures returned by kernel_sendmsg(). These errors
+> indicate that either the local port has been closed or the remote has
+> gone down. Neither of these scenarios are fatal and will eventually be
+> handled through packets that are later queued on the control port.
 > 
 > [...]
 
-Applied to i2c/i2c-host on
+Here is the summary with links:
+  - [V2] net: qrtr: ns: Ignore ENODEV failures in ns
+    https://git.kernel.org/netdev/net-next/c/404dbd26322f
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/2] i2c: omap: switch to NOIRQ_SYSTEM_SLEEP_PM_OPS() and RUNTIME_PM_OPS()
-      commit: 659eb16247d04f442a014fe2dd8b7fa936dfccb5
-[2/2] i2c: omap: wakeup the controller during suspend() callback
-      commit: 8a2ebb775a497a95a79a8ac83027a4f159c36f32
 
