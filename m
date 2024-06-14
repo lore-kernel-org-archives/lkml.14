@@ -1,162 +1,149 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14E1811FE
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 12:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD23811FE;
+	Fri, 14 Jun 2024 12:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718366801; cv=none; b=Y2h9JIDd2YiXY1xnkJtvOjGU+M7XBIU8DrTmTTNv7YZ5XbQOj0ZOuoorGnnh5WkBJv9iLmlxgdMl7MYdOdrF3KF8v1M1Mr/usgafuR7y//e6MVJHEUmMYJUiZSWMQ7E0atrdaGtmD+QMY6xfPZ97Qj45MdX0VwXZdhY+eG9CShU=
+	t=1718366859; cv=none; b=bZ4Eh5Oslaj2tftOdNqV+FbFhP5bCN+Bvz1JWOgeQcNhcbSXkqVMeQV6No6zHsGMhyRMakDkqQgunCsGz4cXn12H0tmWt8NjeDsv+ZpvQRze12TpRf+Zmv1SyjJAwjcfWKGWHG0qeKKgNxqqR9TNlmvP12Ldjmr758w+wbJ5QUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718366801; c=relaxed/simple;
-	bh=4wCXZuEusw5nZqkrkb+6LVoPrYEB+QjclkBKWNxbQ10=;
+	s=arc-20240116; t=1718366859; c=relaxed/simple;
+	bh=Vq6GkNjm49Si+NAnbQlMEolVQ3XwS1Z66jv5HfAMGuU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oGCBX0Bcafdn20I/GTjDmri/YfZNvvGfrdohAOwJC0jRl+i0vELp0BhzW6qBIwNU5WEZIySNTAUoO9iJSo0dePTV0Pz3Qd7ON0cW+Kjk3Z/NsTqeoJIdzVQ0ff03lUp0lGmaroGL3PDB0wxY1pmLXKdq6hBwmwai+SnDUNhhaGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CmgIodLM; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CmgIodLM"
-X-Envelope-To: usamaarif642@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718366796;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KHG/yGyCiGvKudRrmafp28uTXE2vDuh3tAitczZGb/k=;
-	b=CmgIodLMnVHV55Tk4LUvWAhewejUmuErW/ZxAwKOLzaqoVqUg3MHmyCQV1CORFrWVF7fMB
-	X6PUvmq2hcEXKCEfppE92NJinO95mWrhmKEi6+3q1SqU772wMV0DxfT1YHvY26BuhmFToC
-	PMy+wBgFRxTRjIeyYBtTwvDFeKkwNoI=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: shakeel.butt@linux.dev
-X-Envelope-To: david@redhat.com
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: hughd@google.com
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: yosryahmed@google.com
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: kernel-team@meta.com
-Message-ID: <b5952ee4-3b86-40ff-a3de-8a08f09557bd@linux.dev>
-Date: Fri, 14 Jun 2024 20:05:48 +0800
+	 In-Reply-To:Content-Type; b=TcQJU4oqA8B/PivOwt7hp1N87BxsexC+yFO0LKBpspA+MrIzVqVqRLaZ7NL8xJ4kD6AxqKtY6oXH06CQv676nIqMYvXfCUwsLi89mPdN6XmOVEAibgMMD8vxsMvBEfYtz6zo4X4TGQvgNj1ClB+4aeYHEuqBxv64FUWzJvPUXa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E093AFEC;
+	Fri, 14 Jun 2024 05:08:00 -0700 (PDT)
+Received: from [10.57.71.136] (unknown [10.57.71.136])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DBB43F64C;
+	Fri, 14 Jun 2024 05:07:32 -0700 (PDT)
+Message-ID: <3516994c-7b06-4409-b9a9-975b9f7a60eb@arm.com>
+Date: Fri, 14 Jun 2024 13:07:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 1/2] mm: store zero pages to be swapped out in a bitmap
-Content-Language: en-US
-To: Usama Arif <usamaarif642@gmail.com>, akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, david@redhat.com,
- ying.huang@intel.com, hughd@google.com, willy@infradead.org,
- yosryahmed@google.com, nphamcs@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20240614100902.3469724-1-usamaarif642@gmail.com>
- <20240614100902.3469724-2-usamaarif642@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240614100902.3469724-2-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/9] iommu/rockchip: Attach multiple power domains
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Oded Gabbay <ogabbay@kernel.org>,
+ Tomeu Vizoso <tomeu.vizoso@tomeuvizoso.net>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+References: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
+ <20240612-6-10-rocket-v1-2-060e48eea250@tomeuvizoso.net>
+ <ffviz6ak6qsn2reg5y35aerzy7wxfx6fzix6xjyminbhfcguus@clszdjakdcjd>
+ <CAAObsKCx+r5UuESnrPem1Rb1-BF4i8FVwu6uozWhABOWoq+M4Q@mail.gmail.com>
+ <CAAObsKChaBZ2C5ezWsiZ_LoN6R2HFhFA9=UNSRYB6cyeo-jreg@mail.gmail.com>
+ <vmgk4wmlxbsb7lphq2ep3xnxx3mbv6e6lecihtftxoyp5lidvy@mectcwirrlek>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <vmgk4wmlxbsb7lphq2ep3xnxx3mbv6e6lecihtftxoyp5lidvy@mectcwirrlek>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024/6/14 18:07, Usama Arif wrote:
-> Approximately 10-20% of pages to be swapped out are zero pages [1].
-> Rather than reading/writing these pages to flash resulting
-> in increased I/O and flash wear, a bitmap can be used to mark these
-> pages as zero at write time, and the pages can be filled at
-> read time if the bit corresponding to the page is set.
-> With this patch, NVMe writes in Meta server fleet decreased
-> by almost 10% with conventional swap setup (zswap disabled).
+On 2024-06-13 10:38 pm, Sebastian Reichel wrote:
+> Hi,
 > 
-> [1] https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d1344dde9fce0@epcms5p1/
+> On Thu, Jun 13, 2024 at 11:34:02AM GMT, Tomeu Vizoso wrote:
+>> On Thu, Jun 13, 2024 at 11:24 AM Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
+>>> On Thu, Jun 13, 2024 at 2:05 AM Sebastian Reichel
+>>> <sebastian.reichel@collabora.com> wrote:
+>>>> On Wed, Jun 12, 2024 at 03:52:55PM GMT, Tomeu Vizoso wrote:
+>>>>> IOMMUs with multiple base addresses can also have multiple power
+>>>>> domains.
+>>>>>
+>>>>> The base framework only takes care of a single power domain, as some
+>>>>> devices will need for these power domains to be powered on in a specific
+>>>>> order.
+>>>>>
+>>>>> Use a helper function to stablish links in the order in which they are
+>>>>> in the DT.
+>>>>>
+>>>>> This is needed by the IOMMU used by the NPU in the RK3588.
+>>>>>
+>>>>> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+>>>>> ---
+>>>>
+>>>> To me it looks like this is multiple IOMMUs, which should each get
+>>>> their own node. I don't see a good reason for merging these
+>>>> together.
+>>>
+>>> I have made quite a few attempts at splitting the IOMMUs and also the
+>>> cores, but I wasn't able to get things working stably. The TRM is
+>>> really scant about how the 4 IOMMU instances relate to each other, and
+>>> what the fourth one is for.
+>>>
+>>> Given that the vendor driver treats them as a single IOMMU with four
+>>> instances and we don't have any information on them, I resigned myself
+>>> to just have them as a single device.
+>>>
+>>> I would love to be proved wrong though and find a way fo getting
+>>> things stably as different devices so they can be powered on and off
+>>> as needed. We could save quite some code as well.
+>>
+>> FWIW, here a few ways how I tried to structure the DT nodes, none of
+>> these worked reliably:
+>>
+>> https://gitlab.freedesktop.org/tomeu/linux/-/blob/6.10-rocket-multiple-devices-power/arch/arm64/boot/dts/rockchip/rk3588s.dtsi?ref_type=heads#L1163
+>> https://gitlab.freedesktop.org/tomeu/linux/-/blob/6.10-rocket-schema-subnodes//arch/arm64/boot/dts/rockchip/rk3588s.dtsi?ref_type=heads#L1162
+>> https://gitlab.freedesktop.org/tomeu/linux/-/blob/6.10-rocket-multiple-devices//arch/arm64/boot/dts/rockchip/rk3588s.dtsi?ref_type=heads#L1163
+>> https://gitlab.freedesktop.org/tomeu/linux/-/blob/6.10-rocket-multiple-iommus//arch/arm64/boot/dts/rockchip/rk3588s.dtsi?ref_type=heads#L2669
+>>
+>> I can very well imagine I missed some way of getting this to work, but
+>> for every attempt, the domains, iommus and cores were resumed in
+>> different orders that presumably caused problems during concurrent
+>> execution fo workloads.
+>>
+>> So I fell back to what the vendor driver does, which works reliably
+>> (but all cores have to be powered on at the same time).
 > 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-
-Looks good to me, only some small nits below.
-
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
-
-> ---
->  include/linux/swap.h |   1 +
->  mm/page_io.c         | 113 ++++++++++++++++++++++++++++++++++++++++++-
->  mm/swapfile.c        |  15 ++++++
->  3 files changed, 128 insertions(+), 1 deletion(-)
+> Mh. The "6.10-rocket-multiple-iommus" branch seems wrong. There is
+> only one iommu node in that. I would have expected a test with
 > 
-[...]
-> +
-> +static void swap_zeromap_folio_set(struct folio *folio)
-> +{
-> +	struct swap_info_struct *sis = swp_swap_info(folio->swap);
-> +	swp_entry_t entry;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < folio_nr_pages(folio); i++) {
-> +		entry = page_swap_entry(folio_page(folio, i));
+> rknn {
+>      // combined device
+> 
+>      iommus = <&iommu1>, <&iommu2>, ...;
+> };
+> 
+> Otherwise I think I would go with the schema-subnodes variant. The
+> driver can initially walk through the sub-nodes and collect the
+> resources into the main device, so on the driver side nothing would
+> really change. But that has a couple of advantages:
+> 
+> 1. DT and DT binding are easier to read
+> 2. It's similar to e.g. CPU cores each having their own node
+> 3. Easy to extend to more cores in the future
+> 4. The kernel can easily switch to proper per-core device model when
+>     the problem has been identified
 
-It seems simpler to use:
+It also would seem to permit describing and associating the per-core 
+IOMMUs individually - apart from core 0's apparent coupling to whatever 
+shared "uncore" stuff exists for the whole thing, from the distinct 
+clocks, interrupts, power domains etc. lining up with each core I'd 
+guess those IOMMUs are not interrelated the same way the ISP's 
+read/write IOMMUs are (which was the main justification for adopting the 
+multiple-reg design originally vs. distinct DT nodes like Exynos does). 
+However, practically that would require the driver to at least populate 
+per-core child devices to make DMA API or IOMMU API mappings with, since 
+we couldn't spread the "collect the resources" trick into those 
+subsystems as well.
 
-swp_entry_t entry = folio->swap;
-
-for (i = 0; i < folio_nr_pages(folio); i++, entry.val++)
-
-The current code is good too, no objection.
-
-> +		set_bit(swp_offset(entry), sis->zeromap);
-> +	}
-> +}
-> +
-[...]
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 9c6d8e557c0f..0b8270359bcf 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -747,6 +747,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  	unsigned long begin = offset;
->  	unsigned long end = offset + nr_entries - 1;
->  	void (*swap_slot_free_notify)(struct block_device *, unsigned long);
-> +	unsigned int i;
-> +
-> +	/*
-> +	 * Use atomic clear_bit operations only on zeromap instead of non-atomic
-> +	 * bitmap_clear to prevent adjacent bits corruption due to simultaneous writes.
-> +	 */
-> +	for (i = 0; i < nr_entries; i++)
-> +		clear_bit(offset + i, si->zeromap);
-
-I'm wondering if we need to clear bits at all? Since the current locked folio is
-the owner of these bits, we always update correctly when swap_writepage(). So
-if these swap entries freed and reused by another folio, we won't load from backend
-until that another folio has gone swap_writepage(), which update these bits correctly.
-
-Maybe I missed something? Anyway, it should be no harm to clear here too.
-
-Thanks.
-
->  
->  	if (offset < si->lowest_bit)
->  		si->lowest_bit = offset;
-> @@ -2635,6 +2643,7 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
->  	free_percpu(p->cluster_next_cpu);
->  	p->cluster_next_cpu = NULL;
->  	vfree(swap_map);
-> +	bitmap_free(p->zeromap);
->  	kvfree(cluster_info);
->  	/* Destroy swap account information */
->  	swap_cgroup_swapoff(p->type);
-> @@ -3161,6 +3170,12 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->  		goto bad_swap_unlock_inode;
->  	}
->  
-> +	p->zeromap = bitmap_zalloc(maxpages, GFP_KERNEL);
-> +	if (!p->zeromap) {
-> +		error = -ENOMEM;
-> +		goto bad_swap_unlock_inode;
-> +	}
-> +
->  	if (p->bdev && bdev_stable_writes(p->bdev))
->  		p->flags |= SWP_STABLE_WRITES;
->  
+Thanks,
+Robin.
