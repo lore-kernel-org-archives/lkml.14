@@ -1,231 +1,156 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C33185086;
-	Fri, 14 Jun 2024 08:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5281494B3
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718353426; cv=none; b=H/Ggq3YxikW8Tb8RG5Ya/HqSTVGO2eeow2/cSDVIEps4FDdQipPm8jxoHK176gHxjR+krNnXDbgfTsc8BO5KFddfKhwN7Ei0bgUymwQPB4gkz83j30hrdB7DTrjTblGNnhypyDOhAAGTJETmEbZzU3e/ghTg0iupOhYVZ4Etl/Q=
+	t=1718353460; cv=none; b=kf3x2rpS52UiKRyC2KNeUILz4nEv59z6uf09eo5SS/DuWIUarUa1wgXq1tpuytsSS7DEZQFOjr3MsX+o+/ySOIVaO9c3zHyVeaEReRMoasjiQk+QbVGS9BhU1PTRiG3+l05zaiJheAwCx4y+Op0FV0I/ZJqBbUxPBDCP40iRCIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718353426; c=relaxed/simple;
-	bh=I30+svJG/M7AzUfaUajhNLsiziVDSGelWON1BY08RRA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0Uth3DvHHivK2PdYx0uIAbQ/6anVrfMCYIdob9q9BuQOaeynzmr/ca2NV0mj6oKVwajqPPlPFqj0nxb8+l0smgRtyJSKZqrOT/u8vN7hicI+mE4oQTbXEVggf3uD/3SUuPamjQG+fhD3VcV/J44+b0QrqTAywfz87gd0XPnN4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=TAt6VB/3; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718353460; c=relaxed/simple;
+	bh=fv0TaSfIqslUmjuOoZwpyiDbVyDeYNBKgbCqOA67DE4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CQQFkfC/1x86/8LG4mW1zYR40drXZBEAQ7fQ6oDhE78M2bYz33oP0Lc96ar/azo/mYn3X3rj8x8uz+oa22tky3KA2xnNFajpM9ZCO3rP0zyTd20YJmTMxttcm6UFcWCrWlP+M/7Jt3sv/fHYHti0S+VM8CyVWlvnEGZ0cyBCLCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RMtpL1ne; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="TAt6VB/3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718353424; x=1749889424;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I30+svJG/M7AzUfaUajhNLsiziVDSGelWON1BY08RRA=;
-  b=TAt6VB/3Ywffc6PCn87J4eM6zebeVDQf1/nM7gU3lOUNhB8QaqQEDrzu
-   7muhMQvKwzKyWLzo2qqxaLNHD2qNFjtX/mljPrtZiGoCYKgvxyaCLsyn6
-   ZwLt1FhoegUCyFpylHlA0f7d1lOQAWBKXz971JOuSPmowQUj97GSOJWwY
-   3ETjFowZLSFANNwo0dw45p1bZDHAyUKzhz6XPBJPPA34kPUtCL1LXMlqY
-   GndNOVHt179KUmAnHmXGPyCEoxjTHv2a2Cc3WOF6XcJVwpPa8f9jl8+nu
-   rG2f9b13zI69Z88qH5LgSBPdXOXAf7/Vh0n/CZyRfA/3kJwDf3TKfDabN
-   A==;
-X-CSE-ConnectionGUID: lGiPpL1eRHKZ9zuhk1c1dA==
-X-CSE-MsgGUID: t41bSOBzQEqKWlfjgFpvSQ==
-X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="asc'?scan'208";a="28158885"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 01:23:42 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Jun 2024 01:23:10 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 14 Jun 2024 01:23:05 -0700
-Date: Fri, 14 Jun 2024 09:22:47 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Jesse Taube <jesse@rivosinc.com>
-CC: <linux-riscv@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>, Evan Green
-	<evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, Charlie Jenkins
-	<charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu
-	<andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>, Greentime Hu
-	<greentime.hu@sifive.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
-	<bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin
-	<costa.shul@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Baoquan
- He <bhe@redhat.com>, Anup Patel <apatel@ventanamicro.com>, Zong Li
-	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Ben Dooks
-	<ben.dooks@codethink.co.uk>, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Erick Archer
-	<erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] RISC-V: Check scalar unaligned access on all CPUs
-Message-ID: <20240614-padded-mammal-d956735c1293@wendy>
-References: <20240613191616.2101821-1-jesse@rivosinc.com>
- <20240613191616.2101821-4-jesse@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMtpL1ne"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6f1cf00b3aso297099866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 01:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718353457; x=1718958257; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pCUM5zB/whIY+F5E3NPWVek5NaTuOm+4yywidCzp4Os=;
+        b=RMtpL1neE7BwaN2gMr0bfP+03xygkNktpJ74oOwxhR3ctp1gtpk4lwIdVjlIux2TW1
+         V/VF209iUNwt0zRUqyswJgmuThAuv2XlL0tGJVj3kFVLuCDOG5I5CELjuxDdWiigqULt
+         OpCfPQ12DWonGU00nKup6Ozy/aBxtmydix+z8NkwnbFvkRKiTcsbtrENo6G3VZJX2qu+
+         YdiL4q+5us0kyjy3ciABPuC6LoJTYijv6t8TUDXg1YjrGPnnScBZ+36D08FiDpBSu2h3
+         DecwZ8ftmXi78xzp0WD7scJA0Rcfg4+Ch0zhMKrzaGgd0/tBbIWV16LIYK1bKLtKIEAV
+         s7dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718353457; x=1718958257;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pCUM5zB/whIY+F5E3NPWVek5NaTuOm+4yywidCzp4Os=;
+        b=RMF29UWYWPnn3/1ozcAYqbqUf/mNP5wmmv8dbzQONeUnUeACMJnh6D5HkzszkAMCWe
+         BR1p96DOOlaXozvLf5w+k78vQWTxEOhiMIlOlv66ILpvoNYq/75lyTg/tUf9ePN8dNsn
+         jJQE3rHqAkZ/VYVD1WImdKKePv8nL+cGnSRXstw1KcOXya6uEHflNx2dsqbw/xveCPSI
+         DUmnaGxz/6vHctkU488pFHn5LafyDhZ47tB662SMT0mg6Ebj0FaYMJbe3kpoZxgbynvm
+         4I560Ysx0u0SOD8ZhVjgwzYhj4Hv+eorYeA7y9ps4vZk66wLK35uU5Rw/MlsgYFgXLH3
+         tbRg==
+X-Gm-Message-State: AOJu0YyPKrRENh2dPaSh4LWfbd50NK8pddm85pD55fAl6xRmnbWw1DW1
+	9uizXv/iUXXDnHDq2eAEGRusmcm90vJdFbbhxOxPYvAFASd+yuuSz4dnRsdBOho=
+X-Google-Smtp-Source: AGHT+IG5dXFX4FQjxsHkE+bXQUT7iPYQo4HzyMTeAPhjpUybtl9Gh1ZYex+QjtwhNT1jEV3hOTI02g==
+X-Received: by 2002:a17:907:9805:b0:a68:e681:be2c with SMTP id a640c23a62f3a-a6f52414868mr385966266b.20.1718353456776;
+        Fri, 14 Jun 2024 01:24:16 -0700 (PDT)
+Received: from [192.168.0.18] ([78.10.206.163])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb743adacsm1946396a12.86.2024.06.14.01.24.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 01:24:16 -0700 (PDT)
+Message-ID: <672b6156-e425-4f3b-86f4-02a34cab2b67@linaro.org>
+Date: Fri, 14 Jun 2024 10:24:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5roV/dfZvNvEhY/C"
-Content-Disposition: inline
-In-Reply-To: <20240613191616.2101821-4-jesse@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] soc: qcom: icc-bwmon: Allow for interrupts to be
+ shared across instances
+To: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, djakov@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, srinivas.kandagatla@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+ quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com, conor+dt@kernel.org,
+ dmitry.baryshkov@linaro.org, abel.vesa@linaro.org
+References: <20240604011157.2358019-1-quic_sibis@quicinc.com>
+ <20240604011157.2358019-3-quic_sibis@quicinc.com>
+ <5e5f052b-df59-47fb-aed0-10b4f980f151@linaro.org>
+ <5df5dc6b-872f-34c5-a6d2-a64f9c881193@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <5df5dc6b-872f-34c5-a6d2-a64f9c881193@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---5roV/dfZvNvEhY/C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13/06/2024 19:02, Sibi Sankar wrote:
+> 
+> 
+> On 6/4/24 12:16, Krzysztof Kozlowski wrote:
+>> On 04/06/2024 03:11, Sibi Sankar wrote:
+>>> The multiple BWMONv4 instances available on the X1E80100 SoC use the
+>>> same interrupt number. Mark them are shared to allow for re-use across
+>>> instances.
+> 
+> Hey Krzysztof,
+> 
+> Thanks for taking time to review the series :)
+> 
+>>
+>> Would be nice if you also mention you checked that it is safe to have
+>> both devm and shared interrupts (so you investigated possibility of race
+>> on exit path).
+> 
+> I didn't see any problems with devm being used with SHARED when I posted
+> it out. After your review comments I went back again to vett the exit
+> path for races and ran into an pre-existing splat [1] but the bwmon
+> instances work as expected on module removal/re-insertion.
 
-On Thu, Jun 13, 2024 at 03:16:12PM -0400, Jesse Taube wrote:
-> Originally, the check_unaligned_access_emulated_all_cpus function
-> only checked the boot hart. This fixes the function to check all
-> harts.
+Using devm and shared interrupts is in general sign of possible race
+issues and should be avoided. Just "not seeing problems" is not an
+argument for me, to be honest.
 
-This seems like it should be split out and get a Fixes: tag & a cc:
-stable.
+Best regards,
+Krzysztof
 
-> Check for Zicclsm before checking for unaligned access. This will
-> greatly reduce the boot up time as finding the access speed is no longer
-> necessary.
->=20
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> ---
-> V1 -> V2:
->  - New patch
-> ---
->  arch/riscv/kernel/traps_misaligned.c       | 23 ++++++----------------
->  arch/riscv/kernel/unaligned_access_speed.c | 23 +++++++++++++---------
->  2 files changed, 20 insertions(+), 26 deletions(-)
->=20
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
-ps_misaligned.c
-> index b62d5a2f4541..8fadbe00dd62 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -526,31 +526,17 @@ int handle_misaligned_store(struct pt_regs *regs)
->  	return 0;
->  }
-> =20
-> -static bool check_unaligned_access_emulated(int cpu)
-> +static void check_unaligned_access_emulated(struct work_struct *unused)
->  {
-> +	int cpu =3D smp_processor_id();
->  	long *mas_ptr =3D per_cpu_ptr(&misaligned_access_speed, cpu);
->  	unsigned long tmp_var, tmp_val;
-> -	bool misaligned_emu_detected;
-> =20
->  	*mas_ptr =3D RISCV_HWPROBE_MISALIGNED_UNKNOWN;
-> =20
->  	__asm__ __volatile__ (
->  		"       "REG_L" %[tmp], 1(%[ptr])\n"
->  		: [tmp] "=3Dr" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
-> -
-> -	misaligned_emu_detected =3D (*mas_ptr =3D=3D RISCV_HWPROBE_MISALIGNED_E=
-MULATED);
-> -	/*
-> -	 * If unaligned_ctl is already set, this means that we detected that all
-> -	 * CPUS uses emulated misaligned access at boot time. If that changed
-> -	 * when hotplugging the new cpu, this is something we don't handle.
-> -	 */
-> -	if (unlikely(unaligned_ctl && !misaligned_emu_detected)) {
-> -		pr_crit("CPU misaligned accesses non homogeneous (expected all emulate=
-d)\n");
-> -		while (true)
-> -			cpu_relax();
-> -	}
-> -
-> -	return misaligned_emu_detected;
->  }
-> =20
->  bool check_unaligned_access_emulated_all_cpus(void)
-> @@ -562,8 +548,11 @@ bool check_unaligned_access_emulated_all_cpus(void)
->  	 * accesses emulated since tasks requesting such control can run on any
->  	 * CPU.
->  	 */
-> +	schedule_on_each_cpu(check_unaligned_access_emulated);
-> +
->  	for_each_online_cpu(cpu)
-> -		if (!check_unaligned_access_emulated(cpu))
-> +		if (per_cpu(misaligned_access_speed, cpu)
-> +		    !=3D RISCV_HWPROBE_MISALIGNED_EMULATED)
->  			return false;
-> =20
->  	unaligned_ctl =3D true;
-> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kern=
-el/unaligned_access_speed.c
-> index a9a6bcb02acf..70c1588fc353 100644
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -259,23 +259,28 @@ static int check_unaligned_access_speed_all_cpus(vo=
-id)
->  	kfree(bufs);
->  	return 0;
->  }
-> +#endif /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
-> =20
->  static int check_unaligned_access_all_cpus(void)
->  {
-> -	bool all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
-> +	bool all_cpus_emulated;
-> +	int cpu;
-> =20
-> +	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
-> +		for_each_online_cpu(cpu) {
-> +			per_cpu(misaligned_access_speed, cpu) =3D RISCV_HWPROBE_MISALIGNED_FA=
-ST;
-> +		}
-> +		return 0;
-> +	}
-> +
-> +	all_cpus_emulated =3D check_unaligned_access_emulated_all_cpus();
-> +
-> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
-
-Can we make this an IS_ENABLED() please?
-
-
-Thanks,
-Conor.
-
->  	if (!all_cpus_emulated)
->  		return check_unaligned_access_speed_all_cpus();
-> +#endif
-> =20
->  	return 0;
->  }
-> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
-> -static int check_unaligned_access_all_cpus(void)
-> -{
-> -	check_unaligned_access_emulated_all_cpus();
-> -
-> -	return 0;
-> -}
-> -#endif
-> =20
->  arch_initcall(check_unaligned_access_all_cpus);
-> --=20
-> 2.43.0
->=20
-
---5roV/dfZvNvEhY/C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmv91wAKCRB4tDGHoIJi
-0reHAQDJzCDTih2CT5+8AGBLj1gklSGmS/R+h5QMKj0uL8S0zQEAqTT7zZH5px5I
-8XwHyIp3NfUTa9Qm5JgQqXy58YGrLgQ=
-=jw9t
------END PGP SIGNATURE-----
-
---5roV/dfZvNvEhY/C--
