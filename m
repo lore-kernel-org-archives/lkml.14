@@ -1,64 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837F11A255D;
-	Fri, 14 Jun 2024 17:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F058C16D339;
+	Fri, 14 Jun 2024 17:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386035; cv=none; b=LB9y2n15z7SmrFehKOcYPxppP80DPPMM1n8UN10SDRHPUhFAUGa+kJdkoogi8hcv+iUKOZIvtYlFNXekFnLasWwvFkTqHp1rsA4ryDWz4FNN2Kgmx2BZGi6ri0zvX0derpF98o0mUStMmku0a3zTbPxhF9+Wj7trloHCAKnnH3Q=
+	t=1718386030; cv=none; b=dcB0p52G4Yw7N6EaLQO8oDFMq7MUgaAaX5WfUk2Ac4B4YJRgGkIZ2jzrVG0JpfAyeCt5+iFqudYDlJByhDl003oWEzqu0ol8JiLjJij9EZOBAZkDbt/Egwoc4PPhzehQ7a25n69cUwvLOyortTNwPRrERLNCuZAQTYmZ5RuHjG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386035; c=relaxed/simple;
-	bh=0IGoZqzo9rEGSCy7015k1TcUNKJcD0HZgwQpDPr9KD8=;
+	s=arc-20240116; t=1718386030; c=relaxed/simple;
+	bh=Qym83QXWHPgnkwKEoT7DoFQw4nQ5OEzETOnWuP9HcsY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sD7OtQuKves6Vl4ly/Pj0+9juPuV4NLO8GSgTwXIjGxHLvjYEh/KGSB9kow3FQ+zZbwH5JKICFQ96zmAjhsqEuOKYHHb7cZf0elXITWUde90KcBf5tLxir28vtDMrLkPufLBj/vFwCSQEhuVhFXY1cVL4XN4KIFc/g//PifhOLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=orMDadqo; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=OKPqs5BFNdbk+MfqjoYK6B8yM0qneVTUdR0f2KBrzlg7ABBUfuEhTZSYT7GXbQpojo5s9jl9WlhUwqIG8EToMwYbRMFPzrrENp4qeu/RZ7dodUyFqd6h5jM043cCvCqJ0k6dca824xFoziHxu2E7enKVd9LO82kmkLAoO2utdO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WzvU3Uk3; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="orMDadqo"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EHPZxn023608;
-	Fri, 14 Jun 2024 17:27:04 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WzvU3Uk3"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EHQuwX029703;
+	Fri, 14 Jun 2024 17:26:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=sp2iV4oZwEYct
-	YWhVj8Lyhs0oK1Mn4x+lyvQsY0nELo=; b=orMDadqokfuH7h04IxyVpV+ovc1d7
-	/LQv6pvWD9G3m9QBz1qtLZ34rhSS9J2Vdp+bSDTO/rePETu1tKY8nY1hjveeSAbP
-	ZuoLBtgPbnJ2oQezhVIbQD1Pdv0vV1Um6iIO+TSYz/zwAae6I5TiTu8WFJI1qwnQ
-	i6d/171GjSt+Dw+6XEjpRuMrGyT55EILCsC0bSgaKbXXedjPBeBReRJuqU6UQCVI
-	1IyFYNG3aC0TcxNbyS/BbfazhsBATOZT/oGHF+eqWv3oDU6rTKfeMR0lWN9Igy3Z
-	Jq+/E/Bk08WPwBiIomcopaEbRthoFjAhymHN4OCjAAWtpu7Bmhd0Q+f/Q==
+	:mime-version:content-transfer-encoding; s=pp1; bh=22VSPfHLJCj1Z
+	99y/lF4467dDgjD0DULHeuhYPQKV7Q=; b=WzvU3Uk3lN9REqgVeHRljcQqZ8+g0
+	ivurgdPWZYBhb1Y5gs+nYbqrDOsXaC9qW9VdVtpjvikYJ7Gsk0MiPqmgZ5ZDC/NC
+	HFxksUoypROWp8i1WiIlGLfolllhCH3IZr4laWZGx8zJzmEmO//d/BRbtxnp6jYK
+	XUak6X69gSi97XORiE6hSjULVksdAYm4HVyfglrbnYwknHfK4oXp02Ftb3Fgduav
+	pMuFcp9WXzpKi0yDr7EAmUU3I3lioqLR51cdGG8wYuTdsaY2hQmZmH+HAlvUaNSP
+	xMiE5NxImnwCn9kYZ07BCnAN4g6x4tSaM1D4c6s74j4WvopOxHEBYaOtw==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrsja85f8-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05ks-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:03 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHR3S9025410;
-	Fri, 14 Jun 2024 17:27:03 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrsja85f5-1
+	Fri, 14 Jun 2024 17:26:55 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHQtTC029696;
+	Fri, 14 Jun 2024 17:26:55 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05kp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:03 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EFNfPL023618;
-	Fri, 14 Jun 2024 17:27:02 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3unb3u1-1
+	Fri, 14 Jun 2024 17:26:55 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGjprZ027234;
+	Fri, 14 Jun 2024 17:26:53 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn211kkwn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:27:02 +0000
+	Fri, 14 Jun 2024 17:26:53 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQurK39977446
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQltg32178814
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:26:59 GMT
+	Fri, 14 Jun 2024 17:26:49 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D365720040;
-	Fri, 14 Jun 2024 17:26:56 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 62D502004D;
+	Fri, 14 Jun 2024 17:26:47 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B04320043;
-	Fri, 14 Jun 2024 17:26:54 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8AF6E20043;
+	Fri, 14 Jun 2024 17:26:44 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.82.18])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Jun 2024 17:26:53 +0000 (GMT)
+	Fri, 14 Jun 2024 17:26:44 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
@@ -67,9 +67,9 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [V4 05/16] tools/perf: Add disasm_line__parse to parse raw instruction for powerpc
-Date: Fri, 14 Jun 2024 22:56:20 +0530
-Message-Id: <20240614172631.56803-6-atrajeev@linux.vnet.ibm.com>
+Subject: [V4 02/16] tools/perf: Add "update_insn_state" callback function to handle arch specific instruction tracking
+Date: Fri, 14 Jun 2024 22:56:17 +0530
+Message-Id: <20240614172631.56803-3-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
 References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
@@ -81,232 +81,980 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rJPNiMWofqM4QU3K2zKtY0_TyJ9DKpDc
-X-Proofpoint-GUID: zJryH6yyU5xsi5QjiVDOQzs1d2q0XiL8
+X-Proofpoint-GUID: Bv88AOcTly8h684OXjXHCRHb1dG3EXJd
+X-Proofpoint-ORIG-GUID: iQyMP0zjHCti8lONyTnl2-RyFujG_yQB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 adultscore=0
- clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 adultscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406140119
 
-Currently, the perf tool infrastructure disasm_line__parse function to
-parse disassembled line.
+Add "update_insn_state" callback to "struct arch" to handle instruction
+tracking. Currently updating instruction state is handled by static
+function "update_insn_state_x86" which is defined in "annotate-data.c".
+Make this as a callback for specific arch and move to archs specific
+file "arch/x86/annotate/instructions.c" . This will help to add helper
+function for other platforms in file:
+"arch/<platform>/annotate/instructions.c and make changes/updates
+easier.
 
-Example snippet from objdump:
-objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
-
-c0000000010224b4:	lwz     r10,0(r9)
-
-This line "lwz r10,0(r9)" is parsed to extract instruction name,
-registers names and offset. In powerpc, the approach for data type
-profiling uses raw instruction instead of result from objdump to identify
-the instruction category and extract the source/target registers.
-
-Example: 38 01 81 e8     ld      r4,312(r1)
-
-Here "38 01 81 e8" is the raw instruction representation. Add function
-"disasm_line__parse_powerpc" to handle parsing of raw instruction.
-Also update "struct disasm_line" to save the binary code/
-With the change, function captures:
-
-line -> "38 01 81 e8     ld      r4,312(r1)"
-raw instruction "38 01 81 e8"
-
-Raw instruction is used later to extract the reg/offset fields. Macros
-are added to extract opcode and register fields. "struct disasm_line"
-is updated to carry union of "bytes" and "raw_insn" of 32 bit to carry raw
-code (raw). Function "disasm_line__parse_powerpc fills the raw
-instruction hex value and can use macros to get opcode. There is no
-changes in existing code paths, which parses the disassembled code.
-The architecture using the instruction name and present approach is
-not altered. Since this approach targets powerpc, the macro
-implementation is added for powerpc as of now.
-
-Since the disasm_line__parse is used in other cases (perf annotate) and
-not only data tye profiling, the powerpc callback includes changes to
-work with binary code as well as mneumonic representation. Also in case
-if the DSO read fails and libcapstone is not supported, the approach
-fallback to use objdump as option. Hence as option, patch has changes to
-ensure objdump option also works well.
+Define callback "update_insn_state" as part of "struct arch", also make
+some of the debug functions non-static so that it can be referenced from
+other places.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/include/linux/string.h                  |  2 +
- tools/lib/string.c                            | 13 ++++
- .../perf/arch/powerpc/annotate/instructions.c |  1 +
- tools/perf/arch/powerpc/util/dwarf-regs.c     |  9 +++
- tools/perf/util/annotate.h                    |  5 +-
- tools/perf/util/disasm.c                      | 59 ++++++++++++++++++-
- 6 files changed, 87 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/annotate/instructions.c | 383 +++++++++++++++++++
+ tools/perf/util/annotate-data.c             | 391 +-------------------
+ tools/perf/util/annotate-data.h             |  23 ++
+ tools/perf/util/disasm.c                    |   2 +
+ tools/perf/util/disasm.h                    |   7 +
+ 5 files changed, 423 insertions(+), 383 deletions(-)
 
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index db5c99318c79..0acb1fc14e19 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char *);
- 
- extern char *strim(char *);
- 
-+extern void remove_spaces(char *s);
-+
- extern void *memchr_inv(const void *start, int c, size_t bytes);
- #endif /* _TOOLS_LINUX_STRING_H_ */
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index 8b6892f959ab..3126d2cff716 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -153,6 +153,19 @@ char *strim(char *s)
- 	return skip_spaces(s);
+diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+index 5cdf457f5cbe..715d8ce65f7f 100644
+--- a/tools/perf/arch/x86/annotate/instructions.c
++++ b/tools/perf/arch/x86/annotate/instructions.c
+@@ -206,3 +206,386 @@ static int x86__annotate_init(struct arch *arch, char *cpuid)
+ 	arch->initialized = true;
+ 	return err;
  }
- 
-+/*
-+ * remove_spaces - Removes whitespaces from @s
-+ */
-+void remove_spaces(char *s)
++
++#ifdef HAVE_DWARF_SUPPORT
++static void update_insn_state_x86(struct type_state *state,
++				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
++				  struct disasm_line *dl)
 +{
-+	char *d = s;
++	struct annotated_insn_loc loc;
++	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
++	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
++	struct type_state_reg *tsr;
++	Dwarf_Die type_die;
++	u32 insn_offset = dl->al.offset;
++	int fbreg = dloc->fbreg;
++	int fboff = 0;
 +
-+	do {
-+		while (*d == ' ')
-+			++d;
-+	} while ((*s++ = *d++));
++	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
++		return;
++
++	if (ins__is_call(&dl->ins)) {
++		struct symbol *func = dl->ops.target.sym;
++
++		if (func == NULL)
++			return;
++
++		/* __fentry__ will preserve all registers */
++		if (!strcmp(func->name, "__fentry__"))
++			return;
++
++		pr_debug_dtp("call [%x] %s\n", insn_offset, func->name);
++
++		/* Otherwise invalidate caller-saved registers after call */
++		for (unsigned i = 0; i < ARRAY_SIZE(state->regs); i++) {
++			if (state->regs[i].caller_saved)
++				state->regs[i].ok = false;
++		}
++
++		/* Update register with the return type (if any) */
++		if (die_find_func_rettype(cu_die, func->name, &type_die)) {
++			tsr = &state->regs[state->ret_reg];
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->ok = true;
++
++			pr_debug_dtp("call [%x] return -> reg%d",
++				     insn_offset, state->ret_reg);
++			pr_debug_type_name(&type_die, tsr->kind);
++		}
++		return;
++	}
++
++	if (!strncmp(dl->ins.name, "add", 3)) {
++		u64 imm_value = -1ULL;
++		int offset;
++		const char *var_name = NULL;
++		struct map_symbol *ms = dloc->ms;
++		u64 ip = ms->sym->start + dl->al.offset;
++
++		if (!has_reg_type(state, dst->reg1))
++			return;
++
++		tsr = &state->regs[dst->reg1];
++
++		if (src->imm)
++			imm_value = src->offset;
++		else if (has_reg_type(state, src->reg1) &&
++			 state->regs[src->reg1].kind == TSR_KIND_CONST)
++			imm_value = state->regs[src->reg1].imm_value;
++		else if (src->reg1 == DWARF_REG_PC) {
++			u64 var_addr = annotate_calc_pcrel(dloc->ms, ip,
++							   src->offset, dl);
++
++			if (get_global_var_info(dloc, var_addr,
++						&var_name, &offset) &&
++			    !strcmp(var_name, "this_cpu_off") &&
++			    tsr->kind == TSR_KIND_CONST) {
++				tsr->kind = TSR_KIND_PERCPU_BASE;
++				imm_value = tsr->imm_value;
++			}
++		}
++		else
++			return;
++
++		if (tsr->kind != TSR_KIND_PERCPU_BASE)
++			return;
++
++		if (get_global_var_type(cu_die, dloc, ip, imm_value, &offset,
++					&type_die) && offset == 0) {
++			/*
++			 * This is not a pointer type, but it should be treated
++			 * as a pointer.
++			 */
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_POINTER;
++			tsr->ok = true;
++
++			pr_debug_dtp("add [%x] percpu %#"PRIx64" -> reg%d",
++				     insn_offset, imm_value, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		return;
++	}
++
++	if (strncmp(dl->ins.name, "mov", 3))
++		return;
++
++	if (dloc->fb_cfa) {
++		u64 ip = dloc->ms->sym->start + dl->al.offset;
++		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
++
++		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
++			fbreg = -1;
++	}
++
++	/* Case 1. register to register or segment:offset to register transfers */
++	if (!src->mem_ref && !dst->mem_ref) {
++		if (!has_reg_type(state, dst->reg1))
++			return;
++
++		tsr = &state->regs[dst->reg1];
++		if (dso__kernel(map__dso(dloc->ms->map)) &&
++		    src->segment == INSN_SEG_X86_GS && src->imm) {
++			u64 ip = dloc->ms->sym->start + dl->al.offset;
++			u64 var_addr;
++			int offset;
++
++			/*
++			 * In kernel, %gs points to a per-cpu region for the
++			 * current CPU.  Access with a constant offset should
++			 * be treated as a global variable access.
++			 */
++			var_addr = src->offset;
++
++			if (var_addr == 40) {
++				tsr->kind = TSR_KIND_CANARY;
++				tsr->ok = true;
++
++				pr_debug_dtp("mov [%x] stack canary -> reg%d\n",
++					     insn_offset, dst->reg1);
++				return;
++			}
++
++			if (!get_global_var_type(cu_die, dloc, ip, var_addr,
++						 &offset, &type_die) ||
++			    !die_get_member_type(&type_die, offset, &type_die)) {
++				tsr->ok = false;
++				return;
++			}
++
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->ok = true;
++
++			pr_debug_dtp("mov [%x] this-cpu addr=%#"PRIx64" -> reg%d",
++				     insn_offset, var_addr, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++			return;
++		}
++
++		if (src->imm) {
++			tsr->kind = TSR_KIND_CONST;
++			tsr->imm_value = src->offset;
++			tsr->ok = true;
++
++			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
++				     insn_offset, tsr->imm_value, dst->reg1);
++			return;
++		}
++
++		if (!has_reg_type(state, src->reg1) ||
++		    !state->regs[src->reg1].ok) {
++			tsr->ok = false;
++			return;
++		}
++
++		tsr->type = state->regs[src->reg1].type;
++		tsr->kind = state->regs[src->reg1].kind;
++		tsr->ok = true;
++
++		pr_debug_dtp("mov [%x] reg%d -> reg%d",
++			     insn_offset, src->reg1, dst->reg1);
++		pr_debug_type_name(&tsr->type, tsr->kind);
++	}
++	/* Case 2. memory to register transers */
++	if (src->mem_ref && !dst->mem_ref) {
++		int sreg = src->reg1;
++
++		if (!has_reg_type(state, dst->reg1))
++			return;
++
++		tsr = &state->regs[dst->reg1];
++
++retry:
++		/* Check stack variables with offset */
++		if (sreg == fbreg) {
++			struct type_state_stack *stack;
++			int offset = src->offset - fboff;
++
++			stack = find_stack_state(state, offset);
++			if (stack == NULL) {
++				tsr->ok = false;
++				return;
++			} else if (!stack->compound) {
++				tsr->type = stack->type;
++				tsr->kind = stack->kind;
++				tsr->ok = true;
++			} else if (die_get_member_type(&stack->type,
++						       offset - stack->offset,
++						       &type_die)) {
++				tsr->type = type_die;
++				tsr->kind = TSR_KIND_TYPE;
++				tsr->ok = true;
++			} else {
++				tsr->ok = false;
++				return;
++			}
++
++			pr_debug_dtp("mov [%x] -%#x(stack) -> reg%d",
++				     insn_offset, -offset, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		/* And then dereference the pointer if it has one */
++		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
++			 state->regs[sreg].kind == TSR_KIND_TYPE &&
++			 die_deref_ptr_type(&state->regs[sreg].type,
++					    src->offset, &type_die)) {
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->ok = true;
++
++			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
++				     insn_offset, src->offset, sreg, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		/* Or check if it's a global variable */
++		else if (sreg == DWARF_REG_PC) {
++			struct map_symbol *ms = dloc->ms;
++			u64 ip = ms->sym->start + dl->al.offset;
++			u64 addr;
++			int offset;
++
++			addr = annotate_calc_pcrel(ms, ip, src->offset, dl);
++
++			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
++						 &type_die) ||
++			    !die_get_member_type(&type_die, offset, &type_die)) {
++				tsr->ok = false;
++				return;
++			}
++
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->ok = true;
++
++			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
++				     insn_offset, addr, dst->reg1);
++			pr_debug_type_name(&type_die, tsr->kind);
++		}
++		/* And check percpu access with base register */
++		else if (has_reg_type(state, sreg) &&
++			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
++			u64 ip = dloc->ms->sym->start + dl->al.offset;
++			u64 var_addr = src->offset;
++			int offset;
++
++			if (src->multi_regs) {
++				int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
++
++				if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
++				    state->regs[reg2].kind == TSR_KIND_CONST)
++					var_addr += state->regs[reg2].imm_value;
++			}
++
++			/*
++			 * In kernel, %gs points to a per-cpu region for the
++			 * current CPU.  Access with a constant offset should
++			 * be treated as a global variable access.
++			 */
++			if (get_global_var_type(cu_die, dloc, ip, var_addr,
++						&offset, &type_die) &&
++			    die_get_member_type(&type_die, offset, &type_die)) {
++				tsr->type = type_die;
++				tsr->kind = TSR_KIND_TYPE;
++				tsr->ok = true;
++
++				if (src->multi_regs) {
++					pr_debug_dtp("mov [%x] percpu %#x(reg%d,reg%d) -> reg%d",
++						     insn_offset, src->offset, src->reg1,
++						     src->reg2, dst->reg1);
++				} else {
++					pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
++						     insn_offset, src->offset, sreg, dst->reg1);
++				}
++				pr_debug_type_name(&tsr->type, tsr->kind);
++			} else {
++				tsr->ok = false;
++			}
++		}
++		/* And then dereference the calculated pointer if it has one */
++		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
++			 state->regs[sreg].kind == TSR_KIND_POINTER &&
++			 die_get_member_type(&state->regs[sreg].type,
++					     src->offset, &type_die)) {
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->ok = true;
++
++			pr_debug_dtp("mov [%x] pointer %#x(reg%d) -> reg%d",
++				     insn_offset, src->offset, sreg, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		/* Or try another register if any */
++		else if (src->multi_regs && sreg == src->reg1 &&
++			 src->reg1 != src->reg2) {
++			sreg = src->reg2;
++			goto retry;
++		}
++		else {
++			int offset;
++			const char *var_name = NULL;
++
++			/* it might be per-cpu variable (in kernel) access */
++			if (src->offset < 0) {
++				if (get_global_var_info(dloc, (s64)src->offset,
++							&var_name, &offset) &&
++				    !strcmp(var_name, "__per_cpu_offset")) {
++					tsr->kind = TSR_KIND_PERCPU_BASE;
++
++					pr_debug_dtp("mov [%x] percpu base reg%d\n",
++						     insn_offset, dst->reg1);
++				}
++			}
++
++			tsr->ok = false;
++		}
++	}
++	/* Case 3. register to memory transfers */
++	if (!src->mem_ref && dst->mem_ref) {
++		if (!has_reg_type(state, src->reg1) ||
++		    !state->regs[src->reg1].ok)
++			return;
++
++		/* Check stack variables with offset */
++		if (dst->reg1 == fbreg) {
++			struct type_state_stack *stack;
++			int offset = dst->offset - fboff;
++
++			tsr = &state->regs[src->reg1];
++
++			stack = find_stack_state(state, offset);
++			if (stack) {
++				/*
++				 * The source register is likely to hold a type
++				 * of member if it's a compound type.  Do not
++				 * update the stack variable type since we can
++				 * get the member type later by using the
++				 * die_get_member_type().
++				 */
++				if (!stack->compound)
++					set_stack_state(stack, offset, tsr->kind,
++							&tsr->type);
++			} else {
++				findnew_stack_state(state, offset, tsr->kind,
++						    &tsr->type);
++			}
++
++			pr_debug_dtp("mov [%x] reg%d -> -%#x(stack)",
++				     insn_offset, src->reg1, -offset);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		/*
++		 * Ignore other transfers since it'd set a value in a struct
++		 * and won't change the type.
++		 */
++	}
++	/* Case 4. memory to memory transfers (not handled for now) */
 +}
-+
- /**
-  * strreplace - Replace all occurrences of character in string.
-  * @s: The string to operate on.
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index a3f423c27cae..d57fd023ef9c 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -55,6 +55,7 @@ static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
- 		arch->initialized = true;
- 		arch->associate_instruction_ops = powerpc__associate_instruction_ops;
- 		arch->objdump.comment_char      = '#';
-+		annotate_opts.show_asm_raw = true;
- 	}
++#else /* HAVE_DWARF_SUPPORT */
++static void update_insn_state_x86(struct type_state *state __maybe_unused, struct data_loc_info *dloc __maybe_unused,
++		Dwarf_Die * cu_die __maybe_unused, struct disasm_line *dl __maybe_unused)
++{
++	return;
++}
++#endif
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index a4c7f98a75e3..7a48c3d72b89 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -39,7 +39,7 @@ do {								\
+ 		pr_debug3(fmt, ##__VA_ARGS__);			\
+ } while (0)
  
+-static void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
++void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ {
+ 	struct strbuf sb;
+ 	char *str;
+@@ -390,7 +390,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
  	return 0;
-diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/powerpc/util/dwarf-regs.c
-index 0c4f4caf53ac..430623ca5612 100644
---- a/tools/perf/arch/powerpc/util/dwarf-regs.c
-+++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
-@@ -98,3 +98,12 @@ int regs_query_register_offset(const char *name)
- 			return roff->ptregs_offset;
- 	return -EINVAL;
  }
-+
-+#define PPC_OP(op)	(((op) >> 26) & 0x3F)
-+#define PPC_RA(a)	(((a) >> 16) & 0x1f)
-+#define PPC_RT(t)	(((t) >> 21) & 0x1f)
-+#define PPC_RB(b)	(((b) >> 11) & 0x1f)
-+#define PPC_D(D)	((D) & 0xfffe)
-+#define PPC_DS(DS)	((DS) & 0xfffc)
-+#define OP_LD	58
-+#define OP_STD	62
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index d5c821c22f79..9ba772f46270 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -113,7 +113,10 @@ struct annotation_line {
- struct disasm_line {
- 	struct ins		 ins;
- 	struct ins_operands	 ops;
+ 
+-static struct type_state_stack *find_stack_state(struct type_state *state,
++struct type_state_stack *find_stack_state(struct type_state *state,
+ 						 int offset)
+ {
+ 	struct type_state_stack *stack;
+@@ -406,7 +406,7 @@ static struct type_state_stack *find_stack_state(struct type_state *state,
+ 	return NULL;
+ }
+ 
+-static void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
++void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+ 			    Dwarf_Die *type_die)
+ {
+ 	int tag;
+@@ -433,7 +433,7 @@ static void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+ 	}
+ }
+ 
+-static struct type_state_stack *findnew_stack_state(struct type_state *state,
++struct type_state_stack *findnew_stack_state(struct type_state *state,
+ 						    int offset, u8 kind,
+ 						    Dwarf_Die *type_die)
+ {
+@@ -537,7 +537,7 @@ void global_var_type__tree_delete(struct rb_root *root)
+ 	}
+ }
+ 
+-static bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
++bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
+ 				const char **var_name, int *var_offset)
+ {
+ 	struct addr_location al;
+@@ -611,7 +611,7 @@ static void global_var__collect(struct data_loc_info *dloc)
+ 	}
+ }
+ 
+-static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
++bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+ 				u64 ip, u64 var_addr, int *var_offset,
+ 				Dwarf_Die *type_die)
+ {
+@@ -722,381 +722,6 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+ 	}
+ }
+ 
+-static void update_insn_state_x86(struct type_state *state,
+-				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+-				  struct disasm_line *dl)
+-{
+-	struct annotated_insn_loc loc;
+-	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
+-	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
+-	struct type_state_reg *tsr;
+-	Dwarf_Die type_die;
+-	u32 insn_offset = dl->al.offset;
+-	int fbreg = dloc->fbreg;
+-	int fboff = 0;
 -
-+	union {
-+		u8 bytes[4];
-+		u32 raw_insn;
-+	} raw;
- 	/* This needs to be at the end. */
- 	struct annotation_line	 al;
- };
+-	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+-		return;
+-
+-	if (ins__is_call(&dl->ins)) {
+-		struct symbol *func = dl->ops.target.sym;
+-
+-		if (func == NULL)
+-			return;
+-
+-		/* __fentry__ will preserve all registers */
+-		if (!strcmp(func->name, "__fentry__"))
+-			return;
+-
+-		pr_debug_dtp("call [%x] %s\n", insn_offset, func->name);
+-
+-		/* Otherwise invalidate caller-saved registers after call */
+-		for (unsigned i = 0; i < ARRAY_SIZE(state->regs); i++) {
+-			if (state->regs[i].caller_saved)
+-				state->regs[i].ok = false;
+-		}
+-
+-		/* Update register with the return type (if any) */
+-		if (die_find_func_rettype(cu_die, func->name, &type_die)) {
+-			tsr = &state->regs[state->ret_reg];
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("call [%x] return -> reg%d",
+-				     insn_offset, state->ret_reg);
+-			pr_debug_type_name(&type_die, tsr->kind);
+-		}
+-		return;
+-	}
+-
+-	if (!strncmp(dl->ins.name, "add", 3)) {
+-		u64 imm_value = -1ULL;
+-		int offset;
+-		const char *var_name = NULL;
+-		struct map_symbol *ms = dloc->ms;
+-		u64 ip = ms->sym->start + dl->al.offset;
+-
+-		if (!has_reg_type(state, dst->reg1))
+-			return;
+-
+-		tsr = &state->regs[dst->reg1];
+-
+-		if (src->imm)
+-			imm_value = src->offset;
+-		else if (has_reg_type(state, src->reg1) &&
+-			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+-			imm_value = state->regs[src->reg1].imm_value;
+-		else if (src->reg1 == DWARF_REG_PC) {
+-			u64 var_addr = annotate_calc_pcrel(dloc->ms, ip,
+-							   src->offset, dl);
+-
+-			if (get_global_var_info(dloc, var_addr,
+-						&var_name, &offset) &&
+-			    !strcmp(var_name, "this_cpu_off") &&
+-			    tsr->kind == TSR_KIND_CONST) {
+-				tsr->kind = TSR_KIND_PERCPU_BASE;
+-				imm_value = tsr->imm_value;
+-			}
+-		}
+-		else
+-			return;
+-
+-		if (tsr->kind != TSR_KIND_PERCPU_BASE)
+-			return;
+-
+-		if (get_global_var_type(cu_die, dloc, ip, imm_value, &offset,
+-					&type_die) && offset == 0) {
+-			/*
+-			 * This is not a pointer type, but it should be treated
+-			 * as a pointer.
+-			 */
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_POINTER;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("add [%x] percpu %#"PRIx64" -> reg%d",
+-				     insn_offset, imm_value, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-		}
+-		return;
+-	}
+-
+-	if (strncmp(dl->ins.name, "mov", 3))
+-		return;
+-
+-	if (dloc->fb_cfa) {
+-		u64 ip = dloc->ms->sym->start + dl->al.offset;
+-		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+-
+-		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+-			fbreg = -1;
+-	}
+-
+-	/* Case 1. register to register or segment:offset to register transfers */
+-	if (!src->mem_ref && !dst->mem_ref) {
+-		if (!has_reg_type(state, dst->reg1))
+-			return;
+-
+-		tsr = &state->regs[dst->reg1];
+-		if (dso__kernel(map__dso(dloc->ms->map)) &&
+-		    src->segment == INSN_SEG_X86_GS && src->imm) {
+-			u64 ip = dloc->ms->sym->start + dl->al.offset;
+-			u64 var_addr;
+-			int offset;
+-
+-			/*
+-			 * In kernel, %gs points to a per-cpu region for the
+-			 * current CPU.  Access with a constant offset should
+-			 * be treated as a global variable access.
+-			 */
+-			var_addr = src->offset;
+-
+-			if (var_addr == 40) {
+-				tsr->kind = TSR_KIND_CANARY;
+-				tsr->ok = true;
+-
+-				pr_debug_dtp("mov [%x] stack canary -> reg%d\n",
+-					     insn_offset, dst->reg1);
+-				return;
+-			}
+-
+-			if (!get_global_var_type(cu_die, dloc, ip, var_addr,
+-						 &offset, &type_die) ||
+-			    !die_get_member_type(&type_die, offset, &type_die)) {
+-				tsr->ok = false;
+-				return;
+-			}
+-
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("mov [%x] this-cpu addr=%#"PRIx64" -> reg%d",
+-				     insn_offset, var_addr, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-			return;
+-		}
+-
+-		if (src->imm) {
+-			tsr->kind = TSR_KIND_CONST;
+-			tsr->imm_value = src->offset;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
+-				     insn_offset, tsr->imm_value, dst->reg1);
+-			return;
+-		}
+-
+-		if (!has_reg_type(state, src->reg1) ||
+-		    !state->regs[src->reg1].ok) {
+-			tsr->ok = false;
+-			return;
+-		}
+-
+-		tsr->type = state->regs[src->reg1].type;
+-		tsr->kind = state->regs[src->reg1].kind;
+-		tsr->ok = true;
+-
+-		pr_debug_dtp("mov [%x] reg%d -> reg%d",
+-			     insn_offset, src->reg1, dst->reg1);
+-		pr_debug_type_name(&tsr->type, tsr->kind);
+-	}
+-	/* Case 2. memory to register transers */
+-	if (src->mem_ref && !dst->mem_ref) {
+-		int sreg = src->reg1;
+-
+-		if (!has_reg_type(state, dst->reg1))
+-			return;
+-
+-		tsr = &state->regs[dst->reg1];
+-
+-retry:
+-		/* Check stack variables with offset */
+-		if (sreg == fbreg) {
+-			struct type_state_stack *stack;
+-			int offset = src->offset - fboff;
+-
+-			stack = find_stack_state(state, offset);
+-			if (stack == NULL) {
+-				tsr->ok = false;
+-				return;
+-			} else if (!stack->compound) {
+-				tsr->type = stack->type;
+-				tsr->kind = stack->kind;
+-				tsr->ok = true;
+-			} else if (die_get_member_type(&stack->type,
+-						       offset - stack->offset,
+-						       &type_die)) {
+-				tsr->type = type_die;
+-				tsr->kind = TSR_KIND_TYPE;
+-				tsr->ok = true;
+-			} else {
+-				tsr->ok = false;
+-				return;
+-			}
+-
+-			pr_debug_dtp("mov [%x] -%#x(stack) -> reg%d",
+-				     insn_offset, -offset, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-		}
+-		/* And then dereference the pointer if it has one */
+-		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+-			 state->regs[sreg].kind == TSR_KIND_TYPE &&
+-			 die_deref_ptr_type(&state->regs[sreg].type,
+-					    src->offset, &type_die)) {
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
+-				     insn_offset, src->offset, sreg, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-		}
+-		/* Or check if it's a global variable */
+-		else if (sreg == DWARF_REG_PC) {
+-			struct map_symbol *ms = dloc->ms;
+-			u64 ip = ms->sym->start + dl->al.offset;
+-			u64 addr;
+-			int offset;
+-
+-			addr = annotate_calc_pcrel(ms, ip, src->offset, dl);
+-
+-			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
+-						 &type_die) ||
+-			    !die_get_member_type(&type_die, offset, &type_die)) {
+-				tsr->ok = false;
+-				return;
+-			}
+-
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
+-				     insn_offset, addr, dst->reg1);
+-			pr_debug_type_name(&type_die, tsr->kind);
+-		}
+-		/* And check percpu access with base register */
+-		else if (has_reg_type(state, sreg) &&
+-			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
+-			u64 ip = dloc->ms->sym->start + dl->al.offset;
+-			u64 var_addr = src->offset;
+-			int offset;
+-
+-			if (src->multi_regs) {
+-				int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
+-
+-				if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
+-				    state->regs[reg2].kind == TSR_KIND_CONST)
+-					var_addr += state->regs[reg2].imm_value;
+-			}
+-
+-			/*
+-			 * In kernel, %gs points to a per-cpu region for the
+-			 * current CPU.  Access with a constant offset should
+-			 * be treated as a global variable access.
+-			 */
+-			if (get_global_var_type(cu_die, dloc, ip, var_addr,
+-						&offset, &type_die) &&
+-			    die_get_member_type(&type_die, offset, &type_die)) {
+-				tsr->type = type_die;
+-				tsr->kind = TSR_KIND_TYPE;
+-				tsr->ok = true;
+-
+-				if (src->multi_regs) {
+-					pr_debug_dtp("mov [%x] percpu %#x(reg%d,reg%d) -> reg%d",
+-						     insn_offset, src->offset, src->reg1,
+-						     src->reg2, dst->reg1);
+-				} else {
+-					pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
+-						     insn_offset, src->offset, sreg, dst->reg1);
+-				}
+-				pr_debug_type_name(&tsr->type, tsr->kind);
+-			} else {
+-				tsr->ok = false;
+-			}
+-		}
+-		/* And then dereference the calculated pointer if it has one */
+-		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+-			 state->regs[sreg].kind == TSR_KIND_POINTER &&
+-			 die_get_member_type(&state->regs[sreg].type,
+-					     src->offset, &type_die)) {
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->ok = true;
+-
+-			pr_debug_dtp("mov [%x] pointer %#x(reg%d) -> reg%d",
+-				     insn_offset, src->offset, sreg, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-		}
+-		/* Or try another register if any */
+-		else if (src->multi_regs && sreg == src->reg1 &&
+-			 src->reg1 != src->reg2) {
+-			sreg = src->reg2;
+-			goto retry;
+-		}
+-		else {
+-			int offset;
+-			const char *var_name = NULL;
+-
+-			/* it might be per-cpu variable (in kernel) access */
+-			if (src->offset < 0) {
+-				if (get_global_var_info(dloc, (s64)src->offset,
+-							&var_name, &offset) &&
+-				    !strcmp(var_name, "__per_cpu_offset")) {
+-					tsr->kind = TSR_KIND_PERCPU_BASE;
+-
+-					pr_debug_dtp("mov [%x] percpu base reg%d\n",
+-						     insn_offset, dst->reg1);
+-				}
+-			}
+-
+-			tsr->ok = false;
+-		}
+-	}
+-	/* Case 3. register to memory transfers */
+-	if (!src->mem_ref && dst->mem_ref) {
+-		if (!has_reg_type(state, src->reg1) ||
+-		    !state->regs[src->reg1].ok)
+-			return;
+-
+-		/* Check stack variables with offset */
+-		if (dst->reg1 == fbreg) {
+-			struct type_state_stack *stack;
+-			int offset = dst->offset - fboff;
+-
+-			tsr = &state->regs[src->reg1];
+-
+-			stack = find_stack_state(state, offset);
+-			if (stack) {
+-				/*
+-				 * The source register is likely to hold a type
+-				 * of member if it's a compound type.  Do not
+-				 * update the stack variable type since we can
+-				 * get the member type later by using the
+-				 * die_get_member_type().
+-				 */
+-				if (!stack->compound)
+-					set_stack_state(stack, offset, tsr->kind,
+-							&tsr->type);
+-			} else {
+-				findnew_stack_state(state, offset, tsr->kind,
+-						    &tsr->type);
+-			}
+-
+-			pr_debug_dtp("mov [%x] reg%d -> -%#x(stack)",
+-				     insn_offset, src->reg1, -offset);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
+-		}
+-		/*
+-		 * Ignore other transfers since it'd set a value in a struct
+-		 * and won't change the type.
+-		 */
+-	}
+-	/* Case 4. memory to memory transfers (not handled for now) */
+-}
+-
+ /**
+  * update_insn_state - Update type state for an instruction
+  * @state: type state table
+@@ -1115,8 +740,8 @@ static void update_insn_state_x86(struct type_state *state,
+ static void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
+ 			      Dwarf_Die *cu_die, struct disasm_line *dl)
+ {
+-	if (arch__is(dloc->arch, "x86"))
+-		update_insn_state_x86(state, dloc, cu_die, dl);
++	if (dloc->arch->update_insn_state)
++		dloc->arch->update_insn_state(state, dloc, cu_die, dl);
+ }
+ 
+ /*
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index ef235b1b15e1..2bc870e61c74 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -7,6 +7,7 @@
+ #include <linux/rbtree.h>
+ #include <linux/types.h>
+ #include "dwarf-aux.h"
++#include "dwarf-regs.h"
+ #include "annotate.h"
+ #include "debuginfo.h"
+ 
+@@ -18,6 +19,14 @@ struct hist_entry;
+ struct map_symbol;
+ struct thread;
+ 
++#define pr_debug_dtp(fmt, ...)					\
++do {								\
++	if (debug_type_profile)					\
++		pr_info(fmt, ##__VA_ARGS__);			\
++	else							\
++		pr_debug3(fmt, ##__VA_ARGS__);			\
++} while (0)
++
+ enum type_state_kind {
+ 	TSR_KIND_INVALID = 0,
+ 	TSR_KIND_TYPE,
+@@ -215,6 +224,20 @@ void global_var_type__tree_delete(struct rb_root *root);
+ int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+ 
+ bool has_reg_type(struct type_state *state, int reg);
++struct type_state_stack *findnew_stack_state(struct type_state *state,
++						int offset, u8 kind,
++						Dwarf_Die *type_die);
++void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
++				Dwarf_Die *type_die);
++struct type_state_stack *find_stack_state(struct type_state *state,
++						int offset);
++bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
++				u64 ip, u64 var_addr, int *var_offset,
++				Dwarf_Die *type_die);
++bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
++				const char **var_name, int *var_offset);
++void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind);
++
+ #else /* HAVE_DWARF_SUPPORT */
+ 
+ static inline struct annotated_data_type *
 diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index b81cdcf4d6b4..1e8568738b38 100644
+index 72aec8f61b94..b5fe3a7508bb 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -45,6 +45,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+@@ -12,6 +12,7 @@
+ #include <subcmd/run-command.h>
  
- static void ins__sort(struct arch *arch);
- static int disasm_line__parse(char *line, const char **namep, char **rawp);
-+static int disasm_line__parse_powerpc(struct disasm_line *dl);
+ #include "annotate.h"
++#include "annotate-data.h"
+ #include "build-id.h"
+ #include "debug.h"
+ #include "disasm.h"
+@@ -145,6 +146,7 @@ static struct arch architectures[] = {
+ 			.memory_ref_char = '(',
+ 			.imm_char = '$',
+ 		},
++		.update_insn_state = update_insn_state_x86,
+ 	},
+ 	{
+ 		.name = "powerpc",
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index 3d381a043520..718177fa4775 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -3,12 +3,16 @@
+ #define __PERF_UTIL_DISASM_H
  
- static __attribute__((constructor)) void symbol__init_regexpr(void)
- {
-@@ -844,6 +845,59 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 	return -1;
- }
+ #include "map_symbol.h"
++#include "dwarf-aux.h"
  
-+/*
-+ * Parses the result captured from symbol__disassemble_*
-+ * Example, line read from DSO file in powerpc:
-+ * line:    38 01 81 e8
-+ * opcode: fetched from arch specific get_opcode_insn
-+ * rawp_insn: e8810138
-+ *
-+ * rawp_insn is used later to extract the reg/offset fields
-+ */
-+#define	PPC_OP(op)	(((op) >> 26) & 0x3F)
-+
-+static int disasm_line__parse_powerpc(struct disasm_line *dl)
-+{
-+	char *line = dl->al.line;
-+	const char **namep = &dl->ins.name;
-+	char **rawp = &dl->ops.raw;
-+	char tmp, *tmp_raw_insn, *name_raw_insn = skip_spaces(line);
-+	char *name = skip_spaces(name_raw_insn + 11);
-+	int objdump = 0;
-+
-+	if (strlen(line) > 11)
-+		objdump = 1;
-+
-+	if (name_raw_insn[0] == '\0')
-+		return -1;
-+
-+	if (objdump) {
-+		*rawp = name + 1;
-+		while ((*rawp)[0] != '\0' && !isspace((*rawp)[0]))
-+			++*rawp;
-+		tmp = (*rawp)[0];
-+		(*rawp)[0] = '\0';
-+
-+		*namep = strdup(name);
-+		if (*namep == NULL)
-+			return -1;
-+
-+		(*rawp)[0] = tmp;
-+		*rawp = strim(*rawp);
-+	} else
-+		*namep = "";
-+
-+	tmp_raw_insn = strdup(name_raw_insn);
-+	tmp_raw_insn[11] = '\0';
-+	remove_spaces(tmp_raw_insn);
-+
-+	dl->raw.raw_insn = strtol(tmp_raw_insn, NULL, 16);
-+	if (objdump)
-+		dl->raw.raw_insn = be32_to_cpu(strtol(tmp_raw_insn, NULL, 16));
-+
-+	return 0;
-+}
-+
- static void annotation_line__init(struct annotation_line *al,
- 				  struct annotate_args *args,
- 				  int nr)
-@@ -897,7 +951,10 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
- 		goto out_delete;
+ struct annotation_options;
+ struct disasm_line;
+ struct ins;
+ struct evsel;
+ struct symbol;
++struct data_loc_info;
++struct type_state;
++struct disasm_line;
  
- 	if (args->offset != -1) {
--		if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
-+		if (arch__is(args->arch, "powerpc")) {
-+			if (disasm_line__parse_powerpc(dl) < 0)
-+				goto out_free_line;
-+		} else if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
- 			goto out_free_line;
+ struct arch {
+ 	const char	*name;
+@@ -32,6 +36,9 @@ struct arch {
+ 		char memory_ref_char;
+ 		char imm_char;
+ 	} objdump;
++	void		(*update_insn_state)(struct type_state *state,
++				struct data_loc_info *dloc, Dwarf_Die *cu_die,
++				struct disasm_line *dl);
+ };
  
- 		disasm_line__init_ins(dl, args->arch, &args->ms);
+ struct ins {
 -- 
 2.43.0
 
