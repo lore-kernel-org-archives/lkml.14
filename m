@@ -1,25 +1,39 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C70017BBF
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 13:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D5119D8A7;
+	Fri, 14 Jun 2024 14:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718373591; cv=none; b=tKATzyfQfD1m3Qh3b0mhGMltD8AqfokLwJGdP4UF0VvjzTL+8J1Ng517Pde5TqPHKLNKqpQ3WgjDjKlnGe6Isneg8Rdr0GXZd+4iRXYVvUZkp6lVp2SPAQsgy4sPFRcfFeVy24ksiRLjQekN6ZBkYugO1uVMKpCme5hGH3LBNF0=
+	t=1718373643; cv=none; b=q7dZUfhD/16jhNuszdQDJZK51lJQTzx4cyCwEbAJLEU458OBl1ivNwLOoKdsjE1r+JIphqCM7jod66P0dqSffDxEom2d+gI0LxclVc2N96g1Snto7KNJr4Dob7CL4/6Ws7T49XBmEmPM7b+zGaWpyVoZZhSbMARp0fwr2LmdTKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718373591; c=relaxed/simple;
-	bh=eSL6R6gPnLa90fKl76Z8ZljcuJVJNJ3a2a05sj7PkaY=;
+	s=arc-20240116; t=1718373643; c=relaxed/simple;
+	bh=N3ena08kJ6d6XrNJnJXjlULm5ttbXBgY0ikmHO0V7LI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=evtWxABk5ejBghKI8LiJOv//NNEevOB+eQGXvhL6Z44gK6DJdGPv2wb2eRgRfW3MFdbQ088kQMRRYMtZd4MDZtY2jeY2lQ6eXi2RjdMqlw2BR/Du2apX9/xWGNYshX+aqKa+Ja5F+CQZ2VJmEuqg0LPd9aweSM7NIK7c01kz2iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93317FEC;
-	Fri, 14 Jun 2024 07:00:13 -0700 (PDT)
-Received: from [10.1.196.28] (eglon.cambridge.arm.com [10.1.196.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28AE43F8A4;
-	Fri, 14 Jun 2024 06:59:45 -0700 (PDT)
-Message-ID: <62d59c45-c154-43ed-86ad-c2d2461054b6@arm.com>
-Date: Fri, 14 Jun 2024 14:59:43 +0100
+	 In-Reply-To:Content-Type; b=Bkx8YCaQpKEtC86aFHFMxYs365kwyXnt8OO44fXj5Cjpu8LuHR8IJm0fr94m5D2yKZXADmcQPey7JLA7I+TLxgozMgmvjCGb385KaVxSG0tZmnyCWLEMEz//nnejLcD791/kt2LoLKctiAt3gMnKvCBOcFtXuQQpkjN0zag8vVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=a3kZRRhg; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="a3kZRRhg"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 5DB35889EC;
+	Fri, 14 Jun 2024 16:00:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718373639;
+	bh=4+DN2i7csqmQcAXLvxkcKDrBrfSZbHHe/kZgUCJhXOI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a3kZRRhgOmNtheXARqqNagHPCshPBM7Gz0hWk44rNgmGJlEMoFnH7r83Jhr+nfyHa
+	 +RfsmHIroQ9Y9DcPkjHBv76qG5f5IFQGAPoKMVHvhZPsiDhfryxIZt7pvPuB3GTLMO
+	 +kve1Jlc30+9GuSIjpVPs8P8jaY44ux3jDEd28AtpiJosO+USCOBJq+KVwsBsaU5mP
+	 tkgTYMenPeVEkEoQy+jaXecH80U3DZF0ZoI3ALacht9er/PL9lzHYnyRRrx0jAv9LG
+	 moYl3iGrflhI4xX9uy8GuZBrnbhLQ3E25o8eMDY9wXh8HIIdQIJ7SyNC/GHiDuQI+P
+	 Zr0kEUDFKa9XQ==
+Message-ID: <d7006e54-c0e8-445c-a589-9674235913a6@denx.de>
+Date: Fri, 14 Jun 2024 15:53:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,71 +41,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 31/31] x86/resctrl: Move the resctrl filesystem code to
- /fs/resctrl
-Content-Language: en-GB
-To: Dave Martin <Dave.Martin@arm.com>, "Moger, Babu" <babu.moger@amd.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-32-james.morse@arm.com>
- <99ac181d-d93c-4b11-84aa-48953d9eb5a3@amd.com>
- <Zh/gA29yEpbinEPh@e133380.arm.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <Zh/gA29yEpbinEPh@e133380.arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [net-next,PATCH 1/2] dt-bindings: net: add STM32MP25 compatible
+ in documentation for stm32
+To: Christophe Roullier <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
+ <20240614130812.72425-2-christophe.roullier@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240614130812.72425-2-christophe.roullier@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Hi Babu,
-
-On 17/04/2024 15:43, Dave Martin wrote:
-> On Mon, Apr 15, 2024 at 03:44:48PM -0500, Moger, Babu wrote:
->> James/Dave,
->> This is a huge change. Can this be broken into multiple patches?
->> It will be a major task in case we need to bisect to pinpoint any issues
->> later.
-
-> I guess this might be possible, though when moving groups of static
-> functions around that refer to each other it might be more trouble than
-> it is worth.
+On 6/14/24 3:08 PM, Christophe Roullier wrote:
+> New STM32 SOC have 2 GMACs instances.
+> GMAC IP version is SNPS 5.30
 > 
-> I'll need to discuss with James.
+> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+> ---
+>   Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> Either way, I think this patch will need to rebuilt when spinning v2 of
-> this series.  I've been rebasing it by hand, which is not exactly
-> foolproof!
-> 
-> It ought to be possible to break this up into one patch per affected .c
-> file at least, if people feel that it is worthwhile.
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> index f6e5e0626a3f..d087d8eaea12 100644
+> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> @@ -23,12 +23,17 @@ select:
+>             - st,stm32-dwmac
+>             - st,stm32mp1-dwmac
+>             - st,stm32mp13-dwmac
+> +          - st,stm32mp25-dwmac
+>     required:
+>       - compatible
+>   
+>   properties:
+>     compatible:
+>       oneOf:
+> +      - items:
+> +          - enum:
+> +              - st,stm32mp25-dwmac
+> +          - const: snps,dwmac-5.20
+>         - items:
+>             - enum:
+>                 - st,stm32mp1-dwmac
+> @@ -121,6 +126,7 @@ allOf:
+>           compatible:
+>             contains:
+>               enum:
+> +              - st,stm32mp25-dwmac
+>                 - st,stm32mp1-dwmac
+>                 - st,stm32-dwmac
 
-That is how I keep it in my tree - but the intermediate entries don't build, so its only
-useful for keeping my sanity.
-
-I don't think the intermediate points are useful, it would be better to spend the time
-generating confidence that this thing doesn't introduce any functional changes - if it
-does, it should be reverted.
-
-To that end:
-So far I've done this by hand, but recently cooked a python script to generate this. I'll
-include this in the next version instead. Hopefully this is a better way do demonstrate
-'nothing up my sleeve' - it certainly makes it easier to regenerate this after other
-series have been merged.
-
-Obviously I'm not expecting this to be merged as is - as suggested in the cover letter we
-need to find a least disruptive moment.
-
-
-Thanks,
-
-James
+Keep the list sorted please.
