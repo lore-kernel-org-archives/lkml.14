@@ -1,62 +1,51 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from msa.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9E315FA87
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41E36FCB;
+	Fri, 14 Jun 2024 16:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381312; cv=none; b=BqlhTM5wNbtTTGIITLohgyfwq7aDD7vXJCiMotSXyVXJLkDi6VdW4Ecr8DxsVxPlLy7m0XTL8DczjxJvn0xQ4dGIt3QlYtEzgCeswcqfoOcUkjvVS8OM2ZC50/gwKA0ccTxCCspkusp6yDMfVQmVkjKrUA3GZqzRfEF7IF4rb7I=
+	t=1718381328; cv=none; b=J9Jb3b1+zzNgCnr3dGQfmhGsdYA9tiTZaBwbUgCZIj8BjrTc4lmXp7Sb3VGWjy4/gpFTvcUzMr4k4qkXqvX8SWvEdp9vMSw+RNzwcNBaqz0Z7lETF0dB/NZQtcjPak3ePMHHemtayGMO7vbjw9aKJb6EGLcyLG9Eht+B8epT93E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381312; c=relaxed/simple;
-	bh=6M2PqV/7h/kVPTerbxqLHrAdQOpFIkjlO3ANv87ZX/w=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=IrG0JV2Kz6RKjwgM9VJ5BDGX108BEw4QSQpBX4HIm89kBhyuAFA9GigZLewZ0njuUhfBEK4RQabcCKb5bjsN90FUdxcLptPw3EgTPSEpIFBiimthvkGsMRPFgflh9jos+H5JTQc0DG7CI714367453jsp2sZzxzoCAgarWAHRgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=LVCnsRnU; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+	s=arc-20240116; t=1718381328; c=relaxed/simple;
+	bh=R8H8MXJyPb1YM2V92M76ao7oPk/gsYPlvbPUU2JSefY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K8a5pf1y9rmuisSYnqYc2TSWyDXuTZuwqOBT89iD0Gj4sQwVkGYLroHrEHWvEsqJfFngi+EaV2AwmcOkVyEEHbBme2ATyWeNE1vtUsXsDMLrkeFy+AerbiQD33ji9hXpYGzOYspTvj1iHIlLJQjsAiVRuJGAU19+4QucueYzQcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=mfApwInj; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="LVCnsRnU"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c2c6277ef3so1995894a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 09:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1718381308; x=1718986108; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcJeTxiX3WM8uQrCcDSKPApG5QEh6G1KM14LKw9t1aU=;
-        b=LVCnsRnU/lyKetP1Xer6Ea40j/kbMTaBWHXcPj0S2Zz9Z5sDCfruAuF6/q+088IuMP
-         +B55/i4wc4I/CluMlzIxWYMfF2jb3PDwni1CyT/CxUFd+fACigDFDwHcUCvwjcBMSDyu
-         0vHXWEjByE7gSrCZlmnhukqD6ucFEg9fCwK/v1MXrWd8tHatuRFmKAywDBhL98Ffjsmw
-         wQ5dto40VrAVvcdIgZJUBea7ibx5mqDlQY8H8uu0mA1Q8yGWjEkfTwCn/vWbX/uMRQP9
-         epUT18CAnynL8DCe9I4UhC9KnfnzD+bQ77X7B3qc+CMd/mmnn2XWSxcqxR4Oq1kPdto+
-         PSaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718381308; x=1718986108;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcJeTxiX3WM8uQrCcDSKPApG5QEh6G1KM14LKw9t1aU=;
-        b=pFLKB+OW+9noafQH1rsURoLs1njxm+lz4T6BjcpUbjM99DtF+qe5gACKxq/OQkIYq3
-         ClIPxG9/VbIcbDvhP4tGX82kRgMa2y96de3aqFki3gBwB9V7V44WtJBUhb7yk6VNkO0w
-         Rwn5mRl+yc1rjrVeuw+V3+PYCGNa6YWL+PS2gW40x4B5Cs+rG0vf48PEGYXv+0SNGkl6
-         ipIsE0Gy1nalbUVzME7xueAvVFo5wgZWcEt+ZOCgzFEDvNkRAjBBmKDHX79lGsMf8SUr
-         BLSyk359WL65sSEIqkhIYyBWEgA5Yr/efpa0iBcy4VvvWfOgy1cLOuprBZOlhEZYTs4T
-         XXNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYNPVO4UZ4cxDAY6z83uiNyeIC3r31s8EN+Jm5hpfEJi+pPIBcsHTRFFSrBznPIn9QMOVhePGxZeoBrq64WAztKaqQYKSKChWcfOuc
-X-Gm-Message-State: AOJu0YzSLueO6sowZpM24Sm6MUDF4Z5FJHqjrqo+8xngDFqhLFn1ULpC
-	KMOcGMd11UsqWVa3y2856ZaCg7CfInlhszBNPacRBx7tDfaLje39h9y8amJo6NQ=
-X-Google-Smtp-Source: AGHT+IFIgJB6vSmQN+lPIqYX2cO2RPgLhz5hQGek745gmjSMFGXi8hF8p8rCTTHAAuT6SC+VFGSrQw==
-X-Received: by 2002:a17:90b:8d5:b0:2c2:db95:80be with SMTP id 98e67ed59e1d1-2c4dc0288b7mr3311560a91.42.1718381307636;
-        Fri, 14 Jun 2024 09:08:27 -0700 (PDT)
-Received: from localhost.localdomain.cc (vps-bd302c4a.vps.ovh.ca. [15.235.142.94])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4a75d1d40sm6333532a91.9.2024.06.14.09.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 09:08:26 -0700 (PDT)
-From: Li Feng <fengli@smartx.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] scsi: sd: Keep the discard mode stable
-Date: Sat, 15 Jun 2024 00:03:47 +0800
-Message-ID: <20240614160350.180490-1-fengli@smartx.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="mfApwInj"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id I9TgsKvp3tf3yI9TgsiObM; Fri, 14 Jun 2024 18:08:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718381317;
+	bh=iew86RGc22LJ+Q/8TMphmmkcMzmxkXz0kaXfqIW+KKw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=mfApwInjnFPbwpLRxOXdkb6DU8ITDBwhgC7xAdU65yUWLf8jt/8jrF4FFTIDcY2th
+	 iEaahGn2BBaAUi/aQs9YoQcdVURdTzssWNlwOQsZ+ipTuXHMZYiNHEb5C5tkqoaWaI
+	 Kp0acai4IiMym0K99Bb3/Zv/wzE0Bfy2lMIZQDHfms6thq48feafrfAdrW6X97VQRS
+	 U/ax0jsUoBKM34bKWSzTa59xi8UwuCHepVD8jIWgHGUwv1mevIKc2Q44ByIpls246K
+	 ZV9sqMX5tPORVxcb5p50B94POU8T37Dr+8N5tzNd3sf3ouUswuh6JahE3M891WLWus
+	 dcnOmDTWS+flA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 14 Jun 2024 18:08:37 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org
+Subject: [PATCH] drm/nouveau: Constify struct nouveau_job_ops
+Date: Fri, 14 Jun 2024 18:08:30 +0200
+Message-ID: <860e9753d7867aa46b003bb3d0497f1b04065b24.1718381285.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,41 +55,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is a scenario where a large number of discard commands
-are issued when the iscsi initiator connects to the target
-and then performs a session rescan operation. There is a time
-window, most of the commands are in UNMAP mode, and some
-discard commands become WRITE SAME with UNMAP.
+"struct nouveau_job_ops" is not modified in these drivers.
 
-The discard mode has been negotiated during the SCSI probe. If
-the mode is temporarily changed from UNMAP to WRITE SAME with
-UNMAP, IO ERROR may occur because the target may not implement
-WRITE SAME with UNMAP. Keep the discard mode stable to fix this
-issue.
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-Signed-off-by: Li Feng <fengli@smartx.com>
+In order to do it, "struct nouveau_job" and "struct nouveau_job_args" also
+need to be adjusted to this new const qualifier.
+
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   5570	    152	      0	   5722	   165a	drivers/gpu/drm/nouveau/nouveau_exec.o
+
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   5630	    112	      0	   5742	   166e	drivers/gpu/drm/nouveau/nouveau_exec.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/scsi/sd.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_exec.c  | 2 +-
+ drivers/gpu/drm/nouveau/nouveau_sched.h | 4 ++--
+ drivers/gpu/drm/nouveau/nouveau_uvmm.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index f6c822c9cbd2..0165dc70a99b 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2598,7 +2598,12 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
- 		if (buffer[14] & 0x40) /* LBPRZ */
- 			sdkp->lbprz = 1;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_exec.c b/drivers/gpu/drm/nouveau/nouveau_exec.c
+index e65c0ef23bc7..a0b5f1b16e8b 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_exec.c
++++ b/drivers/gpu/drm/nouveau/nouveau_exec.c
+@@ -188,7 +188,7 @@ nouveau_exec_job_timeout(struct nouveau_job *job)
+ 	return DRM_GPU_SCHED_STAT_NOMINAL;
+ }
  
--		sd_config_discard(sdkp, SD_LBP_WS16);
-+		/*
-+		 * When the discard mode has been set to UNMAP, it should not be set to
-+		 * WRITE SAME with UNMAP.
-+		 */
-+		if (!sdkp->max_unmap_blocks)
-+			sd_config_discard(sdkp, SD_LBP_WS16);
- 	}
+-static struct nouveau_job_ops nouveau_exec_job_ops = {
++static const struct nouveau_job_ops nouveau_exec_job_ops = {
+ 	.submit = nouveau_exec_job_submit,
+ 	.armed_submit = nouveau_exec_job_armed_submit,
+ 	.run = nouveau_exec_job_run,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
+index e1f01a23e6f6..20cd1da8db73 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_sched.h
++++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
+@@ -42,7 +42,7 @@ struct nouveau_job_args {
+ 		u32 count;
+ 	} out_sync;
  
- 	sdkp->capacity = lba + 1;
+-	struct nouveau_job_ops *ops;
++	const struct nouveau_job_ops *ops;
+ };
+ 
+ struct nouveau_job {
+@@ -73,7 +73,7 @@ struct nouveau_job {
+ 		u32 count;
+ 	} out_sync;
+ 
+-	struct nouveau_job_ops {
++	const struct nouveau_job_ops {
+ 		/* If .submit() returns without any error, it is guaranteed that
+ 		 * armed_submit() is called.
+ 		 */
+diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
+index ee02cd833c5e..9402fa320a7e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
+@@ -1534,7 +1534,7 @@ nouveau_uvmm_bind_job_cleanup(struct nouveau_job *job)
+ 	nouveau_uvmm_bind_job_put(bind_job);
+ }
+ 
+-static struct nouveau_job_ops nouveau_bind_job_ops = {
++static const struct nouveau_job_ops nouveau_bind_job_ops = {
+ 	.submit = nouveau_uvmm_bind_job_submit,
+ 	.armed_submit = nouveau_uvmm_bind_job_armed_submit,
+ 	.run = nouveau_uvmm_bind_job_run,
 -- 
 2.45.2
 
