@@ -1,129 +1,88 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848B31822EB;
-	Fri, 14 Jun 2024 02:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035D7811E0;
+	Fri, 14 Jun 2024 02:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718331919; cv=none; b=hW95EDXSStM/U95Fjc6/Do4iFGj+tXIROYXjWca08ouNG1MNfO+JSuK6+BOSBkGo1h2TZY6Lsd1kZvqpq2sA+QjhJI+UVZF+7Fhzv3xlGqI5THbkAuEu+KoSGIjMl9kkR2pShoiKTbA7K26m80VU5l9OGGcRDNTc4G+dn5qgXsk=
+	t=1718332067; cv=none; b=cTwDodTg5uMSS2pGS6MYrLKKgVM7taL3mJMCjM0s6iRsN+OSAlaYTEC1UwD+fZEFTF/DDjn4V2o6y287CA8m4dFIsejRCfhJ/Rhl4i1mpvrHMBbjjCQsRBFWYnmOCFja/gN15Uof1UXEobRUMcDqWfH6/9vFAUUWNCSYiRLPtqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718331919; c=relaxed/simple;
-	bh=Pf7UPKwrd/kvnTcMtegUpf1NMAComiNd4Hhie73WEqY=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=gSL0vMWXOiVXTjHU04bfHfqBFdI/+/xMitWUU00xBJZllUHWfMr4SmvJQTDSxlmMhOdHpRECGc5lKYOx1SjBTWtFXir9GNnhrb4wDO4ybHx2ywUv9JE+qLGiTnphwHa+tSJNYqVTM88CCoviB+A2ccEdm/EVWunmaV1ReVNpkk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=V3NL6jSn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=enY8kinJ; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718332067; c=relaxed/simple;
+	bh=TXXVNjzYH9dxXvW19XQWjL2z6vcfgWTA8Sc5YpQH4UY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxQozxo0kEMB1cs2goV9l2B1uK+xEL8I7+LzcT3aC+8o+dM0+ugnjylcVCuLeIS9W9/rx9q+DnA+hjnETQoIBZXtJjRzH8EMpVuKXjYPHZQ//C9nc51SXcZU00TitEoscumWQNk58CEVQ6r/tL99/n8fId6/A1vtURSP9LIQTUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nef0P9Jz; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="V3NL6jSn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="enY8kinJ"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id B2DD51140220;
-	Thu, 13 Jun 2024 22:25:17 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 13 Jun 2024 22:25:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1718331917;
-	 x=1718418317; bh=Pf7UPKwrd/kvnTcMtegUpf1NMAComiNd4Hhie73WEqY=; b=
-	V3NL6jSnjobA3yCXOVJZnVLoQdK1qnGFjHHxbzLRh1ZAdHmdBFJnam8iut9Ex1ho
-	0FzSu5z+3yYUTfh+3DoPextN442seJYLb/p2xfNVFiUs+1uW3jPz6Lg2KxSfoKPf
-	s39W+PQd8n6bCWASoD4lCwoymB8mUzVD9amuD05rHyEhn1WHyZd0E9o0eEdqBGF0
-	s2laT+mwLwVTugWnUkEJ6zV8XfewI6gmAaKOGgDB1audkt50JKLdgE/w9qGAi8K/
-	uK6tsDQCLkbK5WZwILXFFkbsQ4KDS3TYlFcVOZOJH16vh2WZ+R8eHfnVo9XoIahU
-	azgrPx64BNVXAdGOhcia0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718331917; x=
-	1718418317; bh=Pf7UPKwrd/kvnTcMtegUpf1NMAComiNd4Hhie73WEqY=; b=e
-	nY8kinJY1C23yyY7LawTo4tLazXcHQQ4eK/Z38mJnR6DRO5MUnB1DXmPsQMw+9PR
-	4mLj7WW93zJw4n6nGc4vxOmcdPnHv3PG2oQrOLFzlMlfMFFv/MDGJMQcFasbpq+J
-	ZVSGXA4Nxsz1zB71NWuiA0PUg4jOuJhp0sms2exHwn8VrVptgkHHTd/GsNvbYWkz
-	gVbpvXkffXXJfxKGwd/PHnFNnICwQXl5zdn5t1x/0FJSxiQsD7dNxJ8c5w121BZo
-	1S9+e6SiEfg9L7qCBd7wPGjTKtVJErgmBLJtaLQv/rU/zTZYwo+KY3P5J3nkrFiz
-	fWwHEBiYXSEUCEnmvaa8Q==
-X-ME-Sender: <xms:DaprZtqPpwX2tWYaT9p_MDrUpy3d7UxVfz569t_LI01bmFyr2u3opg>
-    <xme:DaprZvo3hOR32eZ-eaAKZLbDblRr910CA6Wwv94d5dVSin8W8iuLZTe3AHugMYh3B
-    pnysYmRTl3g_2vcnKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedukedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:DaprZqPJbnTi0sO8m0IvLwE3Sf9RRtZItiwQoeF4MR-xMq0TrL74jQ>
-    <xmx:DaprZo64e533aPxzfv_LRU8bzd77pMNNIG6hTEDwRmrw4nWAYXKxIg>
-    <xmx:DaprZs7sqLiuArcf_Cfk3tYVXj1YLB_Gwco2yidLnpjhzFb6MBruwg>
-    <xmx:DaprZgiEfNdbfIy9tCklsbi9YIr13Yzihdsord51hchfH5YQQxuyjQ>
-    <xmx:DaprZmQkSRNmCKfqSyHxI9NC8wh7PRpdFvR9AihEll6vaV91arXbgEhz>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 383F436A0074; Thu, 13 Jun 2024 22:25:17 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nef0P9Jz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718332066; x=1749868066;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TXXVNjzYH9dxXvW19XQWjL2z6vcfgWTA8Sc5YpQH4UY=;
+  b=nef0P9JzeRqcRcdSHTZyAMJDNZHvuAd3jHAtcTi/UkF3oGDFP3PPHgm1
+   XJVxRY/8+OOABbZYKtk74PErplv+S4AWzMYZZV1pC39kjM1SJnixIuqg4
+   2Wdjv7OZ8/q0qmVIo/ONAHIMaU+YS1U0/DYdfhvEveD4dDwfD3vZPijGC
+   DVxIJ2cXb5+yGzFq5d3aTPstJp8e+P2ROGOlo/Z/X00SJNq6i8HTMAGi6
+   enDLZpL5r9Dt+G/LKsYAru7vhuX+ctV9DVw5bMcV3MKlDc+4+61q6Fb0J
+   gekh7Gt9Ff7v8e6Q0mStxBFRgUR/DG9vZ8oYkpNYp3yaHmr616cWIg0eo
+   A==;
+X-CSE-ConnectionGUID: qXIwkCUqTSy053c6//a5fg==
+X-CSE-MsgGUID: rKGpTxE9RwyqKSw6yuLatg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="18125318"
+X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
+   d="scan'208";a="18125318"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 19:27:45 -0700
+X-CSE-ConnectionGUID: 0XX4DzhhQv+r0wAZaaJX7A==
+X-CSE-MsgGUID: MtHgo/43RZKk9/rQmraiXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
+   d="scan'208";a="44874865"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 13 Jun 2024 19:27:44 -0700
+Date: Fri, 14 Jun 2024 10:21:11 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: mdf@kernel.org, hao.wu@intel.com, linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fpga: altera-fpga2sdram: remove unused struct 'prop_map'
+Message-ID: <ZmupF3dsgkSYPRN/@yilunxu-OptiPlex-7050>
+References: <20240530205245.125513-1-linux@treblig.org>
+ <ZmgH3FakPP2w/ksI@yilunxu-OptiPlex-7050>
+ <Zmgp01iGuYb-hHLK@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f9a0d11e-53c7-4a15-a7b3-209da8bcf52d@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H7VKGMAH10S4sOZLkbgkUSMAYzpYt-dL83S0Vg286PsaQ@mail.gmail.com>
-References: <20240613-loongarch64-sleep-v1-0-a245232af5e4@flygoat.com>
- <20240613-loongarch64-sleep-v1-2-a245232af5e4@flygoat.com>
- <CAAhV-H7VKGMAH10S4sOZLkbgkUSMAYzpYt-dL83S0Vg286PsaQ@mail.gmail.com>
-Date: Fri, 14 Jun 2024 03:24:47 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>,
- "Jianmin Lv" <lvjianmin@loongson.cn>
-Cc: "Xuerui Wang" <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] LoongArch: Fix ACPI standard register based S3 support
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zmgp01iGuYb-hHLK@gallifrey>
 
+On Tue, Jun 11, 2024 at 10:41:23AM +0000, Dr. David Alan Gilbert wrote:
+> * Xu Yilun (yilun.xu@linux.intel.com) wrote:
+> > On Thu, May 30, 2024 at 09:52:45PM +0100, linux@treblig.org wrote:
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > This is only needed if the person sending the patch is not the author.
+> > 
+> > > 
+> > > 'prop_map' has been unused since the original
+> > > commit e5f8efa5c8bf ("ARM: socfpga: fpga bridge driver support").
+> > 
+> > Please use 'fixes:' tag.
+> 
+> I've avoided using fixes: on this series because it's not a bug;
+> stable and downstream maintainers use Fixes: to indicate that they
+> should pick up a patch on top of something they already have; there's
+> no need for anyone to backport this.
 
+It's good to me.
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=883:11=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> Hi, Jiaxun,
->
-> On Fri, Jun 14, 2024 at 12:41=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flyg=
-oat.com> wrote:
->>
->> Most LoongArch 64 machines are using custom "SADR" ACPI extension
->> to perform ACPI S3 sleep. However the standard ACPI way to perform
->> sleep is to write a value to ACPI PM1/SLEEP_CTL register, and this
->> is never supported properly in kernel.
-> Maybe our hardware is insane so we need "SADR", if so, this patch may
-> break real hardware. What's your opinion, Jianmin?
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-I understand why your hardware need SADR. Most systems DDR self-refresh
-mode needs to be setup by firmware.
-
-There is no chance that it may break real hardware. When firmware suppli=
-ed
-SADR it will always use SADR. The fallback only happens when _S3 method =
-exist
-but no SADR supplied, which won't happen on real hardware.
-
-For QEMU we don't have stub firmware but standard compliant SEEP_CTL is
-sufficient for entering sleep mode, thus we need this fallback path.
-
-Thanks
-
->
-> Huacai
->
->>
-
---=20
-- Jiaxun
+Applied to for-next.
