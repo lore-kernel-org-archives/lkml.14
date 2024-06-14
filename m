@@ -1,150 +1,206 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4881474CB;
-	Fri, 14 Jun 2024 08:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682A61836D3;
+	Fri, 14 Jun 2024 08:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352116; cv=none; b=XLJiiaDk1NSDhVbsMovnfphzr6giHfwMladFLMlbLPbHVPCWDwDhu9kAD9GjrfuDfCIaQnyaIfE193A62OJhbNUaTIheG4n3htfRJuGPyjw5Hj+covB4xfO4jhHtr7iPxl2l70P2KgWVKOs7Fe2UU1EbaLl2p+iBSfkFYCdx2oo=
+	t=1718352119; cv=none; b=fqswiTahEcZBDY58/iJNYIMzh9nBeLh2dv7/gsoH7Fy5KuhFb+bhJLoYpHAwnYtU9b3Ksh9dxgTxl6je8/HJBrQddgAZVZhLw2cEoguBBAuy/IdVrUcWQY25iIui5iJXJFS7e2uuglCK2rCYsNzzn84ceufrZXNI/LfFt/NR5Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352116; c=relaxed/simple;
-	bh=AiE3BsoHl6nbAyEPcQt6QjvUqcm6iPgk/BkHE4KsWHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G5CYJkuWsyxTrhTjhq29Ffq/pu6aTlp/NANXCJdNrLD0fYKfqfNnzj8kV5nhR++ryhLykn/20jLYYdwuqQHLpT6CAdW9Mmu9ZnKUgZfjuf4y1xvZ3yoh1kHlMzYXVRC39yT7iO+xjg0Rj7ZPppqPe9FXA87nMvAwNIvVFVHbqFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RVptile8; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1718352119; c=relaxed/simple;
+	bh=DNloJkCpugxMgXOsQecfvd48tcZUcJDPFTN7cPrQP6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=swywsZChJkRZch7muze5C9flZZLfgIwEcLH8grwJs2ktjlqnHh4y7n3tp6DEGi3Ke607izNgUyh/MUj0HN3hm8Jfe9Uqzns6Afht17SaBU7U/9/BVkDAE6hWBw1eI7eNdnJEddQuWdkJFKMHx2Z97ba00GlsVaAFffBFPeODDwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HCr1D3bl; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RVptile8"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45E1fRo7003155;
-	Fri, 14 Jun 2024 08:01:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=corp-2023-11-20; bh=gGCJMnhO+L8oNf
-	IArlpsLOLy5wZxlT0LIbb7sFe1hZY=; b=RVptile8zcftjCfyE9QkpluaOTDmmd
-	e/XcXEDP1vatdHrlCFpjfbxxOrf/l0Jh9ujaeEoG73bU+PA6Si9GKBW249DkY5gL
-	Wr4S7p2bjb9gHKmJJOh06aCZiTJ1hZS1h1NLhFGvIwUc3tKpvnxjnECQCMB644U6
-	BfFCv1e8YkjIfBX+WliquE9Yzaw+bTOmmH3QwZWRUmMjYl8fS9smekrpr7Moog1N
-	a4UWzf61z6SoOd+Uuyai0wo1wduNnkkLmtRNcpj5ib4x+2GV7+j8jPZDkwYv9OYL
-	lfE8Y7CH16ewV7ewBGnJpYdLdqYR/jhKJgJ6nVB2rL4jxBf5Yt6OdC9Q==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymhajb6tx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 08:01:45 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45E7FWfw020432;
-	Fri, 14 Jun 2024 08:01:44 GMT
-Received: from aakhoje-ol.in.oracle.com (dhcp-10-76-34-154.vpn.oracle.com [10.76.34.154])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3yncaymbrm-1;
-	Fri, 14 Jun 2024 08:01:42 +0000
-From: Anand Khoje <anand.a.khoje@oracle.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc: saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net
-Subject: [PATCH v3] net/mlx5 : Reclaim max 50K pages at once
-Date: Fri, 14 Jun 2024 13:31:35 +0530
-Message-ID: <20240614080135.122656-1-anand.a.khoje@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCr1D3bl"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52c815e8e9eso2017293e87.0;
+        Fri, 14 Jun 2024 01:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718352115; x=1718956915; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nRWFYP2PnBSqJKVpviuIt+bkDMabc8LZej0hybvhqgM=;
+        b=HCr1D3blzIZOzlhk/hSdEwNlX9awu1hh9OCk9cLfVpGMDqB+OnC8QjL1VnZSWz5S7G
+         Cf40xXrHtyBCKSpsNXOZBCRzdIcX8pqgTgJ8G2BTsV2V67/znFFNibnFEf+3wtBTHUFX
+         dOWf5or6sE4PwiXVWVtVBCuABoO+aNU690yZZLTy1mHBt73a3iJFxOTSrVdn0ESz+ji9
+         f81dweD1eHeqVBbCq8m3zVpE5JQuYFbcotaV5pAxTwRtJCSsTmyxQ2fdukcnbzMC/sbY
+         aeldG+1b2Qhk0gnAS5rYrQ1OICPzBDh3RLihrMKOXowYpnsgf2AUCPa+PofyQ9J3OEl5
+         AwQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718352115; x=1718956915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nRWFYP2PnBSqJKVpviuIt+bkDMabc8LZej0hybvhqgM=;
+        b=xHKEKQ/FKDgmOPS3UDxvZ0/uKNepBJ78paw2ZGCYGEC2lfj9Mu/UofT8ThjPpQgUup
+         7nU22B1AVfYxGMn3JRekJnsqHVfxrEA4pok210irWiGYgKPOh/ImpnyO8oasXO11fZa+
+         TvHb9WzOvARJehJtn+vVQQbLKLa1E6KdU4tmMqIJSo5s3+mZ6rGmnAqoO1wxDxg4Zjxc
+         QCFYjP3fQEJFpIbpi5hks8uap53TMUrncM5g4aWP2XtAHukYDjFthqXX1bSuXrLpbuEw
+         PRAoaPX+t2Mwb0UCuXivTbdufXGmI1WD5ffDQid3p/oQWY0GcKHHgMa0AcR7e67WVArL
+         FrGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUH3kmfgPgfECDjOmYcwnKGQ0FeqNgiJh88oMizGkho6LsJwnN6vGKz47YFluQpPTzm3qdu5trdd90uGZ19yNwMDObOdpMsf6YDOIK1qouzp819r2RvYdedRaoKqTY8idD8DqppS02L2k1j/ZA63x4Iye+vHCzJSy7IEEptVU+Ib/Xl0t92jlHU
+X-Gm-Message-State: AOJu0YyTwoakUiUMQ5aPbZ40H1oUwUyyrnz2V5auMoWyx7foZhFVpfx6
+	JRXpdmHXtOBNAp9XM7/0HtmxiKrVlGQaHyuIy+b5/ubINK3YjT56
+X-Google-Smtp-Source: AGHT+IHeEQOR6VcQjY6/3rKRzLVKAle1CSEVGl/XgpzmI8h208I/SEeUoNN5Pd4iU+qdGlaKkbLESA==
+X-Received: by 2002:a05:6512:1319:b0:52c:845e:3194 with SMTP id 2adb3069b0e04-52ca6e6d4b3mr1398030e87.29.1718352114995;
+        Fri, 14 Jun 2024 01:01:54 -0700 (PDT)
+Received: from [172.16.183.82] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282ee91sm437317e87.105.2024.06.14.01.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 01:01:54 -0700 (PDT)
+Message-ID: <b585d817-da4d-45b1-87b5-2cfdc8b8823b@gmail.com>
+Date: Fri, 14 Jun 2024 11:01:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/10] mfd: bd96801: Add ERRB IRQ
+To: Lee Jones <lee@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-watchdog@vger.kernel.org
+References: <cover.1717486682.git.mazziesaccount@gmail.com>
+ <332a2d2429e2ba3c96afd28c1ccc18efc38e1fd3.1717486682.git.mazziesaccount@gmail.com>
+ <20240613163249.GN2561462@google.com>
+ <21a468c2-7d8f-459a-a5a9-53d8694c3f38@gmail.com>
+ <20240614075004.GB2561462@google.com>
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240614075004.GB2561462@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_15,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406140054
-X-Proofpoint-GUID: A8VZ0y80ZXnz0eB4BkEHfS2vhrAxgWIW
-X-Proofpoint-ORIG-GUID: A8VZ0y80ZXnz0eB4BkEHfS2vhrAxgWIW
 
-In non FLR context, at times CX-5 requests release of ~8 million FW pages.
-This needs humongous number of cmd mailboxes, which to be released once
-the pages are reclaimed. Release of humongous number of cmd mailboxes is
-consuming cpu time running into many seconds. Which with non preemptible
-kernels is leading to critical process starving on that cpu’s RQ.
-To alleviate this, this change restricts the total number of pages
-a worker will try to reclaim maximum 50K pages in one go.
-The limit 50K is aligned with the current firmware capacity/limit of
-releasing 50K pages at once per MLX5_CMD_OP_MANAGE_PAGES + MLX5_PAGES_TAKE
-device command.
+On 6/14/24 10:50, Lee Jones wrote:
+> On Fri, 14 Jun 2024, Matti Vaittinen wrote:
+> 
+>> On 6/13/24 19:32, Lee Jones wrote:
+>>> On Tue, 04 Jun 2024, Matti Vaittinen wrote:
+>>>
+>>>> The ROHM BD96801 "scalable PMIC" provides two physical IRQs. The ERRB
+>>>> handling can in many cases be omitted because it is used to inform fatal
+>>>> IRQs, which usually kill the power from the SOC.
+>>>>
+>>>> There may however be use-cases where the SOC has a 'back-up' emergency
+>>>> power source which allows some very short time of operation to try to
+>>>> gracefully shut down sensitive hardware. Furthermore, it is possible the
+>>>> processor controlling the PMIC is not powered by the PMIC. In such cases
+>>>> handling the ERRB IRQs may be beneficial.
+>>>>
+>>>> Add support for ERRB IRQs.
+>>>>
+>>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>>> ---
+>>>> Revision history:
+>>>> v2 =>:
+>>>> 	- No changes
+>>>> v1 => v2:
+>>>> 	- New patch
+>>>> ---
+>>>>    drivers/mfd/rohm-bd96801.c | 291 ++++++++++++++++++++++++++++++++-----
+>>>>    1 file changed, 253 insertions(+), 38 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mfd/rohm-bd96801.c b/drivers/mfd/rohm-bd96801.c
+>>>> index 1c2a9591be7b..b7f073318873 100644
+>>>> --- a/drivers/mfd/rohm-bd96801.c
+>>>> +++ b/drivers/mfd/rohm-bd96801.c
+>>>> @@ -5,13 +5,9 @@
+>>>>     * ROHM BD96801 PMIC driver
+>>>>     *
+>>>>     * This version of the "BD86801 scalable PMIC"'s driver supports only very
+>>>> - * basic set of the PMIC features. Most notably, there is no support for
+>>>> - * the ERRB interrupt and the configurations which should be done when the
+>>>> - * PMIC is in STBY mode.
+>>>> - *
+>>>> - * Supporting the ERRB interrupt would require dropping the regmap-IRQ
+>>>> - * usage or working around (or accepting a presense of) a naming conflict
+>>>> - * in debugFS IRQs.
+>>>
+>>> Why bother adding all that blurb in the first place?
+>>
+>> Because, I assume there are users who would like to have the ERRB in use.
+>> The main purpose of this comment is that any such users could
+>> 	a) see this version does not support ERRB.
+>> 	b) can find the original RFC with ERRB supportn and a workaround.
+>> 	c) know why this version does not work with ERRB and thus fix this
+>>
+>> It seems this ERRB support may be missing from upstream for a while, hence I
+>> think having this note is worthy until (if) this ERRB patch lands in
+>> upstream.
+> 
+> What I mean is - you're adding all of these extra lines in patch 3 and
+> removing them in patch 9.
+> 
 
-Our tests have shown significant benefit of this change in terms of
-time consumed by dma_pool_free().
-During a test where an event was raised by HCA
-to release 1.3 Million pages, following observations were made:
+True. This is because I had a feeling the irqdomain changes might not 
+get merged that fast as it seemed like something that is not completely 
+trivial. This comment is useful if patches 7-10 aren't merged together 
+with 1-6 - which I now also hope is the case XD
 
-- Without this change:
-Number of mailbox messages allocated was around 20K, to accommodate
-the DMA addresses of 1.3 million pages.
-The average time spent by dma_pool_free() to free the DMA pool is between
-16 usec to 32 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@                                        287
-            1024 |@@@                                      1332
-            2048 |@                                        656
-            4096 |@@@@@                                    2599
-            8192 |@@@@@@@@@@                               4755
-           16384 |@@@@@@@@@@@@@@@                          7545
-           32768 |@@@@@                                    2501
-           65536 |                                         0
+>>>> + * basic set of the PMIC features.
+>>>> + * Most notably, there is no support for the configurations which should
+>>>> + * be done when the PMIC is in STBY mode.
+>>>>     *
+>>>>     * Being able to reliably do the configurations like changing the
+>>>>     * regulator safety limits (like limits for the over/under -voltages, over
+>>>> @@ -23,16 +19,14 @@
+>>>>     * be the need to configure these safety limits. Hence it's not simple to
+>>>>     * come up with a generic solution.
+>>>>     *
+>>>> - * Users who require the ERRB handling and STBY state configurations can
+>>>> - * have a look at the original RFC:
+>>>> + * Users who require the STBY state configurations can  have a look at the
+>>>> + * original RFC:
+>>>>     * https://lore.kernel.org/all/cover.1712920132.git.mazziesaccount@gmail.com/
+>>>> - * which implements a workaround to debugFS naming conflict and some of
+>>>> - * the safety limit configurations - but leaves the state change handling
+>>>> - * and synchronization to be implemented.
+>>>> + * which implements some of the safety limit configurations - but leaves the
+>>>> + * state change handling and synchronization to be implemented.
+>>>>     *
+>>>>     * It would be great to hear (and receive a patch!) if you implement the
+>>>> - * STBY configuration support or a proper fix to the debugFS naming
+>>>> - * conflict in your downstream driver ;)
+>>>> + * STBY configuration support or a proper fix in your downstream driver ;)
+>>>>     */
+>>
+>> ...
+>>
+>> Thanks for comments Lee. Reworking this will have to wait for the irqdomain
+>> name suffix, which I will continue after Hervé has done his part of the
+>> irqdomain changes. I will omit this patch from the next re-spin of the
+>> series.
+> 
+> I'm in no rush. :)
 
-- With this change:
-Number of mailbox messages allocated was around 800; this was to
-accommodate DMA addresses of only 50K pages.
-The average time spent by dma_pool_free() to free the DMA pool in this case
-lies between 1 usec to 2 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@@@@@@@@@@@@@@@@@@                       346
-            1024 |@@@@@@@@@@@@@@@@@@@@@@                   435
-            2048 |                                         0
-            4096 |                                         0
-            8192 |                                         1
-           16384 |                                         0
+Well, glad to hear ;) I still usually try to avoid delaying sending the 
+follow-up patches. I am under impression it is easier to review the new 
+revision if the previous revision was not reviewed too long ago... ;)
 
-Signed-off-by: Anand Khoje <anand.a.khoje@oracle.com>
----
-Changes in v3:
-   - Shifted the logic to function req_pages_handler() as per
-     Leon's suggestion.
----
- drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+I feel it is polite to tell the reviewers there will be some delay when 
+I know it.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-index 1b38397..e7c2d36 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-@@ -508,6 +508,7 @@ enum {
- 	RELEASE_ALL_PAGES_MASK = 0x4000,
- };
- 
-+#define MAX_RECLAIM_NPAGES -50000
- static int req_pages_handler(struct notifier_block *nb,
- 			     unsigned long type, void *data)
- {
-@@ -539,9 +540,13 @@ static int req_pages_handler(struct notifier_block *nb,
- 
- 	req->dev = dev;
- 	req->func_id = func_id;
--	req->npages = npages;
- 	req->ec_function = ec_function;
- 	req->release_all = release_all;
-+	if (npages < MAX_RECLAIM_NPAGES)
-+		req->npages = MAX_RECLAIM_NPAGES;
-+	else
-+		req->npages = npages;
-+
- 	INIT_WORK(&req->work, pages_work_handler);
- 	queue_work(dev->priv.pg_wq, &req->work);
- 	return NOTIFY_OK;
+Yours,
+	-- Matti
+
 -- 
-1.8.3.1
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
