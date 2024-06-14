@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35E41A38E4;
-	Fri, 14 Jun 2024 17:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6795A1A3BDF;
+	Fri, 14 Jun 2024 17:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386379; cv=none; b=hyMKF1leCSxSwhRrTJ5UKGhyKKF80TsGikdjc/hT9jlnfxGcmEHpTbclX/bXdKgL2LF3Omj6XtdifYEkm4iEkHiP1EAB7LTFgEmADIEljuI1HqdT2L9v86mANCqybOXV4jkh2to6WtdF9M6s8uvyw9/Y+Sji5TLsARElJHqSaJ8=
+	t=1718386379; cv=none; b=O7a2J16i4uPnzpw7QHUtViyZivuCcI2UJkeBokJ79yAcQRQEVXnRfdiCIK2Gqg5h9aw4iVj0sG5MwhzUwfOJsM15TEC7A7h4oaqYOeJIQaSV9RpCRo1POgOsUTMV8dFyHe9j1+ZC2DqSB+1+z19B2kSVIamAjJanUS5TIZd5K6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718386379; c=relaxed/simple;
-	bh=0iPWn752p3DNDZ7WR4ut9qgAfC5xFiEXXLLFNfT+q90=;
+	bh=dDchFYVE/ZhAseqVgo+pqTonqZkZ9MeBcfs48Q1L85M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W/s1JdzHn9aou2HBsBHT15/8JD4e0AF507YBfd8TxSuYuiOfRrEMJ0dJtpivJczlEKpV9vaGFHFESBtWHLKT7JjdBS2bJR/pcMqumhcfyF6kUNUT55nynpTSx3SDwkN5uMmW0mJAJGl8p0Q5a0t3c9q7xzZMOhzyV3fdA+PCW0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L3yUXNMm; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=Pp6FyvTt6QhBF1OwRTUoInn0E08HPFJfUmWzWXaNe/6w+EK2M8iDIWBy9rLHmSsO51ollPEdsIvrUnYeiqmMVDAcG3ho8k+aY+su9fQ2Sgq1vD56/Dhm77eNQf8swQt48M/JFnrIbMwE8fn1CrGKHiYEwgxptmGOT/fD0A4RJpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IW4unxYu; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L3yUXNMm"
-Received: by mail.gandi.net (Postfix) with ESMTPA id BD2CFFF810;
-	Fri, 14 Jun 2024 17:32:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IW4unxYu"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 833BBFF808;
+	Fri, 14 Jun 2024 17:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718386375;
+	t=1718386370;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uMFasbEf4choChQbQW4o5B2GzIDXCZom8Jh+XZJZcAQ=;
-	b=L3yUXNMmtoZUUu0QU2ABzSlGH7KCqmQtblTAJMJ0qkuOSvfL6rmG1OI01zFrciWoPYQ26L
-	MDEn87KyfQjaZCbqijbzCUElhO9yOpKhj/OAqXNUdpKufLurMnI6PgA/Ly3Zq9dkDbUKSM
-	PjGgfE+KxJEmXSVzW8Q4OXKMp8huOvWSGWwyF0c1V2HAM/OA3657yRUE0pcIvEuV1O4T/Z
-	Pg/0aq3G8lKpkKqkJSQVNEeBMLUsK0hWxUQWXJBO6MS2xXsI0KuVcIYCgayWU+pSH8siUn
-	bXBigm/JwElpb9az7tADwJ/JGu6d4j6oi5Y3UGhVtPbOabRoJ2uAe6WcGMutYw==
+	bh=3Jt3G+9U0q6RfDTk1HQe6Yj9ZdV0UvVAc1UYDI9SykA=;
+	b=IW4unxYuqtWHfPp6kOACcF+GTsjKd+633XLLo7q/KXWgkKzYwKxUNP7306nv+MKpXCv7ep
+	3avTOY9QqnTWu0HfU8z1riCevl523+xTxPphjVWuQmxAhDKN1PksnhyZdK/ycF61le6Cjb
+	uL6Ji+ySOoE0R72ETvPWJwyOMwZYqM3dXXrO2lpOzAzeYkCMLdB/lv0vQqOESkRrkAl9tg
+	3QdJHvYg3eNUuceduXBoqgOwQKWpU/y98TOk2IP9bhnkFgRXXsoXT5BNwMvUityp7a8TMJ
+	AM9AdBgu1DJcC0sCUJ6AUM2216FG+6GQxIF6DSklMjUBlkKr8j/4HnRBhI9ong==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Herve Codina <herve.codina@bootlin.com>,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 11/23] irqdomain: Handle domain bus token in irq_domain_create()
-Date: Fri, 14 Jun 2024 19:32:12 +0200
-Message-ID: <20240614173232.1184015-12-herve.codina@bootlin.com>
+Subject: [PATCH 05/23] irqdomain: Use a dedicated function to set the domain name
+Date: Fri, 14 Jun 2024 19:32:06 +0200
+Message-ID: <20240614173232.1184015-6-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240614173232.1184015-1-herve.codina@bootlin.com>
 References: <20240614173232.1184015-1-herve.codina@bootlin.com>
@@ -63,123 +63,125 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-irq_domain_update_bus_token() is the only way to set the domain bus
-token. This is sub-optimal as irq_domain_update_bus_token() can be
-called only once the domain is created and needs to revert some
-operations, change the domain name and redo the operations.
+The irq domain name computation and setting is directly done in
+__irq_domain_create(). This leads to a quite long __irq_domain_create()
+function.
 
-In order to avoid this revert/change/redo sequence, take into account
-the domain bus token during the domain creation.
+In order to simplify __irq_domain_create() and isolate the domain name
+computation and setting, move the related operations to a dedicated
+function.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- include/linux/irqdomain.h |  2 ++
- kernel/irq/irqdomain.c    | 30 ++++++++++++++++++++++++------
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ kernel/irq/irqdomain.c | 69 +++++++++++++++++++++++-------------------
+ 1 file changed, 38 insertions(+), 31 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index e52fd5e5494c..52bed23e5c61 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -265,6 +265,7 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-  * @hwirq_max:		Maximum number of interrupts supported by controller
-  * @direct_max:		Maximum value of direct maps;
-  *			Use ~0 for no limit; 0 for no direct mapping
-+ * @bus_token:		Domain bus token
-  * @ops:		Domain operation callbacks
-  * @host_data:		Controller private data pointer
-  */
-@@ -274,6 +275,7 @@ struct irq_domain_info {
- 	unsigned int				size;
- 	irq_hw_number_t				hwirq_max;
- 	int					direct_max;
-+	enum irq_domain_bus_token		bus_token;
- 	const struct irq_domain_ops		*ops;
- 	void					*host_data;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 5090b1c572c6..d05aeb9c0a67 100644
+index 31277488ed42..0b152061e63a 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -129,7 +129,8 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
+@@ -128,27 +128,11 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
+ }
  EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
  
- static int irq_domain_set_name(struct irq_domain *domain,
--			       const struct fwnode_handle *fwnode)
-+			       const struct fwnode_handle *fwnode,
-+			       enum irq_domain_bus_token bus_token)
+-static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
+-					      unsigned int size,
+-					      irq_hw_number_t hwirq_max,
+-					      int direct_max,
+-					      const struct irq_domain_ops *ops,
+-					      void *host_data)
++static int irq_domain_set_name(struct irq_domain *domain,
++			       const struct fwnode_handle *fwnode)
  {
+-	struct irqchip_fwid *fwid;
+-	struct irq_domain *domain;
+-
  	static atomic_t unknown_domains;
- 	struct irqchip_fwid *fwid;
-@@ -140,13 +141,23 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 		switch (fwid->type) {
+-
+-	if (WARN_ON((size && direct_max) ||
+-		    (!IS_ENABLED(CONFIG_IRQ_DOMAIN_NOMAP) && direct_max) ||
+-		    (direct_max && (direct_max != hwirq_max))))
+-		return NULL;
+-
+-	domain = kzalloc_node(struct_size(domain, revmap, size),
+-			      GFP_KERNEL, of_node_to_nid(to_of_node(fwnode)));
+-	if (!domain)
+-		return NULL;
++	struct irqchip_fwid *fwid;
+ 
+ 	if (is_fwnode_irqchip(fwnode)) {
+ 		fwid = container_of(fwnode, struct irqchip_fwid, fwnode);
+@@ -157,10 +141,8 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
  		case IRQCHIP_FWNODE_NAMED:
  		case IRQCHIP_FWNODE_NAMED_ID:
--			domain->name = kstrdup(fwid->name, GFP_KERNEL);
-+			domain->name = bus_token ?
-+					kasprintf(GFP_KERNEL, "%s-%d",
-+						  fwid->name, bus_token) :
-+					kstrdup(fwid->name, GFP_KERNEL);
- 			if (!domain->name)
- 				return -ENOMEM;
+ 			domain->name = kstrdup(fwid->name, GFP_KERNEL);
+-			if (!domain->name) {
+-				kfree(domain);
+-				return NULL;
+-			}
++			if (!domain->name)
++				return -ENOMEM;
  			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
  			break;
  		default:
- 			domain->name = fwid->name;
-+			if (bus_token) {
-+				domain->name = kasprintf(GFP_KERNEL, "%s-%d",
-+							 fwid->name, bus_token);
-+				if (!domain->name)
-+					return -ENOMEM;
-+				domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-+			}
- 			break;
- 		}
- 	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
-@@ -158,7 +169,9 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 		 * unhappy about. Replace them with ':', which does
+@@ -177,10 +159,8 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
  		 * the trick and is not as offensive as '\'...
  		 */
--		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
-+		name = bus_token ?
-+			kasprintf(GFP_KERNEL, "%pfw-%d", fwnode, bus_token) :
-+			kasprintf(GFP_KERNEL, "%pfw", fwnode);
- 		if (!name)
- 			return -ENOMEM;
+ 		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
+-		if (!name) {
+-			kfree(domain);
+-			return NULL;
+-		}
++		if (!name)
++			return -ENOMEM;
  
-@@ -169,8 +182,12 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 	if (!domain->name) {
- 		if (fwnode)
- 			pr_err("Invalid fwnode type for irqdomain\n");
--		domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
--					 atomic_inc_return(&unknown_domains));
-+		domain->name = bus_token ?
-+				kasprintf(GFP_KERNEL, "unknown-%d-%d",
-+					  atomic_inc_return(&unknown_domains),
-+					  bus_token) :
-+				kasprintf(GFP_KERNEL, "unknown-%d",
-+					  atomic_inc_return(&unknown_domains));
- 		if (!domain->name)
- 			return -ENOMEM;
+ 		domain->name = strreplace(name, '/', ':');
  		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-@@ -194,7 +211,7 @@ static struct irq_domain *__irq_domain_create(const struct irq_domain_info *info
- 	if (!domain)
- 		return ERR_PTR(-ENOMEM);
+@@ -191,13 +171,40 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
+ 			pr_err("Invalid fwnode type for irqdomain\n");
+ 		domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
+ 					 atomic_inc_return(&unknown_domains));
+-		if (!domain->name) {
+-			kfree(domain);
+-			return NULL;
+-		}
++		if (!domain->name)
++			return -ENOMEM;
+ 		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
+ 	}
  
--	err = irq_domain_set_name(domain, info->fwnode);
-+	err = irq_domain_set_name(domain, info->fwnode, info->bus_token);
- 	if (err) {
- 		kfree(domain);
- 		return ERR_PTR(err);
-@@ -207,6 +224,7 @@ static struct irq_domain *__irq_domain_create(const struct irq_domain_info *info
- 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
- 	domain->ops = info->ops;
- 	domain->host_data = info->host_data;
-+	domain->bus_token = info->bus_token;
- 	domain->hwirq_max = info->hwirq_max;
++	return 0;
++}
++
++static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
++					      unsigned int size,
++					      irq_hw_number_t hwirq_max,
++					      int direct_max,
++					      const struct irq_domain_ops *ops,
++					      void *host_data)
++{
++	struct irq_domain *domain;
++	int err;
++
++	if (WARN_ON((size && direct_max) ||
++		    (!IS_ENABLED(CONFIG_IRQ_DOMAIN_NOMAP) && direct_max) ||
++		    (direct_max && direct_max != hwirq_max)))
++		return NULL;
++
++	domain = kzalloc_node(struct_size(domain, revmap, size),
++			      GFP_KERNEL, of_node_to_nid(to_of_node(fwnode)));
++	if (!domain)
++		return NULL;
++
++	err = irq_domain_set_name(domain, fwnode);
++	if (err) {
++		kfree(domain);
++		return NULL;
++	}
++
+ 	domain->fwnode = fwnode_handle_get(fwnode);
+ 	fwnode_dev_initialized(domain->fwnode, true);
  
- 	if (info->direct_max)
 -- 
 2.45.0
 
