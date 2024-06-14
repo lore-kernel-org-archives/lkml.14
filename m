@@ -1,134 +1,90 @@
-Received: from msa.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED97914884C;
-	Fri, 14 Jun 2024 07:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2F8A20317;
+	Fri, 14 Jun 2024 07:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718349530; cv=none; b=DnH96pCmAYAxHxzhyQArK41VrywZrGHP+BazGpuBD0cpI1VOF+yi9re1gvNrC0zGbtG8jsI3gcz/bYA7oWya4WCXfabPhcz5jXLWfTR6/9+Qedms6wothiDJ+bHkHY//Rt6gFMjQlyPbzORHl7CA4rzQ6m+27ThJYvfaEhA1PZ8=
+	t=1718349551; cv=none; b=K0DI1n+yYiDeqwy4SGft2wQDPaXYVT6OOxu7HND5319SS6UttDZc6TXOaEpX+5ngfZYFzGC6LGWEEfp01aMTO5ywqhEOQizcEMLY6YyAAj2SwazbnQD2yifygd1Ha1AmecCGbcU7Xlh0CEQB+rYOgX6CGKeBJubXu99ZdmdvMzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718349530; c=relaxed/simple;
-	bh=6du1KfglJLoWLvTGWtPHrIfbGlhezcXOWIFkFAthN5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D6iFw8799MnIu0/8aWqWWlyN38C19wyc8p4AyOfrwlyiQ8IzTk5OyXoB78p3PZ5jGh2/VOZPxEvZfG/d0Je1s9dwpzWofCW9MoHRHqclhdnYdgTlEXS1NUmtYVchY6Y54/6zhPmOqYaUUMSxRyxLRxK6esRKGS2NjbOw7vLqd/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=g/xzsFh2; arc=none smtp.client-ip=193.252.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718349551; c=relaxed/simple;
+	bh=EgomXBteig4lz1gdQuwgDEdrsNpZ0S8xQyF6J4Omw00=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=NgJtVLO1uL6uFeAeeIoLBcRcbYU4ltTD9R+8V6JkJ/7P4L3nqTUmEzfNEHEoi9F0i4jH0ufPzeCpVfLVMv5aaAl6yD+obBqkmnYZjVc3GylQc159W/jHWs4qmg9d5WkJwLfVkhYjDlRw7ofawi35xtOYrs66fO6c7s99tkhAlTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=j9MmVXl3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="g/xzsFh2"
-Received: from fedora.home ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id HrXUsAUflNbytHrXUsgDhP; Thu, 13 Jun 2024 22:59:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718312364;
-	bh=vkHkCaWtDIfpH8ijSazjk6Jfhs+hqJsnwjns3+SaeCg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=g/xzsFh2MkamRdsQKDv53s+bAw6tPvjMHfmSFNRtrNOApkoOHKjv8Wc8/TdKeyfHC
-	 ipqv5H/DVpYWUGNABFHxxry+9ml49vL45+z9DUtryf5awGJe4IKtn91XOCKo/UcemF
-	 LWS2tvL39XMnecXlmQK76b+veHt/RUwr0gTF5p+XivJpqZkj0eHJgUnQ/9fSDXHckf
-	 uThafhO/uCu9jHd4W8CVwelQm+aXU/6hIARUdCqqg7nfteQd2ljfqKlUEW0D1JELkH
-	 X9SbpLIpyg4rCTrU/jJSvugjpRUz1PYc7WmD47W0TZjy0vTSrA+Bk0IZ7D6tVYxwxl
-	 kzn6hRUxIzbzg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 13 Jun 2024 22:59:24 +0200
-X-ME-IP: 86.243.222.230
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	sound-open-firmware@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: mediatek: Constify struct mtk_adsp_ipc_ops
-Date: Thu, 13 Jun 2024 22:59:09 +0200
-Message-ID: <a45d6b2b5ec040ea0fc78fca662c2dca3f13a49f.1718312321.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j9MmVXl3"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 89B5820B7001; Fri, 14 Jun 2024 00:19:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89B5820B7001
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1718349549;
+	bh=8vK8fmbd5M6jG/NONoxloyUoUGqGh+n0nc/HIFecwzY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j9MmVXl3l4HDKbN+mnpMpdWeQiVemskLuOUmGgZGcXJ6Yvj6i88MW5FVm0cCjvvJ1
+	 5SHZUfx14om0GJYirtcf1ty40RGqB0Ge/5k1gpiXHZGrgFnjD4Xmh92Y9tQ7m9gDou
+	 ZD0icGxNzmakH8xVd5JDfeh2Z+hT+z6JC4GQ8jHo=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH net-next] net: mana: Use mana_cleanup_port_context() for rxq cleanup
+Date: Fri, 14 Jun 2024 00:19:08 -0700
+Message-Id: <1718349548-28697-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-'struct mtk_adsp_ipc_ops' is not modified in these drivers.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+To cleanup rxqs in port context structures, instead of duplicating the
+code, use existing function mana_cleanup_port_context() which does
+the exact cleanup that's needed.
 
-In order to do it, "struct mtk_adsp_ipc" also needs to be adjusted to this
-new const qualifier.
-
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  15533	   2383	      0	  17916	   45fc	sound/soc/sof/mediatek/mt8195/mt8195.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  15557	   2367	      0	  17924	   4604	sound/soc/sof/mediatek/mt8195/mt8195.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- include/linux/firmware/mediatek/mtk-adsp-ipc.h | 2 +-
- sound/soc/sof/mediatek/mt8186/mt8186.c         | 2 +-
- sound/soc/sof/mediatek/mt8195/mt8195.c         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/firmware/mediatek/mtk-adsp-ipc.h b/include/linux/firmware/mediatek/mtk-adsp-ipc.h
-index 5b1d16fa3f56..6e86799a7dc4 100644
---- a/include/linux/firmware/mediatek/mtk-adsp-ipc.h
-+++ b/include/linux/firmware/mediatek/mtk-adsp-ipc.h
-@@ -40,7 +40,7 @@ struct mtk_adsp_chan {
- struct mtk_adsp_ipc {
- 	struct mtk_adsp_chan chans[MTK_ADSP_MBOX_NUM];
- 	struct device *dev;
--	struct mtk_adsp_ipc_ops *ops;
-+	const struct mtk_adsp_ipc_ops *ops;
- 	void *private_data;
- };
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index b89ad4afd66e..93e526e5dd16 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2529,8 +2529,7 @@ static int mana_init_port(struct net_device *ndev)
+ 	return 0;
  
-diff --git a/sound/soc/sof/mediatek/mt8186/mt8186.c b/sound/soc/sof/mediatek/mt8186/mt8186.c
-index bea1b9d9ca28..74522400207e 100644
---- a/sound/soc/sof/mediatek/mt8186/mt8186.c
-+++ b/sound/soc/sof/mediatek/mt8186/mt8186.c
-@@ -82,7 +82,7 @@ static void mt8186_dsp_handle_request(struct mtk_adsp_ipc *ipc)
- 	}
+ reset_apc:
+-	kfree(apc->rxqs);
+-	apc->rxqs = NULL;
++	mana_cleanup_port_context(apc);
+ 	return err;
  }
  
--static struct mtk_adsp_ipc_ops dsp_ops = {
-+static const struct mtk_adsp_ipc_ops dsp_ops = {
- 	.handle_reply		= mt8186_dsp_handle_reply,
- 	.handle_request		= mt8186_dsp_handle_request,
- };
-diff --git a/sound/soc/sof/mediatek/mt8195/mt8195.c b/sound/soc/sof/mediatek/mt8195/mt8195.c
-index 31dc98d1b1d8..24ae1d4959be 100644
---- a/sound/soc/sof/mediatek/mt8195/mt8195.c
-+++ b/sound/soc/sof/mediatek/mt8195/mt8195.c
-@@ -82,7 +82,7 @@ static void mt8195_dsp_handle_request(struct mtk_adsp_ipc *ipc)
- 	}
- }
- 
--static struct mtk_adsp_ipc_ops dsp_ops = {
-+static const struct mtk_adsp_ipc_ops dsp_ops = {
- 	.handle_reply		= mt8195_dsp_handle_reply,
- 	.handle_request		= mt8195_dsp_handle_request,
- };
+@@ -2787,8 +2786,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ free_indir:
+ 	mana_cleanup_indir_table(apc);
+ reset_apc:
+-	kfree(apc->rxqs);
+-	apc->rxqs = NULL;
++	mana_cleanup_port_context(apc);
+ free_net:
+ 	*ndev_storage = NULL;
+ 	netdev_err(ndev, "Failed to probe vPort %d: %d\n", port_idx, err);
 -- 
-2.45.2
+2.34.1
 
