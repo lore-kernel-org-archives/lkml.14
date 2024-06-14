@@ -1,92 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CC718307E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7691836C9
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 08:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718352894; cv=none; b=IQVmR+prPTWLLPymp5aPPPrbu+wrhZcPwRjnWyaqhu8EkDIijpmbDyPlzZ8tgDBf2U5pO6xlROeb1CE9XkSARlc8bkE7VNqBeut7EzQGAMr5OnTyJ880NOK/nwd5ayj1uRbsOkb4na5BD41k5smgQ4fTZMDqSvDIOsX2+QZf7E8=
+	t=1718352923; cv=none; b=k9+Ty4e+PpLpDWL/s2tp1j2ZxqZsDtWfPPqoNZBrg+nYKeXENze76idecZN+RgX9wNeOTn6kRf8846iA5fQp6HfwbqIhC0DgM1yO6L4WgY7QgXZ5KeDy3+CSZCYHafJHPIv1spaQy4m4x2WdZmkEmPfrhouZ9vmkMCkqi7wQMGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718352894; c=relaxed/simple;
-	bh=AJr56AIyxw1AV+8imWQzB4XZoQsJAgsK6sLrW1PzyvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mqNe6l6M2xidbjwI9UdZ2zfIUtOFxxvf1HFHmzF+zvjW52V7BJ2DSemtUjcSwt8Ju+LTkwKAYEZcMUEIxlSML/tEdHtHTMdCFna6JfgQSyZB714YBK56T3trQz8gHLvGpLLW1CBhySXMinINBOm4KYIxBN9mFwO92wwIrTcKW+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OHSr8R3F; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OHSr8R3F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718352892;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kpIVMcrxNUuot3WrmRIeXJx5cyzexiU4T4G3Mxhn+Fo=;
-	b=OHSr8R3FGbEDBn5Np4aKkOaRmpB4Qxx7BMHcO8fRYQJazTWExyblqR5k5ji7Q/J5y/98oM
-	rOGHEN7X/n8amSyKkrIGYudYOA3hzsjLPI61rIdMuxIMjHRTYwWOJy3GR8BtFxPJIoCcip
-	MtpHBkz1dgOCuYb4tfJ+6YpAkwBeJLw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-QPyfIbc7Np-25l__XOO7DQ-1; Fri,
- 14 Jun 2024 04:14:47 -0400
-X-MC-Unique: QPyfIbc7Np-25l__XOO7DQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0BBC19560AE;
-	Fri, 14 Jun 2024 08:14:45 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.39.193.73])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F2DDA19560BF;
-	Fri, 14 Jun 2024 08:14:40 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-doc@vger.kernel.org,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH] Documentation: Add "S390" to the swiotlb kernel parameter
-Date: Fri, 14 Jun 2024 10:14:38 +0200
-Message-ID: <20240614081438.553160-1-thuth@redhat.com>
+	s=arc-20240116; t=1718352923; c=relaxed/simple;
+	bh=4WHVIBJ3D555tdNg04ZngNBnZIVWhvCMAzFMaswUvRE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Qw9yJWC2uF1AwAZwsDhczIpx0W4+rKMgcnxq72Eecsk8S86r3K/QGRMCc6w8KNP/HcsiEzHbZ1OpMWVzKPYBRYiQrPMlHqGf+K/AcKbgDZMWpGH17jDQLElezjk41ZinDeEtJ22j5o5d6oCFN56ktZmV7RDxTX2ZmaEfGpJ2EwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-375e46790a4so4644625ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 01:15:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718352921; x=1718957721;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ufqmCNorKhcm1V0n33VpfHDH7mK8yeTm8oqi7TEKMcY=;
+        b=j2DJjyJXRQNUM+4/QFuq9xzJNtEoLR3cozogmEEEdXxqhJMOmP+CXTJEpiVALzSkkS
+         8WWyb6azciqjcQ1cJAXbSko32L+4gUuPBhlLEKSwoYQkL2TDVxO9fdxJw6vt1P+b2/ij
+         achw4XFH9RPcqIUbV8puyZ5jJZ6stZ+cgUuoI3KYQf92XNZmLIOwK5KJE4xdBu1++378
+         mc85N/qix3+/5lvIyyZlY3kyrMDkVOkEnUdd1dKYhBRS0nzj/KnbEcYAOphu/DUPJ+ts
+         /bKQ+63SlKD2unL8EHvlzMN0TYNX5kYcTb8Wk30kKFZV9df5KGFGE3N2y8GBa8RfWYr8
+         Zu/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWinODOxJjl+839qQ6aYvKt/N95pV0UqbRRHrSOu6+eWSWtPYYnCMyyQFOYLUuabR0Q75GYYu+HOjFZpeyjEmWHmOaM3jUxsm9/pg6y
+X-Gm-Message-State: AOJu0YzT52QCSV10HsH6/AZjWASm6IloJQLNpAW23UsJx5MpI5AuQd64
+	v+a3KNpZXPX9xKVJ+KEFEbtYJBhmRSOkFF+AyOdd0Sp9TTgJq6xe9jFJq0HnBUW5NZIOB3sbqax
+	7W5Hm+n590QtSXMGMIl2NFUn0Q7dylfFqvBnlUh1i1viH1E/EcHoqocQ=
+X-Google-Smtp-Source: AGHT+IFuC4GnQROLhrD1IHSlaSk6xrNzhyHkQx9Ru/5y+4t7u/sc7gkYfvc54v6jjHK0GvVprTPT9uRyeZb2DlVjNmNkzaAOOz7z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Received: by 2002:a05:6e02:1389:b0:375:a535:f7bc with SMTP id
+ e9e14a558f8ab-375e0c75f5amr1290805ab.0.1718352921132; Fri, 14 Jun 2024
+ 01:15:21 -0700 (PDT)
+Date: Fri, 14 Jun 2024 01:15:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000768f55061ad537c6@google.com>
+Subject: [syzbot] Monthly hfs report (Jun 2024)
+From: syzbot <syzbot+list78403d946dffa425f364@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The "swiotlb" kernel parameter is used on s390 for protected virt since
-commit 64e1f0c531d1 ("s390/mm: force swiotlb for protected virtualization")
-and thus should be marked in kernel-parameters.txt accordingly.
+Hello hfs maintainers/developers,
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+This is a 31-day syzbot report for the hfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/hfs
+
+During the period, 3 new issues were detected and 0 were fixed.
+In total, 45 issues are still open and 16 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref  Crashes Repro Title
+<1>  27193   Yes   possible deadlock in hfsplus_file_extend
+                   https://syzkaller.appspot.com/bug?extid=325b61d3c9a17729454b
+<2>  9791    Yes   possible deadlock in hfsplus_get_block
+                   https://syzkaller.appspot.com/bug?extid=b7ef7c0c8d8098686ae2
+<3>  7680    Yes   kernel BUG in hfs_write_inode
+                   https://syzkaller.appspot.com/bug?extid=97e301b4b82ae803d21b
+<4>  5890    Yes   kernel BUG in __hfsplus_setxattr
+                   https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+<5>  2252    Yes   KMSAN: kernel-infoleak in filemap_read
+                   https://syzkaller.appspot.com/bug?extid=905d785c4923bea2c1db
+<6>  2075    Yes   WARNING in drop_nlink (2)
+                   https://syzkaller.appspot.com/bug?extid=651ca866e5e2b4b5095b
+<7>  1413    Yes   KMSAN: uninit-value in hfs_find_set_zero_bits
+                   https://syzkaller.appspot.com/bug?extid=773fa9d79b29bd8b6831
+<8>  1339    Yes   WARNING in hfs_bnode_create
+                   https://syzkaller.appspot.com/bug?extid=a19ca73b21fe8bc69101
+<9>  1165    Yes   KASAN: slab-out-of-bounds Read in hfsplus_uni2asc
+                   https://syzkaller.appspot.com/bug?extid=076d963e115823c4b9be
+<10> 1070    Yes   KMSAN: uninit-value in hfsplus_delete_cat
+                   https://syzkaller.appspot.com/bug?extid=fdedff847a0e5e84c39f
+
 ---
- PS: I wonder whether we could remove IA-64 nowadays...?
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..423427bf6e49 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6548,7 +6548,7 @@
- 			This parameter controls use of the Protected
- 			Execution Facility on pSeries.
- 
--	swiotlb=	[ARM,IA-64,PPC,MIPS,X86,EARLY]
-+	swiotlb=	[ARM,IA-64,PPC,MIPS,X86,S390,EARLY]
- 			Format: { <int> [,<int>] | force | noforce }
- 			<int> -- Number of I/O TLB slabs
- 			<int> -- Second integer after comma. Number of swiotlb
--- 
-2.45.2
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
+You may send multiple commands in a single email message.
