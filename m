@@ -1,33 +1,69 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15C1145B34
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563AA1474BA
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 05:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718344500; cv=none; b=twUujrH1KtYQ+vKGRPFYmbnc5jzRieC/Wr4wwokoBcc7lbh2GZmOajht80IKww8k1vs3qUw9SKE+kBbrORVEFhvgSNApRyuiQLRAVF6hF71yh+lrrpWYcJcXjUKGQNEOAu9IfHDMsaAX/h5uhRz4Yr61fdb84toAcUkOgMmWmwM=
+	t=1718344545; cv=none; b=ngSExhhU8DW1OV3pxzKkCT2IC/glTfi+RcBcMjtXy5s2rs0wwQ92Wl9ZMbVwIqiXtR/SN4Fih7R11cdreiD+B3XNVP45NLhW2KslsccqjtOTdQJ6VF87cABGbQjuJSZc97EaulG//KFxc0gNAteKk8lmJEsVCldfhoocuEeOix8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718344500; c=relaxed/simple;
-	bh=fVCy6/dkF7HT91z7sabukVEP02eEuNJGU6rMT2irjBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P6ljGTAMnstnRTYC2nMQMeUuDR3ARv5J+75plC6/qk27vDazdcMnEfS13WwN8hI+GYvy1HraQ9C64C+a8Aqrk96/RBw91K0zM1viA6ror41cI4js6BI4aL+IxbJ8X7K+ViQt/oFrGskW7IMKF2jousQyZcJeU+2WWvcIY9ZJTkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app2 (Coremail) with SMTP id HwEQrAA3aMTr2mtmPKtzAQ--.33516S2;
-	Fri, 14 Jun 2024 13:53:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.12.164.29])
-	by gateway (Coremail) with SMTP id _____wCnMN_k2mtmS_QkAA--.8520S2;
-	Fri, 14 Jun 2024 13:53:46 +0800 (CST)
-From: Dongliang Mu <dzm91@hust.edu.cn>
-To: Dongliang Mu <dzm91@hust.edu.cn>,
-	Alex Shi <alexs@kernel.org>,
-	Cheng Ziqiu <chengziqiu@hust.edu.cn>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] scripts: fix most issues reported by pylint
-Date: Fri, 14 Jun 2024 13:53:20 +0800
-Message-Id: <20240614055328.778041-1-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718344545; c=relaxed/simple;
+	bh=Pa6jI99d+sC+RqKa/RilQaFsQvQoyIuPVKJo4RrDMVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ip7K49/dTCdk79Bkr8KRCaUo7byf/Hl9jSQRJkS58Fo0egZfjJTw0rga8tqDUeFzfRoCFGo2x/+GMyjhdz8TV/HZQ6x+5/+2BkoIRrzPFMSSzHWdjS30To2QR8upaRaGZmp/8EQR+xPZ0btpF0YDuFU/lDgM5lewk3wyH9h51xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=BBu7Aado; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="BBu7Aado"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-421eab59723so14468415e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2024 22:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1718344541; x=1718949341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=atieE0lcxb/9U93M0barRDrZi7dMCPkgBP2Rd6ay3bE=;
+        b=BBu7AadoYh2kXZHZfnre/B4XRO9Kcg4c3TJQIcSp8JLrw4XKAUyKEpYBi0zQfnDe8R
+         XTWZDKmC/n5xhq7ku63JZv2p1AmylvM8cox+HtgBooVEa9Dgd1vqGACQHjG3hjR2GYtF
+         K8OaV7NV1n3vnFyemP69eg6kfA1OyIcxuBfQveLl+SHduIwBeq4iFslsBD6Ob3E+QM2L
+         vCZOQ7q1Hhpo1QutwUZoPmuGc4iXmM5ci4gPEELSKJ8c0KPuvG0onqbLVasJzyncvTGH
+         bEFyk7+TD6OruIG94lgQDaUk8hojrIIeoN2m8cWd6Ga2nFTgyb4272iR458i4aVKFmF6
+         TOeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718344541; x=1718949341;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=atieE0lcxb/9U93M0barRDrZi7dMCPkgBP2Rd6ay3bE=;
+        b=Na0aeFwPPzKRW63fiJXLQVHVfbVOTIBJ3sau96J5Rb5YbDNqIp6Y51eAg2JoIomrY8
+         3CkvvAHraCbD8/kG36GGEWHfmXUZRlo/QcSXuffxNbiPnT8YdNNDP0imWWx7ZoIvwy23
+         RJaKRKDXB5qFqrS3qvVZ9QU9tlnNV48s8X82aJZ7LLTOmJuSGw696umKjrvAXCswXwMp
+         //WV3z+7vn3QOii7Iy218c+QqE4FTCIfOAb7pnAP/3nn6xdl4i1ENwcQKoapa2xlCIiN
+         fOHAkRB1pxZPs5+KiTFZAm1TMoKI3hqCOe7HtSLjuFZEIq60kPJjCSWUmnzAoimi8UtW
+         RQqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4H+RlXQgWE/3ZWjkn9rwTir9ifCIwGJ6VCQ7vjG0qVEXqsRr2GyZLe104bLdg1bC69SvOPxLSIjkuqGfVI+A495E6DGwbT2wIYvZS
+X-Gm-Message-State: AOJu0Yw8DbHQ93NpECPlwnbJzEHm9tMgv7zWhQG5xdEzLHM7xy/nWgGy
+	PMqUWMFhEMlPCAEbTob7VqXWQUUWK6H/nCp89jAw7UkE0x+Grbd/GEBJKnsck/Q=
+X-Google-Smtp-Source: AGHT+IHRj4bq/LBSzth+tkBe/3uo7sudhZhCr/LdWnF6gTghRo1IW7OIjDzA2oKro9sLg4cY2HguzA==
+X-Received: by 2002:a05:600c:3516:b0:421:de31:8b with SMTP id 5b1f17b1804b1-423048440d8mr15042905e9.27.1718344541629;
+        Thu, 13 Jun 2024 22:55:41 -0700 (PDT)
+Received: from stroh80.lab.9e.network (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-423072c21dbsm5190605e9.4.2024.06.13.22.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 22:55:41 -0700 (PDT)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/2] hwmon: (max6639) : Add hwmon attributes for fan and pwm
+Date: Fri, 14 Jun 2024 11:25:31 +0530
+Message-ID: <20240614055533.2735210-2-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240614055533.2735210-1-naresh.solanki@9elements.com>
+References: <20240614055533.2735210-1-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,203 +71,193 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrAA3aMTr2mtmPKtzAQ--.33516S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoW3AF1DAr47tF4kKFWruF4fAFb_yoWxGF15p3
-	45CFWIyrs8JrWUtr1xGw4UZFy3Ar9rJrWjqryqq3s7ArnrK3409FW2y34SvrW7WFyrXa43
-	GFWYyr1jqF1j9aDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQIb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jr
-	v_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26F4j6r4UJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42
-	xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUYSoGJUUUUU==
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-Pylint reports many coding style issues of scripts/checktransupdate.py
+Add attribute for fan & pwm i.e.,
+fanY_pulse
+pwmY_freq
 
-This patch fixes most issues with the following contents:
-- add or revise comments for all functions
-- use format string suggested by python
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 ---
- scripts/checktransupdate.py | 55 ++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 31 deletions(-)
+Changes in V5:
+- Remove unnecessary IS_ERR check.
+- Add mutex
+---
+ drivers/hwmon/max6639.c | 90 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 86 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/checktransupdate.py b/scripts/checktransupdate.py
-index 5a0fc99e3f93..70a5dab1a17b 100755
---- a/scripts/checktransupdate.py
-+++ b/scripts/checktransupdate.py
-@@ -4,19 +4,9 @@
- """
- This script helps track the translation status of the documentation
- in different locales, e.g., zh_CN. More specially, it uses `git log`
--commit to find the latest english commit from the translation commit
--(order by author date) and the latest english commits from HEAD. If
-+command to find the latest English commit from the translation commit
-+(order by author date) and the latest English commits from HEAD. If
- differences occur, report the file and commits that need to be updated.
--
--The usage is as follows:
--- ./scripts/checktransupdate.py -l zh_CN
--This will print all the files that need to be updated in the zh_CN locale.
--- ./scripts/checktransupdate.py Documentation/translations/zh_CN/dev-tools/testing-overview.rst
--This will only print the status of the specified file.
--
--The output is something like:
--Documentation/translations/zh_CN/dev-tools/testing-overview.rst (1 commits)
--commit 42fb9cfd5b18 ("Documentation: dev-tools: Add link to RV docs")
- """
+diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
+index 45ed629c6af9..091a4a0abd27 100644
+--- a/drivers/hwmon/max6639.c
++++ b/drivers/hwmon/max6639.c
+@@ -76,6 +76,7 @@ static const unsigned int freq_table[] = { 20, 33, 50, 100, 5000, 8333, 12500,
+  */
+ struct max6639_data {
+ 	struct regmap *regmap;
++	struct mutex update_lock;
  
- import os
-@@ -29,12 +19,14 @@ flag_debug = False
+ 	/* Register values initialized only once */
+ 	u8 ppr[MAX6639_NUM_CHANNELS];	/* Pulses per rotation 0..3 for 1..4 ppr */
+@@ -232,6 +233,9 @@ static int max6639_read_fan(struct device *dev, u32 attr, int channel,
+ 			return res;
+ 		*fan_val = !!(val & BIT(1 - channel));
+ 		return 0;
++	case hwmon_fan_pulses:
++		*fan_val = data->ppr[channel];
++		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -243,6 +247,33 @@ static int max6639_set_ppr(struct max6639_data *data, int channel, u8 ppr)
+ 	return regmap_write(data->regmap, MAX6639_REG_FAN_PPR(channel), ppr-- << 6);
+ }
  
++static int max6639_write_fan(struct device *dev, u32 attr, int channel,
++			     long val)
++{
++	struct max6639_data *data = dev_get_drvdata(dev);
++	int err;
++
++	switch (attr) {
++	case hwmon_fan_pulses:
++		if (val <= 0 || val > 5)
++			return -EINVAL;
++
++		mutex_lock(&data->update_lock);
++		/* Set Fan pulse per revolution */
++		err = max6639_set_ppr(data, channel, val);
++		if (err < 0) {
++			mutex_unlock(&data->update_lock);
++			return err;
++		}
++		data->ppr[channel] = val;
++
++		mutex_unlock(&data->update_lock);
++		return 0;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static umode_t max6639_fan_is_visible(const void *_data, u32 attr, int channel)
+ {
+ 	switch (attr) {
+@@ -262,6 +293,7 @@ static int max6639_read_pwm(struct device *dev, u32 attr, int channel,
+ 	struct max6639_data *data = dev_get_drvdata(dev);
+ 	unsigned int val;
+ 	int res;
++	u8 i;
  
- def dprint(*args, **kwargs):
-+    """Print debug information if the debug flag is set"""
-     if flag_debug:
-         print("[DEBUG] ", end="")
-         print(*args, **kwargs)
+ 	switch (attr) {
+ 	case hwmon_pwm_input:
+@@ -270,6 +302,28 @@ static int max6639_read_pwm(struct device *dev, u32 attr, int channel,
+ 			return res;
+ 		*pwm_val = val * 255 / 120;
+ 		return 0;
++	case hwmon_pwm_freq:
++		mutex_lock(&data->update_lock);
++		res = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(channel), &val);
++		if (res < 0) {
++			mutex_unlock(&data->update_lock);
++			return res;
++		}
++		i = val & MAX6639_FAN_CONFIG3_FREQ_MASK;
++
++		res = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &val);
++		if (res < 0) {
++			mutex_unlock(&data->update_lock);
++			return res;
++		}
++
++		if (val & MAX6639_GCONFIG_PWM_FREQ_HI)
++			i |= 0x4;
++		i &= 0x7;
++		*pwm_val = freq_table[i];
++
++		mutex_unlock(&data->update_lock);
++		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -280,6 +334,7 @@ static int max6639_write_pwm(struct device *dev, u32 attr, int channel,
+ {
+ 	struct max6639_data *data = dev_get_drvdata(dev);
+ 	int err;
++	u8 i;
  
+ 	switch (attr) {
+ 	case hwmon_pwm_input:
+@@ -287,6 +342,28 @@ static int max6639_write_pwm(struct device *dev, u32 attr, int channel,
+ 		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(channel),
+ 				   val * 120 / 255);
+ 		return err;
++	case hwmon_pwm_freq:
++		val = clamp_val(val, 0, 25000);
++
++		i = find_closest(val, freq_table, ARRAY_SIZE(freq_table));
++
++		mutex_lock(&data->update_lock);
++		err = regmap_update_bits(data->regmap, MAX6639_REG_FAN_CONFIG3(channel),
++					 MAX6639_FAN_CONFIG3_FREQ_MASK, i);
++		if (err < 0) {
++			mutex_unlock(&data->update_lock);
++			return err;
++		}
++
++		if (i >> 2)
++			err = regmap_set_bits(data->regmap, MAX6639_REG_GCONFIG,
++					      MAX6639_GCONFIG_PWM_FREQ_HI);
++		else
++			err = regmap_clear_bits(data->regmap, MAX6639_REG_GCONFIG,
++						MAX6639_GCONFIG_PWM_FREQ_HI);
++
++		mutex_unlock(&data->update_lock);
++		return err;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -296,6 +373,7 @@ static umode_t max6639_pwm_is_visible(const void *_data, u32 attr, int channel)
+ {
+ 	switch (attr) {
+ 	case hwmon_pwm_input:
++	case hwmon_pwm_freq:
+ 		return 0644;
+ 	default:
+ 		return 0;
+@@ -401,6 +479,8 @@ static int max6639_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 u32 attr, int channel, long val)
+ {
+ 	switch (type) {
++	case hwmon_fan:
++		return max6639_write_fan(dev, attr, channel, val);
+ 	case hwmon_pwm:
+ 		return max6639_write_pwm(dev, attr, channel, val);
+ 	case hwmon_temp:
+@@ -428,11 +508,11 @@ static umode_t max6639_is_visible(const void *data,
  
- def get_origin_path(file_path):
-+    """Get the origin path from the translation path"""
-     paths = file_path.split("/")
-     tidx = paths.index("translations")
-     opaths = paths[:tidx]
-@@ -43,9 +35,8 @@ def get_origin_path(file_path):
+ static const struct hwmon_channel_info * const max6639_info[] = {
+ 	HWMON_CHANNEL_INFO(fan,
+-			   HWMON_F_INPUT | HWMON_F_FAULT,
+-			   HWMON_F_INPUT | HWMON_F_FAULT),
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_PULSES,
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_PULSES),
+ 	HWMON_CHANNEL_INFO(pwm,
+-			   HWMON_PWM_INPUT,
+-			   HWMON_PWM_INPUT),
++			   HWMON_PWM_INPUT | HWMON_PWM_FREQ,
++			   HWMON_PWM_INPUT | HWMON_PWM_FREQ),
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_MAX | HWMON_T_MAX_ALARM |
+ 			   HWMON_T_CRIT | HWMON_T_CRIT_ALARM | HWMON_T_EMERGENCY |
+@@ -643,6 +723,8 @@ static int max6639_probe(struct i2c_client *client)
+ 		}
+ 	}
  
- 
- def get_latest_commit_from(file_path, commit):
--    command = "git log --pretty=format:%H%n%aD%n%cD%n%n%B {} -1 -- {}".format(
--        commit, file_path
--    )
-+    """Get the latest commit from the specified commit for the specified file"""
-+    command = f"git log --pretty=format:%H%n%aD%n%cD%n%n%B {commit} -1 -- {file_path}"
-     dprint(command)
-     pipe = os.popen(command)
-     result = pipe.read()
-@@ -53,7 +44,7 @@ def get_latest_commit_from(file_path, commit):
-     if len(result) <= 1:
-         return None
- 
--    dprint("Result: {}".format(result[0]))
-+    dprint(f"Result: {result[0]}")
- 
-     return {
-         "hash": result[0],
-@@ -64,16 +55,18 @@ def get_latest_commit_from(file_path, commit):
- 
- 
- def get_origin_from_trans(origin_path, t_from_head):
-+    """Get the latest origin commit from the translation commit"""
-     o_from_t = get_latest_commit_from(origin_path, t_from_head["hash"])
-     while o_from_t is not None and o_from_t["author_date"] > t_from_head["author_date"]:
-         o_from_t = get_latest_commit_from(origin_path, o_from_t["hash"] + "^")
-     if o_from_t is not None:
--        dprint("tracked origin commit id: {}".format(o_from_t["hash"]))
-+        dprint(f"tracked origin commit id: {o_from_t['hash']}")
-     return o_from_t
- 
- 
- def get_commits_count_between(opath, commit1, commit2):
--    command = "git log --pretty=format:%H {}...{} -- {}".format(commit1, commit2, opath)
-+    """Get the commits count between two commits for the specified file"""
-+    command = f"git log --pretty=format:%H {commit1}...{commit2} -- {opath}"
-     dprint(command)
-     pipe = os.popen(command)
-     result = pipe.read().split("\n")
-@@ -83,50 +76,52 @@ def get_commits_count_between(opath, commit1, commit2):
- 
- 
- def pretty_output(commit):
--    command = "git log --pretty='format:%h (\"%s\")' -1 {}".format(commit)
-+    """Pretty print the commit message"""
-+    command = f"git log --pretty='format:%h (\"%s\")' -1 {commit}"
-     dprint(command)
-     pipe = os.popen(command)
-     return pipe.read()
- 
- 
- def check_per_file(file_path):
-+    """Check the translation status for the specified file"""
-     opath = get_origin_path(file_path)
- 
-     if not os.path.isfile(opath):
--        dprint("Error: Cannot find the origin path for {}".format(file_path))
-+        dprint(f"Error: Cannot find the origin path for {file_path}")
-         return
- 
-     o_from_head = get_latest_commit_from(opath, "HEAD")
-     t_from_head = get_latest_commit_from(file_path, "HEAD")
- 
-     if o_from_head is None or t_from_head is None:
--        print("Error: Cannot find the latest commit for {}".format(file_path))
-+        print(f"Error: Cannot find the latest commit for {file_path}")
-         return
- 
-     o_from_t = get_origin_from_trans(opath, t_from_head)
- 
-     if o_from_t is None:
--        print("Error: Cannot find the latest origin commit for {}".format(file_path))
-+        print(f"Error: Cannot find the latest origin commit for {file_path}")
-         return
- 
-     if o_from_head["hash"] == o_from_t["hash"]:
-         if flag_p_uf:
--            print("No update needed for {}".format(file_path))
--        return
-+            print(f"No update needed for {file_path}")
-     else:
--        print("{}".format(file_path), end="\t")
-+        print(f"{file_path}", end="\t")
-         commits = get_commits_count_between(
-             opath, o_from_t["hash"], o_from_head["hash"]
-         )
--        print("({} commits)".format(len(commits)))
-+        print(f"({len(commits)} commits)")
-         if flag_p_c:
-             for commit in commits:
-                 msg = pretty_output(commit)
-                 if "Merge tag" not in msg:
--                    print("commit", msg)
-+                    print(f"commit {msg}")
- 
- 
- def main():
-+    """Main function of the script"""
-     script_path = os.path.dirname(os.path.abspath(__file__))
-     linux_path = os.path.join(script_path, "..")
- 
-@@ -173,9 +168,7 @@ def main():
-         if args.locale is not None:
-             files = (
-                 os.popen(
--                    "find {}/Documentation/translations/{} -type f".format(
--                        linux_path, args.locale
--                    )
-+                    f"find {linux_path}/Documentation/translations/{args.locale} -type f"
-                 )
-                 .read()
-                 .split("\n")
-@@ -183,7 +176,7 @@ def main():
-         else:
-             files = (
-                 os.popen(
--                    "find {}/Documentation/translations -type f".format(linux_path)
-+                    f"find {linux_path}/Documentation/translations -type f"
-                 )
-                 .read()
-                 .split("\n")
++	mutex_init(&data->update_lock);
++
+ 	/* Initialize the max6639 chip */
+ 	err = max6639_init_client(client, data);
+ 	if (err < 0)
 -- 
-2.39.2
+2.42.0
 
