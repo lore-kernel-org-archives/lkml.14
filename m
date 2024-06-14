@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C022E35280
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FC717C20F
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 16:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718382647; cv=none; b=cYjwmvRH0liZ3Jw3qX5GvLiIrOCDOtjb8uYM1eIlMicpVevAcZXlEUM3H5bIrFKcyU1XeWA6lahI1YvNKY6l62PvvjfubBeusiB5Nw4BMZ0uLFbKyOmTED9wvGRuGLkDhYK/42WS0GQVTvQNtYxtyiftKhXxCz0C8/okqe4SiN8=
+	t=1718382648; cv=none; b=sNPV90+AjJOeTN4qR32MEOjZKK/iRxl8tXXqCGtPOh5/2Q6Qy11TUfBNQHXM1TKdwLYBWwlDvU9AbQ0dHIjCnGNx0Li0GrWDd6xudB6dxQjvxg0mdc2a85SpuYUhbCaCg/JrsrHl7EEvuaGlNT2BGgllxoFgnWwyaImH218RXFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718382647; c=relaxed/simple;
-	bh=6RXP7s+1fSEPmeGdjAdu3vzp+mywRk+tKqNadmV1o24=;
+	s=arc-20240116; t=1718382648; c=relaxed/simple;
+	bh=31NBALkfn3aOfHpudA5VSY4NumAiBezUCSuJsOGQ3gs=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=FZoPdvdP1sGTpUjrTw1w/uyGaRRyRMf5blkme36eRCztQ+RnjulldYVz6RVRPujNH8Ebbxxt8vE5etHUnUlaoKmKK5AQFvAKnTwL8NtIedD+sEPTkXqDYvgpxgiiPnLZeA/bzhkPQ3ArLf2d7wQkEeFgF3ma1eestbMquDDzBfw=
+	 Content-Type; b=H6dvolGWLjfjLo/2Vcx+MbNgGV4E8Ru0F17iwVIdd2+lusfJijPJbiQ/wLIUfA6arpMotBxsyMi1+U/DcGZ5L3qLkRiyVxneW/sdhGSLT2AaTxSWd1Zv1nETr0ZOp6k9KwNmiE9IjHjB5sNMNPDI+YHkRNirqIfhgekecvsynX8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731DAC32786;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF894C4AF1D;
 	Fri, 14 Jun 2024 16:30:47 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sI9pW-00000001rpV-27Ri;
+	id 1sI9pW-00000001rqx-43mm;
 	Fri, 14 Jun 2024 12:31:10 -0400
-Message-ID: <20240614163110.367920910@goodmis.org>
+Message-ID: <20240614163110.829234556@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Jun 2024 12:30:16 -0400
+Date: Fri, 14 Jun 2024 12:30:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,7 +47,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [for-next][PATCH 01/13] ring-buffer: Allow mapped field to be set without mapping
+Subject: [for-next][PATCH 04/13] tracing: Implement creating an instance based on a given memory
+ region
 References: <20240614163015.456541709@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,16 +60,14 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-In preparation for having the ring buffer mapped to a dedicated location,
-which will have the same restrictions as user space memory mapped buffers,
-allow it to use the "mapped" field of the ring_buffer_per_cpu structure
-without having the user space meta page mapping.
+Allow for creating a new instance by passing in an address and size to map
+the ring buffer for the instance to.
 
-When this starts using the mapped field, it will need to handle adding a
-user space mapping (and removing it) from a ring buffer that is using a
-dedicated memory range.
+This will allow features like a pstore memory mapped region to be used for
+an tracing instance ring buffer that can be retrieved from one boot to the
+next.
 
-Link: https://lkml.kernel.org/r/20240612232025.190908567@goodmis.org
+Link: https://lkml.kernel.org/r/20240612232025.692086240@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -96,130 +95,152 @@ Cc: Ross Zwisler <zwisler@google.com>
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ kernel/trace/trace.c | 50 +++++++++++++++++++++++++++++++++++---------
+ kernel/trace/trace.h |  6 +++++-
+ 2 files changed, 45 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 28853966aa9a..a240bdc0f2d8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -491,6 +491,7 @@ struct ring_buffer_per_cpu {
- 	unsigned long			pages_removed;
- 
- 	unsigned int			mapped;
-+	unsigned int			user_mapped;	/* user space mapping */
- 	struct mutex			mapping_lock;
- 	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
- 	struct trace_buffer_meta	*meta_page;
-@@ -5224,6 +5225,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 578a49ff5c32..ff2b504fbe00 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4921,6 +4921,11 @@ static int tracing_open(struct inode *inode, struct file *file)
+ static bool
+ trace_ok_for_array(struct tracer *t, struct trace_array *tr)
  {
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
++#ifdef CONFIG_TRACER_SNAPSHOT
++	/* arrays with mapped buffer range do not have snapshots */
++	if (tr->range_addr_start && t->use_max_tr)
++		return false;
++#endif
+ 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
+ }
  
-+	if (!meta)
-+		return;
-+
- 	meta->reader.read = cpu_buffer->reader_page->read;
- 	meta->reader.id = cpu_buffer->reader_page->id;
- 	meta->reader.lost_events = cpu_buffer->lost_events;
-@@ -5280,7 +5284,7 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- 	cpu_buffer->lost_events = 0;
- 	cpu_buffer->last_overrun = 0;
+@@ -8664,11 +8669,13 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
+ 				tr, cpu, &tracing_entries_fops);
  
--	if (cpu_buffer->mapped)
-+	if (cpu_buffer->user_mapped)
- 		rb_update_meta_page(cpu_buffer);
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
+-				tr, cpu, &snapshot_fops);
++	if (!tr->range_addr_start) {
++		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
++				      tr, cpu, &snapshot_fops);
  
- 	rb_head_page_activate(cpu_buffer);
-@@ -6167,7 +6171,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
- 
- 	mutex_lock(&cpu_buffer->mapping_lock);
- 
--	if (!cpu_buffer->mapped) {
-+	if (!cpu_buffer->user_mapped) {
- 		mutex_unlock(&cpu_buffer->mapping_lock);
- 		return ERR_PTR(-ENODEV);
- 	}
-@@ -6191,19 +6195,26 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
-+	/* mapped is always greater or equal to user_mapped */
-+	if (WARN_ON(cpu_buffer->mapped < cpu_buffer->user_mapped))
-+		return -EINVAL;
-+
- 	if (inc && cpu_buffer->mapped == UINT_MAX)
- 		return -EBUSY;
- 
--	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
-+	if (WARN_ON(!inc && cpu_buffer->user_mapped == 0))
- 		return -EINVAL;
- 
- 	mutex_lock(&cpu_buffer->buffer->mutex);
- 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 
--	if (inc)
-+	if (inc) {
-+		cpu_buffer->user_mapped++;
- 		cpu_buffer->mapped++;
--	else
-+	} else {
-+		cpu_buffer->user_mapped--;
- 		cpu_buffer->mapped--;
+-	trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
+-				tr, cpu, &snapshot_raw_fops);
++		trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
++				      tr, cpu, &snapshot_raw_fops);
 +	}
+ #endif
+ }
  
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 	mutex_unlock(&cpu_buffer->buffer->mutex);
-@@ -6328,7 +6339,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+@@ -9205,7 +9212,18 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
  
- 	mutex_lock(&cpu_buffer->mapping_lock);
+ 	buf->tr = tr;
  
--	if (cpu_buffer->mapped) {
-+	if (cpu_buffer->user_mapped) {
- 		err = __rb_map_vma(cpu_buffer, vma);
- 		if (!err)
- 			err = __rb_inc_dec_mapped(cpu_buffer, true);
-@@ -6359,12 +6370,15 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 	 */
- 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+-	buf->buffer = ring_buffer_alloc(size, rb_flags);
++	if (tr->range_addr_start && tr->range_addr_size) {
++		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
++						      tr->range_addr_start,
++						      tr->range_addr_size);
++		/*
++		 * This is basically the same as a mapped buffer,
++		 * with the same restrictions.
++		 */
++		tr->mapped++;
++	} else {
++		buf->buffer = ring_buffer_alloc(size, rb_flags);
++	}
+ 	if (!buf->buffer)
+ 		return -ENOMEM;
+ 
+@@ -9242,6 +9260,10 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
+ 		return ret;
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
++	/* Fix mapped buffer trace arrays do not have snapshot buffers */
++	if (tr->range_addr_start)
++		return 0;
 +
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	ret = allocate_trace_buffer(tr, &tr->max_buffer,
+ 				    allocate_snapshot ? size : 1);
+ 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
+@@ -9342,7 +9364,9 @@ static int trace_array_create_dir(struct trace_array *tr)
+ }
  
- 	err = __rb_map_vma(cpu_buffer, vma);
- 	if (!err) {
- 		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
--		cpu_buffer->mapped = 1;
-+		/* This is the first time it is mapped by user */
-+		cpu_buffer->mapped++;
-+		cpu_buffer->user_mapped = 1;
- 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 	} else {
- 		kfree(cpu_buffer->subbuf_ids);
-@@ -6392,10 +6406,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
- 
- 	mutex_lock(&cpu_buffer->mapping_lock);
- 
--	if (!cpu_buffer->mapped) {
-+	if (!cpu_buffer->user_mapped) {
- 		err = -ENODEV;
- 		goto out;
--	} else if (cpu_buffer->mapped > 1) {
-+	} else if (cpu_buffer->user_mapped > 1) {
- 		__rb_inc_dec_mapped(cpu_buffer, false);
- 		goto out;
+ static struct trace_array *
+-trace_array_create_systems(const char *name, const char *systems)
++trace_array_create_systems(const char *name, const char *systems,
++			   unsigned long range_addr_start,
++			   unsigned long range_addr_size)
+ {
+ 	struct trace_array *tr;
+ 	int ret;
+@@ -9368,6 +9392,10 @@ trace_array_create_systems(const char *name, const char *systems)
+ 			goto out_free_tr;
  	}
-@@ -6403,7 +6417,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
- 	mutex_lock(&buffer->mutex);
- 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
  
--	cpu_buffer->mapped = 0;
-+	/* This is the last user space mapping */
-+	if (!WARN_ON_ONCE(cpu_buffer->mapped < cpu_buffer->user_mapped))
-+		cpu_buffer->mapped--;
-+	cpu_buffer->user_mapped = 0;
++	/* Only for boot up memory mapped ring buffers */
++	tr->range_addr_start = range_addr_start;
++	tr->range_addr_size = range_addr_size;
++
+ 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
  
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
+@@ -9425,7 +9453,7 @@ trace_array_create_systems(const char *name, const char *systems)
  
+ static struct trace_array *trace_array_create(const char *name)
+ {
+-	return trace_array_create_systems(name, NULL);
++	return trace_array_create_systems(name, NULL, 0, 0);
+ }
+ 
+ static int instance_mkdir(const char *name)
+@@ -9479,7 +9507,7 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
+ 			goto out_unlock;
+ 	}
+ 
+-	tr = trace_array_create_systems(name, systems);
++	tr = trace_array_create_systems(name, systems, 0, 0);
+ 
+ 	if (IS_ERR(tr))
+ 		tr = NULL;
+@@ -9672,8 +9700,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 		MEM_FAIL(1, "Could not allocate function filter files");
+ 
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
+-			  tr, &snapshot_fops);
++	if (!tr->range_addr_start) {
++		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
++				  tr, &snapshot_fops);
++	}
+ #endif
+ 
+ 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 749a182dab48..5dd48932509c 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -336,7 +336,6 @@ struct trace_array {
+ 	bool			allocated_snapshot;
+ 	spinlock_t		snapshot_trigger_lock;
+ 	unsigned int		snapshot;
+-	unsigned int		mapped;
+ 	unsigned long		max_latency;
+ #ifdef CONFIG_FSNOTIFY
+ 	struct dentry		*d_max_latency;
+@@ -344,6 +343,11 @@ struct trace_array {
+ 	struct irq_work		fsnotify_irqwork;
+ #endif
+ #endif
++	/* The below is for memory mapped ring buffer */
++	unsigned int		mapped;
++	unsigned long		range_addr_start;
++	unsigned long		range_addr_size;
++
+ 	struct trace_pid_list	__rcu *filtered_pids;
+ 	struct trace_pid_list	__rcu *filtered_no_pids;
+ 	/*
 -- 
 2.43.0
 
