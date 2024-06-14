@@ -1,238 +1,269 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061431974EA;
-	Fri, 14 Jun 2024 17:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718385331; cv=none; b=NU0wliP0NzGEnnnCoxkdpBIpRUoG4WzcVRAtwaxEINzd3LhGwyDFD2nSl30fTnQ40xHk6MV/MeRLeQz9zkJePDcWn7hfhf5d/nXSa7UqiAEE38hzYvepoS56bNHdViK15xPTpsE2Y1ybONvwD3IQko/QKn02xox7BoBSg34SCIs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718385331; c=relaxed/simple;
-	bh=ERY31lbQ9ymOsxtCzVpP4HOibxzB6fNrq3B3Ti28nEo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VcQOlqhpAyHgk2iGKQWMVkheCY66A9g82CLBQf831T4LmJqmmlfJPO4RplhxP3sMqcAXpZV/sCY099Tx7JZd1LM0Qcm2Q5XLCBWmGxZr6a7Iv2mRwKCVTuU4iRfh2Yf1J3JYqvG/dZTBcN2SdXQ9fQ0vmNL0TCcdlvNjpy4s4hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=r3Vlb3Zl; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57327383;
+	Fri, 14 Jun 2024 17:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718385329; cv=fail; b=irITZbUi6bp8mNT7BD/o+i0XBbVOuWpqbikFgvVpsL5k9xi8ELKwTzMLh0m+JfnEm9dFuAxGQDRv3l3aM/B1Q1aBPpABkGkxcjejZSNqJlXDsrWfVoGOvz2q6mERoqT1LoCNq1w9sXZZmJz8WWVKEEQ7hIXHjrhT0UZgyqdko18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718385329; c=relaxed/simple;
+	bh=LIw19/W0AsWw+2KIkmIp64YFJICr9dMEkd6nfiY3Rgc=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=B+6A41kV+jpNgrMRnSaIpNk0Gro/mL6WMveixzEA0xWqs5nFk84KEkO4C03sZcsTaTtj32Og9EYnP+4NBdCfei/JpRrv3+WBS6Bt6HUmdfqvK7xvC9eJz2wD6ZXCaq3DhY+pc4JA3i0idSvAlf8BbSDPpKnc1I/adZMi5wmLDV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EvO1HJEC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xKJ3ZP5Y; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r3Vlb3Zl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718385329; x=1749921329;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ERY31lbQ9ymOsxtCzVpP4HOibxzB6fNrq3B3Ti28nEo=;
-  b=r3Vlb3Zl/+xRksXeVGp8QnPC62zFOgLkO2Ggt3oyEKQ38hckLpZu8Woj
-   PMpPB5nU/zOpiW5GkkeTYhyCI+ZGkeFoEGpg9GRqG3kQaVPsfBpMcSOZd
-   cjLb+U/mRyTDyfNwxF90u0MqAF2Wa53+NGlihLFwJM241iJOwA1vYFQ3N
-   JoflGqbWM4VSuWzJyr6fY0dReTuyTB325qGvHjF+jP5f9Iuc22QJJbJfG
-   E+MRxmpbiee21cxW0DKoIVnqbMKqjJJE4WLv93Uirh7SGS2BisTeIQNb5
-   XRyccf6dKhdugGmNQSfsPnDmgk4xnHL2MKh6iJxibkXZGsA1/Iceb7/7Z
-   Q==;
-X-CSE-ConnectionGUID: FkzynaL6Qw6YgMHq0F4nsw==
-X-CSE-MsgGUID: QxxoVixiRUePyTcyhQN//g==
-X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="194985066"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Jun 2024 10:15:29 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Jun 2024 10:15:08 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 14 Jun 2024 10:15:03 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bryan.whitehead@microchip.com>, <andrew@lunn.ch>, <linux@armlinux.org.uk>,
-	<sbauer@blackbox.su>, <hmehrtens@maxlinear.com>, <lxu@maxlinear.com>,
-	<hkallweit1@gmail.com>, <edumazet@google.com>, <pabeni@redhat.com>,
-	<wojciech.drewek@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net V5 2/3] net: lan743x: Support WOL at both the PHY and MAC appropriately
-Date: Fri, 14 Jun 2024 22:41:56 +0530
-Message-ID: <20240614171157.190871-3-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240614171157.190871-1-Raju.Lakkaraju@microchip.com>
-References: <20240614171157.190871-1-Raju.Lakkaraju@microchip.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EvO1HJEC";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xKJ3ZP5Y"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EDH0P6028782;
+	Fri, 14 Jun 2024 17:15:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=corp-2023-11-20; bh=0JFNBEkLZW8r7K
+	4oJpk46+a0al5+I+dbtX3rZEu/tHw=; b=EvO1HJEC6ZPgEVULxUIr5MlkX5k/WO
+	KDoutnMdlbtv77/74k+8csKABHGQClYrZ3ZtKnkeHDBPZNkPlAC+yNF7PFN/441j
+	cR3nHpo+R3SaPVosFcC0TVY472rYbhPEGIlQh00VAT1ohhk0mfACtugzab7Xz84c
+	2Bo41FM6Des5r4H+fhgjk9CaE3/FgUDLti6VQKzkJmVJ6qOs+ySD5/OiNzIB/Xt6
+	Pm5BHhI4LaiiPkkMtG7YB3auYnYCPSChnTXqFGFbox+IoiU46yUvgsKZagwE6LMv
+	/ombWh3GMvqMJP97YatqbqKyqGn7aybVMJi5q0SzwsWNdywzG8jf97rg==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh3pc2b3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 17:15:17 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGjI3d012525;
+	Fri, 14 Jun 2024 17:15:16 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ynca2srhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 17:15:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e21AUgsF+Hq/PN6pEh4md30s5a5yzfzKNGK1j8eG/6wraKRxWfFv7c7qofgQSRbHi+oTm5NYjlpn89XXtZWYJGKMCfExXDpTenlyIohaVN51UhJ3Hux4RC8s0KJ4IJffLbZ19Xtrqs0nVFtCIPK7gr2Ye195HXlHgDjemDDvbIwWYbGZHHfH57TeijUkKev9RhcuDiVclFOVi9xeD8ebe8+pdlJVChIICTk+8WzuQuXhnveJPgSuVblJUXP0QeegfKY6xmiFcSgMBKQB9+K+Tlwd/ttZloe2KgqTqBMrDYQtoXiwszvPQfOI7K9eIxUInjdestU3MYux4I1gX3J7SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0JFNBEkLZW8r7K4oJpk46+a0al5+I+dbtX3rZEu/tHw=;
+ b=USpwg+cIavWlthOMv51h74gKmnDJ8HhhikOw+isz+pLjE3rmLltuwE0Dp5HoUDoeTbnTRYqWt2BGiqgCLR7dVCmgfSfNZkMYZW/Yqtdd77reMcR89v/r68neBtvSdLzTa56zvQ20rALkGOEUY7E4lHc/oGGdQU34iW/vRajVKG5o16uRDkE6ulrTiRR42y1RMwoymRvioNbUhzsk/doIBc6WTLjuxQc7vN/mqUzKLJRZXNtwY3PPObu6lzN/GCmvonE3VLfit75eCr2yBEW1guBoxgP4UHm4pF1wFUyjmzoVtifMh+dhWoRYfxISObcVBlAmu6VKxGVphmBPscPKxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0JFNBEkLZW8r7K4oJpk46+a0al5+I+dbtX3rZEu/tHw=;
+ b=xKJ3ZP5YCXO69tFRYFc59yZYgOz8gsloMu7ZyzSMfA0JbA2nj91L53h2pM7kwcXR7fxyUHgvZxMZdkQ4EFYQ+xyw3wjnDbOWAQ/gDUKof5ZFpTxAP2Wp/2WLcf4LxMyj7cX3U2w+wPD6p4kVY51cgvpXgC4+daRWq+CfZkjQJXo=
+Received: from SN7PR10MB6287.namprd10.prod.outlook.com (2603:10b6:806:26d::14)
+ by DM4PR10MB7404.namprd10.prod.outlook.com (2603:10b6:8:180::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Fri, 14 Jun
+ 2024 17:15:13 +0000
+Received: from SN7PR10MB6287.namprd10.prod.outlook.com
+ ([fe80::5a47:2d75:eef9:1d29]) by SN7PR10MB6287.namprd10.prod.outlook.com
+ ([fe80::5a47:2d75:eef9:1d29%6]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
+ 17:15:13 +0000
+From: Kris Van Hees <kris.van.hees@oracle.com>
+To: Kris Van Hees <kris.van.hees@oracle.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jiri Olsa <olsajiri@gmail.com>,
+        Elena Zannoni <elena.zannoni@oracle.com>
+Subject: [PATCH v4 0/3] Generate address range data for built-in modules
+Date: Fri, 14 Jun 2024 13:14:25 -0400
+Message-ID: <20240614171428.968174-1-kris.van.hees@oracle.com>
+X-Mailer: git-send-email 2.45.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MN2PR13CA0024.namprd13.prod.outlook.com
+ (2603:10b6:208:160::37) To SN7PR10MB6287.namprd10.prod.outlook.com
+ (2603:10b6:806:26d::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR10MB6287:EE_|DM4PR10MB7404:EE_
+X-MS-Office365-Filtering-Correlation-Id: e127c39a-849f-48f0-32c7-08dc8c958dd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|7416011|376011;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?l42oqv02NeiMrqlCi9Ywf90yXWCqlkeRMlqtPbdYx9oxG76lViTnADeYYqWA?=
+ =?us-ascii?Q?R8xvEL01RHANtfowBxMw5McXoMic7uRxOG1ZcyRS/gwygNzp8gUFwCUlcwb9?=
+ =?us-ascii?Q?8+XhhUUNTt+tKZpy44C7BOPQ/602HnkDAs4Dri2ZAjT+3dPfoPC/xOSH33mY?=
+ =?us-ascii?Q?3KsQi+aaXyv7sI/zvOHXSVMsSfQg3atzS0X4+q3AdkiYb8uWXVpcw8qyO7yD?=
+ =?us-ascii?Q?r2DRZHpjsMbT7pa1kq/qQMFipcphDCqiK15EjDlBkffmWC/WrDmiviUnIqnc?=
+ =?us-ascii?Q?w05GSje/K/Ct3+LFCpx2l30CdYvT/CsAH1cOOFPSGZsoL5rv17YtTdWCM7ww?=
+ =?us-ascii?Q?g0JuNlDeMKBsQnQpRjdR94XZCQ0Y5HyfWc3MCww+9YwAPUpYnI2yU/ceAY2T?=
+ =?us-ascii?Q?VnDL7bYM6p/9glYiNIMPBk+oHI5Ixz1sVGLe/61SPB81ANSB2H2jWkmYMom3?=
+ =?us-ascii?Q?2bwPTT4pJbsyk0SDgOegoJqSbYJJiU0LyHOAa93MFycH09pEaTQ22BPWjz8h?=
+ =?us-ascii?Q?hFZFYOYIwHA+Pgbsk8Jd9+s8BJRKsVtH/z9EAxnhbD7/YAT1ECXc3E4wjfPm?=
+ =?us-ascii?Q?JdXX9rihkT5+5TAO8nkAeka3uJuED6cP9iwis6h1uVQpfbnyCrZuIgd0q/jN?=
+ =?us-ascii?Q?GYmcnSdRGYHgfDAfQwKX7hVvYoXR097g8Nro/ZBeBFwdyP9QW9TWl1PeLTlA?=
+ =?us-ascii?Q?pO63xYNKERJu6p5QrsIV6+ereApG05Hmgg4xJuAgepMWKRV95sxKGlgC1U2k?=
+ =?us-ascii?Q?DHcUaUB2wdWwK8n4iwRilcGV8zACYmQU/7RRXmv6AVBal/uFq8suRMeucslS?=
+ =?us-ascii?Q?zNstO2xVpWHHpiL6zOKNJSPdwSooiB9/h4Ryx5tNbXRdUlrzrU5cfxeawDtJ?=
+ =?us-ascii?Q?G/GsHbNe53r4zlbtp1Z7ijdS89p7XWIvz9PAKAGMGCo/VXTRBH9JQYdNEec3?=
+ =?us-ascii?Q?YEtL5YGi0hOU477TNZQaWvMX+XVgjsnIbXMG3mCPOXuAOfCQSxABKcavTZHa?=
+ =?us-ascii?Q?r1ig3BevGjNI2UrwMAvGXw9RpXbFVnzy7kfGsk3gHb65DchqpIL4gSzMpZF+?=
+ =?us-ascii?Q?1as+5+Z/TBJYwMCKxhHZusHoZxTZwPUZqlH6Bq43P2BR4tHztXNJq3McOfS1?=
+ =?us-ascii?Q?M7c7lxVmra2kW9iROPTYciTmr1hbAmTtGbkNCD50lRPZWa1fdWL1QoO3/5C2?=
+ =?us-ascii?Q?ul5MtG+Kvd1Lwfi/KL98JigxJDgKfQJY0gZkx0f7YFWnmCOHDqF+PNHs4xjR?=
+ =?us-ascii?Q?J5dFCqgo+98DekzvTFftALEpoYsQvf2/VLLGOV0LLoj2X8FnqkoDCIxyeUFt?=
+ =?us-ascii?Q?I3hW4NtYM5VLVcsfU/J4vDlQ?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR10MB6287.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(7416011)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?wnSrmRKyel8lFNLvduqhIR+5Qx3HUYQQnEm3ZXkrObBRN880XxJsvpBnmbxH?=
+ =?us-ascii?Q?nwf4KSm4ggWc5PoruI1s1a2f5aAVTsqATc3oeLe0Im4m6/e0p0OEQNai6Gpl?=
+ =?us-ascii?Q?jblHtWpTZSFXhOtn4rlKhrkKsYzPM6pB0mTyNcMIM3k+cfaZlBs0oNFqO07k?=
+ =?us-ascii?Q?FcV1HmUC8DZ6HG6t1hAioLCQahNf/4/4Kbike8QYRqJ8ZPWvikOHTFcUi001?=
+ =?us-ascii?Q?ZFyZyFeXzkoFIybI/+DfI/xPedbFmsplMiVK0ru48iUg3BEGCLHIi9xg8QGy?=
+ =?us-ascii?Q?ryegVQbjiT5Xq5wBimNZISCN0oo2J1wq8A/sdlmX2t6icum/tp3fR45D23j+?=
+ =?us-ascii?Q?mkKvyynubIiF63/SC/jiqYfoXksqCuhdWXr7fE+RXEBGaIlmHboyOrDTn2mZ?=
+ =?us-ascii?Q?VjxV5SqeQp6D1nL1F1znLRZByYLl4ZMHlKMBk7he1sN+GP/S36z9UGdncCno?=
+ =?us-ascii?Q?HCwbu5y3PN+l2NbXGbEbB6IZDLBQAbXCXsE2jCy1AFynm+Bc5qTunu3j6dCs?=
+ =?us-ascii?Q?URts4z8rB154Uw21G/XRCkq6Uz6NX6KeTM/c9WtvVx+sf6scGoSvY27IaI5+?=
+ =?us-ascii?Q?/Vj/aixD8zQjqxiyIwe/yeolYS0jz5qSD/luu3ixrFIwTd8lvf99TV0JXR9f?=
+ =?us-ascii?Q?3VMeUzA6QeAViDzd8E1WyAp7XcR4x9tDwYAuF/VKILK9EhPTUm+Abua4J/nZ?=
+ =?us-ascii?Q?TkaFoBjb9iA/ZXVOMYud8lJXOWEo0MaVFsRFyh9cr9+tiq2Nutd0nBTapIRF?=
+ =?us-ascii?Q?e084eepkmT2rNW4DR5D2Au0yV5mCU7QmYLQ2SANHHnJqlfAaO83q66GxGRq7?=
+ =?us-ascii?Q?T06yA1jxtmMeY0w0JsUR1qTv8Kf1+JHIMRsId4S4cZOA9BY7x9bAJE5aaJIz?=
+ =?us-ascii?Q?a+s2Vp0Vc0nTuEHrpPcRmQ0WptL9Yw7LXFBpRDFXqkUIxEVNJGpFOtbpXZxN?=
+ =?us-ascii?Q?rRzmi4MvvFJSfXcYy/PXfXrx0IwLpoMGmlCatonrNL7OjPGnDOapT6joRjZj?=
+ =?us-ascii?Q?7BtCsCQ6Zs7/ObCQx9T4UXmG3fyUWGi8V0c4sjCoAV8zim0pM9e6spM9+hPP?=
+ =?us-ascii?Q?c6hY7he15sa73Z8ZCLMYQz5m4pFlWKcWlm4WEECoG1QDJmAkV9jg2cgze0uy?=
+ =?us-ascii?Q?wVsGxDOjdlkYmacFHHNzKTXEyUfhx/njP/3ke2zt+CFpkxpVoT46PLLf/EuG?=
+ =?us-ascii?Q?xwltRHywjQjOWXwr17/L591obHGnPE8FZmov5XVa2Hl0EkYzih//brp7PDHL?=
+ =?us-ascii?Q?uJq4Dzei8QRUu4Ui+vEIBB8/dN545QkTUx72LOaP39lQwBH4epe28ushI3qc?=
+ =?us-ascii?Q?AkQiX0GHzsjxjg0JUHlvvX/KXQ/zhR08Ya7pkNbSGC6aXhMW7uv4vx/3pQJy?=
+ =?us-ascii?Q?/McotEGpjTWBaeprCasLQDe2Rhar4cbMXFjTT0qtdqL7IFQ9+YA5t6/VEwhg?=
+ =?us-ascii?Q?Awzj+VLK1Z/xRpGrvo8THMplvgeBh3fr+1R5iQrU6bYdqZb4PJGxHq3SNcVr?=
+ =?us-ascii?Q?zBV53uty0vJ3PpO7ZLiXDMapM2Hk1mj2ktdqOGuROOH1bIF47e0eOaJSoYev?=
+ =?us-ascii?Q?THwq5m1R6lTCoi9j1ZQ6fL9yT9y4A5FNTtL+YQ+4oQfudkTE5V9CZMsSqEH5?=
+ =?us-ascii?Q?TQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Q1dkl50D84E3sQ/pIpkQFPNJgvdxAA8hYSIbPpBtQEc44lU3FAlt1OV3Y1fZcXU1WD6ngKQybbF8yh3DQ1nUudjCv1aG5HtCPk0QOOaI+PQ+vELCUME/VtCRXwyjVD/zxGlZozsZQxOrT8xXG9UbuQOJSwv5yA/u24wpR68GzgOGRmpMg3QAArr6IPFcGmREbsuf63if1TwPHE/hrzMOKvmDg6GMxGpdAFVzKF3Z/fMpJ/CIM5VdRxLW1lYqub8OZLfWHuQjAhYqewxGLzDPLNzlr616w88o4bEPFFaM0Q+VsUz/YYvRBABj47siPFd5rp++cQMn2SDE9SgSqD0ztCBjX0flSXzeKUoZbpC2E37jFNiavOJPhS7QyHI8X+U3lL8st8JyG/RaeCvHcTJrG11T5AvLrxYJltM979L06JhMhSEaYSOLvMMb8u2up4cwtQmY2WQkm9XEeF7ncI8dWE1rhm3rjUqaKYQxxJlCvjn83Tqx4keyAEh6c5dHXyutfbzXQwKdELCSg0zUx9gIZ5cwzRLqq5yYpP8IUHhmgW1erxoSzrs8MwPFR0AtfY4vr+w3bCiPv0KilRB6PBvdJejPAyF763he3jQcqtbP0XU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e127c39a-849f-48f0-32c7-08dc8c958dd1
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR10MB6287.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 17:15:13.7916
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hJav076B6SwZ70QcRfLuOKaH75qKClhPxcSFMSJz2uvGu5TflYEhdBb+aP+ljVWM8HCvRBr89WM2fbbQem9RXc+cnVtDVX20jwCtusYJJVE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7404
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406140118
+X-Proofpoint-GUID: PeRYQPy_idNK0TnRsnZ-qCPbibuH2Izl
+X-Proofpoint-ORIG-GUID: PeRYQPy_idNK0TnRsnZ-qCPbibuH2Izl
 
-Prevent options not supported by the PHY from being requested to it by the MAC
-Whenever a WOL option is supported by both, the PHY is given priority
-since that usually leads to better power savings.
+Especially for tracing applications, it is convenient to be able to
+refer to a symbol using a <module name, symbol name> pair and to be able
+to translate an address into a <nodule mname, symbol name> pair.  But
+that does not work if the module is built into the kernel because the
+object files that comprise the built-in module implementation are simply
+linked into the kernel image along with all other kernel object files.
 
-Fixes: e9e13b6adc33 ("lan743x: fix for potential NULL pointer dereference with bare card")
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
-Change List:
-------------
-V4 -> V5:
-  - Change Fixes's SHA from 13 chars to 12 chars
-  - Remove the "Reported-by" and "Closes" tags
-V3 -> V4:
-  - Fix the support for "CONFIG_PM=N" 
-V2 -> V3:
-  - Remove the "phy does not support WOL" debug message which is not required
-  - Remove WAKE_PHY support option from Ethernet MAC (LAN743x/PCI11x1x) driver
-  - Add "phy_wol_supported" and "phy_wolopts" variables to hold PHY's WOL config
-V1 -> V2:
-  - Repost - No change
-V0 -> V1:
-  - Change the "phy does not support WOL" print from netif_info() to
-    netif_dbg()
+This is especially visible when providing tracing scripts for support
+purposes, where the developer of the script targets a particular kernel
+version, but does not have control over whether the target system has
+a particular module as loadable module or built-in module.  When tracing
+symbols within a module, referring them by <module name, symbol name>
+pairs is both convenient and aids symbol lookup.  But that naming will
+not work if the module name information is lost if the module is built
+into the kernel on the target system.
 
- .../net/ethernet/microchip/lan743x_ethtool.c  | 44 +++++++++++++++++--
- drivers/net/ethernet/microchip/lan743x_main.c | 18 ++++++--
- drivers/net/ethernet/microchip/lan743x_main.h |  4 ++
- 3 files changed, 58 insertions(+), 8 deletions(-)
+Earlier work addressing this loss of information for built-in modules
+involved adding module name information to the kallsyms data, but that
+required more invasive code in the kernel proper.  This work never did
+get merged into the kernel tree.
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-index d0f4ff4ee075..0d1740d64676 100644
---- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-@@ -1127,8 +1127,12 @@ static void lan743x_ethtool_get_wol(struct net_device *netdev,
- 	if (netdev->phydev)
- 		phy_ethtool_get_wol(netdev->phydev, wol);
- 
--	wol->supported |= WAKE_BCAST | WAKE_UCAST | WAKE_MCAST |
--		WAKE_MAGIC | WAKE_PHY | WAKE_ARP;
-+	if (wol->supported != adapter->phy_wol_supported)
-+		netif_warn(adapter, drv, adapter->netdev,
-+			   "PHY changed its supported WOL! old=%x, new=%x\n",
-+			   adapter->phy_wol_supported, wol->supported);
-+
-+	wol->supported |= MAC_SUPPORTED_WAKES;
- 
- 	if (adapter->is_pci11x1x)
- 		wol->supported |= WAKE_MAGICSECURE;
-@@ -1143,7 +1147,39 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- {
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
- 
-+	/* WAKE_MAGICSEGURE is a modifier of and only valid together with
-+	 * WAKE_MAGIC
-+	 */
-+	if ((wol->wolopts & WAKE_MAGICSECURE) && !(wol->wolopts & WAKE_MAGIC))
-+		return -EINVAL;
-+
-+	if (netdev->phydev) {
-+		struct ethtool_wolinfo phy_wol;
-+		int ret;
-+
-+		phy_wol.wolopts = wol->wolopts & adapter->phy_wol_supported;
-+
-+		/* If WAKE_MAGICSECURE was requested, filter out WAKE_MAGIC
-+		 * for PHYs that do not support WAKE_MAGICSECURE
-+		 */
-+		if (wol->wolopts & WAKE_MAGICSECURE &&
-+		    !(adapter->phy_wol_supported & WAKE_MAGICSECURE))
-+			phy_wol.wolopts &= ~WAKE_MAGIC;
-+
-+		ret = phy_ethtool_set_wol(netdev->phydev, &phy_wol);
-+		if (ret && (ret != -EOPNOTSUPP))
-+			return ret;
-+
-+		if (ret == -EOPNOTSUPP)
-+			adapter->phy_wolopts = 0;
-+		else
-+			adapter->phy_wolopts = phy_wol.wolopts;
-+	} else {
-+		adapter->phy_wolopts = 0;
-+	}
-+
- 	adapter->wolopts = 0;
-+	wol->wolopts &= ~adapter->phy_wolopts;
- 	if (wol->wolopts & WAKE_UCAST)
- 		adapter->wolopts |= WAKE_UCAST;
- 	if (wol->wolopts & WAKE_MCAST)
-@@ -1164,10 +1200,10 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- 		memset(adapter->sopass, 0, sizeof(u8) * SOPASS_MAX);
- 	}
- 
-+	wol->wolopts = adapter->wolopts | adapter->phy_wolopts;
- 	device_set_wakeup_enable(&adapter->pdev->dev, (bool)wol->wolopts);
- 
--	return netdev->phydev ? phy_ethtool_set_wol(netdev->phydev, wol)
--			: -ENETDOWN;
-+	return 0;
- }
- #endif /* CONFIG_PM */
- 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 48835bdc2e63..e418539565b1 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -3118,6 +3118,17 @@ static int lan743x_netdev_open(struct net_device *netdev)
- 		if (ret)
- 			goto close_tx;
- 	}
-+
-+#ifdef CONFIG_PM
-+	if (adapter->netdev->phydev) {
-+		struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
-+
-+		phy_ethtool_get_wol(netdev->phydev, &wol);
-+		adapter->phy_wol_supported = wol.supported;
-+		adapter->phy_wolopts = wol.wolopts;
-+	}
-+#endif
-+
- 	return 0;
- 
- close_tx:
-@@ -3587,10 +3598,9 @@ static void lan743x_pm_set_wol(struct lan743x_adapter *adapter)
- 
- 	pmtctl |= PMT_CTL_ETH_PHY_D3_COLD_OVR_ | PMT_CTL_ETH_PHY_D3_OVR_;
- 
--	if (adapter->wolopts & WAKE_PHY) {
--		pmtctl |= PMT_CTL_ETH_PHY_EDPD_PLL_CTL_;
-+	if (adapter->phy_wolopts)
- 		pmtctl |= PMT_CTL_ETH_PHY_WAKE_EN_;
--	}
-+
- 	if (adapter->wolopts & WAKE_MAGIC) {
- 		wucsr |= MAC_WUCSR_MPEN_;
- 		macrx |= MAC_RX_RXEN_;
-@@ -3686,7 +3696,7 @@ static int lan743x_pm_suspend(struct device *dev)
- 	lan743x_csr_write(adapter, MAC_WUCSR2, 0);
- 	lan743x_csr_write(adapter, MAC_WK_SRC, 0xFFFFFFFF);
- 
--	if (adapter->wolopts)
-+	if (adapter->wolopts || adapter->phy_wolopts)
- 		lan743x_pm_set_wol(adapter);
- 
- 	if (adapter->is_pci11x1x) {
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index fac0f33d10b2..3b2585a384e2 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -1042,6 +1042,8 @@ enum lan743x_sgmii_lsd {
- 	LINK_2500_SLAVE
- };
- 
-+#define MAC_SUPPORTED_WAKES  (WAKE_BCAST | WAKE_UCAST | WAKE_MCAST | \
-+			      WAKE_MAGIC | WAKE_ARP)
- struct lan743x_adapter {
- 	struct net_device       *netdev;
- 	struct mii_bus		*mdiobus;
-@@ -1049,6 +1051,8 @@ struct lan743x_adapter {
- #ifdef CONFIG_PM
- 	u32			wolopts;
- 	u8			sopass[SOPASS_MAX];
-+	u32			phy_wolopts;
-+	u32			phy_wol_supported;
- #endif
- 	struct pci_dev		*pdev;
- 	struct lan743x_csr      csr;
+All that is really needed is knowing whether a given address belongs to
+a particular module (or multiple modules if they share an object file).
+Or in other words, whether that address falls within an address range
+that is associated with one or more modules.
+
+Objects can be identified as belonging to a particular module (or
+modules) based on defines that are passed as flags to their respective
+compilation commands.  The data found in modules.builtin is used to
+determine what modules are built into the kernel proper.  Then,
+vmlinux.o.map and vmlinux.map can be parsed in a single pass to generate
+a modules.buitin.ranges file with offset range information (relative to
+the base address of the associated section) for built-in modules.  This
+file gets installed along with the other modules.builtin.* files.
+
+The impact on the kernel build is minimal because everything is done
+using a single-pass AWK script.  The generated data size is minimal as
+well, (depending on the exact kernel configuration) usually in the range
+of 500-700 lines, with a file size of 20-40KB (if all modules are built
+in, the file contains about 8000 lines, with a file size of about 285KB).
+
+Changes since v3:
+ - Consolidated patches 2 through 5 into a single patch
+ - Move CONFIG_BUILTIN_MODULE_RANGES to Kconfig.debug
+ - Make CONFIG_BUILTIN_MODULE_RANGES select CONFIG_VMLINUX_MAP
+ - Disable CONFIG_BUILTIN_MODULE_RANGES if CONFIG_LTO_CLANG_(FULL|THIN)=y
+ - Support LLVM (lld) compiles in generate_builtin_ranges.awk
+ - Support CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
+ - Only install modules.builtin.ranges if CONFIG_BUILTIN_MODULE_RANGES=y
+
+Changes since v2:
+ - Switched from using modules.builtin.objs to parsing .*.cmd files
+ - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
+ - 1st arg to generate_builtin_ranges.awk is now modules.builtin.modinfo
+ - Parse data from .*.cmd in generate_builtin_ranges.awk
+ - Use $(real-prereqs) rather than $(filter-out ...)
+ - Include modules.builtin.ranges in modules install target
+
+Changes since v1:
+ - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
+ - Moved the config option to the tracers section
+ - 2nd arg to generate_builtin_ranges.awk should be vmlinux.map
+
+Kris Van Hees (5):
+  trace: add CONFIG_BUILTIN_MODULE_RANGES option
+  kbuild: generate a linker map for vmlinux.o
+  module: script to generate offset ranges for builtin modules
+  kbuild: generate modules.builtin.ranges when linking the kernel
+  module: add install target for modules.builtin.ranges
+
+Luis Chamberlain (1):
+  kbuild: add modules.builtin.objs
+
+ .gitignore                          |   2 +-
+ Documentation/dontdiff              |   2 +-
+ Documentation/kbuild/kbuild.rst     |   5 ++
+ Makefile                            |   8 +-
+ include/linux/module.h              |   4 +-
+ kernel/trace/Kconfig                |  17 ++++
+ scripts/Makefile.lib                |   5 +-
+ scripts/Makefile.modinst            |  11 ++-
+ scripts/Makefile.vmlinux            |  17 ++++
+ scripts/Makefile.vmlinux_o          |  18 ++++-
+ scripts/generate_builtin_ranges.awk | 149 ++++++++++++++++++++++++++++++++++++
+ 11 files changed, 228 insertions(+), 10 deletions(-)
+ create mode 100755 scripts/generate_builtin_ranges.awk
+
+
+base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
 -- 
-2.34.1
+2.42.0
 
