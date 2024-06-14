@@ -1,170 +1,187 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE60915CD64;
-	Fri, 14 Jun 2024 15:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC37315FA73;
+	Fri, 14 Jun 2024 15:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378584; cv=none; b=NJlQZWVu2sG0X/QTzq3l3PO+nNNXuSqrscEGRNQuzOlu/+6zbhcV8ICQGJKIe7h0x7Ed+buc7h+4f9ZSucVgCIZWNk2LCnF6UzXjlPFenAJ0MwA4jtNARa87nL8mP1FplZdQNNu7k+EcWZofi42phs2trAvjhYHLL6dcA4GVy4o=
+	t=1718378607; cv=none; b=dqGrUL0+uhSQ9WsEBrs6S5YBkgxoxDxA7/zNtRpYjEqrLzoAKq/EzsDL3i/paWjfJGrtEF2EojlqreuMAgUt9JtK9tiFJA4PqDtTvtFbwpWo6Q7rJF79qYh+KXqQK0cJaAn4FTw+H0kZwLRVmrwHtEGqn/E1JDVZioyYKzlQIzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378584; c=relaxed/simple;
-	bh=ceHwlhkQOv5Wkvy5F61fCWlYXHLEh5xGfP6+3SG6EDs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C4o71iNwZnPrnMbbnMDeQyYs6CRFXkVKz3qAM5a4SBlaxYPBPYTu97H6J1tjhjCh93KwLumTKWP18wNFuG1k8mTkXdcjtqoiIzvr2m4Uf6yRFISGg5Uhrkh3BbLs48+RVWV8YT3nbr9rSLQI3sQpn//MIj+a6e17u2dQrNXvLHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=H6sZ+JFk; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="H6sZ+JFk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=yAGhS
-	Ow2NI85cih3XGIkfc/UtZ8P/eczFTAfdvqLy8o=; b=H6sZ+JFkVQTNUzqKHaUah
-	N/CJydLUMiy1B8fj/9SITomrvG2oIcTQqUvOqpbyfYKo0b4Fw1wbGoz4q0ggrmNV
-	raLZVoLLy4Fv3ELXa5C4qFpv2e9FqCUagUsIzscZsTSa35D/w7hfT9Q7+YrbO3vI
-	4CGTNj8l6l5IQcmYARwGKw=
-Received: from ubuntu.localdomain (unknown [120.228.117.74])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wD3n6tCYGxmSah9Cg--.3328S2;
-	Fri, 14 Jun 2024 23:22:42 +0800 (CST)
-From: Chi Zhiling <chizhiling@163.com>
-To: mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chi Zhiling <chizhiling@kylinos.cn>
-Subject: [PATCH v2] media: xc2028: avoid use-after-free in load_firmware_cb()
-Date: Fri, 14 Jun 2024 08:22:25 -0700
-Message-Id: <20240614152225.3943-1-chizhiling@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240531091026.3094284-1-chizhiling@163.com>
-References: <20240531091026.3094284-1-chizhiling@163.com>
+	s=arc-20240116; t=1718378607; c=relaxed/simple;
+	bh=EL0yGZvLp178iwjqGXn1neHj8u1yfXcPxngFTq3rdXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbbc/vUDdmFPm6alZvJ13IJYjpjTkiIEiVe0dIbNly29qBB2XaYmGU2SfGGt4z6WZe3nVu+n70V7gYNNRZ3ISjkwQB6oxMyLipMstov4QinOLzobH0LVnEqLBNhGTbu9j/3Dth619QhIuhUxEHyVxUUdavIsdshzhawn2m8y72Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7FF4FEC;
+	Fri, 14 Jun 2024 08:23:48 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5DE43F5A1;
+	Fri, 14 Jun 2024 08:23:21 -0700 (PDT)
+Date: Fri, 14 Jun 2024 16:23:18 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Message-ID: <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
+References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+ <20240613061731.3109448-7-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3n6tCYGxmSah9Cg--.3328S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF47KrWDJr43Ar1UJr4fKrg_yoWrWw43pF
-	nxZFWfCrW8Jry3Jr47Jr4UJr1FqrW5Aa10kr4xA34agr13WrZ8tryUtFWUXr1UWr45Aa47
-	JF15JrWrtF4qyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UsFxUUUUUU=
-X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/xtbBLwr9nWXAk3F1ZQABsT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613061731.3109448-7-anshuman.khandual@arm.com>
 
-From: Chi Zhiling <chizhiling@kylinos.cn>
+On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
+> Disable the BRBE before we enter the guest, saving the status and enable it
+> back once we get out of the guest. This avoids capturing branch records in
+> the guest kernel or userspace, which would be confusing the host samples.
 
-syzkaller reported use-after-free in load_firmware_cb() [1].
-The reason is because the module allocated a struct tuner in tuner_probe(),
-and then the module initialization failed, the struct tuner was released.
-A worker which created during module initialization accesses this struct
-tuner later, it caused use-after-free.
+It'd be good to explain why we need to do this for nVHE, but not for
+VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
+when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
+out-of-reset.
 
-The process is as follows:
+What should a user do if they *want* samples from a guest? Is that
+possible to do on other architectures, or do is that always prevented?
 
-task-6504           worker_thread
-tuner_probe                             <= alloc dvb_frontend [2]
-...
-request_firmware_nowait                 <= create a worker
-...
-tuner_remove                            <= free dvb_frontend
-...
-                    request_firmware_work_func  <= the firmware is ready
-                    load_firmware_cb    <= but now the dvb_frontend has been freed
+Mark.
 
-To fix the issue, check the dvd_frontend in load_firmware_cb(), if it is
-null, report a warning and just return.
-
-[1]:
-    ==================================================================
-     BUG: KASAN: use-after-free in load_firmware_cb+0x1310/0x17a0
-     Read of size 8 at addr ffff8000d7ca2308 by task kworker/2:3/6504
-
-     Call trace:
-      load_firmware_cb+0x1310/0x17a0
-      request_firmware_work_func+0x128/0x220
-      process_one_work+0x770/0x1824
-      worker_thread+0x488/0xea0
-      kthread+0x300/0x430
-      ret_from_fork+0x10/0x20
-
-     Allocated by task 6504:
-      kzalloc
-      tuner_probe+0xb0/0x1430
-      i2c_device_probe+0x92c/0xaf0
-      really_probe+0x678/0xcd0
-      driver_probe_device+0x280/0x370
-      __device_attach_driver+0x220/0x330
-      bus_for_each_drv+0x134/0x1c0
-      __device_attach+0x1f4/0x410
-      device_initial_probe+0x20/0x30
-      bus_probe_device+0x184/0x200
-      device_add+0x924/0x12c0
-      device_register+0x24/0x30
-      i2c_new_device+0x4e0/0xc44
-      v4l2_i2c_new_subdev_board+0xbc/0x290
-      v4l2_i2c_new_subdev+0xc8/0x104
-      em28xx_v4l2_init+0x1dd0/0x3770
-
-     Freed by task 6504:
-      kfree+0x238/0x4e4
-      tuner_remove+0x144/0x1c0
-      i2c_device_remove+0xc8/0x290
-      __device_release_driver+0x314/0x5fc
-      device_release_driver+0x30/0x44
-      bus_remove_device+0x244/0x490
-      device_del+0x350/0x900
-      device_unregister+0x28/0xd0
-      i2c_unregister_device+0x174/0x1d0
-      v4l2_device_unregister+0x224/0x380
-      em28xx_v4l2_init+0x1d90/0x3770
-
-     The buggy address belongs to the object at ffff8000d7ca2000
-      which belongs to the cache kmalloc-2k of size 2048
-     The buggy address is located 776 bytes inside of
-      2048-byte region [ffff8000d7ca2000, ffff8000d7ca2800)
-     The buggy address belongs to the page:
-     page:ffff7fe00035f280 count:1 mapcount:0 mapping:ffff8000c001f000 index:0x0
-     flags: 0x7ff800000000100(slab)
-     raw: 07ff800000000100 ffff7fe00049d880 0000000300000003 ffff8000c001f000
-     raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
-     page dumped because: kasan: bad access detected
-
-     Memory state around the buggy address:
-      ffff8000d7ca2200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-      ffff8000d7ca2280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-     >ffff8000d7ca2300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                           ^
-      ffff8000d7ca2380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-      ffff8000d7ca2400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-     ==================================================================
-
-[2]
-    Actually, it is allocated for struct tuner, and dvb_frontend is inside.
-
-Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
----
- drivers/media/tuners/xc2028.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/tuners/xc2028.c b/drivers/media/tuners/xc2028.c
-index 5a967edceca9..352b8a3679b7 100644
---- a/drivers/media/tuners/xc2028.c
-+++ b/drivers/media/tuners/xc2028.c
-@@ -1361,9 +1361,16 @@ static void load_firmware_cb(const struct firmware *fw,
- 			     void *context)
- {
- 	struct dvb_frontend *fe = context;
--	struct xc2028_data *priv = fe->tuner_priv;
-+	struct xc2028_data *priv;
- 	int rc;
- 
-+	if (!fe) {
-+		pr_warn("xc2028: No frontend in %s\n", __func__);
-+		return;
-+	}
-+
-+	priv = fe->tuner_priv;
-+
- 	tuner_dbg("request_firmware_nowait(): %s\n", fw ? "OK" : "error");
- 	if (!fw) {
- 		tuner_err("Could not load firmware %s.\n", priv->fname);
--- 
-2.25.1
-
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ----
+> Changes in V18:
+> 
+> - Used host_data_ptr() to access host_debug_state.brbcr_el1 register
+> - Changed DEBUG_STATE_SAVE_BRBE to use BIT(7)
+> - Reverted back iflags as u8
+> 
+>  arch/arm64/include/asm/kvm_host.h  |  3 +++
+>  arch/arm64/kvm/debug.c             |  5 +++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 31 ++++++++++++++++++++++++++++++
+>  3 files changed, 39 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 36b8e97bf49e..db922c10bd2a 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -579,6 +579,7 @@ struct kvm_host_data {
+>  		u64 trfcr_el1;
+>  		/* Values of trap registers for the host before guest entry. */
+>  		u64 mdcr_el2;
+> +		u64 brbcr_el1;
+>  	} host_debug_state;
+>  };
+>  
+> @@ -842,6 +843,8 @@ struct kvm_vcpu_arch {
+>  #define DEBUG_STATE_SAVE_SPE	__vcpu_single_flag(iflags, BIT(5))
+>  /* Save TRBE context if active  */
+>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+> +/* Save BRBE context if active  */
+> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(7))
+>  
+>  /* SVE enabled for host EL0 */
+>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> index ce8886122ed3..8fa648943f0f 100644
+> --- a/arch/arm64/kvm/debug.c
+> +++ b/arch/arm64/kvm/debug.c
+> @@ -336,10 +336,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +
+> +	/* Check if we have BRBE implemented and available at the host */
+> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>  {
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> index 53efda0235cf..97e861df1b45 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> @@ -79,6 +79,32 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>  	write_sysreg_el1(trfcr_el1, SYS_TRFCR);
+>  }
+>  
+> +static void __debug_save_brbe(u64 *brbcr_el1)
+> +{
+> +	*brbcr_el1 = 0;
+> +
+> +	/* Check if the BRBE is enabled */
+> +	if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> +		return;
+> +
+> +	/*
+> +	 * Prohibit branch record generation while we are in guest.
+> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> +	 * modify the filtering set by the host.
+> +	 */
+> +	*brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
+> +	write_sysreg_el1(0, SYS_BRBCR);
+> +}
+> +
+> +static void __debug_restore_brbe(u64 brbcr_el1)
+> +{
+> +	if (!brbcr_el1)
+> +		return;
+> +
+> +	/* Restore BRBE controls */
+> +	write_sysreg_el1(brbcr_el1, SYS_BRBCR);
+> +}
+> +
+>  void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  {
+>  	/* Disable and flush SPE data generation */
+> @@ -87,6 +113,9 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  	/* Disable and flush Self-Hosted Trace generation */
+>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+>  		__debug_save_trace(host_data_ptr(host_debug_state.trfcr_el1));
+> +	/* Disable BRBE branch records */
+> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_save_brbe(host_data_ptr(host_debug_state.brbcr_el1));
+>  }
+>  
+>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+> @@ -100,6 +129,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  		__debug_restore_spe(*host_data_ptr(host_debug_state.pmscr_el1));
+>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+>  		__debug_restore_trace(*host_data_ptr(host_debug_state.trfcr_el1));
+> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_restore_brbe(*host_data_ptr(host_debug_state.brbcr_el1));
+>  }
+>  
+>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+> -- 
+> 2.25.1
+> 
