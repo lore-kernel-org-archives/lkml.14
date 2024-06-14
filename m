@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244787464
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 13:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3161879DE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 13:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718372872; cv=none; b=DKYvV25fYcrJWOA29P12nXlWsrmYnsiqAYxhkTN1t99TZX261XXud9crNmZFRQYkY16jfTi7nsHoToUPAJ+LtYyIEw/ah5PKQaet//Ymm4quITJ+IEHE1mghI+enqGI0JceqG31QMyju6HZxI+g4gcH/48Lp1lt0Gm/cVUAUIKs=
+	t=1718372874; cv=none; b=hcSN1g1DHIVyYGTf/DGl9Qtp/X/ZDOGIAwgIClNo2Tc238adf96iheY2DIQr0LFhU8ZZ/ENM7csu+2QRmJVl3wpmqJw1Wu16A7FiB2UeiYMe7FQhucp5k5LB5pTBmLejRMWSROpbgShBynyzu+/mWsIx4o27dtaD+J1iz0zhlvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718372872; c=relaxed/simple;
-	bh=X5lWuRC9cQCfM/Lx3VW6kbFigETvm9nUWQ204bvMWeE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mRPLIM9LF5ZGCjWiQFb6cwThFYUtPcBRJRuAyl2dodOmxVKKuQoBslD0fLn2wO9GeiTr/j6Mqz4fbqa0A2GmE62SFLz7jGngl9IYVoHPjamIpJXUj5NPKylCfJDXYojX8qiTGMMFt8JBXupoPBh5Vk716L6Jb307rKs2Bw0Rz3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcElkRG1; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1718372874; c=relaxed/simple;
+	bh=6AgZGDLslNB+RWTEwU9F5AH76hTo5i/UbmU4dY1Nl1U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PMDpjPRNXqpVLQPwwMBB3ZTJEhWHOl1RDsWjWOkaHW3gcerpxLzwnip3JpGSNxI+hQfKnN2oa99EzCMUYsTEwfdcakVRb+OuANNJXiq1qWVtr/OsxHQ5Vq/Zkhb5CROAjx6A1hZZiPEo3VL4153MbZiLXbA/ieUo/fkafSRH3v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQ52wBId; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcElkRG1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQ52wBId"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718372872; x=1749908872;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=X5lWuRC9cQCfM/Lx3VW6kbFigETvm9nUWQ204bvMWeE=;
-  b=KcElkRG1slineCGb5C1FM9YOxY/xOoHnUW5EWnI9X+5gtK40ddwgNgBz
-   hUhFqNS7pDjDgfwPpubc9ZD/B2XY5ph7ZSiOKZ6pPHIUOi5lQMUEUlRp9
-   +pHsfbBMcfJG11rshEUZE2vuUzGtTu9jOCJgkp6DDUsGk9fO2uW3oQ1bR
-   gstPaSPIORvrvwryN7CPyr5EnoG5rGVH4pa9it5a0wimWpdGMKaBGqcp5
-   lX2FklI75snSihDoUL+yzaIAucynWgf/uX+BKTDTx/09TMKG+U1uo2IUd
-   odO25DxKPQ/m5oMPtllx4S38hU/igR7ykF+iDrS+btVNZ17CMnbeKSvth
-   A==;
-X-CSE-ConnectionGUID: XgewpyPISG+3daMjBX7Onw==
-X-CSE-MsgGUID: nYdOF6ZVQvehnVedOX5c1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="19079142"
+  t=1718372874; x=1749908874;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6AgZGDLslNB+RWTEwU9F5AH76hTo5i/UbmU4dY1Nl1U=;
+  b=ZQ52wBId4v8xaMdlCncSeEjVT0JH7qbm48hVFOIA9N7Ojl3NfHJv4lEH
+   5AledYc3u+lp6oD/5GIXk8aWnJmhhtFEXmNr9VpOoa5fA4iX4nle9UjUC
+   I6lp2Pjk6nWsesAQLUwX+vvJiRcSB+vuruYeGZCzeUDC8VzgwOZuK1Ih0
+   KZIAF9yrzVkM8n8mpXKSYuIkhKdtVbJa5LO6Bfy1E4gf+HmLGeiMEqdQp
+   NTuVNigdsdWB5V61nP4chfkkPEBjEbbH/6Rk/aZehcn0EQszcw15q3Jvr
+   a3prCxuNRwP8dVc5SycRn+8fs1YdgVf0W+N5QyXgqFYP9iatbRQ448+w8
+   g==;
+X-CSE-ConnectionGUID: ptXLWax6QYmZH/MtLJihMg==
+X-CSE-MsgGUID: qtN4HCzARLeElpxpg3Kvtg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="19079155"
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="19079142"
+   d="scan'208";a="19079155"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 06:47:51 -0700
-X-CSE-ConnectionGUID: Dvl8LunhQc++GEFUGFdTdg==
-X-CSE-MsgGUID: XosrriLTStKbB5UnHxAzbg==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 06:47:52 -0700
+X-CSE-ConnectionGUID: Z+nIzm+kRGio62kx6jb7Fw==
+X-CSE-MsgGUID: DkGvG/sdSoOwyApQL+U6Cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="40386661"
+   d="scan'208";a="40386671"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2024 06:47:50 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2024 06:47:51 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@kernel.org,
@@ -54,70 +55,49 @@ Cc: acme@kernel.org,
 	yunying.sun@intel.com,
 	tim.c.chen@linux.intel.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 0/8] Support HBM and CXL PMON uncore counters
-Date: Fri, 14 Jun 2024 06:46:23 -0700
-Message-Id: <20240614134631.1092359-1-kan.liang@linux.intel.com>
+Subject: [PATCH V2 3/8] perf/x86/uncore: Retrieve the unit ID from the unit control RB tree
+Date: Fri, 14 Jun 2024 06:46:26 -0700
+Message-Id: <20240614134631.1092359-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240614134631.1092359-1-kan.liang@linux.intel.com>
+References: <20240614134631.1092359-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Changes since V2:
-- Update the description of patch 1 to explain the design of the new
-  RB tree. (Tim)
+The box_ids only save the unit ID for the first die. If a unit, e.g., a
+CXL unit, doesn't exist in the first die. The unit ID cannot be
+retrieved.
 
-The uncore PMON information of both HBM and CXL can be retrieved from
-the discovery table. However, the CXL entries break the driver's
-assumption for the discovery table. The first 7 patches update the
-generic support of the discovery table. The last patch enables the HBM
-and CXL PMON uncore counters.
+The unit control RB tree also stores the unit ID information.
+Retrieve the unit ID from the unit control RB tree
 
-The discovery table support was introduced since commit edae1f06c2cd
-("perf/x86/intel/uncore: Parse uncore discovery tables"). It's a
-self-describing mechanism for the uncore PerfMon hardware. By reading
-through an MMIO page worth of information, SW can ‘discover’ all the
-standard uncore PMON registers.
+Tested-by: Yunying Sun <yunying.sun@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/intel/uncore.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The entire discovery table could be big and contain duplicate
-information. To save space, the perf uncore driver only stores some key
-data. Others are calculated from the key data. The driver further
-assumes that the uncore PMON units are symmetric among dies.
-So only the unit control addresses on Die 0 are completely stored.
-The addresses on other Dies can be calculated via the address of the
-first entry on the Die + a fixed offset.
-
-However, it doesn't work for the CXL PMON units. The CXL PMON units
-could be asymmetric among Dies. The offset between CXL PMON units may be
-different on different Die.
-
-To address the issue, the complete unit control addresses for all
-Dies are stored in an RB tree. For a 2-socket EMR, it requires
-at most ~6KB extra space, which should be acceptable.
-
-Kan Liang (8):
-  perf/x86/uncore: Save the unit control address of all units
-  perf/x86/uncore: Support per PMU cpumask
-  perf/x86/uncore: Retrieve the unit ID from the unit control RB tree
-  perf/x86/uncore: Apply the unit control RB tree to MMIO uncore units
-  perf/x86/uncore: Apply the unit control RB tree to MSR uncore units
-  perf/x86/uncore: Apply the unit control RB tree to PCI uncore units
-  perf/x86/uncore: Cleanup unused unit structure
-  perf/x86/intel/uncore: Support HBM and CXL PMON counters
-
- arch/x86/events/intel/uncore.c           |  97 ++++---
- arch/x86/events/intel/uncore.h           |   8 +-
- arch/x86/events/intel/uncore_discovery.c | 306 +++++++++++++++--------
- arch/x86/events/intel/uncore_discovery.h |  22 +-
- arch/x86/events/intel/uncore_snbep.c     | 128 ++++++++--
- 5 files changed, 388 insertions(+), 173 deletions(-)
-
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index c2d877d20e31..3ad23527833a 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -862,6 +862,9 @@ static const struct attribute_group uncore_pmu_attr_group = {
+ static inline int uncore_get_box_id(struct intel_uncore_type *type,
+ 				    struct intel_uncore_pmu *pmu)
+ {
++	if (type->boxes)
++		return intel_uncore_find_discovery_unit_id(type->boxes, -1, pmu->pmu_idx);
++
+ 	return type->box_ids ? type->box_ids[pmu->pmu_idx] : pmu->pmu_idx;
+ }
+ 
 -- 
 2.35.1
 
