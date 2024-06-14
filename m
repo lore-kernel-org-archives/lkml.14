@@ -1,63 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7C02232A;
-	Fri, 14 Jun 2024 16:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D87A19D8A5;
+	Fri, 14 Jun 2024 16:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718381739; cv=none; b=SmbOewHjVKBr/31ZagPObp1RX7jNHt9wXVAIEz5dg7MBTloJX1zJ+Wc3XAoikYHaTgCdLy/pw/SRudn9ZvA1o4YIFaZlttLS+xPt8YqfZj8F9ixjU6dk9tR0VCklYMv/tYy1yNxQ2/30a2h61hTOUyW488hLcUFWC1VVCQZ1ByY=
+	t=1718381794; cv=none; b=mxUTWvU0XOSq1wYor3u0yrxqkCIHotl9LmHJ2ZT7vmECmaKPJHeouk+npJpRh75im5cD9KcPJCspT0J/zyLpGRmKDrCU4W48rRqQgZzoDrwVj8siQ9w2rJPOsXduKpVZlVqq+h9nr3LxSbeQWVzaIwaMBB2coDUjPaknRERGyBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718381739; c=relaxed/simple;
-	bh=lLNDiROxpO6pLANFAbPa5fupMdZGiml5z4NIV4Owxxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZVluSrdCDuAhnnRHt0E0gHVVYJma6IamsRcGfnMDh18k800RaPqkFI7aOB6q2HBpyw68dRXOUn4AzDN2AJvGG2opo+o3aWvT0NFMpn7Vo0cLImhrhuCr7ALgn9GLzsdfvZIyh210+AMb0P7qOkXeZllrSBNhY3JAQg+z7u/DmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4FzgjLd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718381794; c=relaxed/simple;
+	bh=/m7C93ViXaAcLQc3o+A+6QGlNBUZog2Ouu/otDLJpY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Vq67zPB+IGilNG+rSLExbE47NV8FFmJSPPIRjWvcY/cdpJKnKPiEMq5J1j2Szo3u3o4YM/4dmwU7VsmRoDPqsJkbMvddUyh1GFgTqB8ukIrghOWtF8amYwnLEVkryQRAgcKHfa9THgBWfL/AJ0m63lbxFDiHmD8RTSO0QybWcoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVZBLqZC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4FzgjLd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A95DC2BD10;
-	Fri, 14 Jun 2024 16:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVZBLqZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2DB7C2BD10;
+	Fri, 14 Jun 2024 16:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718381739;
-	bh=lLNDiROxpO6pLANFAbPa5fupMdZGiml5z4NIV4Owxxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P4FzgjLd3XJALTHDN5SZ0DxcxIl2HYKxFd1d1aBzzoSRnUkpUmVCpZXm/xtvyBN80
-	 PZrbxByDpl6sJNTS3KK/kPylUy1+Bj2tygRjWXU+UxESnLf9B3wxhBPozqq4MfNlTm
-	 LbSi2Qa8ryW7VvzIorqf0YOhGAzxZ3IbJ3e84oJGUHLN/CTEZE2TTEtcFO4PhlsuY7
-	 O9w2KFqxI31a6py5slXQiTIjMwlSV77lsFw5yl/lyfZiJooqBJ/3QYl/NoGVbDAkbH
-	 OY3EH9pOmIXepJF5k/2H9YGR1Z6AAh1ZMpZ/gCI7wn4dp6bl/fUTsgqrlM057+o+DD
-	 KkmKhHyb4MUMg==
-Date: Fri, 14 Jun 2024 17:15:34 +0100
-From: Simon Horman <horms@kernel.org>
-To: Adrian Moreno <amorenoz@redhat.com>
-Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com,
-	i.maximets@ovn.org, dev@openvswitch.org,
-	Yotam Gigi <yotam.gi@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 3/9] net: psample: skip packet copy if no
- listeners
-Message-ID: <20240614161534.GT8447@kernel.org>
-References: <20240603185647.2310748-1-amorenoz@redhat.com>
- <20240603185647.2310748-4-amorenoz@redhat.com>
+	s=k20201202; t=1718381793;
+	bh=/m7C93ViXaAcLQc3o+A+6QGlNBUZog2Ouu/otDLJpY0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZVZBLqZClfkIHgS8AkvPIHqYBNvvyMf/gLvvcJ5x4o8UxaYEcqSrWfDYBIHB/bBya
+	 Asq/5Eb8NC2ChNEAD+kLM8nik6v7vSqzOzwAGL9FP9GPOJ0szbUaZIOIGpVXE3v+4I
+	 dl90wllAI3KXnSuJyPmBFmwod39i9ZkpVGbgudUZf349hC6qXq6qaD3rgKfGf54jl3
+	 +vluvgUcTBIBcdGdtr0A6H+cLz5Df2uaqodaxQEIwb0daroDnJOSsPGDwsB+QcqAgK
+	 6/gYCH8dUd0zJj3eUcTYX536exO0d40YvNL6BqRDSPn2XNGh9r6C9z1HFIIaINWrxB
+	 SfDQ3jFml8hxw==
+Date: Fri, 14 Jun 2024 11:16:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 00/13] Make PCI's devres API more consistent
+Message-ID: <20240614161632.GA1116318@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240603185647.2310748-4-amorenoz@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <442e5119dc4d2630b34d8cf9228c84b9cfee1717.camel@redhat.com>
 
-On Mon, Jun 03, 2024 at 08:56:37PM +0200, Adrian Moreno wrote:
-> If nobody is listening on the multicast group, generating the sample,
-> which involves copying packet data, seems completely unnecessary.
+On Fri, Jun 14, 2024 at 01:38:41PM +0200, Philipp Stanner wrote:
+> On Thu, 2024-06-13 at 16:57 -0500, Bjorn Helgaas wrote:
+
+> > This is on pci/devres with some commit log rework and the following
+> > diffs.  I think the bar short/int thing is the only actual code
+> > change.  Happy to squash in any other updates or things I botched.
 > 
-> Return fast in this case.
+> I looked through your tree and only found the following nit:
 > 
-> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+> In commit "PCI: Remove struct pci_devres.enabled status bit" you
+> changed the line
+> 
+> "The PCI devres implementation has a separate boolean to track whether
+> a"
+> 
+> to:
+> 
+> "The pci_devres struct has a separate boolean to track whether a device
+> is"
+> 
+> In past reviews that has been criticized and I was told to always call
+> it "struct pci_devres", not the other way around. That's also how it's
+> put in the following paragraph.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+Amended to that, thanks.
