@@ -1,57 +1,57 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12C213AD2B;
-	Sat, 15 Jun 2024 23:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B6B13BC01;
+	Sat, 15 Jun 2024 23:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718493190; cv=none; b=C/7psD+2SnI2BZrs6bt5gLN5TrYTDZeJ59YDD64TMEHxFydPcT4vx+hxDYVI9WiHNfDbGe3wMrHyPuifdXpBKQnLzv3fK+gi+QwUs9T4Ca3d4PevOGZj+jKbWTbCsycqrUD8JIbNE/tRymlVMpUXssg7mE7ySboiDvYb3kxme0g=
+	t=1718493193; cv=none; b=FjHfBnWaxrvGnGgWnRpJJvbWnXXe46l3Rr5UWnKj1BksJCCRBKfO/UUjci87Ad7wmYuSZuedWWOArJLNUZzo01vuD1eV6+z8qDJnpe9N1tDUcCGIO2WxLCxfDwoCTTZP3QXXQbpHPciSzvY0UCuhwUFPgZ2lzieaN7MHpW9U2qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718493190; c=relaxed/simple;
-	bh=rLp5PUoWlLYXy9ow7R+J0uBhguk6lzJWLm+9dQJ/NIA=;
+	s=arc-20240116; t=1718493193; c=relaxed/simple;
+	bh=ku+VGfnNI34F254MFdUC0xDb4Yx+yRR3yHZAkkb9RSw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AL/TiQwGpP7nrkOSLbp/VvQsO+Hs1grekNrZC2bk/ad4Ogv6hQTYPm2TpDaW77xpFez5zjOIOUQQ5TxfBMY3WV6fsxvlBP9A2zj/mBRx8IhhX3oVTOIUflMQXJ9RRANsyUbqFqXFgpyKBWPBnl42OvnIEBCjzqRXHLh2kn013jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=erWPdYBY; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=MLIvCKnwClEJy9i7bIDmiDcw25g2+bBS+loLjqr803OMzwLLBoYAxqFqTkGNkDMd0HP3didMt4NYntawwsfrwZcaOaPqbeRNJFX2TspA/Qdx+gQgFmchDq/Ss/9djabQz8/FzUTJ/8Lb0piM7Sb8/0BZnitA76PWqldrhD8Vfus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zef32v+h; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erWPdYBY"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-35f2d723ef0so2865115f8f.1;
-        Sat, 15 Jun 2024 16:13:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zef32v+h"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42172ab4b60so30400555e9.0;
+        Sat, 15 Jun 2024 16:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718493186; x=1719097986; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718493189; x=1719097989; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qe05OY5XgNl7IgZQMzl3g7W3eb3ZqytHjml6Zdphh7I=;
-        b=erWPdYBYVTl8vhz/2eCqMmingVrRipSVqj+MG6+Zop6laQZm2WSl4/lsWIsocU+Sy+
-         ANdCe9cD3ZJfsYxbcaY3eTIDUPyXh/e4s5nw9YCk0l7wNhFy0cuuACSo4ue4qE4mK2Jo
-         K0vDApRBlobXsDyscBdJZxWixx3EqUD9vDrpfFbFDDpl6zU7wExIkxI/7/82VbWnayKX
-         JpZwar3qYgVoVGDyzwycROxGgDiNkFarP7nEbXlzk57hpIrlPwxa08S0cwujuj7Mpajx
-         3OGuZkwPh17o0cykXqVOgUY25q5HkekUIJjop32D+WbaIHSUAOcSJtiAoiafqjsYdotV
-         yQ8g==
+        bh=eUfgJaiAMs8UzsHkdvv07vuPTP2fZMr9yKyEFTSMlvM=;
+        b=Zef32v+hwG9vWrFxGGbXn4HF9GeTaX1zojcBEVQjYT7oJZ1vCKPYSFv/I8nQ1aI6g3
+         xN5/iembU/ENwOOU4rRU5HYjceNn7gFsKhvuGoGjVcT44J7UHrES9+yhTuWoSKZHCh2s
+         9iMWquJge8TxWZNJOCD0XAEwYt2ihrVXY2dourvnB9kD9KdXqA9vWXFmXS4yL12GhlSz
+         S156ik4OuvwBUu/qw1BTiCxR3xIqxQmrD/sLRi0D6DDfNHTne7tqBPZQ3RuLdah1ITuF
+         /9wiW5UMYzcHgmG7Qvs/C9ivnEHQeU3seKgnWcrFm8Be0cMIr/sar67Wwho91Om5AMka
+         8sIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718493186; x=1719097986;
+        d=1e100.net; s=20230601; t=1718493189; x=1719097989;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qe05OY5XgNl7IgZQMzl3g7W3eb3ZqytHjml6Zdphh7I=;
-        b=T5ymiFZKcP+rCh+x67uKOIfj/t9aXnYHfetezL/R1Fpy4X648ImQHL8FG3FmgIrpMB
-         RKwx0Xrba/1rDwwyojdKe1z6u391zGlpcShOQDZxmdbwjUa/B76jKGmKeGhUNGmHqbJd
-         Plt/RYRJf9eX1NOSDSqa+I9/yPERmfZGV3MNT8tQby8SLutMIbpVLjzt3uH0Bdxq7hwm
-         tCa+hI98DHj0wUfup6lhFcZq5oWonobVBgrQ/1j6j4E+nXTKUr4Ivw/upbmx3hAYl4ev
-         q5L4tMdZsXJp3aUkpPnfV7QflbVMwRW4wozXa0aDGuwcXUL21J3i4Bpogqx07bxkRtQ1
-         7LSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrd9y/T7spGYKFtE7KKwGf+G/PPIemlkotltXdMeagAlBjU+JC4mqH3WzVlWW8vnrxO1bNMgazUaPOozY/Kvx1cKIDAGZCSuoMEdeKwYyFhc2edMiHqX1/4Y3Xt635LH+8cKiOOLr5ayU0XB5wloM+Y5SZjkagDvKztxpLCGEOM/K831Y=
-X-Gm-Message-State: AOJu0YwtqB++/zsfvxugO9GxkaSfAEzSFT1woezCNTkz81kSYaMxG3fr
-	qYTpN92AW9mOfh7gsKJpEZs/UJLR8JXr0/bJ23PGdYB39064jLsW
-X-Google-Smtp-Source: AGHT+IHm64I/T3lr/JtVXnnZuxi+3VMj/vc9rYWyeT9SeyeSzuP5ktBTfWWM5B1bTsOsrgh6zEnVzg==
-X-Received: by 2002:adf:e88b:0:b0:360:8f85:a5f1 with SMTP id ffacd0b85a97d-3608f85a70amr1330174f8f.5.1718493186165;
-        Sat, 15 Jun 2024 16:13:06 -0700 (PDT)
+        bh=eUfgJaiAMs8UzsHkdvv07vuPTP2fZMr9yKyEFTSMlvM=;
+        b=eBwzK/vupgYIuKGmKe2mjoRiesI7Dgk3gEtXv2FRe/mqNy2zBXRWRorKeNpU9l2IvA
+         3Q4gK9GZyqUbALg2GA1Iil/vmuWhAMyL6y2hvn71kt3sjLK27+ZJSnivL7txrIt4UbBl
+         z6t3QVFNHlkTW0g/K/c/d8WXj7C6wN3Gh3XXilBpKWrf3N/IFTaeJrJ8HVEHJQHhIrmt
+         GADEKYsAy2x90wJw2BozY4/c4MjPlPcyx2WUnA6j10kmytL/8iQmiXHarFZA9wgDup76
+         BGWTofztwlLeGLJeUOhywMJW9gtudW/JErJqdun0ULOwhnJ5sHUvN3Nr42/HwMMvysPI
+         lKIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHyBG7gCmNMgr+9S0g1KZEOAH6xydUKQ0MnhYNYjjJKaCfJ76J5bM17MQnr0ygvWo5xFibxFuxrX2YbBpm/18iJSCgSCyLFXWPaDjpyNv1HyNisipkHhhaUKUR71D1MwXpEyvmoy29Fd5lTDdlxfrF4mohJA0Q5WiKWQKFAWp4Yed6gcE=
+X-Gm-Message-State: AOJu0YzW7viQta0cTLf63+e5gJCtCNn1rVd/EvukCVHg/HRHKloMCEDM
+	HoKCXRzD1wAgJgJL7tXmG94q1cDqVMDI0+DTnKTP3mU5cfyT9b2u
+X-Google-Smtp-Source: AGHT+IEL4+kbVpdEgcEIeKM2g4q5q9aWZiAUukl4ufvB1q01k/ZthG958aYqC8l1qn0eXx9743pVag==
+X-Received: by 2002:a5d:6341:0:b0:360:7279:858e with SMTP id ffacd0b85a97d-3607a7d96e2mr3276940f8f.50.1718493189156;
+        Sat, 15 Jun 2024 16:13:09 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3607509355dsm8145532f8f.13.2024.06.15.16.13.05
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3607509355dsm8145532f8f.13.2024.06.15.16.13.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 16:13:05 -0700 (PDT)
+        Sat, 15 Jun 2024 16:13:08 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -63,9 +63,9 @@ To: Pavel Machek <pavel@ucw.cz>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v5 17/20] leds: leds-lp55xx: generalize sysfs master_fader
-Date: Sun, 16 Jun 2024 01:11:47 +0200
-Message-ID: <20240615231152.28201-18-ansuelsmth@gmail.com>
+Subject: [PATCH v5 20/20] leds: leds-lp5569: Add support for Texas Instruments LP5569
+Date: Sun, 16 Jun 2024 01:11:50 +0200
+Message-ID: <20240615231152.28201-21-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240615231152.28201-1-ansuelsmth@gmail.com>
 References: <20240615231152.28201-1-ansuelsmth@gmail.com>
@@ -77,383 +77,637 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Generalize sysfs master_fader since their implementation is the same across
-some lp55xx based LED driver.
+Add support for Texas Instruments LP5569 LED driver.
+
+Texas Instruments LP5569 is 9 channels chip with programmable engines.
+
+It almost a copy of LP5523 with fundamental changes to regs order and
+regs content.
+
+Has difference in how the clock is handled and doesn't support detecting
+clock time automatically, different handling for selftest and different
+scheme for the status regs.
+
+LED chip supports ENGINE and MUX to group LED and run precompiled code
+with magic values to run patterns. This is loaded via the sysfs entry
+and it's passed as a string of ASCII HEX char.
+
+One some devices using this LED Controller (a NBG7815 Router) it was
+found loading big precompiled pattern with up to 96 bytes of code. To
+have support for this "extended" scenario, hardcode each engine to
+support 4 pages of precompiled pattern (128 bytes of code) and 1 page
+for each MUX. This gives plenty of space for any kind precompiled
+pattern keeping simple logic for page handling of each engine and mux.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/leds/leds-lp5523.c        | 144 ++----------------------------
- drivers/leds/leds-lp55xx-common.c | 119 ++++++++++++++++++++++++
- drivers/leds/leds-lp55xx-common.h |  37 ++++++++
- 3 files changed, 161 insertions(+), 139 deletions(-)
+ drivers/leds/Kconfig       |  16 +-
+ drivers/leds/Makefile      |   1 +
+ drivers/leds/leds-lp5569.c | 542 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 556 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/leds/leds-lp5569.c
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 9d91c2c5a3eb..6f25a6c32869 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -315,137 +315,6 @@ static ssize_t lp5523_selftest(struct device *dev,
- 	return pos;
- }
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 05e6af88b88c..b1d7d94317b3 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -414,7 +414,7 @@ config LEDS_LP50XX
+ 	  module will be called leds-lp50xx.
  
--#define show_fader(nr)						\
--static ssize_t show_master_fader##nr(struct device *dev,	\
--			    struct device_attribute *attr,	\
--			    char *buf)				\
--{								\
--	return show_master_fader(dev, attr, buf, nr);		\
--}
--
--#define store_fader(nr)						\
--static ssize_t store_master_fader##nr(struct device *dev,	\
--			     struct device_attribute *attr,	\
--			     const char *buf, size_t len)	\
--{								\
--	return store_master_fader(dev, attr, buf, len, nr);	\
--}
--
--static ssize_t show_master_fader(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf, int nr)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
--	struct lp55xx_chip *chip = led->chip;
--	int ret;
--	u8 val;
--
--	mutex_lock(&chip->lock);
--	ret = lp55xx_read(chip, LP5523_REG_MASTER_FADER_BASE + nr - 1, &val);
--	mutex_unlock(&chip->lock);
--
--	if (ret == 0)
--		ret = sprintf(buf, "%u\n", val);
--
--	return ret;
--}
--show_fader(1)
--show_fader(2)
--show_fader(3)
--
--static ssize_t store_master_fader(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf, size_t len, int nr)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
--	struct lp55xx_chip *chip = led->chip;
--	int ret;
--	unsigned long val;
--
--	if (kstrtoul(buf, 0, &val))
--		return -EINVAL;
--
--	if (val > 0xff)
--		return -EINVAL;
--
--	mutex_lock(&chip->lock);
--	ret = lp55xx_write(chip, LP5523_REG_MASTER_FADER_BASE + nr - 1,
--			   (u8)val);
--	mutex_unlock(&chip->lock);
--
--	if (ret == 0)
--		ret = len;
--
--	return ret;
--}
--store_fader(1)
--store_fader(2)
--store_fader(3)
--
--static ssize_t show_master_fader_leds(struct device *dev,
--				      struct device_attribute *attr,
--				      char *buf)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
--	struct lp55xx_chip *chip = led->chip;
--	int i, ret, pos = 0;
--	u8 val;
--
--	mutex_lock(&chip->lock);
--
--	for (i = 0; i < LP5523_MAX_LEDS; i++) {
--		ret = lp55xx_read(chip, LP5523_REG_LED_CTRL_BASE + i, &val);
--		if (ret)
--			goto leave;
--
--		val = (val & LP5523_FADER_MAPPING_MASK)
--			>> LP5523_FADER_MAPPING_SHIFT;
--		if (val > 3) {
--			ret = -EINVAL;
--			goto leave;
--		}
--		buf[pos++] = val + '0';
--	}
--	buf[pos++] = '\n';
--	ret = pos;
--leave:
--	mutex_unlock(&chip->lock);
--	return ret;
--}
--
--static ssize_t store_master_fader_leds(struct device *dev,
--				       struct device_attribute *attr,
--				       const char *buf, size_t len)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
--	struct lp55xx_chip *chip = led->chip;
--	int i, n, ret;
--	u8 val;
--
--	n = min_t(int, len, LP5523_MAX_LEDS);
--
--	mutex_lock(&chip->lock);
--
--	for (i = 0; i < n; i++) {
--		if (buf[i] >= '0' && buf[i] <= '3') {
--			val = (buf[i] - '0') << LP5523_FADER_MAPPING_SHIFT;
--			ret = lp55xx_update_bits(chip,
--						 LP5523_REG_LED_CTRL_BASE + i,
--						 LP5523_FADER_MAPPING_MASK,
--						 val);
--			if (ret)
--				goto leave;
--		} else {
--			ret = -EINVAL;
--			goto leave;
--		}
--	}
--	ret = len;
--leave:
--	mutex_unlock(&chip->lock);
--	return ret;
--}
--
- LP55XX_DEV_ATTR_ENGINE_MODE(1);
- LP55XX_DEV_ATTR_ENGINE_MODE(2);
- LP55XX_DEV_ATTR_ENGINE_MODE(3);
-@@ -456,14 +325,11 @@ LP55XX_DEV_ATTR_ENGINE_LOAD(1);
- LP55XX_DEV_ATTR_ENGINE_LOAD(2);
- LP55XX_DEV_ATTR_ENGINE_LOAD(3);
- static LP55XX_DEV_ATTR_RO(selftest, lp5523_selftest);
--static LP55XX_DEV_ATTR_RW(master_fader1, show_master_fader1,
--			  store_master_fader1);
--static LP55XX_DEV_ATTR_RW(master_fader2, show_master_fader2,
--			  store_master_fader2);
--static LP55XX_DEV_ATTR_RW(master_fader3, show_master_fader3,
--			  store_master_fader3);
--static LP55XX_DEV_ATTR_RW(master_fader_leds, show_master_fader_leds,
--			  store_master_fader_leds);
+ config LEDS_LP55XX_COMMON
+-	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
++	tristate "Common Driver for TI/National LP5521/5523/55231/5562/5569/8501"
+ 	depends on LEDS_CLASS
+ 	depends on LEDS_CLASS_MULTICOLOR
+ 	depends on OF
+@@ -422,8 +422,8 @@ config LEDS_LP55XX_COMMON
+ 	select FW_LOADER
+ 	select FW_LOADER_USER_HELPER
+ 	help
+-	  This option supports common operations for LP5521/5523/55231/5562/8501
+-	  devices.
++	  This option supports common operations for LP5521/5523/55231/5562/5569/
++	  8501 devices.
+ 
+ config LEDS_LP5521
+ 	tristate "LED Support for N.S. LP5521 LED driver chip"
+@@ -456,6 +456,16 @@ config LEDS_LP5562
+ 	  Driver provides direct control via LED class and interface for
+ 	  programming the engines.
+ 
++config LEDS_LP5569
++	tristate "LED Support for TI LP5569 LED driver chip"
++	depends on LEDS_CLASS && I2C
++	depends on LEDS_LP55XX_COMMON
++	help
++	  If you say yes here you get support for TI LP5569 LED driver.
++	  It is 9 channels chip with programmable engines.
++	  Driver provides direct control via LED class and interface for
++	  programming the engines.
++
+ config LEDS_LP8501
+ 	tristate "LED Support for TI LP8501 LED driver chip"
+ 	depends on LEDS_CLASS && I2C
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index effdfc6f1e95..ad21941efa19 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_LEDS_LP50XX)		+= leds-lp50xx.o
+ obj-$(CONFIG_LEDS_LP5521)		+= leds-lp5521.o
+ obj-$(CONFIG_LEDS_LP5523)		+= leds-lp5523.o
+ obj-$(CONFIG_LEDS_LP5562)		+= leds-lp5562.o
++obj-$(CONFIG_LEDS_LP5569)		+= leds-lp5569.o
+ obj-$(CONFIG_LEDS_LP55XX_COMMON)	+= leds-lp55xx-common.o
+ obj-$(CONFIG_LEDS_LP8501)		+= leds-lp8501.o
+ obj-$(CONFIG_LEDS_LP8788)		+= leds-lp8788.o
+diff --git a/drivers/leds/leds-lp5569.c b/drivers/leds/leds-lp5569.c
+new file mode 100644
+index 000000000000..389ed307935c
+--- /dev/null
++++ b/drivers/leds/leds-lp5569.c
+@@ -0,0 +1,542 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 Christian Marangi <ansuelsmth@gmail.com>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/firmware.h>
++#include <linux/i2c.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/platform_data/leds-lp55xx.h>
++#include <linux/slab.h>
++#include <dt-bindings/leds/leds-lp55xx.h>
++
++#include "leds-lp55xx-common.h"
++
++#define LP5569_MAX_LEDS			9
++
++/* Memory is used like this:
++ * 0x00 engine 1 program (4 pages)
++ * 0x40 engine 2 program (4 pages)
++ * 0x80 engine 3 program (4 pages)
++ * 0xc0 engine 1 muxing info (1 page)
++ * 0xd0 engine 2 muxing info (1 page)
++ * 0xe0 engine 3 muxing info (1 page)
++ */
++#define LP5569_PAGES_PER_ENGINE		4
++
++#define LP5569_REG_ENABLE		0x00
++#define   LP5569_ENABLE			BIT(6)
++
++#define LP5569_REG_EXEC_CTRL		0x01
++#define   LP5569_MODE_ENG_SHIFT		2
++
++#define LP5569_REG_OP_MODE		0x02
++#define   LP5569_EXEC_ENG_SHIFT		2
++
++#define LP5569_REG_ENABLE_LEDS_MSB	0x04
++#define LP5569_REG_ENABLE_LEDS_LSB	0x05
++#define LP5569_REG_LED_CTRL_BASE	0x07
++#define   LP5569_FADER_MAPPING_MASK	GENMASK(7, 5)
++#define LP5569_REG_LED_PWM_BASE		0x16
++#define LP5569_REG_LED_CURRENT_BASE	0x22
++#define LP5569_REG_MISC			0x2F
++#define   LP5569_AUTO_INC		BIT(6)
++#define   LP5569_PWR_SAVE		BIT(5)
++#define   LP5569_CP_MODE_MASK		GENMASK(4, 3)
++#define   LP5569_PWM_PWR_SAVE		BIT(2)
++#define   LP5569_INTERNAL_CLK		BIT(0)
++#define LP5569_REG_MISC2		0x33
++#define   LP5569_LED_SHORT_TEST		BIT(4)
++#define   LP5569_LED_OPEN_TEST		BIT(3)
++#define LP5569_REG_STATUS		0x3C
++#define   LP5569_MASK_BUSY		BIT(7)
++#define   LP5569_STARTUP_BUSY		BIT(6)
++#define   LP5569_ENGINE_BUSY		BIT(5)
++#define   LP5569_ENGINE1_INT		BIT(2)
++#define   LP5569_ENGINE2_INT		BIT(1)
++#define   LP5569_ENGINE3_INT		BIT(0)
++#define   LP5569_ENG_STATUS_MASK	(LP5569_ENGINE1_INT | LP5569_ENGINE2_INT | \
++					 LP5569_ENGINE3_INT)
++#define LP5569_REG_IO_CONTROL		0x3D
++#define   LP5569_CLK_OUTPUT		BIT(3)
++#define LP5569_REG_RESET		0x3F
++#define   LP5569_RESET			0xFF
++#define LP5569_REG_MASTER_FADER_BASE	0x46
++#define LP5569_REG_CH1_PROG_START	0x4B
++#define LP5569_REG_CH2_PROG_START	0x4C
++#define LP5569_REG_CH3_PROG_START	0x4D
++#define LP5569_REG_PROG_PAGE_SEL	0x4F
++#define LP5569_REG_PROG_MEM		0x50
++#define LP5569_REG_LED_FAULT1		0x81
++#define   LP5569_LED_FAULT8		BIT(0)
++#define LP5569_REG_LED_FAULT2		0x82
++#define   LP5569_LED_FAULT7		BIT(7)
++#define   LP5569_LED_FAULT6		BIT(6)
++#define   LP5569_LED_FAULT5		BIT(5)
++#define   LP5569_LED_FAULT4		BIT(4)
++#define   LP5569_LED_FAULT3		BIT(3)
++#define   LP5569_LED_FAULT2		BIT(2)
++#define   LP5569_LED_FAULT1		BIT(1)
++#define   LP5569_LED_FAULT0		BIT(0)
++
++#define LP5569_ENG1_PROG_ADDR		0x0
++#define LP5569_ENG2_PROG_ADDR		0x40
++#define LP5569_ENG3_PROG_ADDR		0x80
++#define LP5569_ENG1_MUX_ADDR		0xc0
++#define LP5569_ENG2_MUX_ADDR		0xd0
++#define LP5569_ENG3_MUX_ADDR		0xe0
++
++#define LEDn_STATUS_FAULT(n, status)	((status) >> (n) & BIT(0))
++
++#define LP5569_DEFAULT_CONFIG \
++	(LP5569_AUTO_INC | LP5569_PWR_SAVE | LP5569_PWM_PWR_SAVE)
++
++static void lp5569_run_engine(struct lp55xx_chip *chip, bool start)
++{
++	if (!start) {
++		lp55xx_stop_engine(chip);
++		lp55xx_turn_off_channels(chip);
++		return;
++	}
++
++	lp55xx_run_engine_common(chip);
++}
++
++static int lp5569_init_program_engine(struct lp55xx_chip *chip)
++{
++	int i;
++	int j;
++	int ret;
++	u8 status;
++	/* Precompiled pattern per ENGINE setting LED MUX start and stop addresses */
++	static const u8 pattern[][LP55xx_BYTES_PER_PAGE] =  {
++		{ 0x9c, LP5569_ENG1_MUX_ADDR, 0x9c, 0xb0, 0x9d, 0x80, 0xd8, 0x00, 0},
++		{ 0x9c, LP5569_ENG2_MUX_ADDR, 0x9c, 0xc0, 0x9d, 0x80, 0xd8, 0x00, 0},
++		{ 0x9c, LP5569_ENG3_MUX_ADDR, 0x9c, 0xd0, 0x9d, 0x80, 0xd8, 0x00, 0},
++	};
++
++	/* Setup each ENGINE program start address */
++	ret = lp55xx_write(chip, LP5569_REG_CH1_PROG_START, LP5569_ENG1_PROG_ADDR);
++	if (ret)
++		return ret;
++
++	ret = lp55xx_write(chip, LP5569_REG_CH2_PROG_START, LP5569_ENG2_PROG_ADDR);
++	if (ret)
++		return ret;
++
++	ret = lp55xx_write(chip, LP5569_REG_CH3_PROG_START, LP5569_ENG3_PROG_ADDR);
++	if (ret)
++		return ret;
++
++	/* Write precompiled pattern for LED MUX address space for each ENGINE */
++	for (i = LP55XX_ENGINE_1; i <= LP55XX_ENGINE_3; i++) {
++		chip->engine_idx = i;
++		lp55xx_load_engine(chip);
++
++		for (j = 0; j < LP55xx_BYTES_PER_PAGE; j++) {
++			ret = lp55xx_write(chip, LP5569_REG_PROG_MEM + j,
++					   pattern[i - 1][j]);
++			if (ret)
++				goto out;
++		}
++	}
++
++	lp5569_run_engine(chip, true);
++
++	/* Let the programs run for couple of ms and check the engine status */
++	usleep_range(3000, 6000);
++	lp55xx_read(chip, LP5569_REG_STATUS, &status);
++	status = FIELD_GET(LP5569_ENG_STATUS_MASK, status);
++
++	if (status != LP5569_ENG_STATUS_MASK) {
++		dev_err(&chip->cl->dev,
++			"could not configure LED engine, status = 0x%.2x\n",
++			status);
++		ret = -EINVAL;
++	}
++
++out:
++	lp55xx_stop_all_engine(chip);
++	return ret;
++}
++
++static int lp5569_post_init_device(struct lp55xx_chip *chip)
++{
++	int ret;
++	int val;
++
++	ret = lp55xx_write(chip, LP5569_REG_ENABLE, LP5569_ENABLE);
++	if (ret)
++		return ret;
++
++	/* Chip startup time is 500 us, 1 - 2 ms gives some margin */
++	usleep_range(1000, 2000);
++
++	val = LP5569_DEFAULT_CONFIG;
++	val |= FIELD_PREP(LP5569_CP_MODE_MASK, chip->pdata->charge_pump_mode);
++
++	if (chip->pdata->clock_mode == LP55XX_CLOCK_INT) {
++		ret = lp55xx_update_bits(chip, LP5569_REG_IO_CONTROL,
++					 LP5569_CLK_OUTPUT,
++					 LP5569_CLK_OUTPUT);
++		if (ret)
++			return ret;
++
++		val |= LP5569_INTERNAL_CLK;
++	}
++
++	ret = lp55xx_write(chip, LP5569_REG_MISC, val);
++	if (ret)
++		return ret;
++
++	return lp5569_init_program_engine(chip);
++}
++
++static ssize_t lp5569_led_open_test(struct lp55xx_led *led, char *buf)
++{
++	struct lp55xx_chip *chip = led->chip;
++	struct lp55xx_platform_data *pdata = chip->pdata;
++	bool leds_fault[LP5569_MAX_LEDS];
++	struct lp55xx_led *led_tmp = led;
++	int i, ret, pos = 0;
++	u8 status;
++
++	/* Set in STANDBY state */
++	ret = lp55xx_write(chip, LP5569_REG_ENABLE, 0);
++	if (ret)
++		goto exit;
++
++	/* Wait 1ms for device to enter STANDBY state */
++	usleep_range(1000, 2000);
++
++	/* Set Charge Pump to 1.5x */
++	ret = lp55xx_update_bits(chip, LP5569_REG_MISC,
++				 FIELD_PREP(LP5569_CP_MODE_MASK, LP55XX_CP_BOOST),
++				 LP5569_CP_MODE_MASK);
++	if (ret)
++		goto exit;
++
++	/* Enable LED Open Test */
++	ret = lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_OPEN_TEST,
++				 LP5569_LED_OPEN_TEST);
++	if (ret)
++		goto exit;
++
++	/* Put Device in NORMAL state */
++	ret = lp55xx_write(chip, LP5569_REG_ENABLE, LP5569_ENABLE);
++	if (ret)
++		goto exit;
++
++	/* Wait 500 us for device to enter NORMAL state */
++	usleep_range(500, 750);
++
++	/* Enable LED and set to 100% brightness */
++	for (i = 0; i < pdata->num_channels; i++) {
++		ret = lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
++				   LED_FULL);
++		if (ret)
++			goto exit;
++
++		led_tmp++;
++	}
++
++	/* Wait 500 us for device to fill status regs */
++	usleep_range(500, 750);
++
++	/* Parse status led fault 1 regs */
++	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT1, &status);
++	if (ret < 0)
++		goto exit;
++
++	for (i = 0; i < 8; i++)
++		leds_fault[i] = !!((status >> i) & 0x1);
++
++	/* Parse status led fault 2 regs */
++	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT2, &status);
++	if (ret < 0)
++		goto exit;
++
++	for (i = 0; i < 1; i++)
++		leds_fault[i + 8] = !!((status >> i) & 0x1);
++
++	/* Report LED fault */
++	led_tmp = led;
++	for (i = 0; i < pdata->num_channels; i++) {
++		if (leds_fault[led_tmp->chan_nr])
++			pos += sprintf(buf + pos, "LED %d OPEN FAIL\n",
++				       led_tmp->chan_nr);
++
++		led_tmp++;
++	}
++
++	ret = pos;
++
++exit:
++	/* Disable LED Open Test */
++	lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_OPEN_TEST,
++			   0);
++
++	led_tmp = led;
++	for (i = 0; i < pdata->num_channels; i++) {
++		lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
++			     0);
++
++		led_tmp++;
++	}
++
++	return ret;
++}
++
++static ssize_t lp5569_led_short_test(struct lp55xx_led *led, char *buf)
++{
++	struct lp55xx_chip *chip = led->chip;
++	struct lp55xx_platform_data *pdata = chip->pdata;
++	bool leds_fault[LP5569_MAX_LEDS];
++	struct lp55xx_led *led_tmp = led;
++	int i, ret, pos = 0;
++	u8 status;
++
++	/* Set in STANDBY state */
++	ret = lp55xx_write(chip, LP5569_REG_ENABLE, 0);
++	if (ret)
++		goto exit;
++
++	/* Wait 1ms for device to enter STANDBY state */
++	usleep_range(1000, 2000);
++
++	/* Set Charge Pump to 1x */
++	ret = lp55xx_update_bits(chip, LP5569_REG_MISC,
++				 FIELD_PREP(LP5569_CP_MODE_MASK, LP55XX_CP_BYPASS),
++				 LP5569_CP_MODE_MASK);
++	if (ret)
++		goto exit;
++
++	/* Enable LED and set to 100% brightness and current to 100% (25.5mA) */
++	for (i = 0; i < pdata->num_channels; i++) {
++		ret = lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
++				   LED_FULL);
++		if (ret)
++			goto exit;
++
++		ret = lp55xx_write(chip, LP5569_REG_LED_CURRENT_BASE + led_tmp->chan_nr,
++				   LED_FULL);
++		if (ret)
++			goto exit;
++
++		led_tmp++;
++	}
++
++	/* Put Device in NORMAL state */
++	ret = lp55xx_write(chip, LP5569_REG_ENABLE, LP5569_ENABLE);
++	if (ret)
++		goto exit;
++
++	/* Wait 500 us for device to enter NORMAL state */
++	usleep_range(500, 750);
++
++	/* Enable LED Shorted Test */
++	ret = lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_OPEN_TEST,
++				 LP5569_LED_SHORT_TEST);
++	if (ret)
++		goto exit;
++
++	/* Wait 500 us for device to fill status regs */
++	usleep_range(500, 750);
++
++	/* Parse status led fault 1 regs */
++	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT1, &status);
++	if (ret < 0)
++		goto exit;
++
++	for (i = 0; i < 8; i++)
++		leds_fault[i] = !!LEDn_STATUS_FAULT(i, status);
++
++	/* Parse status led fault 2 regs */
++	ret = lp55xx_read(chip, LP5569_REG_LED_FAULT2, &status);
++	if (ret < 0)
++		goto exit;
++
++	for (i = 0; i < 1; i++)
++		leds_fault[i + 8] = !!LEDn_STATUS_FAULT(i, status);
++
++	/* Report LED fault */
++	led_tmp = led;
++	for (i = 0; i < pdata->num_channels; i++) {
++		if (leds_fault[led_tmp->chan_nr])
++			pos += sprintf(buf + pos, "LED %d SHORTED FAIL\n",
++				       led_tmp->chan_nr);
++
++		led_tmp++;
++	}
++
++	ret = pos;
++
++exit:
++	/* Disable LED Shorted Test */
++	lp55xx_update_bits(chip, LP5569_REG_MISC2, LP5569_LED_SHORT_TEST,
++			   0);
++
++	led_tmp = led;
++	for (i = 0; i < pdata->num_channels; i++) {
++		lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led_tmp->chan_nr,
++			     0);
++
++		led_tmp++;
++	}
++
++	return ret;
++}
++
++static ssize_t lp5569_selftest(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
++	struct lp55xx_chip *chip = led->chip;
++	int i, pos = 0;
++
++	mutex_lock(&chip->lock);
++
++	/* Test LED Open */
++	pos = lp5569_led_open_test(led, buf);
++	if (pos < 0)
++		goto fail;
++
++	/* Test LED Shorted */
++	pos = lp5569_led_short_test(led, buf);
++	if (pos < 0)
++		goto fail;
++
++	for (i = 0; i < chip->pdata->num_channels; i++) {
++		/* Restore current */
++		lp55xx_write(chip, LP5569_REG_LED_CURRENT_BASE + led->chan_nr,
++			     led->led_current);
++
++		/* Restore brightness */
++		lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + led->chan_nr,
++			     led->brightness);
++		led++;
++	}
++
++	if (pos == 0)
++		pos = sprintf(buf, "OK\n");
++	goto release_lock;
++fail:
++	pos = sprintf(buf, "FAIL\n");
++
++release_lock:
++	mutex_unlock(&chip->lock);
++
++	return pos;
++}
++
++LP55XX_DEV_ATTR_ENGINE_MODE(1);
++LP55XX_DEV_ATTR_ENGINE_MODE(2);
++LP55XX_DEV_ATTR_ENGINE_MODE(3);
++LP55XX_DEV_ATTR_ENGINE_LEDS(1);
++LP55XX_DEV_ATTR_ENGINE_LEDS(2);
++LP55XX_DEV_ATTR_ENGINE_LEDS(3);
++LP55XX_DEV_ATTR_ENGINE_LOAD(1);
++LP55XX_DEV_ATTR_ENGINE_LOAD(2);
++LP55XX_DEV_ATTR_ENGINE_LOAD(3);
++static LP55XX_DEV_ATTR_RO(selftest, lp5569_selftest);
 +LP55XX_DEV_ATTR_MASTER_FADER(1);
 +LP55XX_DEV_ATTR_MASTER_FADER(2);
 +LP55XX_DEV_ATTR_MASTER_FADER(3);
 +static LP55XX_DEV_ATTR_RW(master_fader_leds, lp55xx_show_master_fader_leds,
 +			  lp55xx_store_master_fader_leds);
- 
- static struct attribute *lp5523_attributes[] = {
- 	&dev_attr_engine1_mode.attr,
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 687693bed868..ac02ab938dd8 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -63,6 +63,9 @@
- 
- #define LED_ACTIVE(mux, led)		(!!(mux & (0x0001 << led)))
- 
-+/* MASTER FADER common property */
-+#define LP55xx_FADER_MAPPING_MASK	GENMASK(7, 6)
 +
- /* External clock rate */
- #define LP55XX_CLK_32K			32768
- 
-@@ -799,6 +802,122 @@ ssize_t lp55xx_store_engine_leds(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(lp55xx_store_engine_leds);
- 
-+ssize_t lp55xx_show_master_fader(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf, int nr)
-+{
-+	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
-+	struct lp55xx_chip *chip = led->chip;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
-+	int ret;
-+	u8 val;
++static struct attribute *lp5569_attributes[] = {
++	&dev_attr_engine1_mode.attr,
++	&dev_attr_engine2_mode.attr,
++	&dev_attr_engine3_mode.attr,
++	&dev_attr_engine1_load.attr,
++	&dev_attr_engine2_load.attr,
++	&dev_attr_engine3_load.attr,
++	&dev_attr_engine1_leds.attr,
++	&dev_attr_engine2_leds.attr,
++	&dev_attr_engine3_leds.attr,
++	&dev_attr_selftest.attr,
++	&dev_attr_master_fader1.attr,
++	&dev_attr_master_fader2.attr,
++	&dev_attr_master_fader3.attr,
++	&dev_attr_master_fader_leds.attr,
++	NULL,
++};
 +
-+	mutex_lock(&chip->lock);
-+	ret = lp55xx_read(chip, cfg->reg_master_fader_base.addr + nr - 1, &val);
-+	mutex_unlock(&chip->lock);
++static const struct attribute_group lp5569_group = {
++	.attrs = lp5569_attributes,
++};
 +
-+	if (ret == 0)
-+		ret = sprintf(buf, "%u\n", val);
++/* Chip specific configurations */
++static struct lp55xx_device_config lp5569_cfg = {
++	.reg_op_mode = {
++		.addr = LP5569_REG_OP_MODE,
++		.shift = LP5569_MODE_ENG_SHIFT,
++	},
++	.reg_exec = {
++		.addr = LP5569_REG_EXEC_CTRL,
++		.shift = LP5569_EXEC_ENG_SHIFT,
++	},
++	.reset = {
++		.addr = LP5569_REG_RESET,
++		.val  = LP5569_RESET,
++	},
++	.enable = {
++		.addr = LP5569_REG_ENABLE,
++		.val  = LP5569_ENABLE,
++	},
++	.prog_mem_base = {
++		.addr = LP5569_REG_PROG_MEM,
++	},
++	.reg_led_pwm_base = {
++		.addr = LP5569_REG_LED_PWM_BASE,
++	},
++	.reg_led_current_base = {
++		.addr = LP5569_REG_LED_CURRENT_BASE,
++	},
++	.pages_per_engine   = LP5569_PAGES_PER_ENGINE,
++	.max_channel  = LP5569_MAX_LEDS,
++	.post_init_device   = lp5569_post_init_device,
++	.brightness_fn      = lp55xx_led_brightness,
++	.multicolor_brightness_fn = lp55xx_multicolor_brightness,
++	.set_led_current    = lp55xx_set_led_current,
++	.firmware_cb        = lp55xx_firmware_loaded_cb,
++	.run_engine         = lp5569_run_engine,
++	.dev_attr_group     = &lp5569_group,
++};
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(lp55xx_show_master_fader);
++static const struct i2c_device_id lp5569_id[] = {
++	{ "lp5569",  .driver_data = (kernel_ulong_t)&lp5569_cfg, },
++	{ }
++};
 +
-+ssize_t lp55xx_store_master_fader(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t len, int nr)
-+{
-+	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
-+	struct lp55xx_chip *chip = led->chip;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
-+	int ret;
-+	unsigned long val;
++MODULE_DEVICE_TABLE(i2c, lp5569_id);
 +
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
++static const struct of_device_id of_lp5569_leds_match[] = {
++	{ .compatible = "ti,lp5569", .data = &lp5569_cfg, },
++	{},
++};
 +
-+	if (val > 0xff)
-+		return -EINVAL;
++MODULE_DEVICE_TABLE(of, of_lp5569_leds_match);
 +
-+	mutex_lock(&chip->lock);
-+	ret = lp55xx_write(chip, cfg->reg_master_fader_base.addr + nr - 1,
-+			   (u8)val);
-+	mutex_unlock(&chip->lock);
++static struct i2c_driver lp5569_driver = {
++	.driver = {
++		.name	= "lp5569x",
++		.of_match_table = of_lp5569_leds_match,
++	},
++	.probe		= lp55xx_probe,
++	.remove		= lp55xx_remove,
++	.id_table	= lp5569_id,
++};
 +
-+	if (ret == 0)
-+		ret = len;
++module_i2c_driver(lp5569_driver);
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(lp55xx_store_master_fader);
-+
-+ssize_t lp55xx_show_master_fader_leds(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
-+	struct lp55xx_chip *chip = led->chip;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
-+	int i, ret, pos = 0;
-+	u8 val;
-+
-+	mutex_lock(&chip->lock);
-+
-+	for (i = 0; i < cfg->max_channel; i++) {
-+		ret = lp55xx_read(chip, cfg->reg_led_ctrl_base.addr + i, &val);
-+		if (ret)
-+			goto leave;
-+
-+		val = FIELD_GET(LP55xx_FADER_MAPPING_MASK, val);
-+		if (val > FIELD_MAX(LP55xx_FADER_MAPPING_MASK)) {
-+			ret = -EINVAL;
-+			goto leave;
-+		}
-+		buf[pos++] = val + '0';
-+	}
-+	buf[pos++] = '\n';
-+	ret = pos;
-+leave:
-+	mutex_unlock(&chip->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(lp55xx_show_master_fader_leds);
-+
-+ssize_t lp55xx_store_master_fader_leds(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t len)
-+{
-+	struct lp55xx_led *led = i2c_get_clientdata(to_i2c_client(dev));
-+	struct lp55xx_chip *chip = led->chip;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
-+	int i, n, ret;
-+	u8 val;
-+
-+	n = min_t(int, len, cfg->max_channel);
-+
-+	mutex_lock(&chip->lock);
-+
-+	for (i = 0; i < n; i++) {
-+		if (buf[i] >= '0' && buf[i] <= '3') {
-+			val = (buf[i] - '0') << __bf_shf(LP55xx_FADER_MAPPING_MASK);
-+			ret = lp55xx_update_bits(chip,
-+						 cfg->reg_led_ctrl_base.addr + i,
-+						 LP55xx_FADER_MAPPING_MASK,
-+						 val);
-+			if (ret)
-+				goto leave;
-+		} else {
-+			ret = -EINVAL;
-+			goto leave;
-+		}
-+	}
-+	ret = len;
-+leave:
-+	mutex_unlock(&chip->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(lp55xx_store_master_fader_leds);
-+
- static struct attribute *lp55xx_engine_attributes[] = {
- 	&dev_attr_select_engine.attr,
- 	&dev_attr_run_engine.attr,
-diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index 212bdb216c9a..063d7392b6a2 100644
---- a/drivers/leds/leds-lp55xx-common.h
-+++ b/drivers/leds/leds-lp55xx-common.h
-@@ -89,6 +89,27 @@ static ssize_t store_engine##nr##_load(struct device *dev,		\
- 	store_load(nr)			 \
- 	static LP55XX_DEV_ATTR_WO(engine##nr##_load, store_engine##nr##_load)
- 
-+#define show_fader(nr)						\
-+static ssize_t show_master_fader##nr(struct device *dev,	\
-+			    struct device_attribute *attr,	\
-+			    char *buf)				\
-+{								\
-+	return lp55xx_show_master_fader(dev, attr, buf, nr);	\
-+}
-+
-+#define store_fader(nr)						\
-+static ssize_t store_master_fader##nr(struct device *dev,	\
-+			     struct device_attribute *attr,	\
-+			     const char *buf, size_t len)	\
-+{								\
-+	return lp55xx_store_master_fader(dev, attr, buf, len, nr); \
-+}
-+
-+#define LP55XX_DEV_ATTR_MASTER_FADER(nr)  \
-+	show_fader(nr)			  \
-+	store_fader(nr)			  \
-+	static LP55XX_DEV_ATTR_RW(master_fader##nr, show_master_fader##nr, store_master_fader##nr)
-+
- struct lp55xx_led;
- struct lp55xx_chip;
- 
-@@ -116,6 +137,8 @@ struct lp55xx_reg {
-  * @prog_mem_base      : Chip specific base reg address for chip SMEM programming
-  * @reg_led_pwm_base   : Chip specific base reg address for LED PWM conf
-  * @reg_led_current_base : Chip specific base reg address for LED current conf
-+ * @reg_master_fader_base : Chip specific base reg address for master fader base
-+ * @reg_led_ctrl_base  : Chip specific base reg address for LED ctrl base
-  * @pages_per_engine   : Assigned pages for each engine
-  *                       (if not set chip doesn't support pages)
-  * @max_channel        : Maximum number of channels
-@@ -136,6 +159,8 @@ struct lp55xx_device_config {
- 	const struct lp55xx_reg prog_mem_base;
- 	const struct lp55xx_reg reg_led_pwm_base;
- 	const struct lp55xx_reg reg_led_current_base;
-+	const struct lp55xx_reg reg_master_fader_base;
-+	const struct lp55xx_reg reg_led_ctrl_base;
- 	const int pages_per_engine;
- 	const int max_channel;
- 
-@@ -257,5 +282,17 @@ extern ssize_t lp55xx_show_engine_leds(struct device *dev,
- extern ssize_t lp55xx_store_engine_leds(struct device *dev,
- 					struct device_attribute *attr,
- 					const char *buf, size_t len, int nr);
-+extern ssize_t lp55xx_show_master_fader(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf, int nr);
-+extern ssize_t lp55xx_store_master_fader(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len, int nr);
-+extern ssize_t lp55xx_show_master_fader_leds(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *buf);
-+extern ssize_t lp55xx_store_master_fader_leds(struct device *dev,
-+					      struct device_attribute *attr,
-+					      const char *buf, size_t len);
- 
- #endif /* _LEDS_LP55XX_COMMON_H */
++MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
++MODULE_DESCRIPTION("LP5569 LED engine");
++MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
