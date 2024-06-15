@@ -1,123 +1,253 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3436179BC;
-	Sat, 15 Jun 2024 11:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD583D96A;
+	Sat, 15 Jun 2024 11:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718450180; cv=none; b=jqFFEMFIuVRCAMSohmHpgXAn+She3nrKRYyfg3LY6QimyCYrYyP+f2nICc8gPrtBwv700U9kYVp52DjE52mBDFkzKQgQ0efOna7Q5lvO/f3JUfCYC12lHSbCJalV4jJKomh4P6AC0e/TAjD/9m+Y+IlxPJcs3WDatlIGic4uJLs=
+	t=1718450189; cv=none; b=NpvYvRRbBfc5jjlGnBtDcCdzXMdicqb+jYWGA2412M4+VoEzrRl9VoM2G728FaRn2k04QB/39SD+Y1dPlv/P5DZG41gca3y4xOXgmvsBFcHWKTbkJIs1ik1qinRuQ336CUNJLueg6PAOMUyAXHiF8oxwVkVC5lx+3FrhpxRKsUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718450180; c=relaxed/simple;
-	bh=43ZgOL9YKF8h621TBgkfyaGeYGcUg0kFE7OE3DmN7n4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=h2AVWhAj7gOXF/aSRnwzbc4H7qgzsVI0qIOdeXkboMeZTaIbDc6ovP/tqv3c6JMFM94QiWevvychqbtwsWYb/b7duujci1leNCJCJ5etFrY0USW4y8bZVr25rFyOaHp3pO+2bqGOiCpVah/7yjdHTgSLdb8R4RoPQzubkxe2vBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HqjmOBtS; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718450189; c=relaxed/simple;
+	bh=+qHT3f+/AOb9YgCvAG8VMXIyyDSdraW1NCKmyVQT+/E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Kv9BU5zVAMkiPSKNyiiNeCSo7LR7n6OH2L4eTHc79FEpizlviRB++yACeVbLEjw+ZAX1wxMo61oCx+EpDDtHhScVbAgtZlJLdqhoIzPa/1xHrEA5A5ilg8P0XFLhNO5EdZ+S9nh2NlzvYNGVDpLBNS+9Iz6oxWeeOTE1ULarSgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=xOkvf8bk; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HqjmOBtS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718450142; x=1719054942; i=markus.elfring@web.de;
-	bh=GVe2jkxEYkenXyOm2W4BRSWAV7lrAsxmZvBTV2Z3Q1Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HqjmOBtSnGPk6zK4zIXPujK33WWTveCin2WuDJ7mLZZVL8anGQDfs50eqKJ432pz
-	 I4V1sAQu/2BsG8RObqEFJgwQJKIM/EZYiKouCzPuv+2yp8RAZiHMa6pG8xHzDHIl0
-	 ZhTYM/JEPIxVrEomknBRzHyKLps+bzFXc7/hIekW5qm6bczPlp2Ran8CS8GjYi+7J
-	 MT+yTWoJW3V1RTxrZPX6C1fFNsLW7dCGDgFzi4diAbPPpXZje3YNRyC3h7mCGZ0OI
-	 YIvOkEdVnIjfqO9c+XWURTHUeu3lHaPXZBcrfazZZ/dxprv8Nr69U+9U/Ily/suik
-	 qAhPij7WMZ6UmTcJow==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MgibW-1ssrWU2sqy-00npTp; Sat, 15
- Jun 2024 13:15:42 +0200
-Message-ID: <98cf0387-eb8e-492b-a78b-b21e3f6dd7e3@web.de>
-Date: Sat, 15 Jun 2024 13:15:38 +0200
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xOkvf8bk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718449679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eE9dplccZ2IeUfRMWTD1T9OavWFDEd5FuUtuIlbIm48=;
+	b=xOkvf8bkCrpq2IaS1Ixz5oCY3xoo4+sPUB3J1Vgi3F5n8lrhY0e2cJezGW4bYSxzgzo5YH
+	zWxDPcXHUGpw34CyuKIBuN0g2hdVCkA9sP4V2AokcJD10YLd1epRDiNLCC8OTzsJaM7hgC
+	3GoD4JmHyWcDyfyqBw2Z4I/eJZV/Lzc=
+Message-ID: <0cdcf83a1ab7c199244d4a00157f6fa8979ef819.camel@crapouillou.net>
+Subject: Re: [PATCH v10 3/6] iio: core: Add new DMABUF interface
+ infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>,  Jonathan Corbet <corbet@lwn.net>, Nuno Sa
+ <nuno.sa@analog.com>, linux-iio@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Date: Sat, 15 Jun 2024 13:07:58 +0200
+In-Reply-To: <20240609105302.07de907a@jic23-huawei>
+References: <20240605110845.86740-1-paul@crapouillou.net>
+	 <20240605110845.86740-4-paul@crapouillou.net>
+	 <20240609105302.07de907a@jic23-huawei>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hariprasad Kelam
- <hkelam@marvell.com>, Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
- Sunil Goutham <sgoutham@marvell.com>
-References: <20240611162213.22213-2-gakula@marvell.com>
-Subject: Re: [net-next PATCH v5 01/10] octeontx2-pf: Refactoring RVU driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240611162213.22213-2-gakula@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NSdjg9D5vhbBbGqE0umagq3x2FwiXii9Hzx58V8GaWL8lclQtPb
- RPpIhhyL9jeVaNRIgONDLN8aijVQGSl7btMULbAz9wRDVJkWPt4radTxL58zdAjUOdY9p+H
- j03ClgPxj+cl2O8x1lmB70hwVhnqDer2Y/0UXNQi7EcE/GOswfRBYNFgdeCTSetYQu4QjfJ
- YxXkglWt2EF/rZe20Bhug==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uTBMgqz8/C8=;qrdO8M4BMDbaK2d2cE0VowkzJlc
- 9ZBRjWrwDtEvL4fbUchakKlRbJ8y5lyK+5g79jrznRW8v1Xu21g4aU2tSOIiMT1Oj/KHkYu+3
- Snr0IoIaxAe25HS9csndxZy+YUbAKJ7auGfJtwf+4/vUYFOWFNlMvx+DGv3uB2VKKeMjx40Sm
- hv9Ca3LxPJgsVyOAI1vnoGJhxyGU4Yfo74bSSb4M8KojiysQG0damNuQr7xOkY2wIojVj3A34
- OnGNsoa4jO4jNk2TNdbnvmVNX2dpv805f8txt9U0CptYd5Rdo3K9gOdIoqC2APFN/Yztu2Rt7
- PRTL7+r2KVAsap1b2X+ilozlPwwlzCI4gk73iI+8FbPXnyKtY/yW8cvWi2p2zsQvDEHYz/XCE
- fm7ADKcKqq/eY9bm4knscgWh2+zIWBRK26aGK9Cr+f3JK1Ogr2rSqEkuD8p6IuH/gjo3z6r2j
- VCXUykff+qK3b0YVJPVmbaejjkIACTbdtPtHqtZ5WMCy9upYFKzYiouF8DOT2dR/3N75mA9n8
- /QSjQ35r08Bw+V8yfHXX13Cmyw1aGaWBiktsMT3RIjPlrDrD+BYrIIwGWTDGYh4lfyxa7euHv
- VFn5MMOgEeYTl1nlx4ux0odPkSgvOGMFv17lZOl1tBatCXBbXPTkHGjuHFXvJCPmymaY30TAX
- h8RLPvNV0xIE9UKCcoP9nbZY9rJnPAOGsWDMGym0ab8sO5hgXS/gw1kpKun2dhv4ACWxG90xH
- 74l7jtaQ8gUaDQ3G9yV214JG93fx5E1znAnLCOUkZ+iE/z6rZjPrflWeQEgSrjRaoigerT5H6
- l6uB5mp3gCv7ovCJnpKF/U73ONY+r5dsipnw7NMkwMqPM=
 
-=E2=80=A6
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-=E2=80=A6
-> +void otx2_disable_napi(struct otx2_nic *pf)
->  {
-=E2=80=A6
-> -		cancel_work_sync(&cq_poll->dim.work);
-> +		work =3D &cq_poll->dim.work;
-> +		if (work->func)
-> +			cancel_work_sync(&cq_poll->dim.work);
-=E2=80=A6
+Le dimanche 09 juin 2024 =C3=A0 10:53 +0100, Jonathan Cameron a =C3=A9crit=
+=C2=A0:
+> On Wed,=C2=A0 5 Jun 2024 13:08:42 +0200
+> Paul Cercueil <paul@crapouillou.net> wrote:
+>=20
+> > Add the necessary infrastructure to the IIO core to support a new
+> > optional DMABUF based interface.
+> >=20
+> > With this new interface, DMABUF objects (externally created) can be
+> > attached to a IIO buffer, and subsequently used for data transfer.
+> >=20
+> > A userspace application can then use this interface to share DMABUF
+> > objects between several interfaces, allowing it to transfer data in
+> > a
+> > zero-copy fashion, for instance between IIO and the USB stack.
+> >=20
+> > The userspace application can also memory-map the DMABUF objects,
+> > and
+> > access the sample data directly. The advantage of doing this vs.
+> > the
+> > read() interface is that it avoids an extra copy of the data
+> > between the
+> > kernel and userspace. This is particularly userful for high-speed
+> > devices which produce several megabytes or even gigabytes of data
+> > per
+> > second.
+> >=20
+> > As part of the interface, 3 new IOCTLs have been added:
+> >=20
+> > IIO_BUFFER_DMABUF_ATTACH_IOCTL(int fd):
+> > =C2=A0Attach the DMABUF object identified by the given file descriptor
+> > to the
+> > =C2=A0buffer.
+> >=20
+> > IIO_BUFFER_DMABUF_DETACH_IOCTL(int fd):
+> > =C2=A0Detach the DMABUF object identified by the given file descriptor
+> > from
+> > =C2=A0the buffer. Note that closing the IIO buffer's file descriptor
+> > will
+> > =C2=A0automatically detach all previously attached DMABUF objects.
+> >=20
+> > IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *):
+> > =C2=A0Request a data transfer to/from the given DMABUF object. Its file
+> > =C2=A0descriptor, as well as the transfer size and flags are provided i=
+n
+> > the
+> > =C2=A0"iio_dmabuf" structure.
+> >=20
+> > These three IOCTLs have to be performed on the IIO buffer's file
+> > descriptor, obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+>=20
+> Need a brief note on the sign off chain.
+> What is Nuno's role in this series as he's not sending the emails and
+> not
+> marked with Co-developed-by=20
 
-I suggest to use the shown local variable once more.
+That's a good question. I think he sent one revision of the patchset
+(v7 or something like that) so he added his SoB.
 
-+			cancel_work_sync(work);
+(Nuno: you confirm?)
 
+I'll add his Co-developed-by then.
 
-=E2=80=A6
-> +int otx2_init_rsrc(struct pci_dev *pdev, struct otx2_nic *pf)
-> +{
-=E2=80=A6
-> +	return 0;
-> +
-> +err_detach_rsrc:
-> +	if (pf->hw.lmt_info)
-> +		free_percpu(pf->hw.lmt_info);
-> +	if (test_bit(CN10K_LMTST, &pf->hw.cap_flag))
-> +		qmem_free(pf->dev, pf->dync_lmt);
-> +	otx2_detach_resources(&pf->mbox);
-> +err_disable_mbox_intr:
-> +	otx2_disable_mbox_intr(pf);
-> +err_mbox_destroy:
-> +	otx2_pfaf_mbox_destroy(pf);
-> +err_free_irq_vectors:
-> +	pci_free_irq_vectors(hw->pdev);
-> +
-> +	return err;
-> +}
-=E2=80=A6
+Cheers,
+-Paul
 
-Would you become interested to convert any usages of goto chains
-into applications of scope-based resource management?
-https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/cleanup.h#=
-L8
+> I gave this a much more thorough look in earlier versions than I have
+> today but
+> a few really minor things inline (that I might have fixed up whilst
+> applying)
+> but looks like you'll be done a v11 for Randy's docs comments anyway
+> :(
+>=20
+> Jonathan
+>=20
+>=20
+> > diff --git a/drivers/iio/industrialio-buffer.c
+> > b/drivers/iio/industrialio-buffer.c
+> > index 0138b21b244f..c98c8ac83785 100644
+> > --- a/drivers/iio/industrialio-buffer.c
+> > +++ b/drivers/iio/industrialio-buffer.c
+>=20
+> > +struct iio_dmabuf_priv {
+> > +	struct list_head entry;
+> > +	struct kref ref;
+> > +
+> > +	struct iio_buffer *buffer;
+> > +	struct iio_dma_buffer_block *block;
+> > +
+> > +	u64 context;
+> > +	spinlock_t lock;
+>=20
+> Given you are going to have a v11, please add a comment to this lock
+> to say what data it is protecting.=20
+>=20
+> > +
+> > +	struct dma_buf_attachment *attach;
+> > +	struct sg_table *sgt;
+> > +	enum dma_data_direction dir;
+> > +	atomic_t seqno;
+> > +};
+>=20
+>=20
+> > diff --git a/include/linux/iio/buffer_impl.h
+> > b/include/linux/iio/buffer_impl.h
+> > index 89c3fd7c29ca..1a221c1d7736 100644
+> > --- a/include/linux/iio/buffer_impl.h
+> > +++ b/include/linux/iio/buffer_impl.h
+> > @@ -9,8 +9,12 @@
+> > =C2=A0#include <uapi/linux/iio/buffer.h>
+> > =C2=A0#include <linux/iio/buffer.h>
+> > =C2=A0
+> > +struct dma_buf_attachment;
+> > +struct dma_fence;
+> > =C2=A0struct iio_dev;
+> > +struct iio_dma_buffer_block;
+> > =C2=A0struct iio_buffer;
+> > +struct sg_table;
+> > =C2=A0
+> > =C2=A0/**
+> > =C2=A0 * INDIO_BUFFER_FLAG_FIXED_WATERMARK - Watermark level of the
+> > buffer can not be
+> > @@ -39,6 +43,13 @@ struct iio_buffer;
+> > =C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device stop=
+s sampling. Calles are balanced
+> > with @enable.
+> > =C2=A0 * @release:		called when the last reference to the
+> > buffer is dropped,
+> > =C2=A0 *			should free all resources allocated by the
+> > buffer.
+> > + * @attach_dmabuf:	called from userspace via ioctl to attach
+> > one external
+> > + *			DMABUF.
+> > + * @detach_dmabuf:	called from userspace via ioctl to detach
+> > one previously
+> > + *			attached DMABUF.
+> > + * @enqueue_dmabuf:	called from userspace via ioctl to queue
+> > this DMABUF
+> > + *			object to this buffer. Requires a valid
+> > DMABUF fd, that
+> > + *			was previouly attached to this buffer.
+>=20
+> Missing docs for lock_queue() and unlock_queue()
+>=20
+> Kernel-doc must be complete or bots are going to moan at us :(
+>=20
+> > =C2=A0 * @modes:		Supported operating modes by this buffer
+> > type
+> > =C2=A0 * @flags:		A bitmask combination of
+> > INDIO_BUFFER_FLAG_*
+> > =C2=A0 *
+> > @@ -68,6 +79,17 @@ struct iio_buffer_access_funcs {
+> > =C2=A0
+> > =C2=A0	void (*release)(struct iio_buffer *buffer);
+> > =C2=A0
+> > +	struct iio_dma_buffer_block * (*attach_dmabuf)(struct
+> > iio_buffer *buffer,
+> > +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct
+> > dma_buf_attachment *attach);
+> > +	void (*detach_dmabuf)(struct iio_buffer *buffer,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_dma_buffer_block *block);
+> > +	int (*enqueue_dmabuf)(struct iio_buffer *buffer,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_dma_buffer_block *block,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dma_fence *fence, struct
+> > sg_table *sgt,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size_t size, bool cyclic);
+> > +	void (*lock_queue)(struct iio_buffer *buffer);
+> > +	void (*unlock_queue)(struct iio_buffer *buffer);
+> > +
+>=20
+>=20
 
-Regards,
-Markus
