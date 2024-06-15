@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A22D515;
-	Sat, 15 Jun 2024 01:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B32FCA6B;
+	Sat, 15 Jun 2024 01:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718416701; cv=none; b=LpT7goLlU1Em7zngMOgtMT6vaiEhCt6/arwzr651kf8EIItxlOAarv1wVMHzVUgAlSkP/BWz2/ed9esXwRd21qBJ2M41onlI5qsBeN44ztX+pQ/9r6KRmfcJlTwthUK/qoxogYn4nAht4lAQPZT/g5lz3e5yw9j7oE0NjqhZsX0=
+	t=1718416707; cv=none; b=WU6fI7uMnBMcE36P5vpfQF0zxGQJTR7T7TFgXJo0M7CeFQRkfXt8OI9EDbM4z9ptyL5w66qFuUy5YmsH0spca4Yi9DcqWc2YgiCkja6CuJr0GfhPnFKO5fjHVdTrDM8jBU6l1Xcf3R5NarM8L8usdI7Iai4RVsEsFgHSuJs0ShE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718416701; c=relaxed/simple;
-	bh=0UTcYjd/8qry8O1pLuXm3l+KAOWonlHQZvdyiqU7/JM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j/+9yjYHWygsQNwEVpAJCWUlFXcUXNBj/UsaeHJBzJCWS7HJoyjN8QTKYGx3y+ElYqtfzS86CkUkIDtxRnsdCLwV5ghSWLEZw8pDdXrBGXxtGZ+9PnnqHGFrefC8MOF/AXoQV5Nu33tCA/XYuwENdMpebUHt/KZUGs+jup0ihKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=U671+UAD; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1718416707; c=relaxed/simple;
+	bh=7LZ/FP1QmtvjACTE2f8O6hoX6TgsfBpUkTOe/3lcqDU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O+0QwOeGP6M4VJcVoaCRw7HiXISOvBcRYWpkrIm/WUzi8vYXH6LZ3gWBsla+8/N4LEsso679M4jWcyiUy5VHN0zy065JEJgqka6tsc5BW2BLU1G1t3t/3n/egGtBJqcY+0Avz1iScEmSYMM3iPpnnM8FwNW3BNZEqv8laKhijko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JGHH+EUF; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="U671+UAD"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JGHH+EUF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718416697;
-	bh=0UTcYjd/8qry8O1pLuXm3l+KAOWonlHQZvdyiqU7/JM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U671+UADHvs8gQ98je0MEVzUl8WLvHhfyn4jmSIgM5ChBC38OyxBDhtjhBVqMTqyj
-	 9w2dFHRBTOGM6O/GCVtZ2TviKFUnainsR+DPX7Ul5HhoOtce0KrCTz2yvfxrbaRhMi
-	 aHOtaQlFkLLN3cKVr/FYhRpQJkufmFPzsw0VFVNxbCj07vj6f8nsScKQLfgRw0M4Tr
-	 Izc/u77ruz2XCFRXCRf47l0eowOb6yzXPE7G0gIr8RKwZJU8jTfuwD7DZTcpHclBxg
-	 a2yoChE4gg2S21jQZvSKgbHvoVFnwMThR0Bg8tppTz89VkSzEaeOTYQuIfPWacpLlB
-	 DfccvweTBHjuQ==
+	s=mail; t=1718416704;
+	bh=7LZ/FP1QmtvjACTE2f8O6hoX6TgsfBpUkTOe/3lcqDU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JGHH+EUFdDCx+0Uair3kGw8oOxdoysb8igYxpPsCaF++LM0CzfNmn9z0bk/yQBxVz
+	 r5VS8Ypy+f3kFDyKyFYQsWHu5qNxC89RdNmmdw2/107j3zqI5Wq5lU36cJ7JIod2CQ
+	 JYbi5RiSM3OfqPbdHUIkRAfLT7HeAsoijRdlZLbS+gpCHtf/LJF+Rx3dYOKUOE9+MU
+	 iMaEgGfplXJTXuYJE0IJAJlfwxdm/C4pJbH9CLVRu0I1LMueCqo81KhexDSST0RoKo
+	 6+HPCvOjv3UXvYnUDZvQAOTrzLkN3vDahVggFoQMdR1/54muaDG0QkYtWEPZfVRHHG
+	 v0+2PSdttl/jA==
 Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: detlev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2CD263781104;
-	Sat, 15 Jun 2024 01:58:14 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 11EC537821C3;
+	Sat, 15 Jun 2024 01:58:20 +0000 (UTC)
 From: Detlev Casanova <detlev.casanova@collabora.com>
 To: linux-kernel@vger.kernel.org
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -52,10 +53,12 @@ Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-staging@lists.linux.dev,
 	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: [PATCH 0/3] media: rockchip: Add rkvdec2 driver
-Date: Fri, 14 Jun 2024 21:56:26 -0400
-Message-ID: <20240615015734.1612108-1-detlev.casanova@collabora.com>
+Subject: [PATCH 2/3] media: dt-bindings: rockchip: Document RK3588 Video Decoder 2 bindings
+Date: Fri, 14 Jun 2024 21:56:28 -0400
+Message-ID: <20240615015734.1612108-3-detlev.casanova@collabora.com>
 X-Mailer: git-send-email 2.44.2
+In-Reply-To: <20240615015734.1612108-1-detlev.casanova@collabora.com>
+References: <20240615015734.1612108-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,38 +67,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a rkvdec2 driver for newer video decoder found on rk3588 based SoC.
+Document the Rockchip RK3588 Video Decoder 2 bindings.
 
-See the first commit message for implementation details.
-
-Detlev Casanova (3):
-  media: rockchip: Introduce the rkvdec2 driver
-  media: dt-bindings: rockchip: Document RK3588 Video Decoder 2 bindings
-  arm64: dts: rockchip: Add rkvdec2 Video Decoder on rk3588(s)
-
- .../bindings/media/rockchip,vdec2.yaml        |   80 ++
- .../boot/dts/rockchip/rk3588-rock-5b.dts      |    4 +
- .../boot/dts/rockchip/rk3588s-orangepi-5.dts  |    4 +
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi     |   19 +
- drivers/staging/media/Kconfig                 |    1 +
- drivers/staging/media/Makefile                |    1 +
- drivers/staging/media/rkvdec2/Kconfig         |   15 +
- drivers/staging/media/rkvdec2/Makefile        |    3 +
- drivers/staging/media/rkvdec2/TODO            |   13 +
- drivers/staging/media/rkvdec2/rkvdec2-h264.c  |  899 +++++++++++++
- drivers/staging/media/rkvdec2/rkvdec2-regs.h  |  372 ++++++
- drivers/staging/media/rkvdec2/rkvdec2.c       | 1160 +++++++++++++++++
- drivers/staging/media/rkvdec2/rkvdec2.h       |  123 ++
- 13 files changed, 2694 insertions(+)
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
+ .../bindings/media/rockchip,vdec2.yaml        | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec2.yaml
- create mode 100644 drivers/staging/media/rkvdec2/Kconfig
- create mode 100644 drivers/staging/media/rkvdec2/Makefile
- create mode 100644 drivers/staging/media/rkvdec2/TODO
- create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-h264.c
- create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-regs.h
- create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.c
- create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.h
 
+diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec2.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec2.yaml
+new file mode 100644
+index 000000000000..e54891b46986
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip,vdec2.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rockchip,vdec2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip Video Decoder 2 (VDec2)
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++description: |-
++  The Rockchip rk3588 has a stateless Video Decoder that can decodes H.264,
++  HEVC, VP9 and AVS2 streams.
++
++properties:
++  compatible:
++    const: rockchip,rk3588-vdec2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: The Video decoder AXI interface clock
++      - description: The Video decoder AHB interface clock
++      - description: The Video decoder core clock
++      - description: The Video decoder CABAC clock
++      - description: The Video decoder HEVC CABAC clock
++
++  clock-names:
++    items:
++      - const: axi
++      - const: ahb
++      - const: core
++      - const: cabac
++      - const: hevc_cabac
++
++  assigned-clocks: true
++
++  assigned-clock-rates: true
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
++    #include <dt-bindings/power/rk3588-power.h>
++
++    vdec2: video-codec@fdc38100 {
++        compatible = "rockchip,rk3588-vdec2";
++        reg = <0x0 0xfdc38100 0x0 0x500>;
++        interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
++        clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
++                 <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
++        clock-names = "axi", "ahc", "core",
++                      "cabac", "hevc_cabac";
++        assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru CLK_RKVDEC0_CORE>,
++                          <&cru CLK_RKVDEC0_CA>, <&cru CLK_RKVDEC0_HEVC_CA>;
++        assigned-clock-rates = <800000000>, <600000000>,
++                               <600000000>, <1000000000>;
++        power-domains = <&power RK3588_PD_RKVDEC0>;
++    };
++
++...
 -- 
 2.44.2
 
