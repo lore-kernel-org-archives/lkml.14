@@ -1,45 +1,48 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8532117C6B;
-	Sat, 15 Jun 2024 08:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2F91803E
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718438809; cv=none; b=H7l14aQ8yqeTyqs1T9OT22GkbuXQKKgAQNYYP30lnwBXXjuVAphnR1z8428SP6qR01cBpmu3w2X10w+QkMryCZ+IkZwTrXQegMoIXAntvtMlwqq42f4ec0YqDeePWx47aj08fsfRMRpLdMG+tSv8pX3V7GMQTnigTokmcizmecg=
+	t=1718438887; cv=none; b=HeSFtirQQbt9Nb3aMMJt+DFvO25T8fXg7uFcqCFKhguDTM0idjETm22r30UchWZNu2b5RZlcQ+WPnFqD1JV+IMifkh2uh2VZRJNQY8dFKEVAhBOFVjp+slSENS4WB5Pn+67/xeEx+f1AgBXBUyugrkgg23lRM2juzTOR/CjpyQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718438809; c=relaxed/simple;
-	bh=GxAOZy0x9WrDZ/LeK+PwkuiwAQ2MR0JWNopsCLd6u4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1OVuHY3afBpGjrUqaanY1/gofmfF3rBlt8PHxWpYn/CtdBKUVOvgeQSR+dcUVedPlzpnDkDXm4kV18FPXSIutRvMkUDdzf0SczDilVToVfJ0HF4dPqqIxSdU0awP7gI5thMbQb/e04rAUcdF9Mec6S9sRrZkgQe+Z6U/extgXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=EoTs6NzW; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1718438887; c=relaxed/simple;
+	bh=zpTDiiwYRHFfQwWxieiObPybAsuSt+nSdOvDRnB85dY=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSwyis25lVVR6gEA3CMAqMa1dKjAZv44yf1TmHr1HYhj9z9dJxvDQcpE9LZ/pplrdQtpFbNM4ZsuExJ6kwe+pu/UcUa5bNtm+h6T7qLItG5WIyWvdpSE4dLqyLs8bZjSi//XlLfdtM7r45qr8FVld3oAXhk43YSy9joScHUY+MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=CjYg5+K2; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="EoTs6NzW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=nBIxbGV2M/V9F3VVH2qGA1ziJ7K7maeJDL9DDy8Cg9E=;
-	b=EoTs6NzW5+SbMEggtvXAVYbG9U9bsMTyrqb4pLuj6K0WRrjBrVOqaiTRqfKKdx
-	y1iWKsIMSw0jdP2uf9z3eNuhA0ijGibqKT4DwWHSMKc5fm4goRzC00PAk9jbgPbO
-	QtE/WEk0MSPapD/L7TiehVBCeEHZSdRfXQnyaFsb4KFtY=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp2 (Coremail) with SMTP id C1UQrABXH+J0S21m4t60CA--.4800S3;
-	Sat, 15 Jun 2024 16:06:14 +0800 (CST)
-Date: Sat, 15 Jun 2024 16:06:12 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Marek Vasut <marex@denx.de>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, kernel@dh-electronics.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mp: Enable HDMI on i.MX8MP DHCOM PDK2
- and PDK3
-Message-ID: <Zm1LdFyxYJ1+UIgY@dragon>
-References: <20240514010706.245874-1-marex@denx.de>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="CjYg5+K2"
+Received: from macsyma.thunk.org ([154.16.192.69])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 45F87bPV000998
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 04:07:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1718438860; bh=+/ngTIzUuX7XPploPv7z+d8ZCh/mJEmERdsDc2gEMQs=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=CjYg5+K2+Wt1RLQ4rv/rviuM5Rz8VL+A3E1rEEB4T/+8o2YS/oBowYjanddtdm/0C
+	 4G7N+4tRWRA3fPsh5hq/AIj1G0Pa4hCSMaH6i4rwrLmBScFI2VFgH9qDgGA6d8nrvD
+	 2oQDe1t4ZrBpP5mRxtXccrh2xJ+Qaer0EQcL26vKfcUVwuOqEAIfL0XvDugL04HN1z
+	 ge9vs5n04NZOimsUAZeWuYz9RnBKirMAW2GOKPLtdrvyZWugpczGMTfigg7a67WGNe
+	 KCAMalwB9RtUKWGD88XTRBOVb0oKMdNjo0rL3EvmPVDHZvhQBQ4MSLrb1fNX9erl6P
+	 n0GWoI8nalb+Q==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id 3C980341697; Sat, 15 Jun 2024 10:07:37 +0200 (CEST)
+Date: Sat, 15 Jun 2024 09:07:37 +0100
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        Linux Filesystem Development List <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, ksummit@lists.linux.dev,
+        linux-security-module@vger.kernel.org
+Subject: Re: Maintainers Summit 2024 Call for Topics
+Message-ID: <20240615080737.GG1906022@mit.edu>
+References: <20240531144957.GA301668@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,19 +51,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240514010706.245874-1-marex@denx.de>
-X-CM-TRANSID:C1UQrABXH+J0S21m4t60CA--.4800S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIco7DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDw-+ZVnxc0gsowACsF
+In-Reply-To: <20240531144957.GA301668@mit.edu>
 
-On Tue, May 14, 2024 at 03:06:42AM +0200, Marek Vasut wrote:
-> Enable HDMI output on i.MX8MP DHCOM PDK2 and PDK3. The I2C5 on PDK2 and
-> I2C mux port 1 on PDK3 respectively are used in regular I2C mode instead
-> of HDMI DDC mode to permit connection of other I2C devices on those buses.
-> The pinctrl_hdmi node is part of the SoM DTSI already.
+Many thanks to those who have submitted topics for the Maintainers
+Summit and to the Kernel Summit track at the Linux Plumber's
+Conference.
+
+We have extended the deadline for Kernel Summit proposals by a week,
+to June 23.  If you have something that you would like to share with
+the kernel development community as a technical topic, or something
+you'd like to porpose as a Maintainers Summit topic, please submit
+your proposal in the next week!
+
+Many thanks,
+
+						- Ted
+
+On Fri, May 31, 2024 at 04:49:57PM +0200, Theodore Ts'o wrote:
+> This year, the Maintainers Summit will be held in Vienna, Austria on
+> Tuesday, September 17th, 2024, just before the Linux Plumber's Conference
+> (September 18--20th).
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-
-Applied, thanks!
-
+> As in previous years, the Maintainers Summit is invite-only, where the
+> primary focus will be process issues around Linux Kernel Development.
+> It will be limited to 30 invitees and a handful of sponsored
+> attendees.
+> 
+> Linus has generated a list of people for the program committee to
+> consider.  People who suggest topics that should be discussed at the
+> Maintainers Summit will also be added to the list for consideration.
+> To make topic suggestions for the Maintainers Summit, please send
+> e-mail to the ksummit@lists.linux.dev with a subject prefix of
+> [MAINTAINERS SUMMIT].
+> 
+> To get the most out of our topic discussions, folks proposing a topic
+> should also suggest relevant people and desired outcomes.
+> 
+> For an examples of past Maintainers Summit topics, please see these
+> LWN articles:
+> 
+>  * 2023 https://lwn.net/Articles/951847/
+>  * 2022 https://lwn.net/Articles/908320/
+>  * 2021 https://lwn.net/Articles/870415/
+> 
+> The Kernel Summit is organized as a track which is run in parallel
+> with the other tracks at the Linux Plumbers Conference (LPC), and is
+> open to all registered attendees of LPC.  The goal of the Kernel
+> Summit track will be to provide a forum to discuss specific technical
+> issues that would be easier to resolve in person than over e-mail.
+> The program committee will also consider "information sharing" topics
+> if they are clearly of interest to the wider development community
+> (i.e., advanced training in topics that would be useful to kernel
+> developers).
+> 
+> To suggest a topic for the Kernel Summit, please do two things. by
+> June 16th, 2024.  First, please tag your e-mail with [TECH TOPIC].  As
+> before, please use a separate e-mail for each topic, and send the
+> topic suggestions to the ksummit discussion list.
+> 
+> Secondly, please create a topic at the Linux Plumbers Conference
+> proposal submission site and target it to the Kernel Summit track:
+> 
+> 	https://lpc.events/event/18/abstracts/
+> 
+> Please do both steps.  I'll try to notice if someone forgets one or
+> the other, but your chances of making sure your proposal gets the
+> necessary attention and consideration are maximized by submitting both
+> to the mailing list and the web site.
+> 
+> 
+> If you were not subscribed on to the kernel mailing list from
+> last year (or if you had removed yourself after the kernel summit),
+> you can subscribe by sending an e-mail to the address:
+> 
+>    ksummit+subscribe@lists.linux.dev
+> 
+> The program committee this year is composed of the following people:
+> 
+> Christian Brauner
+> Jon Corbet
+> Greg KH
+> Sasha Levin
+> Ted Ts'o
+> Rafael J. Wysocki
+> 
