@@ -1,456 +1,194 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C1261FEE;
-	Sat, 15 Jun 2024 20:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F5517727;
+	Sat, 15 Jun 2024 20:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718482196; cv=none; b=Nk/oW5VoiBs/llbYfYyocFFn0YdoyBADX2XzJHsHPyZY1cnnrOyryQyUszLcWelL33t5qhzvmQF0/Qkaj0PgqY30D3uuw2MacAfTV3jfu2h1eTaVpeToI9jyzy4OuDcx5dfuQV2fbLLyqcMAjQE6y8oZKis7q/zqaHEQ0Xd9fNs=
+	t=1718482494; cv=none; b=DRsXaGXjwZ922MjVDDad3Fh1WAB0two7td8U8DdQYdpJRv/FA8Xc1LueI9l/0xyTnmsEVFraZI0ZDWFgCwegY2nNnVNgGbbvRcXmJ2WU8Bin6ZclY3cjB7G1pDX4N5tvdkQQi5bTJanMb2/VdydIuA6R8ALO9/qEUwxP//joTns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718482196; c=relaxed/simple;
-	bh=wFI2RWuGFjy8FUotbYTIBsa35aZrC16/N/mVJgXW9J8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nC4zovxEsZh25dwhfFSYefMgZaBS8HcWI00a83m6+vXGwNq0vLtjpe2jEcU6+XU59ykv8VJjXFUQdmkEkCD6n2tM0RelZLH+5Z7gRnZZUBHrbrAsczY68q8qsQgbMix52VGwfovnxH18fOpIO5nG1wyb2gYrVadvm0xR9yFrEJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVsveQ8S; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718482494; c=relaxed/simple;
+	bh=4U9P84lr6t+3JEYEYRzWAkUaJXUJVHIiXOxzeqsj0FA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JOHxHr5c8Ed3G1hISlbmX8nag2lz9hSn6lj8si6xD2S9tID5Amou/T/PVeVweU3HPNrgL165RD0+mkz1kjL1YbMNFdnrBR6x/DAM5pq/WfX2/FaEZjWuWednBW06xnHb7OM2L2pVg+0qzFeuiIceFepksEsh77jhhUP08Nc8/rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lfpcHWUy; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVsveQ8S"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4217990f8baso29674915e9.2;
-        Sat, 15 Jun 2024 13:09:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718482192; x=1719086992; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2gLMNE0xnXqZ/2ivpjlAsBxILyK5J+/etfKmbTg2SY=;
-        b=bVsveQ8SJMEihJBycxYxu7qLMyUUMzpbWXgYCIc9OXGTQG4D6dtwgXKYlHhrLbf+nZ
-         R24HwfuS9aEfAWEhmQR1tK1iAlzbprZZhoqnN/4ZA0Fajht3r5SBk2ejBMZhI92h++YU
-         jCF+ApRIe5mNRYtvyzYJtLsWjauWg5+uWTrHSW7BwZ5p0ev/H3gcdwEiMTZmlsw+Gv7I
-         zSPipxtJLF1R5DyIcgR6eEmJc3QofaQd7cg6/JVsLG+7nLQ/oOmY7ATyd+RywqnIMhG2
-         cWKSQGC51WQ4rgAaUwk/ZNpwusCJuQJrhkXa81c3/COyoI8J1yeEWdhUN+wJHw8yPBX+
-         TSwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718482192; x=1719086992;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2gLMNE0xnXqZ/2ivpjlAsBxILyK5J+/etfKmbTg2SY=;
-        b=DDxZTnLMoqcutz8DRfSvn5KT1Ifjq+Ga0vLRKSctIfosg1QQwpANpYMtUT5ukBEzHH
-         BP2cbsechkzO/SXnkttGSWWats0CVq3y095/3Q/pRC9bfb858FiMKS58mNvjgy9qlkJu
-         XJhlhllexI96qQ1iM6H6cVkwpUcdzVO7wpefrX7fKHKE9eFx6FoTWop2DF9d8Xmi8tJJ
-         qc1m1nIbVypoXGXXt2zFgO31ZEXb2184NGe6UTlilvRktxpcAaj++3FADHf4zvP32fIa
-         ObTnvkq8R2JJkFc7VQIEFejFZQlWgEfNfvVpyIHGW9njtV4BqGjKESdGwj0IaoYCQNKW
-         u6ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVWpjPXFUFuL7XqZCnkFlzHIvjtvAfIHRMn/55A4+/ocsRNXwWnMt+W2Sp9hvRgMwLy8Ime9o0CA1TNGS5hcE60yAdJfXo8fLH+5b4UCqiOeU+Rn6yJyENeUt0N+WM0nFc0ASlyEhQ=
-X-Gm-Message-State: AOJu0YzxI0VdvknVRUML1u0UDWFCf9NNzSPYZqGm6pGg0hESjYqsn/7T
-	VS0PQ5Zn/dqPN2a+FAYq3eNsy/2CrSJ2j/fPpIvzxnCAo6+bodhk
-X-Google-Smtp-Source: AGHT+IHbhs4HaxypYqQxTYyEWtg5LQarh8kchuBH2Hs9wl5anXVPEMXTuo/OYTmJNdTWVeE7kfhMJQ==
-X-Received: by 2002:a05:600c:4eca:b0:421:ad42:c4c2 with SMTP id 5b1f17b1804b1-42304826469mr55620145e9.10.1718482192384;
-        Sat, 15 Jun 2024 13:09:52 -0700 (PDT)
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a666sm108510915e9.45.2024.06.15.13.09.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 13:09:51 -0700 (PDT)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Dimitri Fedrau <dimitri.fedrau@liebherr.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] power: supply: add support for MAX1720x standalone fuel gauge
-Date: Sat, 15 Jun 2024 22:09:32 +0200
-Message-Id: <20240615200933.162394-3-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240615200933.162394-1-dima.fedrau@gmail.com>
-References: <20240615200933.162394-1-dima.fedrau@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lfpcHWUy"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45FK0PBg014533;
+	Sat, 15 Jun 2024 20:14:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=a
+	+9Fyr6TkJfj4Jmc0tD/DI3poB1anyJvVSoeuKpmq5k=; b=lfpcHWUy6y71y8g8f
+	6ei1BxrfSKlwr03XpeYc2GwoiVMAoAeIl3F0NLYF4u20XInuHAC1zEI3TGhJna9y
+	PpbwKQfeZqK1XXpgiGOOC+QkGjmDVDQARTlB4LHJNZ+djru5Ut0wZfHLVuYoa6hV
+	eeRVAwTD7R9MQdBAkNFYO4SjLy1Q/my5qy9m9tKoLiMkDF7LX/Z5c+LOfgbZZZFm
+	+b/zgVsgndHLqGjGE8yjqeWFoLHSrcQ36QIxzm0rBAFW0YfTkLhIi9+giHD6GmN6
+	LmHaySyGOuJ3cxlxAHXQXxmpD1xVNlxb/EXNq/06pNWgcrrQgAFRXe9bp3vNNHzk
+	No51Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yshk5r0k3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 20:14:41 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45FKEeYg002240;
+	Sat, 15 Jun 2024 20:14:40 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yshk5r0k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 20:14:40 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45FGhk5r028690;
+	Sat, 15 Jun 2024 19:58:08 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn1mvb70q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 19:58:08 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45FJw6nA29885008
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 15 Jun 2024 19:58:08 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5410A58056;
+	Sat, 15 Jun 2024 19:58:06 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2EB9258052;
+	Sat, 15 Jun 2024 19:58:01 +0000 (GMT)
+Received: from [9.43.66.127] (unknown [9.43.66.127])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 15 Jun 2024 19:58:00 +0000 (GMT)
+Message-ID: <c967a861-ff65-4b35-8a45-7e39b9849be5@linux.ibm.com>
+Date: Sun, 16 Jun 2024 01:27:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: sched map skips redundant lines with cpu filters
+To: Fernand Sieber <sieberf@amazon.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20240614073517.94974-1-sieberf@amazon.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20240614073517.94974-1-sieberf@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ZUV4iNxAwLeMgtslx8Jn_nBviL-QDhr3
+X-Proofpoint-GUID: JK3W7m8-ky4YIzL3GW4M1wWFlNg_Y1CZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-15_14,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 adultscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406150152
 
-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Hi Fernand,
 
-The MAX17201 monitor a single cell pack. The MAX17205 monitor and balance
-a 2S or 3S pack or monitor a multiple-series cell pack. Both device use
-I2C interface.
+On 14/06/24 13:05, Fernand Sieber wrote:
+> perf sched map supports cpu filter.
+> However, even with cpu filters active, any context switch currently
+> corresponds to a separate line.
+> As result, context switches on irrelevant cpus result to redundant lines,
+> which makes the output particlularly difficult to read on wide
+> architectures.
+> 
+> Fix it by skipping printing for irrelevant CPUs.
+> 
+> Example snippet of output before fix:
+> 
+>   *B0       1.461147 secs
+>    B0
+>    B0
+>    B0
+>   *G0       1.517139 secs
+> 
+> After fix:
+> 
+>   *B0       1.461147 secs
+>   *G0       1.517139 secs
 
-Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
----
- drivers/power/supply/Kconfig            |  12 +
- drivers/power/supply/Makefile           |   1 +
- drivers/power/supply/max1720x_battery.c | 324 ++++++++++++++++++++++++
- 3 files changed, 337 insertions(+)
- create mode 100644 drivers/power/supply/max1720x_battery.c
+Yes, this makes sense. The current implementation doesn't even print timestamp
+for the redundant lines as shown in the example below.
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 3e31375491d5..e620ae1a9c8b 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -402,6 +402,18 @@ config BATTERY_MAX17042
- 
- 	  Driver can be build as a module (max17042_battery).
- 
-+config BATTERY_MAX1720X
-+tristate "Maxim MAX17201/MAX17205 Fuel Gauge"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  MAX1720x is a family of fuel-gauge systems for lithium-ion (Li+)
-+	  batteries in handheld and portable equipment. MAX17201 are
-+	  configured to operate with a single lithium cell, the MAX17205
-+	  can operate with multiple cells.
-+
-+	  Say Y to include support for the MAX17201/MAX17205 Fuel Gauges.
-+
- config BATTERY_MAX1721X
- 	tristate "MAX17211/MAX17215 standalone gas-gauge"
- 	depends on W1
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 58b567278034..6f02d0248826 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_CHARGER_DA9150)	+= da9150-charger.o
- obj-$(CONFIG_BATTERY_DA9150)	+= da9150-fg.o
- obj-$(CONFIG_BATTERY_MAX17040)	+= max17040_battery.o
- obj-$(CONFIG_BATTERY_MAX17042)	+= max17042_battery.o
-+obj-$(CONFIG_BATTERY_MAX1720X)	+= max1720x_battery.o
- obj-$(CONFIG_BATTERY_MAX1721X)	+= max1721x_battery.o
- obj-$(CONFIG_BATTERY_RT5033)	+= rt5033_battery.o
- obj-$(CONFIG_CHARGER_RT5033)	+= rt5033_charger.o
-diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
-new file mode 100644
-index 000000000000..68d317d01c9d
---- /dev/null
-+++ b/drivers/power/supply/max1720x_battery.c
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Fuel gauge driver for Maxim 17201/17205
-+ *
-+ * based on max1721x_battery.c
-+ *
-+ * Copyright (C) 2024 Liebherr-Electronics and Drives GmbH
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/regmap.h>
-+
-+/* Nonvilatile registers */
-+#define MAX1720_NRSENSE			0xCF	/* RSense in 10^-5 Ohm */
-+
-+/* ModelGauge m5 */
-+#define MAX172XX_STATUS			0x00	/* Status */
-+#define MAX172XX_STATUS_BAT_ABSENT	BIT(3)	/* Battery absent */
-+#define MAX172XX_REPCAP			0x05	/* Average capacity */
-+#define MAX172XX_REPSOC			0x06	/* Percentage of charge */
-+#define MAX172XX_TEMP			0x08	/* Temperature */
-+#define MAX172XX_CURRENT		0x0A	/* Actual current */
-+#define MAX172XX_AVG_CURRENT		0x0B	/* Average current */
-+#define MAX172XX_TTE			0x11	/* Time to empty */
-+#define MAX172XX_AVG_TA			0x16	/* Average temperature */
-+#define MAX172XX_DESIGN_CAP		0x18	/* Design capacity */
-+#define MAX172XX_TTF			0x20	/* Time to full */
-+#define MAX172XX_DEV_NAME		0x21	/* Device name */
-+#define MAX172XX_DEV_NAME_TYPE_MASK	GENMASK(3, 0)
-+#define MAX172XX_DEV_NAME_TYPE_MAX17201	BIT(0)
-+#define MAX172XX_DEV_NAME_TYPE_MAX17205	(BIT(0) | BIT(2))
-+#define MAX172XX_BATT			0xDA	/* Battery voltage */
-+#define MAX172XX_ATAVCAP		0xDF
-+
-+static const char *max1720x_manufacturer = "Maxim Integrated";
-+static const char *max17201_model = "MAX17201";
-+static const char *max17205_model = "MAX17205";
-+
-+struct max1720x_device_info {
-+	struct power_supply *bat;
-+	struct power_supply_desc bat_desc;
-+	struct i2c_client *ancillary;
-+	struct regmap *regmap;
-+	int rsense;
-+};
-+
-+/*
-+ * Model Gauge M5 Algorithm output register
-+ * Volatile data (must not be cached)
-+ */
-+static const struct regmap_range max1720x_volatile_allow[] = {
-+	regmap_reg_range(MAX172XX_STATUS, MAX172XX_ATAVCAP),	/* volatile data */
-+};
-+
-+static const struct regmap_range max1720x_volatile_deny[] = {
-+	/* volatile data unused registers */
-+	regmap_reg_range(0x24, 0x26),
-+	regmap_reg_range(0x30, 0x31),
-+	regmap_reg_range(0x33, 0x34),
-+	regmap_reg_range(0x37, 0x37),
-+	regmap_reg_range(0x3B, 0x3C),
-+	regmap_reg_range(0x40, 0x41),
-+	regmap_reg_range(0x43, 0x44),
-+	regmap_reg_range(0x47, 0x49),
-+	regmap_reg_range(0x4B, 0x4C),
-+	regmap_reg_range(0x4E, 0xAF),
-+	regmap_reg_range(0xB1, 0xB3),
-+	regmap_reg_range(0xB5, 0xB7),
-+	regmap_reg_range(0xBF, 0xD0),
-+	regmap_reg_range(0xDB, 0xDB),
-+	regmap_reg_range(0xE0, 0xFF),
-+};
-+
-+static const struct regmap_access_table max1720x_volatile_regs = {
-+	.yes_ranges	= max1720x_volatile_allow,
-+	.n_yes_ranges	= ARRAY_SIZE(max1720x_volatile_allow),
-+	.no_ranges	= max1720x_volatile_deny,
-+	.n_no_ranges	= ARRAY_SIZE(max1720x_volatile_deny),
-+};
-+
-+static const struct regmap_config max1720x_regmap_cfg = {
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+	.rd_table = &max1720x_volatile_regs,
-+	.volatile_table = &max1720x_volatile_regs,
-+};
-+
-+static enum power_supply_property max1720x_battery_props[] = {
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CHARGE_AVG,
-+	POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG,
-+	POWER_SUPPLY_PROP_TIME_TO_FULL_AVG,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_AVG,
-+	POWER_SUPPLY_PROP_MODEL_NAME,
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+};
-+
-+/* Convert regs value to power_supply units */
-+
-+static int max172xx_time_to_ps(unsigned int reg)
-+{
-+	return reg * 5625 / 1000;	/* in sec. */
-+}
-+
-+static int max172xx_percent_to_ps(unsigned int reg)
-+{
-+	return reg / 256;	/* in percent from 0 to 100 */
-+}
-+
-+static int max172xx_voltage_to_ps(unsigned int reg)
-+{
-+	return reg * 1250;	/* in uV */
-+}
-+
-+static int max172xx_capacity_to_ps(unsigned int reg)
-+{
-+	return reg * 500;	/* in uAh */
-+}
-+
-+/*
-+ * Current and temperature is signed values, so unsigned regs
-+ * value must be converted to signed type
-+ */
-+
-+static int max172xx_temperature_to_ps(unsigned int reg)
-+{
-+	int val = (int16_t)(reg);
-+
-+	return val * 10 / 256; /* in tenths of deg. C */
-+}
-+
-+/*
-+ * Calculating current registers resolution:
-+ *
-+ * RSense stored in 10^-5 Ohm, so mesaurment voltage must be
-+ * in 10^-11 Volts for get current in uA.
-+ * 16 bit current reg fullscale +/-51.2mV is 102400 uV.
-+ * So: 102400 / 65535 * 10^5 = 156252
-+ */
-+static int max172xx_current_to_voltage(unsigned int reg)
-+{
-+	int val = (int16_t)(reg);
-+
-+	return val * 156252;
-+}
-+
-+static int max1720x_battery_get_property(struct power_supply *psy,
-+					 enum power_supply_property psp,
-+					 union power_supply_propval *val)
-+{
-+	struct max1720x_device_info *info = power_supply_get_drvdata(psy);
-+	unsigned int reg_val = 0;
-+	int ret = 0;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		/*
-+		 * POWER_SUPPLY_PROP_PRESENT will always readable via
-+		 * sysfs interface. Value return 0 if battery not
-+		 * present or unaccesable via I2c.
-+		 */
-+		ret = regmap_read(info->regmap, MAX172XX_STATUS, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		val->intval = !(FIELD_GET(MAX172XX_STATUS_BAT_ABSENT, reg_val));
-+		break;
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		ret = regmap_read(info->regmap, MAX172XX_REPSOC, &reg_val);
-+		val->intval = max172xx_percent_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		ret = regmap_read(info->regmap, MAX172XX_BATT, &reg_val);
-+		val->intval = max172xx_voltage_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-+		ret = regmap_read(info->regmap, MAX172XX_DESIGN_CAP, &reg_val);
-+		val->intval = max172xx_capacity_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_AVG:
-+		ret = regmap_read(info->regmap, MAX172XX_REPCAP, &reg_val);
-+		val->intval = max172xx_capacity_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG:
-+		ret = regmap_read(info->regmap, MAX172XX_TTE, &reg_val);
-+		val->intval = max172xx_time_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_TIME_TO_FULL_AVG:
-+		ret = regmap_read(info->regmap, MAX172XX_TTF, &reg_val);
-+		val->intval = max172xx_time_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_TEMP:
-+		ret = regmap_read(info->regmap, MAX172XX_TEMP, &reg_val);
-+		val->intval = max172xx_temperature_to_ps(reg_val);
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		ret = regmap_read(info->regmap, MAX172XX_CURRENT, &reg_val);
-+		val->intval = max172xx_current_to_voltage(reg_val) / info->rsense;
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_AVG:
-+		ret = regmap_read(info->regmap, MAX172XX_AVG_CURRENT, &reg_val);
-+		val->intval = max172xx_current_to_voltage(reg_val) / info->rsense;
-+		break;
-+	case POWER_SUPPLY_PROP_MODEL_NAME:
-+		ret = regmap_read(info->regmap, MAX172XX_DEV_NAME, &reg_val);
-+		reg_val = FIELD_GET(MAX172XX_DEV_NAME_TYPE_MASK, reg_val);
-+		if (reg_val == MAX172XX_DEV_NAME_TYPE_MAX17201)
-+			val->strval = max17201_model;
-+		else if (reg_val == MAX172XX_DEV_NAME_TYPE_MAX17205)
-+			val->strval = max17205_model;
-+		else
-+			return -ENODEV;
-+		break;
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval = max1720x_manufacturer;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int max1720x_probe_sense_resistor(struct max1720x_device_info *info)
-+{
-+	struct device *dev = &info->ancillary->dev;
-+	int ret;
-+
-+	ret = i2c_smbus_read_word_data(info->ancillary, MAX1720_NRSENSE);
-+	if (ret < 0)
-+		return ret;
-+
-+	info->rsense = ret;
-+	if (!info->rsense) {
-+		dev_warn(dev, "RSense not calibrated, set 10 mOhms!\n");
-+		info->rsense = 1000; /* in regs in 10^-5 */
-+	}
-+
-+	return 0;
-+}
-+
-+static int max1720x_probe(struct i2c_client *client)
-+{
-+	struct power_supply_config psy_cfg = {};
-+	struct device *dev = &client->dev;
-+	struct max1720x_device_info *info;
-+	int ret;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, info);
-+	info->bat_desc.name = "max1720x";
-+	info->bat_desc.no_thermal = true;
-+	info->bat_desc.type = POWER_SUPPLY_TYPE_BATTERY;
-+	info->bat_desc.properties = max1720x_battery_props;
-+	info->bat_desc.num_properties = ARRAY_SIZE(max1720x_battery_props);
-+	info->bat_desc.get_property = max1720x_battery_get_property;
-+	psy_cfg.drv_data = info;
-+
-+	info->regmap = devm_regmap_init_i2c(client, &max1720x_regmap_cfg);
-+	if (IS_ERR(info->regmap))
-+		return dev_err_probe(dev, PTR_ERR(info->regmap),
-+				     "regmap initialization failed\n");
-+
-+	info->ancillary = i2c_new_ancillary_device(client, "nvmem", 0xb);
-+	if (IS_ERR(info->ancillary))
-+		return dev_err_probe(dev, PTR_ERR(info->ancillary),
-+				     "Failed to initialize ancillary i2c device\n");
-+
-+	i2c_set_clientdata(info->ancillary, info);
-+	ret = max1720x_probe_sense_resistor(info);
-+	if (ret) {
-+		i2c_unregister_device(info->ancillary);
-+		return dev_err_probe(dev, PTR_ERR(info->bat),
-+				     "Failed to read sense resistor value\n");
-+	}
-+
-+	info->bat = devm_power_supply_register(dev, &info->bat_desc, &psy_cfg);
-+	if (IS_ERR(info->bat)) {
-+		i2c_unregister_device(info->ancillary);
-+		return dev_err_probe(dev, PTR_ERR(info->bat),
-+				     "Failed to register power supply\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void max1720x_remove(struct i2c_client *client)
-+{
-+	struct max1720x_device_info *info = i2c_get_clientdata(client);
-+
-+	i2c_unregister_device(info->ancillary);
-+}
-+
-+static const struct of_device_id max1720x_of_match[] = {
-+	{ .compatible = "maxim,max1720x" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, max1720x_of_match);
-+
-+static struct i2c_driver max1720x_i2c_driver = {
-+	.driver = {
-+		   .name = "max1720x",
-+		   .of_match_table = max1720x_of_match,
-+		   },
-+	.probe = max1720x_probe,
-+	.remove = max1720x_remove,
-+};
-+module_i2c_driver(max1720x_i2c_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Dimitri Fedrau <dima.fedrau@gmail.com>");
-+MODULE_DESCRIPTION("Maxim MAX17201/MAX17205 Fuel Gauge IC driver");
--- 
-2.39.2
+   .  *F0   708529.114889 secs F0 => schbench:278841
+   .   F0 
+   .   F0 
+   .  *.    708529.114919 secs 
+
+It makes sense to remove them entirely since we can still infer the sched-out
+time for the selected CPUs implicitly.
+
+Reviewed-and-tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+
+Thanks and Regards
+Madadi Vineeth Reddy
+> 
+> Signed-off-by: Fernand Sieber <sieberf@amazon.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> ---
+>  tools/perf/builtin-sched.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 7422c930abaf..aa59f763ca46 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1594,8 +1594,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  
+>  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+>  
+> -	printf("  ");
+> -
+>  	new_shortname = 0;
+>  	if (!tr->shortname[0]) {
+>  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+> @@ -1622,6 +1620,11 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  		new_shortname = 1;
+>  	}
+>  
+> +	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
+> +		goto out;
+> +
+> +	printf("  ");
+> +
+>  	for (i = 0; i < cpus_nr; i++) {
+>  		struct perf_cpu cpu = {
+>  			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+> @@ -1656,9 +1659,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  			color_fprintf(stdout, color, "   ");
+>  	}
+>  
+> -	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
+> -		goto out;
+> -
+>  	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+>  	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+>  	if (new_shortname || tr->comm_changed || (verbose > 0 && thread__tid(sched_in))) {
+> @@ -1675,9 +1675,9 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	if (sched->map.comp && new_cpu)
+>  		color_fprintf(stdout, color, " (CPU %d)", this_cpu);
+>  
+> -out:
+>  	color_fprintf(stdout, color, "\n");
+>  
+> +out:
+>  	thread__put(sched_in);
+>  
+>  	return 0;
 
