@@ -1,269 +1,73 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23F17BA5
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 07:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FB44A1E;
+	Sat, 15 Jun 2024 07:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718435190; cv=none; b=bte2FxpEsaQvM34M7fZXpbyShWRdOJEUZASY4aoLt/4Lv37LhIqtOD57p3iGPoBlQ3tXus6IsM6G9Zh0IqyqkwD5ypeysgzbi3Di0QZ0nLaxCsv8E9Hm1u6otvhop3ZNic9yu4YItGV2lXOq889/mNTdRvVDEtFMjPLr2ukMmBA=
+	t=1718435298; cv=none; b=dCntOlCzPdS4S/gr8NRwAfNSbcaSJ1h1tSk+8NAn7X0TyZ2K1Nw8jjMMpVVgqUAmTnIKbQnPf5ys3Ok8KT6BcOvyRSfLCtGkNNEg0t/9FQF9XwHxFN3YWVfo585XaKxINyHXh7QM+U76tyyBli0BgBmQjJ1O0ZL6Tn6q9Hf+kv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718435190; c=relaxed/simple;
-	bh=D/n8NdTYy/LtcBts6BZWE9HrFn7Kex349SmugLLwTDs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuVfT3NSOopzH5R9Jg2giYwOMJvY+lw3VhE0knT3QxkoUQ77FkwErQpcDUXPlW3QkFcwnWSYfhuWvF6t9IAYUZe5bGZ+u8vOAA4kIa9iwPHlWO8yflSA0rC1+/pFDBsXVWxFA4y1LDNpPH2SSMQcc1f/gG3QpkjasGCG43s8hoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YdTmdUfU; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718435298; c=relaxed/simple;
+	bh=ZwcvdUxc1M3aHoVk5X4ehy4eeQBGFf7+nPhJ9DpI80I=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Mime-Version:
+	 Content-Type:Date:Message-ID; b=fSxwHHSniqbn3QKxKrae/gHOg1XssrZ5S8WuAt+2IW6AmE0Om8adfmMmKXCCs7NMSVplgvYVS2RAqvk8uxG3GR1umhXO8UVTZ+cWXlx+/do/prbXZVhpME0QugBo1wGZg+WknIvym7P6v2qswEC63oVKUSV0/BMnig57ITt8xq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=DIpnbk5j; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdTmdUfU"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-80b7c11aaf9so809032241.3
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 00:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718435188; x=1719039988; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vTIboxkmSqNDNHQ9BibBHTyoSa0gVfS8NZcrGuuyLT8=;
-        b=YdTmdUfUI7d4BaWeWUQ+sfLvoVAwoVzw4c9GIThZ/a5HSczHaznLLyf2hEKlMW0vaO
-         znejzj5i+40gTkxWSnw52UPG0zGTNIR7zJO3lOAtGag+M/YKLtLO6A26fpwngEE7ovYB
-         Z94voMk9o+0qQM3XG18obW+bnBaN6SiWwLVn6RIt8ivE8Ou2wwWDW7TeD6vw06QRbbds
-         M+6Rp+FvM5JUKTuJxwJmVNkdNfhQRKp/n9PrzF8rcns5vOIm7WvC+mRhvtlnSKrjvqvM
-         Uq73ZOIwGQSL/ZSmjvvAL2KyouBksHOnzz9veyC5R1NgX/+QmnwiypHm5oQJrpT7c3i6
-         FMnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718435188; x=1719039988;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vTIboxkmSqNDNHQ9BibBHTyoSa0gVfS8NZcrGuuyLT8=;
-        b=KWHUGTtWG8hHtDnhncN1CcUo9abjFhEOIpwBqJ1QL1OmFW/QXQorXrNikHh+55W//J
-         jqRTflnPzRrK+3TjvM+T4NKgt2p+5k3fT7SmP3PsgJIf13VGSlsBs5tHKqftxtMPwpcp
-         okr8xaSCqMG7jOn/CtzoceRFbCsx0MTaqnryOZyfPcW6/UBduZ/7+gDdAxVNPDrttIhK
-         QNqTBd3ELjSKQT9qNilgdpkI96ySmWmJcRP+yhleVWMUmrTAwJ6eJcbG0yA2uS7CsdZQ
-         FirP2+yALR1BA1omHevvCOHaCS/3RwotHVyABLWhT6Y0wpzKS8IcYvEfnbI139qvWcBD
-         mgVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ6UqqMqFGI8hpbOd/9o8bA9PLq/nzHcQlF3URkzRcrX/7szXblGeQYdk9bA+h2FeT+ztiMZ2MkGFRPLQ9Q1lZMUrituNu4RVtviJN
-X-Gm-Message-State: AOJu0YyWX+00QVXZzqLYDllK26zzMy3Z5zSQ/HIsYe4wicKwIKaabvAC
-	imCy8Yks+j/gnsw+WMTD3sHme5CRRoZj2XN1ny4pvvu8tWUrGsVapzO2+Cm+SMruvHc8uIREE48
-	I90CLyIyJpgeHK9xFmRyGRhXMCgSHxyxrD6k9rQ==
-X-Google-Smtp-Source: AGHT+IHeRnOR5MHTUJT70ETG+DjnILBLUrZTj7u+VAbqxt2l3kMOz3CUqJfQE3gpBQBZcu0nN/Ah0LaOxGCrycuemyE=
-X-Received: by 2002:a05:6102:24a7:b0:48d:89e2:8ff6 with SMTP id
- ada2fe7eead31-48dae3b40b9mr4334638137.23.1718435187970; Sat, 15 Jun 2024
- 00:06:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="DIpnbk5j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718434983; bh=ZwcvdUxc1M3aHoVk5X4ehy4eeQBGFf7+nPhJ9DpI80I=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date;
+	b=DIpnbk5jJoumBOggwKKPf/FBL1DTCHlsTCCS7L8udcZpzhfj84WcUCZM4P9DOeEdM
+	 +fylqSruoeepJfm77Du7euA5eByfcqc9GN6cjZ+ISWhvW1AoPWtKtGf/dVntJRlph3
+	 i/wRPlQKX3Irc20CwF2Af91eq/YlQlAzTX8jRzb4=
+X-QQ-FEAT: +BBVktQ4OjZRGhAMCybSmgbXOah7CjTG
+X-QQ-SSF: 0000000000000040000000000000
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-XMAILINFO: MKXYKvFqLnFrSEzRnk6j4uTDT+iE3Bkprc9glgWCzP882CopSjHdjMRGk6oyVP
+	 xxLQbg3UZVf9/meqPwbrj8S1Rnc4cMeaQxhOIPB/Qc/yQ4puq+ZHJ3MiiO5UaM9j2bDYqw9lzcHTM
+	 Z8BKe6GIzCBmgnsFmROgT/Qlansat5m4bDeVvVzX6QKY4ooP7u5bdkxnDy46GZESNeVoLISM4PaBu
+	 iUjDUqa0c8hKHnc0vo9gC6mekc+4y7Hdlz1i9lppfzwbEgwY807RdaaBvwBMz/VVuxCO4vgw33Izw
+	 0Bj7cTA3T1SVX4TDSQjoXZPbyRv7LdodPDZyQ+nzPwwLoFeKtEZDivcjld51/Tf7A/+YBQc9YK36G
+	 J8+d6dor+ybwrjy3RsS4ZvKqhC72Fhs/52rnvOCDDYMIUb5q5G7rblDkbHj/kxwOCPDNs3pp8twn3
+	 PBJFlQXH8p9IuDoLFI6TkqbR74/eE1RdcGLBEQrXXTe3M1lXB97o7QaPhMM6Dsiphsg/VHUbd2mga
+	 N3+YDwgsPwFWAxuUv30bCfEjMICDXUhsAD5+7VyBwMzWvyxgjo2bKzckVC9mrlFA9GZpRai8p8Scu
+	 ZqEhTR9Yk4oti0QCQPbEe+SwaMQ70IgdyFn20+3NGBPjayTkQ+7X4ElleY0ZBrzJY2U8FV90tAK+6
+	 SVPOs7dAkdeZP4QdCaZf4t13Kif4dWual8UosAqQJD1MaSTPDPjrq/sKUazT1r98gNTnSB21uLXBA
+	 xEC2mrSvrlCBAfLUYIYwKHwDfUKzUzUGOIaAMZX+2WwjlnbXdDE8COK2g2lhA1br5jYEXqQike4JR
+	 8todALKt2dAMhg0cXTw3UgApOEtWLBGQgIr/u/0T9MbEhZDonOpkCuJJCzHEyjNrNfaz7tN1e479r
+	 n1qGn44hFFfbSVxeT0ZHKt9193CH1oiQVSEo6qRMhpTakFqIpxriPvAgOcXCLVDDPMIrjy9dqN2HC
+	 vUZBGpKgVRbRfEchM2
+X-HAS-ATTACH: no
+X-QQ-BUSINESS-ORIGIN: 2
+In-Reply-To: <Zm000qL0N6XY7-4O@infradead.org>
+References: <20240615030056.GO1629371@ZenIV>
+ <tencent_63C013752AD7CA1A22E75CEF6166442E6D05@qq.com>
+	<Zm000qL0N6XY7-4O@infradead.org>
+X-QQ-STYLE: 
+X-QQ-mid: webmail648t1718434181t8448596
+From: "=?ISO-8859-1?B?emNqaWUwODAy?=" <zcjie0802@qq.com>
+To: "=?ISO-8859-1?B?Q2hyaXN0b3BoIEhlbGx3aWc=?=" <hch@infradead.org>
+Cc: "=?ISO-8859-1?B?dmlybw==?=" <viro@zeniv.linux.org.uk>, "=?ISO-8859-1?B?YnJhdW5lcg==?=" <brauner@kernel.org>, "=?ISO-8859-1?B?bGludXgtZnNkZXZlbA==?=" <linux-fsdevel@vger.kernel.org>, "=?ISO-8859-1?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] fs: modify the annotation of vfs_mkdir() in fs/namei.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240613113247.525431100@linuxfoundation.org>
-In-Reply-To: <20240613113247.525431100@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sat, 15 Jun 2024 12:36:16 +0530
-Message-ID: <CA+G9fYvLoT=WGZvUjp=oHG=g=o0LG-JaYC+ku+m-e4BH9epxyA@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/317] 5.10.219-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="ISO-8859-1"
+Content-Transfer-Encoding: base64
+Date: Sat, 15 Jun 2024 14:49:41 +0800
+X-Priority: 3
+Message-ID: <tencent_5A1C3E3D91192539DE8138D4A6DC72EBD107@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
 
-On Thu, 13 Jun 2024 at 17:43, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.10.219 release.
-> There are 317 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 15 Jun 2024 11:31:50 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.10.219-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+VGhlIEBkZW50cnkgaXMgYWN0dWFsbHkgdGhlIGRlbnRyeSBvZiBjaGlsZCBkaXJlY3Rvcnks
+IGJ1dCB0aGUgb3JpZ2luIGFubm90YXRpb24gaW5kaWNhdGVzIGl0IGlzIGRlbnRyeSBvZiBw
+YXJlbnQgZGlyZWN0b3J5LgpUaGUgQGRpciBpcyBzaW1pbGFyLg==
 
-
-Results from Linaro=E2=80=99s test farm.
-Regressions on Powerpc and riscv build failures.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-NOTE:
-----
-Following new build warnings noticed with gcc-12.
-
-net/nfc/nci/core.c: In function 'nci_valid_size':
-net/nfc/nci/core.c:1458:9: warning: ISO C90 forbids mixed declarations
-and code [-Wdeclaration-after-statement]
- 1458 |         unsigned int hdr_size =3D NCI_CTRL_HDR_SIZE;
-      |         ^~~~~~~~
-
-## Build
-* kernel: 5.10.219-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.10.y
-* git commit: 853b71b570fb6a0cfe358e0be3b638c65c9065ea
-* git describe: v5.10.218-318-g853b71b570fb
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10=
-.218-318-g853b71b570fb
-
-## Test Regressions (compared to v5.10.218)
-
-* powerpc, build
-  - clang-18-allnoconfig
-  - clang-18-defconfig
-  - clang-18-mpc83xx_defconfig
-  - clang-18-tinyconfig
-  - clang-18-tqm8xx_defconfig
-  - gcc-12-allnoconfig
-  - gcc-12-cell_defconfig
-  - gcc-12-defconfig
-  - gcc-12-maple_defconfig
-  - gcc-12-mpc83xx_defconfig
-  - gcc-12-ppc64e_defconfig
-  - gcc-12-ppc6xx_defconfig
-  - gcc-12-tinyconfig
-  - gcc-12-tqm8xx_defconfig
-
-riscv:
-
-  * build/clang-18-defconfig
-
-## Metric Regressions (compared to v5.10.218)
-
-## Test Fixes (compared to v5.10.218)
-
-## Metric Fixes (compared to v5.10.218)
-
-## Test result summary
-total: 86688, pass: 68564, fail: 2978, skip: 15098, xfail: 48
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 104 total, 104 passed, 0 failed
-* arm64: 31 total, 31 passed, 0 failed
-* i386: 25 total, 25 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 23 total, 9 passed, 14 failed
-* riscv: 9 total, 8 passed, 1 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
