@@ -1,482 +1,438 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7073223746;
-	Sat, 15 Jun 2024 08:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E8DBE68;
+	Sat, 15 Jun 2024 08:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718439713; cv=none; b=TVDEyGjHgoXcrsC3TR47hpTMmEi4YtZOFfpnFaXejldXd67T2bcq7CnN5nyAS4BJES9a0BzvCu0eVwL/TotZyVSvIecUm2kWeFg5aajhF8yzWkLiEwNxYb5KQCsk6J8aQBkdULkYRI071FctMQYyxGNtxvxP/2hjdaJQ+jZ7mf4=
+	t=1718439913; cv=none; b=QEYuKbQU+WYrUUoZN49NQvj9PyEWWnQc9lm3FtFHG5i219/bAXrILDKEupbej2wQzEy5NDA6ySOkkO3GUeXdITMSb2F32choLuuvhN5dpI24RNjjlSH7uSCiMXzs4Dym96sMrdOR6uC2VJRHexe5wW1Ez0PNzJTm1HuatpC1Lpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718439713; c=relaxed/simple;
-	bh=RLFsfChGLgC3Xs+ehWzPb5RF218daZwTyEN1ZMhfYjM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QfvBbjWDGzOgLq1B52nDesdlLn67q9c/xzgx0CWmmC0Tnwk1BSczXPsD6/klrqY0diZh3FOyt3T2FdeKpdPwNMPJiHaOG2YdnYOY0ZxogQwzVTAKlJ2c4uFCefelaODP3aQvS+Yx1R+34Qy0qgU/tQBuCXPOs6i5tubrRcBWCIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TZe8ier2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=73USAklC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TZe8ier2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="73USAklC"
-Date: Sat, 15 Jun 2024 08:21:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718439707;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5RZYrjzcGkoTL184sVziO9B5xrGA66eyQk5mXpuTg5U=;
-	b=TZe8ier2ILYUhhwyfkr5Sbgsha5wdpBcZhFdYFsJqR8hSkMfDQ3B8Lx2H+/uYS4Q/5K5a/
-	ZLk654bPlwLHPpUGyHkCzwiagwpMGmNKGU6IHSXe8IKSkXXZUivWg8IrK85/7eVyElm1MK
-	jsbnR3KMMEJq7RXnH5RJvlvSlRMbpBeRNG9Ij5U17IFITtmJWx61+ES+I34jdbW8fLn1UI
-	I6ERjZXXnwv+3rpb4TFG+AdU8IdKMr+znTjA4WMGo6HC8WwUh5JA5wxW/lipKd7N1aya5y
-	q+QFaUElsqwXuX4tFfsXe+SUnCQYqfcUyjjygX3Q0STaRzMePPfrEP+N2ZfQ3g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718439707;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5RZYrjzcGkoTL184sVziO9B5xrGA66eyQk5mXpuTg5U=;
-	b=73USAklCOY+HOSfAvOHrmmZGFNTejLlSSt6f9P2GlpkzjPioa9evrW5x6WHb0Dun9oZTLj
-	BcOqTo4QO1sE22Cg==
-From: "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vmware] x86/vmware: Introduce VMware hypercall API
-Cc: Alexey Makhalov <alexey.makhalov@broadcom.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240613191650.9913-2-alexey.makhalov@broadcom.com>
-References: <20240613191650.9913-2-alexey.makhalov@broadcom.com>
+	s=arc-20240116; t=1718439913; c=relaxed/simple;
+	bh=IlnUBEHlUTDilPI8TWHODx0HU1aDoU75blv08V81wVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MSefItI7UXAFNaJfJ22Gi+VrIVhmu2K48iRsJURAAcCUQRS0osuWSgQ1KXemT+UAo8r0dMCRu/UVQ21YOkiOv9KLQDsSXzcGZ8fDQ3gv9q66ZAmpYzJav9Y339ARYEFdwLYSCIuDSGKodJ1I5sL/3tcpLdHnMqUh2cJqq4/SALE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrADn74O_T21mNNvrBw--.52314S2;
+	Sat, 15 Jun 2024 16:24:31 +0800 (CST)
+Received: from [10.12.169.238] (unknown [10.12.169.238])
+	by gateway (Coremail) with SMTP id _____wAHZi67T21mDCUdAQ--.56296S2;
+	Sat, 15 Jun 2024 16:24:29 +0800 (CST)
+Message-ID: <5351308d-6fb7-4179-b0a0-32107d8244b7@hust.edu.cn>
+Date: Sat, 15 Jun 2024 16:24:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171843970672.10875.12481364592821283411.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] doc-guide: add help documentation
+ checktransupdate.rst
+To: si.yanteng@linux.dev, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240615035323.909650-1-dzm91@hust.edu.cn>
+ <20240615035323.909650-2-dzm91@hust.edu.cn>
+ <4da91d0b2a0dc580ffaa7c67ab1860c310387e10@linux.dev>
+From: Dongliang Mu <dzm91@hust.edu.cn>
+In-Reply-To: <4da91d0b2a0dc580ffaa7c67ab1860c310387e10@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrADn74O_T21mNNvrBw--.52314S2
+Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFy7Cr1kCw1kCF48Gw48JFb_yoW3CF4Upa
+	43GFWxJan2q345tr1Ig34jvrnIyF1xCa1jgr17Kw1vqrn0yrn7JF43tryFgrWkJryrAayU
+	ZFWjyry7uryrZFDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmYb7Iv0xC_tr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
+	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
+	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
+	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
+	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCF04k20x
+	vE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxUV9N3UUUUU
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-The following commit has been merged into the x86/vmware branch of tip:
 
-Commit-ID:     039b747a42acdbc7a88a3630e447585fdecac8a7
-Gitweb:        https://git.kernel.org/tip/039b747a42acdbc7a88a3630e447585fdecac8a7
-Author:        Alexey Makhalov <alexey.makhalov@broadcom.com>
-AuthorDate:    Thu, 13 Jun 2024 12:16:43 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 14 Jun 2024 18:01:21 +02:00
+On 2024/6/15 15:57, si.yanteng@linux.dev wrote:
+> 2024年6月15日 11:53, "Dongliang Mu" <dzm91@hust.edu.cn> 写到:
+>
+>
+>
+>> This commit adds help documents - Documentation/doc-guide/checktransupdate.rst
+>>
+>> and Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+>>
+>> for scripts/checktransupdate.py, including English and Chinese versions
+>>
+>> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+>>
+>> ---
+>>
+>> v1->v2: fix some issues according to Randy
+>>
+>>   Documentation/doc-guide/checktransupdate.rst | 63 +++++++++++++++++++
+>>
+>>   Documentation/doc-guide/index.rst | 1 +
+>>
+>>   .../zh_CN/doc-guide/checktransupdate.rst | 62 ++++++++++++++++++
+>>
+>>   .../translations/zh_CN/doc-guide/index.rst | 1 +
+>>
+>>   4 files changed, 127 insertions(+)
+>>
+>>   create mode 100644 Documentation/doc-guide/checktransupdate.rst
+>>
+>>   create mode 100644 Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+>>
+>> diff --git a/Documentation/doc-guide/checktransupdate.rst b/Documentation/doc-guide/checktransupdate.rst
+>>
+>> new file mode 100644
+>>
+>> index 000000000000..4ece330882d6
+>>
+>> --- /dev/null
+>>
+>> +++ b/Documentation/doc-guide/checktransupdate.rst
+>>
+>> @@ -0,0 +1,63 @@
+>>
+>> +.. SPDX-License-Identifier: GPL-2.0
+>>
+>> +
+>>
+>> +Check translation update
+>>
+>> +==========================
+> Let's get rid of unnecessary symbols.
+>> +
+>>
+>> +This script helps track the translation status of the documentation in
+>>
+>> +different locales, i.e., whether the documentation is up-to-date with
+>>
+>> +the English counterpart.
+>>
+>> +
+>>
+>> +How it works
+>>
+>> +------------
+>>
+>> +
+>>
+>> +It uses ``git log`` command to track the latest English commit from the
+>>
+>> +translation commit (order by author date) and the latest English commits
+>>
+>> +from HEAD. If any differences occur, the file is considered as out-of-date,
+>>
+>> +then commits that need to be updated will be collected and reported.
+>>
+>> +
+>>
+>> +Features implemented
+>>
+>> +--------------------
+>>
+>> +
+>>
+>> +- check all files in a certain locale
+>>
+>> +- check a single file or a set of files
+>>
+>> +- provide options to change output format
+>>
+>> +
+>>
+>> +Usage
+>>
+>> +-----
+>>
+>> +
+>>
+>> +::
+>>
+>> +
+>>
+>> + checktransupdate.py [-h] [-l LOCALE] [--print-commits | --no-print-commits] [--print-updated-files | --no-print-updated-files] [--debug | --no-debug] [files ...]
+>>
+>> +
+>>
+>> +Options
+>>
+>> +~~~~~~~
+>>
+>> +
+>>
+>> +- ``-l``, ``--locale``: locale to check when file is not specified
+>>
+>> +- ``--[no-]print-commits``: whether to print commits between origin and
+>>
+>> + translation
+>>
+>> +- ``--[no-]print-updated-files``: whether to print files that do no
+>>
+>> + need to be updated
+>>
+>> +- ``files``: files to check, if this option is specified, the locale
+>>
+>> + option will be ignored.
+>>
+>> +
+>>
+>> +Samples
+>>
+>> +~~~~~~~
+>>
+>> +
+>>
+>> +- ``./scripts/checktransupdate.py -l zh_CN``
+>>
+>> + This will print all the files that need to be updated in the zh_CN locale.
+>>
+>> +- ``./scripts/checktransupdate.py Documentation/translations/zh_CN/process/coding-style.rst``
+>>
+>> + This will only print the status of the specified file.
+>>
+>> +
+>>
+>> +Then the output is something like:
+>>
+>> +
+>>
+>> +::
+>>
+>> +
+>>
+>> + Documentation/translations/zh_CN/process/coding-style.rst (2 commits)
+>>
+>> + commit 6813216bbdba ("Documentation: coding-style: ask function-like macros to evaluate parameters")
+>>
+>> + commit 185ea7676ef3 ("Documentation: coding-style: Update syntax highlighting for code-blocks")
+>>
+>> +
+>>
+>> +Features to be implemented
+>>
+>> +----------------------------
+> ditto
+>
+>> +
+>>
+>> +- track the translation status of files that have no translation
+>>
+>> +- files can be a folder instead of only a file
+>>
+>> diff --git a/Documentation/doc-guide/index.rst b/Documentation/doc-guide/index.rst
+>>
+>> index 7c7d97784626..24d058faa75c 100644
+>>
+>> --- a/Documentation/doc-guide/index.rst
+>>
+>> +++ b/Documentation/doc-guide/index.rst
+>>
+>> @@ -12,6 +12,7 @@ How to write kernel documentation
+>>
+>>   parse-headers
+>>
+>>   contributing
+>>
+>>   maintainer-profile
+>>
+>> + checktransupdate
+>>
+>>   
+>>
+>>   .. only:: subproject and html
+>>
+>>   
+>>
+>> diff --git a/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst b/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+>>
+>> new file mode 100644
+>>
+>> index 000000000000..37c0bb518ab8
+>>
+>> --- /dev/null
+>>
+>> +++ b/Documentation/translations/zh_CN/doc-guide/checktransupdate.rst
+>>
+>> @@ -0,0 +1,62 @@
+>>
+>> +.. SPDX-License-Identifier: GPL-2.0
+>>
+>> +
+>>
+>> +.. include:: ../disclaimer-zh_CN.rst
+>>
+>> +
+>>
+>> +:Original: Documentation/doc-guide/checktransupdate.rst
+>>
+>> +
+>>
+>> +:译者: 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
+>>
+>> +
+>>
+>> +检查翻译更新
+>>
+>> +=============
+> ditto
+>> +
+>>
+>> +这个脚本帮助跟踪不同语言的文档翻译状态，即文档是否与对应的英文版本保持更新。
+>>
+>> +
+>>
+>> +工作原理
+>>
+>> +------------
+>>
+>> +
+>>
+>> +它使用 ``git log`` 命令来跟踪翻译提交的最新英文提交（按作者日期排序）和英文文档的
+>>
+>> +最新提交。如果有任何差异，则该文件被认为是过期的，然后需要更新的提交将被收集并报告。
+>>
+>> +
+>>
+>> +实现的功能
+>>
+>> +--------------------
+> ditto
+>
+> ...
+>
+>> +
+>>
+>> +- 检查特定语言中的所有文件
+>>
+>> +- 检查单个文件或一组文件
+>>
+>> +- 提供更改输出格式的选项
+>>
+>> +
+>>
+>> +用法
+>>
+>> +-----
+>>
+>> +
+>>
+>> +::
+>>
+>> +
+>>
+>> + checktransupdate.py [-h] [-l LOCALE] [--print-commits | --no-print-commits] [--print-updated-files | --no-print-updated-files] [--debug | --no-debug] [files ...]
+>>
+>> +
+>>
+>> +选项
+>>
+>> +~~~~~~~
+>>
+>> +
+>>
+>> +- ``-l``, ``--locale``: 检查指定的文件语言，如果未指定文件
+>>
+>> +- ``--[no-]print-commits``: 是否打印英文原始版本和翻译版本之间的提交
+>>
+>> +- ``--[no-]print-updated-files``: 是否打印无需更新的文件
+>>
+>> +- ``files``: 要检查的文件，如果指定了此选项，将忽略语言选项
+>>
+>> +
+>>
+>> +示例
+>>
+>> +~~~~~~~
+> ditto
 
-x86/vmware: Introduce VMware hypercall API
 
-Introduce a vmware_hypercall family of functions. It is a common implementation
-to be used by the VMware guest code and virtual device drivers in architecture
-independent manner.
+Yanteng,
 
-The API consists of vmware_hypercallX and vmware_hypercall_hb_{out,in}
-set of functions analogous to KVM's hypercall API. Architecture-specific
-implementation is hidden inside.
+the requested changes does not match between English and Chinse translation.
 
-It will simplify future enhancements in VMware hypercalls such as SEV-ES and
-TDX related changes without needs to modify a caller in device drivers code.
+Dongliang Mu
 
-Current implementation extends an idea from
 
-  bac7b4e84323 ("x86/vmware: Update platform detection code for VMCALL/VMMCALL hypercalls")
+>
+>
+> Thanks,
+> Yanteng
+>> +
+>>
+>> +- ``./scripts/checktransupdate.py -l zh_CN``
+>>
+>> + 这将打印 zh_CN 语言中需要更新的所有文件。
+>>
+>> +- ``./scripts/checktransupdate.py Documentation/translations/zh_CN/process/coding-style.rst``
+>>
+>> + 这将只打印指定文件的状态。
+>>
+>> +
+>>
+>> +然后输出类似如下的内容：
+>>
+>> +
+>>
+>> +::
+>>
+>> +
+>>
+>> + Documentation/translations/zh_CN/process/coding-style.rst (2 commits)
+>>
+>> + commit 6813216bbdba ("Documentation: coding-style: ask function-like macros to evaluate parameters")
+>>
+>> + commit 185ea7676ef3 ("Documentation: coding-style: Update syntax highlighting for code-blocks")
+>>
+>> +
+>>
+>> +待实现的功能
+>>
+>> +-------------
+>>
+>> +
+>>
+>> +- 跟踪没有翻译过的文件的翻译状态
+>>
+>> +- 文件参数可以是文件夹而不仅仅是单个文件
+>>
+>> diff --git a/Documentation/translations/zh_CN/doc-guide/index.rst b/Documentation/translations/zh_CN/doc-guide/index.rst
+>>
+>> index 78c2e9a1697f..0ac1fc9315ea 100644
+>>
+>> --- a/Documentation/translations/zh_CN/doc-guide/index.rst
+>>
+>> +++ b/Documentation/translations/zh_CN/doc-guide/index.rst
+>>
+>> @@ -18,6 +18,7 @@
+>>
+>>   parse-headers
+>>
+>>   contributing
+>>
+>>   maintainer-profile
+>>
+>> + checktransupdate
+>>
+>>   
+>>
+>>   .. only:: subproject and html
+>>
+>>   
+>>
+>> -- 
+>>
+>> 2.39.2
+>>
 
-to have a slow, but safe path vmware_hypercall_slow() earlier during the boot
-when alternatives are not yet applied.  The code inherits VMWARE_CMD logic from
-the commit mentioned above.
-
-Move common macros from vmware.c to vmware.h.
-
-Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240613191650.9913-2-alexey.makhalov@broadcom.com
----
- arch/x86/include/asm/vmware.h | 279 +++++++++++++++++++++++++++++++--
- arch/x86/kernel/cpu/vmware.c  |  58 ++++++-
- 2 files changed, 315 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index ac9fc51..724c8b9 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -7,26 +7,277 @@
- #include <linux/stringify.h>
- 
- /*
-- * The hypercall definitions differ in the low word of the %edx argument
-- * in the following way: the old port base interface uses the port
-- * number to distinguish between high- and low bandwidth versions.
-+ * VMware hypercall ABI.
-+ *
-+ * - Low bandwidth (LB) hypercalls (I/O port based, vmcall and vmmcall)
-+ * have up to 6 input and 6 output arguments passed and returned using
-+ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
-+ * %esi (arg4), %edi (arg5).
-+ * The following input arguments must be initialized by the caller:
-+ * arg0 - VMWARE_HYPERVISOR_MAGIC
-+ * arg2 - Hypercall command
-+ * arg3 bits [15:0] - Port number, LB and direction flags
-+ *
-+ * - High bandwidth (HB) hypercalls are I/O port based only. They have
-+ * up to 7 input and 7 output arguments passed and returned using
-+ * registers: %eax (arg0), %ebx (arg1), %ecx (arg2), %edx (arg3),
-+ * %esi (arg4), %edi (arg5), %ebp (arg6).
-+ * The following input arguments must be initialized by the caller:
-+ * arg0 - VMWARE_HYPERVISOR_MAGIC
-+ * arg1 - Hypercall command
-+ * arg3 bits [15:0] - Port number, HB and direction flags
-+ *
-+ * For compatibility purposes, x86_64 systems use only lower 32 bits
-+ * for input and output arguments.
-+ *
-+ * The hypercall definitions differ in the low word of the %edx (arg3)
-+ * in the following way: the old I/O port based interface uses the port
-+ * number to distinguish between high- and low bandwidth versions, and
-+ * uses IN/OUT instructions to define transfer direction.
-  *
-  * The new vmcall interface instead uses a set of flags to select
-  * bandwidth mode and transfer direction. The flags should be loaded
-- * into %dx by any user and are automatically replaced by the port
-- * number if the VMWARE_HYPERVISOR_PORT method is used.
-- *
-- * In short, new driver code should strictly use the new definition of
-- * %dx content.
-+ * into arg3 by any user and are automatically replaced by the port
-+ * number if the I/O port method is used.
-+ */
-+
-+#define VMWARE_HYPERVISOR_HB		BIT(0)
-+#define VMWARE_HYPERVISOR_OUT		BIT(1)
-+
-+#define VMWARE_HYPERVISOR_PORT		0x5658
-+#define VMWARE_HYPERVISOR_PORT_HB	(VMWARE_HYPERVISOR_PORT | \
-+					 VMWARE_HYPERVISOR_HB)
-+
-+#define VMWARE_HYPERVISOR_MAGIC		0x564d5868U
-+
-+#define VMWARE_CMD_GETVERSION		10
-+#define VMWARE_CMD_GETHZ		45
-+#define VMWARE_CMD_GETVCPU_INFO		68
-+#define VMWARE_CMD_STEALCLOCK		91
-+
-+#define CPUID_VMWARE_FEATURES_ECX_VMMCALL	BIT(0)
-+#define CPUID_VMWARE_FEATURES_ECX_VMCALL	BIT(1)
-+
-+extern unsigned long vmware_hypercall_slow(unsigned long cmd,
-+					   unsigned long in1, unsigned long in3,
-+					   unsigned long in4, unsigned long in5,
-+					   u32 *out1, u32 *out2, u32 *out3,
-+					   u32 *out4, u32 *out5);
-+
-+/*
-+ * The low bandwidth call. The low word of %edx is presumed to have OUT bit
-+ * set. The high word of %edx may contain input data from the caller.
-  */
-+#define VMWARE_HYPERCALL					\
-+	ALTERNATIVE_2("movw %[port], %%dx\n\t"			\
-+		      "inl (%%dx), %%eax",			\
-+		      "vmcall", X86_FEATURE_VMCALL,		\
-+		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
-+
-+static inline
-+unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     NULL, NULL, NULL, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
-+				u32 *out1, u32 *out2)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     out1, out2, NULL, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
-+				u32 *out1, u32 *out2, u32 *out3)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     out1, out2, out3, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, unsigned long in4,
-+				unsigned long in5, u32 *out2)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
-+					     NULL, out2, NULL, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=c" (*out2)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3),
-+		  "S" (in4),
-+		  "D" (in5)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall6(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, u32 *out2,
-+				u32 *out3, u32 *out4, u32 *out5)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, in3, 0, 0,
-+					     NULL, out2, out3, out4, out5);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=c" (*out2), "=d" (*out3), "=S" (*out4),
-+		  "=D" (*out5)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+static inline
-+unsigned long vmware_hypercall7(unsigned long cmd, unsigned long in1,
-+				unsigned long in3, unsigned long in4,
-+				unsigned long in5, u32 *out1,
-+				u32 *out2, u32 *out3)
-+{
-+	unsigned long out0;
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, in3, in4, in5,
-+					     out1, out2, out3, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (in3),
-+		  "S" (in4),
-+		  "D" (in5)
-+		: "cc", "memory");
-+	return out0;
-+}
-+
-+#ifdef CONFIG_X86_64
-+#define VMW_BP_CONSTRAINT "r"
-+#else
-+#define VMW_BP_CONSTRAINT "m"
-+#endif
-+
-+/*
-+ * High bandwidth calls are not supported on encrypted memory guests.
-+ * The caller should check cc_platform_has(CC_ATTR_MEM_ENCRYPT) and use
-+ * low bandwidth hypercall if memory encryption is set.
-+ * This assumption simplifies HB hypercall implementation to just I/O port
-+ * based approach without alternative patching.
-+ */
-+static inline
-+unsigned long vmware_hypercall_hb_out(unsigned long cmd, unsigned long in2,
-+				      unsigned long in3, unsigned long in4,
-+				      unsigned long in5, unsigned long in6,
-+				      u32 *out1)
-+{
-+	unsigned long out0;
-+
-+	asm_inline volatile (
-+		UNWIND_HINT_SAVE
-+		"push %%" _ASM_BP "\n\t"
-+		UNWIND_HINT_UNDEFINED
-+		"mov %[in6], %%" _ASM_BP "\n\t"
-+		"rep outsb\n\t"
-+		"pop %%" _ASM_BP "\n\t"
-+		UNWIND_HINT_RESTORE
-+		: "=a" (out0), "=b" (*out1)
-+		: "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (cmd),
-+		  "c" (in2),
-+		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
-+		  "S" (in4),
-+		  "D" (in5),
-+		  [in6] VMW_BP_CONSTRAINT (in6)
-+		: "cc", "memory");
-+	return out0;
-+}
- 
--/* Old port-based version */
--#define VMWARE_HYPERVISOR_PORT    0x5658
--#define VMWARE_HYPERVISOR_PORT_HB 0x5659
-+static inline
-+unsigned long vmware_hypercall_hb_in(unsigned long cmd, unsigned long in2,
-+				     unsigned long in3, unsigned long in4,
-+				     unsigned long in5, unsigned long in6,
-+				     u32 *out1)
-+{
-+	unsigned long out0;
- 
--/* Current vmcall / vmmcall version */
--#define VMWARE_HYPERVISOR_HB   BIT(0)
--#define VMWARE_HYPERVISOR_OUT  BIT(1)
-+	asm_inline volatile (
-+		UNWIND_HINT_SAVE
-+		"push %%" _ASM_BP "\n\t"
-+		UNWIND_HINT_UNDEFINED
-+		"mov %[in6], %%" _ASM_BP "\n\t"
-+		"rep insb\n\t"
-+		"pop %%" _ASM_BP "\n\t"
-+		UNWIND_HINT_RESTORE
-+		: "=a" (out0), "=b" (*out1)
-+		: "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (cmd),
-+		  "c" (in2),
-+		  "d" (in3 | VMWARE_HYPERVISOR_PORT_HB),
-+		  "S" (in4),
-+		  "D" (in5),
-+		  [in6] VMW_BP_CONSTRAINT (in6)
-+		: "cc", "memory");
-+	return out0;
-+}
-+#undef VMW_BP_CONSTRAINT
-+#undef VMWARE_HYPERCALL
- 
- /* The low bandwidth call. The low word of edx is presumed clear. */
- #define VMWARE_HYPERCALL						\
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 11f83d0..533ac2d 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -41,17 +41,9 @@
- 
- #define CPUID_VMWARE_INFO_LEAF               0x40000000
- #define CPUID_VMWARE_FEATURES_LEAF           0x40000010
--#define CPUID_VMWARE_FEATURES_ECX_VMMCALL    BIT(0)
--#define CPUID_VMWARE_FEATURES_ECX_VMCALL     BIT(1)
- 
--#define VMWARE_HYPERVISOR_MAGIC	0x564D5868
--
--#define VMWARE_CMD_GETVERSION    10
--#define VMWARE_CMD_GETHZ         45
--#define VMWARE_CMD_GETVCPU_INFO  68
- #define VMWARE_CMD_LEGACY_X2APIC  3
- #define VMWARE_CMD_VCPU_RESERVED 31
--#define VMWARE_CMD_STEALCLOCK    91
- 
- #define STEALCLOCK_NOT_AVAILABLE (-1)
- #define STEALCLOCK_DISABLED        0
-@@ -110,6 +102,56 @@ struct vmware_steal_time {
- static unsigned long vmware_tsc_khz __ro_after_init;
- static u8 vmware_hypercall_mode     __ro_after_init;
- 
-+unsigned long vmware_hypercall_slow(unsigned long cmd,
-+				    unsigned long in1, unsigned long in3,
-+				    unsigned long in4, unsigned long in5,
-+				    u32 *out1, u32 *out2, u32 *out3,
-+				    u32 *out4, u32 *out5)
-+{
-+	unsigned long out0;
-+
-+	switch (vmware_hypercall_mode) {
-+	case CPUID_VMWARE_FEATURES_ECX_VMCALL:
-+		asm_inline volatile ("vmcall"
-+				: "=a" (out0), "=b" (*out1), "=c" (*out2),
-+				"=d" (*out3), "=S" (*out4), "=D" (*out5)
-+				: "a" (VMWARE_HYPERVISOR_MAGIC),
-+				"b" (in1),
-+				"c" (cmd),
-+				"d" (in3),
-+				"S" (in4),
-+				"D" (in5)
-+				: "cc", "memory");
-+		break;
-+	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:
-+		asm_inline volatile ("vmmcall"
-+				: "=a" (out0), "=b" (*out1), "=c" (*out2),
-+				"=d" (*out3), "=S" (*out4), "=D" (*out5)
-+				: "a" (VMWARE_HYPERVISOR_MAGIC),
-+				"b" (in1),
-+				"c" (cmd),
-+				"d" (in3),
-+				"S" (in4),
-+				"D" (in5)
-+				: "cc", "memory");
-+		break;
-+	default:
-+		asm_inline volatile ("movw %[port], %%dx; inl (%%dx), %%eax"
-+				: "=a" (out0), "=b" (*out1), "=c" (*out2),
-+				"=d" (*out3), "=S" (*out4), "=D" (*out5)
-+				: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+				"a" (VMWARE_HYPERVISOR_MAGIC),
-+				"b" (in1),
-+				"c" (cmd),
-+				"d" (in3),
-+				"S" (in4),
-+				"D" (in5)
-+				: "cc", "memory");
-+		break;
-+	}
-+	return out0;
-+}
-+
- static inline int __vmware_platform(void)
- {
- 	uint32_t eax, ebx, ecx, edx;
