@@ -1,73 +1,139 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FB44A1E;
-	Sat, 15 Jun 2024 07:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00C979F0
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 07:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718435298; cv=none; b=dCntOlCzPdS4S/gr8NRwAfNSbcaSJ1h1tSk+8NAn7X0TyZ2K1Nw8jjMMpVVgqUAmTnIKbQnPf5ys3Ok8KT6BcOvyRSfLCtGkNNEg0t/9FQF9XwHxFN3YWVfo585XaKxINyHXh7QM+U76tyyBli0BgBmQjJ1O0ZL6Tn6q9Hf+kv8=
+	t=1718435383; cv=none; b=uiTDsEZJM5MVF2FvE4U+dT0EERZPdpV9QENLdoHxQWYz2DHRjUAMMJH46rCbDToPIMxzhfq9PpexSCn4ZXe7osNIaChqss8OL5pjEWVjonxKgQndUmIDzHvp5XCdiHbIxGG2gAiy7JGYXcM8Yi1nmoNLPchopRTS2S6D4yRprsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718435298; c=relaxed/simple;
-	bh=ZwcvdUxc1M3aHoVk5X4ehy4eeQBGFf7+nPhJ9DpI80I=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Mime-Version:
-	 Content-Type:Date:Message-ID; b=fSxwHHSniqbn3QKxKrae/gHOg1XssrZ5S8WuAt+2IW6AmE0Om8adfmMmKXCCs7NMSVplgvYVS2RAqvk8uxG3GR1umhXO8UVTZ+cWXlx+/do/prbXZVhpME0QugBo1wGZg+WknIvym7P6v2qswEC63oVKUSV0/BMnig57ITt8xq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=DIpnbk5j; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718435383; c=relaxed/simple;
+	bh=InMc+8IWJ3kDnz0Ha0kfcXNeCtlY2AtkImdW3XBWYi0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J4TBTS8vtMZa1Z+uONZz9+ZN9CS1FJ8+914WxMB+2CSNXMOJH+xLikVyQenl5wa4SKvcgBY4eOrimz9W1WbY+HCLM/2MghplxCbmxcLptdM79ACuOkYeuAwlH6yxFy1fDtPk/cMA+UjaO2bbVAk1n0mPq9bX0QYhzYJPhJTUWLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=al09To6l; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="DIpnbk5j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718434983; bh=ZwcvdUxc1M3aHoVk5X4ehy4eeQBGFf7+nPhJ9DpI80I=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date;
-	b=DIpnbk5jJoumBOggwKKPf/FBL1DTCHlsTCCS7L8udcZpzhfj84WcUCZM4P9DOeEdM
-	 +fylqSruoeepJfm77Du7euA5eByfcqc9GN6cjZ+ISWhvW1AoPWtKtGf/dVntJRlph3
-	 i/wRPlQKX3Irc20CwF2Af91eq/YlQlAzTX8jRzb4=
-X-QQ-FEAT: +BBVktQ4OjZRGhAMCybSmgbXOah7CjTG
-X-QQ-SSF: 0000000000000040000000000000
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-XMAILINFO: MKXYKvFqLnFrSEzRnk6j4uTDT+iE3Bkprc9glgWCzP882CopSjHdjMRGk6oyVP
-	 xxLQbg3UZVf9/meqPwbrj8S1Rnc4cMeaQxhOIPB/Qc/yQ4puq+ZHJ3MiiO5UaM9j2bDYqw9lzcHTM
-	 Z8BKe6GIzCBmgnsFmROgT/Qlansat5m4bDeVvVzX6QKY4ooP7u5bdkxnDy46GZESNeVoLISM4PaBu
-	 iUjDUqa0c8hKHnc0vo9gC6mekc+4y7Hdlz1i9lppfzwbEgwY807RdaaBvwBMz/VVuxCO4vgw33Izw
-	 0Bj7cTA3T1SVX4TDSQjoXZPbyRv7LdodPDZyQ+nzPwwLoFeKtEZDivcjld51/Tf7A/+YBQc9YK36G
-	 J8+d6dor+ybwrjy3RsS4ZvKqhC72Fhs/52rnvOCDDYMIUb5q5G7rblDkbHj/kxwOCPDNs3pp8twn3
-	 PBJFlQXH8p9IuDoLFI6TkqbR74/eE1RdcGLBEQrXXTe3M1lXB97o7QaPhMM6Dsiphsg/VHUbd2mga
-	 N3+YDwgsPwFWAxuUv30bCfEjMICDXUhsAD5+7VyBwMzWvyxgjo2bKzckVC9mrlFA9GZpRai8p8Scu
-	 ZqEhTR9Yk4oti0QCQPbEe+SwaMQ70IgdyFn20+3NGBPjayTkQ+7X4ElleY0ZBrzJY2U8FV90tAK+6
-	 SVPOs7dAkdeZP4QdCaZf4t13Kif4dWual8UosAqQJD1MaSTPDPjrq/sKUazT1r98gNTnSB21uLXBA
-	 xEC2mrSvrlCBAfLUYIYwKHwDfUKzUzUGOIaAMZX+2WwjlnbXdDE8COK2g2lhA1br5jYEXqQike4JR
-	 8todALKt2dAMhg0cXTw3UgApOEtWLBGQgIr/u/0T9MbEhZDonOpkCuJJCzHEyjNrNfaz7tN1e479r
-	 n1qGn44hFFfbSVxeT0ZHKt9193CH1oiQVSEo6qRMhpTakFqIpxriPvAgOcXCLVDDPMIrjy9dqN2HC
-	 vUZBGpKgVRbRfEchM2
-X-HAS-ATTACH: no
-X-QQ-BUSINESS-ORIGIN: 2
-In-Reply-To: <Zm000qL0N6XY7-4O@infradead.org>
-References: <20240615030056.GO1629371@ZenIV>
- <tencent_63C013752AD7CA1A22E75CEF6166442E6D05@qq.com>
-	<Zm000qL0N6XY7-4O@infradead.org>
-X-QQ-STYLE: 
-X-QQ-mid: webmail648t1718434181t8448596
-From: "=?ISO-8859-1?B?emNqaWUwODAy?=" <zcjie0802@qq.com>
-To: "=?ISO-8859-1?B?Q2hyaXN0b3BoIEhlbGx3aWc=?=" <hch@infradead.org>
-Cc: "=?ISO-8859-1?B?dmlybw==?=" <viro@zeniv.linux.org.uk>, "=?ISO-8859-1?B?YnJhdW5lcg==?=" <brauner@kernel.org>, "=?ISO-8859-1?B?bGludXgtZnNkZXZlbA==?=" <linux-fsdevel@vger.kernel.org>, "=?ISO-8859-1?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] fs: modify the annotation of vfs_mkdir() in fs/namei.c
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="al09To6l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1718435377; x=1718694577;
+	bh=VZAtgC22c+KKhYQxrDN1MaUsBpanAgCvr8LCqwklF+A=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=al09To6lFGef0pLt+lAgVXExOeTE7RV2cHxyTFfnDiKPM6HH0JIcwLretKPKvEDkB
+	 Ix5L9JkKTfEIK/ZiCrif3IzTEpvAcFVkwOusL1PGEWCsRjs5OgZw5uwSSV8AHjS2gS
+	 8BelcQduzkOZafPBwRjgQpWTmpW1VAeHoLwsail/AbQQ88Dig1tIsWm54EGO/Y2RBb
+	 EIcJR5Ko7JSuwBCJdqXbfz+OV2AqT4C/OypMsZWUPvIy++By/GMQj0b2jKMiaBCwwz
+	 wmwF3X0uK2onzKhp8BdJZZlkZGlY0gIM2nsS1K0i7NkxaIQWOpwPxeqrvrJWbpXgPA
+	 IZu3dEYfErRTg==
+Date: Sat, 15 Jun 2024 07:09:30 +0000
+To: Boqun Feng <boqun.feng@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo <gary@garyguo.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Alan Stern <stern@rowland.harvard.edu>, Andrea Parri <parri.andrea@gmail.com>, Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Nicholas Piggin <npiggin@gmail.com>, David Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
+	kent.overstreet@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, torvalds@linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org, Trevor Gross <tmgross@umich.edu>, dakr@redhat.com
+Subject: Re: [RFC 2/2] rust: sync: Add atomic support
+Message-ID: <b692945b-8fa4-4918-93f6-783fbcde375c@proton.me>
+In-Reply-To: <ZmzvVr7lYfR6Dpca@Boquns-Mac-mini.home>
+References: <20240612223025.1158537-1-boqun.feng@gmail.com> <20240612223025.1158537-3-boqun.feng@gmail.com> <20240613144432.77711a3a@eugeo> <ZmseosxVQXdsQjNB@boqun-archlinux> <CANiq72myhoCCWs7j0eZuxfoYMbTez7cPa795T57+gz2Dpd+xAw@mail.gmail.com> <ZmtC7h7v1t6XJ6EI@boqun-archlinux> <CANiq72=JdqTRPiUfT=-YMTTN+bHeAe2Pba8nERxU3cN8Q-BEOw@mail.gmail.com> <ZmxUxaIwHWnB42h-@Boquns-Mac-mini.home> <c1c45a2e-afdf-40a6-9f44-142752368d5e@proton.me> <ZmzvVr7lYfR6Dpca@Boquns-Mac-mini.home>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 0fe548fbc11fa01208724021192655e59f7fc5d2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
-Date: Sat, 15 Jun 2024 14:49:41 +0800
-X-Priority: 3
-Message-ID: <tencent_5A1C3E3D91192539DE8138D4A6DC72EBD107@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-VGhlIEBkZW50cnkgaXMgYWN0dWFsbHkgdGhlIGRlbnRyeSBvZiBjaGlsZCBkaXJlY3Rvcnks
-IGJ1dCB0aGUgb3JpZ2luIGFubm90YXRpb24gaW5kaWNhdGVzIGl0IGlzIGRlbnRyeSBvZiBw
-YXJlbnQgZGlyZWN0b3J5LgpUaGUgQGRpciBpcyBzaW1pbGFyLg==
+On 15.06.24 03:33, Boqun Feng wrote:
+> On Fri, Jun 14, 2024 at 09:22:24PM +0000, Benno Lossin wrote:
+>> On 14.06.24 16:33, Boqun Feng wrote:
+>>> On Fri, Jun 14, 2024 at 11:59:58AM +0200, Miguel Ojeda wrote:
+>>>> On Thu, Jun 13, 2024 at 9:05=E2=80=AFPM Boqun Feng <boqun.feng@gmail.c=
+om> wrote:
+>>>>>
+>>>>> Does this make sense?
+>>>>
+>>>> Implementation-wise, if you think it is simpler or more clear/elegant
+>>>> to have the extra lower level layer, then that sounds fine.
+>>>>
+>>>> However, I was mainly talking about what we would eventually expose to
+>>>> users, i.e. do we want to provide `Atomic<T>` to begin with? If yes,
+>>>
+>>> The truth is I don't know ;-) I don't have much data on which one is
+>>> better. Personally, I think AtomicI32 and AtomicI64 make the users have
+>>> to think about size, alignment, etc, and I think that's important for
+>>> atomic users and people who review their code, because before one uses
+>>> atomics, one should ask themselves: why don't I use a lock? Atomics
+>>> provide the ablities to do low level stuffs and when doing low level
+>>> stuffs, you want to be more explicit than ergonomic.
+>>
+>> How would this be different with `Atomic<i32>` and `Atomic<i64>`? Just
+>=20
+> The difference is that with Atomic{I32,I64} APIs, one has to choose (and
+> think about) the size when using atomics, and cannot leave that option
+> open. It's somewhere unconvenient, but as I said, atomics variables are
+> different. For example, if someone is going to implement a reference
+> counter struct, they can define as follow:
+>=20
+> =09struct Refcount<T> {
+> =09    refcount: AtomicI32,
+> =09    data: UnsafeCell<T>
+> =09}
+>=20
+> but with atomic generic, people can leave that option open and do:
+>=20
+> =09struct Refcount<R, T> {
+> =09    refcount: Atomic<R>,
+> =09    data: UnsafeCell<T>
+> =09}
+>=20
+> while it provides configurable options for experienced users, but it
+> also provides opportunities for sub-optimal types, e.g. Refcount<u8, T>:
+> on ll/sc architectures, because `data` and `refcount` can be in the same
+> machine-word, the accesses of `refcount` are affected by the accesses of
+> `data`.
+
+I think this is a non-issue. We have two options of counteracting this:
+1. We can just point this out in reviews and force people to use
+   `Atomic<T>` with a concrete type. In cases where there really is the
+   need to be generic, we can have it.
+2. We can add a private trait in the bounds for the generic, nobody
+   outside of the module can access it and thus they need to use a
+   concrete type:
+
+        // needs a better name
+        trait Integer {}
+        impl Integer for i32 {}
+        impl Integer for i64 {}
+
+        pub struct Atomic<T: Integer> {
+            /* ... */
+        }
+
+And then in the other module, you can't do this (with compiler error):
+
+        pub struct Refcount<R: Integer, T> {
+                            // ^^^^^^^ not found in this scope
+                            // note: trait `crate::atomic::Integer` exists =
+but is inaccessible
+            refcount: Atomic<R>,
+            data: UnsafeCell<T>,
+        }
+
+I think that we can start with approach 2 and if we find a use-case
+where generics are really unavoidable, we can either put it in the same
+module as `Atomic<T>`, or change the access of `Integer`.
+
+---
+Cheers,
+Benno
+
+> The point I'm trying to make here is: when you are using atomics, you
+> care about performance a lot (otherwise, why don't you use a lock?), and
+> because of that, you should care about the size of the atomics, because
+> it may affect the performance significantly.
 
