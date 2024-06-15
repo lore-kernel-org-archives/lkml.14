@@ -1,44 +1,41 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625A94F207
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 17:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EC450A6D
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 17:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718471104; cv=none; b=ur/CWi8lPht9DqjCMMUH+KA89/aKhHcTuaHxt/o3Xwa+m16zihK9IPXZAQOwiUvPBVv5YkR5c+KMaTQJSEDmTi0YcPKFERJ7bshVlR7j7xjVCOrOe1FRa7bQQ8E4fYhFqVVaUbff0S3zoI5WFOFpz+8XREXEy/lQ1uBXMRxuBZI=
+	t=1718471109; cv=none; b=WIqvhdLpk2XjnRBGI3HoilrphLDx8rmxyhlLPxXXOeuSo9dTfnQB3axgqqUWHBJHFd3RWTB8DzXCq5RZOTINo0avwoQ1grBmubEdANdVvD3I1ZDsqco3j2vsSimKMDZnlOzney0t81bhsMXxmyW5c24WYKctnzZZQUj5JWjFXKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718471104; c=relaxed/simple;
-	bh=BrAyv3tTQ7BWoPKoLKD4BTSjujDCwwYQ30XEWLgPbOk=;
+	s=arc-20240116; t=1718471109; c=relaxed/simple;
+	bh=+JK/6pCydtVENjy0w54yyF6arAWMss13Dw95qeW20GI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b9Cd8KPcGf7O1PCNMIvrwiq3XC7KSbV3NtM+fpdugQKMewDoyQ2fQh1TqTgRmVcs4ibBQnSsVSavN0dS1Rb/RH+6amB+Q0HRVTlv3f238LeXUAaFuN144e1Gc+pFd2edcMlHwbGvwrIFIgHh2GxCGGiwcQQByqLFDY1+atlcEls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=ZfBioXxC; arc=none smtp.client-ip=149.28.215.223
+	 MIME-Version; b=KWCld3KdIJiRpH1dh2L8aoZ3IpkHQs8Le9FhQRnPNepeu8f2M6+UVo/ZnaqeOd0XqwnIt6tHdUg8FUqZ8LIdOseQ6sqlqkKX3V6jzqSrY4bgQiGOCxPLRv9c4dUdJoF5DJbgFs0dDpeRh5OPyQ47snHkBj1MNkR1Ct9/uiQWCW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=VsgaFdxQ; arc=none smtp.client-ip=167.172.40.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ZfBioXxC"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="VsgaFdxQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718471088; bh=ScLXL7bFS6O80CUAw7XPEvNboE3+OLzOZeGQt7f1YM8=;
- b=ZfBioXxC9wdsuv/hmnLGAyHS8SG5v8V3O90I14kxOVFdM9JNS3sWhXnQa69lmTpsh7uxLE06Y
- pUDefr+5stvFp0SzZOTVnmsF+exPTBti6EZkPTT1BGZk8/rRCBOTatX+vqcGsu2g8Zdlape3DBs
- YVVTNxUgJMyKJw2XvyQnybRE/NgQ1IXUeZj6+q49OuqugdPvDrCmmZKsWzxnm7ogB41EFF+imIk
- xkFOjfgLDSrDwJWRpcQg46DxkMBHfIqjd9mFVWuNJcSFZRKQIg4aT1bxbUUwONkUcvzrYh9YtiB
- 0UqnVpCnxmtZ9owhF2Y6oSEei5zC1kUDe50iziSHUV2Q==
+ t=1718471077; bh=Bcu9b3VrUd6qIU98W1LB1PWRhdR9Skrn32v3O+4jLys=;
+ b=VsgaFdxQZVdNXIhi2U8zovuoyfyqq6MS8Pvmv8oeEMZteMpcVA0byLeJASQdB0fefyWcHfouS
+ 8J0K1NeJi7BO9oPpRIAvtXWw/1lQ8k4UBpBk8IpaEs5m17UmQxhVLEcntfSscw5TsllSZ0QdL6Q
+ 05rH8LmtsNXzy2K80jiMBpelMTwo1Yc0GwyNIpdghb36GKGWcV1sFYDg/XRhnr5FCykL4moQqI8
+ ra+OVnxmOvKsgydSgHmx6kFiV5fX8jPaoHEHlPXGJB14e6aNNH5GW3kVNApEkLXvn30m1Mmu4gX
+ F5IsXxVrA5xqwgNVTQGlyXbGhLCRhkOKk50YmFvd6Gow==
 From: Jonas Karlman <jonas@kwiboo.se>
-To: dri-devel@lists.freedesktop.org, Sandy Huang <hjc@rock-chips.com>,
- "=?UTF-8?q?Heiko=20St=C3=BCbner?=" <heiko@sntech.de>, Andy Yan
- <andy.yan@rock-chips.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Zheng Yang
- <zhengyang@rock-chips.com>
+To: dri-devel@lists.freedesktop.org, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner
+ <heiko@sntech.de>, Yakir Yang <kuankuan.y@gmail.com>, Jeffy Chen
+ <jeffy.chen@rock-chips.com>
 Cc: linux-arm-kernel@lists.infradead.org,
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
- Karlman <jonas@kwiboo.se>
-Subject: [PATCH 04/13] drm/rockchip: dw_hdmi: Fix reading EDID when using a forced mode
-Date: Sat, 15 Jun 2024 17:03:55 +0000
-Message-ID: <20240615170417.3134517-5-jonas@kwiboo.se>
+ Karlman <jonas@kwiboo.se>, linux-clk@vger.kernel.org
+Subject: [PATCH 02/13] clk: rockchip: Set parent rate for DCLK_VOP clock on RK3228
+Date: Sat, 15 Jun 2024 17:03:53 +0000
+Message-ID: <20240615170417.3134517-3-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240615170417.3134517-1-jonas@kwiboo.se>
 References: <20240615170417.3134517-1-jonas@kwiboo.se>
@@ -54,39 +51,36 @@ X-Report-Abuse: abuse@forwardemail.net
 X-Complaints-To: abuse@forwardemail.net
 X-ForwardEmail-Version: 0.4.40
 X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 666dc9aa24e0254b3980401b
+ 167.172.40.54
+X-ForwardEmail-ID: 666dc9a024e0254b39803ff3
 
-EDID cannot be read on RK3328 until after read_hpd has been called and
-correct io voltage has been configured based on connection status.
+Similar to DCLK_LCDC on RK3328, the DCLK_VOP on RK3228 is typically
+parented by the hdmiphy clk and it is expected that the DCLK_VOP and
+hdmiphy clk rate are kept in sync.
 
-When a forced mode is used, e.g. video=1920x1080@60e, the connector
-detect ops, that in turn normally calls the read_hpd, never gets called.
+Use CLK_SET_RATE_PARENT and CLK_SET_RATE_NO_REPARENT flags, same as used
+on RK3328, to make full use of all possible supported display modes.
 
-This result in reading EDID to fail in connector get_modes ops.
-
-Call dw_hdmi_rk3328_read_hpd at end of dw_hdmi_rk3328_setup_hpd to
-correct io voltage and allow reading EDID after setup_hpd.
-
-Fixes: 1c53ba8f22a1 ("drm/rockchip: dw_hdmi: add dw-hdmi support for the rk3328")
+Fixes: 0a9d4ac08ebc ("clk: rockchip: set the clock ids for RK3228 VOP")
+Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/rockchip/clk-rk3228.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index fe33092abbe7..aae48e906af1 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -434,6 +434,8 @@ static void dw_hdmi_rk3328_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
- 		HIWORD_UPDATE(RK3328_HDMI_SDAIN_MSK | RK3328_HDMI_SCLIN_MSK,
- 			      RK3328_HDMI_SDAIN_MSK | RK3328_HDMI_SCLIN_MSK |
- 			      RK3328_HDMI_HPD_IOE));
-+
-+	dw_hdmi_rk3328_read_hpd(dw_hdmi, data);
- }
+diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
+index a24a35553e13..7343d2d7676b 100644
+--- a/drivers/clk/rockchip/clk-rk3228.c
++++ b/drivers/clk/rockchip/clk-rk3228.c
+@@ -409,7 +409,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+ 			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
+ 	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
+ 			RK2928_CLKSEL_CON(27), 8, 8, DFLAGS),
+-	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, 0,
++	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 			RK2928_CLKSEL_CON(27), 1, 1, MFLAGS),
  
- static const struct dw_hdmi_phy_ops rk3228_hdmi_phy_ops = {
+ 	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
 -- 
 2.45.2
 
