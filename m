@@ -1,119 +1,71 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FC74779F;
-	Sat, 15 Jun 2024 15:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337234437;
+	Sat, 15 Jun 2024 15:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718464352; cv=none; b=ojOzV260F1NCvNAx+JGo2c6xTqVGoxl2+YLNmY/ikeX7J5BgsGeUjdJiwDnb5ER41X+hs2S8fKIyVXJmhyM7grTu/BWtQsfiGdzNwHhRADo49AqtDCeKg3mo+l1OXrm9ezTlF5C8gmzxJMmbhGLBrUyznbls0WrIB3k/kFUhkmI=
+	t=1718464607; cv=none; b=AzRSLfiL9aR1lY7d/wU0JZV/BxLd/4vC+bspPuar+wp9MacTms4kwFo4hB+3Rz35tiZvmQE5egH1hGotNFBNmv8Dy9UKw2RFI/Sv7+K2y/dVQYsbX9bD0PhPQRJ6Ubv7f4s4gDpHQSWM8JaYCYDLsmYVGxhgPYE3Z8g7K8yyaME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718464352; c=relaxed/simple;
-	bh=HrTH+jnMarRydEt0XzI1AfUq6mBxW16xbyAhgzSLLpE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=jl88y5U60beCRrPu/hZtPTG0I8HL7dsReWDRP/A6eTEEP9I7J2VI25R2dhsIYKmVFAqwYXegBX9rJndDwIT1lwS5Q+ipxlcofwUedaQRePozUU8+65FhL8zvZNq04sH+p7EHkCpw0MbtrxM1noDLAIiPId3W7IHQPFD1FuFN7Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=aOUuiSm3; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718464607; c=relaxed/simple;
+	bh=40Wj6XVGNuJpJuinT1FRLIVr94RxlZv+LTy0tHJIxw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FV8wYtrTHctj7Tqo+8I/++fvvOfMk+zQR69teNBbsKihBJoATt50qJAIak5ThUL5fmg+nAhxiqENDhmKrE4Z6CN+A+gUyfdQL7+wm6OPWBbAaQcgBtCc8crWpVy0MIBwPq9AjvcbfWQEbB/X7KTXu1LHBSU9a1LSMoJWpaT71XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oITqWQkL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="aOUuiSm3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718464326; x=1719069126; i=markus.elfring@web.de;
-	bh=xI4JZOaAmekL9oFIfzaMYWl6BzblZDDLaeHSkSLoktk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=aOUuiSm3d/ShEPw1JJveglmyb6Ub8y/eL1t/xe8KB415X3pDRgj1JyCYUQ9R7Auz
-	 ObdQ8CsiwP1xth7XxRRXowvsB262EOdPxlbqRkyLEUJfj75lC8VE2DhIhyQC8TQRm
-	 rXC0QMDt1s93H1zzZPrf/5w172Uv/7ahhM1x1eAo1EtRY+ETd4kmFsJjseUz4mDj2
-	 pYUspWTfNdNVd1m1rxB8aM4rtw4S/lOR6lSG362SdraUDxDcoAnFw34ThENxBxi36
-	 VJ/gw0x9D67wtsMusvdA5OrM9gQAG3XquNcjoJjXrw0L7YZ4u4YYR9JLth4TQwHGT
-	 q/88nXqZ1rV14E6rxA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MActe-1s7SSk1RFY-000PnQ; Sat, 15
- Jun 2024 17:12:06 +0200
-Message-ID: <ac47a370-99ca-4fb9-8fb0-800894d04c57@web.de>
-Date: Sat, 15 Jun 2024 17:11:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oITqWQkL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39B0C116B1;
+	Sat, 15 Jun 2024 15:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718464606;
+	bh=40Wj6XVGNuJpJuinT1FRLIVr94RxlZv+LTy0tHJIxw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oITqWQkLtoirbzPziEOi8v1w2dJiXHu+NmH1id2OgsJQkJu21MBaSc/z1dJFdFzs2
+	 x6jiFctC069hir6E/AtWT/rgAA+qP7/M+PmvgUh4zEAkESVjXTPvWECHcTsN3rpkPK
+	 Dvp3g+rO4u6JhEjvVbffH/bWbylm45AVTHRRuD+a9k2n/XcweJSQJFkrc4DcVXatSA
+	 w5aaGFOm2SHa2U9qNa/YsqiSMn/x8zkHl9MnFe1r4oERx3YAqub5LgFP3K7m6CjP1b
+	 4xbguxZnP1O9UTmBMBl2+6fPm63hqJzVedAsBtjt5HZEQhI0nLXo5K+/e3tzH5/IYg
+	 CDAKXPm2TzyIA==
+Date: Sat, 15 Jun 2024 16:16:41 +0100
+From: Simon Horman <horms@kernel.org>
+To: Petr Oros <poros@redhat.com>
+Cc: netdev@vger.kernel.org, ivecera@redhat.com,
+	przemyslaw.kitszel@intel.com,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Konrad Knitter <konrad.knitter@intel.com>,
+	Marcin Domagala <marcinx.domagala@intel.com>,
+	"moderated list:INTEL ETHERNET DRIVERS" <intel-wired-lan@lists.osuosl.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v2] ice: use proper macro for testing bit
+Message-ID: <20240615151641.GG8447@kernel.org>
+References: <20240614094338.467052-1-poros@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hariprasad Kelam
- <hkelam@marvell.com>, Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
- Sunil Goutham <sgoutham@marvell.com>
-References: <20240611162213.22213-3-gakula@marvell.com>
-Subject: Re: [net-next PATCH v5 02/10] octeontx2-pf: RVU representor driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240611162213.22213-3-gakula@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:R1B6N0WVGY1VQp+C75jxqiZVbMCFo8atqZM/QFi0wpeKIIMGZIj
- u8xrhKg7C5xMzaso3wGtA2bR2T+1MbfXVnhuq910wUqUGCfqTkbqZVyrP/wVSWtgNpPRPDF
- nrXTtmHeJwg0n/J59qPKaa24c1577821ET2pWeAqSRspmKER0UeDeu66Tcs51eygQ4eFnuC
- jXkl5ZJWn612x70qwWalQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yAljG0BDJiQ=;ezgkplc3NxtvGdIWrHfSknVEaQU
- YqyGLMGqb9EjFAnUDPDtHpsGQsDdunW0qQqYY/GWrkTbq+quoCUy9FHo8VEaF9Q+pU4JJWNBk
- 6aHjY9lFCs1y5P6M1TI5RR9u8srzxL7cYIdNgaE2DxsXOsfATWJe14d+PMKaHyqzR70Z2hkxJ
- mqQpUIhGxfQfab79cBiozsoyEGpYtLOqqdng5zkfxICezCAfcizrJYvyXNn/LZ1MomOHogcKy
- QJgnD7KeGDK3+AVv3R7R34B/oiJ9UB3A5jWqOOkyEqrGgDJE5oCquJgiXSaSzuEfu1CgMUqu3
- Tm7wWsOAWZWlZnvvF/8LMBnDE+gRyNy5LXhChx2Kt5Fo97am8j0SOXOUUIQDqdNbrwWic+7MC
- wtofcn8vu625IcvRisVZYhABWY6dym9qeGbUBCGKH5f7t00D5FCMdHzWev9aoOLbIYzpXqM/r
- lv9ye8cvhGajhPAsqE3RRYCc1Phpk7mgV+P/0SFMAnkAHqHB6tsWs7/kjJoTqJuuuuGRKuGth
- w3qlUCyiFc0X2UNneNXIL4GnV4s94+74w+H9AgGtkZjpJIpCpM5DDuVIZkYQAarqH458EWBxt
- lXWjLrhmLjkmSRi8ncpmpkDZJ4AolpSYcrkLO+bYJIUlRynNe+8IuATfTKvbaGswHscRO1/To
- c9Y69ih73KkikrRHV53d4ydqtwPohziskk0eAjXY5BEhvrxDE1+JcobUWOuvmJUxGoGJ4qRwE
- mnr10i2lk40mV8tOSLrz7C91AIPqF3zq5HSv7hm5whbaqvGgzg0c0v7FeX3tLLY0TCzXwK1Ym
- 4ef0Ph73u8guAkyJCDUjv/7zIOx8gDAKL/1dnDsl8tD1c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614094338.467052-1-poros@redhat.com>
 
-> This patch adds basic driver for the RVU representor.
-=E2=80=A6
+On Fri, Jun 14, 2024 at 11:43:38AM +0200, Petr Oros wrote:
+> Do not use _test_bit() macro for testing bit. The proper macro for this
+> is one without underline.
 
-Please improve such a change description with imperative wordings.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc3#n94
+Hi Petr,
 
-Can an adjusted summary phrase become also a bit more helpful?
-https://elixir.bootlin.com/linux/v6.10-rc3/source/Documentation/process/ma=
-intainer-tip.rst#L124
+it might be nice to include a brief explanation as to
+why test_bit() is correct.
 
+> 
+> Fixes: 4da71a77fc3b ("ice: read internal temperature sensor")
+> Signed-off-by: Petr Oros <poros@redhat.com>
+> Acked-by: Ivan Vecera <ivecera@redhat.com>
 
-=E2=80=A6
-> +static int rvu_get_rep_cnt(struct otx2_nic *priv)
-> +{
-=E2=80=A6
-> +	mutex_lock(&priv->mbox.lock);
-> +	req =3D otx2_mbox_alloc_msg_get_rep_cnt(&priv->mbox);
-=E2=80=A6
-> +exit:
-> +	mutex_unlock(&priv->mbox.lock);
-> +	return err;
-> +}
-=E2=80=A6
-
-Would you become interested to apply a statement like =E2=80=9Cguard(mutex=
-)(&priv->mbox.lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/mutex.h#L1=
-96
-
-
-=E2=80=A6
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-> @@ -0,0 +1,31 @@
-=E2=80=A6
-> +#ifndef REP_H
-> +#define REP_H
-=E2=80=A6
-
-Can unique include guards be more desirable also for this software?
-
-Regards,
-Markus
+...
