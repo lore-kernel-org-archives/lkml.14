@@ -1,159 +1,109 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F41DFED;
-	Sat, 15 Jun 2024 16:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6991DDC9
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 16:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718468470; cv=none; b=PdIHYTWLDOEUEMrFJO0TW8TnJ5mA0L1L567ZsK4d/yXaGXjbcfaiS31i4Sgy5gmj+havklJW9LiWZL539zT2Yj40bzRdjOi4XGigPZ4lL3Nz6iHxsdNQrZl04N+jnZMZfjp8N6jPttBZN0A0tplpdCzxv5DZAg/qovaG1m6baQY=
+	t=1718469065; cv=none; b=nrbTwcXhFNmfW1cTnp9PRbg57DxRc/RY6nbM82xzYT/7HCdXcSSBQf8q3ffOUsqFPwwtdLsL1YKqH+hpUEhBYpeveTd19D0NfBDYeEz5aSJXBsLegewzAMUhoVBReMUAzHkfH8JN9hQs1MCCl1CU0JZr6RuvVrgafIbnNudR4o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718468470; c=relaxed/simple;
-	bh=/6ch+qcDo2MnkoBjVji3kQHm7RQTr+qczYnFfSjaNGI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nABw1rw8rLHatipeFN5FcFY8F9bA/8RcidapYuHeRtB1m/B4bB7AYwhyYmKK3OdsrIdMD3upEQWznGaHE8CQAwdcsqD/c/ZULLX8sH62wYEBVfe3UxQfrb12UJ/9t+fGZyFYlCh7f2bgTFLA5BZAZs/Mfe79XrZySULJJG3c/X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=JcExtjxI; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+	s=arc-20240116; t=1718469065; c=relaxed/simple;
+	bh=7VZx2zIx3fKKcO70Bfua49T3IcTFqL70s9M1O/FXukI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=neRqQRIhOkZk9z0Brnmo16TgLgtN44uMPumuNK/o1bL27378EqmZ397NV/RGjobKBNjUtK1uC4AfF5gUvJCjPtBstCX9KQTrotf3VSo+5li2KXeM3/30/g3Bp+9EwsoVAUB0nCYKvEnHUV/7azEue1HGW4DmAuWPaFqwUuI5ddA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vYWjgOww; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="JcExtjxI"
-Received: from vra-174-141.tugraz.at (vra-174-141.tugraz.at [129.27.174.141])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4W1h0h32dlz3wV6;
-	Sat, 15 Jun 2024 18:09:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1718467750;
-	bh=Igjx9GfiOHGZFSH3MO+mk+/P1QADm/jiDsEmEwOLM6A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=JcExtjxIcH4p61MtHvpDIteBnwfOz51tS8q5VDIYZI+NpJKKdBykTD9MF+auMH0gv
-	 nRpGkZ8wiqt21vJ92fMlv2TD3fQC7DD0VpoTzbPNocoCPNvnvWiCaaMcQRcSwRThCk
-	 mT/+fqYdLYEQgJHJizSid5Nle80AsJ519MKqmu88=
-Message-ID: <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-From: Martin Uecker <uecker@tugraz.at>
-To: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-  Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  "Liang, Kan" <kan.liang@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,  Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
- Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Matthew Wilcox
- <mawilcox@microsoft.com>, x86@kernel.org, linux-perf-users@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- llvm@lists.linux.dev
-Date: Sat, 15 Jun 2024 18:09:07 +0200
-In-Reply-To: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
-References: 
-	<AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-	 <202406101010.E1C77AE9D@keescook>
-	 <20240610200544.GY8774@noisy.programming.kicks-ass.net>
-	 <202406101438.BC43514F@keescook>
-	 <20240611075542.GD8774@noisy.programming.kicks-ass.net>
-	 <202406121148.688240B@keescook>
-	 <20240612220821.GA18881@noisy.programming.kicks-ass.net>
-	 <202406121530.D9DB956C8@keescook>
-	 <20240614101708.GO8774@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vYWjgOww"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d227b1f4f0so1674976b6e.3
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 09:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718469061; x=1719073861; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FeiXgqyhT/QZGQjBMNx/jn93Qfipagj532oIUhz8rF8=;
+        b=vYWjgOwwzODVWhBCRn2O2nx//GtyAyTaoH+L2P+GRoVHYekObKclzsOGUJYS4z+gHb
+         xYLy4QaJdQs4xjXCQGa0frex4LYhzBeZXb34jeQ8Cfe/8UdkVxz3xDUDqBkUlZcYzkyj
+         xJmLlc6F2TEfIoJ7oex8TBzES0IYj5h3NwdLJLWuDys7eUM8s/0EQxn2XlbNByWwzFQK
+         Zn2sd2EXo6iq3dXCR1nn/dj9ISW1kKwF1Xy9JjUZSyDrOZt7bqmVXQ6/0Xk0fSv022l7
+         bbrrIT65ufKfd+xstsAa/PynqEWgUXUzYdn5mQFAssjQhzmx1sYZtjZjPiqKiegjnzM6
+         KzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718469061; x=1719073861;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FeiXgqyhT/QZGQjBMNx/jn93Qfipagj532oIUhz8rF8=;
+        b=taIFtZpEGYSkDGuzC0nxpPFXne9bLXiaSN1gZUvUQGHI5O4qVNLzQLI6m8OGw4ZVDK
+         Ec1SP40yrXJ1cfV3GD7O4ekQeiO+HQ5wCJHrisvnI6R3lJdsECgrmI1WmateQCz8A/mK
+         LuPbAxQ7X+sE0V+pEyZVgS5BX5bX24qJj+lzNjegmTan4l00yObEPhoaiPA79nJa94dq
+         qyMVR5E53H7ZVL/gUTDfiAEnpAcHbP5zH6TByi4Go1ghGtPOmxv6qnrzeLb2Jh7HdlXq
+         0rQFLJBaKmTgJdbyPWG0hCoPppfxbB/J6j+otaKfl84+kbRdoFmdYrzY7RmiAB6fzJQI
+         TwIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVD/F0dW/gkfCy/mMybBzysiVlEiOiNbChyTwscLClIZ+alo2x/cRGbpp81/Gju91/la0yL66eHU6APhG31v1ctoyqd5/aQuwFQJmMi
+X-Gm-Message-State: AOJu0YwTStCYIg6OkxdKPFuaj9E+619yzIcx4jzuPBR31IRI7/5XlTNn
+	CMDAoeplzCQvaGXenfrEDgQMMYmBH+WGPgIv9DEpIDqe36NqEd8GFh1YGHMd+ak=
+X-Google-Smtp-Source: AGHT+IH0EX0O5PGkdjvB3T+cDiqoufj+oi2S6HzWbdAJ85VUqRve1OR4y4oZmzefOYrvHpdlw+aclQ==
+X-Received: by 2002:a05:6808:130c:b0:3d2:2d1d:3786 with SMTP id 5614622812f47-3d24e8ef7c7mr6367451b6e.25.1718469060952;
+        Sat, 15 Jun 2024 09:31:00 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d24762eddbsm961125b6e.30.2024.06.15.09.31.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Jun 2024 09:31:00 -0700 (PDT)
+Message-ID: <21aa7ed7-6440-437d-a591-0da8cce4bc00@baylibre.com>
+Date: Sat, 15 Jun 2024 11:30:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: -1.9
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] counter: ti-eqep: implement over/underflow events
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: Judith Mendez <jm@ti.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240609-counter-ti-eqep-over-under-events-v1-1-74fe1632f5ab@baylibre.com>
+ <Zm08ZiyXEgWYLZbc@ishi>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <Zm08ZiyXEgWYLZbc@ishi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Freitag, dem 14.06.2024 um 12:17 +0200 schrieb Peter Zijlstra:
-> On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > > I'm happy to take patches. And for this bikeshed, this would be bet=
-ter
-> > > > named under the size_*() helpers which are trying to keep size_t
-> > > > calculations from overflowing (by saturating). i.e.:
-> > > >=20
-> > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> > >=20
-> > > Fine I suppose, but what if we want something not size_t? Are we wait=
-ing
-> > > for the type system extension?
-> >=20
-> > Because of C's implicit promotion/truncation, we can't do anything
-> > sanely with return values of arbitrary type size; we have to capture th=
-e
-> > lvalue type somehow so the checking can happen without C doing silent
-> > garbage.
+On 6/15/24 2:01 AM, William Breathitt Gray wrote:
+> On Sun, Jun 09, 2024 at 04:49:33PM -0500, David Lechner wrote:
+>> This adds support to the TI eQEP counter driver for subscribing to
+>> overflow and underflow events using the counter chrdev interface.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>> This is split out from a series that was sent a few years back [1] that
+>> I never finished, so I'm calling it v2. This was tested on a BeagleBone
+>> Blue using LEGO MINDSTORMS EV3 motors and this script[2].
+>>
+>> [1]: https://lore.kernel.org/linux-iio/20211017013343.3385923-2-david@lechnology.com/
+>> [2]: https://github.com/dlech/linux-counter-ti-eqep-python/blob/3745b0840736248d8e60cc675a0f43558fcbb2af/test.py
+>>
+>> v2 changes:
+>> * Only clear interrupts that were handled.
+>> * Don't set default QPOSMAX value.
+>> * Don't error when setting QPOSMAX to 0.
+>> * Use regmap_write() when appropriate.
+>> * Validate watch channel.
+>> * Use counter_priv().
+> 
+> Hi David,
+> 
+> It's nice to see progress on this again. I remember there being some
+> sort of interrupt storm if QPOSMAX was set to 0. Is that still the case,
+> or was it resolved with the changes in this version?
+> 
+> Willia Breathitt Gray
 
-What is the specific problem here?
+I haven't tried it with the rest of the old series yet, but with this
+patch, it is not a problem to set QPOSMAX (ceiling) to 0.
 
->=20
-> So sizeof() returns the native (built-in) size_t, right? If that type
-> the nooverflow qualifier on, then:
->=20
-> 	sizeof(*p) + num*sizeof(p->foo[0])
->=20
-> should all get the nooverflow semantics right? Because size_t is
-> effectively 'nooverflow unsigned long' the multiplication should promote
-> 'num' to some 'long'.
->=20
-> Now, I've re-read the rules and I don't see qualifiers mentioned, so
-> can't we state that the overflow/nooverflow qualifiers are to be
-> preserved on (implicit) promotion and when nooverflow and overflow are
-> combined the 'safe' nooverflow takes precedence?
->=20
-> I mean, when we're adding qualifiers we can make up rules about them
-> too, right?
-
-It should probably be a type attribute.
-
->=20
-> If 'people' don't want to adorn the built-in size_t, we can always do
-> something like:
->=20
-> #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
->=20
-> and 'fix' it ourselves.
-
-This is likely a stupid question, but making it signed=C2=A0
-wouldn't work?   Or is a signed size_t too small=C2=A0=C2=A0
-or some architectures? Or would this change break too much?
-
-
-Martin
-
->=20
-> > > But none of that is showing me generated asm for the various cases. A=
-s
-> > > such, I don't consider myself informed enough.
-> >=20
-> > Gotcha. For the compile-time stuff it's all just looking at
-> > known-at-compile-time sizes. So for something like this, we get a
-> > __compiletime_warning() emitted:
-> >=20
-> > 	const char src[] =3D "Hello there";
-> > 	char dst[10];
-> >=20
-> > 	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
-> >=20
-> > For run-time checks it's basically just using the regular WARN()
-> > infrastructure with __builtin_dynamic_object_size(). Here's a simplifie=
-d
-> > userspace example with assert():
-> >=20
-> > https://godbolt.org/z/zMrKnMxn5
-> >=20
-> > The kernel's FORTIFY_SOURCE is much more complex in how it does the
-> > checking, how it does the reporting (for helping people figure out what=
-'s
-> > gone weird), etc.
->=20
-> Thanks, I'll go have a look at that.
 
