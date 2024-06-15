@@ -1,253 +1,428 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD583D96A;
-	Sat, 15 Jun 2024 11:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA55C3A8D2
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 11:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718450189; cv=none; b=NpvYvRRbBfc5jjlGnBtDcCdzXMdicqb+jYWGA2412M4+VoEzrRl9VoM2G728FaRn2k04QB/39SD+Y1dPlv/P5DZG41gca3y4xOXgmvsBFcHWKTbkJIs1ik1qinRuQ336CUNJLueg6PAOMUyAXHiF8oxwVkVC5lx+3FrhpxRKsUU=
+	t=1718450587; cv=none; b=urMOX7mK/RG4p4R6sV5fe5KTgf4QIouaLVLDp6yxm7U/erN6iAZFYcmp8lnki/gJuTl7aL6gnauLkMmymX+UGv3SnR1IF0chSQaI5Z8+bvzuz0wm259yI3sMEg9/woflnAisY/SWIv7GWg0hirpR51YATTuYzWHTc37r6sKLCzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718450189; c=relaxed/simple;
-	bh=+qHT3f+/AOb9YgCvAG8VMXIyyDSdraW1NCKmyVQT+/E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Kv9BU5zVAMkiPSKNyiiNeCSo7LR7n6OH2L4eTHc79FEpizlviRB++yACeVbLEjw+ZAX1wxMo61oCx+EpDDtHhScVbAgtZlJLdqhoIzPa/1xHrEA5A5ilg8P0XFLhNO5EdZ+S9nh2NlzvYNGVDpLBNS+9Iz6oxWeeOTE1ULarSgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=xOkvf8bk; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xOkvf8bk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1718449679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=eE9dplccZ2IeUfRMWTD1T9OavWFDEd5FuUtuIlbIm48=;
-	b=xOkvf8bkCrpq2IaS1Ixz5oCY3xoo4+sPUB3J1Vgi3F5n8lrhY0e2cJezGW4bYSxzgzo5YH
-	zWxDPcXHUGpw34CyuKIBuN0g2hdVCkA9sP4V2AokcJD10YLd1epRDiNLCC8OTzsJaM7hgC
-	3GoD4JmHyWcDyfyqBw2Z4I/eJZV/Lzc=
-Message-ID: <0cdcf83a1ab7c199244d4a00157f6fa8979ef819.camel@crapouillou.net>
-Subject: Re: [PATCH v10 3/6] iio: core: Add new DMABUF interface
- infrastructure
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>,  Jonathan Corbet <corbet@lwn.net>, Nuno Sa
- <nuno.sa@analog.com>, linux-iio@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Date: Sat, 15 Jun 2024 13:07:58 +0200
-In-Reply-To: <20240609105302.07de907a@jic23-huawei>
-References: <20240605110845.86740-1-paul@crapouillou.net>
-	 <20240605110845.86740-4-paul@crapouillou.net>
-	 <20240609105302.07de907a@jic23-huawei>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
- LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
- FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
- z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
- +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
- 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
- 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
- 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
- dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
- 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
- rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
- lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
- qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
- JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
- 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
- X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
- AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
- Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
- Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
- McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
- 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
- LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718450587; c=relaxed/simple;
+	bh=ZCwDoM5xGqLn+Uvk6dIOfffa7uFUa1Lus1AAU0SsSn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eerBxKnlb705iEkboJ8MnIwhqCIU5LS4surKo0HphnkXD/y/hEtuj2UQ3bFrN8rRX4Hb117tnqBII2noxj6cHc6KR/4VDn4LOTnNXH87bfIpy4q+6YECkv7YyD2cQbL5ZPgTiAY+wWBQj4EyC5xaUUB0J1b0Rl65YV9iSjB2x4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sIRUU-0002hl-DH; Sat, 15 Jun 2024 13:22:38 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sIRUS-002UUt-71; Sat, 15 Jun 2024 13:22:36 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sIRUS-00CK51-0O;
+	Sat, 15 Jun 2024 13:22:36 +0200
+Date: Sat, 15 Jun 2024 13:22:36 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v3 1/7] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
+Message-ID: <Zm15fP1Sudot33H5@pengutronix.de>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+ <20240614-feature_poe_power_cap-v3-1-a26784e78311@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240614-feature_poe_power_cap-v3-1-a26784e78311@bootlin.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Le dimanche 09 juin 2024 =C3=A0 10:53 +0100, Jonathan Cameron a =C3=A9crit=
-=C2=A0:
-> On Wed,=C2=A0 5 Jun 2024 13:08:42 +0200
-> Paul Cercueil <paul@crapouillou.net> wrote:
->=20
-> > Add the necessary infrastructure to the IIO core to support a new
-> > optional DMABUF based interface.
-> >=20
-> > With this new interface, DMABUF objects (externally created) can be
-> > attached to a IIO buffer, and subsequently used for data transfer.
-> >=20
-> > A userspace application can then use this interface to share DMABUF
-> > objects between several interfaces, allowing it to transfer data in
-> > a
-> > zero-copy fashion, for instance between IIO and the USB stack.
-> >=20
-> > The userspace application can also memory-map the DMABUF objects,
-> > and
-> > access the sample data directly. The advantage of doing this vs.
-> > the
-> > read() interface is that it avoids an extra copy of the data
-> > between the
-> > kernel and userspace. This is particularly userful for high-speed
-> > devices which produce several megabytes or even gigabytes of data
-> > per
-> > second.
-> >=20
-> > As part of the interface, 3 new IOCTLs have been added:
-> >=20
-> > IIO_BUFFER_DMABUF_ATTACH_IOCTL(int fd):
-> > =C2=A0Attach the DMABUF object identified by the given file descriptor
-> > to the
-> > =C2=A0buffer.
-> >=20
-> > IIO_BUFFER_DMABUF_DETACH_IOCTL(int fd):
-> > =C2=A0Detach the DMABUF object identified by the given file descriptor
-> > from
-> > =C2=A0the buffer. Note that closing the IIO buffer's file descriptor
-> > will
-> > =C2=A0automatically detach all previously attached DMABUF objects.
-> >=20
-> > IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *):
-> > =C2=A0Request a data transfer to/from the given DMABUF object. Its file
-> > =C2=A0descriptor, as well as the transfer size and flags are provided i=
-n
-> > the
-> > =C2=A0"iio_dmabuf" structure.
-> >=20
-> > These three IOCTLs have to be performed on the IIO buffer's file
-> > descriptor, obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-> >=20
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
->=20
-> Need a brief note on the sign off chain.
-> What is Nuno's role in this series as he's not sending the emails and
-> not
-> marked with Co-developed-by=20
+Hi Köry,
 
-That's a good question. I think he sent one revision of the patchset
-(v7 or something like that) so he added his SoB.
+Overall, it looks good. Some fields need clarification, so don't be
+surprised if I critique things I proposed myself. There are still
+aspects I don't fully understand :)
 
-(Nuno: you confirm?)
+On Fri, Jun 14, 2024 at 04:33:17PM +0200, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-I'll add his Co-developed-by then.
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_class_num_events - class_num_events states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_CLASS_NUM_EVENTS_CLASS_ERROR: Illegal class
+> + *
+> + * class_num_events is variable indicating the number of classification events
+> + * performed by the PSE. A variable that is set in an implementation-dependent
+> + * manner.
+> + */
+> +enum ethtool_c33_pse_ext_substate_class_num_events {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_CLASS_NUM_EVENTS_CLASS_ERROR = 1,
+> +};
 
-Cheers,
--Paul
+I'm still not 100% sure by this name. class_num_events seems to be more
+PSE side configuration variable. The pd692x0 0x43 value says "Illegal
+class" without providing additional information. If I see it correctly,
+typical classification will end with POWER_NOT_AVAILABLE if we will
+detect not supported class. Something other should fail to detect an
+illegal class.
 
-> I gave this a much more thorough look in earlier versions than I have
-> today but
-> a few really minor things inline (that I might have fixed up whilst
-> applying)
-> but looks like you'll be done a v11 for Randy's docs comments anyway
-> :(
->=20
-> Jonathan
->=20
->=20
-> > diff --git a/drivers/iio/industrialio-buffer.c
-> > b/drivers/iio/industrialio-buffer.c
-> > index 0138b21b244f..c98c8ac83785 100644
-> > --- a/drivers/iio/industrialio-buffer.c
-> > +++ b/drivers/iio/industrialio-buffer.c
->=20
-> > +struct iio_dmabuf_priv {
-> > +	struct list_head entry;
-> > +	struct kref ref;
-> > +
-> > +	struct iio_buffer *buffer;
-> > +	struct iio_dma_buffer_block *block;
-> > +
-> > +	u64 context;
-> > +	spinlock_t lock;
->=20
-> Given you are going to have a v11, please add a comment to this lock
-> to say what data it is protecting.=20
->=20
-> > +
-> > +	struct dma_buf_attachment *attach;
-> > +	struct sg_table *sgt;
-> > +	enum dma_data_direction dir;
-> > +	atomic_t seqno;
-> > +};
->=20
->=20
-> > diff --git a/include/linux/iio/buffer_impl.h
-> > b/include/linux/iio/buffer_impl.h
-> > index 89c3fd7c29ca..1a221c1d7736 100644
-> > --- a/include/linux/iio/buffer_impl.h
-> > +++ b/include/linux/iio/buffer_impl.h
-> > @@ -9,8 +9,12 @@
-> > =C2=A0#include <uapi/linux/iio/buffer.h>
-> > =C2=A0#include <linux/iio/buffer.h>
-> > =C2=A0
-> > +struct dma_buf_attachment;
-> > +struct dma_fence;
-> > =C2=A0struct iio_dev;
-> > +struct iio_dma_buffer_block;
-> > =C2=A0struct iio_buffer;
-> > +struct sg_table;
-> > =C2=A0
-> > =C2=A0/**
-> > =C2=A0 * INDIO_BUFFER_FLAG_FIXED_WATERMARK - Watermark level of the
-> > buffer can not be
-> > @@ -39,6 +43,13 @@ struct iio_buffer;
-> > =C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device stop=
-s sampling. Calles are balanced
-> > with @enable.
-> > =C2=A0 * @release:		called when the last reference to the
-> > buffer is dropped,
-> > =C2=A0 *			should free all resources allocated by the
-> > buffer.
-> > + * @attach_dmabuf:	called from userspace via ioctl to attach
-> > one external
-> > + *			DMABUF.
-> > + * @detach_dmabuf:	called from userspace via ioctl to detach
-> > one previously
-> > + *			attached DMABUF.
-> > + * @enqueue_dmabuf:	called from userspace via ioctl to queue
-> > this DMABUF
-> > + *			object to this buffer. Requires a valid
-> > DMABUF fd, that
-> > + *			was previouly attached to this buffer.
->=20
-> Missing docs for lock_queue() and unlock_queue()
->=20
-> Kernel-doc must be complete or bots are going to moan at us :(
->=20
-> > =C2=A0 * @modes:		Supported operating modes by this buffer
-> > type
-> > =C2=A0 * @flags:		A bitmask combination of
-> > INDIO_BUFFER_FLAG_*
-> > =C2=A0 *
-> > @@ -68,6 +79,17 @@ struct iio_buffer_access_funcs {
-> > =C2=A0
-> > =C2=A0	void (*release)(struct iio_buffer *buffer);
-> > =C2=A0
-> > +	struct iio_dma_buffer_block * (*attach_dmabuf)(struct
-> > iio_buffer *buffer,
-> > +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct
-> > dma_buf_attachment *attach);
-> > +	void (*detach_dmabuf)(struct iio_buffer *buffer,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_dma_buffer_block *block);
-> > +	int (*enqueue_dmabuf)(struct iio_buffer *buffer,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_dma_buffer_block *block,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dma_fence *fence, struct
-> > sg_table *sgt,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size_t size, bool cyclic);
-> > +	void (*lock_queue)(struct iio_buffer *buffer);
-> > +	void (*unlock_queue)(struct iio_buffer *buffer);
-> > +
->=20
->=20
+According to 33.2.4.7
+State diagrams we have CLASSIFICATION_EVAL function which evaluates
+results of classification.
+In case of class_num_events = 1, we have only tpdc_timer. In case of
+error, will we get some timer related error?
 
+In case of class_num_events = 2, if i see it correctly, PSE is doing
+double classification and if results do not match, PSE will go to faul
+state. See CLASS_EV2->(mr_pd_class_detected != temp_var) case.
+
+Is it what we have here?
+
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_error_condition - error_condition states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_NON_EXISTING_PORT: Non-existing
+> + *	port number
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNDEFINED_PORT: Undefined port
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_INTERNAL_HW_FAULT: Internal
+> + *	hardware fault
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_COMM_ERROR_AFTER_FORCE_ON:
+> + *	Communication error after force on
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNKNOWN_PORT_STATUS: Unknown
+> + *	port status
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_TURN_OFF: Host
+> + *	crash turn off
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_FORCE_SHUTDOWN:
+> + *	Host crash force shutdown
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_UNDERLOAD: Underload
+> + *	state
+
+pd692x0 documentation says, underload condition is related to Iport < Imin.
+Sofar, I was not able to find Imin in the final IEEE 802.3 2022 spec.
+
+There are some historical traces:
+https://www.ieee802.org/3/af/public/mar01/darshan_3_0301.pdf
+
+Instead, underload condition seems to be part of Maintain Power Signature (MPS)
+monitoring. See 33.2.9 PSE power removal and 33.2.9.1.2 PSE DC MPS component
+requirements.
+
+Probably, it should go to the ETHTOOL_C33_PSE_EXT_SUBSTATE_MPS
+
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONFIG_CHANGE: Configuration
+> + *	change
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_OVER_TEMP: Over
+> + *	temperature detected
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONNECTION_OPEN: Port is
+> + *	not connected
+
+This seems to reflect DETECT_EVAL->(signature = open_circuit) case. So,
+it is probably not vendor specific error condition?
+
+The difference between open and underload is probably:
+- open: Iport = 0, detection state
+- underload: Iport < Imin (or Ihold?), Iport can be 0. related to powered/MPS
+  state.
+
+> + *
+> + * error_condition is a variable indicating the status of
+> + * implementation-specific fault conditions or optionally other system faults
+> + * that prevent the PSE from meeting the specifications in Table 33–11 and that
+> + * require the PSE not to source power. These error conditions are different
+> + * from those monitored by the state diagrams in Figure 33–10.
+> + */
+> +enum ethtool_c33_pse_ext_substate_error_condition {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_NON_EXISTING_PORT = 1,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNDEFINED_PORT,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_INTERNAL_HW_FAULT,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_COMM_ERROR_AFTER_FORCE_ON,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNKNOWN_PORT_STATUS,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_TURN_OFF,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_FORCE_SHUTDOWN,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_UNDERLOAD,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONFIG_CHANGE,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_OVER_TEMP,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONNECTION_OPEN,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_mr_pse_enable - mr_pse_enable states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_PSE_ENABLE_DISABLE_PIN_ACTIVE: Disable
+> + *	pin active
+> + *
+> + * mr_pse_enable is control variable that selects PSE operation and test
+> + * functions.
+> + */
+> +enum ethtool_c33_pse_ext_substate_mr_pse_enable {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_PSE_ENABLE_DISABLE_PIN_ACTIVE = 1,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_option_detect_ted - option_detect_ted
+> + *	states functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_DET_IN_PROCESS: Detection
+> + *	in process
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_IMPROPER_CAP_DET: Improper
+> + *	capacitor Detection
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_CONNECTION_CHECK_ERROR:
+> + *	Connection check error
+> + *
+> + * option_detect_ted is a variable indicating if detection can be performed
+> + * by the PSE during the ted_timer interval.
+> + */
+> +enum ethtool_c33_pse_ext_substate_option_detect_ted {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_DET_IN_PROCESS = 1,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_IMPROPER_CAP_DET,
+
+The pd692x0 0x25 may be reported in two cases:
+Fail due to out-of-range capacitor value or
+Fail due to detected short value
+
+On one side, this seems to be related to MONITOR_INRUSH function.
+"33.2.7.5 Output current in POWER_UP mode
+
+The PSE shall limit the maximum current sourced at the PI during
+POWER_UP. The maximum inrush current sourced by the PSE shall not exceed the
+PSE inrush template in Figure 33–13."
+
+On other side, pd692x0 documentation is using 0x1C or 0x25 or 0xA7
+values together with "INVALID SIG" description. In this case, this
+values are related to signature detection stage, not power up or
+tinrush_timer stage. In this case, i assume:
+0x25 and 0xa7 refers to Table 33–6 or Table 145–8 Invalid PD detection signature
+electrical characteristics.
+
+Not sure about 0x1c - Non-802.3AF/AT powered device. Is it something
+between Table 33–5 and Table 33–6? 
+
+CCing UNGLinuxDriver@microchip.com
+
+May be you will need to contact Microchip directly. Usually it helps :)
+
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_CONNECTION_CHECK_ERROR,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_option_vport_lim - option_vport_lim states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_HIGH_VOLTAGE: Main supply
+> + *	voltage is high
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_LOW_VOLTAGE: Main supply
+> + *	voltage is low
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_VOLTAGE_INJECTION: Voltage
+> + *	injection into the port
+> + *
+> + * option_vport_lim is an optional variable indicates if VPSE is out of the
+> + * operating range during normal operating state.
+> + */
+> +enum ethtool_c33_pse_ext_substate_option_vport_lim {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_HIGH_VOLTAGE = 1,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_LOW_VOLTAGE,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_VOLTAGE_INJECTION,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_ovld_detected - ovld_detected states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OVLD_DETECTED_OVERLOAD: Overload state
+> + *
+> + * ovld_detected is a variable indicating if the PSE output current has been
+> + * in an overload condition (see 33.2.7.6) for at least TCUT of a one-second
+> + * sliding time.
+> + */
+> +enum ethtool_c33_pse_ext_substate_ovld_detected {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_OVLD_DETECTED_OVERLOAD = 1,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_pd_dll_power_type - pd_dll_power_type
+> + *	states functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_PD_DLL_POWER_TYPE_NON_802_3AF_AT_DEVICE:
+> + *	Non-802.3AF/AT powered device
+> + *
+> + * pd_dll_power_type is a control variable initially output by the PSE power
+> + * control state diagram (Figure 33–27), which can be updated by LLDP
+> + * (see Table 33–26), that indicates the type of PD as advertised through
+> + * Data Link Layer classification.
+> + */
+> +enum ethtool_c33_pse_ext_substate_pd_dll_power_type {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_PD_DLL_POWER_TYPE_NON_802_3AF_AT_DEVICE = 1,
+> +};
+
+Here i was potentially wrong. LLDP stage is after power up, and this
+values was probably set on early stage of signature detection. How can
+we detect a device which is not conform to the 802.3AF/AT standard? Is
+it something pre-802.3AF/AT, micorosemi specific vendor specific signature?
+
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_power_not_available - power_not_available
+> + *	states functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_BUDGET_EXCEEDED: Power
+> + *	budget exceeded
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PM_STATIC: Power
+> + *	Management-Static
+
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PM_STATIC_OVL: Power
+> + *	Management-Static-ovl
+
+Here we need some comment updates. Here is my understanding, taken out
+of thin air:
+0x20 - We have per controller limit, but no limit per port is configured,
+       in this case, if PD classification request more power then
+       allowed by per controller budget, we will get this error.
+       AllPortsPower + NewPortPower > ControllerMaxPower
+0x3c - We have per port limit configured and it is over the controller
+       budget.
+       AllPortsMaxPower + NewPortMaxPower > ControllerMaxPower
+0x3D - PD Class requesting more power that the Port configured port limit.
+       PDClassPower > PortMaxPower
+
+How about:
+ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_CONTROLLER_BUDGET_EXCEEDED: Power
+ *   budget exceeded for the controller
+ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PORT_POWER_LIMIT_EXCEEDS_CONTROLLER_BUDGET: Configured
+ *   port power limit exceeded controller power budget
+ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PD_REQUEST_EXCEEDS_PORT_LIMIT: Power
+ *   request from PD exceeds port limit
+
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_HW_PW_LIMIT: Power
+> + * denied due to Hardware power limit
+
+Not sure i understand this one correctly. Is it something like - all previous
+errors can be solved by proper configuration, but on this one we can't do
+anything. The HW is the limit. Correct? :)
+
+> + * power_not_available is a variable that is asserted in an
+> + * implementation-dependent manner when the PSE is no longer capable of
+> + * sourcing sufficient power to support the attached PD. Sufficient power
+> + * is defined by classification; see 33.2.6.
+> + */
+> +enum ethtool_c33_pse_ext_substate_power_not_available {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_BUDGET_EXCEEDED =  1,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PM_STATIC,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PM_STATIC_OVL,
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_HW_PW_LIMIT,
+> +};
+> +
+> +/**
+> + * enum ethtool_c33_pse_ext_substate_short_detected - short_detected states
+> + *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+> + *
+> + * @ETHTOOL_C33_PSE_EXT_SUBSTATE_SHORT_DETECTED_SHORT_CONDITION: Short
+> + *	condition was detected
+> + *
+> + * short_detected is a variable indicating if the PSE output current has been
+> + * in a short circuit condition for TLIM within a sliding window (see 33.2.7.7).
+> + */
+> +enum ethtool_c33_pse_ext_substate_short_detected {
+> +	ETHTOOL_C33_PSE_EXT_SUBSTATE_SHORT_DETECTED_SHORT_CONDITION = 1,
+> +};
+> +
+>  /**
+>   * enum ethtool_pse_types - Types of PSE controller.
+>   * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
+> diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+> index b49b804b9495..398a0aa8daad 100644
+> --- a/include/uapi/linux/ethtool_netlink.h
+> +++ b/include/uapi/linux/ethtool_netlink.h
+> @@ -915,6 +915,10 @@ enum {
+>  	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
+>  	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
+>  	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
+> +	ETHTOOL_A_C33_PSE_PW_CLASS,		/* u32 */
+> +	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
+> +	ETHTOOL_A_C33_PSE_EXT_STATE,		/* u32 */
+> +	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,		/* u32 */
+>  
+>  	/* add new constants above here */
+>  	__ETHTOOL_A_PSE_CNT,
+> diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
+> index 2c981d443f27..fec56db557d3 100644
+> --- a/net/ethtool/pse-pd.c
+> +++ b/net/ethtool/pse-pd.c
+> @@ -86,7 +86,14 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
+>  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
+>  	if (st->c33_pw_status > 0)
+>  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
+> -
+> +	if (st->c33_pw_class > 0)
+> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_CLASS */
+> +	if (st->c33_actual_pw > 0)
+> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ACTUAL_PW */
+> +	if (st->c33_ext_state_info.c33_pse_ext_state > 0)
+> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_EXT_STATE */
+> +	if (st->c33_ext_state_info.__c33_pse_ext_substate > 0)
+> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_EXT_SUBSTATE */
+
+Hm, we still may include __c33_pse_ext_substate even if c33_pse_ext_state == 0.
+
+>  	return len;
+>  }
+>  
+> @@ -117,6 +124,26 @@ static int pse_fill_reply(struct sk_buff *skb,
+>  			st->c33_pw_status))
+>  		return -EMSGSIZE;
+>  
+> +	if (st->c33_pw_class > 0 &&
+> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_CLASS,
+> +			st->c33_pw_class))
+> +		return -EMSGSIZE;
+> +
+> +	if (st->c33_actual_pw > 0 &&
+> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ACTUAL_PW,
+> +			st->c33_actual_pw))
+> +		return -EMSGSIZE;
+> +
+> +	if (st->c33_ext_state_info.c33_pse_ext_state > 0 &&
+> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_EXT_STATE,
+> +			st->c33_ext_state_info.c33_pse_ext_state))
+> +		return -EMSGSIZE;
+> +
+> +	if (st->c33_ext_state_info.__c33_pse_ext_substate > 0 &&
+> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
+> +			st->c33_ext_state_info.__c33_pse_ext_substate))
+> +		return -EMSGSIZE;
+> +
+
+Same here. 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
