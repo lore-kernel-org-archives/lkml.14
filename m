@@ -1,169 +1,125 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368B2374F1
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 11:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BDC374F1;
+	Sat, 15 Jun 2024 11:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718451801; cv=none; b=rmduxve25ron193aCiy9jgptfC15tpe6yJd0l1p2Cqq4PeV0XNqojRJPmxNd0GitjhWkIzknafJDf/gcB94REs1j5sa5BeO1OKsL44v+dRYRS2UPi9ywJbnSuHZehQcLqiZ1NmkTLtDBmuJE+TOaf1vRehhosmVGNQAdFe5hVRQ=
+	t=1718451876; cv=none; b=nTkRSe8IX9lwaSu7gdtfqxYsMrC5UWli73P57r6Ln0Km3bZyG0kzpJ5Z1DFKUTr1eU+pj8+Fz9ZQRQ16SEeP8+DqJvqd2V0dheZCw+g/atY6PseB8Tfg/ukdlIJBYMssdP+Jh8WxduvN2NT7XZ3fUScfKFpfV7gt1TcFHvWRZBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718451801; c=relaxed/simple;
-	bh=aU+8CTN/tk+oMmXRLpbMCzpvKN/mFsYasuWq3wZilMA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=e0+t1cfsXzTWIkGS69L88eOOPUP4e/6hCg7LJRp2yeesoLTWMSk9e0xG0FpkZjk0p4Ycp5esEjxOi3jUnD2puFZ9BQewxDDPIiSu0VpYGOczD2XheAZ7N4h8avf666r0flpvpAh6n80aIzLXEcZ3DqZyRjxOHVzkNZbEF2seoLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-37597adfab4so27431735ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 04:43:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718451799; x=1719056599;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GwrKewFKoP1Xv38Ej/vpUeQCnneXPV1+0WWIZaMLWQc=;
-        b=o/kW59esLHOjqm975sXZRajLC+MbdhfbDk6ERtzVp2iASW1UD/NCtgCz57fa6O22vG
-         pCDLXosZZwF0pU01GDRi73bC3YCSc+HLJvHBYHg4v1shny48BbZhYuiPhSCtZ/TrDsM6
-         1RSfR66V10cd1fZlbz8UeLGom3kIDIDqnW8urgpEsOrf5d3f4eogwxnH5FBOdq0KwnJl
-         yqjEvk6jkPZu9yX1q6fw4HFrR7rX9gcLSqhiDlCzTOWemRWlYOpPOlqBtyPoXTFKc9ml
-         DnBvbLv6UNlnJC+Fj2gwYs0Ff2vahOdum48+xGhPXd5hnxtMiHibSymwV7jTjvhk6fgx
-         09zg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJDeuJfN+NZMOV+29Bz/W7kuAd6ld1NaM5xhAGLNY1WmutaXGSN3Y1IHdVqXHN/EipUs8TXlBzE6wtvVlrb9S+hXtxqTcRUT1pPH5Y
-X-Gm-Message-State: AOJu0YyJQr2V028rr7hfeQ2K2t0hNsK2t2URY5MNaUiacLKGvPd/LaZH
-	58VLdxhA8Ct8+POi2YngQXdxp44LCB0MD5TZFU4BWUsMyb++411cpMV9Q3xzaq87GJCJ8FyTa9c
-	ETPUuiT1g/dKPEVXY6m/RSeWgE/YRslLRd/kg4TFKEvvs8iU6HXoX2PM=
-X-Google-Smtp-Source: AGHT+IEmSHSQKL/7cN39gvwoti//yUMRW0eg937Fpjz0egPydK0xGOW+zSVXhF3HkuY2KKHTFNoBjKfRp+eDjPjfOTPhN3qZm5v2
+	s=arc-20240116; t=1718451876; c=relaxed/simple;
+	bh=68lts4Ju0T7CR+5pmBNYENZcBYUucTr+vBM8YPISqOI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YBebKmPcmPLnrzYRNQZQUgiOYjTgjoLB7pMSi71qenblQ6A9shyu6zU3mwwgEPGETp76cFHelOGILsIfRzHKRnEHTGQcrfbdJwsp6cJXH7NEQb80JkYhTPBa3ElwQO6m4KtkWJyt3A6j6Ht5YbR+5SAWEKjmao9Yv2nMrHeUi7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W1Z713vqfz4f3jdr;
+	Sat, 15 Jun 2024 19:44:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B7FFB1A0568;
+	Sat, 15 Jun 2024 19:44:23 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP1 (Coremail) with SMTP id cCh0CgBnGw2Vfm1m91gAAA--.148S3;
+	Sat, 15 Jun 2024 19:44:23 +0800 (CST)
+Subject: Re: [PATCH -next v5 7/8] xfs: speed up truncating down a big realtime
+ inode
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, djwong@kernel.org, brauner@kernel.org,
+ david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+ John Garry <john.g.garry@oracle.com>
+References: <20240613090033.2246907-1-yi.zhang@huaweicloud.com>
+ <20240613090033.2246907-8-yi.zhang@huaweicloud.com>
+ <ZmveZolfY0Q0--1k@infradead.org>
+ <399680eb-cd60-4c27-ef2b-2704e470d228@huaweicloud.com>
+ <ZmwJuiMHQ8qgkJDS@infradead.org>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <ecd7a5cf-4939-947a-edd4-0739dc73870b@huaweicloud.com>
+Date: Sat, 15 Jun 2024 19:44:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c03:b0:375:a56d:7719 with SMTP id
- e9e14a558f8ab-375e0e03811mr2934935ab.1.1718451799375; Sat, 15 Jun 2024
- 04:43:19 -0700 (PDT)
-Date: Sat, 15 Jun 2024 04:43:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000010d827061aec3de0@google.com>
-Subject: [syzbot] [virt?] KMSAN: uninit-value in virtqueue_add (5)
-From: syzbot <syzbot+64dd7c1298e0b0da9299@syzkaller.appspotmail.com>
-To: eperezma@redhat.com, jasowang@redhat.com, linux-kernel@vger.kernel.org, 
-	mst@redhat.com, syzkaller-bugs@googlegroups.com, 
-	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ZmwJuiMHQ8qgkJDS@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBnGw2Vfm1m91gAAA--.148S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr15KF1xJr1kJFWxGF4kJFb_yoW8Zr47pr
+	W5ua4DAr9Yq345C3srA3Z7Xa4Fkw1Fka18XF15Zr4UAF9xWFy3CFnaqa15Xa1ku3y8uFW0
+	vF4qqF9xGr17AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hello,
+On 2024/6/14 17:13, Christoph Hellwig wrote:
+> On Fri, Jun 14, 2024 at 03:18:07PM +0800, Zhang Yi wrote:
+>> Thanks for your suggestion.
+>>
+>> Yeah, we could fix the realtime inode problem by just drop this part, but
+>> for the upcoming forcealign feature and atomic feature by John, IIUC, we
+>> couldn't split and convert the tail extent like RT inode does, we should
+>> zero out the entire tail force aligned extent, if not, atomic write could
+>> be broken by submitting unaligned bios.
+> 
+> Let's worry about that if/when those actually land.
 
-syzbot found the following issue on:
+OK, if we don't consider the upcoming forcealign feature and atomic feature,
+I think only path 6 is needed to fix the issue.
 
-HEAD commit:    614da38e2f7a Merge tag 'hid-for-linus-2024051401' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=116670b6980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f5d2cbf33633f507
-dashboard link: https://syzkaller.appspot.com/bug?extid=64dd7c1298e0b0da9299
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> I also see no
+> rason why those couldn't just use partially convert to unwritten path
+> offhand (but without having looked into the details).
+> 
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The reason why atomic feature can't split and convert the tail extent on truncate
+down now is the dio write iter loop will split an atomic dio which covers the
+whole allocation unit(extsize) since there are two extents in on allocation unit.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/89eafb874b71/disk-614da38e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/356000512ad9/vmlinux-614da38e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/839c73939115/bzImage-614da38e.xz
+Please see this code:
+__iomap_dio_rw()
+{
+	...
+	while ((ret = iomap_iter(&iomi, ops)) > 0) {
+		iomi.processed = iomap_dio_iter(&iomi, dio);
+	...
+}
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+64dd7c1298e0b0da9299@syzkaller.appspotmail.com
+The first loop find and submit the frist extent and the second loop submit the
+second extent, this breaks the atomic property.
 
-=====================================================
-BUG: KMSAN: uninit-value in vring_map_one_sg drivers/virtio/virtio_ring.c:380 [inline]
-BUG: KMSAN: uninit-value in virtqueue_add_split drivers/virtio/virtio_ring.c:614 [inline]
-BUG: KMSAN: uninit-value in virtqueue_add+0x1e86/0x65c0 drivers/virtio/virtio_ring.c:2210
- vring_map_one_sg drivers/virtio/virtio_ring.c:380 [inline]
- virtqueue_add_split drivers/virtio/virtio_ring.c:614 [inline]
- virtqueue_add+0x1e86/0x65c0 drivers/virtio/virtio_ring.c:2210
- virtqueue_add_sgs+0x186/0x1b0 drivers/virtio/virtio_ring.c:2244
- __virtscsi_add_cmd drivers/scsi/virtio_scsi.c:471 [inline]
- virtscsi_add_cmd+0x838/0xad0 drivers/scsi/virtio_scsi.c:505
- virtscsi_queuecommand+0x898/0xa60 drivers/scsi/virtio_scsi.c:602
- scsi_dispatch_cmd drivers/scsi/scsi_lib.c:1609 [inline]
- scsi_queue_rq+0x4cc7/0x5a80 drivers/scsi/scsi_lib.c:1851
- blk_mq_dispatch_rq_list+0x79b/0x3440 block/blk-mq.c:2037
- __blk_mq_do_dispatch_sched block/blk-mq-sched.c:170 [inline]
- blk_mq_do_dispatch_sched block/blk-mq-sched.c:184 [inline]
- __blk_mq_sched_dispatch_requests+0x11b7/0x26e0 block/blk-mq-sched.c:309
- blk_mq_sched_dispatch_requests+0x12f/0x270 block/blk-mq-sched.c:331
- blk_mq_run_work_fn+0xd0/0x280 block/blk-mq.c:2420
- process_one_work kernel/workqueue.c:3267 [inline]
- process_scheduled_works+0xa81/0x1bd0 kernel/workqueue.c:3348
- worker_thread+0xea5/0x1560 kernel/workqueue.c:3429
- kthread+0x3e2/0x540 kernel/kthread.c:389
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+For example, we have a file with only one extszie length，if we truncate down
+and split the extent, the file becomes below,
 
-Uninit was stored to memory at:
- memcpy_from_iter lib/iov_iter.c:73 [inline]
- iterate_bvec include/linux/iov_iter.h:122 [inline]
- iterate_and_advance2 include/linux/iov_iter.h:249 [inline]
- iterate_and_advance include/linux/iov_iter.h:271 [inline]
- __copy_from_iter lib/iov_iter.c:249 [inline]
- copy_page_from_iter_atomic+0x12b7/0x2ae0 lib/iov_iter.c:481
- generic_perform_write+0x4c1/0xc60 mm/filemap.c:3982
- ext4_buffered_write_iter+0x564/0xaa0 fs/ext4/file.c:299
- ext4_file_write_iter+0x208/0x3450
- __kernel_write_iter+0x64d/0xc80 fs/read_write.c:523
- dump_emit_page fs/coredump.c:895 [inline]
- dump_user_range+0x8dc/0xee0 fs/coredump.c:956
- elf_core_dump+0x57c7/0x5ae0 fs/binfmt_elf.c:2083
- do_coredump+0x32d5/0x4920 fs/coredump.c:769
- get_signal+0x267e/0x2d00 kernel/signal.c:2896
- arch_do_signal_or_restart+0x53/0xcb0 arch/x86/kernel/signal.c:310
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x5d/0x160 kernel/entry/common.c:218
- do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  |   forced extsize (one atomic IO unit)  |
+  wwwwwwwwwwwwww+uuuuuuuuuuuuuuuuuuuuuuuuuuu
+                ^new size A                ^old size B
 
-Uninit was created at:
- __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
- alloc_pages_mpol+0x299/0x990 mm/mempolicy.c:2264
- alloc_pages+0x1bf/0x1e0 mm/mempolicy.c:2335
- dump_user_range+0x4a/0xee0 fs/coredump.c:940
- elf_core_dump+0x57c7/0x5ae0 fs/binfmt_elf.c:2083
- do_coredump+0x32d5/0x4920 fs/coredump.c:769
- get_signal+0x267e/0x2d00 kernel/signal.c:2896
- arch_do_signal_or_restart+0x53/0xcb0 arch/x86/kernel/signal.c:310
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x5d/0x160 kernel/entry/common.c:218
- do_syscall_64+0xdc/0x1e0 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Then if we submit a DIO from 0 to B, xfs should submit it in one bio, but it
+will submit to two bios, since there are two extents. So, unless we find
+another way to guarantee submit one bio even we have two extents in one atomic
+write unit (I guess it may complicated), we have to zero out the whole unit
+when truncate down(I'd prefer this solution), we need consider this in the near
+future.
 
-Bytes 0-4095 of 4096 are uninitialized
-Memory access of size 4096 starts at ffff88804137f000
+Thanks,
+Yi.
 
-CPU: 0 PID: 55 Comm: kworker/0:1H Not tainted 6.9.0-syzkaller-02707-g614da38e2f7a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: kblockd blk_mq_run_work_fn
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
