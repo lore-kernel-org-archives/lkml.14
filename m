@@ -1,41 +1,43 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EC450A6D
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 17:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38C4D108
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 17:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718471109; cv=none; b=WIqvhdLpk2XjnRBGI3HoilrphLDx8rmxyhlLPxXXOeuSo9dTfnQB3axgqqUWHBJHFd3RWTB8DzXCq5RZOTINo0avwoQ1grBmubEdANdVvD3I1ZDsqco3j2vsSimKMDZnlOzney0t81bhsMXxmyW5c24WYKctnzZZQUj5JWjFXKg=
+	t=1718471110; cv=none; b=MMN7PHiIpxJ8LQ6fyjbVWWFlNMoAqU+xZVaYZfvlLu3HIhYRj4pxm+FUIs6h67H+unyAAtEbBXhmg2uHQC5e57mubcfetRfUbQnKpimuGqZkPW5F7MSd5bz76WKSFkhCKyAM6D1R6RMxhrMTblZ5Mko8oPuYRDOgq9ASEtmpWSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718471109; c=relaxed/simple;
-	bh=+JK/6pCydtVENjy0w54yyF6arAWMss13Dw95qeW20GI=;
+	s=arc-20240116; t=1718471110; c=relaxed/simple;
+	bh=A7yzI6p8iC7yPkOUr3PSzuBisKN32aaC2Ohaxi/CO+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KWCld3KdIJiRpH1dh2L8aoZ3IpkHQs8Le9FhQRnPNepeu8f2M6+UVo/ZnaqeOd0XqwnIt6tHdUg8FUqZ8LIdOseQ6sqlqkKX3V6jzqSrY4bgQiGOCxPLRv9c4dUdJoF5DJbgFs0dDpeRh5OPyQ47snHkBj1MNkR1Ct9/uiQWCW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=VsgaFdxQ; arc=none smtp.client-ip=167.172.40.54
+	 MIME-Version; b=u1deovaUCcGljz1jUqANu0FpZge4JqbdCWf48vnoixJQ1/e3ViUVcfwrIxNaPliIfbGGHqYTNMqMFP+VWnidipbTHjlLjn9wlizXzI2pcIyU2QhWZhS5R8u8sHTCWxp7OjWh0e7B1Cf5D79x8Yn2BS572YgLDj8KgNtY6TuJ9kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=FWXFcMP4; arc=none smtp.client-ip=149.28.215.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="VsgaFdxQ"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="FWXFcMP4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718471077; bh=Bcu9b3VrUd6qIU98W1LB1PWRhdR9Skrn32v3O+4jLys=;
- b=VsgaFdxQZVdNXIhi2U8zovuoyfyqq6MS8Pvmv8oeEMZteMpcVA0byLeJASQdB0fefyWcHfouS
- 8J0K1NeJi7BO9oPpRIAvtXWw/1lQ8k4UBpBk8IpaEs5m17UmQxhVLEcntfSscw5TsllSZ0QdL6Q
- 05rH8LmtsNXzy2K80jiMBpelMTwo1Yc0GwyNIpdghb36GKGWcV1sFYDg/XRhnr5FCykL4moQqI8
- ra+OVnxmOvKsgydSgHmx6kFiV5fX8jPaoHEHlPXGJB14e6aNNH5GW3kVNApEkLXvn30m1Mmu4gX
- F5IsXxVrA5xqwgNVTQGlyXbGhLCRhkOKk50YmFvd6Gow==
+ t=1718471093; bh=rE9asUiY4ZOTyebep+Vmd5NsRtFQtl4VkUu5CnexPvE=;
+ b=FWXFcMP47lR8H8YxHNYa/fV6AxS1uFcmdCAZimBCRF0xVz31IkkUJckVerEyecHBog7vL1+NV
+ ZiG3dqOJtrA/CGmGMtW8tlF3z9KiSOY/E1UvDY1kZmNPhdBWANgUzrwJKIzAwiN1Kqu7axM4DFS
+ EZ04XIyEwgcYS62O+D7+1Cg69SrZ2JBnht/jp/MV7I0X67L7NN79ZNbJRNChzd5BjJpEtFhbT/N
+ 3Bhdp53pPmL7Nb5plZiF6FcxN1nIbS/Sj0H5IYsdHB5G+eGDx+4aDYqltHoQUAe89jcJ94devY0
+ kX7tnZpOn0ZMaYisgs0zO+ZLwRBy1JjN/oGcIM71wmUw==
 From: Jonas Karlman <jonas@kwiboo.se>
-To: dri-devel@lists.freedesktop.org, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner
- <heiko@sntech.de>, Yakir Yang <kuankuan.y@gmail.com>, Jeffy Chen
- <jeffy.chen@rock-chips.com>
+To: dri-devel@lists.freedesktop.org, Sandy Huang <hjc@rock-chips.com>,
+ "=?UTF-8?q?Heiko=20St=C3=BCbner?=" <heiko@sntech.de>, Andy Yan
+ <andy.yan@rock-chips.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
 Cc: linux-arm-kernel@lists.infradead.org,
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
- Karlman <jonas@kwiboo.se>, linux-clk@vger.kernel.org
-Subject: [PATCH 02/13] clk: rockchip: Set parent rate for DCLK_VOP clock on RK3228
-Date: Sat, 15 Jun 2024 17:03:53 +0000
-Message-ID: <20240615170417.3134517-3-jonas@kwiboo.se>
+ Karlman <jonas@kwiboo.se>
+Subject: [PATCH 05/13] drm/rockchip: dw_hdmi: Allow High TMDS Bit Rates
+Date: Sat, 15 Jun 2024 17:03:56 +0000
+Message-ID: <20240615170417.3134517-6-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240615170417.3134517-1-jonas@kwiboo.se>
 References: <20240615170417.3134517-1-jonas@kwiboo.se>
@@ -51,36 +53,30 @@ X-Report-Abuse: abuse@forwardemail.net
 X-Complaints-To: abuse@forwardemail.net
 X-ForwardEmail-Version: 0.4.40
 X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 167.172.40.54
-X-ForwardEmail-ID: 666dc9a024e0254b39803ff3
+ 149.28.215.223
+X-ForwardEmail-ID: 666dc9af24e0254b3980402d
 
-Similar to DCLK_LCDC on RK3328, the DCLK_VOP on RK3228 is typically
-parented by the hdmiphy clk and it is expected that the DCLK_VOP and
-hdmiphy clk rate are kept in sync.
+Call dw_hdmi_set_high_tmds_clock_ratio in phy init ops to allow support
+of High TMDS Bit Rates used by HDMI2.0 display modes.
 
-Use CLK_SET_RATE_PARENT and CLK_SET_RATE_NO_REPARENT flags, same as used
-on RK3328, to make full use of all possible supported display modes.
-
-Fixes: 0a9d4ac08ebc ("clk: rockchip: set the clock ids for RK3228 VOP")
-Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/clk/rockchip/clk-rk3228.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index a24a35553e13..7343d2d7676b 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -409,7 +409,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
- 	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
- 			RK2928_CLKSEL_CON(27), 8, 8, DFLAGS),
--	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, 0,
-+	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
- 			RK2928_CLKSEL_CON(27), 1, 1, MFLAGS),
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index aae48e906af1..5df9c9a0d369 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -362,6 +362,8 @@ static int dw_hdmi_rockchip_genphy_init(struct dw_hdmi *dw_hdmi, void *data,
+ {
+ 	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
  
- 	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
++	dw_hdmi_set_high_tmds_clock_ratio(dw_hdmi, display);
++
+ 	return phy_power_on(hdmi->phy);
+ }
+ 
 -- 
 2.45.2
 
