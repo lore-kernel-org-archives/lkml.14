@@ -1,194 +1,94 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F5517727;
-	Sat, 15 Jun 2024 20:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AED0CA6B;
+	Sat, 15 Jun 2024 20:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718482494; cv=none; b=DRsXaGXjwZ922MjVDDad3Fh1WAB0two7td8U8DdQYdpJRv/FA8Xc1LueI9l/0xyTnmsEVFraZI0ZDWFgCwegY2nNnVNgGbbvRcXmJ2WU8Bin6ZclY3cjB7G1pDX4N5tvdkQQi5bTJanMb2/VdydIuA6R8ALO9/qEUwxP//joTns=
+	t=1718482614; cv=none; b=s7Cw/RReZk/M0cWV1NrIglOG9p1M1etaKc3A1ZoM4CJaGRms63YYAeu0GXiOZIrL3sEcWgJbASsdNkC0MNCRfJoYeZ0Qawb8bRAj6znwsFlXfrnFwhyGaM0iT7RZqFGYpVMbs5J7XxRq7TJ8rqfY2fsMnitAc0ULKVK+1M8jbEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718482494; c=relaxed/simple;
-	bh=4U9P84lr6t+3JEYEYRzWAkUaJXUJVHIiXOxzeqsj0FA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JOHxHr5c8Ed3G1hISlbmX8nag2lz9hSn6lj8si6xD2S9tID5Amou/T/PVeVweU3HPNrgL165RD0+mkz1kjL1YbMNFdnrBR6x/DAM5pq/WfX2/FaEZjWuWednBW06xnHb7OM2L2pVg+0qzFeuiIceFepksEsh77jhhUP08Nc8/rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lfpcHWUy; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718482614; c=relaxed/simple;
+	bh=pCrt5S/DSr4PuaTph6fAbVYP8xLs36/o9IobvSvkmWg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sDdxLNlL6x8a5Qp+Ble6hyXK2CmogsJjTwdr4jyy02FddArHUw28oyhKB2cPS9JZQWj4Hu+b5BJhM6nO9IuvNMk5abmjjVYXqL0Ef9P6QBqLrgHuSpcMwGt/1G/3BD2QAaNC+PLkx0N6pahru4mXLHTWo2/U0qIJL2WjpsrdM4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyxHC6nz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lfpcHWUy"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45FK0PBg014533;
-	Sat, 15 Jun 2024 20:14:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=a
-	+9Fyr6TkJfj4Jmc0tD/DI3poB1anyJvVSoeuKpmq5k=; b=lfpcHWUy6y71y8g8f
-	6ei1BxrfSKlwr03XpeYc2GwoiVMAoAeIl3F0NLYF4u20XInuHAC1zEI3TGhJna9y
-	PpbwKQfeZqK1XXpgiGOOC+QkGjmDVDQARTlB4LHJNZ+djru5Ut0wZfHLVuYoa6hV
-	eeRVAwTD7R9MQdBAkNFYO4SjLy1Q/my5qy9m9tKoLiMkDF7LX/Z5c+LOfgbZZZFm
-	+b/zgVsgndHLqGjGE8yjqeWFoLHSrcQ36QIxzm0rBAFW0YfTkLhIi9+giHD6GmN6
-	LmHaySyGOuJ3cxlxAHXQXxmpD1xVNlxb/EXNq/06pNWgcrrQgAFRXe9bp3vNNHzk
-	No51Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yshk5r0k3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Jun 2024 20:14:41 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45FKEeYg002240;
-	Sat, 15 Jun 2024 20:14:40 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yshk5r0k1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Jun 2024 20:14:40 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45FGhk5r028690;
-	Sat, 15 Jun 2024 19:58:08 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn1mvb70q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 15 Jun 2024 19:58:08 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45FJw6nA29885008
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 15 Jun 2024 19:58:08 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5410A58056;
-	Sat, 15 Jun 2024 19:58:06 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2EB9258052;
-	Sat, 15 Jun 2024 19:58:01 +0000 (GMT)
-Received: from [9.43.66.127] (unknown [9.43.66.127])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 15 Jun 2024 19:58:00 +0000 (GMT)
-Message-ID: <c967a861-ff65-4b35-8a45-7e39b9849be5@linux.ibm.com>
-Date: Sun, 16 Jun 2024 01:27:57 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyxHC6nz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA92C116B1;
+	Sat, 15 Jun 2024 20:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718482614;
+	bh=pCrt5S/DSr4PuaTph6fAbVYP8xLs36/o9IobvSvkmWg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SyxHC6nzwAqquEmlQKWKNXLyElDe5jUKPt6chW4nG+46PVMrYoDApoC/kKCDFSnJI
+	 fAkn4CBnx5IfRrLOlijGAHhIoru3V+uevAY+7eNz2JS6eu10cbHXldk7ZxVTLAu/Q7
+	 TLI2F4j/TZRlJhJoSARBcW1pSo7hyCPHELLfZTOkrn0T7SKL0iGA7LFUF61udFjjk4
+	 YIZPNdeLjcgxU6k03a2omJCUTTd0i7+Aki9f5Wtz2y6SWuDPQyMfLWPHXo13Li8zr8
+	 mAqS8DoD4tBM+uuQ1Gy8VsXExlDoLKtJJ80z+cGsn1ygLDngoMOCZ11CFvde4qgtce
+	 kcjAJpeABYrUQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Banajit Goswami <bgoswami@quicinc.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, 
+ krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <20240612-lpass-codec-v25-v4-0-f63d3676dbc4@linaro.org>
+References: <20240612-lpass-codec-v25-v4-0-f63d3676dbc4@linaro.org>
+Subject: Re: [PATCH v4 0/3] ASoC: codecs: lpass: add support for v2.5 rx
+ macro
+Message-Id: <171848261202.320905.12613370824204863532.b4-ty@kernel.org>
+Date: Sat, 15 Jun 2024 21:16:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: sched map skips redundant lines with cpu filters
-To: Fernand Sieber <sieberf@amazon.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20240614073517.94974-1-sieberf@amazon.com>
-Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <20240614073517.94974-1-sieberf@amazon.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZUV4iNxAwLeMgtslx8Jn_nBviL-QDhr3
-X-Proofpoint-GUID: JK3W7m8-ky4YIzL3GW4M1wWFlNg_Y1CZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-15_14,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- phishscore=0 spamscore=0 mlxlogscore=999 adultscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406150152
+X-Mailer: b4 0.14-dev-0bd45
 
-Hi Fernand,
+On Thu, 13 Jun 2024 11:49:30 +0100, Srinivas Kandagatla wrote:
+> This patchset adds support to reading codec version and also adds
+> support for v2.5 codec version in rx macro.
+> 
+> LPASS 2.5 and up versions have changes in some of the rx blocks which
+> are required to get headset functional correctly.
+> 
+> Tested this on SM8450, X13s and x1e80100 crd.
+> 
+> [...]
 
-On 14/06/24 13:05, Fernand Sieber wrote:
-> perf sched map supports cpu filter.
-> However, even with cpu filters active, any context switch currently
-> corresponds to a separate line.
-> As result, context switches on irrelevant cpus result to redundant lines,
-> which makes the output particlularly difficult to read on wide
-> architectures.
-> 
-> Fix it by skipping printing for irrelevant CPUs.
-> 
-> Example snippet of output before fix:
-> 
->   *B0       1.461147 secs
->    B0
->    B0
->    B0
->   *G0       1.517139 secs
-> 
-> After fix:
-> 
->   *B0       1.461147 secs
->   *G0       1.517139 secs
+Applied to
 
-Yes, this makes sense. The current implementation doesn't even print timestamp
-for the redundant lines as shown in the example below.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-   .  *F0   708529.114889 secs F0 => schbench:278841
-   .   F0 
-   .   F0 
-   .  *.    708529.114919 secs 
+Thanks!
 
-It makes sense to remove them entirely since we can still infer the sched-out
-time for the selected CPUs implicitly.
+[1/3] ASoC: codecs: lpass-macro: add helpers to get codec version
+      commit: 378918d5918116b95300dd7f03913a1d0841f223
+[2/3] ASoC: codec: lpass-rx-macro: prepare driver to accomdate new codec versions
+      commit: dbacef05898d65f586fb9b90ba367e6bf898d68d
+[3/3] ASoC: codec: lpass-rx-macro: add support for 2.5 codec version
+      commit: 432e5074f805d0f976c7430af376a0dd07f1c6d7
 
-Reviewed-and-tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Thanks and Regards
-Madadi Vineeth Reddy
-> 
-> Signed-off-by: Fernand Sieber <sieberf@amazon.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> ---
->  tools/perf/builtin-sched.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 7422c930abaf..aa59f763ca46 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1594,8 +1594,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  
->  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
->  
-> -	printf("  ");
-> -
->  	new_shortname = 0;
->  	if (!tr->shortname[0]) {
->  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
-> @@ -1622,6 +1620,11 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  		new_shortname = 1;
->  	}
->  
-> +	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
-> +		goto out;
-> +
-> +	printf("  ");
-> +
->  	for (i = 0; i < cpus_nr; i++) {
->  		struct perf_cpu cpu = {
->  			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
-> @@ -1656,9 +1659,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  			color_fprintf(stdout, color, "   ");
->  	}
->  
-> -	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
-> -		goto out;
-> -
->  	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
->  	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
->  	if (new_shortname || tr->comm_changed || (verbose > 0 && thread__tid(sched_in))) {
-> @@ -1675,9 +1675,9 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  	if (sched->map.comp && new_cpu)
->  		color_fprintf(stdout, color, " (CPU %d)", this_cpu);
->  
-> -out:
->  	color_fprintf(stdout, color, "\n");
->  
-> +out:
->  	thread__put(sched_in);
->  
->  	return 0;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
