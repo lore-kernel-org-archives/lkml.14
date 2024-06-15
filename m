@@ -1,39 +1,78 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE322575A;
-	Sat, 15 Jun 2024 08:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E3C179A8
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718441552; cv=none; b=rjrQkllW1cTboVITBqfCSvp9ZGZijPJsHypYw5i6bFZIEzk+TreSWuRd32z6ZcUce2fiumKqo0jCnKkXjJbOjKmteW7nMeIyN8BJPfixFvwn5Uhvl5YTD0wtuZSYjEEtGyPUAdnMNgN94ruK+GcIQXXjjVoyVFnXDCv6sFN1khg=
+	t=1718441620; cv=none; b=HVqdLgUoV/dggUi8Z3vh3Xzpk4D3PUszuSr9shMxqMkUul9w1LQKSJS/d9OwBMIOwF8Jc5GodsRh7izilfAFWzjVKx+4faLBptGNui6Rf9erS4F6fhBam7wbCA3Tp4QqVBmEXxOFjFdHm7ksRzMY8+q1Ez3Ds6RO3xHbf6rTKSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718441552; c=relaxed/simple;
-	bh=swQ2Tm1tNIfEE87pE5WaaCMNbRke/wggnc6gseFfg9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cam8YJMqoYtVbeVctmv8tfrXnao99+nFQDiMA3OU2lNtCkjMe/Lk96QrtKL5qOQrV5jfcj+AMzF38KcPxIaY9EWDJqBByGUsk1/tZ0M9p3qb0Ks/JWQlicC6dDHwsek+ObNlTgsNbxq4/bQaT4jCJ8psE1l6EYxL95zLGniBMmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W1VJZ0X0lz4f3jLL;
-	Sat, 15 Jun 2024 16:52:14 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BD17D1A08FC;
-	Sat, 15 Jun 2024 16:52:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBFCVm1mxCEqPg--.28885S4;
-	Sat, 15 Jun 2024 16:52:20 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next] md/raid5: fix spares errors about rcu usage
-Date: Sat, 15 Jun 2024 16:51:43 +0800
-Message-Id: <20240615085143.1648223-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718441620; c=relaxed/simple;
+	bh=A5denq1MtVmoWdMWyF7FXRXEb8dy8ohP7Moy1rmAyd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aD+rD/ZzrfUq3kHXquzohJZTEnGp7MxVEpdAJ49jUImwzvOI/sjl+lfxhuUD8L5DzknKlHYcZhXZqt0PaqUT30P4m1efHYbf5hWlVzo7iyaquAGqtU9zLccaxN500Aedayj4BQQBDMo1aEKo++a3CpPt3Xlhk+mgbLMvuIwUVNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpcVQRfi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpcVQRfi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718441617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4KAnLuJK5ca8N90TBc5SqAtDvhbdQGO+rCBjODh2EaA=;
+	b=dpcVQRfiy/KyaFTic7PhDEd1VlrCnbJQIdhctat/MwaB7o6TuLPM146nLfsXeEiIusfU0K
+	1hRgXGjoDJy26nYh67O89kLpGfMmMrrWxEByWHyl6ytsRgXboJ9N0tu8B03qWY4b3i5pmX
+	I4eQk0uROHVRmKhVpg7YdlCtfEt4aOY=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-W-ApX0idMwOFd74Cr-DREQ-1; Sat, 15 Jun 2024 04:53:35 -0400
+X-MC-Unique: W-ApX0idMwOFd74Cr-DREQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52c844aec2eso2257843e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 01:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718441613; x=1719046413;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4KAnLuJK5ca8N90TBc5SqAtDvhbdQGO+rCBjODh2EaA=;
+        b=F2qy7AmTs78+t3arBDjIdIgwYlmgqR/0q3ES770Ny8DEzcCDD0KQBHMPRopfHfSnmh
+         vjxrh+TBOW5TgbYBn3ufR8Z24/BzN29UaPkWPVgP9XkGCwPmzPFtyW8kwo1Cd7rSWt3j
+         z2kTnoANETcD4EVQ8YS2zYch/HYjcSe+IhpUdvd4zZJT7Jv97+jnGqSWa4oKa9uXzm7c
+         0KjFye8GIc3sGFo2btmFipMipZS4gJHiEoE6KAkxM0OdYQnNg5Hf6MpsdHAU9BKEtjC6
+         1fZeMpK9xp+HSmaZxgF/o7XKH9aNXhFixqckKRf7uxvvSAWtgUnQSHMDE1FVrCK+LAQQ
+         JEIA==
+X-Gm-Message-State: AOJu0Yyh3vnu5kQnZbG38tn2P3XDWdK+WmcX+Df36XEy40L26Eqh0FXO
+	y4xd1O8VyEthytArIaPu/DBeKvFXE/YB7iRGNAj6Nnt+WdZqUXPjBomx/zUoP8zgq4puo9nos8o
+	8b5NH2B1krAGgVW5d59Fx79cRa5OL6D0qzIfNNqwmkYeKqtjaVJba+gkzZHLCGa4oFgDhnaQouO
+	jrt2J6cGuAb9XxaoLQS5600h3V4+R4gZHOug8mfIjN9Np+
+X-Received: by 2002:ac2:5931:0:b0:52c:8a37:6cf4 with SMTP id 2adb3069b0e04-52ca6e56394mr3070364e87.14.1718441613179;
+        Sat, 15 Jun 2024 01:53:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGgscFiGF51kdQUAooo17serhr9s1595/yp1C5TX0wDDST4aYfIyM2irfok4qUH81+JMvDnQA==
+X-Received: by 2002:ac2:5931:0:b0:52c:8a37:6cf4 with SMTP id 2adb3069b0e04-52ca6e56394mr3070344e87.14.1718441612540;
+        Sat, 15 Jun 2024 01:53:32 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42285574e33sm55265715e9.1.2024.06.15.01.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Jun 2024 01:53:31 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Jyri Sarha <jyri.sarha@iki.fi>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/tidss: Add drm_panic support
+Date: Sat, 15 Jun 2024 10:53:18 +0200
+Message-ID: <20240615085326.1726262-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,99 +80,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBFCVm1mxCEqPg--.28885S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw43JF1rur4rJr4UAF15XFb_yoW5XFyDpa
-	n0ya4Uua1Uur45ZFWDJayDC3Wak3WxGayxArWI939YvasYqFZ5Ja18Ja4Fvry5JFyrtay8
-	AFy5Kr4DJF18KFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Add support for the drm_panic module, which displays a pretty user
+friendly message on the screen when a Linux kernel panic occurs.
 
-As commit ad8606702f26 ("md/raid5: remove rcu protection to access rdev
-from conf") explains, rcu protection can be removed, however, there are
-three places left, there won't be any real problems.
-
-drivers/md/raid5.c:8071:24: error: incompatible types in comparison expression (different address spaces):
-drivers/md/raid5.c:8071:24:    struct md_rdev [noderef] __rcu *
-drivers/md/raid5.c:8071:24:    struct md_rdev *
-drivers/md/raid5.c:7569:25: error: incompatible types in comparison expression (different address spaces):
-drivers/md/raid5.c:7569:25:    struct md_rdev [noderef] __rcu *
-drivers/md/raid5.c:7569:25:    struct md_rdev *
-drivers/md/raid5.c:7573:25: error: incompatible types in comparison expression (different address spaces):
-drivers/md/raid5.c:7573:25:    struct md_rdev [noderef] __rcu *
-drivers/md/raid5.c:7573:25:    struct md_rdev *
-
-Fixes: ad8606702f26 ("md/raid5: remove rcu protection to access rdev from conf")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 ---
- drivers/md/raid5.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Tested on an AM625 BeaglePlay board by triggering a panic using the
+`echo c > /proc/sysrq-trigger` command.
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 547fd15115cd..3827f7df6b9a 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -155,7 +155,7 @@ static int raid6_idx_to_slot(int idx, struct stripe_head *sh,
- 	return slot;
- }
+ drivers/gpu/drm/tidss/tidss_plane.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
+index 68fed531f6a7..a5d86822c9e3 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.c
++++ b/drivers/gpu/drm/tidss/tidss_plane.c
+@@ -8,6 +8,7 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_blend.h>
+ #include <drm/drm_crtc.h>
++#include <drm/drm_fb_dma_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_framebuffer.h>
+ #include <drm/drm_gem_atomic_helper.h>
+@@ -166,6 +167,14 @@ static const struct drm_plane_helper_funcs tidss_plane_helper_funcs = {
+ 	.atomic_disable = tidss_plane_atomic_disable,
+ };
  
--static void print_raid5_conf (struct r5conf *conf);
-+static void print_raid5_conf(struct r5conf *conf);
++static const struct drm_plane_helper_funcs tidss_primary_plane_helper_funcs = {
++	.atomic_check = tidss_plane_atomic_check,
++	.atomic_update = tidss_plane_atomic_update,
++	.atomic_enable = tidss_plane_atomic_enable,
++	.atomic_disable = tidss_plane_atomic_disable,
++	.get_scanout_buffer = drm_fb_dma_get_scanout_buffer,
++};
++
+ static const struct drm_plane_funcs tidss_plane_funcs = {
+ 	.update_plane = drm_atomic_helper_update_plane,
+ 	.disable_plane = drm_atomic_helper_disable_plane,
+@@ -211,7 +220,10 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
+ 	if (ret < 0)
+ 		goto err;
  
- static int stripe_operations_active(struct stripe_head *sh)
- {
-@@ -7566,11 +7566,11 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 		if (test_bit(Replacement, &rdev->flags)) {
- 			if (disk->replacement)
- 				goto abort;
--			RCU_INIT_POINTER(disk->replacement, rdev);
-+			disk->replacement = rdev;
- 		} else {
- 			if (disk->rdev)
- 				goto abort;
--			RCU_INIT_POINTER(disk->rdev, rdev);
-+			disk->rdev = rdev;
- 		}
+-	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
++	if (type == DRM_PLANE_TYPE_PRIMARY)
++		drm_plane_helper_add(&tplane->plane, &tidss_primary_plane_helper_funcs);
++	else
++		drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
  
- 		if (test_bit(In_sync, &rdev->flags)) {
-@@ -8052,7 +8052,7 @@ static void raid5_status(struct seq_file *seq, struct mddev *mddev)
- 	seq_printf (seq, "]");
- }
- 
--static void print_raid5_conf (struct r5conf *conf)
-+static void print_raid5_conf(struct r5conf *conf)
- {
- 	struct md_rdev *rdev;
- 	int i;
-@@ -8066,15 +8066,13 @@ static void print_raid5_conf (struct r5conf *conf)
- 	       conf->raid_disks,
- 	       conf->raid_disks - conf->mddev->degraded);
- 
--	rcu_read_lock();
- 	for (i = 0; i < conf->raid_disks; i++) {
--		rdev = rcu_dereference(conf->disks[i].rdev);
-+		rdev = conf->disks[i].rdev;
- 		if (rdev)
- 			pr_debug(" disk %d, o:%d, dev:%pg\n",
- 			       i, !test_bit(Faulty, &rdev->flags),
- 			       rdev->bdev);
- 	}
--	rcu_read_unlock();
- }
- 
- static int raid5_spare_active(struct mddev *mddev)
+ 	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
+ 				       num_planes - 1);
 -- 
-2.39.2
+2.45.1
 
