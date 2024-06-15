@@ -1,149 +1,110 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D68D282F4;
-	Sat, 15 Jun 2024 10:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C713D3A8D2;
+	Sat, 15 Jun 2024 10:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718448045; cv=none; b=m1DsMEkMMT/fQxxYekoJrRIeQ7XSdo+Yyu+3kn+rqTwIeFikvDnsCEMzZb5oMh8ma41NLz7nDy/qLITl50wVXX7IpIcMOPwC9wCQ4zPWWtVG9WVRRAUR10b8RH99EZxfkLYP5sJuEcYWZ8S3DLPPGS9VlBeHqeaWBBtR3/afIqw=
+	t=1718448057; cv=none; b=REwBjMzAroqZSD+9XmeMhOuu5VUm5EGp1O1F2msqSE6j4erVUcwj8xAhX0WpDg8GCkp1axaGnwngGmxPdcNziKu3YJnepSL1QVlnQ5JzCg1Jsv/x1+/PDNlDCx3J2qqAIkjqkzN0PswxrTbFZLhNdGOSxAxr2FAV7WG9x04FPeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718448045; c=relaxed/simple;
-	bh=SYCD/YytL7DNy0ZiT/i6N7krpIWCdNXkNVpVk5PYYZY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Rnh7HlWEbGRg+44a2xJwLfPCoj37lRm5TyB6lt8Tm06N1FjBtO4VxenuIrOOVNL0dOhdC6EMS/A77lkF15QGvIvNN8yO9a/JvA67LeE4xufqzPCiMZH4VlCPmaT3gHzdkXfsDWD3HCvRVq4Egz4SwbmrOyY7LmVCjYY9cCp5EuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=EfxIYb2X; arc=none smtp.client-ip=203.205.221.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718448057; c=relaxed/simple;
+	bh=5/hYyJIIEoZXTpXMYw2yQWyZ2erfhzbU4WNhDN09KFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KKDjKcSWQjIRJyifQNruQnLfbsKHbwllMAOTzWkRM7foPE3ObhQmM+HqRFCLx09gb1LuN5mdmEt4qS1xSuTY58IoLruu4MKvfZfYrBusHjr5SDf9xPx3FjPUMseKVvdfdExml3pCqUpcrj6au7iKysw+vZJiA8yu11WAwhgO4z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbaUoTea; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="EfxIYb2X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718448029; bh=h9ZbyRutdPvXdDMjeryO2qN4mSr/s/9dQx1e05KXDDk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EfxIYb2XgKlK9s3CTJk/uXBPigDTcVNC4qapj9d+tPHRGNeuCI1YcXHqFdTOdbPeY
-	 9pOxr9RgVg2uK3r1roxBjaKG4psQsd5zudKosdq5J3OHuinIB6QtSlDaFei/eTWb1w
-	 Oo2rCkcqfF/ZMnlhw8Glx1bGcKEbaOGxQqN5H7eo=
-Received: from ubuntu.. ([36.129.28.219])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 8971E254; Sat, 15 Jun 2024 18:34:23 +0800
-X-QQ-mid: xmsmtpt1718447663taicd23gl
-Message-ID: <tencent_31E8037EA823B9B4D69E390C7AA133257208@qq.com>
-X-QQ-XMAILINFO: MmpliBmRb3iC64SrTxdBJ7xcvix4drRXcUkDnKmRiN44typURsqVRqgoOq+ol5
-	 6cjQjwcnhsSFXuudR9m5O6InWdPlnVItxF1+JQ20jZa0oEKLKARuKAcuUGkwHmOneIg6hbou6skm
-	 9VxTgVnMIwhds1x43mkSi/OwJ+uB3Na4r/KssdRbfbeFzqvQTpnpaI/CWXb9G8xAuSHC/yu52wTO
-	 z0XhaLrwtz2NgSpeB8cJ1Rjwyt+SQAPwo9MQJqgVnaYPdJeY+xHDjOXeiFXOru4nxqUkg2jrO99c
-	 q6NFhm2IY5LsT8roNw0yk3viimzmYpv7vD5JWutwfbX8tiJblxh3KulxO8N7OXmaQ9U2tdhaoVTN
-	 uCMFaeNL5v8yj+ibkgGzPWqiqGJYFiwsyQKEV8/6U33K90qaBtu2jawwftHloxE31luuP/lPwONH
-	 VlHHypYBgn592uhmy3+e2t6Ka6QhlXJmXRTG7LNkycQKxEK/taSemPehnmaFg8gy25xKS/P7M4WL
-	 EUlEWUv4FzbQVzth4afXeSvv5N2Q5MYIl5BLeyF8SBSv6J+BhHW/ZHY0tz7v1AS82B3mAjYB3V/+
-	 TS7HFJShrJE2q7ytDxdndocfA3VGL88luBzqQn2uy/LhdPh2pvlf2LW8MKxY0GzypVRUFaAqk+Ut
-	 MM1LHTDSxz5n/47Awre7e3uq6SgiRHDhRfh0RQ38sCtqDndoW2rxars3XfLNr2KDWQrGXn1cn/74
-	 MQBTNbeeHO1t5k4EiYawUMFX3V8HRyjQNZzBsYcbbqEt96CB6wiXz4OgV4m96ofqTr8JzaTDhHLp
-	 hgdsb2WohYYhi3kJEYzksTkRJASH1EMpnIghcYfpVM+PRG5VuqjBca2QPpZmwO2O53qhzj7Yaun5
-	 Fj/AszHKcv6hj8mbmZvrgmGo7836rqSU8SWDwtKR4gOX7RlF+d8a6+wVOaawAcBZNL3BoZmyc9l6
-	 aU6RNMSl5ZDTdAYyqkxgTeUE0fjjzSvqtJpZeLF/Hsz6WYE8PPsfcze9TIvwd6nVCLBddxxanHqV
-	 CdTLN2xQylkuiv6rLg
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Congjie Zhou <zcjie0802@qq.com>
-To: zcjie0802@qq.com
-Cc: brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk
-Subject: [PATCH v3] fs: modify the comments in fs/namei.c
-Date: Sat, 15 Jun 2024 18:34:04 +0800
-X-OQ-MSGID: <20240615103404.28565-1-zcjie0802@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <tencent_63C013752AD7CA1A22E75CEF6166442E6D05@qq.com>
-References: <tencent_63C013752AD7CA1A22E75CEF6166442E6D05@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbaUoTea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C61C116B1;
+	Sat, 15 Jun 2024 10:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718448057;
+	bh=5/hYyJIIEoZXTpXMYw2yQWyZ2erfhzbU4WNhDN09KFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hbaUoTeajKyPRJhHUWwdL01CrSb9aL4oZ+w7KoHSQNiqkT8FaJpvRdxLlhdLnmd52
+	 jQl38J5YLPJos+vd8qTq/mrl6+pK6i7a6A13ToDdrseOiZ7s9sLddbGmtcCFjz5tqw
+	 5IGF93OuZk/Y101GWwwjBukafhs3nghzcJ8DGA1OLMJEjjbpuuuODCmSybDeSzPGgm
+	 Lrwsf23rQC5Qwt570mrMz+pxpe+KwDi/KRX/kMpcbqWxmMtX6I1bDqNopSyizGA1zZ
+	 0m7lLg2qp+a9fHLlTiqddrozH1mRByHCHZNTB9kGPncnIeGW7JVJodnv8+u3UaXhsk
+	 4Bt5d1hP1QU0Q==
+Date: Sat, 15 Jun 2024 11:40:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: adi-axi-adc: improve probe() error messaging
+Message-ID: <20240615114050.46d2b0a7@jic23-huawei>
+In-Reply-To: <964821b3-dcbb-42b8-9062-2366a4d30a76@baylibre.com>
+References: <20240613163407.2147884-1-tgamblin@baylibre.com>
+	<57d4659a5abb63d7c085865059b9d71c40371edd.camel@gmail.com>
+	<964821b3-dcbb-42b8-9062-2366a4d30a76@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-modify the comments of serveral functions in fs/namei.c, including:
-1. vfs_create()
-2. vfs_mknod()
-3. vfs_mkdir()
-4. vfs_rmdir()
-5. vfs_symlink()
+On Fri, 14 Jun 2024 15:18:12 -0400
+Trevor Gamblin <tgamblin@baylibre.com> wrote:
 
-All of them come from the same commit(6521f8917082 "namei: prepare for idmapped mounts")
+> On 2024-06-14 5:11 a.m., Nuno S=C3=A1 wrote:
+> > On Thu, 2024-06-13 at 12:34 -0400, Trevor Gamblin wrote: =20
+> >> The current error handling for calls such as devm_clk_get_enabled() in
+> >> the adi-axi-adc probe() function means that, if a property such as
+> >> 'clocks' (for example) is not present in the devicetree when booting a
+> >> kernel with the driver enabled, the resulting error message will be
+> >> vague, e.g.:
+> >> =20
+> >>> adi_axi_adc 44a00000.backend: probe with driver adi_axi_adc failed wi=
+th error -2 =20
+> >> Change the devm_clk_get_enabled(), devm_regmap_init_mmio(), and
+> >> devm_iio_backend_register() checks to use dev_err_probe() with some
+> >> context for easier debugging.
+> >>
+> >> After the fix:
+> >> =20
+> >>> adi_axi_adc 44a00000.backend: error -ENOENT: failed to get clock
+> >>> adi_axi_adc 44a00000.backend: probe with driver adi_axi_adc failed wi=
+th error -2 =20
+> >> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+> >> --- =20
+> > Somehow feel that in these cases the error log should come from the fun=
+ctions we're
+> > calling but bah... likely not going happen/change:
+> >
+> > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> >
+> > (As a suggestion, you may do similar work in the axi-dac driver) =20
+>=20
+> Thanks. I'll send that early next week after a quick test on a board.
+I tweaked the commit text to say
+After the change:
+as I don't want to see this picked up by a bot for stable.
 
-Signed-off-by: Congjie Zhou <zcjie0802@qq.com>
----
- V1: modify the wrong comments of vfs_mkdir()
- V2: polish the comments
- V3: modify the wrong comments of other functions similar to vfs_mkdir()
+As a side note, you could have taken the opportunity to add
+struct device *dev =3D pdev->dev;
+which I think would have reduced a few line lengths without loosing
+readability.  Not important though and perhaps not even a good idea :)
 
- fs/namei.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Applied to the togreg branch of iio.git and pushed out as testing.
+Note I plan to rebase my tree shortly to avoid some merge conflicts
+that otherwise occur.  I'll probably do that before I push out
+other than as testing.
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 37fb0a8aa..65347dda7 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3175,9 +3175,9 @@ static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
- /**
-  * vfs_create - create new file
-  * @idmap:	idmap of the mount the inode was found from
-- * @dir:	inode of @dentry
-- * @dentry:	pointer to dentry of the base directory
-- * @mode:	mode of the new file
-+ * @dir:	inode of the parent directory
-+ * @dentry:	dentry of the child file
-+ * @mode:	mode of the child file
-  * @want_excl:	whether the file must not yet exist
-  *
-  * Create a new file.
-@@ -3968,9 +3968,9 @@ EXPORT_SYMBOL(user_path_create);
- /**
-  * vfs_mknod - create device node or file
-  * @idmap:	idmap of the mount the inode was found from
-- * @dir:	inode of @dentry
-- * @dentry:	pointer to dentry of the base directory
-- * @mode:	mode of the new device node or file
-+ * @dir:	inode of the parent directory
-+ * @dentry:	dentry of the child file
-+ * @mode:	mode of the child device node or file
-  * @dev:	device number of device to create
-  *
-  * Create a device node or file.
-@@ -4095,8 +4095,8 @@ SYSCALL_DEFINE3(mknod, const char __user *, filename, umode_t, mode, unsigned, d
- /**
-  * vfs_mkdir - create directory
-  * @idmap:	idmap of the mount the inode was found from
-- * @dir:	inode of @dentry
-- * @dentry:	pointer to dentry of the base directory
-+ * @dir:	inode of the parent directory
-+ * @dentry:	dentry of the child directory
-  * @mode:	mode of the new directory
-  *
-  * Create a directory.
-@@ -4177,8 +4177,8 @@ SYSCALL_DEFINE2(mkdir, const char __user *, pathname, umode_t, mode)
- /**
-  * vfs_rmdir - remove directory
-  * @idmap:	idmap of the mount the inode was found from
-- * @dir:	inode of @dentry
-- * @dentry:	pointer to dentry of the base directory
-+ * @dir:	inode of the parent directory
-+ * @dentry:	dentry of the child directory
-  *
-  * Remove a directory.
-  *
-@@ -4458,8 +4458,8 @@ SYSCALL_DEFINE1(unlink, const char __user *, pathname)
- /**
-  * vfs_symlink - create symlink
-  * @idmap:	idmap of the mount the inode was found from
-- * @dir:	inode of @dentry
-- * @dentry:	pointer to dentry of the base directory
-+ * @dir:	inode of the parent directory
-+ * @dentry:	dentry of the child symlink file
-  * @oldname:	name of the file to link to
-  *
-  * Create a symlink.
--- 
-2.34.1
+Thanks,
+
+Jonathan
+
+>=20
+> Trevor
+>=20
+> >
+> > - Nuno S=C3=A1
+> >
+> > =20
+>=20
 
