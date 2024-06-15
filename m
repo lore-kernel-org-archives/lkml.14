@@ -1,69 +1,83 @@
-Received: from smtp134-33.sina.com.cn (smtp134-33.sina.com.cn [180.149.134.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F8EDDBE
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 06:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49B817BA5;
+	Sat, 15 Jun 2024 06:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718434127; cv=none; b=e1Te5i+DCcTlVK1T7BClxzbPzThFChhjYbrlwQXzDzAaTTriW9I5vCE9cQi3Kmce4YlyWMVT1nD2hAjhrGCMIQHtXaxwSHaCRxAC4NkIfMLr0FqvbAOK5L5M3pVrdOLdOLxXVL4n0WmiBo6nBW1xFi0jkiBPaS57EHm2cvIe9Nw=
+	t=1718434231; cv=none; b=Z77ePvI/itohU9FRY1N3IhTI3ewgiXPQIUtMmCOYmh136bVXV6U/UK4o7X4hU/TFLgilQG8yBMm52XWm7ouN8Pqd+PyqJxePh0x3/DsSrQx2+HeR4vbo60q5Po3VpnEe5ZpAyoz8k5J9y6m4p7b5cezeCnQIMpCMy2bOzIqAumY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718434127; c=relaxed/simple;
-	bh=VCqHrKLRo7upK5Vo2G01ygKx2d1eckndZ0nekF0lCoI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=by7Oirl89065tJZgTTgaucaVq/tpg3UduRpX6gHFD0fUv3t6uKXTKubkhawwNURFzklCHW9C15rt5lwgJF563zUdwn6fPXFTqD7ohywP7VsxfG7h22QiCA6ZYHpxtxewm3mF55C5KEs4FOuRua5g3qsKpdJX12A/bIvBx46rW5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.228])
-	by sina.com (10.185.250.21) with ESMTP
-	id 666D3919000012C2; Sat, 15 Jun 2024 14:47:56 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 2166303408544
-X-SMAIL-UIID: DB5260639031462D90B6A8AA36523E06-20240615-144756-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
-Date: Sat, 15 Jun 2024 14:47:46 +0800
-Message-Id: <20240615064746.915-1-hdanton@sina.com>
-In-Reply-To: <000000000000f386f90616fea5ef@google.com>
-References: 
+	s=arc-20240116; t=1718434231; c=relaxed/simple;
+	bh=w9q4rwux8PEpDu8FkmvSmiQpihIq57Ai67mpNZdkY4E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ue+kMNY9tIE98fQQl+ZZaac4ERESZ2xumscm+Bvhwek6PTlE/i3jxnYKXhc/Mpl1WwPz4QejB4o5ZzQ0vdYZAvO4X0lzzwHFbxfq2vMmI4/L69sl3Vv9rGTW+db35BcZyqBM0PWQfl4QDX007vnBmNcYNnAUY2Qpbu4uxKgxcDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhgKAkUv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhgKAkUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C15C6C4AF48;
+	Sat, 15 Jun 2024 06:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718434230;
+	bh=w9q4rwux8PEpDu8FkmvSmiQpihIq57Ai67mpNZdkY4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qhgKAkUvn34QdT1i/JjLp8ZMBSvz2h3t+YJ4dXJeoY1P4ZNoSooW2wzmrH9Ih4XoS
+	 +bjqPbCQXJIBrDZ2Orn/E0cwhxixbjU+8ZWbEoiFnFgOoakohFvZK6847rd5XgVKG7
+	 CDanbZdsHu4r36jNOqYG2FSLbIFWCpFH8ZkWepN3ZORgkKq0Hn9HxLhAortgP1igx3
+	 WSlCCnb+6GUPMHEoPjxszA/PkjfHZntSWrdhzVKAGpSKxYJwtqiwm10d1VWzIqyc7I
+	 +Ud0qXnaRlXBQtKZWEsMBNK3COv8nFN6IsfpV4Jf5wbbwEemWLds6fI6qoKleMNV4M
+	 OWdpGgg1g6s2Q==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso46416681fa.1;
+        Fri, 14 Jun 2024 23:50:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXRp48WuMYkixk5L1OoTRvmSRApWoAUnX+9hEaAt/SI0iU+E38DRBj6YBRorEOqyB6tDjIK5f9By2qv8z259HD5inJtrafhRhhloXbaLHFj6LGyGxQxy2IikXNXwgWtxkZksx8Nb3Yyre2Jlp7VhxGr9xhxqE25vwEJeNw7HEcQjOeDcuqu
+X-Gm-Message-State: AOJu0YyiRXLoHEFQ1Tax1RbDVYk8zGOLmKAbXRBOoRpfpKfmvLaPYU5o
+	pMLgrr4JKsJDgrR+8EjQujvGvb/LJ8IUMDUfmi0OlmizEdjddMWD9j0SJETz+FyU8ay/WPYj11v
+	zC0sHrWyUdcwEasuj6gTGog0Sulo=
+X-Google-Smtp-Source: AGHT+IE2jBzSWlCnzMDvbaAU1tAdAo/962aKov4fx3jwh5Oyi/Rg12iVqSJi65SEdda6X96E/o8cRRLhj3ohFjqRw4g=
+X-Received: by 2002:a2e:a443:0:b0:2ec:1973:2b89 with SMTP id
+ 38308e7fff4ca-2ec19732c1amr25512591fa.30.1718434229513; Fri, 14 Jun 2024
+ 23:50:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240614071507.11359-1-mark-pk.tsai@mediatek.com>
+In-Reply-To: <20240614071507.11359-1-mark-pk.tsai@mediatek.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 15 Jun 2024 15:49:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ7rWh_=2WVV3CXTyda=6sZacrkYT=qJw3sJOAFpyH70g@mail.gmail.com>
+Message-ID: <CAK7LNAQ7rWh_=2WVV3CXTyda=6sZacrkYT=qJw3sJOAFpyH70g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: doc: Update default INSTALL_MOD_DIR from extra to updates
+To: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Jonathan Corbet <corbet@lwn.net>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, yj.chiang@mediatek.com, 
+	linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  83a7eefedc9b
+On Fri, Jun 14, 2024 at 4:15=E2=80=AFPM Mark-PK Tsai <mark-pk.tsai@mediatek=
+.com> wrote:
+>
+> The default INSTALL_MOD_DIR was changed from 'extra' to
+> 'updates' in commit b74d7bb7ca24 ("kbuild: Modify default
+> INSTALL_MOD_DIR from extra to updates").
+>
+> This commit updates the documentation to align with the
+> latest kernel.
+>
+> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> ---
 
---- x/fs/open.c
-+++ y/fs/open.c
-@@ -952,7 +952,18 @@ static int do_dentry_open(struct file *f
- 	if (!open)
- 		open = f->f_op->open;
- 	if (open) {
-+		struct super_block *sb = inode->i_sb;
-+
-+		error = -EINVAL;
-+		for (;;) {
-+			int a = atomic_read(&sb->s_active);
-+			if (a < 1)
-+				goto cleanup_all;
-+			if (a == atomic_cmpxchg(&sb->s_active, a, a+1))
-+				break;
-+		}
- 		error = open(inode, f);
-+		deactivate_super(sb);
- 		if (error)
- 			goto cleanup_all;
- 	}
---
+Applied to linux-kbuild.
+Thanks!
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
