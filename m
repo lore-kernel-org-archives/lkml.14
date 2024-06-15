@@ -1,87 +1,144 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563F88F48
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 00:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E498539B
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 00:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718409800; cv=none; b=QKjzwWoIl8sD+9D+lsHeaedAoGtq+u5q0t+FQA/1ebkneDN3OQpzzy8uYuKyw0vNyaGBo6xf0GaiWtZ2u4kX1mjF8Psx0IcnK4XOpyoMedtcgjTN7D3y2uLwiMOpsuutb0oRnCbeUN0c5rTP9uvhV89dy8K4N62rTbas31eXypc=
+	t=1718409901; cv=none; b=LjpvhgX+lP1h/O4rJkwh+sZDtUvIk+D9P7CTOAQZ1za0WFw6LieGxYdjFEhLTlH4Rb6GYTHERMNS3qJJmVA6pwEOi1IKXwSqUmk9uZEBb0M88YhEAnNlF4BdCjcfb1zv1X0wLbQDIIyX/rE3ETFiy2/2Hvp9StEBgZ8q3lTOw5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718409800; c=relaxed/simple;
-	bh=6N2Ip++JmeQyuxUzkw42Rq4cAQ0ea8bNaJo50wQTPxo=;
+	s=arc-20240116; t=1718409901; c=relaxed/simple;
+	bh=s9EnDXutqel6yc9aWVQjnkieztpURLhI4fNOsupj9V4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TGq+4ZZ1Bqhwl2xcdnwEwqIJKViNQq0iI/marzjk8b1kt8aMVsX6V1HbaQpZmKAsFBYclUwnVpXy4Yc6DF59exPe2aNsBe+kBR3pk5L7BdBB6pMYNBTTf9NQeCBHIAYUub7Dvo29wam3Xl4c2WaEzNxYEqYPJk9Un5HasBZulGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rd1PJh7W; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=W3cYPLD6YJvlb2LAxJHXr5ZI1M3gR9uKCzEUF1SWnMnGfM623FszropQ857EDBHzpXO/re7E0TlmpvjP230PFahUFxYcQDluRtcTK6pUD7ecplybCQ/MkQ1Va61lYnjElt6kewbgHpIgFzPf9v7XMeXextTQS+K3+9LK4Y7EEFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yhdw7Os1; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rd1PJh7W"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c2d4ea53c7so2830150a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:03:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yhdw7Os1"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c2dfbc48easo2511681a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2024 17:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718409799; x=1719014599; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718409899; x=1719014699; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1eiSTLvtTayEmKQX6ceqE3SYkZvXHsUIxZY7jPfllU=;
-        b=rd1PJh7WZMiNCdNwubJ4zkKiTrrOvWYAsOaOzxnBMFBSzlvKDOvlctwT9xZ3tHce0Z
-         0cJAobQB9SP7YrjtFdpLWYwd5jnfkoU6uazME1rI2T55GyteWm2g/ppYwcOTaTdi2ohL
-         3wpRWjYhh+eMzpZRfPovXh9XbD1qs7HJEr0MiId7h4fZ+yPJcB89P9wN5vlchgx1WVko
-         M//qk9pqpArm6EaftTYL+xV/r9C1tew/mTGY/zQ13ZGpHom8pbMIzI7hcK3V9g/ka46t
-         QTO35M7rOqksBFSSMoeRLo24sMS/wQ7omKHi5Ml9JuwsNYT8rvwTg0RBnAh645JvigbK
-         bHhA==
+        bh=JAbCB4cWM/jBKzkgnqSGqxJw+sHKF8jD1gh3nQqagX0=;
+        b=Yhdw7Os1412zFNyQoOZNJ3CYQjH4Q4SdXO1f+hYJHRsWdkGzGP4n9ARi35M9K6YFru
+         2/OvF9ew4s/19za1q3hPzjkGbkP0sUc3nc1IoIidqP31JHB2AmSpA5CX9ngUuSfq59P7
+         sPPzb0uv6xdtSXzsGwNgTtZCIWW+z3l6sdV/ri/xzVVOTCsqjKUEGXTBAzHbSPUEv4X0
+         kcsYHXvJVoO0CeTLOjR8DSLIvEqFA8ZXzjO4jDbLxTUeXjZRINgoiTl1bDSPCgbnNy6T
+         ySsgdfDrVXOyl/CjZMVkNzVO9MvsrnNqkxPtGCyxpYmzj6VUtGcLdc68E6YyjiBdOHKQ
+         eX2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718409799; x=1719014599;
+        d=1e100.net; s=20230601; t=1718409899; x=1719014699;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1eiSTLvtTayEmKQX6ceqE3SYkZvXHsUIxZY7jPfllU=;
-        b=eVAcmIJgQq0ssmM61Rbybm977eks9E8Zwum/pfcHZlIDRfICbvo2TeAyqI94W/DRyZ
-         HJEiKvRKrdGegH7Sr69Sf3ywfDon/IJCBMaVpkw4hwGPkmAW/ogwAq7zgncPj2uS/qcW
-         AdA/k4EHvAVmMxNfBXTWN2kB+EUCQkxduuqB5JaLNc+znexPSQdA+5fM9wnz7LWjVTxa
-         T5TDzDYyWXWWVSvwlCw6fs5Po3SfI1P6FXVBvM+RVzyOkZ8P5v23xeFPxMZDB9Ac3lGs
-         BuLO4sBKlO8kZmw7DjRzMYuB/JyOGPxc+nRV37RNLjJYDhpgRxqhoZB3igmIF/tPEi8x
-         PhKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsnRjtoiAngL2ehOygd9Jph8xLRyrvya9QxcJttk8Ry26vZZkrRefG3jTW5DFiJBwBv8FADUSUQeo0NvUTjdM/gfDPW6PzbGVyMnTw
-X-Gm-Message-State: AOJu0YwO+XbSjE/Wigz1gPnM4I0+DJa3UQvuaj1tDsjd8KGRCPExT5Kk
-	vw5I5Ve42FCI5E/WcqHXPNX5i0MNnmapCMYI91TgpXwBi7JlDDJL02eD3B3Kdjfwccksv3rs+hE
-	ilQ==
-X-Google-Smtp-Source: AGHT+IE+lSHliLC6cY456tUCe1Wd8WsI7CC5wV5huhOhGAOADGmGtWz4S5G0y5CIGTaZi6GKIaz9dzkWNO4=
+        bh=JAbCB4cWM/jBKzkgnqSGqxJw+sHKF8jD1gh3nQqagX0=;
+        b=tPDXhadkDpTT7KeagohrK5G+NtjCuHlAr9s6Y07JZLZgWsXU/aPIwCMCznitubHjb7
+         UJPT9gS7lLw1hDE3gbZwJWjc2iu3cI839YsE+pqk0LqcGStK36zVnArox72LGx1DE1NN
+         bdCOwr67V7LpVIaHtkQPRpqHH47cslO5/7VO/tCFbWjMywbuMQfbNrqG8dwMUl0BkWK+
+         5vlRb9oImQx9ZOdxbDX4IeX+A3dl1Xru19+aprJ63uXbudmObR1GWNmOMVPZG7whlX98
+         g1lRlDLXT9az2ogslovzasNTEgktJz896sa903DjOYYlVSItJvi7WiUDUWWL0DOJegpc
+         zEDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8p6MXLPOy1S3tnl1PSUp3RUu3zJcWKLfoFk3Q+wMAQq4G4GoTy43HmXzQHEJwq63d3s8fawIHXt/x6q3IPvluGExzpX1XAHedUWIe
+X-Gm-Message-State: AOJu0YxYYwlJjj+RGNxFhuwqcnrZPvn1lkWIEhBkd9ih/5DrgXt/GTBo
+	Sqt+CpZyeT2DcPFOSJVGrv7jLbXt2YB33lepfDk53ebH3IA4XyWiWPde/muxMGeLmTh97LZuMMo
+	Z6A==
+X-Google-Smtp-Source: AGHT+IHoIiorw5XA41KgarAZ6PxcCkxY6qe04nLr0zVITL8iJtzFO30b8vb4BsxMvGmlCF+/2gJ1QML3LEk=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:903:b0:2c4:b518:10f9 with SMTP id
- 98e67ed59e1d1-2c4bdb65b00mr126757a91.4.1718409798676; Fri, 14 Jun 2024
- 17:03:18 -0700 (PDT)
-Date: Fri, 14 Jun 2024 17:02:55 -0700
-In-Reply-To: <20240608001108.3296879-1-seanjc@google.com>
+ (user=seanjc job=sendgmr) by 2002:a17:90a:4889:b0:2c2:4109:6a5f with SMTP id
+ 98e67ed59e1d1-2c4dbd31ec4mr134262a91.6.1718409899098; Fri, 14 Jun 2024
+ 17:04:59 -0700 (PDT)
+Date: Fri, 14 Jun 2024 17:04:57 -0700
+In-Reply-To: <405dd8997aaaf33419be6b0fc37974370d63fd8c.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240608001108.3296879-1-seanjc@google.com>
-X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <171840976799.1411209.2253384085532260534.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Rephrase comment about synthetic PFERR
- flags in #PF handler
+References: <Zj1Ty6bqbwst4u_N@google.com> <49b7402c-8895-4d53-ad00-07ce7863894d@intel.com>
+ <20240509235522.GA480079@ls.amr.corp.intel.com> <Zj4phpnqYNoNTVeP@google.com>
+ <50e09676-4dfc-473f-8b34-7f7a98ab5228@intel.com> <Zle29YsDN5Hff7Lo@google.com>
+ <f2952ae37a2bdaf3eb53858e54e6cc4986c62528.camel@intel.com>
+ <ZliUecH-I1EhN7Ke@google.com> <38210be0e7cc267a459d97d70f3aff07855b7efd.camel@intel.com>
+ <405dd8997aaaf33419be6b0fc37974370d63fd8c.camel@intel.com>
+Message-ID: <ZmzaqRy2zjvlsDfL@google.com>
+Subject: Re: [PATCH v19 037/130] KVM: TDX: Make KVM_CAP_MAX_VCPUS backend specific
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Content-Type: text/plain; charset="utf-8"
+To: Kai Huang <kai.huang@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Bo2 Chen <chen.bo@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 07 Jun 2024 17:11:08 -0700, Sean Christopherson wrote:
-> Reword the BUILD_BUG_ON() comment in the legacy #PF handler to explicitly
-> describe how asserting that synthetic PFERR flags are limited to bits 31:0
-> protects KVM against inadvertently passing a synthetic flag to the common
-> page fault handler.
-> 
-> No functional change intended.
-> 
-> [...]
+On Fri, Jun 14, 2024, Kai Huang wrote:
+> On Tue, 2024-06-04 at 10:48 +0000, Huang, Kai wrote:
+> > On Thu, 2024-05-30 at 16:12 -0700, Sean Christopherson wrote:
+> > > On Thu, May 30, 2024, Kai Huang wrote:
+> > > > On Wed, 2024-05-29 at 16:15 -0700, Sean Christopherson wrote:
+> > > > > In the unlikely event there is a legitimate reason for max_vcpus_per_td being
+> > > > > less than KVM's minimum, then we can update KVM's minimum as needed.  But AFAICT,
+> > > > > that's purely theoretical at this point, i.e. this is all much ado about nothing.
+> > > > 
+> > > > I am afraid we already have a legitimate case: TD partitioning.  Isaku
+> > > > told me the 'max_vcpus_per_td' is lowed to 512 for the modules with TD
+> > > > partitioning supported.  And again this is static, i.e., doesn't require
+> > > > TD partitioning to be opt-in to low to 512.
+> > > 
+> > > So what's Intel's plan for use cases that creates TDs with >512 vCPUs?
+> > 
+> > I checked with TDX module guys.  Turns out the 'max_vcpus_per_td' wasn't
+> > introduced because of TD partitioning, and they are not actually related.
+> > 
+> > They introduced this to support "topology virtualization", which requires
+> > a table to record the X2APIC IDs for all vcpus for each TD.  In practice,
+> > given a TDX module, the 'max_vcpus_per_td', a.k.a, the X2APIC ID table
+> > size reflects the physical logical cpus that *ALL* platforms that the
+> > module supports can possibly have.
+> > 
+> > The reason of this design is TDX guys don't believe there's sense in
+> > supporting the case where the 'max_vcpus' for one single TD needs to
+> > exceed the physical logical cpus.
+> > 
+> > So in short:
+> > 
+> > - The "max_vcpus_per_td" can be different depending on module versions. In
+> > practice it reflects the maximum physical logical cpus that all the
+> > platforms (that the module supports) can possibly have.
+> > 
+> > - Before CSPs deploy/migrate TD on a TDX machine, they must be aware of
+> > the "max_vcpus_per_td" the module supports, and only deploy/migrate TD to
+> > it when it can support.
+> > 
+> > - For TDX 1.5.xx modules, the value is 576 (the previous number 512 isn't
+> > correct); For TDX 2.0.xx modules, the value is larger (>1000).  For future
+> > module versions, it could have a smaller number, depending on what
+> > platforms that module needs to support.  Also, if TDX ever gets supported
+> > on client platforms, we can image the number could be much smaller due to
+> > the "vcpus per td no need to exceed physical logical cpus".
+> > 
+> > We may ask them to support the case where 'max_vcpus' for single TD
+> > exceeds the physical logical cpus, or at least not to low down the value
+> > any further for future modules (> 2.0.xx modules).  We may also ask them
+> > to give promise to not low the number to below some certain value for any
+> > future modules.  But I am not sure there's any concrete reason to do so?
+> > 
+> > What's your thinking?
 
-Applied to kvm-x86 mmu, thanks!
+It's a reasonable restriction, e.g. KVM_CAP_NR_VCPUS is already capped at number
+of online CPUs, although userspace is obviously allowed to create oversubscribed
+VMs.
 
-[1/1] KVM: x86/mmu: Rephrase comment about synthetic PFERR flags in #PF handler
-      https://github.com/kvm-x86/linux/commit/caa727882937
+I think the sane thing to do is document that TDX VMs are restricted to the number
+of logical CPUs in the system, have KVM_CAP_MAX_VCPUS enumerate exactly that, and
+then sanity check that max_vcpus_per_td is greater than or equal to what KVM
+reports for KVM_CAP_MAX_VCPUS.
 
---
-https://github.com/kvm-x86/linux/tree/next
+Stating that the maximum number of vCPUs depends on the whims TDX module doesn't
+provide a predictable ABI for KVM, i.e. I don't want to simply forward TDX's
+max_vcpus_per_td to userspace.
