@@ -1,109 +1,137 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6991DDC9
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 16:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4691DFED
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 16:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718469065; cv=none; b=nrbTwcXhFNmfW1cTnp9PRbg57DxRc/RY6nbM82xzYT/7HCdXcSSBQf8q3ffOUsqFPwwtdLsL1YKqH+hpUEhBYpeveTd19D0NfBDYeEz5aSJXBsLegewzAMUhoVBReMUAzHkfH8JN9hQs1MCCl1CU0JZr6RuvVrgafIbnNudR4o4=
+	t=1718469144; cv=none; b=rVHNSXm0AK2egxVLtUxMMZ1x3KhT0RF3WM2ugHPwUD8YJT5F7nbQUBwcbAIfmRFqJfEdKlJHkVLLbcxggC0FupE8OAz9PSo1x5fwzUR/qzU2uLtZLdUjqLl9Ezk8kMfSn5xjw4+VgyWjI6Igq+3Fg07wpkhP4lo31D9SoHUTJnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718469065; c=relaxed/simple;
-	bh=7VZx2zIx3fKKcO70Bfua49T3IcTFqL70s9M1O/FXukI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=neRqQRIhOkZk9z0Brnmo16TgLgtN44uMPumuNK/o1bL27378EqmZ397NV/RGjobKBNjUtK1uC4AfF5gUvJCjPtBstCX9KQTrotf3VSo+5li2KXeM3/30/g3Bp+9EwsoVAUB0nCYKvEnHUV/7azEue1HGW4DmAuWPaFqwUuI5ddA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vYWjgOww; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vYWjgOww"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d227b1f4f0so1674976b6e.3
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 09:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718469061; x=1719073861; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FeiXgqyhT/QZGQjBMNx/jn93Qfipagj532oIUhz8rF8=;
-        b=vYWjgOwwzODVWhBCRn2O2nx//GtyAyTaoH+L2P+GRoVHYekObKclzsOGUJYS4z+gHb
-         xYLy4QaJdQs4xjXCQGa0frex4LYhzBeZXb34jeQ8Cfe/8UdkVxz3xDUDqBkUlZcYzkyj
-         xJmLlc6F2TEfIoJ7oex8TBzES0IYj5h3NwdLJLWuDys7eUM8s/0EQxn2XlbNByWwzFQK
-         Zn2sd2EXo6iq3dXCR1nn/dj9ISW1kKwF1Xy9JjUZSyDrOZt7bqmVXQ6/0Xk0fSv022l7
-         bbrrIT65ufKfd+xstsAa/PynqEWgUXUzYdn5mQFAssjQhzmx1sYZtjZjPiqKiegjnzM6
-         KzZw==
+	s=arc-20240116; t=1718469144; c=relaxed/simple;
+	bh=w3bdb5f8NpJyzYXhwZKAp+q9I68UQniR5oMzb0zA2SE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=r/WTWP9AWyKCJaOIRW0lT6sTpzPZPj0n+9yGcF/JaEpVZBdQ3FFRLgZUP68gfwt3sZIFoxQiLI5zHKYcRyktsSuQyNIoS6kK0+UNSzKGAIQDBpE0AI3kKDi3KlH3LgLZ76MlJz5AC5dwL4ngbDp68rvPKBucFmocVxJfHQzM+ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-375beb12e67so30336625ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 09:32:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718469061; x=1719073861;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FeiXgqyhT/QZGQjBMNx/jn93Qfipagj532oIUhz8rF8=;
-        b=taIFtZpEGYSkDGuzC0nxpPFXne9bLXiaSN1gZUvUQGHI5O4qVNLzQLI6m8OGw4ZVDK
-         Ec1SP40yrXJ1cfV3GD7O4ekQeiO+HQ5wCJHrisvnI6R3lJdsECgrmI1WmateQCz8A/mK
-         LuPbAxQ7X+sE0V+pEyZVgS5BX5bX24qJj+lzNjegmTan4l00yObEPhoaiPA79nJa94dq
-         qyMVR5E53H7ZVL/gUTDfiAEnpAcHbP5zH6TByi4Go1ghGtPOmxv6qnrzeLb2Jh7HdlXq
-         0rQFLJBaKmTgJdbyPWG0hCoPppfxbB/J6j+otaKfl84+kbRdoFmdYrzY7RmiAB6fzJQI
-         TwIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVD/F0dW/gkfCy/mMybBzysiVlEiOiNbChyTwscLClIZ+alo2x/cRGbpp81/Gju91/la0yL66eHU6APhG31v1ctoyqd5/aQuwFQJmMi
-X-Gm-Message-State: AOJu0YwTStCYIg6OkxdKPFuaj9E+619yzIcx4jzuPBR31IRI7/5XlTNn
-	CMDAoeplzCQvaGXenfrEDgQMMYmBH+WGPgIv9DEpIDqe36NqEd8GFh1YGHMd+ak=
-X-Google-Smtp-Source: AGHT+IH0EX0O5PGkdjvB3T+cDiqoufj+oi2S6HzWbdAJ85VUqRve1OR4y4oZmzefOYrvHpdlw+aclQ==
-X-Received: by 2002:a05:6808:130c:b0:3d2:2d1d:3786 with SMTP id 5614622812f47-3d24e8ef7c7mr6367451b6e.25.1718469060952;
-        Sat, 15 Jun 2024 09:31:00 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d24762eddbsm961125b6e.30.2024.06.15.09.31.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Jun 2024 09:31:00 -0700 (PDT)
-Message-ID: <21aa7ed7-6440-437d-a591-0da8cce4bc00@baylibre.com>
-Date: Sat, 15 Jun 2024 11:30:59 -0500
+        d=1e100.net; s=20230601; t=1718469142; x=1719073942;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EQaCIZK4GkVF+JVNWthD0E2q5gmK5QBOjggwhuBrRjM=;
+        b=brCwJ1c2UDjwO2Ny9UGywqQJdp0++nnq5n7DinDoGB/sKCzfzxBaqrzq3KAHgO2mdy
+         h7xtqQCxJvoq8V8Q8Mg8mO/bwwLM6AQq4YFEpO68PwhYMIzk6Z3dOf7v1I8jf7/Y6ju/
+         W3Fig5dA2FQ3K/xa7jyUXH3Do9W9mVe64cHbJqFbXB9tAFcD2cqL/qwRZQdtoakD1a+x
+         xd0ToTlSR2ovHo0kCTk8Z3sOp/n1Ehnd/FKmsGmBybmzHRdDLMZjRsBO8UgKEGbNFcNx
+         PJ32fpUPjyDobPY10U03AdHOUiR+z2g0INh5Dw6okqwEan933ZCOdZY3Zicj2RnfWXa6
+         BREA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKtryAaG2r7KnbO71ha+/R8AY/nELDyGmSLgD+uukCFmN8HKNCTi3PwVwHJj1d+LsoKfwKicC2YdINisTAvWwE8uSJjyzVjLhmMGc6
+X-Gm-Message-State: AOJu0YzWusc+dLCzdY5EOBonhALVsN/vvfPYTkORMHgK9kwpQdiLf7G5
+	ogWDInARoRqYiFFFYA59JEqtZ6O3NeNK1S2HzCJmIe8FDjWOlXYfvm2VakhR/Xk1U8NdX3+IuPg
+	Rny/M62FxUFS+s1pqWQlrdPo3GkQQD7BcgixDaxW1ACjB4+P5tvUeRjM=
+X-Google-Smtp-Source: AGHT+IGJwWwyY/FPWTkxgWUdRxJUCdwApcOzTEVArEh1VNXdC/0EHHCWhfShh+f5sCDjOcOl4zVE5w1jcYluqvgLoeHZuR1OaZSl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] counter: ti-eqep: implement over/underflow events
-To: William Breathitt Gray <wbg@kernel.org>
-Cc: Judith Mendez <jm@ti.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240609-counter-ti-eqep-over-under-events-v1-1-74fe1632f5ab@baylibre.com>
- <Zm08ZiyXEgWYLZbc@ishi>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <Zm08ZiyXEgWYLZbc@ishi>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:180d:b0:375:da97:f21a with SMTP id
+ e9e14a558f8ab-375e0e7af51mr4059675ab.3.1718469142470; Sat, 15 Jun 2024
+ 09:32:22 -0700 (PDT)
+Date: Sat, 15 Jun 2024 09:32:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cb6fca061af0462e@google.com>
+Subject: [syzbot] [nilfs?] kernel BUG in nilfs_btnode_create_block (2)
+From: syzbot <syzbot+89cc4f2324ed37988b60@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/15/24 2:01 AM, William Breathitt Gray wrote:
-> On Sun, Jun 09, 2024 at 04:49:33PM -0500, David Lechner wrote:
->> This adds support to the TI eQEP counter driver for subscribing to
->> overflow and underflow events using the counter chrdev interface.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->> This is split out from a series that was sent a few years back [1] that
->> I never finished, so I'm calling it v2. This was tested on a BeagleBone
->> Blue using LEGO MINDSTORMS EV3 motors and this script[2].
->>
->> [1]: https://lore.kernel.org/linux-iio/20211017013343.3385923-2-david@lechnology.com/
->> [2]: https://github.com/dlech/linux-counter-ti-eqep-python/blob/3745b0840736248d8e60cc675a0f43558fcbb2af/test.py
->>
->> v2 changes:
->> * Only clear interrupts that were handled.
->> * Don't set default QPOSMAX value.
->> * Don't error when setting QPOSMAX to 0.
->> * Use regmap_write() when appropriate.
->> * Validate watch channel.
->> * Use counter_priv().
-> 
-> Hi David,
-> 
-> It's nice to see progress on this again. I remember there being some
-> sort of interrupt storm if QPOSMAX was set to 0. Is that still the case,
-> or was it resolved with the changes in this version?
-> 
-> Willia Breathitt Gray
+Hello,
 
-I haven't tried it with the rest of the old series yet, but with this
-patch, it is not a problem to set QPOSMAX (ceiling) to 0.
+syzbot found the following issue on:
+
+HEAD commit:    83a7eefedc9b Linux 6.10-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ab3d96980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c79815c08cc14227
+dashboard link: https://syzkaller.appspot.com/bug?extid=89cc4f2324ed37988b60
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b45273014a8f/disk-83a7eefe.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/94cd5708292e/vmlinux-83a7eefe.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a89698812e8b/bzImage-83a7eefe.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+89cc4f2324ed37988b60@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at fs/nilfs2/btnode.c:59!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 7600 Comm: segctord Not tainted 6.10.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:nilfs_btnode_create_block+0x3dc/0x400 fs/nilfs2/btnode.c:59
+Code: 8e 48 89 da e8 85 25 73 01 e9 a7 fd ff ff e8 cb d2 28 fe eb 0c e8 c4 d2 28 fe eb 05 e8 bd d2 28 fe 4c 89 ef e8 35 00 00 00 90 <0f> 0b e8 ad d2 28 fe 4c 89 f7 48 c7 c6 40 f2 06 8c e8 8e c0 6f fe
+RSP: 0000:ffffc90004f1f270 EFLAGS: 00010202
+RAX: ffffffff821b2801 RBX: 0000000000000010 RCX: ffffffff821b2819
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: ffff88807746f5d0
+RBP: 0000000000001cc3 R08: ffff88807746f5d3 R09: 1ffff1100ee8deba
+R10: dffffc0000000000 R11: ffffed100ee8debb R12: dffffc0000000000
+R13: ffff88807746f570 R14: 1ffff1100ee8deae R15: ffff88805e399490
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdd25186000 CR3: 000000007a728000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nilfs_btnode_prepare_change_key+0x26d/0x300 fs/nilfs2/btnode.c:219
+ nilfs_btree_prepare_update_v+0x397/0x450 fs/nilfs2/btree.c:1942
+ nilfs_btree_prepare_propagate_v fs/nilfs2/btree.c:2001 [inline]
+ nilfs_btree_propagate_v fs/nilfs2/btree.c:2054 [inline]
+ nilfs_btree_propagate+0x3bf/0xdf0 fs/nilfs2/btree.c:2111
+ nilfs_bmap_propagate+0x75/0x120 fs/nilfs2/bmap.c:345
+ nilfs_segctor_apply_buffers+0x184/0x340 fs/nilfs2/segment.c:1006
+ nilfs_segctor_scan_file+0x810/0xa50 fs/nilfs2/segment.c:1066
+ nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1164 [inline]
+ nilfs_segctor_collect fs/nilfs2/segment.c:1492 [inline]
+ nilfs_segctor_do_construct+0x1c43/0x6b50 fs/nilfs2/segment.c:2040
+ nilfs_segctor_construct+0x181/0x6b0 fs/nilfs2/segment.c:2408
+ nilfs_segctor_thread_construct fs/nilfs2/segment.c:2516 [inline]
+ nilfs_segctor_thread+0x55c/0x11b0 fs/nilfs2/segment.c:2601
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:nilfs_btnode_create_block+0x3dc/0x400 fs/nilfs2/btnode.c:59
+Code: 8e 48 89 da e8 85 25 73 01 e9
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
