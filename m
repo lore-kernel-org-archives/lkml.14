@@ -1,101 +1,170 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FF31754B
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 06:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC33CA6F;
+	Sat, 15 Jun 2024 06:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718431343; cv=none; b=JHMQe7sSzuSwnUYVdwHvS0cl3LP+OHidH6uzcbroDOfOvXDXaP96iHeEY/iu6SmRxLypNRm2hO8ufTcD9bF/YsNS8ctObXmzOBZL3qFp47NbTMsp78ZNGffC5bBJ4Jb9I0sRIxIvfHW+Q/Z0w2OWexlhaqJE4trW4JhsY5XktVM=
+	t=1718431730; cv=none; b=LUE1kgHL2YRdwiso6hetXxF1JUeLoBBA87uhFeGK3TT3da1RDElrQX99B/G641BYPSd0nxn/0SSsSMMo22bB9Fs6GwNapn7YYvxo57jVmO0NkLilErIrBBa4LjaSWeG5zeGqwbxC5quYuTlnE65JBm02xKkTWKS7LiTcKQtwQpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718431343; c=relaxed/simple;
-	bh=2nowq4ENPym5E2QjapQIoidzw6/8u5c7K8t6AB4vMug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKsFs/GpwByG0sp65TH25jbyyXyKbN446oNRgTHK8Ihiirrya3ntv1Algne8XdJKLmGgB317dkVOgDSiThVMFLs9D16bZ/Bgd/WPUmAaTonicTghK/dAM/eAWrlbJAHnecOJLt0gnVGGIpHnyVC0Bn85AfIZNn7GLiTdQ4Kd6LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=KMWA1yog; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QDVoPb1C; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1718431730; c=relaxed/simple;
+	bh=Xcy1eQQvooP08Rt1AdTuE3S0NjnEw96JreLGuy2W+g4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MzyviffYkA+HW1FQUXI6muSm9sy6wWwIPDS3RD2eV2Y2D4LzjR0DLE6U43VoEfcEotNSyvaWbGyGxmIG+LFvpRABzUF+JQdhlnen5S9mZQOVLXv6MINWY0FPQBb/1ZdropVW1V0gnaMKKQ6vYhizXgooLkds6qL+7ye6Mxqvt04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b/k/ydMj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="KMWA1yog";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QDVoPb1C"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id EB213138030F;
-	Sat, 15 Jun 2024 02:02:20 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 15 Jun 2024 02:02:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1718431340; x=
-	1718517740; bh=r7u+yphojA5kQs7Ft+k2Ma46p5tLGD9X4713KwZnndE=; b=K
-	MWA1yogYJgubr4q0sND52lywEbAwM8G4CnzXMOTSpfDofQ/zzYiQNAKZZrIP16lJ
-	ddHnsNaFOC+7nZPzIL9GcpSsWWxQ2xWRhejQCvaydI79wFQoxlu3E1niuo0lSZvG
-	aOnZd8k55QeTSsp5/MOQ5P1FafhqvPWKCa8753kQ7cRr3b3WYG4jcim+f/1YqReR
-	1I+q9OTX5FcZV9Dn6PXqpUxF910wdTXsRURsQ8gucGvqBfnRspt+n2shdywdrgc0
-	R1Su6K2zfN77KLywoyCEV1yyarCGXqG34/vIU+Zrzx3aLILPbw9CXZRfLIkrYsB9
-	07SV2EWws5jKhNEJjmnPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718431340; x=1718517740; bh=r7u+yphojA5kQs7Ft+k2Ma46p5tL
-	GD9X4713KwZnndE=; b=QDVoPb1CDVO8Xzqwi+OJn/2ca2k+6zBlvgV2jDCeaRs+
-	tyYY4op9BlTX4WauS55A/1k0seS23sHoLCtXSv5QNPpzkPH7TCwl6XwsKDnBzfPw
-	NUxwepqHy8zADQXAu1NlPVr9B5JjccznBC5Ad2L4e2yVV89fTQHjwXk7V3zz880J
-	76H5J8T7K+Yu+eNYlsljSUBFh2OXlL9xViChj1ws2sh+C6nwySuNl35em3MMKwZd
-	fvZhPoE5/NEflYh8qK1gp7GuoI0SvT2BGiqFzZnvI5ahqYe7FLLSE1ZdX1cPv9KN
-	4Wdl09/QegUP+3p3VftUjHU7fZNY91hAm+b3IM17QA==
-X-ME-Sender: <xms:bC5tZhvqbPm-y-_0mkGAGVvksuU8DWC5mYkDEiuiIstePdt7hXau0Q>
-    <xme:bC5tZqcLjpBuDd3yV3Q3lPCRYsoSUSj2388WKgC68DwHozDpJYJUtV4wNAyV967y9
-    IaklAcsWoLkTnP60ps>
-X-ME-Received: <xmr:bC5tZkxYR7IW7Ny16i4iBMMhhiGPHK12PCZRq8EURYEeM1A2ojBPp0P7vh5zD1tsjeOhTu-PDBO8ua32K1vhnIswoa1kN8lSe82c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvtddguddttdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggujgesth
-    dtredttddtvdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgr
-    khgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhepveeile
-    fhudekffehkeffudduvedvfeduleelfeegieeljeehjeeuvdeghfetvedvnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:bC5tZoNMqJQvvIDlgu_qjsKm3NSaX2KJ3h6BERdWygC128T8M7ztfQ>
-    <xmx:bC5tZh8Kbt-NSuoXNApxAbzBM0hdwjD4qD6W1VCMcVPjVh4C772Txg>
-    <xmx:bC5tZoXFbLbBLCQmG0RJC6NOO7DbvRlyhrSNs_d30WC0MF6JbtD6eA>
-    <xmx:bC5tZicp_0Rg0qZjp-rosKFhQT-chMQwt0ne8BG8WAdpCeT1378k-w>
-    <xmx:bC5tZjKcvpmufdQxRafDlVPrk2G9_MvBz4uFQIbowOhbw_0AI7EPFMjT>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 15 Jun 2024 02:02:19 -0400 (EDT)
-Date: Sat, 15 Jun 2024 15:02:17 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firewire: fix website URL in Kconfig
-Message-ID: <20240615060217.GC497879@workstation.local>
-Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-References: <20240613090343.416198-1-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b/k/ydMj"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45F4pb1k012051;
+	Sat, 15 Jun 2024 06:08:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=joR0DuSj5HluPWl2TjMOJ9
+	C6AXoNG2TEka1zEPsj3BI=; b=b/k/ydMjDWHsF5VZDMoe+SSO9UqqUfKnbbePi+
+	tl7NQJrQ2mPlHDokWjTE8ZJ2BWMhw6AV/h3iwlw2T70BeSiqco9Vn/qQheKOnKFS
+	wkwYP0NVV18gm/tyiNuauwWvoujAWJPEZC0ByG7L+0JJGdzlIECEzkqQNK4KnoYo
+	4Q13LZXyEEKE10ddyAgWc37xjITYFxszusZIG7PeHkLeHmdPruMYqp2X2kBOhcFk
+	GJD1dc825hjPGaAA1M8BdoC5RI8EHfGE4dyiYjWq8qcqF0GRrpe6rZPmZH7RD+kJ
+	9adh7m1vGYTWeSetOpZszprNGVK5gzUEtNypgWWk9frjvajQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys0nf8bqp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 06:08:25 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45F68O7S023345
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 06:08:24 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Jun
+ 2024 23:08:24 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Fri, 14 Jun 2024 23:08:21 -0700
+Subject: [PATCH] cpufreq: powerpc: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613090343.416198-1-o-takashi@sakamocchi.jp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240614-md-powerpc-drivers-cpufreq-v1-1-de4034d87fd2@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIANUvbWYC/x3MQQ6CMBAF0KuQWTsJYG2MVzEuSvuRSaTUKSAJ4
+ e5Wl2/zdspQQaZbtZNilSxTLGhOFfnBxSdYQjG1dWtq2xgeA6fpA02eg8oKzezT0ivebMPZXGC
+ ujTWgEiRFL9s/vz+KO5fBnbroh1/5krhsPLo8Q+k4voqZNMaLAAAA
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar
+	<viresh.kumar@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Nicholas
+ Piggin" <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: _FUh_ZeRf1uIc4GeoD0tuD7_mU230y_I
+X-Proofpoint-ORIG-GUID: _FUh_ZeRf1uIc4GeoD0tuD7_mU230y_I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-15_02,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 clxscore=1011 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406150045
 
-On Thu, Jun 13, 2024 at 06:03:43PM +0900, Takashi Sakamoto wrote:
-> The wiki in kernel.org is no longer updated. This commit replaces the
-> website URL with the latest one.
-> 
-> Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> ---
->  drivers/firewire/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cpufreq/ppc-cbe-cpufreq.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cpufreq/powernv-cpufreq.o
 
-Applied to for-linus branch.
+Add the missing invocation of the MODULE_DESCRIPTION() macro to all
+files which have a MODULE_LICENSE().
 
+This includes three additional files which, although they did not
+produce a warning with the powerpc allmodconfig configuration, may
+cause this warning with specific options enabled in the kernel
+configuration.
 
-Thanks
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+Corrections to these descriptions are welcomed. I'm not an expert in
+this code so in most cases I've taken these descriptions directly from
+code comments, Kconfig descriptions, or git logs.  History has shown
+that in some cases these are originally wrong due to cut-n-paste
+errors, and in other cases the drivers have evolved such that the
+original information is no longer accurate.
+---
+ drivers/cpufreq/maple-cpufreq.c   | 1 +
+ drivers/cpufreq/pasemi-cpufreq.c  | 1 +
+ drivers/cpufreq/pmac64-cpufreq.c  | 1 +
+ drivers/cpufreq/powernv-cpufreq.c | 1 +
+ drivers/cpufreq/ppc_cbe_cpufreq.c | 1 +
+ 5 files changed, 5 insertions(+)
 
-Takashi Sakamoto
+diff --git a/drivers/cpufreq/maple-cpufreq.c b/drivers/cpufreq/maple-cpufreq.c
+index f9306410a07f..19ca7f874d28 100644
+--- a/drivers/cpufreq/maple-cpufreq.c
++++ b/drivers/cpufreq/maple-cpufreq.c
+@@ -238,4 +238,5 @@ static int __init maple_cpufreq_init(void)
+ module_init(maple_cpufreq_init);
+ 
+ 
++MODULE_DESCRIPTION("cpufreq driver for Maple 970FX Evaluation Board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 039a66bbe1be..92a99f09884a 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -271,5 +271,6 @@ static void __exit pas_cpufreq_exit(void)
+ module_init(pas_cpufreq_init);
+ module_exit(pas_cpufreq_exit);
+ 
++MODULE_DESCRIPTION("cpufreq driver for PA Semi PWRficient");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Egor Martovetsky <egor@pasemi.com>, Olof Johansson <olof@lixom.net>");
+diff --git a/drivers/cpufreq/pmac64-cpufreq.c b/drivers/cpufreq/pmac64-cpufreq.c
+index 2cd2b06849a2..9d3fe36075f8 100644
+--- a/drivers/cpufreq/pmac64-cpufreq.c
++++ b/drivers/cpufreq/pmac64-cpufreq.c
+@@ -671,4 +671,5 @@ static int __init g5_cpufreq_init(void)
+ module_init(g5_cpufreq_init);
+ 
+ 
++MODULE_DESCRIPTION("cpufreq driver for SMU & 970FX based G5 Macs");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+index fddbd1ea1635..e923f717e1d7 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1162,5 +1162,6 @@ static void __exit powernv_cpufreq_exit(void)
+ }
+ module_exit(powernv_cpufreq_exit);
+ 
++MODULE_DESCRIPTION("cpufreq driver for the IBM POWER processors");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Vaidyanathan Srinivasan <svaidy at linux.vnet.ibm.com>");
+diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
+index 88afc49941b7..72f568d14f30 100644
+--- a/drivers/cpufreq/ppc_cbe_cpufreq.c
++++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
+@@ -169,5 +169,6 @@ static void __exit cbe_cpufreq_exit(void)
+ module_init(cbe_cpufreq_init);
+ module_exit(cbe_cpufreq_exit);
+ 
++MODULE_DESCRIPTION("cpufreq driver for Cell BE processors");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Christian Krafft <krafft@de.ibm.com>");
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240614-md-powerpc-drivers-cpufreq-6d345e48164e
+
