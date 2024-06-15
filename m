@@ -1,202 +1,225 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D148646;
-	Sat, 15 Jun 2024 02:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718419572; cv=fail; b=gLU7f4z7WZlmdRDP0TGqh02rkU+3iQgyTofCr2WoXVrv/B6ahKiEfQxtfuC5lB4qsmj4lUWT3825kwl5VRq8/Lt+IQMzVi6p7Qzt++/l7ymphGfBKKSsetB8W8HdnPgsBoHqk0lsddbZT0PchWndbDiVZ3qgrmXLyxxt8uMofZs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718419572; c=relaxed/simple;
-	bh=ua1QoAYeeO8Xjw7CENThIxw/P/yBSiSw0BtvoHOXhD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iQlFo81+eZ9ZkKTKaTDSEPpl53xW1O7sqEJM4Mj2wSQSeBuvwLy59jLYhfXRltn1HcsZZ0LnJ1NExSLgyGV76hLQWgknnYmb9mEZZOJeXJ8jX5eXwMiAjNs8beuTDvHW0a0kmGnUGtXOqi1aqyTvqvMJWSDPiiII5lF2wmCllYs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lw48oDgi; arc=fail smtp.client-ip=40.107.93.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B02EAF6;
+	Sat, 15 Jun 2024 02:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718419580; cv=none; b=JDvnFgdd/A+niQ6jCpMYzjhAsDLW8bgtIn4WfmwJf+LLAH71F6d2xjPIFysOUlNt/unYVtu6jUBRAIgBQZofXQNcESLxTUht8eICw0lUto36gXXOT+HyZyvCIU6QFZaYbnFvWGjAebQlyhpQDinAFWjCo6nmKQoDerufJkTjuYU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718419580; c=relaxed/simple;
+	bh=CayOm4G1CctrOMeeJE+sX0Qmi5vmbd/5D18sZkUGXDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GAEjLn1cvJnmleZYY+44bcdXlAiym2P/dhxETDq3eFtYX9RE7ITtjJ8DUmuHhY0VE0YpGp2xNt5HYDRrimIuoMIq5A8YSmultIXPee0pQqUWoQ+FDOqF1xnd4HDPa4L/bCws2RPTIS3r02WD51cUXGluFne/1rnlSzDodnPDkx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CcG5Okpe; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lw48oDgi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P4iGC06V0e+l0TYzP0dvWNfLs1Xyd3baSxWT2ogljnq/rRTz/qQ3PEcXSOdcbc4JhdzcSFyM4Jh+L1zI24+mcdEYWmy8+/b6aET6ebjHvuLkbPe/MrrbXZdUSCKqygXQ7lfS58ScAczblsH6T+p4Ik2l6YyCGKA+5u6IYvGoZn6QxIvnfgFUY7QbbBWJMdplPJkJlet+tzC+yQJbXch3iehmzL10TU9rjiLnVYARrM8bpWerHfIZkyS4ozoFrHCobgTzXwduOoClnYmbu2Ucj6Cx3FQMNj9og812V5bfrUPsZxU22t55Ahu54vO32kAtluV6YTFeEvdoTXl5zAkGZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DbbPycdqJLYR8eLlV0/S72oEHUfmBuJDgCP6xr72diQ=;
- b=OzcR8Wq+oqHUYgu2rw+RzAWxJEbgLhH8DCfq1hegalLuh5h5uXyOHJZg+NVig80TuWy4P3vcooTIioizo0oQypnDJK2xewJCq7g8HiBXuQ8XqUC7TFzqrHGJvvG3QUtO/ADFDciyrUsf3wZrtjXQTIel1UDp3mxToVyEs/vutQ6FnNM/7pOY9U/EUcqhgQrCIG1Z93kKlwzYfqeKXh/nWZTB4Mg40lm4PjFAPmvDhaUW4ENzaCflhl+c5q57UiKwfBLon6VUuIJPoN8cyxALE4gase6zkmnyOs1l5DlH1mytK8r/Z7pI5axxq+4ZCIWfCFS1AlzjyVETCpMpG7K9RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=eideticom.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DbbPycdqJLYR8eLlV0/S72oEHUfmBuJDgCP6xr72diQ=;
- b=Lw48oDgi9nG9ZMKCnYo71zBoP46r0aej1gtFMGgfoCwUtMn186/YzFIG6C2d7qzY7+vqfJdaqb+XRq6Kd1lrCw2t7mTKEEKwpRfciIkW76p1hZos3s+IcD6JQwm5qzsh5kUZnHhMTJacFPOewj6mmrWk1KcJ1l7xAVPSZGwazwFc++R+nHhhWHRw0A6FQ4tl3PQ8awuZOjUOv8Y2KhzIwYLRw25f/t34DBnkPLZfJXIhjaojnnnR5ro1aR55i04tR7EeHc1m+KiaDf4llxgIBW2bKbtpntBn/q3KnjPUSZykGJQ8sZSOCVviKkfc6ulxnH7WfG1O3ja4qST2Amldwg==
-Received: from BLAPR03CA0060.namprd03.prod.outlook.com (2603:10b6:208:32d::35)
- by PH0PR12MB8032.namprd12.prod.outlook.com (2603:10b6:510:26f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25; Sat, 15 Jun
- 2024 02:46:07 +0000
-Received: from MN1PEPF0000ECDB.namprd02.prod.outlook.com
- (2603:10b6:208:32d:cafe::73) by BLAPR03CA0060.outlook.office365.com
- (2603:10b6:208:32d::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25 via Frontend
- Transport; Sat, 15 Jun 2024 02:46:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MN1PEPF0000ECDB.mail.protection.outlook.com (10.167.242.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Sat, 15 Jun 2024 02:46:07 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
- 2024 19:45:58 -0700
-Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
- 2024 19:45:57 -0700
-Message-ID: <ac470f75-c276-4f15-b386-e88194e17f13@nvidia.com>
-Date: Fri, 14 Jun 2024 19:45:51 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CcG5Okpe"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-440530cadc7so16705771cf.0;
+        Fri, 14 Jun 2024 19:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718419577; x=1719024377; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OT2RssNaSUa1rWMkNzd+1pQBqOCAu8315Wi2zKuipi0=;
+        b=CcG5Okpej1GIx/DOoCRUZi6IMWQh2WJek2aay5WQCoI0YExblU4otNqz1QWsP+Raoj
+         xqx6O3VqqOPUr1/RinVV9krvBrF06H35HdBFphYaMgEvmv6DmhL+T3KIkG/w/bpTln9+
+         YMdVDXFPqWCIFY2+v7VPKGzdXL/E/zI+RDA2J7eYPZqs2DMQrsn9WPrI2kY0HJ1Ccvda
+         G2cgb6PR+WwqA96lOSOi8BrUW0SKvwJWIs3ELfRR/Ygc/o8BGC/jlSabzHSV6Zs6Aadc
+         a5xIax6XejxZ2gqgIDFe6ZYIXKGIk7wKPaWP6SCSTE1V+fyLyBKWlPgA59TVyVQHn1tX
+         U2zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718419577; x=1719024377;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OT2RssNaSUa1rWMkNzd+1pQBqOCAu8315Wi2zKuipi0=;
+        b=rRLd6+xkUJXNN1OXtcPATQEGKSCoxg0e0vQ9d26YxLbj/phl874ka1ZmGf7to+eb1i
+         xYg7ohJBbkYH+hAtJHexIQjaz9MrcyDtvdBhjDRmAppwTfgSyc5du8CJLvDCgWLsJSsy
+         rn5kMPBbZli48QHHKfBQbhyGd29Ac+cKnhdzaWM6RqCBzrjYvQj7r0fdx3QVe2ymAEzh
+         494j591TEg8yLJpyv39w2CtZ468YovepRJU1xfH8TEKWY75w3keet/xXKxCVXyi1ekfg
+         KbVr7v7/YEdjL0BoAqowKWGz1WzSmOn4kXf7y0nhfjSKBFnlq/62GMpk0FhwDg2RhrG0
+         U2Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCX613EAkWg2q8Gp+yGzsnCSiApdsboi2Atblk2sqspY0Yasp1urko+keosV8MIHLCN9Kkhp1gCgHTy5iFaGeQYdNuGVNrWAWHC0cfP2wgvuRaKLWiEysURdB7TaDpejTJKOsOYF6AzJOZZotLDt5JTHznqka84f2vGiN4o5zhcd7GpzCeZUF7YEvqcHM/flU9BGzDHXBB5Qvx+DyU7U88lK3a79XMAjtA==
+X-Gm-Message-State: AOJu0Yz0LVPibtUvgnqUO0Ay+tzKQNnZClUndgib1me8FtPtWrUN9nYP
+	cRF92g+R/+RS028a6vMUMOBX3PNoJc9GlSIb2ToJ3wCDEl6uGxAt
+X-Google-Smtp-Source: AGHT+IG3nzFdI5+53c3/xvx6gEm8fdTfMr49LEKpg9JdpL+E4lnmp5VenTGHRK+8HEy1H5IpoWTJsA==
+X-Received: by 2002:a05:622a:3cf:b0:441:1536:2fb2 with SMTP id d75a77b69052e-442168fc2a2mr45239521cf.5.1718419577401;
+        Fri, 14 Jun 2024 19:46:17 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef4fe986sm22655881cf.33.2024.06.14.19.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 19:46:17 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id CAF0C120006A;
+	Fri, 14 Jun 2024 22:39:30 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 14 Jun 2024 22:39:30 -0400
+X-ME-Sender: <xms:4v5sZiCIkC7OszPaUMssT74wKmoECu4NE3RGQzb4_kL-fa3KTqBvVA>
+    <xme:4v5sZsjRTDNULmmpq4LUBGajNRHiHpO44d6AHaheZfdWL7aP1aLnYujuVwmBpznVz
+    5sLlwRaEkwmqRPLCw>
+X-ME-Received: <xmr:4v5sZlla76dvvjrvfJE3piPANyg0H7c46z6K4hRNgykWR9spKeHvhQ5J6A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvtddgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepgffgheejtdfhheehtdejffehgedujeekudfgieejledttedvvdeiuefg
+    fedvffdvnecuffhomhgrihhnpegtrhgrthgvshdrihhonecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhh
+    phgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunh
+    drfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:4v5sZgzaBElSuRsdP-fIruFKFOgjWwtV1baN426HYu8I6PfEIPzAOA>
+    <xmx:4v5sZnRjSxrDCuN6DGH0_4-0MOYUdqTl-VxIZsMqeK6RcIRc2Oz78Q>
+    <xmx:4v5sZrYsSrUFyWL_jSB8sb-y4KoJnCVTOzEV18gaRiSiQsbvUrF3Ww>
+    <xmx:4v5sZgQfJlOXaOAh22tp-ts-48dH7scU06sYeeL82FDAZ0UPUuL_OA>
+    <xmx:4v5sZpCZeb_TruU314g99fB0tIfDrUP-OMsFkOT3w92vuLSbwBGFHpa5>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Jun 2024 22:39:29 -0400 (EDT)
+Date: Fri, 14 Jun 2024 19:39:27 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Gary Guo <gary@garyguo.net>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	torvalds@linux-foundation.org,
+ linux-arm-kernel@lists.infradead.org,	linux-fsdevel@vger.kernel.org,
+ Trevor Gross <tmgross@umich.edu>,	dakr@redhat.com
+Subject: Re: [RFC 2/2] rust: sync: Add atomic support
+Message-ID: <Zmz-338Ad6r4vzM-@Boquns-Mac-mini.home>
+References: <20240612223025.1158537-1-boqun.feng@gmail.com>
+ <20240612223025.1158537-3-boqun.feng@gmail.com>
+ <20240613144432.77711a3a@eugeo>
+ <ZmseosxVQXdsQjNB@boqun-archlinux>
+ <CANiq72myhoCCWs7j0eZuxfoYMbTez7cPa795T57+gz2Dpd+xAw@mail.gmail.com>
+ <ZmtC7h7v1t6XJ6EI@boqun-archlinux>
+ <CANiq72=JdqTRPiUfT=-YMTTN+bHeAe2Pba8nERxU3cN8Q-BEOw@mail.gmail.com>
+ <79239550-dd6e-4738-acea-e7df50176487@nvidia.com>
+ <ZmztZd9OJdLnBZs5@Boquns-Mac-mini.home>
+ <c243bef3-e152-462f-be68-91dbf876092b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] mm/gup: allow FOLL_LONGTERM & FOLL_PCI_P2PDMA
-To: Martin Oliveira <martin.oliveira@eideticom.com>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
-	"Andrew Morton" <akpm@linux-foundation.org>, Logan Gunthorpe
-	<logang@deltatee.com>, Mike Marciniszyn <mike.marciniszyn@intel.com>, Shiraz
- Saleem <shiraz.saleem@intel.com>, Michael Guralnik <michaelgur@nvidia.com>,
-	"Artemy Kovalyov" <artemyko@nvidia.com>
-References: <20240611182732.360317-1-martin.oliveira@eideticom.com>
- <20240611182732.360317-4-martin.oliveira@eideticom.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20240611182732.360317-4-martin.oliveira@eideticom.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDB:EE_|PH0PR12MB8032:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7ed1447-964d-414e-1dff-08dc8ce54e8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|376011|7416011|1800799021|82310400023;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dml1QXRETTgreElBSzRzei9zdFpLYk02NWJWVHNsZUhUZ0FZTjBsR0pkdzhh?=
- =?utf-8?B?SEdBMEs1TnlkZkMvQ0dzOU9hVElHeG1UY2xTcUhvK0hEODlaWmVScW1wOEwv?=
- =?utf-8?B?WThsZUphNys4UVBzTG9TTTNoSjBpVHB1c3BPaFdVRU9CMmtCWXJrSUdDK2ZY?=
- =?utf-8?B?SUluZW01dnpXYlc0ejkySnY2Z1FNd21KdCtOUjRpL2FZRThEU0I2a2QvVHdR?=
- =?utf-8?B?Y1JaRlhPZVJyaCtVVW1xTTRhRUFVam1zUEprdWtVclppVGpsTDM5V3dzL1oy?=
- =?utf-8?B?czBrUzJhcC9CUlZxZkxQNjZyV2QvakNkT3IwQUo4dW1qV1dIaWZIYXQ0RExn?=
- =?utf-8?B?Mkd4RUZoZHBtd2Y1Ty8vRmxEN0psUk1RNUpocWQwdEdnVGFOdGc1bVJ5Y2VL?=
- =?utf-8?B?NkRQQllyUGNNcE56TXN4NEl0UTB2T0l4Ritva28ycVZvQVBrbnBaaFBCR1BV?=
- =?utf-8?B?OVAvbEF1N0lHQmpXbjZudVJkeFdpWENjUnNTaWFMSTlhTHdUR1p3a0FXd09Y?=
- =?utf-8?B?VjJqTVRZdGZZcGlKSi9FM0hjY2pTT1craXJVUmluM1VRaC9vd1BEZ2JPZG96?=
- =?utf-8?B?andEV3pXUGUxVlpmSDUzek0xZFhEWEc3ZFU3UTF2cEtVMER1eHhiemRvbVpz?=
- =?utf-8?B?NmRmbTJFNmRlME0xSFRYeTBvdlZZcEp6czVtSEtYMXlGSzFLM2hoRUxSMk10?=
- =?utf-8?B?bXJzQW1FRkJhbFcxM09iZ2NrTDkvU2FvdnNjUXM1eGhBVmNEaVE2YVI2cmVY?=
- =?utf-8?B?RVlKMUIxWjNNRU9TN2tNam45dmFSOFlLaFFJbEdiTkZPRDRpMFZDQ3cxNGhx?=
- =?utf-8?B?ZHNVTmVTME1IMGJES2k0eGtKZ2hMZHY4d0Z0NDltcmNqRGhxdzJHaDI2a2NM?=
- =?utf-8?B?WUtCSk56VVlLL3owVG5ES0wvTGtlL1RrcVc0eFlncjlVdUp0Tlh5bi9kN3pN?=
- =?utf-8?B?a1RKcXJyZEwyYXFWR08vY0JmekZSYVhlS05XdzZ1emZ6WDVaYTJSRHRyUWpq?=
- =?utf-8?B?RFZzU2ZRSkxPRVdyczBMWWJacG16ZmRCeUREK2RQNERsRmJkdVV6QmlhZHpv?=
- =?utf-8?B?OVdzSkw2UThxampZMExJTkJkQ0ZqTjd6dS9MdUVwa3lJL3pQUG5ualk3d3NQ?=
- =?utf-8?B?c2dXa3U5akpFVzAwMG1TS0xRVTd6cHlFOTNxbXZXaHBxUDdHQXFuNGEyMnUw?=
- =?utf-8?B?QVppOFd2dmhoN3ZISFQzL3dkQzNaVGkwU0VoVVBoelVFRFNzTzhoKy9tOGZB?=
- =?utf-8?B?RWx3eVBPb2xzeGpnRVViSVNweXFONFRTa0JPV2liWHkvN25NOFIrRnBOQzhz?=
- =?utf-8?B?SitJMDZqQldUYjJGVEFzdUhoUkNuSDBsVlRRRHNQNFpUTTdvdlJuSlFhcTha?=
- =?utf-8?B?d3Y2ZFgxcDdYNTRpbG0zd0x2QmMzWFRaeEtHTW52M1YrbUdTM05uVUxwMlJT?=
- =?utf-8?B?Y3UxZHRBT3l3cjlKaU5HTU9IbnlNamxzdGtwZEVNYkgxTjRPSklPdjlFVWkv?=
- =?utf-8?B?VFFoaXBOZXZvK08vTGN5cS9MdjlheU8xVTloNnpWbmdZUzNLRjhNZ3R6M0JR?=
- =?utf-8?B?V2h4TzNyNncyalpBNC8wUUNpaVg5dlJIL0M3bzBSOExMb2RzKzg3NnU4NUJz?=
- =?utf-8?B?aEpIZWsxTElqSnREak8yaW1GMUpCNWhqZ0I5NVJBNmxKWTZFSkpCMFc5MHBV?=
- =?utf-8?B?S29uZ2M4Rno5bUM3VW85ajlKMzk2MkxPTHhlZTAvVjBHSGo3NExpTUc0RUti?=
- =?utf-8?B?bm8rZ0JqWXJLbmpHRWxONTdQTklJWDIwSWtUTlFmMTZYNEhQdWVYR0xOYzdj?=
- =?utf-8?B?RG1zek9RL0NPK09NRUFpMU92Q012Q28vUmcvSThXUGVJUmlwRGZrdWk0bTV0?=
- =?utf-8?B?c0IycWxLOU1ESE52OWpQUjkxL3RCOGgwakhYTm1YZFgvZFE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230037)(36860700010)(376011)(7416011)(1800799021)(82310400023);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2024 02:46:07.1122
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7ed1447-964d-414e-1dff-08dc8ce54e8a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECDB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8032
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c243bef3-e152-462f-be68-91dbf876092b@nvidia.com>
 
-On 6/11/24 11:27 AM, Martin Oliveira wrote:
-> This check existed originally due to concerns that P2PDMA needed to copy
-> fsdax until pgmap refcounts were fixed (see [1]).
+On Fri, Jun 14, 2024 at 06:28:00PM -0700, John Hubbard wrote:
+> On 6/14/24 6:24 PM, Boqun Feng wrote:
+> > On Fri, Jun 14, 2024 at 06:03:37PM -0700, John Hubbard wrote:
+> > > On 6/14/24 2:59 AM, Miguel Ojeda wrote:
+> > > > On Thu, Jun 13, 2024 at 9:05 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > > > 
+> > > > > Does this make sense?
+> > > > 
+> > > > Implementation-wise, if you think it is simpler or more clear/elegant
+> > > > to have the extra lower level layer, then that sounds fine.
+> > > > 
+> > > > However, I was mainly talking about what we would eventually expose to
+> > > > users, i.e. do we want to provide `Atomic<T>` to begin with? If yes,
+> > > > then we could make the lower layer private already.
+> > > > 
+> > > > We can defer that extra layer/work if needed even if we go for
+> > > > `Atomic<T>`, but it would be nice to understand if we have consensus
+> > > > for an eventual user-facing API, or if someone has any other opinion
+> > > > or concerns on one vs. the other.
+> > > 
+> > > Well, here's one:
+> > > 
+> > > The reason that we have things like atomic64_read() in the C code is
+> > > because C doesn't have generics.
+> > > 
+> > > In Rust, we should simply move directly to Atomic<T>, as there are,
+> > > after all, associated benefits. And it's very easy to see the connection
+> > 
+> > What are the associated benefits you are referring to? Rust std doesn't
+> > use Atomic<T>, that somewhat proves that we don't need it.
+> Just the stock things that a generic provides: less duplicated code,
+
+It's still a bit handwavy, sorry.
+
+Admittedly, I haven't looked into too much Rust concurrent code, maybe
+it's even true for C code ;-) So I took a look at the crate that Gary
+mentioned (the one provides generic atomic APIs):
+
+	https://crates.io/crates/atomic
+
+there's a "Dependent" tab where you can see the other crates that
+depends on it. With a quick look, I haven't found any Rust concurrent
+project I'm aware of (no crossbeam, no tokio, no futures). On the other
+hand, there is a non-generic based atomic library:
+
+	https://crates.io/crates/portable-atomic
+
+which has more projects depend on it, and there are some Rust concurrent
+projects that I'm aware of: futures, async-task etc. Note that people
+can get the non-generic based atomic API from Rust std library, and
+the "portable-atomic" crate is only 2-year old, while "atomic" crate is
+8-year old.
+
+More interestingly, the same author of "atomic" crate, who is an expert
+in concurrent areas, has another project (there are a lot projects from
+the author, but this is the one I'm mostly aware of) "parking_lot",
+which "provides implementations of Mutex, RwLock, Condvar and Once that
+are smaller, faster and more flexible than those in the Rust standard
+library, as well as a ReentrantMutex type which supports recursive
+locking.", and it doesn't use the "atomic" crate either.
+
+These data could mean nothing, there are multiple reasons affecting the
+popularity of a library. But all the above seems to suggests that you
+don't really need generic on atomic, at least for a lot of meaningful
+concurent code.
+
+
+So if we were to make a decision right now, I don't see that generic
+atomics are winning. Of course, as I said previously, we can always add
+them if we have learned more and have the consensus.
+
+
+(Don't make me wrong, I love generic in general, I just want to avoid
+the "I have a generic hammer and everything looks like generic nails"
+situation.)
+
+Regards,
+Boqun
+
+> automatic support for future types (although here it's really just
+> integer types we care about of course).
 > 
-> The P2PDMA infrastructure will only call unmap_mapping_range() when the
-> underlying device is unbound, and immediately after unmapping it waits
-> for the reference of all ZONE_DEVICE pages to be released before
-> continuing. This does not allow for a page to be reused and no user
-> access fault is therefore possible. It does not have the same problem as
-> fsdax.
-
-This sounds great. I'm adding Dan Williams to Cc, in hopes of getting an
-ack from him on this point.
-
 > 
-> The one minor concern with FOLL_LONGTERM pins is they will block device
-> unbind until userspace releases them all.
-
-That seems like a completely reasonable consequence of what you are
-doing here, IMHO.
-
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
 > 
-> Co-developed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Martin Oliveira <martin.oliveira@eideticom.com>
-> 
-> [1]: https://lkml.kernel.org/r/Yy4Ot5MoOhsgYLTQ@ziepe.ca
-> ---
->   mm/gup.c | 5 -----
->   1 file changed, 5 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 00d0a77112f4f..28060e41788d0 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2614,11 +2614,6 @@ static bool is_valid_gup_args(struct page **pages, int *locked,
->   	if (WARN_ON_ONCE((gup_flags & (FOLL_GET | FOLL_PIN)) && !pages))
->   		return false;
->   
-> -	/* We want to allow the pgmap to be hot-unplugged at all times */
-> -	if (WARN_ON_ONCE((gup_flags & FOLL_LONGTERM) &&
-> -			 (gup_flags & FOLL_PCI_P2PDMA)))
-> -		return false;
-> -
-
-I am not immediately seeing anything wrong with this... :)
-
-
->   	*gup_flags_p = gup_flags;
->   	return true;
->   }
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
