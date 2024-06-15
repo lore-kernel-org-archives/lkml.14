@@ -1,206 +1,122 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2070.outbound.protection.outlook.com [40.107.94.70])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E62F646;
-	Sat, 15 Jun 2024 01:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718414906; cv=fail; b=KAl2sKYyehg10i5EtCLz5tqzf407MnJMWuW5mv4s+XBRKkNP5qWeuu8Yk57a83tRGfVKLK4BArtC7xF9fh3C4FGJ5nE7uaTwxdFcI9yHKiri+15CF3BeEykQL/n+kLcD0MJqNr4EnHFLQbdFPz70hFhe6m6fj8LELDevSOBhkZ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718414906; c=relaxed/simple;
-	bh=NWW/aCaCWMWKQp1pLV4X8RbGYCw+aMO6gAIgyhDIyRY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GQvWsnfVblJkwTla4YJ3rM5+WzdU3AyXIrR02s+PaT/fU1NjNEMQjT1lqn4/wnoKonWB+SjH0B8x9KlV+8MT6Z7jTp07pKpe+AaBhDhQbCpzFtXpOTncCge6n7+veu/PV34HmRjgLGpAAdVbQCS5Pz8w027+oPVMJFRqt/oKbsM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rVr2WWKJ; arc=fail smtp.client-ip=40.107.94.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32175635
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 01:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718415096; cv=none; b=qjmZfZndY74dsig2H/mLkzdxTDggJ4BTMNh/Z+nSIoHM7CaSqSLRfQCanQW7FzTvRH3WTSUQN2qXmU0WxecpQVcOWFJDEh4zP0+5E0EMXmQ1kcL/JHrlNejpA9dUfBSal5L1IX0m4oOu6qGkPjPoUf4LWhCbzfgBB0hviWn1cDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718415096; c=relaxed/simple;
+	bh=nehH3T81ejemlLKx/jrzh+9n4GlSlk++MOZyKeiA9U8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=sFQmy76o4iy3PpmpXJVsKoMKxWWZyCI/OfUPDIhCkxtk20ILTHRbu09k/kEhHRTx8h81PVn9asTVYq8wyDEIM0pAQLQf1dbhwXkt1abFKANvISLToROhku+1shg21W3U5pSWTt0fMAOVe9GXwHl2HMpU1ZqCNdME406+dwnmilg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QIaPCYc3; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rVr2WWKJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eqq9eeaOVSx6Bqd0n3SrMSIlVN0NFqENrXqyFNkseALYZOjsa07tX7oMYAf6VztLy/16mZY2MxFN6Oangp28GJJwnA5r7C40OJAiqFWW3Wp+k8qemdziVwpOXAjjyObFt1GX3KAV5Xmc4kEoFPgmknzU0XJRRMpRZes5eMqQXiMwA9f91grALBzJDFOI3O0ahfB15xOyLiXOTc4Pjl7b1Rs702KaxAxETtaLNnY+N+XQ76oBrKK7+TBmauYyRQMDk5daAaL0XWi04g3xBIEHh2yg2fL6m/lBXjGRQy6rvn6C+o9blMGkEVf/apXRxPFd6Mkjpj40U9qV1BIfAVTOJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f2/rjzXXkpwBA6c6BnfO8fV8uGpWRE1kPpeoc687ayQ=;
- b=gsEp55naFHZn0PdmAmJdZlJ/YiXpFv7EK4m25RB9zcKo8+xUC51/osobBOV9+4ZMRC7E3fPSB10xL/bMzBMS9uATzlsgFm7JSUV6+5iFl3S1QrnGUPS69aE/3EE11A5lTEw7+M3ZrRcqMAixuX/+RA5eFqs9ClKlasVd7Ow154SWX1CEmVIo3mnwwW1vz9ud+JFfI5nlArXU+dDhwcxs5iPTCHeWooMNCtq016Hmvx85MCEAJ6ptuO7wOQBPrz+7VgbhxXI5Gehnx8vz0KDpJQYdyVY8u21bHnfKpBMPs0mO7+w2B5OoH5LPS8qv15tEUHQvfq7p6NE/Uan0RUKrAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f2/rjzXXkpwBA6c6BnfO8fV8uGpWRE1kPpeoc687ayQ=;
- b=rVr2WWKJ1e7ogsI0y0+9VmEMkpJggje4zW571DonmrOvC3YBx8GSbJW38p6d4/A8n7m7j8IYur+NVYP/JlgmtvqHdkfW4yvrM1vzGyn4oqQtnWTgXz3RTH88Km0+ZiKShVSWDGkyGj0f47KYIXLAe4LBN4cmBf49sTZeCllHKG55bGm2Rwfjav9rxfZqgcWSvp4+T/bffiau1vbMf/wWuHm/5HJKDhDmKxYjmjZsurICHI0kVkvkdzLlCZfz0YEWUfUladXVGHoKPINOa03f6nkmJ/hipQ4EXRcaua8s6GLp+6/fb5UBBuhaFjI7EIe9jkBbtmnkRQGRpLIsQohM7w==
-Received: from PH7P221CA0029.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:32a::12)
- by DM4PR12MB6423.namprd12.prod.outlook.com (2603:10b6:8:bd::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.36; Sat, 15 Jun 2024 01:28:16 +0000
-Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
- (2603:10b6:510:32a:cafe::f0) by PH7P221CA0029.outlook.office365.com
- (2603:10b6:510:32a::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.26 via Frontend
- Transport; Sat, 15 Jun 2024 01:28:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Sat, 15 Jun 2024 01:28:15 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
- 2024 18:28:02 -0700
-Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 14 Jun
- 2024 18:28:00 -0700
-Message-ID: <c243bef3-e152-462f-be68-91dbf876092b@nvidia.com>
-Date: Fri, 14 Jun 2024 18:28:00 -0700
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QIaPCYc3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718415083; bh=aPzxEe2AT3dF0AMQYc5JgGBhkzh96nnm8qimgTmA7Fs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=QIaPCYc3Ho13EYA59vk+2rfu/NUbKVBjbP2LY6ElZggR2XRuzuYAPIaDuSBd4JSIi
+	 YZ+JQx2Hq19JW63IviP7rbtVyTbdmugXeGYOnV0cjvpqqeFxTE1GJl5g7caHAQORPQ
+	 aBuY1uIARsGHX+RRFdoxu4JYmbizYzf9crs6q5+I=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 64B878E0; Sat, 15 Jun 2024 09:25:11 +0800
+X-QQ-mid: xmsmtpt1718414711t2bhippe3
+Message-ID: <tencent_7C660A3DDB361896D036564A16742F776B09@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeie32sTzZtrFxyKLDjhbnhGkBODtguGQBHuy6ebPnJKRujjB9Ijnu
+	 4Z0Hhb7CUAl6FMu3CZXaiS4zw58tYgH1V4j8gvTlbYuxAJsucXcs91Xar+GC53AaTPIFpDdjVpfv
+	 p2Mg53LvPeihMtWcU/O0WMlD6Jr4PZieJojcJL6LWgsr7qrW7nyx2r8xU2V3Py01WReSAN2D5esm
+	 Dypxrly2WolME4wrCUzaLrODKXSJK7qzrifdzX+qsXtL2cUI3JSMbeU0/OUaI4lR1Db1YM4TL/Gs
+	 efmImw37nUe/UI6SHgYgKMb08HpL5mY3NnjWn5DyM3CMJlgkhbFZmeD2YPi1yX6Y6ODMN86LT9V5
+	 iszhONPKWsO1YhhGEbcOAAtvOWnCtIuna+RMSaJdXMYuWokSviUOxYdm2vh3dlht4yfg0UHAnEe/
+	 IwQAaBZza1JwR/RrzGcTcNvnPy41SzBXYJcZY68QEoubZgZdajiPdvHKYLXifUCQoAKn0OhvpyQ3
+	 xuztlprQJHZn9U+9S12LyKLVqsCvcnFb/lFq+J58vEE+ZYzXxbaLlWdN3ZqCiZDZokSH56cV+8ux
+	 9Q5B3mf3npmjJOqMgsmEY1uaoZQQglbq7rG9wxvMGP4ew8NJBFPv71QxQwmeMoqfZQ/L30pUZFDE
+	 qzAOI0V+0Cay3AbPluVow0b7xaNNPtYwA585O5PKNdE4K/pt+cYGcqszYSFbwJZOsD6NQHKTNdtN
+	 +vBMsUqfL0fvpo8guRV3UXpue5FRyygk9yNmqw1/nKSl2uhIX3F/Q6HbePoRS15lfb2FZ4VDwZDC
+	 Ou3dfVldKBEQR2Qcyfu1WuClLW0C5I9I93ejnBoMsAdNjGKZTJUeOmxcJFIZ9zkpERjvk8WvLq9r
+	 HLYM83+1OiulsSkO3JDFwj9VZmubkAy0FsJ/LJgWpHGZTw92XqZ88=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] general protection fault in l2cap_sock_recv_cb
+Date: Sat, 15 Jun 2024 09:25:12 +0800
+X-OQ-MSGID: <20240615012511.3389653-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b0906d061a468b93@google.com>
+References: <000000000000b0906d061a468b93@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/2] rust: sync: Add atomic support
-To: Boqun Feng <boqun.feng@gmail.com>
-CC: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo
-	<gary@garyguo.net>, <rust-for-linux@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<llvm@lists.linux.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
-	<alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
-	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, "Alice
- Ryhl" <aliceryhl@google.com>, Alan Stern <stern@rowland.harvard.edu>, "Andrea
- Parri" <parri.andrea@gmail.com>, Will Deacon <will@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Nicholas Piggin <npiggin@gmail.com>, David
- Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc
- Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>,
-	"Joel Fernandes" <joel@joelfernandes.org>, Nathan Chancellor
-	<nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
-	<kent.overstreet@gmail.com>, "Greg Kroah-Hartman"
-	<gregkh@linuxfoundation.org>, <elver@google.com>, Mark Rutland
-	<mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>,
-	<torvalds@linux-foundation.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>, Trevor Gross <tmgross@umich.edu>,
-	<dakr@redhat.com>
-References: <20240612223025.1158537-1-boqun.feng@gmail.com>
- <20240612223025.1158537-3-boqun.feng@gmail.com>
- <20240613144432.77711a3a@eugeo> <ZmseosxVQXdsQjNB@boqun-archlinux>
- <CANiq72myhoCCWs7j0eZuxfoYMbTez7cPa795T57+gz2Dpd+xAw@mail.gmail.com>
- <ZmtC7h7v1t6XJ6EI@boqun-archlinux>
- <CANiq72=JdqTRPiUfT=-YMTTN+bHeAe2Pba8nERxU3cN8Q-BEOw@mail.gmail.com>
- <79239550-dd6e-4738-acea-e7df50176487@nvidia.com>
- <ZmztZd9OJdLnBZs5@Boquns-Mac-mini.home>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <ZmztZd9OJdLnBZs5@Boquns-Mac-mini.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|DM4PR12MB6423:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4eb900a9-a36c-451d-aa63-08dc8cda6e0c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|376011|7416011|1800799021|82310400023;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YU5hbDhvUEkwak1JS2hKSWxzNXdRVm9wa2tubzZ1djZ6VjIyZTBjL1ZZd2w2?=
- =?utf-8?B?bTNHZk5ENkpqa2wycElIVGhra2lkdzRmb2U2bk13T0E0eE5xMHRpRnFRSUhN?=
- =?utf-8?B?SnZmTVhXcFZkOS9XdGd2ajdrSkV0VTY5OUdKY1dKUFpRdEQzTWk3RlRYZjNu?=
- =?utf-8?B?WU1pK2EzenpCempuS1YrSjJSZTMxUUdnYnBOa3JCVHduWThocDJWcWZReU9T?=
- =?utf-8?B?UGZOcVI3cXZRUlF3cHpEQ2N2NGxxQnlDZUg1ZG5hUVVOMklYRGxtWnN1RHV0?=
- =?utf-8?B?QWIzL1NGdis4WE5mU25NNXZEeWpONnNWWjZWbERsc1RRK1h0QTQveFdQWDBW?=
- =?utf-8?B?clY0RXI2TVlZaHVPMTR4WHd2M0xsUzU4YmtFZUxHdlhRQ213L1VDQWs3YTZ2?=
- =?utf-8?B?T1BtQjVlUkh0cVFWOWswQmZ2Z2NCRmVFTHEwVjhpeFFiakpDZ3pqMCs2WnRQ?=
- =?utf-8?B?M1lwdTdtaWxRZVNWK1BDYVdxWkdvNEdvMlZMK3p3aVRlZHE4Tk04QkJ3TXpI?=
- =?utf-8?B?OVNYZE9vd1ZtdGgxMEFRUVRuS3l0OTc0dXU5QmtxeWo4K3hqSkpPcDl2amVW?=
- =?utf-8?B?am5mLzdNTGFmb2o1dHRjcGdDUTFXc0hjd0xhaEwrTlV5bHVCdkJZMUJmKzk5?=
- =?utf-8?B?a2RPR3lQemI2TStVR3ZKZGlHS2U2aERUTU9QTEpudGZLT0JNSXEzeDJOVFVK?=
- =?utf-8?B?ZHNMQmNEdHVraWw4aGt6QkFLam9QN1dOYTNld0p5bWFPcHdBckwzOUpGU3Nl?=
- =?utf-8?B?M3pSZGEvRFhJd0JneVFIRFFGZDczZ1J4SnNxRGQwc3lEcE9CQUJQdHdaMzlN?=
- =?utf-8?B?SmJTT1kwT2FuUzN3TGx4bFN5Q2IzWjhaUElncFdOc2UxNkN3bmdIU0toTlg1?=
- =?utf-8?B?OTJFZFJJd1BCYU1YTFVWbWJ0YUl3WXZab0VIcGZGTDJaYjQ1TTl3aGd2a3pn?=
- =?utf-8?B?Q1MxOXdZOWNKM04rYkUxNUNaQVo3QzlWS0wvdXgzWGJZM1FJL2FXQkRMV29U?=
- =?utf-8?B?aUdIN2N1RGNmZ3pFNllZWWNXTnI2eGlBQ2pEeWRnK0RsbG9rK2RGNU9kVzFl?=
- =?utf-8?B?R1Q1QmhxOU5QT0drYkVndEhqcm9lU1pFU05adW9TcDBlOTZ4elpCbVkydmd1?=
- =?utf-8?B?M3VEMVFzeVNuTzd6N2VMN2lzWFVMRDUralB6OUNQVnM2Z1F0ZnRYWDRQSldn?=
- =?utf-8?B?aVZ2N3JObklUNkswb0dJZGl6L0ZKZmxQZjRjd0dPOVFaN0o0cGE4MTRENTlp?=
- =?utf-8?B?bUc0V3BZYWIxbzNlNUNJWmtodlBlZnFTTndOV0c5cnZFNkZScWhEcHN0WWw1?=
- =?utf-8?B?OFhQOE5aT3BSczkvcDFETnRreENvZHhtN1poU2pBWkMwWnN2THZwVTBNTS9W?=
- =?utf-8?B?d2ZWMDRLbGxwYWF5d2ZkS0RubjdYcGxsaWxlOGZ3S0NmWnlEcURlc1JvT2tW?=
- =?utf-8?B?WmY3dkJyL0p4OVQwaXRpejQ5NUsvYVhVdURsQU1LbEJqNnhaSzlpaU5sS3lE?=
- =?utf-8?B?WEN5blFhWUx0bWpzdTQ1bnRKa05tb2l6NXYvcnVQNDBWNEJ5Vys3RnMvZ3JJ?=
- =?utf-8?B?aW45bTVlZWdsUFJkZ3Q2ODlFVHMrQ3Z3bUswazFsNDRMUC9RdE5jSjYyNDdS?=
- =?utf-8?B?ZUkwQTJsRHhBVmI0Y1V4MEhDUXJBdTVHOFIwQkdJd2RxN2dvMVpBR2JocXRj?=
- =?utf-8?B?eTZIbTdLYlV2bTM0NlN2SUNwcWlDL1p6RmlERWVMV0lZV2U5SnEwTnA1NHNW?=
- =?utf-8?B?b0hvRjVkMFZHQzBJY3FzYVlXNFp5M3JmbVZMRjJpTXZJdVptdVhxV3JGam8y?=
- =?utf-8?B?cWFGNDdNN0pZTTFPbGJJUnN4bDdtbVNqYkJMTDROcGlzS09CV05SK2J0bWxi?=
- =?utf-8?B?VVl6QWJkSlFTVGdZYXJkVjBKRjAzMnM4ck5XR3lKVDN2YlE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230037)(36860700010)(376011)(7416011)(1800799021)(82310400023);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2024 01:28:15.5600
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eb900a9-a36c-451d-aa63-08dc8cda6e0c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE33.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6423
 
-On 6/14/24 6:24 PM, Boqun Feng wrote:
-> On Fri, Jun 14, 2024 at 06:03:37PM -0700, John Hubbard wrote:
->> On 6/14/24 2:59 AM, Miguel Ojeda wrote:
->>> On Thu, Jun 13, 2024 at 9:05 PM Boqun Feng <boqun.feng@gmail.com> wrote:
->>>>
->>>> Does this make sense?
->>>
->>> Implementation-wise, if you think it is simpler or more clear/elegant
->>> to have the extra lower level layer, then that sounds fine.
->>>
->>> However, I was mainly talking about what we would eventually expose to
->>> users, i.e. do we want to provide `Atomic<T>` to begin with? If yes,
->>> then we could make the lower layer private already.
->>>
->>> We can defer that extra layer/work if needed even if we go for
->>> `Atomic<T>`, but it would be nice to understand if we have consensus
->>> for an eventual user-facing API, or if someone has any other opinion
->>> or concerns on one vs. the other.
->>
->> Well, here's one:
->>
->> The reason that we have things like atomic64_read() in the C code is
->> because C doesn't have generics.
->>
->> In Rust, we should simply move directly to Atomic<T>, as there are,
->> after all, associated benefits. And it's very easy to see the connection
-> 
-> What are the associated benefits you are referring to? Rust std doesn't
-> use Atomic<T>, that somewhat proves that we don't need it.
-  
-Just the stock things that a generic provides: less duplicated code,
-automatic support for future types (although here it's really just
-integer types we care about of course).
+please test null ptr defref in l2cap_sock_recv_cb
 
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cc8ed4d0a848
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
+index 6db60946c627..d6c2394f0235 100644
+--- a/net/bluetooth/l2cap_sock.c
++++ b/net/bluetooth/l2cap_sock.c
+@@ -1241,6 +1241,7 @@ static void l2cap_sock_kill(struct sock *sk)
+ 
+ 	/* Kill poor orphan */
+ 
++	l2cap_pi(sk)->chan->data = NULL;
+ 	l2cap_chan_put(l2cap_pi(sk)->chan);
+ 	sock_set_flag(sk, SOCK_DEAD);
+ 	sock_put(sk);
+@@ -1413,6 +1414,7 @@ static int l2cap_sock_release(struct socket *sock)
+ 	l2cap_chan_hold(chan);
+ 	l2cap_chan_lock(chan);
+ 
++	printk("err: %d, sk refcnt: %u, %s\n", err, refcount_read(&sk->sk_refcnt), __func__);
+ 	sock_orphan(sk);
+ 	l2cap_sock_kill(sk);
+ 
+@@ -1481,12 +1483,23 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
+ 
+ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
+ {
+-	struct sock *sk = chan->data;
+-	struct l2cap_pinfo *pi = l2cap_pi(sk);
++	struct sock *sk;
++	struct l2cap_pinfo *pi;
+ 	int err;
+ 
+-	lock_sock(sk);
++	l2cap_chan_hold(chan);
++	l2cap_chan_lock(chan);
++	sk = chan->data;
++
++	if (!sk) {
++		printk("%s\n", __func__);
++		l2cap_chan_unlock(chan);
++		l2cap_chan_put(chan);
++		return -ENXIO;
++	}
+ 
++	pi = l2cap_pi(sk);
++	lock_sock(sk);
+ 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
+ 		err = -ENOMEM;
+ 		goto done;
+@@ -1535,6 +1548,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
+ 
+ done:
+ 	release_sock(sk);
++	l2cap_chan_unlock(chan);
++	l2cap_chan_put(chan);
+ 
+ 	return err;
+ }
 
