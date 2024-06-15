@@ -1,95 +1,102 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57310107A0;
-	Sat, 15 Jun 2024 06:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C9A1798C;
+	Sat, 15 Jun 2024 06:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718432565; cv=none; b=K6SwvlRhk3ZXX2ZYb8LGClaDem+M/Ya1EQvKNhC5Dhrg0aBGTQCRLvxoap74eVB9chh6FoVJvrFlKmcmJAFkuyjoaKUSmPLR89z0tizUBKmMMu5kxlip+o3gEBNTfKfY7CJ7VZEQPZ5Ookz/hviMeM3XdOaqLFK7lJQfAD+kA2M=
+	t=1718432714; cv=none; b=AEv2rrj+vqjxMfR8h9LN2UENZMFm6Bbdp3THpEu8d11XwC6j8oUe75rXvP+osHK+GnC5/iW4bzNbyxbsXg1PPZXAPZAepKNqNAB9g2BL5Dw7fs8j/ST0fPM97a5ki/FGy9t4QMmOT18TQsaBlk63PhzwMCO46naX+LQoQ0B5XqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718432565; c=relaxed/simple;
-	bh=5vSskR819gwy02xW9+6ivo+XO+ai0QdgCNJE+f8Tr88=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=c2bxp84LH+ZakDX84mLVCARRFR3dn3WB3VcN3Wt9QqV5wJdQCKrtj90JVHjERlva6gQ+9C3CMTQsa2rBVu3mm3vHBjzRV6SubfJr1gr/Qr8k9l6sFacgX8n44Ex0q7GzhBZWjexJ6zhxM/LH7bFbJv5xSv4jxxh/xKuah1aIVNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Mk0ejyL6; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718432714; c=relaxed/simple;
+	bh=zU2ttL5/qBiAy68a//LaIE31Xa+l2SJsshCWjBPUvk8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=go8IqIkckQLJst5vBv60GfbgpIvsGxrClS97ezNINcwDUYoZtXF8DWuhB9TI0IOImCwLYvuIDHXgFy1auaHNaWS/sALTlj7D8J+HNhWuDqAWETbMOtCONip7FwSVkUrS/vJCqidPyFkQEDqTYoTbqaNNMVI7K/LU1l4oYwpFesg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CMdxIfNi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Mk0ejyL6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718432558; x=1719037358; i=markus.elfring@web.de;
-	bh=pa3yLCfa4A6/QNLA9o2k3ZKh1ub9kSYqi973JQDSuP0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Mk0ejyL6MK7Kqlvd9d4gRn7mle0rSMuthiK3EFI+ENSKkfgbBAZsIMtNCt8KmKCm
-	 gZCAbmzHIb6IwKaP+jdG5NSYGYfomibhbIElbiyvmqa8GkKH/FQ1igyh9ECcfygDL
-	 oUiVmsDH03HuQnS3JENmbgpEfg6hN2f/E0lXYiPxMCMQFsBh9oWO6hgHmuurhScaN
-	 eK6QaWrDkzRw5iM+JE2XF4gwImQR0lIj4mEhxsLAGOhk2NfQdCFhGvppjIr5sTcgg
-	 26j1y45g7E5tqVK3II6ZQGHvN7bhx37ppI8gtG63WcAWg3ff6yoK2kmiamcrXMzAb
-	 QvhRTEezOeVF1q3P+Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MOUtg-1s2Tzb3mNa-00SGIF; Sat, 15
- Jun 2024 08:16:49 +0200
-Message-ID: <82283abf-10b1-4095-a93f-112ba8aca483@web.de>
-Date: Sat, 15 Jun 2024 08:16:26 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CMdxIfNi"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45F4tiNJ003425;
+	Sat, 15 Jun 2024 06:25:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=54/pi1I6kA1yluGezlXCaJ
+	ZDaE3jYglkDAh2PuWXhZE=; b=CMdxIfNiEz4OWWeaIF/8dt3Y5WF450NuIlrWzp
+	5upRngDaqpxG9wvjLOKdaDKiyk6d843LvLHW7LZso7mlk5aFDVXBnXiZgsGXuHXn
+	/YzOetMrXngcZLRvpKoVguIHCVTMqx0seo5DFXY/kzUGn2ZQDBSBYwzGIMnC5U+t
+	NV58QG34e6AGpjgX9hDphg8HvsQjjWZL1iSA+/wBIwFxTIM4zPgYPunLTELGdaxi
+	0KmNYZT+6HJukqkLPv+4ZA7vv2LwrTyulqi1srLICzNbGV1wNOCgDTNGP4T/zmFN
+	ujuJxSoU69wAEDLOclzuorxRwZ5W3SpIBp/dU16ynPe9p9+Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys36385r9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 06:25:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45F6P2g1009381
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 15 Jun 2024 06:25:02 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Jun
+ 2024 23:25:02 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Fri, 14 Jun 2024 23:25:00 -0700
+Subject: [PATCH] fbdev: offb: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH] ASoc: PCM6240: Fix a null pointer dereference in
- pcmdevice_i2c_probe
-To: Hao Ge <gehao@kylinos.cn>, linux-sound@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Colin Ian King <colin.i.king@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Shenghao Ding <shenghao-ding@ti.com>, Takashi Iwai <tiwai@suse.com>
-References: <20240614024116.22130-1-hao.ge@linux.dev>
-Content-Language: en-GB
-In-Reply-To: <20240614024116.22130-1-hao.ge@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oRwLXp7KVlsXEEoDSjR0eZi+Amn5PL2L71+HDfFctrLT7AHzdGi
- L0DCe2Dw8h7+a0uuTBOKoGHL6tD9vg4xQnwGucxftH4e76nvr0ZMmzO68oGSTGDXjb0xgrT
- QGYflJAPiKWOVmt6ZXHQfHhI6LzEjt/fVgnJHh0UEZ7s3ImpDcUo76NxzwQAvCVRkgj3Rhc
- ZHIMMWd/Hu8mGiNbDpqRw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lM1Y0VY3ZOo=;zQHAT6TxQy7gygvsZeRcsSh++rK
- zqwGf1S/eHrRWYucvOo9J9B/TcVdpBx4o/MgX81uBjYyZIYpixVETUWYHh8LTiHNepC8mI0YI
- b2KodUHqvDGmjWhpW7GHxBc1ViaqBa9RRN+PWx42ZFNUtivz2Sl5zYyKmdUtM/PpMDUJgskI4
- ejhOGkjYkBM33xoepVnnTuTCFLkF4O0LPpMSFy3tOPNfqvZZoKJkedDwpHLL0/xZyAInv4o3H
- pmi1bYEKcJcOLTXRGsgyPoMY0QcB3fi/iu6lz0hY7d08AO2TiwQtF5Xf2KNXZzuPvIiDBEuaR
- P16hpidkKgN69S0IetGoY5p6rlno6EdocDpzLIv+PEaKlbDG712H6b5Wepk0etzTB2kpb4S5A
- UQXFHJRT0eLlkySM6l4mV+GiDBJQ+nWQRQfn7XOerSwSDAowhg1NjQTIlSDpReZ936To2CK6H
- s5mRzn9VEMBu3sZ3u15QOSbIqiiZsg02U4Kdd4liybWZOpSWfcqeYTZYsS+HHOyZ44dpyfHh5
- KriSDy9c4hPysqXDxrS1jg0NFZDwQwbV98j+lx+bFKKWYNcMZEr/+U8Co/mGuh+FQ37ropwvn
- SuJBN7qfS/f/xZAAktqn5nU0N31yAyYydl/MwkYbMqAJ45EEyAKFxXTddy3+JYKrDIzqTp+VX
- 2d4pHiVirNPUosi22Iigm0cI0zS4AHMOWpyTV/oS7OiBgxWi9bJmxPgQvV+vEiP4t6hhyFQjZ
- E6uKhk6xw9P4uE5cvXCNyquZrWCptFokufy+MdjzU9fQi8dfESy06XNWbm1KYlmMio0eVfSwq
- 1OvryaXoW8x+Nr9cWnejzZrU3N+0TijjnFAUb47pgLhO4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240614-md-powerpc-drivers-video-fbdev-v1-1-5803b38dba18@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIALszbWYC/x3NQQrCMBBA0auUWTvQ1FrUq4iLJDOxAzYJE42F0
+ rsbXb7N/xsUVuEC124D5SpFUmwwhw78bOODUagZhn4Y+8mMuBDm9GHNHkmlshasQpwwOOKKJvD
+ RDyea6HyBFsnKQdb/4HZvdrYwOrXRz7/sU+J7xcWWFyvs+xcv350xjwAAAA==
+To: Helge Deller <deller@gmx.de>
+CC: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5dlPrCBJIeJnN-zF3RN_EYQwZzw1Xpo2
+X-Proofpoint-ORIG-GUID: 5dlPrCBJIeJnN-zF3RN_EYQwZzw1Xpo2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-15_03,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406150046
 
-=E2=80=A6
-> +++ b/sound/soc/codecs/pcm6240.c
-> @@ -2088,8 +2088,7 @@ static int pcmdevice_i2c_probe(struct i2c_client *=
-i2c)
->
->  	pcm_dev =3D devm_kzalloc(&i2c->dev, sizeof(*pcm_dev), GFP_KERNEL);
->  	if (!pcm_dev) {
-> -		ret =3D -ENOMEM;
-> -		goto out;
-> +		return -ENOMEM;
->  	}
-=E2=80=A6
+With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/offb.o
 
-Would you like to omit curly brackets from a single if branch?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.10-rc3#n197
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-Regards,
-Markus
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/video/fbdev/offb.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/video/fbdev/offb.c b/drivers/video/fbdev/offb.c
+index ea38a260774b..e8ff33894603 100644
+--- a/drivers/video/fbdev/offb.c
++++ b/drivers/video/fbdev/offb.c
+@@ -717,4 +717,5 @@ static void __exit offb_exit(void)
+ }
+ module_exit(offb_exit);
+ 
++MODULE_DESCRIPTION("Open Firmware frame buffer device driver");
+ MODULE_LICENSE("GPL");
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240614-md-powerpc-drivers-video-fbdev-1fe3c25d6d89
+
