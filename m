@@ -1,136 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E3C179A8
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554C0179A8;
+	Sat, 15 Jun 2024 08:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718441620; cv=none; b=HVqdLgUoV/dggUi8Z3vh3Xzpk4D3PUszuSr9shMxqMkUul9w1LQKSJS/d9OwBMIOwF8Jc5GodsRh7izilfAFWzjVKx+4faLBptGNui6Rf9erS4F6fhBam7wbCA3Tp4QqVBmEXxOFjFdHm7ksRzMY8+q1Ez3Ds6RO3xHbf6rTKSI=
+	t=1718441714; cv=none; b=heSlwYpdcqtkt+ypn3AedU1lad2n+MRvIBVdxUrOa9+3UYopEEiWKfVETzDvAEZFe6XC9RqFGbEi4TyH1jX5Isl2aN28H5StA9Dv09O+STPQEr1lf+WSg2TJLuw6cnzy7T0lmqVaauYfRX1JXLNmH10SNCQKgHN+0+8Wx9JF3cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718441620; c=relaxed/simple;
-	bh=A5denq1MtVmoWdMWyF7FXRXEb8dy8ohP7Moy1rmAyd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aD+rD/ZzrfUq3kHXquzohJZTEnGp7MxVEpdAJ49jUImwzvOI/sjl+lfxhuUD8L5DzknKlHYcZhXZqt0PaqUT30P4m1efHYbf5hWlVzo7iyaquAGqtU9zLccaxN500Aedayj4BQQBDMo1aEKo++a3CpPt3Xlhk+mgbLMvuIwUVNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpcVQRfi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718441714; c=relaxed/simple;
+	bh=gjwUXfnpJrMIPFPi48+TIaXScjHDYpomx5mQ/+7wIGg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rjn6mwfFkddB2pFXv5wGSCIC8jKsHcn2kLY6ixEXp5QOCzV4GWmfjxL2wsZu57AavLJS09FD5bmlWqPurpmKkxs4dww6kkeuISRCDjTRqBXjY90fU0x7iPxducyi+LQXWVcu6qTHHcJzE1+BDawt8XWxpryi2mO4AszefDcWxGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=C7IePpto; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpcVQRfi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718441617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4KAnLuJK5ca8N90TBc5SqAtDvhbdQGO+rCBjODh2EaA=;
-	b=dpcVQRfiy/KyaFTic7PhDEd1VlrCnbJQIdhctat/MwaB7o6TuLPM146nLfsXeEiIusfU0K
-	1hRgXGjoDJy26nYh67O89kLpGfMmMrrWxEByWHyl6ytsRgXboJ9N0tu8B03qWY4b3i5pmX
-	I4eQk0uROHVRmKhVpg7YdlCtfEt4aOY=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-W-ApX0idMwOFd74Cr-DREQ-1; Sat, 15 Jun 2024 04:53:35 -0400
-X-MC-Unique: W-ApX0idMwOFd74Cr-DREQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52c844aec2eso2257843e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 01:53:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718441613; x=1719046413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4KAnLuJK5ca8N90TBc5SqAtDvhbdQGO+rCBjODh2EaA=;
-        b=F2qy7AmTs78+t3arBDjIdIgwYlmgqR/0q3ES770Ny8DEzcCDD0KQBHMPRopfHfSnmh
-         vjxrh+TBOW5TgbYBn3ufR8Z24/BzN29UaPkWPVgP9XkGCwPmzPFtyW8kwo1Cd7rSWt3j
-         z2kTnoANETcD4EVQ8YS2zYch/HYjcSe+IhpUdvd4zZJT7Jv97+jnGqSWa4oKa9uXzm7c
-         0KjFye8GIc3sGFo2btmFipMipZS4gJHiEoE6KAkxM0OdYQnNg5Hf6MpsdHAU9BKEtjC6
-         1fZeMpK9xp+HSmaZxgF/o7XKH9aNXhFixqckKRf7uxvvSAWtgUnQSHMDE1FVrCK+LAQQ
-         JEIA==
-X-Gm-Message-State: AOJu0Yyh3vnu5kQnZbG38tn2P3XDWdK+WmcX+Df36XEy40L26Eqh0FXO
-	y4xd1O8VyEthytArIaPu/DBeKvFXE/YB7iRGNAj6Nnt+WdZqUXPjBomx/zUoP8zgq4puo9nos8o
-	8b5NH2B1krAGgVW5d59Fx79cRa5OL6D0qzIfNNqwmkYeKqtjaVJba+gkzZHLCGa4oFgDhnaQouO
-	jrt2J6cGuAb9XxaoLQS5600h3V4+R4gZHOug8mfIjN9Np+
-X-Received: by 2002:ac2:5931:0:b0:52c:8a37:6cf4 with SMTP id 2adb3069b0e04-52ca6e56394mr3070364e87.14.1718441613179;
-        Sat, 15 Jun 2024 01:53:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgscFiGF51kdQUAooo17serhr9s1595/yp1C5TX0wDDST4aYfIyM2irfok4qUH81+JMvDnQA==
-X-Received: by 2002:ac2:5931:0:b0:52c:8a37:6cf4 with SMTP id 2adb3069b0e04-52ca6e56394mr3070344e87.14.1718441612540;
-        Sat, 15 Jun 2024 01:53:32 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42285574e33sm55265715e9.1.2024.06.15.01.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 01:53:31 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jyri Sarha <jyri.sarha@iki.fi>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/tidss: Add drm_panic support
-Date: Sat, 15 Jun 2024 10:53:18 +0200
-Message-ID: <20240615085326.1726262-1-javierm@redhat.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="C7IePpto"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1718441712;
+	bh=gjwUXfnpJrMIPFPi48+TIaXScjHDYpomx5mQ/+7wIGg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=C7IePpto9XQdhZ0+o4x8Pi2AqxX1rurIZRgQWuTDAizCNamJN8Jjkxk59QxJzN41l
+	 XnhAjNNgw0nCFF9pz7EuECbOJ2RWIzdzIiiwQeiJKj7JHPXfULBTGGQyVuq4qD27aw
+	 9uf1HnHz/BpFdYMJjKaRRGme9ygi8tucgdhUKe5U=
+Received: from [192.168.124.13] (unknown [113.200.174.91])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0115667456;
+	Sat, 15 Jun 2024 04:55:09 -0400 (EDT)
+Message-ID: <cdef45d36d0e71da5f0534b3783b81c82405bda3.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li
+ <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org,  loongson-kernel@lists.loongnix.cn,
+ stable@vger.kernel.org
+Date: Sat, 15 Jun 2024 16:55:08 +0800
+In-Reply-To: <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
+References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
+	 <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com>
+	 <CAAhV-H5kn2xPLqgop0iOyg-tc5kAYcuNo3cd+f3yCdkN=cJDug@mail.gmail.com>
+	 <fcdeb993-37d6-42e0-8737-3be41413f03d@app.fastmail.com>
+	 <CAAhV-H4s_utEOtFDwjPTqxnMWTVjWhmS7bEVRX+t8HK5QDA8Vg@mail.gmail.com>
+	 <a21a0878-021e-4990-a59d-b10f204a018b@app.fastmail.com>
+	 <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add support for the drm_panic module, which displays a pretty user
-friendly message on the screen when a Linux kernel panic occurs.
+On Sat, 2024-06-15 at 16:52 +0800, Huacai Chen wrote:
+> Hi, Arnd,
+>=20
+> On Sun, May 12, 2024 at 3:53=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wro=
+te:
+> >=20
+> > On Sun, May 12, 2024, at 05:11, Huacai Chen wrote:
+> > > On Sat, May 11, 2024 at 11:39=E2=80=AFPM Arnd Bergmann <arnd@arndb.de=
+> wrote:
+> > > > On Sat, May 11, 2024, at 16:28, Huacai Chen wrote:
+> > > > > On Sat, May 11, 2024 at 8:17=E2=80=AFPM Arnd Bergmann <arnd@arndb=
+.de> wrote:
+> > > > CONFIG_COMPAT_32BIT_TIME is equally affected here. On riscv32
+> > > > this is the only allowed configuration, while on others (arm32
+> > > > or x86-32 userland) you can turn off COMPAT_32BIT_TIME on
+> > > > both 32-bit kernel and on 64-bit kernels with compat mode.
+> > > I don't know too much detail, but I think riscv32 can do something
+> > > similar to arm32 and x86-32, or we can wait for Xuerui to improve
+> > > seccomp. But there is no much time for loongarch because the Debian
+> > > loong64 port is coming soon.
+> >=20
+> > What I meant is that the other architectures only work by
+> > accident if COMPAT_32BIT_TIME is enabled and statx() gets
+> > blocked, but then they truncate the timestamps to the tim32
+> > range, which is not acceptable behavior. Actually mips64 is
+> > in the same situation because it also only supports 32-bit
+> > timestamps in newstatat(), despite being a 64-bit
+> > architecture with a 64-bit time_t in all other syscalls.
+> We can only wait for the seccomp side to be fixed now? Or we can get
+> this patch upstream for LoongArch64 at the moment, and wait for
+> seccomp to fix RISCV32 (and LoongArch32) in future?
 
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
----
-Tested on an AM625 BeaglePlay board by triggering a panic using the
-`echo c > /proc/sysrq-trigger` command.
+I'm wondering why not just introduce a new syscall or extend statx with
+a new flag, as we've discussed many times.  They have their own
+disadvantages but better than this, IMO.
 
- drivers/gpu/drm/tidss/tidss_plane.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-index 68fed531f6a7..a5d86822c9e3 100644
---- a/drivers/gpu/drm/tidss/tidss_plane.c
-+++ b/drivers/gpu/drm/tidss/tidss_plane.c
-@@ -8,6 +8,7 @@
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_blend.h>
- #include <drm/drm_crtc.h>
-+#include <drm/drm_fb_dma_helper.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_framebuffer.h>
- #include <drm/drm_gem_atomic_helper.h>
-@@ -166,6 +167,14 @@ static const struct drm_plane_helper_funcs tidss_plane_helper_funcs = {
- 	.atomic_disable = tidss_plane_atomic_disable,
- };
- 
-+static const struct drm_plane_helper_funcs tidss_primary_plane_helper_funcs = {
-+	.atomic_check = tidss_plane_atomic_check,
-+	.atomic_update = tidss_plane_atomic_update,
-+	.atomic_enable = tidss_plane_atomic_enable,
-+	.atomic_disable = tidss_plane_atomic_disable,
-+	.get_scanout_buffer = drm_fb_dma_get_scanout_buffer,
-+};
-+
- static const struct drm_plane_funcs tidss_plane_funcs = {
- 	.update_plane = drm_atomic_helper_update_plane,
- 	.disable_plane = drm_atomic_helper_disable_plane,
-@@ -211,7 +220,10 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
- 	if (ret < 0)
- 		goto err;
- 
--	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
-+	if (type == DRM_PLANE_TYPE_PRIMARY)
-+		drm_plane_helper_add(&tplane->plane, &tidss_primary_plane_helper_funcs);
-+	else
-+		drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
- 
- 	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
- 				       num_planes - 1);
--- 
-2.45.1
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
