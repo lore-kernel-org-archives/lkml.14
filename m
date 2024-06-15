@@ -1,79 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp134-33.sina.com.cn (smtp134-33.sina.com.cn [180.149.134.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8397A17BA2;
-	Sat, 15 Jun 2024 06:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F8EDDBE
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 06:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718434040; cv=none; b=qxRBsPwvkU8To/axC2KHtDuWt9ccEQQ0jqDIgggdU96JeCKK73ClpxtgboDsPQ2o1pB9l5iBACz/qyy5TWusmFjbU7RIziR/StafwgzwesiOGWAZVuw0fFx2pCCATuBvhhIyOYCJlHMtDrMQDqHAGGPpXR++z2ngPmRCw8g0eHQ=
+	t=1718434127; cv=none; b=e1Te5i+DCcTlVK1T7BClxzbPzThFChhjYbrlwQXzDzAaTTriW9I5vCE9cQi3Kmce4YlyWMVT1nD2hAjhrGCMIQHtXaxwSHaCRxAC4NkIfMLr0FqvbAOK5L5M3pVrdOLdOLxXVL4n0WmiBo6nBW1xFi0jkiBPaS57EHm2cvIe9Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718434040; c=relaxed/simple;
-	bh=p/xtcz5Zfjr2rjF6BXmRtqfio6pwf6KhYflXRTHt1eY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tXwmSV23ORBms3NETqRGS28hTsit/8RHqJw6/LzlBDXX1EKbzT+b3ekMtBciFpW0WyX4M5EGszI4ohVSF0shicjljoG+qfH962ixgSHAjInjITd194xwCbslUJ9UqOnLQlCplp0DVCEZJ7UEwuU40kHZKSqUhii+NudYBAKg5m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSxfJrbX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSxfJrbX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015C8C4AF52;
-	Sat, 15 Jun 2024 06:47:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718434040;
-	bh=p/xtcz5Zfjr2rjF6BXmRtqfio6pwf6KhYflXRTHt1eY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YSxfJrbXQs7VvMyQTLqtQ5YhXmtoILwJxyqFQ7h3NtnV5o6qUS4UtA3aFfU4depvv
-	 wTN+tbnrXHaZ4Rr9k9ftTGQFKB2FP59OPbNEdnQDMkRRPH6LQfoKAvaMWxjI+gxRdT
-	 1KHh4VSesNzVS+IjJuXXlPQqxXyZlo1tYfdLjF8L51gX2KiaYtYrIlwufIMTH5+owV
-	 IRtLTqUtVyV85iD/Jr79CQWxhBfHx4sxLD3Kf2H5zxDqDkAsfubo4g0GmWF2v8BhJj
-	 NLkx02yRhSJrANA06kZGVyX1lCwZo8cSNdGS5j4bhci3qy0/oH5MxwsPQmJ9YnKFx2
-	 tx2tcF6GQuDzg==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso33885401fa.3;
-        Fri, 14 Jun 2024 23:47:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQkKJVRWu+ckuLQDda67xh2u5BNBot/ODbPX6O/B7hu79/S8s2RgDJGjfRTpWSDrO94tvCCVOquffE+3QU+ck7L6CsrDt0l+LBU1pRhRYCAUE5+EX3Rmwifcre/mCr4ZMPw/DXBD8VfyCK
-X-Gm-Message-State: AOJu0YwOJOk5RH8kQ2g6U82qG73N6LYiKMs63d8OzPCmnrVlxsiT2yw+
-	ox8t22k1n+rytmILvjRpYrwoua4L4mYN3ZjozzlfcUwoWAYOUP9/ovKuFLXOZhxaDG3pBUlzv6U
-	/UDvmtXD01oqe4RQuDVV+mubcHpQ=
-X-Google-Smtp-Source: AGHT+IF5l3I9kMurR1b3vVy9boTsub8hbvlIGSMTfxR33A+iV9pXhqtpQ0+m54/NLE0K80eh+7skxGcZmKahGPF1tGY=
-X-Received: by 2002:a2e:8e8c:0:b0:2ec:1deb:5620 with SMTP id
- 38308e7fff4ca-2ec1deb565amr8276111fa.3.1718434038583; Fri, 14 Jun 2024
- 23:47:18 -0700 (PDT)
+	s=arc-20240116; t=1718434127; c=relaxed/simple;
+	bh=VCqHrKLRo7upK5Vo2G01ygKx2d1eckndZ0nekF0lCoI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=by7Oirl89065tJZgTTgaucaVq/tpg3UduRpX6gHFD0fUv3t6uKXTKubkhawwNURFzklCHW9C15rt5lwgJF563zUdwn6fPXFTqD7ohywP7VsxfG7h22QiCA6ZYHpxtxewm3mF55C5KEs4FOuRua5g3qsKpdJX12A/bIvBx46rW5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.64.228])
+	by sina.com (10.185.250.21) with ESMTP
+	id 666D3919000012C2; Sat, 15 Jun 2024 14:47:56 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 2166303408544
+X-SMAIL-UIID: DB5260639031462D90B6A8AA36523E06-20240615-144756-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
+Date: Sat, 15 Jun 2024 14:47:46 +0800
+Message-Id: <20240615064746.915-1-hdanton@sina.com>
+In-Reply-To: <000000000000f386f90616fea5ef@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611205900.2145880-2-u.kleine-koenig@baylibre.com>
-In-Reply-To: <20240611205900.2145880-2-u.kleine-koenig@baylibre.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 15 Jun 2024 15:46:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR16nV-cVxGT-6i-+NBeGaS25=Dn=-rBrMA56exurh9Uw@mail.gmail.com>
-Message-ID: <CAK7LNAR16nV-cVxGT-6i-+NBeGaS25=Dn=-rBrMA56exurh9Uw@mail.gmail.com>
-Subject: Re: [PATCH] modpost: Enable section warning from *driver to .exit.text
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 12, 2024 at 5:59=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
->
-> There used to be several offenders, but now that for all of them patches
-> were sent and most of them were applied, enable the warning also for
-> builds without W=3D1.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  83a7eefedc9b
 
-
-Applied to linux-kbuild.
-Thanks!
-
-
---=20
-Best Regards
-Masahiro Yamada
+--- x/fs/open.c
++++ y/fs/open.c
+@@ -952,7 +952,18 @@ static int do_dentry_open(struct file *f
+ 	if (!open)
+ 		open = f->f_op->open;
+ 	if (open) {
++		struct super_block *sb = inode->i_sb;
++
++		error = -EINVAL;
++		for (;;) {
++			int a = atomic_read(&sb->s_active);
++			if (a < 1)
++				goto cleanup_all;
++			if (a == atomic_cmpxchg(&sb->s_active, a, a+1))
++				break;
++		}
+ 		error = open(inode, f);
++		deactivate_super(sb);
+ 		if (error)
+ 			goto cleanup_all;
+ 	}
+--
