@@ -1,129 +1,99 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D082218EB8
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574D01BDE6;
+	Sat, 15 Jun 2024 08:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718441514; cv=none; b=lJbuF2LyIcRDZylmqpEN7YUDsUoRIqrQ7Zv+/mAHxbvyl7gG1JBTa8TgVeOchwrCFCd+eC3Zl/OwGY26opNP64s96e08DZkrn7kwPjK3VkIY4iRejNcwFTBmeNVjz01gppebyp4u9PAMgb6OMqgSXVQrIOYyboSXU0nyarJ8kSo=
+	t=1718441546; cv=none; b=FBCXOwN2CY9bbyB/8o4lYg/q3bM85UbItJvMT+tOp0LAbtGk8A/Tvpo1czkTfPiqnSet7lmLRNDx2fuEFuXUPGrabA0FFM4JM81oq0TwMjr3GesMhWONECV5c5CYjE2KfXPwSxwNxkhQFcUt4A2QFowJHGeXI8Mw6MmchCwqOyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718441514; c=relaxed/simple;
-	bh=2uhNmFDzmca77n8/NYMgx5PLYKQsfE2F4rpsDHEStzY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fkafxXoLnepCJw3X1HQZx55ws4hzmsQU44gUz9CcqT46erqpbcZ6GI8sUpOz1wajhzxGmSZ6z+Xayg/s2odqJQfNUo4F10u4H1WWuXJMuIk8FUsi5yrXsj410Syius1FE94xZdU/rfNcnkH0Z+8YyZ7q8xrwqzLVVh62ho6eIaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=QeDy1YrO; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1718441546; c=relaxed/simple;
+	bh=lYNgS4EOKxJx9qsKYp8TMD8ZnON5/nuFd2Lwtc4Bs38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GU15e6KRHYL/ut1T0Jhk+Txy5xHQUVZmaFAG7MVGm6/6o6S/TUi+hS3AZvgk0zM9R5egi0qF5SZLUFJ1sym0d8f49+omqQAZsMPkTTx9nkjv6VqaS90cX3qsjGUH5mjCFg6IqECwm443A6MTU7uh53aifcmPRTbpVfLbmE/vOWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rm7bGyvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="QeDy1YrO"
-X-Envelope-To: linux-kernel@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1718441510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FzCprlv9GxaDwbOC21n35gObXPY/amCP46gcmpDxZd4=;
-	b=QeDy1YrOxKKjkHJdePkDCle/LiRFoccvtCuVRnqHasyfAD1jXs8sM0xR/XLODlq+yHXE7J
-	QoodMcP8WCQEbHdDeq1ci6I8HIHG4e9/raQle5ZGipBK2gouPgARL67W26kt8f9tTvNMv6
-	HBuQOQAsk+jD0jB+kXUysP8AqskjdOU+iS7pHsmEjDkdEIR4qMTWc4/rTfbzyJ+wHz+jZS
-	f4jFFiP9JhsRpL/LpvLMPoTkG08Eb4/nmEvvIom1l/797aDmrjBhZKVgQKxedovcIo9yFw
-	ynlOh5JDc9Q9Xpd/JsCJ1Y+RDmZCPyd93WkHdJF6+1AHs6CzRA5n28v3mZgaOw==
-X-Envelope-To: detlev.casanova@collabora.com
-X-Envelope-To: mchehab@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: gregkh@linuxfoundation.org
-X-Envelope-To: sebastian.reichel@collabora.com
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: alchark@gmail.com
-X-Envelope-To: cristian.ciocaltea@collabora.com
-X-Envelope-To: andy.yan@rock-chips.com
-X-Envelope-To: linux-media@vger.kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-staging@lists.linux.dev
-X-Envelope-To: detlev.casanova@collabora.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: linux-kernel@vger.kernel.org,
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>, Alexey Charkov <alchark@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Andy Yan <andy.yan@rock-chips.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
- Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
-Date: Sat, 15 Jun 2024 10:51:38 +0200
-Message-ID: <3333233.eAoTOS8U2s@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240615015734.1612108-2-detlev.casanova@collabora.com>
-References:
- <20240615015734.1612108-1-detlev.casanova@collabora.com>
- <20240615015734.1612108-2-detlev.casanova@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rm7bGyvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D9CC4AF1D;
+	Sat, 15 Jun 2024 08:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718441545;
+	bh=lYNgS4EOKxJx9qsKYp8TMD8ZnON5/nuFd2Lwtc4Bs38=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rm7bGyvCSP4wYWPPHXCJ5jJKdH0VKN96qUprBjDz88UYC8PVqtfg3962oYgA02/1h
+	 GMundvk1CDIq9j+WEsU9gKzSpuW9JO+HuRNnsZGOOAiBedcF+Oq0FZhfow5wmSzR6X
+	 MOLOTy52fW+m7InDGT4CUHBi1xd2xCAfhy5hdb6/cJgN4FojqoVrH84Zj5KHPNVrg8
+	 2q00b8yGw1TgMyEkeqlKgfg2bRd/GD0T1G8CrhXg6IFH0nFVSSOC0t0QCgj8YfdfZp
+	 Utxo1pjGktK0MeuOq5Upym+0kJxwymDNePsqsnxT5Y55lFJREc4PjARJH5Sar6N7j1
+	 sIgibC89Sjk4Q==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so3255844a12.2;
+        Sat, 15 Jun 2024 01:52:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJkVjlHYvBhhg3HL43Stk23qv4CvOPtrX+ieyvJU/fVMQ1JuaBNcI4gL1/Q+0xtrBE1x6HUhpng46QG91Ez5V1Yp2RHDnxmqNBAYb64bN9fMzOKDsKLUE4TBTxhvakSezJiwHIKeeFDEEllxzIEFdqGNvqQIPrbmWXEg8CTVSfvw==
+X-Gm-Message-State: AOJu0Yzolf2jMlpFim4KB07guJX/G2eQY3Xb3gseId6pudnRdVAqtxLU
+	tVwZuM9yU+69K1loMR6xJiSUt+7jtmtNQScM1CI1/DrHdyCxBTMyQR5AAC8dkziuM/n3/c9wI/z
+	5dtSkT8USboezwoNLkbZ2k7iZ7MU=
+X-Google-Smtp-Source: AGHT+IFyPBQJTylosSuf5+MVqWLqEy0/yJ8gB4g4PxtoBOX/oelfetnVysEN8hXKg3y38a5M6OArZggzJ1FoS45HttI=
+X-Received: by 2002:a17:906:756:b0:a6f:1df1:1ef2 with SMTP id
+ a640c23a62f3a-a6f60dc517fmr376288066b.47.1718441544432; Sat, 15 Jun 2024
+ 01:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart8264659.XZnPd2NMnp";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
+ <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com> <CAAhV-H5kn2xPLqgop0iOyg-tc5kAYcuNo3cd+f3yCdkN=cJDug@mail.gmail.com>
+ <fcdeb993-37d6-42e0-8737-3be41413f03d@app.fastmail.com> <CAAhV-H4s_utEOtFDwjPTqxnMWTVjWhmS7bEVRX+t8HK5QDA8Vg@mail.gmail.com>
+ <a21a0878-021e-4990-a59d-b10f204a018b@app.fastmail.com>
+In-Reply-To: <a21a0878-021e-4990-a59d-b10f204a018b@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 15 Jun 2024 16:52:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
+Message-ID: <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---nextPart8264659.XZnPd2NMnp
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
-Date: Sat, 15 Jun 2024 10:51:38 +0200
-Message-ID: <3333233.eAoTOS8U2s@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240615015734.1612108-2-detlev.casanova@collabora.com>
-MIME-Version: 1.0
+Hi, Arnd,
 
-On Saturday, 15 June 2024 03:56:27 CEST Detlev Casanova wrote:
-> This driver supports the second generation of the Rockchip Video
-> decoder, also known as vdpu34x.
-> It is currently only used on the RK3588(s) SoC.
-> ...
-> The core supports H264, HEVC, VP9 and AVS2 decoding but this driver
-> currently only supports H264.
-> ...
-> The decision to make a different driver is mainly because rkvdec2 has
-> more features and can work with multiple cores.
+On Sun, May 12, 2024 at 3:53=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Sun, May 12, 2024, at 05:11, Huacai Chen wrote:
+> > On Sat, May 11, 2024 at 11:39=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+> >> On Sat, May 11, 2024, at 16:28, Huacai Chen wrote:
+> >> > On Sat, May 11, 2024 at 8:17=E2=80=AFPM Arnd Bergmann <arnd@arndb.de=
+> wrote:
+> >> CONFIG_COMPAT_32BIT_TIME is equally affected here. On riscv32
+> >> this is the only allowed configuration, while on others (arm32
+> >> or x86-32 userland) you can turn off COMPAT_32BIT_TIME on
+> >> both 32-bit kernel and on 64-bit kernels with compat mode.
+> > I don't know too much detail, but I think riscv32 can do something
+> > similar to arm32 and x86-32, or we can wait for Xuerui to improve
+> > seccomp. But there is no much time for loongarch because the Debian
+> > loong64 port is coming soon.
+>
+> What I meant is that the other architectures only work by
+> accident if COMPAT_32BIT_TIME is enabled and statx() gets
+> blocked, but then they truncate the timestamps to the tim32
+> range, which is not acceptable behavior. Actually mips64 is
+> in the same situation because it also only supports 32-bit
+> timestamps in newstatat(), despite being a 64-bit
+> architecture with a 64-bit time_t in all other syscalls.
+We can only wait for the seccomp side to be fixed now? Or we can get
+this patch upstream for LoongArch64 at the moment, and wait for
+seccomp to fix RISCV32 (and LoongArch32) in future?
 
-https://wiki.pine64.org/wiki/Quartz64_Development#Upstreaming_Status uses both 
-the rkvdec2 and vdpu346 words and I *assumed* that meant that the Quartz64 
-Model A and B would use rkvdec2. The Q64-A and -B are rk3566 devices though.
+Huacai
 
-So is this just an (unfortunate) use of the same words or is that wiki page 
-just wrong ... or better yet: does rkvdec2 support RK356x too?
-
-Cheers,
-  Diederik
---nextPart8264659.XZnPd2NMnp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZm1WGgAKCRDXblvOeH7b
-brgQAQD+T08UA2/wwhvAFvEN6YbiMOcTnBEhemxyxRye7DTggwD/YEcUSIQQ/RPc
-NSTPgX06r8mCGK7SuZ4YyKRWnCMpWgQ=
-=M6ol
------END PGP SIGNATURE-----
-
---nextPart8264659.XZnPd2NMnp--
-
-
-
+>
+>       Arnd
+>
