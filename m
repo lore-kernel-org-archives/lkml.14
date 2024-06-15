@@ -1,93 +1,124 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C91517BCB
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E33171B0
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 08:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718438727; cv=none; b=K5KyT4CJx9zyIoF3K9FpVnVT2AcjvJenJxZEcI2j3u4vWH/jSCA0hbjjXsfNY+sZJjonYQAJ0IHlaG2dIXWkawwwBAAwu3WaA/z+04sGN4CC/hog0P5Z1FStE/uBb0F8wZal/xVgwYEfu68y6dyw9pvdNtFazxRCASmIbTnB/V0=
+	t=1718438776; cv=none; b=gYdn5uhA+rb/l1GYMDdJUN5/KI6gj7tTqtguQegEUhJ9HjrgsWWTIQkaTdHnKdz6GJwxgkHoZXF6aIZCHiAo89JQyTul4Sar7MxEueZOyGHGxh25+yWXvaa3fS2Ct7pfVAqpZynmSgMrB7f+s7KcclOSdkjjq0vfOVDoSrBXqrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718438727; c=relaxed/simple;
-	bh=bpSAqltJJDrc8OIeVMFHLNWqmBjNYkwRBQsDvwe2WRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=S2MrHVsEZzimBW2el/gFTVNCoBO0wDBG7juKuXAD0SoV2XvQr0ccNoXCf0vpigwfr0MuevkVf63vsV2WynQBZ6YKrLFSd44fiNtggdmiPtPCxdL9X0JCHdH6oby/aqMVOBtAQyVGcaaSpScAR7cCJfCAOOgrqrgrOqhHSNKXv10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCQNYtfP; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCQNYtfP"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a1fe6392eso3774129a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 01:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718438723; x=1719043523; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZSSAKx4JLVIw59Xf8Yxuy4vS34XBtSXCGo/Ramx5QE=;
-        b=LCQNYtfPN1bBi/QP7uXl1fPo3s+m2DI6urqhvh7jLW+cD3DUiZwJH+OJEM287ceQKO
-         VKr/UbMxOLNSH7FD2wJai1FvaaWG8hvPUDlRqWXjWV1OvAeuzHgGjsvRx0SK0feKcSyH
-         PTk8t8TRv444/mrBeDrz4sm2zYr4lLjPB3ym3ycIBsRDiiGEePdX/M77GVLDk9LBw2ns
-         3IUFdHSkGz7lD5eq90kxrFmYBJ5/9wL+4787r/FVO+QzYBNGLTJwoGSe/0278bMyHwcY
-         Ki17nFCLRurSWVfpN4N77gWqLSS3diRyxB6nBGherAOXcCZUhlgcxg/k/485lUXv5Ghd
-         YA+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718438723; x=1719043523;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kZSSAKx4JLVIw59Xf8Yxuy4vS34XBtSXCGo/Ramx5QE=;
-        b=CsjcsQePLm0IrdqvKNEkJkaTxZRWAiumzNeX0qEewywzwOUqTPFcxm0sEXFP9kNMQ4
-         uneqaewlmFhN+Zrn5TqC3Y6MtGQVAEzsPICWabMqeT3MWMdS9jD/Pv7rsiQRnHKVEhg0
-         huGr1AUopHpd/0m+/n9KYIo6wmVyrQR5ymmpDCVMzpfZOkALXLIeltCEpEELw6YVlQD6
-         sK9gSOClSe5TSuCN36h+IuaK3uix+dBuWqkjbKiwhal4y7l0A1FAjNgFLFW7SfSrVlIv
-         mHFtHBdx1MmxfYTXKUmY8Hq0hJQyTTRh7crw9vw4LSChx1YjL90JwRaThSmJ/Un70mj+
-         mSzQ==
-X-Gm-Message-State: AOJu0Yw3cCAL7KbKuBo7OS8ouTBs6HHlpvMkK3A9mccA4lqhF9XkJiKw
-	BwKTV1P3MsZu5fmnCyLJn8UpXjz1IM14bIkgP5Bq5RNKYfS5qJ54
-X-Google-Smtp-Source: AGHT+IHXPGNjdD4QpU7d+X3owTVDjEqfEbbeIh4LCpwxNcLB/ORjMApUnEdqifIFzhmejtjnZdrpYA==
-X-Received: by 2002:a17:907:c302:b0:a6f:6c57:603c with SMTP id a640c23a62f3a-a6f6c57627dmr200513166b.70.1718438723298;
-        Sat, 15 Jun 2024 01:05:23 -0700 (PDT)
-Received: from gmail.com (1F2EF7F9.nat.pool.telekom.hu. [31.46.247.249])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db6b1asm270437866b.88.2024.06.15.01.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 01:05:22 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sat, 15 Jun 2024 10:05:20 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: [GIT PULL] timer fix
-Message-ID: <Zm1LHnqOv9SsW9EM@gmail.com>
+	s=arc-20240116; t=1718438776; c=relaxed/simple;
+	bh=Sl6y5vSpvo/TDY1A0GnSjLx1TQ3HOsv/EHlKZf9iTdI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EqSfqW4h6N9WR8bauusInt0yanxTj7CHqSzJdQ0THX0uGJ+mt5QTedgLxRfd9U2+N3V4Uvjqw6TAvCOkLrLv1AjzIt7+gnoeBUo/IibT/TJMYlsdbcMODbfWHRiXz2ZbA4ot0CFTusOtlM0bURs9b0NC4mfURl8NJOataDMo2iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W1TBb4mTPzwSS0;
+	Sat, 15 Jun 2024 16:01:59 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4F40B180064;
+	Sat, 15 Jun 2024 16:06:09 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Sat, 15 Jun 2024 16:06:09 +0800
+From: Zheng Yejian <zhengyejian1@huawei.com>
+To: <kees@kernel.org>, <song@kernel.org>, <ndesaulniers@google.com>,
+	<yonghong.song@linux.dev>, <thunder.leizhen@huawei.com>, <ardb@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] kallsyms: Simply clean get_symbol_pos()
+Date: Sat, 15 Jun 2024 16:06:43 +0800
+Message-ID: <20240615080643.3865878-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-Linus,
+'symbol_end' is just for calculating 'symbolsize', so if 'symbolsize'
+is NULL, there is no need to find 'symbol_end'. Besides, if 'offset'
+is also NULL, there is even no need to assign to 'symbol_start'. So
+just do cleanup.
 
-Please pull the latest timers/urgent Git tree from:
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/kallsyms.c | 43 +++++++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 18 deletions(-)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2024-06-15
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 22ea19a36e6e..fe6a248d629a 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -322,8 +322,8 @@ static unsigned long get_symbol_pos(unsigned long addr,
+ 				    unsigned long *symbolsize,
+ 				    unsigned long *offset)
+ {
+-	unsigned long symbol_start = 0, symbol_end = 0;
+-	unsigned long i, low, high, mid;
++	unsigned long symbol_start;
++	unsigned long low, high, mid;
+ 
+ 	/* Do a binary search on the sorted kallsyms_addresses array. */
+ 	low = 0;
+@@ -344,28 +344,35 @@ static unsigned long get_symbol_pos(unsigned long addr,
+ 	while (low && kallsyms_sym_address(low-1) == kallsyms_sym_address(low))
+ 		--low;
+ 
++	if (unlikely(!symbolsize && !offset))
++		return low;
++
+ 	symbol_start = kallsyms_sym_address(low);
+ 
+-	/* Search for next non-aliased symbol. */
+-	for (i = low + 1; i < kallsyms_num_syms; i++) {
+-		if (kallsyms_sym_address(i) > symbol_start) {
+-			symbol_end = kallsyms_sym_address(i);
+-			break;
++	if (symbolsize) {
++		unsigned long symbol_end = 0;
++		unsigned long i;
++
++		/* Search for next non-aliased symbol. */
++		for (i = low + 1; i < kallsyms_num_syms; i++) {
++			if (kallsyms_sym_address(i) > symbol_start) {
++				symbol_end = kallsyms_sym_address(i);
++				break;
++			}
+ 		}
+-	}
+ 
+-	/* If we found no next symbol, we use the end of the section. */
+-	if (!symbol_end) {
+-		if (is_kernel_inittext(addr))
+-			symbol_end = (unsigned long)_einittext;
+-		else if (IS_ENABLED(CONFIG_KALLSYMS_ALL))
+-			symbol_end = (unsigned long)_end;
+-		else
+-			symbol_end = (unsigned long)_etext;
+-	}
++		/* If we found no next symbol, we use the end of the section. */
++		if (!symbol_end) {
++			if (is_kernel_inittext(addr))
++				symbol_end = (unsigned long)_einittext;
++			else if (IS_ENABLED(CONFIG_KALLSYMS_ALL))
++				symbol_end = (unsigned long)_end;
++			else
++				symbol_end = (unsigned long)_etext;
++		}
+ 
+-	if (symbolsize)
+ 		*symbolsize = symbol_end - symbol_start;
++	}
+ 	if (offset)
+ 		*offset = addr - symbol_start;
+ 
+-- 
+2.25.1
 
-   # HEAD: 07c54cc5988f19c9642fd463c2dbdac7fc52f777 tick/nohz_full: Don't abuse smp_call_function_single() in tick_setup_device()
-
-Fix boot-time warning in tick_setup_device().
-
- Thanks,
-
-	Ingo
-
------------------->
-Oleg Nesterov (1):
-      tick/nohz_full: Don't abuse smp_call_function_single() in tick_setup_device()
-
-
- kernel/time/tick-common.c | 42 ++++++++++++++----------------------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
