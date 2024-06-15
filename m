@@ -1,89 +1,287 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7407428DD5;
-	Sat, 15 Jun 2024 11:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E045023;
+	Sat, 15 Jun 2024 11:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718452154; cv=none; b=uLhDbQKtpoyiQ4ZySdiue7h7VRwY5P1AqWJtGUNM4NPKZ+5IjU8iJ3YMJBDLYoWYTZddbINQThpOX2yQOVjA5kvbJT2eL8ffEZyMJXlNIsa1h5grpFhIDUGiQmB4MYYmU6SpQL5FhS4hqhQdgKlQtk+0L2yZvZz1D3+aa6G0r4Q=
+	t=1718452175; cv=none; b=O2kC6PaqzLd21M4oWFXMYjRQVGGOz7BWP+84eNvlhmb0txFbr+cQqQF5Dq+/7BMylocEgddkgEIuiVxKD2betmYrPHXbtn4rKk4RssPY+lVxRlBDNf/b+oXDyvgUlIAjRiZyoYNvRIlyUcDKzeatvhdY5zNvO229iLh40rD7lcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718452154; c=relaxed/simple;
-	bh=ruLqlnGQm+f4xdxIVdkx2ifiUgj5LizSyB2S5sU5KH4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=g/mulT2rFEEjAszXW+yTjDnctZEvR0TlKAaJcMQ0UGC4aQE1PCbOxyHtAdSqdAl5FuMAIv6ey2/xSFLZV5RsjML3yqvI4PCTbOK1puj09F5OfITRk4N9jNuEBqbXSD1/Oh5S+02bykrSY/7g3iPmErjGR1SJjKXCdHmvBg98yA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OCV1qhA2; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718452175; c=relaxed/simple;
+	bh=OxsDCVvFmZDdn4b0BWUpauwRblw62cawRbkJDq1lF+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tt/PgUO0HcIqHlWMKBXvwsz6pDiDfmzkd8+oiIwp1Teidjp/XkLfEzA56AszQeqUUPYS0g1RzSn8sux17CJ1tDQQzDUhwpXuUvJcBoHBwupF/+ws4N9ajHr8fttS4L7F/Q0wGtVjGdnHGtrQG7n7TFjKFmz7LLnvDo1NSgrczA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXgqHE/m; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OCV1qhA2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718451845; bh=eoJFGXM2xF4IOwu+tTtspFwBzWcyjYzOFEGvvryPvyk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OCV1qhA2CWhipezswYOuYfRaF7yEnC6SJg9UUnCBAungW//PMoTrwP+a/+X8vUnOO
-	 2vyJ2peYbry6xZmsTEaL/Co6MjGOQ8RCQOj+uc4fbewWlPdB5FEffOPurFlF/1xUAz
-	 BgE4AfB1F7prQx9eHSpENXfp48ZKH5VJZ6S1pFlY=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id B0337AFE; Sat, 15 Jun 2024 19:44:03 +0800
-X-QQ-mid: xmsmtpt1718451843tz3r2n3i2
-Message-ID: <tencent_724B611BCF250EBAF7BBE333DF9E271BB208@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2zOZ5ZNYHLqT+E8AFNcEs6DXo2yNVb+UXeNPB5diAbUnz9GHwqE
-	 zTDpQC3WqgN/d38mDOsQOuBmMnYYBMUCPXzjfkGvA+afBPf6jTfgHDziyqlPlYapRaXr079ramFJ
-	 xGcNUKrTKTQVs7AkI547MGQTz/ZhyXZmG72AJCkB0dOZdUV6FNiNFDI0SyRhV/N7fjNY4Wvbkkah
-	 R/n+6ZVU5Aufl/chDnioaXHEoIHgN4CS2xIZbxqWjJGXsjna5BzaQLCmUM/gTK4Ad+UCp/AVtXzD
-	 1Pcmp6Ig2haNUNg+lU9k5L0MMdyIsHBcQdkegdSsNvHSHuZ+xeIiTmLSB7x5CW4c+KT8wmXJC89Y
-	 q9LYCneVhWbkxK0MXzVRDayy9rikfaiyG1kSJ8DELQs3TU2YAqeyXYCjS0pdravcPpIRl5W9FHgA
-	 tuJuBeqO45HjINimKpzcU4dnlZJUkMMgjYGxaU2TGn9YyoubNHvrRjl+mEfdgQlBU/IWwqv9zzUL
-	 7/MvQ7ALXhRmt5+hGvodGzIlUwazE1wc/8mGAOg7qzHUO0w9gI/FxEaZdjhJ3YWAAZrBOytrcaMO
-	 aNOYOyQIz07q11A678SQX0eA0pdlDPIk9NDF0LRuGp8dYCQOIrXBIF5U4hdYotzzISCy5ZWQVBH2
-	 IUVmsgJOj0Q2Gvrc8JRxJM4bRg7+2obLOi+gCgtxHKA4lXpB6I/auVjqkquKWt0LtuxZV558xA1c
-	 uGMk5VwjmeZO8m3bX+6z2lHl2zneV0maNJTEyU7kELkKvD39DnAJws+3a3X3sfb2znvuXt13ZI0b
-	 xaeMrRy7E8UzN/pclcRzLlovis5xHZYpXpaGIFoPZcZBWsnVtDyAR5TLrTi6jCuVnxKzZxSXWCb6
-	 6jAE/2vnFAq6jEGAU7aSzi0uNXrw6+m47vBw+GlYuvwR4d8NDCXUBp4cIIOHZU7VR0jDWdnN1+
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
-Cc: bfoster@redhat.com,
-	kent.overstreet@linux.dev,
-	linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] bcachefs: bch2_fs_read_write_early needs to hold write lock
-Date: Sat, 15 Jun 2024 19:44:04 +0800
-X-OQ-MSGID: <20240615114403.3924547-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000053e574061ad89521@google.com>
-References: <00000000000053e574061ad89521@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXgqHE/m"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso339515966b.0;
+        Sat, 15 Jun 2024 04:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718452172; x=1719056972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmwpWJqTuK2KpyOhWn70TPuN3f/5XJxgMHjGCJWbC38=;
+        b=FXgqHE/mvROs8pcPtueW1H80ZQ6p1KZ725fij8k7qepnl8zkV6pazNrxXjEkcom2OO
+         V9+ZB/d7cg8lEgPpuoTSF+KKD0JRtayNtnL9w8Al1bdknXmIieRxT2tf0BxPUgAfEUCW
+         WGRT1VsKUMqqXc6J3ZNwV4Iyo/atyNEwkd5mZwSirsS4CT0OQAC3y6/BNptOqiF1s7I8
+         cUrRvT6hFqmoW/eK6schNiXOfui0IPK31+L7xfU/hXWuHQNVDLPO5LG3LJ6ec18j0SDv
+         K70e8a9CKgHlMinVSrEkmU80FIaNXE5dYbrEJkdncENWXlIZEshRon4ezqoYF5lbP+lx
+         CTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718452172; x=1719056972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RmwpWJqTuK2KpyOhWn70TPuN3f/5XJxgMHjGCJWbC38=;
+        b=NSU63cY0/Si20oDvM5RLO90K0v0/F0ODeFomMDChWvdzQLSi726ilVgNJSM29Q5UV3
+         aemucE/bUlNJvNK5SKSYbb5JijReWqHL5N3FCZMzPGQidoolSVNtihOx9OXXXFaEGoGj
+         YRpU//Ha92zW3JHh8q19RiTU5pyGjqTuw/sTClKrZqhfmAzIBoHb+DDhu30Ui6S8DsKf
+         mi/Ly7+nuMc45rRFTKVYGwhC0f63MMXbulNa7saICN80mXYdRTaDykZEx8gZ0d6CnxKE
+         8Nd5umDYFgpmjVSWkWvYT/yFi0wb1xqmBUslpfkVh6La8c+Mjzti54qWkzKzWVOC51+l
+         mpjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnBI3pDEhJmZ1I1SSKr3tiBQFqJdKJ67o1cVnwH5mBjHdV657keJa+WD3/7lIgmT0sXFkZdqOsBYF4YczMOEGAwiCVFEceppxCnQB8ZjAoL7+8x6w5X/AaOP95Wic+ghhz
+X-Gm-Message-State: AOJu0Yw6WI53N1FpcjyNwZ1RjjMHngVIvDOJCE0OU28uPiqhzJrdvoHp
+	+17UOPMgJgmIV8xBe0LHHK+JZTOJwfLwTgSRMiqxrCc1d5A/xcMEzUHUO9Et3QAsfN+PLY0ezBr
+	9Nmr2n0sdYQG41oGVgAO1LV0WahY=
+X-Google-Smtp-Source: AGHT+IFxR+Wzw5GJUuAJyMsGu2IVbRo0bdsH0bHXeCy0tKDMJ2ODk1f+1XyyevV5XalEw6L3dTONayV4wiwT70F2Df8=
+X-Received: by 2002:a17:906:f148:b0:a68:86b9:52e8 with SMTP id
+ a640c23a62f3a-a6f60de6264mr338305266b.68.1718452171866; Sat, 15 Jun 2024
+ 04:49:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240608140835.965949-1-dolinux.peng@gmail.com> <4f551dc5fc792936ca364ce8324c0adea38162f1.camel@gmail.com>
+In-Reply-To: <4f551dc5fc792936ca364ce8324c0adea38162f1.camel@gmail.com>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Sat, 15 Jun 2024 19:49:18 +0800
+Message-ID: <CAErzpmsvvi_dhiJs+Fmyy7R-gKqh3TkiuJCj4U5K6XXJyV6pJA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3] bpf: Using binary search to improve the
+ performance of btf_find_by_name_kind
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: ast@kernel.org, andrii <andrii@kernel.org>, alan.maguire@oracle.com, 
+	acme@kernel.org, daniel@iogearbox.net, mhiramat@kernel.org, song@kernel.org, 
+	haoluo@google.com, yonghong.song@linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-bch2_fs_read_write_early() needs to hold state_lock to pretect and sync data.
+On Tue, Jun 11, 2024 at 6:13=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.com=
+> wrote:
+>
+> On Sat, 2024-06-08 at 07:08 -0700, Donglin Peng wrote:
+>
+> [...]
+>
+> > Changes in RFC v3:
+> >  - Sort the btf types during the build process in order to reduce memor=
+y usage
+> >    and decrease boot time.
+> >
+> > RFC v2:
+> >  - https://lore.kernel.org/all/20230909091646.420163-1-pengdonglin@sang=
+for.com.cn
+> > ---
+> >  include/linux/btf.h |   1 +
+> >  kernel/bpf/btf.c    | 160 +++++++++++++++++++++++++++++++++---
+>
+> I think that kernel part is in a good shape,
+> please split it as a separate commit.
 
-Reported-by: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/bcachefs/snapshot.c | 2 ++
- 1 file changed, 2 insertions(+)
+Okay, thanks.
 
-diff --git a/fs/bcachefs/snapshot.c b/fs/bcachefs/snapshot.c
-index 51918acfd726..b27a4327274d 100644
---- a/fs/bcachefs/snapshot.c
-+++ b/fs/bcachefs/snapshot.c
-@@ -1566,7 +1566,9 @@ int bch2_delete_dead_snapshots(struct bch_fs *c)
- 		return 0;
- 
- 	if (!test_bit(BCH_FS_started, &c->flags)) {
-+		down_write(&c->state_lock);
- 		ret = bch2_fs_read_write_early(c);
-+		up_write(&c->state_lock);
- 		bch_err_msg(c, ret, "deleting dead snapshots: error going rw");
- 		if (ret)
- 			return ret;
--- 
-2.43.0
+>
+> >  tools/lib/bpf/btf.c | 195 ++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 345 insertions(+), 11 deletions(-)
+>
+> [...]
+>
+> > diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
+> > index 2d0840ef599a..93c1ab677bfa 100644
+>
+> I'm not sure that libbpf is the best place to put this functionality,
+> as there might be different kinds of orderings
+> (e.g. see a fresh commit to bpftool to output stable vmlinux.h:
+>  94133cf24bb3 "bpftool: Introduce btf c dump sorting").
 
+Thanks, I think it would be better to put it into the libbpf. However, I wo=
+uld
+also like to hear the opinions of others.
+
+>
+> I'm curious what Andrii, Alan and Arnaldo think on libbpf vs pahole
+> for this feature.
+>
+> Also, I have a selftests build failure with this patch-set
+> (and I suspect that a bunch of dedup test cases would need an update):
+
+I appologize for the bug in my patch that caused the issue. I will fix it.
+
+>
+> $ pwd
+> /home/eddy/work/bpf-next/tools/testing/selftests/bpf
+> $ make -j14 test_progs
+> ...
+>
+>   GEN-SKEL [test_progs] access_map_in_map.skel.h
+> Binary files /home/eddy/work/bpf-next/tools/testing/selftests/bpf/access_=
+map_in_map.bpf.linked2.o and /home/eddy/work/bpf-next/tools/testing/selftes=
+ts/bpf/access_map_in_map.bpf.linked3.o differ
+> make: *** [Makefile:658: /home/eddy/work/bpf-next/tools/testing/selftests=
+/bpf/access_map_in_map.skel.h] Error 1
+> make: *** Waiting for unfinished jobs....
+
+Sorry, I neglected to perform an ID remap for the btf_types in the BTF.ext
+section. I will fix it.
+
+>
+> If this change remains in libbpf, I think it would be great to update
+> btf_find_by_name_kind() to work the same way as kernel one.
+
+Sounds good, we might do it later.
+
+>
+> > --- a/tools/lib/bpf/btf.c
+> > +++ b/tools/lib/bpf/btf.c
+>
+> [...]
+>
+> > +static int btf_sort_type_by_name(struct btf *btf)
+> > +{
+> > +     struct btf_type *bt;
+> > +     __u32 *new_type_offs =3D NULL, *new_type_offs_noname =3D NULL;
+> > +     __u32 *maps =3D NULL, *found_offs;
+> > +     void *new_types_data =3D NULL, *loc_data;
+> > +     int i, j, k, type_cnt, ret =3D 0, type_size;
+> > +     __u32 data_size;
+> > +
+> > +     if (btf_ensure_modifiable(btf))
+> > +             return libbpf_err(-ENOMEM);
+> > +
+> > +     type_cnt =3D btf->nr_types;
+> > +     data_size =3D btf->type_offs_cap * sizeof(*new_type_offs);
+> > +
+> > +     maps =3D (__u32 *)malloc(type_cnt * sizeof(__u32));
+> > +     if (!maps) {
+> > +             ret =3D -ENOMEM;
+> > +             goto err_out;
+> > +     }
+> > +
+> > +     new_type_offs =3D (__u32 *)malloc(data_size);
+> > +     if (!new_type_offs) {
+> > +             ret =3D -ENOMEM;
+> > +             goto err_out;
+> > +     }
+> > +
+> > +     new_type_offs_noname =3D (__u32 *)malloc(data_size);
+> > +     if (!new_type_offs_noname) {
+> > +             ret =3D -ENOMEM;
+> > +             goto err_out;
+> > +     }
+>
+> What is the point of separating offsets in new_type_offs vs
+> new_type_offs_noname? It should be possible to use a single offsets
+> array and have a comparison function that puts all named types before
+> unnamed.
+
+Great, you are right.
+
+>
+> > +
+> > +     new_types_data =3D malloc(btf->types_data_cap);
+> > +     if (!new_types_data) {
+> > +             ret =3D -ENOMEM;
+> > +             goto err_out;
+> > +     }
+> > +
+> > +     memset(new_type_offs, 0, data_size);
+> > +
+> > +     for (i =3D 0, j =3D 0, k =3D 0; i < type_cnt; i++) {
+> > +             const char *name;
+> > +
+> > +             bt =3D (struct btf_type *)(btf->types_data + btf->type_of=
+fs[i]);
+> > +             name =3D btf__str_by_offset(btf, bt->name_off);
+> > +             if (!name || !name[0])
+> > +                     new_type_offs_noname[k++] =3D btf->type_offs[i];
+> > +             else
+> > +                     new_type_offs[j++] =3D btf->type_offs[i];
+> > +     }
+> > +
+> > +     memmove(new_type_offs + j, new_type_offs_noname, sizeof(__u32) * =
+k);
+> > +
+> > +     qsort_r(new_type_offs, j, sizeof(*new_type_offs),
+> > +             btf_compare_type_name, btf);
+> > +
+> > +     for (i =3D 0; i < type_cnt; i++) {
+> > +             found_offs =3D bsearch(&new_type_offs[i], btf->type_offs,=
+ type_cnt,
+> > +                                     sizeof(__u32), btf_compare_offs);
+> > +             if (!found_offs) {
+> > +                     ret =3D -EINVAL;
+> > +                     goto err_out;
+> > +             }
+> > +             maps[found_offs - btf->type_offs] =3D i;
+> > +     }
+> > +
+> > +     loc_data =3D new_types_data;
+> > +     for (i =3D 0; i < type_cnt; i++, loc_data +=3D type_size) {
+> > +             bt =3D (struct btf_type *)(btf->types_data + new_type_off=
+s[i]);
+> > +             type_size =3D btf_type_size(bt);
+> > +             if (type_size < 0) {
+> > +                     ret =3D type_size;
+> > +                     goto err_out;
+> > +             }
+> > +
+> > +             memcpy(loc_data, bt, type_size);
+> > +
+> > +             bt =3D (struct btf_type *)loc_data;
+> > +             switch (btf_kind(bt)) {
+>
+> Please take a look at btf_dedup_remap_types(): it uses newly added
+> iterator interface to enumerate all ID references in the type.
+> It could be used here to avoid enumerating every BTF kind.
+> Also, the d->hypot_map could be used instead of `maps`.
+> And if so, I think that it should be possible to put this pass before
+> btf_dedup_remap_types() in order for it to do the remapping.
+
+Thank you. I will revise the code.
+
+>
+> Alternatively, it might make sense to merge this pass with
+> btf_dedup_compact_types() in order to minimize number of operations,
+> e.g. as in my crude attempt:
+> https://github.com/eddyz87/bpf/tree/binsort-btf-dedup
+
+Thank you. I would refer to your patch.
+
+> (fails with similar selftests issue).
+
+In addition to the bug in my patch, I have also identified a bug in
+linker_fixup_btf
+in the libbpf. After resolving the issue, the selftests successfully
+passed, and I will
+create a new patch to address the bug.
+
+>
+> > +             case BTF_KIND_PTR:
+> > +             case BTF_KIND_CONST:
+> > +             case BTF_KIND_VOLATILE:
+> > +             case BTF_KIND_RESTRICT:
+> > +             case BTF_KIND_TYPEDEF:
+> > +             case BTF_KIND_TYPE_TAG:
+> > +             case BTF_KIND_FUNC:
+> > +             case BTF_KIND_VAR:
+> > +             case BTF_KIND_DECL_TAG:
+> > +                     bt->type =3D btf_get_mapped_type(btf, maps, bt->t=
+ype);
+> > +                     break;
+>
+> [...]
