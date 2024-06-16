@@ -1,158 +1,222 @@
-Received: from sonic307-53.consmr.mail.ir2.yahoo.com (sonic307-53.consmr.mail.ir2.yahoo.com [87.248.110.30])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CAA17B41E
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 07:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=87.248.110.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7116D32D;
+	Sun, 16 Jun 2024 07:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718524208; cv=none; b=mLNOjouHNNT7LWUIcH/6D/WVHHquxkhgbZJnNuS2yqrw+sl0cWo2xTL28O//p0QES6uRUnJPuvu4DDlgI3avtZFSwSxQ2IY+yJBdkhpAVuyrogB/kn+iyTD7uQGbCeipT84ZsCiXnxCt49wJdwf3Thu3p2YlGc2uWpcMw/zy+JY=
+	t=1718524228; cv=none; b=PBp6ikPsCP2f9Ehw2Injnr+JNWMGapkeZtvtGAOud4/nPTmGLvX1NIUTRMI0eW0BabN/dx7qsIyfwymfKT8vtjy3JUDKOKbMHy2BJDecTmCBqwxsGaHG0loUOiw4k7vAiQFOYZEtZ4nFY1rUyL1FGshHW/nU66Sf7njYLZN8cGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718524208; c=relaxed/simple;
-	bh=lL/3Gk7JOk5hvvh1t0hx9ZCAjxnUHlpLEviBVGFzuKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1sPT+FWp9o4Pk0UdYyq1rPQ+KvDjdw0cGC5iZJxvk0xQr08tfkpgRziZmmIfXxbl4fpoKbUaHWl7TJHzMtxJfwLk8+Cc+p70++PyT+h5XxD+D2BBu8Vi0PEUAMuLqOX5q+07qHMS0HW+yEOoP+LwjIZ+zxCdiROgbVpiuQplrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de; spf=pass smtp.mailfrom=yahoo.de; dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b=Ri4hkGLe; arc=none smtp.client-ip=87.248.110.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.de
+	s=arc-20240116; t=1718524228; c=relaxed/simple;
+	bh=FKs+l7vr8yUwexuIpXPZinbV1Mp7+jimwLSLCeURhIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MKH5csCtU3KWBaDy7htzhWPPcQEchcQwTXhdeVMRyKTPYIAimhbI+X2H4+lqHgsyXAVnAWaCE9zyXQfW0QM8eAmZXN955cZFKhi4BpxZdKkXP5qhxoOLfK1Jhg9LmwgKgYp9ZMPdHZfVyRO5oKW/NLwq5uRBQhe5pUsk1Ju0tEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BUglQNkd; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b="Ri4hkGLe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.de; s=s2048; t=1718524198; bh=CgRzjm/nwd78x1rt0gIv5aEFf3uVyoARkr0H9nC1Zzs=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=Ri4hkGLePaQ2AVAhMc0pzBdvcOb3kqkG9Y/X/XJ0uYs/FJta6ctMphoY0qxD7Saar6cInZc0/5ZVbO/V4BvNE3PYqWfp25i/ZZJ8TVucvzG8gdryOOwHCpDXnkdnThoNCAm/DNAaK9kYpDPbdtI5AE6B7KpoCCtHuNBIulmZOadZIOSFrpo4iWYH35hsIQ1WYT7rNeb6TdySx7FvzoH6/0LfgzZRGjq0G6vvR7C1aw/3MOKsodBRk2qUyhRk43IrLq1n3igP6MLl8UxdDLe0R48xEKwqSjjMpTzmnp2kUf6dfjVUq+0qPvHO16Tit+cwkRn6JaaaA+X/sCgHwoBR5g==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1718524198; bh=LO51PwsuAq1x5hZUPzNalqyAto7YjRjUSC5dmkO/ufs=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Aa8Ye/6DK2BdP01ssOTtug6ppiKi5liWdkHyO/VGAZq8NL49nrmfuWsX+XIlccV71bndF4UHtsIHENV43F3yy6mhvnNTBY1IgZiBbMFPDTusyh8jN80fxx+7xu4/wjZYz95jNj8982uaPlWPDV79N397ANA/w22IP/qE8Mt5Qs9BD/AWdp5komzVhM5HNBliRJUhV0ryHmjl/GFOitSwrPuiq44X9f+zknNpOZHL9V+T2MSEUui2/0N6SWwN0m5kmuUoRagGtYVf/uhRveB4r2+KKXdPzkl22E2X0yHFwpPv6X9Um9RYccmT8S9UXQYhArwMHZnRz39xP/NWzSiQ2A==
-X-YMail-OSG: hTHgnAsVM1kWXiUg3ipkxIWXfnSXIfUM_CORVXUSpGMZh2Q3ArqoLVGhEVHI9zV
- 9n98uH3SKAnnFe.KiknOov.uAz9cZYPIM3SmFh9hIydspVF.5F5BftIUJ.JVMruuKQqX2bHZUXU_
- ZXUs35XJHYfTbwVTgsHYb5ZKPnmSXTCEDRj373TdgejQ4OxjfaUWHzvmhKxn2S1q4MKfMQWVP0jO
- Gps1cetZVZsNQLlorgfD3XhaQDZP8uPQAkrm2NFnhpvaRicobWmesDYC1l4BMtUfktvQ3GYB7W9E
- DTr4wvLuM8T8mECfTUHI7PAuHa7bSMOTqr3iWREB9y04SzW2dBAt.MqDdLLzAb52K.dD7iefeHbK
- qqbGV..7D7LsaqhWtaauR.7Rjv6BYYBHexSpaF3uQHGr8RzSqyKdeSSyVr1vu8Oe8EgcoIwVdvgG
- 0tlbpojdlxMGyeRBWwNjWWKmNDU4u7SEB6kmJEoWW77shL8qhKXTezhY2CNtsQI_sVQs4_SThBVw
- mE2JB9IYm4ewOmwq8sk1ho5jFUJtK2MeMpSZl1MQnT1Kk6Sz0.ywZoA.CbL_dJJTDR79EtOxVr_H
- .at_6gZbU1tY46_D9SX2UY4dOxQhWIx.nH.LJ_lTrS2bYumoA98rBvRz10CNIhx2kwlbKNJhc_X.
- Zzb5bhmzDPUutIx3hq3OihIeAKVYinx3faxGQnUlL22u6brIixJLiRzVb9BZUAGkdz3hlInK4Ue0
- Xdwrsk91HwIA6nRJft3nlV1tKMOaZ3rUakASfPT3ddqrzTwkNF4YE1d1PvriK3JN2La6UvzBc4K6
- zSrMfuiH6sLh3bMlaN5Ws.3f0a9DDIFM_c2p05vRa5Z7RT7CJh0fdE9uF9FLh0oVpuoJAKrrf1ZP
- ym7KsUBy8UvlBo.B30B9ARNLG_932qVde3JtGovZMEMNh4isN11Iv62pLy.oVXSKOEm1DI19iV2n
- bHdCgVHwO7UpE.Pk7WHnLgHZCgsaB2hB.5ly_WZW5bQXlqt4TrbioYMilA.nbXywQdLvfZn48mRj
- ZD6tzrNQcyxikKL_gvn_Ck7ch3jlGGm8JWUlQ5AnclWGW2nTIyHonNdkdlvrQGothU7XhiMaCBxM
- 1UZEskQ368p07f844rbTCv2YMlodV6pkk4HBJgPESD1Mrol0NZpM.Ai0kL81toyXLsSPVK_etvif
- cJRtysIQ3xyN6A7ksp86iO5MHBiU2Ht65NnRmhGmxIL70uZyr7spFJSpHl2oPy8oTOFlRORKkTbC
- YOnhokzM446.7GEzusriUcQqkXLHSyiMjsVN_nDLU5EMcI1cAcX9MtuhmQ8BfG3sPuDUgfwArNj_
- VfSvKwaCtgfjGx1W9hghf2RdlEfl7j4q7tOO8Lx59WcmEHjsLHSWbOCJro6oeMe9iuHzsvoRMF78
- T3QkRnJyd06w89NPo.kyG9ZDuyro469LblwF5MY2uDNuKTtOxDmntZwYWHAIQlJFdqtgZHRl4LB1
- RFu9W4yI1aDQy_mWgHdvgJc_fK1SLuZ.yAGdT2ojs91LE8NfdU252t2FSbv.lC1_2zHp4WOm2RxD
- 980UTLUDKvIHAB0zVQXl_q7Hy0ktjaZO4KiZPjLi44.AUY6feasEeB0_gS5YcR.U0HuamG.uuMYW
- C3EMcunMGi7TSj5UkxNxLAh7QRFQgYqfDtRM8qVF3fMd_TV68vvNnYqTdgY9no8Cxa73QXnGxQTu
- w3UclkL8G9vvHf4Zp8pFq3xuGuQy.FCyaKOAuEG1SFiNxXagzvJF5trFKvzOmb6_ZagzZ3ChB1ru
- UgGamjsiYD3VXNBe5KRujUIOhG01MH8O4jy9809tqoauCd7Xf_kUMDzBpZNoJITOMTYxcI0TX4KA
- F2dypW1cwgPW6wunm.mUTg8gJKYnnJSyireHizOn4FpRTsO6W8PS9hqQExHATuy.qccSacSctRU4
- gXqOlQfvJKvZjDH9d4AwFpKtljOpROrzlOs7GrmXDbklLKR5.vBBRwwqcB4MPwp5t08qJKkMAoF3
- 8.4IA9UrrwDIVqqw_ypxxIpWAo3MFPJNNhtD9deyBQMSBb4Lb5mcEYje1JhbNT8M_s0W5zRH4GeS
- rTMT_VkwP21ImKNtpy6q_t_Ty3gkvlFcPeVTscR9NiT_L5AG53eoRl1YpyCSjDG6SNIDw5xSlV3B
- AgtAeEL79PbXPzKnWTiA66FEFCkqCJweV1rdoX1Lue4G6IEb3_gnG56sN5yX1WEPhJj96r.8SDzt
- j7w4Zsd1R7ZadzgcX7AbOtfV6KETviMeWGCHOMu_5CBRaLF88FOoh8QE9ZVs-
-X-Sonic-MF: <fhortner@yahoo.de>
-X-Sonic-ID: 7e3e7412-d17e-47d8-bf68-24b5f07164a1
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ir2.yahoo.com with HTTP; Sun, 16 Jun 2024 07:49:58 +0000
-Received: by hermes--production-ir2-85cf877599-59p75 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID b11e46e9905a001c20392fbd6c3c7e53;
-          Sun, 16 Jun 2024 07:39:49 +0000 (UTC)
-Message-ID: <3f5d01fa-f725-429d-b6a3-7b9617b8b561@yahoo.de>
-Date: Sun, 16 Jun 2024 09:39:36 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUglQNkd"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c2eb5b1917so3015973a91.2;
+        Sun, 16 Jun 2024 00:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718524226; x=1719129026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHcPhxF8HQUomrEgimOjlC4Pkp/Hf/7nELFDRzTQavQ=;
+        b=BUglQNkdM0nNKLoBjfir5ZuhKrK87+z8kVLg1rLJf1d692RqOOU6mUQnkE4JQhGmHG
+         tEdG8w4hqJOy/+t41DVz/QOD8owCRHHwF7MbGE/mfHnHV2f6UYAe5B4JLR63bQBF4dYl
+         1jZcspXP+Zo+UkIwMOYsljRzBH9IHhbf41hvukb/Tp5whqpOcUbm4yxWKHtz880v9XHE
+         eFw/KH+8DgcUHyNwEZNm3Qu80+rGhAKhsEslt3sGitvYTxQ0LT5ICKcNps7lOd63fUAm
+         mYSEMzLTcf4lCaHHHPS3Z4UMAtU0phAIINjzMsiP4bjkjpM92zzd+vku9gzZKfG4r3Dp
+         TIdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718524226; x=1719129026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SHcPhxF8HQUomrEgimOjlC4Pkp/Hf/7nELFDRzTQavQ=;
+        b=dSpd3FeRd82yHW6MEESOnLSUkO+TmlPcHGG64q0VC8kr/CgPkzekluE/N+JsDhXRUn
+         j2FRj3F0ctjbWe12v0OA3ybYGKOxr21DY89w4u0hJDwk08hXPp1prNfiQ42oWa0b29YK
+         Tj150oDUB6vdqvqMKZIKN2vGEbjYT8nMobuQmZFXp79Ar8fcVFA8ycSKWCR2FlP3grC3
+         ezzcOVGcZxIAhTDosRPraR0fCCDwGsFx/B6paLNnUXuzS2TmonPw675sr5yXha5KR4hy
+         VviqaRK+sd2Y3RXqVhiJKT+yA+WSfKmGqs3CGwGmnR5HfVBjaTZGETCi27JmXoBUXeW7
+         7Baw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPIpVNAxYGqoS10l+SGg9iWBcQSwwoiLywwi7/o5njjQyGpTnEFr4fvRlf8jp35DuNZbvWnumlo5agywe6pio6hduRLeQ2plXudgTdO6/sGqafxlXgklwfCT8u79FjBeKDdhZN7E9AW8lzrPgJCEgBEjWxQ72YR+ZdgZCWpk0mNdhYvr8v
+X-Gm-Message-State: AOJu0YzSSgkn2Q/qiceNIqV3j78VaOVmTpHPMaXJkG6wsl6DmutkIFAI
+	KIwTgWTGO8bz/aQrpy3Koo4vnnUIi790vKZJfXq9kkpEJfCT0dzr
+X-Google-Smtp-Source: AGHT+IEK/RZGQ2b9Y0wWYp4TV1f+E9MTFHnHo/ShqcI0xIy1SDy1oupuP0F4TF4G+1kVikHZwmD8lg==
+X-Received: by 2002:a17:903:2302:b0:1f6:f0ff:47a7 with SMTP id d9443c01a7336-1f8629ff1eemr115315475ad.63.1718524225839;
+        Sun, 16 Jun 2024 00:50:25 -0700 (PDT)
+Received: from fedora.one.one.one.one ([2405:201:6013:c0b2:ea4b:30e0:4e3a:ab56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f18724sm59798865ad.234.2024.06.16.00.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jun 2024 00:50:25 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: animeshagarwal28@gmail.com,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] ASoC: dt-bindings: realtek,rt5631: Convert to dtschema
+Date: Sun, 16 Jun 2024 13:19:30 +0530
+Message-ID: <20240616074936.151267-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
- <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de>
- <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
- <78549853-1763-40cf-9974-3fc737fad093@yahoo.de>
- <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
- <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de>
- <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
- <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de>
- <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
- <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de>
- <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
- <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
- <CAJZ5v0jGGV=i8Swu=c8f9bwo--AckUfqZrt0zeqDWKBijG+Z3A@mail.gmail.com>
- <bcac5925-fe2b-4570-83b6-182f4a301721@yahoo.de>
- <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
-Content-Language: en-US
-From: "fhortner@yahoo.de" <fhortner@yahoo.de>
-In-Reply-To: <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22407 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Currently I am running kernel 6.8.12 with reverted commit.
-But yesterday I had a strange behavior.
-After resuming from S3 the laptop registered a low battery, immediately 
-after resume (notification in KDE Plasme). But as far as I could check, 
-the battery level and stats where fine. Nevertheless, after 1 minute it 
-shut off. I guess the low battery reading directly after after resume 
-triggered it.
+Convert the ALC5631/RT5631 audio CODEC bindings to DT Schema.
 
-It is not directly related with the commit, because I have reverted it, 
-but nevertheless, maybe it is helpful to understand the underlying 
-firmware issue.
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
 
-I' going to test your last patch and let you know.
+---
+Changes in v2:
+ - Moved maintainers list above description.
+ - Added missing port property.
+---
+ .../bindings/sound/realtek,rt5631.yaml        | 67 +++++++++++++++++++
+ .../devicetree/bindings/sound/rt5631.txt      | 48 -------------
+ 2 files changed, 67 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/realtek,rt5631.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/rt5631.txt
 
-
-Am 14.06.24 um 12:18 schrieb Rafael J. Wysocki:
-> On Thu, Jun 13, 2024 at 10:04 PM fhortner@yahoo.de <fhortner@yahoo.de> wrote:
->> Am 13.06.24 um 17:14 schrieb Rafael J. Wysocki:
->>
->> Let's see if the ACPI thermal zone is the real culprit.
->>
->> The attached patch only adds the delay for thermal zone 0 which is the
->> ACPI thermal zone.  It also prints the ID and type for all of the
->> resuming thermal zones.
->>
->> Please test it (removing all of the test changes/patches tried so far)
->> and let me know what happens to the battery readings.
->>
->> Patch
->>
->> thermal-delay-resume.patch
->>
->> does not work. Output according to dmesg.txt
->>
->> Attached is a slightly modified version of the last patch I sent.
->> Please test it and let me know if it addresses the problem you are
->> seeing.
->>
->> If it helps, I think we are done with this at least for now.
->>
->> patch thermal-core-resume-prio.patch with .priority = -1 does work
->>
->> One more thing to try is the attached patch (independent of the
->> previous one) to lower the priority of the thermal PM notifier to make
->> it run always after the ACPI battery one.
->>
->> Please test this one too and let me know if it works for you.
->>
->> patch thermal-core-resume-prio.patch
->>
->> with .priority = INT_MIN does also work.
->>
->> If you need any further tests, please don't hesitate to tell me so.
-> No, thank you, I think you've done enough and it is appreciated.
->
-> I don't see any particular drawbacks of this approach and investing
-> more time in trying to get to the bottom of the issue is probably not
-> worth it.
->
-> I'm going to submit the last patch as the proposed solution.
->
->> Thank you for your help!
-> No problem and thank you!
+diff --git a/Documentation/devicetree/bindings/sound/realtek,rt5631.yaml b/Documentation/devicetree/bindings/sound/realtek,rt5631.yaml
+new file mode 100644
+index 000000000000..747a731c44c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/realtek,rt5631.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/realtek,rt5631.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ALC5631/RT5631 audio CODEC
++
++maintainers:
++  - Animesh Agarwal <animeshagarwal28@gmail.com>
++
++description: |
++  This device supports I2C only.
++
++  Pins on the device (for linking into audio routes):
++      * SPK_OUT_R_P
++      * SPK_OUT_R_N
++      * SPK_OUT_L_P
++      * SPK_OUT_L_N
++      * HP_OUT_L
++      * HP_OUT_R
++      * AUX_OUT2_LP
++      * AUX_OUT2_RN
++      * AUX_OUT1_LP
++      * AUX_OUT1_RN
++      * AUX_IN_L_JD
++      * AUX_IN_R_JD
++      * MONO_IN_P
++      * MONO_IN_N
++      * MIC1_P
++      * MIC1_N
++      * MIC2_P
++      * MIC2_N
++      * MONO_OUT_P
++      * MONO_OUT_N
++      * MICBIAS1
++      * MICBIAS2
++
++properties:
++  compatible:
++    enum:
++      - realtek,alc5631
++      - realtek,rt5631
++
++  reg:
++    maxItems: 1
++
++  port:
++    $ref: audio-graph-port.yaml#
++    unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        codec@1a {
++            compatible = "realtek,alc5631";
++            reg = <0x1a>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/sound/rt5631.txt b/Documentation/devicetree/bindings/sound/rt5631.txt
+deleted file mode 100644
+index 56bc85232c49..000000000000
+--- a/Documentation/devicetree/bindings/sound/rt5631.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-ALC5631/RT5631 audio CODEC
+-
+-This device supports I2C only.
+-
+-Required properties:
+-
+-  - compatible : "realtek,alc5631" or "realtek,rt5631"
+-
+-  - reg : the I2C address of the device.
+-
+-Pins on the device (for linking into audio routes):
+-
+-  * SPK_OUT_R_P
+-  * SPK_OUT_R_N
+-  * SPK_OUT_L_P
+-  * SPK_OUT_L_N
+-  * HP_OUT_L
+-  * HP_OUT_R
+-  * AUX_OUT2_LP
+-  * AUX_OUT2_RN
+-  * AUX_OUT1_LP
+-  * AUX_OUT1_RN
+-  * AUX_IN_L_JD
+-  * AUX_IN_R_JD
+-  * MONO_IN_P
+-  * MONO_IN_N
+-  * MIC1_P
+-  * MIC1_N
+-  * MIC2_P
+-  * MIC2_N
+-  * MONO_OUT_P
+-  * MONO_OUT_N
+-  * MICBIAS1
+-  * MICBIAS2
+-
+-Example:
+-
+-alc5631: audio-codec@1a {
+-	compatible = "realtek,alc5631";
+-	reg = <0x1a>;
+-};
+-
+-or
+-
+-rt5631: audio-codec@1a {
+-	compatible = "realtek,rt5631";
+-	reg = <0x1a>;
+-};
+-- 
+2.45.2
 
