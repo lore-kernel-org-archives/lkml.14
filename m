@@ -1,48 +1,48 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF76129CE1;
-	Sun, 16 Jun 2024 17:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FA345957;
+	Sun, 16 Jun 2024 17:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718558778; cv=none; b=cGcw5v3/nMF4MTCq7DUJeQvsL4ENqAxl5wheJY5CQdSaJK6tPoBijqiszjAr0DVKW2SNZvjQNk+yPquT/qWSC0MKOBntlS/mmchd2v0qOWlN3SWQllVzls2N9iB4MXDM3uv1BZ+Y26uLIzQzpyvU8KG9RrpblAyFSbQ/HYNQLMc=
+	t=1718558785; cv=none; b=osSXoa5IWOyQtMoIiF3cy7n4OnToN1aUVOv1bWZdQdl2TMdwk2I+aTZHFpeby6jkjGfaq6Cpu45t28XG/XPgbQ+/7TEtH4zTmmqZxWrJUsTfg8e+MM32/sKOax0Iu4npXynCbu8H/BWAOk+2TZtuVNk8g/xKD/mQqoJZgKIh2L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718558778; c=relaxed/simple;
-	bh=W7g6QkLbcNyOL0ibOl9QGuUvN0dY+konFUG2EdZkjY0=;
+	s=arc-20240116; t=1718558785; c=relaxed/simple;
+	bh=xLtD3CUJ3A5b3eMpkLHWo+koapJSWAUCDA0EKrtJSLc=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=uTO+faZ0U3xGIBfxSltpB/lMDCwCQCGFDvMOdllTwSq0+o89ApRoxKMvdtdHRT/hFb7SiHIgR5zuAIEpFMuWQskMlmcZGqOJ4yhztnA0bZkYAezd04yogTGnESFM61Pyc75b1q9foCL1W6c1Zl6cmaN+RPpoR8FI3Jd6pi7FIIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cJLwlDdF; arc=none smtp.client-ip=203.205.221.205
+	 MIME-Version; b=iipWQg5Co+/cSUk24yZlOng1JvoeETtygp6D4LGILq4I99SfwzO7ifPLvYVmos+udzjI6mjB5ARWJ87b4V6cNIN4AIoHaMgCmz4pI/21xT2MdxUzDgpEgGdK0yzP1bIhyh9T5xxd9ReuLoCMWyyy0Yz0OKYnuZcuK9aUg/Twr3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rhv25Wty; arc=none smtp.client-ip=203.205.221.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cJLwlDdF"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rhv25Wty"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718558472; bh=r+q+AS8zVNgaO5tjAABF3jjVaLE+56ZLraN0N9jAFsc=;
+	t=1718558480; bh=4TsNRvdG1NQQAdbELi3/OvMmViVBRkNVoBLMMVaWK1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cJLwlDdFxSeFuZpbLaIYBopGLFmuHUD8KW6B5UDnYoZxoxjoi2IGkQsGSbFZGDHgd
-	 biZF8xS/8t/OXenRoIFa72ftBUxRF0Bz0w2P9h6yOwcxLF8x32gkvu3h6ywOPwtZ0y
-	 93KyQrHIbTIxB5S5ViOfPjXRgFICm3fKRKy/OA8g=
+	b=rhv25WtyUpKbhPGwTOvBB68on6EsFbRmExJKlcOAI48LpWILVlBgEzS30ntlHhQpc
+	 ZTsxshFvGQMOLCfO9iR33PUM5G9mMbBRHm4ASB4Xp0wVc70+28TIuqvRTvFv2uJPGL
+	 fegiiSN20VBePGBLXpEmH7lqz32lz32fubcdq73g=
 Received: from cyy-pc.lan ([240e:379:2260:ed00:cd33:e8cf:d8f9:bed3])
 	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
 	id 5452D659; Mon, 17 Jun 2024 01:21:05 +0800
-X-QQ-mid: xmsmtpt1718558469tvh711cnd
-Message-ID: <tencent_D3577BC67116D732862BE4A7B187EF4ED005@qq.com>
-X-QQ-XMAILINFO: MFWpArBVhhGTvYuSpRDZ+TOs9ZidMP4HTE29pb1RTzNe4ftOZ44i/dKoQURc49
-	 lp32wJdjjAcS+P00s4XeQDmzVhuwbMvAh+M2CTDGBlj8FPftYbUbLc6j+tbxQMyYKzYQfnONNK0P
-	 HrEN9VoKfvjKrrJHMYJzXd5DWuBsVcw43zMp7EspUesriYk3PFzTU9lpPKcj/A3I0hMdqWZWc34h
-	 G47p6mDORN40tJVfe+Vz2xlkFppyd+iFr0It3zDr4AEY9oJishCn9TZNCgft7TAwYDaUtMd2RNnk
-	 2tTMEQqRSvmmtA4NND2iKvteZsMHkFHW6HGqgvH3x+F7iTxGaz8cipzRNGoVteNkdq7VoeuI6hJy
-	 v2Wre3Se2UAPOiZYxDbafbKNSlkKR09u5jiKmOjs/FgmCdH9owftTYLXAnsWG0dm8PWzKmpeyzw1
-	 izuYfMKXk7J7ZlhYfMN9pd1bGMMz2US5O4AAAmFT/8Czi6PaCHJIWIrpr+VVrtH6nLwwBQ+sSQ/0
-	 2zZ7Sfkc8u3HIX1T0u8vRFEZe3I43CXZTXJlYvwVjox5Ej3c31Q4hv7rH++n2uJaA1RUrugcl2kC
-	 W/HU6RRufYU84HnL4+YlhJP2CiUhsTawiUkeVR+oWqGQ2Z6L5qrNUxBT58Ba2WCsicKCfWOID04P
-	 KkcXyNjYLu67aiKDG+sDj+cuYiCMN7brQLIrwZMExg539/d4VXpomaN2hhrrnMHx1ZFIltPhKS5L
-	 DGZck9cRRoTbZSRoepWJVVAzhGAdgtAZzTeQHXHEHIgq3TbkmfoMhkQPqF6Axd3nu8fkq48Czgw6
-	 ywLCCAlpsLiwE8nsH/qpFI8lqc+BLBA19dC12RkMiohmjuEHUhDTkzZUJ0+g3k4F8w2/AU+h/imc
-	 Gq2gqsqMvJuWFQtKGB1pReYho9kF8OBhx/69zgrpLwkJpOL9qcZguWs5w6gVhvewQA9sd7BnvVWi
-	 5mXlcyc+hregkJ/x5xKEvqab8C9jVbg//f81U+B91uUPo+ohoTNGGhdChZHqc3diWZVzHpf3nPu3
-	 aBgXVbaMP3jdHT2r1pxyWjK1JZ6hs2ayASvUnjS2+p4iEMGkU5e+VPeIXgz7M=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-mid: xmsmtpt1718558477tyhsnv86d
+Message-ID: <tencent_904B1050FBC0B10A172C263924BD518F8F05@qq.com>
+X-QQ-XMAILINFO: NkHKfw09D6j8RA6sM/aK2Q+9dZcLaP+4NJQa9FQkX6htwVjNCVrAuZ5gfdMI56
+	 0aA8f9z8guNkaFGAs65Z/o2KgVEJYvcd/QY3iuRt0CW9VcRBXEAAKHD1Mvwzj5yv0iGpxDiftMD0
+	 IuxdwCbMTidsy/7axyyLf1wk6W5M9kD2n7R0ar6PU4rRWmTYt8rOWeNoMpKyadSzBmWKHM/JxZbZ
+	 r/cmk61LbXOTBOLXZlE3mZ6m51MVDkj6E/rv+pr55Z+z5vI2DjxZd5L1RzONPQihfDTQCJ9AldWy
+	 wQDXtCb5vs2TrVnpkzJB7kVJ+1ouniZy25DC0uvfNChmXJOqkKr/M8Qdp4auqXO+y6akZbSPnqd1
+	 OgVWlmJkZ/55zS7fUJs+rJPy8VoVzz1r6XQ77b0B9sDFS6ZHTKYapUX/n+k6D4kZDplYcEld51s0
+	 q9X9z6oB54QYdB6icx6bmV46Wl0E+11AnX1cQGSj6bGI3EHORbFd5mTflyggK1DgU8Z1wB243J7d
+	 9B6Sw161M0EYK8KH8t5LaQhpLXshVlx7ENsPz18qiP5wAY8DuOwNkfnkYSfja2qV/1hYKV9zuxC8
+	 3G0iZY9PzFureZxC/qW1m8MbFD5etIwn0P7FPOP7wMYv97Z8TTXuQOx0sFYwWDA9ZfmlvVSDKkTV
+	 8a5782w88sM0HuVlbd1yzKfao7fyNOkBPn37mahwfi7uOtWE8xxM6fGdmjaycoJVm+ZVB9Ty3Wm/
+	 EDzieAYZRfNc6YRFgEX8rUO91O8pvEPjc4YHWZlXTxNxpy1lq7S3npjl/zCHeQldfOjxOA3n+YJ0
+	 9j8w/fVoY8bpy8Cv3qxkyseSLhnBrvkxyUB9fwxnLqraM+BSJcUya9jp9IWJDOW4HxAjteAT7+ph
+	 An+i7qBhyDVcMS3gGnG3kpi7mHyCB13aBs9z2JWb4mbSVdbBxDD+fAC1zshse4wu8CehtiNYIO01
+	 m8Be11gHTz1xXuPndactt3OzVkZycHM6a8Z5WjQ+/0NgUstFIRyCe4KmGXFzUe5IkApHFJK+rTFv
+	 K87rDm4ZWrZVJQYFYilZhF0XqMNGlTpRZSihoK8LZrWjKe+hu75uwD8wNypnUd0dlHcSvxYQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-riscv@lists.infradead.org
 Cc: Conor Dooley <conor+dt@kernel.org>,
@@ -55,9 +55,9 @@ Cc: Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v1 3/9] dt-bindings: riscv: add SpacemiT K1 bindings
-Date: Mon, 17 Jun 2024 01:20:48 +0800
-X-OQ-MSGID: <20240616172054.3074948-3-cyy@cyyself.name>
+Subject: [PATCH v1 8/9] riscv: dts: spacemit: add Banana Pi BPI-F3 board device tree
+Date: Mon, 17 Jun 2024 01:20:53 +0800
+X-OQ-MSGID: <20240616172054.3074948-8-cyy@cyyself.name>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
 References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
@@ -69,48 +69,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DT binding documentation for the SpacemiT K1 Soc[1] and the Banana
-Pi BPi-F3 board[2] which used it.
+Banana Pi BPI-F3 [1] is a industrial grade RISC-V development board, it
+design with SpacemiT K1 8 core RISC-V chip [2].
 
-[1] https://www.spacemit.com/en/spacemit-key-stone-2/
-[2] https://docs.banana-pi.org/en/BPI-F3/BananaPi_BPI-F3
+Currently only support booting into console with only uart enabled,
+other features will be added soon later.
+
+[1] https://docs.banana-pi.org/en/BPI-F3/BananaPi_BPI-F3
+[2] https://www.spacemit.com/en/spacemit-key-stone-2/
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 ---
- .../devicetree/bindings/riscv/spacemit.yaml   | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/riscv/spacemit.yaml
+ arch/riscv/boot/dts/Makefile                 |  1 +
+ arch/riscv/boot/dts/spacemit/Makefile        |  2 ++
+ arch/riscv/boot/dts/spacemit/bananapi-f3.dts | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/spacemit/Makefile
+ create mode 100644 arch/riscv/boot/dts/spacemit/bananapi-f3.dts
 
-diff --git a/Documentation/devicetree/bindings/riscv/spacemit.yaml b/Documentation/devicetree/bindings/riscv/spacemit.yaml
+diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+index fdae05bbf556..bff887d38abe 100644
+--- a/arch/riscv/boot/dts/Makefile
++++ b/arch/riscv/boot/dts/Makefile
+@@ -5,6 +5,7 @@ subdir-y += microchip
+ subdir-y += renesas
+ subdir-y += sifive
+ subdir-y += sophgo
++subdir-y += spacemit
+ subdir-y += starfive
+ subdir-y += thead
+ 
+diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
 new file mode 100644
-index 000000000000..3b151fd02473
+index 000000000000..5c512f4e297d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/riscv/spacemit.yaml
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/riscv/spacemit.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/riscv/boot/dts/spacemit/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_ARCH_SPACEMIT) += bananapi-f3.dtb
+diff --git a/arch/riscv/boot/dts/spacemit/bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/bananapi-f3.dts
+new file mode 100644
+index 000000000000..023274189b49
+--- /dev/null
++++ b/arch/riscv/boot/dts/spacemit/bananapi-f3.dts
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0 OR MIT
++/*
++ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
++ */
 +
-+title: SpacemiT SoC-based boards
++#include "k1.dtsi"
 +
-+description:
-+  SpacemiT SoC-based boards
++/ {
++	model = "Banana Pi BPI-F3";
++	compatible = "bananapi,bpi-f3", "spacemit,k1";
 +
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - bananapi,bpi-f3
-+          - const: spacemit,k1
++	chosen {
++		stdout-path = "serial0";
++	};
++};
 +
-+additionalProperties: true
-+
-+...
++&uart0 {
++	status = "okay";
++};
 -- 
 2.45.1
 
