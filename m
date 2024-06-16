@@ -1,41 +1,63 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58F45025E
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 07:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4CC3D6B;
+	Sun, 16 Jun 2024 07:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718521766; cv=none; b=Axvmw7yGya+G9mkZK9vratoIdhw77qloehYWkILNWwuXx+GLXEZWwECCf2qyrYse4HM7oaE3qyUGE5uC3E+sgeD0/Aqzwq3eJVRdsqshL/eT/BmCPwRYJ+e91ncqsiY0WxtJYN3EbzZ+yFKEBfoATQR3aW5f7U1XFmJQhBli/RE=
+	t=1718522257; cv=none; b=P1ouuGFheFNMcc9NOaJfmfUWymJwHbHrcNKyMctmvwwebqXQfikpb5Eaki38uvsLWo5vJ8YzEq11ZlEIIY6wKb1N0cRrgmzMOgGe2WhHciA2FlkFhEBQD5WO9ROfIFf+5utcxtRuC2/9N7NkXn5MIll71R3fJW5JMwxzOGjZ37o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718521766; c=relaxed/simple;
-	bh=vZ0BN+iwJKmD0J8p1QINCDjKP75eZtW2SC1O6NI3ukE=;
+	s=arc-20240116; t=1718522257; c=relaxed/simple;
+	bh=fgLA2l2MSISlEz2pCSwaBnaseRMVySUwoInzsdYsHFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dekoUt4qLdVoTtSPSqYrGcRqzs6nfOql3OGzmrelzE7R7iwrnsCBIDg+v52kuP2oPdKyHrpE+c8982lnir+HyubFw5OunOI9DDBb8hwaaUYajQ37THUKPIwll2Ps/6hNBqhMNTyymfiNDjXI/wYbTy8KHaUNYH6ZbiiYp119B4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=fSQoL1S7; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=u/MTiHnpjxnU16P+kP5Qhjfrz4UjE5P3bSlE+FWMyfGkmamYaY79ByMc36OOP9JX34ym217UvZkUCqJLuLr0gzcN0lD0QoZcz1nYmzttPHS9vATWzskPwR2kflS22lutXc/59fwoHWdLjWUAl/GKoPT8yIF8UWHLGLVgy6784EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8aF7Cfz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="fSQoL1S7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=hoopR7IVlqAk31RamLP5caSJX2yo8Er/Hi00JioDoi0=;
-	b=fSQoL1S7o2B0aEjMy7ProFCXlOtQDDoRKFNDrGrnp6aNmbr1v2fCCSKqBLtB/f
-	bhhEFXVxHD3qBb7ychvk/gfDkNo24Raxv7d3OZ3mHrLYy+mHSdT2OkcS4JYK+h7P
-	PfxQ+L/ArlQW9k5QF6NQXVIBjFpMmkk/1zh6WhpsFHSn0=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp1 (Coremail) with SMTP id ClUQrAB33vqHj25mmz__Bw--.39420S3;
-	Sun, 16 Jun 2024 15:08:56 +0800 (CST)
-Date: Sun, 16 Jun 2024 15:08:55 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] ARM: imx_v6_v7_defconfig: enable DRM_SII902X and
- DRM_DISPLAY_CONNECTOR
-Message-ID: <Zm6Ph1FGsPYJCcbe@dragon>
-References: <20240603-imx-sii902x-defconfig-v2-1-a39e442011ae@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8aF7Cfz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED70DC2BBFC;
+	Sun, 16 Jun 2024 07:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718522256;
+	bh=fgLA2l2MSISlEz2pCSwaBnaseRMVySUwoInzsdYsHFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q8aF7CfzdmcxZtvLDKI1rY0OJosKHfvkqTDumNUcyybPGFXvcdEs4Uq31YdSgoVea
+	 4E3rugIQK5KA6dvgP2klj4GalJSBsMmOd5J+DAQpjBsEeNWRrWkTobCgER2noYJtuW
+	 wR4lq2lQ+wAk/by55X+3cOvi5efZeRYrU/UFstq5qm7k7obU8IsES/krYmTbML+qoh
+	 9KLM3xisTLFub3w5egcD/Le1DQpn4qk0q7vP6iOEDxfvnB4S1o5smuQQsSqkkAu0rN
+	 SPYOtbzgc/f2QkspodBsXEaXqLKQvaGKQXQi83zOSdydkdLE/6eryOp4cE+L1RrWeT
+	 9Hp0cNQm782nQ==
+Date: Sun, 16 Jun 2024 10:15:16 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v5 0/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <Zm6RBIkE0WMZWboK@kernel.org>
+References: <20240613003435.401549779@goodmis.org>
+ <20240616012333.c6ddobbv6aq4jlyn@master>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,18 +66,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240603-imx-sii902x-defconfig-v2-1-a39e442011ae@linaro.org>
-X-CM-TRANSID:ClUQrAB33vqHj25mmz__Bw--.39420S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU4GQ6DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGBsAZV6Nn4yK5AABsJ
+In-Reply-To: <20240616012333.c6ddobbv6aq4jlyn@master>
 
-On Mon, Jun 03, 2024 at 12:09:39AM +0300, Dmitry Baryshkov wrote:
-> Enable the LVDS-to-HDMI bridge and the HDMI display connector drivers
-> used on the iMX53 QSB and QSRB boards with the HDMI mezzanine.
+On Sun, Jun 16, 2024 at 01:23:33AM +0000, Wei Yang wrote:
+> Hi, Steven 
 > 
-> Cc: Chris Healy <cphealy@gmail.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Would you mind cc me in the following version?
 
-Applied, thanks!
+v7: https://lore.kernel.org/all/20240613233415.734483785@goodmis.org 
+ 
+> -- 
+> Wei Yang
+> Help you, Help me
 
+-- 
+Sincerely yours,
+Mike.
