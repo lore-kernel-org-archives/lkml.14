@@ -1,102 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B58F17C67;
-	Sun, 16 Jun 2024 15:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3705168B7
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 15:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718551313; cv=none; b=Qr0v4KO27Nl5qDNDDq1Cpx3mq0n8fs2wvuszO++bYoCg98UhPV/p/W5y7Ck4OFbtubfQeIGJdPeTV3m7/7mskpBSLmRCLb3V85EO62L6oqmZE25l+OyofL2S+DLK0n867jbIJahtUGMeTLntZy77bnhSzfj1+b4z0B1KicZ88tU=
+	t=1718551413; cv=none; b=OO6XOkTdPiD2x0okylHII4mJSmGhiEKqjJZJv4WvBPP/qZ0GsIj5QiLkFIEDGJD+8AFN6wrjaehVeBkH33jXjlcoYsGXi2a4YY7OvuU1GthD2rwzOZQSddAsloVR9Or3I4v08NF0s7eX5S2rvXwHirTc0NDHxN5Dmu4lTXTOqe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718551313; c=relaxed/simple;
-	bh=NEs054oRZFcHRWUqwHRu4qow5jK+NtbPN+Hc1m2p2AM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lQ//AowHy2tt86L65PhCtJ8ZD3ceGaaBOVbFcb7V9W0WQlisaQCZce+7EQEOM3tw5YMPgmuGIaNrmKixY7XoPavSRlSsuaVh99leO1+zHsoBWmJk60n1PCXXRChT10IzsE3s+iF6OBOkh4xdiWKKknJwYFXvIGVsgJpMdKl4hVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0naiLHn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718551413; c=relaxed/simple;
+	bh=No/yQzvhSQo5eA4MVA3Ontr93OnajiTCJcU9VnBHmPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRZzG1yD1ZisKoeOpJyZmCHFi+63JLZFVkL9itwyKO15zREU4m+3S5dhlJkP800IVIGxvR22TTnZaFdnjP8KYlDL8L6mssiTEamI1p2LY7zsDX3dx27PP+rfMWB7tD5XTmibLs/+Gck6CpBaX4EAtc65rnVKEhOoP3LnElZ4z9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=feWXWjPK; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0naiLHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2718AC2BBFC;
-	Sun, 16 Jun 2024 15:21:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718551313;
-	bh=NEs054oRZFcHRWUqwHRu4qow5jK+NtbPN+Hc1m2p2AM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m0naiLHneG0iYR4B9Z1u8hhnq8ti0hwY1ZNCYyYsxPdhZ9O6ck9P0nfVCVPj3T/EC
-	 WKRp4+UIQ1QUja6tft7sD+5uda52IknmLycppKiimJpgVruLv1CIemq/A0/Mx68TDv
-	 uPJT9ovaDWLw8c+kKzBxW+/t9qjUlLYgYBlb9Abb/hE9lVlVjyP3BeAJ4QWLyzYixi
-	 VwuMLw+koGZhauyHclqpxFb7JHra6p9lXU0M37pzTC/q5yOtPZkQr8pH3KxvAH0RU/
-	 PjCOslxSAnaxK7SZvWqD7hCMQ7u3CuVWKDWa8Ou1qUuX+o0rCKsgTKqedb6aWAPO6j
-	 r1Cyn6mnI6CGQ==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b7ffd9f6eso3531984e87.3;
-        Sun, 16 Jun 2024 08:21:53 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzZjU9AsEdB1TxJIgCEDuC/5h7gQpTdgtJiNhHfNRbbVivxx/rt
-	K01KCafU9yM2yHeNSmkOgmcNLlfQV+wGfCagMxzH7BtluYQyIlKFaElIKS+DYUb36W+bZYLeGjm
-	NI3iZb0cmiwR4PORGe+P2y2DPvH4=
-X-Google-Smtp-Source: AGHT+IEt1SPxTG4PEweuJf30U7VJWpA6Ulu1R7NovD9z/yJ/5NNQfyc8XhhePP8HY5lJ6wtLvXusHgf2my8JqeVPgQg=
-X-Received: by 2002:ac2:514f:0:b0:52c:7fc7:f40d with SMTP id
- 2adb3069b0e04-52ca6e6585bmr4851652e87.21.1718551311755; Sun, 16 Jun 2024
- 08:21:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="feWXWjPK"
+X-Envelope-To: boqun.feng@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718551409;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+Y0ywigxrcxoZLMnkkInJwDOVqW5TO6Aw/Ls7GsS5vA=;
+	b=feWXWjPKXXY7VhKtIp2DrasCgMafipVFZJqsNNTR46i50F7JtgPaTyHGZrVzvKgTPXfIop
+	WWU8jryipa3fHFey+xiAVr+eIxX5lyPSUIT/Q0P7ZxQlWEfNatfhz+vepE0+dVYnnvuUCE
+	RgLLOMq/CTSyPIrdJhB58exbhTZzXR8=
+X-Envelope-To: benno.lossin@proton.me
+X-Envelope-To: miguel.ojeda.sandonis@gmail.com
+X-Envelope-To: gary@garyguo.net
+X-Envelope-To: rust-for-linux@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-arch@vger.kernel.org
+X-Envelope-To: llvm@lists.linux.dev
+X-Envelope-To: ojeda@kernel.org
+X-Envelope-To: alex.gaynor@gmail.com
+X-Envelope-To: wedsonaf@gmail.com
+X-Envelope-To: bjorn3_gh@protonmail.com
+X-Envelope-To: a.hindborg@samsung.com
+X-Envelope-To: aliceryhl@google.com
+X-Envelope-To: stern@rowland.harvard.edu
+X-Envelope-To: parri.andrea@gmail.com
+X-Envelope-To: will@kernel.org
+X-Envelope-To: peterz@infradead.org
+X-Envelope-To: npiggin@gmail.com
+X-Envelope-To: dhowells@redhat.com
+X-Envelope-To: j.alglave@ucl.ac.uk
+X-Envelope-To: luc.maranget@inria.fr
+X-Envelope-To: paulmck@kernel.org
+X-Envelope-To: akiyks@gmail.com
+X-Envelope-To: dlustig@nvidia.com
+X-Envelope-To: joel@joelfernandes.org
+X-Envelope-To: nathan@kernel.org
+X-Envelope-To: ndesaulniers@google.com
+X-Envelope-To: kent.overstreet@gmail.com
+X-Envelope-To: gregkh@linuxfoundation.org
+X-Envelope-To: elver@google.com
+X-Envelope-To: mark.rutland@arm.com
+X-Envelope-To: tglx@linutronix.de
+X-Envelope-To: mingo@redhat.com
+X-Envelope-To: bp@alien8.de
+X-Envelope-To: dave.hansen@linux.intel.com
+X-Envelope-To: x86@kernel.org
+X-Envelope-To: hpa@zytor.com
+X-Envelope-To: catalin.marinas@arm.com
+X-Envelope-To: torvalds@linux-foundation.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-fsdevel@vger.kernel.org
+X-Envelope-To: tmgross@umich.edu
+X-Envelope-To: dakr@redhat.com
+Date: Sun, 16 Jun 2024 11:23:20 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo <gary@garyguo.net>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Alan Stern <stern@rowland.harvard.edu>, Andrea Parri <parri.andrea@gmail.com>, 
+	Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, David Howells <dhowells@redhat.com>, 
+	Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, 
+	Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	kent.overstreet@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	elver@google.com, Mark Rutland <mark.rutland@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, torvalds@linux-foundation.org, 
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org, Trevor Gross <tmgross@umich.edu>, 
+	dakr@redhat.com
+Subject: Re: [RFC 2/2] rust: sync: Add atomic support
+Message-ID: <zq5p4o6j4avgncfacqrz6naaw7yqk4e5fbmwz547ge7xi52vmq@zjk3ncmsdrkk>
+References: <CANiq72myhoCCWs7j0eZuxfoYMbTez7cPa795T57+gz2Dpd+xAw@mail.gmail.com>
+ <ZmtC7h7v1t6XJ6EI@boqun-archlinux>
+ <CANiq72=JdqTRPiUfT=-YMTTN+bHeAe2Pba8nERxU3cN8Q-BEOw@mail.gmail.com>
+ <ZmxUxaIwHWnB42h-@Boquns-Mac-mini.home>
+ <c1c45a2e-afdf-40a6-9f44-142752368d5e@proton.me>
+ <ZmzvVr7lYfR6Dpca@Boquns-Mac-mini.home>
+ <b692945b-8fa4-4918-93f6-783fbcde375c@proton.me>
+ <Zm4R0XwTpsASpBhx@Boquns-Mac-mini.home>
+ <5lwylk6fhlvqfgxmt7xdoxdrhtvmplo5kazpdbt3kxpnlltxit@v5xbpiv3dnqq>
+ <Zm7zvt7cNT2YpiIi@Boquns-Mac-mini.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611160938.3511096-1-masahiroy@kernel.org> <20240611160938.3511096-2-masahiroy@kernel.org>
-In-Reply-To: <20240611160938.3511096-2-masahiroy@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 17 Jun 2024 00:21:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQyPRKes7=wNtYXre+nU=5-1oZ-g1uzbjFMFd2e10jFjA@mail.gmail.com>
-Message-ID: <CAK7LNAQyPRKes7=wNtYXre+nU=5-1oZ-g1uzbjFMFd2e10jFjA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: package: add -e and -u options to shell scripts
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zm7zvt7cNT2YpiIi@Boquns-Mac-mini.home>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 12, 2024 at 1:09=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> Set -e to make these scripts fail on the first error.
->
-> Set -u because these scripts are invoked by Makefile, and do not work
-> properly without necessary variables defined.
->
-> Remove the explicit "test -n ..." from scripts/package/install-extmod-bui=
-ld.
->
-> Both options are described in POSIX. [1]
->
-> [1]: https://pubs.opengroup.org/onlinepubs/009604499/utilities/set.html
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+On Sun, Jun 16, 2024 at 07:16:30AM -0700, Boqun Feng wrote:
+> On Sun, Jun 16, 2024 at 05:51:07AM -0400, Kent Overstreet wrote:
+> > On Sat, Jun 15, 2024 at 03:12:33PM -0700, Boqun Feng wrote:
+> > > What's the issue of having AtomicI32 and AtomicI64 first then? We don't
+> > > need to do 1 or 2 until the real users show up.
+> > > 
+> > > And I'd like also to point out that there are a few more trait bound
+> > > designs needed for Atomic<T>, for example, Atomic<u32> and Atomic<i32>
+> > > have different sets of API (no inc_unless_negative() for u32).
+> > > 
+> > > Don't make me wrong, I have no doubt we can handle this in the type
+> > > system, but given the design work need, won't it make sense that we take
+> > > baby steps on this? We can first introduce AtomicI32 and AtomicI64 which
+> > > already have real users, and then if there are some values of generic
+> > > atomics, we introduce them and have proper discussion on design.
+> > > 
+> > > To me, it's perfectly fine that Atomic{I32,I64} co-exist with Atomic<T>.
+> > > What's the downside? A bit specific example would help me understand
+> > > the real concern here.
+> > 
+> > Err, what?
+> > 
+> > Of course we want generic atomics, and we need that for properly
+> > supporting cmpxchg.
+> > 
+> 
+> Nope. Note this series only introduces the atomic types (atomic_ C
+> APIs), but cmpxchg C APIs (no atomic_ prefix) are probably presented via
+> a different API, where we need to make it easier to interact with normal
+> types, and we may use generic there.
+> 
+> > Bogun, you've got all the rust guys pushing for doing this with
+> > generics, I'm not sure why you're being stubborn here?
+> 
+> Hmm? Have you seen the email I replied to John, a broader Rust community
+> seems doesn't appreciate the idea of generic atomics.
 
-
-
-Setting -u needs more careful review and test.
-
-
-This patch will break 'make deb-pkg'.
-
-
-./scripts/package/mkdebian: 150: KDEB_PKGVERSION: parameter not set
-
-
-
-
-To set -u, scripts/package/mkdebian needs code refactoring.
-
-
-
-I will keep scripts/package/mkdebian untouched.
-
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Apologies, I appear to have gotten things backwards in my pre-coffee
+reading, I'll have to catch up on the whole thread :)
