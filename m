@@ -1,48 +1,48 @@
-Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BF412E7E;
-	Sun, 16 Jun 2024 17:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B6739FFB;
+	Sun, 16 Jun 2024 17:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718558475; cv=none; b=e/jj6N2xsknd/QVDAVoYKh8b+VRRkLOd360fYq+TYPaAxYOvsLkGkRvK0q8pQ1YOoZHWnE4sXErEQcoZgq2L3iC9orhJNGiKYYV3XbUUfsHx9J+modn3BkQ1VMpeyIjz+ge6H+QwH/I/8HGMZgvjbwH6vizEABXtdWqkLrR4bB4=
+	t=1718558480; cv=none; b=SGcxzuSpb03/KgVRjAZ6ZaEu3pRq85sm82IEFRxvc8gN00Vpvk/8B4U16Cm5RMawzE8uFLyIqY8k6SGiEVK9hdxUVwanw69JAiNgamMo/mJIKrv7S1LwMHjKq/1BX5XhoAbfDHquOVo+myfZQNq1QDBjVWZmEgxWtcSBAJiJ3dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718558475; c=relaxed/simple;
-	bh=R6/CWhgZQl3gq7chGwL60f99+22K2ciRlGUkuOSJu24=;
+	s=arc-20240116; t=1718558480; c=relaxed/simple;
+	bh=XJRpVJ6q+6fZ3iJUTtv6tSoasYa9YGg70qQsdIRLcRA=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=En2JTxHA+Lm6UsEZP6i4N7u9Ayi5+ofKcT0/mOoqy4zLI5SndYNwXa0HOnBJob82rlGmqdIyQaw9sX4DXm8dBNcfH0tjO8mabdkm5JGx9rrcNwKl0bH705VRDk5kL9LwiC4KyYDbdljxUnAMmESplI8n2pyFjDEkgjD+aTj/stE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hwCv2avq; arc=none smtp.client-ip=203.205.251.72
+	 MIME-Version; b=MYMogLdEZqeOuQgP4D3mszMmujZ5G7SMnmDqs09T1tyHlsmqorS5Ff2AacFnTEQvwVSPw11NGiyRttl+NvfLQm72RnbTv8eejML4Gq741N+VYeqJ3LUWeSAUZAcAPpgPdxqvNQmuG0Zc/uHynUrUDbjttvpzXi0EyBAey1ycqew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fOx9DXUz; arc=none smtp.client-ip=203.205.221.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hwCv2avq"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fOx9DXUz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718558470; bh=ceOFvkqQuF3BJBqg7HHuf2dRny50kltfLRyQrgbV5Jk=;
+	t=1718558475; bh=JKwEkli64nV+u6UbVuHjl1rryovcclGC4cUSLhcp14k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hwCv2avquEdaRvbANtDMgwr4yR/6LCfpP94zlfwxGBhohIy8yfpWgCClG8sqbcsZR
-	 xG1mUEr9BY3AmF9EgAQ5Kz1Uq26T94x3nA8/uLYknX+guNk9ks0oVvjedN+FNaABax
-	 OJEYPfaL4wn7b/wmTQOkV6KysRt2X2W+sQrNEQSY=
+	b=fOx9DXUzRSKFB3VzlEM/jMlO1VRg8rsx13uXibzAGqP9ajpLRg6dE5zHAMGY1ju5a
+	 yMeGSyugu5WgVb0qIo3x/YnyKHd2NNaHh3I/eTDBUEmZJ8Vd0h2eTMRQo+PmrrwIFb
+	 0E/v9NC+ptCefdClylUJDVPlAZ9DMFWZsXzgyahA=
 Received: from cyy-pc.lan ([240e:379:2260:ed00:cd33:e8cf:d8f9:bed3])
 	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
 	id 5452D659; Mon, 17 Jun 2024 01:21:05 +0800
-X-QQ-mid: xmsmtpt1718558468tjw4ij1kg
-Message-ID: <tencent_947689E304AE5A4C7A48682311DF8920B106@qq.com>
-X-QQ-XMAILINFO: OKkKo7I1HxIeYsRDFAmm8SNIGgiuA3hspYtdkw9KJ2qpXlFjjasdXsdLmm6jdw
-	 7yZH96i2B+zl8HYU5ArYhmY9X8f5uqPhq8AvPl0ZhdVEoHRrW782bG1ktVuaLwhIVzxw5J6kWqf1
-	 HwSVYGE8RkY37yYhCbu8f7Ts6Fi/xvQSZ6XcnuPtLZ479UpvZVdmnlPT8N+TOU1p1OMe6kiOMH9Q
-	 nZQqOOVIXxtwxcieAbp1J5Codyp44S2o5q42SJKDE6MrtuKTjqslBzdeYsK+UHTk82vbpN63UlpP
-	 SO7So5P1OtvNcjJRyzFr5quXszph9bKkbum3vErCJInC+QvmPMzjAHZNDGKp8IICrfJBVm4kOAfX
-	 VzI/vvApkXmgmixDXEGaL5WlkKaVnV2ovu37sCxfoxclaRS2hMGlK7npKLJIF1p7Pw5MuogERWz5
-	 104DfLQrjqwwyYcSs2oR7m3UQ/FJA5nWTmqSUwvcjANSdP8gg4HgLm4fpSftzFvAsbn3Q4U89tEu
-	 Z4G/7hI3ExXZnQGBrOWzkgv/0ytot5QNkyWCc43k2WQHQvXdHsd07hEoE7SlJoLyw2AStsdvqWxC
-	 VLTPgR7UpNVuhO742Y6TNjltqwpK7l0dISX0Hausxkz7tsLzBpk1Y5+qyyOBHeT1PUlLY6GkGOoe
-	 NVCUaES04CO9x8fekVlPeqLBfcrtNMWxYc9ylmFwdbDMVEhvo33cbpe2M3E0PzRsf3J4PwK8cQYh
-	 z9vP//zBYvoCMjeQqAAlePXKPgW0oINy21J3QOgE4cUJ5i/XHRMktnsKpg/8X8sem5ui9WaTQqrI
-	 7EFZlUfgpL8OYI30VRU2Rud8apbsclePYfgQrTtJqXjyb7iObxwHHX8MPKHSD6B2B/720/tUiaHu
-	 hhcYW8Rrz3clx9WJutVKgKRzYVFz2eVpOEdbCzoooxDL9k3Rq7TgJMQGTDD8+b9vFGvcyUqPp6UG
-	 u5Rxe4SPv3aVw7N/ORRLksGgAAaV6zWjvw0LDHbeViwe08AhLU43gPPpB9qEuqiEi+rOYrrdmPEW
-	 UcuJQjh5dxumLtJBpyKoswi1xna/GIaiaTWlr5qw==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-mid: xmsmtpt1718558473tzxk4bd50
+Message-ID: <tencent_417C31822BDAD48EF8B84B312521318DBA08@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIe57aA5A2c3PUjTCRk8fYygcDw9FdDkbDlvTVj9MFZs4odlQdLBD
+	 YD/KHRA3SyQc53FC3gTWE7zU4iEZXY2rUPh3czyoAQBojOkU4fNo7/pYeokOCJrBF6xiB7X7o/Yh
+	 lX2OIHvyQ92ujGSwwrXtNQPxtmhGS33EECAbjvL5rRJkaFnJVqpiiCxylBpzZhYVvz0oBIU8QGh1
+	 Qs4ZR+WEH9fUdmBwBNWnJOP73Y8PQdeG2phEQI5UzKSqjPc/bQSgGeYibBLrqR3Qgs8Ft6RY+LxM
+	 8TTNpqhzKE4LUEVLko4rbvNAgNPFAcm+qQ5z8cRDJ1izWhFjcj/ygg081QhhL96fMZG8ccPzX611
+	 T6EYJ8gSVVUYcBl6RVQxv0n6e/TEwiEZcygN4c2nTgZE2wgIyPUa3Y2BFnndHjWU4X8og5C6SStq
+	 6jzyK8b34os81x99rcPcyB/4vBqomvDYU+i1FCpp9AUYeC9Nfn6+7fCRSvQ8X2YDjPYOxDQa1g9y
+	 qAk0sHK1u2231ZmuU1JYZpaQCaSyaokXzs/MgFT55LnKt5ZAr+QuWHVcc66gVWtTIN1y9dKShH2X
+	 fm6drPZRdJu4P2SScVouk6pc5zyzkP1rIcxFMcpvcCl+QeYWxa2iMqYo90lqhMo7ZFC6/H4zwfA+
+	 PWLs45zLuzIdkAxDvMxzPMSmGJ8UDM3chWrzWs0uiPP4eMaj4JIicLHm4Uk3M2VWQNsupzbX14Nm
+	 7SP69SO4y1VmgVZlO4l6L6LjTdcixX7+t5+G2sp9SB8dEEjipjJiHBTbQgEcw70CxZXgprtdkndU
+	 ELgAXBwwcRdLPH4/hIQvD8/kWvqR0BraENdNNjXMtsje4se4bCBafRzRMw5lg1mzph5aQnYtTXnp
+	 EsR5uOtG4hXaJtoCYmXHGHnrOQKm5LRdv99Br2svKakQTCnUADAhZIpwvZJwwwY8ch9Qtao/nQSp
+	 TLLLW1lrIy5IYynnuoC4G9D4O3Cr6DhckL96mS8VsRGzTs6L2mkItZHaUjBmLcsZGSMFvxNgKxVW
+	 O6U4S27vGC2i2Pa3naOQ6Udog83miNQ+eVWp0gOw==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-riscv@lists.infradead.org
 Cc: Conor Dooley <conor+dt@kernel.org>,
@@ -55,9 +55,9 @@ Cc: Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v1 2/9] dt-bindings: riscv: Add SpacemiT X60 compatibles
-Date: Mon, 17 Jun 2024 01:20:47 +0800
-X-OQ-MSGID: <20240616172054.3074948-2-cyy@cyyself.name>
+Subject: [PATCH v1 5/9] dt-bindings: interrupt-controller: Add SpacemiT K1 PLIC
+Date: Mon, 17 Jun 2024 01:20:50 +0800
+X-OQ-MSGID: <20240616172054.3074948-5-cyy@cyyself.name>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
 References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
@@ -69,28 +69,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The X60 is RISC-V CPU cores from SpacemiT and currently used in their K1
-SoC.
-
-Link: https://www.spacemit.com/en/spacemit-x60-core/
+Add compatible string for SpacemiT K1 PLIC.
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 ---
- Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml     | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index d87dd50f1a4b..5ad9cb410335 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -46,6 +46,7 @@ properties:
-               - sifive,u7
-               - sifive,u74
-               - sifive,u74-mc
-+              - spacemit,x60
-               - thead,c906
-               - thead,c910
-               - thead,c920
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+index 709b2211276b..3d0426b56904 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+@@ -59,6 +59,7 @@ properties:
+           - enum:
+               - canaan,k210-plic
+               - sifive,fu540-c000-plic
++              - spacemit,k1-plic
+               - starfive,jh7100-plic
+               - starfive,jh7110-plic
+           - const: sifive,plic-1.0.0
+@@ -71,7 +72,9 @@ properties:
+               - thead,th1520-plic
+           - const: thead,c900-plic
+       - items:
+-          - const: sifive,plic-1.0.0
++          - enum:
++              - sifive,plic-1.0.0
++              - spacemit,k1-plic
+           - const: riscv,plic0
+         deprecated: true
+         description: For the QEMU virt machine only
 -- 
 2.45.1
 
