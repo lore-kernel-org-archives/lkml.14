@@ -1,129 +1,196 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4B016DEB4;
-	Sun, 16 Jun 2024 07:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0EB16DEB4;
+	Sun, 16 Jun 2024 07:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718522867; cv=none; b=lX3XtVoQ2F2iIdORqBIicZtqfDRoyVNnc5xKazK+/FmoWAcWEwkVX2sMTQJYKdJOjq/V4yBQ1LKbzbK8fyAu9txYK1gexCwtvwrzNZdZGkZWvV5wSNvqZe/sNfkKXwDiP1F/STFbA4+b48gv3a4PcatfLt5Olc8wT4DgFkr9UbA=
+	t=1718522924; cv=none; b=Ddsydk2zqzGuvMKlmkovMgOqftyK9ShLoDCoeEgVGo6FUcHy3fqHb4KB3IOOHvZkLMaW4U9C+X9W4Xpdbl3LVxs0ebl7lQF+v1Xy4b9xqkh+5vn2CB9Bn7IaHgrcnMJqlnuDwJvwA/Ma+koKtiGnJiNqLxEvNtBt2f1st8wCX6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718522867; c=relaxed/simple;
-	bh=IJKBx8EngZjCf1UMWwzavgh2/tV9nzo7UHwlFNS36nQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=n0awOyJsvcF/jyp4VvTl4eDsL8DkkbPGYnnwChmIHorZY4dyn3UMiuDdsCLLrbQ9DgmVAaMgPvjIyB7wyTIRAwzaYMHiGWKXSm4OhrQnniZK0xRnuMMGcLAOLG5/3nyqmQ7Mi+oryHSCHiJ78P78QA/UbUkIGXMgjUif0IZ4ml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AtPDByQB; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AtPDByQB"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45G7Qnfg1078062
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 16 Jun 2024 00:26:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45G7Qnfg1078062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1718522810;
-	bh=vcnyciM5IvH6WEzwFFx0NauxBD5rFkkyBqjtfqxYFho=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=AtPDByQBMPrHWCGI+vzy8WZd8eQnzbzM+qXJF88Fb2WB2o+PZTPwNlkkLKmrTUk6a
-	 /nwKfiQrc6wYyXRaN6OA6gbPyymGlSuF1oyKtg540JImmdKhvgid+pRKDF07JtieKB
-	 NlA+yUHTFyuUArFshov6HbYhiR25PIUQJHWNr+dbDyiaN0DzNqG8Qlf2MYLHLsLyG9
-	 3J4g/EJpZBuBi9pumrYn/UbP6yFmGs+Xl7X/nbVEGEg1jPhUdmbrWZVlXkUXCBrk1/
-	 EZ6HOCVUVgIPIyUCzZqJdvMElRaDA3YoyHt+AJbRRYYSEXBbqAVAXVfC0pqegdYl3e
-	 gwkBSyyWTVV1g==
-Message-ID: <99208d95-d3de-44d0-8b08-f508759aabca@zytor.com>
-Date: Sun, 16 Jun 2024 00:26:48 -0700
+	s=arc-20240116; t=1718522924; c=relaxed/simple;
+	bh=onAJtnmk6+29s6dUauR5dhJqG7zZiy9rFtztLY7oXC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ON0+lBgYeDjuIb8BpH6FqMFxXjIaKA56rOBKaR9VX4ffjSZIF+jP3i0tu8WRkF3JEqxuAuzwVtgfA+T01DJAGNkFORo/6TUEBQIZL3v3Gdz6A+EJw6SDxPpovShRKLXS9JhIiOnZfKtGRwIcL4ZRCWoIEsFYdvKSNe50c5/Q34w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from 79-98-74-242.sys-data.com ([79.98.74.242] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sIkJO-00007I-3M; Sun, 16 Jun 2024 09:28:26 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>, Alexey Charkov <alchark@gmail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Diederik de Haas <didi.debian@cknow.org>, Andy Yan <andy.yan@rock-chips.com>,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-staging@lists.linux.dev
+Subject:
+ Re: [PATCH 3/3] arm64: dts: rockchip: Add rkvdec2 Video Decoder on rk3588(s)
+Date: Sun, 16 Jun 2024 09:28:25 +0200
+Message-ID: <6812626.ejJDZkT8p0@phil>
+In-Reply-To: <3666279.iZASKD2KPV@arisu>
+References:
+ <20240615015734.1612108-1-detlev.casanova@collabora.com>
+ <944c4296-8dd2-4ffd-b430-1839ff3a3ed2@kwiboo.se> <3666279.iZASKD2KPV@arisu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND v1 2/3] x86/cpufeatures: Generate a feature mask header
- based on build config
-From: Xin Li <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org
-References: <20240509205340.275568-1-xin@zytor.com>
- <20240509205340.275568-3-xin@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240509205340.275568-3-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 5/9/2024 1:53 PM, Xin Li (Intel) wrote:
-> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+Am Samstag, 15. Juni 2024, 21:55:54 CEST schrieb Detlev Casanova:
+> On Saturday, June 15, 2024 4:25:27 A.M. EDT Jonas Karlman wrote:
+> > Hi Detlev,
+> > 
+> > On 2024-06-15 03:56, Detlev Casanova wrote:
+> > > Add the rkvdec2 Video Decoder to the RK3588s devicetree.
+> > > 
+> > > Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> > > ---
+> > > 
+> > >  .../boot/dts/rockchip/rk3588-rock-5b.dts      |  4 ++++
+> > >  .../boot/dts/rockchip/rk3588s-orangepi-5.dts  |  4 ++++
+> > >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 19 +++++++++++++++++++
+> > >  3 files changed, 27 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > > b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts index
+> > > c551b676860c..965322c24a65 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > > @@ -503,6 +503,10 @@ &pwm1 {
+> > > 
+> > >  	status = "okay";
+> > >  
+> > >  };
+> > > 
+> > > +&rkvdec0 {
+> > > +	status = "okay";
+> > > +};
+> > 
+> > Enable of rkvdec0 should probably be split out from the patch that adds
+> > the rkvdec0 node to soc dtsi.
 > 
-> Introduce an AWK script to auto-generate a header with required and
-> disabled feature masks based on <asm/cpufeatures.h> and current build
-> config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-> simply add
+> Ack
+> 
+> > Also why is rkvdec0 only enabled on rock-5b and orangepi-5?
+> 
+> I only could test on those two but I can enable it on all rk3588 devices.
+> 
+> > > +
+> > > 
+> > >  &saradc {
+> > >  
+> > >  	vref-supply = <&avcc_1v8_s0>;
+> > >  	status = "okay";
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
+> > > b/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts index
+> > > feea6b20a6bf..2828fb4c182a 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dts
+> > > @@ -321,6 +321,10 @@ typec5v_pwren: typec5v-pwren {
+> > > 
+> > >  	};
+> > >  
+> > >  };
+> > > 
+> > > +&rkvdec0 {
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > 
+> > >  &saradc {
+> > >  
+> > >  	vref-supply = <&avcc_1v8_s0>;
+> > >  	status = "okay";
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> > > b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi index
+> > > 0fecbf46e127..09672636dcea 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> > > @@ -3034,6 +3034,9 @@ system_sram2: sram@ff001000 {
+> > > 
+> > >  		ranges = <0x0 0x0 0xff001000 0xef000>;
+> > >  		#address-cells = <1>;
+> > >  		#size-cells = <1>;
+> > 
+> > Blank line is missing.
+> > 
+> > > +		rkvdec0_sram: rkvdec-sram@0 {
+> > > +			reg = <0x0 0x78000>;
+> > > +		};
+> > > 
+> > >  	};
+> > >  	
+> > >  	pinctrl: pinctrl {
+> > > 
+> > > @@ -3103,6 +3106,22 @@ gpio4: gpio@fec50000 {
+> > > 
+> > >  			#interrupt-cells = <2>;
+> > >  		
+> > >  		};
+> > >  	
+> > >  	};
+> > > 
+> > > +
+> > > +	rkvdec0: video-decoder@fdc38100 {
+> > > +		compatible = "rockchip,rk3588-vdec2";
+> > > +		reg = <0x0 0xfdc38100 0x0 0x500>;
+> > > +		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +		clocks = <&cru ACLK_RKVDEC0>, <&cru HCLK_RKVDEC0>, 
+> <&cru
+> > > CLK_RKVDEC0_CORE>, +			 <&cru 
+> CLK_RKVDEC0_CA>, <&cru
+> > > CLK_RKVDEC0_HEVC_CA>;
+> > > +		clock-names = "axi", "ahb", "core",
+> > > +			      "cabac", "hevc_cabac";
+> > > +		assigned-clocks = <&cru ACLK_RKVDEC0>, <&cru 
+> CLK_RKVDEC0_CORE>,
+> > > +				  <&cru CLK_RKVDEC0_CA>, <&cru 
+> CLK_RKVDEC0_HEVC_CA>;
+> > > +		assigned-clock-rates = <800000000>, <600000000>,
+> > > +				       <600000000>, <1000000000>;
+> > > +		power-domains = <&power RK3588_PD_RKVDEC0>;
+> > 
+> > iommus and resets should probably be added.
+> > 
+> > > +		status = "disabled";
+> > > +	};
+> > 
+> > The iommu node for rkvdec0_mmu seem to be missing, is it not required to
+> > be able to use memory >4GiB as decoding buffers?
+> 
+> I need to check if the current rockchip iommu driver will work for this 
+> decoder. I remember that the iommu code for AV1 was a bit different, not sure 
+> about this rkvdec.
+> 
+> > I would also consider adding the rkvdec1 node(s), if I am understanding
+> > correctly they can both be used in a cluster or completely independent.
+> 
+> They can be used independently, yes. I'll add rkvdec1 for rk3588 devices 
+> (rk3588s only has  1 core)
 
-...
+Please check in with Sebastian Reichel about clusters/independent
+controllers. He had a lot of fruitful discussions for the VEPU121/VPU121
+support he is working on.
 
-> +
-> +		printf "\n#define %s_MASKS ", s;
-> +		pfx = "{";
-> +		for (i = 0; i < ncapints; i++) {
-> +			printf "%s \\\n\t%s_MASK_%d", pfx, s, i;
-> +			pfx = ",";
-> +		}
-> +		printf " \\\n}\n\n";
-> +
-> +		printf "#define %s_FEATURE(x) \\\n", s;
-> +		printf "\t((( ";
-> +		for (i = 0; i < ncapints; i++) {
-> +			if (masks[i]) {
-> +				printf "\\\n\t\t((x) >> 5) == %2d ? %s_MASK%-3d : ", i, s, i;
-> +			}
-> +		}
-> +		printf "0 \\\n";
-> +		printf "\t) >> ((x) & 31)) & 1)\n\n";
+Baseline being, while we want the hw to be described correctly wrt the
+multiple instances, we don't generally want to expose them individually
+to userspace, because that would then require userspace to do all the
+scheduling.
 
-This code generates macros {REQUIRED,DISABLED}_FEATURE(x) to tell if a
-CPU feature, e.g., X86_FEATURE_FRED, is a required or disabled feature
-for this particular compile-time configuration.
 
-But they are NOT currently used, so I prefer to remove them for now.
-
-Thanks!
-     Xin
