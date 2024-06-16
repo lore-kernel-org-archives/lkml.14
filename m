@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E68186297
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8876A186E36
 	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718526555; cv=none; b=Gt5LQ4nY+7rZT1DH2qfiH9d7/zAwHIk5J1UxNt/elEAG+qkU4VMwc+bo+C02cU/IGbWVab72texAtAgTxXvaNy3cIR6Y6+Zskj/CdVDxH5gqgm30I6pcl8VLQlPl1gMm6XuAIN6sN8zMOC5bcHmdyQQCSzPAIvSL/7FhhNWOboo=
+	t=1718526555; cv=none; b=XGUqhJkYVeeosixxNizZk0tiPiL75kofvJS0Y2mDH2D3p9bgPxGBZeRZ7s5t6qmP9jHPeTLjuvBWK6KfNJKysi39Iu1oW/d1binfccPm3FR/w4D8uq7kozqqcgXfb8u57eznDLZLHobWHavD8UO4MThYw+PxQ4y+VFk9nCF+Gx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718526555; c=relaxed/simple;
-	bh=rAKjaNMehdyg0txw6oCrP0nD11AXCjGACRzpm1pgFmo=;
+	bh=u1Ec755SGAs2DOyCz8ZDHhB8uInkVMbjC8CrKq6pMlI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZqjJWy9QYd32b1jWbB6nskdahXmNiaThw0LRDC7Q7UPPKUGeIRjxxA3iYaxMah0A0tvZ094Ujub4Jooh/1Dv7GNhBQOezSEbCPC/yunIglVsmji8he3CFJpPRgc3sg4NetSp5wSl7+htHncZ9WcPmlq3m81O99Ap8jxIC6NRZBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjIUKCEx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Yin27pbeFFLyX1DhekBtr8c+d73Ni8x1nvG8skqkFTAgfBeR7b3sV0TpQxTLqivwpaPSH8qPZRHdFin2G71l4tX/J+e5UxAoLAP5ufkHPXvOREzqYtQpwO9zo9xVt5bvwUQCqJxBQssIZsCGb/kJXH5/90e7RGTxEDWSE/jvc68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTPSV1vh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjIUKCEx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D91CC4AF52;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTPSV1vh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 243E5C4AF54;
 	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718526555;
-	bh=rAKjaNMehdyg0txw6oCrP0nD11AXCjGACRzpm1pgFmo=;
+	bh=u1Ec755SGAs2DOyCz8ZDHhB8uInkVMbjC8CrKq6pMlI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NjIUKCEx6T5XPVkB1nsdc410RWn57GkeOD5hQNfK9KT3KmWctPw1VqHfVelLkok6Y
-	 zheXB0bZzRghiepw1oiK/TA5IYXopiokhmY/qSjjnM24KCGVQ83x77qqkA0OyxTJz2
-	 cu6jQ/pWfZecnwkKOBh4lx5PYI81NxBCAe6tMgB9X4feyJoAjvGUCfraJltagGc9bu
-	 7RM+IvXTYuoBw73C38/+/xTSruftWrphaWyQReeUSKSwyIw6qC3ZWOul24X6oyupKu
-	 r1PHsAxHr0wB4rFq7+mr1WZiIlEXTJAwqy5/DfbSCn/bd3nVF5aGIi8qEsCojnSJoE
-	 ocW0UYaJS9AwA==
+	b=XTPSV1vhM1r24dixjMBsDQd+QjRgGkbSI22NSxdwVAoUS6dcjK01pdH17a7RT4fuk
+	 CAlFAi2fLJsrHYSeswFZzxFQaVzA296N6wqiwsZozWD9EmYCh04fmMwwp7MUr9BQ4P
+	 lFZR8lW8vICibl3caEUErusa59rCkQE/W1zEXRh/TcogplwSI0mnTDRudS6roddF2B
+	 WSDt29mizcplT+x86qaW2l9Is+v8sAhj96g7zgx4M94hTx8rSYQMHeeBnk4HomCQ3W
+	 Uo4vwSKg7IcefJ1xJIrirJOdEfTpoqumdNswleeq5FShCtFAzVe+InTm+mzwdiodzr
+	 DoLCCAAn5+HGA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D3BC2BA18;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A451C2BA16;
 	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Sun, 16 Jun 2024 16:29:14 +0800
-Subject: [PATCH 04/13] drm/mediatek: Add DRM_MODE_ROTATE_0 to rotation
- property
+Date: Sun, 16 Jun 2024 16:29:16 +0800
+Subject: [PATCH 06/13] drm/mediatek: Turn off the layers with zero width or
+ height
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240616-mediatek-drm-next-v1-4-7e8f9cf785d8@mediatek.com>
+Message-Id: <20240616-mediatek-drm-next-v1-6-7e8f9cf785d8@mediatek.com>
 References: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
 In-Reply-To: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -55,11 +55,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=3032;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=2110;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=aRjZW9oV7zkNAPoyKvtjvlu+gI5cJW/IgIkY1vL8GJU=;
- b=N4CHHmRZFm2ntcHpjitJWn39vupntoqiBBkKiDpXz8pS+F/c5ngZcLGIFj5DG1vX4G/3GCQ8L
- ZfAIwQHuT5ECQwwAHpQhoDYY7z4KSOY6Q1gVbxfdoQIHjj81mx23bg1
+ bh=dqX2wm5YHxb4PcQ3tQ95rP0OPaABSh/HZP+kCxZYb/s=;
+ b=rBv9L1sZHl5v2QITha1QsonEGs+CHt/5LjEOmGGhA4zq4fd/T5Fg2s86fr6o3Z8CqfcowF5og
+ L1lA6ShbPNCAVdkfnsbWbj5wJKWF+2uVdMbzAyhEAeIYjg5FRruVtj7
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -69,85 +69,51 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Always add DRM_MODE_ROTATE_0 to rotation property to meet
-IGT's (Intel GPU Tools) requirement.
+We found that IGT (Intel GPU Tool) will try to commit layers with
+zero width or height and lead to undefined behaviors in hardware.
+Disable the layers in such a situation.
 
+Fixes: 453c3364632a ("drm/mediatek: Add ovl_adaptor support for MT8195")
+Fixes: d886c0009bd0 ("drm/mediatek: Add ETHDR support for MT8195")
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_ddp_comp.h |  6 +++++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 17 +++++------------
- drivers/gpu/drm/mediatek/mtk_plane.c    |  2 +-
- 3 files changed, 11 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c | 2 +-
+ drivers/gpu/drm/mediatek/mtk_ethdr.c            | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-index 26236691ce4c..f7fe2e08dc8e 100644
---- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-@@ -192,7 +192,11 @@ unsigned int mtk_ddp_comp_supported_rotations(struct mtk_ddp_comp *comp)
- 	if (comp->funcs && comp->funcs->supported_rotations)
- 		return comp->funcs->supported_rotations(comp->dev);
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+index 02dd7dcdfedb..2b62d6475918 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+@@ -158,7 +158,7 @@ void mtk_ovl_adaptor_layer_config(struct device *dev, unsigned int idx,
+ 	merge = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_MERGE0 + idx];
+ 	ethdr = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_ETHDR0];
  
--	return 0;
-+	/*
-+	 * In order to pass IGT tests, DRM_MODE_ROTATE_0 is required when
-+	 * rotation is not supported.
-+	 */
-+	return DRM_MODE_ROTATE_0;
- }
+-	if (!pending->enable) {
++	if (!pending->enable || !pending->width || !pending->height) {
+ 		mtk_merge_stop_cmdq(merge, cmdq_pkt);
+ 		mtk_mdp_rdma_stop(rdma_l, cmdq_pkt);
+ 		mtk_mdp_rdma_stop(rdma_r, cmdq_pkt);
+diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+index d7d16482c947..b5484a286060 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
++++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+@@ -159,7 +159,12 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
+ 	if (idx >= 4)
+ 		return;
  
- static inline unsigned int mtk_ddp_comp_layer_nr(struct mtk_ddp_comp *comp)
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index b552a02d7eae..862ab683ed1b 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -296,27 +296,20 @@ int mtk_ovl_layer_check(struct device *dev, unsigned int idx,
- 			struct mtk_plane_state *mtk_state)
- {
- 	struct drm_plane_state *state = &mtk_state->base;
--	unsigned int rotation = 0;
- 
--	rotation = drm_rotation_simplify(state->rotation,
--					 DRM_MODE_ROTATE_0 |
--					 DRM_MODE_REFLECT_X |
--					 DRM_MODE_REFLECT_Y);
--	rotation &= ~DRM_MODE_ROTATE_0;
--
--	/* We can only do reflection, not rotation */
--	if ((rotation & DRM_MODE_ROTATE_MASK) != 0)
-+	/* check if any unsupported rotation is set */
-+	if (state->rotation & ~mtk_ovl_supported_rotations(dev))
- 		return -EINVAL;
- 
- 	/*
- 	 * TODO: Rotating/reflecting YUV buffers is not supported at this time.
- 	 *	 Only RGB[AX] variants are supported.
-+	 *	 Since DRM_MODE_ROTATE_0 means "no rotation", we should not
-+	 *	 reject layers with this property.
- 	 */
--	if (state->fb->format->is_yuv && rotation != 0)
-+	if (state->fb->format->is_yuv && (state->rotation & ~DRM_MODE_ROTATE_0))
- 		return -EINVAL;
- 
--	state->rotation = rotation;
--
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index a74b26d35985..1723d4333f37 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -338,7 +338,7 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 		return err;
+-	if (!pending->enable) {
++	if (!pending->enable || !pending->width || !pending->height) {
++		/*
++		 * instead of disabling layer with MIX_SRC_CON directly
++		 * set the size to 0 to avoid screen shift due to mixer
++		 * mode switch (hardware behavior)
++		 */
+ 		mtk_ddp_write(cmdq_pkt, 0, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_SIZE(idx));
+ 		return;
  	}
- 
--	if (supported_rotations & ~DRM_MODE_ROTATE_0) {
-+	if (supported_rotations) {
- 		err = drm_plane_create_rotation_property(plane,
- 							 DRM_MODE_ROTATE_0,
- 							 supported_rotations);
 
 -- 
 Git-146)
