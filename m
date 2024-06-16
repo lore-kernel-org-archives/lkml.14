@@ -1,69 +1,114 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DF5154C0E;
-	Sun, 16 Jun 2024 01:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E674154C0E
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 01:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718501019; cv=none; b=uO0CKzsRYfnRiP1NFm5AqH4970X/0JB0X6QzVIhGKXgnOMsHHqlyIO+xq5B/pVnc7JSZUnqZwO/3Cp2Y0lKXYmOo7g2FwhNa4BTIZHjxb2YeAs5ZUNsxclgSI17Yq4U5zati5YN8aq9I3MOhuJOaDQCYusBVwueTBkP0j1vfr7I=
+	t=1718501139; cv=none; b=mhGr7iIBSAP7CaVZH0Xgxl/yeYcB143dO2W6D6KVMbfTKyjkgyB32zLlfzbDyWuih/qFzyDWplhaKvdU2h46GU/++XYva41qgl2BsYfJb7U4t6RHTYHhSZKljsLPD9KcNZcIQB/gXAjOf3AiINEhdlLo+R/qGcJwtrZO/M1bjJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718501019; c=relaxed/simple;
-	bh=dh9mvuWyp0eU8teIlxNhIfF/1X5fszgM5t6Y9dIWI1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T2wPYgu1rmptU/A1VM0PucpaMZuLjk5xHcHqCdvSUtdm7PffNIpBOEGQZr4/8EqHxAA2TEX+dJ1O2ztkb2csofaxGViwlASMqhGeS+t2gqrcxOKiZej70VhYPjdUl/UhohjFy48rZf3mHiiLs8Ol+Km4GbwdxmFBDY9QJi2Ox7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=j0UJoMBU; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1718501139; c=relaxed/simple;
+	bh=JHe8PmT8CAiOYlGo1cndu3zZ4OloPw3FeLHc2NnF29Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Lxw55NrOMWvaJT3eNQXVYnDDhlEy5B8HPQ0uv7Hhtr5BNZGGjesprM79QZsswpOu88+FeOz+SwKO1BH+fnfdmETE3I5xmatitpZB6u/zieDCs0Xq60sIV+wDe0EgBeRYNy2Em/96t/eW82S9ue1y5nuO2+kMY2F7KwfjCUsszok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IpwdFEWc; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j0UJoMBU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=lTZVCyklv744EcLdTU/mwOhqQgHd93wrrqaAFyjVQtk=; b=j0UJoMBUy2xcOTBYcPIotdDHpl
-	M5UWGpUoXwN6Ty5kjkNNus8bkPanMxPHqcPvhA5k71tpRZIoqRl80LkYkl/zjKI4sehQNRZabQx3k
-	WZIu5Ut6V7GrcTRVyz/jNI2ezExmBLkRkcBz2e/FMX2Lj6tqg5VVSMOb/P+dTdQit8K4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sIec1-0009x2-5t; Sun, 16 Jun 2024 03:23:17 +0200
-Date: Sun, 16 Jun 2024 03:23:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>,
-	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH 2/2] net: ravb: Fix R-Car RX frame size limit
-Message-ID: <b1c10539-4d47-4752-8613-785b0ad83f5e@lunn.ch>
-References: <20240615103038.973-1-paul.barker.ct@bp.renesas.com>
- <20240615103038.973-3-paul.barker.ct@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IpwdFEWc"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-796df041d73so236102885a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 18:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1718501137; x=1719105937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vmh7B10VjitCXi5UnMX7IBHWWNFhALchrxl9IDbnSME=;
+        b=IpwdFEWcmhtqCuDAJySqs0o61HabJmdtHdIP50TwjkjLmvdg2V4I1TWgElm/9QCJjV
+         gdiAQSnwlz3g0y5dlFUctsolxw+Dz2G2zVTD5j5urms5iBosxPc9EY4lWFvp/u2tqBXh
+         E38I51S1z2ZsMmy73JSNUjBJh95HDvZ2iyvbY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718501137; x=1719105937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vmh7B10VjitCXi5UnMX7IBHWWNFhALchrxl9IDbnSME=;
+        b=AsrBWd7Mx1OuFbndYb0bw1S/t+2mwGp8dqO3ixg7YXB7k7aPEifAeC0gu8mg7FRqJg
+         ylTtBT4wTjiSw+uQgughpI+S2/Zh3XflP2zhwVGV7ILMUzmt1T5Gkwir9h8HPwDCoqkP
+         b9wXATDl0qIwcZMTN/Di5DkOkZ2rKIhhLxWaFLTOGkddoAg4V5orgMl+2RlkH1L92JDU
+         Q4oSvy74WgChfaGFoDNo4fYzderHbyo3iGOf3pQOdRH0b1+9AMP8yzdLEESPZlz/M2/9
+         4CwgwJIbO2y6CEUEKYZkxGSpz0kFkYBWFRRWnyKZBR1az21asDmtHcQ4qU5sg4lvIPaF
+         xeHw==
+X-Gm-Message-State: AOJu0YwNZN5aR8EeUbnRZuPcYuLMf/naQk4nx8DcofkNu3up2ue7J75i
+	FWUwJHpVg1Ntv2nka3pN3gr5OiVDM2Oq9G7weP2oI8hI7f9KtNnm/GvlJatTGn4eyVXgwrQ0AU7
+	JpQw2FGnU+6yTVJcbqSPRnbX/Q5FNK4wFl2HARHbwNuJi+5vD/wjXQ+QwUXg3sIGEPexqZZ/oc8
+	hamZer/bOQr4uVQfszN8rn7I4XrtyrXw5nqgbtgLc7HA0pglre+wIM
+X-Google-Smtp-Source: AGHT+IF3o2n1vuAWzivHA2bQV4+Plh7YsZ6B36O+Td3GL1zNvsydHY+4muaeP2QpJFgYTbtdwi7YNA==
+X-Received: by 2002:a05:622a:130a:b0:43a:b542:d1dd with SMTP id d75a77b69052e-44216af8850mr64153021cf.36.1718501136510;
+        Sat, 15 Jun 2024 18:25:36 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441f310dae0sm32256121cf.97.2024.06.15.18.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Jun 2024 18:25:35 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: linux-kernel@vger.kernel.org,
+	bp@alien8.de,
+	bcm-kernel-feedback-list@broadcom.com,
+	lkp@intel.com
+Cc: zack.rusin@broadcom.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	linux-iio@vger.kernel.org,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	nuno.sa@analog.com,
+	dragos.bogdan@analog.com,
+	anshulusr@gmail.com,
+	andrea.collamati@gmail.com,
+	oe-kbuild-all@lists.linux.dev,
+	x86@kernel.org,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>
+Subject: [PATCH 1/2] drm/vmwgfx: Fix missing HYPERVISOR_GUEST dependency
+Date: Sat, 15 Jun 2024 18:25:10 -0700
+Message-Id: <20240616012511.198243-1-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.4
+In-Reply-To: <202406152104.FxakP1MB-lkp@intel.com>
+References: <202406152104.FxakP1MB-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240615103038.973-3-paul.barker.ct@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 15, 2024 at 11:30:38AM +0100, Paul Barker wrote:
-> The RX frame size limit should not be based on the current MTU setting.
-> Instead it should be based on the hardware capabilities.
+VMWARE_HYPERCALL alternative will not work as intended without
+VMware guest code initialization.
 
-This is a bit odd. MTU is Maximum Transmission Unit, so clearly is
-about Tx. MRU does not really exist. Does TCP allow for asymmetric
-MTU/MRU? Does MTU discovery work correctly for this?
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406152104.FxakP1MB-lkp@intel.com/
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+---
+ drivers/gpu/drm/vmwgfx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In general, it seems like drivers implement min(MTU, MRU) and nothing
-more. Do you have a real use case for this asymmetry?
+diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/Kconfig
+index faddae3d6ac2..6f1ac940cbae 100644
+--- a/drivers/gpu/drm/vmwgfx/Kconfig
++++ b/drivers/gpu/drm/vmwgfx/Kconfig
+@@ -2,7 +2,7 @@
+ config DRM_VMWGFX
+ 	tristate "DRM driver for VMware Virtual GPU"
+ 	depends on DRM && PCI && MMU
+-	depends on X86 || ARM64
++	depends on (X86 && HYPERVISOR_GUEST) || ARM64
+ 	select DRM_TTM
+ 	select DRM_TTM_HELPER
+ 	select MAPPING_DIRTY_HELPERS
+-- 
+2.39.4
 
-      Andrew
