@@ -1,99 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE2C210EE;
-	Sun, 16 Jun 2024 18:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214C11CA85;
+	Sun, 16 Jun 2024 18:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718563107; cv=none; b=I8XqA8+1mhRLbo67qeDfr74JRfxgt/ejE1BPWX8oUWkENK0qzKzSOqKN4GQpZbv08xNgAzX5jOxWddb7XaGi1ad+FPO/3G5jtgSxnL2+z+ai3jKiwy7vXokArV1a5khOWVplyI3NnPxpraZD05ZebX7woxKFdG7SugIqVh/hcJs=
+	t=1718563322; cv=none; b=d/XIvBSOKH9TJwu/W0QfU4JSS0GQ2b4pf9t4IqVdK4M2biTTS0Eo8e2cbV8H1d5uzThKvMKRXqZj8EIq94g4JtJq0V5pljd/bA3wUUDFXdyAMLUuPTkJE6SftyF4jqtOkg1i2Cu0rswl6ucKVfs6seTSsmb/8Vu2T+WdBqeVAAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718563107; c=relaxed/simple;
-	bh=mKljWFCEhr4ejc3sfHEzZLzWr53KPVcA5FfLGTbsJHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mSrTI2v1TVCfW0ektKoFyG+V2bGXm+ju2G05ur1dEhEzj/IksccXZ/XpbsZcnvL8e9I5ANkUMKzGq3+r7q3neVvhXvwYQbWrZS8KDiv0yTOAGHSCoVIXcfE19+ehV/pCfkd/92pgWtV7eWQ0wsBFPBw9jXiA/1iNEPOaaOxWPY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S78wpN6S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718563322; c=relaxed/simple;
+	bh=CsM4DGKZqITnSBvF9KRlVOZ+BrnA9Rcyy2NY/zVK/6g=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=REOZZso+jm6qYFDGKgMPmXAmYug0qP2T9Y39OqZYt8YAUKqYLRJgjuiIDa+HIpH1eUKxrFele6o6LmZOx9V3a3csrossD3LEzjn12cVbeQTWxGb4X+nvDbhI9L8TNhYBLqOskHNYWjpWb7cYvhC2EmaGsBwmBPkejleMaT1JlpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfVi1Spq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S78wpN6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7311C4AF1D;
-	Sun, 16 Jun 2024 18:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfVi1Spq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A42C2BBFC;
+	Sun, 16 Jun 2024 18:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718563107;
-	bh=mKljWFCEhr4ejc3sfHEzZLzWr53KPVcA5FfLGTbsJHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S78wpN6SwSUeYKlNi+qGGtGDZ/DGfl5WZYihFc4RNV+iekIa+BqjXaPCP3s/r99cc
-	 SRcbh6rQgjTlxof1oFJa5cE1AQhwW2aJJG4SlA3cSICp1q7JbpKQK2DXmVx8LAPPG8
-	 KinUnF3HWCIRITCC9VYrofnnlC/3s7XaDUqqHUv5Apy1V3e65poWfeyg7qOePqxti3
-	 Vx4PFD9ampodJz7jEOgQzY9lFXuTo8ri4jkBr3f2cL5T1STHFa6Z7ovbkQaIl4c0KD
-	 +ikBGtl2nU1i0lCziGuYLFPjnRrx2+PuaYKOAc3NClRsOP980nJq47Ipr74dOdUsPl
-	 sS+TsW6pEK0iA==
-Date: Sun, 16 Jun 2024 19:38:21 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Drew Fustini <dfustini@tenstorrent.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Yangtao Li <frank.li@vivo.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: clock: Document T-Head TH1520 AP_SUBSYS
- controller
-Message-ID: <20240616-reaffirm-thud-e3fb4de33d7f@spud>
-References: <20240615-th1520-clk-v1-0-3ba4978c4d6b@tenstorrent.com>
- <20240615-th1520-clk-v1-1-3ba4978c4d6b@tenstorrent.com>
+	s=k20201202; t=1718563321;
+	bh=CsM4DGKZqITnSBvF9KRlVOZ+BrnA9Rcyy2NY/zVK/6g=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=nfVi1Spq3O8TwowZ+vuXDDMSYKmcpzSwehCL6EsX5rme/5Rs0qC/j207G32eUK6+I
+	 Q5kPW2vCz4AbBp0dC1RE446//AmvLTnAKiw8UeFWUNR2lu/syMupXPeDQyXHztv9uO
+	 lEv7XmArJhFOd9KER6aJ8eVuPJcPKLWE7YPTFTdfro5F+bFwr8dt9GvGyXAc2RLl3H
+	 FYsx8nnS0mfExHNBr2V2uxZQ1ll7kwXBKyjfLku//pZXK7bBff7QR9n8G9k+/XGww6
+	 guhtUxmsX066+TSLbNhm9UEQ3jP4GZAhQfL73bnKxwF0l/Z3/sVB993oZljwrF1sP0
+	 p8EbJM/El1Y2g==
+Date: Sun, 16 Jun 2024 12:42:00 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GV1+ODsExlaKnTkx"
-Content-Disposition: inline
-In-Reply-To: <20240615-th1520-clk-v1-1-3ba4978c4d6b@tenstorrent.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: devicetree@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, 
+ Anup Patel <anup.patel@wdc.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <tencent_D3577BC67116D732862BE4A7B187EF4ED005@qq.com>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+ <tencent_D3577BC67116D732862BE4A7B187EF4ED005@qq.com>
+Message-Id: <171856332052.2487659.8752285245461346812.robh@kernel.org>
+Subject: Re: [PATCH v1 3/9] dt-bindings: riscv: add SpacemiT K1 bindings
 
 
---GV1+ODsExlaKnTkx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, 17 Jun 2024 01:20:48 +0800, Yangyu Chen wrote:
+> Add DT binding documentation for the SpacemiT K1 Soc[1] and the Banana
+> Pi BPi-F3 board[2] which used it.
+> 
+> [1] https://www.spacemit.com/en/spacemit-key-stone-2/
+> [2] https://docs.banana-pi.org/en/BPI-F3/BananaPi_BPI-F3
+> 
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> ---
+>  .../devicetree/bindings/riscv/spacemit.yaml   | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/riscv/spacemit.yaml
+> 
 
-On Sat, Jun 15, 2024 at 06:54:30PM -0700, Drew Fustini wrote:
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/thead,th1520-clk-ap.h>
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      clock-controller@ffef010000 {
-> +        compatible = "thead,th1520-clk-ap";
-> +        reg = <0xff 0xef010000 0x0 0x1000>;
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Drop the 2 cell stuff here, it's not needed in the example.
+yamllint warnings/errors:
 
-Otherwise, looks okay to me.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/riscv/spacemit.yaml: 'maintainers' is a required property
+	hint: Metaschema for devicetree binding documentation
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
 
-> +        clocks = <&osc>;
-> +        #clock-cells = <1>;
-> +      };
-> +    };
+doc reference errors (make refcheckdocs):
 
---GV1+ODsExlaKnTkx
-Content-Type: application/pgp-signature; name="signature.asc"
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/tencent_D3577BC67116D732862BE4A7B187EF4ED005@qq.com
 
------BEGIN PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZm8xHQAKCRB4tDGHoIJi
-0nakAQDI/dX7wq4wr9fhDskwIEdo5GYlExy1/hq7ZvnCAqI/sQD8DXYLfuYeZ3h5
-b137VHF34ez/lW6qbnhU7C8kg1Cl3wY=
-=2EDw
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
---GV1+ODsExlaKnTkx--
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
