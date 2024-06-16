@@ -1,73 +1,75 @@
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1423D8462;
-	Sun, 16 Jun 2024 21:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77EC6BB5C;
+	Sun, 16 Jun 2024 21:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718571812; cv=none; b=hO3vMh4+mgdaH5IMJsTRUjO7qJGxqT5MA0JRyzQQOjGu9T8UQg3rmsATuN08K851ZsumbdCEDPpy7WVZ6FGlDoaotU3ckGJtQwybLQ/7QVl9LDvb6wZNBs22C8KhUvNDuEpwVFWZ+GEIgYZ1LR54MF57APqRiCtXKGsteinISr0=
+	t=1718571818; cv=none; b=iqaLnEnBeF02riFsbfhqFW649D3w1tI/ChwYMCF/IbtXv2I2daNbGqFXvYQEsA/WukrMjn1g2+Eecvvb5gtYEl6deZWAIMAVEaIfzI2wQsNhxYRfKb8FZtKbvGIHutlLija0GVTh/JEOAhbwZmo5eyKVd8CbmvHMRzno0y5yMQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718571812; c=relaxed/simple;
-	bh=X16cS9a/L7NsDy4taesqayQMqsULzc5GrtFlN2wl2OY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=blxLaY6MBtg0aJQHSLA4BLDUwmsGVj2RH6jeeINEU8lSJBorDrovHvioZ7Uo8euNaKkpkIuyrv1L6eGE82g6wI/msSUcgfhnSkogiEZ1Jzvv1wAmPO6vmaNUeh1h/eL4nbGFRQwFwEE0mGIn2OQQxQR8Np4ZnuvKYsCb4HDegGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=aKmP/iHU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qIsFOpvc; arc=none smtp.client-ip=64.147.123.148
+	s=arc-20240116; t=1718571818; c=relaxed/simple;
+	bh=wHsDiD50RoPx24lzv2aOKc2oWoxz6/3EkKTUFYyyMAw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZU4iI/B7A7ZS/YFDCCKbwRMogK1wdBa/d0zobr2nXRvWpKNZySN5WuUkVHjT+riVQo4lsHS03wEcORMtLZUVQY4jd9qYyPc5nlAjhxyLMCrXpJn3+mDdontQD82dzb/BpyfsfcU9mvBxSy04M2mSvlNaXAd0NQXL0opYDm/1LvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=tarcx+hS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S+kv6tWH; arc=none smtp.client-ip=64.147.123.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="aKmP/iHU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qIsFOpvc"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.west.internal (Postfix) with ESMTP id 820941C00096;
-	Sun, 16 Jun 2024 17:03:29 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="tarcx+hS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S+kv6tWH"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 67B3718000C9;
+	Sun, 16 Jun 2024 17:03:35 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 16 Jun 2024 17:03:30 -0400
+  by compute1.internal (MEProxy); Sun, 16 Jun 2024 17:03:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm2; t=1718571809; x=1718658209; bh=tH
-	kz+tqADZwei30zueVWO8gMG2ykRjij8iuylzvjBK8=; b=aKmP/iHUQkOi5PnIRp
-	INQujggGUsxaVx6GQ/WQcAxEcPew6v7LHR+1rMwlJz1BbbQxxO78VUeFP1jN279H
-	UM3Z5ALfPJXXhQl98OKl+M/T3syV2esJVa6/LXExdnCB71GHgPqb+mOiwltR15xI
-	fHeB2OjE5qcEFDYCY+BSCMtehNkZ8Bo32ag7QiY83qDFsEBVzxwZUJZHrGAUgHi7
-	MXWeHeP5XBXq9LfGE6yTLqe7xjXB6OgX55IoDk/SVYQ6mzOdEBYTLITuWj6rW+ko
-	8LL+KyCKQCzIgpwR03eGgyniyZguT6w5vthQ9CykFFwT6xxbeU25EuU4YP6KrkAE
-	0HKg==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1718571815;
+	 x=1718658215; bh=xeKPCFLBIzT9HCzsGdHFFaJZDOn08aeSjaXQqx0+yro=; b=
+	tarcx+hSGrF6xNUSrbMPqXCwveKyYQXyRfTpsoUKHfnXDgtfPvy+vMZCBES2IQ0P
+	vON61floAI8FBruWRKjAIuRkpFIlbijjb/0+Q/OHvZLTe0bRNdRFWpS3y8ho1QiI
+	XotywrEffh+2en05vVfN9DoI+s5xXd3ql/YxJvqNwAS49u2Xu9h7gBWWLAM/nBuE
+	stDLaaSNJDCw4lkcxVo1L/dW29lK9Jn6h3CE6pdX+U/gNxyjJPghB+DxQ5hYU7XY
+	9c05/TA6nxfUyJGH/gw1aaJ1yFXCzTE7AtUS8HKTAjm/YAHon0eGuvIrePqxfnPI
+	6/medlsT3soy/HwKFcdUQA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1718571809; x=1718658209; bh=tHkz+tqADZwei
-	30zueVWO8gMG2ykRjij8iuylzvjBK8=; b=qIsFOpvcZM7RAxvrdOYgeUsuLvojR
-	H0etkP7AUul4Kf8tZ/5dm+FUsCqxxoVvrjFQAeDKBtzMpqHPuOOfoRPkRQV8NtUy
-	UvcvEacM6V7E5iyqsWhvnPKbJumFZ1M8z02c+tamjIcGqwfEk+jdaLsvZuZHqY1K
-	APxiCGfZRGXBzfxinzfvdO3TJGfTZFoBJpiLbqKZ1R6SfX8IXFnX5QDj7CXoe/TR
-	IlmivQtRMNJ0K7xEOG7kp3rBOV1xGjlwF6YTEBXmMKR8PjL/BXI1gjClL9iybBQL
-	YQRT06tkpye/WdcPA+Eum883B3CmJjEUMJNIgEOJ9wtGfCZ27Dgm/sZHw==
-X-ME-Sender: <xms:IFNvZj2ceebmJXGDPkGnMdWDW59WQ4hG4WsySY8xXWWnxdrVpEI8Cg>
-    <xme:IFNvZiFwWJq-Ge9GL522_ugEA-WT0MXCGdwvpFyiw6wLN8l6KCplGWhjdmne7LcdZ
-    bqhSBs1lXYhdkWuPLo>
-X-ME-Received: <xmr:IFNvZj68MSDLggnfQxbV9KJV8W3ljsB74Wzk4xoroAlN9pfoYuqgN8Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvfedgudehjecutefuodetggdotefrod
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718571815; x=
+	1718658215; bh=xeKPCFLBIzT9HCzsGdHFFaJZDOn08aeSjaXQqx0+yro=; b=S
+	+kv6tWH6xLI0UzjJV6Aat4h8fApPndBa0cW09AjvjQNOqad5IW2FT9HQtG8Fotz2
+	0OsY8JehEddHkbn2hFQ8pSAvOLxOmr1SO+EshQD2+e7+Ckok7xBGEBZ1YHjdjHS5
+	eR0q+ypvSa9sYFsIA+TTPszy7nZ9I01XznW+A4GBawF9MaB7rjYWLYVOKno7DjvZ
+	GWSHUByh4NIhLgURuN+lGGx7xvvxklbIvVCh73ptlyzRsvdIimfkKQmSL5ixAwP9
+	zaMhHzgIEd8wFH0ab5pxafWNMcww3NsN56TdPz/ZBd2kaXiHnpy0kb6kmU0Ny7VJ
+	7qDxgNOeWW2Thz4ksuZiQ==
+X-ME-Sender: <xms:JlNvZgtOfJeWW5_G0QsUfX7lm6qonJkcoRPfsAW3JCX21FausaO_jQ>
+    <xme:JlNvZtc4JfLst276mOmrCM1xwb8Krda2um5ufqvbUwgcST3G9vhCOLOS_NPgM_bY4
+    EgL9YpmT1TZgpf5taE>
+X-ME-Received: <xmr:JlNvZry1flqTla5osx1zAuiDkuVOZyw_jxZx8Jv3fbOKE40Sdpo7Izo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvfedgudehiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpedufffffffhueehvefhgfelveekueegteefgeeiieejheefkeeh
-    keevudevieegueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:IFNvZo1GWPZTaOrzkrNduNv2ipwk_KX6eH_6MKPLF_Dyn4MtpVUenQ>
-    <xmx:IFNvZmF8OL8iVpRA8fkqNABT4awFSo7q-TJ2pLUBsLJ2r8FVchqjmA>
-    <xmx:IFNvZp-3HnMx72EFb88-unj3LKbZaiGba0GOQQ_1HxvcmSTJcYjzcQ>
-    <xmx:IFNvZjmaPjiY8-SkBd4AgrCt6ie2PZViOvfx6QEO9wa1FLfWjc96yw>
-    <xmx:IVNvZu_oqkremJgmObGg_b0qmHX_UYcXHvrLkBomYeLhQTZXAHPhpoR0>
+    enucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhi
+    rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleffkeegudeghfdtuddugefh
+    ueevgeffgedukeejleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:JlNvZjO1bTVjApIaf5LiDRfVwNjCEncUFy6L9EG-GVh2ajn8T8mQUw>
+    <xmx:JlNvZg-9ydG_nBr6pJOq6eFTpoLRhrUxMQVWEOk1ePcjy3Uo1XhvQg>
+    <xmx:JlNvZrWVe1-BbJdRkeKKd--zFNqmNIkp2i2w9yJ9iW1N_fBSUXDn7Q>
+    <xmx:JlNvZpftmBsrYLhBVAQoy_9chpWsWyuQy0GawfdvqfbEPfdxtMwOoA>
+    <xmx:J1NvZh2x5bKsHO7eC3PGIx3V-ou1Cmcrr5bYqMB4aRcHe__W1nJBL9nY>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 16 Jun 2024 17:03:27 -0400 (EDT)
+ 16 Jun 2024 17:03:33 -0400 (EDT)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 00/10] MIPS: IPI Improvements
-Date: Sun, 16 Jun 2024 22:03:04 +0100
-Message-Id: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
+Date: Sun, 16 Jun 2024 22:03:06 +0100
+Subject: [PATCH 02/10] MIPS: smp: Manage IPI interrupts as percpu_devid
+ interrupts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,9 +78,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAhTb2YC/x3MQQ5AMBBG4avIrE2iIiWuIhbU4F+0mo6IRNxdY
- /kt3ntIJUGU+uKhJBcUR8gwZUFun8ImjCWb6qpuKmsszw17RGVEMHxMxyVewqm8dq6zs1mcbVv
- KeUyy4v7Xw/i+H52FCCZqAAAA
+Message-Id: <20240616-b4-mips-ipi-improvements-v1-2-e332687f1692@flygoat.com>
+References: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
+In-Reply-To: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
  Florian Fainelli <florian.fainelli@broadcom.com>, 
  Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
@@ -87,77 +89,114 @@ To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2546;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2703;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=X16cS9a/L7NsDy4taesqayQMqsULzc5GrtFlN2wl2OY=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrT8YHl9KYOLQjXdrNnbdp9smzjj+d9tDQ+WfX3cJy5xc
- U3FKSfNjlIWBjEuBlkxRZYQAaW+DY0XF1x/kPUHZg4rE8gQBi5OAZjI8+mMDC+eihTFNafxsLWL
- VnLdC9/IbqZfXf5hZvLTnjur6oSc2RkZ/nNn/v1co8LrPvuv2N0jjb0cd9w2T+VpaY/n4Lg+t+0
- 8CwA=
+ bh=wHsDiD50RoPx24lzv2aOKc2oWoxz6/3EkKTUFYyyMAw=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrT8YHn15v5VvZtXvrzFMZHxUdzxS4+urXDyun5xx9nOL
+ Tx+Rcu5OkpZGMS4GGTFFFlCBJT6NjReXHD9QdYfmDmsTCBDGLg4BWAi9kqMDGdmdUh3JUbe2xpt
+ wyP48MC0s8fPxLuEBiSGidxOlbpbqcrIMMNGfdZT2+WdpXN441a/mP9O5d82uyCLB9qLXlg1iqR
+ LswAA
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Hi all,
+IPI interrupts need to be enabled when a new CPU coming up.
 
-This series improved general handling to MIPS IPI interrupts, made
-IPI numbers scalable, and switch to IPI-MUX for all GERNERIC_IPI
-users on mux.
-
-It is a prerequisite for enabling IRQ_WORK for MIPS.
-
-It has been tested on MIPS Boston I6500, malta SOC-It, Loongson-2K,
-Cavium CN7130 (EdgeRouter 4), and an unannounced interaptiv UP MT
-platform with EIC.
-
-I don't really know broadcom platforms and SGI platforms well so
-changes to those platforms are kept minimal (no functional change).
-
-Please review.
-Thanks
+Manage them as percpu_devid interrupts and invoke enable/disable
+functions at appropriate time to perform enabling as required,
+similar to what RISC-V and Arm doing.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-Jiaxun Yang (10):
-      MIPS: smp: Make IPI interrupts scalable
-      MIPS: smp: Manage IPI interrupts as percpu_devid interrupts
-      MIPS: smp: Provide platform IPI virq & domain hooks
-      MIPS: Move mips_smp_ipi_init call after prepare_cpus
-      MIPS: smp: Implement IPI stats
-      irqchip: irq-mips-gic: Switch to ipi_mux
-      MIPS: Implement get_mips_sw_int hook
-      MIPS: GIC: Implement get_sw_int hook
-      irqchip: irq-mips-cpu: Rework software IRQ handling flow
-      MIPS: smp-mt: Rework IPI functions
+ arch/mips/include/asm/ipi.h | 11 +++++++++++
+ arch/mips/kernel/smp.c      | 26 ++++++++++++++++++++++++--
+ 2 files changed, 35 insertions(+), 2 deletions(-)
 
- arch/mips/Kconfig                |   2 +
- arch/mips/cavium-octeon/smp.c    | 109 +++++++-------------
- arch/mips/generic/irq.c          |  15 +++
- arch/mips/include/asm/ipi.h      |  71 +++++++++++++
- arch/mips/include/asm/irq.h      |   1 +
- arch/mips/include/asm/irq_cpu.h  |   3 +
- arch/mips/include/asm/mips-gic.h |  10 ++
- arch/mips/include/asm/smp-ops.h  |   8 +-
- arch/mips/include/asm/smp.h      |  42 +++-----
- arch/mips/kernel/irq.c           |  21 ++++
- arch/mips/kernel/smp-bmips.c     |  43 ++++----
- arch/mips/kernel/smp-cps.c       |   1 +
- arch/mips/kernel/smp-mt.c        |  70 +++++++++++++
- arch/mips/kernel/smp.c           | 216 ++++++++++++++++++++++++---------------
- arch/mips/loongson64/smp.c       |  51 ++++-----
- arch/mips/mm/c-octeon.c          |   2 +-
- arch/mips/sgi-ip27/ip27-smp.c    |  15 +--
- arch/mips/sgi-ip30/ip30-smp.c    |  15 +--
- arch/mips/sibyte/bcm1480/smp.c   |  19 ++--
- arch/mips/sibyte/sb1250/smp.c    |  13 +--
- drivers/irqchip/Kconfig          |   2 +-
- drivers/irqchip/irq-mips-cpu.c   | 180 +++++++++-----------------------
- drivers/irqchip/irq-mips-gic.c   | 213 ++++++++++++++------------------------
- 23 files changed, 594 insertions(+), 528 deletions(-)
----
-base-commit: a2a47d53ca1f74f60931487c27eeba3c17fb69c9
-change-id: 20240616-b4-mips-ipi-improvements-f8c86b1dc677
+diff --git a/arch/mips/include/asm/ipi.h b/arch/mips/include/asm/ipi.h
+index df7a0ac4227a..88b507339f51 100644
+--- a/arch/mips/include/asm/ipi.h
++++ b/arch/mips/include/asm/ipi.h
+@@ -29,6 +29,17 @@ int mips_smp_ipi_allocate(const struct cpumask *mask);
+  * Return 0 on success.
+  */
+ int mips_smp_ipi_free(const struct cpumask *mask);
++
++void mips_smp_ipi_enable(void);
++void mips_smp_ipi_disable(void);
++#else
++static inline void mips_smp_ipi_enable(void)
++{
++}
++
++static inline void mips_smp_ipi_disable(void)
++{
++}
+ #endif /* CONFIG_GENERIC_IRQ_IPI */
+ #endif /* CONFIG_SMP */
+ #endif
+diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+index a6cf6444533e..710644d47106 100644
+--- a/arch/mips/kernel/smp.c
++++ b/arch/mips/kernel/smp.c
+@@ -186,6 +186,7 @@ irq_handler_t ipi_handlers[IPI_MAX] __read_mostly = {
+ };
+ 
+ #ifdef CONFIG_GENERIC_IRQ_IPI
++static DEFINE_PER_CPU_READ_MOSTLY(int, ipi_dummy_dev);
+ static int ipi_virqs[IPI_MAX] __ro_after_init;
+ static struct irq_desc *ipi_desc[IPI_MAX] __read_mostly;
+ 
+@@ -225,13 +226,29 @@ void mips_smp_send_ipi_mask(const struct cpumask *mask,
+ 	local_irq_restore(flags);
+ }
+ 
++void mips_smp_ipi_enable(void)
++{
++	int i;
++
++	for (i = 0; i < IPI_MAX; i++)
++		enable_percpu_irq(ipi_virqs[i], IRQ_TYPE_NONE);
++}
++
++void mips_smp_ipi_disable(void)
++{
++	int i;
++
++	for (i = 0; i < IPI_MAX; i++)
++		disable_percpu_irq(ipi_virqs[i]);
++}
++
+ static void smp_ipi_init_one(unsigned int virq, const char *name,
+ 			     irq_handler_t handler)
+ {
+ 	int ret;
+ 
+-	irq_set_handler(virq, handle_percpu_irq);
+-	ret = request_irq(virq, handler, IRQF_PERCPU, name, NULL);
++	irq_set_percpu_devid(virq);
++	ret = request_percpu_irq(virq, handler, "IPI", &ipi_dummy_dev);
+ 	BUG_ON(ret);
+ }
+ 
+@@ -343,6 +360,9 @@ static int __init mips_smp_ipi_init(void)
+ 			return -ENODEV;
+ 	}
+ 
++	/* Enable IPI for Boot CPU */
++	mips_smp_ipi_enable();
++
+ 	return 0;
+ }
+ early_initcall(mips_smp_ipi_init);
+@@ -383,6 +403,8 @@ asmlinkage void start_secondary(void)
+ 
+ 	synchronise_count_slave(cpu);
+ 
++	mips_smp_ipi_enable();
++
+ 	/* The CPU is running and counters synchronised, now mark it online */
+ 	set_cpu_online(cpu, true);
+ 
 
-Best regards,
 -- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
+2.43.0
 
