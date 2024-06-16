@@ -1,137 +1,131 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FA345957;
-	Sun, 16 Jun 2024 17:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5641D3AC16;
+	Sun, 16 Jun 2024 17:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718558785; cv=none; b=osSXoa5IWOyQtMoIiF3cy7n4OnToN1aUVOv1bWZdQdl2TMdwk2I+aTZHFpeby6jkjGfaq6Cpu45t28XG/XPgbQ+/7TEtH4zTmmqZxWrJUsTfg8e+MM32/sKOax0Iu4npXynCbu8H/BWAOk+2TZtuVNk8g/xKD/mQqoJZgKIh2L8=
+	t=1718558809; cv=none; b=n8LpZeAHEstOKuJQltCgISEe0RBEVta40B0F3qqgHao75+GNdHoQ8FMij0l3ED558qKVkz/+TV/XqD/6YDrVzwu3Hc+wvuta0vdy9Ui05tETfZdq0kzlasp6wRyK6NZ7CJdTKVdqzi8idtKNLMJEYs1g3Yt/zJr4KxQYS8yH1Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718558785; c=relaxed/simple;
-	bh=xLtD3CUJ3A5b3eMpkLHWo+koapJSWAUCDA0EKrtJSLc=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=iipWQg5Co+/cSUk24yZlOng1JvoeETtygp6D4LGILq4I99SfwzO7ifPLvYVmos+udzjI6mjB5ARWJ87b4V6cNIN4AIoHaMgCmz4pI/21xT2MdxUzDgpEgGdK0yzP1bIhyh9T5xxd9ReuLoCMWyyy0Yz0OKYnuZcuK9aUg/Twr3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rhv25Wty; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1718558809; c=relaxed/simple;
+	bh=Xm/0Py7i6a9IMqxBVqF8drxyHQMhWCpJiWp2iMkPlSI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=fTJrCkb8qooV4jyS7nWpwm/uxjlDGgNUb+5xwVIC+GPXfrPNGijYRoSMUUIudU/JF9hFDt8URM7uvmVElStyaux6gB0bwnoXzUYid72ZgjuA68e208sZjEHkdwfE5SXyyo3GU+pR01L/DC8KXuQjaYEyveFjhDOxUhWOavSqteM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=DiAAoDov; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rhv25Wty"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718558480; bh=4TsNRvdG1NQQAdbELi3/OvMmViVBRkNVoBLMMVaWK1Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=rhv25WtyUpKbhPGwTOvBB68on6EsFbRmExJKlcOAI48LpWILVlBgEzS30ntlHhQpc
-	 ZTsxshFvGQMOLCfO9iR33PUM5G9mMbBRHm4ASB4Xp0wVc70+28TIuqvRTvFv2uJPGL
-	 fegiiSN20VBePGBLXpEmH7lqz32lz32fubcdq73g=
-Received: from cyy-pc.lan ([240e:379:2260:ed00:cd33:e8cf:d8f9:bed3])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 5452D659; Mon, 17 Jun 2024 01:21:05 +0800
-X-QQ-mid: xmsmtpt1718558477tyhsnv86d
-Message-ID: <tencent_904B1050FBC0B10A172C263924BD518F8F05@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j8RA6sM/aK2Q+9dZcLaP+4NJQa9FQkX6htwVjNCVrAuZ5gfdMI56
-	 0aA8f9z8guNkaFGAs65Z/o2KgVEJYvcd/QY3iuRt0CW9VcRBXEAAKHD1Mvwzj5yv0iGpxDiftMD0
-	 IuxdwCbMTidsy/7axyyLf1wk6W5M9kD2n7R0ar6PU4rRWmTYt8rOWeNoMpKyadSzBmWKHM/JxZbZ
-	 r/cmk61LbXOTBOLXZlE3mZ6m51MVDkj6E/rv+pr55Z+z5vI2DjxZd5L1RzONPQihfDTQCJ9AldWy
-	 wQDXtCb5vs2TrVnpkzJB7kVJ+1ouniZy25DC0uvfNChmXJOqkKr/M8Qdp4auqXO+y6akZbSPnqd1
-	 OgVWlmJkZ/55zS7fUJs+rJPy8VoVzz1r6XQ77b0B9sDFS6ZHTKYapUX/n+k6D4kZDplYcEld51s0
-	 q9X9z6oB54QYdB6icx6bmV46Wl0E+11AnX1cQGSj6bGI3EHORbFd5mTflyggK1DgU8Z1wB243J7d
-	 9B6Sw161M0EYK8KH8t5LaQhpLXshVlx7ENsPz18qiP5wAY8DuOwNkfnkYSfja2qV/1hYKV9zuxC8
-	 3G0iZY9PzFureZxC/qW1m8MbFD5etIwn0P7FPOP7wMYv97Z8TTXuQOx0sFYwWDA9ZfmlvVSDKkTV
-	 8a5782w88sM0HuVlbd1yzKfao7fyNOkBPn37mahwfi7uOtWE8xxM6fGdmjaycoJVm+ZVB9Ty3Wm/
-	 EDzieAYZRfNc6YRFgEX8rUO91O8pvEPjc4YHWZlXTxNxpy1lq7S3npjl/zCHeQldfOjxOA3n+YJ0
-	 9j8w/fVoY8bpy8Cv3qxkyseSLhnBrvkxyUB9fwxnLqraM+BSJcUya9jp9IWJDOW4HxAjteAT7+ph
-	 An+i7qBhyDVcMS3gGnG3kpi7mHyCB13aBs9z2JWb4mbSVdbBxDD+fAC1zshse4wu8CehtiNYIO01
-	 m8Be11gHTz1xXuPndactt3OzVkZycHM6a8Z5WjQ+/0NgUstFIRyCe4KmGXFzUe5IkApHFJK+rTFv
-	 K87rDm4ZWrZVJQYFYilZhF0XqMNGlTpRZSihoK8LZrWjKe+hu75uwD8wNypnUd0dlHcSvxYQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup.patel@wdc.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v1 8/9] riscv: dts: spacemit: add Banana Pi BPI-F3 board device tree
-Date: Mon, 17 Jun 2024 01:20:53 +0800
-X-OQ-MSGID: <20240616172054.3074948-8-cyy@cyyself.name>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
-References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="DiAAoDov"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718558791; x=1719163591; i=markus.elfring@web.de;
+	bh=9nBqF5ESlkCFxxxtSfxxafJZFyJpQbDfqjP2Yj1FlIk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=DiAAoDov0evEhITeHjo7u35qPLueFX6HSYuYpyisk4X5eKpIHooR7dBk95psSnjB
+	 AQdd0Y0o4dBP5/f7V43DJxJSnHNmUH5tDhZvxrR4V2DnXDnz8iec+DZ9PH5Sn2S6/
+	 isRjwpx/TkslV7whq9ZP/B2dwQtKAFOU4c/OrcikDIqhnjfflqywSI53aYT5ZesZT
+	 ndBVylcwSHNra2fOJ3b7DWC/VN0ONRplVeI3G3PM6Ks1U/ubC4ROK+RBO8fbR2xh0
+	 l0ruJxWrNTTxZ6PGXgmO95oRbHXwSBcDIE5yFFGWOqxdD0Kn05e1A5R7W4qpRFU1X
+	 MZOCO7WIm6G7yePL2g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M6pUQ-1sJTkO3WVq-00Ef4G; Sun, 16
+ Jun 2024 19:26:30 +0200
+Message-ID: <2660e72f-e2a2-48d1-8571-b738d9739917@web.de>
+Date: Sun, 16 Jun 2024 19:26:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Prasad Kumpatla <quic_pkumpatl@quicinc.com>, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Banajit Goswami <bgoswami@quicinc.com>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Rohit kumar <quic_rohkumar@quicinc.com>,
+ Christophe Jaillet <christophe.jaillet@wanadoo.fr>
+References: <20240611074557.604250-4-quic_mohs@quicinc.com>
+Subject: Re: [PATCH v6 3/7] ASoC: codecs: wcd937x: add wcd937x codec driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240611074557.604250-4-quic_mohs@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:c4qMevEEZoDUqoRZeATp8WmsNJbisvOlM4oORsHrrjrrsyD8K+Z
+ nNih8QUYdTTgvUeNfktoQpIH4cAzbc3XB/e+ap8BXKwMBd8CT1AWDHCvs8pbYDpsfDsEmrj
+ Y+tzfzcuVENc2x6GJZKi1BpOWh/TUa8Ocii93k1JzP3E8pBxPmHgismL4NvcBDZJcyCgd9d
+ kEgzsm+XKdqqsYb7ndUfw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NhWsXH4dfU8=;YdKgy7veYd3vy2o4WUWvR6kCH9a
+ IahlDipBDK+K6LYLz6A/eX6whnMhGi7fHhxH1fkkNL4BNBPVi25uGj3OOkoyKWxk7bDRp8y9M
+ 6PHyxB3iYqN/HqHyKIn5IYaTkMgM5sEP7nc6VvINgSZ/NoLvrls8Fz9LLcUrPZIEkq21YhN2g
+ FIYL2JmpoWzB/IgWsTiBFLMzWknPFCsaeacBXhPp7uQwfSIh6f0YRPR96vcMC7vCbQTM9M8tH
+ xjUGcSMZxARJ8ePFWN1wIKAbG8D2cn2P/6c9pGIcUTKxuE53RJDe4fT/+iJPRGswLUSYNlqjh
+ o9KrXhWRaUX2Fscbuut+AxArU84irUCsOoIv4rElYWrTV620gUegA+McSJ0FRfqbDI7NAQpWj
+ 3RoJ+T7KMaFQdyBLy9SjeXb/a7zWdMCqGmzJwdWI422XoTV91/Ksinb5JS0jQuqNST4bAqAU1
+ rHdTveJ3KV/OAhhFTv+2aYsbD7BO5mGVFO75nSd1cCYnhccju5ZzvoOMFDVRyg3hZ+N+zgDsm
+ /cOjSCIlfyFS7gKuMZfh2QRt9ZyVb1sx34iNwNRCPGaHWv9b5FtCAjqj0vbQGy9z0stcqzQ3T
+ oqbHwqNVXFVQDyMmXk8JYas7bYPFnwxU1ox6BbBbGvcP6jNz1gF+39aKq6gDJE1LXe5NUAVO4
+ 7ru0uZ2RZF/OClscS2u++V+JhgSdkQj2hhpNiIjaZ+1H7dyMgDjqO4ewWXcfmsC5ujfEo0zZv
+ a6NMbsSTyE6sbrWUmpol+FrIXjIBaiQR4tQ1i7Hjyxt31B+FdwgkM7CdUA32nc8d5hKfb3d8c
+ ky9pOQn9kg0Y3xzFs4EqrN6JJQKC7TDx9UJgLxI9/2lkU=
 
-Banana Pi BPI-F3 [1] is a industrial grade RISC-V development board, it
-design with SpacemiT K1 8 core RISC-V chip [2].
+=E2=80=A6
+> +++ b/sound/soc/codecs/wcd937x.c
+> @@ -0,0 +1,1677 @@
+=E2=80=A6
+> +static bool wcd937x_mbhc_get_moisture_status(struct snd_soc_component *=
+component)
+> +{
+> +	struct wcd937x_priv *wcd937x =3D snd_soc_component_get_drvdata(compone=
+nt);
+> +	bool ret =3D false;
+> +
+> +	if (wcd937x->mbhc_cfg.moist_rref =3D=3D R_OFF) {
+> +		snd_soc_component_write_field(component, WCD937X_MBHC_NEW_CTL_2,
+> +					      WCD937X_M_RTH_CTL_MASK, R_OFF);
+> +		goto done;
+> +	}
 
-Currently only support booting into console with only uart enabled,
-other features will be added soon later.
+I suggest to use the following statement.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?h=3Dv6.10-rc3#n532
 
-[1] https://docs.banana-pi.org/en/BPI-F3/BananaPi_BPI-F3
-[2] https://www.spacemit.com/en/spacemit-key-stone-2/
++		return false;
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- arch/riscv/boot/dts/Makefile                 |  1 +
- arch/riscv/boot/dts/spacemit/Makefile        |  2 ++
- arch/riscv/boot/dts/spacemit/bananapi-f3.dts | 19 +++++++++++++++++++
- 3 files changed, 22 insertions(+)
- create mode 100644 arch/riscv/boot/dts/spacemit/Makefile
- create mode 100644 arch/riscv/boot/dts/spacemit/bananapi-f3.dts
 
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index fdae05bbf556..bff887d38abe 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -5,6 +5,7 @@ subdir-y += microchip
- subdir-y += renesas
- subdir-y += sifive
- subdir-y += sophgo
-+subdir-y += spacemit
- subdir-y += starfive
- subdir-y += thead
- 
-diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-new file mode 100644
-index 000000000000..5c512f4e297d
---- /dev/null
-+++ b/arch/riscv/boot/dts/spacemit/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_SPACEMIT) += bananapi-f3.dtb
-diff --git a/arch/riscv/boot/dts/spacemit/bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/bananapi-f3.dts
-new file mode 100644
-index 000000000000..023274189b49
---- /dev/null
-+++ b/arch/riscv/boot/dts/spacemit/bananapi-f3.dts
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-+ */
-+
-+#include "k1.dtsi"
-+
-+/ {
-+	model = "Banana Pi BPI-F3";
-+	compatible = "bananapi,bpi-f3", "spacemit,k1";
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-2.45.1
 
+=E2=80=A6
+> +	/* Read moisture comparator status */
+> +	ret =3D ((snd_soc_component_read(component, WCD937X_MBHC_NEW_FSM_STATU=
+S)
+> +				       & 0x20) ? 0 : 1);
+> +done:
+> +	return ret;
+> +}
+=E2=80=A6
+
+How do you think about to use the following statement instead?
+
++	return (snd_soc_component_read(component, WCD937X_MBHC_NEW_FSM_STATUS) &=
+ 0x20) ? false : true;
+
+
+May the local variable =E2=80=9Cret=E2=80=9D and the label =E2=80=9Cdone=
+=E2=80=9D be omitted
+in this function implementation finally?
+
+Regards,
+Markus
