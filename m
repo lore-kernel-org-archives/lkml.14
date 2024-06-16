@@ -1,159 +1,167 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9B62B2CF
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 21:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5DD2B2CF;
+	Sun, 16 Jun 2024 21:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718574871; cv=none; b=Rf2Kjy/ZEHfyKmNCCCMMhKwoY05RmTWed+3uZAFngrSSJOChQJQhxfMiGay7/SEed4RL/ssw6kRiV8i7CEvU5oawgK/cXvdGruFAw4qauveaYxjtPUN/r/TObTIP1L++2rHH8G9aUAb+n0azw1KaAd8ngihqFRRB5oVkAwzdRo0=
+	t=1718574950; cv=none; b=TxasCi/b18h2ruqHhKU8j56E8JSLWxH/XVeeqciNeAIfDrmJ/EjeLHDkPObcw2jz0Aa6qyvfd6vteTRw/b7vUXLjXTDuVp+6peEiW8fVwBJnyp+ZWNMVk7kdxD2sddoZGvlovA3XMdjdcKxJHiL0sChhl7xho/zYnS+06DrL/pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718574871; c=relaxed/simple;
-	bh=0BtYdNmj4tgibhr+X25IskYgP4z0Rb9KC7CYpn/A8aI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCBi1A3685JI33KkBI/aAVhR6GBaVPeSsW7EaYtdUQ40t8AB6RJqMuO/Jg7dr3lvBBdI6xzCcZH1uKS+kIMu8yAH4QOcnaiQZjs/VGgDPWaEBH+BANRKbxgnpuCF2sOxCJruxDrUd9yp3ob9QHTAO1CIrxAaMUlbk5tC3MCBxP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=02QoeJRH; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1718574950; c=relaxed/simple;
+	bh=Qe2zDpaC0X9RuvbwJKxMNS8MaVjz29kmd6fEm+lqW1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LSBryJieV2sBe142BO7MPq77Ls/H40tLl6rQPOIBLYTYa9gnunRhXA23cYyhZ95izs9xG9yFZ89uNi0kU/sOYbcLAU2Qth/24ko0Xuraen13ykDTFKYO0Vm/uvZDSJXOAL4wtEfWVUf1dV9j/2C8owkln3329mA76p0oKRECNOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLLbKHus; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="02QoeJRH"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-35f27eed98aso3058679f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 14:54:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLLbKHus"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-36087277246so1117865f8f.3;
+        Sun, 16 Jun 2024 14:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718574867; x=1719179667; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Va7jxWnDAAKQwyBwWcGtGRPq0HJsT58aAXHG+7OBweM=;
-        b=02QoeJRHA/6Hw9C8iNK2Tq/3n/ZIJ94GzYmJW2JkiNB7XZHKSmlyptpkuIMpgAEZLs
-         yVJUAeurcIqMUGfJQRiBOa6YNWHUcURSvUCBABJzrkEbLflNABxZ+Noy4G1kwNpqo9UH
-         pT9PQSphpx2K36hnYaK72hbBG6mjGqdphAKar4JgxXUH+S9QIF781x51rhoxoElocrNp
-         xuynuFrBoU73k80x03sTOMO7CEjWEcFk9VMb0r3SlZ3+63XmECBsFfcFic4W5BKkw71R
-         sW0bsACVHcXVKVcpRh36hcEXxt60wZX4LuGnyC/Le531mevkQF4ahfL9BtNV0Jeu8Xo0
-         Vd1A==
+        d=gmail.com; s=20230601; t=1718574947; x=1719179747; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=63S5qsObKr+Jg43OR+tj2RDQ4rfD755QMAJSfXPWTFY=;
+        b=fLLbKHust68TT22IWZi5AIwS9GWuovduoavuBz021uqGMF1sczm2ecfFO5w432vP+J
+         QlEyofFJ59DzA939IF9HdigXsk4WgCaLlslq82ccdH/v8/F3qx+pSwVg+zzdDf7dgymu
+         OxQLcRHQ2EpPEbtFZeW0l3ZghLGaaKwv81OZPkVA3XgXgBGHkQ/OasKzRfMwwPQ9Spfj
+         TKNelMrJFXyW4dZ8TFRGX3ucpwOzofIN56VPdnn/+gs/YpsM7OgTvcTG4HFPHUgTMy7+
+         zpY3CURsT1BOd8f3J3KW900ifHMCZW5dXs5wfQrFJ+l6IQ6KX4UXhl9qMUTdh5f0xafO
+         K8RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718574867; x=1719179667;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Va7jxWnDAAKQwyBwWcGtGRPq0HJsT58aAXHG+7OBweM=;
-        b=xKqnzvZiA8SLZhEiXx3YvYUk1BRaRzy2RjKrL0d18/RPt4tZmz67JvZ8ETeIEah4oh
-         fbJSCIlnDaHpdeig1nT3KElG9+0ntmzSGUQdhSkpJxT85yrh2XP7XExvgbXal8OBGfpj
-         t86Tt8USF5PgcWN9jDR+GZj+NHPu8g7axw4gqrLRp011QzFb+WSwKLWC+LBzdUEXz1IW
-         BbzyqD91vTyn5pk7orKODbp5kf+w8/fkSff1yEiUtlEDZ21z9Cx8fVjfWpNH3PEEuCru
-         SuAlLVciKZsjHqIxwk5pzkCwoiqS+HUvMeVzF/9LXCSbhNlKrxxkJvLnFixTm5YZw80z
-         o9nA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVGWDCdVbj6eZ6UsT3kViBEzLe08ZKY15UP3PqbbaeYudZQbGmDbgaQe5nO2Q8dRgpf0LgJguzXxooWXNXLxDFmrxNkFedLaF7y3M+
-X-Gm-Message-State: AOJu0YzfhQfkUdjam+gMtq1tnYDiz1S11UOZomBgY+ldYCoFi1ycPWfp
-	ulA/GMuzIbfSy8N7TFGTDM44Fz1i6glWP8U0Wlm7+rISFLsk5+QXCBHt2L4RLyKDv3RWsXf9QZL
-	ua2s=
-X-Google-Smtp-Source: AGHT+IEU7um6AxXVHOmLV8ehOKCW5eJRSPwONaIvfB1JzmEuC6EgmofL3tqLOy8ox+3sxwQEThHjpA==
-X-Received: by 2002:a05:6000:d51:b0:35f:2261:4625 with SMTP id ffacd0b85a97d-3607a781819mr5996581f8f.61.1718574867557;
-        Sun, 16 Jun 2024 14:54:27 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750ad216sm10437041f8f.57.2024.06.16.14.54.27
+        d=1e100.net; s=20230601; t=1718574947; x=1719179747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=63S5qsObKr+Jg43OR+tj2RDQ4rfD755QMAJSfXPWTFY=;
+        b=BbywtOGFG5lSBbXsRG9ZKZ6q1h3ekHf9FilpLJo81D+Er8pqQkVOwMzgI6oC7Og5mc
+         XZgmI+AbPo1rvRrHX/6fsVxDyZkQfiqhGfkGEwtZQ9LLT1Apu7klHduyLOTAVna+CAnT
+         2+3i9a1T2EKVy4+NyxHJdvhWfoae9xQdCJd/olCEBR1wW3h622qx14FzPdjhNotmZ1aR
+         TrfjWqk1uPC4dhZJ3G1ZbCBClUdaWRZMiV4Z8oIpOJpjOJpC3jGxi6Qo/83y59unjNlp
+         Ag49Oie6XQs3pRQYh1z91vuiOE5gAAuIy1CnlUIBwENIhDzQGzDhagQf8/KcA4+cS6w+
+         YdaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaDDj3ZWNP1kTeR9Ng0NsUA0pCxbBxeJeJTZcEScTv1N3XhnAmFzAcqYoV2a+2pUBkidfVep0zUL2pAavKs/XmlKnR4DFT59mJhP4qxtpAOjADvBItsPrStFpUU0XtlxVeJqwXbg/RcPm4Wi3a4cxgUtZD5eTd4UKbzptuHn/FRRiEViQ=
+X-Gm-Message-State: AOJu0YyVfPUXgDUWvVpyF6sKBITATKls6PqGNbwD6oD1LTz7gSQIrdn2
+	H0X/rDdc369qnLpYVzduGfwn9tiUthDhS/Ss9o9U68y9gx4R20tL
+X-Google-Smtp-Source: AGHT+IGXbzt+Lte8v35L3/zL4ZM3n7/WNGd2rHyQ+GXhFmThXFui07O+7RWtGUTYsKf594bDhLVAAg==
+X-Received: by 2002:adf:f887:0:b0:35f:2683:6adf with SMTP id ffacd0b85a97d-3607a7e2037mr6234192f8f.44.1718574947176;
+        Sun, 16 Jun 2024 14:55:47 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-36075104b74sm10362879f8f.107.2024.06.16.14.55.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Jun 2024 14:54:27 -0700 (PDT)
-Date: Sun, 16 Jun 2024 22:54:26 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rafael@kernel.org, vincent.guittot@linaro.org, peterz@infradead.org,
-	daniel.lezcano@linaro.org, anna-maria@linutronix.de,
-	kajetan.puchalski@arm.com, lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com
-Subject: Re: [PATCH 1/6] cpuidle: teo: Increase util-threshold
-Message-ID: <20240616215426.wwv5o2gxneiugq46@airbuntu>
-References: <20240606090050.327614-1-christian.loehle@arm.com>
- <20240606090050.327614-2-christian.loehle@arm.com>
- <20240609224701.pc6om2o5ep6btywe@airbuntu>
- <569b7923-d7ba-49a9-a88d-906f44903d20@arm.com>
+        Sun, 16 Jun 2024 14:55:46 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH v6 00/20] leds: leds-lp55xx: overhaul driver
+Date: Sun, 16 Jun 2024 23:51:59 +0200
+Message-ID: <20240616215226.2112-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <569b7923-d7ba-49a9-a88d-906f44903d20@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On 06/10/24 10:11, Christian Loehle wrote:
-> On 6/9/24 23:47, Qais Yousef wrote:
-> > On 06/06/24 10:00, Christian Loehle wrote:
-> >> Increase the util-threshold by a lot as it was low enough for some
-> >> minor load to always be active, especially on smaller CPUs.
-> >>
-> >> For small cap CPUs (Pixel6) the util threshold is as low as 1.
-> >> For CPUs of capacity <64 it is 0. So ensure it is at a minimum, too.
-> >>
-> >> Fixes: 9ce0f7c4bc64 ("cpuidle: teo: Introduce util-awareness")
-> >> Reported-by: Qais Yousef <qyousef@layalina.io>
-> >> Reported-by: Vincent Guittot <vincent.guittot@linaro.org>
-> >> Suggested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
-> >> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
-> >> ---
-> >>  drivers/cpuidle/governors/teo.c | 11 +++++------
-> >>  1 file changed, 5 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-> >> index 7244f71c59c5..45f43e2ee02d 100644
-> >> --- a/drivers/cpuidle/governors/teo.c
-> >> +++ b/drivers/cpuidle/governors/teo.c
-> >> @@ -146,13 +146,11 @@
-> >>   * The number of bits to shift the CPU's capacity by in order to determine
-> >>   * the utilized threshold.
-> >>   *
-> >> - * 6 was chosen based on testing as the number that achieved the best balance
-> >> - * of power and performance on average.
-> >> - *
-> >>   * The resulting threshold is high enough to not be triggered by background
-> >> - * noise and low enough to react quickly when activity starts to ramp up.
-> >> + * noise.
-> >>   */
-> >> -#define UTIL_THRESHOLD_SHIFT 6
-> >> +#define UTIL_THRESHOLD_SHIFT 2
-> >> +#define UTIL_THRESHOLD_MIN 50
-> >>  
-> >>  /*
-> >>   * The PULSE value is added to metrics when they grow and the DECAY_SHIFT value
-> >> @@ -671,7 +669,8 @@ static int teo_enable_device(struct cpuidle_driver *drv,
-> >>  	int i;
-> >>  
-> >>  	memset(cpu_data, 0, sizeof(*cpu_data));
-> >> -	cpu_data->util_threshold = max_capacity >> UTIL_THRESHOLD_SHIFT;
-> >> +	cpu_data->util_threshold = max(UTIL_THRESHOLD_MIN,
-> >> +				max_capacity >> UTIL_THRESHOLD_SHIFT);
-> > 
-> > Thanks for trying to fix this. But I am afraid this is not a solution. There's
-> > no magic number that can truly work here - we tried. As I tried to explain
-> > before, a higher util value doesn't mean long idle time is unlikely. And
-> > blocked load can cause problems where a decay can take too long.
-> > 
-> > We are following up with the suggestions I have thrown back then and we'll
-> > share results if anything actually works.
-> 
-> Namely watching increase / decrease of utilization?
+This long series is (as requested) a big overhaul of the lp55xx based
+LED driver.
 
-We still have to explore and see. I think we need multiple cues if we are to
-try to predict the likelihood of a task waking up sooner than min_residency.
-And be scalable across workloads/systems.
+As notice for these kind of LED chip there was the bad habit of copy
+the old driver and just modify it enough to make it work with the new
+model. Till v4 I was also doing the same by following the pattern and
+the code format of previous driver.
 
-> I think you would have to watch at least a couple of values before entering such
-> a logic and at that point the intercepts logic will handle it anyway.
-> Furthermore IMO we should be wary about introducing any state in teo that persists
-> across calls if not absolutely necessary (like intercept-detection) as it really
-> makes teo much less predictable.
-> 
-> > 
-> > For now, I think a revert is more appropriate. There was some perf benefit, but
-> > the power regressions were bad and there's no threshold value that actually
-> > works. The thresholding concept itself is incorrect and flawed - it seemed the
-> > correct thing back then, yes. But in a hindsight now it doesn't work.
-> 
-> Unfortunate :/
-> OK. I'll do some more testing with that, too. From what I can see a revert wouldn't
-> have terrible fallout with the series altogether, so I might just change this for
-> v2 and drop 2/6.
-> 
-> Kind Regards,
-> Christian
-> 
+Since Lee didn't like this, here is the BIG series that generalize
+pretty much anything in the 4 model currently supported.
+
+Indeed, although the LED chip have fundamental difference (page
+support), things can be generalized and produce slimmer drivers by
+putting everything in the lp55xx-common shared module.
+
+This result in the new model lp5569 being very small with only the
+selftest portion to be custom.
+
+Lee also wasn't clear by the meaning of ENGINE in these LED driver,
+so here some simple explaination. This is very common on these TI LED
+chip. The ENGINE (there are always 3) is just some kind of processor
+that execute a program (precompiled code ASM like) loaded in the SRAM.
+Sysfs is used to load the pattern, and to start and stop the engine.
+
+These pattern can do all kind of complex thing with LEDs. Old LED chip
+had 32bytes of space for the pattern but newer one (like lp5569) have
+pages and if correctly configured can have massive pattern.
+These pattern can do all kind of magic like loops that make the LED
+pulse, change color and all kind of stuff.
+
+(For Lee, sorry if you will have to repeat some review that I might
+ have missed in the lp5569 driver)
+
+Changes v6:
+- Fix compilation warning for ret unused in read_poll_timeout
+  (no idea why this is flagged only on some particular arch...)
+- Fix missing bitfield.h in lp55x-common.c (again it seems this
+  header gets included in the flow if the arch use them or not...)
+Changes v5:
+- Big generalization patch
+- Rework lp5569 driver with new generalized functions
+- Drop all copyright header in lp5569 as the driver got reworked
+  entirely and it's not based on previous one anymore.
+Changes v4:
+- Fix reported buffer overflow due to a copypaste error
+- Add comments to describe fw size logic
+Changes v3:
+- Add ACK tag to DT patch
+- Enlarge and support program size up to 128bytes
+Changes v2:
+- Add ACK tag to DT patch
+- Fix compilation error with target that doesn't
+  include bitfield.h
+
+Christian Marangi (20):
+  dt-bindings: leds-lp55xx: limit pwr-sel property to ti,lp8501
+  dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
+  leds: leds-lp55xx: generalize stop_all_engine OP
+  leds: leds-lp55xx: generalize probe/remove functions
+  leds: leds-lp55xx: generalize load_engine function
+  leds: leds-lp55xx: generalize load_engine_and_select_page function
+  leds: leds-lp55xx: generalize run_engine function
+  leds: leds-lp55xx: generalize update_program_memory function
+  leds: leds-lp55xx: generalize firmware_loaded function
+  leds: leds-lp55xx: generalize led_brightness function
+  leds: leds-lp55xx: generalize multicolor_brightness function
+  leds: leds-lp55xx: generalize set_led_current function
+  leds: leds-lp55xx: generalize turn_off_channels function
+  leds: leds-lp55xx: generalize stop_engine function
+  leds: leds-lp55xx: generalize sysfs engine_load and engine_mode
+  leds: leds-lp55xx: generalize sysfs engine_leds
+  leds: leds-lp55xx: generalize sysfs master_fader
+  leds: leds-lp55xx: support ENGINE program up to 128 bytes
+  leds: leds-lp55xx: drop deprecated defines
+  leds: leds-lp5569: Add support for Texas Instruments LP5569
+
+ .../devicetree/bindings/leds/leds-lp55xx.yaml |  11 +
+ drivers/leds/Kconfig                          |  16 +-
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lp5521.c                    | 405 +---------
+ drivers/leds/leds-lp5523.c                    | 728 ++---------------
+ drivers/leds/leds-lp5562.c                    | 261 +------
+ drivers/leds/leds-lp5569.c                    | 542 +++++++++++++
+ drivers/leds/leds-lp55xx-common.c             | 730 +++++++++++++++++-
+ drivers/leds/leds-lp55xx-common.h             | 133 +++-
+ drivers/leds/leds-lp8501.c                    | 313 +-------
+ 10 files changed, 1523 insertions(+), 1617 deletions(-)
+ create mode 100644 drivers/leds/leds-lp5569.c
+
+-- 
+2.43.0
+
