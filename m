@@ -1,156 +1,112 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8593114A81;
-	Sun, 16 Jun 2024 15:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01106168DE
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 16:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718553376; cv=none; b=m1XCPTnPZcUllT7NfiCo7IDa/BRPGXRnC63pnKUusul+0/dm4kFghTdOzqRm1Ggoiy/HWIWMbUIRmcN1aQGW88fKNkzwxCHtJlrCrXaCMqgQFdhkdz4cVVMYq3jkNQxkoPDTgDJa2E9uFlH2nbCaZSn3OrDetMxkJ4bfDkY01po=
+	t=1718553875; cv=none; b=NNhRqlDFv0Bl9BuhBUJAKeOaPX6wxCDe/YBuORkJJfDJHAdmER6juhS6d42+kYD/8M12mR21ZrhNUkt2hNZNzScRIPdkvIA508mMF+CGOhOkdex8LTfH02jZVIPJfBhv/tiH/R9RIa0x5Mt82J0Xbov2lLYf63CyMb5fux+rGU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718553376; c=relaxed/simple;
-	bh=aWlbf4v4BZx1SCQ2pnzqlMa9hnkkve273zFrppp4+/E=;
+	s=arc-20240116; t=1718553875; c=relaxed/simple;
+	bh=KGBMb+hsV6f1/UzEToXa/ESKEIydm1zGzXT27qGRaAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vpwf9qcPRfyTMQtwVsPP7MZiyDuUjksiQ8FnOTMJznp0sU2rQIfYV6UM7HroSYHHKKboDu6UruyVzPbcJtKBX8z1GosmNnv16HK4Gs0ZPDRWIPOunMe5o7L8ENcOxlw8oLDKZPkOvw0mC75bxYcIItQEFvy2gzKm10IlLBJ000o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=CwvJx6kD; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=WYEZ6NlTGCZvvTARAaDXcjetAOpBsk0P6582Wwj/5DCaMkCEMZAAi4guL3M0aTfeCg0SYrJGyBZZFg/fiCeGxd9f//lJC4lEiqFac/EUMd9GjA3RDldQ5V6BMfsPiWO54YaOSUcMwI3ztLQBf5o8cpFGLMzdgkeJlnT+eWKBIAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Ed3boJ8o; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="CwvJx6kD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
-	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
-	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=epgY0CWZGRWX9cG3rGGhfS4F7GuIuahi+q/0phSIS7c=; b=CwvJx6kDN1zrYDPzW+SU8eA4rc
-	RoXKCSmFfma6bETJLo8LYwLarKyRU6ZX5uRn9DkKFuatHXCk/UfE9goxqnf2GHA5SH8EmQCHboud6
-	cx37QRRF33kdhoXXSwuK/RcEpjJ3sFrVsmkQcb5gxro9y0zshoUznfptqtgbauW6aQR6CRPqoE1Kt
-	fRZHLTNf6MKtF2AtSZioqW/yCyJpM3jH1oL8fySM0Yt7kfch53v8M5VwwNXub48hXVS95eKr36rMs
-	HME89bHDaAeb3xEm4lGnrXciNhXu/t5BNcE3adazaRsHGiYfUC7jMSDMVNhQr7XI2qYuOSwZYEKoI
-	1XYfnbaQ==;
-Received: from [2001:9e8:9e2:3f01:3235:adff:fed0:37e6] (port=33542 helo=lindesnes.fjasle.eu)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <nicolas@fjasle.eu>)
-	id 1sIsEY-0091Ez-V6;
-	Sun, 16 Jun 2024 17:55:59 +0200
-Date: Sun, 16 Jun 2024 17:55:56 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH 2/2] kbuild: package: add -e and -u options to shell
- scripts
-Message-ID: <20240616-dandelion-lynx-of-philosophy-6be45f@lindesnes>
-References: <20240611160938.3511096-1-masahiroy@kernel.org>
- <20240611160938.3511096-2-masahiroy@kernel.org>
- <CAK7LNAQyPRKes7=wNtYXre+nU=5-1oZ-g1uzbjFMFd2e10jFjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Ed3boJ8o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=KGBM
+	b+hsV6f1/UzEToXa/ESKEIydm1zGzXT27qGRaAU=; b=Ed3boJ8oyxjup0H1+s/c
+	64zC+VA1ZLZL5c4dT2r8+7GL7Lj1CTtwS6Pfo61N8kncuvNsOIKLA1HCfSUgwhJ0
+	wPOUGtxi7ya4nftwpvikNwgOAorszAoJjjmClHDDBwAwzzZDQtRy1zbvoDzqjEqF
+	gZ2HO0xGyFNQpBxFuolLpvCulmL+zv94GsitCA1xPVMT2NqzW/D/hibGL+q/JsbH
+	HHkEuiHwrwK5Adj9ZIeTofbNvm6ypi4I5UznCpfTnf9KAJdTZLgcDeCeHBKEJh2U
+	X9SQpq0yqxMFNVtZlU7MPTWy2fJhbLQl3zU1D0iXgvyLH+f23fymJSHATsdBK/Xt
+	oA==
+Received: (qmail 2067608 invoked from network); 16 Jun 2024 18:04:27 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Jun 2024 18:04:27 +0200
+X-UD-Smtp-Session: l3s3148p1@B1bPAAQbhL9ehh9j
+Date: Sun, 16 Jun 2024 18:04:27 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <qnjiwkrqnwyz65nieioq2lt2kaauj2xqvddq5ba7ajrkmk7rky@hik3pexv7er7>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+ <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
+ <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
+ <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
+ <CACRpkdYtLDA3518uSYiTpu1PJuqNErHr9YMAKuar0CeFbfECPA@mail.gmail.com>
+ <CAMRc=Mem6HN13FOA_Ru8zC-GqGGLTsQiktLWs5bN4JD1aM3gHQ@mail.gmail.com>
+ <a7463c6e-2801-4d0e-b723-fc1cf77a04ed@app.fastmail.com>
+ <slpwvai5q24qwymh7nktihvykmlhi5j3nhqjxruxb6yacruu47@27b7rhykw2f3>
+ <3bb9b39c-c15f-49e3-987b-26cd47e05f3e@app.fastmail.com>
+ <CACRpkdaC6i54qUfJ5H16m2wQhR89bXq26Pn0rZ-80m3a60-_mw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="96ku8o6c42x5JWqi"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ogf6eemsskgkbba6"
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAQyPRKes7=wNtYXre+nU=5-1oZ-g1uzbjFMFd2e10jFjA@mail.gmail.com>
+In-Reply-To: <CACRpkdaC6i54qUfJ5H16m2wQhR89bXq26Pn0rZ-80m3a60-_mw@mail.gmail.com>
 
 
---96ku8o6c42x5JWqi
-Content-Type: text/plain; charset=utf-8
+--ogf6eemsskgkbba6
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 17, 2024 at 12:21:15AM +0900, Masahiro Yamada wrote:
-> On Wed, Jun 12, 2024 at 1:09=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
-=2Eorg> wrote:
-> >
-> > Set -e to make these scripts fail on the first error.
-> >
-> > Set -u because these scripts are invoked by Makefile, and do not work
-> > properly without necessary variables defined.
-> >
-> > Remove the explicit "test -n ..." from scripts/package/install-extmod-b=
-uild.
-> >
-> > Both options are described in POSIX. [1]
-> >
-> > [1]: https://pubs.opengroup.org/onlinepubs/009604499/utilities/set.html
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
->=20
->=20
->=20
-> Setting -u needs more careful review and test.
->=20
->=20
-> This patch will break 'make deb-pkg'.
->=20
->=20
-> ./scripts/package/mkdebian: 150: KDEB_PKGVERSION: parameter not set
->=20
->=20
->=20
->=20
-> To set -u, scripts/package/mkdebian needs code refactoring.
->=20
->=20
->=20
-> I will keep scripts/package/mkdebian untouched.
-
-uh, I missed that during the review.  Do you want to refactor mkdebian
-in large scale, or is an explicit fallback definition possibly
-acceptable for you?
-
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index ecfeb34b99aa..7e3878197041 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -7,5 +7,17 @@
- set -eu
-=20
-+# Optional user-specified environment variables
-+
-+# Set target Debian architecture (skip auto-detection)
-+: "${KBUILD_DEBARCH:=3D}"
-+
-+# Set target Debian distribution (skipping auto-detection)
-+: "${KDEB_CHANGELOG_DIST:=3D}"
-+
-+# Overwrite the automatically determined package version.
-+: ${KDEB_PKGVERSION:=3D}
-+
-+
- is_enabled() {
-        grep -q "^$1=3Dy" include/config/auto.conf
- }
 
 
+> I second this opinion. The logic analyzer does in my mind
+> classify as a GPIO debugging feature. Surely someone
+> debugging anything connected to GPIO, such as a key or
+> MMC card detect or whatever could use this feature to see
+> what is going on on that line.
 
-Kind regards,
-Nicolas
+Okay, with that picture I can see where your argument is coming from.
+However, making it a gpiolib debugging feature will surely raise
+expectations. And it is not only the non-equi-distant sampling. The
+script trying to isolate a CPU core tries really hard but is still hacky
+IMO. It has to disable the RCU stall detector and will likely interfere
+with your CPUSET configuration if you have one. As I always said, it is
+last resort debugging.
 
---96ku8o6c42x5JWqi
+As I write this, I start to wonder if this should be really upstream or
+if I just keep it as a branch in my repo. Maybe it is just too hackish
+to be supported mainline?
+
+
+--ogf6eemsskgkbba6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmZvCwkACgkQB1IKcBYm
-Emm2KA//XwZc5KqS+S05fECn6wHG7SKgN34oQCaRIZp+m1gDy1b0Wq//XRd9RIxB
-0g8SREFV6ej4ZCtWlRZNK56iF+f4Lx6d0PBstbKkBmt0hJwfdG3vY9HoSjUbCjG1
-u5O0kFtHPa1fX5ogBVT1NdgBgKCVRPh9OHKGVG1z4uONcHuMgHUIxAatoob7AZUZ
-tUuT802g1C/51/AGVncQh0E21rKZf8IK4IUKp29CFPWgDQDkiecXCTqxa+9FK/v3
-ABmSovJ5MuDrg5o1V3lk+Amky8rSPaNwTCKgALqADAyntCoogDH3Q5QL6VxIjArC
-FDI6pfD0TAIGk5cAil6H6PXdCPkjKPYaxC5LqB1w0rNpfmdgTQY8akEGTG0xq0sn
-GIuveUle1tP/OgFS5W3xiVzOHSYZ4SvgZs6ZeViaT/eem5xru12L2dTP5P7iRdpI
-AUG3Q/ynoH5p08I0d52jLajgNqmTGT5EXfP39M36S/QRRIutH9JSjtru7zthEKVz
-ZhGaWOKrJdNTCdn5pbd/1pVEDgE9TkfKlIiwhjD56dxQ6sW9PzCD+1BccSd4ZWgD
-o3iSbc0oUikhGMU8lFFXYl+tWg3r17pgkZPjO30eWodDX8ErJSlJzR0MJeGJ2/Rf
-PS1NLty3/AiR/xraq6Vts5TyOcQ37kQiJMw+9yfh51cbKeOYGdc=
-=1OYK
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZvDQcACgkQFA3kzBSg
+Kbb7hw/8CrBKvnmbXNsocNTdodgY1tjLDiHpCUAlqOUzbYz1kPOVa1DTkE/rdqam
+iRB/uiHUZU1RkwANATrrSo3ZAfN8e/ffWbOcCtInD/fLqQEC6p7dIz0biFHCfyuz
+L9eXjWMlfFtijXnk7aPphKsZL4n21MqCFC0IN6RpIT8npNieSaY745npgGN2OIaQ
+ViI9QdUy964rYRlzEG9ybJjW8Bh43V/aPKYW8x39T8sqPdOfzZ6BoEpPdjKg/7f2
+3HAmS2WW/ZZK0grDrvmUcKSQOPEgaBuzH6b9qjd+dkcL/YOXCoYO0OmCDSUI9yPW
+KERlFoqnRm30Jnsat1eNIpOv084QDB4EmCZwmxnQQfQ16Bwf4rbv+jzbSNMWCSqV
+ge+aoDvreCzoBKNsnQtYiHbiH/RgR+N9gESuTYKr4jZys6NLI4QdVOmOvuQcOEKy
+/c61N46fQd3wfAQbu8BgqypMRdAj9HAv76+veogZpbVY0Z2v8/XzFVwVqDvGYRGe
+VcUi/pBcuo//OiKsJTkBLJR6WvDo07LfOAMFbYYPS8FYtGzC6eWtPEItvMy+6h2D
+AG5Q4Cg9d9utCNsLPVuXNxLLSfwZJDmw7gPE6kW7y7zPOIKsQ0Vo/JExf6HsPvz+
+7YRkDGxMhPmXfBF/cQq9bcHE1EOeS+oyUMmn/SybJyFB0OWPTVQ=
+=nL8s
 -----END PGP SIGNATURE-----
 
---96ku8o6c42x5JWqi--
+--ogf6eemsskgkbba6--
