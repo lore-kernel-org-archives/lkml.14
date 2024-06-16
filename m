@@ -1,165 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4C617F39C
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1698233C0;
+	Sun, 16 Jun 2024 08:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718526555; cv=none; b=kK1SmWNxvHC81Smdcx7/rrkDJL7kriiS0v0lNsaa3rvFWDcx9Kx4jYvrBFF5KzrlZmwLmmlWFZ/ygaorla1ynNvBIxxnTAlZr4iFC18c3EchVN6IDlZNV/hdQ9nwCKCPRH1N57IVSPy9KAFOMxEhDrIiG2HVm/dtBrjqsbRWZTU=
+	t=1718526938; cv=none; b=j8dT1qHBD2GNMd/gDe3emHP/i2y+psqVr2Qere0bvmgDgA+n1cje3ipOWFe0R4iMl+HmjtYKU5QlkNyoWa9IrOO0len/886amxg4rSiEcUBkE+Y4mK1PlPG1eUBHoOFKhT/9DWwz8e5yLNnvf3c4Myzh0Vhi11QUBVTRPgnVs+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718526555; c=relaxed/simple;
-	bh=kifDOgJ1iwtB4OTqi6lKcrfIWMyq+in5namqaL7qf14=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JLdHtB4mFexNmt9rbRCXKEOrhhALc3K+ktS6tGl310xfysEUAtx1M+tjvGbtPO7hyM0IwT5cGnfJzvZpq1TQv/A4XsJfAtHC1ECl/uzxAEPfv8/wiWAvR++F65IqT4WBNBswggbXo3FiVF38N9iyYuF0qt3mpV1VQqPmTJ4x9r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JakAQWgl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718526938; c=relaxed/simple;
+	bh=gMHw0zgKhT2FIrKEWVvNVX2awLi4Bqd58VLtETxGG0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DId5aX/M/ePWsBDRK3tQioycrPbJLW5kqCNW+oMiLX3B5xrbbDK6qfsUsFgi3/cxtOxwmeJiKWbT4iqUHE7AzlBEja58xeRR1qQGA4szS5IdzbrXy9MmiYZ2K4Rzccs4ycIz2TMlnRnBevmv/bYPoLkoH/e0zQegvnSOaAp7qUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKITIvAf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JakAQWgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32F3BC4AF55;
-	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKITIvAf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53123C2BBFC;
+	Sun, 16 Jun 2024 08:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718526555;
-	bh=kifDOgJ1iwtB4OTqi6lKcrfIWMyq+in5namqaL7qf14=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JakAQWgl2gRNXv+//Kk8IkQHJBTfjTg4vPJK3CXJLbl6AyjPttiu+MKo66DYsuyya
-	 VyQr3YQSWiODEUUIpko3O1PGYkVnNDBU0IWAtCwV9hZVb3UHYKD7vrwvZ4AezEX4Qc
-	 ydoqmk9/1qARbF9knfOPBeYwEV8UD9PJZBNGkh9nVGjg/iXKihGbkgMwtvNP4DrBkF
-	 iazkriUeTZ3NYtpZ4yyIkKXiJI1DpXKnMKZf4cl934fOVs7TwW7ihmBAxANkduwSAK
-	 +CUp1lhhrzZykRXEcPKAm/AJxsgQy+w7/0DRFIDzpVQJgLJlrWixF8ufWa/SvRGL+O
-	 zjDwHjG24frVQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B8CC27C77;
-	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
-From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Sun, 16 Jun 2024 16:29:17 +0800
-Subject: [PATCH 07/13] drm/mediatek: Support more 10bit formats in OVL
+	s=k20201202; t=1718526937;
+	bh=gMHw0zgKhT2FIrKEWVvNVX2awLi4Bqd58VLtETxGG0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oKITIvAfZUzTfAk4VH+3dgKt1FYvHBwTTDgWvZjE9b4QyI4fiF3jwQe3H1Gm5wTuQ
+	 wP5EF/gxM+BNzy7Nm/FSZEHtQKlvHJhya2+2vUU95C+bMWunrs9RCLPRS6rztYwjtB
+	 FAK7IPVBszykFDvXKjJoMv6unq66JO9et4sXrnrts8I9FZgB8BNQCsf5/BldVITew4
+	 Ci01x0bm3SH3g8ESfXOWgd/1wf2LYuR8Jvs/XMB2FCGsCEj/BTDKtxnG1eODq28tM9
+	 p4GpUn/huIZIoi4Ep+yzqvxjQkIeppSf0YbLZmEca4RwFz4ntP49lpadQVN/40Uywe
+	 SZCRyHmKxjmDg==
+Date: Sun, 16 Jun 2024 09:35:29 +0100
+From: Simon Horman <horms@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: kvalo@kernel.org, linux-wireless@vger.kernel.org,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, kees@kernel.org, kuba@kernel.org,
+	Bo Jiao <Bo.Jiao@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Alexander Couzens <lynxis@fe80.eu>,
+	Deren Wu <deren.wu@mediatek.com>,
+	Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
+	Leon Yen <leon.yen@mediatek.com>,
+	Quan Zhou <quan.zhou@mediatek.com>, Ingo Rohloff <lundril@gmx.de>,
+	Sujuan Chen <sujuan.chen@mediatek.com>,
+	StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
+	Benjamin Lin <benjamin-jw.lin@mediatek.com>,
+	Peter Chiu <chui-hao.chiu@mediatek.com>,
+	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH] wifi: mt76: un-embedd netdev from mt76_dev
+Message-ID: <20240616083529.GH8447@kernel.org>
+References: <20240614115317.657700-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240616-mediatek-drm-next-v1-7-7e8f9cf785d8@mediatek.com>
-References: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
-In-Reply-To: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- CK Hu <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, 
- Daniel Kurtz <djkurtz@chromium.org>, YT Shen <yt.shen@mediatek.com>, 
- Mao Huang <littlecvr@chromium.org>, "Nancy.Lin" <nancy.lin@mediatek.com>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Hsiao Chien Sung <shawn.sung@mediatek.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=3047;
- i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=0F3dL7Hk+/JpF+cj2ZIa5qK/8av3/IUZtyCgaJlJ8KQ=;
- b=FUqaJrmj6lkySmFvxKaKCE6fXMSboJr8o/XVh2za02gVuo8S8oPd7q8zz5LoOhBTxMTx1U88M
- ZwLQEFkA7hmBoGKzWamTs+rRa44xpQfvExfxVjt2R8WCL4JQlXrexPB
-X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
- pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
-X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
- auth_id=172
-X-Original-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-Reply-To: shawn.sung@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614115317.657700-1-leitao@debian.org>
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
+On Fri, Jun 14, 2024 at 04:52:42AM -0700, Breno Leitao wrote:
+> Embedding net_device into structures prohibits the usage of flexible
+> arrays in the net_device structure. For more details, see the discussion
+> at [1].
+> 
+> Un-embed the net_devices from struct mt76_dev by converting them
+> into pointers, and allocating them dynamically. Use the leverage
+> alloc_netdev_dummy() to allocate the net_device object at
+> mt76_dma_init().
+> 
+> The free of the device occurs at mt76_dma_cleanup().
+> 
+> Link: https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> 
+> PS: Due to the lack of hardware, this patch was not tested on a real
+> hardware, unfortunately.
+> 
+> PS2: this is the last driver that is still using embedded netdevices.
 
-Support more 10bit formats in OVL.
+...
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+> diff --git a/drivers/net/wireless/mediatek/mt76/dma.h b/drivers/net/wireless/mediatek/mt76/dma.h
+> index 1de5a2b20f74..6454a5eca13e 100644
+> --- a/drivers/net/wireless/mediatek/mt76/dma.h
+> +++ b/drivers/net/wireless/mediatek/mt76/dma.h
+> @@ -116,4 +116,9 @@ mt76_dma_should_drop_buf(bool *drop, u32 ctrl, u32 buf1, u32 info)
+>  	}
+>  }
+>  
+> +static inline struct mt76_dev *mt76_from_netdev(struct net_device *dev)
+> +{
+> +	return *(struct mt76_dev **)netdev_priv(dev);
+> +}
+> +
+>  #endif
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 862ab683ed1b..d970cdce06bc 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -71,6 +71,22 @@
- #define	OVL_CON_VIRT_FLIP	BIT(9)
- #define	OVL_CON_HORZ_FLIP	BIT(10)
- 
-+static inline bool is_10bit_rgb(u32 fmt)
-+{
-+	switch (fmt) {
-+	case DRM_FORMAT_XRGB2101010:
-+	case DRM_FORMAT_ARGB2101010:
-+	case DRM_FORMAT_RGBX1010102:
-+	case DRM_FORMAT_RGBA1010102:
-+	case DRM_FORMAT_XBGR2101010:
-+	case DRM_FORMAT_ABGR2101010:
-+	case DRM_FORMAT_BGRX1010102:
-+	case DRM_FORMAT_BGRA1010102:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static const u32 mt8173_formats[] = {
- 	DRM_FORMAT_XRGB8888,
- 	DRM_FORMAT_ARGB8888,
-@@ -88,12 +104,18 @@ static const u32 mt8173_formats[] = {
- static const u32 mt8195_formats[] = {
- 	DRM_FORMAT_XRGB8888,
- 	DRM_FORMAT_ARGB8888,
-+	DRM_FORMAT_XRGB2101010,
- 	DRM_FORMAT_ARGB2101010,
- 	DRM_FORMAT_BGRX8888,
- 	DRM_FORMAT_BGRA8888,
-+	DRM_FORMAT_BGRX1010102,
- 	DRM_FORMAT_BGRA1010102,
- 	DRM_FORMAT_ABGR8888,
- 	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_XBGR2101010,
-+	DRM_FORMAT_ABGR2101010,
-+	DRM_FORMAT_RGBX1010102,
-+	DRM_FORMAT_RGBA1010102,
- 	DRM_FORMAT_RGB888,
- 	DRM_FORMAT_BGR888,
- 	DRM_FORMAT_RGB565,
-@@ -253,9 +275,7 @@ static void mtk_ovl_set_bit_depth(struct device *dev, int idx, u32 format,
- 	reg = readl(ovl->regs + DISP_REG_OVL_CLRFMT_EXT);
- 	reg &= ~OVL_CON_CLRFMT_BIT_DEPTH_MASK(idx);
- 
--	if (format == DRM_FORMAT_RGBA1010102 ||
--	    format == DRM_FORMAT_BGRA1010102 ||
--	    format == DRM_FORMAT_ARGB2101010)
-+	if (is_10bit_rgb(format))
- 		bit_depth = OVL_CON_CLRFMT_10_BIT;
- 
- 	reg |= OVL_CON_CLRFMT_BIT_DEPTH(bit_depth, idx);
-@@ -368,17 +388,23 @@ static unsigned int ovl_fmt_convert(struct mtk_disp_ovl *ovl, unsigned int fmt)
- 		return OVL_CON_CLRFMT_RGB888(ovl) | OVL_CON_BYTE_SWAP;
- 	case DRM_FORMAT_RGBX8888:
- 	case DRM_FORMAT_RGBA8888:
-+	case DRM_FORMAT_RGBX1010102:
-+	case DRM_FORMAT_RGBA1010102:
- 		return OVL_CON_CLRFMT_ARGB8888;
- 	case DRM_FORMAT_BGRX8888:
- 	case DRM_FORMAT_BGRA8888:
-+	case DRM_FORMAT_BGRX1010102:
- 	case DRM_FORMAT_BGRA1010102:
- 		return OVL_CON_CLRFMT_ARGB8888 | OVL_CON_BYTE_SWAP;
- 	case DRM_FORMAT_XRGB8888:
- 	case DRM_FORMAT_ARGB8888:
-+	case DRM_FORMAT_XRGB2101010:
- 	case DRM_FORMAT_ARGB2101010:
- 		return OVL_CON_CLRFMT_RGBA8888;
- 	case DRM_FORMAT_XBGR8888:
- 	case DRM_FORMAT_ABGR8888:
-+	case DRM_FORMAT_XBGR2101010:
-+	case DRM_FORMAT_ABGR2101010:
- 		return OVL_CON_CLRFMT_RGBA8888 | OVL_CON_BYTE_SWAP;
- 	case DRM_FORMAT_UYVY:
- 		return OVL_CON_CLRFMT_UYVY | OVL_CON_MTX_YUV_TO_RGB;
+Hi Breno,
 
--- 
-Git-146)
+I agree that the above is correct, but I wonder if somehow it
+is nicer to avoid explicit casts and instead take advantage of
+implicit casting too and from void *.
 
+Maybe something like this:
+
+static inline struct mt76_dev *mt76_from_netdev(struct net_device *dev)
+{
+        struct mt76_dev **priv;
+
+        priv = netdev_priv(dev);
+
+        return *priv;
+}
+
+Further, some of the callers of mt76_from_netdev() cast the return value to
+(struct mt7615_dev *). Which seems a bit awkward seeing as it was very
+recently a void * (i.e. netdev_priv() returns void *).
+
+I wonder if something like this makes sense, which I believe would avoid
+the need for any callers to cast.
+
+static inline void *mt76_priv(struct net_device *dev)
+{
+        struct mt76_dev **priv;
+
+        priv = netdev_priv(dev);
+
+        return *priv;
+}
+
+Ideas above compile tested only.
+
+Other than the above, which is clearly more about style than substance,
+this patch looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
 
