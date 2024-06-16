@@ -1,133 +1,79 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7486E79F4;
-	Sun, 16 Jun 2024 14:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965BBDDA6
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 14:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718546633; cv=none; b=Xw8YPoE3L/A911zAWmV61VPm2CqYI73O4fgsISi6jmIxtq8oxqkqYsYcvD9Qi5VJHIVxtMnNEhSzpmPCzBTOC7OSiMZCxADNTUhSWXVYVu8l77WT34c8RTp20Gwh91ILlZis9HCRvUSOVMMNSrCU8DNnmZRGL/oBF5vDOXe6Cc4=
+	t=1718546705; cv=none; b=EkjjNJLh1FNyJNm4F/mkIeF0rGOPQNPu3T5RpT30/fhgayniqLAtw5IpmqIOQ4Y8Ce2Lic7VSQxdrwTY0pG1kYwI2WI0yAnEtpZpa5208REQbWPlnz2ZzHHxHZ9quHx5tYIRDViO8EME6V/0tP+DmxSc5ikEtHp6JZzjgj9fxgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718546633; c=relaxed/simple;
-	bh=uLni8axn70nTeNSOM9zp1HoSjvEJQ+Je1pnxK6epS54=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nVVBxObPpq8L340lxJDkMIklzg2nGcX0q+my8G5HXFNdWlo/zWRNCPnkapnMN1H3vP2lSe+O47Ckava7OYFB9L/ZFBdypr+F2ZcHG5Oo5Pjy7KCCQsZ0NY9b+d633wg53QjP9ysbOGBONuGg1FRpFJcxYiGIymM1ereIu6cLyLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TvQyiG1m; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TvQyiG1m"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A8C0040005;
-	Sun, 16 Jun 2024 14:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718546623;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l+UzjARY5QneLdidg3fAtVri5ykcOQxvdQ7I86EceL0=;
-	b=TvQyiG1myWFoEx3lDRhv/zCFqFdKrEOvhBvc0GykO+vhEJo3rORGweBiL8xDodZNL+vNv7
-	vxEubofWrwUW6yLrjmvjLSGadtmrujbw27y8b/V6pk11mkMa3JmObHyz09DWzipi1vQfMn
-	IUYsHPR1oZuOWc/spHYXbdGy7r5EWG3OIw41rNklV7VmOteIrlF4jGCJ/323AHtGwImjPW
-	ZLpvu39+3g733oZNA7M64lHO6xjJkxv5RZ1zRwgNstojulc19JODDXrAw1y5NlbCyIZI3p
-	EM6/h6IbBdvmllgS5uzJpdUKHmc5oZPz0zJMR6wOlIpjt5s5elzL1CtMH2CQ/g==
-Date: Sun, 16 Jun 2024 18:02:31 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
- <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
- <atenart@kernel.org>
-Subject: Re: [PATCH net-next v13 05/13] net: ethtool: Allow passing a phy
- index for some commands
-Message-ID: <20240616180231.338c2e6c@fedora>
-In-Reply-To: <20240613182613.5a11fca5@kernel.org>
-References: <20240607071836.911403-1-maxime.chevallier@bootlin.com>
-	<20240607071836.911403-6-maxime.chevallier@bootlin.com>
-	<20240613182613.5a11fca5@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1718546705; c=relaxed/simple;
+	bh=6io00tG+BXXD/bjavj6Wc0ZSI2uXwoyQQXTJiFre6ec=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DEVFvP7uDwfR0Y1ML2Hz0O2ekDTwgByCpm1CkEQWKarhvzThonifsSLvW0fz+7iimSvMhBvWaGqV7oaEZIzGLQhjgmS6p5dQjmsQDDDiIx/idwnIPsNvrsQCR6HdnA/xz2dXVg1h0jevNjv+BLWf69L5lrzSaXhstS0tl7j6dCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7ebcbef22c8so443706739f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 07:05:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718546704; x=1719151504;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DLcaaWng2TQ/H+FaOLphi+VM/bKUwUbvtr6FoaGnNrI=;
+        b=W6hgI3rvxQx1nuGAhkISaiS62x5p7/vdNRrdOnutoAfQ+gWK9YP+a0ptifN93yyR8N
+         7RC7X6r5kByqT3/8uqkg6be4B7RrwUTez3ESSjvqNeWwq7DqIFBmsCnvHsTZ3NpxTnCo
+         lNKwqzXe7B1YAv8Dn2iDRbN5ptdt1yxwSUc+XUImu2Lj28DWhsM+hS14e7UCAPabilzU
+         EzH7VYN6yhk7JjR23R5zf38NvUDdya+pFhFbGhkmhGCLjm1etxSLcmE4AIMRGE/Pz4pI
+         ywdfQalDy4q+Dv1MaKBptkiiNaHtdAe5vz5svYi88vb4T7R1vGr6P04vlYChxfikR2Qp
+         zlcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVupBwE+/k13IOulttJSmeK2a1EU6cJkV0tAAkCDUCigAlhPNcNmlhyWDLO4T/mTCC7f8pyovEQ0nDYMxzSbkca3x9PYYQm+tVwu4fA
+X-Gm-Message-State: AOJu0YycSeYKj9NatX5tS8mIZAJm9XJbgriZ+RRTp8z5i5eZhpJCQUGJ
+	FPQ/fLrEBmkYy+zl+KKKxKN0lDt4PscrdzjiW7gw2W94DK/guzkcraQAwebg2g31XPSJdB9YuOw
+	dUGwXia+bwDfBAxIw/EZfbVGEfoDK5h2yDhAZBSaa2CXK8yT/K4Xciko=
+X-Google-Smtp-Source: AGHT+IGHyeFtvlt+ImnEUgnwm5dEInqksvU32QABvMV0/yconOjWp25/ZCqoFaDWtWWVmgcbKMIB0yhITZPgs6UzpCsDR8a/2Hhl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-Received: by 2002:a05:6602:150f:b0:7eb:78b4:faff with SMTP id
+ ca18e2360f4ac-7ebeb62c796mr20918739f.3.1718546703860; Sun, 16 Jun 2024
+ 07:05:03 -0700 (PDT)
+Date: Sun, 16 Jun 2024 07:05:03 -0700
+In-Reply-To: <00000000000041df050616f6ba4e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d05580061b025528@google.com>
+Subject: Re: [syzbot] [mm?] possible deadlock in __mmap_lock_do_trace_start_locking
+From: syzbot <syzbot+6ff90931779bcdfc840c@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
+	hawk@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, lizefan.x@bytedance.com, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netdev@vger.kernel.org, 
+	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Jakub,
+syzbot has bisected this issue to:
 
-On Thu, 13 Jun 2024 18:26:13 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+commit 21c38a3bd4ee3fb7337d013a638302fb5e5f9dc2
+Author: Jesper Dangaard Brouer <hawk@kernel.org>
+Date:   Wed May 1 14:04:11 2024 +0000
 
-> On Fri,  7 Jun 2024 09:18:18 +0200 Maxime Chevallier wrote:
-> > +		if (tb[ETHTOOL_A_HEADER_PHY_INDEX]) {
-> > +			struct nlattr *phy_id;
-> > +
-> > +			phy_id = tb[ETHTOOL_A_HEADER_PHY_INDEX];
-> > +			phydev = phy_link_topo_get_phy(dev,
-> > +						       nla_get_u32(phy_id));  
-> 
-> Sorry for potentially repeating question (please put the answer in the
-> commit message) - are phys guaranteed not to disappear, even if the
-> netdev gets closed? this has no rtnl protection
+    cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints
 
-I'll answer here so that people can correct me if I'm wrong, but I'll
-also add it in the commit logs as well (and possibly with some fixes
-depending on how this discussion goes)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16695261980000
+start commit:   36534d3c5453 tcp: use signed arithmetic in tcp_rtx_probe0_..
+git tree:       bpf
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=15695261980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11695261980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=333ebe38d43c42e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ff90931779bcdfc840c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1585acfa980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17bdb7ee980000
 
-While a PHY can be attached to/detached from a netdevice at open/close,
-the phy_device itself will keep on living, as its lifetime is tied to
-the underlying mdio_device (however phy_attach/detach take a ref on the
-phy_device, preventing it from vanishing while it's attached to a
-netdev)
+Reported-by: syzbot+6ff90931779bcdfc840c@syzkaller.appspotmail.com
+Fixes: 21c38a3bd4ee ("cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints")
 
-I think the worst that could happen is that phy_detach() gets
-called (at ndo_close() for example, but that's not the only possible
-call site for that), and right after we manually unbind the PHY, which
-will drop its last refcount, while we hold a pointer to it :
-
-			phydev = phy_link_topo_get_phy()
- phy_detach(phydev)
- unbind on phydev
-			/* access phydev */
-			
-PHY device lifetime is, from my understanding, not protected by
-rtnl() so should a lock be added, I don't think rtnl_lock() would be
-the one to use.
-
-Maybe instead we should grab a reference to the phydev when we add it
-to the topology ?
-
-> 
-> > +			if (!phydev) {
-> > +				NL_SET_BAD_ATTR(extack, phy_id);
-> > +				return -ENODEV;
-> > +			}
-> > +		} else {
-> > +			/* If we need a PHY but no phy index is specified, fallback
-> > +			 * to dev->phydev  
-> 
-> please double check the submission for going over 80 chars, this one
-> appears to be particularly pointlessly over 80 chars...
-
-Arg yes sorry about this one...
- 
-> > +			 */
-> > +			phydev = dev->phydev;  
-
-Thanks,
-
-Maxime
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
