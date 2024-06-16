@@ -1,163 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C29632;
-	Sun, 16 Jun 2024 01:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10670163A9B
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 01:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718501944; cv=none; b=TDgJ7M0gO5M5mm1rlGH6shgCiZT39BLsdgRezQl+FfUEQqlf+hLOLnMBoNyMfyhjSTsa+Z0qWbfmE7R21SfqJjqk9vdolw5iUBL0/NQxHtsm8hR9hCm8q6psShoEtvh0l6MKISf8QUJBz7X62hYuSkwPwnjAnXFU8LW+Z2znyVc=
+	t=1718502925; cv=none; b=ObXoUwWNpUhswEshKMBfCVo6FNIDrNpm9LPzTlvjBJYrA3J7WBNhJavQFct9ifzvnK/K0KpiwJ3piojCaZ9AjGUqQh72CreMRtt8MLPgzJdGOcJsC82HelfoFK4OyuF8AZsMbAPxBhNQeFlsMH11uvAgcbij372FD41xM98vkVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718501944; c=relaxed/simple;
-	bh=OELwDPSXR+ec8adlrMgSTNJxMzxflVutu+6fmx0M4Lk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gzl2dQfyjIiK4UulfF4NFOanTZdMdRkkS8hGFmaaZweXgfVXvvaBqnQOqwsdo2+kLZ5/hIeEQ0e4sWftGZ1bORMKBGocDM4OTw2siKIS8LttiZRTAg8E/2xxyaIoRUspnibPjXYMH/M8sHIFbhLF5YH6/uM+8r//t5UW2jInbDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqugS4+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718502925; c=relaxed/simple;
+	bh=jdmR4mbethnmbINzfYelG5bZ/4P0Pr0DSPkP3jxTYBE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LWwrYEj2a4mKgciA36ZvUbARSoGVfMJcinjm8CN6Agm2yAtNEGq2hFJrtyvIWG7XAOickUpZwCTuv0EgVderwZPl2t92X3fI+ewYRxGysTWapkIyngA1QQOqID47bjxK/mqsmoMo0kP+wyQX8zD9IxLaduptqld3MFtp0SNd258=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=SkdxgZBI; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqugS4+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB24BC116B1;
-	Sun, 16 Jun 2024 01:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718501944;
-	bh=OELwDPSXR+ec8adlrMgSTNJxMzxflVutu+6fmx0M4Lk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nqugS4+lZ3JyfLCGkCi+RKcW85hGTHZoGv7vl0gQZ8Qhi9tYkXDht0tM9asmkH9UA
-	 AsRCOL1MLTkEsWM++7CuZjQAlg43t946sFAT+l3emFjHCSL3GvnrL5eSvyVFmeXm57
-	 tL/PjmCOK7o3ZmK3/NPEDxiFAhMtzOLqaOu5ILRICKwdphPF2T5A54erNmkXEplkSJ
-	 /WcbETeEZKt/y+C8M2wx/AjLHfIvJ6ju2H8Y0yRKoG+YiMH1ocD0T90KiX7KFUkgk4
-	 /NOiXJj+t4/gqhvh/+dpXBLVmPeOgKGZuoy8DTOsB2Ve/lfL7y9JSXg1my/k/L7DwG
-	 No0VItp5RxLdw==
-From: Chao Yu <chao@kernel.org>
-To: brauner@kernel.org,
-	viro@zeniv.linux.org.uk,
-	akpm@linux-foundation.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chao@kernel.org,
-	stable@vger.kernel.org,
-	syzbot+3ae6be33a50b5aae4dab@syzkaller.appspotmail.com
-Subject: [PATCH] hfs: fix to initialize fields of hfs_inode_info after hfs_alloc_inode()
-Date: Sun, 16 Jun 2024 09:38:41 +0800
-Message-Id: <20240616013841.2217-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="SkdxgZBI"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-705f0c54846so662487b3a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2024 18:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tenstorrent.com; s=google; t=1718502923; x=1719107723; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNPhbe4CKhTW6lWgdp189/o19T4GZdsybtYcMCrAtjY=;
+        b=SkdxgZBI32XHDadUvsgtL5kEtN0sVi8/KDCk1hyGOK+opUkDOljg/fKCWGTNO5qxwH
+         qvj253Y/gaZ/bie9jA68YXQb6gKxdZDqmaZs7YwNmHGmNBm2PCGAZLwta5f36gD2VoN0
+         ht3bYxAsar1c/+JtzB2erVY46eWeSMpuVzTBGXlaMrzAcpTd+yNDE+EtP/tSCMGLyxYL
+         M45WLo+0DPqiXMCvXBrTYr/Od2BrM4VM2093cLYgOk6pm+9gwBnoQFRl+m4Qd4PfnUKc
+         XBUoM8MaP8kK8CqZ797UmZmfoO+AaQs+S2PvLtJQEJt+PhmpM2ZAIj5AP1SF7Jd4oRsg
+         tLpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718502923; x=1719107723;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lNPhbe4CKhTW6lWgdp189/o19T4GZdsybtYcMCrAtjY=;
+        b=BbiVMk41iV1GdrRWCVzuqBV3/zyudbzuW0IgCu8BJtHJYMsoisrSAozAW9/72EsWn5
+         KebPUHk+BCngoY1mz58dDu2xDZV3+qiHULyVlXtpU+ntLu3w6IHoEeEAJt2sCbw7eSdC
+         bJH5jAVG/A/zURU+g81YCHEO/BGXFT5FewDTu+qAFKUd3GAAG8EOxmtu2CzCnzS+ZywT
+         XJoba3/oIo9aBAtFB2+9FFkpvAD3oxRdMru6kcgblKLBN+IsW1VlrB3emozEEUQChSkZ
+         XBURrOO2sREFeksTFkWKTfm6KyM0ocEo2ZFTMoMEXFvo1fXwccbzqfCPb5qo15G9yPsa
+         dq5g==
+X-Forwarded-Encrypted: i=1; AJvYcCX/K5QXtAsXYZXkODMC27f22DMDW0QTdDZnqKIXNMt+zAhS1sPGzzbncdwMCOWi1cu5ff8yqnvQGE498DjgjHKSqG6wY//CeSvCrCyJ
+X-Gm-Message-State: AOJu0YwBYEkWwm4zvE0QgiVKvWHWkTDlUI3mVfbK8yDMjOS1OYW5HLBl
+	7Xr5JqfgVcvPJ2fP3tlJLRUdfXUZQf2ufO5SEgok8gmFP3slmLpK2vsOCs9Cb3K3YU4YHW0s/E7
+	P
+X-Google-Smtp-Source: AGHT+IG2W5IPRHAG1kGoyujjDgtV/z+pDbrlN9J1y1wQMn05h74BhHu6aBbrwBiwAJOG2I5i3s17mA==
+X-Received: by 2002:a05:6a20:d80d:b0:1b8:3f6d:3037 with SMTP id adf61e73a8af0-1bae7ea0f63mr7711032637.18.1718502923295;
+        Sat, 15 Jun 2024 18:55:23 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:1c2:1802:170:1cea:28dd:2ee0:e8e5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4a769aedbsm8751201a91.43.2024.06.15.18.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Jun 2024 18:55:22 -0700 (PDT)
+From: Drew Fustini <dfustini@tenstorrent.com>
+Date: Sat, 15 Jun 2024 18:54:32 -0700
+Subject: [PATCH 3/6] riscv: dts: thead: Add TH1520 AP_SUBSYS clock
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240615-th1520-clk-v1-3-3ba4978c4d6b@tenstorrent.com>
+References: <20240615-th1520-clk-v1-0-3ba4978c4d6b@tenstorrent.com>
+In-Reply-To: <20240615-th1520-clk-v1-0-3ba4978c4d6b@tenstorrent.com>
+To: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, Yangtao Li <frank.li@vivo.com>, 
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Drew Fustini <dfustini@tenstorrent.com>
+X-Mailer: b4 0.12.3
 
-Syzbot reports uninitialized value access issue as below:
+Add node for the AP_SUBSYS clock controller on the T-Head TH1520 SoC.
 
-loop0: detected capacity change from 0 to 64
-=====================================================
-BUG: KMSAN: uninit-value in hfs_revalidate_dentry+0x307/0x3f0 fs/hfs/sysdep.c:30
- hfs_revalidate_dentry+0x307/0x3f0 fs/hfs/sysdep.c:30
- d_revalidate fs/namei.c:862 [inline]
- lookup_fast+0x89e/0x8e0 fs/namei.c:1649
- walk_component fs/namei.c:2001 [inline]
- link_path_walk+0x817/0x1480 fs/namei.c:2332
- path_lookupat+0xd9/0x6f0 fs/namei.c:2485
- filename_lookup+0x22e/0x740 fs/namei.c:2515
- user_path_at_empty+0x8b/0x390 fs/namei.c:2924
- user_path_at include/linux/namei.h:57 [inline]
- do_mount fs/namespace.c:3689 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount+0x66b/0x810 fs/namespace.c:3875
- __x64_sys_mount+0xe4/0x140 fs/namespace.c:3875
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-BUG: KMSAN: uninit-value in hfs_ext_read_extent fs/hfs/extent.c:196 [inline]
-BUG: KMSAN: uninit-value in hfs_get_block+0x92d/0x1620 fs/hfs/extent.c:366
- hfs_ext_read_extent fs/hfs/extent.c:196 [inline]
- hfs_get_block+0x92d/0x1620 fs/hfs/extent.c:366
- block_read_full_folio+0x4ff/0x11b0 fs/buffer.c:2271
- hfs_read_folio+0x55/0x60 fs/hfs/inode.c:39
- filemap_read_folio+0x148/0x4f0 mm/filemap.c:2426
- do_read_cache_folio+0x7c8/0xd90 mm/filemap.c:3553
- do_read_cache_page mm/filemap.c:3595 [inline]
- read_cache_page+0xfb/0x2f0 mm/filemap.c:3604
- read_mapping_page include/linux/pagemap.h:755 [inline]
- hfs_btree_open+0x928/0x1ae0 fs/hfs/btree.c:78
- hfs_mdb_get+0x260c/0x3000 fs/hfs/mdb.c:204
- hfs_fill_super+0x1fb1/0x2790 fs/hfs/super.c:406
- mount_bdev+0x628/0x920 fs/super.c:1359
- hfs_mount+0xcd/0xe0 fs/hfs/super.c:456
- legacy_get_tree+0x167/0x2e0 fs/fs_context.c:610
- vfs_get_tree+0xdc/0x5d0 fs/super.c:1489
- do_new_mount+0x7a9/0x16f0 fs/namespace.c:3145
- path_mount+0xf98/0x26a0 fs/namespace.c:3475
- do_mount fs/namespace.c:3488 [inline]
- __do_sys_mount fs/namespace.c:3697 [inline]
- __se_sys_mount+0x919/0x9e0 fs/namespace.c:3674
- __ia32_sys_mount+0x15b/0x1b0 fs/namespace.c:3674
- do_syscall_32_irqs_on arch/x86/entry/common.c:112 [inline]
- __do_fast_syscall_32+0xa2/0x100 arch/x86/entry/common.c:178
- do_fast_syscall_32+0x37/0x80 arch/x86/entry/common.c:203
- do_SYSENTER_32+0x1f/0x30 arch/x86/entry/common.c:246
- entry_SYSENTER_compat_after_hwframe+0x70/0x82
-
-Uninit was created at:
- __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4590
- __alloc_pages_node include/linux/gfp.h:238 [inline]
- alloc_pages_node include/linux/gfp.h:261 [inline]
- alloc_slab_page mm/slub.c:2190 [inline]
- allocate_slab mm/slub.c:2354 [inline]
- new_slab+0x2d7/0x1400 mm/slub.c:2407
- ___slab_alloc+0x16b5/0x3970 mm/slub.c:3540
- __slab_alloc mm/slub.c:3625 [inline]
- __slab_alloc_node mm/slub.c:3678 [inline]
- slab_alloc_node mm/slub.c:3850 [inline]
- kmem_cache_alloc_lru+0x64d/0xb30 mm/slub.c:3879
- alloc_inode_sb include/linux/fs.h:3018 [inline]
- hfs_alloc_inode+0x5a/0xc0 fs/hfs/super.c:165
- alloc_inode+0x83/0x440 fs/inode.c:260
- new_inode_pseudo fs/inode.c:1005 [inline]
- new_inode+0x38/0x4f0 fs/inode.c:1031
- hfs_new_inode+0x61/0x1010 fs/hfs/inode.c:186
- hfs_mkdir+0x54/0x250 fs/hfs/dir.c:228
- vfs_mkdir+0x49a/0x700 fs/namei.c:4126
- do_mkdirat+0x529/0x810 fs/namei.c:4149
- __do_sys_mkdirat fs/namei.c:4164 [inline]
- __se_sys_mkdirat fs/namei.c:4162 [inline]
- __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4162
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-It missed to initialize .tz_secondswest, .cached_start and .cached_blocks
-fields in struct hfs_inode_info after hfs_alloc_inode(), fix it.
-
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+3ae6be33a50b5aae4dab@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-fsdevel/0000000000005ad04005ee48897f@google.com
-Signed-off-by: Chao Yu <chao@kernel.org>
+Link: https://openbeagle.org/beaglev-ahead/beaglev-ahead/-/blob/main/docs/TH1520%20System%20User%20Manual.pdf
+Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
 ---
- fs/hfs/inode.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/riscv/boot/dts/thead/th1520.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
-index 8c34798a0715..744e10b46904 100644
---- a/fs/hfs/inode.c
-+++ b/fs/hfs/inode.c
-@@ -200,6 +200,7 @@ struct inode *hfs_new_inode(struct inode *dir, const struct qstr *name, umode_t
- 	HFS_I(inode)->flags = 0;
- 	HFS_I(inode)->rsrc_inode = NULL;
- 	HFS_I(inode)->fs_blocks = 0;
-+	HFS_I(inode)->tz_secondswest = sys_tz.tz_minuteswest * 60;
- 	if (S_ISDIR(mode)) {
- 		inode->i_size = 2;
- 		HFS_SB(sb)->folder_count++;
-@@ -275,6 +276,8 @@ void hfs_inode_read_fork(struct inode *inode, struct hfs_extent *ext,
- 	for (count = 0, i = 0; i < 3; i++)
- 		count += be16_to_cpu(ext[i].count);
- 	HFS_I(inode)->first_blocks = count;
-+	HFS_I(inode)->cached_start = 0;
-+	HFS_I(inode)->cached_blocks = 0;
+diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+index d2fa25839012..10a38ed55658 100644
+--- a/arch/riscv/boot/dts/thead/th1520.dtsi
++++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+@@ -5,6 +5,7 @@
+  */
  
- 	inode->i_size = HFS_I(inode)->phys_size = log_size;
- 	HFS_I(inode)->fs_blocks = (log_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/thead,th1520-clk-ap.h>
+ 
+ / {
+ 	compatible = "thead,th1520";
+@@ -161,6 +162,13 @@ soc {
+ 		dma-noncoherent;
+ 		ranges;
+ 
++		clk: clock-controller@ffef010000 {
++			compatible = "thead,th1520-clk-ap";
++			reg = <0xff 0xef010000 0x0 0x1000>;
++			clocks = <&osc>;
++			#clock-cells = <1>;
++		};
++
+ 		plic: interrupt-controller@ffd8000000 {
+ 			compatible = "thead,th1520-plic", "thead,c900-plic";
+ 			reg = <0xff 0xd8000000 0x0 0x01000000>;
+
 -- 
 2.40.1
 
