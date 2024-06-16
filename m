@@ -1,60 +1,61 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4650D179641
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 13:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB64188CCA
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 13:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718543979; cv=none; b=JglbK2BS/wmFP2dwJS4Lay//UJ+Te4263i+ZmsryOIq/vzlu0hbkPVa/kNKsgAtQhC3Nmol7yduI+RK2iBMAgknuvDYsCewgB2DKMVoMaVFHiQAMXmH0U0H3EtrXMd7k20Q4F4LC5uTZHzm8b71bLolfyyDlUBu5+t6ksg0FnMI=
+	t=1718543981; cv=none; b=NWk0LkITNVPZSsa/O9OSlvlyz/kb1Be8nhP3UZ5T3Bk7Pv8kdDKnkWcvfRvpYah65D8A1uuIZbKkDK4Gz3hzLrjNGJ8wzIifR9GLu8DGcquf6rpJmFRrAAaCg1TdaNHNsZRaMD1JTkJ3rcqZAGwXvo9CByQqdsfpB8MepRHd9bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718543979; c=relaxed/simple;
-	bh=KsuesC+AIOWnKwWhlFMQqxP1c7Aqz3KwBjkPKaoEn4s=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B19Z6Dq9W55y1GGb4LLkZnUhAh9asrE/LXyBoJmccWkX2JtOUL26aTmjVk63i8+O0uzgJG5e5x6N0abUmY/GV/1ft8cvPYGU3902sXgMgM9OVN3sfrmt0SJOUnJ/ZHFlwvUlbhkgROOvHEgccyVNAfHQZdzmHPktt0PttRmO7OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s1TC7hss; arc=none smtp.client-ip=209.85.208.53
+	s=arc-20240116; t=1718543981; c=relaxed/simple;
+	bh=dzjm2gBTdMjl6mgRsFtrUQDBw9hhYKgIAMant8cvlAI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GYGV7FQ7bwmHpq+og3GQn0dcKqnJP9fWA0T7uvwDsqktyoXOI1sHkNEbLqQKEuZexRN7/Ui/rA4+Pqm05v+7CZpifr5y/5Mo0sJwllnz5wRKMF9l6EcRd+XBNQ+mKJGv6epch9pQLmaQRrVQ2HBQJCXzaxb+ZOTZdrKnYtqoElo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b9ElPHIX; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1TC7hss"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57c7681ccf3so4089629a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 06:19:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b9ElPHIX"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so4052508a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 06:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718543974; x=1719148774; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9RC7qP2hOgwXMsoy3J2wjG1fwHEObGM33Zw9CpfKZU=;
-        b=s1TC7hss0hKZrvcAMyDEMub+eNRspgcAIOaNSi8425BgJfHwYBqoZ9l78TF75bWFt7
-         JyjUxbH1ypuEU1oKgk3AAFX3LUmZAWzUOUhy7nPs1IT0EhUfe17cebJxEG//LY37Evty
-         oCkGTZLxwdo/kb98ihUyH3WtkWEIRC7zgYBKVYaBVSREbnc0Hv1VqEZi0Rvn9FqTziIZ
-         1ZkaL83rNReErwMTyuRaamI0qNoDFQ6ZeaWj0J9anXnRtE/gA6elK/BnV/WtcLStcaiW
-         wFcwj1CnoQxyAxg7YwV0Keb117UnAbu+hqiwehpQBWSX5ErJMLQUgmbVsFYskf1lrAx2
-         PsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718543974; x=1719148774;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1718543978; x=1719148778; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y9RC7qP2hOgwXMsoy3J2wjG1fwHEObGM33Zw9CpfKZU=;
-        b=UMZLxn6SzrFeXuH4HTciUSqT4EeY9S3gsED7bbtgDjw9J7LY/6VyI2v7XtQdKEkoeo
-         B9d0v6LaV/sf8L/eCaRYbBwM5nKL30IKSvavr20BOlybWcasFVKMvc+A4wPIX4dkdkX7
-         tJ8RkVa9P3ChrfIgVC6aZgVbeXnoyex+3zAX5ZyjzhuroIuT9FgOBNL3iYikNo+TeRYa
-         MrG9PPavMx+yRwFSYO/ilerCxFfIlOj88wN2C0vAr/KhVOf/qffdcwvItZMSXyZ50n27
-         aqFNJDdPBjm2kGF+BMgBoFcPUq/uuByzsjBRoRKmZQuNXAmhjODoFBvkKZpwRUGKk0XB
-         Qwpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrwmOQst4BylyYNtm2sL9xcOo44gb8GzoKN1t9yiWzU8AKpfb4lVdEHraNplxaZgq2zaHskm7gn8+dwIAEo+VhhbmBv8nOktrweQT1
-X-Gm-Message-State: AOJu0YyP9LBS3eG6cV7PsUVX03s8HY6oyTy6L4kVcPw2IXARt98mawVc
-	HVJnmib1Lc2fyKFa4NQEaTEjmI/RiXf/6lzxZyzleO4c1or3ulT8unJeI5q28Ms=
-X-Google-Smtp-Source: AGHT+IGMI/wzpjxIzGob+oc4c+5L+0sBURQOTzW3e+I9pMt6Aj9Zo75Lc2WpGk2lBDIv5UBbbO8UMA==
-X-Received: by 2002:a50:8714:0:b0:57c:ab84:1095 with SMTP id 4fb4d7f45d1cf-57cbd652420mr4227643a12.7.1718543974453;
-        Sun, 16 Jun 2024 06:19:34 -0700 (PDT)
+        bh=S9ZLKoGKyA/Fzir83VT6KMHwP0QAfjlVUV43lkT6aLM=;
+        b=b9ElPHIXhGYplvIOWN2e2Od410TaR5JO7iD1Pahzo3K3ikFaTZSD1WDR/Mr1vptCWK
+         H6qvoOitOpSrwSeA9bNMbnXh4i9MirJHoTtqT60fei17rkxxGaQSqt3T4cuMg51uTdNB
+         b1YjyEsC8RSNa6T6P764pfq6zq2VqvMrSCGY7o5UvoMPtPW0MCNfAWOZ0YZqTJXOTNc+
+         ND5lplGxQFtcrZkjIaLcfQAix7NWyILYmJxc3N0eWhoxloL47HskAOLgaCjSvlofPZJl
+         tk7Ej5hpv/6luUXJ5xH2reeDuQ/XsrVf1Ccazx2qSxSmFScsCGZdVqvho3UVO/5vRqW9
+         R4WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718543978; x=1719148778;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S9ZLKoGKyA/Fzir83VT6KMHwP0QAfjlVUV43lkT6aLM=;
+        b=cJKbls2ZPeKib+blmpDoMq8vE9KLYdGm2KAC38PkXYvXTMPKVZV4MLyEAtihI5dVKL
+         R8L7JDuDEeRBXFEqmWgnzSSG2Z9VoPc7lLPzxzrjBBT4uYWBNJiuoqNuCOkLZlSbyxrz
+         /nsyNflRiwDsBdssyemk/cfSzU4QeT1HYBwzMc2nztFU3ubY5v+Cgck3+GkFDATPwg8z
+         jN6hYZbsVyt67QsmxkJyLdFv/2q96nt9zb989mXB+7ctBm29yo1Cvhl80YvG5f/9KWcx
+         933vB1JY4LnZKlIwI1Nm1U5t9pEG0/18Y/qPlse9YjYkKpGDJx12xrHUUkHplkLkgVW4
+         xzrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW31FTA+Y7QJsivjrViuBJAMOZUrIVDOcIDmynMRLaYasPMM2Km2dWqe5jjvcttAPtvqNWSisUDm2lmdl9aEuJC22oLaJ35nm6D2220
+X-Gm-Message-State: AOJu0Yz4FUkAGWPvYzbvtkk4JAAn4NEkamJLIS8dS3UBWK4+tjo0T/Kp
+	jtB4Z8B+WQVoS5KV9vJXAPn2K0zKQZrcQSTB0Y6rNqT7EkB0uGEz03VLY3wuRSw=
+X-Google-Smtp-Source: AGHT+IHO9RnbHcazsIsMGMs7VyXCSngI/q7B/q3+4iSsAbqu/mLW9gJSoHV2U3Z1C3VdPOojDxIbeg==
+X-Received: by 2002:a50:9fc4:0:b0:57c:8027:534d with SMTP id 4fb4d7f45d1cf-57cbd69d9b8mr5103771a12.27.1718543977636;
+        Sun, 16 Jun 2024 06:19:37 -0700 (PDT)
 Received: from [127.0.1.1] ([78.10.207.147])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb7438815sm5099603a12.80.2024.06.16.06.19.32
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb7438815sm5099603a12.80.2024.06.16.06.19.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Jun 2024 06:19:33 -0700 (PDT)
+        Sun, 16 Jun 2024 06:19:37 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 0/7] dt-bindings: mfd: syscon: Document more compatibles
- and require simpe-mfd description
-Date: Sun, 16 Jun 2024 15:19:20 +0200
-Message-Id: <20240616-dt-bindings-mfd-syscon-split-v2-0-571b5850174a@linaro.org>
+Date: Sun, 16 Jun 2024 15:19:22 +0200
+Subject: [PATCH v2 2/7] dt-bindings: soc: sprd: sc9863a-glbregs: Document
+ SC9863A syscon
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFjmbmYC/33Nyw6CMBCF4Vchs3YMbUWCK9/DsKj0wiTYkk5DJ
- IR3t5K4dfmfxXc2YJvIMtyqDZJdiCmGEvJUwTDq4C2SKQ2ylpe6ES2ajE8KhoJnfDmDvPIQA/I
- 8UUbVWqm67tpIZaAQc7KO3gf/6EuPxDmm9XhbxHf9wd1/eBFYo9au2OVBKH2fKOgUzzF56Pd9/
- wAhMnwyyQAAAA==
+Message-Id: <20240616-dt-bindings-mfd-syscon-split-v2-2-571b5850174a@linaro.org>
+References: <20240616-dt-bindings-mfd-syscon-split-v2-0-571b5850174a@linaro.org>
+In-Reply-To: <20240616-dt-bindings-mfd-syscon-split-v2-0-571b5850174a@linaro.org>
 To: Orson Zhai <orsonzhai@gmail.com>, 
  Baolin Wang <baolin.wang@linux.alibaba.com>, 
  Chunyan Zhang <zhang.lyra@gmail.com>, 
@@ -85,110 +85,95 @@ Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3459;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1897;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=KsuesC+AIOWnKwWhlFMQqxP1c7Aqz3KwBjkPKaoEn4s=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmbuZZ4iKC72/2IrXQ++FeWFww/PEerhVXjYS9F
- gps/xdFZaaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZm7mWQAKCRDBN2bmhouD
- 13DLD/9rH6dQNL9jR/EbdncCtbVy7XfBgF23WzTSQ+Zetujhw6InK0iBU9oEm1RSW3H741evTzS
- 1a/HpapRRfre/jtZ28lyZFE5wDJtLVowZIvWiV2jPC7wUUKnfnGG6xy4y+UO8W5ajNybtQ541QU
- yot4HM7h7n+P3OEtjlAu/pcnQTY04MxIgmVemOiNdK5wVaachnub0WN1lw7kq89xWlOE8fu3uGF
- tnpdejWgoKJJmv7sGMTWEAZQc8OHoTyKB7yx1oohIa7Cs6hJ8sbOkke3QMD5t3NWu73TKtdH5Nb
- 859EmTDIORS+lqwHissSo564KiYjXD9R8rP9RbHlnm8z6Ei9M9c9PjRGCumfhcwUeAnl4RMUmyG
- 2KVhL94LusXQxhLgF7VzRrTd0kWeET5MXGiMPNXOSGONX7hLTF325XYNnwXD422YRnFsz5jeZ3E
- sYlIHRRhBcSjhWfbP0Qp4HBS26bwIjW0poIo71YXoa1SNEwQoz11kT0lUmeECJlvrQaemHs6gcc
- QaTo6mmP7lI/Zt3UkwBNGkzXz9kdIlb71FNORzwYJgARNszOWJSOCq1bHLiwfjR4gYkqiOUUphs
- 9BR9xpFHp42gZ2DHz2Ura9j0DlxBEcJ5gszm3JLaES0vrHheDY/DuIzOhANOqbiCgpIg5vV4zYw
- 5vzsTOP0J6u1U5Q==
+ bh=dzjm2gBTdMjl6mgRsFtrUQDBw9hhYKgIAMant8cvlAI=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmbuZfiEg4Htf73PryBDmHhre04Usi0iIsta0KI
+ HauaVoH5/aJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZm7mXwAKCRDBN2bmhouD
+ 1wUND/4zJem/xT2bP0jF8QkDD0M/Aj7W3bmFEdpYj9UtYubYLZSSMxUk4qKXCk6kLeYVahA5rPC
+ h62lhRFq1txEAblixLgsn+TiseY/cWNGESVoMdjYApbkXurI/OTfmE1WkRvJdzIHZ1lDhBoxFbp
+ mAC+A90V0a9L5ylVBxj/TJsS2RT5F8TBkAn3mpkxDSdrBzOz41Hm1DsHPF8sVjKqikmJy7AfK8K
+ BiWWaFi/I37y1ETVqfdhc92c8+zfMh5lTZ2TSQDiYoyiwihVNfQNbzEylvUQ3945l9sD/845fGL
+ yZmIrK/dseAxgAMGcyKPy4j0YmS+fZTA4pohSsP3EBxoJYXriElXyXwKCAwaVIc2gKrU/uuuaPx
+ gnNw324jOnvUWx1jchGv8Qu/wfgxoYDvYt1oXdsY/ya/VtOr7mFMxdxCEkKOAifX0ANsDB2fKdH
+ SoXo6LgbDbZNoHzO8bIPOFPx6reVkj2cjnjkb35WY+2ui3BMn93C432nN91zVnS+ikyn70G/1W+
+ Lrx8HNeARldbkou56Yt1wyX54daffXOPE28BtlNeL8//88syhIkTtJfUT+DRS8b+VqYs3eTojuw
+ qt6esBgduNadtkatmGFC2pTnRlPdvvYDugVj1rpId0PCUt5rVqqAvw8i38jvspVgBfBn6n4Ayek
+ E9lvLWTzMeLinfw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi,
+Document sprd,sc9863a-glbregs compatible already used in DTS and other
+bindings example.
 
-Dependency
-==========
-Rebased on Lee's MFD tree, because dependency is there already:
-https://lore.kernel.org/all/171828959006.2643902.8308227314531523435.b4-ty@kernel.org/
-
-Merging
-=======
-Preferrably everything via MFD tree (file/context dependencies).
-
-Changes in v2:
-===================
-- Add acks
-- lgm-syscon: add ranges to binding and example
-- syscon.yaml: add big select with all compatibles for older dtschema
-- Link to v1: https://lore.kernel.org/r/20240519-dt-bindings-mfd-syscon-split-v1-0-aaf996e2313a@linaro.org
-
-Description/problem
-===================
-Simple syscon nodes can be documented in common syscon.yaml, however
-devices with simple-mfd compatible, thus some children, should have
-their own schema listing these children.  Such listing makes the binding
-specific, allows better validation (so the incorrect child would not
-appear in the simple-mfd node) and actually enforces repeated rule for
-simple-mfd devices:
-
-  "simple-mfd" is only for simple devices, where the children do not
-  depend on the parent.
-
-Currently the syscon+simple-mfd binding is quite broad and allows
-any child or property, thus above rule cannot be enforced.
-
-Solution
-========
-1. Split the syscon.yaml binding into common syscon properties, used
-   potentially by many bindings, and only simple syscon devices (NO
-   simple-mfd!).
-2. Move some known simple-mfd bindings from syscon.yaml to dedicated
-   files.
-
-This patchset might introduce new dtbs_check warnings for devices having
-simple-mfd and being part of syscon.yaml previously. I fixed some of
-them, but probably not all.
-
-Best regards,
-Krzysztof
-
-To: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Lars Povlsen <lars.povlsen@microchip.com>
-To: Steen Hegelund <Steen.Hegelund@microchip.com>
-To: Daniel Machon <daniel.machon@microchip.com>
-To: UNGLinuxDriver@microchip.com
-To: Nishanth Menon <nm@ti.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (7):
-      dt-bindings: mfd: syscon: Drop hwlocks
-      dt-bindings: soc: sprd: sc9863a-glbregs: Document SC9863A syscon
-      dt-bindings: soc: intel: lgm-syscon: Move to dedicated schema
-      dt-bindings: soc: microchip: sparx5-cpu-syscon: Move to dedicated schema
-      dt-bindings: soc: ti: am654-serdes-ctrl: Move to dedicated schema
-      dt-bindings: mfd: syscon: Split and enforce documenting MFD children
-      dt-bindings: mfd: syscon: Add APM poweroff mailbox
+ .../bindings/soc/sprd/sprd,sc9863a-glbregs.yaml    | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
- .../devicetree/bindings/mfd/syscon-common.yaml     |  72 +++++
- Documentation/devicetree/bindings/mfd/syscon.yaml  | 306 ++++++++++++---------
- .../bindings/soc/intel/intel,lgm-syscon.yaml       |  56 ++++
- .../soc/microchip/microchip,sparx5-cpu-syscon.yaml |  49 ++++
- .../bindings/soc/sprd/sprd,sc9863a-glbregs.yaml    |  55 ++++
- .../bindings/soc/ti/ti,am654-serdes-ctrl.yaml      |  42 +++
- 6 files changed, 457 insertions(+), 123 deletions(-)
----
-base-commit: fe6ba540b2ce777eb4f59991c3ef20ad8a319a1a
-change-id: 20240517-dt-bindings-mfd-syscon-split-37e23996523d
+diff --git a/Documentation/devicetree/bindings/soc/sprd/sprd,sc9863a-glbregs.yaml b/Documentation/devicetree/bindings/soc/sprd/sprd,sc9863a-glbregs.yaml
+new file mode 100644
+index 000000000000..49add564e5e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/sprd/sprd,sc9863a-glbregs.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/sprd/sprd,sc9863a-glbregs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SC9863A Syscon
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    items:
++      - const: sprd,sc9863a-glbregs
++      - const: syscon
++      - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  ranges: true
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++patternProperties:
++  "@[0-9a-f]+$":
++    $ref: /schemas/clock/sprd,sc9863a-clk.yaml
++    description: Clock controllers
++
++additionalProperties: false
++
++examples:
++  - |
++    syscon@20e00000 {
++      compatible = "sprd,sc9863a-glbregs", "syscon", "simple-mfd";
++      reg = <0x20e00000 0x4000>;
++      ranges = <0 0x20e00000 0x4000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      apahb_gate: apahb-gate@0 {
++        compatible = "sprd,sc9863a-apahb-gate";
++        reg = <0x0 0x1020>;
++        #clock-cells = <1>;
++      };
++    };
++
++...
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.43.0
 
