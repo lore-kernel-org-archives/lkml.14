@@ -1,115 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244D949628;
-	Sun, 16 Jun 2024 18:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D8149632;
+	Sun, 16 Jun 2024 18:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718562914; cv=none; b=HWx8maAAKXt/KTI1A1NHfiskNrxt/Y/ZYub0KXPXyQUxw2RB6u1rRIBA2EQpfCNMy4BhHkcSXrDpKZNLnWP/vI7B672s0WdRnWRKRKgpTr9Lq3GgIl/ee/h/sc4nLCDuN63lX+Z02jez1cTpN1hb7+WubrRe7+0elMmC99+Z6FE=
+	t=1718562934; cv=none; b=bGDJiHTtGNySHLyJsY54G8fAbfOczl07rRQjMUqKyEYiLgGQm213dole9cKkssJ/EqJ9uW6LKFF7qzT9CIZWAsA/b2/1YwisVr6ZzFif4ZEy0Dh03T/hVWAYtTGgrTQdpx01MK6SExLTaN5jrgCDm58yq65NDLwDa//OKrrIQ+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718562914; c=relaxed/simple;
-	bh=HeaXwg9XsZN4AFWulu71KeS/rFUqgBiwU0nfkKkuwfk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rRTeyaZPgYSYZhp4DZS+PmiaFZ4Kbq5q7aHMSLu3vgzKeOyZMTQC8QKUGKHIQ1CqsEFBNbaGLHgkOTcnBBI8EQIcX2HBJGYKuf7hYXO4eNwaz/f3p4be4tlawup8BVtfTOziZ7WyIQvXUG4InGpvI01pFxr/pOKeJcgR1DcwpDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qI1As9Ll; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1718562934; c=relaxed/simple;
+	bh=cCKxq9tl4NR2OLs8Y2/gZJnVAyUm8QjK2yLyN/vAu8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DcUlKhUmmfrb6bKANizKZskAejWAHW20aze1CRPY8hrBETY/4zDOr5hoBMZ86IehrMYAag8vCiv00hX6tcfjFjeJL/BU1qXnnb23kLUcMpxsWVI1ededmeqYDankBtb1yfrCnFl2Y76pbQc2sSOkWHN3NW9BN7UCaa+MVMek9SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7bp7BwV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qI1As9Ll"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1718562903; x=1719167703; i=w_armin@gmx.de;
-	bh=8cMcCHyj7SK1ospdikUHJVnpM8ILHd4al8fLJol3GzM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qI1As9Ll1/tvRbTZgJdnuFPbLtfiE85bOr/OkZqTc/LbifX3QPVSm6q+VwLIj1wr
-	 41X0hG2+67JUItVy5T36o8kEMIPZIv09reGsdVe3WbiQpRBtBHyPRluM/GU2jmDmC
-	 YmbdcBEg8d9hQPXJaWyICv7kWkD6GPlex+i3KfPEz1ElyD1WXrrFrvgRS8ZGpFaWR
-	 V+ytyvZtBo3nvsUsyO7YiefrvtedzLTcs2FApjC5bwZUWhiyROCJeo2PgL9g3qQl/
-	 nnusFXUBYt/CeidynlqQshzdJa8bMm7XlK1lt15gnRM57Vj8qf2yGPhslHRpADYdO
-	 +958YmJwNPiacC/DkA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N7QxB-1sShuE2tHJ-00rjtI; Sun, 16
- Jun 2024 20:35:03 +0200
-Message-ID: <0f361860-01d7-4f41-8b15-f616c652ec32@gmx.de>
-Date: Sun, 16 Jun 2024 20:35:02 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7bp7BwV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4654FC2BBFC;
+	Sun, 16 Jun 2024 18:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718562933;
+	bh=cCKxq9tl4NR2OLs8Y2/gZJnVAyUm8QjK2yLyN/vAu8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V7bp7BwVBB+vOxSNNOqc7w2dV0jNV26la3je0nwV8+sOGAfTTTSN6fWzPbOZ1r9LN
+	 F5YDnRrFg/9VqG2pQ5kSXyp5SFUti5qSJmKACyDsEoJkFfth8j1rpkrl0kKH7L+Wcc
+	 K+zAsBuCfGvqbzCK5OodepGgGt/ZfKu2N7/uikAJ0r4qDnpYxgAxMOLopxik5AewCb
+	 CMlEUkR18HKUnS//JSaWImZtEqqn02KAo0H6Jhaf3ThjSXySyUUoTZSUoerLAykQPh
+	 +CqyiSBJscTVpketohBAOVWXUTG6uXGow0zuEzBe5aTaKxbQhLW2WOWScoLBvrwFhZ
+	 KhZckyCD1a4tg==
+Date: Sun, 16 Jun 2024 19:35:29 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jesse Taube <jesse@rivosinc.com>
+Subject: Re: [PATCH v1 0/9] riscv: add initial support for SpacemiT K1
+Message-ID: <20240616-exorcism-computing-e11e26084a62@spud>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] platform/x86: lg-laptop: Support 2024 models
-From: Armin Wolf <W_Armin@gmx.de>
-To: matan@svgalib.org, agathe@boutmy.com
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240606233540.9774-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20240606233540.9774-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:iubwjF+P7X7lTi41OuA+3Xk8Q7BpBTy5Qb47VqXIZR4DRGgzRBz
- qBaMv4qjU/+2XCB11o1YGrOx5UoGzTbDXtpb5/YvYh72XsMERDqHufni+AiEEeX1BKOGqXh
- 8d/uMQNsjxW35koebJaQ23jJyVO3JPxLfW5YDdR7IHwqan+MYpa9KRr+gAh84rm0F9yWJKM
- HPoQ8GGegphUynKGaIXYA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8ZikU1DsVqY=;adJA1e9rr04wzH107dSje/v3rkb
- KTuvX/sGkuyqwpTl9cdEAOf44dRRIT5VpdrCEdkEElFozpfXsWVPKCTA5n7SHNeaxng2dIlCe
- vK7BUlJbJjdBbpTXTN5BOFINE0fDogH9kNCTp79JsO4rE3gybp0kh4x20kNnZ8urztxIYXv+l
- mj7cp82lZXgzPDV27ZlwqMVBpjd6NebwmbcdaHNwcyJ0s7WvBR0YYAkVhwIMYLhvCNDUnbmbk
- M7WOtD0ioeE/MivyMGFeqv5nvmuUJFp7x271XlIBou6xjXo9p+L0sU0SjEh7lj3/AyW5iDtS/
- 0jYyhhZi44lFFPgbsXQVGDqLMfPq6hHnoK4rL/OW398+lqURCI2c61FADJJSbvvSKvcIAzVWr
- bDR2Yc/O3ra8Q8EQeWDws+0EtKSQHGQB/NdvojexBwpJ6yVk5UgwTnxuTQMW4qWCKS+EAyYla
- 1pnJFvcQNyb4sG02bFtODlzyqsxSNdvQgo5DITDCLkxRStLHxBwg7QaUrHHLObvm6EfD9+LSr
- ami1GExTsTdAwqZXsvFkxuTAZSOFAnaoq9ZOuy4tf57ef48T+XefUcRe/UFcimUnpNlZlHon+
- 8uXVbgl2s1+8/vh/oTAHt1xKh3eLntc+yC059c3075WkXpF2K2LMBh7BgNZsHsPqSMbhvllMW
- 4NoF08VkZyJvA8fQtReXEV82ndaL5R22Pl0Wb9Tm/h04tzrilChne3NDKRD5vt1TfX5y1xsxn
- C1gzgq5xXTyPYGGVm2Z6Uu4HpTFOwS4mJ4QLIXiLiYoibuWMUBMqfJKznMi2PCFoiZBA4sF/y
- JAn7aFJ6c8xWgr8wzjnnztHTT89/rAenf23RL95vYW5bw=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hyrkTx1xiIXK1tLb"
+Content-Disposition: inline
+In-Reply-To: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
 
-Am 07.06.24 um 01:35 schrieb Armin Wolf:
 
-> A user complained that the lg-laptop driver does not work on 2024
-> models like the LG Gram 16Z90S-G.AD7BF. The underlying reason turned
-> out to be that the ACPI methods used by this driver where not mapped
-> under \XINI, but instead under \_SB.XINI. Those ACPI methods are
-> associated with the LGEX0820 ACPI device, which was not used by this
-> driver until now.
->
-> The first three patches move the airplane mode hotkey handling out
-> of lg-laptop and into the wireless-hotkey driver. This necessary
-> because the airplane mode hotkey is handled by a different ACPI
-> device (LGEX0815).
->
-> The last patch finally fixes the underlying issue and uses the
-> LGEX0820 ACPI device to find theWMAB/WMBB ACPI methods.
->
-> The modified drivers where tested by the user which created the
-> bug report and appear to work without issues.
+--hyrkTx1xiIXK1tLb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+On Mon, Jun 17, 2024 at 01:18:52AM +0800, Yangyu Chen wrote:
 
-any thought from the maintainer of the driver perhaps?
+>  .../sifive,plic-1.0.0.yaml                    |   5 +-
+>  .../devicetree/bindings/riscv/cpus.yaml       |   1 +
+>  .../devicetree/bindings/riscv/spacemit.yaml   |  24 ++
+>  .../bindings/timer/sifive,clint.yaml          |   4 +-
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  arch/riscv/Kconfig.socs                       |   5 +
+>  arch/riscv/boot/dts/Makefile                  |   1 +
+>  arch/riscv/boot/dts/spacemit/Makefile         |   2 +
+>  arch/riscv/boot/dts/spacemit/bananapi-f3.dts  |  19 ++
+>  arch/riscv/boot/dts/spacemit/k1.dtsi          | 281 ++++++++++++++++++
+>  arch/riscv/configs/defconfig                  |   1 +
+
+No MAINTAINERS update, so I figure that means you don't want to maintain
+it going forwards? If there's someone out that that does care about the
+spacemit k1 (Jesse maybe?), then I'd be more than happy to have them
+look after it.
 
 Thanks,
-Armin Wolf
+Conor.
 
-> Armin Wolf (4):
->    platform/x86: wireless-hotkey: Add support for LG Airplane Button
->    platform/x86: lg-laptop: Remove LGEX0815 hotkey handling
->    platform/x86: lg-laptop: Change ACPI device id
->    platform/x86: lg-laptop: Use ACPI device handle when evaluating
->      WMAB/WMBB
->
->   drivers/platform/x86/lg-laptop.c       | 89 ++++++++++----------------
->   drivers/platform/x86/wireless-hotkey.c |  2 +
->   2 files changed, 36 insertions(+), 55 deletions(-)
->
-> --
-> 2.39.2
->
->
+
+--hyrkTx1xiIXK1tLb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZm8wcQAKCRB4tDGHoIJi
+0ullAPwIwHO7QvY8o2OTJfZuxL1RvaJtHCpIEcjp5JGF6SHaDQEAyVpJmVs0wZpq
+20DChxYrgBQSB7yAGtbtrfsQI4j+5gE=
+=dj44
+-----END PGP SIGNATURE-----
+
+--hyrkTx1xiIXK1tLb--
