@@ -1,57 +1,57 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348D912D74D;
-	Sun, 16 Jun 2024 21:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229CB7CF33;
+	Sun, 16 Jun 2024 21:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718574961; cv=none; b=FvyW50KztaG2f75AmLYR0Lk7h3odxmvyWebUsix4iV6FIi5/+aOKg6/4/BJlf2IYPBL4NqskM4mIsc50zSmzXxI0q/h9rlgcTFYy0To0U7DfZF2qiQuUXrTtsifovtOHBe7N/56Whv4taljsY3rkpPLdXUcH8NBE3EOFeeySzUM=
+	t=1718574959; cv=none; b=uRxEUEjrSW4ueMjclj9AmR3NfUx+ZVv0a3Bgx7KshFdptk0ey2X0We5nN4NEuhTY/1uJHC8S7aO7kAekAZiKYXsb84Hu1U7luNo8o/PTIud4gPcKDQZY6zcHYlVxt/AySwnbnmwmT6QYh4UATBYwk5dOjgIZ5OT14didOxpY2os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718574961; c=relaxed/simple;
-	bh=NxsBdO1ugPMVxl+cLRuL99pkvySUXvjOOtPa5hkRW6s=;
+	s=arc-20240116; t=1718574959; c=relaxed/simple;
+	bh=szz4KKEIpd8hMo073YXlBdiHLQIOYiN+qa+YszEdo98=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OjgSDPInen2QNamzB64dq+BoTUeviiwgWFy9CPM+cF+1rGl+jac9WVHhI6Ki+zoKfEAFLkzur545Mp99CmNFd03n6xFJKvHRMzZWPwALablBv6qs/apcuHyYphxdxgessiqR8RN2NcwT6GAe4TG8INMv/IOSZ97f5Q9lI9lxilA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m222zH2M; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=WtbzRQ9JC+sV1lMZdX4u3f7a0v4RkWlmcrstEx9tkLmwjchjm/FTQDhvUpiqsrJSlLAXDg2YHICkjthoYpiOaUf7Gee/zUamfy6qKUnOdgPxlwhDMNlFgTzcdSVJvGcVWhK3F2lU+u3zVj8y4U/M20Vz56+wZIXYe5zFstct9sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7qlMEjz; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m222zH2M"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4217dbeb4caso30814395e9.1;
-        Sun, 16 Jun 2024 14:55:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7qlMEjz"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35f1c209842so2861799f8f.3;
+        Sun, 16 Jun 2024 14:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718574957; x=1719179757; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718574955; x=1719179755; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KHZc/1LWhRCQc67SMp9qGtUXdrtThurh67cPSPDWhgc=;
-        b=m222zH2MriGyrkEz365Ak2gVIY5UnC95DqmcgjOMh+OUG+jieopRzx2HItfMOcNhB5
-         2yr0a8G41j9B6ULXGBHqvJV5QOdjqOO8/xFJF5L1agVgnMf6T3HVJWFfCKj4KB5eHlL0
-         Z5aJsh/nNmdHV71pyi1CGqGkKzuxuTV/TnvUtx/AF6wx/VFFmzq4GkZiXqPVGh6FQGcg
-         uQi2vXwb/Qv7xe5RxhJGQ2OZyiXw3drM7JIpvKaKUw9i4EoZ7ZMlrCYpG054UEzno9qu
-         PmDOeAqk127eehGjmiQ88JT1bfzcYKGWNyyz8WbqIrX/noIKUHPskTHNA/rJvmeumNyJ
-         ZihA==
+        bh=nmbEIwpOv9kQ2gyavOghBvkw1y9ZRRLoE9/pedGOOhE=;
+        b=E7qlMEjzNsgQfN4mGDcXQFrnJsldOaHairn13ADlLpOGByc4Lm7n5+K/SxFbQuPykH
+         poGGUJOQw1lyaq5CSqtdbVTm2LBgnyKm4QX2m3zVbBCIvM0aSX6Vh4Ggqfvh85szBErY
+         P0tyI7W2D7Ihd4WPe/XPi28gUHg9l2VzgeTxD6erQW3+2P0pmZ81D6eTmBZPJ4NgVwbE
+         xh624JECccsmEFINW4zeDSm2D6XFlaYKvXkkXtXZQkrTrPIlFku64XCVJBSAvcAlxZjN
+         HC71uPm4bfsoY/1oqfVnzeqxVAiVuaiI3PbcNkHz1jA5ldr+zborQI9FakTRQW3wugAV
+         3E3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718574957; x=1719179757;
+        d=1e100.net; s=20230601; t=1718574955; x=1719179755;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KHZc/1LWhRCQc67SMp9qGtUXdrtThurh67cPSPDWhgc=;
-        b=FlsDj1gLddxiHLcrEkC3lBJIoqBgooqiuYk4vW4mVzHaR3Wpy04FqOY9gSd6PZ0A5Z
-         xVUFGIM4xsw7SeQD8xuTF3M0sXXAOO53r4GN4lqBQfyrWfhAXhqQpvCgvQ1QyKBSI3tI
-         a8erjiRLwqp4xRr7BTZSvEOPrKThkTixBfuR1JY2bV7DBVLMz4LlGZdccTfqtr4QgzSq
-         DHqNgX1/akGBiyI3vV2VpL6sS4GrkWWGI6xpKqfx+SnpePRgOhPHeRdjLcjm212GJe5R
-         1R7zTLKfWdjEc2jBaK+I+SZP6/AsIxuH9EAidDFbw368CZgiO9OF7vBKPdKqCZooy5To
-         Cmpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXD/8I/Iiae5rrjeA4Wlbheardp44C12s44JjARan4lVNOirI+zVdq4FGhmw6WCpeVzebQkMAQGIbwWDyNpa8aYcYkIoIoYW/cU6yTlhw6ipgUN8n+QqzspE+zLGvLF6FlVsdXUN4YugMxI+85b1aJqKryuQ8ZXyQ0izaGe47V+Kf6thLY=
-X-Gm-Message-State: AOJu0YxNm9oafIkRWnpzXo/dQlLyp6upS68ZZJlGYTs4E/XlgWy0aqCK
-	htJpsCxivhziVJzQC5wCWJ31h9QFybphwvBOQA8+2Yzzo1aQrHvwGq0rbw==
-X-Google-Smtp-Source: AGHT+IHbX67+xJVR8xJIFoy+waN4vpZRJZU8hO44Q455ATBCnRCtv5gzDmauQ7uogKMgC30f5VN9xQ==
-X-Received: by 2002:a05:600c:364a:b0:421:cbb8:ca7d with SMTP id 5b1f17b1804b1-4230485a61fmr59395415e9.37.1718574957571;
-        Sun, 16 Jun 2024 14:55:57 -0700 (PDT)
+        bh=nmbEIwpOv9kQ2gyavOghBvkw1y9ZRRLoE9/pedGOOhE=;
+        b=aHNEGHZdUeo1VlBHzCOagbf+/6uBa5uUeO2Wdryeary8ZbMbmMw/LmKfFRXd9B0wfW
+         k6dyNFwbS5ehIbqvxIvLYLmRMYUZ3M23+Tlwayp7sl6QGqu+OtTxck2AmBZP5NvtoGVO
+         45MGap1Mqg5kzlQZgc6gY5V5hrf1Yu8u97J9h78cK1ZxCJE3bIRIy2CMXb1TZF0qkBzw
+         61GdlPcwqxmXBv55ZVv+t3UmMdbQ8ljRuFlp+ek2hCKG+vB/buqyobrSPFhanCLSIeBv
+         JuUWa47xnJygQdnoDJuVxQXXfkcaVB++cFr22PGmdbPB0W3S47AuOFJCKopLoGla5bdW
+         3w8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVWoc+7k4VzkTT4nd7efpsqCTVQWny2g0p/wdPi6Kd62hvrPnrJzehgX2+Z2yvYQ6LI9vAnqIxcY0Ydg9tc5Ck+lzauxcBvudNNe1dlSQ6/4B9seODSnmXQTlNuyvwAd6/YECgko3jKL1mejgpNtv9OtN2hrrC8VYDG7+VcV/ivchoX9LY=
+X-Gm-Message-State: AOJu0YzXDYQE1dGUXRc+FaKjiLl/yGlu516aIPAq0M9lQfHPjeFvKxoC
+	X8fSrVxAArkIRD5jJp6LdXfLYVzkKcnytsWm6qltBv0/CoHt9QYU
+X-Google-Smtp-Source: AGHT+IFuVpRb6SxT2sBVyyRrjZll5mlrWmiv8RB5q8oldBfkiviPkkzor46WiwHRP1KPS8asZGUYcQ==
+X-Received: by 2002:adf:ea91:0:b0:360:8fcc:615b with SMTP id ffacd0b85a97d-3608fcc62bamr3097836f8f.47.1718574955320;
+        Sun, 16 Jun 2024 14:55:55 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-36075104b74sm10362879f8f.107.2024.06.16.14.55.56
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-36075104b74sm10362879f8f.107.2024.06.16.14.55.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Jun 2024 14:55:57 -0700 (PDT)
+        Sun, 16 Jun 2024 14:55:55 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -63,9 +63,9 @@ To: Pavel Machek <pavel@ucw.cz>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v6 10/20] leds: leds-lp55xx: generalize led_brightness function
-Date: Sun, 16 Jun 2024 23:52:09 +0200
-Message-ID: <20240616215226.2112-11-ansuelsmth@gmail.com>
+Subject: [PATCH v6 08/20] leds: leds-lp55xx: generalize update_program_memory function
+Date: Sun, 16 Jun 2024 23:52:07 +0200
+Message-ID: <20240616215226.2112-9-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240616215226.2112-1-ansuelsmth@gmail.com>
 References: <20240616215226.2112-1-ansuelsmth@gmail.com>
@@ -77,189 +77,463 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Generalize led_brightness function as the implementation is the same for
-most of the lp55xx based LED driver.
+LED Driver based on lp55xx all use the same logic to write memory in
+SMEM. The only difference is that legacy chip doesn't support pages and
+have the engine regs one after another.
 
-Introduce a new option in device_config, reg_led_pwm_base since the reg
-value is not the same for every LED chip.
+To handle this apply the same logic used for load_engine also for
+update_program_memory.
+
+Introduce a new config in device_config, base_prog. For LED chip
+that doesn't support pages, offset this values of 32 for each engine.
+
+Update all lp55xx based LED driver to use this new function and define
+all the required bits.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/leds/leds-lp5521.c        | 18 ++++--------------
- drivers/leds/leds-lp5523.c        | 17 ++++-------------
- drivers/leds/leds-lp55xx-common.c | 14 ++++++++++++++
- drivers/leds/leds-lp55xx-common.h |  3 +++
- drivers/leds/leds-lp8501.c        | 18 ++++--------------
- 5 files changed, 29 insertions(+), 41 deletions(-)
+ drivers/leds/leds-lp5521.c        | 56 +++--------------------------
+ drivers/leds/leds-lp5523.c        | 50 +++-----------------------
+ drivers/leds/leds-lp5562.c        | 58 +++----------------------------
+ drivers/leds/leds-lp55xx-common.c | 57 ++++++++++++++++++++++++++++++
+ drivers/leds/leds-lp55xx-common.h |  4 +++
+ drivers/leds/leds-lp8501.c        | 52 +++------------------------
+ 6 files changed, 79 insertions(+), 198 deletions(-)
 
 diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index 722b5cd9236e..e4d0dcdbf11b 100644
+index 0b9f99f4fff2..7ea3e5715f59 100644
 --- a/drivers/leds/leds-lp5521.c
 +++ b/drivers/leds/leds-lp5521.c
-@@ -241,19 +241,6 @@ static int lp5521_multicolor_brightness(struct lp55xx_led *led)
- 	return ret;
+@@ -146,55 +146,6 @@ static void lp5521_run_engine(struct lp55xx_chip *chip, bool start)
+ 		lp5521_wait_enable_done();
  }
  
--static int lp5521_led_brightness(struct lp55xx_led *led)
+-static int lp5521_update_program_memory(struct lp55xx_chip *chip,
+-					const u8 *data, size_t size)
 -{
--	struct lp55xx_chip *chip = led->chip;
+-	enum lp55xx_engine_index idx = chip->engine_idx;
+-	u8 pattern[LP5521_PROGRAM_LENGTH] = {0};
+-	static const u8 addr[] = {
+-		[LP55XX_ENGINE_1] = LP5521_REG_R_PROG_MEM,
+-		[LP55XX_ENGINE_2] = LP5521_REG_G_PROG_MEM,
+-		[LP55XX_ENGINE_3] = LP5521_REG_B_PROG_MEM,
+-	};
+-	unsigned cmd;
+-	char c[3];
+-	int nrchars;
 -	int ret;
+-	int offset = 0;
+-	int i = 0;
 -
--	mutex_lock(&chip->lock);
--	ret = lp55xx_write(chip, LP5521_REG_LED_PWM_BASE + led->chan_nr,
--		led->brightness);
--	mutex_unlock(&chip->lock);
+-	while ((offset < size - 1) && (i < LP5521_PROGRAM_LENGTH)) {
+-		/* separate sscanfs because length is working only for %s */
+-		ret = sscanf(data + offset, "%2s%n ", c, &nrchars);
+-		if (ret != 1)
+-			goto err;
 -
--	return ret;
+-		ret = sscanf(c, "%2x", &cmd);
+-		if (ret != 1)
+-			goto err;
+-
+-		pattern[i] = (u8)cmd;
+-		offset += nrchars;
+-		i++;
+-	}
+-
+-	/* Each instruction is 16bit long. Check that length is even */
+-	if (i % 2)
+-		goto err;
+-
+-	for (i = 0; i < LP5521_PROGRAM_LENGTH; i++) {
+-		ret = lp55xx_write(chip, addr[idx] + i, pattern[i]);
+-		if (ret)
+-			return -EINVAL;
+-	}
+-
+-	return size;
+-
+-err:
+-	dev_err(&chip->cl->dev, "wrong pattern format\n");
+-	return -EINVAL;
 -}
 -
- static ssize_t show_engine_mode(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf, int nr)
-@@ -388,9 +375,12 @@ static struct lp55xx_device_config lp5521_cfg = {
- 	.prog_mem_base = {
- 		.addr = LP5521_REG_R_PROG_MEM,
+ static void lp5521_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
+@@ -212,7 +163,7 @@ static void lp5521_firmware_loaded(struct lp55xx_chip *chip)
+ 	 */
+ 
+ 	lp55xx_load_engine(chip);
+-	lp5521_update_program_memory(chip, fw->data, fw->size);
++	lp55xx_update_program_memory(chip, fw->data, fw->size);
+ }
+ 
+ static int lp5521_post_init_device(struct lp55xx_chip *chip)
+@@ -389,7 +340,7 @@ static ssize_t store_engine_load(struct device *dev,
+ 
+ 	chip->engine_idx = nr;
+ 	lp55xx_load_engine(chip);
+-	ret = lp5521_update_program_memory(chip, buf, len);
++	ret = lp55xx_update_program_memory(chip, buf, len);
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+@@ -454,6 +405,9 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 		.addr = LP5521_REG_ENABLE,
+ 		.val  = LP5521_ENABLE_DEFAULT,
  	},
-+	.reg_led_pwm_base = {
-+		.addr = LP5521_REG_LED_PWM_BASE,
++	.prog_mem_base = {
++		.addr = LP5521_REG_R_PROG_MEM,
 +	},
  	.max_channel  = LP5521_MAX_LEDS,
  	.post_init_device   = lp5521_post_init_device,
--	.brightness_fn      = lp5521_led_brightness,
-+	.brightness_fn      = lp55xx_led_brightness,
- 	.multicolor_brightness_fn = lp5521_multicolor_brightness,
- 	.set_led_current    = lp5521_set_led_current,
- 	.firmware_cb        = lp55xx_firmware_loaded_cb,
+ 	.brightness_fn      = lp5521_led_brightness,
 diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 5525d60c342c..a3b4063d504e 100644
+index b28955b72189..395c57330484 100644
 --- a/drivers/leds/leds-lp5523.c
 +++ b/drivers/leds/leds-lp5523.c
-@@ -683,18 +683,6 @@ static int lp5523_multicolor_brightness(struct lp55xx_led *led)
+@@ -254,49 +254,6 @@ static int lp5523_init_program_engine(struct lp55xx_chip *chip)
  	return ret;
  }
  
--static int lp5523_led_brightness(struct lp55xx_led *led)
+-static int lp5523_update_program_memory(struct lp55xx_chip *chip,
+-					const u8 *data, size_t size)
 -{
--	struct lp55xx_chip *chip = led->chip;
+-	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
+-	unsigned int cmd;
+-	char c[3];
+-	int nrchars;
 -	int ret;
+-	int offset = 0;
+-	int i = 0;
 -
--	mutex_lock(&chip->lock);
--	ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + led->chan_nr,
--		     led->brightness);
--	mutex_unlock(&chip->lock);
--	return ret;
+-	while ((offset < size - 1) && (i < LP5523_PROGRAM_LENGTH)) {
+-		/* separate sscanfs because length is working only for %s */
+-		ret = sscanf(data + offset, "%2s%n ", c, &nrchars);
+-		if (ret != 1)
+-			goto err;
+-
+-		ret = sscanf(c, "%2x", &cmd);
+-		if (ret != 1)
+-			goto err;
+-
+-		pattern[i] = (u8)cmd;
+-		offset += nrchars;
+-		i++;
+-	}
+-
+-	/* Each instruction is 16bit long. Check that length is even */
+-	if (i % 2)
+-		goto err;
+-
+-	for (i = 0; i < LP5523_PROGRAM_LENGTH; i++) {
+-		ret = lp55xx_write(chip, LP5523_REG_PROG_MEM + i, pattern[i]);
+-		if (ret)
+-			return -EINVAL;
+-	}
+-
+-	return size;
+-
+-err:
+-	dev_err(&chip->cl->dev, "wrong pattern format\n");
+-	return -EINVAL;
 -}
 -
- static LP55XX_DEV_ATTR_RW(engine1_mode, show_engine1_mode, store_engine1_mode);
- static LP55XX_DEV_ATTR_RW(engine2_mode, show_engine2_mode, store_engine2_mode);
- static LP55XX_DEV_ATTR_RW(engine3_mode, show_engine3_mode, store_engine3_mode);
-@@ -759,10 +747,13 @@ static struct lp55xx_device_config lp5523_cfg = {
- 	.prog_mem_base = {
- 		.addr = LP5523_REG_PROG_MEM,
+ static void lp5523_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
+@@ -314,7 +271,7 @@ static void lp5523_firmware_loaded(struct lp55xx_chip *chip)
+ 	 */
+ 
+ 	lp55xx_load_engine(chip);
+-	lp5523_update_program_memory(chip, fw->data, fw->size);
++	lp55xx_update_program_memory(chip, fw->data, fw->size);
+ }
+ 
+ static ssize_t show_engine_mode(struct device *dev,
+@@ -496,7 +453,7 @@ static ssize_t store_engine_load(struct device *dev,
+ 
+ 	chip->engine_idx = nr;
+ 	lp55xx_load_engine(chip);
+-	ret = lp5523_update_program_memory(chip, buf, len);
++	ret = lp55xx_update_program_memory(chip, buf, len);
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+@@ -819,6 +776,9 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 		.addr = LP5523_REG_ENABLE,
+ 		.val  = LP5523_ENABLE,
  	},
-+	.reg_led_pwm_base = {
-+		.addr = LP5523_REG_LED_PWM_BASE,
++	.prog_mem_base = {
++		.addr = LP5523_REG_PROG_MEM,
 +	},
  	.pages_per_engine   = LP5523_PAGES_PER_ENGINE,
  	.max_channel  = LP5523_MAX_LEDS,
  	.post_init_device   = lp5523_post_init_device,
--	.brightness_fn      = lp5523_led_brightness,
-+	.brightness_fn      = lp55xx_led_brightness,
- 	.multicolor_brightness_fn = lp5523_multicolor_brightness,
- 	.set_led_current    = lp5523_set_led_current,
- 	.firmware_cb        = lp55xx_firmware_loaded_cb,
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index fb05439576c3..7f3733fc446e 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -144,59 +144,6 @@ static void lp5562_run_engine(struct lp55xx_chip *chip, bool start)
+ 		lp5562_wait_enable_done();
+ }
+ 
+-static int lp5562_update_firmware(struct lp55xx_chip *chip,
+-					const u8 *data, size_t size)
+-{
+-	enum lp55xx_engine_index idx = chip->engine_idx;
+-	u8 pattern[LP5562_PROGRAM_LENGTH] = {0};
+-	static const u8 addr[] = {
+-		[LP55XX_ENGINE_1] = LP5562_REG_PROG_MEM_ENG1,
+-		[LP55XX_ENGINE_2] = LP5562_REG_PROG_MEM_ENG2,
+-		[LP55XX_ENGINE_3] = LP5562_REG_PROG_MEM_ENG3,
+-	};
+-	unsigned cmd;
+-	char c[3];
+-	int program_size;
+-	int nrchars;
+-	int offset = 0;
+-	int ret;
+-	int i;
+-
+-	/* clear program memory before updating */
+-	for (i = 0; i < LP5562_PROGRAM_LENGTH; i++)
+-		lp55xx_write(chip, addr[idx] + i, 0);
+-
+-	i = 0;
+-	while ((offset < size - 1) && (i < LP5562_PROGRAM_LENGTH)) {
+-		/* separate sscanfs because length is working only for %s */
+-		ret = sscanf(data + offset, "%2s%n ", c, &nrchars);
+-		if (ret != 1)
+-			goto err;
+-
+-		ret = sscanf(c, "%2x", &cmd);
+-		if (ret != 1)
+-			goto err;
+-
+-		pattern[i] = (u8)cmd;
+-		offset += nrchars;
+-		i++;
+-	}
+-
+-	/* Each instruction is 16bit long. Check that length is even */
+-	if (i % 2)
+-		goto err;
+-
+-	program_size = i;
+-	for (i = 0; i < program_size; i++)
+-		lp55xx_write(chip, addr[idx] + i, pattern[i]);
+-
+-	return 0;
+-
+-err:
+-	dev_err(&chip->cl->dev, "wrong pattern format\n");
+-	return -EINVAL;
+-}
+-
+ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
+@@ -218,7 +165,7 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ 	 */
+ 
+ 	lp55xx_load_engine(chip);
+-	lp5562_update_firmware(chip, fw->data, fw->size);
++	lp55xx_update_program_memory(chip, fw->data, fw->size);
+ }
+ 
+ static int lp5562_post_init_device(struct lp55xx_chip *chip)
+@@ -450,6 +397,9 @@ static struct lp55xx_device_config lp5562_cfg = {
+ 		.addr = LP5562_REG_ENABLE,
+ 		.val  = LP5562_ENABLE_DEFAULT,
+ 	},
++	.prog_mem_base = {
++		.addr = LP5562_REG_PROG_MEM_ENG1,
++	},
+ 	.post_init_device   = lp5562_post_init_device,
+ 	.set_led_current    = lp5562_set_led_current,
+ 	.brightness_fn      = lp5562_led_brightness,
 diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 9844823ece63..4d607849cd50 100644
+index efb086072efa..d8614ed973bc 100644
 --- a/drivers/leds/leds-lp55xx-common.c
 +++ b/drivers/leds/leds-lp55xx-common.c
-@@ -244,6 +244,20 @@ void lp55xx_firmware_loaded_cb(struct lp55xx_chip *chip)
- }
- EXPORT_SYMBOL_GPL(lp55xx_firmware_loaded_cb);
+@@ -27,6 +27,8 @@
+ /* OP MODE require at least 153 us to clear regs */
+ #define LP55XX_CMD_SLEEP		200
  
-+int lp55xx_led_brightness(struct lp55xx_led *led)
++#define LP55xx_PROGRAM_LENGTH		32
++
+ /*
+  * Program Memory Operations
+  * Same Mask for each engine for both mode and exec
+@@ -162,6 +164,61 @@ int lp55xx_run_engine_common(struct lp55xx_chip *chip)
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_run_engine_common);
+ 
++int lp55xx_update_program_memory(struct lp55xx_chip *chip,
++				 const u8 *data, size_t size)
 +{
-+	struct lp55xx_chip *chip = led->chip;
++	enum lp55xx_engine_index idx = chip->engine_idx;
 +	const struct lp55xx_device_config *cfg = chip->cfg;
++	u8 pattern[LP55xx_PROGRAM_LENGTH] = { };
++	u8 start_addr = cfg->prog_mem_base.addr;
++	int i = 0, offset = 0;
 +	int ret;
 +
-+	mutex_lock(&chip->lock);
-+	ret = lp55xx_write(chip, cfg->reg_led_pwm_base.addr + led->chan_nr,
-+			   led->brightness);
-+	mutex_unlock(&chip->lock);
-+	return ret;
++	while ((offset < size - 1) && (i < LP55xx_PROGRAM_LENGTH)) {
++		unsigned int cmd;
++		int nrchars;
++		char c[3];
++
++		/* separate sscanfs because length is working only for %s */
++		ret = sscanf(data + offset, "%2s%n ", c, &nrchars);
++		if (ret != 1)
++			goto err;
++
++		ret = sscanf(c, "%2x", &cmd);
++		if (ret != 1)
++			goto err;
++
++		pattern[i] = (u8)cmd;
++		offset += nrchars;
++		i++;
++	}
++
++	/* Each instruction is 16bit long. Check that length is even */
++	if (i % 2)
++		goto err;
++
++	/*
++	 * For legacy LED chip with no page support, engine base address are
++	 * one after another at offset of 32.
++	 * For LED chip that support page, PAGE is already set in load_engine.
++	 */
++	if (!cfg->pages_per_engine)
++		start_addr += LP55xx_PROGRAM_LENGTH * idx;
++
++	for (i = 0; i < LP55xx_PROGRAM_LENGTH; i++) {
++		ret = lp55xx_write(chip, start_addr + i, pattern[i]);
++		if (ret)
++			return -EINVAL;
++	}
++
++	return size;
++
++err:
++	dev_err(&chip->cl->dev, "wrong pattern format\n");
++	return -EINVAL;
 +}
-+EXPORT_SYMBOL_GPL(lp55xx_led_brightness);
++EXPORT_SYMBOL_GPL(lp55xx_update_program_memory);
 +
  static void lp55xx_reset_device(struct lp55xx_chip *chip)
  {
  	const struct lp55xx_device_config *cfg = chip->cfg;
 diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index cbc122c56828..4578418e5011 100644
+index dd74b214ec74..f0bbd41fdab3 100644
 --- a/drivers/leds/leds-lp55xx-common.h
 +++ b/drivers/leds/leds-lp55xx-common.h
-@@ -100,6 +100,7 @@ struct lp55xx_reg {
+@@ -99,6 +99,7 @@ struct lp55xx_reg {
+  *			 (if not supported 153 us sleep)
   * @reset              : Chip specific reset command
   * @enable             : Chip specific enable command
-  * @prog_mem_base      : Chip specific base reg address for chip SMEM programming
-+ * @reg_led_pwm_base   : Chip specific base reg address for LED PWM conf
++ * @prog_mem_base      : Chip specific base reg address for chip SMEM programming
   * @pages_per_engine   : Assigned pages for each engine
   *                       (if not set chip doesn't support pages)
   * @max_channel        : Maximum number of channels
-@@ -118,6 +119,7 @@ struct lp55xx_device_config {
+@@ -116,6 +117,7 @@ struct lp55xx_device_config {
+ 	const struct lp55xx_reg engine_busy; /* addr, mask */
  	const struct lp55xx_reg reset;
  	const struct lp55xx_reg enable;
- 	const struct lp55xx_reg prog_mem_base;
-+	const struct lp55xx_reg reg_led_pwm_base;
++	const struct lp55xx_reg prog_mem_base;
  	const int pages_per_engine;
  	const int max_channel;
  
-@@ -213,6 +215,7 @@ extern int lp55xx_run_engine_common(struct lp55xx_chip *chip);
- extern int lp55xx_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size);
- extern void lp55xx_firmware_loaded_cb(struct lp55xx_chip *chip);
-+extern int lp55xx_led_brightness(struct lp55xx_led *led);
+@@ -208,6 +210,8 @@ extern bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
+ extern void lp55xx_stop_all_engine(struct lp55xx_chip *chip);
+ extern void lp55xx_load_engine(struct lp55xx_chip *chip);
+ extern int lp55xx_run_engine_common(struct lp55xx_chip *chip);
++extern int lp55xx_update_program_memory(struct lp55xx_chip *chip,
++					const u8 *data, size_t size);
  
  /* common probe/remove function */
  extern int lp55xx_probe(struct i2c_client *client);
 diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
-index 1ea7bb73cd22..8f1fd9525e9a 100644
+index 47b30e9d04a2..d4094d20bdc1 100644
 --- a/drivers/leds/leds-lp8501.c
 +++ b/drivers/leds/leds-lp8501.c
-@@ -137,19 +137,6 @@ static void lp8501_run_engine(struct lp55xx_chip *chip, bool start)
+@@ -137,53 +137,6 @@ static void lp8501_run_engine(struct lp55xx_chip *chip, bool start)
  	lp55xx_run_engine_common(chip);
  }
  
--static int lp8501_led_brightness(struct lp55xx_led *led)
+-static int lp8501_update_program_memory(struct lp55xx_chip *chip,
+-					const u8 *data, size_t size)
 -{
--	struct lp55xx_chip *chip = led->chip;
+-	u8 pattern[LP8501_PROGRAM_LENGTH] = {0};
+-	unsigned cmd;
+-	char c[3];
+-	int update_size;
+-	int nrchars;
+-	int offset = 0;
 -	int ret;
+-	int i;
 -
--	mutex_lock(&chip->lock);
--	ret = lp55xx_write(chip, LP8501_REG_LED_PWM_BASE + led->chan_nr,
--		     led->brightness);
--	mutex_unlock(&chip->lock);
+-	/* clear program memory before updating */
+-	for (i = 0; i < LP8501_PROGRAM_LENGTH; i++)
+-		lp55xx_write(chip, LP8501_REG_PROG_MEM + i, 0);
 -
--	return ret;
+-	i = 0;
+-	while ((offset < size - 1) && (i < LP8501_PROGRAM_LENGTH)) {
+-		/* separate sscanfs because length is working only for %s */
+-		ret = sscanf(data + offset, "%2s%n ", c, &nrchars);
+-		if (ret != 1)
+-			goto err;
+-
+-		ret = sscanf(c, "%2x", &cmd);
+-		if (ret != 1)
+-			goto err;
+-
+-		pattern[i] = (u8)cmd;
+-		offset += nrchars;
+-		i++;
+-	}
+-
+-	/* Each instruction is 16bit long. Check that length is even */
+-	if (i % 2)
+-		goto err;
+-
+-	update_size = i;
+-	for (i = 0; i < update_size; i++)
+-		lp55xx_write(chip, LP8501_REG_PROG_MEM + i, pattern[i]);
+-
+-	return 0;
+-
+-err:
+-	dev_err(&chip->cl->dev, "wrong pattern format\n");
+-	return -EINVAL;
 -}
 -
- /* Chip specific configurations */
- static struct lp55xx_device_config lp8501_cfg = {
- 	.reg_op_mode = {
-@@ -173,10 +160,13 @@ static struct lp55xx_device_config lp8501_cfg = {
- 	.prog_mem_base = {
- 		.addr = LP8501_REG_PROG_MEM,
+ static void lp8501_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
+@@ -201,7 +154,7 @@ static void lp8501_firmware_loaded(struct lp55xx_chip *chip)
+ 	 */
+ 
+ 	lp55xx_load_engine(chip);
+-	lp8501_update_program_memory(chip, fw->data, fw->size);
++	lp55xx_update_program_memory(chip, fw->data, fw->size);
+ }
+ 
+ static int lp8501_led_brightness(struct lp55xx_led *led)
+@@ -237,6 +190,9 @@ static struct lp55xx_device_config lp8501_cfg = {
+ 		.addr = LP8501_REG_ENABLE,
+ 		.val  = LP8501_ENABLE,
  	},
-+	.reg_led_pwm_base = {
-+		.addr = LP8501_REG_LED_PWM_BASE,
++	.prog_mem_base = {
++		.addr = LP8501_REG_PROG_MEM,
 +	},
  	.pages_per_engine   = LP8501_PAGES_PER_ENGINE,
  	.max_channel  = LP8501_MAX_LEDS,
  	.post_init_device   = lp8501_post_init_device,
--	.brightness_fn      = lp8501_led_brightness,
-+	.brightness_fn      = lp55xx_led_brightness,
- 	.set_led_current    = lp8501_set_led_current,
- 	.firmware_cb        = lp55xx_firmware_loaded_cb,
- 	.run_engine         = lp8501_run_engine,
 -- 
 2.43.0
 
