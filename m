@@ -1,166 +1,157 @@
-Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C033012B87;
-	Sun, 16 Jun 2024 16:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA08B11CAB;
+	Sun, 16 Jun 2024 16:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718556025; cv=none; b=PhpsOtNYdtO09PMP9onq020XPsy+tBtfJQD2xlZTA7kK/01tmwdepWcYQmZW/Rlxvc98VznmJVb+o+o6theHMV4QLjr/aUCKYwnAocS491Omn1qgbZS6Tajn3d9lM9uQbSV4lsWg3gZyBMgoG3SO77L2jETF8ctZShKaDV7cqUM=
+	t=1718556781; cv=none; b=ElM9Vt/eYrMyMUcefOzJH/CteeEWK6kzensW7UeCHn//M95zGZjUmzAxSLkikZAXnsJEU9axI7RI4HjK5G1qvO++XwkauilcdFVulBohBiiaHeqmBVDFi6WH/SSLAUwgb4DziNzxMrfobLMggJLruifm+ruAodEJVplnf7z0hnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718556025; c=relaxed/simple;
-	bh=vE0MV0w/SvFtkLPjjo6OLBeSwyoJVF2VeTLOljvFEoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cwwJKhOAWaqgbuq5u/UXGheYaBdruNQ8h/FdgLDFN81dtvkZ2F7l/Un3I5+04AvoiucbJVsc8sUV5tw8I4iZTosp4mBlUvBywjpfQj8hRDYq4MSkJS1jfTRDsvMN8Hk8hjZl0vUQxYjQJf3YbbD6TBZj+qZ8VQe4ZTYH0NkqbKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mail.enpas.org (Postfix) with ESMTPSA id B4C271014D6;
-	Sun, 16 Jun 2024 16:31:10 +0000 (UTC)
-From: Max Staudt <max@enpas.org>
-To: Roderick Colenbrander <roderick.colenbrander@sony.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	max@enpas.org
-Subject: [PATCH v1] hid-playstation: DS4: Update rumble and lightbar together
-Date: Mon, 17 Jun 2024 01:30:55 +0900
-Message-Id: <20240616163055.75174-1-max@enpas.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718556781; c=relaxed/simple;
+	bh=TYIRnGgy2E4bvlh1tTiwU8FbCAdnoxYRiDIauA4okG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oh1w4BV84cx6udiINqg/LyLCOo7J5YEKKmdPQj/Cj/PdGG7RWBIdA2XVE4yZCsnhBbJE/1Cy8TtcnROIlzvEZm6ygPiFqor9eCNkvA6ewvmEv2n+uEpjsBREnMRlr+MagXDJjfpRR4dBz80MvGCrP2dafQARpRUIwA/0aBs8Osw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASneUhlo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASneUhlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F936C32786;
+	Sun, 16 Jun 2024 16:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718556781;
+	bh=TYIRnGgy2E4bvlh1tTiwU8FbCAdnoxYRiDIauA4okG8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ASneUhlolCpoLLFJsWeyOAFNxjSYuuHDoLl3fBXnsVvyoOZ5RugOHjwbWuPJ67kXX
+	 RCkYjXO9Pf3ojUo9rC+q+LItw3YyZc2Dbok5zPlYZ4Zbz1NIHISgM5kW+KF9E/GsJK
+	 K8RqQ2V/0yHfiZbaKnwvOCxg4P3hX21oHrtponfqkOcp24NCsbETHhSsNu4p6cIxDG
+	 Ksh0VVOGydZ2pfdURmaPBI4fuIBcTrzEWFC+R9YhCRonrzDwIebyTlMgjEHKVgzP+E
+	 NqYMZiz+q3pCv3wrgw3+6zYLlGOO5/i5s1+Jj1WlAtn4kY/gBSiLs/zd4LLSwMqVOY
+	 w5ZI/im6UU/3Q==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52c819f6146so5081971e87.1;
+        Sun, 16 Jun 2024 09:53:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXF/ogM+9FNKFQjhlEwXw8WvO+aI2Jj9VKazzuJ147DLRGOXj984ustuijNyHZZigP73H7Td1uugU+6+LAWb3YHxx2MM2fjI5uoDB6I
+X-Gm-Message-State: AOJu0YxBf688gRPsexr7FtXWyBE9H1hHSPDUbuEDmcf6hUjrRobATrVp
+	2YgwyfUvNJQmCLg3W10ohVxbO14qW8IxNQCzmy+7d2ZTvpmx2BDok9cUzqjoVT79OkCeXd56vvi
+	xZf62C4oeNmM5D4o9KelEBE0BDy8=
+X-Google-Smtp-Source: AGHT+IFmUm7AaYH99UZNL0CstSQF8PP/i7E9NjQO202kcCAVR/Hctps3V0pGrx4Nd3+61AhCrfOv1Y6du/6cWGFQ7gA=
+X-Received: by 2002:ac2:528c:0:b0:52c:836c:9ce8 with SMTP id
+ 2adb3069b0e04-52ca6e5506amr5343760e87.4.1718556779870; Sun, 16 Jun 2024
+ 09:52:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240611160938.3511096-1-masahiroy@kernel.org>
+ <20240611160938.3511096-2-masahiroy@kernel.org> <CAK7LNAQyPRKes7=wNtYXre+nU=5-1oZ-g1uzbjFMFd2e10jFjA@mail.gmail.com>
+ <20240616-dandelion-lynx-of-philosophy-6be45f@lindesnes>
+In-Reply-To: <20240616-dandelion-lynx-of-philosophy-6be45f@lindesnes>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 17 Jun 2024 01:52:23 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARPP_OsaOhUHT+5-vi5XJ36hDs0bNsiM7pwuAmj4S+MNg@mail.gmail.com>
+Message-ID: <CAK7LNARPP_OsaOhUHT+5-vi5XJ36hDs0bNsiM7pwuAmj4S+MNg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: package: add -e and -u options to shell scripts
+To: Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some 3rd party gamepads expect updates to rumble and lightbar together,
-and setting one may cancel the other.
+On Mon, Jun 17, 2024 at 12:56=E2=80=AFAM Nicolas Schier <nicolas@fjasle.eu>=
+ wrote:
+>
+> On Mon, Jun 17, 2024 at 12:21:15AM +0900, Masahiro Yamada wrote:
+> > On Wed, Jun 12, 2024 at 1:09=E2=80=AFAM Masahiro Yamada <masahiroy@kern=
+el.org> wrote:
+> > >
+> > > Set -e to make these scripts fail on the first error.
+> > >
+> > > Set -u because these scripts are invoked by Makefile, and do not work
+> > > properly without necessary variables defined.
+> > >
+> > > Remove the explicit "test -n ..." from scripts/package/install-extmod=
+-build.
+> > >
+> > > Both options are described in POSIX. [1]
+> > >
+> > > [1]: https://pubs.opengroup.org/onlinepubs/009604499/utilities/set.ht=
+ml
+> > >
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > ---
+> >
+> >
+> >
+> > Setting -u needs more careful review and test.
+> >
+> >
+> > This patch will break 'make deb-pkg'.
+> >
+> >
+> > ./scripts/package/mkdebian: 150: KDEB_PKGVERSION: parameter not set
+> >
+> >
+> >
+> >
+> > To set -u, scripts/package/mkdebian needs code refactoring.
+> >
+> >
+> >
+> > I will keep scripts/package/mkdebian untouched.
+>
+> uh, I missed that during the review.  Do you want to refactor mkdebian
+> in large scale, or is an explicit fallback definition possibly
+> acceptable for you?
+>
+> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> index ecfeb34b99aa..7e3878197041 100755
+> --- a/scripts/package/mkdebian
+> +++ b/scripts/package/mkdebian
+> @@ -7,5 +7,17 @@
+>  set -eu
+>
+> +# Optional user-specified environment variables
+> +
+> +# Set target Debian architecture (skip auto-detection)
+> +: "${KBUILD_DEBARCH:=3D}"
+> +
+> +# Set target Debian distribution (skipping auto-detection)
+> +: "${KDEB_CHANGELOG_DIST:=3D}"
+> +
+> +# Overwrite the automatically determined package version.
+> +: ${KDEB_PKGVERSION:=3D}
+> +
+> +
+>  is_enabled() {
+>         grep -q "^$1=3Dy" include/config/auto.conf
+>  }
+>
 
-This patch maximises compatibility by always sending rumble and lightbar
-updates whenever updates are sent to the gamepad: valid_flag0 is always
->= 0x03.
 
-Further background reading:
 
-- Apparently the PS4 always sends rumble and lightbar updates together:
 
-  https://eleccelerator.com/wiki/index.php?title=DualShock_4#0x11_2
+It depends on the code.
 
-- 3rd party gamepads may not implement lightbar_blink, and may simply
-  ignore updates with 0x07 set, according to:
 
-  https://github.com/Ryochan7/DS4Windows/pull/1839
 
-This patch leaves the lightbar blink feature as-is: Likely, most users
-are unaware that it exists, hence it's unlikely that a packet with
-0x07 set will even be sent in practice. Let's leave the function there,
-so users of first-party gamepads can continue to use it.
----
- drivers/hid/hid-playstation.c | 55 ++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
-index e7c309cfe3a0..986a4ca8b664 100644
---- a/drivers/hid/hid-playstation.c
-+++ b/drivers/hid/hid-playstation.c
-@@ -387,12 +387,10 @@ struct dualshock4 {
- 	bool update_bt_poll_interval;
- 	uint8_t bt_poll_interval;
- 
--	bool update_rumble;
- 	uint8_t motor_left;
- 	uint8_t motor_right;
- 
- 	/* Lightbar leds */
--	bool update_lightbar;
- 	bool update_lightbar_blink;
- 	bool lightbar_enabled; /* For use by global LED control. */
- 	uint8_t lightbar_red;
-@@ -2092,8 +2090,6 @@ static int dualshock4_led_set_brightness(struct led_classdev *led, enum led_brig
- 		}
- 	}
- 
--	ds4->update_lightbar = true;
--
- 	spin_unlock_irqrestore(&ds4->base.lock, flags);
- 
- 	dualshock4_schedule_work(ds4);
-@@ -2143,26 +2139,39 @@ static void dualshock4_output_worker(struct work_struct *work)
- 
- 	spin_lock_irqsave(&ds4->base.lock, flags);
- 
--	if (ds4->update_rumble) {
--		/* Select classic rumble style haptics and enable it. */
--		common->valid_flag0 |= DS4_OUTPUT_VALID_FLAG0_MOTOR;
--		common->motor_left = ds4->motor_left;
--		common->motor_right = ds4->motor_right;
--		ds4->update_rumble = false;
--	}
-+	/*
-+	 * PS4 seems to send 0xf3 updates by default, according to a HCI trace:
-+	 *   https://eleccelerator.com/wiki/index.php?title=DualShock_4#0x11_2
-+	 *
-+	 * This seems to be a very compatible value with third-party pads:
-+	 *   https://github.com/Ryochan7/DS4Windows/pull/1839
-+	 *
-+	 * However, hid-playstation in v6.10 does not set the upper nibble,
-+	 * and neither does hid-sony in v6.2, or BlueRetro. We should stick
-+	 * to that for now, to minimise the chance of unexpected changes.
-+	 *
-+	 * So let's always update rumble and lightbar at the same time, with
-+	 * the upper nibble cleared, resulting in valid_flag0 == 0x03.
-+	 * Hopefully this will maximise compatibility with third-party pads.
-+	 */
-+	common->valid_flag0 = DS4_OUTPUT_VALID_FLAG0_MOTOR |
-+			      DS4_OUTPUT_VALID_FLAG0_LED;
- 
--	if (ds4->update_lightbar) {
--		common->valid_flag0 |= DS4_OUTPUT_VALID_FLAG0_LED;
--		/* Comptabile behavior with hid-sony, which used a dummy global LED to
--		 * allow enabling/disabling the lightbar. The global LED maps to
--		 * lightbar_enabled.
--		 */
--		common->lightbar_red = ds4->lightbar_enabled ? ds4->lightbar_red : 0;
--		common->lightbar_green = ds4->lightbar_enabled ? ds4->lightbar_green : 0;
--		common->lightbar_blue = ds4->lightbar_enabled ? ds4->lightbar_blue : 0;
--		ds4->update_lightbar = false;
--	}
-+	common->motor_left = ds4->motor_left;
-+	common->motor_right = ds4->motor_right;
-+
-+	/* Compatible behavior with hid-sony, which used a dummy global LED to
-+	 * allow enabling/disabling the lightbar. The global LED maps to
-+	 * lightbar_enabled.
-+	 */
-+	common->lightbar_red = ds4->lightbar_enabled ? ds4->lightbar_red : 0;
-+	common->lightbar_green = ds4->lightbar_enabled ? ds4->lightbar_green : 0;
-+	common->lightbar_blue = ds4->lightbar_enabled ? ds4->lightbar_blue : 0;
- 
-+	/*
-+	 * Output reports updating lightbar_blink will simply be ignored
-+	 * by incompatible controllers, since valid_flag0 == 0x07.
-+	 */
- 	if (ds4->update_lightbar_blink) {
- 		common->valid_flag0 |= DS4_OUTPUT_VALID_FLAG0_LED_BLINK;
- 		common->lightbar_blink_on = ds4->lightbar_blink_on;
-@@ -2459,7 +2468,6 @@ static int dualshock4_play_effect(struct input_dev *dev, void *data, struct ff_e
- 		return 0;
- 
- 	spin_lock_irqsave(&ds4->base.lock, flags);
--	ds4->update_rumble = true;
- 	ds4->motor_left = effect->u.rumble.strong_magnitude / 256;
- 	ds4->motor_right = effect->u.rumble.weak_magnitude / 256;
- 	spin_unlock_irqrestore(&ds4->base.lock, flags);
-@@ -2520,7 +2528,6 @@ static void dualshock4_set_default_lightbar_colors(struct dualshock4 *ds4)
- 	ds4->lightbar_green = player_colors[player_id][1];
- 	ds4->lightbar_blue = player_colors[player_id][2];
- 
--	ds4->update_lightbar = true;
- 	dualshock4_schedule_work(ds4);
- }
- 
--- 
-2.39.2
+I would fix
 
+
+   if [ -n "$KDEB_PKGVERSION" ]; then
+
+
+to
+
+   if [ "${KDEB_PKGVERSION:+set}" =3D set ]; then
+
+or
+   if [ "${KDEB_PKGVERSION:+set}" ]; then
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
