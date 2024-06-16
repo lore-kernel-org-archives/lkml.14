@@ -1,128 +1,134 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1B36BFA6;
-	Sun, 16 Jun 2024 21:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3FD199A2
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 21:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718573527; cv=none; b=Xs6Gewj+/mmz5Fbd61yh1mH+wh8LLeKgd5OznmRfUjIQDELi8P4IGMPF+tWjlY/UOl0sPapVePvFZgMOfooR0fC7eJ1rt2JB35+nWRRt4VHs7Z+oH7l9sav02Zfa/XSGlOw8LHTYkXyDrVt+czm2cEDHCE3XTKMR2HdVulYWf74=
+	t=1718574438; cv=none; b=MDe7+1dEMgwX643LRE/J5ivVhlmBxtnHK9ztR0vTOKKs9ch7DqgR6Be5rEHw1yWU1AnSu6bCt6harVD4UDkxBMx8n6VlP6KA2LAWkG5g1Oz20qfRJPKj3pMulwIyHfZFtut3dbF/nChXe0CVRsMGB8J3964LNOsz1pjR4NrvW3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718573527; c=relaxed/simple;
-	bh=e3mPHRNbPAI0RpRaRBYxdYiAyOtMA8BSTjFOQ/dqqno=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VfUnenVX4speILaDPltH4nLp305mZLOV89obsWR3dYoST3T39CaYdb4nrw8G6OfqyjQInVPWPIqnKDmEzPOVWFMR6cy9c8hD4geBxOC6GNckwOmrpEhawRoi1lfBWh99BM34kcj9CLH8BOXXtZnu/llmQWhZeTqnN/K4OO30v34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A6HLMMjK; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718574438; c=relaxed/simple;
+	bh=qY8ekCqb8CSYQlKNCmLpflYUJ/M3Swd1KevOkF6VTk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JfNL3T6vPP1AIqEHIU+YWHNaAvAJlNOge5hgmYW/NtbSdKUworC9sAQzXqLWiKR3c952HF1VFAvGKlHkYkYHbxf8oDpis1DWibqpkx2xSd7tLLWqB+cPGkQIcsClgjdKZECLnwPRpXz21dOxzZXBgKCBvYLVgPg9/wvLISGUPGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AfuHdrtN; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A6HLMMjK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AC8B40003;
-	Sun, 16 Jun 2024 21:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718573522;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AfuHdrtN"
+X-Envelope-To: leon@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718574433;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vSk/4wckBenK2m2J+umiKHrWAQgsVWf7caDnp2mQsvo=;
-	b=A6HLMMjKnO50sE190j6lsh0HdRCTuV0ZKE4L6bXHg0/AkdKbBNq+SO/fv88fq2M4WJ3lN/
-	Y8JHa3BtHVFPM2u39juvHhaY5d9nfbmEGP8cdM291w2yWxjmYhfO/yKYER40Q1DtIOn6Zi
-	JpSDKWlF6OEgJtwn3VKG8Jw7Q8D3csqJQC+nadTHLewCUy1AntBuTaFw8traq9oZrklljX
-	LU/K/zbg68tMrwIJMm+8+cg4pQ8WGBHBtXVIew/HGOGtu6E2JCq6BWwrsODj4S6V2V1xY8
-	ePPhcBeTW+VRqx5INuYsKUGtmlZH7P2c6mclEorwjTVNGx7KBiVkaU50QTGXvw==
-Date: Sun, 16 Jun 2024 23:31:52 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
- davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner
- Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
- <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
- <atenart@kernel.org>
-Subject: Re: [PATCH net-next v13 05/13] net: ethtool: Allow passing a phy
- index for some commands
-Message-ID: <20240616233152.64f06133@fedora>
-In-Reply-To: <Zm8NrEproHTPzo+O@shell.armlinux.org.uk>
-References: <20240607071836.911403-1-maxime.chevallier@bootlin.com>
-	<20240607071836.911403-6-maxime.chevallier@bootlin.com>
-	<20240613182613.5a11fca5@kernel.org>
-	<20240616180231.338c2e6c@fedora>
-	<9dbd5b23-c59d-4200-ab9c-f8a9d736fea6@lunn.ch>
-	<Zm8NrEproHTPzo+O@shell.armlinux.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	bh=OWJq14Wd9GMO7wEHyo/kTx7ZOQD0we/nLwb6bsYiYQg=;
+	b=AfuHdrtNjCzRQ/zHEp/TVV5RDBbBLYzswwJTmwUv/1PB089c0eOP470uQYraE//ISInUXy
+	Io1o/KYs5in+2+VjsUEH+gtnpuTAg2BO9q6Z+D+M5wG1uX/KXdbLb8igNktcuCkcPPdK5v
+	MTOjOo+95CfmNUkQfGg7Jhiv2eqHZCc=
+X-Envelope-To: jgg@nvidia.com
+X-Envelope-To: leonro@nvidia.com
+X-Envelope-To: sharmaajay@microsoft.com
+X-Envelope-To: agoldberger@nvidia.com
+X-Envelope-To: bmt@zurich.ibm.com
+X-Envelope-To: tangchengchang@huawei.com
+X-Envelope-To: chengyou@linux.alibaba.com
+X-Envelope-To: huangjunxian6@hisilicon.com
+X-Envelope-To: kaishen@linux.alibaba.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+X-Envelope-To: longli@microsoft.com
+X-Envelope-To: mrgolin@amazon.com
+X-Envelope-To: mustafa.ismail@intel.com
+X-Envelope-To: bharat@chelsio.com
+X-Envelope-To: selvin.xavier@broadcom.com
+X-Envelope-To: shiraz.saleem@intel.com
+X-Envelope-To: yishaih@nvidia.com
+X-Envelope-To: zyjzyj2000@gmail.com
+Message-ID: <08219370-0d56-4c92-8b05-f42ca67b1bce@linux.dev>
+Date: Mon, 17 Jun 2024 05:47:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Subject: Re: [PATCH rdma-next 0/2] Extend mlx5 CQ creation with large UAR page
+ index
+To: Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+ Ajay Sharma <sharmaajay@microsoft.com>,
+ Akiva Goldberger <agoldberger@nvidia.com>,
+ Bernard Metzler <bmt@zurich.ibm.com>,
+ Chengchang Tang <tangchengchang@huawei.com>,
+ Cheng Xu <chengyou@linux.alibaba.com>,
+ Junxian Huang <huangjunxian6@hisilicon.com>,
+ Kai Shen <kaishen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Long Li <longli@microsoft.com>,
+ Michael Margolin <mrgolin@amazon.com>,
+ Mustafa Ismail <mustafa.ismail@intel.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>,
+ Selvin Xavier <selvin.xavier@broadcom.com>,
+ Shiraz Saleem <shiraz.saleem@intel.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>
+References: <cover.1718554263.git.leon@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <cover.1718554263.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Russell,
-
-> > It gets interesting with copper SFP. They contain a PHY, and that PHY
-> > can physically disappear at any time. What i don't know is when the
-> > logical representation of the PHY will disappear after the hotunplug
-> > event.
-
-I'm replying to your mail to summarize what the topology code does,
-which I think is correct according to these explanations.
-
+在 2024/6/17 0:15, Leon Romanovsky 写道:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> On a SFP module unplug, the following upstream device methods will be
-> called in order:
-> 1. link_down
-> 2. module_stop
-> 3. disconnect_phy
+> Hi,
+> 
+> This series from Akiva extends the mlx5 private field with the UAR page index
+> which is larger than 16 bits as was before.
 
-Patch 03 adds a phy_sfp_connect_phy() / phy_sfp_disconnect_phy() set of
-helpers that new PHY drivers supporting downstream SFP busses must
-specify in their sfp_upstream_ops, which will add/remove the SFP phy
-to/from the topology. I realize now that I need to add some clear
-documentation so that new drivers get that right.
+UAR: User Access Region
 
-That is because in this situation, the SFP PHY won't be attached to the
-netdev (as the media-converter PHY already is), so relying on the
-phy_attach / phy_detach paths won't cover these cases.
+Zhu Yanjun
+> 
+> As this is first time, we extend ioctl API with private data field after
+> it already has UHW object, we need to change create CQ API signature to
+> support it.
+> 
+> Thanks
+> 
+> Akiva Goldberger (2):
+>    RDMA: Pass entire uverbs attr bundle to create cq function
+>    RDMA/mlx5: Send UAR page index as ioctl attribute
+> 
+>   drivers/infiniband/core/uverbs_cmd.c          |  2 +-
+>   drivers/infiniband/core/uverbs_std_types_cq.c |  2 +-
+>   drivers/infiniband/hw/bnxt_re/ib_verbs.c      |  3 +-
+>   drivers/infiniband/hw/bnxt_re/ib_verbs.h      |  2 +-
+>   drivers/infiniband/hw/cxgb4/cq.c              |  3 +-
+>   drivers/infiniband/hw/cxgb4/iw_cxgb4.h        |  2 +-
+>   drivers/infiniband/hw/efa/efa.h               |  2 +-
+>   drivers/infiniband/hw/efa/efa_verbs.c         |  3 +-
+>   drivers/infiniband/hw/erdma/erdma_verbs.c     |  3 +-
+>   drivers/infiniband/hw/erdma/erdma_verbs.h     |  2 +-
+>   drivers/infiniband/hw/hns/hns_roce_cq.c       |  3 +-
+>   drivers/infiniband/hw/hns/hns_roce_device.h   |  2 +-
+>   drivers/infiniband/hw/irdma/verbs.c           |  5 +--
+>   drivers/infiniband/hw/mana/cq.c               |  2 +-
+>   drivers/infiniband/hw/mana/mana_ib.h          |  2 +-
+>   drivers/infiniband/hw/mlx4/cq.c               |  3 +-
+>   drivers/infiniband/hw/mlx4/mlx4_ib.h          |  2 +-
+>   drivers/infiniband/hw/mlx5/cq.c               | 31 ++++++++++++++++---
+>   drivers/infiniband/hw/mlx5/main.c             |  1 +
+>   drivers/infiniband/hw/mlx5/mlx5_ib.h          |  3 +-
+>   drivers/infiniband/hw/mthca/mthca_provider.c  |  3 +-
+>   drivers/infiniband/sw/rxe/rxe_verbs.c         |  3 +-
+>   drivers/infiniband/sw/siw/siw_verbs.c         |  2 +-
+>   drivers/infiniband/sw/siw/siw_verbs.h         |  2 +-
+>   include/rdma/ib_verbs.h                       |  2 +-
+>   include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
+>   include/uapi/rdma/mlx5_user_ioctl_cmds.h      |  4 +++
+>   27 files changed, 67 insertions(+), 28 deletions(-)
+> 
 
-> 
-> At this point, the PHY device will be removed (phy_device_remove()) and
-> freed (phy_device_free()), and shortly thereafter, the MDIO bus is
-> unregistered and thus destroyed.
-> 
-> In response to the above, phylink will, respectively for each method:
-> 
-> 1. disable the netdev carrier and call mac_link_down()
-> 2. call phy_stop() on the attached PHY
-> 3. remove the PHY from phylink, and then call phy_disconnect(),
->    disconnecting it from the netdev.
-> 
-> Thus, when a SFP PHY is being removed, phylib will see in order the
-> following calls:
-> 
-> 	phy_disconnect()
-> 	phy_device_remove()
-> 	phy_device_free()
-> 
-> Provided the topology linkage is removed on phy_disconnect() which
-> disassociates the PHY from the netdev, SFP PHYs should be fine.
-> 
-
-And here in that case, there's a hook in phy_detach() to remove the phy
-from the topology as well, which deals with the case where phylink
-deals with the sfp_upstream_ops. I think this covers all cases :)
-
-Thanks,
-
-Maxime
