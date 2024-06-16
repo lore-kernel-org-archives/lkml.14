@@ -1,89 +1,50 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A8C2E403;
-	Sun, 16 Jun 2024 01:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DF5154C0E;
+	Sun, 16 Jun 2024 01:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718501018; cv=none; b=R6AQOXzGn/klPC9jx8nQB011QV/oxdAnRhazfUNpOSA0iXjvFOXZ7Z1470l35rahba/0ndqBEY7s/G1tDpxAdzhfp6m2N4sPkcY2uXntDHeyt+PvVBjHKLARcSglWMgSMarwxtujF4FsM9lin7m02aIezp/8cuvLcyPNs1lEwGM=
+	t=1718501019; cv=none; b=uO0CKzsRYfnRiP1NFm5AqH4970X/0JB0X6QzVIhGKXgnOMsHHqlyIO+xq5B/pVnc7JSZUnqZwO/3Cp2Y0lKXYmOo7g2FwhNa4BTIZHjxb2YeAs5ZUNsxclgSI17Yq4U5zati5YN8aq9I3MOhuJOaDQCYusBVwueTBkP0j1vfr7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718501018; c=relaxed/simple;
-	bh=ro9Ubtf2VbL1tovMUy5Bxa4PT3UX7Kpu8c/NtRLKO4Q=;
+	s=arc-20240116; t=1718501019; c=relaxed/simple;
+	bh=dh9mvuWyp0eU8teIlxNhIfF/1X5fszgM5t6Y9dIWI1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EuHzln82alCMmMP66VQl2V3rJHUf+Wsmhq4jdlS0UjL391WkuEHZGMMoNqOsMLKYOUnETOzR4qR5rG35HD6GTK2YR+tKPBc+K2P2IbjUv+XM8yJx9S/gNzEsc1QF4rBCFJgibzeR+qumopFB1u/l+ANjFBcEFpmtMr3KW/VDJcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rjr5Oh8u; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2wPYgu1rmptU/A1VM0PucpaMZuLjk5xHcHqCdvSUtdm7PffNIpBOEGQZr4/8EqHxAA2TEX+dJ1O2ztkb2csofaxGViwlASMqhGeS+t2gqrcxOKiZej70VhYPjdUl/UhohjFy48rZf3mHiiLs8Ol+Km4GbwdxmFBDY9QJi2Ox7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=j0UJoMBU; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rjr5Oh8u"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57c6994e2f1so1824633a12.0;
-        Sat, 15 Jun 2024 18:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718501015; x=1719105815; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J9L818WkrX/e57/2+JLNhNwDE+80PZ6UZB0TCqcvAH0=;
-        b=Rjr5Oh8u8OsHNiub0naUvzYmP+ldVpm8WJ0S/wwRRPAKMO4gfk7SnJc5JPnNEU2h8m
-         7Tmm+pTyPQ0c2DCnggmR3bAzuQM8h9FZXwC4xiFH6rF12cGN2sxhBHkLMogMyChDuYh0
-         LO9p98aG6XGMOStKChdsA9SqZOqUujRiQkLb14ct8ScxGHaIzylc4z5bzq/g4agCfwht
-         lrwDgYfD4bqoqxzBkEn70xloKvTQ4ZWM9SCE/JRk1KG1x8EhAr9ktggKHEZNV2PS+Daf
-         IlBfo5JCTM1FxU530qb4akF5xdbef0ApIb/vytePNW4dfiS7O7qTKWfzzZwDi4UK9rGm
-         /EaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718501015; x=1719105815;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=J9L818WkrX/e57/2+JLNhNwDE+80PZ6UZB0TCqcvAH0=;
-        b=PlsoPZ3NTOrAd1zB6jtSid9m24w07CxVdbYzJiNHBydsIX+YRdSW14EUub5FxgT98V
-         /mK4T4HCJezirtYVKT+xJRMKS5Bx/GgCGO4aDAuOoseXQm8pa9TesZ8hb1K4N6qfnUog
-         J9pLX3cbmpC4R+i8U0gg+uFrSMJ9whVqvfCMxfNkxLMeBrgGrLxeZKG3iDtmU8Ee46Iz
-         vkqkzSOfvLvjM5KvtrY6wZViTmi4eJcansocFL5R7o7VFrfS/GfE1WLHECMYhfwahdYO
-         +a+LP2nO8fRBdublffXmJRl57o6/VyPmfnX1J3u4PlUiiWXNp7kjTZ1wpve6JVxd4eas
-         khWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf3O2CjW5tYHmpRWV4BFHgcYuJDvn4ZvQhjcXDMIohUXCkKoFn8RspNi7aJvTbfe0rNT7Azx4NcFFl07fIeCqfbW39xQTOkOalSEjUmilwzE/7b8g8ajgIHxb7x//kNA4i3BWo7oeZO33ZakAZol6VD3rf
-X-Gm-Message-State: AOJu0Yyj/eFPjOvlIXXdI89LggRHNDPZImWW6w/srCY/tf/84z6bh378
-	1P6/orbEeDScbK/lhY4m97tmMqpisMZpx+PcSKPE93NJLK39pE3x
-X-Google-Smtp-Source: AGHT+IFtCyjk6B2n0WL5jZjzknr32ZUP22JOAasG1n2zIMpqR6Bmv50VyYRbU7uqiXLlR1DQ2YBJjw==
-X-Received: by 2002:a50:c30b:0:b0:579:d673:4e67 with SMTP id 4fb4d7f45d1cf-57cbd6c7495mr5098355a12.26.1718501014766;
-        Sat, 15 Jun 2024 18:23:34 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb741e725sm4305462a12.69.2024.06.15.18.23.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 15 Jun 2024 18:23:34 -0700 (PDT)
-Date: Sun, 16 Jun 2024 01:23:33 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>, wklin@google.com,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v5 0/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Message-ID: <20240616012333.c6ddobbv6aq4jlyn@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240613003435.401549779@goodmis.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j0UJoMBU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=lTZVCyklv744EcLdTU/mwOhqQgHd93wrrqaAFyjVQtk=; b=j0UJoMBUy2xcOTBYcPIotdDHpl
+	M5UWGpUoXwN6Ty5kjkNNus8bkPanMxPHqcPvhA5k71tpRZIoqRl80LkYkl/zjKI4sehQNRZabQx3k
+	WZIu5Ut6V7GrcTRVyz/jNI2ezExmBLkRkcBz2e/FMX2Lj6tqg5VVSMOb/P+dTdQit8K4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sIec1-0009x2-5t; Sun, 16 Jun 2024 03:23:17 +0200
+Date: Sun, 16 Jun 2024 03:23:17 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH 2/2] net: ravb: Fix R-Car RX frame size limit
+Message-ID: <b1c10539-4d47-4752-8613-785b0ad83f5e@lunn.ch>
+References: <20240615103038.973-1-paul.barker.ct@bp.renesas.com>
+ <20240615103038.973-3-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,14 +53,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240613003435.401549779@goodmis.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20240615103038.973-3-paul.barker.ct@bp.renesas.com>
 
-Hi, Steven 
+On Sat, Jun 15, 2024 at 11:30:38AM +0100, Paul Barker wrote:
+> The RX frame size limit should not be based on the current MTU setting.
+> Instead it should be based on the hardware capabilities.
 
-Would you mind cc me in the following version?
+This is a bit odd. MTU is Maximum Transmission Unit, so clearly is
+about Tx. MRU does not really exist. Does TCP allow for asymmetric
+MTU/MRU? Does MTU discovery work correctly for this?
 
+In general, it seems like drivers implement min(MTU, MRU) and nothing
+more. Do you have a real use case for this asymmetry?
 
--- 
-Wei Yang
-Help you, Help me
+      Andrew
