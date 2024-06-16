@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E471850B0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B385D186E46
 	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718526555; cv=none; b=H/1xKR1N6CVD/wCBICxAvgt72zkNWwubwoIBa0W2+uEVonF/dKS8X7lBSuGrUUtzbleXOy0t1JWGBxxOji2ZliDYGc5n4gSIMx6KELMgPdlPELEjAg1sd9k56uXr1xYHrU5AgSyzDgnV1MDw+gO+N3yHxiLNP1PdAXyvILc4/h4=
+	t=1718526555; cv=none; b=o8/MlMhiAW7R5Aeyk3Zu/m29L5D4Q0LMKYV7jLVScot8WSRfnh/bzvvFMPlvJP97U7ezpHk04BWqlNjrxZipfZl0CW9tvScuKKazqma7xbuOoxkIHELroMO32rMPGdT5stZU704Y4H6UR3ju2x7G/0ZlodCeUwc/r1yVawwO3tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718526555; c=relaxed/simple;
-	bh=y4L8DPEW0N5VNTT2zRd+oYE4bUJeVmfldTAKxmr2cq4=;
+	bh=oxb98+Wjy7FjeM9SCAgGOpXxtSD5dWzTsQu21L3Bfoo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AeXOz2fegr+REt23Rh2GvYCdeDpLJnjPk+OCv67yph4Up/eE+gTRUj3lXq7FQPfNdV93wo0A2siRsbYUkqVI5w/0CZfvt60AEybkGvqO28jbvoWdzBdHjTaHq37kcfyazRXU/bcaZCmjB1Bi17/PVeOKfX+rqMF8PvNp44pBOa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pL6gyk10; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=rdK0uRR+6sNC2gH1lvodDgWgcel4jW5TFS6iij1AuOzgrcsQp6nko1WnvCBd8PpDhulm9V4CKEyAW6vVHlAxZ3qaDVxt+efTkUb/huhAxQ0PSTHoCscy4R+7sktghRGls5UHsw0S2b44O3vIzZ5bkW2HaedaS7+nwTsluVYIE+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cf8fve1z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pL6gyk10"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 82A2AC4DDE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cf8fve1z"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4C6F5C4AF63;
 	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718526555;
-	bh=y4L8DPEW0N5VNTT2zRd+oYE4bUJeVmfldTAKxmr2cq4=;
+	bh=oxb98+Wjy7FjeM9SCAgGOpXxtSD5dWzTsQu21L3Bfoo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=pL6gyk101a9mfx7ZugzjEuVs2OlyU5b8QXjcE2GDGdFdGpFP+sKuICB8/0DwYMq2T
-	 4rNmwJA0aDTYVkkdx68PKB8RNZ1doI0v9JZ+ZWfog4f+Yf2hxdI3EGpvA0v3Ce9a9L
-	 mlWY5O0tMsnmi/l9V4ISbiD32HjORMLTf99FIO7yK3aqS5bINIBvDW6cQJxFzg9i8a
-	 KH1eClwU3XOSKX2Mh04P/rge8mPhD51AS6Ew5sd8iwWsQTw9a4E8KG0k73X3ddYy3E
-	 6Tfcnyw/f8Dq7fwJIfWIxiI1WMDZFMAQ4YUFGrWYBVpK7IyitztwD3x0tiyYpEz7o8
-	 wLTf5LCqmT0mg==
+	b=Cf8fve1zALnXtP2E3IypIGjIbnh7OmphnienG/0XEHp6HfwQ5b5srvHqszmc0Fd2F
+	 Eo0tKvpRgEcdyLm3HHjxtduKl50LDn3YL46dSMS1MD7AWa23fesK7TcxqVbSzUe+87
+	 nx17WbWD4II1oAbECqQWb8SyWmcLkJVkV/nf7xTwoXv49PHFIucLa+CiQ6gFCRFnXS
+	 K6gI9P7JoCZBWYYKMwsTpQvdfAFX+muLrkjAHfKLYbdm0CLQAOQCg8LTsWJERGlbxi
+	 fGR6Wn5RTA0FnM8sqIXIF737Cd3K0MJ2GRFKbeALudluJE48odBcIFAcw+ibCbWnBX
+	 g1bBm4Srly08w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB4EC2BA16;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C2BC27C6E;
 	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Sun, 16 Jun 2024 16:29:23 +0800
-Subject: [PATCH 13/13] drm/mediatek: Support DRM plane alpha in Mixer
+Date: Sun, 16 Jun 2024 16:29:19 +0800
+Subject: [PATCH 09/13] drm/mediatek: Fix XRGB setting error in OVL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240616-mediatek-drm-next-v1-13-7e8f9cf785d8@mediatek.com>
+Message-Id: <20240616-mediatek-drm-next-v1-9-7e8f9cf785d8@mediatek.com>
 References: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
 In-Reply-To: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -54,11 +54,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=901;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=2836;
  i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
- bh=7ThFleBFmPuW5Sf6NpW0LO1TvAYrv9i7y0k4TPqs4a4=;
- b=0Ex4IiVIAOYPqOVPscuiMW6iSaEiPi9nM1nnfH3Aq7O/HTOiD+BrqezlMqZQrnM23tubAhdL4
- 757mf7Ek2kaCrKL2Mnp1PjpKWZE0hysrXjY1x0jxEnHEaPPym8U3juS
+ bh=vVW9D7krUv/QeI7mKMXg4dCoJYZZZHxYjH8XtvTllws=;
+ b=QoL51j2R0DiY+OHpy49e3QAW6LGgdoVCPECx4xnWLYMZrD3YfeTfIC47sGwymgVf4ZbeyXm38
+ Fq2J9Sfl+eXBwiwskTMoIlnl52iizChvE30QSBSkFtxhw2+0cG/HEO3
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
@@ -68,31 +68,62 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Set the plane alpha according to DRM plane property.
+CONST_BLD must be enabled for XRGB formats although the alpha channel
+can be ignored, or OVL will still read the value from memory.
+This error only affects CRC generation.
 
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_ethdr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index a302b12aae3f..16be98cee505 100644
---- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -170,8 +170,10 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 		return;
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 738244a6164e..615b75919d1b 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -38,6 +38,7 @@
+ #define DISP_REG_OVL_PITCH_MSB(n)		(0x0040 + 0x20 * (n))
+ #define OVL_PITCH_MSB_2ND_SUBBUF			BIT(16)
+ #define DISP_REG_OVL_PITCH(n)			(0x0044 + 0x20 * (n))
++#define OVL_CONST_BLEND					BIT(28)
+ #define DISP_REG_OVL_RDMA_CTRL(n)		(0x00c0 + 0x20 * (n))
+ #define DISP_REG_OVL_RDMA_GMC(n)		(0x00c8 + 0x20 * (n))
+ #define DISP_REG_OVL_ADDR_MT2701		0x0040
+@@ -428,6 +429,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	unsigned int fmt = pending->format;
+ 	unsigned int offset = (pending->y << 16) | pending->x;
+ 	unsigned int src_size = (pending->height << 16) | pending->width;
++	unsigned int ignore_pixel_alpha = 0;
+ 	unsigned int con;
+ 	bool is_afbc = pending->modifier != DRM_FORMAT_MOD_LINEAR;
+ 	union overlay_pitch {
+@@ -449,6 +451,14 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	if (state->base.fb && state->base.fb->format->has_alpha)
+ 		con |= OVL_CON_AEN | OVL_CON_ALPHA;
  
--	if (state->base.fb && state->base.fb->format->has_alpha)
--		alpha_con = MIXER_ALPHA_AEN | MIXER_ALPHA;
-+	if (state->base.fb) {
-+		alpha_con |= MIXER_ALPHA_AEN;
-+		alpha_con |= state->base.alpha & MIXER_ALPHA;
-+	}
++	/* CONST_BLD must be enabled for XRGB formats although the alpha channel
++	 * can be ignored, or OVL will still read the value from memory.
++	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
++	 * affect the result. Therefore we use !has_alpha as the condition.
++	 */
++	if (state->base.fb && !state->base.fb->format->has_alpha)
++		ignore_pixel_alpha = OVL_CONST_BLEND;
++
+ 	if (pending->rotation & DRM_MODE_REFLECT_Y) {
+ 		con |= OVL_CON_VIRT_FLIP;
+ 		addr += (pending->height - 1) * pending->pitch;
+@@ -464,8 +474,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
  
- 	if (state->base.fb && !state->base.fb->format->has_alpha) {
- 		/*
+ 	mtk_ddp_write_relaxed(cmdq_pkt, con, &ovl->cmdq_reg, ovl->regs,
+ 			      DISP_REG_OVL_CON(idx));
+-	mtk_ddp_write_relaxed(cmdq_pkt, overlay_pitch.split_pitch.lsb, &ovl->cmdq_reg, ovl->regs,
+-			      DISP_REG_OVL_PITCH(idx));
++	mtk_ddp_write_relaxed(cmdq_pkt, overlay_pitch.split_pitch.lsb | ignore_pixel_alpha,
++			      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_PITCH(idx));
+ 	mtk_ddp_write_relaxed(cmdq_pkt, src_size, &ovl->cmdq_reg, ovl->regs,
+ 			      DISP_REG_OVL_SRC_SIZE(idx));
+ 	mtk_ddp_write_relaxed(cmdq_pkt, offset, &ovl->cmdq_reg, ovl->regs,
 
 -- 
 Git-146)
