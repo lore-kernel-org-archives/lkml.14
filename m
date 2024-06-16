@@ -1,132 +1,174 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3154E186E26;
-	Sun, 16 Jun 2024 08:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72049181330
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 08:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718528303; cv=none; b=rvmUBgqWchP6WTCB9IYuOfXVQvgTgjMq7Y3u5lS54UCDQFhZE0bpbItoPB+dBjT5yk6/puVl2nWAbTcDTNkSJwu0RcHj14QGTMb3YBMQyPmW5ABnrk3G3g1/HRlwVIZl/AT0UFxRzHQkcOzFCuIi9OZUb0x2XjhHrkw7S1YtgpY=
+	t=1718528348; cv=none; b=s1Jz2f5a2fWGnZUbQQmI//+eUuRPl5zTrWCCtk/jH6bzJhNnC1lwDdHBTpNQOi9Xrx9Kw3X/RckZ7DSbNYjRD+O9lyiNiN0C6UZv2RkZipQUJ/9e6YTGeSeu1CaStVwyTxHe3PsekaDSqIDfbjtgQsWUpkNFXEbEflG9hJYISBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718528303; c=relaxed/simple;
-	bh=ysxXEWdSdFeJRANHElWTANKfJwhXp9/aaLwfLeDh3nI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KKFpzRM1uhgeMOcP18nE4s4eLAS+FOFui+c300njQTTwJMQyUfElzj1y3ZbIpH/bOtlk01i9UL/twGUG8CbRpyHlXyw/g1OqQ2Z80frGajWkEPaVP1qtxj7KFOn8VlHneo9ODYtUTLwfe6mqmptn9o/zmD/xRzlEqi5AgadgdAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=qdCi3pKR; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1718528348; c=relaxed/simple;
+	bh=UkcGOq3mmcxrWiOFZCmik5zItgVm4hUZxJ0RQxchvLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=B/6oeBPINsOO/B/ErPbwfQkgUItWqBVwUP7rF2dSnFhLOz+WxH4ZYT7BozaeM0Thr8SnlqMTUrJoRIQ5eXlLPVie4kUgma2yZ9ytOehMba0RTsqIYq1ftJdWH2a+zgXrnu2bwDBhBEAogVE+7beWFCSVEauRg/1cBfTnKWsacD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0mWYNTi; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qdCi3pKR"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45G8viDj1100721
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 16 Jun 2024 01:57:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45G8viDj1100721
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1718528269;
-	bh=tORcu0KzoezwP+svxxymeaOgQSsooEptNlD6MZV7h1Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qdCi3pKRGBCyGMdQv4641rh0aeln7aK5WhliHJsJRT96xGzVAtLVF6JxHsFVeYOT3
-	 4j2SHk7L6GXRcjmwrwyn64pz3RyaU3cqI2GyHTKUAQ3yQsHzEOXiKHW/oHWiyaUqIm
-	 qr5AYgD8SBEU+8piD8gSVZa/24cJsBFL1GbOiLU6hG6CcepnR5Xk4u5F7mpcbjIVty
-	 ijE70paxJ2/9ILUjciaKBtGwzTTB/YXLDpWgrHMebYXKkx47AyQeEnLIyGFyUrQAUB
-	 TkdnPmljF/txTz90cPvAEpQ3x8Uwi7Mk/euxA+H33SSi3+F8n91PAugSgtoOsBsSOw
-	 RvG9Ij1oNcxpg==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org
-Subject: [PATCH v2 0/3] x86/cpufeatures: Automatically generate required and disabled feature masks
-Date: Sun, 16 Jun 2024 01:57:40 -0700
-Message-ID: <20240616085743.1100704-1-xin@zytor.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0mWYNTi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718528347; x=1750064347;
+  h=date:from:to:cc:subject:message-id;
+  bh=UkcGOq3mmcxrWiOFZCmik5zItgVm4hUZxJ0RQxchvLQ=;
+  b=U0mWYNTihBwMRNtXCF5DmZMYaHcSTGgWpWm4BpFTrTFqXN/WSYiKuBqE
+   ny6paTJDo4R5j5sN3vxWxH4VNi5LI/+z8qzC0yG0DQ2JFzCfpQm+/XUcp
+   ydUaCIABuJx/1ZmnzNYPoXSK9RwTMzQLqFiT1WF2642+ocfq9vb8pYNI2
+   Qa2koSN635mPVq8CGh42jUrPNKeRFF9MYRlSQJyKM0BNkeuRWv0wGUDHm
+   LPt8RY91gvD6GjMI5YDjV5I94E12vxn+bnrOIQ/VGJfFwlxAY2Hah8Yn+
+   G1/SVoYgoLtZlgKo0dZCRAWZD6HEFj3jP7lzXccab+XdTmqzQ9AuwTOmr
+   g==;
+X-CSE-ConnectionGUID: eX+eAn/TRwerZjLjQco/BQ==
+X-CSE-MsgGUID: 4GPWmkEkSpa6rqYfmcOxLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11104"; a="19201848"
+X-IronPort-AV: E=Sophos;i="6.08,241,1712646000"; 
+   d="scan'208";a="19201848"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 01:59:07 -0700
+X-CSE-ConnectionGUID: d7m8vJVKQ4eZbRsino1Xrw==
+X-CSE-MsgGUID: cYHuanpOQMuEPTmw5izqPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,241,1712646000"; 
+   d="scan'208";a="41616681"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 16 Jun 2024 01:59:05 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sIlj4-0002XK-2h;
+	Sun, 16 Jun 2024 08:59:02 +0000
+Date: Sun, 16 Jun 2024 16:58:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ 71315037cb7d40cdb2f4fbefad31927f6e6caba5
+Message-ID: <202406161616.E1Likza0-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The x86 build process first generates required and disabled feature
-masks based on current build config, and then uses these generated
-masks to compile the source code. When a CPU feature is not enabled
-in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
-flag, i.e., DISABLE_FRED, needs to be properly defined and added to
-a specific disabled CPU features mask in <asm/disabled-features.h>,
-as the following patch does:
-https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
-As a result, the FRED feature bit is surely cleared in the generated
-kernel binary when CONFIG_X86_FRED=n.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cleanups
+branch HEAD: 71315037cb7d40cdb2f4fbefad31927f6e6caba5  x86/boot: Remove unused function __fortify_panic()
 
-Recently there is another case to repeat the same exercise for the
-AMD SEV-SNP CPU feature:
-https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
-https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
+elapsed time: 2423m
 
-It was one thing when there were four of CPU feature masks, but with
-over 20 it is going to cause mistakes, e.g.,
-https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
+configs tested: 97
+configs skipped: 2
 
-We want to eliminate the stupidly repeated exercise to manually assign
-features to CPU feature words through introducing an AWK script to
-automatically generate a header with required and disabled CPU feature
-masks based on current build config, and this patch set does that.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240615   gcc-13.2.0
+arc                   randconfig-002-20240615   gcc-13.2.0
+arm                               allnoconfig   clang-19
+arm                                 defconfig   clang-14
+arm                   randconfig-001-20240615   clang-19
+arm                   randconfig-002-20240615   clang-19
+arm                   randconfig-003-20240615   gcc-13.2.0
+arm                   randconfig-004-20240615   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240615   clang-19
+arm64                 randconfig-002-20240615   gcc-13.2.0
+arm64                 randconfig-003-20240615   clang-17
+arm64                 randconfig-004-20240615   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240615   gcc-13.2.0
+csky                  randconfig-002-20240615   gcc-13.2.0
+hexagon                           allnoconfig   clang-19
+hexagon                             defconfig   clang-19
+hexagon               randconfig-001-20240615   clang-19
+hexagon               randconfig-002-20240615   clang-19
+i386         buildonly-randconfig-001-20240615   clang-18
+i386         buildonly-randconfig-002-20240615   gcc-9
+i386         buildonly-randconfig-003-20240615   gcc-7
+i386         buildonly-randconfig-004-20240615   clang-18
+i386         buildonly-randconfig-005-20240615   clang-18
+i386         buildonly-randconfig-006-20240615   gcc-13
+i386                  randconfig-001-20240615   clang-18
+i386                  randconfig-002-20240615   gcc-13
+i386                  randconfig-003-20240615   clang-18
+i386                  randconfig-004-20240615   clang-18
+i386                  randconfig-005-20240615   clang-18
+i386                  randconfig-006-20240615   clang-18
+i386                  randconfig-011-20240615   clang-18
+i386                  randconfig-012-20240615   gcc-12
+i386                  randconfig-013-20240615   gcc-13
+i386                  randconfig-014-20240615   clang-18
+i386                  randconfig-015-20240615   clang-18
+i386                  randconfig-016-20240615   gcc-13
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240615   gcc-13.2.0
+loongarch             randconfig-002-20240615   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240615   gcc-13.2.0
+nios2                 randconfig-002-20240615   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc                randconfig-001-20240615   gcc-13.2.0
+parisc                randconfig-002-20240615   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc               randconfig-001-20240615   clang-19
+powerpc               randconfig-002-20240615   clang-19
+powerpc               randconfig-003-20240615   clang-19
+powerpc64             randconfig-001-20240615   clang-19
+powerpc64             randconfig-002-20240615   clang-19
+powerpc64             randconfig-003-20240615   clang-19
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   clang-19
+riscv                 randconfig-001-20240615   clang-19
+riscv                 randconfig-002-20240615   gcc-13.2.0
+s390                              allnoconfig   clang-19
+s390                                defconfig   clang-19
+s390                  randconfig-001-20240615   clang-16
+s390                  randconfig-002-20240615   clang-19
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                    randconfig-001-20240615   gcc-13.2.0
+sh                    randconfig-002-20240615   gcc-13.2.0
+sparc                             allnoconfig   gcc-13.2.0
+sparc                               defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240615   gcc-13.2.0
+sparc64               randconfig-002-20240615   gcc-13.2.0
+um                                allnoconfig   clang-17
+um                                  defconfig   clang-19
+um                             i386_defconfig   gcc-13
+um                    randconfig-001-20240615   gcc-7
+um                    randconfig-002-20240615   gcc-11
+um                           x86_64_defconfig   clang-15
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240615   gcc-13.2.0
+xtensa                randconfig-002-20240615   gcc-13.2.0
 
-Changes since v1:
-* Keep the X86_{REQUIRED,DISABLED}_FEATURE_ prefixes solely in
-  arch/x86/Kconfig.cpufeatures (Borislav Petkov).
-* Explain how config option names X86_{REQUIRED,DISABLED}_FEATURE_<name>
-  are formed (Borislav Petkov).
-* Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
-  to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
-  disabled feature for this particular compile-time configuration.
-
-
-H. Peter Anvin (Intel) (2):
-  x86/cpufeatures: Add {required,disabled} feature configs
-  x86/cpufeatures: Generate a feature mask header based on build config
-
-Xin Li (Intel) (1):
-  x86/cpufeatures: Remove {disabled,required}-features.h
-
- arch/x86/Kconfig                              |   4 +-
- arch/x86/Kconfig.cpu                          |  12 +-
- arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
- arch/x86/Makefile                             |  17 +-
- arch/x86/boot/cpucheck.c                      |   3 +-
- arch/x86/boot/cpuflags.c                      |   1 -
- arch/x86/boot/mkcpustr.c                      |   3 +-
- arch/x86/include/asm/Kbuild                   |   1 +
- arch/x86/include/asm/asm-prototypes.h         |   2 +-
- arch/x86/include/asm/atomic64_32.h            |   2 +-
- arch/x86/include/asm/bitops.h                 |   4 +-
- arch/x86/include/asm/cmpxchg_32.h             |   2 +-
- arch/x86/include/asm/cpufeature.h             |   1 +
- arch/x86/include/asm/cpufeatures.h            |   8 -
- arch/x86/include/asm/disabled-features.h      | 161 --------------
- arch/x86/include/asm/required-features.h      | 105 ----------
- arch/x86/kernel/verify_cpu.S                  |   1 +
- arch/x86/lib/Makefile                         |   2 +-
- arch/x86/lib/cmpxchg8b_emu.S                  |   2 +-
- arch/x86/tools/featuremasks.awk               |  90 ++++++++
- lib/atomic64_test.c                           |   2 +-
- tools/arch/x86/include/asm/cpufeatures.h      |   8 -
- .../arch/x86/include/asm/disabled-features.h  | 161 --------------
- .../arch/x86/include/asm/required-features.h  | 105 ----------
- tools/perf/check-headers.sh                   |   2 -
- 25 files changed, 320 insertions(+), 576 deletions(-)
- create mode 100644 arch/x86/Kconfig.cpufeatures
- delete mode 100644 arch/x86/include/asm/disabled-features.h
- delete mode 100644 arch/x86/include/asm/required-features.h
- create mode 100755 arch/x86/tools/featuremasks.awk
- delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
- delete mode 100644 tools/arch/x86/include/asm/required-features.h
-
-
-base-commit: 49b33979e3bf0a5424420d14f026de12f34e8b1e
 -- 
-2.45.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
