@@ -1,43 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A44D16A392;
-	Sun, 16 Jun 2024 08:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FE018628D
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718526301; cv=none; b=b1BoO8IkepzF6OelwiCIiI2pNgySTaIVdhfo2JeV1zpUH3ENJI7ttKV20V/18haV1/ci1CmCbJ8biQonm4Ps9PfgMwArh50DxB7EoUBoI/r5KoIVevx5zblMdMY75O6/uqvr8amrq+wEsClGwbxcGSop6ScG8FUEZvcKfZMgmws=
+	t=1718526555; cv=none; b=UhTF2iKqY1PVa7dHirI9b05CVv/OhcRxZPaXKgdJ0xcPBDObO+hzaA0sdBNOgiyQ7TE/89VezKFX3az9EaZf3nhZzRnuTZFhOYoL2sfG7BJPFCHjlP3WABPfLJWDjWptjoPHZBd0B20M/UnJR+QZ/gyPgyuM+moHiSDLCX+/o08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718526301; c=relaxed/simple;
-	bh=8Tgp/WGahnUFu+TyyKj8l731bhTgqzfkM5kbZre4hgo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NoQZp7/JhIgxegHBOp5jDKR5a3NiynuLP60Gd8Gbt+5BY23mFvql33VkQRIJpPPLbK/oioGUzixfFOaXvBHA0ScdNioWSSkUeXFMJduYdABnSJU9mkzbXOOMGpZq0SpJ+6FVE/RcVFaXR92Cq92PbA5lQJlvArDVshZTgBE7GWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTV8msdK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718526555; c=relaxed/simple;
+	bh=ooFwSoVJ9N3sXdcV4iug2DcGs+ehRHDEPEzbrAfyAEI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uVYdphAB23J4IamO58UHQelS8GTsAOpOs+6vLT91YzZ1eJ2jctSYCvZrAdPlQA0k4dPpvPBKUfHZo0/d24H3+APy/gppIji4aihBams6Nh7pAmRxa+tQEpYy+t2N4K/7fG4ZHJ/GJPJANDHAtUft9II8mLtR2+BNUMChlfgFxtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpS3YKDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTV8msdK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F418C2BBFC;
-	Sun, 16 Jun 2024 08:24:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpS3YKDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0643DC4AF50;
+	Sun, 16 Jun 2024 08:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718526300;
-	bh=8Tgp/WGahnUFu+TyyKj8l731bhTgqzfkM5kbZre4hgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pTV8msdKI1lHfMIwTh0LzgVdynJddj53KlihQuvtQ436dRxehDMoGnmRct3et+EzR
-	 NYgyhCVmZtYizelgHuqXPrzLom3J11MSL/tGV0Dvr2RpvDoCvO99PgpqnJMXqNkhFb
-	 UaJ9eAejr6AGiVu8Dt1P7DjYgwy1LSMt3fqijzWTnFgv7SL6h2oI7qp7rK5jMOeHhX
-	 vNCpyzp9NQnnfoCXHCw2SlcioIHHVP/wuDZLCnQTSgZvVSzB8DRmB1rLo8S6L1570V
-	 tdO5IBWrfe8pDHk5Sr78fR2k2gdowWZw2KdmOOu/8sgcrVkLwscyQwPTAe4Xph+2dp
-	 GU81XgmZrzu7g==
-From: William Breathitt Gray <wbg@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Judith Mendez <jm@ti.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: ti-eqep: implement over/underflow events
-Date: Sun, 16 Jun 2024 17:24:47 +0900
-Message-ID: <171852622547.2476911.15327003731221678203.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240609-counter-ti-eqep-over-under-events-v1-1-74fe1632f5ab@baylibre.com>
-References: <20240609-counter-ti-eqep-over-under-events-v1-1-74fe1632f5ab@baylibre.com>
+	s=k20201202; t=1718526555;
+	bh=ooFwSoVJ9N3sXdcV4iug2DcGs+ehRHDEPEzbrAfyAEI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=KpS3YKDP1ahe//Us3V7N1GqiG1otEZ4R6peB5lsLGldYx9UrZ+ykCyGuGoJ9rDU71
+	 Gg+QXFjoENRLVyc1ckyOdFT52tyvx7YFZjtEQKCyYpj0asi0tSCNk2t4kFJBYbgp+1
+	 13aS5FZ9iRdEUrYU6go5iSRMKrGd+DFTy/wyZr00mHeaFuU3c35cRUik/wQI5IlqgC
+	 1lzr8hWPVuFWHgNK1vG1vPIrV7Vw2XGpt5LFFvFZfXCg+GrvUwkuw23ocDml8qYEpr
+	 GuXR+VrrALUmgOZlUZrR6RuRfdaVAvra24/uaoyN4OkYRnHYFs2qDp92Rh0sfx3IVe
+	 ekDOJCgVlVRFA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BFBC27C77;
+	Sun, 16 Jun 2024 08:29:14 +0000 (UTC)
+From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
+Date: Sun, 16 Jun 2024 16:29:13 +0800
+Subject: [PATCH 03/13] drm/mediatek: Add missing plane settings when async
+ update
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,22 +40,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=403; i=wbg@kernel.org; h=from:subject:message-id; bh=XAiSDL7nD7/Uyl6WagR4gmOtftEcjiXUjBUgulwbuvY=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDGl5C52K1By/zEvVb+TOO/QjT9Fkhc27I4kVkqc9X78Q+ fvm1HuvjlIWBjEuBlkxRZZe87N3H1xS1fjxYv42mDmsTCBDGLg4BWAiQscY/tmo2HEY2p688FdZ KeHlrXR3BZF404ntPwK/p91T2DijbTXDP8XGbPfwUPeqvBTmh/wvpYu4DF6+5miuEWJJnr9t1tJ p/AA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240616-mediatek-drm-next-v1-3-7e8f9cf785d8@mediatek.com>
+References: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
+In-Reply-To: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ CK Hu <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, 
+ Daniel Kurtz <djkurtz@chromium.org>, YT Shen <yt.shen@mediatek.com>, 
+ Mao Huang <littlecvr@chromium.org>, "Nancy.Lin" <nancy.lin@mediatek.com>
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Hsiao Chien Sung <shawn.sung@mediatek.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718526553; l=1082;
+ i=shawn.sung@mediatek.com; s=20240616; h=from:subject:message-id;
+ bh=ADiZlSVJT5s2sH18XbsNK2Wsb8sGtAwURKhvCjHjtzc=;
+ b=FVT/WCynaSSn97vJO73+EtVbiFHnpQke6j5kOKH+9CSpaY+pf3TzcrWiqOmEJYs+/GibTLH26
+ PI8uVoDJsH9DfpE3reZyu3mXz7V5UXp64qRrbfhMf+MYlS5Y6DFcOsc
+X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
+ pk=lq1w8BuWDINX+4JHjGHhhbAU5ICP+cL9VCj7wn+cEDA=
+X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240616 with
+ auth_id=172
+X-Original-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Reply-To: shawn.sung@mediatek.com
 
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-On Sun, 09 Jun 2024 16:49:33 -0500, David Lechner wrote:
-> This adds support to the TI eQEP counter driver for subscribing to
-> overflow and underflow events using the counter chrdev interface.
-> 
-> 
+Fix an issue that plane coordinate was not saved when
+calling async update.
 
-Applied, thanks!
+Fixes: 920fffcc8912 ("drm/mediatek: update cursors by using async atomic update")
 
-[1/1] counter: ti-eqep: implement over/underflow events
-      commit: 1c30c6d024726e2af2a5608474bf1fb6937f5740
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_plane.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best regards,
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index 4625deb21d40..a74b26d35985 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -227,6 +227,8 @@ static void mtk_plane_atomic_async_update(struct drm_plane *plane,
+ 	plane->state->src_y = new_state->src_y;
+ 	plane->state->src_h = new_state->src_h;
+ 	plane->state->src_w = new_state->src_w;
++	plane->state->dst.x1 = new_state->dst.x1;
++	plane->state->dst.y1 = new_state->dst.y1;
+ 
+ 	mtk_plane_update_new_state(new_state, new_plane_state);
+ 	swap(plane->state->fb, new_state->fb);
+
 -- 
-William Breathitt Gray <wbg@kernel.org>
+Git-146)
+
+
