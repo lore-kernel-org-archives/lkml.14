@@ -1,126 +1,64 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from irl.hu (irl.hu [95.85.9.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025AA24B34
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 18:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D7D1847;
+	Sun, 16 Jun 2024 18:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718560825; cv=none; b=E6lp5/GEgXmPcfzZhvHdlmd0XRVX+iAMYaO0O0RgMMfAA7U7zolNwPkqHy8NEOs6rQBnZlxijupnT8XmVTgStyaenviOwOnCmUgCqMtkDoKJ5CsT2s8hZjhteRSJ0ZO9X9qq7wxDll+wVuhmS7A3TrFCAgRpThYh2mIZZQU3sO0=
+	t=1718561289; cv=none; b=UIzE53NRpomyDA22J3/QVaINgY1vE4sU5YSgF1Puo3Cn7qnoFPUlpL6zUHJZs82yz3rtopGgz26864AAprxWyimtwfDDEqCOJV4FtNSg7pFOPl0RWGnioZixcFcIniz3smCRyUmj84bwF+YVgq56chcwOAOctTrujw/PI1GDD0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718560825; c=relaxed/simple;
-	bh=+fzPigpqqCtdyNBac5peDLXSMz+u8kTHjXJcO2VKKY0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=I/JA106foa4nTUnhv3GEtyRLFVB1VPj91GoEiiSRdXZUiieO9LHxEkQshUwLgVUmJXqxm4Wt9e6BwrBTjN1MpdP9AMi2UfcTBtJC1K4cgAn3yQMNhIzwLxju34gUr50MggfGwdmtKRxaj5MnN1p1djB1mJ0fVaZ6D9GgfEOf/yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7eb5f83ae57so395542839f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 11:00:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718560823; x=1719165623;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x6Vx5rRDiMnr7zNSuIUNeaQO0x6H1lSVNApyoo9r05E=;
-        b=NVnB0WJBHC8X1wuYu8P1D6MUgsH0Y5tG1sqj7Ns67vFvTqxAcPUXhGzA9mR/8CxsxH
-         57e4F/J8pUnQzU+H1elXJnXl+IqnV8mUQhD6Px12veuNBGQNG3loaSYrpncjDsSIRyyS
-         wdD68lj14EQ8X1Y5j9WbntrB2DuVGuzTGYVRul2qby7u2sIznGtea83zhwfSMajwBoug
-         W/FAGFRzhPK/cX6g0VoEyvB9NwyyzOXHAMN3UPvJ8URf/yleo/u390RZ9EbtCTNDnSgA
-         42MYzol6WQ2M7fUxYUBmxyYki6xMAGbiyrIz2mZ5moIazR6H5DEFixjUKoYaEDkVwte+
-         AfxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiGUOdB9ZPurNCQA2ZH5Z1VtMbfeV9fsLMO9VCh2v+vx9H70tsIF2DyUrRqcSgm8BUMsXvYhwXxsRN9Bt3wVE6G6bK3UusXSP9pUU8
-X-Gm-Message-State: AOJu0YwU4AtK+ntlAS5USWIeHUYoXtwgUq3XpkPOE0UgasVevnfNfU8s
-	Qf9s4r/LsuWbE6kwMGHETils++DhSF6JKnBSm9crQ9KpUiwoCCdZSCA4dNM7j7aJPC98oM8KHP7
-	kO+I+VOyzocxIVZKfcJtoDzLV9zD5JSqcACPSJf9+d6JSN6YRia9EIG0=
-X-Google-Smtp-Source: AGHT+IEnNQFapInZa9RWHbA4geAl1SxX21EsCPrsi+Ev7n9EoF/IG+EbV4iVjwcTxa8EjJ9Rg8C0BMpalIeGjRtNysfgJX4vJRk5
+	s=arc-20240116; t=1718561289; c=relaxed/simple;
+	bh=zQpt/KOTN1mT5M1C2lwXEYoYFxmtE7HL1hRnOr8ZtNQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iU7pgeLNRO2fvIV5KEGO/dy2np6kGGN2/UazNjTQ0pBxgvkNTR0kV33fTA3n0UWsLrYdm58Eoh1Wh10WZOZyhZfQ59xAmKa6YcV9ZQwwD3WsIVxLGEHzKLN7vg5uY6LzgKSg5WIwJi6npLV68tZAFN5g9CQO7Oq90wTMvrx2d88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (c3e47615.dsl.pool.telekom.hu [::ffff:195.228.118.21])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000070EF5.00000000666F29FF.0023D54E; Sun, 16 Jun 2024 20:07:58 +0200
+Message-ID: <2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
+Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset mic on IdeaPad
+ 330-17IKB 81DM
+From: Gergo Koteles <soyer@irl.hu>
+To: Ajrat Makhmutov <rautyrauty@gmail.com>,
+  alsa-devel@alsa-project.org
+Cc: perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
+  sbinding@opensource.cirrus.com, luke@ljones.dev,
+  shenghao-ding@ti.com, simont@opensource.cirrus.com,
+  foss@athaariq.my.id, rf@opensource.cirrus.com, wzhd@ustc.edu,
+  linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sun, 16 Jun 2024 20:07:57 +0200
+In-Reply-To: <20240615125457.167844-1-rauty@altlinux.org>
+References: <20240615125457.167844-1-rauty@altlinux.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:40aa:b0:4b4:5040:f29f with SMTP id
- 8926c6da1cb9f-4b962b4b3c4mr362827173.1.1718560823101; Sun, 16 Jun 2024
- 11:00:23 -0700 (PDT)
-Date: Sun, 16 Jun 2024 11:00:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000062d903061b059fb4@google.com>
-Subject: [syzbot] [bluetooth?] WARNING in l2cap_send_disconn_req
-From: syzbot <syzbot+e70cc8721ff61d6bebda@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Ajrat,
 
-syzbot found the following issue on:
+On Sat, 2024-06-15 at 15:54 +0300, Ajrat Makhmutov wrote:
+> Headset microphone do not work out of the box with this laptop. This
+> quirk fixes it. Zihao Wang specified the wrong subsystem id in his patch.
 
-HEAD commit:    2ef5971ff345 Merge tag 'vfs-6.10-rc4.fixes' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122b5b6a980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-dashboard link: https://syzkaller.appspot.com/bug?extid=e70cc8721ff61d6bebda
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+The 17aa:3820 is the Duet 7 ITL6's PCI SSID, so I don't think it's a
+mistake. It is just a PCI SSID - codec SSID collision.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Here is an ITL6 probe:
+https://linux-hardware.org/?probe=3Dd3d4d3dea3
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/68c14576ffea/disk-2ef5971f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3e404ec95932/vmlinux-2ef5971f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b486b23228a7/bzImage-2ef5971f.xz
+There are some similar collisions with Lenovo laptops.
+Please see commit 0ac32a396e4f41e88df76ce2282423188a2d2ed0 for an
+example how to handle one.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e70cc8721ff61d6bebda@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9 at kernel/workqueue.c:2281 __queue_work+0xc5e/0xee0 kernel/workqueue.c:2280
-Modules linked in:
-CPU: 0 PID: 9 Comm: kworker/0:1 Not tainted 6.10.0-rc3-syzkaller-00021-g2ef5971ff345 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: events l2cap_chan_timeout
-RIP: 0010:__queue_work+0xc5e/0xee0 kernel/workqueue.c:2280
-Code: ff e8 46 83 36 00 90 0f 0b 90 e9 20 fd ff ff e8 38 83 36 00 eb 13 e8 31 83 36 00 eb 0c e8 2a 83 36 00 eb 05 e8 23 83 36 00 90 <0f> 0b 90 48 83 c4 58 5b 41 5c 41 5d 41 5e 41 5f 5d e9 17 9d 50 0a
-RSP: 0018:ffffc900000e7870 EFLAGS: 00010093
-RAX: ffffffff815fa3dd RBX: ffff888015090008 RCX: ffff888016eb8000
-RDX: 0000000000000000 RSI: 0000000000200000 RDI: 0000000000000000
-RBP: 0000000000000020 R08: ffffffff81628b19 R09: ffffc900000e7940
-R10: dffffc0000000000 R11: fffff5200001cf29 R12: ffff8880245d49c0
-R13: dffffc0000000000 R14: ffff8880245d4800 R15: 0000000000000008
-FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020aa3000 CR3: 000000005e458000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- queue_work_on+0x1c2/0x380 kernel/workqueue.c:2410
- l2cap_send_disconn_req+0x28e/0x440 net/bluetooth/l2cap_core.c:1487
- l2cap_chan_close+0x378/0x9f0 net/bluetooth/l2cap_core.c:826
- l2cap_chan_timeout+0x142/0x360 net/bluetooth/l2cap_core.c:435
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
- kthread+0x2f2/0x390 kernel/kthread.c:389
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+Best regards,
+Gergo
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
