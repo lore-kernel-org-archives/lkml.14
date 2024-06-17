@@ -1,203 +1,90 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403228FA;
-	Mon, 17 Jun 2024 01:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF26610C;
+	Mon, 17 Jun 2024 01:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718588186; cv=none; b=bJeGzo9f6fg86Ptor96sjN0e9M7WYVZpvdq6gqc2NPisUWsoKti0/+3KaGKc67deQhxnwOmJmHplBHHXNJQFpTHZri3Z44ohRm6LvP+s6kZSIxlJldrsJVMf5JLMGtQTV9hTEcqqiEJ1EOTy6sm3cwPb07bRndgvDt0mVleg8+c=
+	t=1718588393; cv=none; b=O++V7wAmq3H3EloJJPZevoS3n2K7Q2m4yeMbcCRMWYPL2ioiahugrk4sqvS/0/uG04P9L5eUUZF4/pZOy/In7ReRaYBm2jx2rdEJHNzwff0/1+Ci+UTuGyKVwd82l8medg/ieHDwYUlstAT0Lz38/S2vhaEcGW+fzZFEsfQcaPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718588186; c=relaxed/simple;
-	bh=9H1/J8OKKqVwu2xDiBQTLiXvt6EywQ1255mf6P8udi8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KGPgEKyrYpz8LXyUbtxUTEF83zFYEPs+s0ZDztDZCZ1PpXZG11DC7ehk031R/HFbu+fLDY7LeCNT365MUbZ6GfavBxJZUoIYv881KLfM8Xt0XNZ8nZTBKKzSzChenb+LuE5yuCM6ZBaO/aKaI1aEgSllFtx24N+N4W7ksTW0rOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W2XVs1DvKzdbN5;
-	Mon, 17 Jun 2024 09:34:45 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id AAB32140258;
-	Mon, 17 Jun 2024 09:36:14 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 17 Jun 2024 09:36:13 +0800
-Message-ID: <c5b6aca7-4673-f529-45ec-edbacca7a2ac@huawei.com>
-Date: Mon, 17 Jun 2024 09:36:12 +0800
+	s=arc-20240116; t=1718588393; c=relaxed/simple;
+	bh=chHB4K5e/KhG9RamBUJG4lk7r5XF+mO524wLBWR0oWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Izh4Lb/lfb0g30INBFTuXRhmhd6RCfXtm8uLCkEyiFmoMJVCu/9B6G4sPkLsg3W0LbS3gTzbYKzdJN+Sr43gQdOD1V20TwRVZc1cfaxjgG4MJ74M1nzYtbdiFB8IHmZ8S8C13GiGcIJLkwG1UZg2LsSpTrlKxV3nfIdaXdpB4HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=SHU5LOIO; arc=none smtp.client-ip=123.58.177.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="SHU5LOIO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=nmo4LZa4f+ke849HrHa0sDohJipa88iAo1w8uLmnG2Y=;
+	b=SHU5LOIOQqerZVdPpmCPmDkCpwnCMYz3ChViEcfacPcNvTGk44m1imtZDG3MaW
+	iX/KgHz5YkFtAGB/ePFi/iFFa1EDXOePd446Ko4lAtqcSktuRVsACt736o/IclWm
+	Jyij00hDU7kMDrX3ylib7VaKkz1w7cUJtfBxuJXJGopO0=
+Received: from dragon (unknown [114.216.76.201])
+	by smtp1 (Coremail) with SMTP id ClUQrABnzvrOk29mF54LCA--.41752S3;
+	Mon, 17 Jun 2024 09:39:27 +0800 (CST)
+Date: Mon, 17 Jun 2024 09:39:25 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>, Li Yang <leoyang.li@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Priit Laes <plaes@plaes.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Marco Felsch <m.felsch@pengutronix.de>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 01/13] ARM: dts: imx6qdl-kontron-samx6i: fix phy-mode
+Message-ID: <Zm+TzS6+ZByF3MHt@dragon>
+References: <20240606090206.2021237-1-mwalle@kernel.org>
+ <20240606090206.2021237-2-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2] riscv: stacktrace: Add USER_STACKTRACE support
-Content-Language: en-US
-To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<dev.mbstr@gmail.com>, <samuel.holland@sifive.com>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240604034729.841930-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20240604034729.841930-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606090206.2021237-2-mwalle@kernel.org>
+X-CM-TRANSID:ClUQrABnzvrOk29mF54LCA--.41752S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtFy3XFyfAFW5Xw1fArykGrg_yoWkXrg_ua
+	yxWan5Aa10qF98XryUJr18JF13Kr1UWr93tr1avFnrZFyav3WxXasIgayjyr45GFW5KrZ8
+	XwsxZr4Yyr1I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8BnQUUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDg8BZVszYrtxowAAsG
 
- Gentle ping.
+On Thu, Jun 06, 2024 at 11:01:54AM +0200, Michael Walle wrote:
+> The iMX.6 cannot add any RGMII delays. The PHY has to add both the RX
 
-On 2024/6/4 11:47, Jinjie Ruan wrote:
-> Currently, userstacktrace is unsupported for riscv. So use the
-> perf_callchain_user() code as blueprint to implement the
-> arch_stack_walk_user() which add userstacktrace support on riscv.
-> Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
-> of perf_callchain_user().
+s/iMX.6/i.MX6?
+
+Shawn
+
+> and TX delays on the RGMII interface. Fix the interface mode. While at
+> it, use the new phy-connection-type property name.
 > 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406012109.PDAjXm2i-lkp@intel.com/
+> Fixes: 5694eed98cca ("ARM: dts: imx6qdl-kontron-samx6i: move phy reset into phy-node")
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 > ---
-> v2:
-> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
-> ---
->  arch/riscv/Kconfig                 |  1 +
->  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
->  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
->  3 files changed, 47 insertions(+), 43 deletions(-)
+>  arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0525ee2d63c7..6ed96d935b8f 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -193,6 +193,7 @@ config RISCV
->  	select THREAD_INFO_IN_TASK
->  	select TRACE_IRQFLAGS_SUPPORT
->  	select UACCESS_MEMCPY if !MMU
-> +	select USER_STACKTRACE_SUPPORT
->  	select ZONE_DMA32 if 64BIT
+> diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+> index 85aeebc9485d..d8c1dfb8c9ab 100644
+> --- a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+> +++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+> @@ -259,7 +259,7 @@ smarc_flash: flash@0 {
+>  &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+> -	phy-mode = "rgmii";
+> +	phy-connection-type = "rgmii-id";
+>  	phy-handle = <&ethphy>;
 >  
->  config CLANG_SUPPORTS_DYNAMIC_FTRACE
-> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-> index 3348a61de7d9..c7468af77c66 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -6,37 +6,9 @@
->  
->  #include <asm/stacktrace.h>
->  
-> -/*
-> - * Get the return address for a single stackframe and return a pointer to the
-> - * next frame tail.
-> - */
-> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
-> -				    unsigned long fp, unsigned long reg_ra)
-> +static bool fill_callchain(void *entry, unsigned long pc)
->  {
-> -	struct stackframe buftail;
-> -	unsigned long ra = 0;
-> -	unsigned long __user *user_frame_tail =
-> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> -
-> -	/* Check accessibility of one struct frame_tail beyond */
-> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> -		return 0;
-> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> -				      sizeof(buftail)))
-> -		return 0;
-> -
-> -	if (reg_ra != 0)
-> -		ra = reg_ra;
-> -	else
-> -		ra = buftail.ra;
-> -
-> -	fp = buftail.fp;
-> -	if (ra != 0)
-> -		perf_callchain_store(entry, ra);
-> -	else
-> -		return 0;
-> -
-> -	return fp;
-> +	return perf_callchain_store(entry, pc) == 0;
->  }
->  
->  /*
-> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
->  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  			 struct pt_regs *regs)
->  {
-> -	unsigned long fp = 0;
-> -
-> -	fp = regs->s0;
-> -	perf_callchain_store(entry, regs->epc);
-> -
-> -	fp = user_backtrace(entry, fp, regs->ra);
-> -	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
-> -		fp = user_backtrace(entry, fp, 0);
-> -}
-> -
-> -static bool fill_callchain(void *entry, unsigned long pc)
-> -{
-> -	return perf_callchain_store(entry, pc) == 0;
-> +	arch_stack_walk_user(fill_callchain, entry, regs);
->  }
->  
->  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> index 528ec7cc9a62..9685a2baa5d9 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -161,3 +161,46 @@ noinline void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie
->  {
->  	walk_stackframe(task, regs, consume_entry, cookie);
->  }
-> +
-> +/*
-> + * Get the return address for a single stackframe and return a pointer to the
-> + * next frame tail.
-> + */
-> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_entry,
-> +				       void *cookie, unsigned long fp,
-> +				       unsigned long reg_ra)
-> +{
-> +	struct stackframe buftail;
-> +	unsigned long ra = 0;
-> +	unsigned long __user *user_frame_tail =
-> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> +
-> +	/* Check accessibility of one struct frame_tail beyond */
-> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> +		return 0;
-> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> +				      sizeof(buftail)))
-> +		return 0;
-> +
-> +	ra = reg_ra ? : buftail.ra;
-> +
-> +	fp = buftail.fp;
-> +	if (!ra || !consume_entry(cookie, ra))
-> +		return 0;
-> +
-> +	return fp;
-> +}
-> +
-> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> +			  const struct pt_regs *regs)
-> +{
-> +	unsigned long fp = 0;
-> +
-> +	fp = regs->s0;
-> +	if (!consume_entry(cookie, regs->epc))
-> +		return;
-> +
-> +	fp = unwind_user_frame(consume_entry, cookie, fp, regs->ra);
-> +	while (fp && !(fp & 0x3))
-> +		fp = unwind_user_frame(consume_entry, cookie, fp, 0);
-> +}
+>  	mdio {
+> -- 
+> 2.39.2
+> 
+
