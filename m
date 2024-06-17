@@ -1,178 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C47C14D2A7;
-	Mon, 17 Jun 2024 15:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EF3EAC5;
+	Mon, 17 Jun 2024 15:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718639329; cv=none; b=WXqac/HtM3fxRDmF5iDOfbqV8Vow//aWcHBRQ+lc3F131y2z0G7Io9eJ72bEmBhEw1k3Df31ZDOqnXyfNFB0TSHXQM0BwDj4zPoWeHqnAquREcItH/enI/by6IenFsQN6ZslBJlk0PzploQS73iDhWL7wGaQrWopneoHmqEEFr8=
+	t=1718639331; cv=none; b=FSDqtcQVZkjjvHrm5io0TLv7NP/W/hPK8k7kbUWS3j9icJOsJhOKQ6BcoKsVRu8esqRxZl+cSood4Lwcg95DAAJQJKTCvlBYVxL8unau0QzoCyv8MzwYpagIihIDMAg+gg9n2l6Wcw05HOUEuogKg00pakXCyMc0SArXUwSGc0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718639329; c=relaxed/simple;
-	bh=fDi6yPRqLiM+HLfGb+FlpnVc+ukGfMsFd2U9nCeH7kE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JtKGjpy8h3QvW5z2pIVhrB8E6LLnRBF2iYLmqoZ6tGyxqeJfC4q9Om0qg+VGfhpfT6DmTlE0wdofhJThOL2OZu/itJu0SqqkqeMdhpu6qysfzoRIngG0cDK4qD+Ht2PfMKlCcYle0IKwgQQxJlGyGee5ij3101mRPYfQc+LXz98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODTYBWUY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718639331; c=relaxed/simple;
+	bh=JYHC8AUX5dsK1Y0iin1rim0E052aWvM9punxPGktQ6o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qRoXTpqQdAqmQwnc6sJvsfVvmHpIKq1IqTq2zQlEaNg/xZUX6izfX+OiDLtZLov6WjklWXBSuK4WaewQS5VH6Y1kHmgraUsWOg6aUb2vNZenGSXbzbUuuUZGCez6LVbN/6Odj+Yo193vGYfTLFbLtGkNR8FxQpU+pAL0AYLnUIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OH5Bnefq; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODTYBWUY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D6FC2BD10;
-	Mon, 17 Jun 2024 15:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718639329;
-	bh=fDi6yPRqLiM+HLfGb+FlpnVc+ukGfMsFd2U9nCeH7kE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ODTYBWUYbq4jF+ultQNT00YqzCbp79CdB5JGWTpbMaN4MV6cyVY2+6SUYKyDBvw6m
-	 cO/UAzhRG43/2vgV17BosUoUj09EgcV+lvj7SP+ExfPOsle0N+1ka4sh6T86JU3GdD
-	 oYnOX4nbNHTVqAdV9z+wsyc9fx44DJZBU4COrh1kPX9CKiE8mXuYnrRM6P6tqBhlBo
-	 ptB5VS7vR3kgZou+8AngXp0OK6RbpTODj5X2DqDZ1A7YapKT7Mf4e8QcFO9yrzdQLK
-	 3Iyk+al0Ii/i/Nfdb4qkgcPlndwgnsX1JxHQM7Tx93Iy4FoCDRD+YnX1lKEfEY2c78
-	 m29L86quDoZOw==
-Message-ID: <2fe7ba36-05b9-42c7-8726-ea891cfc7afc@kernel.org>
-Date: Mon, 17 Jun 2024 17:48:42 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OH5Bnefq"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HDfddI029273;
+	Mon, 17 Jun 2024 17:48:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	zXt1rSU3DkADXbF83KHvvo2zbVA+9Tk+x9InX+d5Cx8=; b=OH5BnefqPKNAuIsA
+	Gtkr4VX3RDwCNZ5qf6Swx52KnozAhSn1IKMt7CmVkPSDgTtA8BK8e8okVOAlGfOu
+	gq2VMFPJJjKkvyOhb8yfXO9uGI/PaxrSu3UvV7wVc6Q/hIPp2iSdgOI4pFwmvKP7
+	tYYGp6wGHdozY45bZjdJFCaxcflTh3Zq+6OR5dhAm/YUAld+qLXLdbtjGXxc+U8X
+	ayZZCW1sfmr18HmZeIJrQ6h0Ue+L2+4ia3M5yL60AY/3Z1GshC7iSxkHu7caAz5C
+	J7tauD+8c5Aj21Ft1MrNREZBe/sP2F2Q1w7ExvRKe4m21kiNUFVavofs0yMhMeSg
+	gYnpHA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys29xy844-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 17:48:12 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA37140047;
+	Mon, 17 Jun 2024 17:46:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 74F1320B60C;
+	Mon, 17 Jun 2024 17:45:32 +0200 (CEST)
+Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
+ 2024 17:45:31 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [net-next,PATCH v2 2/2] net: stmmac: dwmac-stm32: stm32: add management of stm32mp25 for stm32
+Date: Mon, 17 Jun 2024 17:45:16 +0200
+Message-ID: <20240617154516.277205-3-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240617154516.277205-1-christophe.roullier@foss.st.com>
+References: <20240617154516.277205-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT
- binding
-To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
- Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, "J.M.B. Downing"
- <jonathan.downing@nautel.com>, Arnd Bergmann <arnd@arndb.de>,
- Chancel Liu <chancel.liu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
-References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
- <20240614163500.386747-1-piotr.wojtaszczyk@timesys.com>
- <20240614163500.386747-2-piotr.wojtaszczyk@timesys.com>
- <83cbf43e-c927-449f-8b7e-5c8d3ee8cece@kernel.org>
- <CAG+cZ06EeXUDiLsDXkz+6EHqJwpvv2MWwfpvB8AYw0=ZhUkTfQ@mail.gmail.com>
- <83a45f7c-d90b-44d3-b57e-9dad21045e27@kernel.org>
- <CAG+cZ06kzikieaD_JCBybwWk8XKZQjJxa34Cg4QHxrxpT+j0eA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAG+cZ06kzikieaD_JCBybwWk8XKZQjJxa34Cg4QHxrxpT+j0eA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
 
-On 17/06/2024 16:04, Piotr Wojtaszczyk wrote:
->>
->>> It's used by snd_soc_dai_init_dma_data() in [PATCH v3 4/4] to give the
->>> dmaengine a
->>> hint which dma config to use. The LPC32xx doesn't have yet a dmamux driver like
->>
->> and if I change driver platform data to foo and bar, does the DTS work? No.
-> 
-> They shouldn't change the same way as expected dma-names shouldn't change.
-> Lots of drivers expect the dma-names to be "rx", "tx"
-> 
->>
->>> lpc18xx-dmamux.c therefore it still uses platform data entries for
->>> pl08x dma channels
->>> and 'SND_DMAENGINE_PCM_FLAG_NO_DT | SND_DMAENGINE_PCM_FLAG_COMPAT'
->>> flags in the devm_snd_dmaengine_pcm_register().
->>> Typically instead of this platform data you would use regular 'dma'
->>> and 'dma-names' if it had
->>> proper dmamux driver like lpc18xx-dmamux.c
->>
->> Exactly. Use these.
-> 
-> Then I need to write a lpc32xx dma mux driver, device tree binding for
-> it and adjust the
-> LPC32xx I2S driver for it. Is this a hard requirement to accept this
-> patch set for the
-> legacy LPC32xx SoC?
+Add Ethernet support for STM32MP25.
+STM32MP25 is STM32 SOC with 2 GMACs instances.
+GMAC IP version is SNPS 5.3x.
+GMAC IP configure with 2 RX and 4 TX queue.
+DMA HW capability register supported
+RX Checksum Offload Engine supported
+TX Checksum insertion supported
+Wake-Up On Lan supported
+TSO supported
 
-I do not see at all analogy with dma-names. dma-names are used ONLY by
-the consumer to pick up proper property "dmas" from DT. They are not
-passed to DMA code. They are not used to configure DMA provider at all.
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 77 ++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 3 deletions(-)
 
-You parse string from DT and pass it further as DMA filtering code. This
-is abuse of hardware description for programming your driver and their
-dependencies.
-
-Why you cannot hard-code them?
-
-Sorry, to be clear: NAK
-
-> 
->>
->>>
->>>>
->>>> Drop.
->>>>
->>>>
->>>>> +
->>>>> +  "#sound-dai-cells":
->>>>> +    const: 0
->>>>> +
->>>
->>> The "dai-common.yam" doesn't declare a default value for this so
->>
->> Where is my comment to which you refer to? Please do not drop context
->> from replies. I have no clue what you want to discuss here.
-> Well I didn't remove the context, you said:
-> "
-> Drop.
-> (...)
-> +  "#sound-dai-cells":
-> +    const: 0
-> "
-> So I'm confused whether the "#sound-dai-cells" should be in the dt
-> binding or not.
-
-??? Drop is above the text so why do you refer to dai cells? We use here
-text-based mailing list style of discussions, not corporate MS Office.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index b2db0e26c4e4..71a187b4b5b1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -53,7 +53,18 @@
+ #define SYSCFG_MCU_ETH_SEL_MII		0
+ #define SYSCFG_MCU_ETH_SEL_RMII		1
+ 
+-/* STM32MP1 register definitions
++/* STM32MP2 register definitions */
++#define SYSCFG_MP2_ETH_MASK		GENMASK(31, 0)
++
++#define SYSCFG_ETHCR_ETH_PTP_CLK_SEL	BIT(2)
++#define SYSCFG_ETHCR_ETH_CLK_SEL	BIT(1)
++#define SYSCFG_ETHCR_ETH_REF_CLK_SEL	BIT(0)
++
++#define SYSCFG_ETHCR_ETH_SEL_MII	0
++#define SYSCFG_ETHCR_ETH_SEL_RGMII	BIT(4)
++#define SYSCFG_ETHCR_ETH_SEL_RMII	BIT(6)
++
++/* STM32MPx register definitions
+  *
+  * Below table summarizes the clock requirement and clock sources for
+  * supported phy interface modes.
+@@ -104,7 +115,7 @@ struct stm32_ops {
+ 	int (*parse_data)(struct stm32_dwmac *dwmac,
+ 			  struct device *dev);
+ 	bool clk_rx_enable_in_suspend;
+-	bool is_mp13;
++	bool is_mp13, is_mp2;
+ 	u32 syscfg_clr_off;
+ };
+ 
+@@ -277,8 +288,52 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
+ 				 dwmac->mode_mask, val);
+ }
+ 
++static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data *plat_dat)
++{
++	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
++	u32 reg = dwmac->mode_reg;
++	int val = 0;
++
++	switch (plat_dat->mac_interface) {
++	case PHY_INTERFACE_MODE_MII:
++		break;
++	case PHY_INTERFACE_MODE_GMII:
++		if (dwmac->enable_eth_ck)
++			val |= SYSCFG_ETHCR_ETH_CLK_SEL;
++		break;
++	case PHY_INTERFACE_MODE_RMII:
++		val = SYSCFG_ETHCR_ETH_SEL_RMII;
++		if (dwmac->enable_eth_ck)
++			val |= SYSCFG_ETHCR_ETH_REF_CLK_SEL;
++		break;
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		val = SYSCFG_ETHCR_ETH_SEL_RGMII;
++		if (dwmac->enable_eth_ck)
++			val |= SYSCFG_ETHCR_ETH_CLK_SEL;
++		break;
++	default:
++		dev_err(dwmac->dev, "Mode %s not supported",
++			phy_modes(plat_dat->mac_interface));
++		/* Do not manage others interfaces */
++		return -EINVAL;
++	}
++
++	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
++
++	/* Select PTP (IEEE1588) clock selection from RCC (ck_ker_ethxptp) */
++	val |= SYSCFG_ETHCR_ETH_PTP_CLK_SEL;
++
++	/* Update ETHCR (set register) */
++	return regmap_update_bits(dwmac->regmap, reg,
++				 SYSCFG_MP2_ETH_MASK, val);
++}
++
+ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ {
++	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+ 	int ret;
+ 
+ 	ret = stm32mp1_select_ethck_external(plat_dat);
+@@ -289,7 +344,10 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	if (ret)
+ 		return ret;
+ 
+-	return stm32mp1_configure_pmcr(plat_dat);
++	if (!dwmac->ops->is_mp2)
++		return stm32mp1_configure_pmcr(plat_dat);
++	else
++		return stm32mp2_configure_syscfg(plat_dat);
+ }
+ 
+ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
+@@ -365,6 +423,9 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
+ 		return err;
+ 	}
+ 
++	if (dwmac->ops->is_mp2)
++		return err;
++
+ 	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+ 	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
+ 	if (err) {
+@@ -586,10 +647,20 @@ static struct stm32_ops stm32mp13_dwmac_data = {
+ 	.clk_rx_enable_in_suspend = true
+ };
+ 
++static struct stm32_ops stm32mp25_dwmac_data = {
++	.set_mode = stm32mp1_set_mode,
++	.suspend = stm32mp1_suspend,
++	.resume = stm32mp1_resume,
++	.parse_data = stm32mp1_parse_data,
++	.is_mp2 = true,
++	.clk_rx_enable_in_suspend = true
++};
++
+ static const struct of_device_id stm32_dwmac_match[] = {
+ 	{ .compatible = "st,stm32-dwmac", .data = &stm32mcu_dwmac_data},
+ 	{ .compatible = "st,stm32mp1-dwmac", .data = &stm32mp1_dwmac_data},
+ 	{ .compatible = "st,stm32mp13-dwmac", .data = &stm32mp13_dwmac_data},
++	{ .compatible = "st,stm32mp25-dwmac", .data = &stm32mp25_dwmac_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, stm32_dwmac_match);
+-- 
+2.25.1
 
