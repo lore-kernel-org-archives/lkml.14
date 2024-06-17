@@ -1,40 +1,88 @@
-Received: from mail115-79.sinamail.sina.com.cn (mail115-79.sinamail.sina.com.cn [218.30.115.79])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9FB1BDCD
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB37B71B52
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621483; cv=none; b=FNSq/x7st1iy0pYCJUe1ngBJPiApj6DvjTNsu1X6bK5tglzwcA/8HKtMbr7Vc6UKCbbnMBZLY8w8Jr3+8JAWwyunl0HvGaCp2R5RD9x3XqJUoO69JQ4UA2ny25LsTIHG9lyjOTQ9dGnnIW0+mLv4LVjm2zAIta3WDOEktT85rS0=
+	t=1718621629; cv=none; b=tTG5N2IoEBfbP4jIMCuRd2vA0C9ipykAVfFytZXjZcY9IrSRv0P8+P8H9B3mz4NqROEObjN3rgX8BkxOvsEgD+eNelBadAzF0dn0/TUedz2CvfS6729I5aWUiFwl3MZmwVgVaYGy6EreC1yZ8xL/bJF/7lzZVkL6+pUWz5y+i+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621483; c=relaxed/simple;
-	bh=Hj3WU1vz3B2EpqGyRen0bIQ9yuoD69u8qmfkHSsjK7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DIfdJ6iEfeZ5aSydndBlH1ytB6RoaQuWw0Ci1xAKBPn2lN89MwVhxJECEx6MidAQfSew96MxHUX5z0s09hcYBaCGIKlDinzlYbqp/snFhOAcUrGJBVb8KyTOVo1ZAUaqLC/vJM8oJzXDfBjl4eAWla3HZ0t1kVQ2bJuNYDvBZxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.85])
-	by sina.com (10.185.250.22) with ESMTP
-	id 66701492000068D1; Mon, 17 Jun 2024 18:48:52 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1884487602751
-X-SMAIL-UIID: 135842A3F2374E3581B81F65E175E375-20240617-184852-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+9486ac2c18a7693c45d6@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in __lock_sock (2)
-Date: Mon, 17 Jun 2024 18:48:41 +0800
-Message-Id: <20240617104841.1588-1-hdanton@sina.com>
-In-Reply-To: <000000000000758110061afed1c0@google.com>
-References: 
+	s=arc-20240116; t=1718621629; c=relaxed/simple;
+	bh=JiFEQeqE8G8g8PcQJBsUUHzXMQn0i0rKi4ih5hsEpfk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d1iCSAHILNbaw0zw9de9vLaNvrbZe5FMg8Qu1rOyNCwbuqsppxKIuGtdU30x13sJXd9ssumDber/WDMOfpoXBj6p3U0MRZemnwvnofqsCXc3QKUUvZKTW0AosYnrY0OD9VlhwbGtcaim5/d5ltT3i2ZY1+bP6eVZ020pm5djFOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qJbKXv72; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qJbKXv72"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45HArG5J061375;
+	Mon, 17 Jun 2024 05:53:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718621596;
+	bh=8IsrSRtFydZv3T+0eIRnXTxvkv96aiYK/zRbroJAvnw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=qJbKXv72LSYRaG4+KR1VdhiG1YEWZEqruTfDbejKQtP+iE/LRKI72sFHdFZbSxVlc
+	 sIySz5E3UXqF5rmwv8m914eWLmwEz/LOdVupZOahDlNoJQ5ad3vrp6C7Z9hbrI1Rv5
+	 pk1w06I5j+T4nB5GlHGL9S/4DTYzfd3EFvmHOANY=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45HArGpW039834
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Jun 2024 05:53:16 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
+ Jun 2024 05:53:15 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 17 Jun 2024 05:53:15 -0500
+Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45HArFlI106038;
+	Mon, 17 Jun 2024 05:53:15 -0500
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+        Thomas Zimmermann
+	<tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter
+	<daniel@ffwll.ch>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Dominik Haller <d.haller@phytec.de>, Sam
+ Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+        Devarsh Thakkar
+	<devarsht@ti.com>,
+        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
+	<j-luthra@ti.com>,
+        Aradhya Bhatia <a-bhatia1@ti.com>
+Subject: [PATCH v3 02/10] drm/bridge: cdns-dsi: Fix the phy_initialized variable
+Date: Mon, 17 Jun 2024 16:23:03 +0530
+Message-ID: <20240617105311.1587489-3-a-bhatia1@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240617105311.1587489-1-a-bhatia1@ti.com>
+References: <20240617105311.1587489-1-a-bhatia1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,58 +90,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sun, 16 Jun 2024 02:53:18 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    cea2a26553ac mailmap: Add my outdated addresses to the map..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115da30a980000
+Update the Phy initialized state to "not initialized" when the driver
+(and the hardware by extension) gets suspended. This will allow the Phy
+to get initialized again after resume.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  cea2a26553ac
+Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff -pur c/include/net/bluetooth/l2cap.h d/include/net/bluetooth/l2cap.h
---- c/include/net/bluetooth/l2cap.h	2024-06-17 18:33:27.096664300 +0800
-+++ d/include/net/bluetooth/l2cap.h	2024-06-17 18:34:47.465834700 +0800
-@@ -612,6 +612,7 @@ struct l2cap_chan {
- 	void			*data;
- 	const struct l2cap_ops	*ops;
- 	struct mutex		lock;
-+	unsigned int		closed;
- };
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index b016f2ba06bb..42565e253b2d 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -1153,6 +1153,7 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
+ 	clk_disable_unprepare(dsi->dsi_p_clk);
+ 	reset_control_assert(dsi->dsi_p_rst);
+ 	dsi->link_initialized = false;
++	dsi->phy_initialized = false;
+ 	return 0;
+ }
  
- struct l2cap_ops {
-diff -pur c/net/bluetooth/l2cap_core.c d/net/bluetooth/l2cap_core.c
---- c/net/bluetooth/l2cap_core.c	2024-06-17 18:32:21.249083200 +0800
-+++ d/net/bluetooth/l2cap_core.c	2024-06-17 18:35:47.981139900 +0800
-@@ -812,6 +812,7 @@ void l2cap_chan_close(struct l2cap_chan
- {
- 	struct l2cap_conn *conn = chan->conn;
- 
-+	chan->closed++;
- 	BT_DBG("chan %p state %s", chan, state_to_string(chan->state));
- 
- 	switch (chan->state) {
-diff -pur c/net/bluetooth/l2cap_sock.c d/net/bluetooth/l2cap_sock.c
---- c/net/bluetooth/l2cap_sock.c	2024-06-17 18:31:43.431535400 +0800
-+++ d/net/bluetooth/l2cap_sock.c	2024-06-17 18:41:00.785238900 +0800
-@@ -1482,10 +1482,17 @@ static struct l2cap_chan *l2cap_sock_new
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- {
- 	struct sock *sk = chan->data;
--	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	struct l2cap_pinfo *pi;
- 	int err;
- 
-+	l2cap_chan_lock(chan);
-+	if (chan->closed) {
-+		l2cap_chan_unlock(chan);
-+		return -ENOMEM;
-+	}
- 	lock_sock(sk);
-+	pi = l2cap_pi(sk);
-+	l2cap_chan_unlock(chan);
- 
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
---
+-- 
+2.34.1
+
