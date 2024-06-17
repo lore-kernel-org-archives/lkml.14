@@ -1,101 +1,117 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D34198A2D;
-	Mon, 17 Jun 2024 13:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CF419B581
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632028; cv=none; b=caAl0QS+62DgV8slR1dDbpVAJthZUS0yL8G1OP6QtTH9KV8H8oQwA7YiQCBek+WifCDOdr5GOAGtW1OrV+d/R6poiDX0WDVG98eGBeSpn6qz4hkoUNOGAOiB2wWWhQJkcUADhhmefqACBn1xky1fHk4cbuCeJZH2kdXkbcXGLKI=
+	t=1718632045; cv=none; b=BOv4Z9aKnsUFNsG3om3xDPjIADzyjtlZtSwOb/z7/gR78hzCAf8CTmdw7UACqXzNHgfkCl6GMoyv5ZoJg8aFKh+aF0NBatrPsEOJwqUECE38VYONGHNq8wGd6RQR+U4UsnU6qUaVe7xvWJ5z5Ys8/8Ci0rRAuzQs98vWoWLnRwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632028; c=relaxed/simple;
-	bh=2NB43eu1ZnhJn+dbsU/poLUXcczLkoG/+P5pzf4DTBE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UU/M2TZElNS1j87X6luaYBaFR+EC01REyEUMI8IdiPwYTn4IUS/FXL2dns4DkAUsR3Xbu0C1HyJUEat5ZNesJxYR5J8TY/q44Z37BsYK3PlxJCyf8x826KuAuUp9udbYmnMg4YDE5pYVnFxEmlgIXZ24RrFd9ngeI4tL3Qo3cyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oQTxDdVQ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1718632045; c=relaxed/simple;
+	bh=3SUojPKHMWFnVEtUmzCvJ0XJVYHWg9uufwDXcUrW4n0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l0YfYHu0rFWVDf9widP3QPRZ8PIjMnG5rHsScJDszpvoiZvhcVT1Tnhoh48ELae2CaLLvxWlI2oYgjzLUYAH0irOyyWbmn3rUFIwLzscv3JL541Ug1qNavQSya4QDViEoFBdALtcU1MbjP5u7/7PNv6M4TH5v2lBFl/7vqjxm+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=W9xz3IF4; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oQTxDdVQ"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45HDkTn01572680
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 17 Jun 2024 06:46:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45HDkTn01572680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1718631990;
-	bh=o/p3WriqvPQ9emXsAa+PuJT6Sy/sb6jthDAPSr/Ca1s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=oQTxDdVQK3GcDy9FfiD30CnOzinaTHDW0AaA9TyFPaXQGLqX9qfnPs5uOlZKw0t18
-	 ln64nIOmmerDa97WyjSeco3Dg2Wyj/ZY3oV2t2wEKlNoe9iHlEHAOvgvsJWjiYJ7x5
-	 FCdK5WvKksNmdgPXKYFchMHwBtnbbq7DcT+JLv7Juy8uDebJ58wdIisiCp7meHBJV6
-	 SOKq4y3M02x0BEa4g3DWEoWFOu2Rw+aPYNIWGdErPqS4a9GM6CWkQaXEBHyoKhcmEu
-	 d1t8joXMZscFO7PSaHHkEKAtxsxNcVB699tiwvYOG8k18WKDKZ7HgAU24LxhlpWH3U
-	 +DbLJlkTRr/KQ==
-Date: Mon, 17 Jun 2024 06:46:28 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-CC: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, will@kernel.org,
-        peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
-        namhyung@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BRESEND_v1_2/3=5D_x86/cpufeatures=3A_Generat?=
- =?US-ASCII?Q?e_a_feature_mask_header_based_on_build_config?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <99208d95-d3de-44d0-8b08-f508759aabca@zytor.com>
-References: <20240509205340.275568-1-xin@zytor.com> <20240509205340.275568-3-xin@zytor.com> <99208d95-d3de-44d0-8b08-f508759aabca@zytor.com>
-Message-ID: <8F9E89A4-B05B-493C-8BED-52AC6777D915@zytor.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W9xz3IF4"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dff2df7de4aso1643660276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1718632043; x=1719236843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4HcMYFgMjLj9bfVN/vNd/auegls9+ix6qtJM9yIB3tE=;
+        b=W9xz3IF4q30Y9JGoyzWMVfSyeJQDF1fEcKZQ7iDP7StZe/MxTyAu8blo380UCRG+B7
+         xhUAVS7A/cf0N91guFIRNQNveTVJfYyHq9VQYs0EMSa6NYruFWr+DiUdSAVJpG3a46sf
+         L5xyzERHe1pgihny+UUvxtEoCEUcSFjGsBUgs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718632043; x=1719236843;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4HcMYFgMjLj9bfVN/vNd/auegls9+ix6qtJM9yIB3tE=;
+        b=kn4vSLM3wk4Y3RXEGGEAcCB8anssFmZTwGHZn39w78HhI/4nh4d8K2qlk6OFvH9lsL
+         FBOYqriMUwbxvBDLZTqhLJHnGGGxTsE40LJmWI3McgVMeIw7dnkHr39257O4z5+xRg1a
+         8gWJwBcZLnNEEx5kRwot88zihePS14WHBoloNXQYUmk8ZNix7y4dj7fcpOYwdbOh7GFx
+         n1Gt2Diqq340Ntemu9xCMlmn2XD5c4LgjkJ13ZUBFckQ+7i06tdwqa+dVWquj7zlAsHy
+         69Pyv4RAHCdj+0uKezWrQoBfb24AtsIQdX1Vm+aCbkaPiysaum8CMNOSe8IIN+U5Yqcz
+         EiZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVf+LB/+QtgsiP17CIipF7GYMBX0guQwo50xAEE4WUjd9/rp/avh91q1VuNfYSY3id/rdGTaUqMpgug2Lgv5tnAQKV+rqfh/hO9Bo3K
+X-Gm-Message-State: AOJu0YwL2mWzFxK2VUeuOxhqu0apJ7ddkisMsHpmqQfG7FM2ci2OES6f
+	h7Gw/FFnGo4xgo5SDBPQZstTfDiGAqhcADq9yYgBhkVVJXdmWyR/RIYu2qbsDQGgCU6cLjoLelp
+	2DcuoPFBOMHm1Xi3qZBb6HI5z/CFeh6XOvKsM
+X-Google-Smtp-Source: AGHT+IEn0uy3dwK2KhLXw7MEv8zGGNIiTaQBsPR2kW9tDB4MUQUymoB6SG2mXCXggR/NMBj1eOnEsZO0JKSQmlhOkf0=
+X-Received: by 2002:a25:df48:0:b0:df7:7a90:26c5 with SMTP id
+ 3f1490d57ef6-dff153b3999mr8205865276.32.1718632042819; Mon, 17 Jun 2024
+ 06:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <202406152104.FxakP1MB-lkp@intel.com> <20240616012511.198243-1-alexey.makhalov@broadcom.com>
+ <20240617090709.GCZm_8vdnLzt048UH_@fat_crate.local> <20240617100150.GDZnAJjoH5wZKu2OAV@fat_crate.local>
+In-Reply-To: <20240617100150.GDZnAJjoH5wZKu2OAV@fat_crate.local>
+From: Zack Rusin <zack.rusin@broadcom.com>
+Date: Mon, 17 Jun 2024 09:47:12 -0400
+Message-ID: <CABQX2QNT+rDC3M7UPWwT_XRb8iXiihk4iczfcO9iokUFhn0DJw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/vmwgfx: Fix missing HYPERVISOR_GUEST dependency
+To: Borislav Petkov <bp@alien8.de>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, linux-kernel@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, lkp@intel.com, 
+	dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org, jic23@kernel.org, 
+	lars@metafoo.de, nuno.sa@analog.com, dragos.bogdan@analog.com, 
+	anshulusr@gmail.com, andrea.collamati@gmail.com, 
+	oe-kbuild-all@lists.linux.dev, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On June 16, 2024 12:26:48 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 5/9/2024 1:53 PM, Xin Li (Intel) wrote:
->> From: "H=2E Peter Anvin (Intel)" <hpa@zytor=2Ecom>
->>=20
->> Introduce an AWK script to auto-generate a header with required and
->> disabled feature masks based on <asm/cpufeatures=2Eh> and current build
->> config=2E Thus for any CPU feature with a build config, e=2Eg=2E, X86_F=
-RED,
->> simply add
+On Mon, Jun 17, 2024 at 6:02=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
+e:
 >
->=2E=2E=2E
+> On Mon, Jun 17, 2024 at 11:07:09AM +0200, Borislav Petkov wrote:
+> > On Sat, Jun 15, 2024 at 06:25:10PM -0700, Alexey Makhalov wrote:
+> > > VMWARE_HYPERCALL alternative will not work as intended without
+> > > VMware guest code initialization.
+> > >
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202406152104.FxakP1MB-l=
+kp@intel.com/
+> > > Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+> > > ---
+> > >  drivers/gpu/drm/vmwgfx/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/=
+Kconfig
+> > > index faddae3d6ac2..6f1ac940cbae 100644
+> > > --- a/drivers/gpu/drm/vmwgfx/Kconfig
+> > > +++ b/drivers/gpu/drm/vmwgfx/Kconfig
+> > > @@ -2,7 +2,7 @@
+> > >  config DRM_VMWGFX
+> > >     tristate "DRM driver for VMware Virtual GPU"
+> > >     depends on DRM && PCI && MMU
+> > > -   depends on X86 || ARM64
+> > > +   depends on (X86 && HYPERVISOR_GUEST) || ARM64
+> > >     select DRM_TTM
+> > >     select DRM_TTM_HELPER
+> > >     select MAPPING_DIRTY_HELPERS
+> > > --
+> >
+> > Right, I'll queue this soon but it doesn't reproduce here with gcc-11 o=
+r gcc-13.
+> > This must be something gcc-9 specific or so...
 >
->> +
->> +		printf "\n#define %s_MASKS ", s;
->> +		pfx =3D "{";
->> +		for (i =3D 0; i < ncapints; i++) {
->> +			printf "%s \\\n\t%s_MASK_%d", pfx, s, i;
->> +			pfx =3D ",";
->> +		}
->> +		printf " \\\n}\n\n";
->> +
->> +		printf "#define %s_FEATURE(x) \\\n", s;
->> +		printf "\t((( ";
->> +		for (i =3D 0; i < ncapints; i++) {
->> +			if (masks[i]) {
->> +				printf "\\\n\t\t((x) >> 5) =3D=3D %2d ? %s_MASK%-3d : ", i, s, i;
->> +			}
->> +		}
->> +		printf "0 \\\n";
->> +		printf "\t) >> ((x) & 31)) & 1)\n\n";
+> Actually, that's a DRM patch.
 >
->This code generates macros {REQUIRED,DISABLED}_FEATURE(x) to tell if a
->CPU feature, e=2Eg=2E, X86_FEATURE_FRED, is a required or disabled featur=
-e
->for this particular compile-time configuration=2E
->
->But they are NOT currently used, so I prefer to remove them for now=2E
->
->Thanks!
->    Xin
+> Folks in To: ok to carry this though the tip tree?
 
-The goal with these is that it can eliminate the handwritten code that tes=
-ts a long list of masks=2E Again, automation=2E
+That's fine with me. Thanks.
+
+z
