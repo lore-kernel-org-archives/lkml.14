@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F14C194AE1;
-	Mon, 17 Jun 2024 09:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87A9194A51
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718617105; cv=none; b=lsC/JNJn5k9fUbKp4jO2+mdxNkIxXQnL2/truUcIISPSOkeqY2tiRAlS1SZJ8M4g6t+ulGtqhbaTsPl4O3KnYGFiHmnSYv9AiY8eaVbSJZio58YZpdMvPsY8EpLmJigGpPNe2e4rTd8WIi76KR5OfxK0urHv+DTBfJBvjtF+Vrw=
+	t=1718617104; cv=none; b=NoeYBCTxDAEsEeJQ6V3IejQ8Dyb/kUCxyX2NLU7MxsgNKTV82tAsh1rVyeY4YW57Rt1iq1L2P6rRjjdtVcPV5hPbjvdaO3rZn7R4XE4InVeif0eTfS0nhlIPUio8dhqFXXwCTJfG7StALj+o7DL+Lve14/U7Y15qPZT+8iF/u9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718617105; c=relaxed/simple;
-	bh=985+UlFULic6LgAh253V4PgK2g0KvpjtDw3UMIKIEeA=;
+	s=arc-20240116; t=1718617104; c=relaxed/simple;
+	bh=9BeMjQzY2D1n5KMEIdhe/MnEyijbRClm3qeQuf/mLsg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pXiD6TVuUnm7hAK81j4/0P0InCLFX7gCZ2/DM9vv8uof7KPL5b1xWKYYgZHDoo+P4VBC9SxhIgrMt+m07jNedOereUaqREH+ONo78bpiZ4tgrptQsBzCTUPtdjIIVAYV9NC+kS1PXJzpnmTDNrW8c1iaZ2Y9/5MQBhW27DLS7QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nleGknVQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FYZ89u+BlpdedoHqN+XAHiB1kfEjeE0kNbhFw1iSTHMghFMIHssfO/ySI6INFOo5Lp/VxI/KFLiWR1bhQH00/pEhUfBEuBZ6oLcXaCSvlvlgqUcVfqB3bxHqWNlzjvpECdasFAdTrycnuEJAzusnv3KXG/hiOn3RFlFV1yI+FHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDRB50X6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nleGknVQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D1642C4DE18;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDRB50X6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B6E1C4DDF4;
 	Mon, 17 Jun 2024 09:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718617104;
-	bh=985+UlFULic6LgAh253V4PgK2g0KvpjtDw3UMIKIEeA=;
+	bh=9BeMjQzY2D1n5KMEIdhe/MnEyijbRClm3qeQuf/mLsg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=nleGknVQq/D03uzuvlRo7aUlAE9tBXFRqfSbPLfk+moQz0kWJnKLJ7cwgYwl+0bg0
-	 A2Fzz0G5xgU/CpHjW+ixSmi+5B0oXUmBScqqPOxZkfmFSBf9u+7T4JXWUFUyE2zEsA
-	 PLaWxDWwTz5h1RztwSQRpZfxUYB79vCXrBKu5YYaHmCrIYhduQ4m5aMJqNRLtjmnyb
-	 vKWNClfHiiqooPBUu5ZyK6G7/sVj9AM58Fhfh86CQ5/5GxdZ75ReM29mqmhYgvWNKH
-	 qXnWqxMsUzrcrKNWoqdM9rydMqNh8S5HUelNxunFIf045raufmwdjzx4eZITJbglSd
-	 uJ60TxMVorABg==
+	b=sDRB50X6+QsBNtJcO3ey8MFr7RpFAwt9saUt/dnZtQSBe6zmyoNd5QVKYfqHOZ19m
+	 KcG8bYvv8R/+QQgWYgKnI9/Mv0+ragWccOPdF/4dZB4L1Zbyglg1PCUFxnOTIXQQyu
+	 YjaBtukQZj4Mm44cP+EQSMuaG3VgzkyKgzjMCWW2pmDS/6XNKmwjGi6hFMFVxnSAf2
+	 4Vl8Jxnyf5AgyAX5eJEJHSiH5XZJNt74NbaWO6RcuN1Iin+jIRdWeWU3UKUqeQmieO
+	 Ss631ZaglNNiyqA6ZV8ZghdVswMR0esdmNiceSKgYcBwrxEL7lF3BINWTJh9JOabaN
+	 R//mXUiyC0hIg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6146C2BA18;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC54C2BA18;
 	Mon, 17 Jun 2024 09:38:24 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 17 Jun 2024 12:36:56 +0300
-Subject: [PATCH v10 22/38] dt-bindings: input: Add Cirrus EP93xx keypad
+Date: Mon, 17 Jun 2024 12:36:53 +0300
+Subject: [PATCH v10 19/38] mtd: rawnand: add support for ts72xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,22 +40,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240617-ep93xx-v10-22-662e640ed811@maquefel.me>
+Message-Id: <20240617-ep93xx-v10-19-662e640ed811@maquefel.me>
 References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
 In-Reply-To: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Chris Packham <chris.packham@alliedtelesis.co.nz>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Daniel Golle <daniel@makrotopia.org>, Johan Jonker <jbx6244@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ Arnd Bergmann <arnd@arndb.de>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718617100; l=3131;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718617100; l=8042;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=ArW40vHeN5DKryw3IpGISVSZUOgIwSTy8lnGeu9e4oI=;
- b=0nrLy6aiWIYrvMpdiccGipAUfDQAlVnIIlwTlsFt9WFZp51hHUx7lGdPZaF7hSKH6f8MQ5N01qu3
- eFlX6STZD+wAnhwusVvjriMo9oN6qEZimAHGAJrCdVMj2xEcFQRX
+ bh=jHDUJ6eL0sN9Xsu30iSDeAiNw2Ly7ktT7Xc33sA1DRU=;
+ b=7whG2QUWWlNOcmggBTFvIVl5Ld4/2C5EW3thSe5nH3JxmugkjazxUwHmHimUAQ4QEhWfJcD4/F33
+ 7zFz+No1Bo2EfRnUAU5IpRfL2tdSJ+/5S8eLlQkuhM9bVZ5vngLC
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -65,107 +67,273 @@ Reply-To: nikita.shubin@maquefel.me
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Add YAML bindings for ep93xx SoC keypad.
+Technologic Systems has it's own nand controller implementation in CPLD.
 
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- .../bindings/input/cirrus,ep9307-keypad.yaml       | 87 ++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ drivers/mtd/nand/raw/Kconfig                       |   6 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/technologic-nand-controller.c | 222 +++++++++++++++++++++
+ 3 files changed, 229 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml b/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index cbf8ae85e1ae..5a51b835f6b6 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -449,6 +449,12 @@ config MTD_NAND_RENESAS
+ 	  Enables support for the NAND controller found on Renesas R-Car
+ 	  Gen3 and RZ/N1 SoC families.
+ 
++config MTD_NAND_TS72XX
++	tristate "ts72xx NAND controller"
++	depends on ARCH_EP93XX && HAS_IOMEM
++	help
++	  Enables support for NAND controller on ts72xx SBCs.
++
+ comment "Misc"
+ 
+ config MTD_SM_COMMON
+diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+index 25120a4afada..d0b0e6b83568 100644
+--- a/drivers/mtd/nand/raw/Makefile
++++ b/drivers/mtd/nand/raw/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_MTD_NAND_MLC_LPC32XX)      += lpc32xx_mlc.o
+ obj-$(CONFIG_MTD_NAND_SH_FLCTL)		+= sh_flctl.o
+ obj-$(CONFIG_MTD_NAND_MXC)		+= mxc_nand.o
+ obj-$(CONFIG_MTD_NAND_SOCRATES)		+= socrates_nand.o
++obj-$(CONFIG_MTD_NAND_TS72XX)           += technologic-nand-controller.o
+ obj-$(CONFIG_MTD_NAND_TXX9NDFMC)	+= txx9ndfmc.o
+ obj-$(CONFIG_MTD_NAND_MPC5121_NFC)	+= mpc5121_nfc.o
+ obj-$(CONFIG_MTD_NAND_VF610_NFC)	+= vf610_nfc.o
+diff --git a/drivers/mtd/nand/raw/technologic-nand-controller.c b/drivers/mtd/nand/raw/technologic-nand-controller.c
 new file mode 100644
-index 000000000000..a0d2460c55ab
+index 000000000000..0e45a6fd91dd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cirrus,ep9307-keypad.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/cirrus,ep9307-keypad.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/mtd/nand/raw/technologic-nand-controller.c
+@@ -0,0 +1,222 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Technologic Systems TS72xx NAND controller driver
++ *
++ * Copyright (C) 2023 Nikita Shubin <nikita.shubin@maquefel.me>
++ *
++ * Derived from: plat_nand.c
++ *  Author: Vitaly Wool <vitalywool@gmail.com>
++ */
 +
-+title: Cirrus ep93xx keypad
++#include <linux/bits.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
 +
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/platnand.h>
 +
-+allOf:
-+  - $ref: /schemas/input/matrix-keymap.yaml#
++#define TS72XX_NAND_CONTROL_ADDR_LINE	BIT(22)	/* 0xN0400000 */
++#define TS72XX_NAND_BUSY_ADDR_LINE	BIT(23)	/* 0xN0800000 */
 +
-+description:
-+  The KPP is designed to interface with a keypad matrix with 2-point contact
-+  or 3-point contact keys. The KPP is designed to simplify the software task
-+  of scanning a keypad matrix. The KPP is capable of detecting, debouncing,
-+  and decoding one or multiple keys pressed simultaneously on a keypad.
++#define TS72XX_NAND_ALE			BIT(0)
++#define TS72XX_NAND_CLE			BIT(1)
++#define TS72XX_NAND_NCE			BIT(2)
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9307-keypad
-+      - items:
-+          - enum:
-+              - cirrus,ep9312-keypad
-+              - cirrus,ep9315-keypad
-+          - const: cirrus,ep9307-keypad
++#define TS72XX_NAND_CTRL_CLE		(TS72XX_NAND_NCE | TS72XX_NAND_CLE)
++#define TS72XX_NAND_CTRL_ALE		(TS72XX_NAND_NCE | TS72XX_NAND_ALE)
 +
-+  reg:
-+    maxItems: 1
++struct ts72xx_nand_data {
++	struct nand_controller	controller;
++	struct nand_chip	chip;
++	void __iomem		*base;
++	void __iomem		*ctrl;
++	void __iomem		*busy;
++};
 +
-+  interrupts:
-+    maxItems: 1
++static inline struct ts72xx_nand_data *chip_to_ts72xx(struct nand_chip *chip)
++{
++	return container_of(chip, struct ts72xx_nand_data, chip);
++}
 +
-+  clocks:
-+    maxItems: 1
++static int ts72xx_nand_attach_chip(struct nand_chip *chip)
++{
++	switch (chip->ecc.engine_type) {
++	case NAND_ECC_ENGINE_TYPE_ON_HOST:
++		return -EINVAL;
++	case NAND_ECC_ENGINE_TYPE_SOFT:
++		if (chip->ecc.algo == NAND_ECC_ALGO_UNKNOWN)
++			chip->ecc.algo = NAND_ECC_ALGO_HAMMING;
++		chip->ecc.algo = NAND_ECC_ALGO_HAMMING;
++		fallthrough;
++	default:
++		return 0;
++	}
++}
 +
-+  debounce-delay-ms:
-+    description: |
-+          Time in microseconds that key must be pressed or
-+          released for state change interrupt to trigger.
++static void ts72xx_nand_ctrl(struct nand_chip *chip, u8 value)
++{
++	struct ts72xx_nand_data *data = chip_to_ts72xx(chip);
++	unsigned char bits = ioread8(data->ctrl) & ~GENMASK(2, 0);
 +
-+  cirrus,prescale:
-+    description: row/column counter pre-scaler load value
-+    $ref: /schemas/types.yaml#/definitions/uint16
-+    maximum: 1023
++	iowrite8(bits | value, data->ctrl);
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - linux,keymap
++static int ts72xx_nand_exec_instr(struct nand_chip *chip,
++				const struct nand_op_instr *instr)
++{
++	struct ts72xx_nand_data *data = chip_to_ts72xx(chip);
++	unsigned int timeout_us;
++	u32 status;
++	int ret;
 +
-+unevaluatedProperties: false
++	switch (instr->type) {
++	case NAND_OP_CMD_INSTR:
++		ts72xx_nand_ctrl(chip, TS72XX_NAND_CTRL_CLE);
++		iowrite8(instr->ctx.cmd.opcode, data->base);
++		ts72xx_nand_ctrl(chip, TS72XX_NAND_NCE);
++		break;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/input/input.h>
-+    #include <dt-bindings/clock/cirrus,ep9301-syscon.h>
-+    keypad@800f0000 {
-+        compatible = "cirrus,ep9307-keypad";
-+        reg = <0x800f0000 0x0c>;
-+        interrupt-parent = <&vic0>;
-+        interrupts = <29>;
-+        clocks = <&eclk EP93XX_CLK_KEYPAD>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&keypad_default_pins>;
-+        linux,keymap = <KEY_UP>,
-+                       <KEY_DOWN>,
-+                       <KEY_VOLUMEDOWN>,
-+                       <KEY_HOME>,
-+                       <KEY_RIGHT>,
-+                       <KEY_LEFT>,
-+                       <KEY_ENTER>,
-+                       <KEY_VOLUMEUP>,
-+                       <KEY_F6>,
-+                       <KEY_F8>,
-+                       <KEY_F9>,
-+                       <KEY_F10>,
-+                       <KEY_F1>,
-+                       <KEY_F2>,
-+                       <KEY_F3>,
-+                       <KEY_POWER>;
-+    };
++	case NAND_OP_ADDR_INSTR:
++		ts72xx_nand_ctrl(chip, TS72XX_NAND_CTRL_ALE);
++		iowrite8_rep(data->base, instr->ctx.addr.addrs, instr->ctx.addr.naddrs);
++		ts72xx_nand_ctrl(chip, TS72XX_NAND_NCE);
++		break;
++
++	case NAND_OP_DATA_IN_INSTR:
++		ioread8_rep(data->base, instr->ctx.data.buf.in, instr->ctx.data.len);
++		break;
++
++	case NAND_OP_DATA_OUT_INSTR:
++		iowrite8_rep(data->base, instr->ctx.data.buf.in, instr->ctx.data.len);
++		break;
++
++	case NAND_OP_WAITRDY_INSTR:
++		timeout_us = instr->ctx.waitrdy.timeout_ms * 1000;
++		ret = readb_poll_timeout(data->busy, status, status & BIT(5), 0, timeout_us);
++		if (ret)
++			return ret;
++
++		break;
++	}
++
++	if (instr->delay_ns)
++		ndelay(instr->delay_ns);
++
++	return 0;
++}
++
++static int ts72xx_nand_exec_op(struct nand_chip *chip,
++			       const struct nand_operation *op, bool check_only)
++{
++	unsigned int i;
++	int ret;
++
++	if (check_only)
++		return 0;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		ret = ts72xx_nand_exec_instr(chip, &op->instrs[i]);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct nand_controller_ops ts72xx_nand_ops = {
++	.attach_chip = ts72xx_nand_attach_chip,
++	.exec_op = ts72xx_nand_exec_op,
++};
++
++static int ts72xx_nand_probe(struct platform_device *pdev)
++{
++	struct ts72xx_nand_data *data;
++	struct fwnode_handle *child;
++	struct mtd_info *mtd;
++	int err;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	nand_controller_init(&data->controller);
++	data->controller.ops = &ts72xx_nand_ops;
++	data->chip.controller = &data->controller;
++
++	data->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(data->base))
++		return PTR_ERR(data->base);
++	data->ctrl = data->base + TS72XX_NAND_CONTROL_ADDR_LINE;
++	data->busy = data->base + TS72XX_NAND_BUSY_ADDR_LINE;
++
++	child = fwnode_get_next_child_node(dev_fwnode(&pdev->dev), NULL);
++	if (!child)
++		return dev_err_probe(&pdev->dev, -ENXIO,
++				"ts72xx controller node should have exactly one child\n");
++
++	nand_set_flash_node(&data->chip, to_of_node(child));
++	mtd = nand_to_mtd(&data->chip);
++	mtd->dev.parent = &pdev->dev;
++	platform_set_drvdata(pdev, data);
++
++	/*
++	 * This driver assumes that the default ECC engine should be TYPE_SOFT.
++	 * Set ->engine_type before registering the NAND devices in order to
++	 * provide a driver specific default value.
++	 */
++	data->chip.ecc.engine_type = NAND_ECC_ENGINE_TYPE_SOFT;
++
++	/* Scan to find existence of the device */
++	err = nand_scan(&data->chip, 1);
++	if (err)
++		goto err_handle_put;
++
++	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
++	if (err)
++		goto err_clean_nand;
++
++	return 0;
++
++err_clean_nand:
++	nand_cleanup(&data->chip);
++err_handle_put:
++	fwnode_handle_put(child);
++	return err;
++}
++
++static void ts72xx_nand_remove(struct platform_device *pdev)
++{
++	struct ts72xx_nand_data *data = platform_get_drvdata(pdev);
++	struct fwnode_handle *fwnode = dev_fwnode(&pdev->dev);
++	struct nand_chip *chip = &data->chip;
++	int ret;
++
++	ret = mtd_device_unregister(nand_to_mtd(chip));
++	WARN_ON(ret);
++	nand_cleanup(chip);
++	fwnode_handle_put(fwnode);
++}
++
++static const struct of_device_id ts72xx_id_table[] = {
++	{ .compatible = "technologic,ts7200-nand" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ts72xx_id_table);
++
++static struct platform_driver ts72xx_nand_driver = {
++	.driver = {
++		.name = "ts72xx-nand",
++		.of_match_table = ts72xx_id_table,
++	},
++	.probe = ts72xx_nand_probe,
++	.remove_new = ts72xx_nand_remove,
++};
++module_platform_driver(ts72xx_nand_driver);
++
++MODULE_AUTHOR("Nikita Shubin <nikita.shubin@maquefel.me>");
++MODULE_DESCRIPTION("Technologic Systems TS72xx NAND controller driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.43.2
