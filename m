@@ -1,102 +1,65 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B442A193065;
-	Mon, 17 Jun 2024 11:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362FF192B6A;
+	Mon, 17 Jun 2024 11:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623856; cv=none; b=fx2V47F35SusV/K3nPo7jaBSs4o8VpD6uLoPqwb4nChp5A7t9EI4Kfc2wDjno+Wde8ufNvuHh2D3BDW0ThbZ3XXcJR065s1L8efrSzn9YbdrAesx2aK33UXiFeZBv09ETBf1d01vdeiEM32rP+24sX950ipLogCzWlwcoumXxbs=
+	t=1718623877; cv=none; b=aVlIxUrWLogBwoSvsMZUyDUhdyTPKVQ02Eb0nFAauXTns2B6CtBd3rPkQ0700y5gooWIqTMLKTTM8DyLUNSNoYXV+zbgu/AlubigmmFhISTpkvLpek3ShuLAEvZmNgJKz9aXtDz79PoX9NBUeRGm7RU2ULI23OmAPWVOly29wiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623856; c=relaxed/simple;
-	bh=HzBwIhrvBDEM5gpG4WaMTS01iW2I1HhXUnZuP86SIlY=;
+	s=arc-20240116; t=1718623877; c=relaxed/simple;
+	bh=BtqOhsPuK8Eoit8hom/sv0aX31Dh5yO626hm3M1ww14=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLJuHiuBzoV0MzV715qrXHJHWh58Uri9P22ELbVmKdHcR6n1tlrjCnpxmiI0SmqGDUEgDX9RyqDteFhQppyHUR2EyZme9k9SHTMRbire53DT4U0wI9keeJnvoiv/x8zqfGpC+YhzajE7gHJgfKHDh2e9VzfTQmJv4Do5UJA+BVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hnqAzZCi; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PyYNScQ8Bu5trKquibRDNE3P0qgtE6CdcFdmGkf5KUq7p9oSJ3GAvc0wz5ShEEikRBKTQYahCqDnGDFyOawxOXoGV9AfE7MB5wj9nK/kXAsSCNEOrX8aIZjClgyFEJ/b55fgTxu7Rk/TQoMjCqmF01visdCMUuNviulZB3iMcSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jo5QZVns; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hnqAzZCi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718623852;
-	bh=HzBwIhrvBDEM5gpG4WaMTS01iW2I1HhXUnZuP86SIlY=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jo5QZVns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C253C2BD10;
+	Mon, 17 Jun 2024 11:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718623876;
+	bh=BtqOhsPuK8Eoit8hom/sv0aX31Dh5yO626hm3M1ww14=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hnqAzZCiyk1aGB6H02eNX0ndmijhYXmeo8UhmiPnvoqkJ/Z8oNxbyDYrr7gqz+U/8
-	 FQaragdjVfcnexMovURVKJPysXA0KgPY4ysd/8kLXIdGkj/RIyTDh2Uu6ig6XEKQp0
-	 YkjZx9CViut6Mp5jAbyw7+1j7dhozmCO9qJOlbb5h0fM7c1HZSZzbE2UnsEQw6aG7n
-	 4BvNkU8cvT+9ACjNXIZPTgeUMHl9FlIFm5ngHbkec9vBYroVE4eIYBhFFHJYwxjsew
-	 rGZEQ+auVWYN3Mdx9M5HoN523vzdbtKAuTMX3nMG03mH6OxTrenBH/fWtAVoqJKKyN
-	 7QB1p2bjBYN6w==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D73A137804C8;
-	Mon, 17 Jun 2024 11:30:52 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 72F681060734; Mon, 17 Jun 2024 13:30:52 +0200 (CEST)
-Date: Mon, 17 Jun 2024 13:30:52 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Jianfeng Liu <liujianfeng1994@gmail.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, 
-	ezequiel@vanguardiasur.com.ar, frattaroli.nicolas@gmail.com, heiko@sntech.de, 
-	kernel@collabora.com, krzk+dt@kernel.org, linkmauve@linkmauve.fr, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, robh@kernel.org
-Subject: Re: [PATCH v6 4/6] media: hantro: Add RK3588 VEPU121
-Message-ID: <o6iccgurpi7sraq7plxaccz37i44te4jaqicnp2nqbke2qtskh@4kboulg3zywx>
-References: <20240613135034.31684-5-sebastian.reichel@collabora.com>
- <20240617025022.25122-1-liujianfeng1994@gmail.com>
+	b=jo5QZVns6NEFN3XD0fJvjtSCkks2pWhTskDgv1EpyGnRXxREaRS490loCV2IvpXRO
+	 DjlPHHh9/zIEO74s18j4NMrbEYrcyA7NrIHbFJ/VK/+JuFiEaOCOhVaIl4TpMYpTVR
+	 F96uj7tDHK6XevholJmjFvNeh9cue17/DPqfOQ/8=
+Date: Mon, 17 Jun 2024 13:31:13 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-35840: mptcp: use OPTION_MPTCP_MPJ_SYNACK in
+ subflow_finish_connect()
+Message-ID: <2024061743-aversion-uncured-d770@gregkh>
+References: <2024051756-CVE-2024-35840-99fa@gregkh>
+ <ZmFtaijTs6mOpB5B@tiehlicka>
+ <ZnAdxYLsEwDrF31j@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4reipacbikci5md7"
-Content-Disposition: inline
-In-Reply-To: <20240617025022.25122-1-liujianfeng1994@gmail.com>
-
-
---4reipacbikci5md7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZnAdxYLsEwDrF31j@tiehlicka>
 
-Hi,
+On Mon, Jun 17, 2024 at 01:28:05PM +0200, Michal Hocko wrote:
+> On Thu 06-06-24 10:03:59, Michal Hocko wrote:
+> > Hi,
+> > what is the actual security threat here? As far as I can see, the
+> > problem that the commit requested here addresses seems to be rather
+> > functional, rather than responding to an unexpected packet options with
+> > a reset, we actually establish a connection with some garbage parameters
+> > (likely unpredictable). Which is unfortunate but I do not see any
+> > security implications.
+> 
+> Does the silence mean that there are no actual security implications
+> here?
 
-On Mon, Jun 17, 2024 at 10:50:22AM GMT, Jianfeng Liu wrote:
-> Hi Sebastian,
->=20
-> Thu, 13 Jun 2024 15:48:45 +0200, Sebastian Reichel wrote:
-> >+	{ .compatible =3D "rockchip,rk3588-vepu121", .data =3D &rk3568_vpu_var=
-iant, },
->=20
-> rk3568_vpu_variant is decoder's data, typo?
+Sorry, no, I was traveling and am still trying to catch up with the
+pending queue.  Should get to it later today or tomorrow, sorry for the
+delay.
 
-See first sentence of the commit message.
-
--- Sebastian.
-
---4reipacbikci5md7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZwHmgACgkQ2O7X88g7
-+poayg/4kaCjw30iGYWhUbN3lrFew1L0jfg9s4DrgwLa4Mni+dk0QDVauaYcZPGg
-BAEDHvhkwbFY8yBkzuQLu3UWBdXDwlj9BpOtVT25kHorgUe9ZKmUuiAeFkjWjYC6
-66dNjUPhVtMcbrVvdw4iRTfX2ADxjYfF92yPMQ9uOqkMWThV7lshwWTRgOCbSsm7
-zs8VH+RLwdYIAGm6GFVJsZsDG0sHnalPd3q/Jw6wwZvnaLP6d5rGsC3I56vOOH38
-9vS/EuJxrKIL6cbWTrNkY8V4JHH0e83zoLcR+XdwVaJ2Yilqi7EK50JI4UyfIJ2L
-/poeWNwHc57BigUlOjpCzNC8D9748NDMz+CqPnDXJlxGU3MK6ugq6e41nurC++DL
-9uLk+mlGxoH0A+SuakrzYms+xD0NsybpA42/R5n/pYHq1+PwTezb9j3U6/b+blj/
-GL5C7/dwV1MugPOfuWpzCaBWkfHZOZDU603CamBAAk/RmOgcvgvIlTOh9/JJBxVr
-2zfmfnrcd38hGeOPIqdT3P451zmqKVBMaDdgJYvWxMt9pwu4M9/wRYIvJ8vAppad
-LrBMtILqCCfj5zW4Lqmv72Fwn9DA+dJs8ca9OYZVt+G4b65RBbxQ/0gNKp2qWLXa
-HAnDmSyVBsrP3tJq4BDCn236mYV8m0crsPmSOpmWXZv5NLjAPA==
-=KuxJ
------END PGP SIGNATURE-----
-
---4reipacbikci5md7--
+greg k-h
