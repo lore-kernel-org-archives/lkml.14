@@ -1,61 +1,61 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8215F161924
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E52E13AD11
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642717; cv=none; b=XvHnE8Pi9BatrSxWaNGnPyh02LOwzyGOdCavkg8BBSehnyqxhTsc6XHhZ6ymjUQ4SyNUAxUl6XNz/8YBJKYhBZR4h6LIcGEIEVocznmyLPR+ytuCB4w8IRFoQx3Su43G6GqmyCWzcEzbqRd5iWr5pqYUC2/LZjUdhpnpR+pKHEg=
+	t=1718642718; cv=none; b=DOnsf6QIo/Q6oScv0gVBqzUCUGpwTvo1YH0H4pNNBAUE3oiVeSd7tJkGwr2j9A+9WKGyHnWOx8iGKERZkDhPXJ4ETIq+4mrlDdhn+SnvzESzLvYsfF7VlrlwPJlsTcOPKXOUgovIOOLZA3VYh0KLmtCzm7LpHRYHAU6L7PdsUxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642717; c=relaxed/simple;
-	bh=qiXW9STxZi5hxiki6UUMOlRWrR+SQKxMjGn3sIyYrtc=;
+	s=arc-20240116; t=1718642718; c=relaxed/simple;
+	bh=Qk6feGHkRVeLnEkqYQfLBmesQKVLe/DXRQsuBJ1sb3M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l84cLTsJDDskQ7Lqwdpfkri87/E5XRr/aBaHaUj4kLdnTblA/KrhshMTzNvJMib28tHVtO8Rl6VbdZ/ca0YvdyaBKbDg7jHiYZ5kW2dLywYgkshhywdVdfCs8f4h6/l1f+niCN+OZ2G9G+4iXgvFvFAATb/yk8W0M9yZY5yeV8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gLQI1Oss; arc=none smtp.client-ip=209.85.218.47
+	 In-Reply-To:To:Cc; b=guXXXnchQ3OUenlqcOECpfYQ5rgb6ZB7BNPLp1OntMwsW2jVIyE8nfA02dYNC9I00Y8LhKraOL94X5xJVWUcETPlAg9y907YXZnaBBlfKjKIEhNeET5jckxwshqAxTnrYKN8qIgJTzjpg3xDKJvqPCNfr0kcRwEkacvgYXZVW14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rZqR4C8D; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLQI1Oss"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso508799966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:45:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rZqR4C8D"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c8353d8d0so6055782a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1718642713; x=1719247513; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZfbBcvTWg9v7Bbg+JkZfv+jRFiGBg9MQxpTsL00jJxg=;
-        b=gLQI1OssXOAXknp3rFXxABV9tjORBV08b8A1uvBkRmUrKrUKFqe6bc1GOmr/gbhXUT
-         KlrLbuzGBmw2LeZ2DLSLapAXi6pcAVBjiDRRr8tujtJotAD375ROABj8J5vQeHy2bn/3
-         1XYoC1aoo4nnURDQWfhS+ARige/wFZvqLuu1/ZlAl8ugIh9RPcXgsl8n+HkRZXJE4Qev
-         bNi6RhqqIvCmG5kCkKWz8Db0v4FiG9P44Q9INJdRTKr8/wYY6JfESg3c0rnnL7k39Exm
-         tJk39xxB+mFBK6EJsn5X/Hb3eeCA4yQEfwZnR3jucYbfHP1oJul/i+3ZeIuEpsEDqau7
-         iIqA==
+        bh=1iqem2TTUm0Io6iE50JUxcLVu6vIdSJQI7akG3Vt878=;
+        b=rZqR4C8D06He5ntc7DiQje6m8C9bpC11I7PFutJyP97gYRVnMCda5cJF8eubFoQFmp
+         guMo5I6oV7ZnwsDtLiryKy4PWvFd72/ZXVJVTodI/Au4ypHSFelsntgGPu+AMOI0ZSez
+         RndaZagiwoJwvbM7WRegBKpMAzcFArGSFj8DeKqU1yBYWosJ84tP6kPD09D78gSO7LzW
+         WQQLOhDj1SkHCVpEabwJheYLgxuXXKsZFILSWDVyG+bGaARIOqTjM/4PTGYU9ajHckB1
+         9A5UJ1JenzteIN7TEriYIhRsshreh//r/mXL7UmUV9uamvB0+fJb6rMfbx1vkJ8sSBsa
+         ry/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1718642713; x=1719247513;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZfbBcvTWg9v7Bbg+JkZfv+jRFiGBg9MQxpTsL00jJxg=;
-        b=ZO1RBl5hRb3J6+jq0GYLlCtbVsJwfZrk+GX8cB7tea9qo4VdeCX538okYBo6Aj7mn0
-         xgieMS2fkXF0KVBKu/UamZKKw6RykFMpcmfbRQvYBcaEbATV73E7OkkjZ6OIIF1oG7/q
-         4FK6F8D8BfrRAOOfyWCfhI7+ILw/8umZxdVYOYNqzfBFCaXEHaZo08Wku02PbAjNXscI
-         73Dk/in/511wV5ah975h8KPtt2SP44FX+iDXADfP95wm7t/xup7hRKBQJT3wf6XpoOhU
-         Geq2Yh4qARqlQv+86Nv7Nmq79p/qd/ulZHW3YT93PaypS7Pq7Z3U5yET2szw2DZ+dIus
-         +7FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYmBrWnfWU7x2BFlP+G6GerfqpSPVVeZetDDFjCmswVijrbvy00AzWvPGlqsfk20N6dbdUuAJMQutpDsVYVA7R2s+pnUg8Q/F77PbE
-X-Gm-Message-State: AOJu0YwNnnx6iVTEZl73BGIkHszEZ8OU/3pUS0Wzy419MMV5S3E1NOcX
-	ke9kueuBqs3EKfZnpusaFBy57c5fnZyOR5RcA6FmOCYzm0Efgi828CXc5jYQCms=
-X-Google-Smtp-Source: AGHT+IFwqHuL/AFdrKJ5yS1y9SrBtKhrGrSio/O9IDSp5AUqAYl4zRsXzu5G8/8K7KBD2vk6PlyL9A==
-X-Received: by 2002:a17:906:d18f:b0:a6f:7c8:4fd6 with SMTP id a640c23a62f3a-a6f60bcbaadmr750030066b.0.1718642712613;
-        Mon, 17 Jun 2024 09:45:12 -0700 (PDT)
+        bh=1iqem2TTUm0Io6iE50JUxcLVu6vIdSJQI7akG3Vt878=;
+        b=O50cJDu4HY8mXI90h3AoAc0pRP0fj+98Q+KOkKIZ1AbPqA8IAitcplyCanQybR9yq3
+         UjN0SQHz77wuE1TUckhDPY/kQtq0C4Va/PlTEYDAZlhJTTtaMz/9mQ8soaRgX3RNkFgp
+         dzy6YRxDZ+0UZnxZ96hM2A++flJVbNDk7kcJdteyZ8YFlaOa3iA72hzU9rAFTSBOxsP2
+         DpKaPm2nf+wY6aEGgZjaOcYaFhl7mfKxzTJ0uLyif8ynlAEgcnoafC7NJHg/zsCAwvlY
+         S92Gzv6BA88Y6/suC2MXS/d5U90pxuuiaojYBCmR6m2a2aQaEe2pgljKcUOXZF0kI17g
+         dBzA==
+X-Forwarded-Encrypted: i=1; AJvYcCULdQRfc9JRiSa+ibQvZHO94BWlj5kn6DkG2xcEfZlgiGyMc0CdHpeCqaYJvXOYbZGPA2oWbkFc5jTBeE7meH0TK+ak5WdcadgoxlyR
+X-Gm-Message-State: AOJu0YzZSKssopgeC7FBxLoWoTefqOAmxAEOiARQJbPHExjdr2Y7F3nO
+	URW4w8fLfrfnTWGuNDgeQOA4VCPN4K13KOpds1Qq359XhjK4SCOmifzdu9Z860o=
+X-Google-Smtp-Source: AGHT+IExQsl5L51QJEkILCWw/4EWi/X1ko1LnAIwMsBrVJigwlCKJAPhnITO1WSus9mGPJk5KWgHbQ==
+X-Received: by 2002:a17:906:e251:b0:a6f:17a9:947a with SMTP id a640c23a62f3a-a6f60de6059mr682118766b.71.1718642713618;
+        Mon, 17 Jun 2024 09:45:13 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f4170bsm527139966b.157.2024.06.17.09.45.12
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f4170bsm527139966b.157.2024.06.17.09.45.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 09:45:12 -0700 (PDT)
+        Mon, 17 Jun 2024 09:45:13 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 17 Jun 2024 17:44:44 +0100
-Subject: [PATCH v3 3/6] phy: exynos5-usbdrd: convert core clocks to
- clk_bulk
+Date: Mon, 17 Jun 2024 17:44:46 +0100
+Subject: [PATCH v3 5/6] phy: exynos5-usbdrd: convert Vbus supplies to
+ regulator_bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-usb-phy-gs101-v3-3-b66de9ae7424@linaro.org>
+Message-Id: <20240617-usb-phy-gs101-v3-5-b66de9ae7424@linaro.org>
 References: <20240617-usb-phy-gs101-v3-0-b66de9ae7424@linaro.org>
 In-Reply-To: <20240617-usb-phy-gs101-v3-0-b66de9ae7424@linaro.org>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -85,299 +85,209 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.13.0
 
-Using the clk_bulk APIs, the clock handling for the core clocks becomes
-much simpler. No need to check any flags whether or not certain clocks
-exist or not. Further, we can drop the various handles to the
-individual clocks in the driver data and instead simply treat them all
-as one thing.
+Using the regulator_bulk APIs, the handling of power supplies becomes
+much simpler. There is no need anymore to check if regulators have been
+acquired or not, the bulk APIs will do all the work for us. We can also
+drop the various handles to the individual power supplies in the driver
+runtime data and instead simply treat them all as one thing. Error
+cleanup also becomes much simpler.
 
-So far, this driver assumes that all platforms have a clock "ref". It
-also assumes that the clocks "phy_pipe", "phy_utmi", and "itp" exist if
-the platform data "has_common_clk_gate" is set to true. It then goes
-and individually tries to acquire and enable and disable all the
-individual clocks one by one. Rather than relying on these implicit
-clocks and open-coding the clock handling, we can just explicitly spell
-out the clock names in the different device data and use that
-information to populate clk_bulk_data, allowing us to use the clk_bulk
-APIs for managing the clocks.
+Converting to the regulator_bulk APIs also makes it easier to add
+support for those SoCs that have additional power supplies for the PHY.
+Google Tensor gs101 is one example of such a SoC. Otherwise we'd have
+to add all additional supplies individually via individual calls to
+regulator_get() and enable/disable handle them all individually,
+including complicated error handling. That doesn't scale and clutters
+the code.
 
-As a side-effect, this change highlighted the fact that
-exynos5_usbdrd_phy_power_on() forgot to check the result of the clock
-enable calls. Using the clk_bulk APIs, the compiler now warns when
-return values are not checked - therefore add the necessary check
-instead of silently ignoring failures and continuing as if all is OK
-when it isn't.
-
-For consistency, also change a related dev_err() to dev_err_probe() in
-exynos5_usbdrd_phy_clk_handle() to get consistent error message
-formatting.
-
-Finally, exynos5_usbdrd_phy_clk_handle() prints an error message in all
-cases as necessary (except for -ENOMEM). There is no need to print
-another message in its caller (the probe() function), and printing
-errors during OOM conditions is usually discouraged. Drop the
-duplicated message in exynos5_usbdrd_phy_probe().
+Just update the code to use the regulator_bulk APIs.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 129 +++++++++++++++----------------
- 1 file changed, 61 insertions(+), 68 deletions(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 86 +++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 47 deletions(-)
 
 diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index b7e2526f4c06..35b307dad2ee 100644
+index 80a3891fd605..2d2ce06765c4 100644
 --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
 +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -185,10 +185,11 @@ struct exynos5_usbdrd_phy_config {
- struct exynos5_usbdrd_phy_drvdata {
- 	const struct exynos5_usbdrd_phy_config *phy_cfg;
- 	const struct phy_ops *phy_ops;
-+	const char * const *core_clk_names;
-+	int n_core_clks;
+@@ -189,6 +189,8 @@ struct exynos5_usbdrd_phy_drvdata {
+ 	int n_clks;
+ 	const char * const *core_clk_names;
+ 	int n_core_clks;
++	const char * const *regulator_names;
++	int n_regulators;
  	u32 pmu_offset_usbdrd0_phy;
  	u32 pmu_offset_usbdrd0_phy_ss;
  	u32 pmu_offset_usbdrd1_phy;
--	bool has_common_clk_gate;
- };
- 
- /**
-@@ -196,16 +197,12 @@ struct exynos5_usbdrd_phy_drvdata {
-  * @dev: pointer to device instance of this platform device
-  * @reg_phy: usb phy controller register memory base
-  * @clk: phy clock for register access
-- * @pipeclk: clock for pipe3 phy
-- * @utmiclk: clock for utmi+ phy
-- * @itpclk: clock for ITP generation
-+ * @core_clks: core clocks for phy (ref, pipe3, utmi+, ITP, etc. as required)
-  * @drv_data: pointer to SoC level driver data structure
-  * @phys: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
+@@ -205,8 +207,7 @@ struct exynos5_usbdrd_phy_drvdata {
   *	    instances each with its 'phy' and 'phy_cfg'.
   * @extrefclk: frequency select settings when using 'separate
   *	       reference clocks' for SS and HS operations
-- * @ref_clk: reference clock to PHY block from which PHY's
-- *	     operational clocks are derived
-  * @vbus: VBUS regulator for phy
-  * @vbus_boost: Boost regulator for VBUS present on few Exynos boards
+- * @vbus: VBUS regulator for phy
+- * @vbus_boost: Boost regulator for VBUS present on few Exynos boards
++ * @regulators: regulators for phy
   */
-@@ -213,9 +210,7 @@ struct exynos5_usbdrd_phy {
+ struct exynos5_usbdrd_phy {
  	struct device *dev;
- 	void __iomem *reg_phy;
- 	struct clk *clk;
--	struct clk *pipeclk;
--	struct clk *utmiclk;
--	struct clk *itpclk;
-+	struct clk_bulk_data *core_clks;
- 	const struct exynos5_usbdrd_phy_drvdata *drv_data;
- 	struct phy_usb_instance {
- 		struct phy *phy;
-@@ -225,7 +220,6 @@ struct exynos5_usbdrd_phy {
+@@ -222,8 +223,7 @@ struct exynos5_usbdrd_phy {
  		const struct exynos5_usbdrd_phy_config *phy_cfg;
  	} phys[EXYNOS5_DRDPHYS_NUM];
  	u32 extrefclk;
--	struct clk *ref_clk;
- 	struct regulator *vbus;
- 	struct regulator *vbus_boost;
+-	struct regulator *vbus;
+-	struct regulator *vbus_boost;
++	struct regulator_bulk_data *regulators;
  };
-@@ -505,12 +499,10 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
  
- 	dev_dbg(phy_drd->dev, "Request to power_on usbdrd_phy phy\n");
- 
--	clk_prepare_enable(phy_drd->ref_clk);
--	if (!phy_drd->drv_data->has_common_clk_gate) {
--		clk_prepare_enable(phy_drd->pipeclk);
--		clk_prepare_enable(phy_drd->utmiclk);
--		clk_prepare_enable(phy_drd->itpclk);
--	}
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_core_clks,
-+				      phy_drd->core_clks);
-+	if (ret)
-+		return ret;
+ static inline
+@@ -507,21 +507,11 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
+ 		return ret;
  
  	/* Enable VBUS supply */
- 	if (phy_drd->vbus_boost) {
-@@ -540,12 +532,8 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
- 		regulator_disable(phy_drd->vbus_boost);
- 
- fail_vbus:
--	clk_disable_unprepare(phy_drd->ref_clk);
--	if (!phy_drd->drv_data->has_common_clk_gate) {
--		clk_disable_unprepare(phy_drd->itpclk);
--		clk_disable_unprepare(phy_drd->utmiclk);
--		clk_disable_unprepare(phy_drd->pipeclk);
+-	if (phy_drd->vbus_boost) {
+-		ret = regulator_enable(phy_drd->vbus_boost);
+-		if (ret) {
+-			dev_err(phy_drd->dev,
+-				"Failed to enable VBUS boost supply\n");
+-			goto fail_vbus;
+-		}
 -	}
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_core_clks,
-+				   phy_drd->core_clks);
- 
- 	return ret;
- }
-@@ -566,12 +554,8 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
- 	if (phy_drd->vbus_boost)
- 		regulator_disable(phy_drd->vbus_boost);
- 
--	clk_disable_unprepare(phy_drd->ref_clk);
--	if (!phy_drd->drv_data->has_common_clk_gate) {
--		clk_disable_unprepare(phy_drd->itpclk);
--		clk_disable_unprepare(phy_drd->pipeclk);
--		clk_disable_unprepare(phy_drd->utmiclk);
--	}
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_core_clks,
-+				   phy_drd->core_clks);
- 
- 	return 0;
- }
-@@ -885,8 +869,9 @@ static const struct phy_ops exynos850_usbdrd_phy_ops = {
- 
- static int exynos5_usbdrd_phy_clk_handle(struct exynos5_usbdrd_phy *phy_drd)
- {
--	unsigned long ref_rate;
- 	int ret;
-+	struct clk *ref_clk;
-+	unsigned long ref_rate;
- 
- 	phy_drd->clk = devm_clk_get(phy_drd->dev, "phy");
- 	if (IS_ERR(phy_drd->clk)) {
-@@ -894,42 +879,39 @@ static int exynos5_usbdrd_phy_clk_handle(struct exynos5_usbdrd_phy *phy_drd)
- 		return PTR_ERR(phy_drd->clk);
- 	}
- 
--	phy_drd->ref_clk = devm_clk_get(phy_drd->dev, "ref");
--	if (IS_ERR(phy_drd->ref_clk)) {
--		dev_err(phy_drd->dev, "Failed to get phy reference clock\n");
--		return PTR_ERR(phy_drd->ref_clk);
--	}
--	ref_rate = clk_get_rate(phy_drd->ref_clk);
 -
--	ret = exynos5_rate_to_clk(ref_rate, &phy_drd->extrefclk);
--	if (ret) {
--		dev_err(phy_drd->dev, "Clock rate (%ld) not supported\n",
--			ref_rate);
--		return ret;
--	}
-+	phy_drd->core_clks = devm_kcalloc(phy_drd->dev,
-+					  phy_drd->drv_data->n_core_clks,
-+					  sizeof(*phy_drd->core_clks),
-+					  GFP_KERNEL);
-+	if (!phy_drd->core_clks)
-+		return -ENOMEM;
- 
--	if (!phy_drd->drv_data->has_common_clk_gate) {
--		phy_drd->pipeclk = devm_clk_get(phy_drd->dev, "phy_pipe");
--		if (IS_ERR(phy_drd->pipeclk)) {
--			dev_info(phy_drd->dev,
--				 "PIPE3 phy operational clock not specified\n");
--			phy_drd->pipeclk = NULL;
+-	if (phy_drd->vbus) {
+-		ret = regulator_enable(phy_drd->vbus);
+-		if (ret) {
+-			dev_err(phy_drd->dev, "Failed to enable VBUS supply\n");
+-			goto fail_vbus_boost;
 -		}
-+	for (int i = 0; i < phy_drd->drv_data->n_core_clks; ++i)
-+		phy_drd->core_clks[i].id = phy_drd->drv_data->core_clk_names[i];
- 
--		phy_drd->utmiclk = devm_clk_get(phy_drd->dev, "phy_utmi");
--		if (IS_ERR(phy_drd->utmiclk)) {
--			dev_info(phy_drd->dev,
--				 "UTMI phy operational clock not specified\n");
--			phy_drd->utmiclk = NULL;
--		}
-+	ret = devm_clk_bulk_get(phy_drd->dev, phy_drd->drv_data->n_core_clks,
-+				phy_drd->core_clks);
-+	if (ret)
-+		return dev_err_probe(phy_drd->dev, ret,
-+				     "failed to get phy core clock(s)\n");
- 
--		phy_drd->itpclk = devm_clk_get(phy_drd->dev, "itp");
--		if (IS_ERR(phy_drd->itpclk)) {
--			dev_info(phy_drd->dev,
--				 "ITP clock from main OSC not specified\n");
--			phy_drd->itpclk = NULL;
-+	ref_clk = NULL;
-+	for (int i = 0; i < phy_drd->drv_data->n_core_clks; ++i) {
-+		if (!strcmp(phy_drd->core_clks[i].id, "ref")) {
-+			ref_clk = phy_drd->core_clks[i].clk;
-+			break;
- 		}
++	ret = regulator_bulk_enable(phy_drd->drv_data->n_regulators,
++				    phy_drd->regulators);
++	if (ret) {
++		dev_err(phy_drd->dev, "Failed to enable PHY regulator(s)\n");
++		goto fail_vbus;
  	}
-+	if (!ref_clk)
-+		return dev_err_probe(phy_drd->dev, -ENODEV,
-+				     "failed to find phy reference clock\n");
-+
-+	ref_rate = clk_get_rate(ref_clk);
-+	ret = exynos5_rate_to_clk(ref_rate, &phy_drd->extrefclk);
-+	if (ret)
-+		return dev_err_probe(phy_drd->dev, ret,
-+				     "clock rate (%ld) not supported\n",
-+				     ref_rate);
+ 
+ 	/* Power-on PHY */
+@@ -529,10 +519,6 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
  
  	return 0;
- }
-@@ -957,19 +939,29 @@ static const struct exynos5_usbdrd_phy_config phy_cfg_exynos850[] = {
- 	},
+ 
+-fail_vbus_boost:
+-	if (phy_drd->vbus_boost)
+-		regulator_disable(phy_drd->vbus_boost);
+-
+ fail_vbus:
+ 	clk_bulk_disable_unprepare(phy_drd->drv_data->n_core_clks,
+ 				   phy_drd->core_clks);
+@@ -551,10 +537,8 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+ 	inst->phy_cfg->phy_isol(inst, true);
+ 
+ 	/* Disable VBUS supply */
+-	if (phy_drd->vbus)
+-		regulator_disable(phy_drd->vbus);
+-	if (phy_drd->vbus_boost)
+-		regulator_disable(phy_drd->vbus_boost);
++	regulator_bulk_disable(phy_drd->drv_data->n_regulators,
++			       phy_drd->regulators);
+ 
+ 	clk_bulk_disable_unprepare(phy_drd->drv_data->n_core_clks,
+ 				   phy_drd->core_clks);
+@@ -961,6 +945,10 @@ static const char * const exynos5433_core_clk_names[] = {
+ 	"ref", "phy_pipe", "phy_utmi", "itp",
  };
  
-+static const char * const exynos5_core_clk_names[] = {
-+	"ref",
-+};
-+
-+static const char * const exynos5433_core_clk_names[] = {
-+	"ref", "phy_pipe", "phy_utmi", "itp",
++static const char * const exynos5_regulator_names[] = {
++	"vbus", "vbus-boost",
 +};
 +
  static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
  	.phy_cfg		= phy_cfg_exynos5,
  	.phy_ops		= &exynos5_usbdrd_phy_ops,
- 	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
- 	.pmu_offset_usbdrd1_phy	= EXYNOS5420_USBDRD1_PHY_CONTROL,
--	.has_common_clk_gate	= true,
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
+@@ -970,6 +958,8 @@ static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
+ 	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+ 	.core_clk_names		= exynos5_core_clk_names,
+ 	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
++	.regulator_names	= exynos5_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
  };
  
  static const struct exynos5_usbdrd_phy_drvdata exynos5250_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos5,
- 	.phy_ops		= &exynos5_usbdrd_phy_ops,
- 	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
--	.has_common_clk_gate	= true,
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
+@@ -980,6 +970,8 @@ static const struct exynos5_usbdrd_phy_drvdata exynos5250_usbdrd_phy = {
+ 	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+ 	.core_clk_names		= exynos5_core_clk_names,
+ 	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
++	.regulator_names	= exynos5_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
  };
  
  static const struct exynos5_usbdrd_phy_drvdata exynos5433_usbdrd_phy = {
-@@ -977,21 +969,24 @@ static const struct exynos5_usbdrd_phy_drvdata exynos5433_usbdrd_phy = {
- 	.phy_ops		= &exynos5_usbdrd_phy_ops,
- 	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
- 	.pmu_offset_usbdrd1_phy	= EXYNOS5433_USBHOST30_PHY_CONTROL,
--	.has_common_clk_gate	= false,
-+	.core_clk_names		= exynos5433_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5433_core_clk_names),
+@@ -991,6 +983,8 @@ static const struct exynos5_usbdrd_phy_drvdata exynos5433_usbdrd_phy = {
+ 	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+ 	.core_clk_names		= exynos5433_core_clk_names,
+ 	.n_core_clks		= ARRAY_SIZE(exynos5433_core_clk_names),
++	.regulator_names	= exynos5_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
  };
  
  static const struct exynos5_usbdrd_phy_drvdata exynos7_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos5,
- 	.phy_ops		= &exynos5_usbdrd_phy_ops,
- 	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
--	.has_common_clk_gate	= false,
-+	.core_clk_names		= exynos5433_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5433_core_clk_names),
+@@ -1001,6 +995,8 @@ static const struct exynos5_usbdrd_phy_drvdata exynos7_usbdrd_phy = {
+ 	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+ 	.core_clk_names		= exynos5433_core_clk_names,
+ 	.n_core_clks		= ARRAY_SIZE(exynos5433_core_clk_names),
++	.regulator_names	= exynos5_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
  };
  
  static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos850,
- 	.phy_ops		= &exynos850_usbdrd_phy_ops,
- 	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
--	.has_common_clk_gate	= true,
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
+@@ -1011,6 +1007,8 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
+ 	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
+ 	.core_clk_names		= exynos5_core_clk_names,
+ 	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
++	.regulator_names	= exynos5_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
  };
  
  static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
-@@ -1045,10 +1040,8 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
- 	phy_drd->drv_data = drv_data;
+@@ -1083,26 +1081,20 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+ 	if (channel < 0)
+ 		dev_dbg(dev, "Not a multi-controller usbdrd phy\n");
  
- 	ret = exynos5_usbdrd_phy_clk_handle(phy_drd);
--	if (ret) {
--		dev_err(dev, "Failed to initialize clocks\n");
-+	if (ret)
- 		return ret;
+-	/* Get Vbus regulators */
+-	phy_drd->vbus = devm_regulator_get(dev, "vbus");
+-	if (IS_ERR(phy_drd->vbus)) {
+-		ret = PTR_ERR(phy_drd->vbus);
+-		if (ret == -EPROBE_DEFER)
+-			return ret;
+-
+-		dev_warn(dev, "Failed to get VBUS supply regulator\n");
+-		phy_drd->vbus = NULL;
 -	}
+-
+-	phy_drd->vbus_boost = devm_regulator_get(dev, "vbus-boost");
+-	if (IS_ERR(phy_drd->vbus_boost)) {
+-		ret = PTR_ERR(phy_drd->vbus_boost);
+-		if (ret == -EPROBE_DEFER)
+-			return ret;
+-
+-		dev_warn(dev, "Failed to get VBUS boost supply regulator\n");
+-		phy_drd->vbus_boost = NULL;
+-	}
++	/* Get regulators */
++	phy_drd->regulators = devm_kcalloc(dev,
++					   drv_data->n_regulators,
++					   sizeof(*phy_drd->regulators),
++					   GFP_KERNEL);
++	if (!phy_drd->regulators)
++		return ENOMEM;
++	regulator_bulk_set_supply_names(phy_drd->regulators,
++					drv_data->regulator_names,
++					drv_data->n_regulators);
++	ret = devm_regulator_bulk_get(dev, drv_data->n_regulators,
++				      phy_drd->regulators);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to get regulators\n");
  
- 	reg_pmu = syscon_regmap_lookup_by_phandle(dev->of_node,
- 						   "samsung,pmu-syscon");
+ 	dev_vdbg(dev, "Creating usbdrd_phy phy\n");
+ 
 
 -- 
 2.45.2.627.g7a2c4fd464-goog
