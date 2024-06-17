@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2427D194C63
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C04194A75
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623137; cv=none; b=sXQgXGN+klJKN6Xeo/Q5nigBbUqqVih1IQB/Qy0phizBCwXzvXdc5PLpGsdh5sprgFIIuFsvOWSpOJiOtpik98Oq/TY848+WAVACvKaKcJlWX8uYOzbccdIDhSRhGbeAVOSp+/IWie+8+MYScK25pT4BV8KdV/zCtEZQKwrZm3U=
+	t=1718623140; cv=none; b=c7TZKETuP3fZt9aTefjItn6SlVdvfojxYffJK2wxUw+dWEff3gLVHgTtAZlRvOb4vXnYIFU8uRuy+ZL47GHUvVOLISx0mdPctminyeygPLwBeKvBaHYSEpiKszT73ZrZLBrMBWan05SYi0gHexjr9Mec1JlptyDrm/3i+w+yGKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623137; c=relaxed/simple;
-	bh=gGg1ACS6SzmZqkleD+cBDo1nyBYn60WMARK6bfiGgng=;
+	s=arc-20240116; t=1718623140; c=relaxed/simple;
+	bh=KnngVLiI+ACw91dsOqhXf45YArtNq2zX461WZtPUjtY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PJUZQJyoWsxr32KHYgKq4cYN8pnrTQjTKERMAomGShfXZwEiJXue8icHjYZNCbZb31F5qI0GPr7x5DVQyW1ZjDIl3XkbFobHUpnMp7WzzH4WHp55ApY4u2tXFUgpRHEk/bss5/BdDMPMCfDSPQzFaH+aXkVjrnajPTnqqO8tJXo=
+	 MIME-Version; b=iE4ZE/8uzLLeFLH4xW76wpC0ORtmTkWitaF8r28QI5QIip9F5c7xhZBZdXKBdwfmEZMKpQOuUHX651wqayuWi6yrJkrbb2LNHFEGuhiFqgEehMpg4ZOHaNql7wTXvFFenScl0Ii+xn3gdFoc4uuan2iyb1Zu1EJk3mSkC8FbkVs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CBC7152B;
-	Mon, 17 Jun 2024 04:19:19 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88E45152B;
+	Mon, 17 Jun 2024 04:19:22 -0700 (PDT)
 Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 531BD3F6A8;
-	Mon, 17 Jun 2024 04:18:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD44A3F6A8;
+	Mon, 17 Jun 2024 04:18:56 -0700 (PDT)
 From: Mark Rutland <mark.rutland@arm.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: alexandru.elisei@arm.com,
@@ -27,9 +27,9 @@ Cc: alexandru.elisei@arm.com,
 	maz@kernel.org,
 	tglx@linutronix.de,
 	will@kernel.org
-Subject: [PATCH v2 3/5] irqchip/gic-v3: Make distributor priorities variables
-Date: Mon, 17 Jun 2024 12:18:39 +0100
-Message-Id: <20240617111841.2529370-4-mark.rutland@arm.com>
+Subject: [PATCH v2 5/5] arm64: irqchip/gic-v3: Select priorities at boot time
+Date: Mon, 17 Jun 2024 12:18:41 +0100
+Message-Id: <20240617111841.2529370-6-mark.rutland@arm.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240617111841.2529370-1-mark.rutland@arm.com>
 References: <20240617111841.2529370-1-mark.rutland@arm.com>
@@ -41,15 +41,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In subsequent patches the GICv3 driver will choose the regular interrupt
-priority at boot time.
+The distributor and PMR/RPR can present different views of the interrupt
+priority space dependent upon the values of GICD_CTLR.DS and
+SCR_EL3.FIQ. Currently we treat the distributor's view of the priority
+space as canonical, and when the two differ we change the way we handle
+values in the PMR/RPR, using the `gic_nonsecure_priorities` static key
+to decide what to do.
 
-In preparation for using dynamic priorities, place the priorities in
-variables and update the code to pass these as parameters. Users of
-GICD_INT_DEF_PRI_X4 are modified to replicate the priority byte using
-REPEAT_BYTE_U32().
+This approach works, but it's sub-optimal. When using pseudo-NMI we
+manipulate the distributor rarely, and we manipulate the PMR/RPR
+registers very frequently in code spread out throughout the kernel (e.g.
+local_irq_{save,restore}()). It would be nicer if we could use fixed
+values for the PMR/RPR, and dynamically choose the values programmed
+into the distributor.
 
-There should be no functional change as a result of this patch.
+This patch changes the GICv3 driver and arm64 code accordingly. PMR
+values are chosen at compile time, and the GICv3 driver determines the
+appropriate values to program into the distributor at boot time. This
+removes the need for the `gic_nonsecure_priorities` static key and
+results in smaller and better generated code for saving/restoring the
+irqflags.
+
+Before this patch, local_irq_disable() compiles to:
+
+| 0000000000000000 <outlined_local_irq_disable>:
+|    0:   d503201f        nop
+|    4:   d50343df        msr     daifset, #0x3
+|    8:   d65f03c0        ret
+|    c:   d503201f        nop
+|   10:   d2800c00        mov     x0, #0x60                       // #96
+|   14:   d5184600        msr     icc_pmr_el1, x0
+|   18:   d65f03c0        ret
+|   1c:   d2801400        mov     x0, #0xa0                       // #160
+|   20:   17fffffd        b       14 <outlined_local_irq_disable+0x14>
+
+After this patch, local_irq_disable() compiles to:
+
+| 0000000000000000 <outlined_local_irq_disable>:
+|    0:   d503201f        nop
+|    4:   d50343df        msr     daifset, #0x3
+|    8:   d65f03c0        ret
+|    c:   d2801800        mov     x0, #0xc0                       // #192
+|   10:   d5184600        msr     icc_pmr_el1, x0
+|   14:   d65f03c0        ret
+
+... with 3 fewer instructions per call.
+
+For defconfig + CONFIG_PSEUDO_NMI=y, this results in a minor saving of
+~4K of text, and will make it easier to make further improvements to the
+way we manipulate irqflags and DAIF bits.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Cc: Alexandru Elisei <alexandru.elisei@arm.com>
@@ -60,300 +100,302 @@ Cc: Will Deacon <will@kernel.org>
 Reviewed-by: Marc Zyngier <maz@kernel.org>
 Tested-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-common.c       | 10 ++++++----
- drivers/irqchip/irq-gic-common.h       |  4 ++--
- drivers/irqchip/irq-gic-v3-its.c       | 11 ++++++-----
- drivers/irqchip/irq-gic-v3.c           | 19 +++++++++++--------
- drivers/irqchip/irq-gic.c              |  8 ++++----
- drivers/irqchip/irq-hip04.c            |  4 ++--
- include/linux/irqchip/arm-gic-common.h |  4 ----
- include/linux/irqchip/arm-gic-v3.h     |  2 +-
- 8 files changed, 32 insertions(+), 30 deletions(-)
+ arch/arm64/include/asm/arch_gicv3.h     | 15 ----
+ arch/arm64/include/asm/ptrace.h         | 35 ++-------
+ arch/arm64/kernel/image-vars.h          |  5 --
+ drivers/irqchip/irq-gic-v3.c            | 96 ++++++++++---------------
+ include/linux/irqchip/arm-gic-v3-prio.h | 52 ++++++++++++++
+ 5 files changed, 97 insertions(+), 106 deletions(-)
+ create mode 100644 include/linux/irqchip/arm-gic-v3-prio.h
 
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index 4ed17620dc4d7..c776f9142610e 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -7,6 +7,7 @@
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip/arm-gic.h>
-+#include <linux/kernel.h>
+diff --git a/arch/arm64/include/asm/arch_gicv3.h b/arch/arm64/include/asm/arch_gicv3.h
+index 5f172611654b1..9e96f024b2f19 100644
+--- a/arch/arm64/include/asm/arch_gicv3.h
++++ b/arch/arm64/include/asm/arch_gicv3.h
+@@ -175,21 +175,6 @@ static inline bool gic_prio_masking_enabled(void)
  
- #include "irq-gic-common.h"
- 
-@@ -87,7 +88,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	return ret;
+ static inline void gic_pmr_mask_irqs(void)
+ {
+-	BUILD_BUG_ON(GICD_INT_DEF_PRI < (__GIC_PRIO_IRQOFF |
+-					 GIC_PRIO_PSR_I_SET));
+-	BUILD_BUG_ON(GICD_INT_DEF_PRI >= GIC_PRIO_IRQON);
+-	/*
+-	 * Need to make sure IRQON allows IRQs when SCR_EL3.FIQ is cleared
+-	 * and non-secure PMR accesses are not subject to the shifts that
+-	 * are applied to IRQ priorities
+-	 */
+-	BUILD_BUG_ON((0x80 | (GICD_INT_DEF_PRI >> 1)) >= GIC_PRIO_IRQON);
+-	/*
+-	 * Same situation as above, but now we make sure that we can mask
+-	 * regular interrupts.
+-	 */
+-	BUILD_BUG_ON((0x80 | (GICD_INT_DEF_PRI >> 1)) < (__GIC_PRIO_IRQOFF_NS |
+-							 GIC_PRIO_PSR_I_SET));
+ 	gic_write_pmr(GIC_PRIO_IRQOFF);
  }
  
--void gic_dist_config(void __iomem *base, int gic_irqs)
-+void gic_dist_config(void __iomem *base, int gic_irqs, u8 priority)
- {
- 	unsigned int i;
+diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+index 47ec58031f11b..0abe975d68a8e 100644
+--- a/arch/arm64/include/asm/ptrace.h
++++ b/arch/arm64/include/asm/ptrace.h
+@@ -21,35 +21,12 @@
+ #define INIT_PSTATE_EL2 \
+ 	(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT | PSR_MODE_EL2h)
  
-@@ -102,7 +103,8 @@ void gic_dist_config(void __iomem *base, int gic_irqs)
- 	 * Set priority on all global interrupts.
- 	 */
- 	for (i = 32; i < gic_irqs; i += 4)
--		writel_relaxed(GICD_INT_DEF_PRI_X4, base + GIC_DIST_PRI + i);
-+		writel_relaxed(REPEAT_BYTE_U32(priority),
-+			       base + GIC_DIST_PRI + i);
+-/*
+- * PMR values used to mask/unmask interrupts.
+- *
+- * GIC priority masking works as follows: if an IRQ's priority is a higher value
+- * than the value held in PMR, that IRQ is masked. Lowering the value of PMR
+- * means masking more IRQs (or at least that the same IRQs remain masked).
+- *
+- * To mask interrupts, we clear the most significant bit of PMR.
+- *
+- * Some code sections either automatically switch back to PSR.I or explicitly
+- * require to not use priority masking. If bit GIC_PRIO_PSR_I_SET is included
+- * in the priority mask, it indicates that PSR.I should be set and
+- * interrupt disabling temporarily does not rely on IRQ priorities.
+- */
+-#define GIC_PRIO_IRQON			0xe0
+-#define __GIC_PRIO_IRQOFF		(GIC_PRIO_IRQON & ~0x80)
+-#define __GIC_PRIO_IRQOFF_NS		0xa0
+-#define GIC_PRIO_PSR_I_SET		(1 << 4)
+-
+-#define GIC_PRIO_IRQOFF							\
+-	({								\
+-		extern struct static_key_false gic_nonsecure_priorities;\
+-		u8 __prio = __GIC_PRIO_IRQOFF;				\
+-									\
+-		if (static_branch_unlikely(&gic_nonsecure_priorities))	\
+-			__prio = __GIC_PRIO_IRQOFF_NS;			\
+-									\
+-		__prio;							\
+-	})
++#include <linux/irqchip/arm-gic-v3-prio.h>
++
++#define GIC_PRIO_IRQON		GICV3_PRIO_UNMASKED
++#define GIC_PRIO_IRQOFF		GICV3_PRIO_IRQ
++
++#define GIC_PRIO_PSR_I_SET	GICV3_PRIO_PSR_I_SET
  
- 	/*
- 	 * Deactivate and disable all SPIs. Leave the PPI and SGIs
-@@ -116,7 +118,7 @@ void gic_dist_config(void __iomem *base, int gic_irqs)
- 	}
- }
+ /* Additional SPSR bits not exposed in the UABI */
+ #define PSR_MODE_THREAD_BIT	(1 << 0)
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index ba4f8f7d6a91a..8f5422ed1b758 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -105,11 +105,6 @@ KVM_NVHE_ALIAS(__hyp_stub_vectors);
+ KVM_NVHE_ALIAS(vgic_v2_cpuif_trap);
+ KVM_NVHE_ALIAS(vgic_v3_cpuif_trap);
  
--void gic_cpu_config(void __iomem *base, int nr)
-+void gic_cpu_config(void __iomem *base, int nr, u8 priority)
- {
- 	int i;
- 
-@@ -135,6 +137,6 @@ void gic_cpu_config(void __iomem *base, int nr)
- 	 * Set priority on PPI and SGI interrupts
- 	 */
- 	for (i = 0; i < nr; i += 4)
--		writel_relaxed(GICD_INT_DEF_PRI_X4,
-+		writel_relaxed(REPEAT_BYTE_U32(priority),
- 					base + GIC_DIST_PRI + i * 4 / 4);
- }
-diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-index c230175dd584c..e8eab72ef1954 100644
---- a/drivers/irqchip/irq-gic-common.h
-+++ b/drivers/irqchip/irq-gic-common.h
-@@ -21,8 +21,8 @@ struct gic_quirk {
- 
- int gic_configure_irq(unsigned int irq, unsigned int type,
-                        void __iomem *base);
--void gic_dist_config(void __iomem *base, int gic_irqs);
--void gic_cpu_config(void __iomem *base, int nr);
-+void gic_dist_config(void __iomem *base, int gic_irqs, u8 priority);
-+void gic_cpu_config(void __iomem *base, int nr, u8 priority);
- void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
- 		void *data);
- void gic_enable_of_quirks(const struct device_node *np,
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 3c755d5dad6e6..42e63272154e0 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -59,7 +59,7 @@ static u32 lpi_id_bits;
- #define LPI_PROPBASE_SZ		ALIGN(BIT(LPI_NRBITS), SZ_64K)
- #define LPI_PENDBASE_SZ		ALIGN(BIT(LPI_NRBITS) / 8, SZ_64K)
- 
--#define LPI_PROP_DEFAULT_PRIO	GICD_INT_DEF_PRI
-+static u8 __ro_after_init lpi_prop_prio;
- 
- /*
-  * Collection structure - just an ID, and a redistributor address to
-@@ -1926,7 +1926,7 @@ static int its_vlpi_unmap(struct irq_data *d)
- 	/* and restore the physical one */
- 	irqd_clr_forwarded_to_vcpu(d);
- 	its_send_mapti(its_dev, d->hwirq, event);
--	lpi_update_config(d, 0xff, (LPI_PROP_DEFAULT_PRIO |
-+	lpi_update_config(d, 0xff, (lpi_prop_prio |
- 				    LPI_PROP_ENABLED |
- 				    LPI_PROP_GROUP1));
- 
-@@ -2181,8 +2181,8 @@ static void its_lpi_free(unsigned long *bitmap, u32 base, u32 nr_ids)
- 
- static void gic_reset_prop_table(void *va)
- {
--	/* Priority 0xa0, Group-1, disabled */
--	memset(va, LPI_PROP_DEFAULT_PRIO | LPI_PROP_GROUP1, LPI_PROPBASE_SZ);
-+	/* Regular IRQ priority, Group-1, disabled */
-+	memset(va, lpi_prop_prio | LPI_PROP_GROUP1, LPI_PROPBASE_SZ);
- 
- 	/* Make sure the GIC will observe the written configuration */
- 	gic_flush_dcache_to_poc(va, LPI_PROPBASE_SZ);
-@@ -5650,7 +5650,7 @@ int __init its_lpi_memreserve_init(void)
- }
- 
- int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
--		    struct irq_domain *parent_domain)
-+		    struct irq_domain *parent_domain, u8 irq_prio)
- {
- 	struct device_node *of_node;
- 	struct its_node *its;
-@@ -5660,6 +5660,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 
- 	gic_rdists = rdists;
- 
-+	lpi_prop_prio = irq_prio;
- 	its_parent = parent_domain;
- 	of_node = to_of_node(handle);
- 	if (of_node)
+-#ifdef CONFIG_ARM64_PSEUDO_NMI
+-/* Static key checked in GIC_PRIO_IRQOFF. */
+-KVM_NVHE_ALIAS(gic_nonsecure_priorities);
+-#endif
+-
+ /* EL2 exception handling */
+ KVM_NVHE_ALIAS(__start___kvm_ex_table);
+ KVM_NVHE_ALIAS(__stop___kvm_ex_table);
 diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d95dda2383fb5..d884d94c6f4d0 100644
+index e262f73b1ce84..1b2b5f89f8321 100644
 --- a/drivers/irqchip/irq-gic-v3.c
 +++ b/drivers/irqchip/irq-gic-v3.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
-+#include <linux/kernel.h>
- #include <linux/kstrtox.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -36,7 +37,8 @@
+@@ -25,6 +25,7 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/arm-gic-common.h>
+ #include <linux/irqchip/arm-gic-v3.h>
++#include <linux/irqchip/arm-gic-v3-prio.h>
+ #include <linux/irqchip/irq-partition-percpu.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
+@@ -37,8 +38,8 @@
  
  #include "irq-gic-common.h"
  
--#define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
-+static u8 dist_prio_irq __ro_after_init = GICD_INT_DEF_PRI;
-+static u8 dist_prio_nmi __ro_after_init = GICD_INT_DEF_PRI & ~0x80;
+-static u8 dist_prio_irq __ro_after_init = GICD_INT_DEF_PRI;
+-static u8 dist_prio_nmi __ro_after_init = GICD_INT_DEF_PRI & ~0x80;
++static u8 dist_prio_irq __ro_after_init = GICV3_PRIO_IRQ;
++static u8 dist_prio_nmi __ro_after_init = GICV3_PRIO_NMI;
  
  #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
  #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
-@@ -556,7 +558,7 @@ static int gic_irq_nmi_setup(struct irq_data *d)
- 		desc->handle_irq = handle_fasteoi_nmi;
- 	}
+@@ -110,30 +111,6 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+  */
+ static DEFINE_STATIC_KEY_FALSE(supports_pseudo_nmis);
  
--	gic_irq_set_prio(d, GICD_INT_NMI_PRI);
-+	gic_irq_set_prio(d, dist_prio_nmi);
+-DEFINE_STATIC_KEY_FALSE(gic_nonsecure_priorities);
+-EXPORT_SYMBOL(gic_nonsecure_priorities);
+-
+-/*
+- * When the Non-secure world has access to group 0 interrupts (as a
+- * consequence of SCR_EL3.FIQ == 0), reading the ICC_RPR_EL1 register will
+- * return the Distributor's view of the interrupt priority.
+- *
+- * When GIC security is enabled (GICD_CTLR.DS == 0), the interrupt priority
+- * written by software is moved to the Non-secure range by the Distributor.
+- *
+- * If both are true (which is when gic_nonsecure_priorities gets enabled),
+- * we need to shift down the priority programmed by software to match it
+- * against the value returned by ICC_RPR_EL1.
+- */
+-#define GICD_INT_RPR_PRI(priority)					\
+-	({								\
+-		u32 __priority = (priority);				\
+-		if (static_branch_unlikely(&gic_nonsecure_priorities))	\
+-			__priority = 0x80 | (__priority >> 1);		\
+-									\
+-		__priority;						\
+-	})
+-
+ static u32 gic_get_pribits(void)
+ {
+ 	u32 pribits;
+@@ -185,6 +162,41 @@ static void __init gic_prio_init(void)
+ 	cpus_have_security_disabled = gic_dist_security_disabled();
+ 	cpus_have_group0 = gic_has_group0();
  
- 	return 0;
- }
-@@ -591,7 +593,7 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
- 		desc->handle_irq = handle_fasteoi_irq;
- 	}
- 
--	gic_irq_set_prio(d, GICD_INT_DEF_PRI);
-+	gic_irq_set_prio(d, dist_prio_irq);
- }
- 
- static bool gic_arm64_erratum_2941627_needed(struct irq_data *d)
-@@ -753,7 +755,7 @@ static bool gic_rpr_is_nmi_prio(void)
++	/*
++	 * How priority values are used by the GIC depends on two things:
++	 * the security state of the GIC (controlled by the GICD_CTRL.DS bit)
++	 * and if Group 0 interrupts can be delivered to Linux in the non-secure
++	 * world as FIQs (controlled by the SCR_EL3.FIQ bit). These affect the
++	 * way priorities are presented in ICC_PMR_EL1 and in the distributor:
++	 *
++	 * GICD_CTRL.DS | SCR_EL3.FIQ | ICC_PMR_EL1 | Distributor
++	 * -------------------------------------------------------
++	 *      1       |      -      |  unchanged  |  unchanged
++	 * -------------------------------------------------------
++	 *      0       |      1      |  non-secure |  non-secure
++	 * -------------------------------------------------------
++	 *      0       |      0      |  unchanged  |  non-secure
++	 *
++	 * In the non-secure view reads and writes are modified:
++	 *
++	 * - A value written is right-shifted by one and the MSB is set,
++	 *   forcing the priority into the non-secure range.
++	 *
++	 * - A value read is left-shifted by one.
++	 *
++	 * In the first two cases, where ICC_PMR_EL1 and the interrupt priority
++	 * are both either modified or unchanged, we can use the same set of
++	 * priorities.
++	 *
++	 * In the last case, where only the interrupt priorities are modified to
++	 * be in the non-secure range, we program the non-secure values into
++	 * the distributor to match the PMR values we want.
++	 */
++	if (cpus_have_group0 & !cpus_have_security_disabled) {
++		dist_prio_irq = __gicv3_prio_to_ns(dist_prio_irq);
++		dist_prio_nmi = __gicv3_prio_to_ns(dist_prio_nmi);
++	}
++
+ 	pr_info("GICD_CTRL.DS=%d, SCR_EL3.FIQ=%d\n",
+ 		cpus_have_security_disabled,
+ 		!cpus_have_group0);
+@@ -811,7 +823,7 @@ static bool gic_rpr_is_nmi_prio(void)
  	if (!gic_supports_nmi())
  		return false;
  
--	return unlikely(gic_read_rpr() == GICD_INT_RPR_PRI(GICD_INT_NMI_PRI));
-+	return unlikely(gic_read_rpr() == GICD_INT_RPR_PRI(dist_prio_nmi));
+-	return unlikely(gic_read_rpr() == GICD_INT_RPR_PRI(dist_prio_nmi));
++	return unlikely(gic_read_rpr() == GICV3_PRIO_NMI);
  }
  
  static bool gic_irqnr_is_special(u32 irqnr)
-@@ -937,10 +939,11 @@ static void __init gic_dist_init(void)
- 		writel_relaxed(0, base + GICD_ICFGRnE + i / 4);
+@@ -1960,36 +1972,6 @@ static void gic_enable_nmi_support(void)
+ 	pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
+ 		gic_has_relaxed_pmr_sync() ? "relaxed" : "forced");
  
- 	for (i = 0; i < GIC_ESPI_NR; i += 4)
--		writel_relaxed(GICD_INT_DEF_PRI_X4, base + GICD_IPRIORITYRnE + i);
-+		writel_relaxed(REPEAT_BYTE_U32(dist_prio_irq),
-+			       base + GICD_IPRIORITYRnE + i);
+-	/*
+-	 * How priority values are used by the GIC depends on two things:
+-	 * the security state of the GIC (controlled by the GICD_CTRL.DS bit)
+-	 * and if Group 0 interrupts can be delivered to Linux in the non-secure
+-	 * world as FIQs (controlled by the SCR_EL3.FIQ bit). These affect the
+-	 * ICC_PMR_EL1 register and the priority that software assigns to
+-	 * interrupts:
+-	 *
+-	 * GICD_CTRL.DS | SCR_EL3.FIQ | ICC_PMR_EL1 | Group 1 priority
+-	 * -----------------------------------------------------------
+-	 *      1       |      -      |  unchanged  |    unchanged
+-	 * -----------------------------------------------------------
+-	 *      0       |      1      |  non-secure |    non-secure
+-	 * -----------------------------------------------------------
+-	 *      0       |      0      |  unchanged  |    non-secure
+-	 *
+-	 * where non-secure means that the value is right-shifted by one and the
+-	 * MSB bit set, to make it fit in the non-secure priority range.
+-	 *
+-	 * In the first two cases, where ICC_PMR_EL1 and the interrupt priority
+-	 * are both either modified or unchanged, we can use the same set of
+-	 * priorities.
+-	 *
+-	 * In the last case, where only the interrupt priorities are modified to
+-	 * be in the non-secure range, we use a different PMR value to mask IRQs
+-	 * and the rest of the values that we use remain unchanged.
+-	 */
+-	if (gic_has_group0() && !gic_dist_security_disabled())
+-		static_branch_enable(&gic_nonsecure_priorities);
+-
+ 	static_branch_enable(&supports_pseudo_nmis);
  
- 	/* Now do the common stuff */
--	gic_dist_config(base, GIC_LINE_NR);
-+	gic_dist_config(base, GIC_LINE_NR, dist_prio_irq);
- 
- 	val = GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1;
- 	if (gic_data.rdists.gicd_typer2 & GICD_TYPER2_nASSGIcap) {
-@@ -1282,7 +1285,7 @@ static void gic_cpu_init(void)
- 	for (i = 0; i < gic_data.ppi_nr + SGI_NR; i += 32)
- 		writel_relaxed(~0, rbase + GICR_IGROUPR0 + i / 8);
- 
--	gic_cpu_config(rbase, gic_data.ppi_nr + SGI_NR);
-+	gic_cpu_config(rbase, gic_data.ppi_nr + SGI_NR, dist_prio_irq);
- 	gic_redist_wait_for_rwp();
- 
- 	/* initialise system registers */
-@@ -2066,7 +2069,7 @@ static int __init gic_init_bases(phys_addr_t dist_phys_base,
- 	gic_cpu_pm_init();
- 
- 	if (gic_dist_supports_lpis()) {
--		its_init(handle, &gic_data.rdists, gic_data.domain);
-+		its_init(handle, &gic_data.rdists, gic_data.domain, dist_prio_irq);
- 		its_cpu_init();
- 		its_lpi_memreserve_init();
- 	} else {
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 87255bde960fc..3be7bd8cd8cde 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -479,7 +479,7 @@ static void gic_dist_init(struct gic_chip_data *gic)
- 	for (i = 32; i < gic_irqs; i += 4)
- 		writel_relaxed(cpumask, base + GIC_DIST_TARGET + i * 4 / 4);
- 
--	gic_dist_config(base, gic_irqs);
-+	gic_dist_config(base, gic_irqs, GICD_INT_DEF_PRI);
- 
- 	writel_relaxed(GICD_ENABLE, base + GIC_DIST_CTRL);
- }
-@@ -516,7 +516,7 @@ static int gic_cpu_init(struct gic_chip_data *gic)
- 				gic_cpu_map[i] &= ~cpu_mask;
- 	}
- 
--	gic_cpu_config(dist_base, 32);
-+	gic_cpu_config(dist_base, 32, GICD_INT_DEF_PRI);
- 
- 	writel_relaxed(GICC_INT_PRI_THRESHOLD, base + GIC_CPU_PRIMASK);
- 	gic_cpu_if_up(gic);
-@@ -608,7 +608,7 @@ void gic_dist_restore(struct gic_chip_data *gic)
- 			dist_base + GIC_DIST_CONFIG + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
--		writel_relaxed(GICD_INT_DEF_PRI_X4,
-+		writel_relaxed(REPEAT_BYTE_U32(GICD_INT_DEF_PRI),
- 			dist_base + GIC_DIST_PRI + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
-@@ -697,7 +697,7 @@ void gic_cpu_restore(struct gic_chip_data *gic)
- 		writel_relaxed(ptr[i], dist_base + GIC_DIST_CONFIG + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
--		writel_relaxed(GICD_INT_DEF_PRI_X4,
-+		writel_relaxed(REPEAT_BYTE_U32(GICD_INT_DEF_PRI),
- 					dist_base + GIC_DIST_PRI + i * 4);
- 
- 	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
-diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-index 5285150fd9096..31c3f70a5d5e1 100644
---- a/drivers/irqchip/irq-hip04.c
-+++ b/drivers/irqchip/irq-hip04.c
-@@ -260,7 +260,7 @@ static void __init hip04_irq_dist_init(struct hip04_irq_data *intc)
- 	for (i = 32; i < nr_irqs; i += 2)
- 		writel_relaxed(cpumask, base + GIC_DIST_TARGET + ((i * 2) & ~3));
- 
--	gic_dist_config(base, nr_irqs);
-+	gic_dist_config(base, nr_irqs, GICD_INT_DEF_PRI);
- 
- 	writel_relaxed(1, base + GIC_DIST_CTRL);
- }
-@@ -287,7 +287,7 @@ static void hip04_irq_cpu_init(struct hip04_irq_data *intc)
- 		if (i != cpu)
- 			hip04_cpu_map[i] &= ~cpu_mask;
- 
--	gic_cpu_config(dist_base, 32);
-+	gic_cpu_config(dist_base, 32, GICD_INT_DEF_PRI);
- 
- 	writel_relaxed(0xf0, base + GIC_CPU_PRIMASK);
- 	writel_relaxed(1, base + GIC_CPU_CTRL);
-diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
-index 1177f3a1aed5d..fc0246cc05ac2 100644
---- a/include/linux/irqchip/arm-gic-common.h
-+++ b/include/linux/irqchip/arm-gic-common.h
-@@ -10,10 +10,6 @@
- #include <linux/irqchip/arm-vgic-info.h>
- 
- #define GICD_INT_DEF_PRI		0xa0
--#define GICD_INT_DEF_PRI_X4		((GICD_INT_DEF_PRI << 24) |\
--					(GICD_INT_DEF_PRI << 16) |\
--					(GICD_INT_DEF_PRI << 8) |\
--					GICD_INT_DEF_PRI)
- 
- struct irq_domain;
- struct fwnode_handle;
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 728691365464c..70c0948f978eb 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -638,7 +638,7 @@ struct fwnode_handle;
- int __init its_lpi_memreserve_init(void);
- int its_cpu_init(void);
- int its_init(struct fwnode_handle *handle, struct rdists *rdists,
--	     struct irq_domain *domain);
-+	     struct irq_domain *domain, u8 irq_prio);
- int mbi_init(struct fwnode_handle *fwnode, struct irq_domain *parent);
- 
- static inline bool gic_enable_sre(void)
+ 	if (static_branch_likely(&supports_deactivate_key))
+diff --git a/include/linux/irqchip/arm-gic-v3-prio.h b/include/linux/irqchip/arm-gic-v3-prio.h
+new file mode 100644
+index 0000000000000..44157c9abb78b
+--- /dev/null
++++ b/include/linux/irqchip/arm-gic-v3-prio.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __LINUX_IRQCHIP_ARM_GIC_V3_PRIO_H
++#define __LINUX_IRQCHIP_ARM_GIC_V3_PRIO_H
++
++/*
++ * GIC priorities from the view of the PMR/RPR.
++ *
++ * These values are chosen to be valid in either the absolute priority space or
++ * the NS view of the priority space. The value programmed into the distributor
++ * and ITS will be chosen at boot time such that these values appear in the
++ * PMR/RPR.
++ *
++ * GICV3_PRIO_UNMASKED is the PMR view of the priority to use to permit both
++ * IRQs and pseudo-NMIs.
++ *
++ * GICV3_PRIO_IRQ is the PMR view of the priority of regular interrupts. This
++ * can be written to the PMR to mask regular IRQs.
++ *
++ * GICV3_PRIO_NMI is the PMR view of the priority of pseudo-NMIs. This can be
++ * written to the PMR to mask pseudo-NMIs.
++ *
++ * On arm64 some code sections either automatically switch back to PSR.I or
++ * explicitly require to not use priority masking. If bit GICV3_PRIO_PSR_I_SET
++ * is included in the priority mask, it indicates that PSR.I should be set and
++ * interrupt disabling temporarily does not rely on IRQ priorities.
++ */
++#define GICV3_PRIO_UNMASKED	0xe0
++#define GICV3_PRIO_IRQ		0xc0
++#define GICV3_PRIO_NMI		0x80
++
++#define GICV3_PRIO_PSR_I_SET	(1 << 4)
++
++#ifndef __ASSEMBLER__
++
++#define __gicv3_prio_to_ns(p)	(0xff & ((p) << 1))
++#define __gicv3_ns_to_prio(ns)	(0x80 | ((ns) >> 1))
++
++#define __gicv3_prio_valid_ns(p) \
++	(__gicv3_ns_to_prio(__gicv3_prio_to_ns(p)) == (p))
++
++static_assert(__gicv3_prio_valid_ns(GICV3_PRIO_NMI));
++static_assert(__gicv3_prio_valid_ns(GICV3_PRIO_IRQ));
++
++static_assert(GICV3_PRIO_NMI < GICV3_PRIO_IRQ);
++static_assert(GICV3_PRIO_IRQ < GICV3_PRIO_UNMASKED);
++
++static_assert(GICV3_PRIO_IRQ < (GICV3_PRIO_IRQ | GICV3_PRIO_PSR_I_SET));
++
++#endif /* __ASSEMBLER */
++
++#endif /* __LINUX_IRQCHIP_ARM_GIC_V3_PRIO_H */
 -- 
 2.30.2
 
