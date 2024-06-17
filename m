@@ -1,151 +1,149 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F521862A4;
-	Mon, 17 Jun 2024 09:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A090B191499;
+	Mon, 17 Jun 2024 09:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615742; cv=none; b=NSytmE5Ko+SyWTNNG8inl5cekMXayV6vFRCI56ThiFBtolwnuM/7HWIAVvqBi3G88CdmyEWc4lW8gbu78j3Jc2podth8rfVQ7oa5PTVpF3woN0En2OTVlzJUAOwwxJLL+IxgYR38eHvrK6NDAiU3n5yCZtUM00gdHab49IkN7ew=
+	t=1718615809; cv=none; b=Or4wX2CrLomWMqZkqeHzLldJmrx85whygjPzHZp2TudCdHAj/BOU+kw0Mo6Per5i/XdIebnXYXHYwUxhoNdn6U25jM2GdlFiLsENx1JFFSNSj8G8MIJfRU3Wt8GHVBnuklWADDKEvWiSW2udnpn6ySyHJMlc1CyxYqVhZKIpinU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718615742; c=relaxed/simple;
-	bh=EQWalUMofBd6SSv/OrjoR1SwfyoNsF0LUtApc0kjLR8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kQIhOq/5Si2h+LLAisCMPhfONBiWzqLibKDXGOBM2nRndyFc8EP6ZY38kpK8WRCF1H5+1kB0Tka+fqssCa9ZqVZxFnR6dBuIczCQ0XE8uWC2+xs2JZhxrJYdhwe1sa8Z4hFQpBRal1IvCC1Z9LPEoXe5MyrVdATdsVPvpEMrY5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=z2u0DRU9; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718615809; c=relaxed/simple;
+	bh=Vpr+wMRG2V0VYI/abS+c/Zr6kX377Gfc2/aC8MAVBUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eW4p9R32XfeEozLskuh7R30mpebM6Ng2B3YQwjzljlMESAmFQhYZIUsVV+NxuVXDFsUEk4PFIg0XhkbGeMr4yjHf+Cu2CEOJTHAMakN9PRS5JAYVou9FM4aSI1XNx3QH7TslGgPR8VfLO+WAGm4AjleVL37OlPLd/ANje1zhDdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Kkao4Wws; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="z2u0DRU9"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H89GsN019515;
-	Mon, 17 Jun 2024 11:15:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=JLZNH/a/eRZb9WCTFRGCBR
-	v/iJv/oPGQFOGXRp2/VCg=; b=z2u0DRU9HQmuiuWyqdfbGEB8Xnse3uxfsaYDNs
-	xtyMikRXZrngqMK1w4ugFCFLR71TUMhG4N+5u9DPgb0j/6YWbC5565HrD2vh4PAR
-	/HFuD0nDAaKUy3N9bOrPmv8HTZTK9ztkLAN3kOJScjTLaAGNR56jJZz8jThzmawW
-	enjm8Ax4GJO5ffOhBWkLlnfHCeg8E3Xls5T4YfWWe8iQ8IVpIKAkeRPLRKja/MDP
-	tGUCKGpssHy6CZZgK0lj8XpLD/7EgSKyvZrlSP+CYRVF3kguxDf3OmzGMjTxKR0o
-	OPdLmJQRg24r5+OQNQoH8MlM5oWPGsyDHGlsiowI4POA3Bug==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ysnwj3ksc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 11:15:00 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2792F40050;
-	Mon, 17 Jun 2024 11:14:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36191211613;
-	Mon, 17 Jun 2024 11:14:21 +0200 (CEST)
-Received: from localhost (10.48.86.128) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
- 2024 11:14:20 +0200
-From: Etienne Carriere <etienne.carriere@foss.st.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Etienne Carriere
-	<etienne.carriere@foss.st.com>
-Subject: [PATCH] ARM: dts: stm32: OP-TEE async notif interrupt for ST STM32MP15x boards
-Date: Mon, 17 Jun 2024 11:14:18 +0200
-Message-ID: <20240617091418.2956380-1-etienne.carriere@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Kkao4Wws"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 53061FF804;
+	Mon, 17 Jun 2024 09:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718615797;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hWiLB1H/el64qMPYokxKIuSo3yitbl9iDJ4QLffkaTM=;
+	b=Kkao4WwsvjbCNWSEo1UTINUchJhVT+f/G3cY4QYNPK0h1XWnIHuanNcbPmm8oc3UfiQp3G
+	MaEEKqw7Tne7mFSyz3Q2WqvguQd/sbEhvlBJBG1917rfvb2w3pAIQSFmIK9lRkh9JiXDho
+	+kbm2cXY8gol3ubTrKgsySjvYeRPr4Vg3wwUjRE/F/SAbM3OX8Ec63toljJb5ZuIS4o+bA
+	uNSkjrhxtqD3f9Y6BBV15BuX89QE8vtsbO0jBGysCbt0V7CCzuw0othg9vtWzeor+1sGwy
+	brPnaujQcOB1JjqCh6nuyHNRNt4AtywZ2nFrgNbQIwhRVTkOPU/xbvE+4LS5qw==
+Message-ID: <c75601a1-1389-400e-90b9-99c1e775a866@bootlin.com>
+Date: Mon, 17 Jun 2024 11:16:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_08,2024-06-14_03,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] riscv: dts: sophgo: Put sdhci compatible in dt of
+ specific SoC
+To: Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@outlook.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Chen Wang <unicorn_wang@outlook.com>, Chao Wei <chao.wei@sophgo.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240612-sg2002-v2-0-19a585af6846@bootlin.com>
+ <20240612-sg2002-v2-1-19a585af6846@bootlin.com>
+ <IA1PR20MB49534C9E29E86B478205E4B3BBC02@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240616235829.GA4000183@ofsar>
+Content-Language: en-US
+From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+In-Reply-To: <20240616235829.GA4000183@ofsar>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-Define the GIC interrupt (PPI 15) to be used on ST STM32MP15x boards
-for OP-TEE async notif.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@foss.st.com>
----
- arch/arm/boot/dts/st/stm32mp157a-dk1-scmi.dts | 5 +++++
- arch/arm/boot/dts/st/stm32mp157c-dk2-scmi.dts | 5 +++++
- arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts | 5 +++++
- arch/arm/boot/dts/st/stm32mp157c-ev1-scmi.dts | 5 +++++
- 4 files changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/st/stm32mp157a-dk1-scmi.dts b/arch/arm/boot/dts/st/stm32mp157a-dk1-scmi.dts
-index 306e1bc2a514..847b360f02fc 100644
---- a/arch/arm/boot/dts/st/stm32mp157a-dk1-scmi.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157a-dk1-scmi.dts
-@@ -62,6 +62,11 @@ &m4_rproc {
- 	reset-names = "mcu_rst", "hold_boot";
- };
- 
-+&optee {
-+	interrupt-parent = <&intc>;
-+	interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-+
- &rcc {
- 	compatible = "st,stm32mp1-rcc-secure", "syscon";
- 	clock-names = "hse", "hsi", "csi", "lse", "lsi";
-diff --git a/arch/arm/boot/dts/st/stm32mp157c-dk2-scmi.dts b/arch/arm/boot/dts/st/stm32mp157c-dk2-scmi.dts
-index 956da5f26c1c..43280289759d 100644
---- a/arch/arm/boot/dts/st/stm32mp157c-dk2-scmi.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157c-dk2-scmi.dts
-@@ -68,6 +68,11 @@ &m4_rproc {
- 	reset-names = "mcu_rst", "hold_boot";
- };
- 
-+&optee {
-+	interrupt-parent = <&intc>;
-+	interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-+
- &rcc {
- 	compatible = "st,stm32mp1-rcc-secure", "syscon";
- 	clock-names = "hse", "hsi", "csi", "lse", "lsi";
-diff --git a/arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts b/arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts
-index 8e4b0db198c2..6f27d794d270 100644
---- a/arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts
-@@ -67,6 +67,11 @@ &m4_rproc {
- 	reset-names = "mcu_rst", "hold_boot";
- };
- 
-+&optee {
-+	interrupt-parent = <&intc>;
-+	interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-+
- &rcc {
- 	compatible = "st,stm32mp1-rcc-secure", "syscon";
- 	clock-names = "hse", "hsi", "csi", "lse", "lsi";
-diff --git a/arch/arm/boot/dts/st/stm32mp157c-ev1-scmi.dts b/arch/arm/boot/dts/st/stm32mp157c-ev1-scmi.dts
-index 72b9cab2d990..6ae391bffee5 100644
---- a/arch/arm/boot/dts/st/stm32mp157c-ev1-scmi.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157c-ev1-scmi.dts
-@@ -72,6 +72,11 @@ &m4_rproc {
- 	reset-names = "mcu_rst", "hold_boot";
- };
- 
-+&optee {
-+	interrupt-parent = <&intc>;
-+	interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-+
- &rcc {
- 	compatible = "st,stm32mp1-rcc-secure", "syscon";
- 	clock-names = "hse", "hsi", "csi", "lse", "lsi";
--- 
-2.25.1
+On 6/17/24 1:58 AM, Yixun Lan wrote:
+> Hi
+> 
+> On 18:47 Wed 12 Jun     , Inochi Amaoto wrote:
+>> On Wed, Jun 12, 2024 at 10:02:31AM GMT, Thomas Bonnefille wrote:
+>>> Remove SDHCI compatible for CV1800b from common dtsi file to put it in
+>>> the specific dtsi file of the CV1800b.
+>>> This commits aims at following the same guidelines as in the other nodes
+>>> of the CV18XX family.
+> is there any URL of guideline? or did I miss anything
+> couldn't find any discussion about this in v1
+> 
 
+Not explicitly, the fact is that I had to use a specific compatible on 
+SG2002 for the sdhci (it is already defined mainline), I had to choose 
+between :
+
+1. cv18xx.dtsi : compatible cv1800b-dwcmshc
+    cv1800b.dtsi : no redefined compatible
+    sg2002.dtsi : overwrite the previous compatible to use sg2002-dwcmshc
+
+2. cv18xx.dtsi : no compatible
+    cv1800b.dtsi : compatible for cv1800b-dwcmshc
+    sg2002.dtsi : compatible for sg2002-dwcmshc
+
+As in the plic and clint controllers, the second option was chosen I 
+consider this as a "guideline" and reformat the dtsis accordingly.
+
+>>>
+>>> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+>>> ---
+>>>   arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 4 ++++
+>>>   arch/riscv/boot/dts/sophgo/cv18xx.dtsi  | 1 -
+>>>   2 files changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+>>> index ec9530972ae2..b9cd51457b4c 100644
+>>> --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+>>> +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+>>> @@ -25,3 +25,7 @@ &clint {
+>>>   &clk {
+>>>   	compatible = "sophgo,cv1800-clk";
+>>>   };
+>>> +
+>>> +&sdhci0 {
+>>> +	compatible = "sophgo,cv1800b-dwcmshc";
+>>> +};
+>>> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> index 891932ae470f..7247c7c3013c 100644
+>>> --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> @@ -288,7 +288,6 @@ uart4: serial@41c0000 {
+>>>   		};
+>>>   
+>>>   		sdhci0: mmc@4310000 {
+>>> -			compatible = "sophgo,cv1800b-dwcmshc";
+>>>   			reg = <0x4310000 0x1000>;
+>>>   			interrupts = <36 IRQ_TYPE_LEVEL_HIGH>;
+>>>   			clocks = <&clk CLK_AXI4_SD0>,
+>>>
+>>> -- 
+>>> 2.45.2
+>>>
+>>
+>> Hi, Jisheng,
+>>
+>> Is this change necessary? IIRC, the sdhci is the same across
+>> the whole series.
+> I tend to agree with Inochi here, if it's same across all SoC, then no bother to
+> split, it will cause more trouble to maintain..
+> 
+
+To be honest, I agree with this to, but as a specific compatible for the 
+SG2002 was created in commit 849e81817b9b, I thought that the best 
+practice was to use it.
+
+>>
+>> Regards,
+>> Inochi
+> 
