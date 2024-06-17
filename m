@@ -1,117 +1,168 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848CF195815;
-	Mon, 17 Jun 2024 18:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AF51946DB
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647577; cv=none; b=h+jT+ZNG9McVegUV2fVjE+CE0Y9VGSb36Yy42aKLP4pW6iwyWPdufEg7A1RDPln57pTUEgnpp/vW7An838XYBueD08njVr7CH0YucZYv9vrEfGY3pGBBlYLSOElKRBHcEz3PIsroK9zRdDKDqDd6py64UTibKd9xyBzhIdZn/es=
+	t=1718647747; cv=none; b=NvRb4tEiehZZZeX7Yl0tYkJhUmHitB1iL4WjpSi3I9irPq3Rh7H/2Idp+jHEl1C777uHW6OiQHi8atrpQTy7+VoYcAKAdveYAiWQC/G0qW3AruScYCmMl69KK2guflHla6LafgXSMadTamxrbCxkbLM3kQgKPEz/xcyDTujSDoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647577; c=relaxed/simple;
-	bh=3AMq0gYeuzXOoruOhp5BKicT9hKRQPLbej4HKeTM5Os=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C18NgFqGJmxPR3v+Ga1IK+8C5Cg71ALOlSkzM3axjjPZxuLKS/XIwMJywC4NgYkgEghvZ7eL7GgN5oHfJXcN/qOAMy0C695PPL1x/Cy0eo+QBwPOpEPWQgMnwmabNvzwsLqUUm55GhOPxJwJNtEzwOhiTTQnPZZAzyDnT+ni1EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrVicxvG; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718647747; c=relaxed/simple;
+	bh=b+D/bTjJmd9oRoUJip9jd5YaP8VulajMm2JIH4GtR6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=qhsZOug53lwzqEyE59Runz84uxE9xDJeyvbPiYn00cjwQUv6uxyXIj6KBp8QgEillvt9mu0l05V3W7v8Z4YkgG8d0HFW5nYU5/QPsWDrA9WoCzdlcyIPU7lxLU3qnW+AAX3UdOuM8jZIgt5q6t6/Y7AS6xYc5na014LmDoIN+Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=FxTmM0sR; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrVicxvG"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6f0e153eddso595287866b.0;
-        Mon, 17 Jun 2024 11:06:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="FxTmM0sR"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43fdb797ee2so23310731cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718647573; x=1719252373; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lUISvzcrDyCit8PNRnbQzAbUSZEteCiaihQ3g2SOKCA=;
-        b=KrVicxvGljhO4f0dD32vrkzgy0ntlnXz+G7ol9m1aAGU2TZd0JirIyWfly8tjHF/Uf
-         B/Hy18qd7yYVAsTgoUG3RwGoHgwHfoaeE0+3GAa1oLO/F53PBW2BLsWVs2tOkVROGbNQ
-         iAB+Yhmu6Avm+PBxDHintCOz+PZG4PSqP1WVb6tQwSwarEAB3dbX/twa87Ga0TZnArgN
-         i6CYiXzPZIHtJmSCJBZfJ0FBPDadEPHQg2wuQ7igs/7ogqCFjNKxodbtGes9zuj2RXWO
-         OKVcKb8E55oXueB/g6/DLMQOf3HjEvGe6TJHTa/MBU4TPK1ZqeGeop/tIy4Ee6sQs/JC
-         lcOQ==
+        d=cloudflare.com; s=google09082023; t=1718647745; x=1719252545; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+UXAeJHazaKB0tl8krC6xVJ8wj4OwafBBT2mwF8+dZc=;
+        b=FxTmM0sRd6GBucAiAfv8sfCDtlihU8Bv/ofwZ9zD9dSphven7LH/dt9VFBrw05+x7g
+         XPvQkQY0sIBWSEo6PyQXffMUTOLO4QY4zUQ59Vbhk98gKzTZq4bcF0pgUukNkgmdq5Zg
+         X2Hdu7mZmtmGwdq429/1vlNW6sHBdzd6Mxoqd+k06hfCyS0M33d+59kfuspPbtmGF5xd
+         o1I0c/yWMWhTxv9UNIzkAs4LYJYa7VtSj+m1M4wTBQAsWOloDRk+tZWO8uTiT2y8Vlh3
+         Fgl1fBPOaBWgmI0XHCF10jQijBN78i1mYF1bQrsyFahwz5tFwMnflu9ZmPIkdZRk3QJc
+         Vh/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647573; x=1719252373;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lUISvzcrDyCit8PNRnbQzAbUSZEteCiaihQ3g2SOKCA=;
-        b=BIMBb1ggHQMP880HRNCegrxweBJkVpLgRrwcMedyP1SNbGiOHduaq0wYZBEwiKEv7W
-         qdWnWmR1qG6CZ5HnKjPq/8OoGZpevjsYXTUqJTpGdZqr157b180I+8pat/PbPuuGuJNv
-         pI7v6pbAXYBHGmN2X+8VD+lRJWEneoS12cHbr20pbfIU/C0JJDJpjBheYfIs0u3RNyel
-         SZgJ5WjUl+oGVzNgkv2yvlOIKjR/U1wXQEsPCugoaeSqusOym9lf6BwjiM6EjM6IcWke
-         uTyNYPIivMU6YpA5znl5ODeACtM/JFtVHqqmbUuemoseZjPEvaMyinKao2nLltyuJmPo
-         JSZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuWxKT6hTPUB27hHYIF3nhExX0Fm0i8fZvMTawGyv5aId1EM7fGW1xLwuArZWr3wJYvMHjBnC/nEG7/OQaFuGRr3EW0tt7zsW0LVAjxKLyS4Fzbvlpf8nFm7ew7nkdxPIq6nvMeQY=
-X-Gm-Message-State: AOJu0Ywo+U3hDr1Yzqsw34IElqoXo08v9P5aQMk4912NxpCN3BvJ6MaM
-	DB3ldlfcZY8IFWNY2zImZka6khyPgwZnAl8CfTW+vSRz2Y1z16a4hYbpJQ==
-X-Google-Smtp-Source: AGHT+IEMFYDPSu1qgIgiLLkA57g1Y51O2z6R+OMPXA+p7HakfS4BoNAISIFGd86E/4RT8iEpRWOALg==
-X-Received: by 2002:a17:906:37d9:b0:a68:bfd7:b0f3 with SMTP id a640c23a62f3a-a6f60d2975bmr686454766b.21.1718647573320;
-        Mon, 17 Jun 2024 11:06:13 -0700 (PDT)
-Received: from [127.0.1.1] (31-179-0-202.dynamic.chello.pl. [31.179.0.202])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f600cde92sm465175866b.205.2024.06.17.11.06.12
+        d=1e100.net; s=20230601; t=1718647745; x=1719252545;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+UXAeJHazaKB0tl8krC6xVJ8wj4OwafBBT2mwF8+dZc=;
+        b=o/ytqBnO9EuNELqX9HcGIzXSM3AxAG6AcIGhBwdPdnkCIC9mHOevO7HUcPSY70aI4A
+         vXoyMJqz6R9xCEDqSoNUKyfoHElKMHt5sqFlP2/RrRozggaVWhTkPbnrBRCTVQZNbUk0
+         FxoKwEMpE5RtmMGebWzwns3YybUy2PVWZ04YrJZYdBjcm9AJnUAaXrfeg5C+v8cd5KH4
+         ciZhT2Pgxsk3WumlcVGJ8jpZwUBCz62Lx9QpVWORh/9cDEXXGZXYY1TgKGf2BxkkcZgE
+         WUXbPwY6tczluxfcBRmSj7DCOt32HfMvu4P30QW1B3BRDeqAX2CXmhcGsu7PDZofejIe
+         ZstA==
+X-Forwarded-Encrypted: i=1; AJvYcCUv1vKWE+p6o6HKNYuhIeP46n+3YN/ytthQvpkLX+gW0AMaQJDXdqBawHLGdHHHKsOKK3FXjN/59IX3ZeX4fcSbZ6sGLLvCXRyLoW2u
+X-Gm-Message-State: AOJu0YxGHRgiEAe0KxjAnLH+EoQORrVp+qaMD/Wkv+kjCKV/WSf225cn
+	gczVFEnEBTSLow4z+KkrCO6OeIBW12CB/Yc0/Lf1XH4hPATLfiNbC3OeQ5WnRt0=
+X-Google-Smtp-Source: AGHT+IGCUVe+Ux+j+DZ1FKTLw0r3CHgPgOvQ82gXSKD5wF8W9vFcZRxf3i+t6ZxmWpO4wnzXVNIsZg==
+X-Received: by 2002:a05:622a:5296:b0:444:93e0:61d3 with SMTP id d75a77b69052e-44493e062afmr26734751cf.43.1718647743690;
+        Mon, 17 Jun 2024 11:09:03 -0700 (PDT)
+Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:164])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef3d85e8sm48916491cf.2.2024.06.17.11.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 11:06:13 -0700 (PDT)
-From: Roman Storozhenko <romeusmeister@gmail.com>
-Date: Mon, 17 Jun 2024 20:05:57 +0200
-Subject: [PATCH] cpupower: Replace a dead reference link with working ones
+        Mon, 17 Jun 2024 11:09:02 -0700 (PDT)
+Date: Mon, 17 Jun 2024 11:09:00 -0700
+From: Yan Zhai <yan@cloudflare.com>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Abhishek Chauhan <quic_abchauha@quicinc.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Florian Westphal <fw@strlen.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Neil Horman <nhorman@tuxdriver.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH net-next v5 0/7] net: pass receive socket to drop tracepoint
+Message-ID: <cover.1718642328.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-fix-man-ref-v1-1-81c218212e60@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAR7cGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0Nz3bTMCt3cxDzdotQ0XTNDE4sks0RTc8ukVCWgjgKgYGYF2LTo2Np
- aAF0r7GhdAAAA
-To: Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>
-Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Roman Storozhenko <romeusmeister@gmail.com>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Replace a dead reference link to a turbo boost technology description with
-a reference to a root page of the technology on the Intel site, and add
-another one, describing power management technology, which includes short
-description of the turbo boost.
+We set up our production packet drop monitoring around the kfree_skb
+tracepoint. While this tracepoint is extremely valuable for diagnosing
+critical problems, it also has some limitation with drops on the local
+receive path: this tracepoint can only inspect the dropped skb itself,
+but such skb might not carry enough information to:
 
-Signed-off-by: Roman Storozhenko <romeusmeister@gmail.com>
----
-During my review of 'cpupower' documentation I decided to read about
-the Intel's Turbo Boost Technology and found that the reference link is
-dead. I couldn't find this article on the Intel's site. After careful
-reviewing of available articles and manuals I decided to replace this
-link with two others that could substitute the disappeared one.
----
- tools/power/cpupower/man/cpupower-monitor.1 | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+1. determine in which netns/container this skb gets dropped
+2. determine by which socket/service this skb oughts to be received
 
-diff --git a/tools/power/cpupower/man/cpupower-monitor.1 b/tools/power/cpupower/man/cpupower-monitor.1
-index 8ee737eefa5c..b73830256166 100644
---- a/tools/power/cpupower/man/cpupower-monitor.1
-+++ b/tools/power/cpupower/man/cpupower-monitor.1
-@@ -172,9 +172,11 @@ displayed.
- "BIOS and Kernel Developer’s Guide (BKDG) for AMD Family 14h Processors"
- https://support.amd.com/us/Processor_TechDocs/43170.pdf
- 
--"Intel® Turbo Boost Technology
--in Intel® Core™ Microarchitecture (Nehalem) Based Processors"
--http://download.intel.com/design/processor/applnots/320354.pdf
-+"What Is Intel® Turbo Boost Technology?"
-+https://www.intel.com/content/www/us/en/gaming/resources/turbo-boost.html
-+
-+"Power Management - Technology Overview"
-+https://cdrdv2.intel.com/v1/dl/getContent/637748
- 
- "Intel® 64 and IA-32 Architectures Software Developer's Manual
- Volume 3B: System Programming Guide"
+The 1st issue is because skb->dev is the only member field with valid
+netns reference. But skb->dev can get cleared or reused. For example,
+tcp_v4_rcv will clear skb->dev and in later processing it might be reused
+for OFO tree.
 
----
-base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
-change-id: 20240617-fix-man-ref-6148b6a579be
+The 2nd issue is because there is no reference on an skb that reliably
+points to a receiving socket. skb->sk usually points to the local
+sending socket, and it only points to a receive socket briefly after
+early demux stage, yet the socket can get stolen later. For certain drop
+reason like TCP OFO_MERGE, Zerowindow, UDP at PROTO_MEM error, etc, it
+is hard to infer which receiving socket is impacted. This cannot be
+overcome by simply looking at the packet header, because of
+complications like sk lookup programs. In the past, single purpose
+tracepoints like trace_udp_fail_queue_rcv_skb, trace_sock_rcvqueue_full,
+etc are added as needed to provide more visibility. This could be
+handled in a more generic way.
 
-Best regards,
+In this change set we propose a new 'sk_skb_reason_drop' call as a drop-in
+replacement for kfree_skb_reason at various local input path. It accepts
+an extra receiving socket argument. Both issues above can be resolved
+via this new argument.
+
+V4->V5: rename rx_skaddr to rx_sk to be more clear visually, suggested
+by Jesper Dangaard Brouer.
+
+V3->V4: adjusted the TP_STRUCT field order to align better, suggested by
+Steven Rostedt.
+
+V2->V3: fixed drop_monitor function signatures; fixed a few uninitialized sks;
+Added a few missing report tags from test bots (also noticed by Dan
+Carpenter and Simon Horman).
+
+V1->V2: instead of using skb->cb, directly add the needed argument to
+trace_kfree_skb tracepoint. Also renamed functions as Eric Dumazet
+suggested.
+
+V4: https://lore.kernel.org/netdev/cover.1718136376.git.yan@cloudflare.com/
+V3: https://lore.kernel.org/netdev/cover.1717529533.git.yan@cloudflare.com/
+V2: https://lore.kernel.org/linux-kernel/cover.1717206060.git.yan@cloudflare.com/
+V1: https://lore.kernel.org/netdev/cover.1717105215.git.yan@cloudflare.com/
+
+Yan Zhai (7):
+  net: add rx_sk to trace_kfree_skb
+  net: introduce sk_skb_reason_drop function
+  ping: use sk_skb_reason_drop to free rx packets
+  net: raw: use sk_skb_reason_drop to free rx packets
+  tcp: use sk_skb_reason_drop to free rx packets
+  udp: use sk_skb_reason_drop to free rx packets
+  af_packet: use sk_skb_reason_drop to free rx packets
+
+ include/linux/skbuff.h     | 10 ++++++++--
+ include/trace/events/skb.h | 11 +++++++----
+ net/core/dev.c             |  2 +-
+ net/core/drop_monitor.c    |  9 ++++++---
+ net/core/skbuff.c          | 22 ++++++++++++----------
+ net/ipv4/ping.c            |  2 +-
+ net/ipv4/raw.c             |  4 ++--
+ net/ipv4/syncookies.c      |  2 +-
+ net/ipv4/tcp_input.c       |  2 +-
+ net/ipv4/tcp_ipv4.c        |  6 +++---
+ net/ipv4/udp.c             | 10 +++++-----
+ net/ipv6/raw.c             |  8 ++++----
+ net/ipv6/syncookies.c      |  2 +-
+ net/ipv6/tcp_ipv6.c        |  6 +++---
+ net/ipv6/udp.c             | 10 +++++-----
+ net/packet/af_packet.c     | 10 +++++-----
+ 16 files changed, 65 insertions(+), 51 deletions(-)
+
 -- 
-Roman Storozhenko <romeusmeister@gmail.com>
+2.30.2
+
 
