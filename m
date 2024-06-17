@@ -1,113 +1,131 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615A517F397;
-	Mon, 17 Jun 2024 19:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAF9187326
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 19:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718653023; cv=none; b=AvoF4k6DwK78OIh2DqCstVLxCyHGqh25dvwk5TBSlbX4CNmybNVfDR+gyFVhDQy8WVBwv/2r7SzFL1w79Y13A+dMHL2PS9ziXV1tpTQNQWsbkyZN8tAnXToJQJvPOBOdXb7ZeXZTlrFl+sfFxRwLBKgIAYuQ3h3KdyP+UywB4T4=
+	t=1718653086; cv=none; b=a1PJxEfiiSAr9PGr7BurQFgpe+aKnVPqJTLHtfX15R4oCbXkSxG1riQfNIHS0CILlnP5v0SB3anOutpa0+20Yf51+OVx3VUJlcJeq4kR4gaymlZ6Xiorjkeg+EIhtUXnuk5IJmrqbYc5Ml3h7+qw1I03VzmYttfYB9+ofCC0Er8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718653023; c=relaxed/simple;
-	bh=N8H94RCXX5YWmY4bchJl16LRzX71/Gf5z7MQzkptBOQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ppo+kttIbMU/P8b3qUx2idTPwDNiV5cQGPt+v9SvPSqxRncroRQDbtUsIdW0z9Jii8d7Kc3mFPeIRp9MmxetloF5hX2r0A14k+nFoMXO0iFsFdiijKOKRIQ4e+wAdVtTzRPVCc7F5oRdped0ZJcnCzVAmCPVRdciQUYbkyXRnN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=qFy9OqZ+; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718653086; c=relaxed/simple;
+	bh=wlo+NPQPjkhJDcsoBLXWcznRisfoTBjuU62SEtBO9Is=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dyOf+fwtHq4qv/BR1mpJVeM2kG/VQv4E/yi+6ff+BaCPKKqZN/mn4UMRKiQIf+MyCWOWGDbf3eqOrVZe2hkBm3roHKIRmy4bf6g8Cl38N14SKsc5TdxFiL6c/P29kEkwm2c2AK9jlc7kqD/sTNDUqtgXQ596YsjvO/LQ/UofdTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hZbSvA9z; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="qFy9OqZ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718653019; x=1719257819; i=markus.elfring@web.de;
-	bh=3SqP/MMqLPtLI6/aIyy4H8OAKdv545+Ewr3toVxYkx8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qFy9OqZ+61yp2Rr2rTlaNNqY3iWEj82Su6VHQlqnYJfawxb2t3p84wmz+i+lfa2a
-	 9VnvM09uvYl9MKAqtmm06clNbE0mXeOptfJtNazwkRbYbLdx8iws9V0/LhlvliNI5
-	 Zunk4uoQn8GX45NhaXBaSkvTj4fBYA+bRALZinkLVvb/ybcKgFdqdqHOxyzw7BBGJ
-	 5AFU2r3iE51ZRTjdJpMPmEvyEybEsdQjASm3ns0kVH3L+30XktQui8AYQYDZHErpi
-	 RnfL8ZUP7qX2GyMVAhRfcsfj2iVcLLqdzbOaR1xWUtilfclR1Nn3Ss/Gt9CJKi4RU
-	 g6rZ9obCMXGeqxd17w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N3Gkg-1sSbPm0CNW-00tTYm; Mon, 17
- Jun 2024 21:30:24 +0200
-Message-ID: <3fb7f6db-6822-413e-9aa3-953a5e3cd566@web.de>
-Date: Mon, 17 Jun 2024 21:30:11 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hZbSvA9z"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7961fb2d1cfso391279485a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 12:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718653080; x=1719257880; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EeWty9541wg5SD9NtVmG1BHrErKfkqRa0zvwO/tO/ls=;
+        b=hZbSvA9zbtcPY5dyNGk7eqWZFYlVHnjudkAFTg/FQqYgJtAtxqoc32hv1iR6YlYB/p
+         ykR0LiIJc6oDs93r65G0JxmQpT29rpBsDRlAHJ8KdYsfJIGyulBWo1p1zpIuSiPsMrGH
+         eSta4Qu4WM2KUw6RVxeGUVk850qO7oSEGOoT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718653080; x=1719257880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EeWty9541wg5SD9NtVmG1BHrErKfkqRa0zvwO/tO/ls=;
+        b=a+scDo8jALU4AMk65zyAv1uYjn0y/z+AGt/Oka/hiGrV+M//DnbU8BcNy/9qn2FWLz
+         LBZqDqe+KV6FHCcb8q5sI/D/rtL0nrZJPY5P2SWn5VVH7mqPO/p7QkQcO9cwpRO+QSPH
+         9P4Di3+9nwkWEYzFyhmjmAx9X9K47iz5hHKytKQYloACRVpuLdj2d5vE7+v4v70fH5O5
+         cV3351iNlJV3Q2Qod5L7bJsjWjPwXPt3S4kG5TsSzoUTnB5L7hzZ5nXzQJshDjlp+e0I
+         v4VK7jWybPGS8hwulr1ob5klB7MsoVXV19h7VsnIPkOpzpWWCd+tOj0KJxpdX1sDeeq7
+         Ybkg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5yuH4hIsdVYECll4Tp8zpTn7qw/M58WKv2B7FNsrtoCm3nQcXeLDNdmppJUlxLpZzL/wy49sGC8fbit/aCcFOHq1Id+qNKn9h7AQd
+X-Gm-Message-State: AOJu0Yw+VIXtW+epZyJIbgDx7BsSbuuo+baNNRtRRxdSfJSkX6ILDli7
+	VvgthRuYnpCYIeATKmnm/xequYBdrYQiP4cTz5N0NmeVTjNgCJU3Ahtn7LpoPxMzhmnC0MUOHtc
+	=
+X-Google-Smtp-Source: AGHT+IGHcjA1F5lsuKbVbwCovF4bNUh9dB5NAabKQ8eiy+f6BWPrKks66HCSQz745weMXWMn6qblLw==
+X-Received: by 2002:ad4:5be5:0:b0:6b0:6a26:9083 with SMTP id 6a1803df08f44-6b2afd5b8c0mr132340106d6.40.1718653080598;
+        Mon, 17 Jun 2024 12:38:00 -0700 (PDT)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com. [209.85.160.177])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5bf24f5sm58829396d6.3.2024.06.17.12.37.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 12:37:59 -0700 (PDT)
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4405dffca81so40821cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 12:37:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8hqHF2tpLfPt2LOm0hMluEZRl9Jf9ZRHSpvPui8G4VRcjcWyOVhAG7Yg+3/102hxGF/qceGdsyx/kuthjSZPMp47Zym7s1JnzCTz4
+X-Received: by 2002:a05:622a:1813:b0:442:172e:4dd2 with SMTP id
+ d75a77b69052e-4449c71ad9dmr515541cf.18.1718653078487; Mon, 17 Jun 2024
+ 12:37:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Chancel Liu <chancel.liu@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>,
- Jonathan Downing <jonathan.downing@nautel.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Takashi Iwai <tiwai@suse.com>,
- Vladimir Zapolskiy <vz@mleia.com>
-References: <20240614163500.386747-5-piotr.wojtaszczyk@timesys.com>
-Subject: Re: [PATCH v3 4/4] ASoC: fsl: Add i2s and pcm drivers for LPC32xx
- CPUs
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240614163500.386747-5-piotr.wojtaszczyk@timesys.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20240610222515.3023730-1-dianders@chromium.org>
+ <20240610152420.v4.8.I1af05e555c42a9c98435bb7aee0ee60e3dcd015e@changeid> <bc4892b7-7c34-4fcb-b4c0-e383890162f8@linaro.org>
+In-Reply-To: <bc4892b7-7c34-4fcb-b4c0-e383890162f8@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 17 Jun 2024 12:37:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UuChPf0DH7aYq8r2XLCr7D+mbm4QSfthf-9ezvFeNUbg@mail.gmail.com>
+Message-ID: <CAD=FV=UuChPf0DH7aYq8r2XLCr7D+mbm4QSfthf-9ezvFeNUbg@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] serial: qcom-geni: Rework TX in FIFO mode to fix hangs/lockups
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5WMvwVJ2f6aoUtr+Iz89hHXdsaVQ1zgvfdIEvfLMhBHDYIBbpe8
- kWz8j5Flzg276xCuQhuOfkGfjJ1JGGY3ujMyZc1pPd3x6QKmrtdsQqX0puZR60X7t0lHxCa
- yn6PJPgg+aEg447/N0AipP2n+YrYMaefQ7ZzL7N5WylGgwQ1/vOzILgz7mqlOpdJg0hrWyK
- EoJrGwmfCJ2IviYQn3jgw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:289MEY1k7K8=;iOOAW6vyjkidRXUo1txuUPephTd
- Lu1fLFFQ6OiCdw7XqOVx+w2a20k6HujWOHtSQ8ZBlGo/WuwY98D89FpuXLguWAWGVOl0qUIhe
- jc0zM6Y/szMGY+/WlykVXOVhOrLwVuova8HBzv7uV1hrETD7wvDm2z5WgXmqJQxbD0oy6g1n4
- 96zeP7oB9vXE5vRN8plGOvQoTt7SSUequ7lc+YSbYRC563Eg2wHsMUVtXddeBQtIwH+K5e2fL
- FK/5gEqssQlX1EcTxtUDtMj59u8f3/tfig1/7zuXaemfMmKMToZZ4sPidUNjPJFfNENxhD+FZ
- sFEnxnYTxIhbJ3GTw70uWGJpy1FCI80Xz/49TVeQStMHl6rku0TMl0JSmMUoTqibbRB4kJc0e
- 7VB3CB8pMhET7dINxpOTEavR1IjfgXauixR6RgI/klq8k5HxjD7R4s2CoTkyfo5j4gczHHyea
- uLQhNNkNl9dcJEMLqgeT9TbU1OAZHzgQ3p1BlYa8qjorYW5kfp+ffxczoT+vi/IUMxXJyNiIG
- RYZ1HTj6oy3q+dTkHv7WvPJxCk1gQDxvloh9NK+9bruoEk/uzlpDpAyF642GPqGqw+z2LdBcV
- UO6maK85XEM0es5DTY3E9O9oj0JX0iFlTLMn4+phGIuzTzEkmsAxwrixRsE537NT7nn5JkMLV
- 1RdVvS8UeTGPMjpyGaEKa+2F5vxG19XllG9vBQk4KBooBPqzV+MoCky4+nIq1nA2scdl30sD9
- BXSDEwLRSTDA7GIgwW57s28eF/GWnmh5al7DlTHI/7o9P3KtlTaywCCpXvs+w/LHJPw7I8ik5
- 3znkE+XmhoI8DG2/24UILJqI3JkvyvehkDbfd4qGA6mug=
 
-I suggest to specify email addresses for message recipients not only
-in the header field =E2=80=9CCc=E2=80=9D.
+Hi,
+
+On Mon, Jun 17, 2024 at 12:10=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linar=
+o.org> wrote:
+>
+>
+>
+> On 6/11/24 00:24, Douglas Anderson wrote:
+> > The fact that the Qualcomm GENI hardware interface is based around
+> > "packets" is really awkward to fit into Linux's UART design.
+> > Specifically, in order to send bytes you need to start up a new
+> > "command" saying how many bytes you want to send and then you need to
+> > send all those bytes. Once you've committed to sending that number of
+> > bytes it's very awkward to change your mind and send fewer, especially
+> > if you want to do so without dropping bytes on the ground.
+>
+> [...]
+>
+>
+> > +static void qcom_geni_serial_enable_cmd_done(struct uart_port *uport)
+> > +{
+> > +     struct qcom_geni_serial_port *port =3D to_dev_port(uport);
+> > +
+> > +     /* If we're not in FIFO mode we don't use CMD_DONE. */
+> > +     if (port->dev_data->mode !=3D GENI_SE_FIFO)
+> > +             return;
+> > +
+> > +     writel(M_CMD_DONE_EN, uport->membase + SE_GENI_M_IRQ_EN_SET);
+> > +}
+>
+> IDK if this is worth of a separate function, instead of checking for the
+> FIFO in port_setup and writing it there, but generally this patch looks
+> good to me
+
+Sure. Somehow it felt weird to me to put it straight in there, but I
+could go either way. Do you think I should spin the series just for
+this, or just make this change if I happen to need to spin the series
+for something else?
 
 
-=E2=80=A6
-> +++ b/sound/soc/fsl/lpc3xxx-i2s.c
-> @@ -0,0 +1,393 @@
-=E2=80=A6
-> +static int lpc3xxx_i2s_startup(struct snd_pcm_substream *substream, str=
-uct snd_soc_dai *cpu_dai)
-> +{
-=E2=80=A6
-> +	int ret =3D 0;
-> +
-> +	mutex_lock(&i2s_info_p->lock);
-=E2=80=A6
-> +lpc32xx_unlock:
-> +	mutex_unlock(&i2s_info_p->lock);
-> +	return ret;
-> +}
-=E2=80=A6
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Would you become interested to apply a statement like =E2=80=9Cguard(mutex=
-)(&i2s_info_p->lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/mutex.h#L1=
-96
+Thanks for your reviews, I appreciate it!
 
-Regards,
-Markus
+-Doug
