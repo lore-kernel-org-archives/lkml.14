@@ -1,135 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C681C287;
-	Mon, 17 Jun 2024 16:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786381474C6
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718641157; cv=none; b=kglw+g/L2wNr5+zoWqlSCvj06Oau9PiZ8GywT8oniGxtsE2zHyyGj1DIAwL0y+4zVFUyMNbfZrFj/ASm7KvLqqAq2A+lRxTqrqcChqBB7u9Nt+dy/o2HUpzmOcsjodLWvpWVvOsNllSbZiuJYlb0WbCuwe0LxV4XrfxCSoLUpQg=
+	t=1718641186; cv=none; b=Q14ClZG0puB/Z7zUGVuyCZXmYq0ILIygn9UzAnvldGGjb1yqhxSn+wVVRQXCJbykC4tyTgCqKIr7OzPOfzyYPPvXE0p0Bk31yJolK3F1Jz8/eY/DPas3NbSE4L0cMSATORSq7a6GEdoEPz0v807Hg1xc4Y1vwFmPW3SLAIdf0s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718641157; c=relaxed/simple;
-	bh=tNMKTFx8GZIsHQAa1TVjBp9pE152a4bTFj1Yozh2Ewc=;
-	h=From:Date:Message-ID:To:Cc:Cc:Cc:Cc:Subject; b=GnU+EhllyryIvHjJof+toSabvEpI/XRgsKHMj9Rgyiujy5RvrKewzO1ZRJ/0hWP8tUgBltW3fBHz/Oosmtz2/O7SC1LjLY9iO43eKODo2wy5/z5lrPxx1kXHrfSbzVrgCXGRYmvZ3rkpXfSpdqn+M1GC2AlGXrk/1TAqGYWRy9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyjfTB//; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718641186; c=relaxed/simple;
+	bh=/IIwLAg71h7Ka9mSLiQwdsaFgE8fR2kdhUA9bF+cA6w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KYcuvCKzBPT2SYz+jZcpjccSBzPpWs5rlnoq88DtQK40g1rKrWypoz76wTpioCXC2ejZW+afTxY3X0Hi6DGdAX8aqacXU1UpcPEbrZ2XuSS8KwHPEYpuuPE4Mv7w4XucGlKXyeXbzivcIqsEr5Hwd6j1RfLWD5fppdg6FhCctJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c9yjD5c0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OCHSGj4f; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyjfTB//"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B66C2BD10;
-	Mon, 17 Jun 2024 16:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718641157;
-	bh=tNMKTFx8GZIsHQAa1TVjBp9pE152a4bTFj1Yozh2Ewc=;
-	h=From:Date:To:Cc:Cc:Cc:Cc:Subject:From;
-	b=iyjfTB//cTSyRjYJZZ/YpaLXx6Q28lQMJCYtAOGgDFEk4oqV5p8FPBkutxGsSvXTG
-	 tHB2d9hsOg7Jw32NXDCHJPRjCqBJDcWCvmKZ9Dyg0wXgu6keJBuQpVOA9dzcJ/9fJF
-	 uembCL4jdK2cVx/Ys/QNRDUpTpkRyL8oTiNGcR+KcSJgSqXSmZs4xSUbbVEZoo5ZSo
-	 nG7Xh8XaxldSOWkNiNa1aHJ4ZWJuX6q2iRdYQpS30dMdcxBovtgS3aLmoExEfZiJ1i
-	 mYweP/AGFwstC7UcwL+6CvH0QjYGmImAbiOYo3mR9GIGjhwETZTj005KTwMo0HZbW+
-	 3/0wE26tspbdw==
-From: broonie@kernel.org
-Date: Mon, 17 Jun 2024 17:19:14 +0100
-Message-ID: <9de6dc27d89ada54613f3b5a830fee12.broonie@kernel.org>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the perf tree with the origin tree
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c9yjD5c0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OCHSGj4f"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718641182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uiuI0ne78SCn0dRqC/AA7OSeq1K0b9qMP7aQO3GiU3A=;
+	b=c9yjD5c0rmBkkXgK+g/+45a92f5RYx1M1zhQAj0cZoAsc2vCaoKRCI2GSvXLrxDcLapxi8
+	CeuExVn+rbtI/5a88s6XKv7v2M62uR/oKa/EzQyHcrdv5TW5iaGz7GMYCcrCfdB+XPDpJn
+	yuDp3taCI+Wthli5R230f93MkNkMMFpLA43giMkkbUQUjxrabaNuI9bn3yoeWBY6k3SzMb
+	C2X2ueeaxRHND0Qbgtl7ubt0jUl/IlXCYfjbRuWjLhfRTat61w3HZg/+Wbsd/ApM0D6stN
+	DkkiWqpw/EN/LBv48PZRWd+xlcAFMeI286caZdN8isotddO8+78u/5D1/oy9ew==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718641182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uiuI0ne78SCn0dRqC/AA7OSeq1K0b9qMP7aQO3GiU3A=;
+	b=OCHSGj4fl0S5vb/+GHyOFycN5xud/B011qQqB4AEftopyb79TSmKd18Ea/IyMmqF0Mr685
+	1wRKWs368hv5l/Bg==
+To: Phil Chang <phil.chang@mediatek.com>
+Cc: alix.wu@mediatek.com, angelogioacchino.delregno@collabora.com,
+ frederic@kernel.org, jy.ho@mediatek.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ matthias.bgg@gmail.com, phil.chang@mediatek.com, tglx@linutronix.de
+Subject: Re: [PATCH v3] hrtimer: check hrtimer with a NULL function
+In-Reply-To: <20240610133136.327-1-phil.chang@mediatek.com>
+References: <87bk496seb.fsf@somnus>
+ <20240610133136.327-1-phil.chang@mediatek.com>
+Date: Mon, 17 Jun 2024 18:19:42 +0200
+Message-ID: <87tthr4k4h.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hi all,
+Phil Chang <phil.chang@mediatek.com> writes:
 
-Today's linux-next merge of the perf tree got a conflict in:
+> To prevent improper usage of hrtimers and avoid potential kernel crashes,
+> this commit introduces a validation check for hrtimers with a valid function callback,
+> discard the hrtimers that have a NULL callback.
+>
+> The `run_hrtimer` executes callbacks for every hrtimer,
+> and these callbacks must not be NULL. A NULL callback can lead to a kernel crash.
+> This update ensures that all hrtimers have properly initialized callbacks
+> before execution.
 
-  tools/perf/builtin-record.c
+Definitely better! You could sort it, first problem description and then
+solution:
 
-between commit:
+The hrtimer function callback must not be NULL. It has to be specified
+by the callsite but it is not validated by hrtimer code. When a hrtimer
+is queued with a NULL pointer instead of a valid function, the kernel
+crashes with a null pointer dereference when trying to execute the
+callback in __run_hrtimer().
 
-  5b3cde198878b ("Revert "perf record: Reduce memory for recording PERF_RECORD_LOST_SAMPLES event"")
+Introduce a validation before queueing the hrtimer in
+hrtimer_start_range_ns().
 
-from the origin tree and commit:
+>
+> Signed-off-by: Phil Chang <phil.chang@mediatek.com>
 
-  6c1785cd75ef5 ("perf record: Ensure space for lost samples")
+Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-from the perf tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0a8ba1323d64b..019305b94e5fc 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1926,7 +1926,7 @@ static void __record__save_lost_samples(struct record *rec, struct evsel *evsel,
- static void record__read_lost_samples(struct record *rec)
- {
- 	struct perf_session *session = rec->session;
--	struct perf_record_lost_samples *lost = NULL;
-+	struct perf_record_lost_samples_and_ids lost;
- 	struct evsel *evsel;
- 
- 	/* there was an error during record__open */
-@@ -1951,19 +1951,13 @@ static void record__read_lost_samples(struct record *rec)
- 
- 				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
- 					pr_debug("read LOST count failed\n");
--					goto out;
-+					return;
- 				}
- 
- 				if (count.lost) {
--					if (!lost) {
--						lost = zalloc(PERF_SAMPLE_MAX_SIZE);
--						if (!lost) {
--							pr_debug("Memory allocation failed\n");
--							return;
--						}
--						lost->header.type = PERF_RECORD_LOST_SAMPLES;
--					}
--					__record__save_lost_samples(rec, evsel, lost,
-+					memset(&lost.lost, 0, sizeof(lost));
-+					lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
-+					__record__save_lost_samples(rec, evsel, &lost.lost,
- 								    x, y, count.lost, 0);
- 				}
- 			}
-@@ -1971,20 +1965,12 @@ static void record__read_lost_samples(struct record *rec)
- 
- 		lost_count = perf_bpf_filter__lost_count(evsel);
- 		if (lost_count) {
--			if (!lost) {
--				lost = zalloc(PERF_SAMPLE_MAX_SIZE);
--				if (!lost) {
--					pr_debug("Memory allocation failed\n");
--					return;
--				}
--				lost->header.type = PERF_RECORD_LOST_SAMPLES;
--			}
--			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
-+			memset(&lost.lost, 0, sizeof(lost));
-+			lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
-+			__record__save_lost_samples(rec, evsel, &lost.lost, 0, 0, lost_count,
- 						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
- 		}
- 	}
--out:
--	free(lost);
- }
- 
- static volatile sig_atomic_t workload_exec_errno;
-@@ -3196,7 +3182,7 @@ static int switch_output_setup(struct record *rec)
- 	unsigned long val;
- 
- 	/*
--	 * If we're using --switch-output-events, then we imply its 
-+	 * If we're using --switch-output-events, then we imply its
- 	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
- 	 *  thread to its parent.
- 	 */
+> ---
+>  kernel/time/hrtimer.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index 492c14aac642..b8ee320208d4 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -1285,6 +1285,8 @@ void hrtimer_start_range_ns(struct hrtimer *timer, ktime_t tim,
+>  	struct hrtimer_clock_base *base;
+>  	unsigned long flags;
+>  
+> +	if (WARN_ON_ONCE(!timer->function))
+> +		return;
+>  	/*
+>  	 * Check whether the HRTIMER_MODE_SOFT bit and hrtimer.is_soft
+>  	 * match on CONFIG_PREEMPT_RT = n. With PREEMPT_RT check the hard
