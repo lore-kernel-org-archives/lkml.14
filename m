@@ -1,155 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EF4D51D;
-	Mon, 17 Jun 2024 14:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636189; cv=none; b=J3aDlsDSoS4wX/8rFtzuU+WKjM0oxrpGFaKQBJnYgEsGA+oXABAOr3d8g3z97arFysc7F3TU2K1i7Y3qsUcfxakqb9t+H7U0+MHgI77X3Ho3aXsNGvTOT6xKs3QDEthtH64d/1kGzLXXzZqQM2rSDFRQxm29Q2UULqvTIcYi7RA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636189; c=relaxed/simple;
-	bh=1g98WIt6DK45Ckxrtdcr5vChfA+pfghexrdjwxiI8YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qr55YnDrBCJpQf2T8uN56HAEMFITZsJGSYO0W3Gh+7SJ6C6cbhJ6iU9ralQoa7qpmUEThezsS1AiUojlnCIAiI6fZby3OqW+7bzgP+j8NMrzXclCkp2uwIbm0EqtLAoj/gf5KBGogL0WlRajrDSiykuJgrqYGO3AnFXbXC0geuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=clhRAdt9; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35151C2AD
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718636261; cv=pass; b=LgTRHFCwRTSwGUOHYrssyvdZlM6NrRpCy6+1jh7DMR4NRA+IQwFCdqIPZk1Qi/0ztntw1o3C40rWTiqLO6yKN0zIGdrvshfWSCPa3FmqYuEdBD0JPncmYyj2PGqcLyn6sT4HuQmr6p9nPkjo2hlPE0ZPtKf5M5zDOAnFawIbvSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718636261; c=relaxed/simple;
+	bh=2mLJtNChd1G7wUJAeAvf58sTxBTG5cAWI0tJWUet3Oc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WwB1+fLtNGq/Jg4axElNpClrE32nB0tmhjYgdsdhxkCMm7ao+fotmlMImfCdo08Jpm4IkqHORsgBqttGTDYEFhmS1lAB2JtCA3Xt4GXFAYBjNhlw6fHhGBAZtN2f1OxaJ+Ee+rK8DdyEmLnkMer+5PPAlg3fnjarGZGVP5xgFSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=d7aoavem; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="clhRAdt9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F573C2BD10;
-	Mon, 17 Jun 2024 14:56:26 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="clhRAdt9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718636183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6bcwrvbIl7+eEjyyGJoXxh1mehCsgFRYWHRM/zwpUAQ=;
-	b=clhRAdt9QmHzMaEEzVai+8NS5mBwqdWC/f0sKn8iKNRjAYqBW9N3E2L8sbjmiy2SQkZGk0
-	hK8NYQAMg8k+eCY6yhiOMg3Eok18XjHMRfrN68QDTwANHVK37YKOUoOk4GYwZc7KCjnUD+
-	5Jm/fDnndt2OgFIS0O5m9q1UI47PGCA=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 071c720a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 17 Jun 2024 14:56:22 +0000 (UTC)
-Date: Mon, 17 Jun 2024 16:56:17 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnBOkZClsvAUa_5X@zx2c4.com>
-References: <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
- <Zmru7hhz8kPDPsyz@pc636>
- <7efde25f-6af5-4a67-abea-b26732a8aca1@paulmck-laptop>
- <Zmsuswo8OPIhY5KJ@pc636>
- <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
- <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
- <Zmw5FTX752g0vtlD@pc638.lan>
- <ZmybGZDbXkw7JTjc@zx2c4.com>
- <ZnA_QFvuyABnD3ZA@pc636>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="d7aoavem"
+ARC-Seal: i=1; a=rsa-sha256; t=1718636245; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=aNCwsYjfcRZ9W9NfNpaAN13uJi4YbDL3TikJmOLmLuplKVfdGGQHQqsdsD4NwiFL+mBbLyDSUWP48ft7r6TT8CGzpd8RuuMJyyMuvcnd0dTqeeve/E84mX3CtXnbJu88O65tMU/WrMETPZQBFX2Gr5Ta7AYVmrzuWNUVMbUR3/o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1718636245; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2mLJtNChd1G7wUJAeAvf58sTxBTG5cAWI0tJWUet3Oc=; 
+	b=bSsgH0WC5JIDq6hceVUeNYRjJmIQ+IlsAA6LYAmbu/6nz1Nx0bBMYrwjUIglHr+awrHEqsEZdbJlUKKaR1Kc8xkR6IvjCZUNDFYcKhb+1aAfygqhGYIUYz9wGcJlfGAizjWhEmLvtwk2SPTfAdhBmScoEVXR8Vbnl+goIV8qnwA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1718636245;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=2mLJtNChd1G7wUJAeAvf58sTxBTG5cAWI0tJWUet3Oc=;
+	b=d7aoavemvLHEhRRSQFPSn8fybepuT4Dtm8eeMEMx8INiZVx8Yf5am9Bke1/ArJ5c
+	GwNyRgmhEY3Zsy0bWKOTIQa6XflAiwJSqpYH1CerrqzNshRyNP+YDSefp6gokmSMNjm
+	Nu1OLcZ+C94XHxOaZlGDgN6I7TXDwvway/B7EirJcdgxljzsRua0NKNYMdLMKlgPR2Z
+	AF1vhRfd1PZdGJOIPG/Kd2nz8xe6pl/1ojhodn2OQ5rt+U0B7JJjKGHxLDNH1AlivAv
+	ur6L9ikQl4Op+PkmbpYhU7UYKXdueifWwsPuWhi3ZWzoMrCly4VWpNaI3u/Hm9RCeIb
+	QX+LFjnORQ==
+Received: by mx.zohomail.com with SMTPS id 1718636244680837.8300130243035;
+	Mon, 17 Jun 2024 07:57:24 -0700 (PDT)
+Message-ID: <977af3daf5f7eb048eed0310bc93a321728b6106.camel@icenowy.me>
+Subject: Re: [PATCH 1/2] drm/amdgpu: make duplicated EOP packet for GFX7/8
+ have real content
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Alex
+ Deucher <alexander.deucher@amd.com>, Pan Xinhui <Xinhui.Pan@amd.com>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pierre-Eric
+ Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Date: Mon, 17 Jun 2024 22:57:19 +0800
+In-Reply-To: <e7a814fc-7b1a-4e32-8868-292be004f920@amd.com>
+References: <20240617105846.1516006-1-uwu@icenowy.me>
+	 <20240617105846.1516006-2-uwu@icenowy.me>
+	 <88337509-3ad7-47aa-b70f-5294f7f1e486@amd.com>
+	 <b4ebdbce2f44c06806a650e72b1b6eb9a16dffe6.camel@icenowy.me>
+	 <09fbcd1f-c7b1-47e3-9146-17f8189978a8@amd.com>
+	 <e88d4722fa3bbd7104b140debdd85cb212628944.camel@icenowy.me>
+	 <d44651a7-0c07-4b84-8828-f1d405359aeb@amd.com>
+	 <1e5f86991635b9045e91fab6397cda87555f85ff.camel@icenowy.me>
+	 <e7a814fc-7b1a-4e32-8868-292be004f920@amd.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZnA_QFvuyABnD3ZA@pc636>
+X-ZohoMailClient: External
 
-On Mon, Jun 17, 2024 at 03:50:56PM +0200, Uladzislau Rezki wrote:
-> On Fri, Jun 14, 2024 at 09:33:45PM +0200, Jason A. Donenfeld wrote:
-> > On Fri, Jun 14, 2024 at 02:35:33PM +0200, Uladzislau Rezki wrote:
-> > > +	/* Should a destroy process be deferred? */
-> > > +	if (s->flags & SLAB_DEFER_DESTROY) {
-> > > +		list_move_tail(&s->list, &slab_caches_defer_destroy);
-> > > +		schedule_delayed_work(&slab_caches_defer_destroy_work, HZ);
-> > > +		goto out_unlock;
-> > > +	}
-> > 
-> > Wouldn't it be smoother to have the actual kmem_cache_free() function
-> > check to see if it's been marked for destruction and the refcount is
-> > zero, rather than polling every one second? I mentioned this approach
-> > in: https://lore.kernel.org/all/Zmo9-YGraiCj5-MI@zx2c4.com/ -
-> > 
-> >     I wonder if the right fix to this would be adding a `should_destroy`
-> >     boolean to kmem_cache, which kmem_cache_destroy() sets to true. And
-> >     then right after it checks `if (number_of_allocations == 0)
-> >     actually_destroy()`, and likewise on each kmem_cache_free(), it
-> >     could check `if (should_destroy && number_of_allocations == 0)
-> >     actually_destroy()`. 
-> > 
-> I do not find pooling as bad way we can go with. But your proposal
-> sounds reasonable to me also. We can combine both "prototypes" to
-> one and offer.
-> 
-> Can you post a prototype here?
+=E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 16:42 +0200=EF=BC=
+=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> Am 17.06.24 um 16:30 schrieb Icenowy Zheng:
+> > =E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 15:59 +0200=EF=
+=BC=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> > > Am 17.06.24 um 15:43 schrieb Icenowy Zheng:
+> > > > =E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 15:09 +020=
+0=EF=BC=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> > > > > Am 17.06.24 um 15:03 schrieb Icenowy Zheng:
+> > > > > > =E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 14:35 =
++0200=EF=BC=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> > > > > > > Am 17.06.24 um 12:58 schrieb Icenowy Zheng:
+> > > > > > > > The duplication of EOP packets for GFX7/8, with the
+> > > > > > > > former
+> > > > > > > > one
+> > > > > > > > have
+> > > > > > > > seq-1 written and the latter one have seq written,
+> > > > > > > > seems to
+> > > > > > > > confuse
+> > > > > > > > some
+> > > > > > > > hardware platform (e.g. Loongson 7A series PCIe
+> > > > > > > > controllers).
+> > > > > > > >=20
+> > > > > > > > Make the content of the duplicated EOP packet the same
+> > > > > > > > with
+> > > > > > > > the
+> > > > > > > > real
+> > > > > > > > one, only masking any possible interrupts.
+> > > > > > > Well completely NAK to that, exactly that disables the
+> > > > > > > workaround.
+> > > > > > >=20
+> > > > > > > The CPU needs to see two different values written here.
+> > > > > > Why do the CPU need to see two different values here? Only
+> > > > > > the
+> > > > > > second
+> > > > > > packet will raise an interrupt before and after applying
+> > > > > > this
+> > > > > > patch,
+> > > > > > and the first packet's result should just be overriden on
+> > > > > > ordinary
+> > > > > > platforms. The CPU won't see the first one, until it's
+> > > > > > polling
+> > > > > > for
+> > > > > > the
+> > > > > > address for a very short interval, so short that the GPU CP
+> > > > > > couldn't
+> > > > > > execute 2 commands.
+> > > > > Yes exactly that. We need to make two writes, one with the
+> > > > > old
+> > > > > value
+> > > > > (seq - 1) and a second with the real value (seq).
+> > > > >=20
+> > > > > Otherwise it is possible that a polling CPU would see the
+> > > > > sequence
+> > > > > before the second EOP is issued with results in incoherent
+> > > > > view
+> > > > > of
+> > > > > memory.
+> > > > In this case shouldn't we write seq-1 before any work, and then
+> > > > write
+> > > > seq after work, like what is done in Mesa?
+> > > No. This hw workaround requires that two consecutive write
+> > > operations
+> > > happen directly behind each other on the PCIe bus with two
+> > > different
+> > > values.
+> > Well to be honest the workaround code in Mesa seems to not be
+> > working
+> > in this way ...
+>=20
+> Mesa doesn't have any workaround for that hw issue, the code there
+> uses=20
+> a quite different approach.
 
-This is untested, but the simplest, shortest possible version would be:
+Ah? Commit bf26da927a1c ("drm/amdgpu: add cache flush workaround to
+gfx8 emit_fence") says "Both PAL and Mesa use it for gfx8 too, so port
+this commit to gfx_v8_0_ring_emit_fence_gfx", so maybe the workaround
+should just be not necessary here?
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 5f8f47c5bee0..907c0ea56c01 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -275,6 +275,7 @@ struct kmem_cache {
- 	unsigned int inuse;		/* Offset to metadata */
- 	unsigned int align;		/* Alignment */
- 	unsigned int red_left_pad;	/* Left redzone padding size */
-+	bool is_destroyed;		/* Destruction happens when no objects */
- 	const char *name;		/* Name (only for display!) */
- 	struct list_head list;		/* List of slab caches */
- #ifdef CONFIG_SYSFS
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 1560a1546bb1..f700bed066d9 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -494,8 +494,8 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 		goto out_unlock;
 
- 	err = shutdown_cache(s);
--	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
--	     __func__, s->name, (void *)_RET_IP_);
-+	if (err)
-+		s->is_destroyed = true;
- out_unlock:
- 	mutex_unlock(&slab_mutex);
- 	cpus_read_unlock();
-diff --git a/mm/slub.c b/mm/slub.c
-index 1373ac365a46..7db8fe90a323 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
- 		return;
- 	trace_kmem_cache_free(_RET_IP_, x, s);
- 	slab_free(s, virt_to_slab(x), x, _RET_IP_);
-+	if (s->is_destroyed)
-+		kmem_cache_destroy(s);
- }
- EXPORT_SYMBOL(kmem_cache_free);
+>=20
+> > > To make the software logic around that work without any changes
+> > > we
+> > > use
+> > > the values seq - 1 and seq because those are guaranteed to be
+> > > different
+> > > and not trigger any unwanted software behavior.
+> > >=20
+> > > Only then we can guarantee that we have a coherent view of system
+> > > memory.
+> > Any more details about it?
+>=20
+> No, sorry. All I know is that it's a bug in the cache flush logic
+> which=20
+> can be worked around by issuing two write behind each other to the
+> same=20
+> location.
 
-@@ -5342,9 +5344,6 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
- 		if (!slab->inuse) {
- 			remove_partial(n, slab);
- 			list_add(&slab->slab_list, &discard);
--		} else {
--			list_slab_objects(s, slab,
--			  "Objects remaining in %s on __kmem_cache_shutdown()");
- 		}
- 	}
- 	spin_unlock_irq(&n->list_lock);
+So the issue is that the first EOP write does not properly flush the
+cache? Could EVENT_WRITE be used instead of EVENT_WRITE_EOP in this
+workaround to properly flush it without hurting the fence value?
+
+
+>=20
+> > BTW in this case, could I try to write it for 3 times instead of 2,
+> > with seq-1, seq and seq?
+>=20
+> That could potentially work as well, but at some point we would need
+> to=20
+> increase the EOP ring buffer size or could run into performance
+> issues.
+
+Well I will try this. I think the buffer is enlarged in the original
+workaround commit.
+
+>=20
+> > > > As what I see, Mesa uses another command buffer to emit a
+> > > > EVENT_WRITE_EOP writing 0, and commit this command buffer
+> > > > before
+> > > > the
+> > > > real command buffer.
+> > > >=20
+> > > > > > Or do you mean the GPU needs to see two different values
+> > > > > > being
+> > > > > > written,
+> > > > > > or they will be merged into only one write request?
+> > > > > >=20
+> > > > > > Please give out more information about this workaround,
+> > > > > > otherwise
+> > > > > > the
+> > > > > > GPU hang problem on Loongson platforms will persist.
+> > > > > Well if Loongson can't handle two consecutive write
+> > > > > operations to
+> > > > > the
+> > > > > same address with different values then you have a massive
+> > > > > platform
+> > > > > bug.
+> > > > I think the issue is triggered when two consecutive write
+> > > > operations
+> > > > and one IRQ is present, which is exactly the case of this
+> > > > function.
+> > > Well then you have a massive platform bug.
+> > >=20
+> > > Two consecutive writes to the same bus address are perfectly
+> > > legal
+> > > from
+> > > the PCIe specification and can happen all the time, even without
+> > > this
+> > > specific hw workaround.
+> > Yes I know it, and I am not from Loongson, just some user trying to
+> > mess around it.
+>=20
+> Well to be honest on a platform where even two consecutive writes to
+> the=20
+> same location doesn't work I would have strong doubts that it is
+> stable=20
+> in general.
+
+Well I think the current situation is that the IRQ triggered by the
+second EOP packet arrives before the second write is finished, not the
+second write is totally dropped.
+
+>=20
+> Regards,
+> Christian.
 
