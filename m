@@ -1,55 +1,55 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BE9199E98
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FAB195381
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647131; cv=none; b=rJ9PAvZGyvciSkFXkZzCV9gsN3k3hT0DIGEwJLOOyTUVZ+sc6XJqwAVP0XRFhXyywKO+9e91O6dwoxlEjKVXVdLU71r4x1KgyV6sVVykugdYYLi66/jsWkoumvoSqxmom/7A3HTO0aVMPWIpZ/ehuhu60BzvJp3FDasEFkhoakk=
+	t=1718647134; cv=none; b=PDy+3dSdt6j3qo3MvlvpmvnXduowYGu/6h/fNKHHgC6iHj4/nN1tCDRxJo4f9SS5IKwSXFznJVN4YB3p1nq2+TS3j7OxwNsW66VSJYlTvvV7fFU+1nu5OHZtTmvE4DsHqKiWTzDwIBQQGMKhG8TBaIFDPqV7YS2on0t5fE28SIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647131; c=relaxed/simple;
-	bh=XeWLpjfbip2cG1reCp5fuwFDg0zCF0I9155zvse/ZJc=;
+	s=arc-20240116; t=1718647134; c=relaxed/simple;
+	bh=fgkHPoIfKV45x9z/FkKUVFWMMp1fQbapxOYrE3e+eC0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LugDzyPUEiJ0whxHN9HK4ZDWRQIyBXiGhB3BOWntUM86AN4m8inz0vb3hw4B7tIBtXi7UKSHjmCdwafONej+UFP75O6SWR/DT/lm3uyiAqlMD+sEPASF/iR5IAq3560dJcxDbo3JF3aVU3loSkZvaOpvn9PZJsYeAzV/ySmpPLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3uizPohl; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=RkypiJk8IE1CDGwW/AFvhulNV8sqWz5E8HKpbYFmPLcXDeE8rPDdZXAdtAKQLZT/2smVKIxqtFEXQ1GVcp6H+tQVODNvrAyBvMsswTMT3pjwILj5H9rzsUbKuT45kteKqDi4o/g4EmbhbOCANFQWCPFOgKJ8wpOmtq20kk/23Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dX/YX/jm; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3uizPohl"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfefc2c8569so9479424276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dX/YX/jm"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dff1eb1c1fcso5999531276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718647129; x=1719251929; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718647132; x=1719251932; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aDtl7Q8+dGnVJgz6nefcFJrXDgszLOVdSnX1Gj5oN2E=;
-        b=3uizPohlTjkm97ZKCTgoicwbxM9i1iCPVr6bvS97D6Ht17k5/qElTf+8k37moWd3OE
-         nPxD/sTOpm4IZuJFN+MeQ4TTaZj7U51jg4lpn2Pjr9DjiAZHo+vXAuyvfdJgEhwQMCq1
-         K+WmRjqcPfBGHQjnAJ6gP/DED4GalvLYQXjfT1eQwhFPGQXW/8RuPq5/xoRDislZ7hvG
-         52epP5bJ+iSBHPUxXIZKPRMUFZqAApFd1vjfdUyRaiAg63uXjJAQpANyzVqXMZKVfLl9
-         EWoGCRKJuynNWPtmS6KPzdAmodUlfjK3q0kA5COCUAbFHnunz4gtLwEf5zaH73wY0IQm
-         AtVQ==
+        bh=bLYk6wjWkl3juH0J6ovTQNRSOAciGZLb1YErRTCUnNY=;
+        b=dX/YX/jmYd3sn8Pm4eMUMr9zmf5njHWQXEJKDY14VnL8yfKXGT03KATgH/1uhZ0z4j
+         ekgFoIej7jr6trCy75t5T9iUqTQH+88MkT3Z9hkc+6L+OG+6mbEanFp44pNd2cNqHMWZ
+         dSSW4YBua3kFRd4DUT6oYPFNaBVdHeyCOJaplPtzr32obEebpkAxkQ3kcjZ60OlCWCYS
+         KQ8u3JUDLiYD0pHx065dUx/5L+6DFdprv3xefHXLt7vKaK45zBMWm2DjU7VrVhvQbwUl
+         IFBLg82Gq/uvunSht0hos4EszJSNnbOOB5t/g14tUSBMQCRlNGDv8jpkvgYmkBFCuE8J
+         8qRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647129; x=1719251929;
+        d=1e100.net; s=20230601; t=1718647132; x=1719251932;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aDtl7Q8+dGnVJgz6nefcFJrXDgszLOVdSnX1Gj5oN2E=;
-        b=VywjUfiRm1OUnc269fcV2UcBXb7Wo26RM+S1859Y543VzQ3siLorN//x65Rpr6fOEg
-         P21NNH14etByLeHC2o5AsE8xuaZDx4/U3DsAZ6qT8sXcWRvRS4JhDykrqIX5V6jrkk2Y
-         mmYRC3doOrmJR1CV1ZFj8+tyYbKOiFnl5uDkHaM86cHq70DNl3Z79LUF/kC0pcLnHPQ8
-         C9zjbyr//ML1TZKbAAS8RtCBz6FzFujFdGS4Kks1E+gQ5KkDD6HGsZaHRM96/A280E+n
-         b6YaoWKKXo/+nAyM+XpOQNJN7twPzjZRAAursEbfF/3He0aXAuH9SY+i/aTOP/nDQ6zY
-         01RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVquKiraV+to6NjevZnLX0PHrxhwmEEjSBLFIV8xQ82x1Udu6VRAzT7JtzKJjGF0V6pTtFWAzzkwmPjG0jBiL3+wHUzOX6nq8Ix68T1
-X-Gm-Message-State: AOJu0YzD8Ly55IntoCNNk3Lskg4p+Qac/ZljoPMP4dfkVglqknTNA1ac
-	XsHlBclcc1BZM3fbkYYStUoEZ3PsHy2xp1wOO1AY72tstH2aww8CjB5k3KvGgR/rEABp9nJs+0E
-	PUXGr0v5vP3eTucMmpEfzeMyHXA==
-X-Google-Smtp-Source: AGHT+IEPsCaMFfOkZ8T4Tiv95vdcZi2tL3ndrzRupJFWeE1D/DO1qf/1J5PcAqULyuJkAvIHq9t4JZEnvngWo+4TUXg=
+        bh=bLYk6wjWkl3juH0J6ovTQNRSOAciGZLb1YErRTCUnNY=;
+        b=SQRFJ8ZL1mzy2yFUZv5UPxePo6lS+Ew1fJBEi02kCI94gSH6IDbmh9l+66GvfRrreY
+         i3un7GXpfQ/PL82DkcQQrM2S/PfgMyHu8hQOlOwfYLqP8f7GBpJ/UfzAng11mUQJJwlR
+         0fmNwTjOH7UU3kIhyM0wSQdCwxaK6MQrIKRDvJzljBAF0OOrD9KfbEiAA4MUThVVkFvG
+         xTAhC09kgcKeNM1kwh8x5bID8CPVsTKDtl+1R5wz0FFmSl/Ml8ysAh+lfB+OA/qq7whQ
+         +PS8ZEibcxVIQNj+vvy6COHUQxJMe1Bcgxv9nirSrIb3VvERVkxEATD4bf81BuC2YEtj
+         rwow==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1MaEi/6jkRqDkANr4fbcuLMBR0R/A3uS3CnDN9huOKCNo9VsSeyWsMZtDuxNr7SEhM+Zfjhq0EvpAHi/dvaVdOU6uwpcvFo2ezh3
+X-Gm-Message-State: AOJu0YyqNp7yzFEk8kyw1jcHiTTaLekAm10vav7mIUEV2mJdUTIEiT1V
+	/SMnOLUIRSQ/7y+H3On7vGmSfVM1bU8PosEBJpuh3RatnKEpLyucnTEquZieyeoU3rl7dN7HFth
+	bEdcCikdHZEx5vkPkZALl3dlChA==
+X-Google-Smtp-Source: AGHT+IGQ0kaxipcpN+AMKyQsL99MKALkBH0wZMe834vcYOvJGUzDPB28UULwwd+JdyoFZzcBb+pYU7AhTng+2Qb9itM=
 X-Received: from samitolvanen.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:4f92])
- (user=samitolvanen job=sendgmr) by 2002:a05:6902:100f:b0:dfd:d6ec:4e3b with
- SMTP id 3f1490d57ef6-dff15399367mr3619876276.7.1718647128807; Mon, 17 Jun
- 2024 10:58:48 -0700 (PDT)
-Date: Mon, 17 Jun 2024 17:58:32 +0000
+ (user=samitolvanen job=sendgmr) by 2002:a25:ab0d:0:b0:dff:1d27:4b80 with SMTP
+ id 3f1490d57ef6-e022392641amr44457276.4.1718647132243; Mon, 17 Jun 2024
+ 10:58:52 -0700 (PDT)
+Date: Mon, 17 Jun 2024 17:58:34 +0000
 In-Reply-To: <20240617175818.58219-17-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,19 +59,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240617175818.58219-17-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14655; i=samitolvanen@google.com;
- h=from:subject; bh=XeWLpjfbip2cG1reCp5fuwFDg0zCF0I9155zvse/ZJc=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk8BR59D/orRkAZgweMqljSH/+OkombAD0jp
- 16TM3Cl+yaJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5PAAKCRBMtfaEi7xW
- 7jtDC/9KMOiJdtqQmd5yxeu9lQtRLDPRU8fXZcwwe+m9L7fQNt9m4tEmVkD3cHo/0qJynlRygzR
- FGxxenl3OadcMMwHEvQAwL7+xbzS1xmPGA8q3/GH++yL86nlY+UiqEgaoCJ1Zt16Una6K5aixt/
- Szt3xHwLJXzIGX5LXdZp1WpLCmjMqYaPcLyj0+RFSr35a/aaSNVLkrYe0CNuhXGWsEEnXJz+Z8H
- hQTPFOU4r/TgqI616+OjNX7HCZYDzVLTsciRVWN0BPq1ybvfdNgzs2t6j8fvbDqIeNmDu2f/Hct
- +FUEKr8RNFf4y38ml9Z/uCE8/EsW6ZDBJoaGrF+cdKvoJi+weBxDr55cvCTpXDzn1A2ry5sv6MP
- +KA22t/oizWEYDimLLtTU3Bb63Kxh8GcUzfDlhEi3XtEpeVXVTLo8lay3cKTqwGGucIlunlNaNc dS9rxJGLfpk0e9RqjLHahC4/ao+yAQXfT4D0YhK6iPicI/Bq1MnYK4l/Uoo/SPN8ogtTs=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4578; i=samitolvanen@google.com;
+ h=from:subject; bh=fgkHPoIfKV45x9z/FkKUVFWMMp1fQbapxOYrE3e+eC0=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk8LDHvXIagYgFxknPxDdn8T7FgRTBtTGHds
+ CYsT4RaZamJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5PAAKCRBMtfaEi7xW
+ 7pyDC/wIk2JiSe2ugPHTOqu/njY6MVYno9CbIgmrLTZ0ZnVep6zki2FMFDLiAE29rs9ul7uERoe
+ 61Q5nEgznEwOdDHFzHScSXRFFoIbNTAZJ8Too04vEMhHatyd3+r0J2sUPSbk5objzs2RBjWXVOJ
+ +HJWS9xd2kwA1WEvGODVBo6k9WX26WKsxUR6ug0YZ4DCsBRj8/JdygTUEhnZm3zDlIsh3CChA1Q
+ OP24DTzd0veW8UhuU6HasbiKGeld/Zpc++SJ+9CxSycH6XJxzvNyf/t4xVP8K4iBAk3fNxhWNVZ
+ dEpMWHA9qOyST2nWwEzUDxDuX6Ops1r74rScwidUizuA1wKxCJKhysN+R87QRIyjdeQ4Wd76LR5
+ cC7hwZKIR9/KlC6lKe/HylfxgeRl39fveo5Lf820BN2nuDjjapNM8sf049Fdl+IRJKiEn3zGPgq 1GceOJLEwD2pwfTdrYjejSqR7O7OwIFPUK0Uz8eJtceNHcXGCizMdAadlBQdgE8z/kaXc=
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <20240617175818.58219-30-samitolvanen@google.com>
-Subject: [PATCH 13/15] modpost: Add support for hashing long symbol names
+Message-ID: <20240617175818.58219-32-samitolvanen@google.com>
+Subject: [PATCH 15/15] kbuild: Use gendwarfksyms to generate Rust symbol versions
 From: Sami Tolvanen <samitolvanen@google.com>
 To: Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
 	Miguel Ojeda <ojeda@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -81,478 +81,122 @@ Cc: Matthew Maurer <mmaurer@google.com>, Alex Gaynor <alex.gaynor@gmail.com>,
 	rust-for-linux@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rust frequently has symbol names longer than MODULE_NAME_LEN, because
-the full namespace path is encoded into the mangled name. Instead of
-modpost failing when running into a long name with CONFIG_MODVERSIONS,
-store a hash of the name in struct modversion_info.
+Use gendwarfksyms to generate symbol versions for exported Rust symbols,
+and allow CONFIG_MODVERSIONS to be enabled with CONFIG_RUST, assuming the
+debugging information needed by gendwarfksyms is also available.
 
-To avoid breaking userspace tools that parse the __versions array,
-include a null-terminated hash function name at the beginning of the
-name string, followed by a binary hash. In order to keep .mod.c files
-more human-readable, add a comment with the full symbol name before the
-array entry. Example output in rust_minimal.mod.c:
-
-  static const struct modversion_info ____versions[]
-  __used __section("__versions") = {
-        /* _RNvNtNtCs1cdwasc6FUb_6kernel5print14format_strings4INFO */
-        { 0x9ec5442f, "sha256\x00\x56\x96\xf4\x27\xdb\x4a\xbf[...]" },
-        { 0x1d6595b1, "_RNvNtCs1cdwasc6FUb_6kernel5print11call_printk" },
-        { 0x3c642974, "__rust_dealloc" },
-        ...
-  };
-
-modprobe output for the resulting module:
-
-  $ modprobe --dump-modversions rust_minimal.ko
-  0x9ec5442f	sha256
-  0x1d6595b1	_RNvNtCs1cdwasc6FUb_6kernel5print11call_printk
-  0x3c642974	__rust_dealloc
-  ...
-
-While the output is less useful, the tool continues to work and can be
-later updated to produce more helpful output for hashed symbols.
-
-Note that this patch adds a generic SHA-256 implementation to modpost
-adapted from the Crypto API, but other hash functions may be used in
-future if needed.
-
-Suggested-by: Matthew Maurer <mmaurer@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- scripts/mod/Makefile  |   4 +-
- scripts/mod/modpost.c |  20 ++-
- scripts/mod/modpost.h |  20 +++
- scripts/mod/symhash.c | 327 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 364 insertions(+), 7 deletions(-)
- create mode 100644 scripts/mod/symhash.c
+ Makefile      |  6 ++++++
+ init/Kconfig  |  2 +-
+ rust/Makefile | 30 ++++++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/scripts/mod/Makefile b/scripts/mod/Makefile
-index c729bc936bae..ddd59ea9027e 100644
---- a/scripts/mod/Makefile
-+++ b/scripts/mod/Makefile
-@@ -4,7 +4,7 @@ CFLAGS_REMOVE_empty.o += $(CC_FLAGS_LTO)
- hostprogs-always-y	+= modpost mk_elfconfig
- always-y		+= empty.o
+diff --git a/Makefile b/Makefile
+index 14427547dc1e..0701917c5172 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1344,6 +1344,12 @@ prepare: tools/bpf/resolve_btfids
+ endif
+ endif
  
--modpost-objs	:= modpost.o file2alias.o sumversion.o symsearch.o
-+modpost-objs	:= modpost.o file2alias.o symhash.o sumversion.o symsearch.o
++ifdef CONFIG_MODVERSIONS
++ifdef CONFIG_RUST
++prepare: tools/gendwarfksyms
++endif
++endif
++
+ PHONY += resolve_btfids_clean
  
- devicetable-offsets-file := devicetable-offsets.h
+ resolve_btfids_O = $(abspath $(objtree))/tools/bpf/resolve_btfids
+diff --git a/init/Kconfig b/init/Kconfig
+index 72404c1f2157..ef29f002e932 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1903,7 +1903,7 @@ config RUST
+ 	depends on HAVE_RUST
+ 	depends on RUST_IS_AVAILABLE
+ 	depends on !CFI_CLANG
+-	depends on !MODVERSIONS
++	depends on !MODVERSIONS || (DEBUG_INFO && !DEBUG_INFO_REDUCED && !DEBUG_INFO_SPLIT)
+ 	depends on !GCC_PLUGINS
+ 	depends on !RANDSTRUCT
+ 	depends on !DEBUG_INFO_BTF || PAHOLE_HAS_LANG_EXCLUDE
+diff --git a/rust/Makefile b/rust/Makefile
+index f70d5e244fee..385cdf5dc320 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -356,10 +356,11 @@ $(obj)/bindings/bindings_helpers_generated.rs: private bindgen_target_extra = ;
+ $(obj)/bindings/bindings_helpers_generated.rs: $(src)/helpers.c FORCE
+ 	$(call if_changed_dep,bindgen)
  
-@@ -15,7 +15,7 @@ targets += $(devicetable-offsets-file) devicetable-offsets.s
++rust_exports = $(NM) -p --defined-only $(1) | awk '/ (T|R|D) / { printf $(2),$(3) }'
++
+ quiet_cmd_exports = EXPORTS $@
+       cmd_exports = \
+-	$(NM) -p --defined-only $< \
+-		| awk '/ (T|R|D) / {printf "EXPORT_SYMBOL_RUST_GPL(%s);\n",$$3}' > $@
++	$(call rust_exports,$<,"EXPORT_SYMBOL_RUST_GPL(%s);\n",$$3) > $@
  
- # dependencies on generated files need to be listed explicitly
+ $(obj)/exports_core_generated.h: $(obj)/core.o FORCE
+ 	$(call if_changed,exports)
+@@ -420,12 +421,29 @@ ifneq ($(or $(CONFIG_ARM64),$(and $(CONFIG_RISCV),$(CONFIG_64BIT))),)
+ 		__ashlti3 __lshrti3
+ endif
  
--$(obj)/modpost.o $(obj)/file2alias.o $(obj)/sumversion.o $(obj)/symsearch.o: $(obj)/elfconfig.h
-+$(obj)/modpost.o $(obj)/file2alias.o $(obj)/symhash.o $(obj)/sumversion.o $(obj)/symsearch.o: $(obj)/elfconfig.h
- $(obj)/file2alias.o: $(obj)/$(devicetable-offsets-file)
++ifdef CONFIG_MODVERSIONS
++# When module versioning is enabled, calculate symbol versions from the DWARF
++# debugging information. We can't use a source code parser like genksyms,
++# because the source files don't have information about the final structure
++# layout and emitted symbols.
++gendwarfksyms := $(objtree)/tools/gendwarfksyms/gendwarfksyms
++
++cmd_gendwarfksyms = \
++	$(call rust_exports,$@,"%s %s\n",$$1$(comma)$$3) \
++		| $(gendwarfksyms) $@ >> $(dot-target).cmd
++endif
++
++define rule_rustc_library_with_exports
++	$(call cmd_and_fixdep,rustc_library)
++	$(call cmd,gendwarfksyms)
++endef
++
+ $(obj)/core.o: private skip_clippy = 1
+ $(obj)/core.o: private skip_flags = -Dunreachable_pub
+ $(obj)/core.o: private rustc_objcopy = $(foreach sym,$(redirect-intrinsics),--redefine-sym $(sym)=__rust$(sym))
+ $(obj)/core.o: private rustc_target_flags = $(core-cfgs)
+ $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
+-	+$(call if_changed_dep,rustc_library)
++	+$(call if_changed_rule,rustc_library_with_exports)
+ ifdef CONFIG_X86_64
+ $(obj)/core.o: scripts/target.json
+ endif
+@@ -438,7 +456,7 @@ $(obj)/alloc.o: private skip_clippy = 1
+ $(obj)/alloc.o: private skip_flags = -Dunreachable_pub
+ $(obj)/alloc.o: private rustc_target_flags = $(alloc-cfgs)
+ $(obj)/alloc.o: $(RUST_LIB_SRC)/alloc/src/lib.rs $(obj)/compiler_builtins.o FORCE
+-	+$(call if_changed_dep,rustc_library)
++	+$(call if_changed_rule,rustc_library_with_exports)
  
- quiet_cmd_elfconfig = MKELF   $@
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index f48d72d22dc2..2631e3e75a5c 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1900,7 +1900,10 @@ static void add_exported_symbols(struct buffer *buf, struct module *mod)
-  **/
- static void add_versions(struct buffer *b, struct module *mod)
- {
-+	char hash[SYMHASH_STR_LEN];
- 	struct symbol *s;
-+	const char *name;
-+	size_t len;
+ $(obj)/build_error.o: $(src)/build_error.rs $(obj)/compiler_builtins.o FORCE
+ 	+$(call if_changed_dep,rustc_library)
+@@ -447,7 +465,7 @@ $(obj)/bindings.o: $(src)/bindings/lib.rs \
+     $(obj)/compiler_builtins.o \
+     $(obj)/bindings/bindings_generated.rs \
+     $(obj)/bindings/bindings_helpers_generated.rs FORCE
+-	+$(call if_changed_dep,rustc_library)
++	+$(call if_changed_rule,rustc_library_with_exports)
  
- 	if (!modversions)
- 		return;
-@@ -1917,13 +1920,20 @@ static void add_versions(struct buffer *b, struct module *mod)
- 				s->name, mod->name);
- 			continue;
- 		}
--		if (strlen(s->name) >= MODULE_NAME_LEN) {
--			error("too long symbol \"%s\" [%s.ko]\n",
--			      s->name, mod->name);
--			break;
-+		len = strlen(s->name);
-+		/*
-+		 * For symbols with a long name, use the hash format, but include
-+		 * the full symbol name as a comment to keep the generated files
-+		 * human-readable.
-+		 */
-+		if (len >= MODULE_NAME_LEN) {
-+			buf_printf(b, "\t/* %s */\n", s->name);
-+			name = symhash_str(s->name, len, hash);
-+		} else {
-+			name = s->name;
- 		}
- 		buf_printf(b, "\t{ %#8x, \"%s\" },\n",
--			   s->crc, s->name);
-+			   s->crc, name);
- 	}
+ $(obj)/uapi.o: $(src)/uapi/lib.rs \
+     $(obj)/compiler_builtins.o \
+@@ -458,6 +476,6 @@ $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
+     --extern build_error --extern macros --extern bindings --extern uapi
+ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
+     $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
+-	+$(call if_changed_dep,rustc_library)
++	+$(call if_changed_rule,rustc_library_with_exports)
  
- 	buf_printf(b, "};\n");
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index ee43c7950636..cd2eb718936b 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -183,6 +183,26 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
- 			Elf_Sym *sym, const char *symname);
- void add_moddevtable(struct buffer *buf, struct module *mod);
- 
-+/* symhash.c */
-+/*
-+ * For symbol names longer than MODULE_NAME_LEN, encode a hash of the
-+ * symbol name in version information as follows:
-+ *
-+ * <hash name>\0<binary hash of the symbol name>
-+ *
-+ * e.g. as a string in .mod.c files:
-+ * "sha256\x00\xNN{32}"
-+ *
-+ * The string is null terminated after the hash name to avoid breaking
-+ * userspace tools that parse the __versions table and don't understand
-+ * the format.
-+ */
-+#define SYMHASH_STR_PREFIX	"sha256\\x00"
-+#define SYMHASH_STR_PREFIX_LEN	(sizeof(SYMHASH_STR_PREFIX) - 1)
-+#define SYMHASH_STR_LEN		(SYMHASH_STR_PREFIX_LEN + 4*32 + 1)
-+
-+char *symhash_str(const char *name, size_t len, char hash_str[SYMHASH_STR_LEN]);
-+
- /* sumversion.c */
- void get_src_version(const char *modname, char sum[], unsigned sumlen);
- 
-diff --git a/scripts/mod/symhash.c b/scripts/mod/symhash.c
-new file mode 100644
-index 000000000000..d0c9cf5f1f6c
---- /dev/null
-+++ b/scripts/mod/symhash.c
-@@ -0,0 +1,327 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * symhash.c
-+ *
-+ * Symbol name hashing using a SHA-256 implementation adapted from the
-+ * Cryptographic API.
-+ */
-+#include <byteswap.h>
-+#include "modpost.h"
-+
-+#if HOST_ELFDATA == ELFDATA2MSB
-+/* Big endian */
-+#define be32_to_cpu(val) (val)
-+#define cpu_to_be32(val) (val)
-+#define cpu_to_be64(val) (val)
-+#else
-+/* Little endian */
-+#define be32_to_cpu(val) bswap_32(val)
-+#define cpu_to_be32(val) bswap_32(val)
-+#define cpu_to_be64(val) bswap_64(val)
-+#endif
-+
-+#define barrier_data(ptr) __asm__ __volatile__("": :"r"(ptr) :"memory")
-+
-+static inline void memzero_explicit(void *s, size_t count)
-+{
-+	memset(s, 0, count);
-+	barrier_data(s);
-+}
-+
-+static inline uint32_t ror32(uint32_t word, unsigned int shift)
-+{
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-+}
-+
-+/*
-+ * include/crypto/sha2.h - Common values for SHA-2 algorithms
-+ */
-+#define SHA256_DIGEST_SIZE      32
-+#define SHA256_BLOCK_SIZE       64
-+
-+#define SHA256_H0	0x6a09e667UL
-+#define SHA256_H1	0xbb67ae85UL
-+#define SHA256_H2	0x3c6ef372UL
-+#define SHA256_H3	0xa54ff53aUL
-+#define SHA256_H4	0x510e527fUL
-+#define SHA256_H5	0x9b05688cUL
-+#define SHA256_H6	0x1f83d9abUL
-+#define SHA256_H7	0x5be0cd19UL
-+
-+struct sha256_state {
-+	uint32_t state[SHA256_DIGEST_SIZE / 4];
-+	uint64_t count;
-+	uint8_t buf[SHA256_BLOCK_SIZE];
-+};
-+
-+static inline void sha256_init(struct sha256_state *sctx)
-+{
-+	sctx->state[0] = SHA256_H0;
-+	sctx->state[1] = SHA256_H1;
-+	sctx->state[2] = SHA256_H2;
-+	sctx->state[3] = SHA256_H3;
-+	sctx->state[4] = SHA256_H4;
-+	sctx->state[5] = SHA256_H5;
-+	sctx->state[6] = SHA256_H6;
-+	sctx->state[7] = SHA256_H7;
-+	sctx->count = 0;
-+}
-+
-+/*
-+ * include/crypto/sha256_base.h - core logic for SHA-256 implementations
-+ *
-+ * Copyright (C) 2015 Linaro Ltd <ard.biesheuvel@linaro.org>
-+ */
-+typedef void (sha256_block_fn)(struct sha256_state *sst, uint8_t const *src,
-+			       int blocks);
-+
-+static inline int lib_sha256_base_do_update(struct sha256_state *sctx,
-+					    const uint8_t *data,
-+					    unsigned int len,
-+					    sha256_block_fn *block_fn)
-+{
-+	unsigned int partial = sctx->count % SHA256_BLOCK_SIZE;
-+
-+	sctx->count += len;
-+
-+	if ((partial + len) >= SHA256_BLOCK_SIZE) {
-+		int blocks;
-+
-+		if (partial) {
-+			int p = SHA256_BLOCK_SIZE - partial;
-+
-+			memcpy(sctx->buf + partial, data, p);
-+			data += p;
-+			len -= p;
-+
-+			block_fn(sctx, sctx->buf, 1);
-+		}
-+
-+		blocks = len / SHA256_BLOCK_SIZE;
-+		len %= SHA256_BLOCK_SIZE;
-+
-+		if (blocks) {
-+			block_fn(sctx, data, blocks);
-+			data += blocks * SHA256_BLOCK_SIZE;
-+		}
-+		partial = 0;
-+	}
-+	if (len)
-+		memcpy(sctx->buf + partial, data, len);
-+
-+	return 0;
-+}
-+
-+static inline int lib_sha256_base_do_finalize(struct sha256_state *sctx,
-+					      sha256_block_fn *block_fn)
-+{
-+	const int bit_offset = SHA256_BLOCK_SIZE - sizeof(uint64_t);
-+	uint64_t *bits = (uint64_t *)(sctx->buf + bit_offset);
-+	unsigned int partial = sctx->count % SHA256_BLOCK_SIZE;
-+
-+	sctx->buf[partial++] = 0x80;
-+	if (partial > bit_offset) {
-+		memset(sctx->buf + partial, 0x0, SHA256_BLOCK_SIZE - partial);
-+		partial = 0;
-+
-+		block_fn(sctx, sctx->buf, 1);
-+	}
-+
-+	memset(sctx->buf + partial, 0x0, bit_offset - partial);
-+	*bits = cpu_to_be64(sctx->count << 3);
-+	block_fn(sctx, sctx->buf, 1);
-+
-+	return 0;
-+}
-+
-+static inline int lib_sha256_base_finish(struct sha256_state *sctx, uint8_t *out,
-+					 unsigned int digest_size)
-+{
-+	uint32_t *digest = (uint32_t *)out;
-+	int i;
-+
-+	for (i = 0; digest_size > 0; i++, digest_size -= sizeof(uint32_t))
-+		*digest++ = cpu_to_be32(sctx->state[i]);
-+
-+	memzero_explicit(sctx, sizeof(*sctx));
-+	return 0;
-+}
-+
-+/*
-+ * lib/crypto/sha256.c
-+ *
-+ * SHA-256, as specified in
-+ * http://csrc.nist.gov/groups/STM/cavp/documents/shs/sha256-384-512.pdf
-+ *
-+ * SHA-256 code by Jean-Luc Cooke <jlcooke@certainkey.com>.
-+ *
-+ * Copyright (c) Jean-Luc Cooke <jlcooke@certainkey.com>
-+ * Copyright (c) Andrew McDonald <andrew@mcdonald.org.uk>
-+ * Copyright (c) 2002 James Morris <jmorris@intercode.com.au>
-+ * Copyright (c) 2014 Red Hat Inc.
-+ */
-+static const uint32_t SHA256_K[] = {
-+	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
-+	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-+	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
-+	0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-+	0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
-+	0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-+	0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
-+	0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-+	0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
-+	0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-+	0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
-+	0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-+	0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
-+	0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-+	0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
-+	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
-+};
-+
-+static inline uint32_t Ch(uint32_t x, uint32_t y, uint32_t z)
-+{
-+	return z ^ (x & (y ^ z));
-+}
-+
-+static inline uint32_t Maj(uint32_t x, uint32_t y, uint32_t z)
-+{
-+	return (x & y) | (z & (x | y));
-+}
-+
-+#define e0(x)       (ror32(x, 2) ^ ror32(x, 13) ^ ror32(x, 22))
-+#define e1(x)       (ror32(x, 6) ^ ror32(x, 11) ^ ror32(x, 25))
-+#define s0(x)       (ror32(x, 7) ^ ror32(x, 18) ^ (x >> 3))
-+#define s1(x)       (ror32(x, 17) ^ ror32(x, 19) ^ (x >> 10))
-+
-+static inline void LOAD_OP(int I, uint32_t *W, const uint8_t *input)
-+{
-+	W[I] = be32_to_cpu(*((__uint32_t *)input + I));
-+}
-+
-+static inline void BLEND_OP(int I, uint32_t *W)
-+{
-+	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
-+}
-+
-+#define SHA256_ROUND(i, a, b, c, d, e, f, g, h) do {		\
-+	uint32_t t1, t2;						\
-+	t1 = h + e1(e) + Ch(e, f, g) + SHA256_K[i] + W[i];	\
-+	t2 = e0(a) + Maj(a, b, c);				\
-+	d += t1;						\
-+	h = t1 + t2;						\
-+} while (0)
-+
-+static void sha256_transform(uint32_t *state, const uint8_t *input, uint32_t *W)
-+{
-+	uint32_t a, b, c, d, e, f, g, h;
-+	int i;
-+
-+	/* load the input */
-+	for (i = 0; i < 16; i += 8) {
-+		LOAD_OP(i + 0, W, input);
-+		LOAD_OP(i + 1, W, input);
-+		LOAD_OP(i + 2, W, input);
-+		LOAD_OP(i + 3, W, input);
-+		LOAD_OP(i + 4, W, input);
-+		LOAD_OP(i + 5, W, input);
-+		LOAD_OP(i + 6, W, input);
-+		LOAD_OP(i + 7, W, input);
-+	}
-+
-+	/* now blend */
-+	for (i = 16; i < 64; i += 8) {
-+		BLEND_OP(i + 0, W);
-+		BLEND_OP(i + 1, W);
-+		BLEND_OP(i + 2, W);
-+		BLEND_OP(i + 3, W);
-+		BLEND_OP(i + 4, W);
-+		BLEND_OP(i + 5, W);
-+		BLEND_OP(i + 6, W);
-+		BLEND_OP(i + 7, W);
-+	}
-+
-+	/* load the state into our registers */
-+	a = state[0];  b = state[1];  c = state[2];  d = state[3];
-+	e = state[4];  f = state[5];  g = state[6];  h = state[7];
-+
-+	/* now iterate */
-+	for (i = 0; i < 64; i += 8) {
-+		SHA256_ROUND(i + 0, a, b, c, d, e, f, g, h);
-+		SHA256_ROUND(i + 1, h, a, b, c, d, e, f, g);
-+		SHA256_ROUND(i + 2, g, h, a, b, c, d, e, f);
-+		SHA256_ROUND(i + 3, f, g, h, a, b, c, d, e);
-+		SHA256_ROUND(i + 4, e, f, g, h, a, b, c, d);
-+		SHA256_ROUND(i + 5, d, e, f, g, h, a, b, c);
-+		SHA256_ROUND(i + 6, c, d, e, f, g, h, a, b);
-+		SHA256_ROUND(i + 7, b, c, d, e, f, g, h, a);
-+	}
-+
-+	state[0] += a; state[1] += b; state[2] += c; state[3] += d;
-+	state[4] += e; state[5] += f; state[6] += g; state[7] += h;
-+}
-+
-+static void sha256_transform_blocks(struct sha256_state *sctx,
-+				    const uint8_t *input, int blocks)
-+{
-+	uint32_t W[64];
-+
-+	do {
-+		sha256_transform(sctx->state, input, W);
-+		input += SHA256_BLOCK_SIZE;
-+	} while (--blocks);
-+
-+	memzero_explicit(W, sizeof(W));
-+}
-+
-+static void sha256_update(struct sha256_state *sctx, const uint8_t *data, unsigned int len)
-+{
-+	lib_sha256_base_do_update(sctx, data, len, sha256_transform_blocks);
-+}
-+
-+static void __sha256_final(struct sha256_state *sctx, uint8_t *out, int digest_size)
-+{
-+	lib_sha256_base_do_finalize(sctx, sha256_transform_blocks);
-+	lib_sha256_base_finish(sctx, out, digest_size);
-+}
-+
-+static void sha256_final(struct sha256_state *sctx, uint8_t *out)
-+{
-+	__sha256_final(sctx, out, 32);
-+}
-+
-+char *symhash_str(const char *name, size_t len, char hash_str[SYMHASH_STR_LEN])
-+{
-+	static const char hex[] = "0123456789abcdef";
-+	uint8_t hash[SHA256_DIGEST_SIZE];
-+	struct sha256_state sctx;
-+	char *p = hash_str;
-+
-+	/*
-+	 * If the symbol name has an initial dot, dedotify it before hashing to match
-+	 * PPC64 behavior in arch/powerpc/kernel/module_64.c.
-+	 */
-+	if (name[0] == '.') {
-+		name++;
-+		len--;
-+	}
-+
-+	sha256_init(&sctx);
-+	sha256_update(&sctx, (const uint8_t *)name, len);
-+	sha256_final(&sctx, hash);
-+
-+	/* Null-terminated prefix */
-+	memcpy(p, SYMHASH_STR_PREFIX, SYMHASH_STR_PREFIX_LEN);
-+	p += SYMHASH_STR_PREFIX_LEN;
-+
-+	/* Binary hash */
-+	for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
-+		*p++ = '\\';
-+		*p++ = 'x';
-+		*p++ = hex[(hash[i] & 0xf0) >> 4];
-+		*p++ = hex[hash[i] & 0x0f];
-+	}
-+
-+	hash_str[SYMHASH_STR_LEN - 1] = '\0';
-+	return hash_str;
-+}
+ endif # CONFIG_RUST
 -- 
 2.45.2.627.g7a2c4fd464-goog
 
