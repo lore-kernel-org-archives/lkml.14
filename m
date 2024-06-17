@@ -1,125 +1,138 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60197190053
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0AA1922EF
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616796; cv=none; b=DRHtTpJwPddccA5YOAutoeT6Wc1GZJU0Fsj9BgXgEBOPyJqgEMfCXmgalrOkkcYF+z1k7Z81sswx5bsVU5wCorrHmjsTRuswMoKkrG0FM8dhRlBvQ8ItgzE5rJOSbXKjrm1wRiEsCop2PI0RXMUpVAwq6NfdIyTIzEJdbKExcAA=
+	t=1718616842; cv=none; b=MlXuQmk4Bmpv0GWWP9hVWnia2HB5gVtkhBwHNeIUo29/2JENHTjARxafptX8W5mobZZIwaCNbJEF5GH8JBA5n1z9c5L8FnyXvdd8pgxCqVhJrs1J5aPjxYNS2f9JHnasZI37Rf85agDHOVQlgANJENJjXce7hNNykeW3xW5+tsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616796; c=relaxed/simple;
-	bh=cuDoyOzQS8+YGUYNphhgplN7srLAz/Uq/xuPLYwdlvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PpCjZl3wuLx+b/QgCxlGUHfed6bLIIS7fwk5Jfk7j1H7K+E6bA7XmQOSvV09Ns5iyVKxVZR5ZYvrWJKYAtJoYmYwxp/Jg53orB2VxgRTaoTXjcSJ3AFUZ1dwBw1oWyEfApPLW5cMQAgVSwvfci25bCuLiDk7OAXaTnmWooh7Oxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XoFRL6TP; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718616842; c=relaxed/simple;
+	bh=7NSvCXohwZLOOlJWIUDNVZNNLgZsT49wKsS05NVWjKs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s5Yxq8PPckHK92F9YarSehCdlpu3DC9SCoyS0JFYJImmfxDBGV4WWQhh75H4c+uczPuWaap/HsVuy0E6jy5ku1Um/oxzbo3Y//qNJk+vdmg8QIjI/DLd5un0jEQnb2TGLw3cWjglyYBzWHRsR3QSZ6OjBfC9gJyiP/bhHKPHMEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=cMEnLm7d; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XoFRL6TP"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so42728611fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:33:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="cMEnLm7d"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7979198531fso308852685a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718616792; x=1719221592; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XR5GYB9eKu58vQFoGUBee/KjF/Xw+p5AvKjlrAjbe4E=;
-        b=XoFRL6TPRXrl/gtBWDcnwd0t7ToJfi3G5PU0wekKq/sWwT4/dOsIFuiV0M4mM12koY
-         hbI8u1e2NlwHSMNiwRiQoYBSufnUXN74HdAZVFzPxuQyylAhCUQgeXV6tvzY10y5hwcd
-         iZ/VEdnIr3X35cc3kF6toriBEcZ94EiIAfIqQ+6HP/9WU3eqggOJuGsb1NEUR/OO5fnT
-         Ls7LtFGP6rvNT7ERd5wyiZT5Wa1kVBwtCFTD3DRRyMZ1cM+Ap96YWCS6vm067kmq4F9N
-         NjjJpHi0rRIriVPUixcEZj51HaFjCV/0KgeXyFQigDw9CxD9c2EJ0pI13fawwVMc7mtI
-         aXwg==
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718616838; x=1719221638; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dwjk23maxDbhwXR6knY3QoiO7g9DUPuAbXWMaxi9WAo=;
+        b=cMEnLm7d6rQXhTRW5L2AZ7V5TKBCztTO8KfFVrdF/clZ8fsAx8wMA56OQAuSsJ1GTf
+         S1SlRlKjbU+mBs4ArY0kAghfr/raUNz/EQUTYSnYCgLqrnK9wjzV1AYbXrK+ObCTk6fA
+         IfRq/QPSJL1GEPInW4UtjBDtHndx1u1LDWOv8cbgftXz/esjc8ArW7MxPVoIg+zvxKyu
+         yJ1Ub9KUiPflSMCCRcFIL23KY4GJqkl9pvpANkSTXLiRIZKrJ0udfrUBJI/UHMtpnDnK
+         zyoBFWhiOTFAVeUylZ6R6THjQfF7RydR0aR1Apu/Lhn1XOat0LPYPx/gmUCw4pqc6Xio
+         RY+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718616792; x=1719221592;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XR5GYB9eKu58vQFoGUBee/KjF/Xw+p5AvKjlrAjbe4E=;
-        b=XSInJ3Xk7oOJrCsFf10o8jFBj6DwmS18xXPHW5QM1aYrlvDOMcB/KwP5pAoneb7qY7
-         9HwLgTaJJWNP2jJRzjd2Axj/P/i4KX4N9LTbs8MrWLdbn61cHaeJ4uHT2AxKx/WZGFYf
-         dBq5XjIuNSwGgOyorvPedhVBP+GHvn1zx63lf3r3BI+lvcUQhmWx7vVjs4NBfwg3sYVy
-         xlRHQXZlssbTNRTvuPnG/R8IY3ZYBAogjsmY6JTsqzK7wRKiUy6n8A9sLmMh7Wv70m2K
-         oOBPhcC8SzBo6Df4Njc2TtWUCWLMpYplY3A1nMbsP1PoZmMmvS5bUXUFri0lMHzzHWp2
-         iGNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUs//1oEy2IY9HJW3mfYWiC9O27ouA3JJExcbSG0TLIp4gQC8wNJL/44ZgcdbRX4jqAbPNL9MV6dSdY0d3XNPX+JdA/QmMYQyrGD7/3
-X-Gm-Message-State: AOJu0YxBXKx6ZB7xWSMnNlbgCLwAdXp7UEJAhKtC2+MIU3KPbQtlbSn5
-	gdN1jtohIISjl+IGubEE5FffL11yzLvPTjLxBkG+p1w2xY7IRV3ZZGpFZvOkJwE=
-X-Google-Smtp-Source: AGHT+IEa3K7XWz/lzC+j+im6KTvLDjDG7zCAkU3RZRrqaUfwf+xaegKVQs8z15qdzYiqFHNsN+qEbw==
-X-Received: by 2002:a2e:9f44:0:b0:2ea:e98e:4399 with SMTP id 38308e7fff4ca-2ec0e5ffc00mr63770771fa.36.1718616792269;
-        Mon, 17 Jun 2024 02:33:12 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f6320bfdsm153872995e9.37.2024.06.17.02.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 02:33:11 -0700 (PDT)
-Date: Mon, 17 Jun 2024 12:33:08 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Karol Herbst <kherbst@redhat.com>
-Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/nouveau: Use kmemdup_array() instead of kmemdup()
-Message-ID: <a3e8cecc-77dd-4a4a-bb12-c1d6759d3efb@moroto.mountain>
+        d=1e100.net; s=20230601; t=1718616838; x=1719221638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dwjk23maxDbhwXR6knY3QoiO7g9DUPuAbXWMaxi9WAo=;
+        b=uO/VNM8uz8SPa8KuO/7mbszAUc13l1P692mu619YuRXTeKqswCFOdnFe+OqfW+0H81
+         bGmctpn3T+4Dkyd671/pvI8wbqYjwv9FRSI3jJ75j13yrbVfgOLV7ornQkCOcmcL7pBe
+         jk0ffwa4fsA9yPHOyKzwc26zMtRRkS41w6pwv5Sh8jU3Gc+Rbfw5vhR+dmEwCrYZBA7h
+         0w73UrxR9Az3g6obHOHxOH3NCNPGV0X1CrHefo90TnUuBHVyPCDDGlDC7EpJaqVvm19U
+         N636p1tDhqUvFJ+BFGM2Iw/rXSM2bA2bU6lv/ZEcrg+8Dd/Emdk2ztBwBHckELsWdE8s
+         s9RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+//73/j9Mv/XaH3ao0fZACyYPEzsOH0eHwoOaSHDDw2s+iV+6ycaxGAJ4wNZxaUVPZwsVpQuZqKZvzV7rd5VjScJzfpyX9i49LI56
+X-Gm-Message-State: AOJu0YxooKA761JjRuItMB1U++S01f5yT2/2Da4x2zRX4Pjvofkx9nvd
+	i3+U7ZHjUGop01w8PPo/xFrnIXPMsw7rRh7fAJvmjHWGYlmNvfsD0LiXuWN/fDZesWCMIR+3oY6
+	xdrOa867Kow1iAgjlPRRbCkVK79reJYwtELzFdA==
+X-Google-Smtp-Source: AGHT+IEAX5KtNwSxz024jCUDuTs+t2XcQ1Uu/1Qu8JcsorpEu10yK9me2YfmiTGJCyrzuk8/c2n+Pk4pb6M+8oQC+gs=
+X-Received: by 2002:a0c:fbc2:0:b0:6b2:9c0d:4849 with SMTP id
+ 6a1803df08f44-6b2afb7bb5cmr87920016d6.0.1718616838197; Mon, 17 Jun 2024
+ 02:33:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
+ <20240614163500.386747-1-piotr.wojtaszczyk@timesys.com> <20240614163500.386747-2-piotr.wojtaszczyk@timesys.com>
+ <83cbf43e-c927-449f-8b7e-5c8d3ee8cece@kernel.org>
+In-Reply-To: <83cbf43e-c927-449f-8b7e-5c8d3ee8cece@kernel.org>
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Date: Mon, 17 Jun 2024 11:33:47 +0200
+Message-ID: <CAG+cZ06EeXUDiLsDXkz+6EHqJwpvv2MWwfpvB8AYw0=ZhUkTfQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, "J.M.B. Downing" <jonathan.downing@nautel.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Chancel Liu <chancel.liu@nxp.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, linux-sound@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, 
+	linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use kmemdup_array() because we're allocating an array.
+On Sat, Jun 15, 2024 at 12:01=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+> Do not attach (thread) your patchsets to some other threads (unrelated
+> or older versions). This buries them deep in the mailbox and might
+> interfere with applying entire sets.
 
-The main difference between kmemdup() and kmemdup_array() is that the
-kmemdup_array() function has integer overflow checking built it.  The
-"args->in_sync.count" variable is a u32 so integer overflows would only
-be a concern on 32bit systems.  Fortunately, however, the u_memcpya()
-function has integer overflow checking which means that it is not an
-issue.
+I'm sorry about that, it won't happen again.
 
-Still using kmemdup_array() is more appropriate and makes auditing the
-code easier.
+> > +  dma-vc-names:
+>
+> Missing vendor prefix... but I don't really get what's the point of this
+> property.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/gpu/drm/nouveau/nouveau_sched.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Is "nxp,lpc3xxx-dma-vc-names" acceptable?
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
-index 32fa2e273965..53d8b0584a56 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
-@@ -45,10 +45,10 @@ nouveau_job_init(struct nouveau_job *job,
- 		if (job->sync)
- 			return -EINVAL;
- 
--		job->in_sync.data = kmemdup(args->in_sync.s,
--					 sizeof(*args->in_sync.s) *
--					 args->in_sync.count,
--					 GFP_KERNEL);
-+		job->in_sync.data = kmemdup_array(args->in_sync.s,
-+					args->in_sync.count,
-+					sizeof(*args->in_sync.s),
-+					GFP_KERNEL);
- 		if (!job->in_sync.data)
- 			return -ENOMEM;
- 	}
-@@ -60,10 +60,10 @@ nouveau_job_init(struct nouveau_job *job,
- 			goto err_free_in_sync;
- 		}
- 
--		job->out_sync.data = kmemdup(args->out_sync.s,
--					  sizeof(*args->out_sync.s) *
--					  args->out_sync.count,
--					  GFP_KERNEL);
-+		job->out_sync.data = kmemdup_array(args->out_sync.s,
-+					args->out_sync.count,
-+					sizeof(*args->out_sync.s),
-+					GFP_KERNEL);
- 		if (!job->out_sync.data) {
- 			ret = -ENOMEM;
- 			goto err_free_in_sync;
--- 
-2.43.0
+>
+> > +    $ref: /schemas/types.yaml#/definitions/string-array
+> > +    description: |
+> > +      names of virtual pl08x dma channels for tx and rx
+> > +      directions in this order.
+> > +    minItems: 2
+> > +    maxItems: 2
+>
+> What part of hardware or board configuration this represents?
+>
+> It wasn't here and nothing in changelog explained it.
 
+That's information which DMA signal and mux setting an I2S interface uses.
+It's a name (bus_id field) of platform data entry from phy3250.c in
+[PATCH v3 3/4].
+It's used by snd_soc_dai_init_dma_data() in [PATCH v3 4/4] to give the
+dmaengine a
+hint which dma config to use. The LPC32xx doesn't have yet a dmamux driver =
+like
+lpc18xx-dmamux.c therefore it still uses platform data entries for
+pl08x dma channels
+and 'SND_DMAENGINE_PCM_FLAG_NO_DT | SND_DMAENGINE_PCM_FLAG_COMPAT'
+flags in the devm_snd_dmaengine_pcm_register().
+Typically instead of this platform data you would use regular 'dma'
+and 'dma-names' if it had
+proper dmamux driver like lpc18xx-dmamux.c
+
+>
+> Drop.
+>
+>
+> > +
+> > +  "#sound-dai-cells":
+> > +    const: 0
+> > +
+
+The "dai-common.yam" doesn't declare a default value for this so
+isn't it required? It's declared in others yaml files like:
+Documentation/devicetree/bindings/sound/qcom,q6apm.yaml
+
+
+--
+Piotr Wojtaszczyk
+Timesys
