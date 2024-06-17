@@ -1,62 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EFC481DB;
-	Mon, 17 Jun 2024 14:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C4A5B1E4;
+	Mon, 17 Jun 2024 14:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636336; cv=none; b=lHwJXIEbZW1NspLZIIXw44RbzlF4nHwlNaN/S4gbLedUFZhEsURnYD9mDJH3nFtKimskzUj9bfGOlGVTMRlv26tSrcy8vB4i7gl87626fAsTjbNtbyh0wEadaJr51+1TOksi+7+7xCApaKPAjZWuICisGsP9uda/ykbGQIQ72as=
+	t=1718636371; cv=none; b=kUmZIfVhN4SO/ihQa2fH39sC1ZM4ApGPLmTETw3QFS1onnylVbah25MqHYcCE6jTDVOn559sE93iSmpeyKmi1CS6LXrmyU6yd9/3YUSZZRnWbK7QURyuXWPSOnYzdzaY+yXLrHeWN/umcLutRSdPd2V3mBcEcNvBi1jX73OJsrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636336; c=relaxed/simple;
-	bh=ZYgKTewbWFFfcvsQ1ekl5wQ9ScldGcNbBX9Tznn6ya4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=amZTSX6Dz/XT7x0VLHVb+iIMRyQwB0hATJE8kgfTdQy0D0skKAHqooNa69DmR7lzRMbFkzz4sP9S+qroOpkHZT3oqLH1AoGgY2mXbC9g5L4LZfDjFEq2Cwu34U5ZlaWN5SRAeMPGn6f3zeEhSYVP7FDi3tcJBD989vzhCMF0Hxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tICN7TiS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718636371; c=relaxed/simple;
+	bh=b1PJGTlv1eUZIrgNlnXwXE+3iK9WQzktLmR8xz3nq0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oRWTdVBcjt0wHd4H4vhmRes+6AILJei8HjHY7qwkfgj4ZOKvGZpk9UL7zkipxwaVgw/ZlUJ/0n0cd6JJJlBGRFlxoQSnrU9DOh7zMagY1fzdH3PhfYebx6kWgIPpGTjhgFMmdKrLqVUIwpoCZelJR/eOcv+tJvpqMoTixIpWRkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=qUciWrvK; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tICN7TiS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2737CC2BD10;
-	Mon, 17 Jun 2024 14:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718636335;
-	bh=ZYgKTewbWFFfcvsQ1ekl5wQ9ScldGcNbBX9Tznn6ya4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tICN7TiSxitxX2V6zbRUy739dgKwfqFNgNeI/8+s+oPFM1mLNHQ9tus6f/x7n1mvb
-	 6RaDQ9J7laaviwbzrCphuXO66XSBJo8LWCx4anlsV8RBh8i/rSl/tsnlIefoDgxXdr
-	 CiHWBPIHnoXpVKtl9pRxfEuv2+jcLVCxNv8533wBBxYqgu2ZPcwXhoLVRfw0ZctJzF
-	 6p1BED1Ijk6lIfR7BQa6MA+YbeBthMnWMUuiRyqp8ZIf50oh+1Ad4AMAjA5ux2vqYI
-	 JD1SzHksUa0KRLHGmsWituAuDtJ4n6JAJ4i2pzn6Zuxu1A5pk7Nko89jviO0/3f46t
-	 k3vdkADue+Puw==
-Date: Mon, 17 Jun 2024 07:58:54 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Elad Yifee <eladwf@gmail.com>
-Cc: patchwork-bot+netdevbpf@kernel.org, daniel@makrotopia.org, nbd@nbd.name,
- sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, lorenzo@kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- linux@armlinux.org.uk, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v6] net: ethernet: mtk_eth_soc: ppe: add
- support for multiple PPEs
-Message-ID: <20240617075854.29892c69@kernel.org>
-In-Reply-To: <CA+SN3sogd29XG7Sgz1EOqBqtxxcVzFkB_mFq10TW+eYGKtdDTQ@mail.gmail.com>
-References: <20240607082155.20021-1-eladwf@gmail.com>
-	<171824043128.29237.10490597706474690291.git-patchwork-notify@kernel.org>
-	<CA+SN3sogd29XG7Sgz1EOqBqtxxcVzFkB_mFq10TW+eYGKtdDTQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="qUciWrvK"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H5Q2nA001972;
+	Mon, 17 Jun 2024 09:34:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=82NKCBlNAyD/uD7R+ED4UFGffGVBQme/etpeP85WnTs=; b=
+	qUciWrvKskySBFPVRT64266PzVojuoy4SapsHRj7AuvgrL8LAoAYo7Hthl1gcFqa
+	XHsIyf8tuQTEldrmj9cKaD1htmE0Y43LimlHqKb5Zgbly5wAeku/VL9gFPMtLGfo
+	WoUeFL6XNr27D2j1sB6gQy0o5wBHvKZRxCLptSGd+1uajrH9XBvwy+cTZYZ0V/i+
+	RR//hPyRdEfdMyi73AE3WDX0Ty3IECOSNhKxsZh90V6ObyOp2Wk399zW68xEqrO2
+	KhMcvT40jOwmmkou4sOi7H8TJgjDDdTXobsv62E636VXiZvpZzl26LoyxeaM0ZKD
+	zMybmYmeCqaiNnItPeQMXQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ys7cjsx39-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 09:34:01 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Jun
+ 2024 15:33:59 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 17 Jun 2024 15:33:59 +0100
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 6B1B8820248;
+	Mon, 17 Jun 2024 14:33:59 +0000 (UTC)
+Message-ID: <3451fcf6-ff33-4f72-83d1-945b026b925b@opensource.cirrus.com>
+Date: Mon, 17 Jun 2024 15:33:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: cs35l56: Accept values greater than 0 as IRQ
+ numbers
+To: Mark Brown <broonie@kernel.org>,
+        Simon Trimmer
+	<simont@opensource.cirrus.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+References: <20240617135338.82006-1-simont@opensource.cirrus.com>
+ <917507e5-dc6c-4e18-a7e1-554625de604e@sirena.org.uk>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <917507e5-dc6c-4e18-a7e1-554625de604e@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: q0Z9tes_w-BZ_luaxhXYn0kLD8UA4f76
+X-Proofpoint-ORIG-GUID: q0Z9tes_w-BZ_luaxhXYn0kLD8UA4f76
+X-Proofpoint-Spam-Reason: safe
 
-On Sun, 16 Jun 2024 20:34:44 +0300 Elad Yifee wrote:
-> It appears that the current sanity check is insufficient. Should WED
-> be utilized, it will be necessary to find the appropriate PPE index
-> through an alternative method. Kindly revert the recent commit
-> temporarily until I come up with a solution
+On 17/06/2024 15:04, Mark Brown wrote:
+> On Mon, Jun 17, 2024 at 02:53:38PM +0100, Simon Trimmer wrote:
+>> IRQ lookup functions such as those in ACPI can return error values when
+>> an IRQ is not defined. The i2c core driver converts the error codes to a
+>> value of 0 and the SPI bus driver passes them unaltered to client device
+>> drivers.
+>>
+>> The cs35l56 driver should only accept positive non-zero values as IRQ
+>> numbers.
+> 
+> Have all architectures removed 0 as a valid IRQ?
 
-Please send the revert as a patch, with the explanation in the commit
-message. That's our usual process.
+ From discussion threads we can find 0 might still used on x86 for a
+legacy device.
+But the conversations we can find on this don't seem to exclude passing
+a negative error number, just that 0 can normally be assumed invalid.
+
+The kerneldoc for SPI says:
+
+  * @irq: Negative, or the number passed to request_irq() to receive
+  *	interrupts from this device.
+
