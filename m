@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B14191477
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1455197A8C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647111; cv=none; b=IA6PLke7cdVlazFZ5BU486ADjMBmWENjJNfk27zVMCyxghR0nmumoI1pMgR1tSAcStkqN2bhLPsz2d6EMFmczcSRp2ydP8rLCWs32s5iLmea4mHUr9gNzoqbACMrcTNxlTUQ6mVQRblvs0iRmXQ5HHLQrno26/4Pw2nRmCRJtfE=
+	t=1718647115; cv=none; b=dd4khXZUhmvI9d6J5siqNgf27LKWDD8cxd0z7LbVMWI279caUFd+oTW4c2/y287qpxkqm8D13ai+ycXD04AzfBjGfCtxVoQXsGxFNAEEuQYmXit+yWYcYlMRZPur/9TNqDzO/IM1K33icUyxzxEeaGWnX75ONGAivBA4RkbkxlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647111; c=relaxed/simple;
-	bh=Xs4KwoxMlQJYeEXm0rnpnTVWjgFyQKLzxA4GR17idpU=;
+	s=arc-20240116; t=1718647115; c=relaxed/simple;
+	bh=n0WO328t/R/22oR4dAFfOzsZotv9Vy1BGsad/Gul6sE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KciJBH9q8hF/2iTILkTdG968FLwMt8xl7auMJgpi7tAvRwJwwyBtkkZyOnq/HY4hfZ9g5p2V14cxOx6W+QebrHbXL3PZiK5QJF7+kajrUKq1VJ2UjwdWAUzRqCB3iWmv53b445/aqjHHtDi8AFQ6P/hrxW3ehssrFpRgkDwA+l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pL+/eo/q; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=T62TWhCsyJhaLhJE87eBTWPFDRMN2pFHfo/XFLxN3xOKMfn7sJcsTtOxyflheUhoU0qi2arIdjDUO6qxV5AqTYoPNqO2GtSY+tXTBD3gh+LUa3Wzeyjs0OK8vC1xaZ1CfXMSg2upcuMilxJ9Uh6+M0fTWOx9e8mgTOGsKYUISZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0dB5/dc7; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pL+/eo/q"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1f7166c6e1bso43028425ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0dB5/dc7"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfedfecada4so10051566276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718647107; x=1719251907; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718647113; x=1719251913; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUXYcBMIdUd+zaarsTS02Ok3bfGsgWGWrIF0wd751zk=;
-        b=pL+/eo/q9WpkR/igK7yNuzL7KuAMqcL7l8PkUAuOPFWBORerAWmYC3qf84RFdsL+FK
-         49YKRMU92tPmi6D/bQKNeJV1hEhC2flF9AMcq7shuhfVd7WvSzzd3V4skfFVm128fe+t
-         eyBcfcpAPSnjHM+Xqvdzj5C8BcIcCFuintprD2sqgNztfW80zExMobOPC3PMnudnayjp
-         TCfaHomCwbVQvLBC80qE8q0BtliM8zqrLO8kBVl+COir+AEj8tN9gXM8Y104pbg9trr3
-         TjIy2SxrkLiWui3wvYGvcA8thKEyWVHqeS8rlEtCZdIH0YUSu0Nxx8m5eSfjybLKyTHA
-         0R5Q==
+        bh=76YAbYQsN4iBlLO/AdhdCy35iLXKLbSen1j9CZMms3w=;
+        b=0dB5/dc7o7DUJLLo+CLU3qpr9i8DmqWFxFlI5ebrPhKx/m2yQ8Fq1stTxykAID4Bt8
+         oz2qhuP7HbrVD5GNhdj7XELiSakDyTqdi008sDaPkUFmCWYosHPj9WvDov0ZMJT67/hN
+         Zz5piK3RoVIJJPMRfQmB/ZDXeRfmi1yOUfSalXN2DLzSRggyKR2t483fCMYGd3ObRF1j
+         MPbXpw4iEnYqDTzfyvURH6F9U3tEy3IzEyAIJaCoQ9nXI+0Y8SJPH1g/lWbYi+JsO9PU
+         fi5+hVTpqHmh6lr8JNwYlelaNOz+gGUA3KuB0Dso/oM7pWTvWQxLIuhbd3PeaIJQDUux
+         AGZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647107; x=1719251907;
+        d=1e100.net; s=20230601; t=1718647113; x=1719251913;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUXYcBMIdUd+zaarsTS02Ok3bfGsgWGWrIF0wd751zk=;
-        b=qJPoYQjJDFA48OxefWrQdeohwWFfz54AX3MyUEFIoiAAcg0umjmnqBa2HLn1w3NcU2
-         wX5JHcAy+C2dl7jrdMsr4jCpQDeNJRr4647i0TJhOsbdhJtQdTFCv767M6jEkWQUOewG
-         JHvukWh1K9jpzZzM8M+7iEF5silLpvrMtl8tn5X0t+AO5Nuw15eAY5rXq8mcGgG8Z3dm
-         NobU+OvqpPID+gmAy5ckMyZIPStI5xHaxzrMY6rOsszW46F5mIWeoio13S5bIBgp+oHp
-         zkjW5Avn5ZngXiDolMeHu/EJRFI8AwCsxIsLUIvQr0T+wvwdviXLMEGKZomVBYQ4RDe1
-         izQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWmgek0iChiq7YIG7ricItff+X7PGGtmJQY6qCuaOx6ShJQ4r7apzrsPhOBWlTd0RycG2BwYz7AkjVd5j1HtzGz+swdzPxy1HhqIz6
-X-Gm-Message-State: AOJu0Yx5rM2nX1fhN6ltg9b4vTLA1VZtcad3gFDUUauLtvva9INOHE4Z
-	2UOOMUNT7y7cZLPK8cr35vGVx+50h/gAgMdUPVW8ZQLyhZ8dhinHaq329KvvhwvodWE+FOzIxus
-	HvdVLbTgVF3fvLI95m9SNwd/I/Q==
-X-Google-Smtp-Source: AGHT+IEA4cUUoJ3DpsCthdA+8I05uaHgHeN12zjF5sW6zMmJNlL+nFOI3fB/nnhyRIrUpruWLkHexG2JjXFqODJSEZg=
+        bh=76YAbYQsN4iBlLO/AdhdCy35iLXKLbSen1j9CZMms3w=;
+        b=uhg0KmbeV1KFZY2hE5xfbFAEIJDxcEj1SI18oNXK63QhrFAjzSYE/+EyLQgxF81ebi
+         ge2yR24OEbtUkhQUUVAADNmSIiShLykug9+c8en230+9cT0vik5cxGYlUo22t3+zIAGT
+         RpIXr8tQI1Kh5tWwUKQvKeCUCmsdnexKH3SG3A5CXw7mgvR0G9tdkqU6WpTkrZtqnGyg
+         gsPAEKQWMA2Vby6iGeDqPKjoIcSi1w+WfpFEOEkWBVdsl/bw2xlx0Zhab9DmvuzIF+Pa
+         p3jp6ZdJFxXIXYQ2HJ1GFYClTLc0uH1aXQrTGrDE0F6A4+SISDHzREFMUyfJa4gOVTnJ
+         /rEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQq46WndX2tXi269YKayx3d20BseF8JgUwDSIILfMeP7muH/fmdBSKmAM3PAG5wScOkJm/ZRbqnZEu7pLxqdBEs5GtfuOEz5H2oGc2
+X-Gm-Message-State: AOJu0YyoFNo1nciGqQ160vTPNI/neBRueGzfPKSbSuNPEWN862lqFxpr
+	/uKqjRHmst7Wb3ISdK3WWWNySUFIZjFN5PUU0Zub4ff1EtZD2dvu6wB834MRvH19bC/67fXtZn1
+	rDqVdmzxUNbsqsh99u+KCLg2NLg==
+X-Google-Smtp-Source: AGHT+IEFlFDxRrubSZKRKq19ggp4bGgoj3XoC6AvOCv9XxrI5awLRpUMpL3IaZAxaZPpwk4phGXhW1ExNLzu5coj+zU=
 X-Received: from samitolvanen.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:4f92])
- (user=samitolvanen job=sendgmr) by 2002:a17:903:1246:b0:1f4:8a2a:6394 with
- SMTP id d9443c01a7336-1f8627f336dmr9242265ad.8.1718647107293; Mon, 17 Jun
- 2024 10:58:27 -0700 (PDT)
-Date: Mon, 17 Jun 2024 17:58:20 +0000
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:2984:b0:dfb:fb2:ebe with
+ SMTP id 3f1490d57ef6-dff15480784mr1072302276.13.1718647112827; Mon, 17 Jun
+ 2024 10:58:32 -0700 (PDT)
+Date: Mon, 17 Jun 2024 17:58:23 +0000
 In-Reply-To: <20240617175818.58219-17-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,19 +59,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240617175818.58219-17-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13011; i=samitolvanen@google.com;
- h=from:subject; bh=Xs4KwoxMlQJYeEXm0rnpnTVWjgFyQKLzxA4GR17idpU=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk6od45vEuvdcIBwLiaolMBNrH8eaDDzYUua
- Gj3bki6kGyJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5OgAKCRBMtfaEi7xW
- 7q+/C/496QTbzCXL4tbdWN/11WLksSPbgTRoQFGVVj/ECkfhHQ8ojff7vlo8n0YGMzqKO2+tO0b
- kUQ2cAxy0xHGPtvXHo13CaMmIMbvgDcyDLLOtJc2FZ7HPlrgj5bNZ1D1udNTgEDv+AzB5dwIuJK
- +0ubgSZ8G/WDXDgFxJknTGTaoZgG0TJsLsgrY+TVuuRhVdK+etmCJ3V2hEiMTqd2PaSwt2g39lD
- QkcXZJ40xVgyZlIK5CAbMexlxbfmTnKzHl48dnYQQcS04TVGMaUSgax5cBgxsCu0uX2GVYy6g/x
- cmMxqCCG/WmdR9Qht2qLdp4k38iVOm1G1lbFq1jxYbSMASNawDmYAxvkFDvgyCxJ0r//NILJTMU
- RUYmuobzLnRjTxzwUY8mvjPAZ09piSoX/tqkrv6PDaPIC4mzuRysTdGXyMl+CdbUy5UmaLnR+ya ECxJpTk51Jx+9Ksgu88jIjI2lfc1wHw/ured/dV5YkFFALlQ4ei1d4o49roZFXsQ45p4M=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4723; i=samitolvanen@google.com;
+ h=from:subject; bh=n0WO328t/R/22oR4dAFfOzsZotv9Vy1BGsad/Gul6sE=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk7VghQRt6tJGo+Lh47/+dL7GF5TrJggVB/Z
+ YqQXn8U8gKJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5OwAKCRBMtfaEi7xW
+ 7hifC/0SP1IKS7zZIqmmeCgMSQNkuUFdCo1FdX/QfJw4dcz1EktOSWQ87V9jK4Z7eVazfE0Bcvk
+ 2GIYZlmIJjtM/xn/dZfozLVtys9cuUc8GHBd+DJooXharA1ZHjTiuuvzDz+rKCM8nTZfcSAZgKX
+ 6uoXbqjJ5zsaC+O+uKvWLN3mxxL95amU9m/f4w8PZlyuLVjnGlNYse/oMdMvcvmke5ECMiqnKnz
+ Lvb2dslKCjnk3EDIfPMQkZ8JUJiGhw9JebdVbViOQaKdQIhfh93Yl7H+glQHGocNJlpcgTKaFj7
+ OdUDNqe/ZWSIY6WTUM0qQRb7gn6yJem92yyYyRo4FcT67l75b87WWcslEEihf8BDKvUfhMZdcko
+ uq2WFTu8rnd2Pgr4k0goi7QLCfiURuYmCjBAf6ByvrlxG3r0sRURFcnsV+hL/eoTObhFxvpkqwS /qGAgUM2pso52796WF2ZgB/+Cl42HAU7Zd6OoLdhboYfUGRS3yS/BasH4cZo4Dr9C8S5U=
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <20240617175818.58219-18-samitolvanen@google.com>
-Subject: [PATCH 01/15] tools: Add gendwarfksyms
+Message-ID: <20240617175818.58219-21-samitolvanen@google.com>
+Subject: [PATCH 04/15] gendwarfksyms: Expand base_type
 From: Sami Tolvanen <samitolvanen@google.com>
 To: Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
 	Miguel Ojeda <ojeda@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -81,444 +81,175 @@ Cc: Matthew Maurer <mmaurer@google.com>, Alex Gaynor <alex.gaynor@gmail.com>,
 	rust-for-linux@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a basic DWARF parser, which uses libdw to traverse the debugging
-information in an object file and looks for functions and variables.
-In follow-up patches, this will be expanded to produce symbol versions
-for CONFIG_MODVERSIONS from DWARF. This tool is needed mainly for Rust
-kernel module compatibility.
+Add support for expanding basic DWARF attributes and DW_TAG_base_type
+types.
+
+Example usage:
+
+  $ nm -p --defined-only vmlinux.o | \
+      awk '/ (T|R|D) / {printf "%s %s\n",$1, $3}' | \
+      grep loops_per_jiffy | \
+      ./tools/gendwarfksyms/gendwarfksyms --debug vmlinux.o
+
+Output:
+
+  gendwarfksyms: symbol_read_list: adding { 4b0, "loops_per_jiffy" }
+  gendwarfksyms: process_modules: vmlinux.o
+  gendwarfksyms: process_exported_symbols: loops_per_jiffy (@ 4b0)
+  variable base_type unsigned long byte_size(8);
+  #SYMVER loops_per_jiffy 0xc694aefc
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- tools/Makefile                      |  11 +--
- tools/gendwarfksyms/Build           |   2 +
- tools/gendwarfksyms/Makefile        |  49 +++++++++++
- tools/gendwarfksyms/gendwarfksyms.c | 128 ++++++++++++++++++++++++++++
- tools/gendwarfksyms/gendwarfksyms.h |  71 +++++++++++++++
- tools/gendwarfksyms/types.c         |  87 +++++++++++++++++++
- 6 files changed, 343 insertions(+), 5 deletions(-)
- create mode 100644 tools/gendwarfksyms/Build
- create mode 100644 tools/gendwarfksyms/Makefile
- create mode 100644 tools/gendwarfksyms/gendwarfksyms.c
- create mode 100644 tools/gendwarfksyms/gendwarfksyms.h
- create mode 100644 tools/gendwarfksyms/types.c
+ tools/gendwarfksyms/types.c | 109 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 108 insertions(+), 1 deletion(-)
 
-diff --git a/tools/Makefile b/tools/Makefile
-index 276f5d0d53a4..60806ff753b7 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -17,6 +17,7 @@ help:
- 	@echo '  firewire               - the userspace part of nosy, an IEEE-1394 traffic sniffer'
- 	@echo '  firmware               - Firmware tools'
- 	@echo '  freefall               - laptop accelerometer program for disk protection'
-+	@echo '  gendwarfksyms          - generates symbol versions from DWARF'
- 	@echo '  gpio                   - GPIO tools'
- 	@echo '  hv                     - tools used when in Hyper-V clients'
- 	@echo '  iio                    - IIO tools'
-@@ -68,7 +69,7 @@ acpi: FORCE
- cpupower: FORCE
- 	$(call descend,power/$@)
- 
--counter firewire hv guest bootconfig spi usb virtio mm bpf iio gpio objtool leds wmi pci firmware debugging tracing: FORCE
-+counter firewire hv guest bootconfig spi usb virtio mm bpf iio gendwarfksyms gpio objtool leds wmi pci firmware debugging tracing: FORCE
- 	$(call descend,$@)
- 
- bpf/%: FORCE
-@@ -154,8 +155,8 @@ freefall_install:
- kvm_stat_install:
- 	$(call descend,kvm/$(@:_install=),install)
- 
--install: acpi_install counter_install cpupower_install gpio_install \
--		hv_install firewire_install iio_install \
-+install: acpi_install counter_install cpupower_install gendwarfksyms_install \
-+		gpio_install hv_install firewire_install iio_install \
- 		perf_install selftests_install turbostat_install usb_install \
- 		virtio_install mm_install bpf_install x86_energy_perf_policy_install \
- 		tmon_install freefall_install objtool_install kvm_stat_install \
-@@ -168,7 +169,7 @@ acpi_clean:
- cpupower_clean:
- 	$(call descend,power/cpupower,clean)
- 
--counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean tracing_clean:
-+counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gendwarfksyms_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean tracing_clean:
- 	$(call descend,$(@:_clean=),clean)
- 
- libapi_clean:
-@@ -211,7 +212,7 @@ build_clean:
- clean: acpi_clean counter_clean cpupower_clean hv_clean firewire_clean \
- 		perf_clean selftests_clean turbostat_clean bootconfig_clean spi_clean usb_clean virtio_clean \
- 		mm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
--		freefall_clean build_clean libbpf_clean libsubcmd_clean \
-+		freefall_clean build_clean libbpf_clean libsubcmd_clean gendwarfksyms_clean \
- 		gpio_clean objtool_clean leds_clean wmi_clean pci_clean firmware_clean debugging_clean \
- 		intel-speed-select_clean tracing_clean thermal_clean thermometer_clean thermal-engine_clean
- 
-diff --git a/tools/gendwarfksyms/Build b/tools/gendwarfksyms/Build
-new file mode 100644
-index 000000000000..805591b6df80
---- /dev/null
-+++ b/tools/gendwarfksyms/Build
-@@ -0,0 +1,2 @@
-+gendwarfksyms-y += gendwarfksyms.o
-+gendwarfksyms-y += types.o
-diff --git a/tools/gendwarfksyms/Makefile b/tools/gendwarfksyms/Makefile
-new file mode 100644
-index 000000000000..1138ebd8bd0f
---- /dev/null
-+++ b/tools/gendwarfksyms/Makefile
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0
-+include ../scripts/Makefile.include
-+include ../scripts/Makefile.arch
-+
-+ifeq ($(srctree),)
-+srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+endif
-+
-+GENDWARFKSYMS    := $(OUTPUT)gendwarfksyms
-+GENDWARFKSYMS_IN := $(GENDWARFKSYMS)-in.o
-+
-+LIBDW_FLAGS := $(shell $(HOSTPKG_CONFIG) libdw --cflags 2>/dev/null)
-+LIBDW_LIBS  := $(shell $(HOSTPKG_CONFIG) libdw --libs 2>/dev/null || echo -ldw -lelf)
-+
-+all: $(GENDWARFKSYMS)
-+
-+INCLUDES := -I$(srctree)/tools/include
-+
-+WARNINGS := -Wall -Wno-unused-value
-+GENDWARFKSYMS_CFLAGS := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBDW_FLAGS)
-+GENDWARFKSYMS_LDFLAGS := $(LIBDW_LIBS) $(KBUILD_HOSTLDFLAGS)
-+
-+# Always want host compilation.
-+HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
-+
-+ifeq ($(V),1)
-+  Q =
-+else
-+  Q = @
-+endif
-+
-+export srctree OUTPUT
-+include $(srctree)/tools/build/Makefile.include
-+
-+$(GENDWARFKSYMS_IN): FORCE
-+	$(Q)$(MAKE) $(build)=gendwarfksyms $(HOST_OVERRIDES) CFLAGS="$(GENDWARFKSYMS_CFLAGS)" \
-+		LDFLAGS="$(GENDWARFKSYMS_LDFLAGS)"
-+
-+
-+$(GENDWARFKSYMS): $(GENDWARFKSYMS_IN)
-+	$(QUIET_LINK)$(HOSTCC) $(GENDWARFKSYMS_IN) $(GENDWARFKSYMS_LDFLAGS) -o $@
-+
-+clean:
-+	$(call QUIET_CLEAN, gendwarfksyms) $(RM) $(GENDWARFKSYMS)
-+
-+FORCE:
-+
-+.PHONY: clean FORCE
-diff --git a/tools/gendwarfksyms/gendwarfksyms.c b/tools/gendwarfksyms/gendwarfksyms.c
-new file mode 100644
-index 000000000000..4a2dea307849
---- /dev/null
-+++ b/tools/gendwarfksyms/gendwarfksyms.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2024 Google LLC
-+ */
-+
-+#include <fcntl.h>
-+#include <errno.h>
-+#include <stdarg.h>
-+#include <string.h>
-+#include "gendwarfksyms.h"
-+
-+/*
-+ * Options
-+ */
-+
-+/* Print type descriptions and debugging output to stderr */
-+bool debug;
-+
-+static const struct {
-+	const char *arg;
-+	bool *flag;
-+} options[] = {
-+	{ "--debug", &debug },
-+};
-+
-+static int usage(void)
-+{
-+	error("usage: gendwarfksyms [options] elf-object-file < symbol-list");
-+	return -1;
-+}
-+
-+static int parse_options(int argc, const char **argv, const char **filename)
-+{
-+	*filename = NULL;
-+
-+	for (int i = 1; i < argc; i++) {
-+		bool found = false;
-+
-+		for (int j = 0; j < ARRAY_SIZE(options); j++) {
-+			if (!strcmp(argv[i], options[j].arg)) {
-+				*options[j].flag = true;
-+				found = true;
-+				break;
-+			}
-+		}
-+
-+		if (!found) {
-+			if (!*filename)
-+				*filename = argv[i];
-+			else
-+				return -1;
-+		}
-+	}
-+
-+	return *filename ? 0 : -1;
-+}
-+
-+static int process_modules(Dwfl_Module *mod, void **userdata, const char *name,
-+			   Dwarf_Addr base, void *arg)
-+{
-+	Dwarf_Addr dwbias;
-+	Dwarf_Die cudie;
-+	Dwarf_CU *cu = NULL;
-+	Dwarf *dbg;
-+	int res;
-+
-+	debug("%s", name);
-+	dbg = dwfl_module_getdwarf(mod, &dwbias);
-+
-+	do {
-+		res = dwarf_get_units(dbg, cu, &cu, NULL, NULL, &cudie, NULL);
-+		if (res < 0) {
-+			error("dwarf_get_units failed: no debugging information?");
-+			return -1;
-+		} else if (res == 1) {
-+			return DWARF_CB_OK; /* No more units */
-+		}
-+
-+		check(process_module(mod, dbg, &cudie));
-+	} while (cu);
-+
-+	return DWARF_CB_OK;
-+}
-+
-+static const Dwfl_Callbacks callbacks = {
-+	.section_address = dwfl_offline_section_address,
-+	.find_debuginfo = dwfl_standard_find_debuginfo,
-+};
-+
-+int main(int argc, const char **argv)
-+{
-+	const char *filename = NULL;
-+	Dwfl *dwfl;
-+	int fd;
-+
-+	if (parse_options(argc, argv, &filename) < 0)
-+		return usage();
-+
-+	fd = open(filename, O_RDONLY);
-+	if (fd == -1) {
-+		error("open failed for '%s': %s", filename, strerror(errno));
-+		return -1;
-+	}
-+
-+	dwfl = dwfl_begin(&callbacks);
-+	if (!dwfl) {
-+		error("dwfl_begin failed for '%s': %s", filename,
-+		      dwarf_errmsg(-1));
-+		return -1;
-+	}
-+
-+	if (!dwfl_report_offline(dwfl, filename, filename, fd)) {
-+		error("dwfl_report_offline failed for '%s': %s", filename,
-+		      dwarf_errmsg(-1));
-+		return -1;
-+	}
-+
-+	dwfl_report_end(dwfl, NULL, NULL);
-+
-+	if (dwfl_getmodules(dwfl, &process_modules, NULL, 0)) {
-+		error("dwfl_getmodules failed for '%s'", filename);
-+		return -1;
-+	}
-+
-+	dwfl_end(dwfl);
-+
-+	return 0;
-+}
-diff --git a/tools/gendwarfksyms/gendwarfksyms.h b/tools/gendwarfksyms/gendwarfksyms.h
-new file mode 100644
-index 000000000000..44e94f1d9671
---- /dev/null
-+++ b/tools/gendwarfksyms/gendwarfksyms.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2024 Google LLC
-+ */
-+
-+#include <dwarf.h>
-+#include <elfutils/libdw.h>
-+#include <elfutils/libdwfl.h>
-+#include <linux/hashtable.h>
-+#include <inttypes.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+
-+#ifndef __GENDWARFKSYMS_H
-+#define __GENDWARFKSYMS_H
-+
-+/*
-+ * Options -- in gendwarfksyms.c
-+ */
-+extern bool debug;
-+
-+/*
-+ * Output helpers
-+ */
-+#define __PREFIX "gendwarfksyms: "
-+#define __println(prefix, format, ...)                                \
-+	fprintf(stderr, prefix __PREFIX "%s: " format "\n", __func__, \
-+		##__VA_ARGS__)
-+
-+#define debug(format, ...)                                    \
-+	do {                                                  \
-+		if (debug)                                    \
-+			__println("", format, ##__VA_ARGS__); \
-+	} while (0)
-+
-+#define warn(format, ...) __println("warning: ", format, ##__VA_ARGS__)
-+#define error(format, ...) __println("error: ", format, ##__VA_ARGS__)
-+
-+/*
-+ * Error handling helpers
-+ */
-+#define check(expr)                                             \
-+	({                                                      \
-+		int __res = expr;                               \
-+		if (__res < 0) {                                \
-+			error("`%s` failed: %d", #expr, __res); \
-+			return __res;                           \
-+		}                                               \
-+		__res;                                          \
-+	})
-+
-+/*
-+ * types.c
-+ */
-+
-+struct state {
-+	Dwfl_Module *mod;
-+	Dwarf *dbg;
-+};
-+
-+typedef int (*die_callback_t)(struct state *state, Dwarf_Die *die);
-+typedef bool (*die_match_callback_t)(Dwarf_Die *die);
-+extern bool match_all(Dwarf_Die *die);
-+
-+extern int process_die_container(struct state *state, Dwarf_Die *die,
-+				 die_callback_t func,
-+				 die_match_callback_t match);
-+
-+extern int process_module(Dwfl_Module *mod, Dwarf *dbg, Dwarf_Die *cudie);
-+
-+#endif /* __GENDWARFKSYMS_H */
 diff --git a/tools/gendwarfksyms/types.c b/tools/gendwarfksyms/types.c
-new file mode 100644
-index 000000000000..2a8e45ae911c
---- /dev/null
+index 47ae967d42ee..7508d0fb8b80 100644
+--- a/tools/gendwarfksyms/types.c
 +++ b/tools/gendwarfksyms/types.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2024 Google LLC
-+ */
+@@ -16,6 +16,7 @@
+ 	}
+ 
+ DEFINE_GET_ATTR(addr, Dwarf_Addr)
++DEFINE_GET_ATTR(udata, Dwarf_Word)
+ 
+ static bool get_ref_die_attr(Dwarf_Die *die, unsigned int id, Dwarf_Die *value)
+ {
+@@ -82,6 +83,73 @@ static int process(struct state *state, const char *s)
+ 	return 0;
+ }
+ 
++#define MAX_FMT_BUFFER_SIZE 128
 +
-+#include "gendwarfksyms.h"
-+
-+/*
-+ * Type string processing
-+ */
-+static int process(struct state *state, const char *s)
++static int process_fmt(struct state *state, const char *fmt, ...)
 +{
-+	s = s ?: "<null>";
-+
-+	if (debug)
-+		fputs(s, stderr);
-+
-+	return 0;
-+}
-+
-+bool match_all(Dwarf_Die *die)
-+{
-+	return true;
-+}
-+
-+int process_die_container(struct state *state, Dwarf_Die *die,
-+			  die_callback_t func, die_match_callback_t match)
-+{
-+	Dwarf_Die current;
++	char buf[MAX_FMT_BUFFER_SIZE];
++	va_list args;
 +	int res;
 +
-+	res = check(dwarf_child(die, &current));
-+	while (!res) {
-+		if (match(&current))
-+			check(func(state, &current));
-+		res = check(dwarf_siblingof(&current, &current));
++	va_start(args, fmt);
++
++	res = check(vsnprintf(buf, sizeof(buf), fmt, args));
++	if (res >= MAX_FMT_BUFFER_SIZE - 1) {
++		error("vsnprintf overflow: increase MAX_FMT_BUFFER_SIZE");
++		res = -1;
++	} else {
++		check(process(state, buf));
 +	}
 +
++	va_end(args);
++	return res;
++}
++
++/* Process a fully qualified name from DWARF scopes */
++static int process_fqn(struct state *state, Dwarf_Die *die)
++{
++	Dwarf_Die *scopes = NULL;
++	const char *name;
++	int res;
++	int i;
++
++	res = check(dwarf_getscopes_die(die, &scopes));
++	if (!res) {
++		name = get_name(die);
++		name = name ?: "<unnamed>";
++		return check(process(state, name));
++	}
++
++	for (i = res - 1; i >= 0; i--) {
++		if (dwarf_tag(&scopes[i]) == DW_TAG_compile_unit)
++			continue;
++
++		name = get_name(&scopes[i]);
++		name = name ?: "<unnamed>";
++		check(process(state, name));
++		if (i > 0)
++			check(process(state, "::"));
++	}
++
++	free(scopes);
 +	return 0;
 +}
 +
-+/*
-+ * Symbol processing
-+ */
-+static int process_subprogram(struct state *state, Dwarf_Die *die)
++#define DEFINE_PROCESS_UDATA_ATTRIBUTE(attribute)                         \
++	static int process_##attribute##_attr(struct state *state,        \
++					      Dwarf_Die *die)             \
++	{                                                                 \
++		Dwarf_Word value;                                         \
++		if (get_udata_attr(die, DW_AT_##attribute, &value))       \
++			check(process_fmt(state,                          \
++					  " " #attribute "(%" PRIu64 ")", \
++					  value));                        \
++		return 0;                                                 \
++	}
++
++DEFINE_PROCESS_UDATA_ATTRIBUTE(alignment)
++DEFINE_PROCESS_UDATA_ATTRIBUTE(byte_size)
++
+ bool match_all(Dwarf_Die *die)
+ {
+ 	return true;
+@@ -103,11 +171,48 @@ int process_die_container(struct state *state, Dwarf_Die *die,
+ 	return 0;
+ }
+ 
++static int process_type(struct state *state, Dwarf_Die *die);
++
++static int process_type_attr(struct state *state, Dwarf_Die *die)
 +{
-+	return check(process(state, "subprogram;\n"));
++	Dwarf_Die type;
++
++	if (get_ref_die_attr(die, DW_AT_type, &type))
++		return check(process_type(state, &type));
++
++	/* Compilers can omit DW_AT_type -- print out 'void' to clarify */
++	return check(process(state, "base_type void"));
 +}
 +
-+static int process_variable(struct state *state, Dwarf_Die *die)
++static int process_base_type(struct state *state, Dwarf_Die *die)
 +{
-+	return check(process(state, "variable;\n"));
++	check(process(state, "base_type "));
++	check(process_fqn(state, die));
++	check(process_byte_size_attr(state, die));
++	return check(process_alignment_attr(state, die));
 +}
 +
-+static int process_exported_symbols(struct state *state, Dwarf_Die *die)
+ static void state_init(struct state *state)
+ {
+ 	state->crc = 0xffffffff;
+ }
+ 
++static int process_type(struct state *state, Dwarf_Die *die)
 +{
 +	int tag = dwarf_tag(die);
 +
 +	switch (tag) {
-+	/* Possible containers of exported symbols */
-+	case DW_TAG_namespace:
-+	case DW_TAG_class_type:
-+	case DW_TAG_structure_type:
-+		return check(process_die_container(
-+			state, die, process_exported_symbols, match_all));
-+
-+	/* Possible exported symbols */
-+	case DW_TAG_subprogram:
-+	case DW_TAG_variable:
-+		if (tag == DW_TAG_subprogram)
-+			check(process_subprogram(state, die));
-+		else
-+			check(process_variable(state, die));
-+
-+		return 0;
++	case DW_TAG_base_type:
++		check(process_base_type(state, die));
++		break;
 +	default:
-+		return 0;
++		debug("unimplemented type: %x", tag);
++		break;
 +	}
++
++	return 0;
 +}
 +
-+int process_module(Dwfl_Module *mod, Dwarf *dbg, Dwarf_Die *cudie)
-+{
-+	struct state state = { .mod = mod, .dbg = dbg };
-+
-+	return check(process_die_container(
-+		&state, cudie, process_exported_symbols, match_all));
-+}
+ /*
+  * Exported symbol processing
+  */
+@@ -118,7 +223,9 @@ static int process_subprogram(struct state *state, Dwarf_Die *die)
+ 
+ static int process_variable(struct state *state, Dwarf_Die *die)
+ {
+-	return check(process(state, "variable;\n"));
++	check(process(state, "variable "));
++	check(process_type_attr(state, die));
++	return check(process(state, ";\n"));
+ }
+ 
+ static int process_exported_symbols(struct state *state, Dwarf_Die *die)
 -- 
 2.45.2.627.g7a2c4fd464-goog
 
