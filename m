@@ -1,91 +1,113 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297E913C909;
-	Mon, 17 Jun 2024 15:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E752B9A0;
+	Mon, 17 Jun 2024 15:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718639004; cv=none; b=kwTSqHnb9xZAmPEuaQHVleyFmBDa1W80yn9+EEzHF5lYaxcdNprqr1sK8Bq9iFSCupo9VsZkmQnv8DqlhnTB2zur1FVnJy3jLS7fW8iuPxLapycggyxKPXmVaWqjSZI3XNhQbvgQug8m63DUNExHv8+12XuVQHQZwg2DpjZ9s1E=
+	t=1718639016; cv=none; b=DJQlKEY/mnVJuB7FS6YqPBwz6xaHTI6FsLWJaWu2ZR11xchR/V7ms2p8ffBtRZ3vQwdNk8nDjVKoMcE2T3rtQBMMvHThi54Hx6aUDk11ycVbJC1HiqxoNfLDzvRji5HWGh7g0/6Fhl7pAlSmuV0t2YceDTPE3pXVHraf9pHH7nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718639004; c=relaxed/simple;
-	bh=5EBDDBE1vnWBgN770hldZP0JQKfpjmzXK7XyfzJtl+c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CSMNyI+qnP7DjnusGG/KpGNMJdWKPPPCq7zVK9vsMI8YDi6h5gLsL2D/006Jdfb6aIqrwc1PognlXOer1E67KL4fQm250LARrnQhN8+ruB9AQZraYkilDa9JLkjifAZkirUuqSDVqoHsSs/d1slWMEMgPqaH6MLDhjP+QC0cExE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=fyewrraM; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="fyewrraM"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HFYCxq023861;
-	Mon, 17 Jun 2024 10:43:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=X91mzxfXMCn2bJmd
-	FzbP55B/9zkijFCsomFlIi3vsw4=; b=fyewrraMYY0/Dq9nZjlT2y7t1Y1pe0Xr
-	oCowargM2HLrfEGT3BZ3NA0YQ6vQRsCLJdSIRXdRyq9bA/s9mnVhKsgm+Y9vtmB9
-	bFl0FZSYLh+n3Dpew5u5wiVE+eYv1fJC4cxql6PmjjHexml6MlWALH66gWcXWia8
-	sqalZkMJIXG+hN90KicIfhktQ3Me15rxLwz08ZJdKiC0OfM8HLl22+mQ/GCe4T5H
-	zbgllvYRaXOVqtE06iN+NddkYajV+0inAojsP/HtKD/WnccXQtB3vzk66FaSmbis
-	F/a5ErFe19MW5kOS9/RTa3+kKzwBUKrjpVXKuPMocEDtq5z+JpqT5Q==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ys7cjt0f9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 10:43:12 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Jun
- 2024 16:42:55 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 17 Jun 2024 16:42:55 +0100
-Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.65.31])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CCF43820248;
-	Mon, 17 Jun 2024 15:42:54 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <soyer@irl.hu>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, Simon Trimmer <simont@opensource.cirrus.com>
-Subject: [PATCH v3 0/4] ALSA: hda: Improvements to hda_component
-Date: Mon, 17 Jun 2024 16:41:01 +0100
-Message-ID: <20240617154105.108635-1-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718639016; c=relaxed/simple;
+	bh=m0V8kQAJX78JymfCuimEezFCVSUbGSJ913r0go/UaNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kg+ucXJEcAWvk0lIycePTYm770GVY60HxdRVv6lqUGMJiKSg4lOU+Zmblv3VaVM7fg8ri4z74lW5rLTZLWANEWjkHi8apAGQCWUxUQubpQKlFf5ITwClp7mspY21szsQWsKs8U4R2TXJoVWAO7EX6hG1QX3ZnlroX1o9zJCok3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90818C2BD10;
+	Mon, 17 Jun 2024 15:43:32 +0000 (UTC)
+Date: Mon, 17 Jun 2024 16:43:30 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	Steven Price <steven.price@arm.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v3 10/14] arm64: Force device mappings to be non-secure
+ shared
+Message-ID: <ZnBZostHhjqn6uym@arm.com>
+References: <20240605093006.145492-1-steven.price@arm.com>
+ <20240605093006.145492-11-steven.price@arm.com>
+ <SN6PR02MB4157D26A6CE9B3B96032A1D1D4CD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <1dd92421-8eba-48db-99da-4390d9e19abd@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: gySmoCg_5vijXd0aN3iIlPqZ_KDUeChw
-X-Proofpoint-ORIG-GUID: gySmoCg_5vijXd0aN3iIlPqZ_KDUeChw
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1dd92421-8eba-48db-99da-4390d9e19abd@arm.com>
 
-This series of patches moves duplicated members from the
-instanced component structures into a new parent structure and
-introduces locking so that consumers of the interface do not use
-stale data.
+On Mon, Jun 17, 2024 at 03:55:22PM +0100, Suzuki K Poulose wrote:
+> On 17/06/2024 04:33, Michael Kelley wrote:
+> > From: Steven Price <steven.price@arm.com> Sent: Wednesday, June 5, 2024 2:30 AM
+> > > 
+> > > From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > 
+> > > Device mappings (currently) need to be emulated by the VMM so must be
+> > > mapped shared with the host.
+> > > 
+> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Signed-off-by: Steven Price <steven.price@arm.com>
+> > > ---
+> > >   arch/arm64/include/asm/pgtable.h | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> > > index 11d614d83317..c986fde262c0 100644
+> > > --- a/arch/arm64/include/asm/pgtable.h
+> > > +++ b/arch/arm64/include/asm/pgtable.h
+> > > @@ -644,7 +644,7 @@ static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+> > >   #define pgprot_writecombine(prot) \
+> > >   	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
+> > >   #define pgprot_device(prot) \
+> > > -	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
+> > > +	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN | PROT_NS_SHARED)
+> > >   #define pgprot_tagged(prot) \
+> > >   	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_TAGGED))
+> > >   #define pgprot_mhp	pgprot_tagged
+> > 
+> > In v2 of the patches, Catalin raised a question about the need for
+> > pgprot_decrypted(). What was concluded? It still looks to me like
+> > pgprot_decrypted() and prot_encrypted() are needed, by
+> > dma_direct_mmap() and remap_oldmem_pfn_range(), respectively.
+> > Also, assuming Hyper-V supports CCA at some point, the Linux guest
+> > drivers for Hyper-V need pgprot_decrypted() in hv_ringbuffer_init().
+> 
+> Right, I think we could simply do :
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h
+> b/arch/arm64/include/asm/pgtable.h
+> index c986fde262c0..1ed45893d1e6 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -648,6 +648,10 @@ static inline void set_pud_at(struct mm_struct *mm,
+> unsigned long addr,
+>  #define pgprot_tagged(prot) \
+>         __pgprot_modify(prot, PTE_ATTRINDX_MASK,
+> PTE_ATTRINDX(MT_NORMAL_TAGGED))
+>  #define pgprot_mhp     pgprot_tagged
+> +
+> +#define pgprot_decrypted(prot) __pgprot_modify(prot, PROT_NS_SHARED, PROT_NS_SHARED)
+> +#define pgprot_encrypted(prot)  __pgprot_modify(prot, PROT_NS_SHARED, 0)
 
-Changes in v3:
- - These Fixes separated from this series to make them easier
-   to manage:
-   https://lore.kernel.org/all/20240613133713.75550-1-simont@opensource.cirrus.com/
+And maybe rewrite pgprot_device() as:
 
-Simon Trimmer (4):
-  ALSA: hda: hda_component: Introduce component parent structure
-  ALSA: hda: hda_component: Change codecs to use component parent structure
-  ALSA: hda: hda_component: Move codec field into the parent
-  ALSA: hda: hda_component: Protect shared data with a mutex
-
- sound/pci/hda/cs35l41_hda.c     | 43 +++++++++++--------
- sound/pci/hda/cs35l56_hda.c     | 25 ++++++-----
- sound/pci/hda/hda_component.c   | 75 ++++++++++++++++++++-------------
- sound/pci/hda/hda_component.h   | 48 ++++++++++++++-------
- sound/pci/hda/patch_realtek.c   | 17 ++++----
- sound/pci/hda/tas2781_hda_i2c.c | 33 ++++++++-------
- 6 files changed, 141 insertions(+), 100 deletions(-)
+#define __pgprot_device(prot) \
+	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
+#define pgprot_device(prot)	__pgprot_device(pgprot_decrypted(prot))
 
 -- 
-2.34.1
+Catalin
