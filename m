@@ -1,188 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5F61741CA;
-	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7560B18F2E1;
+	Mon, 17 Jun 2024 21:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718659398; cv=none; b=HdoNG7mWaqX4q3eyCitIwa3DMtsnPhukfp6+SjbLgv5ef4cKGV62MPPq1FmpsUAq0Uvb7/yr0jBsx72zD23EBV1ZdiXqDNTngj3jeVqc9z7QgEiczQiZG+NwTpxeUZ+IcpM8XfTgadyyKidqPTM7E85xlDBgSYMr4A1hsmC7NEc=
+	t=1718659792; cv=none; b=N/9o86bphvLesYV5vCicCIokjc4dSEhBzJPr3OnUMr3CcIhd9BzY1bQoct2D+jGBgPBp8mwi17a1oT/jd6R01oqrHNwvGO4bjPcvn3YVYUh8k9pEWMld9pTmDBcBqhP7Ba1ReylMSM+qVp9SIEbiQfPfJHvbPpje0kp1X4FVsNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718659398; c=relaxed/simple;
-	bh=z9FzM7GZ7wU3KOkO5XN4WXRsFslFP8KgxePMoAGxEdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jCW5pw/GJyuUBHmNNlATwrVUI20Pjkr3ywzErtLEPkWYLijpl1ZbKwt2sUA+ZRRhSz1Rni53xm87vCpWLt6mXYhwrMPGKHnicgDrN9/uWir00yOSY4sqgulsvlJZyzZS7ppD/ct19bkaESZaaA1eCAJnG+fe1/hNNDyO+qlW5NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb6TSV2c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718659792; c=relaxed/simple;
+	bh=Ut0KAyrVV4smqcRV54hBWMF2hJaIfY47Llm6WJvhIYM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rCaNbX9KUG7l8gJWw8h1TX/OTAjTlZqxAfyrAdwKXEHPkHG9RQ9A7nQUf7iztSmPDYU4UpK8MB1U7zq749uA4RIBcj8v1LAfsefP5+pGf8FAExGSX7nmN5sJgXhswY57/1rj3EhwKJe1YHkN+oop+/FeIjBNFH/Lw0iehiLaUFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=zmL/tEBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb6TSV2c"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 19EE1C4AF1C;
-	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718659398;
-	bh=z9FzM7GZ7wU3KOkO5XN4WXRsFslFP8KgxePMoAGxEdQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Zb6TSV2cN0yW6QUs3w7Pz8el6/QiyHwUZ5b+ixuKZWVkWG/aM63PqaQIEf5PC/US8
-	 0PyBkieEVG4rhIB8/MpkWhjvICPTOyXWuLLnXlQJyCwFjmHjfNjbSV2kInimJiuLq4
-	 j9E+xZC3y+2IwcFH2Nj3EbVpQgGEdUuMojqUfZWmQwK4Vz2kv9/FLFHzPdGOu8LV7g
-	 BvYON0bak807rR3fo3nwmmyWChn89iBiLku+BMk0RwHPSBUHl/z1JqcbVQLCFUNIqI
-	 5+sUyL4Q4hN0ORQ+J76Uh6E75S5p5WpP2K8m0N/CNZSoQJR3EI4gThQFuML91YZ6qG
-	 ywN045gaW0P7g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02239C2BA1A;
-	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Mon, 17 Jun 2024 23:22:27 +0200
-Subject: [PATCH v2 1/3] ARM: dts: qcom: msm8926-motorola-peregrine: Add
- accelerometer, magnetometer, regulator
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="zmL/tEBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC6A4C2BD10;
+	Mon, 17 Jun 2024 21:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718659792;
+	bh=Ut0KAyrVV4smqcRV54hBWMF2hJaIfY47Llm6WJvhIYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=zmL/tEBMrfdGilrS36BdO+Nqc6pivOT+eFsbUpD7PzogUbAj0zq+5VJPNi6yfMJtW
+	 jOd8Fi901UZR4AUlpU6QjTv0eYjG/RXPESwadqPOcurAcyoV6Tu4uaM0Hf/dgTJOJW
+	 9Jn2l6i4fepY3sAzeD4IDhjRVN4o5gCy1azVLd9U=
+Date: Mon, 17 Jun 2024 14:29:51 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, Omar Sandoval
+ <osandov@osandov.com>, David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Hao Ge <gehao@kylinos.cn>,
+ linux-debuggers@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] mm: convert page type macros to enum
+Message-Id: <20240617142951.08a9cdc791c8edeeca50509b@linux-foundation.org>
+In-Reply-To: <87bk3z1f76.fsf@oracle.com>
+References: <20240607202954.1198180-1-stephen.s.brennan@oracle.com>
+	<20240607212738.bf55318aebd7172fadaa11c5@linux-foundation.org>
+	<87ikygo1yb.fsf@oracle.com>
+	<87bk3z1f76.fsf@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-peregrine-v2-1-c8835d2da7af@apitzsch.eu>
-References: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
-In-Reply-To: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718659400; l=2907;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=mj4yxzOm2d+J3umJgLBBLCdJ6UtTa0NpoUWMAtyqNkY=;
- b=cEbuwgEsPA7k5I25OSNgvvgBVtnZm+tO83xlkrVBYyxVG/Gv9kA2EPiXYOHyrbMJXVidIeZ3l
- poCdd9l/2EHBF7/WHqFeBM04bT9Obc/KjI3kpQSzL6XQGDLCXG5eBFp
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: André Apitzsch <git@apitzsch.eu>
+On Mon, 17 Jun 2024 13:34:21 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
 
-Add the accelerometer, magnetometer and regulator that are present on
-the Motorola Moto G 4G (2013) device.
+> >>> Fixes: 46df8e73a4a3 ("mm: free up PG_slab")
+> >>
+> >> Should we backport this into 6.9.x?
+> >
+> > Hi Andrew,
+> >
+> > Looks like commit 46df8e73a4a3 ("mm: free up PG_slab") is introduced in
+> > the v6.10-rc's, and not backported to 6.9. So PG_slab is still part of
+> 
+> Hi Andrew,
+> 
+> I saw that you've merged this into mm-unstable, thank you!
+> 
+> Since 46df8e73a4a3 ("mm: free up PG_slab") is part of the current 6.10
+> RC, it would be great if this patch could be part of the 6.10 release so
+> we don't release a kernel missing the PG_slab info.
+> 
+> Can you confirm if mm-unstable will get merged in this release cycle? Or
+> else, would it be possible to include it in a branch that will?
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
- .../dts/qcom/qcom-msm8926-motorola-peregrine.dts   | 85 ++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+Turns out the patch as sent was based on David's "mm: allow reuse of
+the lower 16 bit of the page type with an actual type", which changed
+the page flags a lot,  I redid this patch thusly:
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
-index 0cbe2d2fbbb1..50ae3cfc95bb 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
-@@ -68,9 +68,60 @@ smem_region: smem@fa00000 {
- 	};
+--- a/include/linux/page-flags.h~mm-convert-page-type-macros-to-enum
++++ a/include/linux/page-flags.h
+@@ -944,15 +944,22 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpois
+  * mistaken for a page type value.
+  */
+ 
+-#define PAGE_TYPE_BASE	0xf0000000
+-/* Reserve		0x0000007f to catch underflows of _mapcount */
+-#define PAGE_MAPCOUNT_RESERVE	-128
+-#define PG_buddy	0x00000080
+-#define PG_offline	0x00000100
+-#define PG_table	0x00000200
+-#define PG_guard	0x00000400
+-#define PG_hugetlb	0x00000800
+-#define PG_slab		0x00001000
++enum pagetype {
++	/*
++	 * Reserve 0xffff0000 - 0xfffffffe to catch _mapcount underflows and
++	 * allow owners that set a type to reuse the lower 16 bit for their own
++	 * purposes.
++	 */
++	PG_buddy	= 0x00000080,
++	PG_offline	= 0x00000100,
++	PG_table	= 0x00000200,
++	PG_guard	= 0x00000400,
++	PG_hugetlb	= 0x00000800,
++	PG_slab		= 0x00001000,
++
++	PAGE_TYPE_BASE	= 0xf0000000,
++	PAGE_MAPCOUNT_RESERVE	= -128,
++};
+ 
+ #define PageType(page, flag)						\
+ 	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+_
+
+(please check carefully)
+
+and David's later "mm: allow reuse of the lower 16 bit of the page type
+with an actual type" becomes 
+
+ include/linux/mm_types.h   |    5 +++++
+ include/linux/page-flags.h |   16 ++++++++--------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+--- a/include/linux/mm_types.h~mm-allow-reuse-of-the-lower-16-bit-of-the-page-type-with-an-actual-type
++++ a/include/linux/mm_types.h
+@@ -157,6 +157,11 @@ struct page {
+ 		 *
+ 		 * See page-flags.h for a list of page types which are currently
+ 		 * stored here.
++		 *
++		 * Owners of typed folios may reuse the lower 16 bit of the
++		 * head page page_type field after setting the page type,
++		 * but must reset these 16 bit to -1 before clearing the
++		 * page type.
+ 		 */
+ 		unsigned int page_type;
+ 
+--- a/include/linux/page-flags.h~mm-allow-reuse-of-the-lower-16-bit-of-the-page-type-with-an-actual-type
++++ a/include/linux/page-flags.h
+@@ -951,15 +951,15 @@ enum pagetype {
+ 	 * allow owners that set a type to reuse the lower 16 bit for their own
+ 	 * purposes.
+ 	 */
+-	PG_buddy	= 0x00000080,
+-	PG_offline	= 0x00000100,
+-	PG_table	= 0x00000200,
+-	PG_guard	= 0x00000400,
+-	PG_hugetlb	= 0x00000800,
+-	PG_slab		= 0x00001000,
++	PG_buddy	= 0x40000000,
++	PG_offline	= 0x20000000,
++	PG_table	= 0x10000000,
++	PG_guard	= 0x08000000,
++	PG_hugetlb	= 0x04008000,
++	PG_slab		= 0x02000000,
+ 
+-	PAGE_TYPE_BASE	= 0xf0000000,
+-	PAGE_MAPCOUNT_RESERVE	= -128,
++	PAGE_TYPE_BASE	= 0x80000000,
++	PAGE_MAPCOUNT_RESERVE	=  (~0x0000ffff),
  };
  
-+&blsp1_i2c2 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	magnetometer@c {
-+		compatible = "asahi-kasei,ak8963";
-+		reg = <0xc>;
-+		interrupts-extended = <&tlmm 38 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
-+		vdd-supply = <&pm8226_l19>;
-+		pinctrl-0 = <&mag_int_default &mag_reset_default>;
-+		pinctrl-names = "default";
-+	};
-+
-+	accelerometer@18 {
-+		compatible = "st,lis3dh-accel";
-+		reg = <0x18>;
-+		interrupts-extended = <&tlmm 1 IRQ_TYPE_EDGE_FALLING>;
-+		vdd-supply = <&pm8226_l19>;
-+		pinctrl-0 = <&accel_int_default>;
-+		pinctrl-names = "default";
-+		st,drdy-int-pin = <1>;
-+	};
-+};
-+
- &blsp1_i2c3 {
-+	clock-frequency = <400000>;
- 	status = "okay";
+ #define PageType(page, flag)						\
+_
+
+and that patch's fixup becomes
+
+--- a/include/linux/page-flags.h~mm-allow-reuse-of-the-lower-16-bit-of-the-page-type-with-an-actual-type-fix
++++ a/include/linux/page-flags.h
+@@ -955,7 +955,7 @@ enum pagetype {
+ 	PG_offline	= 0x20000000,
+ 	PG_table	= 0x10000000,
+ 	PG_guard	= 0x08000000,
+-	PG_hugetlb	= 0x04008000,
++	PG_hugetlb	= 0x04000000,
+ 	PG_slab		= 0x02000000,
  
-+	regulator@3e {
-+		compatible = "ti,tps65132";
-+		reg = <0x3e>;
-+		pinctrl-0 = <&reg_lcd_default>;
-+		pinctrl-names = "default";
-+
-+		reg_lcd_pos: outp {
-+			regulator-name = "outp";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-active-discharge = <1>;
-+			regulator-boot-on;
-+			enable-gpios = <&tlmm 31 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		reg_lcd_neg: outn {
-+			regulator-name = "outn";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-active-discharge = <1>;
-+			regulator-boot-on;
-+			enable-gpios = <&tlmm 33 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	sensor@48 {
- 		compatible = "ti,tmp108";
- 		reg = <0x48>;
-@@ -278,6 +329,40 @@ &smbb {
- 	status = "okay";
- };
+ 	PAGE_TYPE_BASE	= 0x80000000,
+_
+
+and "mm/zsmalloc: use a proper page type" becomes, in part,
+
+--- a/include/linux/page-flags.h~mm-zsmalloc-use-a-proper-page-type
++++ a/include/linux/page-flags.h
+@@ -957,6 +957,7 @@ enum pagetype {
+ 	PG_guard	= 0x08000000,
+ 	PG_hugetlb	= 0x04000000,
+ 	PG_slab		= 0x02000000,
++	PG_zsmalloc	= 0x01000000,
  
-+&tlmm {
-+	accel_int_default: accel-int-default-state {
-+		pins = "gpio1";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-disable;
-+	};
-+
-+	mag_int_default: mag-int-default-state {
-+		pins = "gpio38";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-disable;
-+	};
-+
-+	mag_reset_default: mag-reset-default-state {
-+		pins = "gpio62";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-high;
-+	};
-+
-+	reg_lcd_default: reg-lcd-default-state {
-+		pins = "gpio31", "gpio33";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-high;
-+	};
-+};
-+
- &usb {
- 	extcon = <&smbb>;
- 	dr_mode = "peripheral";
-
--- 
-2.45.2
+ 	PAGE_TYPE_BASE	= 0x80000000,
+ 	PAGE_MAPCOUNT_RESERVE	=  (~0x0000ffff),
 
 
+
+and the end result is identical to yesterday's mm-everything so that's
+all good.
+
+However I wouldn't want to send the altered version of "mm: convert
+page type macros to enum" into 6.10-rcX because it gets so altered by
+David's mm-unstable changes for the next merge window.  The new version
+of the hotfixes patch won't have had any valid testing on its own.
+
+So I'll temporarily drop David's "mm: page_type, zsmalloc and
+page_mapcount_reset()" series from mm-unstable.  To permit the new "mm:
+convert page type macros to enum" to get some linux-next exposure. 
+David, please remind me to restore that series in a week or so?
