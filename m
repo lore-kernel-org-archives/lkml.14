@@ -1,73 +1,104 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12430288BD
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADFF288BD;
+	Mon, 17 Jun 2024 11:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623302; cv=none; b=hTc/kDlarYPpM0gYU5rxzdRFtdPKOesS/Hff2/+107nwNmXkkolqtkU8kAmy8STT0tPJjaGUOfx1qBWYQTNZSUSdQj1lRGEeywNo5wRk47BxlcZjem2iKhK0o0+WbFpm7fMSWX6MVaGSn7/o4vNw6IAuAO5x7PIkkYnH7VCJoJI=
+	t=1718623333; cv=none; b=OMgnOMNVTPBD2dR59IF/sJwv3oDIsCnTwtyOCGLodWhcyJS9G9Ye36k/89ue4S2dm6sxNwkEgY1EDm+IAEn4mXCFsWOnwJIW0oeCuXb+RJpY/ZhOZV12KUUI6DUPWQ9pxqcK/ZbFqWLV4FGVS4eCFJ3CmT5HTH73OXWRc95qS0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623302; c=relaxed/simple;
-	bh=mlQWTkQYV0ADJmxV/Ck1L3uRlKxNKrUqgQ4/I0kF5RA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FRJUwCV99UqgFi9/BR38QMCD2vXyEXKCory9a79Bgu6lPomjMirQV9iGJOFG5388EF/hNyphjbAluKOUWoUq4KJjjRGaAP4E/dHY3ZYC1dENRjuxIMCmMTKdyjgD0nvrsd4us+uvXtxpPbj4ZWAsCgFgwbOwNPp6GgK3JoJPTdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kxDNctCD; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718623333; c=relaxed/simple;
+	bh=kOUjN3ObfB6MLRRhdOU0QbtDh6rZCZ9HITVr7rHgu/g=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=J7R7TbMQrZQk8ODw0YjJtRvHcvnwBP95EDaIOOUsc0bbJBsoLAT5wvmFQxGnBZAVJGNgyHB1+eEVEMqMfNxmQmWt2fexp8/QFVIPSeHaBbNJzPr1h/RYPvrmOS23jjUm/pgdE5InomXuA5+Q+OGaFFGNhtO+s8NRk5WGcghV8CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Oe8BvrVk; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kxDNctCD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718623299;
-	bh=mlQWTkQYV0ADJmxV/Ck1L3uRlKxNKrUqgQ4/I0kF5RA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kxDNctCDIHKiq9FyLiTP6yQCEf0aQeHTGeZlv9KFLLMfw9IT8srMcKpebr8FAH5o6
-	 z9CGm/LPMG/xAdjBL4O06RbUOsZUJMz15ImMPn+NnNi/tLxueIlg+pywIGOlvTIBEv
-	 2Gyd0916wzCgI/Db78HQGxNPFtjsyyaUGDERWIi9tKX72ToklvSVeYXyPqFd4pgJrj
-	 zd6bjuRl/m/5MnOGdDTILRtd/qpegwbiM6Xy3jVc+xpMKkdoa6hutzSZ5XLrBdjIHw
-	 xzyG7MZCAfCcyBSuBK8ji3SOoWIUDIObuom6JW7kFyrKXobZK/ZwAXojFF+B9Ri0lW
-	 yRIRCaEfXjt+g==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 815AD37804C8;
-	Mon, 17 Jun 2024 11:21:38 +0000 (UTC)
-Message-ID: <88c6c2df-44fd-4f87-9d71-1d6a29aa4754@collabora.com>
-Date: Mon, 17 Jun 2024 13:21:37 +0200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Oe8BvrVk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1718623328; bh=DVWXar9wxRAjzh+tMMvxBN7PqOspNp1LhCSb77WTeOE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Oe8BvrVkPulLLBdyoU9WHQplA+25+ijy7l27v61GoqrzTPV1GKayHTVXGZbersUe2
+	 gzwSGDt7rEf+de40x9EcdGo8GpUZiUw1eYqFcNJxVQO2hgHJZJKhuPlEb0wrNqDFb0
+	 kZ7Nj3gPeev38EaIAatM8e11ckbdWS/VyBFFxaZQ=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 2643043B; Mon, 17 Jun 2024 19:09:36 +0800
+X-QQ-mid: xmsmtpt1718622576t2neii6fc
+Message-ID: <tencent_E43E1B2F25E4BA5EBBEC33229E5E1BEB4B08@qq.com>
+X-QQ-XMAILINFO: MtZ4zLDUQmWf8BIMzYOceNuUXz0sD/09go9XgjcxS12/HumOM82xhfVcQxJ5BU
+	 av21b70FilkRFVUZVupHiRn2LjQcKtaMbuR5pmCpdXC7cvFhr8pPiiP5Nob8dFI7v/eqfhWRhZt7
+	 pmne4yS9TIM+NpNrTEDVrmS+I8xP8ZFT6Nv31TJa+vb5uzgx/aFRNxgqNDN6wgpAyhcu6mydJ2CJ
+	 bVoqj5F0nkizt67JE34L5dbso7buUId4JYOeKF+/vY/EXfIMHHPbpGB4UHzeTmlgqGqv1jToKfeA
+	 DaCRoanCA+MrVTnoMTh4zY90TkkpLhoK8KjoHPsm/vEYGf3gGia/yJjY+wEFfZJMtMdnD+SZVV+J
+	 r8UvRCiBBKa1XuxT/ZtWtEgeojW1TwRCYx94WwOYcCUqdYIGqWuhqLDWsXrmMGJuhS5ELB+9Iwfh
+	 JpGmQo3rmJ/r566SCBogXYJ9DeF3fTnTghuP2xhRzsPFybRkBbHCQC/EwCgDMI1bmr2Wwgu5b1DN
+	 j1Iw2gqLN8vQ0Q145BL5G5tcQ/t63YZKkgX5MCOshaxv3mEDyvWrMOZCf7nBg8ipo6CHDsysVjYf
+	 z1jJ3Cp7BiszyqhJ9pIL+GEsbqpRYJJ7Ps4C4ipK/2I2R9XkFVKYQgbopZ4YZAVr+PcNhWdy1GWb
+	 Fh9llGFvvqXGW9jEGOCZv/Jrvcefu2xkNewRrf+/pQJZHKDh6XJfmdVtzjQT5X60xZJaDA75oMRr
+	 rP21m/mnyFuqfJJEiq6JraU1hTBkEuP4tBxVEu7WE30zO7nbJK4Z0UHeuvUvNzex5+O/O0/qmwHa
+	 OoZ2qx+F7SPnECx6CrY5yPfgPS4zCxMK8JdkKkvnLDIxDngCT4tieFY6o1TjtIEdwIubw+4M376u
+	 7qdfCaH7fOdkU3hKSxiAoCkcMgWC3fp+zIOpgwTaCY86VKxYKi6ekGkojKcBmv+yUnup54HBinD+
+	 9rvt28BIBjQCiFSPrTfA==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: pmenzel@molgen.mpg.de
+Cc: davem@davemloft.net,
+	eadavis@qq.com,
+	edumazet@google.com,
+	johan.hedberg@gmail.com,
+	kuba@kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luiz.dentz@gmail.com,
+	luiz.von.dentz@intel.com,
+	marcel@holtmann.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com,
+	william.xuanziyang@huawei.com
+Subject: [PATCH v2] Bluetooth: Ignore too large handle values in BIG
+Date: Mon, 17 Jun 2024 19:09:37 +0800
+X-OQ-MSGID: <20240617110936.669544-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <f3ae861f-d030-47c6-9eec-5a197b875e0b@molgen.mpg.de>
+References: <f3ae861f-d030-47c6-9eec-5a197b875e0b@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/13] drm/mediatek: Fix XRGB setting error in OVL
-To: shawn.sung@mediatek.com, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- CK Hu <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>,
- Daniel Kurtz <djkurtz@chromium.org>, YT Shen <yt.shen@mediatek.com>,
- Mao Huang <littlecvr@chromium.org>, "Nancy.Lin" <nancy.lin@mediatek.com>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240616-mediatek-drm-next-v1-0-7e8f9cf785d8@mediatek.com>
- <20240616-mediatek-drm-next-v1-9-7e8f9cf785d8@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240616-mediatek-drm-next-v1-9-7e8f9cf785d8@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 16/06/24 10:29, Hsiao Chien Sung via B4 Relay ha scritto:
-> From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> 
-> CONST_BLD must be enabled for XRGB formats although the alpha channel
-> can be ignored, or OVL will still read the value from memory.
-> This error only affects CRC generation.
-> 
-> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+hci_le_big_sync_established_evt is necessary to filter out cases where the
+handle value is belonging to ida id range, otherwise ida will be erroneously
+released in hci_conn_cleanup.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fixes: 181a42edddf5 ("Bluetooth: Make handle of hci_conn be unique")
+Reported-by: syzbot+b2545b087a01a7319474@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=b2545b087a01a7319474
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ net/bluetooth/hci_event.c | 4 +++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index a487f9df8145..3966fbc38df9 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -6893,6 +6893,10 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 
+ 		bis = hci_conn_hash_lookup_handle(hdev, handle);
+ 		if (!bis) {
++			if (handle > HCI_CONN_HANDLE_MAX) {
++				bt_dev_dbg(hdev, "ignore too large handle %u", handle);
++				continue;
++			}
+ 			bis = hci_conn_add(hdev, ISO_LINK, BDADDR_ANY,
+ 					   HCI_ROLE_SLAVE, handle);
+ 			if (IS_ERR(bis))
+-- 
+2.43.0
 
