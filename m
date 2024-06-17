@@ -1,156 +1,149 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01olkn2011.outbound.protection.outlook.com [40.92.98.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C8A19A2AB;
-	Mon, 17 Jun 2024 13:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631274; cv=none; b=p4S/suiOUZ4H8cBlFxvqN49OiI+7KVzY+XYMfUhgFvYxh9ssDnOKsPMhGwC2LMUl0CWi0Qp+U1i6I2eDccJK5FgNRZfxjgiM38JqALgowqlltWhLqpw9ZwFwmjc7U0WcPgd4m+PaMeIRgINx0MHDojJSVkZAwLO9hSZoImFspA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631274; c=relaxed/simple;
-	bh=B1S93Pq7+AlrwtbOQxIsMo+PTww/86FdurCQFQ0V7WI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MHTvVzLf7iKnCN7fXRq/IIfRKPpzrk66IxpH+94p4zEVXkhdNL0ULTzlbVCK8d07tnTDZrH3Ur24n88peR+i4XZm9x0rsZThse4wLnnQPQJaczaQMivd/ejLWLgZz5VhMjYdqZCRjYV7MmZ/km2x4m/6tFwizQj4nYv3Z7fYxf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VM4l80fG; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B9F19A2B2;
+	Mon, 17 Jun 2024 13:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.98.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718631326; cv=fail; b=NZX4wcmAaFijjJyAYEAKLeXKRj6TPgir+xih4xnrHPmd7oeCwPE/HJPi2nCVYD/a/5GHtTL950TwzJiHy/l5Lb7eyNbQRUjODh2FlUB5yT0ljATXajRLivioPB7z8K5EN6N4cpt20VA2tHZQKAia8l4VIQlHCJxPzFOgSk0sz/c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718631326; c=relaxed/simple;
+	bh=rkY+kycCt5vLHgNj3R00RsDg6Wk4nMA86/ceXrnYifg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iQmUMPSfGHkyz6FZhgVZB4QhonqpR6reZ91UWS92sdwIrQsjCecxNND6gbFSO9qzTtDZMCNmMfjrewkQglT78FUJjW6wLYV6U7Mx82aZIt3TpqHIFbbgZn0ov3EMjmKrOwTipDjJ/R9ONMwPJjgHjs6zurN7oBxJRmjW9W8XqU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=rO7XoE+r; arc=fail smtp.client-ip=40.92.98.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VM4l80fG"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cc14815c3so272069e87.0;
-        Mon, 17 Jun 2024 06:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718631271; x=1719236071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
-        b=VM4l80fGB9RFdbh+5VV2pwLZwENWZqPeFRsTY9kyrP0jbeyT814MyFksAMOLho2CA9
-         mHF4ENsxe1XkStcKd6vRNYsQI4E1sh1cpr3zdzx1ksjZbDZdRKMkwT5vrSFHs5S0a2SW
-         6HisXGCKFlyp2KzjQlnUyTMkxD+pbCH/VshYyqE/b44OkJ6QX8IXM+rg5o+kMNNBeW+C
-         2tim5PdLCXvOzXDLhEbXrukkX8LNyMU/nYgkF58cMFLsLWM9QpzsJepphorcvoHvNy3/
-         Din6DHbVLKxz0G3dGR7yyFaYrER/6lrWfoB/+kBIsCAVJgZf4j0/YiWuqnCK5X3IheWr
-         WS7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718631271; x=1719236071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
-        b=L/JzjIeE6Irr687QOBeX6QGFxV3klkVtuSjeEgGdmroF+FBWWhpkb69LUqg0jnFLrL
-         pw6x8AdS29+65CZCStbyEchhmQ+DIm/+A4pawkyWRlwfwKzbX7ESdkybdZ/SvZO/HczW
-         EOUWzNN18SiC4J+TOjCyu61PjluGsLVZ3I01ZFA9rmhga2NmLsx2mR470wb5v+LSvJn2
-         wtnjrfF1qZgeeXCmw7xekxhMdooyAp0zkpQOVQjbFqU5UlE3eAvf4VdEwh2S7AZbmQa5
-         V4Qz3OoPzJrLIQN4fpjIiQfi/lZk18gK4pxCUdfq/a7vVB/+4fdXbiX9ykdNqjcysF6Z
-         3dMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCzXVXgvpY+tka1Es2q7rCT6WcfdKWY+vNkVgVPRrsXW0pgcJEtLrkhYx62Uz7lyG67RzI31fJQxTrlvwPnM0yg0q/YUdr1stsDmsWvJ8KlKBrzrxrm4i5pJ4NuRUBPb7PknvkwdIL6w==
-X-Gm-Message-State: AOJu0Yy1aX5QGRmnAzHSeCfF+6sDPxMWyiiRXmaIfU2dDQ+RdwLK6vcH
-	ji3l/+AJUNan3VIfeiohkwlxe4lCMpSD4V4afoxGI8LW6EZ9QzWTwX4SVSV/XdIWHgBp72vmlZW
-	yHV43yhQGqjdGMIBL42ieQ2xlQlw=
-X-Google-Smtp-Source: AGHT+IGxoq/R66V25JVO/HBkhcEl96wxiJMXgGXl/k0tPpvsH4sU61K9F58Kdy+baOZ9nLjumpg95HzDP25Dn6D6uvU=
-X-Received: by 2002:ac2:5551:0:b0:52c:893c:6c2c with SMTP id
- 2adb3069b0e04-52ca6e6e205mr5569411e87.40.1718631270478; Mon, 17 Jun 2024
- 06:34:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="rO7XoE+r"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LIBOwuw8HY43bTGXbxwIQ9HqPBu/FtUeFh7bHpAPhW1E/iOFj8Yv03Tj0R/YTtlnlwY/fPg/dggofPNHnKBgjF8j0TiZpWvPIZaFRC08igzl3b37AEBkKg5EQIZHwlJVlL5maIIS1r78S8Yh0WskopMe8lhmQC5G5/HnqGEfWCXL2CSHNQO6m5cgK/ShSucup9nrLPpop+mgv4ZY9sJEL0lXwmhKJzrx3qmEk1/kF2ysC+Cs+T4l7k8DcEsvLj1vAqrVLoUv/uCM/xrUqqpuGzNCWk4ji4nS3eXMF083915fGewnDG9YQuWfDtTYRyU8eS5f3kRzWomDQPyaNCQh4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7jun4NponcZtNhYbkqhxBGPVAQQAhT88zHoteLjDN08=;
+ b=PKX5q2r9tYzYy/lpgSF9n7+iqwAEz1T2eRRDibKZYvMNi0J07jhu/fbLIJ50O4Doorz5ykxoEpLOOM/bYIHkPEvRiCgzJ6sFI1iVqAJ7dJRUwhMWuWZPaKyaVOX9AGQ6BLkpfLcxK111MFBaKqtSxZ68JIFD/FCXzOW0jFaVW1dF6s6VMMkLUFwzfsppAjkPZ+c8KyC5jJum6Anasxv28GP4/F0T9GJ+QDmGe99/GXoWL7/mGi+F/5kNOI5msBhwksJSYUVM+zRWAMp3vEMGCpCdU3rnYGZ6f5giFE271cJVWm3X/793Zxz5ETkmb7rKry48BmPRXG9SBAtcW9Thpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7jun4NponcZtNhYbkqhxBGPVAQQAhT88zHoteLjDN08=;
+ b=rO7XoE+rfJOyZwH8DIeFeg2FX8dg8GgXGiuuaCDpawESRL/noodTm2EesGyYeCMXchNsmwfk8l75wSeRFNdgjLeMhNRcJi8KPQA/xabN6xsGTEy4VR0Q0QcaRkmHeGtzc75S8SBZ/vkabZpvtwcFg460u8v5PYv+Q0Jce9khcTdmrnb0IEbjsWSn67UV/sSa3JfDgz5XUUBp0jWsHsZLAJpTZytKERICpTMozCucLnesh9OWhUbTZCophlUpY/sBhvHypBgaWWNPdmtpmyB1A1IpVN8G7yNYshgrHDO5gj/JwZQ9HEfJCHeNFGMPwWNq+iORRWtX35JUylzqYO21Hw==
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:256::8)
+ by OSOP286MB4001.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2f3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 13:35:22 +0000
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899]) by TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899%4]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
+ 13:35:22 +0000
+From: Songyang Li <leesongyang@outlook.com>
+To: helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	leesongyang@outlook.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Cancel compilation restrictions on function pcie_clear_device_status
+Date: Mon, 17 Jun 2024 21:35:20 +0800
+Message-ID:
+ <TY3P286MB2754F489000B7FA6F9CF19D8B4CD2@TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240615212603.GA1157372@bhelgaas>
+References: <20240615212603.GA1157372@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [2nef6F6a5KUuqYB3EYVbFVCiymH645im]
+X-ClientProxiedBy: OS3P301CA0044.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:604:21e::16) To TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:256::8)
+X-Microsoft-Original-Message-ID:
+ <20240617133520.10450-1-leesongyang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718268003.git.haibo1.xu@intel.com> <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
-In-Reply-To: <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Mon, 17 Jun 2024 21:34:18 +0800
-Message-ID: <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: sunilvl@ventanamicro.com, arnd@arndb.de, ajones@ventanamicro.com, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Chen Jiahao <chenjiahao16@huawei.com>, James Morse <james.morse@arm.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Zhao Ke <ke.zhao@shingroup.cn>, 
-	Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY3P286MB2754:EE_|OSOP286MB4001:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2035cf15-ad52-46c6-2d5f-08dc8ed2560d
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|440099025|3412199022|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	SEW2lyPlVMx04GOQJwu1pA9VnpvH/JC+XVhIAF+47DTYvf4ImmAHXViLEG0iFRJai2oK97bSz3Km30qb2iB0K3WfoFHy3miCv7upYzMDVpfUeUqPFw1mZ7cIcas56/erEmkKUyAUYDKmEdic3yH52gWVhhKv9UsZe0DBm/B4g3O8v/cDdwpjqP8OJ1XDGZf1uaUbF3ctV7mE1VtYgmGrqpFoka9zf5GMExQZaH3/v+DyY1IoRbjFFzRF5D1gO8XR+rqUR2+BE+o5cphmWZHk3uj5AZnSmoPc8F8s1VJwA/Xx/NN83wV1WuhGHXK6bQVnx/OXMIkwQEJoGldn4xodmTvT1bLeSItbQvcTi0L16noj9cx0Hdd7CTzjlg1nov1FOo8mpqBs33IhB5BUeREB3wu/fuMNYqLDh/ERaMwibnX4uWXiQTtoFkwb1QDWvdcEimhWJOGz+UgLDOJquzPADud6ekqTDkC/6Di7G9843FVDVIPUp2AwlRx0Gj5Sc1FUA8u3enP1ES5zvlZAd4x3USjrQTiy8U5nWMWsKO7eCZoCqYWPfFVFY9qz2Jb1Lyq+ue33ya6rd0hF+doxjooQx8ajSbK52F0RBWOQjd6+l1fCAdvWW4vHwyzin++ByFKy
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?B9AwaeoUz830kkAHTg5wO+N+PczDbv/mDK2Lk3GW9gRua7Ik8sUibhhNcvlM?=
+ =?us-ascii?Q?M4YhxqfVQmzC3GcnQZuOHofZO8E/U6O+vxoHMM6QQ43EQ3MWPzCTK70ZuO8i?=
+ =?us-ascii?Q?p3ZHr1m3poo7Gy33gaoDztTCPAdTFYXP3hiCwBF4zxLxnN4DAMnZt/AwYBBs?=
+ =?us-ascii?Q?N3HCNTOYzlXVdbZFfMMkhw7BGt7ltb1Ock+goa3ApYZzNFOqHndJzTj1VRFp?=
+ =?us-ascii?Q?mkJY/YN1eKKv9CYUyoSSkkEwhJoYekJ0EUhtp+IU3xosRTSIT0wbelvhaOiw?=
+ =?us-ascii?Q?UnY6j+KKC8g+afRAiArrwG+v1N5WsdmSwq0NDYvEnzPfyG64Y4S2vsMgDOAQ?=
+ =?us-ascii?Q?cw9+LNZQX537/J+FlRhSL/q0CvXiXnR3stPgjEgZ6W2NVQUr6kuS4HVMljbI?=
+ =?us-ascii?Q?oU5o0t86Rzd+cGP7/AayQJdatei3FQ90FalIZ768TvMjkQdcwiJItzHbGhhD?=
+ =?us-ascii?Q?oPL0mqILuI+T5k4zTMkkmX3bSuKb9cfc3X2/O+7xoP9KMseNm62rCwXMrB42?=
+ =?us-ascii?Q?Vxo/FpFw+osGvGBx8yJpYu+qApyCPtvbwMMz9aU5iwpVsqTN772unZah8aRG?=
+ =?us-ascii?Q?emv5so1mmsR9hvz7kt7Femeenz9N81aLipHBz7iYvvl0KsOAMJ/NoLHF94ab?=
+ =?us-ascii?Q?E7+OUVl2HxiJhTF5RF2waeacxEjTwRyGlGxvfY7R8j7xhNFB5DWDyAcR9toN?=
+ =?us-ascii?Q?NH9L2ItdFRX5mcC9W2KQ9xRS+9aQAwEWVZSkyIK/frZWPqwJs6afbykM012W?=
+ =?us-ascii?Q?4QfZ+GIDPC8FgV6/huadvOINFru+JpK7MJ+nkwlYnLDXy8gNQyXvhS7gL5zH?=
+ =?us-ascii?Q?1tXcgS1p87rrnJGmFlYT2fYKtAR4hdX+lhnZ6ksW7sT/t/kmbpcG4LjIHW1L?=
+ =?us-ascii?Q?BVZQ1FkjedBmfriFSJQcUpSAu7hoQIjir0TD8rba0i1CTHDDF1jp9lP/NEvG?=
+ =?us-ascii?Q?OvL7+aQNrSsQIcWlwNQIxxec9YzlL+nTaq8dYIIizOHwt7WqzQxTPw3vUqeE?=
+ =?us-ascii?Q?CCi8m057bO9k9Ckq8Cp56RQNtFMDkE/4dHZXvlrhf2NHm1IS851cNqTmrM7u?=
+ =?us-ascii?Q?MtSIbXDwQmm6MIEKb1oG7DMiGnoAZ5N7FY5RLd79CH+UeL+1q41es0o1g8di?=
+ =?us-ascii?Q?5bhVvUYSCMk66YjvqDzYpZmbTIHPEdqfMVlfayHm5h688vymb8SR07HqjyS8?=
+ =?us-ascii?Q?44/HhTQZah0s6O2EUoiKleQSiwBNP6RnhMRqdbRlPjm4JgOqC0bx5Wpm7Rgd?=
+ =?us-ascii?Q?OiMXKtwKeB8LXmEnwHof?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2035cf15-ad52-46c6-2d5f-08dc8ed2560d
+X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 13:35:21.9490
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSOP286MB4001
 
-@Catalin Marinas @Huacai Chen
+On Sat, 15 Jun 2024 16:26:03 -0500, Bjorn Helgaas wrote:
+> > On Wed, 12 Jun 2024 15:14:32 -0500, Bjorn Helgaas wrote:
+> > > I think all current any callers of pcie_clear_device_status() are also
+> > > under CONFIG_PCIEAER, so I don't think this fixes a current problem.
+> > > 
+> > > As you point out, it might make sense to use
+> > > pcie_clear_device_status() even without AER, but I think we should
+> > > include this change at the time when we add such a use.
+> > > 
+> > > If I'm missing a use with the current kernel, let me know.
+> > 
+> > As far as I know, some PCIe device drivers, for example,
+> > [net/ethernet/broadcom/tg3.c],[net/ethernet/atheros/atl1c/atl1c_main.c],
+> > which use the following code to clear the device status register,
+> > pcie_capability_write_word(tp->pdev, PCI_EXP_DEVSTA,
+> >                 PCI_EXP_DEVSTA_CED |
+> >                 PCI_EXP_DEVSTA_NFED |
+> >                 PCI_EXP_DEVSTA_FED |
+> >                 PCI_EXP_DEVSTA_URD);
+> > I think it may be more suitable to export the pcie_clear_device_status()
+> > for use in the driver code.
+> 
+> If we want to use this from drivers, it would make sense to do
+> something like this patch, and this patch could be part of a series to
+> call it from the drivers.
+> 
+> But at the same time, we should ask whether drivers should be clearing
+> this status themselves, or whether it should be done by the PCI core.
 
-Could you please have a look at this patch for the ACPI_NUMA config on
-ARM64 and LOONGARCH respectively.
+After careful consideration, I agree with your point of view.
+I hold a viewpoint that it should be done by the PCI core,
+rather than pcie drivers. I give up this patch, and then I have
+gained a profound understanding of PCIe Core from this communication.
+Thanks,
 
-Thanks!
+Songyang Li
 
-On Thu, Jun 13, 2024 at 4:37=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> wrot=
-e:
->
-> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> would do the same thing, so change it to a hidden option and the
-> select statements except for the X86_64_ACPI_NUMA can also go away.
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-> ---
->  arch/arm64/Kconfig        | 1 -
->  arch/loongarch/Kconfig    | 1 -
->  drivers/acpi/numa/Kconfig | 5 +----
->  3 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 5d91259ee7b5..5079ad4e21a5 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1484,7 +1484,6 @@ config HOTPLUG_CPU
->  config NUMA
->         bool "NUMA Memory Allocation and Scheduler Support"
->         select GENERIC_ARCH_NUMA
-> -       select ACPI_NUMA if ACPI
->         select OF_NUMA
->         select HAVE_SETUP_PER_CPU_AREA
->         select NEED_PER_CPU_EMBED_FIRST_CHUNK
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index e38139c576ee..8d9e06e4ad84 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -470,7 +470,6 @@ config NR_CPUS
->  config NUMA
->         bool "NUMA Support"
->         select SMP
-> -       select ACPI_NUMA if ACPI
->         help
->           Say Y to compile the kernel with NUMA (Non-Uniform Memory Acces=
-s)
->           support.  This option improves performance on systems with more
-> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> index 849c2bd820b9..f33194d1e43f 100644
-> --- a/drivers/acpi/numa/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -1,9 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  config ACPI_NUMA
-> -       bool "NUMA support"
-> -       depends on NUMA
-> -       depends on (X86 || ARM64 || LOONGARCH)
-> -       default y if ARM64
-> +       def_bool NUMA && !X86
->
->  config ACPI_HMAT
->         bool "ACPI Heterogeneous Memory Attribute Table Support"
-> --
-> 2.34.1
->
