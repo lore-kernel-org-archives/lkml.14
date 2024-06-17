@@ -1,151 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D91BDEF;
-	Mon, 17 Jun 2024 19:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DE01BDEF;
+	Mon, 17 Jun 2024 19:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718652806; cv=none; b=mpxJ3NJizMoMSZNRcuJlnqySGwP6LDKO1bsj/+habRAZsAAcOSumbW3pYO1Rn8Rcj7UqE90iAxe3E68OlVTM4VqxrYCsNaAc/orsYUm93b4CkQaIvmjuXRJr5/8sU1iE74Yg+qb661UHr09SKakG841Rd3ZsHQwKCRqcOEz4vSQ=
+	t=1718652874; cv=none; b=GZLNvrsPr1xX7Kcgd1ZlhA6pV3vBOlTwtn4qeYxDrp4/1zW1mF1+oVSZShBq8ojLCNxXlbolq4ooPU+UtaKD7MpgtQxTK1Hzm3doDv/LdMNFCuKuuUTHy7hk5TugYesTBWj5AcULg2drWu4bn1QnePhMJna2euAqVlNqCUMW2R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718652806; c=relaxed/simple;
-	bh=3XAO2VM0TXU6x8XweVvJD4YnI+f4rCAeGuLNKtf5XE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJ00o7RSxDkH7vYoymSgRP1aN1/KhFkvFx11619NvOyAfxC+nO+iMkfwz7aNfTbmjR+XNZ8ct+MPaSl8TOYcroH4g/oRwCV4cHZG5x/G3+GMZzSN4hKsYc88ql+MzzHq1ArB03ALO7q3z9Pv1Lxp/GBZ5ah4k4Txvv2h+cQR0DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+IuhJ1u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718652874; c=relaxed/simple;
+	bh=iOCgZclJM7x49GMIvu9XuKkfAq+dd65uL4pshkxcOzo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YZ1bbcTcWg1YvEo9mWqfkUfWsA0mcwx9XMb6ZF81Gie4ShtFZ9zkoz+2pS5wfA1XacucCIG6cOWhek5+78ErIiSDJ02tuySrygIslZTt2GqvB+yCIklEHq2V76aqHZcXG/tK3MLjiYk4PHFDyVQl9xj773cBZIIb/EbMmi1Ya8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nteoDU7f; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+IuhJ1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DB2C2BD10;
-	Mon, 17 Jun 2024 19:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718652805;
-	bh=3XAO2VM0TXU6x8XweVvJD4YnI+f4rCAeGuLNKtf5XE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r+IuhJ1uBSHjfadYASAvVJHfyMRxZTTpm+snaD2bLSHMAi6vmpcthDw/cDHndzhVU
-	 THVJsbfhoghlvFkOcqesR+EsZRZwd55HNJU4A+HR9P1cfAxkrocwVBxJqdPK5ugo+E
-	 i89KSDV57oDvnv6z+rvIhHPNSC+uCs92sKaAW2wFAnnyLsKTM0UciMIasQkrhKLnrW
-	 rsixpHiljYTjYOqJTHf3NGITJQF7maTBqiH0pRaYOTRJ7g7PgDceuAY1feWocVVHpY
-	 VZKRiGsfV9Ai40Zy3F1UbX7zLjsNkcdPcek4+hSp+m2dBP1UPN71qtjV/8I+Tvo7g6
-	 y1z1f8pgITJ3Q==
-Date: Mon, 17 Jun 2024 20:33:14 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, lars@metafoo.de, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
- andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, marius.cristea@microchip.com,
- marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
- mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, andy.shevchenko@gmail.com,
- kernel@collabora.com
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: adc: Add MediaTek MT6359 PMIC
- AUXADC
-Message-ID: <20240617203314.641e84a9@jic23-huawei>
-In-Reply-To: <e71a38a9-7a92-4156-a7f0-52f71d461d61@collabora.com>
-References: <20240604123008.327424-1-angelogioacchino.delregno@collabora.com>
-	<20240604123008.327424-2-angelogioacchino.delregno@collabora.com>
-	<20240605235239.GA3455504-robh@kernel.org>
-	<e71a38a9-7a92-4156-a7f0-52f71d461d61@collabora.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nteoDU7f"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HIxq1U007157;
+	Mon, 17 Jun 2024 19:34:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=1rtWCLDVD5hMYMANqkF4sbcV8H
+	woHlf6NHGpbmCphXc=; b=nteoDU7fBPxBhbI2g1oZx7O9k1RSPdTAuFKQMiZ4w5
+	/sc/xg5ZxACM9s5aUiOJ1dsoRN3Gwn1bqrrPGLH9dcNPLyLdpRHW3fUkigxsjIL7
+	XB7e6TP+vXjALKiRJLzQBn2Nt+hE1y1Z7OTfOvG+5MK6+ExPiAg5HcW9lJE0OoV0
+	zv2p8K3M92SQI8UfnD/ioq5TuRwSpkYvqIUOhb1FdvymaxejSY+HNnnv3OPufNAZ
+	JpLHggvrSJVSQeXEW4/dOyvMN5p91bjMAin/PNB2sGSLcU61WmryS2AWSguBNHN3
+	COSgaYWcGY26DiR9r2vDdf6De/P0CJpstRuE/+hh2NJA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yttwc828x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 19:34:19 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HIhUj4009941;
+	Mon, 17 Jun 2024 19:34:19 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgmcj9f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 19:34:19 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HJYFsa26804904
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 19:34:17 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1301558065;
+	Mon, 17 Jun 2024 19:34:15 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 993C558052;
+	Mon, 17 Jun 2024 19:34:14 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Jun 2024 19:34:14 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
+        naveen.n.rao@linux.ibm.com, Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize session support
+Date: Mon, 17 Jun 2024 15:34:08 -0400
+Message-ID: <20240617193408.1234365-1-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -09hiv8-DnkBLNg901VJl7ge-fi8Djmw
+X-Proofpoint-GUID: -09hiv8-DnkBLNg901VJl7ge-fi8Djmw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 mlxscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406170150
 
-On Mon, 10 Jun 2024 10:00:55 +0200
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wrote:
+Fix the following type of error message caused by a missing call to
+tpm2_sessions_init() in the IBM vTPM driver:
 
-> Il 06/06/24 01:52, Rob Herring ha scritto:
-> > On Tue, Jun 04, 2024 at 02:30:04PM +0200, AngeloGioacchino Del Regno wrote:  
-> >> Add a new binding for the MT6350 Series (MT6357/8/9) PMIC AUXADC,
-> >> providing various ADC channels for both internal temperatures and
-> >> voltages, audio accessory detection (hp/mic/hp+mic and buttons,
-> >> usually on a 3.5mm jack) other than some basic battery statistics
-> >> on boards where the battery is managed by this PMIC.
-> >>
-> >> Also add the necessary dt-binding headers for devicetree consumers.
-> >>
-> >> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> >> ---
-> >>   .../iio/adc/mediatek,mt6359-auxadc.yaml       | 33 +++++++++++++++++++
-> >>   .../iio/adc/mediatek,mt6357-auxadc.h          | 21 ++++++++++++
-> >>   .../iio/adc/mediatek,mt6358-auxadc.h          | 22 +++++++++++++
-> >>   .../iio/adc/mediatek,mt6359-auxadc.h          | 22 +++++++++++++
-> >>   4 files changed, 98 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >> new file mode 100644
-> >> index 000000000000..6497c416094d
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >> @@ -0,0 +1,33 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/iio/adc/mediatek,mt6359-auxadc.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: MediaTek MT6350 series PMIC AUXADC
-> >> +
-> >> +maintainers:
-> >> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> >> +
-> >> +description:
-> >> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-> >> +  in some MediaTek PMICs, performing various PMIC related measurements
-> >> +  such as battery and PMIC internal voltage regulators temperatures,
-> >> +  accessory detection resistance (usually, for a 3.5mm audio jack)
-> >> +  other than voltages for various PMIC internal components.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - mediatek,mt6357-auxadc
-> >> +      - mediatek,mt6358-auxadc
-> >> +      - mediatek,mt6359-auxadc
-> >> +
-> >> +  "#io-channel-cells":
-> >> +    const: 1  
-> > 
-> > Why do you need a node here? Just add #io-channel-cells to the parent
-> > node.
-> >   
-> 
-> Because some boards will want to avoid probing the related driver, as that will
-> trigger a reset and this may not play well with ECs (namely, some Chromebooks),
-> which are reading the same AUXADC block.
-> 
-> If I avoid using a new node, instead of just using `status`, I'll have to add a
-> "mediatek,disable-auxadc" property to the parent node, which isn't pretty...
+[    2.987131] tpm tpm0: tpm2_load_context: failed with a TPM error 0x01C4
+[    2.987140] ima: Error Communicating to TPM chip, result: -14
 
-Rob, does this answer the question to your satisfaction?
+Fixes: d2add27cf2b8 ("tpm: Add NULL primary creation")
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ drivers/char/tpm/tpm_ibmvtpm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-If you are fine with this I'd like to queue it up (with the typo in one of the
-patch descriptions that Andy caught fixed up).
-
-Thanks,
-
-Jonathan
-
-> 
-> Cheers,
-> Angelo
-> 
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - "#io-channel-cells"
-> >> +
-> >> +additionalProperties: false  
-> 
-> 
+diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+index d3989b257f42..1e5b107d1f3b 100644
+--- a/drivers/char/tpm/tpm_ibmvtpm.c
++++ b/drivers/char/tpm/tpm_ibmvtpm.c
+@@ -698,6 +698,10 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+ 		rc = tpm2_get_cc_attrs_tbl(chip);
+ 		if (rc)
+ 			goto init_irq_cleanup;
++
++		rc = tpm2_sessions_init(chip);
++		if (rc)
++			goto init_irq_cleanup;
+ 	}
+ 
+ 	return tpm_chip_register(chip);
+-- 
+2.45.2
 
