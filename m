@@ -1,271 +1,113 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D83197A9E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 12:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E096418FC6F;
+	Mon, 17 Jun 2024 12:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718629117; cv=none; b=uXMHCspe2+/qLzcQkXqlNdmIhsHls6bYo2A3YDxqe2jeE/bqRYTtG3q2yqnrzQ5fRR9HNJZwPsiMbp7bqgJro0XKseYOC2n3vORhaoA0SBoc5TFcm8Rallm+4eY2mn0deKvIantMFPxSZjQCBoY4EN4mHSQKMZj9GmV0yrBKbXU=
+	t=1718629201; cv=none; b=hGPYtDkxJ2rGtPYVdlR2flRCdbgFXYJnkqHQYwIjZEi7ISIXdwwfJd/2NQIfSRqADrMqYVVQBKnP6IiKX7ZlGwqfi1gX54ikFCYqx/t1xxbIqxhKtx/HKUtj5/syP8zFPTwN1s7iX3rh+ctJH2vDZSHaVZcFQRiOYVfaYirDbPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718629117; c=relaxed/simple;
-	bh=L4Tdv4oNUtCkWu95VCHEftXhaf4yOIeTqNlEkwqKbIs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PmMCeknEcU3wDz6WeflsPwCqzq5nSpwR9UGM2u4by9dsTRf6NfIe4PGGK+nZGJ4z4ZKpUA5UWou1d7oIEiA7EPu6g9tdPR0gpFrTSlak+vZDX1LX6QG8HQ0qp+7qPdTyfZswCVlM0C0vjEzx5M+PtJa4tXwUtn/xMZ0Rzs/Ek0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nO7dBnqt; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718629201; c=relaxed/simple;
+	bh=8G39HiKoa8xfyKHJf8Y1JNqnXPKRNwnOjDzcCynE99Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUeNNlnkjQrtH5yh4eX2hORWVZ0ddww8ksz7H6ij9bbpvu03BkDcRYkTEtCpZmEcax/eCXvceM5qXGx62TJUnoM4KyQWtBj+/h47HwsKyyMULRcJwSWSVvdWRSQNHJJAdHw5jhc7mY/TTBfdKR0UpYWQfOvk1DflPsfEemXU6Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6JZGuZL; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nO7dBnqt"
-X-Envelope-To: zhouchengming@bytedance.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718629113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Oap4xbzGpve2QvMxgpawfVmVQ/J+LN8RalAjpXNRZCY=;
-	b=nO7dBnqt/V6/Qo3jtcY1ywMmjM7zfOpFgiC9dsruJIIbdXLf7xX72GUOWPVo1CRNEifw7M
-	O1owzF+3GNJTgro3zEYL0Slcy6AfdlhIU+idjvVBHVFm+ycYGUeqRcOus8K0zQRg47eYBk
-	R5aQdEJuerDkX21ggWu7tWtoByBIyHQ=
-X-Envelope-To: minchan@kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: senozhatsky@chromium.org
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: flintglass@gmail.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: yosryahmed@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: chengming.zhou@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Date: Mon, 17 Jun 2024 20:57:41 +0800
-Subject: [PATCH 2/2] mm/zswap: use only one pool in zswap
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6JZGuZL"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52c32d934c2so4789413e87.2;
+        Mon, 17 Jun 2024 05:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718629198; x=1719233998; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6qxWw9hbNV8Y2lcwTy4Qgqg8Y0QqnwMXXkDD5Y6lno=;
+        b=T6JZGuZLrkwsnI89MrIlDx2nywMCN4eeBYsqICd4sqprwocs7m5mv5IiVINp2iajCh
+         j7dxQsdzBtpuWKEhBG4IHLQW3dAomG/B38ulkv/l0r/sqiP0UIseXKU0cGM2cqQ48d4J
+         2Y4wae/ga5ns8zU0j0AUfYjx0OXpvEUlj8fhbvL3HcIu532dmNFKideAQ5+11b0rYCRs
+         kQD9UHKVzcwnj9WtcL+MPYBMtsUasqMlhuo4B6AzXtKRzExOwh5HsUPwdkrCnxSBtEX7
+         rvKcWCJpaBmkq3v2/EeRR/1wE7XB9lzr/HK0l0PlD5Uu8Uc7n8K7Ni6irWzxscXWL2ou
+         IdWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718629198; x=1719233998;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O6qxWw9hbNV8Y2lcwTy4Qgqg8Y0QqnwMXXkDD5Y6lno=;
+        b=sweCL8sC4xoWEccISrcyziBRpzjnxei+beuSJkAeB62vEoPrl8xpwQHFlrPjZYiZeb
+         GRV3WC1PWX4LyjhRueSbDk8YNyMGKJNbGhuAwqbhRZUQWlF6YLwYrhWqe99XrE7BaSF/
+         r9UlQXAFxf7GmKAz2AFJ1NYic27xe8ZHpxzP4BZ2BAUN1m4e488qkI15BeS5vyBv1Of/
+         SPleLlZ/akAP8rIf3+5um1q5jKlWCQO6Btc3o9eGv0hnPJAXlCjYuzlBBbsqXGWOjU2a
+         HS7K5fR9q+rd7ow6zJj1ePjqOLaSNhF/5IYVq1rHZkeVn3uNXQBmHPjRw31RJSWYQFeB
+         yAeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWCDq6CZ6wEzhbOXrLefVGTNInnSBozO5Z6+1RKbPh/Ponm8SNh64YgqBQkJ8Uzn4/vEhYQ21zgqS4iljRLzIYugc/j0IV036R4WcrwOvGgfGhk+eyxw3+8DHcbqjss1cN+A/ZGc5hl1OHSuIjRWiMnH0YCB6LAtzT6o3TuxHoDqTS
+X-Gm-Message-State: AOJu0Yx2QacB8Hr+CL9oqI6jTP7TYy0gPKKuTvAZjt5nvhPaYjpb03vO
+	/JEbVDuGKg4Vhcp3cm61GPMpCU36NnEtW69L0RlBzWz6nq4+knWWYpwFNw==
+X-Google-Smtp-Source: AGHT+IEKJUepyEo0Qr4VnqJMJm4O3lMQ8RESf1ddP7d2P9ZeNTdN+t4VyV9gLe2htpTYYLBjpsX1Rw==
+X-Received: by 2002:a19:6904:0:b0:52c:7fe8:6489 with SMTP id 2adb3069b0e04-52ca6e98eb2mr5625129e87.63.1718629197730;
+        Mon, 17 Jun 2024 05:59:57 -0700 (PDT)
+Received: from debian ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870e9145sm195678665e9.22.2024.06.17.05.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 05:59:57 -0700 (PDT)
+Date: Mon, 17 Jun 2024 14:59:55 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: power: supply: add support for
+ MAX17201/MAX17205 fuel gauge
+Message-ID: <20240617125955.GA292946@debian>
+References: <20240615203352.164234-1-dima.fedrau@gmail.com>
+ <20240615203352.164234-2-dima.fedrau@gmail.com>
+ <ee0cd414-206c-48c9-aee2-06e24e0b981c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240617-zsmalloc-lock-mm-everything-v1-2-5e5081ea11b3@linux.dev>
-References: <20240617-zsmalloc-lock-mm-everything-v1-0-5e5081ea11b3@linux.dev>
-In-Reply-To: <20240617-zsmalloc-lock-mm-everything-v1-0-5e5081ea11b3@linux.dev>
-To: Minchan Kim <minchan@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
- Nhat Pham <nphamcs@gmail.com>
-Cc: Takero Funaki <flintglass@gmail.com>, 
- Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, Chengming Zhou <chengming.zhou@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718629103; l=7170;
- i=chengming.zhou@linux.dev; s=20240617; h=from:subject:message-id;
- bh=L4Tdv4oNUtCkWu95VCHEftXhaf4yOIeTqNlEkwqKbIs=;
- b=BBjbT07sLabE3YgKNeNTNY+hpFA7z5RXhrwdv8lJ4fbQnVsmWqdtttn11LlWrtGy0ReHy0fXP
- jAJh05UZwqUAkHcHksZviYxw5RS3MZdbdlCrh3YQoqLRgKFE7/fK4gV
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=/XPhIutBo+zyUeQyf4Ni5JYk/PEIWxIeUQqy2DYjmhI=
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee0cd414-206c-48c9-aee2-06e24e0b981c@kernel.org>
 
-Zswap uses 32 pools to workaround the locking scalability problem in
-zsmalloc, which brings its own problems like memory waste and more
-memory fragmentation.
+Am Sun, Jun 16, 2024 at 09:27:21AM +0200 schrieb Krzysztof Kozlowski:
+> On 15/06/2024 22:33, Dimitri Fedrau wrote:
+> > Adding documentation for MAXIMs MAX17201/MAX17205 fuel gauge.
+> > 
+> 
+> Three patchsets within 30 minutes. No changelog et all.
+>
+Sorry, had to fix my mail address in the commit message. Changelog was
+in the cover letter. Anyway, could have fixed that in a later version.
 
-Testing results show that we can have near performance with only one
-pool in zswap after changing zsmalloc to use per-size_class lock instead
-of pool spinlock.
+> Slow down (one posting per 24h) to give people chances to review. Then
+> provide changelog under --- and describe what happened.
+> 
+[...]
+> > +maintainers:
+> > +  - Dimitri Fedrau <dima.fedrau@gmail.com>
+> > +
+> > +properties:
+> > +      - description: ModelGauge m5 registers
+> > +      - description: Nonvolatile registers
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: m5
+> > +      - const: nvmem
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> 
+> This is incomplete. Missing battery and probably more... Look how other
+> bindings are written.
+> 
+Some fuel gauges used monitored-battery and/or power-supplies others none
+of them(mitsumi,mm8013.yaml). I'm not sure when to use them.
 
-Testing kernel build (make bzImage -j32) on tmpfs with memory.max=1GB,
-and zswap shrinker enabled with 10GB swapfile on ext4.
-
-                                real    user    sys
-6.10.0-rc3                      138.18  1241.38 1452.73
-6.10.0-rc3-onepool              149.45  1240.45 1844.69
-6.10.0-rc3-onepool-perclass     138.23  1242.37 1469.71
-
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
----
- mm/zswap.c | 60 +++++++++++++++++++-----------------------------------------
- 1 file changed, 19 insertions(+), 41 deletions(-)
-
-diff --git a/mm/zswap.c b/mm/zswap.c
-index e25a6808c2ed..5063c5372e51 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -122,9 +122,6 @@ static unsigned int zswap_accept_thr_percent = 90; /* of max pool size */
- module_param_named(accept_threshold_percent, zswap_accept_thr_percent,
- 		   uint, 0644);
- 
--/* Number of zpools in zswap_pool (empirically determined for scalability) */
--#define ZSWAP_NR_ZPOOLS 32
--
- /* Enable/disable memory pressure-based shrinker. */
- static bool zswap_shrinker_enabled = IS_ENABLED(
- 		CONFIG_ZSWAP_SHRINKER_DEFAULT_ON);
-@@ -160,7 +157,7 @@ struct crypto_acomp_ctx {
-  * needs to be verified that it's still valid in the tree.
-  */
- struct zswap_pool {
--	struct zpool *zpools[ZSWAP_NR_ZPOOLS];
-+	struct zpool *zpool;
- 	struct crypto_acomp_ctx __percpu *acomp_ctx;
- 	struct percpu_ref ref;
- 	struct list_head list;
-@@ -237,7 +234,7 @@ static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
- 
- #define zswap_pool_debug(msg, p)				\
- 	pr_debug("%s pool %s/%s\n", msg, (p)->tfm_name,		\
--		 zpool_get_type((p)->zpools[0]))
-+		 zpool_get_type((p)->zpool))
- 
- /*********************************
- * pool functions
-@@ -246,7 +243,6 @@ static void __zswap_pool_empty(struct percpu_ref *ref);
- 
- static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- {
--	int i;
- 	struct zswap_pool *pool;
- 	char name[38]; /* 'zswap' + 32 char (max) num + \0 */
- 	gfp_t gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
-@@ -267,18 +263,14 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	if (!pool)
- 		return NULL;
- 
--	for (i = 0; i < ZSWAP_NR_ZPOOLS; i++) {
--		/* unique name for each pool specifically required by zsmalloc */
--		snprintf(name, 38, "zswap%x",
--			 atomic_inc_return(&zswap_pools_count));
--
--		pool->zpools[i] = zpool_create_pool(type, name, gfp);
--		if (!pool->zpools[i]) {
--			pr_err("%s zpool not available\n", type);
--			goto error;
--		}
-+	/* unique name for each pool specifically required by zsmalloc */
-+	snprintf(name, 38, "zswap%x", atomic_inc_return(&zswap_pools_count));
-+	pool->zpool = zpool_create_pool(type, name, gfp);
-+	if (!pool->zpool) {
-+		pr_err("%s zpool not available\n", type);
-+		goto error;
- 	}
--	pr_debug("using %s zpool\n", zpool_get_type(pool->zpools[0]));
-+	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
- 
- 	strscpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
- 
-@@ -311,8 +303,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- error:
- 	if (pool->acomp_ctx)
- 		free_percpu(pool->acomp_ctx);
--	while (i--)
--		zpool_destroy_pool(pool->zpools[i]);
-+	zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
- 	return NULL;
- }
-@@ -361,15 +352,12 @@ static struct zswap_pool *__zswap_pool_create_fallback(void)
- 
- static void zswap_pool_destroy(struct zswap_pool *pool)
- {
--	int i;
--
- 	zswap_pool_debug("destroying", pool);
- 
- 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
- 	free_percpu(pool->acomp_ctx);
- 
--	for (i = 0; i < ZSWAP_NR_ZPOOLS; i++)
--		zpool_destroy_pool(pool->zpools[i]);
-+	zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
- }
- 
-@@ -464,8 +452,7 @@ static struct zswap_pool *zswap_pool_find_get(char *type, char *compressor)
- 	list_for_each_entry_rcu(pool, &zswap_pools, list) {
- 		if (strcmp(pool->tfm_name, compressor))
- 			continue;
--		/* all zpools share the same type */
--		if (strcmp(zpool_get_type(pool->zpools[0]), type))
-+		if (strcmp(zpool_get_type(pool->zpool), type))
- 			continue;
- 		/* if we can't get it, it's about to be destroyed */
- 		if (!zswap_pool_get(pool))
-@@ -492,12 +479,8 @@ unsigned long zswap_total_pages(void)
- 	unsigned long total = 0;
- 
- 	rcu_read_lock();
--	list_for_each_entry_rcu(pool, &zswap_pools, list) {
--		int i;
--
--		for (i = 0; i < ZSWAP_NR_ZPOOLS; i++)
--			total += zpool_get_total_pages(pool->zpools[i]);
--	}
-+	list_for_each_entry_rcu(pool, &zswap_pools, list)
-+		total += zpool_get_total_pages(pool->zpool);
- 	rcu_read_unlock();
- 
- 	return total;
-@@ -802,11 +785,6 @@ static void zswap_entry_cache_free(struct zswap_entry *entry)
- 	kmem_cache_free(zswap_entry_cache, entry);
- }
- 
--static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
--{
--	return entry->pool->zpools[hash_ptr(entry, ilog2(ZSWAP_NR_ZPOOLS))];
--}
--
- /*
-  * Carries out the common pattern of freeing and entry's zpool allocation,
-  * freeing the entry itself, and decrementing the number of stored pages.
-@@ -814,7 +792,7 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
- static void zswap_entry_free(struct zswap_entry *entry)
- {
- 	zswap_lru_del(&zswap_list_lru, entry);
--	zpool_free(zswap_find_zpool(entry), entry->handle);
-+	zpool_free(entry->pool->zpool, entry->handle);
- 	zswap_pool_put(entry->pool);
- 	if (entry->objcg) {
- 		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
-@@ -939,7 +917,7 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
- 	if (comp_ret)
- 		goto unlock;
- 
--	zpool = zswap_find_zpool(entry);
-+	zpool = entry->pool->zpool;
- 	gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
- 	if (zpool_malloc_support_movable(zpool))
- 		gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
-@@ -968,7 +946,7 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
- 
- static void zswap_decompress(struct zswap_entry *entry, struct folio *folio)
- {
--	struct zpool *zpool = zswap_find_zpool(entry);
-+	struct zpool *zpool = entry->pool->zpool;
- 	struct scatterlist input, output;
- 	struct crypto_acomp_ctx *acomp_ctx;
- 	u8 *src;
-@@ -1467,7 +1445,7 @@ bool zswap_store(struct folio *folio)
- 	return true;
- 
- store_failed:
--	zpool_free(zswap_find_zpool(entry), entry->handle);
-+	zpool_free(entry->pool->zpool, entry->handle);
- put_pool:
- 	zswap_pool_put(entry->pool);
- freepage:
-@@ -1683,7 +1661,7 @@ static int zswap_setup(void)
- 	pool = __zswap_pool_create_fallback();
- 	if (pool) {
- 		pr_info("loaded using pool %s/%s\n", pool->tfm_name,
--			zpool_get_type(pool->zpools[0]));
-+			zpool_get_type(pool->zpool));
- 		list_add(&pool->list, &zswap_pools);
- 		zswap_has_pool = true;
- 		static_branch_enable(&zswap_ever_enabled);
-
--- 
-2.45.2
-
+Best regards,
+Dimitri Fedrau
