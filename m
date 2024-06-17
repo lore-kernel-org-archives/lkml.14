@@ -1,216 +1,211 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79A5A198A34;
-	Mon, 17 Jun 2024 13:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630300; cv=none; b=hCBxsn5MIX94uVpwtBgMvMCAGwjmJMKTgARnKOQmgq9ic/EIWR07HFKc5w9bf0D+m7eOxW2nrojyD37SBiLaUPCbSxOyeJmeE98nogogw+0XdknzPaQwxcaU6rCQlVU/i56pjxelibGiFbfWGJ7luS/zpAQKgOkqlYTtbr20wlA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630300; c=relaxed/simple;
-	bh=nus8EXCQy5Vw9MTP03RIYqf7FT1L5evjEegx9BPrpLA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m0ckLTIPDJDln1A4aB0Ex2k9Jf5mugGulXA2r/+Qr2vbOEljgC9DHdWOgPUJ3Kll07BA3YGta8k+/dk9f2ajxER083x0hvpm0ejvWuGBT6jarZ58xu1pSw2MqhVzK0IAXHFghXnR7q6Fjo1yiBEUL50jr8Cwg/JP08flioFI46k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.08,244,1712588400"; 
-   d="asc'?scan'208";a="212215763"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Jun 2024 22:18:09 +0900
-Received: from [10.226.92.92] (unknown [10.226.92.92])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 54DF54338F32;
-	Mon, 17 Jun 2024 22:18:07 +0900 (JST)
-Message-ID: <c20a8d7c-a732-4425-ad8c-c5998ed8977e@bp.renesas.com>
-Date: Mon, 17 Jun 2024 14:18:05 +0100
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58121E480
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718630443; cv=fail; b=JaC+nTSjY+9Kt+TmOf2XeMjdbKckxUIF+6xUdP4bvSRu2c/ALv6u2ENHqQQN7mAHKCZEs0UExjON8gb/rUmITeX4bZdmktplI1i5MxxBD2RcEk6JBSfkJNsg1zso1Wr8BO5CBnsDjQhLoMeF+ccJo02J8f6IzdhGqRtT1YkfVjk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718630443; c=relaxed/simple;
+	bh=JqO1mrg2ev2sZpAlOIMIG/x+Dy/9NS5CY3YbDQBMfmM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tNgiYFCRXahwR/VXRgzADPLcM4JwQFrG2+gWu05gXxRzSDI7wWzN5JYhTHdh4bG/09cTt5nf6DzjfWww3HUUHsB6ISMJyF3K8A4dRG5PRnJCa0DxqTbZfH4c0aVcj+q4CuQQIp0+feEbnoi/hMbnh+ZCECQXMP0yNZgkxZZazUg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=vBe5uQUh; arc=fail smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="vBe5uQUh"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HBE1mh017441;
+	Mon, 17 Jun 2024 05:55:59 -0700
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3ysafh5257-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 05:55:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eLokZjyHWIXTB7YuCeWjN67sgxgIyN3GYz4y37xK3XwGayoW90XzAVWzL/00Aub4w1TnkhqMZE5eJI5v/78/uE+G1nA6EXnr9fPaCcWhGTEayIB94NyBuOqrIZDRidwEXtXMRxltnuXgJkYDb7wulfZLi4pC3bSxOTfchxDwooIcvb7EpYfmBl5B/G8DmgUJ6Ue7hqofa15c6SChaxpa/fu6yij6qy7Pqgk3Wt6spdCiNVe/rt7+PxdE1KHLLNCp88rcKrZElIwyPmJOnmo45f2ZcnYnaccAX8EzWh5X6GCHUe+SwyyXIJvuz0JJi2UUE9hUMJ+I2C85+6MpmJOoLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UwidQ+CSMfrAW6BJw6M7Ut/E2getZxETkKDKjYl2rrs=;
+ b=LIjc4mQ8nQBsCGsbdaBSo9l2qeGdNfCFk4Uo9jetCaGNTe0sdishB38HUcLQ0kRjxWBdjWUoqJy6gNlLTrRv9Dm7+f1qDy6EgMPEL2FY0qOdaZfdgfNHYgV9aqMSPqq4smecOTkMugj5GiSlbo5defHsPEJB32XthjBTa8D0WY5ZRG7Dkj+RNyx3Dn4KupWjs4FMYJTerSGvzJXih8ZuzeeN18TU1Ou2FqonLBalNsBscIvUqKoOGncNxBa4JiNL4VGg5+H/OuispwbbWvynGQruiEnjm3O0NgnG36IpkLEPdAXaSfDYVbayHRUDBLhMbLKbwqd+ZofKPV8wmfLCQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UwidQ+CSMfrAW6BJw6M7Ut/E2getZxETkKDKjYl2rrs=;
+ b=vBe5uQUhRHa6DnBFaVGvtpIo5cYLIJYA0L0an+oPUjHrmdQX5k60+VC+qfOtFFA8q7aJ4kYO/4CwSM1hJIKvRZFbwamDLlp5btzJYD11zdiVV8Vnlu1BqumAR22/vXMOT6XAhnAmFi5SBrJ2gfhQb0wQ9EiVkqXHJnzHvspPMj4=
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com (2603:10b6:303:1e0::16)
+ by BL1PR18MB4166.namprd18.prod.outlook.com (2603:10b6:208:313::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 12:55:55 +0000
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::52f3:9792:ee42:90b]) by MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::52f3:9792:ee42:90b%7]) with mapi id 15.20.7677.027; Mon, 17 Jun 2024
+ 12:55:54 +0000
+From: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: Jerin Jacob <jerinj@marvell.com>, Srujana Challa <schalla@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v7 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Thread-Topic: [EXTERNAL] Re: [PATCH v7 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Thread-Index: AQHaqqXUeJduCBvv+0e3+QVunpJsgbG32TAAgAAF9zCAAyjT4IACojEAgA5onMA=
+Date: Mon, 17 Jun 2024 12:55:54 +0000
+Message-ID: 
+ <MW4PR18MB5244E888BB8195D94A6E2EC2A6CD2@MW4PR18MB5244.namprd18.prod.outlook.com>
+References: <2024042950-refurbish-duckbill-77b4@gregkh>
+ <20240520110630.2568767-1-vattunuru@marvell.com>
+ <2024060412-amulet-unflawed-f37a@gregkh>
+ <SJ0PR18MB52462AA2A9F15103D5198CC5A6F82@SJ0PR18MB5246.namprd18.prod.outlook.com>
+ <MW4PR18MB524422223AC92181942C75E2A6FA2@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <4a4b1675-3244-4032-ae64-82ca8872288f@app.fastmail.com>
+In-Reply-To: <4a4b1675-3244-4032-ae64-82ca8872288f@app.fastmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR18MB5244:EE_|BL1PR18MB4166:EE_
+x-ms-office365-filtering-correlation-id: ca8ee96c-9073-491d-077b-08dc8eccd336
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230037|376011|1800799021|366013|38070700015;
+x-microsoft-antispam-message-info: 
+ =?us-ascii?Q?y3fe+tJGQvTBziLhJSFwWNm8CIhAozeNpeVfb2cELbsF1/82IVIy7gzYpvoy?=
+ =?us-ascii?Q?D2VpeiiUGvvYvsZARE2W73xm5G/GmwzYp+XQccaqRyh5oMpLs7O25LMKA95i?=
+ =?us-ascii?Q?GwAiKQtMIQJPHhW7VMC60vuBa/Qh2yPvUUkrAXWOtJhHJY9pAiMFKdS7ioo3?=
+ =?us-ascii?Q?bwTKN078AB14MUgx2sZYOUioHArdq/rJ0NBxxqCsrfP4NSxDo8Z91CdSHEjo?=
+ =?us-ascii?Q?Gr+aDXXWfg4WdiQVoJCLNOTES9yvrDp7kdvm/yQR/uZWXk+EjJn997qlIJIV?=
+ =?us-ascii?Q?Gm6boyn3Ufb2YwNIek/pUTtm2NRa5xAhYhBX4fOtB/EoQKozmVjFShBstsVY?=
+ =?us-ascii?Q?KrmfwyuwwIrtg16k2wULWgVUKTI5hM4l/y5nDs8RLuYCJvHrvRmueJYTnXy+?=
+ =?us-ascii?Q?b7t0aqzudIQ0N0tCK8kPPZstH2I5b9ZIbYwbbS/cOZPRzh1x/IATg6eYfllY?=
+ =?us-ascii?Q?TOJ1E9xvkY9pKWOXMTSwIZLI+9Kl1D1VsRXblRf64XM6ed59a9G6W/aunBfp?=
+ =?us-ascii?Q?FiSXjx5tjQ2rsaTds0gUQ0xSxj/+w2zz9dBOO0a6WBzK8OF8q7EvXsb4NC8Q?=
+ =?us-ascii?Q?HYAPh6MSeVUNp5HDXyLv2W827UUGGNFjlOT6g08KUxH7d97oOdeXhX64qYsA?=
+ =?us-ascii?Q?/DcXqHpeSRUoiuGcRAe0KGQoi4Vfc6n33v3xomhtuvdfhi+kNKh2ZzLdRNh9?=
+ =?us-ascii?Q?+dLuY+2+lAz228N9P8Q3amfdk8JcfmHZDDO8rXv4inrv8b5rErUy9oTcXXY6?=
+ =?us-ascii?Q?stVQaFqg8es4f8FIBvlf/gjSFgMGR/iJHlK2ainBztnztxvHqdyCoTS8YUvf?=
+ =?us-ascii?Q?l3hxFWHeGiZRzRJe6Hp0eDUNjVpUTQWeDRVSbr/juaGDyr7rE4w7b1eDW0V3?=
+ =?us-ascii?Q?jbBw/48LPhj+EkoApupyF99BoX5guKVjw1u1Fbw4ZczA+Ee+wFtLlVc1umDD?=
+ =?us-ascii?Q?FzAv9lVaeczz6e1COmHQR5/3lN8tl31ofPU72aAQuNrt9ShkIQqBBuHPk6v5?=
+ =?us-ascii?Q?gvWNp/qWYSlHc4HRwiDy75yCaBacNG9tfKzSQ5gU5RaHsDIuft6MCApcsUys?=
+ =?us-ascii?Q?e7UC+SQvGB97f9Q8YteJLhGABQKczVM2YUPnAWTDQCt04REw3VA5dxAo+XBc?=
+ =?us-ascii?Q?1PRMysSRFK75C76QWUi/aGBs5O/A0jns3RaqPub/WjHuqEQK8m7bNJFWN1NT?=
+ =?us-ascii?Q?/28nSwPWmlATj0MYvn9esmvpsPYvVEasoSv6/F5RssWDTxy8msWEtlxTho9U?=
+ =?us-ascii?Q?VTi+EnHdx2Cla/LtOD6TcEGZMs2z0OGoiVw3pRX1oNrgwgSYDTKjCvURaIVp?=
+ =?us-ascii?Q?8hFjPt/6HsGA6ZTG2Ow8suSekVLAmYU7sxBL//e19+vKygrN/NaG/PcYkX7j?=
+ =?us-ascii?Q?HdmdVcA=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5244.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(366013)(38070700015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?ZonSNRiKs0z76pMtdlbBWysmBZAEXdbcC/AAUUO3hbf6dko727y/szAfxJ6Y?=
+ =?us-ascii?Q?W+IxfvlTvmn8V5ppTzJI4bVQk/+RAzKbm0q/fsRZScWZvRxCddeIQ+tsr6Jb?=
+ =?us-ascii?Q?UpchNZ0/YaZ6Nu1Ve9CQQancGGpx8/wsgvRFYMJQucHkA5WQFxNKzm5f8R7c?=
+ =?us-ascii?Q?tHnBwE+XR5L/tzR6uzq1Hn8WqIMqv0oa3vKwoEWzUl0iee3tfHdenTN1zlZ1?=
+ =?us-ascii?Q?jV3Rdms5VQY2h5hzVM5tmsAmFBeZeyQwR6gxDy6y2dhBxtHvM6iWE3CzB+JU?=
+ =?us-ascii?Q?ZgwLcspjSgsGug3s3ia/L+76s78/TyDR/GwhHZLj763sG67uQAHGBt8SpIaI?=
+ =?us-ascii?Q?qBmqyiYlfUMAveURzfVjJ7giuZF+MqFVIQH0wDhvwbbZt8qe1gazBLwE3KNM?=
+ =?us-ascii?Q?BQPQ1b6qoj5SN7nHLIw6x6DgOM01KjaZQBPVO+RJCzoT7Y3G7Xo53po13QJY?=
+ =?us-ascii?Q?ehz5s0xsR+MnjQ+aW2ckNqLsJZiR95KNdwR+JFfS4vW+wvqWgsa7hWU8Qsk+?=
+ =?us-ascii?Q?YccOXjPst+DBCmM2H77/kQb6TA/0QFvsBcqHsCu5G67B5lkG44o2YTg0v9jU?=
+ =?us-ascii?Q?Co9EPw7V0/5fvTu47Xp9ve/0Btgchxza0Bn20YIF1Ehc2qDiXrkTlqtgflhy?=
+ =?us-ascii?Q?nVKFmj8sf4gGVBofijYEszo6JRNwNKA9+dWl2JZ+EdUNJ0Xgm9V8HOo52DQR?=
+ =?us-ascii?Q?eXjEEC1Xq22nI17vKS7OJENLR0y/5aBIhfY9+2VlIDpgcyEohlpus1L5LkoX?=
+ =?us-ascii?Q?Sbn0MeQ67cE0S94E0V9Gn8dkL6/kNqdNkafO11AE7sB/dk1zkR1Nh6jHUOXI?=
+ =?us-ascii?Q?CtnXmReRCTLv6HT9MfVXtwlLXEdCr1wD+EeWTe0Rp9W7Q7YkHhcCbcJhxA7N?=
+ =?us-ascii?Q?vfqdK01+OdLER9RUKhIytC4D2IcGmWwXcz9V2XyLXw4R4kHUSD5wxP/DywO9?=
+ =?us-ascii?Q?kIE02GHVzodZcyYlGIFQEIfsd8C/OFN3YA/japghrCHxaqqmwopmV2yBnvNY?=
+ =?us-ascii?Q?z4JYj2lIbRk9HPaVF6yiyOHImIt2nRjBLN3Xf89hCjmLBs1GWHpZq4wwi5wn?=
+ =?us-ascii?Q?2Ha4I74Ksad/4eM8PFPD8t4eWK8wHX2MjsRU6sRBAr6lR2F4sTBaSVkWrUpu?=
+ =?us-ascii?Q?lf/vZGFkidplYJ7Zh3yLK2vw3Z3veLcamkTxn/gHIRwmhu2WSPZANOzgC8Sp?=
+ =?us-ascii?Q?DisWvA5RL8aqbC16dpAiogYyvEoZi3MgEhQToBlJzz3EjzSJB2GqJbeJmvSj?=
+ =?us-ascii?Q?1vaQBnFTcNqtjUuSHKgSZKFf6cWvnwObkI6043t0MKR7x9yKLaslz8939dKl?=
+ =?us-ascii?Q?enPZ+rUdnlQfqWfmCFAFBPai1vBkkrl9GkIQC2yzopeI4ne5QpE2FSC53m9P?=
+ =?us-ascii?Q?b9NmtVnP0W1RhCsiE1hIR3XBfFBTz7UJfnCTcqElJ7diyoHDxVwWmw6ARplV?=
+ =?us-ascii?Q?1kLwQEqNa8CVY47oSea+ver5zFtRfEclWnTK9IVv/40X2azjXNco0qOMxXrn?=
+ =?us-ascii?Q?fOfZ8Y+WUV3lv0dR93I5s8NabJUBxVHJDPiYG3Slj3UlJWcwtpeELOnaB3Cv?=
+ =?us-ascii?Q?Wx2+vDZeq8ZVkFlOW1+MXXiFa85oDiyAm8Sxc2h1?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] docs: stable-kernel-rules: remind reader about DCO
-To: Shung-Hsi Yu <shung-hsi.yu@suse.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- stable@vger.kernel.org, workflows@vger.kernel.org
-References: <20240615020356.5595-1-shung-hsi.yu@suse.com>
- <20240615020356.5595-2-shung-hsi.yu@suse.com>
-Content-Language: en-GB
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-Organization: Renesas Electronics Corporation
-In-Reply-To: <20240615020356.5595-2-shung-hsi.yu@suse.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------wrt1c4Pp6096Reih5PhcYvrU"
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5244.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca8ee96c-9073-491d-077b-08dc8eccd336
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2024 12:55:54.7452
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AUuzBHN9NOdeBzn06TPuc2k4jj/SDyUZ7Ytfrv8fu2ByVAFzWb1cUEnJ0RsLNUURzjMD3WwjHy6LdlWDzrNvKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR18MB4166
+X-Proofpoint-ORIG-GUID: wdsRr3k1X84jL3Jh9znAW4gBohFEhKxb
+X-Proofpoint-GUID: wdsRr3k1X84jL3Jh9znAW4gBohFEhKxb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_11,2024-06-17_01,2024-05-17_01
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------wrt1c4Pp6096Reih5PhcYvrU
-Content-Type: multipart/mixed; boundary="------------hLlHwquRiT6tFl0rMb6UZ0t7";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Shung-Hsi Yu <shung-hsi.yu@suse.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- stable@vger.kernel.org, workflows@vger.kernel.org
-Message-ID: <c20a8d7c-a732-4425-ad8c-c5998ed8977e@bp.renesas.com>
-Subject: Re: [PATCH v2 2/2] docs: stable-kernel-rules: remind reader about DCO
-References: <20240615020356.5595-1-shung-hsi.yu@suse.com>
- <20240615020356.5595-2-shung-hsi.yu@suse.com>
-In-Reply-To: <20240615020356.5595-2-shung-hsi.yu@suse.com>
 
---------------hLlHwquRiT6tFl0rMb6UZ0t7
-Content-Type: multipart/mixed; boundary="------------2RF19yJwrgg8NR7h44Hz0qtc"
 
---------------2RF19yJwrgg8NR7h44Hz0qtc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 15/06/2024 03:03, Shung-Hsi Yu wrote:
-> When sending patch authored by someone else to stable, it is quite easy=
- for the
-> sender to forget adding the Developer's Certification of Origin (DCO, i=
-=2Ee.
-> Signed-off-by). An example of such can be seen in the link below. Menti=
-on DCO
-> explicitly so senders are less likely to forget to do so and cause anot=
-her
-> round-trip.
+> -----Original Message-----
+> From: Arnd Bergmann <arnd@arndb.de>
+> Sent: Saturday, June 8, 2024 2:12 PM
+> To: Vamsi Krishna Attunuru <vattunuru@marvell.com>; Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>
+> Cc: Jerin Jacob <jerinj@marvell.com>; Srujana Challa <schalla@marvell.com=
+>;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [EXTERNAL] Re: [PATCH v7 1/1] misc: mrvl-cn10k-dpi: add
+> Octeon CN10K DPI administrative driver
 >=20
-> Add a label in submitting-patches.rst so we can directly link to the DC=
-O
-> section.
+> On Thu, Jun 6, 2024, at 18:42, Vamsi Krishna Attunuru wrote:
+> >> -----Original Message-----
+> >> > -----Original Message-----
 >=20
-> Link: https://lore.kernel.org/stable/2024051500-underage-unfixed-5d28@g=
-regkh/
-> Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-> ---
-> Change from v1:
-> - explicitly refer to the link as an example in the 1st paragraph (Paul=
-)
-> - commit message typo fix s/explicilty/explicitly/ (Paul)
-> ---
->  Documentation/process/stable-kernel-rules.rst | 4 ++++
->  Documentation/process/submitting-patches.rst  | 1 +
->  2 files changed, 5 insertions(+)
+> >> > The ifdef is cute, but not correct, sorry.  Please use bit shifts
+> >> > to handle this properly without any #ifdef needed at all.
+> >> >
+> >> Ack, will fix it next version. Thanks for the suggestion.
+> >>
+> >
+> > Hi Greg, the ARM64 cores on the Octeon CN10K hardware platform always
+> > run in LE mode and this CN10K DPI PF driver is only supported on
+> > Octeon CN10K platforms as the DPI PF device is an onboard PCIe device.
+> > Can I remove the BE format and only define the LE format for the
+> > dpi_mbox_message structure?, other HW device drivers of Octeon CN10K
+> > platform also only support LE format.
 >=20
-> diff --git a/Documentation/process/stable-kernel-rules.rst b/Documentat=
-ion/process/stable-kernel-rules.rst
-> index d22aa2280f6e..85a91fd40da9 100644
-> --- a/Documentation/process/stable-kernel-rules.rst
-> +++ b/Documentation/process/stable-kernel-rules.rst
-> @@ -168,6 +168,10 @@ If the submitted patch deviates from the original =
-upstream patch (for example
->  because it had to be adjusted for the older API), this must be very cl=
-early
->  documented and justified in the patch description.
-> =20
-> +Be sure to also include a :ref:`Developer's Certificate of Origin
-> +<sign_your_work>` (i.e. ``Signed-off-by``) when sending patches that y=
-ou did
-> +not author yourself.
-> +
-> =20
->  Following the submission
->  ------------------------
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentati=
-on/process/submitting-patches.rst
-> index 66029999b587..98f1c8d8b429 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -394,6 +394,7 @@ e-mail discussions.
-> =20
->  ``git send-email`` will do this for you automatically.
-> =20
-> +.. _sign_your_work:
-> =20
->  Sign your work - the Developer's Certificate of Origin
->  ------------------------------------------------------
+> Isn't this a regular Neoverse-N2 core? That means the hardware does
+> support big-endian in principle, though it's usually only used in VM gues=
+ts,
+> not on bare bare metal and the driver is fairly safe.
+>=20
+> In general, I would always suggest writing portable code, as you never kn=
+ow
+> who is going to copy from your driver into something else. Writing this
+> portably is not that hard or less readable than using bit fields.
+>=20
+ Yes Arnd, understood your point. I am thing le64_get_bits() would solve th=
+e problem here. Can you please confirm.?, I will avoid bit fields and use m=
+ask scheme to extract the fields.
 
-Reviewed-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+Thanks=20
+Vamsi
 
---=20
-Paul Barker
---------------2RF19yJwrgg8NR7h44Hz0qtc
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
 
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
-
---------------2RF19yJwrgg8NR7h44Hz0qtc--
-
---------------hLlHwquRiT6tFl0rMb6UZ0t7--
-
---------------wrt1c4Pp6096Reih5PhcYvrU
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZnA3jQUDAAAAAAAKCRDbaV4Vf/JGvajf
-AP9BjqgSsCcLfEq6gPcMjJUWEMjAyPxdRpSt7FVAxyfBSgD/YvnS80VR5FnJ+FVdZ5sUBEXXiZj5
-4NCO9opfgYanzwQ=
-=JyRj
------END PGP SIGNATURE-----
-
---------------wrt1c4Pp6096Reih5PhcYvrU--
+>       Arnd
