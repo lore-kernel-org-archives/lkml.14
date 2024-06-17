@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549711D2A2C;
-	Mon, 17 Jun 2024 13:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C498D1D2A0E;
+	Mon, 17 Jun 2024 13:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632278; cv=none; b=DFxpDmTWScjmkxrBH1nexI7xQnMPk+s16fkJMzDdor+ARnFXY3mCXAyd4KYn7Ire8KgM4dFLXihaOpnutwyQRHJpVy1Y+7NrXlwiyddMIR1EnipAV+X54JERnjVZxX9DDbG7itxWlWHWxv6i9Xum51WONZVNaXllQDWVjT5jSi0=
+	t=1718632279; cv=none; b=pg3g0rYdLEpnVhZjuixD3aeWc4juwA8OeaDPupOT50ok2nfo9hK8VUkrrNJDZ1i+nxNohOvKWOxnuJiN19z+jAyo/jJt+i3Ivpa9RqCEYbtlsCtXcXzyldz0NEo3vg9oNElJxxpCXK4dxCOJm2PZEn4256TQu6Ny7yAbKqWtDWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632278; c=relaxed/simple;
-	bh=+uuk3vMCYxF3Q8l4AHiJOepR9hKWS3z/s9T1avm3wlI=;
+	s=arc-20240116; t=1718632279; c=relaxed/simple;
+	bh=j+t677zUV4HRQFlt4klS1cop/Q1jwOBeg5HUPERFUPM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=CL5PvXmiagucsH8QgGHQBQQYHBqSwTfEzjXSg9mEfXTMte9q60QxuhIzKlnhNHsbytaZhyVRuG2hEP7nw2MbhrOaB4PqS1+ppcF6aEROh0a6Kl1WJrQqpLYkZEV7y2zhMNLwqnnlsAThqpqb8i2Nx3rTiRgHZ4UJSgb1d908pCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fi8RUXRD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IEpWQiAh; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=gCii4XtTLUcJoC7f9AGSlM/iH0UqXGgO1KCZAqQQQZfMJLr1xHdQ93afzNAkX5nhv6Gkh6GGsWzDJsG4dSOtxbobCq5Ce0+KwGhE/cCEMvvV2wIZ594G2xEGiPl7yFvEsIxeWxQvP9kHhftCmnz8QyvN2GGtjH1EZdc/lv5ImJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ym1v2Duy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v2Jy1zve; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fi8RUXRD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IEpWQiAh"
-Date: Mon, 17 Jun 2024 13:51:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ym1v2Duy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v2Jy1zve"
+Date: Mon, 17 Jun 2024 13:51:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718632271;
+	s=2020; t=1718632269;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SUtlrTxv8VGKnra57J0H5miJp+nw4zCjNbDz8H8iltA=;
-	b=fi8RUXRD7wugXBVVUjK33S+esvhFT3cVkheZUcRGn859W2ShpRQVZF4eGqL/8oBIiJQfzk
-	+uo0+nWLk4pETxjg6+/3C1s8F/5TeFWQrDxTO9lFE6UW2xg2trJdo3iWtLWcjRHu5SahFs
-	G9HLPctDXNPqgCVz6Ow3ubXWl2rdDkOjauu+JUWrSvVPnqV6CDMsXBuEkrB1e7rPcO+AJg
-	hpyqi1PSKFgyQgzV262mzw7CTgatWgSKzC244gHOK9Bw5yjm4QAqVF2Kj7mA5FavHJQBnO
-	4CBy0yRq6bXmfvRUNa3dAnwpGXvyOqC/00Y01uSuDJqDQBvefw95I+64Vr8JGQ==
+	bh=EF36Rz+1P8Rd3H11UEZFZei/2GVx4kH5roHto/S4vt8=;
+	b=Ym1v2DuyiJEAFPYL90QKa205OxUSCDimfkdC5Nn8oEt+eqt0JKRaVyF0V4C1i2OpgeMW8f
+	/riXSkkWpn2uEOBscIPZK3uBPN004+g3wbw/8B5v4CWA7rUfFc1GMERjrV2Wy9Z2cuPxxI
+	ydvvklg/N6Ra1gCOStyFfwqOG+9UJm+Q4LpWyYkrbimafB413CYBcrEXGnl6ey34ly9pqg
+	h7DAF4nwP2Sht6IIgCONsQ7o0R+z4aw7P/4JCYd466FuN7Jia83Bh4O3Cq8Cxf4k8aO6WX
+	yTPBUYrGMtIsZlpAF9pgUSxAc3rAdOZSVCePt37hsyApVySPJGgRgWK6jOPKgA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718632271;
+	s=2020e; t=1718632269;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SUtlrTxv8VGKnra57J0H5miJp+nw4zCjNbDz8H8iltA=;
-	b=IEpWQiAhhNXp/RTo9HUpfjvHiJdLnpNCL6d4HeOSf6agRm/XtuhdaApQmpVtagLp9ZQAz9
-	OzmpQyxXOZtmRWDg==
+	bh=EF36Rz+1P8Rd3H11UEZFZei/2GVx4kH5roHto/S4vt8=;
+	b=v2Jy1zveY5qNMz0QUCwtRWjdSWNv/d/HTlX7kWQz6c27EG7VVr4M85LCAWHLYf6PJOHh3Q
+	h4ZUyqazwqb+UjDA==
 From: "tip-bot2 for Herve Codina" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/core] irqdomain: Handle domain bus token in irq_domain_create()
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Herve Codina <herve.codina@bootlin.com>, x86@kernel.org,
+Subject: [tip: irq/core] irqdomain: Add a resource managed version of
+ irq_domain_instantiate()
+Cc: Herve Codina <herve.codina@bootlin.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240614173232.1184015-12-herve.codina@bootlin.com>
-References: <20240614173232.1184015-12-herve.codina@bootlin.com>
+In-Reply-To: <20240614173232.1184015-17-herve.codina@bootlin.com>
+References: <20240614173232.1184015-17-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171863227113.10875.12036970870423262662.tip-bot2@tip-bot2>
+Message-ID: <171863226962.10875.635902420067890660.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,132 +68,92 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     0b21add71bd9cfa2bd6677a0300e15fd4c4b84ed
-Gitweb:        https://git.kernel.org/tip/0b21add71bd9cfa2bd6677a0300e15fd4c4b84ed
+Commit-ID:     0c5b29a6dc7b463b6072da8cef43800008728ff3
+Gitweb:        https://git.kernel.org/tip/0c5b29a6dc7b463b6072da8cef43800008728ff3
 Author:        Herve Codina <herve.codina@bootlin.com>
-AuthorDate:    Fri, 14 Jun 2024 19:32:12 +02:00
+AuthorDate:    Fri, 14 Jun 2024 19:32:17 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 17 Jun 2024 15:48:14 +02:00
 
-irqdomain: Handle domain bus token in irq_domain_create()
+irqdomain: Add a resource managed version of irq_domain_instantiate()
 
-irq_domain_update_bus_token() is the only way to set the domain bus
-token. This is sub-optimal as irq_domain_update_bus_token() can be called
-only once the domain is created and needs to revert some operations, change
-the domain name and redo the operations.
+Add a devres version of irq_domain_instantiate().
 
-In order to avoid this revert/change/redo sequence, take the domain bus
-into account token during the domain creation.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240614173232.1184015-12-herve.codina@bootlin.com
+Link: https://lore.kernel.org/r/20240614173232.1184015-17-herve.codina@bootlin.com
 
 ---
- include/linux/irqdomain.h |  2 ++
- kernel/irq/irqdomain.c    | 30 ++++++++++++++++++++++++------
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ include/linux/irqdomain.h |  2 ++-
+ kernel/irq/devres.c       | 41 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 43 insertions(+)
 
 diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index e52fd5e..52bed23 100644
+index 5540b22..8820317 100644
 --- a/include/linux/irqdomain.h
 +++ b/include/linux/irqdomain.h
-@@ -265,6 +265,7 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-  * @hwirq_max:		Maximum number of interrupts supported by controller
-  * @direct_max:		Maximum value of direct maps;
-  *			Use ~0 for no limit; 0 for no direct mapping
-+ * @bus_token:		Domain bus token
-  * @ops:		Domain operation callbacks
-  * @host_data:		Controller private data pointer
-  */
-@@ -274,6 +275,7 @@ struct irq_domain_info {
- 	unsigned int				size;
- 	irq_hw_number_t				hwirq_max;
- 	int					direct_max;
-+	enum irq_domain_bus_token		bus_token;
- 	const struct irq_domain_ops		*ops;
- 	void					*host_data;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index fe7bba6..a21648c 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -129,7 +129,8 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
+@@ -304,6 +304,8 @@ struct irq_domain_info {
+ };
  
- static int irq_domain_set_name(struct irq_domain *domain,
--			       const struct fwnode_handle *fwnode)
-+			       const struct fwnode_handle *fwnode,
-+			       enum irq_domain_bus_token bus_token)
- {
- 	static atomic_t unknown_domains;
- 	struct irqchip_fwid *fwid;
-@@ -140,13 +141,23 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 		switch (fwid->type) {
- 		case IRQCHIP_FWNODE_NAMED:
- 		case IRQCHIP_FWNODE_NAMED_ID:
--			domain->name = kstrdup(fwid->name, GFP_KERNEL);
-+			domain->name = bus_token ?
-+					kasprintf(GFP_KERNEL, "%s-%d",
-+						  fwid->name, bus_token) :
-+					kstrdup(fwid->name, GFP_KERNEL);
- 			if (!domain->name)
- 				return -ENOMEM;
- 			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
- 			break;
- 		default:
- 			domain->name = fwid->name;
-+			if (bus_token) {
-+				domain->name = kasprintf(GFP_KERNEL, "%s-%d",
-+							 fwid->name, bus_token);
-+				if (!domain->name)
-+					return -ENOMEM;
-+				domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-+			}
- 			break;
- 		}
- 	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
-@@ -158,7 +169,9 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 		 * unhappy about. Replace them with ':', which does
- 		 * the trick and is not as offensive as '\'...
- 		 */
--		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
-+		name = bus_token ?
-+			kasprintf(GFP_KERNEL, "%pfw-%d", fwnode, bus_token) :
-+			kasprintf(GFP_KERNEL, "%pfw", fwnode);
- 		if (!name)
- 			return -ENOMEM;
+ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info);
++struct irq_domain *devm_irq_domain_instantiate(struct device *dev,
++					       const struct irq_domain_info *info);
  
-@@ -169,8 +182,12 @@ static int irq_domain_set_name(struct irq_domain *domain,
- 	if (!domain->name) {
- 		if (fwnode)
- 			pr_err("Invalid fwnode type for irqdomain\n");
--		domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
--					 atomic_inc_return(&unknown_domains));
-+		domain->name = bus_token ?
-+				kasprintf(GFP_KERNEL, "unknown-%d-%d",
-+					  atomic_inc_return(&unknown_domains),
-+					  bus_token) :
-+				kasprintf(GFP_KERNEL, "unknown-%d",
-+					  atomic_inc_return(&unknown_domains));
- 		if (!domain->name)
- 			return -ENOMEM;
- 		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-@@ -194,7 +211,7 @@ static struct irq_domain *__irq_domain_create(const struct irq_domain_info *info
- 	if (!domain)
- 		return ERR_PTR(-ENOMEM);
- 
--	err = irq_domain_set_name(domain, info->fwnode);
-+	err = irq_domain_set_name(domain, info->fwnode, info->bus_token);
- 	if (err) {
- 		kfree(domain);
- 		return ERR_PTR(err);
-@@ -207,6 +224,7 @@ static struct irq_domain *__irq_domain_create(const struct irq_domain_info *info
- 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
- 	domain->ops = info->ops;
- 	domain->host_data = info->host_data;
-+	domain->bus_token = info->bus_token;
- 	domain->hwirq_max = info->hwirq_max;
- 
- 	if (info->direct_max)
+ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+ 				    irq_hw_number_t hwirq_max, int direct_max,
+diff --git a/kernel/irq/devres.c b/kernel/irq/devres.c
+index f6e5515..b3e9866 100644
+--- a/kernel/irq/devres.c
++++ b/kernel/irq/devres.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/module.h>
+ #include <linux/interrupt.h>
++#include <linux/irqdomain.h>
+ #include <linux/device.h>
+ #include <linux/gfp.h>
+ #include <linux/irq.h>
+@@ -282,3 +283,43 @@ int devm_irq_setup_generic_chip(struct device *dev, struct irq_chip_generic *gc,
+ }
+ EXPORT_SYMBOL_GPL(devm_irq_setup_generic_chip);
+ #endif /* CONFIG_GENERIC_IRQ_CHIP */
++
++#ifdef CONFIG_IRQ_DOMAIN
++static void devm_irq_domain_remove(struct device *dev, void *res)
++{
++	struct irq_domain **domain = res;
++
++	irq_domain_remove(*domain);
++}
++
++/**
++ * devm_irq_domain_instantiate() - Instantiate a new irq domain data for a
++ *                                 managed device.
++ * @dev:	Device to instantiate the domain for
++ * @info:	Domain information pointer pointing to the information for this
++ *		domain
++ *
++ * Return: A pointer to the instantiated irq domain or an ERR_PTR value.
++ */
++struct irq_domain *devm_irq_domain_instantiate(struct device *dev,
++					       const struct irq_domain_info *info)
++{
++	struct irq_domain *domain;
++	struct irq_domain **dr;
++
++	dr = devres_alloc(devm_irq_domain_remove, sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return ERR_PTR(-ENOMEM);
++
++	domain = irq_domain_instantiate(info);
++	if (!IS_ERR(domain)) {
++		*dr = domain;
++		devres_add(dev, dr);
++	} else {
++		devres_free(dr);
++	}
++
++	return domain;
++}
++EXPORT_SYMBOL_GPL(devm_irq_domain_instantiate);
++#endif /* CONFIG_IRQ_DOMAIN */
