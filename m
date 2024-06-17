@@ -1,102 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DA81B1507;
-	Mon, 17 Jun 2024 13:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD021B29AB;
+	Mon, 17 Jun 2024 13:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630536; cv=none; b=AvIODQGQlqSJ0CMuGuxwcyvQh0K30VNpeTinCEbV0zqdtrPVytRmk/Ld4QNzE279kDYT5Bdug5C0+qBVBDFLXseWFCbe2vfg+L64e8doplWomQD/atjmCjefjFrXvyd1TRlEJ92w+yF6j+WK8UbsozVq3xTJLj5zBoIog05hJZ8=
+	t=1718630539; cv=none; b=OjF9YEh0DHJLDcbup0bej3ufYm3YdehqI3czCVnjRfGKRXZsxpRE/vxmh9HIiEsh9zQXrw4i/PxAh66xy5JEhuAWE6wUsrFkkijVtkIw8VeW5lTFEmKr+81zm1AXC7Oxjfx4DJGpkZlBu52xVEhSib0hZhuFCsUxCcFknP4zNUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630536; c=relaxed/simple;
-	bh=CUkpH5ziarLDNTdBZg+j4bgG3JKK8GRBVo8WUHYR+2U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cZ5JQcmzpseP2QSnVHtYOmLpijEIQ5bvjVo+oIi1NOXTIDdJ7ap8wtg2YIrmyClvlYJ/MdUT63ZmB7BnD4Pha8TYsSMAlMQ6Pa7R6Jz+1rrcebKL9iyU/p7S/V4k1pLw9R3FbpKPRfEgYeakVrT6jmGcp+PiRSSupT1bvWA4rJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNLVxgQe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718630539; c=relaxed/simple;
+	bh=/CdsLM4OZtV2MzVFE1JTzdMKf9cHeecCDqvGLRrbY3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UZjjzwJ9LkHxuLanhNT83zVIfWFIho7Ftyys+K8wtp5iECy0oz5JM8hw8fTZCSVay7nKgwxjIOGNL3O1DzTuYR7fyGMjjPP123fWvWLfC5wlDhIWpHj3ocHvY9GhSDS5ny6D4FrSb06z/WTjcUy37zdxNgv2TlgYIf9mT2VC27s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWSkafqW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNLVxgQe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02068C4AF1D;
-	Mon, 17 Jun 2024 13:22:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWSkafqW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71746C2BD10;
+	Mon, 17 Jun 2024 13:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630536;
-	bh=CUkpH5ziarLDNTdBZg+j4bgG3JKK8GRBVo8WUHYR+2U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LNLVxgQeVrVn+xCHGoArEpXMdNwkxWTmZZZlsFhFontEarc58luO3bZmwXKbTbF1A
-	 ffj+OMJcFoU15yKhSGpK4lowomyGfOjbj5L0fo9c6c5x+LviytbLsRJiaGDlLg8YBr
-	 VOLUT732jR2Rz+1zgmx5EuXKSQs5w+1aR+TeqfimYCqaGm2clOWAVgki1bjAVpE/V1
-	 MZt1uHVmbbJYFVfQzbsUtxgwRA8npwMorSo+YfmnxklNM6alyTsN4xNPBl75LgTDoU
-	 ZsWvz+TNQ1e8cv0TLUo3zvfkWdFKo3fRMlB/TB2Jtzv/Mj1NT/YomyTnrPz89/ZGWa
-	 bl7XVfD8CQDrQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Wei Li <liwei391@huawei.com>,
-	Huisong Li <lihuisong@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	catalin.marinas@arm.com,
-	j.granados@samsung.com,
-	mcgrof@kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.9 37/44] arm64: armv8_deprecated: Fix warning in isndep cpuhp starting process
-Date: Mon, 17 Jun 2024 09:19:50 -0400
-Message-ID: <20240617132046.2587008-37-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
-References: <20240617132046.2587008-1-sashal@kernel.org>
+	s=k20201202; t=1718630539;
+	bh=/CdsLM4OZtV2MzVFE1JTzdMKf9cHeecCDqvGLRrbY3M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZWSkafqW/uBJloDfE2iS3jnJTe3NAfbfV/BnxvW1ZExc9IDIJAzQT3cafoR5e1PsH
+	 dy4yG6MK2GfnHeZHsfuDdI0YrNgCUIfGNecBu5Z0HnW9CMAilVU3oKaRUVGsy5pYUA
+	 OXUhbjyp7OAOnN34SaTcMo2u5Hs1a3LlkS97epTvNIsUOuNMpqAm9IdxzPyUvZy5B4
+	 sTNNg0uaf+50rsuDLPu1c66+prlAuiD9egbPBBm4xuKskW2O9rVSx+qax9TbEFKvq2
+	 f5RUk/HrmTTSzmale9I+jxoiPJPe1wveN7tdvV6/en2GdkhecSw5FtCLQKOOucXeRa
+	 Rh+DpXeFoAsqQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso54519821fa.3;
+        Mon, 17 Jun 2024 06:22:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5aXL1BaVGPnkdtdLCTAS9YUhNUDBCQXmAbYwyBNPrSRyUO7D0R84/Gx6ssCS/PpIYwgr5JTBPWvcV+jZfpfh1bUDQHJ3oOqydMbM9zbqjWRc+O+maYuOXMbEwxpJgaDaOLlOBANm4IGp0xXX8JrY6rswLp3on/owJgnko+bB4gzpo
+X-Gm-Message-State: AOJu0Yzlh2C3D6ZhW1AH/08zdCUfHbLqEOZAwtkjCxJt/G0Yhh9ofoIl
+	jBx7QljKrzO6ATxGMA7xXEt5MDgD6apeinvA8TEP1hYducWnjSZ6xx05fRUFdf/umXKoKtAccwe
+	NKO8WThX4jnwhYs11j1QSmnzjo1c=
+X-Google-Smtp-Source: AGHT+IG9NJNmS6gWZLIc3t43DtdKd9O2Vql7o/j15MFKlZz9mwmPaYPtvxG+2OgKUYj4QWowKaOuyAw/OMsvOVStr1o=
+X-Received: by 2002:a05:651c:20c:b0:2ec:1708:4db2 with SMTP id
+ 38308e7fff4ca-2ec170850a0mr48431831fa.47.1718630537833; Mon, 17 Jun 2024
+ 06:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.5
-Content-Transfer-Encoding: 8bit
+References: <20240617132046.2587008-1-sashal@kernel.org> <20240617132046.2587008-7-sashal@kernel.org>
+In-Reply-To: <20240617132046.2587008-7-sashal@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 17 Jun 2024 15:22:06 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGrPY-J=v6b1yXRMEGku7m9LVPE9MUFpg7LYXwtTiu3ZA@mail.gmail.com>
+Message-ID: <CAMj1kXGrPY-J=v6b1yXRMEGku7m9LVPE9MUFpg7LYXwtTiu3ZA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 6.9 07/44] efi: pstore: Return proper errors on
+ UEFI failures
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Kees Cook <keescook@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Wei Li <liwei391@huawei.com>
+NAK
 
-[ Upstream commit 14951beaec93696b092a906baa0f29322cf34004 ]
+Please don't backport this.
 
-The function run_all_insn_set_hw_mode() is registered as startup callback
-of 'CPUHP_AP_ARM64_ISNDEP_STARTING', it invokes set_hw_mode() methods of
-all emulated instructions.
 
-As the STARTING callbacks are not expected to fail, if one of the
-set_hw_mode() fails, e.g. due to el0 mixed-endian is not supported for
-'setend', it will report a warning:
-
-```
-CPU[2] cannot support the emulation of setend
-CPU 2 UP state arm64/isndep:starting (136) failed (-22)
-CPU2: Booted secondary processor 0x0000000002 [0x414fd0c1]
-```
-
-To fix it, add a check for INSN_UNAVAILABLE status and skip the process.
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Tested-by: Huisong Li <lihuisong@huawei.com>
-Link: https://lore.kernel.org/r/20240423093501.3460764-1-liwei391@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/kernel/armv8_deprecated.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
-index dd6ce86d4332b..b776e7424fe91 100644
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -462,6 +462,9 @@ static int run_all_insn_set_hw_mode(unsigned int cpu)
- 	for (int i = 0; i < ARRAY_SIZE(insn_emulations); i++) {
- 		struct insn_emulation *insn = insn_emulations[i];
- 		bool enable = READ_ONCE(insn->current_mode) == INSN_HW;
-+		if (insn->status == INSN_UNAVAILABLE)
-+			continue;
-+
- 		if (insn->set_hw_mode && insn->set_hw_mode(enable)) {
- 			pr_warn("CPU[%u] cannot support the emulation of %s",
- 				cpu, insn->name);
--- 
-2.43.0
-
+On Mon, 17 Jun 2024 at 15:21, Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+>
+> [ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
+>
+> Right now efi-pstore either returns 0 (success) or -EIO; but we
+> do have a function to convert UEFI errors in different standard
+> error codes, helping to narrow down potential issues more accurately.
+>
+> So, let's use this helper here.
+>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/firmware/efi/efi-pstore.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+> index 833cbb995dd3f..194fdbd600ad1 100644
+> --- a/drivers/firmware/efi/efi-pstore.c
+> +++ b/drivers/firmware/efi/efi-pstore.c
+> @@ -136,7 +136,7 @@ static int efi_pstore_read_func(struct pstore_record *record,
+>                                      &size, record->buf);
+>         if (status != EFI_SUCCESS) {
+>                 kfree(record->buf);
+> -               return -EIO;
+> +               return efi_status_to_err(status);
+>         }
+>
+>         /*
+> @@ -181,7 +181,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
+>                         return 0;
+>
+>                 if (status != EFI_SUCCESS)
+> -                       return -EIO;
+> +                       return efi_status_to_err(status);
+>
+>                 /* skip variables that don't concern us */
+>                 if (efi_guidcmp(guid, LINUX_EFI_CRASH_GUID))
+> @@ -219,7 +219,7 @@ static int efi_pstore_write(struct pstore_record *record)
+>                                             record->size, record->psi->buf,
+>                                             true);
+>         efivar_unlock();
+> -       return status == EFI_SUCCESS ? 0 : -EIO;
+> +       return efi_status_to_err(status);
+>  };
+>
+>  static int efi_pstore_erase(struct pstore_record *record)
+> @@ -230,7 +230,7 @@ static int efi_pstore_erase(struct pstore_record *record)
+>                                      PSTORE_EFI_ATTRIBUTES, 0, NULL);
+>
+>         if (status != EFI_SUCCESS && status != EFI_NOT_FOUND)
+> -               return -EIO;
+> +               return efi_status_to_err(status);
+>         return 0;
+>  }
+>
+> --
+> 2.43.0
+>
