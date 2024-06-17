@@ -1,162 +1,213 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B434E194A41
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EB9197A65
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647753; cv=none; b=pCrjd2h0HXVG8vpYBrmvUWVw3w2bmZ10zbT3C89wQju54aYS3xkilemesYL4vv28iFF5P9zZaTlqQV4oX1TcK8Z+fEcIQTAWF3tYdNSq5cypfgxupYlANVzQnEoCdG7+ofb7Ulzl0lmVLChe11rKjgxGMl4uqeIjT1Wl0xstfW4=
+	t=1718647752; cv=none; b=KfeofIxVHnvSif3uep2KIRuePCjy6CB2RUlGaxZgMJxmbftrNRLGl9Ap1vKugtTkzlx0wIzIPH9lsZymbQNdjIyRP8/yt1xpA9U5VAsCv6/wdUv2fiYmVeAcLUf5pFS6JGV4pka1UriACAz49+skMq1CWg9nm3diEaBvfDuKng4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647753; c=relaxed/simple;
-	bh=f6scgY6PPn3i0YktPs71dAhdw8Fm0jCjCRTPKF5daSM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=UgzJvO+XIvEHLyz3AuY2Tc8uowwdYqkwgP0wu3qqVDGyS4A0CyS+9RKO6itibJueKP6yFTRYEJB3yJf9nfDJU47fr2fYdipVRiW9jDTZl9TgSZ420VSqt9tJ0iYSD4sBbxaZLpq7ebFRGnA4F/2JbgOnfAkfC/AWLdTgMDMnvEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 5F02A61966C1;
-	Mon, 17 Jun 2024 20:09:07 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id xtigWcKdybrJ; Mon, 17 Jun 2024 20:09:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id E73B361966CE;
-	Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tipReWDeoSdk; Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id C3B9A61966C1;
-	Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
-Date: Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Gagan Sidhu <broly@mac.com>
-Cc: ZhaoLong Wang <wangzhaolong1@huawei.com>, 
-	chengzhihao1 <chengzhihao1@huawei.com>, 
-	dpervushin <dpervushin@embeddedalley.com>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, 
-	yangerkun <yangerkun@huawei.com>, yi zhang <yi.zhang@huawei.com>
-Message-ID: <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
-In-Reply-To: <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
-References: <CFAC276E-E652-40CD-B3D8-563B95E679A8@mac.com> <14779870-BA54-4ABF-8ABF-FF1D23D172A7@mac.com> <1641029267.251608.1718640023954.JavaMail.zimbra@nod.at> <65E62DA3-EF16-44BD-8E51-E751BD2C496F@mac.com> <1802911356.251780.1718643160760.JavaMail.zimbra@nod.at> <E3E2C13C-1E52-46F2-BE2D-D2592C3369DB@mac.com> <F2DCFCE7-68FA-4C09-AE5B-09F2233575F1@mac.com> <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
-Subject: Re: [PATCH v2] ubi: gluebi: Fix NULL pointer dereference caused by
- ftl notifier
+	s=arc-20240116; t=1718647752; c=relaxed/simple;
+	bh=vSfiyKkiX4bwsedqVMUi+UNKfQCtnxdJsfNl5zihRVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hq33SsTUeYUEliYIjw9voO1zLJBYOQDWK6bvCEscv6YPIGUZYK7OcmiibufOZh0XqrVNbpmPdzJ6glHISSZFSWP2cv8+dHGFeDGyU6Xvafj2NX+vRnFfVxWHxGSrWXlajKJ3wTsCj3zFQc6IZ+EQn8eOtppbB3EgXAgvr8LJ6aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=JmZlHoby; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="JmZlHoby"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5b9a35a0901so1576607eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1718647750; x=1719252550; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MZfIVT4YSXuJxMsX8GTw0JN3/tH12LSkX+JqfTs4Sf8=;
+        b=JmZlHobyVAPEdakgq7N+mNr3CWS6boyxLXSvHkap/Joz2r5e6MJNwf375UZKEYE/Kn
+         n+oNbGvZ4tp7iHB6uugMCyNkSItmtDaf1HKiiYp6He9bQlmm0X28u1PpTzpu8+le08wr
+         0uS4CpLIaI+YlhnGc/yIWwiHiE7eEMEu71QgjxEypxS133vB/qIVh4f2t+xEXdGdB4HE
+         1JoATHyXCwH8QXuFZjOwPo0pqID3dVSHO3fyNPsL67VGIp9UtGNV447UHbAKBzP32k/z
+         B6zAvYxSHddTLGTlqS4UIokBFFIjm2yo8XxcKfKGMIypiGESOXgalHRUogB9tzYpF+zm
+         m4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718647750; x=1719252550;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MZfIVT4YSXuJxMsX8GTw0JN3/tH12LSkX+JqfTs4Sf8=;
+        b=N7CSCn/hF+uFTrvA5U9cYipOOdn4c8rcPRlcmXrOjTurR64693oiyycDlZjHyrICjM
+         mpnX8DD+oFW6psXJ6vZqU7zNvu41JQsZyXHbaIRq4+mLpZvi1NiFFQwB13cDINAo3Ui0
+         VLr9UrP4cu4a1pOXA50uhR/f1EfKznB1Qr/r64GQxG8l/owIwAKsCtoSKE8o0WRxn4NZ
+         fIloBZqyWIbVhWFP+HLPH0kmsI8WdEGdQRVl6Yh7XWCx1VAwcB6hCVNah/GfZFMUh5oZ
+         6b7Dox/yfX89DOwi2s1kEHmeLdS1Rqg/wCiaYIFODBJX/UraqgomG6C0SgoEATNYngDa
+         ut+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuha/wZ0i4c+pCWh+PMjiTpS9rB4N1W0P1jpaPMii0zRhx8ZaXxwGuhFTzpedtp9N79txxLrr+KSj0uLMr+uXkHN9VLSFjsa1fKvFe
+X-Gm-Message-State: AOJu0YwGqM7+7MqmE5+i82xys3YYQWKrRe+galNW5lj0MvLy4kuWk9fV
+	Ch7o8ussDHuSHLEL+5Mzch/JOTJGIo/SrZN/xDBqrUz083ynl+7Z8vm7iPxs9pg=
+X-Google-Smtp-Source: AGHT+IE9jF56bGHkxuy4EDvf8MTN7hIIaWkCmKCKEdckhdpm3H4A8L3DbSTHe/yoY2O1z/znNYnaDQ==
+X-Received: by 2002:a05:6820:1624:b0:5b9:89d9:c601 with SMTP id 006d021491bc7-5bdadc6e276mr10356825eaf.5.1718647747624;
+        Mon, 17 Jun 2024 11:09:07 -0700 (PDT)
+Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:164])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c118a7sm58015446d6.38.2024.06.17.11.09.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 11:09:06 -0700 (PDT)
+Date: Mon, 17 Jun 2024 11:09:04 -0700
+From: Yan Zhai <yan@cloudflare.com>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Abhishek Chauhan <quic_abchauha@quicinc.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Florian Westphal <fw@strlen.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Neil Horman <nhorman@tuxdriver.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH net-next v5 1/7] net: add rx_sk to trace_kfree_skb
+Message-ID: <1c6af55f8c51e60df39122406248eddd1afee995.1718642328.git.yan@cloudflare.com>
+References: <cover.1718642328.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: gluebi: Fix NULL pointer dereference caused by ftl notifier
-Thread-Index: Cdy4KBaQSTQSx5jOia8rup/ThWcV7A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1718642328.git.yan@cloudflare.com>
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Gagan Sidhu" <broly@mac.com>
-> https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/gluebi.c#L2=
-97
->=20
-> it seems the GLUEBI is setting the mtd to MTD_UBIVOLUME
->=20
-> https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/block.c
->=20
-> where this doesn=E2=80=99t even have the text =E2=80=9Cmtd=E2=80=9D anywh=
-ere.
->=20
-> but the boot partition is always the ubiblock device.
->=20
-> so is gluebi taking the same volume and adding the MTD_UBIVOLUME label or
-> something?
+skb does not include enough information to find out receiving
+sockets/services and netns/containers on packet drops. In theory
+skb->dev tells about netns, but it can get cleared/reused, e.g. by TCP
+stack for OOO packet lookup. Similarly, skb->sk often identifies a local
+sender, and tells nothing about a receiver.
 
-Yes, GLUEBI emulates a MTD on top of an UBI volume.
-It sets the MTD device type to MTD_UBIVOLUME.
+Allow passing an extra receiving socket to the tracepoint to improve
+the visibility on receiving drops.
 
->>=20
->> [    5.462504] auto-attach mtd7
->> [    5.462525] ubi0: default fastmap pool size: 15
->> [    5.477309] ubi0: default fastmap WL pool size: 7
->> [    5.486683] ubi0: attaching mtd7
->> [    5.811240] UBI: EOF marker found, PEBs from 273 will be erased
->> [    5.811299] ubi0: scanning is finished
->> [    5.874546] gluebi (pid 1): gluebi_resized: got update notification f=
-or
->> unknown UBI device 0 volume 1
->> [    5.892927] ubi0: volume 1 ("rootfs_data") re-sized from 9 to 28 LEBs
->> [    5.906683] ubi0: attached mtd7 (name "ubi", size 40 MiB)
->> [    5.917446] ubi0: PEB size: 131072 bytes (128 KiB), LEB size: 126976 =
-bytes
->> [    5.931132] ubi0: min./max. I/O unit sizes: 2048/2048, sub-page size =
-2048
->> [    5.944654] ubi0: VID header offset: 2048 (aligned 2048), data offset=
-: 4096
->> [    5.958513] ubi0: good PEBs: 320, bad PEBs: 0, corrupted PEBs: 0
->> [    5.970472] ubi0: user volume: 2, internal volumes: 1, max. volumes c=
-ount:
->> 128
->> [    5.984859] ubi0: max/mean erase counter: 1/0, WL threshold: 4096, im=
-age
->> sequence number: 1613475955
->> [    6.003045] ubi0: available PEBs: 0, total reserved PEBs: 320, PEBs r=
-eserved
->> for bad PEB handling: 15
->> [    6.021426] rootfs: parsing partitions cmdlinepart
->> [    6.021444] ubi0: background thread "ubi_bgt0d" started, PID 97
->> [    6.043694] rootfs: got parser (null)
->> [    6.051426] mtd: device 12 (rootfs) set to be root filesystem
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+---
+v4->v5: rename rx_skaddr -> rx_sk as Jesper Dangaard Brouer suggested
+v3->v4: adjusted the TP_STRUCT field order to be consistent
+v2->v3: fixed drop_monitor function prototype
+---
+ include/trace/events/skb.h | 11 +++++++----
+ net/core/dev.c             |  2 +-
+ net/core/drop_monitor.c    |  9 ++++++---
+ net/core/skbuff.c          |  2 +-
+ 4 files changed, 15 insertions(+), 9 deletions(-)
 
-AFAICT, this log line is not part of the mainline kernel.
+diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
+index 07e0715628ec..b877133cd93a 100644
+--- a/include/trace/events/skb.h
++++ b/include/trace/events/skb.h
+@@ -24,13 +24,14 @@ DEFINE_DROP_REASON(FN, FN)
+ TRACE_EVENT(kfree_skb,
+ 
+ 	TP_PROTO(struct sk_buff *skb, void *location,
+-		 enum skb_drop_reason reason),
++		 enum skb_drop_reason reason, struct sock *rx_sk),
+ 
+-	TP_ARGS(skb, location, reason),
++	TP_ARGS(skb, location, reason, rx_sk),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(void *,		skbaddr)
+ 		__field(void *,		location)
++		__field(void *,		rx_sk)
+ 		__field(unsigned short,	protocol)
+ 		__field(enum skb_drop_reason,	reason)
+ 	),
+@@ -38,12 +39,14 @@ TRACE_EVENT(kfree_skb,
+ 	TP_fast_assign(
+ 		__entry->skbaddr = skb;
+ 		__entry->location = location;
++		__entry->rx_sk = rx_sk;
+ 		__entry->protocol = ntohs(skb->protocol);
+ 		__entry->reason = reason;
+ 	),
+ 
+-	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
+-		  __entry->skbaddr, __entry->protocol, __entry->location,
++	TP_printk("skbaddr=%p rx_sk=%p protocol=%u location=%pS reason: %s",
++		  __entry->skbaddr, __entry->rx_sk, __entry->protocol,
++		  __entry->location,
+ 		  __print_symbolic(__entry->reason,
+ 				   DEFINE_DROP_REASON(FN, FNe)))
+ );
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 85fe8138f3e4..7844227ecbfd 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5233,7 +5233,7 @@ static __latent_entropy void net_tx_action(struct softirq_action *h)
+ 				trace_consume_skb(skb, net_tx_action);
+ 			else
+ 				trace_kfree_skb(skb, net_tx_action,
+-						get_kfree_skb_cb(skb)->reason);
++						get_kfree_skb_cb(skb)->reason, NULL);
+ 
+ 			if (skb->fclone != SKB_FCLONE_UNAVAILABLE)
+ 				__kfree_skb(skb);
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 430ed18f8584..2e0ae3328232 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -109,7 +109,8 @@ static u32 net_dm_queue_len = 1000;
+ struct net_dm_alert_ops {
+ 	void (*kfree_skb_probe)(void *ignore, struct sk_buff *skb,
+ 				void *location,
+-				enum skb_drop_reason reason);
++				enum skb_drop_reason reason,
++				struct sock *rx_sk);
+ 	void (*napi_poll_probe)(void *ignore, struct napi_struct *napi,
+ 				int work, int budget);
+ 	void (*work_item_func)(struct work_struct *work);
+@@ -264,7 +265,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 
+ static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb,
+ 				void *location,
+-				enum skb_drop_reason reason)
++				enum skb_drop_reason reason,
++				struct sock *rx_sk)
+ {
+ 	trace_drop_common(skb, location);
+ }
+@@ -491,7 +493,8 @@ static const struct net_dm_alert_ops net_dm_alert_summary_ops = {
+ static void net_dm_packet_trace_kfree_skb_hit(void *ignore,
+ 					      struct sk_buff *skb,
+ 					      void *location,
+-					      enum skb_drop_reason reason)
++					      enum skb_drop_reason reason,
++					      struct sock *rx_sk)
+ {
+ 	ktime_t tstamp = ktime_get_real();
+ 	struct per_cpu_dm_data *data;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 466999a7515e..2854afdd713f 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -1203,7 +1203,7 @@ bool __kfree_skb_reason(struct sk_buff *skb, enum skb_drop_reason reason)
+ 	if (reason == SKB_CONSUMED)
+ 		trace_consume_skb(skb, __builtin_return_address(0));
+ 	else
+-		trace_kfree_skb(skb, __builtin_return_address(0), reason);
++		trace_kfree_skb(skb, __builtin_return_address(0), reason, NULL);
+ 	return true;
+ }
+ 
+-- 
+2.30.2
 
->> [    6.062891] rootfs_data: parsing partitions cmdlinepart
->> [    6.073669] rootfs_data: got parser (null)
->> [    6.211240] block ubiblock0_0: created from ubi0:0(rootfs)
->> [    6.259545] rtc-pcf8563 0-0051: hctosys: unable to read the hardware =
-clock
->> [    6.282125] VFS: Cannot open root device "(null)" or unknown-block(31=
-,12):
->> error -6
->> [    6.297406] Please append a correct "root=3D" boot option; here are t=
-he
->> available partitions:
->> [    6.314054] 1f00             512 mtdblock0
->> [    6.314060]  (driver?)
->> [    6.327077] 1f01             256 mtdblock1
->> [    6.327081]  (driver?)
->> [    6.340101] 1f02             256 mtdblock2
->> [    6.340105]  (driver?)
->> [    6.353124] 1f03             256 mtdblock3
->> [    6.353129]  (driver?)
->> [    6.366153] 1f04           45056 mtdblock4
->> [    6.366158]  (driver?)
->> [    6.379175] 1f05           40572 mtdblock5
->> [    6.379179]  (driver?)
->> [    6.392217] 1f06            4096 mtdblock6
->> [    6.392222]  (driver?)
->> [    6.405240] 1f07           40960 mtdblock7
->> [    6.405244]  (driver?)
->> [    6.418272] 1f08           32768 mtdblock8
->> [    6.418277]  (driver?)
->> [    6.431296] 1f09           40960 mtdblock9
->> [    6.431300]  (driver?)
->> [    6.444324] 1f0a            6144 mtdblock10
->> [    6.444328]  (driver?)
->> [    6.457518] 1f0b            4608 mtdblock11
->> [    6.457523]  (driver?)
->> [    6.470720] fe00           33604 ubiblock0_0
->> [    6.470724]  (driver?)
->> [    6.484090] Kernel panic - not syncing: VFS: Unable to mount root fs =
-on
->> unknown-block(31,12)
 
-(31, 12) would be mtdblock12.
-How does your kernel know that mtdblock12 shall be the rootfs?
-
-I have a hard time understanding your current setup.
-
-Thanks,
-//richard
