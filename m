@@ -1,343 +1,94 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7105B199E80;
-	Mon, 17 Jun 2024 21:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1F4179BD;
+	Mon, 17 Jun 2024 21:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718661392; cv=none; b=bforn0Qr3YC5kNr64qXYFMVyZJrXv6GIUkgVYnAWNFfWJcjTH3jSoEocP1QnJp+TFfvWmD2UvkvQhGRF/8Oi766ea43b/10n/nx4AEhpuhqv4QC8MwMf9e41an2AIn0ILK3MbqbX0MYOHNonwA+HwO+fkWueyCr52+0QMP9tSxw=
+	t=1718661575; cv=none; b=D7AUPbj7U5CoFB7vB6iIMPYZF0jYPo6q+w7pVXxW5JwVPh62O0YEk2gRjgFjHm9MhT23uXHU3b+TAtkzZS5h521VmmrNinfY5Kzqz0QW7zcKEKHb7sRehm5tKllwXU7X3gNPymAsoic/46idMbNqTV72TUrjz9ctUmeUjI+ku5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718661392; c=relaxed/simple;
-	bh=PJqnn1xMk/vyTcI7+A/mSlNl/s10hJkFyTUCDiHLlLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ftze+aIgtXZ8A9V3ZrewyMzU7muOd5Uzwicz6o3P+3358KkTShSTOeNOzb48AJQE+SKiCqjZ79gfFiklC6s6G16yIaJbU6mcXejplzRNrhIlBjnI7xeVtovUhCECJM0p/J82GK3HI4ri+vAz4MwyZJaMQVQeCg0WZCkaOuQR97o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EoeSEaXH; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718661575; c=relaxed/simple;
+	bh=OXvlYeDAH1Ydm4s1sBrhvitUZ0K9bQtKwCg/Bnu+SsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6G4fzdf7pJMFmjA1IjomRbc/bnB3NXbNgHHzTzfRh3tSC7o37H5yF1w3t6MwtTZwia868RiWVSfsLYNpXqJ0oxKb+FN0FC4WhkRpB8ixKRkO1gFoLbcRGz3sWjs/uqjt4y/NyEqULiS/Vi6GvQjWDv9XRBCZz+N/i0JROXYyLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJM196/A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EoeSEaXH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718661388;
-	bh=PJqnn1xMk/vyTcI7+A/mSlNl/s10hJkFyTUCDiHLlLQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=EoeSEaXHD95nl/EmSAh75MlfIbNTFm82Mb1sQmIwwLYLI4KBbYwt1Lpd0GvJ3omZ+
-	 czgo+iO1EDSLl3wEYGVlkrvzwP4pHW4YPlgIvc3SBHVJ+7SMTvTsVO4bfS0kIfBrjy
-	 /eHVDWyHTB2/6wtHQUrH5CFedrSe8vog/CotNbGkg4UUH28nDenoh+n9gnw4wHjd7M
-	 3u/FP+++Iqs+WQfQICWyMYvjDRAoX7i0B8CcQ+oWOAua7QQ0NVCa2hQ5pbu9FG3FVt
-	 Ynbcm+t2lxP8EatqDlcT0sb9l+DoKOBYTyFBGQC1vm9efLFde+BqI6pt2r0B62iq2o
-	 KBBc7inHUqzLw==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5A56D378217B;
-	Mon, 17 Jun 2024 21:56:28 +0000 (UTC)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 18 Jun 2024 00:48:12 +0300
-Subject: [PATCH 4/4] phy: phy-rockchip-samsung-hdptx: Add clock provider
- support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJM196/A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FD1C2BD10;
+	Mon, 17 Jun 2024 21:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718661574;
+	bh=OXvlYeDAH1Ydm4s1sBrhvitUZ0K9bQtKwCg/Bnu+SsM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=eJM196/Aj1jpNmuYB0F0qZBizNSUVBwIfQnUVQ4QK+/Q44dZCbAjuZZ91vhAjAwuk
+	 uWnLdjnKKE1a4kNUlUTez6sD5Q6W7gO+FquqeNZPvwWGpLTqqMBprMqGuAFBzBxaks
+	 ui04LC9OqrVUnVxFu40uL36AchAdcDV4oN4uxU2cIZMXPxkYFYpYjNiVkTphqNDDNz
+	 HDxdTu9nLmru3SLLNSbK1vIYXn4/fLeN7X/4s/JAxvE92MjNU8djvW4XJopSoqsmCi
+	 +l49XwN03/iQgGfUrce9TrpoDoa+wR0ljNDDzHJppJRXSnzvW0uWugcqjr9W1Pa58R
+	 n3ZjbZnEO1SkQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 370A1CE09DE; Mon, 17 Jun 2024 14:59:34 -0700 (PDT)
+Date: Mon, 17 Jun 2024 14:59:34 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, elver@google.com, akpm@linux-foundation.org,
+	tglx@linutronix.de, peterz@infradead.org, dianders@chromium.org,
+	pmladek@suse.com, torvalds@linux-foundation.org, arnd@arndb.de,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-sh@vger.kernel.org
+Subject: Re: [PATCH v3 cmpxchg 2/4] sh: Emulate one-byte cmpxchg
+Message-ID: <9762aac5-ab5c-4016-bc63-09dbb12c3f36@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
+ <20240604170437.2362545-2-paulmck@kernel.org>
+ <c44890de1c3d54d93fbde09ada558e7cb4a7177c.camel@physik.fu-berlin.de>
+ <fcfa4d17-ea05-46f2-840d-9486923fd01d@paulmck-laptop>
+ <fc6bbbcd0b2a79d8fdcbde576ae3e5a52ffab02a.camel@physik.fu-berlin.de>
+ <972d3e89-ffda-49bc-8c0c-4d23484ca964@paulmck-laptop>
+ <add0cb7b-6ec2-4b13-b327-8ff93358993e@paulmck-laptop>
+ <4da8ec47366209cdb4d61045cb6e8b2f872a37a1.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-rk3588-hdmiphy-clkprov-v1-4-80e4aa12177e@collabora.com>
-References: <20240618-rk3588-hdmiphy-clkprov-v1-0-80e4aa12177e@collabora.com>
-In-Reply-To: <20240618-rk3588-hdmiphy-clkprov-v1-0-80e4aa12177e@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Heiko Stuebner <heiko@sntech.de>, Algea Cao <algea.cao@rock-chips.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: kernel@collabora.com, linux-phy@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-Mailer: b4 0.14-dev-f7c49
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4da8ec47366209cdb4d61045cb6e8b2f872a37a1.camel@physik.fu-berlin.de>
 
-The HDMI PHY PLL can be used as an alternative dclk source to RK3588 SoC
-CRU. It provides more accurate clock rates required by VOP2 to improve
-existing support for display modes handling, which is known to be
-problematic when dealing with non-integer refresh rates, among others.
+On Mon, Jun 17, 2024 at 10:30:40PM +0200, John Paul Adrian Glaubitz wrote:
+> Hi Paul,
+> 
+> On Mon, 2024-06-17 at 09:50 -0700, Paul E. McKenney wrote:
+> > On Tue, Jun 04, 2024 at 02:14:54PM -0700, Paul E. McKenney wrote:
+> > > On Tue, Jun 04, 2024 at 07:56:49PM +0200, John Paul Adrian Glaubitz wrote:
+> > > > Hello,
+> > > > 
+> > > > On Tue, 2024-06-04 at 10:50 -0700, Paul E. McKenney wrote:
+> > > > > > Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > > > > > 
+> > > > > > I can pick this up through my SH tree unless someone insists this to
+> > > > > > go through some other tree.
+> > > > > 
+> > > > > Please do take it, and thank you!  When I see it in -next, I will drop
+> > > > > it from my tree.
+> > > > 
+> > > > I'll pick it up over the weekend for which I have planned my usual kernel
+> > > > review and merge session.
+> > > 
+> > > Very good, and again, thank you!
+> > 
+> > Just following up...  I don't yet see this from you in -next.  When your
+> > version does show up in -next, I will drop my copy from -rcu.
+> 
+> Sorry, I was very busy last week and didn't get around to do any kernel stuff.
+> 
+> I will take care of it this week, I have not forgotten about it and I never let
+> patches unanswered, and unmerged once I have reviewed them.
 
-It is worth noting this only works for HDMI 2.0 or below, e.g. cannot be
-used to support HDMI 2.1 4K@120Hz mode.
+Very good, thank you, and apologies for the noise.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 189 +++++++++++++++++++---
- 1 file changed, 167 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index 72de287282eb..ad3fd4084377 100644
---- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-+++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -8,6 +8,7 @@
-  */
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
-@@ -191,6 +192,8 @@
- #define LN3_TX_SER_RATE_SEL_HBR2	BIT(3)
- #define LN3_TX_SER_RATE_SEL_HBR3	BIT(2)
- 
-+#define HDMI20_MAX_RATE			600000000
-+
- struct lcpll_config {
- 	u32 bit_rate;
- 	u8 lcvco_mode_en;
-@@ -273,6 +276,12 @@ struct rk_hdptx_phy {
- 	struct clk_bulk_data *clks;
- 	int nr_clks;
- 	struct reset_control_bulk_data rsts[RST_MAX];
-+
-+	/* clk provider */
-+	struct clk_hw hw;
-+	unsigned long rate;
-+
-+	atomic_t usage_count;
- };
- 
- static const struct ropll_config ropll_tmds_cfg[] = {
-@@ -760,6 +769,8 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
- 	struct ropll_config rc = {0};
- 	int i;
- 
-+	hdptx->rate = rate * 100;
-+
- 	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
- 		if (rate == ropll_tmds_cfg[i].bit_rate) {
- 			cfg = &ropll_tmds_cfg[i];
-@@ -823,19 +834,6 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
- static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
- 					   unsigned int rate)
- {
--	u32 val;
--	int ret;
--
--	ret = regmap_read(hdptx->grf, GRF_HDPTX_STATUS, &val);
--	if (ret)
--		return ret;
--
--	if (!(val & HDPTX_O_PLL_LOCK_DONE)) {
--		ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
--		if (ret)
--			return ret;
--	}
--
- 	rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_common_sb_init_seq);
- 
- 	regmap_write(hdptx->regmap, LNTOP_REG(0200), 0x06);
-@@ -857,10 +855,66 @@ static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
- 	return rk_hdptx_post_enable_lane(hdptx);
- }
- 
-+static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
-+				     unsigned int rate)
-+{
-+	u32 status;
-+	int ret;
-+
-+	if (atomic_inc_return(&hdptx->usage_count) > 1)
-+		return 0;
-+
-+	ret = regmap_read(hdptx->grf, GRF_HDPTX_STATUS, &status);
-+	if (ret)
-+		goto dec_usage;
-+
-+	if (status & HDPTX_O_PLL_LOCK_DONE)
-+		dev_warn(hdptx->dev, "PLL locked by unknown consumer!\n");
-+
-+	if (rate) {
-+		ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
-+		if (ret)
-+			goto dec_usage;
-+	}
-+
-+	return 0;
-+
-+dec_usage:
-+	atomic_dec(&hdptx->usage_count);
-+	return ret;
-+}
-+
-+static int rk_hdptx_phy_consumer_put(struct rk_hdptx_phy *hdptx)
-+{
-+	u32 status;
-+	int ret;
-+
-+	ret = atomic_dec_return(&hdptx->usage_count);
-+	if (ret > 0)
-+		return 0;
-+
-+	if (ret < 0) {
-+		dev_warn(hdptx->dev, "Usage count underflow!\n");
-+		ret = -EINVAL;
-+	} else {
-+		ret = regmap_read(hdptx->grf, GRF_HDPTX_STATUS, &status);
-+		if (!ret) {
-+			if (status & HDPTX_O_PLL_LOCK_DONE)
-+				rk_hdptx_phy_disable(hdptx);
-+			return 0;
-+		}
-+	}
-+
-+	atomic_inc(&hdptx->usage_count);
-+	return ret;
-+}
-+
- static int rk_hdptx_phy_power_on(struct phy *phy)
- {
- 	struct rk_hdptx_phy *hdptx = phy_get_drvdata(phy);
- 	int bus_width = phy_get_bus_width(hdptx->phy);
-+	int ret;
-+
- 	/*
- 	 * FIXME: Temporary workaround to pass pixel_clk_rate
- 	 * from the HDMI bridge driver until phy_configure_opts_hdmi
-@@ -871,20 +925,18 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
- 	dev_dbg(hdptx->dev, "%s bus_width=%x rate=%u\n",
- 		__func__, bus_width, rate);
- 
--	return rk_hdptx_ropll_tmds_mode_config(hdptx, rate);
-+	ret = rk_hdptx_phy_consumer_get(hdptx, rate);
-+	if (!ret)
-+		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, rate);
-+
-+	return ret;
- }
- 
- static int rk_hdptx_phy_power_off(struct phy *phy)
- {
- 	struct rk_hdptx_phy *hdptx = phy_get_drvdata(phy);
--	u32 val;
--	int ret;
--
--	ret = regmap_read(hdptx->grf, GRF_HDPTX_STATUS, &val);
--	if (ret == 0 && (val & HDPTX_O_PLL_LOCK_DONE))
--		rk_hdptx_phy_disable(hdptx);
- 
--	return ret;
-+	return rk_hdptx_phy_consumer_put(hdptx);
- }
- 
- static const struct phy_ops rk_hdptx_phy_ops = {
-@@ -893,6 +945,99 @@ static const struct phy_ops rk_hdptx_phy_ops = {
- 	.owner	   = THIS_MODULE,
- };
- 
-+static struct rk_hdptx_phy *to_rk_hdptx_phy(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct rk_hdptx_phy, hw);
-+}
-+
-+static int rk_hdptx_phy_clk_prepare(struct clk_hw *hw)
-+{
-+	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
-+
-+	return rk_hdptx_phy_consumer_get(hdptx, hdptx->rate / 100);
-+}
-+
-+static void rk_hdptx_phy_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
-+
-+	rk_hdptx_phy_consumer_put(hdptx);
-+}
-+
-+static unsigned long rk_hdptx_phy_clk_recalc_rate(struct clk_hw *hw,
-+						  unsigned long parent_rate)
-+{
-+	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
-+
-+	return hdptx->rate;
-+}
-+
-+static long rk_hdptx_phy_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-+					unsigned long *parent_rate)
-+{
-+	u32 bit_rate = rate / 100;
-+	int i;
-+
-+	if (rate > HDMI20_MAX_RATE)
-+		return rate;
-+
-+	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
-+		if (bit_rate == ropll_tmds_cfg[i].bit_rate)
-+			break;
-+
-+	if (i == ARRAY_SIZE(ropll_tmds_cfg) &&
-+	    !rk_hdptx_phy_clk_pll_calc(bit_rate, NULL))
-+		return -EINVAL;
-+
-+	return rate;
-+}
-+
-+static int rk_hdptx_phy_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long parent_rate)
-+{
-+	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
-+
-+	return rk_hdptx_ropll_tmds_cmn_config(hdptx, rate / 100);
-+}
-+
-+static const struct clk_ops hdptx_phy_clk_ops = {
-+	.prepare = rk_hdptx_phy_clk_prepare,
-+	.unprepare = rk_hdptx_phy_clk_unprepare,
-+	.recalc_rate = rk_hdptx_phy_clk_recalc_rate,
-+	.round_rate = rk_hdptx_phy_clk_round_rate,
-+	.set_rate = rk_hdptx_phy_clk_set_rate,
-+};
-+
-+static int rk_hdptx_phy_clk_register(struct rk_hdptx_phy *hdptx)
-+{
-+	struct device *dev = hdptx->dev;
-+	const char *name, *pname;
-+	struct clk *refclk;
-+	int ret, id;
-+
-+	refclk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(refclk))
-+		return dev_err_probe(dev, PTR_ERR(refclk),
-+				     "Failed to get ref clock\n");
-+
-+	id = of_alias_get_id(dev->of_node, "hdptxphy");
-+	name = id > 0 ? "clk_hdmiphy_pixel1" : "clk_hdmiphy_pixel0";
-+	pname = __clk_get_name(refclk);
-+
-+	hdptx->hw.init = CLK_HW_INIT(name, pname, &hdptx_phy_clk_ops,
-+				     CLK_GET_RATE_NOCACHE);
-+
-+	ret = devm_clk_hw_register(dev, &hdptx->hw);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register clock\n");
-+
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, &hdptx->hw);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to register clk provider\n");
-+	return 0;
-+}
-+
- static int rk_hdptx_phy_runtime_suspend(struct device *dev)
- {
- 	struct rk_hdptx_phy *hdptx = dev_get_drvdata(dev);
-@@ -987,7 +1132,7 @@ static int rk_hdptx_phy_probe(struct platform_device *pdev)
- 	reset_control_deassert(hdptx->rsts[RST_CMN].rstc);
- 	reset_control_deassert(hdptx->rsts[RST_INIT].rstc);
- 
--	return 0;
-+	return rk_hdptx_phy_clk_register(hdptx);
- }
- 
- static const struct dev_pm_ops rk_hdptx_phy_pm_ops = {
-
--- 
-2.45.2
-
+							Thanx, Paul
