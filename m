@@ -1,142 +1,117 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873CC190049;
-	Mon, 17 Jun 2024 09:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FCB190055;
+	Mon, 17 Jun 2024 09:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616126; cv=none; b=F7CmwoXjhj6zmR//+kRDJVCcupWs6P2193Goi9MPMbDBWdcYXQKyJpryGyWq2ns8xeneCYuIAz+4Q8CQZDTQ1LL0/wPimeFtGOa+hwUX1PkJozmhzxlyvDS2fpdAr7jMMtbMn+zmZETspRdq6jjx4sk0BX+671PgMWyihiDX5bk=
+	t=1718616154; cv=none; b=qaxt042oLQGFeo0jSldqquNaUjfKNzF8X76OKKWhweOF5mMblhy7s8/VnpzUOgNyhyYch/Tw2RTL6L94OGXyOQKrSuL0bBEcWxdP3/TSMqwOMpegEDRgifJFOPTRfiX3g0x9Khr2qVNK0tqmsm90avbbR1p28vhEPfDMXv44dic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616126; c=relaxed/simple;
-	bh=UZMFQ/ml8GzefQaOh2RhaxycPPpPfCpa4+QGAHhgUDY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JWzG7jCY7D+BvBlJbxjkXGVWjO46T28ef4Pj5MDq0Y2ft9fjYnqLHIfgoq+DkA8CI0ALvFrLccXdgXFlJRLNQt0Gb+RJY+LyN0tf7o/+bZcnJwlZUYDzFwLu2QbzLGVWRXLjwWq9xO64rfZO1BJUeGF2zAoR7xWF7mmbITb+gUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HR54fhnV; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HR54fhnV"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H8NbYK024552;
-	Mon, 17 Jun 2024 11:21:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	bkqtW5boQBwGGmqqfn5zcA8qz6TEdI+y48zQPPaL2AU=; b=HR54fhnVCjuk6R+2
-	cQtIv0ZfDKC/oquzi855xdMZVQ+xFfpyb7WXmKSYeR2fvtCWO91cqYgf7wgUuq0K
-	kxsOfHgreUv2EkCbhmNpswvkL+HibIKzBAPcl27EZONaX2YO1cFsrlQ2S08EfGyV
-	uedUeOGs9q/doVR0XwgMLuZFNtkAAyKBEns4WyAOIkAvDEkqDzp/INo132i699fp
-	oea3C4iFcx7HFVjZRsHZiPy6T/SRWi5R83FyHWlY0YO6aHjcMwK2rBzg7tYHxODn
-	kDvCY71cVbNIA98So+7+xpQcSrko8Lts3mSS8GqqPNiolgKfvOQHQ/8GnyVrajwk
-	CmkGMQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys0cg603y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 11:21:47 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5A4D14002D;
-	Mon, 17 Jun 2024 11:21:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E4C4F21161C;
-	Mon, 17 Jun 2024 11:21:13 +0200 (CEST)
-Received: from SHFDAG1NODE1.st.com (10.75.129.69) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
- 2024 11:21:13 +0200
-Received: from SHFDAG1NODE1.st.com ([fe80::b848:dbeb:cd0:84a0]) by
- SHFDAG1NODE1.st.com ([fe80::b848:dbeb:cd0:84a0%13]) with mapi id
- 15.01.2507.035; Mon, 17 Jun 2024 11:21:13 +0200
-From: Etienne CARRIERE - foss <etienne.carriere@foss.st.com>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>, Lee Jones <lee@kernel.org>,
-        Pascal PAILLET-LME
-	<p.paillet@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH v2] dt-bindings: mfd: dual licensing for st,stpmic1
- bindings
-Thread-Topic: [PATCH v2] dt-bindings: mfd: dual licensing for st,stpmic1
- bindings
-Thread-Index: AQHawJeUU3NnSMssbUG+9ayDKPGp5rHLriid
-Date: Mon, 17 Jun 2024 09:21:13 +0000
-Message-ID: <15b20cdd8b9148559352fdb2f02e4e53@foss.st.com>
-References: <20240617092016.2958046-1-etienne.carriere@foss.st.com>
-In-Reply-To: <20240617092016.2958046-1-etienne.carriere@foss.st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718616154; c=relaxed/simple;
+	bh=IhgTRvnm+8oWn/6L7YuXPMreikmbVcVNk+2beHEEtkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rm+AvPGL89FWbMZbmFj/GO9UFoN19OlKQJ30J+xDqli2DuxZFS2cXOypvhOjyoH1CxTzJhHjPKun2NMOaSOwv3yKHY8xph9t1vMEzuOuqzv8YUKqOGl3yXfb3TLIfdMUAMROYQ8++DEwmmzc4kQlX98kXACT8rGMvgxXLdhir3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57c76497cefso4825482a12.1;
+        Mon, 17 Jun 2024 02:22:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718616150; x=1719220950;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eEUIpHnQGVoJgFUUtr6K5uLL6KfCGzBVgBBz+mc8EC8=;
+        b=Ye+FpuyN2yXD2CD29De1o7qKGFo2yvWPUwML5zMCVaNzHx2WFMx8xiJytZz7EJChK7
+         F2CttLk2H/JN0IV4DTPGr0JhOiT3zxTKVLtOULAM+Qwh3oMEbn8roieOpxFPxu2DRO77
+         o0xl+PMmdF/qwS50ff2mRF8OAak6iZyE6Vlqpe/te2ZaYxVQ9gIr6JATtaxT8DjF1AKF
+         aUyYFyP0Y6HkkjPo69Fb/Pz0bwxsHyfTziMekhj6EO1fri8y8FmSkTuImgPKnFYtd8o0
+         Rqcp8yPAMS6SrukFr+VGB6ZMOq7Obs9l6YzFFMpwx8Z7e2NsePGTbh50Zv9+6GoU/p/P
+         1hTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXs9ndNFYYCrL7XynZDJUv7FYgmDFh8MqTpHU6AvxEzKinxf+EfhLqQSv9YgJIqnUJ1LNNiwBgfN+R3nH0fUO5cCJPmgkZMEM6HXQ+BBIbwoorwRInJ0EGtyD029lP8nqmjLwBZ
+X-Gm-Message-State: AOJu0Yx/uBWY7dhLXNb8dSRiGJibG32X9yljsxc0Kck0rRh1V5O0G3+0
+	RnCaHbKFT4fnHYdXHoz9MDHKt7n9FiOgD8adFnkFDw8+P7SAAkJT
+X-Google-Smtp-Source: AGHT+IFOEUVidGPJxpO+GgKTTkPjj7sUIp7yTZvciRnrHQQDmvCrLJJ+SpiU6a/ssk+qbAl8zn9V3Q==
+X-Received: by 2002:a50:a693:0:b0:57c:6773:d9c1 with SMTP id 4fb4d7f45d1cf-57cbd6a5a0emr5821631a12.39.1718616149646;
+        Mon, 17 Jun 2024 02:22:29 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-002.fbsv.net. [2a03:2880:30ff:2::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57ccc173673sm3466975a12.44.2024.06.17.02.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 02:22:29 -0700 (PDT)
+Date: Mon, 17 Jun 2024 02:22:23 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, horms@kernel.org, kees@kernel.org,
+	kuba@kernel.org, Bo Jiao <Bo.Jiao@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Alexander Couzens <lynxis@fe80.eu>,
+	Deren Wu <deren.wu@mediatek.com>,
+	Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
+	Leon Yen <leon.yen@mediatek.com>,
+	Quan Zhou <quan.zhou@mediatek.com>, Ingo Rohloff <lundril@gmx.de>,
+	Sujuan Chen <sujuan.chen@mediatek.com>,
+	StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
+	Benjamin Lin <benjamin-jw.lin@mediatek.com>,
+	Peter Chiu <chui-hao.chiu@mediatek.com>,
+	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH] wifi: mt76: un-embedd netdev from mt76_dev
+Message-ID: <ZnAAT/a3DKnTgUoz@gmail.com>
+References: <20240614115317.657700-1-leitao@debian.org>
+ <87cyogkkju.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_08,2024-06-14_03,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87cyogkkju.fsf@kernel.org>
 
-Hello Conor,
+Hello Kalle,
 
->
-> From: Conor Dooley <conor@kernel.org>
-> Sent: Saturday, June 15, 2024 2:14 PM
->
-> On Fri, Jun 14, 2024 at 05:33:46PM +0200, Etienne Carriere wrote:
-> > Change include/dt-bindings/mfd/st,stpmic1.h license model from GPLv2.0
-> > only to dual GPLv2.0 or BSD-3-Clause. I have every legitimacy to reques=
-t
-> > this change on behalf of STMicroelectronics. This change clarifies that
-> > this DT binding header file can be shared with software components as
-> > bootloaders and OSes that are not published under GPLv2 terms.
+On Mon, Jun 17, 2024 at 12:03:49PM +0300, Kalle Valo wrote:
+> Breno Leitao <leitao@debian.org> writes:
+> 
+> > Embedding net_device into structures prohibits the usage of flexible
+> > arrays in the net_device structure. For more details, see the discussion
+> > at [1].
 > >
-> > In CC are all the contributors to this header file.
+> > Un-embed the net_devices from struct mt76_dev by converting them
+> > into pointers, and allocating them dynamically. Use the leverage
+> > alloc_netdev_dummy() to allocate the net_device object at
+> > mt76_dma_init().
 > >
-> > Cc: Pascal Paillet <p.paillet@st.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Etienne Carriere <etienne.carriere@foss.st.com>
+> > The free of the device occurs at mt76_dma_cleanup().
+> >
+> > Link: https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/ [1]
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
 > > ---
-> >  include/dt-bindings/mfd/st,stpmic1.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings=
-/mfd/st,stpmic1.h
-> > index 321cd08797d9..957c48300cd4 100644
-> > --- a/include/dt-bindings/mfd/st,stpmic1.h
-> > +++ b/include/dt-bindings/mfd/st,stpmic1.h
-> > @@ -1,4 +1,4 @@
-> > -/* SPDX-License-Identifier: GPL-2.0 */
-> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
->
-> The usual dual license for bindings is BSD-2-Clause, was there a
-> specific request for the 3 version?
-
-My mistake. Thanks for spotting that.
-I have my company agreement for the 2 dual models: "OR BSD-2-Clause" and "O=
-R BSD-3-Clause".
-We expect to conform to DT bindings preferred licensing model. Indeed the k=
-ernel documentation explicitly mention "GPL-2.0-only OR BSD-2-Clause".
-We prefer to conform with it. I'll update my patch.
-
-By the way, I'll fix Lee Jones e-mail address that is deprecated.
-
-BR,
-Etienne
-
-
->
-> >  /*
-> >   * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-> >   * Author: Philippe Peurichard <philippe.peurichard@st.com>,
-> > --
-> > 2.25.1
+> > PS: Due to the lack of hardware, this patch was not tested on a real
+> > hardware, unfortunately.
 > >
->=
+> > PS2: this is the last driver that is still using embedded netdevices.
+> 
+> Is this patch a dependency to other patches? I'm asking because it will
+> be _slow_ to get this patch to net-next via wireless trees. If there's
+> urgency then it's much better to take it directly to net-next (of course
+> with acks from Felix and Lorenzo).
+
+Since this is the last patch for the whole flexible netdev work, I would
+prefer to have it through net-next then, so, we finish the whole work
+sooner rather than later.
+
+I will prepare a v2 with Simon's suggestion, and I can target net-next.
+I am just waiting a bit more to hear from Felix and Lorenzo.
+
+Thanks!
