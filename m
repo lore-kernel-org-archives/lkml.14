@@ -1,229 +1,283 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC64720011A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282DF1D2152;
+	Mon, 17 Jun 2024 13:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632277; cv=none; b=hO4+8Aq/hILzqbnrWoAvgAMAMyWJ33LEOW4wMSjLFq/QMr5CqBPaB20hJsimXy2kZAIoKWrhQNIvSh2Umhyn5kYftwBnS0zWOS+MONio3XRt69hQaGIm52LZBSFjjbzUvNYaT+9Fb4i6g5y1VSud2O3L5DpqbfhbPW2t7N1VeiE=
+	t=1718632277; cv=none; b=UX4uPvpmOlrbBWrTWvGDPLVZKuXnZsrvRUyYs3jxcFoaFp/77q4ADFuRc2qLdTD7x7UMatfieEMQTAdTOLTzcp56PKw3QEMkJa7iB7MHQcnRwCF3ahsjHq6ckTYtn5HIP46haKWsmYe2qbrWaTQR/Ms59OUFMBIiaH2oDaccJoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718632277; c=relaxed/simple;
-	bh=IMPpMteq51LRPDW2gSf+ThyrqorBSKEQdFy+CzbJC88=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ofS9pddtJDWp0+h7eLclIGXmbXR3IjIHPOyJSGJHwZie6ezupRSbcmMrouBBIoxYW4PcU7ILU0LI+vokCveRtZ59DA05QKxxuoddHW7YrurDFQXFCAPJyKAAKQDmKEUDC7rkXXBq/JGp+2DoWlqSYVnpMa9t6vSrcB7JFFpOb/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Gyya6KRr; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=22MOoLTDD0SY/2ALD5cAZkkr31/3Q1Hs6gfaUARXlZ4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Hkiwp+aQE8t13xsaaotEJl3BZug56kpyHX/QSIO5Dz5I5MZEmlPZVe+bB7oVSadJCojbs5D6RvhpZ4PAYZdTsdHDrvGeHExKe9KJOWzPUTkMxzsJXJMl8xAKC3hDqPS3jgzWuXo2y7jsFXr4+Zv3ZORsNv2LaLMj1GngHygMYEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aV5E+N3t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w/3CwZLM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Gyya6KRr"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4ee5662fde8so942853e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718632273; x=1719237073; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AKnuVsDBtdHGm81QL99oZtdVbIW3JEVTOu6hlNZPjXg=;
-        b=Gyya6KRrEo4aqr8ywMCcfchhoVHUekY7hRS+pnAXJN4eI4HCPKnQVpWaoO8P1XFi2v
-         PvdtIHX5F6MGkoFo8L6Ut4hfBBh7cEejitHVeWDiWTZWR73DKLPz3CXWAaP9HcoBArBh
-         YRVjKtwezkRAUQamXRqdc029Kn0H8VDDjLzM45CIvRowPedBbmFLdDoC9tBKZ+5akHY9
-         Rcn2UZ9Dp0El5Zv1yFvC8NVPLhPMDhxkcyn/QzQ1xz8DVwA3C6rQF30dO22NatJw/6Z7
-         JpXJPlIvVb7XYR6Hzk9hBcnhPWcsxFChOTEnkosxhHOZ+06Zj/lb8Mc9COFj4GuOsNCN
-         04gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718632273; x=1719237073;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AKnuVsDBtdHGm81QL99oZtdVbIW3JEVTOu6hlNZPjXg=;
-        b=Eac61Bi8D+qa/Z1YVtilR8UHqX5hU8PaVUAzFKMP5eBVnp0cbif9K2PxLTqGxDV3+D
-         71/63JPNpNR97hIpk+bpDvcr8r3E3PNwG+TyNX41LtsiwNEFT74pojnezrbgyAfS7kZi
-         0iUhk1WsZVk6ceDtN08accaj6K19UWRqqDYIVl+Inou4iwzrcI6UFCJU+xGJsytYJrkd
-         2cclmFag8eFJltRhvt41QHklqGEKOOxIVa+VgBpJS19iJ8lT69JVWEFlK+nEwcQHwAMw
-         QAQvK4ltrKEV+s2UMi4xOkZWJxWiILnr1yR7GdB1E+/2SdfPXla0Bkh8bK4HfdKOKGvw
-         EPXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2J3qqzKc6q12NrokwTC+MoT5dtdzkOEM7Ump3xLnuBvmq7mLqv/J8bmGZh/vO74FRW+5yFI17tWgOttgX+D5iAO2kQ+bNmC0IgWLs
-X-Gm-Message-State: AOJu0YwG+UwXNLnIqmpEgBLzMpImLqGPrLD2rQzLR735z8P92WXcIhYF
-	lZ3gNOwEcICaJGQqcI1wMcYNHs7lIH3jePu5uYZ3TYfwx0+MvFs31oabDo/inVQ=
-X-Google-Smtp-Source: AGHT+IHFy1tuFMwxa7P6sFsjYvAHUS1dIKxzAj2HLRYOAmnW2Gug4qjgVMG/WpGom5Qua5PdHz8vPQ==
-X-Received: by 2002:a05:6122:915:b0:4ec:efca:d2b with SMTP id 71dfb90a1353d-4ee3e59c40amr7925275e0c.8.1718632272678;
-        Mon, 17 Jun 2024 06:51:12 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaecc004sm432892285a.31.2024.06.17.06.51.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:51:12 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-Date: Mon, 17 Jun 2024 09:50:21 -0400
-Subject: [PATCH v3 41/41] iio: trigger: stm32-timer-trigger: make use of
- regmap_clear_bits(), regmap_set_bits()
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aV5E+N3t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w/3CwZLM"
+Date: Mon, 17 Jun 2024 13:51:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718632270;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3S9ELFub5thPcDooeVLXIKd0nYwaEFK3GDN3sowVCQ0=;
+	b=aV5E+N3tICbPhON1WZsd5eB7KX+vb6Qj2WuczRyNa3tGDhDUU4AfRG3t45hR4PX+2Vofph
+	wobLA2dMim0etA+ez0yebt9wBJJg3LtU5ghe33Ehxv6NrRVIKMT41NdWKHAzqHxYH8A7cU
+	O4UPClOBtc1XIJfb/7F8YH+5M3fgfEJJ/7acU3XIfMDUqi/leuppdI/dZs1178gjYKaUwg
+	ORWSChOtCdFAWnBQYYCv1qM9XN/Gq4AtBRIiP65RoHaz+4WDAmFbOLW/k+9mJcSvNQzRGH
+	oaV3afC6GwpRlh3Cw/A/j+ic7Ibj/0VUs8julVgUYP2GfwZ7alDKtv7lsU4wdg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718632270;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3S9ELFub5thPcDooeVLXIKd0nYwaEFK3GDN3sowVCQ0=;
+	b=w/3CwZLM9Or88wnXjvxVQAX/tEvKauf6z0Hkzr7QVNVFpFtOrrBq744bZiQYFzTZazl0kY
+	WBsIJnW6XUZWWyBA==
+From: "tip-bot2 for Herve Codina" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq/generic_chip: Introduce
+ irq_domain_{alloc,remove}_generic_chips()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Herve Codina <herve.codina@bootlin.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240614173232.1184015-14-herve.codina@bootlin.com>
+References: <20240614173232.1184015-14-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <171863227050.10875.6471791790295093098.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-review-v3-41-88d1338c4cca@baylibre.com>
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Dmitry Rokosov <ddrokosov@sberdevices.ru>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
- Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
- Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Saravanan Sekar <sravanhome@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, 
- Crt Mori <cmo@melexis.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
- linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- Trevor Gamblin <tgamblin@baylibre.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 7bit
 
-Instead of using regmap_update_bits() and passing the mask twice, use
-regmap_set_bits().
+The following commit has been merged into the irq/core branch of tip:
 
-Instead of using regmap_update_bits() and passing val = 0, use
-regmap_clear_bits().
+Commit-ID:     e25f553a92973eaf59ff3a00fe7f61ab01b2877f
+Gitweb:        https://git.kernel.org/tip/e25f553a92973eaf59ff3a00fe7f61ab01b2877f
+Author:        Herve Codina <herve.codina@bootlin.com>
+AuthorDate:    Fri, 14 Jun 2024 19:32:14 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 17 Jun 2024 15:48:14 +02:00
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+genirq/generic_chip: Introduce irq_domain_{alloc,remove}_generic_chips()
+
+The existing __irq_alloc_domain_generic_chips() uses a bunch of parameters
+to describe the generic chips that need to be allocated.
+
+Adding more parameters and wrappers to hide new parameters in the existing
+code leads to more and more code without any relevant values and without
+any flexibility.
+
+Introduce irq_domain_alloc_generic_chips() where the generic chips
+description is done using the irq_domain_chip_generic_info structure
+instead of the bunch of parameters to allow flexibility and easy evolution.
+
+Also introduce irq_domain_remove_generic_chips() to revert the operations
+done by irq_domain_alloc_generic_chips().
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240614173232.1184015-14-herve.codina@bootlin.com
+
 ---
- drivers/iio/trigger/stm32-timer-trigger.c | 34 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ include/linux/irq.h       | 25 ++++++++++-
+ kernel/irq/generic-chip.c | 91 ++++++++++++++++++++++++++++----------
+ 2 files changed, 93 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-index d76444030a28..0684329956d9 100644
---- a/drivers/iio/trigger/stm32-timer-trigger.c
-+++ b/drivers/iio/trigger/stm32-timer-trigger.c
-@@ -158,7 +158,7 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index a217e10..58264b2 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -1117,6 +1117,27 @@ struct irq_domain_chip_generic {
+ 	struct irq_chip_generic	*gc[];
+ };
  
- 	regmap_write(priv->regmap, TIM_PSC, prescaler);
- 	regmap_write(priv->regmap, TIM_ARR, prd - 1);
--	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, TIM_CR1_ARPE);
-+	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
++/**
++ * struct irq_domain_chip_generic_info - Generic chip information structure
++ * @name:		Name of the generic interrupt chip
++ * @handler:		Interrupt handler used by the generic interrupt chip
++ * @irqs_per_chip:	Number of interrupts each chip handles (max 32)
++ * @num_ct:		Number of irq_chip_type instances associated with each
++ *			chip
++ * @irq_flags_to_clear:	IRQ_* bits to clear in the mapping function
++ * @irq_flags_to_set:	IRQ_* bits to set in the mapping function
++ * @gc_flags:		Generic chip specific setup flags
++ */
++struct irq_domain_chip_generic_info {
++	const char		*name;
++	irq_flow_handler_t	handler;
++	unsigned int		irqs_per_chip;
++	unsigned int		num_ct;
++	unsigned int		irq_flags_to_clear;
++	unsigned int		irq_flags_to_set;
++	enum irq_gc_flags	gc_flags;
++};
++
+ /* Generic chip callback functions */
+ void irq_gc_noop(struct irq_data *d);
+ void irq_gc_mask_disable_reg(struct irq_data *d);
+@@ -1153,6 +1174,10 @@ int devm_irq_setup_generic_chip(struct device *dev, struct irq_chip_generic *gc,
  
- 	/* Force master mode to update mode */
- 	if (stm32_timer_is_trgo2_name(trig->name))
-@@ -169,10 +169,10 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
- 				   0x2 << TIM_CR2_MMS_SHIFT);
+ struct irq_chip_generic *irq_get_domain_generic_chip(struct irq_domain *d, unsigned int hw_irq);
  
- 	/* Make sure that registers are updated */
--	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-+	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
++int irq_domain_alloc_generic_chips(struct irq_domain *d,
++				   const struct irq_domain_chip_generic_info *info);
++void irq_domain_remove_generic_chips(struct irq_domain *d);
++
+ int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 				     int num_ct, const char *name,
+ 				     irq_flow_handler_t handler,
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index d39a40b..d9696f5 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -276,21 +276,14 @@ irq_gc_init_mask_cache(struct irq_chip_generic *gc, enum irq_gc_flags flags)
+ }
  
- 	/* Enable controller */
--	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
-+	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 	mutex_unlock(&priv->lock);
- 
- 	return 0;
-@@ -189,19 +189,19 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv,
- 
- 	mutex_lock(&priv->lock);
- 	/* Stop timer */
--	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
--	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-+	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
-+	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 	regmap_write(priv->regmap, TIM_PSC, 0);
- 	regmap_write(priv->regmap, TIM_ARR, 0);
- 
- 	/* Force disable master mode */
- 	if (stm32_timer_is_trgo2_name(trig->name))
--		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
-+		regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
- 	else
--		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
-+		regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS);
- 
- 	/* Make sure that registers are updated */
--	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-+	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
- 
- 	if (priv->enabled) {
- 		priv->enabled = false;
-@@ -498,11 +498,9 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
- 				priv->enabled = true;
- 				clk_enable(priv->clk);
- 			}
--			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
--					   TIM_CR1_CEN);
-+			regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 		} else {
--			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
--					   0);
-+			regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 			if (priv->enabled) {
- 				priv->enabled = false;
- 				clk_disable(priv->clk);
-@@ -555,7 +553,7 @@ static int stm32_set_trigger_mode(struct iio_dev *indio_dev,
+ /**
+- * __irq_alloc_domain_generic_chips - Allocate generic chips for an irq domain
+- * @d:			irq domain for which to allocate chips
+- * @irqs_per_chip:	Number of interrupts each chip handles (max 32)
+- * @num_ct:		Number of irq_chip_type instances associated with this
+- * @name:		Name of the irq chip
+- * @handler:		Default flow handler associated with these chips
+- * @clr:		IRQ_* bits to clear in the mapping function
+- * @set:		IRQ_* bits to set in the mapping function
+- * @gcflags:		Generic chip specific setup flags
++ * irq_domain_alloc_generic_chips - Allocate generic chips for an irq domain
++ * @d:		irq domain for which to allocate chips
++ * @info:	Generic chip information
++ *
++ * Return: 0 on success, negative error code on failure
+  */
+-int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+-				     int num_ct, const char *name,
+-				     irq_flow_handler_t handler,
+-				     unsigned int clr, unsigned int set,
+-				     enum irq_gc_flags gcflags)
++int irq_domain_alloc_generic_chips(struct irq_domain *d,
++				   const struct irq_domain_chip_generic_info *info)
  {
- 	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+ 	struct irq_domain_chip_generic *dgc;
+ 	struct irq_chip_generic *gc;
+@@ -304,23 +297,23 @@ int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 	if (d->gc)
+ 		return -EBUSY;
  
--	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, TIM_SMCR_SMS);
-+	regmap_set_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS);
+-	numchips = DIV_ROUND_UP(d->revmap_size, irqs_per_chip);
++	numchips = DIV_ROUND_UP(d->revmap_size, info->irqs_per_chip);
+ 	if (!numchips)
+ 		return -EINVAL;
  
+ 	/* Allocate a pointer, generic chip and chiptypes for each chip */
+-	gc_sz = struct_size(gc, chip_types, num_ct);
++	gc_sz = struct_size(gc, chip_types, info->num_ct);
+ 	dgc_sz = struct_size(dgc, gc, numchips);
+ 	sz = dgc_sz + numchips * gc_sz;
+ 
+ 	tmp = dgc = kzalloc(sz, GFP_KERNEL);
+ 	if (!dgc)
+ 		return -ENOMEM;
+-	dgc->irqs_per_chip = irqs_per_chip;
++	dgc->irqs_per_chip = info->irqs_per_chip;
+ 	dgc->num_chips = numchips;
+-	dgc->irq_flags_to_set = set;
+-	dgc->irq_flags_to_clear = clr;
+-	dgc->gc_flags = gcflags;
++	dgc->irq_flags_to_set = info->irq_flags_to_set;
++	dgc->irq_flags_to_clear = info->irq_flags_to_clear;
++	dgc->gc_flags = info->gc_flags;
+ 	d->gc = dgc;
+ 
+ 	/* Calc pointer to the first generic chip */
+@@ -328,11 +321,12 @@ int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 	for (i = 0; i < numchips; i++) {
+ 		/* Store the pointer to the generic chip */
+ 		dgc->gc[i] = gc = tmp;
+-		irq_init_generic_chip(gc, name, num_ct, i * irqs_per_chip,
+-				      NULL, handler);
++		irq_init_generic_chip(gc, info->name, info->num_ct,
++				      i * dgc->irqs_per_chip, NULL,
++				      info->handler);
+ 
+ 		gc->domain = d;
+-		if (gcflags & IRQ_GC_BE_IO) {
++		if (dgc->gc_flags & IRQ_GC_BE_IO) {
+ 			gc->reg_readl = &irq_readl_be;
+ 			gc->reg_writel = &irq_writel_be;
+ 		}
+@@ -345,6 +339,57 @@ int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 	}
  	return 0;
  }
-@@ -683,7 +681,7 @@ static ssize_t stm32_count_set_preset(struct iio_dev *indio_dev,
- 		return ret;
++EXPORT_SYMBOL_GPL(irq_domain_alloc_generic_chips);
++
++/**
++ * irq_domain_remove_generic_chips - Remove generic chips from an irq domain
++ * @d: irq domain for which generic chips are to be removed
++ */
++void irq_domain_remove_generic_chips(struct irq_domain *d)
++{
++	struct irq_domain_chip_generic *dgc = d->gc;
++	unsigned int i;
++
++	if (!dgc)
++		return;
++
++	for (i = 0; i < dgc->num_chips; i++)
++		irq_remove_generic_chip(dgc->gc[i], ~0U, 0, 0);
++
++	d->gc = NULL;
++	kfree(dgc);
++}
++EXPORT_SYMBOL_GPL(irq_domain_remove_generic_chips);
++
++/**
++ * __irq_alloc_domain_generic_chips - Allocate generic chips for an irq domain
++ * @d:			irq domain for which to allocate chips
++ * @irqs_per_chip:	Number of interrupts each chip handles (max 32)
++ * @num_ct:		Number of irq_chip_type instances associated with this
++ * @name:		Name of the irq chip
++ * @handler:		Default flow handler associated with these chips
++ * @clr:		IRQ_* bits to clear in the mapping function
++ * @set:		IRQ_* bits to set in the mapping function
++ * @gcflags:		Generic chip specific setup flags
++ */
++int __irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
++				     int num_ct, const char *name,
++				     irq_flow_handler_t handler,
++				     unsigned int clr, unsigned int set,
++				     enum irq_gc_flags gcflags)
++{
++	struct irq_domain_chip_generic_info info = {
++		.irqs_per_chip		= irqs_per_chip,
++		.num_ct			= num_ct,
++		.name			= name,
++		.handler		= handler,
++		.irq_flags_to_clear	= clr,
++		.irq_flags_to_set	= set,
++		.gc_flags		= gcflags,
++	};
++
++	return irq_domain_alloc_generic_chips(d, &info);
++}
+ EXPORT_SYMBOL_GPL(__irq_alloc_domain_generic_chips);
  
- 	/* TIMx_ARR register shouldn't be buffered (ARPE=0) */
--	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
-+	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
- 	regmap_write(priv->regmap, TIM_ARR, preset);
- 
- 	return len;
-@@ -757,9 +755,9 @@ static void stm32_timer_detect_trgo2(struct stm32_timer_trigger *priv)
- 	 * Master mode selection 2 bits can only be written and read back when
- 	 * timer supports it.
- 	 */
--	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, TIM_CR2_MMS2);
-+	regmap_set_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
- 	regmap_read(priv->regmap, TIM_CR2, &val);
--	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
-+	regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
- 	priv->has_trgo2 = !!val;
- }
- 
-@@ -820,7 +818,7 @@ static void stm32_timer_trigger_remove(struct platform_device *pdev)
- 	/* Check if nobody else use the timer, then disable it */
- 	regmap_read(priv->regmap, TIM_CCER, &val);
- 	if (!(val & TIM_CCER_CCXE))
--		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-+		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 
- 	if (priv->enabled)
- 		clk_disable(priv->clk);
-@@ -841,7 +839,7 @@ static int stm32_timer_trigger_suspend(struct device *dev)
- 		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
- 
- 		/* Disable the timer */
--		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-+		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
- 		clk_disable(priv->clk);
- 	}
- 
-
--- 
-2.45.2
-
+ static struct irq_chip_generic *
