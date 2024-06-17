@@ -1,129 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6D185089;
-	Mon, 17 Jun 2024 06:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4370181315;
+	Mon, 17 Jun 2024 06:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718604987; cv=none; b=BqXjcDxwKNoiVHlGTtJa7w3+6rhkf/Ut2qRBoWhrmO43VM01eN3UHtTpLEFNmuZzaTxdVcs0IdH4tJni828nakMWSht4ES3Zo1BJ+UPNmGRKn0sGd8HGUGbHwRppOlMMW8x7VzixdUaPXUSxAgQ0F/2hMUBkAPjAmEam2kFTfJ8=
+	t=1718605055; cv=none; b=aMZDn4HteGefHBhAochALvL1SuZluxgEOeWt+W88chSJViCzGnkcYzPpZIibwRovGn2gMmguo2dgfh1JPYMtSojVRJKeNluFirb31piAZ7+KrPp23RERk0nth+W1WYCMhcWYRiLYVp1RTGOjdWgIrdw+w26vtw/wuO6rGTEiBY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718604987; c=relaxed/simple;
-	bh=xnKpAidf5yJRHsGR7e7UNXSdcW+rnTfw1pW+zBytFmw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=skEIl/L80DI1bZQO2ai53fFfh9V/AFfn35SGbwrYWlD4z/oc/xu/Q/vIpS/tgRNp/zeXkZHNegO5avRDl2QV7G/AOmMo/ZQ3jbw2TeM35cXZ/7FOO5AN7kXIF4mK+qEJ5hVwQxUn8MYpxtHeV1WXLb+cfHQ0PqwII41+OpllnTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L42Wd3C3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718605055; c=relaxed/simple;
+	bh=ncY2wGCxhFJiX5cy/N8svulUm9ekQ2k5a/Gc8ht/9d0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g7ILckZ7vyWWMbDCL8BZMtHUFraXUUTFBJP9i7rz96CPI58RQcehs6ARjmrd5Xv4/obhKBkFK/dk2Zk5DgTvMFJu9zqaeGrtjFbv9QogCt0MjhXKp3qIYfqZtNeW3hOWBuXIn/HiHr5veY3P5xNCcq7z5Wvs0f5B8eyXb7eA7TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A9oIIiLE; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L42Wd3C3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D38C2BD10;
-	Mon, 17 Jun 2024 06:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718604987;
-	bh=xnKpAidf5yJRHsGR7e7UNXSdcW+rnTfw1pW+zBytFmw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L42Wd3C3jiMaIC0TCNmUeMB9D152DFsdrcJtxM3Br1YhkTQZIu97blHZqNIHNIyQ4
-	 EF9oT8p7PXlYLbLPWnqSmyVU3bOpst9tbqNihHJrCrl7tZeZ/qu3b8n5hLWcRMu2Ym
-	 uQvtVCk3mJn3sSMSH9Lpx5N/maP+8Izs5x1aAjuiZkdFtJqJU4GTBT74wT7I98MVX7
-	 ehKdr0UwbZNAZzpZW25fBT3WjCpCPL6lNq17nJZ/W/ONMFv8fB8jNH4RMIGjWfRuRf
-	 b8xezawcaRfhAPkdiOdgr3DRI4LnfD7ftVPnk4xQXeNFBAtiSrZs4riN0IYuWea+bm
-	 sMOSXdpuw6fpw==
-Message-ID: <312d0bf2-3a17-44df-8a42-0168b2e3640a@kernel.org>
-Date: Mon, 17 Jun 2024 08:16:22 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A9oIIiLE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pkTHKmxzyeCAx+Op/zCoBY2/fUvL2c3TR2l79pXmyYQ=; b=A9oIIiLE01yISYnVkNmWFKZGl/
+	gdZyZ1HzZFYzvo/Z4GQQdQTVRy/xt7exYDLSx51FkxHjAnwpBXNX4y0/8uewsMikkBpqLmm/6MhDH
+	52YmRS15DdWGtPdqhJNs7ZTgcGLt577llNysoLtESEMXwy21Dwy0IhvEwi/PGqCVCJXChDAiT+RCA
+	QrwpFFa95IqBk9LhN4HCgp9132jtc9kKoiA70sOxBNcNo1oDN3KVH54b9FWATizVr99bfZTgg7gRS
+	P0Tm/XmMdxedgOzdjeisyHX7AvvDixle+SCMenBGWX5iLUiF4UZUycRURfsUCXChnTgcUc66zd2Y0
+	i/fHALvA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sJ5gL-00000009PES-1Wim;
+	Mon, 17 Jun 2024 06:17:33 +0000
+Date: Sun, 16 Jun 2024 23:17:33 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Li Feng <fengli@smartx.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: sd: Keep the discard mode stable
+Message-ID: <Zm_U_ZA96u2K6a6S@infradead.org>
+References: <20240614160350.180490-1-fengli@smartx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: hwmon: ti,tmp108: document V+ supply, add
- short description
-To: Stanislav Jakubek <stano.jakubek@gmail.com>,
- Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-hwmon@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Zm8/qxGc8fvi/tuE@standask-GA-A55M-S2HP>
- <f75635d8-4199-4bbe-9fba-a1d2ed206966@roeck-us.net>
- <Zm/FF2xX/rhwmLZ6@standask-GA-A55M-S2HP>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <Zm/FF2xX/rhwmLZ6@standask-GA-A55M-S2HP>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614160350.180490-1-fengli@smartx.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 17/06/2024 07:09, Stanislav Jakubek wrote:
-> On Sun, Jun 16, 2024 at 01:43:08PM -0700, Guenter Roeck wrote:
->> On 6/16/24 12:40, Stanislav Jakubek wrote:
->>> TMP108 is powered by its V+ supply, document it.
->>> While at it, add a short description with a link to its datasheets.
->>>
->>> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
->>> ---
->>> Not entirely sure of the "v+-supply" name, but the datasheet only ever
->>> refers to it as "V+" or simply as the "supply voltage".
->>> Only other name I've seen is in the schematic for the msm8226-based
->>> motorola-falcon smartphone, where it's called "V_POS".
->>>
->>
->> Guess one has to praise the ability of datasheet writers to come up
->> with different names.
->>
->> The datasheet for tmp117 also uses the V+ term, yet the supply name
->> is "vcc-supply". I would personally very much prefer to stick with that,
->> but that is just my personal opinion.
->>
->> Guenter
->>
-> 
-> I'm okay with that. I'll keep this for a few days to see if anyone else
-> has anything to say, then I'll send a V2 with it changed to vcc.
+On Sat, Jun 15, 2024 at 12:03:47AM +0800, Li Feng wrote:
+> +		/*
+> +		 * When the discard mode has been set to UNMAP, it should not be set to
 
-vcc. Anyway + is not an expected character.
+Overly long line here.
 
-Best regards,
-Krzysztof
+> +		 * WRITE SAME with UNMAP.
+> +		 */
+> +		if (!sdkp->max_unmap_blocks)
+> +			sd_config_discard(sdkp, SD_LBP_WS16);
+
+But more importantly this doesn't really scale to all the variations
+of reported / guessed at probe time vs overriden.  I think you just
+need an explicit override flag that skips the discard settings.
 
