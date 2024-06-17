@@ -1,174 +1,276 @@
-Received: from sender3-op-o17.zoho.com (sender3-op-o17.zoho.com [136.143.184.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65986198A35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AAB198A38
 	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718629424; cv=pass; b=hXGiOMzUz58oLz+tKzgb5/jroYHYHCGmhOSeyc53VYLLzQ1hnCyPPZDF+e0jlljxpgymiHYE7/EzQ65tqJJ+AZgtNbotQOuoAjMBXS6v5kA+yG7mQagG68jEUsIOi+QwPqTAf2Vj+0epKbzcNTn7f4cDHatKWeImkWtv9cLYPE8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718629424; cv=none; b=gKPsj6XfE1KRMDzG/ZcNLYO8w6Mn9y+Yn8+RZk+yYksLRoHMysdfbFXbXYbHBFxoRQua4NPpdYA0SQni6wM2KRYYWIu6WYe+ma56fPdjs5frHiUU480EWtMk2ta6bdU2IUNNlUVkeJ2H1y9xEYcFFj0VTKZq6S5pYEZQRor1KmI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718629424; c=relaxed/simple;
-	bh=CuGTFeJasRxMadI0ng6WyEm9q4/tGwznB34rAmPFSqk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p2CLpT6d1WfoxtAkFVec3MjG6ao22LAqxMBMWuE+XGIIXyZFDkhEU2xVXF9AA0Ovt2r0euYO2CI+TG7pux4SgKRfygNoi2J5G6uyF60EvW1GuG5CdT5sc7EDlSPhJtrhh6KDcM+cAcR5gDc74dAJp70FcKc7yaFzMY5Blhw2gcs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=YBUx7G5t; arc=pass smtp.client-ip=136.143.184.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	bh=6t3ZkqcNeoQQb/+n2YWFMbCwguXnWksaQugNhpxF2Qo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=A7UCFep4HrjaVTG0ViUk+6Eb+4SkTLeliSMYd4cZm9fq9wJ8uCZJjROsEbZrXDhuN/vPkb4rGbhm4BmzoWubZlYqQ4hhNDfGXP4dbWcinW1MnDuF6Y2cWhSfN4+N4eu50+CdUcHXwcDSFfwmTuVcGVPia92NO/9TIyDYQrSzJRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BqUPzCrZ; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="YBUx7G5t"
-ARC-Seal: i=1; a=rsa-sha256; t=1718629401; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UUlz104YmEjcGZbvcbLNgBXntRRPSvjU9dEhZlj6DzPyiYo5tSmUdm3PqZEYtrotdWQdPBLvLwgvdn/HTw1L/x2TBkvOJ67dd+hlGvxHC9w+F88WD0hzZVNlR0a6K2ab/zL3aJgZvHqUJ9mj143F2z+tX/HpPcQbFhk3fPl6Kxg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1718629401; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CuGTFeJasRxMadI0ng6WyEm9q4/tGwznB34rAmPFSqk=; 
-	b=IlVCn1LkKh0gK++oCKswwiZfHMltZOE9izvdnNyw3xFeoOLjegxzVs0ljkElTbMvMPOFAUq5xxTIWMr8GmYbpDnosfnn67jDAM3/gN/ZyO4qumcJ4/7Pv2ghxmqkyAUl/v6APTAB8ptD8HCZEFwi73qejwKICoWmq9EczslcpxA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1718629401;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=CuGTFeJasRxMadI0ng6WyEm9q4/tGwznB34rAmPFSqk=;
-	b=YBUx7G5ten6qzSBNx26aB0iMeWj2A8wjBa5mvV5GQiB9u43TGPcRZ5XB3qpIHOjE
-	e6oZ38scjbTg+y57tR3uoRS9MES933jjNkilSDHEA62f/PmIoszKTn3JWgd5uPIlVOZ
-	d8sf++sY0025S3ERvLgBeUooMLfY9w6WM2mzlxSTV6wvMc9vcDeSBI671R/OttIDhRd
-	jbZTW9TYeujJDcAzv/n7/YLuCKfKJfNUePDdiC04sIJrdCEISLlFCn0bcdwZQmbOJwC
-	qeT/wBrnnby5uRUtSvKnCF8/g8/FTHoJVDSdYakyX/L8at5HEH8mOPR9xd1I9J5mxAm
-	x7vHvpy94g==
-Received: by mx.zohomail.com with SMTPS id 1718629398718172.63846711808583;
-	Mon, 17 Jun 2024 06:03:18 -0700 (PDT)
-Message-ID: <b4ebdbce2f44c06806a650e72b1b6eb9a16dffe6.camel@icenowy.me>
-Subject: Re: [PATCH 1/2] drm/amdgpu: make duplicated EOP packet for GFX7/8
- have real content
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Alex
- Deucher <alexander.deucher@amd.com>, Pan Xinhui <Xinhui.Pan@amd.com>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pierre-Eric
- Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Date: Mon, 17 Jun 2024 21:03:13 +0800
-In-Reply-To: <88337509-3ad7-47aa-b70f-5294f7f1e486@amd.com>
-References: <20240617105846.1516006-1-uwu@icenowy.me>
-	 <20240617105846.1516006-2-uwu@icenowy.me>
-	 <88337509-3ad7-47aa-b70f-5294f7f1e486@amd.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BqUPzCrZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57c6994e2f1so2410578a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718629421; x=1719234221; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZTDFr+Cm8nDhokWGI5gZCj0FJzBUQBkkvhzHWESthf0=;
+        b=BqUPzCrZCd95Vuj4RhTrnwhFIjVK9lrprEtpweO8WimwZWUWo4A70Ly4Io255zhcmo
+         TM2KAchY6B1yXo9+BWLeN6h8/TCsyWRJ1uwk38JBJRpa7mM3r/i6gDy6zvqfKNmkEOcr
+         nY0TNCWprpcOVE/kAPanPcudYlWPh/RRxUnHv/TP4hCOyIthXQVxq0H0kOt8J5gGRD9f
+         /qFkQ/qc+GBEGzlZFYjrJl5BMEBGGw7HbvFWZfReSlFCM3HoiUIawFUFY6GGYZ1yNs47
+         9gpw+W74WzcVAaFzLaTjEb4urXo9xwsDigC2slf9TBUN3taRr5k2u4+fwEIbyCz1gYTK
+         WA5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718629421; x=1719234221;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZTDFr+Cm8nDhokWGI5gZCj0FJzBUQBkkvhzHWESthf0=;
+        b=d94J8YNSyFSWuRXaTpNAotEExcWPsw9Ri425b/xAoEd6hlbeaqppY1diE3XKvQNHjb
+         8NGD6tFz9/+Mi7UquPasHl9lv8kXiw3Avlwa7t2b2j2gAB6rhAqdU/BuYvWT6NKt7MVt
+         MabPcSPn9UK0tXODHwhaCoFJlG452l9e+QYrPsUs5UDgInxxG0uADWdELuj0uIRUWFk/
+         kudSygm35IDwzVAcUORjoVsAVWiyxsYmeX4BrNDAjdNS1J6avwc76Q8vZAm+LLKmoD5T
+         lfgNHpYHACDzuWy3vWe+QlcxGuUgUjasZ5lStedvxE5YSCGqWx1Rq9gHqr3Unkq87nda
+         gTpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXiTKpu5Em43OPyA+4EkU0rU7WtTqWD3ryYrsa2DK/pzvIU6Zii2esB/6+lR+f1WjYvaJNR4l7mH+z2BW0MFJhyjFBYS7oM3lbVO9YU
+X-Gm-Message-State: AOJu0YygU7VYhYZZM/9QQH5jaumsCGwl9LRs4pjIydLzFB3Uaw++hocX
+	pJV0I9HyY3AVGjQskGbZFLTbFqPjihRqxamESt6FnNQnCrp+IMeoDZUUWwnQRRU=
+X-Google-Smtp-Source: AGHT+IG0uo6xbwCVLGemxh8QyVdwKLSreFz59C2NpY1GizeXqWOynGBerO7GobcCbP+4hBGajbjtkQ==
+X-Received: by 2002:a50:d48e:0:b0:57c:8e57:c3f0 with SMTP id 4fb4d7f45d1cf-57cbd685122mr7587945a12.16.1718629420843;
+        Mon, 17 Jun 2024 06:03:40 -0700 (PDT)
+Received: from [127.0.1.1] ([78.10.207.147])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72daa67sm6404349a12.38.2024.06.17.06.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 06:03:40 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Mon, 17 Jun 2024 15:03:23 +0200
+Subject: [PATCH 5/6] ASoC: Constify return of snd_soc_dai_get_pcm_stream()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240617-n-asoc-const-auto-selectable-formats-v1-5-8004f346ee38@linaro.org>
+References: <20240617-n-asoc-const-auto-selectable-formats-v1-0-8004f346ee38@linaro.org>
+In-Reply-To: <20240617-n-asoc-const-auto-selectable-formats-v1-0-8004f346ee38@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, 
+ Cezary Rojewski <cezary.rojewski@intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6826;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=6t3ZkqcNeoQQb/+n2YWFMbCwguXnWksaQugNhpxF2Qo=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmcDQi7eqb6NCoOY1F4T3SR0rHmp1JLBzjzFZAV
+ RyLBDlw2vCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZnA0IgAKCRDBN2bmhouD
+ 10zJD/0f8jAVU8xwRZB3dmHz6NbBZYEs6J97frvD4lszp15M1r2Nj9ltmNlVz2SkyA91uxRE6tQ
+ JqLUjxdsx1ZT4mGBkH+kKn8+3b2U9KHa94WwoxU8f1qzlqiZH5J6Gnf43vheTlJlBHjRPHpswrH
+ WSm0AT5yrsNHWqcL0GOcqU6M/PosUm9E8GisLC9VyAv2rj9mmGyECBu1pmbrPmLII9SpqRUfoTx
+ pJNFAvbxwArTES3/2q/uhU1xNfk87XjEB6B8VCgf4gfvtXCjJ6sOwS6sOUcWYe1sl4iY1e1tqqQ
+ 67FniMGKICaYNQR2Y8qtpGNRIGxRsMPI7cu1aJaGUirPxRfAI9KBl3GoJeNj4EWDm7E7SFFSSWj
+ 5Jllwk6HVm/7eeQAqRMahY/aR2mIKOvEDGOn/s4dUppyFeniXbShPtb0UrdjZHWSjSaOB7d7vTd
+ lVMJHm8naCLbYnIC9irS7xN+LJ/mxEdeRmwwnfW1CgZ78YPJRe20a9c7YUXBwCiDL0lHlk6I8XB
+ 62uEI5KyNlpB+hZ9PO2Dv4gaxAGK1g+iCyqm9aNeoRzfaghDQrIZg5gm8ifWqSjBLMEeHQXWANF
+ FRvxsaQSCGLLBfQh3bsgNCC8XzlXuzeeX2aMgQIoFNr23B5q6N2VtMCNOallLX8LFk9BIk9euNi
+ scz/N+b7Bn3Z/zg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-5ZyoIDIwMjQtMDYtMTfmmJ/mnJ/kuIDnmoQgMTQ6MzUgKzAyMDDvvIxDaHJpc3RpYW4gS8O2bmln
-5YaZ6YGT77yaCj4gQW0gMTcuMDYuMjQgdW0gMTI6NTggc2NocmllYiBJY2Vub3d5IFpoZW5nOgo+
-ID4gVGhlIGR1cGxpY2F0aW9uIG9mIEVPUCBwYWNrZXRzIGZvciBHRlg3LzgsIHdpdGggdGhlIGZv
-cm1lciBvbmUgaGF2ZQo+ID4gc2VxLTEgd3JpdHRlbiBhbmQgdGhlIGxhdHRlciBvbmUgaGF2ZSBz
-ZXEgd3JpdHRlbiwgc2VlbXMgdG8gY29uZnVzZQo+ID4gc29tZQo+ID4gaGFyZHdhcmUgcGxhdGZv
-cm0gKGUuZy4gTG9vbmdzb24gN0Egc2VyaWVzIFBDSWUgY29udHJvbGxlcnMpLgo+ID4gCj4gPiBN
-YWtlIHRoZSBjb250ZW50IG9mIHRoZSBkdXBsaWNhdGVkIEVPUCBwYWNrZXQgdGhlIHNhbWUgd2l0
-aCB0aGUKPiA+IHJlYWwKPiA+IG9uZSwgb25seSBtYXNraW5nIGFueSBwb3NzaWJsZSBpbnRlcnJ1
-cHRzLgo+IAo+IFdlbGwgY29tcGxldGVseSBOQUsgdG8gdGhhdCwgZXhhY3RseSB0aGF0IGRpc2Fi
-bGVzIHRoZSB3b3JrYXJvdW5kLgo+IAo+IFRoZSBDUFUgbmVlZHMgdG8gc2VlIHR3byBkaWZmZXJl
-bnQgdmFsdWVzIHdyaXR0ZW4gaGVyZS4KCldoeSBkbyB0aGUgQ1BVIG5lZWQgdG8gc2VlIHR3byBk
-aWZmZXJlbnQgdmFsdWVzIGhlcmU/IE9ubHkgdGhlIHNlY29uZApwYWNrZXQgd2lsbCByYWlzZSBh
-biBpbnRlcnJ1cHQgYmVmb3JlIGFuZCBhZnRlciBhcHBseWluZyB0aGlzIHBhdGNoLAphbmQgdGhl
-IGZpcnN0IHBhY2tldCdzIHJlc3VsdCBzaG91bGQganVzdCBiZSBvdmVycmlkZW4gb24gb3JkaW5h
-cnkKcGxhdGZvcm1zLiBUaGUgQ1BVIHdvbid0IHNlZSB0aGUgZmlyc3Qgb25lLCB1bnRpbCBpdCdz
-IHBvbGxpbmcgZm9yIHRoZQphZGRyZXNzIGZvciBhIHZlcnkgc2hvcnQgaW50ZXJ2YWwsIHNvIHNo
-b3J0IHRoYXQgdGhlIEdQVSBDUCBjb3VsZG4ndApleGVjdXRlIDIgY29tbWFuZHMuCgpPciBkbyB5
-b3UgbWVhbiB0aGUgR1BVIG5lZWRzIHRvIHNlZSB0d28gZGlmZmVyZW50IHZhbHVlcyBiZWluZyB3
-cml0dGVuLApvciB0aGV5IHdpbGwgYmUgbWVyZ2VkIGludG8gb25seSBvbmUgd3JpdGUgcmVxdWVz
-dD8KClBsZWFzZSBnaXZlIG91dCBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHRoaXMgd29ya2Fyb3Vu
-ZCwgb3RoZXJ3aXNlIHRoZQpHUFUgaGFuZyBwcm9ibGVtIG9uIExvb25nc29uIHBsYXRmb3JtcyB3
-aWxsIHBlcnNpc3QuCgo+IAo+IFJlZ2FyZHMsCj4gQ2hyaXN0aWFuLgo+IAo+ID4gCj4gPiBGaXhl
-czogYmYyNmRhOTI3YTFjICgiZHJtL2FtZGdwdTogYWRkIGNhY2hlIGZsdXNoIHdvcmthcm91bmQg
-dG8KPiA+IGdmeDggZW1pdF9mZW5jZSIpCj4gPiBGaXhlczogYTJlNzNmNTZmYTYyICgiZHJtL2Ft
-ZGdwdTogQWRkIHN1cHBvcnQgZm9yIENJSyBwYXJ0cyIpCj4gPiBTaWduZWQtb2ZmLWJ5OiBJY2Vu
-b3d5IFpoZW5nIDx1d3VAaWNlbm93eS5tZT4KPiA+IC0tLQo+ID4gwqAgZHJpdmVycy9ncHUvZHJt
-L2FtZC9hbWRncHUvZ2Z4X3Y3XzAuYyB8IDEyICsrKysrLS0tLS0tLQo+ID4gwqAgZHJpdmVycy9n
-cHUvZHJtL2FtZC9hbWRncHUvZ2Z4X3Y4XzAuYyB8IDEyICsrKystLS0tLS0tLQo+ID4gwqAgMiBm
-aWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ2Z4X3Y3XzAuYwo+ID4gYi9k
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nZnhfdjdfMC5jCj4gPiBpbmRleCA1NDFkYmQ3MGQ4
-Yzc1Li43NzhmMjdmMWEzNGZlIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9h
-bWRncHUvZ2Z4X3Y3XzAuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ2Z4
-X3Y3XzAuYwo+ID4gQEAgLTIxMTcsOSArMjExNyw4IEBAIHN0YXRpYyB2b2lkCj4gPiBnZnhfdjdf
-MF9yaW5nX2VtaXRfZmVuY2VfZ2Z4KHN0cnVjdCBhbWRncHVfcmluZyAqcmluZywgdTY0IGFkZHIs
-Cj4gPiDCoCB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgYm9vbCB3cml0ZTY0Yml0ID0gZmxhZ3MgJiBB
-TURHUFVfRkVOQ0VfRkxBR182NEJJVDsKPiA+IMKgwqDCoMKgwqDCoMKgwqBib29sIGludF9zZWwg
-PSBmbGFncyAmIEFNREdQVV9GRU5DRV9GTEFHX0lOVDsKPiA+IC3CoMKgwqDCoMKgwqDCoC8qIFdv
-cmthcm91bmQgZm9yIGNhY2hlIGZsdXNoIHByb2JsZW1zLiBGaXJzdCBzZW5kIGEgZHVtbXkKPiA+
-IEVPUAo+ID4gLcKgwqDCoMKgwqDCoMKgICogZXZlbnQgZG93biB0aGUgcGlwZSB3aXRoIHNlcSBv
-bmUgYmVsb3cuCj4gPiAtwqDCoMKgwqDCoMKgwqAgKi8KPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDC
-oC8qIFdvcmthcm91bmQgZm9yIGNhY2hlIGZsdXNoIHByb2JsZW1zLCBzZW5kIEVPUCB0d2ljZS4g
-Ki8KPiA+IMKgwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCBQQUNLRVQzKFBB
-Q0tFVDNfRVZFTlRfV1JJVEVfRU9QLAo+ID4gNCkpOwo+ID4gwqDCoMKgwqDCoMKgwqDCoGFtZGdw
-dV9yaW5nX3dyaXRlKHJpbmcsIChFT1BfVENMMV9BQ1RJT05fRU4gfAo+ID4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBFT1Bf
-VENfQUNUSU9OX0VOIHwKPiA+IEBAIC0yMTI3LDExICsyMTI2LDEwIEBAIHN0YXRpYyB2b2lkCj4g
-PiBnZnhfdjdfMF9yaW5nX2VtaXRfZmVuY2VfZ2Z4KHN0cnVjdCBhbWRncHVfcmluZyAqcmluZywg
-dTY0IGFkZHIsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIEVWRU5UX0lOREVYKDUpKSk7Cj4gPiDCoMKgwqDCoMKgwqDC
-oMKgYW1kZ3B1X3Jpbmdfd3JpdGUocmluZywgYWRkciAmIDB4ZmZmZmZmZmMpOwo+ID4gwqDCoMKg
-wqDCoMKgwqDCoGFtZGdwdV9yaW5nX3dyaXRlKHJpbmcsICh1cHBlcl8zMl9iaXRzKGFkZHIpICYg
-MHhmZmZmKSB8Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBEQVRBX1NFTCgxKSB8IElOVF9TRUwoMCkpOwo+ID4gLcKgwqDC
-oMKgwqDCoMKgYW1kZ3B1X3Jpbmdfd3JpdGUocmluZywgbG93ZXJfMzJfYml0cyhzZXEgLSAxKSk7
-Cj4gPiAtwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCB1cHBlcl8zMl9iaXRz
-KHNlcSAtIDEpKTsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoERBVEFfU0VMKHdyaXRlNjRiaXQgPyAyIDogMSkgfAo+ID4g
-SU5UX1NFTCgwKSk7Cj4gPiArwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCBs
-b3dlcl8zMl9iaXRzKHNlcSkpOwo+ID4gK8KgwqDCoMKgwqDCoMKgYW1kZ3B1X3Jpbmdfd3JpdGUo
-cmluZywgdXBwZXJfMzJfYml0cyhzZXEpKTsKPiA+IMKgIAo+ID4gLcKgwqDCoMKgwqDCoMKgLyog
-VGhlbiBzZW5kIHRoZSByZWFsIEVPUCBldmVudCBkb3duIHRoZSBwaXBlLiAqLwo+ID4gwqDCoMKg
-wqDCoMKgwqDCoGFtZGdwdV9yaW5nX3dyaXRlKHJpbmcsIFBBQ0tFVDMoUEFDS0VUM19FVkVOVF9X
-UklURV9FT1AsCj4gPiA0KSk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgYW1kZ3B1X3Jpbmdfd3JpdGUo
-cmluZywgKEVPUF9UQ0wxX0FDVElPTl9FTiB8Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEVPUF9UQ19BQ1RJT05fRU4g
-fAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dmeF92OF8wLmMK
-PiA+IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ2Z4X3Y4XzAuYwo+ID4gaW5kZXggMmYw
-ZTcyY2FlZTFhZi4uMzlhN2Q2MGYxZmQ2OSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9hbWQvYW1kZ3B1L2dmeF92OF8wLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1k
-Z3B1L2dmeF92OF8wLmMKPiA+IEBAIC02MTUzLDkgKzYxNTMsNyBAQCBzdGF0aWMgdm9pZAo+ID4g
-Z2Z4X3Y4XzBfcmluZ19lbWl0X2ZlbmNlX2dmeChzdHJ1Y3QgYW1kZ3B1X3JpbmcgKnJpbmcsIHU2
-NCBhZGRyLAo+ID4gwqDCoMKgwqDCoMKgwqDCoGJvb2wgd3JpdGU2NGJpdCA9IGZsYWdzICYgQU1E
-R1BVX0ZFTkNFX0ZMQUdfNjRCSVQ7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgYm9vbCBpbnRfc2VsID0g
-ZmxhZ3MgJiBBTURHUFVfRkVOQ0VfRkxBR19JTlQ7Cj4gPiDCoCAKPiA+IC3CoMKgwqDCoMKgwqDC
-oC8qIFdvcmthcm91bmQgZm9yIGNhY2hlIGZsdXNoIHByb2JsZW1zLiBGaXJzdCBzZW5kIGEgZHVt
-bXkKPiA+IEVPUAo+ID4gLcKgwqDCoMKgwqDCoMKgICogZXZlbnQgZG93biB0aGUgcGlwZSB3aXRo
-IHNlcSBvbmUgYmVsb3cuCj4gPiAtwqDCoMKgwqDCoMKgwqAgKi8KPiA+ICvCoMKgwqDCoMKgwqDC
-oC8qIFdvcmthcm91bmQgZm9yIGNhY2hlIGZsdXNoIHByb2JsZW1zLCBzZW5kIEVPUCB0d2ljZS4g
-Ki8KPiA+IMKgwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCBQQUNLRVQzKFBB
-Q0tFVDNfRVZFTlRfV1JJVEVfRU9QLAo+ID4gNCkpOwo+ID4gwqDCoMKgwqDCoMKgwqDCoGFtZGdw
-dV9yaW5nX3dyaXRlKHJpbmcsIChFT1BfVENMMV9BQ1RJT05fRU4gfAo+ID4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBFT1Bf
-VENfQUNUSU9OX0VOIHwKPiA+IEBAIC02MTY0LDEyICs2MTYyLDEwIEBAIHN0YXRpYyB2b2lkCj4g
-PiBnZnhfdjhfMF9yaW5nX2VtaXRfZmVuY2VfZ2Z4KHN0cnVjdCBhbWRncHVfcmluZyAqcmluZywg
-dTY0IGFkZHIsCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIEVWRU5UX0lOREVYKDUpKSk7Cj4gPiDCoMKgwqDCoMKgwqDC
-oMKgYW1kZ3B1X3Jpbmdfd3JpdGUocmluZywgYWRkciAmIDB4ZmZmZmZmZmMpOwo+ID4gwqDCoMKg
-wqDCoMKgwqDCoGFtZGdwdV9yaW5nX3dyaXRlKHJpbmcsICh1cHBlcl8zMl9iaXRzKGFkZHIpICYg
-MHhmZmZmKSB8Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBEQVRBX1NFTCgxKSB8IElOVF9TRUwoMCkpOwo+ID4gLcKgwqDC
-oMKgwqDCoMKgYW1kZ3B1X3Jpbmdfd3JpdGUocmluZywgbG93ZXJfMzJfYml0cyhzZXEgLSAxKSk7
-Cj4gPiAtwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCB1cHBlcl8zMl9iaXRz
-KHNlcSAtIDEpKTsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgREFUQV9TRUwod3JpdGU2NGJpdCA/IDIgOiAxKSB8Cj4gPiBJTlRfU0VMKDApKTsK
-PiA+ICvCoMKgwqDCoMKgwqDCoGFtZGdwdV9yaW5nX3dyaXRlKHJpbmcsIGxvd2VyXzMyX2JpdHMo
-c2VxKSk7Cj4gPiArwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCB1cHBlcl8z
-Ml9iaXRzKHNlcSkpOwo+ID4gwqAgCj4gPiAtwqDCoMKgwqDCoMKgwqAvKiBUaGVuIHNlbmQgdGhl
-IHJlYWwgRU9QIGV2ZW50IGRvd24gdGhlIHBpcGU6Cj4gPiAtwqDCoMKgwqDCoMKgwqAgKiBFVkVO
-VF9XUklURV9FT1AgLSBmbHVzaCBjYWNoZXMsIHNlbmQgaW50ICovCj4gPiDCoMKgwqDCoMKgwqDC
-oMKgYW1kZ3B1X3Jpbmdfd3JpdGUocmluZywgUEFDS0VUMyhQQUNLRVQzX0VWRU5UX1dSSVRFX0VP
-UCwKPiA+IDQpKTsKPiA+IMKgwqDCoMKgwqDCoMKgwqBhbWRncHVfcmluZ193cml0ZShyaW5nLCAo
-RU9QX1RDTDFfQUNUSU9OX0VOIHwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgRU9QX1RDX0FDVElPTl9FTiB8Cj4gCgo=
+Returned 'struct snd_soc_pcm_stream' by snd_soc_dai_get_pcm_stream() is
+not modified by the users, so it can be changed as pointer to const.
+This is a necessary step towards making the 'dai->driver' a pointer to
+const.
+
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ include/sound/soc-dai.h   |  2 +-
+ sound/soc/intel/avs/pcm.c |  4 ++--
+ sound/soc/soc-dai.c       |  2 +-
+ sound/soc/soc-pcm.c       | 26 +++++++++++++-------------
+ 4 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+index e9751cc94f8c..bbb72ad4c951 100644
+--- a/include/sound/soc-dai.h
++++ b/include/sound/soc-dai.h
+@@ -473,7 +473,7 @@ struct snd_soc_dai {
+ 	unsigned int probed:1;
+ };
+ 
+-static inline struct snd_soc_pcm_stream *
++static inline const struct snd_soc_pcm_stream *
+ snd_soc_dai_get_pcm_stream(const struct snd_soc_dai *dai, int stream)
+ {
+ 	return (stream == SNDRV_PCM_STREAM_PLAYBACK) ?
+diff --git a/sound/soc/intel/avs/pcm.c b/sound/soc/intel/avs/pcm.c
+index 88e711875004..c76b86254a8b 100644
+--- a/sound/soc/intel/avs/pcm.c
++++ b/sound/soc/intel/avs/pcm.c
+@@ -341,7 +341,7 @@ static int avs_dai_hda_be_prepare(struct snd_pcm_substream *substream, struct sn
+ {
+ 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct snd_soc_pcm_stream *stream_info;
++	const struct snd_soc_pcm_stream *stream_info;
+ 	struct hdac_ext_stream *link_stream;
+ 	struct hdac_ext_link *link;
+ 	struct avs_dma_data *data;
+@@ -637,7 +637,7 @@ static int avs_dai_fe_hw_free(struct snd_pcm_substream *substream, struct snd_so
+ static int avs_dai_fe_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct snd_soc_pcm_stream *stream_info;
++	const struct snd_soc_pcm_stream *stream_info;
+ 	struct avs_dma_data *data;
+ 	struct hdac_ext_stream *host_stream;
+ 	unsigned int format_val;
+diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
+index 0c3a834e504d..9e47053419c1 100644
+--- a/sound/soc/soc-dai.c
++++ b/sound/soc/soc-dai.c
+@@ -473,7 +473,7 @@ int snd_soc_dai_compress_new(struct snd_soc_dai *dai,
+  */
+ bool snd_soc_dai_stream_valid(const struct snd_soc_dai *dai, int dir)
+ {
+-	struct snd_soc_pcm_stream *stream = snd_soc_dai_get_pcm_stream(dai, dir);
++	const struct snd_soc_pcm_stream *stream = snd_soc_dai_get_pcm_stream(dai, dir);
+ 
+ 	/* If the codec specifies any channels at all, it supports the stream */
+ 	return stream->channels_min;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 711b2f49ed88..bad823718ae4 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -504,7 +504,7 @@ static void soc_pcm_apply_msb(struct snd_pcm_substream *substream)
+ 	unsigned int bits = 0, cpu_bits = 0;
+ 
+ 	for_each_rtd_codec_dais(rtd, i, codec_dai) {
+-		struct snd_soc_pcm_stream *pcm_codec = snd_soc_dai_get_pcm_stream(codec_dai, stream);
++		const struct snd_soc_pcm_stream *pcm_codec = snd_soc_dai_get_pcm_stream(codec_dai, stream);
+ 
+ 		if (pcm_codec->sig_bits == 0) {
+ 			bits = 0;
+@@ -514,7 +514,7 @@ static void soc_pcm_apply_msb(struct snd_pcm_substream *substream)
+ 	}
+ 
+ 	for_each_rtd_cpu_dais(rtd, i, cpu_dai) {
+-		struct snd_soc_pcm_stream *pcm_cpu = snd_soc_dai_get_pcm_stream(cpu_dai, stream);
++		const struct snd_soc_pcm_stream *pcm_cpu = snd_soc_dai_get_pcm_stream(cpu_dai, stream);
+ 
+ 		if (pcm_cpu->sig_bits == 0) {
+ 			cpu_bits = 0;
+@@ -538,7 +538,7 @@ static void soc_pcm_hw_init(struct snd_pcm_hardware *hw)
+ }
+ 
+ static void soc_pcm_hw_update_rate(struct snd_pcm_hardware *hw,
+-				   struct snd_soc_pcm_stream *p)
++				   const struct snd_soc_pcm_stream *p)
+ {
+ 	hw->rates = snd_pcm_rate_mask_intersect(hw->rates, p->rates);
+ 
+@@ -551,20 +551,20 @@ static void soc_pcm_hw_update_rate(struct snd_pcm_hardware *hw,
+ }
+ 
+ static void soc_pcm_hw_update_chan(struct snd_pcm_hardware *hw,
+-				   struct snd_soc_pcm_stream *p)
++				   const struct snd_soc_pcm_stream *p)
+ {
+ 	hw->channels_min = max(hw->channels_min, p->channels_min);
+ 	hw->channels_max = min(hw->channels_max, p->channels_max);
+ }
+ 
+ static void soc_pcm_hw_update_format(struct snd_pcm_hardware *hw,
+-				     struct snd_soc_pcm_stream *p)
++				     const struct snd_soc_pcm_stream *p)
+ {
+ 	hw->formats &= p->formats;
+ }
+ 
+ static void soc_pcm_hw_update_subformat(struct snd_pcm_hardware *hw,
+-					struct snd_soc_pcm_stream *p)
++					const struct snd_soc_pcm_stream *p)
+ {
+ 	hw->subformats &= p->subformats;
+ }
+@@ -583,8 +583,8 @@ int snd_soc_runtime_calc_hw(struct snd_soc_pcm_runtime *rtd,
+ {
+ 	struct snd_soc_dai *codec_dai;
+ 	struct snd_soc_dai *cpu_dai;
+-	struct snd_soc_pcm_stream *codec_stream;
+-	struct snd_soc_pcm_stream *cpu_stream;
++	const struct snd_soc_pcm_stream *codec_stream;
++	const struct snd_soc_pcm_stream *cpu_stream;
+ 	unsigned int cpu_chan_min = 0, cpu_chan_max = UINT_MAX;
+ 	int i;
+ 
+@@ -1712,7 +1712,7 @@ static void dpcm_runtime_setup_fe(struct snd_pcm_substream *substream)
+ 		hw->formats &= formats;
+ 
+ 	for_each_rtd_cpu_dais(fe, i, dai) {
+-		struct snd_soc_pcm_stream *cpu_stream;
++		const struct snd_soc_pcm_stream *cpu_stream;
+ 
+ 		/*
+ 		 * Skip CPUs which don't support the current stream
+@@ -1750,7 +1750,7 @@ static void dpcm_runtime_setup_be_format(struct snd_pcm_substream *substream)
+ 
+ 	for_each_dpcm_be(fe, stream, dpcm) {
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+-		struct snd_soc_pcm_stream *codec_stream;
++		const struct snd_soc_pcm_stream *codec_stream;
+ 		int i;
+ 
+ 		for_each_rtd_codec_dais(be, i, dai) {
+@@ -1787,7 +1787,7 @@ static void dpcm_runtime_setup_be_chan(struct snd_pcm_substream *substream)
+ 
+ 	for_each_dpcm_be(fe, stream, dpcm) {
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+-		struct snd_soc_pcm_stream *cpu_stream;
++		const struct snd_soc_pcm_stream *cpu_stream;
+ 		struct snd_soc_dai *dai;
+ 		int i;
+ 
+@@ -1809,7 +1809,7 @@ static void dpcm_runtime_setup_be_chan(struct snd_pcm_substream *substream)
+ 		 * DAIs connected to a single CPU DAI, use CPU DAI's directly
+ 		 */
+ 		if (be->dai_link->num_codecs == 1) {
+-			struct snd_soc_pcm_stream *codec_stream = snd_soc_dai_get_pcm_stream(
++			const struct snd_soc_pcm_stream *codec_stream = snd_soc_dai_get_pcm_stream(
+ 				snd_soc_rtd_to_codec(be, 0), stream);
+ 
+ 			soc_pcm_hw_update_chan(hw, codec_stream);
+@@ -1835,7 +1835,7 @@ static void dpcm_runtime_setup_be_rate(struct snd_pcm_substream *substream)
+ 
+ 	for_each_dpcm_be(fe, stream, dpcm) {
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+-		struct snd_soc_pcm_stream *pcm;
++		const struct snd_soc_pcm_stream *pcm;
+ 		struct snd_soc_dai *dai;
+ 		int i;
+ 
+
+-- 
+2.43.0
 
