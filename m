@@ -1,186 +1,87 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CE61C68B1
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7500D1C68BE
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632226; cv=none; b=eIUcmvkL6tM3KH3103GDM4Sl6aoTHBNK4WjwezDzBQqczD5ZqHY0oNs0S0PvEKl7iHhCobFR4Sn38vyqeoGAckLCYH1vfiaRoJ8wxXlDbJihrXU10oA3LwUE8YLgHRERpJsVzavVmdeYcA/5fVFYeAFFeWv4TUTErWHTjE8Bsqg=
+	t=1718632227; cv=none; b=RuSd4tiXr5wub2/ZHJfz7bwXiWG/hEjD7qnjKuSQaR7MQor9yDAhDumzo8xEXFb4RnlQE52Oih/vaR7awUgBd+irPSitrH1HNwr5JU+9e3j9YBCP3dTxrseVjmUkYCfPZ5I8qI/eNtdx98XBpFoNzpm2bBM+dUQkzdRO48agQo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632226; c=relaxed/simple;
-	bh=6WpzNw/7O6Bgfvz8lndloRTTgJyhcPEVJA0wYoY3R1g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r4KPmOh/v+0gTfdLogdgN6mHq7+c4kDrWk4JYnM1Lfd73lNfP8wf0ncGuISkkrtGbJi3DixICkVlHC6mWvDafVAav8yWqedPJvDW1P8zd1aPCAGuwH5nC0LCtC0UTP6p8EF03dAt+z6Oyl2oXo1einHB9gwhold2/LTWNMOd4O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tY1MVWmf; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1718632227; c=relaxed/simple;
+	bh=D5p2SE0eHG1JvQH6hxT3l8r0DOSeEOFDSIG+C0YDKwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pvfe31qOGaFR6kGZAuhwuWYJRDhf3FVMAh8Ag4A/wBGs5bgvH/56fLJ8G2ANsD8XAO5D6KCz7dZWmmi8hNFvizJJODs2F3WI18s4HtOjK5BXUUTRWwG2XiBv5+5g9IJZof1qZeMu/cg6ngkSUgA5JCX8+d5RkrUKfLNMOKiIXx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EIvEfnXO; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tY1MVWmf"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-795569eede0so223562185a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718632224; x=1719237024; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l19FGmHt7cx9Y1e6lJcD6lg62Kq+f+HHsekNkW7FIwQ=;
-        b=tY1MVWmfOfGf7PmZII49newNsVPDJfl04IOHBXbO8NQB5UvxBI1Eaze950bOUrMJ9M
-         FmZouByZAiaJEjlJl+wTIwJW/0DYYILFzFIuweSvA8nUkIzbeY/t31uhZogsBmzxbSik
-         AR7NHLp8Phqry8ClLSMEb066bx1L73VHXqxD1uKvTj+CyOO4TcjvVehwgGwXpq/fAoOw
-         g8ugJ58ji0cdHJdIBEojVAektbknoxhvN3N+WMGLXEgt4HmtWInxh9R3FUCWcxYEhWLp
-         3cnLar0p7DU8e81dqprutAhL8YUr6I0SXypz4eeIMSHoXG9vddyOMk5JyMGL0HWCvxGF
-         xnTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718632224; x=1719237024;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l19FGmHt7cx9Y1e6lJcD6lg62Kq+f+HHsekNkW7FIwQ=;
-        b=YPyo5WxTlkWNPJ2OsO/7HyQoFlFgkP/dmBhzfWJNwTrP+0JC02qFm2j8XZjh07bDG4
-         QoRH5I9+J/LFXj2qX0V0CbTVqFuZf8LrsQ72zZ09qZ1LwQnUnZHO9DDI2RcbDIbiHS4q
-         yqSZ5alT40V15L0SVkTTW0rmVgcPPokLprozrTiQLc/0C0fGlIfL+qzsliFjal8GxXYm
-         vTtBneAGZPTL3kbdi0mTdO7zdL+z0f4/tYcYTM4w3X7SXvetMxWCjFoADyBbnYT1B66F
-         xD54Hn2J9nX3To1Xo4EFSlBXz6bREjBY0AIxri4JsmN/qw60mugwvKm+T2k0dBqYtaDu
-         pdaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsSAAv+BbMAHAN6e1iCZCY0O/IxsJrHlTZ0CGYo1aFHNrkldn03PktEssWK9QQ8HCYzIGvdACHJqpHerULqv4yNfG6JsoM7/Wow/AE
-X-Gm-Message-State: AOJu0YzXoPs+xTaXX64F0m0QfoLVojf4NWMmvMtBk3/ujqumAEtQWQhn
-	Ma6RRaXPlyPSOO+rp4+ehlY/jhXaozEEuFqC94QMsmGDL7BoOeekGt80a33GXJo=
-X-Google-Smtp-Source: AGHT+IEh7KDprGK33BeeaVNTDiPQqvpWOrx7hEFjzf44w52REiEzqTJNM1IGPx8qlAanIRK9VBBUsQ==
-X-Received: by 2002:a05:620a:4101:b0:795:dca5:e9b7 with SMTP id af79cd13be357-798d26b4948mr1182835585a.69.1718632223483;
-        Mon, 17 Jun 2024 06:50:23 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaecc004sm432892285a.31.2024.06.17.06.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:50:23 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-Date: Mon, 17 Jun 2024 09:49:58 -0400
-Subject: [PATCH v3 18/41] iio: adc: stm32-dfsdm-adc: make use of
- regmap_clear_bits(), regmap_set_bits()
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EIvEfnXO"
+X-Envelope-To: eadavis@qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718632223;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C62PbaCEWfaouXUkkTaXGkDjjhNjBVFwmkpkQFT9P00=;
+	b=EIvEfnXOJg8bh0AbA74ouCqzkJwiFZWf9T1eNE4eN7JHV6iaPo1h7eG87OahDjFBKIMrDj
+	2c59h5PSrxBkzq2hJtB5rnnFP1LV6skqiXqYDcBqaV8dItJcn+MvPbnbe7zF9wZ2XbJ9CY
+	3av/XD1RLQfAkChb+K9+C/Q3KHHXS08=
+X-Envelope-To: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
+X-Envelope-To: bfoster@redhat.com
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: syzkaller-bugs@googlegroups.com
+Date: Mon, 17 Jun 2024 09:50:18 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com, 
+	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] bcachefs: bch2_fs_read_write_early needs to hold write
+ lock
+Message-ID: <pols2a6hnmgwb6tnszy3d2gqlyomstowhozqp4pu7rbgakdtj5@uozspcarep3h>
+References: <00000000000053e574061ad89521@google.com>
+ <tencent_724B611BCF250EBAF7BBE333DF9E271BB208@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-review-v3-18-88d1338c4cca@baylibre.com>
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Dmitry Rokosov <ddrokosov@sberdevices.ru>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
- Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
- Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Saravanan Sekar <sravanhome@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, 
- Crt Mori <cmo@melexis.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
- linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- Trevor Gamblin <tgamblin@baylibre.com>
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_724B611BCF250EBAF7BBE333DF9E271BB208@qq.com>
+X-Migadu-Flow: FLOW_OUT
 
-Instead of using regmap_update_bits() and passing the mask twice, use
-regmap_set_bits().
+On Sat, Jun 15, 2024 at 07:44:04PM +0800, Edward Adam Davis wrote:
+> bch2_fs_read_write_early() needs to hold state_lock to pretect and sync data.
+> 
+> Reported-by: syzbot+4366624c0b5aac4906cf@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 
-Instead of using regmap_update_bits() and passing val = 0, use
-regmap_clear_bits().
+this is incorrect - delete_dead_snapshots() may be called synchronously
+or asynchronously, and if it's called asynchronously we do hold
+state_lock, so this will deadlock
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
- drivers/iio/adc/stm32-dfsdm-adc.c | 29 ++++++++++++-----------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 9a47d2c87f05..fabd654245f5 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -759,8 +759,7 @@ static int stm32_dfsdm_start_conv(struct iio_dev *indio_dev,
- 	return 0;
- 
- filter_unconfigure:
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_CFG_MASK, 0);
-+	regmap_clear_bits(regmap, DFSDM_CR1(adc->fl_id), DFSDM_CR1_CFG_MASK);
- stop_channels:
- 	stm32_dfsdm_stop_channel(indio_dev);
- 
-@@ -774,8 +773,7 @@ static void stm32_dfsdm_stop_conv(struct iio_dev *indio_dev)
- 
- 	stm32_dfsdm_stop_filter(adc->dfsdm, adc->fl_id);
- 
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_CFG_MASK, 0);
-+	regmap_clear_bits(regmap, DFSDM_CR1(adc->fl_id), DFSDM_CR1_CFG_MASK);
- 
- 	stm32_dfsdm_stop_channel(indio_dev);
- }
-@@ -951,16 +949,14 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
- 
- 	if (adc->nconv == 1 && !indio_dev->trig) {
- 		/* Enable regular DMA transfer*/
--		ret = regmap_update_bits(adc->dfsdm->regmap,
--					 DFSDM_CR1(adc->fl_id),
--					 DFSDM_CR1_RDMAEN_MASK,
--					 DFSDM_CR1_RDMAEN_MASK);
-+		ret = regmap_set_bits(adc->dfsdm->regmap,
-+				      DFSDM_CR1(adc->fl_id),
-+				      DFSDM_CR1_RDMAEN_MASK);
- 	} else {
- 		/* Enable injected DMA transfer*/
--		ret = regmap_update_bits(adc->dfsdm->regmap,
--					 DFSDM_CR1(adc->fl_id),
--					 DFSDM_CR1_JDMAEN_MASK,
--					 DFSDM_CR1_JDMAEN_MASK);
-+		ret = regmap_set_bits(adc->dfsdm->regmap,
-+				      DFSDM_CR1(adc->fl_id),
-+				      DFSDM_CR1_JDMAEN_MASK);
- 	}
- 
- 	if (ret < 0)
-@@ -981,8 +977,8 @@ static void stm32_dfsdm_adc_dma_stop(struct iio_dev *indio_dev)
- 	if (!adc->dma_chan)
- 		return;
- 
--	regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_RDMAEN_MASK | DFSDM_CR1_JDMAEN_MASK, 0);
-+	regmap_clear_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
-+			  DFSDM_CR1_RDMAEN_MASK | DFSDM_CR1_JDMAEN_MASK);
- 	dmaengine_terminate_all(adc->dma_chan);
- }
- 
-@@ -1305,9 +1301,8 @@ static irqreturn_t stm32_dfsdm_irq(int irq, void *arg)
- 	if (status & DFSDM_ISR_ROVRF_MASK) {
- 		if (int_en & DFSDM_CR2_ROVRIE_MASK)
- 			dev_warn(&indio_dev->dev, "Overrun detected\n");
--		regmap_update_bits(regmap, DFSDM_ICR(adc->fl_id),
--				   DFSDM_ICR_CLRROVRF_MASK,
--				   DFSDM_ICR_CLRROVRF_MASK);
-+		regmap_set_bits(regmap, DFSDM_ICR(adc->fl_id),
-+				DFSDM_ICR_CLRROVRF_MASK);
- 	}
- 
- 	return IRQ_HANDLED;
-
--- 
-2.45.2
-
+> ---
+>  fs/bcachefs/snapshot.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/bcachefs/snapshot.c b/fs/bcachefs/snapshot.c
+> index 51918acfd726..b27a4327274d 100644
+> --- a/fs/bcachefs/snapshot.c
+> +++ b/fs/bcachefs/snapshot.c
+> @@ -1566,7 +1566,9 @@ int bch2_delete_dead_snapshots(struct bch_fs *c)
+>  		return 0;
+>  
+>  	if (!test_bit(BCH_FS_started, &c->flags)) {
+> +		down_write(&c->state_lock);
+>  		ret = bch2_fs_read_write_early(c);
+> +		up_write(&c->state_lock);
+>  		bch_err_msg(c, ret, "deleting dead snapshots: error going rw");
+>  		if (ret)
+>  			return ret;
+> -- 
+> 2.43.0
+> 
