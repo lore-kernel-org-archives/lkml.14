@@ -1,71 +1,57 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0A715B977;
-	Mon, 17 Jun 2024 16:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE0015EFC7;
+	Mon, 17 Jun 2024 16:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718641884; cv=none; b=f5LPUQcuQHSKMUZYOyb4XOWHfR0hxZwOslDLA+sIB7FfG8vzBCqZ6UdiL7Mpk3lfpYf5r18kJhbf8Gr56QLTfv2nPhekG27x3kN4vCReRBZiLvasEytZCbEijQST/r+HTqo5DaaocUt/s/RSOqIQ2redL5FW5tYbuMCvZjRMk7E=
+	t=1718641914; cv=none; b=Z/JoesGm4OkRW3x1LTkP6uhx5tQsp5ucV5mvPV7j+tU5htfEsNu2frSKObOqJ+vnGqBwxajNgl1GymhvOfP09wZe9shJSoghNoFBPYzJ09nYvkhw2ZO1hLKeM/C8z9ezdPgJp/vfoTP34IeoWTFXMCSv2BhZrlnkrQjsG4wL5p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718641884; c=relaxed/simple;
-	bh=Bjuj+h31fXZSJTP947nQ6wd95zco9N/KLLRlENy27RI=;
+	s=arc-20240116; t=1718641914; c=relaxed/simple;
+	bh=N/Is03mLCxdJCd/OOK+w/wlLamJmjEQxRrxdjj9UKRA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mv/l6GaNhsEvjRRUHZS5IuXZ4lqa/7WXU1Zf8hmcZ4CMocVtiJP7V/BRHY9V3ixVcbzan8YtRHQVgScIgC6gl62Wu69/38/KoZGysN7WKToQD3mylpNVJmit/gyL/LrZ68t5Wx6PLPM5L78EkvMbEejPgRNdoxJ6YdJxVOy4ea8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=HKHjAvgw; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+fgf/DZCp+NYUtsSU7NUSb95jWsTb137OrZRWoav/wmu9Ir1OSvO/RjGpDBnSghm/fByIbTLIKbAUmvmuiZs8YH+Xt1qMxMVpGd59v1PdvN1PvJDm2TgW+CwI7Hi83ssgSUH8F2ismS3Ed0fzxN9BI8EIZCK8jnZvG1FMQQyOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JWkKiRWp; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="HKHjAvgw"
-Received: from pps.filterd (m0355091.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HCpubM016217;
-	Mon, 17 Jun 2024 16:30:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=DKIM202306; bh=8WJALL82Sk9HW31XdlI5/qJ
-	F14ASSC7G53mFaIDlTHE=; b=HKHjAvgw/QeP2J753/bTERhco/ZjJ1mkbQd/cbN
-	wwkDTQg11XVaI7iZEGLNB+cUSUSbI+hq3LCh1m4LiqX9OsdOQSMk+bS2d8q56Mhi
-	neCeQOffMtj+AoWOQz1bBriN7E5ONQKuNLYasb1Exl47xeTmrsEXF2KcV75JnlL0
-	TAVFRKVIlxTwjyKynZ2D9Ts2wQr2P2Nzo5Q1gTpUDG01muWroEewPZMME/E5/qBu
-	itSMxfboZ5cxojvio9JgvCU29ifQaHSiaAJ+AU1YMtTs+VfpRPEfbW735WW4JNsn
-	NbZAhbLV7wNLUrSj3VS/ge7V2yuTBenxrhSitO/ezKVGDaw==
-Received: from va32lpfpp04.lenovo.com ([104.232.228.24])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3ysr2gjvrk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:30:57 +0000 (GMT)
-Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp04.lenovo.com (Postfix) with ESMTPS id 4W2wNx1VSnzg1bp;
-	Mon, 17 Jun 2024 16:30:57 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JWkKiRWp"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4W2wNw5jG8z2VZRt;
-	Mon, 17 Jun 2024 16:30:56 +0000 (UTC)
-Date: Mon, 17 Jun 2024 11:30:55 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH bpf-next v7 1/2] cfi: add C CFI type macro
-Message-ID: <kqo347km77nsh5dppgif3tfsjyt4ghqiao4ndbmkg5ypfmqjit@wrjfvxeohhom>
-References: <ptrugmna4xb5o5lo4xislf4rlz7avdmd4pfho5fjwtjj7v422u@iqrwfrbwuxrq>
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4W2wPp2gXcz9sbq;
+	Mon, 17 Jun 2024 18:31:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1718641902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KuXIJ7LqfJ3Qb7t/gAz8A9hXQtRUtJOjtWlveOqVqMY=;
+	b=JWkKiRWpGNhxs402fjJ1SGsC2FOtKPjRvo6mKa70tUJkaX1x+g+HSinnBkMxJvipXP6EOo
+	HYkWfrYA0rxbNJvuyHEA48QNv6GtrcYKFVzJcr5Zf9j+oKLARU7yMDuusWVc4IcufP7b+s
+	BxQvCVcHvH15El7O0iNZ3w91lfIsDlRFcEKK9KwDqV+jJFBHbSM9de2fCvYXGD8mKeaatI
+	RPShWka2kHdS+p+bJTH69FL8xBeFnqwFPJyLWo5/vIa3Q6QXnT0zb684x2hvZ/kCxWFUCK
+	nfybmgFIAvhP9gxxbyiIXcOsjpiCExUQP+qLJi9OOzLan/G2zXOtYI1H0nXQrA==
+Date: Mon, 17 Jun 2024 16:31:36 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Dave Chinner <david@fromorbit.com>, djwong@kernel.org,
+	chandan.babu@oracle.com, brauner@kernel.org,
+	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
+	linux-mm@kvack.org, hare@suse.de, linux-kernel@vger.kernel.org,
+	yang@os.amperecomputing.com, Zi Yan <zi.yan@sent.com>,
+	linux-xfs@vger.kernel.org, p.raghav@samsung.com,
+	linux-fsdevel@vger.kernel.org, gost.dev@samsung.com,
+	cl@os.amperecomputing.com, john.g.garry@oracle.com
+Subject: Re: [PATCH v7 11/11] xfs: enable block size larger than page size
+ support
+Message-ID: <20240617163136.ozxrlxljmblcgny3@quentin>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-12-kernel@pankajraghav.com>
+ <20240613084725.GC23371@lst.de>
+ <Zm+RhjG6DUoat7lO@dread.disaster.area>
+ <20240617065104.GA18547@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,178 +60,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ptrugmna4xb5o5lo4xislf4rlz7avdmd4pfho5fjwtjj7v422u@iqrwfrbwuxrq>
-X-Proofpoint-GUID: 73KwCL7ZNu4ZqCLmvWaI1aZrjZcEqfiN
-X-Proofpoint-ORIG-GUID: 73KwCL7ZNu4ZqCLmvWaI1aZrjZcEqfiN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- bulkscore=0 phishscore=0 mlxlogscore=999 adultscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170128
+In-Reply-To: <20240617065104.GA18547@lst.de>
+X-Rspamd-Queue-Id: 4W2wPp2gXcz9sbq
 
-From: Mark Rutland <mark.rutland@arm.com>
+On Mon, Jun 17, 2024 at 08:51:04AM +0200, Christoph Hellwig wrote:
+> On Mon, Jun 17, 2024 at 11:29:42AM +1000, Dave Chinner wrote:
+> > > > +	if (mp->m_sb.sb_blocksize > PAGE_SIZE)
+> > > > +		igeo->min_folio_order = mp->m_sb.sb_blocklog - PAGE_SHIFT;
+> > > > +	else
+> > > > +		igeo->min_folio_order = 0;
+> > > >  }
+> > > 
+> > > The minimum folio order isn't really part of the inode (allocation)
+> > > geometry, is it?
+> > 
+> > I suggested it last time around instead of calculating the same
+> > constant on every inode allocation. We're already storing in-memory
+> > strunct xfs_inode allocation init values in this structure. e.g. in
+> > xfs_inode_alloc() we see things like this:
+> 
+> While new_diflags2 isn't exactly inode geometry, it at least is part
+> of the inode allocation.  Folio min order for file data has nothing
+> to do with this at all.
+> 
+> > The only other place we might store it is the struct xfs_mount, but
+> > given all the inode allocation constants are already in the embedded
+> > mp->m_ino_geo structure, it just seems like a much better idea to
+> > put it will all the other inode allocation constants than dump it
+> > randomly into the struct xfs_mount....
+> 
+> Well, it is very closely elated to say the m_blockmask field in
+> struct xfs_mount.  The again modern CPUs tend to get a you simple
+> subtraction for free in most pipelines doing other things, so I'm
+> not really sure it's worth caching for use in inode allocation to
+> start with, but I don't care strongly about that.
 
-Currently x86 and riscv open-code 4 instances of the same logic to
-define a u32 variable with the KCFI typeid of a given function.
+But there will also be an extra conditional apart from subtraction
+right? 
 
-Replace the duplicate logic with a common macro.
+Initially it was something like this:
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
- arch/riscv/kernel/cfi.c       | 35 +++--------------------------------
- arch/x86/kernel/alternative.c | 35 +++--------------------------------
- include/linux/cfi_types.h     | 23 +++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 64 deletions(-)
-
-diff --git a/arch/riscv/kernel/cfi.c b/arch/riscv/kernel/cfi.c
-index 64bdd3e1ab8c..e7aec5f36dd5 100644
---- a/arch/riscv/kernel/cfi.c
-+++ b/arch/riscv/kernel/cfi.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2023 Google LLC
-  */
-+#include <linux/cfi_types.h>
- #include <linux/cfi.h>
- #include <asm/insn.h>
- 
-@@ -82,41 +83,11 @@ struct bpf_insn;
- /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
- extern unsigned int __bpf_prog_runX(const void *ctx,
- 				    const struct bpf_insn *insn);
--
--/*
-- * Force a reference to the external symbol so the compiler generates
-- * __kcfi_typid.
-- */
--__ADDRESSABLE(__bpf_prog_runX);
--
--/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_hash,@object				\n"
--"	.globl	cfi_bpf_hash					\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_hash:							\n"
--"	.word	__kcfi_typeid___bpf_prog_runX			\n"
--"	.size	cfi_bpf_hash, 4					\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
- 
- /* Must match bpf_callback_t */
- extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
--
--__ADDRESSABLE(__bpf_callback_fn);
--
--/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_subprog_hash,@object			\n"
--"	.globl	cfi_bpf_subprog_hash				\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_subprog_hash:						\n"
--"	.word	__kcfi_typeid___bpf_callback_fn			\n"
--"	.size	cfi_bpf_subprog_hash, 4				\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
- 
- u32 cfi_get_func_hash(void *func)
+@@ -73,6 +73,7 @@ xfs_inode_alloc(
+ 	xfs_ino_t		ino)
  {
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 89de61243272..933d0c13a0d8 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #define pr_fmt(fmt) "SMP alternatives: " fmt
+ 	struct xfs_inode	*ip;
++	int			min_order = 0;
  
-+#include <linux/cfi_types.h>
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/perf_event.h>
-@@ -901,41 +902,11 @@ struct bpf_insn;
- /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
- extern unsigned int __bpf_prog_runX(const void *ctx,
- 				    const struct bpf_insn *insn);
--
--/*
-- * Force a reference to the external symbol so the compiler generates
-- * __kcfi_typid.
-- */
--__ADDRESSABLE(__bpf_prog_runX);
--
--/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_hash,@object				\n"
--"	.globl	cfi_bpf_hash					\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_hash:							\n"
--"	.long	__kcfi_typeid___bpf_prog_runX			\n"
--"	.size	cfi_bpf_hash, 4					\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+ 	/*
+ 	 * XXX: If this didn't occur in transactions, we could drop GFP_NOFAIL
+@@ -88,7 +89,8 @@ xfs_inode_alloc(
+ 	/* VFS doesn't initialise i_mode or i_state! */
+ 	VFS_I(ip)->i_mode = 0;
+ 	VFS_I(ip)->i_state = 0;
+-	mapping_set_large_folios(VFS_I(ip)->i_mapping);
++	min_order = max(min_order, ilog2(mp->m_sb.sb_blocksize) - PAGE_SHIFT);
++	mapping_set_folio_orders(VFS_I(ip)->i_mapping, min_order, MAX_PAGECACHE_ORDER);
  
- /* Must match bpf_callback_t */
- extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
--
--__ADDRESSABLE(__bpf_callback_fn);
--
--/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_subprog_hash,@object			\n"
--"	.globl	cfi_bpf_subprog_hash				\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_subprog_hash:						\n"
--"	.long	__kcfi_typeid___bpf_callback_fn			\n"
--"	.size	cfi_bpf_subprog_hash, 4				\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+ 	XFS_STATS_INC(mp, vn_active);
+ 	ASSERT(atomic_read(&ip->i_pincount) == 0);
+@@ -313,6 +315,7 @@ xfs_reinit_inode(
+ 	dev_t			dev = inode->i_rdev;
+ 	kuid_t			uid = inode->i_uid;
+ 	kgid_t			gid = inode->i_gid;
++	int			min_order = 0;
  
- u32 cfi_get_func_hash(void *func)
- {
-diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
-index 6b8713675765..f510e62ca8b1 100644
---- a/include/linux/cfi_types.h
-+++ b/include/linux/cfi_types.h
-@@ -41,5 +41,28 @@
- 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
- #endif
+ 	error = inode_init_always(mp->m_super, inode);
  
-+#else /* __ASSEMBLY__ */
-+
-+#ifdef CONFIG_CFI_CLANG
-+#define DEFINE_CFI_TYPE(name, func)						\
-+	/*									\
-+	 * Force a reference to the function so the compiler generates		\
-+	 * __kcfi_typeid_<func>.						\
-+	 */									\
-+	__ADDRESSABLE(func);							\
-+	/* u32 name = __kcfi_typeid_<func> */					\
-+	extern u32 name;							\
-+	asm (									\
-+	"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"	\
-+	"	.type	" #name ",@object				\n"	\
-+	"	.globl	" #name "					\n"	\
-+	"	.p2align	2, 0x0					\n"	\
-+	#name ":							\n"	\
-+	"	.long	__kcfi_typeid_" #func "				\n"	\
-+	"	.size	" #name ", 4					\n"	\
-+	"	.popsection						\n"	\
-+	);
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_CFI_TYPES_H */
--- 
-2.43.0
+@@ -323,7 +326,8 @@ xfs_reinit_inode(
+ 	inode->i_rdev = dev;
+ 	inode->i_uid = uid;
+ 	inode->i_gid = gid;
+-	mapping_set_large_folios(inode->i_mapping);
++	min_order = max(min_order, ilog2(mp->m_sb.sb_blocksize) - PAGE_SHIFT);
++	mapping_set_folio_orders(inode->i_mapping, min_order, MAX_PAGECACHE_ORDER);
+ 	return error;
+ }
 
+It does introduce a conditional in the inode allocation hot path so I
+went with what Chinner proposed as it is something we use when we
+initialize an inode.
