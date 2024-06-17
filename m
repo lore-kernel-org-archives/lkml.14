@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF5B1940B2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A25194C8E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621631; cv=none; b=NX6BOHrkAX6a/bXGq6LHPV29gvBFxShzwi+3yMUtXslbGUa7P10g3ORucT48DH4sv03dd+2zD8fQaNAmPDrzIxkYVWOR08VWX+XXI1dUNQVVHNSCzzMcgKV1RRPCiKSPc8jfjPtXL23lIUc09062t/XIqnmMjd54o90dlw/kLrg=
+	t=1718621634; cv=none; b=YUfzHBBJCzl2QWhU29jYpWXw8YgUVC5hDhoYphn52UxNDsSwXtwrU8FMMr+M2woaNDBiBjUF0qAsD+Wt8TZOIbRwaMxLtVCxKzIZaeMELD3ms+LsfpHruSOhOA4oEIokm5x/fXINQWmN/BKdikuwL82D8E1NwdT2zxWvjX8EFe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621631; c=relaxed/simple;
-	bh=B4HSoHZe4mXH6yXAGGx4efTr9LA86e8f3NrDzqbgN3s=;
+	s=arc-20240116; t=1718621634; c=relaxed/simple;
+	bh=PXaLz526WBarTP4NKDLe//vpauczDPq2Xn3H1bHHzb8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kdgxoOrELta3/Tx6r92PACNYW0K/6a23GehIbFwHn9DT72+a1A9nMfxOA8xlrbBP4jsKC1JfsB5NMYSwK6ZeRbpGWSOrCWj9WZfEBo6034uosuxDxof54c5J7MFdWGzDJJgoE1utoaAEtFwX2QVaNd2BaK+yRDEPWMyMGwRE9U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bqz8t8hp; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=cUmjcHxUCKZjfvdvC1GPJkvf6yJcdWoxi9lrIfF0ddzA6DcVcoxmFBCF1Kbl7GZdN0xS3rrK+Zr5iASUuXVxDLZUkyvsZKLgIif++v6s/8Bs8zi3YYaB3N2E54heZ3sm1+v35AJA32Wl5EjtYGaebmcACt7h2RlmTSIAfn8M7JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=l83JKey1; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bqz8t8hp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l83JKey1"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45HArP7Q116910;
-	Mon, 17 Jun 2024 05:53:25 -0500
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45HArEuM082673;
+	Mon, 17 Jun 2024 05:53:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718621605;
-	bh=Kex6HF3rK0mh9vKd+0B9OMPGJPo2pSwVSBIzl82Eewg=;
+	s=ti-com-17Q1; t=1718621594;
+	bh=DsLf9qBIxcuy60WQpyn787Nf4DHPYkLzhrsdbTP9Lhs=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Bqz8t8hpdgqw9ED1ul3OG6ukN7vPvZDaGNQJuMWgpehJcmuv65yE4Rkkt51M3363t
-	 ZzgeQJYt9EUxSPSsaFDSGxwkz1LR/Du50iDFFLzfax/vMIPxJotoMyAiH9waB+2aFi
-	 CxEsbXvT7Ry4vJ/rlOXEDLuHA2RswMoqGpq0Gzrc=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45HArPjB065328
+	b=l83JKey1qUAOHNq4XtoXgBeytK/A9dswVlm7aPF3z9147TR5xsFfXo/kFFDwQG1tA
+	 vUDk0yyDOTun8CTk1+8lco8VEvXLn2wf3TywuyvYV8fUDyieU0vc5nvzIxRjB62w2J
+	 ABD1n1Ny4h0Gla3OEvqKJzGGh7ECAibhO8+7ru3Y=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45HArEtf065284
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Jun 2024 05:53:25 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 17 Jun 2024 05:53:14 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Jun 2024 05:53:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 05:53:14 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Jun 2024 05:53:24 -0500
+ Frontend Transport; Mon, 17 Jun 2024 05:53:14 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45HArOPh106178;
-	Mon, 17 Jun 2024 05:53:24 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45HArDov015797;
+	Mon, 17 Jun 2024 05:53:14 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Tomi Valkeinen
@@ -77,9 +77,9 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
         Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
 	<j-luthra@ti.com>,
         Aradhya Bhatia <a-bhatia1@ti.com>
-Subject: [PATCH v3 08/10] drm/bridge: cdns-dsi: Support atomic bridge APIs
-Date: Mon, 17 Jun 2024 16:23:09 +0530
-Message-ID: <20240617105311.1587489-9-a-bhatia1@ti.com>
+Subject: [PATCH v3 01/10] drm/bridge: cdns-dsi: Fix OF node pointer
+Date: Mon, 17 Jun 2024 16:23:02 +0530
+Message-ID: <20240617105311.1587489-2-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240617105311.1587489-1-a-bhatia1@ti.com>
 References: <20240617105311.1587489-1-a-bhatia1@ti.com>
@@ -93,113 +93,35 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Change the existing (and deprecated) bridge hooks, to the bridge
-atomic APIs.
+Fix the OF node pointer passed to the of_drm_find_bridge() call to find
+the next bridge in the display chain.
 
-Add drm helpers for duplicate_state, destroy_state, and bridge_reset
-bridge hooks.
+To find the next bridge in the pipeline, we need to pass "np" - the OF
+node pointer of the next entity in the devicetree chain. Passing
+"of_node" to of_drm_find_bridge will make the function try to fetch the
+bridge for the cdns-dsi which is not what's required.
 
-Further add support for the input format negotiation hook.
+Fix that.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
 Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 ---
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 51 ++++++++++++++++---
- 1 file changed, 43 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 87fdd07ca0bc..acbd4007b38c 100644
+index 7457d38622b0..b016f2ba06bb 100644
 --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -655,7 +655,8 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 	return MODE_OK;
- }
- 
--static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
-+					   struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -675,7 +676,8 @@ static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
- 	pm_runtime_put(dsi->base.dev);
- }
- 
--static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
-+						struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -752,7 +754,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
- 	dsi->link_initialized = true;
- }
- 
--static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
-+					  struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -903,7 +906,8 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
- 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
- }
- 
--static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
-+static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
-+					      struct drm_bridge_state *old_bridge_state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -915,13 +919,44 @@ static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
- 	cdns_dsi_hs_init(dsi);
- }
- 
-+static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-+					       struct drm_bridge_state *bridge_state,
-+					       struct drm_crtc_state *crtc_state,
-+					       struct drm_connector_state *conn_state,
-+					       u32 output_fmt,
-+					       unsigned int *num_input_fmts)
-+{
-+	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-+	struct cdns_dsi *dsi = input_to_dsi(input);
-+	struct cdns_dsi_output *output = &dsi->output;
-+	u32 *input_fmts;
-+
-+	*num_input_fmts = 0;
-+
-+	input_fmts = kzalloc(sizeof(*input_fmts), GFP_KERNEL);
-+	if (!input_fmts)
-+		return NULL;
-+
-+	input_fmts[0] = drm_mipi_dsi_get_input_bus_fmt(output->dev->format);
-+	if (!input_fmts[0])
-+		return NULL;
-+
-+	*num_input_fmts = 1;
-+
-+	return input_fmts;
-+}
-+
- static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
- 	.attach = cdns_dsi_bridge_attach,
- 	.mode_valid = cdns_dsi_bridge_mode_valid,
--	.disable = cdns_dsi_bridge_disable,
--	.pre_enable = cdns_dsi_bridge_pre_enable,
--	.enable = cdns_dsi_bridge_enable,
--	.post_disable = cdns_dsi_bridge_post_disable,
-+	.atomic_disable = cdns_dsi_bridge_atomic_disable,
-+	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
-+	.atomic_enable = cdns_dsi_bridge_atomic_enable,
-+	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
-+	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_reset = drm_atomic_helper_bridge_reset,
-+	.atomic_get_input_bus_fmts = cdns_dsi_bridge_get_input_bus_fmts,
- };
- 
- static int cdns_dsi_attach(struct mipi_dsi_host *host,
+@@ -952,7 +952,7 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
+ 		bridge = drm_panel_bridge_add_typed(panel,
+ 						    DRM_MODE_CONNECTOR_DSI);
+ 	} else {
+-		bridge = of_drm_find_bridge(dev->dev.of_node);
++		bridge = of_drm_find_bridge(np);
+ 		if (!bridge)
+ 			bridge = ERR_PTR(-EINVAL);
+ 	}
 -- 
 2.34.1
 
