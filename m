@@ -1,97 +1,92 @@
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088B015B14A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005761D9538;
+	Mon, 17 Jun 2024 15:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637758; cv=none; b=E8wvek4t/euMXTo2UCHT0fUXteaMZfVMCZTypKXbU9EFlSgdhcj+m9I+0apFqJ/4fyWHXZaKg02e97EGTUp0UGq8LycdgenRTKwR6qUzypNCr23jyqtVoXtyT4bD5Ou98TDJVLRnG6r0FRbGc2LcOnUvADnDtlqDHu8HAWs5bF0=
+	t=1718638034; cv=none; b=unAR950h1YnZiM67Yo6+gur1UqlaGR0DWotKiRrLoeMDfRTAZVmg8T+x2SPxKbJt6+q51deWf4Ae0J4kdOcxKmcKvPAOkc06zj4fIJA6wBzRtWaH4KKCH+B4zJlex04EM2LzhJy97qBkdLEJ71uDDvqjkuYh1GFjk7EmShA5BG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637758; c=relaxed/simple;
-	bh=wJNV/42HjLFWQUYppiDPj8EoEZINZLRmNLoQPS7mZ2A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XPg/w5ev5oyAZMaHRcRze/wXgUervVxLqwA3m75VZLqSKJFr3m7uO4q206WARcq5JeavM4DRbzm4Q+YuYgowOcMKQyrtDrDp5APoFtQYm+eyd18ZlEP8/4zlTw7OeBP4HCuGXYNglaEH6b65hD9uJi9PfPzkgIugCG8K19QXmuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=CHqgnA5e; arc=none smtp.client-ip=185.136.64.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1718638034; c=relaxed/simple;
+	bh=n+wIBWJU1LXxzUpG+e2c5+QYPfK0ydEvJGGwWKE0jUc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=KOUIevusIZj6i/zUKGXPecew9SzkSIjjXPPRjd7da549v+wklDKQoAb5afqegrLr/Afj8LW1+pPPorq3FajPg6KpL0y+8Gh4T3Zgdpf0L4GY2zHdU9n+nbGnRr3K/mzLYpC4U/MZbVjYqOEptLJ1nxDmwtTzgRNt1jZT+8r53Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjdItWre; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="CHqgnA5e"
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20240617152228a31ce0a5302341256e
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 17 Jun 2024 17:22:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=/EABjvlbPLsARyzJ4KZzxhNg4k6Cnivu4GX/GT6Rja0=;
- b=CHqgnA5e3RNIn2wxD3FM4gITg26Mo6RhpPOKUXfVmxxGQ0giG1HPFAW4A1Lu9plm4XkDA+
- XDKKfm3zP5xYi/a7havgREJM6ize6FMdh2C850HzkGhJfQ4H0NSDSqyjiNMWUtuwAM6G9rL0
- JgQvaPHp6mtt1RC/+cGH4ADvv7I4Y=;
-From: Diogo Ivo <diogo.ivo@siemens.com>
-Date: Mon, 17 Jun 2024 16:21:42 +0100
-Subject: [PATCH net-next v4 3/5] dt-bindings: net: Add IEP interrupt
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjdItWre"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70332C4AF1D;
+	Mon, 17 Jun 2024 15:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718638033;
+	bh=n+wIBWJU1LXxzUpG+e2c5+QYPfK0ydEvJGGwWKE0jUc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=JjdItWreMC/EPM8OeL2NH0i8TqCN+WOndTEB31FM1fm0300EaPp3d9sSRcTCdL/0t
+	 UFcvrGp3opCkhtT/Rh4jAkNU+YwH0OaW+FqfUZlWNbwYWum6pTe0hZVac8TQe0BTxw
+	 sILu9XDpvccwKGIa7R5XQ3wwDjR1SWXHZy5j7gWN4LwspNH7f5fUf9SyqHsEgUePzq
+	 rQzEErBtnymU2sP6RAvhzj7pFWILURUtvCAIDH9MnGezMr+AsRkBg87aFE/5Pr46Px
+	 o020GocXn7rtJDTO90E6cuWHjWaYriCRAaQitMuWiyNfotrYYRYZ8Z3d/EG/ZiG5zH
+	 eZNqmhKUI0pZA==
+From: Kalle Valo <kvalo@kernel.org>
+To: James Prestwood <prestwoj@gmail.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>,  linux-wireless@vger.kernel.org,
+  ath10k@lists.infradead.org,  LKML <linux-kernel@vger.kernel.org>
+Subject: Re: invalid vht params rate 1920 100kbps nss 2 mcs 9
+References: <fba24cd3-4a1e-4072-8585-8402272788ff@molgen.mpg.de>
+	<1faa7eee-ed1e-477b-940d-a5cf4478cf73@gmail.com>
+Date: Mon, 17 Jun 2024 18:27:10 +0300
+In-Reply-To: <1faa7eee-ed1e-477b-940d-a5cf4478cf73@gmail.com> (James
+	Prestwood's message of "Mon, 17 Jun 2024 08:09:05 -0700")
+Message-ID: <87iky7mvxt.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240617-iep-v4-3-fa20ff4141a3@siemens.com>
-References: <20240617-iep-v4-0-fa20ff4141a3@siemens.com>
-In-Reply-To: <20240617-iep-v4-0-fa20ff4141a3@siemens.com>
-To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, Nishanth Menon <nm@ti.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
- Jacob Keller <jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Diogo Ivo <diogo.ivo@siemens.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718637741; l=1034;
- i=diogo.ivo@siemens.com; s=20240529; h=from:subject:message-id;
- bh=wJNV/42HjLFWQUYppiDPj8EoEZINZLRmNLoQPS7mZ2A=;
- b=6wsqJo9kwhlrVNl3BTDdfJCSIJGUy1Qdt5j4AIV6Y3fJQ2Y9J07WynWqqDx9Tl05Y07CkBZrZ
- DlYEMMn/vKHCbtN5G0goMFL03s6Oanml5qeRkeykqbaVBB/WAoee2x9
-X-Developer-Key: i=diogo.ivo@siemens.com; a=ed25519;
- pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1320519:519-21489:flowmailer
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The IEP interrupt is used in order to support both capture events, where
-an incoming external signal gets timestamped on arrival, and compare
-events, where an interrupt is generated internally when the IEP counter
-reaches a programmed value.
+James Prestwood <prestwoj@gmail.com> writes:
 
-Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
----
- Documentation/devicetree/bindings/net/ti,icss-iep.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Hi Paul,
+>
+> On 6/16/24 6:10 AM, Paul Menzel wrote:
+>> Dear Linux folks,
+>>
+>>
+>> Linux 6.10-rc3 (commit a3e18a540541) logged the warning below when
+>> connecting to a public WiFi:
+>>
+>> =C2=A0=C2=A0=C2=A0 ath10k_pci 0000:3a:00.0: invalid vht params rate 1920=
+ 100kbps
+>> nss 2 mcs 9
+>
+> This has been reported/discussed [1]. It was hinted that there was a
+> firmware fix for this, but none that I tried got rid of it. I got fed
+> up enough with the logs filling up with this I patched our kernel to
+> remove the warning. AFAICT it appears benign (?). Removing the warning
+> was purely "cosmetic" so other devs stopped complaining about it :)
+>
+> [1] https://www.mail-archive.com/ath10k@lists.infradead.org/msg13406.html
 
-diff --git a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
-index f5c22d6dcaee..e36e3a622904 100644
---- a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
-@@ -28,6 +28,15 @@ properties:
-     maxItems: 1
-     description: phandle to the IEP source clock
- 
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      Interrupt specifier for capture/compare IRQ.
-+
-+  interrupt-names:
-+    items:
-+      - const: iep_cap_cmp
-+
- required:
-   - compatible
-   - reg
+More reliable link to the discussion:
 
--- 
-2.45.2
+https://lore.kernel.org/ath10k/76a816d983e6c4d636311738396f97971b5523fb.161=
+2915444.git.skhan@linuxfoundation.org/
 
+I think we should add this workaround I mentioned in 2021:
+
+   "If the firmware still keeps sending invalid rates we should add a
+    specific check to ignore the known invalid values, but not all of
+    them."
+
+   https://lore.kernel.org/ath10k/87h7mktjgi.fsf@codeaurora.org/
+
+I guess that would be mcs =3D=3D 7 and rate =3D=3D 1440?
+
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
