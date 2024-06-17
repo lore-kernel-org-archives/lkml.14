@@ -1,149 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67C21B1500;
-	Mon, 17 Jun 2024 13:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3219068F;
+	Mon, 17 Jun 2024 13:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631885; cv=none; b=M/eYuPBkwzjUtrz9wS69NQ4aOJF+IN4ZXsmFDtpc5YsZ/MIbjSV0Lhduc2Rt1CDB3y/MbnfUEvyIq/01+IiyXFQpyyZ2S6Vh3sVmRgRvfEQus+uQETIA3eKHEcB6xWwkXBprcQmiBS4ULvNVHjceOXF1yzg+8f1uXh2sZpvtcEs=
+	t=1718631924; cv=none; b=HS7kDSg9NTB+B1XKEd546zR1PyM7pLl2TbJxTJhg8OAsOxF6VYgjNm34qPa1PpmbSL7UGT321FeZwDWcFJdBDToIMO9Lxj69dCp9Q2EqCs3gWmDOmQzi98tpyM5AaO3IZRDconnxt7tugxi2oq+wBGFDZGGOCCyBttU73/tK91Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631885; c=relaxed/simple;
-	bh=Gsnd0zvN4Us9YUc6L20+5iLhVWMkT+Vfavnt0sxap00=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L4KMd4wLGTBPRQb4BvzEVUiYBFuj9tJ1YIshLMLyFQnC2Ba77FP3uvRmRrzauIw8s1mGoNuDa1ULL2D63avVjzOu8sRgM6EYeT5Jtp/pXvhbSZ+Wx3euMhKnsGcaKYos8WYPFcImn1yIByZNItxw7PjKSBNST7ZyWkeSNbkevyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1E2FDA7;
-	Mon, 17 Jun 2024 06:45:07 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA0683F64C;
-	Mon, 17 Jun 2024 06:44:40 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	robin.murphy@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf pmu: Don't de-duplicate core PMUs
-Date: Mon, 17 Jun 2024 14:43:45 +0100
-Message-Id: <20240617134348.208241-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617134348.208241-1-james.clark@arm.com>
-References: <20240617134348.208241-1-james.clark@arm.com>
+	s=arc-20240116; t=1718631924; c=relaxed/simple;
+	bh=4iVfyEz9rC5f5VhbEizq/D4gDbwzw56EP8r/d+CALXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7WRTBVZC0TqobbgJ66q4iJVtXXBaJGWm7eq4uPM27llHWcOaZi+hepOATkr2zdtVOgFRvTW8Q0dI3XZiTR+na9Bo+aWjZrwSzRPDkOnXz8pvjn2b1DNJSF6WjulzcCPVVdz/1FrPmanE/G4u6MlYkjw6LgIDgkbxtaDCOL9OOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlAH4DUk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlAH4DUk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64783C2BD10;
+	Mon, 17 Jun 2024 13:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718631923;
+	bh=4iVfyEz9rC5f5VhbEizq/D4gDbwzw56EP8r/d+CALXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FlAH4DUkW1fOUYBYa90CiYLEhyPwhHj7gWkqqw8iS7jJJmVEDYBMUZtl2LDO6+4kR
+	 NAQlfwuYGf5OH8S/RabV+UY1lvNd615atdQLwJiLtMMCHHznPNIagjH+6JIFvMLWcn
+	 fOKmrJom+rr3vJXeB/BrG5ErfCQY2Vu4i8OaIjMQJ1CcNRgvq0LEqMjg6sxAQCrWFW
+	 WL9WIyL3mMg4hkLHD3m5npeG2PBCO+NefrJQm8umO8P0brhsQ+JQS60HZO0I6IvndQ
+	 9xqtwnS38uxG0R9MfwbU84d93oWeNZH9zFSM2MizMZMdCzGQjGLGWKifHdsL0ZAouw
+	 Fu1/kjOZ6/SAw==
+Date: Mon, 17 Jun 2024 21:31:17 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 7/9] riscv: dts: add initial SpacemiT K1 SoC device
+ tree
+Message-ID: <ZnA6pZLkI2StP8Hh@xhacker>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+ <tencent_701082E2DAE48E2FB857316321778D737C08@qq.com>
+ <ZnAw9QrSD-svYqQ5@xhacker>
+ <20240617-carat-poise-ee63ed6a224e@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240617-carat-poise-ee63ed6a224e@wendy>
 
-Arm PMUs have a suffix, either a single decimal (armv8_pmuv3_0) or 3 hex
-digits which (armv8_cortex_a53) which Perf assumes are both strippable
-suffixes for the purposes of deduplication. S390 "cpum_cf" is a
-similarly suffixed core PMU but is only two characters so is not treated
-as strippable because the rules are a minimum of 3 hex characters or 1
-decimal character.
+On Mon, Jun 17, 2024 at 02:29:46PM +0100, Conor Dooley wrote:
+> On Mon, Jun 17, 2024 at 08:49:57PM +0800, Jisheng Zhang wrote:
+> > On Mon, Jun 17, 2024 at 01:20:52AM +0800, Yangyu Chen wrote:
+> > > Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
+> > > 
+> > > Key features:
+> > > - 4 cores per cluster, 2 clusters on chip
+> > > - UART IP is Intel XScale UART
+> > > 
+> > > Some key considerations:
+> > > - ISA string is inferred from vendor documentation[2]
+> > > - Cluster topology is inferred from datasheet[1] and L2 in vendor dts[3]
+> > > - No coherent DMA on this board
+> > >     Inferred by taking vendor ethernet and MMC drivers to the mainline
+> > >     kernel. Without dma-noncoherent in soc node, the driver fails.
+> > > - No cache nodes now
+> > >     The parameters from vendor dts are likely to be wrong. It has 512
+> > >     sets for a 32KiB L1 Cache. In this case, each set is 64B in size.
+> > >     When the size of the cache line is 64B, it is a directly mapped
+> > >     cache rather than a set-associative cache, the latter is commonly
+> > >     used. Thus, I didn't use the parameters from vendor dts.
+> > > 
+> > > Currently only support booting into console with only uart, other
+> > > features will be added soon later.
+> > 
+> > Hi Yangyu,
+> > 
+> > Per recent practice of cv1800b and th1520 upstream, I think a complete
+> > initial support would include pinctrl, clk and reset, I have received
+> > the complains from the community. So can you please bring the pinctrl
+> > clk  and reset at the same time?
+> 
+> What sort of complaints have you got? That the support is too minimal to
+> be useful?
 
-There are two paths involved in listing PMU events:
+For example https://lore.kernel.org/linux-riscv/95c20c6c-66cd-4f87-920b-5da766317e19@sifive.com/
 
- * HW/cache event printing assumes core PMUs don't have suffixes so
-   doesn't try to strip.
- * Sysfs PMU events share the printing function with uncore PMUs which
-   strips.
-
-This results in slightly inconsistent Perf list behavior if a core PMU
-has a suffix:
-
-  # perf list
-  ...
-  armv8_pmuv3_0/branch-load-misses/
-  armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
-  ...
-
-Fix it by partially reverting back to the old list behavior where
-stripping was only done for uncore PMUs. For example commit 8d9f5146f5da
-("perf pmus: Sort pmus by name then suffix") mentions that only PMUs
-starting 'uncore_' are considered to have a potential suffix. This
-change doesn't go back that far, but does only strip PMUs that are
-!is_core. This keeps the desirable behavior where the many possibly
-duplicated uncore PMUs aren't repeated, but it doesn't break listing for
-core PMUs.
-
-Searching for a PMU continues to use the new stripped comparison
-functions, meaning that it's still possible to request an event by
-specifying the common part of a PMU name, or even open events on
-multiple similarly named PMUs. For example:
-
-  # perf stat -e armv8_cortex/inst_retired/
-
-  5777173628      armv8_cortex_a53/inst_retired/          (99.93%)
-  7469626951      armv8_cortex_a57/inst_retired/          (49.88%)
-
-Fixes: 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/pmu.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 97d74fe6d816..b73946ba9d05 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -847,6 +847,22 @@ __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
- 	return perf_pmu__find_metrics_table(NULL);
- }
- 
-+/**
-+ * Return the length of the PMU name not including the suffix for uncore PMUs.
-+ *
-+ * We want to deduplicate many similar uncore PMUs by stripping their suffixes,
-+ * but there are never going to be too many core PMUs and the suffixes might be
-+ * interesting. "arm_cortex_a53" vs "arm_cortex_a57" or "cpum_cf" for example.
-+ *
-+ * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are visible
-+ */
-+static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, bool skip_duplicate_pmus)
-+{
-+	return skip_duplicate_pmus && !pmu->is_core
-+		? pmu_name_len_no_suffix(pmu->name)
-+		: strlen(pmu->name);
-+}
-+
- /**
-  * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
-  *                                   trailing suffix? The Suffix must be in form
-@@ -1796,9 +1812,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	size_t pmu_name_len = skip_duplicate_pmus
--		? pmu_name_len_no_suffix(pmu->name)
--		: strlen(pmu->name);
-+	size_t pmu_name_len = pmu_deduped_name_len(pmu, skip_duplicate_pmus);
- 	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms.terms, list) {
-@@ -1839,9 +1853,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		size_t buf_used, pmu_name_len;
- 
- 		info.pmu_name = event->pmu_name ?: pmu->name;
--		pmu_name_len = skip_duplicate_pmus
--			? pmu_name_len_no_suffix(info.pmu_name)
--			: strlen(info.pmu_name);
-+		pmu_name_len = pmu_deduped_name_len(pmu, skip_duplicate_pmus);
- 		info.alias = NULL;
- 		if (event->desc) {
- 			info.name = event->name;
--- 
-2.34.1
-
+Now, I think it's better to "model the clocks/resets/other dependencies"
+in the initial support. So lacking of pinctrl, clk and reset doesn't
+fully describe the hardware.
