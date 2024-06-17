@@ -1,99 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B24D53E;
-	Mon, 17 Jun 2024 19:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A59D53E;
+	Mon, 17 Jun 2024 19:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718653798; cv=none; b=JrF9NO4wlSCos/mepmZKjRT/3QUp8jXEkMRV8wdk43bIF9SuYU8aJG+Vum9FTBgPgOjfVETOh+Jz2RR0maSrqfv55P7FQJeeZd98zZx9DqzOLs5desjyvXKNAYNk/EUaMsxecWj4SZFhsbDb4mVEi2Phju7dcUrV1XvtpbSeGZw=
+	t=1718653971; cv=none; b=ItkmiZD0+pqfg4WkC5Fk/akJ/MLn7GxFm7B1efhBeNz9zvgHfgH+qvofJE+B73LgJxjOFLQb8hBiy5WI6GXpZRxmvwZ/IrnWqhtbS7+hGYyqaT1HVGUPDrTlgudIrBWgwx5BP9WtKdVGBfJKEKlbWbFYfVH2UQY5KJwA5qrdHAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718653798; c=relaxed/simple;
-	bh=5NIgnbUFM1+PrOJ60r8IgF7BZQd0mHyp5RnS6Y72WEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ArXTJ1/KpfOpWHs04gxmvGaZz+fvUp6Krk26fqGbCx3/MwVcWYcWoAX9pmgz3TQ77ssqPrItAjx2OQ0KhBl2JGvKRsYVW4sibWbcpT4RbQwTRQSQRMNfFnUmrwcjm/PpujeauLO9xs1Sr8iSBTeXJ3aCTtNEH7YrexN2f6v7Zf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kq1qgEuF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718653971; c=relaxed/simple;
+	bh=8tk93bqRF+37KbOLQkTuGDjKahwCGQIXkCnA/etAVYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Egov9nlPUHuGUyh88tyueeyCzlmbuIpsTuVmNxKXxh0sVfHNRcKJD8pEa+pniX5ZRpGkignwhWJOezZpGkcOe5u3OPPzy/8N5Yo0wG6ex8K4DtWRYoACzt8oLxYJeN6yYqGVS1j+aN37jgvT2SXFAnIBUyJplT0o/fHZv/8NgoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0nXugsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kq1qgEuF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07058C2BD10;
-	Mon, 17 Jun 2024 19:49:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0nXugsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C2F3C2BD10;
+	Mon, 17 Jun 2024 19:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718653798;
-	bh=5NIgnbUFM1+PrOJ60r8IgF7BZQd0mHyp5RnS6Y72WEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kq1qgEuF6cLKPDMIZA2H84uNE++wSDMrqUymEpzT++7NAQmZ4vMR2nM6Vb/hm5OqB
-	 EgFgFS8zB74swq8D56N5YXK7D9971IGl1zVJqtXMllIoqiUaE1S59MKKHRHQ+l/XMO
-	 HNhOxa9E6rG2Ny4rifsO4RKjRJTJvf2Dt77193x3tRnQw3r0hrfTK7DwDICC6stDq3
-	 1Bz+LBpNBE1fki6D0rYVZGbhhCJD5uQsa+h+FxpHqAmf52dDqf78hU2JerfqX2khxI
-	 0dqR6l1rap0bjrKVLosTNS6cPL39j30/IE04U7jvLN3+eB08cRIFkUzfRvk2l88Fxn
-	 ib1BoV6KQIXDg==
-Date: Mon, 17 Jun 2024 20:49:53 +0100
-From: Simon Horman <horms@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Hariprasad Kelam <hkelam@marvell.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	Sunil Goutham <sgoutham@marvell.com>
-Subject: Re: [net-next PATCH v5 02/10] octeontx2-pf: RVU representor driver
-Message-ID: <20240617194953.GA8447@kernel.org>
-References: <20240611162213.22213-3-gakula@marvell.com>
- <ac47a370-99ca-4fb9-8fb0-800894d04c57@web.de>
+	s=k20201202; t=1718653971;
+	bh=8tk93bqRF+37KbOLQkTuGDjKahwCGQIXkCnA/etAVYw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=L0nXugsCZWVdZQAqkRGlJ2rKMo4flDvC8YPtjOyvcSbMM5sx2sbwn5v1R+nN+U8yy
+	 2vO7G199sfBI7ZLfGgK7K3GsP6j7ACmnvblbbG4lsvaDHjQN6wPRc+BE6GVNfwATW3
+	 4oZ6Vj0NFIgnrZLoPvC4vaQ6r3fOtY5ERMnJc4AgtjFb9LyCrAbU9nFgs+SPKxTvc7
+	 055/3QfQSyZO3HucxjUhqTkIPWkLqqS/ICl33PNl5OsVKHxPdFaYywaJMOCkYGbNR5
+	 3TMpZJgMoCvOPbgWK55lt2MR7G+/H93UC3f54FYJAiAA9PTmGqICXSryZL0OLZqEfh
+	 9m+UiEFXInRLg==
+Date: Mon, 17 Jun 2024 20:52:45 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Gustavo Silva <gustavograzs@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: linux-next: manual merge of the char-misc tree with the qcom tree
+Message-ID: <ZnCUDSypSIPCTfJ8@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZKnrXZL2gijoXAbb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac47a370-99ca-4fb9-8fb0-800894d04c57@web.de>
 
-On Sat, Jun 15, 2024 at 05:11:53PM +0200, Markus Elfring wrote:
-> > This patch adds basic driver for the RVU representor.
-> …
-> 
-> Please improve such a change description with imperative wordings.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc3#n94
-> 
-> Can an adjusted summary phrase become also a bit more helpful?
-> https://elixir.bootlin.com/linux/v6.10-rc3/source/Documentation/process/maintainer-tip.rst#L124
-> 
-> 
-> …
-> > +static int rvu_get_rep_cnt(struct otx2_nic *priv)
-> > +{
-> …
-> > +	mutex_lock(&priv->mbox.lock);
-> > +	req = otx2_mbox_alloc_msg_get_rep_cnt(&priv->mbox);
-> …
-> > +exit:
-> > +	mutex_unlock(&priv->mbox.lock);
-> > +	return err;
-> > +}
-> …
-> 
-> Would you become interested to apply a statement like “guard(mutex)(&priv->mbox.lock);”?
-> https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/mutex.h#L196
-> 
-> 
-> …
-> > +++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-> > @@ -0,0 +1,31 @@
-> …
-> > +#ifndef REP_H
-> > +#define REP_H
-> …
-> 
-> Can unique include guards be more desirable also for this software?
 
-As Andrew Lunn said eleswhere [1]:
+--ZKnrXZL2gijoXAbb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"We decided for netdev that guard() was too magical, at least for the
- moment. Lets wait a few years to see how it pans out. scoped_guard()
- is however O.K."
+Hi all,
 
-[1] https://lore.kernel.org/netdev/f2ddbeaa-e053-467f-96d2-699999d72aba@lunn.ch/
+Today's linux-next merge of the char-misc tree got a conflict in:
+
+  Documentation/devicetree/bindings/vendor-prefixes.yaml
+
+between commit:
+
+  1fabbb0888c3d ("dt-bindings: vendor-prefixes: Add Schneider Electric")
+
+=66rom the qcom tree and commit:
+
+  202ce3eaa6912 ("dt-bindings: vendor-prefixes: add ScioSense")
+
+=66rom the char-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 56ad56d7733e9,044e2001f4e3a..0000000000000
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@@ -1264,8 -1254,8 +1264,10 @@@ patternProperties
+      description: Smart Battery System
+    "^schindler,.*":
+      description: Schindler
+ +  "^schneider,.*":
+ +    description: Schneider Electric
++   "^sciosense,.*":
++     description: ScioSense B.V.
+    "^seagate,.*":
+      description: Seagate Technology PLC
+    "^seeed,.*":
+
+--ZKnrXZL2gijoXAbb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZwlAwACgkQJNaLcl1U
+h9By0Af/cvkpxd9DH2Ao3qfPDM4R8D06Va1JBCPQ4o3PPpLMmO58lDAtnLyS8+Z/
+gLj/dx/B/J28/FwazqKoV9hY9PJCva7VHbkxjdcXSxkVfHwU4c/ddssdt52pYO/j
+UB9CRlkmYleSi3Qt+l1PnzY5M6Js7zg9h7bRBVUwWRkegDLz2BSj97Q4jTAGELtG
+nPJX5S6IvT838rKs1tDui1+TD9BDBLZ3agrfywGIrfRBcqiDozcSrbaEryfVkUzV
+SAFy1gH8CJ2jW9B8XfQfUzwyQv0444vSJXxa1eFrva6RUVXBQgcbe4Sh2aj5VZUc
+1WBeIyJjAGMPVLmdJvz4AchxmqXaIw==
+=e9ru
+-----END PGP SIGNATURE-----
+
+--ZKnrXZL2gijoXAbb--
