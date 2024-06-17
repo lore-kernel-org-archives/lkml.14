@@ -1,106 +1,161 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E32018C35F;
-	Mon, 17 Jun 2024 08:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718612085; cv=none; b=tTLdrE9NIZpUz//TaCDel9mCg0N1u1flm2x30VjJG6qFs0JLqnupWZAiQ4dPZ8n9NcbGxgpbndf7uhBaObEJVbrpljIY2D8dPr/gNrn/Tw90/JbblMZQlxZOCXGWgkXOAs+rkN9msq6EUJj9IT0vMVbAPgAOEJ/GCDMUVkC5jLI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718612085; c=relaxed/simple;
-	bh=MzDAuvDpK2yIeIxijUrlToeJQ83pB/6Qyxzx833IYvI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BPbEQm/FKAFUw4gFunj02W/8Bz81saaHNjaJQg4dmZZXh6Kk5jKDKC0vXPeDPE4PEw4UZLbbuVXwySIEM36ElByoMQ2SWrLbdiLStqUq/4W1qConMB7XdUmRdBBMQIUCReFe67UWJCq0yxfLaKRBvwxMfIa5qm18vexaqabHCZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45H8E7gxC2969343, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45H8E7gxC2969343
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 16:14:07 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 17 Jun 2024 16:14:08 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 17 Jun 2024 16:14:07 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Mon, 17 Jun 2024 16:14:07 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Markus Elfring <Markus.Elfring@web.de>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric
- Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>,
-        Simon Horman <horms@kernel.org>
-CC: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Hariprasad Kelam <hkelam@marvell.com>, Jiri Pirko <jiri@resnulli.us>,
-        "Larry
- Chiu" <larry.chiu@realtek.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        "Ratheesh
- Kannoth" <rkannoth@marvell.com>
-Subject: RE: [PATCH net-next v20 01/13] rtase: Add pci table supported in this module
-Thread-Topic: [PATCH net-next v20 01/13] rtase: Add pci table supported in
- this module
-Thread-Index: AQHauLbXxklvPmnlCU+HuxncPxS2kLHE6RYAgAasGQA=
-Date: Mon, 17 Jun 2024 08:14:07 +0000
-Message-ID: <3e4dc0f5c9a449f7905f436e097f80f6@realtek.com>
-References: <20240607084321.7254-2-justinlai0215@realtek.com>
- <bb0e9957-816e-4e36-b85c-6c5501e76a8a@web.de>
-In-Reply-To: <bb0e9957-816e-4e36-b85c-6c5501e76a8a@web.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091307492;
+	Mon, 17 Jun 2024 08:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718612151; cv=pass; b=VfZs/2qWS/5PUJ5G7T7M7naS8qOhTdIfX5s/h3DfmLHKw4NF3OYm3+sv3/SsujycQMP0OFkvxMCenCH67QTwClOsPnXyDwPDHY294JGeWWHpXrWXkTn8r8e0GRU1ycn/pQwoN6BIK5LE3IBFXD75R5U13mlw21UByuBXoYs5Tiw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718612151; c=relaxed/simple;
+	bh=oEw09u6puwEe1Nbazpi+FHtU6JyGgtK0P587AGGRiXE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CJlJEfL7jyMvkuS1kpDc7qLNHRuq3xy4gzI+fl+0a6TcWQYHW5GaWuDFinZWPGN3JeNDNCc8Qu0Nk28yZpCyw3pS04iFlamDeUCqIqaPDC7r+6bAPEl597zoUMjPxkjDFYKC0kqHuHmH4KN42CjiR6DO/e4B1fESCvhxkkqmO2k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=LhQDYkLR; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="LhQDYkLR"
+ARC-Seal: i=1; a=rsa-sha256; t=1718612132; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bGcBqaIfCHRKICOs3rvbDy12lUk9nOlPk6eMD/0DFh7XP/Vhb4GMMUEOJ0DrwlCrlfBrhK7EXrtVzFFtmcc/1msp+h3bJ4Z3SZ0dEZvZ9XEDKMQNNGO46P4GsfuZ+NyCFAf45aD6jK3IACYJXbo4/fg5u2VK4FND1Cnq1IR61rM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1718612132; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oEw09u6puwEe1Nbazpi+FHtU6JyGgtK0P587AGGRiXE=; 
+	b=D2SzVnPXEf4IGkJECZ6ycJwSvArQCAh6UntfciC9i6XptbdCPk66KDgqrFDG/a/Lv4I6s/y3xOqWzfj0E62pZifgAmJ/zufdJmwbpvkFEpQ23i45vhYudeVprvVHeXxlqla88C34gqJSRzJuw1gJtRw87K50QlFbzSVtnWGQgoI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1718612132;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=oEw09u6puwEe1Nbazpi+FHtU6JyGgtK0P587AGGRiXE=;
+	b=LhQDYkLRsNYhoyW+O7FQz6xPOO9x0ur4QOCLqgXaETHdqkjBBoGZqDPNcdYAYXv6
+	CXe7/HkHDcdU8zlDlCAMdFzZpuzuZDYXogHTgGBfL7eEXpI6PPEa0yRgW1Xvw9GkveB
+	sV5IqQbz136iu55t4LTJ9ILjV1h32EjvW6QKN6KQdI+H1Qe/5DKNJUjMHA+S8fS+3Ch
+	82asOB9xMwQkwEvQkyzbV89SaFD8LrqRna8gdLzLjUox8Kq7XvL+H/iPypO4MSpSXs8
+	eqdKidOldX8snJfkT6ibvY/2fzmamPNC/Gmr6LEehwHwiKUzoVIL7GF+fduRyz5K1hx
+	ZGKev4fJtQ==
+Received: by mx.zohomail.com with SMTPS id 1718612130295190.36232977173415;
+	Mon, 17 Jun 2024 01:15:30 -0700 (PDT)
+Message-ID: <60e610782212128d73dab9b1120708d81d809680.camel@icenowy.me>
+Subject: Re: [PATCH v1 0/9] riscv: add initial support for SpacemiT K1
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Yangyu Chen <cyy@cyyself.name>, Conor Dooley <conor@kernel.org>
+Cc: Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org, Conor
+ Dooley <conor+dt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Samuel Holland
+ <samuel.holland@sifive.com>, Anup Patel <anup.patel@wdc.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ devicetree@vger.kernel.org, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Jesse Taube <jesse@rivosinc.com>
+Date: Mon, 17 Jun 2024 16:15:25 +0800
+In-Reply-To: <tencent_2ABAC5E885F8354EF1F9084A6B5B398EE00A@qq.com>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+	 <20240616-exorcism-computing-e11e26084a62@spud>
+	 <20240616224811.GC3983622@ofsar>
+	 <tencent_2ABAC5E885F8354EF1F9084A6B5B398EE00A@qq.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+X-ZohoMailClient: External
 
-PiA+IEFkZCBwY2kgdGFibGUgc3VwcG9ydGVkIGluIHRoaXMgbW9kdWxlLCBhbmQgaW1wbGVtZW50
-IHBjaV9kcml2ZXINCj4gPiBmdW5jdGlvbiB0byBpbml0aWFsaXplIHRoaXMgZHJpdmVyLCByZW1v
-dmUgdGhpcyBkcml2ZXIsIG9yIHNodXRkb3duIHRoaXMgZHJpdmVyLg0KPiANCj4gQ2FuIGEgc3Vt
-bWFyeSBwaHJhc2UgbGlrZSDigJxBZGQgc3VwcG9ydCBmb3IgYSBQQ0kgdGFibGXigJ0gYmUgYSBi
-aXQgbmljZXI/DQo+IA0KDQpZZXMsIHRoYW5rIHlvdSBmb3IgeW91ciBzdWdnZXN0aW9uLiBJIHdp
-bGwgbWFrZSB0aGUgY2hhbmdlLg0KDQo+IA0KPiDigKYNCj4gPiArKysgYi9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9yZWFsdGVrL3J0YXNlL3J0YXNlX21haW4uYw0KPiA+IEBAIC0wLDAgKzEsNjQwIEBA
-DQo+IOKApg0KPiA+ICtzdGF0aWMgaW50IHJ0YXNlX2luaXRfb25lKHN0cnVjdCBwY2lfZGV2ICpw
-ZGV2LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNl
-X2lkICplbnQpIHsNCj4g4oCmDQo+ID4gKyAgICAgLyogaWRlbnRpZnkgY2hpcCBhdHRhY2hlZCB0
-byBib2FyZCAqLw0KPiA+ICsgICAgIGlmICghcnRhc2VfY2hlY2tfbWFjX3ZlcnNpb25fdmFsaWQo
-dHApKSB7DQo+ID4gKyAgICAgICAgICAgICByZXR1cm4gZGV2X2Vycl9wcm9iZSgmcGRldi0+ZGV2
-LCAtRU5PREVWLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInVua25v
-d24gY2hpcCB2ZXJzaW9uLCBjb250YWN0DQo+IHJ0YXNlICINCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICJtYWludGFpbmVycyAoc2VlIE1BSU5UQUlORVJTDQo+IGZpbGUp
-XG4iKTsNCj4gPiArICAgICB9DQo+IOKApg0KPiANCj4gKiBNYXkgY3VybHkgYnJhY2tldHMgYmUg
-b21pdHRlZCBoZXJlPw0KPiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9jdW1lDQo+IG50YXRpb24vcHJv
-Y2Vzcy9jb2Rpbmctc3R5bGUucnN0P2g9djYuMTAtcmMzI24xOTcNCj4gDQo+ICogV291bGQgeW91
-IGxpa2UgdG8ga2VlcCB0aGUgbWVzc2FnZSAoZnJvbSBzdWNoIHN0cmluZyBsaXRlcmFscykgaW4g
-YSBzaW5nbGUNCj4gbGluZT8NCj4gDQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
-aW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL0RvY3VtZQ0KPiBudGF0aW9u
-L3Byb2Nlc3MvY29kaW5nLXN0eWxlLnJzdD9oPXY2LjEwLXJjMyNuMTE2DQo+IA0KDQpUaGFuayB5
-b3UgZm9yIHlvdXIgc3VnZ2VzdGlvbnMsIEkgd2lsbCBtYWtlIGNoYW5nZXMgYmFzZWQgb24gYm90
-aCBvZiB0aGUNCnN1Z2dlc3Rpb25zIG1lbnRpb25lZCBhYm92ZS4NCg0KPiANCj4g4oCmDQo+ID4g
-KyAgICAgZGV2LT5mZWF0dXJlcyB8PSBORVRJRl9GX0lQX0NTVU07DQo+ID4gKyAgICAgZGV2LT5m
-ZWF0dXJlcyB8PSBORVRJRl9GX0hJR0hETUE7DQo+IOKApg0KPiA+ICsgICAgIGRldi0+aHdfZmVh
-dHVyZXMgfD0gTkVUSUZfRl9SWEFMTDsNCj4gPiArICAgICBkZXYtPmh3X2ZlYXR1cmVzIHw9IE5F
-VElGX0ZfUlhGQ1M7DQo+IOKApg0KPiANCj4gSG93IGRvIHlvdSB0aGluayBhYm91dCB0byByZWR1
-Y2Ugc3VjaCBhc3NpZ25tZW50IHN0YXRlbWVudHMgKGlmIGFsbCBkZXNpcmVkDQo+IHNvZnR3YXJl
-IG9wdGlvbnMgd291bGQgYmUgcGFzc2VkIGF0IG9uY2UpPw0KDQpJIHRoaW5rIHlvdXIgc3VnZ2Vz
-dGlvbiBpcyBmZWFzaWJsZSwgYW5kIEkgd2lsbCBtb2RpZnkgaXQgYWNjb3JkaW5nbHkuDQoNCj4g
-DQo+IFJlZ2FyZHMsDQo+IE1hcmt1cw0KDQo=
+=E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 10:00 +0800=EF=BC=
+=8CYangyu Chen=E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> > On Jun 17, 2024, at 06:48, Yixun Lan <dlan@gentoo.org> wrote:
+> >=20
+> > Hi Conor
+> > Thanks for bringing this up
+> >=20
+> > On 19:35 Sun 16 Jun=C2=A0=C2=A0=C2=A0=C2=A0 , Conor Dooley wrote:
+> > > On Mon, Jun 17, 2024 at 01:18:52AM +0800, Yangyu Chen wrote:
+> > >=20
+> > > No MAINTAINERS update, so I figure that means you don't want to
+> > > maintain
+> > > it going forwards? If there's someone out that that does care
+> > > about the
+> > > spacemit k1 (Jesse maybe?), then I'd be more than happy to have
+> > > them
+> > > look after it.
+>=20
+> Actually, I don=E2=80=99t know how to be a maintainer. Should I have to
+> provide a new git tree and all the new patches merged to my tree
+> and then submit a git pull? Or reuse the RISC-V mailing list and
+> just give a review, and the patches come to soc misc tree? I would
+> like the latter one.
+
+Well I think for these SoCs the latter is the case.
+
+BTW I could volunteer as a maintainer, or at least a reviewer here.
+
+>=20
+> > Yangyu kind of has limited time, too many stuff for him..
+> >=20
+>=20
+> True. Maybe I can have a review and test the patch in one week.
+> However, providing a review and test in 2-3 days is sometimes hard
+> for me.
+>=20
+> > I'd volunteered to help on this if it can fill the gap
+> > Also I'd be more than happy if anyone willing step forward to co-
+> > maintain..
+> >=20
+>=20
+> Thanks. Really appreciate it.
+>=20
+> Should I provide a diff like this:
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d6c90161c7bf..718d30996f12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19306,6 +19306,7 @@ F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/=
+dts/
+> =C2=A0X:=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/dts/allwinner/
+> =C2=A0X:=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/dts/renesas/
+> =C2=A0X:=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/dts/sophgo/
+> +X:=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/dts/spacemit/
+> =C2=A0
+> =C2=A0RISC-V PMU DRIVERS
+> =C2=A0M:=C2=A0=C2=A0=C2=A0=C2=A0 Atish Patra <atishp@atishpatra.org>
+> @@ -21004,6 +21005,13 @@ W:=C2=A0=C2=A0=C2=A0=C2=A0 https://linuxtv.org
+> =C2=A0Q:=C2=A0=C2=A0=C2=A0=C2=A0 http://patchwork.linuxtv.org/project/lin=
+ux-media/list/
+> =C2=A0F:=C2=A0=C2=A0=C2=A0=C2=A0 drivers/media/dvb-frontends/sp2*
+> =C2=A0
+> +SPACEMIT DEVICETREES and DRIVERS
+> +M:=C2=A0=C2=A0=C2=A0=C2=A0 Yangyu Chen <cyy@cyyself.name>
+> +M:=C2=A0=C2=A0=C2=A0=C2=A0 Yixun Lan <dlan@gentoo.org>
+> +S:=C2=A0=C2=A0=C2=A0=C2=A0 Maintained
+> +F:=C2=A0=C2=A0=C2=A0=C2=A0 Documentation/devicetree/bindings/riscv/space=
+mit.yaml
+> +F:=C2=A0=C2=A0=C2=A0=C2=A0 arch/riscv/boot/dts/spacemit/
+> +
+> =C2=A0SPANISH DOCUMENTATION
+> =C2=A0M:=C2=A0=C2=A0=C2=A0=C2=A0 Carlos Bilbao <carlos.bilbao.osdev@gmail=
+.com>
+> =C2=A0R:=C2=A0=C2=A0=C2=A0=C2=A0 Avadhut Naik <avadhut.naik@amd.com>
+>=20
+> Thanks,
+> Yangyu Chen
+>=20
+> > --=20
+> > Yixun Lan (dlan)
+> > Gentoo Linux Developer
+> > GPG Key ID AABEFD55
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
