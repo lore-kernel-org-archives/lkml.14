@@ -1,228 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E34194C96;
-	Mon, 17 Jun 2024 11:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CA2195381
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718625336; cv=none; b=OhDzG4KJlBkge+u4u8LRWbcII4hMPGuhtHwKFUtEr7064DpUaGou9zXezPE8XqH9rAk7peB6OJDtYBMq4y8HHoQORb+E/cvF5bDQKNy48JVM8jW7RMl+cD9mt8cQirp/NsCIQUD26e+tWRoVRkVTcTvo5uHNzzVFb68w3pB6RtA=
+	t=1718625336; cv=none; b=CsghzD85MPht9kTII7L0emAJ2E6kMA+ksqCiOPYBkx3K9Bc3ucjxZqxC31ieE5/5qZu1vRp4r7N8P9kOBqC4HEpbNUys09aO9aRRWLCY5SmBGmrJrOUuiHVxSWYL2d7rRRo/hUqtPGla1m4YAjZi47p6TT37d003fTTjh3SRjN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718625336; c=relaxed/simple;
-	bh=XM+m2RBVOi8tsNIGmrWAzIXgQ8fNtz6IroH1/xqCBNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OICWaxI/EBslFbNzoye5mW8mFmZIYXlLxMpOLdcR2Iwx+fOMtTa2QZZt6rdcDB854e6KKCkh3bFT5d02zZ3s45x9FNy7kRC0wMq74f83x0Dk0Gxu07SRxtTp39nyTag5bQjdLehI2dpV8qvRXtpm8Ps8LMlEbZ5QxIlVNN9gVRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHMrRQeg; arc=none smtp.client-ip=10.30.226.201
+	bh=NffCHPh04kxLV1M+4sDkfZRGJ0KtbpqGWJtIcQ8WSyY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iMfZ4Cdf9Id1QXMEFVODbiIieYMfAzqBk9cHhRvjTl7O6bHCOvkdHKDn6FqnwvdaHGbDODefKwmzoa5pQf/yGOGnr+/weULut+VtH/mApgKC5UHdJYVbNJ3I9vF8L2DOKhyfayrmi0aMlSdYXuCbj/sMZ/pYXM+E8oFFAp8YRRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/HahEGD; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHMrRQeg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F6BC4AF48;
-	Mon, 17 Jun 2024 11:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718625336;
-	bh=XM+m2RBVOi8tsNIGmrWAzIXgQ8fNtz6IroH1/xqCBNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OHMrRQeg5jp/ugsI0Ko0Jw4GuJKWfKVsxFoJPkp2wQMUuxzrF1TX50bBeovTHaGj/
-	 cLWnjCrFW+2/+AYJlUCZH9GaKoSaN8mqsLIyelves8FneOqCp+9Q3P7d/dOBz/P+1d
-	 W0vCQ+65jT2UIYZ0NGox4EQIXANyDAPDUI3NaIfh1U8e0tKv+VE2PAiMlM3AtLQ/9T
-	 +7bKSH36imNi1wtNQzggryPWLZ0wVfKOVK0237ZvRJt7NnT6gzN2Omg1ECt/1PSxJW
-	 c8P91uvb1a/b/fZ/vJYeSrHsb8vY9Og9v7ZlglMkH/SRaNhnyThk5agik8Yvj6DAx9
-	 alHY+JqTkasQQ==
-Date: Mon, 17 Jun 2024 13:55:26 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-man@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org, 
-	andyrtr@archlinux.org, Luna Jernberg <droidbittin@gmail.com>, 
-	"Dr. Tobias Quathamer" <toddy@debian.org>, Marcos Fouces <marcos@debian.org>, Sam James <sam@gentoo.org>, 
-	Jonathan Corbet <corbet@lwn.net>, man-pages-maintainers@fedoraproject.org, 
-	Petr Gajdos <pgajdos@suse.cz>
-Subject: man-pages-6.9.1 released
-Message-ID: <dncnuuuqpf4pa3toado6hk3inupa6ntlqxdt4x4y4l63mubuoy@kyam5murveos>
-References: <cpolays26kcjvekvowwik3di3ut66puls47w3gvdfwep66uaul@ka4omfzltwcs>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/HahEGD"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-80b8d0d19e8so1086276241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718625334; x=1719230134; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XV8Tu4yudfofDqv7fDAng14xyMI6FIAAjDu0Vw4P4zQ=;
+        b=J/HahEGDyl+QRvnTQhAyXZX5FJAZLg0XFwd9Adj703lSMOnEub2HivEXqHBo6OgEuK
+         R8qlatYseEpH4gWKRJ68oCYMEIUz5CZOweTlaqyJIL+xfPv64M41a0DGeb3YniE6Q4Qa
+         iEMjbtYUo8mYWgYw85TLw5i/IzjlWVzNyW96/XL1IHSeV62SK/YI98pJi4xH95+SbLmB
+         kpcQI5c14D7wX63tF93v4QiO7I6AOAgOKqh3uu9LWIcAP6Phf3JRS5JF9/TsBBZWeaHy
+         C687GyJv+3IO/hNcgOlGAmUsGmS5SGXBIDapgpJxsbyLB4apsT1Fb6c3grwa3jzAkmz2
+         uJ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718625334; x=1719230134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XV8Tu4yudfofDqv7fDAng14xyMI6FIAAjDu0Vw4P4zQ=;
+        b=RiErH+VogbbKNPM4SHQz/5L/IuL32bpGPdoMoUw4GZ9REYtC0EtgWCxr9cFAtLseQF
+         3XJR5yfyQCeyaMqz427DF+4FyVjca9uQOd5ADJZ0bX2fczOWkSawIu/q5DgQiudAfNXw
+         nfXZyclIYyEFU3zRiFfGZuDJ8vt27TNJrHMrJWQnoNYuAzXJhOLOp8Fv+oaUHkt7g7/B
+         YlAu40+xUKJUCKujFrj8PLeF1+hjNMjcOeexZPR9darQ3o4RK8hxEKw16B3pZAlYa9Gl
+         YQFtMqysVJpnFjM3i0duLV3qDSbEH+xcdjbTdx6wlwfc7BuL311jTLT734B0sG4EkgL8
+         u9jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXQIk019EbrnVGtqkQkdpApzY3njrbyTehz0BxNm2fY2hQQAJ+TEzEKTWDh3zXYVM3HjyzjDB6yiYUxxVeFxouCDLc1J2LxKU67St3
+X-Gm-Message-State: AOJu0Yx3ioykT7j7LjryCpi6+oSNnIXl44BOwrR4ru9kmKdDCnGSqho7
+	TQN49zSPLCo+n1ZwLPXgqaVZjumwlOSlWNo2XFc2K/pchISsd7dlGrCb2tat/Hc+gD1hzFk0oHC
+	HVNVW7VUWOfv9gGxw+xHvWIiiCqU=
+X-Google-Smtp-Source: AGHT+IEIyYlMDM5bd9lCVKySv9/fFUx+T5N0Y5Y7EVhWkghUKBG4aDI1IEd6aEgK4ezk3W516XFLIS5iH7N3r5dKZ7A=
+X-Received: by 2002:a05:6102:3b85:b0:48d:bd49:1fe with SMTP id
+ ada2fe7eead31-48dbd490291mr5131098137.1.1718625333769; Mon, 17 Jun 2024
+ 04:55:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2fxiyucdjqmu7hrg"
-Content-Disposition: inline
-In-Reply-To: <cpolays26kcjvekvowwik3di3ut66puls47w3gvdfwep66uaul@ka4omfzltwcs>
-
-
---2fxiyucdjqmu7hrg
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
+ <c180d2a0-1e34-41f0-bae8-1205d04a5f6b@linux.alibaba.com> <82d31425-86d7-16fa-d09b-fcb203de0986@126.com>
+ <7087d0af-93d8-4d49-94f4-dc846a4e2b98@linux.alibaba.com> <CAGsJ_4xgqDrTsQRYB_VKn+KC6rvYeJF6TQwhT5JnLi-b4nFTOQ@mail.gmail.com>
+ <6dc8df31-eb01-4382-8467-c5510f75531e@linux.alibaba.com>
+In-Reply-To: <6dc8df31-eb01-4382-8467-c5510f75531e@linux.alibaba.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 17 Jun 2024 19:55:21 +0800
+Message-ID: <CAGsJ_4zOOK0-AiLsN0Sw_q3ikPNuk8ofZHsYfV1WkK_6-QsmVw@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
+ non-CMA THP-sized page
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: yangge1116 <yangge1116@126.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, liuzixing@hygon.cn, 
+	Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-man@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org, 
-	andyrtr@archlinux.org, Luna Jernberg <droidbittin@gmail.com>, 
-	"Dr. Tobias Quathamer" <toddy@debian.org>, Marcos Fouces <marcos@debian.org>, Sam James <sam@gentoo.org>, 
-	Jonathan Corbet <corbet@lwn.net>, man-pages-maintainers@fedoraproject.org, 
-	Petr Gajdos <pgajdos@suse.cz>
-Subject: man-pages-6.9.1 released
-References: <cpolays26kcjvekvowwik3di3ut66puls47w3gvdfwep66uaul@ka4omfzltwcs>
-MIME-Version: 1.0
-In-Reply-To: <cpolays26kcjvekvowwik3di3ut66puls47w3gvdfwep66uaul@ka4omfzltwcs>
 
-On Fri, Jun 14, 2024 at 10:16:22PM GMT, Alejandro Colomar wrote:
-> Gidday!
+On Mon, Jun 17, 2024 at 7:36=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2024/6/17 18:43, Barry Song wrote:
+> > On Thu, Jun 6, 2024 at 3:07=E2=80=AFPM Baolin Wang
+> > <baolin.wang@linux.alibaba.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2024/6/4 20:36, yangge1116 wrote:
+> >>>
+> >>>
+> >>> =E5=9C=A8 2024/6/4 =E4=B8=8B=E5=8D=888:01, Baolin Wang =E5=86=99=E9=
+=81=93:
+> >>>> Cc Johannes, Zi and Vlastimil.
+> >>>>
+> >>>> On 2024/6/4 17:14, yangge1116@126.com wrote:
+> >>>>> From: yangge <yangge1116@126.com>
+> >>>>>
+> >>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list fo=
+r
+> >>>>> THP-sized allocations") no longer differentiates the migration type
+> >>>>> of pages in THP-sized PCP list, it's possible to get a CMA page fro=
+m
+> >>>>> the list, in some cases, it's not acceptable, for example, allocati=
+ng
+> >>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
+> >>>>>
+> >>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
+> >>>>> PCP list to avoid the issue above.
+> >>>>>
+> >>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+> >>>>> THP-sized allocations")
+> >>>>> Signed-off-by: yangge <yangge1116@126.com>
+> >>>>> ---
+> >>>>>    mm/page_alloc.c | 10 ++++++++++
+> >>>>>    1 file changed, 10 insertions(+)
+> >>>>>
+> >>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> >>>>> index 2e22ce5..0bdf471 100644
+> >>>>> --- a/mm/page_alloc.c
+> >>>>> +++ b/mm/page_alloc.c
+> >>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
+> >>>>> *preferred_zone,
+> >>>>>        WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+> >>>>>        if (likely(pcp_allowed_order(order))) {
+> >>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >>>>> +        if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & ALLOC_CMA ||
+> >>>>> +                        order !=3D HPAGE_PMD_ORDER) {
+> >>>>
+> >>>> Seems you will also miss the non-CMA THP from the PCP, so I wonder i=
+f
+> >>>> we can add a migratetype comparison in __rmqueue_pcplist(), and if
+> >>>> it's not suitable, then fallback to buddy?
+> >>>
+> >>> Yes, we may miss some non-CMA THPs in the PCP. But, if add a migratet=
+ype
+> >>> comparison in __rmqueue_pcplist(), we may need to compare many times
+> >>> because of pcp batch.
+> >>
+> >> I mean we can only compare once, focusing on CMA pages.
+> >>
+> >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> >> index 3734fe7e67c0..960a3b5744d8 100644
+> >> --- a/mm/page_alloc.c
+> >> +++ b/mm/page_alloc.c
+> >> @@ -2973,6 +2973,11 @@ struct page *__rmqueue_pcplist(struct zone *zon=
+e,
+> >> unsigned int order,
+> >>                   }
+> >>
+> >>                   page =3D list_first_entry(list, struct page, pcp_lis=
+t);
+> >> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >> +               if (order =3D=3D HPAGE_PMD_ORDER &&
+> >> !is_migrate_movable(migratetype) &&
+> >> +                   is_migrate_cma(get_pageblock_migratetype(page)))
+> >> +                       return NULL;
+> >> +#endif
+> >
+> > This doesn't seem ideal either. It's possible that the PCP still has ma=
+ny
+> > non-CMA folios, but due to bad luck, the first entry is "always" CMA.
+> > In this case,
+> > allocations with is_migrate_movable(migratetype) =3D=3D false will alwa=
+ys lose the
+> > chance to use the PCP.   It also appears to incur a PCP spin lock/unloc=
+k.
+>
+> Yes, just some ideas to to mitigate the issue...
+>
+> >
+> > I don't see an ideal solution unless we bring back the CMA PCP :-)
+>
+> Tend to agree, and adding a CMA PCP seems the overhead can be acceptable?
 
-Gidday!
+yes. probably. Hi Ge,
 
-> I'm proud to announce:
->=20
-> 	man-pages-6.9 - manual pages for GNU/Linux
+Could we printk the size before and after adding 1 to NR_PCP_LISTS?
+Does it increase one cacheline?
 
-man-pages-6.9 had a broken link page: FICLONERANGE.2 pointed to a
-nonexistent page.  Thus, here's:
+struct per_cpu_pages {
+spinlock_t lock; /* Protects lists field */
+int count; /* number of pages in the list */
+int high; /* high watermark, emptying needed */
+int high_min; /* min high watermark */
+int high_max; /* max high watermark */
+int batch; /* chunk size for buddy add/remove */
+u8 flags; /* protected by pcp->lock */
+u8 alloc_factor; /* batch scaling factor during allocate */
+#ifdef CONFIG_NUMA
+u8 expire; /* When 0, remote pagesets are drained */
+#endif
+short free_count; /* consecutive free count */
 
-	man-pages-6.9.1 - manual pages for GNU/Linux
-
-Tarball download:
-<https://www.kernel.org/pub/linux/docs/man-pages/>
-Git repository:
-<https://git.kernel.org/cgit/docs/man-pages/man-pages.git/>
-Online PDF book:
-<https://mirrors.edge.kernel.org/pub/linux/docs/man-pages/book/>
-
-You are receiving this message either because:
-
-        a)  (BCC) You contributed to the content of this release.
-
-        b)  You are subscribed to <linux-man@vger.kernel.org>,
-            <linux-kernel@vger.kernel.org>, or
-            <libc-alpha@sourceware.org>.
-
-        c)  I have information (possibly inaccurate) that you are the
-            maintainer of a translation of the manual pages, or are the
-            maintainer of the manual pages set in a particular
-            distribution, or have expressed interest in helping with
-            man-pages maintenance, or have otherwise expressed interest
-            in being notified about man-pages releases.
-            If you don't want to receive such messages from me, or you
-            know of some other translator or maintainer who may want to
-            receive such notifications, send me a message.
-
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Changes in m=
-an-pages-6.9 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Released: 2024-06-14, Aldaya
-
-[...]
-
-> New and changed links
-> ---------------------
->=20
-> man2const/
-> 	EPIOCGPARAMS.2const		(ioctl_eventpoll(2))
-> 	EPIOCSPARAMS.2const		(ioctl_eventpoll(2))
-> 	FAT_IOCTL_GET_ATTRIBUTES.2const	(FAT_IOCTL_SET_ATTRIBUTES(2const))
-> 	FICLONERANGE.2const		(ioctl_ficlone(2))
-
-This was broken.  And now I realize that the changelog didn't document
-the rename from ioctl_ficlonerange.2 =3D> FICLONE.2const.  The script I
-wrote didn't handle renames.  I'll fix the changelog later (but not
-include it in a bugfix release, since that's not critical).
-
-[...]
-
-Have a lovely day!
-
-Alex
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Changes in man=
--pages-6.9.1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Released: 2024-06-17, Aldaya
-
-
-New and rewritten pages
------------------------
-
-None.
-
-
-Newly documented interfaces in existing pages
----------------------------------------------
-
-man2/
-	getrlimit.2
-		rlim_t
-
-
-New and changed links
----------------------
-
-man2const/
-	FICLONERANGE.2const		(FICLONE(2const); was broken in 6.9)
-
-man3type/
-	rlimit.3type			(getrlimit(2))
-	rlim_t.3type			(getrlimit(2))
-
-
-Removed pages
--------------
-
-None.
-
-
-Removed links
--------------
-
-None.
-
-
-Global changes
---------------
-
--  Build system
-   -  Add checks in the build system, to prevent creating link pages
-      that link to a page that doesn't exist.
-   -  Merge handling of man(7) and mdoc(7) manual pages into a single
-      implementation.
-
--  man
-   -  Fix old references to NOTES sections, whose contents have been
-      moved to other sections such as VERSIONS, CAVEATS, or HISTORY.
-   -  Fix incorrect nesting of EX/EE inside nf/fi.
-
--  CONTRIBUTING.d
-   -  Fix some contributing documentation, after I noticed some
-      contributor had been confused by some old instructions.
-
-
-Changes to individual files
----------------------------
-
-The manual pages and other files in the repository have been improved
-beyond what this changelog covers.  To learn more about changes applied
-to individual pages, or the authors of changes, use git(1).
-
-
-
---=20
-<https://www.alejandro-colomar.es/>
-
---2fxiyucdjqmu7hrg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmZwJC4ACgkQnowa+77/
-2zJoww//fkV9ygdQ2FKX7Yw3NF/RUh/JQ68qYeXoy6R7FiOG5cZhaoYp8muSNFVV
-caX/fH4CjcRGkJmMXlubST5eY0wJo0EcHX4SAJ6qXU6J9HMJvtn7frFcXqmUVZJF
-UuYD5D9alckpLxuIb1fL8cHdqXV2GpP9a3FuY9I67CXdvRaKdDaWOMY9Ojqrj0jh
-IV1M7uXvcbLfAJZHkvXzS8eybyqmkJLYjiL6r8UOer8S5PTkkZPzTLTxeJsZtE2m
-T+Vb/0CCatRy/fl5oCNBfVTwHkufEfzmeqRSb+EHjdfJVo7Eo05n3PxUzZ0Fzg0B
-a14R5XtXoY3gl7U0b7xfzWd1krWLjPuz+5nj+C6SWgUeMkJmmKjx5qSP9frW4dsO
-TB+pDJoF1eBvaPv6kVJ9ps3KILHmCWXgs5q1BADbP/f5yu9IVNaX76pr7BcAGIZc
-qh+epRtlJkEF1qKqJnDwOB0Ns8SYMzDMobeVSjYbO9YGzJA4XCUAGFzyZgTAtGBF
-x/sHHOnG2ox0/YVsjMsBBylBKIy6HOnDtseTtRcpFW+nVmkwbx694a/jUIZmUzPc
-zJ6cRzVgCllD/KRLOQhS288ARqCy8d1RwsAOrRcpFNqrVeUDTrbm+EroBk4o+Tcj
-hyalh5pdmn+3x5PnxhnYXBC1cMTMma7lOOHIPNJPD9yhHPVCzv0=
-=cgbA
------END PGP SIGNATURE-----
-
---2fxiyucdjqmu7hrg--
+/* Lists of pages, one per migrate type stored on the pcp-lists */
+struct list_head lists[NR_PCP_LISTS];
+} ____cacheline_aligned_in_smp;
