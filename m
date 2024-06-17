@@ -1,126 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1E6198E6D;
-	Mon, 17 Jun 2024 13:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9B3197A9A;
+	Mon, 17 Jun 2024 13:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630695; cv=none; b=JNJgtI6yZDCVjYpw0PuQL9p1ujY4uwkZQ7t4wPv7LbY41lvHeDFV5teF0hXE3zg8jP1jxDsHYSdU+H2YC6QwJm/QaedeOBZzvyM7rCKQ1Twenxio9vKk+nc8/lFnryeUJVvtkk/F4RmJGC0YOx+dWZtxDmxL6DbNZJPmezraTJg=
+	t=1718630695; cv=none; b=tRrmTfa2OWj/PqlsGm/jVepelKA3ckDrSYlBWYtHTizYoatNQnN+8/mTCoi6vGx+btXw860AuAbelcjLe56FCBVZYMs0cYZSx32hVjKwexqpmC2ulEtPSbj4nSO/2XvRgmbaTixBhx/IRvgy09YfYEFueEi0E8qhnOybEq6bYJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718630695; c=relaxed/simple;
-	bh=p6IjLVb6CaHWuEGcpqzec/0TKNN2PB5mvz90D2rRwGw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KpOvLJ+9X7bUJHxvY+AKxRY8vlMYMxLr20/B644jbIU0GmRccQ+ddvONQkIHvu4ja8EWHFGThVm32S7FAubp+qpf5k/RytanIgQt/jwlynCXtG5gCADfxsRvWFiFmA+F6/EKQkgHqKVq58bb9qeKOULE8n+fnZ7wBRLG8fkQqn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHPBz4FC; arc=none smtp.client-ip=10.30.226.201
+	bh=3W7OKXAyhdPAO8/WbYF1gIWUxeS2ZzVMV22aj1YWSPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H21BhmQaBnN2tn70XxQ25Y8FmoKz3Nl13pZdLaIiLlYqh+7sJZvbmctSCFJU/Eu4uCrCjDhCJaR36hsMBoj7K1t6VDonk7p+xu2VSQesotoVXbQ+yjD8wZfQKmR3mxYkErLunT0vr0Da0Td1YaBEPxRqaLXTw0Z6+n43mGKj3Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOOivvcY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHPBz4FC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C619BC4AF50;
-	Mon, 17 Jun 2024 13:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630694;
-	bh=p6IjLVb6CaHWuEGcpqzec/0TKNN2PB5mvz90D2rRwGw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EHPBz4FCseWxe/AwZIxpXdXz13S1IPXQAMTnMi5MJc+aIdv8JMRMcYd7Yco9m91gC
-	 2gWLc+kxRcaOu/eahWfwMnh8ZmXXxcdQHsvp7Ey5KWfSe0chuya+uW4cGwuNgBfbtk
-	 u7XicNhJToWjoKni6Ggo8ExNZIuTzu5f0XETzvJ91nRydN/foBkId3WysR9wZQF7oi
-	 ipIJt/9lS8x54RQAWlw++oV5e2YMJG1pOg3RW3/8AaCIDv4pxx4ZGtIERtB/4nZOam
-	 uoo4f4EONjMfikZ/10WGyTlU6mkdzWJu/Q3v9Z9XBBNJBHYX+Ads8MNzCZwclgdHBt
-	 iISi28DZPu5yA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e724bc466fso52163481fa.3;
-        Mon, 17 Jun 2024 06:24:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXobh00tW33HYlSCRSLjNyJKH60CmYSCz/+lX2vsBhElcnUZ4RumD8TXKAlxUfh6PDpkZ+vmCA6cY50bxL6CaQjlivKV9YvDKNshn8703sqC3Id3wX8fiROKxaGG09YpyprMRWX+FFcf2lGLPQ9ikYW0j2L9RP6eWSIYcsnwZkE0F6f
-X-Gm-Message-State: AOJu0YyD5laB7Zg8OgL0SHDE1lGrtIrhMMBT6OjtKh6IIRs+AyB0skb9
-	bJGmUPZPKejy6s8awkmnAsqxaX2kVe+OgLZVCaVK2E1ubm1ZjqsBTfjx+RIkXN4lKdAettgF8mz
-	HQnRytsJnkwLmVrfd0TzmA/KdQI4=
-X-Google-Smtp-Source: AGHT+IGd7Il8L/x2VYYvwI+TdyWZk0q6mXYe8OBC5mf9mEsKmgun6wdGhwkf6pmC2QN5hkUrCDpYZTyYfbmDqwUmMIs=
-X-Received: by 2002:a2e:3814:0:b0:2ec:2283:38f6 with SMTP id
- 38308e7fff4ca-2ec228339ddmr45302391fa.40.1718630693141; Mon, 17 Jun 2024
- 06:24:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOOivvcY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718630694; x=1750166694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3W7OKXAyhdPAO8/WbYF1gIWUxeS2ZzVMV22aj1YWSPw=;
+  b=MOOivvcYQUY3oqHCTbuRtvglayhtkHYI9zkY8QrpdtB27syy4duzUME4
+   uwAajMiElokhpzyMeSjN7Q8sddWb3wT+EeNn3rVUjI6C64D9n9P4wy4Iu
+   rukunao0vCaaR2qKpSSLRHzvl/9iB4zHqvZ7yrgtupak4xmod0IvGuFYH
+   o/cab5XVEL1Y+gwhfszLk26jyuqph32z5T9dU/y1RyVk4c/5LwAxXGvMO
+   LcbIUk9QMppJ2brifwUynJTP66x0JHnRpq8oaAesWjG7qS2QXZ5WONs3y
+   /g26dZQR31FWPm4lUhi9SHCOnFXdr9pC3pW5ktzI6z17INoU6pXpVJDu4
+   Q==;
+X-CSE-ConnectionGUID: P7YNUh9zSLKHiNjMgYn1Qg==
+X-CSE-MsgGUID: Wi9yrzuZR46S18uVzNnsRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="18372708"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="18372708"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:24:53 -0700
+X-CSE-ConnectionGUID: PPRLjr1UQsmF05dkhgQ1ZA==
+X-CSE-MsgGUID: eC9cEVyMRymH4ArabPUkbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41072411"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Jun 2024 06:24:49 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJCLm-0004KB-34;
+	Mon, 17 Jun 2024 13:24:46 +0000
+Date: Mon, 17 Jun 2024 21:24:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <202406172104.aOlpCnvb-lkp@intel.com>
+References: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617132309.2588101-1-sashal@kernel.org> <20240617132309.2588101-7-sashal@kernel.org>
-In-Reply-To: <20240617132309.2588101-7-sashal@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 17 Jun 2024 15:24:41 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFDCUfExvB8aD7HduT4-XQ64juFR1k6Q7MTis4MbtcPfA@mail.gmail.com>
-Message-ID: <CAMj1kXFDCUfExvB8aD7HduT4-XQ64juFR1k6Q7MTis4MbtcPfA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.6 07/35] efi: pstore: Return proper errors on
- UEFI failures
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 
-NAK
+Hi Pawan,
 
-This is not a bugfix so it does not belong in stable.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
+base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-1-b88998c01e76%40linux.intel.com
+patch subject: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct cpuinfo_topology
+config: i386-buildonly-randconfig-004-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172104.aOlpCnvb-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172104.aOlpCnvb-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172104.aOlpCnvb-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> arch/x86/kernel/cpu/topology_common.c:145:21: error: use of undeclared identifier 'X86_CPU_TYPE_UNKNOWN'
+     145 |         c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+         |                            ^
+>> arch/x86/kernel/cpu/topology_common.c:148:41: error: use of undeclared identifier 'X86_CPU_TYPE_INTEL_SHIFT'
+     148 |                 c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+         |                                                       ^
+   2 errors generated.
 
 
-On Mon, 17 Jun 2024 at 15:23, Sasha Levin <sashal@kernel.org> wrote:
->
-> From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
->
-> [ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
->
-> Right now efi-pstore either returns 0 (success) or -EIO; but we
-> do have a function to convert UEFI errors in different standard
-> error codes, helping to narrow down potential issues more accurately.
->
-> So, let's use this helper here.
->
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/firmware/efi/efi-pstore.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-> index e7b9ec6f8a86a..5669023bdd1de 100644
-> --- a/drivers/firmware/efi/efi-pstore.c
-> +++ b/drivers/firmware/efi/efi-pstore.c
-> @@ -109,7 +109,7 @@ static int efi_pstore_read_func(struct pstore_record *record,
->                                      &size, record->buf);
->         if (status != EFI_SUCCESS) {
->                 kfree(record->buf);
-> -               return -EIO;
-> +               return efi_status_to_err(status);
->         }
->
->         /*
-> @@ -154,7 +154,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
->                         return 0;
->
->                 if (status != EFI_SUCCESS)
-> -                       return -EIO;
-> +                       return efi_status_to_err(status);
->
->                 /* skip variables that don't concern us */
->                 if (efi_guidcmp(guid, LINUX_EFI_CRASH_GUID))
-> @@ -192,7 +192,7 @@ static int efi_pstore_write(struct pstore_record *record)
->                                             record->size, record->psi->buf,
->                                             true);
->         efivar_unlock();
-> -       return status == EFI_SUCCESS ? 0 : -EIO;
-> +       return efi_status_to_err(status);
->  };
->
->  static int efi_pstore_erase(struct pstore_record *record)
-> @@ -203,7 +203,7 @@ static int efi_pstore_erase(struct pstore_record *record)
->                                      PSTORE_EFI_ATTRIBUTES, 0, NULL);
->
->         if (status != EFI_SUCCESS && status != EFI_NOT_FOUND)
-> -               return -EIO;
-> +               return efi_status_to_err(status);
->         return 0;
->  }
->
-> --
-> 2.43.0
->
+vim +/X86_CPU_TYPE_UNKNOWN +145 arch/x86/kernel/cpu/topology_common.c
+
+   142	
+   143	static void topo_set_cpu_type(struct cpuinfo_x86 *c)
+   144	{
+ > 145		c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+   146	
+   147		if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
+ > 148			c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+   149	}
+   150	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
