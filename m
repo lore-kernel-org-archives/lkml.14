@@ -1,38 +1,77 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93520194AC7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48841197559
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630022; cv=none; b=ISqg39EN1f9NG190uoBiNyuJ5sQ4RUZZdc9TjHbEE+HL9PTzFLZ3yTd0nLZBuydfI44Ug6Kmy2FhwAtp43az244se3H5GvnDwtX2K/5p+bpw7QTi13GfEc0xmNuGCFzo2U+DTF3oKMmzjhN5W55+/moYlSqEcCI5aFaM1nmH8IU=
+	t=1718630077; cv=none; b=bRwD8EuFxgURgIMyeEb3AptVtfTkoRuJ+7WHNjsCSSFJmuDyOf8e+2wZDGtKo6q1Hb78Rqd5n3WmVvV+0kEUIsiPJM+SmSEbKB5kb9kA3vKPRFW2y7QAM7Y7bm04JtApTaJ1yvxGXKb6CpvyGxcUtCOXq89bYQ6i6ncgB7l106A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630022; c=relaxed/simple;
-	bh=JSvHKg6TQXAX+y915eIRoWzB8BseBrcjuluWTcq/bPA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TZLaKv8K36lWZduaI92cvcCbtoSchi9JNhXSpltIUrUmU6gWBtEQ1jENGVxkc4bELAKbKRA+sP51BlZbAicNbNVZIYtFPMtrXL/78RgJb4eAYy0hn4GKrW2g5bu9CYZK9is7ygfSsEh5DLzp/jffnxSXA+o++W27ClaL8vy/b0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dapustor.com; spf=pass smtp.mailfrom=dapustor.com; arc=none smtp.client-ip=114.132.58.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dapustor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dapustor.com
-X-QQ-mid: bizesmtpsz9t1718629912t5494vo
-X-QQ-Originating-IP: ofoZGaY66B9E0Bp1eAiohtnrFFlyHG0pri1WEVYLtFM=
-Received: from localhost.localdomain ( [14.154.190.47])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 17 Jun 2024 21:11:47 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 103092901695252679
-From: Boyang Yu <yuboyang@dapustor.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
+	s=arc-20240116; t=1718630077; c=relaxed/simple;
+	bh=f1DDzJv3xHeLtz/8Uh38H6uqD2mqnmTd8LGL7fsQk2Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FtU4xf+lve1sn4Sn3jvAieTUPGekD0Q9uDr7FalTbwcdfSJQosRTDVXtjO0WdQDR/ltpfsRFGI7TmHjIKf3BWhcK50zmW3Ay97foSSBh3JcnHy3Zl0+nz4+RRHC791gr0pbasXyTweTEqi8m3Pahh1qW8HvTSTZVXtG/EWZAIVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=b5TzQBVo; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="b5TzQBVo"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-707040e3018so1020123a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1718630074; x=1719234874; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+aKuxY2Fk4OLcsa0CSr6w7+nYt28fnnuhVioZfggdrc=;
+        b=b5TzQBVof+D7ozqzsldxhUi+UlO8wz63mvtDIHt7ZOyrANkb3Jt/1cJFe9lw3yRAsg
+         zfIx7E1VXmeSpIa//3xZ3bzRO7xjchhBhWHlgdv8JjT1vXuUARmgZ8NyfV5i2nGioha5
+         k/AJSlszpZQWW+x+QD/qX/kWBgMpfFxzrP+39MmYwQEB+Hjrc8RoG5Lc7VIwO867L22C
+         z2OUSyifBCYrIDDkcAolReyRSww9UwbwRfqX3bLsbPpVesVDULoZxD9TU2cCnaj6Nkkf
+         LNRmZPWGD5+1L/VUFPGiuggrJ6fIXy3o2NbVy9ZrHxW+Aj6s0YKFX3fle79OWnpdSyYq
+         X0DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630074; x=1719234874;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+aKuxY2Fk4OLcsa0CSr6w7+nYt28fnnuhVioZfggdrc=;
+        b=HgkUe6RlDqc37SKPL7H8kMVwke7CINEXEX0CaRLRy4n+eTiicFCanmNMXrAqlYAwYc
+         574+EWB3gUz90ktFBJMPE7SFQw4yoWouaRWlQUhAXb1/5hBDuRuzufDEwWxEs3QL272x
+         MRLCoQ5mzxy5jxVjoNVldw8+iSMz54arL7ZtT1PeM+93gtRRvZIqHnCbFo8XtPrO5rpY
+         4yA3NxgFZXxznK8PWVDSR/qTPi0eqxe0Bvf8tORiNodGYqBfQEJG+hCnCoARxoF9kBM4
+         bQKHJBWNvlafoh/vP05Mmr0jfa5c4TybxX6aHK+zP4KqSgOEBhHEaBl/QPOkxfbiPk2g
+         JrFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVy0ZIC/08zLZU2fPPOtZXrVdtWyOE8VIJqiUovmM0NwSoJDJ6/ZBDBqxXjRSg5oggdyiVYEoEkJTlEVDTnj6uCGQVGzaNrAToaZS+E
+X-Gm-Message-State: AOJu0YwlrI7kkvEhNPwLQsd8SEs1oZ6ko//5hHgL6m8LfG510M5ciwbN
+	lDuWI0bUd44qjMYGG+QYVg7/9PGOUgNukZWlZNxggXpfUxkiLH5h9jUiuDcuGaY=
+X-Google-Smtp-Source: AGHT+IHD4rO7F/Egqxpgx8GA7LvUPhaTN7BCgz2f2PAN52kUoSotiU50nIDGx9zF+6fxgOrcqL1j1g==
+X-Received: by 2002:a17:902:da83:b0:1f4:b18a:3f25 with SMTP id d9443c01a7336-1f8629fee64mr128841735ad.60.1718630074305;
+        Mon, 17 Jun 2024 06:14:34 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.245])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f0260csm78801785ad.200.2024.06.17.06.14.29
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 17 Jun 2024 06:14:34 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Boyang Yu <yuboyang@dapustor.com>
-Subject: [PATCH] nvme: fix NVME_NS_DEAC may incorrectly identifying the disk as EXT_LBA.
-Date: Mon, 17 Jun 2024 21:11:44 +0800
-Message-Id: <20240617131144.48955-1-yuboyang@dapustor.com>
-X-Mailer: git-send-email 2.27.0
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	sunilvl@ventanamicro.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org,
+	bhelgaas@google.com,
+	james.morse@arm.com,
+	jeremy.linton@arm.com,
+	Jonathan.Cameron@huawei.com,
+	pierre.gondois@arm.com,
+	sudeep.holla@arm.com,
+	tiantao6@huawei.com
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH v6 1/3] riscv: cacheinfo: remove the useless input parameter (node) of ci_leaf_init()
+Date: Mon, 17 Jun 2024 21:14:23 +0800
+Message-Id: <20240617131425.7526-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,30 +79,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:dapustor.com:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-The value of NVME_NS_DEAC is 3,
-which means NVME_NS_METADATA_SUPPORTED | NVME_NS_EXT_LBAS.
+ci_leaf_init() is a declared static function. The implementation of the
+function body and the caller do not use the parameter (struct device_node
+*node) input parameter, so remove it.
 
-Signed-off-by: Boyang Yu <yuboyang@dapustor.com>
+Fixes: 6a24915145c9 ("Revert "riscv: Set more data to cacheinfo"")
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/nvme/host/nvme.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/cacheinfo.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index f3a41133ac3f..68b400f9c42d 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -502,7 +502,7 @@ static inline bool nvme_ns_head_multipath(struct nvme_ns_head *head)
- enum nvme_ns_features {
- 	NVME_NS_EXT_LBAS = 1 << 0, /* support extended LBA format */
- 	NVME_NS_METADATA_SUPPORTED = 1 << 1, /* support getting generated md */
--	NVME_NS_DEAC,		/* DEAC bit in Write Zeores supported */
-+	NVME_NS_DEAC = 1 << 2,		/* DEAC bit in Write Zeores supported */
- };
+diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+index 09e9b88110d1..30a6878287ad 100644
+--- a/arch/riscv/kernel/cacheinfo.c
++++ b/arch/riscv/kernel/cacheinfo.c
+@@ -64,7 +64,6 @@ uintptr_t get_cache_geometry(u32 level, enum cache_type type)
+ }
  
- struct nvme_ns {
+ static void ci_leaf_init(struct cacheinfo *this_leaf,
+-			 struct device_node *node,
+ 			 enum cache_type type, unsigned int level)
+ {
+ 	this_leaf->level = level;
+@@ -80,11 +79,11 @@ int populate_cache_leaves(unsigned int cpu)
+ 	int levels = 1, level = 1;
+ 
+ 	if (of_property_read_bool(np, "cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+ 	if (of_property_read_bool(np, "i-cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+ 	if (of_property_read_bool(np, "d-cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+ 
+ 	prev = np;
+ 	while ((np = of_find_next_cache_node(np))) {
+@@ -97,11 +96,11 @@ int populate_cache_leaves(unsigned int cpu)
+ 		if (level <= levels)
+ 			break;
+ 		if (of_property_read_bool(np, "cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+ 		if (of_property_read_bool(np, "i-cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+ 		if (of_property_read_bool(np, "d-cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+ 		levels = level;
+ 	}
+ 	of_node_put(np);
 -- 
-2.27.0
+2.20.1
 
