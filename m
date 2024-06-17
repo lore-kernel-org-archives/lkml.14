@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218DD1A92F4;
-	Mon, 17 Jun 2024 13:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D231A92F7;
+	Mon, 17 Jun 2024 13:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630823; cv=none; b=OcoBeSBa2q/N0iduiosjwzevC8IxHysPcVVSg/Ju6bfJvTHyo09LJ6nOIyzmi3kF4ECbg8r3wjPuNgbDabJUkerXa0Vt+CLSl+ltoj4FXcf42xh52/cAsY/39bwKq7yeQDy4IJLllILOmJ0nkkkXfqXQO2S2IVqId5vL8LFvIi4=
+	t=1718630823; cv=none; b=eunBvZHVEeQiXmKx2wYUxc3Y7+vae0yceZJzuey0PvBtzDnkwwfZb273bFGo/Qt9leriZ3n0b5SvlXBgjNPmXrXSaZMRz3dsTZYphQH+qaLHgJL0FOAxYQ2OGn1PWO4zjK2dHhBTRm3u1tEkqfFqM2WOCi4laFZ2F9N69t0S0+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718630823; c=relaxed/simple;
-	bh=OJvAIGdXoAiQ5x0nnLDGDG/WlfUgXn8ZyWPe9ycRamE=;
+	bh=G//SrmHPDQFLp8xCJwKCuDOXuySp4l9Sbak8tJG/bGo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=defWruamx95rFt2/nrtktio5lXJwFSJfMgYoC5wqBJQGgVQ0Os6YVsmDIut6W/vC4nhhhysOHijbjAHPj2oG08YecUa+O9nN6XNjiNi29LAY43rlNjGS2c0op4MaI+3TvYb5EfWYOgylqHoYNfZj243QDpfdzn7+ffzDQCTJJtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U2iJQexs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QuHoSms2; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=n5M2v9vdZRu0I/5Z2RrTa9eWMCuzsCLpcBapjOcFh7xpIRDTV/hJByp2Lx/mubgAZye/2K8BQz4gc4oyy0+Kt7z+YjJ+EDgvxoX7MGC7xNk0IbL4IYSvuFzFEW2D5FTL9olwNf4H7DEwSgzy/JDz5GUfNQ9AwskRxm545EjZbEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IGB+BapP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dxlKL6FP; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U2iJQexs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QuHoSms2"
-Date: Mon, 17 Jun 2024 13:26:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IGB+BapP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dxlKL6FP"
+Date: Mon, 17 Jun 2024 13:27:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1718630820;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Eqnkrk9k9EBOMajRv3D+I10MRFZZTunhJ2pXW5r6rLs=;
-	b=U2iJQexsJ4jPAE4+hBwfp1SslY/fNXpZMjwzBpVcn65WT+Royy87ufxob0PD93OilROsiX
-	U+Bg1jDR8qFX6YwhL9Fe9lRZ4aY9ZhcAfISJgBT9GA2o+QEWfFaW61QlFseahFaySGrHsl
-	hM3pWZXpxF9O6Pc0Y8BkNgjtodlBRUo1Y2GSUs5FapWm9RtiohGgR68hN2nRyhfeh8Pu/B
-	kcaYbgqjz01/ZdQBU5mYiO5gnZWZyBo92ArdbavayHsisQ05kDFz4LlKxuEK7DZzchWOTC
-	SkocPqfdJa9Xwk5WdOrDUEg7a7mhcgbsoZ4ilvIXDOYbsJuhszkeoJifflJ+gg==
+	bh=sUhTSWmW2FioYYejQBMDk6IqEilwsXlIaggC7fDx/e0=;
+	b=IGB+BapPkIAtcshWLzAhxznT/UqgJDJ8PT/AER+wIC7I9ipPTtH6TC57TPRUr0qIR5YGOJ
+	fLVW0lhsyJos+vNlbnOD4Mni/c30fP6Xy+X4wXCCn2Z/dIf3Q2JLBrqhHCdEeI86u689gI
+	/NFnsgF8nJrEi+NdB6DoVIFWwv+PqCNldso3lIrHatiIHJqIlCbgpxSMwOhYdaA2sEvt0Q
+	Ncd5ptABZCjt07d/WcA7pv/5dbl6yqavDerET3Ttn8T6IY64JyZw+1NWDfIPTCnvbI+MpM
+	fu90CGaq7Eb3fM9MU+53xBwtEf07QADBoN9TPG0UXlw0MEfhVcYIeJGgEj6ZUw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1718630820;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Eqnkrk9k9EBOMajRv3D+I10MRFZZTunhJ2pXW5r6rLs=;
-	b=QuHoSms2mUW0hYtyjVYFGBK86LmRNqum6+297Q1QX83fauWlXwACanXsEmGEvGwHyRXg2U
-	2aMlss0a6F6ylaCg==
-From: "tip-bot2 for Stanislav Spassov" <tip-bot2@linutronix.de>
+	bh=sUhTSWmW2FioYYejQBMDk6IqEilwsXlIaggC7fDx/e0=;
+	b=dxlKL6FP/rv1UFNDki48Jsn19NoXXzOIl1SMV7thnH3sBH2UYdX5UmECfGKALTqOGkvuMW
+	KCk27kmDD1lV8/Dw==
+From: "tip-bot2 for Costa Shulyupin" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] cpu/hotplug: Reverse order of iteration in
- freeze_secondary_cpus()
-Cc: Stanislav Spassov <stanspas@amazon.de>,
+Subject: [tip: smp/core] cpu/hotplug: Fix typo in comment
+Cc: Costa Shulyupin <costa.shul@redhat.com>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240524160449.48594-1-stanspas@amazon.de>
-References: <20240524160449.48594-1-stanspas@amazon.de>
+In-Reply-To: <20240325163810.669459-1-costa.shul@redhat.com>
+References: <20240325163810.669459-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171863081993.10875.11129262468770860324.tip-bot2@tip-bot2>
+Message-ID: <171863082039.10875.16195685078841268525.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,60 +67,33 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the smp/core branch of tip:
 
-Commit-ID:     fde78e4673afcb0bad382af8b81543476dc77655
-Gitweb:        https://git.kernel.org/tip/fde78e4673afcb0bad382af8b81543476dc77655
-Author:        Stanislav Spassov <stanspas@amazon.de>
-AuthorDate:    Fri, 24 May 2024 16:04:49 
+Commit-ID:     f45a6051d582f613f4abc383ae238661f7813302
+Gitweb:        https://git.kernel.org/tip/f45a6051d582f613f4abc383ae238661f7813302
+Author:        Costa Shulyupin <costa.shul@redhat.com>
+AuthorDate:    Mon, 25 Mar 2024 18:38:10 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 17 Jun 2024 15:17:44 +02:00
 
-cpu/hotplug: Reverse order of iteration in freeze_secondary_cpus()
+cpu/hotplug: Fix typo in comment
 
-Whenever CPU hotplug state callbacks are registered, the startup callback
-is invoked on CPUs that have already reached the provided state in order of
-ascending CPU IDs.
-
-In freeze_secondary_cpus() the teardown of CPUs happens in the same are
-invoked in the same order. This is known to make a difference is the
-current implementation of these callbacks in arch/x86/events/intel/uncore.c:
-
- - uncore_event_cpu_online() designates the first CPU it is invoked for
-   on each package as the uncore event collector for that package
-
- - uncore_event_cpu_offline() if the CPU being offlined is the event
-   collector for its package, transfers that responsibility over to
-   the next (by ascending CPU id) one in the same package
-
-With the current order of CPU teardowns in freeze_secondary_cpus(), the
-latter ends up doing the ownership transfer work on every single CPU.  That
-work involves a synchronize_rcu() call, ultimately unnecessarily degrading
-the performance of CPU offlining.
-
-To address this make freeze_secondary_cpus() iterate through the CPUs in
-reverse order, so that the teardown happens in order of descending CPU IDs.
-
-[ tglx: Massage change log ]
-
-Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240524160449.48594-1-stanspas@amazon.de
+Link: https://lore.kernel.org/r/20240325163810.669459-1-costa.shul@redhat.com
 
 ---
- kernel/cpu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/cpuhotplug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 563877d..1979a99 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1891,8 +1891,8 @@ int freeze_secondary_cpus(int primary)
- 	cpumask_clear(frozen_cpus);
- 
- 	pr_info("Disabling non-boot CPUs ...\n");
--	for_each_online_cpu(cpu) {
--		if (cpu == primary)
-+	for (cpu = nr_cpu_ids - 1; cpu >= 0; cpu--) {
-+		if (!cpu_online(cpu) || cpu == primary)
- 			continue;
- 
- 		if (pm_wakeup_pending()) {
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 7a5785f..7f6c820 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -27,7 +27,7 @@
+  * startup callbacks sequentially from CPUHP_OFFLINE + 1 to CPUHP_ONLINE
+  * during a CPU online operation. During a CPU offline operation the
+  * installed teardown callbacks are invoked in the reverse order from
+- * CPU_ONLINE - 1 down to CPUHP_OFFLINE.
++ * CPUHP_ONLINE - 1 down to CPUHP_OFFLINE.
+  *
+  * The state space has three sections: PREPARE, STARTING and ONLINE.
+  *
