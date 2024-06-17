@@ -1,253 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08796195FDB;
-	Mon, 17 Jun 2024 06:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B19195FED;
+	Mon, 17 Jun 2024 06:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718604448; cv=none; b=mOSuOEzo2Ig2SwCZk/a8GeKZGzKxYdolb2hZgBFNPpdqe8sNERpJUPuohTs+rCKeNJ8FlSicTKcTmP1Cgu+FtTLkQE2pHvBXaDqTAKXCREK3jQD5x5JsVTwzkEhHXbwQwBqVEQUxPyScHxDZ7G+RsKBuVut2KOgGqeXFmNJTN04=
+	t=1718604450; cv=none; b=FFTzN8vUBPpwjiHM2ShsmrvJ18kstKU7zpEOAQjFUZfEVGkpj7DTk069uBlUbD/LDyZarH3lHN9A4c9Z/7nIGhX42mSSs6qZM6V5U/T5gLZ0SRbV40QMNHJJENZiBTetr+fhQqcZHZUGAep8ZcvLDkLy2E7i2WJDg+3j64lYCeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718604448; c=relaxed/simple;
-	bh=pm4CS3uITJz8oWMTDsc9hsVdZ0jFek9ebREwEYUCGkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KLDgPKQ+LxKb5u3+ECP66SwnBJqgesKj1co1QjuEQBIn2Hte/IMBYgBMIHmmTN4K1YE9wEo1FBNI1a/K3vH5nwwzdcboeU1ZB/LtH7BDvJ5SL2+dw7z1w/jatp0+1lXvvgjEcTTILcaucRTp9UrxeUVzTUJNG+uMNb+Oh2n7qP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LO8133hK; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718604450; c=relaxed/simple;
+	bh=1qHT3ndHCQslu0fWxXaSamlwmG6qZY213KP8J4wc6mk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XggaUux1SF859yT1Prgi4TdLbKarH6Gs7I2qDJjA4c2hdOkFSmAZk8C412eMbWBbmEgtyHKeraJ1tWkykC8Xd7/SGKGCeXOvbQe6UfRHFrK+D82dQi+/c+6Z3xc+tqHRfwtPdCjWb412/vgHThvC2Vx8m7b5JMJqL9qO/WQXwgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ldz+Km8V; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LO8133hK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718604447; x=1750140447;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pm4CS3uITJz8oWMTDsc9hsVdZ0jFek9ebREwEYUCGkU=;
-  b=LO8133hKvfQTBuefi4JpdudD812bYKTseilBvcs8u6zQToBk3R4Ukl3f
-   JvQZDubLoZUmutWRjpwbjAse5H+ywz68WV0XzqXYjFH43MsQmc0/R3r19
-   XAcbXg7dZgB0VKjxSV72oLX7wH8A4oYrW//Tf+OEO/dHvVyAoMnT4868X
-   r1n9Hz1GjhVPABLAz62gRp0CCcQRGZ4mZj75QVeZ8+GBUtKhJDjtfnOYq
-   WpZgEsNXNXTJjg1KIuR6cRwqjeICAeMSr8QtwFmzSQgxq557CzAWlOJ5l
-   H7rBKBi9g4LAjZGRakN8unOxH/Dxg0VpRxlJ2DYOzTtu4jlcIwaSfjM4d
-   Q==;
-X-CSE-ConnectionGUID: TiozYziLSGOc7Z7suG4m6g==
-X-CSE-MsgGUID: 9uRkGVRmRsuoy5l5AV2DMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15138472"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="15138472"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 23:07:27 -0700
-X-CSE-ConnectionGUID: mBKfOPVtRwGkWQU6iIs2Eg==
-X-CSE-MsgGUID: x2YlxM5MRVayPMoY/JrA+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="41028205"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.69])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 23:07:24 -0700
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: hdegoede@redhat.com,
-	srinivas.pandruvada@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 5/7] platform/x86/intel-uncore-freq: Get rid of uncore_read_freq driver API
-Date: Mon, 17 Jun 2024 09:04:38 +0300
-Message-ID: <20240617060708.892981-6-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617060708.892981-1-tero.kristo@linux.intel.com>
-References: <20240617060708.892981-1-tero.kristo@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldz+Km8V"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5295e488248so4483564e87.2;
+        Sun, 16 Jun 2024 23:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718604446; x=1719209246; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i12zWNu8KlTv7/MNDqzK9U/bdW2I5k7ofAlbTITEnb0=;
+        b=ldz+Km8VUda6LpFv41zY1+XgaacKyb8R3YlLP9+7T0y93d9+wBAHpvOE5DaI2te/FL
+         zu7m239b3fw6bJOde5QZSNGmAzu33phKWYjVSW21HMuUdTvxjyMcR1IEo3LUjzbyua63
+         uGwYqolvEho/oC9SJjiIy9JKrZ9n+KVZmFSVPiucWhPiOWogmssZWEIXzCHwy7CYaziH
+         AzUP6RbdDaAOkkXQ9Nj8GwD5Iwp4ZCEpTec+cFmFtOAqYlg9yyybPVMlZc45+VXHgXgi
+         XoF9q7tlKiAy0+G0+xGqUq8HCuPG6BJtpsxNuqaRIuUHGp3nZAn08aZWQv7GHvP5+nzz
+         Drzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718604446; x=1719209246;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i12zWNu8KlTv7/MNDqzK9U/bdW2I5k7ofAlbTITEnb0=;
+        b=vTpsULKvszpd2lwdT3j3Msh3ZpRqfp4Mr/6KL4pXS+oqBkJW5/h4o77ze+KRlH95wS
+         qUZp3jz2dLc9PWZfRW6ovK7iZ45Gp/CsxA6/P9LgbjovDROM1RLSb3uiUZTkku64W45V
+         1gltiiyhZe1gSpNhcW/hgznQVCc50WOEXHAlcvvNaOzWM37a4CUnRq/zuAqfZzCX6ss2
+         TH+b+bXf6tw8ucgRgrxUft84UG7SxMwEnLiC1bKa3GxRckKL9gMCuaCVK+/qPDKGl4Ww
+         wXlXWJFuHd4sH+JdxeOpC9JRyMn2nPhb3nTyHuAbRpHJR8/6AVE79bDPa5KKRp4PR2+e
+         Ti6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVFnbfIgm9sjPlX14PZpdQekdaiK78Clf2hHPLW/dI9bneMEH04oROBrL4NaemQMa77v39EW5dXtoSo+eQWpdBB8wWnnSIjo+o6a3lZijN5XXqCHPNEGDvtujfFERLMJ8UvzjkCdIGB
+X-Gm-Message-State: AOJu0YxO2JKy9Uj5KJH7i+am4/JVLS4siuqFWCk8jmOQO5IYNCVv0gl8
+	kAuBXPtSVXvMPakKSk02wP/u49jZ/g7vXlXSzPH0lQhZV7uBaydN
+X-Google-Smtp-Source: AGHT+IFOs8sWJOZ1Qx42nJmWJ/bSgd388ge+CDgPhz1DhWOXNvINt96KcZ4XUPBXgcEW8rI8sBWsCQ==
+X-Received: by 2002:a2e:9b54:0:b0:2eb:dc13:2d6b with SMTP id 38308e7fff4ca-2ec0e5c57a5mr55168201fa.13.1718604445880;
+        Sun, 16 Jun 2024 23:07:25 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c17b0csm12351541fa.65.2024.06.16.23.07.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Jun 2024 23:07:25 -0700 (PDT)
+Message-ID: <b462fbc5-0ee0-4bd4-b889-01c09853c407@gmail.com>
+Date: Mon, 17 Jun 2024 09:07:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] bu27034: ROHM BU27034NUC to BU27034ANUC
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1718013518.git.mazziesaccount@gmail.com>
+ <d43500621a2ad0811f58c8c7c87cbdc7b2abb8c1.1718013518.git.mazziesaccount@gmail.com>
+ <20240615184757.2148f7d7@jic23-huawei>
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240615184757.2148f7d7@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Get rid of uncore_read_freq driver API. Instead, add a new entry to the
-enumerated read interface and use this.
+On 6/15/24 20:47, Jonathan Cameron wrote:
+> On Mon, 10 Jun 2024 13:01:23 +0300
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> The ROHM BU27034NUC was cancelled and BU27034ANUC is replacing this
+>> sensor. Use the BU27034NUC driver to support the new BU27034ANUC.
+>>
+>> According to ROHM, the BU27034NUC was never mass-produced. Hence dropping
+>> the BU27034NUC support and using this driver to support BU27034ANUC
+>> should not be a problem to users.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> Fixes: e52afbd61039 ("iio: light: ROHM BU27034 Ambient Light Sensor")
+> 
+> This is an odd case.  I don't think a fixes tag is appropriate
 
-No functional change intended.
+Last week I was thinking this purely from a new BU27034ANUC user's point 
+of view. For user of the new sensor it appears the current driver is 
+broken. Hence this felt like a fix. That was last week though...
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
- .../uncore-frequency-common.c                 | 19 ++++++--------
- .../uncore-frequency-common.h                 | 10 ++++----
- .../uncore-frequency/uncore-frequency-tpmi.c  | 25 ++++++++++++++++---
- .../intel/uncore-frequency/uncore-frequency.c | 20 +++++++++++++--
- 4 files changed, 52 insertions(+), 22 deletions(-)
+  and I
+> don't think we can use the original compatible.
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 8d9817d70e27..cfbff057458d 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -21,7 +21,6 @@ static DEFINE_IDA(intel_uncore_ida);
- /* callbacks for actual HW read/write */
- static int (*uncore_read)(struct uncore_data *data, unsigned int *value, enum uncore_index index);
- static int (*uncore_write)(struct uncore_data *data, unsigned int input, enum uncore_index index);
--static int (*uncore_read_freq)(struct uncore_data *data, unsigned int *freq);
- 
- static ssize_t show_domain_id(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
-@@ -85,7 +84,7 @@ static ssize_t show_perf_status_freq_khz(struct uncore_data *data, char *buf)
- 	int ret;
- 
- 	mutex_lock(&uncore_lock);
--	ret = uncore_read_freq(data, &freq);
-+	ret = uncore_read(data, &freq, UNCORE_INDEX_CURRENT_FREQ);
- 	mutex_unlock(&uncore_lock);
- 	if (ret)
- 		return ret;
-@@ -195,7 +194,7 @@ static int create_attr_group(struct uncore_data *data, char *name)
- 	data->uncore_attrs[index++] = &data->initial_min_freq_khz_kobj_attr.attr;
- 	data->uncore_attrs[index++] = &data->initial_max_freq_khz_kobj_attr.attr;
- 
--	ret = uncore_read_freq(data, &freq);
-+	ret = uncore_read(data, &freq, UNCORE_INDEX_CURRENT_FREQ);
- 	if (!ret)
- 		data->uncore_attrs[index++] = &data->current_freq_khz_kobj_attr.attr;
- 
-@@ -267,17 +266,15 @@ void uncore_freq_remove_die_entry(struct uncore_data *data)
- }
- EXPORT_SYMBOL_NS_GPL(uncore_freq_remove_die_entry, INTEL_UNCORE_FREQUENCY);
- 
--int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, unsigned int *value,
--						     enum uncore_index index),
--			    int (*write_control_freq)(struct uncore_data *data, unsigned int input,
--						      enum uncore_index index),
--			    int (*read_freq)(struct uncore_data *data, unsigned int *freq))
-+int uncore_freq_common_init(int (*read)(struct uncore_data *data, unsigned int *value,
-+					enum uncore_index index),
-+			    int (*write)(struct uncore_data *data, unsigned int input,
-+					 enum uncore_index index))
- {
- 	mutex_lock(&uncore_lock);
- 
--	uncore_read = read_control_freq;
--	uncore_write = write_control_freq;
--	uncore_read_freq = read_freq;
-+	uncore_read = read;
-+	uncore_write = write;
- 
- 	if (!uncore_root_kobj) {
- 		struct device *dev_root = bus_get_dev_root(&cpu_subsys);
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-index 2d98931cd8e2..4c245b945e4e 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -69,13 +69,13 @@ struct uncore_data {
- enum uncore_index {
- 	UNCORE_INDEX_MIN_FREQ,
- 	UNCORE_INDEX_MAX_FREQ,
-+	UNCORE_INDEX_CURRENT_FREQ,
- };
- 
--int uncore_freq_common_init(int (*read_control_freq)(struct uncore_data *data, unsigned int *value,
--						     enum uncore_index index),
--			    int (*write_control_freq)(struct uncore_data *data, unsigned int input,
--						      enum uncore_index index),
--			    int (*uncore_read_freq)(struct uncore_data *data, unsigned int *freq));
-+int uncore_freq_common_init(int (*read)(struct uncore_data *data, unsigned int *value,
-+					enum uncore_index index),
-+			    int (*write)(struct uncore_data *data, unsigned int input,
-+					 enum uncore_index index));
- void uncore_freq_common_exit(void);
- int uncore_freq_add_entry(struct uncore_data *data, int cpu);
- void uncore_freq_remove_die_entry(struct uncore_data *data);
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index e6ec66eb2f03..8d8260781cf0 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -91,7 +91,7 @@ static void read_control_freq(struct tpmi_uncore_cluster_info *cluster_info,
- 
- #define UNCORE_MAX_RATIO	FIELD_MAX(UNCORE_MAX_RATIO_MASK)
- 
--/* Callback for sysfs read for max/min frequencies. Called under mutex locks */
-+/* Helper for sysfs read for max/min frequencies. Called under mutex locks */
- static int uncore_read_control_freq(struct uncore_data *data, unsigned int *value,
- 				    enum uncore_index index)
- {
-@@ -207,7 +207,7 @@ static int uncore_write_control_freq(struct uncore_data *data, unsigned int inpu
- 	return 0;
- }
- 
--/* Callback for sysfs read for the current uncore frequency. Called under mutex locks */
-+/* Helper for sysfs read for the current uncore frequency. Called under mutex locks */
- static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
- {
- 	struct tpmi_uncore_cluster_info *cluster_info;
-@@ -223,6 +223,24 @@ static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
- 	return 0;
- }
- 
-+/* Callback for sysfs read for TPMI uncore values. Called under mutex locks. */
-+static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncore_index index)
-+{
-+	switch (index) {
-+	case UNCORE_INDEX_MIN_FREQ:
-+	case UNCORE_INDEX_MAX_FREQ:
-+		return uncore_read_control_freq(data, value, index);
-+
-+	case UNCORE_INDEX_CURRENT_FREQ:
-+		return uncore_read_freq(data, value);
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
- static void remove_cluster_entries(struct tpmi_uncore_struct *tpmi_uncore)
- {
- 	int i;
-@@ -273,8 +291,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 		return -EINVAL;
- 
- 	/* Register callbacks to uncore core */
--	ret = uncore_freq_common_init(uncore_read_control_freq, uncore_write_control_freq,
--				      uncore_read_freq);
-+	ret = uncore_freq_common_init(uncore_read, uncore_write_control_freq);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index 433ddba4608e..f31a8912bb1f 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -114,6 +114,23 @@ static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
- 	return 0;
- }
- 
-+static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncore_index index)
-+{
-+	switch (index) {
-+	case UNCORE_INDEX_MIN_FREQ:
-+	case UNCORE_INDEX_MAX_FREQ:
-+		return uncore_read_control_freq(data, value, index);
-+
-+	case UNCORE_INDEX_CURRENT_FREQ:
-+		return uncore_read_freq(data, value);
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
- /* Caller provides protection */
- static struct uncore_data *uncore_get_instance(unsigned int cpu)
- {
-@@ -256,8 +273,7 @@ static int __init intel_uncore_init(void)
- 	if (!uncore_instances)
- 		return -ENOMEM;
- 
--	ret = uncore_freq_common_init(uncore_read_control_freq, uncore_write_control_freq,
--				      uncore_read_freq);
-+	ret = uncore_freq_common_init(uncore_read, uncore_write_control_freq);
- 	if (ret)
- 		goto err_free;
- 
+I didn't think so either back in March. However, I forgot what so ever 
+plans I had while I was waiting for some internal decision regarding 
+upstreaming of this... I just went back to the mail I sent about this in 
+March, and I see we discussed adding new compatible back then, and I 
+also promised to send this patch as a series of smaller changes... Sorry!
+
+>  I don't mind breaking
+> support for the non existent port going forwards and indeed dropping
+> all indication it ever existed, but the old kernel's are out there and
+> even getting this into stable is far from a guarantee there won't be
+> a kernel run on a board that has this compatible but has the old
+> driver.
+
+I agree it's not a guarantee, but it would be the best we can do. At 
+least some stable users would upgrade - have upgraded - could pick 
+stable with fixed driver.
+
+>  It's also too big really to be stable material.
+
+I am not really going to argue on that. Asking for the stable 
+maintainers to look at this and port it is indeed a bit too much. I 
+guess we just need to live with having the b0rked version out there.
+
+> So I think the path forwards is a new compatible and drop the old
+> one from the dt bindings and driver.  Thus any new dts for a board
+> that actually has this device will use the new compatible and avoid
+> any risk of encountering the old driver.
+
+Yes. This should be the way forward.
+
+> Maybe we can be more relaxed - what actually happens if you use the
+> existing driver with the new part?
+
+I am pretty sure the world does not explode. I've not tried this so I am 
+not sure if reading the register area where the removed data channel 
+used to be is succeeding. My assumption is it does, but just returns 
+garbage. Furthermore, I am not sure what happens if those removed gains 
+are tried to be set.
+
+So, not tried but I would guess that the read data would just be insane.
+
+> I'm trusting you copied the maths right for the computed
+> channels (that take too long to review!)
+
+I understand the reviewing problem. I feel it is time consuming and 
+sometimes very much energy draining. :) And I _really_ appreciate the 
+work you do with reviewing and maintaining! But trusting me? I suppose 
+we all make mistakes XD
+
+>  So everything inline is
+> formatting type stuff.
+
+Thanks! I will fix the compatible and formatting. I agree with all of 
+the comments - but it may take a while until I send the next version. 
+I'm having a vacation and trying to spend my time AFK for next couple of 
+weeks. My old motorbike and tiny boat are calling for me - so amount of 
+code I write is (probably) inversely proportional to the amount of 
+sunshine in Finland ;)
+
+>>   	/*
+>>   	 * The BU27034 DATA0 and DATA1 channels are both on the visible light
+>>   	 * area (mostly). The data0 sensitivity peaks at 500nm, DATA1 at 600nm.
+>> -	 * These wave lengths are pretty much on the border of colours making
+>> -	 * these a poor candidates for R/G/B standardization. Hence they're both
+>> -	 * marked as clear channels
+>> +	 * These wave lengths are cyan(ish) and orange(ish), making these
+>> +	 * sub-optiomal candidates for R/G/B standardization. Hence they're
+>> +	 * both marked as clear channels.
+> 
+> I think just indexing them and not giving a modifier is probably better than
+> claiming they are clear.  Leave it more vague basically.
+
+Agree. I just didn't see leaving out the modifier as an option.
+
+>>   	 */
+>> -	BU27034_CHAN_DATA(DATA0, IIO_MOD_LIGHT_CLEAR),
+>> -	BU27034_CHAN_DATA(DATA1, IIO_MOD_LIGHT_CLEAR),
+>> -	BU27034_CHAN_DATA(DATA2, IIO_MOD_LIGHT_IR),
+>> +	BU27034_CHAN_DATA(DATA0),
+>> +	BU27034_CHAN_DATA(DATA1),
+>>   	IIO_CHAN_SOFT_TIMESTAMP(4),
+>>   };
+> 
+
 -- 
-2.43.0
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
