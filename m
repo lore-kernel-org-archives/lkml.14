@@ -1,243 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A85517C8;
-	Mon, 17 Jun 2024 16:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9528D1662E4;
+	Mon, 17 Jun 2024 16:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642794; cv=none; b=f9fLylV2tS2CS6as5hS2AZyRDdEfQ0V9mIUVvtEEGhw7hZbFePYV32C5Y0JsqFXhoCytit24dISCmQUGOpPEp1s2KbLYLCppFm5zQWP4xkXsip3Ome2cNHAS+0zkKMLFzNOtlAga1ckPNRSiFOVrTsfNHuW2me4acmTTLAZeUvs=
+	t=1718642822; cv=none; b=mDKivDu7JyljneLjqY4o225Dvsrc4rH7Pm0t9RPOB1KxEQBqKfgXEtK9pP7GxMb/VqBkm4JOj4dx9lZ0B1zoDcdZgSRyh7dwtQ2DcUqz99eLzIxmyj/WGEdTsveskG7gyI6CeKYp7gfFxE7QB9mNrBF2neHMmavG1sW+xtl/jM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642794; c=relaxed/simple;
-	bh=vd97vaQMsq53OVRgUZpwAbni9g8Y6CZ7AU9B12DalEI=;
+	s=arc-20240116; t=1718642822; c=relaxed/simple;
+	bh=vhhddg0K0GVqVJvh1hVLD0nVHA0gdd9jf7upzctVWhI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ia0iSB7sLYXQTzutUMzH8oFIumtwMI0Uqq5NerNBLdMRBkp/jh7qNn8khuMr93oVyC4HCQhSo2Le/YWN7voqPSP5ojkAR+s81Hh/2MA/V0d8KSy1pWZcWgIU/ZAyX2c50ogURc1w0xHKckPd2o/l35or64OzsV3AqwLqQgznmoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Br9rhF+w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kF0hLr4c1+qpxwp+O1kMfzuQvQ/VD1BeBh8p0dfRcDq4axwk8x96PXN/733jfquWY7EyD+JFz5+2i6jZfqn/L4TQWtwKjqv3cE0ImptK0uFd5OZMioPmxaXeq2pewEKnSd90RQg7yFrt8xALX2/f7OcZ/vInvYtU68/9KYXOIEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOS6HAqo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Br9rhF+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CADC4AF48;
-	Mon, 17 Jun 2024 16:46:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOS6HAqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A28FC2BD10;
+	Mon, 17 Jun 2024 16:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718642794;
-	bh=vd97vaQMsq53OVRgUZpwAbni9g8Y6CZ7AU9B12DalEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Br9rhF+wxtiKOtp20GpJdDvnB1wXyvG2QyUfT94QGAyrN0CphiQ3WEkgixJML/GeH
-	 UyvMEbqji1JzhEGfjCNeW3NwPWLHouEUpbGAfBZ7tmIcew6U1At4lTJeFO+maKdG83
-	 NRLd9BMW8ztDkldVVTQ+yyq7mXEYQMLHrDGX+22ps26F7JfEpdREP9kCzlfscA89MJ
-	 S9/lcyOVqCHZCBrDMFJh4Ovse87r6MsVNGM/oHbiO/fshIHXv7uGQoNlW2YGfET/g+
-	 jQH7YGLsA6wsf6CweLor5w31IxFdKAb00pT2cViRf4lrfivPbfMTcC6EDgS7XB2v44
-	 QKg5ctIw7g6sQ==
-Date: Mon, 17 Jun 2024 17:46:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Nishanth Menon <nm@ti.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 6/7] dt-bindings: mfd: syscon: Split and enforce
- documenting MFD children
-Message-ID: <20240617-purge-family-c0c62b8e73d8@spud>
-References: <20240616-dt-bindings-mfd-syscon-split-v2-0-571b5850174a@linaro.org>
- <20240616-dt-bindings-mfd-syscon-split-v2-6-571b5850174a@linaro.org>
- <20240617-zoology-silica-2c8c78363b32@spud>
+	s=k20201202; t=1718642822;
+	bh=vhhddg0K0GVqVJvh1hVLD0nVHA0gdd9jf7upzctVWhI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=gOS6HAqoTXI+bkgNGya7QYGzai9abjrLPVJjgKFkka7oISvCdbRp6Th0pLT4N1rQ2
+	 L+dVRJ74NjlY/HTp2UqG0IRj4+6gkCYvxNQ58mvkVN0QMHYCOxz9QWM7wYQVgTuIyN
+	 QoZgfpfSfjZrhLerxVIPIc0KVyXN5qhAH1Q+AfXuhPrfzdCturLz6wWIMNenjb2oob
+	 y26lJOi309iJUt7TELWyWZvtgI/iW/2E4aniqjkXxnf1g24y93PmGtLtaep2O5sg/6
+	 NS7myJviukUmbH9NCjt7eSiPeswKzS8e87zDE20cvrBPwVLGqlXNdgZpyc5qngss5M
+	 SPiTJZpWhZDyA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CE70ECE09DB; Mon, 17 Jun 2024 09:47:01 -0700 (PDT)
+Date: Mon, 17 Jun 2024 09:47:01 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Zhouyi Zhou <zhouzhouyi@gmail.com>, linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	lance@osuosl.org
+Subject: Re: [PATCH V3] rcutorture: Add CFcommon.arch for the various arch's
+ need
+Message-ID: <76deed7a-9852-4d21-bbcc-8b14e267fe89@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240612013527.1325751-1-zhouzhouyi@gmail.com>
+ <def32dd4-b205-45b8-a5ed-e6e28a0ac4f4@paulmck-laptop>
+ <ZnBkHosMDhsh4H8g@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="f3lcdY1GhHNaaFOV"
-Content-Disposition: inline
-In-Reply-To: <20240617-zoology-silica-2c8c78363b32@spud>
-
-
---f3lcdY1GhHNaaFOV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZnBkHosMDhsh4H8g@J2N7QTR9R3>
 
-On Mon, Jun 17, 2024 at 05:44:52PM +0100, Conor Dooley wrote:
-> On Sun, Jun 16, 2024 at 03:19:26PM +0200, Krzysztof Kozlowski wrote:
-> > Simple syscon nodes can be documented in common syscon.yaml, however
-> > devices with simple-mfd compatible, thus with some children, should have
-> > their own schema listing these children.  Such listing makes the binding
-> > specific, allows better validation (so the incorrect child would not
-> > appear in the simple-mfd node) and actually enforces repeated rule for
-> > simple-mfd devices:
-> >=20
-> >   "simple-mfd" is only for simple devices, where the children do not
-> >   depend on the parent.
-> >=20
-> > Currently the syscon+simple-mfd binding is quite broad and allows
-> > any child or property, thus above rule cannot be enforced.
-> >=20
-> > Split the syscon.yaml binding into:
-> > 1. Common syscon properties, used potentially by many bindings.
-> > 2. Simple syscon devices (NO simple-mfd!).
-> >=20
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >=20
-> > ---
-> >=20
-> > Depends on:
-> > 1. Patch in MFD: https://lore.kernel.org/all/171828959006.2643902.83082=
-27314531523435.b4-ty@kernel.org/
-> > 2. Previous patches in the series.
-> > ---
-> >  .../devicetree/bindings/mfd/syscon-common.yaml     |  72 +++++
-> >  Documentation/devicetree/bindings/mfd/syscon.yaml  | 294 +++++++++++++=
---------
-> >  2 files changed, 251 insertions(+), 115 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/syscon-common.yaml b=
-/Documentation/devicetree/bindings/mfd/syscon-common.yaml
+On Mon, Jun 17, 2024 at 05:28:14PM +0100, Mark Rutland wrote:
+> On Tue, Jun 11, 2024 at 07:57:29PM -0700, Paul E. McKenney wrote:
+> > On Wed, Jun 12, 2024 at 01:35:27AM +0000, Zhouyi Zhou wrote:
+> > > Add CFcommon.arch for the various arch's need for rcutorture.
+> > > 
+> > > According to [1] and [2], this patch
+> > > Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options") by moving
+> > > x86 specific kernel option CONFIG_HYPERVISOR_GUEST to CFcommon.arch
+> > > 
+> > > The patch has been revised and improved under
+> > > Paul E. McKenney's guidance [3].
+> > > 
+> > > [1] https://lore.kernel.org/all/20240427005626.1365935-1-zhouzhouyi@gmail.com/
+> > > [2] https://lore.kernel.org/all/059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop/
+> > > [3] https://lore.kernel.org/lkml/cd3709dc-2c08-4ac2-a19b-d8edb66195e3@paulmck-laptop/T/
+> > > 
+> > > Tested in x86_64 and PPC VM of Open Source Lab of Oregon State University.
+> > > 
+> > > Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+> > 
+> > Much better, thank you!
+> > 
+> > I queued and pushed for review and testing with the usual editing,
+> > so please let me know if I messed anything up.
+> > 
+> > I added Mark on CC in case he has thoughts from an ARM perspective.
+> 
+> Ah, thanks!
+> 
+> >From a quick scan, the only thing I spot is that CONFIG_KVM_GUEST is
+> also not an arm64 thing, and only exists on x86 & powerpc, so pulling
+> that out too would be nice.
+
+Thank you for looking this over!
+
+Zhouyi, would you be willing to add this change, either as a new version
+of this patch or as a new patch on top of it?  (Your choice.)
+
+> That aside, this looks good to me; having the infrastructure to do this
+> per-arch is nice!
+
+Glad you like it!  May we have your ack?
+
+							Thanx, Paul
+
+> Mark.
+> 
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit 29cf4c63d04b9752a32e33d46a57717121353ef7
+> > Author: Zhouyi Zhou <zhouzhouyi@gmail.com>
+> > Date:   Wed Jun 12 01:35:27 2024 +0000
+> > 
+> >     rcutorture: Add CFcommon.arch for the various arch's need
+> >     
+> >     Add CFcommon.arch for the various arch's need for rcutorture.
+> >     
+> >     In accordance with [1] and [2], this patch moves x86 specific kernel
+> >     option CONFIG_HYPERVISOR_GUEST to CFcommon.arch
+> >     
+> >     [1] https://lore.kernel.org/all/20240427005626.1365935-1-zhouzhouyi@gmail.com/
+> >     [2] https://lore.kernel.org/all/059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop/
+> >     
+> >     Tested in x86_64 and PPC VM of Open Source Lab of Oregon State University.
+> >     
+> >     Link: https://lore.kernel.org/lkml/cd3709dc-2c08-4ac2-a19b-d8edb66195e3@paulmck-laptop/T/
+> >     
+> >     Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options")
+> >     Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> >     Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+> >     Cc: Mark Rutland <mark.rutland@arm.com>
+> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> > index b33cd87536899..ad79784e552d2 100755
+> > --- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> > +++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> > @@ -68,6 +68,8 @@ config_override_param "--gdb options" KcList "$TORTURE_KCONFIG_GDB_ARG"
+> >  config_override_param "--kasan options" KcList "$TORTURE_KCONFIG_KASAN_ARG"
+> >  config_override_param "--kcsan options" KcList "$TORTURE_KCONFIG_KCSAN_ARG"
+> >  config_override_param "--kconfig argument" KcList "$TORTURE_KCONFIG_ARG"
+> > +config_override_param "$config_dir/CFcommon.$(uname -m)" KcList \
+> > +		      "`cat $config_dir/CFcommon.$(uname -m) 2> /dev/null`"
+> >  cp $T/KcList $resdir/ConfigFragment
+> >  
+> >  base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
+> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> > index 0e92d85313aa7..cf0387ae53584 100644
+> > --- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> > @@ -1,6 +1,5 @@
+> >  CONFIG_RCU_TORTURE_TEST=y
+> >  CONFIG_PRINTK_TIME=y
+> > -CONFIG_HYPERVISOR_GUEST=y
+> >  CONFIG_PARAVIRT=y
+> >  CONFIG_KVM_GUEST=y
+> >  CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n
+> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686 b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686
 > > new file mode 100644
-> > index 000000000000..c3ff3a7afce3
+> > index 0000000000000..2770560d56a0c
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/syscon-common.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: System Controller Registers R/W Common Properties
-> > +
-> > +description: |
->=20
-> This | can go, right?
->=20
-> > +  System controller node represents a register region containing a set
-> > +  of miscellaneous registers. The registers are not cohesive enough to
-> > +  represent as any specific type of device. The typical use-case is
-> > +  for some other node's driver, or platform-specific code, to acquire
-> > +  a reference to the syscon node (e.g. by phandle, node path, or
-> > +  search using a specific compatible value), interrogate the node (or
-> > +  associated OS driver) to determine the location of the registers,
-> > +  and access the registers directly.
-> > +
-> > +maintainers:
-> > +  - Lee Jones <lee@kernel.org>
-> > +
-> > +select:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
->=20
-> And this can be const, given it's unlikely to grow?
->=20
-> > +          - syscon
-> > +
-> > +  required:
-> > +    - compatible
-> > +
-> > +properties:
-> > +  compatible:
-> > +    contains:
-> > +      const: syscon
-> > +    minItems: 2
-> > +    maxItems: 5  # Should be enough
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  reg-io-width:
-> > +    description: |
->=20
-> Same with this one.
->=20
-> > +      The size (in bytes) of the IO accesses that should be performed
-> > +      on the device.
-> > +    enum: [1, 2, 4, 8]
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: simple-mfd
-> > +    then:
-> > +      properties:
-> > +        compatible:
-> > +          minItems: 3
-> > +          maxItems: 5
-> > +
-> > +additionalProperties: true
-> > +
-> > +examples:
-> > +  - |
-> > +    syscon: syscon@1c00000 {
-> > +        compatible =3D "allwinner,sun8i-h3-system-controller", "syscon=
-";
-> > +        reg =3D <0x01c00000 0x1000>;
-> > +    };
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Docume=
-ntation/devicetree/bindings/mfd/syscon.yaml
-> > index d6fa58c9e4de..d4e9533cf3fe 100644
-> > --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> > @@ -4,7 +4,7 @@
-> >  $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-> >  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> > =20
-> > -title: System Controller Registers R/W
-> > +title: System Controller Devices
-> > =20
-> >  description: |
-> >    System controller node represents a register region containing a set
-> > @@ -19,123 +19,196 @@ description: |
-> >  maintainers:
-> >    - Lee Jones <lee@kernel.org>
-> > =20
-> > +# Need a select with all compatibles listed for compatibility with old=
-er
-> > +# dtschema (<2024.02), so this will not be selected for other schemas =
-having
-> > +# syscon fallback.
-> >  select:
-> >    properties:
-> >      compatible:
-> >        contains:
-> >          enum:
-> > -          - syscon
->=20
-> Wow, this is noisy. Is it not possible to achieve something similar by
-> making the select check for not: compatible: contains: simple-mfd? Or
-> did I misunderstand the intention here?
-
-Ah, you'd match things then like the intel,lgm-syscon, right?
-
---f3lcdY1GhHNaaFOV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnBoYwAKCRB4tDGHoIJi
-0uYIAP9U0vg1Om+wI+Ea8a94/cOvSL1g+49lge2yhs2csIzjoQD+MDs+0h94sqXN
-B3YNAZJSO//xDpVCwRLiP51eOKZJCQU=
-=xOgQ
------END PGP SIGNATURE-----
-
---f3lcdY1GhHNaaFOV--
+> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.i686
+> > @@ -0,0 +1 @@
+> > +CONFIG_HYPERVISOR_GUEST=y
+> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64 b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64
+> > new file mode 100644
+> > index 0000000000000..2770560d56a0c
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon.x86_64
+> > @@ -0,0 +1 @@
+> > +CONFIG_HYPERVISOR_GUEST=y
