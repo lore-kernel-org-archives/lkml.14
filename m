@@ -1,191 +1,229 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79251D2143;
-	Mon, 17 Jun 2024 13:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC64720011A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632276; cv=none; b=cQPJExMqxqhLNYFz4dpbMB9Zj9T0kJqkJVEBxZUQNCsAB7I+e8rEeS3Gg9SYwJsgW47PYkGzxtcQKgtzZiBK/QXj1PI62wYxO+5qLFvn1VFiEJg/KRInzF9d1Ya00EAPeswBaJ5fibPW+04/VuFlGwkXNFpkFQMkHPvfwlGccVI=
+	t=1718632277; cv=none; b=hO4+8Aq/hILzqbnrWoAvgAMAMyWJ33LEOW4wMSjLFq/QMr5CqBPaB20hJsimXy2kZAIoKWrhQNIvSh2Umhyn5kYftwBnS0zWOS+MONio3XRt69hQaGIm52LZBSFjjbzUvNYaT+9Fb4i6g5y1VSud2O3L5DpqbfhbPW2t7N1VeiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632276; c=relaxed/simple;
-	bh=aIWOxPyrclCHUSZFHjjfOg17LorjxL5Ybm8iEf+FIiA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=EqYXXtBU6klp8bkJJQedfXOe++ZvinkspMBb+9gJ3Z1HPTx5ye5rnwrlkM2d0PMAk0LijStqDqjMjkV72qbkp31NkESvAsICg0DpnDkTg1QnySbuwoaMhEWQssGzBR9tMrlulVNaaASF6MjI4HBZ1b1HxDgRLpOEDfFBH+N9SME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l0lbaUT2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ppkrKpHc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718632277; c=relaxed/simple;
+	bh=IMPpMteq51LRPDW2gSf+ThyrqorBSKEQdFy+CzbJC88=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ofS9pddtJDWp0+h7eLclIGXmbXR3IjIHPOyJSGJHwZie6ezupRSbcmMrouBBIoxYW4PcU7ILU0LI+vokCveRtZ59DA05QKxxuoddHW7YrurDFQXFCAPJyKAAKQDmKEUDC7rkXXBq/JGp+2DoWlqSYVnpMa9t6vSrcB7JFFpOb/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Gyya6KRr; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l0lbaUT2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ppkrKpHc"
-Date: Mon, 17 Jun 2024 13:51:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718632270;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xbJuImiQL14atZu6nkH3B43GoOmP/JouFj2L480vYvc=;
-	b=l0lbaUT23RCq/1/mpQ5aSi6+p4D6O9oiZBoioB6HcSeqbM6dkB882l4Pdi0Jmex7hcANFl
-	9BqIAbgq0s6Y72oQkxASVJOhbJvfSKbKfE399Ur44xUVGR3jWnBBrS78degrW5GV+KA5kw
-	wyHqsJfU3rH/IomtVjH75oKKtKlbuRazdoP1DBolxXtUhSnJ1t66dTlJ43JL7rDeobO582
-	EspxTp3NckU/klWK1ZavnlTRLenNQ0rC4CfJQ8j5egSd2yfXH59/1RcwlzVxkLdWsbZJSq
-	SL99wMtt4kZ6O9N5Lhz0WgT42L8Y0o+FTgeYUN9nlnprQOF54WYkUSlTrEw3EQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718632270;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xbJuImiQL14atZu6nkH3B43GoOmP/JouFj2L480vYvc=;
-	b=ppkrKpHcz4q2GBVgf3ZUanJA2D7ErEhB7X+j7KCOXdCx7+X4PpeHD7RbuVV56KK+HUitkA
-	1MaH8Syx77rSU9Ag==
-From: "tip-bot2 for Herve Codina" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqdomain: Add support for generic irq chips creation
- before publishing a domain
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Herve Codina <herve.codina@bootlin.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240614173232.1184015-16-herve.codina@bootlin.com>
-References: <20240614173232.1184015-16-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Gyya6KRr"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4ee5662fde8so942853e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718632273; x=1719237073; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AKnuVsDBtdHGm81QL99oZtdVbIW3JEVTOu6hlNZPjXg=;
+        b=Gyya6KRrEo4aqr8ywMCcfchhoVHUekY7hRS+pnAXJN4eI4HCPKnQVpWaoO8P1XFi2v
+         PvdtIHX5F6MGkoFo8L6Ut4hfBBh7cEejitHVeWDiWTZWR73DKLPz3CXWAaP9HcoBArBh
+         YRVjKtwezkRAUQamXRqdc029Kn0H8VDDjLzM45CIvRowPedBbmFLdDoC9tBKZ+5akHY9
+         Rcn2UZ9Dp0El5Zv1yFvC8NVPLhPMDhxkcyn/QzQ1xz8DVwA3C6rQF30dO22NatJw/6Z7
+         JpXJPlIvVb7XYR6Hzk9hBcnhPWcsxFChOTEnkosxhHOZ+06Zj/lb8Mc9COFj4GuOsNCN
+         04gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718632273; x=1719237073;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AKnuVsDBtdHGm81QL99oZtdVbIW3JEVTOu6hlNZPjXg=;
+        b=Eac61Bi8D+qa/Z1YVtilR8UHqX5hU8PaVUAzFKMP5eBVnp0cbif9K2PxLTqGxDV3+D
+         71/63JPNpNR97hIpk+bpDvcr8r3E3PNwG+TyNX41LtsiwNEFT74pojnezrbgyAfS7kZi
+         0iUhk1WsZVk6ceDtN08accaj6K19UWRqqDYIVl+Inou4iwzrcI6UFCJU+xGJsytYJrkd
+         2cclmFag8eFJltRhvt41QHklqGEKOOxIVa+VgBpJS19iJ8lT69JVWEFlK+nEwcQHwAMw
+         QAQvK4ltrKEV+s2UMi4xOkZWJxWiILnr1yR7GdB1E+/2SdfPXla0Bkh8bK4HfdKOKGvw
+         EPXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2J3qqzKc6q12NrokwTC+MoT5dtdzkOEM7Ump3xLnuBvmq7mLqv/J8bmGZh/vO74FRW+5yFI17tWgOttgX+D5iAO2kQ+bNmC0IgWLs
+X-Gm-Message-State: AOJu0YwG+UwXNLnIqmpEgBLzMpImLqGPrLD2rQzLR735z8P92WXcIhYF
+	lZ3gNOwEcICaJGQqcI1wMcYNHs7lIH3jePu5uYZ3TYfwx0+MvFs31oabDo/inVQ=
+X-Google-Smtp-Source: AGHT+IHFy1tuFMwxa7P6sFsjYvAHUS1dIKxzAj2HLRYOAmnW2Gug4qjgVMG/WpGom5Qua5PdHz8vPQ==
+X-Received: by 2002:a05:6122:915:b0:4ec:efca:d2b with SMTP id 71dfb90a1353d-4ee3e59c40amr7925275e0c.8.1718632272678;
+        Mon, 17 Jun 2024 06:51:12 -0700 (PDT)
+Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaecc004sm432892285a.31.2024.06.17.06.51.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 06:51:12 -0700 (PDT)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+Date: Mon, 17 Jun 2024 09:50:21 -0400
+Subject: [PATCH v3 41/41] iio: trigger: stm32-timer-trigger: make use of
+ regmap_clear_bits(), regmap_set_bits()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171863226991.10875.17604078909094762074.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240617-review-v3-41-88d1338c4cca@baylibre.com>
+References: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
+In-Reply-To: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Dmitry Rokosov <ddrokosov@sberdevices.ru>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Saravanan Sekar <sravanhome@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, 
+ Crt Mori <cmo@melexis.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+ linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ Trevor Gamblin <tgamblin@baylibre.com>
+X-Mailer: b4 0.13.0
 
-The following commit has been merged into the irq/core branch of tip:
+Instead of using regmap_update_bits() and passing the mask twice, use
+regmap_set_bits().
 
-Commit-ID:     e6f67ce32e8e6dcbadf42dc435fbc9002cabf1f9
-Gitweb:        https://git.kernel.org/tip/e6f67ce32e8e6dcbadf42dc435fbc9002cabf1f9
-Author:        Herve Codina <herve.codina@bootlin.com>
-AuthorDate:    Fri, 14 Jun 2024 19:32:16 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Jun 2024 15:48:14 +02:00
+Instead of using regmap_update_bits() and passing val = 0, use
+regmap_clear_bits().
 
-irqdomain: Add support for generic irq chips creation before publishing a domain
-
-The current API functions create an irq_domain and also publish this
-newly created to domain. Once an irq_domain is published, consumers can
-request IRQ in order to use them.
-
-Some interrupt controller drivers have to perform some more operations
-with the created irq_domain in order to have it ready to be used.
-For instance:
-   - Allocate generic irq chips with irq_alloc_domain_generic_chips()
-   - Retrieve the generic irq chips with irq_get_domain_generic_chip()
-   - Initialize retrieved chips: set register base address and offsets,
-     set several hooks such as irq_mask, irq_unmask, ...
-
-With the newly introduced irq_domain_alloc_generic_chips(), an interrupt
-controller driver can use the irq_domain_chip_generic_info structure and
-set the init() hook to perform its generic chips initialization.
-
-In order to avoid a window where the domain is published but not yet
-ready to be used, handle the generic chip creation (i.e the
-irq_domain_alloc_generic_chips() call) before the domain is published.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240614173232.1184015-16-herve.codina@bootlin.com
-
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
- include/linux/irqdomain.h |  9 +++++++++
- kernel/irq/irqdomain.c    | 14 +++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/iio/trigger/stm32-timer-trigger.c | 34 +++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 2c927ed..5540b22 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -210,6 +210,9 @@ enum {
- 	/* Irq domain is a MSI device domain */
- 	IRQ_DOMAIN_FLAG_MSI_DEVICE	= (1 << 9),
+diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+index d76444030a28..0684329956d9 100644
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -158,7 +158,7 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
  
-+	/* Irq domain must destroy generic chips when removed */
-+	IRQ_DOMAIN_FLAG_DESTROY_GC	= (1 << 10),
-+
- 	/*
- 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
- 	 * for implementation specific purposes and ignored by the
-@@ -259,6 +262,9 @@ static inline struct fwnode_handle *irq_domain_alloc_fwnode(phys_addr_t *pa)
+ 	regmap_write(priv->regmap, TIM_PSC, prescaler);
+ 	regmap_write(priv->regmap, TIM_ARR, prd - 1);
+-	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, TIM_CR1_ARPE);
++	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
+ 
+ 	/* Force master mode to update mode */
+ 	if (stm32_timer_is_trgo2_name(trig->name))
+@@ -169,10 +169,10 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+ 				   0x2 << TIM_CR2_MMS_SHIFT);
+ 
+ 	/* Make sure that registers are updated */
+-	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
++	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
+ 
+ 	/* Enable controller */
+-	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
++	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 	mutex_unlock(&priv->lock);
+ 
+ 	return 0;
+@@ -189,19 +189,19 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv,
+ 
+ 	mutex_lock(&priv->lock);
+ 	/* Stop timer */
+-	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
+-	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
++	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
++	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 	regmap_write(priv->regmap, TIM_PSC, 0);
+ 	regmap_write(priv->regmap, TIM_ARR, 0);
+ 
+ 	/* Force disable master mode */
+ 	if (stm32_timer_is_trgo2_name(trig->name))
+-		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
++		regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
+ 	else
+-		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
++		regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS);
+ 
+ 	/* Make sure that registers are updated */
+-	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
++	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
+ 
+ 	if (priv->enabled) {
+ 		priv->enabled = false;
+@@ -498,11 +498,9 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
+ 				priv->enabled = true;
+ 				clk_enable(priv->clk);
+ 			}
+-			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+-					   TIM_CR1_CEN);
++			regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 		} else {
+-			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+-					   0);
++			regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 			if (priv->enabled) {
+ 				priv->enabled = false;
+ 				clk_disable(priv->clk);
+@@ -555,7 +553,7 @@ static int stm32_set_trigger_mode(struct iio_dev *indio_dev,
+ {
+ 	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+ 
+-	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, TIM_SMCR_SMS);
++	regmap_set_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS);
+ 
+ 	return 0;
  }
+@@ -683,7 +681,7 @@ static ssize_t stm32_count_set_preset(struct iio_dev *indio_dev,
+ 		return ret;
  
- void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-+
-+struct irq_domain_chip_generic_info;
-+
- /**
-  * struct irq_domain_info - Domain information structure
-  * @fwnode:		firmware node for the interrupt controller
-@@ -270,6 +276,8 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
-  * @bus_token:		Domain bus token
-  * @ops:		Domain operation callbacks
-  * @host_data:		Controller private data pointer
-+ * @dgc_info:		Geneneric chip information structure pointer used to
-+ *			create generic chips for the domain if not NULL.
-  * @init:		Function called when the domain is created.
-  *			Allow to do some additional domain initialisation.
-  * @exit:		Function called when the domain is destroyed.
-@@ -290,6 +298,7 @@ struct irq_domain_info {
+ 	/* TIMx_ARR register shouldn't be buffered (ARPE=0) */
+-	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
++	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
+ 	regmap_write(priv->regmap, TIM_ARR, preset);
+ 
+ 	return len;
+@@ -757,9 +755,9 @@ static void stm32_timer_detect_trgo2(struct stm32_timer_trigger *priv)
+ 	 * Master mode selection 2 bits can only be written and read back when
+ 	 * timer supports it.
  	 */
- 	struct irq_domain			*parent;
- #endif
-+	struct irq_domain_chip_generic_info	*dgc_info;
- 	int					(*init)(struct irq_domain *d);
- 	void					(*exit)(struct irq_domain *d);
- };
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index a0324d8..4d2a403 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -292,16 +292,25 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info)
- 	}
- #endif
- 
-+	if (info->dgc_info) {
-+		err = irq_domain_alloc_generic_chips(domain, info->dgc_info);
-+		if (err)
-+			goto err_domain_free;
-+	}
-+
- 	if (info->init) {
- 		err = info->init(domain);
- 		if (err)
--			goto err_domain_free;
-+			goto err_domain_gc_remove;
- 	}
- 
- 	__irq_domain_publish(domain);
- 
- 	return domain;
- 
-+err_domain_gc_remove:
-+	if (info->dgc_info)
-+		irq_domain_remove_generic_chips(domain);
- err_domain_free:
- 	irq_domain_free(domain);
- 	return ERR_PTR(err);
-@@ -369,6 +378,9 @@ void irq_domain_remove(struct irq_domain *domain)
- 
- 	mutex_unlock(&irq_domain_mutex);
- 
-+	if (domain->flags & IRQ_DOMAIN_FLAG_DESTROY_GC)
-+		irq_domain_remove_generic_chips(domain);
-+
- 	pr_debug("Removed domain %s\n", domain->name);
- 	irq_domain_free(domain);
+-	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, TIM_CR2_MMS2);
++	regmap_set_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
+ 	regmap_read(priv->regmap, TIM_CR2, &val);
+-	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
++	regmap_clear_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2);
+ 	priv->has_trgo2 = !!val;
  }
+ 
+@@ -820,7 +818,7 @@ static void stm32_timer_trigger_remove(struct platform_device *pdev)
+ 	/* Check if nobody else use the timer, then disable it */
+ 	regmap_read(priv->regmap, TIM_CCER, &val);
+ 	if (!(val & TIM_CCER_CCXE))
+-		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
++		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 
+ 	if (priv->enabled)
+ 		clk_disable(priv->clk);
+@@ -841,7 +839,7 @@ static int stm32_timer_trigger_suspend(struct device *dev)
+ 		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
+ 
+ 		/* Disable the timer */
+-		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
++		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
+ 		clk_disable(priv->clk);
+ 	}
+ 
+
+-- 
+2.45.2
+
