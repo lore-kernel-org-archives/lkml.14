@@ -1,187 +1,383 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D708138396
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CF518FC95
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718610863; cv=none; b=a4HYuO06bm2OTR1xpRKHBbwCbWujloA7gEzAU7GLN7SdSS2TFsLEbs9b3q4Lv+eIcK7bjbDEp69vCQGwupzzZdPEysJr9oGw/3qzAo7Ef4D+vqxrxUlsCN2USXH49DmiOIn5jye7TAQyyxyrO9y9kEyQrY0B6VEyuEXy6bx1GwU=
+	t=1718610887; cv=none; b=CHBfaZP4CeEPYe2T3jxZcf8sHbD2goLzm24DfQ6j0EEa7F4z4gdZP5BscewNLBBXDamfZy8+NM2xxtAkgDI+4//E/Ux54dSHaA3KtpCyYSoZhfvJGfB8Kb4WdvexLPPcaQc+fKLPkVuwuhGxJ9uaCp9H7aUgpjVHhitUkQb5LcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718610863; c=relaxed/simple;
-	bh=BcDumrzhJHX3BFZpVrgs8bCIW5Chag3b1JiIMKiW+1w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=k3XKBBp6v7SJKHwL1ufSXnSa6rtyIyL/RjcuoOvSoNo2EpJg59whA/ozBEObs9O+S00x7nUObnr/sovpeCv6gYj9xkXP6PFUVsG7DB6+Y07hjR3JRHB/4EsqCqBxXmkf9L2TAy+2abvyuCpEwABXSeOd2bAGa2uFjsrV511LtZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7eee4ffd19eso109280339f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 00:54:21 -0700 (PDT)
+	s=arc-20240116; t=1718610887; c=relaxed/simple;
+	bh=pkiVzCiXOsb8Fmyy5UeV55lfclFZglq4ojL/Y0M1LIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ru/bvyDqXO5QvwO7ebaKFUDlc4G/Q0c7S75xTo4xhk0l+WCGtnQstK3ODBiJ0o7EmSiHd67LDlTJjjOSSH8oVRppqksHm1XDG0uSz/vJZJKMVjvUIQlCH8/ptEomYipF2QEtNidCO+dgPSRNOtSsvoak6MTPAkzfYrvxvs3IWno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ykf/fZac; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ykf/fZac"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so46704371fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 00:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718610884; x=1719215684; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mvHTWZh3SokmdNjxkdtSNtzGeiXleD8xQv+taJV8T10=;
+        b=ykf/fZacCMdOBMK+Nictq8RmgBED0A8pKaH3bgaEr3Bq7tc7FvmSA1s/S36JaKFkzy
+         3xakFAaJdOk1Z3FspX3UmetPjjmC/Bd/vBP5S5C3nzgBQLXOtpGKs8sujjRWdqXqdvp1
+         A8CZF9QDrwlMoUVSU3eTJqMuzmWNU4+AX6b8/DhrMVWA7Wb4Qgmcxw/oEfVwPmnoUAns
+         P137yPKpITSkB+xr68O36GaPJjKnkok7Ou2naHKhLTGnrGS+mpv7hcZNSuWTXts9VAHe
+         RdE1Ot6ni373SRMVnHNAOZLtF8wFSHGcyxCL5i++56gHwS2UWsqaF3/KhlmcUTr7rj3f
+         ep5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718610861; x=1719215661;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IL4TW/EgcknLwrn0dgOHn6yHg3+UpWQBoLA7pbtdQ1c=;
-        b=LMp2w4LJJU0MUAfRxVZUeUIKK3woathtl+J17pSeGwo3AeNah5kdTa1JgFzlR7MwHE
-         xD6mzGP/ZRq5420UGjBZbzBZy3eCbkVH8XA+RBeNsC5roAUhIkd9peQRPX2H0M6aBamI
-         KJYXE6MK77oNi4s7e7H0r6oKQ9eryjMwXZ2s9TTtnIPThAo7bleemIUM8rdN3eIHW4Nv
-         nbobsTcWdeSgPc6GNFhj4YN2cRzs1fzWKbA5JbABbn/4NlhJzRM36rY2GehZLl7Efdz+
-         1RegVU9f/2cYOSXd+37GDejSwcZ/OKUsT+9o3ZapRlwX/L7dz4R7itHW+20wctNT5dfl
-         QqZA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6wTRWe5vbdmkKQaw/SZautcfHX6YrTK9LE0mJHiVo5fa2u2rxL/pghXGJXg2aAfYZBW6xXitOpFgGLW3OudSnua4cC3Y2o0d7yk6I
-X-Gm-Message-State: AOJu0YzIsuIVnlqpONA4VQiXwwai3Knp5tUVVG0X/zWRVZfBNWPzpMy4
-	nu6oGMhtP56nczO6qwx4DXYBAFdW6pRAX6qlXfglHnCh/HXZAr87rYiXTmxhaMZ8N/Uq7xBkWB5
-	v+7A0MA4PUI9kNP2h4lvs5xTBalN7U8nwJCfOw3S8ZjxkR3y1PSsqHWw=
-X-Google-Smtp-Source: AGHT+IFUhkn3WFmHdHTQBc9dtTTmorC7CDJAqII+Pbbz7a8XT6qZH0Lq6ZHtGymXONx22uxp9Scpobr+6wjqwqjp+38nGO/dpUZB
+        d=1e100.net; s=20230601; t=1718610884; x=1719215684;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mvHTWZh3SokmdNjxkdtSNtzGeiXleD8xQv+taJV8T10=;
+        b=jN+El690agRB42zpezGTdv6GjKmp8bDJ4F/FVY5/GZxHUsOwoB3tpkPtKrn9CXF+ph
+         QK4M4oP7J/0RaIh27uxDSJ1/hd4qJNzWQXKrdH1ALZgNbBCmoKuR0V18y6++KkZ6mmD1
+         6V4udi7HmsqdWuC9dtLIC2Ohxwn1WJs+AagpUTWuEQthoH2mJG0Wgw2Okp949A2IR8NV
+         16IvfGszsHSnC/jyWEEslDBucY4stzjMm5uX6g+15LDLJGcqejlyLMB25hEAgCCN1gLp
+         9TaEv+c7Xzhh2Q1VIXag16HH1+4s1A+q5z4I+OErPQDnbrREL8L9TzvdTtF5io8YOUw7
+         47Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCXR9ef+W/DYujZ89EEm9Ri9gKZj1YRVIIiLaVQrllMON/rjSxqITCs28VPtEZ8rEpm7HX5v61HbENHYbumBDKfHDhDaZcErHeZKqWvb
+X-Gm-Message-State: AOJu0Yyy6JS5d9+qdn8PI0jf9wa1/rwm3UPLjWojzfYm0Yb1i5ZkYKxC
+	KylehFO0l7D/gklxv3jEZe0KYUnkRj08I4OC/4J+5cUkuIAda5nP17PqEDG6eZw=
+X-Google-Smtp-Source: AGHT+IEVZgF7GuqCy2gMgL5vTvx4VTzWWZjwFflwFmRAPAD+6Lhdke8DJW2mMtdoRuiYOwZ5VzZWpw==
+X-Received: by 2002:a2e:a415:0:b0:2ec:1c95:ff02 with SMTP id 38308e7fff4ca-2ec1c9600c0mr45719121fa.7.1718610883660;
+        Mon, 17 Jun 2024 00:54:43 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c89a1fsm12615441fa.106.2024.06.17.00.54.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 00:54:43 -0700 (PDT)
+Date: Mon, 17 Jun 2024 10:54:41 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	andersson@kernel.org, ebiggers@google.com, neil.armstrong@linaro.org, 
+	srinivas.kandagatla@linaro.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	kernel@quicinc.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
+	quic_omprsing@quicinc.com, quic_nguyenb@quicinc.com, bartosz.golaszewski@linaro.org, 
+	konrad.dybcio@linaro.org, ulf.hansson@linaro.org, jejb@linux.ibm.com, 
+	martin.petersen@oracle.com, mani@kernel.org, davem@davemloft.net, 
+	herbert@gondor.apana.org.au, psodagud@quicinc.com, quic_apurupa@quicinc.com, 
+	sonalg@quicinc.com
+Subject: Re: [PATCH v5 04/15] soc: qcom: ice: add hwkm support in ice
+Message-ID: <3eehkn3cdhhjfqtzpahxhjxtu5uqwhntpgu22k3hknctrop3g5@f7dhwvdvhr3k>
+References: <20240617005825.1443206-1-quic_gaurkash@quicinc.com>
+ <20240617005825.1443206-5-quic_gaurkash@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8524:b0:4b7:ba50:7059 with SMTP id
- 8926c6da1cb9f-4b963fa6971mr441709173.2.1718610861051; Mon, 17 Jun 2024
- 00:54:21 -0700 (PDT)
-Date: Mon, 17 Jun 2024 00:54:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e175c3061b1145e8@google.com>
-Subject: [syzbot] [gfs2?] WARNING: held lock freed in __flush_workqueue
-From: syzbot <syzbot+62f0a214565ddd1969d5@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617005825.1443206-5-quic_gaurkash@quicinc.com>
 
-Hello,
+On Sun, Jun 16, 2024 at 05:50:59PM GMT, Gaurav Kashyap wrote:
+> Qualcomm's ICE (Inline Crypto Engine) contains a proprietary
+> key management hardware called Hardware Key Manager (HWKM).
+> This patch integrates HWKM support in ICE when it is
+> available. HWKM primarily provides hardware wrapped key support
+> where the ICE (storage) keys are not available in software and
+> protected in hardware.
+> 
+> When HWKM software support is not fully available (from Trustzone),
+> there can be a scenario where the ICE hardware supports HWKM, but
+> it cannot be used for wrapped keys. In this case, standard keys have
+> to be used without using HWKM. Hence, providing a toggle controlled
+> by a devicetree entry to use HWKM or not.
+> 
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
+> ---
+>  drivers/soc/qcom/ice.c | 153 +++++++++++++++++++++++++++++++++++++++--
+>  include/soc/qcom/ice.h |   1 +
+>  2 files changed, 150 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
+> index 6f941d32fffb..d5e74cf2946b 100644
+> --- a/drivers/soc/qcom/ice.c
+> +++ b/drivers/soc/qcom/ice.c
+> @@ -26,6 +26,40 @@
+>  #define QCOM_ICE_REG_FUSE_SETTING		0x0010
+>  #define QCOM_ICE_REG_BIST_STATUS		0x0070
+>  #define QCOM_ICE_REG_ADVANCED_CONTROL		0x1000
+> +#define QCOM_ICE_REG_CONTROL			0x0
+> +/* QCOM ICE HWKM registers */
+> +#define QCOM_ICE_REG_HWKM_TZ_KM_CTL			0x1000
+> +#define QCOM_ICE_REG_HWKM_TZ_KM_STATUS			0x1004
+> +#define QCOM_ICE_REG_HWKM_BANK0_BANKN_IRQ_STATUS	0x2008
+> +#define QCOM_ICE_REG_HWKM_BANK0_BBAC_0			0x5000
+> +#define QCOM_ICE_REG_HWKM_BANK0_BBAC_1			0x5004
+> +#define QCOM_ICE_REG_HWKM_BANK0_BBAC_2			0x5008
+> +#define QCOM_ICE_REG_HWKM_BANK0_BBAC_3			0x500C
+> +#define QCOM_ICE_REG_HWKM_BANK0_BBAC_4			0x5010
+> +
+> +/* QCOM ICE HWKM reg vals */
+> +#define QCOM_ICE_HWKM_BIST_DONE_V1		BIT(16)
+> +#define QCOM_ICE_HWKM_BIST_DONE_V2		BIT(9)
+> +#define QCOM_ICE_HWKM_BIST_DONE(ver)		QCOM_ICE_HWKM_BIST_DONE_V##ver
+> +
+> +#define QCOM_ICE_HWKM_CRYPTO_BIST_DONE_V1		BIT(14)
+> +#define QCOM_ICE_HWKM_CRYPTO_BIST_DONE_V2		BIT(7)
+> +#define QCOM_ICE_HWKM_CRYPTO_BIST_DONE(v)		QCOM_ICE_HWKM_CRYPTO_BIST_DONE_V##v
+> +
+> +#define QCOM_ICE_HWKM_BOOT_CMD_LIST1_DONE		BIT(2)
+> +#define QCOM_ICE_HWKM_BOOT_CMD_LIST0_DONE		BIT(1)
+> +#define QCOM_ICE_HWKM_KT_CLEAR_DONE			BIT(0)
+> +
+> +#define QCOM_ICE_HWKM_BIST_VAL(v)	(QCOM_ICE_HWKM_BIST_DONE(v) |		\
+> +					QCOM_ICE_HWKM_CRYPTO_BIST_DONE(v) |	\
+> +					QCOM_ICE_HWKM_BOOT_CMD_LIST1_DONE |	\
+> +					QCOM_ICE_HWKM_BOOT_CMD_LIST0_DONE |	\
+> +					QCOM_ICE_HWKM_KT_CLEAR_DONE)
+> +
+> +#define QCOM_ICE_HWKM_V1_STANDARD_MODE_VAL	(BIT(0) | BIT(1) | BIT(2))
+> +#define QCOM_ICE_HWKM_V2_STANDARD_MODE_MASK	GENMASK(31, 1)
+> +#define QCOM_ICE_HWKM_DISABLE_CRC_CHECKS_VAL	(BIT(1) | BIT(2))
+> +#define QCOM_ICE_HWKM_RSP_FIFO_CLEAR_VAL	BIT(3)
+>  
+>  /* BIST ("built-in self-test") status flags */
+>  #define QCOM_ICE_BIST_STATUS_MASK		GENMASK(31, 28)
+> @@ -34,6 +68,9 @@
+>  #define QCOM_ICE_FORCE_HW_KEY0_SETTING_MASK	0x2
+>  #define QCOM_ICE_FORCE_HW_KEY1_SETTING_MASK	0x4
+>  
+> +#define QCOM_ICE_HWKM_REG_OFFSET	0x8000
+> +#define HWKM_OFFSET(reg)		((reg) + QCOM_ICE_HWKM_REG_OFFSET)
+> +
+>  #define qcom_ice_writel(engine, val, reg)	\
+>  	writel((val), (engine)->base + (reg))
+>  
+> @@ -46,6 +83,9 @@ struct qcom_ice {
+>  	struct device_link *link;
+>  
+>  	struct clk *core_clk;
+> +	u8 hwkm_version;
+> +	bool use_hwkm;
+> +	bool hwkm_init_complete;
+>  };
+>  
+>  static bool qcom_ice_check_supported(struct qcom_ice *ice)
+> @@ -63,8 +103,21 @@ static bool qcom_ice_check_supported(struct qcom_ice *ice)
+>  		return false;
+>  	}
+>  
+> -	dev_info(dev, "Found QC Inline Crypto Engine (ICE) v%d.%d.%d\n",
+> -		 major, minor, step);
+> +	if (major >= 4 || (major == 3 && minor == 2 && step >= 1))
+> +		ice->hwkm_version = 2;
+> +	else if (major == 3 && minor == 2)
+> +		ice->hwkm_version = 1;
+> +	else
+> +		ice->hwkm_version = 0;
+> +
+> +	if (ice->hwkm_version == 0)
+> +		ice->use_hwkm = false;
+> +
+> +	dev_info(dev, "Found QC Inline Crypto Engine (ICE) v%d.%d.%d, HWKM v%d\n",
+> +		 major, minor, step, ice->hwkm_version);
+> +
+> +	if (!ice->use_hwkm)
+> +		dev_info(dev, "QC ICE HWKM (Hardware Key Manager) not used/supported");
+>  
+>  	/* If fuses are blown, ICE might not work in the standard way. */
+>  	regval = qcom_ice_readl(ice, QCOM_ICE_REG_FUSE_SETTING);
+> @@ -113,27 +166,106 @@ static void qcom_ice_optimization_enable(struct qcom_ice *ice)
+>   * fails, so we needn't do it in software too, and (c) properly testing
+>   * storage encryption requires testing the full storage stack anyway,
+>   * and not relying on hardware-level self-tests.
+> + *
+> + * However, we still care about if HWKM BIST failed (when supported) as
+> + * important functionality would fail later, so disable hwkm on failure.
+>   */
+>  static int qcom_ice_wait_bist_status(struct qcom_ice *ice)
+>  {
+>  	u32 regval;
+> +	u32 bist_done_val;
+>  	int err;
+>  
+>  	err = readl_poll_timeout(ice->base + QCOM_ICE_REG_BIST_STATUS,
+>  				 regval, !(regval & QCOM_ICE_BIST_STATUS_MASK),
+>  				 50, 5000);
+> -	if (err)
+> +	if (err) {
+>  		dev_err(ice->dev, "Timed out waiting for ICE self-test to complete\n");
+> +		return err;
+> +	}
+>  
+> +	if (ice->use_hwkm) {
+> +		bist_done_val = ice->hwkm_version == 1 ?
+> +				QCOM_ICE_HWKM_BIST_VAL(1) :
+> +				QCOM_ICE_HWKM_BIST_VAL(2);
+> +		if (qcom_ice_readl(ice,
+> +				   HWKM_OFFSET(QCOM_ICE_REG_HWKM_TZ_KM_STATUS)) !=
+> +				   bist_done_val) {
+> +			dev_err(ice->dev, "HWKM BIST error\n");
+> +			ice->use_hwkm = false;
+> +			err = -ENODEV;
+> +		}
+> +	}
+>  	return err;
+>  }
+>  
+> +static void qcom_ice_enable_standard_mode(struct qcom_ice *ice)
+> +{
+> +	u32 val = 0;
+> +
+> +	/*
+> +	 * When ICE is in standard (hwkm) mode, it supports HW wrapped
+> +	 * keys, and when it is in legacy mode, it only supports standard
+> +	 * (non HW wrapped) keys.
 
-syzbot found the following issue on:
+I can't say this is very logical.
 
-HEAD commit:    a957267fa7e9 Add linux-next specific files for 20240611
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d6beda980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a880e96898e79f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=62f0a214565ddd1969d5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+standard mode => HW wrapped keys
+legacy mode => standard keys
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Consider changing the terms.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6451759a606b/disk-a957267f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7f635dbe5b8a/vmlinux-a957267f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/33eafd1b8aec/bzImage-a957267f.xz
+> +	 *
+> +	 * Put ICE in standard mode, ICE defaults to legacy mode.
+> +	 * Legacy mode - ICE HWKM slave not supported.
+> +	 * Standard mode - ICE HWKM slave supported.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+62f0a214565ddd1969d5@syzkaller.appspotmail.com
+s/slave/some other term/
 
-=========================
-WARNING: held lock freed!
-6.10.0-rc3-next-20240611-syzkaller #0 Not tainted
--------------------------
-syz-executor.0/7578 is freeing memory ffff88823bdf8000-ffff88823bdf81ff, with a lock still held there!
-ffff88823bdf8148 (&x->wait#58){+.+.}-{2:2}, at: touch_wq_lockdep_map kernel/workqueue.c:3895 [inline]
-ffff88823bdf8148 (&x->wait#58){+.+.}-{2:2}, at: __flush_workqueue+0x1b0/0x1710 kernel/workqueue.c:3937
-3 locks held by syz-executor.0/7578:
- #0: ffff8880221960e0 (&type->s_umount_key#107/1){+.+.}-{3:3}, at: alloc_super+0x221/0x9d0 fs/super.c:344
- #1: ffff88823bdf8148 (&x->wait#58){+.+.}-{2:2}, at: touch_wq_lockdep_map kernel/workqueue.c:3895 [inline]
- #1: ffff88823bdf8148 (&x->wait#58){+.+.}-{2:2}, at: __flush_workqueue+0x1b0/0x1710 kernel/workqueue.c:3937
- #2: ffffffff8e335560 (rcu_callback){....}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
- #2: ffffffff8e335560 (rcu_callback){....}-{0:0}, at: rcu_do_batch kernel/rcu/tree.c:2558 [inline]
- #2: ffffffff8e335560 (rcu_callback){....}-{0:0}, at: rcu_core+0xa86/0x1830 kernel/rcu/tree.c:2838
+Is it possible to use both kind of keys when working on standard mode?
+If not, it should be the user who selects what type of keys to be used.
+Enforcing this via DT is not a way to go.
 
-stack backtrace:
-CPU: 0 PID: 7578 Comm: syz-executor.0 Not tainted 6.10.0-rc3-next-20240611-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:91 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:117
- print_freed_lock_bug kernel/locking/lockdep.c:6607 [inline]
- debug_check_no_locks_freed+0x3ca/0x4b0 kernel/locking/lockdep.c:6642
- slab_free_hook mm/slub.c:2178 [inline]
- slab_free mm/slub.c:4455 [inline]
- kfree+0xfa/0x360 mm/slub.c:4576
- rcu_do_batch kernel/rcu/tree.c:2564 [inline]
- rcu_core+0xafd/0x1830 kernel/rcu/tree.c:2838
- handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
- __do_softirq kernel/softirq.c:588 [inline]
- invoke_softirq kernel/softirq.c:428 [inline]
- __irq_exit_rcu+0xf4/0x1c0 kernel/softirq.c:637
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:649
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:lock_acquire+0x264/0x550 kernel/locking/lockdep.c:5821
-Code: 2b 00 74 08 4c 89 f7 e8 1a 18 8a 00 f6 44 24 61 02 0f 85 85 01 00 00 41 f7 c7 00 02 00 00 74 01 fb 48 c7 44 24 40 0e 36 e0 45 <4b> c7 44 25 00 00 00 00 00 43 c7 44 25 09 00 00 00 00 43 c7 44 25
-RSP: 0000:ffffc9000fdcf5c0 EFLAGS: 00000206
-RAX: 0000000000000001 RBX: 1ffff92001fb9ec4 RCX: e87e0b6d03ed4800
-RDX: dffffc0000000000 RSI: ffffffff8bcad320 RDI: ffffffff8c200760
-RBP: ffffc9000fdcf708 R08: ffffffff92fcb8ff R09: 1ffffffff25f971f
-R10: dffffc0000000000 R11: fffffbfff25f9720 R12: 1ffff92001fb9ec0
-R13: dffffc0000000000 R14: ffffc9000fdcf620 R15: 0000000000000246
- touch_wq_lockdep_map kernel/workqueue.c:3895 [inline]
- __flush_workqueue+0x1c9/0x1710 kernel/workqueue.c:3937
- drain_workqueue+0xc9/0x3a0 kernel/workqueue.c:4101
- destroy_workqueue+0xba/0xc40 kernel/workqueue.c:5812
- gfs2_fill_super+0x12a4/0x2520 fs/gfs2/ops_fstype.c:1311
- get_tree_bdev+0x3f7/0x570 fs/super.c:1615
- gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
- vfs_get_tree+0x90/0x2a0 fs/super.c:1780
- do_new_mount+0x2be/0xb40 fs/namespace.c:3379
- do_mount fs/namespace.c:3719 [inline]
- __do_sys_mount fs/namespace.c:3925 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:3902
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe59f07e5aa
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe59fe7eef8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fe59fe7ef80 RCX: 00007fe59f07e5aa
-RDX: 00000000200003c0 RSI: 0000000020037f80 RDI: 00007fe59fe7ef40
-RBP: 00000000200003c0 R08: 00007fe59fe7ef80 R09: 0000000000008000
-R10: 0000000000008000 R11: 0000000000000202 R12: 0000000020037f80
-R13: 00007fe59fe7ef40 R14: 0000000000037f59 R15: 0000000020000400
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	2b 00                	sub    (%rax),%eax
-   2:	74 08                	je     0xc
-   4:	4c 89 f7             	mov    %r14,%rdi
-   7:	e8 1a 18 8a 00       	call   0x8a1826
-   c:	f6 44 24 61 02       	testb  $0x2,0x61(%rsp)
-  11:	0f 85 85 01 00 00    	jne    0x19c
-  17:	41 f7 c7 00 02 00 00 	test   $0x200,%r15d
-  1e:	74 01                	je     0x21
-  20:	fb                   	sti
-  21:	48 c7 44 24 40 0e 36 	movq   $0x45e0360e,0x40(%rsp)
-  28:	e0 45
-* 2a:	4b c7 44 25 00 00 00 	movq   $0x0,0x0(%r13,%r12,1) <-- trapping instruction
-  31:	00 00
-  33:	43 c7 44 25 09 00 00 	movl   $0x0,0x9(%r13,%r12,1)
-  3a:	00 00
-  3c:	43                   	rex.XB
-  3d:	c7                   	.byte 0xc7
-  3e:	44                   	rex.R
-  3f:	25                   	.byte 0x25
+> +	 *
+> +	 * Depending on the version of HWKM, it is controlled by different
+> +	 * registers in ICE.
+> +	 */
+> +	if (ice->hwkm_version >= 2) {
+> +		val = qcom_ice_readl(ice, QCOM_ICE_REG_CONTROL);
+> +		val = val & QCOM_ICE_HWKM_V2_STANDARD_MODE_MASK;
+> +		qcom_ice_writel(ice, val, QCOM_ICE_REG_CONTROL);
+> +	} else {
+> +		qcom_ice_writel(ice, QCOM_ICE_HWKM_V1_STANDARD_MODE_VAL,
+> +				HWKM_OFFSET(QCOM_ICE_REG_HWKM_TZ_KM_CTL));
+> +	}
+> +}
+> +
+> +static void qcom_ice_hwkm_init(struct qcom_ice *ice)
+> +{
+> +	/* Disable CRC checks. This HWKM feature is not used. */
+> +	qcom_ice_writel(ice, QCOM_ICE_HWKM_DISABLE_CRC_CHECKS_VAL,
+> +			HWKM_OFFSET(QCOM_ICE_REG_HWKM_TZ_KM_CTL));
+> +
+> +	/*
+> +	 * Give register bank of the HWKM slave access to read and modify
+> +	 * the keyslots in ICE HWKM slave. Without this, trustzone will not
+> +	 * be able to program keys into ICE.
+> +	 */
+> +	qcom_ice_writel(ice, GENMASK(31, 0), HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BBAC_0));
+> +	qcom_ice_writel(ice, GENMASK(31, 0), HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BBAC_1));
+> +	qcom_ice_writel(ice, GENMASK(31, 0), HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BBAC_2));
+> +	qcom_ice_writel(ice, GENMASK(31, 0), HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BBAC_3));
+> +	qcom_ice_writel(ice, GENMASK(31, 0), HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BBAC_4));
+> +
+> +	/* Clear HWKM response FIFO before doing anything */
+> +	qcom_ice_writel(ice, QCOM_ICE_HWKM_RSP_FIFO_CLEAR_VAL,
+> +			HWKM_OFFSET(QCOM_ICE_REG_HWKM_BANK0_BANKN_IRQ_STATUS));
+> +	ice->hwkm_init_complete = true;
+> +}
+> +
+>  int qcom_ice_enable(struct qcom_ice *ice)
+>  {
+> +	int err;
+> +
+>  	qcom_ice_low_power_mode_enable(ice);
+>  	qcom_ice_optimization_enable(ice);
+>  
+> -	return qcom_ice_wait_bist_status(ice);
+> +	if (ice->use_hwkm)
+> +		qcom_ice_enable_standard_mode(ice);
+> +
+> +	err = qcom_ice_wait_bist_status(ice);
+> +	if (err)
+> +		return err;
+> +
+> +	if (ice->use_hwkm)
+> +		qcom_ice_hwkm_init(ice);
+> +
+> +	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_ice_enable);
+>  
+> @@ -149,6 +281,10 @@ int qcom_ice_resume(struct qcom_ice *ice)
+>  		return err;
+>  	}
+>  
+> +	if (ice->use_hwkm) {
+> +		qcom_ice_enable_standard_mode(ice);
+> +		qcom_ice_hwkm_init(ice);
+> +	}
+>  	return qcom_ice_wait_bist_status(ice);
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_ice_resume);
+> @@ -156,6 +292,7 @@ EXPORT_SYMBOL_GPL(qcom_ice_resume);
+>  int qcom_ice_suspend(struct qcom_ice *ice)
+>  {
+>  	clk_disable_unprepare(ice->core_clk);
+> +	ice->hwkm_init_complete = false;
+>  
+>  	return 0;
+>  }
+> @@ -205,6 +342,12 @@ int qcom_ice_evict_key(struct qcom_ice *ice, int slot)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_ice_evict_key);
+>  
 
+Documentation?
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +bool qcom_ice_hwkm_supported(struct qcom_ice *ice)
+> +{
+> +	return ice->use_hwkm;
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+I see that use_hwkm can change during runtime. Will it have an impact on
+a driver that calls this first?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_ice_hwkm_supported);
+> +
+>  static struct qcom_ice *qcom_ice_create(struct device *dev,
+>  					void __iomem *base)
+>  {
+> @@ -239,6 +382,8 @@ static struct qcom_ice *qcom_ice_create(struct device *dev,
+>  		engine->core_clk = devm_clk_get_enabled(dev, NULL);
+>  	if (IS_ERR(engine->core_clk))
+>  		return ERR_CAST(engine->core_clk);
+> +	engine->use_hwkm = of_property_read_bool(dev->of_node,
+> +						 "qcom,ice-use-hwkm");
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+DT bindings should come before driver changes.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+>  
+>  	if (!qcom_ice_check_supported(engine))
+>  		return ERR_PTR(-EOPNOTSUPP);
+> diff --git a/include/soc/qcom/ice.h b/include/soc/qcom/ice.h
+> index 9dd835dba2a7..1f52e82e3e1c 100644
+> --- a/include/soc/qcom/ice.h
+> +++ b/include/soc/qcom/ice.h
+> @@ -34,5 +34,6 @@ int qcom_ice_program_key(struct qcom_ice *ice,
+>  			 const struct blk_crypto_key *bkey,
+>  			 u8 data_unit_size, int slot);
+>  int qcom_ice_evict_key(struct qcom_ice *ice, int slot);
+> +bool qcom_ice_hwkm_supported(struct qcom_ice *ice);
+>  struct qcom_ice *of_qcom_ice_get(struct device *dev);
+>  #endif /* __QCOM_ICE_H__ */
+> -- 
+> 2.43.0
+> 
 
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
