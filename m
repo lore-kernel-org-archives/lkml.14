@@ -1,57 +1,57 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A71F187575;
-	Mon, 17 Jun 2024 22:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12F919A291;
+	Mon, 17 Jun 2024 22:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718663373; cv=none; b=c1aqcjr7eljLeHBhJ5k4jHMFVmhP6Xzscla9VyX9K/ggjU/PoO6rivcLKHfX7ACqZxFxHlhuaeFiNpx9RqclCu9hP+MFoMX748UOtDK1zSOupWWA32IWZwx11H4Qnrtafhc6FmgNrq5J5C5n/y/yxPE4W8CIZRVoVPluheDpxs8=
+	t=1718663382; cv=none; b=C7SX671EhckPyHcKNQCVGDpNxJeaWHSFIWTKlxRJUPCSyC8lNz6jm3L+uRP6ffqR8LMHrYmPJWFGL1hBLey0oPKga0QrQiFGqIn8VcsTnA2SFGZ6vwB6jerdDjxNsf1tg76Ie5zAxNQ9qkRpIzab0DyElM04eQUfw74zoy2thE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718663373; c=relaxed/simple;
-	bh=NkZo8RX25sudoClmFxD03msEVKOmv/1UFSjECb0a9V8=;
+	s=arc-20240116; t=1718663382; c=relaxed/simple;
+	bh=AlWuH2hU35br9xuDRcYvEV1MF618XJjzVfEsJ6GdOlY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AQpKlnQiPn/fzP0aRlUV786jFCXZj8pHDED8HARVpLKyFja4nW8imSy6FHR7IWuH5EdnrPPh4VDJAp1V97p701MCcN4aOegaWMjl4FWt3h+jKDAXkxk4hW/w3QjQURnO4ygWMcDgko+kPjiZBeF4NGdLBIPJZ/TXoH5WYT/WQA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXTCJLfj; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=BufxliIZe7dd4gRg2iArpf3RKemz8MhEwR9EXrTonq2AcD8wtUYIz82TwG2SlH0mbbKCjdfeNWS+5HY088Rz32vs+oO4U7CsRrixG76FRn7zuzDLFaFUtEaqAS+qFZRLwmzQFTi8/U5dmERXwqXgAZ2CoKHBe78lkfRmspXgmBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kqr5o7CE; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXTCJLfj"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70413de08c7so3505277b3a.0;
-        Mon, 17 Jun 2024 15:29:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kqr5o7CE"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f70c457823so37903195ad.3;
+        Mon, 17 Jun 2024 15:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718663370; x=1719268170; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718663380; x=1719268180; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4IYXAH6lVov3UMTU4HBmUE8GultQbuKxDL2V8XOctOE=;
-        b=BXTCJLfj+impzX96F6a7OF8wpP/cREP1igzecNHW+L5C7+dKgVPHu5btdam6YxeIx2
-         YS4txny3DLl7g+Yw8BM6lD+fkOp6DUwkhXped7WtBTv5PRLV9Wo9rWT+2hmVgERdFnjN
-         rYz8x/0liSZ1fGYRDvo9IfQt4P7Y5ACuUfC0KD1xJa0EtTujN9emxku8L4NCP07MvgLa
-         b7BS0ulyEv/onKLoau5yw1fRMWBu8pfIQwU/81y6BMzpGO9aI03UqsjB0Qttwydr/GPO
-         2TON5ATJ/lCM891pb0gFv4Casiguw0aA4f9yWVcIrPeQer0oTPgnHrnuStWMeQqcQovA
-         sBPw==
+        bh=2u5XyyCALUyXTYTkrQdw3925d4Sy9F+3+rXSvxCSOZU=;
+        b=Kqr5o7CEFccfxowWjwB6ft9DkDKZ5k623syIuvFXAISQzf+en8FKvBJ1vWRcuGUsqO
+         eDqHPGerBi+q8KrOaUY3Og1ELyo1VJQg9/di7N5b9Gt4BF8v22YRGyFvL3vTYYLZ74nG
+         /HFfYTTriBKnEUZcimziy471CythGhj8UogaqG7pZ5IqKUXyzB/Q8CThW+hr52szbx3K
+         VSaBTGyVrKoHqvG+K69i7ymxOvt6oT1ebMDoXzOgnMJcpVcuPHCsTXAIjsA/+f2A62NV
+         Mt5h1ue6JkT0HMcpDlLlIhQr/2ERCaA+e2vkSzBzDF4uuiUAsEu/6DKXnti4UChDVIcK
+         TdXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718663370; x=1719268170;
+        d=1e100.net; s=20230601; t=1718663380; x=1719268180;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4IYXAH6lVov3UMTU4HBmUE8GultQbuKxDL2V8XOctOE=;
-        b=tXl+uB1AUrw5aV5HN0u/Fzq8vDyYG2cd9Y97YqCHorpgCru8vS9ktkGR+Z0fNaiGSC
-         mTOlxrKBcnaQa8W71EvgFbox9IeEbi9egYagXs5wiMvjtn0Tvq8RJeCQRUQlvHVV987l
-         7h8pekTbzCCncX6BoLn7tti8Af+oRAPqiJ6zZAjJWOV4jBAOqGfZ83WjD/Vcd+C6g9tu
-         WZkiYh0w38zN6RnIcPPOHqmdRf49ltH3laRp8Z/XrjQVQvlBNNnOIPLBCS4UreJSpgUS
-         GFRwl7ImQxPB02GD2HaCwSFZNqV/aitKwew3Ich0q7otO9egOZDhOG7risYJQAyS6BAE
-         Vrpw==
-X-Forwarded-Encrypted: i=1; AJvYcCURCfdr2FwR964A5lYhalvdJqgyzDKS/oO3yRi6Z7l5DEJGeZ7wHeif0eNFXJeB5HSPFNxdPenu3s6LhBxgSqhTlLs1vADOXnkzlsLm
-X-Gm-Message-State: AOJu0YzRa4baHdIRBC+Al3VnnFjOdXc5kR+0alCHi7yjoEeYjuNgCx2I
-	jnqmOw4YTBhdTO/YVx0bSI5nIVRI/Uf04MfQnVodQ2BIbyDoNvV1
-X-Google-Smtp-Source: AGHT+IEMNZNbb3l7I5P+6ZevtpY84ksxLR9Fb0E6NKr/WRyORzKCXJTc1fuh+ZcG5+jpkwJHT703/Q==
-X-Received: by 2002:a05:6a20:8405:b0:1af:939b:d477 with SMTP id adf61e73a8af0-1bae7f14684mr10805057637.36.1718663369830;
-        Mon, 17 Jun 2024 15:29:29 -0700 (PDT)
+        bh=2u5XyyCALUyXTYTkrQdw3925d4Sy9F+3+rXSvxCSOZU=;
+        b=JEdHCh3OxgklaCurSL2XnmT5Qd5VNb9q0HqUnrqY1J9+3gX0Fvz5y7jXxtlIyB5/Y1
+         dP2BAVlZcWDL5ACx8cA3eEinP7jyhJy1mQ2PiDn+HSeBmuttjkcONnfmHkGkfyDzfl4q
+         fLiuq+DbOH/Mcqv7BEneowk1hsCNj3DHQUN2mbpysN0KjAQ0o+MPz0rBVy9ZfTAsAeMt
+         o5fpVhkeGBL7wGstoGmJAVjDgJqkFqfLQs5seyN9M2Wn+XIx24ZSkKR95XXIkpLHUEX6
+         vLNQWe/r+xFsZrwdV4oqrIfhvcMoD6rkUzF5Ulq+jpZbgahYMKrx0A9rNYmuKWUOmh3Z
+         MPUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfUPgbbzaMRrGABkyT3uN2JDxsUWAdqKpS7FQsJQ84GjAzuA2wpzEQkyYNuGhvM4G6E6lnGgoQK3neMsBzZcwqTkicEdKKYVdGxoxx
+X-Gm-Message-State: AOJu0YwoDGYcUq07Trd3rSuhtCLsEhVQheJRtpzY2dPX68YGwa1dvkiB
+	7dbQE2ixD1jI3fEOHvGLIWcmbueOGg+l9HcPFeD6hYnf/JUGs+yB
+X-Google-Smtp-Source: AGHT+IFm7HkXJkLG4XiiMbncq6OwQ7O+NNcC2yRYjFYE06NBMuHaN6V2WnVDzvhTPQk1QeABJD7rtQ==
+X-Received: by 2002:a17:902:ec8c:b0:1f7:3d61:b615 with SMTP id d9443c01a7336-1f86253a69dmr135459165ad.0.1718663379817;
+        Mon, 17 Jun 2024 15:29:39 -0700 (PDT)
 Received: from localhost (c-73-37-105-206.hsd1.or.comcast.net. [73.37.105.206])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c468e5a6sm9518979a91.56.2024.06.17.15.29.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f17d5esm84090805ad.225.2024.06.17.15.29.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 15:29:28 -0700 (PDT)
+        Mon, 17 Jun 2024 15:29:39 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: linux-arm-msm@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	David Airlie <airlied@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/5] drm/msm/adreno: Split up giant device table
-Date: Mon, 17 Jun 2024 15:28:59 -0700
-Message-ID: <20240617222916.5980-2-robdclark@gmail.com>
+Subject: [PATCH v2 4/5] drm/msm/adreno: Move hwcg table into a6xx specific info
+Date: Mon, 17 Jun 2024 15:29:02 -0700
+Message-ID: <20240617222916.5980-5-robdclark@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240617222916.5980-1-robdclark@gmail.com>
 References: <20240617222916.5980-1-robdclark@gmail.com>
@@ -82,163 +82,287 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-Split into a separate table per generation, in preparation to move each
-gen's device table to it's own file.
+Introduce a6xx_info where we can stash gen specific stuff without
+polluting the toplevel adreno_info struct.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_device.c | 67 +++++++++++++++++-----
- drivers/gpu/drm/msm/adreno/adreno_gpu.h    | 10 ++++
- 2 files changed, 63 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 65 +++++++++++++++++------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c     |  6 +--
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h     |  9 ++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h   |  6 ++-
+ 4 files changed, 67 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index c3703a51287b..c8319706c5fe 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -20,7 +20,7 @@ bool allow_vram_carveout = false;
- MODULE_PARM_DESC(allow_vram_carveout, "Allow using VRAM Carveout, in place of IOMMU");
- module_param_named(allow_vram_carveout, allow_vram_carveout, bool, 0600);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+index b991d3646722..da49589f82d0 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+@@ -7,6 +7,7 @@
+  */
  
--static const struct adreno_info gpulist[] = {
-+static const struct adreno_info a2xx_gpus[] = {
- 	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x02000000),
- 		.family = ADRENO_2XX_GEN1,
-@@ -54,7 +54,12 @@ static const struct adreno_info gpulist[] = {
- 		.gmem  = SZ_512K,
+ #include "adreno_gpu.h"
++#include "a6xx_gpu.h"
+ #include "a6xx.xml.h"
+ #include "a6xx_gmu.xml.h"
+ 
+@@ -465,7 +466,9 @@ static const struct adreno_info a6xx_gpus[] = {
  		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init  = a2xx_gpu_init,
--	}, {
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a2xx);
-+
-+static const struct adreno_info a3xx_gpus[] = {
-+	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x03000512),
- 		.family = ADRENO_3XX,
- 		.fw = {
-@@ -116,7 +121,12 @@ static const struct adreno_info gpulist[] = {
- 		.gmem  = SZ_1M,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a610_zap.mdt",
+-		.hwcg = a612_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a612_hwcg,
++		},
+ 		/*
+ 		 * There are (at least) three SoCs implementing A610: SM6125
+ 		 * (trinket), SM6115 (bengal) and SM6225 (khaje). Trinket does
+@@ -493,7 +496,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mbn",
+-		.hwcg = a615_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a615_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 128, 1 },
+@@ -513,6 +518,8 @@ static const struct adreno_info a6xx_gpus[] = {
  		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init  = a3xx_gpu_init,
--	}, {
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a3xx);
-+
-+static const struct adreno_info a4xx_gpus[] = {
-+	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x04000500),
- 		.family = ADRENO_4XX,
- 		.revn  = 405,
-@@ -149,7 +159,12 @@ static const struct adreno_info gpulist[] = {
- 		.gmem  = (SZ_1M + SZ_512K),
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
++		.a6xx = &(struct a6xx_info) {
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 169, 1 },
+@@ -531,7 +538,9 @@ static const struct adreno_info a6xx_gpus[] = {
  		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init  = a4xx_gpu_init,
--	}, {
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a4xx);
-+
-+static const struct adreno_info a5xx_gpus[] = {
-+	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x05000600),
- 		.family = ADRENO_5XX,
- 		.revn = 506,
-@@ -274,7 +289,12 @@ static const struct adreno_info gpulist[] = {
- 		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
- 		.init = a5xx_gpu_init,
- 		.zapfw = "a540_zap.mdt",
--	}, {
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a5xx);
-+
-+static const struct adreno_info a6xx_gpus[] = {
-+	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x06010000),
- 		.family = ADRENO_6XX_GEN1,
- 		.revn = 610,
-@@ -520,7 +540,12 @@ static const struct adreno_info gpulist[] = {
- 		.zapfw = "a690_zap.mdt",
- 		.hwcg = a690_hwcg,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+-		.hwcg = a615_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a615_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 138, 1 },
+@@ -550,7 +559,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+-		.hwcg = a615_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a615_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 190, 1 },
+@@ -569,7 +580,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+-		.hwcg = a615_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a615_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 120, 4 },
+@@ -593,7 +606,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a630_zap.mdt",
+-		.hwcg = a630_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a630_hwcg,
++		},
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06040001),
+ 		.family = ADRENO_6XX_GEN2,
+@@ -607,7 +622,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a640_zap.mdt",
+-		.hwcg = a640_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a640_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0, 0 },
+ 			{ 1, 1 },
+@@ -626,7 +643,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a650_zap.mdt",
+-		.hwcg = a650_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a650_hwcg,
++		},
  		.address_space_size = SZ_16G,
--	}, {
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a6xx);
-+
-+static const struct adreno_info a7xx_gpus[] = {
-+	{
- 		.chip_ids = ADRENO_CHIP_IDS(0x07000200),
- 		.family = ADRENO_6XX_GEN1, /* NOT a mistake! */
- 		.fw = {
-@@ -582,7 +607,17 @@ static const struct adreno_info gpulist[] = {
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0, 0 },
+@@ -648,7 +667,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a660_zap.mdt",
+-		.hwcg = a660_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a660_hwcg,
++		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06030500),
+@@ -663,7 +684,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a660_zap.mbn",
+-		.hwcg = a660_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a660_hwcg,
++		},
+ 		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -684,7 +707,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a640_zap.mdt",
+-		.hwcg = a640_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a640_hwcg,
++		},
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06090000),
+ 		.family = ADRENO_6XX_GEN4,
+@@ -698,7 +723,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a690_zap.mdt",
+-		.hwcg = a690_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a690_hwcg,
++		},
+ 		.address_space_size = SZ_16G,
+ 	}
+ };
+@@ -901,7 +928,9 @@ static const struct adreno_info a7xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a702_zap.mbn",
+-		.hwcg = a702_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a702_hwcg,
++		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 236, 1 },
+@@ -921,7 +950,9 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			  ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a730_zap.mdt",
+-		.hwcg = a730_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a730_hwcg,
++		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x43050a01), /* "C510v2" */
+@@ -936,7 +967,9 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			  ADRENO_QUIRK_HAS_HW_APRIV,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a740_zap.mdt",
+-		.hwcg = a740_hwcg,
++		.a6xx = &(struct a6xx_info) {
++			.hwcg = a740_hwcg,
++		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
+@@ -951,6 +984,8 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			  ADRENO_QUIRK_HAS_HW_APRIV,
  		.init = a6xx_gpu_init,
  		.zapfw = "gen70900_zap.mbn",
++		.a6xx = &(struct a6xx_info) {
++		},
  		.address_space_size = SZ_16G,
--	},
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a7xx);
-+
-+static const struct adreno_gpulist *gpulists[] = {
-+	&a2xx_gpulist,
-+	&a3xx_gpulist,
-+	&a4xx_gpulist,
-+	&a5xx_gpulist,
-+	&a6xx_gpulist,
-+	&a6xx_gpulist,
+ 	}
  };
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index eea64ec1bfaa..7e01fb551f12 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -403,7 +403,7 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 	unsigned int i;
+ 	u32 val, clock_cntl_on, cgc_mode;
  
- MODULE_FIRMWARE("qcom/a300_pm4.fw");
-@@ -617,13 +652,17 @@ MODULE_FIRMWARE("qcom/yamato_pm4.fw");
- static const struct adreno_info *adreno_info(uint32_t chip_id)
- {
- 	/* identify gpu: */
--	for (int i = 0; i < ARRAY_SIZE(gpulist); i++) {
--		const struct adreno_info *info = &gpulist[i];
--		if (info->machine && !of_machine_is_compatible(info->machine))
--			continue;
--		for (int j = 0; info->chip_ids[j]; j++)
--			if (info->chip_ids[j] == chip_id)
--				return info;
-+	for (int i = 0; i < ARRAY_SIZE(gpulists); i++) {
-+		for (int j = 0; j < gpulists[i]->gpus_count; j++) {
-+			const struct adreno_info *info = &gpulists[i]->gpus[j];
-+
-+			if (info->machine && !of_machine_is_compatible(info->machine))
-+				continue;
-+
-+			for (int k = 0; info->chip_ids[k]; k++)
-+				if (info->chip_ids[k] == chip_id)
-+					return info;
-+		}
+-	if (!(adreno_gpu->info->hwcg || adreno_is_a7xx(adreno_gpu)))
++	if (!(adreno_gpu->info->a6xx->hwcg || adreno_is_a7xx(adreno_gpu)))
+ 		return;
+ 
+ 	if (adreno_is_a630(adreno_gpu))
+@@ -426,7 +426,7 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 			  state ? 0x5555 : 0);
  	}
  
- 	return NULL;
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index 77526892eb8c..7f20029d3876 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -114,6 +114,16 @@ struct adreno_info {
+-	if (!adreno_gpu->info->hwcg) {
++	if (!adreno_gpu->info->a6xx->hwcg) {
+ 		gpu_write(gpu, REG_A7XX_RBBM_CLOCK_CNTL_GLOBAL, 1);
+ 		gpu_write(gpu, REG_A7XX_RBBM_CGC_GLOBAL_LOAD_CMD, state ? 1 : 0);
  
- #define ADRENO_CHIP_IDS(tbl...) (uint32_t[]) { tbl, 0 }
+@@ -455,7 +455,7 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 	if (!adreno_is_a610_family(adreno_gpu) && !adreno_is_a7xx(adreno_gpu))
+ 		gmu_rmw(gmu, REG_A6XX_GPU_GMU_GX_SPTPRAC_CLOCK_CONTROL, 1, 0);
  
-+struct adreno_gpulist {
-+	const struct adreno_info *gpus;
-+	unsigned gpus_count;
+-	for (i = 0; (reg = &adreno_gpu->info->hwcg[i], reg->offset); i++)
++	for (i = 0; (reg = &adreno_gpu->info->a6xx->hwcg[i], reg->offset); i++)
+ 		gpu_write(gpu, reg->offset, state ? reg->value : 0);
+ 
+ 	/* Enable SP clock */
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 0463a2006822..61c51e9c7f06 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -12,6 +12,15 @@
+ 
+ extern bool hang_debug;
+ 
++/**
++ * struct a6xx_info - a6xx specific information from device table
++ *
++ * @hwcg: hw clock gating register sequence
++ */
++struct a6xx_info {
++	const struct adreno_reglist *hwcg;
 +};
 +
-+#define DECLARK_ADRENO_GPULIST(name)                  \
-+const struct adreno_gpulist name ## _gpulist = {      \
-+	name ## _gpus, ARRAY_SIZE(name ## _gpus)      \
-+}
+ struct a6xx_gpu {
+ 	struct adreno_gpu base;
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index a988f4ed4ea7..849ce0ae9e75 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -82,6 +82,8 @@ struct adreno_speedbin {
+ 	uint16_t speedbin;
+ };
+ 
++struct a6xx_info;
 +
- /*
-  * Helper to build a speedbin table, ie. the table:
-  *      fuse | speedbin
+ struct adreno_info {
+ 	const char *machine;
+ 	/**
+@@ -98,7 +100,9 @@ struct adreno_info {
+ 	struct msm_gpu *(*init)(struct drm_device *dev);
+ 	const char *zapfw;
+ 	u32 inactive_period;
+-	const struct adreno_reglist *hwcg;
++	union {
++		const struct a6xx_info *a6xx;
++	};
+ 	u64 address_space_size;
+ 	/**
+ 	 * @speedbins: Optional table of fuse to speedbin mappings
 -- 
 2.45.2
 
