@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2A18F2E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5F61741CA;
 	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718659398; cv=none; b=Q8Rqm0jPau4zyu9lvQb0gkspcVWHM3/kECWg5UdgxTuA8q87rvYK6HL4il/ciKymBYGetIn0Te0qeIeKDD60jspB765TcRuubgFmFktRmdywvMhTBNVFHOVHjj3l0yRc/alrX5SAniyNQOUmrcsh+Tn6K0obRG2cXMqU/Ol4fBQ=
+	t=1718659398; cv=none; b=HdoNG7mWaqX4q3eyCitIwa3DMtsnPhukfp6+SjbLgv5ef4cKGV62MPPq1FmpsUAq0Uvb7/yr0jBsx72zD23EBV1ZdiXqDNTngj3jeVqc9z7QgEiczQiZG+NwTpxeUZ+IcpM8XfTgadyyKidqPTM7E85xlDBgSYMr4A1hsmC7NEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718659398; c=relaxed/simple;
-	bh=J+DZjuWpLIH16UoIYz36wskMfoII3XzTqDLgxLg1M2E=;
+	bh=z9FzM7GZ7wU3KOkO5XN4WXRsFslFP8KgxePMoAGxEdQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eRlehKFYaY36wXVXrHNLcqWKnbptwd8cvoXE1X+Y3dc/xfmOyWxRgvdb1kE2ey28pXzTe6qfN8cJt8QxrMVisvlsyZDveq1ti3XBhla2qFabez7T9D2SrRDJZLYUmerzF4NSrM4G8eoMT71E2yRZm+Jmpn2o4wnQTFLaMpe3Gt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMeDv847; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jCW5pw/GJyuUBHmNNlATwrVUI20Pjkr3ywzErtLEPkWYLijpl1ZbKwt2sUA+ZRRhSz1Rni53xm87vCpWLt6mXYhwrMPGKHnicgDrN9/uWir00yOSY4sqgulsvlJZyzZS7ppD/ct19bkaESZaaA1eCAJnG+fe1/hNNDyO+qlW5NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb6TSV2c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMeDv847"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 399F3C4AF1A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb6TSV2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19EE1C4AF1C;
 	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718659398;
-	bh=J+DZjuWpLIH16UoIYz36wskMfoII3XzTqDLgxLg1M2E=;
+	bh=z9FzM7GZ7wU3KOkO5XN4WXRsFslFP8KgxePMoAGxEdQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=TMeDv847xJm6MBqVLE/ESfBQq4Gx4jSlnbSRyzTVYmZJX2DHbp8pAAwCUPn/UBH/B
-	 AOhUEOMm9+ORmRd/YzyC07N7QrzYfi5P4+dhWnUlt38VFFltGVrmOArJ3pi1u0nVrX
-	 RArjER1BUJilEJVpb5EvBU3ouGHfXcQXW4D5jeDSRjMSQ4WJ31Uu32R1XHxFfpplQD
-	 EoXxblL8jWkK3Z575XuopL++WlHwLkgACFZXyXYDLsOuUboJACF0Z+1YbXyP2SNMx3
-	 BpTgpwBS/HmUvcKgwyUDNTf/y19P8Ih8vfh49yRaw+eDJZ7DXH1Xaw1sTg2Xl4TkcZ
-	 3kOL1TfPtCw3Q==
+	b=Zb6TSV2cN0yW6QUs3w7Pz8el6/QiyHwUZ5b+ixuKZWVkWG/aM63PqaQIEf5PC/US8
+	 0PyBkieEVG4rhIB8/MpkWhjvICPTOyXWuLLnXlQJyCwFjmHjfNjbSV2kInimJiuLq4
+	 j9E+xZC3y+2IwcFH2Nj3EbVpQgGEdUuMojqUfZWmQwK4Vz2kv9/FLFHzPdGOu8LV7g
+	 BvYON0bak807rR3fo3nwmmyWChn89iBiLku+BMk0RwHPSBUHl/z1JqcbVQLCFUNIqI
+	 5+sUyL4Q4hN0ORQ+J76Uh6E75S5p5WpP2K8m0N/CNZSoQJR3EI4gThQFuML91YZ6qG
+	 ywN045gaW0P7g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A490C2BB85;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02239C2BA1A;
 	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Mon, 17 Jun 2024 23:22:29 +0200
-Subject: [PATCH v2 3/3] ARM: dts: qcom: msm8926-motorola-peregrine: Add
- framebuffer supplies
+Date: Mon, 17 Jun 2024 23:22:27 +0200
+Subject: [PATCH v2 1/3] ARM: dts: qcom: msm8926-motorola-peregrine: Add
+ accelerometer, magnetometer, regulator
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-peregrine-v2-3-c8835d2da7af@apitzsch.eu>
+Message-Id: <20240617-peregrine-v2-1-c8835d2da7af@apitzsch.eu>
 References: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
 In-Reply-To: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -53,11 +53,11 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  ~postmarketos/upstreaming@lists.sr.ht, 
  =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718659400; l=1664;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718659400; l=2907;
  i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=AVdHAcobzRIw/Gjph8HbL/rVZTR3nwbn7PLGoz3cDhU=;
- b=9k+Mh7PCXSDNtEdLjjom8Dts6wyGgQpYZ7F8MIt3DlGAej3ybDYviyz2Y6i5tyzG+6A9M1ele
- LNNiBv6ieMzBYFFlr3FKXE3IBbdXyJSzs0pGFN9qhaVXtzr1BYT79bD
+ bh=mj4yxzOm2d+J3umJgLBBLCdJ6UtTa0NpoUWMAtyqNkY=;
+ b=cEbuwgEsPA7k5I25OSNgvvgBVtnZm+tO83xlkrVBYyxVG/Gv9kA2EPiXYOHyrbMJXVidIeZ3l
+ poCdd9l/2EHBF7/WHqFeBM04bT9Obc/KjI3kpQSzL6XQGDLCXG5eBFp
 X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
  pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
 X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
@@ -67,62 +67,120 @@ Reply-To: git@apitzsch.eu
 
 From: André Apitzsch <git@apitzsch.eu>
 
-Add regulators used by the framebuffer of Motorola Moto G 4G (2013).
+Add the accelerometer, magnetometer and regulator that are present on
+the Motorola Moto G 4G (2013) device.
 
 Signed-off-by: André Apitzsch <git@apitzsch.eu>
 ---
- .../dts/qcom/qcom-msm8926-motorola-peregrine.dts   | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../dts/qcom/qcom-msm8926-motorola-peregrine.dts   | 85 ++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
-index cff9415baa46..376a33125941 100644
+index 0cbe2d2fbbb1..50ae3cfc95bb 100644
 --- a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
 +++ b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
-@@ -29,6 +29,10 @@ framebuffer0: framebuffer@3200000 {
- 			height = <1280>;
- 			stride = <(720 * 3)>;
- 			format = "r8g8b8";
-+			vsp-supply = <&reg_lcd_pos>;
-+			vsn-supply = <&reg_lcd_neg>;
-+			vdd-supply = <&pm8226_l28>;
-+			vddio-supply = <&vddio_disp_vreg>;
- 		};
+@@ -68,9 +68,60 @@ smem_region: smem@fa00000 {
  	};
+ };
  
-@@ -51,6 +55,18 @@ key-volume-up {
- 		};
- 	};
- 
-+	vddio_disp_vreg: regulator-vddio-disp {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vddio_disp";
-+		gpio = <&tlmm 34 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <300>;
-+		enable-active-high;
-+		regulator-boot-on;
-+		vin-supply = <&pm8226_l8>;
-+		pinctrl-0 = <&disp_vddio_default>;
++&blsp1_i2c2 {
++	clock-frequency = <100000>;
++	status = "okay";
++
++	magnetometer@c {
++		compatible = "asahi-kasei,ak8963";
++		reg = <0xc>;
++		interrupts-extended = <&tlmm 38 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
++		vdd-supply = <&pm8226_l19>;
++		pinctrl-0 = <&mag_int_default &mag_reset_default>;
 +		pinctrl-names = "default";
 +	};
 +
- 	reserved-memory {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -342,6 +358,14 @@ accel_int_default: accel-int-default-state {
- 		output-disable;
- 	};
++	accelerometer@18 {
++		compatible = "st,lis3dh-accel";
++		reg = <0x18>;
++		interrupts-extended = <&tlmm 1 IRQ_TYPE_EDGE_FALLING>;
++		vdd-supply = <&pm8226_l19>;
++		pinctrl-0 = <&accel_int_default>;
++		pinctrl-names = "default";
++		st,drdy-int-pin = <1>;
++	};
++};
++
+ &blsp1_i2c3 {
++	clock-frequency = <400000>;
+ 	status = "okay";
  
-+	disp_vddio_default: disp-vddio-default-state {
-+		pins = "gpio34";
++	regulator@3e {
++		compatible = "ti,tps65132";
++		reg = <0x3e>;
++		pinctrl-0 = <&reg_lcd_default>;
++		pinctrl-names = "default";
++
++		reg_lcd_pos: outp {
++			regulator-name = "outp";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++			regulator-active-discharge = <1>;
++			regulator-boot-on;
++			enable-gpios = <&tlmm 31 GPIO_ACTIVE_HIGH>;
++		};
++
++		reg_lcd_neg: outn {
++			regulator-name = "outn";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++			regulator-active-discharge = <1>;
++			regulator-boot-on;
++			enable-gpios = <&tlmm 33 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
+ 	sensor@48 {
+ 		compatible = "ti,tmp108";
+ 		reg = <0x48>;
+@@ -278,6 +329,40 @@ &smbb {
+ 	status = "okay";
+ };
+ 
++&tlmm {
++	accel_int_default: accel-int-default-state {
++		pins = "gpio1";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-disable;
++	};
++
++	mag_int_default: mag-int-default-state {
++		pins = "gpio38";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-disable;
++	};
++
++	mag_reset_default: mag-reset-default-state {
++		pins = "gpio62";
 +		function = "gpio";
 +		drive-strength = <2>;
 +		bias-disable;
 +		output-high;
 +	};
 +
- 	mag_int_default: mag-int-default-state {
- 		pins = "gpio38";
- 		function = "gpio";
++	reg_lcd_default: reg-lcd-default-state {
++		pins = "gpio31", "gpio33";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-high;
++	};
++};
++
+ &usb {
+ 	extcon = <&smbb>;
+ 	dr_mode = "peripheral";
 
 -- 
 2.45.2
