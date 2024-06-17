@@ -1,69 +1,106 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1647879F3
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7A279F3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718590135; cv=none; b=qpjDGx5pJWrYqdjZ/302WygroyYIzCLupEgSofsgPzZnC5Br8hsDRGt7MaFC+dXEixVldfLTW8lCNMuA52nv1OcaCCJZrBjxvPR2q9QH5Ne+S2QHlOxLTskLDlJUkcWjvPiCi9STkFUd0fY0nKyVr/gm4NKwzfYnhnRXZjU+nOk=
+	t=1718590223; cv=none; b=Y3mzsJ0U0kglRu9trFy4Vyt97V7L7rC0K/5hf38fISQRomvU4Mhu09LQWnWAQNcv8m6Rftg2248dJFBn7BUvN1J2qCUJUHUMZG3F5ZB4RgdgUOe/ZPWrCJYUWj9WJs02K8bM7DELX0cSoDW0QGJ8/oJgWIBCyv30enEuydCqM8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718590135; c=relaxed/simple;
-	bh=/XmKsJyGEinE7lOhcuaR9pp9pCTWZBqAYc1028/Hr6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=elzG8hd+u9RkykaztxMNoBJiS0WDSH4kYsvn7g8+n5tNKIaUuBUORmOr9CAL8WyZ0RzdAV1bqAGf5idbcfx8QGEIenm4zWfcMHbzTnmzg2vYUZPXTDLJrwh8LvCThbBdmhglfFX467KpLISWrFjNS7B0tTCabkl+XoghJ+iYh1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=U75G3swG; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1718590223; c=relaxed/simple;
+	bh=5cDTheXxPIdIssxnQWjv/qLVCXYIkgJSlf1PwQPKjZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kplGhDjTQu+sXV4kGmtXlbXDexNnADiIoQAD7k1rtaqGK8VdojkVAA9Opt04Ca5l5HNDHyRHRrtrmusRo7Yt3LcCc76wTDaLtkYph6On/6ZzmseIfoODzoMwLl++ghD9gI0kPPUKysueJYpiVqrmTsBct3EeKfM2uYEdXVSFInU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=VmjSGG5Q; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="U75G3swG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=eUJbS9Qt4DWbWT3Zmh3rSQs58LkamINvp8lvJ2sZAyY=;
-	b=U75G3swGPMxSe1fxh3ViIqabYOGc8pCjediQbe++98avINjFQmhmv88+NqRvwv
-	qc55t3JiVcsJ+bmOUq+nbbqtulplhVUizmqvBpaWKOGmHNNKNolQn6FBzlEEWQDI
-	ZFFfjX6HCcEq3LRWdSNF2alQOc/vEB47JNh9Cz/6xgWw0=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp1 (Coremail) with SMTP id ClUQrAAHbvp4mm9m9QMMCA--.41974S3;
-	Mon, 17 Jun 2024 10:07:53 +0800 (CST)
-Date: Mon, 17 Jun 2024 10:07:52 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Andrew Davis <afd@ti.com>
-Cc: Andre Przywara <andre.przywara@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 2/6] ARM: imx: Switch to new sys-off handler API
-Message-ID: <Zm+aeGXQvxgiHv3M@dragon>
-References: <20240610125924.86003-1-afd@ti.com>
- <20240610125924.86003-2-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VmjSGG5Q"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dfab4779d95so3855322276.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 19:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1718590221; x=1719195021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xqCXTr60lfURDiU6o/ziPYUoB/pkh4/Y0UTODd/6hiA=;
+        b=VmjSGG5QQuHHAieYtNzm8JYK0MbU/t6m4n/g6jT2in/GAto75KeMPMKk8XdCWOkzFZ
+         LwsV0WAXPOnUb7aLPxybGSFA/+NMl++TXndfYHbOB79aPYMKu0bxTkaWlXNy5RRvkfDh
+         HRhINwDdPr87TAGC6gf7w9QJgMCNgihSO/OC+pQGpKpPGkQ30jeXDNEUpgiN+ATCWwJ7
+         qLhZ57iGHeSvi7w+NJTsTFDka3+TTElJGLsWiRtndGZuGzrvzMDLCFjHJvTi9WckILMg
+         gCoSJtioj0JLpB4HyWmaLyTv8K8L3M/BggOQw3/TxM/0jJP5MdEtieaRcdLJNDcMYVEk
+         Qeog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718590221; x=1719195021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xqCXTr60lfURDiU6o/ziPYUoB/pkh4/Y0UTODd/6hiA=;
+        b=WHnyOj6nuqJOYcWcVa8NAvcUzdapjc9Lsx3m0jTBXVEy9wIhG+/TtOOMnetd/SkLxC
+         zUeIkyeeRWVMzf6ULviRDyjCLmqddadF0J2uXqve1TKMaSniqWxh85irfD2aAmFxVABB
+         LFw/oTXK1SqM9XEg2xUjE3GvONE++cgyv+dHyziPW3lzX4RHlfM4cr+QzATI3UqEGLpS
+         VHIXy5cnJHingYDzgRQHlU4U+WIUaCX3IAMtNoU9j16c6c9VJJKFf1KsLLfpmEUigFSY
+         admY5e0VsEWtRH4ycndVhgZgv7cXNvyl6vpjypDkac4EhvoM6EQ0MYWI22kZ196e4khW
+         s1nw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+kgGbkzzqF5PLYrFowiFlletPsQ8UWNIZseQmYvt8igzZvtsBJy1uOZVr0SUt/mld+omptFg8dw4pI3SlfHSfb/yGpJyPL42SXTT+
+X-Gm-Message-State: AOJu0YzRKXmXmJRDNIxluyUn08xxjRKsHtc/O2q8Q3lgVAhww6nU1vpc
+	D9rodRYg77hsrnq4+nyE7/uMQG/0aY3GB0QZr5pzBVU3PoZ8Qmv1FwFvdPBhtz10k8rkHTTazW9
+	Ry9SI5CLgPSS7mef+D2369wax89/DoOYmLHMWFw==
+X-Google-Smtp-Source: AGHT+IHVdf4CeK9m5TY7u8n2i5EYX8aCm7rXG/PvOUZXj0qTxh3niUzEWChMP06D9pYzethEgSj8BqmnKZHhXWATYww=
+X-Received: by 2002:a25:6612:0:b0:dff:3b6a:6322 with SMTP id
+ 3f1490d57ef6-dff3b6a64a9mr2668500276.34.1718590220902; Sun, 16 Jun 2024
+ 19:10:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610125924.86003-2-afd@ti.com>
-X-CM-TRANSID:ClUQrAAHbvp4mm9m9QMMCA--.41974S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUafMaUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBRkBZVsVCpyjVwAAsU
+References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
+ <20240613-dev-andyc-dyn-ftrace-v4-v1-2-1a538e12c01e@sifive.com> <20240613093233.0b349ed0@rorschach.local.home>
+In-Reply-To: <20240613093233.0b349ed0@rorschach.local.home>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Mon, 17 Jun 2024 10:10:09 +0800
+Message-ID: <CABgGipXB8uQ7XZbBFMZa8b7mymKAW7qOkKKaA8qVZ0hGXziSYA@mail.gmail.com>
+Subject: Re: [PATCH 2/8] tracing: do not trace kernel_text_address()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Zong Li <zong.li@sifive.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 07:59:20AM -0500, Andrew Davis wrote:
-> Kernel now supports chained power-off handlers. Use
-> register_platform_power_off() that registers a platform level power-off
-> handler. Legacy pm_power_off() will be removed once all drivers and archs
-> are converted to the new sys-off API.
-> 
-> Signed-off-by: Andrew Davis <afd@ti.com>
+On Thu, Jun 13, 2024 at 9:32=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 13 Jun 2024 15:11:07 +0800
+> Andy Chiu <andy.chiu@sifive.com> wrote:
+>
+> > kernel_text_address() and __kernel_text_address() are called in
+> > arch_stack_walk() of riscv. This results in excess amount of un-related
+> > traces when the kernel is compiled with CONFIG_TRACE_IRQFLAGS. The
+> > situation worsens when function_graph is active, as it calls
+> > local_irq_save/restore in each function's entry/exit. This patch adds
+> > both functions to notrace, so they won't show up on the trace records.
+>
+> I rather not add notrace just because something is noisy.
+>
+> You can always just add:
+>
+>  echo '*kernel_text_address' > /sys/kernel/tracing/set_ftrace_notrace
+>
+> and achieve the same result.
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+Sounds good, I am going to drop this patch for the next revision
 
+>
+> -- Steve
+
+Thanks,
+Andy
