@@ -1,133 +1,102 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FD81D3639
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C8E20012C;
+	Mon, 17 Jun 2024 13:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630657; cv=none; b=kH69V7cOvoSqzx1chojlvFH/vM+njhRriVLVabUVovnA6Akh8BYT/7tj9D7+IQKmEpFuZRoFDuH1kgCD7LzFTM83n8h9dNkUmTPTLIIq95KvMLip9xEHmRw/1lNCELbOzhR9bNvXIVREwxfL4DNnHrrpD+IARWyJHzmfcpOqN+Q=
+	t=1718630661; cv=none; b=jlcntM/z8n9SBN2J0ZR6EizvuhXmUByX2PrZ4z746w95iprVT3/Osv0CgjOYLSMn847m+IZaSChr90aSkZ7axvMElmXVWZbVltkjZ300cchF+E8mSrXsLW7aE/ILaMzKzRPCSHAPR/Yyl9tQybMd4PrzceWFtrpkZ9Qw5e61jNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630657; c=relaxed/simple;
-	bh=Y8TUhCIZhvH0mPpll/+gqifT091gwUxLq/RLLYO7rbM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=J82CMAeCxA1LYaHsdN3DvU5LL55PI9j+FOqpaqlvvJIgaAs77RI/cMuEpacpXh+eSXZUKi7Z44mCjEHsDNjraAfme3wRPuAKMHoLSCXoZRRsMCA60DrBsu5Edix0oFJhH1R2WDJVRV2nKiT1RJJwScORFYsbeZLejAd6ZttOgU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jP7sUEdM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Frztf95e; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718630661; c=relaxed/simple;
+	bh=gXFY6kVP7Vswt9ZX8PM6HfCz4hCwGp9J3qwlDlyRPdA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GMZoTqRA9PN4ROwq6CGUzUV5edznx5CHs1J+aFQpREHlyMr892v6blu83BbcrDGk+mhsiAWGBzj7qFtP1NpEh1q78lSruxi2cblAwoh/SFZlFxqi3AnW3uMM1bd9DOXOqK5qsBf2a+oJExd5vuKHbSLa1lVAE21dAgg3cwrwOs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwnD4caL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jP7sUEdM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Frztf95e"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id D394713802A6;
-	Mon, 17 Jun 2024 09:24:13 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 17 Jun 2024 09:24:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718630653; x=1718717053; bh=RG0OOoOhRs
-	DRXzn/o81MA/WQyCDR8o4YEPnE9nJjDms=; b=jP7sUEdMOQdalssTMMW5Sjxdad
-	HQgG147nSiZjEMlPqZbYOB6kvTZoj6zE9onTWYa+h7KW0z236TG0JbeTZGtJjw/0
-	2mAoBmNBQ7jAn0WwJmzfaDc8Y7bJahEbT9SPDXCkHHht8o+mnn/CcDS/Exv5pkdu
-	3gu+xfiI84wsUyvt9QSXXI68FDHKi0P9Rm0OU24NCUIeSJf8oYtwITUuXJ8CfLEL
-	Z537/5496p/zLLDXRRnRy6TVnmSrtFCzq/ZJl9DHHKg8YB6BxTIVX1EX8EqKWVlb
-	c4Hlnt+tZAFAYtdgp5NQTdW1OWS4dCvz8pNycCOleIK0Q0nZxiQpEtE5SI4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718630653; x=1718717053; bh=RG0OOoOhRsDRXzn/o81MA/WQyCDR
-	8o4YEPnE9nJjDms=; b=Frztf95eICG6TIscoqw1+WkLTmIcnHx2+lcit6hsXgXk
-	DbbhqwImm1xF7axJ9gejfWuLh1Jiuq4J2xZfEIrbQlc0ttKRUgndoB+jT4w+vV69
-	TdvbsuDmLCG5hGIRgaGatt/BN+g1hpQdQv2nnf92ycHhw+23E7tCeXEY7HNvcZ48
-	Qqdf4dfoLSufsIK+e3kDb61gJdiJzQkLqKe0IA+05qwgMI0HSdktyC35IsWFoY58
-	a0jwvWhSPGOwziGwrxYJLjfUi2boMcCZs8AHqoXGzSrFkEmXf+E/JMdxIyRSbhlM
-	nbZLc96RnWcINd1+JbgNK6qRyBQ48TYnxSZRU/pjDQ==
-X-ME-Sender: <xms:_ThwZprPkOGM_pCHV4_ZZBDr4vCTC3ZUSgBIapWwIV8s1tDmzhX7lg>
-    <xme:_ThwZrrcGlvBAMP1-KR0mW7DR5drNOQ5vLntz-QGH1p4sz_wFY07aZzlzoGg0oJQt
-    bPhH6fjU4UILkdX2JY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvhedgieehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:_ThwZmNvl6ukNcA0_diTqypDIbqfwRATBdoHbFxYoQzPBGKdA7si3Q>
-    <xmx:_ThwZk7LtOtkOxnJtHwIZV8Obrv4b01KxOQFSediyvdrgjhiTKanMA>
-    <xmx:_ThwZo5ozhatE88RsuDo7DOXB5WgY8WQYaOYiL2KYq9A3hl3sc3ceQ>
-    <xmx:_ThwZsi0oC-ilm3L60bDLM5l-MLGx09QmESgA6BzmXlMegEwNv1jQA>
-    <xmx:_ThwZj0xJ8B9j7LI12tfIKHOYF3bLbiBTqzXwLXTof22AraviiTcC6PQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 65367B6008F; Mon, 17 Jun 2024 09:24:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwnD4caL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E04C4AF1D;
+	Mon, 17 Jun 2024 13:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630660;
+	bh=gXFY6kVP7Vswt9ZX8PM6HfCz4hCwGp9J3qwlDlyRPdA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IwnD4caLmXWnHLu6wyB3D9YN6mTC/blUMGYGhBTw9RUsbJp8sv7okOPMzS/Lev3x6
+	 geiW31ZidiD8iEB37pnZoOS3faSITQ+7gASAkmnSVgY/Hk/nEkRauA6shAiAfOPL7e
+	 pCPEBF6VxX0FkUliaKDWYsV4ydBjEgN1ps1D+oRNUvYigG9ET3jID8dPto3XJ+4zEt
+	 nsPm+ozzC+vqQz4Od5ved9Zz29/hj1Zacjk8GWbmEGwke2I6YfsQb1sm6jupFmVWFn
+	 VHXLBpP1a1YvppzvULx9+UWI7dZCYNAtacilOxxT6fF44w3kUip3k1KYN5LamQzTM6
+	 nxIlVGtu50J2w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Wei Li <liwei391@huawei.com>,
+	Huisong Li <lihuisong@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	catalin.marinas@arm.com,
+	j.granados@samsung.com,
+	mcgrof@kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 29/35] arm64: armv8_deprecated: Fix warning in isndep cpuhp starting process
+Date: Mon, 17 Jun 2024 09:22:27 -0400
+Message-ID: <20240617132309.2588101-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132309.2588101-1-sashal@kernel.org>
+References: <20240617132309.2588101-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <0f39c75d-11f3-45ef-b0b5-d11c9f1720ac@app.fastmail.com>
-In-Reply-To: 
- <MW4PR18MB5244E888BB8195D94A6E2EC2A6CD2@MW4PR18MB5244.namprd18.prod.outlook.com>
-References: <2024042950-refurbish-duckbill-77b4@gregkh>
- <20240520110630.2568767-1-vattunuru@marvell.com>
- <2024060412-amulet-unflawed-f37a@gregkh>
- <SJ0PR18MB52462AA2A9F15103D5198CC5A6F82@SJ0PR18MB5246.namprd18.prod.outlook.com>
- <MW4PR18MB524422223AC92181942C75E2A6FA2@MW4PR18MB5244.namprd18.prod.outlook.com>
- <4a4b1675-3244-4032-ae64-82ca8872288f@app.fastmail.com>
- <MW4PR18MB5244E888BB8195D94A6E2EC2A6CD2@MW4PR18MB5244.namprd18.prod.outlook.com>
-Date: Mon, 17 Jun 2024 15:23:53 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Vamsi Attunuru" <vattunuru@marvell.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Jerin Jacob" <jerinj@marvell.com>,
- "Srujana Challa" <schalla@marvell.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v7 1/1] misc: mrvl-cn10k-dpi: add Octeon CN10K DPI
- administrative driver
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.34
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 17, 2024, at 14:55, Vamsi Krishna Attunuru wrote:
->> On Thu, Jun 6, 2024, at 18:42, Vamsi Krishna Attunuru wrote:
->> >> -----Original Message-----
->> >> > -----Original Message-----
->> 
->> >> > The ifdef is cute, but not correct, sorry.  Please use bit shifts
->> >> > to handle this properly without any #ifdef needed at all.
->> >> >
->> >> Ack, will fix it next version. Thanks for the suggestion.
->> >>
->> >
->> > Hi Greg, the ARM64 cores on the Octeon CN10K hardware platform always
->> > run in LE mode and this CN10K DPI PF driver is only supported on
->> > Octeon CN10K platforms as the DPI PF device is an onboard PCIe device.
->> > Can I remove the BE format and only define the LE format for the
->> > dpi_mbox_message structure?, other HW device drivers of Octeon CN10K
->> > platform also only support LE format.
->> 
->> Isn't this a regular Neoverse-N2 core? That means the hardware does
->> support big-endian in principle, though it's usually only used in VM guests,
->> not on bare bare metal and the driver is fairly safe.
->> 
->> In general, I would always suggest writing portable code, as you never know
->> who is going to copy from your driver into something else. Writing this
->> portably is not that hard or less readable than using bit fields.
->> 
->  Yes Arnd, understood your point. I am thing le64_get_bits() would 
-> solve the problem here. Can you please confirm.?, I will avoid bit 
-> fields and use mask scheme to extract the fields.
+From: Wei Li <liwei391@huawei.com>
 
-I think FIELD_GET() is more appropriate here. Note that readq()
-already swaps the data from little-endian into CPU native word
-order, so you have a 64-bit number with the bits in a particular
-place starting from the low bit, so you don't have to worry about
-how the fields inside that word line up with byte boundaries.
+[ Upstream commit 14951beaec93696b092a906baa0f29322cf34004 ]
 
-You can also just use an open-coded bit shift and mask value.
+The function run_all_insn_set_hw_mode() is registered as startup callback
+of 'CPUHP_AP_ARM64_ISNDEP_STARTING', it invokes set_hw_mode() methods of
+all emulated instructions.
 
-     Arnd
+As the STARTING callbacks are not expected to fail, if one of the
+set_hw_mode() fails, e.g. due to el0 mixed-endian is not supported for
+'setend', it will report a warning:
+
+```
+CPU[2] cannot support the emulation of setend
+CPU 2 UP state arm64/isndep:starting (136) failed (-22)
+CPU2: Booted secondary processor 0x0000000002 [0x414fd0c1]
+```
+
+To fix it, add a check for INSN_UNAVAILABLE status and skip the process.
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Tested-by: Huisong Li <lihuisong@huawei.com>
+Link: https://lore.kernel.org/r/20240423093501.3460764-1-liwei391@huawei.com
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/armv8_deprecated.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+index e459cfd337117..d6b711e56df97 100644
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -464,6 +464,9 @@ static int run_all_insn_set_hw_mode(unsigned int cpu)
+ 	for (int i = 0; i < ARRAY_SIZE(insn_emulations); i++) {
+ 		struct insn_emulation *insn = insn_emulations[i];
+ 		bool enable = READ_ONCE(insn->current_mode) == INSN_HW;
++		if (insn->status == INSN_UNAVAILABLE)
++			continue;
++
+ 		if (insn->set_hw_mode && insn->set_hw_mode(enable)) {
+ 			pr_warn("CPU[%u] cannot support the emulation of %s",
+ 				cpu, insn->name);
+-- 
+2.43.0
+
