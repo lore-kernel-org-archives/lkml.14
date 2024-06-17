@@ -1,378 +1,93 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5CC13EFE0;
-	Mon, 17 Jun 2024 15:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B0FD53E;
+	Mon, 17 Jun 2024 15:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718639025; cv=none; b=uA/LY9qojACrqf8DKEEzVJ1Mj1WR+Y4Oe4ZzKciwY7y59xOqWojtZ8bhA5hcJWQjOCWBc8ybvuwcaRRu2dHHoplW5x89hUm0kTqaaolqVKDdd01YdwG06Nn9MbfXbe2uMv5GwqRehtObgcba5QlZsFt5EETgpiC3fms4FANu+Us=
+	t=1718639112; cv=none; b=fJPulxGvR/2TSGWOkGGgaqnZ4xrm+we1gy01YBxCIIdEPR9fqiHGvEk645TCbIYTdLHg3e+sV7j4OrWe3KW1zZO/t9dtLFxvCZBZaigz3OhQ3oNVgU7UTPGojUJq6vYCE1bEOQqwFAFeUrBc0DSPU38xktuGWcpZRK8TE7/MW68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718639025; c=relaxed/simple;
-	bh=fGqt6OxZOYyl4Ua8PLa1UC6bzMeKC14iWmMBFbm9Eok=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=phRpfiGAUEBri1e8ioZUjzp6oiWb4BfppfCk6yl0wccqulR971wMs28crKhiUQkBrhp3XWNtKnCL8aToUgvZl8EKp4h4+UhuVWCHw6KqfwHdmNo3bTz5Io2CTJkIzRygYY/kWcJpYI6i/XJEPdhjWsrO40ZPnOxT/OHOEesXasg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=TQIMaKyM; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1718639112; c=relaxed/simple;
+	bh=zPno5OkucR9cTYw6c/LOvzB8+WqVlvwJsJ9jPDFqKbM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U4SEnHZVfrMhukI5JGx9haxwSRg+xZR7X8+peukOYZ79/XATjBB4ka/8cR+ZcspvX7mVUPR0wx5QyqVVoKXFe3V1Se20OQUvyZuvMDrkdAi4DHVgNyCDBXTBWzdxFEFLHjGtKiwi/9DU57GsxobXsI6NADiGRTUbMer+/CxlTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQRMXNHX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="TQIMaKyM"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HFYStm018866;
-	Mon, 17 Jun 2024 10:42:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=H3ze/ArgdNLIpHgEe094VxdfISKlnMNOmq7097Wy0sY=; b=
-	TQIMaKyM/sIF6b/rL2jX2bv9EpDA9uqbuGGDTZaTMsF6iFTWi4bmqa+Hlge9KVuV
-	6xxJyzhKWZdnuGwh6Ivax6a2+HuDLJ5IFjHY6rC+Xb8QJZKUX5aeAGXGZ43n/2nL
-	/ch9nzxBuPFL2bHyBR2YzLmSEfoI5P9KWE3lc4akx0qRhYA0M65o+n4dHnvoBu31
-	oJkDpD5j4G16Goo7SitMm0c8oSNMbYFZdRE3dPhNxvwVERQY7v3O8dOipa74l3kj
-	P5H7lkRXdliTJ2+5Z/lqA7KwXzFw7NPMg9dTiJcwW0U5aIHUEnD8jExC6wcZIECB
-	FtHF9FUBzgd/wwGbz7TKBQ==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3ys8by1vv8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 10:42:57 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Jun
- 2024 16:42:55 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 17 Jun 2024 16:42:55 +0100
-Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.65.31])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 46C2D82024D;
-	Mon, 17 Jun 2024 15:42:55 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <soyer@irl.hu>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, Simon Trimmer <simont@opensource.cirrus.com>
-Subject: [PATCH 1/4] ALSA: hda: hda_component: Introduce component parent structure
-Date: Mon, 17 Jun 2024 16:41:02 +0100
-Message-ID: <20240617154105.108635-2-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617154105.108635-1-simont@opensource.cirrus.com>
-References: <20240617154105.108635-1-simont@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQRMXNHX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EE7C4AF1C;
+	Mon, 17 Jun 2024 15:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718639111;
+	bh=zPno5OkucR9cTYw6c/LOvzB8+WqVlvwJsJ9jPDFqKbM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=oQRMXNHXy6qIvw/CA3RCIXXyyV5QB541KmxirHp0anWVZtCe1nRf5Fav4cQvxt+um
+	 T0J5VwIqzDtDrmIU1M31KrLozzk+bgZcI2K7StQdQNaKJLEKAbUns8xPTJUjRPmF5i
+	 NSF9tR9bDD47csdq3x25oKBOqF0Nm/Iu9/W8OAKeKHogqKIi2Syx7UafOTDPQd6w2S
+	 ZcO8VIE0iE1VUBth+T09HUlu9dxPkxrNlW9g+M6cKB8oYTSBCqru8g4hfgGboM7B40
+	 uMD6Iv4tCuydaBT1CE5Whi1gSa1roEoLoJuoaXO4OwCI+dA6/5Ellc1ugbn6hq+XCt
+	 +snFKOvsyplPA==
+Message-ID: <6180646a59df90da1b365605b6e0d5a55f47c4c6.camel@kernel.org>
+Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_nl_listener_get_doit
+From: Jeff Layton <jlayton@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: syzbot <syzbot+4207adf14e7c0981d28d@syzkaller.appspotmail.com>, 
+	Dai.Ngo@oracle.com, chuck.lever@oracle.com, kolga@netapp.com, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
+	syzkaller-bugs@googlegroups.com, tom@talpey.com, "David S. Miller"
+	 <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	 <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Date: Mon, 17 Jun 2024 11:45:09 -0400
+In-Reply-To: <20240617075129.7cb9ad1d@kernel.org>
+References: <000000000000322bec061aeb58a3@google.com>
+	 <1e36e3c4e4ee1243716f0da5f451ea15993a7e82.camel@kernel.org>
+	 <20240617075129.7cb9ad1d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: A8U-KeXY5F0y7NkpFMyqKe8BDkXbY3lK
-X-Proofpoint-GUID: A8U-KeXY5F0y7NkpFMyqKe8BDkXbY3lK
-X-Proofpoint-Spam-Reason: safe
 
-In preparation for moving duplicated members from the hda_component
-structure introduce a parent structure that wraps the array of
-components. This also allows us to confine the knowledge of the maximum
-number of entries to the hda_component files and eliminate passing that
-redundant information around and making direct accesses to the array.
+On Mon, 2024-06-17 at 07:51 -0700, Jakub Kicinski wrote:
+> On Mon, 17 Jun 2024 06:15:25 -0400 Jeff Layton wrote:
+> > We've had number of these reports recently. I think I understand
+> > what's
+> > happening but I'm not sure how to fix it. The problem manifests as
+> > a
+> > stuck nfsd_mutex:
+> >=20
+> > nfsd_nl_rpc_status_get_start takes the nfsd_mutex, and it's
+> > released in
+> > nfsd_nl_rpc_status_get_done. These are the ->start and ->done
+> > operations for the rpc_status_get dumpit routine.
+> >=20
+> > I think syzbot is triggering one of the two "goto errout_skb"
+> > conditions in netlink_dump (not sure which). In those cases we end
+> > up
+> > returning from that function without calling ->done, which would
+> > lead
+> > to the hung mutex like we see here.
+> >=20
+> > Is this a bug in the netlink code, or is the rpc_status_get dumpit
+> > routine not using ->start and ->done correctly?
+>=20
+> Dumps are spread over multiple recvmsg() calls, even if we error out
+> the next recvmsg() will dump again, until ->done() is called. And
+> we'll
+> call ->done() if socket is closed without reaching the end.
+>=20
+> But the multi-syscall nature puts us at the mercy of the user meaning
+> that holding locks ->start() to ->done() is a bit of a no-no.
+> Many of the dumps dump contents of an Xarray, so its easy to remember
+> an index and continue dumping from where we left off.
 
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
----
- sound/pci/hda/hda_component.c | 65 +++++++++++++++++++----------------
- sound/pci/hda/hda_component.h | 42 ++++++++++++++--------
- sound/pci/hda/patch_realtek.c | 17 +++++----
- 3 files changed, 71 insertions(+), 53 deletions(-)
-
-diff --git a/sound/pci/hda/hda_component.c b/sound/pci/hda/hda_component.c
-index d02589014a3f..b05a0b87d32a 100644
---- a/sound/pci/hda/hda_component.c
-+++ b/sound/pci/hda/hda_component.c
-@@ -15,35 +15,39 @@
- #include "hda_local.h"
- 
- #ifdef CONFIG_ACPI
--void hda_component_acpi_device_notify(struct hda_component *comps, int num_comps,
-+void hda_component_acpi_device_notify(struct hda_component_parent *parent,
- 				      acpi_handle handle, u32 event, void *data)
- {
-+	struct hda_component *comp;
- 	int i;
- 
--	for (i = 0; i < num_comps; i++) {
--		if (comps[i].dev && comps[i].acpi_notify)
--			comps[i].acpi_notify(acpi_device_handle(comps[i].adev), event,
--					     comps[i].dev);
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++) {
-+		comp = hda_component_from_index(parent, i);
-+		if (comp->dev && comp->acpi_notify)
-+			comp->acpi_notify(acpi_device_handle(comp->adev), event, comp->dev);
- 	}
- }
- EXPORT_SYMBOL_NS_GPL(hda_component_acpi_device_notify, SND_HDA_SCODEC_COMPONENT);
- 
- int hda_component_manager_bind_acpi_notifications(struct hda_codec *cdc,
--						  struct hda_component *comps, int num_comps,
-+						  struct hda_component_parent *parent,
- 						  acpi_notify_handler handler, void *data)
- {
- 	bool support_notifications = false;
- 	struct acpi_device *adev;
-+	struct hda_component *comp;
- 	int ret;
- 	int i;
- 
--	adev = comps[0].adev;
-+	adev = parent->comps[0].adev;
- 	if (!acpi_device_handle(adev))
- 		return 0;
- 
--	for (i = 0; i < num_comps; i++)
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++) {
-+		comp = hda_component_from_index(parent, i);
- 		support_notifications = support_notifications ||
--			comps[i].acpi_notifications_supported;
-+			comp->acpi_notifications_supported;
-+	}
- 
- 	if (support_notifications) {
- 		ret = acpi_install_notify_handler(adev->handle, ACPI_DEVICE_NOTIFY,
-@@ -61,13 +65,13 @@ int hda_component_manager_bind_acpi_notifications(struct hda_codec *cdc,
- EXPORT_SYMBOL_NS_GPL(hda_component_manager_bind_acpi_notifications, SND_HDA_SCODEC_COMPONENT);
- 
- void hda_component_manager_unbind_acpi_notifications(struct hda_codec *cdc,
--						     struct hda_component *comps,
-+						     struct hda_component_parent *parent,
- 						     acpi_notify_handler handler)
- {
- 	struct acpi_device *adev;
- 	int ret;
- 
--	adev = comps[0].adev;
-+	adev = parent->comps[0].adev;
- 	if (!acpi_device_handle(adev))
- 		return;
- 
-@@ -78,21 +82,25 @@ void hda_component_manager_unbind_acpi_notifications(struct hda_codec *cdc,
- EXPORT_SYMBOL_NS_GPL(hda_component_manager_unbind_acpi_notifications, SND_HDA_SCODEC_COMPONENT);
- #endif /* ifdef CONFIG_ACPI */
- 
--void hda_component_manager_playback_hook(struct hda_component *comps, int num_comps, int action)
-+void hda_component_manager_playback_hook(struct hda_component_parent *parent, int action)
- {
-+	struct hda_component *comp;
- 	int i;
- 
--	for (i = 0; i < num_comps; i++) {
--		if (comps[i].dev && comps[i].pre_playback_hook)
--			comps[i].pre_playback_hook(comps[i].dev, action);
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++) {
-+		comp = hda_component_from_index(parent, i);
-+		if (comp->dev && comp->pre_playback_hook)
-+			comp->pre_playback_hook(comp->dev, action);
- 	}
--	for (i = 0; i < num_comps; i++) {
--		if (comps[i].dev && comps[i].playback_hook)
--			comps[i].playback_hook(comps[i].dev, action);
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++) {
-+		comp = hda_component_from_index(parent, i);
-+		if (comp->dev && comp->playback_hook)
-+			comp->playback_hook(comp->dev, action);
- 	}
--	for (i = 0; i < num_comps; i++) {
--		if (comps[i].dev && comps[i].post_playback_hook)
--			comps[i].post_playback_hook(comps[i].dev, action);
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++) {
-+		comp = hda_component_from_index(parent, i);
-+		if (comp->dev && comp->post_playback_hook)
-+			comp->post_playback_hook(comp->dev, action);
- 	}
- }
- EXPORT_SYMBOL_NS_GPL(hda_component_manager_playback_hook, SND_HDA_SCODEC_COMPONENT);
-@@ -124,22 +132,21 @@ static int hda_comp_match_dev_name(struct device *dev, void *data)
- }
- 
- int hda_component_manager_bind(struct hda_codec *cdc,
--			       struct hda_component *comps, int count)
-+			       struct hda_component_parent *parent)
- {
- 	int i;
- 
--	/* Init shared data */
--	for (i = 0; i < count; ++i) {
--		memset(&comps[i], 0, sizeof(comps[i]));
--		comps[i].codec = cdc;
--	}
-+	/* Init shared and component specific data */
-+	memset(parent, 0, sizeof(*parent));
-+	for (i = 0; i < ARRAY_SIZE(parent->comps); i++)
-+		parent->comps[i].codec = cdc;
- 
--	return component_bind_all(hda_codec_dev(cdc), comps);
-+	return component_bind_all(hda_codec_dev(cdc), &parent->comps);
- }
- EXPORT_SYMBOL_NS_GPL(hda_component_manager_bind, SND_HDA_SCODEC_COMPONENT);
- 
- int hda_component_manager_init(struct hda_codec *cdc,
--			       struct hda_component *comps, int count,
-+			       struct hda_component_parent *parent, int count,
- 			       const char *bus, const char *hid,
- 			       const char *match_str,
- 			       const struct component_master_ops *ops)
-diff --git a/sound/pci/hda/hda_component.h b/sound/pci/hda/hda_component.h
-index c70b3de68ab2..a016f1b942a2 100644
---- a/sound/pci/hda/hda_component.h
-+++ b/sound/pci/hda/hda_component.h
-@@ -28,18 +28,21 @@ struct hda_component {
- 	void (*post_playback_hook)(struct device *dev, int action);
- };
- 
-+struct hda_component_parent {
-+	struct hda_component comps[HDA_MAX_COMPONENTS];
-+};
-+
- #ifdef CONFIG_ACPI
--void hda_component_acpi_device_notify(struct hda_component *comps, int num_comps,
-+void hda_component_acpi_device_notify(struct hda_component_parent *parent,
- 				      acpi_handle handle, u32 event, void *data);
- int hda_component_manager_bind_acpi_notifications(struct hda_codec *cdc,
--						  struct hda_component *comps, int num_comps,
-+						  struct hda_component_parent *parent,
- 						  acpi_notify_handler handler, void *data);
- void hda_component_manager_unbind_acpi_notifications(struct hda_codec *cdc,
--						     struct hda_component *comps,
-+						     struct hda_component_parent *parent,
- 						     acpi_notify_handler handler);
- #else
--static inline void hda_component_acpi_device_notify(struct hda_component *comps,
--						    int num_comps,
-+static inline void hda_component_acpi_device_notify(struct hda_component_parent *parent,
- 						    acpi_handle handle,
- 						    u32 event,
- 						    void *data)
-@@ -47,8 +50,7 @@ static inline void hda_component_acpi_device_notify(struct hda_component *comps,
- }
- 
- static inline int hda_component_manager_bind_acpi_notifications(struct hda_codec *cdc,
--								struct hda_component *comps,
--								int num_comps,
-+								struct hda_component_parent *parent,
- 								acpi_notify_handler handler,
- 								void *data)
- 
-@@ -57,17 +59,16 @@ static inline int hda_component_manager_bind_acpi_notifications(struct hda_codec
- }
- 
- static inline void hda_component_manager_unbind_acpi_notifications(struct hda_codec *cdc,
--								   struct hda_component *comps,
-+								   struct hda_component_parent *parent,
- 								   acpi_notify_handler handler)
- {
- }
- #endif /* ifdef CONFIG_ACPI */
- 
--void hda_component_manager_playback_hook(struct hda_component *comps, int num_comps,
--					 int action);
-+void hda_component_manager_playback_hook(struct hda_component_parent *parent, int action);
- 
- int hda_component_manager_init(struct hda_codec *cdc,
--			       struct hda_component *comps, int count,
-+			       struct hda_component_parent *parent, int count,
- 			       const char *bus, const char *hid,
- 			       const char *match_str,
- 			       const struct component_master_ops *ops);
-@@ -75,13 +76,24 @@ int hda_component_manager_init(struct hda_codec *cdc,
- void hda_component_manager_free(struct hda_codec *cdc,
- 				const struct component_master_ops *ops);
- 
--int hda_component_manager_bind(struct hda_codec *cdc,
--			       struct hda_component *comps, int count);
-+int hda_component_manager_bind(struct hda_codec *cdc, struct hda_component_parent *parent);
-+
-+static inline struct hda_component *hda_component_from_index(struct hda_component_parent *parent,
-+							     int index)
-+{
-+	if (!parent)
-+		return NULL;
-+
-+	if (index < 0 || index >= ARRAY_SIZE(parent->comps))
-+		return NULL;
-+
-+	return &parent->comps[index];
-+}
- 
- static inline void hda_component_manager_unbind(struct hda_codec *cdc,
--					       struct hda_component *comps)
-+						struct hda_component_parent *parent)
- {
--	component_unbind_all(hda_codec_dev(cdc), comps);
-+	component_unbind_all(hda_codec_dev(cdc), &parent->comps);
- }
- 
- #endif /* ifndef __HDA_COMPONENT_H__ */
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 79736c8782a3..9cf94b9fac17 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -131,7 +131,7 @@ struct alc_spec {
- 	u8 alc_mute_keycode_map[1];
- 
- 	/* component binding */
--	struct hda_component comps[HDA_MAX_COMPONENTS];
-+	struct hda_component_parent comps;
- };
- 
- /*
-@@ -6789,8 +6789,7 @@ static void comp_acpi_device_notify(acpi_handle handle, u32 event, void *data)
- 
- 	codec_info(cdc, "ACPI Notification %d\n", event);
- 
--	hda_component_acpi_device_notify(spec->comps, ARRAY_SIZE(spec->comps),
--					 handle, event, data);
-+	hda_component_acpi_device_notify(&spec->comps, handle, event, data);
- }
- 
- static int comp_bind(struct device *dev)
-@@ -6799,12 +6798,12 @@ static int comp_bind(struct device *dev)
- 	struct alc_spec *spec = cdc->spec;
- 	int ret;
- 
--	ret = hda_component_manager_bind(cdc, spec->comps, ARRAY_SIZE(spec->comps));
-+	ret = hda_component_manager_bind(cdc, &spec->comps);
- 	if (ret)
- 		return ret;
- 
- 	return hda_component_manager_bind_acpi_notifications(cdc,
--							     spec->comps, ARRAY_SIZE(spec->comps),
-+							     &spec->comps,
- 							     comp_acpi_device_notify, cdc);
- }
- 
-@@ -6813,8 +6812,8 @@ static void comp_unbind(struct device *dev)
- 	struct hda_codec *cdc = dev_to_hda_codec(dev);
- 	struct alc_spec *spec = cdc->spec;
- 
--	hda_component_manager_unbind_acpi_notifications(cdc, spec->comps, comp_acpi_device_notify);
--	hda_component_manager_unbind(cdc, spec->comps);
-+	hda_component_manager_unbind_acpi_notifications(cdc, &spec->comps, comp_acpi_device_notify);
-+	hda_component_manager_unbind(cdc, &spec->comps);
- }
- 
- static const struct component_master_ops comp_master_ops = {
-@@ -6827,7 +6826,7 @@ static void comp_generic_playback_hook(struct hda_pcm_stream *hinfo, struct hda_
- {
- 	struct alc_spec *spec = cdc->spec;
- 
--	hda_component_manager_playback_hook(spec->comps, ARRAY_SIZE(spec->comps), action);
-+	hda_component_manager_playback_hook(&spec->comps, action);
- }
- 
- static void comp_generic_fixup(struct hda_codec *cdc, int action, const char *bus,
-@@ -6838,7 +6837,7 @@ static void comp_generic_fixup(struct hda_codec *cdc, int action, const char *bu
- 
- 	switch (action) {
- 	case HDA_FIXUP_ACT_PRE_PROBE:
--		ret = hda_component_manager_init(cdc, spec->comps, count, bus, hid,
-+		ret = hda_component_manager_init(cdc, &spec->comps, count, bus, hid,
- 						 match_str, &comp_master_ops);
- 		if (ret)
- 			return;
--- 
-2.34.1
-
+Understood, thanks. I wasn't keyed into the fact that ->start and -
+>done weren't always called in the context of the same syscall. In that
+case, I think we have no choice but to move the locking into the -
+>dumpit routine. I believe Lorenzo is drafting a patch along those
+lines.
+--=20
+Jeff Layton <jlayton@kernel.org>
