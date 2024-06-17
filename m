@@ -1,234 +1,135 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EF3EAC5;
-	Mon, 17 Jun 2024 15:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B85EAC5;
+	Mon, 17 Jun 2024 15:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718639331; cv=none; b=FSDqtcQVZkjjvHrm5io0TLv7NP/W/hPK8k7kbUWS3j9icJOsJhOKQ6BcoKsVRu8esqRxZl+cSood4Lwcg95DAAJQJKTCvlBYVxL8unau0QzoCyv8MzwYpagIihIDMAg+gg9n2l6Wcw05HOUEuogKg00pakXCyMc0SArXUwSGc0o=
+	t=1718639376; cv=none; b=S7aEgw8sgbsgZG6o83Id1CFSxLGpP9xpISVuP6XiCOzQpmVUWRYqGoxHUxyjegnbJXaCXJh5C5ItVzASnt4xgE/B518kXNGQmDgOsHK27AhTh0XbV88NbPDCMqaPk2pS7Jnzc4TnrZzoczxwPYR1kHAlt9wxjCDh8uiSeU2kTdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718639331; c=relaxed/simple;
-	bh=JYHC8AUX5dsK1Y0iin1rim0E052aWvM9punxPGktQ6o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qRoXTpqQdAqmQwnc6sJvsfVvmHpIKq1IqTq2zQlEaNg/xZUX6izfX+OiDLtZLov6WjklWXBSuK4WaewQS5VH6Y1kHmgraUsWOg6aUb2vNZenGSXbzbUuuUZGCez6LVbN/6Odj+Yo193vGYfTLFbLtGkNR8FxQpU+pAL0AYLnUIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OH5Bnefq; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718639376; c=relaxed/simple;
+	bh=9jxoacm0VNzafJu9FOapUXFOnY1Zd94cS5szpcO+6Zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VrVuZWPxS80t77K7rIGRMHBI99hc21jSEur0EE9AiBMccC/8ZdHd3JbsJdY/pp+6yNnoaiNbpwI1/wHC1+jqCO/HkiqxQSV8zS9a2IjD5252lufZlb/i7MF0ECSz4ai5Hdvd/4i8HpwkDWzNQOagsj1QhPR0QIPxfxqmk+29VGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQ2APQT+; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OH5Bnefq"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HDfddI029273;
-	Mon, 17 Jun 2024 17:48:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	zXt1rSU3DkADXbF83KHvvo2zbVA+9Tk+x9InX+d5Cx8=; b=OH5BnefqPKNAuIsA
-	Gtkr4VX3RDwCNZ5qf6Swx52KnozAhSn1IKMt7CmVkPSDgTtA8BK8e8okVOAlGfOu
-	gq2VMFPJJjKkvyOhb8yfXO9uGI/PaxrSu3UvV7wVc6Q/hIPp2iSdgOI4pFwmvKP7
-	tYYGp6wGHdozY45bZjdJFCaxcflTh3Zq+6OR5dhAm/YUAld+qLXLdbtjGXxc+U8X
-	ayZZCW1sfmr18HmZeIJrQ6h0Ue+L2+4ia3M5yL60AY/3Z1GshC7iSxkHu7caAz5C
-	J7tauD+8c5Aj21Ft1MrNREZBe/sP2F2Q1w7ExvRKe4m21kiNUFVavofs0yMhMeSg
-	gYnpHA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys29xy844-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 17:48:12 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA37140047;
-	Mon, 17 Jun 2024 17:46:44 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 74F1320B60C;
-	Mon, 17 Jun 2024 17:45:32 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
- 2024 17:45:31 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH v2 2/2] net: stmmac: dwmac-stm32: stm32: add management of stm32mp25 for stm32
-Date: Mon, 17 Jun 2024 17:45:16 +0200
-Message-ID: <20240617154516.277205-3-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240617154516.277205-1-christophe.roullier@foss.st.com>
-References: <20240617154516.277205-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQ2APQT+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f717608231so34377225ad.2;
+        Mon, 17 Jun 2024 08:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718639374; x=1719244174; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHo927smNjkpt0+sCP+aYgix3Q+5w0hosKdaxQjMOgQ=;
+        b=MQ2APQT+iO+Eh0DXJQkI4uU+NnoTm57gpAHrOcGq3sb/q0iBES4aesC9E7BAFWyvzE
+         /8pP5TIM+H0bGTfECCMxrG+ru7qGjPZcaHg4lRspd5PFTw1i6TCPTqGBjeYIJqe4gUyw
+         bGEW7bwtLS7seet9zfDkBgk7GPiL/ZHitZJ5zDJ/W3+RFXdV/5pCZbPOL8/jFlOnej8Y
+         nXevDfIwy+xipH7Ixf3rgdIMOrDolXxI4hOhJIbNIcvFl1B2SGYrZQipwW+AahrSpmTV
+         CMdJfkzBeG0ZS6zSq0vAUq3Fz4p1ZLUIsl2W6WMOQ3ted8ttgmmEXPSsteZnvzHisi7W
+         30rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718639374; x=1719244174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fHo927smNjkpt0+sCP+aYgix3Q+5w0hosKdaxQjMOgQ=;
+        b=XtuurV6AnhqW08ikfC/v7F/AbLBgYiLnbi0E6nyKKeG0W52yiCAPIF4VzcSpOGHAUd
+         BL6qjOjwdP7Q3Z/qdA3A6HiOhbgyxXArVjLIjBpJ15weTHE0HyqAn4OiXHgbOkU5RTFY
+         mBZePZQc6p3S4jmL74wD8liEoqtKe8jbAVjECUdHlDjWbTvJM4j9WpqjVkTlMKqaA0MR
+         7NZTYOZEvHkec/KwlhaoUA5qeBMUfgAbJDQbbKbUBS7kpUB4uq8oJ2J6Y1rfKDpiDryT
+         /7J4+Wjrqlx3dWIN2BnMxK6O6JBhRXnDtAuq3FAcNT1PFtlJZwLSacLMP7wZzYedJATn
+         L9Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXaikpSaFCDI9IPmEQp+B2Fuw0OK18xie+Y9nrweBdSv8FemS+CcEIahVP0k5R9oUHgSEEkdetK2dpo9a7DlJ7bzBoxYz/dVvqCx1V40NxyVF7MLKWszEbHKbUIpWMrjO/Doz2Cb41vnOSNxWXLOWEXQwY77azFCjvloA2ZXr6Yl13Fg==
+X-Gm-Message-State: AOJu0YzTJm0htyL7hociH7PmG0sWSf6Pc9oN3qGf94rzBXxIqETVBwCX
+	HaqKJq+yH3P9PTrVvf3wZj2uA0I29JXnMeGiQg6GIYO1Vi0AZEXw
+X-Google-Smtp-Source: AGHT+IGNbnjCGTfKI07a4UNbGPXQuG49aaEGA13NJD7JLoGUMWXHzLxcA414MUCJx0aBqKwSDo3jQQ==
+X-Received: by 2002:a17:902:e889:b0:1f7:4021:508a with SMTP id d9443c01a7336-1f8627c7d14mr158688035ad.33.1718639373888;
+        Mon, 17 Jun 2024 08:49:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855ee8349sm80467885ad.120.2024.06.17.08.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 08:49:32 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 17 Jun 2024 08:49:30 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	=?iso-8859-1?Q?Ren=E9?= Rebe <rene@exactcode.de>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Stephen Horvath <s.horvath@outlook.com.au>
+Subject: Re: [PATCH v4 5/6] i2c: smbus: Support DDR5 SPD EEPROMs
+Message-ID: <4e09b843-3d2d-46d7-a8e1-2eabc4382dc7@roeck-us.net>
+References: <20240604040237.1064024-1-linux@roeck-us.net>
+ <20240604040237.1064024-6-linux@roeck-us.net>
+ <a5aa120d-8497-4ca8-9752-7d800240b999@molgen.mpg.de>
+ <efb77b37-30e5-48a8-b4af-eb9995a2882b@roeck-us.net>
+ <33f369c1-1098-458e-9398-30037bd8c5aa@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33f369c1-1098-458e-9398-30037bd8c5aa@molgen.mpg.de>
 
-Add Ethernet support for STM32MP25.
-STM32MP25 is STM32 SOC with 2 GMACs instances.
-GMAC IP version is SNPS 5.3x.
-GMAC IP configure with 2 RX and 4 TX queue.
-DMA HW capability register supported
-RX Checksum Offload Engine supported
-TX Checksum insertion supported
-Wake-Up On Lan supported
-TSO supported
+Hi Paul,
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 77 ++++++++++++++++++-
- 1 file changed, 74 insertions(+), 3 deletions(-)
+On Mon, Jun 17, 2024 at 04:42:47PM +0200, Paul Menzel wrote:
+[ ... ]
+> 
+> I applied your patch
+> 
+>     $ git log --oneline --no-decorate -2
+>     00058a6 eeprom: Add basic spd5118 support
+>     a0e5865 i2cdetect: only use "newer" I2C_FUNC_* flags if they exist
+> 
+> but reading eeprom fails:
+> 
+>     $ sudo ./eeprom/decode-dimms
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index b2db0e26c4e4..71a187b4b5b1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -53,7 +53,18 @@
- #define SYSCFG_MCU_ETH_SEL_MII		0
- #define SYSCFG_MCU_ETH_SEL_RMII		1
- 
--/* STM32MP1 register definitions
-+/* STM32MP2 register definitions */
-+#define SYSCFG_MP2_ETH_MASK		GENMASK(31, 0)
-+
-+#define SYSCFG_ETHCR_ETH_PTP_CLK_SEL	BIT(2)
-+#define SYSCFG_ETHCR_ETH_CLK_SEL	BIT(1)
-+#define SYSCFG_ETHCR_ETH_REF_CLK_SEL	BIT(0)
-+
-+#define SYSCFG_ETHCR_ETH_SEL_MII	0
-+#define SYSCFG_ETHCR_ETH_SEL_RGMII	BIT(4)
-+#define SYSCFG_ETHCR_ETH_SEL_RMII	BIT(6)
-+
-+/* STM32MPx register definitions
-  *
-  * Below table summarizes the clock requirement and clock sources for
-  * supported phy interface modes.
-@@ -104,7 +115,7 @@ struct stm32_ops {
- 	int (*parse_data)(struct stm32_dwmac *dwmac,
- 			  struct device *dev);
- 	bool clk_rx_enable_in_suspend;
--	bool is_mp13;
-+	bool is_mp13, is_mp2;
- 	u32 syscfg_clr_off;
- };
- 
-@@ -277,8 +288,52 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
- 				 dwmac->mode_mask, val);
- }
- 
-+static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data *plat_dat)
-+{
-+	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
-+	u32 reg = dwmac->mode_reg;
-+	int val = 0;
-+
-+	switch (plat_dat->mac_interface) {
-+	case PHY_INTERFACE_MODE_MII:
-+		break;
-+	case PHY_INTERFACE_MODE_GMII:
-+		if (dwmac->enable_eth_ck)
-+			val |= SYSCFG_ETHCR_ETH_CLK_SEL;
-+		break;
-+	case PHY_INTERFACE_MODE_RMII:
-+		val = SYSCFG_ETHCR_ETH_SEL_RMII;
-+		if (dwmac->enable_eth_ck)
-+			val |= SYSCFG_ETHCR_ETH_REF_CLK_SEL;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		val = SYSCFG_ETHCR_ETH_SEL_RGMII;
-+		if (dwmac->enable_eth_ck)
-+			val |= SYSCFG_ETHCR_ETH_CLK_SEL;
-+		break;
-+	default:
-+		dev_err(dwmac->dev, "Mode %s not supported",
-+			phy_modes(plat_dat->mac_interface));
-+		/* Do not manage others interfaces */
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
-+
-+	/* Select PTP (IEEE1588) clock selection from RCC (ck_ker_ethxptp) */
-+	val |= SYSCFG_ETHCR_ETH_PTP_CLK_SEL;
-+
-+	/* Update ETHCR (set register) */
-+	return regmap_update_bits(dwmac->regmap, reg,
-+				 SYSCFG_MP2_ETH_MASK, val);
-+}
-+
- static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- {
-+	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
- 	int ret;
- 
- 	ret = stm32mp1_select_ethck_external(plat_dat);
-@@ -289,7 +344,10 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	if (ret)
- 		return ret;
- 
--	return stm32mp1_configure_pmcr(plat_dat);
-+	if (!dwmac->ops->is_mp2)
-+		return stm32mp1_configure_pmcr(plat_dat);
-+	else
-+		return stm32mp2_configure_syscfg(plat_dat);
- }
- 
- static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
-@@ -365,6 +423,9 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
- 		return err;
- 	}
- 
-+	if (dwmac->ops->is_mp2)
-+		return err;
-+
- 	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
- 	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
- 	if (err) {
-@@ -586,10 +647,20 @@ static struct stm32_ops stm32mp13_dwmac_data = {
- 	.clk_rx_enable_in_suspend = true
- };
- 
-+static struct stm32_ops stm32mp25_dwmac_data = {
-+	.set_mode = stm32mp1_set_mode,
-+	.suspend = stm32mp1_suspend,
-+	.resume = stm32mp1_resume,
-+	.parse_data = stm32mp1_parse_data,
-+	.is_mp2 = true,
-+	.clk_rx_enable_in_suspend = true
-+};
-+
- static const struct of_device_id stm32_dwmac_match[] = {
- 	{ .compatible = "st,stm32-dwmac", .data = &stm32mcu_dwmac_data},
- 	{ .compatible = "st,stm32mp1-dwmac", .data = &stm32mp1_dwmac_data},
- 	{ .compatible = "st,stm32mp13-dwmac", .data = &stm32mp13_dwmac_data},
-+	{ .compatible = "st,stm32mp25-dwmac", .data = &stm32mp25_dwmac_data},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, stm32_dwmac_match);
--- 
-2.25.1
+decode-dimms does not need sudo, but that should not make a difference.
 
+>     Cannot read /sys/bus/i2c/drivers/spd5118/0-0050/eeprom at
+> ./eeprom/decode-dimms line 2465.
+> 
+Well, it _is_ a hack ;-), but that specific operation should not fail.
+
+Please try the following:
+
+ls -l /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
+cp /sys/bus/i2c/drivers/spd5118/0-0050/eeprom /tmp
+od -t x1 /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
+sudo i2cdump -y -f 0 0x50
+
+All those should work, and the size of /tmp/eeprom should be
+1024 bytes. The output of i2cdump should start with something like
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: 51 18 0a 86 32 03 32 00 00 00 00 07 ff 7f 00 00    Q???2?2......?..
+                                     ^^
+
+and with
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: 51 18 0a 86 32 03 32 00 00 00 00 00 ff 7f 00 00    Q???2?2......?..
+                                     ^^
+
+after executing the "sensors" command.
+
+Other than that, I can see that your system is an Intel system,
+meaning the i2c controller would be i801, not piix4. I wonder
+if that makes a difference. Has anyone else seeing this tested
+eeprom access with i801 (or any other controller besides piix4),
+by any chance ?
+
+Thanks,
+Guenter
