@@ -1,299 +1,92 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0EB4176ACB;
-	Mon, 17 Jun 2024 01:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4252717C8
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 01:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718589110; cv=none; b=k2vBesbdf+yTv8NecS7sEMcPz8ZtxON/1+jp5LEK/UaDMlr2TmyXt/6V0352DrZBd95fw9sQVuOUGBn/4GJlUnUEdFOWSPqupXPQ++A3Kxdc3hvjjwhbZtDizTViJF1HsNAV4BuRzBCWV4X8bE95bC8jlO1ZHWM/qc7TAugDYk0=
+	t=1718589169; cv=none; b=MzYhEOODJcAk8CSzXbHGWf1ZJdUWcprk2AxsXYohm2e8Sa7YHYF+3YtHYYgZXCCeT1uf1zw+Q9wui0W46b150drtUjele2/7CCPrbZOlSsuTHFYK6QMK9+naC5HuABZDCJ7OLG4m6R+OQR7B4QE1dd68qtwvJ6I+B9R2gpwlMsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718589110; c=relaxed/simple;
-	bh=ngDwTY3j1nXwAIQv0mUkX7nrrF23O7NJyWWHubE4Roc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrOqUQRtsGd/tkh4PA8cl57PGmbaC0ZjhiEYtAuCt6iSw9KH2ZttwEVEG5krC/AhE0Eh4Sko8Y7dyGlF4X1i0Yyj4HD1uqRDbttAyamGgTtEVh3gmULnvLtdtFjl53TU4dds/G2WKYDXZtwZsJsgH4u6ITKTphLO6ejlB8Veksw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=ZIR0v1lI; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1718589169; c=relaxed/simple;
+	bh=sTJ/iuTrsEdSBS5qgmnl6h5mYl1g8hs6XygUrJRR7A0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NHrFx/jjQc0SXCXG/Kgl9FG9WULEwIhI5RuX63WHweukVVJKtyE1IDGNxxe0CYTjws3zGqdJFAZfoLBSiHnqtUlLuYuIVAuVxIlFjaAZkxj85SZuY8D/BxVHsa635wDkukpFIUYC1+QEe5akRuFeb1vYGv0VYkE7OHYeBPqVExo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJFTFOc6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="ZIR0v1lI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=yjhnsYCfAeoBAabQvKZBv+okYUIYqBnLVfnV+eVmD54=;
-	b=ZIR0v1lICYJG3iQZmi9ehNMCButpVAOYVX2BJCxyciLhVEcCLlGUH032xYs8+u
-	gQSL8KEfAEvhaTjKqWLppanByLvwe9JnttAJdWBFqXeFnhBNBUsYAODFwJEftq4s
-	LKf/QXGKg0utTFt4oF2QB/4CQjrF92w+WjdhvtBPZtwTs=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp1 (Coremail) with SMTP id ClUQrAD3XfqYlm9mFcsLCA--.41569S3;
-	Mon, 17 Jun 2024 09:51:21 +0800 (CST)
-Date: Mon, 17 Jun 2024 09:51:20 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, Li Yang <leoyang.li@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Priit Laes <plaes@plaes.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Marco Felsch <m.felsch@pengutronix.de>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 13/13] ARM: dts: imx6qdl-kontron-samx6i: add actual
- device trees
-Message-ID: <Zm+WmDvhXJsprfar@dragon>
-References: <20240606090206.2021237-1-mwalle@kernel.org>
- <20240606090206.2021237-14-mwalle@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJFTFOc6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718589167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sTJ/iuTrsEdSBS5qgmnl6h5mYl1g8hs6XygUrJRR7A0=;
+	b=JJFTFOc6HlOD1n+sow2Jigc73ftOD9Wm1kZhYkGimBR5VgqAOHUvUawgYlbqkMaDRKEGji
+	4UUNXRCXPDHQosqj5YEHIsSG/ZBrGJKBZVnfILftTqc/cNhfwhAGwnRaRT/7se6h+04VHw
+	HR3Urt0PVs+pqSpncWAGtS2svklkOls=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-2PKXjfnhM_mjCKGnUcHv5g-1; Sun, 16 Jun 2024 21:52:44 -0400
+X-MC-Unique: 2PKXjfnhM_mjCKGnUcHv5g-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c2dfb3d3e2so4258073a91.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2024 18:52:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718589163; x=1719193963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sTJ/iuTrsEdSBS5qgmnl6h5mYl1g8hs6XygUrJRR7A0=;
+        b=igCV60vqGwMU5vzrBbuxENZi4SZJgnR3YPLTM37AdoFsJzf0BFEF8+/CWKg6H65SpC
+         UZlX0gUtgdaoXlSiicFn/pdrlTCG76LJsHfLv+PLWw1AH9Div9ihUdoJeTy60DIJK78K
+         5huLloxiQmZX6Igy+bF3Q/1h16pJ8X1yrSVz5Vf9pr+eOFwMtKH+pokDEWL+/6HvqIPM
+         awPMYJr+twe9C4gsdsGYw84ShW23YxC2OcYNa1iu7KNtlUT3WunOiid5SqmQ97UZHYj7
+         V1xGGUmnsMS/SKSzAb/zbOf4MGkkAqm2ouKEm4jJDMgH7mP1vTaKhbSnSoK8nyqmVsd+
+         WIWg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2MTtI2nvPReYs4BIv8WJulV3U3BA/uCuFsCVwNSOf7FexZIuTxz2G2zVvIg6qMoPa5iHdGFfBY3IfLs2Yrc1/6OBqBZ34n4ckEeAm
+X-Gm-Message-State: AOJu0YwS83/VsHkHOY3ul+9wdo1GX53H6DfQ3AG6+RskHS+GzG7Caz8w
+	kfM5hnefWg5kDGB3b/jAl4ntPwnzyyRiDudYMCISvU10XbZ6ZF8YU5XMW20KHvRcCog0pLnsEBh
+	cHqMyz+sG7aDQWBVZi9pquXPXVOqeenfUfY/QH/dCFgCCS5ed8musu7/bKPi9j1bpzQ477H5feX
+	CTbLjkWYQfhWiqUZRhpBu83TIm1ZAMxUAS0QUZ
+X-Received: by 2002:a17:90b:1213:b0:2c4:a974:bc79 with SMTP id 98e67ed59e1d1-2c4dba4cf41mr9455803a91.36.1718589163037;
+        Sun, 16 Jun 2024 18:52:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+QQNT5453eJc8Q6wrY2MwQONVCUdTNKrjoTG9l0wExtAxoW4PcawA6CbvZ6/VnsBDwc00gN9K/+tJsC+cH0k=
+X-Received: by 2002:a17:90b:1213:b0:2c4:a974:bc79 with SMTP id
+ 98e67ed59e1d1-2c4dba4cf41mr9455799a91.36.1718589162769; Sun, 16 Jun 2024
+ 18:52:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606090206.2021237-14-mwalle@kernel.org>
-X-CM-TRANSID:ClUQrAD3XfqYlm9mFcsLCA--.41569S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JF15ZFy8Zw4Utr1fAF18Krg_yoWxGFy7pa
-	s7GFsxWF4xCw1xK34DXryUKF4UAw4DCasI9rn8Ja40yFZ7u3ZrGr9akw15C3W5Jrs5Cw43
-	KF92vr1xtwsrXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jf6pPUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhkBZVszYrt7JgAAsf
+References: <20240516-md-vringh-v1-1-31bf37779a5a@quicinc.com>
+In-Reply-To: <20240516-md-vringh-v1-1-31bf37779a5a@quicinc.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 17 Jun 2024 09:52:31 +0800
+Message-ID: <CACGkMEvdL4ieDDbpwy+MGBbHjia5UbbJQfUidh2btG9vPcvWpg@mail.gmail.com>
+Subject: Re: [PATCH] vringh: add MODULE_DESCRIPTION()
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 06, 2024 at 11:02:06AM +0200, Michael Walle wrote:
-> For now, there wasn't any in-tree users of the dtsi files for the
-> Kontron SMARC-sAMX6i board. Let's add device trees, for this board on a
-> Kontron SMARC Eval 2.0 Carrier.
-> 
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
-> ---
->  arch/arm/boot/dts/nxp/imx/Makefile            |   2 +
->  .../nxp/imx/imx6dl-kontron-samx6i-ads2.dts    |  12 ++
->  .../dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts |  12 ++
->  .../nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi  | 148 ++++++++++++++++++
->  4 files changed, 174 insertions(+)
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dts
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-> index 231c0d73a53e..92e291603ea1 100644
-> --- a/arch/arm/boot/dts/nxp/imx/Makefile
-> +++ b/arch/arm/boot/dts/nxp/imx/Makefile
-> @@ -99,6 +99,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6dl-icore.dtb \
->  	imx6dl-icore-mipi.dtb \
->  	imx6dl-icore-rqs.dtb \
-> +	imx6dl-kontron-samx6i-ads2.dtb \
->  	imx6dl-lanmcu.dtb \
->  	imx6dl-mamoj.dtb \
->  	imx6dl-mba6a.dtb \
-> @@ -207,6 +208,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6q-icore-ofcap10.dtb \
->  	imx6q-icore-ofcap12.dtb \
->  	imx6q-icore-rqs.dtb \
-> +	imx6q-kontron-samx6i-ads2.dtb \
->  	imx6q-kp-tpc.dtb \
->  	imx6q-logicpd.dtb \
->  	imx6q-marsboard.dtb \
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dts
-> new file mode 100644
-> index 000000000000..6a0c53f23a15
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dts
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR X11
-> +
-> +/dts-v1/;
-> +
-> +#include "imx6dl.dtsi"
-> +#include "imx6qdl-kontron-samx6i.dtsi"
-> +#include "imx6qdl-kontron-samx6i-ads2.dtsi"
-> +
-> +/ {
-> +	model = "Kontron SMARC-sAMX6i Dual-Lite/Solo on SMARC Eval 2.0 carrier";
-> +	compatible = "kontron,imx6dl-samx6i-ads2", "kontron,imx6dl-samx6i", "fsl,imx6dl";
-> +};
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts
-> new file mode 100644
-> index 000000000000..94c395cc020e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR X11
-> +
-> +/dts-v1/;
-> +
-> +#include "imx6q.dtsi"
-> +#include "imx6qdl-kontron-samx6i.dtsi"
-> +#include "imx6qdl-kontron-samx6i-ads2.dtsi"
-> +
-> +/ {
-> +	model = "Kontron SMARC-sAMX6i Quad/Dual on SMARC Eval 2.0 carrier";
-> +	compatible = "kontron,imx6q-samx6i-ads2", "kontron,imx6q-samx6i", "fsl,imx6q";
-> +};
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi
-> new file mode 100644
-> index 000000000000..15a87ee4159d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree include for the Kontron SMARC-sAMX6i board on a SMARC Eval
-> + * 2.0 carrier (ADS2).
-> + *
-> + */
-> +
-> +/ {
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sound {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&dailink_master>;
-> +		simple-audio-card,frame-master = <&dailink_master>;
-> +		simple-audio-card,widgets =
-> +			"Headphone", "Headphone Jack",
-> +			"Line", "Line Out Jack",
-> +			"Microphone", "Microphone Jack",
-> +			"Line", "Line In Jack";
-> +		simple-audio-card,routing =
-> +			"Line Out Jack", "LINEOUTR",
-> +			"Line Out Jack", "LINEOUTL",
-> +			"Headphone Jack", "HPOUTR",
-> +			"Headphone Jack", "HPOUTL",
-> +			"IN1L", "Line In Jack",
-> +			"IN1R", "Line In Jack",
-> +			"Microphone Jack", "MICBIAS",
-> +			"IN2L", "Microphone Jack",
-> +			"IN2R", "Microphone Jack";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&ssi1>;
-> +		};
-> +
-> +		dailink_master: simple-audio-card,codec {
-> +			sound-dai = <&wm8904>;
-> +		};
-> +	};
-> +
-> +	reg_codec_mic: regulator-codec-mic {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "V_3V3_MIC";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	reg_codec_1p8v: regulator-codec-1p8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "V_1V8_S0_CODEC";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&audmux {
-> +	status = "okay";
-> +};
-> +
-> +&can1 {
-> +	status = "okay";
-> +};
-> +
-> +&can2 {
-> +	status = "okay";
-> +};
-> +
-> +&ecspi4 {
-> +	flash@1 {
-> +		compatible = "jedec,spi-nor";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <100000000>;
-> +		reg = <1>;
+On Fri, May 17, 2024 at 9:57=E2=80=AFAM Jeff Johnson <quic_jjohnson@quicinc=
+.com> wrote:
+>
+> Fix the allmodconfig 'make w=3D1' issue:
+>
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/vhost/vringh.o
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-compatible
-reg
-spi-max-frequency (generic properties)
-m25p,fast-read (device or vendor specific ones)
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-> +	};
-> +};
-> +
-> +&fec {
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +
-> +	wm8904: audio-codec@1a {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "wlf,wm8904";
-> +		reg = <0x1a>;
+Thanks
 
-Move #sound-dai-cells here?
-
-Shawn
-
-> +		clocks = <&clks IMX6QDL_CLK_CKO2>;
-> +		clock-names = "mclk";
-> +		AVDD-supply = <&reg_codec_1p8v>;
-> +		CPVDD-supply = <&reg_codec_1p8v>;
-> +		DBVDD-supply = <&reg_codec_1p8v>;
-> +		DCVDD-supply = <&reg_codec_1p8v>;
-> +		MICVDD-supply = <&reg_codec_mic>;
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	eeprom@57 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x57>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&pcie {
-> +	status = "okay";
-> +};
-> +
-> +&ssi1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	status = "okay";
-> +};
-> +
-> +&uart5 {
-> +	status = "okay";
-> +};
-> +
-> +&usbh1 {
-> +	status = "okay";
-> +};
-> +
-> +&usbotg {
-> +	status = "okay";
-> +};
-> +
-> +&usdhc3 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.39.2
-> 
+>
 
