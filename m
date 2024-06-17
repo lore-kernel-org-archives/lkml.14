@@ -1,38 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72752190053
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E60B192B88
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616855; cv=none; b=aNiM9SbfldsVQEUveSdwlbr1lgJKnhh3xg7fVDFn04Bioy0gfwg290F4+vKuEmppJSigZaEpotd0notBPB+CqSn1XFJL5ZSeXhlxgjrN2yi/ySJ4iVxUVqDEp3hV7Fa0ygfcQCn2fraa9SqcVjBcOLk1kFUBMH3Uy+EjDz39rxU=
+	t=1718616880; cv=none; b=Hn+qMyWDDHz9GzCinuAALfrNS0E0r/dndH3NbvGfVNnqKIZo9qc8tunIOJXE014YtYrS/QKCCdQx1j2ooWCRAdQ2RavuxriLgJjqQVj+jBgXQ0efrE0t/PyUg9DM01jwMtVd8VUTWA/j6km4kOkyWgoT7JBvRynBC4Ku9CfW7NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616855; c=relaxed/simple;
-	bh=qS5RzhPz6VyWFGttWg4LdfawHxBIpGLXRgp4PWSNfVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIArYGqVkIk1ufcHkQRJ80C8BajgXnwp749Ouone2CBOjuAMvTMJ0EQW/2DfASozG12DNy1x6cJm3W7/1+mDY2HGgpKo97p9AjcNv6i5JkoBY/sKvjdBpccNtYGZguRqKZPZhK4AmsTv1lW5dqVXTEzaYqZJ4uZXlS7LZNOe+6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BDDFDA7;
-	Mon, 17 Jun 2024 02:34:36 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49A5E3F64C;
-	Mon, 17 Jun 2024 02:34:10 -0700 (PDT)
-Date: Mon, 17 Jun 2024 10:34:01 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	ryan.roberts@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/mm: Drop ESR_ELx_FSC_TYPE
-Message-ID: <ZnACqAtt549JXGD-@J2N7QTR9R3>
-References: <20240613094538.3263536-1-anshuman.khandual@arm.com>
- <86y179jdbx.wl-maz@kernel.org>
- <ca66f7ac-97d5-474d-bec4-d0ff79c08eaa@arm.com>
- <87cyoj3j44.wl-maz@kernel.org>
- <45ace175-9b59-4ba2-91b8-b96151c03c05@arm.com>
- <86iky8j9ow.wl-maz@kernel.org>
- <cea3ced2-b8b3-426b-8c40-a47881a5bff6@arm.com>
+	s=arc-20240116; t=1718616880; c=relaxed/simple;
+	bh=eQ3GEmVfz/NFFavQ5n+cPs0wp3Jo10dh1DwRVPw1aME=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FHPjcpmsOMkw2KCrVsg/YHOkX1zwVf79vCTcr4ylgigg+k6P9hN9m5temB4OeLmnhuZNHqQiwXBnDBOgJM2HQVWJfabMb7GTOJToH9EKDPh6yqj0/6kHXkYzPj7ZR+s2+DRq5TXVXeZuMHeM3QjXn8N2LsGP4SKErjaGJEUBPM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PbqQOMOP; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbqQOMOP"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c4b92c09bso5547715e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718616877; x=1719221677; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pZqlfzq0gqd8L9nHKEtDudKTVJ2RTjWVZ3OJQhA6rBE=;
+        b=PbqQOMOPL+ZjqEOB2y7P3WMc7nwjms/hKhbpjzmpBdWoX8Wea+u8Md/MMdbE67z9Qa
+         fUe+RmpDytiSpJJ/2M0rdzFXPAGtl5aSjzJcn/mmKDkAzVsUC+ONIiyX8DEVkgXvbK/n
+         LvmLsAcz49Vn5PGl6dU1ciOkqJ4o+zuChoCZuKEf9LS6SDBY2UxaGgqnpXPS00GL7V5n
+         2p2vuLpVI+WzhymLz6pivD0YrI0/ROB1NeMLBIUT5MW4ucwei+Pje+ZeM9nHo04x8489
+         0rIxiYByQrNgkJ8KHPlPjSKDXK3BXkt16M/BZ7+dqyGK06e7BGmlBjrFqcqiM1Y6O/vH
+         1/0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718616877; x=1719221677;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pZqlfzq0gqd8L9nHKEtDudKTVJ2RTjWVZ3OJQhA6rBE=;
+        b=X1CNVNlQoFf/0ouHZ6tg3ahm2dgk4qIaTwV3IJTJAnTW8lTOlmJ4ECZvEjCgGJ2/wf
+         2eGQecaDWKCMbbPh9w+waK4NAoc5eZMQvNgJlFzQGHONtx2XQswiQuuIo4T+IcL64c3T
+         YfTd5FAMKiBuDmaOvE/21rPTAeW9+6/g0pkDNaKAHP0lUOvrkOd8leoQlsdGL7bjoB7l
+         t/QF59hwfkakM2zv8t7UazHmrwz2o42sTXOZMpPPz42C0YAGwxENzw4n41SMmNfHWKWk
+         dtXPabwIcCHIe06boSWAxFWoj48usEhHrDbDzTQJHurBvTtXn/Fo0BlnSMC+C58KGVsl
+         5inQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNbXJMwP667X5yM1HmZN/0l8OVIPB7RvB9HHyViyzqIS77UUpjsrvYYF1DM3sMt1BEbrERbch3jw9zb+0RYWQk7Am06s1GLARqGkPR
+X-Gm-Message-State: AOJu0YwUApd2rDzREZzbDTWuG9cSNIEHCV9bieY2P+FPrm1g2Uop+Jo4
+	c6mzqmr3ZALOVP5db12s++snoNp1f52335KjiZ61qqrzD55MyQqogoaFTA70BqHnqPMM49SO4vL
+	t
+X-Google-Smtp-Source: AGHT+IGTlennQ1HIxAYqKG4+OH6QB/vWUXrpLW9Q5q5XLEK9WNED7iZgfkSiN+EXrJNQbyVatzIneA==
+X-Received: by 2002:a05:6512:1c2:b0:52b:863a:59b4 with SMTP id 2adb3069b0e04-52ca6e6e576mr6799194e87.41.1718616876583;
+        Mon, 17 Jun 2024 02:34:36 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f602e0c2sm152224985e9.14.2024.06.17.02.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 02:34:36 -0700 (PDT)
+Date: Mon, 17 Jun 2024 12:34:32 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: Richard Cochran <richardcochran@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v2 net] ptp: fix integer overflow in max_vclocks_store
+Message-ID: <ee8110ed-6619-4bd7-9024-28c1f2ac24f4@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,87 +68,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cea3ced2-b8b3-426b-8c40-a47881a5bff6@arm.com>
+X-Mailer: git-send-email haha only kidding
 
-On Mon, Jun 17, 2024 at 02:09:27PM +0530, Anshuman Khandual wrote:
-> On 6/17/24 13:13, Marc Zyngier wrote:
-> > On Mon, 17 Jun 2024 04:15:40 +0100,
-> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> >>
-> >> Does the following re-worked patch looks okay ? Earlier set_thread_esr() changes
-> >> can be dropped from arch/arm64/mm/fault.c and also the original commit message
-> >> still makes sense.
-> >>
-> >> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-> >> index 7abf09df7033..6cd13ac61005 100644
-> >> --- a/arch/arm64/include/asm/esr.h
-> >> +++ b/arch/arm64/include/asm/esr.h
-> >> @@ -121,6 +121,13 @@
-> >>  #define ESR_ELx_FSC_SECC       (0x18)
-> >>  #define ESR_ELx_FSC_SECC_TTW(n)        (0x1c + (n))
-> >>  
-> >> +/* Status codes for individual page table levels */
-> >> +#define ESR_ELx_FSC_ACCESS_L(n)        (ESR_ELx_FSC_ACCESS + n)
-> >> +#define ESR_ELx_FSC_FAULT_nL   (0x2C)
-> >> +#define ESR_ELx_FSC_FAULT_L(n) (((n) < 0 ? ESR_ELx_FSC_FAULT_nL : \
-> >> +                                           ESR_ELx_FSC_FAULT) + (n))
-> >> +#define ESR_ELx_FSC_PERM_L(n)  (ESR_ELx_FSC_PERM + n)
-> >> +
-> >>  /* ISS field definitions for Data Aborts */
-> >>  #define ESR_ELx_ISV_SHIFT      (24)
-> >>  #define ESR_ELx_ISV            (UL(1) << ESR_ELx_ISV_SHIFT)
-> >> @@ -388,20 +395,33 @@ static inline bool esr_is_data_abort(unsigned long esr)
-> >>  
-> >>  static inline bool esr_fsc_is_translation_fault(unsigned long esr)
-> >>  {
-> >> -       /* Translation fault, level -1 */
-> >> -       if ((esr & ESR_ELx_FSC) == 0b101011)
-> >> -               return true;
-> >> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
-> >> +       esr = esr & ESR_ELx_FSC;
-> >> +
-> >> +       return (esr == ESR_ELx_FSC_FAULT_L(3)) ||
-> >> +              (esr == ESR_ELx_FSC_FAULT_L(2)) ||
-> >> +              (esr == ESR_ELx_FSC_FAULT_L(1)) ||
-> >> +              (esr == ESR_ELx_FSC_FAULT_L(0)) ||
-> >> +              (esr == ESR_ELx_FSC_FAULT_L(-1));
-> >>  }
-> >>  
-> >>  static inline bool esr_fsc_is_permission_fault(unsigned long esr)
-> >>  {
-> >> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_PERM;
-> >> +       esr = esr & ESR_ELx_FSC;
-> >> +
-> >> +       return (esr == ESR_ELx_FSC_PERM_L(3)) ||
-> >> +              (esr == ESR_ELx_FSC_PERM_L(2)) ||
-> >> +              (esr == ESR_ELx_FSC_PERM_L(1)) ||
-> >> +              (esr == ESR_ELx_FSC_PERM_L(0));
-> >>  }
-> >>  
-> >>  static inline bool esr_fsc_is_access_flag_fault(unsigned long esr)
-> >>  {
-> >> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_ACCESS;
-> >> +       esr = esr & ESR_ELx_FSC;
-> >> +
-> >> +       return (esr == ESR_ELx_FSC_ACCESS_L(3)) ||
-> >> +              (esr == ESR_ELx_FSC_ACCESS_L(2)) ||
-> >> +              (esr == ESR_ELx_FSC_ACCESS_L(1)) ||
-> >> +              (esr == ESR_ELx_FSC_ACCESS_L(0));
-> >>  }
-> >>  
-> >>  /* Indicate whether ESR.EC==0x1A is for an ERETAx instruction */
-> > 
-> > This looks better indeed.
-> 
-> Thanks Marc.
-> 
-> Hello Mark/Ryan,
-> 
-> Could I still keep your tags for the patch, or it's better to just
-> drop them as there are some new changes being folded in. Please do
-> advise. Thank you.
+On 32bit systems, the "4 * max" multiply can overflow.  Use kcalloc()
+to do the allocation to prevent this.
 
-Just drop them for now -- we can easily reply with new tags (and I
-probably will, as the above looks sane to me).
+Fixes: 44c494c8e30e ("ptp: track available ptp vclocks information")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+v2: It's better to use kcalloc() instead of size_mul().
 
-Mark.
+ drivers/ptp/ptp_sysfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
+index a15460aaa03b..6b1b8f57cd95 100644
+--- a/drivers/ptp/ptp_sysfs.c
++++ b/drivers/ptp/ptp_sysfs.c
+@@ -296,8 +296,7 @@ static ssize_t max_vclocks_store(struct device *dev,
+ 	if (max < ptp->n_vclocks)
+ 		goto out;
+ 
+-	size = sizeof(int) * max;
+-	vclock_index = kzalloc(size, GFP_KERNEL);
++	vclock_index = kcalloc(max, sizeof(int), GFP_KERNEL);
+ 	if (!vclock_index) {
+ 		err = -ENOMEM;
+ 		goto out;
+-- 
+2.43.0
+
