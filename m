@@ -1,94 +1,122 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E95192B89;
-	Mon, 17 Jun 2024 09:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA0A19148B;
+	Mon, 17 Jun 2024 09:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615495; cv=none; b=S3d32lt/YuZsHf8klgcMYKtIMnY8TJlkLvYqaSDIFJizd52qYd3Gu3GJkKwiQ2KHgH7wbH+n1BnJrfEkj+XJoEwp1uxC1mdanux9poiVH1GKZjS+z3J7cQ8FO1ugE84fHSgVRGU5e30LTtVvddit02VXYxC6erWEeImQdZckNHw=
+	t=1718615495; cv=none; b=rdZ9pT3MeuG1CdqzezCWzVHhF/p1PU3QXKz1xV5g3uYRxnVSdnzuHVXXsN3yt/7I6q/3Y++3FcbSWIJ9E00C5OwwLF25UhFlHHU5a4abt6apW8UXgqTfFQfUHpXlsDsrbjqpfssdB4DVYXkqnG4wCVnlvjAs/0aUCQlE6YJbLig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718615495; c=relaxed/simple;
-	bh=BNypJZ0Cx2gOnF3iMtKKqVQWHAjZZROs/81IROL2cVU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=SbjqBryXwtF5Xj6JFoZIJ7qKnuPp3hjzgB2l/phzVr+GPVpu0fNoh0wkY1K9x+GwaEXRL8KuecIX9n36mP12maVVeWEbCx/pPY91o4t4L9t8dr5oFmFFo+uESi8s0b/OlOTYS13GOszqUSoBN+JAzVs0fRJN3Flr6FL/nSh3ZiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W2kdc1sRtz4f3ktx;
-	Mon, 17 Jun 2024 17:11:16 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EBF401A016E;
-	Mon, 17 Jun 2024 17:11:27 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgCnDw2+_W9mE+OzAA--.36669S3;
-	Mon, 17 Jun 2024 17:11:27 +0800 (CST)
-Subject: Re: [PATCH -next v5 7/8] xfs: speed up truncating down a big realtime
- inode
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, djwong@kernel.org, brauner@kernel.org,
- david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
- John Garry <john.g.garry@oracle.com>
-References: <20240613090033.2246907-1-yi.zhang@huaweicloud.com>
- <20240613090033.2246907-8-yi.zhang@huaweicloud.com>
- <ZmveZolfY0Q0--1k@infradead.org>
- <399680eb-cd60-4c27-ef2b-2704e470d228@huaweicloud.com>
- <ZmwJuiMHQ8qgkJDS@infradead.org>
- <ecd7a5cf-4939-947a-edd4-0739dc73870b@huaweicloud.com>
- <Zm_ezp1TaIoAK1-P@infradead.org>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <59887f65-4a5b-aa96-7646-4c7b79372bf1@huaweicloud.com>
-Date: Mon, 17 Jun 2024 17:11:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	bh=GKC80AskjgIH1oTAvyBvjh1n9L5xZNA5S+uO3/gNb5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGpWILszo/KoifxL/3ZgWybtzHTqoD75lYAAIcyGfvkSJWHR86B+W+hir0p4lJhDAk8nnKUHigvgk37v+bFrU2PSuUbGIm25Mt+VzbRcGmDZLOWZINYwXu4GeTr3MN7NNF5hb9ww8pKV/LRzU37uS+C2WnHPgEXt2h7QvFViJ+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TT1W0lpv; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TT1W0lpv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718615494; x=1750151494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GKC80AskjgIH1oTAvyBvjh1n9L5xZNA5S+uO3/gNb5Y=;
+  b=TT1W0lpvY5XLSCskHJIY/wMXGRy0rfmaFidx4hexqpVKU3W9cP7THrI9
+   ZS9aXO+SubdTs/VLbUeBzelqEPfE9Awdp3ipFEEv4uBCjuomD+nk8j96P
+   +UGbUhv0pMJUPXroYNjGAyvB74IXofrT5pXKc8AOW/Q3wviaHH9sl3SBy
+   34nir+IzJHhT3xOO7y++eE4IY+jAtW9f+qQI5maleRTXcBXGhcHvzssss
+   87ZW4AiSpcmq16RAC9m3KSVQsDwcQI24ICrygH33EfRnRZWYYzTV4YVAX
+   ZkOvD2ZLnbYkr7JhKKXYWVeao+GbuT9aT4nNKk4l4IWqYSU4M/j9lhvYs
+   w==;
+X-CSE-ConnectionGUID: JavX3WjORAqw9z32VMc7kg==
+X-CSE-MsgGUID: vt7+SXh5Se20nFykyofURg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="19257195"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="19257195"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 02:11:33 -0700
+X-CSE-ConnectionGUID: YI5I6kmtS7iaFryFOelWYA==
+X-CSE-MsgGUID: mHxU0YLlS7mxpiTz5kcGdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41260324"
+Received: from mshehzad-mobl.amr.corp.intel.com (HELO desk) ([10.209.21.13])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 02:11:33 -0700
+Date: Mon, 17 Jun 2024 02:11:32 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH PATCH 2/9] cpufreq: intel_pstate: Use topology_cpu_type() to
+ get cpu-type
+Message-ID: <20240617-add-cpu-type-v1-2-b88998c01e76@linux.intel.com>
+X-Mailer: b4 0.12.3
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zm_ezp1TaIoAK1-P@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCnDw2+_W9mE+OzAA--.36669S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrGr1DKr4xArWxJw1rAFyDtrb_yoWxArbEq3
-	yavrZ3ArWIy3WxZ3W2yrn8CrWIqFs5Kw4jk343Gr1DWayrXr93ZrZ8Cr1fXw1agF43Crnx
-	Kr1DZ34xXr9IgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbIxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU1zuWJUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
 
-On 2024/6/17 14:59, Christoph Hellwig wrote:
-> On Sat, Jun 15, 2024 at 07:44:21PM +0800, Zhang Yi wrote:
->> The reason why atomic feature can't split and convert the tail extent on truncate
->> down now is the dio write iter loop will split an atomic dio which covers the
->> whole allocation unit(extsize) since there are two extents in on allocation unit.
-> 
-> We could fix this by merging the two in iomap_begin, as the end_io
-> handler already deals with multiple ranges.  
+Intel pstate driver uses hybrid_get_type() to get the cpu-type of a given
+CPU. It uses smp_call_function_single() which is sub-optimal and can be
+avoided as cpu-type is also available in the per-cpu topology structure.
 
-Yeah, that's one solution.
+Use topology_cpu_type() to get the cpu-type.
 
-> But let's think of that when the need actually arises.
-> 
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+ drivers/cpufreq/intel_pstate.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-Sure, I will retest and submit only patch 6&8 to solve current issue in my next
-version.
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 65d3f79104bd..40f5e5b0b45e 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1951,24 +1951,16 @@ static int knl_get_turbo_pstate(int cpu)
+ 	return ret;
+ }
+ 
+-static void hybrid_get_type(void *data)
+-{
+-	u8 *cpu_type = data;
+-
+-	*cpu_type = get_this_hybrid_cpu_type();
+-}
+-
+ static int hwp_get_cpu_scaling(int cpu)
+ {
+-	u8 cpu_type = 0;
++	u8 cpu_type = topology_cpu_type(cpu);
+ 
+-	smp_call_function_single(cpu, hybrid_get_type, &cpu_type, 1);
+ 	/* P-cores have a smaller perf level-to-freqency scaling factor. */
+-	if (cpu_type == 0x40)
++	if (cpu_type == X86_CPU_TYPE_INTEL_CORE)
+ 		return hybrid_scaling_factor;
+ 
+ 	/* Use default core scaling for E-cores */
+-	if (cpu_type == 0x20)
++	if (cpu_type == X86_CPU_TYPE_INTEL_ATOM)
+ 		return core_get_scaling();
+ 
+ 	/*
 
-Thanks,
-Yi.
+-- 
+2.34.1
+
 
