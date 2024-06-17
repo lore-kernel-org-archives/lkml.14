@@ -1,154 +1,92 @@
-Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F10190464;
-	Mon, 17 Jun 2024 08:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6604D7492;
+	Mon, 17 Jun 2024 08:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718612521; cv=none; b=cgtrzs3CtyrkuclhV0QPGECzLNchF5Jeeu7nk0aH4sGkS68XyD4A5Ot3sgf1vR+mkzlXt2bVecTvfalImlA5rYmDA1Zg/76yzNJ9gS0eTR3cGfRb0798+cN2gOmzq5adik7qgxSL6eHMCV7H/IwAS+2nTaUNYycHF70+49RJRbQ=
+	t=1718612663; cv=none; b=O2broj1+/QA9FaY7fPP8GCnATQfGixx9/Cfbnknd6LXDqIWoXL/CVym69V//5Qyoes3RlO7DuyXhMoAp3m/m/u03XV1J1GXe7bbm2owDf8XNZfNOvEwZy6Mga+bJ5XNAFdMCj1gsgUK8UA2rsNpx74lYl+Jve17MSiS0uD07P2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718612521; c=relaxed/simple;
-	bh=m7ezWA4EapccuJHFsnN/X8zAkfEKsVddEeDHIkp3DSs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=haJxkvyFnt8gci44TNyeKlgh9WBWT1AqXb+wWfZxZC2RfARmxVs/467iuTXqIKA/w9No75i9aLdY8wjCJQVN5lNpU8xbmKHgdTuXi3qto1hgtlUTUAIDeudbfTTwa+0T7q14FBWxTYfTZ9gNF0yD//x2U9qQ1/rZdiHl0DWZSCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=isu0i9O1; arc=none smtp.client-ip=185.250.0.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	s=arc-20240116; t=1718612663; c=relaxed/simple;
+	bh=4PMSWQqpgy9KLTBdJ1z7dLEh7Y62+2GJ2xCLSoh/wE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTC03h1hnW9OlBZNUD4F9A1HDxI4Hsf+y1afbrCysIDbLESYShAkfEO+1Sc4ctlcThPquh6QFkYYlr0eHeBLOgQ8LYKfhDkohsFT3bnXDP8KcWxz2BZyqTuqZqZRLgIhIphxY6bVxDM7FnpuPLP6e3XGyAmunI73j/t8MMmm0uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PhN4LAsy; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="isu0i9O1"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9A7506A800;
-	Mon, 17 Jun 2024 11:21:30 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1718612506; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references:autocrypt;
-	bh=BwuhUxOR0latqkY8rTzfYsXbbsUhulcTI88pJ+A5+2s=;
-	b=isu0i9O1jaU5xq9RCrKEsKPD1NzFaKbYiNezBKRHU5mUrOpvjpGUI38yeACbwzr3hRQVQ2
-	VTAQlxBYCsX2QBr0JDt3v8nKXd/7JSBDAMGM6UsrXDRi7zOZnufnzHVfCoxGbgh83FvvsQ
-	jEwFynmgv0WVwcqn+4XOjRo3wl9PgE+SUshbjn+Hx3ZGVSYCjscqvCB8A0baN2Eb5mnVBU
-	i5HL0kVHyHNLe3PLGdMAZ0wk91S18aIxdPMDzJgLqP29qrfdkWTDreY5lLaTRu/F0stglH
-	yE+uW8cuhVG/daFy67r7EMx+HiA/pFyf0xSLc65XGEyAPQI5HuITKREkNxyRYQ==
-Message-ID: <c0d18fef-be65-461e-948f-c25e757199a5@lexina.in>
-Date: Mon, 17 Jun 2024 11:21:30 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhN4LAsy"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b96a78639aso1622411eaf.1;
+        Mon, 17 Jun 2024 01:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718612661; x=1719217461; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9HdCcwPlP04M3/JAPMUtzS+6dDB80C3B57mZ9YxWUl4=;
+        b=PhN4LAsysQRcL6wvq7W32/wCk4K+KdPg9e0nObFG8uu5to4e7QA30/qL3OhjqXMVHR
+         +GX5Qo164NCiYPVqbKQV/m2oOY6kyoWtIGiNGL7H3OBilwln7nCVogUDbkD6QMPtUxML
+         dTcRiFMWYnhd1IlgFIHvvDDfoCTwOca0HhseGS3TU2+XRuC3IyIIGqr6Xljd+QL4MSey
+         pcNJoZ/Sub5pk5Hn7rUAjLvrxlMXlrTXsO/GDcuBqyoXw1G7oBP689Gcnw77RzkzSTt7
+         SBUGPpL7MiqEKAiktDaXEFhpW8BaGQOnA3x/2KbNjMnGlfpYRUi+5lksxDmji9/QoF1Q
+         Te9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718612661; x=1719217461;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9HdCcwPlP04M3/JAPMUtzS+6dDB80C3B57mZ9YxWUl4=;
+        b=K1xmpYPyu6SP1KO5DWV49ehzLJqn3/MKyILzOPhdRtsBcCLH6EyMVVEqo1bepc96G7
+         1OJeuXlqMEQCmJzn5kPy7rBYIn/n3wOLWKqgmXQ6yjM1QqF9eBWxQPq2ThCL5Y9s5pvH
+         +AStxLSSE4Oz00ExQGRX5rk2ZIblCvD/ye5IvDmCEK6nhLGvJBizmNeH21PgdxguRajn
+         j6gXxVY3p501CzbfhRrBJP0By691ZuA67/d5KBHZFNX+/xXJzY2oWNUaEsFQTjhwpHjN
+         wiXkoYpORj37CpbFYoi+q+Lu5LC1TUv4PhS4+PsqklFtczdRJTrPIPFXrkrDDq8Z64xO
+         x7qg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3q79ULvZdK0fjQng7qBVf4NqUMRZFT3rf0sHzGvBxiYLLuRa//J/RuJj8dxdLWzR+MqRH8JcOa+zaryX1LdfjKxNlfTdSZaN0eYbVnYiS6Ad7YStYGKC1HK9vhv56K5e+j25FBo7KyjYOBFrEG0Mk61PqyHrKZ1AMhUBUZCreuGLaxsiCBzXtuw==
+X-Gm-Message-State: AOJu0YykWm7489kBlxIac4jRXnRIL222Bl00Azk8YY52j6yEz5SJxso4
+	ZFfiuMZeC703xRHpZwjvB10Mdn6LS0AFJBH3jlgyG5Lc9HfzW4spNuIRssKzTELQDqaJxTjYlyM
+	fukYwczqT94dAWOWpzDb5Hyb3PKU=
+X-Google-Smtp-Source: AGHT+IEXwPAwhOMCvBhbWjRVW5Ubq87Slh/d+RapR7WqMRF0MA+etjIVrc7SQl3B2SvXdsOlXOP+gTpxWIkIi/JCyWc=
+X-Received: by 2002:a05:6820:1506:b0:5bd:80d7:1891 with SMTP id
+ 006d021491bc7-5bdadc8d142mr8246644eaf.9.1718612661374; Mon, 17 Jun 2024
+ 01:24:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Viacheslav <adeep@lexina.in>
-Subject: Re: [PATCH v5 3/4] dt-bindings: arm: amlogic:
- amlogic,meson-gx-ao-secure: add secure-monitor property
-To: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20240610084032.3096614-1-adeep@lexina.in>
- <20240610084032.3096614-4-adeep@lexina.in>
- <20240610-dropout-compress-6d6a9b749524@spud>
- <4866f6d4-2e3c-40c7-a8cb-ba4e422ffef6@lexina.in>
- <20240611-undying-earthy-00236ac251aa@spud>
- <20240613164244.GA1999034-robh@kernel.org>
-Content-Language: ru, en-US
-Autocrypt: addr=adeep@lexina.in; keydata=
- xsDNBF+1fsQBDADh4przgt1LU4l+B6rIWel42Mg3hgdgbZ2nlIkKnaaNLXkm5rK0EJJeStd7
- 8sxsdk9n7UQFB3mkmgjc89zyAG+CDG/+KZQMWOsc5IvWlDebKlefieyvf9yvV4qcQTeudr3C
- CgUxq8qsp1fDX9jdSjz5/OMJKrxCElMxLxJTFF+FHtWvUIMr4txesE8NP7f7VnIYILEeMM8q
- gvptNUrWQr6KTv4XnRD/BvsRZJWnQ/a5MzMGQWzw7LeT4vhV4lYqJsXmxbGLUOKi+5ZpslR3
- Ffby2kdL1Xyq6Y7Gi70RhUpKP0xGJ6gDVs6SjFSb9UxgrjwNBWZcFeSJkc6pR5JbgbYMRvdA
- W5CNnA8TzdfhPgO3HEDFlsVqberSBI/tMiwHWPze7jkv7ttx/Wg9+RZybFfCkGm4XvKh7aP4
- jG3Td43mqhyHGzOd/EUxNITebqxqpEJTmRCisgpjr3M76aht4UFz11tP/QEuCrpDX0bOMPYA
- 4aohmhw5FLyWUPg0JllH6kEAEQEAAc0SIDxhZGVlcEBsZXhpbmEuaW4+wsDwBBMBCgAaBAsJ
- CAcCFQoCFgECGQEFgl+1fsQCngECmwMACgkQ7jaxEAJajfrgvAwA051C6jUKS6Wp4oy2Or0i
- B1HXCDDaCS2zgWDCa+nuI+8qVDzTx0TAlurt+S3AUv8+DHjkc4XjEHtDdigabp2nGsk51w3C
- WyGD7NKUQz8/mpN7Fb2OV79etE3PTMayUrXRZh7ZuvQ7vkUemKM8rRw0PFPu3kqwZPDPapYH
- rPyJZjnNFuvFULli/xIcc8+WklaYgOKg4nmsVBT4NigiV2Y4Mb4yVBWl58mErRH5pv08NYb4
- 1JFD2FZnTGhEeumQDl9p6Kd+rZETRgkMEHw+HMwdXl5ZXv5ci4NTigiH77UvfN8FetuAdl3x
- 6EM+1bJkgab6TMyWdNPPmF6e5BPHtBduk9gzmU5+xUlTbur0gun662oFi1oWwbAqhBDueDyL
- xCi8qjycOJaehBcPRtksQeTZrp+fDYne7hq3ywMBdlqhdz4Sfm7urLHvA/bApgJKlWylkqkl
- sG82QPh63ZnNw2lORTGEQTO3tBMY5RLKnrvZjtZR7W06pVZXyQQXZceEmpCazsDNBF+1fsQB
- DACy2kiiKt2bTSl4u/z1en+BhP16c/RbjnDXVkbapyZRCf3OmjfpRXprje4Z0+HAHReWgnOc
- sC6vNk+SWimoE/qyXQTNnUDS7KYdFaof14UmU2rA9pf1oXHOgMRzlwinCe+6NCgkjsqOr3e5
- 8XNo+cxmQy1bhHt1LDwixBFU6v65umJpZAVUd1F624wU+UeRZCjymMB80ePxF9ppnfcYc+Yp
- aM70LFwDzxCmeLGv0uMb0jfgJ8j2k2LS5nOQ4AX+WoOb98vFuqW7oYA9oCCKDG0Gp/w9QxG5
- RKjMytZIUxQA2JDq0jUN90pK0mtZJn7/Dr8GRM+W+UpeKiK7wW9iTFH+hTIRtbCC8vO8JDGz
- umW65BFtZfH2cEQDU2nbdsf/SstszPDMuyDiCHmxh8MKN/fn55osvJvjXgqpsH48tz9O7262
- P5xK4nMpsWWj7W6OhHGTQTHgMrKsiYoDx9+5NGt8n+MbLO5DUvyOSvfAiE+hRaf97R9vtoSy
- BoyahDXmCH0AEQEAAcLA3wQYAQoACQWCX7V+xAKbDAAKCRDuNrEQAlqN+ra3C/95TV1Fjy//
- t6FvNIgLy0e+5LnTegejiCaGbxklGFIWkGamX/DOm3QF+ZaKsoXUf/kmpL10dnsExiGHTeGw
- 7zR8+rOkVnK6fq0ady43a7RxKP5nW0pDVclTvsAWr1CcdFrCVpH2idj7fjtAmZlMbuiEMXoo
- kaDXdhJtS60VrwS4xUlw4ZPQjMZdQdvpu4vGtZUfJr+8vJ757d9N3EGpFUrk+5QWozjktLVm
- gdQ0nlD9ji3RpwjhQWCIoi6GmdWpfdj3LzDO/DwWRLlz8iAdZG3pHSGsCmM2MJ16HbPnsSxr
- YrKwM/HVpqTSVsprnQogPL/xM0AH11uAbqNvIvm6sUkEmx2kdBzTKjY0YdSkpUgTauWn13bg
- Ay+0xfqxRvYBSsHpWpnSnsI12861OVGnYsnB8gJlJLSQjOl3Kwq36MeWbAg6Bs4PnNU4i+uO
- rz9PJ4vHmMYfmMDJLYWJI6pcLyAoZSE/bSTLaRV73/zjtlX85mtEL3fvh6G342uRCvAwqgI=
-In-Reply-To: <20240613164244.GA1999034-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20240510094034.12493-1-linux.amoon@gmail.com>
+In-Reply-To: <20240510094034.12493-1-linux.amoon@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Mon, 17 Jun 2024 13:54:04 +0530
+Message-ID: <CANAwSgTRfEChziyys251-FezSevSq9pxHLJixVCAybJhq5YAqw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PM / devfreq: exynos: Use Use devm_clk_get_enabled()
+ helpers
+To: Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, linux-pm@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for review.
+Hi All,
 
-13/06/2024 19.42, Rob Herring wrote:
-> On Tue, Jun 11, 2024 at 07:07:28PM +0100, Conor Dooley wrote:
->> On Tue, Jun 11, 2024 at 01:25:11PM +0300, Viacheslav wrote:
->>> Hi!
->>>
->>> 10/06/2024 19.08, Conor Dooley wrote:
->>>> On Mon, Jun 10, 2024 at 11:39:49AM +0300, Viacheslav Bocharov wrote:
->>>>> Add secure-monitor property to schema for meson-gx-socinfo-sm driver.
->>>>
->>>> "bindings are for hardware, not drivers". Why purpose does the "secure
->>>> monitor" serve that the secure firmware needs a reference to it?
->>>
->>> This driver is an extension to the meson-gx-socinfo driver: it supplements
->>> information obtained from the register with information from the
->>> SM_GET_CHIP_ID secure monitor call. Due to the specifics of the module
->>> loading order, we cannot do away with meson-gx-socinfo, as it is used for
->>> platform identification in some drivers. Therefore, the extended information
->>> is formatted as a separate driver, which is loaded after the secure-monitor
->>> driver.
->>
->> Please stop talking about drivers, this is a binding which is about
->> hardware. Please provide, in your next version, a commit message that
->> justifies adding this property without talking about driver probing
->> order etc, and instead focuses on what service the "secure monitor"
->> provides etc.
-> 
-> To put it another way, how many secure monitors does 1 system have?
+On Fri, 10 May 2024 at 15:10, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> The devm_clk_get_enabled() helpers:
+>     - call devm_clk_get()
+>     - call clk_prepare_enable() and register what is needed in order to
+>      call clk_disable_unprepare() when needed, as a managed resource.
+>
+> This simplifies the code and avoids the calls to clk_disable_unprepare().
+>
+> While at it, use dev_err_probe consistently, and use its return value
+> to return the error code.
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 
-One per system in current device tree.
+Gentle ping?
 
-
-> 
-> What do you do if the property is not present? You didn't make it
-> required which is good because that would be an ABI break.
-
-We need an indication of the ability to use the secure-monitor to obtain 
-additional information within the soc driver. It seemed to me that using 
-an explicit reference to the secure-monitor is the best choice.
-
-> 
-> You only need a link in DT if there are different possible providers or
-> some per consumer information to describe (e.g. an interrupt number or
-> clock ID). You don't have the latter and likely there is only 1 possible
-> provider.
-
-Would replacing the reference to sm with an option, for example, 
-use-secure-monitor = <1>; look more appropriate in this case?
-
-
-> 
-> Rob
-> 
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-
--- 
-Viacheslav
+Thanks
+-Anand
