@@ -1,249 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628AF15E5A9
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767EA15E5DE;
+	Mon, 17 Jun 2024 14:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718635292; cv=none; b=RdqR7gip4NwUV3djlHcem4hmR5vu39MKCJgKIhX8fuCAcyU0MTSDql0kn9phYh67RPJFAhou698xRjC0Lrz1iWQZ0RNCH5pbMMZWcjF6RXkFwPWlSevxIACPmrqk7WKlOYNLfKx2naya1InnqpJ1g3e+r1CwW+Bq4RYqNYpXa40=
+	t=1718635298; cv=none; b=JKmaPozO8jO3KrLViF3enCw8nKGk0H7R9bw97/NbbkboqE4c/BcFRpqj0T6uJP0A7YmqvEUirPcWxjhx9tllYDqYqS9sq2zFlC9va6HiVu72/0yHkRcvOSZ5YOzVttrAwxRm46Y7sMHRvBAFUIVBhA7bt1I6oY1Dac3eaxVlC94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718635292; c=relaxed/simple;
-	bh=QW5oWZ8gmTw6vFjOs2TBVrkH9y+MYMdSSUWbhgEl4xs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qICs2PVUAdYno6SRv3sTmKftqrAjoBJDyR+q0Qf2tL+UhlHoX2lLt+u7JkbYLS9KiGGJPyqpRvGg5Tt6tHTPfEk+ITd/ZnmH0j3nYHbO9a5Iee4+Fn2EKMViOjoSVuKzo0bW+C2mk26JIj8ujeB+MXf43vQ9ekLWT907wayoIL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VT4X0bt7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718635298; c=relaxed/simple;
+	bh=FyWrXdXjckoc0z50AFEwR9w92vG/cvPD3T0yDH7WBvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hV0efFoIGEcyYF9+eQlzthXEmaJeMtWXvfVq93b6OlUK8oibc+S3RLA185uUsqs0GOKiKfEX+7uhQrjZzpcys2mWhoSlTvOnG+CobiQHQCeTFxhwp1Epco4ZhELpOCSZUr6zL1RFIzJovXnt513Od5znAwlOaSSSSJsEEKK9pjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g/RJHWfF; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VT4X0bt7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718635289;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dBjPYXeV0EWopTwsNRqGM0mNGcDnahH8FozbM0iNvCA=;
-	b=VT4X0bt7CH550SAaYUBTfubqgiJwlKEzMe7Q6xjjM837jiRf6QFxUtx2doYseRhv7CsnaJ
-	JLrGwbDUPl+nGGW7YbBC/icO4U84ysaFbWlXbc9KeJCWHAjW2vKPBay0L+j6/vsm8kLYaT
-	WPQ9XpGNQXHX3EFEt87ZbJHTvjBr/CU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-240-yvPWStyWOEuXkLHKYogjIA-1; Mon,
- 17 Jun 2024 10:41:23 -0400
-X-MC-Unique: yvPWStyWOEuXkLHKYogjIA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B341119560B6;
-	Mon, 17 Jun 2024 14:41:21 +0000 (UTC)
-Received: from llong.com (unknown [10.22.32.57])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C5C11956048;
-	Mon, 17 Jun 2024 14:41:19 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Xavier <ghostxavier@sina.com>,
-	Peter Hunt <pehunt@redhat.com>,
-	Petr Malat <oss@malat.biz>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH-cgroup v2 5/5] selftest/cgroup: Update test_cpuset_prs.sh to match changes
-Date: Mon, 17 Jun 2024 10:39:45 -0400
-Message-Id: <20240617143945.454888-6-longman@redhat.com>
-In-Reply-To: <20240617143945.454888-1-longman@redhat.com>
-References: <20240617143945.454888-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g/RJHWfF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718635297; x=1750171297;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FyWrXdXjckoc0z50AFEwR9w92vG/cvPD3T0yDH7WBvQ=;
+  b=g/RJHWfFAfu/kyMrsGlrOy7zZGMmU4PzUTrGw9D3uBpoMm7awoxPJixm
+   dakdQWWXvkV7MBEPDCyIz+ZZhAA05dxOlunRdPeZfZwj2TsLN40pQp1O9
+   lDcyZOO3f/VrlNK1eUcqSO5rIUtRsEJ/B5u+9C3d68oFnDD/0vqESpyW1
+   QEIoL6ptLC+1FwTiwLeMWKdzAeRS8l1YZeT5qcJ6Nw6Ut6gvptbWl6F2A
+   VOK0MIpTIEU52BZUnQ6vygixh3P3/FC+5mAYAot34OXLsGFePIhxk9QO7
+   PI/IyKKG4VvBd93mTofP6RmO3vDiEmI1IaRS9TaqHZbRfpkG3Lksub9sR
+   g==;
+X-CSE-ConnectionGUID: 6tW5+gjxQKK02LBReq6R+g==
+X-CSE-MsgGUID: JIE+7mvtTI+KcxR3v0Eb4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15179865"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="15179865"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:41:36 -0700
+X-CSE-ConnectionGUID: XRIBTruCQAK1dCALWT0eWA==
+X-CSE-MsgGUID: jNSuDk0rR3u54hagyJvdiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41915717"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by orviesa007.jf.intel.com with SMTP; 17 Jun 2024 07:41:33 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 17 Jun 2024 17:41:32 +0300
+Date: Mon, 17 Jun 2024 17:41:32 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: glink: fix child node release in probe
+ function
+Message-ID: <ZnBLHFA4PjxwYWr+@kuha.fi.intel.com>
+References: <20240613-ucsi-glink-release-node-v1-1-f7629a56f70a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613-ucsi-glink-release-node-v1-1-f7629a56f70a@gmail.com>
 
-Unlike the list of isolated CPUs, it is not easy to programamatically
-determine what sched domains are being created by the scheduler just
-by examinng the data in various kernfs filesystems. The easiest way
-to get this information is by enabling /sys/kernel/debug/sched/verbose
-file to make those information displayed in the console. This is also
-what the test_cpuset_prs.sh script is doing when the -v flag is given.
+On Thu, Jun 13, 2024 at 02:14:48PM +0200, Javier Carrasco wrote:
+> The device_for_each_child_node() macro requires explicit calls to
+> fwnode_handle_put() in all early exits of the loop if the child node is
+> not required outside. Otherwise, the child node's refcount is not
+> decremented and the resource is not released.
+> 
+> The current implementation of pmic_glink_ucsi_probe() makes use of the
+> device_for_each_child_node(), but does not release the child node on
+> early returns. Add the missing calls to fwnode_handle_put().
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: c6165ed2f425 ("usb: ucsi: glink: use the connector orientation GPIO to provide switch events")
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-It is rather hard to fetch the data from the console and compare it to
-the expected result. An easier way is to dump the expected sched-domain
-information out to the console so that they can be visually compared
-with the actual sched domain data. However, this have to be done manually
-by visual inspection and so will only be done once in a while.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Moreover the preceding cpuset commits also change the cpuset behavior
-requiring corresponding chanages in some test cases as well as new test
-cases to test the newly added functionality.
+> ---
+> This case would be a great opportunity for the recently introduced
+> device_for_each_child_node_scoped(), but given that it has not been
+> released yet, the traditional approach has been used to account for
+> stable kernels (bug introduced with v6.7). A second patch to clean
+> this up with that macro is ready to be sent once this fix is applied,
+> so this kind of problem does not arise if more early returns are added.
+> 
+> This issue has been found while analyzing the code and not tested with
+> hardware, only compiled and checked with static analysis tools. Any
+> tests with real hardware are always welcome.
+> ---
+>  drivers/usb/typec/ucsi/ucsi_glink.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_glink.c b/drivers/usb/typec/ucsi/ucsi_glink.c
+> index f7546bb488c3..41375e0f9280 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_glink.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_glink.c
+> @@ -372,6 +372,7 @@ static int pmic_glink_ucsi_probe(struct auxiliary_device *adev,
+>  		ret = fwnode_property_read_u32(fwnode, "reg", &port);
+>  		if (ret < 0) {
+>  			dev_err(dev, "missing reg property of %pOFn\n", fwnode);
+> +			fwnode_handle_put(fwnode);
+>  			return ret;
+>  		}
+>  
+> @@ -386,9 +387,11 @@ static int pmic_glink_ucsi_probe(struct auxiliary_device *adev,
+>  		if (!desc)
+>  			continue;
+>  
+> -		if (IS_ERR(desc))
+> +		if (IS_ERR(desc)) {
+> +			fwnode_handle_put(fwnode);
+>  			return dev_err_probe(dev, PTR_ERR(desc),
+>  					     "unable to acquire orientation gpio\n");
+> +		}
+>  		ucsi->port_orientation[port] = desc;
+>  	}
+>  
+> 
+> ---
+> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+> change-id: 20240613-ucsi-glink-release-node-9fc09d81e138
+> 
+> Best regards,
+> -- 
+> Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- .../selftests/cgroup/test_cpuset_prs.sh       | 55 ++++++++++++++-----
- 1 file changed, 40 insertions(+), 15 deletions(-)
-
-diff --git a/tools/testing/selftests/cgroup/test_cpuset_prs.sh b/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-index 96bf2b5c5eb6..7c08cc153367 100755
---- a/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-+++ b/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-@@ -169,6 +169,14 @@ test_add_proc()
- #  T    = put a task into cgroup
- #  O<c>=<v> = Write <v> to CPU online file of <c>
- #
-+# ECPUs    - effective CPUs of cpusets
-+# Pstate   - partition root state
-+# ISOLCPUS - isolated CPUs (<icpus>[,<icpus2>])
-+#
-+# Note that if there are 2 fields in ISOLCPUS, the first one is for
-+# sched-debug matching which includes offline CPUs and single-CPU partitions
-+# while the second one is for matching cpuset.cpus.isolated.
-+#
- SETUP_A123_PARTITIONS="C1-3:P1:S+ C2-3:P1:S+ C3:P1"
- TEST_MATRIX=(
- 	#  old-A1 old-A2 old-A3 old-B1 new-A1 new-A2 new-A3 new-B1 fail ECPUs Pstate ISOLCPUS
-@@ -228,23 +236,29 @@ TEST_MATRIX=(
- 	" C0-3:S+ C1-3:S+ C2-3     .    X2-3  X2-3:P2   .      .     0 A1:0-1,A2:2-3,A3:2-3 A1:P0,A2:P2 2-3"
- 	" C0-3:S+ C1-3:S+ C2-3     .    X2-3   X3:P2    .      .     0 A1:0-2,A2:3,A3:3 A1:P0,A2:P2 3"
- 	" C0-3:S+ C1-3:S+ C2-3     .    X2-3   X2-3  X2-3:P2   .     0 A1:0-1,A2:1,A3:2-3 A1:P0,A3:P2 2-3"
--	" C0-3:S+ C1-3:S+ C2-3     .    X2-3   X2-3 X2-3:P2:C3 .     0 A1:0-2,A2:1-2,A3:3 A1:P0,A3:P2 3"
-+	" C0-3:S+ C1-3:S+ C2-3     .    X2-3   X2-3 X2-3:P2:C3 .     0 A1:0-1,A2:1,A3:2-3 A1:P0,A3:P2 2-3"
- 	" C0-3:S+ C1-3:S+ C2-3   C2-3     .      .      .      P2    0 A1:0-3,A2:1-3,A3:2-3,B1:2-3 A1:P0,A3:P0,B1:P-2"
- 	" C0-3:S+ C1-3:S+ C2-3   C4-5     .      .      .      P2    0 B1:4-5 B1:P2 4-5"
- 	" C0-3:S+ C1-3:S+ C2-3    C4    X2-3   X2-3  X2-3:P2   P2    0 A3:2-3,B1:4 A3:P2,B1:P2 2-4"
- 	" C0-3:S+ C1-3:S+ C2-3    C4    X2-3   X2-3 X2-3:P2:C1-3 P2  0 A3:2-3,B1:4 A3:P2,B1:P2 2-4"
- 	" C0-3:S+ C1-3:S+ C2-3    C4    X1-3  X1-3:P2   P2     .     0 A2:1,A3:2-3 A2:P2,A3:P2 1-3"
- 	" C0-3:S+ C1-3:S+ C2-3    C4    X2-3   X2-3  X2-3:P2 P2:C4-5 0 A3:2-3,B1:4-5 A3:P2,B1:P2 2-5"
-+	" C4:X0-3:S+ X1-3:S+ X2-3  .      .      P2     .      .     0 A1:4,A2:1-3,A3:1-3 A2:P2 1-3"
-+	" C4:X0-3:S+ X1-3:S+ X2-3  .      .      .      P2     .     0 A1:4,A2:4,A3:2-3 A3:P2 2-3"
- 
- 	# Nested remote/local partition tests
- 	" C0-3:S+ C1-3:S+ C2-3   C4-5   X2-3  X2-3:P1   P2     P1    0 A1:0-1,A2:,A3:2-3,B1:4-5 \
- 								       A1:P0,A2:P1,A3:P2,B1:P1 2-3"
- 	" C0-3:S+ C1-3:S+ C2-3    C4    X2-3  X2-3:P1   P2     P1    0 A1:0-1,A2:,A3:2-3,B1:4 \
- 								       A1:P0,A2:P1,A3:P2,B1:P1 2-4,2-3"
-+	" C0-3:S+ C1-3:S+ C2-3    C4    X2-3  X2-3:P1    .     P1    0 A1:0-1,A2:2-3,A3:2-3,B1:4 \
-+								       A1:P0,A2:P1,A3:P0,B1:P1"
- 	" C0-3:S+ C1-3:S+  C3     C4    X2-3  X2-3:P1   P2     P1    0 A1:0-1,A2:2,A3:3,B1:4 \
- 								       A1:P0,A2:P1,A3:P2,B1:P1 2-4,3"
- 	" C0-4:S+ C1-4:S+ C2-4     .    X2-4  X2-4:P2  X4:P1    .    0 A1:0-1,A2:2-3,A3:4 \
- 								       A1:P0,A2:P2,A3:P1 2-4,2-3"
-+	" C0-4:S+ C1-4:S+ C2-4     .    X2-4  X2-4:P2 X3-4:P1   .    0 A1:0-1,A2:2,A3:3-4 \
-+								       A1:P0,A2:P2,A3:P1 2"
- 	" C0-4:X2-4:S+ C1-4:X2-4:S+:P2 C2-4:X4:P1 \
- 				   .      .      X5      .      .    0 A1:0-4,A2:1-4,A3:2-4 \
- 								       A1:P0,A2:P-2,A3:P-1"
-@@ -270,8 +284,8 @@ TEST_MATRIX=(
- 			    .      .    X2-3    P2      .      .     0 A1:0-2,A2:3,XA2:3 A2:P2 3"
- 
- 	# Invalid to valid local partition direct transition tests
--	" C1-3:S+:P2 C2-3:X1:P2 .  .      .      .      .      .     0 A1:1-3,XA1:1-3,A2:2-3:XA2: A1:P2,A2:P-2 1-3"
--	" C1-3:S+:P2 C2-3:X1:P2 .  .      .    X3:P2    .      .     0 A1:1-2,XA1:1-3,A2:3:XA2:3 A1:P2,A2:P2 1-3"
-+	" C1-3:S+:P2 X4:P2  .      .      .      .      .      .     0 A1:1-3,XA1:1-3,A2:1-3:XA2: A1:P2,A2:P-2 1-3"
-+	" C1-3:S+:P2 X4:P2  .      .      .    X3:P2    .      .     0 A1:1-2,XA1:1-3,A2:3:XA2:3 A1:P2,A2:P2 1-3"
- 	"  C0-3:P2   .      .    C4-6   C0-4     .      .      .     0 A1:0-4,B1:4-6 A1:P-2,B1:P0"
- 	"  C0-3:P2   .      .    C4-6 C0-4:C0-3  .      .      .     0 A1:0-3,B1:4-6 A1:P2,B1:P0 0-3"
- 	"  C0-3:P2   .      .  C3-5:C4-5  .      .      .      .     0 A1:0-3,B1:4-5 A1:P2,B1:P0 0-3"
-@@ -282,21 +296,18 @@ TEST_MATRIX=(
- 	" C0-3:X1-3:S+:P2 C1-3:X2-3:S+:P2 C2-3:X3:P2 \
- 				   .      .     X4      .      .     0 A1:1-3,A2:1-3,A3:2-3,XA2:,XA3: A1:P2,A2:P-2,A3:P-2 1-3"
- 	" C0-3:X1-3:S+:P2 C1-3:X2-3:S+:P2 C2-3:X3:P2 \
--				   .      .     C4      .      .     0 A1:1-3,A2:1-3,A3:2-3,XA2:,XA3: A1:P2,A2:P-2,A3:P-2 1-3"
-+				   .      .    C4:X     .      .     0 A1:1-3,A2:1-3,A3:2-3,XA2:,XA3: A1:P2,A2:P-2,A3:P-2 1-3"
- 	# Local partition CPU change tests
- 	" C0-5:S+:P2 C4-5:S+:P1 .  .      .    C3-5     .      .     0 A1:0-2,A2:3-5 A1:P2,A2:P1 0-2"
- 	" C0-5:S+:P2 C4-5:S+:P1 .  .    C1-5     .      .      .     0 A1:1-3,A2:4-5 A1:P2,A2:P1 1-3"
- 
- 	# cpus_allowed/exclusive_cpus update tests
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3 \
--				   .     C4      .      P2     .     0 A1:4,A2:4,XA2:,XA3:,A3:4 \
-+				   .    X:C4     .      P2     .     0 A1:4,A2:4,XA2:,XA3:,A3:4 \
- 								       A1:P0,A3:P-2"
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3 \
- 				   .     X1      .      P2     .     0 A1:0-3,A2:1-3,XA1:1,XA2:,XA3:,A3:2-3 \
- 								       A1:P0,A3:P-2"
--	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3 \
--				   .      .     C3      P2     .     0 A1:0-2,A2:0-2,XA2:3,XA3:3,A3:3 \
--								       A1:P0,A3:P2 3"
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3 \
- 				   .      .     X3      P2     .     0 A1:0-2,A2:1-2,XA2:3,XA3:3,A3:3 \
- 								       A1:P0,A3:P2 3"
-@@ -304,10 +315,7 @@ TEST_MATRIX=(
- 				   .      .     X3      .      .     0 A1:0-3,A2:1-3,XA2:3,XA3:3,A3:2-3 \
- 								       A1:P0,A3:P-2"
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3:P2 \
--				   .      .     C3      .      .     0 A1:0-3,A2:3,XA2:3,XA3:3,A3:3 \
--								       A1:P0,A3:P-2"
--	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3:P2 \
--				   .     C4      .      .      .     0 A1:4,A2:4,A3:4,XA1:,XA2:,XA3 \
-+				   .     X4      .      .      .     0 A1:0-3,A2:1-3,A3:2-3,XA1:4,XA2:,XA3 \
- 								       A1:P0,A3:P-2"
- 
- 	#  old-A1 old-A2 old-A3 old-B1 new-A1 new-A2 new-A3 new-B1 fail ECPUs Pstate ISOLCPUS
-@@ -354,6 +362,9 @@ TEST_MATRIX=(
- 	"  C0-1:P1   .      .  P1:C2-3  C0-2     .      .      .     0 A1:0-2,B1:2-3 A1:P-1,B1:P-1"
- 	"   C0-1     .      .  P1:C2-3  C0-2     .      .      .     0 A1:0-2,B1:2-3 A1:P0,B1:P-1"
- 
-+	# cpuset.cpus can overlap with sibling cpuset.cpus.exclusive but not subsumed by it
-+	"   C0-3     .      .    C4-5     X5     .      .      .     0 A1:0-3,B1:4-5"
-+
- 	#  old-A1 old-A2 old-A3 old-B1 new-A1 new-A2 new-A3 new-B1 fail ECPUs Pstate ISOLCPUS
- 	#  ------ ------ ------ ------ ------ ------ ------ ------ ---- ----- ------ --------
- 	# Failure cases:
-@@ -363,6 +374,9 @@ TEST_MATRIX=(
- 
- 	# Changes to cpuset.cpus.exclusive that violate exclusivity rule is rejected
- 	"   C0-3     .      .    C4-5   X0-3     .      .     X3-5   1 A1:0-3,B1:4-5"
-+
-+	# cpuset.cpus cannot be a subset of sibling cpuset.cpus.exclusive
-+	"   C0-3     .      .    C4-5   X3-5     .      .      .     1 A1:0-3,B1:4-5"
- )
- 
- #
-@@ -564,14 +578,15 @@ check_cgroup_states()
- 	do
- 		set -- $(echo $CHK | sed -e "s/:/ /g")
- 		CGRP=$1
-+		CGRP_DIR=$CGRP
- 		STATE=$2
- 		FILE=
- 		EVAL=$(expr substr $STATE 2 2)
--		[[ $CGRP = A2 ]] && CGRP=A1/A2
--		[[ $CGRP = A3 ]] && CGRP=A1/A2/A3
-+		[[ $CGRP = A2 ]] && CGRP_DIR=A1/A2
-+		[[ $CGRP = A3 ]] && CGRP_DIR=A1/A2/A3
- 
- 		case $STATE in
--			P*) FILE=$CGRP/cpuset.cpus.partition
-+			P*) FILE=$CGRP_DIR/cpuset.cpus.partition
- 			    ;;
- 			*)  echo "Unknown state: $STATE!"
- 			    exit 1
-@@ -595,6 +610,16 @@ check_cgroup_states()
- 				;;
- 		esac
- 		[[ $EVAL != $VAL ]] && return 1
-+
-+		#
-+		# For root partition, dump sched-domains info to console if
-+		# verbose mode set for manual comparison with sched debug info.
-+		#
-+		[[ $VAL -eq 1 && $VERBOSE -gt 0 ]] && {
-+			DOMS=$(cat $CGRP_DIR/cpuset.cpus.effective)
-+			[[ -n "$DOMS" ]] &&
-+				echo " [$CGRP] sched-domain: $DOMS" > $CONSOLE
-+		}
- 	done
- 	return 0
- }
 -- 
-2.39.3
-
+heikki
