@@ -1,191 +1,221 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2395114E2FF;
-	Mon, 17 Jun 2024 15:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636951; cv=none; b=IHO4SkDePpmch+EI8oTGHe1YUc+axh8Z5YQBfS92Rpr8jru/UKN0zCZfm/j5eXxP7TSNVVK4fcdTl6Mzkqr6FZA1BvbP8RWjzIO5XgbU0yNB0XLQ69/hf3JlgUjTWpuyzW6Iqv+fNFLaEfMGoa/Q8OLVrVvchJkTfmNbiJja/Z8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636951; c=relaxed/simple;
-	bh=IT162UEg2/PWZivrlpF3xwi1skWmZOYgmUYGn5FNmVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3LmYWWisKg7LqsLnL72nvYPRM/QnxhAUNri5cE8DYXtH8LfVPO1ckbS+wPPTDKUC7FIJMbpdAfQk3a3bVuFUFiKnAtZCSRgKj0L1xZmgTktWG71753iMr4R3lZkIVpXYOoUal0HZ3aTMWChIRBOvNd1zi7gvly35xsRC3Y6gF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0KHB6Ry; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2711514D9;
+	Mon, 17 Jun 2024 15:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718636954; cv=fail; b=jTcY3Q7sn4jVrapvJmcmxh5/wpts97uVnHUzfAWh/8ePlOuVfQwjrcT7YkoiTcvJyCtNcolRG1E21uu9COp3A+08EWzTXYZ2sedKwogkwqk9h+JoyyQzeAiD3OHDQ6YFyj5Ge5DV0zHOrwZQOEuimS39QRxPVuFtWjG015iBoKE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718636954; c=relaxed/simple;
+	bh=z9TCsTdrf2VFvSxFHjghukPWXU3S1DWzNpUAVVqiwzI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=TPpQfYtHHGRYT6VOPvmqClEovIUcucjq6NN5zrNwAw272Z31drYlIStqg1A/iK8MMhpWtYivtow6ufTjvetF2yf19eQo8MWZwA/78tqYTEg3MmfYTgP13t3PiJHwdpBmts2gtrRpmBmDuJA4fay947iWy8bIJSZfhvQRqdsvwMs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lfXWKI6N; arc=fail smtp.client-ip=40.107.236.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0KHB6Ry"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f47f07aceaso36410225ad.0;
-        Mon, 17 Jun 2024 08:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718636949; x=1719241749; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WSfIk8K4XME6GZfBy3FFM+3s5/rKYnSusBreIG/t7cA=;
-        b=e0KHB6RyIJlpmBKe3bjozvNuTO5gorhaFaEd+JN3Hnxag2+OUICNQUXq7gRjgbH8YX
-         iFHcFaaJYCeQtcMtDKnsprdLbHFnwGd0M5BrX2mFv+kb3F7sP1fpqFqu0f+B6igtBOFv
-         +Prhhvj5bulfEFSh9lL7FFsiuwaEoACdwQEAGOm1eyPJqRALX2xSXjcZGqu81bqM4EKF
-         vj0FQjmbP+XcpANeaT7br6o1TYRke4MLKbqfUCKKYC2R8wxR8YZ89FQgMBHQq5Z3oStS
-         l7R0LwE8qIfPJM4LIKsQZ3u4MTfa7W0CxgWgejJoqKqt6Inx+EpsqgZ4MJUyDh8t5L2T
-         NDfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718636949; x=1719241749;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WSfIk8K4XME6GZfBy3FFM+3s5/rKYnSusBreIG/t7cA=;
-        b=LtxjCVZwMlI+F9tSeBqhMya16yE96G3ElOi4bh6lGWFRX5dFOissLgbcB1RjuKbfhC
-         EcuO5aJL2gkje2iv6xmfP+VPmtZNmXqm7FbeLEN9CpXeacxLNIL/jdZfz70pnKLJxq6T
-         aWOJm1CcHYVCHL3qIhDFtqnmcMvyAoMHdwzvHxvhIJsGxtG9z8Kk0EKcdjIcFOwYVI0c
-         CytNaKNcruV1yW0ynX1yz4K4P6ZzhGyAoo5ZSp7yt0smtHSCf5ShmACMpbjygZ7IAich
-         VZzQ+d7cR4UV39diPoHUrSxRQU2+k9FuuxwUIYmK9AnU03W03Ajg5nA7redZwKpvGbm5
-         /Mzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNoVocayMHEk1f31bp5osrNLZKTBv0Mou+O1ddaWkJurkaz0Cn0o+Pd7xotk4ISmJ6oPAoD4bge2Rc1x1VGHjHshczavNxzh+alRix
-X-Gm-Message-State: AOJu0YzoNXTeTgGPciTRqtbm9TBnrFE/JCN4nAJYvEHlcqDDB3TOXOQY
-	HsKaT6FJT2vnHv8Q4pdst6q0r8Ruj5D7jclcCGZ1g53Wf3oWA9if
-X-Google-Smtp-Source: AGHT+IHaWapibFdK79vB3fJG4Nz96RSjPehaB6COG+NcELElXjUeNz89MPURVFDFdeqFx+o2JGWVzg==
-X-Received: by 2002:a17:903:22c5:b0:1f7:e32f:f067 with SMTP id d9443c01a7336-1f862a1694emr104999715ad.50.1718636949159;
-        Mon, 17 Jun 2024 08:09:09 -0700 (PDT)
-Received: from [10.102.4.159] ([208.195.13.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e56183sm80122435ad.28.2024.06.17.08.09.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 08:09:08 -0700 (PDT)
-Message-ID: <1faa7eee-ed1e-477b-940d-a5cf4478cf73@gmail.com>
-Date: Mon, 17 Jun 2024 08:09:05 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lfXWKI6N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YLq6Z+0C8XrREXVJ3SeW80oe+GXC8C5sUgq2ZIdgxWgyzS8UYNBrjALfJzGJJAaIvZVLxhO9ZO2phzdQcwWIYzAVUyz1j9vUW3Wv/LTGYCj/u5i8MbGw7K3qp1f8E8IEkKsDZnhewbmAbTEthChXV+8Evsn6el7KXg0XwyksnLEuyxQsmwwYcpRPhBqF4nkH+Jo5J8McFIepxEPDpjZ0LyIgp5SJagMleoOMp7G2qvUo4UOT1owiRNPSxl0xXvehfR4dqvc9RFD0QD6vXkvXnLJ7hqkTHphQfHxNJ5yaj3Vgtnk1tQfF+yEImx9By50aweJwgprDUm3Si5njMfulvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vFIk8nZcVeK5tEVFyzj174gG68kaG0VSXmODuw3FFWM=;
+ b=giP4+EtMgYwK9vBNwhcD+C8w92Dgm3G0vy11Hm9LbALIlUmk/uG/GFHXPqBxOQ/itFNfvXhc+DQzvxDPSBtQ+G+dzWkVyVNMYfGEhjdadRczDUILmy5rsp7OZiS1Sv657JR8hVkfbjdM5f3f8N13abED+c6xWMBMZZZvdBhgM8ZZu/NuFfjML+To4ifhzsINdpwp44fR/G1ayX2xkfhinofHn2k8eo+Q0XAlaoXSNrPEoN5aFG6GY4+t0wfIYA18EbRDPMpWQrQ6GzyJCoikTW2idL0c5CRPv/cPWC5cPzRYNAcx2lnj3jtIzYj8SRKaqnC5Bm29tvTiqJwc2VDhZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFIk8nZcVeK5tEVFyzj174gG68kaG0VSXmODuw3FFWM=;
+ b=lfXWKI6N02kYun7GQbHCtgYjz2mfHKQ8/9efTOCk4rjnZuyUUmnUk8KuAUCFYC5cMSfBolEVfGIYp+cF1aSf/hr12L2RWXnZDrFhH3YZ4GB02aoffLOoxqaihGG5X9fqHYHU3TLndKnEpsq+khqX4d7BMOUF5kHTWtcZbYCBcRTPtHwzp7RMZ4uw7NHO/RVcE6+iVfAtQXEkJ0ubQ9VYDJd8DptY+OxznxqrFcBlL9S6lxld0YgWlq01rC/ak8ZqdTYlXg/mG0fYB6yFMFyFQz4kXc4c8fAGulL88vyNcYrVyGfY6+/8+E4Z7xqYk/ALh8HIduBuUiYYGwB+QAvnvg==
+Received: from SA9PR10CA0014.namprd10.prod.outlook.com (2603:10b6:806:a7::19)
+ by SN7PR12MB7021.namprd12.prod.outlook.com (2603:10b6:806:262::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 15:09:09 +0000
+Received: from SA2PEPF00003AE7.namprd02.prod.outlook.com
+ (2603:10b6:806:a7:cafe::c2) by SA9PR10CA0014.outlook.office365.com
+ (2603:10b6:806:a7::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
+ Transport; Mon, 17 Jun 2024 15:09:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SA2PEPF00003AE7.mail.protection.outlook.com (10.167.248.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 15:09:09 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 17 Jun
+ 2024 08:08:55 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 17 Jun 2024 08:08:54 -0700
+Received: from dev-l-177.mtl.labs.mlnx (10.127.8.11) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 17 Jun 2024 08:08:51 -0700
+From: Dragos Tatulea <dtatulea@nvidia.com>
+Date: Mon, 17 Jun 2024 18:07:51 +0300
+Subject: [PATCH vhost 17/23] vdpa/mlx5: Consolidate all VQ modify to Ready
+ to use resume_vq()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: invalid vht params rate 1920 100kbps nss 2 mcs 9
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <fba24cd3-4a1e-4072-8585-8402272788ff@molgen.mpg.de>
-Content-Language: en-US
-From: James Prestwood <prestwoj@gmail.com>
-In-Reply-To: <fba24cd3-4a1e-4072-8585-8402272788ff@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240617-stage-vdpa-vq-precreate-v1-17-8c0483f0ca2a@nvidia.com>
+References: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com>
+In-Reply-To: <20240617-stage-vdpa-vq-precreate-v1-0-8c0483f0ca2a@nvidia.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
+	<eperezma@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky
+	<leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu
+	<si-wei.liu@oracle.com>
+CC: <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Dragos Tatulea
+	<dtatulea@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
+X-Mailer: b4 0.13.0
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE7:EE_|SN7PR12MB7021:EE_
+X-MS-Office365-Filtering-Correlation-Id: 625df858-0de4-4796-d7ad-08dc8edf7039
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|7416011|376011|1800799021|82310400023|36860700010;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L2tYay9hcjF1S0dVbThBREJLMzFZL3dSbUh3TEFBSHhiaUVmMzRxS01xNUJG?=
+ =?utf-8?B?ZDRJZm5aRSs0Y2ZSdVFkM2plWXhYYmRnVEozMXIyZlFxcUlDbkdIVnRidmxh?=
+ =?utf-8?B?SmpxaXhXcVlhVm45RTlPbSt0NDUyNkZsYWN6Mi9xQVF4aDllL2lzdU5MY2xY?=
+ =?utf-8?B?S1VmVkhGaHpZU1M1cUxScUVHWGVnN1VYREFQRU1iK0NRVlp2Y3FBS0FacEdW?=
+ =?utf-8?B?Y2tIWWxsUCtsajF4Z0VZNE1wZ1RZSkRxaHI3SUFadnIzWjYwVGdZUjBvNDNw?=
+ =?utf-8?B?M1JiTGtTalhQYU5wRzJMSXd3OWluTnlhV2JtK1JHUW9CR0hWNmFxdUxTZ3p1?=
+ =?utf-8?B?cVVSaVBFdG9MSitsVzZVOHgxY2JLOWplcTl4aTVFMWtobDNoUm1NQWdLR1JI?=
+ =?utf-8?B?bzlzSVg4cjRqdW1aWWw3RjdjYXpVQ2FkYUtHeEdFaThnMVMybWVsdVIxREcw?=
+ =?utf-8?B?TlZHWEU5N3lXYytjNDVTWTFHSCtoY1o4RXF2aHBrb2xxSEpGbkNlM2l0NXNt?=
+ =?utf-8?B?QVhkajhtMnl2SFhFaDU4cjhnbFFYZ1hiZ1RlYzRpeWZwNjlESDVDRDdrSlRz?=
+ =?utf-8?B?ZFdWQ3FkR20xQTY1L21PekNJa1g3WEhGTmF2ODB6SU9DeUU4RndUc0RKZDVm?=
+ =?utf-8?B?NThnditvSVZZZFFQUm1SWlM1OE1nRUZKNnV0b0N6QUZ4WHV3NGNlbTBkendX?=
+ =?utf-8?B?VVVHcHZ3Z2pUYjdWTjAvZ2lsd2JjZ0hUcjEzaTZ2Y0t4NXZoZHdWM3oxNWRq?=
+ =?utf-8?B?UUQrdm4xUzFsbGdKUTBGSFk4RnFDRGgreU9oQloyeXUwanR1bWc2bzQxK0xQ?=
+ =?utf-8?B?ZmJYYURlVzFxanlmYUtCMlUxaDV1bE9KdWRsbGkzRHpYeVNncUYzakZFcXRp?=
+ =?utf-8?B?ck1lV2c5ZG1LSWozMi95QjByTWZzYnU4L3VUT29TSGFHMHV6UUVSbU9XSFVj?=
+ =?utf-8?B?TUF6WTk5R2t1TzVPVStKQlJOWklsL051emFheWlzblJWQ1BlRGZPYlNLSjQw?=
+ =?utf-8?B?NnZQUU1Dd2xPOGRxRVQzUktJcXI1M25KZzFKQ0hxTm1QT1JxMmc1VzFWd2h3?=
+ =?utf-8?B?c2NQbittWnloQWl5SjVWQXJ4UjNDanFpd1ZTYmVkRmIzUzR5VkZMZW5pZlFN?=
+ =?utf-8?B?ZFNvOTI4NkovK1V4OVcwamNPTU1HaTJKdytnMWFtNmJmODdHNGg5SWhyZGRE?=
+ =?utf-8?B?NE5JeVczUFNJbVJYMGl6NWVDd1d0d0pMajhPSDdjZXpaNlI0QUt5QUNJMXkv?=
+ =?utf-8?B?bjVSdDBTamo4N2RweW5pK0J6dkoxTDBQSUlrZmlDZEhPM2g1MHl5S0J0UVRv?=
+ =?utf-8?B?WG5jeXVCOWxmY1JFYnNpbWJuUnplbzZaeEgzKzBjWVBieXBqQUxEM0l4dllh?=
+ =?utf-8?B?YlZabldUK2N1UzI4blNacmJ4ejEzbDRaM2lweWdYakNVK1dEdmNRcSsrVGJj?=
+ =?utf-8?B?ek9XZVE3TEJLQmd6Q2o0OHlHbXdTSlhQdFdOOStrMEJQMlNmTVZYMDZ4cEsx?=
+ =?utf-8?B?UE9PNTNGTTlWNGJycVp6dW9EcS9oUmJiVHR6Y0lQdmZaR3NWY0c3NU1EbGxy?=
+ =?utf-8?B?STRWWjFDVEdHUkU1N0tMWDVWVEhsNVhGb3IxMkx5ZkFpY2xldjQvU0x3UC8z?=
+ =?utf-8?B?anZSYUFDeTI0Qlh3VGNkYk5sQ0YrUktvMVVRYXJkTUhFSUlVdzRkM2FCUmxR?=
+ =?utf-8?B?SmJXdGJOZ2lEZ1E4Vjc1L1NyQVEvR3Q1WWdZMmFlYndtbVFyMmhaYSsxdE1G?=
+ =?utf-8?B?dmJFdGRaaGF4aEsyMkM3RnBXUVk3eHE4NU0zTjVvWVZzb0pReFRHRHUzdmFP?=
+ =?utf-8?B?dzE3bWdmc1ZGcTkwbFp4NkhBVVdzanBlMDdIMzBKazZNU1dtOTJUUk5uMjJJ?=
+ =?utf-8?B?dTkrL0hacGtpZ1haSEdBUnJFMU1wSTdJcG9RUWQ4NnVuNFE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(82310400023)(36860700010);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 15:09:09.0051
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 625df858-0de4-4796-d7ad-08dc8edf7039
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003AE7.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7021
 
-Hi Paul,
+There are a few more places modifying the VQ to Ready directly. Let's
+consolidate them into resume_vq().
 
-On 6/16/24 6:10 AM, Paul Menzel wrote:
-> Dear Linux folks,
->
->
-> Linux 6.10-rc3 (commit a3e18a540541) logged the warning below when 
-> connecting to a public WiFi:
->
->     ath10k_pci 0000:3a:00.0: invalid vht params rate 1920 100kbps nss 
-> 2 mcs 9
+The redundant warnings for resume_vq() errors can also be dropped.
 
-This has been reported/discussed [1]. It was hinted that there was a 
-firmware fix for this, but none that I tried got rid of it. I got fed up 
-enough with the logs filling up with this I patched our kernel to remove 
-the warning. AFAICT it appears benign (?). Removing the warning was 
-purely "cosmetic" so other devs stopped complaining about it :)
+There is one special case that needs to be handled for virtio-vdpa:
+the initialized flag must be set to true earlier in setup_vq() so that
+resume_vq() doesn't return early.
 
-[1] https://www.mail-archive.com/ath10k@lists.infradead.org/msg13406.html
+Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+---
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
->
->
-> Kind regards,
->
-> Paul
->
->
-> ```
-> Jun 16 11:38:15 abreu kernel: Linux version 
-> 6.10.0-rc3-00174-ga3e18a540541 (build@bohemianrhapsody.molgen.mpg.de) 
-> (gcc (Debian 13.2.0-25) 13.2.0, GNU ld (GNU Binutils for Debian) 2.42) 
-> #196 SMP PREEMPT_DYNAMIC Sun Jun 16 06:02:29 CEST 2024
-> […]
-> Jun 16 11:38:15 abreu kernel: DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 
-> 2.21.0 06/02/2022
-> […]
-> Jun 16 11:38:33 abreu kernel: ath10k_pci 0000:3a:00.0: enabling device 
-> (0000 -> 0002)
-> Jun 16 11:38:33 abreu kernel: ath10k_pci 0000:3a:00.0: pci irq msi 
-> oper_irq_mode 2 irq_mode 0 reset_mode 0
-> Jun 16 11:38:34 abreu kernel: ath10k_pci 0000:3a:00.0: qca6174 hw3.2 
-> target 0x05030000 chip_id 0x00340aff sub 1a56:1535
-> Jun 16 11:38:34 abreu kernel: ath10k_pci 0000:3a:00.0: kconfig debug 0 
-> debugfs 0 tracing 0 dfs 0 testmode 0
-> Jun 16 11:38:34 abreu kernel: ath10k_pci 0000:3a:00.0: firmware ver 
-> WLAN.RM.4.4.1-00288- api 6 features wowlan,ignore-otp,mfp crc32 bf907c7c
-> Jun 16 11:38:34 abreu kernel: ath10k_pci 0000:3a:00.0: board_file api 
-> 2 bmi_id N/A crc32 d2863f91
-> Jun 16 11:38:34 abreu kernel: ath10k_pci 0000:3a:00.0: htt-ver 3.87 
-> wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
-> Jun 16 11:38:34 abreu kernel: ath: EEPROM regdomain: 0x6c
-> Jun 16 11:38:34 abreu kernel: ath: EEPROM indicates we should expect a 
-> direct regpair map
-> Jun 16 11:38:34 abreu kernel: ath: Country alpha2 being used: 00
-> Jun 16 11:38:34 abreu kernel: ath: Regpair used: 0x6c
-> […]
-> Jun 16 11:39:20 abreu kernel: wlp58s0: authenticate with 
-> 70:18:a7:0e:f7:cb (local address=9c:b6:d0:d1:6a:b1)
-> Jun 16 11:39:20 abreu kernel: wlp58s0: send auth to 70:18:a7:0e:f7:cb 
-> (try 1/3)
-> Jun 16 11:39:20 abreu kernel: wlp58s0: send auth to 70:18:a7:0e:f7:cb 
-> (try 2/3)
-> Jun 16 11:39:20 abreu kernel: wlp58s0: send auth to 70:18:a7:0e:f7:cb 
-> (try 3/3)
-> Jun 16 11:39:20 abreu kernel: wlp58s0: authentication with 
-> 70:18:a7:0e:f7:cb timed out
-> Jun 16 11:39:22 abreu kernel: wlp58s0: authenticate with 
-> 4c:bc:48:39:16:ab (local address=9c:b6:d0:d1:6a:b1)
-> Jun 16 11:39:22 abreu kernel: wlp58s0: send auth to 4c:bc:48:39:16:ab 
-> (try 1/3)
-> Jun 16 11:39:22 abreu kernel: wlp58s0: send auth to 4c:bc:48:39:16:ab 
-> (try 2/3)
-> Jun 16 11:39:22 abreu kernel: wlp58s0: send auth to 4c:bc:48:39:16:ab 
-> (try 3/3)
-> Jun 16 11:39:22 abreu kernel: wlp58s0: authentication with 
-> 4c:bc:48:39:16:ab timed out
-> Jun 16 11:39:24 abreu kernel: wlp58s0: authenticate with 
-> 4c:bc:48:38:d8:4b (local address=9c:b6:d0:d1:6a:b1)
-> Jun 16 11:39:24 abreu kernel: wlp58s0: send auth to 4c:bc:48:38:d8:4b 
-> (try 1/3)
-> Jun 16 11:39:24 abreu kernel: wlp58s0: authenticated
-> Jun 16 11:39:24 abreu kernel: wlp58s0: associate with 
-> 4c:bc:48:38:d8:4b (try 1/3)
-> Jun 16 11:39:24 abreu kernel: wlp58s0: RX AssocResp from 
-> 4c:bc:48:38:d8:4b (capab=0x1101 status=0 aid=30)
-> Jun 16 11:39:24 abreu kernel: wlp58s0: associated
-> Jun 16 11:39:24 abreu kernel: wlp58s0: Limiting TX power to 20 (23 - 
-> 3) dBm as advertised by 4c:bc:48:38:d8:4b
-> Jun 16 11:39:50 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:39:56 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:02 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:08 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:20 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:26 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:32 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:38 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:43 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:40:49 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:41:01 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:41:13 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:41:19 abreu kernel: ath10k_pci 0000:3a:00.0: invalid vht 
-> params rate 1920 100kbps nss 2 mcs 9
-> Jun 16 11:41:21 abreu kernel: wlp58s0: deauthenticating from 
-> 4c:bc:48:38:d8:4b by local choice (Reason: 3=DEAUTH_LEAVING)
->
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index e3a82c43b44e..f5d5b25cdb01 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -160,6 +160,7 @@ static void free_fixed_resources(struct mlx5_vdpa_net *ndev);
+ static void init_mvqs(struct mlx5_vdpa_net *ndev);
+ static int setup_vq_resources(struct mlx5_vdpa_net *ndev, bool filled);
+ static void teardown_vq_resources(struct mlx5_vdpa_net *ndev);
++static int resume_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtqueue *mvq);
+ 
+ static bool mlx5_vdpa_debug;
+ 
+@@ -1500,16 +1501,14 @@ static int setup_vq(struct mlx5_vdpa_net *ndev,
+ 	if (err)
+ 		goto err_vq;
+ 
++	mvq->initialized = true;
++
+ 	if (mvq->ready) {
+-		err = modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY);
+-		if (err) {
+-			mlx5_vdpa_warn(&ndev->mvdev, "failed to modify to ready vq idx %d(%d)\n",
+-				       idx, err);
++		err = resume_vq(ndev, mvq);
++		if (err)
+ 			goto err_modify;
+-		}
+ 	}
+ 
+-	mvq->initialized = true;
+ 	return 0;
+ 
+ err_modify:
+@@ -2422,7 +2421,6 @@ static void mlx5_vdpa_set_vq_ready(struct vdpa_device *vdev, u16 idx, bool ready
+ 	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
+ 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+ 	struct mlx5_vdpa_virtqueue *mvq;
+-	int err;
+ 
+ 	if (!mvdev->actual_features)
+ 		return;
+@@ -2439,14 +2437,10 @@ static void mlx5_vdpa_set_vq_ready(struct vdpa_device *vdev, u16 idx, bool ready
+ 	if (!ready) {
+ 		suspend_vq(ndev, mvq);
+ 	} else {
+-		err = modify_virtqueue_state(ndev, mvq, MLX5_VIRTIO_NET_Q_OBJECT_STATE_RDY);
+-		if (err) {
+-			mlx5_vdpa_warn(mvdev, "modify VQ %d to ready failed (%d)\n", idx, err);
++		if (resume_vq(ndev, mvq))
+ 			ready = false;
+-		}
+ 	}
+ 
+-
+ 	mvq->ready = ready;
+ }
+ 
+
+-- 
+2.45.1
+
