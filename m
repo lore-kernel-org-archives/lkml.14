@@ -1,147 +1,152 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2613AD3E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAF613B789
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718633326; cv=none; b=D2m6Obs3U67LaJuwLCP1oJ3YFXFaYtdXF0/aZGjsf8jXJ/xHDd5jTO454artbwQndelk7t5Fz1iAtTse6Fa/Azvg/Lf6Jyg69nF2jh8sAD18W2+VDJOKwj6EPtaRFmi66FyihsoXMYlsdVZmaSgoDEExKIVjLDRgAiJLIUAURPA=
+	t=1718633365; cv=none; b=MGH0gG9a7ijz3EzWB1nBymQPGMk8s0+sCpoozcQMV6ulO07JjPHJRgHaObf4vyiyBE+driv2Mq6iwfTybRB+WAAU5iVUNPKdmyR8ZdOicDvL30jzMx28e9/dRC0oG3XyVYAvMQIuSgeIVOEzgEhFY/uII2ikAhHA9bGUMkPtl3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718633326; c=relaxed/simple;
-	bh=6mBQ9sxPm1+L1muWwT/oZLH3YefinaTlBp76n9Qq3EY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pOFRKmbSMNdZOd/6WibML8OJKLJ9pROFee6hVyvn4HxJuGSpDnGyhcEbTYfl7ucVbQ74GnI9ivqyFVCK2qyIZPoD5jVtWDG88FdCRlepUm/KzRHhIuXKooOPAyrGfiJnIc2ERIgf+xcdQFvESAVLF4qcxCIxjve2G1/72qoSmb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g0Lz19i7; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718633365; c=relaxed/simple;
+	bh=FvPTTxF0erOx8Zx++j0OPV5uC3LiiROOi5pF3C7gOYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhaUywi/lVdcovyXnYp6d9ecZ06ASQ8pEI7gATMOYg3/Fh1YXMtWhGH6N10YlgX4tkmm/fEnqfwPOwLRCzpWVGS+/3tAbOVVOuPYb9jDjuvZqfxC6LM27/+D3M9DIZeqPkN/fROAwe004Hxd5VIxFhv2zzKUClyqcHR9oKyXrWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=BynpzMVn; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0Lz19i7"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52c8342af5eso4664870e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:08:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BynpzMVn"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ebd6ae2f56so4970681fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718633323; x=1719238123; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ut1uDZxGaHU7Y1Co+4s4ECfaXa9r8CDK31+uMSSSBQA=;
-        b=g0Lz19i7JNUpp+a+M+0n38TfdaU+hj+eO0Xky1W1Hsm+yC80uOnD5Bf8NGY/NweFZ1
-         O0IxT2SMPmKUTxFFgPWxACCjtm7vjq8ew+TOL4wes5HbV2oQcYaKWZFHnax28UtwweU2
-         JFCkka1X8600fTY/63SVBWZDypm43H24/rJssLtczhAG1jq025a4vH5w4wcwx8zMI+7m
-         HGB2UC0lpcLAsY3h3w/vz7K+T+8VOFGgXBAJpF6FWsopk7k4JBIEnI1pm57U3AXrzrq0
-         dJQq6gcU1ezoUeXf14K1gG2WjF7uvsiY0n7g4LBH/Adtfa79h9fmWydb2LWIi+TdD2WY
-         zmBw==
+        d=ffwll.ch; s=google; t=1718633362; x=1719238162; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u5n6unhG89aEhQNtetOcAr9RgdHuXzyN1J8LzFmwaso=;
+        b=BynpzMVnGGSESnNF0Qz/j8NJ2HFdUuEBynSV7ljSBBi+YkileqBP5Yk/Nk/3zeJcGa
+         hO2JCGOufuuobsMwnjUC7xYGM7ENoJBP3mT3WUPBFRucJvKCEaBSmBuM+N5SW7lLxKuX
+         s49GRD4lm3Az64iTuUnHfE71ifcTdgcBVA8x0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718633323; x=1719238123;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ut1uDZxGaHU7Y1Co+4s4ECfaXa9r8CDK31+uMSSSBQA=;
-        b=nse33N5g7GzFpu00h6p5YMGe4ZR39tVwyjpgGv2bEzIVVc76UdtFXe0RSNLfTx2y0z
-         Faa74C25sngwAyrKJaXSago0j3e8b99Q4NFEGbRnWaOs2ucfos7wpkoXxq3aaKDhzGoz
-         R5FRwA3xRetgsFFrhOvYYvV9eC+1hbaQ3E0sjWZvt/DR29KQ0CQrl2Ege6OWXmCQNucy
-         iKEjqRrdi7IdT5vP1ikUCs8fSIk40OLW4Jx7dptioAsHOkAF4z/7b9G046P5bDXQgeAk
-         hLXjr9H78aa5JPn3IzFoS/GfYMIwe086RKbkBe8y8XyoliZgYQqRYDlFpwWZZWOUqZPY
-         g44g==
-X-Forwarded-Encrypted: i=1; AJvYcCXJbqG2aMFbBc/8tneYkyMKpKJ078lt2EUNaX1o4/eO9xi5/cgRyu0WIU7R2uFfa/pJq+Ih8udA+xaVdFh9ypIc6PDRYntUCMB0QhVU
-X-Gm-Message-State: AOJu0Yywk7bFrlv0K5eopuE5EaYVyNTIr7AEQNgG/SvQ7DUQzSwR4cWY
-	YhSVuh4IJWssbEILGag0Iu+3iPOIGE3AsyJWahRCotoDaaJ3Kth6Q+RhZVB4KCU=
-X-Google-Smtp-Source: AGHT+IGf9az8bnelhhdQwXy6LIcfqWaXA9MCm6Bpzt1+j6XVLA3GxRhXjKny8rZdplSvoN+HlphXCw==
-X-Received: by 2002:ac2:46e3:0:b0:52b:7d16:2c7a with SMTP id 2adb3069b0e04-52ca6e55d4bmr6687102e87.3.1718633322602;
-        Mon, 17 Jun 2024 07:08:42 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:7f86:d83c:9278:7757? ([2a01:e0a:982:cbb0:7f86:d83c:9278:7757])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075104b74sm11893173f8f.107.2024.06.17.07.08.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 07:08:42 -0700 (PDT)
-Message-ID: <11999928-b536-4257-980d-f98ca55285d6@linaro.org>
-Date: Mon, 17 Jun 2024 16:08:39 +0200
+        d=1e100.net; s=20230601; t=1718633362; x=1719238162;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u5n6unhG89aEhQNtetOcAr9RgdHuXzyN1J8LzFmwaso=;
+        b=bTlPzJPV4hBlki44Mry8zOb/HkoqHoheFOu4YKhkJSaStDt+h9ce3ESRRsJnl5tX44
+         7sNMLU5jeeMS8lj6a7Sb+moOtpb/r3K9I0LUnTD7LOtLpA8+wia8cGw1J2CqRXAaN6EH
+         cCitsbzMT+fCfBVtqUgMXKcdQvpIoBwtuZ0F5YGhzWowxKWHtBKQz4amuMW+valh+43R
+         XjG2zAeuFoUykR1XnfzH1Enjax/jNRB5zbcqSw7a8UjLD05amBvDzQG0G9ymXVyb4qda
+         0siZs0F5rSUdgelSR8Xf+5DPto+opYHiKUKN9kFOf+miQR6T0mV0KiyuhDZbvCQkSKTH
+         XZuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXd9AMLUhd+YEQYwUb7h3H2HY3Jl7kVhCZiOafhAzfxSUIZD5GBAEF+P2rc7UIBCK2KxoRqigki+Yvzvn+eXGtiGeMHsE9g11zcUS3a
+X-Gm-Message-State: AOJu0Yy3DWdaFTFEuHFw1cBEW60VOGpIeOwVGoBz9CddvghV1mKdah2c
+	ZImqAU+HownYuCbd18jXQhh81LPSQsRDkn2z83lU6ykLiTV+qBdxelJXae58B8s=
+X-Google-Smtp-Source: AGHT+IHb1LmHZoCdyR9BvmFgsEhfcdrU3ejbVsbNyhiIbOxnK8ExuzSQZLQ5pMgs5z4coXE3SFcELw==
+X-Received: by 2002:a2e:9345:0:b0:2ec:16c4:ead5 with SMTP id 38308e7fff4ca-2ec16c4effcmr50743691fa.2.1718633362433;
+        Mon, 17 Jun 2024 07:09:22 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870e95eesm197740135e9.25.2024.06.17.07.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 07:09:22 -0700 (PDT)
+Date: Mon, 17 Jun 2024 16:09:19 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at
+ shutdown
+Message-ID: <ZnBDjxwdyomF0B6I@phenom.ffwll.local>
+Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
+	Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+References: <20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
+ <20240612-garnet-condor-from-saturn-1c51bb@houat>
+ <CAD=FV=Xpu0-_kEvRWy9w8ypjo7pF7tsFWxHfhMZ=YjHugTqG1w@mail.gmail.com>
+ <Zmm6_27GikpmT3HQ@phenom.ffwll.local>
+ <CAD=FV=XpJtCU+8aSaT0e5Ob5Owcn8b0gcdZzUrQoSdE5f9CerA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2] dt-bindings: iommu: qcom,iommu: Add MSM8953 GPU IOMMU
- to SMMUv2 compatibles
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-References: <20240606-topic-sm8953-upstream-smmu-gpu-v2-1-67be88007d87@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240606-topic-sm8953-upstream-smmu-gpu-v2-1-67be88007d87@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XpJtCU+8aSaT0e5Ob5Owcn8b0gcdZzUrQoSdE5f9CerA@mail.gmail.com>
+X-Operating-System: Linux phenom 6.8.9-amd64 
 
-Hi,
-
-On 06/06/2024 15:15, Neil Armstrong wrote:
-> Add MSM8953 compatible string with "qcom,msm-iommu-v2" as fallback
-> for the MSM8953 GPU IOMMU which is compatible with Qualcomm's secure
-> fw "SMMU v2" implementation.
-
-Gentle ping !
-
-Thanks,
-Neil
-
+On Wed, Jun 12, 2024 at 09:52:40AM -0700, Doug Anderson wrote:
+> Sima,
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> [1] https://lore.kernel.org/all/20240523-topic-sdm450-upstream-tbx605f-v1-0-e52b89133226@linaro.org/
-> ---
->   Documentation/devicetree/bindings/iommu/qcom,iommu.yaml | 1 +
->   1 file changed, 1 insertion(+)
+> On Wed, Jun 12, 2024 at 8:13 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > > > I ran the coccinelle script we started with, and here are the results:
+> > > >
+> > > > ./drivers/gpu/drm/vmwgfx/vmwgfx_drv.c:1640:25-39: ERROR: KMS driver vmw_pci_driver is missing shutdown implementation
+> > > > ./drivers/gpu/drm/kmb/kmb_drv.c:621:30-49: ERROR: KMS driver kmb_platform_driver is missing shutdown implementation
+> > > > ./drivers/gpu/drm/tiny/arcpgu.c:422:30-52: ERROR: KMS driver arcpgu_platform_driver is missing shutdown implementation
+> > >
+> > > Sure, although I think we agreed even back when we talked about this
+> > > last that your coccinelle script wasn't guaranteed to catch every
+> > > driver. ...so I guess the question is: are we willing to accept that
+> > > we'll stop disabling panels at shutdown for any drivers that might
+> > > were missed. For instance, looking at it by hand (which also could
+> > > miss things), I previously thought that we also might need:
+> > >
+> > > * nouveau
+> > > * tegra
+> > > * amdgpu
+> > > * sprd
+> > > * gma500
+> > > * radeon
+> > >
+> > > I sent patches for those drivers but they don't go through drm-misc
+> > > and some of the drivers had a lot of abstraction layers and were hard
+> > > to reason about. I'm also not 100% confident that all of those drivers
+> > > really are affected--they'd have to be used with panel-simple or
+> > > panel-edp...
+> >
+> > Aside from amdgpu and radeon they're all in -misc now, and Alex is
+> > generally fairly responsive.
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.yaml b/Documentation/devicetree/bindings/iommu/qcom,iommu.yaml
-> index a74eb899c381..571e5746d177 100644
-> --- a/Documentation/devicetree/bindings/iommu/qcom,iommu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.yaml
-> @@ -25,6 +25,7 @@ properties:
->             - const: qcom,msm-iommu-v1
->         - items:
->             - enum:
-> +              - qcom,msm8953-iommu
->                 - qcom,msm8976-iommu
->             - const: qcom,msm-iommu-v2
->   
-> 
-> ---
-> base-commit: ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
-> change-id: 20240606-topic-sm8953-upstream-smmu-gpu-2b582c34bcb6
-> 
-> Best regards,
+> Sorry for not keeping up with things, but can you point to where this
+> was documented or what patch changed things so that these drivers went
+> through drm-misc? From the MAINTAINERS file I see commit 5a44d50f0072
+> ("MAINTAINERS: Update drm-misc entry to match all drivers") and that
+> shows several of these drivers as "X:". As far as I can tell that
+> means that they _aren't_ handled by drm-misc, right? Maybe the
+> decision was made elsewhere and MAINTAINERS was just not updated, or
+> I'm not looking at the right place? I checked drm-misc-next and
+> drm/next and, for instance, "tegra" and "kmb" still show as excluded.
 
+Hm tegra moved meanwhile, but I guess it's not yet update in MAINTAINERS
+(or not everywhere), at least for bugfixes. I think nouveau also has
+partially moved?
+
+Anyway past a certain point of unresponsiveness, drm-misc serves as the
+catch-all for everything and you can land with an ack from drm or drm-misc
+maintainers.
+-Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
