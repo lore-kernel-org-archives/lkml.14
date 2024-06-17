@@ -1,74 +1,74 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC50D199EB7;
-	Mon, 17 Jun 2024 22:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8168F1993B4;
+	Mon, 17 Jun 2024 22:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718663378; cv=none; b=p81/1aL8VGkjBrYhANy4FdPW2rRXjBUdH6qLWzmqm/R3FSHjqaxYMLxIYAv2lcXfoPrjPbK48+ZUNlxOztAKAbIrFwMeGLy0AIJfOH6q5Ld40leHY6n2f4Uskkw/wGijYw7zH0wZ8WOel4GMSNH9d8XCGBW9KfjUdf7KTuY5zIA=
+	t=1718663385; cv=none; b=Nhm03Xn76mWDH74FXEkSno59b7bkbI7EF5DHgR9dPLL4DoyMVonSXDb8PeADI6hLLLZOFo/Meq2aWDtHJEDUWTfu1Kvw+1NLTKBcNYWNiI14rowTNtlAM7ay1cckWrvDFeZgVKtmJySJsXv2wMg6r7qt8ysQZUU5X0ITrDR3O6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718663378; c=relaxed/simple;
-	bh=Xz9QV6i46tKdd/d/21qMcE50Yk1RnmyHrD2mM74Bmr0=;
+	s=arc-20240116; t=1718663385; c=relaxed/simple;
+	bh=9ik/dbRG2KDXr5U5yANnm2+ojtRt2tcTJO6AfXGOCeg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZCGkXnGyIf+x8n2eHLftZhG2AUF5p9vqExmWXFJ3/930m+kTquHCd2MqIWFbHAcPRkoUzVkyvpkg2jN1AinDOCcB0cSQpcbDoxnIkpElrFkAXYyNGbVihsUEtL6yrZc8q6UAZpM5nIQq3v5h1XwudVGmMK1uYi22cxvFenUmUQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GSN0r38X; arc=none smtp.client-ip=209.85.160.45
+	 MIME-Version; b=tVq6xW9o+dH0ROUUpl4tKS253YEB/M9reYjxQp9p+uLDp6kzqSPclPrucKm9jGsB7dV+PY6+cke8UkXVYJifSGqZFlwuLzA/AafdhWT0q8N16EdAdDDQw6WZnUyZ7N0+9Bz/HetJ2wcgA0NZxcLW6Pu2saVrYXe+nULjAIiR4Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZrkBP/M; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSN0r38X"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-254aec5a084so2362513fac.3;
-        Mon, 17 Jun 2024 15:29:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZrkBP/M"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f70509b811so34073775ad.1;
+        Mon, 17 Jun 2024 15:29:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718663375; x=1719268175; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718663383; x=1719268183; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/5rmpi09MO9n2hy/qrINbjOvG6eB0hWRetNoJ98udSU=;
-        b=GSN0r38XMhy8LhZGahfK3tozgOcw5TG/kjDxLT7hrdm0J8MzOHIOmqiztyhrSDPHuC
-         9vAnnvcDQhVg5RWPfl0mS+da/RX2Do5pF4t7FoyST2THb+ZooxVXJpVvin6m7ZXqFHil
-         +TaO3SvIMi5HvrypWZcwk8YeJkIjytlYQm6sWlYNY1uzU1Rxr3R2ey4bpfpjKi0MSWss
-         Vz97R+c4/pC3ln5d6eZi+TLdWH+yfvxqOWV8dt2c4m78dO0BS8GgdtjYXhsSA8qDAgvc
-         c7gSmuSIc8zXhSAv3/n2vVfHrlNOl4//hUi8UIrW9DRPMd7A54X3MPH+HppnZMQTwiAT
-         bDbQ==
+        bh=zu563V/oBM6IlkzbyvA7OvdgJnWa8cdv5ZIPMxeXNbI=;
+        b=UZrkBP/MDuOKzOJwqfBeVNbX3Cc0HLfhhwVP+WtAhVnz1T7jWjchIkRwYMNwzzo4in
+         v3aqhgZFEo5U15GVYHOe8bBw8M8G1tqG+TjihlCFyTXH8PBaq8WJpHthrQWCXXLLOR29
+         mKTc0wtKyPp8yUmovL/YWCy54mEjyEB9qSe1yb3xsL8u8lw2ViGyOFbfz5TmRn+oeWdh
+         4am4fbWuE+yoQJqODQlwxQ0RNcR+cRCei113mnZ74l5lBNFrJFYeDcoGW7ccyUZDfNTn
+         rK6HK0sCnlkrauFnWzXWtJ1MOj+LybGIsxqrgcq/BZMIaVtG79HbcAoByqPczhFD9FBZ
+         tnXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718663375; x=1719268175;
+        d=1e100.net; s=20230601; t=1718663383; x=1719268183;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/5rmpi09MO9n2hy/qrINbjOvG6eB0hWRetNoJ98udSU=;
-        b=xH1m95PNwjtUm6Dx/VylMwHxzYmsxMp6RVCR9W6BNBXronD7ULiGTZRqdMy4vS8mdL
-         OSLvx9QGrrjIT6k0boGp5Rw3GoDDJcf1MHLPdQ8pP+FbOZyLddDA0TQNqkgrXUix/H+4
-         R6pxWtIZgTdtqe2lNP2VDcq7Fv08OgTE/QoeW9EP9ckoHbC3uOgW9hcZAet8A3gCpXj9
-         v9Lln48EdkSfFhkhaQUbhV5shHLvgk4G9quCqn6M7QMstafSZb1C19DZjIe3kr/iWPl8
-         BjC6pST33/WoXSMvWiX/8L1QVhnVVQ8nJrPdgMtc+FuvCSZpJireb1tJXBuf+zQKmWdf
-         +R4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVyGKP4uM0vZe9FXeTBjTwENyWaREH0cKfAwiqmFa3MhzDJpDpfq2jXJqrQvvh2qJK6bZL4pyUD6OyNH68a9IWVCg0kFv2PgvHn6pk6
-X-Gm-Message-State: AOJu0YwdNwnEOsZ0ciXjc/tXcCVyBF1PQyQI+XplSApFTMPrsFTv2GsB
-	fyI5pzt35OFQS4AXCw4S/0pqmDb9yPU+lE05gesaBXGPC5cRzSwsQVT5VQ==
-X-Google-Smtp-Source: AGHT+IFT2uECiKt8e8yRM5EdmVrXYFyF3Xnbtdzl8cWcq7imB26pKamwwoH8Td+EIdlcZUpsTCv7IQ==
-X-Received: by 2002:a05:6870:9589:b0:254:e4a0:4d89 with SMTP id 586e51a60fabf-25842882a43mr12075795fac.10.1718663374449;
-        Mon, 17 Jun 2024 15:29:34 -0700 (PDT)
+        bh=zu563V/oBM6IlkzbyvA7OvdgJnWa8cdv5ZIPMxeXNbI=;
+        b=ohMr3EJCIeuRBlc/HkalhlPye2IyF2Iwb8RsOJ/hF4gK3qVcWWfpNKBifCXuUjnfXu
+         OZPG4RNtan7h51c80kRDV1QdWMNq+SxR5R+pRso0UEpAeHimhUz8nHGF7gDaELnXDOsH
+         +Q2+NEFGLhpcqVXgamzuW7obvjhRul/4LsMe0m4c0+yf3qzsH2UGj0tIZLeHsfscMecW
+         0CaW5EzlBg1COBkotBaqRV56lkINIWUADULAsNL8bAyOkeWz/b7ZfddS4vAHXbaJBRpg
+         8WAF/rBLmBEbZrgCnWVsq4xf2Uq0vU/qemQhZHQXFG2IQvnwQb775lpwKWmD/Q2s0w6o
+         r4dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBNb7v5PF2DE0qbDzEk1x1yF1ZoO2ROrtRtSznVW3cxsri/mqpFQGOYKstac4thFgw/bpszYgE8soCwKZFPc7kbLXQkhwcXxMw3gRJ
+X-Gm-Message-State: AOJu0Yz/m2mMgEkJdPtS8dZnOmMvFLabLTAdtmvzMb19PXJHTVeUsDPK
+	F3VpZE+lOHTFKCJma92p+Zm+lzTt0Jg7Os6k8OD5Qrkmhdn+qtRN
+X-Google-Smtp-Source: AGHT+IEBjTYPhGHhaTRmUVhQ6Sauc4pZaKn0mURFE9M6Bj0SDE9lOaNkWii1Gx6g5R5DAo9lfjrTgw==
+X-Received: by 2002:a17:903:32c9:b0:1f4:7713:8f6 with SMTP id d9443c01a7336-1f8629fb039mr113433575ad.52.1718663382518;
+        Mon, 17 Jun 2024 15:29:42 -0700 (PDT)
 Received: from localhost (c-73-37-105-206.hsd1.or.comcast.net. [73.37.105.206])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fee2c40887sm5836284a12.67.2024.06.17.15.29.33
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e6debasm83995155ad.65.2024.06.17.15.29.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 15:29:33 -0700 (PDT)
+        Mon, 17 Jun 2024 15:29:41 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: linux-arm-msm@vger.kernel.org,
 	freedreno@lists.freedesktop.org,
 	Rob Clark <robdclark@chromium.org>,
 	Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Abhinav Kumar <quic_abhinavk@quicinc.com>,
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sean Paul <sean@poorly.run>,
 	Marijn Suijten <marijn.suijten@somainline.org>,
 	David Airlie <airlied@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/5] drm/msm/adreno: Split catalog into separate files
-Date: Mon, 17 Jun 2024 15:29:00 -0700
-Message-ID: <20240617222916.5980-3-robdclark@gmail.com>
+Subject: [PATCH v2 5/5] drm/msm/adreno: Move CP_PROTECT settings to hw catalog
+Date: Mon, 17 Jun 2024 15:29:03 -0700
+Message-ID: <20240617222916.5980-6-robdclark@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240617222916.5980-1-robdclark@gmail.com>
 References: <20240617222916.5980-1-robdclark@gmail.com>
@@ -82,1390 +82,716 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-Split each gen's gpu table into it's own file.  Only code-motion, no
-functional change.
+Move the CP_PROTECT settings into the hw catalog.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/Makefile               |   5 +
- drivers/gpu/drm/msm/adreno/a2xx_catalog.c  |  52 ++
- drivers/gpu/drm/msm/adreno/a3xx_catalog.c  |  81 +++
- drivers/gpu/drm/msm/adreno/a4xx_catalog.c  |  50 ++
- drivers/gpu/drm/msm/adreno/a5xx_catalog.c  | 148 +++++
- drivers/gpu/drm/msm/adreno/a6xx_catalog.c  | 338 +++++++++++
- drivers/gpu/drm/msm/adreno/adreno_device.c | 625 +--------------------
- 7 files changed, 680 insertions(+), 619 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/adreno/a2xx_catalog.c
- create mode 100644 drivers/gpu/drm/msm/adreno/a3xx_catalog.c
- create mode 100644 drivers/gpu/drm/msm/adreno/a4xx_catalog.c
- create mode 100644 drivers/gpu/drm/msm/adreno/a5xx_catalog.c
- create mode 100644 drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 247 +++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c     | 257 +---------------------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h     |   2 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h   |  13 ++
+ 4 files changed, 268 insertions(+), 251 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index eb788921ff4f..f5e2838c6a76 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -8,13 +8,18 @@ ccflags-$(CONFIG_DRM_MSM_DP) += -I $(src)/dp
- adreno-y := \
- 	adreno/adreno_device.o \
- 	adreno/adreno_gpu.o \
-+	adreno/a2xx_catalog.o \
- 	adreno/a2xx_gpu.o \
- 	adreno/a2xx_gpummu.o \
-+	adreno/a3xx_catalog.o \
- 	adreno/a3xx_gpu.o \
-+	adreno/a4xx_catalog.o \
- 	adreno/a4xx_gpu.o \
-+	adreno/a5xx_catalog.o \
- 	adreno/a5xx_gpu.o \
- 	adreno/a5xx_power.o \
- 	adreno/a5xx_preempt.o \
-+	adreno/a6xx_catalog.o \
- 	adreno/a6xx_gpu.o \
- 	adreno/a6xx_gmu.o \
- 	adreno/a6xx_hfi.o \
-diff --git a/drivers/gpu/drm/msm/adreno/a2xx_catalog.c b/drivers/gpu/drm/msm/adreno/a2xx_catalog.c
-new file mode 100644
-index 000000000000..5c6afd1291ba
---- /dev/null
-+++ b/drivers/gpu/drm/msm/adreno/a2xx_catalog.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2013-2014 Red Hat
-+ * Author: Rob Clark <robdclark@gmail.com>
-+ *
-+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-+ */
-+
-+#include "adreno_gpu.h"
-+
-+static const struct adreno_info a2xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x02000000),
-+		.family = ADRENO_2XX_GEN1,
-+		.revn  = 200,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "yamato_pm4.fw",
-+			[ADRENO_FW_PFP] = "yamato_pfp.fw",
-+		},
-+		.gmem  = SZ_256K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a2xx_gpu_init,
-+	}, { /* a200 on i.mx51 has only 128kib gmem */
-+		.chip_ids = ADRENO_CHIP_IDS(0x02000001),
-+		.family = ADRENO_2XX_GEN1,
-+		.revn  = 201,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "yamato_pm4.fw",
-+			[ADRENO_FW_PFP] = "yamato_pfp.fw",
-+		},
-+		.gmem  = SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a2xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x02020000),
-+		.family = ADRENO_2XX_GEN2,
-+		.revn  = 220,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "leia_pm4_470.fw",
-+			[ADRENO_FW_PFP] = "leia_pfp_470.fw",
-+		},
-+		.gmem  = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a2xx_gpu_init,
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a2xx);
-+
-+MODULE_FIRMWARE("qcom/leia_pfp_470.fw");
-+MODULE_FIRMWARE("qcom/leia_pm4_470.fw");
-+MODULE_FIRMWARE("qcom/yamato_pfp.fw");
-+MODULE_FIRMWARE("qcom/yamato_pm4.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_catalog.c b/drivers/gpu/drm/msm/adreno/a3xx_catalog.c
-new file mode 100644
-index 000000000000..7962ce0f3516
---- /dev/null
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_catalog.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2013-2014 Red Hat
-+ * Author: Rob Clark <robdclark@gmail.com>
-+ *
-+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-+ */
-+
-+#include "adreno_gpu.h"
-+
-+static const struct adreno_info a3xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x03000512),
-+		.family = ADRENO_3XX,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a330_pm4.fw",
-+			[ADRENO_FW_PFP] = "a330_pfp.fw",
-+		},
-+		.gmem  = SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x03000520),
-+		.family = ADRENO_3XX,
-+		.revn  = 305,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a300_pm4.fw",
-+			[ADRENO_FW_PFP] = "a300_pfp.fw",
-+		},
-+		.gmem  = SZ_256K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x03000600),
-+		.family = ADRENO_3XX,
-+		.revn  = 307,        /* because a305c is revn==306 */
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a300_pm4.fw",
-+			[ADRENO_FW_PFP] = "a300_pfp.fw",
-+		},
-+		.gmem  = SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(
-+			0x03020000,
-+			0x03020001,
-+			0x03020002
-+		),
-+		.family = ADRENO_3XX,
-+		.revn  = 320,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a300_pm4.fw",
-+			[ADRENO_FW_PFP] = "a300_pfp.fw",
-+		},
-+		.gmem  = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(
-+			0x03030000,
-+			0x03030001,
-+			0x03030002
-+		),
-+		.family = ADRENO_3XX,
-+		.revn  = 330,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a330_pm4.fw",
-+			[ADRENO_FW_PFP] = "a330_pfp.fw",
-+		},
-+		.gmem  = SZ_1M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a3xx);
-+
-+MODULE_FIRMWARE("qcom/a300_pm4.fw");
-+MODULE_FIRMWARE("qcom/a300_pfp.fw");
-+MODULE_FIRMWARE("qcom/a330_pm4.fw");
-+MODULE_FIRMWARE("qcom/a330_pfp.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a4xx_catalog.c b/drivers/gpu/drm/msm/adreno/a4xx_catalog.c
-new file mode 100644
-index 000000000000..11fe8dcb22bf
---- /dev/null
-+++ b/drivers/gpu/drm/msm/adreno/a4xx_catalog.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2013-2014 Red Hat
-+ * Author: Rob Clark <robdclark@gmail.com>
-+ *
-+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-+ */
-+
-+#include "adreno_gpu.h"
-+
-+static const struct adreno_info a4xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x04000500),
-+		.family = ADRENO_4XX,
-+		.revn  = 405,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a420_pm4.fw",
-+			[ADRENO_FW_PFP] = "a420_pfp.fw",
-+		},
-+		.gmem  = SZ_256K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a4xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x04020000),
-+		.family = ADRENO_4XX,
-+		.revn  = 420,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a420_pm4.fw",
-+			[ADRENO_FW_PFP] = "a420_pfp.fw",
-+		},
-+		.gmem  = (SZ_1M + SZ_512K),
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a4xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x04030002),
-+		.family = ADRENO_4XX,
-+		.revn  = 430,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a420_pm4.fw",
-+			[ADRENO_FW_PFP] = "a420_pfp.fw",
-+		},
-+		.gmem  = (SZ_1M + SZ_512K),
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a4xx_gpu_init,
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a4xx);
-+
-+MODULE_FIRMWARE("qcom/a420_pm4.fw");
-+MODULE_FIRMWARE("qcom/a420_pfp.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_catalog.c b/drivers/gpu/drm/msm/adreno/a5xx_catalog.c
-new file mode 100644
-index 000000000000..0b34d834f3c3
---- /dev/null
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_catalog.c
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2013-2014 Red Hat
-+ * Author: Rob Clark <robdclark@gmail.com>
-+ *
-+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-+ */
-+
-+#include "adreno_gpu.h"
-+
-+static const struct adreno_info a5xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x05000600),
-+		.family = ADRENO_5XX,
-+		.revn = 506,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+		},
-+		.gmem = (SZ_128K + SZ_8K),
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_TWO_PASS_USE_WFI |
-+			  ADRENO_QUIRK_LMLOADKILL_DISABLE,
-+		.init = a5xx_gpu_init,
-+		.zapfw = "a506_zap.mdt",
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x05000800),
-+		.family = ADRENO_5XX,
-+		.revn = 508,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+		},
-+		.gmem = (SZ_128K + SZ_8K),
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
-+		.init = a5xx_gpu_init,
-+		.zapfw = "a508_zap.mdt",
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x05000900),
-+		.family = ADRENO_5XX,
-+		.revn = 509,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+		},
-+		.gmem = (SZ_256K + SZ_16K),
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
-+		.init = a5xx_gpu_init,
-+		/* Adreno 509 uses the same ZAP as 512 */
-+		.zapfw = "a512_zap.mdt",
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x05010000),
-+		.family = ADRENO_5XX,
-+		.revn = 510,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+		},
-+		.gmem = SZ_256K,
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.init = a5xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x05010200),
-+		.family = ADRENO_5XX,
-+		.revn = 512,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+		},
-+		.gmem = (SZ_256K + SZ_16K),
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
-+		.init = a5xx_gpu_init,
-+		.zapfw = "a512_zap.mdt",
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(
-+			0x05030002,
-+			0x05030004
-+		),
-+		.family = ADRENO_5XX,
-+		.revn = 530,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+			[ADRENO_FW_GPMU] = "a530v3_gpmu.fw2",
-+		},
-+		.gmem = SZ_1M,
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_TWO_PASS_USE_WFI |
-+			ADRENO_QUIRK_FAULT_DETECT_MASK,
-+		.init = a5xx_gpu_init,
-+		.zapfw = "a530_zap.mdt",
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x05040001),
-+		.family = ADRENO_5XX,
-+		.revn = 540,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a530_pm4.fw",
-+			[ADRENO_FW_PFP] = "a530_pfp.fw",
-+			[ADRENO_FW_GPMU] = "a540_gpmu.fw2",
-+		},
-+		.gmem = SZ_1M,
-+		/*
-+		 * Increase inactive period to 250 to avoid bouncing
-+		 * the GDSC which appears to make it grumpy
-+		 */
-+		.inactive_period = 250,
-+		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
-+		.init = a5xx_gpu_init,
-+		.zapfw = "a540_zap.mdt",
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a5xx);
-+
-+MODULE_FIRMWARE("qcom/a530_pm4.fw");
-+MODULE_FIRMWARE("qcom/a530_pfp.fw");
-+MODULE_FIRMWARE("qcom/a530v3_gpmu.fw2");
-+MODULE_FIRMWARE("qcom/a530_zap.mdt");
-+MODULE_FIRMWARE("qcom/a530_zap.b00");
-+MODULE_FIRMWARE("qcom/a530_zap.b01");
-+MODULE_FIRMWARE("qcom/a530_zap.b02");
-+MODULE_FIRMWARE("qcom/a540_gpmu.fw2");
 diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-new file mode 100644
-index 000000000000..899fc5fb5184
---- /dev/null
+index da49589f82d0..89e7feffcbe3 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
 +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-@@ -0,0 +1,338 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2013-2014 Red Hat
-+ * Author: Rob Clark <robdclark@gmail.com>
-+ *
-+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-+ */
-+
-+#include "adreno_gpu.h"
-+
-+static const struct adreno_info a6xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010000),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 610,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+		},
-+		.gmem = (SZ_128K + SZ_4K),
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a610_zap.mdt",
-+		.hwcg = a612_hwcg,
-+		/*
-+		 * There are (at least) three SoCs implementing A610: SM6125
-+		 * (trinket), SM6115 (bengal) and SM6225 (khaje). Trinket does
-+		 * not have speedbinning, as only a single SKU exists and we
-+		 * don't support khaje upstream yet.  Hence, this matching
-+		 * table is only valid for bengal.
-+		 */
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 206, 1 },
-+			{ 200, 2 },
-+			{ 157, 3 },
-+			{ 127, 4 },
-+		),
-+	}, {
-+		.machine = "qcom,sm7150",
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
-+		.family = ADRENO_6XX_GEN1,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a630_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a615_zap.mbn",
-+		.hwcg = a615_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 128, 1 },
-+			{ 146, 2 },
-+			{ 167, 3 },
-+			{ 172, 4 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 618,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a630_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 169, 1 },
-+			{ 174, 2 },
-+		),
-+	}, {
-+		.machine = "qcom,sm4350",
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010900),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 619,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a619_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a615_zap.mdt",
-+		.hwcg = a615_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 138, 1 },
-+			{ 92,  2 },
-+		),
-+	}, {
-+		.machine = "qcom,sm6375",
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010901),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 619,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a619_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a615_zap.mdt",
-+		.hwcg = a615_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 190, 1 },
-+			{ 177, 2 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06010900),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 619,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a619_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a615_zap.mdt",
-+		.hwcg = a615_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 120, 4 },
-+			{ 138, 3 },
-+			{ 169, 2 },
-+			{ 180, 1 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(
-+			0x06030001,
-+			0x06030002
-+		),
-+		.family = ADRENO_6XX_GEN1,
-+		.revn = 630,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a630_gmu.bin",
-+		},
-+		.gmem = SZ_1M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a630_zap.mdt",
-+		.hwcg = a630_hwcg,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06040001),
-+		.family = ADRENO_6XX_GEN2,
-+		.revn = 640,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a640_gmu.bin",
-+		},
-+		.gmem = SZ_1M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a640_zap.mdt",
-+		.hwcg = a640_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0, 0 },
-+			{ 1, 1 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06050002),
-+		.family = ADRENO_6XX_GEN3,
-+		.revn = 650,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a650_sqe.fw",
-+			[ADRENO_FW_GMU] = "a650_gmu.bin",
-+		},
-+		.gmem = SZ_1M + SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a650_zap.mdt",
-+		.hwcg = a650_hwcg,
-+		.address_space_size = SZ_16G,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0, 0 },
-+			{ 1, 1 },
-+			{ 2, 3 }, /* Yep, 2 and 3 are swapped! :/ */
-+			{ 3, 2 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06060001),
-+		.family = ADRENO_6XX_GEN4,
-+		.revn = 660,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a660_sqe.fw",
-+			[ADRENO_FW_GMU] = "a660_gmu.bin",
-+		},
-+		.gmem = SZ_1M + SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a660_zap.mdt",
-+		.hwcg = a660_hwcg,
-+		.address_space_size = SZ_16G,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06030500),
-+		.family = ADRENO_6XX_GEN4,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a660_sqe.fw",
-+			[ADRENO_FW_GMU] = "a660_gmu.bin",
-+		},
-+		.gmem = SZ_512K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a660_zap.mbn",
-+		.hwcg = a660_hwcg,
-+		.address_space_size = SZ_16G,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 117, 0 },
-+			{ 172, 2 }, /* Called speedbin 1 downstream, but let's not break things! */
-+			{ 190, 1 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06080001),
-+		.family = ADRENO_6XX_GEN2,
-+		.revn = 680,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a630_sqe.fw",
-+			[ADRENO_FW_GMU] = "a640_gmu.bin",
-+		},
-+		.gmem = SZ_2M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a640_zap.mdt",
-+		.hwcg = a640_hwcg,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x06090000),
-+		.family = ADRENO_6XX_GEN4,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a660_sqe.fw",
-+			[ADRENO_FW_GMU] = "a660_gmu.bin",
-+		},
-+		.gmem = SZ_4M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a690_zap.mdt",
-+		.hwcg = a690_hwcg,
-+		.address_space_size = SZ_16G,
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a6xx);
-+
-+MODULE_FIRMWARE("qcom/a615_zap.mbn");
-+MODULE_FIRMWARE("qcom/a619_gmu.bin");
-+MODULE_FIRMWARE("qcom/a630_sqe.fw");
-+MODULE_FIRMWARE("qcom/a630_gmu.bin");
-+MODULE_FIRMWARE("qcom/a630_zap.mbn");
-+MODULE_FIRMWARE("qcom/a640_gmu.bin");
-+MODULE_FIRMWARE("qcom/a650_gmu.bin");
-+MODULE_FIRMWARE("qcom/a650_sqe.fw");
-+MODULE_FIRMWARE("qcom/a660_gmu.bin");
-+MODULE_FIRMWARE("qcom/a660_sqe.fw");
-+
-+static const struct adreno_info a7xx_gpus[] = {
-+	{
-+		.chip_ids = ADRENO_CHIP_IDS(0x07000200),
-+		.family = ADRENO_6XX_GEN1, /* NOT a mistake! */
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a702_sqe.fw",
-+		},
-+		.gmem = SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a702_zap.mbn",
-+		.hwcg = a702_hwcg,
-+		.speedbins = ADRENO_SPEEDBINS(
-+			{ 0,   0 },
-+			{ 236, 1 },
-+			{ 178, 2 },
-+			{ 142, 3 },
-+		),
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x07030001),
-+		.family = ADRENO_7XX_GEN1,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a730_sqe.fw",
-+			[ADRENO_FW_GMU] = "gmu_gen70000.bin",
-+		},
-+		.gmem = SZ_2M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			  ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a730_zap.mdt",
-+		.hwcg = a730_hwcg,
-+		.address_space_size = SZ_16G,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x43050a01), /* "C510v2" */
-+		.family = ADRENO_7XX_GEN2,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "a740_sqe.fw",
-+			[ADRENO_FW_GMU] = "gmu_gen70200.bin",
-+		},
-+		.gmem = 3 * SZ_1M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			  ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "a740_zap.mdt",
-+		.hwcg = a740_hwcg,
-+		.address_space_size = SZ_16G,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
-+		.family = ADRENO_7XX_GEN3,
-+		.fw = {
-+			[ADRENO_FW_SQE] = "gen70900_sqe.fw",
-+			[ADRENO_FW_GMU] = "gmu_gen70900.bin",
-+		},
-+		.gmem = 3 * SZ_1M,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
-+			  ADRENO_QUIRK_HAS_HW_APRIV,
-+		.init = a6xx_gpu_init,
-+		.zapfw = "gen70900_zap.mbn",
-+		.address_space_size = SZ_16G,
-+	}
-+};
-+DECLARK_ADRENO_GPULIST(a7xx);
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index c8319706c5fe..1e789ff6945e 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -20,596 +20,12 @@ bool allow_vram_carveout = false;
- MODULE_PARM_DESC(allow_vram_carveout, "Allow using VRAM Carveout, in place of IOMMU");
- module_param_named(allow_vram_carveout, allow_vram_carveout, bool, 0600);
- 
--static const struct adreno_info a2xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x02000000),
--		.family = ADRENO_2XX_GEN1,
--		.revn  = 200,
--		.fw = {
--			[ADRENO_FW_PM4] = "yamato_pm4.fw",
--			[ADRENO_FW_PFP] = "yamato_pfp.fw",
--		},
--		.gmem  = SZ_256K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a2xx_gpu_init,
--	}, { /* a200 on i.mx51 has only 128kib gmem */
--		.chip_ids = ADRENO_CHIP_IDS(0x02000001),
--		.family = ADRENO_2XX_GEN1,
--		.revn  = 201,
--		.fw = {
--			[ADRENO_FW_PM4] = "yamato_pm4.fw",
--			[ADRENO_FW_PFP] = "yamato_pfp.fw",
--		},
--		.gmem  = SZ_128K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a2xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x02020000),
--		.family = ADRENO_2XX_GEN2,
--		.revn  = 220,
--		.fw = {
--			[ADRENO_FW_PM4] = "leia_pm4_470.fw",
--			[ADRENO_FW_PFP] = "leia_pfp_470.fw",
--		},
--		.gmem  = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a2xx_gpu_init,
--	}
--};
--DECLARK_ADRENO_GPULIST(a2xx);
--
--static const struct adreno_info a3xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x03000512),
--		.family = ADRENO_3XX,
--		.fw = {
--			[ADRENO_FW_PM4] = "a330_pm4.fw",
--			[ADRENO_FW_PFP] = "a330_pfp.fw",
--		},
--		.gmem  = SZ_128K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a3xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x03000520),
--		.family = ADRENO_3XX,
--		.revn  = 305,
--		.fw = {
--			[ADRENO_FW_PM4] = "a300_pm4.fw",
--			[ADRENO_FW_PFP] = "a300_pfp.fw",
--		},
--		.gmem  = SZ_256K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a3xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x03000600),
--		.family = ADRENO_3XX,
--		.revn  = 307,        /* because a305c is revn==306 */
--		.fw = {
--			[ADRENO_FW_PM4] = "a300_pm4.fw",
--			[ADRENO_FW_PFP] = "a300_pfp.fw",
--		},
--		.gmem  = SZ_128K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a3xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(
--			0x03020000,
--			0x03020001,
--			0x03020002
--		),
--		.family = ADRENO_3XX,
--		.revn  = 320,
--		.fw = {
--			[ADRENO_FW_PM4] = "a300_pm4.fw",
--			[ADRENO_FW_PFP] = "a300_pfp.fw",
--		},
--		.gmem  = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a3xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(
--			0x03030000,
--			0x03030001,
--			0x03030002
--		),
--		.family = ADRENO_3XX,
--		.revn  = 330,
--		.fw = {
--			[ADRENO_FW_PM4] = "a330_pm4.fw",
--			[ADRENO_FW_PFP] = "a330_pfp.fw",
--		},
--		.gmem  = SZ_1M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a3xx_gpu_init,
--	}
--};
--DECLARK_ADRENO_GPULIST(a3xx);
--
--static const struct adreno_info a4xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x04000500),
--		.family = ADRENO_4XX,
--		.revn  = 405,
--		.fw = {
--			[ADRENO_FW_PM4] = "a420_pm4.fw",
--			[ADRENO_FW_PFP] = "a420_pfp.fw",
--		},
--		.gmem  = SZ_256K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a4xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x04020000),
--		.family = ADRENO_4XX,
--		.revn  = 420,
--		.fw = {
--			[ADRENO_FW_PM4] = "a420_pm4.fw",
--			[ADRENO_FW_PFP] = "a420_pfp.fw",
--		},
--		.gmem  = (SZ_1M + SZ_512K),
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a4xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x04030002),
--		.family = ADRENO_4XX,
--		.revn  = 430,
--		.fw = {
--			[ADRENO_FW_PM4] = "a420_pm4.fw",
--			[ADRENO_FW_PFP] = "a420_pfp.fw",
--		},
--		.gmem  = (SZ_1M + SZ_512K),
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init  = a4xx_gpu_init,
--	}
--};
--DECLARK_ADRENO_GPULIST(a4xx);
--
--static const struct adreno_info a5xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x05000600),
--		.family = ADRENO_5XX,
--		.revn = 506,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--		},
--		.gmem = (SZ_128K + SZ_8K),
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_TWO_PASS_USE_WFI |
--			  ADRENO_QUIRK_LMLOADKILL_DISABLE,
--		.init = a5xx_gpu_init,
--		.zapfw = "a506_zap.mdt",
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x05000800),
--		.family = ADRENO_5XX,
--		.revn = 508,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--		},
--		.gmem = (SZ_128K + SZ_8K),
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
--		.init = a5xx_gpu_init,
--		.zapfw = "a508_zap.mdt",
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x05000900),
--		.family = ADRENO_5XX,
--		.revn = 509,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--		},
--		.gmem = (SZ_256K + SZ_16K),
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
--		.init = a5xx_gpu_init,
--		/* Adreno 509 uses the same ZAP as 512 */
--		.zapfw = "a512_zap.mdt",
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x05010000),
--		.family = ADRENO_5XX,
--		.revn = 510,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--		},
--		.gmem = SZ_256K,
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.init = a5xx_gpu_init,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x05010200),
--		.family = ADRENO_5XX,
--		.revn = 512,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--		},
--		.gmem = (SZ_256K + SZ_16K),
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
--		.init = a5xx_gpu_init,
--		.zapfw = "a512_zap.mdt",
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(
--			0x05030002,
--			0x05030004
--		),
--		.family = ADRENO_5XX,
--		.revn = 530,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--			[ADRENO_FW_GPMU] = "a530v3_gpmu.fw2",
--		},
--		.gmem = SZ_1M,
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_TWO_PASS_USE_WFI |
--			ADRENO_QUIRK_FAULT_DETECT_MASK,
--		.init = a5xx_gpu_init,
--		.zapfw = "a530_zap.mdt",
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x05040001),
--		.family = ADRENO_5XX,
--		.revn = 540,
--		.fw = {
--			[ADRENO_FW_PM4] = "a530_pm4.fw",
--			[ADRENO_FW_PFP] = "a530_pfp.fw",
--			[ADRENO_FW_GPMU] = "a540_gpmu.fw2",
--		},
--		.gmem = SZ_1M,
--		/*
--		 * Increase inactive period to 250 to avoid bouncing
--		 * the GDSC which appears to make it grumpy
--		 */
--		.inactive_period = 250,
--		.quirks = ADRENO_QUIRK_LMLOADKILL_DISABLE,
--		.init = a5xx_gpu_init,
--		.zapfw = "a540_zap.mdt",
--	}
--};
--DECLARK_ADRENO_GPULIST(a5xx);
--
--static const struct adreno_info a6xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x06010000),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 610,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--		},
--		.gmem = (SZ_128K + SZ_4K),
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init = a6xx_gpu_init,
--		.zapfw = "a610_zap.mdt",
--		.hwcg = a612_hwcg,
--		/*
--		 * There are (at least) three SoCs implementing A610: SM6125
--		 * (trinket), SM6115 (bengal) and SM6225 (khaje). Trinket does
--		 * not have speedbinning, as only a single SKU exists and we
--		 * don't support khaje upstream yet.  Hence, this matching
--		 * table is only valid for bengal.
--		 */
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 206, 1 },
--			{ 200, 2 },
--			{ 157, 3 },
--			{ 127, 4 },
--		),
--	}, {
--		.machine = "qcom,sm7150",
--		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
--		.family = ADRENO_6XX_GEN1,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a630_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.zapfw = "a615_zap.mbn",
--		.hwcg = a615_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 128, 1 },
--			{ 146, 2 },
--			{ 167, 3 },
--			{ 172, 4 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 618,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a630_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 169, 1 },
--			{ 174, 2 },
--		),
--	}, {
--		.machine = "qcom,sm4350",
--		.chip_ids = ADRENO_CHIP_IDS(0x06010900),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 619,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a619_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init = a6xx_gpu_init,
--		.zapfw = "a615_zap.mdt",
--		.hwcg = a615_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 138, 1 },
--			{ 92,  2 },
--		),
--	}, {
--		.machine = "qcom,sm6375",
--		.chip_ids = ADRENO_CHIP_IDS(0x06010901),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 619,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a619_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.init = a6xx_gpu_init,
--		.zapfw = "a615_zap.mdt",
--		.hwcg = a615_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 190, 1 },
--			{ 177, 2 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06010900),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 619,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a619_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.zapfw = "a615_zap.mdt",
--		.hwcg = a615_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 120, 4 },
--			{ 138, 3 },
--			{ 169, 2 },
--			{ 180, 1 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(
--			0x06030001,
--			0x06030002
--		),
--		.family = ADRENO_6XX_GEN1,
--		.revn = 630,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a630_gmu.bin",
--		},
--		.gmem = SZ_1M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.zapfw = "a630_zap.mdt",
--		.hwcg = a630_hwcg,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06040001),
--		.family = ADRENO_6XX_GEN2,
--		.revn = 640,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a640_gmu.bin",
--		},
--		.gmem = SZ_1M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.zapfw = "a640_zap.mdt",
--		.hwcg = a640_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0, 0 },
--			{ 1, 1 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06050002),
--		.family = ADRENO_6XX_GEN3,
--		.revn = 650,
--		.fw = {
--			[ADRENO_FW_SQE] = "a650_sqe.fw",
--			[ADRENO_FW_GMU] = "a650_gmu.bin",
--		},
--		.gmem = SZ_1M + SZ_128K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a650_zap.mdt",
--		.hwcg = a650_hwcg,
--		.address_space_size = SZ_16G,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0, 0 },
--			{ 1, 1 },
--			{ 2, 3 }, /* Yep, 2 and 3 are swapped! :/ */
--			{ 3, 2 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06060001),
--		.family = ADRENO_6XX_GEN4,
--		.revn = 660,
--		.fw = {
--			[ADRENO_FW_SQE] = "a660_sqe.fw",
--			[ADRENO_FW_GMU] = "a660_gmu.bin",
--		},
--		.gmem = SZ_1M + SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a660_zap.mdt",
--		.hwcg = a660_hwcg,
--		.address_space_size = SZ_16G,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06030500),
--		.family = ADRENO_6XX_GEN4,
--		.fw = {
--			[ADRENO_FW_SQE] = "a660_sqe.fw",
--			[ADRENO_FW_GMU] = "a660_gmu.bin",
--		},
--		.gmem = SZ_512K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a660_zap.mbn",
--		.hwcg = a660_hwcg,
--		.address_space_size = SZ_16G,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 117, 0 },
--			{ 172, 2 }, /* Called speedbin 1 downstream, but let's not break things! */
--			{ 190, 1 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06080001),
--		.family = ADRENO_6XX_GEN2,
--		.revn = 680,
--		.fw = {
--			[ADRENO_FW_SQE] = "a630_sqe.fw",
--			[ADRENO_FW_GMU] = "a640_gmu.bin",
--		},
--		.gmem = SZ_2M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
--		.init = a6xx_gpu_init,
--		.zapfw = "a640_zap.mdt",
--		.hwcg = a640_hwcg,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x06090000),
--		.family = ADRENO_6XX_GEN4,
--		.fw = {
--			[ADRENO_FW_SQE] = "a660_sqe.fw",
--			[ADRENO_FW_GMU] = "a660_gmu.bin",
--		},
--		.gmem = SZ_4M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a690_zap.mdt",
--		.hwcg = a690_hwcg,
--		.address_space_size = SZ_16G,
--	}
--};
--DECLARK_ADRENO_GPULIST(a6xx);
--
--static const struct adreno_info a7xx_gpus[] = {
--	{
--		.chip_ids = ADRENO_CHIP_IDS(0x07000200),
--		.family = ADRENO_6XX_GEN1, /* NOT a mistake! */
--		.fw = {
--			[ADRENO_FW_SQE] = "a702_sqe.fw",
--		},
--		.gmem = SZ_128K,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a702_zap.mbn",
--		.hwcg = a702_hwcg,
--		.speedbins = ADRENO_SPEEDBINS(
--			{ 0,   0 },
--			{ 236, 1 },
--			{ 178, 2 },
--			{ 142, 3 },
--		),
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x07030001),
--		.family = ADRENO_7XX_GEN1,
--		.fw = {
--			[ADRENO_FW_SQE] = "a730_sqe.fw",
--			[ADRENO_FW_GMU] = "gmu_gen70000.bin",
--		},
--		.gmem = SZ_2M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			  ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a730_zap.mdt",
--		.hwcg = a730_hwcg,
--		.address_space_size = SZ_16G,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x43050a01), /* "C510v2" */
--		.family = ADRENO_7XX_GEN2,
--		.fw = {
--			[ADRENO_FW_SQE] = "a740_sqe.fw",
--			[ADRENO_FW_GMU] = "gmu_gen70200.bin",
--		},
--		.gmem = 3 * SZ_1M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			  ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "a740_zap.mdt",
--		.hwcg = a740_hwcg,
--		.address_space_size = SZ_16G,
--	}, {
--		.chip_ids = ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
--		.family = ADRENO_7XX_GEN3,
--		.fw = {
--			[ADRENO_FW_SQE] = "gen70900_sqe.fw",
--			[ADRENO_FW_GMU] = "gmu_gen70900.bin",
--		},
--		.gmem = 3 * SZ_1M,
--		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
--		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
--			  ADRENO_QUIRK_HAS_HW_APRIV,
--		.init = a6xx_gpu_init,
--		.zapfw = "gen70900_zap.mbn",
--		.address_space_size = SZ_16G,
--	}
--};
--DECLARK_ADRENO_GPULIST(a7xx);
-+extern const struct adreno_gpulist a2xx_gpulist;
-+extern const struct adreno_gpulist a3xx_gpulist;
-+extern const struct adreno_gpulist a4xx_gpulist;
-+extern const struct adreno_gpulist a5xx_gpulist;
-+extern const struct adreno_gpulist a6xx_gpulist;
-+extern const struct adreno_gpulist a7xx_gpulist;
- 
- static const struct adreno_gpulist *gpulists[] = {
- 	&a2xx_gpulist,
-@@ -620,35 +36,6 @@ static const struct adreno_gpulist *gpulists[] = {
- 	&a6xx_gpulist,
+@@ -454,6 +454,173 @@ static const struct adreno_reglist a690_hwcg[] = {
+ 	{}
  };
  
--MODULE_FIRMWARE("qcom/a300_pm4.fw");
--MODULE_FIRMWARE("qcom/a300_pfp.fw");
--MODULE_FIRMWARE("qcom/a330_pm4.fw");
--MODULE_FIRMWARE("qcom/a330_pfp.fw");
--MODULE_FIRMWARE("qcom/a420_pm4.fw");
--MODULE_FIRMWARE("qcom/a420_pfp.fw");
--MODULE_FIRMWARE("qcom/a530_pm4.fw");
--MODULE_FIRMWARE("qcom/a530_pfp.fw");
--MODULE_FIRMWARE("qcom/a530v3_gpmu.fw2");
--MODULE_FIRMWARE("qcom/a530_zap.mdt");
--MODULE_FIRMWARE("qcom/a530_zap.b00");
--MODULE_FIRMWARE("qcom/a530_zap.b01");
--MODULE_FIRMWARE("qcom/a530_zap.b02");
--MODULE_FIRMWARE("qcom/a540_gpmu.fw2");
--MODULE_FIRMWARE("qcom/a615_zap.mbn");
--MODULE_FIRMWARE("qcom/a619_gmu.bin");
--MODULE_FIRMWARE("qcom/a630_sqe.fw");
--MODULE_FIRMWARE("qcom/a630_gmu.bin");
--MODULE_FIRMWARE("qcom/a630_zap.mbn");
--MODULE_FIRMWARE("qcom/a640_gmu.bin");
--MODULE_FIRMWARE("qcom/a650_gmu.bin");
--MODULE_FIRMWARE("qcom/a650_sqe.fw");
--MODULE_FIRMWARE("qcom/a660_gmu.bin");
--MODULE_FIRMWARE("qcom/a660_sqe.fw");
--MODULE_FIRMWARE("qcom/leia_pfp_470.fw");
--MODULE_FIRMWARE("qcom/leia_pm4_470.fw");
--MODULE_FIRMWARE("qcom/yamato_pfp.fw");
--MODULE_FIRMWARE("qcom/yamato_pm4.fw");
++/* For a615, a616, a618, a619, a630, a640 and a680 */
++static const u32 a630_protect_regs[] = {
++	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
++	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
++	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
++	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
++	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
++	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
++	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
++	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
++	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
++	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
++	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
++	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
++	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
++	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
++	A6XX_PROTECT_NORDWR(0x09e70, 0x0001),
++	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
++	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0ae50, 0x032f),
++	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
++	A6XX_PROTECT_NORDWR(0x0be20, 0x17df),
++	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
++	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x11c00, 0x0000), /* note: infinite range */
++};
++DECLARE_ADRENO_PROTECT(a630_protect, 32);
++
++/* These are for a620 and a650 */
++static const u32 a650_protect_regs[] = {
++	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
++	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
++	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
++	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
++	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
++	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
++	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
++	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
++	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
++	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
++	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
++	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
++	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
++	A6XX_PROTECT_NORDWR(0x08e80, 0x027f),
++	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
++	A6XX_PROTECT_NORDWR(0x09e60, 0x0011),
++	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
++	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0ae50, 0x032f),
++	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0b608, 0x0007),
++	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
++	A6XX_PROTECT_NORDWR(0x0be20, 0x17df),
++	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
++	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x18400, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1a800, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
++	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
++	A6XX_PROTECT_NORDWR(0x1f887, 0x001b),
++	A6XX_PROTECT_NORDWR(0x1f8c0, 0x0000), /* note: infinite range */
++};
++DECLARE_ADRENO_PROTECT(a650_protect, 48);
++
++/* These are for a635 and a660 */
++static const u32 a660_protect_regs[] = {
++	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
++	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
++	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
++	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
++	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
++	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
++	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
++	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
++	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
++	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
++	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
++	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
++	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
++	A6XX_PROTECT_NORDWR(0x08e80, 0x027f),
++	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
++	A6XX_PROTECT_NORDWR(0x09e60, 0x0011),
++	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
++	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0ae50, 0x012f),
++	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0b608, 0x0006),
++	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
++	A6XX_PROTECT_NORDWR(0x0be20, 0x015f),
++	A6XX_PROTECT_NORDWR(0x0d000, 0x05ff),
++	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
++	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x18400, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1a400, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
++	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
++	A6XX_PROTECT_NORDWR(0x1f860, 0x0000),
++	A6XX_PROTECT_NORDWR(0x1f887, 0x001b),
++	A6XX_PROTECT_NORDWR(0x1f8c0, 0x0000), /* note: infinite range */
++};
++DECLARE_ADRENO_PROTECT(a660_protect, 48);
++
++/* These are for a690 */
++static const u32 a690_protect_regs[] = {
++	A6XX_PROTECT_RDONLY(0x00000, 0x004ff),
++	A6XX_PROTECT_RDONLY(0x00501, 0x00001),
++	A6XX_PROTECT_RDONLY(0x0050b, 0x002f4),
++	A6XX_PROTECT_NORDWR(0x0050e, 0x00000),
++	A6XX_PROTECT_NORDWR(0x00510, 0x00000),
++	A6XX_PROTECT_NORDWR(0x00534, 0x00000),
++	A6XX_PROTECT_NORDWR(0x00800, 0x00082),
++	A6XX_PROTECT_NORDWR(0x008a0, 0x00008),
++	A6XX_PROTECT_NORDWR(0x008ab, 0x00024),
++	A6XX_PROTECT_RDONLY(0x008de, 0x000ae),
++	A6XX_PROTECT_NORDWR(0x00900, 0x0004d),
++	A6XX_PROTECT_NORDWR(0x0098d, 0x00272),
++	A6XX_PROTECT_NORDWR(0x00e00, 0x00001),
++	A6XX_PROTECT_NORDWR(0x00e03, 0x0000c),
++	A6XX_PROTECT_NORDWR(0x03c00, 0x000c3),
++	A6XX_PROTECT_RDONLY(0x03cc4, 0x01fff),
++	A6XX_PROTECT_NORDWR(0x08630, 0x001cf),
++	A6XX_PROTECT_NORDWR(0x08e00, 0x00000),
++	A6XX_PROTECT_NORDWR(0x08e08, 0x00007),
++	A6XX_PROTECT_NORDWR(0x08e50, 0x0001f),
++	A6XX_PROTECT_NORDWR(0x08e80, 0x0027f),
++	A6XX_PROTECT_NORDWR(0x09624, 0x001db),
++	A6XX_PROTECT_NORDWR(0x09e60, 0x00011),
++	A6XX_PROTECT_NORDWR(0x09e78, 0x00187),
++	A6XX_PROTECT_NORDWR(0x0a630, 0x001cf),
++	A6XX_PROTECT_NORDWR(0x0ae02, 0x00000),
++	A6XX_PROTECT_NORDWR(0x0ae50, 0x0012f),
++	A6XX_PROTECT_NORDWR(0x0b604, 0x00000),
++	A6XX_PROTECT_NORDWR(0x0b608, 0x00006),
++	A6XX_PROTECT_NORDWR(0x0be02, 0x00001),
++	A6XX_PROTECT_NORDWR(0x0be20, 0x0015f),
++	A6XX_PROTECT_NORDWR(0x0d000, 0x005ff),
++	A6XX_PROTECT_NORDWR(0x0f000, 0x00bff),
++	A6XX_PROTECT_RDONLY(0x0fc00, 0x01fff),
++	A6XX_PROTECT_NORDWR(0x11c00, 0x00000), /*note: infiite range */
++};
++DECLARE_ADRENO_PROTECT(a690_protect, 48);
++
+ static const struct adreno_info a6xx_gpus[] = {
+ 	{
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06010000),
+@@ -468,6 +635,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a610_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a612_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		/*
+ 		 * There are (at least) three SoCs implementing A610: SM6125
+@@ -498,6 +666,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a615_zap.mbn",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a615_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -519,6 +688,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.a6xx = &(struct a6xx_info) {
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -540,6 +710,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a615_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a615_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -561,6 +732,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a615_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a615_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -582,6 +754,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a615_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a615_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+@@ -608,6 +781,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a630_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a630_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06040001),
+@@ -624,6 +798,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a640_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a640_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0, 0 },
+@@ -645,6 +820,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a650_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a650_hwcg,
++			.protect = &a650_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+@@ -669,6 +845,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a660_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a660_hwcg,
++			.protect = &a660_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+@@ -686,6 +863,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a660_zap.mbn",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a660_hwcg,
++			.protect = &a660_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+@@ -709,6 +887,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a640_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a640_hwcg,
++			.protect = &a630_protect,
+ 		},
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06090000),
+@@ -725,6 +904,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		.zapfw = "a690_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a690_hwcg,
++			.protect = &a690_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 	}
+@@ -916,6 +1096,60 @@ static const struct adreno_reglist a740_hwcg[] = {
+ 	{},
+ };
+ 
++static const u32 a730_protect_regs[] = {
++	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
++	A6XX_PROTECT_RDONLY(0x0050b, 0x0058),
++	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
++	A6XX_PROTECT_RDONLY(0x005fb, 0x009d),
++	A6XX_PROTECT_NORDWR(0x00699, 0x01e9),
++	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
++	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
++	/* 0x008d0-0x008dd and 0x008e0-0x008e6 are unprotected on purpose for tools like perfetto */
++	A6XX_PROTECT_NORDWR(0x008de, 0x0001),
++	A6XX_PROTECT_RDONLY(0x008e7, 0x014b),
++	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
++	A6XX_PROTECT_NORDWR(0x0098d, 0x00b2),
++	A6XX_PROTECT_NORDWR(0x00a41, 0x01be),
++	A6XX_PROTECT_NORDWR(0x00df0, 0x0001),
++	A6XX_PROTECT_NORDWR(0x00e01, 0x0000),
++	A6XX_PROTECT_NORDWR(0x00e07, 0x0008),
++	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
++	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
++	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
++	A6XX_PROTECT_NORDWR(0x08e80, 0x0280),
++	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
++	A6XX_PROTECT_NORDWR(0x09e40, 0x0000),
++	A6XX_PROTECT_NORDWR(0x09e64, 0x000d),
++	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
++	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
++	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
++	A6XX_PROTECT_NORDWR(0x0ae50, 0x000f),
++	A6XX_PROTECT_NORDWR(0x0ae66, 0x0003),
++	A6XX_PROTECT_NORDWR(0x0ae6f, 0x0003),
++	A6XX_PROTECT_NORDWR(0x0b604, 0x0003),
++	A6XX_PROTECT_NORDWR(0x0ec00, 0x0fff),
++	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x18400, 0x0053),
++	A6XX_PROTECT_RDONLY(0x18454, 0x0004),
++	A6XX_PROTECT_NORDWR(0x18459, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1a459, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1c459, 0x1fff),
++	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
++	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
++	A6XX_PROTECT_NORDWR(0x1f860, 0x0000),
++	A6XX_PROTECT_NORDWR(0x1f878, 0x002a),
++	/* CP_PROTECT_REG[45, 46] are left untouched! */
++	0,
++	0,
++	A6XX_PROTECT_NORDWR(0x1f8c0, 0x00000),
++};
++DECLARE_ADRENO_PROTECT(a730_protect, 48);
++
+ static const struct adreno_info a7xx_gpus[] = {
+ 	{
+ 		.chip_ids = ADRENO_CHIP_IDS(0x07000200),
+@@ -952,6 +1186,7 @@ static const struct adreno_info a7xx_gpus[] = {
+ 		.zapfw = "a730_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a730_hwcg,
++			.protect = &a730_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+@@ -969,6 +1204,7 @@ static const struct adreno_info a7xx_gpus[] = {
+ 		.zapfw = "a740_zap.mdt",
+ 		.a6xx = &(struct a6xx_info) {
+ 			.hwcg = a740_hwcg,
++			.protect = &a730_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 	}, {
+@@ -985,8 +1221,19 @@ static const struct adreno_info a7xx_gpus[] = {
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "gen70900_zap.mbn",
+ 		.a6xx = &(struct a6xx_info) {
++			.protect = &a730_protect,
+ 		},
+ 		.address_space_size = SZ_16G,
+ 	}
+ };
+ DECLARK_ADRENO_GPULIST(a7xx);
++
++static inline void __build_asserts(void)
++{
++	BUILD_BUG_ON(a630_protect.count > a630_protect.count_max);
++	BUILD_BUG_ON(a650_protect.count > a650_protect.count_max);
++	BUILD_BUG_ON(a660_protect.count > a660_protect.count_max);
++	BUILD_BUG_ON(a690_protect.count > a690_protect.count_max);
++	BUILD_BUG_ON(a730_protect.count > a730_protect.count_max);
++}
++
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 7e01fb551f12..f22a9e8460b3 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -465,256 +465,11 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 	gpu_write(gpu, REG_A6XX_RBBM_CLOCK_CNTL, state ? clock_cntl_on : 0);
+ }
+ 
+-/* For a615, a616, a618, a619, a630, a640 and a680 */
+-static const u32 a6xx_protect[] = {
+-	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
+-	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
+-	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
+-	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
+-	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
+-	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
+-	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
+-	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
+-	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
+-	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
+-	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
+-	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
+-	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
+-	A6XX_PROTECT_NORDWR(0x09e70, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
+-	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0ae50, 0x032f),
+-	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x0be20, 0x17df),
+-	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
+-	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x11c00, 0x0000), /* note: infinite range */
+-};
 -
- static const struct adreno_info *adreno_info(uint32_t chip_id)
+-/* These are for a620 and a650 */
+-static const u32 a650_protect[] = {
+-	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
+-	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
+-	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
+-	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
+-	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
+-	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
+-	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
+-	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
+-	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
+-	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
+-	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
+-	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
+-	A6XX_PROTECT_NORDWR(0x08e80, 0x027f),
+-	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
+-	A6XX_PROTECT_NORDWR(0x09e60, 0x0011),
+-	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
+-	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0ae50, 0x032f),
+-	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0b608, 0x0007),
+-	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x0be20, 0x17df),
+-	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
+-	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x18400, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1a800, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
+-	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
+-	A6XX_PROTECT_NORDWR(0x1f887, 0x001b),
+-	A6XX_PROTECT_NORDWR(0x1f8c0, 0x0000), /* note: infinite range */
+-};
+-
+-/* These are for a635 and a660 */
+-static const u32 a660_protect[] = {
+-	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
+-	A6XX_PROTECT_RDONLY(0x00501, 0x0005),
+-	A6XX_PROTECT_RDONLY(0x0050b, 0x02f4),
+-	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00800, 0x0082),
+-	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
+-	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
+-	A6XX_PROTECT_RDONLY(0x008de, 0x00ae),
+-	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
+-	A6XX_PROTECT_NORDWR(0x0098d, 0x0272),
+-	A6XX_PROTECT_NORDWR(0x00e00, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x00e03, 0x000c),
+-	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
+-	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
+-	A6XX_PROTECT_NORDWR(0x08e80, 0x027f),
+-	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
+-	A6XX_PROTECT_NORDWR(0x09e60, 0x0011),
+-	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
+-	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0ae50, 0x012f),
+-	A6XX_PROTECT_NORDWR(0x0b604, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0b608, 0x0006),
+-	A6XX_PROTECT_NORDWR(0x0be02, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x0be20, 0x015f),
+-	A6XX_PROTECT_NORDWR(0x0d000, 0x05ff),
+-	A6XX_PROTECT_NORDWR(0x0f000, 0x0bff),
+-	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x18400, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1a400, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
+-	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
+-	A6XX_PROTECT_NORDWR(0x1f860, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x1f887, 0x001b),
+-	A6XX_PROTECT_NORDWR(0x1f8c0, 0x0000), /* note: infinite range */
+-};
+-
+-/* These are for a690 */
+-static const u32 a690_protect[] = {
+-	A6XX_PROTECT_RDONLY(0x00000, 0x004ff),
+-	A6XX_PROTECT_RDONLY(0x00501, 0x00001),
+-	A6XX_PROTECT_RDONLY(0x0050b, 0x002f4),
+-	A6XX_PROTECT_NORDWR(0x0050e, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x00510, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x00534, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x00800, 0x00082),
+-	A6XX_PROTECT_NORDWR(0x008a0, 0x00008),
+-	A6XX_PROTECT_NORDWR(0x008ab, 0x00024),
+-	A6XX_PROTECT_RDONLY(0x008de, 0x000ae),
+-	A6XX_PROTECT_NORDWR(0x00900, 0x0004d),
+-	A6XX_PROTECT_NORDWR(0x0098d, 0x00272),
+-	A6XX_PROTECT_NORDWR(0x00e00, 0x00001),
+-	A6XX_PROTECT_NORDWR(0x00e03, 0x0000c),
+-	A6XX_PROTECT_NORDWR(0x03c00, 0x000c3),
+-	A6XX_PROTECT_RDONLY(0x03cc4, 0x01fff),
+-	A6XX_PROTECT_NORDWR(0x08630, 0x001cf),
+-	A6XX_PROTECT_NORDWR(0x08e00, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x08e08, 0x00007),
+-	A6XX_PROTECT_NORDWR(0x08e50, 0x0001f),
+-	A6XX_PROTECT_NORDWR(0x08e80, 0x0027f),
+-	A6XX_PROTECT_NORDWR(0x09624, 0x001db),
+-	A6XX_PROTECT_NORDWR(0x09e60, 0x00011),
+-	A6XX_PROTECT_NORDWR(0x09e78, 0x00187),
+-	A6XX_PROTECT_NORDWR(0x0a630, 0x001cf),
+-	A6XX_PROTECT_NORDWR(0x0ae02, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x0ae50, 0x0012f),
+-	A6XX_PROTECT_NORDWR(0x0b604, 0x00000),
+-	A6XX_PROTECT_NORDWR(0x0b608, 0x00006),
+-	A6XX_PROTECT_NORDWR(0x0be02, 0x00001),
+-	A6XX_PROTECT_NORDWR(0x0be20, 0x0015f),
+-	A6XX_PROTECT_NORDWR(0x0d000, 0x005ff),
+-	A6XX_PROTECT_NORDWR(0x0f000, 0x00bff),
+-	A6XX_PROTECT_RDONLY(0x0fc00, 0x01fff),
+-	A6XX_PROTECT_NORDWR(0x11c00, 0x00000), /*note: infiite range */
+-};
+-
+-static const u32 a730_protect[] = {
+-	A6XX_PROTECT_RDONLY(0x00000, 0x04ff),
+-	A6XX_PROTECT_RDONLY(0x0050b, 0x0058),
+-	A6XX_PROTECT_NORDWR(0x0050e, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00510, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00534, 0x0000),
+-	A6XX_PROTECT_RDONLY(0x005fb, 0x009d),
+-	A6XX_PROTECT_NORDWR(0x00699, 0x01e9),
+-	A6XX_PROTECT_NORDWR(0x008a0, 0x0008),
+-	A6XX_PROTECT_NORDWR(0x008ab, 0x0024),
+-	/* 0x008d0-0x008dd and 0x008e0-0x008e6 are unprotected on purpose for tools like perfetto */
+-	A6XX_PROTECT_NORDWR(0x008de, 0x0001),
+-	A6XX_PROTECT_RDONLY(0x008e7, 0x014b),
+-	A6XX_PROTECT_NORDWR(0x00900, 0x004d),
+-	A6XX_PROTECT_NORDWR(0x0098d, 0x00b2),
+-	A6XX_PROTECT_NORDWR(0x00a41, 0x01be),
+-	A6XX_PROTECT_NORDWR(0x00df0, 0x0001),
+-	A6XX_PROTECT_NORDWR(0x00e01, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x00e07, 0x0008),
+-	A6XX_PROTECT_NORDWR(0x03c00, 0x00c3),
+-	A6XX_PROTECT_RDONLY(0x03cc4, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x08630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x08e00, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e08, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x08e50, 0x001f),
+-	A6XX_PROTECT_NORDWR(0x08e80, 0x0280),
+-	A6XX_PROTECT_NORDWR(0x09624, 0x01db),
+-	A6XX_PROTECT_NORDWR(0x09e40, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x09e64, 0x000d),
+-	A6XX_PROTECT_NORDWR(0x09e78, 0x0187),
+-	A6XX_PROTECT_NORDWR(0x0a630, 0x01cf),
+-	A6XX_PROTECT_NORDWR(0x0ae02, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x0ae50, 0x000f),
+-	A6XX_PROTECT_NORDWR(0x0ae66, 0x0003),
+-	A6XX_PROTECT_NORDWR(0x0ae6f, 0x0003),
+-	A6XX_PROTECT_NORDWR(0x0b604, 0x0003),
+-	A6XX_PROTECT_NORDWR(0x0ec00, 0x0fff),
+-	A6XX_PROTECT_RDONLY(0x0fc00, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x18400, 0x0053),
+-	A6XX_PROTECT_RDONLY(0x18454, 0x0004),
+-	A6XX_PROTECT_NORDWR(0x18459, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1a459, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1c459, 0x1fff),
+-	A6XX_PROTECT_NORDWR(0x1f400, 0x0443),
+-	A6XX_PROTECT_RDONLY(0x1f844, 0x007b),
+-	A6XX_PROTECT_NORDWR(0x1f860, 0x0000),
+-	A6XX_PROTECT_NORDWR(0x1f878, 0x002a),
+-	/* CP_PROTECT_REG[45, 46] are left untouched! */
+-	0,
+-	0,
+-	A6XX_PROTECT_NORDWR(0x1f8c0, 0x00000),
+-};
+-
+ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
  {
- 	/* identify gpu: */
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+-	const u32 *regs = a6xx_protect;
+-	unsigned i, count, count_max;
+-
+-	if (adreno_is_a650(adreno_gpu) || adreno_is_a702(adreno_gpu)) {
+-		regs = a650_protect;
+-		count = ARRAY_SIZE(a650_protect);
+-		count_max = 48;
+-		BUILD_BUG_ON(ARRAY_SIZE(a650_protect) > 48);
+-	} else if (adreno_is_a690(adreno_gpu)) {
+-		regs = a690_protect;
+-		count = ARRAY_SIZE(a690_protect);
+-		count_max = 48;
+-		BUILD_BUG_ON(ARRAY_SIZE(a690_protect) > 48);
+-	} else if (adreno_is_a660_family(adreno_gpu)) {
+-		regs = a660_protect;
+-		count = ARRAY_SIZE(a660_protect);
+-		count_max = 48;
+-		BUILD_BUG_ON(ARRAY_SIZE(a660_protect) > 48);
+-	} else if (adreno_is_a730(adreno_gpu) ||
+-		   adreno_is_a740(adreno_gpu) ||
+-		   adreno_is_a750(adreno_gpu)) {
+-		regs = a730_protect;
+-		count = ARRAY_SIZE(a730_protect);
+-		count_max = 48;
+-		BUILD_BUG_ON(ARRAY_SIZE(a730_protect) > 48);
+-	} else {
+-		regs = a6xx_protect;
+-		count = ARRAY_SIZE(a6xx_protect);
+-		count_max = 32;
+-		BUILD_BUG_ON(ARRAY_SIZE(a6xx_protect) > 32);
+-	}
++	const struct adreno_protect *protect = adreno_gpu->info->a6xx->protect;
++	unsigned i;
+ 
+ 	/*
+ 	 * Enable access protection to privileged registers, fault on an access
+@@ -726,13 +481,13 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+ 		  A6XX_CP_PROTECT_CNTL_ACCESS_FAULT_ON_VIOL_EN |
+ 		  A6XX_CP_PROTECT_CNTL_LAST_SPAN_INF_RANGE);
+ 
+-	for (i = 0; i < count - 1; i++) {
++	for (i = 0; i < protect->count - 1; i++) {
+ 		/* Intentionally skip writing to some registers */
+-		if (regs[i])
+-			gpu_write(gpu, REG_A6XX_CP_PROTECT(i), regs[i]);
++		if (protect->regs[i])
++			gpu_write(gpu, REG_A6XX_CP_PROTECT(i), protect->regs[i]);
+ 	}
+ 	/* last CP_PROTECT to have "infinite" length on the last entry */
+-	gpu_write(gpu, REG_A6XX_CP_PROTECT(count_max - 1), regs[i]);
++	gpu_write(gpu, REG_A6XX_CP_PROTECT(protect->count_max - 1), protect->regs[i]);
+ }
+ 
+ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 61c51e9c7f06..c206dab8bc08 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -16,9 +16,11 @@ extern bool hang_debug;
+  * struct a6xx_info - a6xx specific information from device table
+  *
+  * @hwcg: hw clock gating register sequence
++ * @protect: CP_PROTECT settings
+  */
+ struct a6xx_info {
+ 	const struct adreno_reglist *hwcg;
++	const struct adreno_protect *protect;
+ };
+ 
+ struct a6xx_gpu {
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index 849ce0ae9e75..4e5a437ebf8b 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -143,6 +143,19 @@ const struct adreno_gpulist name ## _gpulist = {      \
+  */
+ #define ADRENO_SPEEDBINS(tbl...) (struct adreno_speedbin[]) { tbl {SHRT_MAX, 0} }
+ 
++struct adreno_protect {
++	const uint32_t *regs;
++	uint32_t count;
++	uint32_t count_max;
++};
++
++#define DECLARE_ADRENO_PROTECT(name, __count_max)	\
++static const struct adreno_protect name = {		\
++	.regs = name ## _regs,				\
++	.count = ARRAY_SIZE(name ## _regs),		\
++	.count_max = __count_max,			\
++};
++
+ struct adreno_gpu {
+ 	struct msm_gpu base;
+ 	const struct adreno_info *info;
 -- 
 2.45.2
 
