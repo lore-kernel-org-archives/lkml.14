@@ -1,204 +1,179 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48786158DD4
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A429D15A493
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637697; cv=none; b=ZUdKreCRP9nASTpMK8i3RmJGrLM/El9/1c70qUW0imuXRrE80TtY9xS9bi+cs2Ybc7hn8dt86elfv1Fyqyg+MD9FnGDaR5eOZ/CKqWkJPZXmAZWSorQ8lZPr8wV4ZzFzAmOYsEe0bO4pG8Kl0+WDyRSEfYZiq+Z6we+Om9Nu/nE=
+	t=1718637748; cv=none; b=AsoxBQz+Et01/3jV/BITfFC7CMs7reMHVfypgHwqAkrTr8/1qQoax8sdr9efER9uHF/E8UNm2uwuQpmDTbUg9kpRn1CEqNVFsR4ojf3u9pq7ZYlkWRwGVnsqpXSF9dq7epBqy8XXsqU1GUtkeMrfOMeejvqmoSNDyJWOQUObNOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637697; c=relaxed/simple;
-	bh=Q9WnguKm+UBjQSRP4b97vXSra71dt9RFpU0p4AXuSIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WvcxikFwiZBBl+yh9eJXs4YjJVqIwkS9D3JEvRksg/qGEm0qVQ9YBHoq4uP4LRzWex9WPHNl0wpF3UDWl2adg5Ia/mBxu1mIvpFGVGbgMwSXiwNxOqdXXl9UvROYwMIdCzCqiC4ZqcOZrHVJJ/UGEiJyYdLwAKys6yRy7WVbioc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NSJ1dkP2; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718637748; c=relaxed/simple;
+	bh=1WCrd5faPn+mYTZ7JSuYSySdH178zAkO2xerg6qhj+8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HN5RYl3zm1zopEx4bszGSZ+YkcVxWE7joOrGzHw2LNssCB9oDDWIaO84LTd+BJd93JXwtTrJW6SmhzsRx+QPc3F7mhWqUcur1rUh1bGteQaCi0Dc7Sr+azKwg8CkTXD8d7vpR6scpZxRW2eJ0Rcim12uIaICbLgFuLs3uDmF6hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=ToOaERND; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NSJ1dkP2"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6ef46d25efso557390766b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 08:21:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="ToOaERND"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-797e2834c4eso374795585a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 08:22:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718637693; x=1719242493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t5snYc+Qico17+UwnnuvmPc5oEWV7IQ5Wznvf984u0Q=;
-        b=NSJ1dkP2XcqGLA3fr80YZgn7iLCDHeXRO5mhZM2RdcaOsK/rX5an6IMeyTE0iH4Cfo
-         K/hCVeY+kI/5RY3mrNoVsJJnDVLTC5ocDn1STRARIef80MxmWNDqJHD2L3v06KVBN/sh
-         y9g44pObbc7FrwWOXbjcDEHIwSiSIZCoca5bWZ4qgBUbDQr0xlQF7H9f1fAZKKK5tEUl
-         RhfpQv7wxAXhbiBAZCQ/VdHWkUo0AK74U+xFNmR0V9ctd7fns72HUDPq88TEjOrI3b5K
-         ic5hqqCEKu8xpdexJ3y9vvWprAbEVLIi7Cp8KAQovJpfFHgfmljgKdOwOEAk03SQT8/2
-         zY3A==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1718637744; x=1719242544; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3/FM3QUCn6Oly1MyDk1CjKXwx7qpQYJAZGU3cke12jM=;
+        b=ToOaERNDsXqd2Sk4KlJMhm63hFk8y2QYxTHyMdnsHV9RG7IDLR3gtqtUDM0PS99S5k
+         MmoliEWoP+vtbeiGKAjXPk4n2Jz0H8BFY6JpMg/WtbF5f0KEXsgEHiyd30kqa21vVx7L
+         3P+ApA1OZGupXqFZxwPDFLmE2E+VwKKA710KlshmDT4PnJ36CqHfe/QgUSvpBqsfzk+a
+         tGq7a+W3NFCPXJ+OoQBYEADr0ovdFS8EJvI+iRts6mzpqrRw/H6QKCy5bMOYdRUHM0tv
+         qY3cF+gfA9ilUNkSeO0FX40C2J9OWznfqthSintkxbYuqK+WuZs0gVjzDyXO4OeQnWbI
+         QKKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718637693; x=1719242493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t5snYc+Qico17+UwnnuvmPc5oEWV7IQ5Wznvf984u0Q=;
-        b=RDG8bGlcEZ+ctI/hRjDR5f/qHxlDaxdF+3kRVCX5zCiYQeq5aNFYoTWaibsBkAxFis
-         XP7ceSBHCBGeEJDh0kxbpezo6+ebOjQxx24uKGkuxy24OpGe5+DoE6fxD3fcphG3CgOD
-         Led/krNkxwC9vdlWoMqYcNGFe5BXYuca5jinVG3ARBI3bRZriUP9VAj2lchp+1iG7IN5
-         cAgH1ymVVxnT6irWdb/if1SoMZXZBcipkIPQLjUtsECKx7z3FyaPeU6Uv72emozSB0qX
-         Q7ebcVZkz5ERCfFg9guvyk7bRIALiuPLt8O8YGk1rq3ob3VT57KbWnLvxB/3d1JSqalU
-         PCpw==
-X-Forwarded-Encrypted: i=1; AJvYcCXynmrNcalrVJCzEn5RjwV9/8+EAPm5pJjtl0ZfxbBtgkfMo9zfwNnlDiiZSEdrI4DLs+ysRgsqDTmqxAlqC56XxANst7z9YVtDQBUa
-X-Gm-Message-State: AOJu0YzGGxQ4rUPM9q4+VM1c5SoVUyq3tQlgC22wmITDwWmn6MzAg35i
-	K8AyE+PeVyA4vivpwSBdxngTFB5Aexq4H8k+3LCikv7DTmW3f4CSrJe8qsA2JcU=
-X-Google-Smtp-Source: AGHT+IHmoBd0YCnYXoNipxTVZiGnK0CNG3XEyfuGo0DU31tnCZ9xpe/d/H5KI0iWr9XgD0kRzNwzfQ==
-X-Received: by 2002:a17:907:d50d:b0:a6f:61c7:dea7 with SMTP id a640c23a62f3a-a6f61c7df44mr739053066b.18.1718637693478;
-        Mon, 17 Jun 2024 08:21:33 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecdcfbsm521442666b.109.2024.06.17.08.21.32
+        d=1e100.net; s=20230601; t=1718637744; x=1719242544;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3/FM3QUCn6Oly1MyDk1CjKXwx7qpQYJAZGU3cke12jM=;
+        b=jS0aWg8uVc5k3JrH//ot7evEr/wuA7KnkbTH5w1U7ny905X5p7WcOrp2fBTsdljsPZ
+         JWvqWWrBT9/4g1O508VL/HyPMXF6Ru6KqvA4pga5R7y4oVJloI2DGmjqAcW3uBRcHigd
+         iHqUQigqSuqo8ViCGDWN6K5cJVlvMTOsiRGPGbQ3wRYSQkECQuL2v/bRN2ghpOhS4Fi0
+         yjcxYgTl/9AkZ5bDBcEhiyHL4iTWFHWkr7sX/0snFqirQd6QaK3QzgTR6gFadL88Z04Q
+         JnCxEQqRZkpcwIEPydDeaHLzFvVtOZLdTuBg2XWIItT9ecOEWBjM45sSGKf68O69GPFz
+         ZtyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuCAENgflqU2gFDrXm8qZI7GmEW1su6wcCeL82Q9ruJANedGasZ6SLOLTXRWTS+oWbyNFU1Xds4aCVnhDEve33IDZjdN6VKJYXNBkE
+X-Gm-Message-State: AOJu0Yw+Q23ggk1sullMl4GCuxbNCpfHKWI4YPYGSM3Jyl3lKBEWDn7G
+	/VMUO+5aOUeSUGoe+8vorQXVsKw28OB4E0/B+hKr6vzdsaEXHlORN8+pH3T3xTY=
+X-Google-Smtp-Source: AGHT+IGgbfn+7mAk/1/X8Q8iM0sSSXawlAQZ4Cyo4qH0flu14E16sBQYKctBfM4ogrts8SmywVEXoA==
+X-Received: by 2002:a05:620a:1710:b0:795:5750:cef7 with SMTP id af79cd13be357-798d03e6830mr1608790385a.36.1718637744495;
+        Mon, 17 Jun 2024 08:22:24 -0700 (PDT)
+Received: from nicolas-tpx395.lan ([2606:6d00:15:57da::7a9])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaee575fsm438671285a.40.2024.06.17.08.22.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 08:21:33 -0700 (PDT)
-Date: Mon, 17 Jun 2024 17:21:31 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v2 08/18] printk: nbcon: Stop threads on
- shutdown/reboot
-Message-ID: <ZnBUe0ZJgjbZXlAL@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-9-john.ogness@linutronix.de>
+        Mon, 17 Jun 2024 08:22:24 -0700 (PDT)
+Message-ID: <e5d2f6d735bb4c997393e6d3ace53953b062ecd8.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Detlev Casanova <detlev.casanova@collabora.com>, Jianfeng Liu
+	 <liujianfeng1994@gmail.com>
+Cc: alchark@gmail.com, andy.yan@rock-chips.com, conor+dt@kernel.org, 
+	cristian.ciocaltea@collabora.com, devicetree@vger.kernel.org, 
+	didi.debian@cknow.org, dsimic@manjaro.org, gregkh@linuxfoundation.org, 
+	heiko@sntech.de, krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
+	mchehab@kernel.org, robh@kernel.org, sebastian.reichel@collabora.com
+Date: Mon, 17 Jun 2024 11:22:23 -0400
+In-Reply-To: <4116468.VLH7GnMWUR@arisu>
+References: <20240615015734.1612108-2-detlev.casanova@collabora.com>
+	 <20240617094735.27928-1-liujianfeng1994@gmail.com>
+	 <f295f41ef1c9ee920ac3ac8e70ccf672ba7c9648.camel@ndufresne.ca>
+	 <4116468.VLH7GnMWUR@arisu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603232453.33992-9-john.ogness@linutronix.de>
 
-On Tue 2024-06-04 01:30:43, John Ogness wrote:
-> Register a syscore_ops shutdown function to stop all threaded
-> printers on shutdown/reboot. This allows printk to cleanly
-> transition back to atomic printing in order to provide a robust
-> mechanism for outputting the final messages.
+Le lundi 17 juin 2024 =C3=A0 10:20 -0400, Detlev Casanova a =C3=A9crit=C2=
+=A0:
+> On Monday, June 17, 2024 10:04:59 A.M. EDT Nicolas Dufresne wrote:
+> > Hi,
+> >=20
+> > Le lundi 17 juin 2024 =C3=A0 17:47 +0800, Jianfeng Liu a =C3=A9crit :
+> > > Hi Detlev,
+> > >=20
+> > > Thanks a lot for your work! I try to use rkvdec2 with chromium but it
+> > > can't play h264 video. Here is the log of chromium:
+> > >=20
+> > > [5799:5873:0617/171224.850061:VERBOSE2:video_decoder_pipeline.cc(473)=
+]
+> > > Initialize(): config: codec: h264, profile: h264 high, level: not
+> > > available, alpha_mode: is_opaque, coded size: [1920,1080], visible re=
+ct:
+> > > [0,0,1920,1080], natural size: [1920,1080], has extra data: true,
+> > > encryption scheme: Unencrypted, rotation: 0=C2=B0, flipped: 0, color =
+space:
+> > > {primaries:BT709, transfer:BT709, matrix:BT709, range:LIMITED}
+> > > [5799:5886:0617/171224.850915:VERBOSE2:v4l2_video_decoder.cc(182)]
+> > > V4L2VideoDecoder():
+> > > [5799:5886:0617/171224.851218:VERBOSE1:v4l2_device.cc(128)] Open(): N=
+o
+> > > devices supporting H264 for type: 0
+> > > [5799:5886:0617/171224.851346:VERBOSE4:v4l2_queue.cc(1069)] This queu=
+e
+> > > does  support requests.: No such file or directory (2)
+> > This one indicates that V4L2_BUF_CAP_SUPPORTS_REQUESTS might be missing=
+ in
+> > the REQBUFS implementation. I suspect GStreamer simply assumes this tod=
+ay
+> > for driver exposing stateless formats (which is fair, its not a complia=
+nce
+> > test, and we don't have a codec compliance yet).
+>=20
+> There is a src_vq->supports_requests =3D true; Do I also need to set a fl=
+ag on=20
+> the device caps ?
 
-It looks like a simple straightforward patch. But there are some
-hidden questions.
+I don't know, but you can check very easily what flags you have out of REQB=
+UFS
+with the dev_debug output or using v4l2-tracer.
 
-> --- a/kernel/printk/nbcon.c
-> +++ b/kernel/printk/nbcon.c
-> @@ -1703,3 +1704,33 @@ void nbcon_device_release(struct console *con)
->  	console_srcu_read_unlock(cookie);
->  }
->  EXPORT_SYMBOL_GPL(nbcon_device_release);
-> +
-> +/**
-> + * printk_kthread_shutdown - shutdown all threaded printers
-> + *
-> + * On system shutdown all threaded printers are stopped. This allows printk
-> + * to transition back to atomic printing, thus providing a robust mechanism
-> + * for the final shutdown/reboot messages to be output.
-> + */
-> +static void printk_kthread_shutdown(void)
+regards,
+Nicolas
 
-I would rename this to "printk_shutdown_threads() because it
-is symmetric to printk_setup_threads().
+>=20
+> > I'd suggest to check and fix this one, and retry, might only be noise, =
+might
+> > be the main cause, we cannot tell.
+> >=20
+> > > [5799:5886:0617/171224.851426:VERBOSE1:v4l2_video_decoder.cc(476)]
+> > > InitializeBackend(): Using a stateless API for profile: h264 high and
+> > > fourcc: S264
+> > > [5799:5886:0617/171224.851687:VERBOSE1:v4l2_video_decoder.cc(598)]
+> > > SetupInputFormat(): Input (OUTPUT queue) Fourcc: S264
+> > > [5799:5886:0617/171224.851797:VERBOSE1:v4l2_video_decoder.cc(636)]
+> > > AllocateInputBuffers(): Requesting: 17 OUTPUT buffers of type
+> > > V4L2_MEMORY_MMAP
+> > > [5799:5886:0617/171224.867687:VERBOSE1:v4l2_queue.cc(1511)] Streamon(=
+):
+> > > (OUTPUT_MPLANE) VIDIOC_STREAMON failed: Invalid argument (22)
+> > > [5799:5886:0617/171224.867902:VERBOSE1:v4l2_video_decoder.cc(937)]
+> > > StartStreamV4L2Queue(): Failed to streamon V4L2 queue.
+> > > [5799:5886:0617/171224.868009:VERBOSE1:v4l2_video_decoder.cc(1377)]
+> > > SetState(): Error occurred, stopping queues.
+> > > [5799:5886:0617/171224.868105:ERROR:v4l2_video_decoder.cc(120)]
+> > > StartStreamV4L2Queue failed at
+> > > Decode@media/gpu/v4l2/v4l2_video_decoder.cc:915
+> > > [5799:5886:0617/171224.871898:WARNING:v4l2_video_decoder_backend_stat=
+eles
+> > > s.cc(126)] There is/are 0 pending CAPTURE queue buffers pending deque=
+uing.
+> > > This might be fine or a problem depending on the destruction semantic=
+s
+> > > (of theclient code.
+> > >=20
+> > > Here is the chromium code failed when calling VIDIOC_STREAMON:
+> > > https://github.com/chromium/chromium/blob/125.0.6422.60/media/gpu/v4l=
+2/v4l
+> > > 2_queue.cc#L1508
+> > >=20
+> > > I'm running chromium v125.0.6422.60 and I can decode 1080p h264 with
+> > > hantro g1 decoder on rk3588.
+> >=20
+> > Are you using minigbm ? Because if you do, we don't have minigbm code f=
+or
+> > this driver (and have no plan to do so, since we don't aim for ChromeOS
+> > support).
+> >=20
+> > Nicolas
+> >=20
+> > > Best regards,
+> > > Jianfeng
+>=20
 
-
-> +{
-> +	struct console *con;
-> +
-> +	console_list_lock();
-
-First ideas (how the waterfall of questions started):
-
-    + I though that we should do here:
-
-	    printk_threads_enabled = false;
-
-      It would tell vprintk_emit() to call nbcon_atomic_flush_pending().
-      And it would be symetric with printk_setup_threads().
-
-
-    + Also I though whether to call it before or after stopping the kthreads.
-
-      If we set the variable before stopping kthreads then the kthreads
-      might try to flush the messages in parallel with the flush from
-      vprintk_emit(). It should be safe because it would be serialized
-      via the nbcon console context. But it would be the first scenario
-      where this happen => not much tested.
-
-      Well, we should start the direct flush before stopping kthreads.
-      So that we could see the messages when the stopping fails.
-
-
-But then I realized:
-
-Ha, vprintk_emit() would call nbcon_atomic_flush_pending() anyway
-because these notifiers are called with:
-
-	system_state > SYSTEM_RUNNING
-
-This makes me wonder whether we need to stop the kthreads at all.
-How exactly does this make printk more robust during shutdown?
-
-Well, there is one differece. The kthreads could not interferre with
-the direct flush when they are stopped.
-
-But we have the same problem also with suspend/resume. And we do not
-stop the kthreads in this case.
-
-Maybe, we should just add a check of
-
-       system_state > SYSTEM_RUNNING
-
-also into the nbcon_kthread_func(). Maybe, the kthread should not try
-to flush the messages when they are flushed directly by
-vprintk_emit().
-
-But then there is the problem with "the current owner is responsible
-for flushing everything". vprintk_emit() could not flush the messages
-when nbcon_atomic_flush_pending() races with the kthread. And if
-the kthread stops flushing then nobody would flush the rest
-of the pending messages.
-
-Maybe, the notifier could just call pr_flush() like in suspend_console().
-Maybe it is not important to stop the kthreads.
-
-But maybe, the messages get flushed before the kthread is stopped.
-Also the kthread could not interfere with direct flush once stopped.
-Mabye, this is the idea behind "more robust during suspend".
-
-But why is suspend solved another way then?
-Is the suspend less important than shutdown?
-
-My opinion:
-
-I am not against stopping the kthreads. But the mechanism of switching
-between kthreads and direct flush should be the same for both suspend
-and shutdown. And I am not sure if we need to stop the kthreads then.
-
-> +	for_each_console(con) {
-> +		if (con->flags & CON_NBCON)
-> +			nbcon_kthread_stop(con);
-> +	}
-> +	console_list_unlock();
-> +}
-> +
-> +static struct syscore_ops printk_syscore_ops = {
-> +	.shutdown = printk_kthread_shutdown,
-> +};
-> +
-> +static int __init printk_init_ops(void)
-> +{
-> +	register_syscore_ops(&printk_syscore_ops);
-> +	return 0;
-> +}
-> +device_initcall(printk_init_ops);
-
-I guess that "device_initcall" is cut&pasted ;-) IMHO, it does not
-fit much. That said, I do not have strong opinion where
-it belongs.
-
-IMHO, the best solution would be to register the notifier in
-printk_setup_threads() before we actually allow creating them.
-(Later update: if we really need to stop them).
-
-Best Regards,
-Petr
