@@ -1,195 +1,169 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CA2195381
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3793194C63
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718625336; cv=none; b=CsghzD85MPht9kTII7L0emAJ2E6kMA+ksqCiOPYBkx3K9Bc3ucjxZqxC31ieE5/5qZu1vRp4r7N8P9kOBqC4HEpbNUys09aO9aRRWLCY5SmBGmrJrOUuiHVxSWYL2d7rRRo/hUqtPGla1m4YAjZi47p6TT37d003fTTjh3SRjN4=
+	t=1718625352; cv=none; b=m+ReUsL8yixbSV86jOYaFS/cVPnk1YxJRy4aZD4R35Ib3CjSUNAOhi2qAcc3jJXpHhQtO+Ee0fXZBYexXGtMcpvCcyB44nAUraSLtmMfm4Mdcg0v5ox7eDu6WS/EiuLlEIPfFdvEIid5BNbWxXtBl+HoIhrJ2lTzwLdvFTQG1Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718625336; c=relaxed/simple;
-	bh=NffCHPh04kxLV1M+4sDkfZRGJ0KtbpqGWJtIcQ8WSyY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iMfZ4Cdf9Id1QXMEFVODbiIieYMfAzqBk9cHhRvjTl7O6bHCOvkdHKDn6FqnwvdaHGbDODefKwmzoa5pQf/yGOGnr+/weULut+VtH/mApgKC5UHdJYVbNJ3I9vF8L2DOKhyfayrmi0aMlSdYXuCbj/sMZ/pYXM+E8oFFAp8YRRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/HahEGD; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/HahEGD"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-80b8d0d19e8so1086276241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718625334; x=1719230134; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XV8Tu4yudfofDqv7fDAng14xyMI6FIAAjDu0Vw4P4zQ=;
-        b=J/HahEGDyl+QRvnTQhAyXZX5FJAZLg0XFwd9Adj703lSMOnEub2HivEXqHBo6OgEuK
-         R8qlatYseEpH4gWKRJ68oCYMEIUz5CZOweTlaqyJIL+xfPv64M41a0DGeb3YniE6Q4Qa
-         iEMjbtYUo8mYWgYw85TLw5i/IzjlWVzNyW96/XL1IHSeV62SK/YI98pJi4xH95+SbLmB
-         kpcQI5c14D7wX63tF93v4QiO7I6AOAgOKqh3uu9LWIcAP6Phf3JRS5JF9/TsBBZWeaHy
-         C687GyJv+3IO/hNcgOlGAmUsGmS5SGXBIDapgpJxsbyLB4apsT1Fb6c3grwa3jzAkmz2
-         uJ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718625334; x=1719230134;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XV8Tu4yudfofDqv7fDAng14xyMI6FIAAjDu0Vw4P4zQ=;
-        b=RiErH+VogbbKNPM4SHQz/5L/IuL32bpGPdoMoUw4GZ9REYtC0EtgWCxr9cFAtLseQF
-         3XJR5yfyQCeyaMqz427DF+4FyVjca9uQOd5ADJZ0bX2fczOWkSawIu/q5DgQiudAfNXw
-         nfXZyclIYyEFU3zRiFfGZuDJ8vt27TNJrHMrJWQnoNYuAzXJhOLOp8Fv+oaUHkt7g7/B
-         YlAu40+xUKJUCKujFrj8PLeF1+hjNMjcOeexZPR9darQ3o4RK8hxEKw16B3pZAlYa9Gl
-         YQFtMqysVJpnFjM3i0duLV3qDSbEH+xcdjbTdx6wlwfc7BuL311jTLT734B0sG4EkgL8
-         u9jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXQIk019EbrnVGtqkQkdpApzY3njrbyTehz0BxNm2fY2hQQAJ+TEzEKTWDh3zXYVM3HjyzjDB6yiYUxxVeFxouCDLc1J2LxKU67St3
-X-Gm-Message-State: AOJu0Yx3ioykT7j7LjryCpi6+oSNnIXl44BOwrR4ru9kmKdDCnGSqho7
-	TQN49zSPLCo+n1ZwLPXgqaVZjumwlOSlWNo2XFc2K/pchISsd7dlGrCb2tat/Hc+gD1hzFk0oHC
-	HVNVW7VUWOfv9gGxw+xHvWIiiCqU=
-X-Google-Smtp-Source: AGHT+IEIyYlMDM5bd9lCVKySv9/fFUx+T5N0Y5Y7EVhWkghUKBG4aDI1IEd6aEgK4ezk3W516XFLIS5iH7N3r5dKZ7A=
-X-Received: by 2002:a05:6102:3b85:b0:48d:bd49:1fe with SMTP id
- ada2fe7eead31-48dbd490291mr5131098137.1.1718625333769; Mon, 17 Jun 2024
- 04:55:33 -0700 (PDT)
+	s=arc-20240116; t=1718625352; c=relaxed/simple;
+	bh=hzbdzCNgOajYMka/w3WGxrit2ajekIZLVxfqwUc2JGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RAtvOqXPzbhHKTaqbIBMPxqu1FPnBrdvjuJE0LFOJ0IJYikvNhfJkkUbany6upR6hJHlDqcXB/YBSdveUWGD8lBUwpydq1wfSn7XUQ23lLm+Fw+yUcGQvJtDQx8+kv2CC9rYavo3WdkJ0nISulOCTeVgkDAy75KFXwTsJe6BpMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6629FEC;
+	Mon, 17 Jun 2024 04:56:13 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA4813F64C;
+	Mon, 17 Jun 2024 04:55:45 -0700 (PDT)
+Date: Mon, 17 Jun 2024 12:55:38 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	James Morse <james.morse@arm.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	Peter Newman <peternewman@google.com>, dfustini@baylibre.com,
+	amitsinght@marvell.com, David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH] x86/resctrl: Don't try to free nonexistent RMIDs
+Message-ID: <ZnAkOhFWzDqhlSyt@e133380.arm.com>
+References: <20240614160843.11006-1-Dave.Martin@arm.com>
+ <1e3bba2e-5cf6-4a77-b92d-5c7ab1661d17@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <c180d2a0-1e34-41f0-bae8-1205d04a5f6b@linux.alibaba.com> <82d31425-86d7-16fa-d09b-fcb203de0986@126.com>
- <7087d0af-93d8-4d49-94f4-dc846a4e2b98@linux.alibaba.com> <CAGsJ_4xgqDrTsQRYB_VKn+KC6rvYeJF6TQwhT5JnLi-b4nFTOQ@mail.gmail.com>
- <6dc8df31-eb01-4382-8467-c5510f75531e@linux.alibaba.com>
-In-Reply-To: <6dc8df31-eb01-4382-8467-c5510f75531e@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 17 Jun 2024 19:55:21 +0800
-Message-ID: <CAGsJ_4zOOK0-AiLsN0Sw_q3ikPNuk8ofZHsYfV1WkK_6-QsmVw@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: yangge1116 <yangge1116@126.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, liuzixing@hygon.cn, 
-	Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e3bba2e-5cf6-4a77-b92d-5c7ab1661d17@intel.com>
 
-On Mon, Jun 17, 2024 at 7:36=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 2024/6/17 18:43, Barry Song wrote:
-> > On Thu, Jun 6, 2024 at 3:07=E2=80=AFPM Baolin Wang
-> > <baolin.wang@linux.alibaba.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024/6/4 20:36, yangge1116 wrote:
-> >>>
-> >>>
-> >>> =E5=9C=A8 2024/6/4 =E4=B8=8B=E5=8D=888:01, Baolin Wang =E5=86=99=E9=
-=81=93:
-> >>>> Cc Johannes, Zi and Vlastimil.
-> >>>>
-> >>>> On 2024/6/4 17:14, yangge1116@126.com wrote:
-> >>>>> From: yangge <yangge1116@126.com>
-> >>>>>
-> >>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list fo=
-r
-> >>>>> THP-sized allocations") no longer differentiates the migration type
-> >>>>> of pages in THP-sized PCP list, it's possible to get a CMA page fro=
-m
-> >>>>> the list, in some cases, it's not acceptable, for example, allocati=
-ng
-> >>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
-> >>>>>
-> >>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
-> >>>>> PCP list to avoid the issue above.
-> >>>>>
-> >>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-> >>>>> THP-sized allocations")
-> >>>>> Signed-off-by: yangge <yangge1116@126.com>
-> >>>>> ---
-> >>>>>    mm/page_alloc.c | 10 ++++++++++
-> >>>>>    1 file changed, 10 insertions(+)
-> >>>>>
-> >>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >>>>> index 2e22ce5..0bdf471 100644
-> >>>>> --- a/mm/page_alloc.c
-> >>>>> +++ b/mm/page_alloc.c
-> >>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
-> >>>>> *preferred_zone,
-> >>>>>        WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-> >>>>>        if (likely(pcp_allowed_order(order))) {
-> >>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >>>>> +        if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & ALLOC_CMA ||
-> >>>>> +                        order !=3D HPAGE_PMD_ORDER) {
-> >>>>
-> >>>> Seems you will also miss the non-CMA THP from the PCP, so I wonder i=
-f
-> >>>> we can add a migratetype comparison in __rmqueue_pcplist(), and if
-> >>>> it's not suitable, then fallback to buddy?
-> >>>
-> >>> Yes, we may miss some non-CMA THPs in the PCP. But, if add a migratet=
-ype
-> >>> comparison in __rmqueue_pcplist(), we may need to compare many times
-> >>> because of pcp batch.
-> >>
-> >> I mean we can only compare once, focusing on CMA pages.
-> >>
-> >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >> index 3734fe7e67c0..960a3b5744d8 100644
-> >> --- a/mm/page_alloc.c
-> >> +++ b/mm/page_alloc.c
-> >> @@ -2973,6 +2973,11 @@ struct page *__rmqueue_pcplist(struct zone *zon=
-e,
-> >> unsigned int order,
-> >>                   }
-> >>
-> >>                   page =3D list_first_entry(list, struct page, pcp_lis=
-t);
-> >> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >> +               if (order =3D=3D HPAGE_PMD_ORDER &&
-> >> !is_migrate_movable(migratetype) &&
-> >> +                   is_migrate_cma(get_pageblock_migratetype(page)))
-> >> +                       return NULL;
-> >> +#endif
-> >
-> > This doesn't seem ideal either. It's possible that the PCP still has ma=
-ny
-> > non-CMA folios, but due to bad luck, the first entry is "always" CMA.
-> > In this case,
-> > allocations with is_migrate_movable(migratetype) =3D=3D false will alwa=
-ys lose the
-> > chance to use the PCP.   It also appears to incur a PCP spin lock/unloc=
-k.
->
-> Yes, just some ideas to to mitigate the issue...
->
-> >
-> > I don't see an ideal solution unless we bring back the CMA PCP :-)
->
-> Tend to agree, and adding a CMA PCP seems the overhead can be acceptable?
+Hi Reinette,
 
-yes. probably. Hi Ge,
+On Fri, Jun 14, 2024 at 03:47:58PM -0700, Reinette Chatre wrote:
+> Hi Dave,
+> 
+> On 6/14/24 9:08 AM, Dave Martin wrote:
+> > Commit 6791e0ea3071 ("x86/resctrl: Access per-rmid structures by
+> > index") adds logic to map individual monitoring groups into a
+> > global index space used for tracking allocated RMIDs.
+> > 
+> > That patch keept the logic to ignore requests to free the default
+> 
+> keept -> kept
+> 
+> nitpick: I actually do not know if "that patch" gets same hate as
+> "this patch" so to avoid any potential feedback about this I'd like
+> to suggest that this is rewritten without this term. Perhaps
+> something like: "Requests to free the default RMID in free_rmid()
+> are ignored, and this works fine on x86."
+> 
+> > RMID in free_rmid(), and this works fine on x86.
+> > 
 
-Could we printk the size before and after adding 1 to NR_PCP_LISTS?
-Does it increase one cacheline?
+How about recasting the first paragraph into the past tense (since it
+relates a past commit), and rewording as "Requests to free the default
+RMID continued to be ignored in free_rmid(), and this works fine on
+x86."
 
-struct per_cpu_pages {
-spinlock_t lock; /* Protects lists field */
-int count; /* number of pages in the list */
-int high; /* high watermark, emptying needed */
-int high_min; /* min high watermark */
-int high_max; /* max high watermark */
-int batch; /* chunk size for buddy add/remove */
-u8 flags; /* protected by pcp->lock */
-u8 alloc_factor; /* batch scaling factor during allocate */
-#ifdef CONFIG_NUMA
-u8 expire; /* When 0, remote pagesets are drained */
-#endif
-short free_count; /* consecutive free count */
+(I agree that "this patch" would have been ambiguous.  "That patch" was
+an attempt to be clearer, but felt a bit clumsy.  Naming the commit
+again felt worse, though would have been clearer.  I've noticed that
+people who do not have English as their first language tend to use
+"this" and "that" a little differently from native English speakers, so
+there is probably more scope for confusion here that I like to
+assume...)
 
-/* Lists of pages, one per migrate type stored on the pcp-lists */
-struct list_head lists[NR_PCP_LISTS];
-} ____cacheline_aligned_in_smp;
+> > With arm64 MPAM, there is a latent bug here: on platforms with no
+> > monitors exposed through resctrl, each control group still gets a
+> > different monitoring group ID as seen by the hardware, since the
+> > CLOSID always forms part of the monitoring group ID.  This means
+> > that when removing a control group, the code may try to free this
+> > group's default monitoring group RMID for real.  If there are no
+> > monitors however, the RMID tracking table rmid_ptrs[] would be a
+> > waste of memory and is never allocated, leading to a splat when a
+> > free_rmid() tries to dereference the table.
+> > 
+> > One option would be to treat RMID 0 as special for every CLOSID,
+> > but this would be ugly since we still want to do bookkeeping for
+> > these monitoring group IDs when there are monitors present in the
+> > hardware.
+> > 
+> > Instead, add a gating check of resctrl_arch_mon_capable() in
+> > free_rmid(), and just do nothing if the hardware doesn't have
+> > monitors.
+> > 
+> > This fix mirrors the gating checks already present in
+> > mkdir_rdt_prepare_rmid_alloc() and elsewhere.
+> > 
+> > No functional change on x86.
+> > 
+> > Fixes: 6791e0ea3071 ("x86/resctrl: Access per-rmid structures by index")
+> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > 
+> > ---
+> > 
+> > Based on v6.10-rc3.
+> > 
+> > Tested on x86 (But so far for the monitors-present case.
+> 
+> Tested by booting with "rdt=!cmt,!mbmtotal,!mbmlocal".
+
+Thanks (I take it that's your test, not a request to be more specific
+about mine?)
+
+As it happens I tested with rdt=cmt,mbmtotal,mbmlocal,l3cat,l3cdp
+(though I made no effort to exercise these features other than running
+the selftests).  I can note this in the commit if you prefer.
+
+> 
+> > Testing on Atom would be appreciated.)
+> > 
+> > Tested on arm64 for the no-monitors case.
+> > ---
+> >   arch/x86/kernel/cpu/resctrl/monitor.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > index 2345e6836593..366f496ca3ce 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > @@ -519,7 +519,8 @@ void free_rmid(u32 closid, u32 rmid)
+> >   	 * allows architectures that ignore the closid parameter to avoid an
+> >   	 * unnecessary check.
+> >   	 */
+> > -	if (idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
+> > +	if (!resctrl_arch_mon_capable() ||
+> > +	    idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
+> >   						RESCTRL_RESERVED_RMID))
+> >   		return;
+> > 
+> 
+> Thank you for catching this. This reveals how subtle resctrl is by
+> calling free_rmid() in paths for convenience and then relying on an
+> uninitialized variable for correct behavior.
+> 
+> This replaces this subtle assumption with an actual check.
+> 
+> With changelog comments addressed:
+> | Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> 
+> Reinette
+
+Thanks for that.  I'll wait for your reply before respinning this.
+
+Cheers
+---Dave
