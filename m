@@ -1,188 +1,224 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from qs51p00im-qukt01072301.me.com (qs51p00im-qukt01072301.me.com [17.57.155.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C454D19755F
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA71219AA5C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.155.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718648305; cv=none; b=Nb2aWQ+rJhj1BQNFV7y8LZRQ3jRyM39vUC52OC9dbARhxz+OZDNAvhLhpE2emzkIcB6YIOxzEOtLpHIOFtsbog0xm3z34ZKn2HIJdJPNHd7KpxNAnpV2vHw1vPGBSQsOeBa5FoBy1mmRyGjzK3Ze9wpBg1BUo9DnCIdqnbADnvI=
+	t=1718648310; cv=none; b=N5vNh0wkShXY5QL3HaCVCEhbeuV7Omg6lgVK1oJNO6JwfTfPweWtY1D155UpPHhZxQpw3CxD9vKIddH9cRYnqdJGe0YWPrdbrqJWIiBK1pqq/06SskXFbXodo2c0NGV0v70KgEnD2RGwDAuWdRbF+JeS6a+i4vYg39chfS2vXsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718648305; c=relaxed/simple;
-	bh=+jomKzveyXY2tTRka5xwlhaDV7ne7uUxM+zGwO4hnGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UEW9LcTCg7q1rDdyTZFht7BaaixcjO9Ly4/FhY9WTUp3/T0lyoeWe5S0iJqYJG8dXYWiUA/5daPgpLGBO3pz2nYUmESroFdgrwUB+ZJnJHmhV3xZ4vzHYzDxYA2HA9kFTXay1mUlDZA9nPObVh9TUcceWvNqZM8wiYmXyDVNSDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nBORirBa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=89M5oUoc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nBORirBa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=89M5oUoc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1718648310; c=relaxed/simple;
+	bh=4Gu1fbPocltXlsofi4VIKRS13wZx09T4hCqNeHvSNKo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=jDyI6yEETRFh1EYh1tECW8uDG83QDxkrE2oOdAWAkNf6SiY7z7Yjb/rsoxfvOdP7BBgUsTrffclWKj4W0pRhreQF+u8USFTZZ6yM7DMoAYQaw9TeXwwckl6lPsPP3q3apoNVzq68n6n4/cxDn7MRjuKHKs85+gWuTczsqrIxHPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mac.com; spf=pass smtp.mailfrom=mac.com; dkim=pass (2048-bit key) header.d=mac.com header.i=@mac.com header.b=N7ux4WrZ; arc=none smtp.client-ip=17.57.155.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mac.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mac.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nBORirBa";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="89M5oUoc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nBORirBa";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="89M5oUoc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6906C219B8;
-	Mon, 17 Jun 2024 18:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718648299; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9y+6syuY0d4lFZbPYpRMim+4VcbHKlTIw3/agQk/TDg=;
-	b=nBORirBa08jmfq2NO/U4y4YUboVTjTcpyYw7U19N5OFxFNgDRA9B19pyBpy9iMPNr2irxh
-	jCQtTehWQXRQoMwiGGhy4dR7TqtlPa2V1R+PDyFXoejny05bGlw0K/OZRfgGBEY+EqNfQl
-	IiCfdY9ntU6UzBUikafjKsEd+v/ji7M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718648299;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9y+6syuY0d4lFZbPYpRMim+4VcbHKlTIw3/agQk/TDg=;
-	b=89M5oUoctl5izBKekMyc9yJIvNlUKeirgB8u3OTsv8up647yqSbjsdu/SvD9yHPXh99Uvj
-	6rpX0LN28U+Qb+AA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718648299; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9y+6syuY0d4lFZbPYpRMim+4VcbHKlTIw3/agQk/TDg=;
-	b=nBORirBa08jmfq2NO/U4y4YUboVTjTcpyYw7U19N5OFxFNgDRA9B19pyBpy9iMPNr2irxh
-	jCQtTehWQXRQoMwiGGhy4dR7TqtlPa2V1R+PDyFXoejny05bGlw0K/OZRfgGBEY+EqNfQl
-	IiCfdY9ntU6UzBUikafjKsEd+v/ji7M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718648299;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9y+6syuY0d4lFZbPYpRMim+4VcbHKlTIw3/agQk/TDg=;
-	b=89M5oUoctl5izBKekMyc9yJIvNlUKeirgB8u3OTsv8up647yqSbjsdu/SvD9yHPXh99Uvj
-	6rpX0LN28U+Qb+AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 03EE0139AB;
-	Mon, 17 Jun 2024 18:18:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zlhvNel9cGa4HQAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Mon, 17 Jun 2024 18:18:17 +0000
-Date: Mon, 17 Jun 2024 20:18:14 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>,
- dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH RESEND] drm/display: Drop obsolete dependency on
- COMPILE_TEST
-Message-ID: <20240617201814.73a07702@endymion.delvare>
-In-Reply-To: <vsrsvmrkqnmxs3ncqv5m2gevzefiq55tr2iolxlmoehsvgcfkn@hyx37vax6r5e>
-References: <20240617103018.515f0bf1@endymion.delvare>
-	<xd2yybtxvzte7gwqwg2vudzvhoekqao2dle6zsuduzjzi3rsay@xhahwof2prph>
-	<20240617132348.5f20bf89@endymion.delvare>
-	<vsrsvmrkqnmxs3ncqv5m2gevzefiq55tr2iolxlmoehsvgcfkn@hyx37vax6r5e>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=mac.com header.i=@mac.com header.b="N7ux4WrZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mac.com; s=1a1hai;
+	t=1718648307; bh=zl4ADSYUfA5+v6Sbvl/cQPRda8ieZo/JDRv9TvRws+s=;
+	h=Content-Type:Mime-Version:Subject:From:Date:Message-Id:To;
+	b=N7ux4WrZMBpUHSnOXOCqHmxOGr3jGGkN4+sVBWIamX1nj4N+tWqQHd8YECWxnpZXZ
+	 a+ZluKA5mEUDV9V8aoeYzpjWWY/xKNtWTL0HwAauwBPWABfact+3S4VQN/iIaqyjI9
+	 wYYquDvPghNAgI9ifaRaL/sqsjWy+4yOvUyU1JgtUgwcCzObtygho+YnpMlP7VtppD
+	 5+AsaSKZf0d+yzVYZPq+1o0GFBNvCmUbk2rDrO8UGvxR3Q3rgzzEZl/ReMLkKAfSZk
+	 uSc1tOl8WkJrfKZy0rD0ZHh1LFQhAMMDx4GuYr/JtCN7yCXw7q5kpskq/I8wQMDEuw
+	 5f+KINf/HhSSQ==
+Received: from [172.20.144.3] (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
+	by qs51p00im-qukt01072301.me.com (Postfix) with ESMTPSA id 0675E2540152;
+	Mon, 17 Jun 2024 18:18:21 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_CC(0.00)[chromium.org,lists.freedesktop.org,vger.kernel.org,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,linux-foundation.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.21\))
+Subject: Re: [PATCH v2] ubi: gluebi: Fix NULL pointer dereference caused by
+ ftl notifier
+From: Gagan Sidhu <broly@mac.com>
+In-Reply-To: <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
+Date: Mon, 17 Jun 2024 12:18:18 -0600
+Cc: ZhaoLong Wang <wangzhaolong1@huawei.com>,
+ chengzhihao1 <chengzhihao1@huawei.com>,
+ dpervushin <dpervushin@embeddedalley.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-mtd <linux-mtd@lists.infradead.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ yangerkun <yangerkun@huawei.com>,
+ yi zhang <yi.zhang@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <90A90DA4-8B68-432D-9577-0D3635AF84BB@mac.com>
+References: <CFAC276E-E652-40CD-B3D8-563B95E679A8@mac.com>
+ <14779870-BA54-4ABF-8ABF-FF1D23D172A7@mac.com>
+ <1641029267.251608.1718640023954.JavaMail.zimbra@nod.at>
+ <65E62DA3-EF16-44BD-8E51-E751BD2C496F@mac.com>
+ <1802911356.251780.1718643160760.JavaMail.zimbra@nod.at>
+ <E3E2C13C-1E52-46F2-BE2D-D2592C3369DB@mac.com>
+ <F2DCFCE7-68FA-4C09-AE5B-09F2233575F1@mac.com>
+ <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
+ <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
+To: Richard Weinberger <richard@nod.at>
+X-Mailer: Apple Mail (2.3445.104.21)
+X-Proofpoint-GUID: qvV_8sI9K2MF_V5cNH9ppsjRRpV4aTwc
+X-Proofpoint-ORIG-GUID: qvV_8sI9K2MF_V5cNH9ppsjRRpV4aTwc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2406170142
 
-On Mon, 17 Jun 2024 14:55:22 +0300, Dmitry Baryshkov wrote:
-> On Mon, Jun 17, 2024 at 01:23:48PM GMT, Jean Delvare wrote:
-> > Hi Dmitry,
-> > 
-> > Thanks for your feedback.
-> > 
-> > On Mon, 17 Jun 2024 12:57:19 +0300, Dmitry Baryshkov wrote:  
-> > > On Mon, Jun 17, 2024 at 10:30:30AM GMT, Jean Delvare wrote:  
-> > > > Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), it
-> > > > is possible to test-build any driver which depends on OF on any
-> > > > architecture by explicitly selecting OF. Therefore depending on
-> > > > COMPILE_TEST as an alternative is no longer needed.    
-> > > 
-> > > The goal of this clause is to allow build-testing the driver with OF
-> > > being disabled (meaning that some of OF functions are stubbed and some
-> > > might disappear). I don't see how user-selectable OF provides the same
-> > > result.  
-> > 
-> > Historically, the goal of this clause *was* to allow build-testing the
-> > driver on architectures which did not support OF, and that did make
-> > sense back then. As I understand it, building the driver without OF
-> > support was never a goal per se (if it was, then the driver wouldn't be
-> > set to depend on OF in the first place).
-> > 
-> > Some of my other submissions include the following explanation which
-> > you might find useful (I ended up stripping it on resubmission after
-> > being told I was being too verbose, but maybe it was needed after all):
-> > 
-> > It is actually better to always build such drivers with OF enabled,
-> > so that the test builds are closer to how each driver will actually be
-> > built on its intended target. Building them without OF may not test
-> > much as the compiler will optimize out potentially large parts of the
-> > code. In the worst case, this could even pop false positive warnings.
-> > Dropping COMPILE_TEST here improves the quality of our testing and
-> > avoids wasting time on non-existent issues.  
-> 
-> This doesn't seem to match the COMPILE_TEST usage that I observe in
-> other places. For example, we frequently use 'depends on ARCH_QCOM ||
-> COMPILE_TEST'. Which means that the driver itself doesn't make sense
-> without ARCH_QCOM, but we want for it to be tested on non-ARCH_QCOM
-> cases. I think the same logic applies to 'depends on OF ||
-> COMPILE_TEST' clauses. The driver (DP AUX bus) depends on OF to be fully
-> functional, but it should be compilable even without OF case.
 
-The major difference is that one can't possibly enable ARCH_QCOM if
-building on X86 for example. Therefore COMPILE_TEST is the only way to
-let everyone (including randconfig/allmodconfig build farms) test-build
-your code.
 
-On the other hand, if you want to test-build drm_dp_aux_bus, you can
-simply enable OF, because it is available on all architectures and
-doesn't depend on anything. No need for COMPILE_TEST.
+> On Jun 17, 2024, at 12:09 PM, Richard Weinberger <richard@nod.at> =
+wrote:
+>=20
+> ----- Urspr=C3=BCngliche Mail -----
+>> Von: "Gagan Sidhu" <broly@mac.com>
+>> =
+https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/gluebi.c#L29=
+7
+>>=20
+>> it seems the GLUEBI is setting the mtd to MTD_UBIVOLUME
+>>=20
+>> https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/block.c
+>>=20
+>> where this doesn=E2=80=99t even have the text =E2=80=9Cmtd=E2=80=9D =
+anywhere.
+>>=20
+>> but the boot partition is always the ubiblock device.
+>>=20
+>> so is gluebi taking the same volume and adding the MTD_UBIVOLUME =
+label or
+>> something?
+>=20
+> Yes, GLUEBI emulates a MTD on top of an UBI volume.
+> It sets the MTD device type to MTD_UBIVOLUME.
+>=20
+>>>=20
+>>> [    5.462504] auto-attach mtd7
+>>> [    5.462525] ubi0: default fastmap pool size: 15
+>>> [    5.477309] ubi0: default fastmap WL pool size: 7
+>>> [    5.486683] ubi0: attaching mtd7
+>>> [    5.811240] UBI: EOF marker found, PEBs from 273 will be erased
+>>> [    5.811299] ubi0: scanning is finished
+>>> [    5.874546] gluebi (pid 1): gluebi_resized: got update =
+notification for
+>>> unknown UBI device 0 volume 1
+>>> [    5.892927] ubi0: volume 1 ("rootfs_data") re-sized from 9 to 28 =
+LEBs
+>>> [    5.906683] ubi0: attached mtd7 (name "ubi", size 40 MiB)
+>>> [    5.917446] ubi0: PEB size: 131072 bytes (128 KiB), LEB size: =
+126976 bytes
+>>> [    5.931132] ubi0: min./max. I/O unit sizes: 2048/2048, sub-page =
+size 2048
+>>> [    5.944654] ubi0: VID header offset: 2048 (aligned 2048), data =
+offset: 4096
+>>> [    5.958513] ubi0: good PEBs: 320, bad PEBs: 0, corrupted PEBs: 0
+>>> [    5.970472] ubi0: user volume: 2, internal volumes: 1, max. =
+volumes count:
+>>> 128
+>>> [    5.984859] ubi0: max/mean erase counter: 1/0, WL threshold: =
+4096, image
+>>> sequence number: 1613475955
+>>> [    6.003045] ubi0: available PEBs: 0, total reserved PEBs: 320, =
+PEBs reserved
+>>> for bad PEB handling: 15
+>>> [    6.021426] rootfs: parsing partitions cmdlinepart
+>>> [    6.021444] ubi0: background thread "ubi_bgt0d" started, PID 97
+>>> [    6.043694] rootfs: got parser (null)
+>>> [    6.051426] mtd: device 12 (rootfs) set to be root filesystem
+>=20
+> AFAICT, this log line is not part of the mainline kernel.
 
-For clarity, I'm not advocating against the use of COMPILE_TEST,
-actually if you check the history of my kernel contributions 10 years
-back, you'll find commits from me adding COMPILE_TEST in addition to
-arch-specific dependencies to many drivers. All I'm saying is that it
-should only be used when it is the only way to enable the build.
+this is mainline. it=E2=80=99s just not 6.x. it=E2=80=99s 4.14.
+>=20
+>>> [    6.062891] rootfs_data: parsing partitions cmdlinepart
+>>> [    6.073669] rootfs_data: got parser (null)
+>>> [    6.211240] block ubiblock0_0: created from ubi0:0(rootfs)
+>>> [    6.259545] rtc-pcf8563 0-0051: hctosys: unable to read the =
+hardware clock
+>>> [    6.282125] VFS: Cannot open root device "(null)" or =
+unknown-block(31,12):
+>>> error -6
+>>> [    6.297406] Please append a correct "root=3D" boot option; here =
+are the
+>>> available partitions:
+>>> [    6.314054] 1f00             512 mtdblock0
+>>> [    6.314060]  (driver?)
+>>> [    6.327077] 1f01             256 mtdblock1
+>>> [    6.327081]  (driver?)
+>>> [    6.340101] 1f02             256 mtdblock2
+>>> [    6.340105]  (driver?)
+>>> [    6.353124] 1f03             256 mtdblock3
+>>> [    6.353129]  (driver?)
+>>> [    6.366153] 1f04           45056 mtdblock4
+>>> [    6.366158]  (driver?)
+>>> [    6.379175] 1f05           40572 mtdblock5
+>>> [    6.379179]  (driver?)
+>>> [    6.392217] 1f06            4096 mtdblock6
+>>> [    6.392222]  (driver?)
+>>> [    6.405240] 1f07           40960 mtdblock7
+>>> [    6.405244]  (driver?)
+>>> [    6.418272] 1f08           32768 mtdblock8
+>>> [    6.418277]  (driver?)
+>>> [    6.431296] 1f09           40960 mtdblock9
+>>> [    6.431300]  (driver?)
+>>> [    6.444324] 1f0a            6144 mtdblock10
+>>> [    6.444328]  (driver?)
+>>> [    6.457518] 1f0b            4608 mtdblock11
+>>> [    6.457523]  (driver?)
+>>> [    6.470720] fe00           33604 ubiblock0_0
+>>> [    6.470724]  (driver?)
+>>> [    6.484090] Kernel panic - not syncing: VFS: Unable to mount root =
+fs on
+>>> unknown-block(31,12)
+>=20
+> (31, 12) would be mtdblock12.
+> How does your kernel know that mtdblock12 shall be the rootfs?
 
--- 
-Jean Delvare
-SUSE L3 Support
+this is an openwrt approach: =
+https://openwrt.org/docs/techref/filesystems (under =E2=80=9Ctechnical =
+details=E2=80=9D, third paragraph)
+
+essentially there=E2=80=99s a feature they add to the kernel (via patch) =
+where you can enable a feature that sets the root device based on the =
+name of the partition.
+
+in this case as long as the volume within your ubi file contains the =
+name =E2=80=9Crootfs=E2=80=9D, openwrt will follow it as it gets =
+unpacked and set that as the rootdevice for you.
+
+=E2=80=94
+
+>=20
+> I have a hard time understanding your current setup.
+
+i think we are saying the same thing when you say (31,12) is mtdblock12, =
+which is shown as ubiblock0_0, because once i remove the change under =
+discussion here, the boot is fine.=20
+
+is it possible that gluebi is adding properties to the device created by =
+CONFIG_MTD_UBI_BLOCK or something like that?
+
+i wouldn=E2=80=99t worry about how the kernel knows which partition to =
+set as root. openwrt has been doing this for over ten years.=20
+
+the real question is, if we know what partition to set as root =
+(ubiblock0_0 or mtdblock12), why does this change prevent it from =
+finishing the boot?
+
+the only explanation seems to be that gluebi is adding features to the =
+ubiblock0_0 device (MTD_UBIVOLUME)?
+
+
+
+>=20
+> Thanks,
+> //richard
+
