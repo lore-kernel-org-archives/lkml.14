@@ -1,97 +1,153 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D97161B6A;
-	Mon, 17 Jun 2024 16:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE3A1EB46;
+	Mon, 17 Jun 2024 16:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718643433; cv=none; b=OLFex3V/kJBkPEa9xalkTEhWdia07Y+GvS+C6x50w70YgTrPsSscCdVZpdahT2lKNR+aIm59bKpgGwKJFbhrZvHFDzzT1tKXD2tBMIHBsn1voqyG7G+hdUlzKbh1ufWkIROklf0VuaJ7lBPNjKjNBdnFT4JVRH6LaB1XIK0o7Hk=
+	t=1718643479; cv=none; b=lLWbzwaHF56yiqjLs788FXRlMF/hUQ/LVsxy54QvjmMBfm6IQz9mCzJazFU4zB0OZNLdaCfsaXbqWqWVWxL/+WcUnVEq5OyWiMegYu/FFdFAYjDLDtEtd9+vXDsYhFPo5DU2My6LHBpw6kWIcaXJl2zOjImSH3EzSshRPnV5BOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718643433; c=relaxed/simple;
-	bh=n+1y+E9hLwnclKdeZG42L3zqKhdxvs9cOOLpFzB4YqM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=L+KORXstr29tGdbXfa1cT1eN5LPiHLF02z2S85BAFZmt/Q4rPu4eXoGbAMpgXTS5tRxaPofOUNzpM4bdSbDDnN2jE7lfMuK+bhfPxLtlsFzUwLZ7I+AFTcx4tOeksWkq4skl0zOR1lZu8JIpmV3M7hJrNW1ao9GXTS89G1hwgTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NP1eyFLy; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1718643479; c=relaxed/simple;
+	bh=EYhhFEKPUKJ3A9IrkQKwCZDAWmChwoTv2GvWJZl4HTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=imZmdj4ryEINtLUkDzErn0Ypo1qfLNoAQKXmslftyw9vOjzfjS359aXdP3yt9kjbzyaZV2X+wWsVkCoPGXkWCkaBM87Qcrhs0autllpP9mxC6UHHcctVQ/Afy00fsOnFw7whXd5Ir68joY8YV6O5lc0vaaLNxxzI6qil2Z5NKNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ju6HrgnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NP1eyFLy"
-Received: from [100.65.192.170] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CE96820B7004;
-	Mon, 17 Jun 2024 09:57:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CE96820B7004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1718643432;
-	bh=MgHT8Z4HUIE9ezW/auV6wWbDrDM4WPcrEGledglcTCo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=NP1eyFLyCc4Y4s2fAcJMhWMHNWs7U2TWcth3d4RkSAzZEKf8KFu//cZOhJ2AM9jZS
-	 0IjukHycG+vWof36cxv90it7Q91ISv0qWWCeqkrA1WjENnRCLymD95hp8hRHSkb86C
-	 vqfqwY35x2OJHzFxLdk1AHvrdduRDxApgR7bc6Eg=
-Message-ID: <7d5f800f-fc65-4fbf-adad-616d51501c62@linux.microsoft.com>
-Date: Mon, 17 Jun 2024 09:57:12 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ju6HrgnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D28C2BD10;
+	Mon, 17 Jun 2024 16:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718643478;
+	bh=EYhhFEKPUKJ3A9IrkQKwCZDAWmChwoTv2GvWJZl4HTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ju6HrgnMDQT8HCJ1gUVvsZkxpNmMPkxNK3n1ac+FHNzr28r23Kig+IKENMFY/aoli
+	 sCrEBTKypzLwmzOOTIIQ+dJZ1hNc1oWeFMO8ZDC9sIZ1xs5d4o4htq1Hr5BEYXThIr
+	 MJUPZNtOOzFe+09X+N9PnxFMDSiqPq5nw/V3EV7PtVk5XCTtgGvm+KUr0/4Ra7GtfR
+	 imIYZJIek4IdcKtIEL1CznqlsG6budKqedaqWnzWXO98umXX3H+q/CqeSrRqsyHS3o
+	 JuUlB1M/H7vLhAoi3Dh8Qb9g5rFbtITo1p8GxN8KVLUwAV276fyW9cW0u26TaUn7F/
+	 EzOjz/socuMBA==
+Date: Mon, 17 Jun 2024 17:57:53 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Viacheslav <adeep@lexina.in>
+Cc: Rob Herring <robh@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] dt-bindings: arm: amlogic:
+ amlogic,meson-gx-ao-secure: add secure-monitor property
+Message-ID: <20240617-sulfate-posture-1619f1cdf090@spud>
+References: <20240610084032.3096614-1-adeep@lexina.in>
+ <20240610084032.3096614-4-adeep@lexina.in>
+ <20240610-dropout-compress-6d6a9b749524@spud>
+ <4866f6d4-2e3c-40c7-a8cb-ba4e422ffef6@lexina.in>
+ <20240611-undying-earthy-00236ac251aa@spud>
+ <20240613164244.GA1999034-robh@kernel.org>
+ <c0d18fef-be65-461e-948f-c25e757199a5@lexina.in>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com
-Subject: Re: [PATCH v3 5/6] docs: i2c: summary: document 'local' and 'remote'
- targets
-To: Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240614081239.7128-8-wsa+renesas@sang-engineering.com>
- <20240614081239.7128-13-wsa+renesas@sang-engineering.com>
- <4zxr4rlqnjqbqh3oxmd2ufqi6uk4pxa3tniuya5pgjtqi6tswc@utq4r2zt6z6b>
- <ed75fyc2xcsnwubq42eposf6ayt5aj2jmqz6mthugk6vm2zpi4@qqwlmuwayoo5>
- <y34k2k25xdr5z4v7oejp4da237s4o5qym5npihyydwlbsdh75c@vhmfl7sw3pbm>
-Content-Language: en-US
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <y34k2k25xdr5z4v7oejp4da237s4o5qym5npihyydwlbsdh75c@vhmfl7sw3pbm>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="NNsmTeGnFTom/65N"
+Content-Disposition: inline
+In-Reply-To: <c0d18fef-be65-461e-948f-c25e757199a5@lexina.in>
 
-On 6/17/2024 4:58 AM, Andi Shyti wrote:
-> Hi Wolfram,
-> 
-> On Sun, Jun 16, 2024 at 09:14:40PM GMT, Wolfram Sang wrote:
->>> I am not a big fan of the use of the word client. It's not used
->>> anywhere in the documentation and it's too generic as a name for
->>> giving it a specific meaning.
->>>
->>> I've seen already some confusion amongst reviewers and
->>> maintainers when Easwar sent the patch in drm.
->>>
->>> If it depends on me, I would stick to the only controller/target
->>> and render obsolet the use of the word "client" in the i2c
->>> context.
->>
->> Have you read the paragraph "Synonyms" from patch 6? I don't think we
->> can obsolete client because:
->>
->> $ git grep 'struct i2c_client \*client' | wc -l
->> 6100
 
-> at least saying that "target" is the
-> preferred name for what was called "client" until now.
+--NNsmTeGnFTom/65N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm in agreement on obsoleting "client" as well. On the pace of change,
-I'll defer to you. I was trying to elicit a recommendation on future use
-of "client" when I asked:
+On Mon, Jun 17, 2024 at 11:21:30AM +0300, Viacheslav wrote:
+> Thanks for review.
+>=20
+> 13/06/2024 19.42, Rob Herring wrote:
+> > On Tue, Jun 11, 2024 at 07:07:28PM +0100, Conor Dooley wrote:
+> > > On Tue, Jun 11, 2024 at 01:25:11PM +0300, Viacheslav wrote:
+> > > > Hi!
+> > > >=20
+> > > > 10/06/2024 19.08, Conor Dooley wrote:
+> > > > > On Mon, Jun 10, 2024 at 11:39:49AM +0300, Viacheslav Bocharov wro=
+te:
+> > > > > > Add secure-monitor property to schema for meson-gx-socinfo-sm d=
+river.
+> > > > >=20
+> > > > > "bindings are for hardware, not drivers". Why purpose does the "s=
+ecure
+> > > > > monitor" serve that the secure firmware needs a reference to it?
+> > > >=20
+> > > > This driver is an extension to the meson-gx-socinfo driver: it supp=
+lements
+> > > > information obtained from the register with information from the
+> > > > SM_GET_CHIP_ID secure monitor call. Due to the specifics of the mod=
+ule
+> > > > loading order, we cannot do away with meson-gx-socinfo, as it is us=
+ed for
+> > > > platform identification in some drivers. Therefore, the extended in=
+formation
+> > > > is formatted as a separate driver, which is loaded after the secure=
+-monitor
+> > > > driver.
+> > >=20
+> > > Please stop talking about drivers, this is a binding which is about
+> > > hardware. Please provide, in your next version, a commit message that
+> > > justifies adding this property without talking about driver probing
+> > > order etc, and instead focuses on what service the "secure monitor"
+> > > provides etc.
+> >=20
+> > To put it another way, how many secure monitors does 1 system have?
+>=20
+> One per system in current device tree.
 
-===
-What's the combined effect of this documentation update in terms of the
-recommendation for switching over the Linux kernel? Are we to use
-controller/client or controller/target?
-===
+One per system, or one is currently described per system, but more might
+be added later?
 
-"Synonyms" from patch 6 does say that controller/target is preferred but
-couched it in the caveat "If speaking about I2C in general" and
-adapter/client when "discuss[ing] implementation details." I was trying
-to give space for an unambiguous recommendation.
+> > What do you do if the property is not present? You didn't make it
+> > required which is good because that would be an ABI break.
+>=20
+> We need an indication of the ability to use the secure-monitor to obtain
+> additional information within the soc driver. It seemed to me that using =
+an
+> explicit reference to the secure-monitor is the best choice.
+>=20
+> >=20
+> > You only need a link in DT if there are different possible providers or
+> > some per consumer information to describe (e.g. an interrupt number or
+> > clock ID). You don't have the latter and likely there is only 1 possible
+> > provider.
+>=20
+> Would replacing the reference to sm with an option, for example,
+> use-secure-monitor =3D <1>; look more appropriate in this case?
 
-I think we are on the same page here if we just remove the caveats.
+Perhaps a silly question, but (provided there's only one per system, why
+can't the secure-monitor driver expose a function that you can call to get
+a reference to the system-monitor? I did something similar before with
+a call to in mpfs_sys_controller_get() mpfs_rng_probe(). Granted,
+mpfs-rng is probed from software so it's slightly different to your
+case, but the principle is the same and it's not unheard of for code in
+drivers/soc to expose interfaces to other drivers like this. You can
+just call a function like that, and know whether there's a secure
+monitor, without having to retrofit a DT property.
 
 Thanks,
-Easwar
+Conor.
 
+--NNsmTeGnFTom/65N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnBrEQAKCRB4tDGHoIJi
+0t04AP9IZpDaZr0ZUw5JP/PZ+mfLbOJbqMfSkCUHR55GfiYSjQEAsopLOy9vwxux
+yt1njFci5qcGHtd4l6xcHFxdHYq+XQ0=
+=0Ywh
+-----END PGP SIGNATURE-----
+
+--NNsmTeGnFTom/65N--
