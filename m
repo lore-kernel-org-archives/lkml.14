@@ -1,60 +1,73 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40254190049;
-	Mon, 17 Jun 2024 09:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2004D190682
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616071; cv=none; b=K7uiKXhTsUa1WHkdAqI8dndXfrFnfxiSYfs5/RvJL0NCbPsckvGCIWsNevmzlqoRCWbjwMLy9fQIqwqbOGyTvN5pNrtTR98vvNUdJszKbQI0MRtSxqQmn+fdDxx1NrK2W6ukhop5PGGFFrjhKXyIJKEqZMnP+D6Hzd/No/LmyLU=
+	t=1718616119; cv=none; b=CbyFNjlBBfoDT3aPk+nvFnCRcw4vu4Rx8zwnPt54rdo1so7Ulm4tJ/yqOTOiB6vJ8xiD4Fk2EO1LTxS82CTv3hF0soamypXmMG/WFhx6nQ/wEMTskTT1F0QPrEPds+iGzsxsplDLh+aYaJf3woVzsCSSf1R9K8v8FQWmreV7+2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616071; c=relaxed/simple;
-	bh=xL0gEdixcV2+RNy10wgYnIaOWrfqDrGRfIkcwaA+Icg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M8+HLcbG8SZXHKjEpkaJL5FBa00tlAI9u9rWmwcAgoH23q2YCRgwceqRohvfHhxUED4mhTgdKIszglrXhFNDi/xeixDOsuTgUp4OscfGFDvsJR3kVGNz/YZdqqbRysI8NqXkd3O9QXFbXCJkAZquUZwtJiKdwOWIU1InVdJ2rcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wnLHq0TF; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718616119; c=relaxed/simple;
+	bh=xervD/akNAn+3bajOSvxHM3QVMxTAKhY2J5D0oWTDdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pMdhxGwNSzt5CfwfZV610wzzVUH88JcAO/Uwwu4KH5c4p/5xYSsExyMiMTctveqBACjrA6Ns1dvl3BZHibh7rQhcukxWJ+OJaN8hereofqPaUJu3/hrf6koT7c+WyBTtwXOvcppR3wgU1Wx0RlLR7ZbbI8QQ/2tLJ2zY5rbl/q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G1Q1oNn6; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wnLHq0TF"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H8TcUY028750;
-	Mon, 17 Jun 2024 11:20:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=GL07PGu1vgaXnCMZg7OIqD
-	UaXSbNoiZtITb4vC2Rq7M=; b=wnLHq0TF1n5sTXZxXx6qDAmZuNXEoLGnkgwo+s
-	EoBEacW1y8NtNEKAMpKCrTi5wY0FeRRRIaTbifx+1/gxk4+hGlQroUilzu+ySPye
-	7CxoZjeyaQpaRD8W+pimLwSJ58r/Bb/irIXpzkprInTNgb9BVnv8A2rF4nNkkRRJ
-	rIEY6xegw/jM6la4iqoEYm39zQrvVXP9fQp5E4l+MMzq5QKNkT9gOBc0JVvoJ1GS
-	W61iS3dMuk9/+7FVevETCuXVW3iWkVIvdXBMeRAL3xSXRKFM61AfmzxyrHFUONVN
-	ZeYPOm+fWrIHbE+r3VnyFMBlliUOLglvReX8LaQUoaKP4r/g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys1ucnhyg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 11:20:56 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 41D3F40045;
-	Mon, 17 Jun 2024 11:20:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14C1121194A;
-	Mon, 17 Jun 2024 11:20:23 +0200 (CEST)
-Received: from localhost (10.48.86.128) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
- 2024 11:20:22 +0200
-From: Etienne Carriere <etienne.carriere@foss.st.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <devicetree@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, "Lee
- Jones" <lee@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Etienne Carriere
-	<etienne.carriere@foss.st.com>
-Subject: [PATCH v2] dt-bindings: mfd: dual licensing for st,stpmic1 bindings
-Date: Mon, 17 Jun 2024 11:20:16 +0200
-Message-ID: <20240617092016.2958046-1-etienne.carriere@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1Q1oNn6"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso723123766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718616115; x=1719220915; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AL9vCWb26ggkgGLF0K/9fugVAtzgFV6EBJsc+Ci/VT0=;
+        b=G1Q1oNn6T/Jaqo5wZp9huewBbTTqQ5sgGK5mtxFu/23kNNGA/qAyAOvKf5kRG1d/ID
+         uTVt5qGULWTyBuoCd32RTaH460iyNEajbivXwA1dWdd9rHwZO4Scc2BYcwsUb/U5KclO
+         6bA3g9p2LEb+4Oil6gB2DfPsY+V8W8LKYVmJB3mAm+Y9ySUk4g30AAQOSSBfkC1SZ7qf
+         tAIA4eEP4hlbV99AKa+v6SO5YtkjYW70vYosdmRl/bAwLleUHwTFcaT2aOl5QfMMIsl3
+         JSsnWl6khA+BPiSzrcSlrm/TzIXPiddKGqXe0edOoHAkU74+w6I5hhBsr9EYJBhNARp9
+         jNTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718616115; x=1719220915;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AL9vCWb26ggkgGLF0K/9fugVAtzgFV6EBJsc+Ci/VT0=;
+        b=Qx5J3tzh0SVrr6ZTTSGLeedCPbPkr539HtnT4mUwjtk+1HvNkGRieAXyhobjcZezXv
+         ARoPue3a5BC7qVLRcIxWSsrlfDR7ZB5p68c1KNt0Vy8MMQCAMZwCUIWT1ix5TJ26VzK8
+         T/7udqi4UaD4p3S5lG10dWMZL6r6DVbhqBU7ovZL1MPOYPmOwTU/+7VdjVipFXwg5Q5G
+         SYwXnYxxs0jBF/i+OineAAmC3JVyWFGhQ6RwXTkBxqwnaoBQm4TB02yY4wi9h0LAL///
+         3/lPSND+45PpFBy08GW4Z7nrCjw3hIU+gDk/gw6R9kh/NlOhWYIrHrJUyJnHyO+vAwDC
+         s36w==
+X-Forwarded-Encrypted: i=1; AJvYcCXnCj3NIGVF4Rr0NiPmGjTk4M9VYDx1XXu2g5zuOBOIUNZucJvzvMgeBUkWPq5QWTCbM7LFlSRyGFG9cSmtwToe7y/rP9hpDL9byWgc
+X-Gm-Message-State: AOJu0YyYACAaHXiOshILBxVKyzX4/Jt8ujQnrjRB+TRx5Lk/M1uYNzWC
+	h2Dsw2acirZYVMrdYsBogRLw5BuyUyeit5n9anvYfQdaQzMWrnXfUsBU1n2iP6c=
+X-Google-Smtp-Source: AGHT+IFLPbl4cACD6B5wyibfTQu8bh5NfSr1rfSOwZYEb5WkGOlYQmmuS5S7vCodWDvRJd2pyBRJcg==
+X-Received: by 2002:a17:907:b9d5:b0:a68:b159:11ee with SMTP id a640c23a62f3a-a6f52403808mr813822266b.12.1718616115319;
+        Mon, 17 Jun 2024 02:21:55 -0700 (PDT)
+Received: from krzk-bin.. ([78.10.207.147])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ed359bsm497944966b.137.2024.06.17.02.21.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 02:21:54 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] ASoC: soc-dai.h: Constify DAI ops auto_selectable_formats
+Date: Mon, 17 Jun 2024 11:21:51 +0200
+Message-ID: <20240617092152.244981-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,44 +75,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_08,2024-06-14_03,2024-05-17_01
 
-Change include/dt-bindings/mfd/st,stpmic1.h license model from GPLv2.0
-only to dual GPLv2.0 or BSD-2-Clause. I have every legitimacy to request
-this change on behalf of STMicroelectronics. This change clarifies that
-this DT binding header file can be shared with software components as
-bootloaders and OSes that are not published under GPLv2 terms.
+The core ASoC code does not modify contents of the
+'auto_selectable_formats' array passed in 'struct snd_soc_dai_ops', so
+make it const for code safety.
 
-In CC are all the contributors to this header file.
-
-Cc: Pascal Paillet <p.paillet@st.com>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Etienne Carriere <etienne.carriere@foss.st.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes since v1:
-- Change request license from "GPL-2.0-only OR BSD-3-Clause" to
-  "GPL-2.0-only OR BSD-2-Clause".
-- Update Lee's e-mail address.
----
- include/dt-bindings/mfd/st,stpmic1.h | 2 +-
+ include/sound/soc-dai.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
-index 321cd08797d9..9dd15b9c743e 100644
---- a/include/dt-bindings/mfd/st,stpmic1.h
-+++ b/include/dt-bindings/mfd/st,stpmic1.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
- /*
-  * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-  * Author: Philippe Peurichard <philippe.peurichard@st.com>,
+diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+index 15ef268c9845..279223c4ef5e 100644
+--- a/include/sound/soc-dai.h
++++ b/include/sound/soc-dai.h
+@@ -361,7 +361,7 @@ struct snd_soc_dai_ops {
+ 	 * see
+ 	 *	snd_soc_dai_get_fmt()
+ 	 */
+-	u64 *auto_selectable_formats;
++	const u64 *auto_selectable_formats;
+ 	int num_auto_selectable_formats;
+ 
+ 	/* probe ordering - for components with runtime dependencies */
 -- 
-2.25.1
+2.43.0
 
