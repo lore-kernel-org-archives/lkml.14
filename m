@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFDB1990D7;
-	Mon, 17 Jun 2024 12:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E774F197A86;
+	Mon, 17 Jun 2024 12:53:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718628829; cv=none; b=r2OMMhxVYqJe3zCTXk4Jak/faSwPZOCLIUxrBJsWw+exwamp6GGaIbIasuTAhzfrWipfWx8NJHayVjr647J1xE0xNukCTLx18z0BlOGtKRcHXxRF+xmAPibQXY3yL7PfD8JC5n5c9HmQA1w3JN/YIzwVzzsEx3xjgA/W0zcT+Ds=
+	t=1718628824; cv=none; b=RWRNLsD08WAUHWTBSuIxRGwxSRrOZ/rt/zSSzQ+2ncm2EqA2FtX4pGzvAHZS4df8zQFC94IL18XOGV9w/SpNn0o9Isujc34yETfFn3JPoZeO9feWxgHE3cWr7shmpJIoyyyWrIheSFT5rJemGre2LamyVgMpa271m3ylUmhRBx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718628829; c=relaxed/simple;
-	bh=1yv03DejpjIhtoLqLThgUtevm5kwrLeq6sL2gn4HWZE=;
+	s=arc-20240116; t=1718628824; c=relaxed/simple;
+	bh=8QrIiGKAfWXYSKOw+7GWsV5mMWRqmE1BCGs/aClFW54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GQMArqibq7lkzDAD0a29BSDEQ/FnGtv2C/oIiB4lGXXeLp0vbaDZB6F6NvefcDrcv/FXOJWa24usOHx2zZj72n2J6EklNDWQsy8j8kaYv30wnFKVWlmrHDNCHko6pA0AkoRRii3FagvXY0mHlYGNO0prqGG0+UzfjPIVw6RuKKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nshs0tBQ; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=AkKBqsI6umWtj24nwqW5EDXp3BnTi6VJrQpWhvMW0vmF/RmW8PI2mpt70FIJe1X3eO+C4M1wvqp/vDRO72p1Qs3tEivcJwJDbYKcDtJ+stl+lLJce1jsfXRtrTai02gURT0WvA6xRmy72eafNfsaawCirh/5iZFIEskWU3JSPLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBQrgvVy; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nshs0tBQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBQrgvVy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718628828; x=1750164828;
+  t=1718628823; x=1750164823;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1yv03DejpjIhtoLqLThgUtevm5kwrLeq6sL2gn4HWZE=;
-  b=nshs0tBQ0gXrEU9vAnE8aTVQYLazlcqZxLMPT5xhtcDudwsMTHC69koK
-   d56usvvBGyJH+sYLEhA0V5RVAm+qK+5wm4Rqr93hay7727EWSod9cns2a
-   iwzn72MU8urPv1qTJmPgSzNHTM/p8EdZ+IEXIE0xJCOkQibP50ScRHITJ
-   F6/Ev/LLbmyxQCQ4wOBJPbC33tetOMRhQqRS9ljfPUvs2wxyFZGwOewcE
-   DEAertDlgyhj8jc+3oRFEhdaaqkj1bLb3KcQhDl0gadlbSv1ntf/UIQfJ
-   dQrETWpXWQTkCfZrE+nekBm6c4sMyjAZ8734D7nn0EIBz2NNy1a8+KYoE
-   A==;
-X-CSE-ConnectionGUID: trcgXAMCQRmNqfbFfDPjmQ==
-X-CSE-MsgGUID: DZqX/zc4SSGX643p7C6TFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15570961"
+  bh=8QrIiGKAfWXYSKOw+7GWsV5mMWRqmE1BCGs/aClFW54=;
+  b=fBQrgvVyHZjwMbmxy3PD2dW/LNvuz5f5LF5rlEJSTJq6wpVaCqkWumVJ
+   QMMbDD+2fn17sk7gROMFanRjUUG5b7z/V3WruqF6HRLy7dAwafPXTGMMV
+   UCU03D05X/Up6sao0qfqqJczZeLpNnKjPW/WSUFeASJakUiXC+mEkciiB
+   5hNDUgvbv3borplvrfLuTlqNrTNLSAaspT+Iy4Bvh04wKcw+ix9qO4sYJ
+   aj62JXLAElPiHyH4RsCZx03ZBW6GF9tcFOrh90da96LVcnDsLAD8cKWb0
+   b20XlDlR5FsvYw9pmB3tpvOM8cwdxoyvJW7FNYClyHcgIm10yL7s2gAL5
+   w==;
+X-CSE-ConnectionGUID: pyhdcW+MTM2F6a+q4/NJ5g==
+X-CSE-MsgGUID: wBsx0tcbQSua716aclG/eQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15570874"
 X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="15570961"
+   d="scan'208";a="15570874"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 05:53:45 -0700
-X-CSE-ConnectionGUID: dVuN1nxgTi2KqORSBg33SQ==
-X-CSE-MsgGUID: Noz1a+zPT3GpnYZJ1iQKTw==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 05:53:41 -0700
+X-CSE-ConnectionGUID: Rn8A65IbRTSzRlAE8rV63Q==
+X-CSE-MsgGUID: Qof73oaST925OhdbfHrjiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="72387574"
+   d="scan'208";a="72387524"
 Received: from b4969164b36c.jf.intel.com ([10.165.59.5])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 05:53:44 -0700
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 05:53:40 -0700
 From: "Huang, Haitao" <haitao.huang@linux.intel.com>
 To: jarkko@kernel.org,
 	dave.hansen@linux.intel.com,
@@ -68,9 +68,9 @@ Cc: zhiquan1.li@intel.com,
 	mikko.ylinen@linux.intel.com,
 	yangjie@microsoft.com,
 	chrisyan@microsoft.com
-Subject: [PATCH v15 13/14] Docs/x86/sgx: Add description for cgroup support
-Date: Mon, 17 Jun 2024 05:53:20 -0700
-Message-ID: <20240617125321.36658-14-haitao.huang@linux.intel.com>
+Subject: [PATCH v15 05/14] x86/sgx: Implement basic EPC misc cgroup functionality
+Date: Mon, 17 Jun 2024 05:53:12 -0700
+Message-ID: <20240617125321.36658-6-haitao.huang@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240617125321.36658-1-haitao.huang@linux.intel.com>
 References: <20240617125321.36658-1-haitao.huang@linux.intel.com>
@@ -82,134 +82,442 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-Add initial documentation of how to regulate the distribution of
-SGX Enclave Page Cache (EPC) memory via the Miscellaneous cgroup
-controller.
+SGX Enclave Page Cache (EPC) memory allocations are separate from normal
+RAM allocations, and are managed solely by the SGX subsystem. The
+existing cgroup memory controller cannot be used to limit or account for
+SGX EPC memory, which is a desirable feature in some environments. For
+instance, within a Kubernetes environment, while a user may specify a
+particular EPC quota for a pod, the orchestrator requires a mechanism to
+enforce that the pod's actual runtime EPC usage does not exceed the
+allocated quota.
 
+Utilize the misc controller [admin-guide/cgroup-v2.rst, 5-9. Misc] to
+limit and track EPC allocations per cgroup. Earlier patches have added
+the "sgx_epc" resource type in the misc cgroup subsystem. Add basic
+support in SGX driver as the "sgx_epc" resource provider:
+
+- Set "capacity" of EPC by calling misc_cg_set_capacity()
+- Update EPC usage counter, "current", by calling charge and uncharge
+APIs for EPC allocation and deallocation, respectively.
+- Setup sgx_epc resource type specific callbacks, which perform
+initialization and cleanup during cgroup allocation and deallocation,
+respectively.
+
+With these changes, the misc cgroup controller enables users to set a hard
+limit for EPC usage in the "misc.max" interface file. It reports current
+usage in "misc.current", the total EPC memory available in
+"misc.capacity", and the number of times EPC usage reached the max limit
+in "misc.events".
+
+For now, the EPC cgroup simply blocks additional EPC allocation in
+sgx_alloc_epc_page() when the limit is reached. Reclaimable pages are
+still tracked in the global active list, only reclaimed by the global
+reclaimer when the total free page count is lower than a threshold.
+
+Later patches will reorganize the tracking and reclamation code in the
+global reclaimer and implement per-cgroup tracking and reclaiming.
+
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Co-developed-by: Haitao Huang<haitao.huang@linux.intel.com>
-Signed-off-by: Haitao Huang<haitao.huang@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
+Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
 Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Acked-by: Kai Huang <kai.huang@intel.com>
-Tested-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
+Reviewed-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
 Tested-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
+V15:
+- Declare __init for sgx_cgroup_init() (Jarkko)
+- Disable SGX when sgx_cgroup_init() fails (Jarkko)
+
+V13:
+- Remove unneeded includes. (Kai)
+
+V12:
+- Remove CONFIG_CGROUP_SGX_EPC and make sgx cgroup implementation
+conditionally compiled with CONFIG_CGROUP_MISC. (Jarkko)
+
+V11:
+- Update copyright and format better (Kai)
+- Create wrappers to remove #ifdefs in c file. (Kai)
+- Remove unneeded comments (Kai)
+
+V10:
+- Shorten function, variable, struct names, s/sgx_epc_cgroup/sgx_cgroup. (Jarkko)
+- Use enums instead of booleans for the parameters. (Dave, Jarkko)
+
 V8:
-- Limit text width to 80 characters to be consistent.
+- Remove null checks for epc_cg in try_charge()/uncharge(). (Jarkko)
+- Remove extra space, '_INTEL'. (Jarkko)
+
+V7:
+- Use a static for root cgroup (Kai)
+- Wrap epc_cg field in sgx_epc_page struct with #ifdef (Kai)
+- Correct check for charge API return (Kai)
+- Start initialization in SGX device driver init (Kai)
+- Remove unneeded BUG_ON (Kai)
+- Split  sgx_get_current_epc_cg() out of sgx_epc_cg_try_charge() (Kai)
 
 V6:
-- Remove mentioning of VMM specific behavior on handling SIGBUS
-- Remove statement of forced reclamation, add statement to specify
-ENOMEM returned when no reclamation possible.
-- Added statements on the non-preemptive nature for the max limit
-- Dropped Reviewed-by tag because of changes
-
-V4:
-- Fix indentation (Randy)
-- Change misc.events file to be read-only
-- Fix a typo for 'subsystem'
-- Add behavior when VMM overcommit EPC with a cgroup (Mikko)
+- Split the original large patch"Limit process EPC usage with misc
+cgroup controller"  and restructure it (Kai)
 ---
- Documentation/arch/x86/sgx.rst | 83 ++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ arch/x86/kernel/cpu/sgx/Makefile     |  1 +
+ arch/x86/kernel/cpu/sgx/epc_cgroup.c | 73 ++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/sgx/epc_cgroup.h | 72 +++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/sgx/main.c       | 42 ++++++++++++++--
+ arch/x86/kernel/cpu/sgx/sgx.h        | 21 ++++++++
+ include/linux/misc_cgroup.h          |  2 +
+ 6 files changed, 208 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/sgx/epc_cgroup.c
+ create mode 100644 arch/x86/kernel/cpu/sgx/epc_cgroup.h
 
-diff --git a/Documentation/arch/x86/sgx.rst b/Documentation/arch/x86/sgx.rst
-index d90796adc2ec..c537e6a9aa65 100644
---- a/Documentation/arch/x86/sgx.rst
-+++ b/Documentation/arch/x86/sgx.rst
-@@ -300,3 +300,86 @@ to expected failures and handle them as follows:
-    first call.  It indicates a bug in the kernel or the userspace client
-    if any of the second round of ``SGX_IOC_VEPC_REMOVE_ALL`` calls has
-    a return code other than 0.
+diff --git a/arch/x86/kernel/cpu/sgx/Makefile b/arch/x86/kernel/cpu/sgx/Makefile
+index 9c1656779b2a..081cb424575e 100644
+--- a/arch/x86/kernel/cpu/sgx/Makefile
++++ b/arch/x86/kernel/cpu/sgx/Makefile
+@@ -4,3 +4,4 @@ obj-y += \
+ 	ioctl.o \
+ 	main.o
+ obj-$(CONFIG_X86_SGX_KVM)	+= virt.o
++obj-$(CONFIG_CGROUP_MISC)	+= epc_cgroup.o
+diff --git a/arch/x86/kernel/cpu/sgx/epc_cgroup.c b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+new file mode 100644
+index 000000000000..73e4c0304b77
+--- /dev/null
++++ b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+@@ -0,0 +1,73 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2022-2024 Intel Corporation. */
 +
++#include<linux/slab.h>
++#include "epc_cgroup.h"
 +
-+Cgroup Support
-+==============
++/* The root SGX EPC cgroup */
++static struct sgx_cgroup sgx_cg_root;
 +
-+The "sgx_epc" resource within the Miscellaneous cgroup controller regulates
-+distribution of SGX EPC memory, which is a subset of system RAM that is used to
-+provide SGX-enabled applications with protected memory, and is otherwise
-+inaccessible, i.e. shows up as reserved in /proc/iomem and cannot be
-+read/written outside of an SGX enclave.
++/**
++ * sgx_cgroup_try_charge() - try to charge cgroup for a single EPC page
++ *
++ * @sgx_cg:	The EPC cgroup to be charged for the page.
++ * Return:
++ * * %0 - If successfully charged.
++ * * -errno - for failures.
++ */
++int sgx_cgroup_try_charge(struct sgx_cgroup *sgx_cg)
++{
++	return misc_cg_try_charge(MISC_CG_RES_SGX_EPC, sgx_cg->cg, PAGE_SIZE);
++}
 +
-+Although current systems implement EPC by stealing memory from RAM, for all
-+intents and purposes the EPC is independent from normal system memory, e.g. must
-+be reserved at boot from RAM and cannot be converted between EPC and normal
-+memory while the system is running.  The EPC is managed by the SGX subsystem and
-+is not accounted by the memory controller.  Note that this is true only for EPC
-+memory itself, i.e.  normal memory allocations related to SGX and EPC memory,
-+e.g. the backing memory for evicted EPC pages, are accounted, limited and
-+protected by the memory controller.
++/**
++ * sgx_cgroup_uncharge() - uncharge a cgroup for an EPC page
++ * @sgx_cg:	The charged sgx cgroup.
++ */
++void sgx_cgroup_uncharge(struct sgx_cgroup *sgx_cg)
++{
++	misc_cg_uncharge(MISC_CG_RES_SGX_EPC, sgx_cg->cg, PAGE_SIZE);
++}
 +
-+Much like normal system memory, EPC memory can be overcommitted via virtual
-+memory techniques and pages can be swapped out of the EPC to their backing store
-+(normal system memory allocated via shmem).  The SGX EPC subsystem is analogous
-+to the memory subsystem, and it implements limit and protection models for EPC
-+memory.
++static void sgx_cgroup_free(struct misc_cg *cg)
++{
++	struct sgx_cgroup *sgx_cg;
 +
-+SGX EPC Interface Files
-+-----------------------
++	sgx_cg = sgx_cgroup_from_misc_cg(cg);
++	if (!sgx_cg)
++		return;
 +
-+For a generic description of the Miscellaneous controller interface files,
-+please see Documentation/admin-guide/cgroup-v2.rst
++	kfree(sgx_cg);
++}
 +
-+All SGX EPC memory amounts are in bytes unless explicitly stated otherwise. If
-+a value which is not PAGE_SIZE aligned is written, the actual value used by the
-+controller will be rounded down to the closest PAGE_SIZE multiple.
++static void sgx_cgroup_misc_init(struct misc_cg *cg, struct sgx_cgroup *sgx_cg)
++{
++	cg->res[MISC_CG_RES_SGX_EPC].priv = sgx_cg;
++	sgx_cg->cg = cg;
++}
 +
-+  misc.capacity
-+        A read-only flat-keyed file shown only in the root cgroup. The sgx_epc
-+        resource will show the total amount of EPC memory available on the
-+        platform.
++static int sgx_cgroup_alloc(struct misc_cg *cg)
++{
++	struct sgx_cgroup *sgx_cg;
 +
-+  misc.current
-+        A read-only flat-keyed file shown in the non-root cgroups. The sgx_epc
-+        resource will show the current active EPC memory usage of the cgroup and
-+        its descendants. EPC pages that are swapped out to backing RAM are not
-+        included in the current count.
++	sgx_cg = kzalloc(sizeof(*sgx_cg), GFP_KERNEL);
++	if (!sgx_cg)
++		return -ENOMEM;
 +
-+  misc.max
-+        A read-write single value file which exists on non-root cgroups. The
-+        sgx_epc resource will show the EPC usage hard limit. The default is
-+        "max".
++	sgx_cgroup_misc_init(cg, sgx_cg);
 +
-+        If a cgroup's EPC usage reaches this limit, EPC allocations, e.g., for
-+        page fault handling, will be blocked until EPC can be reclaimed from the
-+        cgroup. If there are no pages left that are reclaimable within the same
-+        group, the kernel returns ENOMEM.
++	return 0;
++}
 +
-+        The EPC pages allocated for a guest VM by the virtual EPC driver are not
-+        reclaimable by the host kernel. In case the guest cgroup's limit is
-+        reached and no reclaimable pages left in the same cgroup, the virtual
-+        EPC driver returns SIGBUS to the user space process to indicate failure
-+        on new EPC allocation requests.
++const struct misc_res_ops sgx_cgroup_ops = {
++	.alloc = sgx_cgroup_alloc,
++	.free = sgx_cgroup_free,
++};
 +
-+        The misc.max limit is non-preemptive. If a user writes a limit lower
-+        than the current usage to this file, the cgroup will not preemptively
-+        deallocate pages currently in use, and will only start blocking the next
-+        allocation and reclaiming EPC at that time.
++int __init sgx_cgroup_init(void)
++{
++	misc_cg_set_ops(MISC_CG_RES_SGX_EPC, &sgx_cgroup_ops);
++	sgx_cgroup_misc_init(misc_cg_root(), &sgx_cg_root);
 +
-+  misc.events
-+        A read-only flat-keyed file which exists on non-root cgroups.
-+        A value change in this file generates a file modified event.
++	return 0;
++}
+diff --git a/arch/x86/kernel/cpu/sgx/epc_cgroup.h b/arch/x86/kernel/cpu/sgx/epc_cgroup.h
+new file mode 100644
+index 000000000000..5750eebc2f3f
+--- /dev/null
++++ b/arch/x86/kernel/cpu/sgx/epc_cgroup.h
+@@ -0,0 +1,72 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SGX_EPC_CGROUP_H_
++#define _SGX_EPC_CGROUP_H_
 +
-+          max
-+                The number of times the cgroup has triggered a reclaim due to
-+                its EPC usage approaching (or exceeding) its max EPC boundary.
++#include <asm/sgx.h>
++#include <linux/cgroup.h>
++#include <linux/misc_cgroup.h>
 +
-+Migration
-+---------
++#include "sgx.h"
 +
-+Once an EPC page is charged to a cgroup (during allocation), it remains charged
-+to the original cgroup until the page is released or reclaimed. Migrating a
-+process to a different cgroup doesn't move the EPC charges that it incurred
-+while in the previous cgroup to its new cgroup.
++#ifndef CONFIG_CGROUP_MISC
++
++#define MISC_CG_RES_SGX_EPC MISC_CG_RES_TYPES
++struct sgx_cgroup;
++
++static inline struct sgx_cgroup *sgx_get_current_cg(void)
++{
++	return NULL;
++}
++
++static inline void sgx_put_cg(struct sgx_cgroup *sgx_cg) { }
++
++static inline int sgx_cgroup_try_charge(struct sgx_cgroup *sgx_cg)
++{
++	return 0;
++}
++
++static inline void sgx_cgroup_uncharge(struct sgx_cgroup *sgx_cg) { }
++
++static inline void sgx_cgroup_init(void) { }
++
++#else /* CONFIG_CGROUP_MISC */
++
++struct sgx_cgroup {
++	struct misc_cg *cg;
++};
++
++static inline struct sgx_cgroup *sgx_cgroup_from_misc_cg(struct misc_cg *cg)
++{
++	return (struct sgx_cgroup *)(cg->res[MISC_CG_RES_SGX_EPC].priv);
++}
++
++/**
++ * sgx_get_current_cg() - get the EPC cgroup of current process.
++ *
++ * Returned cgroup has its ref count increased by 1. Caller must call
++ * sgx_put_cg() to return the reference.
++ *
++ * Return: EPC cgroup to which the current task belongs to.
++ */
++static inline struct sgx_cgroup *sgx_get_current_cg(void)
++{
++	/* get_current_misc_cg() never returns NULL when Kconfig enabled */
++	return sgx_cgroup_from_misc_cg(get_current_misc_cg());
++}
++
++/**
++ * sgx_put_cg() - Put the EPC cgroup and reduce its ref count.
++ * @sgx_cg - EPC cgroup to put.
++ */
++static inline void sgx_put_cg(struct sgx_cgroup *sgx_cg)
++{
++	put_misc_cg(sgx_cg->cg);
++}
++
++int sgx_cgroup_try_charge(struct sgx_cgroup *sgx_cg);
++void sgx_cgroup_uncharge(struct sgx_cgroup *sgx_cg);
++int __init sgx_cgroup_init(void);
++
++#endif /* CONFIG_CGROUP_MISC */
++
++#endif /* _SGX_EPC_CGROUP_H_ */
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index e64073fb4256..8c30257e0953 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -18,6 +18,7 @@
+ #include "driver.h"
+ #include "encl.h"
+ #include "encls.h"
++#include "epc_cgroup.h"
+ 
+ struct sgx_epc_section sgx_epc_sections[SGX_MAX_EPC_SECTIONS];
+ static int sgx_nr_epc_sections;
+@@ -559,7 +560,16 @@ int sgx_unmark_page_reclaimable(struct sgx_epc_page *page)
+  */
+ struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim)
+ {
++	struct sgx_cgroup *sgx_cg;
+ 	struct sgx_epc_page *page;
++	int ret;
++
++	sgx_cg = sgx_get_current_cg();
++	ret = sgx_cgroup_try_charge(sgx_cg);
++	if (ret) {
++		sgx_put_cg(sgx_cg);
++		return ERR_PTR(ret);
++	}
+ 
+ 	for ( ; ; ) {
+ 		page = __sgx_alloc_epc_page();
+@@ -568,8 +578,10 @@ struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim)
+ 			break;
+ 		}
+ 
+-		if (list_empty(&sgx_active_page_list))
+-			return ERR_PTR(-ENOMEM);
++		if (list_empty(&sgx_active_page_list)) {
++			page = ERR_PTR(-ENOMEM);
++			break;
++		}
+ 
+ 		if (reclaim == SGX_NO_RECLAIM) {
+ 			page = ERR_PTR(-EBUSY);
+@@ -585,6 +597,15 @@ struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim)
+ 		cond_resched();
+ 	}
+ 
++	if (!IS_ERR(page)) {
++		WARN_ON_ONCE(sgx_epc_page_get_cgroup(page));
++		/* sgx_put_cg() in sgx_free_epc_page() */
++		sgx_epc_page_set_cgroup(page, sgx_cg);
++	} else {
++		sgx_cgroup_uncharge(sgx_cg);
++		sgx_put_cg(sgx_cg);
++	}
++
+ 	if (sgx_should_reclaim(SGX_NR_LOW_PAGES))
+ 		wake_up(&ksgxd_waitq);
+ 
+@@ -603,8 +624,16 @@ struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim)
+ void sgx_free_epc_page(struct sgx_epc_page *page)
+ {
+ 	struct sgx_epc_section *section = &sgx_epc_sections[page->section];
++	struct sgx_cgroup *sgx_cg = sgx_epc_page_get_cgroup(page);
+ 	struct sgx_numa_node *node = section->node;
+ 
++	/* sgx_cg could be NULL if called from __sgx_sanitize_pages() */
++	if (sgx_cg) {
++		sgx_cgroup_uncharge(sgx_cg);
++		sgx_put_cg(sgx_cg);
++		sgx_epc_page_set_cgroup(page, NULL);
++	}
++
+ 	spin_lock(&node->lock);
+ 
+ 	page->owner = NULL;
+@@ -644,6 +673,8 @@ static bool __init sgx_setup_epc_section(u64 phys_addr, u64 size,
+ 		section->pages[i].flags = 0;
+ 		section->pages[i].owner = NULL;
+ 		section->pages[i].poison = 0;
++		sgx_epc_page_set_cgroup(&section->pages[i], NULL);
++
+ 		list_add_tail(&section->pages[i].list, &sgx_dirty_page_list);
+ 	}
+ 
+@@ -788,6 +819,7 @@ static void __init arch_update_sysfs_visibility(int nid) {}
+ static bool __init sgx_page_cache_init(void)
+ {
+ 	u32 eax, ebx, ecx, edx, type;
++	u64 capacity = 0;
+ 	u64 pa, size;
+ 	int nid;
+ 	int i;
+@@ -838,6 +870,7 @@ static bool __init sgx_page_cache_init(void)
+ 
+ 		sgx_epc_sections[i].node =  &sgx_numa_nodes[nid];
+ 		sgx_numa_nodes[nid].size += size;
++		capacity += size;
+ 
+ 		sgx_nr_epc_sections++;
+ 	}
+@@ -847,6 +880,8 @@ static bool __init sgx_page_cache_init(void)
+ 		return false;
+ 	}
+ 
++	misc_cg_set_capacity(MISC_CG_RES_SGX_EPC, capacity);
++
+ 	return true;
+ }
+ 
+@@ -921,7 +956,8 @@ static int __init sgx_init(void)
+ 	if (!sgx_page_cache_init())
+ 		return -ENOMEM;
+ 
+-	if (!sgx_page_reclaimer_init()) {
++	if (!sgx_page_reclaimer_init() || !sgx_cgroup_init()) {
++		misc_cg_set_capacity(MISC_CG_RES_SGX_EPC, 0);
+ 		ret = -ENOMEM;
+ 		goto err_page_cache;
+ 	}
+diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
+index ca34cd4f58ac..fae8eef10232 100644
+--- a/arch/x86/kernel/cpu/sgx/sgx.h
++++ b/arch/x86/kernel/cpu/sgx/sgx.h
+@@ -39,14 +39,35 @@ enum sgx_reclaim {
+ 	SGX_DO_RECLAIM
+ };
+ 
++struct sgx_cgroup;
++
+ struct sgx_epc_page {
+ 	unsigned int section;
+ 	u16 flags;
+ 	u16 poison;
+ 	struct sgx_encl_page *owner;
+ 	struct list_head list;
++#ifdef CONFIG_CGROUP_MISC
++	struct sgx_cgroup *sgx_cg;
++#endif
+ };
+ 
++static inline void sgx_epc_page_set_cgroup(struct sgx_epc_page *page, struct sgx_cgroup *cg)
++{
++#ifdef CONFIG_CGROUP_MISC
++	page->sgx_cg = cg;
++#endif
++}
++
++static inline struct sgx_cgroup *sgx_epc_page_get_cgroup(struct sgx_epc_page *page)
++{
++#ifdef CONFIG_CGROUP_MISC
++	return page->sgx_cg;
++#else
++	return NULL;
++#endif
++}
++
+ /*
+  * Contains the tracking data for NUMA nodes having EPC pages. Most importantly,
+  * the free page list local to the node is stored here.
+diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
+index 440ed2bb8053..c9b47a5e966a 100644
+--- a/include/linux/misc_cgroup.h
++++ b/include/linux/misc_cgroup.h
+@@ -46,11 +46,13 @@ struct misc_res_ops {
+  * @max: Maximum limit on the resource.
+  * @usage: Current usage of the resource.
+  * @events: Number of times, the resource limit exceeded.
++ * @priv: resource specific data.
+  */
+ struct misc_res {
+ 	u64 max;
+ 	atomic64_t usage;
+ 	atomic64_t events;
++	void *priv;
+ };
+ 
+ /**
 -- 
 2.43.0
 
