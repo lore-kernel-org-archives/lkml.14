@@ -1,168 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A76194A43;
-	Mon, 17 Jun 2024 13:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9D1194A43
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631041; cv=none; b=bhHHcEQ+jJdygTH2Z1f+jvhDtzxznKM8WewYDbVLdxfxmc0xB1iwRt4oPv6e17Pj0XDieFAho36udRb/YxMz7Rka0iMC+jPqLsqHUY5Nka5LPHRgwfe/LZsJ0MorJ9HsQeZ3FkU212SMAVQfyWgOXJecMMZZPjlk1x5hVrfIp0Y=
+	t=1718631194; cv=none; b=pTNh1Rij8OPlGc751FvYcg803GCnl0NqF65v5gdzndof/8HfjB3VUq3X8+L2C4USnDF0mz/FPRRyQqUyBql8ZruNmtS3FqFCKthLnxW0OMhTQV7Nk2oRERMhXaYh7YzOlrZA4qKkgG8O0S7z/SsgJaxPXF+0rstVaIG2Ivrka8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631041; c=relaxed/simple;
-	bh=K1d1FkkEzlQ/UT9ihqbOKIjtW36wnnFLcT/ZvMOVYFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AfGxZMQspP33BvPE5w313y1e6g4HUDaD2qoDqOxwGttC4PGQZvDWWvV/xckiaqFY9ac4er+RORU/oclwGlQfNkQ28BSrG1UCpfiGi866ucXg44x8oM9zoKRjI5Y3R/Wo27ORlieOIqSZC60CsZfNH+4dfeE+4AcDMGaEtpTn+pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhTGVFmw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhTGVFmw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D209EC2BD10;
-	Mon, 17 Jun 2024 13:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718631040;
-	bh=K1d1FkkEzlQ/UT9ihqbOKIjtW36wnnFLcT/ZvMOVYFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hhTGVFmwyz+fliyEfsQwaIqR+ib5wkuWod8Xw3Xd/q/GBJP141ALpYUx3SINa51Sj
-	 fogpyLoW6Mi5ApaXiy6PxD5l4ilE7gQ46/LwMOO/4sxJnrAsOnBRcZF6xEYFNr5mVi
-	 DIVXZkX8BYLy8ikwhnkKsXFH8VteP+w/QZlyFN6XjzktWaT29cfOUoPewHiSfHgdlX
-	 w+N29UD7JhPaXjW8lmBpIRsYlzfyeQV85MizgwCneZIgUtURBMmUYPW5JUdBnBpDUi
-	 wnzapWZrPwOUszAFMV4zm8tL3FUcPJBCljoHV5+me/19eQw+vLWS7SjwREOgYujxaY
-	 sWoEv1U4NZp9A==
-Date: Mon, 17 Jun 2024 21:16:43 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@outlook.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Chao Wei <chao.wei@sophgo.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] riscv: dts: sophgo: Put sdhci compatible in dt of
- specific SoC
-Message-ID: <ZnA3O14HOiV1SBPV@xhacker>
-References: <20240612-sg2002-v2-0-19a585af6846@bootlin.com>
- <20240612-sg2002-v2-1-19a585af6846@bootlin.com>
- <IA1PR20MB49534C9E29E86B478205E4B3BBC02@IA1PR20MB4953.namprd20.prod.outlook.com>
- <20240616235829.GA4000183@ofsar>
- <c75601a1-1389-400e-90b9-99c1e775a866@bootlin.com>
+	s=arc-20240116; t=1718631194; c=relaxed/simple;
+	bh=SmyG6Eoc//AkzX1uumr7PmduUREuFi7OxTGIbkmXVBY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=hL9z6i16T0LQco9TT/v9aG42X3IG+HFf0Gs3UG/xVuoRjGlMLA7PN1B3+lKr9OY/MMfRJNtIaqzogF2r9dXSa/bgDDEGju5oyLLwpaV4oQ7URQiB6e5ocR7KFSecypVW724YAIGxpRX7R8PPXZR/RQOFuk4b6PyPGBr4hSl/I0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-375ea274166so29700505ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:33:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718631192; x=1719235992;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SmyG6Eoc//AkzX1uumr7PmduUREuFi7OxTGIbkmXVBY=;
+        b=CgTR+CCGZueJEZrYXNgUV7DUp2Xs/gihcHtK3eZCeO3Ne2H2g3/M6bxpysgmfjK+/I
+         BrVln6Z7MBmiFHnhGwAEnkiZ7MrRaZAivVyzq5ZpUEwav6C/TdZ1kVuGfKt9eXZoJmzL
+         UlUFdLX3lU/LGOvkGCgVKf3Ll0XxKmnttUaZGBiXKwTfODA1P5R/8IuS6So8N6/NoHID
+         AeuTTyyOBCu39TpO/yVkwGEjk4qkhOyluE8nbPNYWRD4u+eHyOdksWLRCG+NLnxQ1irE
+         wNYFvDH3heijO8f/txeHBV4ssqX56cFCh8buZYloWGXCjI437QtNOXxNy0oIfwPWOJWc
+         gxVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqwrc8P2sHHdEZnE23plyC9o5EiU3nwtszr3XI5e1+DvRZX3bJJNZ0SaptpEk+47rwPOTHtIJj7v4PEoRVcHLnglV8G37kBzkq279v
+X-Gm-Message-State: AOJu0YxZ7XTofO/mebuNeyTdHwbryzHsC9sD40w757Oz60IEgJUB8YRP
+	LIbz2MpXuJQcuxSLiRO/j4coksYuSeGt4aKbjagsRKtz7Gwgj/BpduAO5r2d5M4ro6r178MfYaO
+	qeY5UiBzUsp4jrQRFqMck0QIxx6BVdSRTl1B7y0Xuhzggp4CVAxJ9wOU=
+X-Google-Smtp-Source: AGHT+IGX9zfHpzk56r67iN/P61ob8v67anACI84pSuiDqzQ9F8vk7vIQ58lj4OrW4BRfbYZj/Cu0bgQ4H7QYhM6b7u71+5UrCV/R
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c75601a1-1389-400e-90b9-99c1e775a866@bootlin.com>
+X-Received: by 2002:a05:6e02:1e0d:b0:375:8af5:8d15 with SMTP id
+ e9e14a558f8ab-375e0fe2df1mr5603295ab.5.1718631191882; Mon, 17 Jun 2024
+ 06:33:11 -0700 (PDT)
+Date: Mon, 17 Jun 2024 06:33:11 -0700
+In-Reply-To: <0000000000007de0cf06140124c0@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b14275061b160102@google.com>
+Subject: Re: [syzbot] WARNING in unmap_page_range (3)
+From: syzbot <syzbot+e145145f0c83d4deb8fa@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, david@redhat.com, 
+	liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	lstoakes@gmail.com, syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 17, 2024 at 11:16:32AM +0200, Thomas Bonnefille wrote:
-> 
-> 
-> On 6/17/24 1:58 AM, Yixun Lan wrote:
-> > Hi
-> > 
-> > On 18:47 Wed 12 Jun     , Inochi Amaoto wrote:
-> > > On Wed, Jun 12, 2024 at 10:02:31AM GMT, Thomas Bonnefille wrote:
-> > > > Remove SDHCI compatible for CV1800b from common dtsi file to put it in
-> > > > the specific dtsi file of the CV1800b.
-> > > > This commits aims at following the same guidelines as in the other nodes
-> > > > of the CV18XX family.
-> > is there any URL of guideline? or did I miss anything
-> > couldn't find any discussion about this in v1
-> > 
-> 
-> Not explicitly, the fact is that I had to use a specific compatible on
-> SG2002 for the sdhci (it is already defined mainline), I had to choose
-> between :
-> 
-> 1. cv18xx.dtsi : compatible cv1800b-dwcmshc
->    cv1800b.dtsi : no redefined compatible
->    sg2002.dtsi : overwrite the previous compatible to use sg2002-dwcmshc
-> 
-> 2. cv18xx.dtsi : no compatible
->    cv1800b.dtsi : compatible for cv1800b-dwcmshc
->    sg2002.dtsi : compatible for sg2002-dwcmshc
-> 
-> As in the plic and clint controllers, the second option was chosen I
-> consider this as a "guideline" and reformat the dtsis accordingly.
-> 
-> > > > 
-> > > > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> > > > ---
-> > > >   arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 4 ++++
-> > > >   arch/riscv/boot/dts/sophgo/cv18xx.dtsi  | 1 -
-> > > >   2 files changed, 4 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > > > index ec9530972ae2..b9cd51457b4c 100644
-> > > > --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > > > +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > > > @@ -25,3 +25,7 @@ &clint {
-> > > >   &clk {
-> > > >   	compatible = "sophgo,cv1800-clk";
-> > > >   };
-> > > > +
-> > > > +&sdhci0 {
-> > > > +	compatible = "sophgo,cv1800b-dwcmshc";
-> > > > +};
-> > > > diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
-> > > > index 891932ae470f..7247c7c3013c 100644
-> > > > --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
-> > > > +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
-> > > > @@ -288,7 +288,6 @@ uart4: serial@41c0000 {
-> > > >   		};
-> > > >   		sdhci0: mmc@4310000 {
-> > > > -			compatible = "sophgo,cv1800b-dwcmshc";
-> > > >   			reg = <0x4310000 0x1000>;
-> > > >   			interrupts = <36 IRQ_TYPE_LEVEL_HIGH>;
-> > > >   			clocks = <&clk CLK_AXI4_SD0>,
-> > > > 
-> > > > -- 
-> > > > 2.45.2
-> > > > 
-> > > 
-> > > Hi, Jisheng,
-> > > 
-> > > Is this change necessary? IIRC, the sdhci is the same across
-> > > the whole series.
+This bug is marked as fixed by commit:
+mm/memory: Fix missing pte marker for !page on pte zaps
 
-Hi,
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
 
-sorry for being late, I was busy in the past 2.5 month. Per my
-understanding, the sdhci in cv1800b is the same as the one in
-sg200x. Maybe I'm wrong, but this was my impression when I cooked
-the sdhci driver patch for these SoCs.
+#syz fix: exact-commit-title
 
-> > I tend to agree with Inochi here, if it's same across all SoC, then no bother to
-> > split, it will cause more trouble to maintain..
-> > 
-> 
-> To be honest, I agree with this to, but as a specific compatible for the
-> SG2002 was created in commit 849e81817b9b, I thought that the best practice
-> was to use it.
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
 
-I'd like to take this chance to query DT maintainers: FWICT, in the past
-even if the PLIC is the same between SoCs, adding a new compatible for
-them seems a must. So when time goes on, the compatbile list would be
-longer and longer, is it really necessary? Can we just use the existing
-compatible string?
-DT maintainers may answered the query in the past, if so, sorry for
-querying again.
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=e145145f0c83d4deb8fa
 
-> 
-> > > 
-> > > Regards,
-> > > Inochi
-> > 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+---
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 10 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
