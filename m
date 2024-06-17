@@ -1,101 +1,106 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9898413D89B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D693A8D8;
+	Mon, 17 Jun 2024 14:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718633607; cv=none; b=W6dZeKW80GIov7wSUUmOfmR96nym+GDNjcgWLLPsGqTLN9vix3Te1YW9VQNF+G6ogLjjdJnVSHaLgogeCq1y7vhPVkSy+xRcoxw3fpXsdRBH1MpGON74EEt9oXZ/lYFrwe3f8BgOLu7+B0alaWEHBV7l3Vhr6TIOHss8r5wzO14=
+	t=1718633748; cv=none; b=QswOZlXozH8dCiTE0lnz3i9qT6FRmH2sN++Xayi2sPoHolCrsrPHzGbXDhFI4gZfKrWxX4Fcg9rnC9Y8g4T+GBTiht95UyNkgWha2OIIq2aQz/oHkqjJpjJIfsoCOQV+ObsmhW87Dmp6Kn05t0E1GR05RFplQw04VomFts3Dd6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718633607; c=relaxed/simple;
-	bh=WbP6JlvYUOCRrvrolImvmqZUSzO7TNqCzTdTFU3eGjM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lxkBrklF/jqj5Z86+ZddJiwbtQHsP0xdp0G4nQvMHiq/qFdX+VkLBwnBaOiOwuOyoRRjmOYEPAQ7xNlg5f8j/UVXVydC4hl+cZooIQ3vZmHVCBbQqj20isNMao+ewyRFxIyMTTKI/Jx4YtS66dGTGpOEqWbsbnBBGB93m2E7HNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b=IEOVp81I; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1718633748; c=relaxed/simple;
+	bh=FMIRM+ikIspzilRHxp740oHKv8WJwo5bCUHb91TRtrA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Afi6/eDDoqr+wPFIj0jrkVXZHjqA++RHkvQS/V4HLtSn10qxDFNv1Y2TNkYIeZosOTKiB/ygotTz5wT9JS8Hwr70xfibXxAw3G1cTq8Uai49cbKEAde6gXK46lAhM46/E1HS9Rkr8ONZRYGNgyFOsBoWBaait/4v+TQdEtYTOUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cwWxSTLV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLQf55do; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b="IEOVp81I"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b065d12e81so21662066d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.com; s=cloud; t=1718633604; x=1719238404; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEPYDVeLkU0IonjTu34unuOh82lmo92YGof/pNWGY/U=;
-        b=IEOVp81I86D3wRnf3RGHFsurStgHObMwgTipjdjqrka/iE1UN7LfAtAKRXixdPJnuM
-         R3vsyABapOBOSGISa+Cbr+BNNzGVpDb++Yybl6i8g6MudxE0cNiiT4YECs/neoEccGRA
-         BY8HL7DYJAg8gYVbiYprlo/TOvYp1KijpM6ME=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718633604; x=1719238404;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AEPYDVeLkU0IonjTu34unuOh82lmo92YGof/pNWGY/U=;
-        b=br+eS0hXgSNKVdmkuqQTMIHtIxhlUaEs+dCQCZ9PSe/oaJrefTWnoWlhfIz+OfwrSJ
-         sPAKTT+fX/HKbL4Q8wW+znZg6MbEdW9qmcGqylH/ExBvwtr2bzE/IUcJiNknA+69jIp2
-         fu3J2Vvb1wK+ydTnw4K7kz1Jr1VRT0WBPvzIDlDg0L+SRQOtgzxowrWDK+084qdc5Z8X
-         m22X/knjB8pE/IAyN31dmaD38mtrHQygVsaLrB1pwEVxO3/NdDCS50BTPQwOUJxn7RcR
-         V59nvuble2ebDXZfgneo/cyXaUyAeHOplhqXNhi2LmuUcVSDSWJpawWi9chKJ1WXbXOf
-         mZRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtItSOaTOTEAxNKtg15zPlnOuZTez/T/vFBU3FRxyCj3gIZO/7acnt6ODr5qBxTY2xqEKWIKjYOLoOLPp9xt5LAQj3XZez0TsjAOka
-X-Gm-Message-State: AOJu0YwEiYbEF2za8Z7mEcC92wk3coa5XmtqI4e4vAGl+EXRXc0eotME
-	5xapYUiytyMfopSbZtOhFQzzoZvoHepwrXex8kP8mdhAs9IEqArEB00ggRCL8os=
-X-Google-Smtp-Source: AGHT+IGng51gHJ++fAhRU0HYTBiDRSVfUV9r9cDVWxS6lcJMbyubX5iCAI3jBFKyZg6BMsISJA1PAA==
-X-Received: by 2002:a0c:e6ca:0:b0:6b2:c888:6c7 with SMTP id 6a1803df08f44-6b2c888089emr48248246d6.7.1718633604500;
-        Mon, 17 Jun 2024 07:13:24 -0700 (PDT)
-Received: from fziglio-xenia-fedora.eng.citrite.net ([185.25.67.249])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5eb4811sm55124386d6.77.2024.06.17.07.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 07:13:24 -0700 (PDT)
-From: Frediano Ziglio <frediano.ziglio@cloud.com>
-To: xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Juergen Gross <jgross@suse.com>,
-	Frediano Ziglio <frediano.ziglio@cloud.com>
-Subject: [PATCH] x86/xen/time: Reduce Xen timer tick
-Date: Mon, 17 Jun 2024 15:13:03 +0100
-Message-ID: <20240617141303.53857-1-frediano.ziglio@cloud.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cwWxSTLV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLQf55do"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718633745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JBtM+S9Ap9GQsni5A3sYdh6Yhl8y511eo5WwG1zoVyA=;
+	b=cwWxSTLVBpJEwfoYlroCSQWqEqqX8FlkC7glJ6n751jR0P0e4gFOxJInsLm1pqNMVsXvhE
+	SrDAKpU3mAGW2p1RTRpE+9jySnyz4i0wPiJ6KDJQMne/hxJfqmn8hB5mXRNKT8QZyMXMPT
+	sTkT5DhTLObuemQcRPZGIjeYT9IEiHv9DolKbGxtz2MEQTmKZw20ivmiAZOtE/4FStnHRD
+	OMIivyg3+JM7YNUwDbBIaZ2x2eKbhfNUUYdhBtZwdU1sZjS8U62tx8wbUcrnJn3/VsFJNW
+	BJR48n+k/t7fza5gSGRJucd1mxT5Bf9MLbr/BmPH7Y48eeOagejzdQhde1/0OA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718633745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JBtM+S9Ap9GQsni5A3sYdh6Yhl8y511eo5WwG1zoVyA=;
+	b=sLQf55do2taqLUJxYEl35PnJjUl4YtverHodM//296JALc3vv/W7j57P2cEyyRJvrrg1E8
+	bL3wrKdA5ew69TAQ==
+To: Marc Zyngier <maz@kernel.org>
+Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
+ rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com,
+ den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com,
+ sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
+ rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
+ lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org,
+ robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
+ vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
+ andersson@kernel.org, mark.rutland@arm.com,
+ shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+Subject: Re: [PATCH v3 14/24] genirq/gic-v3-mbi: Remove unused wired MSI
+ mechanics
+In-Reply-To: <87h6dru0pb.ffs@tglx>
+References: <20240614102403.13610-1-shivamurthy.shastri@linutronix.de>
+ <20240614102403.13610-15-shivamurthy.shastri@linutronix.de>
+ <86le36jf0q.wl-maz@kernel.org> <87plsfu3sz.ffs@tglx>
+ <86h6drk9h1.wl-maz@kernel.org> <87h6dru0pb.ffs@tglx>
+Date: Mon, 17 Jun 2024 16:15:44 +0200
+Message-ID: <87ed8vu033.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Current timer tick is causing some deadline to fail.
-The current high value constant was probably due to an old
-bug in the Xen timer implementation causing errors if the
-deadline was in the future.
-This was fixed in Xen commit:
-19c6cbd90965 xen/vcpu: ignore VCPU_SSHOTTMR_future
+On Mon, Jun 17 2024 at 16:02, Thomas Gleixner wrote:
+> On Mon, Jun 17 2024 at 14:03, Marc Zyngier wrote:
+>> Patch 9/24 rewrites the mbigen driver. Which has nothing to do with
+>> what the gic-v3-mbi code does. They are different blocks, and the sole
+>> machine that has the mbigen IP doesn't have any gic-v3-mbi support.
+>> All they have in common are 3 random letters.
+>>
+>> What you are doing here is to kill any support for *devices* that need
+>> to signal level-triggered MSIs in that driver, and nothing to do with
+>> wire-MSI translation.
+>>
+>> So what replaces it?
+>
+> Hrm. I must have misread this mess. Let me stare some more.
 
-Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
----
- arch/x86/xen/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok. Found my old notes.
 
-diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
-index 52fa5609b7f6..ce30b8d3efe7 100644
---- a/arch/x86/xen/time.c
-+++ b/arch/x86/xen/time.c
-@@ -30,7 +30,7 @@
- #include "xen-ops.h"
- 
- /* Minimum amount of time until next clock event fires */
--#define TIMER_SLOP	100000
-+#define TIMER_SLOP	1000
- 
- static u64 xen_sched_clock_offset __read_mostly;
- 
--- 
-2.45.1
+AFAICT _all_ users of platform_device_msi_init_and_alloc_irqs():
 
+        ufs_qcom_config_esi()
+        smmu_pmu_setup_msi()
+        flexrm_mbox_probe()
+        arm_smmu_setup_msis()
+        hidma_request_msi()
+        mv_xor_v2_probe()
+
+just install their special MSI write callback. I don't see any of those
+setting up LEVEL triggered MSIs.
+
+But then I'm might be missing something. If so can you point me please
+to the usage instance which actually uses level signaled MSI?
+
+Thanks,
+
+        tglx
