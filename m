@@ -1,137 +1,171 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281FE158874
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD4B22083;
+	Mon, 17 Jun 2024 15:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637505; cv=none; b=PxqFAFwV3jTi23xg42qmr2w05OexLTq9I6n1LH7hsruz6uWLHk5HxZBTpG8GdrnkbLbIskvrdSdrfFRhmmTPOoEXSxQR7wR+xSnVSmx83PrILfByCBMg6VyNIiSnL17rFP2qdGmFjx9EpUMlSxOiqyHME4HWQN1scTeJOO6g0mY=
+	t=1718637576; cv=none; b=D15Jh/NuWrXwWM7Ow7X9rs091YGiuhgthDO4UHI4Did+UbB3mS1fJ4xL+zQNVefmr5RHTjj1Ovty/TMTWpGUXI7dC1TOO1pAiAtElFH3JqofpwsGNVTldBTl9cBDMeIagUHhO6628htrv7g7dCDOPMIDDmu7+NfPPlTLRp5hloA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637505; c=relaxed/simple;
-	bh=Dtfjmiibyv70CczBYWesrAFMidjZ7VsVwcrW/v6aMN8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bv06M5sehlymgNVh2GPG16egw0SgziPuyBAwPtCd+nUrhyb+8xI2ZYjHv4W4lvRUrBr88P1F1eouIPl49DXnuinqkvo94+MMP0rtqcnOYrBhxBOsri+XULdsLt5jVKU8JqNO2MRmUr0vkL/+Ew2Sae1J4ImUJ/YGr1CqqyOTl8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=a+70oPMU; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1718637576; c=relaxed/simple;
+	bh=naIpIa1Kqns2NPV2ho5gEYD9eBsk6s5vBFjFML3y3gY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttQ4L65tQpVMV6fjDmCFAx1wKiaWFKeNC9KSfiNDIOR9PtkcFVSpekNHDSq8ue39xjDrYMJSw64J23ml9PQ970cWmVjyoOIcHuJMbiW+b8IgVp/n+lA8SAD01pmD3i8eC+LaQ66Tg4WK9VGkdi8i3hzP/vgJKUNUH2UQnI0qvRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcD6Akg1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="a+70oPMU"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3d4430b8591so195707b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 08:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718637503; x=1719242303; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqFHaVaNbt8gAYcmaLaicI4T3xsUr/WCZWRgASuEC/s=;
-        b=a+70oPMUlgo2jv+0KQrK8hKQ1EjOIFGVdDqguJOdMFVuTUqsv00EryKZKYmRrsP11j
-         ueLp2SLBIPXf1odCmfADWqTvY+rDpBPqlzmQB6uXgcM7RG+tNoaJBNrx2H39iIHOkWnR
-         CZBDgd46BWeJyK2WL7CjUCJx+LUufQ7v+8RVj/SR8vyeM0IqwHQBQx3qNImK0OUvRr4K
-         NTtqDuTdXsgI248CB9c/FCxLJxVJkmojbBiJmvr+sGrDKBLW1g8SY5ptbjEXYyn89oFN
-         OMbLCnw+3Yy9RHKyx6mgnyTpeve4yr6kbUOcD2u5HOxuJDns2QO+/x7FX86wTBZA56n1
-         MubA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718637503; x=1719242303;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DqFHaVaNbt8gAYcmaLaicI4T3xsUr/WCZWRgASuEC/s=;
-        b=nDrL4MZjpnrYB613CDKIdzxjb+qLWxvmHJZgyAqJURTqAACpYpzFMyuQ1kS5+LuIAD
-         sC7+q+cawSoPR01RGZFW7LAzo1Lk8oLu6KDs4OwDlgt/lwSLPTH/PnZlnMEaUKtidtnh
-         OlL9ZI6X8sFX/CLSBuAu05LHUcooV1AFwfunWkYjuIlM7I69mSJy7u5l8Cj32dH2Mhb8
-         qAKQRPVYmOkY6qheECg+QzxYA5n8I3nZ2KlNov3c7L7OAO9dS7NmRDoX5M/5NnuwSVvN
-         0e+lN8trJZ9DSWapG9Yx58ZB6q2OoDyGgpP8Ci2DZ124l0Fnm2416M4dH7uFn9IsyIqQ
-         nw0g==
-X-Forwarded-Encrypted: i=1; AJvYcCX/HC3igdCRAzu0/le2bb5F6t1F9TfUDqjuGo+0qpnkKVSr/j01niX9h7RdxMy1Xpk8APcEQi18e8PDy4gBa+ipMh64WTXjnMroUenO
-X-Gm-Message-State: AOJu0YzD9arj4suLv3MTDS7ZE+NvlS6rPynfOU/pCdok8K0JhRb6lQHX
-	ewKCHKi95y4YMPTix2UGA893tpuxxSLLKBsuwID2EY5c1iOwlQoTbAfrhdk8ahM=
-X-Google-Smtp-Source: AGHT+IGyElQstV3t6uBctyLHT4j9HpM72d7y0GvafAH57GHeiarMjs51iEj2uexrKxq3xWSCFSWR5w==
-X-Received: by 2002:a05:6808:1927:b0:3d2:2efd:123a with SMTP id 5614622812f47-3d24e8b9abfmr12625613b6e.2.1718637503175;
-        Mon, 17 Jun 2024 08:18:23 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798abe47f2csm438381085a.116.2024.06.17.08.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 08:18:22 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: Nuno Sa <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>
-Cc: Trevor Gamblin <tgamblin@baylibre.com>,
-	Angelo Dureghello <adureghello@baylibre.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: dac: adi-axi-dac: improve probe() error messaging
-Date: Mon, 17 Jun 2024 11:18:19 -0400
-Message-ID: <20240617151820.3337034-1-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcD6Akg1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61E1C2BD10;
+	Mon, 17 Jun 2024 15:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718637576;
+	bh=naIpIa1Kqns2NPV2ho5gEYD9eBsk6s5vBFjFML3y3gY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QcD6Akg1FReoE8UPj/9zF6jZ1yON9EcKYgTCgFyPoyQ9Wte08cmcGhBeGg10nC+52
+	 O07VNeU9KgWCAhkTidcKUHPuLZVhNLLHF7Q2CVLDMy96838Aq1knZ40LRDYWYRw9h7
+	 wRFVHZzx65ta+Hy8nTLvQW+TchUfJ9RzIAW8G9NnlcHxNMURuZ77x09vgNM2ZJoAVH
+	 B/9g1CHT4IbzAUQLyY1zCq9Q0DAdAZMfnRVNwzKAta163AL8eRs5wW5Xu6D7Y6LSYz
+	 9R9F+CYDa8ySAitMzmOL9BByawEiEH6S/JI+Lqni/isTureAiD5nlUV0rBD+3sZzUh
+	 WskH6GRMGuisw==
+Date: Mon, 17 Jun 2024 16:19:30 +0100
+From: Conor Dooley <conor@kernel.org>
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	lee@kernel.org, alexandre.belloni@bootlin.com,
+	magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 02/12] dt-bindings: clock: renesas,rzg3s-vbattb-clk:
+ Document the VBATTB clock driver
+Message-ID: <20240617-subsoil-creed-04bf5f13d081@spud>
+References: <20240614071932.1014067-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240614071932.1014067-3-claudiu.beznea.uj@bp.renesas.com>
+ <20240615-angler-occupier-6188a3187655@spud>
+ <3d9ed0ec-ca9a-45b4-a633-8f7051d13cff@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="56coL768YMNwi762"
+Content-Disposition: inline
+In-Reply-To: <3d9ed0ec-ca9a-45b4-a633-8f7051d13cff@tuxon.dev>
 
-The current error handling for calls such as devm_clk_get_enabled() in
-the adi-axi-dac probe() function means that, if a property such as
-'clocks' (for example) is not present in the devicetree when booting a
-kernel with the driver enabled, the resulting error message will be
-vague, e.g.:
 
-|adi_axi_dac 44a00000.dac: probe with driver adi_axi_dac failed with error -2
+--56coL768YMNwi762
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Change the devm_clk_get_enabled(), devm_regmap_init_mmio(), and
-devm_iio_backend_register() checks to use dev_err_probe() with some
-context for easier debugging.
+On Mon, Jun 17, 2024 at 10:02:47AM +0300, claudiu beznea wrote:
+>=20
+>=20
+> On 15.06.2024 15:17, Conor Dooley wrote:
+> > On Fri, Jun 14, 2024 at 10:19:22AM +0300, Claudiu wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> The VBATTB IP of the Renesas RZ/G3S SoC controls the clock that feeds
+> >> the RTC and the tamper detector. Add documentation for the VBATTB clock
+> >> driver.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >> ---
+> >>  .../clock/renesas,rzg3s-vbattb-clk.yaml       | 90 +++++++++++++++++++
+> >>  1 file changed, 90 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,rz=
+g3s-vbattb-clk.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/renesas,rzg3s-vba=
+ttb-clk.yaml b/Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb=
+-clk.yaml
+> >> new file mode 100644
+> >> index 000000000000..ef52a0c0f874
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb-clk=
+=2Eyaml
+> >> @@ -0,0 +1,90 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/clock/renesas,rzg3s-vbattb-clk.yam=
+l#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Renesas VBATTB clock
+> >> +
+> >> +maintainers:
+> >> +  - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >> +
+> >> +description:
+> >> +  Renesas VBATTB module is an always on powered module (backed by bat=
+tery) which
+> >> +  generates a clock (VBATTCLK). This clocks feeds the RTC and the tam=
+per detector
+> >> +  modules.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: renesas,rzg3s-vbattb-clk
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: VBATTB module clock
+> >> +      - description: VBATTB input xtal
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: bclk
+> >> +      - const: vbattb_xtal
+> >> +
+> >> +  '#clock-cells':
+> >> +    const: 0
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +  renesas,vbattb-load-nanofarads:
+> >> +    description: load capacitance of the on board xtal
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    enum: [ 4000, 7000, 9000, 12500 ]
+> >> +
+> >> +  renesas,vbattb-osc-bypass:
+> >> +    description: set when external clock is connected to RTXOUT pin
+> >> +    type: boolean
+> >=20
+> > When you say "external clock", is that an input or an output?
+>=20
+> I took that statement from the HW manual. As of the HW manual [1], table
+> 42.2, that would be an input.
 
-After the change:
+Forgive me for not wanting to open the zip etc and find the information
+in the document, but why do you need an extra property? Is it not
+something you can determine from the clocks/clock-names properties?
+It sounds like an additional clock from your description, is it actually
+different way to provide the second clock you mention above?
 
-|adi_axi_dac 44a00000.dac: error -ENOENT: failed to get clock
-|adi_axi_dac 44a00000.dac: probe with driver adi_axi_dac failed with error -2
+>=20
+> [1]
+> https://www.renesas.com/us/en/products/microcontrollers-microprocessors/r=
+z-mpus/rzg3s-general-purpose-microprocessors-single-core-arm-cortex-a55-11-=
+ghz-cpu-and-dual-core-cortex-m33-250
+>=20
 
-Suggested-by: Nuno Sa <nuno.sa@analog.com>
-Tested-by: Angelo Dureghello <adureghello@baylibre.com>
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
-Added Angelo as Tested-by since he tested the patch on an internal
-setup.
----
- drivers/iio/dac/adi-axi-dac.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+--56coL768YMNwi762
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
-index 880d83a014a1..6d56428e623d 100644
---- a/drivers/iio/dac/adi-axi-dac.c
-+++ b/drivers/iio/dac/adi-axi-dac.c
-@@ -545,7 +545,8 @@ static int axi_dac_probe(struct platform_device *pdev)
- 
- 	clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(clk))
--		return PTR_ERR(clk);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
-+				     "failed to get clock\n");
- 
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
-@@ -555,7 +556,8 @@ static int axi_dac_probe(struct platform_device *pdev)
- 	st->regmap = devm_regmap_init_mmio(&pdev->dev, base,
- 					   &axi_dac_regmap_config);
- 	if (IS_ERR(st->regmap))
--		return PTR_ERR(st->regmap);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(st->regmap),
-+				     "failed to init register map\n");
- 
- 	/*
- 	 * Force disable the core. Up to the frontend to enable us. And we can
-@@ -601,7 +603,8 @@ static int axi_dac_probe(struct platform_device *pdev)
- 	mutex_init(&st->lock);
- 	ret = devm_iio_backend_register(&pdev->dev, &axi_dac_generic, st);
- 	if (ret)
--		return ret;
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to register iio backend\n");
- 
- 	dev_info(&pdev->dev, "AXI DAC IP core (%d.%.2d.%c) probed\n",
- 		 ADI_AXI_PCORE_VER_MAJOR(ver),
--- 
-2.45.2
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnBUAgAKCRB4tDGHoIJi
+0rZQAQCewakzSyZHrcYUH8+d8xIo+9/OP7zyCp6sCDIWB4L7sAEAzqCsVwlD4cn+
+2oxxeZnpGsG3xJ+EYOZM76MqaXgtQwQ=
+=GLxB
+-----END PGP SIGNATURE-----
+
+--56coL768YMNwi762--
