@@ -1,41 +1,32 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06E0191461;
-	Mon, 17 Jun 2024 11:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6507617FAA4
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718624135; cv=none; b=mseqWyiOCD/Q7IQIXQ/H3bSxpX4ajf8Eqo85j0ZBaKauQh6dh9GqHbdR6TsPmebECp8k+KqyOR0n5Aq34DYHKYiue+8qWLRXe/pGfBUMFD12s2xpzy3HhJg4Vv8R6EOIy3pFMmbbCzH2CXTgfyKq0OsxtfMChV+gz+PG5TdC938=
+	t=1718624180; cv=none; b=r2weRtYIkZBNt0R5e6Gu5UcNhOXDTBPV5Wg2JqHPrA6CU7Z1Rm3+rsUpbu9GxsBpYbmYAKuvtws1vTPQqNekbcOjGUnuKmEov3NKsd+POTUq7c6jd0triJM9xnfJ/cDhdenQs/hSKX8Yrd5MOAH3yIkUE27NIWvVHzlbez0kMlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718624135; c=relaxed/simple;
-	bh=XxliRVqdpWsKsqcEu3t/96tFWK1GpkWqJETGL+PV4nc=;
+	s=arc-20240116; t=1718624180; c=relaxed/simple;
+	bh=HgbbKIN59xMOMkOM35Lr6tD1Zl3TR+Kx7kF0gqw4zGk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m0JU8WnixFmls3n9oYBuTmkvztI9k3cBdNC9DXnd4BsmvBVYbn3mtFQE3cyOAgWwY4cIK4jrbdQPAWkG5IAl8RYIWxT3pUoNkggNBzn1UfFHhP1wQAQgh9yL8U/r8CGjtqCCfZQIjZm7KKZbUcqA1GNewQoZ6GNhh2jVOqxrKnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=EgmUKSMl; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=QMuYVl61KMTzIMJ5gwVnt9x/fNPL6PQtvPD8Cb2WsMaTzOeTaGRczfHSyhLECwDYb4hBf2NPnjunCFV++exnxFdbhJsBnv3r3+FaX9u2smr81u2yx8Rn4OpuqyRk3rNHLg9E18eSBYfxUGxHKJZ/oKqFqz31GKLTmW0xQOBqOKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q3sCW/uB; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="EgmUKSMl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718624099; x=1719228899; i=markus.elfring@web.de;
-	bh=XxliRVqdpWsKsqcEu3t/96tFWK1GpkWqJETGL+PV4nc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=EgmUKSMlpamrvnKIHEWFIOChO9V3zg3bFL17/I0VIZy2SQqHwf22ACzybQG6/coz
-	 DuWoO7nnPdhx2tfviapjmCsvtLeBeMbO6iKg7p7PRvsPuX0S0mXgdMw6KojEFNuaM
-	 9ojeq3wcFKgNIhxSRrnQeJRy77u4GiarVqCPnq1eXlNd3UC+7sQnxlwcLIlwov68o
-	 NCF9lEUjRI714mJ21j/3hPf/3wsfOHGxyTeXlvoxlbil567R/q2p9/LhbXIReXCTZ
-	 efL3ctTcY6BvKdFRrsFxH0ztyVtT0wj0FT9C7BzH4jANn9onze9zY+H8PMAD3hvTy
-	 XACrDO9kCCnSfIG3hg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M59jC-1sKGZD1XhU-00GfTD; Mon, 17
- Jun 2024 13:34:59 +0200
-Message-ID: <cc44d8e8-a7fc-48d2-a497-956dde22ff46@web.de>
-Date: Mon, 17 Jun 2024 13:34:57 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q3sCW/uB"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718624175; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=E2MMVK6CmD4r8j4aKlkyVgyeeNax6qRDpJMHibAguZM=;
+	b=q3sCW/uB8Gx910AaJjwDEDIYpYFX4lYCnJprPy2srP0FWVf9J+EBxZGf5y9yrVbiNr48d700Q+S9XeB7B+tYhvk8GIRB4KCB2SYjvplT0VDk4Y6cYHOgsgZOhl06SsRvJ6QzxZf+75jXOctXusVTwQHv6OfYtYvMDQV7fyO1lmw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W8d3SmY_1718624173;
+Received: from 30.97.56.79(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8d3SmY_1718624173)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Jun 2024 19:36:14 +0800
+Message-ID: <6dc8df31-eb01-4382-8467-c5510f75531e@linux.alibaba.com>
+Date: Mon, 17 Jun 2024 19:36:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,60 +34,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v4 2/3] leds: sy7802: Add support for Silergy SY7802 flash LED
- controller
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Andr=C3=A9_Apitzsch?=
- <git@apitzsch.eu>, linux-leds@vger.kernel.org, phone-devel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, Bjorn Andersson <andersson@kernel.org>
-Cc: Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Conor Dooley <conor+dt@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Lee Jones <lee@kernel.org>, Trilok Soni <quic_tsoni@quicinc.com>,
- Peter Zijlstra <peterz@infradead.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20240616-sy7802-v4-2-789994180e05@apitzsch.eu>
- <5701d3e7-f67b-4189-a5fd-8a992b9155fb@web.de> <ZnAHsRn3N4mwPL7q@duo.ucw.cz>
- <e9fd75aa-3bd8-4227-ac07-fc762e558ea6@web.de>
- <nxrodsfowjfn64dn6idoi56hzrhdszxylmw6kdhgxbt53akamf@aavvblj64syf>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <nxrodsfowjfn64dn6idoi56hzrhdszxylmw6kdhgxbt53akamf@aavvblj64syf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jsuSdlwXKRSHY2XfCETjDQgmpLkmqyIzK7uZQAfoSU6PSrXsyD7
- ZStOs2kQKAx19AgYuXCuvRLVJVDT3QvV6vPY6cqeH3HLFsCUloHBOw2mhuQd4DMku2tLwzf
- qgyQyL3yAmmgZK3+hM4avQxih240BvmGLs59Q/O3+/TXITUzCU6wAB2IYVKWE3p+hQavC6M
- bO6xPXQp65lPVH9ZcIivQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dLTQFaCvbF8=;P4D+4gPaH91H11DXfXST39sHCtE
- jYs3aV0U8NRlz9CF1fdHOksVa6wtSpnwpVK66dEq7ou4lM2Tjq+1VTy75DdJCxiAgDJxTOXtw
- 6mbhPGMTl8AJHbCFayNzMC4SWqyam9rbWbbTn3ACqG/44Ec26BZfC2vkS1mReRTSjTuI+xH6b
- ZsH2FSKLzGAyNyLzqc7gxmwpQHgLNLvFaimR0vuUuJNSU+FAyeryFJFl5gkoEUomEXwgY1SwV
- /3Gbo3DVsd04khhqzqrg7l9Pqkae7ynQDpbU3S9ovm9siL9UiMTd1l3R/5naApAAvS59vd1Fd
- RLT2g1uTkajDx7AMwYMhyIT0GMx6SAXtLc9IhpKjJsrPep3J3fehNZPpOwRvmqKy+D/gJ9j5Z
- xc0NpIcOul0RkO8zH7o6v9WVDhBOZryYggdVUcgo3Hz98oSyRo0HzUCwCEGnFA9jvGyORbxLZ
- agp8xZBxVElvUavd/VoMw2o2GlzQq78BIUyviGB4OxPpKo5uIK8buLO9IM8R3EqIi1vB02a2c
- 9p5t2cdT6LblKwYNZpTL+0EsGeP6v/gsuZ4HDoJf6O3Kg4D1aA8y0FreiI/Se8Pm5Nkt94khu
- 3mCX2GvfppT7aZCq9ZqRU3UwKay4imb2i2rT/BK1nediA7cVlr1l2k22j++XZr9n6hWxw5qfD
- HNhW0F0o/ScPw+VmcFp5MgducJADb3NT7D0AoEvIYo2x6WUbNrbOH9KQ4cw+sg1HXoU9R2LUO
- UkBbREsE0nempk7AwBxIqISoLbhm9VZzaYNBZ2ob7wO/L7LDOl1BSieb+zACki4gOBb0NdEZx
- WYJ8F2OJPlXeFema846yhE0zpD784JGFtxJJKs0CMA7dU=
+Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
+ non-CMA THP-sized page
+To: Barry Song <21cnbao@gmail.com>
+Cc: yangge1116 <yangge1116@126.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, liuzixing@hygon.cn,
+ Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Zi Yan <ziy@nvidia.com>
+References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
+ <c180d2a0-1e34-41f0-bae8-1205d04a5f6b@linux.alibaba.com>
+ <82d31425-86d7-16fa-d09b-fcb203de0986@126.com>
+ <7087d0af-93d8-4d49-94f4-dc846a4e2b98@linux.alibaba.com>
+ <CAGsJ_4xgqDrTsQRYB_VKn+KC6rvYeJF6TQwhT5JnLi-b4nFTOQ@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAGsJ_4xgqDrTsQRYB_VKn+KC6rvYeJF6TQwhT5JnLi-b4nFTOQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
->> Various source code places can be updated also according to referenced
->> programming interfaces.
->> https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup=
-.h#L8
+
+
+On 2024/6/17 18:43, Barry Song wrote:
+> On Thu, Jun 6, 2024 at 3:07 PM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
 >>
->> Will corresponding collateral evolution become better supported?
->
-> Plesae stop this. cleanup.h might be a nice thing, but it should not be
-> used to make code less obvious or worse.
+>>
+>>
+>> On 2024/6/4 20:36, yangge1116 wrote:
+>>>
+>>>
+>>> 在 2024/6/4 下午8:01, Baolin Wang 写道:
+>>>> Cc Johannes, Zi and Vlastimil.
+>>>>
+>>>> On 2024/6/4 17:14, yangge1116@126.com wrote:
+>>>>> From: yangge <yangge1116@126.com>
+>>>>>
+>>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+>>>>> THP-sized allocations") no longer differentiates the migration type
+>>>>> of pages in THP-sized PCP list, it's possible to get a CMA page from
+>>>>> the list, in some cases, it's not acceptable, for example, allocating
+>>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
+>>>>>
+>>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
+>>>>> PCP list to avoid the issue above.
+>>>>>
+>>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+>>>>> THP-sized allocations")
+>>>>> Signed-off-by: yangge <yangge1116@126.com>
+>>>>> ---
+>>>>>    mm/page_alloc.c | 10 ++++++++++
+>>>>>    1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>>>> index 2e22ce5..0bdf471 100644
+>>>>> --- a/mm/page_alloc.c
+>>>>> +++ b/mm/page_alloc.c
+>>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
+>>>>> *preferred_zone,
+>>>>>        WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+>>>>>        if (likely(pcp_allowed_order(order))) {
+>>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>>> +        if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & ALLOC_CMA ||
+>>>>> +                        order != HPAGE_PMD_ORDER) {
+>>>>
+>>>> Seems you will also miss the non-CMA THP from the PCP, so I wonder if
+>>>> we can add a migratetype comparison in __rmqueue_pcplist(), and if
+>>>> it's not suitable, then fallback to buddy?
+>>>
+>>> Yes, we may miss some non-CMA THPs in the PCP. But, if add a migratetype
+>>> comparison in __rmqueue_pcplist(), we may need to compare many times
+>>> because of pcp batch.
+>>
+>> I mean we can only compare once, focusing on CMA pages.
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 3734fe7e67c0..960a3b5744d8 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -2973,6 +2973,11 @@ struct page *__rmqueue_pcplist(struct zone *zone,
+>> unsigned int order,
+>>                   }
+>>
+>>                   page = list_first_entry(list, struct page, pcp_list);
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +               if (order == HPAGE_PMD_ORDER &&
+>> !is_migrate_movable(migratetype) &&
+>> +                   is_migrate_cma(get_pageblock_migratetype(page)))
+>> +                       return NULL;
+>> +#endif
+> 
+> This doesn't seem ideal either. It's possible that the PCP still has many
+> non-CMA folios, but due to bad luck, the first entry is "always" CMA.
+> In this case,
+> allocations with is_migrate_movable(migratetype) == false will always lose the
+> chance to use the PCP.   It also appears to incur a PCP spin lock/unlock.
 
-These APIs were added to improve several software components,
-weren't they?
+Yes, just some ideas to to mitigate the issue...
 
-Regards,
-Markus
+> 
+> I don't see an ideal solution unless we bring back the CMA PCP :-)
+
+Tend to agree, and adding a CMA PCP seems the overhead can be acceptable?
