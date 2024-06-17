@@ -1,205 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6937E1A08AC;
-	Mon, 17 Jun 2024 13:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D9A199E8B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630892; cv=none; b=MRpuMWdYoXipJEmEcAKra0nyI+lWZrn2BE++s+luEmi/XLQx8pO0r0XxFTT6kM9gtmV6o1S2/Cv8HhVlOhOspSlil9cZFSHqRxtTu9YUsHOJ9hA7hGEeShX9PIZjBG3G/6m/zgnwOlJCi/tztbIcDbPdqfpmQhEAGz0rd/As1G8=
+	t=1718630952; cv=none; b=tjP4qK5nnn6krLYOmo4afd8bxcDo1Yp5WFe8Ar6khrJH215sEH89FyjOoUvH57D4HmJYWLpp0HtUgsZVwDX/qaqMcFzfB9Y4uNHPAPjUc9PtAIi1lmk15zU/vJqt/nIKj47VUYpqfAtzUNCMPWjILrDkCNfD5ZkqqtZtXeOxWbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630892; c=relaxed/simple;
-	bh=stN5Ld1JXEx7p6jKEsYnl/+iDFWxr690DHHoqxLYQJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CSk9vfsZZdphvpFUkHvF2goMDwIMAK3aZyrNg35I5sxZ8Yj7KdwuBfZ7fC8zpSP05s9qRCpyolPi/+TRoWPsZ/gXDgDeUkM9MsEIK9lz/eRmuN+OI2aQ4yafSUG0IG4cbs6lsNs98d9g1JVaz3B9sK9wkjd5HxARqsjkA78XHtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDW0mQUz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718630952; c=relaxed/simple;
+	bh=Yc0EuuuvuIobJasWUoS+pkdhx8hRPcrDkQa+cROqMhs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qklcpDfsqGEwHHoL3pSu2TH9Dg8tES0I5VRwlYbXiZAkfDfroZUTieSr3xPw7cKj2yCn+GG/TBsM47+M7aDoo9OhzPuiyc8X2EVxerxs/Wz430C29a3/6V/tuy7jM4YXsiwrxXDsb+gAG7cMWAT8PktnzTPMqKTC0AoXTjMAYYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQl2mChG; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDW0mQUz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95072C2BD10;
-	Mon, 17 Jun 2024 13:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630892;
-	bh=stN5Ld1JXEx7p6jKEsYnl/+iDFWxr690DHHoqxLYQJ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SDW0mQUzOH+fcLkExeTa7Rjf990uXcIJpyD1N+OWT46wdec81KlAA4hVFh8SnScp3
-	 LhRJ5pOUipvR2ucPLy7fKlZ2NOMf6uNRuy5Kkfnm9VU6OTPJQUW0FbwSGORd210CDN
-	 83LvetO2vIJvhXVP5jT8s2fw2sTmJM1vAH4QnBs7IygsdQo1yn7EmaGp455HFWOosy
-	 w3bqhxS+0nYksDpCaX+tWrOnCak6zn8EKYThcXQFpXx7fiMhR98jLbPLvhnZQTowG+
-	 oOsGM+I2iiZQRdgCDZXsTtBphF1/+2QoeFSGWPhHXNYwwSQI6i/wHkJUwSbLx3hOez
-	 j6eFcT8Mnl37w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 9/9] kconfig: remove wrong expr_trans_bool()
-Date: Mon, 17 Jun 2024 09:27:54 -0400
-Message-ID: <20240617132757.2590643-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132757.2590643-1-sashal@kernel.org>
-References: <20240617132757.2590643-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQl2mChG"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c4af25f7d7so3725275a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718630950; x=1719235750; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u9q+Z4GD9MpvcYkpXfGOgXbR7/P8MYbKwiRSUUKubKM=;
+        b=mQl2mChGD3t9dy/X0AWYDPyTH+dPHGLsInNUo7fL13AZeQQv6OoN/A5X616J/cQMbb
+         pxOOuStunQNi8cLre3FzH1ZRx55WF93vfq0OneNS0Q/A8RUcYbousSNeAzbmIFvh7U5F
+         AUn3uzfSCHIUVUb2N0ur5CDZ1nCodFKLMFdkqeCQ+Cs8t964I3Efx3detM//oqXCKX5u
+         SRoaNvAT/H1eYgpQTzedEizTXf3nqA0blF2W8F3awLoDSyOiSXxA1a+NRXaMnPnJ3LGk
+         UAWYjZw+pimOfajHmyH7QdcuZ8z6A5WO4c5HAzU/mhRXODk+rq8PEDhH99qTYSCt+kGJ
+         4mDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630950; x=1719235750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u9q+Z4GD9MpvcYkpXfGOgXbR7/P8MYbKwiRSUUKubKM=;
+        b=jSEtfPKPwsv1HEL3K7g/GXDHkjPxipUUh+xf5LGECVk0cSMwOl0mZUstRmUA89tiLp
+         zVwmtlofy+wi8G54D3ujU+awqR3tUU0NuQRVx7UseWjKf2KKCNSyhQU++dcBaNQtDDPB
+         pX5OMrOrP+T40/zIQ/J7POHxVxNtvb5liN3js6M2kAFR5TrR6/A7RqewpivnRJq39jW4
+         w/rPvsE0A4pmOEn99VExI/MebR2eoGq0YoQZ84NaXj0KvAMcUw9frYEGwbnHbWzJ/UR7
+         TP6fYubRktyGF6NqMvYZZ5YxctSYagicbJC2mtt2FNdcq3vFPwhvrjWSPWQFS9x8H+qr
+         c9Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnohkPHhISOLAsqOE1h69omfEYylYU3GkxeesGFT6+rEGANJABT0ZUKpX9NMuy0dvYDG13BC3cIXclTZ1KK1LU8JRfWHUC4ELY6CU7
+X-Gm-Message-State: AOJu0YyRBmtWqRv5aAkUg/H7r2bMee0wiS4X5qMJIBYL4grl5OyabvnR
+	DGk7g172FjeSgKWl03AHbH3uwv8bUsw+/yOg9WHHGTgOjbL8/bEw/s0PtDZrZkguWCvt/Hn0nba
+	NT/2EyZqk2EX2IM5vs0MRyrIsQEI=
+X-Google-Smtp-Source: AGHT+IFHNQnVqTbXey7rmOHY9zC5Gl6630C23KaIy8xKqNcUDOtRiu3TC30yfGx+t6zBKRWmGgrhzjL5YAGs06H5CPg=
+X-Received: by 2002:a17:90a:2dc6:b0:2bd:f4cb:bd87 with SMTP id
+ 98e67ed59e1d1-2c4db24e973mr9926240a91.14.1718630949878; Mon, 17 Jun 2024
+ 06:29:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.316
-Content-Transfer-Encoding: 8bit
+References: <20240203165307.7806-1-aford173@gmail.com> <20240203165307.7806-11-aford173@gmail.com>
+ <Zm_UzO4Jmm7Aykcm@atmark-techno.com>
+In-Reply-To: <Zm_UzO4Jmm7Aykcm@atmark-techno.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 17 Jun 2024 08:28:58 -0500
+Message-ID: <CAHCN7xJt+1WGFYeBii1jUDEg9OU176f0AA+rMkXCqNQrfq=XWg@mail.gmail.com>
+Subject: Re: drm/bridge/imx8mp-hdmi-tx: Allow inexact pixel clock frequencies
+ (Was: [PATCH V8 10/12] drm/bridge: imx: add bridge wrapper driver for i.MX8MP
+ DWC HDMI)
+To: Dominique MARTINET <dominique.martinet@atmark-techno.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, linux-arm-kernel@lists.infradead.org, 
+	marex@denx.de, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	Makoto Sato <makoto.sato@atmark-techno.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+On Mon, Jun 17, 2024 at 1:17=E2=80=AFAM Dominique MARTINET
+<dominique.martinet@atmark-techno.com> wrote:
+>
+> Adam Ford wrote on Sat, Feb 03, 2024 at 10:52:50AM -0600:
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> >
+> > Add a simple wrapper driver for the DWC HDMI bridge driver that
+> > implements the few bits that are necessary to abstract the i.MX8MP
+> > SoC integration.
+>
+> Hi Lucas, Adam,
+> (trimmed ccs a bit)
+>
+> First, thank you for the effort of upstreaming all of this!! It's really
+> appreciated, and with display working I'll really be wanting to upstream
+> our DTS as well as soon as I have time (which is going to be a while,
+> but better late than never ?)
+>
+> Until then, it's been a few months but I've got a question on this bit:
+>
+> > diff --git a/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c b/drivers/gpu/=
+drm/bridge/imx/imx8mp-hdmi-tx.c
+> > new file mode 100644
+> > index 000000000000..89fc432ac611
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
+> > +static enum drm_mode_status
+> > +imx8mp_hdmi_mode_valid(struct dw_hdmi *dw_hdmi, void *data,
+> > +                    const struct drm_display_info *info,
+> > +                    const struct drm_display_mode *mode)
+> > +{
+> > +     struct imx8mp_hdmi *hdmi =3D (struct imx8mp_hdmi *)data;
+> > +
+> > +     if (mode->clock < 13500)
+> > +             return MODE_CLOCK_LOW;
+> > +
+> > +     if (mode->clock > 297000)
+> > +             return MODE_CLOCK_HIGH;
+> > +
+> > +     if (clk_round_rate(hdmi->pixclk, mode->clock * 1000) !=3D
+> > +         mode->clock * 1000)
+> > +             return MODE_CLOCK_RANGE;
+>
+> Do you know why such a check is here?
 
-[ Upstream commit 77a92660d8fe8d29503fae768d9f5eb529c88b36 ]
+I didn't write the original code, so I'll defer to Lucas here.  I just
+tried to edit/fix issues as they were identified to get it pushed
+upstream.
 
-expr_trans_bool() performs an incorrect transformation.
+>
+> When plugging in a screen with no frequency identically supported in its
+> EDID this check causes the screen to stay black, and we've been telling
+> customers to override the EDID but it's a huge pain.
+>
+> Commit 6ad082bee902 ("phy: freescale: add Samsung HDMI PHY") already
+> "fixed" the samsung hdmi phy driver to return the next frequency if an
+> exact match hasn't been found (NXP tree's match frequencies exactly, but
+> this gets the first clock with pixclk <=3D rate), so if this check is als=
+o
+> relaxed our displays would work out of the box.
 
-[Test Code]
+Are you proposing to replace 'return MODE_CLOCK_RANGE' with a printed warni=
+ng?
 
-    config MODULES
-            def_bool y
-            modules
+>
+> I also don't see any other bridge doing this kind of check.
+> drivers/gpu/drm/bridge/imx/imx93-mipi-dsi.c has a similar check with a
+> 0.5% leeway, and all the other drivers don't check anything.
+> If you want to add some level of safety, I think we could make this work
+> with a 5% margin easily... Printing a warning in dmesg could work if
+> you're worried about artifacts, but litteraly anything is better than a
+> black screen with no error message in my opinion.
+>
+>
+> In practice the screen I'm looking at has an EDID which only supports
+> 51.2MHz and the closest frequency supported by the Samsung HDMI phy is
+> 50.4MHz, so that's a ~1.5% difference and it'd be great if it could work
+> out of the box.
 
-    config A
-            def_bool y
-            select C if B != n
+I wonder if the HDMI PHY could be improved to better dynamically
+calculate values instead of the look tables.
 
-    config B
-            def_tristate m
-
-    config C
-            tristate
-
-[Result]
-
-    CONFIG_MODULES=y
-    CONFIG_A=y
-    CONFIG_B=m
-    CONFIG_C=m
-
-This output is incorrect because CONFIG_C=y is expected.
-
-Documentation/kbuild/kconfig-language.rst clearly explains the function
-of the '!=' operator:
-
-    If the values of both symbols are equal, it returns 'n',
-    otherwise 'y'.
-
-Therefore, the statement:
-
-    select C if B != n
-
-should be equivalent to:
-
-    select C if y
-
-Or, more simply:
-
-    select C
-
-Hence, the symbol C should be selected by the value of A, which is 'y'.
-
-However, expr_trans_bool() wrongly transforms it to:
-
-    select C if B
-
-Therefore, the symbol C is selected by (A && B), which is 'm'.
-
-The comment block of expr_trans_bool() correctly explains its intention:
-
-  * bool FOO!=n => FOO
-    ^^^^
-
-If FOO is bool, FOO!=n can be simplified into FOO. This is correct.
-
-However, the actual code performs this transformation when FOO is
-tristate:
-
-    if (e->left.sym->type == S_TRISTATE) {
-                             ^^^^^^^^^^
-
-While it can be fixed to S_BOOLEAN, there is no point in doing so
-because expr_tranform() already transforms FOO!=n to FOO when FOO is
-bool. (see the "case E_UNEQUAL" part)
-
-expr_trans_bool() is wrong and unnecessary.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/kconfig/expr.c | 29 -----------------------------
- scripts/kconfig/expr.h |  1 -
- scripts/kconfig/menu.c |  2 --
- 3 files changed, 32 deletions(-)
-
-diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-index 7e38070ee523b..1c69de8cacf6d 100644
---- a/scripts/kconfig/expr.c
-+++ b/scripts/kconfig/expr.c
-@@ -395,35 +395,6 @@ static struct expr *expr_eliminate_yn(struct expr *e)
- 	return e;
- }
- 
--/*
-- * bool FOO!=n => FOO
-- */
--struct expr *expr_trans_bool(struct expr *e)
--{
--	if (!e)
--		return NULL;
--	switch (e->type) {
--	case E_AND:
--	case E_OR:
--	case E_NOT:
--		e->left.expr = expr_trans_bool(e->left.expr);
--		e->right.expr = expr_trans_bool(e->right.expr);
--		break;
--	case E_UNEQUAL:
--		// FOO!=n -> FOO
--		if (e->left.sym->type == S_TRISTATE) {
--			if (e->right.sym == &symbol_no) {
--				e->type = E_SYMBOL;
--				e->right.sym = NULL;
--			}
--		}
--		break;
--	default:
--		;
--	}
--	return e;
--}
--
- /*
-  * e1 || e2 -> ?
-  */
-diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-index 43a87f8ea738c..968219750244a 100644
---- a/scripts/kconfig/expr.h
-+++ b/scripts/kconfig/expr.h
-@@ -302,7 +302,6 @@ struct expr *expr_copy(const struct expr *org);
- void expr_free(struct expr *e);
- void expr_eliminate_eq(struct expr **ep1, struct expr **ep2);
- tristate expr_calc_value(struct expr *e);
--struct expr *expr_trans_bool(struct expr *e);
- struct expr *expr_eliminate_dups(struct expr *e);
- struct expr *expr_transform(struct expr *e);
- int expr_contains_symbol(struct expr *dep, struct symbol *sym);
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index 4cf15d449c05d..4d48ff3083bd8 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -390,8 +390,6 @@ void menu_finalize(struct menu *parent)
- 				dep = expr_transform(dep);
- 				dep = expr_alloc_and(expr_copy(basedep), dep);
- 				dep = expr_eliminate_dups(dep);
--				if (menu->sym && menu->sym->type != S_TRISTATE)
--					dep = expr_trans_bool(dep);
- 				prop->visible.expr = dep;
- 
- 				/*
--- 
-2.43.0
-
+adam
+>
+> For reference, the output of edid-decode is as follow:
+> ---
+> edid-decode /sys/devices/platform/display-subsystem/drm/car
+> d1/card1-HDMI-A-1/edid
+> edid-decode (hex):
+>
+> 00 ff ff ff ff ff ff 00 3a 49 03 00 01 00 00 00
+> 20 1e 01 03 80 10 09 00 0a 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 00 14 00 40 41 58 23 20 a0 20
+> c8 00 9a 56 00 00 00 18 00 00 00 10 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 10 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 10
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 9a
+>
+> ----------------
+>
+> Block 0, Base EDID:
+>   EDID Structure Version & Revision: 1.3
+>   Vendor & Product Identification:
+>     Manufacturer: NRI
+>     Model: 3
+>     Serial Number: 1
+>     Made in: week 32 of 2020
+>   Basic Display Parameters & Features:
+>     Digital display
+>     Maximum image size: 16 cm x 9 cm
+>     Gamma: 1.00
+>     RGB color display
+>     First detailed timing is the preferred timing
+>   Color Characteristics:
+>     Red  : 0.0000, 0.0000
+>     Green: 0.0000, 0.0000
+>     Blue : 0.0000, 0.0000
+>     White: 0.0000, 0.0000
+>   Established Timings I & II: none
+>   Standard Timings: none
+>   Detailed Timing Descriptors:
+>     DTD 1:  1024x600    59.993 Hz 128:75   38.095 kHz  51.200 MHz (154 mm=
+ x 86 m
+> m)
+>                  Hfront  160 Hsync  32 Hback 128 Hpol N
+>                  Vfront   12 Vsync   8 Vback  15 Vpol N
+>     Dummy Descriptor:
+>     Dummy Descriptor:
+>     Dummy Descriptor:
+> Checksum: 0x9a
+> ---
+>
+>
+> Thanks,
+> --
+> Dominique Martinet
+>
+>
+>
+> --
+> linux-phy mailing list
+> linux-phy@lists.infradead.org
+> https://lists.infradead.org/mailman/listinfo/linux-phy
