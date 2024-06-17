@@ -1,47 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8117419A28F;
-	Mon, 17 Jun 2024 23:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C903219AA46
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 23:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718665914; cv=none; b=UQqq9qbopi3xp/B8wdsVlW2p4ywI/I5bvLplIxNLP4Lwz1HvRuTj9l8E6mqLhJsVo2wpZgubn6u81aCGWxr5Fkm2QJn96HnpPTuo4Tju2LdodFg8V4cOdfSWA6VbrRUze9WW+t+b7gRiD2+kTtRU6EUEb6DxB8LtI/124QCVNa0=
+	t=1718665917; cv=none; b=WNBKrSqBs8e3caSlf8bRs1lBe0xyuM0BZdhac6HMBdkbG5W7eKLu756RgBTTYyLzUeUURP26NXjvw7sfdpgFmoGjVN4GAyKM0sU4dPuox1gIRtmY58HcXNE39fb2E+1zpGV+IE6s9tsKzoHz15ZF1GKSdGXk9lWRm3x9bvJYCos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718665914; c=relaxed/simple;
-	bh=bpeQJSd0BsKdh9O1L/WBzXi7cm11ewlcZk3ruc8dtR0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eiGP+29wbrZVAyKwW4FfO3NYRq78awTgbgzFtHlHzK5zolbCFD2+jzv8nXMIkRqtptIICJAiamq1o+uhH9uEMYDck+PSzTrNRmWDkpR42zRS/soAFTI2bnIxQV7t0I+xYpXwXsgUaZ3Ng1nHKcl2AMTT05pEzRFf46hg4KYmoGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+vC9QNM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718665917; c=relaxed/simple;
+	bh=juyczMSrylM+yeB/lAu9GW7f9Vw0N9qx0xSqhCvK/8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tF+JL1CJP6Xqq+Shbz88tDTgBVxgZ1kBFusEVqqDC1zr2qIra6OhP4QTSbwRBvjK62JJCxKxSiDm/3fjjBfrtPI3iDGUOw4E5rhpDNs63k0kbSFTwanrve+7gaX6blnx8aKukRAkN72kq5hswibhfwmgt1iGGrnrK/pQux/nQFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWfd77bU; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+vC9QNM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 632F3C2BD10;
-	Mon, 17 Jun 2024 23:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718665914;
-	bh=bpeQJSd0BsKdh9O1L/WBzXi7cm11ewlcZk3ruc8dtR0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s+vC9QNMgzZdAx9M19zFTyp6wVD9TNrSnmUUiy4HB5kw9cMU8Dfh3L/a/eNyu9GOf
-	 hK7ke+48a6jrsvGi0girlUcCeo11/jxkdhaJsp94/A/FLvNgdYzMW82gC8amLpE/Du
-	 +FrbWG8mEmEAo9TPosKX/KEEgHuWag18qr1FVT70pNCK5DEjUCnTcRw+t1DijrhvSa
-	 5CmyaUcUcQWTpD4e9wNL20UlTRm1gcMBRPhpe+v0w3+SSKfs4f4dMQDLpU2fEQi1EX
-	 oCkLacYhkdAlidIlMbKYJy4HJM1yuXfh8JsjoQ/hMJSJStHazXeBu0PW1fSM9ZeZ/q
-	 +Sagxf85R8Htw==
-From: SeongJae Park <sj@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: SeongJae Park <sj@kernel.org>,
-	yskelg@gmail.com,
-	Jinwoo Park <pmnxis@gmail.com>,
-	Austin Kim <austindh.kim@gmail.com>,
-	shjy180909@gmail.com,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] Documentation: cve Korean translation
-Date: Mon, 17 Jun 2024 16:11:48 -0700
-Message-Id: <20240617231148.64366-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <87h6drgq7m.fsf@trenco.lwn.net>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWfd77bU"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f8395a530dso41997575ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718665915; x=1719270715; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LvCyWt69PGUZt4BpaxsAne+Mf2MHqVNEFtr7gIEXROw=;
+        b=RWfd77bUhedFfCwhBYIk0rmeUpokKa8cqPHzn8aprihc4ak/eS2MF+ozPlCWLrGP0R
+         jSt7yMhqoQz1iX7GdMSXw1y6lgjZiGIwvcHQnlPMZe+w31NJkBEkA3GY5A4pLrUh8bN5
+         YD2IYwBWmTGHil007h9VlsVNEEzg4Mjot4VI9M7jEx1wgcO4/tmBrltBOyYr9fOsmsQ1
+         s5N+mhfkc6BthjfvMf56Ctg973NBBx/PklSGHDs2lvI+Fwx06TUOhkXqOHh4LngD0IgL
+         j6rnJe0hfYA723OI8JNG1KRDHCLZSq9V3xESg6Omh4ab3w5OZcJuebZlccAU/FmVdjjg
+         8hRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718665915; x=1719270715;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LvCyWt69PGUZt4BpaxsAne+Mf2MHqVNEFtr7gIEXROw=;
+        b=KgSlgoZNz73CNqpylNKWvwJJ+wG4NBC46OW8PPsbM/k1BgFBglptLVtmoCRFvHW7og
+         sNB4MgGVpFaQnBFxG1TLRwNk2URUqiyJLbxLMC23jcpDYOiqK6ula3dVWexzhvWbEs41
+         tZ2kNm9H3YSQdHHdcR9pBcDcjKQ4OxkCXAWEFW84hwYlnVoZ5HvvjLKF8kF+6hvO4XBm
+         pvurjJzq5eOE3moFywexTNx1PhujYpz2cKCyT7IwAMLpStuMM+IF3kml4TGDw6/LPoMo
+         /2lX+cVSJo76IAGFhpRih1/ZPutGhmbzHV00JyyngIFMliJ3fr/UjwzFwCxEI4cIzdAu
+         8exw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtYUGiD8pn4M4ecWUqZyMjcOurZ5EE/f6LEnmh9kt8WtiiXkFaHLWvKbIp2i+N0IrhS6uTb2PE5z1nvCOIs3cTuKg4TvLvnmtlwwqw
+X-Gm-Message-State: AOJu0YyxcLpRo3TzObQdaUHI+xq1GkVcJfXPSxoENTad3C3UnGmvetej
+	pp2yIwxNQmfrL4W7WC84RvyvNLU2q2M80xJARnvsWQkaUwE3aapi
+X-Google-Smtp-Source: AGHT+IH5DJEcFgg+9xWxSi15GsjyaYgih3hjGgUnN5rZbQBNeoC2YkMtuFoNrtwZuU2horotlw9GLQ==
+X-Received: by 2002:a17:902:cec4:b0:1f9:8f8d:cc5f with SMTP id d9443c01a7336-1f98f8dcf99mr6363815ad.26.1718665915014;
+        Mon, 17 Jun 2024 16:11:55 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e5a0d5sm84658605ad.43.2024.06.17.16.11.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 16:11:54 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-mm@kvack.org
+Cc: baolin.wang@linux.alibaba.com,
+	chrisl@kernel.org,
+	linux-kernel@vger.kernel.org,
+	mhocko@suse.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	willy@infradead.org,
+	ying.huang@intel.com,
+	yosryahmed@google.com,
+	yuzhao@google.com
+Subject: [PATCH v2 0/3] mm: clarify folio_add_new_anon_rmap() and __folio_add_anon_rmap()
+Date: Tue, 18 Jun 2024 11:11:34 +1200
+Message-Id: <20240617231137.80726-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,40 +79,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi John,
+From: Barry Song <v-songbaohua@oppo.com>
 
-On Mon, 17 Jun 2024 16:27:25 -0600 Jonathan Corbet <corbet@lwn.net> wrote:
+The whole thing was originally suggested by David while we tried
+to weaken the WARN_ON in __folio_add_anon_rmap() while bringing up
+mTHP swapin[1]. This patchset is also preparatory work for mTHP
+swapin.
 
-> yskelg@gmail.com writes:
-> 
-> > From: Yunseong Kim <yskelg@gmail.com>
-> >
-> > This is a Documentation/process/cve korean version.
-> >
-> > The following changes have been updated based on SeongJae Park’s feedback
-> > from the last v4 patch.
-> >
-> > Signed-off-by: Yunseong Kim <yskelg@gmail.com>
-> > ---
-> >  Documentation/translations/ko_KR/index.rst    |   1 +
-> >  .../translations/ko_KR/process/cve.rst        | 107 ++++++++++++++++++
-> >  2 files changed, 108 insertions(+)
-> >  create mode 100644 Documentation/translations/ko_KR/process/cve.rst
-> 
-> SeongJae, are you happy with this version?
+folio_add_new_anon_rmap() assumes that new anon rmaps are always
+exclusive. However, this assumption doesn’t hold true for cases
+like do_swap_page(), where a new anon might be added to the
+swapcache and is not necessarily exclusive.
 
-I have a trivial concern about this patch.  I'm not very confident about it,
-though.  I therefore personally shared the concern with Yunseong.  Yunseong
-thankfully agreed at some of my points, and he told me that he will post a new
-version of this patch.
+The patchset extends the rmap flags to allow folio_add_new_anon_rmap()
+to handle both exclusive and non-exclusive new anon folios.
+The do_swap_page() function is updated to use this extended API with
+rmap flags. Consequently, all new anon folios now consistently use
+folio_add_new_anon_rmap().
+The special case for !folio_test_anon() in __folio_add_anon_rmap() can
+be safely removed.
 
-Please correct me if anything is wrong or missed, Yunseong.
+In conclusion, new anon folios always use folio_add_new_anon_rmap(),
+regardless of exclusivity. Old anon folios continue to use
+__folio_add_anon_rmap() via folio_add_anon_rmap_pmd() and
+folio_add_anon_rmap_ptes().
 
-So, I hope this patch to eventually be merged, but I have no strong opinion to
-provide either 'Reviewed-by:' or 'Nacked-by:'.
+[1] https://lore.kernel.org/linux-mm/20240118111036.72641-6-21cnbao@gmail.com/
 
-[...]
+-v2:
+ * fix crashes reported by Yuan Shuai during swapoff, thanks; David
+   also commented unuse_pte() for swapoff;
+ * add comments for !anon according to David, thanks;
+ * add Yuan Shuai's tested-by tags, thanks for Yuan Shuai's testing
+   on real phones;
+ * refine changelog;
 
+-v1(RFC):
+ https://lore.kernel.org/linux-mm/20240613000721.23093-1-21cnbao@gmail.com/
 
-Thanks,
-SJ
+Barry Song (3):
+  mm: extend rmap flags arguments for folio_add_new_anon_rmap
+  mm: use folio_add_new_anon_rmap() if folio_test_anon(folio)==false
+  mm: remove folio_test_anon(folio)==false path in
+    __folio_add_anon_rmap()
+
+ include/linux/rmap.h    |  2 +-
+ kernel/events/uprobes.c |  2 +-
+ mm/huge_memory.c        |  2 +-
+ mm/khugepaged.c         |  2 +-
+ mm/memory.c             | 18 +++++++++++++-----
+ mm/migrate_device.c     |  2 +-
+ mm/rmap.c               | 34 +++++++++++++---------------------
+ mm/swapfile.c           | 15 ++++++++++++---
+ mm/userfaultfd.c        |  2 +-
+ 9 files changed, 44 insertions(+), 35 deletions(-)
+
+-- 
+2.34.1
+
