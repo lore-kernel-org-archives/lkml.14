@@ -1,160 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810EA19AD6A;
-	Mon, 17 Jun 2024 13:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD07198A1D;
+	Mon, 17 Jun 2024 13:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630592; cv=none; b=TcjpYxtRGv3yF30f1RI8NqbgPPdYqhwKofHuLGevyg7Op7E1O5fDB/M/K81s0HricnW0eWSPuSv0r3+bJ329IZ6hIrVpn3PyetHuV9o7dIIaWTmrD31phAntxwubghek8ybmVZ6KRCiqZcLxUHd0mELr28rr5r+J8FtbNMj3vvs=
+	t=1718630595; cv=none; b=glyRux7hdZQHhZ/Sh9V00Juow1mfHutLlr2+qItNFN4Hax8LD1pG8DUJ7vzV7ZYiK/5Bw+jlH/FADkKOXG7GyvAKTuMQiuatoHEthOpqz4HvNCbmnXvAuYmu/hgq55Cs02X1jqIgFCXxgfh0q59BgIFVrR08HTphpbygChzC89E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630592; c=relaxed/simple;
-	bh=ElwEEKlltBx5dmTZseGkyQ9j+pnPgSlfITcDRLuO6OA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Osq2yRcm7mk94qr4m0z4rI/WdfX0gmAMB2rFC1DaqwAXqfnhQ4f66W3Twk0sF92sAHhaUAh2h/Ndn1yJFiY1NmcjqIqXKMzsmm4QHwogZqGa+izzn9OzszOEpbqQ5/T6tOn70WwdhDccSnKq4r02o9d+b/SMtGkTikXhT3wczfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stRJnte4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stRJnte4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6230C2BD10;
-	Mon, 17 Jun 2024 13:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630592;
-	bh=ElwEEKlltBx5dmTZseGkyQ9j+pnPgSlfITcDRLuO6OA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=stRJnte4Xe0sIklrTRurdGf+3lu1qu+x76nJd3BPQBQfga7PKRdp3y8p28P8CgOnC
-	 +hyMCAL1HPCZ2wuQPWqvetysnId3JuolcG4G1IhH4G7G3bG/FocX+ql7Qo8I1UBxtB
-	 vUdEPjPMD8uVvkwZsN52xRjMzoepzCWsaCqeywLDqkoWb5KkyfYCzdDMmqVxRdsJ2h
-	 VWRHUglccbMuO7PGKgHVOW6IL9JjqLfug3DjuUk1+ggyynklGBpO2PwBmSQvTeQ2jD
-	 4GTSiAyEiCaIC0unIm1VgDTI8yElZEFewk8MYYaF9kO/2WEHtDKXDIe8kzAWhnqpft
-	 E7McK8P8ZJg5Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Martin Wilck <martin.wilck@suse.com>,
-	Rajashekhar M A <rajs@netapp.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	James.Bottomley@HansenPartnership.com,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 01/35] scsi: core: alua: I/O errors for ALUA state transitions
-Date: Mon, 17 Jun 2024 09:21:59 -0400
-Message-ID: <20240617132309.2588101-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718630595; c=relaxed/simple;
+	bh=Jm5ABuXa1QZ4dDdviCRqejeLxd1ZIb8/SJS6zHgv/UY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hXs2pArmh1zc68z4kpEScVKkQh0sSnpsDsG9iyEXjFvgxNbuhKPdqZq6ny0IB0h2xGGVwIvwVrmw7ybnu77vwressS5m0LMsCxYIsnKHM/tltgHTpGctTbJTvGmVguBCJ7btbG73WPXC0DB6s7vjW+wc729ZsdocKl9ErJXGR0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C1BD2000B;
+	Mon, 17 Jun 2024 13:23:04 +0000 (UTC)
+Message-ID: <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
+Date: Mon, 17 Jun 2024 15:23:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.34
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
+To: Conor Dooley <conor.dooley@microchip.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+ <20240613-lubricant-breath-061192a9489a@wendy>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240613-lubricant-breath-061192a9489a@wendy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-From: Martin Wilck <martin.wilck@suse.com>
+Hi Conor,
 
-[ Upstream commit 10157b1fc1a762293381e9145041253420dfc6ad ]
+Sorry for the delay here.
 
-When a host is configured with a few LUNs and I/O is running, injecting FC
-faults repeatedly leads to path recovery problems.  The LUNs have 4 paths
-each and 3 of them come back active after say an FC fault which makes 2 of
-the paths go down, instead of all 4. This happens after several iterations
-of continuous FC faults.
+On 13/06/2024 09:48, Conor Dooley wrote:
+> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
+>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+>> converted ftrace_make_nop() to use patch_insn_write() which does not
+>> emit any icache flush relying entirely on __ftrace_modify_code() to do
+>> that.
+>>
+>> But we missed that ftrace_make_nop() was called very early directly when
+>> converting mcount calls into nops (actually on riscv it converts 2B nops
+>> emitted by the compiler into 4B nops).
+>>
+>> This caused crashes on multiple HW as reported by Conor and Björn since
+>> the booting core could have half-patched instructions in its icache
+>> which would trigger an illegal instruction trap: fix this by emitting a
+>> local flush icache when early patching nops.
+>>
+>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> ---
+>>   arch/riscv/include/asm/cacheflush.h | 6 ++++++
+>>   arch/riscv/kernel/ftrace.c          | 3 +++
+>>   2 files changed, 9 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+>> index dd8d07146116..ce79c558a4c8 100644
+>> --- a/arch/riscv/include/asm/cacheflush.h
+>> +++ b/arch/riscv/include/asm/cacheflush.h
+>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
+>>   	asm volatile ("fence.i" ::: "memory");
+>>   }
+>>   
+>> +static inline void local_flush_icache_range(unsigned long start,
+>> +					    unsigned long end)
+>> +{
+>> +	local_flush_icache_all();
+>> +}
+>> +
+>>   #define PG_dcache_clean PG_arch_1
+>>   
+>>   static inline void flush_dcache_folio(struct folio *folio)
+>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>> index 4f4987a6d83d..32e7c401dfb4 100644
+>> --- a/arch/riscv/kernel/ftrace.c
+>> +++ b/arch/riscv/kernel/ftrace.c
+>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+>>   	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>   	mutex_unlock(&text_mutex);
+> So, turns out that this patch is not sufficient. I've seen some more
+> crashes, seemingly due to initialising nops on this mutex_unlock().
+> Palmer suggested moving the if (!mod) ... into the lock, which fixed
+> the problem for me.
 
-Reason here is that we're returning an I/O error whenever we're
-encountering sense code 06/04/0a (LOGICAL UNIT NOT ACCESSIBLE, ASYMMETRIC
-ACCESS STATE TRANSITION) instead of retrying.
 
-[mwilck: The original patch was developed by Rajashekhar M A and Hannes
-Reinecke. I moved the code to alua_check_sense() as suggested by Mike
-Christie [1]. Evan Milne had raised the question whether pg->state should
-be set to transitioning in the UA case [2]. I believe that doing this is
-correct. SCSI_ACCESS_STATE_TRANSITIONING by itself doesn't cause I/O
-errors. Our handler schedules an RTPG, which will only result in an I/O
-error condition if the transitioning timeout expires.]
+Ok, it makes sense, I completely missed that. I'll send a fix for that 
+shortly so that it can be merged in rc5.
 
-[1] https://lore.kernel.org/all/0bc96e82-fdda-4187-148d-5b34f81d4942@oracle.com/
-[2] https://lore.kernel.org/all/CAGtn9r=kicnTDE2o7Gt5Y=yoidHYD7tG8XdMHEBJTBraVEoOCw@mail.gmail.com/
+Thanks,
 
-Co-developed-by: Rajashekhar M A <rajs@netapp.com>
-Co-developed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Martin Wilck <martin.wilck@suse.com>
-Link: https://lore.kernel.org/r/20240514140344.19538-1-mwilck@suse.com
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/device_handler/scsi_dh_alua.c | 31 +++++++++++++++-------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+Alex
 
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index a226dc1b65d71..4eb0837298d4d 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -414,28 +414,40 @@ static char print_alua_state(unsigned char state)
- 	}
- }
- 
--static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
--					      struct scsi_sense_hdr *sense_hdr)
-+static void alua_handle_state_transition(struct scsi_device *sdev)
- {
- 	struct alua_dh_data *h = sdev->handler_data;
- 	struct alua_port_group *pg;
- 
-+	rcu_read_lock();
-+	pg = rcu_dereference(h->pg);
-+	if (pg)
-+		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
-+	rcu_read_unlock();
-+	alua_check(sdev, false);
-+}
-+
-+static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
-+					      struct scsi_sense_hdr *sense_hdr)
-+{
- 	switch (sense_hdr->sense_key) {
- 	case NOT_READY:
- 		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
- 			/*
- 			 * LUN Not Accessible - ALUA state transition
- 			 */
--			rcu_read_lock();
--			pg = rcu_dereference(h->pg);
--			if (pg)
--				pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
--			rcu_read_unlock();
--			alua_check(sdev, false);
-+			alua_handle_state_transition(sdev);
- 			return NEEDS_RETRY;
- 		}
- 		break;
- 	case UNIT_ATTENTION:
-+		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
-+			/*
-+			 * LUN Not Accessible - ALUA state transition
-+			 */
-+			alua_handle_state_transition(sdev);
-+			return NEEDS_RETRY;
-+		}
- 		if (sense_hdr->asc == 0x29 && sense_hdr->ascq == 0x00) {
- 			/*
- 			 * Power On, Reset, or Bus Device Reset.
-@@ -502,7 +514,8 @@ static int alua_tur(struct scsi_device *sdev)
- 
- 	retval = scsi_test_unit_ready(sdev, ALUA_FAILOVER_TIMEOUT * HZ,
- 				      ALUA_FAILOVER_RETRIES, &sense_hdr);
--	if (sense_hdr.sense_key == NOT_READY &&
-+	if ((sense_hdr.sense_key == NOT_READY ||
-+	     sense_hdr.sense_key == UNIT_ATTENTION) &&
- 	    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
- 		return SCSI_DH_RETRY;
- 	else if (retval)
--- 
-2.43.0
 
+>
+>>   
+>> +	if (!mod)
+>> +		local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
+>> +
+>>   	return out;
+>>   }
+>>   
+>> -- 
+>> 2.39.2
+>>
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
