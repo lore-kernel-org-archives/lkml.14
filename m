@@ -1,107 +1,178 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CCF146D77;
-	Mon, 17 Jun 2024 15:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C47C14D2A7;
+	Mon, 17 Jun 2024 15:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718639254; cv=none; b=sOiIausTe0/pHohNkvbvdimTouIgM7O/AQqz9CX5FMrbhL0CbQJnKEPjTSBM+z2ONm5hTXITf2RUI6ea97YGNNXljpVgx8LFoR6WSgjOTlRIde7mxpxnPIi+PHDzqigiRP4ztVLWlO42FcL+IFe8B1raJK0iEwFk0+0jIj564gY=
+	t=1718639329; cv=none; b=WXqac/HtM3fxRDmF5iDOfbqV8Vow//aWcHBRQ+lc3F131y2z0G7Io9eJ72bEmBhEw1k3Df31ZDOqnXyfNFB0TSHXQM0BwDj4zPoWeHqnAquREcItH/enI/by6IenFsQN6ZslBJlk0PzploQS73iDhWL7wGaQrWopneoHmqEEFr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718639254; c=relaxed/simple;
-	bh=0niStB/NLbg3eeXWTY6CwHcOhx+2lEBEmTzt5zp5qUY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tRptFglG8AEUE3YE/gYmNFGyzScCUnEFIoCTVOCYLRfpUETJqCEU1ILuiwNpER3WbmIxMV6oOyJ7CilhY8Yqsj910PoodJ1yP7yuC1VMrtRNQ1r3e+z4b27f6E3ON0Ui5dBcaUBlqIosGexGmWoxcDRWY3+fTbdl/oybdm/clvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XgHjtcMw; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718639329; c=relaxed/simple;
+	bh=fDi6yPRqLiM+HLfGb+FlpnVc+ukGfMsFd2U9nCeH7kE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JtKGjpy8h3QvW5z2pIVhrB8E6LLnRBF2iYLmqoZ6tGyxqeJfC4q9Om0qg+VGfhpfT6DmTlE0wdofhJThOL2OZu/itJu0SqqkqeMdhpu6qysfzoRIngG0cDK4qD+Ht2PfMKlCcYle0IKwgQQxJlGyGee5ij3101mRPYfQc+LXz98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODTYBWUY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XgHjtcMw"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HDT8vt003715;
-	Mon, 17 Jun 2024 17:46:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=qrP88rqf3P2C1jMZG6SITf
-	Ge6w2GJOwUx9Atbrod1UM=; b=XgHjtcMwp3OCLfaXrq7OGRMmiNxuKEikDleOXW
-	Zww6SOvlastGEs69flIdp227WNDIrvBlbrM9IzvF2eVkQRUrhicW3aPA643OzhjM
-	1jclUspsTh4w9oMndOrw5tsJiqxelSjqx3mE6qC7Ia+OksfM8jlfLxmjL1xicDn+
-	WNhCJF/oGtAj8zw2UZc25hLCF6XmpVXkL5qIF/Y/WSHhXldVymijBB4r39W635Y5
-	Yz/HtJWjEljCKxhjl3+Gbpt3pTtFWFzkvH2RKWXUGQcs4Frp1ntMZOgPzYaYNh73
-	EX/TPkvDdara3mKoL3gr0WONRpHalWQvvEga/zmr6LLi7oQg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys0cg7g69-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 17:46:49 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 164FA40045;
-	Mon, 17 Jun 2024 17:46:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8D30320B604;
-	Mon, 17 Jun 2024 17:45:26 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
- 2024 17:45:26 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH v2 0/2] Series to deliver Ethernet for STM32MP25
-Date: Mon, 17 Jun 2024 17:45:14 +0200
-Message-ID: <20240617154516.277205-1-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODTYBWUY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D6FC2BD10;
+	Mon, 17 Jun 2024 15:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718639329;
+	bh=fDi6yPRqLiM+HLfGb+FlpnVc+ukGfMsFd2U9nCeH7kE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ODTYBWUYbq4jF+ultQNT00YqzCbp79CdB5JGWTpbMaN4MV6cyVY2+6SUYKyDBvw6m
+	 cO/UAzhRG43/2vgV17BosUoUj09EgcV+lvj7SP+ExfPOsle0N+1ka4sh6T86JU3GdD
+	 oYnOX4nbNHTVqAdV9z+wsyc9fx44DJZBU4COrh1kPX9CKiE8mXuYnrRM6P6tqBhlBo
+	 ptB5VS7vR3kgZou+8AngXp0OK6RbpTODj5X2DqDZ1A7YapKT7Mf4e8QcFO9yrzdQLK
+	 3Iyk+al0Ii/i/Nfdb4qkgcPlndwgnsX1JxHQM7Tx93Iy4FoCDRD+YnX1lKEfEY2c78
+	 m29L86quDoZOw==
+Message-ID: <2fe7ba36-05b9-42c7-8726-ea891cfc7afc@kernel.org>
+Date: Mon, 17 Jun 2024 17:48:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT
+ binding
+To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
+ Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, "J.M.B. Downing"
+ <jonathan.downing@nautel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Chancel Liu <chancel.liu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
+ <20240614163500.386747-1-piotr.wojtaszczyk@timesys.com>
+ <20240614163500.386747-2-piotr.wojtaszczyk@timesys.com>
+ <83cbf43e-c927-449f-8b7e-5c8d3ee8cece@kernel.org>
+ <CAG+cZ06EeXUDiLsDXkz+6EHqJwpvv2MWwfpvB8AYw0=ZhUkTfQ@mail.gmail.com>
+ <83a45f7c-d90b-44d3-b57e-9dad21045e27@kernel.org>
+ <CAG+cZ06kzikieaD_JCBybwWk8XKZQjJxa34Cg4QHxrxpT+j0eA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAG+cZ06kzikieaD_JCBybwWk8XKZQjJxa34Cg4QHxrxpT+j0eA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-STM32MP25 is STM32 SOC with 2 GMACs instances.
-    GMAC IP version is SNPS 5.3x.
-    GMAC IP configure with 2 RX and 4 TX queue.
-    DMA HW capability register supported
-    RX Checksum Offload Engine supported
-    TX Checksum insertion supported
-    Wake-Up On Lan supported
-    TSO supported
+On 17/06/2024 16:04, Piotr Wojtaszczyk wrote:
+>>
+>>> It's used by snd_soc_dai_init_dma_data() in [PATCH v3 4/4] to give the
+>>> dmaengine a
+>>> hint which dma config to use. The LPC32xx doesn't have yet a dmamux driver like
+>>
+>> and if I change driver platform data to foo and bar, does the DTS work? No.
+> 
+> They shouldn't change the same way as expected dma-names shouldn't change.
+> Lots of drivers expect the dma-names to be "rx", "tx"
+> 
+>>
+>>> lpc18xx-dmamux.c therefore it still uses platform data entries for
+>>> pl08x dma channels
+>>> and 'SND_DMAENGINE_PCM_FLAG_NO_DT | SND_DMAENGINE_PCM_FLAG_COMPAT'
+>>> flags in the devm_snd_dmaengine_pcm_register().
+>>> Typically instead of this platform data you would use regular 'dma'
+>>> and 'dma-names' if it had
+>>> proper dmamux driver like lpc18xx-dmamux.c
+>>
+>> Exactly. Use these.
+> 
+> Then I need to write a lpc32xx dma mux driver, device tree binding for
+> it and adjust the
+> LPC32xx I2S driver for it. Is this a hard requirement to accept this
+> patch set for the
+> legacy LPC32xx SoC?
 
-V2: - Remark from Marek (sort compatible in YAML, change in glue to simplify)
+I do not see at all analogy with dma-names. dma-names are used ONLY by
+the consumer to pick up proper property "dmas" from DT. They are not
+passed to DMA code. They are not used to configure DMA provider at all.
 
-Christophe Roullier (2):
-  dt-bindings: net: add STM32MP25 compatible in documentation for stm32
-  net: stmmac: dwmac-stm32: stm32: add management of stm32mp25 for stm32
+You parse string from DT and pass it further as DMA filtering code. This
+is abuse of hardware description for programming your driver and their
+dependencies.
 
- .../devicetree/bindings/net/stm32-dwmac.yaml  |  8 +-
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 77 ++++++++++++++++++-
- 2 files changed, 81 insertions(+), 4 deletions(-)
+Why you cannot hard-code them?
 
+Sorry, to be clear: NAK
 
-base-commit: 4314175af49668ab20c0d60d7d7657986e1d0c7c
--- 
-2.25.1
+> 
+>>
+>>>
+>>>>
+>>>> Drop.
+>>>>
+>>>>
+>>>>> +
+>>>>> +  "#sound-dai-cells":
+>>>>> +    const: 0
+>>>>> +
+>>>
+>>> The "dai-common.yam" doesn't declare a default value for this so
+>>
+>> Where is my comment to which you refer to? Please do not drop context
+>> from replies. I have no clue what you want to discuss here.
+> Well I didn't remove the context, you said:
+> "
+> Drop.
+> (...)
+> +  "#sound-dai-cells":
+> +    const: 0
+> "
+> So I'm confused whether the "#sound-dai-cells" should be in the dt
+> binding or not.
+
+??? Drop is above the text so why do you refer to dai cells? We use here
+text-based mailing list style of discussions, not corporate MS Office.
+
+Best regards,
+Krzysztof
 
