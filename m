@@ -1,164 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E8816DC0C
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F295A16EB42;
+	Mon, 17 Jun 2024 13:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630720; cv=none; b=PDWnpLO+T5EPalSaImzM0kR0dTXGsMHXnNX3nYBVyCfzvSwxH/TVlaJj/dUfIYrJ7LV29PmWDp0JWlZ1pIis0e1/W91mqvyOg3s2N5maIb2dFOgCxNGcOabgyFl3yjiR3GU2eZ0e6Slt5AKRRPxEngmWliYM5L1Nfi3Ej9RLb68=
+	t=1718630721; cv=none; b=PwgenGqNHPvtCpFNMRgZkG1bIbFskVBOfl6WMIAcvgnfuVkrTG5zNzH1h2mBEo/rqq5cmyaAsIYSy3Qho+KWS4yYJAq3b5GJgf2vd37NVPJugIRBYfM1X0Q9yVRBbtXnW72YVE0E0O53/OWwPY3Nw9NUjq2kBYu/lsEJ4dXiehA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630720; c=relaxed/simple;
-	bh=e0Ai7S6YQSXLPsDKMzDQYJxDo/I6cDjDA6YZygp1mvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eIfVrXy3d1juuTSgiGLgIqvDk3vZ5yMfHMc+glq7dOQwF02V6E0ood9gAoZuf3S2hxXodhoUbewvsGQv39a4CGy1oGHVlAXlKwFCHkOuk8t7g29FPN7FuzIIl6nXhK/9sAILZuqBVLfc9fvw3NyMtwM3Lo9kqh66xulZIuU/uCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S8cEi+yM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718630721; c=relaxed/simple;
+	bh=t+VJMoHbS5aMzSdzqTh+8YeLJC/JfqfBNiQW1Ei54KY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CjgTLOkIJfBpCjwpwBWXiGq5YiBs7CzKbJ7LxgEtuvtKLEij74njMZ0YlaBkzkwnY0MehfmxFWh5ha2caCja978u4XScgb0ejHXeQVjjV+5G1jenEvGRfl7O58D+ypvyOK/SIlZE5Wr27Hcjakkjfx/znmlgkwe3dAZ3Rh8QWDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RE5yKVw2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S8cEi+yM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718630718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/S3QsnopAU1g3EZ48Lr3+KF/tnwo0ee82bp6T2xhvDs=;
-	b=S8cEi+yM5tXwym7NqL5eTO/Jv+nHAgZlp2YvsMeg9hzOp8MIleVnq8ktsbPVPJA18ZeDGF
-	Ufad7CE2IqJi63khIvGjbuiMGuMtVUK6jr8qb/8BPRSuBOwGjp+OlAw07wgml5djVLxO/n
-	cIUzd1DYZAmUlCjjiKG0BZDiCyJ8zMw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-363-BlJk37XOOUOIThFzWWXb7g-1; Mon, 17 Jun 2024 09:25:16 -0400
-X-MC-Unique: BlJk37XOOUOIThFzWWXb7g-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3608fb58acaso1135762f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:25:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718630715; x=1719235515;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/S3QsnopAU1g3EZ48Lr3+KF/tnwo0ee82bp6T2xhvDs=;
-        b=b5M7XvR/6BCn/l4OoxqtWQsPZg24HYxQVfcF634Jb8g/f15Hoa49+/xB07J72qNUpq
-         /vYWxmSwGnfOaouuItS+S8suN3Ag9anZ2ltmjQ/yT08fUvtaogUxkKS5/1K5jelnqvBq
-         mV2yLFiOoyhm39bAbt+un0w9OeRbMRBoBFra87J9WzjhiDNypyyTFLr0bxvzXFFUfd+4
-         i8KO84i1mjyLndCIvfc9k80YzNcuBk+RIZQComt+tAvpOQo/0Rj5nSdiUvSQVJyCoe8i
-         nMIUDfy+sqIguXgWlws/hLEEn0K2ImbJvfbFwaKx90JR0BeWWBpf9AMKU56jF38GMOr5
-         xGHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWryMoNILbURfIjw5tZ/x1qyQeVvDOBLHyFfQDkOWC/RV+r4H5XE/0HM3LFHtV7tqxW+HRoDsheLrJdZ0YllgjoCH9aq4SkIK2fAs+G
-X-Gm-Message-State: AOJu0YzctaM7lNpYZh3DbahfG1S+fHpr08BYP0bkwoGke2h3OjTV0dIk
-	JDnRdLsRdAMuT2pRNLoNXLUSXNTSbcPveNDaqoFSayQkHXLtL7FvW5hHe07sM4Xepby2sU4iMB2
-	wuqNge93cq2cP+vC+ebwii8qO0GYIexawr2VuQSYbYAg3RGYLgh68uUI2dEIIpg==
-X-Received: by 2002:adf:e850:0:b0:35f:204c:889f with SMTP id ffacd0b85a97d-3607a7833b0mr8786835f8f.56.1718630715268;
-        Mon, 17 Jun 2024 06:25:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5RKQQn0KRZhLjfi6KZQa3K/TTM2W1cxHcRKnOc2A/u+LNZscYxGxayZdx96GzT+RJtL3BLQ==
-X-Received: by 2002:adf:e850:0:b0:35f:204c:889f with SMTP id ffacd0b85a97d-3607a7833b0mr8786801f8f.56.1718630714671;
-        Mon, 17 Jun 2024 06:25:14 -0700 (PDT)
-Received: from redhat.com ([2a06:c701:7439:b500:58cc:2220:93ce:7c4a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509353csm11912155f8f.22.2024.06.17.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:25:13 -0700 (PDT)
-Date: Mon, 17 Jun 2024 09:25:10 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Abhinav Jain <jain.abhinav177@gmail.com>
-Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
-Subject: Re: [PATCH] virtio_net: Eliminate OOO packets during switching
-Message-ID: <20240617091919-mutt-send-email-mst@kernel.org>
-References: <20240614220422.42733-1-jain.abhinav177@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RE5yKVw2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36510C4AF4D;
+	Mon, 17 Jun 2024 13:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630720;
+	bh=t+VJMoHbS5aMzSdzqTh+8YeLJC/JfqfBNiQW1Ei54KY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RE5yKVw2QFTnHBrJuphAkOpFioG0CgfNrQjG4xyeCCqCwVzuZARPKvcM1fj50TMPi
+	 jSudY4zoQ02TJkPaMLh2DBITOjIWIveigXxHLWJs9veT80S2kde+hFQOh674EH9V3x
+	 W/iPl+asiQQsjgYbS07m4DvkiWs/qNtY1BvyCmeuHJnvYgW80pnob5sZ+FtQvPzu8B
+	 57PIzwatlYai5BV80tvheHjihkqLTraMsi6UlxcpMe/pe6Tm1tmVs83CjQbltuaEkH
+	 Gk/6IWEd2ZCZ1pjYbo5iAAJN+MlHzW+MV6CTW8GyIVzkSZQBrV4NrFSYeFYyx9C8i1
+	 0H6rJKNLe+i0Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	syzbot+8830db5d3593b5546d2e@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 13/29] wifi: mac80211: handle tasklet frames before stopping
+Date: Mon, 17 Jun 2024 09:24:17 -0400
+Message-ID: <20240617132456.2588952-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132456.2588952-1-sashal@kernel.org>
+References: <20240617132456.2588952-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614220422.42733-1-jain.abhinav177@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.94
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 14, 2024 at 10:04:22PM +0000, Abhinav Jain wrote:
-> Disable the network device & turn off carrier before modifying the
-> number of queue pairs.
-> Process all the in-flight packets and then turn on carrier, followed
-> by waking up all the queues on the network device.
+From: Johannes Berg <johannes.berg@intel.com>
 
-Did you test that there's a workload with OOO and
-this patch actually prevents that?
+[ Upstream commit 177c6ae9725d783f9e96f02593ce8fb2639be22f ]
 
-> 
-> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
+The code itself doesn't want to handle frames from the driver
+if it's already stopped, but if the tasklet was queued before
+and runs after the stop, then all bets are off. Flush queues
+before actually stopping, RX should be off at this point since
+all the interfaces are removed already, etc.
 
+Reported-by: syzbot+8830db5d3593b5546d2e@syzkaller.appspotmail.com
+Link: https://msgid.link/20240515135318.b05f11385c9a.I41c1b33a2e1814c3a7ef352cd7f2951b91785617@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mac80211/ieee80211_i.h |  2 ++
+ net/mac80211/main.c        | 10 ++++++++--
+ net/mac80211/util.c        |  2 ++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/net/virtio_net.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 61a57d134544..d0a655a3b4c6 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -3447,7 +3447,6 @@ static void virtnet_get_drvinfo(struct net_device *dev,
->  
->  }
->  
-> -/* TODO: Eliminate OOO packets during switching */
->  static int virtnet_set_channels(struct net_device *dev,
->  				struct ethtool_channels *channels)
->  {
-> @@ -3471,6 +3470,15 @@ static int virtnet_set_channels(struct net_device *dev,
->  	if (vi->rq[0].xdp_prog)
->  		return -EINVAL;
->  
-> +	/* Disable network device to prevent packet processing during
-> +	 * the switch.
-> +	 */
-> +	netif_tx_disable(dev);
-> +	netif_carrier_off(dev);
-
-Won't turning off carrier cause a lot of damage such as
-changing IP and so on?
-
-> +
-> +	/* Make certain that all in-flight packets are processed. */
-> +	synchronize_net();
-> +
-
-The comment seems to say what the code does not do.
-
-
-Also, doing this under rtnl is a heavy weight operation.
-
-
-
->  	cpus_read_lock();
->  	err = virtnet_set_queues(vi, queue_pairs);
->  	if (err) {
-> @@ -3482,7 +3490,12 @@ static int virtnet_set_channels(struct net_device *dev,
->  
->  	netif_set_real_num_tx_queues(dev, queue_pairs);
->  	netif_set_real_num_rx_queues(dev, queue_pairs);
-> - err:
-> +
-> +	/* Restart the network device */
-> +	netif_carrier_on(dev);
-> +	netif_tx_wake_all_queues(dev);
-> +
-> +err:
->  	return err;
->  }
->  
-
-
-
-Given the result is, presumably, improved performance with less
-packet loss due to OOO, I'd like to see some actual testing results,
-hopefully also measuring the effect on CPU load.
-
-
-
-
-> -- 
-> 2.34.1
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 3e14d5c9aa1b4..0d8a9bb925384 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -1782,6 +1782,8 @@ void ieee80211_link_info_change_notify(struct ieee80211_sub_if_data *sdata,
+ void ieee80211_configure_filter(struct ieee80211_local *local);
+ u32 ieee80211_reset_erp_info(struct ieee80211_sub_if_data *sdata);
+ 
++void ieee80211_handle_queued_frames(struct ieee80211_local *local);
++
+ u64 ieee80211_mgmt_tx_cookie(struct ieee80211_local *local);
+ int ieee80211_attach_ack_skb(struct ieee80211_local *local, struct sk_buff *skb,
+ 			     u64 *cookie, gfp_t gfp);
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 6faba47b7b0ea..89771f0e0ae70 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -300,9 +300,8 @@ u32 ieee80211_reset_erp_info(struct ieee80211_sub_if_data *sdata)
+ 	       BSS_CHANGED_ERP_SLOT;
+ }
+ 
+-static void ieee80211_tasklet_handler(struct tasklet_struct *t)
++void ieee80211_handle_queued_frames(struct ieee80211_local *local)
+ {
+-	struct ieee80211_local *local = from_tasklet(local, t, tasklet);
+ 	struct sk_buff *skb;
+ 
+ 	while ((skb = skb_dequeue(&local->skb_queue)) ||
+@@ -327,6 +326,13 @@ static void ieee80211_tasklet_handler(struct tasklet_struct *t)
+ 	}
+ }
+ 
++static void ieee80211_tasklet_handler(struct tasklet_struct *t)
++{
++	struct ieee80211_local *local = from_tasklet(local, t, tasklet);
++
++	ieee80211_handle_queued_frames(local);
++}
++
+ static void ieee80211_restart_work(struct work_struct *work)
+ {
+ 	struct ieee80211_local *local =
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 1088d90e355ba..08e6691cdc4a4 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -2207,6 +2207,8 @@ u32 ieee80211_sta_get_rates(struct ieee80211_sub_if_data *sdata,
+ 
+ void ieee80211_stop_device(struct ieee80211_local *local)
+ {
++	ieee80211_handle_queued_frames(local);
++
+ 	ieee80211_led_radio(local, false);
+ 	ieee80211_mod_tpt_led_trig(local, 0, IEEE80211_TPT_LEDTRIG_FL_RADIO);
+ 
+-- 
+2.43.0
 
