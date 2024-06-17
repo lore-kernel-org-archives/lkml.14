@@ -1,130 +1,90 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5D71802A3;
-	Mon, 17 Jun 2024 10:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC4D18C326
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718618437; cv=none; b=RKhW5I+Mc2ek8DfGCbt86QroWdIWtK9gaLlAvXuj3b2w6E2NNton8D6jFR78PDufZi10QOLMir3l3uvB3x21avcOV0B8/0D+i4JY9yA/iYigCSHyEmjthYQr/n/K4y2LHpl0cwHRTOHfVVyjypYvMvnyN4xjAOQlp7ddocVOKfk=
+	t=1718618537; cv=none; b=fpnSj6SokKZi0MpI2WRce1avKtw/CD6bQHJ7z/xPeyoyUXoYHS3ho+XPaESUhmrjkKvlYpnCetOaDMs6u3nphp2ZWsuq/O4JFkqCivEbIAqbmmLz+EWZkRtlvHGGtcyXfaAQYGJeTm8WFBE3u6zt4d2U9tdUbYoEoiu1OV0dq5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718618437; c=relaxed/simple;
-	bh=CMVlDxSdOUy+95XNw5zblVX9VgDs93mSI+wzmAgDr1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JyB+pHx0sVHq+EW3YD0yAq8zUJXOgZ1tiGuqO/OjQ9ZJr5SD8rYAwJnKK4ogD+NZt7ZfPdeCTlpx+fniXes6zcK2FFluon/oxF87il1HlUlDy1vS5HyL4DE24Zm2vZ36skbGTD+WPOALO+FYmuRi4LKio4GSdKiwBZ3E6K2yyYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EKQ33z5j; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718618537; c=relaxed/simple;
+	bh=qtA4vdLpStckZ4K+HJdtG+Yn+DDVup8OpUIHT1OfTTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdOIjP2lDHABRSTu4aGNbdoJNZVBLCogWdA1sxgHfwIGm9+V8bInFiMx4hPgx/8pkzgsINhQ6p97lpO913BeacMujXbGKUnyYi7lOn8vsSORZ/JkfwQybq0eVhKVayiYYtxJbGz6goFhLz+4nqTCplARmwCKyJbRAJxAOuYu+c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nOdXaef5; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EKQ33z5j"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45H9lwgp046206;
-	Mon, 17 Jun 2024 04:47:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718617678;
-	bh=6EvuFkTe3ohvJlyxpb98f49oOrF2H7bMHIXzcQ0Hi9Q=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=EKQ33z5jEbGFdn+FjRBzGdqyn7iJvKoi1OJAht/68XRcqAB0ZqRJIgyovxs/Fem1F
-	 mP+UZb89pDFSlfeWfmuyf2DLVAFFAO73XQWOpXU6Q+2YZcDMsJsURXZg/BtZ99KyZa
-	 STwMz+5pIwvMeQJMu76+X75qkoEa/Wf+c6Qf37bM=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45H9lwdg030511
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Jun 2024 04:47:58 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Jun 2024 04:47:58 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Jun 2024 04:47:58 -0500
-Received: from [172.24.18.200] (lt5cd2489kgj.dhcp.ti.com [172.24.18.200])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45H9lsh9010450;
-	Mon, 17 Jun 2024 04:47:55 -0500
-Message-ID: <46e0461e-08e2-4fcd-80dc-f1213d57489b@ti.com>
-Date: Mon, 17 Jun 2024 15:17:54 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nOdXaef5"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so49827881fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 03:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718618533; x=1719223333; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ej4HKaTXNbtrLZvPteJwUzGUeQdd3JpTOE58bTuRP4g=;
+        b=nOdXaef53XeEmVn3q8HDoZ9MFOhX4JF9mJ3/7uU/HWs/gkNi1Ron/Fvz/1kJd3PhTA
+         4ZC93SVl93LuXk5eW3978yTgo5UBLAk7+J6453tR5CkiSqkIOWSeeKEp3TA4Do6+9nvf
+         ZPLdzsto2icMJ0/IazAB+R8n9zLnQVHjTAgKyCvJSBjeXqU9RZDHLG45qTUhSjxcZ2/f
+         RXfj7IAPZobrnFR1F9Xo/KEiM742SUofrv3BEh7Vm6GdQHMHQ8z/apWD/puasXPncybJ
+         TXYxb24V8SxnKbfu2mVMcWKRC4a+8Q/jNHJWIZSFCuvMd+KY+olsrs3pUBl2f/mHIs9u
+         A1sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718618533; x=1719223333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ej4HKaTXNbtrLZvPteJwUzGUeQdd3JpTOE58bTuRP4g=;
+        b=P+MgLmsIMkXf9yfxY4lHeJMv8SmJg5KWkD+bOZ5LLkA94/uKXN068GCngUkJAgFbfH
+         2sl8GjCfgH6UQEqsTxthvRy92ZUAl93a4K8MgmybryVIHxEP/6rC1COID9hi3szUE+j1
+         o96fK1ZIrLz5DWGKwdM98PdaBSUra/vdYeYkQ5YOf1ryb6f3L+ri97OKcQIA8nNy6zY0
+         Ng5M/d8Nu1MjLnl0GEdkqQAp4NzdWI3M8x8aZ+SrwLsyjOnzrySF4n3kbxKlxgRktLf6
+         ef47eYVteqcjSYQaH49VyG1KJLvnRi5Q+jjGdvB/Lsdj85CRnQiXnbVOdRf+U/YXfPUM
+         GZGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHw3VdmcpQzjwSYH4tpUBp7uP4r5GdjC4hjKvXlQupJIjuoirw70KpwmK+ogdn4sDhG6qRJL6PzK14AfhQPqXAeoBg+i8UDM1+Z4yz
+X-Gm-Message-State: AOJu0YwpyijPzG699oDnJMb3cV1hOd2UqzPNS6P7EGcgYg0wJGHX+V8k
+	Y/laR+Kdaq/7clNPtUtSW6xiYwg+6iz3Zmul5Ax7QkmxMLa1gMfdr9Sk7UevCbc=
+X-Google-Smtp-Source: AGHT+IH7zs1ElNWSLauUoxe6oUcxbMknt8N4yLuI0xWzD1LWnvcGVtunFezu9q6l/fZs7aoYPEqeug==
+X-Received: by 2002:a2e:2e0f:0:b0:2eb:e840:4a1b with SMTP id 38308e7fff4ca-2ec0e5b5e75mr59433771fa.7.1718618533565;
+        Mon, 17 Jun 2024 03:02:13 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c16c91sm13197401fa.63.2024.06.17.03.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 03:02:13 -0700 (PDT)
+Date: Mon, 17 Jun 2024 13:02:11 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Naina Mehta <quic_nainmeht@quicinc.com>
+Cc: andersson@kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, konrad.dybcio@linaro.org, 
+	manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] arm64: dts: qcom: sdx75: Add remoteproc node
+Message-ID: <mkthvgckbcttjh5d6ikv2tgmxyix6au4vcqobrcy7ukf3rtyn2@yyg2tvfkoawo>
+References: <20240617093428.3616194-1-quic_nainmeht@quicinc.com>
+ <20240617093428.3616194-5-quic_nainmeht@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] serial: 8250_omap: Implementation of Errata i2310
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: <vigneshr@ti.com>, <nm@ti.com>, <tony@atomide.com>, <jirislaby@kernel.org>,
-        <ronald.wahl@raritan.com>, <thomas.richard@bootlin.com>,
-        <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <ilpo.jarvinen@linux.intel.com>
-References: <20240617052253.2188140-1-u-kumar1@ti.com>
- <2024061704-vengeful-exemplify-261a@gregkh>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <2024061704-vengeful-exemplify-261a@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617093428.3616194-5-quic_nainmeht@quicinc.com>
 
-Hi Greg
-
-On 6/17/2024 11:52 AM, Greg KH wrote:
-> On Mon, Jun 17, 2024 at 10:52:53AM +0530, Udit Kumar wrote:
->> As per Errata i2310[0], Erroneous timeout can be triggered,
->> if this Erroneous interrupt is not cleared then it may leads
->> to storm of interrupts, therefore apply Errata i2310 solution.
->>
->> [0] https://www.ti.com/lit/pdf/sprz536 page 23
->>
->> Fixes: b67e830d38fa ("serial: 8250: 8250_omap: Fix possible interrupt storm on K3 SoCs")
->> Signed-off-by: Udit Kumar <u-kumar1@ti.com>
->> ---
->> Test logs
->> https://gist.github.com/uditkumarti/7a7ab6994581bbb09cf1a4271c592d8e
->>
->> Change logs
->> Changes in v2:
->> - Added Fixes Tag and typo correction in commit message
->> - Corrected bit position to UART_OMAP_EFR2_TIMEOUT_BEHAVE
->> Link to v1
->> https://lore.kernel.org/all/20240614061314.290840-1-u-kumar1@ti.com/
->>
->>   drivers/tty/serial/8250/8250_omap.c | 25 ++++++++++++++++++++-----
->>   1 file changed, 20 insertions(+), 5 deletions(-)
-> Hi,
->
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
->
-> You are receiving this message because of the following common error(s)
-> as indicated below:
->
-> - You have marked a patch with a "Fixes:" tag for a commit that is in an
->    older released kernel, yet you do not have a cc: stable line in the
->    signed-off-by area at all, which means that the patch will not be
->    applied to any older kernel releases.  To properly fix this, please
->    follow the documented rules in the
->    Documentation/process/stable-kernel-rules.rst file for how to resolve
->    this.
->
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
+On Mon, Jun 17, 2024 at 03:04:27PM GMT, Naina Mehta wrote:
+> Add MPSS remoteproc node for SDX75 SoC.
+> 
+> Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sdx75.dtsi | 47 +++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
 
 
-I realized the same due to other patches, this not getting applied 
-cleanly on stable (using git am).
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
 
-Let me know if you are ok,  I will port this to stable kernel, once this 
-is merged into Linux tree.
-
-
->
-> thanks,
->
-> greg k-h's patch email bot
+-- 
+With best wishes
+Dmitry
