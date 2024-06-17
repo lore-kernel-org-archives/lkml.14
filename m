@@ -1,46 +1,66 @@
-Received: from orthanc.universe-factory.net (orthanc.universe-factory.net [104.238.176.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817E91172C;
-	Mon, 17 Jun 2024 18:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.238.176.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C00196C96;
+	Mon, 17 Jun 2024 18:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718649030; cv=none; b=cyxN2RJTXDe7iniL0r4Z2zKsKYfZ6bHHV42ipYgEjqaJ1Oabe9xnTadBhFx60Is5hQVv3HmDmrBzrkV0OGAAaV7M0m2bXl1yZA+AQDfRRGtEE3cA+RH0FmrmGA7wbiC2i9HlsgmBImwMl+WAvmEjIIxC1hD4iTNDXhq3djc4tBA=
+	t=1718649061; cv=none; b=M1E3PqMe/LtndxLrVwohYVOMilKKxPya6EO9DBYi5l/6ZX6wuRDnh7Sv7DV23PZJyC6mEDaTUs2iZ/QAvazjPT9OcYlEpnw+VGx8i6vsjPS846gBOBtlRvQPq6hzfnO9N02IY/jDQA34ePZCjPWCM0DJp0g871j2IeWPg60C7vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718649030; c=relaxed/simple;
-	bh=4XAtuEQiqQbpYEVeHxagUGn2wi+TrhNC9PC7JyIq0W8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/+kDJeMGjx3cLEaIsJHetuTdO04J/CqI1H3arZEGbw/q5g23Uib6i2Gxbp0vtkIYAUcOT8hLPbO16id65l9oYOmvxlVlWfp0Umcy5gNsZzVUQ8JEHsgT/aOsva2tdkZ3BuPqSl5xJZWF7Rr+CW/YBZefuFkaQJ79F5rujLJ98A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; arc=none smtp.client-ip=104.238.176.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
-Received: from avalon.fritz.box (unknown [IPv6:2001:19f0:6c01:100::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by orthanc.universe-factory.net (Postfix) with ESMTPSA id 4F3661F917;
-	Mon, 17 Jun 2024 20:30:20 +0200 (CEST)
-From: Matthias Schiffer <mschiffer@universe-factory.net>
-To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1718649061; c=relaxed/simple;
+	bh=vidJFk6H/S82+Wi7PaCYYa05Xa8LB7oh//PbK+7UNWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FYEL2p4Vo03ActsjoT7JzO9rJzzZRI8esa4YbIzH6cDtg5g2j6Uv4MNCGVwf7c+yuQ/Aw5JhBHPKF2qDKPdLLYIFHIRpjJesnIcjZ/qcqT3I0sOvhZl7uH+1umNtomNmkrnqhcyjycmmLi5GhKGZVmIOEL6MA1qcdfpFVEa8UVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WFGSTdLT; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFGSTdLT"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6efae34c83so579707266b.0;
+        Mon, 17 Jun 2024 11:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718649058; x=1719253858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r43fwplRQSNhvu+3okxltxxzzi48q8i0FPadBQFXZa8=;
+        b=WFGSTdLTNRnTOvD25FrSyGYzCZA0Rm9oF7ufeDbcyL1OZirY/1KVp8D3iQ8q7WKDOV
+         dZTeC2FElK4dPZI9npniDWL76eWiI9S2ab2Rh41Bh4Q9V73jVr+51ztWl4JOSeZMEH46
+         cBx90nNJvDluBdLO1ahJJo6DceAcFhVwbth59d2CmUHmr8vy7sPtyylzZ7bQ2c3dxdkE
+         +aNmr8Sl8J1ZgrKHgia1xahi7LcAyHDHq5FE+yOz4vysLz5tFvgXnZDkvZd7vnBu0lsc
+         mTtceAx2dAjoKoowtDhBQhJfG6FFDEfoQtjPltJho6k5rt7ANq6p3XhVROeFGqv3cZUC
+         7dFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718649058; x=1719253858;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r43fwplRQSNhvu+3okxltxxzzi48q8i0FPadBQFXZa8=;
+        b=o4PYb0IXfi5zXSPZdF/ZR1Y76jNVFzgKsEtDHEwSmPM/ve3/6vYqgKdGelSbCgqplf
+         WeqDZvtOGd5ueBO/P+8L2z3NgiMq1ky+8syznei2aw5xujI+Hocts7EelIXgzYFiLS/+
+         IGX6Vstgluh/S4Oef87Kg3AL57Nvy2sCIjtL03pGrQif1a+BHY4EpL4RLV9A1yGrF/dp
+         kw5Ytr3IEWS6bAjlqFVYo4Kh1Eqv/qZ2uhzUX5Na/H/nLeFOsiGziZZvQja6Ea3jI7rH
+         kXMhv1nad54X2GVD7zfosirAcrAuMB9tKSjhs6Q9vnRjOBigbUud8nBE8aKuVAcnlcXk
+         xyYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPigEsi0cF5fjHAmJUl6C/s7Vfi0y6Lp1pRCxt6rUkBjxGqKoRO/mY7/OciY8nxEK1qjLSlf9OsPg1zz5hh9aj7Vir6qU3/14c+lRDjIukzInSSxNPKRk6kVkjs4Ms7Ybbo3IwRdzGui8=
+X-Gm-Message-State: AOJu0Yz7zLvhLUGtkbefMsiW3Y/rfD9jT3Hpu5fjXgTirKz1pRuW30tM
+	ZzTCxW+W9pRVlCsxfkDdQ5edsGM6Et+KcyBZYBVKR5xVsowQ4hcf
+X-Google-Smtp-Source: AGHT+IGt9YAUF0O6oDxU407S63hoXMspEwp397GgLRaM9xdZq+idV0cIMLA1zmW9sL9vwhvHDww9ww==
+X-Received: by 2002:a17:906:c354:b0:a6e:8aa4:1fc1 with SMTP id a640c23a62f3a-a6f60d2ca06mr589192766b.28.1718649058101;
+        Mon, 17 Jun 2024 11:30:58 -0700 (PDT)
+Received: from thinkpad-p52.telekom.ip (2a02-8388-e100-e800-c687-22dd-17e6-d8eb.cable.dynamic.v6.surfer.at. [2a02:8388:e100:e800:c687:22dd:17e6:d8eb])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f8f6eb3sm483252666b.143.2024.06.17.11.30.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 11:30:57 -0700 (PDT)
+From: Andrei Lalaev <andrey.lalaev@gmail.com>
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	m.felsch@pengutronix.de
+Cc: andrey.lalaev@gmail.com,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: [PATCH net-next v2 1/2] net: dsa: mt7530: factor out bridge join/leave logic
-Date: Mon, 17 Jun 2024 20:30:00 +0200
-Message-ID: <378bc964b49f9e9954336e99009932ac22bfe172.1718603656.git.mschiffer@universe-factory.net>
+	Andrei Lalaev <andrei.lalaev@anton-paar.com>
+Subject: [PATCH] Input: qt1050 - handle CHIP_ID reading error
+Date: Mon, 17 Jun 2024 20:30:18 +0200
+Message-ID: <20240617183018.916234-1-andrey.lalaev@gmail.com>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,157 +70,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As preparation for implementing bridge port isolation, move the logic to
-add and remove bits in the port matrix into a new helper
-mt7530_update_port_member(), which is called from
-mt7530_port_bridge_join() and mt7530_port_bridge_leave().
+From: Andrei Lalaev <andrei.lalaev@anton-paar.com>
 
-No functional change intended.
+If the device is missing, we get the following error:
 
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+  qt1050 3-0041: ID -1340767592 not supported
+
+Let's handle this situation and print more informative error
+when reading of CHIP_ID fails:
+
+  qt1050 3-0041: Failed to read chip ID: -6
+
+Fixes: cbebf5addec1 ("Input: qt1050 - add Microchip AT42QT1050 support")
+Signed-off-by: Andrei Lalaev <andrei.lalaev@anton-paar.com>
 ---
+ drivers/input/keyboard/qt1050.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-v2: no changes
-
- drivers/net/dsa/mt7530.c | 103 +++++++++++++++++----------------------
- 1 file changed, 46 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 598434d8d6e4..ecacaefdd694 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1302,6 +1302,50 @@ mt7530_stp_state_set(struct dsa_switch *ds, int port, u8 state)
- 		   FID_PST(FID_BRIDGED, stp_state));
- }
+diff --git a/drivers/input/keyboard/qt1050.c b/drivers/input/keyboard/qt1050.c
+index b51dfcd76038..056e9bc26026 100644
+--- a/drivers/input/keyboard/qt1050.c
++++ b/drivers/input/keyboard/qt1050.c
+@@ -226,7 +226,12 @@ static bool qt1050_identify(struct qt1050_priv *ts)
+ 	int err;
  
-+static void mt7530_update_port_member(struct mt7530_priv *priv, int port,
-+				      const struct net_device *bridge_dev, bool join)
-+	__must_hold(&priv->reg_mutex)
-+{
-+	struct dsa_port *dp = dsa_to_port(priv->ds, port), *other_dp;
-+	struct mt7530_port *p = &priv->ports[port], *other_p;
-+	struct dsa_port *cpu_dp = dp->cpu_dp;
-+	u32 port_bitmap = BIT(cpu_dp->index);
-+	int other_port;
-+
-+	dsa_switch_for_each_user_port(other_dp, priv->ds) {
-+		other_port = other_dp->index;
-+		other_p = &priv->ports[other_port];
-+
-+		if (dp == other_dp)
-+			continue;
-+
-+		/* Add/remove this port to/from the port matrix of the other
-+		 * ports in the same bridge. If the port is disabled, port
-+		 * matrix is kept and not being setup until the port becomes
-+		 * enabled.
-+		 */
-+		if (!dsa_port_offloads_bridge_dev(other_dp, bridge_dev))
-+			continue;
-+
-+		if (join) {
-+			other_p->pm |= PCR_MATRIX(BIT(port));
-+			port_bitmap |= BIT(other_port);
-+		} else {
-+			other_p->pm &= ~PCR_MATRIX(BIT(port));
-+		}
-+
-+		if (other_p->enable)
-+			mt7530_rmw(priv, MT7530_PCR_P(other_port),
-+				   PCR_MATRIX_MASK, other_p->pm);
+ 	/* Read Chip ID */
+-	regmap_read(ts->regmap, QT1050_CHIP_ID, &val);
++	err = regmap_read(ts->regmap, QT1050_CHIP_ID, &val);
++	if (err) {
++		dev_err(&ts->client->dev, "Failed to read chip ID: %d\n", err);
++		return false;
 +	}
 +
-+	/* Add/remove the all other ports to this port matrix. */
-+	p->pm = PCR_MATRIX(port_bitmap);
-+	if (priv->ports[port].enable)
-+		mt7530_rmw(priv, MT7530_PCR_P(port),
-+			   PCR_MATRIX_MASK, p->pm);
-+}
-+
- static int
- mt7530_port_pre_bridge_flags(struct dsa_switch *ds, int port,
- 			     struct switchdev_brport_flags flags,
-@@ -1345,39 +1389,11 @@ mt7530_port_bridge_join(struct dsa_switch *ds, int port,
- 			struct dsa_bridge bridge, bool *tx_fwd_offload,
- 			struct netlink_ext_ack *extack)
- {
--	struct dsa_port *dp = dsa_to_port(ds, port), *other_dp;
--	struct dsa_port *cpu_dp = dp->cpu_dp;
--	u32 port_bitmap = BIT(cpu_dp->index);
- 	struct mt7530_priv *priv = ds->priv;
- 
- 	mutex_lock(&priv->reg_mutex);
- 
--	dsa_switch_for_each_user_port(other_dp, ds) {
--		int other_port = other_dp->index;
--
--		if (dp == other_dp)
--			continue;
--
--		/* Add this port to the port matrix of the other ports in the
--		 * same bridge. If the port is disabled, port matrix is kept
--		 * and not being setup until the port becomes enabled.
--		 */
--		if (!dsa_port_offloads_bridge(other_dp, &bridge))
--			continue;
--
--		if (priv->ports[other_port].enable)
--			mt7530_set(priv, MT7530_PCR_P(other_port),
--				   PCR_MATRIX(BIT(port)));
--		priv->ports[other_port].pm |= PCR_MATRIX(BIT(port));
--
--		port_bitmap |= BIT(other_port);
--	}
--
--	/* Add the all other ports to this port matrix. */
--	if (priv->ports[port].enable)
--		mt7530_rmw(priv, MT7530_PCR_P(port),
--			   PCR_MATRIX_MASK, PCR_MATRIX(port_bitmap));
--	priv->ports[port].pm |= PCR_MATRIX(port_bitmap);
-+	mt7530_update_port_member(priv, port, bridge.dev, true);
- 
- 	/* Set to fallback mode for independent VLAN learning */
- 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
-@@ -1478,38 +1494,11 @@ static void
- mt7530_port_bridge_leave(struct dsa_switch *ds, int port,
- 			 struct dsa_bridge bridge)
- {
--	struct dsa_port *dp = dsa_to_port(ds, port), *other_dp;
--	struct dsa_port *cpu_dp = dp->cpu_dp;
- 	struct mt7530_priv *priv = ds->priv;
- 
- 	mutex_lock(&priv->reg_mutex);
- 
--	dsa_switch_for_each_user_port(other_dp, ds) {
--		int other_port = other_dp->index;
--
--		if (dp == other_dp)
--			continue;
--
--		/* Remove this port from the port matrix of the other ports
--		 * in the same bridge. If the port is disabled, port matrix
--		 * is kept and not being setup until the port becomes enabled.
--		 */
--		if (!dsa_port_offloads_bridge(other_dp, &bridge))
--			continue;
--
--		if (priv->ports[other_port].enable)
--			mt7530_clear(priv, MT7530_PCR_P(other_port),
--				     PCR_MATRIX(BIT(port)));
--		priv->ports[other_port].pm &= ~PCR_MATRIX(BIT(port));
--	}
--
--	/* Set the cpu port to be the only one in the port matrix of
--	 * this port.
--	 */
--	if (priv->ports[port].enable)
--		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK,
--			   PCR_MATRIX(BIT(cpu_dp->index)));
--	priv->ports[port].pm = PCR_MATRIX(BIT(cpu_dp->index));
-+	mt7530_update_port_member(priv, port, bridge.dev, false);
- 
- 	/* When a port is removed from the bridge, the port would be set up
- 	 * back to the default as is at initial boot which is a VLAN-unaware
+ 	if (val != QT1050_CHIP_ID_VER) {
+ 		dev_err(&ts->client->dev, "ID %d not supported\n", val);
+ 		return false;
 -- 
-2.45.2
+2.35.2
 
