@@ -1,120 +1,139 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B26A1BDCD;
-	Mon, 17 Jun 2024 10:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540B56F505
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718619663; cv=none; b=nh7Y0GXHva0Y93gjevq8Splf+3HUvh0+e8xBh7lA/hxTt0+iOAdB5wD21AdOO1lrd6pyoBBxVWT+YSTFzHybrAMPqxavN3K7Q/Sy/WYLG399wscVdLVhMc6dsAbfl7ELkktCdRRSS23e9/NEQSaw83ro/pLQuwTQpZmZajrKKrM=
+	t=1718620005; cv=none; b=nkjD/diEkYN2+TYEj+Nyxy5aTERKojpXDDd7a3qjbFqyIH/TbbLA4ZtpDRkIrIIUfL6kMonTCsZ7jOzsr33bdW54fxOKDfi/u27Tpt2qWtUhNrifbilJQRgcBtl8u8hiru9v2adz9yRnT20RQW0B2HAvyVCagTjmhdfp/BFI2Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718619663; c=relaxed/simple;
-	bh=hma8mMPlNw0XPIyVpQPHEbIDI4S64MWji2iDW3ZuWZU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=puXOUDzCAhuSIfhECtCNJleFZ6h5Xg4VVjcPZwkqgEYFE1yc7pxAPnOIx95LLdHvpLPpt7Bkfn/ESrZuYN9EAwlxiJYXkbu1bkvco/hpfXupxO8N//6WK3vecoLlijvmNf5QCAZonTKIkjf624fH7gzd2JjSLzNFXgIKqldNCww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYyJK7R9; arc=none smtp.client-ip=209.85.218.43
+	s=arc-20240116; t=1718620005; c=relaxed/simple;
+	bh=7hXGDHwLfhamJrMU1icU92e4wy3F23Sftij7zIlYQ5o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ngvkEFC8Ml+1QxyKkmrhuB4nRjnF3VXqXCkiK7HgNzDnscntRH7pgeYb4iJzI9zpYN2nX9XXyNmN5oybX8tz1Cze1MQlP4j1PQ1iMoSVCqPGVqrB2n1M1eoDeqzJNWyGUUAKbITrUOESif/OWQvp+xCUa41/ZmqoycsPUfIJJVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Slhve6r2; arc=none smtp.client-ip=209.85.222.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYyJK7R9"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a63359aaaa6so633183566b.2;
-        Mon, 17 Jun 2024 03:21:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Slhve6r2"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-80d68861bf9so1475123241.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 03:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718619660; x=1719224460; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uHfz5gEjeGSF+rOMoEalB7WTEbRFmK0VDhLIXxLJjyM=;
-        b=SYyJK7R9hRyNYh0qdOUDmE7QA/WtTQKTwiqR76JshjqM9TV62gzyfA0o2IVbVjytuc
-         rLpCzHgTGioXDcGqdxy/T7lhVE7keYt8MARXGS2tWEGdbeyD64A/28auanksh/uAyqpb
-         KRD4cEypIXM88bsZFUPielXqDvrNWJCyqieEFv6+oPzziUdOICHHzCdguPoUogzlD2bG
-         MNtOX/jmApZf36O0Vpgbk64sGALUFUwbloOyCazs7rto6SUR1353k+YoYr5099ypdqGj
-         n3V2PTpiR9zvAXTSO1f+GgHDMTKMfYz45lq2s3Hx/u4Z/miXzSgV5bUz1MxdgySdlYqF
-         eaLA==
+        d=gmail.com; s=20230601; t=1718620003; x=1719224803; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AFoVB120xxdGUtJY/lUzDNHtyGa18ElXXxsWBBg/Yrg=;
+        b=Slhve6r2PIAXJBTNGhNFeVPjOoFZDqU3PbxlJA2roqS6HNCBW70N3OWvSwb4T5WQ3D
+         0UzuXfDhpVA9jdwS7xgUsrwpd+OJ0Qus61FcagekZJyiR8IMwj/S3BXxKNf+A242iw5S
+         Spr7fQW74V2jHV360yoPglB/EyCRfy7U1IaBMR3/rGX4jWDNRE7DpOXLX51V9oexbEmQ
+         3hkLsrOGPVY5p9bI34AaBkZGjguHR8AqhJR4dZQh2B4V5mI5mJdFX1DZm6Tl7Q4JZN2l
+         psR8iiXj1De4Cb3kSAB/A84Bgj9R2kgnxTIjBS7Fza7MaDMft2EJwrAqzyFBuofNSq7C
+         PDPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718619660; x=1719224460;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uHfz5gEjeGSF+rOMoEalB7WTEbRFmK0VDhLIXxLJjyM=;
-        b=mVCqVZ9Ph03QBrEd/zFJUsQDpSY/HMRwRqgkJcsYIAr/bEVasmRb51gQzUxln73KQE
-         6BUxQ3cBN4a4g89JPdTR7l+lwSIzlTfaXHtzDEYHIDdPcn8h+bfB52Sx3Gt/FUgz4XpA
-         0x7On7riCG0dDvxbFazB0p0Dd/6oV9xHR3zjkeXFb8gldfGG/X5Vtg/7mXdt9+KyVmsF
-         qcpLkAJbvSKBbWjO+/6ecgmI33HqrDdiTYOkbH3UlpP7wdvH+x7LSKawoIglrOEhSp7l
-         ck4lexmvtJvYbc9Mz6c35RQd3yRwPXkB4U9n20iAgutx+glixEa0T10kC8UJnsMdZcG3
-         WoZg==
-X-Forwarded-Encrypted: i=1; AJvYcCULGIRNOlkMX4PzQqJ2TxGTO3FIKTeCrEq/CocMeqJvkGaEDvvq8y6KayJyO3tQqDO1CL0hW0v20+fy9BHSfnHyXwfMm4/9+YuUW8byxtIKTEptiT8Dz43E72m70l27pC0LAdg3+E0JEA==
-X-Gm-Message-State: AOJu0YxafKAWKJxbC3JpVSHlMIH69nKt0H25aIqb8/s56aKuQ0t1Jh0p
-	y60gimLpcPmHFlN8jilpgtBUHVxhwaX+37Z5+hTNvwRQmXKwXkZ0
-X-Google-Smtp-Source: AGHT+IHeyhFwbJ02FHOefpxR67mlMUl7SBsrp6KlB/ktW30pRVoaZ2fDCDwgr8eiuKSf7S+gP/BYVQ==
-X-Received: by 2002:a17:906:3e96:b0:a6f:5c1a:c99d with SMTP id a640c23a62f3a-a6f60dc56fbmr551002466b.53.1718619659791;
-        Mon, 17 Jun 2024 03:20:59 -0700 (PDT)
-Received: from ?IPV6:2001:8f8:183b:6864:7071:8881:6a51:3e82? ([2001:8f8:183b:6864:7071:8881:6a51:3e82])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56da3344sm508978966b.19.2024.06.17.03.20.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 03:20:59 -0700 (PDT)
-Message-ID: <a25472f5-3e88-408c-a033-5e338dce6340@gmail.com>
-Date: Mon, 17 Jun 2024 14:20:52 +0400
+        d=1e100.net; s=20230601; t=1718620003; x=1719224803;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AFoVB120xxdGUtJY/lUzDNHtyGa18ElXXxsWBBg/Yrg=;
+        b=H4tzA3JLiacFrmUtjPSx7YMR8eKyKsyD9f6pA+B+qv4tWG+6GAaL91M1Xek/eClEZV
+         D23xYWM9NFnL0AjhizX1nga+qN3zb8miShRZ+Ut0xj1YY9Ui/k5yv7m1mSLUL2H2G8tM
+         ShAtAGVj8pcTf9TQP3n9K+fAvuk/i3cWBmNVlU0vTTmgi3HVazu9t4QIfFA5UpRVz4Nh
+         qc94Hc4vFPsrLr6107Jkq5s8Kr12RSocb1pLeAazqDJeuxRURIFIptBCgrk+AkoEc+Pq
+         Bae5CFOa1bhINGoyQQd10MVWnvRq0+qS8E5zBKNUmAHTBvdAuOb5V0Q6GKrPqXPlospJ
+         oAMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUbYUUFM9AUxEJaYqw2F4bHCLPa20qic1zgcjVm+tihsMi3b2gudC7B88BjuwD7WqlfwJLPGQw0O6x/3lxNF5X+kfDRlNHw/keJ3ro
+X-Gm-Message-State: AOJu0YwolJ6eFEus6Gp3VJTBU/07CbWebcHEinx7esCXDYyNyBh+dQhl
+	asVjU995786xqe/v94qHtrWRbIJFky41tS/Se/pqBHzJyQnG7d9Y9agSh4abKqw7GhjAB1nrOU9
+	nR0TZmm8ADj0K6aFK39WPAJbdsG0=
+X-Google-Smtp-Source: AGHT+IH4ZVF8+aYTJ8p8IDCCO95wJIZviSoKL/6SigeVRkIpcVRxNxBZG9nBpaxAl/YEqB5S5UdcVukr6A2/S5+1ktI=
+X-Received: by 2002:a67:f9cb:0:b0:48c:30be:37f6 with SMTP id
+ ada2fe7eead31-48dae3d5ad4mr9389244137.27.1718620003081; Mon, 17 Jun 2024
+ 03:26:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Alexey Charkov <alchark@gmail.com>
-Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: Add bluetooth rfkill to
- Khadas Edge2
-To: Jacobe Zang <jacobe.zang@wesion.com>, "robh@kernel.org"
- <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "heiko@sntech.de" <heiko@sntech.de>
-Cc: Nick Xie <nick@khadas.com>, "efectn@protonmail.com"
- <efectn@protonmail.com>, "jagan@edgeble.ai" <jagan@edgeble.ai>,
- "dsimic@manjaro.org" <dsimic@manjaro.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240617071112.3133101-1-jacobe.zang@wesion.com>
- <20240617071112.3133101-3-jacobe.zang@wesion.com>
- <f147be11-fc35-44c2-88e8-7421fee47ace@letovo.ru>
- <TYZPR03MB70017A6280F060A6F4A1DD9880CD2@TYZPR03MB7001.apcprd03.prod.outlook.com>
-Content-Language: en-GB
-In-Reply-To: <TYZPR03MB70017A6280F060A6F4A1DD9880CD2@TYZPR03MB7001.apcprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
+In-Reply-To: <1717492460-19457-1-git-send-email-yangge1116@126.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 17 Jun 2024 22:26:31 +1200
+Message-ID: <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
+ non-CMA THP-sized page
+To: yangge1116@126.com
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com, 
+	liuzixing@hygon.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(sorry, the previous one got sent in HTML by accident)
-
-On 17/06/2024 12:55, Jacobe Zang wrote:
->> You refer to wlan in the commit message, but there is nothing wlan
->> related in the patch itself. Update the commit message perhaps?
-> At that time, I want to describe that wlan and bluetooth were from the module named BCM43438. But, it's true that wlan do not be metioned in the code. I will update it in next version.
+On Tue, Jun 4, 2024 at 9:15=E2=80=AFPM <yangge1116@126.com> wrote:
 >
->> I thought you'd need to also reference the respective GPIO to be able to trigger its
->> state, not just switch the pinctrl configuration to GPIO.
-> You means the shutdown-gpios? I configure it in the bluetooth node, it can't be configure in rfkill node at the same time.
+> From: yangge <yangge1116@126.com>
+>
+> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+> THP-sized allocations") no longer differentiates the migration type
+> of pages in THP-sized PCP list, it's possible to get a CMA page from
+> the list, in some cases, it's not acceptable, for example, allocating
+> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
+>
+> The patch forbids allocating non-CMA THP-sized page from THP-sized
+> PCP list to avoid the issue above.
 
-In Documentation/devicetree/bindings/net/rfkill-gpio.yaml shutdown-gpios 
-is listed as a required property, did you try building the sources with 
-CHECK_DTBS=1 in make arguments?
+Could you please describe the impact on users in the commit log?
+Is it possible that some CMA memory might be used by non-movable
+allocation requests? If so, will CMA somehow become unable to
+migrate, causing cma_alloc() to fail?
 
-If you already control this GPIO from elsewhere (such as from the 
-bluetooth driver), then perhaps you don't need to define a separate 
-rfkill device at all.
+>
+> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized =
+allocations")
+> Signed-off-by: yangge <yangge1116@126.com>
+> ---
+>  mm/page_alloc.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 2e22ce5..0bdf471 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone *preferred_zone,
+>         WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+>
+>         if (likely(pcp_allowed_order(order))) {
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & ALLOC_CMA ||
+> +                                               order !=3D HPAGE_PMD_ORDE=
+R) {
+> +                       page =3D rmqueue_pcplist(preferred_zone, zone, or=
+der,
+> +                                               migratetype, alloc_flags)=
+;
+> +                       if (likely(page))
+> +                               goto out;
+> +               }
 
->> I'm also wondering if bt_reset_pin is the right one to use here. On my
->> Rock 5B I had to trigger bt_wake_pin to get Bluetooth up and running.
-> Yes, I try to configure bt_reset_pin, bt_wake_host_irq and  bt_wake_pin in pinctrl separately. Each of them works well. After I connected a BT device to Edge2, I input rfkill block 1, bluetooth function failed. Then I input rfkill unblock 1, it can rework. So at last I only configure the bt_reset_pin.
+This seems not ideal, because non-CMA THP gets no chance to use PCP. But it
+still seems better than causing the failure of CMA allocation.
 
-That doesn't necessarily mean that the hardware gets an rfkill signal, 
-what you describe above could also come from the software alone. It 
-would be great to somehow check if the physical pin state gets triggered 
-once you switch rfkill state from userspace, and then that the bluetooth 
-device handles it appropriately (e.g. gets into a hardware-disable state 
-somehow).
+Is there a possible approach to avoiding adding CMA THP into pcp from the f=
+irst
+beginning? Otherwise, we might need a separate PCP for CMA.
 
-Best regards,
-Alexey
+> +#else
+>                 page =3D rmqueue_pcplist(preferred_zone, zone, order,
+>                                        migratetype, alloc_flags);
+>                 if (likely(page))
+>                         goto out;
+> +#endif
+>         }
+>
+>         page =3D rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
+> --
+> 2.7.4
 
+Thanks
+Barry
