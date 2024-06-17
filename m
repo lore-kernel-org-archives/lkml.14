@@ -1,177 +1,117 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82B918F2C2;
-	Mon, 17 Jun 2024 09:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152ED374D9
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718614975; cv=none; b=hUZvPfXMnt+8JbhltQQnK66EGGYS6DudH8QQBK0Sue7HpjhBMizla14hbC7+SU8+udqgBH7oKi5j24ULlg8YYNIPiac4PUwSWMNFBYZC/0WmNZ9v89ue5j3livK67o9Waa8AZrjAo5JshhqzRdfRcTUliw6rJLA3pZUOfwH2q7I=
+	t=1718615024; cv=none; b=kwLuVn1ImxZLtHqfQnwSq5KVwvBD55BxIoWUmEG+eKjAPeXZk99PjVP7mUHkOO1Xb+SS+KH646IMkaXauCaMRh/h2XTlnOpO3+DYoJjqT0SXB7LXZXZnHZUwbAhP6RMwK4Uwb2QzgLZ/LaK9gd4A6Bw65wvVKXuE+veNtZ2ZSxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718614975; c=relaxed/simple;
-	bh=cSz55dptPmcSK2hnEEWa51mIDqWBhDCuCzZoXAnIswo=;
-	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
-	 References:To:MIME-Version; b=jGVbsH13s3XmofFFzgPNWbKjxTH5HLgvYPzj5n5EBfjs/IxZxyqaDQPB9rsXqod/ZymiCxk9QDIlBJ/m/3Qnp8YK7Emsr5R1qJiRN7+Cb9fF8GtoD/nAqoRqgKVSkd0/KY76nkll18gD2Aj7R1W1bQbRHoo7DfPG0zwOIhd0uNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ztek66uP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1718615024; c=relaxed/simple;
+	bh=nB8QMBkw+Gs0pg1mPKXuIZhWT23WrRcc+RsQ7FIMqTA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=CkWo06AKhYgUMoRoO3OoImpbSp3B58e2dZkDlYipozCuaNmS4UxYX7MRBP3Y5XFJW7CKKIRZeq2TdjFWZST6BZNGWOxP3Co07Ui9Ts3kINocfmu2khRLq/PQ2dRwL0j+4A52V9I+ORFTLJ3q3kA2j0G63kuKBus2Z3WC17Cnlw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=1yhs8A8+; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ztek66uP"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H5vHUX013461;
-	Mon, 17 Jun 2024 09:02:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:subject:from:in-reply-to:date:cc:message-id
-	:references:to:content-transfer-encoding:mime-version; s=pp1;
-	 bh=tgNXS5H79ucwG35KsYePCtr8WrjT1qVmzdV8DrTgygs=; b=Ztek66uPVFml
-	t/w2sujsjUAPGMvDqDog9HyCNpnZOEQPKo6OYXYOORFWozRo1VLW8wnLmnqrMzZH
-	sLbvi8xAdwBbkv3BrgNNkLGdKNS8ijmFR99ZO4lml8fSQ+I1RdhEC51TvwMmlEXg
-	GCD735jv7e5dWYXp1cCZGYZDsbHs8SMkx8EIPNnhmBeUUqhMwoAE1HW917qZbBWU
-	WI0Ezpfgg8jn5jW/VM+QbuY7X5na0f48O0j3fplgWWoAyo8U+twwxoluRvqvH06I
-	CzoyAeeYTqQ6FIGCriLL1BIlQKN/vr2APV6S+q3ykJAkPrk26sy5I0gC3HQwvNbv
-	T5Lt80vhlw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yt8efh6rw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:02:42 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45H92goU005623;
-	Mon, 17 Jun 2024 09:02:42 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yt8efh6rv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:02:42 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45H6tJHc019519;
-	Mon, 17 Jun 2024 09:02:41 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysnp0rp67-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:02:41 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45H92ZBh43385220
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 09:02:37 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 73E4420063;
-	Mon, 17 Jun 2024 09:02:35 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8603720040;
-	Mon, 17 Jun 2024 09:02:33 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.84])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 17 Jun 2024 09:02:33 +0000 (GMT)
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="1yhs8A8+"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7041ed475acso3158321b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1718615021; x=1719219821; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CDNdx/ptahIqYIH0Pj0xId5ttxu/lCJrKg2rnZynRFw=;
+        b=1yhs8A8+yZZvqagFw3Vrduykdf38OHNEBpppN6JGgTKAQO5jpN+GX3wkcwAI/5dhlp
+         J7tQL1I6a3rYY0ndIpVY6IzBE05BF0cV19rB8kr2JnAIY/ywIJg9Pp+kzFYl/NkZ/XDO
+         xYtrnTeF/GHwK0b4k+uZMK1XUH6ImU+wePJLDftoME9ZKHfQL2AdoLUDCKSIp/k1wpI2
+         PwTDWqjufr5TwZUfaL1s+W/SNfTzf043y6d84Fv1h2nZZiEKdrCG9cfTnFa+s1W7BXC5
+         vsnKhJ6Gm1gC2pv5oQhDAgM0i/D/+5bQ7qSM3pj5+cyTh5/nOQAGoNBxshgvCKiEvQFI
+         tdXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718615021; x=1719219821;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CDNdx/ptahIqYIH0Pj0xId5ttxu/lCJrKg2rnZynRFw=;
+        b=OYWs7A4AU4yDyebd1wOLdmKOhS9LQ5Gvte+L3BlHxTpaoen8TUhJVBPQ4nHl1S4g14
+         OLkLcAa4niceHv7OVBqFlcrr06GFH09/0O6+/1vWIaAyRT1/tPjrQkyGJ+6qMOKyzrVU
+         oVnt5oRVlcEB0GBeiIWG7QaktTruZGy1ViJnlQSRSlTYnmuVnC1Iu7CF716BpmZ4KfBV
+         kZJGT+uoMFEwx2fBMJj7tjBg6cb4aWJUCau82MOg8QcFticIquKLevFNMcaHux1tQcSd
+         NzyAGSAHMjhHqQwSyYhGPwQRMg599ZR98OmJU2eQUkyXP3DFpW9zROk3tDvStmlgETtA
+         L87A==
+X-Forwarded-Encrypted: i=1; AJvYcCVtT8lUVRLFyifLJBr8YY8x1W52SWLIrldng1DgN/8yMIbGFn70q8r1eIfUSQqS9vVnmkHa9to9IO6L2kMgbONBhMt3iqKZkqwl/wlG
+X-Gm-Message-State: AOJu0YyBj0MNovoOVjIf6+JUDAM9YC4ELuvIvQBPemIiffMdFapmQ0J4
+	1vFV0KRx1YqOe3rkZ8ATjFAONUDYzaQ9KjvGoUDh/yu+khI26XB0wfjtXyu/HhPMyC4lWjL6t3e
+	3B+pGuQ==
+X-Google-Smtp-Source: AGHT+IGl4ZLPZeK1F68wu9bXpVDKybvPNImmW3ohNbywjyE4zel7t83lUzZALw6c8pEDGKdWBPKXzg==
+X-Received: by 2002:a05:6a00:8d5:b0:704:32dc:c4e4 with SMTP id d2e1a72fcca58-705d7123929mr11639890b3a.1.1718615020941;
+        Mon, 17 Jun 2024 02:03:40 -0700 (PDT)
+Received: from smtpclient.apple (vps-bd302c4a.vps.ovh.ca. [15.235.142.94])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fedcf36aa1sm6270503a12.17.2024.06.17.02.03.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2024 02:03:40 -0700 (PDT)
 Content-Type: text/plain;
 	charset=utf-8
-Subject: Re: [PATCH 2/2] tools/perf: Fix parallel-perf python script to
- replace new python syntax ":=" usage
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <802a5260-8d74-4a5e-85fc-c9b86460d4c5@intel.com>
-Date: Mon, 17 Jun 2024 14:32:21 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Message-Id: <FEE9269F-7500-4169-9F94-50E3CCA174DF@linux.vnet.ibm.com>
-References: <20240614172742.56976-1-atrajeev@linux.vnet.ibm.com>
- <20240614172742.56976-2-atrajeev@linux.vnet.ibm.com>
- <802a5260-8d74-4a5e-85fc-c9b86460d4c5@intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5c_T6aJerPZEOIdkIdBcDCb19dd3zZGf
-X-Proofpoint-GUID: pRVyNUmO1as08Vu7_RuDyXkPSZFRtCjC
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_07,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 suspectscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170068
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [PATCH] scsi: sd: Keep the discard mode stable
+From: Li Feng <fengli@smartx.com>
+In-Reply-To: <Zm_U_ZA96u2K6a6S@infradead.org>
+Date: Mon, 17 Jun 2024 17:03:03 +0800
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <44BCFE4F-AB66-4E6A-A181-E7D93847EF98@smartx.com>
+References: <20240614160350.180490-1-fengli@smartx.com>
+ <Zm_U_ZA96u2K6a6S@infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
 
 
 
-> On 16 Jun 2024, at 8:33=E2=80=AFPM, Adrian Hunter <adrian.hunter@intel.co=
-m> wrote:
+> 2024=E5=B9=B46=E6=9C=8817=E6=97=A5 14:17=EF=BC=8CChristoph Hellwig =
+<hch@infradead.org> =E5=86=99=E9=81=93=EF=BC=9A
 >=20
-> On 14/06/24 20:27, Athira Rajeev wrote:
->> perf test "perf script tests" fails as below in systems
->> with python 3.6
->>=20
->> File "/home/athira/linux/tools/perf/tests/shell/../../scripts/python/par=
-allel-perf.py", line 442
->> if line :=3D p.stdout.readline():
->>             ^
->> SyntaxError: invalid syntax
->> --- Cleaning up ---
->> ---- end(-1) ----
->> 92: perf script tests: FAILED!
->>=20
->> This happens because ":=3D" is a new syntax that assigns values
->> to variables as part of a larger expression. This is introduced
->> from python 3.8 and hence fails in setup with python 3.6
+> On Sat, Jun 15, 2024 at 12:03:47AM +0800, Li Feng wrote:
+>> + /*
+>> + * When the discard mode has been set to UNMAP, it should not be set =
+to
 >=20
-> According to below python 3.6 is end-of-life
->=20
-> https://devguide.python.org/versions/
->=20
-> What was still using python 3.6?
->=20
->> Address this by splitting the large expression and check the
->> value in two steps:
->> Previous line: if line :=3D p.stdout.readline():
->> Current change:
->> line =3D p.stdout.readline()
->> if line:
->>=20
->> With patch
->>=20
->> ./perf test "perf script tests"
->>  93: perf script tests:  Ok
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->=20
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Overly long line here.
+OK.
 
-Observed this on SLES 15 SP5
-Thanks for the Acked-by Adrian
-
-I will be posting a V2 adding this Acked-by for this Patch 2 and addressing=
- changes suggested in handling "/tmp/perf-%d.map=E2=80=9D files in Patch 1
-
-Thanks
-Athira
 >=20
->> ---
->> tools/perf/scripts/python/parallel-perf.py | 3 ++-
->> 1 file changed, 2 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/scr=
-ipts/python/parallel-perf.py
->> index 21f32ec5ed46..be85fd7f6632 100755
->> --- a/tools/perf/scripts/python/parallel-perf.py
->> +++ b/tools/perf/scripts/python/parallel-perf.py
->> @@ -439,7 +439,8 @@ def ProcessCommandOutputLines(cmd, per_cpu, fn, *x):
->> pat =3D re.compile(r"\s*\[[0-9]+\]")
->> p =3D subprocess.Popen(cmd, stdout=3Dsubprocess.PIPE)
->> while True:
->> - if line :=3D p.stdout.readline():
->> + line =3D p.stdout.readline()
->> + if line:
->> line =3D line.decode("utf-8")
->> if pat.match(line):
->> line =3D line.split()
+>> + * WRITE SAME with UNMAP.
+>> + */
+>> + if (!sdkp->max_unmap_blocks)
+>> + sd_config_discard(sdkp, SD_LBP_WS16);
+>=20
+> But more importantly this doesn't really scale to all the variations
+> of reported / guessed at probe time vs overriden.  I think you just
+> need an explicit override flag that skips the discard settings.
+>=20
+I think we only need to prevent the temporary change of discard mode=20
+from UNMAP to WS16, and this patch should be enough.
 
+Maybe it is a good idea to remove the call to sd_config_discard=20
+from read_capacity_16 . Because the unmap_alignment/ unmap_granularity
+used by sd_config_discard are assigned in sd_read_block_limits.=20
 
+sd_read_block_limits is enough to negotiate the discard parameter.=20
+It is redundant for read_capacity to modify the discard parameter.  In =
+this way,=20
+when the SCSI probe sends read_capacity first and then read block =
+limits,=20
+it avoids the change of discard from DISABLE to WS16 to UNMAP.
+
+Thanks,
+Li=
