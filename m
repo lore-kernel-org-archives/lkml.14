@@ -1,129 +1,160 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C04C1D18E6
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957C71D18EA;
+	Mon, 17 Jun 2024 13:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632273; cv=none; b=Q8Up0fnmfb+Rwt2nx7hZdR6RueT9439i4MMsojpSsxdA4ZKW+a8qA9ZwVj8FvmNRi0GJLMBZwioeqIOR9/x928B8uIvohw3dikEYwWEW9sTAUwzFMmb8mEu4gtni9tkCrKrhB8srBJg97p+xUbGDnF7LLUBOkvp/ss3dx79iapM=
+	t=1718632273; cv=none; b=Vrvl+n7Kme+bpTdl/O0ZHVvtpQozOzKeYkM6sM+tW7kMYGhAvYZnuPCtWPlDh1zVaHU72zKQq+H9iW9xcWQDiRc61GrjAjRxNazVDLMUYP05cl/2MTlTpGxXc9FahCE+dYFiuAG4vfhc4qe581HlcU49P1fP4mE4aIXvRJRb8xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718632273; c=relaxed/simple;
-	bh=/iTmUukNGLPGvGh+5363cpZBdKYe1qLwwMB3hsIs3J4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EykoAq29jn79nRJNPUJjpQ3ErHQg2XVyISJS1FicRq5/ctr4e0eKGSa6scswdlUzmb3JnD9mo5UW6X5VEly+HqYd38TGbg28S/NYwC2wzFNpoL0b7SdRyJqGhRqCrgBlphe12iIsG2yQ0sY+elJf/CDmq4V9/RT1hxjuZhyYdxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hZXZGfed; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=Pm4faYVykkcXdU+VaMOQQ94QueMr8h7aGqbVVgZr+8k=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=WAuw/0kKw0Y2xH6d3pm43Z/xtEv57W2VomG/bj6vFUoC6bYjmlyr1vPfNl4TP9e1wWJE0/f+33lx6YfBy4c+yGVYwXQSgOKxksoyRNU8hCt21NCqRE/2cGY8GQoV3Sjv+YV2a78nUuPD2c5ahJTf+7fHoHd0tM0SwmKBpC1obu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2GU6Cm+H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tgwm/tPB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hZXZGfed"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7954f8b818fso290944285a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718632270; x=1719237070; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DYef8rADT2ijxxEcxYPLN7/oRY6yNh5EaRUGzmb2a/I=;
-        b=hZXZGfedqGZ/DvNsGkX5tE4xAdw1NkCaAByg98DAM6mRkVK+7hhc9IDOL7MDFFarr4
-         4SnGUKI3mGGx6x6o8Mjo3PUErArmkWud2UV8xZJ5R1B3dMHdN2kX2zXYviJwaCzc7NA9
-         irPcuixmQBa5s3/YTD8+4dPuWHgUVo7/tvZHfpVrukT5TiJCo2Cf9jUpXYjNHlLp7466
-         dML4fLqKWyjFQfJPH4o4bmsTyYRUYokC7PkGTozMB0YPD+InMd1Iwb4/7bjB4D/hPB9K
-         CATwehPSVMi6RiZY72TtfCjH7A/j3JK5A5DHXHMEVmtKczhzOCyTJPtXnTJV5lzXZ4iJ
-         3Edw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718632270; x=1719237070;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DYef8rADT2ijxxEcxYPLN7/oRY6yNh5EaRUGzmb2a/I=;
-        b=raGI9dT5uvAsOWlajT5vvsr6B6mp7/e0jjchBzNIq/ZKYWTgRXU/Cf+U48xRPuqvzl
-         R8lZNcya+6LLE7lqDq1YGre9wuYYb4X+RJKJok+3L1cqhH9FTLszGZF61xs7rECLHnY0
-         Q8RIpVQiT2V940Zl/hLFlKgBiAvmrzaTwLLd37XKHyrL+xkCGLhkG07GwHt9nrcn44Ds
-         Gl8iwgu/6EgIE0egcdJ3w1Zf5Ji3TxRiA6ZiYgMyXN3KLGh8fztUq3+4E2wxtbXXuWJD
-         5iiRSbHfI2Ah3p2H8yaKaWPx2lwvuLF9EOK8h6VoKGLLVNzXKKO/ADRgOUT7eeWNeRfA
-         lPTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGFYqjCOelxXMD6db2eC2lpCVeH6dDhzhdM3wIRpShUeJDn8SF4a9fZmBj6DOxnN8Akpfw/YWthWixZ1Ntp1+1uZO8w55yt9oEzUvk
-X-Gm-Message-State: AOJu0YxgqlJtUJ2wsd8GkmUKaI3SMF1xmskjrNEfA/aB9g0CLmEYuRO6
-	roLOICpMrDa5xV6FmPYcTNB94LyaxIk5DLNo/BB4wcWLFxS6yIic/eHRgcM0AzQ=
-X-Google-Smtp-Source: AGHT+IG+NTpXbmfTtgLV5kgHRYZJqicJgvBNrkkmD2PI5YKClqNlpZ4QFEOEqllRaBP9Jcn3G+Ldqw==
-X-Received: by 2002:a05:620a:24d5:b0:795:50ef:4030 with SMTP id af79cd13be357-798d242f345mr1050763085a.41.1718632270523;
-        Mon, 17 Jun 2024 06:51:10 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798aaecc004sm432892285a.31.2024.06.17.06.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:51:10 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-Date: Mon, 17 Jun 2024 09:50:20 -0400
-Subject: [PATCH v3 40/41] iio: temperature: mlx90632: make use of
- regmap_clear_bits()
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2GU6Cm+H";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tgwm/tPB"
+Date: Mon, 17 Jun 2024 13:51:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718632268;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vahR3jsS8CtTwwY5H5t42TcBcOkT6KsvbxVrMSiUt7I=;
+	b=2GU6Cm+H4G3rs9zjDLgq0gjfuQ/yUyD04paScA9Ot/qX9TLgPaWpoe8JQ7SstAszuxnN8x
+	QYKhNw4XndpJ6te0BW/+RuWsX5eHE17qS0GyIYLxiRidmwhD+0p5YnwQ/SvXX6OaJJ0jHr
+	MDxliUW2KwNAq0D5UCSH5ZXbA/zLtFKYdZH9lk6SPc1U9UU1HCfoxxN9OeY4dCKjDbE9SN
+	DiigC/AW+lVGFlvtPiKaQiE2ggGPR02cVO72uO6fTuDLi1rNI5FkjrbJzhh2A0tB8vi5RA
+	6RgRFlyLu8nNNyo1f600oH9DeQWtZPoTGmc8A+aVuxoCrbed4Mws26lPvKij3w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718632268;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vahR3jsS8CtTwwY5H5t42TcBcOkT6KsvbxVrMSiUt7I=;
+	b=tgwm/tPBmTVhTIMHAqoV1T/ID+cUer3idrGHAj5tB1v14q/ZpCMUJMmF1X0iQ6XeD+l0Jl
+	s8vP6Gz4Cdykp5Bw==
+From: "tip-bot2 for Herve Codina" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqdomain: Remove __irq_domain_add()
+Cc: Herve Codina <herve.codina@bootlin.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240614173232.1184015-21-herve.codina@bootlin.com>
+References: <20240614173232.1184015-21-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <171863226851.10875.3080035403553714457.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240617-review-v3-40-88d1338c4cca@baylibre.com>
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-0-88d1338c4cca@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Dmitry Rokosov <ddrokosov@sberdevices.ru>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
- Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
- Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Saravanan Sekar <sravanhome@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, 
- Crt Mori <cmo@melexis.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
- linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- Trevor Gamblin <tgamblin@baylibre.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 7bit
 
-Instead of using regmap_update_bits() and passing val = 0, use
-regmap_clear_bits().
+The following commit has been merged into the irq/core branch of tip:
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Acked-by: Crt Mori <cmo@melexis.com>
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+Commit-ID:     0b4b172b760efabf8a77ea17644d333fbb444d39
+Gitweb:        https://git.kernel.org/tip/0b4b172b760efabf8a77ea17644d333fbb444d39
+Author:        Herve Codina <herve.codina@bootlin.com>
+AuthorDate:    Fri, 14 Jun 2024 19:32:21 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 17 Jun 2024 15:48:15 +02:00
+
+irqdomain: Remove __irq_domain_add()
+
+__irq_domain_add() has been replaced by irq_domain_instanciate() and so,
+it is no more used.
+
+Simply remove it.
+
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240614173232.1184015-21-herve.codina@bootlin.com
+
 ---
- drivers/iio/temperature/mlx90632.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/irqdomain.h |  6 +-----
+ kernel/irq/irqdomain.c    | 33 ---------------------------------
+ 2 files changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
-index 8a57be108620..e7de30f613d2 100644
---- a/drivers/iio/temperature/mlx90632.c
-+++ b/drivers/iio/temperature/mlx90632.c
-@@ -334,8 +334,8 @@ static int mlx90632_perform_measurement(struct mlx90632_data *data)
- 	unsigned int reg_status;
- 	int ret;
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 33a968f..02cd486 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -184,7 +184,7 @@ enum {
+ 	/* Irq domain is hierarchical */
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
  
--	ret = regmap_update_bits(data->regmap, MLX90632_REG_STATUS,
--				 MLX90632_STAT_DATA_RDY, 0);
-+	ret = regmap_clear_bits(data->regmap, MLX90632_REG_STATUS,
-+				MLX90632_STAT_DATA_RDY);
- 	if (ret < 0)
- 		return ret;
+-	/* Irq domain name was allocated in __irq_domain_add() */
++	/* Irq domain name was allocated internally */
+ 	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
  
-
--- 
-2.45.2
-
+ 	/* Irq domain is an IPI domain with virq per cpu */
+@@ -307,10 +307,6 @@ struct irq_domain *irq_domain_instantiate(const struct irq_domain_info *info);
+ struct irq_domain *devm_irq_domain_instantiate(struct device *dev,
+ 					       const struct irq_domain_info *info);
+ 
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+-				    irq_hw_number_t hwirq_max, int direct_max,
+-				    const struct irq_domain_ops *ops,
+-				    void *host_data);
+ struct irq_domain *irq_domain_create_simple(struct fwnode_handle *fwnode,
+ 					    unsigned int size,
+ 					    unsigned int first_irq,
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index c9b076c..91eaf6b 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -318,39 +318,6 @@ err_domain_free:
+ EXPORT_SYMBOL_GPL(irq_domain_instantiate);
+ 
+ /**
+- * __irq_domain_add() - Allocate a new irq_domain data structure
+- * @fwnode: firmware node for the interrupt controller
+- * @size: Size of linear map; 0 for radix mapping only
+- * @hwirq_max: Maximum number of interrupts supported by controller
+- * @direct_max: Maximum value of direct maps; Use ~0 for no limit; 0 for no
+- *              direct mapping
+- * @ops: domain callbacks
+- * @host_data: Controller private data pointer
+- *
+- * Allocates and initializes an irq_domain structure.
+- * Returns pointer to IRQ domain, or NULL on failure.
+- */
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+-				    irq_hw_number_t hwirq_max, int direct_max,
+-				    const struct irq_domain_ops *ops,
+-				    void *host_data)
+-{
+-	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
+-		.size		= size,
+-		.hwirq_max	= hwirq_max,
+-		.direct_max	= direct_max,
+-		.ops		= ops,
+-		.host_data	= host_data,
+-	};
+-	struct irq_domain *d;
+-
+-	d = irq_domain_instantiate(&info);
+-	return IS_ERR(d) ? NULL : d;
+-}
+-EXPORT_SYMBOL_GPL(__irq_domain_add);
+-
+-/**
+  * irq_domain_remove() - Remove an irq domain.
+  * @domain: domain to remove
+  *
