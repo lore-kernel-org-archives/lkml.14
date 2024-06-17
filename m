@@ -1,1090 +1,410 @@
-Received: from SEVP216CU002.outbound.protection.outlook.com (mail-koreacentralazon11022019.outbound.protection.outlook.com [52.101.154.19])
+Received: from cluster-d.mailcontrol.com (cluster-d.mailcontrol.com [85.115.60.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4576119596A;
-	Mon, 17 Jun 2024 10:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.154.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1238F194C80;
+	Mon, 17 Jun 2024 10:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.115.60.190
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621317; cv=fail; b=TXuVxZXP5PgvORue/Syb6Lm7sxvKpLhO5PrUrN7vx9qeAYvXIosqW4iHFnoBxf4CNBwVe2LekTRczgx1bC1OXd4r3S3u4bbK+EZ6rjMflf8l1kkWOPmh2rtJCFurp33/QGNrqfLij3cxJtkDFsafUEkv2LbPAknGQ5c0R6Ljnmo=
+	t=1718621331; cv=fail; b=bduN0oj/tTnZGxzj1zZNkmuoPMlEWQ0Q5T4r2ces2zNUiqPe/22jzm2W6P1oCeBJj5yF9xmTNLwrnbHCpSUrI/LQ1nkKXxFzJdaqkOZlrHrYpMtkG9j/nyKkyaumiOiS+32rD5gELQPzwWUMpvpyDPcHn1EHuwl4Xf+qzfmoE+4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621317; c=relaxed/simple;
-	bh=uk6SuBB2u+Fit9ySFu1vjc2rMhkV6UokUGyKfbhk/Fc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M26A8S1E7lfMtlF0KjwGZgQv6YJtDy+cYzq5JzvmQFeWgAJTh76sViFfp3mJqGbpfDFK3LzdtGa+GNSy4nRdcpTQepjdxkjLScdVFuFSDjBqckgR/klM0PjeJMBNc8ljvtIQiFx7aynRJKhHMa++h88zh48FClHizd9itu9YXn0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=pass smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=ZuSoltNS; arc=fail smtp.client-ip=52.101.154.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chipsnmedia.com
+	s=arc-20240116; t=1718621331; c=relaxed/simple;
+	bh=tWJh+1SMFcHVEOQk7KWJfg8K3f3eN8DiqqpXWd7FExQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=K5xTcAtTH6amSpeJy9C4gXqVzjYEUJiOqdYuevg6bwZAJ39+z6hxmLFKWBXouPNFQSBsdWMjzCM8h8dIa7zsGLBH9Lmdegux7xwcrC6FX8xnH0mop6tToYrG9E26pezSJNVIAuqDPUngC1AuP7HyIKl6qW7RhLqeumC+qWIO9JQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=EEjzdLrR; arc=fail smtp.client-ip=85.115.60.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="ZuSoltNS"
+	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="EEjzdLrR"
+Received: from rly14d.srv.mailcontrol.com (localhost [127.0.0.1])
+	by rly14d.srv.mailcontrol.com (MailControl) with ESMTP id 45H89V4E264798;
+	Mon, 17 Jun 2024 09:09:31 +0100
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by rly14d.srv.mailcontrol.com (MailControl) id 45H88Z0A244741;
+	Mon, 17 Jun 2024 09:08:35 +0100
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2051.outbound.protection.outlook.com [104.47.12.51])
+	by rly14d-eth0.srv.mailcontrol.com (envelope-sender oshpigelman@habana.ai) (MIMEDefang) with ESMTP id 45H88UmG242795
+	(TLS bits=256 verify=OK); Mon, 17 Jun 2024 09:08:35 +0100 (BST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U5IpT/yiJ9UEYYyEpXZUsxXk4LvlhF7qyAoYYj7S/fBgvkPJF9jGf9aVIKjMT+MBbzwQ6EHawFa49XvhE8jobs4HS4TdfCGSL+lKHjUKoPEWMyWUT0AVy8Ugqrg3MVIFjmUQZDdvyL8YyrVdKWGhWB8LrML+omhH2BMf4rS4CqR7Rqc5zWUyIkALo3MGuRpf/OYE8kf1/LnoHRteLaMLJy8adFi1mQ2qXRqZOs80eQby0iE7p1lj2Aato3djSoZJa9R4+fcWLPlzW4lkDoATb57rpOyRUX867W0tD2Hg5F7QTOI2HVExH5v/Nxp2S+AEeIwy8rfhy1JeVe51QO6TxQ==
+ b=aesEDMt1MHATh+2vfI5n7PlwTnGraeE5oQFfizYUJE36cehoAz317wPadSKXHbxunhUSwc739u3PB6+jowQNMrE0jtn5qAXuorFzO0xM3nzh6zeLDch/M/P37+RvnQ+gKlRHHToeQtpvxo/m5aW7UfXSO0T+aIKJEjpFs/Fzlasae6nYCIcc9WduDYrFwlR9VFPIR/19q1sHM45tLg3pKKqMcdfkJhF7QINhPhP9Rg7hbxzkjt86nxh6Ef9KpIdpWWpi9WksgO4SuXTBdh9rUSmCDIW4Uf/yB2Jm+CcKKhAW3VFL1kYn5oi27gUS1uvAxQ+dTc4pTzvazw/G4P0qTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=urdNcwtB/GoxQgx35+TgZ0Zfk3vPK9oQ6i6knRNaVSo=;
- b=EkGoqjc5Sqfwm6et7c4FCl2xIXC+BjYEaGY0hGhZ6xl8BogyEO4a+GbamEZNspFAvxtjm7iDa/FdUggABfgpXR1iiK8fX2HWGRfFDuuaxBgrmNUdEgNB0zMZVQ1MpSUravxoIwIuiIV/zyRR8IzVH0YznVwPuqTDiwEPCeOltXx6jhxK8OpH0euscvUKqlf+4jp1XSAPJg/fYh/Set1l6wBJ+w5n5iybVTaIsigbJN7oeq4aSeLoY50ih6WgWvO7lYpmkEJZutEkomb+yw3XALzRucGE6TGEtgvQTHXp9uRp3k9jETFa+qQCoc2lcFUydCyyVNCsa46fnBJ6NCe4QA==
+ bh=tWJh+1SMFcHVEOQk7KWJfg8K3f3eN8DiqqpXWd7FExQ=;
+ b=mC75+6d6y561z7pG+Kl+sMiVMd5w5KHfbC13OQea6gW9wBCD/n3xstoL1/Dq1/na09YOrd1v8s7IaokyrUO3en9ei1q4tvoeBBoNOBD9NAo1RC5PyyY1AYKqpPNqJ8UMz9LZ/Iz6NyUnAr0vgTA1NpNUTHTQ7fwyqMkvh/3dPrQNyxf0Xa2nXpNs5zXSOs8ZYiL04RHxadTYoBqFl4SFHtORB55flretmIY9hWCKWWIFgqoHpEnPCoR+PYJr/hFKjd4vlMdOFCf4axgAJWIYT8YTkkRZ6GGi3X+AKoR1abvvXqw+DwMm6h78EAw2l2vWEAdlz8qJtd7fr//X0O58Ug==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
- header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
- s=selector1;
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=habana.ai;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=urdNcwtB/GoxQgx35+TgZ0Zfk3vPK9oQ6i6knRNaVSo=;
- b=ZuSoltNS86lAz6XPd0DQRIl4dTklr13ijFK3vI464j6vpUamdfbxPSTkIQyIXHBxulrNxru5S+DQiKFe2oycMXGEWwLzXEu/UzAMGLLncDtynqDTpnfEyEI1nOU6rM6qPpPFino7I6G0yyZ4K/sRxJN6wvt9kqD1dnppW5X8Mxg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
-Received: from SE1P216MB1303.KORP216.PROD.OUTLOOK.COM (2603:1096:101:15::5) by
- SE2P216MB2773.KORP216.PROD.OUTLOOK.COM (2603:1096:101:28a::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.30; Mon, 17 Jun 2024 10:48:26 +0000
-Received: from SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
- ([fe80::b711:5ab1:b5a4:d01b]) by SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
- ([fe80::b711:5ab1:b5a4:d01b%4]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
- 10:48:26 +0000
-From: "Jackson.lee" <jackson.lee@chipsnmedia.com>
-To: mchehab@kernel.org,
-	nicolas@ndufresne.ca,
-	sebastian.fricke@collabora.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hverkuil@xs4all.nl,
-	nas.chung@chipsnmedia.com,
-	lafley.kim@chipsnmedia.com,
-	b-brnich@ti.com,
-	jackson.lee@chipsnmedia.com,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Subject: [RESEND PATCH v6 3/4] media: chips-media: wave5: Use helpers to calculate bytesperline and sizeimage.
-Date: Mon, 17 Jun 2024 19:48:17 +0900
-Message-Id: <20240617104818.221-4-jackson.lee@chipsnmedia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617104818.221-1-jackson.lee@chipsnmedia.com>
-References: <20240617104818.221-1-jackson.lee@chipsnmedia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SL2PR01CA0004.apcprd01.prod.exchangelabs.com
- (2603:1096:100:41::16) To SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:15::5)
+ bh=tWJh+1SMFcHVEOQk7KWJfg8K3f3eN8DiqqpXWd7FExQ=;
+ b=EEjzdLrRAGfOaBcSBReI/U5DxoYBcAthp+vy/rnCuZSJMPG5ZXYGQTtpNFDYzMBRXl8dNY+oknBCq0epvZATHFnhXIq/SHcePXjN+saFkh5/yqoX2JTzRvb1FNeKSLdAAXhi9tjupXLIxuoI15O+qzqQ3qh0IJ5SPKMm/G80FXe3p5A7iJh3IqT81Mffr5uSwJgxHtRCv0vIsddOEaUchW4adnOVvT4urQztKZqx0QK57mIV5X06YclrPD2FO2Snv0Uj6UdZT2uDGQLl1vEXZUWOLtz32PeyA1BDkOtuR+BFZ9laL66xphSamD+h+RMiecfDvuGizKcRWt6YiiiUNg==
+Received: from PAWPR02MB9149.eurprd02.prod.outlook.com (2603:10a6:102:33d::18)
+ by VI0PR02MB11116.eurprd02.prod.outlook.com (2603:10a6:800:25a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 08:08:26 +0000
+Received: from PAWPR02MB9149.eurprd02.prod.outlook.com
+ ([fe80::90a0:a4f0:72e9:58b9]) by PAWPR02MB9149.eurprd02.prod.outlook.com
+ ([fe80::90a0:a4f0:72e9:58b9%3]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
+ 08:08:26 +0000
+From: Omer Shpigelman <oshpigelman@habana.ai>
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC: "ogabbay@kernel.org" <ogabbay@kernel.org>,
+        Zvika Yehudai
+	<zyehudai@habana.ai>
+Subject: Re: [PATCH 01/15] net: hbl_cn: add habanalabs Core Network driver
+Thread-Topic: [PATCH 01/15] net: hbl_cn: add habanalabs Core Network driver
+Thread-Index: AQHavWrVVuRHPTgJKUqRN0LFtHgrD7HFqK+AgAX3iYA=
+Date: Mon, 17 Jun 2024 08:08:26 +0000
+Message-ID: <83a6029e-1e45-4ce7-99bb-a3643ddbf8ab@habana.ai>
+References: <20240613082208.1439968-1-oshpigelman@habana.ai>
+ <20240613082208.1439968-2-oshpigelman@habana.ai>
+ <a0e8f31e-fa12-4f48-853d-16c78bce1d76@intel.com>
+In-Reply-To: <a0e8f31e-fa12-4f48-853d-16c78bce1d76@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=habana.ai;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAWPR02MB9149:EE_|VI0PR02MB11116:EE_
+x-ms-office365-filtering-correlation-id: 1cf17545-79f9-4688-d8ce-08dc8ea4aa76
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230037|1800799021|366013|41320700010|38070700015;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?QlZDQVRIalFSaXJxQmFwT0tIcjlUbDVBQTJxSDJyV3hzdlFHMkFRQTZzOVlN?=
+ =?utf-8?B?b3ZkbGhTOGZ0UUllMGRGUUN0STBra1lhOXVNeWpWSmF3VThpOG9WR3haSzJi?=
+ =?utf-8?B?QmlGeGhobVBqdzNYVi9KcHArUXlSYXJGbFQ0aDhRcEJ1eXIzUVRFek1nSmpN?=
+ =?utf-8?B?S3lCWmx6MHhGQUUwdzV3dnpuazgzQmlUaEN6bXM4RWw4SEsrcmEzMVBZcVlq?=
+ =?utf-8?B?eHgxQkNTOHVQeWtMTXh4bXVrOThXOWRsMVBDcHg3cWdzS2x3cW50UFZpTDRJ?=
+ =?utf-8?B?akRkRUF4RUtudHdXN05BcnpSWWMwODhwMElsVnpnYUpzWkVldmtxTEJxM0N5?=
+ =?utf-8?B?NVFIYnhMRUNVUWhsaWZPQThVbWR6b3NGRDdBUFJTYjd6amJZR2ZYQ3RyMGtk?=
+ =?utf-8?B?VUV2TzY0dUx4ZHh5Z0JweHZUVU5vY3Y0UXZ4VlRxNHhBZXJ4bC9WT1o1QUQy?=
+ =?utf-8?B?QU1SRTZ0WmdLWlRITW00U0hIclI1dy9qQlNQVS9JSTVQcmtTOFdZRjdoVDBi?=
+ =?utf-8?B?TDFvYjY2K2pURXJsUVJ6T2l1SmZOMlBFSm9yL09uQWQwVlJSaWVpaFRKYzNS?=
+ =?utf-8?B?a2N3N2c2U3pPbFpoZkF4MlBMWFN1dVJ2SUZLNWNrZWlQcGREZjR4NDgxQWEv?=
+ =?utf-8?B?YW4yV1FnNVVLOXJKbjM5cHRqWlRCTWhXQnZSZ3Nxdzk4U0dEdzJtSmVwa1Na?=
+ =?utf-8?B?ejZlYUhFR0RkekpaSUxvdmJpbzhpazZ6OEhyQ2s4NGJENTBEOFpUcDJhR0tR?=
+ =?utf-8?B?UFBveEMyaC9ONVg4ZlVuTmlDMWFucFA3NWlGNHVTVEE2a3BzMFVCQVd2NGsr?=
+ =?utf-8?B?eHpGdmVoM2lxWFhpTEhPd0NFdzlXQVRqTFJwcVdiSW9TSHA5ejFxUXRlQjVM?=
+ =?utf-8?B?S2Nhbi9CK3dOMlRVTHZSQlZJOWVxYURlYTFzczAzaVVpSUFtUWNiZmg3d2pa?=
+ =?utf-8?B?Uy9qbnFvbjRveFFVemx4RDBhZGlBMTVSdktaMnNTTjltRm41Qm15MitmTGNz?=
+ =?utf-8?B?dit1QXljZklxaDQ4N3FmVUd2Tkt5eFZCMlFjclFDVHNEV2JIZ0V5b2lsRWJQ?=
+ =?utf-8?B?Zko5a2Z2QUREdTFGc1hrMzU5dE92R1ZhRU1WY25WQ0VPQ3Vjb3U3SW8rL2Ez?=
+ =?utf-8?B?c2ZvK3lvQ29Kc2JSOU95Rno4WHRpcEJjZW1CS3NtQmdCQ084L29maFo3emZM?=
+ =?utf-8?B?NGlEcU40LzlCUDJlcE5LU2Z1OW8vN1MrdkRLRjdNbDRHZmVXVENCaGphdGdS?=
+ =?utf-8?B?Wjd0L0dEK3dKenRxMGs5QXhQM214Z0ZCdUpwbWxFUGhxa0JqZ2h3TTMvWjgv?=
+ =?utf-8?B?OEk3cGZGQ2c2VGFQekxYWGc2bmwzUHJCWldzeXZXYyt6TTdLcjNMTTFCWDJM?=
+ =?utf-8?B?VHQvTE5zV0pjOFVYR3k0bThmWnhyY3RZODRVQ2lTRVU3K0pDNTIxNHFHL2VV?=
+ =?utf-8?B?cnVQRWdYMUtlaGhQeXVCWC9WN20yYVlzM0lJYWcwdG1pUXBrZ3pFbW1nNDZE?=
+ =?utf-8?B?V09JQ1hOc3lFM2xJUE1QeVh5cVoyV1VlZXVwa0NWdUh4THpGclVnYWFjUkJx?=
+ =?utf-8?B?MzF0SGRZUVhndTFJRVBDeUxrcE1HNGttcEY4WFdCL0wvMEF0NE0rUXlIUFNW?=
+ =?utf-8?B?WXh6UUExVzZJMUNYUXQwUndVejVlMVdTOEM2RE9PWTRFZFRPcENNWDFsOFpP?=
+ =?utf-8?B?bHF1cW96RldZL2lPSWU4L1pQNG1Ic1JnV0dPUkF0UWRibFp5eSs3SEZyY0pV?=
+ =?utf-8?Q?2AwRXOcTq1KUtDJv6kqaCBo9aUUYyHQkB7bYHER?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR02MB9149.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(41320700010)(38070700015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?TTQ1UTJmeVpIQVBzM0N3Rmd2L3RqRlAxdnRSVlNxOTRPOEJYeTk2TEd4cG8y?=
+ =?utf-8?B?L09Jd01WRkxxcXdQenM0UUdOeFAyNExLRDI1T2cyREI0bVV2K1VVZG8zajZE?=
+ =?utf-8?B?NVV4aDhjOUJRY2JyUkFya3pvVXNTWVljZHh5VmJPd1Y4cUYzR0s3WUhRZ3Vw?=
+ =?utf-8?B?ZFJVeGpwZjY2L0Y5Z0k3TlNBbVVaU1NCMUJpdGFMWFprNWtWdGJCSkh1RGMx?=
+ =?utf-8?B?a3pBVy9rb2xOWTRWNS9mYnN0Y0xCQVBrVHJINHZBZmdHaUVLbnBybS9ILzVv?=
+ =?utf-8?B?QzdEckNSblErajhsdUJoeW5nZ0FCSnNMZG90UEcxNzdySUZRM0x0WE9zSVR6?=
+ =?utf-8?B?aEx4SVhpQU0wZlVhdjVqczhJbDFOeE5RV1ByLzR0SUxmZzJhY1c5cDdOazBM?=
+ =?utf-8?B?Z0VwQ1pNbVlDUjRicWV6cVNXUWR6UXJCMU41amdsbmxLRXFsZERlREFkc3ZY?=
+ =?utf-8?B?cGoyV0Zoc0VqeUZ0OVU1YkdCMko0YnBXSnp3eVlKS2NnYjR1cXJiLzhPRzQ2?=
+ =?utf-8?B?WHB1cExuRnNPWXJBbDcwVHdDR2FKNDg1VE5lVkFzZjlHK3YycmpiTXlTZTNN?=
+ =?utf-8?B?blQ5WUlRZkJxN1FNQXNVa2t3Znh3Qjlyc3ZFVFNreTBMMUhNeU1mSUhEd0cv?=
+ =?utf-8?B?TnBZclM4MlB5ZlNNQ3l2aHc5NWtiK0JBV2Era3hrYytJcmhlWlVDQ1l4TWZs?=
+ =?utf-8?B?NU02RXRkLzVxZzVSaW90QlN0dWJJWmJLM3AzaGRxMVIxaHU2VVAwdmV6NmdL?=
+ =?utf-8?B?Z0t5ZXNCOTBYdnlmK3Y1Z1RCMm5YdThwZUJtUGJjdkY5UG9PNnNaQUgyOElN?=
+ =?utf-8?B?TWRVdVUybVVOaFFCNXcxdXp5bE5oTkdjTndHUy8wczZSWXZPQXFZdHFyOUEr?=
+ =?utf-8?B?emljTmpMVU5sMUUvSysyQlNlczVZZ0hTbHhDQ0s4cVNIbEZjRHdXTlVia2hK?=
+ =?utf-8?B?Wmx6dS83cVVvNEUzTk9BYW1NcG9UWHMrRTJhc2JQaFNsSG1XUVBTMnN4MSta?=
+ =?utf-8?B?b3lRU1pwTEpmeXN5bVp6a1JvVmR0M0NnVmJmN0srSXE5NmcwZ296cmRzTHdY?=
+ =?utf-8?B?d3hLMVZJTFJDcXE1NS9kdGM5V0xKZE9WZEdBaFd5dmdwUGhnMzI3aU0xWHVI?=
+ =?utf-8?B?SnpkdjJhdWw1Wi96WEZFcHJPazBkMXJvcFdaaHFxdTQxWFY2VURqZ1FqNDZB?=
+ =?utf-8?B?MVNCQU45bDFrdGFqSGEvbDgwNmNQL3laNkhvaUxJaHFnbVMxcWRkdGlFRnBJ?=
+ =?utf-8?B?ZXhYQnBDai8zcHk1dEZEcUZaRVRhOXp6WDRCVjlzL3YwcTVRMGxqeTJPaCt3?=
+ =?utf-8?B?TlJ6V2ljVVIzYXlyTzBsaUdEMThwdFZibE5PMnViWDdvcytKTHdzQjNVdENh?=
+ =?utf-8?B?eTByRmRaZUZMQzVONEorMDhwNUFjaGthNUNVTndsQ3Rmdm9yUElTVTh2N0JG?=
+ =?utf-8?B?aVdIK3RaQ0NmZlloQ2tROEYrOEJLRlZja0pVZnVIZVREL21RSnk3RHJvUWla?=
+ =?utf-8?B?dTZMTkxpb3pxakRZWmt3NXpnRURxaWZkWVJwOTc2VjYwUWJ2MWl2REJsalUy?=
+ =?utf-8?B?YkI5dXZrWEF2TTV5MVdNMEd6RU9XeU5yZHVTZE5oOXFjVGxXU3BPU09QTTk4?=
+ =?utf-8?B?N1dRWHlpZjFjTmxzNk4yOEFmTnpONWQ5dWp3RTBUbytJOFJVaXc1TnRSQzVl?=
+ =?utf-8?B?My9JZWgvOUtINHVOdXB0TWRSa1Z1eWxWanU3Zkh4Q0dhT0hCSk5OSDhDcitJ?=
+ =?utf-8?B?b0NzSTdJTWhsUFNaYVVJM0VIQjZvbW1KRmVqOFJveGFPVThsWEtYbGZNOWVI?=
+ =?utf-8?B?cXRHQk1zbHFXa3pmRkpHRDJWVVRtNTZ0YWpDY3JvbjlLQ3E5YUlQdE9IK0cx?=
+ =?utf-8?B?a0I5bjlVZVorbzJVUkRISk1jRG4zNldsV0ZTdm94bVRYZFByNEtGcSsxMm9o?=
+ =?utf-8?B?NTNSVmd5QzdSd1N6WVBvMFg3U05iMzQ3RGZ1c3JZRml3bE02WEhWVjVEQnA1?=
+ =?utf-8?B?dDdYdkJMNE90QjNaRDJFZGZCVS9uKzZNbk1idWtpalNUL0ZYMUhHUDdNa0hU?=
+ =?utf-8?B?VG44M0tlc1RUOUFxWEptbUEyc3JpcEt2ODhvVit4cEk5b1hpMXhrK0ZqaTVw?=
+ =?utf-8?Q?7YSgb/smeu+MBWaPrpN+FKN0/?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <63605A3BEA0E4D4CACCF12DFE14D94B9@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SE1P216MB1303:EE_|SE2P216MB2773:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56e813e6-3f25-46c8-c40e-08dc8ebb048a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|366013|376011|52116011|1800799021|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nOLsMUva9qYzxwMWREjgRpxOyAAweH2AO00AZ+TItvVmG9uIW3InYEw6e/CY?=
- =?us-ascii?Q?Q+pNIETaNstTc6+wCM4RRRB9RAdaS3W/pN/Io0U/QCxDyfOEalZkpxvhnGTQ?=
- =?us-ascii?Q?HXxhG0hVTbAOaSM0AQXjHjQN8fuQPC4BiXrkYmm60qfn/Y+/vy84PMhzfKgV?=
- =?us-ascii?Q?TuNTCMNx8CDuGXIYW2JxZHlW5zw972Il8Vn8PZgE+LFVL7SGbvLvKk2kjex+?=
- =?us-ascii?Q?5LX4SN3PO3UZI4AM/H3EGJhLaAttfluxBbucYMwG/YyrTOwM8imTbIUz8+Z5?=
- =?us-ascii?Q?HQAXjA3sU56hStJaAqIkf3UgqSUFSxNVXAhgtaUNJjaW4eADuNTRJEvOsmqI?=
- =?us-ascii?Q?9DlOjUHXnbZDEEyJ6D7t5/4ZG/woiiSTxJDHcPhun3RUDMOHLH9c+0N7vWGr?=
- =?us-ascii?Q?RPKYkzjsTs6i7KKho85QakFaCozlNgEbPb/Ot4xl+wFkhsUmWH0xq0xhOvmv?=
- =?us-ascii?Q?M1yLwzOpVsGW1gbm2U2zXclfZIcNwdoh3APBtCjRX2egayrlI0yhnGTlHtDQ?=
- =?us-ascii?Q?obDjZ8SNlkOKlsV9kS0tlEH5/8QtT7r6ES/vOlPzpZGB56TloB+X/gk5wm4G?=
- =?us-ascii?Q?XFsmQebcMcZlao2amitxUksnF4uPWjLFUUxrkTdRnCch0isue6gcWdPyPF/Q?=
- =?us-ascii?Q?zXErE/Udd4xAJ7fVDRTWB2L6qzzKeNsbDZ8kL+jES+hPcg1RUfayKWVDZAiw?=
- =?us-ascii?Q?Tb0JLqJ9l56q0QA8CTxoXY4JYN0uVauy+F0jztMRdG7ohOo/7i99skfy4FDM?=
- =?us-ascii?Q?6B+2JmhB+B5QelCGIc1GH1/zkNMDKag/N1EfAqX5NUlAIdTdxgjQrdK8kOau?=
- =?us-ascii?Q?XbY1juIVGk3Sbsi6SB3Zg3nBS7B8QOH77V2EPbe5jAOSBDOPbo//eCTtlE3w?=
- =?us-ascii?Q?+OSM5zUTKkmo1WAQ9dOdCssa6GbRD1+AYsqFw5eAolwC+VjGqI8h9kC/j0+Z?=
- =?us-ascii?Q?3smVVl/Rfeb1StVsirl6Sw4mAop4je1rYs9OPbhPpFIT+KIA+6QkVm4zOs3J?=
- =?us-ascii?Q?qn4aB/FxK5hF12no+5VUNqb7x8kg/C0Tom5Cbe7Kdaa0G3fRBEjiu8bQelRC?=
- =?us-ascii?Q?dwgzqC7X02Xku6I/i08YOhNUT3kyI/PWqXCMPIwGpMQDiFiL5iF6oRNJYGjm?=
- =?us-ascii?Q?XlGk3FlpKjPMtfRt25QwmEXrq/AvG2tR6Fu7BR7dC2N4i/LuXqD++97/TKRe?=
- =?us-ascii?Q?e7xGZX/Akmv+im/dfNaRNh1jwdjiwVSMiTtThTVHZETz472kndbgCaFpuHof?=
- =?us-ascii?Q?olwfhRMTgSoUFALDDcOce4U1Oqn/Os31Ton/s60ycPNEpaXobNy15gddqA0k?=
- =?us-ascii?Q?SV09v4hyX5vPwAlv7e3H+t9vBLAsmpwXSTIcdJUg9pfehrzOgQ9i8zydQPZo?=
- =?us-ascii?Q?s/mnsp0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SE1P216MB1303.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(52116011)(1800799021)(38350700011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?l9sgo7056GEopSH2GfvSPWk9G3JeiVoXgOvMQw7F+tYz4UUFtHsmJkqO1Psn?=
- =?us-ascii?Q?oTM23Ay8Rfhoh7Z2/FhnwJztQ2b90JgGE5EO2sTtod657wkT5zb75YetJ9Pj?=
- =?us-ascii?Q?o54HBS0r/x4y9MqzjslEZTkOG/Y//5WPVrCijC9yWBlY0izX8gdDv/txn6kj?=
- =?us-ascii?Q?oy9ClXDWIFh6x67s9rjzP2QK/zdgdWhQwOCeCVvpTGkl1wqstXB1cn6X+hCG?=
- =?us-ascii?Q?+CHxDyyR8Ii9poXpJtxeZd3CsO3TNDhzpFmHUKcJ2J7NFK6ku/ddxgDicg4O?=
- =?us-ascii?Q?PYDGzat5bOyUP9eaytPReLSPL4hjuTd562/Z6uAXuTEh6Y3CxbZ7lWac8wNH?=
- =?us-ascii?Q?yk6/s+G0J2XF+tlXbONil2kvFJzK2K433FxaGbG64tbN8E73d5LDV5DAPW8g?=
- =?us-ascii?Q?oj+EOOE6M9iFMQVRPqJU8RggFJ9uB/scfTqzGZpqt3r9Dff07/W44J7z5U1y?=
- =?us-ascii?Q?bRlZ/l2wN7JSZLQB6yVB6XrVw1S9pq4XfRNf13h8dlRp7Za3COLsBTPaGE7t?=
- =?us-ascii?Q?dYBmCct5BpzId84rFjdvZ0ry8uZJlIjISW9ABG2Wyj4OzfHrQJojLMHqvfSF?=
- =?us-ascii?Q?cWQL9nU0yC7pLYfQoKpEXZUOPtpkzipGL4BY2FYYvPER8ZqGMb9aSH1ZtmEf?=
- =?us-ascii?Q?KmOBn4QaI4OGW7kTHEf8+qyd3ovJxMJOYcV8JvNnJ1xFDTGAaE559A3FLUIu?=
- =?us-ascii?Q?r/QzjO2nFoxmepUFspuuagctW1o/fqlYpQc2H0KbnUERzcOGb23E84bB3yH3?=
- =?us-ascii?Q?vDYoFQUURUJFYWtMlCAUnGZ6ZT3zSDzVSZpqym1PmAhoEyxkle5hHPPcR4Hx?=
- =?us-ascii?Q?SDx1bhwYHoZKOTaszbeJVm9Ve9wvpyxgWM+wwtSM4xoSi4kIWKg8Gmu0Vzsx?=
- =?us-ascii?Q?iL/sFeDWD9CgVCZ29CUEVuWwZiNoe8xxgv1iD/eYt3Aj7rGQTAn83krgduEI?=
- =?us-ascii?Q?aR+C9uRZ0wx9ruIUhCh97Eah/JlMPw/W6ueWgrnk+dRz0JIxQGmxkgnUAcoN?=
- =?us-ascii?Q?2bj6mbENv3KRy/UmZKBu7qgPb0EXbhbjhpiEZgz8qUIraB2f6CHsIJQ8Tzpr?=
- =?us-ascii?Q?JEAOhuSmOGdyrhgHJxG0TUdNLUsZe5C1BSLg1toV6aC+I+W1Y8PTxSFwDztN?=
- =?us-ascii?Q?Syr32IZDB4+TX/Ld36bxkcKwbdHvJEQEJYYQLwnrwN+kH+FO81QcaF2Rqk8w?=
- =?us-ascii?Q?9r5ZThLuKRdCZxuyquSh39aq8jNDaSSVVbT7cRXOWQXEHom9anZwd4jwlDtE?=
- =?us-ascii?Q?W4xEaqyXX4hK/hxViUnGCqPkEA25BB7wlXezbPjlUbUVypEdZjHPEmWQoVSI?=
- =?us-ascii?Q?srINAiUxwgQL2mzvO5Jr2Xsw5VTBIxmWYML/pUKBD9mMg+OhQCLju1mninYx?=
- =?us-ascii?Q?+G9cNujZ+quNIXdt3m9bmmhYe9dhEyVy/v6Hm5jzpR1RkMWjshnS9gLOqy4S?=
- =?us-ascii?Q?tim7aPrP9b93YeqwGg7WqEPfOY3OpQARUxQ/40W5ktWuV8CTlIJ9WLA3w9rT?=
- =?us-ascii?Q?JUmiP/BZaZ6v3DMLxgStMrWnVequAqkoNiDsxhSFjNEXHJ0ZXuGEdxhYRHTU?=
- =?us-ascii?Q?Ig1z9aGFZUfDMhXOBC6wzGbKmWgJHIU+AAE0FVf42OI4+lX4TcVUmLRfJE6b?=
- =?us-ascii?Q?Rw=3D=3D?=
-X-OriginatorOrg: chipsnmedia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56e813e6-3f25-46c8-c40e-08dc8ebb048a
-X-MS-Exchange-CrossTenant-AuthSource: SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	n0fUu1vUijS7v5TnTmLf8ePzpE5dWtCSahNzTuQvGluMYZIbICk+hKB6jZEvGbYQxTQLTaG3/QQWfX2hx3cy0spNxKuf4XouDav9tBg1mftDhRfkW5wN+hvj3PGVdTvHINLSeTAR8L9vw2Hc+PsXP2SVdnYs96n0h2Zobld0G0LG4rrPb9kmCODrBcqy+puyoWv1q/kPLkph6nco2lNi1KwE5x9Gv7VApDs7GU7unhaQAQXUbjngBu6NWblEq0DNMKwjty1Gl1cLB4qkd+k3jqlnMelBTsQ+NFv0fHjmk1WOcTkiZ3bceybn+B976J8bclluLnhJCgxRwuQaxwlgRXHl7ifDx10k9FqRne0j0+BawfHvxthH81GIN2DybZSgDtfGt4UVj9rpld0ug5YVzliLcgUgnPaBiYmd/JkUcZm+OS5Sn5AbJ8M1src9r7xGmdHsjAfI3nJ4Vo/8eScCipl8ztQo5e5jmqT3BsN5FWedCAwTULgdX3TdEddVs9Daefoeo6T2OhOZgXXBCTwUhBLXjgx9sI4rDrsyhBlruWM5PvdgPVc+bVg5o58Cbth6zM2hHyEQVYk/vkPV/x0elYlOHBHC1GuF8r2IUy5nAY0CjGqKuXg5gyQZIG48ojH4
+X-OriginatorOrg: habana.ai
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 10:48:26.7609
+X-MS-Exchange-CrossTenant-AuthSource: PAWPR02MB9149.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf17545-79f9-4688-d8ce-08dc8ea4aa76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2024 08:08:26.5011
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8132kjiRjHJPIhxbqK5u+tqt9tXL1Fa9SlQzexq6h2tuZPzTOTc3SIyW3eQzUfe/vSoNMRc9237u3vSCRQhZ8GWn/sRA2M1UNixYFXX6Mag=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE2P216MB2773
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: isV5VznxsIYFNUfJjdeT/hx1WydE2I5P1yMhzM2j4+3C2j897a3F8Wjz/939oIf8sUpIUHQPvmYSS1p4Ksyy6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR02MB11116
+X-MailControlDKIMCheck: cGFzcyBoYWJhbmEuYWkgW3Bhc3Nd
+X-MailControl-OutInfo: MTcxODYxMTc3MzpGUEtleTEucHJpdjq9PpNMtq0znq02unsYPO+Boqm3YsTlvjpH8wEh5opnQBDSBK897EEO8vO3FAjulqons6J/3dTQOLXQMzfdd8P4nixex3arvJcfZ0G2fr0Y1i9Kydy8XtGJL7L4+0xJRg8v22uaqKKzqHSDNZnqsX+L5bXdwr8HO2p4w8VNTPxu8jLbKTToKJ/YRJ8/am3Hys1HfQ3N3rIcU4OjTkssw5fI/G+fGnXip/EFe0hWHeQCEOva77YGMBhWY+wNH7U/iqczsGUzDP0OZ7ETwsRhSVmQPGU2eNWCDf5U8ljKPgb0n4qjk1bVi3Z9Gq43FbyrwPtj9EQ+DS8plnPqiqAk8SyR
+X-Scanned-By: MailControl 44278.2143 (www.mailcontrol.com) on 10.68.1.124
 
-From: "jackson.lee" <jackson.lee@chipsnmedia.com>
-
-Use v4l2-common helper functions to calculate bytesperline and sizeimage,
-instead of calculating in a wave5 driver directly.
-
-In case of raw(YUV) v4l2_pix_format, the wave5 driver updates
-v4l2_pix_format_mplane struct through v4l2_fill_pixfmt_mp() function.
-
-Encoder and Decoder need same bytesperline and sizeimage values
-for same v4l2_pix_format.
-So, a wave5_update_pix_fmt is refactored to support both together.
-
-Signed-off-by: Jackson.lee <jackson.lee@chipsnmedia.com>
-Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
- .../platform/chips-media/wave5/wave5-helper.c |  24 ++
- .../platform/chips-media/wave5/wave5-helper.h |   5 +
- .../chips-media/wave5/wave5-vpu-dec.c         | 300 +++++++-----------
- .../chips-media/wave5/wave5-vpu-enc.c         | 197 +++++-------
- .../platform/chips-media/wave5/wave5-vpu.h    |   5 +-
- .../chips-media/wave5/wave5-vpuconfig.h       |  27 +-
- 6 files changed, 239 insertions(+), 319 deletions(-)
-
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-helper.c b/drivers/media/platform/chips-media/wave5/wave5-helper.c
-index 7e0f34bfa5be..b20ab69cd341 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-helper.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-helper.c
-@@ -7,6 +7,8 @@
- 
- #include "wave5-helper.h"
- 
-+#define DEFAULT_BS_SIZE(width, height) ((width) * (height) / 8 * 3)
-+
- const char *state_to_str(enum vpu_instance_state state)
- {
- 	switch (state) {
-@@ -224,3 +226,25 @@ void wave5_return_bufs(struct vb2_queue *q, u32 state)
- 		v4l2_m2m_buf_done(vbuf, state);
- 	}
- }
-+
-+void wave5_update_pix_fmt(struct v4l2_pix_format_mplane *pix_mp,
-+			  int pix_fmt_type,
-+			  unsigned int width,
-+			  unsigned int height,
-+			  const struct v4l2_frmsize_stepwise *frmsize)
-+{
-+	v4l2_apply_frmsize_constraints(&width, &height, frmsize);
-+
-+	if (pix_fmt_type == VPU_FMT_TYPE_CODEC) {
-+		pix_mp->width = width;
-+		pix_mp->height = height;
-+		pix_mp->num_planes = 1;
-+		pix_mp->plane_fmt[0].bytesperline = 0;
-+		pix_mp->plane_fmt[0].sizeimage = max(DEFAULT_BS_SIZE(width, height),
-+						     pix_mp->plane_fmt[0].sizeimage);
-+	} else {
-+		v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat, width, height);
-+	}
-+	pix_mp->flags = 0;
-+	pix_mp->field = V4L2_FIELD_NONE;
-+}
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-helper.h b/drivers/media/platform/chips-media/wave5/wave5-helper.h
-index 6cee1c14d3ce..9937fce553fc 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-helper.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-helper.h
-@@ -28,4 +28,9 @@ const struct vpu_format *wave5_find_vpu_fmt_by_idx(unsigned int idx,
- 						   const struct vpu_format fmt_list[MAX_FMTS]);
- enum wave_std wave5_to_vpu_std(unsigned int v4l2_pix_fmt, enum vpu_instance_type type);
- void wave5_return_bufs(struct vb2_queue *q, u32 state);
-+void wave5_update_pix_fmt(struct v4l2_pix_format_mplane *pix_mp,
-+			  int pix_fmt_type,
-+			  unsigned int width,
-+			  unsigned int height,
-+			  const struct v4l2_frmsize_stepwise *frmsize);
- #endif
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-index 861a0664047c..5901a8bb0797 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-@@ -11,111 +11,92 @@
- #define VPU_DEC_DEV_NAME "C&M Wave5 VPU decoder"
- #define VPU_DEC_DRV_NAME "wave5-dec"
- 
--#define DEFAULT_SRC_SIZE(width, height) ({			\
--	(width) * (height) / 8 * 3;					\
--})
-+static const struct v4l2_frmsize_stepwise dec_hevc_frmsize = {
-+	.min_width = W5_MIN_DEC_PIC_8_WIDTH,
-+	.max_width = W5_MAX_DEC_PIC_WIDTH,
-+	.step_width = W5_DEC_CODEC_STEP_WIDTH,
-+	.min_height = W5_MIN_DEC_PIC_8_HEIGHT,
-+	.max_height = W5_MAX_DEC_PIC_HEIGHT,
-+	.step_height = W5_DEC_CODEC_STEP_HEIGHT,
-+};
-+
-+static const struct v4l2_frmsize_stepwise dec_h264_frmsize = {
-+	.min_width = W5_MIN_DEC_PIC_32_WIDTH,
-+	.max_width = W5_MAX_DEC_PIC_WIDTH,
-+	.step_width = W5_DEC_CODEC_STEP_WIDTH,
-+	.min_height = W5_MIN_DEC_PIC_32_HEIGHT,
-+	.max_height = W5_MAX_DEC_PIC_HEIGHT,
-+	.step_height = W5_DEC_CODEC_STEP_HEIGHT,
-+};
-+
-+static const struct v4l2_frmsize_stepwise dec_raw_frmsize = {
-+	.min_width = W5_MIN_DEC_PIC_8_WIDTH,
-+	.max_width = W5_MAX_DEC_PIC_WIDTH,
-+	.step_width = W5_DEC_RAW_STEP_WIDTH,
-+	.min_height = W5_MIN_DEC_PIC_8_HEIGHT,
-+	.max_height = W5_MAX_DEC_PIC_HEIGHT,
-+	.step_height = W5_DEC_RAW_STEP_HEIGHT,
-+};
- 
- static const struct vpu_format dec_fmt_list[FMT_TYPES][MAX_FMTS] = {
- 	[VPU_FMT_TYPE_CODEC] = {
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_HEVC,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_hevc_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_H264,
--			.max_width = 8192,
--			.min_width = 32,
--			.max_height = 4320,
--			.min_height = 32,
-+			.v4l2_frmsize = &dec_h264_frmsize,
- 		},
- 	},
- 	[VPU_FMT_TYPE_RAW] = {
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV420,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV12,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV21,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV422P,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV16,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV61,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV420M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV12M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV21M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV422M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV16M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV61M,
--			.max_width = 8192,
--			.min_width = 8,
--			.max_height = 4320,
--			.min_height = 8,
-+			.v4l2_frmsize = &dec_raw_frmsize,
- 		},
- 	}
- };
-@@ -234,74 +215,6 @@ static void wave5_handle_src_buffer(struct vpu_instance *inst, dma_addr_t rd_ptr
- 	inst->remaining_consumed_bytes = consumed_bytes;
- }
- 
--static void wave5_update_pix_fmt(struct v4l2_pix_format_mplane *pix_mp, unsigned int width,
--				 unsigned int height)
--{
--	switch (pix_mp->pixelformat) {
--	case V4L2_PIX_FMT_YUV420:
--	case V4L2_PIX_FMT_NV12:
--	case V4L2_PIX_FMT_NV21:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height * 3 / 2;
--		break;
--	case V4L2_PIX_FMT_YUV422P:
--	case V4L2_PIX_FMT_NV16:
--	case V4L2_PIX_FMT_NV61:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height * 2;
--		break;
--	case V4L2_PIX_FMT_YUV420M:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[1].sizeimage = width * height / 4;
--		pix_mp->plane_fmt[2].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[2].sizeimage = width * height / 4;
--		break;
--	case V4L2_PIX_FMT_NV12M:
--	case V4L2_PIX_FMT_NV21M:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[1].sizeimage = width * height / 2;
--		break;
--	case V4L2_PIX_FMT_YUV422M:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[1].sizeimage = width * height / 2;
--		pix_mp->plane_fmt[2].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[2].sizeimage = width * height / 2;
--		break;
--	case V4L2_PIX_FMT_NV16M:
--	case V4L2_PIX_FMT_NV61M:
--		pix_mp->width = round_up(width, 32);
--		pix_mp->height = round_up(height, 16);
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = width * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[1].sizeimage = width * height;
--		break;
--	default:
--		pix_mp->width = width;
--		pix_mp->height = height;
--		pix_mp->plane_fmt[0].bytesperline = 0;
--		pix_mp->plane_fmt[0].sizeimage = max(DEFAULT_SRC_SIZE(width, height),
--						     pix_mp->plane_fmt[0].sizeimage);
--		break;
--	}
--}
--
- static int start_decode(struct vpu_instance *inst, u32 *fail_res)
- {
- 	struct v4l2_m2m_ctx *m2m_ctx = inst->v4l2_fh.m2m_ctx;
-@@ -389,6 +302,8 @@ static int handle_dynamic_resolution_change(struct vpu_instance *inst)
- 	}
- 
- 	if (p_dec_info->initial_info_obtained) {
-+		const struct vpu_format *vpu_fmt;
-+
- 		inst->conf_win.left = initial_info->pic_crop_rect.left;
- 		inst->conf_win.top = initial_info->pic_crop_rect.top;
- 		inst->conf_win.width = initial_info->pic_width -
-@@ -396,10 +311,27 @@ static int handle_dynamic_resolution_change(struct vpu_instance *inst)
- 		inst->conf_win.height = initial_info->pic_height -
- 			initial_info->pic_crop_rect.top - initial_info->pic_crop_rect.bottom;
- 
--		wave5_update_pix_fmt(&inst->src_fmt, initial_info->pic_width,
--				     initial_info->pic_height);
--		wave5_update_pix_fmt(&inst->dst_fmt, initial_info->pic_width,
--				     initial_info->pic_height);
-+		vpu_fmt = wave5_find_vpu_fmt(inst->src_fmt.pixelformat,
-+					     dec_fmt_list[VPU_FMT_TYPE_CODEC]);
-+		if (!vpu_fmt)
-+			return -EINVAL;
-+
-+		wave5_update_pix_fmt(&inst->src_fmt,
-+				     VPU_FMT_TYPE_CODEC,
-+				     initial_info->pic_width,
-+				     initial_info->pic_height,
-+				     vpu_fmt->v4l2_frmsize);
-+
-+		vpu_fmt = wave5_find_vpu_fmt(inst->dst_fmt.pixelformat,
-+					     dec_fmt_list[VPU_FMT_TYPE_RAW]);
-+		if (!vpu_fmt)
-+			return -EINVAL;
-+
-+		wave5_update_pix_fmt(&inst->dst_fmt,
-+				     VPU_FMT_TYPE_RAW,
-+				     initial_info->pic_width,
-+				     initial_info->pic_height,
-+				     vpu_fmt->v4l2_frmsize);
- 	}
- 
- 	v4l2_event_queue_fh(fh, &vpu_event_src_ch);
-@@ -548,12 +480,12 @@ static int wave5_vpu_dec_enum_framesizes(struct file *f, void *fh, struct v4l2_f
- 	}
- 
- 	fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
--	fsize->stepwise.min_width = vpu_fmt->min_width;
--	fsize->stepwise.max_width = vpu_fmt->max_width;
--	fsize->stepwise.step_width = 1;
--	fsize->stepwise.min_height = vpu_fmt->min_height;
--	fsize->stepwise.max_height = vpu_fmt->max_height;
--	fsize->stepwise.step_height = 1;
-+	fsize->stepwise.min_width = vpu_fmt->v4l2_frmsize->min_width;
-+	fsize->stepwise.max_width = vpu_fmt->v4l2_frmsize->max_width;
-+	fsize->stepwise.step_width = W5_DEC_CODEC_STEP_WIDTH;
-+	fsize->stepwise.min_height = vpu_fmt->v4l2_frmsize->min_height;
-+	fsize->stepwise.max_height = vpu_fmt->v4l2_frmsize->max_height;
-+	fsize->stepwise.step_height = W5_DEC_CODEC_STEP_HEIGHT;
- 
- 	return 0;
- }
-@@ -576,6 +508,7 @@ static int wave5_vpu_dec_try_fmt_cap(struct file *file, void *fh, struct v4l2_fo
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
- 	struct dec_info *p_dec_info = &inst->codec_info->dec_info;
-+	const struct v4l2_frmsize_stepwise *frmsize;
- 	const struct vpu_format *vpu_fmt;
- 	int width, height;
- 
-@@ -589,14 +522,12 @@ static int wave5_vpu_dec_try_fmt_cap(struct file *file, void *fh, struct v4l2_fo
- 		width = inst->dst_fmt.width;
- 		height = inst->dst_fmt.height;
- 		f->fmt.pix_mp.pixelformat = inst->dst_fmt.pixelformat;
--		f->fmt.pix_mp.num_planes = inst->dst_fmt.num_planes;
-+		frmsize = &dec_raw_frmsize;
- 	} else {
--		const struct v4l2_format_info *info = v4l2_format_info(vpu_fmt->v4l2_pix_fmt);
--
--		width = clamp(f->fmt.pix_mp.width, vpu_fmt->min_width, vpu_fmt->max_width);
--		height = clamp(f->fmt.pix_mp.height, vpu_fmt->min_height, vpu_fmt->max_height);
-+		width = f->fmt.pix_mp.width;
-+		height = f->fmt.pix_mp.height;
- 		f->fmt.pix_mp.pixelformat = vpu_fmt->v4l2_pix_fmt;
--		f->fmt.pix_mp.num_planes = info->mem_planes;
-+		frmsize = vpu_fmt->v4l2_frmsize;
- 	}
- 
- 	if (p_dec_info->initial_info_obtained) {
-@@ -604,9 +535,8 @@ static int wave5_vpu_dec_try_fmt_cap(struct file *file, void *fh, struct v4l2_fo
- 		height = inst->dst_fmt.height;
- 	}
- 
--	wave5_update_pix_fmt(&f->fmt.pix_mp, width, height);
--	f->fmt.pix_mp.flags = 0;
--	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+	wave5_update_pix_fmt(&f->fmt.pix_mp, VPU_FMT_TYPE_RAW,
-+			     width, height, frmsize);
- 	f->fmt.pix_mp.colorspace = inst->colorspace;
- 	f->fmt.pix_mp.ycbcr_enc = inst->ycbcr_enc;
- 	f->fmt.pix_mp.quantization = inst->quantization;
-@@ -718,7 +648,9 @@ static int wave5_vpu_dec_enum_fmt_out(struct file *file, void *fh, struct v4l2_f
- static int wave5_vpu_dec_try_fmt_out(struct file *file, void *fh, struct v4l2_format *f)
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
-+	const struct v4l2_frmsize_stepwise *frmsize;
- 	const struct vpu_format *vpu_fmt;
-+	int width, height;
- 
- 	dev_dbg(inst->dev->dev,
- 		"%s: fourcc: %u width: %u height: %u num_planes: %u colorspace: %u field: %u\n",
-@@ -727,20 +659,19 @@ static int wave5_vpu_dec_try_fmt_out(struct file *file, void *fh, struct v4l2_fo
- 
- 	vpu_fmt = wave5_find_vpu_fmt(f->fmt.pix_mp.pixelformat, dec_fmt_list[VPU_FMT_TYPE_CODEC]);
- 	if (!vpu_fmt) {
-+		width = inst->src_fmt.width;
-+		height = inst->src_fmt.height;
- 		f->fmt.pix_mp.pixelformat = inst->src_fmt.pixelformat;
--		f->fmt.pix_mp.num_planes = inst->src_fmt.num_planes;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, inst->src_fmt.width, inst->src_fmt.height);
-+		frmsize = &dec_hevc_frmsize;
- 	} else {
--		int width = clamp(f->fmt.pix_mp.width, vpu_fmt->min_width, vpu_fmt->max_width);
--		int height = clamp(f->fmt.pix_mp.height, vpu_fmt->min_height, vpu_fmt->max_height);
--
-+		width = f->fmt.pix_mp.width;
-+		height = f->fmt.pix_mp.height;
- 		f->fmt.pix_mp.pixelformat = vpu_fmt->v4l2_pix_fmt;
--		f->fmt.pix_mp.num_planes = 1;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, width, height);
-+		frmsize = vpu_fmt->v4l2_frmsize;
- 	}
- 
--	f->fmt.pix_mp.flags = 0;
--	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+	wave5_update_pix_fmt(&f->fmt.pix_mp, VPU_FMT_TYPE_CODEC,
-+			     width, height, frmsize);
- 
- 	return 0;
- }
-@@ -748,6 +679,7 @@ static int wave5_vpu_dec_try_fmt_out(struct file *file, void *fh, struct v4l2_fo
- static int wave5_vpu_dec_s_fmt_out(struct file *file, void *fh, struct v4l2_format *f)
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
-+	const struct vpu_format *vpu_fmt;
- 	int i, ret;
- 
- 	dev_dbg(inst->dev->dev,
-@@ -782,7 +714,13 @@ static int wave5_vpu_dec_s_fmt_out(struct file *file, void *fh, struct v4l2_form
- 	inst->quantization = f->fmt.pix_mp.quantization;
- 	inst->xfer_func = f->fmt.pix_mp.xfer_func;
- 
--	wave5_update_pix_fmt(&inst->dst_fmt, f->fmt.pix_mp.width, f->fmt.pix_mp.height);
-+	vpu_fmt = wave5_find_vpu_fmt(inst->dst_fmt.pixelformat, dec_fmt_list[VPU_FMT_TYPE_RAW]);
-+	if (!vpu_fmt)
-+		return -EINVAL;
-+
-+	wave5_update_pix_fmt(&inst->dst_fmt, VPU_FMT_TYPE_RAW,
-+			     f->fmt.pix_mp.width, f->fmt.pix_mp.height,
-+			     vpu_fmt->v4l2_frmsize);
- 
- 	return 0;
- }
-@@ -1005,6 +943,7 @@ static int wave5_vpu_dec_queue_setup(struct vb2_queue *q, unsigned int *num_buff
- 	struct vpu_instance *inst = vb2_get_drv_priv(q);
- 	struct v4l2_pix_format_mplane inst_format =
- 		(q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) ? inst->src_fmt : inst->dst_fmt;
-+	unsigned int i;
- 
- 	dev_dbg(inst->dev->dev, "%s: num_buffers: %u | num_planes: %u | type: %u\n", __func__,
- 		*num_buffers, *num_planes, q->type);
-@@ -1018,31 +957,9 @@ static int wave5_vpu_dec_queue_setup(struct vb2_queue *q, unsigned int *num_buff
- 		if (*num_buffers < inst->fbc_buf_count)
- 			*num_buffers = inst->fbc_buf_count;
- 
--		if (*num_planes == 1) {
--			if (inst->output_format == FORMAT_422)
--				sizes[0] = inst_format.width * inst_format.height * 2;
--			else
--				sizes[0] = inst_format.width * inst_format.height * 3 / 2;
--			dev_dbg(inst->dev->dev, "%s: size[0]: %u\n", __func__, sizes[0]);
--		} else if (*num_planes == 2) {
--			sizes[0] = inst_format.width * inst_format.height;
--			if (inst->output_format == FORMAT_422)
--				sizes[1] = inst_format.width * inst_format.height;
--			else
--				sizes[1] = inst_format.width * inst_format.height / 2;
--			dev_dbg(inst->dev->dev, "%s: size[0]: %u | size[1]: %u\n",
--				__func__, sizes[0], sizes[1]);
--		} else if (*num_planes == 3) {
--			sizes[0] = inst_format.width * inst_format.height;
--			if (inst->output_format == FORMAT_422) {
--				sizes[1] = inst_format.width * inst_format.height / 2;
--				sizes[2] = inst_format.width * inst_format.height / 2;
--			} else {
--				sizes[1] = inst_format.width * inst_format.height / 4;
--				sizes[2] = inst_format.width * inst_format.height / 4;
--			}
--			dev_dbg(inst->dev->dev, "%s: size[0]: %u | size[1]: %u | size[2]: %u\n",
--				__func__, sizes[0], sizes[1], sizes[2]);
-+		for (i = 0; i < *num_planes; i++) {
-+			sizes[i] = inst_format.plane_fmt[i].sizeimage;
-+			dev_dbg(inst->dev->dev, "%s: size[%u]: %u\n", __func__, i, sizes[i]);
- 		}
- 	}
- 
-@@ -1564,20 +1481,15 @@ static const struct vb2_ops wave5_vpu_dec_vb2_ops = {
- static void wave5_set_default_format(struct v4l2_pix_format_mplane *src_fmt,
- 				     struct v4l2_pix_format_mplane *dst_fmt)
- {
--	unsigned int dst_pix_fmt = dec_fmt_list[VPU_FMT_TYPE_RAW][0].v4l2_pix_fmt;
--	const struct v4l2_format_info *dst_fmt_info = v4l2_format_info(dst_pix_fmt);
--
- 	src_fmt->pixelformat = dec_fmt_list[VPU_FMT_TYPE_CODEC][0].v4l2_pix_fmt;
--	src_fmt->field = V4L2_FIELD_NONE;
--	src_fmt->flags = 0;
--	src_fmt->num_planes = 1;
--	wave5_update_pix_fmt(src_fmt, 720, 480);
--
--	dst_fmt->pixelformat = dst_pix_fmt;
--	dst_fmt->field = V4L2_FIELD_NONE;
--	dst_fmt->flags = 0;
--	dst_fmt->num_planes = dst_fmt_info->mem_planes;
--	wave5_update_pix_fmt(dst_fmt, 736, 480);
-+	wave5_update_pix_fmt(src_fmt, VPU_FMT_TYPE_CODEC,
-+			     W5_DEF_DEC_PIC_WIDTH, W5_DEF_DEC_PIC_HEIGHT,
-+			     &dec_hevc_frmsize);
-+
-+	dst_fmt->pixelformat = dec_fmt_list[VPU_FMT_TYPE_RAW][0].v4l2_pix_fmt;
-+	wave5_update_pix_fmt(dst_fmt, VPU_FMT_TYPE_RAW,
-+			     W5_DEF_DEC_PIC_WIDTH, W5_DEF_DEC_PIC_HEIGHT,
-+			     &dec_raw_frmsize);
- }
- 
- static int wave5_vpu_dec_queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-index 703fd8d1c7da..a470f24cbabe 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-@@ -11,65 +11,60 @@
- #define VPU_ENC_DEV_NAME "C&M Wave5 VPU encoder"
- #define VPU_ENC_DRV_NAME "wave5-enc"
- 
-+static const struct v4l2_frmsize_stepwise enc_frmsize[FMT_TYPES] = {
-+	[VPU_FMT_TYPE_CODEC] = {
-+		.min_width = W5_MIN_ENC_PIC_WIDTH,
-+		.max_width = W5_MAX_ENC_PIC_WIDTH,
-+		.step_width = W5_ENC_CODEC_STEP_WIDTH,
-+		.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+		.max_height = W5_MAX_ENC_PIC_HEIGHT,
-+		.step_height = W5_ENC_CODEC_STEP_HEIGHT,
-+	},
-+	[VPU_FMT_TYPE_RAW] = {
-+		.min_width = W5_MIN_ENC_PIC_WIDTH,
-+		.max_width = W5_MAX_ENC_PIC_WIDTH,
-+		.step_width = W5_ENC_RAW_STEP_WIDTH,
-+		.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+		.max_height = W5_MAX_ENC_PIC_HEIGHT,
-+		.step_height = W5_ENC_RAW_STEP_HEIGHT,
-+	},
-+};
-+
- static const struct vpu_format enc_fmt_list[FMT_TYPES][MAX_FMTS] = {
- 	[VPU_FMT_TYPE_CODEC] = {
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_HEVC,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_CODEC],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_H264,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_CODEC],
- 		},
- 	},
- 	[VPU_FMT_TYPE_RAW] = {
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV420,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV12,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV21,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV420M,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV12M,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 		{
- 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV21M,
--			.max_width = W5_MAX_ENC_PIC_WIDTH,
--			.min_width = W5_MIN_ENC_PIC_WIDTH,
--			.max_height = W5_MAX_ENC_PIC_HEIGHT,
--			.min_height = W5_MIN_ENC_PIC_HEIGHT,
-+			.v4l2_frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW],
- 		},
- 	}
- };
-@@ -106,46 +101,6 @@ static int switch_state(struct vpu_instance *inst, enum vpu_instance_state state
- 	return -EINVAL;
- }
- 
--static void wave5_update_pix_fmt(struct v4l2_pix_format_mplane *pix_mp, unsigned int width,
--				 unsigned int height)
--{
--	switch (pix_mp->pixelformat) {
--	case V4L2_PIX_FMT_YUV420:
--	case V4L2_PIX_FMT_NV12:
--	case V4L2_PIX_FMT_NV21:
--		pix_mp->width = width;
--		pix_mp->height = height;
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = round_up(width, 32) * height * 3 / 2;
--		break;
--	case V4L2_PIX_FMT_YUV420M:
--		pix_mp->width = width;
--		pix_mp->height = height;
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = round_up(width, 32) * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[1].sizeimage = round_up(width, 32) * height / 4;
--		pix_mp->plane_fmt[2].bytesperline = round_up(width, 32) / 2;
--		pix_mp->plane_fmt[2].sizeimage = round_up(width, 32) * height / 4;
--		break;
--	case V4L2_PIX_FMT_NV12M:
--	case V4L2_PIX_FMT_NV21M:
--		pix_mp->width = width;
--		pix_mp->height = height;
--		pix_mp->plane_fmt[0].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[0].sizeimage = round_up(width, 32) * height;
--		pix_mp->plane_fmt[1].bytesperline = round_up(width, 32);
--		pix_mp->plane_fmt[1].sizeimage = round_up(width, 32) * height / 2;
--		break;
--	default:
--		pix_mp->width = width;
--		pix_mp->height = height;
--		pix_mp->plane_fmt[0].bytesperline = 0;
--		pix_mp->plane_fmt[0].sizeimage = width * height / 8 * 3;
--		break;
--	}
--}
--
- static int start_encode(struct vpu_instance *inst, u32 *fail_res)
- {
- 	struct v4l2_m2m_ctx *m2m_ctx = inst->v4l2_fh.m2m_ctx;
-@@ -360,13 +315,8 @@ static int wave5_vpu_enc_enum_framesizes(struct file *f, void *fh, struct v4l2_f
- 			return -EINVAL;
- 	}
- 
--	fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
--	fsize->stepwise.min_width = vpu_fmt->min_width;
--	fsize->stepwise.max_width = vpu_fmt->max_width;
--	fsize->stepwise.step_width = 1;
--	fsize->stepwise.min_height = vpu_fmt->min_height;
--	fsize->stepwise.max_height = vpu_fmt->max_height;
--	fsize->stepwise.step_height = 1;
-+	fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
-+	fsize->stepwise = enc_frmsize[VPU_FMT_TYPE_CODEC];
- 
- 	return 0;
- }
-@@ -391,7 +341,9 @@ static int wave5_vpu_enc_enum_fmt_cap(struct file *file, void *fh, struct v4l2_f
- static int wave5_vpu_enc_try_fmt_cap(struct file *file, void *fh, struct v4l2_format *f)
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
-+	const struct v4l2_frmsize_stepwise *frmsize;
- 	const struct vpu_format *vpu_fmt;
-+	int width, height;
- 
- 	dev_dbg(inst->dev->dev, "%s: fourcc: %u width: %u height: %u num_planes: %u field: %u\n",
- 		__func__, f->fmt.pix_mp.pixelformat, f->fmt.pix_mp.width, f->fmt.pix_mp.height,
-@@ -399,20 +351,19 @@ static int wave5_vpu_enc_try_fmt_cap(struct file *file, void *fh, struct v4l2_fo
- 
- 	vpu_fmt = wave5_find_vpu_fmt(f->fmt.pix_mp.pixelformat, enc_fmt_list[VPU_FMT_TYPE_CODEC]);
- 	if (!vpu_fmt) {
-+		width = inst->dst_fmt.width;
-+		height = inst->dst_fmt.height;
- 		f->fmt.pix_mp.pixelformat = inst->dst_fmt.pixelformat;
--		f->fmt.pix_mp.num_planes = inst->dst_fmt.num_planes;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, inst->dst_fmt.width, inst->dst_fmt.height);
-+		frmsize = &enc_frmsize[VPU_FMT_TYPE_CODEC];
- 	} else {
--		int width = clamp(f->fmt.pix_mp.width, vpu_fmt->min_width, vpu_fmt->max_width);
--		int height = clamp(f->fmt.pix_mp.height, vpu_fmt->min_height, vpu_fmt->max_height);
--
-+		width = f->fmt.pix_mp.width;
-+		height = f->fmt.pix_mp.height;
- 		f->fmt.pix_mp.pixelformat = vpu_fmt->v4l2_pix_fmt;
--		f->fmt.pix_mp.num_planes = 1;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, width, height);
-+		frmsize = vpu_fmt->v4l2_frmsize;
- 	}
- 
--	f->fmt.pix_mp.flags = 0;
--	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+	wave5_update_pix_fmt(&f->fmt.pix_mp, VPU_FMT_TYPE_CODEC,
-+			     width, height, frmsize);
- 	f->fmt.pix_mp.colorspace = inst->colorspace;
- 	f->fmt.pix_mp.ycbcr_enc = inst->ycbcr_enc;
- 	f->fmt.pix_mp.quantization = inst->quantization;
-@@ -499,7 +450,9 @@ static int wave5_vpu_enc_enum_fmt_out(struct file *file, void *fh, struct v4l2_f
- static int wave5_vpu_enc_try_fmt_out(struct file *file, void *fh, struct v4l2_format *f)
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
-+	const struct v4l2_frmsize_stepwise *frmsize;
- 	const struct vpu_format *vpu_fmt;
-+	int width, height;
- 
- 	dev_dbg(inst->dev->dev, "%s: fourcc: %u width: %u height: %u num_planes: %u field: %u\n",
- 		__func__, f->fmt.pix_mp.pixelformat, f->fmt.pix_mp.width, f->fmt.pix_mp.height,
-@@ -507,28 +460,26 @@ static int wave5_vpu_enc_try_fmt_out(struct file *file, void *fh, struct v4l2_fo
- 
- 	vpu_fmt = wave5_find_vpu_fmt(f->fmt.pix_mp.pixelformat, enc_fmt_list[VPU_FMT_TYPE_RAW]);
- 	if (!vpu_fmt) {
-+		width = inst->src_fmt.width;
-+		height = inst->src_fmt.height;
- 		f->fmt.pix_mp.pixelformat = inst->src_fmt.pixelformat;
--		f->fmt.pix_mp.num_planes = inst->src_fmt.num_planes;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, inst->src_fmt.width, inst->src_fmt.height);
-+		frmsize = &enc_frmsize[VPU_FMT_TYPE_RAW];
- 	} else {
--		int width = clamp(f->fmt.pix_mp.width, vpu_fmt->min_width, vpu_fmt->max_width);
--		int height = clamp(f->fmt.pix_mp.height, vpu_fmt->min_height, vpu_fmt->max_height);
--		const struct v4l2_format_info *info = v4l2_format_info(vpu_fmt->v4l2_pix_fmt);
--
-+		width = f->fmt.pix_mp.width;
-+		height = f->fmt.pix_mp.height;
- 		f->fmt.pix_mp.pixelformat = vpu_fmt->v4l2_pix_fmt;
--		f->fmt.pix_mp.num_planes = info->mem_planes;
--		wave5_update_pix_fmt(&f->fmt.pix_mp, width, height);
-+		frmsize = vpu_fmt->v4l2_frmsize;
- 	}
- 
--	f->fmt.pix_mp.flags = 0;
--	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
--
-+	wave5_update_pix_fmt(&f->fmt.pix_mp, VPU_FMT_TYPE_RAW,
-+			     width, height, frmsize);
- 	return 0;
- }
- 
- static int wave5_vpu_enc_s_fmt_out(struct file *file, void *fh, struct v4l2_format *f)
- {
- 	struct vpu_instance *inst = wave5_to_vpu_inst(fh);
-+	const struct vpu_format *vpu_fmt;
- 	int i, ret;
- 
- 	dev_dbg(inst->dev->dev, "%s: fourcc: %u width: %u height: %u num_planes: %u field: %u\n",
-@@ -568,7 +519,15 @@ static int wave5_vpu_enc_s_fmt_out(struct file *file, void *fh, struct v4l2_form
- 	inst->quantization = f->fmt.pix_mp.quantization;
- 	inst->xfer_func = f->fmt.pix_mp.xfer_func;
- 
--	wave5_update_pix_fmt(&inst->dst_fmt, f->fmt.pix_mp.width, f->fmt.pix_mp.height);
-+	vpu_fmt = wave5_find_vpu_fmt(inst->dst_fmt.pixelformat, enc_fmt_list[VPU_FMT_TYPE_CODEC]);
-+	if (!vpu_fmt)
-+		return -EINVAL;
-+
-+	wave5_update_pix_fmt(&inst->dst_fmt, VPU_FMT_TYPE_CODEC,
-+			     f->fmt.pix_mp.width, f->fmt.pix_mp.height,
-+			     vpu_fmt->v4l2_frmsize);
-+	inst->conf_win.width = inst->dst_fmt.width;
-+	inst->conf_win.height = inst->dst_fmt.height;
- 
- 	return 0;
- }
-@@ -584,12 +543,17 @@ static int wave5_vpu_enc_g_selection(struct file *file, void *fh, struct v4l2_se
- 	switch (s->target) {
- 	case V4L2_SEL_TGT_CROP_DEFAULT:
- 	case V4L2_SEL_TGT_CROP_BOUNDS:
--	case V4L2_SEL_TGT_CROP:
- 		s->r.left = 0;
- 		s->r.top = 0;
- 		s->r.width = inst->dst_fmt.width;
- 		s->r.height = inst->dst_fmt.height;
- 		break;
-+	case V4L2_SEL_TGT_CROP:
-+		s->r.left = 0;
-+		s->r.top = 0;
-+		s->r.width = inst->conf_win.width;
-+		s->r.height = inst->conf_win.height;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -612,8 +576,10 @@ static int wave5_vpu_enc_s_selection(struct file *file, void *fh, struct v4l2_se
- 
- 	s->r.left = 0;
- 	s->r.top = 0;
--	s->r.width = inst->src_fmt.width;
--	s->r.height = inst->src_fmt.height;
-+	s->r.width = min(s->r.width, inst->dst_fmt.width);
-+	s->r.height = min(s->r.height, inst->dst_fmt.height);
-+
-+	inst->conf_win = s->r;
- 
- 	return 0;
- }
-@@ -1151,8 +1117,8 @@ static void wave5_set_enc_openparam(struct enc_open_param *open_param,
- 	open_param->wave_param.lambda_scaling_enable = 1;
- 
- 	open_param->line_buf_int_en = true;
--	open_param->pic_width = inst->dst_fmt.width;
--	open_param->pic_height = inst->dst_fmt.height;
-+	open_param->pic_width = inst->conf_win.width;
-+	open_param->pic_height = inst->conf_win.height;
- 	open_param->frame_rate_info = inst->frame_rate;
- 	open_param->rc_enable = inst->rc_enable;
- 	if (inst->rc_enable) {
-@@ -1456,20 +1422,15 @@ static const struct vb2_ops wave5_vpu_enc_vb2_ops = {
- static void wave5_set_default_format(struct v4l2_pix_format_mplane *src_fmt,
- 				     struct v4l2_pix_format_mplane *dst_fmt)
- {
--	unsigned int src_pix_fmt = enc_fmt_list[VPU_FMT_TYPE_RAW][0].v4l2_pix_fmt;
--	const struct v4l2_format_info *src_fmt_info = v4l2_format_info(src_pix_fmt);
--
--	src_fmt->pixelformat = src_pix_fmt;
--	src_fmt->field = V4L2_FIELD_NONE;
--	src_fmt->flags = 0;
--	src_fmt->num_planes = src_fmt_info->mem_planes;
--	wave5_update_pix_fmt(src_fmt, 416, 240);
-+	src_fmt->pixelformat = enc_fmt_list[VPU_FMT_TYPE_RAW][0].v4l2_pix_fmt;
-+	wave5_update_pix_fmt(src_fmt, VPU_FMT_TYPE_RAW,
-+			     W5_DEF_ENC_PIC_WIDTH, W5_DEF_ENC_PIC_HEIGHT,
-+			     &enc_frmsize[VPU_FMT_TYPE_RAW]);
- 
- 	dst_fmt->pixelformat = enc_fmt_list[VPU_FMT_TYPE_CODEC][0].v4l2_pix_fmt;
--	dst_fmt->field = V4L2_FIELD_NONE;
--	dst_fmt->flags = 0;
--	dst_fmt->num_planes = 1;
--	wave5_update_pix_fmt(dst_fmt, 416, 240);
-+	wave5_update_pix_fmt(dst_fmt, VPU_FMT_TYPE_CODEC,
-+			     W5_DEF_ENC_PIC_WIDTH, W5_DEF_ENC_PIC_HEIGHT,
-+			     &enc_frmsize[VPU_FMT_TYPE_CODEC]);
- }
- 
- static int wave5_vpu_enc_queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
-@@ -1733,6 +1694,8 @@ static int wave5_vpu_open_enc(struct file *filp)
- 	v4l2_ctrl_handler_setup(v4l2_ctrl_hdl);
- 
- 	wave5_set_default_format(&inst->src_fmt, &inst->dst_fmt);
-+	inst->conf_win.width = inst->dst_fmt.width;
-+	inst->conf_win.height = inst->dst_fmt.height;
- 	inst->colorspace = V4L2_COLORSPACE_REC709;
- 	inst->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
- 	inst->quantization = V4L2_QUANTIZATION_DEFAULT;
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.h b/drivers/media/platform/chips-media/wave5/wave5-vpu.h
-index 32b7fd3730b5..3847332551fc 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.h
-@@ -38,10 +38,7 @@ enum vpu_fmt_type {
- 
- struct vpu_format {
- 	unsigned int v4l2_pix_fmt;
--	unsigned int max_width;
--	unsigned int min_width;
--	unsigned int max_height;
--	unsigned int min_height;
-+	const struct v4l2_frmsize_stepwise *v4l2_frmsize;
- };
- 
- static inline struct vpu_instance *wave5_to_vpu_inst(struct v4l2_fh *vfh)
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h b/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-index d9751eedb0f9..8e11d93ca38f 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-@@ -30,10 +30,29 @@
- 
- #define MAX_NUM_INSTANCE                32
- 
--#define W5_MIN_ENC_PIC_WIDTH            256
--#define W5_MIN_ENC_PIC_HEIGHT           128
--#define W5_MAX_ENC_PIC_WIDTH            8192
--#define W5_MAX_ENC_PIC_HEIGHT           8192
-+#define W5_DEF_DEC_PIC_WIDTH            720U
-+#define W5_DEF_DEC_PIC_HEIGHT           480U
-+#define W5_MIN_DEC_PIC_8_WIDTH          8U
-+#define W5_MIN_DEC_PIC_8_HEIGHT         8U
-+#define W5_MIN_DEC_PIC_32_WIDTH         32U
-+#define W5_MIN_DEC_PIC_32_HEIGHT        32U
-+#define W5_MAX_DEC_PIC_WIDTH            8192U
-+#define W5_MAX_DEC_PIC_HEIGHT           4320U
-+#define W5_DEC_CODEC_STEP_WIDTH         1U
-+#define W5_DEC_CODEC_STEP_HEIGHT        1U
-+#define W5_DEC_RAW_STEP_WIDTH           32U
-+#define W5_DEC_RAW_STEP_HEIGHT          16U
-+
-+#define W5_DEF_ENC_PIC_WIDTH            416U
-+#define W5_DEF_ENC_PIC_HEIGHT           240U
-+#define W5_MIN_ENC_PIC_WIDTH            256U
-+#define W5_MIN_ENC_PIC_HEIGHT           128U
-+#define W5_MAX_ENC_PIC_WIDTH            8192U
-+#define W5_MAX_ENC_PIC_HEIGHT           8192U
-+#define W5_ENC_CODEC_STEP_WIDTH         8U
-+#define W5_ENC_CODEC_STEP_HEIGHT        8U
-+#define W5_ENC_RAW_STEP_WIDTH           32U
-+#define W5_ENC_RAW_STEP_HEIGHT          16U
- 
- //  application specific configuration
- #define VPU_ENC_TIMEOUT                 60000
--- 
-2.43.0
-
+T24gNi8xMy8yNCAxNjowMSwgUHJ6ZW1layBLaXRzemVsIHdyb3RlOg0KPiBbU29tZSBwZW9wbGUg
+d2hvIHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBkb24ndCBvZnRlbiBnZXQgZW1haWwgZnJvbSBwcnpl
+bXlzbGF3LmtpdHN6ZWxAaW50ZWwuY29tLiBMZWFybiB3aHkgdGhpcyBpcyBpbXBvcnRhbnQgYXQg
+aHR0cHM6Ly9ha2EubXMvTGVhcm5BYm91dFNlbmRlcklkZW50aWZpY2F0aW9uIF0NCj4NCj4gT24g
+Ni8xMy8yNCAxMDoyMSwgT21lciBTaHBpZ2VsbWFuIHdyb3RlOg0KPj4gQWRkIHRoZSBoYmxfY24g
+ZHJpdmVyIHdoaWNoIHdpbGwgc2VydmUgYm90aCBFdGhlcm5ldCBhbmQgSW5maW5pQmFuZA0KPj4g
+ZHJpdmVycy4NCj4+IGhibF9jbiBpcyB0aGUgbGF5ZXIgd2hpY2ggaXMgdXNlZCBieSB0aGUgc2F0
+ZWxsaXRlIGRyaXZlcnMgZm9yIG1hbnkgc2hhcmVkDQo+PiBvcGVyYXRpb25zIHRoYXQgYXJlIG5l
+ZWRlZCBieSBib3RoIEVOIGFuZCBJQiBzdWJzeXN0ZW1zIGxpa2UgUVBzLCBDUXMgZXRjLg0KPj4g
+VGhlIENOIGRyaXZlciBpcyBpbml0aWFsaXplZCB2aWEgYXV4aWxpYXJ5IGJ1cyBieSB0aGUgaGFi
+YW5hbGFicyBkcml2ZXIuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogT21lciBTaHBpZ2VsbWFuIDxv
+c2hwaWdlbG1hbkBoYWJhbmEuYWk+DQo+PiBDby1kZXZlbG9wZWQtYnk6IEFiaGlsYXNoIEsgViA8
+a3ZhYmhpbGFzaEBoYWJhbmEuYWk+DQo+PiBTaWduZWQtb2ZmLWJ5OiBBYmhpbGFzaCBLIFYgPGt2
+YWJoaWxhc2hAaGFiYW5hLmFpPg0KPj4gQ28tZGV2ZWxvcGVkLWJ5OiBBbmRyZXkgQWdyYW5vdmlj
+aCA8YWFncmFub3ZpY2hAaGFiYW5hLmFpPg0KPj4gU2lnbmVkLW9mZi1ieTogQW5kcmV5IEFncmFu
+b3ZpY2ggPGFhZ3Jhbm92aWNoQGhhYmFuYS5haT4NCj4+IENvLWRldmVsb3BlZC1ieTogQmhhcmF0
+IEphdWhhcmkgPGJqYXVoYXJpQGhhYmFuYS5haT4NCj4+IFNpZ25lZC1vZmYtYnk6IEJoYXJhdCBK
+YXVoYXJpIDxiamF1aGFyaUBoYWJhbmEuYWk+DQo+PiBDby1kZXZlbG9wZWQtYnk6IERhdmlkIE1l
+cmlpbiA8ZG1lcmlpbkBoYWJhbmEuYWk+DQo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBNZXJpaW4g
+PGRtZXJpaW5AaGFiYW5hLmFpPg0KPj4gQ28tZGV2ZWxvcGVkLWJ5OiBTYWdpdiBPemVyaSA8c296
+ZXJpQGhhYmFuYS5haT4NCj4+IFNpZ25lZC1vZmYtYnk6IFNhZ2l2IE96ZXJpIDxzb3plcmlAaGFi
+YW5hLmFpPg0KPj4gQ28tZGV2ZWxvcGVkLWJ5OiBadmlrYSBZZWh1ZGFpIDx6eWVodWRhaUBoYWJh
+bmEuYWk+DQo+PiBTaWduZWQtb2ZmLWJ5OiBadmlrYSBZZWh1ZGFpIDx6eWVodWRhaUBoYWJhbmEu
+YWk+DQo+PiAtLS0NCj4+ICAgLi4uL2RldmljZV9kcml2ZXJzL2V0aGVybmV0L2luZGV4LnJzdCAg
+ICAgICAgIHwgICAgMSArDQo+PiAgIC4uLi9kZXZpY2VfZHJpdmVycy9ldGhlcm5ldC9pbnRlbC9o
+YmwucnN0ICAgICB8ICAgODIgKw0KPj4gICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDExICsNCj4+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwv
+S2NvbmZpZyAgICAgICAgICAgIHwgICAyMCArDQo+PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2lu
+dGVsL01ha2VmaWxlICAgICAgICAgICB8ICAgIDEgKw0KPj4gICBkcml2ZXJzL25ldC9ldGhlcm5l
+dC9pbnRlbC9oYmxfY24vTWFrZWZpbGUgICAgfCAgICA5ICsNCj4+ICAgLi4uL25ldC9ldGhlcm5l
+dC9pbnRlbC9oYmxfY24vY29tbW9uL01ha2VmaWxlIHwgICAgMyArDQo+PiAgIC4uLi9uZXQvZXRo
+ZXJuZXQvaW50ZWwvaGJsX2NuL2NvbW1vbi9oYmxfY24uYyB8IDU5NTQgKysrKysrKysrKysrKysr
+KysNCj4+ICAgLi4uL25ldC9ldGhlcm5ldC9pbnRlbC9oYmxfY24vY29tbW9uL2hibF9jbi5oIHwg
+MTYyNyArKysrKw0KPj4gICAuLi4vZXRoZXJuZXQvaW50ZWwvaGJsX2NuL2NvbW1vbi9oYmxfY25f
+ZHJ2LmMgfCAgMjIwICsNCj4+ICAgLi4uL2ludGVsL2hibF9jbi9jb21tb24vaGJsX2NuX21lbW9y
+eS5jICAgICAgIHwgICA0MCArDQo+PiAgIC4uLi9ldGhlcm5ldC9pbnRlbC9oYmxfY24vY29tbW9u
+L2hibF9jbl9waHkuYyB8ICAgMzMgKw0KPj4gICAuLi4vZXRoZXJuZXQvaW50ZWwvaGJsX2NuL2Nv
+bW1vbi9oYmxfY25fcXAuYyAgfCAgIDEzICsNCj4+ICAgaW5jbHVkZS9saW51eC9oYWJhbmFsYWJz
+L2NwdWNwX2lmLmggICAgICAgICAgIHwgIDEyNSArLQ0KPj4gICBpbmNsdWRlL2xpbnV4L2hhYmFu
+YWxhYnMvaGxfYm9vdF9pZi5oICAgICAgICAgfCAgICA5ICstDQo+PiAgIGluY2x1ZGUvbGludXgv
+bmV0L2ludGVsL2NuLmggICAgICAgICAgICAgICAgICB8ICA0NzQgKysNCj4+ICAgaW5jbHVkZS9s
+aW51eC9uZXQvaW50ZWwvY25fYXV4LmggICAgICAgICAgICAgIHwgIDI5OCArDQo+PiAgIGluY2x1
+ZGUvbGludXgvbmV0L2ludGVsL2NuaS5oICAgICAgICAgICAgICAgICB8ICA2MzYgKysNCj4+ICAg
+MTggZmlsZXMgY2hhbmdlZCwgOTU0NSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4N
+Cj4gdGhpcyBpcyBhIHZlcnkgYmlnIHBhdGNoLCBpdCBhc2tzIGZvciBhIHNwbGl0OyB3aGF0J3Mg
+d29yc2UsIGl0J3MNCj4gcHJvcG9ydGlvbmFsIHRvIHRoZSBzaXplIG9mIHRoaXMgc2VyaWVzOg0K
+PiAgMTQ2IGZpbGVzIGNoYW5nZWQsIDE0ODUxNCBpbnNlcnRpb25zKCspLCA3MCBkZWxldGlvbnMo
+LSkNCj4gd2hpY2ggaXMganVzdCB0b28gYmlnDQo+DQo+IFsuLi5dDQo+DQoNClllYWgsIHdlbGwg
+SSdtIGxpbWl0ZWQgdG8gMTUgcGF0Y2hlcyBwZXIgcGF0Y2ggc2V0IGFjY29yZGluZyB0byB0aGUg
+a2VybmVsDQpkb2Mgc28gSSBoYWQgdG8gaGF2ZSB0aGlzIGJpZyBwYXRjaC4NCk91ciBjaGFuZ2Vz
+IGFyZSBjb250YWluZWQgaW4gNCBkaWZmZXJlbnQgZHJpdmVycyBhbmQgYWxsIG9mIHRoZSBjaGFu
+Z2VzDQpzaG91bGQgYmUgbWVyZ2VkIHRvZ2V0aGVyIHNvIHRoZSBIVyB3aWxsIGJlIG9wZXJhdGlv
+bmFsLg0KSGVuY2UgSSBoYWQgdG8gc3F1ZWV6ZSBzb21lIGNvZGUgdG8gYSBiaWcgcGF0Y2guDQoN
+Cj4+ICtTdXBwb3J0DQo+PiArPT09PT09PQ0KPj4gK0ZvciBnZW5lcmFsIGluZm9ybWF0aW9uLCBn
+byB0byB0aGUgSW50ZWwgc3VwcG9ydCB3ZWJzaXRlIGF0Og0KPj4gK2h0dHBzOi8vd3d3LmludGVs
+LmNvbS9zdXBwb3J0Lw0KPj4gKw0KPj4gK0lmIGFuIGlzc3VlIGlzIGlkZW50aWZpZWQgd2l0aCB0
+aGUgcmVsZWFzZWQgc291cmNlIGNvZGUgb24gYSBzdXBwb3J0ZWQga2VybmVsDQo+PiArd2l0aCBh
+IHN1cHBvcnRlZCBhZGFwdGVyLCBlbWFpbCB0aGUgc3BlY2lmaWMgaW5mb3JtYXRpb24gcmVsYXRl
+ZCB0byB0aGUgaXNzdWUNCj4+ICt0byBpbnRlbC13aXJlZC1sYW5AbGlzdHMub3N1b3NsLm9yZy4N
+Cj4NCj4gSSdtIHdlbGNvbWluZyB5b3UgdG8gcG9zdCBuZXh0IHZlcnNpb24gb2YgdGhlIGRyaXZl
+ciB0byB0aGUgSVdMIG1haWxpbmcNCj4gbGlzdCwgYW5kIGJlZm9yZSB0aGF0LCB0byBnbyB0aHJv
+dWdoIG91ciBJbnRlbCBwYXRoIGZvciBldGhlcm5ldA0KPiBzdWJzeXN0ZW0gKHJkbWEgYW5kIGEg
+ZmV3IHNtYWxsZXIgb25lcyBhbHNvIGdvIHRocm91Z2ggdGhhdCkNCj4gKHRoYXQgc3RhcnRzIGlu
+dGVybmFsbHksIEkgd2lsbCBQTSB5b3UgdGhlIGRldGFpbHMpDQo+DQo+IFsuLi5dDQo+DQoNCk9r
+LCBJJ2xsIGdvIHRoZSBJbnRlbCBwYXRoIGZpcnN0Lg0KDQo+PiArKysgYi9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9pbnRlbC9oYmxfY24vY29tbW9uL2hibF9jbi5jDQo+PiBAQCAtMCwwICsxLDU5NTQg
+QEANCj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPj4gKy8qIENvcHly
+aWdodCAyMDIwLTIwMjQgSGFiYW5hTGFicywgTHRkLg0KPj4gKyAqIENvcHlyaWdodCAoQykgMjAy
+My0yMDI0LCBJbnRlbCBDb3Jwb3JhdGlvbi4NCj4+ICsgKiBBbGwgUmlnaHRzIFJlc2VydmVkLg0K
+Pj4gKyAqLw0KPj4gKw0KPj4gKyNpbmNsdWRlICJoYmxfY24uaCINCj4+ICsNCj4+ICsjaW5jbHVk
+ZSA8bGludXgvZmlsZS5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4+ICsjaW5j
+bHVkZSA8bGludXgvb3ZlcmZsb3cuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvcGNpLmg+DQo+PiAr
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4+ICsNCj4+ICsjZGVmaW5lIE5JQ19NSU5fV1FTX1BF
+Ul9QT1JUICAgICAgICAgMg0KPj4gKw0KPj4gKyNkZWZpbmUgTklDX1NFUV9SRVNFVFNfVElNRU9V
+VF9NUyAgICAxNTAwMCAvKiAxNSBzZWNvbmRzICovDQo+PiArI2RlZmluZSBOSUNfTUFYX1NFUV9S
+RVNFVFMgICAgICAgICAgIDMNCj4+ICsNCj4+ICsjZGVmaW5lIEhCTF9DTl9JUFY0X1BST1RPQ09M
+X1VEUCAgICAgMTcNCj4+ICsNCj4+ICsvKiBTT0IgbWFzayBpcyBub3QgZXhwZWN0ZWQgdG8gY2hh
+bmdlIGFjcm9zcyBBU0lDLiBIZW5jZSBjb21tb24gZGVmaW5lcy4gKi8NCj4+ICsjZGVmaW5lIE5J
+Q19TT0JfSU5DX01BU0sgICAgICAgICAgICAgMHg4MDAwMDAwMA0KPj4gKyNkZWZpbmUgTklDX1NP
+Ql9WQUxfTUFTSyAgICAgICAgICAgICAweDdmZmYNCj4+ICsNCj4+ICsjZGVmaW5lIE5JQ19EVU1Q
+X1FQX1NaICAgICAgICAgICAgICAgICAgICAgICBTWl80Sw0KPj4gKw0KPj4gKyNkZWZpbmUgSEJM
+X0FVWDJOSUMoYXV4X2RldikgXA0KPj4gKyAgICAgKHsgXA0KPj4gKyAgICAgICAgICAgICBzdHJ1
+Y3QgaGJsX2F1eF9kZXYgKl9fYXV4X2RldiA9IChhdXhfZGV2KTsgXA0KPj4gKyAgICAgICAgICAg
+ICAoKF9fYXV4X2RldiktPnR5cGUgPT0gSEJMX0FVWF9ERVZfRVRIKSA/IFwNCj4+ICsgICAgICAg
+ICAgICAgY29udGFpbmVyX29mKF9fYXV4X2Rldiwgc3RydWN0IGhibF9jbl9kZXZpY2UsIGVuX2F1
+eF9kZXYpIDogXA0KPj4gKyAgICAgICAgICAgICBjb250YWluZXJfb2YoX19hdXhfZGV2LCBzdHJ1
+Y3QgaGJsX2NuX2RldmljZSwgaWJfYXV4X2Rldik7IFwNCj4+ICsgICAgIH0pDQo+DQo+IHRoaXMg
+c2hvdWxkIGJlIGEgZnVuY3Rpb24NCj4NCg0KSSdsbCBzd2l0Y2ggaXQgdG8gYSBmdW5jdGlvbi4N
+Cg0KPj4gKw0KPj4gKyNkZWZpbmUgUkFORF9TVEFUX0NOVChjbnQpIFwNCj4+ICsgICAgIGRvIHsg
+XA0KPj4gKyAgICAgICAgICAgICB1MzIgX19jbnQgPSBnZXRfcmFuZG9tX3UzMigpOyBcDQo+PiAr
+ICAgICAgICAgICAgIChjbnQpID0gX19jbnQ7IFwNCj4+ICsgICAgICAgICAgICAgZGV2X2luZm8o
+aGRldi0+ZGV2LCAicG9ydCAlZCwgJXM6ICV1XG4iLCBwb3J0LCAjY250LCBfX2NudCk7IFwNCj4N
+Cj4gbm8gd2F5IGZvciBzdWNoIG1lc3NhZ2UsIGRpdHRvIGZvciB0aGUgZnVuY3Rpb24NCj4NCg0K
+VGhlIHRoaW5nIGlzIHRoYXQgSSdkIGxpa2UgdG8gcHJpbnQgdGhlIGNvdW50ZXIgbmFtZSBhbmQg
+aXQncyB2YWx1ZS4NCkZvciB0aGF0IEkgbmVlZCB0byBzdHJpbmdpZnkgdGhlIGNvdW50ZXIgbmFt
+ZS4NCklNTyBpdCBpcyBuaWNlciB0byBoYXZlIHRoZSBjdXJyZW50IGNvZGUgcmF0aGVyIHRoYW4g
+c29tZXRoaW5nIGxpa2U6DQoNClJBTkRfU1RBVF9DTlQoc3RhdHVzLT5oaWdoX2Jlcl9yZWluaXQs
+DQogICAgICAgICAgICAgIF9fc3RyaW5naWZ5KHN0YXR1cy0+aGlnaF9iZXJfcmVpbml0KSk7DQpS
+QU5EX1NUQVRfQ05UKHN0YXR1cy0+Y29ycmVjdGFibGVfZXJyX2NudCwNCiAgICAgICAgICAgICAg
+X19zdHJpbmdpZnkoc3RhdHVzLT5jb3JyZWN0YWJsZV9lcnJfY250KSk7DQoNCm9yOg0KDQpSQU5E
+X1NUQVRfQ05UKHN0YXR1cy0+aGlnaF9iZXJfcmVpbml0LCAiaGlnaF9iZXJfcmVpbml0Iik7DQpS
+QU5EX1NUQVRfQ05UKHN0YXR1cy0+Y29ycmVjdGFibGVfZXJyX2NudCwgImNvcnJlY3RhYmxlX2Vy
+cl9jbnQiKTsNCg0KQnV0IEknbGwgY2hhbmdlIGl0IGlmIGl0J3Mgbm90IGNvbW1vbiB0byBwcmlu
+dCBmcm9tIG1hY3Jvcy4NCg0KPj4gKyAgICAgfSB3aGlsZSAoMCkNCj4+ICsNCj4+ICtzdHJ1Y3Qg
+aGJsX2NuX3N0YXQgaGJsX2NuX21hY19mZWNfc3RhdHNbXSA9IHsNCj4+ICsgICAgIHsiY29ycmVj
+dGFibGVfZXJyb3JzIiwgMHgyLCAweDN9LA0KPj4gKyAgICAgeyJ1bmNvcnJlY3RhYmxlX2Vycm9y
+cyIsIDB4NCwgMHg1fQ0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IGhibF9jbl9zdGF0IGhibF9j
+bl9tYWNfc3RhdHNfcnhbXSA9IHsNCj4+ICsgICAgIHsiT2N0ZXRzIiwgMHgwfSwNCj4+ICsgICAg
+IHsiT2N0ZXRzUmVjZWl2ZWRPSyIsIDB4NH0sDQo+PiArICAgICB7ImFBbGlnbm1lbnRFcnJvcnMi
+LCAweDh9LA0KPj4gKyAgICAgeyJhUEFVU0VNQUNDdHJsRnJhbWVzUmVjZWl2ZWQiLCAweEN9LA0K
+Pj4gKyAgICAgeyJhRnJhbWVUb29Mb25nRXJyb3JzIiwgMHgxMH0sDQo+PiArICAgICB7ImFJblJh
+bmdlTGVuZ3RoRXJyb3JzIiwgMHgxNH0sDQo+PiArICAgICB7ImFGcmFtZXNSZWNlaXZlZE9LIiwg
+MHgxOH0sDQo+PiArICAgICB7ImFGcmFtZUNoZWNrU2VxdWVuY2VFcnJvcnMiLCAweDFDfSwNCj4+
+ICsgICAgIHsiVkxBTlJlY2VpdmVkT0siLCAweDIwfSwNCj4+ICsgICAgIHsiaWZJbkVycm9ycyIs
+IDB4MjR9LA0KPj4gKyAgICAgeyJpZkluVWNhc3RQa3RzIiwgMHgyOH0sDQo+PiArICAgICB7Imlm
+SW5NdWx0aWNhc3RQa3RzIiwgMHgyQ30sDQo+PiArICAgICB7ImlmSW5Ccm9hZGNhc3RQa3RzIiwg
+MHgzMH0sDQo+PiArICAgICB7IkRyb3BFdmVudHMiLCAweDM0fSwNCj4+ICsgICAgIHsiUGt0cyIs
+IDB4Mzh9LA0KPj4gKyAgICAgeyJVbmRlcnNpemVQa3RzIiwgMHgzQ30sDQo+PiArICAgICB7IlBr
+dHM2NE9jdGV0cyIsIDB4NDB9LA0KPj4gKyAgICAgeyJQa3RzNjV0bzEyN09jdGV0cyIsIDB4NDR9
+LA0KPj4gKyAgICAgeyJQa3RzMTI4dG8yNTVPY3RldHMiLCAweDQ4fSwNCj4+ICsgICAgIHsiUGt0
+czI1NnRvNTExT2N0ZXRzIiwgMHg0Q30sDQo+PiArICAgICB7IlBrdHM1MTJ0bzEwMjNPY3RldHMi
+LCAweDUwfSwNCj4+ICsgICAgIHsiUGt0czEwMjR0bzE1MThPY3RldHMiLCAweDU0fSwNCj4+ICsg
+ICAgIHsiUGt0czE1MTl0b01heE9jdGV0cyIsIDB4NTh9LA0KPj4gKyAgICAgeyJPdmVyc2l6ZVBr
+dHMiLCAweDVDfSwNCj4+ICsgICAgIHsiSmFiYmVycyIsIDB4NjB9LA0KPj4gKyAgICAgeyJGcmFn
+bWVudHMiLCAweDY0fSwNCj4+ICsgICAgIHsiYUNCRkNQQVVTRVJ4MCIsIDB4Njh9LA0KPj4gKyAg
+ICAgeyJhQ0JGQ1BBVVNFUngxIiwgMHg2Q30sDQo+PiArICAgICB7ImFDQkZDUEFVU0VSeDIiLCAw
+eDcwfSwNCj4+ICsgICAgIHsiYUNCRkNQQVVTRVJ4MyIsIDB4NzR9LA0KPj4gKyAgICAgeyJhQ0JG
+Q1BBVVNFUng0IiwgMHg3OH0sDQo+PiArICAgICB7ImFDQkZDUEFVU0VSeDUiLCAweDdDfSwNCj4+
+ICsgICAgIHsiYUNCRkNQQVVTRVJ4NiIsIDB4ODB9LA0KPj4gKyAgICAgeyJhQ0JGQ1BBVVNFUng3
+IiwgMHg4NH0sDQo+PiArICAgICB7ImFNQUNDb250cm9sRnJhbWVzUmVjZWl2ZWQiLCAweDg4fQ0K
+Pj4gK307DQo+PiArDQo+PiArc3RydWN0IGhibF9jbl9zdGF0IGhibF9jbl9tYWNfc3RhdHNfdHhb
+XSA9IHsNCj4+ICsgICAgIHsiT2N0ZXRzIiwgMHgwfSwNCj4+ICsgICAgIHsiT2N0ZXRzVHJhbnNt
+aXR0ZWRPSyIsIDB4NH0sDQo+PiArICAgICB7ImFQQVVTRU1BQ0N0cmxGcmFtZXNUcmFuc21pdHRl
+ZCIsIDB4OH0sDQo+PiArICAgICB7ImFGcmFtZXNUcmFuc21pdHRlZE9LIiwgMHhDfSwNCj4+ICsg
+ICAgIHsiVkxBTlRyYW5zbWl0dGVkT0siLCAweDEwfSwNCj4+ICsgICAgIHsiaWZPdXRFcnJvcnMi
+LCAweDE0fSwNCj4+ICsgICAgIHsiaWZPdXRVY2FzdFBrdHMiLCAweDE4fSwNCj4+ICsgICAgIHsi
+aWZPdXRNdWx0aWNhc3RQa3RzIiwgMHgxQ30sDQo+PiArICAgICB7ImlmT3V0QnJvYWRjYXN0UGt0
+cyIsIDB4MjB9LA0KPj4gKyAgICAgeyJQa3RzNjRPY3RldHMiLCAweDI0fSwNCj4+ICsgICAgIHsi
+UGt0czY1dG8xMjdPY3RldHMiLCAweDI4fSwNCj4+ICsgICAgIHsiUGt0czEyOHRvMjU1T2N0ZXRz
+IiwgMHgyQ30sDQo+PiArICAgICB7IlBrdHMyNTZ0bzUxMU9jdGV0cyIsIDB4MzB9LA0KPj4gKyAg
+ICAgeyJQa3RzNTEydG8xMDIzT2N0ZXRzIiwgMHgzNH0sDQo+PiArICAgICB7IlBrdHMxMDI0dG8x
+NTE4T2N0ZXRzIiwgMHgzOH0sDQo+PiArICAgICB7IlBrdHMxNTE5dG9NYXhPY3RldHMiLCAweDND
+fSwNCj4+ICsgICAgIHsiYUNCRkNQQVVTRVR4MCIsIDB4NDB9LA0KPj4gKyAgICAgeyJhQ0JGQ1BB
+VVNFVHgxIiwgMHg0NH0sDQo+PiArICAgICB7ImFDQkZDUEFVU0VUeDIiLCAweDQ4fSwNCj4+ICsg
+ICAgIHsiYUNCRkNQQVVTRVR4MyIsIDB4NEN9LA0KPj4gKyAgICAgeyJhQ0JGQ1BBVVNFVHg0Iiwg
+MHg1MH0sDQo+PiArICAgICB7ImFDQkZDUEFVU0VUeDUiLCAweDU0fSwNCj4+ICsgICAgIHsiYUNC
+RkNQQVVTRVR4NiIsIDB4NTh9LA0KPj4gKyAgICAgeyJhQ0JGQ1BBVVNFVHg3IiwgMHg1Q30sDQo+
+PiArICAgICB7ImFNQUNDb250cm9sRnJhbWVzVHgiLCAweDYwfSwNCj4+ICsgICAgIHsiUGt0cyIs
+IDB4NjR9DQo+PiArfTsNCj4+ICsNCj4+ICtzdGF0aWMgY29uc3QgY2hhciBwY3NfY291bnRlcnNf
+c3RyW11bRVRIX0dTVFJJTkdfTEVOXSA9IHsNCj4+ICsgICAgIHsicGNzX2xvY2FsX2ZhdWx0cyJ9
+LA0KPj4gKyAgICAgeyJwY3NfcmVtb3RlX2ZhdWx0cyJ9LA0KPj4gKyAgICAgeyJwY3NfcmVtb3Rl
+X2ZhdWx0X3JlY29uZmlnIn0sDQo+PiArICAgICB7InBjc19saW5rX3Jlc3RvcmVzIn0sDQo+PiAr
+ICAgICB7InBjc19saW5rX3RvZ2dsZXMifSwNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBzaXpl
+X3QgcGNzX2NvdW50ZXJzX3N0cl9sZW4gPSBBUlJBWV9TSVpFKHBjc19jb3VudGVyc19zdHIpOw0K
+Pj4gK3NpemVfdCBoYmxfY25fbWFjX2ZlY19zdGF0c19sZW4gPSBBUlJBWV9TSVpFKGhibF9jbl9t
+YWNfZmVjX3N0YXRzKTsNCj4+ICtzaXplX3QgaGJsX2NuX21hY19zdGF0c19yeF9sZW4gPSBBUlJB
+WV9TSVpFKGhibF9jbl9tYWNfc3RhdHNfcngpOw0KPj4gK3NpemVfdCBoYmxfY25fbWFjX3N0YXRz
+X3R4X2xlbiA9IEFSUkFZX1NJWkUoaGJsX2NuX21hY19zdGF0c190eCk7DQo+DQo+IHdoeSB0aG9z
+ZSBhcmUgbm90IGNvbnN0Pw0KPg0KDQpJJ2xsIGFkZCBjb25zdC4NCg0KPj4gKw0KPj4gK3N0YXRp
+YyB2b2lkIHFwc19zdG9wKHN0cnVjdCBoYmxfY25fZGV2aWNlICpoZGV2KTsNCj4+ICtzdGF0aWMg
+dm9pZCBxcF9kZXN0cm95X3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKTsNCj4+ICtzdGF0
+aWMgaW50IF9fdXNlcl93cV9hcnJfdW5zZXQoc3RydWN0IGhibF9jbl9jdHggKmN0eCwgc3RydWN0
+IGhibF9jbl9wb3J0ICpjbl9wb3J0LCB1MzIgdHlwZSk7DQo+PiArc3RhdGljIHZvaWQgdXNlcl9j
+cV9kZXN0cm95KHN0cnVjdCBrcmVmICprcmVmKTsNCj4+ICtzdGF0aWMgdm9pZCBzZXRfYXBwX3Bh
+cmFtc19jbGVhcihzdHJ1Y3QgaGJsX2NuX2RldmljZSAqaGRldik7DQo+PiArc3RhdGljIGludCBo
+YmxfY25faWJfY21kX2N0cmwoc3RydWN0IGhibF9hdXhfZGV2ICphdXhfZGV2LCB2b2lkICpjbl9p
+Yl9jdHgsIHUzMiBvcCwgdm9pZCAqaW5wdXQsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgdm9pZCAqb3V0cHV0KTsNCj4+ICtzdGF0aWMgaW50IGhibF9jbl9pYl9xdWVyeV9tZW1faGFu
+ZGxlKHN0cnVjdCBoYmxfYXV4X2RldiAqaWJfYXV4X2RldiwgdTY0IG1lbV9oYW5kbGUsDQo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgaGJsX2liX21lbV9pbmZv
+ICppbmZvKTsNCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBoYmxfY25fcmVzZXRfc3RhdHNfY291bnRl
+cnNfcG9ydChzdHJ1Y3QgaGJsX2NuX2RldmljZSAqaGRldiwgdTMyIHBvcnQpOw0KPj4gK3N0YXRp
+YyB2b2lkIGhibF9jbl9sYXRlX2luaXQoc3RydWN0IGhibF9jbl9kZXZpY2UgKmhkZXYpOw0KPj4g
+K3N0YXRpYyB2b2lkIGhibF9jbl9sYXRlX2Zpbmkoc3RydWN0IGhibF9jbl9kZXZpY2UgKmhkZXYp
+Ow0KPj4gK3N0YXRpYyBpbnQgaGJsX2NuX3N3X2luaXQoc3RydWN0IGhibF9jbl9kZXZpY2UgKmhk
+ZXYpOw0KPj4gK3N0YXRpYyB2b2lkIGhibF9jbl9zd19maW5pKHN0cnVjdCBoYmxfY25fZGV2aWNl
+ICpoZGV2KTsNCj4+ICtzdGF0aWMgdm9pZCBoYmxfY25fc3BtdV9pbml0KHN0cnVjdCBoYmxfY25f
+cG9ydCAqY25fcG9ydCwgYm9vbCBmdWxsKTsNCj4+ICtzdGF0aWMgaW50IGhibF9jbl9jbWRfcG9y
+dF9jaGVjayhzdHJ1Y3QgaGJsX2NuX2RldmljZSAqaGRldiwgdTMyIHBvcnQsIHUzMiBmbGFncyk7
+DQo+PiArc3RhdGljIHZvaWQgaGJsX2NuX3Fwc19zdG9wKHN0cnVjdCBoYmxfY25fcG9ydCAqY25f
+cG9ydCk7DQo+PiArDQo+PiArc3RhdGljIGludCBoYmxfY25fcmVxdWVzdF9pcnFzKHN0cnVjdCBo
+YmxfY25fZGV2aWNlICpoZGV2KQ0KPj4gK3sNCj4+ICsgICAgIHN0cnVjdCBoYmxfY25fYXNpY19m
+dW5jcyAqYXNpY19mdW5jcyA9IGhkZXYtPmFzaWNfZnVuY3M7DQo+PiArDQo+PiArICAgICByZXR1
+cm4gYXNpY19mdW5jcy0+cmVxdWVzdF9pcnFzKGhkZXYpOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
+aWMgdm9pZCBoYmxfY25fZnJlZV9pcnFzKHN0cnVjdCBoYmxfY25fZGV2aWNlICpoZGV2KQ0KPj4g
+K3sNCj4+ICsgICAgIHN0cnVjdCBoYmxfY25fYXNpY19mdW5jcyAqYXNpY19mdW5jcyA9ICBoZGV2
+LT5hc2ljX2Z1bmNzOw0KPj4gKw0KPj4gKyAgICAgYXNpY19mdW5jcy0+ZnJlZV9pcnFzKGhkZXYp
+Ow0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBoYmxfY25fc3luY2hyb25pemVfaXJxcyhz
+dHJ1Y3QgaGJsX2F1eF9kZXYgKmNuX2F1eF9kZXYpDQo+PiArew0KPj4gKyAgICAgc3RydWN0IGhi
+bF9jbl9kZXZpY2UgKmhkZXYgPSBjbl9hdXhfZGV2LT5wcml2Ow0KPj4gKyAgICAgc3RydWN0IGhi
+bF9jbl9hc2ljX2Z1bmNzICphc2ljX2Z1bmNzOw0KPj4gKw0KPj4gKyAgICAgYXNpY19mdW5jcyA9
+IGhkZXYtPmFzaWNfZnVuY3M7DQo+PiArDQo+PiArICAgICBhc2ljX2Z1bmNzLT5zeW5jaHJvbml6
+ZV9pcnFzKGhkZXYpOw0KPj4gK30NCj4+ICsNCj4+ICt2b2lkIGhibF9jbl9nZXRfZnJhY19pbmZv
+KHU2NCBudW1lcmF0b3IsIHU2NCBkZW5vbWluYXRvciwgdTY0ICppbnRlZ2VyLCB1NjQgKmV4cCkN
+Cj4+ICt7DQo+PiArICAgICB1NjQgaGlnaF9kaWdpdF9uLCBoaWdoX2RpZ2l0X2QsIGludGVnZXJf
+dG1wLCBleHBfdG1wOw0KPj4gKyAgICAgdTggbnVtX2RpZ2l0c19uLCBudW1fZGlnaXRzX2Q7DQo+
+PiArICAgICBpbnQgaTsNCj4+ICsNCj4+ICsgICAgIG51bV9kaWdpdHNfZCA9IGhibF9jbl9nZXRf
+bnVtX29mX2RpZ2l0cyhkZW5vbWluYXRvcik7DQo+PiArICAgICBoaWdoX2RpZ2l0X2QgPSBkZW5v
+bWluYXRvcjsNCj4+ICsgICAgIGZvciAoaSA9IDA7IGkgPCBudW1fZGlnaXRzX2QgLSAxOyBpKysp
+DQo+PiArICAgICAgICAgICAgIGhpZ2hfZGlnaXRfZCAvPSAxMDsNCj4+ICsNCj4+ICsgICAgIGlu
+dGVnZXJfdG1wID0gMDsNCj4+ICsgICAgIGV4cF90bXAgPSAwOw0KPj4gKw0KPj4gKyAgICAgaWYg
+KG51bWVyYXRvcikgew0KPj4gKyAgICAgICAgICAgICBudW1fZGlnaXRzX24gPSBoYmxfY25fZ2V0
+X251bV9vZl9kaWdpdHMobnVtZXJhdG9yKTsNCj4+ICsgICAgICAgICAgICAgaGlnaF9kaWdpdF9u
+ID0gbnVtZXJhdG9yOw0KPj4gKyAgICAgICAgICAgICBmb3IgKGkgPSAwOyBpIDwgbnVtX2RpZ2l0
+c19uIC0gMTsgaSsrKQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGhpZ2hfZGlnaXRfbiAvPSAx
+MDsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgZXhwX3RtcCA9IG51bV9kaWdpdHNfZCAtIG51bV9k
+aWdpdHNfbjsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgaWYgKGhpZ2hfZGlnaXRfbiA8IGhpZ2hf
+ZGlnaXRfZCkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGhpZ2hfZGlnaXRfbiAqPSAxMDsN
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICBleHBfdG1wKys7DQo+PiArICAgICAgICAgICAgIH0N
+Cj4+ICsNCj4+ICsgICAgICAgICAgICAgaW50ZWdlcl90bXAgPSBkaXZfdTY0KGhpZ2hfZGlnaXRf
+biwgaGlnaF9kaWdpdF9kKTsNCj4+ICsgICAgIH0NCj4+ICsNCj4+ICsgICAgICppbnRlZ2VyID0g
+aW50ZWdlcl90bXA7DQo+PiArICAgICAqZXhwID0gZXhwX3RtcDsNCj4+ICt9DQo+DQo+IHRoaXMg
+ZnVuY3Rpb24gc291bmRzIHN1c3BpY2lvdXMgZm9yIGEgbmV0d29yayBkcml2ZXIsIHdoYXQgZG8g
+eW91IG5lZWQNCj4gaXQgZm9yPw0KPg0KDQpTb21lIG9mIG91ciBjb3VudGVycyBhcmUgZXhwb3Nl
+ZCBieSB0aGUgSFcgd2l0aCBudW1lcmF0b3IvZGVub21pbmF0b3INCnJlcHJlc2VudGF0aW9uIGFu
+ZCB3ZSdkIGxpa2UgdG8gZXhwb3NlIHRoZW0gdG8gdGhlIHVzZXIgd2l0aCBleHBvbmVudA0KcmVw
+cmVzZW50YXRpb24uDQpUaGlzIGZ1bmN0aW9uIGNvbnZlcnRzIGEgY291bnRlciB2YWx1ZSBmcm9t
+IG9uZSByZXByZXNlbnRhdGlvbiB0byB0aGUNCm90aGVyLg0KDQo+PiArDQo+PiAraW50IGhibF9j
+bl9yZWFkX3NwbXVfY291bnRlcnMoc3RydWN0IGhibF9jbl9wb3J0ICpjbl9wb3J0LCB1NjQgb3V0
+X2RhdGFbXSwgdTMyICpudW1fb3V0X2RhdGEpDQo+PiArew0KPj4gKyAgICAgc3RydWN0IGhibF9j
+bl9kZXZpY2UgKmhkZXYgPSBjbl9wb3J0LT5oZGV2Ow0KPj4gKyAgICAgc3RydWN0IGhibF9jbl9h
+c2ljX3BvcnRfZnVuY3MgKnBvcnRfZnVuY3M7DQo+PiArICAgICBzdHJ1Y3QgaGJsX2NuX3N0YXQg
+Kmlnbm9yZTsNCj4+ICsgICAgIGludCByYzsNCj4+ICsNCj4+ICsgICAgIHBvcnRfZnVuY3MgPSBo
+ZGV2LT5hc2ljX2Z1bmNzLT5wb3J0X2Z1bmNzOw0KPj4gKw0KPj4gKyAgICAgcG9ydF9mdW5jcy0+
+c3BtdV9nZXRfc3RhdHNfaW5mbyhjbl9wb3J0LCAmaWdub3JlLCBudW1fb3V0X2RhdGEpOw0KPg0K
+PiBoYXJkIHRvIGlnbm9yZSB0aGF0IHlvdSBkZXJlZiB1bmluaXRpYWxpemVkIHBvaW50ZXIuLi4N
+Cj4NCj4gcGxlYXNlIGNvbnNpZGVyIGdvaW5nIG9uZSBzdGVwIGJhY2sgYW5kIHN0YXJ0IHdpdGgg
+b3VyIGludGVybmFsIG1haWxpbmcNCj4gbGlzdHMsIHRoYW5rIHlvdQ0KPiBQcnplbWVrDQo+DQo+
+IFsuLi5dDQo=
