@@ -1,35 +1,34 @@
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33331A2FC2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A95F1A2FCD
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631333; cv=none; b=Q6faom7USboPclUUkD9VnwbvN4fdUhPM4p1WxOY57zDNLUX7AQLh7omvjVlMlbLztYFJo7YYXsul0MaRdsVbX3gjJQR9rHUNRfKHwlCZGT36hFbfMeNIMhpIHuer74lvGuni6sYLJ4oaYoseJhs+fCeITRW/FKrk0Rg3dnYhqEs=
+	t=1718631334; cv=none; b=oyGqYqX77h4wCFwKxgwba792UWkM2BeVg/9yJGRHB/u/dRfRJekHyNh6epcQ99LtTDrL2ZiPj160UC/siyOaWoo4ZnyogIH2dgjts8N/Kqfc0vWyd2lKuhI3snqxTyHAaBVEsudf2yeHBK2iMODe6LM7fJd5kAZkkI57bjMgJ+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631333; c=relaxed/simple;
-	bh=35WKRlgt95dlXzrYED3ZuLd2zlL2yZUiX9zfMTO7aB8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EYanKtN6IzZkr4VDTnpvZI7aMYM/xn4x8mpmtnr7bOw5wrlNXlKxhcf2BivgxhM8lg5j5hO8+BHD2nBCm7gjOdZVBJBVNUm14ntplYqutG9PX6HHjywh4IgZQriV6q6SVBba/jKvMG+3a61fvz+gcKGFBLRXFcNUjRwa0MzhjdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=AmHPfDiT; arc=none smtp.client-ip=37.18.73.165
+	s=arc-20240116; t=1718631334; c=relaxed/simple;
+	bh=gvXWnPNP81RFJbxt9dfPpNSQPXb3YqrDs9qsTrp0k7Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GselQ5PNH0wQHO96iqZJez+uDhafN4HL1zt5Jy6D/CHLgiS1pJZE4MhJm1JMaZTz/+zxkS504q1MGOPOhZ5j8BfxPe6Oo/KIIjTx/IUdC/UhZXo4d7EAMxWTyXJulRhAMdmDDoRVR+mD+huJrFz3iO0YBcPKk0dwO6NPtP0Nn04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=q8djABTX; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="AmHPfDiT"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="q8djABTX"
 Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 1D6CB100009;
-	Mon, 17 Jun 2024 16:35:23 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 1D6CB100009
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 3D810100003;
+	Mon, 17 Jun 2024 16:35:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 3D810100003
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1718631323;
-	bh=s3IdEpoU8Idriuk8g63QAeoI/TR/7zBrB1N7H/17w8U=;
+	s=mail; t=1718631322;
+	bh=8FxyRaKeWJqwgkCh0J/SmA262Y/mTap6YRFjgrEtVGQ=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=AmHPfDiTxt1A03tynXh9e4ElOYSFwA3pboSyYhjiSNG8gKbnaYEZAZZMOSy6rwT1x
-	 y4WyLGydxdIAhK7mFXjCMFz0gCGChrXigonvXRyRzMmsCTESZyRjUc1uU40TgPhgxQ
-	 7Rii47N1O2fy7bzmaP7fvLDGk3fcUpd/C1Pd2vLou5cx0GljRkqT7nvOXaKQQFfbUb
-	 dUGzzHs7Ot/Noyca2lt8U1joca4VAqTw5Z287f85cphupiZRAxk101WBU4vBUhRX2x
-	 QLs88HsEufe8DnBR+MWI7Vn1WnvCH/t8vuGlocrP4f98uhd2L2KJ7CPjcUM3ZTVw3F
-	 traq7Z2IKwx1g==
+	b=q8djABTXUS7lmXQBL3d/t9Su5FRjJ5E/+T7yzdlvPQ4RUGUHTaZEYGl3Y9YuOZGXP
+	 k6WR9F3zUi6QeW+OQtMdMBhMbyCmDWHegizsIR6McU2rg9D9MvaUKgxa7Q8rlJtNd/
+	 XxKSn0skJx3AAKyJSwFDjzDqn75u9fg/1BdfHMe4trOiofr3HoNaPM74H7Fq/+S+x3
+	 fzgdU+gMgCqwHG4HmK/srRenwQkIeGduYXAeeCLLd7rGs5iLrPJMyK45NihfYEq5r5
+	 6a5MblZ4rRlXOQ5AtY+cwEcP8ye4ewiJQi0WgeBszCI7srlLrH4lGOfoYJ9GqUy8NA
+	 ZcKXrVXsEYbAA==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
@@ -38,7 +37,7 @@ Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.1
 Received: from CAB-WSD-0004828.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 17 Jun 2024 16:35:22 +0300
+ 15.2.1118.40; Mon, 17 Jun 2024 16:35:21 +0300
 From: Martin Kurbanov <mmkurbanov@salutedevices.com>
 To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
 	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Mika Westerberg
@@ -50,12 +49,10 @@ To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
 	<avromanov@salutedevices.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
 	<kernel@salutedevices.com>, Martin Kurbanov <mmkurbanov@salutedevices.com>
-Subject: [PATCH v1 3/5] mtd: spinand: make spinand_wait() global
-Date: Mon, 17 Jun 2024 16:34:55 +0300
-Message-ID: <20240617133504.179705-4-mmkurbanov@salutedevices.com>
+Subject: [PATCH v1 0/5] mtd: spinand: add OTP support
+Date: Mon, 17 Jun 2024 16:34:52 +0300
+Message-ID: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
 X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
-References: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,58 +80,27 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/17 11:22:00 #25639124
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-Change the function spinand_wait() from static to global so that SPI
-NAND flash drivers don't duplicate it.
+This patchset implements the SPI-NAND OTP functions to allow access to
+the SPI-NAND OTP data.
+Specific support is added for Micron MT29F2G01ABAGD and ESMT F50L1G41LB/
+F50D1G41LB flash chips.
 
-Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
----
- drivers/mtd/nand/spi/core.c | 18 ++++++++++++++----
- include/linux/mtd/spinand.h |  3 +++
- 2 files changed, 17 insertions(+), 4 deletions(-)
+Martin Kurbanov (5):
+  mtd: spinand: make spinand_{read,write}_page global
+  mtd: spinand: add OTP support
+  mtd: spinand: make spinand_wait() global
+  mtd: spinand: micron: OTP access for MT29F2G01ABAGD
+  mtd: spinand: esmt: OTP access for F50{L,D}1G41LB
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 2cb825edd49d0..c3e3d1e9599f1 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -496,10 +496,20 @@ static int spinand_erase_op(struct spinand_device *spinand,
- 	return spi_mem_exec_op(spinand->spimem, &op);
- }
- 
--static int spinand_wait(struct spinand_device *spinand,
--			unsigned long initial_delay_us,
--			unsigned long poll_delay_us,
--			u8 *s)
-+/**
-+ * spinand_wait() - Poll memory device status
-+ * @spinand: the spinand device
-+ * @initial_delay_us: delay in us before starting to poll
-+ * @poll_delay_us: time to sleep between reads in us
-+ * @s: the pointer to variable to store the value of REG_STATUS
-+ *
-+ * This function polls a status register (REG_STATUS) and returns when
-+ * the STATUS_READY bit is 0 or when the timeout has expired.
-+ *
-+ * Return: 0 on success, a negative error code otherwise.
-+ */
-+int spinand_wait(struct spinand_device *spinand, unsigned long initial_delay_us,
-+		 unsigned long poll_delay_us, u8 *s)
- {
- 	struct spi_mem_op op = SPINAND_GET_FEATURE_OP(REG_STATUS,
- 						      spinand->scratchbuf);
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index a0d42a9be333f..3b9e7ed32c81d 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -567,6 +567,9 @@ int spinand_match_and_init(struct spinand_device *spinand,
- int spinand_upd_cfg(struct spinand_device *spinand, u8 mask, u8 val);
- int spinand_select_target(struct spinand_device *spinand, unsigned int target);
- 
-+int spinand_wait(struct spinand_device *spinand, unsigned long initial_delay_us,
-+		 unsigned long poll_delay_us, u8 *s);
-+
- int spinand_read_page(struct spinand_device *spinand,
- 		      const struct nand_page_io_req *req);
- 
+ drivers/mtd/nand/spi/Makefile |   3 +-
+ drivers/mtd/nand/spi/core.c   |  45 +++++--
+ drivers/mtd/nand/spi/esmt.c   |  69 ++++++++++-
+ drivers/mtd/nand/spi/micron.c | 117 +++++++++++++++++-
+ drivers/mtd/nand/spi/otp.c    | 219 ++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spinand.h   |  65 ++++++++++
+ 6 files changed, 506 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/mtd/nand/spi/otp.c
+
 -- 
 2.43.2
 
