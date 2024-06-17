@@ -1,164 +1,252 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB1A10958;
-	Mon, 17 Jun 2024 15:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718638264; cv=fail; b=eK+W7d45538ihN1pLsN8YTRQL+xbtrHdSp1ryLLOgSpSJZHYc5cUt05nSIYdhBAiWFtc1KgY8wbkCJ5pRPru8kDitUGjIXm6M3UxpB2m32fBUkw2bzUqkQXXRAHqC+3Ll1T8oSlOQvIMN2lEb8JCnwJnnZ8mRC4rWPEXFWIc9xA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718638264; c=relaxed/simple;
-	bh=JwkUhd5/sbNUK9KTzgVNEXUMJRK2PwBjJ9R8YDgE+Dw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RclcGKxNpDdbC4bkeJBhTs7Rdik6teuWp8beyWUBqiho5ybO/qEya5SEoXtH+DS5B/1u/lvifaUg0Sz0SzhgV5KcpCTsn3KqaGKKilJkWeK1mA8hCYreMyAgRMLeAq75OBkxnKgatNOLmNf7s403oXNOHv2wjP5i18n5F00LnFw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rYWsx3O0; arc=fail smtp.client-ip=40.107.244.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE2310958
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718638287; cv=none; b=olmaDd34adfAJTVuabsoljZ1X6rm9xLM3lquMaeDusKsZ2I2P+7o7ufM56OKngR+Z15xkZw4bVdxzDfsNwWlZTqlhFUNWsWzpxtik9TxWVs4p5amdbtoIxacCP4QsMa+xu0gGzAhbjm1ETF2a5JKnt862Fo433PMAcAJB8+jFGc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718638287; c=relaxed/simple;
+	bh=Z5ps00j25+f+pCZjGF86QTTkz8HWyZ02cBh3yfxWmhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S23KEsJTtGQnX/qwMUY6HejRrSyMd0BaAih5LgDf/JIt3qCyUmSHkYG7FghtNha2H8VH2H9W0/YAfpCZqctC6kV8I0Pi+5lc6N76rJY4+5hJjvD4fMxoMScoLZXULcGJmWraTcdkwwqSRKDQLzpVADq07F68iI8YsWYSaeH+2R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ta5Y4+ko; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rYWsx3O0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bje7VcFH0Glg9OIiD5li+A4TYX4L4LJ7bcyfYFA/SY5DjKrYcTQG2ZdNKpXglFrqp/TpJmFhjNnrZwXgn5nGvi6edMTj33e+zqL2OO4MFifpKDXkczZzs/vtG2QlqSmT6ObkDpZ7Nm0H93QcYpbVKZA4jTEuokMKP9pqxJgNzj8een2rOAFCqjQiIHWlMbltiY8pmNvkjfCA/CVdZm+ZZ/K3mhwUzQbf5620IUdM2k9B9UFOeRPohwOQHJAm27ziMbXjWCYHdNENA/Q8mWj3qNyqI3iuojPfQK6Su3/uW3TBZ/f3sH6MHHlVE7TufGg1Hcy21AnxTNTDcqaQQt3d9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9yR7Dx3icZplT1FPYTD3fkQh1mWl2tpuswyyIloR43Y=;
- b=L+dIugh/GtP1SlNKGyqYUHNx+GJJlIwDriC5tYBdRS1Kllb9q49A8uKhiyARlkyYXYxBrbN5HqELA5NLUyN5uV+Wu9Z4yKAp3B6RHest+O2e+UPE4g2E40DSFDjMeCI/R9mCOAc/xgyWrget4KSErY8aDC+JBt6JkP9p2eiLu/ML/vlignf9fs9p+Msv8TPR2Ytm5ha/rkJCqUBS9WqRbEssJtbjIfW6f3ZHetZlCPPpPqx4haeDUeLeGYxqVUCpxFOd80ALFkBC/G7KBxhRqDzY0lFGLRkrTcXTaUWy7E8gOKi06gdjMeMWZkHVQB/3A2zAjqOdX3DxXoTbT1q5yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9yR7Dx3icZplT1FPYTD3fkQh1mWl2tpuswyyIloR43Y=;
- b=rYWsx3O0Naoe14uUPGiWeKqN7NcZNnbk7WleTb/nKy8e9TuW8KAxT/I9d7kuyy/S818CrWC0kqGTXS8TI75OJsxtM4bnHZJdsuXlzh6zuZGiQsx3cEV7lo9jt/bV9/RYvpB2AEVHn6QhuUiGjxxa959At+Os/Rij/M99I3+5ju4=
-Received: from BN8PR16CA0008.namprd16.prod.outlook.com (2603:10b6:408:4c::21)
- by PH7PR12MB6419.namprd12.prod.outlook.com (2603:10b6:510:1fd::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
- 2024 15:30:58 +0000
-Received: from BN1PEPF0000468B.namprd05.prod.outlook.com
- (2603:10b6:408:4c:cafe::5f) by BN8PR16CA0008.outlook.office365.com
- (2603:10b6:408:4c::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
- Transport; Mon, 17 Jun 2024 15:30:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN1PEPF0000468B.mail.protection.outlook.com (10.167.243.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 15:30:57 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Jun
- 2024 10:30:56 -0500
-Received: from xhdakumarma40u.xilinx.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Mon, 17 Jun 2024 10:30:54 -0500
-From: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-To: <broonie@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<git@amd.com>, <amitrkcian2002@gmail.com>, Amit Kumar Mahapatra
-	<amit.kumar-mahapatra@amd.com>
-Subject: [PATCH 1/1] spi: Fix SPI slave probe failure
-Date: Mon, 17 Jun 2024 21:00:52 +0530
-Message-ID: <20240617153052.26636-1-amit.kumar-mahapatra@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ta5Y4+ko"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5184FC2BD10;
+	Mon, 17 Jun 2024 15:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718638287;
+	bh=Z5ps00j25+f+pCZjGF86QTTkz8HWyZ02cBh3yfxWmhA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ta5Y4+koI5rW+dIlyFdKGImyhjonlrcrk8CoLEmNQdPcxgbDxGx8M0jQA+heQWx5v
+	 D2PKsfPOwSwoF2YlxhFTT5iBZ9tcCp0JeDPsEOO2/nvW/q25eIQQaBj9eDNukU2xEh
+	 9uA2EJu2sd0h9NZPZsD14QqMBdxTlvnToebZLk2dr47/slInhFCEXXGbRUr7UWZdQG
+	 Fx8spvxgPMVQlQABxAUAOs0Q5ex+T+xe7402bCGi7AYjiPxydOZYgyYGM33p2Xi/1r
+	 5VXxF6CJ0ca4WqUk6FDcI/L41zv4SONLcosNINgvIFmwOL8C4XYhsWRYHWd4NADscb
+	 U/+5oSah9m0nA==
+Message-ID: <0ec3c33c-d9ff-41a5-be94-0142f103b815@kernel.org>
+Date: Mon, 17 Jun 2024 17:31:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: amit.kumar-mahapatra@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000468B:EE_|PH7PR12MB6419:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90fd30e2-a8ec-4a09-af0a-08dc8ee27c44
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|376011|82310400023|36860700010|1800799021;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J1/ikJjfv4U5huCdDHVQIQe4GsMSyy+Ks5xkBBNMgWbl1J//l7UyuZBv05/s?=
- =?us-ascii?Q?KixHJlnFzawzVAufePbaN6YH6wAFYJM9qfTDuFcGMqWuGtzVZTHIUBLt0Kv4?=
- =?us-ascii?Q?Wm9vFdQzXP+kBeHdzJu022MC0wVXfILVu3O7MLnHH7Fvtm9O+htQXD6Jj8Pq?=
- =?us-ascii?Q?+BopgZ0xGulYRAuPodNRocBqJkQqvMLgoOGlFFGUv2W5fbdnjEt370UVKZUt?=
- =?us-ascii?Q?wD9duGauZV4rwCKzkI3nnI0svNw5FsjoGLyvg/n1yP4bgKI42ZhEQKN8gl7G?=
- =?us-ascii?Q?2Da8XBlR9/HEKegAMdrbtVtkBwPR0gUy/hI/lp+YYL137fLUDU20kEIup4Ws?=
- =?us-ascii?Q?rojPctQCfAeQkcrBdZ412mV6QSKeOkEGMJr785Anw16AiVV3u8hvvq2lDG8w?=
- =?us-ascii?Q?OtpCumQrGsajR3Wjd7SYXrW5cppXZZhvI9PwUJy3VLfpuKh0fum53dIQCftx?=
- =?us-ascii?Q?M2lEuy+gKXrU0dgNTdoz+EY5xhIaHUfpq3Z5I2l09GonKxPxPCGfmsdXRhjy?=
- =?us-ascii?Q?ntSxmaqbWZ+AN4qHS2XPFe89VWhxpgVaUTBD9qtikP3pHaHyREeDeG/zRJ3M?=
- =?us-ascii?Q?frpiG4KnOr+/Q0E++oo5J9oOd40LHvgRQkcR4jm8kJB4oJ/8u6qERAq5E4yw?=
- =?us-ascii?Q?lKikhUOuGXAsZ9DLpIVhoxCUpk15Xi9vtkFOTqM/qPGJlptJtgSlt74BDfL9?=
- =?us-ascii?Q?bN/gbtLe0mVsRhgIf1AhwYht1/jftvb/X/wM7i7gALiVuz1pDAnOwcLzqZLK?=
- =?us-ascii?Q?d8OvssvrNqPb+c2mPjHxdIc0ja+v3HaPpPypw5LSw19H5KI28SUd4IOrPI0u?=
- =?us-ascii?Q?QTQP4nfkW6wv1N0pYLTwUtCKkD7EWdM3MYiXR1bCCdkP2tX4EoqHKbK66E2c?=
- =?us-ascii?Q?b7bYBOFqM1TiWXIuo3hdOiWZi8b0fy3z9YjL36MKL54weHtR0aiDLK7FowpT?=
- =?us-ascii?Q?/Vn9L5qZZFrknjfbzXRGtbBr18wM6dOfCcwZ7T1qdEah7ySYZkarqocyXPRc?=
- =?us-ascii?Q?Py2GYrCij7BfYS/DY5XeHmfQsuztLdXsjGCN5mBABY8wp7OnVePgcQ7GJiGk?=
- =?us-ascii?Q?lpf43JPtci1M3kPlZSY88FmgCto3tT+r+H4yKoFzErn2HIxLiI2zxF3/V+5l?=
- =?us-ascii?Q?wpUEF2AAxqEwHTeANb8w0bbwQtYuL/syf+OwImMnQ6Gos5O32nZcNhZrnlgx?=
- =?us-ascii?Q?iUIF/TDEJeB3XD3WE3UNHbESEZiG+9FGLrytuepQiqxOmvJ5U1pz5jOJTNsd?=
- =?us-ascii?Q?1rEwbPxtnElg+tkyhZNQXMpQ7hO7wF8/suRXFxrqPCixxXKs1hEptMCHm75C?=
- =?us-ascii?Q?N9aFPkeaUnBPG5mmkTdUYIeqtdUHBdaQphyfL55TBplqkp9Xdus7Wqh++atw?=
- =?us-ascii?Q?S5MY43JKUrwO3CZPWbYXPk+rNSWEfxpzabOCDSSg7A0EBWVyNg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(82310400023)(36860700010)(1800799021);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 15:30:57.6209
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90fd30e2-a8ec-4a09-af0a-08dc8ee27c44
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000468B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6419
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] memcg: use ratelimited stats flush in the reclaim
+To: Yosry Ahmed <yosryahmed@google.com>, Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@suse.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Yu Zhao <yuzhao@google.com>,
+ Muchun Song <songmuchun@bytedance.com>,
+ Facebook Kernel Team <kernel-team@meta.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>
+References: <20240615081257.3945587-1-shakeel.butt@linux.dev>
+ <CAJD7tkbpFu8z1HaUgkaE6bup_fsD39QLPmgNyOnaTrm+hZ_9hA@mail.gmail.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <CAJD7tkbpFu8z1HaUgkaE6bup_fsD39QLPmgNyOnaTrm+hZ_9hA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-While adding a SPI device, the SPI core ensures that multiple logical CS
-doesn't map to the same physical CS. For example, spi->chip_select[0] !=
-spi->chip_select[1] and so forth. However, unlike the SPI master, the SPI
-slave doesn't have the list of chip selects, this leads to probe failure
-when the SPI controller is configured as slave. Update the
-__spi_add_device() function to perform this check only if the SPI
-controller is configured as master.
 
-Fixes: 4d8ff6b0991d ("spi: Add multi-cs memories support in SPI core")
-Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
----
-BRANCH: for-next
----
- drivers/spi/spi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 9721adf048b5..e7e4201e93b5 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -689,10 +689,12 @@ static int __spi_add_device(struct spi_device *spi)
- 	 * Make sure that multiple logical CS doesn't map to the same physical CS.
- 	 * For example, spi->chip_select[0] != spi->chip_select[1] and so on.
- 	 */
--	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
--		status = spi_dev_check_cs(dev, spi, idx, spi, idx + 1);
--		if (status)
--			return status;
-+	if (!spi_controller_is_target(ctlr)) {
-+		for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
-+			status = spi_dev_check_cs(dev, spi, idx, spi, idx + 1);
-+			if (status)
-+				return status;
-+		}
- 	}
- 
- 	/* Set the bus ID string */
--- 
-2.17.1
+On 16/06/2024 02.28, Yosry Ahmed wrote:
+> On Sat, Jun 15, 2024 at 1:13 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+>>
+>> The Meta prod is seeing large amount of stalls in memcg stats flush
+>> from the memcg reclaim code path. At the moment, this specific callsite
+>> is doing a synchronous memcg stats flush. The rstat flush is an
+>> expensive and time consuming operation, so concurrent relaimers will
+>> busywait on the lock potentially for a long time. Actually this issue is
+>> not unique to Meta and has been observed by Cloudflare [1] as well. For
+>> the Cloudflare case, the stalls were due to contention between kswapd
+>> threads running on their 8 numa node machines which does not make sense
+>> as rstat flush is global and flush from one kswapd thread should be
+>> sufficient for all. Simply replace the synchronous flush with the
+>> ratelimited one.
+>>
 
+Like Yosry, I don't agree that simply using ratelimited flush here is
+the right solution, at-least other options need to be investigated first.
+
+I can confirm that at Cloudflare, we are seeing massive issues due
+kswapd and to this specific mem_cgroup_flush_stats() call inlined in
+shrink_node, taking the rstat lock. I looked at our 12 numa node
+machines, given kswapd have a kthread per NUMA node, and realized the
+issue is much worse on these servers, as lock contention on rstat lock
+happens more frequently, where 12 CPUs waste cycles on spinning every
+time kswapd runs.  We added fleet wide stats (/proc/N/schedstat) for
+kthreads, and realized we are on fleet wide average burning 20.000 CPU
+cores on kswapd, that primarily spins on rstat lock.
+
+Try to run this command to see kswapd CPU usage spikes:
+   $ pidstat -u -C kswapd 1 60
+
+Code wise: when the Per-CPU-Pages (PCP) freelist is empty,
+__alloc_pages_slowpath calls wake_all_kswapds(), this cause wakeup calls
+to all the kswapdN threads simultaneously. The kswapd thread will invoke
+shrink_node, which as explained trigger the cgroup rstat flush operation
+as part of its work. Thus, effectively the kernel's own memory
+management processes triggers self-inflicted rstat lock contention, by
+waking up all kswapd threads simultaneously.
+
+So, we definitely need a solution to this issue!
+(... more ideas below inlined as comments to Yosry)
+
+>> One may raise a concern on potentially using 2 sec stale (at worst)
+>> stats for heuristics like desirable inactive:active ratio and preferring
+>> inactive file pages over anon pages but these specific heuristics do not
+>> require very precise stats and also are ignored under severe memory
+>> pressure. This patch has been running on Meta fleet for more than a
+>> month and we have not observed any issues. Please note that MGLRU is not
+>> impacted by this issue at all as it avoids rstat flushing completely.
+>>
+>> Link: https://lore.kernel.org/all/6ee2518b-81dd-4082-bdf5-322883895ffc@kernel.org [1]
+>> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+>> ---
+>>   mm/vmscan.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index c0429fd6c573..bda4f92eba71 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -2263,7 +2263,7 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
+>>           * Flush the memory cgroup stats, so that we read accurate per-memcg
+>>           * lruvec stats for heuristics.
+>>           */
+>> -       mem_cgroup_flush_stats(sc->target_mem_cgroup);
+>> +       mem_cgroup_flush_stats_ratelimited(sc->target_mem_cgroup);
+> 
+> I think you already know my opinion about this one :) I don't like it
+> at all, and I will explain why below. I know it may be a necessary
+> evil, but I would like us to make sure there is no other option before
+> going forward with this.
+> 
+I'm signing up to solving this somehow, as this is a real prod issue.
+
+An easy way to solve the kswapd issue, would be to reintroduce
+"stats_flush_ongoing" concept, that was reverted in 7d7ef0a4686a ("mm:
+memcg: restore subtree stats flushing") (Author: Yosry Ahmed), and
+introduced in 3cd9992b9302 ("memcg: replace stats_flush_lock with an
+atomic") (Author: Yosry Ahmed).
+
+The concept is: If there is an ongoing rstat flush, this time limited to
+the root cgroup, then don't perform the flush.  We can only do this for
+the root cgroup tree, as flushing can be done for subtrees, but kswapd
+is always for root tree, so it is good enough to solve the kswapd
+thundering herd problem.  We might want to generalize this beyond memcg.
+
+
+> Unfortunately, I am travelling this week, so I probably won't be able
+> to follow up on this for a week or so, but I will try to lay down my
+> thoughts as much as I can.
+> 
+> Why don't I like this?
+> 
+> - From a high level, I don't like the approach of replacing
+> problematic flushing calls with the ratelimited version. It strikes me
+> as a whac-a-mole approach that is mitigating symptoms of a larger
+> problem.
+> 
+
+This also looks like a whac-a-mole approach to me.
+
+I'm not directly against rate-limited flushing, but I do think the 2 sec
+interval is too long. IMHO we should be able to have a smaller bound in
+the ms area.
+
+Like I proposed 50 ms flush rate limiting in [2]
+  [2] 
+https://lore.kernel.org/all/171328990014.3930751.10674097155895405137.stgit@firesoul/
+
+
+> - With the added thresholding code, a flush is only done if there is a
+> significant number of pending updates in the relevant subtree.
+> Choosing the ratelimited approach is intentionally ignoring a
+> significant change in stats (although arguably it could be irrelevant
+> stats).
+> 
+
+My production observations are that the thresholding code isn't limiting
+the flushing in practice.
+
+
+> - Reclaim code is an iterative process, so not updating the stats on
+> every retry is very counterintuitive. We are retrying reclaim using
+> the same stats and heuristics used by a previous iteration,
+> essentially dismissing the effects of those previous iterations.
+> 
+> - Indeterministic behavior like this one is very difficult to debug if
+> it causes problems. The missing updates in the last 2s (or whatever
+> period) could be of any magnitude. We may be ignoring GBs of
+> free/allocated memory. What's worse is, if it causes any problems,
+> tracing it back to this flush will be extremely difficult.
+> 
+
+The 2 sec seems like a long period for me.
+
+> What can we do?
+> 
+> - Try to make more fundamental improvements to the flushing code (for
+> memcgs or cgroups in general). The per-memcg flushing thresholding is
+> an example of this. For example, if flushing is taking too long
+> because we are flushing all subsystems, it may make sense to have
+> separate rstat trees for separate subsystems.
+> 
+> One other thing we can try is add a mutex in the memcg flushing path.
+> I had initially had this in my subtree flushing series [1], but I
+> dropped it as we thought it's not very useful. 
+
+I'm running an experimental kernel with rstat lock converted to mutex on
+a number of production servers, and we have not observed any regressions.
+The kswapd thundering herd problem also happen on these machines, but as
+these are sleep-able background threads, it is fine to sleep on the mutex.
+
+
+> Currently in
+> mem_cgroup_flush_stats(), we check if there are enough pending updates
+> to flush, then we call cgroup_flush_stats() and spin on the lock. It
+> is possible that while we spin, those pending updates we observed have
+> been flushed. If we add back the mutex like in [1], then once we
+> acquire the mutex we check again to make sure there are still enough
+> stats to flush.
+> 
+
+It is a good point to re-check after obtaining the lock, as things could
+have changed in the intermediate period when waiting for the lock. This
+is also done (for time) in my 50 ms flush rate limit patch [1] ;-)
+
+
+> [1]https://lore.kernel.org/all/20231010032117.1577496-6-yosryahmed@google.com/
+> 
+> - Try to avoid the need for flushing in this path. I am not sure what
+> approach MGLRU uses to avoid the flush, but if we can do something
+> similar for classic LRUs that would be preferable. I am guessing MGLRU
+> may be maintaining its own stats outside of the rstat framework.
+> 
+> - Try to figure out if one (or a few) update paths are regressing all
+> flushers. If one specific stat or stats update path is causing most of
+> the updates, we can try to fix that instead. Especially if it's a
+> counter that is continuously being increased and decreases (so the net
+> change is not as high as we think).
+> 
+> At the end of the day, all of the above may not work, and we may have
+> to live with just using the ratelimited approach. But I *really* hope
+> we could actually go the other way. Fix things on a more fundamental
+> level and eventually drop the ratelimited variants completely.
+>
+
+My pipe dream is that kernel can avoiding the cost of maintain the
+cgroup threshold stats for flushing, and instead rely on a dynamic time
+based threshold (in ms area) that have no fast-path overhead :-P
+
+
+> Just my 2c. Sorry for the long email :)
+
+Appreciate your input a lot! :-)
+
+--Jesper
