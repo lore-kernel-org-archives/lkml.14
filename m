@@ -1,123 +1,115 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6168195FE2;
-	Mon, 17 Jun 2024 09:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B761190686;
+	Mon, 17 Jun 2024 09:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718617502; cv=none; b=nU3/DKSktaeN+P609HhTsV5Wc73YboDLNYk7p1ECelnIxug4Z88z0TZoMB2IWZKwpLtWM2B34kTgkrmsV2edgnTtgSnRV0xGr8LstlPL5Xrh9tPfvFUogxOw2gRA8jA18mQkaOAr32zn9mubAjoTmB31ykacrZ+qj3bQy7Im3gE=
+	t=1718617665; cv=none; b=CNv2nQwNO8kr7Y+HPrklVmdmJ/B9aA8XS44BJwKru4nOhWv7FpV41sFUzH26JGjfq1sGl/9POdnAhHuS/3JkD1vtGZ/QWxxSRw1uimecYYglby9DW/BowRAwcsQOe/aTxuGIt+HLe/83VfIDyP44Or3TsJ8sKbm3BoufjbiYmXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718617502; c=relaxed/simple;
-	bh=ulYGpQplI6j1LKMsfjUp+t3ELw7gic7cyJ0yseY/H9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9AJjCA7dGP9cQuXJ+7As6L38p2wVTxjnqBV6NKn2p5L5AQS7gw4uWS5kSlukmfY4Q8R2EAsKCVNqMBjPJ1d6KtUb4krh4BYPRNi6MhJ8zrD3cb+RGlMgAGlIDRcq5FLmLeKd87hvtJxvGGpVd+6nN3OTH0fhC5m15avq1NGuzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRQK8qMG; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1718617665; c=relaxed/simple;
+	bh=8RBdNog9v6i7Y12AFGORLNl5FaRMz/KfSoh+ctsLO0s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JTQ188wSLnlbiH/MBAmjRwBXyRUo0FwL+VsCs/i5BDcgQv+CDsuwDRPHB22duts6zbYRwE1WOTEWIWOz4UorSvvW78XeiAJCusV6J/iyUTSBoIfm+UZh1Ibe9V4uEmxxCUQ7QKFeLCCS3Pr7VprDN8Za59JDL9GQl86wSJEvWt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxCFO+Mu; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRQK8qMG"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a44c2ce80so4862858a12.0;
-        Mon, 17 Jun 2024 02:45:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxCFO+Mu"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-6e41550ae5bso2949795a12.3;
+        Mon, 17 Jun 2024 02:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718617499; x=1719222299; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X97SzOogYwfV1kCh1JrbnYsGiZ69at2aW20xoDHZcwM=;
-        b=YRQK8qMG10Tu118PKZMGKDW9RjYukT6APWdm9ILfAJy9KTum4UdmI6kiQbbavH7B3M
-         aTDa2R244OMWgzCnAM5KbdLTxMboiYDRfCqOePETZcbE225fzXhKFZN7o4YfUjHeMKdT
-         cl2N8L3xDC2E9ZOBKHgF7fvxQ/EvY1+snOh8hcoTHs4M1RMY8eUEe/arZQAtMUxkdvvm
-         OdY/K+grdVN9Tw5KZuh9QkYNM6r7Ckj8Ubeejfcld0syOJFieIJ0DG0JfD9hu43hQsfp
-         avu6nKySL599b5BkUNllIgkao9T0ITmmOuWYGAPk7Na1GgB5qyLSrGAXM6HkBwMwCYfq
-         SEkw==
+        d=gmail.com; s=20230601; t=1718617663; x=1719222463; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=usGpbKfnBPC6WUjY1RuxzYU4ZgAbIRTvzZTlT0vlyVY=;
+        b=KxCFO+MuRjXB39G79ciTJyojqXlgoFQNLxKaDQPv1qmT1ydBNKzoNG+7jOIHvRVfGB
+         YgXUryZHl8E+tsvmJyHG79xLL/gLmy/LUmXd72iYaL48Mj2o/3FgyEpIeeSPgpAWigOw
+         PfhzlZhVi+2m1Zkjwdt18Ia2yAWeNaSMJc5Q1lORe16DGsvzzLe6kXjTGKQ43ahhuwpk
+         kL6wA6jVQWGswD+IYYA3sWGWfpO+hKL2DO1e70H8HvZueEbhvox0hqF6FLnZhF4xh/2a
+         r7hFkmFblgSZum/R00mPZHoU7f7dA4YPlXzQL+WTsT7gfWyrxFB9wfS91pNevZpOU+va
+         r8HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718617499; x=1719222299;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X97SzOogYwfV1kCh1JrbnYsGiZ69at2aW20xoDHZcwM=;
-        b=dwTdagVhdRIuwgJ1UuNb75h9mqn38B5pE68+CR0WrnySfn9dPAxsZDkrFWEZUE/VSA
-         FV0FeoFaNbY40pmmeDEOFAcEFqD0wLk6bNum1e/wEQ0ycoXXYtW8I8AXSBhQaEd/D5AV
-         16n5JezK3rsg5vdsCZedJPM947aCWRtwIoTavNSa+LYoY1PhRfNykl38GOnFQoXAJwN0
-         va4iPd6EASMtFz90faOnX/6SRW9qGnJnCLuoH7Pr3icBs25+C9OYC9xQcvptCmmr1UGc
-         LNWT/hFX5OKWbqJlIGSTCgq5GJ4WB2ZpNqtzPiE5c02aCzbaYgpsJHPXXT7+SdzIAM/7
-         dsbg==
-X-Forwarded-Encrypted: i=1; AJvYcCU428HcEjyAzo5OJgjKx0djqzAhI41PIhmsZpu49Wh4QqHLzV07W0PaF0lFtHEl6TymZHFqQEYpnqGT7MdbRdC5WtKXhKGLwgFhW57Fx05CQnlcoeGQlm0Xnh/4FUSs0EwDXrlFpjfwJQ==
-X-Gm-Message-State: AOJu0Yz6I9gJ3GRwP4mWznN9SwIwG++gbumguQ56vLAyjklwq4ZNKxhV
-	x5GtK8iqcPGU+kTDj6Em3E5N2SZ9c4DnyDh4oE6GW+5AKVEKA8ln
-X-Google-Smtp-Source: AGHT+IFS75We8HO8dxXBT7VUWU1ReVIHpzlJDr8M/osvVnkMD+fe6bx8ReOw1WyqfmavqcTI87RW1Q==
-X-Received: by 2002:a50:cdd5:0:b0:57a:2a46:701 with SMTP id 4fb4d7f45d1cf-57cbd68e23emr5766447a12.19.1718617498862;
-        Mon, 17 Jun 2024 02:44:58 -0700 (PDT)
-Received: from ?IPV6:2001:8f8:183b:6864:7071:8881:6a51:3e82? ([2001:8f8:183b:6864:7071:8881:6a51:3e82])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb743ada1sm6149470a12.96.2024.06.17.02.44.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 02:44:58 -0700 (PDT)
-Message-ID: <feeb8dcd-661f-415e-be08-afe175d0102e@gmail.com>
-Date: Mon, 17 Jun 2024 13:44:54 +0400
+        d=1e100.net; s=20230601; t=1718617663; x=1719222463;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=usGpbKfnBPC6WUjY1RuxzYU4ZgAbIRTvzZTlT0vlyVY=;
+        b=AoUUxi4CwIRQ10B2sabqgn+ol86e/u9fQHbyr70J3QQ9Ny59zA/VGb3620eXr/3VjV
+         vyFs2WgHG2LA8QxH6YBjJs+rfjsbCqKGR58kGI8jw0wjgDdcZFsowprkTRrs6BmPJgs3
+         U94GyuM9Lb7ZyLW25bhC1MDG0NzjumX/cNL5jxfNHXhNUQKvyB3eAcrxO5hLfRIkJAHH
+         L/SZRGNeWsQ1LHZbNalefWmmgw/v0ylRLdKD4LyD6NiH/YeOnEZAWO3WFx/T83uxpCbf
+         rAEw+YbRSHq355o7FdH3IWQYUrbk//BRF+foMxKZPUYDhr4cfb5zbZnefgqFDIxSYRhq
+         hBMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDyCcAgEYOKuaamd6pB9LTqzQ0DmdFjxzOva4LddHMmlDE2PTBkGjp1L1WdgcuzJgmDhKaldA1eYUQeeSFydnf/4HKnKZhqTQvnVJP3cIStWT67ZzQTV04aNqad8CJJ4QWfXpXI0rRpoV/ygtkDJ771e1TyPKFbD9NCwjB5BTtfYLVhOde
+X-Gm-Message-State: AOJu0Yw2rzjnpMi0cuNpKxlzOdLHngbGEQZ4ekDh1CWbwvRKYmfdaF1J
+	zQ+GqoL/YAsoiqY4AiFxxQM/lOrAZw+I4OCVtOKqmUi99tAnnU5V
+X-Google-Smtp-Source: AGHT+IFyxj6DeLjbzNAUMQS9A9wQr543YPl1rLY7vjP9jo76xxnmD/MsXV8euv4MDQM0ooApWPY5Kw==
+X-Received: by 2002:a05:6a20:da92:b0:1b5:b214:efcc with SMTP id adf61e73a8af0-1bae82fd317mr10638457637.53.1718617662752;
+        Mon, 17 Jun 2024 02:47:42 -0700 (PDT)
+Received: from localhost.localdomain ([221.220.133.99])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c46701absm8576488a91.40.2024.06.17.02.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 02:47:42 -0700 (PDT)
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+To: detlev.casanova@collabora.com
+Cc: alchark@gmail.com,
+	andy.yan@rock-chips.com,
+	conor+dt@kernel.org,
+	cristian.ciocaltea@collabora.com,
+	devicetree@vger.kernel.org,
+	didi.debian@cknow.org,
+	dsimic@manjaro.org,
+	gregkh@linuxfoundation.org,
+	heiko@sntech.de,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+Date: Mon, 17 Jun 2024 17:47:34 +0800
+Message-Id: <20240617094735.27928-1-liujianfeng1994@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240615015734.1612108-2-detlev.casanova@collabora.com>
+References: <20240615015734.1612108-2-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] arm64: dts: rockchip: Add AP6275P wireless support
- to Khadas Edge 2
-Content-Language: en-GB
-To: Jacobe Zang <jacobe.zang@wesion.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de
-Cc: nick@khadas.com, efectn@protonmail.com, jagan@edgeble.ai,
- dsimic@manjaro.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240617071112.3133101-1-jacobe.zang@wesion.com>
- <20240617071112.3133101-5-jacobe.zang@wesion.com>
-From: Alexey Charkov <alchark@gmail.com>
-In-Reply-To: <20240617071112.3133101-5-jacobe.zang@wesion.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi Detlev,
 
-On 17/06/2024 10:11, Jacobe Zang wrote:
-> Khadas Edge2 uses the PCI-e Ampak AP6275P 2T2R Wi-Fi 6 module.
->
-> Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
-> ---
->   .../boot/dts/rockchip/rk3588s-khadas-edge2.dts  | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-> index 233bab17bffd2..7d7cc3e76838c 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-> @@ -365,6 +365,23 @@ &pcie2x1l2 {
->   	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
->   	vpcie3v3-supply = <&vcc3v3_pcie_wl>;
->   	status = "okay";
-> +
-> +	pcie@0,0 {
-> +		reg = <0x400000 0 0 0 0>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		device_type = "pci";
-> +		bus-range = <0x40 0x4f>;
-> +
-> +		wifi: wifi@0,0 {
-> +			compatible = "pci14e4,449d";
+Thanks a lot for your work! I try to use rkvdec2 with chromium but it
+can't play h264 video. Here is the log of chromium:
 
-This doesn't seem to be listed in the bindings, nor is there a mainline 
-driver that would match either this compatible or PCI ID 14e4:449d. 
-Maybe submit either or both of those first, to make sure they are 
-reviewed and acceptable for mainline inclusion, before this change lands 
-in DTS and becomes part of the ABI?
+[5799:5873:0617/171224.850061:VERBOSE2:video_decoder_pipeline.cc(473)] Initialize(): config: codec: h264, profile: h264 high, level: not available, alpha_mode: is_opaque, coded size: [1920,1080], visible rect: [0,0,1920,1080], natural size: [1920,1080], has extra data: true, encryption scheme: Unencrypted, rotation: 0°, flipped: 0, color space: {primaries:BT709, transfer:BT709, matrix:BT709, range:LIMITED}
+[5799:5886:0617/171224.850915:VERBOSE2:v4l2_video_decoder.cc(182)] V4L2VideoDecoder():
+[5799:5886:0617/171224.851218:VERBOSE1:v4l2_device.cc(128)] Open(): No devices supporting H264 for type: 0
+[5799:5886:0617/171224.851346:VERBOSE4:v4l2_queue.cc(1069)] This queue does  support requests.: No such file or directory (2)
+[5799:5886:0617/171224.851426:VERBOSE1:v4l2_video_decoder.cc(476)] InitializeBackend(): Using a stateless API for profile: h264 high and fourcc: S264
+[5799:5886:0617/171224.851687:VERBOSE1:v4l2_video_decoder.cc(598)] SetupInputFormat(): Input (OUTPUT queue) Fourcc: S264
+[5799:5886:0617/171224.851797:VERBOSE1:v4l2_video_decoder.cc(636)] AllocateInputBuffers(): Requesting: 17 OUTPUT buffers of type V4L2_MEMORY_MMAP
+[5799:5886:0617/171224.867687:VERBOSE1:v4l2_queue.cc(1511)] Streamon(): (OUTPUT_MPLANE) VIDIOC_STREAMON failed: Invalid argument (22)
+[5799:5886:0617/171224.867902:VERBOSE1:v4l2_video_decoder.cc(937)] StartStreamV4L2Queue(): Failed to streamon V4L2 queue.
+[5799:5886:0617/171224.868009:VERBOSE1:v4l2_video_decoder.cc(1377)] SetState(): Error occurred, stopping queues.
+[5799:5886:0617/171224.868105:ERROR:v4l2_video_decoder.cc(120)] StartStreamV4L2Queue failed at Decode@media/gpu/v4l2/v4l2_video_decoder.cc:915
+[5799:5886:0617/171224.871898:WARNING:v4l2_video_decoder_backend_stateless.cc(126)] There is/are 0 pending CAPTURE queue buffers pending dequeuing. This might be fine or a problem depending on the destruction semantics (of theclient code.
 
-I'm also wondering why would adding a DT node for a PCI device be needed 
-in the first place, given that PCI supports device discovery? Does it 
-require some sort of boot-time fixup by the bootloader? If so, it might 
-be helpful to state that in comments.
+Here is the chromium code failed when calling VIDIOC_STREAMON:
+https://github.com/chromium/chromium/blob/125.0.6422.60/media/gpu/v4l2/v4l2_queue.cc#L1508
+
+I'm running chromium v125.0.6422.60 and I can decode 1080p h264 with
+hantro g1 decoder on rk3588.
 
 Best regards,
-
-Alexey
-
+Jianfeng
