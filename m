@@ -1,117 +1,80 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112F954918;
-	Mon, 17 Jun 2024 10:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D843517FAA2;
+	Mon, 17 Jun 2024 10:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718620122; cv=none; b=fiiHDk9xMY81pxBR+FJ5AGd/eOM6DeUr/7P82751Y07yAvCongWVANMcTVs6MP+SVeqYSOynpfl1aQjnS64fPV1shSRgBKlQan064X1PhNOih+AbdAEEhCKGEr3CrKzW8IL9KWossuIIY0eDW5cZeAcSMXvxXeZSc+m3DdQkFVQ=
+	t=1718620146; cv=none; b=ZwlutKFGMyx5SUBWjf3DoYnsvBtKECGF30dDWLJzT3BPSen6o6drYJNf3rANNOckhngL7iWzdMJnomO3Xe66hKgEkPHuWFrCLqs0AXCthXSCiiP0f6TnxtWBQO7Z4Wa/rt5z05qWE3WK95IhUVAsspkqlOXQ0bMqq5bmUDcGrMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718620122; c=relaxed/simple;
-	bh=xsHDvj91rxUXRfNY9tPQ/XaEV10xovW7ukcPVwhmryw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qTVvtuLsLWEf2O5yW+gRcv7P0YviiKaVqXTYQ6dXN4iQaaCgPdZ4UqBhdxqhUnwhf+M6EHksCi/8ZDLWJ40Ycuwg8jM4XePyYnB9MmU2b9RCig+ob/sBaYIyxZeQtnFeLmrCS7irAytObIfvzedCfN3qtUILB5EfQRWaT01Jgok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id F0E5D61E5FE01;
-	Mon, 17 Jun 2024 12:28:17 +0200 (CEST)
-Message-ID: <bcacbd63-843f-4387-a317-517ea532242c@molgen.mpg.de>
-Date: Mon, 17 Jun 2024 12:28:17 +0200
+	s=arc-20240116; t=1718620146; c=relaxed/simple;
+	bh=h8m6K47SfYhgo2FbakEfctLP6IJiz9PoDGqcI9Lpx78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO1OGgQDRvpvzZPO8LWPpk+JxvjdWNH6lfiCuIa/ev+W3a4ASBBMNyoV+VpYrq0qCngAxXHeEGEpAdIq9KwRgiEmGnp6BMvvrxuARbgE5ozle2I5rlUehvCNNfsponOeRYH1WntTFyUKhNJ39DKc+GgMLWUPdUqGb0HI6NM6R0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DScFnxtt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DScFnxtt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14F0C2BD10;
+	Mon, 17 Jun 2024 10:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718620146;
+	bh=h8m6K47SfYhgo2FbakEfctLP6IJiz9PoDGqcI9Lpx78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DScFnxttQ9z8aIToFh5M30yf9Y2aVWUOrwvezwqPtrmd5T7Je4ggNXYj5XH7gnjFd
+	 6mUxzvzXAmVSUFtS1c5rCVSXH3B4EZXDs/wSo++DAPc4i3poRJxn4zJvOncv5qPvdn
+	 PNU/kGlx/1DVsSDLSeSgnwG5ZugUvev8w3EY+K9/z3rqBSWvTqi8tl4evbyYT/gR5+
+	 5GhMDJ/9YfmJ5LesDvu6jemo2bA4784rqu1oVYikSaLJju4R/lhvD52LVdWzdtjfTl
+	 UuLItxoWpGXyNrQY36pgZkz7Eu3iX5ANCMWeNwIJb68r+I1TFmXin9CSGHrnRDGI+d
+	 z0JQUr6XduYQA==
+Date: Mon, 17 Jun 2024 11:29:01 +0100
+From: Simon Horman <horms@kernel.org>
+To: xiaolei wang <xiaolei.wang@windriver.com>
+Cc: olteanv@gmail.com, linux@armlinux.org.uk, alexandre.torgue@foss.st.com,
+	andrew@lunn.ch, joabreu@synopsys.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	mcoquelin.stm32@gmail.com, wojciech.drewek@intel.com,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net PATCH] net: stmmac: No need to calculate speed divider when
+ offload is disabled
+Message-ID: <20240617102901.GO8447@kernel.org>
+References: <20240614081916.764761-1-xiaolei.wang@windriver.com>
+ <20240615144747.GE8447@kernel.org>
+ <ec41f61f-d500-4dda-8a79-37a68ddafced@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: btusb: Add RTL8852BE device 0489:e125 to
- device tables
-To: Hilda Wu <hildawu@realtek.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- alex_lu@realsil.com.cn, max.chou@realtek.com, kidman@realtek.com
-References: <20240617090518.3237642-1-hildawu@realtek.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240617090518.3237642-1-hildawu@realtek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec41f61f-d500-4dda-8a79-37a68ddafced@windriver.com>
 
-Dear Hilda,
-
-
-Thank you for the improved version.
-
-Am 17.06.24 um 11:05 schrieb Hilda Wu:
-> Add the support ID 0489:e125 to usb_device_id table for
-> Realtek RTL8852B chip.
+On Sun, Jun 16, 2024 at 09:15:05AM +0800, xiaolei wang wrote:
 > 
-> The device info from /sys/kernel/debug/usb/devices as below.
+> On 6/15/24 22:47, Simon Horman wrote:
+> > On Fri, Jun 14, 2024 at 04:19:16PM +0800, Xiaolei Wang wrote:
+
+...
+
+> >          /* Final adjustments for HW */
+> >          value = div_s64(qopt->idleslope * 1024ll * ptr, port_transmit_rate_kbps);
+> >          priv->plat->tx_queues_cfg[queue].idle_slope = value & GENMASK(31, 0);
+> > 
+> >          value = div_s64(-qopt->sendslope * 1024ll * ptr, port_transmit_rate_kbps);
+> >          priv->plat->tx_queues_cfg[queue].send_slope = value & GENMASK(31, 0);
+> > 
+> > And the div_s64() lines above appear to use
+> > ptr uninitialised in the !qopt->enable case.
 > 
-> T:  Bus=01 Lev=01 Prnt=01 Port=07 Cnt=03 Dev#=  5 Spd=12   MxCh= 0
-> D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-> P:  Vendor=0489 ProdID=e125 Rev= 0.00
-> S:  Manufacturer=Realtek
-> S:  Product=Bluetooth Radio
-> S:  SerialNumber=00e04c000001
-> C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
-> I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-> E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-> E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-> I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-> I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-> I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-> I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-> I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-> I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-> 
-> Signed-off-by: Hilda Wu <hildawu@realtek.com>
-> 
-> ---
-> Change in v2:
->   - Add suitable spaces to commit log.
-> ---
-> ---
->   drivers/bluetooth/btusb.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 79aefdb3324d..2d7d47f9d007 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -555,6 +555,8 @@ static const struct usb_device_id quirks_table[] = {
->   						     BTUSB_WIDEBAND_SPEECH },
->   	{ USB_DEVICE(0x13d3, 0x3572), .driver_info = BTUSB_REALTEK |
->   						     BTUSB_WIDEBAND_SPEECH },
-> +	{ USB_DEVICE(0x0489, 0xe125), .driver_info = BTUSB_REALTEK |
-> +						     BTUSB_WIDEBAND_SPEECH },
->   
+> Oh, when deleting the configuration, idleslope and sendslope are both 0, do
+> you mean we also need to set ptr to 0?
 
-Did you overlook my comment regarding the sorting?
+Understood, if idleslope and sendslope are 0, then ptr could be set to any
+value and the result would be the same.  And, based on my limited
+understanding, 0 does not seem to be a bad choice.
 
->   	/* Realtek 8852BT/8852BE-VT Bluetooth devices */
->   	{ USB_DEVICE(0x0bda, 0x8520), .driver_info = BTUSB_REALTEK |
+My point is that ptr shouldn't be uninitialised at this point.
 
-
-Kind regards,
-
-Paul
+...
