@@ -1,412 +1,523 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFB74500C;
-	Mon, 17 Jun 2024 16:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368D617C8;
+	Mon, 17 Jun 2024 16:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642864; cv=none; b=a71jLtN5PL1utXkGytd0RWZyoSfHsYFW347K6AslxvUGawX2tIWD24Eqatr9+uj01TcXPwddL52YmSqubPfNb0CBQNYRuYB2tbTO3YHh89Fu/3bXClNNrVaIt3AE8Phki/utAIdUrJpRND+cDH2DWDas+ZLO9zDKF2ADpaAtKhY=
+	t=1718642939; cv=none; b=kG99nCvAwbxBRI9E9bnO7hFJYSaBEpZH3AJ/ela0rBgDK8VKiEM5QM2hNwAF8Ha2P64kg8oY6X2qxVVQoQRBSjFEi6qyNuZ0cVCt9Mf99iuBGTe5eR6+q5zNw8ONxvsXRQh4autscEUEOPOwVX+AH/zDW4KejlKVfmGbo7GRl/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642864; c=relaxed/simple;
-	bh=aM9RnoGXr8emv7Tq4e0WP1W2t4kOtvT3myzG7ANBYtE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=X3mP4ruVjDTr3twxBmEIUps7JOrNX0sTrlVbtEnUdmxNQt6daYkqRadBnvhBoVPhhzWjZFgnh5iMZIqwawBy6UzIiQF3/2jZihdgfB2pgFjVebtpLYsCWPK1olOexX8ffuyQ0lgP/vXMPRmLkz0fjMKmRpgK4dxa8bmKaKERvGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NeXkydqz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NeXkydqz"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HGaLB5001925;
-	Mon, 17 Jun 2024 16:47:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=P
-	hYpQRcKjYLNv02jVjWeC2p16m9d11AocHNjE7/LYBs=; b=NeXkydqziIaXvjxJo
-	xisfknjclVdmvVYMmABeKU960RwJPf3FLmSn8NOI3vhq1pNQd2rQql/aYb1X1PdM
-	CwLytNDx+8x8jQ4ibU4cUJICcR90h7rQ3bz7/PdTfNAJkfP5tq8hHbGpswoRMbw2
-	NPZgciZlirBmIFFMRHZss4Z0AlpHiXIp2PBExm6l9t99d+FOFEGNN/LbUMG6/F04
-	NWtxOOIhPmrxvgXjF8IPwPTa8k2Wksxyk1RG8iHIElPXpp6NRazgzP8vcQVlbqmX
-	8b30ViPX/wk/c5JN7ABdFpxLYi9eRlTmd7Fc5JQcK37q9n+eLzoHOrYyCFjRDxtz
-	qfmuQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytrpyg25v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:47:26 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HGhsMJ016207;
-	Mon, 17 Jun 2024 16:47:26 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytrpyg25r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:47:25 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HFc8sv023889;
-	Mon, 17 Jun 2024 16:47:25 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysp9puv8f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:47:25 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HGlJev55968118
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 16:47:21 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E53F220069;
-	Mon, 17 Jun 2024 16:47:18 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 538C620043;
-	Mon, 17 Jun 2024 16:47:16 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.76.136])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 17 Jun 2024 16:47:16 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1718642939; c=relaxed/simple;
+	bh=Sw4WMbh4MR37Sjul7GaT+1B0IUYI69+si4+4QmM1hIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cy3Ebwq1XyWGp5UQMtskIrboKcDHQjiqdaYMPzxULZKaRpu5ENFFv0rEsI2DOSWtQwcJ+ZPHi3OD+76D07U4eiGJYzlxhX5vZI2uKLxDNw/l7NKmvI/aiMUjwG6DGQIC7tZ56yauAHl+DMiEUiGHwT1Q3xoUaqIB5mvUyNFGYRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A45ADA7;
+	Mon, 17 Jun 2024 09:49:20 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BE663F64C;
+	Mon, 17 Jun 2024 09:48:53 -0700 (PDT)
+Date: Mon, 17 Jun 2024 17:48:51 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] firmware: arm_scmi: add initial support for i.MX
+ BBM protocol
+Message-ID: <ZnBo84P1Av0pZ324@pluto>
+References: <20240524-imx95-bbm-misc-v2-v4-0-dc456995d590@nxp.com>
+ <20240524-imx95-bbm-misc-v2-v4-3-dc456995d590@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
- fail when kernel debuginfo is not present
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
-Date: Mon, 17 Jun 2024 22:17:04 +0530
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DA51C986-34EE-4849-B9C4-DB69E2ECF75C@linux.vnet.ibm.com>
-References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
- <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
-To: James Clark <james.clark@arm.com>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: PDF8rStCNfiBRYeiGThJsCtGO_CMIBvI
-X-Proofpoint-GUID: RHQcb8kY_a5qBb4qu-H26rxOJr7Ykx5N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1011 mlxlogscore=999 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170127
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240524-imx95-bbm-misc-v2-v4-3-dc456995d590@nxp.com>
 
+On Fri, May 24, 2024 at 04:56:45PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> i.MX95 has a battery-backed module(BBM), which has persistent storage (GPR),
+> an RTC, and the ON/OFF button. The System Manager(SM) firmware use SCMI vendor
+> protocol(SCMI BBM) to let agent be able to use GPR, RTC and ON/OFF
+> button.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/arm_scmi/Kconfig          |   2 +
+>  drivers/firmware/arm_scmi/Makefile         |   1 +
+>  drivers/firmware/arm_scmi/imx/Kconfig      |  14 ++
+>  drivers/firmware/arm_scmi/imx/Makefile     |   2 +
+>  drivers/firmware/arm_scmi/imx/imx-sm-bbm.c | 380 +++++++++++++++++++++++++++++
+>  include/linux/scmi_imx_protocol.h          |  42 ++++
+>  6 files changed, 441 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/Kconfig b/drivers/firmware/arm_scmi/Kconfig
+> index aa5842be19b2..79846cbaf71b 100644
+> --- a/drivers/firmware/arm_scmi/Kconfig
+> +++ b/drivers/firmware/arm_scmi/Kconfig
+> @@ -180,4 +180,6 @@ config ARM_SCMI_POWER_CONTROL
+>  	  called scmi_power_control. Note this may needed early in boot to catch
+>  	  early shutdown/reboot SCMI requests.
+>  
+> +source "drivers/firmware/arm_scmi/imx/Kconfig"
+> +
 
+It could be that we fold all the Vendor drivers under
+drivers/firmware/arm_scmi/vendors once it is merged...but we will take
+care of this reowrk/refctor...still not sure about this details.
 
-> On 17 Jun 2024, at 8:30=E2=80=AFPM, James Clark <james.clark@arm.com> =
-wrote:
->=20
->=20
->=20
-> On 17/06/2024 13:21, Athira Rajeev wrote:
->> Running "perftool-testsuite_probe" fails as below:
->>=20
->> ./perf test -v "perftool-testsuite_probe"
->> 83: perftool-testsuite_probe  : FAILED
->>=20
->> There are three fails:
->>=20
->> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added =
-probe :: perf probe -l (output regexp parsing)
->>=20
->=20
-> On a machine where NO_DEBUGINFO gets set, this one skips for me. But =
-on
-> a machine where there _is_ debug info this test still fails.
->=20
-> But in both cases the probe looks like it was added successfully. So =
-I'm
-> wondering if this one does need to be skipped, or it's just always
-> failing? Do you have this test passing anywhere where there is debug =
-info?
->=20
-> The list command looks like it successfully lists the probe for me in
-> both cases, it just doesn't have an address on the end:
->=20
-> perf list 'probe:*'
->=20
->   probe:inode_permission (on inode_permission)
->=20
-> Does the missing address mean anything or is it just not handled
-> properly by the test?
->=20
-> Ironically the machine that _does_ pass the debug info test also =
-prints
-> this, but it looks like it still adds and lists the probe correctly:
->=20
->  perf probe -l probe:*
->=20
->  Failed to find debug information for address 0xffff80008047ac30
->    probe:inode_permission (on inode_permission)
+>  endmenu
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index fd59f58ce8a2..fb9407fef60c 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -16,6 +16,7 @@ scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+>  
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o
+> +obj-$(CONFIG_ARM_SCMI_PROTOCOL) += imx/
+>  
+>  obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+>  
+> diff --git a/drivers/firmware/arm_scmi/imx/Kconfig b/drivers/firmware/arm_scmi/imx/Kconfig
+> new file mode 100644
+> index 000000000000..4b6ac7febe8f
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/imx/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +menu "ARM SCMI NXP i.MX Vendor Protocols"
+> +
+> +config IMX_SCMI_BBM_EXT
+> +	tristate "i.MX SCMI BBM EXTENSION"
+> +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> +	default y if ARCH_MXC
+> +	help
+> +	  This enables i.MX System BBM control logic which supports RTC
+> +	  and BUTTON.
+> +
+> +	  This driver can also be built as a module.
+> +
+> +endmenu
+> diff --git a/drivers/firmware/arm_scmi/imx/Makefile b/drivers/firmware/arm_scmi/imx/Makefile
+> new file mode 100644
+> index 000000000000..a7dbdd20dbb9
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/imx/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_IMX_SCMI_BBM_EXT) += imx-sm-bbm.o
+> diff --git a/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c b/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c
+> new file mode 100644
+> index 000000000000..3f8321d247ae
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/imx/imx-sm-bbm.c
+> @@ -0,0 +1,380 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) NXP BBM Protocol
+> + *
+> + * Copyright 2024 NXP
+> + */
+> +
+> +#define pr_fmt(fmt) "SCMI Notifications BBM - " fmt
+> +
+> +#include <linux/bits.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/scmi_imx_protocol.h>
+> +
+> +#include "../protocols.h"
+> +#include "../notify.h"
+> +
+> +#define SCMI_PROTOCOL_SUPPORTED_VERSION		0x10000
+> +
+> +enum scmi_imx_bbm_protocol_cmd {
+> +	IMX_BBM_GPR_SET = 0x3,
+> +	IMX_BBM_GPR_GET = 0x4,
+> +	IMX_BBM_RTC_ATTRIBUTES = 0x5,
+> +	IMX_BBM_RTC_TIME_SET = 0x6,
+> +	IMX_BBM_RTC_TIME_GET = 0x7,
+> +	IMX_BBM_RTC_ALARM_SET = 0x8,
+> +	IMX_BBM_BUTTON_GET = 0x9,
+> +	IMX_BBM_RTC_NOTIFY = 0xA,
+> +	IMX_BBM_BUTTON_NOTIFY = 0xB,
+> +};
+> +
+> +#define GET_RTCS_NR(x)	le32_get_bits((x), GENMASK(23, 16))
+> +#define GET_GPRS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_UPDATED		BIT(2)
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER	BIT(1)
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_ALARM		BIT(0)
+> +
+> +#define SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG	BIT(0)
+> +
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_FLAG	\
+> +	(SCMI_IMX_BBM_NOTIFY_RTC_UPDATED | SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER | \
+> +	 SCMI_IMX_BBM_NOTIFY_RTC_ALARM)
+> +
+> +#define SCMI_IMX_BBM_EVENT_RTC_MASK		GENMASK(31, 24)
+> +
+> +struct scmi_imx_bbm_info {
+> +	u32 version;
+> +	int nr_rtc;
+> +	int nr_gpr;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_protocol_attributes {
+> +	__le32 attributes;
+> +};
+> +
+> +struct scmi_imx_bbm_set_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +	__le32 value_low;
+> +	__le32 value_high;
+> +};
+> +
+> +struct scmi_imx_bbm_get_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_imx_bbm_alarm_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +	__le32 value_low;
+> +	__le32 value_high;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_rtc_notify {
+> +	__le32 rtc_id;
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_button_notify {
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_imx_bbm_notify_payld {
+> +	__le32 flags;
+> +};
+> +
+> +static int scmi_imx_bbm_attributes_get(const struct scmi_protocol_handle *ph,
+> +				       struct scmi_imx_bbm_info *pi)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_imx_bbm_protocol_attributes *attr;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0, sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr = t->rx.buf;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+> +		pi->nr_rtc = GET_RTCS_NR(attr->attributes);
+> +		pi->nr_gpr = GET_GPRS_NR(attr->attributes);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_notify(const struct scmi_protocol_handle *ph,
+> +			       u32 src_id, int message_id, bool enable)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +
+> +	if (message_id == IMX_BBM_RTC_NOTIFY) {
+> +		struct scmi_msg_imx_bbm_rtc_notify *rtc_notify;
+> +
+> +		ret = ph->xops->xfer_get_init(ph, message_id,
+> +					      sizeof(*rtc_notify), 0, &t);
+> +		if (ret)
+> +			return ret;
+> +
+> +		rtc_notify = t->tx.buf;
+> +		rtc_notify->rtc_id = cpu_to_le32(0);
+> +		rtc_notify->flags =
+> +			cpu_to_le32(enable ? SCMI_IMX_BBM_NOTIFY_RTC_FLAG : 0);
+> +	} else if (message_id == IMX_BBM_BUTTON_NOTIFY) {
+> +		struct scmi_msg_imx_bbm_button_notify *button_notify;
+> +
+> +		ret = ph->xops->xfer_get_init(ph, message_id,
+> +					      sizeof(*button_notify), 0, &t);
+> +		if (ret)
+> +			return ret;
+> +
+> +		button_notify = t->tx.buf;
+> +		button_notify->flags = cpu_to_le32(enable ? 1 : 0);
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +	return ret;
+> +}
+> +
+> +static enum scmi_imx_bbm_protocol_cmd evt_2_cmd[] = {
+> +	IMX_BBM_RTC_NOTIFY,
+> +	IMX_BBM_BUTTON_NOTIFY
+> +};
+> +
+> +static int scmi_imx_bbm_set_notify_enabled(const struct scmi_protocol_handle *ph,
+> +					   u8 evt_id, u32 src_id, bool enable)
+> +{
+> +	int ret, cmd_id;
+> +
+> +	if (evt_id >= ARRAY_SIZE(evt_2_cmd))
+> +		return -EINVAL;
+> +
+> +	cmd_id = evt_2_cmd[evt_id];
+> +	ret = scmi_imx_bbm_notify(ph, src_id, cmd_id, enable);
+> +	if (ret)
+> +		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
+> +			 evt_id, src_id, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static void *scmi_imx_bbm_fill_custom_report(const struct scmi_protocol_handle *ph,
+> +					     u8 evt_id, ktime_t timestamp,
+> +					     const void *payld, size_t payld_sz,
+> +					     void *report, u32 *src_id)
+> +{
+> +	const struct scmi_imx_bbm_notify_payld *p = payld;
+> +	struct scmi_imx_bbm_notif_report *r = report;
+> +
+> +	if (sizeof(*p) != payld_sz)
+> +		return NULL;
+> +
+> +	if (evt_id == SCMI_EVENT_IMX_BBM_RTC) {
+> +		r->is_rtc = true;
+> +		r->is_button = false;
+> +		r->timestamp = timestamp;
+> +		r->rtc_id = le32_get_bits(p->flags, SCMI_IMX_BBM_EVENT_RTC_MASK);
+> +		r->rtc_evt = le32_get_bits(p->flags, SCMI_IMX_BBM_NOTIFY_RTC_FLAG);
+> +		dev_dbg(ph->dev, "RTC: %d evt: %x\n", r->rtc_id, r->rtc_evt);
+> +		*src_id = r->rtc_evt;
+> +	} else if (evt_id == SCMI_EVENT_IMX_BBM_BUTTON) {
+> +		r->is_rtc = false;
+> +		r->is_button = true;
+> +		r->timestamp = timestamp;
+> +		dev_dbg(ph->dev, "BBM Button\n");
+> +		*src_id = 0;
+> +	} else {
+> +		WARN_ON_ONCE(1);
+> +		return NULL;
+> +	}
+> +
+> +	return r;
+> +}
+> +
+> +static const struct scmi_event scmi_imx_bbm_events[] = {
+> +	{
+> +		.id = SCMI_EVENT_IMX_BBM_RTC,
+> +		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
+> +		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
+> +	},
+> +	{
+> +		.id = SCMI_EVENT_IMX_BBM_BUTTON,
+> +		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
+> +		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
+> +	},
+> +};
+> +
+> +static const struct scmi_event_ops scmi_imx_bbm_event_ops = {
+> +	.set_notify_enabled = scmi_imx_bbm_set_notify_enabled,
+> +	.fill_custom_report = scmi_imx_bbm_fill_custom_report,
+> +};
+> +
+> +static const struct scmi_protocol_events scmi_imx_bbm_protocol_events = {
+> +	.queue_sz = SCMI_PROTO_QUEUE_SZ,
+> +	.ops = &scmi_imx_bbm_event_ops,
+> +	.evts = scmi_imx_bbm_events,
+> +	.num_events = ARRAY_SIZE(scmi_imx_bbm_events),
+> +	.num_sources = 1,
+> +};
+> +
+> +static int scmi_imx_bbm_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +	u32 version;
+> +	int ret;
+> +	struct scmi_imx_bbm_info *binfo;
+> +
+> +	ret = ph->xops->version_get(ph, &version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(ph->dev, "NXP SM BBM Version %d.%d\n",
+> +		 PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +	binfo = devm_kzalloc(ph->dev, sizeof(*binfo), GFP_KERNEL);
+> +	if (!binfo)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_imx_bbm_attributes_get(ph, binfo);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ph->set_priv(ph, binfo, version);
+> +}
 
-Hi James,
+I would move this init down below, right before the scmi_imx_bbm and
+after the proto_ops definition,  for consistency and readability.
 
-Thanks for checking this patch.
+> +
+> +static int scmi_imx_bbm_rtc_time_set(const struct scmi_protocol_handle *ph,
+> +				     u32 rtc_id, u64 sec)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_set_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_TIME_SET, sizeof(*cfg), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = 0;
+> +	cfg->value_low = cpu_to_le32(lower_32_bits(sec));
+> +	cfg->value_high = cpu_to_le32(upper_32_bits(sec));
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_rtc_time_get(const struct scmi_protocol_handle *ph,
+> +				     u32 rtc_id, u64 *value)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_get_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_TIME_GET, sizeof(*cfg),
+> +				      sizeof(u64), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = 0;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret)
+> +		*value = get_unaligned_le64(t->rx.buf);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_rtc_alarm_set(const struct scmi_protocol_handle *ph,
+> +				      u32 rtc_id, u64 sec)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_alarm_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, IMX_BBM_RTC_ALARM_SET, sizeof(*cfg), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG;
+> +	cfg->value_low = cpu_to_le32(lower_32_bits(sec));
+> +	cfg->value_high = cpu_to_le32(upper_32_bits(sec));
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_button_get(const struct scmi_protocol_handle *ph, u32 *state)
+> +{
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, IMX_BBM_BUTTON_GET, 0, sizeof(u32), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret)
+> +		*state = get_unaligned_le32(t->rx.buf);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct scmi_imx_bbm_proto_ops scmi_imx_bbm_proto_ops = {
+> +	.rtc_time_get = scmi_imx_bbm_rtc_time_get,
+> +	.rtc_time_set = scmi_imx_bbm_rtc_time_set,
+> +	.rtc_alarm_set = scmi_imx_bbm_rtc_alarm_set,
+> +	.button_get = scmi_imx_bbm_button_get,
+> +};
+> +
 
-In environment where kernel is compiled with debuginfo:
+...just here the init
 
-1) Add probe point
+> +static const struct scmi_protocol scmi_imx_bbm = {
+> +	.id = SCMI_PROTOCOL_IMX_BBM,
+> +	.owner = THIS_MODULE,
+> +	.instance_init = &scmi_imx_bbm_protocol_init,
+> +	.ops = &scmi_imx_bbm_proto_ops,
+> +	.events = &scmi_imx_bbm_protocol_events,
+> +	.supported_version = SCMI_PROTOCOL_SUPPORTED_VERSION,
+> +	.vendor_id = "NXP",
+> +	.sub_vendor_id = "i.MX95 EVK",
+> +};
+> +
 
-# ./perf probe --add inode_permission
-Added new event:
-  probe:inode_permission (on inode_permission)
+Beside this, LGTM.
 
-You can now use it in all perf tools, such as:
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
 
-perf record -e probe:inode_permission -aR sleep 1
-
-
-2) Check using perf probe -l
-
-# ./perf probe -l
-probe:inode_permission (on inode_permission:2@fs/namei.c)
-
-With debuginfo, the result has additional info.
- The test looks for matching pattern =
-"\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)=E2=80=9D in result
-where it is expecting "inode_permission:2@fs/namei.c=E2=80=9D . The =
-=E2=80=9C@fs/namei.c=E2=80=9D info needs debuginfo here.
-
-The function I am using in patch to check for debuginfo =
-(skip_if_no_debuginfo) is from "tests/shell/lib/probe_vfs_getname.sh"
-
-skip_if_no_debuginfo() {
-        add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the =
-path for the kernel|Debuginfo-analysis is not supported)|(file has no =
-debug information)" && return 2
-        return 1
-}
-
-So the debuginfo test passes in your case since the log has "Failed to =
-find debug information=E2=80=9D which is not present in above grep =
-string.=20
-
-James,
-
-Only =E2=80=9Cperf probe -l=E2=80=9D subtest fails with debuginfo =
-enabled or other two subtests as well? Can you also share result on how =
-other two subtests behaves ?=20
-
-1. Fail 2 :
-   perf probe -nf --max-probes=3D512 -a 'vfs_* $params=E2=80=99
- =20
-
-2. Fail 3 :
-  perf probe 'vfs_read =
-somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
-
-
-Also since you mentioned this gets skipped when debuginfo is not =
-enabled, curious to know what is debuginfo message from your setup with =
-debuginfo disabled.
-
-Thanks again for checking.
-
-Athira
-
->=20
-
-
->=20
->> 2. Regexp not found: "probe:vfs_mknod"
->>   Regexp not found: "probe:vfs_create"
->>   Regexp not found: "probe:vfs_rmdir"
->>   Regexp not found: "probe:vfs_link"
->>   Regexp not found: "probe:vfs_write"
->>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
->>=20
->> 3. Regexp not found: "Failed to find"
->>   Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->>   Regexp not found: "in this function|at this address"
->>   Line did not match any pattern: "The /boot/vmlinux file has no =
-debug information."
->>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, =
-or install an appropriate debuginfo package."
->>=20
->> These three tests depends on kernel debug info.
->> 1. Fail 1 expects file name along with probe which needs debuginfo
->> 2. Fail 2 :
->>    perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
->>    Debuginfo-analysis is not supported.
->>     Error: Failed to add events.
->>=20
->> 3. Fail 3 :
->>   perf probe 'vfs_read =
-somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
->>   Debuginfo-analysis is not supported.
->>   Error: Failed to add events.
->>=20
->> There is already helper function skip_if_no_debuginfo in
->> lib/probe_vfs_getname.sh which does perf probe and returns
->> "2" if debug info is not present. Use the skip_if_no_debuginfo
->> function and skip only the three tests which needs debuginfo
->> based on the result.
->>=20
->> With the patch:
->>=20
->>    83: perftool-testsuite_probe:
->>   --- start ---
->>   test child forked, pid 3927
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission ::
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: -a
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: --add
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added =
-probe :: perf list
->>   Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added =
-probe
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added =
-probe
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed =
-probe (should NOT be listed)
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: =
-adding probe
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: first probe adding
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: second probe adding (without force)
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: second probe adding (with force)
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled =
-probe
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing =
-multiple probes
->>   Regexp not found: "probe:vfs_mknod"
->>   Regexp not found: "probe:vfs_create"
->>   Regexp not found: "probe:vfs_rmdir"
->>   Regexp not found: "probe:vfs_link"
->>   Regexp not found: "probe:vfs_write"
->>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
->>   Regexp not found: "Failed to find"
->>   Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->>   Regexp not found: "in this function|at this address"
->>   Line did not match any pattern: "The /boot/vmlinux file has no =
-debug information."
->>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, =
-or install an appropriate debuginfo package."
->>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
-retval :: add
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
-retval :: record
->>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function =
-argument probing :: script
->>   ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
->>   ---- end(0) ----
->>   83: perftool-testsuite_probe                                        =
-: Ok
->>=20
->> Only the three specific tests are skipped and remaining
->> ran successfully.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> .../shell/base_probe/test_adding_kernel.sh    | 31 =
-+++++++++++++++++--
->> 1 file changed, 28 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
-b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->> index 63bb8974b38e..187dc8d4b163 100755
->> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->> @@ -21,8 +21,18 @@
->> THIS_TEST_NAME=3D`basename $0 .sh`
->> TEST_RESULT=3D0
->>=20
->> +# shellcheck source=3Dlib/probe_vfs_getname.sh
->> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
->> +
->> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
->>=20
->> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
->> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
->> +skip_if_no_debuginfo
->> +if [ $? -eq 2 ]; then
->> + NO_DEBUGINFO=3D1
->> +fi
->> +
->> check_kprobes_available
->> if [ $? -ne 0 ]; then
->> print_overall_skipped
->> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=3D$?
->> ../common/check_all_patterns_found.pl =
-"\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on =
-${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < =
-$LOGS_DIR/adding_kernel_list-l.log
->> CHECK_EXIT_CODE=3D$?
->>=20
->> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe =
-:: perf probe -l"
->> +if [ $NO_DEBUGINFO ] ; then
->> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
->> +else
->> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe =
-:: perf probe -l"
->> +fi
->> +
->> (( TEST_RESULT +=3D $? ))
->>=20
->>=20
->> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=3D$?
->> ../common/check_all_patterns_found.pl "probe:vfs_mknod" =
-"probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" =
-< $LOGS_DIR/adding_kernel_adding_wildcard.err
->> CHECK_EXIT_CODE=3D$?
->>=20
->> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding =
-support"
->> +if [ $NO_DEBUGINFO ] ; then
->> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
->> +else
->> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding =
-support"
->> +fi
->> +
->> (( TEST_RESULT +=3D $? ))
->>=20
->>=20
->> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=3D$?
->> ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < =
-$LOGS_DIR/adding_kernel_nonexisting.err
->> (( CHECK_EXIT_CODE +=3D $? ))
->>=20
->> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing =
-variable"
->> +if [ $NO_DEBUGINFO ]; then
->> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
->> +else
->> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing =
-variable"
->> +fi
->> +
->> (( TEST_RESULT +=3D $? ))
->>=20
->>=20
-
+Thanks,
+Cristian
