@@ -1,96 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3219068F;
-	Mon, 17 Jun 2024 13:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E03B197A77;
+	Mon, 17 Jun 2024 13:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631924; cv=none; b=HS7kDSg9NTB+B1XKEd546zR1PyM7pLl2TbJxTJhg8OAsOxF6VYgjNm34qPa1PpmbSL7UGT321FeZwDWcFJdBDToIMO9Lxj69dCp9Q2EqCs3gWmDOmQzi98tpyM5AaO3IZRDconnxt7tugxi2oq+wBGFDZGGOCCyBttU73/tK91Q=
+	t=1718631957; cv=none; b=ImoalIA8YWRWhrdGEv+pmYFUMPH/QH2bPUx1s4Vt0ANf92SlGTHcz6EYHLDAhAuLPJnncJE2SD9DtAAE9hj/V+USGwAaeBn67btX6GUxW2Sp2hgzjJ5/aTrtTxk28ldRRuEAxQyYSS40CsGioK6l2j/ZyZogfSHCYjdY6niVR4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631924; c=relaxed/simple;
-	bh=4iVfyEz9rC5f5VhbEizq/D4gDbwzw56EP8r/d+CALXA=;
+	s=arc-20240116; t=1718631957; c=relaxed/simple;
+	bh=uxUyG9w3kzRRDkCmDR9ae5S/qbGPu4o5T0wPuhZOZm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7WRTBVZC0TqobbgJ66q4iJVtXXBaJGWm7eq4uPM27llHWcOaZi+hepOATkr2zdtVOgFRvTW8Q0dI3XZiTR+na9Bo+aWjZrwSzRPDkOnXz8pvjn2b1DNJSF6WjulzcCPVVdz/1FrPmanE/G4u6MlYkjw6LgIDgkbxtaDCOL9OOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlAH4DUk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MScUIVKurqsJjTzGykrd2N6Xnn6RvTVF6EBgGvI1hrKJ3Y/t8eBVV0JdUM/eokcF1LzmVz4xJ0bKNQUPPiIRZrFc5/g8xcB+t9Zq15xXlP9WGHUmeUIelrIHOqZXBW0ugYgcsoqDCjpCUaCIn/8bGASRBI0IrAXVU7ez2uzMm+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m4FWWIGl; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlAH4DUk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64783C2BD10;
-	Mon, 17 Jun 2024 13:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718631923;
-	bh=4iVfyEz9rC5f5VhbEizq/D4gDbwzw56EP8r/d+CALXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FlAH4DUkW1fOUYBYa90CiYLEhyPwhHj7gWkqqw8iS7jJJmVEDYBMUZtl2LDO6+4kR
-	 NAQlfwuYGf5OH8S/RabV+UY1lvNd615atdQLwJiLtMMCHHznPNIagjH+6JIFvMLWcn
-	 fOKmrJom+rr3vJXeB/BrG5ErfCQY2Vu4i8OaIjMQJ1CcNRgvq0LEqMjg6sxAQCrWFW
-	 WL9WIyL3mMg4hkLHD3m5npeG2PBCO+NefrJQm8umO8P0brhsQ+JQS60HZO0I6IvndQ
-	 9xqtwnS38uxG0R9MfwbU84d93oWeNZH9zFSM2MizMZMdCzGQjGLGWKifHdsL0ZAouw
-	 Fu1/kjOZ6/SAw==
-Date: Mon, 17 Jun 2024 21:31:17 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 7/9] riscv: dts: add initial SpacemiT K1 SoC device
- tree
-Message-ID: <ZnA6pZLkI2StP8Hh@xhacker>
-References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
- <tencent_701082E2DAE48E2FB857316321778D737C08@qq.com>
- <ZnAw9QrSD-svYqQ5@xhacker>
- <20240617-carat-poise-ee63ed6a224e@wendy>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m4FWWIGl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718631954; x=1750167954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uxUyG9w3kzRRDkCmDR9ae5S/qbGPu4o5T0wPuhZOZm4=;
+  b=m4FWWIGlGGVbWNWRZBG1ZnFWiEBVfpv64QJHDn0TX8ctBzyRAx7I+sZm
+   DExisWi1Jvv23UKvQ068BnxVXU//4D3F7L7mVhkPiHo71Oqn7yP2UpWOx
+   tFLJzzvbpai5XRCPgiWsJ6sMN1rgEuQ5blDJO63pR9+34+fcjZ2o+llOd
+   JhBAfl94jiMxwVoLj0iqNM7gF2+NdrEfLpN2stXrnIyh+luovVd88xtUm
+   RV2GNDjAuSzoMSWvEk0kwLR4geP5AVFJcpj78+0l5kAS639dqApwCK2iX
+   TT/BkyMxgIcaoIlSzaRyfwoUxVOcFkNismlmjxiaKzgMYYRaRsYlWQaEL
+   Q==;
+X-CSE-ConnectionGUID: iYXybY+xTI+IiWLZjdo0tg==
+X-CSE-MsgGUID: LxOHWzXiSW6RPI3tw7WW9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15423009"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="15423009"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:45:54 -0700
+X-CSE-ConnectionGUID: yRDSuFj8TKGtE6IfgTep9g==
+X-CSE-MsgGUID: 3AxYSsRuSoWIkXxrMDqhRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="64394193"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 17 Jun 2024 06:45:49 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJCg7-0004LF-26;
+	Mon, 17 Jun 2024 13:45:47 +0000
+Date: Mon, 17 Jun 2024 21:45:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, daniel.sneddon@linux.intel.com,
+	tony.luck@intel.com, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <202406172100.6R91rhbf-lkp@intel.com>
+References: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240617-carat-poise-ee63ed6a224e@wendy>
+In-Reply-To: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 
-On Mon, Jun 17, 2024 at 02:29:46PM +0100, Conor Dooley wrote:
-> On Mon, Jun 17, 2024 at 08:49:57PM +0800, Jisheng Zhang wrote:
-> > On Mon, Jun 17, 2024 at 01:20:52AM +0800, Yangyu Chen wrote:
-> > > Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
-> > > 
-> > > Key features:
-> > > - 4 cores per cluster, 2 clusters on chip
-> > > - UART IP is Intel XScale UART
-> > > 
-> > > Some key considerations:
-> > > - ISA string is inferred from vendor documentation[2]
-> > > - Cluster topology is inferred from datasheet[1] and L2 in vendor dts[3]
-> > > - No coherent DMA on this board
-> > >     Inferred by taking vendor ethernet and MMC drivers to the mainline
-> > >     kernel. Without dma-noncoherent in soc node, the driver fails.
-> > > - No cache nodes now
-> > >     The parameters from vendor dts are likely to be wrong. It has 512
-> > >     sets for a 32KiB L1 Cache. In this case, each set is 64B in size.
-> > >     When the size of the cache line is 64B, it is a directly mapped
-> > >     cache rather than a set-associative cache, the latter is commonly
-> > >     used. Thus, I didn't use the parameters from vendor dts.
-> > > 
-> > > Currently only support booting into console with only uart, other
-> > > features will be added soon later.
-> > 
-> > Hi Yangyu,
-> > 
-> > Per recent practice of cv1800b and th1520 upstream, I think a complete
-> > initial support would include pinctrl, clk and reset, I have received
-> > the complains from the community. So can you please bring the pinctrl
-> > clk  and reset at the same time?
-> 
-> What sort of complaints have you got? That the support is too minimal to
-> be useful?
+Hi Pawan,
 
-For example https://lore.kernel.org/linux-riscv/95c20c6c-66cd-4f87-920b-5da766317e19@sifive.com/
+kernel test robot noticed the following build errors:
 
-Now, I think it's better to "model the clocks/resets/other dependencies"
-in the initial support. So lacking of pinctrl, clk and reset doesn't
-fully describe the hardware.
+[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
+base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-1-b88998c01e76%40linux.intel.com
+patch subject: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct cpuinfo_topology
+config: i386-buildonly-randconfig-003-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172100.6R91rhbf-lkp@intel.com/config)
+compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172100.6R91rhbf-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172100.6R91rhbf-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/x86/kernel/cpu/topology_common.c: In function 'topo_set_cpu_type':
+>> arch/x86/kernel/cpu/topology_common.c:145:21: error: 'X86_CPU_TYPE_UNKNOWN' undeclared (first use in this function)
+     145 |  c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+         |                     ^~~~~~~~~~~~~~~~~~~~
+   arch/x86/kernel/cpu/topology_common.c:145:21: note: each undeclared identifier is reported only once for each function it appears in
+>> arch/x86/kernel/cpu/topology_common.c:148:41: error: 'X86_CPU_TYPE_INTEL_SHIFT' undeclared (first use in this function)
+     148 |   c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/X86_CPU_TYPE_UNKNOWN +145 arch/x86/kernel/cpu/topology_common.c
+
+   142	
+   143	static void topo_set_cpu_type(struct cpuinfo_x86 *c)
+   144	{
+ > 145		c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+   146	
+   147		if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
+ > 148			c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+   149	}
+   150	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
