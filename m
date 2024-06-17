@@ -1,137 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452C129D19;
-	Mon, 17 Jun 2024 02:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2442B15EFC9;
+	Mon, 17 Jun 2024 02:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718590322; cv=none; b=X/awC+Y2IDBW9TpMwx2ICqS/eywVPKAsr10cUCuJktzUBAPn36JKzC3F83vZNvvd1QrycDU2YchozjEix8MhPaU7woqXo7eaeh+6/QQGQvmShu54PzrYcwfsQFHu6TMBZNSF1J2oF3hcgYEK/Uapj07edtKpy4SDL+bz8qSRWLg=
+	t=1718590349; cv=none; b=Lf/eSQ95gd/cU/q+A4r2EME/9JzIW2MZGaU6wSVuEsWaitVJZbheVDB7A0zVAqavao2aqlzRHGVjfbJfzSWwMAFbyXRhBZHSsNY0SQDhZrvyWAtqFF5dkFzeTJYox+BMedsV5yoGgKD+7PWYibqYzsKmdkX8TtQsDZ1QoJ+UNQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718590322; c=relaxed/simple;
-	bh=itwsVa10Pb4Iql/zli9eOmB+/Xbz4VCqkvBFU09kQo8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MMrTwlhSHn2pCgq6NnHEQLlKCiwWQoHZn3FSP0V6mvtBULdtPjmHneF1NoeJwGKbRAnsF1R5r7yzzpKqUI7Xdfkbnqsl3uokxxMmYH5H/nWcuWAMjQe2Z+wAcesrqpmwKzi5rP9RB8QmycefAZyvSrHR/82R5gS+DAyGQz8L7wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqc1uP7r; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718590349; c=relaxed/simple;
+	bh=2hkMhVkh2nVoBTw6NJzXuRmEaWOunyw84vTzOsVqq8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rq6xLdbbiQILpPJbkYhfcyLURhxgt6UcpM5omoZO2aW14UQfA+p5bnniHBiS9mr1x5WKOzCsUD02+WTNqlSLt7Jk2rTqBzcQITgjknWikSPg9UEaRTK+raP/UCl2oD8ukwobW9JAmBaAAk+b1KOziAS8jhpfl2u8w2QMKDpm13w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=YZcvj283; arc=none smtp.client-ip=123.58.177.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqc1uP7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718590320; x=1750126320;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=itwsVa10Pb4Iql/zli9eOmB+/Xbz4VCqkvBFU09kQo8=;
-  b=hqc1uP7r2qzD0rySLPNZzikTqZzk7elksR411udrfhqPRv/9nVrfKol8
-   4Px62JLVCxFgyaN+IyJqSgXY3s55/0kh7+huNCixtSv2hAN3WRIX2RNPd
-   TbHot0gff9qDLyb4768b/X/B0xo1z3cK09F8kD2i+UpX0iq47NnR7WyZT
-   vz35xx64iNUuCUmVUxuinAbJBqYiDAC5AwhfyZ/sLK82VGFfBIFZcEbXL
-   2OhWnNk/YFT7Fxg7snoibvdEyR9xrdpBgCzJZjpLmYOotcyY1wWSATNgp
-   cPOk/yM3zlAn6jAGUgdUwuTBWUIj5V3NmgVPEkuAA5tsSAGOm7MvWTkmF
-   w==;
-X-CSE-ConnectionGUID: AxMJ1nybSS6ZRe92CoN0pw==
-X-CSE-MsgGUID: 1cE1bNYZRmu/9WnZBB3iLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="26038109"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="26038109"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 19:11:59 -0700
-X-CSE-ConnectionGUID: 999u2h2dQjiv9bTlFQfcKg==
-X-CSE-MsgGUID: y1E7LXt1SeKrOE9Ku0BjnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="45499818"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 19:11:56 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Bharata B Rao <bharata@amd.com>,  Alistair
- Popple <apopple@nvidia.com>,  "Aneesh Kumar K . V"
- <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH -V2] cxl/region: Support to calculate memory tier
- abstract distance
-In-Reply-To: <ZmjBfcaosIlOODFR@aschofie-mobl2> (Alison Schofield's message of
-	"Tue, 11 Jun 2024 14:28:29 -0700")
-References: <20240611055423.470574-1-ying.huang@intel.com>
-	<ZmjBfcaosIlOODFR@aschofie-mobl2>
-Date: Mon, 17 Jun 2024 10:10:05 +0800
-Message-ID: <87v8285ngi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="YZcvj283"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=0akHP1anUFimuceQyxW2eFWvpAgkvYdidH+pYaG6Ejs=;
+	b=YZcvj283Aon/EwSllz18VWjet31sT4J91PTvreJLrD/yFEY6Y2H780mNAajZwl
+	5NYGJDdy5jhTbv82QzCTToXWLkj8t6sW+8EDAEDrEiHlUnmPlK2vpdi15bc3UPVE
+	YBMU502EeXM/PIHZnJ3c5uLsZHmgUP3BQVw3/zBReT+SE=
+Received: from dragon (unknown [114.216.76.201])
+	by smtp2 (Coremail) with SMTP id C1UQrAD3P31tm29m_e_NCA--.25055S3;
+	Mon, 17 Jun 2024 10:11:58 +0800 (CST)
+Date: Mon, 17 Jun 2024 10:11:57 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Christopher Obbard <chris.obbard@collabora.com>
+Cc: linux-kernel@vger.kernel.org, kernel@collabora.com,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/1] arm64: dts: imx8mp-debix-model-a: Enable HDMI
+ output
+Message-ID: <Zm+bbZilJNup8mEN@dragon>
+References: <20240610234307.96766-1-chris.obbard@collabora.com>
+ <20240610234307.96766-2-chris.obbard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610234307.96766-2-chris.obbard@collabora.com>
+X-CM-TRANSID:C1UQrAD3P31tm29m_e_NCA--.25055S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUID73DUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGA4BZV6Nn46QnQAAs9
 
-Alison Schofield <alison.schofield@intel.com> writes:
+On Tue, Jun 11, 2024 at 12:42:38AM +0100, Christopher Obbard wrote:
+> Enable the HDMI output on the Debix Model A SBC, using the HDMI encoder
+> present in the i.MX8MP SoC.
+> 
+> This has been tested with a generic 1080p HDMI display, along with a
+> smaller 1280x800 HDMI display.
+> 
+> Signed-off-by: Christopher Obbard <chris.obbard@collabora.com>
 
-> On Tue, Jun 11, 2024 at 01:54:23PM +0800, Ying Huang wrote:
+Applied, thanks!
 
-[snip]
-
->> ---
->>  drivers/cxl/core/region.c | 40 +++++++++++++++++++++++++++++++++++----
->>  drivers/cxl/cxl.h         |  2 ++
->>  2 files changed, 38 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 3c2b6144be23..81d0910c0a02 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/uuid.h>
->>  #include <linux/sort.h>
->>  #include <linux/idr.h>
->> +#include <linux/memory-tiers.h>
->>  #include <cxlmem.h>
->>  #include <cxl.h>
->>  #include "core.h"
->> @@ -2304,14 +2305,20 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->>  	return true;
->>  }
->>  
->> +static int cxl_region_nid(struct cxl_region *cxlr)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
->> +	struct cxl_decoder *cxld = &cxled->cxld;
->> +
->> +	return phys_to_target_node(cxld->hpa_range.start);
->> +}
->> +
->
-> I believe it's OK to send a resource_size_t to phys_to_target_node()
-> like this:
->
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2308,10 +2308,8 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->  static int cxl_region_nid(struct cxl_region *cxlr)
->  {
->         struct cxl_region_params *p = &cxlr->params;
-> -       struct cxl_endpoint_decoder *cxled = p->targets[0];
-> -       struct cxl_decoder *cxld = &cxled->cxld;
->
-> -       return phys_to_target_node(cxld->hpa_range.start);
-> +       return phys_to_target_node(p->res->start);
->  }
->
-
-Read the related code again, it appears that there's a theoretical race
-condition here.  The register_memory_notifier() is called in
-devm_cxl_add_region(), where p->targets[] and p->res haven't been
-setupped yet.  And, IIUC, p->targets[] or p->res may be gone during the
-life cycle of regions too.  If so, we need to use
-guard(rwsem_read)(&cxl_region_rwsem) to protect p->targets[] and p->res
-references.  Because the memory notifier may be called for other nodes
-online/offline.
-
---
-Best Regards,
-Huang, Ying
