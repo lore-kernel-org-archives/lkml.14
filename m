@@ -1,139 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754391BF2B;
-	Mon, 17 Jun 2024 14:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EC12E6A;
+	Mon, 17 Jun 2024 14:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632920; cv=none; b=i6aB0f/DIdE9m4woZsPzB39ctrZm3YISqeW7prFEST1VGgslzKqM1v4cEhX4qW3HlHTzXUP7byftqliskE5CqWgR+LXbbKtivbO3naxQd5gUKwL2WzPQ8Yn18jENKou+MgK9/ri1HQn3gHcNViHlcFG9aDknUKOaDO3JhvEMfJs=
+	t=1718632949; cv=none; b=ISR6ZQYcq+khowo6uOEvI4mIVrdhcXTYSa+XLiXVyT/BRuQTfEhfxnY7hLFapGR5WeUoeDxPvGL8/TCYzOSNdBaUqjXYtMz7epuwmJbzPyaMeFAnjmwwDzALw27uTmBHnrk+AQbVYbsAgvcUEtYncKQJubOBchkrIRVg5NNWBsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632920; c=relaxed/simple;
-	bh=+5sMLlQjXiSMPvX/MsyRTJLDa/2Lz5M1r4ucStNkDvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3Vj2OfvzN2hrRDPH15ZP7Ijenp7vbxxBWh0BDl5IcqLlWOrI/WLNCenWagn0X9au7sRyk1vbPmrJZYaA9sUCjDkTVZiqX2a8Org2kxxt8JVr2GZ8mleOw5dRBgV9je7YJohxfTeNy1QRVhVn2sI2SQNkJLcdao49NyfrmhK4oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rsc3o/oY; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718632949; c=relaxed/simple;
+	bh=vg+RfbQuP7Ba2mCXmuv4YQNEagG2f55+JVDZpc66crI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CYnTG6PjiEiqjKSIe3Hs5/V0oqJ9KvW4s+kOOWrtmYR5HBdW1oPdjshxIuWgDa0AyzURWWvq8Q1hh5C7uCRU2ecBgqgjGx34gcXbaUPs2iyLAmQY9Y4F51omxYw1gagV5pucy2+XXDlDAQt5Y/9VEthnTdfgbx1CGRFVuEtl2KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=31aNCmxy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O1Uv28M2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rsc3o/oY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718632918; x=1750168918;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+5sMLlQjXiSMPvX/MsyRTJLDa/2Lz5M1r4ucStNkDvc=;
-  b=Rsc3o/oYYGZNT8lyN0KYI6/hqTbwiBOgTfkI/WpDqNQRJofAqClV1GBm
-   fTsPiDgNUF//piBwkUgAxkpXLubLAkdU+borJmK42sAJD5sh+jaZe8N8z
-   JScAy7h2ipQj0oZ766Da7dV+yPZa4/GeefDXVpiihnTJkeslCpYDT2b2j
-   exXEivj55avVzgm2EiIJ0tWSsym6LNp9YHNFBzUCmB5R6VI8+vpHmt9jf
-   MOG4XUdoeR3cNYQH1076nI63A6klZ2c1M7NP5nxnSuzakD0TsXlN9kxlZ
-   +vz7egyZky+nb3H6MSiRGmH+uU9SCS9bo6J07nfugm1ayTRsy5YmOhnHo
-   Q==;
-X-CSE-ConnectionGUID: dkz9inBET7qhuT3142bz2A==
-X-CSE-MsgGUID: Ug0mVlf8SLG4yO6VkOGAJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="26854368"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="26854368"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:01:58 -0700
-X-CSE-ConnectionGUID: cbI57oqLSgWWTV2s2HHveQ==
-X-CSE-MsgGUID: xQJ3PNCfRoGXp2R8jjn5FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="41304066"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 17 Jun 2024 07:01:54 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sJCvf-0004MH-2e;
-	Mon, 17 Jun 2024 14:01:51 +0000
-Date: Mon, 17 Jun 2024 22:01:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, daniel.sneddon@linux.intel.com,
-	tony.luck@intel.com, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH PATCH 2/9] cpufreq: intel_pstate: Use topology_cpu_type()
- to get cpu-type
-Message-ID: <202406172134.ICqkbkNm-lkp@intel.com>
-References: <20240617-add-cpu-type-v1-2-b88998c01e76@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="31aNCmxy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O1Uv28M2"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718632944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JEgP6nrjaN40xXEwrTWVtd3w2ZCVG6Zro3ipay84baA=;
+	b=31aNCmxyI/jOsyTTXBeM6zLOjjQJmBDkyUdhsoWDBTLxXzOlVyN0tY4+kT8ZuV6vJBoFuW
+	afESyFWstnehE+WAucaWFJ3+jTNdVWtn9IjTJdIMoLveJNeq7npCDjw9fKDSX0yTUwgk6T
+	5jcix4c5z2Dw7S5s6wQ1bvQUniKK77gU+L8bkoebow9BKZ0UJmj3tWh43KZdxxzjqew12/
+	4Y4By4mGrPqzg9nkCTWq/wdSwrEiktuefqkEcuRcjITjqP/bMC0b7DrDfnE6nspWq7l7rs
+	OVN8Lk89Z87Y0CdS7WKghBvIxHCw9IcKCGmk8FRvPvqTNbMJZf+a9xYMCcw0zA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718632944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JEgP6nrjaN40xXEwrTWVtd3w2ZCVG6Zro3ipay84baA=;
+	b=O1Uv28M2yo4rAmZ4lCRhT1xRU04yv0o/VdQz1V1zAT3CwbTAbIaDWD/Jizs55LvqBgsVTp
+	HfpoRuEmjxZhj7Aw==
+To: Marc Zyngier <maz@kernel.org>
+Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
+ rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com,
+ den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com,
+ sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
+ rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
+ lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org,
+ robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
+ vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
+ andersson@kernel.org, mark.rutland@arm.com,
+ shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+Subject: Re: [PATCH v3 14/24] genirq/gic-v3-mbi: Remove unused wired MSI
+ mechanics
+In-Reply-To: <86h6drk9h1.wl-maz@kernel.org>
+References: <20240614102403.13610-1-shivamurthy.shastri@linutronix.de>
+ <20240614102403.13610-15-shivamurthy.shastri@linutronix.de>
+ <86le36jf0q.wl-maz@kernel.org> <87plsfu3sz.ffs@tglx>
+ <86h6drk9h1.wl-maz@kernel.org>
+Date: Mon, 17 Jun 2024 16:02:24 +0200
+Message-ID: <87h6dru0pb.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617-add-cpu-type-v1-2-b88998c01e76@linux.intel.com>
+Content-Type: text/plain
 
-Hi Pawan,
+On Mon, Jun 17 2024 at 14:03, Marc Zyngier wrote:
+> On Mon, 17 Jun 2024 13:55:24 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> 
+>> On Sat, Jun 15 2024 at 18:24, Marc Zyngier wrote:
+>> > On Fri, 14 Jun 2024 11:23:53 +0100,
+>> > Shivamurthy Shastri <shivamurthy.shastri@linutronix.de> wrote:
+>> >>  static struct msi_domain_info mbi_pmsi_domain_info = {
+>> >> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>> >> -		   MSI_FLAG_LEVEL_CAPABLE),
+>> >> +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
+>> >>  	.ops	= &mbi_pmsi_ops,
+>> >>  	.chip	= &mbi_pmsi_irq_chip,
+>> >>  };
+>> >
+>> > This patch doesn't do what it says. It simply kills any form of level
+>> > MSI support for *endpoints*, and has nothing to do with any sort of
+>> > "wire to MSI".
+>> >
+>> > What replaces it?
+>> 
+>> Patch 9/24 switches the wire to MSI with level support over. This just
+>> removes the leftovers.
+>
+> That's not what I read.
+>
+> Patch 9/24 rewrites the mbigen driver. Which has nothing to do with
+> what the gic-v3-mbi code does. They are different blocks, and the sole
+> machine that has the mbigen IP doesn't have any gic-v3-mbi support.
+> All they have in common are 3 random letters.
+>
+> What you are doing here is to kill any support for *devices* that need
+> to signal level-triggered MSIs in that driver, and nothing to do with
+> wire-MSI translation.
+>
+> So what replaces it?
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
-base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-2-b88998c01e76%40linux.intel.com
-patch subject: [PATCH PATCH 2/9] cpufreq: intel_pstate: Use topology_cpu_type() to get cpu-type
-config: i386-buildonly-randconfig-001-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172134.ICqkbkNm-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172134.ICqkbkNm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406172134.ICqkbkNm-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/cpufreq/intel_pstate.c: In function 'hwp_get_cpu_scaling':
->> drivers/cpufreq/intel_pstate.c:1959:25: error: 'X86_CPU_TYPE_INTEL_CORE' undeclared (first use in this function)
-    1959 |         if (cpu_type == X86_CPU_TYPE_INTEL_CORE)
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/cpufreq/intel_pstate.c:1959:25: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/cpufreq/intel_pstate.c:1963:25: error: 'X86_CPU_TYPE_INTEL_ATOM' undeclared (first use in this function)
-    1963 |         if (cpu_type == X86_CPU_TYPE_INTEL_ATOM)
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/X86_CPU_TYPE_INTEL_CORE +1959 drivers/cpufreq/intel_pstate.c
-
-  1953	
-  1954	static int hwp_get_cpu_scaling(int cpu)
-  1955	{
-  1956		u8 cpu_type = topology_cpu_type(cpu);
-  1957	
-  1958		/* P-cores have a smaller perf level-to-freqency scaling factor. */
-> 1959		if (cpu_type == X86_CPU_TYPE_INTEL_CORE)
-  1960			return hybrid_scaling_factor;
-  1961	
-  1962		/* Use default core scaling for E-cores */
-> 1963		if (cpu_type == X86_CPU_TYPE_INTEL_ATOM)
-  1964			return core_get_scaling();
-  1965	
-  1966		/*
-  1967		 * If reached here, this system is either non-hybrid (like Tiger
-  1968		 * Lake) or hybrid-capable (like Alder Lake or Raptor Lake) with
-  1969		 * no E cores (in which case CPUID for hybrid support is 0).
-  1970		 *
-  1971		 * The CPPC nominal_frequency field is 0 for non-hybrid systems,
-  1972		 * so the default core scaling will be used for them.
-  1973		 */
-  1974		return intel_pstate_cppc_get_scaling(cpu);
-  1975	}
-  1976	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Hrm. I must have misread this mess. Let me stare some more.
