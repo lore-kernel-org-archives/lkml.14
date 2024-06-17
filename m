@@ -1,80 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773D513C3F2;
-	Mon, 17 Jun 2024 14:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFE713C81B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 14:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718633431; cv=none; b=BZgaa3e/0KbzYDcuy7meQeoRolyvY1yxp9wa/kjNcl9rHFJ9pGaDEluxlsEJq95GkfUQ4KBrTPM06ScXT7NHdSvId3PCVGDf2yRWJFo0yonbrgzJ8AtWYdL/Ap/eocZTfpqJXDkUHqPR0WseBNepcOBYhXBM+EIAThP7Wh3HkiY=
+	t=1718633520; cv=none; b=N/n8HpAes8FRU2CdDzQNBDM2byd7j+vA60Z8kUKFKyqe62idpWO7FKLIRQYt7xQ0eADIJRmSHgdaVRgBjLWya07qaDEJd2GKwoblg4mcGHlFTOJGdHSYXZdnqQjW629aQ4k9ER5jeM7vm5HX3AWkjfqZVuhHOKjy8EEiDn2Fsgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718633431; c=relaxed/simple;
-	bh=ZY0frUm/l/ELazp3keFtHSZU2+jYmNK9nHk3XE/5PDM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MLgMl43w/KHY0NmMchjyXIBpKy8BaCt8krxr1AnxpFF4pSDkoq9KyWzOcv/M3Fm7uK/4qgWul0FCmTo+2aUhyrDNkVtBq510H/C34AhVPy4r2jasx38JECuUv6Nk1YrVKXNtONnwM5dlNlVwlxIcYj3CNL1OYPsVGEeddJKKUkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eeUml2zM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718633520; c=relaxed/simple;
+	bh=C2SAVHOyNTSMDiQfOQc+olVCdTZJppGRHLEkFWkECgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EL9oNewomaNfZqDIhdPYS4t+HRceqS5S5TFCKcfX0rZhYxSQ/3yzSxsJuNNYFRCbKKXS/7Di48R9CAUlRXRSkJKoE4bFrgtTrEie1U+1P5pFqpw5c7PnnvmZen9F8KQjQ80y7aA3j3qNih7szvDh9C+40D6fMhahe3L9lwAKS3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bBk91bAt; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eeUml2zM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1AD6EC4DDF3;
-	Mon, 17 Jun 2024 14:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718633431;
-	bh=ZY0frUm/l/ELazp3keFtHSZU2+jYmNK9nHk3XE/5PDM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eeUml2zMnU9Tr5usyo/xu22P0H0SOSWbGapAD48Ecn7eOpCgavdMidKMLs0eJS9DY
-	 mL9Uart+1OAdxwAb6t5nIgWaaIGP0z8KEJDhtsm58N6FJiN3tYjHnRREycPY1u1ZE2
-	 qZOleREEQumGu+73JOertCtKUPMelURDh5/yciWo54NHp7yBMPUxKGYWVRD3a6Pc+x
-	 Chd041nW/rl82cKPyZ6gEu82jrx+EjXVvWml44LO8c1sxdVEgmBoUJyc2p1wzJAzwF
-	 ZSt0ODjkQ8Xr7aQhr5M6AT16PCK3VuClD8wQy3TYnxiDsLGnTqk+hDYTJYlL7VS3N3
-	 oCJn4IgFdTHbw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EF192C4361B;
-	Mon, 17 Jun 2024 14:10:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bBk91bAt"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6f04afcce1so562774566b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718633517; x=1719238317; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2SAVHOyNTSMDiQfOQc+olVCdTZJppGRHLEkFWkECgM=;
+        b=bBk91bAt/erP5mL3knKkxVdMhFwJru9aAsPt/Z0dcLFBdXbBvSGnVV8Fvc4sValzdw
+         iuMtSCdZZamxlBD4QbQpKg9U///sgFPgGwVA0tZa4aTqjqcayAiy+JKxZGNJpz5SVn/c
+         wtLkRPoJc7U/gBOfleKB8FCtGpRdSlvE/m3edIbYZhsP92j+5y1odQ00TRHse8hq+hsZ
+         Un7S2/+R2S5ceBAyXMbkcxX8mqe1ukgvNxmrB40omSG7g6EWk2T7gyNglH0CAQD5rzkN
+         IweGMOgkrfXp7rdzC9s42LAydeMZ+DGj0MSeD0ZrYKb2IKFuGd1tmJ6D6HopW/tCsz17
+         cj/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718633517; x=1719238317;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C2SAVHOyNTSMDiQfOQc+olVCdTZJppGRHLEkFWkECgM=;
+        b=m8CdHuOfwl16TmwkxrLIFnoYuDjDRvAFuvT2S5TjxjfcvocjYaT6+Ld6pQ6JJNqtqX
+         JKEY+Jr9qleUTOoKcEwgkaDYv78S8Ujq7YhnR69h9sObh/k6kBPeZDu+uON3OgjzdVoQ
+         7ts//SoWyUlS30kLIc1sm6u7s1lt+1NYX3wxxxvqKK5CNgw1eCnTbWWm8TFTZfhmiNjL
+         rdR7+Ez5lh+kuK3n32THhduWjug9QmRKKebnQXeA+Q7OLvZgeeoKs7SOXgaF/tjlZ5WF
+         rtPaYXgXokkRJj4uCMgBaMCFLpNqyRYBSIR5gQnO7SDxbnLp6WoJRepP9oO/EIItxmCd
+         EV6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUYbdnmmFFrS4vvdP1tVZgMGbjKxAyn7VqRXRG+f1TkbCBlNmW+X4EUU0AkJMW7N6u1uN0Z4dUVQFaLvmjPKYLO8MGeJzcZpL6j9weC
+X-Gm-Message-State: AOJu0YyoVM6vSdTjl5NglxRpdXZndHKWVN/rOdPSe11WaACJ8xtPfByK
+	PSP9+gIcu0kD324Vtipa/sR9aewK84iz3jtUJNDtH7YLlnwq8XGcB+T07WkqVk8=
+X-Google-Smtp-Source: AGHT+IFlbSH1GvxfJkQSwG+UrC4v6gx0fdCPmYTDKY3WzRbLOQNkpCirO5vKZ2nfSibqMaANo06JTQ==
+X-Received: by 2002:a17:907:c283:b0:a6f:6661:dbbf with SMTP id a640c23a62f3a-a6f6661de22mr770138066b.71.1718633517028;
+        Mon, 17 Jun 2024 07:11:57 -0700 (PDT)
+Received: from localhost (p200300f65f283b00ca876ee5dd3d1e3b.dip0.t-ipconnect.de. [2003:f6:5f28:3b00:ca87:6ee5:dd3d:1e3b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56dd2dcesm518217066b.93.2024.06.17.07.11.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 07:11:56 -0700 (PDT)
+Date: Mon, 17 Jun 2024 16:11:54 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Junyi Zhao <junyi.zhao@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, 
+	Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, kelvin.zhang@amlogic.com, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] pwm: meson: Add support for Amlogic S4 PWM
+Message-ID: <6bzysc3jwugo3epcxsef7uupk536prsc3phlf3m64n3jjwpxus@2uigg44uotuh>
+References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+ <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
+ <1jfrtgj0so.fsf@starbuckisacylon.baylibre.com>
+ <tnwdnwiruoty5yd42bmkupgg6hjxib5lblhqcyouoyx5y3zvnq@2d7cnrei24m4>
+ <1jbk44htqr.fsf@starbuckisacylon.baylibre.com>
+ <948ba34a-1e05-45c4-8ba7-66c72bdb6fa5@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] Bluetooth: Ignore too large handle values in BIG
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171863343097.8850.935824555783496146.git-patchwork-notify@kernel.org>
-Date: Mon, 17 Jun 2024 14:10:30 +0000
-References: <tencent_E43E1B2F25E4BA5EBBEC33229E5E1BEB4B08@qq.com>
-In-Reply-To: <tencent_E43E1B2F25E4BA5EBBEC33229E5E1BEB4B08@qq.com>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: pmenzel@molgen.mpg.de, davem@davemloft.net, edumazet@google.com,
- johan.hedberg@gmail.com, kuba@kernel.org, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, luiz.von.dentz@intel.com,
- marcel@holtmann.org, netdev@vger.kernel.org, pabeni@redhat.com,
- syzkaller-bugs@googlegroups.com, william.xuanziyang@huawei.com
-
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Mon, 17 Jun 2024 19:09:37 +0800 you wrote:
-> hci_le_big_sync_established_evt is necessary to filter out cases where the
-> handle value is belonging to ida id range, otherwise ida will be erroneously
-> released in hci_conn_cleanup.
-> 
-> Fixes: 181a42edddf5 ("Bluetooth: Make handle of hci_conn be unique")
-> Reported-by: syzbot+b2545b087a01a7319474@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=b2545b087a01a7319474
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2] Bluetooth: Ignore too large handle values in BIG
-    https://git.kernel.org/bluetooth/bluetooth-next/c/401ad9b792e1
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vjzyofe7xtcvocgd"
+Content-Disposition: inline
+In-Reply-To: <948ba34a-1e05-45c4-8ba7-66c72bdb6fa5@amlogic.com>
 
 
+--vjzyofe7xtcvocgd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Mon, Jun 17, 2024 at 04:44:13PM +0800, Junyi Zhao wrote:
+> > > So yes, please use dev_err_probe() also to handle
+> > > devm_add_action_or_reset().
+> >=20
+> > My point here is also that devm_add_action_or_reset() can only fail on
+> > memory allocation, like (devm_)kzalloc. Looking around the kernel, we
+> > tend to not add messages for that and just return the error code,
+> > presumably because those same 'out of memory' messages would proliferate
+> > everywhere.
+>
+> Hi Uwe, I didnt get the clear point.
+> So, if we need "return ret" directly? or keep "dev_err_probe()" to print?
+
+Please keep the dev_err_probe(). There is a problem with that approach
+(as Jerome pointed out), but that is about to be addressed in driver
+core code.
+
+Best regards
+Uwe
+
+--vjzyofe7xtcvocgd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZwRCcACgkQj4D7WH0S
+/k5C6ggAusUDCe62w1qb8jlNP1dXoK6OQvw09sDK1x3v6607Hh9+PZte3/EYmwn1
+AIT2qpIcaBkVb3oB8plPowm3oU62dqZ5Z5ab1QN97qlths09uZiOxkA/MSLTTUx6
+T6GbIn+8OmUDBSa2jyqbFBV5IapU3TgN/PGDUVu3/fp5psvI6tCfyLUpxR1pTXWZ
+M3XM5N2LvVkzyu1O77yBaKOsB+4TVcgRLGwi1MzbqbvbLQoyRscvB18qB4x8Ytsa
+kLCtuCLJfdujJfR6fTWC/1xeXGoK+YnnoELLOj7LaBVpnUzN8StlNOTM2q7Pm354
+ndgwDT55Ok9oedoR5qNzhmx6RPB9qw==
+=M9gi
+-----END PGP SIGNATURE-----
+
+--vjzyofe7xtcvocgd--
