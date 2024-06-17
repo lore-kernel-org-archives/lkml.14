@@ -1,162 +1,168 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2122.outbound.protection.outlook.com [40.107.117.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A801946BF;
-	Mon, 17 Jun 2024 11:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.122
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623382; cv=fail; b=aLaiOg5bFBG/TUAxD8K23+IqmoxKC9V/+aNCQ3ayrqEbZHMXhgWVOO03RMCfXeh12TOZFyHEhQeR+fff1LxigFW3QpbUOjSi6uMd8mThECR27zyqsxZt+lgsUs/XBCXmZ0YzPrGeJEXzO9cwFLcCef1d4emxdTDOp3ZZT5Y9iCY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623382; c=relaxed/simple;
-	bh=L/yMYKkmBasibPE64MnEXw8YQGZAVB+XJT930R96eH4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dn+sMy/wxGHayzh8L1CJo2rx9iU4AplvYocQxoaG+tIjf1kYDf2pYIv0CVn7BvCKZaiyVegcbAeWnznliQUo15uUYNaICu8ebKaJCq5N1js6BLvkwdH++zUiuswMGxbuqY7AZzqgohOGFLedr7l21RKUzySxMJqvZMUioyJcWcE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.117.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fHJD7DWPAGu2w29kDXKmj5NDrnND4bnEOr//wGsUiNWUnuQZpzFxnD/B1gzpcrSZ2NhH7kW/Q9Ky57pPMtVfd/8Izjm0pzF3Wz1TSaUVDfRRdixIyOZ4IGvUUCYFeZqwb+iQObRBLln8g+b1jF5LIJyGkiPeGb4TKH1KCE+ITX8hOqI6duESD8qe+ePTFWClWPSxhj95RlK0tmGoZxNzAq+7Z3IhJPve5XH6bO5HYgooqk93GW5ReqgCZTgQLm+UiqVqyH+x9GB5BhvgHS2Vp3Oobz76s57aF2a2OUnduZImHYzYk3AsvVZG1MkB5xFjgFzEp3oiPAXV6NcGUVjl5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L/yMYKkmBasibPE64MnEXw8YQGZAVB+XJT930R96eH4=;
- b=TmjSzcWFFQPfqoK5LP20DK0B5IDw+a/N/D0r2bcZ4BklpwCBUiCaX+DP7O3XqJd8i3TvzJnoWdCJvXRAEwf9hwmkyKP243CQWHiXkeVDvpyYeNvPkB1DxkJ5FbVvXaKOhm/WbFZ/X/yytiWZqJv+2xNAhL8cp1Rq8Pigu8wBnKqaKmGfl9tSmRHOiNR1HGDTycoLBGHiP2Hd0H6K/iIoHD041wwTJGFjIjWy8FJxISUJ8NhFrAJF8KocHNLjo5oJBfpvh1oexTy/7qTcuReWWazBetMdyAlYZpsFr97Uh044CwMp4XKk2gYKjpZAc/bpLRsm878ZNCBmYIH4wV/+Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
- dkim=pass header.d=wesion.com; arc=none
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
- by KL1PR03MB7937.apcprd03.prod.outlook.com (2603:1096:820:fa::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.29; Mon, 17 Jun
- 2024 11:22:57 +0000
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::78dd:5e68:1a9c:36c0]) by TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::78dd:5e68:1a9c:36c0%6]) with mapi id 15.20.7677.029; Mon, 17 Jun 2024
- 11:22:57 +0000
-From: Jacobe Zang <jacobe.zang@wesion.com>
-To: Alexey Charkov <alchark@gmail.com>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
-CC: Nick Xie <nick@khadas.com>, "efectn@protonmail.com"
-	<efectn@protonmail.com>, "jagan@edgeble.ai" <jagan@edgeble.ai>,
-	"dsimic@manjaro.org" <dsimic@manjaro.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org"
-	<linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: Add bluetooth rfkill to
- Khadas Edge2
-Thread-Topic: [PATCH v2 2/5] arm64: dts: rockchip: Add bluetooth rfkill to
- Khadas Edge2
-Thread-Index: AQHawIWSGno1qGDO5k+YxfPMD0x/C7HLrc+AgAAGRQWAAArwAIAACnfW
-Date: Mon, 17 Jun 2024 11:22:57 +0000
-Message-ID:
- <TYZPR03MB7001732D8E2F0921BA82B7BC80CD2@TYZPR03MB7001.apcprd03.prod.outlook.com>
-References: <20240617071112.3133101-1-jacobe.zang@wesion.com>
- <20240617071112.3133101-3-jacobe.zang@wesion.com>
- <f147be11-fc35-44c2-88e8-7421fee47ace@letovo.ru>
- <TYZPR03MB70017A6280F060A6F4A1DD9880CD2@TYZPR03MB7001.apcprd03.prod.outlook.com>
- <a25472f5-3e88-408c-a033-5e338dce6340@gmail.com>
-In-Reply-To: <a25472f5-3e88-408c-a033-5e338dce6340@gmail.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wesion.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB7001:EE_|KL1PR03MB7937:EE_
-x-ms-office365-filtering-correlation-id: db6b8349-f78f-4c59-1f08-08dc8ebfd6e9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230037|376011|1800799021|7416011|366013|38070700015;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?QxD1fZDennjY75yTWx8FJ8Dpj1pbyaiQz6LgjJWCLW6KXeq6fd+OTHwXlq?=
- =?iso-8859-1?Q?J+Yx3InoKDDMsmwtjyRsBxppiosxp7cwuhuBf/25iDP+u9iKe/LQEj+UVX?=
- =?iso-8859-1?Q?/w0ArK/BKv3D6175ItdHjHPDALsw7jT8En3ZmNTnnaNM3n+nAhnrYxHgS7?=
- =?iso-8859-1?Q?xeeHmpVWA078lCA+zSTqx24odvlNMbR3/cHZETw+Axw04BaxtZK3ecDxKD?=
- =?iso-8859-1?Q?dYVEv3czceaQlX5gNk1DKPFVRZl3XGGVxxkat7Gcp8ew9Ng6EfQXyTcHi/?=
- =?iso-8859-1?Q?SAWrWKk8cPcpJHzWe8IOO6uS65p2uTWmsJOpNsQEfB6qV59a7ON+ss5ItW?=
- =?iso-8859-1?Q?XNQyIHYBlP0npt2EdftsQrVRY3oQ8pSIqDv9NwpbPg/LCQPlFyitS7Xa75?=
- =?iso-8859-1?Q?PxBfBKeDtDOG7tFQFquhoCi1e/FjPndNEpnVKAvQGu/wVM45cBO6YRl9mW?=
- =?iso-8859-1?Q?OT9eoMtJjMi32yt6Gl3Zdp8ng+BTC5xeQmnk7M1wsq2Rm3nrbeHslCMUIm?=
- =?iso-8859-1?Q?xoBOeR3VIephkuPuiBaEYHR3c2kVVq0KteI7Y57C+qKxxxNPMOlVoqN2q8?=
- =?iso-8859-1?Q?f7UHS36S4L6QaEf/g8YB6rbpdzr97jTOcUtSv4jCO6BTgqndcdFAgIuX/U?=
- =?iso-8859-1?Q?Oo0k4LXpSqyiulT06Qgj5nE8N6+u+CWwRzxSUwFEtwYYrb6aEdzEAlvH3D?=
- =?iso-8859-1?Q?KXf9yIDzrgN2oKTyuy0ahdfDmiSCh54/SybI5mbV7OteK750Rdullh+25s?=
- =?iso-8859-1?Q?xgkND1t184p6m3G2/TraUasvcPiC6ypzOMDowktQRwPbWJe+pN/KSig1n+?=
- =?iso-8859-1?Q?DCZfx7CWvO000D4FQF+A+9hDuHDYjQbnbxLQDeMO7IYWTXHmxg1Q6NBNpc?=
- =?iso-8859-1?Q?6fsK5huxYpocRC3FEWsjUMJ6HoUZGSI4sZtd0d4e3TppG0fAOIIu27sX43?=
- =?iso-8859-1?Q?WwgiRbVSiaz3GRKWFDDtLuMhiiVo1miR04yj1YRc/EdIDMkK+rprHKSWMJ?=
- =?iso-8859-1?Q?qKF9eBpgDpaS2NO5A3Aw9iMtQVcjB3WaE4hxcE/TGQgBLTQFMKhuHv5I3d?=
- =?iso-8859-1?Q?faZAeRMT/SJSEh2hiAZQ2luyVbmxOTvlRTZaJgo5EZLMYevWdQ+ok+FWVO?=
- =?iso-8859-1?Q?uxFT0cCqRHEmusxPKxMqbHbOFkY4sEw1k+vaHgexmwwBkP8Dn4ISf/nPky?=
- =?iso-8859-1?Q?ln8POXm6nSkLpL1VhGmtmL/rQa6SbBsYUfH9pEwnTVmPNHjIKICCuyg8SC?=
- =?iso-8859-1?Q?/6Qyz0HO1sgrGz46zAoBe/lUsrJyVUtK61MDk/CaNehDU5BF4Y0K4kGc7K?=
- =?iso-8859-1?Q?DWrgK5glPq+z9zzZQOhIzPGRcu5yzVNMqUvcgn+iab2SQQxcsswh9T7wLS?=
- =?iso-8859-1?Q?7L5y9Av08VxZSKxByDHffru/bbTXmR6+vneA6dOG4T8WtRZUIm7gk=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(7416011)(366013)(38070700015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?CTYbmoslli15f89SNUruOwfnEdFOUDUrC5Yiz7QGwgMjSz/dLd3r27MJEv?=
- =?iso-8859-1?Q?6yU1oxB8YlsFX4LwInWvr7ndNoncbSfaI8n7+1kfe2In+Bv+37f4kRSwcj?=
- =?iso-8859-1?Q?61TVr/9hNR83InQKlEPUFTNz+ODjA4rLyI/FFT478DS/O3rgcbN5A6Ws/m?=
- =?iso-8859-1?Q?eyse/1Dy1Ndg1ksJHxRE8/i0vBUDRALQwVKLWoQwRT3U763Gl4FhWi3xz/?=
- =?iso-8859-1?Q?9fA1nKgkxmkftNhFeqcCYQJEQlZCkUwJy7BJgA1gNcCXVNueTXzixiV3p+?=
- =?iso-8859-1?Q?r8zKyYyT2Ri7R8Dp2ElKVOZYwQQeOn1p1Agne2K6r1JbP4eehIm3IN2rPk?=
- =?iso-8859-1?Q?VZ/p0RSvMbF5fvns3HxQumdYsFgqWmdWm/O1j2qlSOLHS6gu9eRGJ7cVP2?=
- =?iso-8859-1?Q?VIau0GoGhZ8Jq4PrrC30RQtfH1cmH5EubC5TzFlq1rvZPRc7isQXl5qEXy?=
- =?iso-8859-1?Q?i4DjGY3rlaEvV5CmlTkgtMDy6WJ2kYwEBiWPUU0TS7woPyhSlOqnXkREce?=
- =?iso-8859-1?Q?kib9MgWW9ULDBGdKsRcwL0n06yMqNq6IX138XPYQVmxMyZJKUpyDA604hv?=
- =?iso-8859-1?Q?swzqJ9Apc5odgEp81X4tbdeohdyGg+W3OhBxZiurAEhSh4FnjwAiKwJ3dW?=
- =?iso-8859-1?Q?G0151w4zqqrekN/izofKnfaEPMeB1jdYJ9JfPc0slRS7moO7/MWI+PZgs3?=
- =?iso-8859-1?Q?ds/5/2OzQ2t/JREJB8tOa0dWpz9dUWBHMwFWj/kSpscqRW45JAG475leOQ?=
- =?iso-8859-1?Q?eE/4f7cxOnW6tUTpX+TrcMwCX0Kz2zFTfLAL8ipOnicxVOKjiLiyX3V9I4?=
- =?iso-8859-1?Q?K2nMUrj/57Mknu21PhfHpPLlzykc6+ygzYe8nGb4bTRSTXemXEmrclrOqI?=
- =?iso-8859-1?Q?5P0eUXx4Ll1TyEUWNcXMktJo/hZjV7dJJf+K2P0HvGFV3zHCb1XEqyfI0c?=
- =?iso-8859-1?Q?+w2eR9PFlfnF27IvgLtlascryziMeE4Kz2r5ByZ2fjy54oXhUS4vLSfSY2?=
- =?iso-8859-1?Q?wS2evy77MfvcIrniTgvPa7vs4Xpd7j3xLem1WZJ5IPlZXweU47jUV4EcKF?=
- =?iso-8859-1?Q?ZMgkuAD1dna19nU7cecGpP+mbnwpxibOcSO6UJXFr6GGaM1R35/ExDB5Jk?=
- =?iso-8859-1?Q?ouAxWlgXDmuV4QMU8GwG9c8UdboYpxZBpja26gJe5e6uAkNolH7/2QQDdr?=
- =?iso-8859-1?Q?UevTGQ89E+aC3lxv2Kw+U1j1clBN6UENkJcAGNbCSCIvMjEe6j6iMA9J+o?=
- =?iso-8859-1?Q?e4yR1E9cKsrfUvrKb3JvAp6VrTS//MnFXTzKptYSVv9GmDuEfQ44/dAjg7?=
- =?iso-8859-1?Q?19RBgJdzvUa08BLJnL8pgN1+HaWqhMiNGirfThg2c4qG+6RP+/uc+gNL/q?=
- =?iso-8859-1?Q?C5AUcBjn1jRBXFnDJmK8Q8CKFVQX7MQyOqQkqGOzQPB+k/nQkQh0Kc8a2d?=
- =?iso-8859-1?Q?QFacsFyw4ljZtxAW8LkiSfHBOF9jQelevtiTAzH1ChiyBO/nBj2A3pIH+l?=
- =?iso-8859-1?Q?1eQ8D0UtNFgwiwHAfo4gASwq755v84UlkswLIMU3W2vtiCER/kaKgXWjZN?=
- =?iso-8859-1?Q?CR9jLobEf8iN5ELJP/utnfmWjLSFdJcCOuJPWE85g+GgUjgAH6fAFgVJTy?=
- =?iso-8859-1?Q?SeMLfyYvwPv7M4NvHWMi7h6uHgLzca6GMR?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F5194A51
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718623394; cv=none; b=U7jgBHEDXXN5HMFVCAsEhlcPIiwriycjlikL06CSMF3qmNajpQrsbA84jJ43z9pOQyEDcBv57MC/rtG8jJ8nncm4W8gPVC+Xm9tG3NFnAXIYhiqaQCGTz5NGRqc7V8v8FHhwalTT494wkEYyT2RvyjKNVT3YwdkpbDrEv4M/dXI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718623394; c=relaxed/simple;
+	bh=StZPGP5/i6bU5Xn6N3H5JCPZRkydWn4sCNBBZMzJ8cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHXn210wei+Aj0q6QmMkm7P2Qbzs/r6lUwyAwc001ONPataB6gPr7oiqf6XYkmOs398KgYsearWNdwdJNK7HwB08YHjWrmeSmHXgQCh/lPC/l++wNqEnljd6CKXLn4f2ebgakmFd77L9q+rMcOifQm0gjK3m7so+6pMMLm+59b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jfrW+++Z; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jfrW+++Z"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f123bf735so2972987f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718623391; x=1719228191; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sM9D3IqfgB50OxP9LSaIkbOJs5yF44MMVnRSPz65e9Q=;
+        b=jfrW+++Z8TzHScqOeauKH9oEvVxFKPu3HWLEdjbR+fJbloI7KeI1Vkkpgvdjh7YqOq
+         dZYyczIeIUcPwd0SnAr4ZR5ReQS8y1jylvgos7aaW7z8s21FZExpAZIVDNq1XDrO8bOG
+         njV2IEPApBmm8HOW1Q8xKwSeMPLXKGVMN3qJop4OQ/WEJjv1UofGhJWY37BLjb5holOj
+         KC1NMxiUXYLRInGmu5Y5x1NdYYkhhDLMu67OkmFg3Niy6axcZJsbvOPAwOdhAnjhGK96
+         m91gl6GFWFp4tpjZ3j29cnK8pH1RD8oUuuOkuQcbep6QjNPcr1b/ksFhhw1tLLdGkMd0
+         H4Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718623391; x=1719228191;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sM9D3IqfgB50OxP9LSaIkbOJs5yF44MMVnRSPz65e9Q=;
+        b=tuLOY4lXP3r6KDig3rbdFUmy5kOSJahPZdPnQG0vVxSvgcwUlI+eMqUp5Ff/6Bi1/I
+         fcESR0c/FIFLyKLdjDBZifwmS6FK0FpW1RqkXQYVgjNSQjq2sM1RkzV6P1U2V7Ri7fEK
+         ki/aMLb4SNmcvK7lU75+pFf5o8HlLyblrB3QjDnvEpysQDqjtXqG47w3T4JbIpNcPIMf
+         NfybkoJaeSLaU+0yc97AgCdQ29Hddyv8vVrZyq4VU/zo9WR4WkiGAUYG7FnZW2XDN0GQ
+         gGNW8geYZG32ft9d+e1/Eqr/nrZZKe5bLD0YrMQSs1A3QR9w9wByEKfm82Au5/r5G/7W
+         /cvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWY82qoVpkhTZhWbfMoCuNM/gnRrLBB/DuO9JOomp0Dk2oEsbXgX1INpgtYKOfijTMQ+dK65AZiGWOnKa0BLFatbM1Ud1LN34U6EIlv
+X-Gm-Message-State: AOJu0Yx6rncbJlVFi730jXDaanV1mjYzZ3r0VY6atHzAMNM0roB45pTb
+	g6GYSx3gGEu8KNKhZSfD4MtfuIlIR1us2fSnTalFTCVPMotTglwmAGOIZBSQX7E=
+X-Google-Smtp-Source: AGHT+IETE+Maao3JAp1ZfgvsbcmTneajMGOq/KKGP7BvZAyqnGu9qO6mLUlHKQfEume52Ehz/Rt4gQ==
+X-Received: by 2002:adf:f902:0:b0:360:727b:8b47 with SMTP id ffacd0b85a97d-3607a7e7c15mr8074845f8f.63.1718623390738;
+        Mon, 17 Jun 2024 04:23:10 -0700 (PDT)
+Received: from myrica ([2.221.137.100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750acf32sm11673653f8f.49.2024.06.17.04.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 04:23:10 -0700 (PDT)
+Date: Mon, 17 Jun 2024 12:23:26 +0100
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: Peter Maydell <peter.maydell@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	fvogt@suse.de
+Subject: Re: [PATCH v3 02/14] arm64: Detect if in a realm and set RIPAS RAM
+Message-ID: <20240617112326.GA1193@myrica>
+References: <20240605093006.145492-1-steven.price@arm.com>
+ <20240605093006.145492-3-steven.price@arm.com>
+ <20240612104023.GB4602@myrica>
+ <3301ddd8-f088-48e3-bfac-460891698eac@arm.com>
+ <20240613105107.GC417776@myrica>
+ <CAFEAcA99bPtEr2OpE45wCgfSArZdtz4tu9rggLNb+=Rujh0ZvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: wesion.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db6b8349-f78f-4c59-1f08-08dc8ebfd6e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2024 11:22:57.5228
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6JqSU6mJkF73BEcPkzw9yp4fD2DJCf18BwmvwBmCyOka8cPEM8Fp/GU70pj7J9THN5yrUeVsnFlEwNigDbyGyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7937
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFEAcA99bPtEr2OpE45wCgfSArZdtz4tu9rggLNb+=Rujh0ZvQ@mail.gmail.com>
 
-> If you already control this GPIO from elsewhere (such as from the=0A=
-> bluetooth driver), then perhaps you don't need to define a separate=0A=
-> rfkill device at all.=0A=
-=0A=
-Yes, I missed the error log before. The rfkill driver didn't probe successf=
-ully. I will remove this rfkill node and reserve bluetooth node next time.=
-=0A=
-=0A=
----=0A=
-Best Regards=0A=
-Jacobe=
+On Mon, Jun 17, 2024 at 11:27:31AM +0100, Peter Maydell wrote:
+> On Thu, 13 Jun 2024 at 11:50, Jean-Philippe Brucker
+> <jean-philippe@linaro.org> wrote:
+> >
+> > On Wed, Jun 12, 2024 at 11:59:22AM +0100, Suzuki K Poulose wrote:
+> > > On 12/06/2024 11:40, Jean-Philippe Brucker wrote:
+> > > > On Wed, Jun 05, 2024 at 10:29:54AM +0100, Steven Price wrote:
+> > > > > From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > > >
+> > > > > Detect that the VM is a realm guest by the presence of the RSI
+> > > > > interface.
+> > > > >
+> > > > > If in a realm then all memory needs to be marked as RIPAS RAM initially,
+> > > > > the loader may or may not have done this for us. To be sure iterate over
+> > > > > all RAM and mark it as such. Any failure is fatal as that implies the
+> > > > > RAM regions passed to Linux are incorrect - which would mean failing
+> > > > > later when attempting to access non-existent RAM.
+> > > > >
+> > > > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > > > Co-developed-by: Steven Price <steven.price@arm.com>
+> > > > > Signed-off-by: Steven Price <steven.price@arm.com>
+> > > >
+> > > > > +static bool rsi_version_matches(void)
+> > > > > +{
+> > > > > + unsigned long ver_lower, ver_higher;
+> > > > > + unsigned long ret = rsi_request_version(RSI_ABI_VERSION,
+> > > > > +                                         &ver_lower,
+> > > > > +                                         &ver_higher);
+> > > >
+> > > > There is a regression on QEMU TCG (in emulation mode, not running under KVM):
+> > > >
+> > > >    qemu-system-aarch64 -M virt -cpu max -kernel Image -nographic
+> > > >
+> > > > This doesn't implement EL3 or EL2, so SMC is UNDEFINED (DDI0487J.a R_HMXQS),
+> > > > and we end up with an undef instruction exception. So this patch would
+> > > > also break hardware that only implements EL1 (I don't know if it exists).
+> > >
+> > > Thanks for the report,  Could we not check ID_AA64PFR0_EL1.EL3 >= 0 ? I
+> > > think we do this for kvm-unit-tests, we need the same here.
+> >
+> > Good point, it also fixes this case and is simpler. It assumes RMM doesn't
+> > hide this field, but I can't think of a reason it would.
+> >
+> > This command won't work anymore:
+> >
+> >   qemu-system-aarch64 -M virt,secure=on -cpu max -kernel Image -nographic
+> >
+> > implements EL3 and SMC still treated as undef. QEMU has a special case for
+> > starting at EL2 in this case, but I couldn't find what this is for.
+> 
+> That's a bit of an odd config, because it says "emulate EL3 but
+> never use it". QEMU's boot loader starts the kernel at EL2 because
+> the kernel boot protocol requires that (this is more relevant on
+> boards other than virt where EL3 is not command-line disableable).
+> I have a feeling we've occasionally found that somebody's had some
+> corner case reason to use it, though. (eg
+> https://gitlab.com/qemu-project/qemu/-/issues/1899
+> is from somebody who says they use this when booting Windows 11 because
+> it asserts at boot time that EL3 is present and won't boot otherwise.)
+
+Thanks for the pointer. In this case it looks like Linux was used as
+reproducer and not the main use-case, though I wonder if some CIs
+regularly boot this particular configuration.
+
+> 
+> Your underlying problem here seems to be that you don't have
+> a way for the firmware to say "hey, SMC works, you can use it" ?
+
+We do: SMCCC recommends to look at the PSCI conduit declared in DT/ACPI.
+Given that RMM mandates using the SMC conduit for both PSCI and RSI calls,
+we could use this discovery mechanism here. The problem is that we have to
+discover it very early at boot, before the DT infrastructure is ready,
+so the implementation is a little awkward. I did post one earlier in this
+thread but it doesn't yet account for ACPI-only boot, which will need
+something similar. Testing ID_AA64PFR0_EL1.EL3 would be much simpler, but
+it would break this config.
+
+Thanks,
+Jean
+
