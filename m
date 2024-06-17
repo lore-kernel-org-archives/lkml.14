@@ -1,138 +1,156 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA99195FC9
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 12:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B0B190052
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 12:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718627066; cv=none; b=BeQTqEIu0b2jMYmVsvGL9H82ECuyZp7nL4jWn1/+Ft10ZOOBaADt36ApUdNzMuPI/dSnWA3D78DTUr8N3ytmLHTh6zPW8d7BYD72SJufAZjWRZbR/UQNBaAHm/WGsn88yaRn+431YRkX5UpY9+v/tpuS3RXtbQAElFBaIIXBnPM=
+	t=1718627171; cv=none; b=Bp1ED2UFjgwq1d1RGFDY2fnYHt6sm66vx5GG7yLyfRLwKCnhqISS6kFE/SizYSLfn9PzJ/QZtu/tHEmUUrEkf0nl+XoVoAp2G6g5haqaZBhPOgcznmTJV2yhnRNrKR7Ufy/usSjxmbbAPuQ8RuQi+UE5YQHhqrL6Y84uF8l1J7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718627066; c=relaxed/simple;
-	bh=dkMDNulLc5a3KLXLaG9NTS/W6BS8iK9znwy1GGRProY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gox7uTjCiGsWjGvUz6tBvbFUlNieLnQE2jo4TnIIr2G7v34SXAHqldHshuqM7AVXb1uNCc/TO+Kr0sW3tf+Lb/Q+iHdxjCdsnsEhFpynpxsutOdJH+2yru4feVTDYmOX9JUaDUFDViR0xiYA1gSdcQrtE9YKkAjXi3Z3UPkP0n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=fwTHWlDa; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=g4K2zHoA reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1718627171; c=relaxed/simple;
+	bh=0yH54hdRmJm1LYRknv1AkPHR6e6a/3XtHrSym3izFec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dKsD8BVj3EbOpc3vQ2TO6YhUuWo6jX/dajEc4ugNhUubmUr5P5MRtj6jHs0cioh9JzOFvzciV7dc1aj12ykzv8GOlCN5uee7aOmbdsjD7PthNo5R9kjT8pzjXUgvM0dI8hJJKb5nhYRRDRcfreIv+20giQaUJjVwHNJb6RSKlNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hfyKCoDs; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fwTHWlDa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="g4K2zHoA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfyKCoDs"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f8ebbd268so63261666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 05:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1718627064; x=1750163064;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1DWb/EiOwYhJRYZ8QlGi2CNp9bjqfMiLLHh4hpYPFWY=;
-  b=fwTHWlDai6fhRFNxg5aUL7acCM8uSSOJ8i1L/EQ296j0xm8/DGVZjYWk
-   O6qX9ti+37E1A67eTbL8/vM7/yjzD//jWjxMJrYCuOJQXITtJJITZTEYh
-   YjpNtxMZOuIcoj3V7sHCu7bUVt3Fr++Zhhkkil+vKHePaPP2KVun9CDUt
-   9T3OYqHEJiDDF1gWQYRj1zJa2PTteI/+ZGgiDuodaYtsdMw/5GNNaCv0X
-   PQIDpRk/WbCtp5bGSvfH9kpuHrBPnRflxAxF6E8DD9nZzyJj19Adq6Xy2
-   tX3mfbFsC+Cn9A9Xqy6THw11t4LxdKIwdVeUw12xkNWU6Wuf219/jbkTW
-   A==;
-X-CSE-ConnectionGUID: +LhNIslwQOiSnbUIsBIBGA==
-X-CSE-MsgGUID: S6MTshiITkikvpWnRSPZhQ==
-X-IronPort-AV: E=Sophos;i="6.08,244,1712613600"; 
-   d="scan'208";a="37427062"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 17 Jun 2024 14:24:23 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 13931165A62;
-	Mon, 17 Jun 2024 14:24:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1718627059;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=1DWb/EiOwYhJRYZ8QlGi2CNp9bjqfMiLLHh4hpYPFWY=;
-	b=g4K2zHoAZe44J/CHAJxXu7T6W4h8Qg/VnXzmT/r8JcqkJeYTderXB1FhvapwGh+fdhjzkK
-	z922+oekovB31wuWsCsirI1ZJLHpfdpOTE3n/xH7gmvtVDsxYxZSILuxDcIZTYHesW0pTe
-	IpS7ixmQIRzSwjaNSDwjRwtd4bz3NPholsCHyz7qcsSswUJ6eAgmJUx0aSUsaVG4lXMxyg
-	OFtGKwF37RvvpSJ8TY/oZxemVIg2KnAiPzMpvd48vltXVQhXeowdnhmQqbYfI+Abl5YL19
-	x0kSBufWcURXfGL4EbtPJbAnDBHaxag4SROyAZI5OiM93uYi3EJ/VxTtArqzDA==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v2 5/5] mfd: tqmx86: add I2C IRQ support
-Date: Mon, 17 Jun 2024 14:23:02 +0200
-Message-ID: <b6cc921b24dbe8c2272528c23b683e1180a7234a.1718626665.git.matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1718626665.git.matthias.schiffer@ew.tq-group.com>
-References: <cover.1718626665.git.matthias.schiffer@ew.tq-group.com>
+        d=linaro.org; s=google; t=1718627168; x=1719231968; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=D1W3TjI82LPT0GMJMb8ibh1Cs/OuD6DN8HxB363KGxc=;
+        b=hfyKCoDsUcQszhVObhh9tMsayDT9m5YjtYx3r2w2Nj9DIbT7myT6uipcVWeoqk8tkZ
+         cngGAMNsOhpCUV4O3/kOV85q4I61soHkIJMYCeWt+OYME3agtBmgRjraMxuxDo2npgkZ
+         TpYs76yLvU7ogSHVIvGLl5RsWisJ8/UvoNz93disRFk20+3XzPcXjRTrvbcXNQPecvFB
+         osSNAtA0PsGyU+e0PNOkhiApEuHHzwYhoQkvNcfMbv3/8EsOOjWsYsDWY8WDnR+5Y/ru
+         nFKtofKkIXEGNU5sL6k3GNyDTqCVjjZiuH5mTP615MuQer4/3TsGBYCQkFrwavwMX/Jn
+         pikg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718627168; x=1719231968;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D1W3TjI82LPT0GMJMb8ibh1Cs/OuD6DN8HxB363KGxc=;
+        b=uDZ1sq19KKhGjYdvXBrFmcn/FAan/oJWKZTgK96DTSix791UWGVyxT5CDoSohx/9Wm
+         u7XLXgTVSh0mOO/HC1QVf2ysLcbdoImQYQ4HpQqjWtwYYyK9urXnMtRzZWMzqmGNkIRy
+         /nlYNjwMPQ169xyDoHOKE8lTSxteV5bLPq/EyU+2aCyFTX9H017Nnzwvyaadc6YVuYpW
+         rdiPJrEqWJTNAftmeFkWtVAgWL7voOh9NpYdSFa1G56DbfDxcT1D6VS49Z7EQqNno47q
+         z60qxn4bGpW5JT07zeZ5dcBOzPESI9H2tOozLa2qxUs2Gx75Byi/Of02lCvhm3DHZQEK
+         wRFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6XOkFg1nQ2Wie1EzTZCD8/PaCAdSAOvX9/rmS7FFWojofVzsLaMOGXf/8JAxwSWecUZCHERDXAoLTQ1HQbkQFXw8EDWpXbIHGxMFN
+X-Gm-Message-State: AOJu0YyTc8xdWrmVT5n6k6/Iix4ZD3rjDZFhktHzzio5w4lt++14H6B2
+	nq/iol1TJRZBG19NbS28ZfwQIDKZ7S61MVWewoWy9GLJltRAT3lbwH+E7DcnUU8=
+X-Google-Smtp-Source: AGHT+IGfNYZp4goCNHzgFZHaZHzhHrawdVbekNhioTdJBl+uUoNamZcee565J1kZhGwnpwUKwgH3Ng==
+X-Received: by 2002:a17:906:414e:b0:a6f:92d2:24b2 with SMTP id a640c23a62f3a-a6f92d22574mr643266b.25.1718627168158;
+        Mon, 17 Jun 2024 05:26:08 -0700 (PDT)
+Received: from [192.168.0.18] ([78.10.207.147])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56da336fsm505971466b.41.2024.06.17.05.26.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 05:26:07 -0700 (PDT)
+Message-ID: <a2d25f72-84bb-4ef6-8254-1df8da0bf808@linaro.org>
+Date: Mon, 17 Jun 2024 14:26:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ASoC: Constify DAI ops auto_selectable_formats
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Support Opensource <support.opensource@diasemi.com>,
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+ Baojun Xu <baojun.xu@ti.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20240617092152.244981-1-krzysztof.kozlowski@linaro.org>
+ <20240617092152.244981-2-krzysztof.kozlowski@linaro.org>
+ <20240617132436.640e5310@bootlin.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240617132436.640e5310@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 7bit
 
-From: Gregor Herburger <gregor.herburger@tq-group.com>
+On 17/06/2024 13:24, Herve Codina wrote:
+> Hi Krzysztof,
+> 
+> On Mon, 17 Jun 2024 11:21:52 +0200
+> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+> 
+>> The static arrays passed as 'auto_selectable_formats' are not modified
+>> by the drivers nor by the core code, so make it const for code safety.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  sound/soc/codecs/ak4613.c          | 2 +-
+>>  sound/soc/codecs/da7213.c          | 2 +-
+>>  sound/soc/codecs/hdmi-codec.c      | 2 +-
+>>  sound/soc/codecs/idt821034.c       | 2 +-
+>>  sound/soc/codecs/pcm3168a.c        | 2 +-
+>>  sound/soc/codecs/peb2466.c         | 2 +-
+>>  sound/soc/generic/test-component.c | 2 +-
+>>  sound/soc/sh/fsi.c                 | 2 +-
+>>  sound/soc/sh/rcar/core.c           | 2 +-
+>>  sound/soc/soc-utils.c              | 2 +-
+>>  10 files changed, 10 insertions(+), 10 deletions(-)
+>>
+> 
+> I think you miss sound/soc/codecs/framer-codec.c
 
-The i2c-ocores controller can run in interrupt mode on tqmx86 modules.
-Add module parameter to allow configuring the IRQ number, similar to the
-handling of the GPIO IRQ.
+Yes, indeed, thanks!
 
-Signed-off-by: Gregor Herburger <gregor.herburger@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
-
-v2: improve module parameter description (was patch 4/4)
-
- drivers/mfd/tqmx86.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/tqmx86.c b/drivers/mfd/tqmx86.c
-index 7f9ccd83278dd..dcd5fa3e18c50 100644
---- a/drivers/mfd/tqmx86.c
-+++ b/drivers/mfd/tqmx86.c
-@@ -50,6 +50,7 @@
- #define TQMX86_REG_IO_EXT_INT_9			2
- #define TQMX86_REG_IO_EXT_INT_12		3
- #define TQMX86_REG_IO_EXT_INT_MASK		0x3
-+#define TQMX86_REG_IO_EXT_INT_I2C_SHIFT		0
- #define TQMX86_REG_IO_EXT_INT_GPIO_SHIFT	4
- #define TQMX86_REG_SAUC		0x17
- 
-@@ -60,7 +61,12 @@ static uint gpio_irq;
- module_param(gpio_irq, uint, 0);
- MODULE_PARM_DESC(gpio_irq, "GPIO IRQ number (valid parameters: 7, 9, 12)");
- 
--static const struct resource tqmx_i2c_soft_resources[] = {
-+static uint i2c_irq;
-+module_param(i2c_irq, uint, 0);
-+MODULE_PARM_DESC(i2c_irq, "I2C IRQ number (valid parameters: 7, 9, 12)");
-+
-+static struct resource tqmx_i2c_soft_resources[] = {
-+	DEFINE_RES_IRQ(0),
- 	DEFINE_RES_IO(TQMX86_IOBASE_I2C, TQMX86_IOSIZE_I2C),
- };
- 
-@@ -271,6 +277,18 @@ static int tqmx86_probe(struct platform_device *pdev)
- 	ocores_platform_data.clock_khz = tqmx86_board_id_to_clk_rate(dev, board_id);
- 
- 	if (i2c_det == TQMX86_REG_I2C_DETECT_SOFT) {
-+		if (i2c_irq) {
-+			err = tqmx86_setup_irq(dev, "I2C", i2c_irq, io_base,
-+					       TQMX86_REG_IO_EXT_INT_I2C_SHIFT);
-+			if (err)
-+				i2c_irq = 0;
-+		}
-+
-+		if (i2c_irq)
-+			tqmx_i2c_soft_resources[0].start = i2c_irq;
-+		else
-+			tqmx_i2c_soft_resources[0].flags = 0;
-+
- 		err = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
- 					   tqmx86_i2c_soft_dev,
- 					   ARRAY_SIZE(tqmx86_i2c_soft_dev),
--- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
+Best regards,
+Krzysztof
 
