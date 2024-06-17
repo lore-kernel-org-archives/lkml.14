@@ -1,170 +1,218 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E109F14431B;
-	Mon, 17 Jun 2024 14:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3314D6E5;
+	Mon, 17 Jun 2024 14:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718634056; cv=none; b=BnZJzRPWlqYraTPbpRFZiMM8ebm3Scpr41NrtvkMG9w1+Iz8fepVAvs2dSaxodGMO925kxHotSwxY0m6B77TSUWxY1VeIPkl+9cR1mQPwa7PFyauJZ9MOCznbXipjtQ2+Iim0rP4AVCxGbxLoJ1bxOWa5PeGZG5ah3NOnMpn2mY=
+	t=1718634056; cv=none; b=cxMTVdn6EwK5wO7iu/8DuF61jhpb6Rgb+/E3RfRNlR5bh/lOVsVSePRpEOzxRIcz6AMN03vtXiXfWV3Zpppx/rsT7P2a70iwDW3R1Vk4CYoI+0qxGqLOgdMHXv86fcEfsznLc+WuJp+FQRj8WoOoYGtlH+Dv+ZB5NGW1S1cCFHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718634056; c=relaxed/simple;
-	bh=rT3ErQ2RhcAZ0GHggMJ+9CGK3rDjead7zGL+WSoRczk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z2TNdbUeDReY4VufQb2Hk6riu6+oE40CnLRn2LSV/s7WAu0Ck6KfCIp+ddwP5fGhx+Yq6BB+7dWW/q3OlrjUCCCTlp1bCKASBsuZ7+XLE79AZDHFatHcd2/Z070YxTrQHnbyC89ZNpQAzIeX3Iqmz4PJP7kGn0Je/ROBHO1JYQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zZVu2wrR; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=unPUtePx4FTeKKBmH9jeU3M6vc1xY06k0mJbsHVvoRc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dwop1LlkdDRPGhlkR9Bx8mSoky2KqtT4sGQOtUvudaV42Pg4gfWUijmMBIv11X/X8FOoEBkXyGkw4PwIiThXWRNMt6b27SQRksZN39U+V266lyjpc4KuIYtYfhnyKpNuALmKb0rMQ4FJ5q8gG1/pluTKBsh/2CsPX7vx6BHEiW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UaUHpI94; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zZVu2wrR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718634053;
-	bh=rT3ErQ2RhcAZ0GHggMJ+9CGK3rDjead7zGL+WSoRczk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=zZVu2wrRhDGF7owXlJY7ZeerZt0jB6uitzJ7hnqS6WDkqB0SQQtd9a8StGbkhXXOb
-	 kUmu1/nQtNGLTGwT3JZ0M981NXyFkt0uo/gHNnwDRl34Q7kyl7Vlj0B+nAqJnZS517
-	 4iKOBzU3Kj9na0sdGX9xupHMTgdWXeWm7CTA3gKz50WK4N9Tge+poxSVorkIqD1S/x
-	 liSLRzhsO2H+lWF0vMmB+b69TPWWmpUz6b1qw2eL9carxstil4oCL71uVkVaq1l0IL
-	 Qu+HtskIXNfTbDlv2PZyhZqR9QtmwI5TFgBO5JnI8qnbtc17H00G7FMEdJ5RqwNDV7
-	 VLO1DJo0Kd0gA==
-Received: from arisu.localnet (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6E94637812FD;
-	Mon, 17 Jun 2024 14:20:50 +0000 (UTC)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: Jianfeng Liu <liujianfeng1994@gmail.com>,
- Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: alchark@gmail.com, andy.yan@rock-chips.com, conor+dt@kernel.org,
- cristian.ciocaltea@collabora.com, devicetree@vger.kernel.org,
- didi.debian@cknow.org, dsimic@manjaro.org, gregkh@linuxfoundation.org,
- heiko@sntech.de, krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
- mchehab@kernel.org, robh@kernel.org, sebastian.reichel@collabora.com
-Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
-Date: Mon, 17 Jun 2024 10:20:23 -0400
-Message-ID: <4116468.VLH7GnMWUR@arisu>
-Organization: Collabora
-In-Reply-To: <f295f41ef1c9ee920ac3ac8e70ccf672ba7c9648.camel@ndufresne.ca>
-References:
- <20240615015734.1612108-2-detlev.casanova@collabora.com>
- <20240617094735.27928-1-liujianfeng1994@gmail.com>
- <f295f41ef1c9ee920ac3ac8e70ccf672ba7c9648.camel@ndufresne.ca>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaUHpI94"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b065d12e81so21700736d6.0;
+        Mon, 17 Jun 2024 07:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718634054; x=1719238854; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PaTJzZNQnKML5wOALCFr7UKAYUQ4uDtj0s8DKZQbERU=;
+        b=UaUHpI94jf3oSGoH7rCc//ZtSGHc/meBLsXzwgKo7T5gjnF1hkqmiVSw05YVgBgOx/
+         b3hBJb9Xd3w5G5iZSxybPbyhbZM572sEzYNZv+id8njWsc80Y4E+2mIIorDFM3wwFMsL
+         jadERNyUe58vi6JgblQwmzKjTT0Bg9imiIlUVRdSOpsuMiYJF6/2zKhQArHhAF9brgsx
+         hhq6HXId4EByT3UD1V3UC06yvafSvdcfkJZ0w5WLsxTn7ugEnVW8T973AX6F9B6S75NO
+         d9OrmTIe+ejQExdxzl/hqOLausbnTWif4GIgN0B4tfhmtB2ojqOnI2M7rhTDcnmizf2r
+         okcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718634054; x=1719238854;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PaTJzZNQnKML5wOALCFr7UKAYUQ4uDtj0s8DKZQbERU=;
+        b=xKOn1nwud13y9F+Hv/jkawaGmlmglmJZKAbTf7ki7V9MGmDnGl4a9iK7WaQY08DwxS
+         7PWS3zE9U4s4GIiQD8S18SmPkkhpzrt+MTN8VMqz+to9b+1gyTZWEJAHax6eybeHPpzC
+         Dq0tNuZrDbkn5AbjlVz49IHeWBhmoinG/8Cq1+LLbLbsKL1YiRvT7up8ul6lAHi1epD5
+         A6jrrARVgSZKi8SkSpv2WjkuPo2D5Ev9l10H2uLN8CXAXfKgC6HUELvlBF4AjspatVXP
+         7dk0YPeyoa2d/Xk/dEBdX+g5HcbeI7UAt990IItEzaLlxB5TVkK3BSC/OKGQzdfVlhdU
+         l2VA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnRU9mRvVTHThcVdEjld+WqbAOFBUv68GOokfYpqNekUAEl8CagDU0DooqXJtYmVAoNuRN+uBjawPDcHMa6LE658d8xiuF2H/Ose3Rti3NCSbZlGF0nG1hy+3E0Ps2j7VgtLeLk913kZ61pY1GkKJgYee+qiM5Tb5bzbxDFrF+JJid
+X-Gm-Message-State: AOJu0Yz3fcYZIl+PQHBMg7MyChCAs393taFAVZ3Ucw6K1d5GfoGdWJBN
+	Uuc2RHgl/68H4vKgbXNI9edSpTdqnKLaYhAJXhJxk+JiOjdDFDLgOE1FYXf7
+X-Google-Smtp-Source: AGHT+IFDaQH3oE9wnnPykHX6d3ceULs7zIEDhV5rSBjBtx7IebGxMyd2ReuaF/wrLpBqk8ly6W7Vew==
+X-Received: by 2002:a0c:e58b:0:b0:6b0:7997:ee3b with SMTP id 6a1803df08f44-6b2afcd99a2mr97733156d6.35.1718634054139;
+        Mon, 17 Jun 2024 07:20:54 -0700 (PDT)
+Received: from [127.0.1.1] ([2607:fea8:bad7:5400:2557:2c70:d69f:574f])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef4f5875sm46640001cf.28.2024.06.17.07.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 07:20:53 -0700 (PDT)
+From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+Date: Mon, 17 Jun 2024 10:20:52 -0400
+Subject: [PATCH v2] dt-bindings: thermal: convert hisilicon-thermal.txt to
+ dt-schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart10749034.NyiUUSuA9g";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240617-hisilicon-thermal-dt-bindings-conversion-v2-1-5eea9bc59c77@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAENGcGYC/63Qz2rDMAwG8FcpPk/Df1Sn66nvMXZwbDkxJE5xg
+ tkoefcpZYMcW+jxE+L3Id3ETCXRLM6HmyhU05ymzEG/HYTvXe4IUuAstNQorTLQ88qQ/JRh6am
+ MboCwQJtySLmbgeeVyoaAcUhGoYzSnQRz10Ixfd+rPr84M7RM5efeXPU2/S/Bx0uqBgVkrW8Dm
+ qjx49KNLg3vfhq3zj+weRI8YnMkZSnY1r8GNFJ5Is0faXfg9oZq9qc/AxuGbTgFxChjaHAPr+v
+ 6CwMPbXDbAQAA
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+X-Mailer: b4 0.14-dev-0bd45
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718634053; l=3876;
+ i=abdulrasaqolawani@gmail.com; s=20240613; h=from:subject:message-id;
+ bh=unPUtePx4FTeKKBmH9jeU3M6vc1xY06k0mJbsHVvoRc=;
+ b=Leg+7ppemKw7KR0Vj2wUHEQU2L6Ut0RFyUwj7sP7YHJqFB7qmnJtB+JS/FyATEfDV2aaVaJ59
+ IvB53yo3rxwAYnWE2WpJkVkfSATG9xekvH7CKsX1Q001E0pYK/15Xuu
+X-Developer-Key: i=abdulrasaqolawani@gmail.com; a=ed25519;
+ pk=cUqfinPW5pkopFB8ShBc0ZTNgYvSW5ZTa8aLIFPGp/w=
 
---nextPart10749034.NyiUUSuA9g
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"; protected-headers="v1"
-From: Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
-Date: Mon, 17 Jun 2024 10:20:23 -0400
-Message-ID: <4116468.VLH7GnMWUR@arisu>
-Organization: Collabora
-MIME-Version: 1.0
+Convert the hisilicon SoCs tsensor txt bindings to dt-schema
 
-On Monday, June 17, 2024 10:04:59 A.M. EDT Nicolas Dufresne wrote:
-> Hi,
->=20
-> Le lundi 17 juin 2024 =E0 17:47 +0800, Jianfeng Liu a =E9crit :
-> > Hi Detlev,
-> >=20
-> > Thanks a lot for your work! I try to use rkvdec2 with chromium but it
-> > can't play h264 video. Here is the log of chromium:
-> >=20
-> > [5799:5873:0617/171224.850061:VERBOSE2:video_decoder_pipeline.cc(473)]
-> > Initialize(): config: codec: h264, profile: h264 high, level: not
-> > available, alpha_mode: is_opaque, coded size: [1920,1080], visible rect:
-> > [0,0,1920,1080], natural size: [1920,1080], has extra data: true,
-> > encryption scheme: Unencrypted, rotation: 0=B0, flipped: 0, color space:
-> > {primaries:BT709, transfer:BT709, matrix:BT709, range:LIMITED}
-> > [5799:5886:0617/171224.850915:VERBOSE2:v4l2_video_decoder.cc(182)]
-> > V4L2VideoDecoder():
-> > [5799:5886:0617/171224.851218:VERBOSE1:v4l2_device.cc(128)] Open(): No
-> > devices supporting H264 for type: 0
-> > [5799:5886:0617/171224.851346:VERBOSE4:v4l2_queue.cc(1069)] This queue
-> > does  support requests.: No such file or directory (2)
-> This one indicates that V4L2_BUF_CAP_SUPPORTS_REQUESTS might be missing in
-> the REQBUFS implementation. I suspect GStreamer simply assumes this today
-> for driver exposing stateless formats (which is fair, its not a compliance
-> test, and we don't have a codec compliance yet).
+Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+---
+Changes in v2:
+- Remove extra node in example.
+- Use standard node name in example.
+- Include additional defines from includes.
+- Add reference to thermal-sensor.yaml.
+- Remove redundant properties and comments.
 
-There is a src_vq->supports_requests =3D true; Do I also need to set a flag=
- on=20
-the device caps ?
+- Link to v1: https://lore.kernel.org/all/20240613224204.185844-1-abdulrasaqolawani@gmail.com
+---
 
-> I'd suggest to check and fix this one, and retry, might only be noise, mi=
-ght
-> be the main cause, we cannot tell.
->=20
-> > [5799:5886:0617/171224.851426:VERBOSE1:v4l2_video_decoder.cc(476)]
-> > InitializeBackend(): Using a stateless API for profile: h264 high and
-> > fourcc: S264
-> > [5799:5886:0617/171224.851687:VERBOSE1:v4l2_video_decoder.cc(598)]
-> > SetupInputFormat(): Input (OUTPUT queue) Fourcc: S264
-> > [5799:5886:0617/171224.851797:VERBOSE1:v4l2_video_decoder.cc(636)]
-> > AllocateInputBuffers(): Requesting: 17 OUTPUT buffers of type
-> > V4L2_MEMORY_MMAP
-> > [5799:5886:0617/171224.867687:VERBOSE1:v4l2_queue.cc(1511)] Streamon():
-> > (OUTPUT_MPLANE) VIDIOC_STREAMON failed: Invalid argument (22)
-> > [5799:5886:0617/171224.867902:VERBOSE1:v4l2_video_decoder.cc(937)]
-> > StartStreamV4L2Queue(): Failed to streamon V4L2 queue.
-> > [5799:5886:0617/171224.868009:VERBOSE1:v4l2_video_decoder.cc(1377)]
-> > SetState(): Error occurred, stopping queues.
-> > [5799:5886:0617/171224.868105:ERROR:v4l2_video_decoder.cc(120)]
-> > StartStreamV4L2Queue failed at
-> > Decode@media/gpu/v4l2/v4l2_video_decoder.cc:915
-> > [5799:5886:0617/171224.871898:WARNING:v4l2_video_decoder_backend_statel=
-es
-> > s.cc(126)] There is/are 0 pending CAPTURE queue buffers pending dequeui=
-ng.
-> > This might be fine or a problem depending on the destruction semantics
-> > (of theclient code.
-> >=20
-> > Here is the chromium code failed when calling VIDIOC_STREAMON:
-> > https://github.com/chromium/chromium/blob/125.0.6422.60/media/gpu/v4l2/=
-v4l
-> > 2_queue.cc#L1508
-> >=20
-> > I'm running chromium v125.0.6422.60 and I can decode 1080p h264 with
-> > hantro g1 decoder on rk3588.
->=20
-> Are you using minigbm ? Because if you do, we don't have minigbm code for
-> this driver (and have no plan to do so, since we don't aim for ChromeOS
-> support).
->=20
-> Nicolas
->=20
-> > Best regards,
-> > Jianfeng
+Validated with dtschema and tested against `hi3660-hikey960.dts`.
+---
+ .../bindings/thermal/hisilicon,tsensor.yaml        | 57 ++++++++++++++++++++++
+ .../bindings/thermal/hisilicon-thermal.txt         | 32 ------------
+ 2 files changed, 57 insertions(+), 32 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/thermal/hisilicon,tsensor.yaml b/Documentation/devicetree/bindings/thermal/hisilicon,tsensor.yaml
+new file mode 100644
+index 000000000000..8b898fbfb200
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/hisilicon,tsensor.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/hisilicon,tsensor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Temperature Sensor on HiSilicon SoCs
++
++maintainers:
++  - Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
++
++allOf:
++  - $ref: thermal-sensor.yaml
++
++properties:
++  compatible:
++    enum:
++      - hisilicon,tsensor
++      - hisilicon,hi3660-tsensor
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: thermal_clk
++
++  interrupts:
++    maxItems: 1
++
++  '#thermal-sensor-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#thermal-sensor-cells'
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/hi6220-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++     temperature-sensor@f7030700 {
++        compatible = "hisilicon,tsensor";
++        reg = <0xf7030700 0x1000>;
++        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
++        clock-names = "thermal_clk";
++        #thermal-sensor-cells = <1>;
++     };
+diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+deleted file mode 100644
+index 4b19d80e6558..000000000000
+--- a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-* Temperature Sensor on hisilicon SoCs
+-
+-** Required properties :
+-
+-- compatible: "hisilicon,tsensor".
+-- reg: physical base address of thermal sensor and length of memory mapped
+-  region.
+-- interrupt: The interrupt number to the cpu. Defines the interrupt used
+-  by /SOCTHERM/tsensor.
+-- clock-names: Input clock name, should be 'thermal_clk'.
+-- clocks: phandles for clock specified in "clock-names" property.
+-- #thermal-sensor-cells: Should be 1. See Documentation/devicetree/bindings/thermal/thermal-sensor.yaml for a description.
+-
+-Example :
+-
+-for Hi6220:
+-	tsensor: tsensor@0,f7030700 {
+-		compatible = "hisilicon,tsensor";
+-		reg = <0x0 0xf7030700 0x0 0x1000>;
+-		interrupts = <0 7 0x4>;
+-		clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
+-		clock-names = "thermal_clk";
+-		#thermal-sensor-cells = <1>;
+-	}
+-
+-for Hi3660:
+-	tsensor: tsensor@fff30000 {
+-		compatible = "hisilicon,hi3660-tsensor";
+-		reg = <0x0 0xfff30000 0x0 0x1000>;
+-		interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+-		#thermal-sensor-cells = <1>;
+-	};
 
---nextPart10749034.NyiUUSuA9g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+---
+base-commit: 8d5ed3dd17c9c1bdb39ecb125f0e28dfb5111dd9
+change-id: 20240613-hisilicon-thermal-dt-bindings-conversion-3a4e3140f0a8
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEonF9IvGrXNkDg+CX5EFKUk4x7bYFAmZwRicACgkQ5EFKUk4x
-7bYICgf9HGR2mStaG71gFFNr6E9cHZX99Rfy5S0F2pILlta1bauHn+MrGEvOL9zt
-r57kN7jzxcGrM2hPequqd4YF85OFHns2Z8tbAz74UqqG1PlPHdfWrLpfBoDph2dD
-Pg9F/f1sDDy8k6IsHn/Rd/qH4RL96V2qSaqfKI/qH1xbxLls5p8JNvH12mBEVv/O
-4m4OfP/tM2BRQS0nK0UseYKJ3nL4coqKsWtstbVAgtCA8OW1NsJ7VNb6kfWtt/dY
-kb7hz+eqwpqoA+IW8gz+5yVfKoXYzfnMaK03GLSWphlxRrHo3FcM1Tcolm9vEMMH
-Y3IX6BEAtv8CJn5gpKCIcWyg+/Nt1g==
-=5zKt
------END PGP SIGNATURE-----
-
---nextPart10749034.NyiUUSuA9g--
-
-
+Best regards,
+-- 
+Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
 
