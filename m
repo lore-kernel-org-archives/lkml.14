@@ -1,115 +1,103 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0022753AD;
-	Mon, 17 Jun 2024 11:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BE5194120;
+	Mon, 17 Jun 2024 11:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718622766; cv=none; b=geD///BmbbA3KsIIswCmBqhdi1/R8TaeZNkwZqHub3vlfxaFgPNTCUF3SqcS2O/tMZixH6hB6DzhKBrhht2XJ991sbGbI4l0Xkac5+kGLAKMVu7HR4hls3Ty9U2to+k+HAbUpQPVsg2j36BRNyQ8OInfx87uZgXw1Y+WiAlycoY=
+	t=1718622782; cv=none; b=AyRFyY2YfySpAGEjBFaVJISK+CY/EfQNKrKjSOekmIeW5SNyFIxr8i/IDkrUxSTfpMyQtgSEgHKigpDPW3ALRyXkc7+jUri6UHSyuBaIyjiIHOC9dPCsiMzJZ2t41Xuf8iWLkwHy9M/gUde6u9mAXfC3LJO/W+fCVEtKASiOF+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718622766; c=relaxed/simple;
-	bh=/q1tmGRlV2b94HWtvWzP/RQIoEDOOCF6WdK86KGM5kw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=dxfBmkfNvHjWjktCFnzi+z+VGZbLTycnxvxAHVwVWVZ495VflKBc13H+yMdCQIeWRLztldbEz6JXhB7wlF9dcvJ4HQByOtfaxGWRfcrVx0ShpEstopiTjx1NCQwQJMH+d2oQa5JGfvoXewg+gfiFOXJlqp89grxZh+4QT1qvoRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dmJNxc9E; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718622782; c=relaxed/simple;
+	bh=/L6WYMxSMfjTIoWr9t9k/aRtdxtiTotpKJC0bwZmths=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C3VinOnlC0USxFk4saZMyno8Ffpdc9MCU09NGAB2YNVw9J+bZaBe6DIA/LVYOVpNb9ztWVJ/Ew/iRHSunqxzlqSM52rVGe2CGFfx68Oaz1EdvI6EQ87bsxUPlkRaqDpZrmE3XbKTdcN0Y36vKpt2BS5JBMFXJk2ow35Cs2zrDjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TWun6Tz0; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dmJNxc9E"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45HAMafd108445;
-	Mon, 17 Jun 2024 05:22:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718619756;
-	bh=BELgjrJN+w9ID7lAyyjagN60DA04mZRsSAuLmcMGPok=;
-	h=From:Date:Subject:To:CC;
-	b=dmJNxc9E2I8a1ykhfp2pyDeZURjntkNiGgDfFidBzN/K6lwB3+BLk+xSDqoCaRdFH
-	 6fBBg0zlHJtUdh1Khno1Idi0nhFYrwSUtaeBDyyG5Qd38Y8eaiW6O3n+1TLA+bkODT
-	 wnNOodVzhTEnJfWMCni1J7rxIDD161twfYxfwbrI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45HAMaMC014661
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Jun 2024 05:22:36 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Jun 2024 05:22:36 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Jun 2024 05:22:35 -0500
-Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45HAMZG7062219;
-	Mon, 17 Jun 2024 05:22:35 -0500
-From: Kamlesh Gurudasani <kamlesh@ti.com>
-Date: Mon, 17 Jun 2024 15:52:10 +0530
-Subject: [PATCH] arm64: dts: ti: k3-am62a-main: Enable crypto accelerator
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TWun6Tz0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718622778;
+	bh=/L6WYMxSMfjTIoWr9t9k/aRtdxtiTotpKJC0bwZmths=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TWun6Tz0mrFyu0Doh3GSFs5086lVufoWIuFjkxiKsPZHUQOo5/kxB2MOvTdkHoK4M
+	 l4YUhTOvHS6iKdIwIxJr+SYFYE4R3tSubri3gpAKeg6QauwUwxk8RGrhWTgKsJRkga
+	 WmuEAq1gxUD4FXTikNClu2mpX/GqqqZR9v0VNhWXWVooGlwaZSnITzWYVtrWMAdY/Q
+	 Gc1Sy3KP5c8iVAVzEodL3ey7mM4zKdz2E7c0MAl9n4oWfGTO9aciNFSPuXhlGTSJ4A
+	 mnRmhAVp0wQ90eRATO9s4OC6Pw0gg5PJ3Gn/yeXaoaNP+Ktue2EHgnAsiuTtPDUH6E
+	 goMQ1PX6AMUzA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 42DB93780480;
+	Mon, 17 Jun 2024 11:12:55 +0000 (UTC)
+Message-ID: <33aac6a0-7bdf-48d3-bf79-0f3bf60394f2@collabora.com>
+Date: Mon, 17 Jun 2024 13:12:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 21/22] dt-bindings: thermal: simplify few bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Guillaume La Roque <glaroque@baylibre.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Amit Kucheria <amitk@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Heiko Stuebner <heiko@sntech.de>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Pascal Paillet <p.paillet@foss.st.com>, Keerthy <j-keerthy@ti.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>,
+ zhanghongchen <zhanghongchen@loongson.cn>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, imx@lists.linux.dev,
+ linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240614-dt-bindings-thermal-allof-v1-0-30b25a6ae24e@linaro.org>
+ <20240614-dt-bindings-thermal-allof-v1-21-30b25a6ae24e@linaro.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240614-dt-bindings-thermal-allof-v1-21-30b25a6ae24e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240617-crytpo-am62a-v1-1-ddb719aed71b@ti.com>
-X-B4-Tracking: v=1; b=H4sIAFEOcGYC/x2NQQqDQAwAvyI5N+BuZRf6ldJDsk1rDq6SSLGIf
- +/a4zAMs4OLqTjcuh1MPuo61wbh0kEZqb4F9dkYYh+HPoWMxb7rMiNNKRIyJ84hDddSMrSEyQX
- ZqJbxjCbyVewUi8lLt//n/jiOHwN2oBJ3AAAA
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jayesh Choudhary <j-choudhary@ti.com>,
-        Kamlesh Gurudasani <kamlesh@ti.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718619754; l=1194;
- i=kamlesh@ti.com; s=20230614; h=from:subject:message-id;
- bh=/q1tmGRlV2b94HWtvWzP/RQIoEDOOCF6WdK86KGM5kw=;
- b=TNVi2y7uh3tYafIIJ1Yi8dgneltwOXnWXnzGfis/4VTTSW2okYU913sE2frv+4N+8DE8Gh0Ho
- GbkVPJPOvsqBE25wlpzZ+HS2K3j++7x0lFit5KAIfDjUbWm6lIoudGD
-X-Developer-Key: i=kamlesh@ti.com; a=ed25519;
- pk=db9XKPVWDGJVqj2jDqgnPQd6uQf3GZ3oaQa4bq1odGo=
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add the node for sa3ul crypto accelerator.
+Il 14/06/24 11:46, Krzysztof Kozlowski ha scritto:
+> Simplify few bindings which already reference thermal-sensor.yaml schema
+> by dropping unneeded requiring of '#thermal-sensor-cells' and dropping
+> assigned-clocks properties (core schema allows it if 'clocks' are
+> there).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-Signed-off-by: Kamlesh Gurudasani <kamlesh@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-index ce4a2f105630..298d0c91fc0a 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-@@ -216,6 +216,18 @@ k3_reset: reset-controller {
- 		};
- 	};
- 
-+	crypto: crypto@40900000 {
-+		compatible = "ti,am62-sa3ul";
-+		reg = <0x00 0x40900000 0x00 0x1200>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x00 0x40900000 0x00 0x40900000 0x00 0x30000>;
-+
-+		dmas = <&main_pktdma 0xf501 0>, <&main_pktdma 0x7506 0>,
-+		       <&main_pktdma 0x7507 0>;
-+		dma-names = "tx", "rx1", "rx2";
-+	};
-+
- 	secure_proxy_sa3: mailbox@43600000 {
- 		compatible = "ti,am654-secure-proxy";
- 		#mbox-cells = <1>;
-
----
-base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
-change-id: 20240617-crytpo-am62a-bb6b71643cc7
-
-Best regards,
--- 
-Kamlesh Gurudasani <kamlesh@ti.com>
 
