@@ -1,233 +1,309 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E1119AD49;
-	Mon, 17 Jun 2024 13:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E3F192B88
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631592; cv=none; b=ZYWij3zvgMxJJmCQqGD08k9ePoa6vFhaUqkfZSil+T6D1lHNqhw8tcs6T+HQrBnJIiUXv6yX5DkE3SH4EnX952+nwiqauRcny9W8mUqxXs4viBI50yzM50KQ78kvjCDHBNri6ZG9tHxPnZf7HqlsjjMyl4C4KghYpKrxRoCOru8=
+	t=1718631676; cv=none; b=kEw31cQk+jnz3hLjPVn5bvLNRHR5QS25Uvnqi8HhBsIlSSUfC7Iq4PozrNmnJca5kVEnOBWn54cqJfKV7nvJPSn/rgEDevIeUS/wf89rdhSyA/0Rrwbbo4kfOC/nGqlacF8uzs0CJ6TySZXSUmCafqqBFs2+caVHsSKGYFEBChw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631592; c=relaxed/simple;
-	bh=grf+gfPIry7cjE0QCoWI519+41pP+TNkQsjMbIeAo5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=twBZlKzD6P06xILf+W04TtkrDnGuC6h7nAVkmVlxaXJfBmbbYiJc/RNN+5TAPoyimI12Nt8MQJiCDH8qAMsselxD9oOvrSzaPFAHSb6ddFuKpbXXyzuSMwsQHIAF/2zEt1izy2Ep5erwZiQs6yX8THmkkHAR7S+RqzNTNgKS4GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r/K3PmNz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mpq6t8K2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r/K3PmNz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mpq6t8K2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1718631676; c=relaxed/simple;
+	bh=ajRZ2EjcsauA7rjIlvZ2dPQTW7oo2QpMTQarfEMCOTg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gfz4gx2jeaqjM1f/OCLvS46MEIBMnRgQYS4PQFuMSjOXdChATRkndeXvYPChz8679jYHccoPV9r4YnZKegkKg1WzIfVEAe1d2fR+aH/mmV931qykhTu3734qByezQw/FFw6rqWY2kAbfDIoyXDaqG39pnFhlI0vefkiytpcPvmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9w9EJl8; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r/K3PmNz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mpq6t8K2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r/K3PmNz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mpq6t8K2"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2788438263;
-	Mon, 17 Jun 2024 13:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718631589; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ma2i8ZOEdYL8rm1BANCfMWT47zZ325d/hxqoHMQs+gQ=;
-	b=r/K3PmNzZiuTKIvUjp6uXM7uHKd7+couYQZSOJWwVjCbPGszak31oLUuhi2F0Pz7ox9+5f
-	WXg02AUF0LKVvxENCbVGkyAWBczdkuDE7ulZIGFpDd8BgiksDisoP6qmOxJvn1MuOwni07
-	u9RX3pjs9kohSiwMDAxmZNvucqjan4U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718631589;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ma2i8ZOEdYL8rm1BANCfMWT47zZ325d/hxqoHMQs+gQ=;
-	b=Mpq6t8K2kABw2O6JloFVNqK2DLQ6NKIdtywGqkzdy5iB32Wsee2o8+DFUHbaFux0qSErLd
-	yu9/YpH5+JMAkWCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="r/K3PmNz";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Mpq6t8K2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718631589; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ma2i8ZOEdYL8rm1BANCfMWT47zZ325d/hxqoHMQs+gQ=;
-	b=r/K3PmNzZiuTKIvUjp6uXM7uHKd7+couYQZSOJWwVjCbPGszak31oLUuhi2F0Pz7ox9+5f
-	WXg02AUF0LKVvxENCbVGkyAWBczdkuDE7ulZIGFpDd8BgiksDisoP6qmOxJvn1MuOwni07
-	u9RX3pjs9kohSiwMDAxmZNvucqjan4U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718631589;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ma2i8ZOEdYL8rm1BANCfMWT47zZ325d/hxqoHMQs+gQ=;
-	b=Mpq6t8K2kABw2O6JloFVNqK2DLQ6NKIdtywGqkzdy5iB32Wsee2o8+DFUHbaFux0qSErLd
-	yu9/YpH5+JMAkWCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C9A513AAA;
-	Mon, 17 Jun 2024 13:39:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5ev2BqU8cGYcSAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 17 Jun 2024 13:39:49 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id BB70DA0887; Mon, 17 Jun 2024 15:39:48 +0200 (CEST)
-Date: Mon, 17 Jun 2024 15:39:48 +0200
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+d31185aa54170f7fc1f5@syzkaller.appspotmail.com>
-Cc: jack@suse.com, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [udf?] KMSAN: uninit-value in udf_update_tag
-Message-ID: <20240617133948.4kubbcbmn2q5j5pp@quack3>
-References: <000000000000cf405f060d8f75a9@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9w9EJl8"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7046e87e9afso3403923b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718631674; x=1719236474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q0pp4nLuLDtvrTRt1gP/9BmZwggZYJPGQwgqI4bcf7s=;
+        b=B9w9EJl8npuLmDW6a3oPDlAiqqbDG18p3NaY0ABqZ/X+LzUDP8H1edJxDyoFA03ufN
+         nxg2OxTFRiKfYApyd/VVf0VfOGaKS+Q6juzIT4SlYxepv/3EMujJGedc4bDJW79oGZ+P
+         QwFLlCtrjCmsGHIX0OAN54B26kOFFax2KDYpa3TES6e8UifPfEJTTAXhOdmkl4UtxdH2
+         0PU0WKwb3GqxJBa/0uqTrpz+Wb7u/y6VnrMcBA+wF9ZFA9fzmSCqJGjEeEzSEXikoXQt
+         fdqAaOhpoA5LIQRAIdLJ5iQnpWxGzV+84kYdRYBUV2upCYExB1pHqbPvSGcbEJwnUGtg
+         FWWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718631674; x=1719236474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q0pp4nLuLDtvrTRt1gP/9BmZwggZYJPGQwgqI4bcf7s=;
+        b=OeLqYCYNQfeRV4AsgUPe0/1kLgm0xDoOy6vrtYgs8oGWPHEhz19Y1EelWXlzMMGmdT
+         PBC6NBy3RUuCwKhkPDxU/7qWF9E40kcry60bpvBkJQNAMzaeTbktY5QrsOerrfFvVta6
+         Z2lPoYglMdl5H9WxpDisjvyy6E8M5J/mwyiGET2gQ0T7o9dT2xaYLJiccoGdDq7mZEp1
+         aOnTCR29GdbzlK5DlNBtcGJoW0LjevzM4E5T6X7AN3FHbdsWfaxC4WJGf5N5FEZWxMwZ
+         LkNF0UUD4W2fFvq0hyDYjuTpMERFylktKqtI7uBT7rtkF5PtAucXxT5HjYdSS/46M6TQ
+         RnPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHX30HG84/3+h0Pz16dz++bugpioFJNQGflBbFbVcCS0H9mrfiXggH7vh7FbnBb8yFAdGD6aOWRBnpSEJXpem/5Axm0mKJ7pfZIa2T
+X-Gm-Message-State: AOJu0Yxokh4e04f5rRBPaYmgPpO/oqF4q7FZSXCADQcDM93Y8bF9/GES
+	PGkbNHxw2P6tcnA2NXZsIqzEnzO3e1bSZWZbC5z7hkTNWcLZH/e/DxtvlTgRIPStjw32/rXKsv3
+	UwjyYLSygYYTok6kgF73yRWwjN4E=
+X-Google-Smtp-Source: AGHT+IGL1B2BYMw+YBoulVZaQLRFpQouRVZZxGbMCWRau4ceu76A7i6GVVB7OO7b8w3Wvy9CS3LAD+elObIiA6nzxos=
+X-Received: by 2002:a05:6a20:2448:b0:1b8:d79:55f3 with SMTP id
+ adf61e73a8af0-1bae82a599bmr9569600637.54.1718631674103; Mon, 17 Jun 2024
+ 06:41:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="xic7exfhiajb22in"
-Content-Disposition: inline
-In-Reply-To: <000000000000cf405f060d8f75a9@google.com>
-X-Rspamd-Queue-Id: 2788438263
-X-Spam-Score: -1.51
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+,1:+,2:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[d31185aa54170f7fc1f5];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	HAS_ATTACHMENT(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+References: <20240601132459.81123-1-aford173@gmail.com> <7015c544-14c3-40af-aa10-e3088eea5633@leemhuis.info>
+ <CAHCN7xJfqcN=yqWAURuy-oF8EiwoB5i840Gct65xgqgxNSL_Ug@mail.gmail.com> <701edf2c-2c70-4031-9d6f-cd31cd082df7@leemhuis.info>
+In-Reply-To: <701edf2c-2c70-4031-9d6f-cd31cd082df7@leemhuis.info>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 17 Jun 2024 08:41:02 -0500
+Message-ID: <CAHCN7x+LasjE8NgkKzXZbxUZXLnhJhnuzfXPgbBKgtWeD0rEXA@mail.gmail.com>
+Subject: Re: [PATCH V2] drm/bridge: adv7511: Fix Intermittent EDID failures
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dmitry.baryshkov@linaro.org, victor.liu@nxp.com, sui.jingfeng@linux.dev, 
+	aford@beaconembedded.com, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 17, 2024 at 8:29=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 17.06.24 15:14, Adam Ford wrote:
+> > On Mon, Jun 17, 2024 at 8:00=E2=80=AFAM Linux regression tracking (Thor=
+sten
+> > Leemhuis) <regressions@leemhuis.info> wrote:
+> >>
+> >> [CCing the regression list, as it should be in the loop for regression=
+s:
+> >> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> >>
+> >> Hi! Top-posting for once, to make this easily accessible to everyone.
+> >>
+> >> Hmm, seem nobody took a look at below fix for a regression that seems =
+to
+> >> be caused by f3d9683346d6b1 ("drm/bridge: adv7511: Allow IRQ to share
+> >> GPIO pins") [which went into v6.10-rc1].
+> >>
+> >> Adam and Dimitry, what are your stances on this patch from Adam? I'm
+> >> asking, as you authored respectively committed the culprit?
+> >
+> > I learned of the regression from Liu Ying [...]
+>
+> Ohh, I'm very sorry, stupid me somehow missed that the Adam that was
+> posting the fix was the same Adam that authored the culprit. :-( Seems I
+> definitely need more coffee (or green tea in my case) or reduce the
+> number or regressions on the stack. Please accept my apologies.
+>
+> Thx for the update anyway.
 
---xic7exfhiajb22in
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No problem.  Sent out a few e-mails and/or patches while tired and I
+when I read them again when I was awake, I had to ask myself 'what
+what was I thinking'
 
-On Thu 28-12-23 02:34:28, syzbot wrote:
-> syzbot found the following issue on:
-> 
-> HEAD commit:    861deac3b092 Linux 6.7-rc7
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=16e0171ae80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d31185aa54170f7fc1f5
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17561579e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1277e7a5e80000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/0ea60ee8ed32/disk-861deac3.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6d69fdc33021/vmlinux-861deac3.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/f0158750d452/bzImage-861deac3.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/f35551f8a991/mount_0.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+d31185aa54170f7fc1f5@syzkaller.appspotmail.com
-> 
-> =======================================================
-> UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
-> =====================================================
-> BUG: KMSAN: uninit-value in crc_itu_t_byte include/linux/crc-itu-t.h:22 [inline]
-> BUG: KMSAN: uninit-value in crc_itu_t+0x287/0x2e0 lib/crc-itu-t.c:60
->  crc_itu_t_byte include/linux/crc-itu-t.h:22 [inline]
->  crc_itu_t+0x287/0x2e0 lib/crc-itu-t.c:60
->  udf_update_tag+0x5c/0x2a0 fs/udf/misc.c:261
->  udf_rename+0x13dd/0x16a0 fs/udf/namei.c:877
->  vfs_rename+0x1a79/0x1fa0 fs/namei.c:4844
->  do_renameat2+0x1571/0x1ca0 fs/namei.c:4996
->  __do_sys_rename fs/namei.c:5042 [inline]
->  __se_sys_rename fs/namei.c:5040 [inline]
->  __x64_sys_rename+0xec/0x140 fs/namei.c:5040
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> 
-> Local variable diriter created at:
->  udf_rename+0xbb/0x16a0 fs/udf/namei.c:768
->  vfs_rename+0x1a79/0x1fa0 fs/namei.c:4844
-> 
-> CPU: 0 PID: 5011 Comm: syz-executor409 Not tainted 6.7.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-> =====================================================
-> 
+>
+> > Dimitry had given me some suggestions, and from that,  I posted a V1.
+> > Dmitry had some more followup suggestions [2] which resulted in the
+> > V2.
+> >> As far as I know, Liu was satisfied that this addressed the regression
+> > he reported.
+>
+> So in that case the main question afaics is why this fix did not make
+> any progress for more than two weeks now (at least afaics -- or did I
+> miss something in that area, too?).
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+I have not seen anything either which is why I sent out the gentle
+nudge last week.
 
-									Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
-
---xic7exfhiajb22in
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-udf-Fix-bogus-checksum-computation-in-udf_rename.patch"
-
-From 1657db149c4c596cf1b2451b73f72db94b612800 Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Mon, 17 Jun 2024 12:57:50 +0200
-Subject: [PATCH] udf: Fix bogus checksum computation in udf_rename()
-
-Syzbot reports uninitialized memory access in udf_rename() when updating
-checksum of '..' directory entry of a moved directory. This is indeed
-true as we pass on-stack diriter.fi to the udf_update_tag() and because
-that has only struct fileIdentDesc included in it and not the impUse or
-name fields, the checksumming function is going to checksum random stack
-contents beyond the end of the structure. This is actually harmless
-because the following udf_fiiter_write_fi() will recompute the checksum
-from on-disk buffers where everything is properly included. So all that
-is needed is just removing the bogus calculation.
-
-Fixes: e9109a92d2a9 ("udf: Convert udf_rename() to new directory iteration code")
-Link: https://lore.kernel.org/all/000000000000cf405f060d8f75a9@google.com/T/
-Reported-by: syzbot+d31185aa54170f7fc1f5@syzkaller.appspotmail.com
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- fs/udf/namei.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/fs/udf/namei.c b/fs/udf/namei.c
-index 1308109fd42d..78a603129dd5 100644
---- a/fs/udf/namei.c
-+++ b/fs/udf/namei.c
-@@ -876,8 +876,6 @@ static int udf_rename(struct mnt_idmap *idmap, struct inode *old_dir,
- 	if (has_diriter) {
- 		diriter.fi.icb.extLocation =
- 					cpu_to_lelb(UDF_I(new_dir)->i_location);
--		udf_update_tag((char *)&diriter.fi,
--			       udf_dir_entry_len(&diriter.fi));
- 		udf_fiiter_write_fi(&diriter, NULL);
- 		udf_fiiter_release(&diriter);
- 	}
--- 
-2.35.3
-
-
---xic7exfhiajb22in--
+adam
+>
+> Ciao, Thorsten
+>
+> >> On 01.06.24 15:24, Adam Ford wrote:
+> >>> In the process of adding support for shared IRQ pins, a scenario
+> >>> was accidentally created where adv7511_irq_process returned
+> >>> prematurely causing the EDID to fail randomly.
+> >>>
+> >>> Since the interrupt handler is broken up into two main helper functio=
+ns,
+> >>> update both of them to treat the helper functions as IRQ handlers. Th=
+ese
+> >>> IRQ routines process their respective tasks as before, but if they
+> >>> determine that actual work was done, mark the respective IRQ status
+> >>> accordingly, and delay the check until everything has been processed.
+> >>>
+> >>> This should guarantee the helper functions don't return prematurely
+> >>> while still returning proper values of either IRQ_HANDLED or IRQ_NONE=
+.
+> >>>
+> >>> Reported-by: Liu Ying <victor.liu@nxp.com>
+> >>> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pi=
+ns")
+> >>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>> Tested-by: Liu Ying <victor.liu@nxp.com> # i.MX8MP EVK ADV7535 EDID r=
+etrieval w/o IRQ
+> >>> ---
+> >>> V2:  Fix uninitialized cec_status
+> >>>      Cut back a little on error handling to return either IRQ_NONE or
+> >>>      IRQ_HANDLED.
+> >>>
+> >>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/d=
+rm/bridge/adv7511/adv7511.h
+> >>> index ea271f62b214..ec0b7f3d889c 100644
+> >>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> >>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> >>> @@ -401,7 +401,7 @@ struct adv7511 {
+> >>>
+> >>>  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
+> >>>  int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511);
+> >>> -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int i=
+rq1);
+> >>> +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int ir=
+q1);
+> >>>  #else
+> >>>  static inline int adv7511_cec_init(struct device *dev, struct adv751=
+1 *adv7511)
+> >>>  {
+> >>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c b/drivers/g=
+pu/drm/bridge/adv7511/adv7511_cec.c
+> >>> index 44451a9658a3..651fb1dde780 100644
+> >>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
+> >>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
+> >>> @@ -119,7 +119,7 @@ static void adv7511_cec_rx(struct adv7511 *adv751=
+1, int rx_buf)
+> >>>       cec_received_msg(adv7511->cec_adap, &msg);
+> >>>  }
+> >>>
+> >>> -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int i=
+rq1)
+> >>> +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int ir=
+q1)
+> >>>  {
+> >>>       unsigned int offset =3D adv7511->info->reg_cec_offset;
+> >>>       const u32 irq_tx_mask =3D ADV7511_INT1_CEC_TX_READY |
+> >>> @@ -130,17 +130,21 @@ void adv7511_cec_irq_process(struct adv7511 *ad=
+v7511, unsigned int irq1)
+> >>>                               ADV7511_INT1_CEC_RX_READY3;
+> >>>       unsigned int rx_status;
+> >>>       int rx_order[3] =3D { -1, -1, -1 };
+> >>> -     int i;
+> >>> +     int i, ret =3D 0;
+> >>> +     int irq_status =3D IRQ_NONE;
+> >>>
+> >>> -     if (irq1 & irq_tx_mask)
+> >>> +     if (irq1 & irq_tx_mask) {
+> >>>               adv_cec_tx_raw_status(adv7511, irq1);
+> >>> +             irq_status =3D IRQ_HANDLED;
+> >>> +     }
+> >>>
+> >>>       if (!(irq1 & irq_rx_mask))
+> >>> -             return;
+> >>> +             return irq_status;
+> >>>
+> >>> -     if (regmap_read(adv7511->regmap_cec,
+> >>> -                     ADV7511_REG_CEC_RX_STATUS + offset, &rx_status)=
+)
+> >>> -             return;
+> >>> +     ret =3D regmap_read(adv7511->regmap_cec,
+> >>> +                     ADV7511_REG_CEC_RX_STATUS + offset, &rx_status)=
+;
+> >>> +     if (ret < 0)
+> >>> +             return irq_status;
+> >>>
+> >>>       /*
+> >>>        * ADV7511_REG_CEC_RX_STATUS[5:0] contains the reception order =
+of RX
+> >>> @@ -172,6 +176,8 @@ void adv7511_cec_irq_process(struct adv7511 *adv7=
+511, unsigned int irq1)
+> >>>
+> >>>               adv7511_cec_rx(adv7511, rx_buf);
+> >>>       }
+> >>> +
+> >>> +     return IRQ_HANDLED;
+> >>>  }
+> >>>
+> >>>  static int adv7511_cec_adap_enable(struct cec_adapter *adap, bool en=
+able)
+> >>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/g=
+pu/drm/bridge/adv7511/adv7511_drv.c
+> >>> index 66ccb61e2a66..c8d2c4a157b2 100644
+> >>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> >>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> >>> @@ -469,6 +469,8 @@ static int adv7511_irq_process(struct adv7511 *ad=
+v7511, bool process_hpd)
+> >>>  {
+> >>>       unsigned int irq0, irq1;
+> >>>       int ret;
+> >>> +     int cec_status =3D IRQ_NONE;
+> >>> +     int irq_status =3D IRQ_NONE;
+> >>>
+> >>>       ret =3D regmap_read(adv7511->regmap, ADV7511_REG_INT(0), &irq0)=
+;
+> >>>       if (ret < 0)
+> >>> @@ -478,29 +480,31 @@ static int adv7511_irq_process(struct adv7511 *=
+adv7511, bool process_hpd)
+> >>>       if (ret < 0)
+> >>>               return ret;
+> >>>
+> >>> -     /* If there is no IRQ to handle, exit indicating no IRQ data */
+> >>> -     if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+> >>> -         !(irq1 & ADV7511_INT1_DDC_ERROR))
+> >>> -             return -ENODATA;
+> >>> -
+> >>>       regmap_write(adv7511->regmap, ADV7511_REG_INT(0), irq0);
+> >>>       regmap_write(adv7511->regmap, ADV7511_REG_INT(1), irq1);
+> >>>
+> >>> -     if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.e=
+ncoder)
+> >>> +     if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.e=
+ncoder) {
+> >>>               schedule_work(&adv7511->hpd_work);
+> >>> +             irq_status =3D IRQ_HANDLED;
+> >>> +     }
+> >>>
+> >>>       if (irq0 & ADV7511_INT0_EDID_READY || irq1 & ADV7511_INT1_DDC_E=
+RROR) {
+> >>>               adv7511->edid_read =3D true;
+> >>>
+> >>>               if (adv7511->i2c_main->irq)
+> >>>                       wake_up_all(&adv7511->wq);
+> >>> +             irq_status =3D IRQ_HANDLED;
+> >>>       }
+> >>>
+> >>>  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
+> >>> -     adv7511_cec_irq_process(adv7511, irq1);
+> >>> +     cec_status =3D adv7511_cec_irq_process(adv7511, irq1);
+> >>>  #endif
+> >>>
+> >>> -     return 0;
+> >>> +     /* If there is no IRQ to handle, exit indicating no IRQ data */
+> >>> +     if (irq_status =3D=3D IRQ_HANDLED || cec_status =3D=3D IRQ_HAND=
+LED)
+> >>> +             return IRQ_HANDLED;
+> >>> +
+> >>> +     return IRQ_NONE;
+> >>>  }
+> >>>
+> >>>  static irqreturn_t adv7511_irq_handler(int irq, void *devid)
+> >>> @@ -509,7 +513,7 @@ static irqreturn_t adv7511_irq_handler(int irq, v=
+oid *devid)
+> >>>       int ret;
+> >>>
+> >>>       ret =3D adv7511_irq_process(adv7511, true);
+> >>> -     return ret < 0 ? IRQ_NONE : IRQ_HANDLED;
+> >>> +     return ret < 0 ? IRQ_NONE : ret;
+> >>>  }
+> >>>
+> >>>  /* -----------------------------------------------------------------=
+------------
+> >
+> >
