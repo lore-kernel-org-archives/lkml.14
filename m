@@ -1,205 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F151A92F1;
-	Mon, 17 Jun 2024 13:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630822; cv=none; b=LAFji7ucBZw6BQT8Q7v//eLvdxUqWLLIYtn4OrtsF+nFLRFV3vpOREuho6XJqJSclLEcnManMqgQCNg4nC8gwR7RVoDGAyjIylQJ5VqAaE4AhU35PGhtJ8BWnm0tshtag8G/t7z4RJkCa7zD2l+QWRfcvHT/Te9rnzYP5k8q1Ww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630822; c=relaxed/simple;
-	bh=GYf0WT4dWalRZp8O4+Sw9ZSrM9J3fIUdjEsVWP5mT/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y4BzucQzXrPI4iWhDP6AK52B8Qb9kSjtrzrgz76Ybi+X8tf0moW9pED+psOGxa+haV8dTR8xinW0TkZBBtZBJHsSWguoDzCWxZUf81/xVcv+v4gxGRHizOkKXdUrhpnQHAQhs5Qd/Ce6fmEDatC0wMbfqtnXijVEOdWCD/k5gfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPYlXD3Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPYlXD3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E24C4AF1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218981A92F3;
 	Mon, 17 Jun 2024 13:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630821;
-	bh=GYf0WT4dWalRZp8O4+Sw9ZSrM9J3fIUdjEsVWP5mT/U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XPYlXD3QWM4F5jXuS2EK52p/ETW6TjtE65CyMYqsk6/nMJbqJ3Xb5gLcyjyW8203x
-	 kqntZ6dPtvM8LXgSztJdklgEoQTFbQgfyRDj4j403EJ4w0/vJp9f71ZoFKhLdV7fsL
-	 Vp6qlIB59qZuDavDx3i9lBqhtwj6wuGsJdWFMmsMIKLFE6KCfE77kyaOeSpKVmXGjU
-	 C2WTSWLHgVanWPQJ5DjWfj+L3Egr62FJqaW5joFw+7VIzXs2pEtdAuDBffw2gHzsbh
-	 BWwu5v5Y1LvEAQJ0yplRji/o9lOzwkyioZTkSa66Klu0BvBj5jXkOuHDpMCs5ZM/lS
-	 FfgOCsDMA2m7g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 21/21] kconfig: remove wrong expr_trans_bool()
-Date: Mon, 17 Jun 2024 09:25:58 -0400
-Message-ID: <20240617132617.2589631-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132617.2589631-1-sashal@kernel.org>
-References: <20240617132617.2589631-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718630823; cv=none; b=j9m4KD1SFFjj6NjpADEDKsydc3KpNFxeZrP1aoz16dfMpnzh5ya3MOG57YyvG19NT1CNZlsng9hxznycVkTJoNZkwaXOXPRAeG5Zps8bKBaEiQB3uw8NPsBbYVs4f+fRVvNg3dVvDSK4TzI22xGNVEYvbNztdWxft4rPIN8TWZo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718630823; c=relaxed/simple;
+	bh=SdVsJ6L/9rb/Sy/wmxJEimcEbJHhawwqkwqnvH5htC4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=D7eD4MGx43z5s7ekW9EqygV/sC6KWnbTlFmC1gsWRIasjmhOj2NSVz+LYLsb3/NwoBe1MrypHxAEv8RvN6A+pZ6bomrPyWitbOgGyq3OdwsHCDPzjth8mJBLyvjpME9bHAZbiLoY2EW3B68Tl0DUwl5oYNEg5nCQNe1sVs4a6/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VkTuIvLD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=57XUZurf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VkTuIvLD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="57XUZurf"
+Date: Mon, 17 Jun 2024 13:27:00 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718630820;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FUtI/9RKIXnQcM74XUylgCsWNRYB5FbCggWcLkU1G1M=;
+	b=VkTuIvLDSIqh6zXccE+rw2BtiD2aq8zr835nY3J6KmmKuWVaUmbIKSo9a3Mb2nNeoaRxFh
+	leZSKoswQDO/mzDqP+shA+wKh9tYll1E9LKVzddyyVv+Koop5mWqfFwGL2+ojIu+NvUSsl
+	sKQ4Nl6tjdG3NleEW4VMGwYP61tqTIH529uo4PG390LBI6sFhRf1dSAtdr82kr5M2I+x2n
+	8Z4B7Ig4s+m87vGhX7NVeUExywwD3/XzRqOUp6Bbgy5TGsdFqSJlsPddilSVO6SVcJrt4r
+	AXGgtyDsz/T1oOZSakct3cIEF9R1cnpU65iXoL/9EUnQyFEnkkNr1vMz4fvgIQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718630820;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FUtI/9RKIXnQcM74XUylgCsWNRYB5FbCggWcLkU1G1M=;
+	b=57XUZurf77fXTBdKtH+jblzitgJzG6bGFKUj7GpMWROHbqFCo+FDMC3878e/pBPQ5+h+0i
+	ejZhqeRCPse6b2CQ==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] smp: Use str_plural() to fix Coccinelle warnings
+Cc: Thorsten Blum <thorsten.blum@toblux.com>,
+ Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240508154225.309703-2-thorsten.blum@toblux.com>
+References: <20240508154225.309703-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.161
-Content-Transfer-Encoding: 8bit
+Message-ID: <171863082016.10875.7195591265773977724.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+The following commit has been merged into the smp/core branch of tip:
 
-[ Upstream commit 77a92660d8fe8d29503fae768d9f5eb529c88b36 ]
+Commit-ID:     c4df15931cb72556fea93bd763ada88e56cbd8e5
+Gitweb:        https://git.kernel.org/tip/c4df15931cb72556fea93bd763ada88e56cbd8e5
+Author:        Thorsten Blum <thorsten.blum@toblux.com>
+AuthorDate:    Wed, 08 May 2024 17:42:26 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 17 Jun 2024 15:17:44 +02:00
 
-expr_trans_bool() performs an incorrect transformation.
+smp: Use str_plural() to fix Coccinelle warnings
 
-[Test Code]
+Fixes the following two Coccinelle/coccicheck warnings reported by
+string_choices.cocci:
 
-    config MODULES
-            def_bool y
-            modules
+	opportunity for str_plural(num_cpus)
+	opportunity for str_plural(num_nodes)
 
-    config A
-            def_bool y
-            select C if B != n
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Link: https://lore.kernel.org/r/20240508154225.309703-2-thorsten.blum@toblux.com
 
-    config B
-            def_tristate m
-
-    config C
-            tristate
-
-[Result]
-
-    CONFIG_MODULES=y
-    CONFIG_A=y
-    CONFIG_B=m
-    CONFIG_C=m
-
-This output is incorrect because CONFIG_C=y is expected.
-
-Documentation/kbuild/kconfig-language.rst clearly explains the function
-of the '!=' operator:
-
-    If the values of both symbols are equal, it returns 'n',
-    otherwise 'y'.
-
-Therefore, the statement:
-
-    select C if B != n
-
-should be equivalent to:
-
-    select C if y
-
-Or, more simply:
-
-    select C
-
-Hence, the symbol C should be selected by the value of A, which is 'y'.
-
-However, expr_trans_bool() wrongly transforms it to:
-
-    select C if B
-
-Therefore, the symbol C is selected by (A && B), which is 'm'.
-
-The comment block of expr_trans_bool() correctly explains its intention:
-
-  * bool FOO!=n => FOO
-    ^^^^
-
-If FOO is bool, FOO!=n can be simplified into FOO. This is correct.
-
-However, the actual code performs this transformation when FOO is
-tristate:
-
-    if (e->left.sym->type == S_TRISTATE) {
-                             ^^^^^^^^^^
-
-While it can be fixed to S_BOOLEAN, there is no point in doing so
-because expr_tranform() already transforms FOO!=n to FOO when FOO is
-bool. (see the "case E_UNEQUAL" part)
-
-expr_trans_bool() is wrong and unnecessary.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/expr.c | 29 -----------------------------
- scripts/kconfig/expr.h |  1 -
- scripts/kconfig/menu.c |  2 --
- 3 files changed, 32 deletions(-)
+ kernel/smp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-index 81ebf8108ca74..81dfdf4470f75 100644
---- a/scripts/kconfig/expr.c
-+++ b/scripts/kconfig/expr.c
-@@ -396,35 +396,6 @@ static struct expr *expr_eliminate_yn(struct expr *e)
- 	return e;
- }
+diff --git a/kernel/smp.c b/kernel/smp.c
+index f085ebc..1848357 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -25,6 +25,7 @@
+ #include <linux/nmi.h>
+ #include <linux/sched/debug.h>
+ #include <linux/jump_label.h>
++#include <linux/string_choices.h>
  
--/*
-- * bool FOO!=n => FOO
-- */
--struct expr *expr_trans_bool(struct expr *e)
--{
--	if (!e)
--		return NULL;
--	switch (e->type) {
--	case E_AND:
--	case E_OR:
--	case E_NOT:
--		e->left.expr = expr_trans_bool(e->left.expr);
--		e->right.expr = expr_trans_bool(e->right.expr);
--		break;
--	case E_UNEQUAL:
--		// FOO!=n -> FOO
--		if (e->left.sym->type == S_TRISTATE) {
--			if (e->right.sym == &symbol_no) {
--				e->type = E_SYMBOL;
--				e->right.sym = NULL;
--			}
--		}
--		break;
--	default:
--		;
--	}
--	return e;
--}
--
- /*
-  * e1 || e2 -> ?
-  */
-diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-index 9c9caca5bd5f2..c91060e19e477 100644
---- a/scripts/kconfig/expr.h
-+++ b/scripts/kconfig/expr.h
-@@ -296,7 +296,6 @@ void expr_free(struct expr *e);
- void expr_eliminate_eq(struct expr **ep1, struct expr **ep2);
- int expr_eq(struct expr *e1, struct expr *e2);
- tristate expr_calc_value(struct expr *e);
--struct expr *expr_trans_bool(struct expr *e);
- struct expr *expr_eliminate_dups(struct expr *e);
- struct expr *expr_transform(struct expr *e);
- int expr_contains_symbol(struct expr *dep, struct symbol *sym);
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index 606ba8a63c24e..8c53d9478be1f 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -380,8 +380,6 @@ void menu_finalize(struct menu *parent)
- 				dep = expr_transform(dep);
- 				dep = expr_alloc_and(expr_copy(basedep), dep);
- 				dep = expr_eliminate_dups(dep);
--				if (menu->sym && menu->sym->type != S_TRISTATE)
--					dep = expr_trans_bool(dep);
- 				prop->visible.expr = dep;
+ #include <trace/events/ipi.h>
+ #define CREATE_TRACE_POINTS
+@@ -982,8 +983,7 @@ void __init smp_init(void)
+ 	num_nodes = num_online_nodes();
+ 	num_cpus  = num_online_cpus();
+ 	pr_info("Brought up %d node%s, %d CPU%s\n",
+-		num_nodes, (num_nodes > 1 ? "s" : ""),
+-		num_cpus,  (num_cpus  > 1 ? "s" : ""));
++		num_nodes, str_plural(num_nodes), num_cpus, str_plural(num_cpus));
  
- 				/*
--- 
-2.43.0
-
+ 	/* Any cleanup work */
+ 	smp_cpus_done(setup_max_cpus);
