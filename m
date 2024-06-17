@@ -1,274 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2048.outbound.protection.outlook.com [40.107.100.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067BD13B28A;
-	Mon, 17 Jun 2024 07:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718607604; cv=none; b=KAm9eH9dzt2MegscAABVLpQuvvCw4WZgqZHRdOLb79+Rx+vA/iq58D6mJkp09je7eTwidLTelsJjoqEirZqa5K7Y5K3WPKaat3quHyNB/q3WSc+Jzx1UVBeAnpTBVepLLe42slYX3fnzVkxZxO++AmMyYxYEeD2SbojQXJHKBEM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718607604; c=relaxed/simple;
-	bh=/hbaAgyGIPPhVG4P0OCPoMtvi95I8xCPbHS9u7/7aeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yrj1krC9ufh94QPVyPzXlR8ErhHEvgWfLm9inshmmFV15yp2R6sTbjwOyIWDch4vy8vOuzKUCC9JSbE4r60ynryNgdbd8GH+IY7CBKjgY2Tao6ByZw6dQR+JhJ1xXso/aEsI4w06Tsmr4KFRQA7mVMV4+EPetDvvTq5LJPpEHxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmaNH9hZ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4263D188CA1;
+	Mon, 17 Jun 2024 07:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718607621; cv=fail; b=NEuPRzhUcxdfSceTqgdfJErzwZDzxTtQxhygbtKN6U6gAnhXtfxnK3A6QGdMNpzFJyoew+i+zcHdpAGLn14pYWjMWsOdhLSPTR8rdutn6wEGFjzGCjfNnkzhXRESLoQkKeSS9iUHbWqdUlEntDeZO2pM1b2wNBuR6fBauaJdtao=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718607621; c=relaxed/simple;
+	bh=8APnC4Pq5Loi4F8AGmPFFd/e9xx77G6sYoRSwhSZlyI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YQl0qGdJU9lOvcuG4unkE2gyahQhb0o0tRL07m6Tq+trvTRmvoVac/J/bNTcDza8cVx5MzMHAd+UW/S/o8yvj6l4i7M/Lju6PCEfhNVv7Y+kf+pn9UUgnCuu0P457qIyGly1C8jNaJg3PvueO7AZoi0cFonXYajXl0wkvIBe1g4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E8KEqJOF; arc=fail smtp.client-ip=40.107.100.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmaNH9hZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE53C2BD10;
-	Mon, 17 Jun 2024 06:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718607603;
-	bh=/hbaAgyGIPPhVG4P0OCPoMtvi95I8xCPbHS9u7/7aeQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CmaNH9hZhKG/+3f3KwCFC104mRHj15+nwXX5vTPeeUU0o6VcftZ9Uarc1FVkYyHRH
-	 FtklDNE1f2EjQu8odsTakFzuUCu+23LRwAdR/BpggkMa0jJ1or1STdRpMAhdD5nfPp
-	 euLIU7bUHubUzSXcNehJS5SHLM42cdCvV4O27SKMBnMuoLujjXnQMIpD6DUvNAu0iN
-	 jHMN3Kp0nTDdUxHGgd8OKq8HXnjg9CG3hA7ZHwrzx88/Mj7Odl2dQtP0CPM8DvlKzo
-	 Npc55b5YI+7pQfuhLhib0oCKivNSRjXwEDjuUX1RwG7Iu/v+2VYYlO6uCV4tojTLHs
-	 rZUOguS8pEfNw==
-Message-ID: <28a6ff46-ad12-45c6-9ccb-f99fd08f3265@kernel.org>
-Date: Mon, 17 Jun 2024 08:59:56 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E8KEqJOF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e1+8bH9CM6cFDyIcx0Wb5f86PUfv3cgIeNm4Yt/wZWMpO75HCXQFxJNQywVuX4eu8D3tYae837V+kgdyafuS5pi4VHCCSknVQ3VsOqriunCj4phKNyxEOMdsob+qLdRHvkttNXfqS14S7qUvrNvxBogk5Mwu2KkWTL6CpERNOtUsrOJW7w3MRoLNuJXsrvBYmP0u3QYjys1VZTREwzJSDjmCh97eezpbTZuLKqFAbtvRzuT31vL2mL4L+/3cEgbp1hoce5b6bbAQxQJSyYso/37gnjuGHpUahTjZSiMkDYbbPqaJOf1L7MucpNzIpTkSjRAzXfaoso67/R8t716Xcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4fEP6IOk/dqDCVLBBkb/XglqICz97GSMG7gMhrxOxp4=;
+ b=DXXnH/e73uJnfa+/m6rCQv+seArKwrcDVqKNh4/upAvuT6fSlrq8xlTy+dS39fhWbKHVV8HCorlWsfANL0UBQ9JOvKehG6wxDaMLtOQO4llgTczw+U0hzv7+UH7VCg5oqyl03GeDykhsJj66iNGFePFMCodRbuYevNs/4D37LS+6rOivdK+aF/iXn8wkQYk0ZN8l2ZpAndvoluoRtxw+sEj2i+7EUxKR21v1JYb8G3BMew3jOa9JvgVLAORuiVmKbZxtyJ3MuVskGPpa/rZsu7pAS7A6UzlUx0nYDqPOHIwSb4I2NJgaL17AJZ3SyMHnBqQGTwRkqEzIN+Pq4858Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4fEP6IOk/dqDCVLBBkb/XglqICz97GSMG7gMhrxOxp4=;
+ b=E8KEqJOFlxGAtnLyHofr+hXSdPMYQwHrzjN7KkdB2HawmCkT7GqwGAcbmk7agI3HWg3Lins5J8POiuV5EiUVHGXhMZ54q040J6i+uhXM8uN327bJqBCSfRPEkEp1unt3ltm087mxgGSs5I/xOm+isXnqKs6blqsrP8NznM01H/M=
+Received: from DS7PR03CA0149.namprd03.prod.outlook.com (2603:10b6:5:3b4::34)
+ by DS7PR12MB5982.namprd12.prod.outlook.com (2603:10b6:8:7d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 07:00:15 +0000
+Received: from DS2PEPF00003440.namprd02.prod.outlook.com
+ (2603:10b6:5:3b4:cafe::98) by DS7PR03CA0149.outlook.office365.com
+ (2603:10b6:5:3b4::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
+ Transport; Mon, 17 Jun 2024 07:00:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003440.mail.protection.outlook.com (10.167.18.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 07:00:15 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 17 Jun 2024 02:00:11 -0500
+From: Perry Yuan <perry.yuan@amd.com>
+To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
+	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
+	<Borislav.Petkov@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 00/11] AMD Pstate Driver Fixes and Improvements
+Date: Mon, 17 Jun 2024 14:59:02 +0800
+Message-ID: <cover.1718606975.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: ptp: Convert ptp-qoirq to yaml format
-To: Frank Li <Frank.Li@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Madalin Bucur <madalin.bucur@nxp.com>, Sean Anderson <sean.anderson@seco.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev
-References: <20240614-ls_fman-v1-0-cb33c96dc799@nxp.com>
- <20240614-ls_fman-v1-1-cb33c96dc799@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240614-ls_fman-v1-1-cb33c96dc799@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003440:EE_|DS7PR12MB5982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22277ae2-ebcf-45c4-b910-08dc8e9b241c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|36860700010|376011|1800799021|82310400023;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1MGZauBgXmDMyTKhgODn/PbYGKxVBmDjOD4iRq/7w24FcZ0AZxT3Y0B5bGRu?=
+ =?us-ascii?Q?rwxOB3A9BsSj1r/viH5wWAzJCew7iU9SgHMgB36oBPwlJtUzlJfp1JykXgdE?=
+ =?us-ascii?Q?RpEh80mFcU3pFnu88dy91GZID/wiH6+IQNXZB4IUPHvqkTwj+MMbBmzdY2RF?=
+ =?us-ascii?Q?wVvA2Ji1WoI+GojdTAOctLeVyYiB+5e9RSW8ISk67yc6cZh7qVcVe6pYKXp0?=
+ =?us-ascii?Q?fYww8dls2J7qN9RQ67/MeeKCPJO9nc5GEmppOjFwHEDbO5N77OVhgcVfG+pY?=
+ =?us-ascii?Q?HPAPBuzzqgkEJaHWjb0SIGzgcuTkVPR7Y46IG+qy0sWFbdvtFj7YQrYT/Boa?=
+ =?us-ascii?Q?4P/E2VrL7v2xj373+kZq2WtMOhueqoeJG9gZVmpKc/Sm+allEcZwW+WvF3qv?=
+ =?us-ascii?Q?Ry0yFNyu6GrgJf+HJh9+UF0q+qXiHKD7Pw4FAGn44uxl0790Y0UztJ5xTisu?=
+ =?us-ascii?Q?iEHMpJZfO/v6aPpCEERc2LUOUQyghYUG2A3dKQJCHR4MJehlI2tohKnZTajS?=
+ =?us-ascii?Q?qBDvfLWN8jnzfxbW5SWUuhIJcShIBh2vN0YLmEWioSNkIuPmlks2F4IQUoWY?=
+ =?us-ascii?Q?bXLwR+w9Ehb6YI01ZnaYFpoOutVaCdSvHXmGUo4ew4J+lisvhf3ajjIHRR2V?=
+ =?us-ascii?Q?EXWhyjCVPYZYGHy2fo5doP/X0vDPmvjUXhLREZinFvhlcy+LtL81KzuHEx9S?=
+ =?us-ascii?Q?FQKYo1ZW0L2DYeqKpciifUpG11kPNqO1l0mD5v9sb70ZN9zgZLvZCXHeOzGi?=
+ =?us-ascii?Q?oBzVO5YAp1TCSYas4qGEpzTBCc1iqfpRhcKPO0O9F9KmLxhcEE070QOhL8jT?=
+ =?us-ascii?Q?MnydVbnaCpak3TJgL0okD2EHF7ucO27nIPd165utu8NmdZX0DGJeJ470nB+U?=
+ =?us-ascii?Q?RibXg9ZZCJduFmF4V3PIUNqSgOac/XYElimN2x1pLOTqwHrJ68VFEmLjCfJz?=
+ =?us-ascii?Q?EoqFTJIJbDIpqS3uLPcO/H6GjQhqRNnHKsEiVzXj7aj9s7QgpI6MKskmTfQl?=
+ =?us-ascii?Q?E04OzeNA2ZcLtC85UqAelNrMVioNvzfo9QVEvtZQA6GbyD2/udxAa30tap+L?=
+ =?us-ascii?Q?JAmXc53NgBhuu7DHzYn2KyA4yzxWUVePCUOzoxUXGrHZQ+Yjwl3ESUGZE0xm?=
+ =?us-ascii?Q?YRjRD4yTKNEtLVxtC0CPFQdkxn9IACixE96JMnpcXwLIjFC0xhPTQBqEdiuo?=
+ =?us-ascii?Q?27+NsdDPaHfviaSlmqeMEYNxciA+k3FVy/dzTKSAkKsC0txjUygZrAJ/3FEF?=
+ =?us-ascii?Q?w4YwJTAR/Nb2XGxCX2pF8CpMJx7ehrDrLXi/guvhkWX4EyblVyrgTfvCtpEw?=
+ =?us-ascii?Q?xw3049y2WU2WI5G8R1cxlXgh+quyrJEFGtQh4iQuHBWJcQPf0SUQlVJxMi07?=
+ =?us-ascii?Q?Mz/crD378yj41F8mWJNb53WWLCr2e+kovD0XKoPujOA/yYSKDA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(376011)(1800799021)(82310400023);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 07:00:15.5767
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22277ae2-ebcf-45c4-b910-08dc8e9b241c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003440.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5982
 
-On 14/06/2024 22:33, Frank Li wrote:
-> diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.yaml b/Documentation/devicetree/bindings/ptp/ptp-qoriq.yaml
-> new file mode 100644
-> index 0000000000000..585e8bffd90c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.yaml
+Hello everyone,
 
-Filename based on compatible. Can be fsl,ptp.yaml
+This patchset addresses critical issues and enhances performance settings for CPUs
+with heterogeneous core types in the AMD pstate driver. 
+Specifically, it resolves problems related to calculating the highest performance
+and frequency on the latest CPUs with preferred cores. 
+Additionally, the patchset includes documentation improvements in amd-pstate.rst,
+offering a comprehensive guide covering topics such as recommended reboot requirements
+during driver switching, debugging procedures for driver loading failures.
 
-> @@ -0,0 +1,148 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ptp/ptp-qoriq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale QorIQ 1588 timer based PTP clock
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,etsec-ptp
-> +      - fsl,fman-ptp-timer
-> +      - fsl,dpaa2-ptp
-> +      - fsl,enetc-ptp
-> +    description: |
-> +      Should be "fsl,etsec-ptp" for eTSEC
-> +      Should be "fsl,fman-ptp-timer" for DPAA FMan
-> +      Should be "fsl,dpaa2-ptp" for DPAA2
-> +      Should be "fsl,enetc-ptp" for ENETC
+Your feedback and suggestions for improvement are highly appreciated. 
+Please review the patches and provide your valuable input.
 
-You can write it simpler, e.g.
-- fsl,etsec-ptp   # eTSEC
-
-and then you see that this does not bring any new information - your
-comment duplicates the compatible. Just drop.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 2
-> +    maxItems: 4
-
-Items should be described.
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  fsl,cksel:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Timer reference clock source.
-> +
-> +      Reference clock source is determined by the value, which is holded
-> +      in CKSEL bits in TMR_CTRL register. "fsl,cksel" property keeps the
-> +      value, which will be directly written in those bits, that is why,
-> +      according to reference manual, the next clock sources can be used:
-> +
-> +      For eTSEC,
-> +      <0> - external high precision timer reference clock (TSEC_TMR_CLK
-> +            input is used for this purpose);
-> +      <1> - eTSEC system clock;
-> +      <2> - eTSEC1 transmit clock;
-> +      <3> - RTC clock input.
-> +
-> +      For DPAA FMan,
-> +      <0> - external high precision timer reference clock (TMR_1588_CLK)
-> +      <1> - MAC system clock (1/2 FMan clock)
-> +      <2> - reserved
-> +      <3> - RTC clock oscillator
-> +
-> +  fsl,tclk-period:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Timer reference clock period in nanoseconds.
-> +
-> +  fsl,tmr-prsc:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Prescaler, divides the output clock.
-> +
-> +  fsl,tmr-add:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Frequency compensation value.
-> +
-> +  fsl,tmr-fiper1:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Fixed interval period pulse generator.
-> +
-> +  fsl,tmr-fiper2:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Fixed interval period pulse generator.
-> +
-> +  fsl,tmr-fiper3:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Fixed interval period pulse generator.
-> +      Supported only on DPAA2 and ENETC hardware.
-> +
-> +  fsl,max-adj:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Maximum frequency adjustment in parts per billion.
-> +
-> +      These properties set the operational parameters for the PTP
-> +      clock. You must choose these carefully for the clock to work right.
-> +      Here is how to figure good values:
-> +
-> +      TimerOsc     = selected reference clock   MHz
-> +      tclk_period  = desired clock period       nanoseconds
-> +      NominalFreq  = 1000 / tclk_period         MHz
-> +      FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
-> +      tmr_add      = ceil(2^32 / FreqDivRatio)
-> +      OutputClock  = NominalFreq / tmr_prsc     MHz
-> +      PulseWidth   = 1 / OutputClock            microseconds
-> +      FiperFreq1   = desired frequency in Hz
-> +      FiperDiv1    = 1000000 * OutputClock / FiperFreq1
-> +      tmr_fiper1   = tmr_prsc * tclk_period * FiperDiv1 - tclk_period
-> +      max_adj      = 1000000000 * (FreqDivRatio - 1.0) - 1
-> +
-> +      The calculation for tmr_fiper2 is the same as for tmr_fiper1. The
-> +      driver expects that tmr_fiper1 will be correctly set to produce a 1
-> +      Pulse Per Second (PPS) signal, since this will be offered to the PPS
-> +      subsystem to synchronize the Linux clock.
-> +
-> +      When this attribute is not used, the IEEE 1588 timer reference clock
-> +      will use the eTSEC system clock (for Gianfar) or the MAC system
-> +      clock (for DPAA).
-> +
-> +  fsl,extts-fifo:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The presence of this property indicates hardware
-> +      support for the external trigger stamp FIFO
-> +
-> +  little-endian:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The presence of this property indicates the 1588 timer
-> +      support for the external trigger stamp FIFO.
-> +      IP block is little-endian mode. The default endian mode
-> +      is big-endian.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ptp_clock@24e00 {
-
-phc@
-
-> +        compatible = "fsl,etsec-ptp";
-> +        reg = <0x24E00 0xB0>;
-
-Lowercase hex, in other places as well.
-
-
-> +        interrupts = <12 0x8>, <13 0x8>;
-
-Use proper defines for interrupt flags.
-
-> +        interrupt-parent = <&ipic>;
-> +        fsl,cksel       = <1>;
-
+Thank you.
 
 Best regards,
-Krzysztof
+Perry.
+
+Changes from V3:
+ * add one new patch to enable shared memory type CPPC by default
+ * pick all the RB by and ACk by flags from Mario and Gautham
+ * update the patch #7 PPR link with doc id (Boris & Mario)
+ * fix the highest perf initialization issue with preferred core check
+  for patch #9 (Gautham)
+ * rework return core type and commit log for the patch #9 (Mario)
+ * address feedback for patch #5 for the debugging suggestions.(Mario)
+ * retest the patches on MSR and shared memory type CPPC systems, no regression seen.
+
+Changes from V2:
+ * pick review by and ack by flags from Mario and Gautham
+ * rebase to latest linux-pm bleeding edge branch
+ * fix driver loading block issue for patch 4, make sure the warning will
+   not abort the driver loading in case there are some new family/model id.
+ * fix the driver loading sequence issue for patch 10, it allows command line
+   and kernel config option together. command line will override kconfig option.
+ * add back the AMD CPUs with Family ID 19H and Model ID range 0x70 to 0x7f to return
+   the highest perf and check others CPU core type in the following codes.
+ * run some testing on the local system.
+ * move the amd_core_type to amd-pstate.c because of the amd-pstate.h was removed lately.
+
+Changes from V1:
+ * drop patch 11 which has been merged in a separate patch. (Mario)
+ * fix some typos in commit log and tile (Mario)
+ * fix the patch 11 regression issue of kernel command line (Oleksandr Natalenko)
+ * pick ack flag for patch 7 (Mario)
+ * drop patch 4 which is not recommended for user(Mario)
+ * rebase to linux-pm/bleeding-edge branch
+ * fix some build warning
+ * rework the patch 3 for CPU ID matching(Mario)
+ * address feedback for patch 5 (Mario)
+ * move the acpi pm profile after got default mode(Mario)
+
+Perry Yuan (11):
+  cpufreq: amd-pstate: optimize the initial frequency values
+    verification
+  cpufreq: amd-pstate: remove unused variable nominal_freq
+  cpufreq: amd-pstate: show CPPC debug message if CPPC is not supported
+  cpufreq: amd-pstate: add debug message while CPPC is supported and
+    disabled by SBIOS
+  Documentation: PM: amd-pstate: add debugging section for driver
+    loading failure
+  Documentation: PM: amd-pstate: add guided mode to the Operation mode
+  cpufreq: amd-pstate: switch boot_cpu_has() to cpu_feature_enabled()
+  x86/cpufeatures: Add feature bits for AMD heterogeneous processor
+  cpufreq: amd-pstate: implement heterogeneous core topology for highest
+    performance initialization
+  cpufreq: amd-pstate: auto-load pstate driver by default
+  cpufreq: amd-pstate: enable shared memory type CPPC by default
+
+ Documentation/admin-guide/pm/amd-pstate.rst |  16 +-
+ arch/x86/include/asm/cpufeatures.h          |   1 +
+ arch/x86/include/asm/processor.h            |   2 +
+ arch/x86/kernel/cpu/amd.c                   |  19 ++
+ arch/x86/kernel/cpu/scattered.c             |   1 +
+ drivers/cpufreq/amd-pstate.c                | 198 ++++++++++++++------
+ 6 files changed, 182 insertions(+), 55 deletions(-)
+
+-- 
+2.34.1
 
