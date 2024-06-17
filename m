@@ -1,132 +1,234 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCF5194ADE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821851946BF;
 	Mon, 17 Jun 2024 11:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623484; cv=none; b=sm1gw2oXqIBUbWdpKzpt0rr6EsdkpuBrsrQU5Gz6cfN7pZnOg6R+JfxiqbFCxfCZ/jHxXdqgyTjq1/egIVjfARu6X26hn9xoi+mBvCcTea2HXKZIwCCE0/SJBN1NWO9xN11DTPaRCeW2KEjJ5Y7YeCN1OZAbMMUX424/RiOxR9I=
+	t=1718623485; cv=none; b=OLPJES9EeIOR0YHTsb6bKg4sCHcfD2TfmsHX8eu6mmktZ82FVO5yszlSdQnxa9XNFVMrUSQurfSFmCUxl2kHrRV4lIvKfutpkQncPkYgCJYbS230UDlpO4IaseoWLxNBJVupQJ9svr2fdN8GpmUlXoPAFvFoQYrZyf3+U0GYIcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623484; c=relaxed/simple;
-	bh=eSVJenYg+Ov0lTGtltByPlRtrbUcU4mRc+K3naSiZCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ULOLsIYW8zroURDGpkfHp+f33vsDUpovL0JBjmSFJYRNU81xJG4uYFZtQ1Rzkxn7Bx/39cbtyDE9IPImODyQeMNUr7lnJ6m6Jf9XHXq61uGPm5yK6JrMW68hzcVEpaoVLakBHza78NEVIXo4FHxfUiQ2zQtEUgzvdMOvGviC9NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2rIhrfb; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718623485; c=relaxed/simple;
+	bh=eaGIv4aNnjyodwJuzlJ/GaTpMfiWBxYzeoYrErNR4uQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IlMEgJUm2ygqFTy/IGqPH0G2AgicSgTFdxzrXPXa3RlmUqRs4+Gevc6RaYxExTkTj2m7K2cjNWYQqWAWVS+AgVvLb0Y58OtPyoPfGYNIn5eFcVZSyuDllxxsF/4AXqdDCulpsIQP8oMLkhj3p2qQyTgZcCJd1zPSbCH4zIaXCtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ux4Jf4p+; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2rIhrfb"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ebec2f11b7so41693441fa.2;
-        Mon, 17 Jun 2024 04:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718623481; x=1719228281; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9u+S5covs6tqmYHGnRdoyC4fZEq6n6k72rCqTj5o6f8=;
-        b=C2rIhrfbaA/OUYnIXpeHcRCL+L+e3NxNKry0hLfeULmOOePwxUXHk0HdELGrtneXUq
-         igr+/6VUKLVQb62iiRZOCMCXvErkkF15wlruVeygWfebMwUi3h6JJMpJEyr0Qbml/njI
-         gviEDbvqWVQkflow+IreIuzFAyw/fzYplQ79HYIN96TT9cu8G0NDQI2pk3zi9wT0HYrr
-         nTuByMD8FNmFJhvjnYxQKlj4Fsg56b+ZlT1x/2ZDFw/7vpvqtwr/o3u5IfZAIpablWxm
-         h5U16ystikB9GfLE0tTd9KL0DQUqvxGxQmLiL/jPZmhtU//SbhPFIQq4HwGTWmskE+9j
-         wr6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718623481; x=1719228281;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9u+S5covs6tqmYHGnRdoyC4fZEq6n6k72rCqTj5o6f8=;
-        b=DRW4r919NUlIZdWCOwAkkujqWldeMbWsMPmynKC10rUXUlZxYkt1JaDvQ3W4QxHDV5
-         vpeCtS/bmW51EwCBVcWM6O5O/eS8zLybOVmbrYHijDf5qYoJxd/j9dUUfY+/rye+GmDO
-         xh0gZmiqzliAqKthgVO4L/p3+6VdKG6aWzf+rx4c9r01KzGz4cRW7Q0Rr6GNXNT5goC4
-         Bm8doAnoiOTDg0ZtTKRe+wYq0Jdakbow7aOK35LigFs6tQ///cir4FTmwSKx7wV32PmA
-         II343rvzriG6tB0wBnbQqZPcMOjJ+d7+6s+Wy221vbRTphZSUeM+I1KrnTiS9hTFzKqp
-         YeXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH5VZXB3s278Top4xM0Vm+8zfJtgt5xSLlHcnCVsehfrrDlAcBXKGyta8H42+UXVXGZRCBLlyBIE5FIhDF9Y1I2N6CEMgqeZ46YcthKO3M9a4hj+nIEx4r10TgOxAKVwx90ERSE5noBRziEgaDncwjwvMuEk/9HthlbHJ6Rs2f1hJrHJg6K9Bm
-X-Gm-Message-State: AOJu0YzNUPzuwl5eDRBwOsTQV4GgXrfM6apvFtoFGH7bMwDSrtNw6apy
-	i8Uy2wL3kUHAJN4VoWOvyBSa2BPB3vl9YoJN1TwF4F5x5jjrlPPjuv8dynvH6moX6KduEPXPTBS
-	AbHzRqbKOGAxK1XhEKITWZ1/JNX8=
-X-Google-Smtp-Source: AGHT+IGz6l+l2whi4KHsvt7QZn5lx+DKSwikD+nALNnvZcUbYjy+X2GiVSQjXpnGcwoJjxYhQDFCdsoQdYC2+brDzHc=
-X-Received: by 2002:a2e:7311:0:b0:2eb:f2cf:1e49 with SMTP id
- 38308e7fff4ca-2ec0e5b5228mr58253731fa.2.1718623480308; Mon, 17 Jun 2024
- 04:24:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ux4Jf4p+"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H8QOdR013701;
+	Mon, 17 Jun 2024 13:24:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ihd8JZG+nI+ageiVBS3hq5sjCegkaeHknt9LK/X6/1M=; b=ux4Jf4p+Y3hysvf7
+	F+iuZ1qR8apPHEwU+kNDncimJCJWMDlMnXr02oMQ83nzurKCa45K9GvP6sK52p/f
+	GEVbbk4alTESbn8+x2X7+4bYe3HWryK/qhuhNn4TySFvDwIriF8CtdY0M5yrZ+AP
+	zC/mOeiZcJskKOKcMSJsBDiBKxQ73YdmY711H92TpQU/4ydBMZpIU6w6xmTtg/U6
+	76Sf6Muq/tjjb08ogee9FBt2Mg8VgdVM6Cch9LlPnvelW2urWGx+VT1/jkg6/VcA
+	nPcvFkr/UyumtAlIrH1NHFvKpBqqWjyj3mAUMqeoNc+Mk5l+aOjlA52LO9Cv46yZ
+	2hd+OA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys035e84u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 13:24:11 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0FA104002D;
+	Mon, 17 Jun 2024 13:24:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 809252132CA;
+	Mon, 17 Jun 2024 13:23:37 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 17 Jun
+ 2024 13:23:36 +0200
+Message-ID: <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
+Date: Mon, 17 Jun 2024 13:23:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zm39RkZMjHdui8nh@casper.infradead.org> <20240616023951.1250-1-hdanton@sina.com>
- <20240617075758.wewhukbrjod5fp5o@quack3>
-In-Reply-To: <20240617075758.wewhukbrjod5fp5o@quack3>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Mon, 17 Jun 2024 20:24:23 +0900
-Message-ID: <CAKFNMo=rL0tv1eUqHJ-KZXwZRuaJ3yWfWU8jzZaAgR3FU1DO7w@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: truncate: flush lru cache for evicted inode
-To: Jan Kara <jack@suse.cz>
-Cc: Hillf Danton <hdanton@sina.com>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, 
-	syzbot+d79afb004be235636ee8@syzkaller.appspotmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-nilfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: stm32: add
+ management of stm32mp25 for stm32
+To: Marek Vasut <marex@denx.de>, "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
+ <20240614130812.72425-3-christophe.roullier@foss.st.com>
+ <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
+Content-Language: en-US
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_10,2024-06-17_01,2024-05-17_01
 
-On Mon, Jun 17, 2024 at 4:57=E2=80=AFPM Jan Kara wrote:
+Hi Marek,
+
+On 6/14/24 15:58, Marek Vasut wrote:
+> On 6/14/24 3:08 PM, Christophe Roullier wrote:
 >
-> On Sun 16-06-24 10:39:51, Hillf Danton wrote:
-> > On Sat, 15 Jun 2024 21:44:54 +0100 Matthew Wilcox wrote:
-> > >
-> > > I suspect this would trigger:
-> > >
-> > > +++ b/fs/inode.c
-> > > @@ -282,6 +282,7 @@ static struct inode *alloc_inode(struct super_blo=
-ck *sb)
-> > >  void __destroy_inode(struct inode *inode)
-> > >  {
-> > >         BUG_ON(inode_has_buffers(inode));
-> > > +       BUG_ON(inode->i_data.nrpages);
-> > >         inode_detach_wb(inode);
-> > >         security_inode_free(inode);
-> > >         fsnotify_inode_delete(inode);
-> > >
-> > Yes, it was triggered [1]
-> >
-> > [1] https://lore.kernel.org/lkml/00000000000084b401061af6ab80@google.co=
-m/
-> >
-> > and given trigger after nrpages is checked in clear_inode(),
-> >
-> >       iput(inode)
-> >       evict(inode)
-> >       truncate_inode_pages_final(&inode->i_data);
-> >       clear_inode(inode);
-> >       destroy_inode(inode);
-> >
-> > why is folio added to exiting mapping?
-> >
-> > #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git  83a7eefedc9b
+> [...]
 >
-> OK, so based on syzbot results this seems to be a bug in
-> nilfs_evict_inode() (likely caused by corrupted filesystem so that root
-> inode's link count was 0 and hence was getting deleted on iput()). I gues=
-s
-> nilfs maintainers need to address these with more consistency checks of
-> metadata when loading them...
+>> +static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data 
+>> *plat_dat)
+>> +{
+>> +    struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+>> +    u32 reg = dwmac->mode_reg;
+>> +    int val = 0;
+>> +
+>> +    switch (plat_dat->mac_interface) {
+>> +    case PHY_INTERFACE_MODE_MII:
+>> +        break;
 >
->                                                                         H=
-onza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> dwmac->enable_eth_ck does not apply to MII mode ? Why ?
 
-Sorry for my late response.
+It is like MP1 and MP13, nothing to set in syscfg register for case MII 
+mode wo crystal.
 
-Also, thank you for pointing out that the problem seems to be caused
-via nilfs_evict_inode() by a missing consistency check of the link
-count.
-
-I'll check it out and think about how to deal with it.
-
-Thanks,
-Ryusuke Konishi
+>
+>> +    case PHY_INTERFACE_MODE_GMII:
+>> +        if (dwmac->enable_eth_ck)
+>> +            val |= SYSCFG_ETHCR_ETH_CLK_SEL;
+>> +        break;
+>> +    case PHY_INTERFACE_MODE_RMII:
+>> +        val = SYSCFG_ETHCR_ETH_SEL_RMII;
+>> +        if (dwmac->enable_eth_ck)
+>> +            val |= SYSCFG_ETHCR_ETH_REF_CLK_SEL;
+>> +        break;
+>> +    case PHY_INTERFACE_MODE_RGMII:
+>> +    case PHY_INTERFACE_MODE_RGMII_ID:
+>> +    case PHY_INTERFACE_MODE_RGMII_RXID:
+>> +    case PHY_INTERFACE_MODE_RGMII_TXID:
+>> +        val = SYSCFG_ETHCR_ETH_SEL_RGMII;
+>> +        if (dwmac->enable_eth_ck)
+>> +            val |= SYSCFG_ETHCR_ETH_CLK_SEL;
+>> +        break;
+>> +    default:
+>> +        dev_err(dwmac->dev, "Mode %s not supported",
+>> +            phy_modes(plat_dat->mac_interface));
+>> +        /* Do not manage others interfaces */
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
+>> +
+>> +    /*  select PTP (IEEE1588) clock selection from RCC 
+>> (ck_ker_ethxptp) */
+>
+> Drop extra leading space.
+> Sentence starts with capital letter.
+ok
+>
+>> +    val |= SYSCFG_ETHCR_ETH_PTP_CLK_SEL;
+>> +
+>> +    /* Update ETHCR (set register) */
+>> +    return regmap_update_bits(dwmac->regmap, reg,
+>> +                 SYSCFG_MP2_ETH_MASK, val);
+>> +}
+>> +
+>>   static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+>>   {
+>>       int ret;
+>> @@ -292,6 +346,21 @@ static int stm32mp1_set_mode(struct 
+>> plat_stmmacenet_data *plat_dat)
+>>       return stm32mp1_configure_pmcr(plat_dat);
+>>   }
+>>   +static int stm32mp2_set_mode(struct plat_stmmacenet_data *plat_dat)
+>> +{
+>> +    int ret;
+>> +
+>> +    ret = stm32mp1_select_ethck_external(plat_dat);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    ret = stm32mp1_validate_ethck_rate(plat_dat);
+>> +    if (ret)
+>> +        return ret;
+>
+>
+> Is it necessary to duplicate this entire function instead of some:
+>
+> if (is_mp2)
+>   return stm32mp2_configure_syscfg(plat_dat);
+> else
+>   return stm32mp1_configure_syscfg(plat_dat);
+>
+> ?
+ok I would like to avoid to use is_mp2 boolean but you are right it is 
+simplify visibility of the code.
+>
+>> +    return stm32mp2_configure_syscfg(plat_dat);
+>> +}
+>> +
+>>   static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
+>>   {
+>>       struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+>> @@ -348,12 +417,6 @@ static int stm32_dwmac_parse_data(struct 
+>> stm32_dwmac *dwmac,
+>>           return PTR_ERR(dwmac->clk_rx);
+>>       }
+>>   -    if (dwmac->ops->parse_data) {
+>> -        err = dwmac->ops->parse_data(dwmac, dev);
+>> -        if (err)
+>> -            return err;
+>> -    }
+>> -
+>>       /* Get mode register */
+>>       dwmac->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscon");
+>>       if (IS_ERR(dwmac->regmap))
+>> @@ -365,20 +428,14 @@ static int stm32_dwmac_parse_data(struct 
+>> stm32_dwmac *dwmac,
+>>           return err;
+>>       }
+>>   -    dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+>> -    err = of_property_read_u32_index(np, "st,syscon", 2, 
+>> &dwmac->mode_mask);
+>> -    if (err) {
+>> -        if (dwmac->ops->is_mp13)
+>> -            dev_err(dev, "Sysconfig register mask must be set 
+>> (%d)\n", err);
+>> -        else
+>> -            dev_dbg(dev, "Warning sysconfig register mask not set\n");
+>> -    }
+>> +    if (dwmac->ops->parse_data)
+>> +        err = dwmac->ops->parse_data(dwmac, dev);
+>
+> Why is this change here ? What is the purpose ?
+> This should be documented in commit message too.
+>
+> The indirect call is not necessary either, simply do
+>
+> if (is_mp2)
+>   return err;
+>
+> ... do mp15/13 stuff here ...
+>
+> return err;
+Right, with use of is_mp2 variable it is more simple
+>
+> [...]
