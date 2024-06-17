@@ -1,122 +1,110 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DA81A38C7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A181AB51B;
+	Mon, 17 Jun 2024 13:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630488; cv=none; b=uNxYFcWpeZVi+XfIrFAQ2XXWnhinAQN/UigAUPFDfO5zL2nLBcZYNAfOMrTvhXw6AfiL1WB03XO4qba02/v4vq7gEnQ3mAvqUmW2kuYOFGZpJxobfZI3Mw54wEidB2laiyfxJqmzvYNlcxfuUDtki62lKHwgfmrB959cbXROlPM=
+	t=1718630491; cv=none; b=obBslh2kdktat+dzR1yEa0vl3uP8GyRUxhuVpWGvZL8I9jB+kPbQggMk+LLEVTtGpVI0VA4ElrXs7y9T2nPVBN0KUjB2YF5ikO8EyH2I7HVCm84wjAtxeg56l5KsKZOYjvBS/7K3wFRCHMh8C0ZVfsCNK2WzYlggLqpTa4TZn+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630488; c=relaxed/simple;
-	bh=2F3D4ViPK/1/0WFA+bQj22QbsbJhhW9+IG40Nypkr9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VwGmFFh1JpV9cpaf7tdiwQDRw9N2w/HUHa96k9tcDjHrgbDp7Hn1cam8JWe09KRKRLAuvF31SbGfbY95+Z6PtC9zqxmTKudKj0HIfGkNdD+ZDPiuDDmBCZ5Qi+QoB97mQ8P0fQHX3kUoNEvJW5JGJWGXYbmr/qlDBoJy8fv3XR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=URnxip1Q; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718630491; c=relaxed/simple;
+	bh=JLOJ558q63l03Y1Ze34RgJjlYOi5QqzBLt+5yBQZ0cU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qYuvZ53RhZ6hTrFifIcCmDBaDD3i0bq6SV3jT2cHDVQ/Q/6svJBJcw/lWbuuo4Uyn4LYx3epFatRqVKvKW9wMpIEcuuogEmmcKWbhEP4F6Dt/qf38JiKOTxj3mFBoNTjHn4Esuv2qqccRXfdOpu70Xo3DLBGW2l5Yp+JHsrsOwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4rd8Qa0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="URnxip1Q"
-X-Envelope-To: syzbot+9f74cb4006b83e2a3df1@syzkaller.appspotmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718630484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CF8ncAOSZZUP14yQYZNhIjrPI6G3/InI6dmPBgZ8X6c=;
-	b=URnxip1QgMFKqwHKtkQvpXXnXd8shMqasi5zjrxVZWtU7tnYvFdrEK/fXtrQmzjdcOMJjl
-	e3ejlL+DBOyuYIjmMaNM94yRgjHxXC/KJxlt31gGxoCHsRR0nU+19wXuDYNK+h1KRB7SI2
-	G5Z1T3kRVVsq+mYL9JgkLm83AYQnmRs=
-X-Envelope-To: bfoster@redhat.com
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: syzkaller-bugs@googlegroups.com
-Date: Mon, 17 Jun 2024 09:21:20 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: syzbot <syzbot+9f74cb4006b83e2a3df1@syzkaller.appspotmail.com>
-Cc: bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in
- read_one_super (2)
-Message-ID: <dx5mkmikbckgxyeiq5aru6wvgkx4h63uvvkb72r37ipsczxrux@s56rz3r4yy4v>
-References: <0000000000003565fc061b122e02@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4rd8Qa0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3829C2BD10;
+	Mon, 17 Jun 2024 13:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630491;
+	bh=JLOJ558q63l03Y1Ze34RgJjlYOi5QqzBLt+5yBQZ0cU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=u4rd8Qa0SHy59fXKpggcWNB4bYwaq1rX6WLPseLtpPJyeL5o6Z/HNRHg3Y3DwFk/7
+	 ZV75GKTIP/l5mmDEpP/XfivT50ooG2/KYilL3k68ajz/EAlT5krdC7woAh4yfoNZBm
+	 SANHZSR2YFpbxIGOjgQjCo2gY5TzRglMFGOomgIF46Hf7mWUTUHlY0L7zJASkH7uOd
+	 roP61xUQWjQ1N2yHXB9MBU6S1kM46Q/6T1lMGVGoUmKkTCXIFVVyghpGXkEFRgfZdf
+	 Bvq9+ZOxGnSlZUc3pFEuKwk7g0hycmbPNLXIwnXaOPKYtihRZfYjiFw5DG0Fj81Cff
+	 ZHDSD/9z4ALBw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	kvalo@kernel.org,
+	gregory.greenman@intel.com,
+	shaul.triebitz@intel.com,
+	benjamin.berg@intel.com,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 20/44] wifi: iwlwifi: mvm: Handle BIGTK cipher in kek_kck cmd
+Date: Mon, 17 Jun 2024 09:19:33 -0400
+Message-ID: <20240617132046.2587008-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
+References: <20240617132046.2587008-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000003565fc061b122e02@google.com>
-X-Migadu-Flow: FLOW_OUT
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.5
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 17, 2024 at 01:59:18AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15286f7a980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9f74cb4006b83e2a3df1
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9f74cb4006b83e2a3df1@syzkaller.appspotmail.com
-> 
-> loop2: detected capacity change from 0 to 32789
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in fs/bcachefs/super-io.c:653:3
-> shift exponent 106 is too large for 64-bit type 'unsigned long'
-> CPU: 0 PID: 9174 Comm: syz-executor.2 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->  ubsan_epilogue lib/ubsan.c:231 [inline]
->  __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
->  read_one_super+0xfb5/0xfc0 fs/bcachefs/super-io.c:653
->  __bch2_read_super+0x65a/0x1460 fs/bcachefs/super-io.c:750
->  bch2_fs_open+0x246/0xdf0 fs/bcachefs/super.c:2074
->  bch2_mount+0x6b0/0x13a0 fs/bcachefs/fs.c:1919
->  legacy_get_tree+0xf0/0x190 fs/fs_context.c:662
->  vfs_get_tree+0x92/0x2a0 fs/super.c:1780
->  do_new_mount+0x2be/0xb40 fs/namespace.c:3352
->  do_mount fs/namespace.c:3692 [inline]
->  __do_sys_mount fs/namespace.c:3898 [inline]
->  __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f82b087e5aa
-> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f82b1586ef8 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00007f82b1586f80 RCX: 00007f82b087e5aa
-> RDX: 0000000020011a00 RSI: 0000000020000780 RDI: 00007f82b1586f40
-> RBP: 0000000020011a00 R08: 00007f82b1586f80 R09: 0000000001200014
-> R10: 0000000001200014 R11: 0000000000000206 R12: 0000000020000780
-> R13: 00007f82b1586f40 R14: 00000000000119fa R15: 00000000200007c0
->  </TASK>
-> ---[ end trace ]---
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-#syz fix: bcachefs: Fix shift overflow in read_one_super()
+From: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+
+[ Upstream commit 08b16d1b5997dc378533318e2a9cd73c7a898284 ]
+
+The BIGTK cipher field was added to the kek_kck_material_cmd
+but wasn't assigned. Fix that by differentiating between the
+IGTK/BIGTK keys and assign the ciphers fields accordingly.
+
+Signed-off-by: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240513132416.7fd0b22b7267.Ie9b581652b74bd7806980364d59e1b2e78e682c0@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 74743c3ceeefb..6f16b5b33f0c0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -595,6 +595,12 @@ static void iwl_mvm_wowlan_gtk_type_iter(struct ieee80211_hw *hw,
+ 					 void *_data)
+ {
+ 	struct wowlan_key_gtk_type_iter *data = _data;
++	__le32 *cipher = NULL;
++
++	if (key->keyidx == 4 || key->keyidx == 5)
++		cipher = &data->kek_kck_cmd->igtk_cipher;
++	if (key->keyidx == 6 || key->keyidx == 7)
++		cipher = &data->kek_kck_cmd->bigtk_cipher;
+ 
+ 	switch (key->cipher) {
+ 	default:
+@@ -606,10 +612,13 @@ static void iwl_mvm_wowlan_gtk_type_iter(struct ieee80211_hw *hw,
+ 		return;
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_256:
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_128:
+-		data->kek_kck_cmd->igtk_cipher = cpu_to_le32(STA_KEY_FLG_GCMP);
++		if (cipher)
++			*cipher = cpu_to_le32(STA_KEY_FLG_GCMP);
+ 		return;
+ 	case WLAN_CIPHER_SUITE_AES_CMAC:
+-		data->kek_kck_cmd->igtk_cipher = cpu_to_le32(STA_KEY_FLG_CCM);
++	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
++		if (cipher)
++			*cipher = cpu_to_le32(STA_KEY_FLG_CCM);
+ 		return;
+ 	case WLAN_CIPHER_SUITE_CCMP:
+ 		if (!sta)
+-- 
+2.43.0
+
