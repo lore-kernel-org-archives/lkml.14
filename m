@@ -1,136 +1,98 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2191922C7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417CA1922C7;
+	Mon, 17 Jun 2024 10:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718618793; cv=none; b=JqLPlBPnhJG4/S8197tzo+SUl1Yb162eFErI5r2H+zLEbGml+5zTJ8MeOsuCTG3b/AsudH0spAGXn0AyyyJR+mWEAJV6YRuFc5q8qCyFdMN01yN9P18v3WBsBLsqeH5cp3JHPgZrHoxkTYGCrq9607mGkvAGpuG2wM+Y2STeebg=
+	t=1718618918; cv=none; b=TaenAwDl86NDAX4s734cWK1gnPWthDwGY5I8OxEZeow11pNeE2gTaqX/J98l1DztTD2TeTH8Sl5wOPMiHpY6MXZ+k8YFDYSmLZgQflQNZr2YSbXzqCU2i1cYlmS891YVavEaWwt3+NTdxSNuA3RFfdbwYdSXU5sZazf0dMk68Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718618793; c=relaxed/simple;
-	bh=sWUNyWzeJ1P9kNaINyoEPpwx2VzRq791lEgIfVQ+e8k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WiFvGAUYN+Y2tqMOQYBc/xqIryVXwHYH6tQOOV4kLMyeVMr5KhJDRo4jy8dbwAfu+xQ2qMA6G7fs4aJOhlbf6M4CN7ZibCtF9gakbYYL3s5Hex8v3aqTsLEVG9TiJOMZKhlI0JAkqU7svkgGTm3/U7Q8ekkeH9UbJ1CIasrcj94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=idcH79tF; arc=none smtp.client-ip=220.197.31.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1718618918; c=relaxed/simple;
+	bh=TaxsO8A8ub1Kl+G8RAHhURMfNaORdUuzVR35IOWc2Us=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qbFfMvydFkWsPqMdQu40yj71dWO62zSi4s9oEVw5p0KWoBFy+cyy6fqYZPC6BI3rTvE+SQQBv+HAdNsqxCKnvl6WpYp/2f4BfB6xSPBzi9Rx1rwc8D8c53ihKymZDjSv7GM2rzPuY0ECyQm63Yz9P70fsFcUnrrlYz90EuASOfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ma5Bo46F; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="idcH79tF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
-	Content-Type; bh=geQNIyMIatZwbN8alJljzy+7QcThplEvKiyRZfzgfS0=;
-	b=idcH79tFg4Yd4NdDuBe+XKrhDYCRF4QxirOzxova7ZD424BSv9u6i84d93bHb0
-	/gHImfziG5rGZnegI7knZML1AZ4efnfAbWU4x9QuaESBnDKRkm8Bi3to5zK/5MC/
-	TPzneaDT2UM+QyihPYGKOB+6+KTwHwu+nxyKm4ArWSsJo=
-Received: from [172.21.21.216] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD331jkBnBm1R1bCw--.7695S2;
-	Mon, 17 Jun 2024 17:50:29 +0800 (CST)
-Subject: Re: [PATCH] mm/gup: don't check page lru flag before draining it
-To: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, liuzixing@hygon.cn
-References: <0d7a4405-9a2e-4bd1-ba89-a31486155233@redhat.com>
- <dc7a0b61-8d3f-7205-2f6d-c2b12500947a@126.com>
- <776de760-e817-43b2-bd00-8ce96f4e37a8@redhat.com>
- <7063920f-963a-4b3e-a3f3-c5cc227bc877@redhat.com>
- <48150a28-ed48-49ff-9432-9cd30cda4da4@linux.alibaba.com>
- <11ef3deb-d1e3-46d5-97ed-9ba3c1fbbba9@redhat.com>
- <697a9bc2-a655-4035-aa5e-7d3acb23e79d@redhat.com>
- <d6deb928-3466-45ea-939b-cb5aca9bc7b4@linux.alibaba.com>
- <3a368e38-a4cb-413e-a6d9-41c6b3dbd5ae@redhat.com>
- <48fb0e58-16d1-7956-cf35-74741826617a@126.com>
- <ZmR1dVUB5mE2If9t@casper.infradead.org>
- <617f9e36-9334-4630-a6b9-473f2dd570d4@redhat.com>
- <8351052a-5c21-c383-544b-3166e883587c@126.com>
- <a39c8602-3c9c-48fd-9bdb-2089ccccd6bc@redhat.com>
-From: yangge1116 <yangge1116@126.com>
-Message-ID: <7b69abe5-3782-965c-ec82-5baef84e2d06@126.com>
-Date: Mon, 17 Jun 2024 17:50:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ma5Bo46F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718618874; x=1719223674; i=markus.elfring@web.de;
+	bh=TaxsO8A8ub1Kl+G8RAHhURMfNaORdUuzVR35IOWc2Us=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ma5Bo46Fv0vhwksF3QxGchVDD11mEG78xEc9FyNlGsbKgZI1LlZRz7Bv72EFMlH9
+	 /0En/bGvmlaau/fjcko7qU04lUOj23ckOUMih5Z9FfU8XS8P3mNUs5sIn86HIHkm4
+	 BRJFUEW0vLm0UIQXQVmW8bR5pObYcbU2FTpRaRDI8+gm/xb36omiN8CEGRxJnM0Gl
+	 7lJztCZlKWTtPZ7FFAMyfsyzZEr3mccH4P+lsBFfrMPL7fc+6LQiVeSEn0oE/sX83
+	 uU4TQuz6Q6hf/XtTzhAOig3FUM+m+nx2Ah9MoJW1ypIXLSlb37m7iS4rtUg86nLWU
+	 1+Ka/XI1DG+SceKrtg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N8n08-1sPSPM1GJa-00ulRF; Mon, 17
+ Jun 2024 12:07:54 +0200
+Message-ID: <6b284a02-15e2-4eba-9d5f-870a8baa08e8@web.de>
+Date: Mon, 17 Jun 2024 12:07:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a39c8602-3c9c-48fd-9bdb-2089ccccd6bc@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD331jkBnBm1R1bCw--.7695S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw17tFW8KF4xXFy3uryDKFg_yoW8trykpF
-	yUKF9rKF4qkryqkFnFqr17ArsYy3yrXFy5ZFWxJFy7CF4qqF15KrW8ta15uFy3Jr4Fgr1I
-	ka12q3WfWF1UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b8PEfUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWRIBG2VLaxbqAAAAso
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v20 02/13] rtase: Implement the .ndo_open function
+To: Justin Lai <justinlai0215@realtek.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Hariprasad Kelam <hkelam@marvell.com>, Jiri Pirko <jiri@resnulli.us>,
+ Larry Chiu <larry.chiu@realtek.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ Ratheesh Kannoth <rkannoth@marvell.com>
+References: <20240607084321.7254-3-justinlai0215@realtek.com>
+ <1d01ece4-bf4e-4266-942c-289c032bf44d@web.de>
+ <ef7c83dea1d849ad94acef81819f9430@realtek.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ef7c83dea1d849ad94acef81819f9430@realtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0bUc5Xvq0TvjvOY8nCnUp3iYnU/l2VPXA976WEEsyigooLEZn/y
+ CwZWd7INAFsvjsmbHp7G2BrI0EPi8ZHJXeh9IpFEb0V2k2IPT7IqWbNNM0wsUYVzffo+Td7
+ hU73J1CkmQd+0th4o8yBp2cWTMJZUKwqW5YzONRX+Zq4p4TU39k2hJOBDcyy3YwLY2gM0RD
+ /LflWIq8Yy+R3fVeUgc7w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:6lHu8sL5HPI=;Isuzt4XBBOHDeLdcrnEb4Pcu35p
+ eJQH2LVasE5qYiQyEwzS9ihp+KcuvLpi1DrWv1CGJzHiM5to6zagirZ+e8WbsLpYagaj35afN
+ PFNh2lStEOus6ndFdUftr1WPFET4NNaSivg8qVZmZdwT4gRKVTtHBKBfOPjmDsM8FYmm9ZIxv
+ RIC+yxkRM4NLRh9cQ6wOC93wW4sF1/SVBLIbhs+CTvZnArU5l6kQYFz7XJoPoHwyYhK2ZZ9Uv
+ g9AF+yr1iVB69j5PFeU02l8NOpVfvz+MUeSKivT839lVCzCqG/NrZZYW45VFesdeEf3pj3rKB
+ flsqqa8MJpt1Wf6Ocnf/I3oR7tQKkWqIshICByQqIReIz5PF2dp1dz5sxRwecTgQyg5shEig6
+ bzyGAhso4sPSLQdkIiYUUZbrQIUtpBLa0L+cCo2n9pABQk/cnryxftls4hBj95bKE1vbAs1YZ
+ ZlVZHXtiKVl9Mj+G4NyOz1j/JlzLdmWta8q/puR/P1nKbhAoxK67NXcAJNX6+CR8EqhdcR3+A
+ tvCMpSOmk3g5Jd7kzFL/1rz+q4CTZuZgnJwaygNnExVzalsYt+B/F+KZf2wQbZWDM6bR97JkB
+ VXGqnJckLjwA31qaknLKXjGhPCsJl/TeV/eYPf9TB466snQ4RogD54S8QTablh9Fz0We5HrWP
+ kA297vcZSpF7HQH0QpycJt7assOuvFGwLvGOjPQG4NluYrBqV+QHLIeeg4+NOS/p098EniMF2
+ wUV4iC6nxCLpDG01C3kmlkZdUPUPpHGF1MooNfgwPsErk7cm3AwAWTMsaWjcpw5VLqjd4Jcoe
+ wthttMvysz22q+PD5iM+s8qxYw6Epiv90rRlEUcS5SQI4=
 
+>> How do you think about to increase the application of scope-based resou=
+rce management?
+>> https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/cleanup=
+.h#L8
+>
+> Due to our tx and rx each having multiple queues that need to
+> allocate descriptors, if any one of the queues fails to allocate,
+> rtase_alloc_desc() will return an error. Therefore, using 'goto'
+> here rather than directly returning seems to be reasonable.
 
+Some goto chains can be replaced by further usage of advanced cleanup tech=
+niques,
+can't they?
 
-在 2024/6/12 下午3:32, David Hildenbrand 写道:
-> On 11.06.24 13:20, yangge1116 wrote:
->>
->>
->> 在 2024/6/9 上午12:03, David Hildenbrand 写道:
->>> On 08.06.24 17:15, Matthew Wilcox wrote:
->>>> On Sat, Jun 08, 2024 at 12:38:49PM +0800, yangge1116 wrote:
->>>>> Can we add a PG_lru_batch flag to determine whether a page is in lru
->>>>> batch?
->>>>> If we can, seems this problem will be easier.
->>>>
->>>> Page flags are in short supply.  You'd need a really good 
->>>> justification.
->>>>
->>>
->>> A flag would not be able to handle the "part of multiple LRU batches"
->>> that should currently possible (when to clear the flag?). Well, if we
->>> have to keep supporting that. If we only to be part in a single LRU
->>> batch, a new flag could work and we could still allow isolating a folio
->>> from LRU while in some LRU batch.
->>
->> Yes, before adding a folio to LRU batch, check whether the folio has
->> been added. Add the folio to LRU batch only if the folio has not been
->> added.
->>
->>>
->>> If we could handle it using the existing flags, that would of course be
->>> better (wondering if we could store more information in the existing
->>> flags by using a different encoding for the different states).
->>
->> If a folio contains more than one page, the folio will not be added to
->> LRU batch. Can we use folio_test_large(folio) to filter?
->>
->> if (!folio_test_large(folio) && drain_allow) {
->>     lru_add_drain_all();
->>     drain_allow = false;
->> }
-> 
-> I think we should do better than this, and not do arbitrary 
-> lru_add_drain_all() calls.
-> 
-
-Thanks, I've got another idea.
-
-If we add GUP_PIN_COUNTING_BIAS to folio's ref count before adding to 
-LRU batch, we can use folio_maybe_dma_pinned(folio) to check whether the 
-folio is in LRU batch. I wonder if it's feasible?
-
-
-static void folio_batch_add_and_move(struct folio_batch *fbatch,
-     struct folio *folio, move_fn_t move_fn)
-{
-     if (!folio_test_large(folio)) {
-         folio_ref_add(folio, GUP_PIN_COUNTING_BIAS);
-
-         if (folio_batch_add(fbatch, folio) && !lru_cache_disabled())
-             return;
-     }
-
-     folio_batch_move_lru(fbatch, move_fn);
-}
-
-if (!folio_test_large(folio) && folio_maybe_dma_pinned(folio) &&
-     drain_allow) {
-     lru_add_drain_all();
-     drain_allow = false;
-}
-
-
+Regards,
+Markus
