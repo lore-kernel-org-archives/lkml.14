@@ -1,199 +1,142 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA7A192B88;
-	Mon, 17 Jun 2024 18:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846461990A1;
+	Mon, 17 Jun 2024 18:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647991; cv=none; b=UFU9Ciu7bU2tVnKLsmdFtpGcMHqv65bO4KdOxJTYUL5sYop1Vm8n92pzWO7d8epBTmAMmpj+pGc2LVk8cF+H7D8IO/LNo8QYtlmvAZbCClFBhk0HKbabFTcN0gJVftViJoii6mCb+BMnjDYzprrtFC5Xg2ETxaA+ah5/1jGJgoQ=
+	t=1718647995; cv=none; b=u02fEA1mX+AnvVIhg5Hpr6RUobO4sXU+WrgylBJvzkNL2lDS2Un2XIBfxhCPYQZtELDRlHIQ1mYToJiMBDvK+8X90wl8/MUXXGVQExtQ7nsptPYqoxkqW3hI+1Rhsi2SpZtuCv/Xz4UoFZgTtoIIqhHp8xONH3oGrqka1TEVyJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647991; c=relaxed/simple;
-	bh=hRLVvLtRBbOdvUPno8a93Vzcp5jl8gtbD85/dJV2oDk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=YPdQ6whchcI0UGtLQ+oCyu/0Ne+rdIhSkr5cPCoXnXl5bwdap5E40wvd/55eAdd0Q2yHyhJVliKhtS3r4OT6DyCqUp1hY1gtUZAXnfeOZzElnPkgXANnNpY9lTpB5MklNRmUkX/O67l8lge1LL2eMwJkb10v2qJOJ0/ES/jIbTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlLEcbew; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718647995; c=relaxed/simple;
+	bh=zVmuXawoZOmGPtzxJ5/umElw4loxnxZuF+TKBzVf3Ac=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ugNiXipekVQRwR5RvIsb0GGLU0J1RZUWr9PT+eFGqTApXTmoTjwkCpv1OsNoEwJFZJxYZqbEPj7eLRTVPhNJLkaGqIs9wjD454JVeQUaJe8TouUq9baIvm5lthwg/FplV2U3tx/Hb9kdd20PH7idbKSiEDzB+hprG3nOG2pNpN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=wcQOV/Er reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlLEcbew"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6f97a4c4588so2829443a34.2;
-        Mon, 17 Jun 2024 11:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718647988; x=1719252788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wnDgtRUgKAlSFYmIuJjQW/N6laowqIFFEW1+oJmutvU=;
-        b=KlLEcbewk7h6zmGsCJhFMwfBX80bMe9Af+jSQO8fBE7wdZDqfyNqf73lw5Hg4QASIG
-         bfrOVw0p9ZxWpV1qvIK4idgbQJ6cVCTkuoGr7GfgL0g6bDVQbN7tSWfzUUKpzJVEDAGI
-         fbWFrUwW6G6pv2S9KuwHDukfMYXrJVAcf1uJ+sX1bg1T0EgE8jwVbLIdt6LJTKmMvsDY
-         FLqPDcTbi6TTFHM1kH+c+BSCHsWfbu44hJaTfBd8F3orwJskwmMoL2ST1eqDddEH8DgV
-         cmCOIJlckVhDTHu4vE7OM24u8abShyErJn5Zt805uDBzv0JnJxEJMxbNaKexHRJ65lzw
-         GHGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647988; x=1719252788;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wnDgtRUgKAlSFYmIuJjQW/N6laowqIFFEW1+oJmutvU=;
-        b=DAfEyC802YnorjZYyGyBh8AAV5BqZupdI8q9PnGUZ3Rsmi/YA1so2lmwWpGAwC/d5R
-         PMXTWTGM+/Zsm+7x2h8tDcguQ8IWewfzrysSGDAth7S/tMj2HtiKLx5r+NNDvh+M+MmI
-         V+3W6I/iSLcGrm1ihtLNC/+fjqHmPllcFfNb06vrhTdXba1zr/2d4IkAHhXJiP5C5++8
-         Dgk+kVCOMDqSXkmHg7ynygnAC4IxjpDS3v7/EM3aeWeFLUlFB1hESG1eWmcTI8gq66+Z
-         /VleJioB4bQ9CS/T/Q6PXCHM9w3a1kukDq7CJw4FNgL6JRma7l3xlMzGXrTlNkR6b7XE
-         Xc0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWjDrdFsncnKZzXe9c8n2jWC1ynaY/Vghy2krESaSRSEl+dNydyhi5mUs3jOn38KkCTNJyZ4uRkkmdlfib5JjXUOPoBDfqXcHF8PD/jurmorPrBMETLtlStF2cr+Xy7tJy2yOlT
-X-Gm-Message-State: AOJu0YyHk7jnKG3wQx3u5pZbjjGDDClp6OJFswlOdGy5R/27y3NF+PQG
-	uU6U/o5Wse3/e3Nbg9tCg2EPgPvJnnH9Ao9khP/swPJr0IzCWSbT
-X-Google-Smtp-Source: AGHT+IEobT5WZZ9llfzIFkvOO66J52WFUiWGnt25JF+3NqHKxdUDb76NjANoVgeOSeZ/Qa2KtCilqw==
-X-Received: by 2002:a05:6830:1da8:b0:6f9:eb37:b49a with SMTP id 46e09a7af769-6fb93b5b890mr10915095a34.36.1718647988217;
-        Mon, 17 Jun 2024 11:13:08 -0700 (PDT)
-Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5bf289csm57828316d6.26.2024.06.17.11.13.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 11:13:07 -0700 (PDT)
-Date: Mon, 17 Jun 2024 14:13:07 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: intel-wired-lan@lists.osuosl.org, 
- Tony Nguyen <anthony.l.nguyen@intel.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Mina Almasry <almasrymina@google.com>, 
- nex.sw.ncis.osdt.itp.upstreaming@intel.com, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Message-ID: <66707cb3444bd_21d16f294b0@willemb.c.googlers.com.notmuch>
-In-Reply-To: <ad06d2bb-df1d-41cd-8e5a-8758db768f74@intel.com>
-References: <20240528134846.148890-1-aleksander.lobakin@intel.com>
- <20240528134846.148890-12-aleksander.lobakin@intel.com>
- <66588346c20fd_3a92fb294da@willemb.c.googlers.com.notmuch>
- <ad06d2bb-df1d-41cd-8e5a-8758db768f74@intel.com>
-Subject: Re: [PATCH iwl-next 11/12] idpf: convert header split mode to libeth
- + napi_build_skb()
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="wcQOV/Er"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
+ id bb0cfa7e74617a10; Mon, 17 Jun 2024 20:13:06 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 0100516606FD;
+	Mon, 17 Jun 2024 20:13:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1718647986;
+	bh=zVmuXawoZOmGPtzxJ5/umElw4loxnxZuF+TKBzVf3Ac=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=wcQOV/ErQXbDaI/ph7nHLuS27tLyiNY3MKnDqguW8VaDoQnC0e/CLFXZ9hc62ROlD
+	 vYBBdX0UnKTkZHmMQNSmuGH44ynAA5xqjeys3UWBlRGoqvHZXcmulOa2WD90pq7bDV
+	 iTTJPO1QJUWT8BT1v7HxLrJQgwbROnstkyO7bPiv7M/Kum8kHRiCQh3yFyvARcYNrc
+	 jxo4xYckUQLNaGmj25Y9TKsZTtnSIUOxTMfrw5UGPvQZlZ3mt8e7XmFcEi1imTsFfP
+	 mbUW0xzWr785HIJNCtdy5WmBZeA2+11f+gqa+BpGeKCI7OlpYxP00hyZmAbc9/GDSn
+	 0JJPMOwbMFG7A==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Subject:
+ [PATCH v1 12/14] thermal: uniphier: Use thermal_zone_for_each_trip() for
+ walking trip points
+Date: Mon, 17 Jun 2024 20:07:35 +0200
+Message-ID: <2148114.bB369e8A3T@kreacher>
+In-Reply-To: <8409966.T7Z3S40VBb@kreacher>
+References: <8409966.T7Z3S40VBb@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfedvhedguddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehhrgihrghshhhirdhkuhhnihhhihhkohesshhotghiohhnvgigthdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-Alexander Lobakin wrote:
-> From: Willem De Bruijn <willemdebruijn.kernel@gmail.com>
-> Date: Thu, 30 May 2024 09:46:46 -0400
-> =
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> > Alexander Lobakin wrote:
-> >> Currently, idpf uses the following model for the header buffers:
-> >>
-> >> * buffers are allocated via dma_alloc_coherent();
-> >> * when receiving, napi_alloc_skb() is called and then the header is
-> >>   copied to the newly allocated linear part.
-> >>
-> >> This is far from optimal as DMA coherent zone is slow on many system=
-s
-> >> and memcpy() neutralizes the idea and benefits of the header split. =
+It is generally inefficient to iterate over trip indices and call
+thermal_zone_get_trip() every time to get the struct thermal_trip
+corresponding to the given trip index, so modify the uniphier thermal
+driver to use thermal_zone_for_each_trip() for walking trips.
 
-> > =
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/thermal/uniphier_thermal.c |   37 +++++++++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
-> > In the previous revision this assertion was called out, as we have
-> > lots of experience with the existing implementation and a previous on=
-e
-> > based on dynamic allocation one that performed much worse. You would
-> =
+Index: linux-pm/drivers/thermal/uniphier_thermal.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/uniphier_thermal.c
++++ linux-pm/drivers/thermal/uniphier_thermal.c
+@@ -239,13 +239,32 @@ static irqreturn_t uniphier_tm_alarm_irq
+ 	return IRQ_HANDLED;
+ }
+ 
++struct trip_walk_data {
++	struct uniphier_tm_dev *tdev;
++	int crit_temp;
++	int index;
++};
++
++static int uniphier_tm_trip_walk_cb(struct thermal_trip *trip, void *arg)
++{
++	struct trip_walk_data *twd = arg;
++
++	if (trip->type == THERMAL_TRIP_CRITICAL &&
++	    trip->temperature < twd->crit_temp)
++		twd->crit_temp = trip->temperature;
++
++	uniphier_tm_set_alert(twd->tdev, twd->index, trip->temperature);
++	twd->tdev->alert_en[twd->index++] = true;
++}
++
+ static int uniphier_tm_probe(struct platform_device *pdev)
+ {
++	struct trip_walk_data twd = { .crit_temp = INT_MAX, .index = 0 };
+ 	struct device *dev = &pdev->dev;
+ 	struct regmap *regmap;
+ 	struct device_node *parent;
+ 	struct uniphier_tm_dev *tdev;
+-	int i, ret, irq, crit_temp = INT_MAX;
++	int i, ret, irq;
+ 
+ 	tdev = devm_kzalloc(dev, sizeof(*tdev), GFP_KERNEL);
+ 	if (!tdev)
+@@ -293,20 +312,10 @@ static int uniphier_tm_probe(struct plat
+ 	}
+ 
+ 	/* set alert temperatures */
+-	for (i = 0; i < thermal_zone_get_num_trips(tdev->tz_dev); i++) {
+-		struct thermal_trip trip;
++	twd.tdev = tdev;
++	thermal_zone_for_each_trip(tdev->tz_dev, uniphier_tm_trip_walk_cb, &twd);
+ 
+-		ret = thermal_zone_get_trip(tdev->tz_dev, i, &trip);
+-		if (ret)
+-			return ret;
+-
+-		if (trip.type == THERMAL_TRIP_CRITICAL &&
+-		    trip.temperature < crit_temp)
+-			crit_temp = trip.temperature;
+-		uniphier_tm_set_alert(tdev, i, trip.temperature);
+-		tdev->alert_en[i] = true;
+-	}
+-	if (crit_temp > CRITICAL_TEMP_LIMIT) {
++	if (twd.crit_temp > CRITICAL_TEMP_LIMIT) {
+ 		dev_err(dev, "critical trip is over limit(>%d), or not set\n",
+ 			CRITICAL_TEMP_LIMIT);
+ 		return -EINVAL;
 
-> napi_build_skb() is not a dynamic allocation. In contrary,
-> napi_alloc_skb() from the current implementation actually *is* a dynami=
-c
-> allocation. It allocates a page frag for every header buffer each time.=
-
-> =
-
-> Page Pool refills header buffers from its pool of recycled frags.
-> Plus, on x86_64, truesize of a header buffer is 1024, meaning it picks
-> a new page from the pool every 4th buffer. During the testing of common=
-
-> workloads, I had literally zero new page allocations, as the skb core
-> recycles frags from skbs back to the pool.
-> =
-
-> IOW, the current version you're defending actually performs more dynami=
-c
-> allocations on hotpath than this one =C2=AF\_(=E3=83=84)_/=C2=AF
-> =
-
-> (I explained all this several times already)
-> =
-
-> > share performance numbers in the next revision
-> =
-
-> I can't share numbers in the outside, only percents.
-> =
-
-> I shared before/after % in the cover letter. Every test yielded more
-> Mpps after this change, esp. non-XDP_PASS ones when you don't have
-> networking stack overhead.
-
-This is the main concern: AF_XDP has no existing users, but TCP/IP is
-used in production environments. So we cannot risk TCP/IP regressions
-in favor of somewhat faster AF_XDP. Secondary is that a functional
-implementation of AF_XDP soon with optimizations later is preferable
-over the fastest solution later.
- =
-
-> > =
-
-> > https://lore.kernel.org/netdev/0b1cc400-3f58-4b9c-a08b-39104b9f2d2d@i=
-ntel.com/T/#me85d509365aba9279275e9b181248247e1f01bb0
-> > =
-
-> > This may be so integral to this patch series that asking to back it
-> > out now sets back the whole effort. That is not my intent.
-> > =
-
-> > And I appreciate that in principle there are many potential
-> > optizations.
-> > =
-
-> > But this (OOT) driver is already in use and regressions in existing
-> > workloads is a serious headache. As is significant code churn wrt
-> > other still OOT feature patch series.
-> > =
-
-> > This series (of series) modifies the driver significantly, beyond the=
-
-> > narrow scope of adding XDP and AF_XDP.
-> =
-
-> Yes, because all this is needed in order for XDP to work properly and
-> quick enough to be competitive. OOT XDP implementation is not
-> competitive and performs much worse even in comparison to the upstream =
-ice.
-> =
-
-> (for example, the idea of doing memcpy() before running XDP only to do
->  XDP_DROP and quickly drop frames sounds horrible)
-> =
-
-> Any serious series modification would mean a ton of rework only to
-> downgrade the overall functionality, why do that?
-
-As I said before, it is not my intent to set back the effort by asking
-for changes now.
-
-Only to caution to not expand the patch series even more (it grew from
-3 to 6 series) and to remind that performance of established workloads
-remain paramount.
- =
-
-> Thanks,
-> Olek
 
 
