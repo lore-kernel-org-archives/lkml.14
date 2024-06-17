@@ -1,97 +1,90 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1E1198E84
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.235.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD24192B88;
+	Mon, 17 Jun 2024 18:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718648716; cv=none; b=XAx5fno2q69G38mRGHN/KS/SxLreE81xwbGXYbxV5v2CfVmBgbGuggtd632So2z6BWMoISAEH30vbEJov/zNLg0MSUZtHX1I6cs3p6RpWgcPGAwh0eCzHdL4bokGdSO8GLLofIqEaiH4b30Wzhk88WPeCaP382VVyeYe7hHRkQ8=
+	t=1718648756; cv=none; b=UX5IswZapFGh3GeUXv5aQZoplTaPOsN0wgDAI8KXsZCBFsEfLxDDdxPuY3V4gr/VgYXZ7o5pL4/Wkt6bBSifWcJar+AAyQAzyQy3AIVBv/KZCz589loKGF5cFXL+owJc+ZPO8OD/JGbnt3j+ExWvHDPVoHr8Roz7yqaiO3V0GHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718648716; c=relaxed/simple;
-	bh=ZujwxhU0fzmG232AYTsvdM9y++5f47AvLo4FCkYzn9M=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RjM3XX5i5Xd0Lt1rm0DtuYmBuGwXCK6VPx2k2X8+PGhESLaFRs037/TE7G2ktMLEIYUf9jyjbacS5Osud3M0mg9z+N4+Y0fsZcpzsHeTXqo8YS7GLMQ+WV5JXtGePgBrdvm6VlHps8tM4IhomCHMhNLZgFDIug6XyuOUTkpE4aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=161.53.235.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id C8F01601A1;
-	Mon, 17 Jun 2024 20:17:06 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id n6JXneNXu9Ca; Mon, 17 Jun 2024 20:17:04 +0200 (CEST)
-Received: from [192.168.178.20] (dh207-41-66.xnet.hr [88.207.41.66])
-	by domac.alu.hr (Postfix) with ESMTPSA id 293E86018F;
-	Mon, 17 Jun 2024 20:17:01 +0200 (CEST)
-Message-ID: <fbcbe79b-5447-4ff7-af6b-a0398d944155@gmail.com>
-Date: Mon, 17 Jun 2024 20:16:56 +0200
+	s=arc-20240116; t=1718648756; c=relaxed/simple;
+	bh=NqerbviuZuOzLrbX+rKOzS146N4t7YDVoAkNbjWSVw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFHb4oowoApTiUHJ55pOefkArlPCFLHPyAzvnPvMsgyeLT6cHX2MEDwck6Dern3GeeHEJY5JWsdqrj3qMXqMHiUV/+ogPz8wbIM8Id4Xw45yk7EnHafGDT4P89VjWprwJgX8XoZjnO/1bYIMQDFi5x+RPj7gy5YnHyTCJ9nfKFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dd945dAE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dd945dAE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718648754; x=1750184754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NqerbviuZuOzLrbX+rKOzS146N4t7YDVoAkNbjWSVw8=;
+  b=Dd945dAECaSaZE/qi+a/lXiKSMT/zqiNH1E1cIE7hzytLZvbGQYtlHp4
+   TPfbv0Bhj2koP01XSB6q3ve0Oz52wkKPQ8QrsvOtAffE2WNSTRvokFljo
+   i+C+MbwVkAZYAaZbiBQ8ZWvESgUKa6Insmb6EW5484fN3mozstVGyyJqk
+   iNEDN6DflaLw8pTDE/7Ew0Kuh/C86YuShqOGLYoQTJOApTYSHCe5+4g9N
+   v+/wy1TZ+iRLe3Vz2/OESDP23ghLH/D32VNOvc7wEogSoSyXSdvvW3qG6
+   lo1fn9S0gGlK8+OdmroIqgUbRPV2Q90l0w3B5LXwW4835mTumN3fLacMz
+   Q==;
+X-CSE-ConnectionGUID: BAPH3knTQ3e7H2RgYp4r6Q==
+X-CSE-MsgGUID: HwAgR0XERP2rNvizZpy0SA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15615865"
+X-IronPort-AV: E=Sophos;i="6.08,245,1712646000"; 
+   d="scan'208";a="15615865"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 11:25:54 -0700
+X-CSE-ConnectionGUID: QbnXQa6/Qo+c5kyTH7gHvQ==
+X-CSE-MsgGUID: WzXxJHVDQ8StKJEeAJIxlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,245,1712646000"; 
+   d="scan'208";a="46228721"
+Received: from mshehzad-mobl.amr.corp.intel.com (HELO desk) ([10.209.21.13])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 11:25:53 -0700
+Date: Mon, 17 Jun 2024 11:25:48 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 3/9] perf/x86/intel: Use topology_cpu_type() to get
+ cpu-type
+Message-ID: <20240617182548.2uqh2yawjucxhsqh@desk>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <20240617-add-cpu-type-v1-3-b88998c01e76@linux.intel.com>
+ <7c4978b4-ac69-480e-b8cf-a473b64ed917@intel.com>
+ <20240617180905.7ao623w6eyu64hs2@desk>
+ <513abce9-48f5-4dab-9e8c-7023077ea589@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Mirsad Todorovac <mtodorovac69@gmail.com>
-Subject: Re: [BUG linux-next] Hang in boot on Ubuntu 22.04 LTS
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Sam Ravnborg <sam@ravnborg.org>,
- Vineet Gupta <vgupta@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>
-References: <4b7cad0c-0c8d-4341-a822-6b249cd74565@gmail.com>
-Content-Language: en-US
-In-Reply-To: <4b7cad0c-0c8d-4341-a822-6b249cd74565@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <513abce9-48f5-4dab-9e8c-7023077ea589@intel.com>
 
-On 5/18/24 00:51, Mirsad Todorovac wrote:
-> Hi, all,
+On Mon, Jun 17, 2024 at 11:17:35AM -0700, Dave Hansen wrote:
+> On 6/17/24 11:09, Pawan Gupta wrote:
+> >> Is this trying to make the case that get_this_hybrid_cpu_type() and
+> >> topology_cpu_type() are equivalent or pointing out a difference?
+> > Pointing out a difference. get_this_hybrid_cpu_type() misses a case when
+> > cpu-type is enumerated regardless of X86_FEATURE_HYBRID_CPU. I don't think
+> > checking for the hybrid feature is necessary here, because there is an
+> > existing fixup for this case:
 > 
-> Between next-20240503 and next-20240506 there was a problem that prevented booting in
-> Ubuntu 22.04 LTS on an AMD Ryzen 9 box.
-> 
-> The symptom is stuck boot with blank screen and an underscore blinking. After CTRL+ALT+DEL,
-> the kernel shuts down and reboots back into grub.
-> 
-> After next-20240503, the boot never succeeded on this configuration, but I am unable to
-> see what went wrong.
-> 
-> Please find attached the config and lshw.txt.
-> 
-> I thought it would be
-> 
-> # good: [f25eae2c405cbe810f8c52d743ea2b507c3fc301] arch: Select fbdev helpers with CONFIG_VIDEO
-> git bisect good f25eae2c405cbe810f8c52d743ea2b507c3fc301
-> # bad: [2fd001cd36005846caa6456fff1008c6f5bae9d4] arch: Rename fbdev header and source files
-> git bisect bad 2fd001cd36005846caa6456fff1008c6f5bae9d4
-> # good: [f178e96de7f0868e1b4d6df687794961f30125f2] arch: Remove struct fb_info from video helpers
-> git bisect good f178e96de7f0868e1b4d6df687794961f30125f2
-> # first bad commit: [2fd001cd36005846caa6456fff1008c6f5bae9d4] arch: Rename fbdev header and source files
-> 
-> Best regards,
-> Mirsad Todorovac
+> OK, that makes sense.  Could you include that in the changelog, please?
 
-Hi all,
-
-FYI: Now, after building 6.10.0-rc3-next-20240612, the issue with the hang in Ubuntu 22.04 LTS
-appears to be fixed.
-
-In case of the requirement, I could try to bisect to the exact commit which fixed the problem.
-
-Hope this helps.
-
-Best regards,
-Mirsad Todorovac
+Sure.
