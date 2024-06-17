@@ -1,104 +1,379 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A0F194C7D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B92D288BD
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621634; cv=none; b=fsq0tIVvFTALaMN8tsDwCRy8vwvSR2HQljVlz7D/5AfTsCp3jfVZKo4x5G/AEbV1c7m5XS723XKnRDv9mWueM1kOanTNT0JfEjV89mabUysu8PwHXWXaQQrlPWOLV5qptZKCWhQd7m6iAI+FwowN9CdhBFO4P0PKCHKbVoa9kac=
+	t=1718621635; cv=none; b=LidJDKy0RpSzk5M24XqGmtrWiqqW/zyYkhqPU61UCrVh1i7vxV+jH6p4x4I19gIqeTWlDADCvzqAdS7wYIL5HCEPo37dwEQzABtgGU6oq84bgWKIvaPt/ge/DQxNQLqskPCV35JXyl7LnVX18qGgbUURq2ZViT9+LynAFjnCZ3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621634; c=relaxed/simple;
-	bh=JYCJegv03aVOinmfYCBrn0PCCtg6iZCX2AzWfB8ydmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qqt8e6vAilhOGk+Zdrwyu1jQAaYq5aH1RITHeLiB0oCVKi2rjMgU1iHVSMmU0pNQgboWfNLtF1YctJnHRBs4jJECxuCeCB/Gef2W6O91dCPOLKCpwK+zpsIIjwzDphrLfF/enmrgr7jusP+zCf/7KbOoo390FC6r4etuVNSrsgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=I81JHSZN; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1718621635; c=relaxed/simple;
+	bh=BPiGT9+jkX3i7cQYnEXcuTTHvTMc0SMgkEVFVMe7Q5s=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tHcB/bNkcop4lP/hcTjy3sJ68D5MEO11k6x2l8TzgZ1p42lYuwbzTh9/rX7Z6fe6s7bM36IfYR7d/LCImHJg36mO08IeCsVyphwxwAy4ElUqutA5FYaV94yajBEc75EcJTEtHhdKXADepl4/L+jfhcmr246GXxwc1aDkutyiZ+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f3Ii9NnD; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="I81JHSZN"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-422df2a81f2so30808615e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 03:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718621631; x=1719226431; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FI5abRBwHqCqP5M0Gc7e8iMgb9TjGPy4OKO84XUaFTk=;
-        b=I81JHSZN4e8ixuP8C30qnT0wXpAkkBZzBAoSl++obt4WWGBNDziiRAL9m9Zalxk8X2
-         3NqkB/Q40b5ZEp4KHNcX4gICiOEXsRJ1W0eyHvqCfZaPuWMsaSQDZZImqZXPNBmaG0Fj
-         AQ7WJrNPCRhyCwByoY8hKhXxJJ6bUCEMZLAQMV/5CDc2Xi5BdCAyhEY8I2EXQeWNjlxU
-         TP0bgNe4xmVfyvTt9nY2PpVJUJAzt9BxScrO/n3ThGNIOFNEjzwpcM/RsdAADcBqTAUO
-         wYD3rdMStpv6oj96TBA7K8WoI7SclBUhP6ypWH9btDQukMel8mGF3dAVPTGXP0QyCjJX
-         JLtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718621631; x=1719226431;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FI5abRBwHqCqP5M0Gc7e8iMgb9TjGPy4OKO84XUaFTk=;
-        b=udpxZpCWNjXt3nIj3O0c2I/Hx7QCFFEEZiijs86x3R7m9ZA4o5uVMd2OJjDYgJpFWZ
-         D51/T/dvSdLEu4/etwglwhr6y/eJE1A9gmNYwGNXkxhfeYMSKJkFYTQuvvZh/fj85oOH
-         t9RJ+h4GoYGLkxf3G06xFb3b14GgN0yCrLxILz6gsYl844kVjAHgmWWmrPgs02Hz6URo
-         HU07qEs1EMYYTBTzSHMLAbWYPLvn/NZD5y4vrOCgYoPHMlD+QqWOjiNUolNxXfxMvOr1
-         8uuUmGBxcOEpKugUCmpXZePs3NTaAldVfOlSEnxicewKtqfAK1J7og2NKue8c8qaut/C
-         ulug==
-X-Forwarded-Encrypted: i=1; AJvYcCUDyuZD8KRrjK6TrvTOmjMu442jcPhmPx2JnhhyglR0GdbYsjDed+RwcOuUQgjd5y7y6K8xMBvXju6eirgrnd6Te48xa5vhz9G7bjdh
-X-Gm-Message-State: AOJu0YwNPyy7J5tnGOV/WsIia99uprAP1RRKOmAqY9yhKVoOa5xatWP2
-	+gicX7xHbU83Wv4jljD86XvC5a3WN6hiI0kTO2j4mBhtJZUOwV9VCQ9gqXa5qQA=
-X-Google-Smtp-Source: AGHT+IHfKnpLm8kd48ivVuHGuCzwntJbUFWu1qPeaSSxuCNbdaB2OudubZuHajH59m/HAAff8iX6DA==
-X-Received: by 2002:a05:600c:4749:b0:422:fdae:b687 with SMTP id 5b1f17b1804b1-4230482bcf3mr84358475e9.17.1718621630391;
-        Mon, 17 Jun 2024 03:53:50 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422ffdc329asm121452625e9.1.2024.06.17.03.53.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 03:53:50 -0700 (PDT)
-Date: Mon, 17 Jun 2024 11:53:48 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Xuewen Yan <xuewen.yan94@gmail.com>, Xuewen Yan <xuewen.yan@unisoc.com>,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	vincent.donnefort@arm.com, ke.wang@unisoc.com,
-	linux-kernel@vger.kernel.org, christian.loehle@arm.com
-Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding
- actual_cpu_capacity
-Message-ID: <20240617105348.ebtony3ciwxhvj2w@airbuntu>
-References: <20240606070645.3295-1-xuewen.yan@unisoc.com>
- <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
- <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
- <20240616222003.agcz5osb2nkli75h@airbuntu>
- <CAKfTPtBikWsyPon6HweEZg5qjSP+QX=WZDQu4NHs7PUcSCqDDA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f3Ii9NnD"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45HArQma082697;
+	Mon, 17 Jun 2024 05:53:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718621606;
+	bh=3Ak0cYY9/Ktqpij4a7CVob7W84NwWWlob/wDNvIKk/I=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=f3Ii9NnDPeW+RBHd6Ubb4MckjdgRT4jMEB0lycvk61j9xln1Q2EoqwqUv5kyBxbzf
+	 KCT45Cj54NFTTssYDMQ06VlRbKvVNrDk0b421ueGRm7wFWUBQlQGOXvLXe+po/s84v
+	 3BynuIOiYk0uquWkgtBdW6iY5JJNjz6uCpuKGFlc=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45HArQJa039876
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Jun 2024 05:53:26 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
+ Jun 2024 05:53:26 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 17 Jun 2024 05:53:26 -0500
+Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45HArP8t106207;
+	Mon, 17 Jun 2024 05:53:26 -0500
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+        Thomas Zimmermann
+	<tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter
+	<daniel@ffwll.ch>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Dominik Haller <d.haller@phytec.de>, Sam
+ Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+        Devarsh Thakkar
+	<devarsht@ti.com>,
+        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
+	<j-luthra@ti.com>,
+        Aradhya Bhatia <a-bhatia1@ti.com>
+Subject: [PATCH v3 09/10] drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+Date: Mon, 17 Jun 2024 16:23:10 +0530
+Message-ID: <20240617105311.1587489-10-a-bhatia1@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240617105311.1587489-1-a-bhatia1@ti.com>
+References: <20240617105311.1587489-1-a-bhatia1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtBikWsyPon6HweEZg5qjSP+QX=WZDQu4NHs7PUcSCqDDA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 06/17/24 11:07, Vincent Guittot wrote:
+Move the bridge pre_enable call before crtc enable, and the bridge
+post_disable call after the crtc disable.
 
-> > And should effective_cpu_util() return a value higher than
-> > get_actual_cpu_capacity()?
-> 
-> I don't think we should because we want to return the effective
-> utilization not the actual compute capacity.
-> Having an utilization of the cpu or group of cpus above the actual
-> capacity or the original capacity mainly means that we will have to
-> run longer
-> 
-> By capping the utilization we filter this information.
-> 
-> capacity orig = 800
-> util_avg = 700
-> 
-> if we cap the capacity to 400 the cpu is expected to run twice longer
-> for the same amount of work to be done
+The sequence of enable after this patch will look like:
 
-Okay makes sense. Wouldn't the util be 'wrong' (to what degree will depend on
-min/max freq ratio) though?
+	bridge[n]_pre_enable
+	...
+	bridge[1]_pre_enable
 
-We cap with arch_scale_capacity() still, I guess we know at this stage it is
-100% wrong if we allow returning higher values?
+	crtc_enable
+	encoder_enable
+
+	bridge[1]_enable
+	...
+	bridge[n]__enable
+
+and vice-versa for the bridge chain disable sequence.
+
+The definition of bridge pre_enable hook says that,
+"The display pipe (i.e. clocks and timing signals) feeding this bridge
+will not yet be running when this callback is called".
+
+Since CRTC is also a source feeding the bridge, it should not be enabled
+before the bridges in the pipeline are pre_enabled. Fix that by
+re-ordering the sequence of bridge pre_enable and bridge post_disable.
+
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 165 ++++++++++++++++++----------
+ include/drm/drm_atomic_helper.h     |   7 ++
+ 2 files changed, 114 insertions(+), 58 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index fb97b51b38f1..e8ad08634f58 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -74,6 +74,7 @@
+  * also shares the &struct drm_plane_helper_funcs function table with the plane
+  * helpers.
+  */
++
+ static void
+ drm_atomic_helper_plane_changed(struct drm_atomic_state *state,
+ 				struct drm_plane_state *old_plane_state,
+@@ -1122,11 +1123,11 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
+ }
+ 
+ static void
+-disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
++disable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_state *old_state,
++			    enum bridge_chain_operation_type op_type)
+ {
+ 	struct drm_connector *connector;
+ 	struct drm_connector_state *old_conn_state, *new_conn_state;
+-	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+ 	int i;
+ 
+@@ -1163,32 +1164,55 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+ 		if (WARN_ON(!encoder))
+ 			continue;
+ 
+-		funcs = encoder->helper_private;
+-
+-		drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
+-			       encoder->base.id, encoder->name);
+-
+ 		/*
+ 		 * Each encoder has at most one connector (since we always steal
+ 		 * it away), so we won't call disable hooks twice.
+ 		 */
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+-		drm_atomic_bridge_chain_disable(bridge, old_state);
+ 
+-		/* Right function depends upon target state. */
+-		if (funcs) {
+-			if (funcs->atomic_disable)
+-				funcs->atomic_disable(encoder, old_state);
+-			else if (new_conn_state->crtc && funcs->prepare)
+-				funcs->prepare(encoder);
+-			else if (funcs->disable)
+-				funcs->disable(encoder);
+-			else if (funcs->dpms)
+-				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+-		}
++		switch (op_type) {
++		case DRM_ENCODER_BRIDGE_DISABLE:
++			funcs = encoder->helper_private;
++
++			drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
++				       encoder->base.id, encoder->name);
++
++			drm_atomic_bridge_chain_disable(bridge, old_state);
++
++			/* Right function depends upon target state. */
++			if (funcs) {
++				if (funcs->atomic_disable)
++					funcs->atomic_disable(encoder, old_state);
++				else if (new_conn_state->crtc && funcs->prepare)
++					funcs->prepare(encoder);
++				else if (funcs->disable)
++					funcs->disable(encoder);
++				else if (funcs->dpms)
++					funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
++			}
++
++			break;
++
++		case DRM_BRIDGE_POST_DISABLE:
++			drm_atomic_bridge_chain_post_disable(bridge, old_state);
+ 
+-		drm_atomic_bridge_chain_post_disable(bridge, old_state);
++			break;
++
++		default:
++			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
++			break;
++		}
+ 	}
++}
++
++static void
++disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
++{
++	struct drm_crtc *crtc;
++	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
++	int i;
++
++	disable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_DISABLE);
+ 
+ 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		const struct drm_crtc_helper_funcs *funcs;
+@@ -1234,6 +1258,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+ 		if (ret == 0)
+ 			drm_crtc_vblank_put(crtc);
+ 	}
++
++	disable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_POST_DISABLE);
+ }
+ 
+ /**
+@@ -1445,6 +1471,64 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
+ 	}
+ }
+ 
++static void
++enable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_state *old_state,
++			   enum bridge_chain_operation_type op_type)
++{
++	struct drm_connector *connector;
++	struct drm_connector_state *new_conn_state;
++	int i;
++
++	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
++		const struct drm_encoder_helper_funcs *funcs;
++		struct drm_encoder *encoder;
++		struct drm_bridge *bridge;
++
++		if (!new_conn_state->best_encoder)
++			continue;
++
++		if (!new_conn_state->crtc->state->active ||
++		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
++			continue;
++
++		encoder = new_conn_state->best_encoder;
++
++		/*
++		 * Each encoder has at most one connector (since we always steal
++		 * it away), so we won't call enable hooks twice.
++		 */
++		bridge = drm_bridge_chain_get_first_bridge(encoder);
++
++		switch (op_type) {
++		case DRM_BRIDGE_PRE_ENABLE:
++			drm_atomic_bridge_chain_pre_enable(bridge, old_state);
++			break;
++
++		case DRM_ENCODER_BRIDGE_ENABLE:
++			funcs = encoder->helper_private;
++
++			drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
++				       encoder->base.id, encoder->name);
++
++			if (funcs) {
++				if (funcs->atomic_enable)
++					funcs->atomic_enable(encoder, old_state);
++				else if (funcs->enable)
++					funcs->enable(encoder);
++				else if (funcs->commit)
++					funcs->commit(encoder);
++			}
++
++			drm_atomic_bridge_chain_enable(bridge, old_state);
++			break;
++
++		default:
++			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
++			break;
++		}
++	}
++}
++
+ /**
+  * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
+  * @dev: DRM device
+@@ -1465,10 +1549,10 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state;
+ 	struct drm_crtc_state *new_crtc_state;
+-	struct drm_connector *connector;
+-	struct drm_connector_state *new_conn_state;
+ 	int i;
+ 
++	enable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_PRE_ENABLE);
++
+ 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		const struct drm_crtc_helper_funcs *funcs;
+ 
+@@ -1491,42 +1575,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 		}
+ 	}
+ 
+-	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
+-		const struct drm_encoder_helper_funcs *funcs;
+-		struct drm_encoder *encoder;
+-		struct drm_bridge *bridge;
+-
+-		if (!new_conn_state->best_encoder)
+-			continue;
+-
+-		if (!new_conn_state->crtc->state->active ||
+-		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
+-			continue;
+-
+-		encoder = new_conn_state->best_encoder;
+-		funcs = encoder->helper_private;
+-
+-		drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
+-			       encoder->base.id, encoder->name);
+-
+-		/*
+-		 * Each encoder has at most one connector (since we always steal
+-		 * it away), so we won't call enable hooks twice.
+-		 */
+-		bridge = drm_bridge_chain_get_first_bridge(encoder);
+-		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
+-
+-		if (funcs) {
+-			if (funcs->atomic_enable)
+-				funcs->atomic_enable(encoder, old_state);
+-			else if (funcs->enable)
+-				funcs->enable(encoder);
+-			else if (funcs->commit)
+-				funcs->commit(encoder);
+-		}
+-
+-		drm_atomic_bridge_chain_enable(bridge, old_state);
+-	}
++	enable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_ENABLE);
+ 
+ 	drm_atomic_helper_commit_writebacks(dev, old_state);
+ }
+diff --git a/include/drm/drm_atomic_helper.h b/include/drm/drm_atomic_helper.h
+index 9aa0a05aa072..b45a175a9f8a 100644
+--- a/include/drm/drm_atomic_helper.h
++++ b/include/drm/drm_atomic_helper.h
+@@ -43,6 +43,13 @@
+  */
+ #define DRM_PLANE_NO_SCALING (1<<16)
+ 
++enum bridge_chain_operation_type {
++	DRM_BRIDGE_PRE_ENABLE,
++	DRM_BRIDGE_POST_DISABLE,
++	DRM_ENCODER_BRIDGE_ENABLE,
++	DRM_ENCODER_BRIDGE_DISABLE,
++};
++
+ struct drm_atomic_state;
+ struct drm_private_obj;
+ struct drm_private_state;
+-- 
+2.34.1
+
