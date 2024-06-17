@@ -1,113 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11824194A53;
-	Mon, 17 Jun 2024 10:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203265025E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621997; cv=none; b=p73DG+lNWLQ9izgbVkaMi43Mb7lGpdhlNXI9/+yS53uL3ro05S2ZmmyPjItfJo/UCkDWz8k4KmNinM9mhfGfEIavJF7lsEzAtqCCQ+drLvdo/Fy4rvEUScEOfiktEmSJSVRmDi10ii7sNzJQJOAsjq6fwd3nM/FFnr50r6fHxBI=
+	t=1718622064; cv=none; b=gZ1JXzbXwNLrblc2Y96fXIHYngQasROFzeWgA0DzDYoaqnNCSQcRzfIWahwkykEjMOWEjvlQNLrwjLcI521NO21e1xTCwrqPcgb9TYU5CXBPEiOI7g2tsOLubAPxyYim8rRG92+PVJZ72hTWPJLZBV06G7quseO7E6MzY8tupLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621997; c=relaxed/simple;
-	bh=IFaIJd8SbmZdoZU6IAF6zOy7FMHxFQgJEE4alDxsEYU=;
+	s=arc-20240116; t=1718622064; c=relaxed/simple;
+	bh=cKofoxhoSF5ZQPhIVi4G0l+IsmRHCdzIQcUF+FD2XyE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KoMYf0qHImw00py3EGyLp1mCmRF/ucSxU7odFmMU0jPfQvH4xxcNCri1cm3KDgAFPtj80puobiSxNNtIC5G0jsAeoh9aZan/Z5FRfOTiefccvrNpuSUB9IZdVyO2nYwbXPWkFOC9nmNsdDggC+plyX3nnoHWpw+S2Uzpoa1nDsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uiAkF+oS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQvXoZteheUf+hLBPHxX3CRU93+5cDDlauMBPrLZScAYT8/u8K0BwxKC2SZudQdrvZfkvoS0lWPBEpj6/yDQMTDWs1Nfo864rvJ9h/qQ3uPlqPy1Xfwzetbv1pvp4ArSqutYwm4Tt4koK11b9unQntBJJlJ/d002mfL9LmL+koQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o+1WFjLe; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiAkF+oS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63167C2BD10;
-	Mon, 17 Jun 2024 10:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718621996;
-	bh=IFaIJd8SbmZdoZU6IAF6zOy7FMHxFQgJEE4alDxsEYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uiAkF+oSD26HcSVafMv/J+QNgkahxDDMiOl51kEUo0TRb7XshM8eGjSgR1AKIO/aq
-	 DHrec+DfXSWl3z0cI2v8OpW8uRFDArIfNz69u6T7xHLuTc15vJ2eJKbHymt+xtnlPC
-	 NA6wU6tj+ikeYWKpiEk4kc86WLv+4esE+ZFRT7KLlkWP5naHVLkV7l38Ewgo0g/UUV
-	 zRHmmMPNVsjzgReEB1tHDpiKUAZFa9DRw3kRQtSo27XjX+VanhHwQbMSyO1oVJXh1W
-	 IcouB5EdBS5vM+5HCQaVhXYSfdpa5IyU8bbQsBDkaC2APa/Q/fsrLDc3F8PJxPnuQu
-	 eseex6Z2zSfGg==
-Date: Mon, 17 Jun 2024 12:59:52 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-man@vger.kernel.org, 
-	mingo@kernel.org, tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com, 
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com, DeepakKumar.Mishra@arm.com, 
-	aneesh.kumar@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] signal.7: Fix wrong mention of sigprocmask
-Message-ID: <ap6zlyayczxurkituv4r4hpyqrmne6rsu5hnll3vgrvh2dw6x3@mqt5dzkdrccn>
-References: <20240611090823.820724-1-dev.jain@arm.com>
- <20240611090823.820724-3-dev.jain@arm.com>
- <ZmhL18D4rGeV_vnJ@finisterre.sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+1WFjLe"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec002caeb3so56208651fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718622061; x=1719226861; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/SjNe9vmU5byAvsAKJbghGk4V4PXep6SvlVxJjNPLCM=;
+        b=o+1WFjLe5iHMnIJFK6/5EHggVUxNKTkLC5bRpkyDnPnH4mFa9+xozoX8waK8199/JW
+         wJGUHx6s3Kih4j3glwb8ZjxrwL04nPOLGbObdjoUlunI8gdKtckGmgHxBkS5mygTnlIM
+         Ivi49dwortHOAfnXqMSMN0iWi/6qzz7viR0tnXgIKNvTcyOjrmCTESjzYPd8UGbOg6wB
+         VsHriqkSsoOPbLysJopShTYMlBt6lxsc8eUdUXvExM8bgMAfXDFTBVLWr6mGoSDisjL8
+         GfsvUrLQWVPc7SEhSy3KNGMmuEeXl9VNFPs5/JqOeDznd7jyAlGwfjkBMLbKv6NMtFaS
+         X8Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718622061; x=1719226861;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/SjNe9vmU5byAvsAKJbghGk4V4PXep6SvlVxJjNPLCM=;
+        b=j+crNcME2rkdG4qPluNKl7iW52OR4JWXGlRtcR+mRwdCsmnmYUCDziNgrFby6M1aKO
+         YRlRK9to2hi9BpmRivcSH4/L7VBNbmIsWLqIdRyA2wAPA+FlD3+WqVfzFf2NlOgmnshu
+         s8JxM+00OQ8Xg18CuyfiXg2k8Rq7M9fVrV7FiREXUdseQaLeA0RlrNMk/dibByeSwAWV
+         tOt8CzjtHAnRhmxPZIKKG+sVV7nrb6s1wisTA3+RXI+OaNNfgkbUZmMRFZ8ococLdemr
+         BvHrRpLhAJx2ttRQkjvzCueM8ww0KIjcfgSbgGOCJVN+kaLFqVs3oHuIXpvzuT1M4iYl
+         yIkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5P3EP69iVh4AZVTIx6x5tBA4+1mJ8WvYTwih+D5T+DJufotXNzsOqM7hsclla3yEoukFJDZIEJymPk4kl51VazHosHcA7CmHO+6Wq
+X-Gm-Message-State: AOJu0YzmIAc8SqB6FQtjNudLcj9h1UoyQhgFZpMBwFJbf5xrU+7KFaPh
+	NeblNT1OBYvW75Ml2L5UESfL/BR62Xso2Of6JhNF41GjCyTi22pu3OM1xDNyYc8=
+X-Google-Smtp-Source: AGHT+IEXhLINf4w3Jt6vhMBeIEaqYtSUuf/UGyq0ougmpEhxyfRWYmFs/qW8gnDYQ7pYqWK6RaW5Ug==
+X-Received: by 2002:a05:6512:10ce:b0:52c:bd0a:dd32 with SMTP id 2adb3069b0e04-52cbd0add64mr1873804e87.46.1718622061319;
+        Mon, 17 Jun 2024 04:01:01 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282de47sm1203069e87.66.2024.06.17.04.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 04:01:00 -0700 (PDT)
+Date: Mon, 17 Jun 2024 14:00:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: krzysztof.kozlowski@linaro.org, djakov@kernel.org, robh@kernel.org, 
+	conor+dt@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [RFC PATCH 0/2] arm64: qcom: Add BWMON support for SA8775p
+Message-ID: <3yrji5rrzrfj3j4bekvhos36mgafbdcufsslk5daqfn7y5k2qz@k3nrrlbnlsmb>
+References: <20240617092940.1724962-1-quic_tengfan@quicinc.com>
+ <yb3ni6o22zdm2lqodj7utdb2dlg3jkbwzutxhmljxle3syoe5y@op2prslmri4y>
+ <d997f42d-0616-4180-ae36-9d2ebd60d15f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eqwh37wv6cfzfaak"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZmhL18D4rGeV_vnJ@finisterre.sirena.org.uk>
+In-Reply-To: <d997f42d-0616-4180-ae36-9d2ebd60d15f@quicinc.com>
 
+On Mon, Jun 17, 2024 at 06:42:42PM GMT, Tengfei Fan wrote:
+> 
+> 
+> On 6/17/2024 5:43 PM, Dmitry Baryshkov wrote:
+> > On Mon, Jun 17, 2024 at 05:29:38PM GMT, Tengfei Fan wrote:
+> > > Add CPU and LLCC BWMON nodes and their corresponding OPP tables for
+> > > SA8775p SoC.
+> > 
+> > This series is marked as RFC, Request For Comments. What kind of
+> > comments are expected for the series?
+> > 
+> 
+> I found that the BWMON patch for x1e80100[1] is currently under review.
+> There are upstream comments suggesting that we reference the same shared OPP
+> table from all the BWMONs that share the same OPP table. However, there will
+> be some DTBS CHECK warnings[2] if we do reference the same shared OPP table.
+> 
+> Therefore, I pushed this patch series to collect some comments on whether we
+> can have separate OPP tables for each BWMON, as the OPP table of
+> "pmu@90b5400" and "pmu@90b6400" in this patch series.
 
---eqwh37wv6cfzfaak
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-man@vger.kernel.org, 
-	mingo@kernel.org, tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com, 
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com, DeepakKumar.Mishra@arm.com, 
-	aneesh.kumar@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] signal.7: Fix wrong mention of sigprocmask
-References: <20240611090823.820724-1-dev.jain@arm.com>
- <20240611090823.820724-3-dev.jain@arm.com>
- <ZmhL18D4rGeV_vnJ@finisterre.sirena.org.uk>
-MIME-Version: 1.0
-In-Reply-To: <ZmhL18D4rGeV_vnJ@finisterre.sirena.org.uk>
+Thank you for the explanation. Now why wasn't this a part of the cover
+letter?
 
-Hi Dev, Mark,
+> 
+> [1]
+> https://lore.kernel.org/lkml/4ef1d9a9-6a0e-4324-b6d5-2ae225855b03@linaro.org/
+> 
+> [2]
+> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pmu@90b5400: 'opp-table' is a
+> required property from schema $id:
+> http://devicetree.org/schemas/interconnect/qcom,msm8998-bwmon.yaml#
+> 
+> > > 
+> > > Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> > > ---
+> > > 
+> > > This patch series depends on patch series:
+> > > "[PATCH 2/4] soc: qcom: icc-bwmon: Allow for interrupts to be shared across instances"
+> > > https://lore.kernel.org/lkml/20240604011157.2358019-3-quic_sibis@quicinc.com/
+> > > 
+> > > Tengfei Fan (2):
+> > >    dt-bindings: interconnect: qcom-bwmon: Document SA8775p bwmon
+> > >      compatibles
+> > >    arm64: dts: qcom: sa8775p: Add CPU and LLCC BWMON
+> > > 
+> > >   .../interconnect/qcom,msm8998-bwmon.yaml      |   2 +
+> > >   arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 115 ++++++++++++++++++
+> > >   2 files changed, 117 insertions(+)
+> > > 
+> > > 
+> > > base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+> > > -- 
+> > > 2.25.1
+> > > 
+> > 
+> 
+> -- 
+> Thx and BRs,
+> Tengfei Fan
 
-On Tue, Jun 11, 2024 at 02:06:31PM GMT, Mark Brown wrote:
-> On Tue, Jun 11, 2024 at 02:38:23PM +0530, Dev Jain wrote:
-> > The handler is registered with sigaction(), not sigprocmask(). Even if =
-the
-> > purpose of writing sigprocmask() here was to mention blocked signals, t=
-he
-> > statement currently concerns the "addition" of blocked signals; signals
-> > blocked through sigprocmask() would already be present in the thread
-> > context of blocked signals.
->=20
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-
-Thanks for the patch and the review!  I've applied the patch.  It will
-be included in the man-pages-6.9.1 release later today.
-
-Have a lovely day!
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---eqwh37wv6cfzfaak
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmZwFygACgkQnowa+77/
-2zJS+Q/8C45MtZU8DXy0dicCrqEwky6HyWmDTJhnSlwy/6oP2Vr+f+KTBJMdu6kv
-F3OH1sU8mhK9KpIFudIEPZiQ+5DzvYdlYhwiI7Yy7j+3xybxUAojPVMLI4M+xhtL
-9FmFTnYm44hi5/2e4KCvkCx8ZOf2G1dXw82RVE6n+tqk3XpUduo0uC/2BekMWSoq
-tlwyngquAGIRPg4tg9xFRhHIJfTRTSqEVZPdEjx19qXpOZBZRWCRSeekCWt4w7vb
-8hVvhnNNLLUTnc84MhZ0xlaqICLUwpQAd4w1UiYazEnbIsanpDoqiLH6gSP5EUcI
-oNHtCKRZqZ/j3h4knTGnEjxS0ATCrGTMTLZ5HP4pdZF4shvbVv6qyB+W8Xrc3g4j
-DsoOqnJEC3Cezz9mPHqCqbghQEKzLEMA8daEErVUqwjiZsTPSwY3BYMB6FG/r3QP
-v51msgFnJWkXHybAYVYmMvDytYOF/GZxifHP/TJDLjxW8v7G+w+Z7HQU2RcuTYHT
-1XolLcuvmzlTlhIT5hCTzPe/MjtRX1zuy+1jzmQ76JeSOpcOM+NlnsyzhWc/lGhe
-742VS6ObYC9qN6LYGmIyM4SUVn23I7W8dxnRGByk0Nd1Px4k72pxKw7vk+/WMqNk
-fHj50M6CMG3fE4XHm8tzy4cnMvwbIbDN7PXSv4gcKvC+PmvHQkQ=
-=4jYk
------END PGP SIGNATURE-----
-
---eqwh37wv6cfzfaak--
+-- 
+With best wishes
+Dmitry
