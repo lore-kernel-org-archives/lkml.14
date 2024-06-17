@@ -1,153 +1,140 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C6818FC99;
-	Mon, 17 Jun 2024 07:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D665B187544
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718610093; cv=none; b=Qwi4Xc+u2L+te1otZgVcFZWh9QoMjUs7qcom12ktfoigUXiIs2HqUSXxCKl4g6xpZC3cS1uFASyOqMViMcByEZIiX1J8D5DXB9ZA2+gqm7VFpS7HCN0MM50IzrlVcBEXfRfh1lYF0rV+jQarm3kZtic/QBwYy/nWPQr9nRPpB3g=
+	t=1718610226; cv=none; b=c+PuUAQF7bTxMCV6LDW740HAy0mMvUP8tPZKJ8F/7NZkaT7HJYzHI6iDwg92o5N9bJJmx1yx4wJ9p9QQMIaERg8cpdi07/InhvSulFOwFnoms3Pvfp/q5Nv7a08Nl0BaxLMBKuKUfXZzdCwHU24cMgBUCdRI1qWBwWnDWxp58MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718610093; c=relaxed/simple;
-	bh=gjozgmj5PXuXIp5WIMI+3tl/AexBgymhhdMPg4hky8k=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I7fYubK2nsrudu/UTxOrDpE67XB0f3ilLU9fUDfYB43ld+FoUItSwul6MBsrNwheVbtDAxZC/OfHjXQN7F+9hXNGB0Tbp+i3oAxRl7vMaj6W3RktVZPc0/TeUf7AU9ICUbnDc2WRNckqGjSft82yiaKqDQy8GEljKKQCpAw8D3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=OveYK393; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1718610226; c=relaxed/simple;
+	bh=8BJEdFGc/bKOzaqBjHJa7B+oGPgBlMGR+Mnc8XI09bA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZibbupyeZ3/CIexmg5MRuCYXyXe8t/XWv48Y26NlFuP4783bg/Y4QaehTjybVKb3wNVgG3fFvTCKeZiyo7C+swO6Ylf4MeW5R+yL3Wq9ZhZrD+PwkyU+m3Q2tVQM8L4VIx3aA6ro4A9I8rSkgUzADsCLlSD6mrVkkTe1fperpYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1ViBl3A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="OveYK393"
-Received: from [192.168.68.112] (ppp118-210-79-194.adl-adc-lon-bras32.tpg.internode.on.net [118.210.79.194])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id E152D2014F;
-	Mon, 17 Jun 2024 15:41:27 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1718610088;
-	bh=x9+zAFyMZm/7B6EtHFsboC7Irgy20gXAvPeF+y2R7t8=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=OveYK393V8uvj6JEsiSZT7QZl4vPieX0Ju+ZLvf5kbShLas6hXj4+QG7Dxwmt/92Y
-	 H5iBzJlEahDYzQN2ilXXMdTYKofCyR997WswNQyaLjNrChXHXfefaytfdtnQaoRnyc
-	 ZoQoOxgtLM70vjfv7lojCmbd2OTXZcUYLv9hZpYQUKR0bbvGHX2zvYP9Ooy+qO2t/k
-	 a4UkFuKUSKcLo7ZQhZgEficn/6k/jIf6SbHT5EBCz+6aTkJ+ZWsCp9+nKjxfJTtiX8
-	 JRWNJNYjUtF6FXOsJcPdpb3ni+CxTlsrInu/ubsTR/5GGups2Xrtk8EyFJvo26/+kx
-	 RZ17kajnCs9aQ==
-Message-ID: <643e0e9bbab98d442add8e6ef0c39c923942e9d0.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v1 7/7] ARM: dts: aspeed: Harma: remove pca9546
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Peter Yin <peteryin.openbmc@gmail.com>, patrick@stwcx.xyz, Rob Herring
-	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	 <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date: Mon, 17 Jun 2024 17:11:27 +0930
-In-Reply-To: <20240613152425.1582059-8-peteryin.openbmc@gmail.com>
-References: <20240613152425.1582059-1-peteryin.openbmc@gmail.com>
-	 <20240613152425.1582059-8-peteryin.openbmc@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1ViBl3A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57437C2BD10;
+	Mon, 17 Jun 2024 07:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718610226;
+	bh=8BJEdFGc/bKOzaqBjHJa7B+oGPgBlMGR+Mnc8XI09bA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=t1ViBl3AyI7NL+OfXKe9/iIGKb5x4X/cUA1sSxyDpu5OSqsJGofh3LRW3V5+RQg/a
+	 otb6z964S2DHNQugu1r77I2SXOGCq7pCCHSsll7sthmecCShUkn/szXKv0vaLsJ4rl
+	 +O0T6Sd/XnwWGsO1d2PhrxxC6rZ2gVtk9G+kI1oJ8Fa9EPQRGKSY4oI36kARYrEkfL
+	 ry9Vime9qf4dy1AXR7dXqihzaileyY1dDa3NxVhGa/EO0AoZtV3pgCxXpeh/vVVhtK
+	 B0icG3Bg4uAjRU4KH5R8JNUDKu3fDrl9u5XIPPaK7LOe0BxE8hnBTrKoa38Kuhl9dT
+	 JFKyrSxHt3pzg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sJ71k-004VcU-Fj;
+	Mon, 17 Jun 2024 08:43:44 +0100
+Date: Mon, 17 Jun 2024 08:43:43 +0100
+Message-ID: <86iky8j9ow.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	mark.rutland@arm.com,
+	ryan.roberts@arm.com,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/mm: Drop ESR_ELx_FSC_TYPE
+In-Reply-To: <45ace175-9b59-4ba2-91b8-b96151c03c05@arm.com>
+References: <20240613094538.3263536-1-anshuman.khandual@arm.com>
+	<86y179jdbx.wl-maz@kernel.org>
+	<ca66f7ac-97d5-474d-bec4-d0ff79c08eaa@arm.com>
+	<87cyoj3j44.wl-maz@kernel.org>
+	<45ace175-9b59-4ba2-91b8-b96151c03c05@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, ryan.roberts@arm.com, catalin.marinas@arm.com, will@kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Peter,
-
-On Thu, 2024-06-13 at 23:24 +0800, Peter Yin wrote:
-> remove pca9546 and add Aegis fru device
-
-Is there some relationship between these two things? Can you elaborate?
-
-You also add a couple of GPIO expanders that aren't mentioned here?
-
-Andrew
-
->=20
-> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
-> ---
->  .../dts/aspeed/aspeed-bmc-facebook-harma.dts  | 56 +++++++++----------
->  1 file changed, 25 insertions(+), 31 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts b/arc=
-h/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-> index d892e646fced..4ff9e0104bbe 100644
-> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-> @@ -20,10 +20,6 @@ aliases {
->  		i2c21 =3D &imux21;
->  		i2c22 =3D &imux22;
->  		i2c23 =3D &imux23;
-> -		i2c24 =3D &imux24;
-> -		i2c25 =3D &imux25;
-> -		i2c26 =3D &imux26;
-> -		i2c27 =3D &imux27;
->  		i2c28 =3D &imux28;
->  		i2c29 =3D &imux29;
->  		i2c30 =3D &imux30;
-> @@ -391,33 +387,6 @@ gpio@31 {
->  		"","","","";
->  	};
-> =20
-> -	i2c-mux@71 {
-> -		compatible =3D "nxp,pca9546";
-> -		reg =3D <0x71>;
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
-> -
-> -		imux24: i2c@0 {
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
-> -			reg =3D <0>;
-> -		};
-> -		imux25: i2c@1 {
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
-> -			reg =3D <1>;
-> -		};
-> -		imux26: i2c@2 {
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
-> -			reg =3D <2>;
-> -		};
-> -		imux27: i2c@3 {
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
-> -			reg =3D <3>;
-> -		};
-> -	};
->  	// PTTV FRU
->  	eeprom@52 {
->  		compatible =3D "atmel,24c64";
-> @@ -427,6 +396,31 @@ eeprom@52 {
-> =20
->  &i2c11 {
->  	status =3D "okay";
+On Mon, 17 Jun 2024 04:15:40 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> Does the following re-worked patch looks okay ? Earlier set_thread_esr() changes
+> can be dropped from arch/arm64/mm/fault.c and also the original commit message
+> still makes sense.
+> 
+> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+> index 7abf09df7033..6cd13ac61005 100644
+> --- a/arch/arm64/include/asm/esr.h
+> +++ b/arch/arm64/include/asm/esr.h
+> @@ -121,6 +121,13 @@
+>  #define ESR_ELx_FSC_SECC       (0x18)
+>  #define ESR_ELx_FSC_SECC_TTW(n)        (0x1c + (n))
+>  
+> +/* Status codes for individual page table levels */
+> +#define ESR_ELx_FSC_ACCESS_L(n)        (ESR_ELx_FSC_ACCESS + n)
+> +#define ESR_ELx_FSC_FAULT_nL   (0x2C)
+> +#define ESR_ELx_FSC_FAULT_L(n) (((n) < 0 ? ESR_ELx_FSC_FAULT_nL : \
+> +                                           ESR_ELx_FSC_FAULT) + (n))
+> +#define ESR_ELx_FSC_PERM_L(n)  (ESR_ELx_FSC_PERM + n)
 > +
-> +	gpio@30 {
-> +		compatible =3D "nxp,pca9555";
-> +		reg =3D <0x30>;
-> +		gpio-controller;
-> +		#gpio-cells =3D <2>;
-> +	};
-> +	gpio@31 {
-> +		compatible =3D "nxp,pca9555";
-> +		reg =3D <0x31>;
-> +		gpio-controller;
-> +		#gpio-cells =3D <2>;
+>  /* ISS field definitions for Data Aborts */
+>  #define ESR_ELx_ISV_SHIFT      (24)
+>  #define ESR_ELx_ISV            (UL(1) << ESR_ELx_ISV_SHIFT)
+> @@ -388,20 +395,33 @@ static inline bool esr_is_data_abort(unsigned long esr)
+>  
+>  static inline bool esr_fsc_is_translation_fault(unsigned long esr)
+>  {
+> -       /* Translation fault, level -1 */
+> -       if ((esr & ESR_ELx_FSC) == 0b101011)
+> -               return true;
+> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_FAULT;
+> +       esr = esr & ESR_ELx_FSC;
 > +
-> +		gpio-line-names =3D
-> +		"","","","",
-> +		"","","presence-cmm","",
-> +		"","","","",
-> +		"","","","";
-> +	};
+> +       return (esr == ESR_ELx_FSC_FAULT_L(3)) ||
+> +              (esr == ESR_ELx_FSC_FAULT_L(2)) ||
+> +              (esr == ESR_ELx_FSC_FAULT_L(1)) ||
+> +              (esr == ESR_ELx_FSC_FAULT_L(0)) ||
+> +              (esr == ESR_ELx_FSC_FAULT_L(-1));
+>  }
+>  
+>  static inline bool esr_fsc_is_permission_fault(unsigned long esr)
+>  {
+> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_PERM;
+> +       esr = esr & ESR_ELx_FSC;
 > +
-> +	// Aegis FRU
-> +	eeprom@52 {
-> +		compatible =3D "atmel,24c64";
-> +		reg =3D <0x52>;
-> +	};
->  };
-> =20
->  &i2c12 {
+> +       return (esr == ESR_ELx_FSC_PERM_L(3)) ||
+> +              (esr == ESR_ELx_FSC_PERM_L(2)) ||
+> +              (esr == ESR_ELx_FSC_PERM_L(1)) ||
+> +              (esr == ESR_ELx_FSC_PERM_L(0));
+>  }
+>  
+>  static inline bool esr_fsc_is_access_flag_fault(unsigned long esr)
+>  {
+> -       return (esr & ESR_ELx_FSC_TYPE) == ESR_ELx_FSC_ACCESS;
+> +       esr = esr & ESR_ELx_FSC;
+> +
+> +       return (esr == ESR_ELx_FSC_ACCESS_L(3)) ||
+> +              (esr == ESR_ELx_FSC_ACCESS_L(2)) ||
+> +              (esr == ESR_ELx_FSC_ACCESS_L(1)) ||
+> +              (esr == ESR_ELx_FSC_ACCESS_L(0));
+>  }
+>  
+>  /* Indicate whether ESR.EC==0x1A is for an ERETAx instruction */
 
+This looks better indeed.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
