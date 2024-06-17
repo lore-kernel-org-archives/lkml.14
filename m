@@ -1,125 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBE71BF38;
-	Mon, 17 Jun 2024 15:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 605A5768E1
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 15:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718638384; cv=none; b=nWk8I0yCb8uM12kR/MLkMrWkfUwq09hO0rHmNCrQ3gNtqo0y1xc6XIZe/s1qkXy9vxULyflJv5bGU6gP4nq3fCKmZRGHjXxZvXXeXYP0pp2eN6ny2TeAfbvO0XX4wx1kFf+cwbfOxBEg88oPThYEroDBmOmMXI/1cxvReNWUx7M=
+	t=1718638438; cv=none; b=T6u3GLFCvEWJjtWrPAEeNLHLMY46ysWLS8SWXJwn9AwkK6dp56bFZUaaSObFyS/Vw+abzZ2Wklog9bQSfaBolVStCkrVUTE69dexJ+Do1X2Snh1PTT3c4jl7NeUdjyggQfehjip8cwg7C3H513+dpUNNyi5lxickvmR+KYw0kEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718638384; c=relaxed/simple;
-	bh=HxCgZ9RRehmuaY6O4D/DkqsCxzUh2/Ih2ogkzpYGqys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uBvXYy0eqK/doFzPpBxLmWkrvsJsSaK8GejFB4BUpHn4l3pPdYJ0AitIQ8ex2XMkxFSvNCcJOStPbQfX1YbU6Jx/+ibmib1MqPZUrPIJyl265vSVDuMpgOqfL9r0Dr9Upi6Seee2Iys3UDeCRVeT6TMEEDh/dza+BuvF9tphv4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cq5T+6Ci; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718638438; c=relaxed/simple;
+	bh=pHiu+hAd4XU2vX1VrkxJP6YEyAUBEy25VGv1TWYVPcU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bH62TJUwfEE4V3nxHB1tyAwq5h/SRshXDNTzNebdC7eJhF8StHfmA810yTiQkq/9fyCG3QA9XCyPExq2ohg1yDNbevUhnrPzcHO3MNc8+hgiB2MApO96RVZF8/9kL5r07KeAF7X4p5U3q7KLFZfnqAkbYDEaSEYMBY258bb0Ga0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jyJLQ0yO; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cq5T+6Ci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F8FC4AF1C;
-	Mon, 17 Jun 2024 15:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718638384;
-	bh=HxCgZ9RRehmuaY6O4D/DkqsCxzUh2/Ih2ogkzpYGqys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cq5T+6Ci5gl+/lsjeByOrNUYs1W4yi2O0xOuvt3SOBaQpxoiuXxIozmJ9BktASDdb
-	 IiegacTovdT5OMiyAfbHHRzCj40MJJWSlgbI+mkP0McRnkIvtbu0aLBShEVreEABgU
-	 WZoyO+ShWJKDCgXfYoDB4Z3Pg/DhgJWsQkeRhyXxjkTBkvNXyFczzUQQSiUXC2C6t7
-	 zdRv5nuvylPllepQjfdauJMZjzLn9Z66qDwNpfaQL6u8gLq38HTURc58lVN/qXoVgn
-	 kumsZhxSvo0yLZe0FSWn2xAxJt93rlpLEiQqtWQvRb2QLhwjamvBelDSOyTYUk2J3p
-	 jAgEr4evAWABw==
-Date: Mon, 17 Jun 2024 16:32:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Yixun Lan <dlan@gentoo.org>, Yangyu Chen <cyy@cyyself.name>,
-	linux-riscv@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jesse Taube <jesse@rivosinc.com>
-Subject: Re: [PATCH v1 0/9] riscv: add initial support for SpacemiT K1
-Message-ID: <20240617-synapse-carmaker-0a59c7c6edb7@spud>
-References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
- <20240616-exorcism-computing-e11e26084a62@spud>
- <20240616224811.GC3983622@ofsar>
- <ZnBEBQjTQtFs-fXt@xhacker>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jyJLQ0yO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=7OviY
+	DEQb7uRFcJ+eACIcQxXYLnr6KuLZxlnKBnBsaI=; b=jyJLQ0yOFz/4Yu2UG8Xba
+	/tsXf/vMWZ0NDoxtu/bRZlAl3Xdp9V3em/sjV+GNLYkR3RdQFTtKI5dfgz46k1/Y
+	qFEQhFUtqfEr4dEhzpinL2z/1zmWfQvH5fFvsYu9FAYcrugzjjMgcA2fvUDIhQUc
+	VGbqHrbqqxMNrPw3763YuA=
+Received: from localhost.localdomain (unknown [111.35.186.64])
+	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wDnFys+V3BmcLM3BA--.12089S4;
+	Mon, 17 Jun 2024 23:33:25 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: surenb@google.com,
+	kent.overstreet@linux.dev,
+	akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [PATCH] Add accumulated call counter for memory allocation profiling
+Date: Mon, 17 Jun 2024 23:32:50 +0800
+Message-Id: <20240617153250.9079-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AaEPeEN+LnYVG4mh"
-Content-Disposition: inline
-In-Reply-To: <ZnBEBQjTQtFs-fXt@xhacker>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnFys+V3BmcLM3BA--.12089S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCry5WF13CF4UGF18Xw1DKFg_yoW5Xr4rpF
+	4Y9F1UGan5JrykC3Wxtw1vqry3t3yjka43KrWjg395uF1YyrWDXayDKr1j9FyxCFy0gFnF
+	vwnIg3y7C3WkA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE1vVZUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMwYBqmXAl5KK4wAAsX
 
+Accumulated call counter can be used to evaluate rate
+of memory allocation via delta(counters)/delta(time).
+This metrics can help analysis performance behaviours,
+e.g. tuning cache size, etc.
 
---AaEPeEN+LnYVG4mh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: David Wang <00107082@163.com>
+---
+ include/linux/alloc_tag.h | 11 +++++++----
+ lib/alloc_tag.c           |  7 +++----
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
-On Mon, Jun 17, 2024 at 10:11:17PM +0800, Jisheng Zhang wrote:
-> On Sun, Jun 16, 2024 at 10:48:11PM +0000, Yixun Lan wrote:
-> > Hi Conor
-> >  Thanks for bringing this up
-> >=20
-> > On 19:35 Sun 16 Jun     , Conor Dooley wrote:
-> > > On Mon, Jun 17, 2024 at 01:18:52AM +0800, Yangyu Chen wrote:
-> > >=20
-> > > No MAINTAINERS update, so I figure that means you don't want to maint=
-ain
-> > > it going forwards? If there's someone out that that does care about t=
-he
-> > > spacemit k1 (Jesse maybe?), then I'd be more than happy to have them
-> > > look after it.
-> > Yangyu kind of has limited time, too many stuff for him..
-> >=20
-> > I'd volunteered to help on this if it can fill the gap
-> > Also I'd be more than happy if anyone willing step forward to co-mainta=
-in..
->=20
-> Does maintainership work like this? Is willing to do enough?
-> FWICT, maintainership involves active patch contributing, reviewing and
-> maintaining the whole SoC. It is better to take over the maintainership
-> after showing enough patch contributions and understanding of the SoC.
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index abd24016a900..62734244c0b9 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -18,6 +18,7 @@
+ struct alloc_tag_counters {
+ 	u64 bytes;
+ 	u64 calls;
++	u64 accu_calls;
+ };
+ 
+ /*
+@@ -102,14 +103,15 @@ static inline bool mem_alloc_profiling_enabled(void)
+ 
+ static inline struct alloc_tag_counters alloc_tag_read(struct alloc_tag *tag)
+ {
+-	struct alloc_tag_counters v = { 0, 0 };
++	struct alloc_tag_counters v = { 0, 0, 0 };
+ 	struct alloc_tag_counters *counter;
+ 	int cpu;
+ 
+ 	for_each_possible_cpu(cpu) {
+-		counter = per_cpu_ptr(tag->counters, cpu);
+-		v.bytes += counter->bytes;
+-		v.calls += counter->calls;
++		counter		= per_cpu_ptr(tag->counters, cpu);
++		v.bytes		+= counter->bytes;
++		v.calls		+= counter->calls;
++		v.accu_calls	+= counter->accu_calls;
+ 	}
+ 
+ 	return v;
+@@ -145,6 +147,7 @@ static inline void __alloc_tag_ref_set(union codetag_ref *ref, struct alloc_tag
+ 	 * counter because when we free each part the counter will be decremented.
+ 	 */
+ 	this_cpu_inc(tag->counters->calls);
++	this_cpu_inc(tag->counters->accu_calls);
+ }
+ 
+ static inline void alloc_tag_ref_set(union codetag_ref *ref, struct alloc_tag *tag)
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 11ed973ac359..c4059362d828 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -66,8 +66,8 @@ static void allocinfo_stop(struct seq_file *m, void *arg)
+ static void print_allocinfo_header(struct seq_buf *buf)
+ {
+ 	/* Output format version, so we can change it. */
+-	seq_buf_printf(buf, "allocinfo - version: 1.0\n");
+-	seq_buf_printf(buf, "#     <size>  <calls> <tag info>\n");
++	seq_buf_printf(buf, "allocinfo - version: 1.1\n");
++	seq_buf_printf(buf, "#     <size>  <calls> <tag info> <accumulated calls>\n");
+ }
+ 
+ static void alloc_tag_to_text(struct seq_buf *out, struct codetag *ct)
+@@ -78,8 +78,7 @@ static void alloc_tag_to_text(struct seq_buf *out, struct codetag *ct)
+ 
+ 	seq_buf_printf(out, "%12lli %8llu ", bytes, counter.calls);
+ 	codetag_to_text(out, ct);
+-	seq_buf_putc(out, ' ');
+-	seq_buf_putc(out, '\n');
++	seq_buf_printf(out, " %llu\n", counter.accu_calls);
+ }
+ 
+ static int allocinfo_show(struct seq_file *m, void *arg)
+-- 
+2.39.2
 
-I was going to reply to your other patch about providing more complete
-"basic" support for the SoC, but I guess I'll reply here and address
-both points. After the k230 and th1520, which were both merged with very
-basic support and have made very little progress towards being a useful
-platform, I'm pretty reluctant to merge another platform in a super
-basic state. I was going to make this point before you brought it up,
-but it's good to know I am not the only one with that view. To be clear,
-I'm not pointing blame for those platforms, I'd just like to avoid a
-repeat. If Yangyu doesn't have time to do any development work on the
-platform, I'd like to see someone else (and as I mentioned Jesse is
-interested) take on getting some of the basic driver patches written and
-merge only when those are accepted. Having no in-tree clock and pinctrl
-drivers is definitely a hindrance to other people doing parallel
-development of drivers and I'd like to avoid that.
-
-Getting back to your point in this mail, whoever gets the platform to
-that state is well suited to looking after it going forwards. Some other
-interested parties could also join as reviewers. I don't want to see
-people joining as maintainers that are not going to have an interest
-in the platform going forward, as that'll just end up with me as the
-defacto maintainer.
-
-Thanks,
-Conor.
-
---AaEPeEN+LnYVG4mh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnBXKgAKCRB4tDGHoIJi
-0v20AQCpR2ZQ2v2NRkN0DYxAd/yPPIfKqlUlrmJB2U/evik29gD9FRxjtuXoD1XB
-QPAeBrDfwe+kvuWdHG1CeRwlLMpItAA=
-=xn4V
------END PGP SIGNATURE-----
-
---AaEPeEN+LnYVG4mh--
