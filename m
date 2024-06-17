@@ -1,139 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBE1190694;
-	Mon, 17 Jun 2024 09:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13E1190685
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615379; cv=none; b=CZG0vAjbL7gnHE80XagZxhWcrLtd0g/iqTA0OoH+y784cAg3vVPm1Twe6/ZECD0HGjaDQhd7NjH6WrTnt/PL6yoy1Cmr+aKMuIOOkQImFKSFCQLLwdCXE+pao8TSglTrHALngQZn1sT9z6gO1kWwtpNTNpVr2ETur5/IhZp1HR8=
+	t=1718615423; cv=none; b=Lb42FRc+Oz3nISQ+M+6slyr66NHT52EHO7I7RF6KZwVN3QXxIbQ0yVsYHDRIwtBJFBPng9GlYg7KbWImn9/cXQ+ceJ1Vajb4hjhu2V3ARa1lZ5/24rPhBLsYOY+DJnseD7YC5LBBy0xyegxZysLLldCV1fcksqqqDCAMz6tdEC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718615379; c=relaxed/simple;
-	bh=CFsb4JRR8B7+LNbbg/vD4+mfvHSBhr5GHHr0I+YW3Zc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=IKzzaJm+catIrS1coFwXGlS2UYpOepUaksgD1AgweXfOUpPtPjcyHEZyaacDMv+3sFzl4L0uk9pp0KQ4stnk7svodTsM+q/Ke8xMeRPbLxkEHBKQqBoVXmCmG/irNwjCrh2Qk+I/4PZi2c6PvciHYvbDL4p0+SkKzgy66pxRFJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1c5oIuT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718615423; c=relaxed/simple;
+	bh=DdCPOdQmrAjhuhY9h+trWlJUu0TJ43Y9MmSImJCW2uA=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=XglVRq827Uf3Se79H+NkLvK/tduvpqd3aXi/Ya47GcyG4hb/X4NicRndZ5vyEYhJpWUrXc7utrCtxM0KyotI0QpcimdQ/3BAsZ9Rf7OnCC4fo0k4Hf0HpwvsJ+ir8guo93GP8cNCyn8v9yNlg3Lx/KbrXdk9ky/kqW/lKxqJvoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=AuE/mqPJ; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1c5oIuT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C68C3277B;
-	Mon, 17 Jun 2024 09:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718615379;
-	bh=CFsb4JRR8B7+LNbbg/vD4+mfvHSBhr5GHHr0I+YW3Zc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=G1c5oIuTePKfG2RzKc8tjI5+qJyx22PFYRthWIJb40HJGySFJR02dRUwTKxt8qCdV
-	 QvMWlvTPpO/998/8121SGDWwPusP7s+ExTE/Mk20ukPkEnUI+aoPe4tZHRTQGmerON
-	 WqyW5MrPNbTFAdSkUk+XoRj/xih/OjLlaE/Ve5bbghMw2lUdh6S9P2XvmRJ5QTNAoE
-	 CjoOzYnL4feeyss7uNmDJom8g7ut1HyCz6Dx7KdAH23aRkzj6r+9nvearD04vM9mjd
-	 nOVkiXu/A70y1Bsye0WO/tO+wrzx3cUmIHjPmDTTrL4ZL9hgwCUSg85SwE+tcqewxk
-	 5+y7QOzLvi2gg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,  "David S . Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  Jeff Johnson <jjohnson@kernel.org>,
-  linux-wireless@vger.kernel.org,  netdev@vger.kernel.org,
-  devicetree@vger.kernel.org,  ath11k@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  ath12k@lists.infradead.org,  Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v9 1/2] dt-bindings: net: wireless: qcom,ath11k:
- describe the ath11k on QCA6390
-References: <20240605122106.23818-1-brgl@bgdev.pl>
-	<20240605122106.23818-2-brgl@bgdev.pl> <87h6e6qjuh.fsf@kernel.org>
-	<CAMRc=MdiKxtnN+g92RUTXdOydaPV5M2u5iUdKyE2SNvDkdXAjg@mail.gmail.com>
-	<871q5aqiei.fsf@kernel.org>
-	<CAMRc=McacZMP-51hjH+d8=PVe+Wgw4a8xWcv0sRPLJKL_gP=KQ@mail.gmail.com>
-	<87sexqoxm9.fsf@kernel.org>
-	<CAMRc=McYAbhL5M1geYtf8LbgJG5x_+ZUFKXRuo7Vff_8ssNoUA@mail.gmail.com>
-	<8db01c97-1cb2-4a86-abff-55176449e264@kernel.org>
-	<CAMRc=Mer2HpuBLGiabNtSgSRduzrrtT1AtGoDXeHgYqavWXdrA@mail.gmail.com>
-	<87ikyenx5c.fsf@kernel.org>
-	<CAMRc=MdPQu-r4aaeag9apYP1-FoQ2-_GAk_qnHqDz-jWibRDFQ@mail.gmail.com>
-	<CAMRc=Mfsqnfy-Q++QyZNmsYoV72hUoNFEDCW6KZ0H_MEHEe5Rw@mail.gmail.com>
-Date: Mon, 17 Jun 2024 12:09:33 +0300
-In-Reply-To: <CAMRc=Mfsqnfy-Q++QyZNmsYoV72hUoNFEDCW6KZ0H_MEHEe5Rw@mail.gmail.com>
-	(Bartosz Golaszewski's message of "Fri, 14 Jun 2024 09:18:14 +0200")
-Message-ID: <878qz4kkaa.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="AuE/mqPJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1718615418;
+	bh=3cwK7/F68hnzfW+WeXsBbPpNomD2U0ZeRwICxZjWgq8=;
+	h=From:To:Cc:Subject:Date;
+	b=AuE/mqPJvwBUXPzvRj7/iMiX8TTXA7DMfRYBsMO4JJM5e0lGMJtBKOSz5T+nDLV1E
+	 Nq9z5SyLexPrJQyAIq/buqkwh2WYKjIfNDqrie54EypwHkN89gtb9Qd9vuN2nCK8Ze
+	 //E5dilhJkfndcQVb/pGgwN7pCjKD0ooexXaS01w=
+Received: from localhost.localdomain ([203.119.160.29])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id FA3A60F; Mon, 17 Jun 2024 17:03:58 +0800
+X-QQ-mid: xmsmtpt1718615038t0ywb5yy8
+Message-ID: <tencent_F6283AC33634D608765A49147F203961E308@qq.com>
+X-QQ-XMAILINFO: Mi1i9A6j4UyX6l/q9sLmBwaskHCdXxA+7W3RCVvUTcj+VlB6ikqnoi9/4o7OUt
+	 mf/0uAifwiUKPNqh+IWQvZ10usBaxSJknz9+PExUQAGNE7bbzvjYXw71gUtnoVctuRtT14nvHAGn
+	 ZmkczWgT09fOUOjR1gnqbNwvlItUXbbINEAwv7oZoIylApHE+d89Jh8yQGBk1BlulZCaUY30EdQ9
+	 71uG39iadx2V8wYjh8tk+A8PvjDwDbpP4l3j+EJvevcWDyZXRpAodkhCN61N2YRckZQkmRPUdNmX
+	 eh61G6Rr+9/iJVwRKDx9RJlC2rAVLSamQJYzufw7cm/lt7UtlKtaCT+iephiv07zVypJSmHrDiNv
+	 R03v8U14WYgpSqdk6/IyjEWiOvxs6OXRSv/JA/XsG2UyhxiCZmHMvn718uU5ms6ClJDp7kAAAT4C
+	 fFhgllhjk7P7fcGjNDjomv/qd6/QsXCJ07I5TmVFBqpvH9OKDUT7By1KahPvklAHiqGZsvNZ+wyV
+	 4/JZtHb6B/eh5CqQX7CAIBK6HNGdtd3WDAeTq+vaeZ9xe5hNOAp91SzQXfL9eiE3C/ZKom5gbJKf
+	 3m4TMcdYznq55ijZFwRqug1wdOsxzN5t/cxEaCNU6d3DJncLeHu25ObFZH99eGR7hPocc1TO4pHn
+	 wcnlfUsx82QTQlC1Y6hKU5enodN8aRtwvmO8l8e8ik2FP+i9w94pirRryX+Bg+HntaqXJoe/woiV
+	 Gfq4/Rx+jyestsq4mD5NC3+w545ZmQE1CznF8b8Q505xMI6KRNDkqIUnwDOnbkNqTtPF1kr9KUYv
+	 SQzZanCKhPTuGuvanMhc11Oj58dNJfDdq3NvMkFo2aHPMTULq2Cd6UK6LIH2PotWingAXo3yNPPU
+	 x3mjpMBKFCOsrRKw40n4Rih+irrV2HuQgZBRl1AJV5x8qJNwSRtkKqHUnX7CamPJi84j/v2pEgr+
+	 wMG0HlFFdOotmYtENgQTVuAWfIi1jQkIyxcpaUEwtoL7shobHCRKpuNjd2CkhA37E0tWl2RbCBjx
+	 kMnDlldVrwLhWqS95eJ+SP4GNoHNczOoZhjlXgVF+9XCXmcqhbPOj0uudc4XFaM4yqEOutih0v6u
+	 zGybo7faf1nXXeMpjz25wAOPuRGg==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: wodemia@foxmail.com
+To: alexs@kernel.org,
+	siyanteng@loongson.cn,
+	corbet@lwn.net
+Cc: linux-doc@vger.kernel.or,
+	linux-kernel@vger.kernel.org,
+	Tao Zou <wodemia@linux.alibaba.com>
+Subject: [PATCH 1/1] zh_CN/admin-guide: Add zh_CN/admin-guide/numastat.rst translation document
+Date: Mon, 17 Jun 2024 17:03:56 +0800
+X-OQ-MSGID: <20240617090356.54592-1-wodemia@foxmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Bartosz Golaszewski <brgl@bgdev.pl> writes:
+From: Tao Zou <wodemia@linux.alibaba.com>
 
-> On Wed, Jun 12, 2024 at 2:52=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->>
->> On Wed, Jun 12, 2024 at 2:49=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wr=
-ote:
->> >
->> > Bartosz Golaszewski <brgl@bgdev.pl> writes:
->> >
->> > >> >> Sure, I don't need DT but that's not my point. My point is why r=
-equire
->> > >> >> these supplies for _all_ devices having PCI id 17cb:1101 (ie. QC=
-A6390)
->> > >> >> then clearly there are such devices which don't need it? To me t=
-hat's
->> > >> >> bad design and, if I'm understanding correctly, prevents use of
->> > >> >> qcom,ath11k-calibration-variant property. To me having the suppl=
-ies
->> > >> >> optional in DT is more approriate.
->> > >> >>
->> > >> >
->> > >> > We require them because *they are physically there*.
->> > >>
->> > >> I understand that for all known DT QCA6390 hardware, the supplies s=
-hould
->> > >> be provided thus they should be required. If in the future we have
->> > >> different design or we represent some pluggable PCI card, then:
->> > >> 1. Probably that PCI card does not need power sequencing, thus no DT
->> > >> description,
->> > >> 2. If still needs power sequencing, you can always amend bindings a=
-nd
->> > >> un-require the supplies.
->> > >>
->> > >>
->> > >> Best regards,
->> > >> Krzysztof
->> > >>
->> > >
->> > > Kalle, does the above answer your questions? Are these bindings good=
- to go?
->> >
->> > To me most important is that we are on the same page that in some cases
->> > (eg. with M.2 boards) the supplies can be optional and we can update t=
-he
->> > bindings doc once such need arises (but we don't make any changes right
->> > now). Based on point 2 from Krzysztof I think we all agree, right?
->> >
->> > Just making sure: if we later change the supplies optional does that
->> > create any problems with backwards compatibility? It's important that
->> > updates go smoothly.
->>
->> No, you can always relax the requirements alright. It's only when you
->> make them more strict that you'll run into backward compatibility
->> issues.
->>
->> Bart
->
-> Kalle,
->
-> Is that ok with you? Can we get that queued to avoid the new
-> check_dtbs warnings in next when the DTS changes land?
+Add translation zh_CN/admin-guide/numastat.rst and link it to
+zh_CN/admin-guide/index.rst while clean its todo entry.
 
-Yes, this patchset is already on our pending branch and should be
-applied soon. I was on a long weekend hence the delay.
+Signed-off-by: Tao Zou <wodemia@linux.alibaba.com>
+---
+ .../translations/zh_CN/admin-guide/index.rst  |  2 +-
+ .../zh_CN/admin-guide/numastat.rst            | 50 +++++++++++++++++++
+ 2 files changed, 51 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/translations/zh_CN/admin-guide/numastat.rst
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
+index ac2960da33e6..0db80ab830a0 100644
+--- a/Documentation/translations/zh_CN/admin-guide/index.rst
++++ b/Documentation/translations/zh_CN/admin-guide/index.rst
+@@ -68,6 +68,7 @@ Todolist:
+    cpu-load
+    cputopology
+    lockup-watchdogs
++   numastat
+    unicode
+    sysrq
+    mm/index
+@@ -109,7 +110,6 @@ Todolist:
+ *   module-signing
+ *   mono
+ *   namespaces/index
+-*   numastat
+ *   parport
+ *   perf-security
+ *   pm/index
+diff --git a/Documentation/translations/zh_CN/admin-guide/numastat.rst b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+new file mode 100644
+index 000000000000..4f7fee557cb5
+--- /dev/null
++++ b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+@@ -0,0 +1,50 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: Documentation/admin-guide/numastat.rst
++:Translator: Tao Zou <wodemia@linux.alibaba.com>
++
++.. _cn_numastat:
++
++
++===============================
++Numa策略命中/未命中统计
++===============================
++
++/sys/devices/system/node/node*/numastat
++
++所有数据的单位都是页面。巨页有独立的计数器。
++
++numa_hit、numa_miss和numa_foreign计数器反应了进程是否能够在他们偏好的节点上分配内存。
++如果进程成功在偏好的节点上分配内存则在偏好的节点上增加numa_hit计数，否则在偏好的节点上增
++加numa_foreign计数同时在实际内存分配的节点上增加numa_miss计数。
++
++通常，偏好的节点是进程运行所在的CPU的本地节点，但是一些限制可以改变这一行为，比如内存策略，
++因此同样有两个基于CPU本地节点的计数器。local_node和numa_hit类似，当在CPU所在的节点上分
++配内存时增加local_node计数，other_node和numa_miss类似，当在CPU所在节点之外的其他节点
++上成功分配内存时增加other_node计数。需要注意，没有和numa_foreign对应的计数器。
++
++更多细节内容:
++
++=============== ============================================================
++numa_hit        一个进程想要从本节点分配内存并且成功。
++
++numa_miss       一个进程想要从其他节点分配内存但是最终在本节点完成内存分配。
++
++numa_foreign    一个进程想要在本节点分配内存但是最终在其他节点完成内存分配。
++
++local_node      一个进程运行在本节点的CPU上并且从本节点上获得了内存。
++
++other_node      一个进程运行在其他节点的CPU上但是在本节点上获得了内存。
++
++interleave_hit  内存交叉分配策略下想要从本节点分配内存并且成功。
++=============== ============================================================
++
++你可以使用numactl软件包（http://oss.sgi.com/projects/libnuma/）中的numastat工具
++来辅助阅读。需要注意，numastat工具目前只在有少量CPU的机器上运行良好。
++
++需要注意，在有无内存节点（一个节点有CPUs但是没有内存）的系统中numa_hit，numa_miss和
++numa_foreign统计数据会被严重曲解。在当前的内核实现中，如果一个进程偏好一个无内存节点（即
++进程正在该节点的一个本地CPU上运行），实际上会从距离最近的有内存节点中挑选一个作为偏好节点。
++结果会导致相应的内存分配不会增加无内存节点上的numa_foreign计数器，并且会扭曲最近节点上的
++numa_hit、numa_miss和numa_foreign统计数据。
+-- 
+2.39.3 (Apple Git-146)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
