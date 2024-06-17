@@ -1,99 +1,83 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D231A92F7;
-	Mon, 17 Jun 2024 13:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616AF1AA4B1;
+	Mon, 17 Jun 2024 13:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630823; cv=none; b=eunBvZHVEeQiXmKx2wYUxc3Y7+vae0yceZJzuey0PvBtzDnkwwfZb273bFGo/Qt9leriZ3n0b5SvlXBgjNPmXrXSaZMRz3dsTZYphQH+qaLHgJL0FOAxYQ2OGn1PWO4zjK2dHhBTRm3u1tEkqfFqM2WOCi4laFZ2F9N69t0S0+w=
+	t=1718630833; cv=none; b=QuWi5gJWyzh4b5wmmVAF7CTpHVZf+IjrVcqX4nymfYC258CYavIf6uVohqJTPAV/jVsveZoOlg1Kd29vl8FmJg5TUsQZjFie0IN0nJCacyH5YUTK3SJlRqx54L9sy4PO8bM3t6kK3IGzx6KY6dmYt0/Asn8gjPW1H8qCeUsdYoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630823; c=relaxed/simple;
-	bh=G//SrmHPDQFLp8xCJwKCuDOXuySp4l9Sbak8tJG/bGo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=n5M2v9vdZRu0I/5Z2RrTa9eWMCuzsCLpcBapjOcFh7xpIRDTV/hJByp2Lx/mubgAZye/2K8BQz4gc4oyy0+Kt7z+YjJ+EDgvxoX7MGC7xNk0IbL4IYSvuFzFEW2D5FTL9olwNf4H7DEwSgzy/JDz5GUfNQ9AwskRxm545EjZbEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IGB+BapP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dxlKL6FP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718630833; c=relaxed/simple;
+	bh=//3aVNV1+rbdJo2MftE5KH8BpelNcEsO7/rdmGtajjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WNbMDE4RgfhWFw8pAyyKlNniyu3v0FQfZWMJj6vdznFcCRNfR4KNtJNfx+f3i9d4ZfqwM9WZPaturnC9Vc2/r4a5FYAjwSNz2MDQSAhQbc+lwT8RedX1BfPO4ysbmB+Rj7TBHGtcCo5Wz06XbkBSPyH57M7teg0aoF8hqBknXAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tq80RPP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IGB+BapP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dxlKL6FP"
-Date: Mon, 17 Jun 2024 13:27:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718630820;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUhTSWmW2FioYYejQBMDk6IqEilwsXlIaggC7fDx/e0=;
-	b=IGB+BapPkIAtcshWLzAhxznT/UqgJDJ8PT/AER+wIC7I9ipPTtH6TC57TPRUr0qIR5YGOJ
-	fLVW0lhsyJos+vNlbnOD4Mni/c30fP6Xy+X4wXCCn2Z/dIf3Q2JLBrqhHCdEeI86u689gI
-	/NFnsgF8nJrEi+NdB6DoVIFWwv+PqCNldso3lIrHatiIHJqIlCbgpxSMwOhYdaA2sEvt0Q
-	Ncd5ptABZCjt07d/WcA7pv/5dbl6yqavDerET3Ttn8T6IY64JyZw+1NWDfIPTCnvbI+MpM
-	fu90CGaq7Eb3fM9MU+53xBwtEf07QADBoN9TPG0UXlw0MEfhVcYIeJGgEj6ZUw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718630820;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUhTSWmW2FioYYejQBMDk6IqEilwsXlIaggC7fDx/e0=;
-	b=dxlKL6FP/rv1UFNDki48Jsn19NoXXzOIl1SMV7thnH3sBH2UYdX5UmECfGKALTqOGkvuMW
-	KCk27kmDD1lV8/Dw==
-From: "tip-bot2 for Costa Shulyupin" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] cpu/hotplug: Fix typo in comment
-Cc: Costa Shulyupin <costa.shul@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240325163810.669459-1-costa.shul@redhat.com>
-References: <20240325163810.669459-1-costa.shul@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tq80RPP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C819FC4AF48;
+	Mon, 17 Jun 2024 13:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630832;
+	bh=//3aVNV1+rbdJo2MftE5KH8BpelNcEsO7/rdmGtajjU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tq80RPP5vOJvKsHqS+gMapx9L5jic0QtVuAiLIo1GbdP7ml1XBgTnYps0crGbasbe
+	 r39RFGHJnYhkhAOXaTuV8Gll5pkzNlz3TOmRSU6X9KjUOZAnN2aat9b1FWkj8fVFFM
+	 87jObltvJvZRAtwAIGNTcn5Yu/potGvCY02LL1OFKgRI7u+rX+FzgnigTL+s48tjcw
+	 JI2PFXX0VcZeBMef3YY3vk0SVGz0XadYk80OEIURmMvdrzF4cC5oW0SfL5yfQ1El5k
+	 q5geO4T24/TMKdc8tM7WCz1jY4Wqi5ZuD2C2rOjKaYvP695Zci79BSJ6AM2MDq7QMI
+	 aJfOlu3/Ca6Lw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Saurav Kashyap <skashyap@marvell.com>,
+	Nilesh Javali <njavali@marvell.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jhasan@marvell.com,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 01/13] scsi: qedf: Set qed_slowpath_params to zero before use
+Date: Mon, 17 Jun 2024 09:26:50 -0400
+Message-ID: <20240617132710.2590101-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171863082039.10875.16195685078841268525.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.219
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the smp/core branch of tip:
+From: Saurav Kashyap <skashyap@marvell.com>
 
-Commit-ID:     f45a6051d582f613f4abc383ae238661f7813302
-Gitweb:        https://git.kernel.org/tip/f45a6051d582f613f4abc383ae238661f7813302
-Author:        Costa Shulyupin <costa.shul@redhat.com>
-AuthorDate:    Mon, 25 Mar 2024 18:38:10 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Jun 2024 15:17:44 +02:00
+[ Upstream commit 6c3bb589debd763dc4b94803ddf3c13b4fcca776 ]
 
-cpu/hotplug: Fix typo in comment
+Zero qed_slowpath_params before use.
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240325163810.669459-1-costa.shul@redhat.com
-
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Link: https://lore.kernel.org/r/20240515091101.18754-4-skashyap@marvell.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cpuhotplug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qedf/qedf_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 7a5785f..7f6c820 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -27,7 +27,7 @@
-  * startup callbacks sequentially from CPUHP_OFFLINE + 1 to CPUHP_ONLINE
-  * during a CPU online operation. During a CPU offline operation the
-  * installed teardown callbacks are invoked in the reverse order from
-- * CPU_ONLINE - 1 down to CPUHP_OFFLINE.
-+ * CPUHP_ONLINE - 1 down to CPUHP_OFFLINE.
-  *
-  * The state space has three sections: PREPARE, STARTING and ONLINE.
-  *
+diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+index 6923862be3fbc..2536da96130ea 100644
+--- a/drivers/scsi/qedf/qedf_main.c
++++ b/drivers/scsi/qedf/qedf_main.c
+@@ -3453,6 +3453,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
+ 	}
+ 
+ 	/* Start the Slowpath-process */
++	memset(&slowpath_params, 0, sizeof(struct qed_slowpath_params));
+ 	slowpath_params.int_mode = QED_INT_MODE_MSIX;
+ 	slowpath_params.drv_major = QEDF_DRIVER_MAJOR_VER;
+ 	slowpath_params.drv_minor = QEDF_DRIVER_MINOR_VER;
+-- 
+2.43.0
+
