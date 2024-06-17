@@ -1,149 +1,140 @@
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01olkn2011.outbound.protection.outlook.com [40.92.98.11])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B9F19A2B2;
-	Mon, 17 Jun 2024 13:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.98.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631326; cv=fail; b=NZX4wcmAaFijjJyAYEAKLeXKRj6TPgir+xih4xnrHPmd7oeCwPE/HJPi2nCVYD/a/5GHtTL950TwzJiHy/l5Lb7eyNbQRUjODh2FlUB5yT0ljATXajRLivioPB7z8K5EN6N4cpt20VA2tHZQKAia8l4VIQlHCJxPzFOgSk0sz/c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631326; c=relaxed/simple;
-	bh=rkY+kycCt5vLHgNj3R00RsDg6Wk4nMA86/ceXrnYifg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iQmUMPSfGHkyz6FZhgVZB4QhonqpR6reZ91UWS92sdwIrQsjCecxNND6gbFSO9qzTtDZMCNmMfjrewkQglT78FUJjW6wLYV6U7Mx82aZIt3TpqHIFbbgZn0ov3EMjmKrOwTipDjJ/R9ONMwPJjgHjs6zurN7oBxJRmjW9W8XqU8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=rO7XoE+r; arc=fail smtp.client-ip=40.92.98.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33331A2FC2
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718631333; cv=none; b=Q6faom7USboPclUUkD9VnwbvN4fdUhPM4p1WxOY57zDNLUX7AQLh7omvjVlMlbLztYFJo7YYXsul0MaRdsVbX3gjJQR9rHUNRfKHwlCZGT36hFbfMeNIMhpIHuer74lvGuni6sYLJ4oaYoseJhs+fCeITRW/FKrk0Rg3dnYhqEs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718631333; c=relaxed/simple;
+	bh=35WKRlgt95dlXzrYED3ZuLd2zlL2yZUiX9zfMTO7aB8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYanKtN6IzZkr4VDTnpvZI7aMYM/xn4x8mpmtnr7bOw5wrlNXlKxhcf2BivgxhM8lg5j5hO8+BHD2nBCm7gjOdZVBJBVNUm14ntplYqutG9PX6HHjywh4IgZQriV6q6SVBba/jKvMG+3a61fvz+gcKGFBLRXFcNUjRwa0MzhjdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=AmHPfDiT; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="rO7XoE+r"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LIBOwuw8HY43bTGXbxwIQ9HqPBu/FtUeFh7bHpAPhW1E/iOFj8Yv03Tj0R/YTtlnlwY/fPg/dggofPNHnKBgjF8j0TiZpWvPIZaFRC08igzl3b37AEBkKg5EQIZHwlJVlL5maIIS1r78S8Yh0WskopMe8lhmQC5G5/HnqGEfWCXL2CSHNQO6m5cgK/ShSucup9nrLPpop+mgv4ZY9sJEL0lXwmhKJzrx3qmEk1/kF2ysC+Cs+T4l7k8DcEsvLj1vAqrVLoUv/uCM/xrUqqpuGzNCWk4ji4nS3eXMF083915fGewnDG9YQuWfDtTYRyU8eS5f3kRzWomDQPyaNCQh4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7jun4NponcZtNhYbkqhxBGPVAQQAhT88zHoteLjDN08=;
- b=PKX5q2r9tYzYy/lpgSF9n7+iqwAEz1T2eRRDibKZYvMNi0J07jhu/fbLIJ50O4Doorz5ykxoEpLOOM/bYIHkPEvRiCgzJ6sFI1iVqAJ7dJRUwhMWuWZPaKyaVOX9AGQ6BLkpfLcxK111MFBaKqtSxZ68JIFD/FCXzOW0jFaVW1dF6s6VMMkLUFwzfsppAjkPZ+c8KyC5jJum6Anasxv28GP4/F0T9GJ+QDmGe99/GXoWL7/mGi+F/5kNOI5msBhwksJSYUVM+zRWAMp3vEMGCpCdU3rnYGZ6f5giFE271cJVWm3X/793Zxz5ETkmb7rKry48BmPRXG9SBAtcW9Thpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7jun4NponcZtNhYbkqhxBGPVAQQAhT88zHoteLjDN08=;
- b=rO7XoE+rfJOyZwH8DIeFeg2FX8dg8GgXGiuuaCDpawESRL/noodTm2EesGyYeCMXchNsmwfk8l75wSeRFNdgjLeMhNRcJi8KPQA/xabN6xsGTEy4VR0Q0QcaRkmHeGtzc75S8SBZ/vkabZpvtwcFg460u8v5PYv+Q0Jce9khcTdmrnb0IEbjsWSn67UV/sSa3JfDgz5XUUBp0jWsHsZLAJpTZytKERICpTMozCucLnesh9OWhUbTZCophlUpY/sBhvHypBgaWWNPdmtpmyB1A1IpVN8G7yNYshgrHDO5gj/JwZQ9HEfJCHeNFGMPwWNq+iORRWtX35JUylzqYO21Hw==
-Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:256::8)
- by OSOP286MB4001.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2f3::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
- 2024 13:35:22 +0000
-Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
- ([fe80::670b:45a6:4c30:d899]) by TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
- ([fe80::670b:45a6:4c30:d899%4]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
- 13:35:22 +0000
-From: Songyang Li <leesongyang@outlook.com>
-To: helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	leesongyang@outlook.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Cancel compilation restrictions on function pcie_clear_device_status
-Date: Mon, 17 Jun 2024 21:35:20 +0800
-Message-ID:
- <TY3P286MB2754F489000B7FA6F9CF19D8B4CD2@TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240615212603.GA1157372@bhelgaas>
-References: <20240615212603.GA1157372@bhelgaas>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [2nef6F6a5KUuqYB3EYVbFVCiymH645im]
-X-ClientProxiedBy: OS3P301CA0044.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:604:21e::16) To TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:256::8)
-X-Microsoft-Original-Message-ID:
- <20240617133520.10450-1-leesongyang@outlook.com>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="AmHPfDiT"
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 1D6CB100009;
+	Mon, 17 Jun 2024 16:35:23 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 1D6CB100009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1718631323;
+	bh=s3IdEpoU8Idriuk8g63QAeoI/TR/7zBrB1N7H/17w8U=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=AmHPfDiTxt1A03tynXh9e4ElOYSFwA3pboSyYhjiSNG8gKbnaYEZAZZMOSy6rwT1x
+	 y4WyLGydxdIAhK7mFXjCMFz0gCGChrXigonvXRyRzMmsCTESZyRjUc1uU40TgPhgxQ
+	 7Rii47N1O2fy7bzmaP7fvLDGk3fcUpd/C1Pd2vLou5cx0GljRkqT7nvOXaKQQFfbUb
+	 dUGzzHs7Ot/Noyca2lt8U1joca4VAqTw5Z287f85cphupiZRAxk101WBU4vBUhRX2x
+	 QLs88HsEufe8DnBR+MWI7Vn1WnvCH/t8vuGlocrP4f98uhd2L2KJ7CPjcUM3ZTVw3F
+	 traq7Z2IKwx1g==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 17 Jun 2024 16:35:22 +0300 (MSK)
+Received: from CAB-WSD-0004828.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 17 Jun 2024 16:35:22 +0300
+From: Martin Kurbanov <mmkurbanov@salutedevices.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, Michael Walle <michael@walle.cc>, Mark
+ Brown <broonie@kernel.org>, Chia-Lin Kao <acelan.kao@canonical.com>, Md Sadre
+ Alam <quic_mdalam@quicinc.com>, Ezra Buehler
+	<ezra.buehler@husqvarnagroup.com>, Sridharan S N <quic_sridsn@quicinc.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>, Alexey Romanov
+	<avromanov@salutedevices.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+	<kernel@salutedevices.com>, Martin Kurbanov <mmkurbanov@salutedevices.com>
+Subject: [PATCH v1 3/5] mtd: spinand: make spinand_wait() global
+Date: Mon, 17 Jun 2024 16:34:55 +0300
+Message-ID: <20240617133504.179705-4-mmkurbanov@salutedevices.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
+References: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY3P286MB2754:EE_|OSOP286MB4001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2035cf15-ad52-46c6-2d5f-08dc8ed2560d
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|440099025|3412199022|1710799023;
-X-Microsoft-Antispam-Message-Info:
-	SEW2lyPlVMx04GOQJwu1pA9VnpvH/JC+XVhIAF+47DTYvf4ImmAHXViLEG0iFRJai2oK97bSz3Km30qb2iB0K3WfoFHy3miCv7upYzMDVpfUeUqPFw1mZ7cIcas56/erEmkKUyAUYDKmEdic3yH52gWVhhKv9UsZe0DBm/B4g3O8v/cDdwpjqP8OJ1XDGZf1uaUbF3ctV7mE1VtYgmGrqpFoka9zf5GMExQZaH3/v+DyY1IoRbjFFzRF5D1gO8XR+rqUR2+BE+o5cphmWZHk3uj5AZnSmoPc8F8s1VJwA/Xx/NN83wV1WuhGHXK6bQVnx/OXMIkwQEJoGldn4xodmTvT1bLeSItbQvcTi0L16noj9cx0Hdd7CTzjlg1nov1FOo8mpqBs33IhB5BUeREB3wu/fuMNYqLDh/ERaMwibnX4uWXiQTtoFkwb1QDWvdcEimhWJOGz+UgLDOJquzPADud6ekqTDkC/6Di7G9843FVDVIPUp2AwlRx0Gj5Sc1FUA8u3enP1ES5zvlZAd4x3USjrQTiy8U5nWMWsKO7eCZoCqYWPfFVFY9qz2Jb1Lyq+ue33ya6rd0hF+doxjooQx8ajSbK52F0RBWOQjd6+l1fCAdvWW4vHwyzin++ByFKy
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?B9AwaeoUz830kkAHTg5wO+N+PczDbv/mDK2Lk3GW9gRua7Ik8sUibhhNcvlM?=
- =?us-ascii?Q?M4YhxqfVQmzC3GcnQZuOHofZO8E/U6O+vxoHMM6QQ43EQ3MWPzCTK70ZuO8i?=
- =?us-ascii?Q?p3ZHr1m3poo7Gy33gaoDztTCPAdTFYXP3hiCwBF4zxLxnN4DAMnZt/AwYBBs?=
- =?us-ascii?Q?N3HCNTOYzlXVdbZFfMMkhw7BGt7ltb1Ock+goa3ApYZzNFOqHndJzTj1VRFp?=
- =?us-ascii?Q?mkJY/YN1eKKv9CYUyoSSkkEwhJoYekJ0EUhtp+IU3xosRTSIT0wbelvhaOiw?=
- =?us-ascii?Q?UnY6j+KKC8g+afRAiArrwG+v1N5WsdmSwq0NDYvEnzPfyG64Y4S2vsMgDOAQ?=
- =?us-ascii?Q?cw9+LNZQX537/J+FlRhSL/q0CvXiXnR3stPgjEgZ6W2NVQUr6kuS4HVMljbI?=
- =?us-ascii?Q?oU5o0t86Rzd+cGP7/AayQJdatei3FQ90FalIZ768TvMjkQdcwiJItzHbGhhD?=
- =?us-ascii?Q?oPL0mqILuI+T5k4zTMkkmX3bSuKb9cfc3X2/O+7xoP9KMseNm62rCwXMrB42?=
- =?us-ascii?Q?Vxo/FpFw+osGvGBx8yJpYu+qApyCPtvbwMMz9aU5iwpVsqTN772unZah8aRG?=
- =?us-ascii?Q?emv5so1mmsR9hvz7kt7Femeenz9N81aLipHBz7iYvvl0KsOAMJ/NoLHF94ab?=
- =?us-ascii?Q?E7+OUVl2HxiJhTF5RF2waeacxEjTwRyGlGxvfY7R8j7xhNFB5DWDyAcR9toN?=
- =?us-ascii?Q?NH9L2ItdFRX5mcC9W2KQ9xRS+9aQAwEWVZSkyIK/frZWPqwJs6afbykM012W?=
- =?us-ascii?Q?4QfZ+GIDPC8FgV6/huadvOINFru+JpK7MJ+nkwlYnLDXy8gNQyXvhS7gL5zH?=
- =?us-ascii?Q?1tXcgS1p87rrnJGmFlYT2fYKtAR4hdX+lhnZ6ksW7sT/t/kmbpcG4LjIHW1L?=
- =?us-ascii?Q?BVZQ1FkjedBmfriFSJQcUpSAu7hoQIjir0TD8rba0i1CTHDDF1jp9lP/NEvG?=
- =?us-ascii?Q?OvL7+aQNrSsQIcWlwNQIxxec9YzlL+nTaq8dYIIizOHwt7WqzQxTPw3vUqeE?=
- =?us-ascii?Q?CCi8m057bO9k9Ckq8Cp56RQNtFMDkE/4dHZXvlrhf2NHm1IS851cNqTmrM7u?=
- =?us-ascii?Q?MtSIbXDwQmm6MIEKb1oG7DMiGnoAZ5N7FY5RLd79CH+UeL+1q41es0o1g8di?=
- =?us-ascii?Q?5bhVvUYSCMk66YjvqDzYpZmbTIHPEdqfMVlfayHm5h688vymb8SR07HqjyS8?=
- =?us-ascii?Q?44/HhTQZah0s6O2EUoiKleQSiwBNP6RnhMRqdbRlPjm4JgOqC0bx5Wpm7Rgd?=
- =?us-ascii?Q?OiMXKtwKeB8LXmEnwHof?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2035cf15-ad52-46c6-2d5f-08dc8ed2560d
-X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 13:35:21.9490
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSOP286MB4001
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185966 [Jun 17 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: mmkurbanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/17 11:22:00 #25639124
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Sat, 15 Jun 2024 16:26:03 -0500, Bjorn Helgaas wrote:
-> > On Wed, 12 Jun 2024 15:14:32 -0500, Bjorn Helgaas wrote:
-> > > I think all current any callers of pcie_clear_device_status() are also
-> > > under CONFIG_PCIEAER, so I don't think this fixes a current problem.
-> > > 
-> > > As you point out, it might make sense to use
-> > > pcie_clear_device_status() even without AER, but I think we should
-> > > include this change at the time when we add such a use.
-> > > 
-> > > If I'm missing a use with the current kernel, let me know.
-> > 
-> > As far as I know, some PCIe device drivers, for example,
-> > [net/ethernet/broadcom/tg3.c],[net/ethernet/atheros/atl1c/atl1c_main.c],
-> > which use the following code to clear the device status register,
-> > pcie_capability_write_word(tp->pdev, PCI_EXP_DEVSTA,
-> >                 PCI_EXP_DEVSTA_CED |
-> >                 PCI_EXP_DEVSTA_NFED |
-> >                 PCI_EXP_DEVSTA_FED |
-> >                 PCI_EXP_DEVSTA_URD);
-> > I think it may be more suitable to export the pcie_clear_device_status()
-> > for use in the driver code.
-> 
-> If we want to use this from drivers, it would make sense to do
-> something like this patch, and this patch could be part of a series to
-> call it from the drivers.
-> 
-> But at the same time, we should ask whether drivers should be clearing
-> this status themselves, or whether it should be done by the PCI core.
+Change the function spinand_wait() from static to global so that SPI
+NAND flash drivers don't duplicate it.
 
-After careful consideration, I agree with your point of view.
-I hold a viewpoint that it should be done by the PCI core,
-rather than pcie drivers. I give up this patch, and then I have
-gained a profound understanding of PCIe Core from this communication.
-Thanks,
+Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+---
+ drivers/mtd/nand/spi/core.c | 18 ++++++++++++++----
+ include/linux/mtd/spinand.h |  3 +++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-Songyang Li
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 2cb825edd49d0..c3e3d1e9599f1 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -496,10 +496,20 @@ static int spinand_erase_op(struct spinand_device *spinand,
+ 	return spi_mem_exec_op(spinand->spimem, &op);
+ }
+ 
+-static int spinand_wait(struct spinand_device *spinand,
+-			unsigned long initial_delay_us,
+-			unsigned long poll_delay_us,
+-			u8 *s)
++/**
++ * spinand_wait() - Poll memory device status
++ * @spinand: the spinand device
++ * @initial_delay_us: delay in us before starting to poll
++ * @poll_delay_us: time to sleep between reads in us
++ * @s: the pointer to variable to store the value of REG_STATUS
++ *
++ * This function polls a status register (REG_STATUS) and returns when
++ * the STATUS_READY bit is 0 or when the timeout has expired.
++ *
++ * Return: 0 on success, a negative error code otherwise.
++ */
++int spinand_wait(struct spinand_device *spinand, unsigned long initial_delay_us,
++		 unsigned long poll_delay_us, u8 *s)
+ {
+ 	struct spi_mem_op op = SPINAND_GET_FEATURE_OP(REG_STATUS,
+ 						      spinand->scratchbuf);
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index a0d42a9be333f..3b9e7ed32c81d 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -567,6 +567,9 @@ int spinand_match_and_init(struct spinand_device *spinand,
+ int spinand_upd_cfg(struct spinand_device *spinand, u8 mask, u8 val);
+ int spinand_select_target(struct spinand_device *spinand, unsigned int target);
+ 
++int spinand_wait(struct spinand_device *spinand, unsigned long initial_delay_us,
++		 unsigned long poll_delay_us, u8 *s);
++
+ int spinand_read_page(struct spinand_device *spinand,
+ 		      const struct nand_page_io_req *req);
+ 
+-- 
+2.43.2
 
