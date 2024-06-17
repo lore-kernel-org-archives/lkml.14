@@ -1,120 +1,110 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CA8194092;
-	Mon, 17 Jun 2024 10:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A95819047F
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718618556; cv=none; b=s/UJ3ZNfMP9GqUj7TMFE/GtfaB3R67XZ1A0NPwoVCb2DYILAOGNBy3EdcDofOgYvicgv3ZmaenJ1d/0e02ioO8ACvu55aNchYP1FzZGpOOmZlohnlPk7qA60EJ5RHNxzvTJOik5zt7T6VDd204ENG6m4Cqf2KndZBwTnPimMsXk=
+	t=1718618595; cv=none; b=uXR9cj/HrWWXVMDVOb9Bh4n0WZHome4EVSljte/SXROQuwjrDsLvp/PBeV1rOmQ04YY4lmRowJmj1V9EnHhW2XzHRF0TBio0KycEJRf/W3B1tGv2ykRJegvTQUr56T8uwEhFyd1FyQOtHBe33g5GQUi3bxEYLwYXmZC/7XoICds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718618556; c=relaxed/simple;
-	bh=5ucFmytPGWUITdYIUNvYuJbY8zzIT+lAWia57YkFvQ0=;
+	s=arc-20240116; t=1718618595; c=relaxed/simple;
+	bh=L5aKYq+K9LHs7OusAkwM8HVmwDPeNKVqgx5oq7ZSd/E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ajq7kUaxZWEaQ2FpFfNYU9FdPATHRSB/u/RZcXrTTXkCHByrE80MBkmRRWpBe5YWi+1WrkSCPzCTK8gxNEWlczdRY9lbqSciBD94lcD/W3DnSPPsvAyl1X3jJePbQpO5v6LCvo43bbZ/rb1yY8AskxrSPiTwBTgWGi/A/eRvWs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TXfbg8gC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXChRDN+8eZ6LA6FtIMSZ5i+BThhYAyVOz0XHdS6rl6isy4Qu4/h0gTHccJ32YS+pSJu/b//TRc0I02fJu6hVWkxgCv5n/5kOZUcLpJWOJGtRCpCAxee6NReVqPzJVmqul6l7sAtPRFbviKySqfY5qmLtgLtOVIgcu0khvhGPeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JQZ6um2B; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TXfbg8gC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id ABDC240E021A;
-	Mon, 17 Jun 2024 10:02:26 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id p-SwtidTbXwT; Mon, 17 Jun 2024 10:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718618542; bh=hk8qAv1xkelStwfpGcnWoiVIdVGUKqufug9abuox7ko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TXfbg8gChJROKcS7Y/Q95/XP3hPTOGtUQG9RULQxSAPp/U31ELpExyR7R2eP6JvPv
-	 GBo/JMTUPKJkzBmwfvqv3Aa/OHmtphGUF5ObrfG0KD6KN/uxUNCGaFKX/toaaPmocK
-	 dUruAb5F/VIBChTG3m2nmJRfiI+pJLYYTnNAVP86hIqUJQbLnIjXor7z6r8JsOWymw
-	 +zP7yAp+bxNprgPOZYlLabLJOC+mA1IKIsZ15Ws2UtxL0uWgf/dYDonpJ+c9zA3MnI
-	 KtB0BfSYZgSXDdgBumPTd69RR6BEC07BGeujoaoetOGsO6aXSDtqfUqgJ8IZdx3VXK
-	 bE/EAEhvtfRiy1hhkwI5VkZhHfhA88mlCAjWL3OWlao+ZQceZvRnrDiOpvPskzytIl
-	 dR/2Ttih6SHsZR7ZY6qU2rBTgc2cFyl1BJTz53XnjswrTPrIMv6d7MnlWZ/IWHN5rZ
-	 JfviQAn9l4hwngIfPd6YcRZVzp6Y93p0TAmsxRtBobXqiWP0emeMZV6i1St+lKRzsO
-	 FCl39wI/2EuMIbvWDVPxd49vkTXwgTLK5WYfUjDQPQN5bxDD5rYjIRdG0iFTXst0Y/
-	 3/3ywFM9g6Vor4KD6CyKgeLMCuqNBLfro21rP6XXFx+k7Z4itqZLgT5WJ7Xm3KbrWM
-	 jGWNxY3vqsz4yn0YbfBQH0I4=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 156CB40E01F9;
-	Mon, 17 Jun 2024 10:01:56 +0000 (UTC)
-Date: Mon, 17 Jun 2024 12:01:50 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Zack Rusin <zack.rusin@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-	lkp@intel.com, zack.rusin@broadcom.com,
-	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
-	tzimmermann@suse.de, mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com, linux-iio@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, nuno.sa@analog.com,
-	dragos.bogdan@analog.com, anshulusr@gmail.com,
-	andrea.collamati@gmail.com, oe-kbuild-all@lists.linux.dev,
-	x86@kernel.org
-Subject: Re: [PATCH 1/2] drm/vmwgfx: Fix missing HYPERVISOR_GUEST dependency
-Message-ID: <20240617100150.GDZnAJjoH5wZKu2OAV@fat_crate.local>
-References: <202406152104.FxakP1MB-lkp@intel.com>
- <20240616012511.198243-1-alexey.makhalov@broadcom.com>
- <20240617090709.GCZm_8vdnLzt048UH_@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JQZ6um2B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718618593; x=1750154593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=L5aKYq+K9LHs7OusAkwM8HVmwDPeNKVqgx5oq7ZSd/E=;
+  b=JQZ6um2Bhuhwabez/q/5ByvcGeDh0xQDwlXmbRv62BMb9123t+2n79cx
+   dMtJ0HOTrdfVUnY/2Ed4p4+6dbXNTDUFqSsMoLdDmR7peYlBW/KGMLxMx
+   UN6RxNgWKSOYzUZJFQD0KLSU5xYifK1dHOxi6qWmJWhCYw5wtzHMmQbFo
+   StULRTV//NIZVZv9yURqqbSoAbYjCoSxF70jZcJSo1S1ZgD441vZx3NIT
+   LZvK43C1vp5P/gQKyqnjfw0bYrJ/t6V4IEzmQLjoUMRMLD4QCUe9/cJa9
+   mou6kiKATMWbNa72eKpEGzZSk7flvTloesE4xlDG1HMaRTC/Ht/skE4n9
+   g==;
+X-CSE-ConnectionGUID: a36284zdRoK4zRBUoEnLwQ==
+X-CSE-MsgGUID: jKkbXvvXRkSUOjE78hfV0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="19223103"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="19223103"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 03:03:12 -0700
+X-CSE-ConnectionGUID: H1Q/QF7GTbuFCkwxgUDDKg==
+X-CSE-MsgGUID: jFDmWRUPSL+d49XjExrCZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41249743"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 17 Jun 2024 03:03:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 1A1AB18E; Mon, 17 Jun 2024 13:03:10 +0300 (EEST)
+Date: Mon, 17 Jun 2024 13:03:10 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"lirongqing@baidu.com" <lirongqing@baidu.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH][v2] virt: tdx-guest: Don't free decrypted memory
+Message-ID: <yfoowboa5qwcjkmjggfjx4hm2emhhlwvao3s5rync5anoiyuba@4ezmhhlnb3j7>
+References: <20240614051452.14548-1-lirongqing@baidu.com>
+ <c209517e42fa83cbc3f030293f89813a6c1cfce1.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240617090709.GCZm_8vdnLzt048UH_@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c209517e42fa83cbc3f030293f89813a6c1cfce1.camel@intel.com>
 
-On Mon, Jun 17, 2024 at 11:07:09AM +0200, Borislav Petkov wrote:
-> On Sat, Jun 15, 2024 at 06:25:10PM -0700, Alexey Makhalov wrote:
-> > VMWARE_HYPERCALL alternative will not work as intended without
-> > VMware guest code initialization.
+On Fri, Jun 14, 2024 at 04:13:46PM +0000, Edgecombe, Rick P wrote:
+> On Fri, 2024-06-14 at 13:14 +0800, Li RongQing wrote:
+> > In CoCo VMs it is possible for the untrusted host to cause
+> > set_memory_decrypted() to fail such that an error is returned
+> > and the resulting memory is shared. Callers need to take care
+> > to handle these errors to avoid returning decrypted (shared)
+> > memory to the page allocator, which could lead to functional
+> > or security issues.
 > > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202406152104.FxakP1MB-lkp@intel.com/
-> > Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+> > So when set_memory_decrypted fails, leak decrypted memory, and
+> > print an error message
+> > 
+> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
 > > ---
-> >  drivers/gpu/drm/vmwgfx/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > diff with v1: leak the page, and print error
 > > 
-> > diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/Kconfig
-> > index faddae3d6ac2..6f1ac940cbae 100644
-> > --- a/drivers/gpu/drm/vmwgfx/Kconfig
-> > +++ b/drivers/gpu/drm/vmwgfx/Kconfig
-> > @@ -2,7 +2,7 @@
-> >  config DRM_VMWGFX
-> >  	tristate "DRM driver for VMware Virtual GPU"
-> >  	depends on DRM && PCI && MMU
-> > -	depends on X86 || ARM64
-> > +	depends on (X86 && HYPERVISOR_GUEST) || ARM64
-> >  	select DRM_TTM
-> >  	select DRM_TTM_HELPER
-> >  	select MAPPING_DIRTY_HELPERS
-> > -- 
+> >  drivers/virt/coco/tdx-guest/tdx-guest.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/virt/coco/tdx-guest/tdx-guest.c b/drivers/virt/coco/tdx-
+> > guest/tdx-guest.c
+> > index 1253bf7..3a6e76c8 100644
+> > --- a/drivers/virt/coco/tdx-guest/tdx-guest.c
+> > +++ b/drivers/virt/coco/tdx-guest/tdx-guest.c
+> > @@ -125,7 +125,7 @@ static void *alloc_quote_buf(void)
+> >                 return NULL;
+> >  
+> >         if (set_memory_decrypted((unsigned long)addr, count)) {
+> > -               free_pages_exact(addr, len);
+> > +               pr_err("Failed to set Quote buffer decrypted, leak the
+> > buffer\n");
+> >                 return NULL;
+> >         }
 > 
-> Right, I'll queue this soon but it doesn't reproduce here with gcc-11 or gcc-13.
-> This must be something gcc-9 specific or so...
+> I'm not sure we need the error message, because the set_memory() failure we are
+> most worried about already has a WARN.
 
-Actually, that's a DRM patch.
-
-Folks in To: ok to carry this though the tip tree?
-
-Thx.
+Yeah, I think we should just remove the pr_err(). It will be shadowed by
+the stack trace and WARN() anyway.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+  Kiryl Shutsemau / Kirill A. Shutemov
