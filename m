@@ -1,160 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF83210A2B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498B018A94C;
+	Mon, 17 Jun 2024 17:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718646698; cv=none; b=rCnnkQKK+KuTXHIZ0eBjq8jP2LRpBY5ajz375zuDPGgsjVauxer03tJKnVffOBwZBXZPbb9yn4w0DVm0dg5H+FO1oBGnf5bAdAqiZx872aNW6QimttD8uezJ19aTw1VZmhxK8SbPC6ms7Z8Mw9b5OFtPjWrG783yV64k7id4v1M=
+	t=1718646743; cv=none; b=YcuEBcrpCH7umiIr/H+L1IB8eMx2NnSEohAwWdwmu/HLm4XbTFvcqm9NwbQb15XYdcTBzG0oZ0LLsLdNLchx1tz1JDOpNI598iNszCzT4DUB+OAhmbLkKiP8l3/ZTdJUPDt6VrcuGiwBlQCj+xwJd9COWL/6kXkXia0yV2aOSoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718646698; c=relaxed/simple;
-	bh=05DKzXm7ufvNYjMNjhhavu6W7fJrGElPjR2YxQcqIwA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1K/AkXqXRmu9wIfePMkTxkNnJNBRG6aJcmQiIKMKNj/2ZoPAxvhaA+AR5FDnev+x1m/A/PqoUp3zwVoid+YBOsknF4+trEdSDbcvXWMYvd8AudTAbxQ7tXb3q5dmYnpC3aF7W3O5eCyFKcTH/uugsLue1YL1kM3A6uI2cHbuJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dS24VKWF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718646743; c=relaxed/simple;
+	bh=vk02w9S3tVvpEn7klolVsvvXbuaOMdfrZ5sxrW1smsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P06P0XFCPvi9RwkbizpiAY+db9dOZOHyc3yBMrAft9dSsmAmc62qvQDULY9ck46tcg/duqx36DlMStXc7aIzwAzSuGI0hT6RfwIZ6OB9SAn3jWDDln1dKAaq2oAWImCd0h0QYW3GVWKWxxBS1RrdqjCR4sMEUW8Bndd2OmwqVcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUzpdER7; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dS24VKWF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718646695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UNxZ0AHOB5x7G6gJUqvguXQHUKcvpr7QKbf1RuHG8ZM=;
-	b=dS24VKWFzrvgjIZl5qVsfFiPaC9zEzTSw+rEoo/j5LWEN3NdsboT7kei6nj0yVgyl0xtWM
-	ROMy5K2+IRl1Dl7kPadquln/1ylpAFhTisYGYjI1n9TCv0CUOcdGETTGOB1Ku7AKTwBEWk
-	muXCo2dgo7/d9fWdvwntilXB0sUJKgA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-VGwjcKcrPgK4SDUMc9REuA-1; Mon, 17 Jun 2024 13:51:34 -0400
-X-MC-Unique: VGwjcKcrPgK4SDUMc9REuA-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-35f06558bc3so3135311f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:51:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718646693; x=1719251493;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UNxZ0AHOB5x7G6gJUqvguXQHUKcvpr7QKbf1RuHG8ZM=;
-        b=LTwas/Ul5uPP2XoToDSgaIfWVEUCb/H3BJ7Wv6TP0i4mwRrs0ls8Il+8U7uJdMbUaN
-         ytobgXsagB7QhOl5FJ51Cwz0lkfW+8AXrX1IVuc7IMgb+rK0zq7uSSfoYoqHwOWUvChg
-         goeyDggwjIt2Siv/m8crY5cySIMx092UN7nxKHdBzfdcaSI441L44guLrm21zKobibVn
-         fuq8GPJtGuVtezJjm1qmlSZ/caHuECkuDY2lR3b2TtvYeufTng9Rt8t2yP5r1KMzNKR8
-         n0GFsM1nKsa0NGOiosiIt6jzCqv+TYwBAetUewz5gHN8gdDYfSMlqL3G/8Mf9YIIK7wl
-         dSYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJwSr9b5voBdGofEFagb6w4Cy4tT6YaZvyt25iiMww+jAsiufcM8LxgHMicdrKjb5FH8LZuWFLpnKeIoouDBfj8Bd+Tm8ZCrY7wkDH
-X-Gm-Message-State: AOJu0YwFhPkRhBlDUwzjQee1L8VllGq1UXFTdnTMKOKBYFR1MCHwZ93s
-	Gwqe4S+y2V13vjdcp9IRPC00yLUHWUdYfIa4SYCCM+G0zoW2EHaRGlu2sNihvJfwMenb53AuJWa
-	vzgx8iGhTQ464RhigIzYv52RKUNPT4NaOVI4xALoJqipJDmkmGw37mtXOrE/j/w==
-X-Received: by 2002:adf:efc9:0:b0:360:7277:e827 with SMTP id ffacd0b85a97d-3607a77af20mr6492742f8f.45.1718646693312;
-        Mon, 17 Jun 2024 10:51:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFedNAp8cvOulKaXIRn4zohRYMTE4Lz/Tokc0vmwD9YEiho0CETYRC8xhv59MptPCzjIDORJA==
-X-Received: by 2002:adf:efc9:0:b0:360:7277:e827 with SMTP id ffacd0b85a97d-3607a77af20mr6492730f8f.45.1718646692909;
-        Mon, 17 Jun 2024 10:51:32 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c740:2200:95d8:cbf4:fffd:7f81? (p200300cbc740220095d8cbf4fffd7f81.dip0.t-ipconnect.de. [2003:cb:c740:2200:95d8:cbf4:fffd:7f81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f228asm12410582f8f.73.2024.06.17.10.51.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 10:51:32 -0700 (PDT)
-Message-ID: <fbd652ad-2f3f-4fa7-9a4c-96e0876b6397@redhat.com>
-Date: Mon, 17 Jun 2024 19:51:31 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUzpdER7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718646742; x=1750182742;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vk02w9S3tVvpEn7klolVsvvXbuaOMdfrZ5sxrW1smsM=;
+  b=IUzpdER7Yk8D85T/l4qoL4raT40PNT9WfzE3z2bdU4cjKMWb2Ge9RLeD
+   OqZGhfowONo8kjAUiXPmFmlgyUbJ/yFenaFp1aoRCU+W28VtKFixczj4O
+   MJXiR0PolKayN9++9su/rPtFNsKO/OpCo+DgTRC+zLvo4ypT1tpMf1R3H
+   y3laRpYHIaVmIsmE6H+eOEuda0GOqyaoTzeOadRDiN9c/NcLzJdaWuew4
+   PRcWuZ5N4Hr8JGNLVpHpauJheFHrNzZgS/hRKyGznWyqyC1LyNJC0OZOa
+   B5mTm0XzJQF2zJvkA+Y6W5ZP1MljsO+Oo9kVAHKTjhaOXjYYSGv6O9fzU
+   g==;
+X-CSE-ConnectionGUID: E2nYtlNgQKKeZpzZMdlwcw==
+X-CSE-MsgGUID: 1E2IJ7OsTzGllEe+Txzqwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15327119"
+X-IronPort-AV: E=Sophos;i="6.08,245,1712646000"; 
+   d="scan'208";a="15327119"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 10:51:29 -0700
+X-CSE-ConnectionGUID: UnOBOO2LTdCE53ENRUeWRg==
+X-CSE-MsgGUID: tXxyaKh7TyqfvgGcwFNxYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,245,1712646000"; 
+   d="scan'208";a="41138954"
+Received: from mshehzad-mobl.amr.corp.intel.com (HELO desk) ([10.209.21.13])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 10:51:28 -0700
+Date: Mon, 17 Jun 2024 10:51:17 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <20240617175117.wdldhu4qdf7gowl7@desk>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
+ <f4242edf-6c78-421c-8e21-63627b13c35f@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] asynchronously scan and free empty user PTE pages
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: hughd@google.com, willy@infradead.org, mgorman@suse.de,
- muchun.song@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1718267194.git.zhengqi.arch@bytedance.com>
- <02f8cbd0-8b2b-4c2d-ad96-f854d25bf3c2@redhat.com>
- <efac94f6-2fb3-4682-a894-7c8ffac18d20@bytedance.com>
- <2cda0af6-8fde-4093-b615-7979744d6898@redhat.com>
- <aadae460-3797-4d10-a380-5d4fe8189e20@bytedance.com>
- <24480cd6-0a13-4534-8d64-4517e73f0070@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <24480cd6-0a13-4534-8d64-4517e73f0070@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f4242edf-6c78-421c-8e21-63627b13c35f@citrix.com>
 
-On 14.06.24 05:32, Qi Zheng wrote:
-> Hi David,
+On Mon, Jun 17, 2024 at 10:35:15AM +0100, Andrew Cooper wrote:
+> On 17/06/2024 10:11 am, Pawan Gupta wrote:
+> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > index cb4f6c513c48..f310a7fb4e00 100644
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -95,6 +95,9 @@ struct cpuinfo_topology {
+> >  	// Core ID relative to the package
+> >  	u32			core_id;
+> >  
+> > +	// CPU-type e.g. performance, efficiency etc.
+> > +	u8			cpu_type;
+> > +
 > 
-> How about starting with this:
+> End of the structure?  At least that way new additions are less likely
+> to add more padding.
+
+Right, I will move it to the end of the structure.
+
+> > diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+> > index 9a6069e7133c..be82c8769bb2 100644
+> > --- a/arch/x86/kernel/cpu/topology_common.c
+> > +++ b/arch/x86/kernel/cpu/topology_common.c
+> > @@ -140,6 +140,14 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+> >  	}
+> >  }
+> >  
+> > +static void topo_set_cpu_type(struct cpuinfo_x86 *c)
+> > +{
+> > +	c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+> > +
+> > +	if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
 > 
-> a. for MADV_DONTNEED case, try synchronous reclaim as you said
-> b. for MADV_FREE case, add a madvise(MADV_PT_RECLAIM) option to mark
->      this vma, then add its corresponding mm to a global list, and then
->      traverse the list and reclaim it when the memory is tight and enters
->      the system reclaim path.
-> 
->      (If this option is for synchronous reclaim as you said, then the
->       user-mode program may need to start a thread to make a cyclic call.
->       I'm not sure if this usage makes sense. If so, I can also implement
->       such an option.)
-> c. for s390 case you mentioned, maybe we can set a CONFIG_FREE_PT first,
->      and then s390 will not select this config until the problem is solved.
+> c->cpuid_level ?
 
-CONFIG_PT_RECLAIM or sth. like that, that would depend on 
-CONFIG_ARCH_SUPPORTS_PT_RECLAIM.
-
-Then we can start with what we know works and was tested (e.g., x86).
-
--- 
-Cheers,
-
-David / dhildenb
-
+Will do.
