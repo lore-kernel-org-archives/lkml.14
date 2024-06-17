@@ -1,151 +1,205 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B4190684
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 08:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A20717F5;
+	Mon, 17 Jun 2024 08:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718613223; cv=none; b=Q40KuQAP7KPQBbt5JUcO9Psgoyc5ARDgisBk+XTB9OytSAU3Cz0GHsIVHl7XZ1o3+wVbiswdw/RM5ex6DGSf36hxPYz0BUtGtPACoN6ZXtLGC0ZMTfzcHIRB3RlBrc9ClQZCybonNtNYp7n4JAr1ATehYiTmUC95qiwQjyglKMw=
+	t=1718613240; cv=none; b=B/QOwqRFHIXfqjM3cpePV0qAdiCoCV/5MhX/3vGCAj1NnX0EaMfn84gU/a+b73RSESKT+M/Om9eqMEVOVbnbnGtnzUVKPE7FYGv8B5jEGItuFKCJE0h/6QKgaY06/LzMpngrfGPXTP2UWI1cvRMqpOBBW0HxR+b1cGU8/E4KPSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718613223; c=relaxed/simple;
-	bh=VHymT8tDoJB513hoWIwppBxh8Pj30kNWx/qsc2Ifl4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gJz89063owuTUEDRX4Us5u/Kkp1y3SowB9LJK0Mk7zehFNeEdn8BQxwYolNk4uh7uXM/h3I0lKoAa3WWFAW7I+p8HjDooxno0Pj8DgHjADP0RpY+QH9+MHbX8THdqAvf48SnR5idHvkj+/ZKB4o2040ZXQnU+AD+ZjAip/OKOws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aokhwUhP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1XMFY7XP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aokhwUhP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1XMFY7XP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1718613240; c=relaxed/simple;
+	bh=+6wl04oLhPpSDJmE7ASj9/nNTOu1MjHLRoHDOiR7cTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QvnvkNlLeP8d/vB46pBLr4Fb9+vHmqRwGV77NiDxVF4LHmqDLF74jKDh7Leq0yZqBeDaaENtzdTeCXEKl64lLXqbbT+EbkoiImtEMD9h8Iw1BJsLsgza5Fw1G/8vfCDUeQmuQKtLW4jufMzCjgDdOGXfMIXjXix5Wg+xhe5jjdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MWyS7qU/; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aokhwUhP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1XMFY7XP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aokhwUhP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1XMFY7XP"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B63445FD1C;
-	Mon, 17 Jun 2024 08:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718613219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IfUHy7jvC6C04xNMpt9q7GAc0YI8QU0L6ePoL2dWjTI=;
-	b=aokhwUhPRMn/0hex1uFpquaVKQxdv+23yq3Shf2fml80DzSdgmTDYnOmz5ojhj6sKvVODD
-	l7KwWrpkC3aL323zbF42adrPb4M6J/KhJg0BdzETMiU2AWY0GKfzcgTlHlDeKvMd8/Nz+5
-	3o1h360my+RizUAsRTjozCJjU8OJnc0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718613219;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IfUHy7jvC6C04xNMpt9q7GAc0YI8QU0L6ePoL2dWjTI=;
-	b=1XMFY7XPvQByI7XhBa0t0Fm7yRelaTQBW9elotikT3qrLkhAV4dqlIJOJ2hck64N3vDgzy
-	wG1Ns0vWLs3h9EAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718613219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IfUHy7jvC6C04xNMpt9q7GAc0YI8QU0L6ePoL2dWjTI=;
-	b=aokhwUhPRMn/0hex1uFpquaVKQxdv+23yq3Shf2fml80DzSdgmTDYnOmz5ojhj6sKvVODD
-	l7KwWrpkC3aL323zbF42adrPb4M6J/KhJg0BdzETMiU2AWY0GKfzcgTlHlDeKvMd8/Nz+5
-	3o1h360my+RizUAsRTjozCJjU8OJnc0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718613219;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IfUHy7jvC6C04xNMpt9q7GAc0YI8QU0L6ePoL2dWjTI=;
-	b=1XMFY7XPvQByI7XhBa0t0Fm7yRelaTQBW9elotikT3qrLkhAV4dqlIJOJ2hck64N3vDgzy
-	wG1Ns0vWLs3h9EAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8F81B139AB;
-	Mon, 17 Jun 2024 08:33:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gtdCHOL0b2abYwAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Mon, 17 Jun 2024 08:33:38 +0000
-Date: Mon, 17 Jun 2024 10:33:36 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>
-Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH RESEND] drm/logicvc: Drop obsolete dependency on
- COMPILE_TEST
-Message-ID: <20240617103336.7fddb08d@endymion.delvare>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MWyS7qU/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=rgwoDle0VCjUgkksnE/DxlmcEtuf5f9KQBQjSoWR2uI=;
+	t=1718613238; x=1719045238; b=MWyS7qU/vMPj7MQgM+W/z10GYMFJ9jvjXQEBOcjTEmeR4l6
+	zVRFELDvEKDmCba2if94kP9aUXOmAGbEjFdEQq3q+JRJZcXacdvH3CnAUwg5z4LhWhobem+/3rR+B
+	omq2lEqJBzE9IYeprhOgacWAgCqQEyeg/AQ3FG6u3KcGEaR8BMSol6yuHkKyLpymDYGanfUNsmdAr
+	c9sXzAGmWiNhPDS2S9GTceoWHRarAN3Sm4Jp+OIudZ1cCqrVL+kLNl+cnUVsGprhwlyaj9FhjLcoZ
+	KEZnO+TXqHTB/9HaBdjPa7mtBQnmQ+Fm7GTuSp12vNqpS39o6A5jJn91o/apHBUA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sJ7oF-0004hN-11; Mon, 17 Jun 2024 10:33:51 +0200
+Message-ID: <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
+Date: Mon, 17 Jun 2024 10:33:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.20
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.20 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.90)[86.06%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[bootlin.com,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,bootlin.com:email]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+ <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+ <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
+ <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
+ <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718613238;e08520a9;
+X-HE-SMSGID: 1sJ7oF-0004hN-11
 
-Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), it
-is possible to test-build any driver which depends on OF on any
-architecture by explicitly selecting OF. Therefore depending on
-COMPILE_TEST as an alternative is no longer needed.
+This thread/fixing the regressions looks stalled again, let me jump in
+here with a further comment below.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
----
-Already sent on: 2022-11-21, 2023-01-27, 2023-12-02
+On 11.06.24 20:15, Arınç ÜNAL wrote:
+> On 11/06/2024 16:03, AngeloGioacchino Del Regno wrote:
+>> Il 11/06/24 14:56, Arınç ÜNAL ha scritto:
+>>> On 11/06/2024 15:28, AngeloGioacchino Del Regno wrote:
+>>>> Il 11/06/24 13:38, Arınç ÜNAL ha scritto:
+>>>>> On 11/06/2024 14:30, Thorsten Leemhuis wrote:
+>>>>>> On 07.06.24 16:15, Thorsten Leemhuis wrote:
+>>>>>>> On 07.06.24 16:03, Paolo Abeni wrote:
+>>>>>>>> On Thu, 2024-06-06 at 10:26 +0200, Thorsten Leemhuis wrote:
+>>>>>>>>> On 31.05.24 08:10, Arınç ÜNAL wrote:
+>>>>>>>>>> On 31/05/2024 08.40, Thorsten Leemhuis wrote:
+>>>>>>>>>>> [adding Paolo, who committed the culprit]
+>>>>>>>>>
+>>>>>>>>> /me slowly wonders if the culprit should be reverted for now
+>>>>>>>>> (see below)
+>>>>>>>>> and should be reapplied later together with the matching
+>>>>>>>>> changes from
+>>>>>>>>> Arınç ÜNAL.
+>>>>>>>>
+>>>>>>>> FWIS I think a revert should be avoided, given that a fix is
+>>>>>>>> available
+>>>>>>>> and nicely small.
+>>>>>>>
+>>>>>>> Yeah, on one hand I agree; but on the other it seems that the
+>>>>>>> maintainers that would have to take care of the dt changes to fix
+>>>>>>> this
+>>>>>>> until now remained silent in this thread, apart from Rob who sent
+>>>>>>> the
+>>>>>>> mail regarding the warnings.
+>>>>>>>
+>>>>>>> I put those maintainers in the To: field of this mail, maybe that
+>>>>>>> might
+>>>>>>> lead to some reaction.
+>>>>>>
+>>>>>> Still no reply from the DRS folks or any other progress I noticed.
+>>>>>> Guess
+>>>>>> that means I will soon have no other choice than to get Linus
+>>>>>> involved,
+>>>>>> as this looks stuck. :-( #sigh
+>>>>>
+>>>>> Does it have to be Linus that needs to apply "[PATCH 0/2] Set PHY
+>>>>> address
+>>>>> of MT7531 switch to 0x1f on MediaTek arm64 boards"? Aren't there
+>>>>> any other
+>>>>> ARM maintainers that can apply the fix to their tree?
+>>>>>
+>>>>> Arınç
+>>>>
+>>>> You have feedback from two people on the series that you mentioned,
+>>>> and noone
+>>>> is going to apply something that needs to be fixed.
+>>>>
+>>>> I'm giving you the possibility of addressing the comments in your
+>>>> patch, but
+>>>> I don't want to see any mention of the driver previously ignoring
+>>>> this or that
+>>>> as this is irrelevant for a hardware description. Devicetree only
+>>>> describes HW.
+>>>>
+>>>> Adding up, in commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY
+>>>> address of switch from device tree"),
+>>>> you have created a regression.
+>>>>
+>>>> Regressions should be fixed - as in - if the driver did work before
+>>>> with the old
+>>>> devicetrees, it shall still work. You can't break ABI. Any changes
+>>>> that you do
+>>>> to your driver must not break functionality with old devicetrees.
+>>>>
+>>>> So...
+>>>>
+>>>> ------> Fix the driver that you broke <------
+>>>
+>>> The device tree ABI before the change on the driver:
+>>>
+>>> The reg value represents the PHY address of the switch.
+>>>
+>>> The device tree ABI after the change on the driver:
+>>>
+>>> The reg value represents the PHY address of the switch.
+>>>
+>>> I see no device tree ABI breakage. What I see instead is the driver
+>>> starting enforcing the device tree ABI. No change had been made on the
+>>> device tree ABI so any non-Linux driver that controls this switch
+>>> continues
+>>> to work.
+>>>
+>>> These old device tree source files in question did not abide by the
+>>> device
+>>> tree ABI in the first place, which is why they don't work anymore as the
+>>> Linux driver now enforces the ABI. Device tree source files not
+>>> conforming
+>>> to the ABI is not something to maintain but to fix. The patch series
+>>> that
+>>> fixes them are already submitted.
+>>
+>> As I said, the devicetree MUST describe the hardware correctly, and on
+>> that I do
+>> agree, and I, again, said that I want to take the devicetree fix.
+>>
+>> However, the driver regressed, and this broke functionality with old
+>> device trees.
+>> Old device trees might have been wrong (and they are, yes), but
+>> functionality was
+>> there and the switch was working.
+>>
+>> I repeat, driver changes MUST be retro-compatible with older device
+>> trees, and your
+>> driver changes ARE NOT; otherwise, this wouldn't be called *regression*.
+> 
+> I'm going to argue that what caused the regression is the broken device
+> tree. The recent change on the driver only worked towards exposing the
+> broken device tree.
 
-This is one of the only 3 remaining occurrences of this deprecated
-construct.
+Well, for the kernel that does not matter much: due to our "no
+regressions" rule and how Linus handles it the author of that "recent
+change" (e.g. you) is responsible to fix regressions a change exposed --
+or that change is reverted (I might be wrong, but I think there are
+quotes from Linus in
+https://docs.kernel.org/process/handling-regressions.html to back this
+up). So in the end a revert in a week or two is likely the outcome,
+unless you or someone else fixes it in a way that pleases
+AngeloGioacchino et. at.
 
-Who can pick this patch and get it upstream?
-
- drivers/gpu/drm/logicvc/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-6.6.orig/drivers/gpu/drm/logicvc/Kconfig
-+++ linux-6.6/drivers/gpu/drm/logicvc/Kconfig
-@@ -1,7 +1,7 @@
- config DRM_LOGICVC
- 	tristate "LogiCVC DRM"
- 	depends on DRM
--	depends on OF || COMPILE_TEST
-+	depends on OF
- 	select DRM_KMS_HELPER
- 	select DRM_KMS_DMA_HELPER
- 	select DRM_GEM_DMA_HELPER
-
-
--- 
-Jean Delvare
-SUSE L3 Support
+Ciao, Thorsten
