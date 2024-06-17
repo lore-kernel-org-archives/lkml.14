@@ -1,127 +1,191 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD07198A1D;
-	Mon, 17 Jun 2024 13:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0E219ADB8;
+	Mon, 17 Jun 2024 13:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630595; cv=none; b=glyRux7hdZQHhZ/Sh9V00Juow1mfHutLlr2+qItNFN4Hax8LD1pG8DUJ7vzV7ZYiK/5Bw+jlH/FADkKOXG7GyvAKTuMQiuatoHEthOpqz4HvNCbmnXvAuYmu/hgq55Cs02X1jqIgFCXxgfh0q59BgIFVrR08HTphpbygChzC89E=
+	t=1718630594; cv=none; b=aJoTHChR30m61Clc6bjwJdV/dS8+m7d2TMLoj1qQmGH1gOm3AwW5ucr23BAN2XaVT2ibM8cy4IA7tOkUwFPYPJWAi9ShOFjhPKEHXDP/TqzMFvu3VlthyCkDOvKWaHcJpY3qE5zwDCv05hScI/XKoLqcne76xlEg+izihhZkgJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630595; c=relaxed/simple;
-	bh=Jm5ABuXa1QZ4dDdviCRqejeLxd1ZIb8/SJS6zHgv/UY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hXs2pArmh1zc68z4kpEScVKkQh0sSnpsDsG9iyEXjFvgxNbuhKPdqZq6ny0IB0h2xGGVwIvwVrmw7ybnu77vwressS5m0LMsCxYIsnKHM/tltgHTpGctTbJTvGmVguBCJ7btbG73WPXC0DB6s7vjW+wc729ZsdocKl9ErJXGR0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C1BD2000B;
-	Mon, 17 Jun 2024 13:23:04 +0000 (UTC)
-Message-ID: <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
-Date: Mon, 17 Jun 2024 15:23:04 +0200
+	s=arc-20240116; t=1718630594; c=relaxed/simple;
+	bh=ooe+NfCkDLbyZzNacuckmn0L8ElUEGAsDuJ8Pl8gFyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q6ROuCrX22Hh4ouFpSYYoHUH1QieNtxlKogVkEWNXK59SLrCVTeJheeQhTlilkulXYdyLdU8sC3O3zwbtF09p2QVCoLicKgHRdfbDkKhrfMlsxqbIeZMKfBE6WtDxWhQMFEoLUC7gB8xwJxrAzI8EpBD68Y83M59L/LsKYyyBOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdM3cnuq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdM3cnuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4A87C4AF1D;
+	Mon, 17 Jun 2024 13:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630594;
+	bh=ooe+NfCkDLbyZzNacuckmn0L8ElUEGAsDuJ8Pl8gFyk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IdM3cnuqm9eyXbWnKr/yS7DvHkGPA0e8y+N4/iW1ArVweqOoGK6qYDfFLdeR3LiUW
+	 +MoZBILeF9lPdiiXxYgGbAvW0HQbrcmHLTdWN800E5SKeqjb65AawM9BZdrNY1Us7k
+	 MjdWyu6POEON5qE2Eo4Sur/1SIdAny3vZiYyTZQGhdtI3yPjxQB3dZOXcUrg7MKu6x
+	 wyHXOe2q4vgWHa7kEO/FFuUIEUB759Q16cvsWa+l+sIkmx26BPFid+qTgbZ5+6B6L/
+	 ziggsfHgm3fSzS6X25Pjh2GichbB66GDnjToFb5TcIqg9nSNf7z4L/0W4QyREWDEnY
+	 TLUwpcb+sqgxw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	phil@philpotter.co.uk,
+	corbet@lwn.net,
+	James.Bottomley@HansenPartnership.com,
+	nathan@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 02/35] scsi: sr: Fix unintentional arithmetic wraparound
+Date: Mon, 17 Jun 2024 09:22:00 -0400
+Message-ID: <20240617132309.2588101-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132309.2588101-1-sashal@kernel.org>
+References: <20240617132309.2588101-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-To: Conor Dooley <conor.dooley@microchip.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
- <20240613-lubricant-breath-061192a9489a@wendy>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240613-lubricant-breath-061192a9489a@wendy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.34
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Conor,
+From: Justin Stitt <justinstitt@google.com>
 
-Sorry for the delay here.
+[ Upstream commit 9fad9d560af5c654bb38e0b07ee54a4e9acdc5cd ]
 
-On 13/06/2024 09:48, Conor Dooley wrote:
-> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
->> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
->> converted ftrace_make_nop() to use patch_insn_write() which does not
->> emit any icache flush relying entirely on __ftrace_modify_code() to do
->> that.
->>
->> But we missed that ftrace_make_nop() was called very early directly when
->> converting mcount calls into nops (actually on riscv it converts 2B nops
->> emitted by the compiler into 4B nops).
->>
->> This caused crashes on multiple HW as reported by Conor and Björn since
->> the booting core could have half-patched instructions in its icache
->> which would trigger an illegal instruction trap: fix this by emitting a
->> local flush icache when early patching nops.
->>
->> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> ---
->>   arch/riscv/include/asm/cacheflush.h | 6 ++++++
->>   arch/riscv/kernel/ftrace.c          | 3 +++
->>   2 files changed, 9 insertions(+)
->>
->> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
->> index dd8d07146116..ce79c558a4c8 100644
->> --- a/arch/riscv/include/asm/cacheflush.h
->> +++ b/arch/riscv/include/asm/cacheflush.h
->> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
->>   	asm volatile ("fence.i" ::: "memory");
->>   }
->>   
->> +static inline void local_flush_icache_range(unsigned long start,
->> +					    unsigned long end)
->> +{
->> +	local_flush_icache_all();
->> +}
->> +
->>   #define PG_dcache_clean PG_arch_1
->>   
->>   static inline void flush_dcache_folio(struct folio *folio)
->> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->> index 4f4987a6d83d..32e7c401dfb4 100644
->> --- a/arch/riscv/kernel/ftrace.c
->> +++ b/arch/riscv/kernel/ftrace.c
->> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->>   	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->>   	mutex_unlock(&text_mutex);
-> So, turns out that this patch is not sufficient. I've seen some more
-> crashes, seemingly due to initialising nops on this mutex_unlock().
-> Palmer suggested moving the if (!mod) ... into the lock, which fixed
-> the problem for me.
+Running syzkaller with the newly reintroduced signed integer overflow
+sanitizer produces this report:
 
+[   65.194362] ------------[ cut here ]------------
+[   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
+[   65.203607] -2147483648 * 177 cannot be represented in type 'int'
+[   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+[   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   65.219923] Call Trace:
+[   65.221556]  <TASK>
+[   65.223029]  dump_stack_lvl+0x93/0xd0
+[   65.225573]  handle_overflow+0x171/0x1b0
+[   65.228219]  sr_select_speed+0xeb/0xf0
+[   65.230786]  ? __pm_runtime_resume+0xe6/0x130
+[   65.233606]  sr_block_ioctl+0x15d/0x1d0
+...
 
-Ok, it makes sense, I completely missed that. I'll send a fix for that 
-shortly so that it can be merged in rc5.
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang. It was re-enabled in the kernel
+with Commit 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer").
 
-Thanks,
+Firstly, let's change the type of "speed" to unsigned long as
+sr_select_speed()'s only caller passes in an unsigned long anyways.
 
-Alex
+$ git grep '\.select_speed'
+|	drivers/scsi/sr.c:      .select_speed           = sr_select_speed,
+...
+|	static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
+|	                unsigned long arg)
+|	{
+|	        ...
+|	        return cdi->ops->select_speed(cdi, arg);
+|	}
 
+Next, let's add an extra check to make sure we don't exceed 0xffff/177
+(350) since 0xffff is the max speed. This has two benefits: 1) we deal
+with integer overflow before it happens and 2) we properly respect the
+max speed of 0xffff. There are some "magic" numbers here but I did not
+want to change more than what was necessary.
 
->
->>   
->> +	if (!mod)
->> +		local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
->> +
->>   	return out;
->>   }
->>   
->> -- 
->> 2.39.2
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/357
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Link: https://lore.kernel.org/r/20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/cdrom/cdrom-standard.rst | 4 ++--
+ drivers/scsi/sr.h                      | 2 +-
+ drivers/scsi/sr_ioctl.c                | 5 ++++-
+ include/linux/cdrom.h                  | 2 +-
+ 4 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/cdrom/cdrom-standard.rst b/Documentation/cdrom/cdrom-standard.rst
+index 7964fe134277b..6c1303cff159e 100644
+--- a/Documentation/cdrom/cdrom-standard.rst
++++ b/Documentation/cdrom/cdrom-standard.rst
+@@ -217,7 +217,7 @@ current *struct* is::
+ 		int (*media_changed)(struct cdrom_device_info *, int);
+ 		int (*tray_move)(struct cdrom_device_info *, int);
+ 		int (*lock_door)(struct cdrom_device_info *, int);
+-		int (*select_speed)(struct cdrom_device_info *, int);
++		int (*select_speed)(struct cdrom_device_info *, unsigned long);
+ 		int (*get_last_session) (struct cdrom_device_info *,
+ 					 struct cdrom_multisession *);
+ 		int (*get_mcn)(struct cdrom_device_info *, struct cdrom_mcn *);
+@@ -396,7 +396,7 @@ action need be taken, and the return value should be 0.
+ 
+ ::
+ 
+-	int select_speed(struct cdrom_device_info *cdi, int speed)
++	int select_speed(struct cdrom_device_info *cdi, unsigned long speed)
+ 
+ Some CD-ROM drives are capable of changing their head-speed. There
+ are several reasons for changing the speed of a CD-ROM drive. Badly
+diff --git a/drivers/scsi/sr.h b/drivers/scsi/sr.h
+index 1175f2e213b56..dc899277b3a44 100644
+--- a/drivers/scsi/sr.h
++++ b/drivers/scsi/sr.h
+@@ -65,7 +65,7 @@ int sr_disk_status(struct cdrom_device_info *);
+ int sr_get_last_session(struct cdrom_device_info *, struct cdrom_multisession *);
+ int sr_get_mcn(struct cdrom_device_info *, struct cdrom_mcn *);
+ int sr_reset(struct cdrom_device_info *);
+-int sr_select_speed(struct cdrom_device_info *cdi, int speed);
++int sr_select_speed(struct cdrom_device_info *cdi, unsigned long speed);
+ int sr_audio_ioctl(struct cdrom_device_info *, unsigned int, void *);
+ 
+ int sr_is_xa(Scsi_CD *);
+diff --git a/drivers/scsi/sr_ioctl.c b/drivers/scsi/sr_ioctl.c
+index 5b0b35e60e61f..a0d2556a27bba 100644
+--- a/drivers/scsi/sr_ioctl.c
++++ b/drivers/scsi/sr_ioctl.c
+@@ -425,11 +425,14 @@ int sr_reset(struct cdrom_device_info *cdi)
+ 	return 0;
+ }
+ 
+-int sr_select_speed(struct cdrom_device_info *cdi, int speed)
++int sr_select_speed(struct cdrom_device_info *cdi, unsigned long speed)
+ {
+ 	Scsi_CD *cd = cdi->handle;
+ 	struct packet_command cgc;
+ 
++	/* avoid exceeding the max speed or overflowing integer bounds */
++	speed = clamp(0, speed, 0xffff / 177);
++
+ 	if (speed == 0)
+ 		speed = 0xffff;	/* set to max */
+ 	else
+diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
+index 98c6fd0b39b63..fdfb61ccf55ae 100644
+--- a/include/linux/cdrom.h
++++ b/include/linux/cdrom.h
+@@ -77,7 +77,7 @@ struct cdrom_device_ops {
+ 				      unsigned int clearing, int slot);
+ 	int (*tray_move) (struct cdrom_device_info *, int);
+ 	int (*lock_door) (struct cdrom_device_info *, int);
+-	int (*select_speed) (struct cdrom_device_info *, int);
++	int (*select_speed) (struct cdrom_device_info *, unsigned long);
+ 	int (*get_last_session) (struct cdrom_device_info *,
+ 				 struct cdrom_multisession *);
+ 	int (*get_mcn) (struct cdrom_device_info *,
+-- 
+2.43.0
+
