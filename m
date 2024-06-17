@@ -1,117 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B00D1940A5;
-	Mon, 17 Jun 2024 09:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A312F1946C2;
+	Mon, 17 Jun 2024 09:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616943; cv=none; b=XQAcu8kpYHfVEeflpE7Dq6+UH8BoJBTK+1q4gnSL1LmlFSwJqFV1E/UBG4ulFhlpeNZjcjFDNHbdwDXWwgN8B/5X/wKUG8ZLwB7rMdBg1g4oNOCPfzmi4uqiErxh1iIl3FXP3S6BjmajpwVapLgCREBQzAnlLJsgiW3mYqSDkRE=
+	t=1718616947; cv=none; b=uXPFzTtizB8yjc/QCzVk0fi+Z336EZQBEDqOPBG9lnnLRafwFY0sgaydBiNihq/6FePPIZX5NbEO/QKiKZmmWAGwZYdp8etAXZX/x58CdH6CUOKEMKu+so+AWrUdVwB6qzcy8u3k1RYBFwB1uvSJRaFVqd2p7+7eJCAmNFjMJNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616943; c=relaxed/simple;
-	bh=LALBUUvW8Kse4AhvQYhuI96Q8Xbsr3W50ZfHimcXO+A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jgSp1oWP8wEwE507xApayJN5P6IbsXJ9e7/+lJ9Mz5GQ/miw8hdWG/14AhhTREUdhQx3aWtvM0n5Y5zDspdoNBvFg534RIqayca3sOIEccqm6bDoGEOgymd0AhSo8vuKahNb+SeOeppimVu2NJZBdhyjOiL7htp5drrsp2m2FpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GKasLyQh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718616947; c=relaxed/simple;
+	bh=ISTGOrNx+qky+Jf5GkYALSgWEhhMC0r4cnJ4/R8olvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ibCCZdIfBmR2Zy+D/6i1QIFY+63YgvcPBu1AdA1PB4tPwsQZeUsjQfNIALyj470NZLBSgeK2lfqVlArebrC2V2+tWRMK1yceazQuVmjAKTZ50VlXlVyP7zWq/dEh7LmpCMqigfQSZHydU9CrpOaBC97AnvqzQ14eOO5LV8ZLz8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oi/pzgcx; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GKasLyQh"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H1U0IH022935;
-	Mon, 17 Jun 2024 09:35:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	x+1LjJSyI+pTyeP5ZzKsfVjGJZOz9Q+/39izIqoC8ek=; b=GKasLyQh4Bz7a2BD
-	xan6yGKkZmqg9Wdz1xg4pa+lnyV80VrZmvCB0VXoWmzBAr95uK53x1rCKdgX07xG
-	PjXYQOYSOqlsbpY8RcZKTkmpsYyIf9T4oj3NQGlyJ1uZtP9bvvCpaVZvA6GmQ01c
-	lA+GqMi3sUcpx/680mMNL2CIzicqacYN3WoxCwu/Su4NVFJJyKq6hRastMePHSIR
-	g2JXBtMBBhMz0JJIwod0BjBl1icUaiDD3f4j4U80l5Nkj/fyMmQEK5aIbCxIZvW7
-	4DJgJBfMOIYEDylh4a9Ru2nknyOE7F6lelY07xj6/+rcqsP/fOmFnrZidrOSDo9o
-	B35qEw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys1wr38v1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:35:39 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45H9Zc0s021033
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:35:38 GMT
-Received: from hu-nainmeht-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Jun 2024 02:35:34 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_nainmeht@quicinc.com>
-Subject: [PATCH v2 1/5] dt-bindings: remoteproc: qcom,sm8550-pas: document the SDX75 PAS
-Date: Mon, 17 Jun 2024 15:04:24 +0530
-Message-ID: <20240617093428.3616194-2-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617093428.3616194-1-quic_nainmeht@quicinc.com>
-References: <20240617093428.3616194-1-quic_nainmeht@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oi/pzgcx"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4218314a6c7so34768705e9.0;
+        Mon, 17 Jun 2024 02:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718616944; x=1719221744; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NItPfN2Qb0jONFGc3TV9yNBIU5BBovoAluD8hqM7ItQ=;
+        b=Oi/pzgcxhbH+1ZLhhaWr6YN40AuJ5sFQJwk79rQSW+OsFoI77NmYUswqcZwDHIGTxd
+         nrKW6hpc/cjfBc+YgouNVefyDvhXaG5NdHxewRFgJkyk/X46V21PibgjV7u69VLMKXTa
+         6Qf+9D+GC4pKIs8V4xbQu58y8aP9dMAv4ELGgNPRtEk2If6ASgc0niZnRNCLmL7ILhrs
+         KSPxIh9V43tPRnqP9G8BqQ7+G3vaB23Xh3sD3mv1heaT+DxgyjHBIq1ZGQUxRjk308Zt
+         T3laH7btUhIpu3mSk+gvmht/5Wy2E5pvvhe/H8sqvDbDL5ooLP2/lzGjA35/CuKsxVXf
+         yfJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718616944; x=1719221744;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NItPfN2Qb0jONFGc3TV9yNBIU5BBovoAluD8hqM7ItQ=;
+        b=U5sIuKaXvq0VNnlgX2Ftha+e27oTGwsUoT3JDY88hg21xgid0Wqu2VRQ2UcSGA4TuQ
+         nLev9VqhMAGYIeoEdIRGMISpdffu/imhj+E0QijBfNah/fjZCQq93jpDMVlFB61UJHvl
+         yP63FvwqGsgf+npFmLgbgI5rTx4IUZC2FXspS1MzbpZyJDECNgePcn9ZYjAPKDVNnVRp
+         Nxqir5uHraTVE2b3Dc0oR2e0rvfdO50ZFvnL2j1OP1L/CrA1nI23BrTADx03YABZ5vgS
+         wMR8+P8U40Vu+d3ZE8mHi7AN0KdWWATo+QAv0IBFT5UaKebkBQmcy8sm870rCCH4d5Tr
+         s3gg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDzzklHP1YZn5SjNGQZRgYfY3LxMhGrlpGqT7OCzmwHAqpd3C6p2z2vKJFOvZ6114RZRuB3/N6sc6WMZ5xZlDEyVw4ByYSF40izEDDDO8lku+YuwKQJ6wGDAYYoX8Uw5jw7khWZFGN
+X-Gm-Message-State: AOJu0YxaRnPrUKFGsTZh5BLof4KwdCkalhwmhv1OztsvtiZAUH5rfg/Z
+	BywWElPU8JRM3O++/uRMoNTMqFow9wo5b/yrPCSI6YJ/q2eIT84k
+X-Google-Smtp-Source: AGHT+IHkhFqJsu0zmOOch7REDu686xAm493O5ju1z/aAIv+qBa/8GbjT4Fi1o5mdTMUXXVy7avigzA==
+X-Received: by 2002:adf:f7d1:0:b0:360:9625:c571 with SMTP id ffacd0b85a97d-3609625c5f8mr1581491f8f.48.1718616943752;
+        Mon, 17 Jun 2024 02:35:43 -0700 (PDT)
+Received: from [10.76.84.188] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075104b8bsm11521810f8f.105.2024.06.17.02.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 02:35:43 -0700 (PDT)
+Message-ID: <dbf947a3-3d3b-4686-a707-a813b6a4ce5a@gmail.com>
+Date: Mon, 17 Jun 2024 12:35:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fHScYGxBslwZBNFIELgQaYFkzAmwrzuu
-X-Proofpoint-ORIG-GUID: fHScYGxBslwZBNFIELgQaYFkzAmwrzuu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_08,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406170073
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] iio: adc: ad7192: use
+ devm_regulator_get_enable_read_voltage
+To: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240612-iio-adc-ref-supply-refactor-v2-0-fa622e7354e9@baylibre.com>
+ <20240612-iio-adc-ref-supply-refactor-v2-1-fa622e7354e9@baylibre.com>
+ <20240615130858.22043725@jic23-huawei>
+Content-Language: en-US
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+In-Reply-To: <20240615130858.22043725@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Document the MPSS Peripheral Authentication Service on SDX75 platform.
+On 15.06.2024 15:08, Jonathan Cameron wrote:
+> On Wed, 12 Jun 2024 16:03:05 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
+> 
+>> This makes use of the new devm_regulator_get_enable_read_voltage()
+>> function to reduce boilerplate code.
+>>
+>> Error messages have changed slightly since there are now fewer places
+>> where we print an error. The rest of the logic of selecting which
+>> supply to use as the reference voltage remains the same.
+>>
+>> Also 1000 is replaced by MILLI in a few places for consistency.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> 
+> Complicated bit of code, but seems correct.
+> However, it crossed with Alisa-Dariana switching adding a
+> struct device *dev = &spi->dev to probe() that I picked up earlier
+> today.
+> 
+> I could unwind that but given Alisa-Dariana has a number of
+> other patches on this driver in flight, I'd like the two of you
+> to work out the best resolution between you.  Maybe easiest option
+> is that Alisa-Dariana sends this a first patch of the next
+> series I should pick up.
+> 
+> Thanks,
+> 
+> Jonathan
+I will add this patch to my series and send it shortly.
 
-Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
----
- .../devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml        | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
-index 73fda7565cd1..d7fad7b3c2c6 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
-@@ -16,6 +16,7 @@ description:
- properties:
-   compatible:
-     enum:
-+      - qcom,sdx75-mpss-pas
-       - qcom,sm8550-adsp-pas
-       - qcom,sm8550-cdsp-pas
-       - qcom,sm8550-mpss-pas
-@@ -113,6 +114,7 @@ allOf:
-       properties:
-         compatible:
-           enum:
-+            - qcom,sdx75-mpss-pas
-             - qcom,sm8650-mpss-pas
-     then:
-       properties:
-@@ -146,6 +148,7 @@ allOf:
-       properties:
-         compatible:
-           enum:
-+            - qcom,sdx75-mpss-pas
-             - qcom,sm8550-mpss-pas
-             - qcom,sm8650-mpss-pas
-     then:
--- 
-2.34.1
-
+Kind regards,
+Alisa-Dariana Roman.
