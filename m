@@ -1,177 +1,120 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kvr.at (smtp.kvr.at [83.65.151.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D801A16DC23;
-	Mon, 17 Jun 2024 17:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CA616DC32;
+	Mon, 17 Jun 2024 17:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.65.151.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718645053; cv=none; b=kUmRgu/UG5qtz/oDTWNxDCRIYBqzHagPEfQLt33N3IWUi/EOHytIQDHJnHSInpQv97kKfPK3PC7mkeIzsw9VaDRJCwCnTPD7yWkGn6ScG5u5t71o2kcUNAyN+U2rZEFJkgAqWsrM4Gbxjf77hN/bMMHmKi8XrJWvSvTsgIvFFlQ=
+	t=1718645190; cv=none; b=B97/DI1faEptk4GNm8qRAYSytVM0kqbZCbjdhhpAQwpNHhQ49mLGjNH//Dzw+lZUl64mDudCCSoX/bpUaIqDrDuueKrQs7UAyvM0Zpk/oVXfNXG/2w4+aoUDQICnO5O5OUIhgulF5WUwexRYSN2uoiom2GWV9kZ+HBTZvnWbfGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718645053; c=relaxed/simple;
-	bh=vXa4/V3bEr1cUbdgbeqTNfZwEYyyf3Z8A4QKWK/9VcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=AZfceLfnoBEO2SPoajUYi11Au1nau/SmQyWEqQgtbl8SFMfUPLqK0HNjRB4ZYgoTBseVw0VrYWWzkxOUeDT2BQKbq6Z8XdI/5XDZ7uI8R4+kGlx+h4CJlsHv7cWudr9DxkcuG4yfqJyH0+lPb0bzhtM4hHZ4nd+A+nMlgzzu5no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fIJn20/7; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1718645190; c=relaxed/simple;
+	bh=eroIsAP7wOvBXsB8a4Z+fCWgoahxgGvp7mSRwrsG1DM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Egg3QYuOZj7xPW3jDzeBCK1oPcOdhfgcAVbkG//ZL7H/wBDuRCHo83XJsSeBQGqW3jUq9w/jPvvye0h0jO1qnQd+uyB7mUHq0JUmlQZTjC7/qw5uMTPa8t/rN2TZG6gGWXo6eiVR1XykkZZRXfkqeVHZFQ6Ms8Vy6OfPafuq0qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (4096-bit key) header.d=debian.org header.i=@debian.org header.b=G3Q9mHiQ; arc=none smtp.client-ip=83.65.151.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fIJn20/7"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240617172408epoutp01d5cfb621ee9332625028acae497565c9~Z2pDkcxZp2902629026epoutp01O;
-	Mon, 17 Jun 2024 17:24:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240617172408epoutp01d5cfb621ee9332625028acae497565c9~Z2pDkcxZp2902629026epoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1718645048;
-	bh=3GE3KET7bOf1zcmKKymQ2JPlkXHN91x41000eo5a7lA=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=fIJn20/7wP01siSaq+PLtS0oBmmYBxSsDSsFfL7DTgvB/Cyvr6AGPiMAmQDHX3NVq
-	 SiE6szv8tltuVtBjD6MzXNm3tkerE0tHehPd3pd9G2uFY1y2HnDPfalYF3cvn+hXxW
-	 UQxx6m06VH4gCCSdAtyw4XVjio8JSs334Wc9gkds=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240617172408epcas5p14cd564ede4e3b176c07c37d1f9b80cc0~Z2pDN_D1I0954009540epcas5p1i;
-	Mon, 17 Jun 2024 17:24:08 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4W2xZG0RD8z4x9Pp; Mon, 17 Jun
-	2024 17:24:06 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	56.C0.06857.53170766; Tue, 18 Jun 2024 02:24:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240617172405epcas5p304fc3cb06e74bae8ef44170bdf73feff~Z2pAjhLuV0869008690epcas5p3c;
-	Mon, 17 Jun 2024 17:24:05 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240617172405epsmtrp102e99dc9015645e38ebeee8e5344b312~Z2pAhH4JU0128601286epsmtrp1G;
-	Mon, 17 Jun 2024 17:24:05 +0000 (GMT)
-X-AuditID: b6c32a4b-88bff70000021ac9-91-66707135ee1d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E3.2B.18846.53170766; Tue, 18 Jun 2024 02:24:05 +0900 (KST)
-Received: from [107.122.11.51] (unknown [107.122.11.51]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240617172400epsmtip15cdc36d9ff46a830e937444c42522c89~Z2o8ahfCc0277102771epsmtip1W;
-	Mon, 17 Jun 2024 17:24:00 +0000 (GMT)
-Message-ID: <faaa5c15-a80d-339a-d9dd-2dd05fb26621@samsung.com>
-Date: Mon, 17 Jun 2024 22:54:00 +0530
+	dkim=pass (4096-bit key) header.d=debian.org header.i=@debian.org header.b="G3Q9mHiQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=20200417.ckk.user; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eroIsAP7wOvBXsB8a4Z+fCWgoahxgGvp7mSRwrsG1DM=; b=G3Q9mHiQA7hyoCjPxO4ITg3mvy
+	jLmhcIeKAJMMFq4TmBvjfR0asmDuEwTKF92FMLIiHvj88/r9KO+Pc5oqHBspeV6gCO/rjLrcC5YoA
+	oVxP02MWaepETm8JAVEoj8fkd4MOqCSOJj9KHYKD6vuDBc7yP9+bR+KRHupqDmn6hmYlZRkLcBPkG
+	ETWWjNKPVG+72f+z+GKGoL41/iJH1Gzc27FuUPxSmVko2xliUfFL9Wx0dWmdxWz0qq437vQUVCCa7
+	+cm4vz/G6TuiUHLn9zdND5+W0FISCaFyE932jzgBcp0sgTUnR9gyANminHUF3Bs2qaGxDZJeGs/7E
+	avHSdiDvVRTq2lu9PycGcdEQhQX/XhpToO2NdbOFsHjTuOC7R8utV5syBjD98TtudBs1Y9i95vtAO
+	wchqjgKEOFrX4bC75vIgg1UjNFydAMrQ/EfyZJOU7/rOk4fKqoXkx38hzOZ5qg7VDSO1gDmce5i0i
+	DtC77QzVzvKMGApRmI3pQVGg1LqszGbpU9xcWOxq61d8dWuVgo9J6KKI2h+Grd1KcY+fkbRu2evun
+	ix12GQk95O4yu72jkd0WPlHiXv9flF+Qr7nUkL5BYHTpko80qWGJEu4+w0ArgrqkiUfJU9DKNOYX1
+	iWOqv7aANppxW5tbVgM02dQqJJXr6Epu8rwrgsacc=;
+Received: from [192.168.0.7] (port=58816)
+	by smtp.kvr.at with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.97)
+	(envelope-from <ckk@debian.org>)
+	id 1sJFsf-00000006mK8-1MJu;
+	Mon, 17 Jun 2024 19:10:56 +0200
+Message-ID: <57e56ca5-bbbc-495a-926e-54d7e2f5e76c@debian.org>
+Date: Mon, 17 Jun 2024 19:10:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
-	Gecko/20100101 Thunderbird/91.13.1
-Subject: Re: [PATCH v8 10/10] nvme: Atomic write support
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
+To: David Howells <dhowells@redhat.com>
+Cc: Andrea Righi <andrea.righi@canonical.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Luca Boccassi <bluca@debian.org>,
+ TJ <linux@iam.tj>, Emanuele Rocca <ema@debian.org>
+References: <Zj0ErxVBE3DYT2Ea@gpd>
+ <20231221132400.1601991-1-dhowells@redhat.com>
+ <20231221132400.1601991-41-dhowells@redhat.com>
+ <531994.1716450257@warthog.procyon.org.uk> <ZlnnkzXiPPuEK7EM@ariel.home>
 Content-Language: en-US
-To: John Garry <john.g.garry@oracle.com>, axboe@kernel.dk,
-	kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	dchinner@redhat.com, jack@suse.cz
-Cc: djwong@kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com, linux-aio@kvack.org,
-	linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org, nilay@linux.ibm.com,
-	ritesh.list@gmail.com, willy@infradead.org, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, dm-devel@lists.linux.dev,
-	hare@suse.de, Alan Adamson <alan.adamson@oracle.com>
-From: Kanchan Joshi <joshi.k@samsung.com>
-In-Reply-To: <20240610104329.3555488-11-john.g.garry@oracle.com>
+From: Christian Kastner <ckk@debian.org>
+Autocrypt: addr=ckk@debian.org; keydata=
+ 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
+In-Reply-To: <ZlnnkzXiPPuEK7EM@ariel.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TezDcVxTH5/72tw+b2XS7qBudKd1oWhKPZcmVIVExmd+MTkcnTTujD93a
-	H6vYXfvog6YRStiKx0rSUkKXprJRml31CBGhniGEIaJBvRLirTVFQrprN6n/Puec75nvPefM
-	ZVA4rXRbRoRYQcrEgigujYlXNjk6OnvGSMPcaje9UHlHCwXVZXRg6MpwBg3NNq0A1PUon476
-	JnejQk0+juo0agxdvtKMoYWk2zj68ftEDLXfWKQhzWAlhno2qgFSNw4AdO5CAkDXh/aj3okS
-	Oqq73o6jvmt5NFRwaYqOvrtbTUO/tG5hKCulH0MVWUsYKrp8At3sSKGjstlFHLUNvYyS0tbp
-	qHuzlYoer+XR/OyJmtxhOlGoUxLdI1dxQl/iRPR1KQmdNpVG6FbUdCJT0wAIffEpYlqfA4ja
-	e/E0IqGzmUIsTw3hxGJ9P43oLPyDTuhvxQVxgiN9RKRASMrsSXGoRBghDvflBh4PORri6eXG
-	c+Z5o4Nce7EgmvTlBrwV5HwsIsqwMq7954IopSEVJJDLua6HfWQSpYK0F0nkCl8uKRVGSflS
-	F7kgWq4Uh7uIScUhnpubu6dB+EmkqCg7AUi7dn25sdpEiQenLVTAggHZfDjeU041ModdC2Cy
-	1l8FmAZeAfDe/QbwPOg/PU591jHZp8ZMhRoAqxJqqKZgHsDiO5OYUcViH4b9czPAyDj7Ndgy
-	p8ZN+Rdhe87kNluzQ+G6qoFmZEs2gj/rzm3nKWwbODRZsO1gxV4CsDd9xlxIxWH+QrgKMBg0
-	tiPsyVYa0xZsPzjQm2aW2MGq+TyKsReyE5hwsKoMMz07AA4Xq3ATW8JHrRV0E9vCmYxkM4fC
-	3pzbZr0CTtTdNPMRmNSRQTH6Ugy+5ddcTV674dnHxnkZBgkLpiRzTOpX4Yh6yrwsGzj2Q7GZ
-	CajTNZp31QbgmeR1kAnsc3esJXfH+Lk7xsn937kQ4Fqwh5TKo8NJuafUQ0x+8fzgoZJoHdj+
-	UU6B1WD8ryWXRoAxQCOADArXiuV/QRzGYQkFX8WSMkmITBlFyhuBp+E+WRRb61CJ4UuKFSE8
-	vrcb38vLi+/t4cXj2rBmk/KFHHa4QEFGkqSUlD3rwxgWtvGYAzcraCxudT3Yg0j97dchQae6
-	/lPrwvsX97WOxul9XKZK872ZeIV+7aX1wY3pIlL4ysz8g4eaaJ275Rssb61deKe2ZfWS9L1/
-	V45w0otOXlw6+8BpoPlD7ZnXr7pvWf3ps7b36Te5dls/zYq+bjlh0fzmydhjTbYHSP7ykn/s
-	0XjPz/75QKtKYwavpRxini/Wl80dGFRnfjvN8x2q4sut2pYdRgpu7Cvd//fB2bDRJ4GtoofB
-	Y9k2kpg9512O7yL0kVVPtQ2F7y9UUp6AmHcCEjSuPol+JZruUepdlkPzx5tbsW+/W6p9ge7N
-	LOoMyaqPsmT8fsuXqD8VILZIl31EnVhPvBPHxeUiAc+JIpML/gPSz14u2gQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7bCSnK5pYUGawcvnfBbrTx1jttjTf4rJ
-	YvXdfjaL14c/MVqcfTWX3eLyEz6LBYvmsljsWTSJyWLl6qNMFu9az7FYzJ7ezGRxcv97NotF
-	N7YxWVz4tYPRYtKha4wWU6Y1MVrsvaVtcenxCnaLPXtPslhc3jWHzWL+sqfsFt3Xd7BZLD/+
-	j8liYsdVJostEz8wWSxeGWpx8FQHu8W61+9ZLE7ckrZo7fnJbnH+73FWi98/5rA5KHjsnHWX
-	3WPBplKP8/c2snhsXqHlcflsqcemVZ1sHps+TWL3mLDoAKPH5iX1Hi82z2T02H2zgc2j6cxR
-	Zo+PT2+xeLzfd5XN48yCI+wem09XBwhFcdmkpOZklqUW6dslcGUsntzEWHCWu+LX18PMDYyN
-	nF2MnBwSAiYSTy5PYupi5OIQEtjOKPGt+zcrREJcovnaD3YIW1hi5b/n7BBFrxkl3t1uZwFJ
-	8ArYSVx985IRxGYRUJU49mYSVFxQ4uTMJ2C2qECyxMs/E8EGCQtYSCzdNAUszgy04NaT+WCb
-	RQQ+MEq82biGBcRhFuhkkTg/rZMNYt0JRokzP/cCreDgYBPQlLgwuRSkm1PAQeLapR6oSWYS
-	XVu7GCFseYntb+cwT2AUmoXkkFlIFs5C0jILScsCRpZVjKKpBcW56bnJBYZ6xYm5xaV56XrJ
-	+bmbGMGpSCtoB+Oy9X/1DjEycTAeYpTgYFYS4XWalpcmxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-	nFc5pzNFSCA9sSQ1OzW1ILUIJsvEwSnVwNRlt0Zv8lLTCy4LfqXs1eTVClHb8Wm3WGLuFsk1
-	jbNY1B37Jzo7vDrVP/H21QLlN5H3PFuDORvOtdZVvBEyTd/pN6Fxq9imc4es1H3//zQ5ZOkp
-	dvq1kN6ulTxc8p4JWQz2hc7Gvuxdn68fFdAvW+NmlCaiHvXHtfdagVruy93n9ptmX7nBZZLO
-	vjlYfNau2m9920p7z/PmTC+RNf7K8XCpUVOAsHP2rXie5SbidTOMXVRqJznlVKu/dj2SX7yX
-	T1BrWqm4Zvv7251CvUtvZm5qdDym7Kcuxt/mnnJmwszzlxJSZ/2U2NOv7WM3wSc5iWdhs+ZZ
-	//e8qp054ndZJ9odPhMnnfZbYnLZ5xolluKMREMt5qLiRACuq6SitAMAAA==
-X-CMS-MailID: 20240617172405epcas5p304fc3cb06e74bae8ef44170bdf73feff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240610162108epcas5p27ec7c4797da691f5874208bfcfa7c3e3
-References: <20240610104329.3555488-1-john.g.garry@oracle.com>
-	<CGME20240610162108epcas5p27ec7c4797da691f5874208bfcfa7c3e3@epcas5p2.samsung.com>
-	<20240610104329.3555488-11-john.g.garry@oracle.com>
 
-On 6/10/2024 4:13 PM, John Garry wrote:
-> +static bool nvme_valid_atomic_write(struct request *req)
-> +{
-> +	struct request_queue *q = req->q;
-> +	u32 boundary_bytes = queue_atomic_write_boundary_bytes(q);
-> +
-> +	if (blk_rq_bytes(req) > queue_atomic_write_unit_max_bytes(q))
-> +		return false;
-> +
-> +	if (boundary_bytes) {
-> +		u64 mask = boundary_bytes - 1, imask = ~mask;
-> +		u64 start = blk_rq_pos(req) << SECTOR_SHIFT;
-> +		u64 end = start + blk_rq_bytes(req) - 1;
-> +
-> +		/* If greater then must be crossing a boundary */
-> +		if (blk_rq_bytes(req) > boundary_bytes)
-> +			return false;
+Hi,
 
-Nit: I'd cache blk_rq_bytes(req), since that is repeating and this 
-function is called for each atomic IO.
+On 2024-05-31 17:06, Emanuele Rocca wrote:
+> Meanwhile TJ (in CC) has been doing a lot of further investigation and
+> opened https://bugzilla.kernel.org/show_bug.cgi?id=218916.
 
-> +
-> +		if ((start & imask) != (end & imask))
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->   static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
->   		struct request *req, struct nvme_command *cmnd,
->   		enum nvme_opcode op)
-> @@ -941,6 +965,12 @@ static inline blk_status_t nvme_setup_rw(struct nvme_ns *ns,
->   
->   	if (req->cmd_flags & REQ_RAHEAD)
->   		dsmgmt |= NVME_RW_DSM_FREQ_PREFETCH;
-> +	/*
-> +	 * Ensure that nothing has been sent which cannot be executed
-> +	 * atomically.
-> +	 */
-> +	if (req->cmd_flags & REQ_ATOMIC && !nvme_valid_atomic_write(req))
-> +		return BLK_STS_INVAL;
->   
+just to loop back to the MLs: in the referenced bug, TJ posted an
+analysis and and added a patch that fixed the issue for multiple testers.
 
-Is this validity check specific to NVMe or should this be moved up to 
-block layer as it also knows the limits?
+Best,
+Christian
