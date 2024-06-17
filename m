@@ -1,93 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45FF190686;
-	Mon, 17 Jun 2024 09:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6651190675
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615037; cv=none; b=OVRpqGzu8q4glaUJ0L9zXt+AS1MmasIsZkARIY64QcRXub1B6KBXb3CbErwjjXlNwvgBpLMNC+ZmrpTwEZud7q9AvLtPT2JkIDg/r8aaSv1zRNC0j1H//C7lCwwTNQkZcnSUsKjK6AslqCszQq3ODNE3jhY/ycvSRhEJ/MCZZ84=
+	t=1718615078; cv=none; b=XhvjNthoumjFWJuwascNjhtxF2QiyPCgThdHlh2y/IBwe7QFbLWadNEQt3hqtjcZ7JPHGwFaUKIDyl+xl9Uh19qQ+GEbCqcv3NIQaVQR54gOj/dYpQ2ikxkoYPvJm0+gdgtU4BNPyyokCU76lqlBiEjYzDnuxu5Dx+OgyJwTNKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718615037; c=relaxed/simple;
-	bh=THa1cIbc5tm8begwrxwa5OJJ+G0okx8FqtWT7e7BWZU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=pEbE02fwC9aqwxwuE2164LZs6xYwIqxsQvSVi2Xl3S/YV5tjimu/JXwrwAu2oUv5qoIDG36kmjoe/sy+llhahiE5q2gw6E0W+OCLAr2SphrD/v0X563fUOPKKGaAGuhjvHqyn11L1GmIABnE5gDewWLYWj8QKlRy4M6T81dogfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBua7iJD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718615078; c=relaxed/simple;
+	bh=q+3Vz3i2TsdrpjkC9PcCy29rOh22Klo7SY6unJ5sDoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IdzOsg+npXLi4qmRb/xD9dSCiaJVgehWSyVS8O1+9rBoB6gpMFlopHqir9zWL48yQMpQPSfOWw7IR5jSv7v1bgLQmvtxf3xsnw+WFI6DQ38ALMggCpU/9aCNQaUplPfQ+7FQ3xpwnHqmGfsQO/aZXdp3v140zkrzV3gQRhhDW1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vGoCGs47; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBua7iJD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82926C2BD10;
-	Mon, 17 Jun 2024 09:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718615036;
-	bh=THa1cIbc5tm8begwrxwa5OJJ+G0okx8FqtWT7e7BWZU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=tBua7iJDkc8Y2cmXCtRKuJMl9ctDCr7nY0rG4J98jFn/eV49vtr8e9uORP/aGFGGK
-	 0jiqol8vvv18U/pB3BBqL5CCIDjWhN/oB17eKeoAjlfyLMCxomP8RMTdN7jluyCG6i
-	 H9oFOrB0tiz4eHlZuJX7Uvdc0wlPwAfg3cSrceUGT3ZORNQntkwuwb5JNA7z79W28e
-	 bmvpZMul7+vOjz9jOv+JXucDCYS7EwFKvx0N1Ym7uHj1MELLeQLKtLPuCqY/5mcbwv
-	 X0u0MPrzEj6niTGf6wDm8S7bjuVri1tBD0jzzJ7cAEr4urDeqqioMeF+gy8g5U6QBd
-	 WFj1dpewcfjTw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: linux-wireless@vger.kernel.org,  Felix Fietkau <nbd@nbd.name>,  Lorenzo
- Bianconi <lorenzo@kernel.org>,  Ryder Lee <ryder.lee@mediatek.com>,
-  Shayne Chen <shayne.chen@mediatek.com>,  Sean Wang
- <sean.wang@mediatek.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
-  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-  netdev@vger.kernel.org,  horms@kernel.org,  kees@kernel.org,
-  kuba@kernel.org,  Bo Jiao <Bo.Jiao@mediatek.com>,  Daniel Golle
- <daniel@makrotopia.org>,  Alexander Couzens <lynxis@fe80.eu>,  Deren Wu
- <deren.wu@mediatek.com>,  Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
-  Leon Yen <leon.yen@mediatek.com>,  Quan Zhou <quan.zhou@mediatek.com>,
-  Ingo Rohloff <lundril@gmx.de>,  Sujuan Chen <sujuan.chen@mediatek.com>,
-  StanleyYP Wang <StanleyYP.Wang@mediatek.com>,  Benjamin Lin
- <benjamin-jw.lin@mediatek.com>,  Peter Chiu <chui-hao.chiu@mediatek.com>,
-  linux-kernel@vger.kernel.org (open list:ARM/Mediatek SoC support),
-  linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
- support),  linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek
- SoC support)
-Subject: Re: [PATCH] wifi: mt76: un-embedd netdev from mt76_dev
-References: <20240614115317.657700-1-leitao@debian.org>
-Date: Mon, 17 Jun 2024 12:03:49 +0300
-In-Reply-To: <20240614115317.657700-1-leitao@debian.org> (Breno Leitao's
-	message of "Fri, 14 Jun 2024 04:52:42 -0700")
-Message-ID: <87cyogkkju.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vGoCGs47"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52c84a21b8cso3800291e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718615075; x=1719219875; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q+3Vz3i2TsdrpjkC9PcCy29rOh22Klo7SY6unJ5sDoA=;
+        b=vGoCGs47kxRptQjiGTVxeYjnhX0LWod79vxU5Bytx/liuaTpF0ZOm1JtFUZ+pC5ef0
+         7IXXUGSVK3TpWElWLzU/ipEmt4dbdygNG3+1r4f3a2LyigprVxykD3vFxakpG9xJ2MbX
+         zT4ckfaSd0ACyuq6fD9CH69IJJ4N/KVp6GSpy972dyQqZ4NEleSBmHWRT5UU9ZFfFXmV
+         ZNIXilcIsZcV5+skW3moENeErWEaM8hwREcaRjDpgNQIly0ZE6xMDsUiEgfHIAp4GOVH
+         6u+YutQ9brb1BFaoxiucn4RaUqQpvgXVaMvKTg9gLdeA81W/ehL7jhPPVMODz7iViD/B
+         yxhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718615075; x=1719219875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q+3Vz3i2TsdrpjkC9PcCy29rOh22Klo7SY6unJ5sDoA=;
+        b=slk0Yf3Io8D4XPWGXmzNColw6Smoy36rF+Wi8BMUFpLTUbWeYHZxWeGhrGyZ3ytr9f
+         T/Qf+D5utbu+n/HGuJIvCjaQ7tMgaL3nBUi9swfqwdJCgy49rO8sYjiOgCyfx3oqtjvO
+         Tm8gZV716YFmNKOtLIc0V8uSs4u/glY4eU0CHvjmkJzYhJbrxkk8VJb0Z8TrN7NKvvxS
+         lMJk8iYf2fOCph6KzWe06ItGCYfB0Ifd6GG8OqI1Qv0bX6fDGgfjK+FAASVw4Zpyie+4
+         U+dDOlazyZ4YldTOnS6Sfx4+4LskTRQO0OU+jWjUV1HtLfKhDKBUcxhchsz8uX0Dvm6+
+         aaUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/8843KgMI/K1/x7LUiFfFMyYvfXrHLvxr+AnARKeeBlXM/okfmpV4Us1Ln19AOXQhZ6QS1q0IbI/5BRmPcg7fPA9TXwViRKdlrdkn
+X-Gm-Message-State: AOJu0YwpXzSpokoE/NYEipvewf3QNPJ6Ie21c6retnOocGfHaGXiTde4
+	3QqTb1ZV5g4vGk3POjf2CusD+IkXv5NLx8kRYqKOZS8CW18R+thdDVQ2EhkiX/F0psWBIQPsZkG
+	XWo42nDdoJMURi3a6J4aMxHjvcq8GFszf/rv9UA==
+X-Google-Smtp-Source: AGHT+IF+HJZcRpUbZaoti30eFGkz57My4se7oV+eTI19fCyAo/6voMtDXYoZMTNQnN/HrQtJfz8h91nbF6hk4mFYQKI=
+X-Received: by 2002:a05:6512:ba0:b0:52c:8dea:c56f with SMTP id
+ 2adb3069b0e04-52ca6cc6e6bmr3777612e87.25.1718615072794; Mon, 17 Jun 2024
+ 02:04:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240611102744.v2.1.I2b014f90afc4729b6ecc7b5ddd1f6dedcea4625b@changeid>
+In-Reply-To: <20240611102744.v2.1.I2b014f90afc4729b6ecc7b5ddd1f6dedcea4625b@changeid>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 17 Jun 2024 11:04:21 +0200
+Message-ID: <CACRpkda4KbfWnMwFyJAFKeyvJ3A32D1WuEQd=VQpQcg02-+32Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/mediatek: Call drm_atomic_helper_shutdown() at
+ shutdown time
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Fei Shao <fshao@chromium.org>, 
+	Maxime Ripard <mripard@kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Breno Leitao <leitao@debian.org> writes:
+On Tue, Jun 11, 2024 at 7:28=E2=80=AFPM Douglas Anderson <dianders@chromium=
+.org> wrote:
 
-> Embedding net_device into structures prohibits the usage of flexible
-> arrays in the net_device structure. For more details, see the discussion
-> at [1].
+> Based on grepping through the source code this driver appears to be
+> missing a call to drm_atomic_helper_shutdown() at system shutdown
+> time. Among other things, this means that if a panel is in use that it
+> won't be cleanly powered off at system shutdown time.
 >
-> Un-embed the net_devices from struct mt76_dev by converting them
-> into pointers, and allocating them dynamically. Use the leverage
-> alloc_netdev_dummy() to allocate the net_device object at
-> mt76_dma_init().
+> The fact that we should call drm_atomic_helper_shutdown() in the case
+> of OS shutdown/restart comes straight out of the kernel doc "driver
+> instance overview" in drm_drv.c.
 >
-> The free of the device occurs at mt76_dma_cleanup().
+> This driver users the component model and shutdown happens in the base
+> driver. The "drvdata" for this driver will always be valid if
+> shutdown() is called and as of commit 2a073968289d
+> ("drm/atomic-helper: drm_atomic_helper_shutdown(NULL) should be a
+> noop") we don't need to confirm that "drm" is non-NULL.
 >
-> Link: https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/ [1]
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->
-> PS: Due to the lack of hardware, this patch was not tested on a real
-> hardware, unfortunately.
->
-> PS2: this is the last driver that is still using embedded netdevices.
+> Suggested-by: Maxime Ripard <mripard@kernel.org>
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> Reviewed-by: Fei Shao <fshao@chromium.org>
+> Tested-by: Fei Shao <fshao@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Is this patch a dependency to other patches? I'm asking because it will
-be _slow_ to get this patch to net-next via wireless trees. If there's
-urgency then it's much better to take it directly to net-next (of course
-with acks from Felix and Lorenzo).
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Yours,
+Linus Walleij
