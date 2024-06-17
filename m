@@ -1,108 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C330161B6A;
-	Mon, 17 Jun 2024 16:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F33166306
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718643485; cv=none; b=hkHWr3MwHi93pOVnrF1QmzK6Jko0mQYZrqCjIvz0U7sRZUHBOij0bftdrsMssHSdPdUh3iZ1wxs0SMm2KDMt/DVDYYnD3OWkQT+aqZQOFV3CLqvhO3LnBPaaGvwfVD619aubpRSE450sfj7vCbh1CbUruimop/cNJ6es0aK4HAs=
+	t=1718643595; cv=none; b=ClxuMbkbDZpj86btlDKpBImWdfxhzDh2HbA2EBBifuxkq0KDhg14+OZSEPOsbB97sICB1PFQU/tiTRI1keOJQC9nt55jehvrTzqNftwMiUfrBpkybw+XIopXEQ9jg0B+XuKuV32AVZYAYw3BHYn1LM0DTY6dufAu0qBiFu+pmpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718643485; c=relaxed/simple;
-	bh=fUjYaRe8sqwn+3/vFWBWn9gD6kaYbkbJlyulqCM3tGo=;
+	s=arc-20240116; t=1718643595; c=relaxed/simple;
+	bh=9bd+nL5Qo2BdVE2faxqfZ9C8XrEg65OcZZiq9C2Spf8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bXn9PnxUjhkzN/Wr8Ylg+WIQl6qfVhFJvfZWb2aRZb+ihxsm0dgakyuaXKayRDo0D/7scBWcZDh/eCRlj3XAPw+LapWtEsSmWstE3Z+TXC8EmRKp8zucjZmFArUdeCXjpktauE4fAxmsPrR2g4e+3HEP3QLvtFLK4hzxUIGXguA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=flFAYgY/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdAtMOr4spjL9VRqLLF7XbpZU0/JwRaJr+FHJ+GtlncizSe7c0smawDYvD4ZoFqfs8HQtC61jIEKMfxqdTB2Sh+Gy393K142WpdpROesU+c8GFCbsmvx2RSgcJa/mgXxwQFkXIm7E/O9sCzwRtWth/wJ34aQFqVpuHh+dtY7bDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DxC9qhVJ; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="flFAYgY/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB0CC2BD10;
-	Mon, 17 Jun 2024 16:58:02 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="flFAYgY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718643480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3Er+nOtS55CJu3Syh5+61jyHDlq8/Vrsh+iYYZbfn+o=;
-	b=flFAYgY/nnqqK8ubdy9niyG0NubdT4klfUfroBy/DNbbO5DVT8vPRu3BffTtJ7pQodZOaN
-	Y3wGFg0sxRrxjV2DzwGTt5JcGvNy16RrLu7AO/l+9eaew+eczEo86Y/W+NUwvsFaEBJxH+
-	IIdE/u1uTCF4+OVrHDCFLUq2WCu7sHI=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 4270396f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 17 Jun 2024 16:57:57 +0000 (UTC)
-Date: Mon, 17 Jun 2024 18:57:45 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZnBrCQy13jZV_hyZ@zx2c4.com>
-References: <cb51bc57-47b8-456a-9ac0-f8aa0931b144@paulmck-laptop>
- <ZmszOd5idhf2Cb-v@pc636>
- <b03b007f-3afa-4ad4-b76b-dea7b3aa2bc3@paulmck-laptop>
- <Zmw5FTX752g0vtlD@pc638.lan>
- <ZmybGZDbXkw7JTjc@zx2c4.com>
- <ZnA_QFvuyABnD3ZA@pc636>
- <ZnBOkZClsvAUa_5X@zx2c4.com>
- <ZnBkvYdbAWILs7qx@pc636>
- <CAHmME9r4q8erE3E-Xn61ZkSOdDDrgx6jhTAywx3ca4=G0z=wAA@mail.gmail.com>
- <ZnBnb1WkJFXs5L6z@pc636>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxC9qhVJ"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70413de08c7so3271198b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718643593; x=1719248393; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kz7h6S7CY33xNf+Mf+d3dXD+GMd4vrHEwzJ+6/NbRPc=;
+        b=DxC9qhVJcpUtWSckg0qt8PN9NpBe/WNx/LhAqZRBJrmnlxBySUtcmu8zq7485EPN3S
+         ZD+SA0aEIbaPFHlPlgAeH1Xd0xg0BapmNG5BAPDvasZZsuDAi38VGXJ/c85o3HiKNySr
+         uT0JckqV5qwpnDxGXJUcM2KoB1bDCxVHibKOI/bTz2AqUITxeTt1phX0chfHzKvACdM0
+         esSu9TqaZY19M5nNQTNIOLuvO7LmxDyWuH6dEEcCXq4jFFiuDIsSDWGoE706QM7ebSWI
+         NVZK2PSAuSaN+JZP2nzi3KPIXnlIVvDl1AYfNZfzqe7fh1ytqm4r+jsL8RPFE+CUTjpM
+         lPuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718643593; x=1719248393;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kz7h6S7CY33xNf+Mf+d3dXD+GMd4vrHEwzJ+6/NbRPc=;
+        b=UaVjlbZnb04PfYXpTQWuA3heEqn6INv87tNpRhC2EZ3VJxK4985FdNKjJZtIQUjC2q
+         JZlYVD5z1EEps6vqxkmVchUMqGzGM4MtFkaHNn81ddCnf2cLZ2jnBHGBL9XlsU3DMCdW
+         bRLpmoZVS0L7fOgclJ5apsFIhUq5NLBgGI9lGY/7tFpMplvyAKtfDGxaLfyQlNqse4ed
+         +lED6tuObmhgFpGmdo1gc8iPk36Eqq0Y49Lb9bRmKYMwTAQei1VfkH1D9yTti9ceRWOO
+         YILYut955/RiHmg5LiHf7jnxLp/oqvkyE2XLrsdBxaAwaDlnJMjtv++HQUoa3RfEk2+6
+         ZdDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNKwCd7wu4m+/CHl+2Z/KMNNmEdYy8r+Gx69qvktpT9+znqab8aUyY8M8Ggl1I3LUxZqD3djLJiynqjva2wyI473Y3eSSwJLFLFI9u
+X-Gm-Message-State: AOJu0Yzrm/ZL1yuaByxNZr3/zjTUfmSBMZr4k6y52/GzFHorcAv+wNCa
+	xPrGWopipUhGH4pXFG29eR2FVc/EDMwUt5EEXnYHX3hT2SK0P+J3
+X-Google-Smtp-Source: AGHT+IEVDLF22+KVbDDCRk+q+Z6pxruF61ha6vbfUbnX9IZGegvbIWt7yO77Vtm/3m8BA5T2A2SMTQ==
+X-Received: by 2002:a05:6a00:cc5:b0:705:a18a:6863 with SMTP id d2e1a72fcca58-705d7112674mr12256175b3a.4.1718643593066;
+        Mon, 17 Jun 2024 09:59:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3bf1csm7510722b3a.137.2024.06.17.09.59.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 09:59:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 17 Jun 2024 09:59:50 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: Page select register restrictions in regmap core
+Message-ID: <78c93d6b-af0e-4d96-b213-e1e402524361@roeck-us.net>
+References: <e3e11724-794d-423e-9326-ffe8eed5119c@roeck-us.net>
+ <4b22e04f-3142-4a5a-a8d1-366c4b8bbb73@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZnBnb1WkJFXs5L6z@pc636>
+In-Reply-To: <4b22e04f-3142-4a5a-a8d1-366c4b8bbb73@sirena.org.uk>
 
-On Mon, Jun 17, 2024 at 06:42:23PM +0200, Uladzislau Rezki wrote:
-> On Mon, Jun 17, 2024 at 06:33:23PM +0200, Jason A. Donenfeld wrote:
-> > On Mon, Jun 17, 2024 at 6:30 PM Uladzislau Rezki <urezki@gmail.com> wrote:
-> > > Here if an "err" is less then "0" means there are still objects
-> > > whereas "is_destroyed" is set to "true" which is not correlated
-> > > with a comment:
-> > >
-> > > "Destruction happens when no objects"
-> > 
-> > The comment is just poorly written. But the logic of the code is right.
-> > 
-> OK.
+Hi Mark,
+
+On Mon, Jun 17, 2024 at 04:08:08PM +0100, Mark Brown wrote:
+> On Mon, Jun 17, 2024 at 07:20:28AM -0700, Guenter Roeck wrote:
 > 
-> > >
-> > > >  out_unlock:
-> > > >       mutex_unlock(&slab_mutex);
-> > > >       cpus_read_unlock();
-> > > > diff --git a/mm/slub.c b/mm/slub.c
-> > > > index 1373ac365a46..7db8fe90a323 100644
-> > > > --- a/mm/slub.c
-> > > > +++ b/mm/slub.c
-> > > > @@ -4510,6 +4510,8 @@ void kmem_cache_free(struct kmem_cache *s, void *x)
-> > > >               return;
-> > > >       trace_kmem_cache_free(_RET_IP_, x, s);
-> > > >       slab_free(s, virt_to_slab(x), x, _RET_IP_);
-> > > > +     if (s->is_destroyed)
-> > > > +             kmem_cache_destroy(s);
-> >
-> Here i am not follow you. How do you see that a cache has been fully
-> freed? Or is it just super draft code?
+> >         .window_start     = 0,
+> >         .window_len       = SPD5118_PAGE_SIZE,			// 128
+> >         .range_min        = 0,
+> >         .range_max        = SPD5118_PAGE_SIZE - 1,		// 127
+> 
+> 
+> >         .window_start     = SPD5118_PAGE_SIZE,			// 128
+> >         .window_len       = SPD5118_PAGE_SIZE,			// 128
+> >         .range_min        = SPD5118_PAGE_SIZE,			// 128
+> >         .range_max        = 9 * SPD5118_PAGE_SIZE - 1,		// 0x47f
+> 
+> You appear to be trying to define ranges that overlap with the windows
+> that you're trying to expose.  I can't understand what that's trying to
+> represent or how that would work.  The window is the physical registers
+> that the host can actually see, the range is the virtual addresses which
+> users of the region should use to access registers behind the window.
+> This should be a range of register values which don't physically exist
+> on the device.  I really can't understand what a sensible handling of an
 
-kmem_cache_destroy() does this in shutdown_cache().
+Can you point me to an example ? All examples I can find have overlapping
+values for .range_min/.range_max and .window_start/.window_len, and pretty
+much all of them start range_min with 0.
+
+> overlap would be, any attempt to access the window should recursively
+> trigger selection of the range so no actual register should work.  I
+> can't tell what it's trying to model.
+> 
+
+page 0: 0x00-0x7f	Volatile registers, page selector at 0x0b
+	0x80-0xff	page 0 of non-volatile memory
+page 1:	0x0b		page selector register	<-- this is what trips the check
+	0x80-0xff	page 1 of non-volatile memory
+...
+page 7:	0x0b		page selector register
+	0x80-0xff	page 7 of non-volatile memory
+
+> This configuration would also be rejected by the next test which
+> verifies that the window does not overlap with the range.
+> 
+
+No, it isn't. The windows in the two ranges don't overlap, and neither
+do the ranges. The only overlap is the selector register. The check you
+refer to explicitly does not apply to a single range.
+
+> > This works just fine if I comment out the select register validation in
+> > the regmap core (the one which generates the error). Is there a reason
+> > for having this restriction, or would it be possible to drop it ?
+> 
+> I'm very surprised this does anything useful TBH, possibly that's a bug
+> of some kind.  A configuration with the selector within the range is
+> nonsensical as far as I can see since the range can't be accessed
+> without programming the selector, the range should be purely virtual
+> registers and the selector must be a physical register.
+
+Pretty much all drivers I looked at start the range with 0, having
+the selector register within the range is explicitly accepted by the
+regmap code, and pretty much all drivers using regmap for page
+selection do that. The difference here is that the page selector
+register is in the first range and visible from all pages, but the
+other volatile registers are only visible in page 0.
+Yes, I would agree that this doesn't make much sense, but it is what
+the spd5118 standard calls for, and at least the Renesas/IDT spd5188
+chip implements it that way.
+
+Anyway, how should I model this ?
+
+Thanks,
+Guenter
