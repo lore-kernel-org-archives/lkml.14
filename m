@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58916FF50;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5371D953B;
 	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718659398; cv=none; b=M8QlQ3vtP3cgc4hOUNpKKmQ5wWF3zXJCA9iXlzC4zYsJWAUfHzxRs9psg+tbsaz3oYLzCRxr3BYLbwYQqxZ52SBTrMxqM8M7KaDla7JQOz553bu1kuuX/e6GOxZvLdkEOSPQb9Cfv51hqaF1BHNaKbkEH1+Q0G8By259+gP0GmE=
+	t=1718659398; cv=none; b=s+gruNTsj2vDFwknZQoTriKSX5D+kmNoBfIPI4LajqS+8W2QQWJ7KtUmdB76f0pX4LuJFKNYVlJdkBg6E+LYGhGholVIXBD71LXG1H8c4APPOJVlK1EoZLrDxgAX8QgZn2Vm9CSIVHEwApotgCOjLM5HepLkBJhpqFXX4ST1Q90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718659398; c=relaxed/simple;
-	bh=gxguENUktsJsPjFaq8UcvbJuvvei3DvrYMOWcTOkAw8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UOChd8tKzDUKEfiLghEOylJzqRCqelkaEZWjIl+tfAgXeB64BDsURdytJjPyexekeBNn4W8rpRKtH/SUEiEir1WtovP45mv/ovQAehS0nYwld+vNVvQ1V1oCs6BFJhSGAq8wT/gb6v7TfQ6YVio7Y4dcD1m8KPVKsWBX7HBxcEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aft9fpdR; arc=none smtp.client-ip=10.30.226.201
+	bh=NgvjfQGLFr6DjBTEVnXz0u3d1k1P/9ZsIsSaGq7/Bgk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=javXd47A0/mIv2aq4oS0X/S/v5GvYoDn98v9F/7Jh0ihAarADMZjhzFK+JYSpwRc4YTAMS/zEQZPfNgaSOGqinzNnY6LePHoAjE92ZHVly3e0uuyVyTSvVS5r96Hq4J1NvLBkM7tghp5v1K6KPs8Ze3VUP6gAE7YmXSKskUN6mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMs8iUc3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aft9fpdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F3DBFC2BD10;
-	Mon, 17 Jun 2024 21:23:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMs8iUc3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27122C4AF51;
+	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718659398;
-	bh=gxguENUktsJsPjFaq8UcvbJuvvei3DvrYMOWcTOkAw8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Aft9fpdRjUUcdNvrMdcmExDGcNn1bRiup2HAjUZSDGAmdohhdiEeF0nL1VruNB7vO
-	 6K4dUC6hS+kDuQKsr2YrwqUn3Dd5HyKN5Pt+05ZANEE75WiOVLVHDl9NlNGwdAHepW
-	 nLamvo2CPXubKOngSvAsi/WReoayK1NfM4BS7ASrOPN1hkPL2P0RFkM//zk7j07bAp
-	 jQ6ocCVhzRNpEnmcE9H0dt8oYYKEPSmOoa0sA1GMDl2TYMvM3ZDuw59SBbr4g/d2n/
-	 zJSC9lcCpsjcmbq+tTnTfmxGkPCjfJXTtzvdBrDK2gzZLAYuU2YTlLFDe4icM7VvdC
-	 hgj3a3y+/fPHw==
+	bh=NgvjfQGLFr6DjBTEVnXz0u3d1k1P/9ZsIsSaGq7/Bgk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=VMs8iUc3ky/5mzZITWIeZc3XxwONmcQd4oqMd9+fDflnTGXOdRdXCPj3kgncJoh71
+	 JNtBjNFAzpGGEAk0E+KshJhwTP5muXTjnxLDXD90Or36Xo5vGkdG7Sk/o+5uk2x6TW
+	 K5hIAQdJ7xfU8JVLfgp2MpUoGTWApdvlp8m6ajQK1RnGOdAznm7Pkpn175mY8qjVlQ
+	 peYGyoMo3/aaAYa6L92mJH7PrVVb4J39II13f9ppjdzmk//RBm7fUDHBvEBOYkjzRD
+	 w/2dPYS931SPZHQlgQeY1g6BvFTvI7v+SHFQVT8B9hYRrgh1arZ5zX+mTvVuPkkyL0
+	 pcxyc+lYT9W2g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4EDC27C79;
-	Mon, 17 Jun 2024 21:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D37C2BB9A;
+	Mon, 17 Jun 2024 21:23:18 +0000 (UTC)
 From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Subject: [PATCH v2 0/3] ARM: dts: qcom: msm8926-motorola-peregrine: Update
- device tree of Motorola Moto G 4G (2013)
-Date: Mon, 17 Jun 2024 23:22:26 +0200
-Message-Id: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
+Date: Mon, 17 Jun 2024 23:22:28 +0200
+Subject: [PATCH v2 2/3] ARM: dts: qcom: msm8926-motorola-peregrine: Update
+ temperature sensor
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIABKpcGYC/23MwQ6CMBCE4Vche7aGbWhjPPkehkMtI91LaVogK
- uHdrZw9/pPJt1FBFhS6NhtlrFJkijX0qSEfXByhZKhNutVda9mqhIwxS4Sy8AbaPtjAU/2njKe
- 8Duve1w5S5im/D3rl3/pPWVmxupiBOwd2zO7mksyf4sMZC/X7vn8ByCK5NKQAAAA=
+Message-Id: <20240617-peregrine-v2-2-c8835d2da7af@apitzsch.eu>
+References: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
+In-Reply-To: <20240617-peregrine-v2-0-c8835d2da7af@apitzsch.eu>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -53,11 +53,11 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  ~postmarketos/upstreaming@lists.sr.ht, 
  =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718659400; l=871;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718659400; l=1178;
  i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=gxguENUktsJsPjFaq8UcvbJuvvei3DvrYMOWcTOkAw8=;
- b=r9wdA5EbSuCzt6TOOpC+UdYY6D094zXNEqld0DfTqtYhkVbD0sevSl4Hl0VgRDEAYR2x1ki9J
- WXXD2LOhk/0DrTFcYwBUXMERrD+u6y4Q/KyNz2gG9n1Vym5RCVRJBv9
+ bh=lioNlZR631NtRJ2JVy/65vxGGztyn3Q8Af+bbiSagJY=;
+ b=ALfmy8RuBtkDBwdTpaCgtWG2bVt1y7mcXue/wSoGL8Th7XZNKTmqfjus459j0baMme4wdvZio
+ X+ixkKI5DD+DUHF2suJRSwKU9b6QLD0cMmRpF9Mepl9wU034ioI0l/y
 X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
  pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
 X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
@@ -65,29 +65,48 @@ X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
 X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 Reply-To: git@apitzsch.eu
 
-Add accelerometer, magnetometer, regulator and temperature sensor alert
-interrupt and update framebuffer supplies.
+From: André Apitzsch <git@apitzsch.eu>
+
+Add alert interrupt for the temperature sensor of Motorola Moto G 4G
+(2013), although not used by the driver yet.
 
 Signed-off-by: André Apitzsch <git@apitzsch.eu>
 ---
-Changes in v2:
-- Split commit into three commits
-- Link to v1: https://lore.kernel.org/r/20240616-peregrine-v1-1-85d14ae1a11a@apitzsch.eu
+ arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
----
-André Apitzsch (3):
-      ARM: dts: qcom: msm8926-motorola-peregrine: Add accelerometer, magnetometer, regulator
-      ARM: dts: qcom: msm8926-motorola-peregrine: Update temperature sensor
-      ARM: dts: qcom: msm8926-motorola-peregrine: Add framebuffer supplies
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
+index 50ae3cfc95bb..cff9415baa46 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
++++ b/arch/arm/boot/dts/qcom/qcom-msm8926-motorola-peregrine.dts
+@@ -125,6 +125,10 @@ reg_lcd_neg: outn {
+ 	sensor@48 {
+ 		compatible = "ti,tmp108";
+ 		reg = <0x48>;
++		interrupts-extended = <&tlmm 13 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-0 = <&temp_alert_default>;
++		pinctrl-names = "default";
++		#thermal-sensor-cells = <0>;
+ 	};
+ };
+ 
+@@ -361,6 +365,14 @@ reg_lcd_default: reg-lcd-default-state {
+ 		bias-disable;
+ 		output-high;
+ 	};
++
++	temp_alert_default: temp-alert-default-state {
++		pins = "gpio13";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-disable;
++	};
+ };
+ 
+ &usb {
 
- .../dts/qcom/qcom-msm8926-motorola-peregrine.dts   | 121 +++++++++++++++++++++
- 1 file changed, 121 insertions(+)
----
-base-commit: c71189547381bb5f176c6b22a9edc3414f1837b9
-change-id: 20240616-peregrine-6ec5e26b15ec
-
-Best regards,
 -- 
-André Apitzsch <git@apitzsch.eu>
+2.45.2
 
 
