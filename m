@@ -1,105 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F2C1B4C3C;
-	Mon, 17 Jun 2024 13:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0F219AD58
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630550; cv=none; b=F6Lgr+Kst7w/VCRN4XTajiEuPfFFb3UIG9+DWkZqxQa1HIVYag06O5Xr7+biWAllmxNX4jAjUGh6NPM6Bzix/U7nXe8KmSI94ukpOCpknACFgyi2iUI3vZXEQ4g3QdQR2sMl6lzk4MR1swWgRPDLSfOQdPZO9cSCE8yb7KkoYy0=
+	t=1718630561; cv=none; b=eeN20VeD8ci+llWtipKdWTsVxIDtB/dBtJ7sCHO658da9/yKqIIGdQxkTUGu3w25CuZvm+bXFfK1iVGVTsHP6K2WKRE2gC7TEp3jlpCN7PMAJVoJ1TV5vVVBdiHYi/XJKJhfwn5OOsqaib2wBwhnWeapFHuykKh1uxl+ISR2ds4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630550; c=relaxed/simple;
-	bh=WU/ecu/cqXf8TbX521ocAfNCVNpp0ahcPYQQV8HphKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rzRKDtkT00rys8vBly3kM0WF2eeYQ0rX5Z9Kcq3RWe+3HraTaQZ6INVJ3CGk44y5wyBdztwpRyupJmYuNutXZdhxFXL5tLnT0nOtnu0t0IeP37IJjLXTJlI/zbyHgg5zgD2HrOr9GPdS3ECKYA4WUOrISzQWrf7ZMrqX7JVsK0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8M6F+k7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718630561; c=relaxed/simple;
+	bh=x2/TWbf4pMW/7B3jUbR49NyBzVBSJJKoqAkbb4uuZqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TPkM2OHCYhecj06L56cqZPBHYoOcoszrJEqziN+d3q/xCrU+LwIiEZ9qC5++CDTd+WPT3oZ1XEQZTV4Co5SFA0A8hIqjwhtaxvAjg5ChPekpbM3be0CqrjFziQnaeHgbeX6b/Dv2Li6GiY6e9n56K99kuhQkTpdYJTsVljBKsLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E+gpl1EW; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8M6F+k7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FD5C2BD10;
-	Mon, 17 Jun 2024 13:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630549;
-	bh=WU/ecu/cqXf8TbX521ocAfNCVNpp0ahcPYQQV8HphKA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D8M6F+k7UmvXSsZE+ar/JIQFeEb2ZbroeS8DkTVWUuAz39gTWuQ00bz5xIB+b2+2t
-	 iZ0kGc2qY7iZ5so8IzBWo1LRWg0fSp6tYEI429SGtENDOd8HE7NFvzVDxOU4iDYOX3
-	 /sXn/NZoPgr0wE0ogcHmcZiIaLR/WSzxvGsyovuPbDVLa4gePpDJH+QTpZHD20JQhM
-	 f2Yc4fBUPBq6VYpCAeJrFID40Ix1ZKA+qnoj1rWdeeXt9ZQFuptUquJstB14AghMXo
-	 WCh032mm9wouNOfOLr9UkgALY0HFzylLZevzzikqlP3e0HMS2kXRP9mpugmQRWZUUn
-	 DtsYOUps5erMA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Louis Dalibard <ontake@ontake.dev>,
-	Jiri Kosina <jkosina@suse.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 44/44] HID: Ignore battery for ELAN touchscreens 2F2C and 4116
-Date: Mon, 17 Jun 2024 09:19:57 -0400
-Message-ID: <20240617132046.2587008-44-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
-References: <20240617132046.2587008-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E+gpl1EW"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ebeefb9a7fso59260401fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718630555; x=1719235355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ZbiqmECcZY8mamkHFgAOvFj2yp3N5y/XiTKfM4Svdg=;
+        b=E+gpl1EWGFhN9DRUzAdWNdoTkmKLT9eYD5xha9LrD87RAmtXDphi+hqmeciGHNR8gM
+         EUrsPaMxIrklw2gNLQ4WaC1+MYwwb+ZXHWs6TLUynFZzUjRV3P8wL2yUX0MlbkKhWMFG
+         MEnmnij/3KpPImi85WHJXNgBsnaeNgzr4CTEdMCWU2lm/lPMrlvAbRcUk47lalloAaCh
+         b3gpn+zrfHPsvKwpbz/Ovllpz08Owyx5xWGXfGk/p/IWjsN97lmRa2L4qAR1QbadbYgX
+         /YGUD5f9iMKNEWi78irsYe23lIs+0iACmwl6UC2b5AUt175uqeBgCPJJ9HLs6CRM5P0G
+         mKBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630555; x=1719235355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2ZbiqmECcZY8mamkHFgAOvFj2yp3N5y/XiTKfM4Svdg=;
+        b=ROFOmC4RIbchJ2XFCdmmMD5uF4BL/yB+HP/MIhj2Ibfj56MzbbU3K1mHzsr1noO6di
+         2DslXwQlp0NWLYaAqKNjAMWNM3re79Wx8Fz0FfAgTJwsR3CH/XQXIxo5yAtRDIYt1qjV
+         5RaCEPMgV/bDZWYGmyQtGwqOFZodxWx2OOU57sLtZhuivnBG3aO7svVPlRIDouFqmXJ/
+         aLvmWSs8GPfkWOvvkmTBekMNtg+/ythnpE0+87HR9omGID5hl7IHkbXcSzuUG3CMf/vg
+         kkT00Gbsgkm4k3WnN4Kz5dn4iAozErs77rjg9ObhgV16Yhg2wxMg7baYixjaNXniu7BV
+         pRZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfuSVBzgVvOuRJuo4SFlDDiAymn/jwAr0DncjgLwYbo62E6DfuHE68YmsrVPtazhVM3pjJ0fOvGpkKRU5mq894OI6q+JEIXEk5TVNt
+X-Gm-Message-State: AOJu0YwqvXHQkqhgo1USPmOkvjjeypUOuLyW5Sy2TmfY7Z/vCWlsK408
+	u1OgnuIrLANL7y3/NwIxRGdhzuYkgnTgsL3J2rGedyHKe7Sg1l3eyIycUFP3YMFLi4Beln3Ciyn
+	d57cVZ/NoBMbpGW7XsK5gQT/qx6svhQKkc71UJw==
+X-Google-Smtp-Source: AGHT+IFTPp5MCmbl5JG32vigsgybvL3dycGFvRHZv60p5LHQHldYQWcRVTiphDUMaheGmt7QEUHyx14Mo+lEkfgLk3w=
+X-Received: by 2002:a2e:9a8b:0:b0:2ec:c8:2755 with SMTP id 38308e7fff4ca-2ec0e5d085amr58381091fa.24.1718630554747;
+ Mon, 17 Jun 2024 06:22:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.5
-Content-Transfer-Encoding: 8bit
+References: <20240612-iio-adc-ref-supply-refactor-v2-0-fa622e7354e9@baylibre.com>
+ <20240612-iio-adc-ref-supply-refactor-v2-1-fa622e7354e9@baylibre.com>
+ <20240615130858.22043725@jic23-huawei> <dbf947a3-3d3b-4686-a707-a813b6a4ce5a@gmail.com>
+In-Reply-To: <dbf947a3-3d3b-4686-a707-a813b6a4ce5a@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 17 Jun 2024 08:22:23 -0500
+Message-ID: <CAMknhBFJ01Xu69Arvd3S=dbADGFmzaYKm2XBtw_CtnjtYwnnew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] iio: adc: ad7192: use devm_regulator_get_enable_read_voltage
+To: Alisa-Dariana Roman <alisadariana@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Marcelo Schmitt <marcelo.schmitt1@gmail.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Mark Brown <broonie@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Louis Dalibard <ontake@ontake.dev>
+On Mon, Jun 17, 2024 at 4:35=E2=80=AFAM Alisa-Dariana Roman
+<alisadariana@gmail.com> wrote:
+>
+> On 15.06.2024 15:08, Jonathan Cameron wrote:
+> > On Wed, 12 Jun 2024 16:03:05 -0500
+> > David Lechner <dlechner@baylibre.com> wrote:
+> >
+> >> This makes use of the new devm_regulator_get_enable_read_voltage()
+> >> function to reduce boilerplate code.
+> >>
+> >> Error messages have changed slightly since there are now fewer places
+> >> where we print an error. The rest of the logic of selecting which
+> >> supply to use as the reference voltage remains the same.
+> >>
+> >> Also 1000 is replaced by MILLI in a few places for consistency.
+> >>
+> >> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> >
+> > Complicated bit of code, but seems correct.
+> > However, it crossed with Alisa-Dariana switching adding a
+> > struct device *dev =3D &spi->dev to probe() that I picked up earlier
+> > today.
+> >
+> > I could unwind that but given Alisa-Dariana has a number of
+> > other patches on this driver in flight, I'd like the two of you
+> > to work out the best resolution between you.  Maybe easiest option
+> > is that Alisa-Dariana sends this a first patch of the next
+> > series I should pick up.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> I will add this patch to my series and send it shortly.
+>
+> Kind regards,
+> Alisa-Dariana Roman.
 
-[ Upstream commit a3a5a37efba11b7cf1a86abe7bccfbcdb521764e ]
-
-At least ASUS Zenbook 14 (2023) and ASUS Zenbook 14 Pro (2023) are affected.
-
-The touchscreen reports a battery status of 0% and jumps to 1% when a
-stylus is used.
-
-The device ID was added and the battery ignore quirk was enabled for it.
-
-[jkosina@suse.com: reformatted changelog a bit]
-Signed-off-by: Louis Dalibard <ontake@ontake.dev>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-ids.h   | 2 ++
- drivers/hid/hid-input.c | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 8376fb5e2d0b4..005239dbd7f18 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -421,6 +421,8 @@
- #define I2C_DEVICE_ID_HP_SPECTRE_X360_13_AW0020NG  0x29DF
- #define I2C_DEVICE_ID_ASUS_TP420IA_TOUCHSCREEN 0x2BC8
- #define I2C_DEVICE_ID_ASUS_GV301RA_TOUCHSCREEN 0x2C82
-+#define I2C_DEVICE_ID_ASUS_UX3402_TOUCHSCREEN 0x2F2C
-+#define I2C_DEVICE_ID_ASUS_UX6404_TOUCHSCREEN 0x4116
- #define USB_DEVICE_ID_ASUS_UX550VE_TOUCHSCREEN	0x2544
- #define USB_DEVICE_ID_ASUS_UX550_TOUCHSCREEN	0x2706
- #define I2C_DEVICE_ID_SURFACE_GO_TOUCHSCREEN	0x261A
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 8bb16e9b94aa5..c9094a4f281e9 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -377,6 +377,10 @@ static const struct hid_device_id hid_battery_quirks[] = {
- 	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_GV301RA_TOUCHSCREEN),
- 	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_UX3402_TOUCHSCREEN),
-+	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_UX6404_TOUCHSCREEN),
-+	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ASUS_UX550_TOUCHSCREEN),
- 	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ASUS_UX550VE_TOUCHSCREEN),
--- 
-2.43.0
-
+Great, thanks!
