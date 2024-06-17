@@ -1,118 +1,125 @@
-Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035CF155736;
-	Mon, 17 Jun 2024 14:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418F5155C90;
+	Mon, 17 Jun 2024 14:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718634513; cv=none; b=Hzpk2cOtFzYoNZxqebyF6UMyv5/FpaILfgt7W+BE/DFdJqu1fHJZkc80hZ9zGFMa6yT2f0CmQnfsApK1ISjeeapMLjnht1xVmqr1qkX6jt8iDXnwL7tYD3eNRRpmKN+gKKbn8FcL4fXrEIPPa4TopUPYn4mntYPOXZwm3LbnlQA=
+	t=1718634598; cv=none; b=uwFsPq/cvaKYBLFo6iDUJqSNCL4KqMVL3mVzLczyGK99EDGVrhGMeDvDESAmpYC5D7bezdDOjyZKwKGAql7v4uVWkj/SivM2ZT+ITJnbMkPogyBlu2rqm+8KVR26p3hFcLEbPI3gbQ0hP6iNQSsNIt28WVEi9zCsssGhDLsRVmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718634513; c=relaxed/simple;
-	bh=P/NrncKQR4tv9oXaIUeKT1Nf/NY6cRVCw7zAn/4OBNI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=gf1g6c99brI79GFwMRNMfh/o0x7/VjS7mtCzEabNziEgkHt2Yn+tL4nFI90zYbtDQEiJAUdyIIPAwH0J6uX9dZVGZHj7MpF8qT1xG051XsI4UJKU4fUK7l7Oq+zEekTUZrciyukMb2WZ8RXype1ldnffUvc/glJB8M3FKoixtig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=XrwjtL/i; arc=none smtp.client-ip=198.252.153.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	s=arc-20240116; t=1718634598; c=relaxed/simple;
+	bh=+oLVuF20b17/KeD/cnhmpNZn4qN3JI5332dEw38tUHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XJMouKDloCVpq15UvkuLaob/6qHqfqro/L0ypgy1f65xTe7z+nIPjqM60dkqpUsS6s4yDcgL8JalPs7AsuHkIq5N/DPQvK4jyvVyhNtoT54eZJawKdxl49vL8mFbF7fB2JUbxgPtuAr3mZO+OLWMQ/oIU33RPDjFddo3Nn25lkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=j94Fw9eC; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="XrwjtL/i"
-Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx1.riseup.net (Postfix) with ESMTPS id 4W2sgX1DfyzDqfq;
-	Mon, 17 Jun 2024 14:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1718634504; bh=P/NrncKQR4tv9oXaIUeKT1Nf/NY6cRVCw7zAn/4OBNI=;
-	h=From:To:Subject:Date:From;
-	b=XrwjtL/iln3NR2iQzbx77hmYVMi4RnePeEXTPlRDM+86BX8uj9GI57V1lqlXNfSUp
-	 NU702EoCYOSam/Q/FV6XR9qK3TikLVHodbjpLb4kqabeuJcrr8XrBXRxNNT1YEjU/M
-	 V/Bg5Ut7eyhVuwnQF0rx1czC+IeyTKL/uYhDpchE=
-X-Riseup-User-ID: C43C3320A8254A748022E269A5DF7B5E499C7825BF1B5A845D821EB134D22584
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4W2sgW0yTXzFt8Q;
-	Mon, 17 Jun 2024 14:28:22 +0000 (UTC)
-From: Shiva Kiran K <shiva_kr@riseup.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Roshan Khatri <topofeverest8848@gmail.com>,
-	Shiva Kiran K <shiva_kr@riseup.net>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j94Fw9eC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ghrNYOjKUEns5+oO8F4lUhqgpFkLNAVFJZuIbM/3u/w=; b=j94Fw9eC7NnKbFDeBoa45Q7SGt
+	sG5hfav4ymiv/Y4PtNTKhkxBaxoDxJMaelWnUjSpWqPVbvYyEjIHUGyle/WG35CGO4879yIQxDpN6
+	WxD5Rp1S2g6LhgHe1znMW+vwjynMt7vcHKfX8kKepX9mSVoB+VPN4tW4sjUXOqxN81D0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sJDMY-000HK8-Q6; Mon, 17 Jun 2024 16:29:38 +0200
+Date: Mon, 17 Jun 2024 16:29:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Mitsuhiro Kimura <mitsuhiro.kimura.kc@renesas.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: fbtft: Remove unnecessary parentheses
-Date: Mon, 17 Jun 2024 19:57:47 +0530
-Message-ID: <20240617142746.51885-2-shiva_kr@riseup.net>
+Subject: Re: [net-next PATCH 2/2] net: ravb: Fix R-Car RX frame size limit
+Message-ID: <ed455f3f-dcb3-4654-af78-6ff6c6c5c22e@lunn.ch>
+References: <20240615103038.973-1-paul.barker.ct@bp.renesas.com>
+ <20240615103038.973-3-paul.barker.ct@bp.renesas.com>
+ <b1c10539-4d47-4752-8613-785b0ad83f5e@lunn.ch>
+ <933ffa58-8092-4768-993d-cd62897d203d@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <933ffa58-8092-4768-993d-cd62897d203d@bp.renesas.com>
 
-Remove unnecessary parentheses in `if` statements.
-Reported by checkpatch.pl
+On Mon, Jun 17, 2024 at 03:03:21PM +0100, Paul Barker wrote:
+> On 16/06/2024 02:23, Andrew Lunn wrote:
+> > On Sat, Jun 15, 2024 at 11:30:38AM +0100, Paul Barker wrote:
+> >> The RX frame size limit should not be based on the current MTU setting.
+> >> Instead it should be based on the hardware capabilities.
+> > 
+> > This is a bit odd. MTU is Maximum Transmission Unit, so clearly is
+> > about Tx. MRU does not really exist. Does TCP allow for asymmetric
+> > MTU/MRU? Does MTU discovery work correctly for this?
+> > 
+> > In general, it seems like drivers implement min(MTU, MRU) and nothing
+> > more. Do you have a real use case for this asymmetry?
+> > 
+> >       Andrew
+> 
+> Hi Andrew,
+> 
+> This change is based on my understanding of MTU/MRU, on the specs of the
+> RZ SoCs I'm working with (primarily RZ/G2L family, RZ/G3S and RZ/G2H)
+> and on some testing. My goal here is just to make the capabilities of
+> the hardware available to users.
+> 
+> For the RZ/G2L family and RZ/G3S, we can only support an MTU of up to
+> 1500 bytes, but we can receive frames of up to (IIRC) 8192 bytes. I have
+> tested sending jumbo frames to an RZ/G2L device using both iperf3 and
+> ping and I see no errors.
+> 
+> * For iperf3 RX testing, the RZ/G2L is only responding with acks. These
+>   are small regardless of the size of the received packets, so the
+>   mis-match in MTU between the two hosts causes no issue.
+> 
+> * For ping testing, the RZ/G2L will give a fragmented response to the
+>   ping packet which the other host can reassemble.
+> 
+> For the RZ/G2H, we support sending frames of up to 2047 bytes but we can
+> receive frames of up to 4092 bytes. The driver will need a few more
+> changes to handle reception of packets >2kB in size, but this is
+> something we can do in the near future.
+> 
+> Is there any reason why we shouldn't support this? I am by no means an
+> expert in the Linux networking internals so there may be things I'm
+> missing.
 
-Signed-off-by: Shiva Kiran K <shiva_kr@riseup.net>
----
- drivers/staging/fbtft/fb_ili9320.c | 2 +-
- drivers/staging/fbtft/fb_ra8875.c  | 2 +-
- drivers/staging/fbtft/fbtft-bus.c  | 2 +-
- drivers/staging/fbtft/fbtft-core.c | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+I've no really experience what the Linux stack will do. I have seen a
+number of devices which do not limit received packets to the MTU,
+i.e. they are happy to receive bigger packets. And i don't think this
+has caused an issue. But is it ever actually used? Do users setup
+asymmetric jumbo systems? I've no idea.
 
-diff --git a/drivers/staging/fbtft/fb_ili9320.c b/drivers/staging/fbtft/fb_ili9320.c
-index 0be7c2d51..409b54cc5 100644
---- a/drivers/staging/fbtft/fb_ili9320.c
-+++ b/drivers/staging/fbtft/fb_ili9320.c
-@@ -37,7 +37,7 @@ static int init_display(struct fbtft_par *par)
- 	devcode = read_devicecode(par);
- 	fbtft_par_dbg(DEBUG_INIT_DISPLAY, par, "Device code: 0x%04X\n",
- 		      devcode);
--	if ((devcode != 0x0000) && (devcode != 0x9320))
-+	if (devcode != 0x0000 && devcode != 0x9320)
- 		dev_warn(par->info->device,
- 			 "Unrecognized Device code: 0x%04X (expected 0x9320)\n",
- 			devcode);
-diff --git a/drivers/staging/fbtft/fb_ra8875.c b/drivers/staging/fbtft/fb_ra8875.c
-index 398bdbf53..ce305a0be 100644
---- a/drivers/staging/fbtft/fb_ra8875.c
-+++ b/drivers/staging/fbtft/fb_ra8875.c
-@@ -50,7 +50,7 @@ static int init_display(struct fbtft_par *par)
- 
- 	par->fbtftops.reset(par);
- 
--	if ((par->info->var.xres == 320) && (par->info->var.yres == 240)) {
-+	if (par->info->var.xres == 320 && par->info->var.yres == 240) {
- 		/* PLL clock frequency */
- 		write_reg(par, 0x88, 0x0A);
- 		write_reg(par, 0x89, 0x02);
-diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
-index 3d422bc11..ab903c938 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -85,7 +85,7 @@ void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
- 	if (len <= 0)
- 		return;
- 
--	if (par->spi && (par->spi->bits_per_word == 8)) {
-+	if (par->spi && par->spi->bits_per_word == 8) {
- 		/* we're emulating 9-bit, pad start of buffer with no-ops
- 		 * (assuming here that zero is a no-op)
- 		 */
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index c8d52c63d..64babfe3a 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -666,7 +666,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 		txbuflen = 0;
- 
- #ifdef __LITTLE_ENDIAN
--	if ((!txbuflen) && (bpp > 8))
-+	if (!txbuflen && bpp > 8)
- 		txbuflen = PAGE_SIZE; /* need buffer for byteswapping */
- #endif
- 
--- 
-2.45.2
+One thing i suggest you test is you put this in the middle of two
+systems which do support jumbo.
 
+     4K       1.5K       4K
+A <-----> B <-----> C <------> D.
+
+Make your device B and C, setting the MTU as supported. But set A and
+D with a jumbo MTU which your systems should be able to receive. Do IP
+routing along the chain. And then do some iperf transfers. I would
+test both IPv4 and IPv6, since MTU path discovery in IPv6 is used a
+lot, and gateways are not supposed to fragment.
+
+I'm assuming here your device does actually have two interfaces?  If
+it is only ever an end system, that simplifies it a lot, and these
+tests are not needed.
+
+    Andrew
