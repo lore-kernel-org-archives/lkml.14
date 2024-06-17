@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48E01993B1
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574CF19A283
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647129; cv=none; b=BuqzzFIkxwpQGN1bUdOaNEMdwMGjwFAXk32d4nfbDyz6x9CXFTy8xnp4i9/Jar7LfNaGLrHeYxSSu2GkeL9H2yK0/x8g4ZwRN+ovLC2vvz5Nebx8wgXhByKC1ttCixyuJDgD26Vmht2Bu1BlKvdxKkEPNLGvpTnlHh9Z2+PGX4Y=
+	t=1718647133; cv=none; b=rwkfDht6EnGiYAXjeWHMjcWmoDGt2GnUGfwbSrd0LPhomH+6d3oN1SAp8j2ivlIZl3HZdyJmx52qPyg5s3w4iVBsFVP638RnH8G7WzhGD1Ci+z7tQ/I+4MV03eUBT5qrTS9b9NcZRfx+jIKLBQX3Su/CD9T8dosIzZN8ElA2jmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647129; c=relaxed/simple;
-	bh=E8SnT3PVNgwvs9gIA8r8UmB9RILzIMEk5mxRikJC8gY=;
+	s=arc-20240116; t=1718647133; c=relaxed/simple;
+	bh=qxjnDPhbkT2bqk3JUgXG+OMT2L0q9TuqyeH9xgQXlZY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=n6RRmo6jTp7D3FX+wmr4Nax1H9Va80Vzzj/RHKPIBWhygHWlEjDhxqUDCGft0W2YwvxfN9qCXGdH4ck/wp5DbeKF8umy/1fGGjRHlPWqdf7W0coZkHDGViYBC2WBPejMygC7wCtTOnXX2Ccgpgr8bkEivtRR7GKBSQA1NLe1/EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fX/hZuTq; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=fuSDumGWKOcMD9GkoRFX15fIgQNqeF8ZSV5UHPzVG6wcj+eukr/EWtN9GEyrdzWZQIWUfKEH0+PlPcLcStrtam8syRwm6ZSWhWd7tNnt725PeQ3XrISpdVNvqjzx5j1mtmqLi99vfgK4V1RIOTkYiITNhX12s03W/oSAWd4VIfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ntve6mM6; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fX/hZuTq"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-705ddabb4deso2521917b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ntve6mM6"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-631b498f981so66798047b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718647127; x=1719251927; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718647130; x=1719251930; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q78REyi52sqkWL03kuxiNz+yyQ9ejPgzHXaQsMRmJ8I=;
-        b=fX/hZuTqdTeAAo+DEk3WrIyHJWpdonvIf+ID2BSTh4xCRom+PH6qNyDxtwDFBoZXRU
-         oZNqogRuNmblU8ioPf6xerIHKwgHPk1rYGhHa9XahbpsEa3VY21rq92JU2Uap16YzUUo
-         3cycS/qKR7M+UjPoEYsBiMjb2/2tgzVRejR0quU9dgh4Ym+HjdpfOiZHAQq+CFrfWEC2
-         ff+IUyw2R7nRYPms+RcdX0ommm17Q8U357Vv4ihI7y0V7kSUNINkmg7iwgeVw0h4YAgU
-         gaP9T7jU1B0Lh5FJHiUhWJtQpH66u8fsBRNsBMjR3FCqljOPZftdmKV9QGMJpOQVvW9U
-         LbfQ==
+        bh=FepdhZeTk2P/UGpz1yHjDkWXnUR5Ic7EpV5t8vA3VJ8=;
+        b=Ntve6mM6DKbaoATCL/7rMMqKbS9RdvB9UiL/y3A3x3g0guz27tUYPP8v5pFjwjQ0Le
+         X2SfN8OMi80AMvct+25h3aXEXiNgkl49ZzSBD5zMWU5tef8xdOxr7E82rWpOTGj90of+
+         uSD6IaLzoa9In3pCqBjrYBPldTfG3+FEHgArJ8dk3NzpRtQZGnqHl0CyVvNXDzoi93tL
+         zXerhRSEUfiaO2aEtmsntV7ZEXdUiQ77hTjOvKvYFBH1VW0vzMHnV5444J3A928kzmmU
+         p7qltGWrgmjeR77D4Yc/MqPP3CGGM9WOHZgB4uu8SiR78Xl11lHDTaWCql62P91C8Kbn
+         fKSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647127; x=1719251927;
+        d=1e100.net; s=20230601; t=1718647130; x=1719251930;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q78REyi52sqkWL03kuxiNz+yyQ9ejPgzHXaQsMRmJ8I=;
-        b=AHKmGPECDeJ8dxqzdlWA9gPKqudHPELLDOneGCFjN1UE9uxnFNhOuT6emG/z5EX2Ff
-         ghDqygKJLd3SojWJtBKw3KAYcFPkgWp++z2gffZv0/KC3n5npIsKfbV9yqB4vi5oPrxL
-         +afm+a0hr41sLNRRnTV3pTXTMVEwFynQUEpBAd/CITP9RNF5PFlVkRjzOkS4dJjQCAa2
-         pSsek51VHdYrgsf53Ef6grSwHX9pOD6twSyvXXoBBwM6z6PJ55YYiEYJZI+Q1FR/Zq8l
-         k/HtxWN2BA8TvETeDNdrjmib7ukAEWaAw8GrwLaRw9LHYxKmZbH3n0TtIpTQDJjy17fG
-         X5kg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0a8IfEYjooosmku56J3MOWJCPFNT6Qn5dyGDblB6lNZY80xKFdYnMFKXlX5QhmCOo854RNI6JeBYwqw202fDwf7Y5qIosd9IoIq64
-X-Gm-Message-State: AOJu0YxgS0wZRsDKyqTL3kT1ivA7SfHbsiq3mlAbWmyGAPkafKOTT+fI
-	+A7oi9bKZuzlfSdrgkSuhqlZbnreov0iUEUqhnImbW2J3HQmkIxeWheDpk8MiTdVBoh2OowyTpP
-	GUpQaznz+oFH+ZPgb9q8so0/jSw==
-X-Google-Smtp-Source: AGHT+IG7Ue5DJDS1N7DP4tCk4vCEgaA5IoS5ykSNmz1WLMo+HqkFJZ34S73K58/Xvvf2E+rzd0MQkiPOgpUx01THRW4=
+        bh=FepdhZeTk2P/UGpz1yHjDkWXnUR5Ic7EpV5t8vA3VJ8=;
+        b=wHzxKW26XMTvvpxQbtO4saokf1WUhj/yJC1AAi797J1NbBs5xhPQuuLEGQgvJHeCwC
+         FFP76e8rG+D6QMmJLGVFJpaa9hBiLxwi3h9PkPfDZDckHdPxy/JLwX7teaU9RZet5asi
+         k6rVMWIVWsd5+6f/d6OzWQvTN1fHZlNfp9cYb/+iIAf3xDe5BpOrOVRTbw4TtEnc+e12
+         /EeD31/pj61MDA92ddnF1BLZc+gWnKoEYF0O6W6YM1bD1i4v0bY+FRqHHtL5gl4IPRIp
+         jrgayk5CMeY4mo+LOyZZo5uX/r/U0a40HcJPcK2Vdl4ywNxBfSLQue0vviD6z9mqba7w
+         7t8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXFf5jaKp1oi9rC1mI6pRIGVZefxlXv/ct+ui3R2uOmpFeJQ5VGvm0UjxZoIOnBuh8eNQlNtUQbwRpnuWyC/aXQiltKXPI1S7Bson6E
+X-Gm-Message-State: AOJu0YzGBz2WJUzklm4px6gwaJJ+ttDc+IKNfRgUvgCMASEFNP4a5Gv/
+	CeYGxEPndrf/2zikqu7aV2c7emdQ93KZblh0OswXD0eG/tulJ+rJqu7tptwDlm5wF18KF41zz7z
+	WR7ysy54Jjxn5gY0petY1981a4g==
+X-Google-Smtp-Source: AGHT+IEKWMn41cQguv0qNaedPOXvzvvCPGUBW2Ai4IEXCZr+AQfjcwobN3pE2EUdIwaI2VHKh5POsClBLW5Uwl1z0o0=
 X-Received: from samitolvanen.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:4f92])
- (user=samitolvanen job=sendgmr) by 2002:a05:6a00:1d9a:b0:705:d750:83dd with
- SMTP id d2e1a72fcca58-7061a9cd714mr1634b3a.0.1718647126976; Mon, 17 Jun 2024
- 10:58:46 -0700 (PDT)
-Date: Mon, 17 Jun 2024 17:58:31 +0000
+ (user=samitolvanen job=sendgmr) by 2002:a05:690c:4a0f:b0:62c:de05:5a78 with
+ SMTP id 00721157ae682-6322402cc6cmr27980207b3.6.1718647130513; Mon, 17 Jun
+ 2024 10:58:50 -0700 (PDT)
+Date: Mon, 17 Jun 2024 17:58:33 +0000
 In-Reply-To: <20240617175818.58219-17-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,19 +59,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240617175818.58219-17-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5421; i=samitolvanen@google.com;
- h=from:subject; bh=E8SnT3PVNgwvs9gIA8r8UmB9RILzIMEk5mxRikJC8gY=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk8Bb1DCi99v6wb89Vda/7vwSnIbRDTw0ABB
- IYi86zqYneJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5PAAKCRBMtfaEi7xW
- 7nsZC/0fY4b4nIhSqSmetH7M+TuHCSDRTPXYnz6APqYIR82AgLo3SR3Ca+zpPFziHT1Rvik7uWJ
- zbbTbE32fF7R6lopcUh6k6qh+cctPuAvDyN8CkOqnb/8lMAbFPb0xZNnZmHyEjgeccTLmusU9yX
- VqNaEs5SIhiDoST8A4iAJMwnAOzKKXMm7X4nfZ7cL+RsMBIGAf4C0WnoszRDD6GbfLh1gMumKVa
- KQ0XD7c9cne4LvKv8m8s/9Hp0SJnsVYdXWB86YueROeGhYVSflI5wsXS5UvNa3XoZO9JFhXUJTS
- 8YlBnQpE/+EWz8rZXdKYdz3Q4SIk9ZiRVwpqA8Cj1uZm2toAw2ht99lvfXleE4nwg3xo3QWft/R
- J5ca6acXIjNTxb2jWVqlWkNSbF+OZZ58Q55ETL83qi2OALARh0OSMBx0XhNS6zAd/gwFgyR2TZK mD/JQPyoZ0uxXu2y905BawVVBWgkgJ5zuEvfYGUg9b7LdKl6n7oFmM+LHBAOeTGft9HD8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2620; i=samitolvanen@google.com;
+ h=from:subject; bh=qxjnDPhbkT2bqk3JUgXG+OMT2L0q9TuqyeH9xgQXlZY=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBmcHk8BkgxPBOcTFd109aXG7GZv2GPe3nQuIQTV
+ +Ps+2NQwXmJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCZnB5PAAKCRBMtfaEi7xW
+ 7jz9C/4irEUBFYs+I2aOmFliiJGDZqYDERdlWQJY/S2Kbp2uY4rgt0ooq54+mWm/RT29dZRw1qu
+ wzZiFq3yJ5kfWTI7Em5p8rOwLLsAlr8cATc+M//wemnhZOM4pYjVxleLdFdht0Smp1bVohtkM2Y
+ 6x+zf+KwjcDE2nYxWr8hqpjFF6idGlQnuBq47MhzEJaSmyy1WJjtqddvn3gxNCaBcwcBv4Vnp4Q
+ fyDZHNKoqZGdfiwqWKvgOynjGMAotjb3BvoI9d9AkP/qR3F1pN7IFWM6xgqCDeGCaDl9Eu68/rQ
+ kbPtux6ew2Ox0cVDiVjQOLDnxLOHyDgFsK2a9JCSJaJzMxyugaZIRPpv7fyLYrsK/hCI/y0q+GM
+ uKT5ReLVoA31RS7SnoKjUGgYi0DOUw+OIuPcX5qP11TCp4+Y8hrnzAXxNy6zByYL3wJujL5fTCV 7m+q7O8nwVMrXXoKTpARpZ4LqG+8Ui3OUm+s92JY1f3ZicqYMkl4sJUtTMrAc9Q799oLY=
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <20240617175818.58219-29-samitolvanen@google.com>
-Subject: [PATCH 12/15] gendwarfksyms: Add inline debugging
+Message-ID: <20240617175818.58219-31-samitolvanen@google.com>
+Subject: [PATCH 14/15] module: Support hashed symbol names when checking modversions
 From: Sami Tolvanen <samitolvanen@google.com>
 To: Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
 	Miguel Ojeda <ojeda@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -81,160 +81,85 @@ Cc: Matthew Maurer <mmaurer@google.com>, Alex Gaynor <alex.gaynor@gmail.com>,
 	rust-for-linux@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Understanding the operation and caching of the tool can be somewhat
-challenging without a debugger. Add inline debugging information with
-the --inline-debug command, which adds highlighted tags to the --debug
-output with information about cache states etc.
+When checking modversions for symbol names longer than MODULE_NAME_LEN,
+look for the hashed symbol name instead. This is needed for Rust modules,
+which frequently use symbol names longer than the maximum length
+supported by struct modversion_info.
 
+Suggested-by: Matthew Maurer <mmaurer@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- tools/gendwarfksyms/gendwarfksyms.c |  3 +++
- tools/gendwarfksyms/gendwarfksyms.h | 29 +++++++++++++++++++++++++++++
- tools/gendwarfksyms/types.c         | 14 ++++++++++++++
- 3 files changed, 46 insertions(+)
+ kernel/module/version.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/tools/gendwarfksyms/gendwarfksyms.c b/tools/gendwarfksyms/gendwarfksyms.c
-index 7095f0ecccab..acf4b44238e2 100644
---- a/tools/gendwarfksyms/gendwarfksyms.c
-+++ b/tools/gendwarfksyms/gendwarfksyms.c
-@@ -15,6 +15,8 @@
- 
- /* Print type descriptions and debugging output to stderr */
- bool debug;
-+/* Print inline debugging information to stderr (with --debug) */
-+bool inline_debug;
- /* Don't use caching */
- bool no_cache;
- /* Don't pretty-print (with --debug) */
-@@ -25,6 +27,7 @@ static const struct {
- 	bool *flag;
- } options[] = {
- 	{ "--debug", &debug },
-+	{ "--inline-debug", &inline_debug },
- 	{ "--no-cache", &no_cache },
- 	{ "--no-pretty-print", &no_pretty_print },
- };
-diff --git a/tools/gendwarfksyms/gendwarfksyms.h b/tools/gendwarfksyms/gendwarfksyms.h
-index 568f3727017e..34d1be3cfb7f 100644
---- a/tools/gendwarfksyms/gendwarfksyms.h
-+++ b/tools/gendwarfksyms/gendwarfksyms.h
-@@ -18,6 +18,7 @@
-  * Options -- in gendwarfksyms.c
-  */
- extern bool debug;
-+extern bool inline_debug;
- extern bool no_cache;
- extern bool no_pretty_print;
- 
-@@ -38,6 +39,18 @@ extern bool no_pretty_print;
- #define warn(format, ...) __println("warning: ", format, ##__VA_ARGS__)
- #define error(format, ...) __println("error: ", format, ##__VA_ARGS__)
- 
-+#define __inline_debug(color, format, ...)                              \
-+	do {                                                            \
-+		if (debug && inline_debug)                              \
-+			fprintf(stderr,                                 \
-+				"\033[" #color "m<" format ">\033[39m", \
-+				__VA_ARGS__);                           \
-+	} while (0)
-+
-+#define inline_debug_r(format, ...) __inline_debug(91, format, __VA_ARGS__)
-+#define inline_debug_g(format, ...) __inline_debug(92, format, __VA_ARGS__)
-+#define inline_debug_b(format, ...) __inline_debug(94, format, __VA_ARGS__)
-+
- /*
-  * Error handling helpers
-  */
-@@ -51,6 +64,9 @@ extern bool no_pretty_print;
- 		__res;                                          \
- 	})
+diff --git a/kernel/module/version.c b/kernel/module/version.c
+index 53f43ac5a73e..0b33ca085138 100644
+--- a/kernel/module/version.c
++++ b/kernel/module/version.c
+@@ -8,8 +8,36 @@
+ #include <linux/module.h>
+ #include <linux/string.h>
+ #include <linux/printk.h>
++#include <crypto/sha2.h>
+ #include "internal.h"
  
 +/*
-+ * DWARF helpers
++ * For symbol names longer than MODULE_NAME_LEN, the version table includes
++ * a hash of the symbol name in the following format:
++ *
++ * <hash name>\0<binary hash of the symbol name>
 + */
- /* Consistent aliases (DW_TAG_<type>_type) for DWARF tags */
- #define DW_TAG_enumerator_type DW_TAG_enumerator
- #define DW_TAG_formal_parameter_type DW_TAG_formal_parameter
-@@ -97,6 +113,19 @@ struct cached_item {
- 
- enum cached_die_state { INCOMPLETE, UNEXPANDED, COMPLETE };
- 
-+static inline const char *cache_state_name(enum cached_die_state state)
++#define SYMHASH_PREFIX		"sha256"
++#define SYMHASH_PREFIX_LEN	sizeof(SYMHASH_PREFIX) /* includes \0 */
++#define SYMHASH_LEN		(SYMHASH_PREFIX_LEN + SHA256_DIGEST_SIZE)
++
++static void symhash(const char *name, size_t len, u8 hash[SYMHASH_LEN])
 +{
-+	switch (state) {
-+	default:
-+	case INCOMPLETE:
-+		return "INCOMPLETE";
-+	case UNEXPANDED:
-+		return "UNEXPANDED";
-+	case COMPLETE:
-+		return "COMPLETE";
-+	}
++	memcpy(hash, SYMHASH_PREFIX, SYMHASH_PREFIX_LEN);
++	sha256(name, len, &hash[SYMHASH_PREFIX_LEN]);
 +}
 +
- struct cached_die {
- 	enum cached_die_state state;
- 	uintptr_t addr;
-diff --git a/tools/gendwarfksyms/types.c b/tools/gendwarfksyms/types.c
-index da3aa2ad9f57..694b33cdd606 100644
---- a/tools/gendwarfksyms/types.c
-+++ b/tools/gendwarfksyms/types.c
-@@ -97,6 +97,7 @@ static int process(struct state *state, struct cached_die *cache, const char *s)
- 		fputs(s, stderr);
- 
- 	state->crc = partial_crc32(s, state->crc);
-+	inline_debug_r("cache %p string '%s'", cache, s);
- 	return cache_add_string(cache, s);
- }
- 
-@@ -456,6 +457,8 @@ static int process_cached(struct state *state, struct cached_die *cache,
- 	while (ci) {
- 		switch (ci->type) {
- 		case STRING:
-+			inline_debug_b("cache %p STRING '%s'", cache,
-+				       ci->data.str);
- 			check(process(state, NULL, ci->data.str));
- 			break;
- 		case LINEBREAK:
-@@ -468,6 +471,8 @@ static int process_cached(struct state *state, struct cached_die *cache,
- 				error("dwarf_die_addr_die failed");
- 				return -1;
- 			}
-+			inline_debug_b("cache %p DIE addr %lx tag %d", cache,
-+				       ci->data.addr, dwarf_tag(&child));
- 			check(process_type(state, NULL, &child));
- 			break;
- 		default:
-@@ -561,6 +566,9 @@ static int process_type(struct state *state, struct cached_die *parent,
- 		check(cache_get(die, want_state, &cache));
- 
- 		if (cache->state == want_state) {
-+			inline_debug_g("cached addr %p tag %d -- %s", die->addr,
-+				       tag, cache_state_name(cache->state));
++static int symcmp(const char *version_name, const char *name, size_t len,
++		  const u8 *hash)
++{
++	BUILD_BUG_ON(SYMHASH_LEN > MODULE_NAME_LEN);
 +
- 			if (want_state == COMPLETE && is_expanded_type(tag))
- 				check(cache_mark_expanded(die));
- 
-@@ -572,6 +580,9 @@ static int process_type(struct state *state, struct cached_die *parent,
- 		}
- 	}
- 
-+	inline_debug_g("addr %p tag %d -- INCOMPLETE -> %s", die->addr, tag,
-+		       cache_state_name(want_state));
++	if (len >= MODULE_NAME_LEN)
++		return memcmp(version_name, hash, SYMHASH_LEN);
 +
- 	switch (tag) {
- 	/* Type modifiers */
- 	PROCESS_TYPE(atomic)
-@@ -608,6 +619,9 @@ static int process_type(struct state *state, struct cached_die *parent,
- 	}
- 
- 	if (!no_cache) {
-+		inline_debug_r("parent %p cache %p die addr %p tag %d", parent,
-+			       cache, die->addr, tag);
++	return strcmp(version_name, name);
++}
 +
- 		/* Update cache state and append to the parent (if any) */
- 		cache->state = want_state;
- 		check(cache_add_die(parent, die));
+ int check_version(const struct load_info *info,
+ 		  const char *symname,
+ 			 struct module *mod,
+@@ -19,6 +47,8 @@ int check_version(const struct load_info *info,
+ 	unsigned int versindex = info->index.vers;
+ 	unsigned int i, num_versions;
+ 	struct modversion_info *versions;
++	u8 hash[SYMHASH_LEN];
++	size_t len;
+ 
+ 	/* Exporting module didn't supply crcs?  OK, we're already tainted. */
+ 	if (!crc)
+@@ -32,10 +62,16 @@ int check_version(const struct load_info *info,
+ 	num_versions = sechdrs[versindex].sh_size
+ 		/ sizeof(struct modversion_info);
+ 
++	len = strlen(symname);
++
++	/* For symbols with a long name, use the hash format. */
++	if (len >= MODULE_NAME_LEN)
++		symhash(symname, len, hash);
++
+ 	for (i = 0; i < num_versions; i++) {
+ 		u32 crcval;
+ 
+-		if (strcmp(versions[i].name, symname) != 0)
++		if (symcmp(versions[i].name, symname, len, hash) != 0)
+ 			continue;
+ 
+ 		crcval = *crc;
 -- 
 2.45.2.627.g7a2c4fd464-goog
 
