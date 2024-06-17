@@ -1,213 +1,391 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A398B197A9A;
-	Mon, 17 Jun 2024 13:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF87B197A9E;
+	Mon, 17 Jun 2024 13:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718629440; cv=none; b=U2rnUDIpEZ8cK3Vd44YMr6FO9oVD1TRh1Yn1DI5UoNExKRXGi/CLeQ1x4sjQNV7vjriVVEXUR6m3ly4wvZOH3DGq4fqmf4mW3YgaIH/Gn5NsZrEDnp4ELovvB9T+nN1/FKaiLgtEPrjaJQOV8ZY0R6aV/peAb47Oo3Epsc/30w4=
+	t=1718629438; cv=none; b=dhf4qEyrZoKFTk9uqM3a/zjefzRMFhmoAL3PsSMfrCH/19pSowMgeTWu+kcD0yN0e5Fo9TjphGJk8hHqVOUg6OD2mNpGDjVVPZAD0p5MCojEtk7TrEQtm4yfE+xKOAcVC0lma8cM41x6ZWg/skZElIguW/Ppe0xYMD0u51P+5HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718629440; c=relaxed/simple;
-	bh=pCT7W04LnD6l9y/HFu2bMAK4iu/96wc7GXCK6milrYU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bf1DNgZvXkq/zX8iW7gTXWWEavhymjSOoWgPP0OiW2E7wtfqU6QcaP07FQFwwdTCa5vSky5mcHD8KR4CsXKiPk45Wb9tsoUS+Q91iRBGCWwvOohowGWeiF5eyA0WRDpwJHZCKf657zxjw7mdIQizGnSgpvhDyZyo0NjbrEWdxFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HPlgxYpR; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1718629438; c=relaxed/simple;
+	bh=EORJkp/+upucIcV35yM0E99zuj3YYCUH4IYVJVItSAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=izHKCtShKzzAoq514pO9hJIXlf36SFFSgUlkWiuU/06NL9RNfImOSMiyFz2LePkKDNkdpcftIRMU0aqJHBYVWdish78OUP6IyyvW6jNR8wUr7aJm2QDL14eUS8BJka98jiywhDhVNqcHAQlNAe0vf6a6pwliju0c10LUhyFq0BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY4+ffOi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HPlgxYpR"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HARLEq028427;
-	Mon, 17 Jun 2024 13:03:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pp1; bh=b8DKrD+MUczif2pbsNNR8jx4+f
-	6p6CebDMGQUxbt2oM=; b=HPlgxYpRBt+n7HdrD7S8W+IHTP669ufZUZrdFYeAcl
-	lQY0N+rUi8wZhvyTHHMK+MfFU4Jjok9xauIl1xQpkHXS1PyuPkP9GkFJ+hjA8Fv3
-	d35UAVxoY9DHYdVXbuUEeky+czzCLJswbFg/Jd6J2abtTdrWFXua+X5YfK93I4y9
-	IAjHt3QwSgJ4hf5omEGKfSDqhyOF2WueiJMvBE+dEnC4QmbCUwStvC9WgwgVwUyJ
-	C+OQO/OUsGx6vieI9xgiD2Tl8gSXAOIbDge6G3CXbLC3obMVJ+57mq6X34g0KMfp
-	DfTBO/ioYTHYnKdlrwE8RLoPVhy5tIj71HcAA3uvk7Hg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytj408ju5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:45 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HD3imp005347;
-	Mon, 17 Jun 2024 13:03:44 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytj408ju4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:44 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HBKjiR019500;
-	Mon, 17 Jun 2024 13:03:43 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysnp0tdrw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:43 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HD3bpJ54722928
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 13:03:39 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BD9D2004D;
-	Mon, 17 Jun 2024 13:03:37 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 15A6E2004B;
-	Mon, 17 Jun 2024 13:03:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.120.218])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Jun 2024 13:03:34 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH V2 1/3] tools/perf: Fix the string match for "/tmp/perf-$PID.map" files in dso__load
-Date: Mon, 17 Jun 2024 18:33:30 +0530
-Message-Id: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY4+ffOi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DD6C4AF48;
+	Mon, 17 Jun 2024 13:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718629438;
+	bh=EORJkp/+upucIcV35yM0E99zuj3YYCUH4IYVJVItSAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pY4+ffOiBZ6YjSdFzRqcd7ZtrV4T0cqz4jDzVshvC+RI5FSmEioLReBkh5ssCWxE5
+	 p59aP4C7OXhBosW6Z//aOXGF56fF/rHR8yxFU91W32+ED0AmIIhm9BvlpX373jnxER
+	 OLwsafi6NjjDD8MLfJMbeBACrT3KEx6NxAntZD+WPPl1VJ4esDKsSss2azudLk6R6D
+	 IjgRCcckPexk641Q+VocpwndKK/KHb2TK1a4FEUW82YTXD5zGJYiUTXvuWE8xW+kLq
+	 Qo+Tv3EGF13jMnScABuJ9oJd1HRNaboHRBc39FY2pp/LfDNOz4LlsNGKdhnjWb5B7b
+	 T4ytPxer4IyGA==
+Date: Mon, 17 Jun 2024 20:49:57 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 7/9] riscv: dts: add initial SpacemiT K1 SoC device
+ tree
+Message-ID: <ZnAw9QrSD-svYqQ5@xhacker>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+ <tencent_701082E2DAE48E2FB857316321778D737C08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0bIx__JvlTPUa5cwsPvOiSg8hOPVDXWh
-X-Proofpoint-GUID: QJ_Qqkfu_Er2SR-1wtianOIYGinmzzqH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_11,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170100
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <tencent_701082E2DAE48E2FB857316321778D737C08@qq.com>
 
-Perf test for perf probe of function from different CU fails
-as below:
+On Mon, Jun 17, 2024 at 01:20:52AM +0800, Yangyu Chen wrote:
+> Banana Pi BPI-F3 motherboard is powered by SpacemiT K1[1].
+> 
+> Key features:
+> - 4 cores per cluster, 2 clusters on chip
+> - UART IP is Intel XScale UART
+> 
+> Some key considerations:
+> - ISA string is inferred from vendor documentation[2]
+> - Cluster topology is inferred from datasheet[1] and L2 in vendor dts[3]
+> - No coherent DMA on this board
+>     Inferred by taking vendor ethernet and MMC drivers to the mainline
+>     kernel. Without dma-noncoherent in soc node, the driver fails.
+> - No cache nodes now
+>     The parameters from vendor dts are likely to be wrong. It has 512
+>     sets for a 32KiB L1 Cache. In this case, each set is 64B in size.
+>     When the size of the cache line is 64B, it is a directly mapped
+>     cache rather than a set-associative cache, the latter is commonly
+>     used. Thus, I didn't use the parameters from vendor dts.
+> 
+> Currently only support booting into console with only uart, other
+> features will be added soon later.
 
-	./perf test -vv "test perf probe of function from different CU"
-	116: test perf probe of function from different CU:
-	--- start ---
-	test child forked, pid 2679
-	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa7iy89bx/testfile
-	  Error: Failed to add events.
-	--- Cleaning up ---
-	"foo" does not hit any event.
-	  Error: Failed to delete events.
-	---- end(-1) ----
-	116: test perf probe of function from different CU                   : FAILED!
+Hi Yangyu,
 
-The test does below to probe function "foo" :
+Per recent practice of cv1800b and th1520 upstream, I think a complete
+initial support would include pinctrl, clk and reset, I have received
+the complains from the community. So can you please bring the pinctrl
+clk  and reset at the same time?
 
-	# gcc -g -Og -flto -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.c
-	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-	# gcc -g -Og -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.c
-	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
-	# gcc -g -Og -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
+Thanks
 
-	# ./perf probe -x /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile foo
-	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-	   Error: Failed to add events.
-
-Perf probe fails to find symbol foo in the executable placed in
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
-
-Simple reproduce:
-
- # mktemp -d /tmp/perf-checkXXXXXXXXXX
-   /tmp/perf-checkcWpuLRQI8j
-
- # gcc -g -o test test.c
- # cp test /tmp/perf-checkcWpuLRQI8j/
- # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
-   00000000100006bc T foo
-
- # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
-   Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
-      Error: Failed to add events.
-
-But it works with any files like /tmp/perf/test. Only for
-patterns with "/tmp/perf-", this fails.
-
-Further debugging, commit 80d496be89ed ("perf report: Add support
-for profiling JIT generated code") added support for profiling JIT
-generated code. This patch handles dso's of form
-"/tmp/perf-$PID.map" .
-
-The check used "if (strncmp(self->name, "/tmp/perf-", 10) == 0)"
-to match "/tmp/perf-$PID.map". With this commit, any dso in
-/tmp/perf- folder will be considered separately for processing
-(not only JIT created map files ). Fix this by changing the
-string pattern to check for "/tmp/perf-%d.map". Add a helper
-function is_perf_pid_map_name to do this check.
-
-With the fix,
-	# ./perf test "test perf probe of function from different CU"
-	117: test perf probe of function from different CU                   : Ok
-
-Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
----
-Changelog:
-v2 -> v2:
- Addressed review comments from Adrian.
- Added helper function is_perf_pid_map_name to check
- dso name of form "/tmp/perf-%d.map". Used sscanf
- instead of regex comparison.
-
- tools/perf/util/dso.c    | 7 +++++++
- tools/perf/util/dso.h    | 3 +++
- tools/perf/util/symbol.c | 3 ++-
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index dde706b71da7..4dabb82d8018 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1652,3 +1652,10 @@ int dso__strerror_load(struct dso *dso, char *buf, size_t buflen)
- 	scnprintf(buf, buflen, "%s", dso_load__error_str[idx]);
- 	return 0;
- }
-+
-+bool is_perf_pid_map_name(const char *dso_name)
-+{
-+	int tid;
-+
-+	return sscanf(dso_name, "/tmp/perf-%d.map", &tid) == 1;
-+}
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index df2c98402af3..44a3a5c97daf 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -809,4 +809,7 @@ void reset_fd_limit(void);
- u64 dso__find_global_type(struct dso *dso, u64 addr);
- u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
- 
-+/* Check if dso name is of format "/tmp/perf-%d.map" */
-+bool is_perf_pid_map_name(const char *dso_name);
-+
- #endif /* __PERF_DSO */
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 9e5940b5bc59..aee0a4cfb383 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
- 	const char *map_path = dso__long_name(dso);
- 
- 	mutex_lock(dso__lock(dso));
--	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
-+	perfmap = is_perf_pid_map_name(map_path);
-+
- 	if (perfmap) {
- 		if (dso__nsinfo(dso) &&
- 		    (dso__find_perf_map(newmapname, sizeof(newmapname),
--- 
-2.35.3
-
+> 
+> [1] https://docs.banana-pi.org/en/BPI-F3/SpacemiT_K1_datasheet
+> [2] https://developer.spacemit.com/#/documentation?token=BWbGwbx7liGW21kq9lucSA6Vnpb
+> [3] https://gitee.com/bianbu-linux/linux-6.1/blob/bl-v1.0.y/arch/riscv/boot/dts/spacemit/k1-x.dtsi
+> 
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> ---
+>  arch/riscv/boot/dts/spacemit/k1.dtsi | 281 +++++++++++++++++++++++++++
+>  1 file changed, 281 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/spacemit/k1.dtsi
+> 
+> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> new file mode 100644
+> index 000000000000..58f9e143c659
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> @@ -0,0 +1,281 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +/*
+> + * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
+> + */
+> +
+> +/dts-v1/;
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	model = "SpacemiT K1";
+> +	compatible = "spacemit,k1";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		timebase-frequency = <10000000>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&cpu_0>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu_1>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu_2>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu_3>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&cpu_4>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu_5>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu_6>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu_7>;
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu_0: cpu@0 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu0_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_1: cpu@1 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <1>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu1_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_2: cpu@2 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <2>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu2_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_3: cpu@3 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <3>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu3_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_4: cpu@4 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <4>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu4_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_5: cpu@5 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <5>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu5_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_6: cpu@6 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <6>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu6_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +		cpu_7: cpu@7 {
+> +			compatible = "spacemit,x60", "riscv";
+> +			device_type = "cpu";
+> +			reg = <7>;
+> +			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicntr_zicond_zicsr_zifencei_zihintpause_zihpm_zfh_zba_zbb_zbc_zbs_zkt_zvfh_zvkt_sscofpmf_sstc_svinval_svnapot_svpbmt";
+> +			riscv,isa-base = "rv64i";
+> +			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
+> +					       "zicbop", "zicboz", "zicntr", "zicond", "zicsr",
+> +					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
+> +					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
+> +					       "sscofpmf", "sstc", "svinval", "svnapot", "svpbmt";
+> +			riscv,cbom-block-size = <64>;
+> +			riscv,cbop-block-size = <64>;
+> +			riscv,cboz-block-size = <64>;
+> +			mmu-type = "riscv,sv39";
+> +
+> +			cpu7_intc: interrupt-controller {
+> +				compatible = "riscv,cpu-intc";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		interrupt-parent = <&plic>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		dma-noncoherent;
+> +		ranges;
+> +
+> +		plic: interrupt-controller@e0000000 {
+> +			compatible = "spacemit,k1-plic", "riscv,plic0";
+> +			reg = <0x0 0xe0000000 0x0 0x4000000>;
+> +			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>,
+> +					      <&cpu1_intc 11>, <&cpu1_intc 9>,
+> +					      <&cpu2_intc 11>, <&cpu2_intc 9>,
+> +					      <&cpu3_intc 11>, <&cpu3_intc 9>,
+> +					      <&cpu4_intc 11>, <&cpu4_intc 9>,
+> +					      <&cpu5_intc 11>, <&cpu5_intc 9>,
+> +					      <&cpu6_intc 11>, <&cpu6_intc 9>,
+> +					      <&cpu7_intc 11>, <&cpu7_intc 9>;
+> +			interrupt-controller;
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			riscv,ndev = <159>;
+> +		};
+> +
+> +		clint: timer@e4000000 {
+> +			compatible = "spacemit,k1-clint", "riscv,clint0";
+> +			reg = <0x0 0xe4000000 0x0 010000>;
+> +			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>,
+> +					      <&cpu1_intc 3>, <&cpu1_intc 7>,
+> +					      <&cpu2_intc 3>, <&cpu2_intc 7>,
+> +					      <&cpu3_intc 3>, <&cpu3_intc 7>,
+> +					      <&cpu4_intc 3>, <&cpu4_intc 7>,
+> +					      <&cpu5_intc 3>, <&cpu5_intc 7>,
+> +					      <&cpu6_intc 3>, <&cpu6_intc 7>,
+> +					      <&cpu7_intc 3>, <&cpu7_intc 7>;
+> +		};
+> +
+> +		uart0: serial@d4017000 {
+> +			compatible = "intel,xscale-uart";
+> +			reg = <0x0 0xd4017000 0x0 0x100>;
+> +			interrupts = <42>;
+> +			clock-frequency = <14000000>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> -- 
+> 2.45.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
