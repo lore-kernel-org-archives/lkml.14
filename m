@@ -1,98 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE352181CE4;
-	Mon, 17 Jun 2024 06:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6728814AA0;
+	Mon, 17 Jun 2024 06:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718605342; cv=none; b=CEa0rbBxRVWHCEjg2phOmLdzVNsBhBuGl6CQnIkHn759xR+RAilL5flQfapM4b7kXhZkO8rvJT2uxGJjFX4191uW0+v5xeZu48uYXc8GCPlcNAvFKu1BRvoF6SMpj0TIDfDncxo0ZQ9XB/KQm28uEia9jWqq24/mkltims7fdWY=
+	t=1718605397; cv=none; b=CNAjd5miwRQXvAykcq+CPyEsF8Y2vfy0Sw9u0X/Ld/hmKULDF7k4Xf0GXzBv3uKLn9b5ooIcEqrNeocFGX6D+BGUmDPPtbfQJsXuuGDuS/V8HXFTCDqIK1z5+1+mJNZ6d9QUNoYvXnEmixVeBEiZ9PZt52U0hEYnADNTY7p671w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718605342; c=relaxed/simple;
-	bh=y07j14qPqdH8wPKemO1zLM+3jz3004W3JjHnGjkjRV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u52Z4pKwaRkPtdcvY6yoTNmBFTGKFuez07vEatpYCAKqXn6xyevfIaCtEuAA8ABiwbPWSY3tZ56xsWYGri0OOxvWndhhBKlGx7H0pCtkAtJYjKVneOKSq08UF7Gujrkphcj19pNzrr9FlB+D2kDgBx1S2c14+94e0KtMnc9T8LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FDOn8SZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718605397; c=relaxed/simple;
+	bh=Bj9KOQlYYb/E4BUJciYwOXA2xQLANZigFJhFDkyVzUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hOyV/yJRDbNaa0Zi8Yvcffljaph2UvkR1wv2c2GGLr5eD4Um29hQB6nkQBcyyakjEDawB/8acf1r19h6jiJgzq6Yz9m998CARboegxPA62bS18ndctQKGOail8zbtQm0EqgQODhmH8UZad2nKS4gwS+skcu6t4YpGh7MdoaxhR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgCxtIyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FDOn8SZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C823AC2BD10;
-	Mon, 17 Jun 2024 06:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718605341;
-	bh=y07j14qPqdH8wPKemO1zLM+3jz3004W3JjHnGjkjRV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FDOn8SZAqRz8FAuz3CMI0JCmLSzDkZ9jVGQ6MyYH3XE9AcPWFwv8b29yn0e+d9P+X
-	 v3NxEF7o1T4qPsVHP/FvElj+7S86xBJiRpl/wL7TpHGHF9D+752MxeaZEe4EMLj1wS
-	 0YETu5fYvIEa9tzja0XhbjkxsHsl9TiWPeD9/t50=
-Date: Mon, 17 Jun 2024 08:22:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Udit Kumar <u-kumar1@ti.com>
-Cc: vigneshr@ti.com, nm@ti.com, tony@atomide.com, jirislaby@kernel.org,
-	u.kleine-koenig@pengutronix.de, ronald.wahl@raritan.com,
-	thomas.richard@bootlin.com, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v2] serial: 8250_omap: Implementation of Errata i2310
-Message-ID: <2024061704-vengeful-exemplify-261a@gregkh>
-References: <20240617052253.2188140-1-u-kumar1@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgCxtIyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D03FC2BD10;
+	Mon, 17 Jun 2024 06:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718605397;
+	bh=Bj9KOQlYYb/E4BUJciYwOXA2xQLANZigFJhFDkyVzUc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PgCxtIydDp01LnsPLoVMeIoHcjSQMaiIUChkjbWulETDiXmqKhrsOvR+pPVoAsvbz
+	 8uXt/4EXD0ydIbd6vtG+wva7MXAn7HctJbx7+LAgaVYDQ2oerXwqVCc89U6CAu4yvR
+	 Gy+5mH7IWj3jNXsCoDQgzYcqONP7E9DgXvmRapJIS4Xutnz1ywIpeoYT6bb6Ea0LBO
+	 zZXVA49u4nPPUqpaP6XKVUY6U3p2AT1pGULzLUF8IeqUyi+XvkPxmWYInd4W6zbIiT
+	 QUoYQM6kAVh7g1jxuEAI792+Nzo2vwDXA7nOuBuGelrlC6mS3Z3nlOivQZfTMZi2Xh
+	 rLA6pfb3Ki/Eg==
+Message-ID: <b859c506-9910-43a6-923c-2a9ee26c4f19@kernel.org>
+Date: Mon, 17 Jun 2024 08:23:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617052253.2188140-1-u-kumar1@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] dt-bindings: vendor-prefixes: Add a pci14e4 entry
+To: Jacobe Zang <jacobe.zang@wesion.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: nick@khadas.com, heiko.stuebner@cherry.de, neil.armstrong@linaro.org,
+ macromorgan@hotmail.com, sre@kernel.org, hvilleneuve@dimonoff.com,
+ andre.przywara@arm.com, michael.riesch@wolfvision.net,
+ linus.walleij@linaro.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240617023517.3104427-1-jacobe.zang@wesion.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240617023517.3104427-1-jacobe.zang@wesion.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 10:52:53AM +0530, Udit Kumar wrote:
-> As per Errata i2310[0], Erroneous timeout can be triggered,
-> if this Erroneous interrupt is not cleared then it may leads
-> to storm of interrupts, therefore apply Errata i2310 solution.
+On 17/06/2024 04:35, Jacobe Zang wrote:
+> Add Broadcom pci14e4 prefix for PCIe Wi-Fi module in dts.
 > 
-> [0] https://www.ti.com/lit/pdf/sprz536 page 23
-> 
-> Fixes: b67e830d38fa ("serial: 8250: 8250_omap: Fix possible interrupt storm on K3 SoCs")
-> Signed-off-by: Udit Kumar <u-kumar1@ti.com>
+> Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
 > ---
-> Test logs
-> https://gist.github.com/uditkumarti/7a7ab6994581bbb09cf1a4271c592d8e
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Change logs
-> Changes in v2:
-> - Added Fixes Tag and typo correction in commit message
-> - Corrected bit position to UART_OMAP_EFR2_TIMEOUT_BEHAVE
-> Link to v1
-> https://lore.kernel.org/all/20240614061314.290840-1-u-kumar1@ti.com/
-> 
->  drivers/tty/serial/8250/8250_omap.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index fbf47f0bacf1a..d0db6df57bfe5 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1112,6 +1112,8 @@ patternProperties:
+>      description: Parade Technologies Inc.
+>    "^parallax,.*":
+>      description: Parallax Inc.
+> +  "^pci14e4,.*":
+> +    description: Broadcom Corporation
 
-Hi,
+I think this is not needed. We do not document PCI or USB prefixes.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Best regards,
+Krzysztof
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
