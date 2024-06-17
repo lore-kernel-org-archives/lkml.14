@@ -1,76 +1,61 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D0742AB3
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E44D176ABF;
+	Mon, 17 Jun 2024 02:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718591877; cv=none; b=bHnG+H/OZmraZlNyoyczDIg4fhVx1//QrpHrKPwd2ike7EGWwMZBUp5lZgTrTdfXNxcTml+/MhHL4nxetiyxy1yxRbwm09mgNLt1fsCR0sAgPbHlejltcKOFkZ6n6AUc9hVJmNDAvD1Iq9Ydli+6j0FEmAKIIQYpi+ChRT5ktHI=
+	t=1718591929; cv=none; b=PuU0tmJW6cuXVMzmjVNjl1t/KrpL1VVEh5GrOqOGqqQQGgbHEp1aZq4KDEbh8d8HNNM3Ts7DHYARGbj5kTHANA8VifKocGII/mmzcELP5/ncFtSV0yYuYnZZo2PNYWsYtPQDAYxClC0nwzw0uGmhVOHy+ifmd+Y61bBJhCFRBNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718591877; c=relaxed/simple;
-	bh=qSL3eKAjeHt7Kk0yruu1GZl3MBX/ZwLc3o/CkrKYsg8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FGAcIrbd1xW9BaOJ/qQ+R5ALDUy6eWlIuR4iWYoIONFdHe8sbwc9ADTvj/AHX93Pfnzq8PVSCodoOUQFU0xn0c2P1MTUBlmdzb9XPVrDhRxS5kbJ6+u042EECO6wko3SMEKHx5NpaBtjVBFsaNXPmbkO7qfokB0iuZEp6JeZ6HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz6t1718591723tbphd7e
-X-QQ-Originating-IP: /AI5/DWK6Ka4Eft1aYTQyvsr4t/GicHxKFCrU3cA+4c=
-Received: from HX01040082.powercore.com.cn ( [14.19.141.254])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 17 Jun 2024 10:35:21 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 16799335354651430
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: npiggin@gmail.com
-Cc: mpe@ellerman.id.au,
-	christophe.leroy@csgroup.eu,
-	naveen.n.rao@linux.ibm.com,
-	masahiroy@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	jinglin.wen@shingroup.cn
-Subject: [PATCH] powerpc: Fixed duplicate copying in the early boot.
-Date: Mon, 17 Jun 2024 10:35:09 +0800
-Message-Id: <20240617023509.5674-1-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1718591929; c=relaxed/simple;
+	bh=+jeXfjlrGK5EVa6fxyWlB75AtU0t9OhFgX0NYh1Q870=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAv3tt1qRWy9MPAwiYFjJ9fmMPEPYZ3zjOr0b+nJ6f7L00MnxcxHRGYccyqDKEmhFE8rsBsM/yRP+XdZkrjXRKzeEPBh+tNModqUFBIPO8Ii9xQRYYlOVwLErXICvyu7+y5O6xlS3j1mnd+jgEm1przRGRRhaWp3ClS2GokkVKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=kr5b56C0; arc=none smtp.client-ip=123.58.177.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="kr5b56C0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=tS7StaUjtxem+KaMU9nNBhZvq1yvpGbzXt+J+yb06fA=;
+	b=kr5b56C04Hd8AAmWfaIYCIoWigsmxVfURHfzk54CXbLbehMCO5ocny2qSv1zm8
+	da0640tR68bw7fr4kkqk8Dy0F3V65EsA5PpL+PPsncFae2DHwD6R2+b2vnTjhFWr
+	b7SugV+WU6jWuLfviNUUhAnsXRWnQy50fuZld+YrMh78U=
+Received: from dragon (unknown [114.216.76.201])
+	by smtp1 (Coremail) with SMTP id ClUQrAD3X0SloW9mwmoMCA--.39487S3;
+	Mon, 17 Jun 2024 10:38:30 +0800 (CST)
+Date: Mon, 17 Jun 2024 10:38:29 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"moderated list:ARM/FREESCALE LAYERSCAPE ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] arm64: dts: layerscape: change thermal node name
+Message-ID: <Zm+hpWKd0iokVvym@dragon>
+References: <20240613222413.182662-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613222413.182662-1-Frank.Li@nxp.com>
+X-CM-TRANSID:ClUQrAD3X0SloW9mwmoMCA--.39487S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUa7PEDUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhABZVszYrukEQACs8
 
-According to the code logic, when the kernel is loaded to address 0,
-no copying operation should be performed, but it is currently being
-done.
+On Thu, Jun 13, 2024 at 06:24:12PM -0400, Frank Li wrote:
+> Add thermal subfix for thermal node name to fix DTB_CHECK warning:
+> 
+>     thermal-zones: '...' do not match any of the regexes:
+>     '^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$'
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-This patch fixes the issue where the kernel code was incorrectly
-duplicated to address 0 when booting from address 0.
-
-Signed-off-by: Jinglin Wen <jinglin.wen@shingroup.cn>
----
- arch/powerpc/kernel/head_64.S | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index 4690c219bfa4..6c73551bdc50 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -647,7 +647,9 @@ __after_prom_start:
-  * Note: This process overwrites the OF exception vectors.
-  */
- 	LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)
--	mr.	r4,r26			/* In some cases the loader may  */
-+	tophys(r4,r26)
-+	cmplwi	cr0,r4,0	/* runtime base addr is zero */
-+	mr	r4,r26			/* In some cases the loader may */
- 	beq	9f			/* have already put us at zero */
- 	li	r6,0x100		/* Start offset, the first 0x100 */
- 					/* bytes were copied earlier.	 */
--- 
-2.25.1
+Applied, thanks!
 
