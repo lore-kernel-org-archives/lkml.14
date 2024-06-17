@@ -1,104 +1,142 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51B11B010D;
-	Mon, 17 Jun 2024 13:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B6D19B3D0
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631829; cv=none; b=Y3HQsT3X5z37UbQ7rzUFXsiJlTrm7nxQ/DjeYmHGDu78KDKGYV0NZGNMn/gJsY48idYB4KHJ/hygv41BkX/cJNmwRZ8/S0lfSq79fpNba23XEk0Q/Wv9jTdszmxXYZsaUcvEBPuYXYhu/ZOQ0aFBHgSbRx6vG1TtERznT0gr4Gk=
+	t=1718631829; cv=none; b=MItR8lQRAdo9K528K61jbCxgYN4xe0MijPcd01ExPC//+6sr5ndTKRFqQH7MP8+raPVN8u5DQ1XVEL9Dq+I1uL4H3wO8yXMH5KhupgO9mriMTIUu8NyYqK1h7z3l2kBQbxQAZxeyBvyqEl4/BccMMH/ONmnN9hLeB7cuQpTEMzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718631829; c=relaxed/simple;
-	bh=JMXBprBeRODOlE2SRHNAbkZsK7FOxhmKNe4tTfTgEFo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rJX/zsYyyDLQBvM5DvIMjpFnvuvTQa4w5qxsZJMay1pN94m5pgtMOhojGMBb0++oMfkukkhW6GqwPQjbFEVxVtb9GHPquKOCHOqU5KlAKQ2FAmhyRp59jvoH4AAd6MjLWZC4n61q6OPswEsMGfaW4fsCX/zh6IoLInh2zSq6lNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W2rb91jzhzxRtT;
-	Mon, 17 Jun 2024 21:39:33 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C31814011B;
-	Mon, 17 Jun 2024 21:43:43 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by dggpemd100004.china.huawei.com
- (7.185.36.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 17 Jun
- 2024 21:43:42 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <hca@linux.ibm.com>,
-	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
-	<svens@linux.ibm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
-	<kees@kernel.org>, <gustavoars@kernel.org>, <arnd@arndb.de>,
-	<leobras@redhat.com>, <broonie@kernel.org>, <mark.rutland@arm.com>,
-	<imbrenda@linux.ibm.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<liuyuntao12@huawei.com>
-Subject: [PATCH] remove AND operation in choose_random_kstack_offset()
-Date: Mon, 17 Jun 2024 13:37:21 +0000
-Message-ID: <20240617133721.377540-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	bh=g2+vx2tkomM5KV01/sRMWBdQvKX1Pl22D91eUMwYl7g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gsiJhWR9ycWwsvbJ5YTjFy51uK9x2hAWu5qkroTOTL8AWkrjGGggvk23CGma5PpIl3XeJqxlVt1O0aZBd8f6NL1k5TOa0pQsMkU/o0gkAo6nG6VxTpO2JwvCUpSIi88154qftFccR7SwPys0qhfoKvrOn5tuC2J7e7lIhmWYPvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=XD3TGtUq; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XD3TGtUq"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7eb7bf1357cso175752739f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1718631827; x=1719236627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aGKpj5AvHTsEbrLmF9bNmz/D9P/h+ZMX1niQukt3LXM=;
+        b=XD3TGtUq4sF/bt3MW82nKGXR0x7mehLAU0DORNW6nLY89FRzPmV64usRNHxMcLUwUK
+         uTov8Xn/w0yccWTDxr2mVeYtOEORcurYPDkxmmZyKdvPp0XFtwMYBCcOqw4FcrEzElzF
+         GYLP+4f1cGIhj+VoI+/jSJksOZqqlLbSjbO17Fm+Lb58nPZu4nnE1I3E2lhb0uBkQHVg
+         WI8uYnGwgOmwfqCFzhbnG8OmOS84eQPmp+r2VWhZPLgZzrcNy0TuaEml/7j6O3/ZHdlz
+         97dtwwu5aAVrcUyOraBnX4kLrgXxt8f60YI9tNIbO1oV+EwGFcSv5OpeKAzQSj6EtagI
+         Ycmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718631827; x=1719236627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aGKpj5AvHTsEbrLmF9bNmz/D9P/h+ZMX1niQukt3LXM=;
+        b=m6/8HB3U17Yja22zH+CrnkjguYg9uRo4Bjw5s9PpVJVQVGquhS3SEox8YRkw2POMY9
+         kX0L3+gmXw3E42OLozM0iomIi7yqivOEtIyNQN7ete3qmxlQxdRqkOPSbNG+ZF2+8+Uo
+         G+vNouFZOJdN4IT1jZ8lkK10Zzu9vTC7SI3tUThQgm30kTpcNEogGbSj4V/CLnYBoHvl
+         8wNwxzxpHd8hVeWSS5cjaiOCET3YynvJP6DE81L1ASrKIH9YWvKmGpuXaptVIhNXQWr4
+         RQ6kPlVE7y+jYgTobJRZAWH379fHiAcG7+ltqCYQP40k5sTLN9NtyNgWqq96LlsxSaVn
+         UidA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHqyCgVletFh0BU+OC+7zfIar72ggJdaC3QIfTTwcHyUTYQz7f+BqcD89NArvQIo4iz941NyRtu8h2DASPWoVHzFZJJqNNWuLvQOBz
+X-Gm-Message-State: AOJu0Yyk5YFrZuFbgqwj9ZLCYvD+Nmx2eXPfeTSCiElcotmeCa89xPDL
+	Th4aI4D7LFC7OcUT2ZRK7y9msCFcU58MqyKGNRsPGhjoBAVQZqwucMq/oKpgBDDg2XSFajkf7iU
+	V1jSP7KjnTcdxaFFs/l4Uq5Y6txqa7eygX//0Tw==
+X-Google-Smtp-Source: AGHT+IG/B3WypjhzIUOJZbLMxyurBmwQdjlcHydZzcumzgrC9Dze6gAT7/km/QnYVaq8ae6CKJ08zdbpc3jZxjOCGIk=
+X-Received: by 2002:a05:6602:1503:b0:7eb:78b4:faee with SMTP id
+ ca18e2360f4ac-7ebeb4909cbmr1147213239f.3.1718631826563; Mon, 17 Jun 2024
+ 06:43:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd100004.china.huawei.com (7.185.36.20)
+References: <20240614142156.29420-1-zong.li@sifive.com> <20240614142156.29420-5-zong.li@sifive.com>
+ <a1a99374-dc40-4d57-9773-e660dc33beb2@linux.intel.com>
+In-Reply-To: <a1a99374-dc40-4d57-9773-e660dc33beb2@linux.intel.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Mon, 17 Jun 2024 21:43:35 +0800
+Message-ID: <CANXhq0pQuoriKfHF51fXUtrZLkJBNOCe6M8Z6JbDjoRvbe1nWg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/10] iommu/riscv: add iotlb_sync_map operation support
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	tjeznach@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, jgg@ziepe.ca, kevin.tian@intel.com, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since the offset would be bitwise ANDed with 0x3FF in
-add_random_kstack_offset(), so just remove AND operation here.
+On Sat, Jun 15, 2024 at 11:17=E2=80=AFAM Baolu Lu <baolu.lu@linux.intel.com=
+> wrote:
+>
+> On 6/14/24 10:21 PM, Zong Li wrote:
+> > Add iotlb_sync_map operation for flush IOTLB. Software must
+> > flush the IOTLB after each page table.
+> >
+> > Signed-off-by: Zong Li<zong.li@sifive.com>
+> > ---
+> >   drivers/iommu/riscv/Makefile |  1 +
+> >   drivers/iommu/riscv/iommu.c  | 11 +++++++++++
+> >   2 files changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/iommu/riscv/Makefile b/drivers/iommu/riscv/Makefil=
+e
+> > index d36625a1fd08..f02ce6ebfbd0 100644
+> > --- a/drivers/iommu/riscv/Makefile
+> > +++ b/drivers/iommu/riscv/Makefile
+> > @@ -1,3 +1,4 @@
+> >   # SPDX-License-Identifier: GPL-2.0-only
+> >   obj-$(CONFIG_RISCV_IOMMU) +=3D iommu.o iommu-platform.o iommu-pmu.o
+> >   obj-$(CONFIG_RISCV_IOMMU_PCI) +=3D iommu-pci.o
+> > +obj-$(CONFIG_SIFIVE_IOMMU) +=3D iommu-sifive.o
+> > diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+> > index 9aeb4b20c145..df7aeb2571ae 100644
+> > --- a/drivers/iommu/riscv/iommu.c
+> > +++ b/drivers/iommu/riscv/iommu.c
+> > @@ -1115,6 +1115,16 @@ static void riscv_iommu_iotlb_sync(struct iommu_=
+domain *iommu_domain,
+> >       riscv_iommu_iotlb_inval(domain, gather->start, gather->end);
+> >   }
+> >
+> > +static int riscv_iommu_iotlb_sync_map(struct iommu_domain *iommu_domai=
+n,
+> > +                                   unsigned long iova, size_t size)
+> > +{
+> > +     struct riscv_iommu_domain *domain =3D iommu_domain_to_riscv(iommu=
+_domain);
+> > +
+> > +     riscv_iommu_iotlb_inval(domain, iova, iova + size - 1);
+>
+> Does the RISC-V IOMMU architecture always cache the non-present or
+> erroneous translation entries? If so, can you please provide more
+> context in the commit message?
+>
+> If not, why do you want to flush the cache when building a new
+> translation?
+>
 
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
----
- arch/arm64/kernel/syscall.c          | 2 +-
- arch/s390/include/asm/entry-common.h | 2 +-
- arch/x86/include/asm/entry-common.h  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+It seems to me that we can indeed remove this operation, because it
+may be too aggressive given the following situation.
 
-diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-index ad198262b981..43f555f7cd2d 100644
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -63,7 +63,7 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 	 *
- 	 * The resulting 5 bits of entropy is seen in SP[8:4].
- 	 */
--	choose_random_kstack_offset(get_random_u16() & 0x1FF);
-+	choose_random_kstack_offset(get_random_u16());
- }
- 
- static inline bool has_syscall_work(unsigned long flags)
-diff --git a/arch/s390/include/asm/entry-common.h b/arch/s390/include/asm/entry-common.h
-index 7f5004065e8a..35555c944630 100644
---- a/arch/s390/include/asm/entry-common.h
-+++ b/arch/s390/include/asm/entry-common.h
-@@ -54,7 +54,7 @@ static __always_inline void arch_exit_to_user_mode(void)
- static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
- 						  unsigned long ti_work)
- {
--	choose_random_kstack_offset(get_tod_clock_fast() & 0xff);
-+	choose_random_kstack_offset(get_tod_clock_fast());
- }
- 
- #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
-diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
-index 7e523bb3d2d3..b28a307f2014 100644
---- a/arch/x86/include/asm/entry-common.h
-+++ b/arch/x86/include/asm/entry-common.h
-@@ -85,7 +85,7 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
- 	 * Therefore, final stack offset entropy will be 5 (x86_64) or
- 	 * 6 (ia32) bits.
- 	 */
--	choose_random_kstack_offset(rdtsc() & 0xFF);
-+	choose_random_kstack_offset(rdtsc());
- }
- #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
- 
--- 
-2.34.1
+I added it for updating the MSI mapping when we change the irq
+affinity of a pass-through device to another vCPU. The RISC-V IOMMU
+spec allows MSI translation to go through the MSI flat table, MRIF, or
+the normal page table. In the case of the normal page table, the MSI
+mapping is created in the second-stage page table, mapping the GPA of
+the guest's supervisor interrupt file to the HPA of host's guest
+interrupt file. This MSI mapping needs to be updated when the HPA of
+host's guest interrupt file is changed.
 
+I think we can invalidate the cache after updating the MSI mapping,
+rather than adding the iotlb_sync_map() operation for every mapping
+created. Does it also make sense to you? If so, I will remove it in
+the next version. Thanks.
+
+> Best regards,
+> baolu
