@@ -1,145 +1,107 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C898A48;
-	Mon, 17 Jun 2024 08:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD96A48;
+	Mon, 17 Jun 2024 08:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718611462; cv=none; b=Nw02/3QrGr0cbUfdQd4qPV5YTsAKhgU5ypaStP8mnLKBVFIi6Wyij4mQV1+iJyRNnfmM74TxjVY28m6DWT94jIj6563wJ7/HKlJ7kVdkti7a6qZ4L35AD78XU9ZEBJelBOyWpkEae8Izb9a0w83EnumuMAMMOrUkZrH6hHQ4sm0=
+	t=1718611539; cv=none; b=BPLHEAV4rMlt7xtOdaha6EIH5Ax+yGtJ2ecmNjW98CzA8D7aaKJMGfqX4E2ZL9LNgbpdOAQrXtXi0ZzXWMA/Al0FjgaqSUJs17TpkmVbnwgTW2DUrc7BtBQ30lXdD4wdwKr6Ndw5R7PrB4pq/XeSAho+AXnbvKYJgVOjDaFNlHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718611462; c=relaxed/simple;
-	bh=46hqN2x9tCodtz4f+p9bKlz4DoolUlXsc2EoKqB+GqY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1NxztqtOKe6C9KTqMJf4k27DXt34IKcMkZu5SnShNBpowNqD/wqrw8qCfQtszUeEOf+6YZDqoyF8Z0CbCCMF25ghRoXaeCVPruP0EqOJrjk8CtYo0dn0boqGEQrU9n4t4OdT/2ahZQ1V6jCwtKwhrxWcF1znox3+yo5W0kC58s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sVwN4ibG; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sVwN4ibG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718611460; x=1750147460;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=46hqN2x9tCodtz4f+p9bKlz4DoolUlXsc2EoKqB+GqY=;
-  b=sVwN4ibG+F1u1t1Uacrcn7GZGnQgYvkBEvrrVHQQ/Iys7dTJUoVoN8o6
-   B1p4yoSOjpntuNFmRjzX+Qs1ktmmb138+wupRBhoFDbu7CAXe4BCwcD6d
-   j1iaXjk0C+oXM6hWWMV4aIz2kYgzeecAkM0rEi7gRzciUTJIKYxtw6+f8
-   1lwCy0XwzJ5McvkYWJrrbgpXj6oWtPem0Zg8+a0JAqVjfMyfnOdbQpBzq
-   4LL72EunivFZ/HOqn93G7xwHRFW9LJ8enUG7D+FuO50HxzdoNPvnLQ/xa
-   S16OtktpHPU0uyWhvqa5/harVN5GheRov/o+FoORaGAK8esjBRWWtgbNQ
-   Q==;
-X-CSE-ConnectionGUID: KTYX6uPmSP2Ap7j89zTe6w==
-X-CSE-MsgGUID: LwMaza2HTh6HKQMtkrNe5A==
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="asc'?scan'208";a="27844232"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 17 Jun 2024 01:04:19 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 17 Jun 2024 01:04:00 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Mon, 17 Jun 2024 01:03:57 -0700
-Date: Mon, 17 Jun 2024 09:03:39 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Inochi Amaoto <inochiama@outlook.com>
-CC: Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille
-	<thomas.bonnefille@bootlin.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Chen Wang <unicorn_wang@outlook.com>,
-	Chao Wei <chao.wei@sophgo.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer
- Dabbelt <palmer@dabbelt.com>, Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH 1/5] dt-bindings: interrupt-controller: Add SOPHGO SG2002
- plic
-Message-ID: <20240617-arrival-settling-3a98e5939808@wendy>
-References: <20240527-sg2002-v1-0-1b6cb38ce8f4@bootlin.com>
- <20240527-sg2002-v1-1-1b6cb38ce8f4@bootlin.com>
- <20240617003627.GA4008871@ofsar>
- <IA1PR20MB4953B2253043C304760A2D12BBCD2@IA1PR20MB4953.namprd20.prod.outlook.com>
+	s=arc-20240116; t=1718611539; c=relaxed/simple;
+	bh=OjsLavVhJ3gnb4N+l8jSUFK7ZC6Q3rgbMegsvQY3ang=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cBLAhX72lzB+T5nNNJMPMV1Y3aO6NiXktivSPWprwuJ6udI0zdYYs/0vNvrJ3E+JRuQ8Q8c73qUCwQiLCX9GnmTGssjgci61IBVHB8mtpFsLB0h+drCVE5BUPlrYgE8T/WltXQ3Un5YfCyU3QHDsgFCi9d0aOExHEwkrdV13fWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-632597a42b8so25786097b3.3;
+        Mon, 17 Jun 2024 01:05:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718611536; x=1719216336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jUXvmmVuBcx3SnmccNhTKf6C2uYuISFtiAnpe9jq8rA=;
+        b=dcUguoWtJFnkuKBeHaE0vQgk8cRM0zOC0eJDZ5l42uSYLqJioL7w6DKZO/T9NFUDM+
+         cKgC4kb+Vx/GvNOyPMXKtl2+G1U2LrSFYF7SpP0147LcaWHisEFSWdJOFM4TYuDQSj3a
+         aKmK57wK5YP1euUhDVW48szCQjS12SV8dVnM4/n1gTuj42jeQr5m2yPKEGGaiE58r26h
+         6FI5I4MW9Jty8DQuWhrXCkszh4ozGasrTrKxPij8VntzRY6LHRu9CNByMB0Ie0gBv0H6
+         9S7IBmEdASHCqGRjl9z7Ar6ZodtHnlX6qJL9qxA5y7pACLveOW2lhNatSEUy7hqKGLYS
+         02KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwkqlPuF2w652j9vBkzSEATeKk6pLDphCKYcaL0qMkFJ1uVXZCa7/zcSIdCFbIxfUarOWuJjS/WCzHc+zIbnrVkmW18jZppAx1Cv2K1vRyp/462H0I6hTUGNHubpf7iZpeq9RHxxMdFDJTSlGX8Kd4WEHoiEHHFh9+br+7/TTUPD/QFqtjohCm7bmVblIttk9TyMTVHRNG+3bW7x4HxN//lfnh9qVr
+X-Gm-Message-State: AOJu0YxMa04DnUFMjUYTwIwU540sJFOSRIwR0HUH5tT+2y9TE+CeDes7
+	9x8XCTRtWcGgbVfC/+U5rvn7Wb64akvxjrrcBviWp5ZiuCByyCMhDofzGCdA
+X-Google-Smtp-Source: AGHT+IEV1SBGzmazgVCaR2E8ldAUYNAUrioR1l1bB1V6sD8xEIQSAUqKZ2W1oNGgFabPhYTsKvxn3A==
+X-Received: by 2002:a81:a0c1:0:b0:62c:e82c:398a with SMTP id 00721157ae682-63874659785mr6715797b3.2.1718611535675;
+        Mon, 17 Jun 2024 01:05:35 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-631183d7eeesm13410507b3.16.2024.06.17.01.05.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 01:05:35 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-632750bf73bso23885267b3.2;
+        Mon, 17 Jun 2024 01:05:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUr7JKzB8zzKH+fH9uqi60DG2q45eRTDQudu7G7EZfTiZZe+ukPeoUrTgFSZWln6vPMNJLllzIOUFKPw+96QqBD8eaWmW6Lq+cI8InMRGQg4AhnTujI0fBA7Fxh4bDO5zKgl4Xp91etMR13Mk7nyp+Af1Vv2PwtFXKyET+7xQVaLVIvip8OEexuSSswP3UROACaZllgJMy8Eo8zrS+788tGgxzwqQwC
+X-Received: by 2002:a81:5b56:0:b0:61b:bd7f:c9f5 with SMTP id
+ 00721157ae682-63222758bb7mr91352297b3.4.1718611534205; Mon, 17 Jun 2024
+ 01:05:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zYXOfHOY/pRglM2C"
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB4953B2253043C304760A2D12BBCD2@IA1PR20MB4953.namprd20.prod.outlook.com>
-
---zYXOfHOY/pRglM2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240610233221.242749-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240610233221.242749-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Jun 2024 10:05:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX9xahD_t6ZKpSJ2K_S1QMjW5Cd90DR8XpOhbs6E8KhoA@mail.gmail.com>
+Message-ID: <CAMuHMdX9xahD_t6ZKpSJ2K_S1QMjW5Cd90DR8XpOhbs6E8KhoA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/4] dt-bindings: clock: Add R9A09G057 core clocks
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 17, 2024 at 11:33:00AM +0800, Inochi Amaoto wrote:
-> On Mon, Jun 17, 2024 at 12:36:27AM GMT, Yixun Lan wrote:
-> > hi Thomas:
-> >=20
-> > On 12:28 Mon 27 May     , Thomas Bonnefille wrote:
-> > > Add compatible string for SOPHGO SG2002 Platform-Level Interruter
-> > > Controller.
-> > >=20
-> > > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> > > ---
-> > >  .../devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml =
-     | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/s=
-ifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-control=
-ler/sifive,plic-1.0.0.yaml
-> > > index 709b2211276b..7e1451f9786a 100644
-> > > --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,p=
-lic-1.0.0.yaml
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,p=
-lic-1.0.0.yaml
-> > > @@ -67,6 +67,7 @@ properties:
-> > >                - allwinner,sun20i-d1-plic
-> > >                - sophgo,cv1800b-plic
-> > >                - sophgo,cv1812h-plic
-> > > +              - sophgo,sg2002-plic
-> >=20
-> > it's not necessary to introduce a new compatible name, as sg2002 use sa=
-me plic IP as cv1800b
-> > I feel it's wrong to introduce sophgo,cv1812h-plic at first place, but =
-that we can't revert?
-> >=20
-> > same reason also apply to clint in patch 2/5 ..
-> >=20
->=20
-> You are right, it is historical reasons. For hardware, they have the same=
- risc-v cores
-> across the whole series.
->=20
-> It could be better to use something just like "cv1800-plic".
+On Tue, Jun 11, 2024 at 1:32=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Define RZ/V2H(P) (R9A09G057) Clock Pulse Generator core clocks.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> - Dropped the module clocks and just added the core clocks
+>
+> Note the core clocks are the once which are listed as part
 
-Different integrations of the same IP could result in bugs present in
-one device and not another. Unless these SoCs are the same die, but with
-bits fused off, I'd appreciate soc-specific compatibles.
+s/the once/a subset of the ones/
 
-Thanks,
-Conor.
+> of section 4.4.2 which cannot be controlled by CLKON register.
 
---zYXOfHOY/pRglM2C
-Content-Type: application/pgp-signature; name="signature.asc"
+and we can add more when needed ("append only").
 
------BEGIN PGP SIGNATURE-----
+> +++ b/include/dt-bindings/clock/r9a09g057-cpg.h
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZm/t0AAKCRB4tDGHoIJi
-0rQZAP4sMNITKIgW0yhdH6QXLJeHlppfCx4teG80f1lrA0Oj4wEA096L9PT3PcMi
-4tAca6zqH76nsuJnituv/7lYSa32vg8=
-=K7NA
------END PGP SIGNATURE-----
+With the "renesas," prefix added:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---zYXOfHOY/pRglM2C--
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
