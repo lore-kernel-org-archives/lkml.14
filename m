@@ -1,137 +1,116 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84F2C8E1;
-	Mon, 17 Jun 2024 20:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6CCC8E1;
+	Mon, 17 Jun 2024 20:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718656414; cv=none; b=YjuOqFY5x7XaHwMGbOrpboAd/6YUWb+TFA6vcVPcsSORTyR86uN86q94K/uCRILT3bE/c/ww4fBSVdN6YXZoJQaP6Gw/YvwPkw5fD0OHnOCX/mlMAxg/nv97NlumV5tcmYaeLGXw3PNpE1m9JefL07yUYPxl4mbUKEOei0HjH2A=
+	t=1718656473; cv=none; b=nyTQaBbUwWBfuA7xbkTqpSpWrfLiO9LEXikCKswB8oF1GBK/boJhVMTjVcuoN2WLLQFrrSH5as3/J0mCjHW1W8UVrZ0ff+V8TUhrIRoAx/QwXIYLnBmlAfcmpaf73QigJ7lXsdunsGJpIvJDaV/ftYU7p7vExVzYhr/FN2IS/Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718656414; c=relaxed/simple;
-	bh=jaVlw/Bw2+IaY2P1kl0q/XJdhyk5gRvGocCy6MEcCw4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=m58qUYFwE05jOnYoUQcfrSWGhkOdWs4nWnPsJYDv6D0wY53G+iENwaL+A3gJlj1T8u7F8XosNkzNa6ulg7GPFhKluLz/mc7E1AK9WiueOJogirjlH7VmimAP0ww/nm488Fhjp5JMfFVBdP9FWIr5M5WUEDlhab5SOTnRebqglVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vi3Yte+C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eYSZp6yr; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718656473; c=relaxed/simple;
+	bh=/Gc+C2UHCtOgADFB+UMA/UmcYodFik9l5bCk3r+xZ3U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u/apbgDTzHAN8ukp0g2cp+lPIM+IYtvHuvMwJnCIufqNsiIkMnnDymvjstIYo+wTSZEroneDnTS/lohIX3wwaYQ+PlwwucGiL7oenqpjNusoqzKA2nUacc4amdB/G0esWnf3J4B/5qZGDvxPDVecXmQsQlf6Phd/CY0ii90bwrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=cjpKOwu1; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vi3Yte+C";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eYSZp6yr"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BF5E01140294;
-	Mon, 17 Jun 2024 16:33:29 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 17 Jun 2024 16:33:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQ
-	zo1keWksdhYbdPIRd3lKjznmVOskNt6RY=; b=vi3Yte+C00ngmRPurQDjKom+Mo
-	7I2cXSkKKNSB3XaghDFBbW/yX9/IPU+rRKCyWAzl47+aN0dJBwZytlg5eKZDKpm5
-	dOiXtBQU2BvderPOj3+4RvUFl8vYgwvsbZr3TlnTMBmZWtRjZc/TZZPY1xKS0pNm
-	iT1u2dIQ83IHy42PfsHGyuPMg9xXEfY6JbVGbLlnuT9ITi0YW1sUEKFPzZUxUzyU
-	hHDvY0sHFOMj5nBpXl1+gU5e9HP1nt2XufkwO9Zm0HlGMAjEbcrR8PaP7GQThCXi
-	o10cA793EMGQuhQbpeLx6h1+fEc070+pfF/iLmR9wXYi7yqbWdxxXIN6JTwg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQzo1keWksdhYbdPIRd3
-	lKjznmVOskNt6RY=; b=eYSZp6yr4uIcpX4K/DSJxA0dcLd9y5bZ93XJW91IS+C4
-	gjlAwhWHe/cuYtu2t9+rR1CaidAkP9kO5FnK4pWFz4Ta3t/i9hDoTxbVdm1uXwiB
-	gRy/ef0i36wnqwPqn8P56M2NiEr5yLX0OScuw6P5oot20Us5csX45S3F/sjwoW/K
-	jY+2IM7qYf1Ociil3fiITp5HY/Z623KIkN0U8yjx7x5RVhgeaEXChzSSyjZlEZr0
-	uP15pIaWS1R48nSrhZyHw7gG1RXV/65B3hv5y1lPdqLLnEx9V5PAik8nGf3RNlrT
-	sApmUyi6IVJcpU1ug8ooT0Lc7HadGojIEFTc9juqew==
-X-ME-Sender: <xms:mJ1wZlJSv-bIOceDxEPYcbRc7MEi36kkxS0h0ztbzdDFL1m7X_X5aQ>
-    <xme:mJ1wZhLV-WrMVzF2QVsFYrRlHraCxhVMp625Ohg5bOqu-N-c3VGKIvRTayuuAXgmm
-    d1s02toKF-LUXGI3GE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvhedgudehtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:mJ1wZts8xgHY9hrr66fNkOvtkPVWByYLruSPKGDiNjYZ5fwbpQAJCw>
-    <xmx:mJ1wZmYX3CRvz-zIy_A_kY7FVCjE2JLb1l9FDUhw44LCWjo7zQBpdA>
-    <xmx:mJ1wZsZeB7E86sMRNAP0sjDBwEfNKoOuH1K3VlS2sMybSFBUufdT2Q>
-    <xmx:mJ1wZqDat5LjPLNQI4zkBx2YzhSH3yjp5jBIBwyGIEhULpAH_pnbFQ>
-    <xmx:mZ1wZoKoS86N3mTV8tHw8qF-NH8CoB31Le40nQ6TOtL4j9BaC45Be_ER>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 876EDB60098; Mon, 17 Jun 2024 16:33:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="cjpKOwu1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sTO8oI11aLdYRsC1cGz0uoItKaFKpKNhGb0xWrXF7Jg=; t=1718656469; x=1719261269; 
+	b=cjpKOwu1kby5ZOeJX6lF6OxNZggw5lxlrL0Uta9llgGmyu3sHaTU3Mgz49SU1/MCcj+YQUjkxcN
+	qsQ3PmDfxkBltGBkllsZYs50sbI5foFDTLGUHYgbEa5oxopZwirP5q9sZ34S2Sa8JMLo9VHqkM9wP
+	69qpvfPMFlnaTQ90A5QwUB21PchzYiHpnCMH7xi2XN1hr09qIsNg4QRd1gQIs6M6dMjuELt3Hi8C0
+	WQk8QbKK4hwImEIcthzEXN/WsZANurd9+zC61q0UWkC1Hf723Pskpm34KfEzWIIkxKQc5Z7xidQ/3
+	2PohS/Ix6Jl80bkflm7fvPLAwEGG5pKkhF1g==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1sJIzx-00000000mcz-0YkK; Mon, 17 Jun 2024 22:30:41 +0200
+Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=suse-laptop-2.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1sJIzx-00000004C3g-1WiU; Mon, 17 Jun 2024 22:30:41 +0200
+Message-ID: <4da8ec47366209cdb4d61045cb6e8b2f872a37a1.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v3 cmpxchg 2/4] sh: Emulate one-byte cmpxchg
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: paulmck@kernel.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, elver@google.com, akpm@linux-foundation.org, 
+ tglx@linutronix.de, peterz@infradead.org, dianders@chromium.org,
+ pmladek@suse.com,  torvalds@linux-foundation.org, arnd@arndb.de, Andi Shyti
+ <andi.shyti@linux.intel.com>, Palmer Dabbelt <palmer@rivosinc.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, linux-sh@vger.kernel.org
+Date: Mon, 17 Jun 2024 22:30:40 +0200
+In-Reply-To: <add0cb7b-6ec2-4b13-b327-8ff93358993e@paulmck-laptop>
+References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
+	 <20240604170437.2362545-2-paulmck@kernel.org>
+	 <c44890de1c3d54d93fbde09ada558e7cb4a7177c.camel@physik.fu-berlin.de>
+	 <fcfa4d17-ea05-46f2-840d-9486923fd01d@paulmck-laptop>
+	 <fc6bbbcd0b2a79d8fdcbde576ae3e5a52ffab02a.camel@physik.fu-berlin.de>
+	 <972d3e89-ffda-49bc-8c0c-4d23484ca964@paulmck-laptop>
+	 <add0cb7b-6ec2-4b13-b327-8ff93358993e@paulmck-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
-In-Reply-To: <202406171122.B5FDA6A@keescook>
-References: <20240617133721.377540-1-liuyuntao12@huawei.com>
- <ZnBbr2CAqBGDe2aN@J2N7QTR9R3> <202406171122.B5FDA6A@keescook>
-Date: Mon, 17 Jun 2024 22:33:08 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>
-Cc: "Yuntao Liu" <liuyuntao12@huawei.com>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Heiko Carstens" <hca@linux.ibm.com>, gor@linux.ibm.com,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Leonardo Bras" <leobras@redhat.com>, "Mark Brown" <broonie@kernel.org>,
- imbrenda@linux.ibm.com, pawan.kumar.gupta@linux.intel.com
-Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
-Content-Type: text/plain
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
-> On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
->> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
->> > Since the offset would be bitwise ANDed with 0x3FF in
->> > add_random_kstack_offset(), so just remove AND operation here.
->> > 
->> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
->> 
->> The comments in arm64 and x86 say that they're deliberately capping the
->> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
->> value with 0x3FF.
->> 
->> Maybe it's ok to expand that, but if that's the case the commit message
->> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
->> x86), and those comments need to be updated accordingly.
->> 
->> As-is, I do not think this patch is ok.
->
-> Yeah, I agree: the truncation is intentional and tuned to the
-> architecture.
+Hi Paul,
 
-It may be intentional, but it's clearly nonsense: there is nothing
-inherent to the architecture that means we have can go only 256
-bytes instead of 512 bytes into the 16KB available stack space.
+On Mon, 2024-06-17 at 09:50 -0700, Paul E. McKenney wrote:
+> On Tue, Jun 04, 2024 at 02:14:54PM -0700, Paul E. McKenney wrote:
+> > On Tue, Jun 04, 2024 at 07:56:49PM +0200, John Paul Adrian Glaubitz wro=
+te:
+> > > Hello,
+> > >=20
+> > > On Tue, 2024-06-04 at 10:50 -0700, Paul E. McKenney wrote:
+> > > > > Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin=
+.de>
+> > > > >=20
+> > > > > I can pick this up through my SH tree unless someone insists this=
+ to
+> > > > > go through some other tree.
+> > > >=20
+> > > > Please do take it, and thank you!  When I see it in -next, I will d=
+rop
+> > > > it from my tree.
+> > >=20
+> > > I'll pick it up over the weekend for which I have planned my usual ke=
+rnel
+> > > review and merge session.
+> >=20
+> > Very good, and again, thank you!
+>=20
+> Just following up...  I don't yet see this from you in -next.  When your
+> version does show up in -next, I will drop my copy from -rcu.
 
-As far as I can tell, any code just gets bloated to the point
-where it fills up the available memory, regardless of how
-much you give it. I'm sure one can find code paths today that
-exceed the 16KB, so there is no point pretending that 15.75KB
-is somehow safe to use while 15.00KB is not.
+Sorry, I was very busy last week and didn't get around to do any kernel stu=
+ff.
 
-I'm definitely in favor of making this less architecture
-specific, we just need to pick a good value, and we may well
-end up deciding to use less than the default 1KB. We can also
-go the opposite way and make the limit 4KB but then increase
-the default stack size to 20KB for kernels that enable
-randomization.
+I will take care of it this week, I have not forgotten about it and I never=
+ let
+patches unanswered, and unmerged once I have reviewed them.
 
-       Arnd
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
