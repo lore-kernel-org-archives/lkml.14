@@ -1,168 +1,162 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AF51946DB
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B434E194A41
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647747; cv=none; b=NvRb4tEiehZZZeX7Yl0tYkJhUmHitB1iL4WjpSi3I9irPq3Rh7H/2Idp+jHEl1C777uHW6OiQHi8atrpQTy7+VoYcAKAdveYAiWQC/G0qW3AruScYCmMl69KK2guflHla6LafgXSMadTamxrbCxkbLM3kQgKPEz/xcyDTujSDoI=
+	t=1718647753; cv=none; b=pCrjd2h0HXVG8vpYBrmvUWVw3w2bmZ10zbT3C89wQju54aYS3xkilemesYL4vv28iFF5P9zZaTlqQV4oX1TcK8Z+fEcIQTAWF3tYdNSq5cypfgxupYlANVzQnEoCdG7+ofb7Ulzl0lmVLChe11rKjgxGMl4uqeIjT1Wl0xstfW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647747; c=relaxed/simple;
-	bh=b+D/bTjJmd9oRoUJip9jd5YaP8VulajMm2JIH4GtR6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qhsZOug53lwzqEyE59Runz84uxE9xDJeyvbPiYn00cjwQUv6uxyXIj6KBp8QgEillvt9mu0l05V3W7v8Z4YkgG8d0HFW5nYU5/QPsWDrA9WoCzdlcyIPU7lxLU3qnW+AAX3UdOuM8jZIgt5q6t6/Y7AS6xYc5na014LmDoIN+Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=FxTmM0sR; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="FxTmM0sR"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43fdb797ee2so23310731cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1718647745; x=1719252545; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+UXAeJHazaKB0tl8krC6xVJ8wj4OwafBBT2mwF8+dZc=;
-        b=FxTmM0sRd6GBucAiAfv8sfCDtlihU8Bv/ofwZ9zD9dSphven7LH/dt9VFBrw05+x7g
-         XPvQkQY0sIBWSEo6PyQXffMUTOLO4QY4zUQ59Vbhk98gKzTZq4bcF0pgUukNkgmdq5Zg
-         X2Hdu7mZmtmGwdq429/1vlNW6sHBdzd6Mxoqd+k06hfCyS0M33d+59kfuspPbtmGF5xd
-         o1I0c/yWMWhTxv9UNIzkAs4LYJYa7VtSj+m1M4wTBQAsWOloDRk+tZWO8uTiT2y8Vlh3
-         Fgl1fBPOaBWgmI0XHCF10jQijBN78i1mYF1bQrsyFahwz5tFwMnflu9ZmPIkdZRk3QJc
-         Vh/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647745; x=1719252545;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+UXAeJHazaKB0tl8krC6xVJ8wj4OwafBBT2mwF8+dZc=;
-        b=o/ytqBnO9EuNELqX9HcGIzXSM3AxAG6AcIGhBwdPdnkCIC9mHOevO7HUcPSY70aI4A
-         vXoyMJqz6R9xCEDqSoNUKyfoHElKMHt5sqFlP2/RrRozggaVWhTkPbnrBRCTVQZNbUk0
-         FxoKwEMpE5RtmMGebWzwns3YybUy2PVWZ04YrJZYdBjcm9AJnUAaXrfeg5C+v8cd5KH4
-         ciZhT2Pgxsk3WumlcVGJ8jpZwUBCz62Lx9QpVWORh/9cDEXXGZXYY1TgKGf2BxkkcZgE
-         WUXbPwY6tczluxfcBRmSj7DCOt32HfMvu4P30QW1B3BRDeqAX2CXmhcGsu7PDZofejIe
-         ZstA==
-X-Forwarded-Encrypted: i=1; AJvYcCUv1vKWE+p6o6HKNYuhIeP46n+3YN/ytthQvpkLX+gW0AMaQJDXdqBawHLGdHHHKsOKK3FXjN/59IX3ZeX4fcSbZ6sGLLvCXRyLoW2u
-X-Gm-Message-State: AOJu0YxGHRgiEAe0KxjAnLH+EoQORrVp+qaMD/Wkv+kjCKV/WSf225cn
-	gczVFEnEBTSLow4z+KkrCO6OeIBW12CB/Yc0/Lf1XH4hPATLfiNbC3OeQ5WnRt0=
-X-Google-Smtp-Source: AGHT+IGCUVe+Ux+j+DZ1FKTLw0r3CHgPgOvQ82gXSKD5wF8W9vFcZRxf3i+t6ZxmWpO4wnzXVNIsZg==
-X-Received: by 2002:a05:622a:5296:b0:444:93e0:61d3 with SMTP id d75a77b69052e-44493e062afmr26734751cf.43.1718647743690;
-        Mon, 17 Jun 2024 11:09:03 -0700 (PDT)
-Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:164])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef3d85e8sm48916491cf.2.2024.06.17.11.09.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 11:09:02 -0700 (PDT)
-Date: Mon, 17 Jun 2024 11:09:00 -0700
-From: Yan Zhai <yan@cloudflare.com>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Neil Horman <nhorman@tuxdriver.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH net-next v5 0/7] net: pass receive socket to drop tracepoint
-Message-ID: <cover.1718642328.git.yan@cloudflare.com>
+	s=arc-20240116; t=1718647753; c=relaxed/simple;
+	bh=f6scgY6PPn3i0YktPs71dAhdw8Fm0jCjCRTPKF5daSM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=UgzJvO+XIvEHLyz3AuY2Tc8uowwdYqkwgP0wu3qqVDGyS4A0CyS+9RKO6itibJueKP6yFTRYEJB3yJf9nfDJU47fr2fYdipVRiW9jDTZl9TgSZ420VSqt9tJ0iYSD4sBbxaZLpq7ebFRGnA4F/2JbgOnfAkfC/AWLdTgMDMnvEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 5F02A61966C1;
+	Mon, 17 Jun 2024 20:09:07 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id xtigWcKdybrJ; Mon, 17 Jun 2024 20:09:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id E73B361966CE;
+	Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tipReWDeoSdk; Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id C3B9A61966C1;
+	Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
+Date: Mon, 17 Jun 2024 20:09:06 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: Gagan Sidhu <broly@mac.com>
+Cc: ZhaoLong Wang <wangzhaolong1@huawei.com>, 
+	chengzhihao1 <chengzhihao1@huawei.com>, 
+	dpervushin <dpervushin@embeddedalley.com>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mtd <linux-mtd@lists.infradead.org>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, 
+	yangerkun <yangerkun@huawei.com>, yi zhang <yi.zhang@huawei.com>
+Message-ID: <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
+In-Reply-To: <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
+References: <CFAC276E-E652-40CD-B3D8-563B95E679A8@mac.com> <14779870-BA54-4ABF-8ABF-FF1D23D172A7@mac.com> <1641029267.251608.1718640023954.JavaMail.zimbra@nod.at> <65E62DA3-EF16-44BD-8E51-E751BD2C496F@mac.com> <1802911356.251780.1718643160760.JavaMail.zimbra@nod.at> <E3E2C13C-1E52-46F2-BE2D-D2592C3369DB@mac.com> <F2DCFCE7-68FA-4C09-AE5B-09F2233575F1@mac.com> <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
+Subject: Re: [PATCH v2] ubi: gluebi: Fix NULL pointer dereference caused by
+ ftl notifier
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: gluebi: Fix NULL pointer dereference caused by ftl notifier
+Thread-Index: Cdy4KBaQSTQSx5jOia8rup/ThWcV7A==
 
-We set up our production packet drop monitoring around the kfree_skb
-tracepoint. While this tracepoint is extremely valuable for diagnosing
-critical problems, it also has some limitation with drops on the local
-receive path: this tracepoint can only inspect the dropped skb itself,
-but such skb might not carry enough information to:
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Gagan Sidhu" <broly@mac.com>
+> https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/gluebi.c#L2=
+97
+>=20
+> it seems the GLUEBI is setting the mtd to MTD_UBIVOLUME
+>=20
+> https://github.com/torvalds/linux/blob/master/drivers/mtd/ubi/block.c
+>=20
+> where this doesn=E2=80=99t even have the text =E2=80=9Cmtd=E2=80=9D anywh=
+ere.
+>=20
+> but the boot partition is always the ubiblock device.
+>=20
+> so is gluebi taking the same volume and adding the MTD_UBIVOLUME label or
+> something?
 
-1. determine in which netns/container this skb gets dropped
-2. determine by which socket/service this skb oughts to be received
+Yes, GLUEBI emulates a MTD on top of an UBI volume.
+It sets the MTD device type to MTD_UBIVOLUME.
 
-The 1st issue is because skb->dev is the only member field with valid
-netns reference. But skb->dev can get cleared or reused. For example,
-tcp_v4_rcv will clear skb->dev and in later processing it might be reused
-for OFO tree.
+>>=20
+>> [    5.462504] auto-attach mtd7
+>> [    5.462525] ubi0: default fastmap pool size: 15
+>> [    5.477309] ubi0: default fastmap WL pool size: 7
+>> [    5.486683] ubi0: attaching mtd7
+>> [    5.811240] UBI: EOF marker found, PEBs from 273 will be erased
+>> [    5.811299] ubi0: scanning is finished
+>> [    5.874546] gluebi (pid 1): gluebi_resized: got update notification f=
+or
+>> unknown UBI device 0 volume 1
+>> [    5.892927] ubi0: volume 1 ("rootfs_data") re-sized from 9 to 28 LEBs
+>> [    5.906683] ubi0: attached mtd7 (name "ubi", size 40 MiB)
+>> [    5.917446] ubi0: PEB size: 131072 bytes (128 KiB), LEB size: 126976 =
+bytes
+>> [    5.931132] ubi0: min./max. I/O unit sizes: 2048/2048, sub-page size =
+2048
+>> [    5.944654] ubi0: VID header offset: 2048 (aligned 2048), data offset=
+: 4096
+>> [    5.958513] ubi0: good PEBs: 320, bad PEBs: 0, corrupted PEBs: 0
+>> [    5.970472] ubi0: user volume: 2, internal volumes: 1, max. volumes c=
+ount:
+>> 128
+>> [    5.984859] ubi0: max/mean erase counter: 1/0, WL threshold: 4096, im=
+age
+>> sequence number: 1613475955
+>> [    6.003045] ubi0: available PEBs: 0, total reserved PEBs: 320, PEBs r=
+eserved
+>> for bad PEB handling: 15
+>> [    6.021426] rootfs: parsing partitions cmdlinepart
+>> [    6.021444] ubi0: background thread "ubi_bgt0d" started, PID 97
+>> [    6.043694] rootfs: got parser (null)
+>> [    6.051426] mtd: device 12 (rootfs) set to be root filesystem
 
-The 2nd issue is because there is no reference on an skb that reliably
-points to a receiving socket. skb->sk usually points to the local
-sending socket, and it only points to a receive socket briefly after
-early demux stage, yet the socket can get stolen later. For certain drop
-reason like TCP OFO_MERGE, Zerowindow, UDP at PROTO_MEM error, etc, it
-is hard to infer which receiving socket is impacted. This cannot be
-overcome by simply looking at the packet header, because of
-complications like sk lookup programs. In the past, single purpose
-tracepoints like trace_udp_fail_queue_rcv_skb, trace_sock_rcvqueue_full,
-etc are added as needed to provide more visibility. This could be
-handled in a more generic way.
+AFAICT, this log line is not part of the mainline kernel.
 
-In this change set we propose a new 'sk_skb_reason_drop' call as a drop-in
-replacement for kfree_skb_reason at various local input path. It accepts
-an extra receiving socket argument. Both issues above can be resolved
-via this new argument.
+>> [    6.062891] rootfs_data: parsing partitions cmdlinepart
+>> [    6.073669] rootfs_data: got parser (null)
+>> [    6.211240] block ubiblock0_0: created from ubi0:0(rootfs)
+>> [    6.259545] rtc-pcf8563 0-0051: hctosys: unable to read the hardware =
+clock
+>> [    6.282125] VFS: Cannot open root device "(null)" or unknown-block(31=
+,12):
+>> error -6
+>> [    6.297406] Please append a correct "root=3D" boot option; here are t=
+he
+>> available partitions:
+>> [    6.314054] 1f00             512 mtdblock0
+>> [    6.314060]  (driver?)
+>> [    6.327077] 1f01             256 mtdblock1
+>> [    6.327081]  (driver?)
+>> [    6.340101] 1f02             256 mtdblock2
+>> [    6.340105]  (driver?)
+>> [    6.353124] 1f03             256 mtdblock3
+>> [    6.353129]  (driver?)
+>> [    6.366153] 1f04           45056 mtdblock4
+>> [    6.366158]  (driver?)
+>> [    6.379175] 1f05           40572 mtdblock5
+>> [    6.379179]  (driver?)
+>> [    6.392217] 1f06            4096 mtdblock6
+>> [    6.392222]  (driver?)
+>> [    6.405240] 1f07           40960 mtdblock7
+>> [    6.405244]  (driver?)
+>> [    6.418272] 1f08           32768 mtdblock8
+>> [    6.418277]  (driver?)
+>> [    6.431296] 1f09           40960 mtdblock9
+>> [    6.431300]  (driver?)
+>> [    6.444324] 1f0a            6144 mtdblock10
+>> [    6.444328]  (driver?)
+>> [    6.457518] 1f0b            4608 mtdblock11
+>> [    6.457523]  (driver?)
+>> [    6.470720] fe00           33604 ubiblock0_0
+>> [    6.470724]  (driver?)
+>> [    6.484090] Kernel panic - not syncing: VFS: Unable to mount root fs =
+on
+>> unknown-block(31,12)
 
-V4->V5: rename rx_skaddr to rx_sk to be more clear visually, suggested
-by Jesper Dangaard Brouer.
+(31, 12) would be mtdblock12.
+How does your kernel know that mtdblock12 shall be the rootfs?
 
-V3->V4: adjusted the TP_STRUCT field order to align better, suggested by
-Steven Rostedt.
+I have a hard time understanding your current setup.
 
-V2->V3: fixed drop_monitor function signatures; fixed a few uninitialized sks;
-Added a few missing report tags from test bots (also noticed by Dan
-Carpenter and Simon Horman).
-
-V1->V2: instead of using skb->cb, directly add the needed argument to
-trace_kfree_skb tracepoint. Also renamed functions as Eric Dumazet
-suggested.
-
-V4: https://lore.kernel.org/netdev/cover.1718136376.git.yan@cloudflare.com/
-V3: https://lore.kernel.org/netdev/cover.1717529533.git.yan@cloudflare.com/
-V2: https://lore.kernel.org/linux-kernel/cover.1717206060.git.yan@cloudflare.com/
-V1: https://lore.kernel.org/netdev/cover.1717105215.git.yan@cloudflare.com/
-
-Yan Zhai (7):
-  net: add rx_sk to trace_kfree_skb
-  net: introduce sk_skb_reason_drop function
-  ping: use sk_skb_reason_drop to free rx packets
-  net: raw: use sk_skb_reason_drop to free rx packets
-  tcp: use sk_skb_reason_drop to free rx packets
-  udp: use sk_skb_reason_drop to free rx packets
-  af_packet: use sk_skb_reason_drop to free rx packets
-
- include/linux/skbuff.h     | 10 ++++++++--
- include/trace/events/skb.h | 11 +++++++----
- net/core/dev.c             |  2 +-
- net/core/drop_monitor.c    |  9 ++++++---
- net/core/skbuff.c          | 22 ++++++++++++----------
- net/ipv4/ping.c            |  2 +-
- net/ipv4/raw.c             |  4 ++--
- net/ipv4/syncookies.c      |  2 +-
- net/ipv4/tcp_input.c       |  2 +-
- net/ipv4/tcp_ipv4.c        |  6 +++---
- net/ipv4/udp.c             | 10 +++++-----
- net/ipv6/raw.c             |  8 ++++----
- net/ipv6/syncookies.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  6 +++---
- net/ipv6/udp.c             | 10 +++++-----
- net/packet/af_packet.c     | 10 +++++-----
- 16 files changed, 65 insertions(+), 51 deletions(-)
-
--- 
-2.30.2
-
-
+Thanks,
+//richard
