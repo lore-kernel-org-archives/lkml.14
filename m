@@ -1,70 +1,104 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2442B15EFC9;
-	Mon, 17 Jun 2024 02:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5994161310
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718590349; cv=none; b=Lf/eSQ95gd/cU/q+A4r2EME/9JzIW2MZGaU6wSVuEsWaitVJZbheVDB7A0zVAqavao2aqlzRHGVjfbJfzSWwMAFbyXRhBZHSsNY0SQDhZrvyWAtqFF5dkFzeTJYox+BMedsV5yoGgKD+7PWYibqYzsKmdkX8TtQsDZ1QoJ+UNQQ=
+	t=1718590351; cv=none; b=kryNdgeKcEbiGdm/sIK6LFnBM4vU/m+pI4v323pX1NnKJE1EDkQsDIpzidiDH1ZK29RD3LBX95a1XGdibhQhugnEhp1jkbzCwfaQS4A+L/EH9nDfkGR20PaDxtkEF+zRRxh02s5Cj37grepQg8rxn86MXonNlUyCM/3hnzUjhtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718590349; c=relaxed/simple;
-	bh=2hkMhVkh2nVoBTw6NJzXuRmEaWOunyw84vTzOsVqq8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rq6xLdbbiQILpPJbkYhfcyLURhxgt6UcpM5omoZO2aW14UQfA+p5bnniHBiS9mr1x5WKOzCsUD02+WTNqlSLt7Jk2rTqBzcQITgjknWikSPg9UEaRTK+raP/UCl2oD8ukwobW9JAmBaAAk+b1KOziAS8jhpfl2u8w2QMKDpm13w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=YZcvj283; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1718590351; c=relaxed/simple;
+	bh=+usWI0nPBVcSZ+VJqjI6qxc97XtNV3HNm04/jAf8hVI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o32DnnLp/L74W9nqSZozJZz+0M1VQRKsoXNf6S9LbVrdjaVuwU+X4U44giQ20x1Xc7mDlJtC3sHSnu56Y8k/ppMvXG2I67itCV5cR1/iMzqEeIYss3vWjFTktjUyO/q7LQZmykpyGKLscdCGJQX2m5iTmsG1pWjpQuPwXor1sEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o4WMaMkL; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="YZcvj283"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=0akHP1anUFimuceQyxW2eFWvpAgkvYdidH+pYaG6Ejs=;
-	b=YZcvj283Aon/EwSllz18VWjet31sT4J91PTvreJLrD/yFEY6Y2H780mNAajZwl
-	5NYGJDdy5jhTbv82QzCTToXWLkj8t6sW+8EDAEDrEiHlUnmPlK2vpdi15bc3UPVE
-	YBMU502EeXM/PIHZnJ3c5uLsZHmgUP3BQVw3/zBReT+SE=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp2 (Coremail) with SMTP id C1UQrAD3P31tm29m_e_NCA--.25055S3;
-	Mon, 17 Jun 2024 10:11:58 +0800 (CST)
-Date: Mon, 17 Jun 2024 10:11:57 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Christopher Obbard <chris.obbard@collabora.com>
-Cc: linux-kernel@vger.kernel.org, kernel@collabora.com,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/1] arm64: dts: imx8mp-debix-model-a: Enable HDMI
- output
-Message-ID: <Zm+bbZilJNup8mEN@dragon>
-References: <20240610234307.96766-1-chris.obbard@collabora.com>
- <20240610234307.96766-2-chris.obbard@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o4WMaMkL"
+X-Envelope-To: markus.elfring@web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718590344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M8Qv5NrmpUkXbkH01JqmIrt+CGtlE3ZyafHTyGTEsUw=;
+	b=o4WMaMkL0QujctNqCm7RhryIdoRkf0PTp9GQGVMPAhXSCijgB7iL0Y7gYHo3Kms3AFAfDi
+	eaw1Hp1SElrC4zXpNQPyvz6BshqW8odKK+UhcApS0mnUI4SFwsBb0CHWaIlsqf65Q80k2v
+	SKGNGWCALfJESUs7QLj/dHLeFJSgyRQ=
+X-Envelope-To: broonie@kernel.org
+X-Envelope-To: perex@perex.cz
+X-Envelope-To: tiwai@suse.com
+X-Envelope-To: shenghao-ding@ti.com
+X-Envelope-To: colin.i.king@gmail.com
+X-Envelope-To: gehao618@163.com
+X-Envelope-To: linux-sound@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: gehao@kylinos.cn
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Hao Ge <hao.ge@linux.dev>
+To: Markus.Elfring@web.de,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: shenghao-ding@ti.com,
+	colin.i.king@gmail.com,
+	gehao618@163.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH v2] ASoc: PCM6240: Return directly after a failed devm_kzalloc() in pcmdevice_i2c_probe()
+Date: Mon, 17 Jun 2024 10:09:54 +0800
+Message-Id: <20240617020954.17252-1-hao.ge@linux.dev>
+In-Reply-To: <82283abf-10b1-4095-a93f-112ba8aca483@web.de>
+References: <82283abf-10b1-4095-a93f-112ba8aca483@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610234307.96766-2-chris.obbard@collabora.com>
-X-CM-TRANSID:C1UQrAD3P31tm29m_e_NCA--.25055S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUID73DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGA4BZV6Nn46QnQAAs9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 11, 2024 at 12:42:38AM +0100, Christopher Obbard wrote:
-> Enable the HDMI output on the Debix Model A SBC, using the HDMI encoder
-> present in the i.MX8MP SoC.
-> 
-> This has been tested with a generic 1080p HDMI display, along with a
-> smaller 1280x800 HDMI display.
-> 
-> Signed-off-by: Christopher Obbard <chris.obbard@collabora.com>
+From: Hao Ge <gehao@kylinos.cn>
 
-Applied, thanks!
+The value “-ENOMEM” was assigned to the local variable “ret”
+in one if branch after a devm_kzalloc() call failed at the beginning.
+This error code will trigger then a pcmdevice_remove() call with a passed
+null pointer so that an undesirable dereference will be performed.
+Thus return the appropriate error code directly.
+
+Fixes: 1324eafd37aa ("ASoc: PCM6240: Create PCM6240 Family driver code")
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+
+---
+v2:
+- adjust title and commit message
+- omit curly brackets
+---
+ sound/soc/codecs/pcm6240.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/codecs/pcm6240.c b/sound/soc/codecs/pcm6240.c
+index 86e126783a1d..8f7057e689fb 100644
+--- a/sound/soc/codecs/pcm6240.c
++++ b/sound/soc/codecs/pcm6240.c
+@@ -2087,10 +2087,8 @@ static int pcmdevice_i2c_probe(struct i2c_client *i2c)
+ #endif
+ 
+ 	pcm_dev = devm_kzalloc(&i2c->dev, sizeof(*pcm_dev), GFP_KERNEL);
+-	if (!pcm_dev) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
++	if (!pcm_dev)
++		return -ENOMEM;
+ 
+ 	pcm_dev->chip_id = (id != NULL) ? id->driver_data : 0;
+ 
+-- 
+2.25.1
 
