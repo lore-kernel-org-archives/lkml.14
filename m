@@ -1,244 +1,249 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2043.outbound.protection.outlook.com [40.107.103.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F2E19923F;
-	Mon, 17 Jun 2024 20:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718655490; cv=fail; b=W/GU5RnANrBVJcmhah4ItGInRIl34Sztg/794tyASyr5U2YAQQSZQJSm5k2kE+YF+OZNM5z9R5etc9AWiKl0im7qUsklWH3oA7FZ9r/30sToJCOLOU6Wv9mROjgbpliQwvenGutiFcb3Jk/Jr3ONRhGssC2SjmxSI9lJjJqTwX8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718655490; c=relaxed/simple;
-	bh=SHH+RxbPVg9d9vvgQwAyIOSN1a0ktF2Q9tORg7XL1Wg=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=BAASp77DUvJeouY4dyfCDTrXOpv5W1WWBeiehymJUeASDzfSkIQWvCJX6kZGdOVHIL9vpDrJJe1PvzQx7s36lbLtRWqzyuKrLQkCbNt/5hr//sQttrEgq7ka5Ew6UNvAI64hQWiykrHIe9QIJRGjTFcmhLbfL1veBf0WoIg6D/c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=nUALNL3y; arc=fail smtp.client-ip=40.107.103.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD7C198823;
+	Mon, 17 Jun 2024 20:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718655495; cv=none; b=aufdTaGCQdOq79a/MU7RLTnsgBfzjmIGdukk5KWkuJoXBKAX+5mYmaSclmlgXUU3t9cgrHu75Uf2ekHP3n5DyMrjqMNVe/28LusufPLnzRQglsOnBT/QGiMSCC8JpzZfrq7pOM9wzPALGnj6DQR6lfOj2XUX4Tk075m8ZN/OX/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718655495; c=relaxed/simple;
+	bh=OtVJdGEulRR6iKBFNWOxb7iykvDXqHHzSJe5xWSLj/U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JfR/wEjeUJQ5CZL409nqNc3qqHo8wL7VyCt7KVOUDTozXl2X+xbATsRVbDGO/HKJKjyAsIYuEc1dmpZbsdfUnXtTt//SKFe5skennJHnAsEEimuSAoMc1VGvPAIUhloaKoPKgEqWRYOA8D5DpsVOk827pnBGilVvmQypT4qx5wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ATluY9by; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nUALNL3y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JLlh1Q4LU71Zy6JKAcX+isitunPdsHwVaLip4liZSK4MkU9YqF4RlSYo3+NuH+2KRUt1DBFSB3+40qOO7ZTsoujfwz0Jkl1hV1NYu04pSKtgsI1A9j5/6NV+nHirvMdxkg1aeAmmWVkt3E9esjLDpeTdcuJ9INmN0tYqV6NsLgVhpt8Tjqa9iPrT3X+bXNHl6W5ABUOAIWK+RNTdyYmqp1zLqBVheyUz09uB8IEPFvMGIpQUq3tYmbyY8AAfDzBq6cDio29wWFgBYmRFWwIGHlrgKU9ZaXbSsL/BCdSNeVkzlIqkW4WZPzOLl2nFIV7NW4/fAf+uPa4bpwG+poJjEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tHd1Na5jpn2/1hr3DnG0fdy90jL7MoCN4Eo+Mj/vcaY=;
- b=eRXZiA3m8NhUpK9/ZotHyUvmjksuivr9nNIGaFYhFlm67zpKZnmY3ZoKEh+y3KCkww+EMu0NbmtnQZncTexLDHbIxENGAF6zuWMQ4yKkQmXjGAxvl7G7IcOdmrkPinm++QbJ3Tqd9SXI9TmjihLXUvOSxgnMUHqDxW08PFAgfeq7BFFRSW3XnJWwBIyn7sCVJYNp5YYhvd46a3e4ctv7WJWLvTXSSIu+3J+D+V/f1X6idLe2BWfxKpPsagHFMP5BGPIfFPicBnHjPAbhI4dKqnp7FAE4MLo6UA5xL7HIh+r+9ZSqRCCrm8Y6TibgP7jxWglSiybv+QJfxor1+iLhEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tHd1Na5jpn2/1hr3DnG0fdy90jL7MoCN4Eo+Mj/vcaY=;
- b=nUALNL3yY13rFk4t5BpAKAS0N7C4vD3lhhclDrk56DvI1/QwFRN83+ZdDsPwDP4whKvx52lb/sJVdPWLVEoExsMU3ENGmGvwSiFba+x2ymsyudSm7jBiDRQvgBzt5pLqZkRaP6bKcQN3UmrZUBqSLOUud7XQS7DKo8xzMOmzqhI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA4PR04MB7997.eurprd04.prod.outlook.com (2603:10a6:102:c9::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
- 2024 20:18:05 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
- 20:18:05 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 17 Jun 2024 16:16:45 -0400
-Subject: [PATCH v6 09/10] PCI: imx6: Call: Common PHY API to set mode,
- speed, and submode
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240617-pci2_upstream-v6-9-e0821238f997@nxp.com>
-References: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
-In-Reply-To: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, devicetree@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718655424; l=2342;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=SHH+RxbPVg9d9vvgQwAyIOSN1a0ktF2Q9tORg7XL1Wg=;
- b=1DI3HJ76h3fwRbwaWh5+zj2zcwaMy67Ux3uNEvoY+VsVDXNwCeK8AK9kbH+c+fD5DiENFwqw8
- s3npenmN8jJBqLfo2zclPe35U8r/3CQzw/wF27Wwy8LUHJeKwEj12gS
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR05CA0116.namprd05.prod.outlook.com
- (2603:10b6:a03:334::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATluY9by"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so1017385a12.1;
+        Mon, 17 Jun 2024 13:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718655491; x=1719260291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ihwEhBftKt1w8XQkg13RWLFkeL3798aqGLkbQ6rlJCc=;
+        b=ATluY9bykrMqBoRTzdWM9PliWnhU0PBoa0qt/RtPS9XZbBOWjGJ+LAmAm71nNVwUKx
+         9+kkb9ex4lErTvEe/4FLcx3vnLqlwT8BWPU3DNI2DifsnzC7r6UIr05fTdmQoFoxOIcu
+         Gf+P84Qb+KjX5SRgz4dHP1pKdGSO2RE8O+7TkgkCZgO32BKaMRb80goYWi/hRl7P9Jcu
+         Xi2/o5RuNlkS7noSoc4cP9yye1DH2O7LF2RGu+7kjHdoqJh1qH5qVTdl64/k690kayEL
+         79rhiES+vGjceQK43MxWXE61jEYCPIAflQ4qVVkFbiqxRDOPO2jn1UaCFVFAbsNA2J6l
+         tVRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718655491; x=1719260291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ihwEhBftKt1w8XQkg13RWLFkeL3798aqGLkbQ6rlJCc=;
+        b=tj0qRRmVSKByUJtwioq2h5xdd3RdX4EXwq64mzafLJt0Bqov/NhyRPJ60v+FrfKrag
+         sI96lfmBAvXWvLM/c4SDMiLTGQj0LehRGOrWRFsCVnN8LK5sPoVZZs1zde6GM4PJBRqt
+         /FpKCKcM3ixULXpKU0CvuDppm+uttWFcCHEluS7XSImnN21h395AVQcHv42Ah+GwaMoD
+         zbRszDl30AWZjTlKqydvRAejy08xXI5uVNkTFmxXmHqrX2GwoU5Zi/D57Cq5MZaMeL71
+         DnQ+yFpJfDZXIZfxd9trjbcYRIC5YgY7+rN6xlg2t/umKmtIPu4feeWHY443+3/u1hXT
+         EZfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYnHkS9xeoLRmCWuZ0P8xAmx/kYVT75Efc6G7iBlUjL9fX6SywtPFz2GhJhWHOO+bwLr2IX0nnJm3+iPd82pk6K2K35BSR/Abujg==
+X-Gm-Message-State: AOJu0YxfHIc197SM/3mRPYbRVBVKjXd3Yc3VLHIcMsmwdKY1TIDgiAPT
+	ioNOeICBwA+kymPCz9X7FLsafC+TifQbqYvAZQPk/ohG+ii1LOGrqYh1cIHh
+X-Google-Smtp-Source: AGHT+IH0twaBCtMlcDcRVhYz45raKGKvcQXzLY/cPs1uD6bo90wAdszMT1pzUcI7XWBu/zJyb4SCcg==
+X-Received: by 2002:aa7:de8b:0:b0:57c:bc03:caa2 with SMTP id 4fb4d7f45d1cf-57cf7ad5216mr304971a12.20.1718655491211;
+        Mon, 17 Jun 2024 13:18:11 -0700 (PDT)
+Received: from andrea.fritz.box (host-79-26-69-235.retail.telecomitalia.it. [79.26.69.235])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cbc4f5870sm6087128a12.4.2024.06.17.13.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 13:18:10 -0700 (PDT)
+From: Andrea Parri <parri.andrea@gmail.com>
+To: stern@rowland.harvard.edu,
+	will@kernel.org,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	npiggin@gmail.com,
+	dhowells@redhat.com,
+	j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr,
+	paulmck@kernel.org,
+	akiyks@gmail.com,
+	dlustig@nvidia.com,
+	joel@joelfernandes.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3] tools/memory-model: Document herd7 (abstract) representation
+Date: Mon, 17 Jun 2024 22:17:59 +0200
+Message-Id: <20240617201759.1670994-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB7997:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19e2af5f-b5ba-4353-2f27-08dc8f0a98dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|376011|7416011|1800799021|366013|52116011|38350700011|921017;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V1ZIcXZpRFdrUkVXQmQ1RzJJTWxuMHQ5bUN4L3QxVjdKemI3cDA4WjhNeWdX?=
- =?utf-8?B?SDJBUEIyZDV5SC83UXdXVWpKc1pndzRNVnBwMFVaTElQQ1V3UXlhWjNBSTVO?=
- =?utf-8?B?LzUwdWIrMnhFMzhoUUZvY01qbXVySmhXdDRQaWJ5VldZOTdLVHdRcDFQNTla?=
- =?utf-8?B?ZFFvT3RSWnNIL0JjanBVdkNvK2U2Z3dnVzJlRFgvaEF3TFhBTlFqa1JsMlR5?=
- =?utf-8?B?TkZ1MVVaSysxaVB1R3o2L0JHVXRraThjSytnTjY4ck83RDFjckRzS0VGZnNS?=
- =?utf-8?B?NzdCdGFOY0ptWmloRHZLQlBRbHlRMzJFd2p6K09vQVdoVzNUVjF4eW0rbEc2?=
- =?utf-8?B?WmhPUEluNGVtSm5aQ3V6S2owemlPajhmVHVYMDJ0ajlveHJZb0tZL2FNamdl?=
- =?utf-8?B?NjZiRXRTeE00R1VLTVZWSzJKZmFxamhTVzNSQ2xXS1lCUWZkcWxIbElTNVpp?=
- =?utf-8?B?MVlYN1lCa3JNZ2Z2eC9vR2FpWERLWnJsTlRjN3ZILzRCTWdJZE9tZFJ6RWY3?=
- =?utf-8?B?bThic3IzL0tQU3pRRHUrSnl6aXppUVl0SVo3NlVtcTRqRDZRN1U1SjJiWVgr?=
- =?utf-8?B?NDNaTzRscjNiai9uRFFEcFpzWHd0UGhLQXlQeUx6R0JseVhFR0lhM1BGcHJ0?=
- =?utf-8?B?TU9makl5MkNsN2dMblJ4Sitsc3JXVUNScEJ2QzFaeTQxMjFCYkswZms0YXNx?=
- =?utf-8?B?bzByUkhYYUFSYjlzWnhnWk9WVkVBLzBRYng0ZzUxaW50RmxtQW9YdVBCR1hR?=
- =?utf-8?B?M2IrU3pqTnExLzRSVFc5SWRwVUZVQS9mV1lWM3BOaERlWmlUUWg0THUxbVZP?=
- =?utf-8?B?eUJvcWtBYVA2MER6d0I4RlJBbnM1a3lhRm9TWUk0WkxXNExZbTJaOWlaMjRa?=
- =?utf-8?B?OUc1UzdkT1c2ajVudXFjS1VZVGRaN1NRckpUVUFFLzVUNVJKd1FkczFGQXBi?=
- =?utf-8?B?SGxJNUZhaXF0dHpkM0E1NDFVS3E0VXpQU2VUNm5QTW9TcG5PVWhBZG05MVJ3?=
- =?utf-8?B?Tit2c1Y5OHEyaDR4Q2lwUDdndUxkNnBPVFo5cHVKN3o1M3Z3SDRXQzVickp5?=
- =?utf-8?B?cktOYU5DSEh4OEhRTGJtOXdXVk1ONEdkcGZuQXpuajdueTcxUjBxODJINVRo?=
- =?utf-8?B?WFlrK3BCRGVMYTA1cStYK3JwWVhlcXdqQUhJWVpIaC9YVFhGbU5rNU43dlp3?=
- =?utf-8?B?M2ZoT29Yd1hoSUlBZHlVbHNDdmRvQnZwZ0RXYnhiWG40SDd0WUpoMzNpNUtR?=
- =?utf-8?B?ZnRKM29JMjhsb0M0STF3dmlYRlVUcEVOREVCZ1RGOHJsV1IyZnhXbTJOeFdI?=
- =?utf-8?B?N1BDUWJnazZxTUVqR21LZEtLQmVUWVFQOTJQZ0szUGNkMVpocmZqN25OWFJR?=
- =?utf-8?B?QTBEeEFDNW9YcTJmOXo4ZncvNnhENGNCUCs5Zy9ER1UycXFFZGV4bnRNMTlm?=
- =?utf-8?B?K25PejJXY1Q0djlsNXBvM3JmOEg5YnI5UHQ4eklpcjUxeWdiNkszeGpiUERh?=
- =?utf-8?B?b0lEZVdiSndjdHJMeFkvZkVMbGx2d2xQL0ZGUmNzUkVWWW1TNG8rYTlaOGdE?=
- =?utf-8?B?bVVNMGxQL2x0ZG5sZnhjSXdVYTRKSVZIYStzL0xLMm15RXdLN1FZemtncUhZ?=
- =?utf-8?B?WmNjMnZoWVJFeTNpNy9GakVzSzJlUEYrNFNWb3R6b05sOWI0S0Zwc2hscTZV?=
- =?utf-8?B?UjN1QnNRRWhxUi9FRzh2UFRxZU5naVd2cUNGNExFWTE0M3QvMkMvQ3Y1NExz?=
- =?utf-8?B?eS9OSmFzMURjWTE5N3VOdWNiNGlCRkR2M0ZvbERYNzh2V3lKL2dhQU9jZDlk?=
- =?utf-8?B?dzZ2YU4wQ2lUR2RKT2UzQXdUNHJKSFF6NUFwbVVhd0ZUN0VYTUdMa2lvTjhr?=
- =?utf-8?Q?OeM0dYvg3k6Ug?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(7416011)(1800799021)(366013)(52116011)(38350700011)(921017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1lPY3RMMnFhenIzanhiWmplRm1QRldWQWxqTXNvRTBaNmQweXVESjRueWZY?=
- =?utf-8?B?NFU4ZmszZW96SUdFZU14cThha0c5UzBkalhrRlBSaFpXczdETG8wdll4b0ht?=
- =?utf-8?B?eGJKc3dBZnZiTWpmcmdRTXpKOHF4Y1lKTXJucTAwOVErUDdxL3o0ZHhhUEN4?=
- =?utf-8?B?NGtES2M2ZWFZeDZ3SndYN09FSmZ6Sm8zMEdzYTA2d0FNV1Z5dTNvdzJBY3A1?=
- =?utf-8?B?TGc1RnRMclIyenl0cW9MWmp4cW9rdXlwMjR5K0lYQytUMkFScmhWTU8vUnds?=
- =?utf-8?B?ZFNKdFpDUHAvdzRoejlqR3g4aHlhNWRYREVnallNR2F4a3p1K3cxWnhRMDJQ?=
- =?utf-8?B?K1NNMURmWjE0QU11MHM5RUZIRURPUUgxdC8vWGFYSTFxLyt3dnpKbUpkRWNL?=
- =?utf-8?B?TnlJS2hKUVllZ01sMGc3OU9ibzM5K2xMbWN5bm9XdFpGQUFyNTJpT3M5a0xs?=
- =?utf-8?B?dmxIYkUva05uMTlBei9nTTdRV1pvNW9Ya0h0NUJSM21hbnBCa0Foa1U1TnVG?=
- =?utf-8?B?bjVFV2Y4TWhQU3JTbEdUaENadUpSeGZjTXRWVnZTQURWK2hTOTFLTWhadWtl?=
- =?utf-8?B?b0NhcTZiVWJoR0ZtNkRWSW1FeDZYV0ZyU2JRWU5lQjNTSHJ4RDBmcUlmU3Rr?=
- =?utf-8?B?dnVKSWpOd2lCazNEa1NKRFNMNUtQSEtzWEw5cVVXMFBaQmlEVkMvTHlEWk9Y?=
- =?utf-8?B?aXFKaTlXUVIrMnF4R29kVHh5c1c2SXR1UUxDZ042NUhLbmMyaEhXeVBMYmtJ?=
- =?utf-8?B?R3RYUEdBaUhTeG90SFVvVDVSSGMrTFNneTdySWxqZThDYUFUMHBsb1FTOElJ?=
- =?utf-8?B?OGZNcXlJa0p6UGROelBjNFkyYkZ1RzQ5SWFlN0IzS2FyVlpsSU9rYksvMWs5?=
- =?utf-8?B?RFBoU3JoeUplUGlPNU9laWVCOFBwb3VoNHRxREw3R3VaMGlEL1RqaWVkbllD?=
- =?utf-8?B?VytqbjZXSWpncCtnbHNXQzN3MDhLVUNxTVEzSkdrZWl1VFhnaXJKUGFtWDlH?=
- =?utf-8?B?cmdmc1JJelp5U0UzbTljVVpINjNZRVltWmRVaW5MNXpycHpabm5zbXpmUitP?=
- =?utf-8?B?dHMyUlEzQUlqRFZBRXpuOGxoVFR2WjdwTTlpcENmdDIydVErclEyQWFiZlVv?=
- =?utf-8?B?WEtOS3NLYkFjWUFFNzBlVHlPemt4Y2tPdkFaeW8wQzZCQjJPWEZkQTZhZ2No?=
- =?utf-8?B?dU83cnBiOTVSdksxMmQ3WURkYkdReXNHb2djekxkN0htR3RJUVhkMzEzYzZI?=
- =?utf-8?B?czJSUVZURmRqemUvVzAwUzBpN2FHTkFVaG1EUlRQNkM4R28vd3crUko4cjNN?=
- =?utf-8?B?dG1YMWRCSlM1c1FiVTk1S0NVTm1JcTNXWkVEWWY5eDFDbVRWNXpkWlgrUXlp?=
- =?utf-8?B?Smx6N252U0hhQitqczVyRWV6eTRBY3M1OHJvSnI2ZjlSQUZxbStKeERRT0o2?=
- =?utf-8?B?c2FJaUh5RzdmMS9IeE5vMEtDSCswMlM2UHo0MlVVYkgyNUxwc09vRXlwVmFa?=
- =?utf-8?B?YkFqcW02SjBhU3ljZ0ZRbndBRVdmRnpxNlIza3VEMEIzeGdQNVd2SWFyZWJH?=
- =?utf-8?B?Q20xeGpkVkhIanFidjdLZ2lzNWxsY2dHM3Blb0tjQkNxTkFkRkE0UUd2ZHBi?=
- =?utf-8?B?Z0QxQjlXT1dhTXh0dDVHMFRPQUhzc2xVQWtBd3Era2VmZWNhbmpFNXZhRVN1?=
- =?utf-8?B?ZEd3OCtoZUo0cm0ySnhyb2NVMnNObVdLcVNSRVk5dkJjV2FtTHk4aHoxMmdl?=
- =?utf-8?B?VkV5K2tlckVHLzQycFY2dGtVNG9seGdmVFQvZk9MeEdhN2tKVDFRK1krcm9s?=
- =?utf-8?B?R2VNSE5CbzB2MG5JQU9CRU5uRGlDK2QzM1hvZGtwbVBDNU1nMk52Vm8yUldw?=
- =?utf-8?B?akhoa2hxQU9ncWc2S0JJSWtjeTMwK1pUUFdNdkZHQm9TcW5ueEJnSmthNXBR?=
- =?utf-8?B?bEt6U0NtTS9ONkdidzF6RHRZY2RraFdnYysyT0ZZWm5qR1Y3Sncva1NVbExl?=
- =?utf-8?B?YUFyMXZqRERscW1mM1AydEk3MlFaRi9jeWd0Vm5ERG5SS0NzR0l3REVxaFRr?=
- =?utf-8?B?R3Z0MkNMVjF1eVQ1Qk44MXpYUTlwTzB3b0haVW9jazg5OFc5MnFXTm5WV3Vu?=
- =?utf-8?Q?A0XU5l4Dp/FIjlfXaq1YgR8rg?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19e2af5f-b5ba-4353-2f27-08dc8f0a98dd
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 20:18:05.7756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TcQGik/0oNDC8zazY4KbcK01Tw0mraCBnbMElbrZU86Fsd1fYBixyg6LgD+6RyacYUIRUB+vKr9HYZoGUuSVRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7997
+Content-Transfer-Encoding: 8bit
 
-Invoke the common PHY API to configure mode, speed, and submode. While
-these functions are optional in the PHY interface, they are necessary for
-certain PHY drivers. Lack of support for these functions in a PHY driver
-does not cause harm.
+tools/memory-model/ and herdtool7 are closely linked: the latter is
+responsible for (pre)processing each C-like macro of a litmus test,
+and for providing the LKMM with a set of events, or "representation",
+corresponding to the given macro.  Provide herd-representation.txt
+to document the representations of the concurrency macros, following
+their "classification" in Documentation/atomic_t.txt.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Suggested-by: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes since v2 [1]:
+  - drop lk-rmw links
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index ab0ed7ab3007a..18c133f5a56fc 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -30,6 +30,7 @@
- #include <linux/interrupt.h>
- #include <linux/reset.h>
- #include <linux/phy/phy.h>
-+#include <linux/phy/pcie.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- 
-@@ -229,6 +230,10 @@ static void imx_pcie_configure_type(struct imx_pcie *imx_pcie)
- 
- 	id = imx_pcie->controller_id;
- 
-+	/* If mode_mask[0] is 0, means use phy driver to set mode */
-+	if (!drvdata->mode_mask[0])
-+		return;
-+
- 	/* If mode_mask[id] is zero, means each controller have its individual gpr */
- 	if (!drvdata->mode_mask[id])
- 		id = 0;
-@@ -808,6 +813,7 @@ static void imx_pcie_ltssm_enable(struct device *dev)
- 	struct imx_pcie *imx_pcie = dev_get_drvdata(dev);
- 	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
- 
-+	phy_set_speed(imx_pcie->phy, PCI_EXP_LNKCAP_SLS_2_5GB);
- 	if (drvdata->ltssm_mask)
- 		regmap_update_bits(imx_pcie->iomuxc_gpr, drvdata->ltssm_off, drvdata->ltssm_mask,
- 				   drvdata->ltssm_mask);
-@@ -820,6 +826,7 @@ static void imx_pcie_ltssm_disable(struct device *dev)
- 	struct imx_pcie *imx_pcie = dev_get_drvdata(dev);
- 	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
- 
-+	phy_set_speed(imx_pcie->phy, 0);
- 	if (drvdata->ltssm_mask)
- 		regmap_update_bits(imx_pcie->iomuxc_gpr, drvdata->ltssm_off,
- 				   drvdata->ltssm_mask, 0);
-@@ -955,6 +962,12 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
- 			goto err_clk_disable;
- 		}
- 
-+		ret = phy_set_mode_ext(imx_pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
-+		if (ret) {
-+			dev_err(dev, "unable to set pcie PHY mode\n");
-+			goto err_phy_off;
-+		}
-+
- 		ret = phy_power_on(imx_pcie->phy);
- 		if (ret) {
- 			dev_err(dev, "waiting for PHY ready timeout!\n");
+Changes since v1 [2]:
+  - add legenda/notations
+  - add some SRCU, locking macros
+  - update formatting of failure cases
+  - update README file
 
+[1] https://lore.kernel.org/lkml/20240605134918.365579-1-parri.andrea@gmail.com/
+[2] https://lore.kernel.org/lkml/20240524151356.236071-1-parri.andrea@gmail.com/
+
+ tools/memory-model/Documentation/README       |   7 +-
+ .../Documentation/herd-representation.txt     | 106 ++++++++++++++++++
+ 2 files changed, 112 insertions(+), 1 deletion(-)
+ create mode 100644 tools/memory-model/Documentation/herd-representation.txt
+
+diff --git a/tools/memory-model/Documentation/README b/tools/memory-model/Documentation/README
+index 304162743a5b8..44e7dae73b296 100644
+--- a/tools/memory-model/Documentation/README
++++ b/tools/memory-model/Documentation/README
+@@ -33,7 +33,8 @@ o	You are familiar with Linux-kernel concurrency and the use of
+ 
+ o	You are familiar with Linux-kernel concurrency and the use
+ 	of LKMM, and would like to learn about LKMM's requirements,
+-	rationale, and implementation:	explanation.txt
++	rationale, and implementation:	explanation.txt and
++	herd-representation.txt
+ 
+ o	You are interested in the publications related to LKMM, including
+ 	hardware manuals, academic literature, standards-committee
+@@ -61,6 +62,10 @@ control-dependencies.txt
+ explanation.txt
+ 	Detailed description of the memory model.
+ 
++herd-representation.txt
++	The (abstract) representation of the Linux-kernel concurrency
++	primitives in terms of events.
++
+ litmus-tests.txt
+ 	The format, features, capabilities, and limitations of the litmus
+ 	tests that LKMM can evaluate.
+diff --git a/tools/memory-model/Documentation/herd-representation.txt b/tools/memory-model/Documentation/herd-representation.txt
+new file mode 100644
+index 0000000000000..2fe270e902635
+--- /dev/null
++++ b/tools/memory-model/Documentation/herd-representation.txt
+@@ -0,0 +1,106 @@
++#
++# Legenda:
++#	R,	a Load event
++#	W,	a Store event
++#	F,	a Fence event
++#	LKR,	a Lock-Read event
++#	LKW,	a Lock-Write event
++#	UL,	an Unlock event
++#	LF,	a Lock-Fail event
++#	RL,	a Read-Locked event
++#	RU,	a Read-Unlocked event
++#	R*,	a Load event included in RMW
++#	W*,	a Store event included in RMW
++#	SRCU,	a Sleepable-Read-Copy-Update event
++#
++#	po,	a Program-Order link
++#	rmw,	a Read-Modify-Write link
++#
++# By convention, a blank entry/representation means "same as the preceding entry".
++#
++    ------------------------------------------------------------------------------
++    |                        C macro | Events                                    |
++    ------------------------------------------------------------------------------
++    |                    Non-RMW ops |                                           |
++    ------------------------------------------------------------------------------
++    |                      READ_ONCE | R[once]                                   |
++    |                    atomic_read |                                           |
++    |                     WRITE_ONCE | W[once]                                   |
++    |                     atomic_set |                                           |
++    |               smp_load_acquire | R[acquire]                                |
++    |            atomic_read_acquire |                                           |
++    |              smp_store_release | W[release]                                |
++    |             atomic_set_release |                                           |
++    |                   smp_store_mb | W[once] ->po F[mb]                        |
++    |                         smp_mb | F[mb]                                     |
++    |                        smp_rmb | F[rmb]                                    |
++    |                        smp_wmb | F[wmb]                                    |
++    |          smp_mb__before_atomic | F[before-atomic]                          |
++    |           smp_mb__after_atomic | F[after-atomic]                           |
++    |                    spin_unlock | UL                                        |
++    |                 spin_is_locked | On success: RL                            |
++    |                                | On failure: RU                            |
++    |         smp_mb__after_spinlock | F[after-spinlock]                         |
++    |      smp_mb__after_unlock_lock | F[after-unlock-lock]                      |
++    |                  rcu_read_lock | F[rcu-lock]                               |
++    |                rcu_read_unlock | F[rcu-unlock]                             |
++    |                synchronize_rcu | F[sync-rcu]                               |
++    |                rcu_dereference | R[once]                                   |
++    |             rcu_assign_pointer | W[release]                                |
++    |                 srcu_read_lock | R[srcu-lock]                              |
++    |                 srcu_down_read |                                           |
++    |               srcu_read_unlock | W[srcu-unlock]                            |
++    |                   srcu_up_read |                                           |
++    |               synchronize_srcu | SRCU[sync-srcu]                           |
++    | smp_mb__after_srcu_read_unlock | F[after-srcu-read-unlock]                 |
++    ------------------------------------------------------------------------------
++    |       RMW ops w/o return value |                                           |
++    ------------------------------------------------------------------------------
++    |                     atomic_add | R*[noreturn] ->rmw W*[once]               |
++    |                     atomic_and |                                           |
++    |                      spin_lock | LKR ->po LKW                              |
++    ------------------------------------------------------------------------------
++    |        RMW ops w/ return value |                                           |
++    ------------------------------------------------------------------------------
++    |              atomic_add_return | F[mb] ->po R*[once]                       |
++    |                                |     ->rmw W*[once] ->po F[mb]             |
++    |               atomic_fetch_add |                                           |
++    |               atomic_fetch_and |                                           |
++    |                    atomic_xchg |                                           |
++    |                           xchg |                                           |
++    |            atomic_add_negative |                                           |
++    |      atomic_add_return_relaxed | R*[once] ->rmw W*[once]                   |
++    |       atomic_fetch_add_relaxed |                                           |
++    |       atomic_fetch_and_relaxed |                                           |
++    |            atomic_xchg_relaxed |                                           |
++    |                   xchg_relaxed |                                           |
++    |    atomic_add_negative_relaxed |                                           |
++    |      atomic_add_return_acquire | R*[acquire] ->rmw W*[once]                |
++    |       atomic_fetch_add_acquire |                                           |
++    |       atomic_fetch_and_acquire |                                           |
++    |            atomic_xchg_acquire |                                           |
++    |                   xchg_acquire |                                           |
++    |    atomic_add_negative_acquire |                                           |
++    |      atomic_add_return_release | R*[once] ->rmw W*[release]                |
++    |       atomic_fetch_add_release |                                           |
++    |       atomic_fetch_and_release |                                           |
++    |            atomic_xchg_release |                                           |
++    |                   xchg_release |                                           |
++    |    atomic_add_negative_release |                                           |
++    ------------------------------------------------------------------------------
++    |            Conditional RMW ops |                                           |
++    ------------------------------------------------------------------------------
++    |                 atomic_cmpxchg | On success: F[mb] ->po R*[once]           |
++    |                                |                 ->rmw W*[once] ->po F[mb] |
++    |                                | On failure: R*[once]                      |
++    |                        cmpxchg |                                           |
++    |              atomic_add_unless |                                           |
++    |         atomic_cmpxchg_relaxed | On success: R*[once] ->rmw W*[once]       |
++    |                                | On failure: R*[once]                      |
++    |         atomic_cmpxchg_acquire | On success: R*[acquire] ->rmw W*[once]    |
++    |                                | On failure: R*[once]                      |
++    |         atomic_cmpxchg_release | On success: R*[once] ->rmw W*[release]    |
++    |                                | On failure: R*[once]                      |
++    |                   spin_trylock | On success: LKR ->po LKW                  |
++    |                                | On failure: LF                            |
++    ------------------------------------------------------------------------------
 -- 
 2.34.1
 
