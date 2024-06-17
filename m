@@ -1,127 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7198E18413A;
-	Mon, 17 Jun 2024 06:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBE818413A;
+	Mon, 17 Jun 2024 06:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718604457; cv=none; b=AYCBuUvFDFkeQVkzS22g9Rpi3FbHB0ykkjJNRMoxDySSV5tbhpbwoK0XfSTVQ1gk4NKe1Ag74bsQAtbrV6JG6s7yDlBIKD+/+gKMHHW5Awp8gbpyatInM8Z5FA027EkC691WWOdz846KPd4g5PFSAmGQqDyvhpsaAVgsGcA5tIQ=
+	t=1718604485; cv=none; b=XSvskNo1eUS5gFfvbhpDbxixBgieQKj5EpXNHjk7FQuTgBJHGXULmURknBmR0r3g1v2nA12z/pVFEP3WOOuDm6bZB1f8QTAfOgOt3Cg1uIhm7jAGMPvvjCkEiOJXivQnwukLWEh4MEvZzIBb0OlEruECSw+aShDX66yfjgbDxh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718604457; c=relaxed/simple;
-	bh=QmNts0XwHafR5EXddCWfiOq2RMFaHuzOgju0J5QxFvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GPLz1DfhEB+lF/9NOafw6nIns68GppNxh/w6SlO18f25K+ysKCNA45fBJQJlA4ThkmKoRUgcqKjpVrKDM0KH/QpyN5EGyfSRmPmQM/AxfVDfbqsPfuEu1OAVwetNxpWiLDtIz91/vfygNGJ1ui+ENQd0kX2behuy50/AKQ7E9jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GLBjSFkI; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718604485; c=relaxed/simple;
+	bh=ZA0s0gNeSjzLRVXJMbeLoXx1v3zjcuvzIR4zDKYuTEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r9357S47SZmAK0SHhAFkJ4LAaAlGrKTBmTUdKZ5y+GVTowPbMAQYq3eYA2F9v8yYMCt6j4u7auubdi0lrd61qpXdIHgy8N0ZjmWUrSBODYGBieyk1wbr1qICBvARo965xqupLNbEuI2oY3B4hkCVlVBuQF1y2fX8Zkum6zNC7sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3qHcXXJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GLBjSFkI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718604457; x=1750140457;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QmNts0XwHafR5EXddCWfiOq2RMFaHuzOgju0J5QxFvs=;
-  b=GLBjSFkIXKKDhtn2Pj0NceZqsrXXrS/4Om3XA3Z99QL7CTZCyIP1nceE
-   zyi8cHGVQDSDQL28pQq/QpR5nnWxFR9vQH7p+bQbaKIRcASla9q+TOT9U
-   9x/Kb/gkc281UtM527txkOnqcYqtkazOIWabMTXK15d6IpHXgaYtedtLY
-   SwomFTocydkWy2hQshdOfWEKNQLqmiutmaFTXJPJM3SebXCCV55QhHWPU
-   VBkThZXkAF7I8YtW/v6Y+ZCpVALM8WWpYVVrkFxFmmHnrZarkFo3qsqvE
-   MxYLuCouziP6JEmnJMyLiLuw4THWEUIv77ayMcKXl0GBZ3SAOcVtIE1+g
-   w==;
-X-CSE-ConnectionGUID: c34k0LelT1qNpLXk3GgREQ==
-X-CSE-MsgGUID: pKe9F8YRR/e5eq5Psqkviw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15138488"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="15138488"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 23:07:32 -0700
-X-CSE-ConnectionGUID: 5N9ae2fOS5qnY7CHGPf1iw==
-X-CSE-MsgGUID: VE5KclkzQeSCHXHXuQE7Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="41028228"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.69])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 23:07:30 -0700
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: hdegoede@redhat.com,
-	srinivas.pandruvada@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 7/7] platform/x86/intel-uncore-freq: Use generic helpers for current frequency
-Date: Mon, 17 Jun 2024 09:04:40 +0300
-Message-ID: <20240617060708.892981-8-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617060708.892981-1-tero.kristo@linux.intel.com>
-References: <20240617060708.892981-1-tero.kristo@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3qHcXXJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B41FC4AF1A;
+	Mon, 17 Jun 2024 06:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718604484;
+	bh=ZA0s0gNeSjzLRVXJMbeLoXx1v3zjcuvzIR4zDKYuTEI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H3qHcXXJT4j/y5MP+2KYdNyDzUstdHrl0CpwOGBNPgeOhRJODHdj7yFIuSMhWQBRq
+	 5HyVbiZmY+8x4P0WiN6SgvQyfTsOMH42dPRBkzwRx7qH56AOPfUNZcwmVtoO0uOzAy
+	 ArKiVtARNOUQr5o2jTZ1jkYRUvJYXQ6yUYtRG/sE+yN2+CaNTzALJx+gwmjgpoRj9i
+	 b7AA2wrEY8kJR1mypOfnFSJwGeXpnTvh3jNbuW0V2hGiNRkT/YPubDK61zztTZh84U
+	 r/xYS63ncxroDWyxoZYDce9ZNB8KGRCJ+DtRi7kKAuWCNVBDsF9MFLe/Q3eSqLVGd2
+	 KkArAb8Skh0LQ==
+Message-ID: <5297d20f-1b7b-437e-8d43-57b8d9f15ea2@kernel.org>
+Date: Mon, 17 Jun 2024 08:08:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/2] dt-bindings: memory: fsl: replace maintainer
+To: Shawn Guo <shawnguo2@yeah.net>
+Cc: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+References: <20240604142249.1957762-1-mwalle@kernel.org>
+ <20240604142249.1957762-2-mwalle@kernel.org>
+ <364dc212-71dc-4bc9-b4fa-97ba2f92d679@kernel.org> <Zm+sV8dJ+oCOwatg@dragon>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Zm+sV8dJ+oCOwatg@dragon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use the generic sysfs helpers for reading the current frequency also,
-and remove the custom ones.
+On 17/06/2024 05:24, Shawn Guo wrote:
+> On Tue, Jun 11, 2024 at 10:49:36AM +0200, Krzysztof Kozlowski wrote:
+>> On 04/06/2024 16:22, Michael Walle wrote:
+>>> Li Yang's mail address is bouncing, replace it with Shawn Guo's one.
+>>>
+>>> Signed-off-by: Michael Walle <mwalle@kernel.org>
+>>> ---
+>>> This is marked as an RFC because it is more of a question for Shawn if
+>>> he is willing to take over the maintainership.
+>>> ---
+>>
+>> I suppose this could go via IMX SoC tree, so:
+>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> A second thought on this one.
+> 
+> Hi Krzysztof,
+> 
+> Since you are the maintainer for drivers/memory, would it be more
+> reasonable to put you instead of me in there?
+> 
+> Patch dropped for now.
 
-No functional change intended.
+Sure, I can grab it.
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
- .../uncore-frequency-common.c                 | 25 +------------------
- 1 file changed, 1 insertion(+), 24 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 9356a0f322e6..4e880585cbe4 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -76,20 +76,6 @@ static ssize_t store_attr(struct uncore_data *data, const char *buf, ssize_t cou
- 	return count;
- }
- 
--static ssize_t show_perf_status_freq_khz(struct uncore_data *data, char *buf)
--{
--	unsigned int freq;
--	int ret;
--
--	mutex_lock(&uncore_lock);
--	ret = uncore_read(data, &freq, UNCORE_INDEX_CURRENT_FREQ);
--	mutex_unlock(&uncore_lock);
--	if (ret)
--		return ret;
--
--	return sprintf(buf, "%u\n", freq);
--}
--
- #define store_uncore_attr(name, index)					\
- 	static ssize_t store_##name(struct kobject *kobj,		\
- 				     struct kobj_attribute *attr,	\
-@@ -109,22 +95,13 @@ static ssize_t show_perf_status_freq_khz(struct uncore_data *data, char *buf)
- 		return show_attr(data, buf, index);			\
- 	}
- 
--#define show_uncore_perf_status(name)					\
--	static ssize_t show_##name(struct kobject *kobj,		\
--				   struct kobj_attribute *attr, char *buf)\
--	{                                                               \
--		struct uncore_data *data = container_of(attr, struct uncore_data, name##_kobj_attr);\
--									\
--		return show_perf_status_freq_khz(data, buf); \
--	}
--
- store_uncore_attr(min_freq_khz, UNCORE_INDEX_MIN_FREQ);
- store_uncore_attr(max_freq_khz, UNCORE_INDEX_MAX_FREQ);
- 
- show_uncore_attr(min_freq_khz, UNCORE_INDEX_MIN_FREQ);
- show_uncore_attr(max_freq_khz, UNCORE_INDEX_MAX_FREQ);
- 
--show_uncore_perf_status(current_freq_khz);
-+show_uncore_attr(current_freq_khz, UNCORE_INDEX_CURRENT_FREQ);
- 
- #define show_uncore_data(member_name)					\
- 	static ssize_t show_##member_name(struct kobject *kobj,	\
--- 
-2.43.0
+Best regards,
+Krzysztof
 
