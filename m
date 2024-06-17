@@ -1,97 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D991940B1;
-	Mon, 17 Jun 2024 10:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DC77173C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718620223; cv=none; b=B1RxyuHAdVx3F86Nm/gI+twAp061FPN7m4RsxS6Je/1sQVN7POteLuB8Kb8EnX9Yx7WYHqBv3hXDqs8ggDqu44o6zr8Crz89ca13vn2ysgty1J/iY4QZRcHdLCX9izWnQ5QDVZMhATcV7G0tGep7MdjulOfXnFiJBeB3ts7CmZM=
+	t=1718620453; cv=none; b=hEPP7BA/Ng4GDe08EjbLb/FKn5VcAiKpI/Shj2G82i3qutwLhP6aHjwvlpEmSLrQmN6yhbeGB7ERJyc319ghyH+gAaoOmM4Q9RCWSAemL3TnHIO345dDz4J4eUq+tyDJFQKa3dw0jE9xYjpngruDFtz8WdQn8mXFVLVt9xspl9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718620223; c=relaxed/simple;
-	bh=legsQcTjmGF/ESY3infoB6MxTfUlzmDtnEkbU9JhtHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qkuRPvNDqpadylIQKihIeCHcsR2/aJX3Syljz8MNAifhlOQNPM0+OPjbf43iy6E69KpUGTLZylOwqxq0WGfkTQHj23VG5ynYtCeQUegSgloX75mpLGsjga83BIM5OAuNuOlR5cyq6mYKWcO5oplpVahZW24A7wU7pO5kWcjqBdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1WvYIdz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718620453; c=relaxed/simple;
+	bh=NN/LB0iNyF5p+kAW7Oq5/02O/+o/KCvnyEWLGVqd5qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=amzkmFVRuONzd8NvM1wWRg+oH2ko/7E74uEHhxU9oZwz7YuGF8eK/yrpHHm/eBNdlgLZT7K7j1ic3g3ezVLUuQca/kaS1QliAIfXwY2wir/EjYBRQkgWEBG+nwBjlU9xfxkC+k8PblEodUSkYJrE47WygZsxTk+8psIQsIxGA/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L0zn0Uns; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1WvYIdz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6AFDC2BD10;
-	Mon, 17 Jun 2024 10:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718620222;
-	bh=legsQcTjmGF/ESY3infoB6MxTfUlzmDtnEkbU9JhtHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q1WvYIdzflRbJsCA4eyWA1W0k8ZjQtxt26fBxqoFgqg8+M0NI3d/OytudixcKoBX7
-	 l8zMN2cSJlIGP5Hmspyi/VswwFsMSYrVMTW8bVY9nArK0uVXSe0knEim+WnidIVNfi
-	 gOHAuegd6Fqcl3CiZs5oL6HrsE0HsxrgQ/OC6NnHaiydm7eHuTvHpB2WVSc505FMGr
-	 7WaqHIYhF7sg1Sn8F+SDqZI2dPvhvHwwNfMMG3toJEz0OWvVhfT7q9mCJ2HAGMkVQw
-	 D7Ap7Ifh6sQRpVAlGURNYpPmjuwIMJQC9Q52cOdXp7QpoEW8QcoigqemjsdLoJ44Os
-	 NyJ2xCxlMPH7Q==
-Date: Mon, 17 Jun 2024 11:30:17 +0100
-From: Simon Horman <horms@kernel.org>
-To: =?utf-8?Q?Adri=C3=A1n?= Moreno <amorenoz@redhat.com>
-Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com,
-	i.maximets@ovn.org, dev@openvswitch.org,
-	Yotam Gigi <yotam.gi@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 4/9] net: psample: allow using rate as
- probability
-Message-ID: <20240617103017.GP8447@kernel.org>
-References: <20240603185647.2310748-1-amorenoz@redhat.com>
- <20240603185647.2310748-5-amorenoz@redhat.com>
- <20240614161130.GP8447@kernel.org>
- <CAG=2xmOhMMg8JDVi4x5P5F39yfG2p72kyYxDud0fcjc9VzDeLA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L0zn0Uns"
+X-Envelope-To: lihongfu@kylinos.cn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718620449;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4iGdIENTyDHyME+nFTGWO+3nQ6WZFYygsaPwHXuXkSU=;
+	b=L0zn0UnsHEsGZxAMQaTatGqMp8CyargCRzVqGcZHIFzQHG6PyUgUiZuA3aMZepu1NdKYqR
+	oXLn4BIu2lnZ0ljQdqRJ4imkaN16h3MsIDly6m6xylZDPoPey74BnVA5mHoydNie4zqkmX
+	1T91UaDKhf7Un0TEsHkYnLp3TEi/dTc=
+X-Envelope-To: davem@davemloft.net
+X-Envelope-To: edumazet@google.com
+X-Envelope-To: kuba@kernel.org
+X-Envelope-To: pabeni@redhat.com
+X-Envelope-To: allison.henderson@oracle.com
+X-Envelope-To: netdev@vger.kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+X-Envelope-To: rds-devel@oss.oracle.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+Message-ID: <5a2cbc3e-bb37-4753-9c47-b196399ecf0a@linux.dev>
+Date: Mon, 17 Jun 2024 18:34:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH] rds:Simplify the allocation of slab caches
+To: Hongfu Li <lihongfu@kylinos.cn>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ allison.henderson@oracle.com
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20240617075435.110024-1-lihongfu@kylinos.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20240617075435.110024-1-lihongfu@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG=2xmOhMMg8JDVi4x5P5F39yfG2p72kyYxDud0fcjc9VzDeLA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 17, 2024 at 06:32:14AM +0000, Adrián Moreno wrote:
-> On Fri, Jun 14, 2024 at 05:11:30PM GMT, Simon Horman wrote:
-> > On Mon, Jun 03, 2024 at 08:56:38PM +0200, Adrian Moreno wrote:
-> > > Although not explicitly documented in the psample module itself, the
-> > > definition of PSAMPLE_ATTR_SAMPLE_RATE seems inherited from act_sample.
-> > >
-> > > Quoting tc-sample(8):
-> > > "RATE of 100 will lead to an average of one sampled packet out of every
-> > > 100 observed."
-> > >
-> > > With this semantics, the rates that we can express with an unsigned
-> > > 32-bits number are very unevenly distributed and concentrated towards
-> > > "sampling few packets".
-> > > For example, we can express a probability of 2.32E-8% but we
-> > > cannot express anything between 100% and 50%.
-> > >
-> > > For sampling applications that are capable of sampling a decent
-> > > amount of packets, this sampling rate semantics is not very useful.
-> > >
-> > > Add a new flag to the uAPI that indicates that the sampling rate is
-> > > expressed in scaled probability, this is:
-> > > - 0 is 0% probability, no packets get sampled.
-> > > - U32_MAX is 100% probability, all packets get sampled.
-> > >
-> > > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> >
-> > Hi Adrian,
-> >
-> > Would it be possible to add appropriate documentation for
-> > rate - both the original ratio variant, and the new probability
-> > variant - somewhere?
-> >
+在 2024/6/17 15:54, Hongfu Li 写道:
+> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+> to simplify the creation of SLAB caches.
 > 
-> Hi Simon, thanks for the suggestion. Would the uapi header be a good
-> place for such documentation?
+> Signed-off-by: Hongfu Li <lihongfu@kylinos.cn>
+> ---
+>   net/rds/tcp.c      | 4 +---
+>   net/rds/tcp_recv.c | 4 +---
+>   2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+> index d8111ac83bb6..3dc6956f66f8 100644
+> --- a/net/rds/tcp.c
+> +++ b/net/rds/tcp.c
+> @@ -719,9 +719,7 @@ static int __init rds_tcp_init(void)
+>   {
+>   	int ret;
+>   
+> -	rds_tcp_conn_slab = kmem_cache_create("rds_tcp_connection",
+> -					      sizeof(struct rds_tcp_connection),
+> -					      0, 0, NULL);
+> +	rds_tcp_conn_slab = KMEM_CACHE(rds_tcp_connection, 0);
 
-Hi Adrian,
+KMEM_CACHE is declared as below:
 
-I didn't look closely, but that does sound like a good place to me.
+/*
+  * Please use this macro to create slab caches. Simply specify the
+  * name of the structure and maybe some flags that are listed above.
+  *
+  * The alignment of the struct determines object alignment. If you
+  * f.e. add ____cacheline_aligned_in_smp to the struct declaration
+  * then the objects will be properly aligned in SMP configurations.
+  */
+#define KMEM_CACHE(__struct, __flags)                                   \
+                 kmem_cache_create(#__struct, sizeof(struct __struct),   \
+                         __alignof__(struct __struct), (__flags), NULL)
+
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+Thanks a lot.
+
+Zhu Yanjun
+
+>   	if (!rds_tcp_conn_slab) {
+>   		ret = -ENOMEM;
+>   		goto out;
+> diff --git a/net/rds/tcp_recv.c b/net/rds/tcp_recv.c
+> index c00f04a1a534..7997a19d1da3 100644
+> --- a/net/rds/tcp_recv.c
+> +++ b/net/rds/tcp_recv.c
+> @@ -337,9 +337,7 @@ void rds_tcp_data_ready(struct sock *sk)
+>   
+>   int rds_tcp_recv_init(void)
+>   {
+> -	rds_tcp_incoming_slab = kmem_cache_create("rds_tcp_incoming",
+> -					sizeof(struct rds_tcp_incoming),
+> -					0, 0, NULL);
+> +	rds_tcp_incoming_slab = KMEM_CACHE(rds_tcp_incoming, 0);
+>   	if (!rds_tcp_incoming_slab)
+>   		return -ENOMEM;
+>   	return 0;
+
