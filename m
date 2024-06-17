@@ -1,137 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4CA17FAA4;
-	Mon, 17 Jun 2024 13:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAA8194A61
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718629391; cv=none; b=WC7QGRuJgRdLMYfxdqyhn2XqbOzsG0MCyAwTH85g2mFRMHeqGh2ioN0qBarjvjms41JbMhPuUqCEgghLknyHSj9r2XKtwO53telgTuzArfe4qbW/lth0rGhVXwoW2fiUrVZKQ8TDkJtnnJDXE9EqArRkhKACCojPT5iHnZSK60Q=
+	t=1718629417; cv=none; b=YI0Sl9ZY5qIQOmM48nOzi59jJp7fQc3Er3iirdT6ROKDiu0KtQwhUBnPNMixzyRFvVbU7iXBzM33eDMIMeGP8X5ZCYJ2lUDor/O6Wj5TkqLEa7t9eDp9KrzGSEmusLJJj90JyRlfrRQF5zioyfxA6MqNxZxcfM15Qu4HjtDWubw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718629391; c=relaxed/simple;
-	bh=M7VLjVNrIB50tU6t1nZPg0R5+ccYl0nZK24JAKpUyGA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=agO92kYsVImS09udgJGdWeit8onnv4lRTz6G6oAIbKfBZah3/I3kzvsHApyDZfERRgI+RFr7hCzubJeoR7FuafzaauGPirKUDQrK25guz6WD2QiTiDfWjJXoOw616BW4TYH3J8Z9yguPwb/eMLTeF7NjNmNTiZVLym2VACQcSCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gsElOoC5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718629417; c=relaxed/simple;
+	bh=YWvpQ0ab4Dp6gKq8jwDSX4NydsgeD85hsgBWMfw0Wak=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fFU0h6LPvzYePQYicnJsPgdRvhyLc4/gV/d943vdQWaLaUtPzdaFnSsZwXaG5fFRutYpzR8gJs6IuD1cbPRfS0ECX46xtmyNywEEE/kJ7vNFBx3WQh3p038jQCPNS9UOBX52ejjjHljQOkvgwGtbJsuNBZ7BP537WJm+b3NdsC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AzE+SCyt; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsElOoC5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2AA1C2BD10;
-	Mon, 17 Jun 2024 13:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718629390;
-	bh=M7VLjVNrIB50tU6t1nZPg0R5+ccYl0nZK24JAKpUyGA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gsElOoC5Re9d+pr1YwYIbWAqs0jcEb8b9D3zbWSWoKQmulj0zAzNwtAXGk6qcZMXW
-	 LxUnKTFOvwT/jytTzKiu32J3hw5JzND/mubc1g98vHM0xh3ZtmWWD7x3QouH+KaO20
-	 GA0a6UGFP6mISSKKHn3yttKaKylK2r6GzUFI3uXUomBk3TpOsk1t43pOmtFcjGWmn9
-	 /ufVatJxmgzlU5/RcUjQQzuiVLkzmdyq98N3pp8goVtzEd31A+6nSIsjjHWuGuWCdj
-	 jlAkof1uOnGtfGxWUo3K4/trtjhcS2rZ85cIl/SqoXpDhV3rrvc1vnMUs9ftKnenHy
-	 eC19HNvl9PJCQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sJC0p-004b1B-Ra;
-	Mon, 17 Jun 2024 14:03:07 +0100
-Date: Mon, 17 Jun 2024 14:03:06 +0100
-Message-ID: <86h6drk9h1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shivamurthy Shastri
- <shivamurthy.shastri@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	anna-maria@linutronix.de,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com,
-	bhelgaas@google.com,
-	rdunlap@infradead.org,
-	vidyas@nvidia.com,
-	ilpo.jarvinen@linux.intel.com,
-	apatel@ventanamicro.com,
-	kevin.tian@intel.com,
-	nipun.gupta@amd.com,
-	den@valinux.co.jp,
-	andrew@lunn.ch,
-	gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	alex.williamson@redhat.com,
-	will@kernel.org,
-	lorenzo.pieralisi@arm.com,
-	jgg@mellanox.com,
-	ammarfaizi2@gnuweeb.org,
-	robin.murphy@arm.com,
-	lpieralisi@kernel.org,
-	nm@ti.com,
-	kristo@kernel.org,
-	vkoul@kernel.org,
-	okaya@kernel.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	mark.rutland@arm.com,
-	shameerali.kolothum.thodi@huawei.com,
-	yuzenghui@huawei.com
-Subject: Re: [PATCH v3 14/24] genirq/gic-v3-mbi: Remove unused wired MSI mechanics
-In-Reply-To: <87plsfu3sz.ffs@tglx>
-References: <20240614102403.13610-1-shivamurthy.shastri@linutronix.de>
-	<20240614102403.13610-15-shivamurthy.shastri@linutronix.de>
-	<86le36jf0q.wl-maz@kernel.org>
-	<87plsfu3sz.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AzE+SCyt"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57c6994e2f1so2410492a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718629414; x=1719234214; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0h98bfk6InRRrhm6wwIHnjZdloO4BC8T6hc9Gmbf7c=;
+        b=AzE+SCytGUOjt/YFp8MrG2VCasMypd9BFoZYkOCW/Ql95Z5emayfBWmx5nwZUxc13L
+         9Hw3I9YLfC1PaVVkhm9uH0dblqzlW9OpJaHQAb1H69nk5ka7eWmJVr3wIohHXh/7aWz5
+         ItkY0ljkngwrWhdQeeWdypO9icEavIKAh4jjIifvO3NAwAJDyr/wkM+axEQeEwXuhaWn
+         55ebNukKSzFTMAKM8iu8cj9CYt5JdxOrQlWkqoPLWQCPU6b9Xe43k00Vw+hvEBFX1Nxs
+         /PaD8E09M6jAHgFSHbf7VVyOEOsB1KdO2r8NOTsLvcEDKREnL68ArAZ6zexXX9OehnFk
+         WxZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718629414; x=1719234214;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0h98bfk6InRRrhm6wwIHnjZdloO4BC8T6hc9Gmbf7c=;
+        b=fPH7ua2+9V1A9L1X3Uy2v5mMASWLFd0aqD5sDVYjDwa1lXcq66DDoSHwVqU9YVQQmN
+         zg3womE4eo2B6od2QOqRu5PdYiQVkK9rYPF8KCPPozH1wxg/Vxg4l8Y4nNTLmnsF93KZ
+         mGdnFJWVTSJ3x5eySmMyibWMUyJXpU1aYjIUy7j+f9ECmT4sfT60yU4pLxz10mbm1jgt
+         amO8jXDu+YrYWh7QhnguuWrqyAYzeUb+8Nz4eT4hhfAyzeyq3BdrLJ85y7aCJaBD2XCt
+         EzuDgUCX1p+xW8VrIo3/4p9FH/V9scVbn2N+y6W4DoMHwc2sG3CCqkHNr37F6nYdVR39
+         t3JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgTF51N22iSr9qK55UJ4sc78bUJzqCW4xiaU2nfjkxE4xd1Kma47fO2U8GjmChrY1vfDarEHR/Svyb/mo1w5qlKefCbcyeUzpQ7jbP
+X-Gm-Message-State: AOJu0Yxz81OuKf+kuISY9f+/RozncHAnYpcqmZhj+6taitBtQDcjdvIi
+	RXdZ7skf1jfTDnEjkayYYK7NPXaklyWzOXMafoNwHH4XOUtcOHkecEPnqLtqCoI=
+X-Google-Smtp-Source: AGHT+IExtTHGNouiNFqgjEiT+LPP433XAeDYx1y6ZS3ofgzCUaUo3A3zQURDTqIS8cL0nLldaqPNSQ==
+X-Received: by 2002:a50:c056:0:b0:57c:6338:328a with SMTP id 4fb4d7f45d1cf-57cbd6c7589mr9110762a12.30.1718629413597;
+        Mon, 17 Jun 2024 06:03:33 -0700 (PDT)
+Received: from [127.0.1.1] ([78.10.207.147])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72daa67sm6404349a12.38.2024.06.17.06.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 06:03:33 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/6] ASoC: Few constifications (mostly arguments)
+Date: Mon, 17 Jun 2024 15:03:18 +0200
+Message-Id: <20240617-n-asoc-const-auto-selectable-formats-v1-0-8004f346ee38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, shivamurthy.shastri@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABc0cGYC/x2N0QrCMAwAf2Xk2UA7q4K/Ij7EmGpgNtJ0Qxj7d
+ 8vu7V7uVnCpKg7XYYUqi7pa6RIPA/CbyktQn91hDGMK53jBguTGyFa8Ic3N0GUSbvSYBLPVDzX
+ HeMzMp9BJCXrqWyXrb9/c7tv2BxQCUup2AAAA
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, 
+ Cezary Rojewski <cezary.rojewski@intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2065;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=YWvpQ0ab4Dp6gKq8jwDSX4NydsgeD85hsgBWMfw0Wak=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmcDQZw8CQ6TtEuwrDOfeyUso35j7jNCqTLG3G5
+ N7+xDUTMyiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZnA0GQAKCRDBN2bmhouD
+ 1zYrD/wM2IO5gZH/cQKpnk2qBqusJLmMij0sMKKL+5bcwpi23FojEa+GuWh2EMwPnjTj4utyPdh
+ 7JyboAxvTe3MZGlgXPUZr//nic+0BYW3WSW2dSWyS3VNGxTMjA8C3VMl7miscFV5+tjWrIKG/a+
+ NDQzoAU9ilfXFt3ZWvOxUetiq5VTtYUFRMhLtYdOUzI2HyVSTAMvOAOzplMXLw0Kn1NM4zjOyY8
+ 33Tr3e8c11tHUS8Awv97pIb8lfTuQTgT8C9oR4zvRRQUXvP34ADYrAbV7Ydf8+J5nebLRFoJD43
+ SNXtRXhICMRfQTXFZPoKoVE0tGA+8uNNhGVmwL9cfpMI4MIo6lE1MS5Q7v+33zdAdEo8jzCfRD9
+ mpcj8evTj7sZkVbmZ6HMHj7wZgwAdto+7I9K4W5Be0yisk2WSDiUrpo88c/gEEqNr+zJ7WgRakk
+ zfD7QmCqNEGROVVso0LlINeb+qEiIWUAKol8e0JDrt75EycYs59LTFfFmdI4Ax2s1zl4m1yx/8m
+ Cfk2cLZ+24AvyedFrIbf6y+NFPbCXrV14Pjc044trBQlKBO64vdetO0eFcHTD7sTiDFgjHlRqvv
+ 9XzFHZRmmhR/46sCgsTx9t0k7DsM7QpepXg1Y/w/+eQELXsW6XWyG3D386IXRB5d5ber3QVrd9C
+ NNtbwNuw38cNWKQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Mon, 17 Jun 2024 13:55:24 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> On Sat, Jun 15 2024 at 18:24, Marc Zyngier wrote:
-> > On Fri, 14 Jun 2024 11:23:53 +0100,
-> > Shivamurthy Shastri <shivamurthy.shastri@linutronix.de> wrote:
-> >>  static struct msi_domain_info mbi_pmsi_domain_info = {
-> >> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> >> -		   MSI_FLAG_LEVEL_CAPABLE),
-> >> +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
-> >>  	.ops	= &mbi_pmsi_ops,
-> >>  	.chip	= &mbi_pmsi_irq_chip,
-> >>  };
-> >
-> > This patch doesn't do what it says. It simply kills any form of level
-> > MSI support for *endpoints*, and has nothing to do with any sort of
-> > "wire to MSI".
-> >
-> > What replaces it?
-> 
-> Patch 9/24 switches the wire to MSI with level support over. This just
-> removes the leftovers.
+Make few pointers in ASoC functions as pointers to const, so the code is
+clearer to read, a bit safer and allows further constifications (e.g.
+placing some data as rodata).
 
-That's not what I read.
+Best regards,
+Krzysztof
 
-Patch 9/24 rewrites the mbigen driver. Which has nothing to do with
-what the gic-v3-mbi code does. They are different blocks, and the sole
-machine that has the mbigen IP doesn't have any gic-v3-mbi support.
-All they have in common are 3 random letters.
+---
+Krzysztof Kozlowski (6):
+      ASoC: Constify of_phandle_args in snd_soc_dai_driver
+      ASoC: Constify of_phandle_args in snd_soc_dai_link_component
+      ASoC: Constify passed data to core function
+      ASoC: Constify DAI passed to get_channel_map
+      ASoC: Constify return of snd_soc_dai_get_pcm_stream()
+      ALSA: Cleanup trailing white-spaces
 
-What you are doing here is to kill any support for *devices* that need
-to signal level-triggered MSIs in that driver, and nothing to do with
-wire-MSI translation.
+ include/sound/soc-dai.h            | 26 +++++++------
+ include/sound/soc.h                | 19 +++++-----
+ sound/core/control_compat.c        |  2 +-
+ sound/core/device.c                |  4 +-
+ sound/core/hwdep.c                 | 10 ++---
+ sound/core/init.c                  |  3 +-
+ sound/core/memalloc.c              |  2 +-
+ sound/core/memory.c                |  2 +-
+ sound/core/pcm.c                   | 22 +++++------
+ sound/core/pcm_compat.c            |  2 +-
+ sound/core/pcm_lib.c               | 41 ++++++++++----------
+ sound/core/pcm_misc.c              |  2 +-
+ sound/core/pcm_native.c            | 76 +++++++++++++++++++-------------------
+ sound/core/seq_device.c            |  2 +-
+ sound/soc/codecs/lpass-rx-macro.c  |  2 +-
+ sound/soc/codecs/lpass-tx-macro.c  |  2 +-
+ sound/soc/codecs/lpass-va-macro.c  |  2 +-
+ sound/soc/codecs/lpass-wsa-macro.c |  2 +-
+ sound/soc/codecs/wcd9335.c         |  2 +-
+ sound/soc/codecs/wcd934x.c         |  2 +-
+ sound/soc/intel/avs/pcm.c          |  4 +-
+ sound/soc/soc-core.c               |  4 +-
+ sound/soc/soc-dai.c                | 14 +++----
+ sound/soc/soc-pcm.c                | 26 ++++++-------
+ sound/soc/soc-utils.c              |  8 ++--
+ 25 files changed, 141 insertions(+), 140 deletions(-)
+---
+base-commit: cf32e2eb8404572eaacd219dde4e703fad349299
+change-id: 20240617-n-asoc-const-auto-selectable-formats-13fcc5000044
 
-So what replaces it?
-
-	M.
-
+Best regards,
 -- 
-Without deviation from the norm, progress is not possible.
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
