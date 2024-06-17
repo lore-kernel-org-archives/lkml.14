@@ -1,67 +1,67 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5AA188CD0
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7525D19047F
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718618246; cv=none; b=D0S1D7vyZx5VFWXAGR9C7/q5RxCXb+ky1KaTfzgGUasuwn3sq/BVmDKAcuAruO+oA9W08i3Lj6JaMGyqDlsz6V5gv+3ZQIq4gbVrot7Okdc+6EENuVv6V+Bthk+zOm0B6zf8SOk0n446DALm1PLVNkkTudeg6ugFWClq+3lIsf8=
+	t=1718618275; cv=none; b=EBheMShacVN3w++aNBZQ5WqRDmL9lupIxpwwYDpiM2023r5+sSecmSRbB53dI2kcXW5LLZPEoNniOMwELg2jVf/iGxQZc1QVAZ9DqRac2VbU2/kVwCFyWyrOULzeusXvzarQUr3GQtYdjgtSwrGk82E7vNfYRqahWppJRhf/OUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718618246; c=relaxed/simple;
-	bh=NaMgEtEXjnyBoZGtC0yFboDbzlMwOw8XnvW1azukAsU=;
+	s=arc-20240116; t=1718618275; c=relaxed/simple;
+	bh=PrV4VEI30qeYGma2/K3q4eVmI6pg3wGw1kNQ5ChwWJ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyZTVMIVChfLQDE2IO2oi+uRkbu0146iQre56BsV718pwCQ3JI2Lm1seQEibnHIIv8kMQxA4wdCKyB0HIjXgW1KPO1s1E6m0z5PbdHzVW4ccxjUYEmF02B2XIzp/JqjygJD0V63GCdSec0BVanh/NHAYIaZsA0GeuSuBsnODg30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x0Zwaq66; arc=none smtp.client-ip=209.85.167.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=COclTI0WxK+U+K6MPaZcHmF6pjbS2zOGQrGj7rFNeY6l30kryx3Ylkj0vRHfw8dwTDKfvrVBY/DO8mCs3bcs85T5UjvMmjAuExxH1+CWIF5EYq9u8gaoMl0h5YZP/YGn6oXj3ptlHoY8AMbqCgpQsWPhKAx8XDusRIJUAaXcKxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DpvvFJYc; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x0Zwaq66"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c819f6146so5764588e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:57:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DpvvFJYc"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ec2f4966a2so5894611fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718618243; x=1719223043; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718618271; x=1719223071; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GAu3yut6C33w0f3QgUUkKHsVifCYw6coodnkymy99jw=;
-        b=x0Zwaq66Nto5FusLFCPMi7VnGybz9WPc5uoJ0MWlsSLiXXpUGdfBbsJgmqo7VHd3dt
-         LOxYnhACnSs3iTcAZfTJ40Tmd2WyOWHZyqGkbRBAkZBHAiuo33sC1UdHSkkj01i+18d7
-         s1CWU/gf+A/q3Vsp4L1IBz5QpgqSr3q3cvT82owmBvTMmchMln3AYCpFirWB0e8J7psy
-         8OUkF1ZAOQ9FmyzsY0hR/EHEdpLQ0Fm/W/zs/2yo85DQgLyM22g2PhNq9STMuoopihIv
-         bf4KeIzKWZye05pQ475EarLUlgukCromltRenbri+RlFLonOkhJNPytdMzKBRFgsFhYk
-         hNdQ==
+        bh=gpoL09JxB35FJ5ImuHuqaZBN/f8BI3/8KeXWtW7kk7I=;
+        b=DpvvFJYc6JeFd5K9e8HseeHLJOTSxJ9FWRpSIb9iRH6QcP/9zfIr4vdxDc7c2WubO9
+         /0RK4N75s8DuKbSKxbNbqXJELE5S5WRpQAWRADvco6ajdCqhERCE986OBeMsUX7BOb0K
+         fOGWD0TMFIKm/2ZMBrCyNIRIFq4IY7lBULoPtUbTNF+N9Pc0evd1v09uJIW3K7S7wWIx
+         q3VISWXRnuTTMqdaUimZ8x+vnl+56vHj3Ukk9n8gsy7ghrpzODp0CKnpIz1TTLYaSrYN
+         8+IEujH2NOh+Zuh0tF55sL04fLm04R+B+slOEOi8SLWBcaDd3eEKZiUeoJo674Z1nYUO
+         9Mkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718618243; x=1719223043;
+        d=1e100.net; s=20230601; t=1718618271; x=1719223071;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GAu3yut6C33w0f3QgUUkKHsVifCYw6coodnkymy99jw=;
-        b=c4K898t+ZOBRfT55AfCh2Qf2fC+ElDOAXOhFK2lDhhdSrxpSuF7i4f4TyGzuVo45XS
-         MhCOjuQQY+gcjfabk3qAA2eqQ6qvDet+XLZ882VtqykF3dOeOCr/jgvooMjHzC5yEgnu
-         rSzZAQpt1TWyILGtatXnFDjQtuHZgT5e/YW68ZcnyrC6GGCT+8Ioxyxz5kNqRE3HEqa+
-         JnFRjpei+iWe+NT/N2w2Sj16jLRmlWomvJrzOjUDTX24ceLG4NDRWSeNIBKrnUkFXSNa
-         rKU69YSKMqWVIrTDT65QJJ75EWPvNUah83+5K56AfWuGHGXHIHRHrwGBB0p52Lk1hBI8
-         BpqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWM7rL61UJY97cMeil6v0hHVJ1NjoKKHYphENqYyJq+V8v29XUIgcHHFvQ+dEmgS6291FKWGG9y9A4jYiAY/UIfJC8t/1b1Esuzr0Nh
-X-Gm-Message-State: AOJu0Ywils+IqlsqZL0ff7AMtEWAhsxPQ1SjFQhC57F+bjp71bRi9kBv
-	fo2DFLsssfViu+aDy/XJjTO8DdtZjiAcJ2CiN9/u9VYxSxLUEk83cfwh2YnLRtg=
-X-Google-Smtp-Source: AGHT+IGd0lubX4e/KngoOZFs4XUo7XaV0srvqIlzUax7XiFNyo+YBY3jricMn+yHE/eYu10R++2NAQ==
-X-Received: by 2002:a05:6512:2350:b0:52c:a1ad:18bd with SMTP id 2adb3069b0e04-52ca6e54ceamr8567114e87.6.1718618241899;
-        Mon, 17 Jun 2024 02:57:21 -0700 (PDT)
+        bh=gpoL09JxB35FJ5ImuHuqaZBN/f8BI3/8KeXWtW7kk7I=;
+        b=bEj4vY9yhZwXknzqexNSnn8VgzoIAxYuDYaddV2HAwsUuBr+WEdCOVzZRayK81aDyt
+         mXbUXyeukUTrw/I5eo3hOgXS76Hjoc+sS0EyNzbTzy2gBfrxzDv7VROlTlc4XEnBqSo1
+         ZUb1UmxSIcTGyIbw8Ty3KkPx0S9AkQWdpRvqM2uz480/D+hKSOHymJ1BCVx+puz0Jge1
+         9heXmt1B0cn3nTnYB2IrJ2zmHfWhWmiTvzCq6onI4kqUIdFXtnfdRHG5sgXf7ZVCJIGg
+         aUwZ4V6T6sS8cBkJQk3KhxiCNXwiklNQV/grKQhDUXuIIVzB/5BvWT2znst2TP1SnYsA
+         Ocqg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7ea+sKvjE8t8lwcecFb/9tE8O7JMCrH9yFn76ic6lCqtIyiRCFoxlvTm4YL24OA7ITMOzOyeXVERjBjor/b8t0Cd+wAdDNaebTz7R
+X-Gm-Message-State: AOJu0YzLG2fZzsvpjAU5H8Z0tvdv0tb1Cq0espvql1oFfxSPsz1PlKxI
+	H9N+AmGaWR/rVS+T3taxCXM3HSCExbIiE4dilD+658hOxXjsl1XGah5Qd5DJZXE=
+X-Google-Smtp-Source: AGHT+IHzleOF863+St6gLFWi26LpebCOh4j1P2exxdVoLWaAvyxh87B5slPANvXBUl2QDK0yoYiihw==
+X-Received: by 2002:a2e:7a0d:0:b0:2ec:2c65:2dfa with SMTP id 38308e7fff4ca-2ec2c652f76mr22644241fa.6.1718618271445;
+        Mon, 17 Jun 2024 02:57:51 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2887effsm1197140e87.257.2024.06.17.02.57.21
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c78400sm13171961fa.84.2024.06.17.02.57.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 02:57:21 -0700 (PDT)
-Date: Mon, 17 Jun 2024 12:57:19 +0300
+        Mon, 17 Jun 2024 02:57:51 -0700 (PDT)
+Date: Mon, 17 Jun 2024 12:57:49 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Jean Delvare <jdelvare@suse.de>
 Cc: dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RESEND] drm/display: Drop obsolete dependency on
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RESEND] drm/logicvc: Drop obsolete dependency on
  COMPILE_TEST
-Message-ID: <xd2yybtxvzte7gwqwg2vudzvhoekqao2dle6zsuduzjzi3rsay@xhahwof2prph>
-References: <20240617103018.515f0bf1@endymion.delvare>
+Message-ID: <uegtnit6luloxwqbfbwirnt4wytgwfjg5nn52uen6fkhemqukk@4b26w7agpbqu>
+References: <20240617103336.7fddb08d@endymion.delvare>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,22 +70,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240617103018.515f0bf1@endymion.delvare>
+In-Reply-To: <20240617103336.7fddb08d@endymion.delvare>
 
-On Mon, Jun 17, 2024 at 10:30:30AM GMT, Jean Delvare wrote:
+On Mon, Jun 17, 2024 at 10:33:36AM GMT, Jean Delvare wrote:
 > Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), it
 > is possible to test-build any driver which depends on OF on any
 > architecture by explicitly selecting OF. Therefore depending on
 > COMPILE_TEST as an alternative is no longer needed.
-
-The goal of this clause is to allow build-testing the driver with OF
-being disabled (meaning that some of OF functions are stubbed and some
-might disappear). I don't see how user-selectable OF provides the same
-result.
-
 > 
 > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > Cc: David Airlie <airlied@gmail.com>
 > Cc: Daniel Vetter <daniel@ffwll.ch>
 > ---
@@ -93,23 +87,26 @@ result.
 > 
 > This is one of the only 3 remaining occurrences of this deprecated
 > construct.
+
+The same comment as the one for your drm/display patch.
+
 > 
 > Who can pick this patch and get it upstream?
 > 
->  drivers/gpu/drm/display/Kconfig |    2 +-
+>  drivers/gpu/drm/logicvc/Kconfig |    2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> --- linux-6.6.orig/drivers/gpu/drm/display/Kconfig
-> +++ linux-6.6/drivers/gpu/drm/display/Kconfig
-> @@ -3,7 +3,7 @@
->  config DRM_DP_AUX_BUS
->  	tristate
+> --- linux-6.6.orig/drivers/gpu/drm/logicvc/Kconfig
+> +++ linux-6.6/drivers/gpu/drm/logicvc/Kconfig
+> @@ -1,7 +1,7 @@
+>  config DRM_LOGICVC
+>  	tristate "LogiCVC DRM"
 >  	depends on DRM
 > -	depends on OF || COMPILE_TEST
 > +	depends on OF
->  
->  config DRM_DISPLAY_HELPER
->  	tristate
+>  	select DRM_KMS_HELPER
+>  	select DRM_KMS_DMA_HELPER
+>  	select DRM_GEM_DMA_HELPER
 > 
 > 
 > -- 
