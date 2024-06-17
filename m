@@ -1,92 +1,121 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6604D7492;
-	Mon, 17 Jun 2024 08:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFE919005C;
+	Mon, 17 Jun 2024 08:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718612663; cv=none; b=O2broj1+/QA9FaY7fPP8GCnATQfGixx9/Cfbnknd6LXDqIWoXL/CVym69V//5Qyoes3RlO7DuyXhMoAp3m/m/u03XV1J1GXe7bbm2owDf8XNZfNOvEwZy6Mga+bJ5XNAFdMCj1gsgUK8UA2rsNpx74lYl+Jve17MSiS0uD07P2M=
+	t=1718612726; cv=none; b=nbw/Bc9+i3uNTG6D+I6xPsYiaDI5i4AJkmcbNUgihi+73/KmKQMsUB0Ygk7ZwfV/GsLoMGcIo3rQISJrvrIqwd4RQqtd3/gmBeNOmgCncNoKpUhcwzslwpxAs5a8zvQjVrvkqXPflyU9FIKBDR4XVZH5+W39BJqgKy3RiL02JVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718612663; c=relaxed/simple;
-	bh=4PMSWQqpgy9KLTBdJ1z7dLEh7Y62+2GJ2xCLSoh/wE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gTC03h1hnW9OlBZNUD4F9A1HDxI4Hsf+y1afbrCysIDbLESYShAkfEO+1Sc4ctlcThPquh6QFkYYlr0eHeBLOgQ8LYKfhDkohsFT3bnXDP8KcWxz2BZyqTuqZqZRLgIhIphxY6bVxDM7FnpuPLP6e3XGyAmunI73j/t8MMmm0uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PhN4LAsy; arc=none smtp.client-ip=209.85.161.52
+	s=arc-20240116; t=1718612726; c=relaxed/simple;
+	bh=q+ykIq3JrthTza0nnbx3+H/W4+2t2m1QN/3JLPVTJbo=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=i8DSaTJnhwMwuG772U5P5/lMiGzPWafRCPVYs7xwwmZvl2mGVHVuBX5MuXzeB64dyOoT23XRTbcUPv/eq5pAtFHZuTx/tMFYH9+pcczV4rNp0ecWQGkjVtJP3AgzC4gGR1DJVevkR8KRcOQ2RSpkDzygsR5d8j24m4SUsNqA8tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1mUa3Yl; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhN4LAsy"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b96a78639aso1622411eaf.1;
-        Mon, 17 Jun 2024 01:24:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1mUa3Yl"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-36084187525so1817646f8f.3;
+        Mon, 17 Jun 2024 01:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718612661; x=1719217461; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HdCcwPlP04M3/JAPMUtzS+6dDB80C3B57mZ9YxWUl4=;
-        b=PhN4LAsysQRcL6wvq7W32/wCk4K+KdPg9e0nObFG8uu5to4e7QA30/qL3OhjqXMVHR
-         +GX5Qo164NCiYPVqbKQV/m2oOY6kyoWtIGiNGL7H3OBilwln7nCVogUDbkD6QMPtUxML
-         dTcRiFMWYnhd1IlgFIHvvDDfoCTwOca0HhseGS3TU2+XRuC3IyIIGqr6Xljd+QL4MSey
-         pcNJoZ/Sub5pk5Hn7rUAjLvrxlMXlrTXsO/GDcuBqyoXw1G7oBP689Gcnw77RzkzSTt7
-         SBUGPpL7MiqEKAiktDaXEFhpW8BaGQOnA3x/2KbNjMnGlfpYRUi+5lksxDmji9/QoF1Q
-         Te9g==
+        d=gmail.com; s=20230601; t=1718612723; x=1719217523; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wTj9FCeMEMsqbwW0LLZPKSs2YM2K1G3AwyQg5n+snzc=;
+        b=L1mUa3YlbrtEUqDHoebMP37EEHgWDKpMJuBvdpy7fzqEP2yZct+j3E54d4lksnCKRl
+         ylKdxeGuPxD+cm8lwhEJdSWRcwDlHjeK5d3i1i/W7cdN3EsPeki0atf7Dl2d5ceT4cKI
+         f95JPRNk1sI4NKPya+GYPytjyD5QxUG+KOifAL+ZQq2pQvgw9p2MA0jSnUFZoiZDgd/v
+         qRQP/khM0HLfkKgc0lEMQxhI1SC0qsECMPJVVQbIZnzgi5DOxxaEstr8S7Oeyz7ILshT
+         uiqvJaiSmJtm+oWrXBj+tuit9s+eH6rxk+n8oooxU0Qj+Kmf+suoiJzsJTgZcivFbsLj
+         /tCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718612661; x=1719217461;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9HdCcwPlP04M3/JAPMUtzS+6dDB80C3B57mZ9YxWUl4=;
-        b=K1xmpYPyu6SP1KO5DWV49ehzLJqn3/MKyILzOPhdRtsBcCLH6EyMVVEqo1bepc96G7
-         1OJeuXlqMEQCmJzn5kPy7rBYIn/n3wOLWKqgmXQ6yjM1QqF9eBWxQPq2ThCL5Y9s5pvH
-         +AStxLSSE4Oz00ExQGRX5rk2ZIblCvD/ye5IvDmCEK6nhLGvJBizmNeH21PgdxguRajn
-         j6gXxVY3p501CzbfhRrBJP0By691ZuA67/d5KBHZFNX+/xXJzY2oWNUaEsFQTjhwpHjN
-         wiXkoYpORj37CpbFYoi+q+Lu5LC1TUv4PhS4+PsqklFtczdRJTrPIPFXrkrDDq8Z64xO
-         x7qg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3q79ULvZdK0fjQng7qBVf4NqUMRZFT3rf0sHzGvBxiYLLuRa//J/RuJj8dxdLWzR+MqRH8JcOa+zaryX1LdfjKxNlfTdSZaN0eYbVnYiS6Ad7YStYGKC1HK9vhv56K5e+j25FBo7KyjYOBFrEG0Mk61PqyHrKZ1AMhUBUZCreuGLaxsiCBzXtuw==
-X-Gm-Message-State: AOJu0YykWm7489kBlxIac4jRXnRIL222Bl00Azk8YY52j6yEz5SJxso4
-	ZFfiuMZeC703xRHpZwjvB10Mdn6LS0AFJBH3jlgyG5Lc9HfzW4spNuIRssKzTELQDqaJxTjYlyM
-	fukYwczqT94dAWOWpzDb5Hyb3PKU=
-X-Google-Smtp-Source: AGHT+IEXwPAwhOMCvBhbWjRVW5Ubq87Slh/d+RapR7WqMRF0MA+etjIVrc7SQl3B2SvXdsOlXOP+gTpxWIkIi/JCyWc=
-X-Received: by 2002:a05:6820:1506:b0:5bd:80d7:1891 with SMTP id
- 006d021491bc7-5bdadc8d142mr8246644eaf.9.1718612661374; Mon, 17 Jun 2024
- 01:24:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718612723; x=1719217523;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wTj9FCeMEMsqbwW0LLZPKSs2YM2K1G3AwyQg5n+snzc=;
+        b=MaJmCDu1065/V5JtZ60vCn1J5ceTe1PKHMEibI1iiCn7QUJ2s58FjFj+F99w0wC21+
+         9gLJQQ1Yi3mYguMIweIyljGnZeYmyqkJ66TqJpwJkCnpD7eZzh2qu1f3EBuxxqXHiOIK
+         UIttbhzUuULBp5aiN+38SKI8W/J8txDYuJgRwxnMiPWw1pOav+CE2Rv5dO3UgOu74Q+U
+         gM8+QzAnBpxZNxIypygMMoG//xir6FBKGy3wt1UtEnzpHzQ4XTqTW6h+SAFWHM3/aU60
+         Ig2fDzAGhx27sSl+8gAnW1htwm2vLeW9vspRWbseZdbu5N9/Zs3B4yTlthgm0mBifNLs
+         Odeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrgnFBA8ue3bNu2RVY7Vup+U1zGEVo+NZeytawKDFGlkgthA4NdpBS1hi/R7XSn4sC3sP5FuNijPxT2oKPJmg9mFS1mVlmkxKTrpUNNYhlY4s2kUfNTx/gjgsmBWuc0hYqyebv
+X-Gm-Message-State: AOJu0Yy73/+JpUpDSLt4Lxqo64DgwS6eLQH/7dmymfIlUeUlUq02CeEx
+	8bQ7R9/6ZjO0TWKAfCkQmUd9Q52/rIlt2NToTOls3IGMB3MN1160
+X-Google-Smtp-Source: AGHT+IFt4JX3Jbfuc0eYBurcj5EoAHcJCyOCK8+9XhLyCVo6x6fZnIYeDbKcVH2naa3emRECXqY0eA==
+X-Received: by 2002:a5d:61c3:0:b0:360:9533:c716 with SMTP id ffacd0b85a97d-3609533c932mr1652408f8f.2.1718612722567;
+        Mon, 17 Jun 2024 01:25:22 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:9594:d2ff:a13c:2a33])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075093499sm11532931f8f.8.2024.06.17.01.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 01:25:21 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Oleksij Rempel <o.rempel@pengutronix.de>,  Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>,  linux-kernel@vger.kernel.org,
+  netdev@vger.kernel.org,  Dent Project <dentproject@linuxfoundation.org>,
+  kernel@pengutronix.de
+Subject: Re: [PATCH net-next v3 2/7] netlink: specs: Expand the PSE netlink
+ command with C33 new features
+In-Reply-To: <20240614-feature_poe_power_cap-v3-2-a26784e78311@bootlin.com>
+	(Kory Maincent's message of "Fri, 14 Jun 2024 16:33:18 +0200")
+Date: Mon, 17 Jun 2024 09:01:28 +0100
+Message-ID: <m2frtc9ew7.fsf@gmail.com>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+	<20240614-feature_poe_power_cap-v3-2-a26784e78311@bootlin.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510094034.12493-1-linux.amoon@gmail.com>
-In-Reply-To: <20240510094034.12493-1-linux.amoon@gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 17 Jun 2024 13:54:04 +0530
-Message-ID: <CANAwSgTRfEChziyys251-FezSevSq9pxHLJixVCAybJhq5YAqw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PM / devfreq: exynos: Use Use devm_clk_get_enabled()
- helpers
-To: Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, linux-pm@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hi All,
+Kory Maincent <kory.maincent@bootlin.com> writes:
 
-On Fri, 10 May 2024 at 15:10, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> The devm_clk_get_enabled() helpers:
->     - call devm_clk_get()
->     - call clk_prepare_enable() and register what is needed in order to
->      call clk_disable_unprepare() when needed, as a managed resource.
->
-> This simplifies the code and avoids the calls to clk_disable_unprepare().
->
-> While at it, use dev_err_probe consistently, and use its return value
-> to return the error code.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+> index 00dc61358be8..0ff27319856c 100644
+> --- a/Documentation/netlink/specs/ethtool.yaml
+> +++ b/Documentation/netlink/specs/ethtool.yaml
+> @@ -20,6 +20,20 @@ definitions:
+>      name: header-flags
+>      type: flags
+>      entries: [ compact-bitsets, omit-reply, stats ]
+> +  -
+> +    name: c33-pse-ext-state
+> +    enum-name:
+> +    type: enum
+> +    entries: [ none,
+> +               ethtool_c33_pse_ext_state_class_num_events,
+> +               ethtool_c33_pse_ext_state_error_condition,
+> +               ethtool_c33_pse_ext_state_mr_pse_enable,
+> +               ethtool_c33_pse_ext_state_option_detect_ted,
+> +               ethtool_c33_pse_ext_state_option_vport_lim,
+> +               ethtool_c33_pse_ext_state_ovld_detected,
+> +               ethtool_c33_pse_ext_state_pd_dll_power_type,
+> +               ethtool_c33_pse_ext_state_power_not_available,
+> +               ethtool_c33_pse_ext_state_short_detected ]
 
-Gentle ping?
+It looks like this should use name-prefix: ethtool-c33-pse-ext-state- so
+that all the entries can be shortened.
 
-Thanks
--Anand
+The entries should be in hyphen-case, not snake_case.
+
+The preferred format for a list that spills over many lines is to use
+the yaml list format:
+
+    entries:
+      - none
+      - class-num-events
+      - error-condition
+      - mr-pse-enable
+      ...
+
+Thanks!
+--
+Donald Hunter.
