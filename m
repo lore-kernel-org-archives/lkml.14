@@ -1,162 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CAC18FDCB;
-	Mon, 17 Jun 2024 08:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718611960; cv=none; b=bEYsLD5I+Ja3tyjHzWoB9nvu+4mmr+VcWOuZKyAU5fkOnuaaVweXYS4i7f6g4GLihfegLmIw8dwoA0QhbpSk9n2WzofMU055YrBO/h+O3os/I58eHp+n0xx/+SylNINEMHR1cMIR502PmRjU/hoLxR29X2LdOjzB4cmF7CYX1Qw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718611960; c=relaxed/simple;
-	bh=yhl2RzCdR+x+WW3ayanTXncY6o1XRzG9gKgwudGQbOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GFr3pBMaQTlIbqqBbo7SGEcjcHskYpyDTaAUXhjTIuhFaes0/DKfKDC8enSrm2ti7tohIU+Wh/ZMi6AlNazXnWcy3LobZDJ/3fhyHFWYAtAEvAtCJ+eZIzcM3pLT6Y5Lf97TRqeVI0Iop6HAu1Y5OzOMoI2fOWD5792LcwZEXJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiuxC+cZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiuxC+cZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46656C2BD10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC2918FDC8;
 	Mon, 17 Jun 2024 08:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718611959;
-	bh=yhl2RzCdR+x+WW3ayanTXncY6o1XRzG9gKgwudGQbOs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZiuxC+cZmE0/Bx4NyAjIvtDtVVyRzbz9g8HeBBpSQyP7BQ+mY9FCX+Hl/Lv44nbRf
-	 5AHg0aampFUBnNWXeGnzN+vvJIsKhT29R4xTfILvApL+tnvGlD1bfZvRxCtLzv8Rjr
-	 7tTvc4m3dfpzOBDPfs2DGVeLr85bDRBwI1xp3LEesAqgslCmZC7/PBnxMbfAE59NAC
-	 QhAbWkkWOGY4ERqfC/2QJLIZYBus3JyGx7y9JozuPuerzssUbhbK9hNM5e7GmUBg6f
-	 nb8UVlDVDcw9oQ18fNgHlrMzQ7825PbX/FrIT+jt7+YZ0rx9gMksGVOxYl+Ux2Qciw
-	 6sLfYsr+IXPAw==
-Date: Mon, 17 Jun 2024 10:12:33 +0200
-From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Paolo Abeni <pabeni@redhat.com>, "andrew@lunn.ch" <andrew@lunn.ch>,
- "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "linux@armlinux.org.uk"
- <linux@armlinux.org.uk>, "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
- <kuba@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "ericwouds@gmail.com" <ericwouds@gmail.com>
-Subject: Re: [PATCH next-next] net: phy: realtek: add support for rtl8224
- 2.5Gbps PHY
-Message-ID: <20240617101233.103eb0a3@dellmb>
-In-Reply-To: <e9a2b30f-71a1-4e3d-9754-a5d505ca6705@alliedtelesis.co.nz>
-References: <20240611053415.2111723-1-chris.packham@alliedtelesis.co.nz>
-	<c3d699a1-2f24-41c5-b0a7-65db025eedbc@alliedtelesis.co.nz>
-	<20240612090707.7da3fc01@dellmb>
-	<fbf2be8d31579d1c9305fd961751fc6f0a4b4556.camel@redhat.com>
-	<20240614102558.32dcba79@dellmb>
-	<e9a2b30f-71a1-4e3d-9754-a5d505ca6705@alliedtelesis.co.nz>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718611962; cv=none; b=Ews23dw8YPwBVXoaMymsFr8fJ4Rs36QBEA8AVRvyYru/P4lpq5IveGvA7ekwGsZpUfAIYHMLMMBeIT/BQKBGkWUc2yPdRfC3Jlfr8oWHaoWny43XoDWNI3qYU0e9xvXRWza67vxTJ0ViPxc7dtRBuKOykSn4I5ThNAxIVrEdNSU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718611962; c=relaxed/simple;
+	bh=LB1uCJgoLfTPxUw5p3900BEwW8PP2FYKrGJVvybz9U8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FY9v3qSwqn3ZY+4PUco5uuLTO0UOo/tBpocjKjEzzeNplWs+1D/1JHvJ5YFBc+zXGXB/+L5LnKhvAA7YScI2YSMRpFoS1eW3gM1jCH9hI4wj9P7iR/OgBNvVUjUTDTpt9qKwz3IB136uEDvk+CLfb+1pm91S8d+sMJyRX3Yt4FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=NZ51vGvJ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=kB3bj8/a reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="NZ51vGvJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="kB3bj8/a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1718611959; x=1750147959;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TFbicy+mwtStkQReucKb9kND+lMZA6N/BgT+KQQPvkY=;
+  b=NZ51vGvJYExKG96N+eMW15BRLd81+tAJdMA13ArlF6JT6d8GV7Uhryqp
+   1Vv9+EKmigskEVXsiueGwVqVvyWhm+nhgAOw/zLqjXtVam+HjFJT8YpoG
+   C//LFvlVUITGjoh7JDE9mkYVZuJWNE6a94PWbFuPaLevTv8FMQzDxIf80
+   qLrLf0g5uLGO0wbuDscA/DzYr/UKo4SlMQoxthdH+wkz2AV4CgrE4SvkY
+   7Z2ktSIKIzn4h3QjiKgKyFi584Dkl9M0bLNo22WLbJ+PZjssyOpQdOwqL
+   LfMtG/ZRNKLOSO07NvvN7J5FfTlEii/rDepiOPFyE5v3fI4a1rhlAukcA
+   Q==;
+X-CSE-ConnectionGUID: /2GYNCziSWqafNXgADeirw==
+X-CSE-MsgGUID: feKQdwM2R5WHlEm4kwBTWg==
+X-IronPort-AV: E=Sophos;i="6.08,244,1712613600"; 
+   d="scan'208";a="37420109"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 17 Jun 2024 10:12:36 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 82529165881;
+	Mon, 17 Jun 2024 10:12:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1718611952; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=TFbicy+mwtStkQReucKb9kND+lMZA6N/BgT+KQQPvkY=;
+	b=kB3bj8/adMXRRmWmn/htTlCospq5P7v541JbsPm894OaHu9JEi6Y+SU1WuqZxc0KWourHD
+	y0nlXmk1TrWKWPogH+igp+OF5KZu0tBjUa7OHN7c5SDBxmdI1CI8CE1xrCOSsjfZxAvRcV
+	4p+69OpesU951fKlu+9fUdHr4ctabjTx8hIZ2c01VMRUTzBJrnQB3pR8Y4/gUl0o8PoLhI
+	IPNRAU9y4mgJjH3S1BSh/85koJ+f95XwKW6i2pxLAKBg1i6V0ZHpeit/FX6S313UTtiYD7
+	1R4QTtnH6+cn0l/dozmaQaLG/GefRfVVzKzb7URxWvJ5s4fAxcobYoRgbPAZ0Q==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Li Yang <leoyang.li@nxp.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] dt-bindings: arm: add MBa8MP-RAS314 SBC
+Date: Mon, 17 Jun 2024 10:12:28 +0200
+Message-Id: <20240617081229.195638-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sun, 16 Jun 2024 21:24:53 +0000
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+MBa8MP-RAS314 is an SBC based on the embedded module TQMa8MPxL.
+All relevant interfaces integrated in the CPU have been implemented on
+the MBa8MP-RAS314 for (an) industrial usage. Due to the numerous interfaces
+and the small size of this SBC the use in different applications
+is possible without the need of a [special,custom] design.
 
-> On 14/06/24 20:25, Marek Beh=C3=BAn wrote:
-> > On Fri, 14 Jun 2024 10:18:47 +0200
-> > Paolo Abeni <pabeni@redhat.com> wrote:
-> > =20
-> >> On Wed, 2024-06-12 at 09:07 +0200, Marek Beh=C3=BAn wrote: =20
-> >>> On Tue, 11 Jun 2024 20:42:43 +0000
-> >>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
-> >>>     =20
-> >>>> +cc Eric W and Marek.
-> >>>>
-> >>>> On 11/06/24 17:34, Chris Packham wrote: =20
-> >>>>> The Realtek RTL8224 PHY is a 2.5Gbps capable PHY. It only uses the
-> >>>>> clause 45 MDIO interface and can leverage the support that has alre=
-ady
-> >>>>> been added for the other 822x PHYs.
-> >>>>>
-> >>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> >>>>> ---
-> >>>>>
-> >>>>> Notes:
-> >>>>>       I'm currently testing this on an older kernel because the boa=
-rd I'm
-> >>>>>       using has a SOC/DSA switch that has a driver in openwrt for L=
-inux 5.15.
-> >>>>>       I have tried to selectively back port the bits I need from th=
-e other
-> >>>>>       rtl822x work so this should be all that is required for the r=
-tl8224.
-> >>>>>      =20
-> >>>>>       There's quite a lot that would need forward porting get a wor=
-king system
-> >>>>>       against a current kernel so hopefully this is small enough th=
-at it can
-> >>>>>       land while I'm trying to figure out how to untangle all the o=
-ther bits.
-> >>>>>      =20
-> >>>>>       One thing that may appear lacking is the lack of rate_matchin=
-g support.
-> >>>>>       According to the documentation I have know the interface used=
- on the
-> >>>>>       RTL8224 is (q)uxsgmii so no rate matching is required. As I'm=
- still
-> >>>>>       trying to get things completely working that may change if I =
-get new
-> >>>>>       information.
-> >>>>>
-> >>>>>    drivers/net/phy/realtek.c | 8 ++++++++
-> >>>>>    1 file changed, 8 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> >>>>> index 7ab41f95dae5..2174893c974f 100644
-> >>>>> --- a/drivers/net/phy/realtek.c
-> >>>>> +++ b/drivers/net/phy/realtek.c
-> >>>>> @@ -1317,6 +1317,14 @@ static struct phy_driver realtek_drvs[] =3D {
-> >>>>>    		.resume         =3D rtlgen_resume,
-> >>>>>    		.read_page      =3D rtl821x_read_page,
-> >>>>>    		.write_page     =3D rtl821x_write_page,
-> >>>>> +	}, {
-> >>>>> +		PHY_ID_MATCH_EXACT(0x001ccad0),
-> >>>>> +		.name		=3D "RTL8224 2.5Gbps PHY",
-> >>>>> +		.get_features   =3D rtl822x_c45_get_features,
-> >>>>> +		.config_aneg    =3D rtl822x_c45_config_aneg,
-> >>>>> +		.read_status    =3D rtl822x_c45_read_status,
-> >>>>> +		.suspend        =3D genphy_c45_pma_suspend,
-> >>>>> +		.resume         =3D rtlgen_c45_resume,
-> >>>>>    	}, {
-> >>>>>    		PHY_ID_MATCH_EXACT(0x001cc961),
-> >>>>>    		.name		=3D "RTL8366RB Gigabit Ethernet" =20
-> >>> Don't you need rtl822xb_config_init for serdes configuration? =20
-> >> Marek, I read the above as you would prefer to have such support
-> >> included from the beginning, as such I'm looking forward a new version
-> >> of this patch.
-> >>
-> >> Please raise a hand if I read too much in your reply. =20
-> > I am raising my hand :) I just wanted to point it out.
-> > If this code works for Chris' hardware, it is okay even without the
-> > .config_init. =20
->=20
-> I did look into this. The SERDES configuration seems to be different=20
-> between the RTL8221 and RTL8224. I think that might be because the=20
-> RTL8221 can do a few different host interfaces whereas the RTL8224 is=20
-> really only USXGMII. There are some configurable parameters but they=20
-> appear to be done differently.
->=20
-> Having said that I definitely don't have a system working end to end. I=20
-> know the line side stuff is working well (auto-negotiating speeds from=20
-> 10M to 2.5B) but I'm not getting anything on the host side. I'm not sure=
-=20
-> if that's a problem with the switch driver or with the PHY.
->=20
-> I'd like this to go in as it shouldn't regress anything but I can=20
-> understand if the bar is "needs to be 100% working" I'll just have to=20
-> carry this locally until I can be sure.
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-If it doesn't work, it can confuse people that it is working if it is
-accepted...
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 6d185d09cb6ae..f168400d29950 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1145,8 +1145,9 @@ properties:
+           version as an industrial computing device.
+         items:
+           - enum:
+-              - tq,imx8mp-tqma8mpql-mba8mpxl # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM on MBa8MPxL
+-          - const: tq,imx8mp-tqma8mpql       # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM
++              - tq,imx8mp-tqma8mpql-mba8mpxl      # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM on MBa8MPxL
++              - tq,imx8mp-tqma8mpql-mba8mp-ras314 # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM on MBa8MP-RAS314
++          - const: tq,imx8mp-tqma8mpql            # TQ-Systems GmbH i.MX8MP TQMa8MPQL SOM
+           - const: fsl,imx8mp
+ 
+       - description: i.MX8MQ based Boards
+-- 
+2.34.1
 
-Try to contact Realtek via the contact I sent you in the private
-e-mail, maybe you'll be able to make this work.
-
-Marek
