@@ -1,73 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251B315F411;
-	Mon, 17 Jun 2024 16:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B41553B5;
+	Mon, 17 Jun 2024 16:44:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642663; cv=none; b=uWnxja0/k8ldy2vLEbW144hvyXsLZSwy8TEwFGnN9r1YfcsfEbHlaxopJBTtr+pgUzrVdCMgSKA2+gwOXT1RwDhEyfE6I432wBACeqLxo2L2n6KN5e55c8vzvtvF5ZEXRhLHHkyiLbHsUNyHmXu8dEzKX8nhBWchyXiC2h+Jcd8=
+	t=1718642687; cv=none; b=C1pywx4Dg4JmOYn59yO3KL8kaZwpROM5Vkt/i/1eldTayn0ESwUotelEg5m8l3xVNbxsQG6I5GHhOWq2bGlMQhvPg1mqnSdWHmxWVeCj085Jj83kRq8yoccwVIq4lrFj8cBHuEpm9LR0n54GrJsEsHaI1WXgADq5i310e2GRaw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642663; c=relaxed/simple;
-	bh=bAwok2w5sDP9uSS8/aitt6u/za/o92q1BPRXfbSXSF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PPElgbs/DHLKO5u+nxBTeVN6jeSPj2U1qVvj5BFlRShzfdfetIHDOnYaLhEEDuPa7U+h25aSHuWZtAqW2WueFghmwRg7SpnSit0yMh0Up13cg6yO6uOKbcNOoyhZV5n5dKGcnrO82B1zD7XQimJrXzhTFjBVrY1rJbwWOj6b7Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8Sl0b7q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718642687; c=relaxed/simple;
+	bh=fxLVzo+2ZT7HYt/prqGCBsBTnbT0PD7moPGAuSTb58I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SEABPy5Zc+2bzR3QduWPqmUrUJ3aseIPAg5mIj4gLZbBqUMLRaiHqo7eoW7VNY56cZU3JOVe0AKbTx/piZgyaoGMKueFgAYTu7SBKLHPNnKbENi4c/DQ8k8bw+s8sH4ZDSbKZdak+wpCMQ7o2us2TuFXMocfB9Hh5S7CCLX6PRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6rsFGtM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8Sl0b7q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C045C4AF49;
-	Mon, 17 Jun 2024 16:44:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6rsFGtM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B542C2BD10;
+	Mon, 17 Jun 2024 16:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718642662;
-	bh=bAwok2w5sDP9uSS8/aitt6u/za/o92q1BPRXfbSXSF4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a8Sl0b7qpaha1QMp71OCXfr2vSE/3r1mHkBm3sV9wzCTAvWuz+r9jaKzuLAw1R9qd
-	 ml/1W7WPnNouDIUN6XFg6c/Wrn6v8E/Z8YLKWcB6TJQwbaoOCTgbirmifO5tCbqDGc
-	 bBm0c7TBMnKDom1KH6MiloCvC/dGCJp2H7VsfV5x8tYLPEbxVQzXNIA9eAVqB5t8c/
-	 KGc6QIIOazLIm6TOMebtFp8IKjE+AQdWCa31uEv/GHIWgaFP286EZcGgR+5pjyav52
-	 Cr7l63Iz11hPxGtu0iYBGyaYFiwRkuXU2EUXy9KCEZGn+thaGZSWrxanV0h/Fx+l3L
-	 VPAtHMOncmY6Q==
-Date: Mon, 17 Jun 2024 09:44:21 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jiri Pirko <jiri@resnulli.us>, Parav Pandit <parav@nvidia.com>, Jason
- Wang <jasowang@redhat.com>, Cindy Lu <lulu@redhat.com>, Dragos Tatulea
- <dtatulea@nvidia.com>, "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/2] vdpa: support set mac address from vdpa tool
-Message-ID: <20240617094421.4ae387d7@kernel.org>
-In-Reply-To: <20240617121929-mutt-send-email-mst@kernel.org>
-References: <ZmlAYcRHMqCgYBJD@nanopsycho.orion>
-	<CACGkMEtKFZwPpzjNBv2j6Y5L=jYTrW4B8FnSLRMWb_AtqqSSDQ@mail.gmail.com>
-	<PH0PR12MB5481BAABF5C43F9500D2852CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAETXPWG2BvyqSc@nanopsycho.orion>
-	<PH0PR12MB5481F6F62D8E47FB6DFAD206DCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAgefA1ge11bbFp@nanopsycho.orion>
-	<PH0PR12MB548116966222E720D831AA4CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAz8xchRroVOyCY@nanopsycho.orion>
-	<20240617094314-mutt-send-email-mst@kernel.org>
-	<20240617082002.3daaf9d4@kernel.org>
-	<20240617121929-mutt-send-email-mst@kernel.org>
+	s=k20201202; t=1718642686;
+	bh=fxLVzo+2ZT7HYt/prqGCBsBTnbT0PD7moPGAuSTb58I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=n6rsFGtMKSkTIFSXpIMdCwQio9jYicY3Ddbzy6orElrR1tnxanBGgNjbXwJSJIjyB
+	 IhwVeAw8XBAC6ZG+Y/f0wlSWy7QhAMtcBa0y6/Ypw0AzySQgR0qhpJxapBxtEpa1hD
+	 HN1WefaINoB2hkWQ37taBKTSETTmJ8bmkJgX1HoNcE6eRYVikjkvytdBcv1Y/J3fax
+	 Ev6CTM3VpwNcnYZIl1th47/BlYRgHAXuYIl2QzCqVw7PP+uvpnJu9kXicPV4FHR/0n
+	 uERUuZZ/hqEIBKIeZXLI50rY+G9ejxZnE4y/tkDxrGNbTtb09hH2Ttws1dD0UuVOr2
+	 UxltFgEPuZA3g==
+Date: Mon, 17 Jun 2024 17:44:42 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>,
+	Nicolas Pitre <npitre@baylibre.com>,
+	Julien Panis <jpanis@baylibre.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mediatek tree
+Message-ID: <ZnBn-vSj-ssrJFr2@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eu5EAOr3acTKhxzD"
+Content-Disposition: inline
 
-On Mon, 17 Jun 2024 12:20:19 -0400 Michael S. Tsirkin wrote:
-> > But the virtio spec doesn't allow setting the MAC...
-> > I'm probably just lost in the conversation but there's hypervisor side
-> > and there is user/VM side, each of them already has an interface to set
-> > the MAC. The MAC doesn't matter, but I want to make sure my mental model
-> > matches reality in case we start duplicating too much..  
-> 
-> An obvious part of provisioning is specifying the config space
-> of the device.
 
-Agreed, that part is obvious.
-Please go ahead, I don't really care and you clearly don't have time
-to explain.
+--eu5EAOr3acTKhxzD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi all,
+
+After merging the mediatek tree, today's linux-next build (arm64
+defconfig) failed like this:
+
+/tmp/next/build/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3: Warning (graph_port): /fragment@4/__overlay__: graph port node name should be 'port'
+Error: /tmp/next/build/arch/arm64/boot/dts/mediatek/mt8186.dtsi:2399.29-30 syntax error
+FATAL ERROR: Unable to parse input tree
+make[4]: *** [/tmp/next/build/scripts/Makefile.lib:431: arch/arm64/boot/dts/mediatek/mt8186-corsola-magneton-sku393216.dtb] Error 1
+
+Caused by commit
+
+  d7c1bde38bf37a5 ("arm64: dts: mediatek: mt8186: add default thermal zones")
+
+I have used the last version of the mediatek tree from 20240613 instead.
+
+--eu5EAOr3acTKhxzD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZwZ/kACgkQJNaLcl1U
+h9ARbAf/SbPmuU+REdW5OOksuv162VL/mtRNAgoP5stk1AWd6okamA4YiGYHq9Xk
+pxJ6yGMpAkYINGy2FYsPYDLbHojkC5UR7wb168Y96NwsvPcvXipsCYLEwM3pObGv
+o+jAXUAmF8WqpRyT6ZdzNloBrmO3lu9DumZEY/BgofpDol3/+8ufVpMOYEFWocO3
+OJc4RS7jMJfPSHI+szTapuKBmNpp+ZfUvuZwGBHCSohejQOD9aHSp6Hsa4FavwsI
+8Q8GIubgBlzSqI1t1QMG49vVw8mdgX9+yVZG6mgo4WDmNc/rAsNHiqnaDvcg5rCC
+p94GMAKYMBRhvVgLc4X0c3hfcrOLAQ==
+=SUL0
+-----END PGP SIGNATURE-----
+
+--eu5EAOr3acTKhxzD--
