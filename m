@@ -1,260 +1,131 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F54C171B0;
-	Mon, 17 Jun 2024 08:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B695719048B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 08:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718614579; cv=none; b=qhMQLimfMOr5J2ARiUJY5OUxU2vtkV/ah9zMDDBxVdVIGvtgnFqOa+GHAQORQR6KF6tOnYjioKsO/HsPqZ9MxTX2kJGC8if0u/vxhX9jLgwM2/of2MUAKfp4yZVT3bibSjui6ho3Atb83ALNSiGLwsVnChMFKsHjEmhN7Payl4Q=
+	t=1718614761; cv=none; b=W0U0r50GAG6dLogZ3X2tPUzTIS0CBBntHXvRXcG63A9p2PiCZ59qjHVzxEG6KgcfXcGigPZx0Orv4knyGxy36oEnrZ6LsQhmEeCQISi2E7ppRerqXCNUfWit2YktilH5UVnrS6/0YsKS0+7d98OuGTs4TWTI9sDjhAUFwk8le9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718614579; c=relaxed/simple;
-	bh=Oui3HoXK55nnW0IUGIdFKPDnIg/Y9ztYiH1xOpz6wYA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nb7nADuDfp8lBEaV0thx6rOyDb9/MrckZXXFyJ2jj4V0M/KBx1Gb/2KX79lGc+mRriQ1mraXqWsHG+a5GzllSJNg4xEBg0xfWY6I3+XKLLx+r+UJmg+95fiJbalrAgI6BkOtxrMUJfccCJ5qTssgmZQ3S/cneABDEDORLRyNyHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2odm/ET; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2odm/ET"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f44b5b9de6so32597755ad.3;
-        Mon, 17 Jun 2024 01:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718614578; x=1719219378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Px2F5O/xlFYH5rKqkkkLF6gjhpLOgiX0YoFm/7eZqRY=;
-        b=f2odm/ET1zOHL8QADMp0lEn9Q2LE86N2blYnkH2zxLUDN2oQUS/IdqucHwCaUdz/81
-         xNM5L8caHDcehNEGl8MUW39CKtXoQdNEgt+MerPy7Pnw+oN6JUPWakoqRRtwZXqk/PLi
-         KpkN9y2XmeiSc3wMGCurhfTcELaXE4wOVEYizYX2R0KcE8qXHSPDVdGNube43HF3nYje
-         CTm0YEnFuYN2oyKM7cRsZE/oaGkOlBQWRvYN4kA8M6yHCTlTKz4BGwNWNihmVjUtpoiQ
-         EBDr5QZ8lHD72wboiRey3c1a1vgKunCmhdG90QqrnpMEXOJ0pxZbQBEUzcoUCSVKsed1
-         TDpQ==
+	s=arc-20240116; t=1718614761; c=relaxed/simple;
+	bh=azrhHKA8GofXXpFtnTVLKlnvryN0CNZGEUH5cnPaz08=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=p/xKRyGLcoR9+QVMr9EoG0j3fikWy6QvoKrGgHxg3wbkZdEH2Mhtv73E7JFLLg7vi6FNDnkMIiwpTkK2+2rHJgaTcjFFAx2aaCt4Zhwuuy14W7KOM7hNdv2tjF63p5ibO5VTcVy6wTzsn02/unCNIKQAObK1kWd68sdUTDDq/9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-375d8dbfc25so42832485ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 01:59:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718614578; x=1719219378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Px2F5O/xlFYH5rKqkkkLF6gjhpLOgiX0YoFm/7eZqRY=;
-        b=NlLGaabVzGEo44pFfp7oDpyGEmhEKm12QrDD0R3PddNIfhN8gJdzbaRS1M+Yxi/cNi
-         S46qXgNIGavMzG71JC9nSgyPfar/cKn6DzNFK4oMjZsVn78pZhCeliq5TUI0TV6pSCCG
-         6vXN5xhDWo6Lo7zSzoEBuwwAqLNmwcuGnmA3JDqVA5SluRxHaFNajoJzVNbyxzSaKkGD
-         2JgIVTwJr7VWBW0cQIGM1hCJ2FKt0t9F++EznN4XltHg+22n8HzxI071yoYrga3xgRjb
-         0qRc+htIby6kCva3/CGK9Z4EuyP38sJfyMZY+/0P2OYOevVnD440SIruqVWSLikmHVJv
-         aYsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgsdktkWlo48d5fl62RMXan+Th2rhjYUsrXL+KX037ErQgAiqWVRPrSu/1pTGc9PQnD4rlgjSIL9+kLGJ+IDlpQq3eNyTbkVwAOtijNR5nB/RKv1BT+xQ1jazq2ZsKtfFiNXLkQpo/9A==
-X-Gm-Message-State: AOJu0YyMxt8Gl1ZNNXwGtBGp9cE2lFrVcotRxIIkV4ntQ0Cgs62jfUTS
-	FQhGwqKj8DBmKi9IzZJ81ifgd4NuLvj/J3q+sZ9U+SV2MW9gZ80n
-X-Google-Smtp-Source: AGHT+IHeVjWVii646asJCpvxGnP4VmV3AlDIExZwWwDrivS9N4JaJa0DteWgOnOA+8uSzFbLsrsErQ==
-X-Received: by 2002:a17:903:22c5:b0:1f7:e32f:f067 with SMTP id d9443c01a7336-1f862a1694emr96194705ad.50.1718614577443;
-        Mon, 17 Jun 2024 01:56:17 -0700 (PDT)
-Received: from localhost.localdomain ([122.161.50.215])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f28fd8sm75407295ad.252.2024.06.17.01.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 01:56:16 -0700 (PDT)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	sebastian.reichel@collabora.com,
-	andy.yan@rock-chips.com,
-	s.hauer@pengutronix.de,
-	jbx6244@yandex.com
-Cc: linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	skhan@linuxfoundation.org,
-	Shresth Prasad <shresthprasad7@gmail.com>
-Subject: [PATCH v4] dt-bindings: phy: rockchip-emmc-phy: Convert to dtschema
-Date: Mon, 17 Jun 2024 14:23:42 +0530
-Message-ID: <20240617085341.34332-2-shresthprasad7@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1718614759; x=1719219559;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h6M+uX0qwRHQUN70aVnCHGwZLDZe6zA4HwQq3ercWqw=;
+        b=hpfsPz0EPvlIzNJlgO8KwkSTI5d3T6tyIpDpUQI5fG6aN6OSRW4KeHYA9gvjulEYVY
+         trmA8teFiq9wI1v1UbCiOp6I4dnqT5Zgt3UOdbvvugZWMvc1z7glvVW6W16gBgj2/SSh
+         Wmvv6xznLaAwTDvosr7fo9BtQWwJaBhkc9jlc11FSjRRvWbcpMTMuaqxis60Sp+PMu4C
+         +IT2q7TYplOkWvlVrI4Eva+uyMgF3lSfmwH8G02KHjA84KD4ij4Y97z/dcK+849SqFAa
+         c4Rn8Lhp6vrcaJJlYHUnvAflGULHAZ9Ot6xv8bpfExd7TSVMrpCPeCrQL/yEkXJe7j/v
+         0BIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUig/+REmYxCX7h+0hHocry/jWw+CxY3G6Lpo2pRrw5dOrNYeGFIN/KvdAStPLWqFY6wdwtOhNRJSD7ftVBrEzxzi6eE1uS9aF8+Q1y
+X-Gm-Message-State: AOJu0Yxfjt3BVy+OzrWQvdgh0Qf/mq0BHyA9NeGX39K+MqCDwnjpFAZi
+	WsFyBITLeJUWxCyZpfja04JISZAVs+Ry+/zJ8H/21DdSNHvjY9y/0SUjgkClVUYWDu7TqzMnLFz
+	WTrWVGI4HSS7ip92P4s0CqEWMO839xboDJy4GFXbiQeDM3fTpzyEO2Kk=
+X-Google-Smtp-Source: AGHT+IHvzyIxHQtz6i7UeyWeO5D3kAAlL6SpUbyIh+TyaF6UDh6WKHEv5tJL8CmzzUlLzgsIKJfaM2nJq2QYoihyI7367qkRT41E
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:148b:b0:375:ac5d:d5df with SMTP id
+ e9e14a558f8ab-375e0c7dcaemr9446075ab.0.1718614758871; Mon, 17 Jun 2024
+ 01:59:18 -0700 (PDT)
+Date: Mon, 17 Jun 2024 01:59:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003565fc061b122e02@google.com>
+Subject: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in read_one_super (2)
+From: syzbot <syzbot+9f74cb4006b83e2a3df1@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
-for validation.
+Hello,
 
-Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15286f7a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
+dashboard link: https://syzkaller.appspot.com/bug?extid=9f74cb4006b83e2a3df1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9f74cb4006b83e2a3df1@syzkaller.appspotmail.com
+
+loop2: detected capacity change from 0 to 32789
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in fs/bcachefs/super-io.c:653:3
+shift exponent 106 is too large for 64-bit type 'unsigned long'
+CPU: 0 PID: 9174 Comm: syz-executor.2 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
+ read_one_super+0xfb5/0xfc0 fs/bcachefs/super-io.c:653
+ __bch2_read_super+0x65a/0x1460 fs/bcachefs/super-io.c:750
+ bch2_fs_open+0x246/0xdf0 fs/bcachefs/super.c:2074
+ bch2_mount+0x6b0/0x13a0 fs/bcachefs/fs.c:1919
+ legacy_get_tree+0xf0/0x190 fs/fs_context.c:662
+ vfs_get_tree+0x92/0x2a0 fs/super.c:1780
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f82b087e5aa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f82b1586ef8 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f82b1586f80 RCX: 00007f82b087e5aa
+RDX: 0000000020011a00 RSI: 0000000020000780 RDI: 00007f82b1586f40
+RBP: 0000000020011a00 R08: 00007f82b1586f80 R09: 0000000001200014
+R10: 0000000001200014 R11: 0000000000000206 R12: 0000000020000780
+R13: 00007f82b1586f40 R14: 00000000000119fa R15: 00000000200007c0
+ </TASK>
+---[ end trace ]---
+
+
 ---
-Request for an Ack from the PHY maintainers, so that the DT maintainer Heiko 
-can merge it to grf.yaml in the order that he likes.
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes in v4:
-    - change license to `GPL-2.0-only`
-    - change dt-binding file name
-    - remove descriptions
-    - move `#phy-cells` to the bottom
-    - add Heiko to maintainers
-    - fix `patternProperties` regex in grf.yaml
-    - change `description` to `$ref` in grf.yaml
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
-and `rockchip/rk3399-pinebook-pro.dtb`.
----
- .../phy/rockchip,rk3399-emmc-phy.yaml         | 72 +++++++++++++++++++
- .../bindings/phy/rockchip-emmc-phy.txt        | 43 -----------
- .../devicetree/bindings/soc/rockchip/grf.yaml |  9 ++-
- 3 files changed, 78 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3399-emmc-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip,rk3399-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,rk3399-emmc-phy.yaml
-new file mode 100644
-index 000000000000..e61ba2b0abcd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip,rk3399-emmc-phy.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/rockchip,rk3399-emmc-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip EMMC PHY
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+  - Shresth Prasad <shresthprasad7@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: rockchip,rk3399-emmc-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: emmcclk
-+
-+  clocks:
-+    maxItems: 1
-+
-+  drive-impedance-ohm:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Specifies the drive impedance in Ohm.
-+    enum: [33, 40, 50, 66, 100]
-+    default: 50
-+
-+  rockchip,enable-strobe-pulldown:
-+    type: boolean
-+    description: |
-+      Enable internal pull-down for the strobe
-+      line.  If not set, pull-down is not used.
-+
-+  rockchip,output-tapdelay-select:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Specifies the phyctrl_otapdlysec register.
-+    default: 0x4
-+    maximum: 0xf
-+
-+  "#phy-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    grf: syscon@ff770000 {
-+      compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-+      reg = <0xff770000 0x10000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      emmcphy: phy@f780 {
-+        compatible = "rockchip,rk3399-emmc-phy";
-+        reg = <0xf780 0x20>;
-+        clocks = <&sdhci>;
-+        clock-names = "emmcclk";
-+        drive-impedance-ohm = <50>;
-+        #phy-cells = <0>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-deleted file mode 100644
-index 57d28c0d5696..000000000000
---- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--Rockchip EMMC PHY
-------------------------
--
--Required properties:
-- - compatible: rockchip,rk3399-emmc-phy
-- - #phy-cells: must be 0
-- - reg: PHY register address offset and length in "general
--   register files"
--
--Optional properties:
-- - clock-names: Should contain "emmcclk".  Although this is listed as optional
--		(because most boards can get basic functionality without having
--		access to it), it is strongly suggested.
--		See ../clock/clock-bindings.txt for details.
-- - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
-- - drive-impedance-ohm: Specifies the drive impedance in Ohm.
--                        Possible values are 33, 40, 50, 66 and 100.
--                        If not set, the default value of 50 will be applied.
-- - rockchip,enable-strobe-pulldown: Enable internal pull-down for the strobe
--                                    line.  If not set, pull-down is not used.
-- - rockchip,output-tapdelay-select: Specifies the phyctrl_otapdlysec register.
--                                    If not set, the register defaults to 0x4.
--                                    Maximum value 0xf.
--
--Example:
--
--
--grf: syscon@ff770000 {
--	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--...
--
--	emmcphy: phy@f780 {
--		compatible = "rockchip,rk3399-emmc-phy";
--		reg = <0xf780 0x20>;
--		clocks = <&sdhci>;
--		clock-names = "emmcclk";
--		drive-impedance-ohm = <50>;
--		#phy-cells = <0>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-index 79798c747476..6e1b1cdea680 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-@@ -176,9 +176,12 @@ allOf:
-             Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
- 
-       patternProperties:
--        "phy@[0-9a-f]+$":
--          description:
--            Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-+        "^phy@[0-9a-f]+$":
-+          type: object
-+
-+          $ref: /schemas/phy/rockchip,rk3399-emmc-phy.yaml#
-+
-+          unevaluatedProperties: false
- 
-   - if:
-       properties:
--- 
-2.45.2
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
