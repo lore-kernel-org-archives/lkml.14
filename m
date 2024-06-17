@@ -1,88 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD02579E5
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C166618EA8
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 16:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718640987; cv=none; b=ros+6fOM20W0oXBw0VtBJ/xh+XvJcG7sEXgzhFzXMDqIkFzrKJhU+m3b9APklQy+h6U7pfGU6mhgy3/QdagS7u4+Bnn9evAShPMxUdF1C/TNW8ft6VurrGJbF4x9kAithg3GO0E/DFLo97pQE0LDCrnqFTJmmwlecPjOp4sC33Q=
+	t=1718641002; cv=none; b=j4lKuUw/5UT4Y4KxVMqU/d1RdGv9AXXKmynKyZFTUus/5ek4oqHm1+zGAe3DDdPNkP0civ8PpoBOpfNI5UrhSBd//6I2tbtIBNXJno4oAoj4h6Bs7VOqChuPVSlesGySXu++3VUxClhgiG4lXvPwfExOK0WNKE+WvDVxSqg1zDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718640987; c=relaxed/simple;
-	bh=JrtpPYVIbnFOKuBv+qAfdsjZN0xFqynHmVM9CHaos8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lGip/S6uu4lUwAi+mpL/0bZkocCanaYiurwx//LgkNqPludNcU2vmGoZEX+Yqj6Zy7QFa1yZTgqe0Cx9UjY0gJbzQkHiq4Foda/NjbCIHBOhEpXFp72qcEYFufoqB9PY+DI8INTFQExIBiIhDPlSxB+r5vX4awKAY9LOmpXyRvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 456DFDA7;
-	Mon, 17 Jun 2024 09:16:47 -0700 (PDT)
-Received: from e127648.cambridge.arm.com (e127648.arm.com [10.1.33.10])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48D813F64C;
-	Mon, 17 Jun 2024 09:16:21 -0700 (PDT)
-From: Christian Loehle <christian.loehle@arm.com>
-To: linux-kernel@vger.kernel.org,
-	anna-maria@linutronix.de
-Cc: frederic@kernel.org,
-	tglx@linutronix.de,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH] tick: Remove unnused tick_nohz_get_idle_calls()
-Date: Mon, 17 Jun 2024 17:16:15 +0100
-Message-Id: <20240617161615.49309-1-christian.loehle@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718641002; c=relaxed/simple;
+	bh=cXlFaaZyLt871zLh2Qx9F4Zo3k9YKoSbOukIWQzTSUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MVtZhz7TL3Q0/TSCEc+Wlu4pc3ZpzpBZyXGoyGNKRugkflJON74eQ+6YOoz0XCZkh6Olvb4xCC6XFyKxMpcn6MXMxnqo0VB7cq8jK0WopIrZ81y27zvce7vwRsJFNTBLA1SLCtElWFTpnhm+VvGAVkwGUSeIvi1EDiWT1AOS2kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 45HGDc5W028348;
+	Mon, 17 Jun 2024 11:13:38 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 45HGDb8V028342;
+	Mon, 17 Jun 2024 11:13:37 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Mon, 17 Jun 2024 11:13:36 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Jinglin Wen <jinglin.wen@shingroup.cn>
+Cc: npiggin@gmail.com, masahiroy@kernel.org, linux-kernel@vger.kernel.org,
+        christophe.leroy@csgroup.eu, naveen.n.rao@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: Fixed duplicate copying in the early boot.
+Message-ID: <20240617161336.GM19790@gate.crashing.org>
+References: <20240617023509.5674-1-jinglin.wen@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617023509.5674-1-jinglin.wen@shingroup.cn>
+User-Agent: Mutt/1.4.2.3i
 
-The function returns the idle calls counter for the current cpu and
-therefore usually isn't what the caller wants. It is unnused since
-commit 466a2b42d676 ("cpufreq: schedutil: Use idle_calls counter of the
-remote CPU")
+Hi!
 
-Signed-off-by: Christian Loehle <christian.loehle@arm.com>
----
- include/linux/tick.h     |  1 -
- kernel/time/tick-sched.c | 14 --------------
- 2 files changed, 15 deletions(-)
+On Mon, Jun 17, 2024 at 10:35:09AM +0800, Jinglin Wen wrote:
+> +	cmplwi	cr0,r4,0	/* runtime base addr is zero */
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index 4924a33700b7..72744638c5b0 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -139,7 +139,6 @@ extern void tick_nohz_irq_exit(void);
- extern bool tick_nohz_idle_got_tick(void);
- extern ktime_t tick_nohz_get_next_hrtimer(void);
- extern ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next);
--extern unsigned long tick_nohz_get_idle_calls(void);
- extern unsigned long tick_nohz_get_idle_calls_cpu(int cpu);
- extern u64 get_cpu_idle_time_us(int cpu, u64 *last_update_time);
- extern u64 get_cpu_iowait_time_us(int cpu, u64 *last_update_time);
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 71a792cd8936..43a6370a2ebc 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1385,20 +1385,6 @@ unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
- 	return ts->idle_calls;
- }
- 
--/**
-- * tick_nohz_get_idle_calls - return the current idle calls counter value
-- *
-- * Called from the schedutil frequency scaling governor in scheduler context.
-- *
-- * Return: the current idle calls counter value for the current CPU
-- */
--unsigned long tick_nohz_get_idle_calls(void)
--{
--	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
--
--	return ts->idle_calls;
--}
--
- static void tick_nohz_account_idle_time(struct tick_sched *ts,
- 					ktime_t now)
- {
--- 
-2.34.1
+Just write
+   cmpwi r4,0
 
+cr0 is the default, also implicit in many other instructions, please
+don't clutter the source code.  All the extra stuff makes you miss the
+things that do matter!
+
+The "l" is unnecessary, you only care about equality here after all.
+
+Should it not be cmpdi here, though?
+
+
+Segher
