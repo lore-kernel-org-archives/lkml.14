@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B34D18D0B0;
-	Mon, 17 Jun 2024 13:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE46618D0B0;
+	Mon, 17 Jun 2024 13:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630757; cv=none; b=kbowroamVKJw6N0+Jey5nBow/qLqh+0jdXCy9wFHlColUB4wI8e7aqd+90kHqqi7BTIHsda7HoeUWv3d7LxtwZHYaoftBY6yF10bQQUK+tYlZIlXm02YrrkqykhFO3m8FrIUurGVZKoDwgtOP9tTRVx7dvz3PkiOR0OyFOWlFHk=
+	t=1718630780; cv=none; b=J9RabjmRzUeYAxN486tVf89RMwrLoDDIoYon0PxyxQW9h066PCGe95wX3Y1ofHAW0e1atR9//Cuqvxrl11c6gp+hXzd8WDQYyOzRtRc6hBc+vVFogZsO7wUZ2Y60KtoPFOmg7apyOaJkMgbHmFqhHAq85ccMWJigP5N22MuRsWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630757; c=relaxed/simple;
-	bh=vYfswvJzrtsRWRx3NsAYResCsxzDI1JtjJfaKrt5xvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nm5qWJYKSAPhHVi+wDQgCr7esORd+Hl94Zz3uvDQ+OdmnVFuMMcEaZO56y3NrogI9koRnEDI+tCeBxak9d4l2sF5m1Ngg/w8+XZMRe9/XrWFbxvFcMc1NjiLAAEcL3SZpyM8eGLl928LuCoPtcnujN45/2HRu9ONXqxvhgD+HGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUKLxZqY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718630780; c=relaxed/simple;
+	bh=o1kRwwDvVU1rG3e8P5Z+WVP3KIo7hNw64Oqe8utbRqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c0zLRxRsmtpY9zbK2A+O+ckx6HyLpeljk7PDGzzp3ZKsSoi1EeyVcs6z/fhKzcMYvBBFzMGiO9kDMZRoLvN38zn1Iq1iGoKsN5xB1aYbbaswt+W9dcOUwRuy7+2LV4FQgZ7ynOTUVd4HOP7rDsv2jCG6HpNRvc8S+UTH7bo+ZFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIVEuZGO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUKLxZqY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565DBC4AF49;
-	Mon, 17 Jun 2024 13:25:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIVEuZGO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C044C2BD10;
+	Mon, 17 Jun 2024 13:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630757;
-	bh=vYfswvJzrtsRWRx3NsAYResCsxzDI1JtjJfaKrt5xvc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUKLxZqYcEYI437FNDy6de+KR/Ph3iDh/34dxNyLCDMLAVcTv10Y8JfTFAZk+c+Se
-	 no4J+g+Kd2uF2IIe87ANmvuNrFIFqajHF4SkCoRbFTw7pX4LKzPKwGN0o/LF7uZWmB
-	 TDSkjmcjdS5VQdIrV8ktUT9knRdKeKKvCa46RVXhpxaPGShZRDBOY396yxYTgK9ZDj
-	 1JIP6kesIhvvV9WqKGrDB6m+lL/6YMZSUsS7vTX3Lan885PfFNADvY10Y2pjXYwoa8
-	 P1r2KWuFTXjQ8cu2RC+wxKWUjoFv6rqFojBFldPLWYOkvJxd45RN4oHst0J2BFzORt
-	 NzreT0xpuB3aQ==
+	s=k20201202; t=1718630779;
+	bh=o1kRwwDvVU1rG3e8P5Z+WVP3KIo7hNw64Oqe8utbRqY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dIVEuZGOO2N4vNi4l7SthBdNSZr4K4uQKbd1mPkZGMMv2eABLhhACZB+UhfqKOtRg
+	 DKkN9MRy8KkUkyWYMBDUpVn0qAohTlqdY2dWmy6OrWfmzz+mc4zkPylrrZ8IPhvQRk
+	 imo/0PErJI4eSmVziOlGq/9PpyUluVv3uQxeywiebpnDJA2zkgNfEjP8RkY8lYEFkN
+	 3Y2FRD7S0XrTjqwnMl32pSugVCe/GZookhlXbX9JALyz4E4izrSLICUi1hK82EOwNz
+	 hC4o043gFemkSvWSPXu8dnk7+gsQD9EQ0AFh2kZxssb/csYdXmC1naQUKXxJeACJAF
+	 7WglltTMTXsOw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Louis Dalibard <ontake@ontake.dev>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Martin Wilck <martin.wilck@suse.com>,
+	Rajashekhar M A <rajs@netapp.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 29/29] HID: Ignore battery for ELAN touchscreens 2F2C and 4116
-Date: Mon, 17 Jun 2024 09:24:33 -0400
-Message-ID: <20240617132456.2588952-29-sashal@kernel.org>
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 01/21] scsi: core: alua: I/O errors for ALUA state transitions
+Date: Mon, 17 Jun 2024 09:25:38 -0400
+Message-ID: <20240617132617.2589631-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132456.2588952-1-sashal@kernel.org>
-References: <20240617132456.2588952-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,57 +50,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.94
+X-stable-base: Linux 5.15.161
 Content-Transfer-Encoding: 8bit
 
-From: Louis Dalibard <ontake@ontake.dev>
+From: Martin Wilck <martin.wilck@suse.com>
 
-[ Upstream commit a3a5a37efba11b7cf1a86abe7bccfbcdb521764e ]
+[ Upstream commit 10157b1fc1a762293381e9145041253420dfc6ad ]
 
-At least ASUS Zenbook 14 (2023) and ASUS Zenbook 14 Pro (2023) are affected.
+When a host is configured with a few LUNs and I/O is running, injecting FC
+faults repeatedly leads to path recovery problems.  The LUNs have 4 paths
+each and 3 of them come back active after say an FC fault which makes 2 of
+the paths go down, instead of all 4. This happens after several iterations
+of continuous FC faults.
 
-The touchscreen reports a battery status of 0% and jumps to 1% when a
-stylus is used.
+Reason here is that we're returning an I/O error whenever we're
+encountering sense code 06/04/0a (LOGICAL UNIT NOT ACCESSIBLE, ASYMMETRIC
+ACCESS STATE TRANSITION) instead of retrying.
 
-The device ID was added and the battery ignore quirk was enabled for it.
+[mwilck: The original patch was developed by Rajashekhar M A and Hannes
+Reinecke. I moved the code to alua_check_sense() as suggested by Mike
+Christie [1]. Evan Milne had raised the question whether pg->state should
+be set to transitioning in the UA case [2]. I believe that doing this is
+correct. SCSI_ACCESS_STATE_TRANSITIONING by itself doesn't cause I/O
+errors. Our handler schedules an RTPG, which will only result in an I/O
+error condition if the transitioning timeout expires.]
 
-[jkosina@suse.com: reformatted changelog a bit]
-Signed-off-by: Louis Dalibard <ontake@ontake.dev>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+[1] https://lore.kernel.org/all/0bc96e82-fdda-4187-148d-5b34f81d4942@oracle.com/
+[2] https://lore.kernel.org/all/CAGtn9r=kicnTDE2o7Gt5Y=yoidHYD7tG8XdMHEBJTBraVEoOCw@mail.gmail.com/
+
+Co-developed-by: Rajashekhar M A <rajs@netapp.com>
+Co-developed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Martin Wilck <martin.wilck@suse.com>
+Link: https://lore.kernel.org/r/20240514140344.19538-1-mwilck@suse.com
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h   | 2 ++
- drivers/hid/hid-input.c | 4 ++++
- 2 files changed, 6 insertions(+)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 31 +++++++++++++++-------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 405d88b08908d..4b8c1d18c21e0 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -417,6 +417,8 @@
- #define I2C_DEVICE_ID_HP_SPECTRE_X360_13_AW0020NG  0x29DF
- #define I2C_DEVICE_ID_ASUS_TP420IA_TOUCHSCREEN 0x2BC8
- #define I2C_DEVICE_ID_ASUS_GV301RA_TOUCHSCREEN 0x2C82
-+#define I2C_DEVICE_ID_ASUS_UX3402_TOUCHSCREEN 0x2F2C
-+#define I2C_DEVICE_ID_ASUS_UX6404_TOUCHSCREEN 0x4116
- #define USB_DEVICE_ID_ASUS_UX550VE_TOUCHSCREEN	0x2544
- #define USB_DEVICE_ID_ASUS_UX550_TOUCHSCREEN	0x2706
- #define I2C_DEVICE_ID_SURFACE_GO_TOUCHSCREEN	0x261A
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 4ba5df3c1e039..b0091819fd58a 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -374,6 +374,10 @@ static const struct hid_device_id hid_battery_quirks[] = {
- 	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_GV301RA_TOUCHSCREEN),
- 	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_UX3402_TOUCHSCREEN),
-+	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ASUS_UX6404_TOUCHSCREEN),
-+	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ASUS_UX550_TOUCHSCREEN),
- 	  HID_BATTERY_QUIRK_IGNORE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELAN, USB_DEVICE_ID_ASUS_UX550VE_TOUCHSCREEN),
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index a9c4a5e2ccb90..60792f257c235 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -406,28 +406,40 @@ static char print_alua_state(unsigned char state)
+ 	}
+ }
+ 
+-static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
+-					      struct scsi_sense_hdr *sense_hdr)
++static void alua_handle_state_transition(struct scsi_device *sdev)
+ {
+ 	struct alua_dh_data *h = sdev->handler_data;
+ 	struct alua_port_group *pg;
+ 
++	rcu_read_lock();
++	pg = rcu_dereference(h->pg);
++	if (pg)
++		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
++	rcu_read_unlock();
++	alua_check(sdev, false);
++}
++
++static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
++					      struct scsi_sense_hdr *sense_hdr)
++{
+ 	switch (sense_hdr->sense_key) {
+ 	case NOT_READY:
+ 		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
+ 			/*
+ 			 * LUN Not Accessible - ALUA state transition
+ 			 */
+-			rcu_read_lock();
+-			pg = rcu_dereference(h->pg);
+-			if (pg)
+-				pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
+-			rcu_read_unlock();
+-			alua_check(sdev, false);
++			alua_handle_state_transition(sdev);
+ 			return NEEDS_RETRY;
+ 		}
+ 		break;
+ 	case UNIT_ATTENTION:
++		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
++			/*
++			 * LUN Not Accessible - ALUA state transition
++			 */
++			alua_handle_state_transition(sdev);
++			return NEEDS_RETRY;
++		}
+ 		if (sense_hdr->asc == 0x29 && sense_hdr->ascq == 0x00) {
+ 			/*
+ 			 * Power On, Reset, or Bus Device Reset.
+@@ -494,7 +506,8 @@ static int alua_tur(struct scsi_device *sdev)
+ 
+ 	retval = scsi_test_unit_ready(sdev, ALUA_FAILOVER_TIMEOUT * HZ,
+ 				      ALUA_FAILOVER_RETRIES, &sense_hdr);
+-	if (sense_hdr.sense_key == NOT_READY &&
++	if ((sense_hdr.sense_key == NOT_READY ||
++	     sense_hdr.sense_key == UNIT_ATTENTION) &&
+ 	    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
+ 		return SCSI_DH_RETRY;
+ 	else if (retval)
 -- 
 2.43.0
 
