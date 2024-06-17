@@ -1,67 +1,66 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9021946BC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186C9191461;
+	Mon, 17 Jun 2024 11:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718623882; cv=none; b=cHtrekIl+LcUKwAQYWr9UZLMwHavWMBML85/W6EEkBOgSSixt1VW/Yu4nVmfNRz6VgBbnUPpfMa+Kp2QxRRLF0yKcttHxJI2/ueFCIE76SiTbMlV0yJJFuCTTKVj2KxfXqPvOXG9Z8CiTyTrNHkgLd/OeypewAtRfbPQvDb4jGY=
+	t=1718624090; cv=none; b=VIUxJ54R9CntAMouKc+I+MEumJJq0t5CKmsWglIG/AVAaQyVGGsZFvnaS5Gz6yF8I2wn/Dk4U8D0ImSLYnbHZtYdq8mt5C8GCvhnAPYnj5DkBZ78eeyGgJFeefBo7C1t6GYu2hf5mwrYNEwjl2cynjlkUQ4DlZekDrPLhHYjFfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718623882; c=relaxed/simple;
-	bh=cCoXQV3kYF7W4zbN+zvGdFQuynk8VUtSE0YxweJekic=;
+	s=arc-20240116; t=1718624090; c=relaxed/simple;
+	bh=0jId0a55uaWiJleIvuFAp7uQffIjPdI/Ww2Wmybckx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSQl1MzTfGcqHxaHdqCMyvr0OvRtsIoYBHwxWFZ+9a3dpje4DGRziO9Uny08MoQWc3jc+MijKqtpt6cSViPUQhde4qJuclunQQvD1LoDMEVeOOd4METkM0LEbk3Pyi4MulM/Umb0cQgGYkcPigUdA/tLFqV3GrDldnpsuvhEvGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=xk9Nq4I4; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	 Content-Type:Content-Disposition:In-Reply-To; b=oL9tPIfe7GuLK0ebsQCprg3PcTF9GlKcKONjkwmt62OkE5ocFRUY0MDgCPr0/3lGoF9vS4rmFw8h/oRw7dCWcvyEY14E8rRWdK9zGz4Ba24mBDktV2IStlabbUCZ1s7HiWlTVDsra6F1zaoypbGTif5hw5477xcoHtJZ1x0LG+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bELuhYh7; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="xk9Nq4I4"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4217a96de38so30938715e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718623876; x=1719228676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TgVC6xwTMFPOUKFAMsWw+F8yDLHqZOwZjG2EMVIlrFk=;
-        b=xk9Nq4I4Pmhxl05WUMPKxHg09v1+PVElruoTgX+hyaAPFW4E2PrbOfF/zsf30lGy/Z
-         g3KNTg+umlONiMtgXaeghp6ZRMNSSyc3uZoUqrGaLC2TowpeSo4FeBOYiOIj+8sRfKO7
-         fohT3pmvg+vwgwObQZ78ADhN9I+atIRiVcRRfvi3cfUa7VNLBoFRszq4KP0aiEMN8p/G
-         2LFoCknTELepfWWwqQejcOZdjikD1RKxvCFwp4pNBkWrrsuOZ1kRuMWb2DKZhOqAfrUq
-         abH7c+6+Cc6P2cCL1zKMjSKSTo4rYkh47f1yC3u9k8n8xvWCtKFYpXRgdaiPtutR5lpT
-         0zQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718623876; x=1719228676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TgVC6xwTMFPOUKFAMsWw+F8yDLHqZOwZjG2EMVIlrFk=;
-        b=bQ5Pefw6XY7XBUj1JXBQ4RMJP9GFWS+xxqhmR/KRXF9NUE0oGGykWGbclVUYSiIk69
-         800srm/BwxAVjcYU/BsvRgAXfd7sL5M1s6akI2WsrT+xlIsI77bK0m8I+yhLtlC6/GO/
-         ovJF8Q2FA59cqzHLY0L6Hd8NldyNJnw+XSbN/vWKwnmRfIgUixyPyPlKW6F3Rybe5tbf
-         3/HbVusOm98TQtqFDuugZTDMORKFmXpjgj/U15F2XS9JP0SsHnWWb5+4ak+4dqxxaVGX
-         bDcS/+izJiOGL3B/1EsPYwgJ+ym8WJVDK8gh10ZWS49j8blbWLWv9mR6kpou3rcquQC/
-         FjCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0amOoOVNhTTmRPvipO5I6Yc7rckEhvzbfvi+1VFGdD9KMIhtcc2yJMFzGEp7oKo94BdZZXr1YxTymQ9J+K/173cV5JXtzSwEdS1FG
-X-Gm-Message-State: AOJu0YzKzGzLIBwrhv9AoSLGVefdrnO9P6Klc3Rxgk+QrDGWO7K4wakV
-	eRvSR1yAlZM+mhC8139QqrrpRWupd3Grm8N/JGBaFcitowmYDO5YtYiRTITf7vU=
-X-Google-Smtp-Source: AGHT+IFQdNTBFMjluYuYDNiSDw0jBvXyuET+DmpHPyKJrukjPXm7sadAvuTx8wiCI2gh9SgZquoIXA==
-X-Received: by 2002:a05:600c:1d07:b0:421:7435:88d7 with SMTP id 5b1f17b1804b1-42304844106mr87253345e9.26.1718623876032;
-        Mon, 17 Jun 2024 04:31:16 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286eefa63sm193971445e9.1.2024.06.17.04.31.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 04:31:15 -0700 (PDT)
-Date: Mon, 17 Jun 2024 13:31:11 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: luoxuanqiang <luoxuanqiang@kylinos.cn>
-Cc: edumazet@google.com, kuniyu@amazon.com, davem@davemloft.net,
-	dccp@vger.kernel.org, dsahern@kernel.org, fw@strlen.de,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	alexandre.ferrieux@orange.com
-Subject: Re: [PATCH net v3] Fix race for duplicate reqsk on identical SYN
-Message-ID: <ZnAef_DSlzfNP0wh@nanopsycho.orion>
-References: <20240617075640.207570-1-luoxuanqiang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bELuhYh7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718624088; x=1750160088;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0jId0a55uaWiJleIvuFAp7uQffIjPdI/Ww2Wmybckx8=;
+  b=bELuhYh7XykUM0BiQF9UDGrfnbCZ6Lzs559ctU42KfI1u1R/k9ktGImi
+   E5Z8hmXyUMiIrtEOtbl75VROgOoKnPH+ihhyHtYy3b2W8WDLhnk3xx1UZ
+   ZvZJW7NaB0ushr6ilq7fESgacTX+YyRqtAw/9sV0rm4fyagsoLxFYMcqA
+   iZzcjj93kJxXc4kWhNLMBfBklcfQWA7F18ILb3Em+hQ/Nmb3HhP8WtoNa
+   645KHz1N6HF5UmO1sUl65XoeDFvJkKBfqxoGFaf7ugbRGgSuA5rYgSuRn
+   h7FisD4Jpb8fY7rVm6QkPekFeUFMxklF3JQC5qO93bBIF0TkVwdoZ/mpJ
+   A==;
+X-CSE-ConnectionGUID: AHV2rNPcQaixJuof2THFqg==
+X-CSE-MsgGUID: Jif929qLSimskTX1+cSEmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15411182"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="15411182"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 04:34:47 -0700
+X-CSE-ConnectionGUID: E2+bi//pTLy/iZHHsXQ5NA==
+X-CSE-MsgGUID: 5FEHokIsRdCLQF89Jyr7oQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="45698928"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 17 Jun 2024 04:34:46 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJAdG-0004ET-29;
+	Mon, 17 Jun 2024 11:34:42 +0000
+Date: Mon, 17 Jun 2024 19:34:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yasin Lee <yasin.lee.x@outlook.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+	Yasin Lee <yasin.lee.x@gmail.com>
+Subject: Re: [PATCH v5 3/3] iio:proximity:hx9023s: Add TYHX HX9023S sensor
+ driver
+Message-ID: <202406171946.qe83Tde0-lkp@intel.com>
+References: <SN7PR12MB8101D4BC788B5954608D677DA4CC2@SN7PR12MB8101.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,62 +69,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240617075640.207570-1-luoxuanqiang@kylinos.cn>
+In-Reply-To: <SN7PR12MB8101D4BC788B5954608D677DA4CC2@SN7PR12MB8101.namprd12.prod.outlook.com>
 
-Mon, Jun 17, 2024 at 09:56:40AM CEST, luoxuanqiang@kylinos.cn wrote:
->When bonding is configured in BOND_MODE_BROADCAST mode, if two identical
->SYN packets are received at the same time and processed on different CPUs,
->it can potentially create the same sk (sock) but two different reqsk
->(request_sock) in tcp_conn_request().
->
->These two different reqsk will respond with two SYNACK packets, and since
->the generation of the seq (ISN) incorporates a timestamp, the final two
->SYNACK packets will have different seq values.
->
->The consequence is that when the Client receives and replies with an ACK
->to the earlier SYNACK packet, we will reset(RST) it.
->
->========================================================================
->
->This behavior is consistently reproducible in my local setup,
->which comprises:
->
->                  | NETA1 ------ NETB1 |
->PC_A --- bond --- |                    | --- bond --- PC_B
->                  | NETA2 ------ NETB2 |
->
->- PC_A is the Server and has two network cards, NETA1 and NETA2. I have
->  bonded these two cards using BOND_MODE_BROADCAST mode and configured
->  them to be handled by different CPU.
->
->- PC_B is the Client, also equipped with two network cards, NETB1 and
->  NETB2, which are also bonded and configured in BOND_MODE_BROADCAST mode.
->
->If the client attempts a TCP connection to the server, it might encounter
->a failure. Capturing packets from the server side reveals:
->
->10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->10.10.10.10.45182 > localhost: Flags [S], seq 320236027,
->localhost > 10.10.10.10.45182: Flags [S.], seq 2967855116,
->localhost > 10.10.10.10.45182: Flags [S.], seq 2967855123, <==
->10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->10.10.10.10.45182 > localhost: Flags [.], ack 4294967290,
->localhost > 10.10.10.10.45182: Flags [R], seq 2967855117, <==
->localhost > 10.10.10.10.45182: Flags [R], seq 2967855117,
->
->Two SYNACKs with different seq numbers are sent by localhost,
->resulting in an anomaly.
->
->========================================================================
->
->The attempted solution is as follows:
->In the tcp_conn_request(), while inserting reqsk into the ehash table,
->it also checks if an entry already exists. If found, it avoids
->reinsertion and releases it.
->
->Simultaneously, In the reqsk_queue_hash_req(), the start of the
->req->rsk_timer is adjusted to be after successful insertion.
->
->Signed-off-by: luoxuanqiang <luoxuanqiang@kylinos.cn>
+Hi Yasin,
 
-You are missing "Fixes" tag.
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on robh/for-next linus/master v6.10-rc4 next-20240613]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Yasin-Lee/dt-bindings-iio-proximity-Add-hx9023s-binding/20240616-154122
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/SN7PR12MB8101D4BC788B5954608D677DA4CC2%40SN7PR12MB8101.namprd12.prod.outlook.com
+patch subject: [PATCH v5 3/3] iio:proximity:hx9023s: Add TYHX HX9023S sensor driver
+config: arm64-randconfig-r132-20240617 (https://download.01.org/0day-ci/archive/20240617/202406171946.qe83Tde0-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20240617/202406171946.qe83Tde0-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406171946.qe83Tde0-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/proximity/hx9023s.c:955:44: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 @@     got int diff @@
+   drivers/iio/proximity/hx9023s.c:955:44: sparse:     expected restricted __be16
+   drivers/iio/proximity/hx9023s.c:955:44: sparse:     got int diff
+
+vim +955 drivers/iio/proximity/hx9023s.c
+
+   931	
+   932	static irqreturn_t hx9023s_trigger_handler(int irq, void *private)
+   933	{
+   934		struct iio_poll_func *pf = private;
+   935		struct iio_dev *indio_dev = pf->indio_dev;
+   936		struct hx9023s_data *data = iio_priv(indio_dev);
+   937		struct device *dev = regmap_get_device(data->regmap);
+   938		int ret;
+   939		unsigned int bit, i = 0;
+   940	
+   941		guard(mutex)(&data->mutex);
+   942		ret = hx9023s_sample(data);
+   943		if (ret) {
+   944			dev_warn(dev, "sampling failed\n");
+   945			goto out;
+   946		}
+   947	
+   948		ret = hx9023s_get_prox_state(data);
+   949		if (ret) {
+   950			dev_warn(dev, "get prox failed\n");
+   951			goto out;
+   952		}
+   953	
+   954		for_each_set_bit(bit, indio_dev->active_scan_mask, indio_dev->masklength)
+ > 955			data->buffer.channels[i++] = data->ch_data[indio_dev->channels[bit].channel].diff;
+   956	
+   957		iio_push_to_buffers_with_timestamp(indio_dev, &data->buffer, pf->timestamp);
+   958	
+   959	out:
+   960		iio_trigger_notify_done(indio_dev->trig);
+   961	
+   962		return IRQ_HANDLED;
+   963	}
+   964	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
