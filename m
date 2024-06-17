@@ -1,106 +1,229 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C343A194AF9;
-	Mon, 17 Jun 2024 09:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5022F190673;
+	Mon, 17 Jun 2024 09:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616965; cv=none; b=eX6Tp1QrY68hl0eMoVvNlHP/p3l82i8bLMqjRUafsL1l4EcTD3LVmnR7ZamI52cwKVL9spdvRIg+vBgVtcLl/Ut6TaOqV/qXvAbJ2yjYdoxa6t1RQoVCSnK4MbeQPTHgB/yYvE6a4hn/EZAvdv/MhvM2sc2GqzGllPVqRQnkDK0=
+	t=1718617070; cv=none; b=Ret+ZKYY3TbGmXpD59WqRmKh5AfLjYYkMvqGsHrrt9y6nIGN+lCpPBYjL8C/VZGmEjMFInjoyJo+EiCasl/Tgffn8nEA6Nc0VBTrxLE0Xw0Bg4SM/zVKu04eveDrwAoYhtQEMHAj5Rr4tCgPK6CAyyKNGF5UfQ/pOiBL496iud0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616965; c=relaxed/simple;
-	bh=vQqTvbivMs+MNtHTioR/qckxEhiqb5TTenbL4zuI1zQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kBXyv4HcaqZ2WVrqlmB9xp03hsFLXTpAuliwsOVtfcKpHtsjk+j1hnV/RwtiE2JWpwkrPY/H6AqNoG9m0ndL/G5Vo89bRlqJGRfW79WP+obUjYrGzfNB3hv2oE7ke1J8Gyskaw/WnryvGeVZSlwKjh5SY6mGd+3G6wvylvF/Xmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RA9g7i2x; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718617070; c=relaxed/simple;
+	bh=6GJI8RyV4Rxgbr0HGunZUiPB2c9B8M95YOgm2k5GYIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uy12kYpESvpLidfbm0vQYkScPK9OeI1PWfb5OaMGEjzWiSHVImPeZ3KKwtZ788jI/sDN4rnhbuPADWrO6kG9y+joKQrh6ys56F2hXxPwxzTUCUVNQIynvit2mo1Yqika7kCtOUk71uM0G39TL3RDZpVzeghElTdEUb+473Pc20U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=e0eoA3Rw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=60VR4dPt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=e0eoA3Rw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=60VR4dPt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RA9g7i2x"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H0aCK0028294;
-	Mon, 17 Jun 2024 09:36:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qlf8nNst8S52KWr/4lUQRbOdt7tnowKDVkaY8PGgG7A=; b=RA9g7i2xGIYeqcaw
-	fiRuiq3a/ptDioN1hESxslZkEWBJg7p1kJ3t5ae3CrJp8Hg0WCh6W54h4bde9G/n
-	jY242t1/cC/21u/aNDQxKpvBxmRgRwgpFGpPOnrSfMLLn44f9oVSDTOPPFX/2x77
-	vKDapd8/14Uz8b5rfMIWXBsnqMKf8YE28Ddg4GdPWWbjN3J05lTE6IF48Jw6PuWA
-	fntSgWIhup7NLIVEwpg0UvAgsyXI3Hjlbc5OWxY53Ayxj+qHN4ReHwc1tJQ8lgv3
-	dSjHkxkomILD1wnLEW7gdx7dgZuuiVtTI0bVNwAJgPF7jRW6Z95Q3U51N2ezD9Fe
-	FmJbsg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys2hxb8hr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:36:00 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45H9Zxgn003141
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 09:35:59 GMT
-Received: from hu-nainmeht-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Jun 2024 02:35:55 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_nainmeht@quicinc.com>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: sdx75-idp: enable MPSS remoteproc node
-Date: Mon, 17 Jun 2024 15:04:28 +0530
-Message-ID: <20240617093428.3616194-6-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617093428.3616194-1-quic_nainmeht@quicinc.com>
-References: <20240617093428.3616194-1-quic_nainmeht@quicinc.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="e0eoA3Rw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="60VR4dPt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="e0eoA3Rw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="60VR4dPt"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1C3045FE13;
+	Mon, 17 Jun 2024 09:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718617066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
+	b=e0eoA3RwXAUApO9OKFPUvDLR7Su4DXfOVMavcXGgWD2mB625CNUBJPgxynUWq0RXpTy8U1
+	dNsdSNXz/cOIs0WeOmwg1BkKaXMXVSMq6zA50xqDvsb5sW1PN5LCTejML6iMlLLvh9ChwR
+	vRsoNbrAf5iy8S1rJq8pbDgMGE3USQs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718617066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
+	b=60VR4dPt9IjY7qkDextIsvc8s7WdXcsVzYK2nbo624/PVrX35T0zYvjSGzWKaS1ETvUHRr
+	KnV99vuMnASrOjDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=e0eoA3Rw;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=60VR4dPt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718617066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
+	b=e0eoA3RwXAUApO9OKFPUvDLR7Su4DXfOVMavcXGgWD2mB625CNUBJPgxynUWq0RXpTy8U1
+	dNsdSNXz/cOIs0WeOmwg1BkKaXMXVSMq6zA50xqDvsb5sW1PN5LCTejML6iMlLLvh9ChwR
+	vRsoNbrAf5iy8S1rJq8pbDgMGE3USQs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718617066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SflxasanEA/QtBQMFtVqAWfy8whSAsE2lNZEdzjNdd4=;
+	b=60VR4dPt9IjY7qkDextIsvc8s7WdXcsVzYK2nbo624/PVrX35T0zYvjSGzWKaS1ETvUHRr
+	KnV99vuMnASrOjDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E24913AAA;
+	Mon, 17 Jun 2024 09:37:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lkRuA+oDcGYgeAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 17 Jun 2024 09:37:46 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A9A78A0886; Mon, 17 Jun 2024 11:37:45 +0200 (CEST)
+Date: Mon, 17 Jun 2024 11:37:45 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: NeilBrown <neilb@suse.de>, Amir Goldstein <amir73il@gmail.com>,
+	James Clark <james.clark@arm.com>, ltp@lists.linux.it,
+	linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
+ ->atomic_open used.
+Message-ID: <20240617093745.nhnc7e7efdldnjzl@quack3>
+References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
+ <20240615-fahrrad-bauordnung-a349bacd8c82@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lEHMSu-eLMhLcOEggCjp1AIJpX6PKNyJ
-X-Proofpoint-ORIG-GUID: lEHMSu-eLMhLcOEggCjp1AIJpX6PKNyJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_08,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=928 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 mlxscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240615-fahrrad-bauordnung-a349bacd8c82@brauner>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,gmail.com,arm.com,lists.linux.it,vger.kernel.org,zeniv.linux.org.uk,suse.cz];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 1C3045FE13
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-Enable MPSS remoteproc node on sdx75-idp platform.
+On Sat 15-06-24 07:35:42, Christian Brauner wrote:
+> On Wed, 12 Jun 2024 17:09:55 +1000, NeilBrown wrote:
+> > When a file is opened and created with open(..., O_CREAT) we get
+> > both the CREATE and OPEN fsnotify events and would expect them in that
+> > order.   For most filesystems we get them in that order because
+> > open_last_lookups() calls fsnofify_create() and then do_open() (from
+> > path_openat()) calls vfs_open()->do_dentry_open() which calls
+> > fsnotify_open().
+> > 
+> > [...]
+> 
+> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+> Patches in the vfs.fixes branch should appear in linux-next soon.
+> 
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
+> 
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
+> 
+> Note that commit hashes shown below are subject to change due to rebase,
+> trailer updates or similar. If in doubt, please check the listed branch.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: vfs.fixes
+> 
+> [1/1] VFS: generate FS_CREATE before FS_OPEN when ->atomic_open used.
+>       https://git.kernel.org/vfs/vfs/c/7536b2f06724
 
-Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sdx75-idp.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+I have reviewed the patch you've committed since I wasn't quite sure which
+changes you're going to apply after your discussion with Amir. And I have
+two comments:
 
-diff --git a/arch/arm64/boot/dts/qcom/sdx75-idp.dts b/arch/arm64/boot/dts/qcom/sdx75-idp.dts
-index fde16308c7e2..f1bbe7ab01ab 100644
---- a/arch/arm64/boot/dts/qcom/sdx75-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdx75-idp.dts
-@@ -282,6 +282,12 @@ &qupv3_id_0 {
- 	status = "okay";
- };
- 
-+&remoteproc_mpss {
-+	firmware-name = "qcom/sdx75/modem.mbn",
-+			"qcom/sdx75/modem_dtb.mbn";
-+	status = "okay";
-+};
+@@ -1085,8 +1080,17 @@ EXPORT_SYMBOL(file_path);
+  */
+ int vfs_open(const struct path *path, struct file *file)
+ {
++	int ret;
 +
- &sdhc {
- 	cd-gpios = <&tlmm 103 GPIO_ACTIVE_LOW>;
- 	vmmc-supply = <&reg_2v95_vdd>;
--- 
-2.34.1
+ 	file->f_path = *path;
+-	return do_dentry_open(file, NULL);
++	ret = do_dentry_open(file, NULL);
++	if (!ret)
++		/*
++		 * Once we return a file with FMODE_OPENED, __fput() will call
++		 * fsnotify_close(), so we need fsnotify_open() here for symmetry.
++		 */
++		fsnotify_open(file);
++	return ret;
+ }
 
+AFAICT this will have a side-effect that now fsnotify_open() will be
+generated even for O_PATH open. It is true that fsnotify_close() is getting
+generated for them already and we should strive for symmetry. Conceptually
+it doesn't make sense to me to generate fsnotify events for O_PATH
+opens/closes but maybe I miss something. Amir, any opinion here?
+
+@@ -3612,6 +3612,9 @@ static int do_open(struct nameidata *nd,
+ 	int acc_mode;
+ 	int error;
+ 
++	if (file->f_mode & FMODE_OPENED)
++		fsnotify_open(file);
++
+ 	if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
+ 		error = complete_walk(nd);
+ 		if (error)
+
+Frankly, this works but looks as an odd place to put this notification to.
+Why not just placing it just next to where fsnotify_create() is generated
+in open_last_lookups()? Like:
+
+        if (open_flag & O_CREAT)
+                inode_lock(dir->d_inode);
+        else
+                inode_lock_shared(dir->d_inode);
+        dentry = lookup_open(nd, file, op, got_write);
+-	if (!IS_ERR(dentry) && (file->f_mode & FMODE_CREATED))
+-		fsnotify_create(dir->d_inode, dentry);
++	if (!IS_ERR(dentry)) {
++		if (file->f_mode & FMODE_CREATED)
++	                fsnotify_create(dir->d_inode, dentry);
++		if (file->f_mode & FMODE_OPENED)
++			fsnotify_open(file);
++	}
+        if (open_flag & O_CREAT)
+                inode_unlock(dir->d_inode);
+        else
+                inode_unlock_shared(dir->d_inode);
+
+That looks like a place where it is much more obvious this is for
+atomic_open() handling? Now I admit I'm not really closely familiar with
+the atomic_open() paths so maybe I miss something and do_open() is better.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
