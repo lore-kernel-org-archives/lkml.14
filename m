@@ -1,107 +1,204 @@
-Received: from out28-100.mail.aliyun.com (out28-100.mail.aliyun.com [115.124.28.100])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAF6DDAD
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407AF17E900
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718605705; cv=none; b=IxRJ39enxaJyPPoTHBQaFgXO6AeHqLHNnn/5izbL0XsVJ4JtV5QbPevmvBzc1x93j1sgmgfW54s0k0X0/o4WHDBMacR6NM2877iteUH14gC0vfBVBX/XkkaoqkmZItUBpdW9lqa5FjZBOw6/KzcnGlSIXzMDWrsbTaorDQ4gai8=
+	t=1718605799; cv=none; b=gxTLe1OZv9opEnQB2vnHFKYgmBS2kNdDNiyzEQY7Cfgm4l0acDD4yr2rm+jMvf6Jy2Yde9kyNlIUfcjfX/7hsd3zutFBtlpABY4L69CBUhVduQwbqK3hN9Ac+VvWKjSH0AXomib9PjDOZnx2NoeXg3Iwk520oeFlgjJ0BI9Mcso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718605705; c=relaxed/simple;
-	bh=bxuv+KRLC4+RGQNNNfVBzHItWpX86UHlafkvArXBMaw=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:References:
-	 In-Reply-To:Content-Type; b=qmJ72xZG/bNYpxmmDRsjQilUnZN24mWUv7Ukh0+yOChvgN7NBLh8QWiLDCMURWef5gtlV6sNsqF6+Vrm/U06C4EadwzZu+NyRZMugelf++Qlc0+VRhyA5EEDgeSQ/LhYRxdx8+0PosnZ9L+4nZ9CtJg3jYJQuO1TNdshx4ofia4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com; spf=pass smtp.mailfrom=ubisectech.com; arc=none smtp.client-ip=115.124.28.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubisectech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07386803|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.242902-0.000759734-0.756338;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037088118;MF=bugreport@ubisectech.com;NM=1;PH=DW;RN=6;RT=6;SR=0;TI=W4_0.2.3_v5ForWebDing_21126CAB_1718605112440_o7001c878;
-Received: from WS-web (bugreport@ubisectech.com[W4_0.2.3_v5ForWebDing_21126CAB_1718605112440_o7001c878]) at Mon, 17 Jun 2024 14:22:53 +0800
-Date: Mon, 17 Jun 2024 14:22:53 +0800
-From: "Ubisectech Sirius" <bugreport@ubisectech.com>
-To: "Dave Airlie" <airlied@gmail.com>
-Cc: "linux-kernel" <linux-kernel@vger.kernel.org>,
-  "maarten.lankhorst" <maarten.lankhorst@linux.intel.com>,
-  "mripard" <mripard@kernel.org>,
-  "tzimmermann" <tzimmermann@suse.de>,
-  "dri-devel" <dri-devel@lists.freedesktop.org>
-Reply-To: "Ubisectech Sirius" <bugreport@ubisectech.com>
-Message-ID: <bf3fa1c7-5fea-4db6-b7df-e7e19b336f27.bugreport@ubisectech.com>
-Subject: =?UTF-8?B?5Zue5aSN77yaV0FSTklORyBpbiBkcm1fbW9kZV9jcmVhdGVfbGVhc2VfaW9jdGw=?=
-X-Mailer: [Alimail-Mailagent][W4_0.2.3][v5ForWebDing][Chrome]
+	s=arc-20240116; t=1718605799; c=relaxed/simple;
+	bh=gB74UQ+ZU/i1keZiWgSywW8y4hrs5IFCjiV5a6pIvAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EPOuQCLJn04D35nRhDvT/eMfmdNUoIVyvzNuHvfOlJmh8vpC/Y6xpr41VaieGQpkLJ3pC0tZCi/dieaWCADUxg3RonpfBgOGgBqAZQhZecBKUQ2waYogzLzKltpC3N9od5m8KwT73rslngYkvbjD3q/YJJ6sxh6kQDiElhvmV7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sJ5sA-0005oq-R9; Mon, 17 Jun 2024 08:29:46 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sJ5s9-002uZ2-Pb; Mon, 17 Jun 2024 08:29:45 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sJ5s9-00G1vp-2F;
+	Mon, 17 Jun 2024 08:29:45 +0200
+Date: Mon, 17 Jun 2024 08:29:45 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: David Lin <yu-hao.lin@nxp.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"briannorris@chromium.org" <briannorris@chromium.org>,
+	"kvalo@kernel.org" <kvalo@kernel.org>,
+	"francesco@dolcini.it" <francesco@dolcini.it>,
+	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [EXT] Re: [PATCH v10 2/2] wifi: mwifiex: add host mlme for AP
+ mode
+Message-ID: <Zm_X2ULdvDIHFWAl@pengutronix.de>
+References: <20240418060626.431202-1-yu-hao.lin@nxp.com>
+ <20240418060626.431202-3-yu-hao.lin@nxp.com>
+ <Zmmeg15YQtiChZ70@pengutronix.de>
+ <PA4PR04MB9638C0A141C53CC2F5898DA1D1C22@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <Zmvjw3aG9j8kW0Ld@pengutronix.de>
+ <PA4PR04MB9638EE40501500C0B58BACC5D1CD2@PA4PR04MB9638.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-x-aliyun-im-through: {"mailThroughImNew":true}
-References: <CAPM=9twiDQ0Yv8p-oWWWZnnFViMiN79U6VGSC-wisSE-oYOEqg@mail.gmail.com>
-x-aliyun-mail-creator: W4_0.2.3_v5ForWebDing_M3LTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyNS4wLjAuMCBTYWZhcmkvNTM3LjM2vN
-In-Reply-To: <CAPM=9twiDQ0Yv8p-oWWWZnnFViMiN79U6VGSC-wisSE-oYOEqg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA4PR04MB9638EE40501500C0B58BACC5D1CD2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-PiBDYydpbmcgZHJpLWRldmVsCgo+IERvZXMgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvZHJpLWRl
-dmVsLzIwMjQwNjE3MDM1MjU4LjI3NzQwMzItMS1haXJsaWVkQGdtYWlsLmNvbS9ULyN1Cj4gaGVs
-cD8KCj4gVGhhbmtzLAoKPiBEYXZlLgoKSGkuIFRoZSBpc3N1ZSBkb2VzIG5vdCBhcHBlYXIgYWZ0
-ZXIgYXBwbGllZCB0aGUgcGF0Y2guCgo+IE9uIE1vbiwgMTcgSnVuIDIwMjQgYXQgMTM6MTIsIFVi
-aXNlY3RlY2ggU2lyaXVzCj4gPGJ1Z3JlcG9ydEB1YmlzZWN0ZWNoLmNvbT4gd3JvdGU6Cj4+Cj4+
-IEhlbGxvLgo+PiBXZSBhcmUgVWJpc2VjdGVjaCBTaXJpdXMgVGVhbSwgdGhlIHZ1bG5lcmFiaWxp
-dHkgbGFiIG9mIENoaW5hIFZhbGlhbnRTZWMuIFJlY2VudGx5LCBvdXIgdGVhbSBoYXMgZGlzY292
-ZXJlZCBhIGlzc3VlIGluIExpbnV4IGtlcm5lbCA2LjguwqAgQXR0YWNoZWQgdG8gdGhlIGVtYWls
-IHdlcmUgYSBQb0MgZmlsZSBvZiB0aGUgaXNzdWUuCj4+Cj4+IFN0YWNrIGR1bXA6Cj4+Cj4+IC0t
-LS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+PiBXQVJOSU5HOiBDUFU6IDEgUElE
-OiAxODkyOSBhdCBtbS9wYWdlX2FsbG9jLmM6NDU0NSBfX2FsbG9jX3BhZ2VzKzB4NDAyLzB4MjFi
-MCBtbS9wYWdlX2FsbG9jLmM6NDU0NQo+PiBNb2R1bGVzIGxpbmtlZCBpbjoKPj4gQ1BVOiAxIFBJ
-RDogMTg5MjkgQ29tbTogc3l6LWV4ZWN1dG9yLjMgTm90IHRhaW50ZWQgNi44LjAgIzEKPj4gSGFy
-ZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJT1Mg
-MS4xNS4wLTEgMDQvMDEvMjAxNAo+PiBSSVA6IDAwMTA6X19hbGxvY19wYWdlcysweDQwMi8weDIx
-YjAgbW0vcGFnZV9hbGxvYy5jOjQ1NDUKPj4gQ29kZTogZmYgMDAgMGYgODQgMTUgZmUgZmYgZmYg
-ODAgY2UgMDEgZTkgMGQgZmUgZmYgZmYgODMgZmUgMGEgMGYgODYgMGUgZmQgZmYgZmYgODAgM2Qg
-YzcgY2YgNmEgMGQgMDAgNzUgMGIgYzYgMDUgYmUgY2YgNmEgMGQgMDEgOTAgPDBmPiAwYiA5MCA0
-NSAzMSBlNCBlOSA4NyBmZSBmZiBmZiBlOCA1ZSAzZSA5YiBmZiA4NCBjMCAwZiA4NSA3YSBmZQo+
-PiBSU1A6IDAwMTg6ZmZmZmM5MDAwMWNjNzgwOCBFRkxBR1M6IDAwMDEwMjQ2Cj4+IFJBWDogMDAw
-MDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAwMDAwMDAgUkNYOiAxZmZmZjkyMDAwMzk4ZjE0
-Cj4+IFJEWDogMDAwMDAwMDAwMDAwMDAwMSBSU0k6IDAwMDAwMDAwMDAwMDAwMGIgUkRJOiAwMDAw
-MDAwMDAwMDQwZGMwCj4+IFJCUDogZmZmZmM5MDAwMWNjN2FiOCBSMDg6IDAwMDAwMDAwMDAwMDAw
-MDcgUjA5OiAwMDAwMDAwMDAwMDAwMDAwCj4+IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAw
-MDAwMDAwMDAwMDAwMDAgUjEyOiAwMDAwMDAwMDAwN2ExMjAwCj4+IFIxMzogMDAwMDAwMDAwMDAw
-MDAwYiBSMTQ6IDAwMDAwMDAwMDAwNDBkYzAgUjE1OiAwMDAwMDAwMDAwMDAwMDBiCj4+IEZTOsKg
-IDAwMDA3ZjE3MTdiYTU2NDAoMDAwMCkgR1M6ZmZmZjg4ODA3ZWMwMDAwMCgwMDAwKSBrbmxHUzow
-MDAwMDAwMDAwMDAwMDAwCj4+IENTOsKgIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAw
-MDAwMDgwMDUwMDMzCj4+IENSMjogMDAwMDAwMDAyMDNkMDAwMCBDUjM6IDAwMDAwMDAwMWY1YzAw
-MDAgQ1I0OiAwMDAwMDAwMDAwNzUwZWYwCj4+IERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAw
-MDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwCj4+IERSMzogMDAwMDAwMDAwMDAw
-MDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwCj4+IFBLUlU6
-IDU1NTU1NTU0Cj4+IENhbGwgVHJhY2U6Cj4+wqAgPFRBU0s+Cj4+wqAgX19hbGxvY19wYWdlc19u
-b2RlIGluY2x1ZGUvbGludXgvZ2ZwLmg6MjM4IFtpbmxpbmVdCj4+wqAgYWxsb2NfcGFnZXNfbm9k
-ZSBpbmNsdWRlL2xpbnV4L2dmcC5oOjI2MSBbaW5saW5lXQo+PsKgIF9fa21hbGxvY19sYXJnZV9u
-b2RlKzB4ODgvMHgxYTAgbW0vc2x1Yi5jOjM5MjYKPj7CoCBfX2RvX2ttYWxsb2Nfbm9kZSBtbS9z
-bHViLmM6Mzk2OSBbaW5saW5lXQo+PsKgIF9fa21hbGxvYysweDM3MC8weDQ4MCBtbS9zbHViLmM6
-Mzk5NAo+PsKgIGttYWxsb2NfYXJyYXkgaW5jbHVkZS9saW51eC9zbGFiLmg6NjI3IFtpbmxpbmVd
-Cj4+wqAga2NhbGxvYyBpbmNsdWRlL2xpbnV4L3NsYWIuaDo2NTggW2lubGluZV0KPj7CoCBmaWxs
-X29iamVjdF9pZHIgZHJpdmVycy9ncHUvZHJtL2RybV9sZWFzZS5jOjM4OSBbaW5saW5lXQo+PsKg
-IGRybV9tb2RlX2NyZWF0ZV9sZWFzZV9pb2N0bCsweDRjYS8weDFmNzAgZHJpdmVycy9ncHUvZHJt
-L2RybV9sZWFzZS5jOjUyMgo+PsKgIGRybV9pb2N0bF9rZXJuZWwrMHgxZWIvMHgzZjAgZHJpdmVy
-cy9ncHUvZHJtL2RybV9pb2N0bC5jOjc0NAo+PsKgIGRybV9pb2N0bCsweDU4Mi8weGI3MCBkcml2
-ZXJzL2dwdS9kcm0vZHJtX2lvY3RsLmM6ODQxCj4+wqAgdmZzX2lvY3RsIGZzL2lvY3RsLmM6NTEg
-W2lubGluZV0KPj7CoCBfX2RvX3N5c19pb2N0bCBmcy9pb2N0bC5jOjg3MSBbaW5saW5lXQo+PsKg
-IF9fc2Vfc3lzX2lvY3RsIGZzL2lvY3RsLmM6ODU3IFtpbmxpbmVdCj4+wqAgX194NjRfc3lzX2lv
-Y3RsKzB4MWExLzB4MjEwIGZzL2lvY3RsLmM6ODU3Cj4+wqAgZG9fc3lzY2FsbF94NjQgYXJjaC94
-ODYvZW50cnkvY29tbW9uLmM6NTIgW2lubGluZV0KPj7CoCBkb19zeXNjYWxsXzY0KzB4ZDUvMHgy
-NzAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6ODMKPj7CoCBlbnRyeV9TWVNDQUxMXzY0X2FmdGVy
-X2h3ZnJhbWUrMHg2Zi8weDc3Cj4+IFJJUDogMDAzMzoweDdmMTcxNmU4ZWVlZAo+PiBDb2RlOiBj
-MyBlOCA5NyAyYiAwMCAwMCAwZiAxZiA4MCAwMCAwMCAwMCAwMCBmMyAwZiAxZSBmYSA0OCA4OSBm
-OCA0OCA4OSBmNyA0OCA4OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4YiA0YyAy
-NCAwOCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAxIGMzIDQ4IGM3IGMxIGIwIGZmIGZm
-IGZmIGY3IGQ4IDY0IDg5IDAxIDQ4Cj4+IFJTUDogMDAyYjowMDAwN2YxNzE3YmE1MDI4IEVGTEFH
-UzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMTAKPj4gUkFYOiBmZmZmZmZmZmZm
-ZmZmZmRhIFJCWDogMDAwMDdmMTcxNmZlM2Y4MCBSQ1g6IDAwMDA3ZjE3MTZlOGVlZWQKPj4gUkRY
-OiAwMDAwMDAwMDIwMDAwM2MwIFJTSTogMDAwMDAwMDBjMDE4NjRjNiBSREk6IDAwMDAwMDAwMDAw
-MDAwMDMKPj4gUkJQOiAwMDAwN2YxNzE2ZjEzMDE0IFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6
-IDAwMDAwMDAwMDAwMDAwMDAKPiBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAw
-MDAwMjQ2IFIxMjogMDAwMDAwMDAwMDAwMDAwMAo+IFIxMzogMDAwMDAwMDAwMDAwMDAwYiBSMTQ6
-IDAwMDA3ZjE3MTZmZTNmODAgUjE1OiAwMDAwN2YxNzE3Yjg1MDAwCj4+wqAgPC9UQVNLPgo+Pgo+
-Pgo+PiBUaGFuayB5b3UgZm9yIHRha2luZyB0aGUgdGltZSB0byByZWFkIHRoaXMgZW1haWwgYW5k
-IHdlIGxvb2sgZm9yd2FyZCB0byB3b3JraW5nIHdpdGggeW91IGZ1cnRoZXIuCj4+Cj4+Cj4+Cj4+
-Cj4+Cj4+Cj4+Cj4+Cj4+Cj4+
+On Mon, Jun 17, 2024 at 02:15:41AM +0000, David Lin wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > Sent: Friday, June 14, 2024 2:32 PM
+> > To: David Lin <yu-hao.lin@nxp.com>
+> > Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > briannorris@chromium.org; kvalo@kernel.org; francesco@dolcini.it; Pete
+> > Hsieh <tsung-hsien.hsieh@nxp.com>; Francesco Dolcini
+> > <francesco.dolcini@toradex.com>
+> > Subject: Re: [EXT] Re: [PATCH v10 2/2] wifi: mwifiex: add host mlme for AP
+> > mode
+> >
+> > Caution: This is an external email. Please take care when clicking links or
+> > opening attachments. When in doubt, report the message using the 'Report
+> > this email' button
+> >
+> >
+> > On Fri, Jun 14, 2024 at 02:06:45AM +0000, David Lin wrote:
+> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > Sent: Wednesday, June 12, 2024 9:12 PM
+> > > > To: David Lin <yu-hao.lin@nxp.com>
+> > > > Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > briannorris@chromium.org; kvalo@kernel.org; francesco@dolcini.it;
+> > > > Pete Hsieh <tsung-hsien.hsieh@nxp.com>; Francesco Dolcini
+> > > > <francesco.dolcini@toradex.com>
+> > > > Subject: [EXT] Re: [PATCH v10 2/2] wifi: mwifiex: add host mlme for
+> > > > AP mode
+> > > >
+> > > > Caution: This is an external email. Please take care when clicking
+> > > > links or opening attachments. When in doubt, report the message
+> > > > using the 'Report this email' button
+> > > >
+> > > >
+> > > > Hi David,
+> > > >
+> > > > On Thu, Apr 18, 2024 at 02:06:26PM +0800, David Lin wrote:
+> > > > > Add host based MLME to enable WPA3 functionalities in AP mode.
+> > > > > This feature required a firmware with the corresponding V2 Key API
+> > > > > support. The feature (WPA3) is currently enabled and verified only
+> > > > > on IW416. Also, verified no regression with change when host MLME
+> > > > > is disabled.
+> > > > >
+> > > > > Signed-off-by: David Lin <yu-hao.lin@nxp.com>
+> > > > > Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > > > > ---
+> > > > >
+> > > >
+> > > > > diff --git a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > > > > b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > > > > index 491e36611909..073c665183b3 100644
+> > > > > --- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > > > > +++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > > > > @@ -72,6 +72,10 @@ int mwifiex_set_secure_params(struct
+> > > > mwifiex_private *priv,
+> > > > >                               bss_config->key_mgmt =
+> > > > KEY_MGMT_PSK;
+> > > > >                       }
+> > > > >                       break;
+> > > > > +             case WLAN_AKM_SUITE_SAE:
+> > > > > +                     bss_config->protocol = PROTOCOL_WPA2;
+> > > > > +                     bss_config->key_mgmt = KEY_MGMT_SAE;
+> > > > > +                     break;
+> > > >
+> > > > Shouldn't this be |= PROTOCOL_WPA2 and |= KEY_MGMT_SAE?
+> > > > Clearing the other flags when SAE is enabled looks wrong to me.
+> > > >
+> > > > Sascha
+> > > >
+> > >
+> > > These fields are used for the configuration of FW, this is the correct setting.
+> >
+> > This is done in a loop iterating over the different AKM suites, with your patch
+> > this looks like this:
+> >
+> >         for (i = 0; i < params->crypto.n_akm_suites; i++) {
+> >                 switch (params->crypto.akm_suites[i]) {
+> >                 case WLAN_AKM_SUITE_8021X:
+> >                         if (params->crypto.wpa_versions &
+> >                             NL80211_WPA_VERSION_1) {
+> >                                 bss_config->protocol =
+> > PROTOCOL_WPA;
+> >                                 bss_config->key_mgmt =
+> > KEY_MGMT_EAP;
+> >                         }
+> >                         if (params->crypto.wpa_versions &
+> >                             NL80211_WPA_VERSION_2) {
+> >                                 bss_config->protocol |=
+> > PROTOCOL_WPA2;
+> >                                 bss_config->key_mgmt =
+> > KEY_MGMT_EAP;
+> >                         }
+> >                         break;
+> >                 case WLAN_AKM_SUITE_PSK:
+> >                         if (params->crypto.wpa_versions &
+> >                             NL80211_WPA_VERSION_1) {
+> >                                 bss_config->protocol =
+> > PROTOCOL_WPA;
+> >                                 bss_config->key_mgmt =
+> > KEY_MGMT_PSK;
+> >                         }
+> >                         if (params->crypto.wpa_versions &
+> >                             NL80211_WPA_VERSION_2) {
+> >                                 bss_config->protocol |=
+> > PROTOCOL_WPA2;
+> >                                 bss_config->key_mgmt =
+> > KEY_MGMT_PSK;
+> >                         }
+> >                         break;
+> >                 case WLAN_AKM_SUITE_SAE:
+> >                         bss_config->protocol = PROTOCOL_WPA2;
+> >                         bss_config->key_mgmt = KEY_MGMT_SAE;
+> >                         break;
+> >
+> >                 default:
+> >                         break;
+> >                 }
+> >         }
+> >
+> > It looks wrong to overwrite bss_config->protocol and bss_config->key_mgmt in
+> > each iteration of this loop. If that would be correct, you wouldn't need a loop
+> > at all, but could instead configure based on the last AKM suite entry.
+> >
+> > In my understanding the bits in bss_config->key_mgmt should be ored together
+> > depending on the possible AKM suites which is also what the downstream
+> > driver does.
+> >
+> 
+> For the configuration of FW, ored only happens for the same AKM suite.
+
+Sorry, I don't understand this. Could you elaborate what you mean here?
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
