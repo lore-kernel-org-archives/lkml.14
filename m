@@ -1,172 +1,171 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF4018C344;
-	Mon, 17 Jun 2024 07:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718609354; cv=fail; b=WlbLBmz19RycyWNNkvIyneBugnn++0HYQDUUe/Cl7wrsG3aJ7morLwvLv2rlFBqXc5pQxp6lahEF93tdCfR1ttuUIw8FlBldogZuhROUerFuDmm0ASionc9hfy+dTBcNTgetsdqD/8g0WKz7JBxtLzxHu3zoeBcgPOhep/ZBG64=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718609354; c=relaxed/simple;
-	bh=4rA4MoY1oD/sjElxw+DPC+1Xw5Eh/R1KWGwYB6X+YKc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PIrF3kX5qQcu/fOKkrBRu5dHPb4a5Py3jhBXE4mpXgcUFg1GZIW/A216jMQt162f35JHkbEbw7dqjdFU4ypgzf1XA0sro6xF7QuiWE+KP2YgYLWESud8BxVLoR4pnvzQ7Z8UBo80hhjyeN6ptxhUBypS9OITFDjsgXxo6ynznWA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EhUrnHGz; arc=fail smtp.client-ip=40.107.92.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72681188CC2;
+	Mon, 17 Jun 2024 07:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718609358; cv=none; b=NbJizANCpWSWIvS0aUoXQH6zWT/Z822FuuJ25Vq48TqJaPJId/RwFfRr8QkU4uJuCvBHMLN4+87aYm+P4sI2Ur+jCD2YBauEUpgDiSqfdlR+AZGKDbdgbFZepeA6eEfhpc05pqCIj/OYNGrQ4MhdmDZ6nIWlhprMn9s2h5TaVFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718609358; c=relaxed/simple;
+	bh=/LyDENuvfYDBXxhDzgEz448XxUjV1uQrB6Iyg0sw2yc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z9qjEXPzYXMi0zSSAkwTe5/2YHUAfXUIYWMWDA1Nhc25Xk4U+k9oMIJi0L9VTRHRxHTZmeE6+mdj/4dw6T/fjXHw2JXXjX7SrfP8tTtfFOw/KTn6pwZv61fUaE8jm1F4PFtrLqIN0eotr3hQumAd5gLzkrP16fv7FLG2tYJc368=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ph1k+oPf; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EhUrnHGz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jlOtMcjEv50EZieYsqUTdigG1iQUohLUC5i8lyWqTHs5VcjpFxCgc9hXEYRa9Fj1yUrUaHCQYdFkklFBD4ExY+Tq6zWV86pcf3M6OwkbiXW2IGnzkoEv9yLTQXITAwSEDoIuyfc21uXXQvR6huIgXcFVUD2B0K0QUKf15axNSI/0/haJQwGqbUeyfX9AF/NjLsgApLlBnvFhPICv1OYkVjf4Rt2dqRwpMNnOy3zDRwDVaEJaUhaaH4Pu/wM746JSWbwbIjJu7/pR70O3ia33ZD/1ukU/LRBCJcIoxbb1ZgCrmSVw4HaetPeErRJmRohVEwE/WmFaHmm6p+lTU0viWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2Dyv1NDMNED30ORLfcqKTahNsT7sXpi25pcbmL3aF6A=;
- b=ZAPr2Bmm213uLig9uk6mjInfxLzRG+SbENfArVblt6K5uMRCYhX6zlJSgBXRxqWW1J2Ev+nUd7eS0GnCjropVNLgjOSi7HfugIcsUT7ojr5LX3E+YP0rVUrt225LrkFp12TWyUjFxlJ53ISVZ/p6tEhVJb1opSoFtP37Kcx+McnbwqguHxCCXU/NSUgdV0/j1z3oRuJTkxc9aPnB6yLnMJJq1WBV89VaBsyS/v6TeNj1Rntz7/GXJ1RWeRpY/SApzhgOu0iA0rriaANbjsKBvVMzbyoyH8OLX4p+yxO+m9stQDsntUh+n8bAC7pqzYL6/krx1+G5yLFf7KWx5DrC1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Dyv1NDMNED30ORLfcqKTahNsT7sXpi25pcbmL3aF6A=;
- b=EhUrnHGzc31i7Ghar2oBsvefF3iZrcqityXN0oh3TMSWgu8/ejFnK9qjPM9Z6hxBk+54BCOcczQVZb5q/gC4zYQdWjKj/wEAzCWFk9ADiTPvGC/PUr9ryjayTr7iEP3lCjWVjGyUyuHof/UO2QL0DX0T1Am1fhBgDMeJERGXnqk=
-Received: from BYAPR06CA0064.namprd06.prod.outlook.com (2603:10b6:a03:14b::41)
- by IA1PR12MB8263.namprd12.prod.outlook.com (2603:10b6:208:3f8::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
- 2024 07:29:09 +0000
-Received: from SJ1PEPF00001CE0.namprd05.prod.outlook.com
- (2603:10b6:a03:14b:cafe::ce) by BYAPR06CA0064.outlook.office365.com
- (2603:10b6:a03:14b::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.28 via Frontend
- Transport; Mon, 17 Jun 2024 07:29:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE0.mail.protection.outlook.com (10.167.242.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 07:29:09 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Jun
- 2024 02:29:08 -0500
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Mon, 17 Jun 2024 02:29:04 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <venkataprasad.potturu@amd.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>, "Vijendar
- Mukunda" <Vijendar.Mukunda@amd.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Syed Saba
- Kareem" <Syed.SabaKareem@amd.com>, Kuninori Morimoto
-	<kuninori.morimoto.gx@renesas.com>, "open list:SOUND - SOC LAYER / DYNAMIC
- AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/8] ASoC: amd: acp: remove acp_i2s_probe function
-Date: Mon, 17 Jun 2024 12:58:37 +0530
-Message-ID: <20240617072844.871468-4-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617072844.871468-1-Vijendar.Mukunda@amd.com>
-References: <20240617072844.871468-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ph1k+oPf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718609355; x=1750145355;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/LyDENuvfYDBXxhDzgEz448XxUjV1uQrB6Iyg0sw2yc=;
+  b=ph1k+oPfcoFKcdhOnAANf4n86RQJ04Oj7ssSTzKyuSpy4szlpKB/Rs5d
+   9xuz+hP7+kckhrF/0bbGUl2ylQyNalBVWh536ljWOQ0eJ2w54FhViCll0
+   RgptoImv/77w2TUey1LW1nBejc9T2aT49NeaiTLzySqHWRf0TmukV63Js
+   zTPuTwddkoWNHO3T0oLtdCaZnVPIo0T7yf0AaVvhwBaC/1AhB7feXovBH
+   TdLBkdQ0GYQ5nYUf7j95CAd3s2vk60eyBbloNZNMYXP5JJ3lArTYpOse4
+   ACoZ3s2pA3dQutkn/c6TiRwBZwIGxquHXpaKmFGC4tikxdDoxqrO769MG
+   A==;
+X-CSE-ConnectionGUID: BQubg5HpRrqbLaHVDWvPoA==
+X-CSE-MsgGUID: Dt7ztb1mQzeZfIUWRBkoQg==
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="asc'?scan'208";a="28483707"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 17 Jun 2024 00:29:14 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 17 Jun 2024 00:29:02 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Mon, 17 Jun 2024 00:28:59 -0700
+Date: Mon, 17 Jun 2024 08:28:41 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Yangyu Chen <cyy@cyyself.name>
+CC: Conor Dooley <conor@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	<linux-riscv@lists.infradead.org>, Conor Dooley <conor+dt@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup.patel@wdc.com>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Jesse Taube <jesse@rivosinc.com>
+Subject: Re: [PATCH v1 0/9] riscv: add initial support for SpacemiT K1
+Message-ID: <20240617-margarita-alongside-255cbb09ef59@wendy>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+ <20240616-exorcism-computing-e11e26084a62@spud>
+ <20240616224811.GC3983622@ofsar>
+ <tencent_2ABAC5E885F8354EF1F9084A6B5B398EE00A@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: Vijendar.Mukunda@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE0:EE_|IA1PR12MB8263:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e6bc5e6-113a-4d72-bb3a-08dc8e9f2d62
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|36860700010|376011|1800799021|82310400023;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lOUt+RM091FCQ0Re8ADtkX2ldVh/9HlIJwHq4xmJxMRfm4cfwokEtmbaG07s?=
- =?us-ascii?Q?N8P2tiz4sTr0V83O26UFERlNhHUevZbb3+ATZz2XDZkc0OwjDiNo/5nxzguR?=
- =?us-ascii?Q?uRFIfq6ZJfgjIjgck0KI7QSTvquMQC5Vs6y3gZhW4OwLnGn7Zm5Is43pi58y?=
- =?us-ascii?Q?rYcS6R8OZZuUd+IdIy0Dxv53uGySd9nD1yaTilYakBiPA91uYCoIoqnH1WQU?=
- =?us-ascii?Q?hirqY3Q9AvWdnQA5fXAn4VcyWixBj8Xb4DNNyqd/DADXJn022/c4eVmNKHSq?=
- =?us-ascii?Q?Jc1g/M/VAbNTliMzI7ubFjs1oFwL+AvPBzhOJAA4iC0sbMRLAyX1Dn54xlbj?=
- =?us-ascii?Q?g/SEd+V8YjDy7yLLr9oIVHMJRlLwn0lMjruRRsnZkeV/SEQIAgSf0TZleBOZ?=
- =?us-ascii?Q?PF7xyDsJUrR6h5WtuwKV4Lci/4Bcy/CF8ZX0cMN0/7odnO3GvDoq0wrGKFr2?=
- =?us-ascii?Q?ZAV14xx6wfHnB19/wD/KNzwbt37yExiS8gYKd7lE7s0vGL2++3CHd4z+K9PE?=
- =?us-ascii?Q?RxtTmNjj+lJY+pTJW4W/dAmZwFR79lTOaoOCNa53+tv6jccKwrglBIJQ8zHw?=
- =?us-ascii?Q?ofnF2lGrdPzvJFI1gir0Ft+2ZYoBPnMv/+fuONUOR0j8xGpLtedfrtp6hddX?=
- =?us-ascii?Q?Bqwam4wxkXHv5iIaA9CAAwYLmZa++Mm33CnBMhDtrv/Q8UyzLxxZXf1T+Ckj?=
- =?us-ascii?Q?wdssYwTPiOTWJpullKCwKRuxjfaNAp+K1Menog6mDeSekdK9clEnq3gtugpU?=
- =?us-ascii?Q?mz7+oDIQSPJLYbvzBA05fbPlfrPBYSP5FjvfGv14VMJEkXfNvwA/qeSfoEgW?=
- =?us-ascii?Q?5LiIQGC4L3vb2IH08PEtxu4y3ONvtNuKMi+xURCi8udxThCTq1C29plkKKoK?=
- =?us-ascii?Q?qCoqqaJbnjXY8L/fllHiRoMpT1E/YSE+RbXXg2pzoxZAeq7tp8jzlKMDgN2Y?=
- =?us-ascii?Q?JTMPVFHH+ftcTJ7B9otfqLYrle92VEWfUc8OlQmKFM5E31CuI0fvvO+46Z0M?=
- =?us-ascii?Q?cCltCSJY2QsvVtsRiGGMDaOq9K1ReAFFTX3Nd04WSuljytd0FiZwIrpD0sh7?=
- =?us-ascii?Q?aLE0HzFMjzI88Uceso5+LCchowRqrshdOdKoXHdDy4FnstCxgqr3/4HdFzk5?=
- =?us-ascii?Q?vIbk8AdVWGsgA7I3eRJWunksE+cdrjwxRRQ004CQo44lCZcXU9qrd3WK/MKQ?=
- =?us-ascii?Q?Fh3d6pADaxYJ4ufTTHETNn1f9uN+KfQ9F9FV2nl2UFPOByRJenA9yJ+F7LCn?=
- =?us-ascii?Q?SIUS7dD2xGmAB4frc+Las+OjNoD/3ztTg+6xmY/wW5nRY/tBJAEGXxOgQglr?=
- =?us-ascii?Q?quoaYkZ4ZPVb6GdtmVYhEQEU33FGiBSU6SffT1tFn2Vlm8TGuHNZziVODSmC?=
- =?us-ascii?Q?Kg3NPCCXGnFTHtVm4+NBodU6FNpMSy14S5weje1gjV0mbXl6nA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(376011)(1800799021)(82310400023);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 07:29:09.0750
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e6bc5e6-113a-4d72-bb3a-08dc8e9f2d62
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8263
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sUdZtwqJCkgb0H8C"
+Content-Disposition: inline
+In-Reply-To: <tencent_2ABAC5E885F8354EF1F9084A6B5B398EE00A@qq.com>
 
-In acp_i2s_probe(), acp_base null check is verified.
-As already acp_base null check will be verified in acp platform
-driver probe sequence, additional NULL check in acp_i2s_probe() is not
-needed. Remove acp_i2s_probe() function.
+--sUdZtwqJCkgb0H8C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/acp/acp-i2s.c | 14 --------------
- 1 file changed, 14 deletions(-)
+On Mon, Jun 17, 2024 at 10:00:32AM +0800, Yangyu Chen wrote:
+>=20
+> > On Jun 17, 2024, at 06:48, Yixun Lan <dlan@gentoo.org> wrote:
+> >=20
+> > Hi Conor
+> > Thanks for bringing this up
+> >=20
+> > On 19:35 Sun 16 Jun     , Conor Dooley wrote:
+> >> On Mon, Jun 17, 2024 at 01:18:52AM +0800, Yangyu Chen wrote:
+> >>=20
+> >> No MAINTAINERS update, so I figure that means you don't want to mainta=
+in
+> >> it going forwards? If there's someone out that that does care about the
+> >> spacemit k1 (Jesse maybe?), then I'd be more than happy to have them
+> >> look after it.
+>=20
+> Actually, I don=E2=80=99t know how to be a maintainer. Should I have to
+> provide a new git tree and all the new patches merged to my tree
+> and then submit a git pull?
 
-diff --git a/sound/soc/amd/acp/acp-i2s.c b/sound/soc/amd/acp/acp-i2s.c
-index ef12f97ddc69..7da414bc3b96 100644
---- a/sound/soc/amd/acp/acp-i2s.c
-+++ b/sound/soc/amd/acp/acp-i2s.c
-@@ -584,21 +584,7 @@ static int acp_i2s_startup(struct snd_pcm_substream *substream, struct snd_soc_d
- 	return 0;
- }
- 
--static int acp_i2s_probe(struct snd_soc_dai *dai)
--{
--	struct device *dev = dai->component->dev;
--	struct acp_dev_data *adata = dev_get_drvdata(dev);
--
--	if (!adata->acp_base) {
--		dev_err(dev, "I2S base is NULL\n");
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
- const struct snd_soc_dai_ops asoc_acp_cpu_dai_ops = {
--	.probe		= acp_i2s_probe,
- 	.startup	= acp_i2s_startup,
- 	.hw_params	= acp_i2s_hwparams,
- 	.prepare	= acp_i2s_prepare,
--- 
-2.34.1
+Yeah, in the ideal case :) I wrote a document with information as to
+how this all works for new platform maintainers:
+https://docs.kernel.org/process/maintainer-soc.html#information-for-new-sub=
+maintainers
 
+> Or reuse the RISC-V mailing list and
+> just give a review, and the patches come to soc misc tree? I would
+> like the latter one.
+
+If you don't have the time/interest/whatever in having a tree, then
+sure, I can apply the patches for it. I'd rather have someone look after
+a tree themselves, but this option is better than me growing another
+platform to look after.
+
+> > Yangyu kind of has limited time, too many stuff for him..
+> >=20
+>=20
+> True. Maybe I can have a review and test the patch in one week.
+> However, providing a review and test in 2-3 days is sometimes hard
+> for me.
+
+It would be unreasonable to expect a 2-3 day turnaround :)
+
+> > I'd volunteered to help on this if it can fill the gap
+> > Also I'd be more than happy if anyone willing step forward to co-mainta=
+in..
+> >=20
+>=20
+> Thanks. Really appreciate it.
+>=20
+> Should I provide a diff like this:
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d6c90161c7bf..718d30996f12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19306,6 +19306,7 @@ F:      arch/riscv/boot/dts/
+>  X:     arch/riscv/boot/dts/allwinner/
+>  X:     arch/riscv/boot/dts/renesas/
+>  X:     arch/riscv/boot/dts/sophgo/
+> +X:     arch/riscv/boot/dts/spacemit/
+
+If you don't want to apply patches, drop this hunk.
+
+>  RISC-V PMU DRIVERS
+>  M:     Atish Patra <atishp@atishpatra.org>
+> @@ -21004,6 +21005,13 @@ W:     https://linuxtv.org
+>  Q:     http://patchwork.linuxtv.org/project/linux-media/list/
+>  F:     drivers/media/dvb-frontends/sp2*
+> =20
+> +SPACEMIT DEVICETREES and DRIVERS
+> +M:     Yangyu Chen <cyy@cyyself.name>
+> +M:     Yixun Lan <dlan@gentoo.org>
+
+Jesse mentioned on IRC she was interested in the platform, so maybe she
+would like to be involved too.
+
+Thanks,
+Conor.
+
+--sUdZtwqJCkgb0H8C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZm/lpQAKCRB4tDGHoIJi
+0rjzAQDObDEqhK4rTAoVhenfAwjYqm4LfpWxPSOh3FiikvWIoQD/QzjEI0jSU9iU
+eybCR5sSqTxdUVDBKVOrOoamqv6EQA4=
+=6IiD
+-----END PGP SIGNATURE-----
+
+--sUdZtwqJCkgb0H8C--
