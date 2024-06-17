@@ -1,58 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED24D1940B2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 10:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAFB61FCA;
+	Mon, 17 Jun 2024 10:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718620462; cv=none; b=iKsoKDL3z+RmIZA/3odhzOck+x1qN0V90IsLXi7ptBxFzlvLJwcw8RWw83rld414nd+C8j52JhuM/psvIBiZ+OYZTy1ey6SyyuL1oS5BsB43LIgwPkMyX9e5cFM/USFjN8XOJwhGaMFGiQbgKqyDwsKaEeR92BYrj6QssiAvTGU=
+	t=1718620830; cv=none; b=ZPYH9M8mkjjACCRwyvikgvkfgiu5OPisGMcQ2zFYjVrEiX8yMH42kfyz7c01aygFHvv5dxZFCN0tKJNmTHWUtlXh+Y/Xrqr6LstOp8geXb+2TC8LXNyYECmyKyqsS0lzBk8dohN+DULXlIQTY5US2dA0fqF5HHb7pk+QuW267vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718620462; c=relaxed/simple;
-	bh=edwklOwUpN3/khUTiztuvQHfcx/h8uxguvmkHBABe/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q2Qjg5X4O+k748Qtn0f5626BF0K8eUX8cZXZYE3iGkNAq1rI2yVFFk9oPlY5E60w7JcMdG7WOV9j+CAV420trayTusRm4ZD9zuFU4I26x4yqZLrkH7Xzv1QzrgTTEXDilwqoT2V1062WO3OQolMxox11vgdAuaSvGFFO3wSSaQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TyWdKukn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718620830; c=relaxed/simple;
+	bh=/YeVRc5sA8W64kYZ5SXwoCKhOR+BzHU525YdNCIta/I=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=NPre8Zseq5uTUZo2+AbEb6u5b/GK4PpGtIK2QrlcPIYSCmXdB/vzYCPpdEQGQWUdnULzwtQFurDc6rlgBMHB8pm+P6NR/jjD7dIlAFrSMACysQ+U3NPKpsQlyaiOJp+2tPoa7ewkwFBIOPx6Wr8ACAgA0sx62fpAACTKdIljX/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ms94PKPn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TyWdKukn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718620459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NPi0Lc2x8pzbKbisJrHzDcJs/eDuRo98ZfsdasjbD/Q=;
-	b=TyWdKukn99r9HYo448kUItZBg36f3tgyYKm8k/XvksnDe6nCbmaDx0b5XH8eqOOCXsAXtN
-	bN6WDmqZ7a9Y3+IYm8yWkJwLGTfXQ+9oHLEMgDxpPAl8Jg7GAL8ndqeLHdxEIe0BLCeK34
-	zdJPZzHJz9ME8RUHW9cMd0YmiJfVFEU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-307-5D80IxndOgKTTJc2QlToGQ-1; Mon,
- 17 Jun 2024 06:34:15 -0400
-X-MC-Unique: 5D80IxndOgKTTJc2QlToGQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8559D1956080;
-	Mon, 17 Jun 2024 10:34:13 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.164])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9356919560AE;
-	Mon, 17 Jun 2024 10:34:09 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: jtornosm@redhat.com,
-	stable@vger.kernel.org
-Subject: [PATCH] net: usb: ax88179_178a: improve link status logs
-Date: Mon, 17 Jun 2024 12:33:59 +0200
-Message-ID: <20240617103405.654567-1-jtornosm@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ms94PKPn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DA217C4AF1D;
+	Mon, 17 Jun 2024 10:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718620829;
+	bh=/YeVRc5sA8W64kYZ5SXwoCKhOR+BzHU525YdNCIta/I=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ms94PKPnsMz6JikGONqrMeb9QeVhJd6Fh1Sw5nUGl6QDy0OqvwUVhAsBLxEAXpFbA
+	 EHDZnPMYgo4CWUO784dnVt8LL2MzDwhw2rX64bncDqVT/BZuFahxk8iyPF2lOWDJMX
+	 IqufLeB6iuMArvvxF61FTYggEuTDke7LNXpMX0XjOVDvNdtL+C2q7fiaiS/jB5+28P
+	 7+T/J8kcSgJMBXHpKbjgIBXl1xPPZsLs9eJsA3kbLLbDqOoy6o4rfycu4+6CD4YBfZ
+	 S88zOc9gS+KRnp1QNsWut3ZJk7u28RgGLkRq5ANSfOUomdsoso0n3jst454gVpIM5M
+	 e75g6+tW98mmg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B7B4FC4936D;
+	Mon, 17 Jun 2024 10:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,55 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Subject: Re: [net-next v5 0/2] mlx5: Add netdev-genl queue stats
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171862082974.4522.13019612823624585192.git-patchwork-notify@kernel.org>
+Date: Mon, 17 Jun 2024 10:40:29 +0000
+References: <20240612200900.246492-1-jdamato@fastly.com>
+In-Reply-To: <20240612200900.246492-1-jdamato@fastly.com>
+To: Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, nalramli@fastly.com,
+ cjubran@nvidia.com, davem@davemloft.net, dtatulea@nvidia.com,
+ edumazet@google.com, gal@nvidia.com, kuba@kernel.org, leon@kernel.org,
+ linux-rdma@vger.kernel.org, naveenm@marvell.com, pabeni@redhat.com,
+ richardcochran@gmail.com, saeedm@nvidia.com, tariqt@nvidia.com
 
-Avoid spurious link status logs that may ultimately be wrong; for example,
-if the link is set to down with the cable plugged, then the cable is
-unplugged and afer this the link is set to up, the last new log that is
-appearing is incorrectly telling that the link is up.
+Hello:
 
-In order to aovid errors, show link status logs after link_reset
-processing, and in order to avoid spurious as much as possible, only show
-the link loss when some link status change is detected.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-cc: stable@vger.kernel.org
-Fixes: e2ca90c276e1 ("ax88179_178a: ASIX AX88179_178A USB 3.0/2.0 to gigabit ethernet adapter driver")
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
----
- drivers/net/usb/ax88179_178a.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On Wed, 12 Jun 2024 20:08:55 +0000 you wrote:
+> Greetings:
+> 
+> Welcome to v5.
+> 
+> Switched from RFC to just a v5, because I think this is pretty close.
+> Minor changes from v4 summarized below in the changelog.
+> 
+> [...]
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index c2fb736f78b2..60357796be99 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -326,7 +326,8 @@ static void ax88179_status(struct usbnet *dev, struct urb *urb)
- 
- 	if (netif_carrier_ok(dev->net) != link) {
- 		usbnet_link_change(dev, link, 1);
--		netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
-+		if (!link)
-+			netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
- 	}
- }
- 
-@@ -1542,6 +1543,7 @@ static int ax88179_link_reset(struct usbnet *dev)
- 			 GMII_PHY_PHYSR, 2, &tmp16);
- 
- 	if (!(tmp16 & GMII_PHY_PHYSR_LINK)) {
-+		netdev_info(dev->net, "ax88179 - Link status is: 0\n");
- 		return 0;
- 	} else if (GMII_PHY_PHYSR_GIGA == (tmp16 & GMII_PHY_PHYSR_SMASK)) {
- 		mode |= AX_MEDIUM_GIGAMODE | AX_MEDIUM_EN_125MHZ;
-@@ -1579,6 +1581,8 @@ static int ax88179_link_reset(struct usbnet *dev)
- 
- 	netif_carrier_on(dev->net);
- 
-+	netdev_info(dev->net, "ax88179 - Link status is: 1\n");
-+
- 	return 0;
- }
- 
+Here is the summary with links:
+  - [net-next,v5,1/2] net/mlx5e: Add txq to sq stats mapping
+    https://git.kernel.org/netdev/net-next/c/0a3e5c1b670f
+  - [net-next,v5,2/2] net/mlx5e: Add per queue netdev-genl stats
+    https://git.kernel.org/netdev/net-next/c/7b66ae536a78
+
+You are awesome, thank you!
 -- 
-2.45.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
