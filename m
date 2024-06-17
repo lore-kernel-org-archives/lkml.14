@@ -1,133 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6B01AAE25;
-	Mon, 17 Jun 2024 13:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6A51AAE20
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630839; cv=none; b=aeXaXegBZoR8qKPh3eypIVLS4IkrsN+X26xKHiTz+MyFO2I4Y7b7+h6G6To4I7KOimFfQlKzeInk8JqrMLGlbudcGPoD8KDbVCQkZiTatPnHhQhP1f2vhN9/rbiPAZvheYyjIJcSGdhy9xiMs5zacjXswqktAmLRwxZfWHHI974=
+	t=1718630840; cv=none; b=Vln7jD3f0JKVgdx3wsTQfHSLCJGtDYKficxn50Lq1cCK/0JPQC5nIuUpwQn+GGEJLCzUCf0eAxmia9LH31DadZ7mtBhjlOkay/AI1eMXtTx7nerC2m/EInmT6aZlyN6ZFHDMvJn9fYmnRuXdb+fllfVy0BshwJwUpkWFi7I5oDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630839; c=relaxed/simple;
-	bh=hkBazFID4EYMTgjfxxvVnBj1vPs2rQ2RDJVNXEpy/vQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TTN8q5hJLkhtussfSX2pzTx1aSlQEsDfgLSNNXXNFajXctj2IJTrlNCdoxiAa5ffew2vt70/xww9Z8Ip7rj84vrVXYI7aLgZoB18ipxxf4f4PlGmwOteHRuZeAeGvQ/WA77yBjjZ8unuEpDb0IavE97ggy64HBP8hu6t46yf9AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgPcvRqZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718630840; c=relaxed/simple;
+	bh=BVnGMwoCZw7PxuD/QNYyTuQeJ5mFD9HFP2ibNF1eTeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3RHwy96q47+dxEegJ/xYpb0wznlihxzqHTIq1Jil8gsPwaHs3OACZb6UtAaR/NxsRSWJ1yTWO04yVsWi9lC6Dm03zoLNqymXGPmrESv1cPvqSPMAY5jifXvf4j7LCLC92BRR1s30fMyQtjMDZpnwgKrAVMe6Nm65QZ1rmOWCWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fVoE/9pY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgPcvRqZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5FACC4AF48;
-	Mon, 17 Jun 2024 13:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630838;
-	bh=hkBazFID4EYMTgjfxxvVnBj1vPs2rQ2RDJVNXEpy/vQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rgPcvRqZrkH/ugXeYUnQ/6lDhfGC06fV/nS9wCcU9SjuaPR57gOeBPcGOoMMY6CGg
-	 FAdNlDXvk8RqcuLIXn/de9sUDOFqb6rD6Ty423gTCR/yuSxGeBkBaBYDyK2tsnZzUE
-	 QMbvYh4N2feSdcyACYyH6q/BP0/H8r7R9kv9cDxV6ARwcZYlv5G6+qDAFqGNcIDJhb
-	 do4OTIkLBnKnpgjGez3RzR5tyJUw9IXU3SLIXxuJmvwACwpHAg+3PGUJAH9SXDmzik
-	 DEM7ZdYki++ebaeW70sMpbnqnf8Ddyru2Ljectfl9VtWP11/tifXXtJ9rqErP0fsmT
-	 kN6q0rueBFUHw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 05/13] wifi: mac80211: fix UBSAN noise in ieee80211_prep_hw_scan()
-Date: Mon, 17 Jun 2024 09:26:54 -0400
-Message-ID: <20240617132710.2590101-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132710.2590101-1-sashal@kernel.org>
-References: <20240617132710.2590101-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fVoE/9pY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718630837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q84CXo0wUI7hBoP/Wd2wSAm0e9Fj0ilpl/ZCzDP0aQQ=;
+	b=fVoE/9pYF/4QP5Y2SzVh5tCPk6w6WxxBx97pOkpPBHc7zKEJyvV/rcsH87Y/xPghD3Xmlf
+	P/YW5Qt24JDxrVvGq4kIId+5hh3mUffgx6dqDRTq3ewdOAD0SyqvKY0BXNunOwqnOvzQ6n
+	3eAkxw8B6Ebnog8vsWrit2h7iWVGIHM=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-468-HpE1E4J2P3uBK9e5hHzm9A-1; Mon, 17 Jun 2024 09:27:15 -0400
+X-MC-Unique: HpE1E4J2P3uBK9e5hHzm9A-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52c84d02b7fso3327589e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:27:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630833; x=1719235633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q84CXo0wUI7hBoP/Wd2wSAm0e9Fj0ilpl/ZCzDP0aQQ=;
+        b=RlI3jKJR8bCOcknO+/DcxgXXAbxrEgIMuuyTSussaBEfLejR4r1VHgeLDbgxXW2a3m
+         gNVfS6+Zg4V7tqOIfaaFYmexNSqSIq9PJjgj9zYNoEPI52jBywhpUBcdJ1tnVT6zRRq9
+         MlV/cS0hsyTVKneqzwakgzCfaC2XY5za0CN8PnCB2MJIfgHLUiHbbUGgMH3j50bK/QA4
+         B4fZkhcpDFb+Oeu+DRvF+29EdRRwteHo0/0MN1T0WzKKGBjC74/8SuUFCgxORGW11iRQ
+         qRq2rOijC6h/hgisqz3J4nPfmTItdQLfCCvi+5n1WTABKupRJik/vYyrtqdlZU6E0MoQ
+         bn1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWwvjynCoTHQybvR8aVnDfZQIhnoVa3C0Qk1YYW0o0alds/QpJQHUlS8p8DprXP+eMb3WZkohhV4Si8WFdCzy8COpVYYbPRuFvgKu9s
+X-Gm-Message-State: AOJu0YzMetY8bBCMsFGm7eptUzH2KawsFo9Y2c48Sqr2fdw4TXK+eT/T
+	VCZgZYy6fOq2NxaD2Og3Mi8RCcynN/fjDHjK2ixMhrLnSdDQU55D9mh1UVephH53hZs41BlR99a
+	oUrTio1W7SsoipmFlajCzoRfIs3ipPOQ9Q1j9H9/THzsyT6+Q43uOjeqqKbgKIA==
+X-Received: by 2002:a05:6512:20c6:b0:52c:881b:73c0 with SMTP id 2adb3069b0e04-52ca6e64378mr6296637e87.17.1718630833651;
+        Mon, 17 Jun 2024 06:27:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpnKGZZT8Zk3aPPgtEsPpln7bsKIoo+bG+Ridg0DdcuVdy5+34CRZh9UkBKQn9c7obciZzKg==
+X-Received: by 2002:a05:6512:20c6:b0:52c:881b:73c0 with SMTP id 2adb3069b0e04-52ca6e64378mr6296612e87.17.1718630833121;
+        Mon, 17 Jun 2024 06:27:13 -0700 (PDT)
+Received: from redhat.com ([2a06:c701:7439:b500:58cc:2220:93ce:7c4a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509348esm11832788f8f.17.2024.06.17.06.27.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 06:27:12 -0700 (PDT)
+Date: Mon, 17 Jun 2024 09:27:06 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Jason Wang <jasowang@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] vringh: add MODULE_DESCRIPTION()
+Message-ID: <20240617092653-mutt-send-email-mst@kernel.org>
+References: <20240516-md-vringh-v1-1-31bf37779a5a@quicinc.com>
+ <7da04855-13a1-49f9-9336-424a9b6c6ad8@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.219
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7da04855-13a1-49f9-9336-424a9b6c6ad8@quicinc.com>
 
-From: Dmitry Antipov <dmantipov@yandex.ru>
+On Sat, Jun 15, 2024 at 02:50:11PM -0700, Jeff Johnson wrote:
+> On 5/16/2024 6:57 PM, Jeff Johnson wrote:
+> > Fix the allmodconfig 'make w=1' issue:
+> > 
+> > WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/vhost/vringh.o
+> > 
+> > Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> > ---
+> >  drivers/vhost/vringh.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > index 7b8fd977f71c..73e153f9b449 100644
+> > --- a/drivers/vhost/vringh.c
+> > +++ b/drivers/vhost/vringh.c
+> > @@ -1614,4 +1614,5 @@ EXPORT_SYMBOL(vringh_need_notify_iotlb);
+> >  
+> >  #endif
+> >  
+> > +MODULE_DESCRIPTION("host side of a virtio ring");
+> >  MODULE_LICENSE("GPL");
+> > 
+> > ---
+> > base-commit: 7f094f0e3866f83ca705519b1e8f5a7d6ecce232
+> > change-id: 20240516-md-vringh-c43803ae0ba4
+> > 
+> 
+> Just following up to see if anything else is needed to pick this up.
 
-[ Upstream commit 92ecbb3ac6f3fe8ae9edf3226c76aa17b6800699 ]
+I tagged this, will be in the next pull.
 
-When testing the previous patch with CONFIG_UBSAN_BOUNDS, I've
-noticed the following:
-
-UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:372:4
-index 0 is out of range for type 'struct ieee80211_channel *[]'
-CPU: 0 PID: 1435 Comm: wpa_supplicant Not tainted 6.9.0+ #1
-Hardware name: LENOVO 20UN005QRT/20UN005QRT <...BIOS details...>
-Call Trace:
- <TASK>
- dump_stack_lvl+0x2d/0x90
- __ubsan_handle_out_of_bounds+0xe7/0x140
- ? timerqueue_add+0x98/0xb0
- ieee80211_prep_hw_scan+0x2db/0x480 [mac80211]
- ? __kmalloc+0xe1/0x470
- __ieee80211_start_scan+0x541/0x760 [mac80211]
- rdev_scan+0x1f/0xe0 [cfg80211]
- nl80211_trigger_scan+0x9b6/0xae0 [cfg80211]
- ...<the rest is not too useful...>
-
-Since '__ieee80211_start_scan()' leaves 'hw_scan_req->req.n_channels'
-uninitialized, actual boundaries of 'hw_scan_req->req.channels' can't
-be checked in 'ieee80211_prep_hw_scan()'. Although an initialization
-of 'hw_scan_req->req.n_channels' introduces some confusion around
-allocated vs. used VLA members, this shouldn't be a problem since
-everything is correctly adjusted soon in 'ieee80211_prep_hw_scan()'.
-
-Cleanup 'kmalloc()' math in '__ieee80211_start_scan()' by using the
-convenient 'struct_size()' as well.
-
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Link: https://msgid.link/20240517153332.18271-2-dmantipov@yandex.ru
-[improve (imho) indentation a bit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/mac80211/scan.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index b241ff8c015a9..be5d02c129e92 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -727,15 +727,21 @@ static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
- 			local->hw_scan_ies_bufsize *= n_bands;
- 		}
- 
--		local->hw_scan_req = kmalloc(
--				sizeof(*local->hw_scan_req) +
--				req->n_channels * sizeof(req->channels[0]) +
--				local->hw_scan_ies_bufsize, GFP_KERNEL);
-+		local->hw_scan_req = kmalloc(struct_size(local->hw_scan_req,
-+							 req.channels,
-+							 req->n_channels) +
-+					     local->hw_scan_ies_bufsize,
-+					     GFP_KERNEL);
- 		if (!local->hw_scan_req)
- 			return -ENOMEM;
- 
- 		local->hw_scan_req->req.ssids = req->ssids;
- 		local->hw_scan_req->req.n_ssids = req->n_ssids;
-+		/* None of the channels are actually set
-+		 * up but let UBSAN know the boundaries.
-+		 */
-+		local->hw_scan_req->req.n_channels = req->n_channels;
-+
- 		ies = (u8 *)local->hw_scan_req +
- 			sizeof(*local->hw_scan_req) +
- 			req->n_channels * sizeof(req->channels[0]);
--- 
-2.43.0
+Thanks!
 
