@@ -1,147 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E349519069A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70896194ACE
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718624301; cv=none; b=OCpk/bSu2lEQKUHJgAUaF6pwFENTIxdRdsaxPvONWMyBWOujxXHgw5Yrvkxg5tBj58y3AkUQc75WroyAAQbsGnOG0lLIGQUaqbOwhDwJ3hCro7G71V2YR1tc7TNiyls6H6HLsdwZD7FuHjGrBduDYC/qCFkL6Y6qGEIjy45TPNE=
+	t=1718624385; cv=none; b=QHkQ9i2zLBGaIJ5OS95fGXrvSoHLVg+Gveihk1SXdM2T3MSUuayenap2YiJLwURi4sZsAK6cI2jD4BGFh5bxlOwcYsWodF52QDkTA7AJUN1Br6rEyQWK6X29vlhmr59U1Bkpww/6ryp6/cq97+HLDwk8WCfORBKzsw3p6zEjvrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718624301; c=relaxed/simple;
-	bh=Jhscx+ZIsUJjtjS+S1mYdMxAB0SSRoCRbFclSexxvm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hSBR0Vjzk8cK7cG6jVh6JTJBx+sfMPBXA5/konmHykNcVrYJEJ/0bkGZxM2AE7dza7eY31/GMwO/7RlVloslrdG9F7AoYusliyAL0X86eIoCfT95z9UawCpO9Xa7QlETvzDPBG4WgpcvWdS/UW/4uBbNawUD6VihoJDbuzU0Rto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXGJnJB5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718624385; c=relaxed/simple;
+	bh=2MVBMXKtEV+SoW1Is/b02YaJ/oeQaKdapE1m/LyMP+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3i7BRY0E3WugsB/ws2vg+Iggcpt+Me+ksImAr6ddjJo1DzSWJpi5W5U4tZawgXnCPMZDpEbQfyVLLeCq+TjCUfe2M/3zdo2l2kUrF0WvEinDM/OYkCAim7ojEARwGL/OQmziS6UtS4bz7QSRmv9yW+t/BUEKaGaLgJf1OdbeDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=j2YIu11u; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXGJnJB5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718624298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0Kc7h87YsT9DHt1tRlY5kGZHCAuCj2NA4WSI3E/cJE=;
-	b=cXGJnJB5hwksnOh47e5GZG3FYsTOBazCGNdcijzY2D9JV1+1AR/FPh3gG2nsVf1co1OyMJ
-	uU6Ho6VZDnGlmKJeMDI6Y5uQB5QDM9pql0evZUBu1jaMOzdmim9aIqKpsS0jSLilqVHJHy
-	0DcEjbSv/MvXvctogxMZCJfBN1XbjiY=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-qdb0_cisMDKnKqmd_gFB4g-1; Mon, 17 Jun 2024 07:38:17 -0400
-X-MC-Unique: qdb0_cisMDKnKqmd_gFB4g-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52c968340c8so3895316e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:38:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="j2YIu11u"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so26428855e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 04:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718624382; x=1719229182; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vk6dtPNyyVj6zzyAjgfNu0JAJ1s5tHyI8dGBafB3rOw=;
+        b=j2YIu11uCKjpvr+eeGyvX7tIhVch8RzgZ9hIrLuWLhmZMbldTjGgOveDIu6+Y27qrt
+         r4s8mW2KkPtOUHNMlk37wT0V1TiYYWO+dPjsrN7xavThHgY5RaGNTIiLIwmkwrcyILCg
+         mAjzjXzLHwjRvdpBiJV0m3GaeCKmvrKygjGoMlkLHrXY7N9kKK+8547UO9kAscAPM4+g
+         2brdViNIlmEhJfJcaOgMQqbRzdRKCdVdcwx50zUsirTI8kv+TXxXr+Zs1kvPBwN7/nkM
+         j/mGQaizjBHeGs36dksG1eVfBfeO7kitzQmYU3/UCzbEqA3CMCArzydFdJQnGVoO4xyy
+         OXqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718624295; x=1719229095;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1718624382; x=1719229182;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y0Kc7h87YsT9DHt1tRlY5kGZHCAuCj2NA4WSI3E/cJE=;
-        b=o+n/ZsL/uxCaMGZZKY5A5EOzYEPeUWGZmTTlD6PR7EKKRFRmG8cPlpbhwIYaNmKwoa
-         RR1dEjHNGMaxHtpgK1Jlb2OW05rkciMaVsXoYUp+QoIXwryk1fVV+jbX9ar1kt3OehYb
-         4xeKo9ZPNO74RDlYWeHT6bvR0123sjnuqA0noS0mv3bDlam9BHmxmXEFr98sZBCtPBHC
-         bEhxdMvSCKZ7Qx2ELy1njoRx/4aKfkS+Ix4wIzhUzYt9YDXMnMRRy4VD+2/P6fsec/F2
-         mzTFfq21b7jeFJmETruQOz02J9346RjRhhdPsAyWdg/Lh9aXM7VKrAIjHBW0WKIV/7dU
-         G8Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMZW0oxn/4wnQdy9Ys+u6eusioq+qBCZ9f25N5gd46Z4p8T1Vc5Nne5jYzaNXllZKlybsI/ySqEa5kE/FwtF5zrEFgPbajg8bRMDqZ
-X-Gm-Message-State: AOJu0YxKbbxlV3J+M4x8TM+XOs2G4IxIphDyZv4NpyJQzVv0wd1G1XMO
-	S+2K1y2GpuWY9tHAbTm603rr0aEd6mxDYk2LpOecza8uIHFSCTzFOH93a3mtAtMtmfD9DMlIniC
-	XX0fVSIRrY+kFaZYRleF7qYmKe1gdzCKgdwodLZgf5IX97BuLAGGKwiAumpyAoBhfBhLUpsfq
-X-Received: by 2002:ac2:5f53:0:b0:52c:9bcc:e177 with SMTP id 2adb3069b0e04-52ca6e6db3emr6446176e87.34.1718624295403;
-        Mon, 17 Jun 2024 04:38:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8ieLGLkSX25YvxUU73G1pJZDdpLd+LcNUpG3OzlHqw6rNPX8yyM8oB/AHOC5zwwT4lEJRAg==
-X-Received: by 2002:ac2:5f53:0:b0:52c:9bcc:e177 with SMTP id 2adb3069b0e04-52ca6e6db3emr6446167e87.34.1718624295024;
-        Mon, 17 Jun 2024 04:38:15 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e? ([2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422ffdc329asm122167725e9.1.2024.06.17.04.38.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 04:38:14 -0700 (PDT)
-Message-ID: <7807302b-a501-46f5-8326-2b6394a3ab7c@redhat.com>
-Date: Mon, 17 Jun 2024 13:38:13 +0200
+        bh=vk6dtPNyyVj6zzyAjgfNu0JAJ1s5tHyI8dGBafB3rOw=;
+        b=PDKhRJPSOYfvu3HTmawPn0cvWcBcmg2kSJnVGbtF1KL/CH11U/15lFIX38O3deOaHT
+         7VokrYNxPTFbaXaVUVsvfXzPvnqwK0eTqVnEMCtuLcDj5NOQkvd+RSS/c2yubdp1Gy/l
+         M5CML0/+29u9ngTd2xTLWsBkCud+EweUQG5jy5Mm5uN0r0DlZR9rx9brRxe/ee8z0Vs9
+         dCKaIegPEFYnGUIYPvPZkYPM3KHZce6o46b+UOr1+bLzE5T0CJ7FpQh47/XEgf48XO9F
+         SFwrxC+l177nSHJPAyG5PM/6J+niAJFfrxTOY6sreXwycyFW4pAk0gbINJNXRhh16sPW
+         U4kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDnmGVunHEN7JnNDar9qIKz5X9yPOWEEUcNBB21+ST1EICqX4jVbK4vXTKYj0rVdXDqYY0MC2gX3O12SrJ7Fhr+B4Yy8pCYItuvNVo
+X-Gm-Message-State: AOJu0Yxakk9k8uAQglIWjgpz7vvQMgkbC30P6GA7qWxEehtjtU5/6jvZ
+	PqyG17iiKpIXW6o0F4s57615l7y9z/ZkaIjeGH18C8kWnQA4wSEm3B5k74pQOPw=
+X-Google-Smtp-Source: AGHT+IFVRuTLn45QZm+qYSRfTY8AFzPm0Gs8GMkMeMyMJm8QfZBwXB8YbsDOfaj/yQR/DXrCVERX1Q==
+X-Received: by 2002:a05:600c:5110:b0:421:7f07:92ce with SMTP id 5b1f17b1804b1-4230481bc6fmr93604225e9.3.1718624381698;
+        Mon, 17 Jun 2024 04:39:41 -0700 (PDT)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f6419e38sm159155415e9.39.2024.06.17.04.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 04:39:41 -0700 (PDT)
+Date: Mon, 17 Jun 2024 13:39:37 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Parav Pandit <parav@nvidia.com>
+Cc: Jason Wang <jasowang@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Cindy Lu <lulu@redhat.com>, Dragos Tatulea <dtatulea@nvidia.com>,
+	"mst@redhat.com" <mst@redhat.com>,
+	"virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/2] vdpa: support set mac address from vdpa tool
+Message-ID: <ZnAgefA1ge11bbFp@nanopsycho.orion>
+References: <20240611053239.516996-1-lulu@redhat.com>
+ <20240611185810.14b63d7d@kernel.org>
+ <ZmlAYcRHMqCgYBJD@nanopsycho.orion>
+ <CACGkMEtKFZwPpzjNBv2j6Y5L=jYTrW4B8FnSLRMWb_AtqqSSDQ@mail.gmail.com>
+ <PH0PR12MB5481BAABF5C43F9500D2852CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
+ <ZnAETXPWG2BvyqSc@nanopsycho.orion>
+ <PH0PR12MB5481F6F62D8E47FB6DFAD206DCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/tidss: Add drm_panic support
-To: Javier Martinez Canillas <javierm@redhat.com>,
- linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Daniel Vetter
- <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- dri-devel@lists.freedesktop.org
-References: <20240615085326.1726262-1-javierm@redhat.com>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <20240615085326.1726262-1-javierm@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PH0PR12MB5481F6F62D8E47FB6DFAD206DCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
+
+Mon, Jun 17, 2024 at 11:44:53AM CEST, parav@nvidia.com wrote:
+>
+>> From: Jiri Pirko <jiri@resnulli.us>
+>> Sent: Monday, June 17, 2024 3:09 PM
+>> 
+>> Mon, Jun 17, 2024 at 04:57:23AM CEST, parav@nvidia.com wrote:
+>> >
+>> >
+>> >> From: Jason Wang <jasowang@redhat.com>
+>> >> Sent: Monday, June 17, 2024 7:18 AM
+>> >>
+>> >> On Wed, Jun 12, 2024 at 2:30 PM Jiri Pirko <jiri@resnulli.us> wrote:
+>> >> >
+>> >> > Wed, Jun 12, 2024 at 03:58:10AM CEST, kuba@kernel.org wrote:
+>> >> > >On Tue, 11 Jun 2024 13:32:32 +0800 Cindy Lu wrote:
+>> >> > >> Add new UAPI to support the mac address from vdpa tool Function
+>> >> > >> vdpa_nl_cmd_dev_config_set_doit() will get the MAC address from
+>> >> > >> the vdpa tool and then set it to the device.
+>> >> > >>
+>> >> > >> The usage is: vdpa dev set name vdpa_name mac **:**:**:**:**:**
+>> >> > >
+>> >> > >Why don't you use devlink?
+>> >> >
+>> >> > Fair question. Why does vdpa-specific uapi even exist? To have
+>> >> > driver-specific uapi Does not make any sense to me :/
+>> >>
+>> >> It came with devlink first actually, but switched to a dedicated uAPI.
+>> >>
+>> >> Parav(cced) may explain more here.
+>> >>
+>> >Devlink configures function level mac that applies to all protocol devices
+>> (vdpa, rdma, netdev) etc.
+>> >Additionally, vdpa device level mac can be different (an additional one) to
+>> apply to only vdpa traffic.
+>> >Hence dedicated uAPI was added.
+>> 
+>> There is 1:1 relation between vdpa instance and devlink port, isn't it?
+>> Then we have:
+>>        devlink port function set DEV/PORT_INDEX hw_addr ADDR
+>> 
+>Above command is privilege command done by the hypervisor on the port function.
+>Vpda level setting the mac is similar to a function owner driver setting the mac on the self netdev (even though devlink side has configured some mac for it).
+>For example,
+>$ ip link set dev wlan1 address 00:11:22:33:44:55
+
+Hmm, under what sceratio exacly this is needed? I mean, the VM that has
+VDPA device can actually do that too. That is the actual function owner.
 
 
+>
+>> Which does exactly what you need, configure function hw address (mac).
+>> 
+>> When you say VDPA traffic, do you suggest there might be VDPA instance and
+>> netdev running on the same VF in parallel. If yes, do we have 2 eswitch port
+>> representors to be separately used to steer the traffic?
+>> If no, how is that supposed to be working?
+>A eswitch may allow incoming and outgoing traffic from multiple mac addresses left to the tc rules to decide.
+>It does not need two eswitch ports.
 
-On 15/06/2024 10:53, Javier Martinez Canillas wrote:
-> Add support for the drm_panic module, which displays a pretty user
-> friendly message on the screen when a Linux kernel panic occurs.
-
-Thanks for enabling drm panic on another hardware.
-It looks good to me.
-
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
-
-
-> 
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> ---
-> Tested on an AM625 BeaglePlay board by triggering a panic using the
-> `echo c > /proc/sysrq-trigger` command.
-> 
->   drivers/gpu/drm/tidss/tidss_plane.c | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-> index 68fed531f6a7..a5d86822c9e3 100644
-> --- a/drivers/gpu/drm/tidss/tidss_plane.c
-> +++ b/drivers/gpu/drm/tidss/tidss_plane.c
-> @@ -8,6 +8,7 @@
->   #include <drm/drm_atomic_helper.h>
->   #include <drm/drm_blend.h>
->   #include <drm/drm_crtc.h>
-> +#include <drm/drm_fb_dma_helper.h>
->   #include <drm/drm_fourcc.h>
->   #include <drm/drm_framebuffer.h>
->   #include <drm/drm_gem_atomic_helper.h>
-> @@ -166,6 +167,14 @@ static const struct drm_plane_helper_funcs tidss_plane_helper_funcs = {
->   	.atomic_disable = tidss_plane_atomic_disable,
->   };
->   
-> +static const struct drm_plane_helper_funcs tidss_primary_plane_helper_funcs = {
-> +	.atomic_check = tidss_plane_atomic_check,
-> +	.atomic_update = tidss_plane_atomic_update,
-> +	.atomic_enable = tidss_plane_atomic_enable,
-> +	.atomic_disable = tidss_plane_atomic_disable,
-> +	.get_scanout_buffer = drm_fb_dma_get_scanout_buffer,
-> +};
-> +
->   static const struct drm_plane_funcs tidss_plane_funcs = {
->   	.update_plane = drm_atomic_helper_update_plane,
->   	.disable_plane = drm_atomic_helper_disable_plane,
-> @@ -211,7 +220,10 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
->   	if (ret < 0)
->   		goto err;
->   
-> -	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
-> +	if (type == DRM_PLANE_TYPE_PRIMARY)
-> +		drm_plane_helper_add(&tplane->plane, &tidss_primary_plane_helper_funcs);
-> +	else
-> +		drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
->   
->   	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
->   				       num_planes - 1);
+Ugh.
 
