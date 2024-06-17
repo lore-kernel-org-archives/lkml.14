@@ -1,75 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E511158D77;
-	Mon, 17 Jun 2024 15:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3A2158DB6;
+	Mon, 17 Jun 2024 15:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637604; cv=none; b=cYOIqCmaSwn21GEghdL7yigR8DSpHUb5Ss5QoijOKtK+r+G+5I2UNkD1g51mooJoO5/NXBnwB3XZ1OHor58ztN/Qt0PeygAKNKHwOhqZY4ejbtb+9GedwLEjMqlkgkyZCZCsgczgr8/j+n9UiMG2Kw8WYNg5YHrlKsHTc8rHi4s=
+	t=1718637694; cv=none; b=hyZOGPGzaa7pJAAJAsQU9pJgsgbbNDKtJPuIRc/+wuylPqYrSD7obUg4Ddh+y4cNkx7F6P0GRTicJdeRqj3AwczW7KiEfOfjW0/Gqonq5hRFsWU7taL3yfz2AnZRLXuo6HkgdvSEJX6GkYgTBaOFrvenys/a/IIO0ywcTceER9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637604; c=relaxed/simple;
-	bh=9jJLrF/6NbGsgQCvXVBt2x6elX8/EKdyI2Lp4Ov7Puo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gIn9lrgCJpMyiE30euXhcY/7fTawsqaWmFC/0qzYdlhaO95ZpiDfpNnWIanj1tDOCyxzP0Z9gtyQRvoN3e2G6BzhMnSY/xZTV4KjH4S5FKF4Och9/7yD+CjfWcg9qLCRUBMHxTX4QGfLELmCKUVTkSclRpwexlfkjP5JMhcoCgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0Egcz5w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718637694; c=relaxed/simple;
+	bh=5Wn7SBadF1voQ3s8lFOjrITjw/7NasFYsMiD4rEzIT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=o9aRDDIryuS/MrpmfLY70lR6KRRAgAKFPIMFeY3hvSsbYBGJm+zn2Cu8WldSydn42O8FZRomeKhX1+II2MW2V24mkLqW3Q2B98Fla469NwS25nkpff4mJfMRgOrSXY6egjD8hKJOOccN0cGn/4riagPbCW6p5TEVUZ+4+fHf01g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILov2p6V; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0Egcz5w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34F1C2BD10;
-	Mon, 17 Jun 2024 15:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718637604;
-	bh=9jJLrF/6NbGsgQCvXVBt2x6elX8/EKdyI2Lp4Ov7Puo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=b0Egcz5wY6JJJbRJH2mJFg5nSWE0RQ5nxe5jOaXHpK9HpjJ270esJtCpRCwruMWTW
-	 x/4mrJFaVgVt40jkUhq1qLNGp6O8JxSI9UGq0OrBHx1rRZTG6wxvjPOn/ppwm+X3gK
-	 KfvHbXLD6U1YdS6Pyv+YwJRI4b9D3g09o9ptfDy3eGr3QZ09ipRA8XBbb3+LasYFhz
-	 hawzEYBp85tfKfU+/HYlzhr6LRN0JA7plSXGNpLbX/lsuAiB5QoQ6lQqnzqtPxXT7D
-	 2AVgXredJjvRuuaV+5J+6qF05XljQaer6vA0zYiKH5VTXS7OIyLVZ+H8lPlIm/ZBi0
-	 uIlvM5Ke9jjyQ==
-Date: Mon, 17 Jun 2024 08:20:02 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jiri Pirko <jiri@resnulli.us>, Parav Pandit <parav@nvidia.com>, Jason
- Wang <jasowang@redhat.com>, Cindy Lu <lulu@redhat.com>, Dragos Tatulea
- <dtatulea@nvidia.com>, "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/2] vdpa: support set mac address from vdpa tool
-Message-ID: <20240617082002.3daaf9d4@kernel.org>
-In-Reply-To: <20240617094314-mutt-send-email-mst@kernel.org>
-References: <20240611053239.516996-1-lulu@redhat.com>
-	<20240611185810.14b63d7d@kernel.org>
-	<ZmlAYcRHMqCgYBJD@nanopsycho.orion>
-	<CACGkMEtKFZwPpzjNBv2j6Y5L=jYTrW4B8FnSLRMWb_AtqqSSDQ@mail.gmail.com>
-	<PH0PR12MB5481BAABF5C43F9500D2852CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAETXPWG2BvyqSc@nanopsycho.orion>
-	<PH0PR12MB5481F6F62D8E47FB6DFAD206DCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAgefA1ge11bbFp@nanopsycho.orion>
-	<PH0PR12MB548116966222E720D831AA4CDCCD2@PH0PR12MB5481.namprd12.prod.outlook.com>
-	<ZnAz8xchRroVOyCY@nanopsycho.orion>
-	<20240617094314-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILov2p6V"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70435f4c330so3574814b3a.1;
+        Mon, 17 Jun 2024 08:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718637693; x=1719242493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=00MR3ut2aMx7bMI2LS9yReBsbwXpambIHWaVlb3riis=;
+        b=ILov2p6V69cMgt7VzMLFPZxZfPHDH00CNYayZkqXCFeqZq13i0yGaeODRhQ+vxiQtj
+         9Rv2zwZIhmD4zbAepTF5mN1QxBeGr6RFuN7WNTkzvTkTocW9K2Vsb0iRpsA1h0l/EiLp
+         vrbUIHsxcQDTxJOkcXflPophscGB5+FdEaSAJlPssmNqRaj2DwkLphB45Az9h8Rhamuv
+         9JSHiDQ1h3PeadwNeeZF4hULBPNrXtesFNL/H/vbNqb+XNZvDh0XE/VET5MZ46cnXoZe
+         lYxmV7GQPpbhfaV2wM0+x9Qry7olwxgzMMwU91Ijabl62iMk9tizzQbcLxYwPLnZCC5k
+         N/gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718637693; x=1719242493;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=00MR3ut2aMx7bMI2LS9yReBsbwXpambIHWaVlb3riis=;
+        b=H+DmYbOYpRHZiKLCk/y83hJVm3aFPLRHMgtSPCZb+SKY1HkZbaO1PtTcsG55QtbK3K
+         WGXnmCKSEaSJLT6G1pU3Em7JOvCOULuDSv9f0kbC06vQDt3h+fG+RgVALdBTlI0NklDs
+         eExDoO4wjT5CYc4OW01KaZj0ckGTc5WWNp6JLFd/WeJxMiR64UY5BNO6weX4elmANWtw
+         nPl+9pICnQ8y6gno+QBp0i2T+bNJfz+yrpBopmfVBrPRVyptYF9H06jLnoucA+AxlFhM
+         HgnGUV0IHiSAAoOiKj0J2DbSPSAfDSD6iRGwnOkQwkjzJ/0cYTRYiKIJPK9bYqhfk5aJ
+         pc/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWfidXvBepByAWkV34Y/WhohrSKCCEsfh/zFaK1ByAz7mqTHC+hda9sj6TV8cRhCkWfkTBHmi9yN/K/4tjnmzNnygRse9XU/JppuW1Kb1b9DkTcccp4xnh0tY3QD9b8KnjwDATdkFYCxfs6pFO4bXYo6hTqtQGEjLbaR4JdX7abC20gsVl5
+X-Gm-Message-State: AOJu0YwTBkMum6rWrvkSSIEtT6JPikeCU33UWpYdOwm41jxkKVsM2pjm
+	IKA4iZYqzvp2yBdPsV3IRjpRM7D9DZDD++NjLqgiiahY2u56NICh
+X-Google-Smtp-Source: AGHT+IHBHAhCvnxr/UkOTrgt6uZtW2TW6zVduT+0n5X0O7AEH43lwuvAseCDAnFPI71RKlft3Z+Kkw==
+X-Received: by 2002:a05:6a20:3c91:b0:1b6:5b3a:9a55 with SMTP id adf61e73a8af0-1bae7eb2d92mr9897841637.14.1718637692784;
+        Mon, 17 Jun 2024 08:21:32 -0700 (PDT)
+Received: from localhost.localdomain ([221.220.133.99])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-70a36b6954dsm1760558a12.84.2024.06.17.08.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 08:21:32 -0700 (PDT)
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+To: nicolas@ndufresne.ca
+Cc: alchark@gmail.com,
+	andy.yan@rock-chips.com,
+	conor+dt@kernel.org,
+	cristian.ciocaltea@collabora.com,
+	detlev.casanova@collabora.com,
+	devicetree@vger.kernel.org,
+	didi.debian@cknow.org,
+	dsimic@manjaro.org,
+	gregkh@linuxfoundation.org,
+	heiko@sntech.de,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	liujianfeng1994@gmail.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+Date: Mon, 17 Jun 2024 23:21:18 +0800
+Message-Id: <20240617152118.30684-1-liujianfeng1994@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <f295f41ef1c9ee920ac3ac8e70ccf672ba7c9648.camel@ndufresne.ca>
+References: <f295f41ef1c9ee920ac3ac8e70ccf672ba7c9648.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Jun 2024 09:47:21 -0400 Michael S. Tsirkin wrote:
-> I don't know what this discussion is about, at this point.
-> For better or worse, vdpa gained interfaces for provisioning
-> new devices. Yes the solution space was wide but it's been there
-> for years so kind of too late to try and make people
-> move to another interface for that.
-> 
-> Having said that, vdpa interfaces are all built around
-> virtio spec. Let's try to stick to that.
+Hi Nicolas,
 
-But the virtio spec doesn't allow setting the MAC...
-I'm probably just lost in the conversation but there's hypervisor side
-and there is user/VM side, each of them already has an interface to set
-the MAC. The MAC doesn't matter, but I want to make sure my mental model
-matches reality in case we start duplicating too much..
+On Mon, 17 Jun 2024 10:04:59 -0400, Nicolas Dufresne wrote:
+>> [5799:5886:0617/171224.851218:VERBOSE1:v4l2_device.cc(128)] Open(): No devices supporting H264 for type: 0
+>> [5799:5886:0617/171224.851346:VERBOSE4:v4l2_queue.cc(1069)] This queue does  support requests.: No such file or directory (2)
+>
+>This one indicates that V4L2_BUF_CAP_SUPPORTS_REQUESTS might be missing in the
+>REQBUFS implementation. I suspect GStreamer simply assumes this today for driver
+>exposing stateless formats (which is fair, its not a compliance test, and we
+>don't have a codec compliance yet).
+>
+>I'd suggest to check and fix this one, and retry, might only be noise, might be
+>the main cause, we cannot tell.
+
+This log doesn't harm chromium decoding. I can also see it when using
+hantro g1 decoder. The issue is "VIDIOC_STREAMON failed" later causing 
+decode failed.
+
+>Are you using minigbm ? Because if you do, we don't have minigbm code for this
+>driver (and have no plan to do so, since we don't aim for ChromeOS support).
+
+I'm using patched chromium which can use mesa's libgbm to render NV12.
+Robert Mader has showed me patches from this mesa's merge request[1].
+
+[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/23214
+
+Best regards,
+Jianfeng
