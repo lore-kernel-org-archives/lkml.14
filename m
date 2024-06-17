@@ -1,133 +1,148 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84C51BC4F;
-	Mon, 17 Jun 2024 05:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFB8181330;
+	Mon, 17 Jun 2024 05:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718602148; cv=none; b=JXb+ztK9YeRcFCgB2JNn1n7FSOkrLJBmTHE1u9RCdJIsdLfLmq1TajY9AuwgpfeDPrgWoVwklBr4meDUG3w74//Zor4opH3fOQ2bqMRGr6cQQQhgiYfwL3MujjUJTGgvfDPNIjZwONSrw4q8Xk8+1L8/S7Gk+NT2BocRiyl6WAE=
+	t=1718602186; cv=none; b=U4wNQKrzPEGXY8RRy5qqvGAVNcMFDxdpy03z3VTOZ1MIkwetAuydxVFdNFidljbfbBRJDe3xulknFiZ4wGR4jbjVZ15dHgG3uMmr1iI60jVGor0zOItpYlvAHj5vfKAWIBys6K1FvBxdPG2j34vxenp2css2xe/HIigT8Eeut7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718602148; c=relaxed/simple;
-	bh=JfuXF7LccmOQXgvjaPciJFC2/V4JeOfYjOyWcZn6Fow=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPJDIHmdE/aAtCGGdanLnXDIjOjnKKs8fNWgW6qSLmRaPLJRv/GGvvBfIFRQMEP0bqV8LSO84GihwlM0G+b4PeCEcW6kRUWMkTa+F2HirLcDXMMY+wa7yQNjJfYR1PWDpmcTvin5EWOjR4KtiKI4MCsGPYzm+N3OjpgOs/iP5SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FKy5gVf/; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718602186; c=relaxed/simple;
+	bh=VZl9Dt00+pQFuwUZq2ZbWrXnzRU7zRHOGJ+iYooxmx0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=BIasybgKa8LYCjbjWPpkgBSlUAxA69fIxRU/5bd3p/snz4pEle4+2irU87pj63h7bBmUsZPisRXApePnG78XL5bklNO02UaH4bcFlThCa2k6PMlHd7oos1n9HJuRwPOKy1jIiyEQAuK0+I5EBpvhjIiZUG5WXtu5c5PZHJPAGM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YnOwnzWU; arc=none smtp.client-ip=209.85.216.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FKy5gVf/"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45H5N4Pt017027;
-	Mon, 17 Jun 2024 00:23:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718601784;
-	bh=qu9x8V63xIXF7+SOlwPPEqr91xJ3aMsUjkBmekG1Wns=;
-	h=From:To:CC:Subject:Date;
-	b=FKy5gVf/eIOsc3HMyb0XpthUevaYMDNzmPy1yT1FeX41hAuwqUZb/l3JvKs5IZCIP
-	 KrujFIKEahKu7xTl+cEnLEM31wesM53SMQ1x2pecdN10/1kGvrad0tOP3cRQfpKZeS
-	 TiJHjgCPC6Ht9c9nIbfegnuoNKmPfybzZelNVGPs=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45H5N4eP006639
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Jun 2024 00:23:04 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Jun 2024 00:23:03 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Jun 2024 00:23:03 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45H5MxRS035065;
-	Mon, 17 Jun 2024 00:23:00 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <vigneshr@ti.com>, <nm@ti.com>, <tony@atomide.com>
-CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <u.kleine-koenig@pengutronix.de>, <ronald.wahl@raritan.com>,
-        <thomas.richard@bootlin.com>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <ilpo.jarvinen@linux.intel.com>, Udit Kumar <u-kumar1@ti.com>
-Subject: [PATCH v2] serial: 8250_omap: Implementation of Errata i2310
-Date: Mon, 17 Jun 2024 10:52:53 +0530
-Message-ID: <20240617052253.2188140-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnOwnzWU"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-2c4e2cd931aso521199a91.0;
+        Sun, 16 Jun 2024 22:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718602184; x=1719206984; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TUsI5R+Z0iy5fF8mDhU7qwVZOawS/mIqRte7Pe8J3zI=;
+        b=YnOwnzWUaZmO/D+ow7ns103fHsew4JkE0bhjlHn2ZOS6wVzASxBOqXnfbRT49c3adA
+         2+B4R6MfoL+o0+q4AcPoNes9DAlJMXJW9ri6tvm1fTYCi6Dbsg0nMG1iJX7R6kbZXP3L
+         pY3pBVkxgBvb0O+otaSy/kyEjOACnEHN9Sq4qL/49ipjbNR6ZtHBfMj2OJ8Ri2AE7eIm
+         BLXdlGZ2xB5H+6m3eq4eVO2HnuukuNP8445tPCnUmfzW+mK1uGNxwOAZOLUCklsAl3+2
+         dbIZUYCF+uVMhI8j2MW8X7FfEI77cMfKo8YEH1BH1HWTfchYTOIulZz97s/1A8tj4qEA
+         aa4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718602184; x=1719206984;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TUsI5R+Z0iy5fF8mDhU7qwVZOawS/mIqRte7Pe8J3zI=;
+        b=OnOUjEjHzsl3pvpHV5m2XNG9LYXP5qRv0pqoxYwYaqThLn+Yc0g/HKij9CR6x9D3Nf
+         SMsaXrcoX9NwXDT131K0Q9Apr7C/SZ8utvqZNpwgqbGQZMSIYRuKrNsXESHQwVNG7y2S
+         ts7nyqtuN9sBhMLUuRa5O8yOAEAOu23vO88IhCtPzGRfRzja9GHDejdVwYv88RWAJ97J
+         cYjRZicRBmUqM0PbrhE2GNPpuh0wCo1Hu8IRHecvsNrblVz3m8Vi0VsY7zDv/ZmK52GZ
+         jeeEPO5YGTg3cohzjshhMc3TWZ/UBknGpNLlxasQkR+cd3kR+ftkMQsvo7yeCJ6HThGc
+         br1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXk/StLLP9BKjv5xy2hRKJqisoQ+8rvvSGoP8JuPgTKJel7+oQch4RQiED3lUe/Q4TOvlXmEhpKUnCdNGgixJTJHhV6SBrbRm+SXeblTuWSTJet+rs6umgvbHwvN/c+wT8hwpNTKP2ZnLqkgcTS
+X-Gm-Message-State: AOJu0YwSXZG8fKXMzb7CNu9Y/6+Jfoopwt67jPW+rq9vqtq5BHjoVTKz
+	/jZngjuqt3IIDd4FVjMvo7e2WKeqas/m38sXihXPLj6qgWbz7cGw
+X-Google-Smtp-Source: AGHT+IH3QQcBtYgpWXy8Eibq53Mk2mB6I+M4MbSta2aASqh/Q1m8xZoJHiVBxZsXJ0RpaXUKk29i0w==
+X-Received: by 2002:a17:902:d4c7:b0:1f2:f9b9:8796 with SMTP id d9443c01a7336-1f8627eb9fcmr102562255ad.2.1718602184316;
+        Sun, 16 Jun 2024 22:29:44 -0700 (PDT)
+Received: from localhost.localdomain ([117.147.90.53])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f88daf2b8dsm11699355ad.193.2024.06.16.22.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jun 2024 22:29:43 -0700 (PDT)
+From: aigourensheng <shechenglong001@gmail.com>
+To: akpm@linux-foundation.org
+Cc: shuah@kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	aigourensheng <shechenglong001@gmail.com>
+Subject: [PATCH] selftests/mm:fix test_prctl_fork_exec return failure
+Date: Mon, 17 Jun 2024 01:29:34 -0400
+Message-Id: <20240617052934.5834-1-shechenglong001@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-As per Errata i2310[0], Erroneous timeout can be triggered,
-if this Erroneous interrupt is not cleared then it may leads
-to storm of interrupts, therefore apply Errata i2310 solution.
+after calling fork() in the test_prctl_fork_exec() function,
+the global variable ksm_full_scans_fd is initialized to 0
+in the child process upon entering the main function
+of ./ksm_functional_tests.
+In the function call chain test_child_ksm() ->
+__mmap_and_merge_range -> ksm_merge-> ksm_get_full_scans,
+start_scans = ksm_get_full_scans() will return an error.
+Therefore, the value of ksm_full_scans_fd needs to be
+initialized before calling test_child_ksm in the child process.
 
-[0] https://www.ti.com/lit/pdf/sprz536 page 23
-
-Fixes: b67e830d38fa ("serial: 8250: 8250_omap: Fix possible interrupt storm on K3 SoCs")
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
+Signed-off-by: aigourensheng <shechenglong001@gmail.com>
 ---
-Test logs
-https://gist.github.com/uditkumarti/7a7ab6994581bbb09cf1a4271c592d8e
+ .../selftests/mm/ksm_functional_tests.c       | 38 +++++++++++--------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
 
-Change logs
-Changes in v2:
-- Added Fixes Tag and typo correction in commit message
-- Corrected bit position to UART_OMAP_EFR2_TIMEOUT_BEHAVE
-Link to v1
-https://lore.kernel.org/all/20240614061314.290840-1-u-kumar1@ti.com/
-
- drivers/tty/serial/8250/8250_omap.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 170639d12b2a..ddac0a13cf84 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -115,6 +115,10 @@
- /* RX FIFO occupancy indicator */
- #define UART_OMAP_RX_LVL		0x19
+diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+index 37de82da9be7..b61803e36d1c 100644
+--- a/tools/testing/selftests/mm/ksm_functional_tests.c
++++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+@@ -656,12 +656,33 @@ static void test_prot_none(void)
+ 	munmap(map, size);
+ }
  
-+/* Timeout low and High */
-+#define UART_OMAP_TO_L                 0x26
-+#define UART_OMAP_TO_H                 0x27
++static void init_global_file_handles(void)
++{
++	mem_fd = open("/proc/self/mem", O_RDWR);
++	if (mem_fd < 0)
++		ksft_exit_fail_msg("opening /proc/self/mem failed\n");
++	ksm_fd = open("/sys/kernel/mm/ksm/run", O_RDWR);
++	if (ksm_fd < 0)
++		ksft_exit_skip("open(\"/sys/kernel/mm/ksm/run\") failed\n");
++	ksm_full_scans_fd = open("/sys/kernel/mm/ksm/full_scans", O_RDONLY);
++	if (ksm_full_scans_fd < 0)
++		ksft_exit_skip("open(\"/sys/kernel/mm/ksm/full_scans\") failed\n");
++	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
++	if (pagemap_fd < 0)
++		ksft_exit_skip("open(\"/proc/self/pagemap\") failed\n");
++	proc_self_ksm_stat_fd = open("/proc/self/ksm_stat", O_RDONLY);
++	proc_self_ksm_merging_pages_fd = open("/proc/self/ksm_merging_pages",
++						O_RDONLY);
++	ksm_use_zero_pages_fd = open("/sys/kernel/mm/ksm/use_zero_pages", O_RDWR);
++}
 +
- /*
-  * Copy of the genpd flags for the console.
-  * Only used if console suspend is disabled
-@@ -663,13 +667,24 @@ static irqreturn_t omap8250_irq(int irq, void *dev_id)
+ int main(int argc, char **argv)
+ {
+ 	unsigned int tests = 8;
+ 	int err;
  
- 	/*
- 	 * On K3 SoCs, it is observed that RX TIMEOUT is signalled after
--	 * FIFO has been drained, in which case a dummy read of RX FIFO
--	 * is required to clear RX TIMEOUT condition.
-+	 * FIFO has been drained or erroneously.
-+	 * So apply solution of Errata i2310 as mentioned in
-+	 * https://www.ti.com/lit/pdf/sprz536
- 	 */
- 	if (priv->habit & UART_RX_TIMEOUT_QUIRK &&
--	    (iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT &&
--	    serial_port_in(port, UART_OMAP_RX_LVL) == 0) {
--		serial_port_in(port, UART_RX);
-+		(iir & UART_IIR_RX_TIMEOUT) == UART_IIR_RX_TIMEOUT) {
-+		unsigned char efr2, timeout_h, timeout_l;
-+
-+		efr2 = serial_in(up, UART_OMAP_EFR2);
-+		timeout_h = serial_in(up, UART_OMAP_TO_H);
-+		timeout_l = serial_in(up, UART_OMAP_TO_L);
-+		serial_out(up, UART_OMAP_TO_H, 0xFF);
-+		serial_out(up, UART_OMAP_TO_L, 0xFF);
-+		serial_out(up, UART_OMAP_EFR2, UART_OMAP_EFR2_TIMEOUT_BEHAVE);
-+		serial_in(up, UART_IIR);
-+		serial_out(up, UART_OMAP_EFR2, efr2);
-+		serial_out(up, UART_OMAP_TO_H, timeout_h);
-+		serial_out(up, UART_OMAP_TO_L, timeout_l);
+ 	if (argc > 1 && !strcmp(argv[1], FORK_EXEC_CHILD_PRG_NAME)) {
++		init_global_file_handles();
+ 		exit(test_child_ksm());
  	}
  
- 	/* Stop processing interrupts on input overrun */
+@@ -674,22 +695,7 @@ int main(int argc, char **argv)
+ 
+ 	pagesize = getpagesize();
+ 
+-	mem_fd = open("/proc/self/mem", O_RDWR);
+-	if (mem_fd < 0)
+-		ksft_exit_fail_msg("opening /proc/self/mem failed\n");
+-	ksm_fd = open("/sys/kernel/mm/ksm/run", O_RDWR);
+-	if (ksm_fd < 0)
+-		ksft_exit_skip("open(\"/sys/kernel/mm/ksm/run\") failed\n");
+-	ksm_full_scans_fd = open("/sys/kernel/mm/ksm/full_scans", O_RDONLY);
+-	if (ksm_full_scans_fd < 0)
+-		ksft_exit_skip("open(\"/sys/kernel/mm/ksm/full_scans\") failed\n");
+-	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
+-	if (pagemap_fd < 0)
+-		ksft_exit_skip("open(\"/proc/self/pagemap\") failed\n");
+-	proc_self_ksm_stat_fd = open("/proc/self/ksm_stat", O_RDONLY);
+-	proc_self_ksm_merging_pages_fd = open("/proc/self/ksm_merging_pages",
+-					      O_RDONLY);
+-	ksm_use_zero_pages_fd = open("/sys/kernel/mm/ksm/use_zero_pages", O_RDWR);
++	init_global_file_handles();
+ 
+ 	test_unmerge();
+ 	test_unmerge_zero_pages();
 -- 
-2.34.1
+2.17.1
 
