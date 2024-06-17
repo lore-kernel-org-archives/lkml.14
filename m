@@ -1,83 +1,141 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF369191475
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD9B41C93;
+	Mon, 17 Jun 2024 09:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616187; cv=none; b=Tha9/dfa64TI2OSG5aNafpxwH/B3r7w3ww9KmKy+dTgXGwv+s/v01FV4LW2m5hA+TUcmloKLXpNdTeYBJRKH3Ce5BLKzvixvRZ3f7D7Ciou5zPeB5EKoHfNPmyOzBAqaYJu1Tsl4Oy5Hw8fqKsElX/v/ol1RFScU3iH+HOo24zM=
+	t=1718616267; cv=none; b=E+Z36UiXSNKhvVvm10peZXDKDUFmhESTc/P1LYf1xp66L6t4kNGJMDe7pGi5a8GG3kSfSzIF+6Krx+OniHHBruMSmsWA2AGdQaXk1TdRanzJsT0ECDzDh2WG+LGaUdOt8qZgV2kFJXiGBHR2LxXBQ8iGWbSSe6KUIcYENKcfyGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616187; c=relaxed/simple;
-	bh=PJorj6pZybZCRAmgMBh4ooMcrMxupHMGQPqA/q11VUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=qt12w4omfHM7kvqgTcm5Gl8qXB6mEXQiV6UxQtdRWbL/eVj0lbJb+1L5NdieBzzhRzGBLfSzE52TEnr0dHmIUYqifMbSXU0vB2PbO3d9t0Sw1apbxZ1KPtAQs1+zq/iJoC2fBP6lNJKbaaxBRRvjTFbZWr0vXm1VMaE76GHDj04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QMmixxYJ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718616267; c=relaxed/simple;
+	bh=9TH45R9i/G9Oz07Ivh80UmsdcTZLOinzkILdKhSrrD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7Bf1tovnqhLrMYpOKo/kMp1Ocyrl9hCTSVBNM53n4jNvleU2WZClw+iHABTTjOeg7F9E6XMeIT07yN4X0ah2+KnJgYqv7RAqVUDbwQt+/2Dy1gx8VfDVW3k4h2ofMj+8uDHhrxOsWzwJh+q3sAhii8CF41ueBYQrJ8ITZD1dk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb2sg47Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMmixxYJ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42249a4f9e4so28840395e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718616184; x=1719220984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to
-         :references:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PJorj6pZybZCRAmgMBh4ooMcrMxupHMGQPqA/q11VUA=;
-        b=QMmixxYJV02w5jGsjaYPK8uw8ATgnsghF9FuhA/pR5z6LSPx5Yp0VH+XA7Ectd+eWI
-         MYKVqZSeQwyHb9Oi64Tzm/kpOOg4wtky1ErU0NQXazVuquhtDbjgh2H3JqTfrWci6yMM
-         xCNYkvY4zV/kROI8cJ9fVSfB5Q08v0NaBPNH/ekl8hrHepZH8VxYw7qNhiOMRQ9MYIqP
-         z2VmWnV8bR5t07hU0AGVC13eCgbSD+ZFWmgKzHOcecE1Waw1chVScOiZBsaHxfqE3L/y
-         Nhib8sTqPx+K2SODDlpEtqjKO974pznUsspuKiixZLSZICSQWVBMKCG1SsUjt5mYXPVh
-         skgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718616184; x=1719220984;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to
-         :references:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PJorj6pZybZCRAmgMBh4ooMcrMxupHMGQPqA/q11VUA=;
-        b=R0lohwQWp/Pokcf9YWgMqAx1CvRyaINd/zXFd9SOPeJwOQYwisHm1lT9EZl1j4Nkzb
-         j6At1UUEtVY+f1s4P9b186kFzLcauvYOoB2+Av1bf8ht2DFSenv5F95q3XbM4wHjHFqd
-         Zw+eNNF3GjoU52AEUAHk8twb2LHqn+LL8yjJ4GpaMDbkqMumPKAIuT71XdRkQASLObjP
-         cVgK9C/z0Z1JuAXs9cFevwttzNfwzONNWylyj0LdEVl8ZqiW42bXv2jWu5kuZQJ3WZEl
-         UyvL7JOWUKIka+m9h6w9OtJSEpb8mqXt/AWJqO9tTe+DcIwTCfPknj1TT55dB1OkGiOD
-         N74Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV5g/a7NacfSesyUfOYHSkp66rV6IGS1zPiR3l0pd62In72R96RVmgE8WxAmeMxcrbhsjFevHhFiDISt8PVq6U+B3rL3IoAjY7zXjM2
-X-Gm-Message-State: AOJu0Yz6e4FT+O2nKkqWUh2KoubC/NIO+b/dK5gvkme3EJ6dVDbWd1YE
-	Vixjg7efwBM+J7rMJ1DIzGphPWZz4l9MnOrpccfiVgSph492Uo5N1Tna0HaYpgw=
-X-Google-Smtp-Source: AGHT+IFfL3Bs1KrLYPlq1k0cwv3eyK8lsf0inS3DFHb4TVzuMMGvXRsZ3JYsj7XJdNFeaX26ROtE2A==
-X-Received: by 2002:a05:600c:1d1b:b0:421:65a4:2936 with SMTP id 5b1f17b1804b1-423048240b6mr85210755e9.12.1718616184294;
-        Mon, 17 Jun 2024 02:23:04 -0700 (PDT)
-Received: from meli-email.org (adsl-33.109.242.225.tellas.gr. [109.242.225.33])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422869d4f2esm192148015e9.0.2024.06.17.02.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 02:23:04 -0700 (PDT)
-Date: Mon, 17 Jun 2024 12:02:57 +0300
-From: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex Benn=?UTF-8?B?w6k=?= e <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Bj=?UTF-8?B?w7Y=?= rn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
-Subject: Re: [RFC PATCH V2 3/8] rust: Extend OPP bindings for the configuration options
-User-Agent: meli 0.8.6
-References: <cover.1717750631.git.viresh.kumar@linaro.org> <37bdd7ee7b74292830dd9977154b08ebcf08a138.1717750631.git.viresh.kumar@linaro.org>
-In-Reply-To: <37bdd7ee7b74292830dd9977154b08ebcf08a138.1717750631.git.viresh.kumar@linaro.org>
-Message-ID: <f7wqe.d5i9jcj6qgw@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb2sg47Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B780C2BD10;
+	Mon, 17 Jun 2024 09:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718616265;
+	bh=9TH45R9i/G9Oz07Ivh80UmsdcTZLOinzkILdKhSrrD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hb2sg47ZBmlA3GwQ6X8LBpbsGgk+RhS3I0PBVVDdLfCezpCgUjz7pHQTwlpnW5Pp0
+	 r+F0BANkYlpcKIm3fQpIvUY99kTz32U1QQtnEaMnQ8rkplSuGiIIyDojN6nswSLGJ7
+	 5t87RDzt5TxCus+Z4YzJSjZAE56w1020qFqrvEWS+ZrMjD9Ad+/eB7BG39W38Z8X2r
+	 UWBLewN89keamUHMpknZxCOBMMsKH4x9Q8G0tWSyYnKymPuKKdW1l/FebiLkiwCGtu
+	 4n51DOWjZ/rWinMcJCBxykhBFM824jcTgWkv7KOM+4g+t8FWUMNY4U+kM2tD1AeAiN
+	 XcfjhwOaTccUA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sJ8b8-0000000053S-1JXM;
+	Mon, 17 Jun 2024 11:24:22 +0200
+Date: Mon, 17 Jun 2024 11:24:22 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rajendra Nayak <quic_rjendra@quicinc.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100: Enable tsens and thermal
+ zone nodes
+Message-ID: <ZnAAxlH6yhlJf6fV@hovoldconsulting.com>
+References: <20240614-x1e80100-dts-thermal-v2-1-4d4f9effacc6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20240614-x1e80100-dts-thermal-v2-1-4d4f9effacc6@linaro.org>
 
-On Fri, 07 Jun 2024 12:12, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->This extends OPP bindings with the bindings for the OPP core
->configuration options.
->
->Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->---
-> rust/kernel/opp.rs | 305 ++++++++++++++++++++++++++++++++++++++++++++-
-> 1 file changed, 303 insertions(+), 2 deletions(-)
->
+On Fri, Jun 14, 2024 at 01:50:07PM +0300, Abel Vesa wrote:
+> From: Rajendra Nayak <quic_rjendra@quicinc.com>
+> 
+> Add tsens and thermal zones nodes for x1e80100 SoC.
+> 
+> Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+> Changes in v2:
+> - Dropped the thermal engine nodes.
+> - Dropped comments from tsens nodes.
+> - Droppd the polling-delay entirely and polling-delay-passive where not
+>   necessary.
+> - Added top/bottom location to all sensors (where applicable).
+> - Fixed trip points with duplicate values for same temp.
+> - Marked as critical the 125°C throughout all trip points.
+> - Link to v1: https://lore.kernel.org/r/20240527-x1e80100-dts-thermal-v1-1-ea13b8fa6ffc@linaro.org
+> ---
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 1176 ++++++++++++++++++++++++++++++++
+>  1 file changed, 1176 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index 9944c654851e..df13df7967db 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
 
-Reviewed-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+> +		cpu0-0-bottom-thermal {
+> +			thermal-sensors = <&tsens0 2>;
+> +
+> +			trips {
+> +				trip-point0 {
+> +					temperature = <90000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				trip-point1 {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu-critical {
+> +					temperature = <110000>;
+> +					hysteresis = <1000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+
+The CPU bottom thermal zones fail to register with v2:
+
+[    0.146219] thermal_sys: Thermal zone name (cpu0-0-bottom-thermal) too long, should be under 20 chars
+[    0.146241] thermal_sys: Failed to register thermal zone cpu0-0-bottom-thermal: -22
+[    0.146474] thermal_sys: Thermal zone name (cpu0-1-bottom-thermal) too long, should be under 20 chars
+[    0.146495] thermal_sys: Failed to register thermal zone cpu0-1-bottom-thermal: -22
+[    0.146753] thermal_sys: Thermal zone name (cpu0-2-bottom-thermal) too long, should be under 20 chars
+[    0.146774] thermal_sys: Failed to register thermal zone cpu0-2-bottom-thermal: -22
+[    0.147024] thermal_sys: Thermal zone name (cpu0-3-bottom-thermal) too long, should be under 20 chars
+[    0.147045] thermal_sys: Failed to register thermal zone cpu0-3-bottom-thermal: -22
+[    0.147297] thermal_sys: Thermal zone name (cpuss0-bottom-thermal) too long, should be under 20 chars
+[    0.147319] thermal_sys: Failed to register thermal zone cpuss0-bottom-thermal: -22
+[    0.149401] thermal_sys: Thermal zone name (cpu1-0-bottom-thermal) too long, should be under 20 chars
+[    0.149423] thermal_sys: Failed to register thermal zone cpu1-0-bottom-thermal: -22
+[    0.149765] thermal_sys: Thermal zone name (cpu1-1-bottom-thermal) too long, should be under 20 chars
+[    0.149787] thermal_sys: Failed to register thermal zone cpu1-1-bottom-thermal: -22
+[    0.150098] thermal_sys: Thermal zone name (cpu1-2-bottom-thermal) too long, should be under 20 chars
+[    0.150119] thermal_sys: Failed to register thermal zone cpu1-2-bottom-thermal: -22
+[    0.150437] thermal_sys: Thermal zone name (cpu1-3-bottom-thermal) too long, should be under 20 chars
+[    0.150458] thermal_sys: Failed to register thermal zone cpu1-3-bottom-thermal: -22
+[    0.150775] thermal_sys: Thermal zone name (cpuss1-bottom-thermal) too long, should be under 20 chars
+[    0.150796] thermal_sys: Failed to register thermal zone cpuss1-bottom-thermal: -22
+[    0.152838] thermal_sys: Thermal zone name (cpu2-0-bottom-thermal) too long, should be under 20 chars
+[    0.152859] thermal_sys: Failed to register thermal zone cpu2-0-bottom-thermal: -22
+[    0.153211] thermal_sys: Thermal zone name (cpu2-1-bottom-thermal) too long, should be under 20 chars
+[    0.153232] thermal_sys: Failed to register thermal zone cpu2-1-bottom-thermal: -22
+[    0.153603] thermal_sys: Thermal zone name (cpu2-2-bottom-thermal) too long, should be under 20 chars
+[    0.153624] thermal_sys: Failed to register thermal zone cpu2-2-bottom-thermal: -22
+[    0.153994] thermal_sys: Thermal zone name (cpu2-3-bottom-thermal) too long, should be under 20 chars
+[    0.154015] thermal_sys: Failed to register thermal zone cpu2-3-bottom-thermal: -22
+[    0.154386] thermal_sys: Thermal zone name (cpuss2-bottom-thermal) too long, should be under 20 chars
+[    0.154407] thermal_sys: Failed to register thermal zone cpuss2-bottom-thermal: -22
+
+Johan
