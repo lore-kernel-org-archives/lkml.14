@@ -1,59 +1,59 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5057B17E900;
-	Mon, 17 Jun 2024 18:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77ED198856
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718650380; cv=none; b=Q5yLoAzzkEsusKV16gE/cZ0Yl4l9OnMjX14iaQa7aKGoamSm7/R5yuffy+TS0oXrbxnA6ADWMTWwgJfgVLWtJ+GdtV5DOjXVfNie43xp+TtM5o9HRsV68MZGRH1/Bw73PpVay9HkJagPtwCsU8i1UxihezXOFriWNpM0sqz5LFE=
+	t=1718650388; cv=none; b=bR/u+CFaK2chu0+iyC4n7hLVHBvfhERRGSg98lJPg8OAB/e6Hc3k9yqjqhmijPI/2TeFprYTrsvRtUKvp/H17u9JHR5DEfbVe56jkewihakzWjkDayfrqHYDcHMgXnqn5usY0JFw5zKX+0VcLhRTpXjTCjxW3P5+/Llg/y0dXuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718650380; c=relaxed/simple;
-	bh=BF7uZaD7lnxQyh3lTTyTsD3+XLVYTQ9pmJnwOpGPQ8A=;
+	s=arc-20240116; t=1718650388; c=relaxed/simple;
+	bh=K9KjBKCkpXLAqOUVTwlZWowQdOkv1eWRfWuRpNdDdC0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EO+hppNHo861hG5UNg2jb1BK85PemIL+vp4oc96mcr3UD8vnc+51z8KoRy2npHAERin6NtwzRDS8qTQXSXoQXfOnFRBKgDjFE2OjXXZHmKcLHk1j9kiyEqbmXN09RdWCkXWZ/4XMEHaoXoPaz1qYBtONbYYCNUTQTDyQHd0ilCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7JQ83Cd; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=YQAWVO5fNBj2iOyA9dCxIfvei74y7upiKTpbwA3aT0Sli8kacEzYl4L79sKSaoGYsb7z72sOTov2jdRrfCdU0w9h+pRNj5P5YrMaCSesSaIp+uge+XzxapUf5IS5u6f240nVqOWfvsJtBMljJdeQb0tE73SfVnZHYMORwTrvPFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=adwwQhkU; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7JQ83Cd"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so39137275e9.1;
-        Mon, 17 Jun 2024 11:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="adwwQhkU"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52bbdb15dd5so5314740e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718650378; x=1719255178; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718650385; x=1719255185; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fWjJjq4VyTBxkY0C45AnzzK9M0qUU4Vb28GUzKrZrOA=;
-        b=d7JQ83Cd6V7hafzuV2kuB7Qx6tZN/rM96Vv7M0LlczqKYSusiyx82AUzp0n1F+81Kz
-         yUzxyjBWcWCFVy9/xIRRgHg99n3D8xwU3X/rD9uwQHb8k3gIfE+FX5+ULkeYq3Nwu7pj
-         Ut7UK2ZJbq1EIBg0t1h8Gizn63owp1zIwHK57L21ODCUJ6zaZMLg2DpCkluGYtroChrR
-         rReUwGN2grRAD0vpt7uE/aGmdwwzQ4G4GPkR+Dnxqvos0R8X5gia9Rnz8JDsqD29aLbO
-         WLJSwM6RTiBIH4nRCvzwCT35YBsNeNysk2ZTaExasSdXbaMwUOQ+UVDd0XT9d6J8jMiE
-         0DRQ==
+        bh=MWy7ZuXKNt2Ozc+a401wysn7JDFxJ4mbR0Kx2EK+fP0=;
+        b=adwwQhkUT9dibSw8WUspUawD54qOfBWo96bBCEI7559GbXPD74Kvd5JXSEe8VreSkp
+         y6z6DNdPkwQfaJ3zaQa4BTWfN2lq/u7rU2SK77AbQfIL+p06CcgiiqS0EakfDlv47xVq
+         CjLcK4xWw5SdYmYln47YNo2BaVadWx7bWBwDKZfkNQZOpofNv4eygYWQAiw1FN8BuPFt
+         WGenlCkKhvMUcNF9RVq7e6pPnNqM0+00SSdQXOaDLblEn7mvJGj9tU43imBebP3C9Plc
+         Xkl+FGdbWfna2Js8UbVYt4OxFZ/kKT5KBXA0WnHjjrXaueRotmURX/H6xuDAfoB0bAAy
+         58Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718650378; x=1719255178;
+        d=1e100.net; s=20230601; t=1718650385; x=1719255185;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fWjJjq4VyTBxkY0C45AnzzK9M0qUU4Vb28GUzKrZrOA=;
-        b=p+ZzP1Up4s1a5euAnjKwPrejjy6iaQ3A2/h4BW4CC8sWiuzP9WddcRXGmcXIbdXEiH
-         vqzCD9jh+NnTEEwsrBnxOotJn1CrixRC1vRqHghBEA+9EQzxFc27NzI+aJQQQ3JnhL0j
-         kk7WmJF04fRdwuhLmrUW3vDB/HlqiIQZMcCbXZk93zxTXLUeBO8baq8DQkEGBUbvWbh0
-         tC38zF7jiXlPQMxP3mpRNMhMteRnnykKQxZ8m47nrUfFJd0qiwbBRJ3g4nUSSomRe3hF
-         G8jEXp5PhCKUm05S9GtO9dM3qHSiQomkET2GGsmCpISHlKjxShAKP+ii494htDcZTBjY
-         gmhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVTk6zjL0Jo+WjWDL8xlwcrDzhKsfNniSftnW+ivYlEycZNfEtYcnywLdNzBLOSqtAxo5Jmlzfkp1dggx1jrQR3iTwtC0823KEuDwf9dfZ5NITKt/hPhjL9mNWmWr8GTyIVcyR/tC8itk+x0yHZuZm7JBixmaMuCiXv5C8kfd3wT+L7w==
-X-Gm-Message-State: AOJu0YwT9/T5DS9xfH9FBGX2vbqdKhfSEJ3pVUN/LnXp8NncK9uZoCVI
-	8agH2HEuHBmrLGSHSbnpSoQt3yebWmeIZgxyn2Ez7RpkuBYWz38/yMMSxdXyUrs=
-X-Google-Smtp-Source: AGHT+IEBX8FFSyOXx4+xGG3tRDdpRsim+ngLzm0BcsFL0VXYQ8+dulSMhJRQsFQ8jsYTKklolvx5vA==
-X-Received: by 2002:a05:600c:5492:b0:421:d8d4:75e3 with SMTP id 5b1f17b1804b1-4230485bac2mr69041565e9.40.1718650377596;
-        Mon, 17 Jun 2024 11:52:57 -0700 (PDT)
-Received: from ?IPV6:2a10:d582:37c5:0:ed15:7e1f:11e6:9a9a? ([2a10:d582:37c5:0:ed15:7e1f:11e6:9a9a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075093d58sm12439436f8f.4.2024.06.17.11.52.56
+        bh=MWy7ZuXKNt2Ozc+a401wysn7JDFxJ4mbR0Kx2EK+fP0=;
+        b=tHlu0HQYvbXb9K7Hh8nBXgxkrTScoR+MtwgShL+qnv+611Qc51lWip0iaRSSEnASeA
+         mIJZwQldGt6+l1Ff1hWNeLZOKkT2euJUgaCyAnukN2E7bYLkp90wIRo+QB+TY9LETNS2
+         2vHSfSZBlc0sJqvsdGS5oU7OKai4xsqWw/VbPulUSw4Vw2o2s8p+uw2lHjEVRujH32N6
+         zx4mcUF5PScPqDWQH9lnklS5mpgs4qZXZs53lH/B1lAmbGhTcg9ZlRb4g06/jVRW4bj5
+         KJsSzaXq+0K7sNJ0PA8AMYp3rXYY7i3WvmLR/0s1V4rlejH4cgVRiZS86fq0ChQ9wChl
+         7U1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUm28KO/OBtYPo7J0cxYXYCQRgkX4hqvGo0V5UWLhEte+0Qai7MVQO7LmB2by+mCZMa1WXnbgmCI9k0/CzoZgM6GQl3HL5qQ2AbZ2yi
+X-Gm-Message-State: AOJu0YxFCtoEgJ8p7GyrkLiNJVHKD2Dt6F/c40BVv+vimuyATFK5io1o
+	+y1LgGfY8AWyvPCt17Ce9F4cvW9QCutu46SwGHvuGTd1BJ8SqsF49y9E6xhV+p8=
+X-Google-Smtp-Source: AGHT+IEWLFZZ0jt8SRhky/z9Jh7PVDX3/2EZDQYZkcA5mbEYl1CnAWhQD/l67EYmxT3DLAleDU3ugg==
+X-Received: by 2002:ac2:43d6:0:b0:52c:a9c2:d363 with SMTP id 2adb3069b0e04-52ca9c316abmr5936135e87.10.1718650385024;
+        Mon, 17 Jun 2024 11:53:05 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:cb2:a9df:9f88:17b:c7e7:fa59? ([2a00:f41:cb2:a9df:9f88:17b:c7e7:fa59])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2825b43sm1301472e87.12.2024.06.17.11.53.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 11:52:57 -0700 (PDT)
-Message-ID: <67dca4c3-bb86-4cd4-b80b-733ba93547b9@gmail.com>
-Date: Mon, 17 Jun 2024 19:52:55 +0100
+        Mon, 17 Jun 2024 11:53:04 -0700 (PDT)
+Message-ID: <c45cc12e-40e2-4a1b-8055-b3e956ba2a24@linaro.org>
+Date: Mon, 17 Jun 2024 20:53:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,73 +61,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] iio: light: ROHM BH1745 colour sensor
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
- Jonathan Cameron <jic23@kernel.org>
-Cc: lars@metafoo.de, krzk+dt@kernel.org, conor+dt@kernel.org,
- robh@kernel.org, ivan.orlov0322@gmail.com, javier.carrasco.cruz@gmail.com,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240606162948.83903-1-muditsharma.info@gmail.com>
- <20240606162948.83903-2-muditsharma.info@gmail.com>
- <20240608172227.17996c75@jic23-huawei>
- <CANhJrGM9czj0RL3OLCgRHEKc2QOjG9P0AZTrZxvYUk65TCpHRg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] serial: qcom-geni: Introduce
+ qcom_geni_serial_poll_bitfield()
+To: Douglas Anderson <dianders@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Johan Hovold <johan+linaro@kernel.org>,
+ John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Stephen Boyd <swboyd@chromium.org>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh@kernel.org>,
+ Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+References: <20240610222515.3023730-1-dianders@chromium.org>
+ <20240610152420.v4.5.Ic6411eab8d9d37acc451705f583fb535cd6dadb2@changeid>
 Content-Language: en-US
-From: Mudit Sharma <muditsharma.info@gmail.com>
-In-Reply-To: <CANhJrGM9czj0RL3OLCgRHEKc2QOjG9P0AZTrZxvYUk65TCpHRg@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240610152420.v4.5.Ic6411eab8d9d37acc451705f583fb535cd6dadb2@changeid>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/06/2024 06:58, Matti Vaittinen wrote:
-> la 8. kesäk. 2024 klo 19.22 Jonathan Cameron (jic23@kernel.org) kirjoitti:
->>
->> On Thu,  6 Jun 2024 17:29:42 +0100
->> Mudit Sharma <muditsharma.info@gmail.com> wrote:
->>
->>> Add support for BH1745, which is an I2C colour sensor with red, green,
->>> blue and clear channels. It has a programmable active low interrupt
->>> pin. Interrupt occurs when the signal from the selected interrupt
->>> source channel crosses set interrupt threshold high or low level.
->>>
->>> This driver includes device attributes to configure the following:
->>> - Interrupt pin latch: The interrupt pin can be configured to
->>>    be latched (until interrupt register (0x60) is read or initialized)
->>>    or update after each measurement.
->>> - Interrupt source: The colour channel that will cause the interrupt
->>>    when channel will cross the set threshold high or low level.
->>>
->>> This driver also includes device attributes to present valid
->>> configuration options/values for:
->>> - Integration time
->>> - Interrupt colour source
->>> - Hardware gain
->>>
+
+
+On 6/11/24 00:24, Douglas Anderson wrote:
+> With a small modification the qcom_geni_serial_poll_bit() function
+> could be used to poll more than just a single bit. Let's generalize
+> it. We'll make the qcom_geni_serial_poll_bit() into just a wrapper of
+> the general function.
 > 
->>> +
->>> +#define BH1745_CHANNEL(_colour, _si, _addr)                                   \
->>> +     {                                                                     \
->>> +             .type = IIO_INTENSITY, .modified = 1,                         \
->>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),                 \
->>> +             .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_HARDWAREGAIN) | \
->>
->> Provide _SCALE instead of HARDWAREGAIN
->> As it's an intensity channel (and units are tricky for color sensors given
->> frequency dependence etc) all you need to do is ensure that if you halve
->> the _scale and measure the same light source, the computed
->> _RAW * _SCALE value remains constant.
-> 
-> ...Which is likely to cause also the integration time setting to
-> impact the SCALE.
-> 
-> You may or may not want to see the GTS-helpers
-> (drivers/iio/industrialio-gts-helper.c) - which have their own tricky
-> corners. I think Jonathan once suggested to me to keep the
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Hi Matti,
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Thank you for the recommendation here.
-
-Looking into GTS-helper for v5.
-
-Best regards,
-Mudit Sharma
+Konrad
