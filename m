@@ -1,189 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B351AC247;
-	Mon, 17 Jun 2024 13:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17C91AED24;
+	Mon, 17 Jun 2024 13:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631760; cv=none; b=DGfJq+d0guYjm7qhz4oO9EHQQddLuj1qNHuBvXgJ9TORuMBMp0LyDe+WH+3bkgbzzQDW98wYr00gFPwSXoip/mQykqPl1ilae+VIeeMfmIkusOt4+n61+G4QBa8e2xVWBpclGao12Zya+fQsstPwyypwkYZU0sKYCfrrYShkl5s=
+	t=1718631817; cv=none; b=NyF3nKvBeuImKxDxQgdwbI9gCwfTRYxJKazqwxWUs5NasgN0VYlqLlPmRt7LYlVrf3raWcd/MYGQHTRj0xPUjB7fpvJ+MuoBQC/oP1YR/LGqot6DUqadlgBiq2TdOXmPnw81Kr19BRe1nWBJilOiN7mn0myE8bW1pP7vPpQj1h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631760; c=relaxed/simple;
-	bh=jAzokita4ObBVuqP6v9/pCm7QzuPOXyw106mBV/23Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEgBr0GvM21ptWZYwY28+L4heCZBmnryBUo6ID+8Tl/XkT+Y2KneyWCrAQrP1ZGJUVHtge3y6rNtnmCpdOD/7UgjlqPqLvRwVtDNVZqlskaZS7w1WZu8vsiR+SxGMkTodtXqeHiLijy7B4XcF0+W/SSYT1itD22Ftk+EnHMfm2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VpAyeIw3; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718631817; c=relaxed/simple;
+	bh=wPdlMn4BkQJ1i+WvuHCmNwqJAwmoMMcYl971v9DomFs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qx4zdbnv2Qg8BSc21KFZfBUvdnlFrBtfowTfiQN0y+m4JuWbkv74F9xTwXYB5/q14HFL6RK66EwJPSS5UgdK7VOiM0U2TioNGxcYc+m8N7YGkLWmVrTD6VTIZgbXZehSzpel+IjPPkHcdiU+YdCsACFoD+ykculXWQuS1HIh0o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S3HkmBr6; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VpAyeIw3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718631758; x=1750167758;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jAzokita4ObBVuqP6v9/pCm7QzuPOXyw106mBV/23Ck=;
-  b=VpAyeIw3OdpLPXod5M+S96OkWityDjNtJVoQiMev3Pck472tNeqn2zQb
-   zgAyV7rIRdBf6384tGiwX3PJRKPg2EHeNpGWv7JvFzFzg7urTZ0MF5a/3
-   R9tpo6b8PTpH7G+ovu9u+blhRiSqnTi3zowcG6kFKh7GP1agLemCdmHZe
-   y8MTdD3RmfEe8i9QQoAt9MtYaSzO3ndZ+eAtpYqMALtXQQ7c8C5KFZSwO
-   97FsqRYw7hwag6ITSElDnA7/EY7UOtjEa0uLBhOdQ5CqNgYtURq4C6hlQ
-   8Qk/7m38VM6PUM7rDPaKeO4aZq/fYJYkj/YleNYyGjEOCIOzVDXdzMNgi
-   w==;
-X-CSE-ConnectionGUID: bwpA3hfTRaSL+O0+WqlJ+Q==
-X-CSE-MsgGUID: vY5bH/9vQJSOg6c74npNvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="26140411"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="26140411"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:42:24 -0700
-X-CSE-ConnectionGUID: cyDZ2+c4Q5yMw2iNvTNnbw==
-X-CSE-MsgGUID: MEU7Mh7STxq2kwapeOkp4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="41131257"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:42:21 -0700
-Message-ID: <7c667516-b5a2-48e1-afd8-e45906e69053@intel.com>
-Date: Mon, 17 Jun 2024 16:42:13 +0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S3HkmBr6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718631814;
+	bh=wPdlMn4BkQJ1i+WvuHCmNwqJAwmoMMcYl971v9DomFs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=S3HkmBr6agUfW95p6IZ5XRCZ8SXGakexEfxerssqNteb6ERE+9IrPn+eIzXQ3pPwT
+	 QRQcBuxxe/IdVRooZRu4o6xbj88PsaPT0WRD7HzPGgSeFCnVoavP/DQJB7t8eKL9gP
+	 GEClxw+4Gn1LePmGb7jSe7RM4T09+hfsHST1NeqyQDdJOHvOdbpbP0LVG7K7j/DxS+
+	 gc2UJuy5w7VXuaOlPt+5WIvUXr4S97awQsFm5m1SjMBFPkxpnEP0rzHEhR5UPX99je
+	 f417DkkCcpc9mkI4RuDtBywU40yoThKahWTcPehbESaQIyfFwJhaHm4gPpQYvorx3E
+	 jb7T1pIkbGI/Q==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6CB9E3782121;
+	Mon, 17 Jun 2024 13:43:32 +0000 (UTC)
+Message-ID: <ec8e632a80a8d4ded6f692d92dff9f699881773e.camel@collabora.com>
+Subject: Re: [PATCH v4 00/11] media: rkvdec: Add H.264 High 10 and 4:2:2
+ profile support
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Diederik de Haas <didi.debian@cknow.org>, Ezequiel Garcia
+ <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ linux-rockchip@lists.infradead.org, Jonas Karlman <jonas@kwiboo.se>,  Andy
+ Yan <andyshrk@163.com>
+Cc: Alex Bee <knaerzche@gmail.com>, Benjamin Gaignard
+	 <benjamin.gaignard@collabora.com>, Sebastian Fricke
+	 <sebastian.fricke@collabora.com>, Christopher Obbard
+	 <chris.obbard@collabora.com>, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 17 Jun 2024 09:43:29 -0400
+In-Reply-To: <122755518.lCnTqr06ca@bagend>
+References: <20231105165521.3592037-1-jonas@kwiboo.se>
+	 <122755518.lCnTqr06ca@bagend>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2 2/2] perf/core: Fix incorrected time diff in
- tick adjust period
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
- <20240417115446.2908769-3-luogengkun@huaweicloud.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240417115446.2908769-3-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 17/04/24 14:54, Luo Gengkun wrote:
-> Adrian found that there is a probability that the number of samples
-> is small, which is caused by the unreasonable large sampling period.
-> 
->  # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
->  # perf script
->  ...
->  test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
->  ...
-> 
-> It seems that the Timer Interrupts is not coming every TICK_NSEC when
+Hi,
 
-No, the period is not adjusted unless the event is active i.e. scheduled in.
-So an event in a task context where the task sleeps a lot will
-likely not be adjusted every tick.
+Le dimanche 16 juin 2024 =C3=A0 11:47 +0200, Diederik de Haas a =C3=A9crit=
+=C2=A0:
+> On Sunday, 5 November 2023 17:54:59 CEST Jonas Karlman wrote:
+> > This is a revival of a 3 year old series [1] now that NV15/NV20/NV30 su=
+pport
+> > for display driver have landed in mainline tree.
+> >=20
+> > This series adds H.264 High 10 and 4:2:2 profile support to the Rockchi=
+p
+> > Video Decoder driver.
+> >=20
+> > Patch 1 adds helpers for calculating plane bytesperline and sizeimage.
+> > Patch 2 adds two new pixelformats for semi-planer 10-bit 4:2:0/4:2:2 YU=
+V.
+> >=20
+> > Patch 3 change to use bytesperline and buffer height to configure strid=
+es.
+> > Patch 4 change to use values from SPS/PPS control to configure the HW.
+> > Patch 5 remove an unnecessary call to validate sps at streaming start.
+> >=20
+> > Patch 6-10 refactor code to support filtering of CAPUTRE formats based
+> > on the image format returned from a get_image_fmt ops.
+> >=20
+> > Patch 11 adds final bits to support H.264 High 10 and 4:2:2 profiles.
+> >=20
+> > Tested on a ROCK Pi 4 (RK3399) and Rock64 (RK3328):
+> >=20
+> >   v4l2-compliance 1.24.1, 64 bits, 64-bit time_t
+> >   ...
+> >   Total for rkvdec device /dev/video1: 46, Succeeded: 46, Failed: 0,
+> > Warnings: 0
+> >=20
+> >   Running test suite JVT-FR-EXT with decoder FFmpeg-H.264-V4L2-request
+> >   ...
+> >   Ran 65/69 tests successfully
+> >=20
+> >   Running test suite JVT-AVC_V1 with decoder FFmpeg-H.264-V4L2-request
+> >   ...
+> >   Ran 127/135 tests successfully
+> >=20
+> > Before this series:
+> >=20
+> >   Running test suite JVT-FR-EXT with decoder FFmpeg-H.264-V4L2-request
+> >   ...
+> >   Ran 44/69 tests successfully
+> >=20
+> > ...
+> >=20
+> > Following commits adds support for NV15/NV20/NV30 to VOP driver:
+> > 728c15b4b5f3 ("drm/fourcc: Add NV20 and NV30 YUV formats")
+> > d4b384228562 ("drm/rockchip: vop: Add NV15, NV20 and NV30 support")
+> >=20
+> > To fully runtime test this series you may need above drm commits and ff=
+mpeg
+> > patches from [2], this series and drm patches is also available at [3].
+> >=20
+> > [1]
+> > https://lore.kernel.org/linux-media/20200706215430.22859-1-jonas@kwiboo=
+.se/
+> > [2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-n6.1-dev/ [3]
+> > https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-high-10=
+-v4/
+> > [4] https://gist.github.com/Kwiboo/f4ac15576b2c72887ae2bc5d58b5c865 [5]
+> > https://gist.github.com/Kwiboo/459a1c8f1dcb56e45dc7a7a29cc28adf
+>=20
+> Reviving this old thread now that rkvdec2 'stuff' emerged.
+> I have (actually) done quite some tests with this (and "media: rkvdec: Ad=
+d=20
+> HEVC backend" patch set) and they have been part of my kernel builds ever=
+=20
+> since.
+> I _think_, but don't know, that is relevant for Andy's question:
+>=20
+> On zondag 16 juni 2024 08:58:20 CEST Andy Yan <andyshrk@163.com> wrote:
+> > How can I test these patches? Do they require any additional userspace
+> > patches?
+>=20
+> I have the same question and I think you'd need this and the HEVC patch s=
+et=20
+> and then also patch FFmpeg and then it should enable HW acceleration.
+> So my question boils down to: with the rkvdec2 patch set, should V4L2-req=
+uests=20
+> now also work with rkvdec, so not just Hantro anymore?
 
-> system is idle. For example, counter increase n during 2 * TICK_NSEC,
-> and it call perf_adjust_period using n and TICK_NSEC, so the final period
-> we calculated will be bigger than expected one. What's more, if the
-> the overflow time is larger than 2 * TICK_NSEC we cannot tune the period
-> using __perf_event_account_interrupt. To fix this problem, perf can
-> calculate the tick interval by itself.
+FFmpeg changes are still downstream, and different people (even within
+LibreELEC) seems to have slightly different version or alteration. It would=
+ be
+really nice if this work could move upstream FFMpeg so that we can be more =
+sure
+what what "working with FFmpeg v4l2-requests" means.
 
-Yes, the period can get stuck being too big:
+Meanwhile, support in upstream GStreamer is stable on Hantro G2 and Mediate=
+k
+VCODEC. In theory, it works fine with RKVDEC, and it will certainly work wi=
+th
+RKVDEC2 when we get to write the HEVC support.
 
-	perf_adjust_freq_unthr_events() calculates a value that is
-	too big because it incorrectly assumes the count has
-	accumulated only since the last tick, whereas it can have
-	been much longer.
+>=20
+> BTW: the libdrm commits have been merged upstream quite some time ago, so=
+ if=20
+> you have a recent version of that, you don't need to patch that.
+> If you use FFmpeg 7.0, then Jonas has a branch for that too (haven't trie=
+d it=20
+> yet though).
+>=20
+> FWIW: my test results were a bit mixed. I didn't post them before as I do=
+n't=20
+> fully/really understand this 'video stuff', and I didn't want you all to =
+suffer=20
+> from what was likely a PEBKAC issue.
+>=20
+> On my PineTab2 (rk3566) I had some h.264 videos HW accelerated, but not a=
+ll.=20
+> My guess is that it's related to the resolution. 1920x1080 worked, while =
+it=20
+> didn't work with a 1280x640 video. The video still played, just not HW=
+=20
+> accelerated. IOW: improvements in some and otherwise it was just rendered=
+ by=20
+> the CPU (I think), just like before.
 
-	__perf_event_account_interrupt() has an unexplained limit
-	(2*TICK_NSEC) on the count delta, and won't adjust the
-	period if that is exceeded.
+This is because all rk35XX have two hardware video decoders for H.264. This=
+ is
+not to be be confused with rkvdec which is gone. It has a modified Hantro G=
+1
+core (limited to 1080p60) and rkvdec2 core (driver in progress). I don't th=
+ink
+Rockchip really expected the first one to be ever used, but upstream has be=
+en
+pushy and its now enabled upstream. That has a side effect, which is that
+userspace will have to work harder on these platform to pick the right HW f=
+or
+the task.
 
-> 
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 15 ++++++++++++---
->  2 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index afb028c54f33..2708f1d0692c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -265,6 +265,7 @@ struct hw_perf_event {
->  	 * State for freq target events, see __perf_event_overflow() and
->  	 * perf_adjust_freq_unthr_context().
->  	 */
-> +	u64				freq_tick_stamp;
->  	u64				freq_time_stamp;
->  	u64				freq_count_stamp;
->  #endif
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cad50d3439f1..0f2025d631aa 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4112,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  {
->  	struct perf_event *event;
->  	struct hw_perf_event *hwc;
-> -	u64 now, period = TICK_NSEC;
-> +	u64 now, period, tick_stamp;
->  	s64 delta;
->  
->  	/*
-> @@ -4151,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  		 */
->  		event->pmu->stop(event, PERF_EF_UPDATE);
->  
-> +		tick_stamp = perf_clock();
+>=20
+> On my Rock64 I got a pink tint with all videos, like described here:
+> https://github.com/mpv-player/mpv/issues/12968
+> IIUC, that's actually a problem in the lima driver?
 
-Perhaps jiffies would work just as well, but be
-more efficient.
+Its not clear from the bug report. This visual artefact has been seen with
+wayland compositors lately (notably weston). Notably, this can happen if yo=
+u try
+and import NV12 with mesa (panfrost and lima included) but forcing a TEXTUR=
+E_2D
+target instead of external target. Normally this should be rejected by mesa=
+, but
+is accidentally not, and cause miss-render.
 
-> +		period = tick_stamp - hwc->freq_tick_stamp;
-> +		hwc->freq_tick_stamp = tick_stamp;
-> +
->  		now = local64_read(&event->count);
->  		delta = now - hwc->freq_count_stamp;
->  		hwc->freq_count_stamp = now;
-> @@ -4162,8 +4166,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  		 * to perf_adjust_period() to avoid stopping it
->  		 * twice.
->  		 */
-> -		if (delta > 0)
-> -			perf_adjust_period(event, period, delta, false);
-> +		if (delta > 0) {
-> +			/*
-> +			 * we skip first tick adjust period
-> +			 */
-> +			if (likely(period != tick_stamp))
-> +				perf_adjust_period(event, period, delta, false);
-> +		}
->  
->  		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
->  	next:
+Nicolas
+
+>=20
+> Cheers,
+>   Diederik
 
