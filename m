@@ -1,157 +1,155 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13E1190685
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 09:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80D13FE4A;
+	Mon, 17 Jun 2024 09:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615423; cv=none; b=Lb42FRc+Oz3nISQ+M+6slyr66NHT52EHO7I7RF6KZwVN3QXxIbQ0yVsYHDRIwtBJFBPng9GlYg7KbWImn9/cXQ+ceJ1Vajb4hjhu2V3ARa1lZ5/24rPhBLsYOY+DJnseD7YC5LBBy0xyegxZysLLldCV1fcksqqqDCAMz6tdEC0=
+	t=1718615467; cv=none; b=dP5wytbVztvPji2284l3aAasTXXounZ4NH95MekbbS8rI8kHJlEa8sM0HOZjTqYFpXlJS9esC9G6l/hPpQEHquPP++lbh5Y9+GnME3aQWhwqqr7274qQpaGEqICoumTEA2SCTzngfuqcvtZeyRRP3XnIMidpGBB/NlzCtPLayiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718615423; c=relaxed/simple;
-	bh=DdCPOdQmrAjhuhY9h+trWlJUu0TJ43Y9MmSImJCW2uA=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=XglVRq827Uf3Se79H+NkLvK/tduvpqd3aXi/Ya47GcyG4hb/X4NicRndZ5vyEYhJpWUrXc7utrCtxM0KyotI0QpcimdQ/3BAsZ9Rf7OnCC4fo0k4Hf0HpwvsJ+ir8guo93GP8cNCyn8v9yNlg3Lx/KbrXdk9ky/kqW/lKxqJvoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=AuE/mqPJ; arc=none smtp.client-ip=203.205.221.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1718615467; c=relaxed/simple;
+	bh=0vAa6PKyw6NOERQlOIJcTuSJpk9vJSNt+toYxjrtXYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pdcEL/IhlT5egKPUXAnSrylAdmkRfXWzi7FN9gXniARqIKJO7+hb+aUp6vlmYNseO5j0wjRmmYjQHlRWwsYXqz4UcvWl7jjbWA4utMLMC8Xwd8Q8+4O+jtkjBWuOEifp+2ELd9mG22voXlajTxQoGBbpDggnJE9vkb1LgpEG2JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hOmw52cY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="AuE/mqPJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1718615418;
-	bh=3cwK7/F68hnzfW+WeXsBbPpNomD2U0ZeRwICxZjWgq8=;
-	h=From:To:Cc:Subject:Date;
-	b=AuE/mqPJvwBUXPzvRj7/iMiX8TTXA7DMfRYBsMO4JJM5e0lGMJtBKOSz5T+nDLV1E
-	 Nq9z5SyLexPrJQyAIq/buqkwh2WYKjIfNDqrie54EypwHkN89gtb9Qd9vuN2nCK8Ze
-	 //E5dilhJkfndcQVb/pGgwN7pCjKD0ooexXaS01w=
-Received: from localhost.localdomain ([203.119.160.29])
-	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
-	id FA3A60F; Mon, 17 Jun 2024 17:03:58 +0800
-X-QQ-mid: xmsmtpt1718615038t0ywb5yy8
-Message-ID: <tencent_F6283AC33634D608765A49147F203961E308@qq.com>
-X-QQ-XMAILINFO: Mi1i9A6j4UyX6l/q9sLmBwaskHCdXxA+7W3RCVvUTcj+VlB6ikqnoi9/4o7OUt
-	 mf/0uAifwiUKPNqh+IWQvZ10usBaxSJknz9+PExUQAGNE7bbzvjYXw71gUtnoVctuRtT14nvHAGn
-	 ZmkczWgT09fOUOjR1gnqbNwvlItUXbbINEAwv7oZoIylApHE+d89Jh8yQGBk1BlulZCaUY30EdQ9
-	 71uG39iadx2V8wYjh8tk+A8PvjDwDbpP4l3j+EJvevcWDyZXRpAodkhCN61N2YRckZQkmRPUdNmX
-	 eh61G6Rr+9/iJVwRKDx9RJlC2rAVLSamQJYzufw7cm/lt7UtlKtaCT+iephiv07zVypJSmHrDiNv
-	 R03v8U14WYgpSqdk6/IyjEWiOvxs6OXRSv/JA/XsG2UyhxiCZmHMvn718uU5ms6ClJDp7kAAAT4C
-	 fFhgllhjk7P7fcGjNDjomv/qd6/QsXCJ07I5TmVFBqpvH9OKDUT7By1KahPvklAHiqGZsvNZ+wyV
-	 4/JZtHb6B/eh5CqQX7CAIBK6HNGdtd3WDAeTq+vaeZ9xe5hNOAp91SzQXfL9eiE3C/ZKom5gbJKf
-	 3m4TMcdYznq55ijZFwRqug1wdOsxzN5t/cxEaCNU6d3DJncLeHu25ObFZH99eGR7hPocc1TO4pHn
-	 wcnlfUsx82QTQlC1Y6hKU5enodN8aRtwvmO8l8e8ik2FP+i9w94pirRryX+Bg+HntaqXJoe/woiV
-	 Gfq4/Rx+jyestsq4mD5NC3+w545ZmQE1CznF8b8Q505xMI6KRNDkqIUnwDOnbkNqTtPF1kr9KUYv
-	 SQzZanCKhPTuGuvanMhc11Oj58dNJfDdq3NvMkFo2aHPMTULq2Cd6UK6LIH2PotWingAXo3yNPPU
-	 x3mjpMBKFCOsrRKw40n4Rih+irrV2HuQgZBRl1AJV5x8qJNwSRtkKqHUnX7CamPJi84j/v2pEgr+
-	 wMG0HlFFdOotmYtENgQTVuAWfIi1jQkIyxcpaUEwtoL7shobHCRKpuNjd2CkhA37E0tWl2RbCBjx
-	 kMnDlldVrwLhWqS95eJ+SP4GNoHNczOoZhjlXgVF+9XCXmcqhbPOj0uudc4XFaM4yqEOutih0v6u
-	 zGybo7faf1nXXeMpjz25wAOPuRGg==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: wodemia@foxmail.com
-To: alexs@kernel.org,
-	siyanteng@loongson.cn,
-	corbet@lwn.net
-Cc: linux-doc@vger.kernel.or,
-	linux-kernel@vger.kernel.org,
-	Tao Zou <wodemia@linux.alibaba.com>
-Subject: [PATCH 1/1] zh_CN/admin-guide: Add zh_CN/admin-guide/numastat.rst translation document
-Date: Mon, 17 Jun 2024 17:03:56 +0800
-X-OQ-MSGID: <20240617090356.54592-1-wodemia@foxmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hOmw52cY"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45H8LwXE022485;
+	Mon, 17 Jun 2024 09:10:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=N
+	2Mw6uQnbAvcilPkScR95H4zvLvgapP78kdoxjkL5Uo=; b=hOmw52cYetjjZEq8I
+	PAI2uKeCZ+vp3BFEvkUWSodcw3wLVLRJTdo4IPz91wMZjvfqJyY3q2/bJZA//wDI
+	LS4xG5ywj4m9wCkaCoT8xpY6BkkQTKZbuvTcYxKPSNb1T0ZuPMa/yWleVAOCjcZY
+	PycFJ9Qc/sxL+sCpbEf3c1goH3bsupOq3eiM0KrUHo2ElhtaGBsgD6tQH5OgY43n
+	R6I6UjOEfxB77Ncx7BzuuKESFYH1Fbpio/5esLYVMci8SSFkIvsM5VuFxoFVc1Hx
+	H80yw9FRTWWFZK2Pet1xhRAXq3hCF7pMtPD1AiWqDhXQOVvNK8kSzjMvbW3L+0CG
+	rZyiQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytgbngd14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 09:10:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45H7u2S6011027;
+	Mon, 17 Jun 2024 09:10:54 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yspsmrck3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 09:10:54 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45H9ApgY27460192
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 09:10:53 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 816A85805B;
+	Mon, 17 Jun 2024 09:10:51 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 829E558058;
+	Mon, 17 Jun 2024 09:10:47 +0000 (GMT)
+Received: from [9.43.13.239] (unknown [9.43.13.239])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Jun 2024 09:10:47 +0000 (GMT)
+Message-ID: <1ce94229-631d-420a-976e-6259b136a92e@linux.ibm.com>
+Date: Mon, 17 Jun 2024 14:40:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel OOPS while creating a NVMe Namespace
+To: Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>
+Cc: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, sachinp@linux.vnet.com,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        shinichiro.kawasaki@wdc.com
+References: <2312e6c3-a069-4388-a863-df7e261b9d70@linux.vnet.ibm.com>
+ <ZmdLlaVO-QUug5aj@kbusch-mbp.dhcp.thefacebook.com>
+ <e8fa4c36-49e5-40b8-9cea-6b3b61aa3240@grimberg.me>
+ <ZmdQuz8vJZMj41Kn@kbusch-mbp.dhcp.thefacebook.com>
+ <bccf1e1f-bc45-4052-9504-d852f9ae4e6c@grimberg.me>
+ <ZmdVIfnqtweVt9ZN@kbusch-mbp.dhcp.thefacebook.com>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <ZmdVIfnqtweVt9ZN@kbusch-mbp.dhcp.thefacebook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5L14OMVf1nwDViWXPy-Ha5421Dp2uIcq
+X-Proofpoint-GUID: 5L14OMVf1nwDViWXPy-Ha5421Dp2uIcq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_07,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1011 phishscore=0 impostorscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406170068
 
-From: Tao Zou <wodemia@linux.alibaba.com>
 
-Add translation zh_CN/admin-guide/numastat.rst and link it to
-zh_CN/admin-guide/index.rst while clean its todo entry.
 
-Signed-off-by: Tao Zou <wodemia@linux.alibaba.com>
----
- .../translations/zh_CN/admin-guide/index.rst  |  2 +-
- .../zh_CN/admin-guide/numastat.rst            | 50 +++++++++++++++++++
- 2 files changed, 51 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/translations/zh_CN/admin-guide/numastat.rst
+On 6/11/24 01:03, Keith Busch wrote:
+> On Mon, Jun 10, 2024 at 10:17:42PM +0300, Sagi Grimberg wrote:
+>> On 10/06/2024 22:15, Keith Busch wrote:
+>>> On Mon, Jun 10, 2024 at 10:05:00PM +0300, Sagi Grimberg wrote:
+>>>>
+>>>> On 10/06/2024 21:53, Keith Busch wrote:
+>>>>> On Mon, Jun 10, 2024 at 01:21:00PM +0530, Venkat Rao Bagalkote wrote:
+>>>>>> Issue is introduced by the patch: be647e2c76b27f409cdd520f66c95be888b553a3.
+>>>>> My mistake. The namespace remove list appears to be getting corrupted
+>>>>> because I'm using the wrong APIs to replace a "list_move_tail". This is
+>>>>> fixing the issue on my end:
+>>>>>
+>>>>> ---
+>>>>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>>>>> index 7c9f91314d366..c667290de5133 100644
+>>>>> --- a/drivers/nvme/host/core.c
+>>>>> +++ b/drivers/nvme/host/core.c
+>>>>> @@ -3959,9 +3959,10 @@ static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
+>>>>>    	mutex_lock(&ctrl->namespaces_lock);
+>>>>>    	list_for_each_entry_safe(ns, next, &ctrl->namespaces, list) {
+>>>>> -		if (ns->head->ns_id > nsid)
+>>>>> -			list_splice_init_rcu(&ns->list, &rm_list,
+>>>>> -					     synchronize_rcu);
+>>>>> +		if (ns->head->ns_id > nsid) {
+>>>>> +			list_del_rcu(&ns->list);
+>>>>> +			list_add_tail_rcu(&ns->list, &rm_list);
+>>>>> +		}
+>>>>>    	}
+>>>>>    	mutex_unlock(&ctrl->namespaces_lock);
+>>>>>    	synchronize_srcu(&ctrl->srcu);
+>>>>> --
+>>>> Can we add a reproducer for this in blktests? I'm assuming that we can
+>>>> easily trigger this
+>>>> with adding/removing nvmet namespaces?
+>>> I'm testing this with Namespace Manamgent commands, which nvmet doesn't
+>>> support. You can recreate the issue by detaching the last namespace.
+>>>
+>>
+>> I think the same will happen in a test that creates two namespaces and then
+>> echo 0 > ns/enable.
+> 
+> Looks like nvme/016 tess this. It's reporting as "passed" on my end, but
+> I don't think it's actually testing the driver as intended. Still
+> messing with it.
+> 
+I believe nvme/016 creates and deletes the namespace however there's no backstore 
+associated with the loop device and hence nvme/016 is unable to recreate this issue.
 
-diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
-index ac2960da33e6..0db80ab830a0 100644
---- a/Documentation/translations/zh_CN/admin-guide/index.rst
-+++ b/Documentation/translations/zh_CN/admin-guide/index.rst
-@@ -68,6 +68,7 @@ Todolist:
-    cpu-load
-    cputopology
-    lockup-watchdogs
-+   numastat
-    unicode
-    sysrq
-    mm/index
-@@ -109,7 +110,6 @@ Todolist:
- *   module-signing
- *   mono
- *   namespaces/index
--*   numastat
- *   parport
- *   perf-security
- *   pm/index
-diff --git a/Documentation/translations/zh_CN/admin-guide/numastat.rst b/Documentation/translations/zh_CN/admin-guide/numastat.rst
-new file mode 100644
-index 000000000000..4f7fee557cb5
---- /dev/null
-+++ b/Documentation/translations/zh_CN/admin-guide/numastat.rst
-@@ -0,0 +1,50 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/admin-guide/numastat.rst
-+:Translator: Tao Zou <wodemia@linux.alibaba.com>
-+
-+.. _cn_numastat:
-+
-+
-+===============================
-+Numa策略命中/未命中统计
-+===============================
-+
-+/sys/devices/system/node/node*/numastat
-+
-+所有数据的单位都是页面。巨页有独立的计数器。
-+
-+numa_hit、numa_miss和numa_foreign计数器反应了进程是否能够在他们偏好的节点上分配内存。
-+如果进程成功在偏好的节点上分配内存则在偏好的节点上增加numa_hit计数，否则在偏好的节点上增
-+加numa_foreign计数同时在实际内存分配的节点上增加numa_miss计数。
-+
-+通常，偏好的节点是进程运行所在的CPU的本地节点，但是一些限制可以改变这一行为，比如内存策略，
-+因此同样有两个基于CPU本地节点的计数器。local_node和numa_hit类似，当在CPU所在的节点上分
-+配内存时增加local_node计数，other_node和numa_miss类似，当在CPU所在节点之外的其他节点
-+上成功分配内存时增加other_node计数。需要注意，没有和numa_foreign对应的计数器。
-+
-+更多细节内容:
-+
-+=============== ============================================================
-+numa_hit        一个进程想要从本节点分配内存并且成功。
-+
-+numa_miss       一个进程想要从其他节点分配内存但是最终在本节点完成内存分配。
-+
-+numa_foreign    一个进程想要在本节点分配内存但是最终在其他节点完成内存分配。
-+
-+local_node      一个进程运行在本节点的CPU上并且从本节点上获得了内存。
-+
-+other_node      一个进程运行在其他节点的CPU上但是在本节点上获得了内存。
-+
-+interleave_hit  内存交叉分配策略下想要从本节点分配内存并且成功。
-+=============== ============================================================
-+
-+你可以使用numactl软件包（http://oss.sgi.com/projects/libnuma/）中的numastat工具
-+来辅助阅读。需要注意，numastat工具目前只在有少量CPU的机器上运行良好。
-+
-+需要注意，在有无内存节点（一个节点有CPUs但是没有内存）的系统中numa_hit，numa_miss和
-+numa_foreign统计数据会被严重曲解。在当前的内核实现中，如果一个进程偏好一个无内存节点（即
-+进程正在该节点的一个本地CPU上运行），实际上会从距离最近的有内存节点中挑选一个作为偏好节点。
-+结果会导致相应的内存分配不会增加无内存节点上的numa_foreign计数器，并且会扭曲最近节点上的
-+numa_hit、numa_miss和numa_foreign统计数据。
--- 
-2.39.3 (Apple Git-146)
+To recreate this issue, we need to associate a backstore (either a block-dev or 
+a regular-file) to the loop device and then use it for creating and then deleting 
+the namespace.
+
+I wrote a blktest for this specific regression and I could able to trigger this crash. 
+I would submit this blktest in a separate email. 
+
+Thanks,
+--Nilay
+
 
