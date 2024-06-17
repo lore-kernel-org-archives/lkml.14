@@ -1,168 +1,106 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9249C11718;
-	Mon, 17 Jun 2024 07:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718609411; cv=fail; b=RU4UBz2LWBrv/NOo0GaHGAgRyCxs5serBEeAU2nmu931b+qxfLEnG2bFVVU1PH6xo6DBqGKq77O4alk4SztyzHUID8Dug//1psgKLtwhKdpBoNU050RPATu2e2yh+jYRxP3VbmdusD8rU3x61KWTtVi7lpLPic4xQxuhDCHjdg4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718609411; c=relaxed/simple;
-	bh=9jwe7o2FYbrJCFK7f0i548cNZjFKc0HU/5eyCZJEwmc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OKoRv//Z8vef80gY48dCzW/2I11MEx2OOI0VsoKT7Z7JmtkOQubKtqybVAKoRsJlCzf3cZnSs5G4ebCoJIoAJk7lMv9WhQiNcI4Sr/yQFXaZmiSGT5lOruKDtSgVzayE4uKYH8EqTlF/4plm8D7/Q/TKlzwvI1Q0cWTHsHmQY7w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Myou0GPg; arc=fail smtp.client-ip=40.107.237.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3067518FC76
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 07:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718609434; cv=none; b=aU47zLS6KRaPtFgdYl0q2eo2E3nNa5aNzXeJSUOV1yt+DPRGmuiXwfBSwB1e4kzfE7DxwmM8x9PjbUcPmPl8yHdP00BCD/KUk3F2nFv4D/PnqGCIjTQAQa9t+K2I2g3gFPmx2j5KNWlJqS3EerbHeFevydgG4k5pA9R+RQo5p0s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718609434; c=relaxed/simple;
+	bh=YpopGvnEYqFyRz7X35CYcR4CW+/UcvqXN6pFgcsrP+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ImXibrIsKQdkuzS2GAeX1zXN94FgOzn/gInEfdFwSwA2AcyliTKWWpFrjEX1KLHj63zmLvzDBXBg/U/z/76JniqWseD6+HA/5BBbgZP/gtIuYEAdKeuvNA1I52k0f1qor+yS0/0KgN0DzChTpFg/POo31UbEoO9/dhO4Z/fQX+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hzSwGng5; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Myou0GPg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N5A3Mo4HZr93zk/v4JDemUBXeCpCgsUr2ByX2lCYJAWBioIwmkrcniQLJeMHbtbUEAgN9EJT2HilTm85t9ujD2YOTrXys0vUTvmBpxlmXek10UZfpOMK0qJQCsUHmoaxbZGiaqz1DawWNsGqsoDiTzxeQxTsefGzEFhBi/W/jSmRLdaDLR2yKq8jzWM8EG1fIPd5E+d42bhLFk320soQNDh5xIjFP16uuOVR05ZGzRRJR4ZYMkoQEI7I+qsZwgWugEaT1yTKJSCLd6bJexg1iUfmq/AfH+nyrys7eSpWDtSOLUrXtuemAGOzp4bUEgRPSa0s5frcixskduW08n6FzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yGT7Dfnz3JtmMpxBbI0tYAJJaoE9JnQ1eo+oQM1C4XM=;
- b=KKoZRL5ZeRNZG9dPSWQOw7OkjgTrxqcscSEgVBLTM7iVADQF9l3Wu9N9GfSs1oI215tIj5S/BgYTiDDeXsm/kxzw4jj2qLhw8+FTRmYagAUm6Hjm/md2GEAGLN6VvfWLeCBx4NO6dbbJ1ten+Kks/0+ywRhtxoGXWog7vnW6UqxwtDXGEVJCaoUz7bgjVIIz2rOwsndcny4P70MzRHCi1xMjnu5FvSzXdRzO/u9LkwqEg++4/0YeS1CABDkuUMV0yD5rHxzzOsb54NkfPsLHzGWMxXX7WV1ZRf9aKGPpwuT/4ezXIHc4BXs+RWn08D+WKyveFrdXZ6gJ5SaagXiJbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yGT7Dfnz3JtmMpxBbI0tYAJJaoE9JnQ1eo+oQM1C4XM=;
- b=Myou0GPgwhnQb4sVd6rlIfHStGrv8zv4vJNoVakZR22oe7NU+E3Hnvi5ocsvCSu6HYHQGI5jsF4DbK35gyDNDRjPjnZWRwyVQbPD9oL7hyREarG+/Z8djuF6GSp9KqK0ez8zQOdzsNGOvAtB3wprkwMJ4yJfpY8/LkOKru6XHe4=
-Received: from BY5PR03CA0022.namprd03.prod.outlook.com (2603:10b6:a03:1e0::32)
- by CYXPR12MB9337.namprd12.prod.outlook.com (2603:10b6:930:d8::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
- 2024 07:30:06 +0000
-Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
- (2603:10b6:a03:1e0:cafe::a0) by BY5PR03CA0022.outlook.office365.com
- (2603:10b6:a03:1e0::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
- Transport; Mon, 17 Jun 2024 07:30:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 07:30:05 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Jun
- 2024 02:30:00 -0500
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Mon, 17 Jun 2024 02:29:57 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <venkataprasad.potturu@amd.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>, "Vijendar
- Mukunda" <Vijendar.Mukunda@amd.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Syed Saba
- Kareem" <Syed.SabaKareem@amd.com>, "open list:SOUND - SOC LAYER / DYNAMIC
- AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 8/8] ASoC: amd: acp: add pcm constraints for buffer size and period size
-Date: Mon, 17 Jun 2024 12:58:41 +0530
-Message-ID: <20240617072844.871468-8-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617072844.871468-1-Vijendar.Mukunda@amd.com>
-References: <20240617072844.871468-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hzSwGng5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Ypop
+	GvnEYqFyRz7X35CYcR4CW+/UcvqXN6pFgcsrP+M=; b=hzSwGng5N1WpO+XwqCOa
+	zOIcpD6tSxkeXtjp5kOsisyW4zcx5WkHeuRFOCddA1lG4T4L7L0KMo6hjXYa8EWz
+	D+XXjxwXGfiYBnzJFP9aPuJuYf0SOkTYp5b3sqZDWoBGJi/zkuFxGY8cz0QZjTaF
+	dyzxdaXdCZG4rzE9wDnq4j4IPOtpF1e2BOE3rJQMJhqZw2nJowkPRFFtAlHI0zLE
+	QUfxjDPkkR4qdWO6juW7A3O1uHhOpsLxM3PSurtxCYJ1tPScVZnt342Fp+X6FJ4z
+	BK8Sgy5Qd/KgZoYOFLFXN/H2gQzPCw0MIrg5/2aeSG+pLOg53yoWkpdhzwwHCoFM
+	5g==
+Received: (qmail 2239695 invoked from network); 17 Jun 2024 09:30:27 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jun 2024 09:30:27 +0200
+X-UD-Smtp-Session: l3s3148p1@xyNo8BAbDpUgAwDPXzjQABqqX1QYyOSW
+Date: Mon, 17 Jun 2024 09:30:26 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [RFC PATCH v2 2/3] mmc: tmio: Use MMC core APIs to control the
+ vqmmc regulator
+Message-ID: <exbmp7szqrmfsu2uo7iawcqxfknd36pqdzvazjogpb7nybn5bt@xvk2gjseqzhv>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Prabhakar <prabhakar.csengg@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240613091721.525266-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240613091721.525266-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: Vijendar.Mukunda@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|CYXPR12MB9337:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f69f8b8-236b-486b-9463-08dc8e9f4f24
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|376011|82310400023|1800799021|36860700010;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NoRVySmQNu41yyN8VgAqa9wjEcV1yMl7IxIT9HiwxMUpXxHTpm8ibqdvnhuJ?=
- =?us-ascii?Q?pEan4K9wM+Y7rIEEM02r1hlxD2HkgxBjdGlEU8vAN+uO+KRgRnmYKhhnl0Ke?=
- =?us-ascii?Q?Hv+YDyMvr3+pTqRDmJvpigPXH3iYfQio/WcGrom1zWwJrGxgkNjTPuGui/l4?=
- =?us-ascii?Q?MazOdMdxI2VULdUrFzWlo1YlaBD5GBrMd137hlfMELJOahe+Ap83uPC/dCtZ?=
- =?us-ascii?Q?CJ4SEMgssQycqTD4xqCCPRImRMeEf9NYIce2ciUpd1pKwkouHVXKYrPPBCmT?=
- =?us-ascii?Q?2RpSxMb7nuIXCZ2OpjrwQmM0t9lMw9VrwbnZ1T94jQ/yqtROwQ5gG7gyQHcx?=
- =?us-ascii?Q?gQnJY6ot/AU7r/dIUjnY07BXbXcyhTygTMtlCzTxUOer31AdCAQq2CbistAo?=
- =?us-ascii?Q?KIemKs671SQsBYzMdGrMCiqU1dGSEYnGwYAJWe4+AtY7SYniYSwUqQoK/bKS?=
- =?us-ascii?Q?OCPG9H7X7xmrq8lHxeLIQENspoMZa9ho+HIWhdu+oLcT0Oh7CJaOForRgONT?=
- =?us-ascii?Q?Yw23Hpl0vT/Vb0znxlbBd8GrVkEXZhHKuYd8Jc24ha5t7OJOe40NAUCGMjls?=
- =?us-ascii?Q?BniTpVCKe9qm9i3+8QbrqssLtZafQtBZvgzt9SmZ7b0Eb2Q5sMPkdANqN+XS?=
- =?us-ascii?Q?CglY7ej5qGDej2svfoe/CNwdh0fkmFAOu/3/AEDscysgQpga1JJkkLuGlDZC?=
- =?us-ascii?Q?jf1s3FHnBR7R3JvVWZIllGCe1Cu5GKx1qe16xgOyNvB4rmo6/daCGB04e4Io?=
- =?us-ascii?Q?Jib9EtvNIBYs3DuIkOmysOEmpV5fIPu0qchfc1mprqDDeYMXLdgqptFjJtCx?=
- =?us-ascii?Q?eHtRA/0dj5v6CAq3qEA1b1+w1vW5hXHeb4PmSM1ZHTogyif8EVJVjKR/Hy0D?=
- =?us-ascii?Q?Ga6gXU2k7nsrtXc/l+6VzbhIArxUVt8YhOYpEsz/zhsHJiotHmZeOZV3nxsv?=
- =?us-ascii?Q?UvqISDVmjNZtEZs/zli3OTBuUWVZBPtyDHPJ4WPW2l4nkrxFz8l4y8z7Vf2t?=
- =?us-ascii?Q?Xl7WkUrqLlsR0KPZGFFuvViCZZZ5t+bpRW+E+HGcPTNEwR+xPszxp5TU+OnE?=
- =?us-ascii?Q?oW/dRV+Fpydtmx+5B9HqDvKsuCaFTdfkqFwFouzQxjAbUwIGcuCa/9pT1BfM?=
- =?us-ascii?Q?cJjMgYJnNGpaAGwm28FuWNrZCic8GxsQdL7VnD5q7CuwFpMjIpEAG9WQ1sk6?=
- =?us-ascii?Q?lPUf9Pof+/8AtXIXf1CqpxNzk54fAlviDzPKCZAMCau6sTkbr51Jcj3byjOh?=
- =?us-ascii?Q?KiiQPntImiVoelnmOsU+NYtQMKNqRbCvizWWgy+xVg81XG9YAn1ztYHNAAhF?=
- =?us-ascii?Q?dI6ExD1aKGrJBKx5SDp0GVAKbVFoE3U2rDxfhtLssOy18Oqgae/PmDQJEcr7?=
- =?us-ascii?Q?xXuD9ZGi37Y9nBepyb/xhUx0YzFHKJQkUF3CR/yTqKikdvgkuQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(376011)(82310400023)(1800799021)(36860700010);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 07:30:05.7571
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f69f8b8-236b-486b-9463-08dc8e9f4f24
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CDF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9337
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nlmmntutv3el3vse"
+Content-Disposition: inline
+In-Reply-To: <20240613091721.525266-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-ACP common dma driver has a buffer size and period size restriction
-which should be 64 byte aligned. Add pcm constraints for the same.
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/acp/acp-platform.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+--nlmmntutv3el3vse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/amd/acp/acp-platform.c b/sound/soc/amd/acp/acp-platform.c
-index aaac8aa744cb..4f409cd09c11 100644
---- a/sound/soc/amd/acp/acp-platform.c
-+++ b/sound/soc/amd/acp/acp-platform.c
-@@ -197,6 +197,20 @@ static int acp_dma_open(struct snd_soc_component *component, struct snd_pcm_subs
- 	else
- 		runtime->hw = acp_pcm_hardware_capture;
- 
-+	ret = snd_pcm_hw_constraint_step(runtime, 0, SNDRV_PCM_HW_PARAM_PERIOD_BYTES, DMA_SIZE);
-+	if (ret) {
-+		dev_err(component->dev, "set hw constraint HW_PARAM_PERIOD_BYTES failed\n");
-+		kfree(stream);
-+		return ret;
-+	}
-+
-+	ret = snd_pcm_hw_constraint_step(runtime, 0, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, DMA_SIZE);
-+	if (ret) {
-+		dev_err(component->dev, "set hw constraint HW_PARAM_BUFFER_BYTES failed\n");
-+		kfree(stream);
-+		return ret;
-+	}
-+
- 	ret = snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
- 	if (ret < 0) {
- 		dev_err(component->dev, "set integer constraint failed\n");
--- 
-2.34.1
+On Thu, Jun 13, 2024 at 10:17:20AM GMT, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Use the mmc_regulator_enable_vqmmc() and mmc_regulator_disable_vqmmc() AP=
+Is
+> to enable/disable the vqmmc regulator.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Cool, didn't know these helpers!
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--nlmmntutv3el3vse
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZv5g4ACgkQFA3kzBSg
+KbZkyRAAgrb6xHEkS0H6xtQ+/pusoGob4ZWgWh5E62vqnAiKTNDDgEKquGaY/W5t
+Sql3eAExyCHl7Jnf+K9Wbx2Z7gQiVGHupnGe6tYPkpakmRZdzdBuiJpDrAvZmjSo
+VSGw33yzt7pmriGfQMBwvaIbyv+U5SRTgdn4I0G9etcGCX5Z+l0HfVSly+neQGvd
+brf/xKphFAS+sbcEqXbtGRwo83rO5rLKlsUncwGP5eb1m9XOyTLkAK9aIM0bDt98
+J5HHErmH69wzNnJ5cR7gg2yDritGf5O64awymQtMtf8zpvGmoLgNUD3kHrEBZnCf
+yz2TVUnDem9gZArHD4LpADeGQkk/HdPuuyCpLJW7/RALD7GNPjL8/hSQVLulOS0P
+4ZvCUH2lE11+agXM+ohe1dug1Thh5aPwM2mAbxCEIc8yvD283NPWXCJ6dw5a3Dej
+iQJC/k7CFFV2Y8uPX3DxhsDJrpyn19q28MX99iva7KFXP+6zZ8sJxiOZWneBPfLd
+nvOkHugISxJpwtkvWAMKTslyXiZlvxnyXW4vV05oJOahmWcm0Ab8p8u0Wen8ba1V
+arxIeJMHgLuX9IY+p862ug3HyEMBb3svIS01cP9WE2OlXZovkA24296N1W/CPDDg
+36r9dkd2sxh8c3O0Q4K5a7J6KcmVDzUEu6cmgbFpKYFSSFE+viM=
+=pq/6
+-----END PGP SIGNATURE-----
+
+--nlmmntutv3el3vse--
