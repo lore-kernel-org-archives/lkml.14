@@ -1,67 +1,44 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2851A2FCF
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053D019755E
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 13:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631389; cv=none; b=OreFJMQO1EIStxjEP3RbmHgG3a7e5Q6++REEFVqupysBs0S2LWXy3BFZWv7JOuzW8PHSulKeWl14dByxbA2KNw+N6bjJvVu5mEh2ZR9NWWOTsx6rJ3eNwRe23p0TCdFYCmfFt5O/YlBFq0HRzdT1B2WdBcRQl9HQd5gJaWtb0/o=
+	t=1718631473; cv=none; b=mN/p8RiQXVie+x/lwfjgoNj0nGfV5OhBthaV1Ys/OklP7EdE2acUOBybbInuScsepnTbcqv6huhvEDPY6Iro1e2kkiOeV+IdCITbcTQrAp49+AGY/SXYyFwTKfyqUFIWw+RYWJ5pOd2gf99N0TBCixFNb82qY6frUFrHSPtyaAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631389; c=relaxed/simple;
-	bh=fkadhAyonb7RymKr0Hwj9qGiWcoaWFoudlddldfbojY=;
+	s=arc-20240116; t=1718631473; c=relaxed/simple;
+	bh=NQdNeU4qXN5u/cvfa4YmP9hOej+wTGdqze0LpXU32tc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhiR/oIfFQf5owtDYySGlvGL4BN+0vp1g3mHIgcVf+GlMv0E6t2XIWXLpMuwB0DLA1yIXTMi3sxJqAbJdqwa7WGu33zVY7lsPJwy4cfyQkQ6qG47P7VxKD8SU3PEHZSiFFkNEPoe2gjGgCVeosJmQ1vHcIn662c3D/X1xaX4yxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=RSuya5hQ; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fse+em9myAyYG/QMV1LHmh2KX2El6tlSy3c5UCbd0A3hdmDolNtoF+w2lBUc3eBAzBoGfGvaO7w4uXEujCBh/fgO6IIb0pvfLGiJVGPYGw69rUOwNtTtjPTgGJqteuvK8ZnJL0yU9KwAbK5zDYqHHmdDrcwnH+AY1oc8c7PMXZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JmmNUZEl; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="RSuya5hQ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so36322125e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 06:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718631385; x=1719236185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+FTQb5W5/GJ/Nb4LvauMZmPKUHXtT9dcXAWj/SvSDY=;
-        b=RSuya5hQGrSTTwFtuBl6/rYKn0k7rEetc7C6wa05py67lGIzR/fbqmVDhimOcIRaBG
-         7RwakKGjGsMaKVOboJFC1+LESpkzRkTnjQwfH378O35qHiWOTFjjAOKkNUFyIFD51xuq
-         PvKe5njleoOP0wDETKSDt+r+pkI3CowbJKFegbDGnnyu16ZcPs4UUvMLcdQCj/x3u1S3
-         koGIWbpIAQd8CT0x2B7O470E4HLeXjA7XaQ97LZaW7rxx2WIEerzzYf8iSMqFO+c0mkJ
-         1wdWiaJTV1Yj/gG26UtsjDtglxY0mWaAw95ta7iRSb5y1xj9/dNB+61jVBGJmhgDlTP5
-         0P2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718631385; x=1719236185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y+FTQb5W5/GJ/Nb4LvauMZmPKUHXtT9dcXAWj/SvSDY=;
-        b=n7nG7ijQNts+4uwZFK5G0C9f8OzhBHhtxELiyi/JqdcCosvsgd9ExTpZr8fNo5xVkQ
-         ZCmMXkj63mBiCMlOmt7fIGGSB15U/DYqUpwd/l6QXcVrXGbovYDBsyMoY7z17RSyZ1MJ
-         cdkviFH2AP1zKLfAuf4jczsBSiLE/tcWn8wriHyeuTna4JMxWH0AEx+c1X87mYiNF/f9
-         BretmNdkC6eguzZR4cRG/65AZQZX3t4ZXEopWOTmJ1fMOW0NE0XMTAgPrf5jW7ezj3dG
-         RwXDm8mWOfkC8o8fEXf3grivikFG/4AzRIqAZi+WNCNuSANWkYn8VjkVTPafWqat5WaQ
-         /l+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVmUC0KRZqVDActxF3sAuLWVY3WTfxG+I8/G++WQ+mw/z+Vm3/WzMzLGHoiY84mBDiY0okjba6Mv9LTwU7MFCriLID+if/IrRLymOdA
-X-Gm-Message-State: AOJu0YxBOV7pwT+NyY5GsbJ64TCXkVyOY8HCBLut4bl61zZ5jWVb3rDE
-	xXvadvYxD0YdgFfM7GwMP+KDLde6sj57rJGeah59BqqzF6PiGjRsUxdilxS16zY=
-X-Google-Smtp-Source: AGHT+IHgsgd/TPVM+18WkZs2+AeqnSk2SRZRbmmdW0ObBeSJuDLzDBQ2FjqSWprz5A6LjcnamvKJ7w==
-X-Received: by 2002:a05:6000:bcc:b0:360:7a01:6afd with SMTP id ffacd0b85a97d-3607a74e760mr6960206f8f.10.1718631385486;
-        Mon, 17 Jun 2024 06:36:25 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36074e0e5adsm12011860f8f.0.2024.06.17.06.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 06:36:25 -0700 (PDT)
-Date: Mon, 17 Jun 2024 15:36:20 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v2 net] ptp: fix integer overflow in max_vclocks_store
-Message-ID: <ZnA71MTiaESQTUMp@nanopsycho.orion>
-References: <ee8110ed-6619-4bd7-9024-28c1f2ac24f4@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JmmNUZEl"
+X-Envelope-To: syzbot+ffd2270f0bca3322ee00@syzkaller.appspotmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718631469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4jP1+vtfIGE42YbPzKjJ+ikH9kugd8yGrOn34t3cgUc=;
+	b=JmmNUZEl/Of1JNkmG8XVZJWeQJtG0IROqBW7YJXev4MQAT+otKKXKh29t4Wt+NY8TORvR3
+	8pft0C5TeV4BTGcWaV7OntJKJfxYGl8ytkMVshf4wpkQXQEblnuHlVq8lI1bhSWcxonccZ
+	Xv0YVHc97dYQNhzMSc/2mpu0fRPmeV0=
+X-Envelope-To: bfoster@redhat.com
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: syzkaller-bugs@googlegroups.com
+Date: Mon, 17 Jun 2024 09:37:46 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: syzbot <syzbot+ffd2270f0bca3322ee00@syzkaller.appspotmail.com>
+Cc: bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_journal_res_get
+Message-ID: <kewuj4cgmjbmetwovhdmltrgsfeqd7zdsfll3szgb3shkpmtm3@ocpkmxty4man>
+References: <000000000000aaf271061ac4c9ab@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,13 +47,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ee8110ed-6619-4bd7-9024-28c1f2ac24f4@moroto.mountain>
+In-Reply-To: <000000000000aaf271061ac4c9ab@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Mon, Jun 17, 2024 at 11:34:32AM CEST, dan.carpenter@linaro.org wrote:
->On 32bit systems, the "4 * max" multiply can overflow.  Use kcalloc()
->to do the allocation to prevent this.
->
->Fixes: 44c494c8e30e ("ptp: track available ptp vclocks information")
->Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+On Thu, Jun 13, 2024 at 05:39:19AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    8867bbd4a056 mm: arm64: Fix the out-of-bounds issue in con..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1210c3fc980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ffd2270f0bca3322ee00
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16aecfba980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171b3126980000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/6ea21f50498b/disk-8867bbd4.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/e2fed09364aa/vmlinux-8867bbd4.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/4860173c7a18/Image-8867bbd4.gz.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/bd29adaaf7ea/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+ffd2270f0bca3322ee00@syzkaller.appspotmail.com
+> 
+> bcachefs (loop0): flushing journal and stopping allocators, journal seq 11
+> bcachefs (loop0): flushing journal and stopping allocators complete, journal seq 11
+> ------------[ cut here ]------------
+> kernel BUG at fs/bcachefs/journal.h:375!
+> Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 1 PID: 6249 Comm: syz-executor102 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+> pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
+> lr : bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
+> sp : ffff80009b3076e0
+> x29: ffff80009b3076e0 x28: 1fffe0001bf4957f x27: 0000000000000002
+> x26: dfff800000000000 x25: 1ffff00013660ee8 x24: dfff800000000000
+> x23: 1ffff00013660eec x22: dfff800000000000 x21: 0000000000000005
+> x20: ffff0000dfa4a5c0 x19: ffff80009b307760 x18: 0000000000000008
+> x17: 6c706d6f63207372 x16: ffff80008ae4f3c0 x15: 0000000000000002
+> x14: 1ffff00013660eec x13: 0000000000000000 x12: 0000000000000000
+> x11: ffff700013660eee x10: 0000000000ff0100 x9 : 0000000000000000
+> x8 : ffff0000d62fbc80 x7 : 0000000000000000 x6 : 0000000000000000
+> x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000010
+> x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+> Call trace:
+>  bch2_journal_res_get+0x1a8/0x1b4 fs/bcachefs/journal.h:375
+>  bch2_journal_meta+0x9c/0x268 fs/bcachefs/journal.c:828
+>  bch2_fs_journal_stop+0x188/0x348 fs/bcachefs/journal.c:1179
+>  __bch2_fs_read_only+0x2a4/0x3d0 fs/bcachefs/super.c:291
+>  __bch2_fs_read_write+0x2f0/0x434 fs/bcachefs/super.c:507
+>  bch2_fs_read_write+0xa8/0xf0 fs/bcachefs/super.c:520
+>  bch2_remount+0x2bc/0x460 fs/bcachefs/fs.c:1731
+>  legacy_reconfigure+0xfc/0x114 fs/fs_context.c:685
+>  reconfigure_super+0x1d0/0x6f0 fs/super.c:1072
+>  vfs_cmd_reconfigure fs/fsopen.c:267 [inline]
+>  vfs_fsconfig_locked fs/fsopen.c:296 [inline]
+>  __do_sys_fsconfig fs/fsopen.c:476 [inline]
+>  __se_sys_fsconfig fs/fsopen.c:349 [inline]
+>  __arm64_sys_fsconfig+0x8b8/0xc40 fs/fsopen.c:349
+>  __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+>  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+>  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+>  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+>  el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+>  el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+>  el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+> Code: 17ffffab 9770cd61 d4210000 9770cd5f (d4210000) 
+> ---[ end trace 0000000000000000 ]---
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+#syz fix: bcachefs: Fix early init error path in journal code
