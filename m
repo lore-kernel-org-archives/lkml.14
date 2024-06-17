@@ -1,59 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8381A168490;
-	Mon, 17 Jun 2024 17:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B611684BF;
+	Mon, 17 Jun 2024 17:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718644078; cv=none; b=CodCKFE/6c7hzCAKdJtrBflnPE3j5BFpDkfX4npI5h/yWh7u/pnaM3/aBAOFVZAlarIEnk/Qw78RK1OxYIghBWSikEZ3zwuLt0c1rUe/OqvLg/Xo4j9P49+sj/aEiWPWHGL7kOdfUYUFBN5GzQaNWYvUIpHrdotkLJESRHMO/9U=
+	t=1718644124; cv=none; b=bo4Lxg5U/HMP/vrsVCKOeHRko75PiMxuzgqCduFxviyi+VC9+xAesAMwIjXEB9fwfM0WCn2wjPI2f2NWZrzq8WD6ZA3AT776CORFSRzoI9a6yjNAS66NwRpwUoCRiMSYEGSa1giZBvjiXaOgnjG5qItDjmy1s929Oy1e2ZQlHIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718644078; c=relaxed/simple;
-	bh=R04srHi6Ng6jDR0S2/u3J1fH1eVapnydxeg+PnaGE78=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=swAzDEIWjt9jF6OETO4yXzk9oJuCRfGUdOXfB4eNp6wYBWwDPa2y4+9vmS0PCzQsrTqrwMuGZKygavF2ACMn/ilY4A8Y/rGvUzdEeQ4wrmU95RJYC0rlXRcxtnKLt7DvQ7+wIEDdaOiqOa2CmYGHsQhVle4Q+esMutA8RF3sSWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE4BC2BD10;
-	Mon, 17 Jun 2024 17:07:56 +0000 (UTC)
-Date: Mon, 17 Jun 2024 13:07:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: dongliang cui <cuidongliang390@gmail.com>, Dongliang Cui
- <dongliang.cui@unisoc.com>, axboe@kernel.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, ebiggers@kernel.org, ke.wang@unisoc.com,
- hongyu.jin.cn@gmail.com, niuzhiguo84@gmail.com, hao_hao.wang@unisoc.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- akailash@google.com
-Subject: Re: [PATCH v5] block: Add ioprio to block_rq tracepoint
-Message-ID: <20240617130754.3b4dbd62@rorschach.local.home>
-In-Reply-To: <84e024ba-b921-481c-a83d-eec0dd0e8328@acm.org>
-References: <20240614074936.113659-1-dongliang.cui@unisoc.com>
-	<7d0f68b8-ecdb-45fb-ae10-954eac5ed32c@acm.org>
-	<CAPqOJe1=+dqcapg-_Y+Fq9W61wDMMzDLzP+CQqcTW69WdKQqRw@mail.gmail.com>
-	<84e024ba-b921-481c-a83d-eec0dd0e8328@acm.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718644124; c=relaxed/simple;
+	bh=gx/vBZHRvUmIyCzLBrHv7A/uxP4nVY5Z8aEFxljAWec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NKTpRm7VMHnzDUbx/ySspF7xk4eaVls0GeSAajAamrAcRTuEV9Wy/gIQmQ+Fpaudx8pKTXpYYcFLLc9Pnry3f3f92j8Tfeto8I6J59oW+ZdOWU4ree9JZQJkh05RAlhKdD1rU3DROXRLL8v/k+k3Q7ZLcnMQXT7Uz8eXkt+7pag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=QoXrIrvn; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="QoXrIrvn"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 9BABF8826E;
+	Mon, 17 Jun 2024 19:08:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718644120;
+	bh=1LdYSyTBSDGBxuQ70W3AP01Rdne8htwL8v2sMMNqG24=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QoXrIrvnzwtvEIa5aEXKzpiB/7KC8fX4ff4gWB4XiB6kASzmH7iWchHIaoCNVsSSI
+	 a6Ed+fjXdLjMjOaGYHlBaEQzEGWC7yfboVKGuboE0TNt8bd5o1vr84Pl/bTttFqCVw
+	 yOWIfODbtdURahcifJTTNFIgSjqH2M/VZ79+UpYO0Ek0H9tCN7HBuoTqEgPgFMzASM
+	 tpfL35qrR4V/T7VievY9GSZttD7Ud+At6XtS7VgB6nPQM2mrTGq50fWV9tLrm+Kn2A
+	 O8+MoG45HM+qRmm5tfmaogYFiUKMLC95kVM0xIMnDeGv6YPfaiJ8x2iCgi3n2T1anG
+	 3GiBCrxdJxB0Q==
+Message-ID: <39d35f6d-4f82-43af-883b-a574b8a67a1a@denx.de>
+Date: Mon, 17 Jun 2024 17:57:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: stm32: add
+ management of stm32mp25 for stm32
+To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240614130812.72425-1-christophe.roullier@foss.st.com>
+ <20240614130812.72425-3-christophe.roullier@foss.st.com>
+ <4c2f1bac-4957-4814-bf62-816340bd9ff6@denx.de>
+ <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <09010b02-fb55-4c4b-9d0c-36bd0b370dc8@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Mon, 17 Jun 2024 10:02:48 -0700
-Bart Van Assche <bvanassche@acm.org> wrote:
+On 6/17/24 1:23 PM, Christophe ROULLIER wrote:
 
-> >> Do we really want to include the constant "[0]" in the tracing output?  
-> > This is how it is printed in the source code.
-> >  From the code flow point of view, there is no need to print this value
-> > in trace_block_rq_requeue.
-> > Do we need to consider the issue of uniform printing format? If not, I
-> > think we can delete it.  
+Hi,
+
+>>> +static int stm32mp2_configure_syscfg(struct plat_stmmacenet_data 
+>>> *plat_dat)
+>>> +{
+>>> +    struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+>>> +    u32 reg = dwmac->mode_reg;
+>>> +    int val = 0;
+>>> +
+>>> +    switch (plat_dat->mac_interface) {
+>>> +    case PHY_INTERFACE_MODE_MII:
+>>> +        break;
+>>
+>> dwmac->enable_eth_ck does not apply to MII mode ? Why ?
 > 
-> I'm not aware of any other tracing statement that prints out a constant.
-> Is there perhaps something that I'm missing or overlooking?
+> It is like MP1 and MP13, nothing to set in syscfg register for case MII 
+> mode wo crystal.
 
-The only time that is done, is if the trace event is used in multiple
-places and there's one place that the value will always be the same.
+Have a look at STM32MP15xx RM0436 Figure 83. Peripheral clock 
+distribution for Ethernet.
 
--- Steve
+If RCC (top-left corner of the figure) generates 25 MHz MII clock 
+(yellow line) on eth_clk_fb (top-right corner), can I set 
+ETH_REF_CLK_SEL to position '1' and ETH_SEL[2] to '0' and feed ETH 
+(right side) clk_rx_i input with 25 MHz clock that way ?
+
+I seems like this should be possible, at least theoretically. Can you 
+check with the hardware/silicon people ?
+
+As a result, the MII/RMII mode would behave in a very similar way, and 
+so would GMII/RGMII mode behave in a very similar way. Effectively you 
+would end up with this (notice the fallthrough statements):
+
++	case PHY_INTERFACE_MODE_RMII:
++		val = SYSCFG_ETHCR_ETH_SEL_RMII;
++		fallthrough;
++	case PHY_INTERFACE_MODE_MII:
++		if (dwmac->enable_eth_ck)
++			val |= SYSCFG_ETHCR_ETH_REF_CLK_SEL;
++		break;
++
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		val = SYSCFG_ETHCR_ETH_SEL_RGMII;
++		fallthrough;
++	case PHY_INTERFACE_MODE_GMII:
++		if (dwmac->enable_eth_ck)
++			val |= SYSCFG_ETHCR_ETH_CLK_SEL;
++		break;
+
+[...]
