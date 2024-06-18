@@ -1,284 +1,291 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2044.outbound.protection.outlook.com [40.95.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB7E57CB0;
-	Wed, 19 Jun 2024 06:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75714A1D;
+	Wed, 19 Jun 2024 06:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718777192; cv=fail; b=D4RVwdrXosbyZFiiKbM1G9FB/obZvKdfOs/3p5g5++yG4HZDW12Yw8TOW8jEPHLlCs9MlRq3zqxRha0PaDavlD7XB1+PVL0QmDqItPP0K1KpcuN9eMzTgNYaR35gTdouZBxnh2SrNUnz7OM/A7QefJTrILcevY7VO/fxH97qOw8=
+	t=1718777235; cv=fail; b=Li96d/0QPXKxOLlQzDRAIk9aaaafcex6hbT1F8O80k+5QjFGk8FtCNXIDGLwD7hocAp/6YESou592vayydTapTTrHvqdrVytbYAMEd7jnG3mhUSFMvI0zZFV1//eri1gr7S+50IYdYtipehJ+bOgbkM+r/MLGU9ChqbVm0swZCA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718777192; c=relaxed/simple;
-	bh=IlywmxBxBYZVotTJfm+VWHOUo4mHC+9AGrHu1bd8rxA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jg8j4/XC+rKx6Mb89td9I1o/386Q0lJVLTLM5sj+SZGHkPB8fGjr3TizmUIcr81IkTpaFyaIH+OphTMTLM1Uex2AVwxjd1+MVXqUDztMp+rJWrmX0Dbx5xu2deMA22vNRcrcxWUSvHkCFpnTh1TZwwJ3wE66nRAaW+FZLd0EEHQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IWvE+5a/; arc=fail smtp.client-ip=40.107.237.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1718777235; c=relaxed/simple;
+	bh=mcXP9SNJbzJPmiKmmcsDqUiVDM9EBOk6J1DqTFRBkGM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A0Y3Z/LMr1zVWuVwG0sVOPLfy+IIjy8JVkDWF8jZfn0sIKaUvm+E619X/2UCCbbwLw+uTdLGnEgTc+JaleXcOB1+Bh8Cy5upwAYNyFfxJ6JA1DQ/B3JvjAkgrS4bR49cbLw/c3YoHvFwC19QiSwXwG82irXJhxKqa/WNBQuTueM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=EfdS6P2G; arc=fail smtp.client-ip=40.95.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IWvE+5a/"
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="EfdS6P2G"
+Received: from JH0PR03MB7655.apcprd03.prod.outlook.com (2603:1096:990:d::5) by
+ SEZPR03MB7354.apcprd03.prod.outlook.com (2603:1096:101:10d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Wed, 19 Jun
+ 2024 06:07:10 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jvliwGwrI684HaTrbjYWeudWAnhOR7xTk4NDmws42FM8sTUKzak3hqfakZX0qE/D6fEbPGgNodtbnyw5vv0X/wFj1U92VbTsAcb4w+zOoeMImmkEFpd6Qzc5hikNzaMWzn6MV3f5j6oINdZmZqgSuPnzmtu9GfwgHecmOgpIu2UutC0qWcbju1ru2SxNa3mtGcs6DIvuWgEK0s/xnsBF96L8awZjleHByryKjcbtcCxfPeg6fEqrJNgBr91ER4h171sbqpVepQaV5n0v5a7JoUkbSMtCgk4tk2CTJ/JKnHTI75jirkLRUMqQOUgwE5ME9YkkJLbadZxfw7gKgIZ3Vg==
+ b=bE5c/sYTqZ2fV+PLQ6M7vT4qVkrcrk767ZbwCs2/Q2ktL+cd7YmGNh0WNt1zmphs/n3a/U2Y5/Hxcq59ctxGt7ulvjWeFalbrVJ9IIk52i6k1iS3gVQ5cBDzIh57fAHk9azvkp3Qw1QEjZCqTJPOZ5Xoq+vMJ12Uib1HKJi2DCdPxCMgXZZ7kn9Bv2qvIBD2CbE8GiFE/XF/IN2jX+swBXMQTrp58EjnqgqqQ81jBQJLUynqF3XN/tmacLKrk+pEgcfm/SOd+mVvXECj9MdruaNTcr5S5E4nLBuVwjuytQWjttA7HkrYtJKd9n7QOYbisscsBudKP1ZAxQaUcXDD4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tg52k/hfDsmwJ1JtdyMckYVqVkr1wBtgn/yibjrlFyg=;
- b=XBPZ3+4Z7zRKq91jnvnpNIAP6P11eFgQrHOgk4QY3vBuefzfBT5yNFGiVJBIdnVajaAyJ9JfmjMjLcW7XLUf0BQDFpv36N/jJ0lGJLtZqs5upy/TaPlEJY8HKB9EU4T8JLrQqNtzs+UbYCADAvIN+PvJRhjq2ywH4QUH+bXLp19I1N43P0DYVZkXxrMyj4UVkxnIJ5fKsxZK8KIPiPXDnRT9q1PYqjHnqadT54BE7bw0s5OfkeG3o3ZbJrcSR2wLbOOgJey5WdKTwAiN5iG6S1YUt7G3QbYHNusuUcVwB2Jnc90Oi9qm3ddkm6OWMKl4zbddnffcpeGPAotLNGj+fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=IGy850DIw7eQ5j5A7JzFAm34SAxuePjha0VfpURvVew=;
+ b=KSOt1hnjxpKoRcCPUNBXJu1gVmbB1yIqHuEVb5o/OwJPj59BCQcbhaU2EtDEhENyTtUgkAjHEZLhkPw1qTfhJaMZISOc6qjCmJZ6/WQY/mSg03oRNOcEzcTbw2to67HukBluJ/NVusMEh9EGySKmN7qqx0WEAWp4jqrLabcnup8Z+Dfg3+rL3SohL51NZC3lUzvwhdmsPl6504WFGPMkeM5YTpuxBMnlpOQAMVohr+/aHrZySzikOEbYUkEAy143w9C1HgTLB9rhMshMxNVIjS3RlUPz4L10Ky46D6HZbA37pNRXlk2uKy5/RwdzFHVq9yh5EKYz8FdZotrZaowUPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 175.98.123.7) smtp.rcpttodomain=baylibre.com
+ smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tg52k/hfDsmwJ1JtdyMckYVqVkr1wBtgn/yibjrlFyg=;
- b=IWvE+5a/cMGlplOaNaZ+l3z8GQLL2sYoZBQdBxxscyt+KujgxC9ttBLrl5WMuaYoSQPPsF3ESsVTrjktE1RkEcFHTwTHnqOYLh5ghn5ZPgSZyTD7rwIqmBPLkYobS6YW+WIDwfvvQPwHqHdkua+IZs5BNn/6Bh3rthDRv32FZ8U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com (2603:10b6:8:96::19) by
- SJ1PR12MB6289.namprd12.prod.outlook.com (2603:10b6:a03:458::17) with
+ bh=IGy850DIw7eQ5j5A7JzFAm34SAxuePjha0VfpURvVew=;
+ b=EfdS6P2GIH3qZKW2nPiMMRCIjtwfKcwtiAITLen2I1r0D0q5l91Na3QEooL/hccabCEtVvd4l+FiKWq9sHjXkd92/pC/A8znhtSpIf1x07bRqRJuI23L2IxGM3Iyhe1HeERWXYekVIfEEz9nNXUvxv+5NNhU/i93HKhRvZLILjM=
+Received: from PS1PR03CA0003.apcprd03.prod.outlook.com (2603:1096:803:3d::15)
+ by JH0PR03MB7655.apcprd03.prod.outlook.com (2603:1096:990:d::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Wed, 19 Jun
- 2024 06:06:27 +0000
-Received: from DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec]) by DS7PR12MB6309.namprd12.prod.outlook.com
- ([fe80::b890:920f:cf3b:5fec%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
- 06:06:27 +0000
-Message-ID: <9b8c57e7-a871-6771-dcc0-99847bbbcbc0@amd.com>
-Date: Wed, 19 Jun 2024 11:36:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Subject: Re: [PATCH v9 06/24] virt: sev-guest: Simplify VMPCK and sequence
- number assignments
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
- bp@alien8.de, x86@kernel.org, kvm@vger.kernel.org
-Cc: mingo@redhat.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
- pgonda@google.com, seanjc@google.com, pbonzini@redhat.com
-References: <20240531043038.3370793-1-nikunj@amd.com>
- <20240531043038.3370793-7-nikunj@amd.com>
- <64164798-3055-c745-0bc1-bbecc1dd0421@amd.com>
-From: "Nikunj A. Dadhania" <nikunj@amd.com>
-In-Reply-To: <64164798-3055-c745-0bc1-bbecc1dd0421@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0190.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::19) To DS7PR12MB6309.namprd12.prod.outlook.com
- (2603:10b6:8:96::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
+ 2024 18:58:27 +0000
+Received: from HK3PEPF00000221.apcprd03.prod.outlook.com
+ (2603:1096:803:3d:cafe::1d) by PS1PR03CA0003.outlook.office365.com
+ (2603:1096:803:3d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.32 via Frontend
+ Transport; Tue, 18 Jun 2024 18:58:27 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
+ HK3PEPF00000221.mail.protection.outlook.com (10.167.8.43) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Tue, 18 Jun 2024 18:58:25 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Jun
+ 2024 02:58:24 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 19 Jun 2024 02:58:24 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 4C88D5F627;
+	Tue, 18 Jun 2024 21:58:23 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 47DA2DC0726; Tue, 18 Jun 2024 21:58:23 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <p.zabel@pengutronix.de>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
+	<tmaimon77@gmail.com>
+Subject: [PATCH v25 2/3] reset: npcm: register npcm8xx clock auxiliary bus device
+Date: Tue, 18 Jun 2024 21:58:18 +0300
+Message-ID: <20240618185819.2155595-3-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240618185819.2155595-1-tmaimon77@gmail.com>
+References: <20240618185819.2155595-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6309:EE_|SJ1PR12MB6289:EE_
-X-MS-Office365-Filtering-Correlation-Id: 416dfa40-2766-4d70-5041-08dc9025f475
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|7416011|1800799021|366013;
+X-MS-TrafficTypeDiagnostic:
+	HK3PEPF00000221:EE_|JH0PR03MB7655:EE_|SEZPR03MB7354:EE_
+X-MS-Office365-Filtering-Correlation-Id: e7685ee6-c00a-4797-dfca-08dc8fc8a21d
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230037|48200799015|61400799024|82310400023|376011|7416011|7093399009|35950700013|921017|35450700002;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OERBbjFybUV3Y2gzQW8zbjdwZzZKU1pSbjFFSTlVVlpkeEtZZUh4SjNZblRy?=
- =?utf-8?B?NnlRUHVYcWg5aXRwMFczMXpVbGxXUnY2Ni9mZnZ6UTJCK05MT1NBR0VtZ09o?=
- =?utf-8?B?V1B3V3NoUkxHUGJYdkQ5V0gyQW5lY3ROYTRNUTRyVGVEZGhwYVV2QkZTSmhL?=
- =?utf-8?B?Mmg3S1piUm44ejhTQ1hpNGdXRmx0eXdUb1YrVGU4ZzgxZ0NUbVIwWWRBUnI2?=
- =?utf-8?B?S1dGQXBhTDUzc1NWRmRkaVJGNGZaeTJYc2ZVS0dXZzJLd1F2OGJRU3dDVFl0?=
- =?utf-8?B?N2xTc05PdDZBaHluTCsxTXRBVzd0TGhlNnZIVGpKcnEvdGVUVnAxOUtTVWlk?=
- =?utf-8?B?OWJNZkNwR2JRRC92Q0thTEN2MW5BZXpzN0FqK3Q5QlNtV0tJdjBMWU4wMjIv?=
- =?utf-8?B?WUVvYzRDcmNTdjJFZldCcDl6Ky82N2VWelA1eURzT0hFcHN2Mm5vYUJGRFJP?=
- =?utf-8?B?LzhhdnE2Vkx3ZDNDTVlMTnB6SGUrdjF5Q2hLWG96UERXaDFST2t6UGhGa0RJ?=
- =?utf-8?B?QUY3MFBQaFZ0UW4zb3dtTjdWeFdFdmErNDF0czdQcy96aGxUdDRFWU1kOFBQ?=
- =?utf-8?B?OFRPOERmKzI4L1gxQmN3ZVZOOWJlL1RtTnhwczU5bzBtVElZRERkMExVbVBC?=
- =?utf-8?B?UVRnVGllRlREbGlpRGhrZzZBMFhYUVhCbm1KUFpnVnRhaUdrdng5eXdCWE1s?=
- =?utf-8?B?aVV6d3pIMHQ2SnRROU9KUGIyMDk5SjNYODBrYnhqVnlid09kSSt4L083MFZU?=
- =?utf-8?B?dFVPbFppcWJ6dHMrZ0hBNDk1dzNpWmpFeWpRN3Q5RWVKNG5kNityWEVKTHZs?=
- =?utf-8?B?WmhjOHd4eUFkY0ZlZTh0QzgrZGhuMG5hKzBxQzBSZXlaSi9MR1N5aXEzZnNp?=
- =?utf-8?B?M2R3SkRGa1JHZzg0eGVSNFdLL1FjZTFqaXprYm42MDhUUk1WL3g5QzlCOElj?=
- =?utf-8?B?aDNxUm92TmhBTHlKUVIyemUzZHU5UW5oaEhNdTJ6a1MwbklyOHVLTktXUWV3?=
- =?utf-8?B?bWNTK3ZQL3R4UXdqYWJNdmczUjZIcit0YTZlUVNkZkM5cVpaa2N0RFY0azNl?=
- =?utf-8?B?T3QvN3M4T1EzZnN4TXlXMDVWRWIxN01IVDJ6ay84bi85WlI0b3Bxcm5XUVdR?=
- =?utf-8?B?dCs2QnRtejk3Z29YWDlaSzg5dDdqcHJ6ZTE0NkwrR2lVOWl3TC8xTDg3Zlo3?=
- =?utf-8?B?UGpHU2lVbWFJZE9lenJ3b1h6ekQybXJsUDIxelNMcHFHRmtHYm90WEgyOHF3?=
- =?utf-8?B?WXNQaHJaTzNYK01lVjVVVitYZ0orNlovTW9mWUhjcHJYTmZ1cEV4bForK1Rs?=
- =?utf-8?B?ZDBObDQrMTFKZ1h6MmhVMExoZXc0SjgvUGtVbnhYTzVFYUJHWmt0V3lKOVZB?=
- =?utf-8?B?Y0o0WGhWVFNsY0MwQmxMSFZPMFRVRUJGcDl4a3V6MXpBMENwZHVmdlY4c0Ez?=
- =?utf-8?B?NlA2Q3p6UTVzQ1RXWkwvMmJpeWRybFA2Y2I5OU90N2VoK1E2ajRVeVhpcHdy?=
- =?utf-8?B?aGJOb29CSzRySkt1WHpvcFUrNnREL082L0NIdU9tSjNBT0wvZmNLVnpFN2Fz?=
- =?utf-8?B?WXhFQjZzMU9NS1Q5clhlQnV0UEw4OGw1c0RhNnI4eFN3Y3NtYlc0KzhPemxu?=
- =?utf-8?B?SzZGbnRLeTFBZ3dnc3M2Ni9rcG8zR2dQaTdrVlA0WFNJRGxkMzJycm5PQ3ow?=
- =?utf-8?B?WVp0Ky9qdC9PR1h1WnJ1US9OOUVQaldsQ0tVWGZudmVQK3VmdFF3T2pDK0Zw?=
- =?utf-8?Q?zV8bjO8PrjD7H8m1C8u9WwVIkNA7i/adrvfmhES?=
+ =?us-ascii?Q?s6fvipqa0fj4SimVyVIh1dL+ydTbiASEyMPSuR0KpTnokZfxBs5Db/BNEdgN?=
+ =?us-ascii?Q?wbeHb2llEBdMAIrsmSnurmVdIDP8R/KEG7CdyI0tXsphYwnSVmrHYKCEbQ6D?=
+ =?us-ascii?Q?7n5J/hs+9qbtbCSdmYTQWArUfMcGPuantw7SxbUeA22Ute8yKMDsNsTSho+J?=
+ =?us-ascii?Q?819GRVhBdn9EryholN3DmE7uvmV2hc9D9d5cELG4nfN3jOXAlNnosN1PVwac?=
+ =?us-ascii?Q?f4vv/PabH8NAp5rnSOlDpA6Zhnlqc6IrKtIcYfzVJuX9w4pw78WbFDWssBeD?=
+ =?us-ascii?Q?3ycz1nPZoHR8Ij6kYba/x7n7jNiu+pfouGJ5ut/onMVoopCL+1XJwQHLQQUI?=
+ =?us-ascii?Q?rZv/yX9DqQujmK41LCesAwNYcng4fiL890egdiMSWxzaA7ToYxESVFEqIn9w?=
+ =?us-ascii?Q?2sivrqzsqXIRDH86WDXwS4ycnyiu9AJd0JH0AzgzkRlCQtNkVCM2tWYx2vyr?=
+ =?us-ascii?Q?xOhJV1h37VnsKTEwNWBwGnE/zdSzlsSujVgHRu7sNmdFsELcPUo3VVAmAwbZ?=
+ =?us-ascii?Q?VxunSsL6mLnEGyElOE+9XvgcyLagugceNN8IgL6kLoETXmCPQd2oXCiTDxy7?=
+ =?us-ascii?Q?piKB4khSL6msWc0UclN8jF87NeKy/d6PvZSfXSYkGX99FaZOFi9O2F22oLxG?=
+ =?us-ascii?Q?6NGPagKxrFgeGAYfCfBZ2g0QlLZ8/olsIp7TQoRNoyIFYhl5KNJafxS1stJL?=
+ =?us-ascii?Q?KXM2BhlJyktPdF/KfuU4zkP56CAwEklGQI9G2S3QIA7xWvH1F4qS1Wwp1d2f?=
+ =?us-ascii?Q?WDXKU3TXNzOXKE9g/9hIgNw1U+8I1cGklAxXV3DP2OOC3zjuEer2EqESipO5?=
+ =?us-ascii?Q?YSf0LJ207L0EdK3Wj5WRly+I1+4/sK0BCPntkl/43cbl1z07/OMpIwSYxsOL?=
+ =?us-ascii?Q?CadWmcZq1hVsmEmLO2Qg95peR9aZp3x1Qp77V4J+UJYtiyM9trAWEYcDvXR0?=
+ =?us-ascii?Q?M38ELesxFdgTwU/8Lvnz+7zkgyFEWWE1IEvYELK+hBK9xDYs3wNDH99Fx7yu?=
+ =?us-ascii?Q?pLnwt0BMhGfy6Exepn6ciqy213HUd5zF+AN6MkPl4psYcRqokvk4p49O0Q6w?=
+ =?us-ascii?Q?h6mhKUtPtp3/tjh4Otc0F74AC17nienlgKAfO7AXwn68k12whA/lGBdDGpoI?=
+ =?us-ascii?Q?Tzy5D7VlXt7nlbo5AZZbMuHBal8Aze09yR7BMeH6fMgmiFtE8NfR7c+z/WgR?=
+ =?us-ascii?Q?6H1NhOEKeC+XGeNMxg2yI7uFJpRN+e7Jnun/mFZjWm5qF6qCNlGuGpC+VvQB?=
+ =?us-ascii?Q?FAH0uXioBmaU76BvQQFa+HjyZjZRG/oIkD8tb3eJmEr1uKb+WxeaKCipwAzn?=
+ =?us-ascii?Q?mJtVR1vCR0mkcCVvcUcQKkQvmmb2mcJ0YGc1NSXUnqX1d+Ol8gM30/oI/Mn2?=
+ =?us-ascii?Q?foNZPgn3ph38ZLo1hWs2cWKBuxyiblHw6UBkVogkpijiRYEdICDt49icJ2hW?=
+ =?us-ascii?Q?XiHDONam3x7IOgoONBDbeFM+FsSd9ech?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6309.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(7416011)(1800799021)(366013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b2h3SjVsaG5VTGEybThwcm0vMkozenAwbFEva2QycitoQkR6RWNmTXZ0ZmRQ?=
- =?utf-8?B?Nk9VWDFtUjZESDh6Qytzb3RNdEtGRTVhMjFZTU02bWM1YTgrc1RCL3drOWdT?=
- =?utf-8?B?bGdXbFc2QUQyNk11S1RDUnc0ajlOOGw2SlhRbVRHME92ZVRsTjhiUW9YMVR4?=
- =?utf-8?B?Q214OHRJczlhYTNnR01KOHJub3F3Zk96cittTi95aExnd2dHOUk5VFAwdGZn?=
- =?utf-8?B?QzlmZjNjOEpIS1ZZNEJUKy9XYzhiaC9GUWZTeU8ybjdNdDFOWkpuT3Q4K3l1?=
- =?utf-8?B?emlWZVE3eWFHQUd0TXQvMFVDYWtWK1B0ME1uMkt1eE9IQnNvMXY3VW0zSlJE?=
- =?utf-8?B?VWZyOENueTNEVnkzZFhpWWZqZ3pqSXdzdVNyRFZVejZjRWo3aGNaYTJhN3dw?=
- =?utf-8?B?U0xHVHBBSTNaL1NoVURkdTVRWDcvSVdOMUxUOXFSMm5GcG14M1RkYkczUzhE?=
- =?utf-8?B?eHpjM2VSV1FFQ3dkY1kyV2lMYis0dWxKR0RmdEk1clRra3pma0Z4d3RFNlFs?=
- =?utf-8?B?Q0h0S0JmSm85SVQ5QVhmaXZCdEw1cjJjVEt5c2JZQmNsbFZ5cU5aeWVkSVFH?=
- =?utf-8?B?OW53dlhmMVR4VTBjYTZsVUFFSHMrNFEyUTRKSG1jTlMzaWY0S1FZWlJBNWZW?=
- =?utf-8?B?Q3NTT2tLMWRwdHdyWGRFOFBub1dIL1NkaVViRnlNUFVZNzFjcVJyTzVqaEI1?=
- =?utf-8?B?VmVRalhxWURxZkJoaGJzNkhzVnNyUU9tNFhpRHQ1ZDhuYlA4TGVycW5iWll5?=
- =?utf-8?B?eEhYdGd5VkV1elRvZDMyM2l6c25jWlpJUDdPU24va1Nud0RlYWt0YnZSaGh1?=
- =?utf-8?B?UjM3dDJMRHhMcmw4VXF6bVhRb1hCM2pPbEFmaTZtSmR4eDRSWVV2WjhUclpI?=
- =?utf-8?B?YVdFWXJvWjh2TVM2QnBVNklKSldhVnREeitFTkkyK2hpdWhCY2YrYzJSMldS?=
- =?utf-8?B?bS84TWk1U0FMVk12dUJIYlV0WVdIZ29DcTRHNlZtTitYZ2FvRHB6R21KVGN2?=
- =?utf-8?B?d0E4WndWSFYvWGEvOGxvMUlOdi9TZ3g4WlhYeE52S1g3NERZQTR1cWlLRU9i?=
- =?utf-8?B?UE9YbktzaGxabTRUVldzQ04yV2FHdVMrb1FOUFJCYmpaNVg1U2ovOHduRTFn?=
- =?utf-8?B?N2JSd21OWW1DTlRrQ1FUN3pGUjQxTitxUTdmdll3Und5VmJ0eUc2elJadVJz?=
- =?utf-8?B?WTdVYlRGMklRZTJSUmVLakRaTnVLd280SjZoUTUzUC9hNVQzNTFUeXpWSDU4?=
- =?utf-8?B?THVZcmNUbzU5RE9pWHYyZmI3TU1PZVk4MWloSkR0bmVjRVVOTEV6OGFxQUpo?=
- =?utf-8?B?NVFwaFNMLzVkeWVZWElxeFM2L1hHTVBGR3l6UE1uSDBMbFQ5Z0l4M0FPZHNy?=
- =?utf-8?B?MVl6eWZadUI2aUw4YkJqcFdrMDdEdHNTSjB3QkcrNi9kNXZ0VFk3b2JwN2di?=
- =?utf-8?B?cWZ3b2VkUE1rdEdyQ2dOSyt4VDQvbkYybEhHU1FaTWg1VG9JNDlHS3g2Y2to?=
- =?utf-8?B?VFhaUS81Zld6SlBmaGJDN1FZK2hEVkpsQnBISWVTVVhtMWF3cHdEVXVKYURx?=
- =?utf-8?B?dWhsa2crL1ljc3lPemtBSlMwaGliQ05wbDFiWVFEeFJrVTZRcExWekRBYmV6?=
- =?utf-8?B?dzFDc1VveDNONGVvUExUKzQyajA5UWt1TlcwREhOSkZPQThxc0pIODZsWXo4?=
- =?utf-8?B?QVVOUUpYQjM5WlV4TXMwZjhjZ2d2OHRHVlNhdjU4YTdlMFB0RFlOdVNSMlZ0?=
- =?utf-8?B?anB4Sk5qYktzYmlIa1F6MnpBODhlNTRkYnlqSkNlSFhBTEpyWEJHRThiTmJj?=
- =?utf-8?B?UmFVNXNocHVNUTN3dm1FVHRkUFpoaEVrZ0hBMERRY1VPNCttMzc2cWx6RlZu?=
- =?utf-8?B?b2tXcHBiaFVoU1FyczgxTE84RlVFMjNsdEhKMm1kejJwSkZGd25zZGZvbDBq?=
- =?utf-8?B?SG1ENE9GY1J1UXhCbGZ5QzZ5SGJ3dGVsMFZwdkxSekhtRCtVcjVNcXpDRG0x?=
- =?utf-8?B?SGVpYUc1dVJEYkRkeUhTRzJHU2paY3RrRXJiYlA0YTNjYzZ4a2RUMUxicVhP?=
- =?utf-8?B?OURPaG56ZG56dU41ZzhyeUlEcjY5V0xtN0U2QUFQWjFTT1R3bHltNVFFTEZF?=
- =?utf-8?Q?7BptC6FYhufVmicoUqBpsJp1a?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 416dfa40-2766-4d70-5041-08dc9025f475
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6309.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 06:06:27.2578
+ CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230037)(48200799015)(61400799024)(82310400023)(376011)(7416011)(7093399009)(35950700013)(921017)(35450700002);DIR:OUT;SFP:1022;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 18:58:25.5553
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HE2tb0ASY797dMRm2dx4etHgAOD0e4bbJ6uk7VFUdTyhZFxGJauBqnRs6CTg3uVrWhnm1+VxH8bPEpQxeRDrrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6289
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7685ee6-c00a-4797-dfca-08dc8fc8a21d
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+ HK3PEPF00000221.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7655
+X-OriginatorOrg: nuvoton.com
 
+Add NPCM8xx clock controller auxiliary bus device registration.
 
+The NPCM8xx clock controller is registered as an aux device because the
+reset and the clock controller share the same register region.
 
-On 6/19/2024 2:57 AM, Tom Lendacky wrote:
-> On 5/30/24 23:30, Nikunj A Dadhania wrote:
->> Preparatory patch to remove direct usage of VMPCK and message sequence
->> number in the SEV guest driver. Use arrays for the VM platform
->> communication key and message sequence number to simplify the function and
->> usage.
->>
->> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
-> 
-> One minor comment below, otherwise, for the general logic of using an array:
-> 
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> 
->> ---
->>  arch/x86/include/asm/sev.h              | 12 ++++-------
->>  drivers/virt/coco/sev-guest/sev-guest.c | 27 ++++---------------------
->>  2 files changed, 8 insertions(+), 31 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
->> index dbf17e66d52a..d06b08f7043c 100644
->> --- a/arch/x86/include/asm/sev.h
->> +++ b/arch/x86/include/asm/sev.h
->> @@ -118,6 +118,8 @@ struct sev_guest_platform_data {
->>  	u64 secrets_gpa;
->>  };
->>  
->> +#define VMPCK_MAX_NUM		4
->> +
->>  /*
->>   * The secrets page contains 96-bytes of reserved field that can be used by
->>   * the guest OS. The guest OS uses the area to save the message sequence
->> @@ -126,10 +128,7 @@ struct sev_guest_platform_data {
->>   * See the GHCB spec section Secret page layout for the format for this area.
->>   */
->>  struct secrets_os_area {
->> -	u32 msg_seqno_0;
->> -	u32 msg_seqno_1;
->> -	u32 msg_seqno_2;
->> -	u32 msg_seqno_3;
->> +	u32 msg_seqno[VMPCK_MAX_NUM];
->>  	u64 ap_jump_table_pa;
->>  	u8 rsvd[40];
->>  	u8 guest_usage[32];
->> @@ -145,10 +144,7 @@ struct snp_secrets_page {
->>  	u32 fms;
->>  	u32 rsvd2;
->>  	u8 gosvw[16];
->> -	u8 vmpck0[VMPCK_KEY_LEN];
->> -	u8 vmpck1[VMPCK_KEY_LEN];
->> -	u8 vmpck2[VMPCK_KEY_LEN];
->> -	u8 vmpck3[VMPCK_KEY_LEN];
->> +	u8 vmpck[VMPCK_MAX_NUM][VMPCK_KEY_LEN];
->>  	struct secrets_os_area os_area;
->>  	u8 rsvd3[3840];
->>  } __packed;
->> diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
->> index 5c0cbdad9fa2..a3c0b22d2e14 100644
->> --- a/drivers/virt/coco/sev-guest/sev-guest.c
->> +++ b/drivers/virt/coco/sev-guest/sev-guest.c
->> @@ -668,30 +668,11 @@ static const struct file_operations snp_guest_fops = {
->>  
->>  static u8 *get_vmpck(int id, struct snp_secrets_page *secrets, u32 **seqno)
->>  {
->> -	u8 *key = NULL;
->> -
->> -	switch (id) {
->> -	case 0:
->> -		*seqno = &secrets->os_area.msg_seqno_0;
->> -		key = secrets->vmpck0;
->> -		break;
->> -	case 1:
->> -		*seqno = &secrets->os_area.msg_seqno_1;
->> -		key = secrets->vmpck1;
->> -		break;
->> -	case 2:
->> -		*seqno = &secrets->os_area.msg_seqno_2;
->> -		key = secrets->vmpck2;
->> -		break;
->> -	case 3:
->> -		*seqno = &secrets->os_area.msg_seqno_3;
->> -		key = secrets->vmpck3;
->> -		break;
->> -	default:
->> -		break;
->> -	}
->> +	if ((id + 1) > VMPCK_MAX_NUM)
->> +		return NULL;
-> 
-> This looks a bit confusing to me, because of the way it has to be
-> written with the "+ 1". I wonder if something like the following would
-> read better:
-> 
-> 	switch (id) {
-> 	case 0 ... 3:
-> 		*seqno = &secrets->os_area.msg_seqno[id];
-> 		return secrets->vmpck[id];
-> 	default:
-> 		return NULL;
-> 	}
->
-> Just my opinion, if others are fine with it, then that's fine.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/reset/reset-npcm.c          | 72 ++++++++++++++++++++++++++++-
+ include/soc/nuvoton/clock-npcm8xx.h | 16 +++++++
+ 2 files changed, 87 insertions(+), 1 deletion(-)
+ create mode 100644 include/soc/nuvoton/clock-npcm8xx.h
 
-I have separated patch 6 and 7 for better code review and modular changes.
+diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
+index 8935ef95a2d1..a27f0666c990 100644
+--- a/drivers/reset/reset-npcm.c
++++ b/drivers/reset/reset-npcm.c
+@@ -15,6 +15,8 @@
+ #include <linux/regmap.h>
+ #include <linux/of_address.h>
+ 
++#include <soc/nuvoton/clock-npcm8xx.h>
++
+ /* NPCM7xx GCR registers */
+ #define NPCM_MDLR_OFFSET	0x7C
+ #define NPCM7XX_MDLR_USBD0	BIT(9)
+@@ -89,6 +91,7 @@ struct npcm_rc_data {
+ 	const struct npcm_reset_info *info;
+ 	struct regmap *gcr_regmap;
+ 	u32 sw_reset_number;
++	struct device *dev;
+ 	void __iomem *base;
+ 	spinlock_t lock;
+ };
+@@ -372,6 +375,67 @@ static const struct reset_control_ops npcm_rc_ops = {
+ 	.status		= npcm_rc_status,
+ };
+ 
++static void npcm_clock_unregister_adev(void *_adev)
++{
++	struct auxiliary_device *adev = _adev;
++
++	auxiliary_device_delete(adev);
++	auxiliary_device_uninit(adev);
++}
++
++static void npcm_clock_adev_release(struct device *dev)
++{
++	struct auxiliary_device *adev = to_auxiliary_dev(dev);
++	struct npcm_clock_adev *rdev = to_npcm_clock_adev(adev);
++
++	kfree(rdev);
++}
++
++static struct auxiliary_device *npcm_clock_adev_alloc(struct npcm_rc_data *rst_data, char *clk_name)
++{
++	struct npcm_clock_adev *rdev;
++	struct auxiliary_device *adev;
++	int ret;
++
++	rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
++	if (!rdev)
++		return ERR_PTR(-ENOMEM);
++
++	rdev->base = rst_data->base;
++
++	adev = &rdev->adev;
++	adev->name = clk_name;
++	adev->dev.parent = rst_data->dev;
++	adev->dev.release = npcm_clock_adev_release;
++	adev->id = 555u;
++
++	ret = auxiliary_device_init(adev);
++	if (ret) {
++		kfree(rdev);
++		return ERR_PTR(ret);
++	}
++
++	return adev;
++}
++
++static int npcm8xx_clock_controller_register(struct npcm_rc_data *rst_data, char *clk_name)
++{
++	struct auxiliary_device *adev;
++	int ret;
++
++	adev = npcm_clock_adev_alloc(rst_data, clk_name);
++	if (IS_ERR(adev))
++		return PTR_ERR(adev);
++
++	ret = auxiliary_device_add(adev);
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		return ret;
++	}
++
++	return devm_add_action_or_reset(rst_data->dev, npcm_clock_unregister_adev, adev);
++}
++
+ static int npcm_rc_probe(struct platform_device *pdev)
+ {
+ 	struct npcm_rc_data *rc;
+@@ -392,6 +456,7 @@ static int npcm_rc_probe(struct platform_device *pdev)
+ 	rc->rcdev.of_node = pdev->dev.of_node;
+ 	rc->rcdev.of_reset_n_cells = 2;
+ 	rc->rcdev.of_xlate = npcm_reset_xlate;
++	rc->dev = &pdev->dev;
+ 
+ 	ret = devm_reset_controller_register(&pdev->dev, &rc->rcdev);
+ 	if (ret) {
+@@ -413,7 +478,12 @@ static int npcm_rc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	return ret;
++	switch (rc->info->bmc_id) {
++	case BMC_NPCM8XX:
++		return npcm8xx_clock_controller_register(rc, "clk-npcm8xx");
++	default:
++		return ret;
++	}
+ }
+ 
+ static struct platform_driver npcm_rc_driver = {
+diff --git a/include/soc/nuvoton/clock-npcm8xx.h b/include/soc/nuvoton/clock-npcm8xx.h
+new file mode 100644
+index 000000000000..139130e98c51
+--- /dev/null
++++ b/include/soc/nuvoton/clock-npcm8xx.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __SOC_NPCM8XX_CLOCK_H
++#define __SOC_NPCM8XX_CLOCK_H
++
++#include <linux/auxiliary_bus.h>
++#include <linux/container_of.h>
++
++struct npcm_clock_adev {
++	void __iomem *base;
++	struct auxiliary_device adev;
++};
++
++#define to_npcm_clock_adev(_adev) \
++	container_of((_adev), struct npcm_clock_adev, adev)
++
++#endif
+-- 
+2.34.1
 
-The next patch simplifes this further to:
-
-static inline u8 *get_vmpck(struct snp_guest_dev *snp_dev)
-{
-	return snp_dev->secrets->vmpck[snp_dev->vmpck_id];
-}
-
-static bool assign_vmpck(struct snp_guest_dev *dev, unsigned int vmpck_id)
-{
-	if ((vmpck_id + 1) > VMPCK_MAX_NUM)
-		return false;
-
-	dev->vmpck_id = vmpck_id;
-
-	return true;
-}
-
-
-Regards
-Nikunj
