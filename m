@@ -1,99 +1,121 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64A519F466
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F5E158DCE
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718709160; cv=none; b=oUDR2xboT9umBayjYJJXCgs4U1J7nPCG0nQUuBGuRjxVlgmYpz98rOWGr2RkeyW3wFp1+K0j+USQQv+5xi8DJVCNaGaVNPtcLcvcfcydG/91n4wxdI9i9ThynM5r8ij/SNrGc4UTZx6E+9BABUK7Fg6/1p9BXJGuW8zc3ot8psM=
+	t=1718709196; cv=none; b=rRPJBYDmb1XocZhUNmVLoGDzfvEyJWv7YdlDSBHYrCLbRvGTRZW914At0RV5fVK7zykeoZom6k7+9WbTJmQ6GtT+2CbQ1k93VjahnCqLP/wEZS9GbjbQorC8W35XsGfPVV18xsNorCn+DnXjahdPjBYBRon9iEo7zxtrc3Ti2r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718709160; c=relaxed/simple;
-	bh=LytFF4Umh3FGe2BHoZB/hPX8STy/rMVhd/DWw4ViV9Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B18YgHvIsWh0XZ5VWByC6tELQWElJQ1gnUBiXKuVSGYrl+CYl6DLcUPJNGiuJ7lRBAk/WsaLkHwFl5yJ9FyLSPfVztoKuu8QAQqsj+xs9eHYBH2ww5Wp7QTEOYvm6DQplqNctmoNKid/WWkJ3zA92xrY8bdZm7NXaYs9HFnonrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VUnd+W1U; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1718709196; c=relaxed/simple;
+	bh=ygTqAmSf0IfPNGq1Shs18IB+YIEVcTNMo1JV/OBncAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z9AJqlxZUc/JZ2BpJCZvroIzdsgHnb15EDBZbjvQyAb7nr74gEvqrJF8kYFw5VsaX3WESpz1FgDygBGeuIa+oiAxZlPq0l6PPdJ5neh37xvuSeUYn/3UQNlb4NXbA+zTtoniPcgJzBI1Zz64MCiX/n8AlB3spmMsNFTeidYdqz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iff/+Dct; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VUnd+W1U"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c85a7f834so6816747e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:12:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iff/+Dct"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cc1528c83so1062881e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:13:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718709157; x=1719313957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LytFF4Umh3FGe2BHoZB/hPX8STy/rMVhd/DWw4ViV9Q=;
-        b=VUnd+W1UO8dwI++rRJjC9xkLMye0Q0APYfv8wJocutnV98ASXKsE+os+RYgZnr3hWA
-         aU83XdiVm1aVzbH4ycE7zZBcBDGxa4LAutLPtLVqrfDod+A+pnLWCCEazb5IxWGd309L
-         ubTrPyWwdUL9XrveurDSq81DaVSwhwQufQnZTb1xzpnHVSxrLujgHeyByxs6RQuFKiN8
-         Y+caXzBQIoO0Z0w9fXXy3e/mzi5sz0DjgwBtnZlBuDV152DN6KvG1ilNYLwrO6QFDnlH
-         us/SORoz2NoEXKmvrWXa/CBygHmCH3UmkNSa2R3Rn6erqUkAXotZOdtqaepnTBXTtPqK
-         +i8Q==
+        d=linaro.org; s=google; t=1718709193; x=1719313993; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JZUe7gF67J9gDxOaoNUrJWpHp/2/v3KlOF4371wquz0=;
+        b=Iff/+DctX2C8u060DPaW5Ae9G0SgfAFh/WdUObvWJAw1LTIMIQSTXD72gSDy07veK6
+         mFTU50XZwD6bkKvQlanhExsmAS+3Ir/MBN3t0azcnLOl1SYfCKIGlqcOp5czLjFUOGsK
+         khpOUITl6zJxzNXBH9wmINluZwfTHOx29/U6AGuMjM9M3TOBgTFFuMbgg4GXBf2ibMhW
+         umzBOej+RK3ePC0Vas70Q6RfQkWnjqG0k8p5fLHZFGFwEBHO4g94UCKrqgew0OyfWU+H
+         5xzmWDyP/cijUHsYUfzf+thQHgFsWFls2yFP0MqTa4mDs8lzbDr+Yuh1Sx8yYM/ZjIDV
+         kUxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718709157; x=1719313957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LytFF4Umh3FGe2BHoZB/hPX8STy/rMVhd/DWw4ViV9Q=;
-        b=L5dUMWaLdw4dL5tGxCSYoMDEAvBsdDjxnHowdVEutIIzvJeP5vLuwc3PZXtPeOiPhV
-         7QTVhtDBB6xO3MWtDPO94xaCGHYpb/6SIl62c3Q8SlD2q3d2gb/g5IAILDs0OFZF/Oq0
-         lT8l6HW+Bjo+xPmlup3wW3r/6+e0pmkb/tHOLiFB9YwGlSAo+p2gpj4R7xI6IjZE1fXO
-         tnJGZ6dfICB0b1RuOI79M8RGX1W4AKqWK+7mWA8IOo1DsWCRHAwJUC1gjApSexuHBgpX
-         u4fshrG51zR2Ndyb2cYJsTTis5hDdjyR3rhfZsgFxfwfZs2ov/DaVX5Fvb3ZnSkO2JvC
-         SLpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWraYFq9Y3Mjb728oQLVVcjCY9J5yorl4HSSObMzgwpZ9sZsHwZp3r6M+RcYZJoPArA+DhVSe7ZG/J48PPc5HLJ2iD+kwQS0ZVCOhyZ
-X-Gm-Message-State: AOJu0YxvJpE/7qNSnf0uR9kbBN+i5I3ja859oGflWmgUSvKU6bFquFqZ
-	Z4g2bmX+lInaxEqEBR4JJB7YKz9lZrfJOkNUMoxbTgee4yojLMT79i2pe2UmHipdUN1q73fi/li
-	tPdDMfKof/ykT6fD4Ij4wTSkvUbGtVUNJROshfA==
-X-Google-Smtp-Source: AGHT+IFCeIOoRy25rTwUHZ/n6vBdkCPzCkJ8a//pB4Qa6c+3jDe2XeC/62v2ldwWc8Yh5JI+ho23V5WmsKqsRfZrbxc=
-X-Received: by 2002:ac2:5307:0:b0:52c:998a:77ba with SMTP id
- 2adb3069b0e04-52ca6e6e5f2mr6662065e87.36.1718709157060; Tue, 18 Jun 2024
- 04:12:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718709193; x=1719313993;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JZUe7gF67J9gDxOaoNUrJWpHp/2/v3KlOF4371wquz0=;
+        b=T9jkiU96BSLALt7mdhAQpmh6avMbftT6YkfVr+STQH3RfhKsg0fnZuEH5j8PaxiLfm
+         4BVpWgk1fDRTJE1wi7e1JQ5Z2heuiwpfFNIlM0YjMfs2dKWvwDSqk3X5XEh4FpT0oH9S
+         LlZyvfc2m+b8jWH87biu7iMdvp9EVlq9vZ+lNcH2Vmd2jdUTDPZ9/qDQ36xzTt9IJfSI
+         3HJZUqj2AP6FKMFBuHwrC3r/7PIW+mtwsCshNRL4zLwzcO3oNDGjrnbcHNt6ffxDj3ha
+         f3eWFJ0I3Bl5HTZLVKowgiN/sKucVBhfreIesN32OSJTnt+ude4Y9i4sI9Nsk04ggAh2
+         41gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNUJlc66ijJuLlCPRm3HPAUqDDLvRFh+J8MMJZGacFW2a4zgpQCnE9VAbnBE0g+kSQ4sEN3F4+ta6v9ihmrUjBcixQO5ZL9jRnZka7
+X-Gm-Message-State: AOJu0Yz5F5j1bd5LdP2mo1eTVgNAOkwh5H/mPSmGuo29oE0ruXyDe2t8
+	MEGqcvK5McZyNzqAbi2BYqT6zQxb6JC1shOtEI1IlLXmz+5LmrL9kziis0gH9wk=
+X-Google-Smtp-Source: AGHT+IFvHh/ds3YGzEZJqogwunAMiM1SJOHwoExwr3tTrv56ocyHxKE2bN01RmdOChtzhx+k1jIP3g==
+X-Received: by 2002:a05:6512:15a:b0:52c:958a:4afa with SMTP id 2adb3069b0e04-52ca6e65889mr6824542e87.23.1718709192614;
+        Tue, 18 Jun 2024 04:13:12 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cbb24b860sm652495e87.191.2024.06.18.04.13.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 04:13:12 -0700 (PDT)
+Message-ID: <c3ab8619-2842-4e90-883a-04e45fb18394@linaro.org>
+Date: Tue, 18 Jun 2024 13:13:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com> <20240617-review-v3-35-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-35-88d1338c4cca@baylibre.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Jun 2024 13:12:26 +0200
-Message-ID: <CACRpkdYchu+muvbinPpUFvppMMQCFe9zTcApj46ip4PYUGUhVg@mail.gmail.com>
-Subject: Re: [PATCH v3 35/41] iio: pressure: bmp280-core: make use of regmap_clear_bits()
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Dmitry Rokosov <ddrokosov@sberdevices.ru>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Saravanan Sekar <sravanhome@gmail.com>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Crt Mori <cmo@melexis.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/5] drm/msm/adreno: Move hwcg table into a6xx specific
+ info
+To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240617225127.23476-1-robdclark@gmail.com>
+ <20240617225127.23476-5-robdclark@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240617225127.23476-5-robdclark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 3:51=E2=80=AFPM Trevor Gamblin <tgamblin@baylibre.c=
-om> wrote:
 
-> Instead of using regmap_update_bits() and passing val =3D 0, use
-> regmap_clear_bits().
->
-> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 6/18/24 00:51, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Introduce a6xx_info where we can stash gen specific stuff without
+> polluting the toplevel adreno_info struct.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 65 +++++++++++++++++------
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c     |  6 +--
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.h     |  9 ++++
+>   drivers/gpu/drm/msm/adreno/adreno_gpu.h   |  6 ++-
+>   4 files changed, 67 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> index bcc2f4d8cfc6..96d93251fdd6 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+> @@ -7,6 +7,7 @@
+>    */
+>   
+>   #include "adreno_gpu.h"
+> +#include "a6xx_gpu.h"
+>   #include "a6xx.xml.h"
+>   #include "a6xx_gmu.xml.h"
+>   
+> @@ -465,7 +466,9 @@ static const struct adreno_info a6xx_gpus[] = {
+>   		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+>   		.init = a6xx_gpu_init,
+>   		.zapfw = "a610_zap.mdt",
+> -		.hwcg = a612_hwcg,
+> +		.a6xx = &(struct a6xx_info) {
 
-Yours,
-Linus Walleij
+const
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
