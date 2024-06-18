@@ -1,114 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1AC14D6FC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7DB1741F0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718745338; cv=none; b=rcUAuTRKemnG3ydmEl/x/QmIWuNyEL+H8qB8iiIruh8OZbGU9QufKwCn83PRzv6twnVhla+PP47QdOrQXsMtWEoH7FGEbYYz9GH6O6ncgl0cesWMY8YaSCpH7HwHLRa9HpUp/9XtiD2F93r+2weXlePJb++tYK1n3/RMEFl5i00=
+	t=1718745575; cv=none; b=mRLl8q6Sqc/qwOugtKT4A7c0cR5d5Un6DO4PTQ6LnNGXWm+DlyHfuBolNGdHYwCL8t847TFN0XKY4M7vVzMRFqlueZxhlBROFFSc6laoOus0e8udJLDeiHtkh4St0smI6zLaTvlqOSDThMkdJ2ZppHUumm0Sr2cKIh5+f+MVkmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718745338; c=relaxed/simple;
-	bh=sf4Kk8xdQqZve48iGjYcOf7KxledJ7m6ar/8nEH3AHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kjoz7RHNgnnGmyp/GIHwcmedT77fCjC4JDfzebxpPgg2goapk/6Zo5UccDNd/zYdUL8+DbDKMOki8sA00UGAEVNKIbAlornjoF/nPW+UZ7J0ConIhEQaYWdkYliN78kYACz7oztF438scxCBdVMzDqBoKISmFSrl0a/lhDQYbDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h2nG7ESl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718745575; c=relaxed/simple;
+	bh=OmfcprcSrUb+Cz3hA2CEgypCro4sSFG4VGiwa764RG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TbLSfmK261sTLxQbOGjYCBkbe3kUhsZx1yGQgPRuWaspemfdAbd+V/X/4mmzoWaqcNacJsV+923cVopYuHrizygy9edt3y+8ltd9gmsnkbs/Erj/2HDnEe7Nha8myTcJpc0fhF6GbRMRMf+WuwnPJZDfbl6xiC83vGG5EZYvSSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=wlmvvA6B; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2nG7ESl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718745336;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=96nBoDElHbTtsoCtF5N08Hdwjkz7BYhf+kPf44yoMq8=;
-	b=h2nG7ESlqTSdZoAf8sTL8LCJ2N3ewGGbsnXupktCssENx1Qxp4xd9PGHKjUJchmKqfcJXH
-	bzD+spesbMC4WIrGmKcAql+9Q7lMMotzRrJUus006Fr6ZeG3OQ7GOPLr2TkunwVcExlT2m
-	Qub6DYt/tdDcIDY7la5mtpy+dNcwmAQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-115-s3sOmFj5O5GwlcDCoqr4gQ-1; Tue, 18 Jun 2024 17:15:34 -0400
-X-MC-Unique: s3sOmFj5O5GwlcDCoqr4gQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4217f941ca8so38372965e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718745333; x=1719350133;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="wlmvvA6B"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7042a8ad9f5so139598b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1718745573; x=1719350373; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=96nBoDElHbTtsoCtF5N08Hdwjkz7BYhf+kPf44yoMq8=;
-        b=Ij4etr4JtIb+bNV4mc/rFTRTEQuCCoRzz9weIuitRKx5TBhIw3ATcpaE8SGNFvN7pY
-         CYkxcJU8Q46q7MVL4uPzWJDoNWF8NLB9O0g7TN526b4o/1hGRqOsvBunoyrxhTsrQRpl
-         5UMQoSreuzLqKcWZW5TSbjTRTEVfaACXJH2gOoW02c/WUZub9T7rwibhSDFLks7yOoiB
-         meCPs+crY4krDCye7LVJ5ToK6vwBP6f8o2sl4190XulU4J2oZRdLswVhLTRVypz7PouG
-         CiAdAyZimZ8+eHa+F0LuI9UHf2KJjLK0djBDEl7HjEkMR3KNaFIA903N5Y6F/IQfRaZa
-         tVng==
-X-Forwarded-Encrypted: i=1; AJvYcCXywttxSJ0abfqiuWOPqBDsUMO0b4Y+iVIAEz4YSZ7EoQqIURvxgF1eqeV53b6yhPOI7oKywCA/PMN6waBxAfwSzrMiLBz2Jny+f4cq
-X-Gm-Message-State: AOJu0YzMYgZAVvGrvChOPvs3wr9GEWPEaa+OwtoL7QGIIpSUGFaBuo33
-	LIoz++hQrPIqc+hEkK6/72I9l3s7k+4llnLYYOH1pNfrPo8pR3H9eTLHt8HFsvKVZAzvfZ/x/u7
-	djY+ylDHprwn0eMmKhe28rM2BN819qqyiInQOltaifXmat8AAD8MSAaDxwoxO3w==
-X-Received: by 2002:a05:600c:214c:b0:422:6e65:a4bb with SMTP id 5b1f17b1804b1-4247507a10cmr3164135e9.5.1718745333712;
-        Tue, 18 Jun 2024 14:15:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmkvm6Wpg+T20KkbVracoP2lwhqgErIro0Zt5eKTCJ6OBKJ/cZuGS4YIJx2hS2d1tS9Nt4pQ==
-X-Received: by 2002:a05:600c:214c:b0:422:6e65:a4bb with SMTP id 5b1f17b1804b1-4247507a10cmr3163985e9.5.1718745333366;
-        Tue, 18 Jun 2024 14:15:33 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe91f7sm239240225e9.16.2024.06.18.14.15.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 14:15:32 -0700 (PDT)
-Message-ID: <175e7744-1234-44c0-b031-24ac42524b44@redhat.com>
-Date: Tue, 18 Jun 2024 23:15:31 +0200
+        bh=gBOXu3AX8iawimeoI7cVv0ed5p6W28OLisBmj7DoqVw=;
+        b=wlmvvA6BvEqyuuBoqUKOoJyj4PwPrQFUKWUY5IQnA6vyE+rc+I+4L8TXE9roOC9KNq
+         2eJymBdop86ofjXk1IE38F6oSjUq+md1puHObDGI+MdxqRU5nQEp6UW9rX5M4v5LYOT0
+         pSsjmDtQtKue4APmmOpq7EVYrK7dgK7bW7DwGXZT4qd9SKkorJbdJblZzs48AEgKYhu2
+         wwpOPKhS+7Qbeg9aXb9GkAUJGL/lToe0/kw7SPHkL2nib6Mz2OTynozca04+VvrAakBW
+         1lCILexuJFfGDD51T8KhsaBdHcnhkLg6pxMr5BWv8W4jefX10WrDxiM+U74GfJTXEzpa
+         TEKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718745573; x=1719350373;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gBOXu3AX8iawimeoI7cVv0ed5p6W28OLisBmj7DoqVw=;
+        b=ghHPKHQV+CdwwMhRSm6m0e0ZP31/0nrvp37VTLmnA6nD80TjkUOSxKUArSqXM8Bn7D
+         epcarOJTMqbb/7zW9NQkJrCggBkytx0vQijZNfJy0MnQKkbpS7S6A1h2nytOqm768S0r
+         OfnYDrqgDy6MnIvFRyAtZonryKjZ80+ev909DAw88KZEUwKkLjhaI0BPXZDpnUom3ck/
+         D2kRs0JmKAZZKu+MXhceaSeaIm5kwvGYdTZfhZUyt/ihg4kIgUxCmZuoGZ6BUprqEeve
+         b008biSz5fkYkqkPxjHAj/jPehd5e+D1S4AH+0LV8tfmeGdY/KWlAEglRarWNzIFEyZ5
+         qWhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWUz7FxyHgogFfH0u8zUEkKn6JXQ6eTHnXWlGKuh6zFED+76Q2T0Ad8XlvPpkgcPlGRJXJMFg4S1ObhakjQdRJXJ154Yqyhcw/RKte
+X-Gm-Message-State: AOJu0Yxv3zorP9yTCrbajqp6PqmcpSUikFOEfj6Yash4caHMv5r0IQlB
+	uAO25nLl79kpv0SndT73HtgRWboIVqhF9FldnNPGpbefGZWILFT5YkP3hvdLDyA=
+X-Google-Smtp-Source: AGHT+IEDJdHgqhnpdjG6jF8Kggw629x32bz6eKrC/MAgTBCxU/oW9mH69BRNudTCCPM3Uu+J0MTMjg==
+X-Received: by 2002:a05:6a20:3c8a:b0:1b4:b9f0:ffc4 with SMTP id adf61e73a8af0-1bcab0528d7mr5844124637.18.1718745573134;
+        Tue, 18 Jun 2024 14:19:33 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-710744224c4sm390475a12.66.2024.06.18.14.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 14:19:32 -0700 (PDT)
+Date: Tue, 18 Jun 2024 14:19:24 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Omer Shpigelman <oshpigelman@habana.ai>
+Cc: Joe Damato <jdamato@fastly.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+ <linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "ogabbay@kernel.org"
+ <ogabbay@kernel.org>, Zvika Yehudai <zyehudai@habana.ai>
+Subject: Re: [PATCH 09/15] net: hbl_en: add habanalabs Ethernet driver
+Message-ID: <20240618141924.5a62a3d8@hermes.local>
+In-Reply-To: <16369c7d-af15-4959-9e84-8a495b6b5035@habana.ai>
+References: <20240613082208.1439968-1-oshpigelman@habana.ai>
+	<20240613082208.1439968-10-oshpigelman@habana.ai>
+	<ZmzIy3c0j8ubspIM@LQ3V64L9R2>
+	<16369c7d-af15-4959-9e84-8a495b6b5035@habana.ai>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] rust: add firmware abstractions
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, russ.weight@linux.dev,
- ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
- boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com,
- airlied@gmail.com, fujita.tomonori@gmail.com, pstanner@redhat.com,
- ajanulgu@redhat.com, lyude@redhat.com, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240617203010.101452-1-dakr@redhat.com>
- <20240617203010.101452-3-dakr@redhat.com>
- <ZnHkQpyiX4UKdLEt@bombadil.infradead.org>
-Content-Language: en-US
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <ZnHkQpyiX4UKdLEt@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Luis,
+On Tue, 18 Jun 2024 19:37:36 +0000
+Omer Shpigelman <oshpigelman@habana.ai> wrote:
 
-On 6/18/24 21:47, Luis Chamberlain wrote:
-> On Mon, Jun 17, 2024 at 10:29:41PM +0200, Danilo Krummrich wrote:
->> Add an abstraction around the kernels firmware API to request firmware
->> images. The abstraction provides functions to access the firmware's size
->> and backing buffer.
->>
->> The firmware is released once the abstraction instance is dropped.
->>
->> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> > 
+> > Is there any reason in particular to call netif_receive_skb instead of
+> > napi_gro_receive ?
+> >   
 > 
-> I don't speak Rust, so if we're gonna add this, I'd just ask you also
-> become a firmware loader maintainer, willing to spend time to help
-> review both C and Rust code. Is that too much to ask?
+> As you can see, we also support polling mode which is a non-NAPI flow.
+> We could use napi_gro_receive() for NAPI flow and netif_receive_skb() for
+> polling mode but we don't support RX checksum offload anyway.
 
-That is fine, I'm happy to help out. I think Greg applied the patch already.
-But I can send a separate one adding the corresponding entry later on.
-
-- Danilo
-
-> 
->    Luis
-> 
-
+ Why non-NAPI? I thought current netdev policy was all drivers should
+use NAPI.
