@@ -1,71 +1,160 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE12B1474A2
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087E213A877;
+	Tue, 18 Jun 2024 12:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714285; cv=none; b=A4gksRcpFHeWXg54/Rg1nOadS/gkKOTGdl4X4u2csV+aUR/w1KQXL6s/SekZT89bJtuvnpNnWSmw/bMZ3DsVUBYy/VgBf/M4yzriCSe4qbtJHzGbubZRAewOwLO+/tOrDII3LsPpxHjJrGwF3aTLl3gqrcl/YpWoWzeTNtfjDRA=
+	t=1718714315; cv=none; b=UwWNlHTX1ht7stxDJ27jPxamAC7S/+E5BiZcDtzDjk+M1M9BTQNzLReSuPNkrYJAWiwNkymp7zb+fCdcAHKhFdG4vGovlqj5AVMRXM8cX7de9qQbdjUbhyJGf57beJ+sst5vXUeoo5Nj0zZh87hPW5kH8KeThSK3w8Ntt1mfbes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714285; c=relaxed/simple;
-	bh=fGTSPjnQr05i/Qz1njYxsPrj+v0954KqoCdZCgFqtHA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=SCai9EtKPSY9aG6ZNUZ0+4aWfh8hf0JpK8MRuV/qj07WXQX5anMcSqAv5kzxuqBG9BKfJGAK5aLN9Bct2D8TlcFatIQC/30m3uONAECy+7Tu2S522knehLLUzgcBJqN5vhCdCKQuvUfDCUzbee+Cg0o85SXBrbNATdCql+tJyDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7eb1d659c76so700695939f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:38:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718714283; x=1719319083;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G31n2s5h9TgP7VMBf8zD67R7hIlXkzsxNuS5q3V8lvo=;
-        b=c4CsWCV6NlMR8GHgBcM3poSV/gXuBMUaZIot5IM7pcW0Pi5zqw+iW0U0i76VRuHAb6
-         8amupRdl2tTs9+v/L2kbrGD3qv7rs1aFRuDWMWHjmN9j7zqE73u58uOkI7DKzQbhV0bQ
-         0j2ZcpA0khKXUjiEdwssBHq2nroIdel4RUB8/Vt/GViuhOyCwJoS2WzjGSgT1xIzSxOB
-         Xzt/G5IQ+zo261GyY/ZZ2KU3Kho+eTuEr4hbkhhFs6J0K6NlVyv3xSRAeWmm2VKOnF2X
-         JCBTHOniFIGdAz62nEZdeFCnxCBS+VIhW+IYbCPVW2e3jJ6rwkQ461soHSh3Qz8HYr3C
-         qjEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYsL1zZwxhViCFmbvoDYkWLfyygOfnIQRYu34EipcdUlKR50txlLWs6fYQdhaV9fGCo9gnp5ZMYghZ002af5wqeLD2krcYx7eprBdb
-X-Gm-Message-State: AOJu0Yx76w/SqOsTrHlYvxnOoFvSvysTTXWOalEH+uJAkcSPb4O2dvHs
-	orBArFmmxYXwDIB/PTFhdxg7ETBfgwQi4MJuEV+21odamLCQ69aRKHAV2tPrKiuMPNY3k+6v0Tc
-	WzNRIC3ZVt2COw2WfacTNAjA4uMclQe67LlLJczjp7bWwcfkXJ1E50rQ=
-X-Google-Smtp-Source: AGHT+IGA6H74RoVlHPgLUYkCnJztGcZO9f+hnXqri2n6cFO/VcQG28o5xOHHsyAQNMpFYDV7m+zXjKie2NoGZTTXIV1cB7FHaquN
+	s=arc-20240116; t=1718714315; c=relaxed/simple;
+	bh=ElwEEKlltBx5dmTZseGkyQ9j+pnPgSlfITcDRLuO6OA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ESw6tI+jVqERXV7237anGInbfDcJpRsBVonMtd7kVmV6qcml4+4ug6DemnGWJyNWreEtbCTTLJdnAIDEGUqCtJ/hMKP1Pxq4nm2JkvnF8lNTB3OhrlK89mvujAYaXKbxMR1c0XWQa3vjRBEeNSgOdHEDXLCWYn4saOhwEay47iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMfvlQSL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMfvlQSL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380BDC3277B;
+	Tue, 18 Jun 2024 12:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714314;
+	bh=ElwEEKlltBx5dmTZseGkyQ9j+pnPgSlfITcDRLuO6OA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NMfvlQSLo3Xavk3X2tXb08vsHlDo+mkH3gHDy5y0mto6Di7cXRphvhFPeS6Et33zr
+	 QLnP5A56Kh5OaXX8XrCV/ZnfbJiVcKNfQvD8fVTGSyAHBBB+aA8b73xi2f1m2DM9oZ
+	 QfWuXi2KLuH4tdSZpVOnTIO8u6jVzQewds1N95HwxHhwqZbYFkjpmbr/mVZmQBvEuV
+	 NBMW4bz2BQ1486biDxkV+IIqYgh963bX0badwsVbbzRMwGEjS39NIbPzswl15pxFR9
+	 FXwQp1OnMvuI1rMzOuJLwBD7usPkUKQUQGXYNEox4dmEYIb8mPbXLvkEX4rFySNBkx
+	 6UEfrry7YrbPw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Martin Wilck <martin.wilck@suse.com>,
+	Rajashekhar M A <rajs@netapp.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/35] scsi: core: alua: I/O errors for ALUA state transitions
+Date: Tue, 18 Jun 2024 08:37:21 -0400
+Message-ID: <20240618123831.3302346-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3713:b0:4b9:6c10:36c1 with SMTP id
- 8926c6da1cb9f-4b96c103c50mr449016173.2.1718714282767; Tue, 18 Jun 2024
- 05:38:02 -0700 (PDT)
-Date: Tue, 18 Jun 2024 05:38:02 -0700
-In-Reply-To: <b82ee1f4-0a09-7976-0b5b-c762f5eb4186@netfilter.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004b8b81061b295a04@google.com>
-Subject: Re: [syzbot] [netfilter?] net-next test error: WARNING: suspicious
- RCU usage in _destroy_all_sets
-From: syzbot <syzbot+cfbe1da5fdfc39efc293@syzkaller.appspotmail.com>
-To: kadlec@netfilter.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.34
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Martin Wilck <martin.wilck@suse.com>
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+[ Upstream commit 10157b1fc1a762293381e9145041253420dfc6ad ]
 
-Reported-and-tested-by: syzbot+cfbe1da5fdfc39efc293@syzkaller.appspotmail.com
+When a host is configured with a few LUNs and I/O is running, injecting FC
+faults repeatedly leads to path recovery problems.  The LUNs have 4 paths
+each and 3 of them come back active after say an FC fault which makes 2 of
+the paths go down, instead of all 4. This happens after several iterations
+of continuous FC faults.
 
-Tested on:
+Reason here is that we're returning an I/O error whenever we're
+encountering sense code 06/04/0a (LOGICAL UNIT NOT ACCESSIBLE, ASYMMETRIC
+ACCESS STATE TRANSITION) instead of retrying.
 
-commit:         0eb94209 netfilter: ipset: Fix suspicious rcu_derefere..
-git tree:       git://blackhole.szhk.kfki.hu/nf main
-kernel config:  https://syzkaller.appspot.com/x/.config?x=33d942c3f3616a8f
-dashboard link: https://syzkaller.appspot.com/bug?extid=cfbe1da5fdfc39efc293
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+[mwilck: The original patch was developed by Rajashekhar M A and Hannes
+Reinecke. I moved the code to alua_check_sense() as suggested by Mike
+Christie [1]. Evan Milne had raised the question whether pg->state should
+be set to transitioning in the UA case [2]. I believe that doing this is
+correct. SCSI_ACCESS_STATE_TRANSITIONING by itself doesn't cause I/O
+errors. Our handler schedules an RTPG, which will only result in an I/O
+error condition if the transitioning timeout expires.]
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+[1] https://lore.kernel.org/all/0bc96e82-fdda-4187-148d-5b34f81d4942@oracle.com/
+[2] https://lore.kernel.org/all/CAGtn9r=kicnTDE2o7Gt5Y=yoidHYD7tG8XdMHEBJTBraVEoOCw@mail.gmail.com/
+
+Co-developed-by: Rajashekhar M A <rajs@netapp.com>
+Co-developed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Martin Wilck <martin.wilck@suse.com>
+Link: https://lore.kernel.org/r/20240514140344.19538-1-mwilck@suse.com
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/device_handler/scsi_dh_alua.c | 31 +++++++++++++++-------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index a226dc1b65d71..4eb0837298d4d 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -414,28 +414,40 @@ static char print_alua_state(unsigned char state)
+ 	}
+ }
+ 
+-static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
+-					      struct scsi_sense_hdr *sense_hdr)
++static void alua_handle_state_transition(struct scsi_device *sdev)
+ {
+ 	struct alua_dh_data *h = sdev->handler_data;
+ 	struct alua_port_group *pg;
+ 
++	rcu_read_lock();
++	pg = rcu_dereference(h->pg);
++	if (pg)
++		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
++	rcu_read_unlock();
++	alua_check(sdev, false);
++}
++
++static enum scsi_disposition alua_check_sense(struct scsi_device *sdev,
++					      struct scsi_sense_hdr *sense_hdr)
++{
+ 	switch (sense_hdr->sense_key) {
+ 	case NOT_READY:
+ 		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
+ 			/*
+ 			 * LUN Not Accessible - ALUA state transition
+ 			 */
+-			rcu_read_lock();
+-			pg = rcu_dereference(h->pg);
+-			if (pg)
+-				pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
+-			rcu_read_unlock();
+-			alua_check(sdev, false);
++			alua_handle_state_transition(sdev);
+ 			return NEEDS_RETRY;
+ 		}
+ 		break;
+ 	case UNIT_ATTENTION:
++		if (sense_hdr->asc == 0x04 && sense_hdr->ascq == 0x0a) {
++			/*
++			 * LUN Not Accessible - ALUA state transition
++			 */
++			alua_handle_state_transition(sdev);
++			return NEEDS_RETRY;
++		}
+ 		if (sense_hdr->asc == 0x29 && sense_hdr->ascq == 0x00) {
+ 			/*
+ 			 * Power On, Reset, or Bus Device Reset.
+@@ -502,7 +514,8 @@ static int alua_tur(struct scsi_device *sdev)
+ 
+ 	retval = scsi_test_unit_ready(sdev, ALUA_FAILOVER_TIMEOUT * HZ,
+ 				      ALUA_FAILOVER_RETRIES, &sense_hdr);
+-	if (sense_hdr.sense_key == NOT_READY &&
++	if ((sense_hdr.sense_key == NOT_READY ||
++	     sense_hdr.sense_key == UNIT_ATTENTION) &&
+ 	    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
+ 		return SCSI_DH_RETRY;
+ 	else if (retval)
+-- 
+2.43.0
+
