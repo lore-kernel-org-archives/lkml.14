@@ -1,162 +1,290 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD07D14BF86;
-	Tue, 18 Jun 2024 16:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6145A14EC79;
+	Tue, 18 Jun 2024 16:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718727142; cv=none; b=tt9Y93k4nHIyVBPN1JU7d5HVQLya5kT9PLR/nb7OwSXSGyONgUrgVZoft++K9teJV5ay0/gdEJ5N4+fAPmllieut0I78q5PI3+IzFtIInGR3DgSe5PK0z2DWMIEt6wDy+m9rcErYAHXgq2NqQGTzQO+CrQc8NhrldsIrOTNnr9o=
+	t=1718727153; cv=none; b=QUYdCfOJic327qKQccNqHpCYBpyIpF60UgQBcFX6NUueu/henjGWfJfqCwh/dvzwh6H0N619rkBBvRaA1OH7rYNbPfkyUQthHSFVBuiDfP8uEXalGJV/1IlNcXUuYz9lZjrUOPOc6LmZhewMWbTKrhlKlPiu6DF0ybVlFn6UPfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718727142; c=relaxed/simple;
-	bh=TL24mQmoCmG6JvMGnERNa9n0D2q1ckHqAKpeRsdYRPc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mYnQAu//PCE1tAKeaV5fy0kkElTpHvK532h4cMvxRvk8/TI7bl1ZUgtxNjTm9xlnoR6KCrJWU37O56ZksO0n49cqEVxuxZf0glS9MZTr/ppvv/UECISXo4JFG3LwIvQN9k/JjGSiXraWhLL46qGCFcanVO0JXewpYcUfSmP4YCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BF8gFfmg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718727153; c=relaxed/simple;
+	bh=1F52Yx/ZQ4nCWj8eVMsenNJs/hsF0vmXXhuKUIvd89w=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kaFuRXN0/B3e0mZGIJu0ygoEMcfiB8lejuOVq/8OCntwK9TIlbXovixNEkW2s/dpgiltNrAuD4cHRfGkiKCAVr3HPPJvwBz/3XU/XOWityDWfMbB85+o1JyoI7gv+wKhvyNU8kynykjHweNtH6PJHFCAE4QOQ8hFi9S3UqCbxyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EfjyD904; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BF8gFfmg"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IBCqcW005312;
-	Tue, 18 Jun 2024 16:12:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DJbPrjRaIj8/B9EpEBGXNYWr
-	h0MR43gEeBmb26KI2FE=; b=BF8gFfmgoHCOten5wPNXAOty7uz/468ZeCHERTZz
-	jCB6BDygS2mnLkLwySiz7QhXiJE9C3q0pffpRvmGhTwyn6kH1l6eSqIdum8YuKMX
-	BJVUYRcuBO71YtHghku7iqePqvdTnhDjtl7RtP0rXpB2ictbpFQ3Y2sVlPrKPu+A
-	hcPCxPUAAkfPB3Pa2uV/Bq0Db50ml1qP6L4B2mam2kKJaDe1//aim8qBJLx4xJl7
-	pPlh+1V/B0qH1nI+1VRcJeU82ObyoHFcWsHHfTu2HLyYCZ9zCokinrztmq2Gjahd
-	xhck7U/EawNceGM3f2zVZgvL/7NZsnzim9XqXyi5Rsm3Fg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yu95rgt3c-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EfjyD904"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IFAEX5008943;
+	Tue, 18 Jun 2024 18:12:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	S+H8H+djGQYAAsQ0PjdqLYQJy1Hwlzih8CMqVRnehcE=; b=EfjyD9044mkD/CzS
+	aQyX5J8AxI0RFm2bxYDYHjqPGsFy2FDAWVMdZSPWydiRib+V8AD7Mc1Xz/U7JNb9
+	YXFnpOVTtVFmO6AjzVp00NrhL3eLEuzaTUUHpOGBwFwTdraaypUa8TrBr6ZDUr4F
+	oLfvYsCLArgGoVNCuBFfDTv95Px8TqiGcabS1cZ1r03cQIHsn/h30FADp/1EUteL
+	LhVNEv4D60hvmibrVSnKhEgcuO6Azjvkrwfh7C45iX645UU0/xZsDdN5jL63DK4J
+	JAH6z/cktZQsudySTjs/O/w0Aa/q7wndNg+doXN5hiMLgVlzPR7c59bvjbKlt9pj
+	HT+mFQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ysnwja5h9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 16:12:08 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45IGC6Ig009286
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 16:12:06 GMT
-Received: from hu-akhilpo-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 18 Jun 2024 09:12:01 -0700
-Date: Tue, 18 Jun 2024 21:41:58 +0530
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-To: Will Deacon <will@kernel.org>
-CC: Andrew Halaney <ahalaney@redhat.com>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul
-	<sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        Rob Clark <robdclark@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
-Message-ID: <20240618161158.qpqbv77tqveo5g6l@hu-akhilpo-hyd.qualcomm.com>
-References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
- <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
- <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
- <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
- <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
- <20240604144055.GE20384@willie-the-truck>
+	Tue, 18 Jun 2024 18:12:04 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 41F5F40045;
+	Tue, 18 Jun 2024 18:12:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 13D6721197B;
+	Tue, 18 Jun 2024 18:11:32 +0200 (CEST)
+Received: from localhost (10.252.27.64) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 18 Jun
+ 2024 18:11:31 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: Olivier Moysan <olivier.moysan@foss.st.com>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 8/8] iio: adc: stm32-dfsdm: add scaling support to dfsdm
+Date: Tue, 18 Jun 2024 18:08:34 +0200
+Message-ID: <20240618160836.945242-9-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240604144055.GE20384@willie-the-truck>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BUNumrrajOAzsr7DX2KcvMEECRsfSlrH
-X-Proofpoint-ORIG-GUID: BUNumrrajOAzsr7DX2KcvMEECRsfSlrH
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 adultscore=0 clxscore=1011 priorityscore=1501
- spamscore=0 phishscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180121
 
-On Tue, Jun 04, 2024 at 03:40:56PM +0100, Will Deacon wrote:
-> On Thu, May 16, 2024 at 01:55:26PM -0500, Andrew Halaney wrote:
-> > On Thu, May 16, 2024 at 08:20:05PM GMT, Akhil P Oommen wrote:
-> > > On Thu, May 16, 2024 at 08:15:34AM -0500, Andrew Halaney wrote:
-> > > > If I understand correctly, you don't need any memory barrier.
-> > > > writel()/readl()'s are ordered to the same endpoint. That goes for all
-> > > > the reordering/barrier comments mentioned below too.
-> > > > 
-> > > > device-io.rst:
-> > > > 
-> > > >     The read and write functions are defined to be ordered. That is the
-> > > >     compiler is not permitted to reorder the I/O sequence. When the ordering
-> > > >     can be compiler optimised, you can use __readb() and friends to
-> > > >     indicate the relaxed ordering. Use this with care.
-> > > > 
-> > > > memory-barriers.txt:
-> > > > 
-> > > >      (*) readX(), writeX():
-> > > > 
-> > > > 	    The readX() and writeX() MMIO accessors take a pointer to the
-> > > > 	    peripheral being accessed as an __iomem * parameter. For pointers
-> > > > 	    mapped with the default I/O attributes (e.g. those returned by
-> > > > 	    ioremap()), the ordering guarantees are as follows:
-> > > > 
-> > > > 	    1. All readX() and writeX() accesses to the same peripheral are ordered
-> > > > 	       with respect to each other. This ensures that MMIO register accesses
-> > > > 	       by the same CPU thread to a particular device will arrive in program
-> > > > 	       order.
-> > > > 
-> > > 
-> > > In arm64, a writel followed by readl translates to roughly the following
-> > > sequence: dmb_wmb(), __raw_writel(), __raw_readl(), dmb_rmb(). I am not
-> > > sure what is stopping compiler from reordering  __raw_writel() and __raw_readl()
-> > > above? I am assuming iomem cookie is ignored during compilation.
-> > 
-> > It seems to me that is due to some usage of volatile there in
-> > __raw_writel() etc, but to be honest after reading about volatile and
-> > some threads from gcc mailing lists, I don't have a confident answer :)
-> > 
-> > > 
-> > > Added Will to this thread if he can throw some light on this.
-> > 
-> > Hopefully Will can school us.
-> 
-> The ordering in this case is ensured by the memory attributes used for
-> ioremap(). When an MMIO region is mapped using Device-nGnRE attributes
-> (as it the case for ioremap()), the "nR" part means "no reordering", so
-> readX() and writeX() to that region are ordered wrt each other.
+Add scaling support to STM32 DFSDM.
 
-But that avoids only HW reordering, doesn't it? What about *compiler reordering* in the
-case of a writel following by a readl which translates to:
-	1: dmb_wmb()
-	2: __raw_writel() -> roughly "asm volatile('str')
-	3: __raw_readl() -> roughly "asm volatile('ldr')
-	4: dmb_rmb()
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ drivers/iio/adc/Kconfig           |  1 +
+ drivers/iio/adc/stm32-dfsdm-adc.c | 94 ++++++++++++++++++++++++++++++-
+ 2 files changed, 92 insertions(+), 3 deletions(-)
 
-Is the 'volatile' keyword sufficient to avoid reordering between (2) and (3)? Or
-do we need a "memory" clobber to inhibit reordering?
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index f3dfdaa80678..858ae8161fa4 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -1223,6 +1223,7 @@ config STM32_DFSDM_ADC
+ 	select IIO_BUFFER
+ 	select IIO_BUFFER_HW_CONSUMER
+ 	select IIO_TRIGGERED_BUFFER
++	select IIO_BACKEND
+ 	help
+ 	  Select this option to support ADCSigma delta modulator for
+ 	  STMicroelectronics STM32 digital filter for sigma delta converter.
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index 69b4764d7cba..93bf6035bd6d 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -9,6 +9,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/iio/adc/stm32-dfsdm-adc.h>
++#include <linux/iio/backend.h>
+ #include <linux/iio/buffer.h>
+ #include <linux/iio/hw-consumer.h>
+ #include <linux/iio/sysfs.h>
+@@ -78,6 +79,7 @@ struct stm32_dfsdm_adc {
+ 	/* ADC specific */
+ 	unsigned int oversamp;
+ 	struct iio_hw_consumer *hwc;
++	struct iio_backend **backend;
+ 	struct completion completion;
+ 	u32 *buffer;
+ 
+@@ -672,6 +674,8 @@ static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
+ 						struct fwnode_handle *node)
+ {
+ 	struct stm32_dfsdm_channel *df_ch;
++	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
++	struct iio_backend *backend;
+ 	const char *of_str;
+ 	int ret, val;
+ 
+@@ -721,6 +725,14 @@ static int stm32_dfsdm_generic_channel_parse_of(struct stm32_dfsdm *dfsdm,
+ 	if (ret != -EINVAL)
+ 		df_ch->alt_si = 0;
+ 
++	if (adc->dev_data->type == DFSDM_IIO) {
++		backend = devm_iio_backend_subnode_get(&indio_dev->dev, NULL, node);
++		if (IS_ERR(backend))
++			return dev_err_probe(&indio_dev->dev, PTR_ERR(backend),
++					     "Failed to get backend\n");
++		adc->backend[ch->scan_index] = backend;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1060,7 +1072,7 @@ static int stm32_dfsdm_update_scan_mode(struct iio_dev *indio_dev,
+ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+-	int ret;
++	int i = 0, ret;
+ 
+ 	/* Reset adc buffer index */
+ 	adc->bufi = 0;
+@@ -1071,6 +1083,15 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+ 			return ret;
+ 	}
+ 
++	if (adc->backend) {
++		while (adc->backend[i]) {
++			ret = iio_backend_enable(&indio_dev->dev, adc->backend[i]);
++			if (ret < 0)
++				return ret;
++			i++;
++		}
++	}
++
+ 	ret = stm32_dfsdm_start_dfsdm(adc->dfsdm);
+ 	if (ret < 0)
+ 		goto err_stop_hwc;
+@@ -1103,6 +1124,7 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
+ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
++	int i = 0;
+ 
+ 	stm32_dfsdm_stop_conv(indio_dev);
+ 
+@@ -1110,6 +1132,13 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
+ 
+ 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
+ 
++	if (adc->backend) {
++		while (adc->backend[i]) {
++			iio_backend_disable(&indio_dev->dev, adc->backend[i]);
++			i++;
++		}
++	}
++
+ 	if (adc->hwc)
+ 		iio_hw_consumer_disable(adc->hwc);
+ 
+@@ -1282,7 +1311,14 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 				int *val2, long mask)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+-	int ret;
++
++	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
++	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
++	u32 max = flo->max << (flo->lshift - chan->scan_type.shift);
++	int ret, idx = chan->scan_index;
++
++	if (flo->lshift < chan->scan_type.shift)
++		max = flo->max >> (chan->scan_type.shift - flo->lshift);
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+@@ -1291,6 +1327,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 			return ret;
+ 		if (adc->hwc)
+ 			ret = iio_hw_consumer_enable(adc->hwc);
++		if (adc->backend[idx])
++			ret = iio_backend_enable(&indio_dev->dev, adc->backend[idx]);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: IIO enable failed (channel %d)\n",
+@@ -1301,6 +1339,8 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 		ret = stm32_dfsdm_single_conv(indio_dev, chan, val);
+ 		if (adc->hwc)
+ 			iio_hw_consumer_disable(adc->hwc);
++		if (adc->backend[idx])
++			iio_backend_disable(&indio_dev->dev, adc->backend[idx]);
+ 		if (ret < 0) {
+ 			dev_err(&indio_dev->dev,
+ 				"%s: Conversion failed (channel %d)\n",
+@@ -1320,6 +1360,45 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
+ 		*val = adc->sample_freq;
+ 
+ 		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_SCALE:
++		/*
++		 * Scale is expressed in mV.
++		 * When fast mode is disabled, actual resolution may be lower
++		 * than 2^n, where n=realbits-1.
++		 * This leads to underestimating input voltage. To
++		 * compensate this deviation, the voltage reference can be
++		 * corrected with a factor = realbits resolution / actual max
++		 */
++		if (adc->backend[idx]) {
++			iio_backend_read_raw(adc->backend[idx], val, val2, mask);
++
++			*val = div_u64((u64)*val * (u64)BIT(DFSDM_DATA_RES - 1), max);
++			*val2 = chan->scan_type.realbits;
++			if (chan->differential)
++				*val *= 2;
++		}
++		return IIO_VAL_FRACTIONAL_LOG2;
++
++	case IIO_CHAN_INFO_OFFSET:
++		/*
++		 * DFSDM output data are in the range [-2^n,2^n],
++		 * with n=realbits-1.
++		 * - Differential modulator:
++		 * Offset correspond to SD modulator offset.
++		 * - Single ended modulator:
++		 * Input is in [0V,Vref] range, where 0V corresponds to -2^n, and Vref to 2^n.
++		 * Add 2^n to offset. (i.e. middle of input range)
++		 * offset = offset(sd) * vref / res(sd) * max / vref.
++		 */
++		if (adc->backend[idx]) {
++			iio_backend_read_raw(adc->backend[idx], val, val2, mask);
++
++			*val = div_u64((u64)max * *val, BIT(*val2 - 1));
++			if (!chan->differential)
++				*val += max;
++		}
++		return IIO_VAL_INT;
+ 	}
+ 
+ 	return -EINVAL;
+@@ -1449,7 +1528,15 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev, struct iio_c
+ 	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
+ 	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
+ 	 */
+-	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
++	if (child) {
++		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++					BIT(IIO_CHAN_INFO_SCALE) |
++					BIT(IIO_CHAN_INFO_OFFSET);
++	} else {
++		/* Legacy. Scaling not supported */
++		ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
++	}
++
+ 	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+ 					BIT(IIO_CHAN_INFO_SAMP_FREQ);
+ 
+@@ -1816,3 +1903,4 @@ module_platform_driver(stm32_dfsdm_adc_driver);
+ MODULE_DESCRIPTION("STM32 sigma delta ADC");
+ MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(IIO_BACKEND);
+-- 
+2.25.1
 
-This is still not clear to me even after going through some compiler documentions.
-
--Akhil.
-
-> 
-> Note that guarantee _doesn't_ apply to other flavours of ioremap(), so
-> e.g. ioremap_wc() won't give you the ordering.
-> 
-> Hope that helps,
-> 
-> Will
