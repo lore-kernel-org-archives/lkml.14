@@ -1,279 +1,1257 @@
-Received: from mx0b-00230701.pphosted.com (mx0b-00230701.pphosted.com [148.163.158.9])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2052.outbound.protection.outlook.com [40.107.104.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5F186287;
-	Tue, 18 Jun 2024 21:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.158.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C181849F9;
+	Tue, 18 Jun 2024 21:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718747657; cv=fail; b=GFb8ea0ZrbEILZBuDmXPRgUU1EGSHDkg7KlLnbbIqLVcHAZrurC9lS2E6hHVXrMUgwAfPRDypw3IeeHjVPAFSBXB1kqK0DFq9zgGonuMz3gCv60uDoTEOOjgMzXtw9jPRL/mTIdr7h438nxXkDBp7nz/Zi2SX1hxfE1Z0Ze0Nfw=
+	t=1718747656; cv=fail; b=UBgazvhcYea+FSrvngoL/BNctCAoIr9A8wbMJ8Bu3McwygL/A3yJVcBcM1WhyCbGCyVtVKfRjhezGgFCSwaClaGFW4tzdfTeygQT807B6TMXeRvEg8VCJgp3TItI9MPBxo1+wYNDcndGYnnwB8DFViNJ3f0fEwDKpuhwJ9gRATU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718747657; c=relaxed/simple;
-	bh=Urb0p70Ark8Nb4f4O8BOmzM674rn8V0n/2DDNMUgJFs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DumEIwcqfK3SuR7ceO0pUJHNe6rfPAF7imub8wEgclCteXyzyv0kO7iRu2OeClq9yOb1t0w5W/jjpsGED23A62oq0Exv2B8vX9/3kQNJtBeWvqgejA9nEJYc9xm5lVZaHBBucyzpWYaUbCr/DckhG7Bn7ekbnBeXKI96a6TQVd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=v/5d//d6; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=YME3G5Hj; dkim=fail (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=nuKPX3xq reason="signature verification failed"; arc=fail smtp.client-ip=148.163.158.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
+	s=arc-20240116; t=1718747656; c=relaxed/simple;
+	bh=y+AGv642+cjvVIlm1YYGdrJXgyEzPHH4My0jZF3TceM=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=lzi01MWWR/HTFITdQqPHDfWMvGbRwqQGYx9KoXjXbtvMx9+mTsRKMfpwKJN7h2URTrpLp9oxBK7fpPfL35f78c3k1y+/3EI6JDW3j+mWI7pSwkIfFTieGSKU7iX10LhK/T9pu8VAcuvfI+gDssopn8MhszuOOFcvxevO5Wj5V6U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=PiERpuY3; arc=fail smtp.client-ip=40.107.104.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="v/5d//d6";
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YME3G5Hj";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="nuKPX3xq"
-Received: from pps.filterd (m0098572.ppops.net [127.0.0.1])
-	by mx0b-00230701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILgPvp020284;
-	Tue, 18 Jun 2024 14:54:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
-	cc:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	pfptdkimsnps; bh=Urb0p70Ark8Nb4f4O8BOmzM674rn8V0n/2DDNMUgJFs=; b=
-	v/5d//d6qayLk5L3H1O95d4N0xbi3yjbgOuQegyRxyaKssQwjJXZD5UAgFmsaWdC
-	/yXuFpS0TIhFBrV0gohCVmG+aAAmbkufb0Jbiuh936nfIqxY4HPP3dm9b3cnU0/r
-	q1B0yyrmPjffDgPxDXMJ6DhDOk3uSJ37zM1NCe53VisnsC66KO2Zt78gdmLK/iNp
-	4+lV2qg4bdhqxkdifNMcIGLldV6WxQ6JtTzeEWw3HbBSvAC/xDSPuP6Oyqryk1Rs
-	1WaHMlevBhoez3sZWp5uvMZJGFF7KLdac/ggRIs0wRHCew0/YG4zzo4628JKFKKE
-	bm2i+dTcE8s6u6xc7VlVnA==
-Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.87.133])
-	by mx0b-00230701.pphosted.com (PPS) with ESMTPS id 3yujcur0wh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 14:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-	t=1718747648; bh=Urb0p70Ark8Nb4f4O8BOmzM674rn8V0n/2DDNMUgJFs=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=YME3G5Hj860X+OAHm6C9MEneKkhWBunXCSJsilk3UEjWSi36ylu62/LShx1v4UWkI
-	 qyFDLlHrK7zW1W6tyZFp1H0teRV1kfnx0WPYtG/hA1VEIdoG3JnPNilmDsoj1iUBll
-	 CjZNAcjLXmj3mWsYH7sJ3w0iiBNW4lxwIzvs9low9DFH6HKXfkhITi87erCX4mccfi
-	 ULXvjx4s/3GOGmXFVpVkOjcqZqrUia0KnYCbJtWkfLltSz/HgUOrj1Y3md+W2yNdTt
-	 aVUKDVfy9fxDIYm6hhwlR8kjBF1i9y7sPIgkW1SzaWwOFsnEQ06zTo0nFwnHgiXnIF
-	 yW99iALZoQXrA==
-Received: from mailhost.synopsys.com (badc-mailhost3.synopsys.com [10.192.0.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
-	 client-signature RSA-PSS (2048 bits))
-	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
-	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5D2DA40235;
-	Tue, 18 Jun 2024 21:54:08 +0000 (UTC)
-Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (verified OK))
-	by mailhost.synopsys.com (Postfix) with ESMTPS id DB4EDA007A;
-	Tue, 18 Jun 2024 21:54:07 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-	dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.a=rsa-sha256 header.s=selector1 header.b=nuKPX3xq;
-	dkim-atps=neutral
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2043.outbound.protection.outlook.com [104.47.51.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
-	by o365relay-in.synopsys.com (Postfix) with ESMTPS id 3722840132;
-	Tue, 18 Jun 2024 21:54:07 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PiERpuY3"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S7Lm3qIc/1rK6h42EwMyueo2oUrMMOlIxlP9QRA0WwAOMrZfuuBFA0kxHFXGxjJxQTZ342Yr5MZC9DsYo8J4G5Szb7nCsVbL/SDu64bicKPCsfhMOSngB+7jLKICUzlJsrjRHSPNE68ElpylIBynXv9VOpdhdRSwQWt/2bf1UozOh721SvOrAfFlSTsL6WWxnNLOhC69T0B9yo9Iqo8ddo2S/po0Th1YR2c6t2Fy09aIUP/GbkExBS2uWAlhMWIMEcwlIYTdMeJlLpCFsApycgp/6Kfd1qN1PDNy95PVPUgtBlink8Zih/ro2mCw85FBtPdFo6XlA5Ces6J0uOkm1w==
+ b=XZUrO8U/GUp1/LkcF1yHY9tepfM8M9/CzLvPy51g81G1Ddv2bEvKx2TkMizqUWgr8OSNx+atAZ/gpDGdaq/0nRWuY6GXOamQWrw30G0ayyD8Tn0EE3L4iMFjJS97LyEKRA9KaoccUO+wW2X4bhYsJw5XvBxvwx8VB1qjJbu6J0AqVDBQ5Lt3AHIQswc08BQwtbLMSAkRLNMdV3xnUmGcWIUvWpTAr/OJBi9nKPdw1Ysy0yA7dc8KwNQyCVT8tOUlhkPD4vUpxNpvXsWtvnLZ9s8NwbQ6kYDP3x7+rqtU8sPfvZlz67hrOO/42EFPW9SDSw1cx/ab0XdgM9pxX4VbMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Urb0p70Ark8Nb4f4O8BOmzM674rn8V0n/2DDNMUgJFs=;
- b=C5T2Zrjya2xEUtZ/xNoDQEdHfopmIB2Y9gFmVcxR0jTB1b7klDHEM6DQ0OmFSwO0u2BFum4SmeOzLySkuk//MS8z7ISzlmBY+h8AVtF1ohTIH/WzAyY6TYPB/eaiClnxb+QsbI13+adyWl1ksU64y6ATRXpyxR5Vs7/+zYcHYeyNomdIhtfhMbUDD5luNpG7Xy7E2cHTvY0k8qF+HPS2EyR/wjjrOJ1AVvJwc1/sQ69Au+RUaj9a8qPFx3QRbdD2EJExnoOQOIwl/S3Eclgi6MO5VgwrlrRRxmkUaZ+UGxQvvqbMaCmkNbCvlTYyFAhEEz85Y2APvXllupsn9oOl1w==
+ bh=8K/evLQlTA+kCcmXthRa4tT32k7EbFByQpMvdjulQd8=;
+ b=Z9n5d6nBWGByYZ7jfOUHIjGHQpTnSLFGP6wYClGeemzLnLPV9ReDZeTka0HYbeRTDFwnVjwAMipEowtzzk9EV/vg/Tsfi+Mq9f9YFqPAlxkw3AwX4TxY/NnChW+P+CYOoTpcHkKo5BiBSbMSU3G0JylGA7qdYFqc8ld+jcPqMxTHYwXyJSwhyb8SQAWANiWjk0CGqeTlCEZcUHgbug7kIFQTSDU3/C+TZTG3q+CJgJ6yftbly902r0Vbe8TBPqx4r4iZeOjX/6w0UpVVh6hswMuy+X1aVWeYxMAqlD9w3f84mZqWvhKzMln8mZapqNVDtlA7WxtgvpNwK0FSru08IA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Urb0p70Ark8Nb4f4O8BOmzM674rn8V0n/2DDNMUgJFs=;
- b=nuKPX3xqy+QXkOBuCuWfDrlhAbucbZPoejCoCLxED2uoq5fzaZGr5tEh0g/B6Br6VvN847sykRtZ5pOVvmd+/ukHLVuNWo0WubrFhU0rXZfa28AaX0NeX/NnSocSilCVIWcNb4vylSqK8+m0CGP1f7OsyWfaLOEkNb3iPr6VcAE=
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16)
- by DM4PR12MB5819.namprd12.prod.outlook.com (2603:10b6:8:63::22) with
+ bh=8K/evLQlTA+kCcmXthRa4tT32k7EbFByQpMvdjulQd8=;
+ b=PiERpuY3CJq9sYRLDJxN1yNGgQIn8cIfwqnw0y2EC0My3uT1h39tDau+LtrVMGpevEN+Yx8rusvcvtUv3CRgTKOCN00rfmKV4eyXp5CZx5R7G8brt4sBqUJ+M2jYtVWDvfJaB+hYJDmGBa8MTTveY9r92PLf95kMzoLg1AFVwT0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU4PR04MB11008.eurprd04.prod.outlook.com (2603:10a6:10:58d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 21:54:04 +0000
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::3d09:f15f:d888:33a8]) by LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::3d09:f15f:d888:33a8%3]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 21:54:03 +0000
-X-SNPS-Relay: synopsys.com
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To: Meng Li <Meng.Li@windriver.com>
-CC: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "quic_uaggarwa@quicinc.com" <quic_uaggarwa@quicinc.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xu.yang_2@nxp.com" <xu.yang_2@nxp.com>
-Subject: Re: [v2 PATCH] usb: dwc3: core: remove lock of otg mode during gadget
- suspend/resume to avoid deadlock
-Thread-Topic: [v2 PATCH] usb: dwc3: core: remove lock of otg mode during
- gadget suspend/resume to avoid deadlock
-Thread-Index: AQHawS5mXgmtPyyguEiEAyP9uNoV27HOEasA
-Date: Tue, 18 Jun 2024 21:54:03 +0000
-Message-ID: <20240618215356.hw6ar6guxbhlf5y7@synopsys.com>
-References: <20240618031918.2585799-1-Meng.Li@windriver.com>
-In-Reply-To: <20240618031918.2585799-1-Meng.Li@windriver.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV2PR12MB5990:EE_|DM4PR12MB5819:EE_
-x-ms-office365-filtering-correlation-id: 6c824628-f64d-444a-4d31-08dc8fe12b51
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|376011|1800799021|366013|38070700015;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?MHdqQkR2L2dMRlB0UzhpVm55Qy9QVWlxbStmcWdScm9QdlYzMWhaSGpkR0pD?=
- =?utf-8?B?NC93eUVHVXVLUHlRWndxOEFVS011UEFTRWY0dWtxa3RxdlVab2JtR1V5TkhF?=
- =?utf-8?B?MDNLNTA5d2tmM0pweElsSjg4VDdGQ0lreENMbnZPZVBLOVh5MG55S05hbmF1?=
- =?utf-8?B?RW9OZ2RVNElsTXZPK09wWFA4ajJNTTJkZnNBdWJ0b0hyOExTK3Rlb1pFeUw0?=
- =?utf-8?B?VTJQZ2hIbmtJVXJCemg2QmpHc2FnOTgrZmR5MlR5TjNPOWJKMjdEZWtOcXFT?=
- =?utf-8?B?VXc3WU83bHRtRlkrdTM5bE1TM2lQRmFHdFpmeElCaFhLcmQzazlpQkpDeXNT?=
- =?utf-8?B?UW9ZSjdPWEZBMUF5MGRIdzk3NHNGWFhRWHVGRXl5dmd3RFEzeGZtbVNhNDRM?=
- =?utf-8?B?WmhtTkMwUnd2RHUzTkhxUnJna0YvaFVNazg4QndkR3RmdU1uWVpPVUxNUGwz?=
- =?utf-8?B?UUMvNjQ3SmtNQXk2NTB6YWM4Q2JlaVBTYzQ2M2xtWGZsQkZBZFhxZzVzczhr?=
- =?utf-8?B?aGJ0OXlDSmgzZVRDRXZ1UEJiNjdFUnhLYXhyWGdIRC9lS3l0WUdUd1R2RDl0?=
- =?utf-8?B?MEdlcVB1K1dJMnVGaldyVE00RXZsemtuL0FNYmlIejNRWWZrdC82RXlicCt0?=
- =?utf-8?B?MkoveUVqcHRzRGRlSk5LNUtrYm5zUjRxbEFOVlBBWVpXQjBoMXJoZ3ZmZXhU?=
- =?utf-8?B?OEZLY3B0Y2VvaVBFSVZCRGJ6YnRROHBWdGZFSGxYVUtQcFJJb2NBbk5jQmtr?=
- =?utf-8?B?eVU1QTBSeXhjVWJXelFGaThqMk8rTXZoOWpCOFhtcHhrUk01RDE0bE1ZRVg5?=
- =?utf-8?B?WUFuMitrK2EvaG5UWk9iaGJORThiaVNCM0IyRlg1V0NCL1M4Qk9SNE8zSllL?=
- =?utf-8?B?THFwL0hwVE5pVUVTOEVEZGVZQ01uMEs1dnloZVFBUHIyb2Z2bUFnRWxmdUlr?=
- =?utf-8?B?cTFQYVhzQ3kyNVNFT2V5UGpnVmpGWWhVL25obWFMR2lEZ1VRY0swZTVXYzlO?=
- =?utf-8?B?d0c5M2drNG82RWE0QXByb1NaTzB3SytrYnp1SXU5VUNHWHpnc1hBL0QwbXZG?=
- =?utf-8?B?R0Y2Vkh3SHN5TDg5eXJyMWk2YjErK3JyWWR6Tm0wUnRvUy9ERjlLbC9TWEVF?=
- =?utf-8?B?ZmU5L2R4ZXUrME5QSUZ3UjRCdjkzNHVEeXZRRmN5cm9EUkpXZm9zaVp5STVo?=
- =?utf-8?B?NWdSQ0J3R0lseHNYRmZ2Z09xUExubVpxZ3l1dUJwbm1CNkkzeGJIaXoyYlFo?=
- =?utf-8?B?TTVuTnR6QTZ0WS9PdHo0K2sxdTRNTEdGLzYxZUFCNEpOQlF1MXcydG5kOTRT?=
- =?utf-8?B?VEI4S05uSEJMV0ZscFNLOFZETjFaTmVsMTdiN1hGRzQvdkQ1N3BlZDZrQ1FD?=
- =?utf-8?B?K1hYN3hGMzZOdFk1TEJvZm9SSU9FaXRHWUp4ek9veUdsNmhFbzVCbVlheHJa?=
- =?utf-8?B?bHNYRS95d3ZIbDFYMlovWE83VWxNQ2F0eVVLbWN2VWlCYlRRSXlGVGtvOW1i?=
- =?utf-8?B?cnZEZ2FKNlFHUFlkUk9HOGdmbXlRaTRQQW12OVk4ckRUQzcyNlZ4WW9GMW8w?=
- =?utf-8?B?RUtsK00xRTdCRCs2SHcvMFJzSGpPS2NsSUJRM29EdGdSZEJZcGlNZVZ2Ykg1?=
- =?utf-8?B?V1c0TDRud2czQkh6MXpYYVU5aEdwK0ErS0lvMWxvYlNmODF1bThwRjNjUE84?=
- =?utf-8?B?SUdyNEZ4SDJYZk5uMEtxY2ZwczlvZEhvcFhMY0QrcmhER09WZjVQOEY5VGVz?=
- =?utf-8?B?WmRubWVlUXVFSmNZYUIrMlhXak1SUnhLTVhaTEVEbXZyTmlZWnJGVUpqaVF6?=
- =?utf-8?Q?mNJ2oAoNsSe0nGPs++QVS87MGhU+V3m5u8a6I=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(366013)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?emtGZHBGejNXVGdXY1U0TEZETXhOY3hLaVNTVVo4czIvaWlxVVg3LzRDa1FT?=
- =?utf-8?B?R0doU2M1VDZBOE1JWlgxS1RMd2gyUVpWci85SVVxekg0RFBXTHJaU0lHcnhN?=
- =?utf-8?B?QzZiN2ZUcXlGbXZyMlRBY0xGWkNMYTU5ekFCU3B2ZU9jVjNjeXBZb3R2VnFB?=
- =?utf-8?B?VmNpRGR3UEZYV29VUTJRODFqd2I3R3pjTEIzZUNIWjNXRkl3Rmo0bGd1VHFP?=
- =?utf-8?B?QXMzeTF0d3pLanZkSEFzemZ4QjBoUm9CbXY3TkVXbk5kLzNqN3dyS0I5RW9G?=
- =?utf-8?B?RlVTL0VRRHNDZG10ekh1bGZKRzNNOHV2ZEhqREZ4WG9HQ2ZrQ1BlTjhaYS9N?=
- =?utf-8?B?VnF1TWNoSHFZVkVUL2pORVQ4ZVNQZGtYRVBBSWRJNmthR1V3Q0RKUDZhTU8z?=
- =?utf-8?B?RWNLdEZwM0pyeXY5R2xNb2dqUEJPbE8rR0FFUFJpaGxPeWcrUVJscTY3VUky?=
- =?utf-8?B?N2owU2tLNVM3bGhjejBIZ0xmQmY3Y3FvUW9yV0tUbDlNdDZ1c2Zpbm85UVp3?=
- =?utf-8?B?Y1NjcE4yQnJMeCtSc2VEc1lwVktQQXNvMmxBcWpIOERhdXcvTjVqMy8zbEFU?=
- =?utf-8?B?TGhLT2tOZXZSOTFjaDBRMmZoeXRXc3FCejh3UEVPelFKSThFVVBkVjQ2aWtG?=
- =?utf-8?B?ekF0N3dmYlpqa1NieVJwTTAxN3RBRzNLUFNPRFh5NDlOZ2FjVGFtaE1ld01y?=
- =?utf-8?B?VTB0Ykh4TEdQRW5nNTdqR1M2eHlQOU5VYnRRWkh1U2F6Ymk0Wko4RzdYbzJM?=
- =?utf-8?B?Y3ZuaCt2NTMraW5PZVBEeG95WGxkeTJ6VjhwWERNeldZTkI0RFdPSHBsYlVj?=
- =?utf-8?B?c2Z3VFMwM0I0b1RQOEwwYnVwcFZsVXUwcDh3LzcxeFZFRDdkY2p4aHhyTGdM?=
- =?utf-8?B?UFZhNVNVQWNxT0NDeXIvVnRFdUgrVXI3UDJwbVM1RmszN21MSDlPRElPaHdG?=
- =?utf-8?B?OHI2NmhLeWVPdjRNQzNOUjNwdWF5bk9EWlNtb0VWNTFhRWVzK0dEWWx3K21F?=
- =?utf-8?B?ZGl2b21HeW0rTU5MTDd5am10RlRna1RXajJYVnhuRXlGOStlRXVpVXlCRWdX?=
- =?utf-8?B?elJIRDl2c2kva05TV2xGZDFYQVVacndMWnY5cXA3S2FrS09YcDlVOGZZU25P?=
- =?utf-8?B?c1pKaEtBWjAvNEhHWkg1QjNBNC8yUzZsYU1xazNqV2Z4aFNBOVhVNTR3eThw?=
- =?utf-8?B?QXJDS2R0bGN5dTk5eGR0T010ZzVWd1R2czBBd01OVlR2KzdhNGVtbnh3RDBP?=
- =?utf-8?B?eWpHK2RGTDFHcXJmM2l1UmxJUzNlZENNMEtrTERjZ2ZPdTR2VS9IM01OQzNQ?=
- =?utf-8?B?NXgzd0pFZFRmMDNZVWNpZE5sMzU3WEcyRHY1UHEzcnduaXZNNHRxK08wNWNq?=
- =?utf-8?B?S3JWRVBmR1hlVFJFS3RXb3BJNUMyQ21BZ0tOdzZYNExZR0twYWM1endyNVVs?=
- =?utf-8?B?dnp1Q1ZqMUxBeDZXbmFBTk9DQ0NLOHRFM1owNDgySGMzZkcySWx5cHVXMmZM?=
- =?utf-8?B?UERhRW1xcXBSNGxWb3FCVHVQU2tSZFlTdVFjUmZsR2pOc0R4Mjg3YXRVaTBC?=
- =?utf-8?B?STJZdGY3bmdPWU9lSnVnL1VoTTdZL0R3ZlFmczB1Kyt4czNoeFpLUEIwQnUr?=
- =?utf-8?B?L3pYU0VGS29RWVh2bVJWSVZSeUlKT3o2YUUxY0NTS1VrV3loOUlCK2J5RGNo?=
- =?utf-8?B?MSsyUGliM0I0Q25McUFNVDFNWWJabUNRQ2lPRnNIcWJZSlNYNUR4VjkzVmpI?=
- =?utf-8?B?eVdvOWlkc3llZFltS05DN3VJK0VvK2J1SDcxUUNLYmJGL3hGU0xCR2VIVGdV?=
- =?utf-8?B?TVFoalpwanFpTWZGTEdnMjc2Ynh4N0UrSVc5UEhhUVhoSWJXWjM1UVRRNHpq?=
- =?utf-8?B?L0dqdW9vMkFZWGtVUEtCUEYrTjRSNG1RNEpMTHNoRnNzMUg3c28ydjYyeEJk?=
- =?utf-8?B?K0xwWXJFYURDZVFtM2hid2hzbEtqVjJTT0pUdEw2Qnk4MUtlTHpYNEZ2NzJh?=
- =?utf-8?B?dDkwTkFaWWV3cEowam5sb0NGK2UzVWN4a0k0ZWt1WmU5UUhlYkxoSGptUnIw?=
- =?utf-8?B?OEJrbWlJbmcweFZHTnpKbHpsc1p3em9YdEJrWWlvelZUMWVLTldoS2JLK05S?=
- =?utf-8?Q?NGhx5U3JpMejgjoLCQsiH++pl?=
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 21:54:11 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 21:54:11 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Date: Tue, 18 Jun 2024 17:53:46 -0400
+Subject: [PATCH v2 2/2] dt-bindings: net: Convert fsl-fman to yaml
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <6595F3B03A305244A8E9C0F1631A0ACD@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240618-ls_fman-v2-2-f00a82623d8e@nxp.com>
+References: <20240618-ls_fman-v2-0-f00a82623d8e@nxp.com>
+In-Reply-To: <20240618-ls_fman-v2-0-f00a82623d8e@nxp.com>
+To: Yangbo Lu <yangbo.lu@nxp.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Madalin Bucur <madalin.bucur@nxp.com>, 
+ Sean Anderson <sean.anderson@seco.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718747639; l=31822;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=y+AGv642+cjvVIlm1YYGdrJXgyEzPHH4My0jZF3TceM=;
+ b=8D3fFwftBWTGd/ITgJRU2pBvnzvJpmVPKiXTPzS7l00WGt83IJ3FhuOO8fgnFxsxCnROfV01y
+ 28ehjRgbWg3DeINaBSPa2VnxDkCCJQKg5L526n8huFWBciFWJCZqDMW
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BY5PR17CA0004.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	GvwZF2bCnsQ6OHp7mYBukvJxlBwcO1as+/wsCW57WXqgwqm9Kjg81Q7QLQ7PRCf+WVNhohAtOYgJEn6q/FJKp5kQZsbH7IJZI8SEb/RKMu6OUNkCLZ4foZz8ENCLtqMkxPFs7aNwHKB8St/bomtds4/MlPw4Q+UsF5jflvDEq8508cAqmAUejOuZ12o7nVSJZZe+6zI8raDhjZkwnSU01TvL5W7+r6rRaUAckTcCtvCmqb2i9YmHcYg9Mq6udbm4p6TQrtkemeQx9FB8gFDm1mKRs76wzRLNIyj4kNS1L1T5hmiyTQK6dKqJfskHhvCWbZOAFV4KR3uSVQhypHIIdeoZxh2Z6sC7djDpog9CbA+zeZUdkmNIxGrNEOb0R2rDLm5ZvzKZV6Wdg/uhlHlXRW7KzvNUeM0uqCJXLMYl/6R8kaAOolPSFiKItXgvD7cPKMAVKxlpLbBHVN71OarcT3EmXM0GadhEA5bUH4+WlZvBDj8xfzD3/7HiaO7yfaBCP7meCPDY+SkW6QNMB06eTT6EgQ7atjjoj173M6JXlNGNE3Y0mL0hgkcyPnuoPUxry4YWGjLcSP33OOdZv5HJTrrGfHpIbIOV7n/Fz4W6iQtdulIgOD10O/g3GcUOmZoXF5jNT7ptiXDd0CM+6hoDKw==
-X-OriginatorOrg: synopsys.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB11008:EE_
+X-MS-Office365-Filtering-Correlation-Id: f76b1992-e377-4b5a-60f3-08dc8fe12f94
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230037|366013|376011|52116011|1800799021|7416011|921017|38350700011;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?UEhCU1F1U21OaXFpYkMxdmtIbkRCWDF2U1UvV0R2b3o0bmxBVVZpS0YyL2pl?=
+ =?utf-8?B?MWQzTUVCQVdrYWR6cmVHRVRyd0t6QVNPOFFnMGVHMjc3TGVCenpsdlFMSFdJ?=
+ =?utf-8?B?V2pDNXhpWEw2ODFuMDZOME95T0JKWmVPb1NKU2xORWgvQzAzSmlWYlVrdWZx?=
+ =?utf-8?B?T0ZIdUJxOERadVgzdEk5SE9tbXNsZ1ZOM3gwWTFzYTZGMVpzT3U3UE9MTE9W?=
+ =?utf-8?B?ck96N2tTUlprTGRnNXR4b20ybEIzTDFhUVpCU1FnbHJ5d3ZWa0JDY0VkY0c0?=
+ =?utf-8?B?cVVxOCtubTlHRU03MmdlM2Rhem5TclFnNUJDbXdJT0tna3ZrQUt6VnlxUUlp?=
+ =?utf-8?B?alpCNDNoclI5dTJFL3dxMWhGRXJDOFRYb0lldG01VGtBQXNIM2dmbG5kVDkv?=
+ =?utf-8?B?ZjRoZ1ZORmpHN2pIdHFPZnRieFlNNnMyNzVKN3gzV3ZvQVZZNzlVNkVtTGlt?=
+ =?utf-8?B?ZlQ4cVNrTlNPQTdSbUt1RFhFN01RTVJORWlWbjVWMVBQcGQrTVZDWm5vZkhL?=
+ =?utf-8?B?dlZwNytYc3pBUlo5VnUwZlpXNkZxV2tkaUp2Tm5WaDVjV1hRR2ZVeUlZVlNL?=
+ =?utf-8?B?dHhITUMyMEdjRHVQQ0QwWkhqdnRKdlM2NkMvcDN4RDZobTFyV2VKRGxSTjdJ?=
+ =?utf-8?B?dWluZmF1V3ZyVENSRjZHa3M2a1hqM3A0Q2ZrOTFuNXQzU3hGaDkxMk95ZWpT?=
+ =?utf-8?B?ekZvSWIrTXlRU2wxd2xMckVidFBHMXl5anJmY1I4U09JZGlYV1NGTlJrZkZs?=
+ =?utf-8?B?aHFWbUpNbjIzdkhQaUg4WUkraUdNaFNLWjRHYXNRd3djT2o4Ti8rWDNpeDZZ?=
+ =?utf-8?B?dDRmaUdBaHd0eEVrdXpRT1FyL1Y3dytkVHc1WWN0RzZzR3drQkpYa285VFdT?=
+ =?utf-8?B?R05oTGF0ajdiVU1yWTloZVdWMnJLSFl0NTgyVHN1enhGVXlSckUwNjFCbEZD?=
+ =?utf-8?B?ck9xclRFb3NNV0dZWGV3bE9Gc1BrOWhyenhyZU8rMjJlR2piR3ZWdHA5VGND?=
+ =?utf-8?B?elA1VzZJdjhQS1IrdmxuaVJZQVY4NFQzb0pvVFJYT0RpTm4wUlBDeFYrcEJR?=
+ =?utf-8?B?Qjd2YzdCNEZLcjFqNTFqNSt5ZlFzSEZEN0llZ1VORWp1VVBEbTZJRnBGaUs4?=
+ =?utf-8?B?eVF4dHZBV1JLVUR2THZMOG03SVEwaE80VkJ1ZW04c1pMVDZjaTNyRVNSNVBu?=
+ =?utf-8?B?OUdzMVBzRlFSL1pzZzdYWnpwbFViUDZHeThZMHhwU2tsSUZ0QU9STWI3LzZz?=
+ =?utf-8?B?UVFNOHczYWRWajJ2V0JNYkZJSnFhOEtUUDN3aUNEbEozRmxnY0dKakJMYmdr?=
+ =?utf-8?B?WTNqaEVobTFPWTVHby9xNStSMEJLakxVWTJmb09kcEpxSzVhdHlUczZrNWRM?=
+ =?utf-8?B?VUpIaHRZSmRiTG04TkdxVTEyZFlpUjFTNmFnUVZEM1RycERVNkJuZHdBWEdT?=
+ =?utf-8?B?SVh5aGNEMmdBZzkwM1J4M3lqZ0NQb3cxRzM3aVo1QkdTZFdEa25mSHozMGw1?=
+ =?utf-8?B?SUFkc25CeVJrbXFRRnRjMjkxaGcvNzFKeXd3V042WDNCQWdlR3JaOEl2akpp?=
+ =?utf-8?B?UzFWVjZ4QVlrVktTL1Jvb0tHRlpQbVRMRzVpOTBJM2Z6TkhQc3RDemxjdGV2?=
+ =?utf-8?B?b2F0b0poK3RjRjgyeEpPU1lhV1RsRHF6eDFIVy9CdnJ5Mytzek12eWtDMGtR?=
+ =?utf-8?B?OGsxVm1QYjFJdjBTQ0dsUXJHQnN0RFVHb0ZqdzA3ZDZOb1NJVitubHFxWUUy?=
+ =?utf-8?B?Qy9MZWRIeUxPR0pmOTFoNG1jS3RRdlg0K0NZbzVzd0dmRnZYbTU5ZkVnMjBH?=
+ =?utf-8?B?eXZaUUlKbGVSQjIrUUdDdz09?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(52116011)(1800799021)(7416011)(921017)(38350700011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?SUdFS3VDa2NHeHZvU3ZmUW4zd0M2UFUyY1dJQWw0TFRsSEV0T1p1QU5xakkw?=
+ =?utf-8?B?bmhjT2FIVVRoK0s0SmZvcUV4M1Q1MENmc0x3QzVVOC94U3VUckxOTHlGWVA0?=
+ =?utf-8?B?Ulo1b1Y2ZW40dEo4UHNtRDVEOWx2NENGZlZrMWFZSG53UnBIeFBIU3VnbFg1?=
+ =?utf-8?B?Qjl4OFQ3US9EMUVVZTF2L1hsWUtXc2FENzJlNlV4ZkZNUjVYblBaOWZzUWc4?=
+ =?utf-8?B?OTFDdnRhOVd0WGRERVVqOXBzN2VPYVF6dnAyNHVEK24vUHBkRElwMDVKZE9k?=
+ =?utf-8?B?cFhUL1BSdjREZ2VzdjVNcXUyUm9EODNQOXFpNzd6aC8vZ0UrY3VXOUFEUlEz?=
+ =?utf-8?B?cVAxKy80QW9zQnRVeUtWVitWY0hYWWJ3VVZ3MHZnMXprYjZNWnpHakdlZGpv?=
+ =?utf-8?B?YmJSQXdLRlZsdkhES201b0YwWFQ4MXFROE9NODVvbjJjTHRSbWR3bFBvL21T?=
+ =?utf-8?B?Y1pCR3h6VUF3ckZOZURHbmRQcUprSkptVVpPQ3A2SmJaUTNqd25WeXpMZFR4?=
+ =?utf-8?B?YnNkOEc5clZsN0ZKSUVpZHdOQ1BxMytmNTJTNSsyRHg2bFFPNVhjekJIWk84?=
+ =?utf-8?B?UHI0R096UloveFhaTmxmTExRRGgyZHFGY2hCMzRseVVQc05mczY3b1UzVTg5?=
+ =?utf-8?B?Z0VobXN2TG1vMDhwTXJ3RXJBQnRNVTRRZFBjaWFyNXd1OFhmN3ZtaVg2QllR?=
+ =?utf-8?B?cjVLZUI2SHMxZUdNZ1ZnTThvd3A2d2lLdWVVRXRRTnBIWENNWHI4TWJrN3FS?=
+ =?utf-8?B?MGFBS2cwTVQvSmxVZWhaV042Q2tRSU5JRmhMUlJuZHVDSEozVU5kYk5yckhS?=
+ =?utf-8?B?NEJDNjl3Qk5WS1VXZGdLOFhNeFhmMjcwNnc2KytHU09KdzBPK3hOSnlSTDlr?=
+ =?utf-8?B?eSs1WGoycXA4MjdQYzhJVnJDOGxzSWZKUEUxYjlSK1ZaUktGNlVoMVc4aXFw?=
+ =?utf-8?B?dU4vVFNXS3ZYSCs5bG13bDRXMm9CR0IrczAzSmRCK050b3BCczZMczhyVlEw?=
+ =?utf-8?B?UzFIOWh1YzV0bXdrMDZCdHRlaG00eUpnRm1qc0IyNVVEVGNoTmdwSFdYSXQ4?=
+ =?utf-8?B?S2U5QUhmbGxVUms2YTlPd2xmL1VVTitOUWt2cHk5anVJVnlGMFdvdmR3Tmlv?=
+ =?utf-8?B?OGYyWjRPRCtGdStVZjNhTC90NXlIeCt3Y2Z5YmIxYndPSXVpckVqTlZmeUtq?=
+ =?utf-8?B?M0o4cFNndlNPeUVHb2ZhYStScFpSWHVxNnFwdU1BK2NuMTN5T3dqNUcrT2gr?=
+ =?utf-8?B?ZWRMS3pyUEJqMHRRVUEwN0dpTG9ibjdkelVhWFV4cjZBa0RRY3kxNVpsM29i?=
+ =?utf-8?B?b1dkUmJ6R1g1dllwek4ySmo5WFplNW1NUzFOaVhld25kdmtSaWhjazRPZU4r?=
+ =?utf-8?B?S1Y2bHVOUXc3bG4wTmZVNXI1Y1A3UGxUZWplM0psVWp0L0Fkc3RqUU9yckh1?=
+ =?utf-8?B?RGR6ODVSeFMvTUhNMUhoQ3V4WCtJd3NFSXNneG41dGtQQkpjTlozL1R6RFRF?=
+ =?utf-8?B?R3RWVWVONXg0T3hsWTh4V0p0RGlicm1MdlJwSTgzbitJY1ZmVmQwdWhLbitv?=
+ =?utf-8?B?UnE0NEdUN1BWb2o1aXhvZnNqVlU3ZGhwcER5ajZlSTd5clhsaWNQd2JzL0VZ?=
+ =?utf-8?B?SGp0Q0FmUkppeHpvVzdmNVA2REJTZFdBRlpNTkErTklPRWdvWTNEWDBESG11?=
+ =?utf-8?B?TXk2dTlTWG9QQTRlS2ZIU3hwOURndzY4ZFhqdFRHaFYxRys0ZFMyOUgyNy9y?=
+ =?utf-8?B?TE5Hcy9hUXpIVlRQZzRGUFczVnAvNEhSMTZCN2s5eWVuVzZrSTNHdkM0eHlX?=
+ =?utf-8?B?THV1Lzl6Y2xUZVZLaXZ3a2wyWnZ5R3FkTkJXb1IwWXlSQnhnY0Z4dDg2QjMr?=
+ =?utf-8?B?S2doNzJkTmlvMFczcStUNkxnZElSMk91N1hkQUxpTEJaNjZuWkVWUTVmQW1U?=
+ =?utf-8?B?OG90RDZCMEJqZ0RlT211cXlkUVQ3OS8vOTRobjRsWVEzTm5iSU9UY21RQTNW?=
+ =?utf-8?B?bFZobUtIMERtNXFpbk03aXFWQmlscVFiTzBSaEpyTWdaWHAvdEoyd3BPS0tM?=
+ =?utf-8?B?bTVGbDZaQjBOYnI1bDg2WkN6Z0RESjlocVNYVlNtdHZFL2xUZlZOcC9ENjFR?=
+ =?utf-8?Q?Y6mIwP1ywAnnXYEYme5J2x2/v?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f76b1992-e377-4b5a-60f3-08dc8fe12f94
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c824628-f64d-444a-4d31-08dc8fe12b51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2024 21:54:03.6444
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 21:54:11.0783
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C5vQhwfPHN1bqWjFiqcnG8770IVtW6on408Rk3HvBCNdMhleXXhVvhZgizPL/sTXNPDBnDwdeEvesXjDs0VfmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5819
-X-Proofpoint-GUID: GFNjT2gNlLwXbhUsR1-bBXDBv94nkC1q
-X-Proofpoint-ORIG-GUID: GFNjT2gNlLwXbhUsR1-bBXDBv94nkC1q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_04,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam policy=outbound_active_cloned score=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 adultscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406180161
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NOblCrtdBY+km20kuVAVa2qD+/ITFqgVTHGhIrXWWFicTnWmsLlJcb+d0Ym5DKWdhIru1Aa08aMbJk7nGNDweQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11008
 
-T24gVHVlLCBKdW4gMTgsIDIwMjQsIE1lbmcgTGkgd3JvdGU6DQo+IFdoZW4gY29uZmlnIENPTkZJ
-R19VU0JfRFdDM19EVUFMX1JPTEUgaXMgc2VsZWN0ZWQsIGFuZCB0cmlnZ2VyIHN5c3RlbQ0KPiB0
-byBlbnRlciBzdXNwZW5kIHN0YXR1cyB3aXRoIGJlbG93IGNvbW1hbmQ6DQo+IGVjaG8gbWVtID4g
-L3N5cy9wb3dlci9zdGF0ZQ0KPiBUaGVyZSB3aWxsIGJlIGEgZGVhZGxvY2sgaXNzdWUgb2NjdXJy
-aW5nLiBEZXRhaWxlZCBpbnZva2luZyBwYXRoIGFzDQo+IGJlbG93Og0KPiBkd2MzX3N1c3BlbmRf
-Y29tbW9uKCkNCj4gICAgIHNwaW5fbG9ja19pcnFzYXZlKCZkd2MtPmxvY2ssIGZsYWdzKTsgICAg
-ICAgICAgICAgIDwtLSAxc3QNCj4gICAgIGR3YzNfZ2FkZ2V0X3N1c3BlbmQoZHdjKTsNCj4gICAg
-ICAgICBkd2MzX2dhZGdldF9zb2Z0X2Rpc2Nvbm5lY3QoZHdjKTsNCj4gICAgICAgICAgICAgc3Bp
-bl9sb2NrX2lycXNhdmUoJmR3Yy0+bG9jaywgZmxhZ3MpOyAgICAgIDwtLSAybmQNCj4gVGhpcyBp
-c3N1ZSBpcyBleHBvc2VkIGJ5IGNvbW1pdCBjN2ViZDgxNDllZTUgKCJ1c2I6IGR3YzM6IGdhZGdl
-dDogRml4DQo+IE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBpbiBkd2MzX2dhZGdldF9zdXNwZW5k
-IikgdGhhdCByZW1vdmVzIHRoZSBjb2RlDQo+IG9mIGNoZWNraW5nIHdoZXRoZXIgZHdjLT5nYWRn
-ZXRfZHJpdmVyIGlzIE5VTEwgb3Igbm90LiBJdCBjYXVzZXMgdGhlDQo+IGZvbGxvd2luZyBjb2Rl
-IGlzIGV4ZWN1dGVkIGFuZCBkZWFkbG9jayBvY2N1cnMgd2hlbiB0cnlpbmcgdG8gZ2V0IHRoZQ0K
-PiBzcGlubG9jay4gSW4gZmFjdCwgdGhlIHJvb3QgY2F1c2UgaXMgdGhlIGNvbW1pdCA1MjY1Mzk3
-Zjk0NDIoInVzYjogZHdjMzoNCj4gUmVtb3ZlIERXQzMgbG9ja2luZyBkdXJpbmcgZ2FkZ2V0IHN1
-c3BlbmQvcmVzdW1lIikgdGhhdCBmb3Jnb3QgdG8gcmVtb3ZlDQo+IHRoZSBsb2NrIG9mIG90ZyBt
-b2RlLiBTbywgcmVtb3ZlIHRoZSByZWR1bmRhbnQgbG9jayBvZiBvdGcgbW9kZSBkdXJpbmcNCj4g
-Z2FkZ2V0IHN1c3BlbmQvcmVzdW1lLg0KPiANCj4gRml4ZXM6IDUyNjUzOTdmOTQ0MiAoInVzYjog
-ZHdjMzogUmVtb3ZlIERXQzMgbG9ja2luZyBkdXJpbmcgZ2FkZ2V0IHN1c3BlbmQvcmVzdW1lIikN
-Cj4gQ2M6IFh1IFlhbmcgPHh1LnlhbmdfMkBueHAuY29tPg0KPiBDYzogc3RhYmxlQHZnZXIua2Vy
-bmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBNZW5nIExpIDxNZW5nLkxpQHdpbmRyaXZlci5jb20+
-DQo+IA0KPiAtLS0NCj4gdjEtPnYyOg0KPiAgLSBpbXByb3ZlIGNvbW1pdCBsb2csIGNvcnJlY3Qg
-dGhlIEZpeGVzIGNvbW1pdCBpZC4NCj4gDQo+IC0tLQ0KPiAgZHJpdmVycy91c2IvZHdjMy9jb3Jl
-LmMgfCA2IC0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgZGVsZXRpb25zKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMgYi9kcml2ZXJzL3VzYi9kd2MzL2Nv
-cmUuYw0KPiBpbmRleCA3ZWU2MWE4OTUyMGIuLjlkNDdjM2FhNTc3NyAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy91c2IvZHdjMy9jb3JlLmMNCj4gKysrIGIvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMN
-Cj4gQEAgLTIyNTAsNyArMjI1MCw2IEBAIHN0YXRpYyBpbnQgZHdjM19jb3JlX2luaXRfZm9yX3Jl
-c3VtZShzdHJ1Y3QgZHdjMyAqZHdjKQ0KPiAgDQo+ICBzdGF0aWMgaW50IGR3YzNfc3VzcGVuZF9j
-b21tb24oc3RydWN0IGR3YzMgKmR3YywgcG1fbWVzc2FnZV90IG1zZykNCj4gIHsNCj4gLQl1bnNp
-Z25lZCBsb25nCWZsYWdzOw0KPiAgCXUzMiByZWc7DQo+ICAJaW50IGk7DQo+ICANCj4gQEAgLTIy
-OTMsOSArMjI5Miw3IEBAIHN0YXRpYyBpbnQgZHdjM19zdXNwZW5kX2NvbW1vbihzdHJ1Y3QgZHdj
-MyAqZHdjLCBwbV9tZXNzYWdlX3QgbXNnKQ0KPiAgCQkJYnJlYWs7DQo+ICANCj4gIAkJaWYgKGR3
-Yy0+Y3VycmVudF9vdGdfcm9sZSA9PSBEV0MzX09UR19ST0xFX0RFVklDRSkgew0KPiAtCQkJc3Bp
-bl9sb2NrX2lycXNhdmUoJmR3Yy0+bG9jaywgZmxhZ3MpOw0KPiAgCQkJZHdjM19nYWRnZXRfc3Vz
-cGVuZChkd2MpOw0KPiAtCQkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZHdjLT5sb2NrLCBmbGFn
-cyk7DQo+ICAJCQlzeW5jaHJvbml6ZV9pcnEoZHdjLT5pcnFfZ2FkZ2V0KTsNCj4gIAkJfQ0KPiAg
-DQo+IEBAIC0yMzEyLDcgKzIzMDksNiBAQCBzdGF0aWMgaW50IGR3YzNfc3VzcGVuZF9jb21tb24o
-c3RydWN0IGR3YzMgKmR3YywgcG1fbWVzc2FnZV90IG1zZykNCj4gIA0KPiAgc3RhdGljIGludCBk
-d2MzX3Jlc3VtZV9jb21tb24oc3RydWN0IGR3YzMgKmR3YywgcG1fbWVzc2FnZV90IG1zZykNCj4g
-IHsNCj4gLQl1bnNpZ25lZCBsb25nCWZsYWdzOw0KPiAgCWludAkJcmV0Ow0KPiAgCXUzMgkJcmVn
-Ow0KPiAgCWludAkJaTsNCj4gQEAgLTIzNjYsOSArMjM2Miw3IEBAIHN0YXRpYyBpbnQgZHdjM19y
-ZXN1bWVfY29tbW9uKHN0cnVjdCBkd2MzICpkd2MsIHBtX21lc3NhZ2VfdCBtc2cpDQo+ICAJCWlm
-IChkd2MtPmN1cnJlbnRfb3RnX3JvbGUgPT0gRFdDM19PVEdfUk9MRV9IT1NUKSB7DQo+ICAJCQlk
-d2MzX290Z19ob3N0X2luaXQoZHdjKTsNCj4gIAkJfSBlbHNlIGlmIChkd2MtPmN1cnJlbnRfb3Rn
-X3JvbGUgPT0gRFdDM19PVEdfUk9MRV9ERVZJQ0UpIHsNCj4gLQkJCXNwaW5fbG9ja19pcnFzYXZl
-KCZkd2MtPmxvY2ssIGZsYWdzKTsNCj4gIAkJCWR3YzNfZ2FkZ2V0X3Jlc3VtZShkd2MpOw0KPiAt
-CQkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZHdjLT5sb2NrLCBmbGFncyk7DQo+ICAJCX0NCj4g
-IA0KPiAgCQlicmVhazsNCj4gLS0gDQo+IDIuMzQuMQ0KPiANCg0KRGlkIHlvdSB1c2UgImdpdCBm
-b3JtYXQtcGF0Y2ggLXYiPyBUaGUgJHN1YmplY3QgdmVyc2lvbiBwcmVmaXggb3JkZXIgaXMNCmRp
-ZmZlcmVudC4gSW4gYW55IGNhc2UsDQoNCkFja2VkLWJ5OiBUaGluaCBOZ3V5ZW4gPFRoaW5oLk5n
-dXllbkBzeW5vcHN5cy5jb20+DQoNClRoYW5rcywNClRoaW5o
+Convert fsl-fman from txt to yaml format and split it fsl,fman.yam,
+fsl,fman-port.yaml, fsl-muram.yaml, fsl-mdio.yaml.
+
+Addition changes:
+fsl,fman.yaml:
+  - Fixed interrupts in example.
+  - Fixed ethernet@e8000 miss } in example.
+  - ptp-timer add label in example.
+  - Ref to new fsl,fman*.yaml.
+  - Reorder property in example.
+  - Keep only one example.
+  - Add const for #address-cells and #size-cells.
+  - Use defined interrupt type.
+  - ptp example use node name phc.
+
+fsl,fman-port:
+  - Keep only one example.
+
+fsl,fman-mdio:
+  - Add little-endian property.
+  - Add ref to mdio.yaml.
+  - Remove suppress-preamble.
+  - Add #address-cells and #size-cells in example.
+  - Remove clock-frequency, which already describe in mmio.yaml.
+
+fsl,muram.yaml:
+  - Add reg property.
+  - Remove range property.
+  - Use reg instead of range in example.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+---
+Change from v1 to v2
+- Fix make refcheckdocs warning.
+- remove ranges in fsl,muram.yaml and all examples.
+- Only keep one example
+- Add const for #address-cells and #size-cells.
+- Compatible is always the first property. reg follows, third ranges.
+- Using define interrupt type
+---
+ .../devicetree/bindings/net/fsl,fman-mdio.yaml     | 123 +++++
+ .../devicetree/bindings/net/fsl,fman-muram.yaml    |  40 ++
+ .../devicetree/bindings/net/fsl,fman-port.yaml     |  75 +++
+ .../devicetree/bindings/net/fsl,fman.yaml          | 204 ++++++++
+ Documentation/devicetree/bindings/net/fsl-fman.txt | 548 ---------------------
+ MAINTAINERS                                        |   2 +-
+ 6 files changed, 443 insertions(+), 549 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/fsl,fman-mdio.yaml b/Documentation/devicetree/bindings/net/fsl,fman-mdio.yaml
+new file mode 100644
+index 0000000000000..6b2c0aa407a23
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl,fman-mdio.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/fsl,fman-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Frame Manager MDIO Device
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description: FMan MDIO Node.
++  The MDIO is a bus to which the PHY devices are connected.
++
++properties:
++  compatible:
++    enum:
++      - fsl,fman-mdio
++      - fsl,fman-xmdio
++      - fsl,fman-memac-mdio
++    description:
++      Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
++      Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
++      Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
++      FMan v3.
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: A reference to the input clock of the controller
++          from which the MDC frequency is derived.
++
++  interrupts:
++    maxItems: 1
++
++  fsl,fman-internal-mdio:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Fman has internal MDIO for internal PCS(Physical
++      Coding Sublayer) PHYs and external MDIO for external PHYs.
++      The settings and programming routines for internal/external
++      MDIO are different. Must be included for internal MDIO.
++
++  fsl,erratum-a009885:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: Indicates the presence of the A009885
++      erratum describing that the contents of MDIO_DATA may
++      become corrupt unless it is read within 16 MDC cycles
++      of MDIO_CFG[BSY] being cleared, when performing an
++      MDIO read operation.
++
++  fsl,erratum-a011043:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Indicates the presence of the A011043 erratum
++      describing that the MDIO_CFG[MDIO_RD_ER] bit may be falsely
++      set when reading internal PCS registers. MDIO reads to
++      internal PCS registers may result in having the
++      MDIO_CFG[MDIO_RD_ER] bit set, even when there is no error and
++      read data (MDIO_DATA[MDIO_DATA]) is correct.
++      Software may get false read error when reading internal
++      PCS registers through MDIO. As a workaround, all internal
++      MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
++
++      For internal PHY device on internal mdio bus, a PHY node should be created.
++      See the definition of the PHY node in booting-without-of.txt for an
++      example of how to define a PHY (Internal PHY has no interrupt line).
++      - For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
++      - For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY.
++        The PCS PHY address should correspond to the value of the appropriate
++        MDEV_PORT.
++
++  little-endian:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      IP block is little-endian mode. The default endian mode is big-endian.
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - $ref: mdio.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    mdio@f1000 {
++        compatible = "fsl,fman-xmdio";
++        reg = <0xf1000 0x1000>;
++        interrupts = <101 2 0 0>;
++    };
++
++  - |
++    mdio@e3120 {
++        compatible = "fsl,fman-mdio";
++        reg = <0xe3120 0xee0>;
++        fsl,fman-internal-mdio;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tbi-phy@8 {
++            reg = <0x8>;
++            device_type = "tbi-phy";
++        };
++    };
++
++  - |
++    mdio@f1000 {
++        compatible = "fsl,fman-memac-mdio";
++        reg = <0xf1000 0x1000>;
++        fsl,fman-internal-mdio;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pcsphy6: ethernet-phy@0 {
++            reg = <0x0>;
++        };
++    };
++
+diff --git a/Documentation/devicetree/bindings/net/fsl,fman-muram.yaml b/Documentation/devicetree/bindings/net/fsl,fman-muram.yaml
+new file mode 100644
+index 0000000000000..aa71acc7fa5b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl,fman-muram.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/fsl,fman-muram.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Frame Manager MURAM Device
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description: |
++  FMan Internal memory - shared between all the FMan modules.
++  It contains data structures that are common and written to or read by
++  the modules.
++
++  FMan internal memory is split into the following parts:
++    Packet buffering (Tx/Rx FIFOs)
++    Frames internal context
++
++properties:
++  compatible:
++    enum:
++      - fsl,fman-muram
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    muram@0 {
++        compatible = "fsl,fman-muram";
++        reg = <0x0 0x28000>;
++    };
+diff --git a/Documentation/devicetree/bindings/net/fsl,fman-port.yaml b/Documentation/devicetree/bindings/net/fsl,fman-port.yaml
+new file mode 100644
+index 0000000000000..9de445307830d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl,fman-port.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/fsl,fman-port.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Frame Manager Port Device
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description: |
++  The Frame Manager (FMan) supports several types of hardware ports:
++    Ethernet receiver (RX)
++    Ethernet transmitter (TX)
++    Offline/Host command (O/H)
++
++properties:
++  compatible:
++    enum:
++      - fsl,fman-v2-port-oh
++      - fsl,fman-v2-port-rx
++      - fsl,fman-v2-port-tx
++      - fsl,fman-v3-port-oh
++      - fsl,fman-v3-port-rx
++      - fsl,fman-v3-port-tx
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Specifies the hardware port id.
++      Each hardware port on the FMan has its own hardware PortID.
++      Super set of all hardware Port IDs available at FMan Reference
++      Manual under "FMan Hardware Ports in Freescale Devices" table.
++
++      Each hardware port is assigned a 4KB, port-specific page in
++      the FMan hardware port memory region (which is part of the
++      FMan memory map). The first 4 KB in the FMan hardware ports
++      memory region is used for what are called common registers.
++      The subsequent 63 4KB pages are allocated to the hardware
++      ports.
++      The page of a specific port is determined by the cell-index.
++
++  reg:
++    items:
++      - description: There is one reg region describing the port
++          configuration registers.
++
++  fsl,fman-10g-port:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: The default port rate is 1G.
++      If this property exists, the port is s 10G port.
++
++  fsl,fman-best-effort-port:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: The default port rate is 1G.
++      Can be defined only if 10G-support is set.
++      This property marks a best-effort 10G port (10G port that
++      may not be capable of line rate).
++
++required:
++  - compatible
++  - reg
++  - cell-index
++
++additionalProperties: false
++
++examples:
++  - |
++    port@a8000 {
++        compatible = "fsl,fman-v2-port-tx";
++        reg = <0xa8000 0x1000>;
++        cell-index = <0x28>;
++    };
++
+diff --git a/Documentation/devicetree/bindings/net/fsl,fman.yaml b/Documentation/devicetree/bindings/net/fsl,fman.yaml
+new file mode 100644
+index 0000000000000..7908f67413dea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl,fman.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/fsl,fman.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Frame Manager Device
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description:
++  Due to the fact that the FMan is an aggregation of sub-engines (ports, MACs,
++  etc.) the FMan node will have child nodes for each of them.
++
++properties:
++  compatible:
++    enum:
++      - fsl,fman
++    description:
++      FMan version can be determined via FM_IP_REV_1 register in the
++      FMan block. The offset is 0xc4 from the beginning of the
++      Frame Processing Manager memory map (0xc3000 from the
++      beginning of the FMan node).
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Specifies the index of the FMan unit.
++
++      The cell-index value may be used by the SoC, to identify the
++      FMan unit in the SoC memory map. In the table below,
++      there's a description of the cell-index use in each SoC:
++
++      - P1023:
++      register[bit]      FMan unit  cell-index
++      ============================================================
++      DEVDISR[1]      1    0
++
++      - P2041, P3041, P4080 P5020, P5040:
++      register[bit]      FMan unit  cell-index
++      ============================================================
++      DCFG_DEVDISR2[6]    1    0
++      DCFG_DEVDISR2[14]    2    1
++        (Second FM available only in P4080 and P5040)
++
++      - B4860, T1040, T2080, T4240:
++      register[bit]      FMan unit  cell-index
++      ============================================================
++      DCFG_CCSR_DEVDISR2[24]    1    0
++      DCFG_CCSR_DEVDISR2[25]    2    1
++        (Second FM available only in T4240)
++
++      DEVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
++      the specific SoC "Device Configuration/Pin Control" Memory
++      Map.
++
++  reg:
++    items:
++      - description: BMI configuration registers.
++      - description: QMI configuration registers.
++      - description: DMA configuration registers.
++      - description: FPM configuration registers.
++      - description: FMan controller configuration registers.
++    minItems: 1
++
++  ranges: true
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: fmanclk
++
++  interrupts:
++    items:
++      - description: The first element is associated with the event interrupts.
++      - description: the second element is associated with the error interrupts.
++
++  fsl,qman-channel-range:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      Specifies the range of the available dedicated
++      channels in the FMan. The first cell specifies the beginning
++      of the range and the second cell specifies the number of
++      channels
++    items:
++      - description: The first cell specifies the beginning of the range.
++      - description: |
++          The second cell specifies the number of channels.
++          Further information available at:
++          "Work Queue (WQ) Channel Assignments in the QMan" section
++          in DPAA Reference Manual.
++
++  fsl,qman:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: See soc/fsl/qman.txt
++
++  fsl,bman:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: See soc/fsl/bman.txt
++
++  fsl,erratum-a050385:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: A boolean property. Indicates the presence of the
++      erratum A050385 which indicates that DMA transactions that are
++      split can result in a FMan lock.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++patternProperties:
++  '^muram@[a-f0-9]+$':
++    $ref: fsl,fman-muram.yaml
++
++  '^port@[a-f0-9]+$':
++    $ref: fsl,fman-port.yaml
++
++  '^ethernet@[a-f0-9]+$':
++    $ref: fsl,fman-dtsec.yaml
++
++  '^mdio@[a-f0-9]+$':
++    $ref: fsl,fman-mdio.yaml
++
++  '^phc@[a-f0-9]+$':
++    $ref: /schemas/ptp/fsl,ptp.yaml
++
++required:
++  - compatible
++  - cell-index
++  - reg
++  - ranges
++  - clocks
++  - clock-names
++  - interrupts
++  - fsl,qman-channel-range
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    fman@400000 {
++        compatible = "fsl,fman";
++        reg = <0x400000 0x100000>;
++        ranges = <0 0x400000 0x100000>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        cell-index = <1>;
++        clocks = <&fman_clk>;
++        clock-names = "fmanclk";
++        interrupts = <96 IRQ_TYPE_EDGE_FALLING>,
++                     <16 IRQ_TYPE_EDGE_FALLING>;
++        fsl,qman-channel-range = <0x40 0xc>;
++
++        muram@0 {
++            compatible = "fsl,fman-muram";
++            reg = <0x0 0x28000>;
++        };
++
++        port@81000 {
++            cell-index = <1>;
++            compatible = "fsl,fman-v2-port-oh";
++            reg = <0x81000 0x1000>;
++        };
++
++        fman1_rx_0x8: port@88000 {
++            cell-index = <0x8>;
++            compatible = "fsl,fman-v2-port-rx";
++            reg = <0x88000 0x1000>;
++        };
++
++        fman1_tx_0x28: port@a8000 {
++            cell-index = <0x28>;
++            compatible = "fsl,fman-v2-port-tx";
++            reg = <0xa8000 0x1000>;
++        };
++
++        ethernet@e0000 {
++            compatible = "fsl,fman-dtsec";
++            cell-index = <0>;
++            reg = <0xe0000 0x1000>;
++            ptp-timer = <&ptp_timer>;
++            fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
++            tbi-handle = <&tbi5>;
++        };
++
++        ptp_timer: phc@fe000 {
++            compatible = "fsl,fman-ptp-timer";
++            reg = <0xfe000 0x1000>;
++            interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
++        };
++
++        mdio@f1000 {
++            compatible = "fsl,fman-xmdio";
++            reg = <0xf1000 0x1000>;
++            interrupts = <101 IRQ_TYPE_EDGE_FALLING>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
+deleted file mode 100644
+index 5e02b4b286f67..0000000000000
+--- a/Documentation/devicetree/bindings/net/fsl-fman.txt
++++ /dev/null
+@@ -1,548 +0,0 @@
+-=============================================================================
+-Freescale Frame Manager Device Bindings
+-
+-CONTENTS
+-  - FMan Node
+-  - FMan Port Node
+-  - FMan MURAM Node
+-  - FMan dTSEC/XGEC/mEMAC Node
+-  - FMan IEEE 1588 Node
+-  - FMan MDIO Node
+-  - Example
+-
+-=============================================================================
+-FMan Node
+-
+-DESCRIPTION
+-
+-Due to the fact that the FMan is an aggregation of sub-engines (ports, MACs,
+-etc.) the FMan node will have child nodes for each of them.
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: Must include "fsl,fman"
+-		FMan version can be determined via FM_IP_REV_1 register in the
+-		FMan block. The offset is 0xc4 from the beginning of the
+-		Frame Processing Manager memory map (0xc3000 from the
+-		beginning of the FMan node).
+-
+-- cell-index
+-		Usage: required
+-		Value type: <u32>
+-		Definition: Specifies the index of the FMan unit.
+-
+-		The cell-index value may be used by the SoC, to identify the
+-		FMan unit in the SoC memory map. In the table below,
+-		there's a description of the cell-index use in each SoC:
+-
+-		- P1023:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DEVDISR[1]			1		0
+-
+-		- P2041, P3041, P4080 P5020, P5040:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DCFG_DEVDISR2[6]		1		0
+-		DCFG_DEVDISR2[14]		2		1
+-			(Second FM available only in P4080 and P5040)
+-
+-		- B4860, T1040, T2080, T4240:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DCFG_CCSR_DEVDISR2[24]		1		0
+-		DCFG_CCSR_DEVDISR2[25]		2		1
+-			(Second FM available only in T4240)
+-
+-		DEVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
+-		the specific SoC "Device Configuration/Pin Control" Memory
+-		Map.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property. Specifies the offset of the
+-		following configuration registers:
+-		- BMI configuration registers.
+-		- QMI configuration registers.
+-		- DMA configuration registers.
+-		- FPM configuration registers.
+-		- FMan controller configuration registers.
+-
+-- ranges
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-- clocks
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: phandle for the fman input clock.
+-
+-- clock-names
+-		usage: required
+-		Value type: <stringlist>
+-		Definition: "fmanclk" for the fman input clock.
+-
+-- interrupts
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A pair of IRQs are specified in this property.
+-		The first element is associated with the event interrupts and
+-		the second element is associated with the error interrupts.
+-
+-- fsl,qman-channel-range
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: Specifies the range of the available dedicated
+-		channels in the FMan. The first cell specifies the beginning
+-		of the range and the second cell specifies the number of
+-		channels.
+-		Further information available at:
+-		"Work Queue (WQ) Channel Assignments in the QMan" section
+-		in DPAA Reference Manual.
+-
+-- fsl,qman
+-- fsl,bman
+-		Usage: required
+-		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
+-
+-- fsl,erratum-a050385
+-		Usage: optional
+-		Value type: boolean
+-		Definition: A boolean property. Indicates the presence of the
+-		erratum A050385 which indicates that DMA transactions that are
+-		split can result in a FMan lock.
+-
+-=============================================================================
+-FMan MURAM Node
+-
+-DESCRIPTION
+-
+-FMan Internal memory - shared between all the FMan modules.
+-It contains data structures that are common and written to or read by
+-the modules.
+-FMan internal memory is split into the following parts:
+-	Packet buffering (Tx/Rx FIFOs)
+-	Frames internal context
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: Must include "fsl,fman-muram"
+-
+-- ranges
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-		Specifies the multi-user memory offset and the size within
+-		the FMan.
+-
+-EXAMPLE
+-
+-muram@0 {
+-	compatible = "fsl,fman-muram";
+-	ranges = <0 0x000000 0x28000>;
+-};
+-
+-=============================================================================
+-FMan Port Node
+-
+-DESCRIPTION
+-
+-The Frame Manager (FMan) supports several types of hardware ports:
+-	Ethernet receiver (RX)
+-	Ethernet transmitter (TX)
+-	Offline/Host command (O/H)
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include one of the following:
+-			- "fsl,fman-v2-port-oh" for FManV2 OH ports
+-			- "fsl,fman-v2-port-rx" for FManV2 RX ports
+-			- "fsl,fman-v2-port-tx" for FManV2 TX ports
+-			- "fsl,fman-v3-port-oh" for FManV3 OH ports
+-			- "fsl,fman-v3-port-rx" for FManV3 RX ports
+-			- "fsl,fman-v3-port-tx" for FManV3 TX ports
+-
+-- cell-index
+-		Usage: required
+-		Value type: <u32>
+-		Definition: Specifies the hardware port id.
+-		Each hardware port on the FMan has its own hardware PortID.
+-		Super set of all hardware Port IDs available at FMan Reference
+-		Manual under "FMan Hardware Ports in Freescale Devices" table.
+-
+-		Each hardware port is assigned a 4KB, port-specific page in
+-		the FMan hardware port memory region (which is part of the
+-		FMan memory map). The first 4 KB in the FMan hardware ports
+-		memory region is used for what are called common registers.
+-		The subsequent 63 4KB pages are allocated to the hardware
+-		ports.
+-		The page of a specific port is determined by the cell-index.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: There is one reg region describing the port
+-		configuration registers.
+-
+-- fsl,fman-10g-port
+-		Usage: optional
+-		Value type: boolean
+-		Definition: The default port rate is 1G.
+-		If this property exists, the port is s 10G port.
+-
+-- fsl,fman-best-effort-port
+-		Usage: optional
+-		Value type: boolean
+-		Definition: Can be defined only if 10G-support is set.
+-		This property marks a best-effort 10G port (10G port that
+-		may not be capable of line rate).
+-
+-EXAMPLE
+-
+-port@a8000 {
+-	cell-index = <0x28>;
+-	compatible = "fsl,fman-v2-port-tx";
+-	reg = <0xa8000 0x1000>;
+-};
+-
+-port@88000 {
+-	cell-index = <0x8>;
+-	compatible = "fsl,fman-v2-port-rx";
+-	reg = <0x88000 0x1000>;
+-};
+-
+-port@81000 {
+-	cell-index = <0x1>;
+-	compatible = "fsl,fman-v2-port-oh";
+-	reg = <0x81000 0x1000>;
+-};
+-
+-=============================================================================
+-FMan dTSEC/XGEC/mEMAC Node
+-
+-Refer to Documentation/devicetree/bindings/net/fsl,fman-dtsec.yaml
+-
+-============================================================================
+-FMan IEEE 1588 Node
+-
+-Refer to Documentation/devicetree/bindings/ptp/fsl,ptp.yaml
+-
+-=============================================================================
+-FMan MDIO Node
+-
+-DESCRIPTION
+-
+-The MDIO is a bus to which the PHY devices are connected.
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
+-		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
+-		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
+-		FMan v3.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-- clocks
+-		Usage: optional
+-		Value type: <phandle>
+-		Definition: A reference to the input clock of the controller
+-		from which the MDC frequency is derived.
+-
+-- clock-frequency
+-		Usage: optional
+-		Value type: <u32>
+-		Definition: Specifies the external MDC frequency, in Hertz, to
+-		be used. Requires that the input clock is specified in the
+-		"clocks" property. See also: mdio.yaml.
+-
+-- suppress-preamble
+-		Usage: optional
+-		Value type: <boolean>
+-		Definition: Disable generation of preamble bits. See also:
+-		mdio.yaml.
+-
+-- interrupts
+-		Usage: required for external MDIO
+-		Value type: <prop-encoded-array>
+-		Definition: Event interrupt of external MDIO controller.
+-
+-- fsl,fman-internal-mdio
+-		Usage: required for internal MDIO
+-		Value type: boolean
+-		Definition: Fman has internal MDIO for internal PCS(Physical
+-		Coding Sublayer) PHYs and external MDIO for external PHYs.
+-		The settings and programming routines for internal/external
+-		MDIO are different. Must be included for internal MDIO.
+-
+-- fsl,erratum-a009885
+-		Usage: optional
+-		Value type: <boolean>
+-		Definition: Indicates the presence of the A009885
+-		erratum describing that the contents of MDIO_DATA may
+-		become corrupt unless it is read within 16 MDC cycles
+-		of MDIO_CFG[BSY] being cleared, when performing an
+-		MDIO read operation.
+-
+-- fsl,erratum-a011043
+-		Usage: optional
+-		Value type: <boolean>
+-		Definition: Indicates the presence of the A011043 erratum
+-		describing that the MDIO_CFG[MDIO_RD_ER] bit may be falsely
+-		set when reading internal PCS registers. MDIO reads to
+-		internal PCS registers may result in having the
+-		MDIO_CFG[MDIO_RD_ER] bit set, even when there is no error and
+-		read data (MDIO_DATA[MDIO_DATA]) is correct.
+-		Software may get false read error when reading internal
+-		PCS registers through MDIO. As a workaround, all internal
+-		MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
+-
+-For internal PHY device on internal mdio bus, a PHY node should be created.
+-See the definition of the PHY node in booting-without-of.txt for an
+-example of how to define a PHY (Internal PHY has no interrupt line).
+-- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
+-- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY.
+-  The PCS PHY address should correspond to the value of the appropriate
+-  MDEV_PORT.
+-
+-EXAMPLE
+-
+-Example for FMan v2 external MDIO:
+-
+-mdio@f1000 {
+-	compatible = "fsl,fman-xmdio";
+-	reg = <0xf1000 0x1000>;
+-	interrupts = <101 2 0 0>;
+-};
+-
+-Example for FMan v2 internal MDIO:
+-
+-mdio@e3120 {
+-	compatible = "fsl,fman-mdio";
+-	reg = <0xe3120 0xee0>;
+-	fsl,fman-internal-mdio;
+-
+-	tbi1: tbi-phy@8 {
+-		reg = <0x8>;
+-		device_type = "tbi-phy";
+-	};
+-};
+-
+-Example for FMan v3 internal MDIO:
+-
+-mdio@f1000 {
+-	compatible = "fsl,fman-memac-mdio";
+-	reg = <0xf1000 0x1000>;
+-	fsl,fman-internal-mdio;
+-
+-	pcsphy6: ethernet-phy@0 {
+-		reg = <0x0>;
+-	};
+-};
+-
+-=============================================================================
+-Example
+-
+-fman@400000 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	cell-index = <1>;
+-	compatible = "fsl,fman"
+-	ranges = <0 0x400000 0x100000>;
+-	reg = <0x400000 0x100000>;
+-	clocks = <&fman_clk>;
+-	clock-names = "fmanclk";
+-	interrupts = <
+-		96 2 0 0
+-		16 2 1 1>;
+-	fsl,qman-channel-range = <0x40 0xc>;
+-
+-	muram@0 {
+-		compatible = "fsl,fman-muram";
+-		reg = <0x0 0x28000>;
+-	};
+-
+-	port@81000 {
+-		cell-index = <1>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x81000 0x1000>;
+-	};
+-
+-	port@82000 {
+-		cell-index = <2>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x82000 0x1000>;
+-	};
+-
+-	port@83000 {
+-		cell-index = <3>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x83000 0x1000>;
+-	};
+-
+-	port@84000 {
+-		cell-index = <4>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x84000 0x1000>;
+-	};
+-
+-	port@85000 {
+-		cell-index = <5>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x85000 0x1000>;
+-	};
+-
+-	port@86000 {
+-		cell-index = <6>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x86000 0x1000>;
+-	};
+-
+-	fman1_rx_0x8: port@88000 {
+-		cell-index = <0x8>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x88000 0x1000>;
+-	};
+-
+-	fman1_rx_0x9: port@89000 {
+-		cell-index = <0x9>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x89000 0x1000>;
+-	};
+-
+-	fman1_rx_0xa: port@8a000 {
+-		cell-index = <0xa>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8a000 0x1000>;
+-	};
+-
+-	fman1_rx_0xb: port@8b000 {
+-		cell-index = <0xb>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8b000 0x1000>;
+-	};
+-
+-	fman1_rx_0xc: port@8c000 {
+-		cell-index = <0xc>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8c000 0x1000>;
+-	};
+-
+-	fman1_rx_0x10: port@90000 {
+-		cell-index = <0x10>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x90000 0x1000>;
+-	};
+-
+-	fman1_tx_0x28: port@a8000 {
+-		cell-index = <0x28>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xa8000 0x1000>;
+-	};
+-
+-	fman1_tx_0x29: port@a9000 {
+-		cell-index = <0x29>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xa9000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2a: port@aa000 {
+-		cell-index = <0x2a>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xaa000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2b: port@ab000 {
+-		cell-index = <0x2b>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xab000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2c: port@ac0000 {
+-		cell-index = <0x2c>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xac000 0x1000>;
+-	};
+-
+-	fman1_tx_0x30: port@b0000 {
+-		cell-index = <0x30>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xb0000 0x1000>;
+-	};
+-
+-	ethernet@e0000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <0>;
+-		reg = <0xe0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
+-		tbi-handle = <&tbi5>;
+-	};
+-
+-	ethernet@e2000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <1>;
+-		reg = <0xe2000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
+-		tbi-handle = <&tbi6>;
+-	};
+-
+-	ethernet@e4000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <2>;
+-		reg = <0xe4000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
+-		tbi-handle = <&tbi7>;
+-	};
+-
+-	ethernet@e6000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <3>;
+-		reg = <0xe6000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
+-		tbi-handle = <&tbi8>;
+-	};
+-
+-	ethernet@e8000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <4>;
+-		reg = <0xf0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
+-		tbi-handle = <&tbi9>;
+-
+-	ethernet@f0000 {
+-		cell-index = <8>;
+-		compatible = "fsl,fman-xgec";
+-		reg = <0xf0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
+-	};
+-
+-	ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
+-
+-	mdio@f1000 {
+-		compatible = "fsl,fman-xmdio";
+-		reg = <0xf1000 0x1000>;
+-		interrupts = <101 2 0 0>;
+-	};
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 322e89b13c843..7204a81b86930 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8862,7 +8862,7 @@ M:	Madalin Bucur <madalin.bucur@nxp.com>
+ R:	Sean Anderson <sean.anderson@seco.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/fsl-fman.txt
++F:	Documentation/devicetree/bindings/net/fsl-fman.yaml
+ F:	drivers/net/ethernet/freescale/fman
+ 
+ FREESCALE QORIQ PTP CLOCK DRIVER
+
+-- 
+2.34.1
+
