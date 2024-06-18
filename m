@@ -1,100 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201FE156F25
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 18:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10E72139C6;
+	Tue, 18 Jun 2024 18:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718735822; cv=none; b=c14hyvZIFowiJw5EvVWqR11Igts+orm1GZB1fPY1bsJWupnENDMfd/54GMcCdm2UcWt1Ius7XUefPvCtI/nj8G9llv9xkVm3ZZ2ZCZ8yB0YjN+QWD+VBO+g/vSfYIOyQuJQ58xwKxgabI37R+6zjW+XFx6ff1o/gU/W7Q4i+Yc0=
+	t=1718735901; cv=none; b=rWu/41OX80DpSyZVV6M9vl6d1etHT9sDCimit0J9i3nFNdz+uJn0+yOJBmpunPmu9NEONKXXjRkl3p/vJ5pMHK+VM71pGhhuT/mE1p3J18VCaZhtbE3zRdy47AVZUh72cWTVCFHNQy8ve+u2pcUVMs56TVmhaYgUQjjzmNXy2JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718735822; c=relaxed/simple;
-	bh=6dqI5FMicCFOtzWkymzM/4W739wxDKCyS1QKnMAJiE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PzYRYaB/4aMDwTqbJYDq9duBtOWsf6Dg0liAjO+ZT/EmMC2eD/+rV566LgtwJVZTwnZbU28x5tOD30NXtu7hViv5Rt3P3VbCh05c3T1hUdX685HzxkEgQomgVPETeH8pEXZKWlobelHUqYmV3jJD/Njv72l/rV4rTTvopk/qgh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fc5dIQSc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718735901; c=relaxed/simple;
+	bh=9iZR6qfhdq2inBfR21miynRAFj2tcgSizdsoz74Q7C0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWNSnwYR/UcS243YrRlAPv7V6KJ+jT0PXGOwCBII9w9FWiKwe0ObUxY7srQ28knwRfDMe2rVjm37i9ChMa5japVU2DHyZhGo/SxmpMyHKzm1x+ECrDnNPDgSOSG6hgSgwiRrnSw7BV7LJ4zqkzNwKkYHgUoBhF1fDqOIg4Awar0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NS89/eA9; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fc5dIQSc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 877C640E0219;
-	Tue, 18 Jun 2024 18:36:56 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id LRW06gXU3vjC; Tue, 18 Jun 2024 18:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718735812; bh=v4ekNk7M9X1ZXaB//Hg4UEVPT3/BcXHuBouv1vwQ6ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fc5dIQScYhhPk+Y6M37kp6LIA3gBSoFpIOfuwav9kNLME7pOyQm6O1G4ZuuoxT4OO
-	 jZAjPtiC8657tnCcNFp3ncr+F/sRfhvztGfo+RjMdaKk0OdLSeOzEaOEiu6LZLYo5u
-	 lXnyXpNcjNFy68bGGN4vbxhZBoKNXVunW5ANJZE/6HHI3sRU8t7vVPVyGrJ3WjDBVR
-	 VdpL1JITEYa+rB2omsfq2t5pxNjqvsBzaae7FI9afIfJOOghM/XeicAbICLbeh5dTJ
-	 1vGFfiGRZeASt3hMTE+fExhK6elB7JU9e6x+QXOeUC/KAyCETSQrNVMwQPfaZ4jfDi
-	 JY8Li8mGQU/KY2kqqBilmdmkqrLTPojuQ7fessgl61QVvS7q1vr82Fr/spnm0wMFmK
-	 seGN2ZAjqEM5Uo68JGd9tXyqM4obsH9DmMfUuBHhPPnI/VCTszCLFFAS2DJLKw/bvP
-	 j3OnixlED7Mgo6kS08vGY3DrBYznHIpGXNDChqRB9KxjQds5Rk9ZkgXY1+a5xEnu05
-	 AfJxeEjTvzRIHdz6W6ELobQZnoRqnq4n7nPMCcPeLgQz0qReNbQ9x+/1p0YzfZnOQh
-	 JyFtqT2hpbdBG/INE5arUsQL5MNvXpaoxdk02CAre35ixncyLO6RTSwOfA3Y6rcw3C
-	 MoHa3XDl3oHvGMMgtwV8qu3A=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NS89/eA9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718735897;
+	bh=9iZR6qfhdq2inBfR21miynRAFj2tcgSizdsoz74Q7C0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NS89/eA9OrJeKUWAjWeVXDiTwGODlZRi/gQdOEt1zpb8O6WhLOoeqHZLFQ09MleWX
+	 s1yBPsNUtBDO5QwUdd3jVIp9A264e9Q00yZVKYw5EMhMKbAztbX/S+u6orsN6YcFrr
+	 1OVoRFg/yQhCtCpQUQJG5eXC2DJ1jb/CM9dC2HR0IO0MqKczoeYesXI6MVtg/gd1Gg
+	 j0V7dZo2VPYd7c+BkebElRrDczuLJpplg2wTTe5uY6bMqoHZlVnjeiPDCW+0kLcZi3
+	 vGlTjHnWlS/bqoU1qYEECNRckuEZ93Fd0C7MJaAf9pZ3NTpV3wU++72Vt6qugYOmcD
+	 vm2oTrf4s3wrw==
+Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E166140E019D;
-	Tue, 18 Jun 2024 18:36:46 +0000 (UTC)
-Date: Tue, 18 Jun 2024 20:36:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Borislav Petkov <bp@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/cpufeatures: Flip the /proc/cpuinfo appearance
- logic
-Message-ID: <20240618183641.GGZnHTuS2zS4e1fPv2@fat_crate.local>
-References: <20240618113840.24163-1-bp@kernel.org>
- <ZnGUVcEUUF_1Vqmi@google.com>
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8105B3780BFE;
+	Tue, 18 Jun 2024 18:38:17 +0000 (UTC)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 2ABA24800C9; Tue, 18 Jun 2024 20:38:17 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com
+Subject: [PATCH v7 0/6] RK3588 VEPU121/VPU121 support
+Date: Tue, 18 Jun 2024 20:18:31 +0200
+Message-ID: <20240618183816.77597-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZnGUVcEUUF_1Vqmi@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 07:06:13AM -0700, Sean Christopherson wrote:
-> If we're going to churn the whole file, why not take the opportunity make it more
-> structured?  E.g. use a variadic macro so the name doesn't need to be buried in a
-> string inside a comment, and so that each feature doesn't have to open code the
-> math.  Lack of third input omits the flag from /proc/cpuinfo, and a magic keyword,
-> e.g. AUTO, uses the feature name.
-> 
-> There are quite a few games that could be played with macros, and IMO pretty much
-> all of them would be better than comment+string shenanigans.
-> 
-> #define X86F(word, bit, abi_name...) ((word) * 32 + bit)
-> 
-> #define X86_FEATURE_FPU           X86F(0,  0, AUTO)
-> 
-> #define X86_FEATURE_XMM		  X86F(0, 25, SSE2)
-> 
-> #define X86_FEATURE_K8		  X86F(3,  4)
+Hi,
 
-I'm always open to those things, sure. But it'll have to go ontop ofc.
+This series enables Hantro support for RK3588. It is based on these two
+previous series from Emmanuel Gil Peyrot and Jianfeng Liu, which looked
+stalled to me. Considering the full driver is already upstream, I think
+this low hanging fruit should be enabled in 6.11:
 
-"X86F(3, 4)" is not very readable but we'll get used to it. I like the aspect of
-not having to open code the word math. But then having it opencoded is
-maximally readable...
+ * https://lore.kernel.org/all/20240316071100.2419369-1-liujianfeng1994@gmail.com/
+ * https://lore.kernel.org/linux-rockchip/20240412151515.837824-1-linkmauve@linkmauve.fr/
 
-Yeah, we'll see what the others say too.
+Their series got some feedback from Nicolas Dufresne, that there should be a
+plan how multi-core processing will be handled once it is supported in the
+kernel. I had a look (and internal discussion with Nicolas) and came up with a
+patch, which allows describing all the Hantro IP in DT. The driver will only
+probe for the first instance. This involves dropping the RK3568 compatible
+for the VEPU121, so that only kernels with the driver change will try to
+handle these IP. Once the kernel is capable of multi-core support, the same
+technique to disable cores 1-3 can be used to combine them all into one
+cluster.
 
-Thx.
+We also discussed, if they should be described as a cluster (e.g. by creating
+some kind of virtual bus for the 4 encoders in DT). Apparently the VSI doc
+describes the grouping of up to 4 instances. But there is no obvious reason
+why only these groups can be used as a cluster. It seems that even the 5th
+encoder from the combo VPU121 could be used together with the other clustered
+cores in theory. In practice this is probably a bad idea because of the shared
+cache of that encoder. Since that is handled with a different compatible, this
+can be thought about at a later point of time and handled in the kernel. Thus
+no special cluster description is needed in DT.
+
+Changes since PATCHv6:
+ * Collected Acked-by for RK3588 VEPU121 DT binding from Conor Dooley
+ * Fix resource leak of DT node in hantro_disable_multicore()
+ * Support disabled nodes in hantro_disable_multicore()
+ * Use correct match data (RK3568 VEPU instead of VPU) for RK3588 VEPU121
+
+Changes since PATCHv5:
+ * Fix binding for vepu121 (use enum)
+ * split hantro driver patch (multicore / vepu121 compatible)
+ * move video-codec@fdb50000 node to correct position
+ * change "jpeg_enc*" alias to "vepu121_*"
+ * change "vpu_*" alias to "vpu121_*" (to be consistent)
+
+Changes since PATCHv3 (VEPU121) / PATCHv4 (VPU121)
+ * combine both patchsets, since there is some overleap
+ * add patch to disable multi-core handling in the hantro driver
+ * drop the RK3568 fallback compatible for VEPU (see above for the reason)
+ * describe all RK3588 VEPU cores (possible because of driver change)
+
+Greetings,
+
+-- Sebastian
+
+Emmanuel Gil Peyrot (2):
+  media: dt-bindings: rk3568-vepu: Add RK3588 VEPU121
+  arm64: dts: rockchip: Add VEPU121 to RK3588
+
+Jianfeng Liu (2):
+  media: dt-bindings: rockchip-vpu: Add RK3588 VPU121
+  arm64: dts: rockchip: Add VPU121 support for RK3588
+
+Sebastian Reichel (2):
+  media: hantro: Disable multicore support
+  media: hantro: Add RK3588 VEPU121
+
+ .../bindings/media/rockchip,rk3568-vepu.yaml  |   1 +
+ .../bindings/media/rockchip-vpu.yaml          |   3 +
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 101 ++++++++++++++++++
+ .../media/platform/verisilicon/hantro_drv.c   |  48 +++++++++
+ 4 files changed, 153 insertions(+)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
