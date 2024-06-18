@@ -1,135 +1,63 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gentwo.org (gentwo.org [62.72.0.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B08A13E8BE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 17:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EB52139DD
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 17:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718731620; cv=none; b=UrXEOfujXa9bziwbNyeWmmuYcIzMJZeVHtaR1SudM1DV8s3R+u0gJYagxbAgxxV4uAJr71tU8oosfts8cv9lI/+31fPMATd8BhPlbKSKH1GFOtYotgbEopkS1iRelyUNHvXOJDalq7AAWK3+S7s3tOcxyoePTAqYprhXJnygURA=
+	t=1718731639; cv=none; b=FAMQMpKLwZmIHdKZWIw96+f7rtK9AVMXlNWvpjkEvs3xcHTFX9n0YT0Qy8BtVTpSnpD8kRfO0Pqz3xlgevAo7Q1kGdzYv2ptu3uOc80Gr57IBWoRX0D80URMNaGUYdH+kq6y4mwcYDIryZ95ZmB+hQwglWJyJwWSwKWyU/lsniA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718731620; c=relaxed/simple;
-	bh=C67RHACpPp61qeVE9UwoRllkODOsgpgxer+BTPBPlFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CekM2SNQmleNY7V7bNHmGXhR+A18GVGXXnWQDBp9tVYejaEJtTzMcmPz00yehZkMc6q/p7nWAya5tAz+G+V6pOFa9KiB+wD5WRCJ90MotJ0f85+s9VPXfzn6yu340jj+tp/ZH3QMxcpV3BVAGIi2eBsZMuOWGkmy7DRxylsw4Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lcfdcyXg; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcfdcyXg"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ead2c6b50bso62504351fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:26:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718731617; x=1719336417; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=W2XgDBRe+uXR1JhTiAW0H+F2QdLuA6dIQSH0HmfL2qI=;
-        b=lcfdcyXgfyZHLkNHrRTYeZKmJ/3WJFNo9sC+NJ+BvPznNCPBIP4gLVDYnRIOx+epGe
-         8ECwMlXQJjGxFTHC5zS/ClgfobDd9ngG9hQ1FLXriEn/MdEnJgAnAtVDvpp6fufhkYiG
-         d+Nl3AWF+AYeYq2UXimeB7AETjTWeMqOIrE0ejKQBHMmhi40/Yg5pwN1qU56GbDrIFx8
-         ny2K9mYtqD0/4m9ZfrfhSgOTMYEnIymKi4piNL733KmpJ87APmN406owgDadBpdh5Ef7
-         F0XOjLzid2ou43ez7hf2oL4CeImcV2PWn25S9vP6JrkTHh9oBiQKIIP66QBZAsSTc9iA
-         qmUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718731617; x=1719336417;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W2XgDBRe+uXR1JhTiAW0H+F2QdLuA6dIQSH0HmfL2qI=;
-        b=HU38BmLxWcH6pLmcIDESy3FtZ2bcjpl4dd+SQeo7aH+tNqvaakrVvAQDhhbeW17hJb
-         BoUfDdvlEzHdHyhKGNlQ/BdnOQvdhfbjIltPCUE3+BOsXLL1ir9CYu+fwkarD4jIOrS/
-         lKd7wBuFoeSfyFoHvcUXwwx466UmQ9TJVIAq/E7OeXRLmIXp7XstJr89o349ATfHZsmg
-         K61dZUs+QEDoSGQLSUNB6QQ8qK775T8NWpuuH0UjKpLdNoOxwcfvlvpX/wZp3MjUKxUP
-         ImaTi5VC3Ov//36lH9pySC0xkWmv2SL9BegkQIqYoVUFXl/QM2WpuXqPfuDPRcCg+/xZ
-         s08Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWgFhz5JWAUmkOrj712hK0+8plGzh2tBqxgfxl5C6U666wwm3am+RXGdw1wY1395G18dVmLWdYDW/zp0789yvGeHQJ9aH1IJNppuKMr
-X-Gm-Message-State: AOJu0Yw+zbQE71cjF/cvKnJBL0os4zCjVt6zC2oV6ITuvMMOpmsN4ZVe
-	Ry7cjRyZwlJPdBpgPoPn9xqXGl2a39rDBF01l0PIV1DHiewgEsODZs9IdNttLlE=
-X-Google-Smtp-Source: AGHT+IHnlPq6SIHBVQIVyvhtZzEM4VjHJZd+R56nsfAoWok8bl5Nz8Rpo3Ive6lWbA3CpuueiYxIMA==
-X-Received: by 2002:a05:6512:49a:b0:52b:c1d4:7df3 with SMTP id 2adb3069b0e04-52ccaa36980mr190988e87.35.1718731617392;
-        Tue, 18 Jun 2024 10:26:57 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2889052sm1555203e87.299.2024.06.18.10.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 10:26:57 -0700 (PDT)
-Date: Tue, 18 Jun 2024 20:26:55 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/5] drm/msm/adreno: Move hwcg table into a6xx
- specific info
-Message-ID: <x64uencmmiqlozqhjnp2jclizjzhhhekkhvxqmm6dlilr7huyd@wmaikimb63jx>
-References: <20240617225127.23476-1-robdclark@gmail.com>
- <20240617225127.23476-5-robdclark@gmail.com>
- <wnnjjljjyl5s3fkwiapux3f76243ngp2ppk2cm7kkhdp5dc4sz@v4wypnga3izv>
- <CAF6AEGvjeGxP+A2umyQHo49G1rAdZkY0bHuemvFP4jgNkspu3Q@mail.gmail.com>
+	s=arc-20240116; t=1718731639; c=relaxed/simple;
+	bh=8HEh2eyL5BOMLEiQRw7cMUqNTFe17lj0Z/QTnMAyQBE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QJZyDBs4Yvn6M7Di/0HI/RkNRpPRxHoVQx3YedGsvTzCHiYtQ39jEQSiwegk1yH8ELIgniM8NpXmQX8P20YzqhtzkzJL5Od+6wK5to+uZDBR6HNRIqgDC83Vrm3KufSy3DXJlyvCosnQ8JKAu5SZYvqQlPVEs79/AfNQNX3Q36I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 2DCE740B10; Tue, 18 Jun 2024 09:57:07 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 2C9A8401CA;
+	Tue, 18 Jun 2024 09:57:07 -0700 (PDT)
+Date: Tue, 18 Jun 2024 09:57:07 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+cc: Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
+    David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>, 
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+    zhouchengming@bytedance.com, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v3 1/3] slab: make check_object() more consistent
+In-Reply-To: <e655405f-92b2-46e4-830e-013586bd0022@linux.dev>
+Message-ID: <a98b715d-011b-ce39-0872-2772fc619b7e@linux.com>
+References: <20240607-b4-slab-debug-v3-0-bb2a326c4ceb@linux.dev> <20240607-b4-slab-debug-v3-1-bb2a326c4ceb@linux.dev> <63da08b7-7aa3-3fad-55e6-9fc3928a49de@gentwo.org> <8b844d71-01f1-472b-a63a-4c9cdb26e9ef@suse.cz> <e93fc5a6-434f-376c-a819-353124da053d@linux.com>
+ <e655405f-92b2-46e4-830e-013586bd0022@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGvjeGxP+A2umyQHo49G1rAdZkY0bHuemvFP4jgNkspu3Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, Jun 18, 2024 at 09:33:48AM GMT, Rob Clark wrote:
-> On Tue, Jun 18, 2024 at 1:30 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Mon, Jun 17, 2024 at 03:51:14PM GMT, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > Introduce a6xx_info where we can stash gen specific stuff without
-> > > polluting the toplevel adreno_info struct.
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 65 +++++++++++++++++------
-> > >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c     |  6 +--
-> > >  drivers/gpu/drm/msm/adreno/a6xx_gpu.h     |  9 ++++
-> > >  drivers/gpu/drm/msm/adreno/adreno_gpu.h   |  6 ++-
-> > >  4 files changed, 67 insertions(+), 19 deletions(-)
-> > >
-> >
-> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >
-> >
-> > > @@ -98,7 +100,9 @@ struct adreno_info {
-> > >       struct msm_gpu *(*init)(struct drm_device *dev);
-> > >       const char *zapfw;
-> > >       u32 inactive_period;
-> > > -     const struct adreno_reglist *hwcg;
-> > > +     union {
-> > > +             const struct a6xx_info *a6xx;
-> > > +     };
-> > >       u64 address_space_size;
-> > >       /**
-> > >        * @speedbins: Optional table of fuse to speedbin mappings
-> >
-> > My preference would be towards wrapping the adreno_gpu, but that would
-> > require more significant rework of the driver. Let's see if we can get
-> > to that later.
-> >
-> 
-> yeah, it was going to be more re-work, and I'm neck deep in
-> gpuvm/vm_bind.. I just wanted to land this since it is a pita (and
-> error prone) to rebase as more gpu's get added ;-)
+On Fri, 14 Jun 2024, Chengming Zhou wrote:
 
-Yes, I'm fine with that. My note was more like a 'later todo' item.
+>> One can then put a slub_debug option on the kernel command line which 
+>> will result in detailed error reports on what caused the corruption. It 
+>> will also activate resilience measures that will often allow the 
+>> continued operation until a fix becomes available.
+>
+> This reminds me that we can't toggle slub_debug options for kmem_cache in runtime,
+> I'm wondering is it useful to be able to enable/disable debug options in runtime?
+> We can implement this feature by using per-slab debug options, so per-slab has
+> independent execution path, in which some slabs with debug options enabled go
+> the slow path, while others can still go fast path.
+>
+> No sure if it's useful in some cases? Maybe KFENCE is enough? Just my random thoughts.
 
-> 
-> It isn't entirely unlike how we handle gpu gen specific options in
-> mesa, where we have a somewhat bigger set of options, so I wouldn't
-> say that this approach was worse than extending adreno_info.. just
-> different..
+The problem is that some of these options would change the total size of 
+the data stored in a slab. Features that do not require size changes can 
+be done at runtime on slab caches.
 
-
--- 
-With best wishes
-Dmitry
