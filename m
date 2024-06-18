@@ -1,117 +1,196 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2C96F30C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C49322F1C;
+	Tue, 18 Jun 2024 15:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718724383; cv=none; b=AjNVlaDxCh3D415otkdAetX4T1VQfCObdYfFIkvQE1vKl9I2KfbLWVB3dqWOYapF4Z/EQOArSdTSM7DTWbQZ324a3LBRnRKzLmW0K5jvWybuFRegvlvZF1PmDl12aGG4Kpm6DSnCaTzM29MaAkvf5qyNDetwVWUwsdnCyoVLJNg=
+	t=1718724513; cv=none; b=OPLVGgfD2hxIzPFqNNcjBq1snW9n3T9dWPhYKE0WaqL6Yxt9HAAwjPS98LTQa6oQtwRsqB61QR1qd4aQnwuqGgSi9i601RqjQ96zkLiWnjP75oWuOp+IEFHfyl/S5kbiCSB6IWd9QM+ia1PGaNzjS3MsInXTS1IEN2grNX3JIkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718724383; c=relaxed/simple;
-	bh=CurE6Dkz9pV9+txAi+R7t+xa0vDbGQMbECnR1uv+xKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmAxRbYTCp+dmAG+l6KPeoZxDsHNJJvVIx5l/gC9gWY0W1aWbzrrYqemfy5fW3yJVJvNZ66yCet550nr23vgEZbhZVdkufkhCz3gz+u3n1ElIigxErsnuk7YwvNo2bnINNLq8+++ezaCIEP2TE19a8Wr32/qRaDeEubPTUe1cbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SgqKOl8J; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgqKOl8J"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-361785bfa71so353393f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718724380; x=1719329180; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5B2trNpXh5L0I47RQYjAXwFGQO0vFRPcG1PhQTg8CE=;
-        b=SgqKOl8J1EwJIh74OiILD3lhfJ5JSWVFg31vL+6ZqHyUOaUN67LNKvcvl3n5vFCAJT
-         y61koQH7HXik7MItRsosYs6nUtkONFurKqdtOszO+5bIn9jsusx4ISWy4kHrTVEuH6KX
-         kafVs5ox0yjjyC6vzmMzr5Oj59GWUkGecljcl8OS/rA/2fH7zyFOkXpQxCIuCV+tVfZv
-         z3ItV6GmDvm6ljQQGWK2d7zMOsAm9Ty8voZ7AY1EFg8OQLibRKQll7JsRaDlQhS+TeEF
-         6093Dn3dB8gBKU07evKVS2+sOPg7/sdM0eLPWNLy8aM4fWZYra0+5NA0i0pMDnbekHwY
-         YgfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718724380; x=1719329180;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j5B2trNpXh5L0I47RQYjAXwFGQO0vFRPcG1PhQTg8CE=;
-        b=Z3DfyWH2wD9mxSvNF24EOCVvKKF/+LwR3hIkCNiXW+opJljB8uonDcjHEylXnUGN23
-         VoCOwCnR1p3FISUoCBf5vVusIFu0IjSTYWS1Si4aR9ENBT3MYxqNDhZSsGBchfQO01/I
-         GjDt1Sokb4sOqQpTxaesz2GO9mAqxr2vOAS9RoZ768rh86qCzR3EFJMDTuXhdk3FiGzZ
-         F0u3nUhJEFvZNwbHRGqzDTTOp8YKUsR3+UgzobE4wrJRxeK1wblB4bHAaNSs8Tp5Ao/d
-         FeFt2oTsqHS7Vo6FoBXdxBJdmaIe+98sS2zat91i+EM1evcsAc3QzUdlLIgb5GLjNw2d
-         vY3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ/uK7H7Fu741jKAGTXmz3238ddS9qgSUkXPh5vph79JfLVlZb+UxWPJbzx+2ndT49g1spjzhWkwaKLdtpMXg8jbD4j866DdMH/BzM
-X-Gm-Message-State: AOJu0YzIlKoJZYM+rOcMKanWvHg6KSder9Je7T4RCWU0knu+kVCc+vEs
-	mXycCJTslSMa5RllJZIo8ypbXJo34Q1GKPBUcl4iIxUeImejLI+6L3C2oDXoXZI=
-X-Google-Smtp-Source: AGHT+IFko0ZVQHKPPOkLVKQkbHGo/8Z4TkJ5VFh493yXuyA4aG+1zvplXZXGK68vb6yBbrYE7fPF8g==
-X-Received: by 2002:a5d:5917:0:b0:360:7c13:761e with SMTP id ffacd0b85a97d-3607c137725mr10358113f8f.65.1718724379686;
-        Tue, 18 Jun 2024 08:26:19 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36268ad16b6sm1097771f8f.92.2024.06.18.08.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 08:26:19 -0700 (PDT)
-Date: Tue, 18 Jun 2024 16:26:17 +0100
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: kgdb-bugreport@lists.sourceforge.net,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Thorsten Blum <thorsten.blum@toblux.com>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/13] kdb: Use 'unsigned int' in kdb_md() where
- appropriate
-Message-ID: <20240618152617.GF11330@aspen.lan>
-References: <20240618003546.4144638-1-dianders@chromium.org>
- <20240617173426.9.I95a99321878631c9ed6a520feba65b949f948529@changeid>
+	s=arc-20240116; t=1718724513; c=relaxed/simple;
+	bh=F+ED/OioFLnqOYlwF4WKTud/ZqoBQqoLpm+kzsS3g1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qu6jETLPh63DbRnaCIRhsrt9XpJ1NYbZkiIYNUayrdMZEjTkv0nJbEwRKC1uLBD9oCM8GJfGNTJY7yQuWZUzt29TJhjgZRdKQqZZQqOkXM5WkZeTg2EX/f9jKA4eFn5aUEmTbROCHl5Mtlr/bgMWO9O+6CTt+8HsDFgWcaCoPe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 48A3261E5FE01;
+	Tue, 18 Jun 2024 17:27:50 +0200 (CEST)
+Message-ID: <c345a680-d5a3-4ca8-a9e2-8ac04f526284@molgen.mpg.de>
+Date: Tue, 18 Jun 2024 17:27:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617173426.9.I95a99321878631c9ed6a520feba65b949f948529@changeid>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] i2c: smbus: Support DDR5 SPD EEPROMs
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Armin Wolf <W_Armin@gmx.de>, Stephen Horvath <s.horvath@outlook.com.au>
+References: <20240604040237.1064024-1-linux@roeck-us.net>
+ <20240604040237.1064024-6-linux@roeck-us.net>
+ <a5aa120d-8497-4ca8-9752-7d800240b999@molgen.mpg.de>
+ <efb77b37-30e5-48a8-b4af-eb9995a2882b@roeck-us.net>
+ <33f369c1-1098-458e-9398-30037bd8c5aa@molgen.mpg.de>
+ <4e09b843-3d2d-46d7-a8e1-2eabc4382dc7@roeck-us.net>
+ <f20ea816-5165-401e-948f-6e77682a2d1b@molgen.mpg.de>
+ <975af7e5-b1b0-400e-a1c3-6d9140421f25@roeck-us.net>
+ <8719fc64-2b51-4b79-ba52-0a3b9216f2db@molgen.mpg.de>
+ <f76a4d07-887b-4efb-b20e-52979db31216@roeck-us.net>
+ <fd8868ef-6179-45a7-8249-ee17994a8e78@molgen.mpg.de>
+ <2532ca4a-83dd-4ab8-af04-6ebcd5ca8673@roeck-us.net>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <2532ca4a-83dd-4ab8-af04-6ebcd5ca8673@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 17, 2024 at 05:34:43PM -0700, Douglas Anderson wrote:
-> Several of the integers in kdb_md() should be marked unsigned. Mark
-> them as such. When doing this, we need to add an explicit cast to the
-> address masking or it ends up getting truncated down to "int" size.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->  kernel/debug/kdb/kdb_main.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index fcd5292351a7..c064ff093670 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -1594,8 +1594,8 @@ static void kdb_md_line(const char *fmtstr, unsigned long addr,
->  static int kdb_md(int argc, const char **argv)
->  {
->  	static unsigned long last_addr;
-> -	static int last_radix, last_bytesperword, last_repeat;
-> -	int radix = 16, mdcount = 8, bytesperword = KDB_WORD_SIZE, repeat = 0;
-> +	static unsigned int last_radix, last_bytesperword, last_repeat;
-> +	unsigned int radix = 16, mdcount = 8, bytesperword = KDB_WORD_SIZE, repeat = 0;
->  	char fmtchar, fmtstr[64];
->  	unsigned long addr;
->  	unsigned long word;
-> @@ -1722,11 +1722,11 @@ static int kdb_md(int argc, const char **argv)
->
->  	/* Round address down modulo BYTESPERWORD */
->
-> -	addr &= ~(bytesperword-1);
-> +	addr &= ~((unsigned long)bytesperword - 1);
-
-I think the round_down() macro will take care of the cast for you (and
-probably render the comment pointless too).
-
-Other than that it looks like a good change.
+Dear Guenter,
 
 
-Daniel.
+Am 18.06.24 um 17:12 schrieb Guenter Roeck:
+> On 6/18/24 07:59, Paul Menzel wrote:
+
+>> Am 18.06.24 um 16:23 schrieb Guenter Roeck:
+>>> On 6/18/24 06:51, Paul Menzel wrote:
+>>
+>>>> Am 18.06.24 um 15:32 schrieb Guenter Roeck:
+>>>>
+>>>>> On 6/18/24 03:25, Paul Menzel wrote:
+>>>>> [ ... ]
+>>>>>>
+>>>>>>      $ ls -l /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
+>>>>>>      -r--r--r-- 1 root root 1024 Jun 18 12:17  /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
+>>>>>>      $ cp /sys/bus/i2c/drivers/spd5118/0-0050/eeprom /tmp
+>>>>>>      cp: error reading '/sys/bus/i2c/drivers/spd5118/0-0050/eeprom': No such device or address
+>>>>>
+>>>>> That suggests that the i801 driver got an error when trying some 
+>>>>> chip operation.
+>>>>> Unfortunately I have no idea what that error or the failed 
+>>>>> operation might be.
+>>>>>
+>>>>>>      $ od -t x1 /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
+>>>>>>      od: /sys/bus/i2c/drivers/spd5118/0-0050/eeprom: read error: No such device or address
+>>>>>>      0000000
+>>>>>>
+>>>>>>> sudo i2cdump -y -f 0 0x50
+>>>>>>
+>>>>>>      $ sudo LD_LIBRARY_PATH=~/src/i2c-tools/lib tools/i2cdump -y -f 0 0x50
+>>>>>>      No size specified (using byte-data access)
+>>>>>>      Error: Could not open file `/dev/i2c-0' or `/dev/i2c/0': No such file or directory
+>>>>>>
+>>>>> This should work after you load the "i2c-dev" module.
+>>>>
+>>>> Silly me. Thank you.
+>>>>
+>>>>> If you get it to work, please provide the output. Maybe it helps 
+>>>>> tracking down the problem.
+>>>>
+>>>> ```
+>>>> $ sudo LD_LIBRARY_PATH=~/src/i2c-tools/lib tools/i2cdump -y -f 0 0x50
+>>>> No size specified (using byte-data access)
+>>>>       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    
+>>>> 0123456789abcdef
+>>>> 00: 51 18 0a 86 32 03 32 00 00 00 00 00 ff 01 00 00    Q???2?2......?..
+>>>> 10: 00 00 00 00 00 00 00 00 00 00 00 00 70 03 00 00    ............p?..
+>>>> 20: 50 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00    P?..............
+>>>> 30: 00 58 01 00 00 00 00 00 00 00 00 00 00 00 00 00    .X?.............
+>>>> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> 70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> 80: 30 10 12 02 04 00 20 62 00 00 00 00 90 02 00 00    0????. b....??..
+>>>> 90: 00 00 00 00 a0 01 f2 03 7a 0d 00 00 00 00 80 3e    ....????z?....?>
+>>>> a0: 80 3e 80 3e 00 7d 80 bb 30 75 27 01 a0 00 82 00    ?>?>.}??0u'??.?.
+>>>> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> c0: 00 00 00 00 00 00 88 13 08 88 13 08 20 4e 20 10    ......?????? N ?
+>>>> d0: 27 10 15 34 20 10 27 10 c4 09 04 4c 1d 0c 00 00    '??4 ?'????L??..
+>>>> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+>>>> ```
+>>>>
+>>>> So (00,b) = 0x00 opposed to 0x07 in your example output.
+>>>>
+>>>
+>>> Yes, that assumed that reading the nvram/eeprom succeeded, which it didn't.
+>>> The value might also be 7 directly after booting and before loading
+>>> the spd5118 driver.
+>>>
+>>> Anyway, it almost looks like setting the page doesn't work, or maybe write
+>>> operations in general.
+>>>
+>>> Can you try the following ?
+>>>
+>>> dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom 
+>>> count=64 bs=1
+>>>
+>>> and
+>>>
+>>> dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom 
+>>> count=1 bs=64
+>>>
+>>> That should only try to read from page 0.
+>>
+>>      $ sudo dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=64 bs=1
+>>      64+0 records in
+>>      64+0 records out
+>>      64 bytes copied, 0.046002 s, 1.4 kB/s
+>>      $ sudo dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=1 bs=64
+>>      1+0 records in
+>>      1+0 records out
+>>      64 bytes copied, 0.000215414 s, 297 kB/s
+>>
+>>> Also, please try to set a temperature limit, either temp1_max
+>>> or temp1_crit. Setting temp1_max to, say, 56000, or temp1_crit
+>>> to 84000 should do.
+>>
+>> I did
+>>
+>>      $ tail -3 /etc/sensors3.conf
+>>      chip "spd5118-*"
+>>          set temp1_max 56000
+>>          set temp1_crit 84000
+>>
+>> but it stays with the defaults:
+>>
+>> ```
+>> $ sensors
+> 
+> Did you run "sudo sensors -s" ?
+
+No, I did not.
+
+> I don't know if that would report errors, though.
+
+It looks like it does:
+
+     $ sudo sensors -s
+     Error: File /etc/sensors3.conf, line 522: Failed to set value
+     Error: File /etc/sensors3.conf, line 523: Failed to set value
+     spd5118-i2c-0-53: At least one "set" statement failed
+     Error: File /etc/sensors3.conf, line 522: Failed to set value
+     Error: File /etc/sensors3.conf, line 523: Failed to set value
+     spd5118-i2c-0-51: At least one "set" statement failed
+     Error: File /etc/sensors3.conf, line 522: Failed to set value
+     Error: File /etc/sensors3.conf, line 523: Failed to set value
+     spd5118-i2c-0-52: At least one "set" statement failed
+     Error: File /etc/sensors3.conf, line 522: Failed to set value
+     Error: File /etc/sensors3.conf, line 523: Failed to set value
+     spd5118-i2c-0-50: At least one "set" statement failed
+
+
+Kind regards,
+
+Paul
