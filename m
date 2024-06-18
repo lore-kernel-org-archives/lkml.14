@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D381A2FAC;
-	Tue, 18 Jun 2024 14:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAAB1A2FBF;
+	Tue, 18 Jun 2024 14:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719314; cv=none; b=SQ3wGPrrX/0ejXEnDugp/OQ05PIsg+cXVnDTPtZ+kZ93ZsStHWh9Urk6K1bi7HPzAooEduo53eO+zDfXaGXXrmwsOPwkVmrjzD7KLI3l3eZ5cv+FdWtOjcJ2CGR6BhcvtCYS6xJ3R50I7wMTWIokuWSznI8bYrimVthb7Mhme+k=
+	t=1718719314; cv=none; b=u28Zbn+IvypFt3x7Q0RgNHRi30Ztw7IaHdj6iTesneQx4QirRFbKgI7DaxAlWkZ3Dbwv1cpA630n90MLOxXAq8z9oQELhb0jfdusLTkRmJmNr6pUI6TrsgQVhAE3LILtvzr1PNW8CLx2YLPQxlBT/U9bgXM19wcy0HfMMNpqlAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718719314; c=relaxed/simple;
-	bh=0jdHezPBWe+kNe+HRCzZf6w6ruy+nn+tN2J4ZD4iVTA=;
+	bh=hP1Sutuk6GwUvPJcUtrxyool9tgsm6NiPeXLPxY+b3g=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=gsmaMzQn77tm6HqSLhecveNa93tE+k5kgxhcLsQS1OjYTFsfs2MPVBg4z8PSCtEG+n8Fn2RmIyQTf4SBk7waWcIdpiSFPllEemxgaukXNVowVGBPNj2B+vcSu6YkHelkrSMsrh1hUbufCAXm2Jqlh4IKLgxU/JoXhqD1z+RNXFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q3BAFEb9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N5/tVKaF; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=brFCd49U+7TM8PJrYY9fMWGmaEY9jkcaWbqU4rE3KEeeNSaFXWlVUtDr+U8Oz53HmaYBb66VS6dvrXoeyoxp3qsIOYwOyXwRaPblzLNy9Y+swvIBsg2y2lhMis91ZJuJ287puOztme1IL6lpM9pfDLLma5PHcfbQfG6Oe1j9pMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pa1ytrrc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OTtu2J87; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q3BAFEb9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N5/tVKaF"
-Date: Tue, 18 Jun 2024 14:01:41 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pa1ytrrc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OTtu2J87"
+Date: Tue, 18 Jun 2024 14:01:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718719301;
+	s=2020; t=1718719302;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M3XA7PCboLb5Mo8grNovBTZjA/sQnI1sb97xD2fnGdY=;
-	b=Q3BAFEb9LiqWWVjAilqNV4mkDlgzpMCLY2A3lst3M0CZES2B9ilf84g0VxA2sVz6dFVkIS
-	Ll6XHK4DLHPCsOfc14l+Khn86HsBoyumMb9kavNK4ejVql3PWijMOIKgIsMkSfYZzlwo0r
-	EHoKXd7rh2ZpLvLIh9cBGCqBwIlZmrYpPLQIdcvdk4VBNqyR+TNk68rV7C+5QWoT6+caMQ
-	wDD+WAaZRN1qV4abCfPp3agR63tnigfdsWx97zVEq6EhRS7dq5CFzcl5sfsA2uQrYT1vH+
-	arDvjXS1DP+E9BBoIZ40+AKHde+TSfo7UoBAQPY95IONBipyYd0In1fzIE8QmQ==
+	bh=ZvoOY9zrd3u9eFjKl+GvukzBW0ic62LEkWCMcrK2X7Y=;
+	b=pa1ytrrcQnqbsDr+pZC6EKpSdqOAhI2xLUp7zo/333+49JvJ12+Yckwc8PiaHHxOwbSHaU
+	pUyPvjbon2srb0bdA2TBGo5y5LrszJkyNoD7fxkXsheDrt/HfnvnsszPd5vcTZIDwPm0in
+	CXRMlaIlidWKq9CNhqjWgXc5bEF38j7n0/bMDa498XVbgfXU+mwJK7ZSXHrRcmOccxWwN8
+	FNVeM6Gwgj2odGr0H9Obc+JOZu5iDycXTi0nO8Nc1s65sTSW+F7WUCje/guo1I7H0e9gbY
+	0cgqA0jaXa1xxKowdM+S9NrBMCXuPg8RBqzsHZkGfPO3l2HAc+dswV28JOaLUg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718719301;
+	s=2020e; t=1718719302;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M3XA7PCboLb5Mo8grNovBTZjA/sQnI1sb97xD2fnGdY=;
-	b=N5/tVKaFpdBRBstBk+LUOmyQRFb41PfohNBuP6Y3BmSaS8jCy8C+A1hWE8xpiq0+4B8JAX
-	mxh/gY4MK1aix+Dg==
-From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
+	bh=ZvoOY9zrd3u9eFjKl+GvukzBW0ic62LEkWCMcrK2X7Y=;
+	b=OTtu2J87LGZ09JB5nGmQhSNPz+nNUqtUDl8SWw88Nw93b2JjPT2irfL0tykx1LBJSq5i2m
+	JK5eIPwCL9Ck7oBw==
+From: "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cc] x86/tdx: Account shared memory
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Kai Huang <kai.huang@intel.com>,
- Tao Liu <ltao@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240614095904.1345461-10-kirill.shutemov@linux.intel.com>
-References: <20240614095904.1345461-10-kirill.shutemov@linux.intel.com>
+Subject:
+ [tip: x86/cc] x86/relocate_kernel: Use named labels for less confusion
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240614095904.1345461-6-kirill.shutemov@linux.intel.com>
+References: <20240614095904.1345461-6-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171871930127.10875.6668721524099904982.tip-bot2@tip-bot2>
+Message-ID: <171871930260.10875.4112304051280084140.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,60 +68,73 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cc branch of tip:
 
-Commit-ID:     c3abbf1376874f0d6eb22859a8655831644efa42
-Gitweb:        https://git.kernel.org/tip/c3abbf1376874f0d6eb22859a8655831644efa42
-Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 14 Jun 2024 12:58:54 +03:00
+Commit-ID:     7b46a8997db27ed70b01458fa4437ec2360feddd
+Gitweb:        https://git.kernel.org/tip/7b46a8997db27ed70b01458fa4437ec2360feddd
+Author:        Borislav Petkov <bp@alien8.de>
+AuthorDate:    Fri, 14 Jun 2024 12:58:50 +03:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 17 Jun 2024 17:45:59 +02:00
+CommitterDate: Mon, 17 Jun 2024 17:45:46 +02:00
 
-x86/tdx: Account shared memory
+x86/relocate_kernel: Use named labels for less confusion
 
-The kernel will convert all shared memory back to private during kexec.
-The direct mapping page tables will provide information on which memory
-is shared.
+That identity_mapped() function was loving that "1" label to the point of
+completely confusing its readers.
 
-It is extremely important to convert all shared memory. If a page is
-missed, it will cause the second kernel to crash when it accesses it.
+Use named labels in each place for clarity.
 
-Keep track of the number of shared pages. This will allow for
-cross-checking against the shared information in the direct mapping and
-reporting if the shared bit is lost.
+No functional changes.
 
-Memory conversion is slow and does not happen often. Global atomic is
-not going to be a bottleneck.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Tested-by: Tao Liu <ltao@redhat.com>
-Link: https://lore.kernel.org/r/20240614095904.1345461-10-kirill.shutemov@linux.intel.com
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Link: https://lore.kernel.org/r/20240614095904.1345461-6-kirill.shutemov@linux.intel.com
 ---
- arch/x86/coco/tdx/tdx.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kernel/relocate_kernel_64.S | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 26fa47d..979891e 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -38,6 +38,8 @@
- 
- #define TDREPORT_SUBTYPE_0	0
- 
-+static atomic_long_t nr_shared;
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 54e6200..8b8922d 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 */
+ 	movl	$X86_CR4_PAE, %eax
+ 	testq	$X86_CR4_LA57, %r13
+-	jz	1f
++	jz	.Lno_la57
+ 	orl	$X86_CR4_LA57, %eax
+-1:
++.Lno_la57:
 +
- /* Called from __tdx_hypercall() for unrecoverable failure */
- noinstr void __noreturn __tdx_hypercall_failed(void)
- {
-@@ -821,6 +823,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
- 		return -EIO;
+ 	movq	%rax, %cr4
  
-+	if (enc)
-+		atomic_long_sub(numpages, &nr_shared);
-+	else
-+		atomic_long_add(numpages, &nr_shared);
-+
- 	return 0;
- }
+ 	/* Flush the TLB (needed?) */
+@@ -162,9 +163,9 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * used by kexec. Flush the caches before copying the kernel.
+ 	 */
+ 	testq	%r12, %r12
+-	jz 1f
++	jz .Lsme_off
+ 	wbinvd
+-1:
++.Lsme_off:
  
+ 	movq	%rcx, %r11
+ 	call	swap_pages
+@@ -184,7 +185,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 */
+ 
+ 	testq	%r11, %r11
+-	jnz 1f
++	jnz .Lrelocate
+ 	xorl	%eax, %eax
+ 	xorl	%ebx, %ebx
+ 	xorl    %ecx, %ecx
+@@ -205,7 +206,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	ret
+ 	int3
+ 
+-1:
++.Lrelocate:
+ 	popq	%rdx
+ 	leaq	PAGE_SIZE(%r10), %rsp
+ 	ANNOTATE_RETPOLINE_SAFE
