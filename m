@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B313B15E5BC;
-	Tue, 18 Jun 2024 18:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A8115ECD1;
+	Tue, 18 Jun 2024 18:18:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718734697; cv=none; b=cnWBeuHxjZmkLOZ1FcNvoaKer5g0loQx5X3U6mqSA9+3LJEEBZnkt+Unwfd6jRHQ4xl6IQdgHN3xwVUBn19DXFb2lc24W71hisv7kFmVVAQDhC1he3NJZYl4i1gSsWSlDvUBhVzYeCFWCzqTNE7GnEF52JGMnm1npU4AoQ1IMa0=
+	t=1718734698; cv=none; b=Zv9M8lTRjfT5vBfr2eXEMuYgAhfvb/1rOUMGBdKb2YgA9FrVa0mqBWmcME3j2x2A2G70PihF6tdi69eWGrqRJRPRT1/gHelY9OS9GMzoJ/F2406RVhejMITPU6XBrFSxVMFzgqpbOEUcZabwLXmABiV2xwHLDYcfMNI+9mBLClc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718734697; c=relaxed/simple;
-	bh=7hRdxjHOSIuwrdZCOKzvtYTSDa0l/gnw+9kuPa/0bZU=;
+	s=arc-20240116; t=1718734698; c=relaxed/simple;
+	bh=iHi9F2LJwfRH7bQXO7MbPtxBZ9hQhqVO/mLP8mATsq0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EpKgAAPH73E5CPKCl4qkgBCuSo9rs9FleChmJJcx6xjfeJxlr4hlrHZbgTzRPwIugEy8UdqoDlpvlGtCTiFjM9UDimdeY422mD1WzN2QTV0P4Z6bssVC2Xzkpa9l0bfORYrWDOQNYxMGGzvG0nLMKegZ1Vjmbkf1XRN7QORbg58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkohSxYo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=W1mMwAe/U2SVON/hEnLFracSqi7KU+rjwgsHrYHXIWoeconm0ftTuoOtPuQnXOcKVeONL1uKtPLHadEBIxGT9RnRZU7zJlFb+Ghm2yUXx2KMhdjU6BOuGuH20ps9dfJl4U5hFHCKJw7q5GgiCQ5/vDfu8HxWniyofgsV46uekDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYOkhPAI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkohSxYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D542BC4AF48;
-	Tue, 18 Jun 2024 18:18:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYOkhPAI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A89C4AF49;
+	Tue, 18 Jun 2024 18:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718734697;
-	bh=7hRdxjHOSIuwrdZCOKzvtYTSDa0l/gnw+9kuPa/0bZU=;
+	s=k20201202; t=1718734698;
+	bh=iHi9F2LJwfRH7bQXO7MbPtxBZ9hQhqVO/mLP8mATsq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rkohSxYoVet+2VnInROCLHYvbmT/IcPl8P0ZgsPJ3X5uqKAAALvILpaMNTgGw2HL+
-	 pA+wVpDtiRRJCmbVDvwOy8kIDC3Ybx/M7EllPDu5PiuRpxWxCTL1Q0o//xVXjeXAGc
-	 PyxuRULZuqMY6uvSC9/eijvV1adFiBJ7alMLDXzn7OXN4Zl0nxghlYw9X1AKmLb/8K
-	 rMXmH7ZDhYb7tpjfcBqUr0HQacYPAy6ttPJ76I2ENZCQwJaXxJVzD1oE9uKvrub2Wt
-	 6v82xCBHrO/7cykYCj+gtLR88OKpLBk1gH6iTcPcMlSflBWhDl/2OVHuce76tLx/hu
-	 h+yFlMoGobSuQ==
+	b=aYOkhPAIdBUFDJZuuOt/U3pLKRvSSX6WXYHpo+fIAycQr3OgTttGwtX284KPO+qPd
+	 hPVHPYRAtFozTVYqtkOhu2yi1QuxXf0q1fDgbkyNr9zb6YBKJdtc8u3LenvjZxZjhS
+	 ikrcX0GVUDeS6WeqszBOgeAe7eDR1c7gJhPc3iHVs8eDGvnMC0s8naVmIA6dH5+QGb
+	 ijPhu813BtP4jEPR18XhavPEc9pJ4IgbSuIqyrQRE/2Q5cv/Na8SAX8D4J9Hqo8ams
+	 YfHlm52WY2W/hyEXKQLccxzAtQlY4VNpvFvletIxoA/vcD4xKg3jgcWp8zqTeYdfTV
+	 BMtuWx94rR9Fg==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
 	damon@lists.linux.dev,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] mm/damon/core: implement DAMOS quota goals online commit function
-Date: Tue, 18 Jun 2024 11:17:58 -0700
-Message-Id: <20240618181809.82078-2-sj@kernel.org>
+Subject: [PATCH 03/12] mm/damon/sysfs: use damon_commit_ctx()
+Date: Tue, 18 Jun 2024 11:18:00 -0700
+Message-Id: <20240618181809.82078-4-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240618181809.82078-1-sj@kernel.org>
 References: <20240618181809.82078-1-sj@kernel.org>
@@ -46,102 +46,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement functions for supporting online DAMOS quota goals parameters
-update.  The function receives two DAMOS quota structs.  One is the
-struct that currently being used by a kdamond and therefore to be
-updated.  The other one contains the parameters to be applied to the
-first one.  The function applies the new parameters to the destination
-struct while keeping/updating the internal status.  The function should
-be called from parameters-update safe place, like DAMON callbacks.
+DAMON_SYSFS manually manipulates DAMON context structs for online
+parameters update.  Since the struct contains not only input parameters
+but also internal status and operation results, it is not that simple.
+Indeed, we found and fixed a few bugs in the code.  Now DAMON core layer
+provides a function for the usage, namely damon_commit_ctx().  Replace
+the manual manipulation logic with the function.  The core layer
+function could have its own bugs, but this change removes a source of
+bugs.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- include/linux/damon.h |  1 +
- mm/damon/core.c       | 59 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ mm/damon/sysfs.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 3d62d98d6359..ce12c9f1b4e4 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -742,6 +742,7 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
- 			int target_nid);
- void damon_add_scheme(struct damon_ctx *ctx, struct damos *s);
- void damon_destroy_scheme(struct damos *s);
-+int damos_commit_quota_goals(struct damos_quota *dst, struct damos_quota *src);
- 
- struct damon_target *damon_new_target(void);
- void damon_add_target(struct damon_ctx *ctx, struct damon_target *t);
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index c0ec5be4f56e..b538a31fbd83 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -666,6 +666,65 @@ void damon_set_schemes(struct damon_ctx *ctx, struct damos **schemes,
- 		damon_add_scheme(ctx, schemes[i]);
+diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
+index 6fee383bc0c5..0f9fe18beb40 100644
+--- a/mm/damon/sysfs.c
++++ b/mm/damon/sysfs.c
+@@ -1345,6 +1345,9 @@ static int damon_sysfs_apply_inputs(struct damon_ctx *ctx,
+ 	return damon_sysfs_set_schemes(ctx, sys_ctx->schemes);
  }
  
-+static struct damos_quota_goal *damos_nth_quota_goal(
-+		int n, struct damos_quota *q)
-+{
-+	struct damos_quota_goal *goal;
-+	int i = 0;
++static struct damon_ctx *damon_sysfs_build_ctx(
++		struct damon_sysfs_context *sys_ctx);
 +
-+	damos_for_each_quota_goal(goal, q) {
-+		if (i++ == n)
-+			return goal;
-+	}
-+	return NULL;
-+}
-+
-+static void damos_commit_quota_goal(
-+		struct damos_quota_goal *dst, struct damos_quota_goal *src)
-+{
-+	dst->metric = src->metric;
-+	dst->target_value = src->target_value;
-+	if (dst->metric == DAMOS_QUOTA_USER_INPUT)
-+		dst->current_value = src->current_value;
-+	/* keep last_psi_total as is, since it will be updated in next cycle */
-+}
-+
-+/**
-+ * damos_commit_quota_goals() - Commit DAMOS quota goals to another quota.
-+ * @dst:	The commit destination DAMOS quota.
-+ * @src:	The commit source DAMOS quota.
-+ *
-+ * Copies user-specified parameters for quota goals from @src to @dst.  Users
-+ * should use this function for quota goals-level parameters update of running
-+ * DAMON contexts, instead of manual in-place updates.
-+ *
-+ * This function should be called from parameters-update safe context, like
-+ * DAMON callbacks.
-+ */
-+int damos_commit_quota_goals(struct damos_quota *dst, struct damos_quota *src)
-+{
-+	struct damos_quota_goal *dst_goal, *next, *src_goal, *new_goal;
-+	int i = 0, j = 0;
-+
-+	damos_for_each_quota_goal_safe(dst_goal, next, dst) {
-+		src_goal = damos_nth_quota_goal(i++, src);
-+		if (src_goal)
-+			damos_commit_quota_goal(dst_goal, src_goal);
-+		else
-+			damos_destroy_quota_goal(dst_goal);
-+	}
-+	damos_for_each_quota_goal_safe(src_goal, next, src) {
-+		if (j++ < i)
-+			continue;
-+		new_goal = damos_new_quota_goal(
-+				src_goal->metric, src_goal->target_value);
-+		if (!new_goal)
-+			return -ENOMEM;
-+		damos_add_quota_goal(dst, new_goal);
-+	}
-+	return 0;
-+}
-+
- /**
-  * damon_nr_running_ctxs() - Return number of currently running contexts.
+ /*
+  * damon_sysfs_commit_input() - Commit user inputs to a running kdamond.
+  * @kdamond:	The kobject wrapper for the associated kdamond.
+@@ -1353,14 +1356,22 @@ static int damon_sysfs_apply_inputs(struct damon_ctx *ctx,
   */
+ static int damon_sysfs_commit_input(struct damon_sysfs_kdamond *kdamond)
+ {
++	struct damon_ctx *param_ctx;
++	int err;
++
+ 	if (!damon_sysfs_kdamond_running(kdamond))
+ 		return -EINVAL;
+ 	/* TODO: Support multiple contexts per kdamond */
+ 	if (kdamond->contexts->nr != 1)
+ 		return -EINVAL;
+ 
+-	return damon_sysfs_apply_inputs(kdamond->damon_ctx,
+-			kdamond->contexts->contexts_arr[0]);
++	param_ctx = damon_sysfs_build_ctx(kdamond->contexts->contexts_arr[0]);
++	if (IS_ERR(param_ctx))
++		return PTR_ERR(param_ctx);
++	err = damon_commit_ctx(kdamond->damon_ctx, param_ctx);
++	damon_sysfs_destroy_targets(param_ctx);
++	damon_destroy_ctx(param_ctx);
++	return err;
+ }
+ 
+ static int damon_sysfs_commit_schemes_quota_goals(
 -- 
 2.39.2
 
