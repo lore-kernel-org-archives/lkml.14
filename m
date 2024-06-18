@@ -1,47 +1,47 @@
 Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B9F1B94F;
-	Tue, 18 Jun 2024 02:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2304F1D69E;
+	Tue, 18 Jun 2024 02:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718677476; cv=fail; b=jPoOhLqSVMv8BYFdTV9Aw0ZLmf4dIFb7WYioaIyCw2rodyKdiajao4SI2vkbUVQXwwMEnbLW3WetVkkRub9LRjJM3C5Pvpw3PbgdSloFD4/H+XTQb7FPLna9VBttlKMRfuhcyohra/SnasmNiRDWZxpiNYGXFIzT8Z3wwCjy6O0=
+	t=1718677478; cv=fail; b=K7Sn2oe4I7y1GwMeewjQi0PXyykxMDJvev8Dg4ZrgenOubeA96iQPVh08QQg3Tp9gMml4PPVGGfQyAoqdT8/okHbTPgTdx5plf/XmQ4ZBVI3UNhZKMFJVkEUJ839+RTtrFZBQHx5Bof1mhGvIZEfBhBxYRP+Wf1NK/dbGz2i6QE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718677476; c=relaxed/simple;
-	bh=FZrf+gNZtLWOihnJW5hsoQWtglHIcoCDdxtWhY7bF3c=;
+	s=arc-20240116; t=1718677478; c=relaxed/simple;
+	bh=r25R3DLw42bRvjPfM3GMuKdb4gojkuS9PIw/UC3TZNg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ax0o3x7eNIqX9fekot4XLCBw3PI+jGSo6GPF63msuTZ1gOt/GPvYYRDhd1a4d5g4b5xRkkh0Do9h0bYW0zK1qlRa6c6KXe641WRn3oqXD9JoZxJga28Vu3Ly6PHtSiI9iHMk99hV1lmA3Mcx+Rzf+4xd7JJZTSKXQutnN/jOR9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I3IM5Y5i; arc=fail smtp.client-ip=40.107.243.79
+	 Content-Type:MIME-Version; b=h91uFnlHtvsXfKmnIfjLoBby97hI6e/2S0hqBVzfkennZAWfixqGqfn1LsTJaPYsOg1BArMDxLoVR4HSp7RWeDYv7YxNGEN+hwE+6cGVV6EB9z6TApbxqXr48dqxERYLKxQI2GKU0OjXIa5Gc4XTBSeqV24w0otBDjJ3A2JV96k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AhlobOrt; arc=fail smtp.client-ip=40.107.243.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I3IM5Y5i"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AhlobOrt"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zlqm0xIOD2EYl0sRt/nU3s0B2YDUJhaSLSTUNGXqiBeAHzK8ddb00uuN9+4FBa6J9B1FgG5zs8zCmJhpgZz+jOLDffQkk/jBfwvdEDzJKFyfz9VGJV//9A+GBjjYWhUDH7eqMZPacAv+90NQBGygkroj1Lf68ZewSUSJmU8FJ0zYwUEpepxohjtRNiQM/X3XZdELoiTTstxoIHp7lJA9+CbSbjj0D/toHemlWIMUeQCLFcqpR9K61wmV+521N8g9YjJz6ydWbb26fzJXIbA3eg3XM4Gj54ZHJf0HPyOr1eyJ9GOwAnWPQOc98lSEBnQKjCMPfO+WGRwSHRUrfPDNRA==
+ b=fDrr9S0oRn+91wwIiq294ubX+avDQOwls+aSZdoS97GzRNg46cCyV7onvTF3JhgIg7ufoT+GudPUF3pS+ptq6HogrkSzWNHdtpnBizG/YJSjf3lefg2WLQnhvD2wyYYzkTqmvTDq9Y4FO7rPXCjn4rLkBVG6t4ui+4tqhymhNNMPQy2G6Q/6LVUe5ZMGh3QMcnJ1QIM0xiSmgr5F2/1JKhaAuYDpAMaKEBvL5dwbLpMeK0f23E96rvwucf194xJTFlEBExmQhdKT6SoNz6WN3Fwq/Bm/3MtoygXW95B4ryyveeY1O9BtPd96eQ0km3nfPo7kdAQxKbPEUyxQqQdi5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OHCQG7BggPiMHbTnE22zLbGUpD7QcsjBk3b5b+WODUM=;
- b=RbjhgOfOjIX3jvI9/d1N5pfy2/aU/klZfxeBeALbsGN6Q5O/USkws60yefx8j0lM0USMn2PXGjfmF5k9uLuBD5ckmf1SMJYYX2BlspENJ/n4LI3ewFjfP0aotNx6oImN87K29V2LNSNlZcqpTuktdW26oh9J8ixmZaQ138dXTogf/OzllBDDXGF0rWd35/durWXzFZ2gkaH/5SeSJ8W3H/TzuLd+S5QFwco5fAPen3DFDuJBrJfcL4V6VuRyRVgeRNHDc+CI27Ke8sSWprwSQkJaVF/XKT87c1lDaR1fVnEE1QOLwA5RmVzYYULW+zSjAcNsUuMqCEQ3xd1A4rKcCw==
+ bh=4WrJZsMOp+aqB2aUs9lp8RMTT8HkgthjIv6hrWU1MrU=;
+ b=KNTx82HyDraD0RMqW7QMOty/gSPsOuM6ZSk2jMBUpOZ+UOe3yVJLNTB4UuyX+KwI+wr9E4aK0xGW3cE6zFLWRJNp0bNhfSVs140eHXcIBSbMr+zajhnm5DGUEH07K4/IjbWZeV+6QH/+zfGQhmUCYABy4wocoSO8Y6jlHc/EJ/5+DGeoCBrHjtYL6gM9RxECTUNf6gOmWpE9bzPqNl9A1ebpUTJ2x325CF9mvWya4RD2CpSI/gyUyeRFbs1H33TaaQRQ2Did+oyhWBZl1xtC4QejVW64bfEDeG3n/4mPZNPWDBLyUm4boklrkcXu0sasCRvB3LV6is+MAUzQDkmeTg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OHCQG7BggPiMHbTnE22zLbGUpD7QcsjBk3b5b+WODUM=;
- b=I3IM5Y5imljOvPsj0Hgha5jWWebsQfclfXF+sqVInZMdQoqcUdjgWMe8MgvyTnqPBEWlwen7kTMlLJWvG8t5iLSUAueIORnd8ER3tvMmZxD+S/T+dT/HP6KYupEp/LMcDc4IW6RjWYl3QgVhxA/7e5Ej1aDZrOC9COVyWlA+6WiZ6aMlQaKkv0SJ7CmIozHLfQfy7ysRI2y+vlQiYETAfDHODtF7hRRYFLap8YMwyavO8OY3H8ezo5vyClmLAWKnav2o8d0fcFBB0TIw8Cbe2q2GKRknlKWufglQ1cl6I02vFb8d+GsRhb8oLUo3oDkPvRhAtD3iXF0NmSMfio92LA==
+ bh=4WrJZsMOp+aqB2aUs9lp8RMTT8HkgthjIv6hrWU1MrU=;
+ b=AhlobOrtlM0TA3PddqACMmosnzhlwwIGhiqqeuZShqeDlxap11Q3xqG+z7m+3aZbWWfdJEsqTczxmDh3q2fc52AfKsxEI02KTDN9S3gg0pZBf8UT59M7ygUst+XR/WKYAiH4DPRURMVicKY+h3zRQB73t/6fpw+chmw8eXHGDIsCo2bJqpubhA7J1MkhPWn4oXTbkT/SlSvzuAVhwBri8foRaEqXA1FSRPAWZLF+konjIPvQx26nEPvElKStrOvxvFO9VubflNKMmQSP+tfO7UsYIt1AtAJZTI+1yPOeNkP0FB16GF8lDpA6AmUSYGi4m7DI3T94cH0Xb5yiB6YHlA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
  by SA3PR12MB8047.namprd12.prod.outlook.com (2603:10b6:806:31b::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 02:24:26 +0000
+ 2024 02:24:28 +0000
 Received: from BY5PR12MB4130.namprd12.prod.outlook.com
  ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
  ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 02:24:26 +0000
+ 02:24:28 +0000
 From: John Hubbard <jhubbard@nvidia.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Jeff Xu <jeffxu@chromium.org>,
@@ -60,17 +60,17 @@ Cc: Andrei Vagin <avagin@google.com>,
 	linux-kselftest@vger.kernel.org,
 	LKML <linux-kernel@vger.kernel.org>,
 	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v3 3/6] selftests/mm: mseal, self_elf: rename TEST_END_CHECK to REPORT_TEST_PASS
-Date: Mon, 17 Jun 2024 19:24:19 -0700
-Message-ID: <20240618022422.804305-4-jhubbard@nvidia.com>
+Subject: [PATCH v3 5/6] selftests/mm: kvm, mdwe fixes to avoid requiring "make headers"
+Date: Mon, 17 Jun 2024 19:24:21 -0700
+Message-ID: <20240618022422.804305-6-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240618022422.804305-1-jhubbard@nvidia.com>
 References: <20240618022422.804305-1-jhubbard@nvidia.com>
 X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0227.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::22) To BY5PR12MB4130.namprd12.prod.outlook.com
+X-ClientProxiedBy: BYAPR08CA0031.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::44) To BY5PR12MB4130.namprd12.prod.outlook.com
  (2603:10b6:a03:20b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -80,535 +80,438 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|SA3PR12MB8047:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27699c89-858d-4ad2-e2d9-08dc8f3dc65d
+X-MS-Office365-Filtering-Correlation-Id: 097689c9-3b85-48c6-9f82-08dc8f3dc77c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|366013|1800799021;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7+LjVT+lIYYP5u8X3wfF0ZmDdqU5zdxzr/WCYaIq1PXlYzGNjnbJzhLYfelv?=
- =?us-ascii?Q?GXQYdpTqbr67WaCP7Uj1EOOPSW8CwIFW6vcvMvusBbSWME1scNXp2rW04To3?=
- =?us-ascii?Q?ghGX47I/4XiHo1P4KTp8V0ffy2fAqqK3hRmaR3urqERFAlRVD/pDvMTZMkX7?=
- =?us-ascii?Q?wrQamUf+39m8LtoEqyZQXFApSXtL6KtYbz9pBqRwcREs6b5YpoIlYGuO25tY?=
- =?us-ascii?Q?SxfoigrSDdcmM7c67pnR9Wc9Uaq/WnTjs17JixO6o9NzvUs5u2qdXASIXCMz?=
- =?us-ascii?Q?XLSvspn7qFat2JrD3nWusa9zml3yJBJgZ6KYR9z7fHHdvA0/QTyrJRoHDVsf?=
- =?us-ascii?Q?t2iaznr0s0y0vkPombHHGSrli6ec/105g0HzIyuSBEaAsWhlrqC3SHnnoC2T?=
- =?us-ascii?Q?dpiNm/XqN7jzIDpmEAI8xHBgOclTrgk0Dd71u42n3hRuzXoPO9G1g7tiPJbz?=
- =?us-ascii?Q?qUQiuUDu25x3koy239EGi/nMXMLkw8Du5q5/ffDhCZTsmaXUgLGh9f0lK87B?=
- =?us-ascii?Q?jFY1s9WNp/3IzcR7MmgU7LY9cmH5MRmGpd0G95bBmAk95yhorUJb8BCrE9Yx?=
- =?us-ascii?Q?BzzWaZHaABW0JOGf/rq2hvLv5VXC5SHbVD2Wkp4VvgwhaNb6cYK4gi4da0xo?=
- =?us-ascii?Q?hfvUIIP3QKxfNjHSM0XTfk23Vk+Ma+dfKh4UtgMPZlLuecum6rIOBnzpOfgW?=
- =?us-ascii?Q?3RldUn+Z81E1uMFAzXHbsnnwGUoY2c4Gwlqk+HIuDjZC/lsQkiIUSlfz4ILV?=
- =?us-ascii?Q?6PePe3tpzTx3Em+iq2KQrOYcAtFqYOvASII9BZ/ONby8PZqVx7bxqnUUOPU4?=
- =?us-ascii?Q?IB+elq4ubmp6feSzn2r0eNmGTPw2m/DRCIuAi1gcxLmGygz8Mir9yXbDHg6q?=
- =?us-ascii?Q?Q7UqeVhfl8ptECdftBnDBgfl9cEhYi5NSlwNrGog8krf1xBnm5Je8fktFlP0?=
- =?us-ascii?Q?Z8eRcKdfLtAdd/NUKvvX0Bfxeud3uvvRz7c7Ftv4C8fwe+hNxQ8I4aL1Eo2L?=
- =?us-ascii?Q?Tl0Ghh+LKn9n2WK3HyevX/sL8IZUCIv63xqrzSMIpiXPdjWbrRHnDfx/GLaq?=
- =?us-ascii?Q?kaISeRUAyx861MqU4EkJ471Y7pNxOkqaWhopyS2cQqUkAtRbvLJ19Ghlpxa/?=
- =?us-ascii?Q?FVGW46Gi29v5PWybS8ywIIVdWFeM6nLeZh52ndqBdXEClppQT9802XronDSW?=
- =?us-ascii?Q?HtitqckbwX2AWoJm1eUDMcEYhlV7DNARuATCnTn9g8qBXDqZ6RLzcgBfSdkX?=
- =?us-ascii?Q?mkQxpDcwkhhADg0WCyukrLDX25abUjon1dRD9hRxgYytKBhw10ok0w6+xAq+?=
- =?us-ascii?Q?ZwdsSK04Lq2KzHs16JFxn/Xk?=
+	=?us-ascii?Q?brUIShgwJo/KYRpEuOBq71ayEfuUiXSwAaxjf0u1g4ZOmGJ+gFbPt+mREJvZ?=
+ =?us-ascii?Q?X6uFq6AUSGTM9skJcgVEvBVXQUmzCdG/hPDMmee/Q28EYa2d+fTebgk+ttoz?=
+ =?us-ascii?Q?sHdD05cLXV+7jfwNYKUTs1kxx7Wh9drjb2Qtz8Aq3TH80EjQeMjS0hZ8uwbH?=
+ =?us-ascii?Q?GP90G5C2eso+3Si7J7tR8BSr2zwgu73MF7ThCHtTzQdbc9mSc0ymRlEUv8kW?=
+ =?us-ascii?Q?wbaU6iPKxo4BfDLcxD7f43xN4KT/McRkAlxXaAkEPWmgUwZaGwpoixTEZm7z?=
+ =?us-ascii?Q?ysiNxiAnj+5z/p+QS0qbtMsRYC+TcIQ1/ZPR1rDimY2nPrs3ksXu0kHcD0mo?=
+ =?us-ascii?Q?ojMh1uk9O9gGnJh/q2w+jDv+QPmoSTU1zpuR8C6IFWcsRxfey6JRAbh/ancF?=
+ =?us-ascii?Q?rp/HJ5QDrpY7qbbdk+0zrA6a1ENw/ACdVrxlDcqaG3kRbYSLzr5lbIOHdk+K?=
+ =?us-ascii?Q?6NGgbziCZpwrl5Xy0tS5khCFWLm1QUKjOGG44E7xqbOMxGQb0fF5npiOMb7N?=
+ =?us-ascii?Q?DHA7ivXiirJJXM4ucj4ASYOzbdIRguhCadh/eYmXxqicLwpVJzX2CWd4w8Db?=
+ =?us-ascii?Q?vP3F9VE/ZYQ0iWz4Vp4q7LQVlA4HdfC6g+uZsnpUuTo43t7QAcf5Igo4Cj/A?=
+ =?us-ascii?Q?Y7O/KVFEuGjko0mbyDqMmkuPc9KNi4RvbTH/xYcpxKScQ9Cw544sUtICZkju?=
+ =?us-ascii?Q?w/GRhDzlhRs0M5F2Q/5H/KWD7LSd0rPJFcd8FMHORgCgVKFPeL03KOR2k6BC?=
+ =?us-ascii?Q?NYNRYql/2MamKL3Q/7avmvCG+JlvFipTfwXoVSiVqgrgS5Smw3XTiOcqvRuE?=
+ =?us-ascii?Q?aqzTHil9jCV9qF1mwY8DyumcBY2ZHrPl3upPt0sWDfo277kgvp8MHndL3Ix0?=
+ =?us-ascii?Q?FwxPBSom55hKq8acJ8fBs0Up8po+ITybeerFZ60q9y81J9W7bH3ZPW4oe56h?=
+ =?us-ascii?Q?K+RN1Iy2q0FUPTztbXhDQfXy269Nm3JnRvavYXpKYmUwcPofTRtHae1fYnhs?=
+ =?us-ascii?Q?Y0qnRongnIkmcCPZ34J1FFxKwRdW4kRWM9YRJdpn7VTOV/f+Lz+aIchx8w1k?=
+ =?us-ascii?Q?VgPE1u3iLmqxJ9afa+/lUD1SmDW9oSWetnc5HiIggF4gUSDqI4lq61kwpwBY?=
+ =?us-ascii?Q?jndIKpqkV2pecqql0mk/J4sj2MSYeJoi4FByOvxGuPqgoBMeHmL8ZRRM/YJc?=
+ =?us-ascii?Q?A53+XoCL78MnHmOJes/abYvbjP+OF2K4p7UVvTV7KWJTFCNgtiHyqnW25XZg?=
+ =?us-ascii?Q?jaBa98J0OYXVxJ3kB8xVSDA0J8RZrp0vo//P7YErq2adzyySVnFisc/bFqiG?=
+ =?us-ascii?Q?phXuGkD1DgCYgGY1f3UmtSu9?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(366013)(1800799021);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3Bi+m7dPlk+TTZxtOGngp9Dm0n0kQABKyzDxoFdFjH5RTRN+byTBDV76Wlpu?=
- =?us-ascii?Q?AH4nobKzQSDEsb4czcDZb5AqzeYhGrOtG5MFv8AOjYHrK32sFmkH1dM7Di4O?=
- =?us-ascii?Q?ruIZqyAE1WNCbgTVJ+Ef30pbItSjxG8apzFX4zYgKwKBs7sKFxX954z4rzO3?=
- =?us-ascii?Q?AJY38OsCzM25bQsVMB79M1Cu6/erjDt6EWa87pGzniskkEFuNQv5QFpDZQay?=
- =?us-ascii?Q?OP7rk+mbftOlusNpsa6FC1jdBiBZsgqnV1gkKjQ1Iv/QDjrzZUTu1h+Hd4kd?=
- =?us-ascii?Q?Fus/63PWg1gJPuU8aGPf3nkoeAPpzoD5K678wutkkUZ/oBCU32WmUhybBmQt?=
- =?us-ascii?Q?69sMlFIhbhgQIQOCh/2/Hin8Y1EMnPTmSX5sU7ZMKUWjqW8Q9BevfoTShZm6?=
- =?us-ascii?Q?mab1zt70uURso2oMOruAY55wBw02TR3o0tHuziOmeTv5i+XwlcZfBvP9UJl3?=
- =?us-ascii?Q?6RGvTuLTghcQ3b9oxHypuSFSfsQ/1aLjwXGwHSPlCYf9mHiJKZdNGQPQYFkt?=
- =?us-ascii?Q?NY8LzZTIyBRSVvuOFusr4Arxg0egXnL3GuahVH3vm9AuFABV3mf16i1HxPCn?=
- =?us-ascii?Q?P5nUY5geToUg1ZDwTVlhoQkdFHEDL89Q7z4Gbc+1oAGgHl/x+2P8G6oQMag8?=
- =?us-ascii?Q?Lz5yHqTWd8UBYklvSJUF5gyOCVcVz80dOOmDZMfCmUDl5sZQ9LGz6A7KMFGX?=
- =?us-ascii?Q?zoctu5RbqBNFlio4y+7UGhbbf0tRXmynvzVUdG1i/5hNnUKC46UaBg2GHRZv?=
- =?us-ascii?Q?zHu161daSe/GQ41+X/bVIWSRgVX5EfBnsedr9ytfZcRI1XaRNXT8AECsqZEy?=
- =?us-ascii?Q?JIs+YsakQ+G88t8OwssIWOTQgkEUKN0lg3cWAQdxbQe+2WeYdV2lgWQHO1r6?=
- =?us-ascii?Q?RXqvXkrd4m2ovKr+Y5Cf4Tuuh0qO15Ytd71lINK83px13iC2STnASx3JOgbD?=
- =?us-ascii?Q?oa7ww9L9gUYyVm9iAOjdbQlBEjCRse4JLCQ+5lJlikcqxug8yamaLO2bzGZ1?=
- =?us-ascii?Q?6xJYbY+71Ol9d27QqllGAuAS6Zp/vESzBDWJVwH1+U7cxvEnlLhrmKY0qjvM?=
- =?us-ascii?Q?29IdbkPLQn2rfGE9rYdfkDsQ46KrY8SCsgDnZhZHjwFgB/8T3AM3ZU0vXkji?=
- =?us-ascii?Q?2burDqg9xQ5poUhHSq1j2Moc9HDheDy7Ltjwvm5/I0ytmuQza1VUIWORrjog?=
- =?us-ascii?Q?TeLbrqR0l17Oi/KdOzhhlRYBlDS/A2IYw1v78lddfSEUdEfrHAiR164PVKsG?=
- =?us-ascii?Q?DYH51xd9ynuEm0GUAlmXmAi18swqP+X12I404C6f0AiCmamPAkaov0K4Ojgd?=
- =?us-ascii?Q?WMrY9nU/nqIHGRUJi9B4/3WL4WvlHd1ipe62zWQJzuMP3iAVHNxv1XkxCcyN?=
- =?us-ascii?Q?zHzFmwVQv9ccRSdYkBAF2t8XLTsj+8itQQabnIBoXP/mkdDvcIBo+/flaMme?=
- =?us-ascii?Q?DDPjq4GzOZVD6LQXAzmsO9FYaMikhNCFOOAwJ6W5cSgJeFdemso/oKj6JTxz?=
- =?us-ascii?Q?Fb5JOiTKUf/3AF9K5rcXrYD2NDiNCXia+jgvPa5B1JxmoV1ZL6gIglsXlUqr?=
- =?us-ascii?Q?k34f2AR/of4+7wuHUuZxSh7jidXH+95G0tiZlSvo?=
+	=?us-ascii?Q?hBpX8LMzeWxBz3bIWqUnzJMRP1pdMBuTzkRnItu0kgATfOf4FAbtACMaV70D?=
+ =?us-ascii?Q?rZMlHnRlYL/jr+HZFgpzt4LHACAK1DMfgk5OsGkDLQ0Lq1+ZGdghLlOjNFZS?=
+ =?us-ascii?Q?RsjVFZrCNxkSCnJcjcV8GiI/nqL5rYGpUkpeAhgMbdlkhHBO1sqcWBmuN8t+?=
+ =?us-ascii?Q?d3bWMS1hU/t9Wfc0oHvIDxR0IQfT5AA+tNm7rTB4Q0BtAx1C62BIBQg2XqwD?=
+ =?us-ascii?Q?kbXf5DDX1i797Go84BFH7L6LKlZULkDkyZJVglU59SPRJGPbvEz+ELXEnZp1?=
+ =?us-ascii?Q?JtMdDi526azFiJHWShdQYaMyUIYbEVidkvQv64CWiO77vrCeEzXNKekBqsBu?=
+ =?us-ascii?Q?qNH7wq0tKvE90rt1ppkrwo9CVi4L+5wKR0ZfXsJFuKGZcgrf8VT5YPdp3dH5?=
+ =?us-ascii?Q?PhFBswjF+7Q9ZbTa/SvmzoNi1ohXe4wYe6aYeP5sY2r0WKWEt2va+923D+W1?=
+ =?us-ascii?Q?rp7MBvWJhB2iKTTaD4bEzjtTILFIgh3Jb2Z1xIrA5DnQng0oxriIPXsAxzJe?=
+ =?us-ascii?Q?nrztgAmi/3idI7kRQtVGHd8Mh1RcTgfznLj8MxlgPMQq1VJzhMi6OJe6ECsi?=
+ =?us-ascii?Q?HMtTEOIpqRQ5zdvto/7clxwQ2/6BQIMSe6b8jbmd3A/K5n/G708ozSVpLXgY?=
+ =?us-ascii?Q?HQQ+RLFWIdAF5xu6TlDOWjlhNEgciflrz963GGTgY8UX4Fbt3FDuyxCRDQwm?=
+ =?us-ascii?Q?lJjUdXxTKA9JwMtAqu5nrsPdO6H46l6Cr2biK1xjp/Q6P/HlshObn9d/p7FI?=
+ =?us-ascii?Q?+4mnTlPj/wsNbWJoGzmsnUZSDNyRx2mAmX0IR0MlZMBXv69w4NDSqSDgCgbB?=
+ =?us-ascii?Q?cVxPvUAmv/vH7GXEDsSKJu4hOKd70WR/HLUIrvAhs4OL8RJRxDfCrfYyLWId?=
+ =?us-ascii?Q?i+4Yazx1nun7zLmAz6RuHBP7XPIKDk5DEJi5XOhd4+C0PWOTq4WVtiEGpCaZ?=
+ =?us-ascii?Q?T4NYhUsBSC6xAZjPXVylKR6mNa5vmVCpa29TDzGPum1/0RqHKJUnA9xJNOU5?=
+ =?us-ascii?Q?5GukvWvCHFhuwwE0REbZoLvCTKMLqOnj/NZ0aXJORDdo7Tz++ASMkdXrmvem?=
+ =?us-ascii?Q?3otSRS78T0y+9mx/6mADQJvmTkGUMFIBJka/ofUhW6Eeu1Tut7A2BMvzEeAQ?=
+ =?us-ascii?Q?YZnV4w4uCSdlUhB7SrgU2UaYyGlG8V593cx9aAuErDKelYyYJDHXnUjdjAgd?=
+ =?us-ascii?Q?K58JulX565adPcJ+MSm+1PKCCs80CA6hUy8U7g7TvBUR5Ji/jYVqyW9ANUFV?=
+ =?us-ascii?Q?Tfn8wItuduEyjLt0clc2hyIcYg7tZ0v1Ysy+1+6TXvuJjq6zs5ygnfeloQEb?=
+ =?us-ascii?Q?t9EDM3Q01WHZX2O1kklC0pqkhPudfiGzGVJg8rcFeKQeqJvIEh+2Y8vqfnjY?=
+ =?us-ascii?Q?DwQ3IRyjJXhzFwUINRRL5KoVRAB9KfMf7qmDyLyN94dmZKYbo8kfrVgphKHe?=
+ =?us-ascii?Q?mtxBwG80ym8mLJsNWqzaUAzVK/AWJ2Q3du3LUrRH1vmRiHK0V9q9yP/i4mOn?=
+ =?us-ascii?Q?TRkQcNtzrlDj8bypitUg+8XlA4VdKgK/xLZQCgi3Dj/l6WdWEIrAklaVub8w?=
+ =?us-ascii?Q?bav+QEHVub/S/xAT1GpNMH++6E/YKWDgqXDqgzux?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27699c89-858d-4ad2-e2d9-08dc8f3dc65d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 097689c9-3b85-48c6-9f82-08dc8f3dc77c
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 02:24:26.4244
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 02:24:28.3026
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RCbjcwiVbr99K7SL1c2jNWoGanYTIU66nuiumfkAxGQEmmqUAc8bUnelHr9xKryUPveO5WX7xZWPAxmmlpeaLA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wSCeEj0YnJgUbH+ry1AHGvrcB2a0QvboOKXJy96oXAJtjm67FQtyq0MnvyCTcntKe1uuuzKtXJqPXqyiQO8Xig==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8047
 
-Now that the test macros are factored out into their final location, and
-simplified, it's time to rename TEST_END_CHECK to something that
-represents its new functionality: REPORT_TEST_PASS.
+On Ubuntu 23.04, the kvm and mdwe selftests/mm build fails due to
+missing a few items that are found in prctl.h. Here is an excerpt of the
+build failures:
 
-Acked-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Jeff Xu <jeffxu@chromium.org>
-Tested-by: Jeff Xu <jeffxu@chromium.org>
+ksm_tests.c:252:13: error: use of undeclared identifier 'PR_SET_MEMORY_MERGE'
+...
+mdwe_test.c:26:18: error: use of undeclared identifier 'PR_SET_MDWE'
+mdwe_test.c:38:18: error: use of undeclared identifier 'PR_GET_MDWE'
+
+Fix these errors by adding a new tools/include/uapi/linux/prctl.h . This
+file was created by running "make headers", and then copying a snapshot
+over from ./usr/include/linux/prctl.h, as per the approach we settled on
+in [1].
+
+[1] commit e076eaca5906 ("selftests: break the dependency upon local
+header files")
+
+Cc: David Hildenbrand <david@redhat.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- tools/testing/selftests/mm/mseal_helpers.h |  2 +-
- tools/testing/selftests/mm/mseal_test.c    | 92 +++++++++++-----------
- tools/testing/selftests/mm/seal_elf.c      |  2 +-
- 3 files changed, 48 insertions(+), 48 deletions(-)
+ tools/include/uapi/linux/prctl.h | 331 +++++++++++++++++++++++++++++++
+ 1 file changed, 331 insertions(+)
+ create mode 100644 tools/include/uapi/linux/prctl.h
 
-diff --git a/tools/testing/selftests/mm/mseal_helpers.h b/tools/testing/selftests/mm/mseal_helpers.h
-index 108d3fd0becb..0cfce31c76d2 100644
---- a/tools/testing/selftests/mm/mseal_helpers.h
-+++ b/tools/testing/selftests/mm/mseal_helpers.h
-@@ -18,7 +18,7 @@
- 		}							\
- 	} while (0)
- 
--#define TEST_END_CHECK() ksft_test_result_pass("%s\n", __func__)
-+#define REPORT_TEST_PASS() ksft_test_result_pass("%s\n", __func__)
- 
- #ifndef PKEY_DISABLE_ACCESS
- #define PKEY_DISABLE_ACCESS	0x1
-diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
-index d4d6ae42f502..a818f010de47 100644
---- a/tools/testing/selftests/mm/mseal_test.c
-+++ b/tools/testing/selftests/mm/mseal_test.c
-@@ -240,7 +240,7 @@ static void test_seal_addseal(void)
- 	ret = sys_mseal(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_unmapped_start(void)
-@@ -268,7 +268,7 @@ static void test_seal_unmapped_start(void)
- 	ret = sys_mseal(ptr + 2 * page_size, 2 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_unmapped_middle(void)
-@@ -300,7 +300,7 @@ static void test_seal_unmapped_middle(void)
- 	ret = sys_mseal(ptr + 3 * page_size, page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_unmapped_end(void)
-@@ -329,7 +329,7 @@ static void test_seal_unmapped_end(void)
- 	ret = sys_mseal(ptr, 2 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_multiple_vmas(void)
-@@ -360,7 +360,7 @@ static void test_seal_multiple_vmas(void)
- 	ret = sys_mseal(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_split_start(void)
-@@ -385,7 +385,7 @@ static void test_seal_split_start(void)
- 	ret = sys_mseal(ptr + page_size, 3 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_split_end(void)
-@@ -410,7 +410,7 @@ static void test_seal_split_end(void)
- 	ret = sys_mseal(ptr, 3 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_invalid_input(void)
-@@ -445,7 +445,7 @@ static void test_seal_invalid_input(void)
- 	ret = sys_mseal(ptr - page_size, 5 * page_size);
- 	FAIL_TEST_IF_FALSE(ret < 0);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_zero_length(void)
-@@ -469,7 +469,7 @@ static void test_seal_zero_length(void)
- 	ret = sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_zero_address(void)
-@@ -495,7 +495,7 @@ static void test_seal_zero_address(void)
- 	ret = sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_twice(void)
-@@ -515,7 +515,7 @@ static void test_seal_twice(void)
- 	ret = sys_mseal(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect(bool seal)
-@@ -539,7 +539,7 @@ static void test_seal_mprotect(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_start_mprotect(bool seal)
-@@ -569,7 +569,7 @@ static void test_seal_start_mprotect(bool seal)
- 			PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_end_mprotect(bool seal)
-@@ -599,7 +599,7 @@ static void test_seal_end_mprotect(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_unalign_len(bool seal)
-@@ -628,7 +628,7 @@ static void test_seal_mprotect_unalign_len(bool seal)
- 			PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_unalign_len_variant_2(bool seal)
-@@ -656,7 +656,7 @@ static void test_seal_mprotect_unalign_len_variant_2(bool seal)
- 			PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_two_vma(bool seal)
-@@ -691,7 +691,7 @@ static void test_seal_mprotect_two_vma(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_two_vma_with_split(bool seal)
-@@ -738,7 +738,7 @@ static void test_seal_mprotect_two_vma_with_split(bool seal)
- 			PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_partial_mprotect(bool seal)
-@@ -764,7 +764,7 @@ static void test_seal_mprotect_partial_mprotect(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_two_vma_with_gap(bool seal)
-@@ -807,7 +807,7 @@ static void test_seal_mprotect_two_vma_with_gap(bool seal)
- 	ret = sys_mprotect(ptr + 3 * page_size, page_size, PROT_READ);
- 	FAIL_TEST_IF_FALSE(ret == 0);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_split(bool seal)
-@@ -844,7 +844,7 @@ static void test_seal_mprotect_split(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mprotect_merge(bool seal)
-@@ -878,7 +878,7 @@ static void test_seal_mprotect_merge(bool seal)
- 	ret = sys_mprotect(ptr + 2 * page_size, 2 * page_size, PROT_READ);
- 	FAIL_TEST_IF_FALSE(ret == 0);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_munmap(bool seal)
-@@ -903,7 +903,7 @@ static void test_seal_munmap(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- /*
-@@ -943,7 +943,7 @@ static void test_seal_munmap_two_vma(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- /*
-@@ -981,7 +981,7 @@ static void test_seal_munmap_vma_with_gap(bool seal)
- 	ret = sys_munmap(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_munmap_start_freed(bool seal)
-@@ -1021,7 +1021,7 @@ static void test_munmap_start_freed(bool seal)
- 		FAIL_TEST_IF_FALSE(size == 0);
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_munmap_end_freed(bool seal)
-@@ -1051,7 +1051,7 @@ static void test_munmap_end_freed(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_munmap_middle_freed(bool seal)
-@@ -1095,7 +1095,7 @@ static void test_munmap_middle_freed(bool seal)
- 		FAIL_TEST_IF_FALSE(size == 0);
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_shrink(bool seal)
-@@ -1124,7 +1124,7 @@ static void test_seal_mremap_shrink(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_expand(bool seal)
-@@ -1156,7 +1156,7 @@ static void test_seal_mremap_expand(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_move(bool seal)
-@@ -1189,7 +1189,7 @@ static void test_seal_mremap_move(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mmap_overwrite_prot(bool seal)
-@@ -1217,7 +1217,7 @@ static void test_seal_mmap_overwrite_prot(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == ptr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mmap_expand(bool seal)
-@@ -1248,7 +1248,7 @@ static void test_seal_mmap_expand(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == ptr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mmap_shrink(bool seal)
-@@ -1276,7 +1276,7 @@ static void test_seal_mmap_shrink(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == ptr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_shrink_fixed(bool seal)
-@@ -1307,7 +1307,7 @@ static void test_seal_mremap_shrink_fixed(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == newAddr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_expand_fixed(bool seal)
-@@ -1338,7 +1338,7 @@ static void test_seal_mremap_expand_fixed(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == newAddr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_move_fixed(bool seal)
-@@ -1368,7 +1368,7 @@ static void test_seal_mremap_move_fixed(bool seal)
- 	} else
- 		FAIL_TEST_IF_FALSE(ret2 == newAddr);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_move_fixed_zero(bool seal)
-@@ -1400,7 +1400,7 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_move_dontunmap(bool seal)
-@@ -1429,7 +1429,7 @@ static void test_seal_mremap_move_dontunmap(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
-@@ -1463,7 +1463,7 @@ static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
- 
- 	}
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- 
-@@ -1556,7 +1556,7 @@ static void test_seal_merge_and_split(void)
- 	FAIL_TEST_IF_FALSE(size ==  22 * page_size);
- 	FAIL_TEST_IF_FALSE(prot == 0x4);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_discard_ro_anon_on_rw(bool seal)
-@@ -1585,7 +1585,7 @@ static void test_seal_discard_ro_anon_on_rw(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_discard_ro_anon_on_pkey(bool seal)
-@@ -1632,7 +1632,7 @@ static void test_seal_discard_ro_anon_on_pkey(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_discard_ro_anon_on_filebacked(bool seal)
-@@ -1669,7 +1669,7 @@ static void test_seal_discard_ro_anon_on_filebacked(bool seal)
- 		FAIL_TEST_IF_FALSE(!ret);
- 	close(fd);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_discard_ro_anon_on_shared(bool seal)
-@@ -1698,7 +1698,7 @@ static void test_seal_discard_ro_anon_on_shared(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- static void test_seal_discard_ro_anon(bool seal)
-@@ -1728,7 +1728,7 @@ static void test_seal_discard_ro_anon(bool seal)
- 	else
- 		FAIL_TEST_IF_FALSE(!ret);
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- int main(int argc, char **argv)
-diff --git a/tools/testing/selftests/mm/seal_elf.c b/tools/testing/selftests/mm/seal_elf.c
-index 45c73213775b..7aa1366063e4 100644
---- a/tools/testing/selftests/mm/seal_elf.c
-+++ b/tools/testing/selftests/mm/seal_elf.c
-@@ -127,7 +127,7 @@ static void test_seal_elf(void)
- 	FAIL_TEST_IF_FALSE(ret < 0);
- 	ksft_print_msg("somestr is sealed, mprotect is rejected\n");
- 
--	TEST_END_CHECK();
-+	REPORT_TEST_PASS();
- }
- 
- int main(int argc, char **argv)
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
+new file mode 100644
+index 000000000000..35791791a879
+--- /dev/null
++++ b/tools/include/uapi/linux/prctl.h
+@@ -0,0 +1,331 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _LINUX_PRCTL_H
++#define _LINUX_PRCTL_H
++
++#include <linux/types.h>
++
++/* Values to pass as first argument to prctl() */
++
++#define PR_SET_PDEATHSIG  1  /* Second arg is a signal */
++#define PR_GET_PDEATHSIG  2  /* Second arg is a ptr to return the signal */
++
++/* Get/set current->mm->dumpable */
++#define PR_GET_DUMPABLE   3
++#define PR_SET_DUMPABLE   4
++
++/* Get/set unaligned access control bits (if meaningful) */
++#define PR_GET_UNALIGN	  5
++#define PR_SET_UNALIGN	  6
++# define PR_UNALIGN_NOPRINT	1	/* silently fix up unaligned user accesses */
++# define PR_UNALIGN_SIGBUS	2	/* generate SIGBUS on unaligned user access */
++
++/* Get/set whether or not to drop capabilities on setuid() away from
++ * uid 0 (as per security/commoncap.c) */
++#define PR_GET_KEEPCAPS   7
++#define PR_SET_KEEPCAPS   8
++
++/* Get/set floating-point emulation control bits (if meaningful) */
++#define PR_GET_FPEMU  9
++#define PR_SET_FPEMU 10
++# define PR_FPEMU_NOPRINT	1	/* silently emulate fp operations accesses */
++# define PR_FPEMU_SIGFPE	2	/* don't emulate fp operations, send SIGFPE instead */
++
++/* Get/set floating-point exception mode (if meaningful) */
++#define PR_GET_FPEXC	11
++#define PR_SET_FPEXC	12
++# define PR_FP_EXC_SW_ENABLE	0x80	/* Use FPEXC for FP exception enables */
++# define PR_FP_EXC_DIV		0x010000	/* floating point divide by zero */
++# define PR_FP_EXC_OVF		0x020000	/* floating point overflow */
++# define PR_FP_EXC_UND		0x040000	/* floating point underflow */
++# define PR_FP_EXC_RES		0x080000	/* floating point inexact result */
++# define PR_FP_EXC_INV		0x100000	/* floating point invalid operation */
++# define PR_FP_EXC_DISABLED	0	/* FP exceptions disabled */
++# define PR_FP_EXC_NONRECOV	1	/* async non-recoverable exc. mode */
++# define PR_FP_EXC_ASYNC	2	/* async recoverable exception mode */
++# define PR_FP_EXC_PRECISE	3	/* precise exception mode */
++
++/* Get/set whether we use statistical process timing or accurate timestamp
++ * based process timing */
++#define PR_GET_TIMING   13
++#define PR_SET_TIMING   14
++# define PR_TIMING_STATISTICAL  0       /* Normal, traditional,
++                                                   statistical process timing */
++# define PR_TIMING_TIMESTAMP    1       /* Accurate timestamp based
++                                                   process timing */
++
++#define PR_SET_NAME    15		/* Set process name */
++#define PR_GET_NAME    16		/* Get process name */
++
++/* Get/set process endian */
++#define PR_GET_ENDIAN	19
++#define PR_SET_ENDIAN	20
++# define PR_ENDIAN_BIG		0
++# define PR_ENDIAN_LITTLE	1	/* True little endian mode */
++# define PR_ENDIAN_PPC_LITTLE	2	/* "PowerPC" pseudo little endian */
++
++/* Get/set process seccomp mode */
++#define PR_GET_SECCOMP	21
++#define PR_SET_SECCOMP	22
++
++/* Get/set the capability bounding set (as per security/commoncap.c) */
++#define PR_CAPBSET_READ 23
++#define PR_CAPBSET_DROP 24
++
++/* Get/set the process' ability to use the timestamp counter instruction */
++#define PR_GET_TSC 25
++#define PR_SET_TSC 26
++# define PR_TSC_ENABLE		1	/* allow the use of the timestamp counter */
++# define PR_TSC_SIGSEGV		2	/* throw a SIGSEGV instead of reading the TSC */
++
++/* Get/set securebits (as per security/commoncap.c) */
++#define PR_GET_SECUREBITS 27
++#define PR_SET_SECUREBITS 28
++
++/*
++ * Get/set the timerslack as used by poll/select/nanosleep
++ * A value of 0 means "use default"
++ */
++#define PR_SET_TIMERSLACK 29
++#define PR_GET_TIMERSLACK 30
++
++#define PR_TASK_PERF_EVENTS_DISABLE		31
++#define PR_TASK_PERF_EVENTS_ENABLE		32
++
++/*
++ * Set early/late kill mode for hwpoison memory corruption.
++ * This influences when the process gets killed on a memory corruption.
++ */
++#define PR_MCE_KILL	33
++# define PR_MCE_KILL_CLEAR   0
++# define PR_MCE_KILL_SET     1
++
++# define PR_MCE_KILL_LATE    0
++# define PR_MCE_KILL_EARLY   1
++# define PR_MCE_KILL_DEFAULT 2
++
++#define PR_MCE_KILL_GET 34
++
++/*
++ * Tune up process memory map specifics.
++ */
++#define PR_SET_MM		35
++# define PR_SET_MM_START_CODE		1
++# define PR_SET_MM_END_CODE		2
++# define PR_SET_MM_START_DATA		3
++# define PR_SET_MM_END_DATA		4
++# define PR_SET_MM_START_STACK		5
++# define PR_SET_MM_START_BRK		6
++# define PR_SET_MM_BRK			7
++# define PR_SET_MM_ARG_START		8
++# define PR_SET_MM_ARG_END		9
++# define PR_SET_MM_ENV_START		10
++# define PR_SET_MM_ENV_END		11
++# define PR_SET_MM_AUXV			12
++# define PR_SET_MM_EXE_FILE		13
++# define PR_SET_MM_MAP			14
++# define PR_SET_MM_MAP_SIZE		15
++
++/*
++ * This structure provides new memory descriptor
++ * map which mostly modifies /proc/pid/stat[m]
++ * output for a task. This mostly done in a
++ * sake of checkpoint/restore functionality.
++ */
++struct prctl_mm_map {
++	__u64	start_code;		/* code section bounds */
++	__u64	end_code;
++	__u64	start_data;		/* data section bounds */
++	__u64	end_data;
++	__u64	start_brk;		/* heap for brk() syscall */
++	__u64	brk;
++	__u64	start_stack;		/* stack starts at */
++	__u64	arg_start;		/* command line arguments bounds */
++	__u64	arg_end;
++	__u64	env_start;		/* environment variables bounds */
++	__u64	env_end;
++	__u64	*auxv;			/* auxiliary vector */
++	__u32	auxv_size;		/* vector size */
++	__u32	exe_fd;			/* /proc/$pid/exe link file */
++};
++
++/*
++ * Set specific pid that is allowed to ptrace the current task.
++ * A value of 0 mean "no process".
++ */
++#define PR_SET_PTRACER 0x59616d61
++# define PR_SET_PTRACER_ANY ((unsigned long)-1)
++
++#define PR_SET_CHILD_SUBREAPER	36
++#define PR_GET_CHILD_SUBREAPER	37
++
++/*
++ * If no_new_privs is set, then operations that grant new privileges (i.e.
++ * execve) will either fail or not grant them.  This affects suid/sgid,
++ * file capabilities, and LSMs.
++ *
++ * Operations that merely manipulate or drop existing privileges (setresuid,
++ * capset, etc.) will still work.  Drop those privileges if you want them gone.
++ *
++ * Changing LSM security domain is considered a new privilege.  So, for example,
++ * asking selinux for a specific new context (e.g. with runcon) will result
++ * in execve returning -EPERM.
++ *
++ * See Documentation/userspace-api/no_new_privs.rst for more details.
++ */
++#define PR_SET_NO_NEW_PRIVS	38
++#define PR_GET_NO_NEW_PRIVS	39
++
++#define PR_GET_TID_ADDRESS	40
++
++#define PR_SET_THP_DISABLE	41
++#define PR_GET_THP_DISABLE	42
++
++/*
++ * No longer implemented, but left here to ensure the numbers stay reserved:
++ */
++#define PR_MPX_ENABLE_MANAGEMENT  43
++#define PR_MPX_DISABLE_MANAGEMENT 44
++
++#define PR_SET_FP_MODE		45
++#define PR_GET_FP_MODE		46
++# define PR_FP_MODE_FR		(1 << 0)	/* 64b FP registers */
++# define PR_FP_MODE_FRE		(1 << 1)	/* 32b compatibility */
++
++/* Control the ambient capability set */
++#define PR_CAP_AMBIENT			47
++# define PR_CAP_AMBIENT_IS_SET		1
++# define PR_CAP_AMBIENT_RAISE		2
++# define PR_CAP_AMBIENT_LOWER		3
++# define PR_CAP_AMBIENT_CLEAR_ALL	4
++
++/* arm64 Scalable Vector Extension controls */
++/* Flag values must be kept in sync with ptrace NT_ARM_SVE interface */
++#define PR_SVE_SET_VL			50	/* set task vector length */
++# define PR_SVE_SET_VL_ONEXEC		(1 << 18) /* defer effect until exec */
++#define PR_SVE_GET_VL			51	/* get task vector length */
++/* Bits common to PR_SVE_SET_VL and PR_SVE_GET_VL */
++# define PR_SVE_VL_LEN_MASK		0xffff
++# define PR_SVE_VL_INHERIT		(1 << 17) /* inherit across exec */
++
++/* Per task speculation control */
++#define PR_GET_SPECULATION_CTRL		52
++#define PR_SET_SPECULATION_CTRL		53
++/* Speculation control variants */
++# define PR_SPEC_STORE_BYPASS		0
++# define PR_SPEC_INDIRECT_BRANCH	1
++# define PR_SPEC_L1D_FLUSH		2
++/* Return and control values for PR_SET/GET_SPECULATION_CTRL */
++# define PR_SPEC_NOT_AFFECTED		0
++# define PR_SPEC_PRCTL			(1UL << 0)
++# define PR_SPEC_ENABLE			(1UL << 1)
++# define PR_SPEC_DISABLE		(1UL << 2)
++# define PR_SPEC_FORCE_DISABLE		(1UL << 3)
++# define PR_SPEC_DISABLE_NOEXEC		(1UL << 4)
++
++/* Reset arm64 pointer authentication keys */
++#define PR_PAC_RESET_KEYS		54
++# define PR_PAC_APIAKEY			(1UL << 0)
++# define PR_PAC_APIBKEY			(1UL << 1)
++# define PR_PAC_APDAKEY			(1UL << 2)
++# define PR_PAC_APDBKEY			(1UL << 3)
++# define PR_PAC_APGAKEY			(1UL << 4)
++
++/* Tagged user address controls for arm64 */
++#define PR_SET_TAGGED_ADDR_CTRL		55
++#define PR_GET_TAGGED_ADDR_CTRL		56
++# define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
++/* MTE tag check fault modes */
++# define PR_MTE_TCF_NONE		0UL
++# define PR_MTE_TCF_SYNC		(1UL << 1)
++# define PR_MTE_TCF_ASYNC		(1UL << 2)
++# define PR_MTE_TCF_MASK		(PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC)
++/* MTE tag inclusion mask */
++# define PR_MTE_TAG_SHIFT		3
++# define PR_MTE_TAG_MASK		(0xffffUL << PR_MTE_TAG_SHIFT)
++/* Unused; kept only for source compatibility */
++# define PR_MTE_TCF_SHIFT		1
++
++/* Control reclaim behavior when allocating memory */
++#define PR_SET_IO_FLUSHER		57
++#define PR_GET_IO_FLUSHER		58
++
++/* Dispatch syscalls to a userspace handler */
++#define PR_SET_SYSCALL_USER_DISPATCH	59
++# define PR_SYS_DISPATCH_OFF		0
++# define PR_SYS_DISPATCH_ON		1
++/* The control values for the user space selector when dispatch is enabled */
++# define SYSCALL_DISPATCH_FILTER_ALLOW	0
++# define SYSCALL_DISPATCH_FILTER_BLOCK	1
++
++/* Set/get enabled arm64 pointer authentication keys */
++#define PR_PAC_SET_ENABLED_KEYS		60
++#define PR_PAC_GET_ENABLED_KEYS		61
++
++/* Request the scheduler to share a core */
++#define PR_SCHED_CORE			62
++# define PR_SCHED_CORE_GET		0
++# define PR_SCHED_CORE_CREATE		1 /* create unique core_sched cookie */
++# define PR_SCHED_CORE_SHARE_TO		2 /* push core_sched cookie to pid */
++# define PR_SCHED_CORE_SHARE_FROM	3 /* pull core_sched cookie to pid */
++# define PR_SCHED_CORE_MAX		4
++# define PR_SCHED_CORE_SCOPE_THREAD		0
++# define PR_SCHED_CORE_SCOPE_THREAD_GROUP	1
++# define PR_SCHED_CORE_SCOPE_PROCESS_GROUP	2
++
++/* arm64 Scalable Matrix Extension controls */
++/* Flag values must be in sync with SVE versions */
++#define PR_SME_SET_VL			63	/* set task vector length */
++# define PR_SME_SET_VL_ONEXEC		(1 << 18) /* defer effect until exec */
++#define PR_SME_GET_VL			64	/* get task vector length */
++/* Bits common to PR_SME_SET_VL and PR_SME_GET_VL */
++# define PR_SME_VL_LEN_MASK		0xffff
++# define PR_SME_VL_INHERIT		(1 << 17) /* inherit across exec */
++
++/* Memory deny write / execute */
++#define PR_SET_MDWE			65
++# define PR_MDWE_REFUSE_EXEC_GAIN	(1UL << 0)
++# define PR_MDWE_NO_INHERIT		(1UL << 1)
++
++#define PR_GET_MDWE			66
++
++#define PR_SET_VMA		0x53564d41
++# define PR_SET_VMA_ANON_NAME		0
++
++#define PR_GET_AUXV			0x41555856
++
++#define PR_SET_MEMORY_MERGE		67
++#define PR_GET_MEMORY_MERGE		68
++
++#define PR_RISCV_V_SET_CONTROL		69
++#define PR_RISCV_V_GET_CONTROL		70
++# define PR_RISCV_V_VSTATE_CTRL_DEFAULT		0
++# define PR_RISCV_V_VSTATE_CTRL_OFF		1
++# define PR_RISCV_V_VSTATE_CTRL_ON		2
++# define PR_RISCV_V_VSTATE_CTRL_INHERIT		(1 << 4)
++# define PR_RISCV_V_VSTATE_CTRL_CUR_MASK	0x3
++# define PR_RISCV_V_VSTATE_CTRL_NEXT_MASK	0xc
++# define PR_RISCV_V_VSTATE_CTRL_MASK		0x1f
++
++#define PR_RISCV_SET_ICACHE_FLUSH_CTX	71
++# define PR_RISCV_CTX_SW_FENCEI_ON	0
++# define PR_RISCV_CTX_SW_FENCEI_OFF	1
++# define PR_RISCV_SCOPE_PER_PROCESS	0
++# define PR_RISCV_SCOPE_PER_THREAD	1
++
++/* PowerPC Dynamic Execution Control Register (DEXCR) controls */
++#define PR_PPC_GET_DEXCR		72
++#define PR_PPC_SET_DEXCR		73
++/* DEXCR aspect to act on */
++# define PR_PPC_DEXCR_SBHE		0 /* Speculative branch hint enable */
++# define PR_PPC_DEXCR_IBRTPD		1 /* Indirect branch recurrent target prediction disable */
++# define PR_PPC_DEXCR_SRAPD		2 /* Subroutine return address prediction disable */
++# define PR_PPC_DEXCR_NPHIE		3 /* Non-privileged hash instruction enable */
++/* Action to apply / return */
++# define PR_PPC_DEXCR_CTRL_EDITABLE	 0x1 /* Aspect can be modified with PR_PPC_SET_DEXCR */
++# define PR_PPC_DEXCR_CTRL_SET		 0x2 /* Set the aspect for this process */
++# define PR_PPC_DEXCR_CTRL_CLEAR	 0x4 /* Clear the aspect for this process */
++# define PR_PPC_DEXCR_CTRL_SET_ONEXEC	 0x8 /* Set the aspect on exec */
++# define PR_PPC_DEXCR_CTRL_CLEAR_ONEXEC	0x10 /* Clear the aspect on exec */
++# define PR_PPC_DEXCR_CTRL_MASK		0x1f
++
++#endif /* _LINUX_PRCTL_H */
 -- 
 2.45.2
 
