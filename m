@@ -1,60 +1,61 @@
 Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F51A38D4
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AAF1ABCB7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719362; cv=none; b=EhLXtfsmdMmZkvkmhU4txBOW+Q+nqNeNZm3vqqaZFnxlc9RFFP8MlfACcjnSwwb2GbITfb5bEEbg+igAR4Ounc9CewpGdOugqFoTj40/sflpN2Dkmyy7uRq/ZcMX9NNn7xqHOOXwIJjLUdaB0JjmLVpPZkKEOOnwRHCP5zgawWc=
+	t=1718719364; cv=none; b=DslFlSazrIzhKiIR+hN+xRYDQQ+ybMX0NjoMfIOX2B5nQelyRguxrPgihwBljNhoypV8wupFWQKrxR3JSIwidrSOB2HOgUhvtNDd/uQ2r1FfKwjv537GrEOEEzdfJjByIj0wsR7g6wjzBpXacYa7EsuQR2xajUHLrj9Tn6kWUpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719362; c=relaxed/simple;
-	bh=A6kuif+EaXqoEMG7xaj25XS2KcSl5ZJh9WVTl3nCKxU=;
+	s=arc-20240116; t=1718719364; c=relaxed/simple;
+	bh=PO21rWTwSri6pXqW0QAoF3rRYxBHPQXcTMLtVuYPAPY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BSrnPma6BcmxigZrU8/ic1rMjd5nw9mrEwawJoEt7+yIzIzr8miLO8q+Mkf3wp4eigdxq8ByNkZnea0xydegWYrgG2ocH9/YuC7Cuur6qk2keKR3KdqMDXSXlKMl5pImgFdwao5036Q8zuVQS0023d18D4EkueHSCRHjDzt5bV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XXddTLld; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:To:Cc; b=l9Cm3oDiagtEyHZAO4ZG3M6i6TMaWIoi+noDJ4nCPJdjNMgfkFhgwaa6Q1awfYjIKMGt/NwmFb7gGD2+spuyDL2CCfG/9MbX6ZB81AfeJhSOCRqHwTolbrLBNqc83NbLCUdwTNFnAQAkz/xywHS+Eh5sSQ4uKs9a5EYrioqncCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MKexz67T; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XXddTLld"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f1e35156cso4723015f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MKexz67T"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-361785bfa71so272755f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718719358; x=1719324158; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718719360; x=1719324160; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=C7A2H1vn46bs7vzUe2mxoJ5kUKOzuhCfRLK3RT+N/4k=;
-        b=XXddTLldNAA7MBCQpQPNTn7HWZjIRyinpb8AAxMUtd4gElKlQhSMTx4sSi3d6SMGcB
-         z7vi3z2cl2NYZq1NymiN6u2YL/rWVYuJjka+SYKf2tQfF22dC9yPlXnSccHDjmzkl7mS
-         Z0ffF6IhwVK/EdtDeF7FwyIcJEUoZ3GTSIPuhNzdYkWli7lZxYopsnJOWLObllj4Ggt/
-         8Grns8DyRYzKSI54ZGrHTRbaF9VgIsvfu76RRVV4yylQBheSVSHy13QxSWEjg65A4By6
-         ypdzTTvCkfXBZ9Ap8xqb4JxXuhiuQqcIu4u2+3j9o4ThnXgUbas7su7/TNhT/4XFYW+3
-         dskQ==
+        bh=SmU+WlwI0In7K1/gMjhndg/uoX9jW0QNIwYtnLhPUbw=;
+        b=MKexz67Ty2ztXziEExBdmHVk87zPY7S6ofk/iXtqhacvTTxSsQXt06vuuQGxj5e8oV
+         7tsci5JrsG4hIBZPCI2asJwwf2ig6hdHZLHygUF6aMS0plVD4pRKrykHUXmaVYFTzSHA
+         seeVsAMu1HeqzH2saOOgk9kof86rqUFFr7y0qPRH9UIw3D9LTciVu4yRxFrMFZhrDEwP
+         RFiG3iuvSQCfu8l2VJ6ojXsqHjGQTV8pzXrS+q5FTp2RkXl5AKxDf4eAEklTRFVpfJUV
+         IxkcGO/jnwHIjHEiNh3dIceMPIu5XtUKIgtzpmWHezR4a+mpGgy5JaE3FNufGgtdFLPQ
+         KOtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719358; x=1719324158;
+        d=1e100.net; s=20230601; t=1718719360; x=1719324160;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C7A2H1vn46bs7vzUe2mxoJ5kUKOzuhCfRLK3RT+N/4k=;
-        b=HpWEkEFhPGEB90KXcykp18xw98n4T17UbXmzSW5BNRFRxAspUz/FTXS39xIjvDSAZF
-         UTaCEv0dTeu7/Z0SjzKJALjZVU/A3NRr7GIdn8b8RYrPSQFGiO2WmpBiTe0450YpvmhV
-         W8cY7j5EoTtCX3nN/UUEWX79yXxBDTsTXGFgNMhV7KfElRejh8i0Xq9iQdAwZ1G9HgHn
-         ZV4ZQdzzIfI9a+UnNRz7CEHe74o0z4+m6VFoO/8BeN9FXQ6R4ln98bE3xscCHWQMd7Rd
-         /gy8OE4A+UoNUkyF42+lUppEtAhnu+LIGWe/Gj+9X8sEuNpg472xyOFCid8M3suxEiye
-         LGxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVueuTnRTzfBeacE6a5I7f6RX/GborMT9Jua8233Cw5NbfT4kX1JdWJlsnD74ZrJXpMLYGtDLHt07jrHmBwepP074L1R7ISRzp6Z/YK
-X-Gm-Message-State: AOJu0Yy8YGkBD+gmG+MMwvWTc2qY3dH1NvCup6zDJmNgoJWcxsYQcN8m
-	LZvXgvB/iFXQ6xyEjCCLoUMU4zE1Qqkt06lpu658DTyWXob538B/j7VAd+hBarQ=
-X-Google-Smtp-Source: AGHT+IFveMAeeYnGXlbgaKPbEE636y3oEz+xbQvRxeYUKyvxdbSUC2rC5BJCZhSUrFoLatWxvWuhBw==
-X-Received: by 2002:a5d:6901:0:b0:360:8269:5690 with SMTP id ffacd0b85a97d-36082695cdamr7690748f8f.17.1718719357775;
-        Tue, 18 Jun 2024 07:02:37 -0700 (PDT)
+        bh=SmU+WlwI0In7K1/gMjhndg/uoX9jW0QNIwYtnLhPUbw=;
+        b=s2QErdt6TxNe+ACw4LEbTq+gcLXoEHsNsAB8GqT9Lc3+oNhErv2I1UndJnzt5wT4Tg
+         3290zGgFX/KM1PreGz/oC5aKzO29meDpIex1FztAiw3dhnK7PHBlMvx7vjjg+/aC2lQ2
+         J6oMjN4AWaGVZO4ccmTXze+ot33W1Cm2/niC12vgTcExh//WBnCErXrDkf/lZYHznyP9
+         MbM0lU1iWJt7vtQunYFAA7EwpVWc4U0CeanZxRB6N2x9lGRLGgM34RQgWs94fumdYWa4
+         NMZu/OBSea3UFzcI1RbkaSU8M4fPbGLArUfFbBS4INN5BssaPSaFc5qGnipjKvrpA5cX
+         fZBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYiR+JFfsmWGYvTm7xu0Po/YFchNzSwOkWY1kYo5uEVUuwGvTm1MZtsue1krgRzxlvW0bvn/zj2ZTHoyjz9ELmMwP/tVTsGJPcUmja
+X-Gm-Message-State: AOJu0Yxq5jAg/M98YxDHQUfYvHXOhn3O2xpr5Bu1C9THjizye0cOTOmG
+	UqUfbwbwODusDb7ef7Nch2Wg7i+8D8qNOdZTRept8TdlZhf0FFleNvyNtrMoUyM=
+X-Google-Smtp-Source: AGHT+IEtKN5tC6ABJu+hRBezT/QshYcfhWNrkTMUXMHmMGcpraUk52c+2mvByGaSZJu3f52D9bSM2A==
+X-Received: by 2002:a5d:5412:0:b0:35f:259c:cca2 with SMTP id ffacd0b85a97d-3607a768b42mr8062269f8f.34.1718719359438;
+        Tue, 18 Jun 2024 07:02:39 -0700 (PDT)
 Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f22absm14412546f8f.79.2024.06.18.07.02.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f22absm14412546f8f.79.2024.06.18.07.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:02:37 -0700 (PDT)
+        Tue, 18 Jun 2024 07:02:39 -0700 (PDT)
 From: Guillaume Stols <gstols@baylibre.com>
-Date: Tue, 18 Jun 2024 14:02:38 +0000
-Subject: [PATCH 6/9] dt-bindings: iio: adc: adi,ad7606: fix example
+Date: Tue, 18 Jun 2024 14:02:41 +0000
+Subject: [PATCH 9/9] iio: adc: ad7606: fix standby gpio state to match the
+ documentation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-cleanup-ad7606-v1-6-f1854d5c779d@baylibre.com>
+Message-Id: <20240618-cleanup-ad7606-v1-9-f1854d5c779d@baylibre.com>
 References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
 In-Reply-To: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
@@ -80,26 +81,39 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  dlechner@baylibre.com
 X-Mailer: b4 0.14.0
 
-Example uses adi,ad7606-8 as compatible, but adi,sw-mode is not
-available for it. So remove this property from example.
+The binding's documentation specifies that "As the line is active low, it
+should be marked GPIO_ACTIVE_LOW". However, in the driver, it was handled
+the opposite way. This commit sets the driver's behaviour in sync with the
+documentation
 
+Fixes: 722407a4e8c0 ("staging:iio:ad7606: Use GPIO descriptor API")
 Signed-off-by: Guillaume Stols <gstols@baylibre.com>
 ---
- Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iio/adc/ad7606.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-index 65d6ca5843d7..a8fb0d926859 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-@@ -198,7 +198,6 @@ examples:
-                                            <&gpio 23 GPIO_ACTIVE_HIGH>,
-                                            <&gpio 26 GPIO_ACTIVE_HIGH>;
-             standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
--            adi,sw-mode;
-         };
-     };
- ...
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index 502344e019e0..05addea105f0 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -438,7 +438,7 @@ static int ad7606_request_gpios(struct ad7606_state *st)
+ 		return PTR_ERR(st->gpio_range);
+ 
+ 	st->gpio_standby = devm_gpiod_get_optional(dev, "standby",
+-						   GPIOD_OUT_HIGH);
++						   GPIOD_OUT_LOW);
+ 	if (IS_ERR(st->gpio_standby))
+ 		return PTR_ERR(st->gpio_standby);
+ 
+@@ -681,7 +681,7 @@ static int ad7606_suspend(struct device *dev)
+ 
+ 	if (st->gpio_standby) {
+ 		gpiod_set_value(st->gpio_range, 1);
+-		gpiod_set_value(st->gpio_standby, 0);
++		gpiod_set_value(st->gpio_standby, 1);
+ 	}
+ 
+ 	return 0;
 
 -- 
 2.34.1
