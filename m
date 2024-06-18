@@ -1,99 +1,109 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7105119CD03
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A0F158DB4;
+	Tue, 18 Jun 2024 11:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718709127; cv=none; b=gMUqfLBjwVKZmLg0bP51htm6AUWEpoU3sXjrbO61+JqHMl78YTnNguQ1zollwIWNUpCfCjW3G7YsXIPkF3y5hGPpbMJEFHWkzwYcl1GmsjipcQNs2N2LFn1WIhT9/lThiFP+cfP1xRnpVz/xslykbOnVfcroAWmHnxQhFKKqheM=
+	t=1718709157; cv=none; b=EW+pIR6WbOO3QldrNZFUYnsK23OQrZxQRUpoREBmipKGciah0G28cGiHTY7OjVatfcxdCQvEadjT/MPsYZz4VixJuCxvycKEgpqfP8r1wRQrzqefxEuCu6ET8DNT8Qzzzj+i4jtDf6zhwrClOl+GJkTjBEAPTeAvXMbqlV4cPTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718709127; c=relaxed/simple;
-	bh=QG/iPLr/BAQwM9/XiN9cLBGNZu40KP9nRuNjYsIk9yg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dm83o4Gidgc5XkpexC1u2oJ+/kD059SjmEdJVvlA2kK4wtJrwL/ZsRydJRjxDvBWL415aGdIwxf7UNCuaBUzJVP9laiNWUBIKhb8iVEvBOIGFOpberROw8FPdi8uUnke+za8LtGXRn6jMpoeFlTnqdQIeiTpRxkWmS6H7PPKAx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SH3OrT5A; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718709157; c=relaxed/simple;
+	bh=0GHupV46ZiTQkCvR/9xjYYpLuWY+JLethuNFtKgsOBw=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=o4ou2HZ+DDGriBsdl1PNyhrbYbZfKKK18atYwgzCj4TXOXU7fhajZDurLF9vP83ertgLZr6gbqoaJkHT9kQ1TJoKQuw74WI9t+B9A5mm9TUOBwgUvVJFtV44PU9nTsNyleWLPB9EnsW9FXjxu23jqgLhToaLqmixmUx2UsnLue8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcWqq19g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SH3OrT5A"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ead2c6b50bso58442421fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718709124; x=1719313924; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QG/iPLr/BAQwM9/XiN9cLBGNZu40KP9nRuNjYsIk9yg=;
-        b=SH3OrT5AyoX5pmJjs+tEllltF3OiU43RJ6iDNFWx8zni9ArPd9yI19jNAdbfYvKO5C
-         ylCjAvn7Z8D/AAu/bNYIBuGWOcAENTAGsELnLYXHyTvBgJJBeNWhUpyTLdGSvj9BY+pH
-         oZAcAdFpaC2iL0x/DDC729ezkJPLUSqKq5KyBN1CVOdUfdhHsLKzqFv80nDENRmxMWtT
-         2T1wkxV9bxi19Kyu5moH4cAvN9CXBMiczHVax8RoEnDB8o7KxRJs3IURKVIZL6OAgKDj
-         I99u6+T1EBOOMgz3OP/XCByRt1v3kW070pXXLemauv06Va6tAPQC18wekfxTYOeW5FVi
-         7rkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718709124; x=1719313924;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QG/iPLr/BAQwM9/XiN9cLBGNZu40KP9nRuNjYsIk9yg=;
-        b=Er/Tmq69hFQ5YQuYDn/yll30vRLeq9Z1o6yLTngjitKTMa7yNpkwKz2Bkimr5+LyBa
-         Ybc6ku1/D4l/8nQom2WtM4VQQWoWwuOyB3coVaVLuZOrxlNmfR1bxDJyaa7W95x/tVED
-         PXjOMusNSvZj1WHLy/XHiwhfpjknDqLM+7MwQImZZacyWe0QaeNoarVeSRBcPDY/j2m+
-         VO4d80tjJlVmtxewVg0zymWgEz+YZmNRaCO6GQHcfJE0XCv1thzsZ5I+8qIHERRXRHka
-         FiHETbKoTyC3xl5eX4zeeQD945FIt9bOEVMfyp0X/hSfr9LJXGymZTg34KCfVY5rwAvS
-         tGrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCQJJqnLPIa9vgdxIkLOE4WCy5j70bR2lyE3okov2d45iIJkiqUnMgydJmUzzlF9alrlfx7XCvfM7bC0eF/tLFDUvVm6oERzc22GEo
-X-Gm-Message-State: AOJu0YwBViwyGltP5anGaK+Nlf6SYVkbgS2qO5jtbdq+MtGk+Fpdy7e6
-	Yp5Q9lUW3DfsfS3kHh0z/pER9VPUQ7oDb0em7btlCAcZoSsidz5nI2XlSNTv+aCVOx2tWvzS6/u
-	TTyuGeXUWw6gWyowQj8c3i2CLS9DFAtKs9uQNRw==
-X-Google-Smtp-Source: AGHT+IHXkf3ljqAhrm9EuvRTPL71FiQZJIgLs0Bh9F/FREvRGl6HEr1C7BhvQe/yk1MwI0e0CuEwwH242Rm+FHCeyyY=
-X-Received: by 2002:a05:6512:45c:b0:52c:8289:e890 with SMTP id
- 2adb3069b0e04-52ca6e55c92mr8109856e87.4.1718709123676; Tue, 18 Jun 2024
- 04:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcWqq19g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CDCC3277B;
+	Tue, 18 Jun 2024 11:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718709156;
+	bh=0GHupV46ZiTQkCvR/9xjYYpLuWY+JLethuNFtKgsOBw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=FcWqq19gnRsWN+uOVya+nn3wDKn5n/t9aaUP7vQBiIpz7Aqs7bhUHUtjg//tp34gG
+	 j23hOHiEUJlnfoVOlg+GiHPjFtpoBkOZCEDHdaZtKInh4TCrqGlbfjua7vhRstYkEI
+	 CpWLV7nMht88H2eGDOGmG/TUCWluPcKRSLaDYsIqLeZVqE+LjzUvJPrncdjn3DzYri
+	 0y5p8b3jwVWQObyuyRb6NTrE6hxtGNRYoTwT5tM5vKo9KDgIQ/uY7tFSptf2N0NnIK
+	 AfHcSwS2YLYiEVq4jjp3GwA5XGkuDpHSYuL6un7dNS8GzWq5PsHWkViRHrhMxHPmmU
+	 rhFCUiwMOvJhg==
+Date: Tue, 18 Jun 2024 05:12:35 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-review-v3-0-88d1338c4cca@baylibre.com> <20240617-review-v3-33-88d1338c4cca@baylibre.com>
-In-Reply-To: <20240617-review-v3-33-88d1338c4cca@baylibre.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Jun 2024 13:11:52 +0200
-Message-ID: <CACRpkdZjPrG4kUBxc+r7NzUt9UZSdiF7KWT6AWAd+vpuLSWk1w@mail.gmail.com>
-Subject: Re: [PATCH v3 33/41] iio: magnetometer: ak8974: make use of regmap_set_bits()
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Dmitry Rokosov <ddrokosov@sberdevices.ru>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Cosmin Tanislav <cosmin.tanislav@analog.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Saravanan Sekar <sravanhome@gmail.com>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Crt Mori <cmo@melexis.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Jie Gan <quic_jiegan@quicinc.com>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>, linux-kernel@vger.kernel.org, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quic_xinlon@quicinc.com, 
+ Song Chai <quic_songchai@quicinc.com>, devicetree@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Jinlong Mao <quic_jinlmao@quicinc.com>, 
+ quic_yanzl@quicinc.com, Tao Zhang <quic_taozha@quicinc.com>, 
+ andersson@kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ linux-arm-kernel@lists.infradead.org, quic_yuanjiey@quicinc.com, 
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, coresight@lists.linaro.org, 
+ Trilok Soni <quic_tsoni@quicinc.com>, quic_liuxin@quicinc.com, 
+ quic_yijiyang@quicinc.com, quic_sijiwu@quicinc.com, 
+ quic_xueqnie@quicinc.com, Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <20240618072726.3767974-2-quic_jiegan@quicinc.com>
+References: <20240618072726.3767974-1-quic_jiegan@quicinc.com>
+ <20240618072726.3767974-2-quic_jiegan@quicinc.com>
+Message-Id: <171870915568.1107169.13844924050806547324.robh@kernel.org>
+Subject: Re: [PATCH v1 1/3] dt-bindings: arm: Add binding document for
+ Coresight Slave Register device.
 
-On Mon, Jun 17, 2024 at 3:50=E2=80=AFPM Trevor Gamblin <tgamblin@baylibre.c=
-om> wrote:
 
-> Instead of using regmap_update_bits() and passing the mask twice, use
-> regmap_set_bits().
->
-> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+On Tue, 18 Jun 2024 15:27:24 +0800, Jie Gan wrote:
+> Add binding document for Coresight Slave Register device.
+> 
+> Add a new property to TMC, qcom,csr-atid-offset, to indicate which
+> ATID registers will be used by the TMC ETR. Each TMC ETR device is
+> associated with four ATID registers that are continuous in address.
+> 
+> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+> ---
+>  .../bindings/arm/arm,coresight-tmc.yaml       |  8 ++
+>  .../bindings/arm/qcom,coresight-csr.yaml      | 76 +++++++++++++++++++
+>  2 files changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/qcom,coresight-csr.yaml
+> 
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Yours,
-Linus Walleij
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/qcom,coresight-csr.yaml: properties:clock-names: {'maxItems': 1, 'items': [{'const': 'apb_pclk'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+Error: Documentation/devicetree/bindings/arm/qcom,coresight-csr.example.dts:43.3-44.1 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:427: Documentation/devicetree/bindings/arm/qcom,coresight-csr.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240618072726.3767974-2-quic_jiegan@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
