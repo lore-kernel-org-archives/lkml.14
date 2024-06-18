@@ -1,102 +1,208 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53B713C694
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D28E46557;
+	Tue, 18 Jun 2024 12:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718713408; cv=none; b=qqAcxngVcdplWTLGtSGzd8uR+6HoZLbL0vcKCXNkdoSDCnet+1xhvZ2pt7s0L8PzKHvyLpImXJuIf5a4If2WhIyVk8NFJ848Uqva2KtI9jSZuMbueVo80BCvuRBBMQgpfsBO+TK31pwBdion5sdo9kzAiuAhjUbT4u0WENZgai0=
+	t=1718713494; cv=none; b=Hg2bomzN2CeP3JdYK8w1KyqgyHy+sFRKmiD3aHv8ivS5i22NIfVbANvIpmZoU/jZCKlNXfGMejIlYiflmtwYalVc5Y9kg6XjfjtyPQ8J73KI0IXtnXrGKL5RgublMkncqnW3fMw1tiIAoyEcGTRsmyvwjr/kAuQHqAHrNurOqqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718713408; c=relaxed/simple;
-	bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ttqHvWIUDDvRaZgUdAJz82uST6yYji9XbHFi7wWCs3o8fsDbr79e3M0DS0T6xMXo7mEGnuDzz4gq/xKVpmNCXQRY5G+xI9Vk27c5u8LJM8Sz6sLm30U/y+hFEvZcqNVoO5Zs/9GT1g+RIz3mNFOOBbj/BE2AiTfCAh4xce3U++U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLjLXBdU; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718713494; c=relaxed/simple;
+	bh=o7SwzaL//wOaTtBrzy+LvyipfRZrFJ3fWNXXisi3+aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G7ocA6m9wMVyN9tOjrkGsWU6OI8e50AVDFnyVw8Xdi5q782D5StI0QVr8klLxuPf3huvK7+Kc5IR8mOD/JLvc/QRMqIWcDlUvcfbxRUFR5rqZ4Emi4+j9HrnMw6yN58LirThC2IxjURM3YDWjlkralCJc6LaK9PQtIAaawAuTEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JFUyCilU; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLjLXBdU"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-63152a07830so44746127b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718713406; x=1719318206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
-        b=oLjLXBdU73Qyz9mlpjJ51V9DXeiY4HN4EDhGZg87mJIhSS2mT3BGSHB73eqQj2LSmP
-         wPPZva3HcVqLg3GrYTTpB+VkZsOKaEHE4vNavIICp++EhkybhGPQsxCrw0p4FsyizT/r
-         mPGTl9oAeTuSiEuHC/Z6Xd7vHBCuekZFCAhljPcM4DZeGwyJe6BbTfYq/3IyKsBfeAkt
-         jDNScJDAjWSKEsguf9DFCakl3YS0E1/pg6Ig95g+scgdfab2fWMbuCRSIP32GhGLVCWt
-         4pIqCuQy6/9Wld+OGfiLK9d+N6oKGFdW9kc/GeeXdPxuuy+03n83VmZ8Q+BLV+F9xljy
-         Rjdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718713406; x=1719318206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
-        b=J8y/bPk9zvfHDgeTByfz7wac5bI1BoTrOrRiW0ETqX3jZsZrnay1O95BDk9kF0ZaAZ
-         uYr996Y2/AXJosvSzs3IDNlypEuIyo9qPOdmgx5571mCK6xprhjYUJ5QcLJpBe5owF/L
-         ryma+HgZe4pnBpqnzghT1GmE3WXKXMO8kYK8EFvRm0QA0m2YjRPkX8OsHJwezEjXcEyw
-         qFrR+iELy6zh+B+qZqVl3ab+4ltJC1TDqa+eBkV6Q6bXjDYfWDaLx8HqxSCobWaAENhQ
-         FFDY2WNWmn31IVj+iaoPqujUMASiXBoxOwytnmNkjC4NSspBFDRII45POwHaC/RhOyv+
-         HfPA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6eWPAGp0x4oNbZH0z5gAINnMIqlqiRH41mTx5M1GidhC4iOnDQQDthiRq2kDQEWbxDu00mOVwcoyUe3k+MM6DB8gIMEXJg9YirBte
-X-Gm-Message-State: AOJu0YzzJY0WnrHeFvqa7INd77Y7DN1yK1/3jJIqCEUZ1PzlvVFcgwri
-	evLCb831B7LcsIHnX7ZY735opd9MDkjxIDXya6T2rNuF6zX8jR06ZhAQzccJKPzOEMmh+kSNulz
-	JbwkAH8mRB/6uUzVTT9KBrI7zJZK97egxXRDu
-X-Google-Smtp-Source: AGHT+IGByXTFHMVNXIbwEPuEy6ECS8UlQ7NjRzqMyf5rOrRSa+3k76BSDfeXF6KiRmwBQfl6+NuPndA17rE7v9lMezs=
-X-Received: by 2002:a05:690c:6a09:b0:62c:f01a:17a3 with SMTP id
- 00721157ae682-63222a586e9mr136731667b3.15.1718713405543; Tue, 18 Jun 2024
- 05:23:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFUyCilU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718713493; x=1750249493;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o7SwzaL//wOaTtBrzy+LvyipfRZrFJ3fWNXXisi3+aM=;
+  b=JFUyCilUCH1W+foz5WcEm+ljD392yHc5EBfqggc+j3DLVWCuMw3i1E14
+   2pHLdofUM2OcWK5Tv3Uofm5Ie/hLXBjxu3UWMLXHnlo8jRUzwTV6qBck5
+   GZu45CQe6nwwoeZdJZYKQfZVg+3V/D8fjSeVyusNAGgDDFWys2Fo0Rxcg
+   dM9FsUBQy+zcd/wIS06Xac39wp/oH80CUNBMsgyZ7z5ss8+NVSCCJialY
+   vIqCBENB8KHoY+AxBABzmP78xUVKhwjYjQZkNi+6ke1VUbbWPVgvK4u3I
+   JO0v2/+33NuSLSsd4NMeAA5OLDK2sg2mwyo4T/954nx/qOrZSfrvkzL5N
+   Q==;
+X-CSE-ConnectionGUID: Txuk331pToybs8kZge+zZA==
+X-CSE-MsgGUID: lhhvniJgRaSPpxfmJPZyJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15348918"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15348918"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 05:24:52 -0700
+X-CSE-ConnectionGUID: m9OktrGURPeOhr6uyCNYMQ==
+X-CSE-MsgGUID: NAkiw1SDSPmfVTMbRqovZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="46076739"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Jun 2024 05:24:52 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJXtI-0005Ur-1e;
+	Tue, 18 Jun 2024 12:24:48 +0000
+Date: Tue, 18 Jun 2024 20:24:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+	pavel@ucw.cz, lee@kernel.org, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v1 2/2] leds: Add LED1202 I2C driver
+Message-ID: <202406181953.mXAkCdSy-lkp@intel.com>
+References: <ZnCoBAG2TNiIz1xE@admins-Air>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-12-iii@linux.ibm.com>
-In-Reply-To: <20240613153924.961511-12-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 18 Jun 2024 14:22:44 +0200
-Message-ID: <CAG_fn=UEutgfgiE5xcFT=LXk51_PYmcCXCeNg3zSSEPYJ+tttg@mail.gmail.com>
-Subject: Re: [PATCH v4 11/35] kmsan: Allow disabling KMSAN checks for the
- current task
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnCoBAG2TNiIz1xE@admins-Air>
 
-On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Like for KASAN, it's useful to temporarily disable KMSAN checks around,
-> e.g., redzone accesses. Introduce kmsan_disable_current() and
-> kmsan_enable_current(), which are similar to their KASAN counterparts.
->
-> Make them reentrant in order to handle memory allocations in interrupt
-> context. Repurpose the allow_reporting field for this.
+Hi Vicentiu,
 
-I am still a bit reluctant, because these nested counters always end
-up being inconsistent.
-But your patch series fixes support for SLUB_DEBUG, and I don't have
-better ideas how to do this.
+kernel test robot noticed the following build errors:
 
-Could you please extend "Disabling the instrumentation" in kmsan.rst
-so that it explains the new enable/disable API?
-I think we should mention that the users need to be careful with it,
-keeping the regions short and preferring other ways to disable
-instrumentation, where possible.
+[auto build test ERROR on lee-leds/for-leds-next]
+[also build test ERROR on robh/for-next linus/master v6.10-rc4 next-20240617]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Vicentiu-Galanopulo/leds-Add-LED1202-I2C-driver/20240618-052035
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git for-leds-next
+patch link:    https://lore.kernel.org/r/ZnCoBAG2TNiIz1xE%40admins-Air
+patch subject: [PATCH v1 2/2] leds: Add LED1202 I2C driver
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20240618/202406181953.mXAkCdSy-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240618/202406181953.mXAkCdSy-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406181953.mXAkCdSy-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/module.h:12,
+                    from drivers/leds/leds-led1202.c:7:
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:396:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     396 |          BUILD_BUG_ON_ZERO((perms) > 0777) +                                    \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:373:8: note: in expansion of macro 'DEVICE_ATTR'
+     373 | static DEVICE_ATTR(led_device_regsdump, 0x00444, ll1202_show_all_registers,
+         |        ^~~~~~~~~~~
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:399:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     399 |          BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +              \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:373:8: note: in expansion of macro 'DEVICE_ATTR'
+     373 | static DEVICE_ATTR(led_device_regsdump, 0x00444, ll1202_show_all_registers,
+         |        ^~~~~~~~~~~
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:396:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     396 |          BUILD_BUG_ON_ZERO((perms) > 0777) +                                    \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:375:8: note: in expansion of macro 'DEVICE_ATTR'
+     375 | static DEVICE_ATTR(patt_sequence_repetition, 0x00444 | 0x00200,
+         |        ^~~~~~~~~~~
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:399:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     399 |          BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +              \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:375:8: note: in expansion of macro 'DEVICE_ATTR'
+     375 | static DEVICE_ATTR(patt_sequence_repetition, 0x00444 | 0x00200,
+         |        ^~~~~~~~~~~
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:396:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     396 |          BUILD_BUG_ON_ZERO((perms) > 0777) +                                    \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:378:8: note: in expansion of macro 'DEVICE_ATTR'
+     378 | static DEVICE_ATTR(current_mA, 0x00444, ll1202_show_channel_mA_current, NULL);
+         |        ^~~~~~~~~~~
+>> include/linux/build_bug.h:16:51: error: negative width in bit-field '<anonymous>'
+      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+         |                                                   ^
+   include/linux/kernel.h:399:10: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+     399 |          BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +              \
+         |          ^~~~~~~~~~~~~~~~~
+   include/linux/sysfs.h:221:26: note: in expansion of macro 'VERIFY_OCTAL_PERMISSIONS'
+     221 |                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/device.h:158:52: note: in expansion of macro '__ATTR'
+     158 |         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
+         |                                                    ^~~~~~
+   drivers/leds/leds-led1202.c:378:8: note: in expansion of macro 'DEVICE_ATTR'
+     378 | static DEVICE_ATTR(current_mA, 0x00444, ll1202_show_channel_mA_current, NULL);
+         |        ^~~~~~~~~~~
+
+
+vim +16 include/linux/build_bug.h
+
+bc6245e5efd70c Ian Abbott       2017-07-10   6  
+bc6245e5efd70c Ian Abbott       2017-07-10   7  #ifdef __CHECKER__
+bc6245e5efd70c Ian Abbott       2017-07-10   8  #define BUILD_BUG_ON_ZERO(e) (0)
+bc6245e5efd70c Ian Abbott       2017-07-10   9  #else /* __CHECKER__ */
+bc6245e5efd70c Ian Abbott       2017-07-10  10  /*
+bc6245e5efd70c Ian Abbott       2017-07-10  11   * Force a compilation error if condition is true, but also produce a
+8788994376d84d Rikard Falkeborn 2019-12-04  12   * result (of value 0 and type int), so the expression can be used
+bc6245e5efd70c Ian Abbott       2017-07-10  13   * e.g. in a structure initializer (or where-ever else comma expressions
+bc6245e5efd70c Ian Abbott       2017-07-10  14   * aren't permitted).
+bc6245e5efd70c Ian Abbott       2017-07-10  15   */
+8788994376d84d Rikard Falkeborn 2019-12-04 @16  #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+527edbc18a70e7 Masahiro Yamada  2019-01-03  17  #endif /* __CHECKER__ */
+527edbc18a70e7 Masahiro Yamada  2019-01-03  18  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
