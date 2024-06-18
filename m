@@ -1,40 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3C15ADAB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ABC15B0F0;
+	Tue, 18 Jun 2024 07:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695590; cv=none; b=tDj/Nl0WSwhqSsJGblZa7vIyOr2V08Gm+vS8PiJ0f/TJ+ktaZbRTRL62L2T/hW+Bt8l8vKh/4EOrGH8D0M37Yvdp7sKzKX/fg8jshwuppqVu16XA8AT+iBhupI9cK5+yWsH/ba/9b1I0wP+1qleEg2jC+4yXgNfBSpe8BT5L4rU=
+	t=1718695630; cv=none; b=BS/Od/u12tDVspxyZCsqYfmAcb1EZ2H0ULbgks4L4US1A37R4w2Asr4ulqpCeiuSgbqrurP8SsiOPxAWSXffKcAOlNwoiLLa2oiNmEtDFKxpL7M2+x4mQRfsRDK7rEQi2DUXSCF6Rts4DOF9TuUjQxnCnmlXHThUwdD3nhGmB00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695590; c=relaxed/simple;
-	bh=KONhJvRsGKe9Je25O438ETYA1LD2QrAImWkgO4iDTkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mWdNH3uRHDz+/6YAGhirwd0zNJNKl+ksMLqpDGXDxsb/0F/JWtKdmucL9th+UAPbYNKqq+fCaKeD/Qxw1rOA+x1nMq1cYlgHdv1GYumRaebK6wyIWMVl6Yv5Lg28//44OsRRNdoak5Fma6h3LX4kUtJN427NH3p5rvhnjtjkHTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8HBx8Aa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8HBx8Aa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF46EC4AF1D;
-	Tue, 18 Jun 2024 07:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718695590;
-	bh=KONhJvRsGKe9Je25O438ETYA1LD2QrAImWkgO4iDTkE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X8HBx8AaJTixloScUfXKYiN8u5tzU+rzS9gH2zqvDNRSnKD0VfCmNk09o3JMVKHUm
-	 UR4J8B5JP+5pnGNQxLsLuqDgtMQvBDDRa/GUScgLMvVOAZb/m3d4j3vOsBiRY23eqh
-	 qrqM/Y5EUdgyLpkiBe+TN6XkZMJgeBA4fBD8FN0e87b7II7yAMaSBdq78Ivl/5jKvv
-	 qWRUV+5BbZOBp7bAM7XZYZD4GZKnuPv7guKz5kOq8wUj8f9rPbB8galgaf/boDtaDJ
-	 TBIPPmRDcpmxsaVthDN3dw4BWkb3mXqxq7Xd+ZXJKx2fQdIKAY7ovGQfb/HKZ59z/J
-	 VFXVhxkpwhP/g==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
+	s=arc-20240116; t=1718695630; c=relaxed/simple;
+	bh=v+8kEJ1OUngwE8rxso5D9lb/3tGgmgmX7ZUQc61K5XI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nUC5rSUQqljSusl1t/tSehy9J3+8ZDyiQlbs+xL/ho3m3INua5cxUaJzEERjBL/cz3CDcxHwfU6LxDRNS2QgOhDtw4EG06OnxyLxq5GTFBFHw+Ys8f8JJ5iequkrWOP3oaB/sj4SdWKg8Oq23jVN56pHRoEGOs3Idd27xkixVZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 67bed1d82d4311ef9305a59a3cc225df-20240618
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:57452060-6d28-4dc8-8c16-2a184e905e64,IP:25,
+	URL:0,TC:0,Content:9,EDM:0,RT:0,SF:1,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:35
+X-CID-INFO: VERSION:1.1.38,REQID:57452060-6d28-4dc8-8c16-2a184e905e64,IP:25,UR
+	L:0,TC:0,Content:9,EDM:0,RT:0,SF:1,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:35
+X-CID-META: VersionHash:82c5f88,CLOUDID:9d76cedba94e646680ad55363fc6a752,BulkI
+	D:2406171554551IQWSKXU,BulkQuantity:1,Recheck:0,SF:24|72|19|42|74|57|66|81
+	7|102,TC:nil,Content:4|-5,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:ni
+	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 1,FCT|NGT
+X-CID-BAS: 1,FCT|NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED
+	SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR, SN_UNTRUSTED
+	SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-UUID: 67bed1d82d4311ef9305a59a3cc225df-20240618
+X-User: lihongfu@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.255)] by mailgw.kylinos.cn
+	(envelope-from <lihongfu@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 2042290132; Tue, 18 Jun 2024 15:21:39 +0800
+From: Hongfu Li <lihongfu@kylinos.cn>
+To: yanjun.zhu@linux.dev
+Cc: allison.henderson@oracle.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	lihongfu@kylinos.cn,
 	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v3] f2fs: get rid of buffer_head use
-Date: Tue, 18 Jun 2024 15:26:20 +0800
-Message-Id: <20240618072620.720535-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	rds-devel@oss.oracle.com
+Subject: [PATCH] rds:Simplify the allocation of slab caches
+Date: Tue, 18 Jun 2024 15:21:21 +0800
+Message-Id: <20240618072121.67838-1-lihongfu@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <5a2cbc3e-bb37-4753-9c47-b196399ecf0a@linux.dev>
+References: <5a2cbc3e-bb37-4753-9c47-b196399ecf0a@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,279 +70,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert to use folio and related functionality.
+>> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+>> to simplify the creation of SLAB caches.
+>> 
+>> Signed-off-by: Hongfu Li <lihongfu@kylinos.cn>
+>> ---
+>>   net/rds/tcp.c      | 4 +---
+>>   net/rds/tcp_recv.c | 4 +---
+>>   2 files changed, 2 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+>> index d8111ac83bb6..3dc6956f66f8 100644
+>> --- a/net/rds/tcp.c
+>> +++ b/net/rds/tcp.c
+>> @@ -719,9 +719,7 @@ static int __init rds_tcp_init(void)
+>>   {
+>>   	int ret;
+>>   
+>> -	rds_tcp_conn_slab = kmem_cache_create("rds_tcp_connection",
+>> -					      sizeof(struct rds_tcp_connection),
+>> -					      0, 0, NULL);
+>> +	rds_tcp_conn_slab = KMEM_CACHE(rds_tcp_connection, 0);
 
-Cc: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Chao Yu <chao@kernel.org>
----
-- support large folio
-- use bd_mapping instead of bd_inode->i_mapping
- fs/f2fs/data.c  |  1 -
- fs/f2fs/f2fs.h  | 11 +++++-
- fs/f2fs/file.c  |  1 -
- fs/f2fs/inode.c |  1 -
- fs/f2fs/super.c | 93 +++++++++++++++++++++++++++++--------------------
- 5 files changed, 66 insertions(+), 41 deletions(-)
+>KMEM_CACHE is declared as below:
+>
+>/*
+>  * Please use this macro to create slab caches. Simply specify the
+>  * name of the structure and maybe some flags that are listed above.
+>  *
+>  * The alignment of the struct determines object alignment. If you
+>  * f.e. add ____cacheline_aligned_in_smp to the struct declaration
+>  * then the objects will be properly aligned in SMP configurations.
+>  */
+>#define KMEM_CACHE(__struct, __flags)                                   \
+>                 kmem_cache_create(#__struct, sizeof(struct __struct),   \
+>                         __alignof__(struct __struct), (__flags), NULL)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index b6dcb3bcaef7..0b4f563f2361 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -7,7 +7,6 @@
-  */
- #include <linux/fs.h>
- #include <linux/f2fs_fs.h>
--#include <linux/buffer_head.h>
- #include <linux/sched/mm.h>
- #include <linux/mpage.h>
- #include <linux/writeback.h>
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f7ee6c5e371e..777497919c62 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -11,7 +11,6 @@
- #include <linux/uio.h>
- #include <linux/types.h>
- #include <linux/page-flags.h>
--#include <linux/buffer_head.h>
- #include <linux/slab.h>
- #include <linux/crc32.h>
- #include <linux/magic.h>
-@@ -1990,6 +1989,16 @@ static inline struct f2fs_super_block *F2FS_RAW_SUPER(struct f2fs_sb_info *sbi)
- 	return (struct f2fs_super_block *)(sbi->raw_super);
- }
- 
-+static inline struct f2fs_super_block *F2FS_SUPER_BLOCK(struct folio *folio,
-+								pgoff_t index)
-+{
-+	pgoff_t idx_in_folio = index % (1 << folio_order(folio));
-+
-+	return (struct f2fs_super_block *)
-+		(page_address(folio_page(folio, idx_in_folio)) +
-+						F2FS_SUPER_OFFSET);
-+}
-+
- static inline struct f2fs_checkpoint *F2FS_CKPT(struct f2fs_sb_info *sbi)
- {
- 	return (struct f2fs_checkpoint *)(sbi->ckpt);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index e4a7cff00796..7508c744c157 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -8,7 +8,6 @@
- #include <linux/fs.h>
- #include <linux/f2fs_fs.h>
- #include <linux/stat.h>
--#include <linux/buffer_head.h>
- #include <linux/writeback.h>
- #include <linux/blkdev.h>
- #include <linux/falloc.h>
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index dbfebbddf675..87982e06bbe7 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -7,7 +7,6 @@
-  */
- #include <linux/fs.h>
- #include <linux/f2fs_fs.h>
--#include <linux/buffer_head.h>
- #include <linux/writeback.h>
- #include <linux/sched/mm.h>
- #include <linux/lz4.h>
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 4a1bc8f40f9a..c664db2b2a5e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -11,7 +11,6 @@
- #include <linux/fs_context.h>
- #include <linux/sched/mm.h>
- #include <linux/statfs.h>
--#include <linux/buffer_head.h>
- #include <linux/kthread.h>
- #include <linux/parser.h>
- #include <linux/mount.h>
-@@ -3333,24 +3332,42 @@ loff_t max_file_blocks(struct inode *inode)
- 	return result;
- }
- 
--static int __f2fs_commit_super(struct buffer_head *bh,
--			struct f2fs_super_block *super)
-+static int __f2fs_commit_super(struct f2fs_sb_info *sbi, struct folio *folio,
-+						pgoff_t index, bool update)
- {
--	lock_buffer(bh);
--	if (super)
--		memcpy(bh->b_data + F2FS_SUPER_OFFSET, super, sizeof(*super));
--	set_buffer_dirty(bh);
--	unlock_buffer(bh);
--
-+	struct bio *bio;
- 	/* it's rare case, we can do fua all the time */
--	return __sync_dirty_buffer(bh, REQ_SYNC | REQ_PREFLUSH | REQ_FUA);
-+	blk_opf_t opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH | REQ_FUA;
-+	int ret;
-+
-+	folio_lock(folio);
-+	folio_wait_writeback(folio);
-+	if (update)
-+		memcpy(F2FS_SUPER_BLOCK(folio, index), F2FS_RAW_SUPER(sbi),
-+					sizeof(struct f2fs_super_block));
-+	folio_mark_dirty(folio);
-+	folio_clear_dirty_for_io(folio);
-+	folio_start_writeback(folio);
-+	folio_unlock(folio);
-+
-+	bio = bio_alloc(sbi->sb->s_bdev, 1, opf, GFP_NOFS);
-+
-+	/* it doesn't need to set crypto context for superblock update */
-+	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio_index(folio));
-+
-+	if (!bio_add_folio(bio, folio, folio_size(folio), 0))
-+		f2fs_bug_on(sbi, 1);
-+
-+	ret = submit_bio_wait(bio);
-+	folio_end_writeback(folio);
-+
-+	return ret;
- }
- 
- static inline bool sanity_check_area_boundary(struct f2fs_sb_info *sbi,
--					struct buffer_head *bh)
-+					struct folio *folio, pgoff_t index)
- {
--	struct f2fs_super_block *raw_super = (struct f2fs_super_block *)
--					(bh->b_data + F2FS_SUPER_OFFSET);
-+	struct f2fs_super_block *raw_super = F2FS_SUPER_BLOCK(folio, index);
- 	struct super_block *sb = sbi->sb;
- 	u32 segment0_blkaddr = le32_to_cpu(raw_super->segment0_blkaddr);
- 	u32 cp_blkaddr = le32_to_cpu(raw_super->cp_blkaddr);
-@@ -3425,7 +3442,7 @@ static inline bool sanity_check_area_boundary(struct f2fs_sb_info *sbi,
- 			set_sbi_flag(sbi, SBI_NEED_SB_WRITE);
- 			res = "internally";
- 		} else {
--			err = __f2fs_commit_super(bh, NULL);
-+			err = __f2fs_commit_super(sbi, folio, index, false);
- 			res = err ? "failed" : "done";
- 		}
- 		f2fs_info(sbi, "Fix alignment : %s, start(%u) end(%llu) block(%u)",
-@@ -3438,12 +3455,11 @@ static inline bool sanity_check_area_boundary(struct f2fs_sb_info *sbi,
- }
- 
- static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
--				struct buffer_head *bh)
-+					struct folio *folio, pgoff_t index)
- {
- 	block_t segment_count, segs_per_sec, secs_per_zone, segment_count_main;
- 	block_t total_sections, blocks_per_seg;
--	struct f2fs_super_block *raw_super = (struct f2fs_super_block *)
--					(bh->b_data + F2FS_SUPER_OFFSET);
-+	struct f2fs_super_block *raw_super = F2FS_SUPER_BLOCK(folio, index);
- 	size_t crc_offset = 0;
- 	__u32 crc = 0;
- 
-@@ -3601,7 +3617,7 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
- 	}
- 
- 	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
--	if (sanity_check_area_boundary(sbi, bh))
-+	if (sanity_check_area_boundary(sbi, folio, index))
- 		return -EFSCORRUPTED;
- 
- 	return 0;
-@@ -3948,7 +3964,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
- {
- 	struct super_block *sb = sbi->sb;
- 	int block;
--	struct buffer_head *bh;
-+	struct folio *folio;
- 	struct f2fs_super_block *super;
- 	int err = 0;
- 
-@@ -3957,32 +3973,32 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
- 		return -ENOMEM;
- 
- 	for (block = 0; block < 2; block++) {
--		bh = sb_bread(sb, block);
--		if (!bh) {
-+		folio = read_mapping_folio(sb->s_bdev->bd_mapping, block, NULL);
-+		if (IS_ERR(folio)) {
- 			f2fs_err(sbi, "Unable to read %dth superblock",
- 				 block + 1);
--			err = -EIO;
-+			err = PTR_ERR(folio);
- 			*recovery = 1;
- 			continue;
- 		}
- 
- 		/* sanity checking of raw super */
--		err = sanity_check_raw_super(sbi, bh);
-+		err = sanity_check_raw_super(sbi, folio, block);
- 		if (err) {
- 			f2fs_err(sbi, "Can't find valid F2FS filesystem in %dth superblock",
- 				 block + 1);
--			brelse(bh);
-+			folio_put(folio);
- 			*recovery = 1;
- 			continue;
- 		}
- 
- 		if (!*raw_super) {
--			memcpy(super, bh->b_data + F2FS_SUPER_OFFSET,
-+			memcpy(super, F2FS_SUPER_BLOCK(folio, block),
- 							sizeof(*super));
- 			*valid_super_block = block;
- 			*raw_super = super;
- 		}
--		brelse(bh);
-+		folio_put(folio);
- 	}
- 
- 	/* No valid superblock */
-@@ -3996,7 +4012,8 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
- 
- int f2fs_commit_super(struct f2fs_sb_info *sbi, bool recover)
- {
--	struct buffer_head *bh;
-+	struct folio *folio;
-+	pgoff_t index;
- 	__u32 crc = 0;
- 	int err;
- 
-@@ -4014,22 +4031,24 @@ int f2fs_commit_super(struct f2fs_sb_info *sbi, bool recover)
- 	}
- 
- 	/* write back-up superblock first */
--	bh = sb_bread(sbi->sb, sbi->valid_super_block ? 0 : 1);
--	if (!bh)
--		return -EIO;
--	err = __f2fs_commit_super(bh, F2FS_RAW_SUPER(sbi));
--	brelse(bh);
-+	index = sbi->valid_super_block ? 0 : 1;
-+	folio = read_mapping_folio(sbi->sb->s_bdev->bd_mapping, index, NULL);
-+	if (IS_ERR(folio))
-+		return PTR_ERR(folio);
-+	err = __f2fs_commit_super(sbi, folio, index, true);
-+	folio_put(folio);
- 
- 	/* if we are in recovery path, skip writing valid superblock */
- 	if (recover || err)
- 		return err;
- 
- 	/* write current valid superblock */
--	bh = sb_bread(sbi->sb, sbi->valid_super_block);
--	if (!bh)
--		return -EIO;
--	err = __f2fs_commit_super(bh, F2FS_RAW_SUPER(sbi));
--	brelse(bh);
-+	index = sbi->valid_super_block;
-+	folio = read_mapping_folio(sbi->sb->s_bdev->bd_mapping, index, NULL);
-+	if (IS_ERR(folio))
-+		return PTR_ERR(folio);
-+	err = __f2fs_commit_super(sbi, folio, index, true);
-+	folio_put(folio);
- 	return err;
- }
- 
--- 
-2.40.1
+Sorry, I'll check it carefully next time.
 
+Thanks, 
+
+Hongfu Li
+
+>>   	if (!rds_tcp_conn_slab) {
+>>   		ret = -ENOMEM;
+>>   		goto out;
+>> diff --git a/net/rds/tcp_recv.c b/net/rds/tcp_recv.c
+>> index c00f04a1a534..7997a19d1da3 100644
+>> --- a/net/rds/tcp_recv.c
+>> +++ b/net/rds/tcp_recv.c
+>> @@ -337,9 +337,7 @@ void rds_tcp_data_ready(struct sock *sk)
+>>   
+>>   int rds_tcp_recv_init(void)
+>>   {
+>> -	rds_tcp_incoming_slab = kmem_cache_create("rds_tcp_incoming",
+>> -					sizeof(struct rds_tcp_incoming),
+>> -					0, 0, NULL);
+>> +	rds_tcp_incoming_slab = KMEM_CACHE(rds_tcp_incoming, 0);
+>>   	if (!rds_tcp_incoming_slab)
+>>   		return -ENOMEM;
+>>   	return 0;
