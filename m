@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB669155CB9;
-	Tue, 18 Jun 2024 07:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEC5156991;
+	Tue, 18 Jun 2024 07:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695538; cv=none; b=JrpEUMHdoXi+F3zx2gVx8kMOlANhVVik0emuocbgPSsZP26+Ny9bl2MQ86gx715MjCDjKhSJcvVPrw5r/CqRMBe1Jf1UwCbDE/8nPB5SpymrULHnTaTmgd94ZCtxwTdUG6g8VMFLC6SF8/pJljm16IHSJ9lSBvPsdtdnbZqIuBs=
+	t=1718695539; cv=none; b=YeodU3quokNdRkTVVg69VOB1HAY/uxgzVkdlfVMigmzN/wsR7sjCeJ5hQnqqLGAfT6MPzQQCs/YXZV3Kze27/bC4Qj23eeC2F8iz9fbuiPFJ1Njc0BOLrx6lsTw8kOGNojPgDUc2cd3Fmrj+A8YNmPOhECaRjNZC57C7iSjo12U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695538; c=relaxed/simple;
-	bh=uyor+YoAq5LCl1tympUAjuHINXAU0Rd4nLiZUnTuChE=;
+	s=arc-20240116; t=1718695539; c=relaxed/simple;
+	bh=LIlnRdFChcWrskshA2uHWa9ibTblCvtjpr5uMO8mOMw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XLM5VXwTkrjKFBsXqFEaG+U1aQjggcr1SSr0fASE3DRjtIKLNJfB0Qf+Ag7I4bSm87YiAFI9qLy7ATF8WYY6znAqq0wgutcGoFUvl7+qrMNMu/zQWEEARm1LW9PvcfJh/yLjitZRGY31lJ19O1B+Bx6H6P1FN5aBekhrdNJvwss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CaSqNtTT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GuRcgJqX; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=u8I66m5eGtlmBNmGR4/+yYGerbcQ+UWksvGvlbXxapVdNDDUcYNqQjcH0ajVFZTQ2KlseUJbU/H2tOYejkcLqHfOQ6K4JVR8/GuzSrX2xEgzkmrJ3iouHvxEkVa1hWFNuyhNkMPnmup6U6nhqbVjvfwiEIiuAo9tod4pMeLbH6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IB2LyY5R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3Yr3G/9R; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CaSqNtTT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GuRcgJqX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IB2LyY5R";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Yr3G/9R"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718695534;
+	s=2020; t=1718695533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MPqDekgBbaL2uHOA54ypCHD+Ebie1oWnMATs+QupYFo=;
-	b=CaSqNtTTsxj+HcEAovoLcDE8oFpru83gnbQs16tLsSVFHz2rawWyZF9l0g4RMzYBRBoYqA
-	K3pLtZ5NYLjwO11n7aCHYy2hX53FWTKOqHvsbDEBrx/XlctikUz4QIGLkINNubhPoJpFVS
-	n46sw9G8WpGQjHMgw1CPnTd04UnALxVW1W/Yiouwfy1I0ORX4nR2h4+OGdR1vw18DWLdw2
-	oB9lC4vbF8AGCav0De1Ux1qTuLd5LCD7gZyMZWS4DaZeG6EkTAlwvE1kp/9ljX+liDX18k
-	eOJF8Zn+bVjhG45Qpl0lm1cK0mb6ma2QwPbS+4fsiUzBmbHAcXWlt5/q/M4lWA==
+	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
+	b=IB2LyY5RWSn/HmCBSusa2FZ16Cq8/AfVb6y7fnawYli5CAhdfvgikt37cyJ7RmijRCm5x1
+	Us8Czw9DxKoGsbeCc8pmJqylGZtZF4tRCnpq/lK8CxBftdF1Vm04xqQjK5gsepfVXEvQfx
+	mzWo0L2qDm/XN3l5ReVq4O6ah5njyrszNK7G0XpGT5axw6CSsFw5mFDh0NC2e/IDyhDPRe
+	yXLPa62BXUxYYAys1/bPN69p3r02f1dyXLzWjia7twQuZGL2Y0FZ8GRU+olQ5qUoxpCmL5
+	Vy84JRHd9a/GJC1C0m6Ivqpmev6gKA+/85shnQBZIstqhw7bd4JzL0FXVCX0Eg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718695534;
+	s=2020e; t=1718695533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MPqDekgBbaL2uHOA54ypCHD+Ebie1oWnMATs+QupYFo=;
-	b=GuRcgJqXopA9Gc1FKId2uTE5b3aGVQT2G2OZDA1gLSJZ2cKFhuacJqQ8SV94W01j6/aEx6
-	+tJv4EOCtr5Y7DAQ==
+	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
+	b=3Yr3G/9RZlk9El6plD6jIUSiLXoD1F6kEt9JbZIxNgIr23LDJ6B2XHPtHa3z6LX5xkCC/y
+	1zBG4JEGCf1l8YAw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -55,17 +55,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ben Segall <bsegall@google.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v7 net-next 08/15] net: softnet_data: Make xmit per task.
-Date: Tue, 18 Jun 2024 09:13:24 +0200
-Message-ID: <20240618072526.379909-9-bigeasy@linutronix.de>
+	David Ahern <dsahern@kernel.org>
+Subject: [PATCH v7 net-next 06/15] net/ipv4: Use nested-BH locking for ipv4_tcp_sk.
+Date: Tue, 18 Jun 2024 09:13:22 +0200
+Message-ID: <20240618072526.379909-7-bigeasy@linutronix.de>
 In-Reply-To: <20240618072526.379909-1-bigeasy@linutronix.de>
 References: <20240618072526.379909-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -76,244 +69,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Softirq is preemptible on PREEMPT_RT. Without a per-CPU lock in
-local_bh_disable() there is no guarantee that only one device is
-transmitting at a time.
-With preemption and multiple senders it is possible that the per-CPU
-`recursion' counter gets incremented by different threads and exceeds
-XMIT_RECURSION_LIMIT leading to a false positive recursion alert.
-The `more' member is subject to similar problems if set by one thread
-for one driver and wrongly used by another driver within another thread.
+ipv4_tcp_sk is a per-CPU variable and relies on disabled BH for its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
 
-Instead of adding a lock to protect the per-CPU variable it is simpler
-to make xmit per-task. Sending and receiving skbs happens always
-in thread context anyway.
+Make a struct with a sock member (original ipv4_tcp_sk) and a
+local_lock_t and use local_lock_nested_bh() for locking. This change
+adds only lockdep coverage and does not alter the functional behaviour
+for !PREEMPT_RT.
 
-Having a lock to protected the per-CPU counter would block/ serialize two
-sending threads needlessly. It would also require a recursive lock to
-ensure that the owner can increment the counter further.
-
-Make the softnet_data.xmit a task_struct member on PREEMPT_RT. Add
-needed wrapper.
-
-Cc: Ben Segall <bsegall@google.com>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: David Ahern <dsahern@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/netdevice.h      | 42 +++++++++++++++++++++++++---------
- include/linux/netdevice_xmit.h | 13 +++++++++++
- include/linux/sched.h          |  5 +++-
- net/core/dev.c                 | 14 ++++++++++++
- net/core/dev.h                 | 18 +++++++++++++++
- 5 files changed, 80 insertions(+), 12 deletions(-)
- create mode 100644 include/linux/netdevice_xmit.h
+ include/net/sock.h  |  5 +++++
+ net/ipv4/tcp_ipv4.c | 15 +++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 85111502cf8f1..96b233a0bc2b3 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -43,6 +43,7 @@
+diff --git a/include/net/sock.h b/include/net/sock.h
+index b30ea0c342a65..cce23ac4d5148 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -544,6 +544,11 @@ struct sock {
+ 	netns_tracker		ns_tracker;
+ };
 =20
- #include <linux/netdev_features.h>
- #include <linux/neighbour.h>
-+#include <linux/netdevice_xmit.h>
- #include <uapi/linux/netdevice.h>
- #include <uapi/linux/if_bonding.h>
- #include <uapi/linux/pkt_cls.h>
-@@ -3223,13 +3224,7 @@ struct softnet_data {
- 	struct sk_buff_head	xfrm_backlog;
- #endif
- 	/* written and read only by owning cpu: */
--	struct {
--		u16 recursion;
--		u8  more;
--#ifdef CONFIG_NET_EGRESS
--		u8  skip_txqueue;
--#endif
--	} xmit;
-+	struct netdev_xmit xmit;
- #ifdef CONFIG_RPS
- 	/* input_queue_head should be written by cpu owning this struct,
- 	 * and only read by other cpus. Worth using a cache line.
-@@ -3257,10 +3252,18 @@ struct softnet_data {
-=20
- DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
-=20
-+#ifndef CONFIG_PREEMPT_RT
- static inline int dev_recursion_level(void)
- {
- 	return this_cpu_read(softnet_data.xmit.recursion);
- }
-+#else
-+static inline int dev_recursion_level(void)
-+{
-+	return current->net_xmit.recursion;
-+}
-+
-+#endif
-=20
- void __netif_schedule(struct Qdisc *q);
- void netif_schedule_queue(struct netdev_queue *txq);
-@@ -4875,18 +4878,35 @@ static inline ktime_t netdev_get_tstamp(struct net_=
-device *dev,
- 	return hwtstamps->hwtstamp;
- }
-=20
--static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops =
-*ops,
--					      struct sk_buff *skb, struct net_device *dev,
--					      bool more)
-+#ifndef CONFIG_PREEMPT_RT
-+static inline void netdev_xmit_set_more(bool more)
- {
- 	__this_cpu_write(softnet_data.xmit.more, more);
--	return ops->ndo_start_xmit(skb, dev);
- }
-=20
- static inline bool netdev_xmit_more(void)
- {
- 	return __this_cpu_read(softnet_data.xmit.more);
- }
-+#else
-+static inline void netdev_xmit_set_more(bool more)
-+{
-+	current->net_xmit.more =3D more;
-+}
-+
-+static inline bool netdev_xmit_more(void)
-+{
-+	return current->net_xmit.more;
-+}
-+#endif
-+
-+static inline netdev_tx_t __netdev_start_xmit(const struct net_device_ops =
-*ops,
-+					      struct sk_buff *skb, struct net_device *dev,
-+					      bool more)
-+{
-+	netdev_xmit_set_more(more);
-+	return ops->ndo_start_xmit(skb, dev);
-+}
-=20
- static inline netdev_tx_t netdev_start_xmit(struct sk_buff *skb, struct ne=
-t_device *dev,
- 					    struct netdev_queue *txq, bool more)
-diff --git a/include/linux/netdevice_xmit.h b/include/linux/netdevice_xmit.h
-new file mode 100644
-index 0000000000000..38325e0702968
---- /dev/null
-+++ b/include/linux/netdevice_xmit.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _LINUX_NETDEVICE_XMIT_H
-+#define _LINUX_NETDEVICE_XMIT_H
-+
-+struct netdev_xmit {
-+	u16 recursion;
-+	u8  more;
-+#ifdef CONFIG_NET_EGRESS
-+	u8  skip_txqueue;
-+#endif
++struct sock_bh_locked {
++	struct sock *sock;
++	local_lock_t bh_lock;
 +};
 +
-+#endif
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 61591ac6eab6d..5187486c25222 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -36,6 +36,7 @@
- #include <linux/signal_types.h>
- #include <linux/syscall_user_dispatch_types.h>
- #include <linux/mm_types_task.h>
-+#include <linux/netdevice_xmit.h>
- #include <linux/task_io_accounting.h>
- #include <linux/posix-timers_types.h>
- #include <linux/restart_block.h>
-@@ -975,7 +976,9 @@ struct task_struct {
- 	/* delay due to memory thrashing */
- 	unsigned                        in_thrashing:1;
- #endif
--
-+#ifdef CONFIG_PREEMPT_RT
-+	struct netdev_xmit		net_xmit;
-+#endif
- 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+ enum sk_pacing {
+ 	SK_PACING_NONE		=3D 0,
+ 	SK_PACING_NEEDED	=3D 1,
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index de0c8f43448ab..318bdd9b8f27c 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -93,7 +93,9 @@ static int tcp_v4_md5_hash_hdr(char *md5_hash, const stru=
+ct tcp_md5sig_key *key,
+ struct inet_hashinfo tcp_hashinfo;
+ EXPORT_SYMBOL(tcp_hashinfo);
 =20
- 	struct restart_block		restart_block;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index c361a7b69da86..c15b0215a66b7 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3940,6 +3940,7 @@ netdev_tx_queue_mapping(struct net_device *dev, struc=
-t sk_buff *skb)
- 	return netdev_get_tx_queue(dev, netdev_cap_txqueue(dev, qm));
+-static DEFINE_PER_CPU(struct sock *, ipv4_tcp_sk);
++static DEFINE_PER_CPU(struct sock_bh_locked, ipv4_tcp_sk) =3D {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
+=20
+ static u32 tcp_v4_init_seq(const struct sk_buff *skb)
+ {
+@@ -882,7 +884,9 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb,
+ 	arg.tos =3D ip_hdr(skb)->tos;
+ 	arg.uid =3D sock_net_uid(net, sk && sk_fullsock(sk) ? sk : NULL);
+ 	local_bh_disable();
+-	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
++	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
++	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
++
+ 	sock_net_set(ctl_sk, net);
+ 	if (sk) {
+ 		ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
+@@ -907,6 +911,7 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb,
+ 	sock_net_set(ctl_sk, &init_net);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTRSTS);
++	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
+ 	local_bh_enable();
+=20
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1002,7 +1007,8 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ 	arg.tos =3D tos;
+ 	arg.uid =3D sock_net_uid(net, sk_fullsock(sk) ? sk : NULL);
+ 	local_bh_disable();
+-	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
++	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
++	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
+ 	sock_net_set(ctl_sk, net);
+ 	ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
+ 			   inet_twsk(sk)->tw_mark : READ_ONCE(sk->sk_mark);
+@@ -1017,6 +1023,7 @@ static void tcp_v4_send_ack(const struct sock *sk,
+=20
+ 	sock_net_set(ctl_sk, &init_net);
+ 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
++	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
+ 	local_bh_enable();
  }
 =20
-+#ifndef CONFIG_PREEMPT_RT
- static bool netdev_xmit_txqueue_skipped(void)
- {
- 	return __this_cpu_read(softnet_data.xmit.skip_txqueue);
-@@ -3950,6 +3951,19 @@ void netdev_xmit_skip_txqueue(bool skip)
- 	__this_cpu_write(softnet_data.xmit.skip_txqueue, skip);
- }
- EXPORT_SYMBOL_GPL(netdev_xmit_skip_txqueue);
-+
-+#else
-+static bool netdev_xmit_txqueue_skipped(void)
-+{
-+	return current->net_xmit.skip_txqueue;
-+}
-+
-+void netdev_xmit_skip_txqueue(bool skip)
-+{
-+	current->net_xmit.skip_txqueue =3D skip;
-+}
-+EXPORT_SYMBOL_GPL(netdev_xmit_skip_txqueue);
-+#endif
- #endif /* CONFIG_NET_EGRESS */
+@@ -3615,7 +3622,7 @@ void __init tcp_v4_init(void)
 =20
- #ifdef CONFIG_NET_XGRESS
-diff --git a/net/core/dev.h b/net/core/dev.h
-index b7b518bc2be55..4984dd9b334bc 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -150,6 +150,8 @@ struct napi_struct *napi_by_id(unsigned int napi_id);
- void kick_defer_list_purge(struct softnet_data *sd, unsigned int cpu);
+ 		sk->sk_clockid =3D CLOCK_MONOTONIC;
 =20
- #define XMIT_RECURSION_LIMIT	8
-+
-+#ifndef CONFIG_PREEMPT_RT
- static inline bool dev_xmit_recursion(void)
- {
- 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
-@@ -165,5 +167,21 @@ static inline void dev_xmit_recursion_dec(void)
- {
- 	__this_cpu_dec(softnet_data.xmit.recursion);
- }
-+#else
-+static inline bool dev_xmit_recursion(void)
-+{
-+	return unlikely(current->net_xmit.recursion > XMIT_RECURSION_LIMIT);
-+}
-+
-+static inline void dev_xmit_recursion_inc(void)
-+{
-+	current->net_xmit.recursion++;
-+}
-+
-+static inline void dev_xmit_recursion_dec(void)
-+{
-+	current->net_xmit.recursion--;
-+}
-+#endif
-=20
- #endif
+-		per_cpu(ipv4_tcp_sk, cpu) =3D sk;
++		per_cpu(ipv4_tcp_sk.sock, cpu) =3D sk;
+ 	}
+ 	if (register_pernet_subsys(&tcp_sk_ops))
+ 		panic("Failed to create the TCP control socket.\n");
 --=20
 2.45.2
 
