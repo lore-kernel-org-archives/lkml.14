@@ -1,150 +1,66 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC60197A7B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9927B19ADB0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718679262; cv=none; b=ZElN9uLZzPkndRPOXpCoHRHPWIvlqbIBHAijf9iiGlQ+HZlKDMDhr72m7dJAxY/0w+09mhucUFcjjTb5O857R1Glru3rEW3aWsQC+ZZI6/5n3YkKdkJXotGUeW0s9vx/zTqNHsi2Il/B4xtpkTxh0ImK6kgKevS22f+UqnQNwEY=
+	t=1718679412; cv=none; b=LcLi2qswXBPin9kD70h++st+a2tn7sqEW9o/Gwq3YzOc0332oHJOyOcEkVs7BQ/uN3Tw2F7F8U8uoZkVHBN4TVg9P0VKAgkZfMoglqS+MG0s57c2elgoTlBpsOeN/8U59bKOj4VQioJIktijtZPSt3ao9a90JN7DT0WKOEIoarI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718679262; c=relaxed/simple;
-	bh=4j0EvQkQ9xJAUqlZ8bWcy54HxYyBb02BLfp17lE/u6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fjGwmbhGotWuM7i6ishPjeea5hJLC6jPA/vcC/8CXt52I0nLAdFhAqTXu7RCgXovY3xf5UWbrMzLFaB+92PFxba7fiZwgVhoBzvfpJRMWQmsRvsIFePNr1Cp4+lrQcxgzCUNwjVjwcDHbsWJgqxQGJc5tNCsfSG0smvSP31DeTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kfocus.org; spf=pass smtp.mailfrom=kfocus.org; dkim=pass (2048-bit key) header.d=kfocus-org.20230601.gappssmtp.com header.i=@kfocus-org.20230601.gappssmtp.com header.b=X+rBiOWZ; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kfocus.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kfocus.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kfocus-org.20230601.gappssmtp.com header.i=@kfocus-org.20230601.gappssmtp.com header.b="X+rBiOWZ"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7ebde93bf79so224010739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 19:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kfocus-org.20230601.gappssmtp.com; s=20230601; t=1718679260; x=1719284060; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=911Yzpdxj/p69u1bVziccAshKYL3Ktlrp0ENvO+HyZU=;
-        b=X+rBiOWZURKYhDJj8ggITvqQcNvPaMM90QRswKclVhG3JOEqM/YKgROH3nK6/ENnUQ
-         3TN9T0GILZIP9AIOk11aped/atRcgHr7sJcbo7PDYfeCDg8TEVu6NC5P5SATCd1/APuP
-         7mQg+jnaHH0NrNNouTgAebpusmpgKZhHFrgexJuojl/rJ1GF8wg6oDDNaiRXFf5BtmJh
-         mFPIVZA+1HWjCcWFKyLfwHHca8q6yo8GCNRGAwjOONNEMCVMQk2DcAGNo2G8qYDcTASk
-         I+WOK9A/DlaC1QvUSp3ido2+YZYWklLu4owbq1whasVz8s9Dc3Ina8U764yAA09ZvLp4
-         AN1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718679260; x=1719284060;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=911Yzpdxj/p69u1bVziccAshKYL3Ktlrp0ENvO+HyZU=;
-        b=Cg8e14KiRvRoVDDIAxNcwu51I1K6SD3yCgMHDw0+e5sT3kUCJWZNNXNvGdURrJjwn6
-         t6UO+e7cVgiOQpIRmONx7s/AW4VDnc8CZ/JZRSpB6Ev6rWRaEDVeblzSEr4H5gaeO4pg
-         5x7RWUNzkwHfbmbUhchSbiN8eB8P85jLf1OYqcUR0DR0DMR1R8eFE/9LOwJdIRk1p8Yu
-         rNssrn1I9mJKN5kI2M9e9olYOmJPT1C2dMGXJiMcjMbZI6I/Udx0kFz3pKclF6OpitEx
-         4CUSL9GHKTTPuXYiZV4DGKaptR+sZbARmYPocyPxj/TDJfRpnJS++KjvWmC3KxSAn7PB
-         Ysng==
-X-Forwarded-Encrypted: i=1; AJvYcCUC7vzZWIN3SY+i2JQMh7hx9R/3JwcjTEklyIi+za8IpSrmyBuD3s13Z0dTKLVF6hwsixGNTXmZz5ZcrCpC1Mj9nj9QdjxXE5lf2vZB
-X-Gm-Message-State: AOJu0Yw6+7Wq9X5Q03r1FsnwLMdbxXR/noxUwmSXmDMPtiUCoNCDSdhj
-	IeUaScNe2K/V4aw/WqIFjsgD2CbmszSSVfjR9xy+eD+VQwi8rJIcZIo2HKlnrOg=
-X-Google-Smtp-Source: AGHT+IFtYOzppYAG8HWgNrS/JIDEK2crHyhIyRM15PBmmmZQkpZZi9moaBfyES7RS8gS8+LVuTzjpQ==
-X-Received: by 2002:a05:6602:140a:b0:7eb:4770:6ea2 with SMTP id ca18e2360f4ac-7ebeb4b4fe9mr1402072239f.5.1718679260204;
-        Mon, 17 Jun 2024 19:54:20 -0700 (PDT)
-Received: from kf-XE ([2607:fb91:111c:4643:b5f:d6ad:8a73:5578])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b956a21890sm3006114173.129.2024.06.17.19.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 19:54:19 -0700 (PDT)
-Date: Mon, 17 Jun 2024 21:54:17 -0500
-From: Aaron Rainbolt <arainbolt@kfocus.org>
-To: linux-acpi@vger.kernel.org, rafael@kernel.org
-Cc: mario.limonciello@amd.com, lenb@kernel.org,
-	linux-kernel@vger.kernel.org, mmikowski@kfocus.org
-Subject: [PATCH] acpi: Allow ignoring _OSC CPPC v2 bit via kernel parameter
-Message-ID: <ZnD22b3Br1ng7alf@kf-XE>
+	s=arc-20240116; t=1718679412; c=relaxed/simple;
+	bh=z4yyF+UmXxEc5mtHCyYsfU2zNwtL4Y+ZVskAsRua9T4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/uWK6/sJWUkvgdbtES1fvP1g9M7u9b3rlFaBgPG6qsOmTsMRb9IxBduY9SbyRU5BAVg/td0mDy9bruRva2cwWZ7sVGul0Gasa/WRObgxkiinWMcnkK73hE9nMxRc6bNUgAQdHcdIJW8iSb7hN7Nqjpgb052vcHCG1qMVPlcik4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav112.sakura.ne.jp (fsav112.sakura.ne.jp [27.133.134.239])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 45I2ulH6041517;
+	Tue, 18 Jun 2024 11:56:47 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav112.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav112.sakura.ne.jp);
+ Tue, 18 Jun 2024 11:56:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav112.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 45I2ulke041514
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 18 Jun 2024 11:56:47 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <3b9e4f5a-3008-4480-9816-080f74179a23@I-love.SAKURA.ne.jp>
+Date: Tue, 18 Jun 2024 11:56:46 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] [virt?] upstream test error: KMSAN: uninit-value
+ in receive_buf
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: syzbot <syzbot+799fbb6d9e02a7a1d62b@syzkaller.appspotmail.com>,
+        davem@davemloft.net, edumazet@google.com, eperezma@redhat.com,
+        linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org,
+        pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux.dev, Jason Wang <jasowang@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <000000000000d10c260619498c25@google.com>
+ <4ffb1d55-acfd-4647-a4d7-f227a6ad21ea@I-love.SAKURA.ne.jp>
+ <1718674059.0143738-1-xuanzhuo@linux.alibaba.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <1718674059.0143738-1-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-acpi: Allow ignoring _OSC CPPC v2 bit via kernel parameter
+On 2024/06/18 10:27, Xuan Zhuo wrote:
+> Maybe this patch can fix this issue:
+> 
+> 	 http://lore.kernel.org/all/20240606111345.93600-1-xuanzhuo@linux.alibaba.com
 
-The _OSC is supposed to contain a bit indicating whether the hardware
-supports CPPC v2 or not. This bit is not always set, causing CPPC v2 to
-be considered absent. This results in severe single-core performance
-issues with the EEVDF scheduler.
+Yes, thank you.
 
-To work around this, provide a new kernel parameter,
-"processor.ignore_osc_cppc_bit", which may be used to ignore the _OSC
-CPPC v2 bit and act as if the bit was enabled. This allows CPPC to be
-properly detected even if not "enabled" by _OSC, allowing users with
-problematic hardware to obtain decent single-core performance.
+#syz fix: virtio_ring: fix KMSAN error for premapped mode
 
-Tested-by: Michael Mikowski <mmikowski@kfocus.org>
-Signed-off-by: Aaron Rainbolt <arainbolt@kfocus.org>
-
----
-
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 1d857978f5f4..53406dd6cb87 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -671,7 +671,7 @@ static inline void arch_init_invariance_cppc(void) { }
-  *
-  *	Return: 0 for success or negative value for err.
-  */
--int acpi_cppc_processor_probe(struct acpi_processor *pr)
-+int acpi_cppc_processor_probe(struct acpi_processor *pr, bool ignore_osc_cppc_bit)
- {
- 	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
- 	union acpi_object *out_obj, *cpc_obj;
-@@ -686,7 +686,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
- 
- 	if (!osc_sb_cppc2_support_acked) {
- 		pr_debug("CPPC v2 _OSC not acked\n");
--		if (!cpc_supported_by_cpu()) {
-+		if (!ignore_osc_cppc_bit && !cpc_supported_by_cpu()) {
- 			pr_debug("CPPC is not supported by the CPU\n");
- 			return -ENODEV;
- 		}
-diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
-index 67db60eda370..a183bca6c1c5 100644
---- a/drivers/acpi/processor_driver.c
-+++ b/drivers/acpi/processor_driver.c
-@@ -33,6 +33,11 @@ MODULE_AUTHOR("Paul Diefenbaugh");
- MODULE_DESCRIPTION("ACPI Processor Driver");
- MODULE_LICENSE("GPL");
- 
-+static bool ignore_osc_cppc_bit = false;
-+module_param(ignore_osc_cppc_bit, bool, 0);
-+MODULE_PARM_DESC(ignore_osc_cppc_bit,
-+	"Ignore _OSC CPPC bit, assume CPPC v2 is present");
-+
- static int acpi_processor_start(struct device *dev);
- static int acpi_processor_stop(struct device *dev);
- 
-@@ -170,7 +175,7 @@ static int __acpi_processor_start(struct acpi_device *device)
- 	if (pr->flags.need_hotplug_init)
- 		return 0;
- 
--	result = acpi_cppc_processor_probe(pr);
-+	result = acpi_cppc_processor_probe(pr, ignore_osc_cppc_bit);
- 	if (result && !IS_ENABLED(CONFIG_ACPI_CPU_FREQ_PSS))
- 		dev_dbg(&device->dev, "CPPC data invalid or not present\n");
- 
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index 3f34ebb27525..79fd61b3f537 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -358,10 +358,10 @@ int acpi_map_cpuid(phys_cpuid_t phys_id, u32 acpi_id);
- int acpi_get_cpuid(acpi_handle, int type, u32 acpi_id);
- 
- #ifdef CONFIG_ACPI_CPPC_LIB
--extern int acpi_cppc_processor_probe(struct acpi_processor *pr);
-+extern int acpi_cppc_processor_probe(struct acpi_processor *pr, bool ignore_osc_cppc_bit);
- extern void acpi_cppc_processor_exit(struct acpi_processor *pr);
- #else
--static inline int acpi_cppc_processor_probe(struct acpi_processor *pr)
-+static inline int acpi_cppc_processor_probe(struct acpi_processor *pr, bool ignore_osc_cppc_bit)
- {
- 	return 0;
- }
