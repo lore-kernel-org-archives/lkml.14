@@ -1,202 +1,102 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365DF13AD29;
-	Tue, 18 Jun 2024 14:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6351E2139DA
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722256; cv=none; b=YuHXve6RxpnngDdZS05wQxKyWYvzvt1pHBqvw3+x0IhWTlH+VovFXsygl0fnBWpkm8bK+KbMLeqFiEKhsy7NOTkNpFZ+kSxg4eGDxw3eLNBUmE6+0TaZoKuxkaSdIFW9rULA/iTJjmZYDjtlNBlANii4ZmS5um3EMW67O8rHig8=
+	t=1718722320; cv=none; b=fCKpcnAqSYWF/I6k6xhMSidKYQUtdHNTXVZvX7DhmfiQBvfivTsRp8v326kI2DWTo/DeQJIIWSN5d3x4HmrnDUdWhSKrkrLTVtg7DDR2rdOo2ENXQqU2EabaPPGLscJghYJT/X8FuKOj1gOEvNHLjAvtRnNkt0GS7i22hAWwugk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722256; c=relaxed/simple;
-	bh=hGcbKw7n7y063SAaMZ8ffGbjHZGhut2D+dmcWhtpEH8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=UnueXPSks1Bv0jqrlyU+TV/0QTpS1fiu3tw53xUH+Sriu+jklla9S+2hkm607Bz0b03r74WKyHRyiY1g7L7ZIqGtc/8jlCaT5flUMoIiSskcud024U1RcpfVWrqxH7uLtbICUwYbUI/tPmcfMrm3S15wdBF5IgWNSiMgPtTA8PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=lZi+4Z+u; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TOKykJP4; arc=none smtp.client-ip=64.147.123.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lZi+4Z+u";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TOKykJP4"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.west.internal (Postfix) with ESMTP id BD91B1C000E3;
-	Tue, 18 Jun 2024 10:50:53 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 18 Jun 2024 10:50:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1718722253;
-	 x=1718808653; bh=C90Sq4PGFbLE3AmGVlHhSTr6SX3wdgYia1raOYnOhKg=; b=
-	lZi+4Z+uhSAxvGONZNO8PhBIWtE0wt0EJyIgsmUi7mBCb7giaESo7VyuX8VvKe/z
-	/LbskahmcgqQssLJMh9f9XPBGkVwYbqf9FChw9uqBC94+fk0xEte3mT07GHbZ8UW
-	plcSAOc5zDaHnaWZp84ANTPpVdMHbpU0Zo7xV/p4nrZ7gvOO6VkoszjxA6iM5aZI
-	3LqJwOZ9MNkvVIF6polj+S7tRENE61evUvZDtvWvdS/WH6pDQwk1+ZPAHVVJaDeC
-	RUt3ZvWHByxsqjXCkdgbgn3f1ljZDVfN0D6cOQhPz7v+LGkEawlXTcS5ervPIpEv
-	L9oalGKxY36/h5L9uJ3yjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1718722253; x=
-	1718808653; bh=C90Sq4PGFbLE3AmGVlHhSTr6SX3wdgYia1raOYnOhKg=; b=T
-	OKykJP4OUst02UPJvpI1+MR2C7+kR/rFPvCyzstS2GyAxVBqzmZMqXnYTi226OLn
-	OWYxejUjSFuU/d10ssQjY93aw1jWtGFP/qTScifgc7dJdmX5tccCtWm5co9ks2gB
-	jC0BG5pUdk0gla88LuIYhOWH9Q78Ywz1w2ehxnj7nbLDlfRlXS5pY1+p0uLcf1oG
-	HxYfz8ar9i+4tBiDTZEdGvoiMNM0jql27AGz81hM6WI/zn/+Gydbgvj4a57l0j0L
-	Ooa6B3drxI6GnVwUm5i8AB1XOGeUJT69pYwXnoavTPzNq+m24HCtIwxbCLZeEp2K
-	m9sHKpZoEXWb4EqHI1K2g==
-X-ME-Sender: <xms:zJ5xZv4rkCXTfkHr70K9NVrv11ZUtjjFBhkDS3bGTagyb2sOwyJOgQ>
-    <xme:zJ5xZk4LB6BpZMGwoqqgWykP8iPRQlRvJ1dNZinyTnghfVfLbtCX--oM9Gey7rTkU
-    EOgXzEdODv7SdZ1sg0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvkedghedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:zJ5xZmc8cH7BP6g7ZRVs2Lk_NUbV1wObc751dfQdpOjeGTb4o3X7OQ>
-    <xmx:zJ5xZgKu5fEFkwZKQ50hD-Hg6FUXnOepKdHE_JoyESf8ln6aMH7FpA>
-    <xmx:zJ5xZjKnPLup1zcBPLGvR4UCBEGMBVN5CviX_HfPytVvFUZT8J9kTg>
-    <xmx:zJ5xZpy4CDZBLe6zebisWLCqFEiqpU5Dqfbd08FePnmyqXfWPOFcpw>
-    <xmx:zZ5xZq8MUzFJulJB6_wrzzJDi6c5-bzs5AYjcq6msfxLBqS-kbfY3WIc>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AD18036A0074; Tue, 18 Jun 2024 10:50:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	s=arc-20240116; t=1718722320; c=relaxed/simple;
+	bh=JdxU76DpI5KkDSMb89wA0sDnG1t8b3veRymky71DvfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyLX4/lvF6gh9rhLaC2Kk114KkiYyLmJ+sFnWWd7naOOWiPOpI01F64qVc8CSdOPUmxIPwcgm5igmwgdffjWkY2RP84H2WCZgNSF6GBaidnPs61wvWvAuBAWZSX4GuXg0T1BHG/KixhM5a2L7XS9hncT8u7SQ4XYwRxdwl851AI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C78DDA7;
+	Tue, 18 Jun 2024 07:52:20 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89EB03F6A8;
+	Tue, 18 Jun 2024 07:51:54 -0700 (PDT)
+Date: Tue, 18 Jun 2024 15:51:47 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/fpsimd: Ensure that offlined CPUs are not using SME
+Message-ID: <ZnGfA-kGqCjbDu90@J2N7QTR9R3>
+References: <20240618-arm64-fpsimd-sme-cpu-die-v1-1-9a90d1a34918@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a3d57a7e-6134-4da5-bd4a-b150d2c97912@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H7RQu6wdBBjOBptZX6R63Ypw1qFCoJnZ335bFKd1f=XdA@mail.gmail.com>
-References: <20240616-b4-mips-ipi-improvements-v1-0-e332687f1692@flygoat.com>
- <20240616-b4-mips-ipi-improvements-v1-4-e332687f1692@flygoat.com>
- <CAAhV-H4LsuLYBefKZb5aHx_+fYyWjvO+Bm8h5=NFtSvk6E0Szw@mail.gmail.com>
- <7cbf218e-d311-4c33-aabb-7208eac231ed@app.fastmail.com>
- <CAAhV-H7RQu6wdBBjOBptZX6R63Ypw1qFCoJnZ335bFKd1f=XdA@mail.gmail.com>
-Date: Tue, 18 Jun 2024 15:50:33 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Broadcom internal kernel review list" <bcm-kernel-feedback-list@broadcom.com>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Serge Semin" <fancer.lancer@gmail.com>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/10] MIPS: Move mips_smp_ipi_init call after prepare_cpus
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618-arm64-fpsimd-sme-cpu-die-v1-1-9a90d1a34918@kernel.org>
 
+On Tue, Jun 18, 2024 at 03:03:50PM +0100, Mark Brown wrote:
+> When we use CPU hotplug to offline a CPU we may transition directly from
+> running a task which was using SME to the CPU being offlined. This means
+> that PSTATE.{SM,ZA} may still be set, indicating to the system that SME is
+> still in use. This could create contention with other still running CPUs if
+> the system uses shared SMCUs.
 
+Does it actually cause contention if the CPU isn't issuing SME
+instructions?
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8818=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=884:51=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Tue, Jun 18, 2024 at 6:10=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygo=
-at.com> wrote:
->>
->>
->>
->> =E5=9C=A82024=E5=B9=B46=E6=9C=8817=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8B=
-=E5=8D=882:53=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> > Hi, Jiaxun
->> >
->> > On Mon, Jun 17, 2024 at 5:03=E2=80=AFAM Jiaxun Yang <jiaxun.yang@fl=
-ygoat.com> wrote:
->> >>
->> >> This will give platform code a genuine chance to setup
->> >> IPI IRQ in prepare_cpus.
->> >>
->> >> This is the best place for platforms to setup IPI as smp_setup
->> >> is too early for IRQ subsystem.
->> > mips_smp_ipi_init() is an early_initcall() function, why do you say=
- it
->> > is in smp_setup()?
->>
->> Sorry, I was trying to say that smp_setup is not a good point so we s=
-hould
->> go prepare_cpus.
-> It is not in smp_setup() now, then how do you move it from smp_setup()?
-[...]
+Is this theoretical or something you see in practice?
 
-Well I was trying to justify where should I move it to, not where
-does it from.
+> For most systems this shouldn't be an issue, we should have PSCI or some
+> other power management mechanism which will take care of this as part of
+> offlining the CPU. However we do still have support for spin tables,
 
-I should improve the commit message to justify the reason first.
+I don't think spin-table is relevant; there's no support whatsoever for
+offlining CPUs with spin-table (and offlining will be rejected long
+before cpu_die()).
 
-Thanks
-- Jiaxun
->
-> Huacai
->
->>
->> The intention of this patch is to move mips_smp_ipi_init to a certain=
- point
->> so platform would gain control over it.
->>
->> Thanks
->> - Jiaxun
->>
->> >
->> >
->> > Huacai
->> >>
->> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> >> ---
->> >>  arch/mips/kernel/smp.c | 11 ++++++++++-
->> >>  1 file changed, 10 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
->> >> index fe053fe52147..ddf96c28e2f0 100644
->> >> --- a/arch/mips/kernel/smp.c
->> >> +++ b/arch/mips/kernel/smp.c
->> >> @@ -375,7 +375,6 @@ static int __init mips_smp_ipi_init(void)
->> >>
->> >>         return 0;
->> >>  }
->> >> -early_initcall(mips_smp_ipi_init);
->> >>  #endif
->> >>
->> >>  /*
->> >> @@ -460,12 +459,22 @@ void __init smp_cpus_done(unsigned int max_c=
-pus)
->> >>  /* called from main before smp_init() */
->> >>  void __init smp_prepare_cpus(unsigned int max_cpus)
->> >>  {
->> >> +       int rc;
->> >> +
->> >>         init_new_context(current, &init_mm);
->> >>         current_thread_info()->cpu =3D 0;
->> >>         mp_ops->prepare_cpus(max_cpus);
->> >>         set_cpu_sibling_map(0);
->> >>         set_cpu_core_map(0);
->> >>         calculate_cpu_foreign_map();
->> >> +#ifdef CONFIG_GENERIC_IRQ_IPI
->> >> +       rc =3D mips_smp_ipi_init();
->> >> +       if (rc) {
->> >> +               pr_err("Failed to initialize IPI - disabling SMP");
->> >> +               init_cpu_present(cpumask_of(0));
->> >> +               return;
->> >> +       }
->> >> +#endif
->> >>  #ifndef CONFIG_HOTPLUG_CPU
->> >>         init_cpu_present(cpu_possible_mask);
->> >>  #endif
->> >>
->> >> --
->> >> 2.43.0
->> >>
->>
->> --
->> - Jiaxun
+> and it is possible that system firmware may not be ideally
+> implemented, so let's explicitly disable SME during the process of
+> offlining the CPU in order to ensure there's no spurious contention.
 
---=20
-- Jiaxun
+If this is an issue, surely it's the same with idle, or any other long
+period spent in the kernel, or any long period where userspace leaves
+the CPU in streaming mode?
+
+It feels very odd that we should need to do something for cpu offlining
+in particular.
+
+Mark,
+
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  arch/arm64/kernel/smp.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 31c8b3094dd7..9e8fc6ac758a 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -383,6 +383,10 @@ void __noreturn cpu_die(void)
+>  	/* Tell cpuhp_bp_sync_dead() that this CPU is now safe to dispose of */
+>  	cpuhp_ap_report_dead();
+>  
+> +	/* Ensure we are not spuriously contending any SMCU */
+> +	if (system_supports_sme())
+> +		sme_smstop();
+> +
+>  	/*
+>  	 * Actually shutdown the CPU. This must never fail. The specific hotplug
+>  	 * mechanism must perform all required cache maintenance to ensure that
+> 
+> ---
+> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+> change-id: 20240617-arm64-fpsimd-sme-cpu-die-57205c7f220e
+> 
+> Best regards,
+> -- 
+> Mark Brown <broonie@kernel.org>
+> 
+> 
