@@ -1,184 +1,258 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C07119CD1F;
-	Tue, 18 Jun 2024 03:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA471078B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718681330; cv=none; b=D8HpJ4T4G459Wq9wequ4ODGDc3c9sxmeFcErzXm0ZDY/0QGEaJQcHp2DaxER4g2kpsvXu37ixY0i6v6w3BY/CR6eXriWvb/J86P5qJoCko5wrphe6K5cETYF2m53bQyuWNYfiGXJQ+Pvmxt1Jyzd4PcxaV+BQy4hxDVkeaa2/o8=
+	t=1718681491; cv=none; b=RaoIaXbiny29qfC+Adyk65yuIwZNATLo2+/gKMRtQOgC9S9bnQasJHxz+7CVFHKE/5EJqjMx5Jp+EW9kWT4R8NOtp7lKTiI+hFPq8p59HrqILEbew9IyALmCo986ju82QotT4Ru2iBFIkw5ibqUnFuTB1jBaJ91jUhG4aCVjNEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718681330; c=relaxed/simple;
-	bh=E6v+KD9p8R6kimPj3jrgbH1H5pXJ3EeJibShbrpzaq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N35l9x6F0ct8AwoivnYwCyE6uSOEDGJkgeW/sbxzO43eMMS+AfuvXizSBNusXyDCHmehDDhEw8HvpJK5LGQGzj1QD8oPQv65k66OJABzrehR2+aFF0vLKJn/McdGFPk4d/riz2+V9JV9nJ5YyszH/dHsWN9neS2qxuBie3zrc/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W3Bzj3VfFz4f3jHh;
-	Tue, 18 Jun 2024 11:28:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CCB951A0181;
-	Tue, 18 Jun 2024 11:28:43 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgC3agjm_nBmV0P9AA--.2852S4;
-	Tue, 18 Jun 2024 11:28:43 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: jack@suse.cz,
-	paolo.valente@unimore.it,
-	axboe@kernel.dk,
-	tj@kernel.org,
-	josef@toxicpanda.com
-Cc: linux-block@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next] block, bfq: remove blkg_path()
-Date: Tue, 18 Jun 2024 11:27:53 +0800
-Message-Id: <20240618032753.3502528-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718681491; c=relaxed/simple;
+	bh=SpBt0hbpPezUvX7Dfy11W/uXWq3AonpwV160WsE6UfY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lBzsNMTd8lH9y+uD6o372BYWOMYXRDd8vcH/Fc1om4lfPFNN0Q/1C2xDsr5TYDJpRBZJC131TBZ6AWe5DG5v2fuf8/UcJbrZob3V5Uj8MzRAE/nwGNBfOxRjLnJR/NNRQODRR/ev73+CFRrJcX46lf5e65QNXrRB/TJ0SPl4JuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=hekzG3fr; arc=none smtp.client-ip=117.135.210.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="hekzG3fr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
+	Content-Type; bh=FMGSPpXZUiFkhSCU0e4bsz7g6v295g4MMcsy6x3vwJM=;
+	b=hekzG3frY+gSaAFGZg0o8uk4sVJmZ5RAA780VseFoddNY8XMXdmXR5IYYeOaM2
+	TUTj7SYdmmnH9VzWz//drb+YjNs2oicI4LSrZ+n5Z58FDvhOyZnWuumLUk779uZ+
+	wcq/nBHwy4OYEc3IDSwC2ui412QUdTH5akfoI2SV3YKB0=
+Received: from [172.21.21.216] (unknown [118.242.3.34])
+	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wD3X0x0_3Bm47oVAA--.12793S2;
+	Tue, 18 Jun 2024 11:31:02 +0800 (CST)
+Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
+ non-CMA THP-sized page
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com,
+ liuzixing@hygon.cn
+References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
+ <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
+ <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com>
+ <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
+ <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
+From: yangge1116 <yangge1116@126.com>
+Message-ID: <4482bf69-eb07-0ec9-f777-28ce40f96589@126.com>
+Date: Tue, 18 Jun 2024 11:31:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3agjm_nBmV0P9AA--.2852S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFyDZF13JFW3uw1fCF1DGFg_yoWrur1Dpa
-	sIgr17G3s8KF1Iqw10g340qryrAa1rZryUK3yjgrWFkryavrn2vF1Yyws5XFySvF9ayr42
-	vr1Y934UC3WqkFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUva14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-	uYvjfUF9a9DUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CM-TRANSID:_____wD3X0x0_3Bm47oVAA--.12793S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtw17Gr4kuFyxZr4fWFyfJFb_yoWxXr1DpF
+	WfG3W7Ka1UX345Awnrt3Z0kr1Yk343Kr18Wr1rXry8urnIyr1IkF4xJr1UuFyrAry7JF40
+	qrWUt3ZxZF4UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjiSLUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOhkCG2VEw2HQMwAAsa
 
-From: Yu Kuai <yukuai3@huawei.com>
 
-After commit 35fe6d763229 ("block: use standard blktrace API to output
-cgroup info for debug notes"), the field 'bfqg->blkg_path' is not used
-and hence can be removed, and therefor blkg_path() is not used anymore
-and can be removed.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/bfq-cgroup.c  | 51 ---------------------------------------------
- block/bfq-iosched.h |  3 ---
- block/blk-cgroup.h  | 13 ------------
- 3 files changed, 67 deletions(-)
+在 2024/6/18 上午9:55, Barry Song 写道:
+> On Tue, Jun 18, 2024 at 9:36 AM yangge1116 <yangge1116@126.com> wrote:
+>>
+>>
+>>
+>> 在 2024/6/17 下午8:47, yangge1116 写道:
+>>>
+>>>
+>>> 在 2024/6/17 下午6:26, Barry Song 写道:
+>>>> On Tue, Jun 4, 2024 at 9:15 PM <yangge1116@126.com> wrote:
+>>>>>
+>>>>> From: yangge <yangge1116@126.com>
+>>>>>
+>>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+>>>>> THP-sized allocations") no longer differentiates the migration type
+>>>>> of pages in THP-sized PCP list, it's possible to get a CMA page from
+>>>>> the list, in some cases, it's not acceptable, for example, allocating
+>>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
+>>>>>
+>>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
+>>>>> PCP list to avoid the issue above.
+>>>>
+>>>> Could you please describe the impact on users in the commit log?
+>>>
+>>> If a large number of CMA memory are configured in the system (for
+>>> example, the CMA memory accounts for 50% of the system memory), starting
+>>> virtual machine with device passthrough will get stuck.
+>>>
+>>> During starting virtual machine, it will call pin_user_pages_remote(...,
+>>> FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area,
+>>> pin_user_pages_remote() will migrate the page from CMA area to non-CMA
+>>> area because of FOLL_LONGTERM flag. If non-movable allocation requests
+>>> return CMA memory, pin_user_pages_remote() will enter endless loops.
+>>>
+>>> backtrace:
+>>> pin_user_pages_remote
+>>> ----__gup_longterm_locked //cause endless loops in this function
+>>> --------__get_user_pages_locked
+>>> --------check_and_migrate_movable_pages //always check fail and continue
+>>> to migrate
+>>> ------------migrate_longterm_unpinnable_pages
+>>> ----------------alloc_migration_target // non-movable allocation
+>>>
+>>>> Is it possible that some CMA memory might be used by non-movable
+>>>> allocation requests?
+>>>
+>>> Yes.
+>>>
+>>>
+>>>> If so, will CMA somehow become unable to migrate, causing cma_alloc()
+>>>> to fail?
+>>>
+>>>
+>>> No, it will cause endless loops in __gup_longterm_locked(). If
+>>> non-movable allocation requests return CMA memory,
+>>> migrate_longterm_unpinnable_pages() will migrate a CMA page to another
+>>> CMA page, which is useless and cause endless loops in
+>>> __gup_longterm_locked().
+> 
+> This is only one perspective. We also need to consider the impact on
+> CMA itself. For example,
+> when CMA is borrowed by THP, and we need to reclaim it through
+> cma_alloc() or dma_alloc_coherent(),
+> we must move those pages out to ensure CMA's users can retrieve that
+> contiguous memory.
+> 
+> Currently, CMA's memory is occupied by non-movable pages, meaning we
+> can't relocate them.
+> As a result, cma_alloc() is more likely to fail.
+> 
+>>>
+>>> backtrace:
+>>> pin_user_pages_remote
+>>> ----__gup_longterm_locked //cause endless loops in this function
+>>> --------__get_user_pages_locked
+>>> --------check_and_migrate_movable_pages //always check fail and continue
+>>> to migrate
+>>> ------------migrate_longterm_unpinnable_pages
+>>>
+>>>
+>>>
+>>>
+>>>
+>>>>>
+>>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+>>>>> THP-sized allocations")
+>>>>> Signed-off-by: yangge <yangge1116@126.com>
+>>>>> ---
+>>>>>    mm/page_alloc.c | 10 ++++++++++
+>>>>>    1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>>>> index 2e22ce5..0bdf471 100644
+>>>>> --- a/mm/page_alloc.c
+>>>>> +++ b/mm/page_alloc.c
+>>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
+>>>>> *preferred_zone,
+>>>>>           WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+>>>>>
+>>>>>           if (likely(pcp_allowed_order(order))) {
+>>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags &
+>>>>> ALLOC_CMA ||
+>>>>> +                                               order !=
+>>>>> HPAGE_PMD_ORDER) {
+>>>>> +                       page = rmqueue_pcplist(preferred_zone, zone,
+>>>>> order,
+>>>>> +                                               migratetype,
+>>>>> alloc_flags);
+>>>>> +                       if (likely(page))
+>>>>> +                               goto out;
+>>>>> +               }
+>>>>
+>>>> This seems not ideal, because non-CMA THP gets no chance to use PCP.
+>>>> But it
+>>>> still seems better than causing the failure of CMA allocation.
+>>>>
+>>>> Is there a possible approach to avoiding adding CMA THP into pcp from
+>>>> the first
+>>>> beginning? Otherwise, we might need a separate PCP for CMA.
+>>>>
+>>
+>> The vast majority of THP-sized allocations are GFP_MOVABLE, avoiding
+>> adding CMA THP into pcp may incur a slight performance penalty.
+>>
+> 
+> But the majority of movable pages aren't CMA, right?
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index d442ee358fc2..b758693697c0 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -797,57 +797,6 @@ void bfq_bic_update_cgroup(struct bfq_io_cq *bic, struct bio *bio)
- 	 */
- 	bfq_link_bfqg(bfqd, bfqg);
- 	__bfq_bic_change_cgroup(bfqd, bic, bfqg);
--	/*
--	 * Update blkg_path for bfq_log_* functions. We cache this
--	 * path, and update it here, for the following
--	 * reasons. Operations on blkg objects in blk-cgroup are
--	 * protected with the request_queue lock, and not with the
--	 * lock that protects the instances of this scheduler
--	 * (bfqd->lock). This exposes BFQ to the following sort of
--	 * race.
--	 *
--	 * The blkg_lookup performed in bfq_get_queue, protected
--	 * through rcu, may happen to return the address of a copy of
--	 * the original blkg. If this is the case, then the
--	 * bfqg_and_blkg_get performed in bfq_get_queue, to pin down
--	 * the blkg, is useless: it does not prevent blk-cgroup code
--	 * from destroying both the original blkg and all objects
--	 * directly or indirectly referred by the copy of the
--	 * blkg.
--	 *
--	 * On the bright side, destroy operations on a blkg invoke, as
--	 * a first step, hooks of the scheduler associated with the
--	 * blkg. And these hooks are executed with bfqd->lock held for
--	 * BFQ. As a consequence, for any blkg associated with the
--	 * request queue this instance of the scheduler is attached
--	 * to, we are guaranteed that such a blkg is not destroyed, and
--	 * that all the pointers it contains are consistent, while we
--	 * are holding bfqd->lock. A blkg_lookup performed with
--	 * bfqd->lock held then returns a fully consistent blkg, which
--	 * remains consistent until this lock is held.
--	 *
--	 * Thanks to the last fact, and to the fact that: (1) bfqg has
--	 * been obtained through a blkg_lookup in the above
--	 * assignment, and (2) bfqd->lock is being held, here we can
--	 * safely use the policy data for the involved blkg (i.e., the
--	 * field bfqg->pd) to get to the blkg associated with bfqg,
--	 * and then we can safely use any field of blkg. After we
--	 * release bfqd->lock, even just getting blkg through this
--	 * bfqg may cause dangling references to be traversed, as
--	 * bfqg->pd may not exist any more.
--	 *
--	 * In view of the above facts, here we cache, in the bfqg, any
--	 * blkg data we may need for this bic, and for its associated
--	 * bfq_queue. As of now, we need to cache only the path of the
--	 * blkg, which is used in the bfq_log_* functions.
--	 *
--	 * Finally, note that bfqg itself needs to be protected from
--	 * destruction on the blkg_free of the original blkg (which
--	 * invokes bfq_pd_free). We use an additional private
--	 * refcounter for bfqg, to let it disappear only after no
--	 * bfq_queue refers to it any longer.
--	 */
--	blkg_path(bfqg_to_blkg(bfqg), bfqg->blkg_path, sizeof(bfqg->blkg_path));
- 	bic->blkcg_serial_nr = serial_nr;
- }
- 
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 467e8cfc41a2..08ddf2cfae5b 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -1003,9 +1003,6 @@ struct bfq_group {
- 	/* must be the first member */
- 	struct blkg_policy_data pd;
- 
--	/* cached path for this blkg (see comments in bfq_bic_update_cgroup) */
--	char blkg_path[128];
--
- 	/* reference counter (see comments in bfq_bic_update_cgroup) */
- 	refcount_t ref;
- 
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index 25833221a12b..6dcaf63c560a 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -301,19 +301,6 @@ static inline struct blkcg *cpd_to_blkcg(struct blkcg_policy_data *cpd)
- 	return cpd ? cpd->blkcg : NULL;
- }
- 
--/**
-- * blkg_path - format cgroup path of blkg
-- * @blkg: blkg of interest
-- * @buf: target buffer
-- * @buflen: target buffer length
-- *
-- * Format the path of the cgroup of @blkg into @buf.
-- */
--static inline int blkg_path(struct blkcg_gq *blkg, char *buf, int buflen)
--{
--	return cgroup_path(blkg->blkcg->css.cgroup, buf, buflen);
--}
--
- /**
-  * blkg_get - get a blkg reference
-  * @blkg: blkg to get
--- 
-2.39.2
+> Do we have an estimate for
+> adding back a CMA THP PCP? Will per_cpu_pages introduce a new cacheline, which
+> the original intention for THP was to avoid by having only one PCP[1]?
+> 
+> [1] https://patchwork.kernel.org/project/linux-mm/patch/20220624125423.6126-3-mgorman@techsingularity.net/
+> 
+
+The size of struct per_cpu_pages is 256 bytes in current code containing 
+commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized 
+allocations").
+crash> struct per_cpu_pages
+struct per_cpu_pages {
+     spinlock_t lock;
+     int count;
+     int high;
+     int high_min;
+     int high_max;
+     int batch;
+     u8 flags;
+     u8 alloc_factor;
+     u8 expire;
+     short free_count;
+     struct list_head lists[13];
+}
+SIZE: 256
+
+After revert commit 5d0a661d808f ("mm/page_alloc: use only one PCP list 
+for THP-sized allocations"), the size of struct per_cpu_pages is 272 bytes.
+crash> struct per_cpu_pages
+struct per_cpu_pages {
+     spinlock_t lock;
+     int count;
+     int high;
+     int high_min;
+     int high_max;
+     int batch;
+     u8 flags;
+     u8 alloc_factor;
+     u8 expire;
+     short free_count;
+     struct list_head lists[15];
+}
+SIZE: 272
+
+Seems commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for 
+THP-sized allocations") decrease one cacheline.
+
+> 
+>> Commit 1d91df85f399 takes a similar approach to filter, and I mainly
+>> refer to it.
+>>
+>>
+>>>>> +#else
+>>>>>                   page = rmqueue_pcplist(preferred_zone, zone, order,
+>>>>>                                          migratetype, alloc_flags);
+>>>>>                   if (likely(page))
+>>>>>                           goto out;
+>>>>> +#endif
+>>>>>           }
+>>>>>
+>>>>>           page = rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
+>>>>> --
+>>>>> 2.7.4
+>>>>
+>>>> Thanks
+>>>> Barry
+>>>>
+>>
+>>
 
