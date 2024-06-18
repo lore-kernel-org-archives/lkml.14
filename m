@@ -1,233 +1,162 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08E94DA0C;
-	Tue, 18 Jun 2024 16:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD07D14BF86;
+	Tue, 18 Jun 2024 16:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718727138; cv=none; b=VrugwjhOZWCRv3TiFCztSN8r6YaNCNc37dI9kd5snQBIOJQQ9LS+9LjFxu9XbJpFGO0LgqEdPrHq5/wV9+Voyo8P+2aPMlVC7+f+oeKE9GQN6NuL/zWVweFNyo5ML6h7X5AZqst6lZ8YEqppQs6q7lQIfQpFrMxomc++oapOnww=
+	t=1718727142; cv=none; b=tt9Y93k4nHIyVBPN1JU7d5HVQLya5kT9PLR/nb7OwSXSGyONgUrgVZoft++K9teJV5ay0/gdEJ5N4+fAPmllieut0I78q5PI3+IzFtIInGR3DgSe5PK0z2DWMIEt6wDy+m9rcErYAHXgq2NqQGTzQO+CrQc8NhrldsIrOTNnr9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718727138; c=relaxed/simple;
-	bh=AwPVk18OdGcscZHTFXzEXSjzJXtISdJya6SrT29SPXU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SOVOeiZj1s1xBp/us7/sX3nlOYLKpFo9x55+PJ53WQ4jrc7CtN4dJcFD1dnLkYrGV18orl2lURcygQQNUW6ZTVydeeNNWNb5+3WsoBLyLTFIZdrc2YG9OqdxmPDwTMIHQhCWPAvR3W5r+2BLeUStcbC4dxdqfYsIHPlQMEcL6js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DWg+vTeG; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718727142; c=relaxed/simple;
+	bh=TL24mQmoCmG6JvMGnERNa9n0D2q1ckHqAKpeRsdYRPc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mYnQAu//PCE1tAKeaV5fy0kkElTpHvK532h4cMvxRvk8/TI7bl1ZUgtxNjTm9xlnoR6KCrJWU37O56ZksO0n49cqEVxuxZf0glS9MZTr/ppvv/UECISXo4JFG3LwIvQN9k/JjGSiXraWhLL46qGCFcanVO0JXewpYcUfSmP4YCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BF8gFfmg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DWg+vTeG"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IFxAKF024676;
-	Tue, 18 Jun 2024 18:12:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	qL0QIk/5tc56Rf9/m2Q6wHM/v+PyGRnuQRu8OBBKDr4=; b=DWg+vTeGp/UYuPoA
-	2Os3m6pr72ek3sgwdvIL/QgGbfc2KYb6YA5AavqMoXE0nUXJ8bX3S6DkBVnybmUt
-	ufIsCyR7TzWSwe2i3Uq577jiB1H32/Vi+X2dsOVK58ebu4+1YhIYFVwEkdxzvX5A
-	KdN8yf5BOSOSAgBrxkHvHNeve0lwcTnQ1w9mKFT+AEl5S0oaQsUGw3eHGDWiHg9p
-	wc+//h6fG/TO7H54moP4uH+mCl5cEkGpLi+MDalI0OoeGipGMjywi1RoJj2BIEoQ
-	lNqanTWOdbjTBLDhkx5qYukbOynk6Erswo2z3CyMwAgt2ezEAclKqF33JTrv1H03
-	j2ssBA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys29y3ypf-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BF8gFfmg"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IBCqcW005312;
+	Tue, 18 Jun 2024 16:12:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=DJbPrjRaIj8/B9EpEBGXNYWr
+	h0MR43gEeBmb26KI2FE=; b=BF8gFfmgoHCOten5wPNXAOty7uz/468ZeCHERTZz
+	jCB6BDygS2mnLkLwySiz7QhXiJE9C3q0pffpRvmGhTwyn6kH1l6eSqIdum8YuKMX
+	BJVUYRcuBO71YtHghku7iqePqvdTnhDjtl7RtP0rXpB2ictbpFQ3Y2sVlPrKPu+A
+	hcPCxPUAAkfPB3Pa2uV/Bq0Db50ml1qP6L4B2mam2kKJaDe1//aim8qBJLx4xJl7
+	pPlh+1V/B0qH1nI+1VRcJeU82ObyoHFcWsHHfTu2HLyYCZ9zCokinrztmq2Gjahd
+	xhck7U/EawNceGM3f2zVZgvL/7NZsnzim9XqXyi5Rsm3Fg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yu95rgt3c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 18:12:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3E50E4002D;
-	Tue, 18 Jun 2024 18:11:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D4AB521BF78;
-	Tue, 18 Jun 2024 18:11:30 +0200 (CEST)
-Received: from localhost (10.252.27.64) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 18 Jun
- 2024 18:11:30 +0200
-From: Olivier Moysan <olivier.moysan@foss.st.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: Olivier Moysan <olivier.moysan@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: [PATCH 7/8] iio: add sd modulator generic iio backend
-Date: Tue, 18 Jun 2024 18:08:33 +0200
-Message-ID: <20240618160836.945242-8-olivier.moysan@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240618160836.945242-1-olivier.moysan@foss.st.com>
-References: <20240618160836.945242-1-olivier.moysan@foss.st.com>
+	Tue, 18 Jun 2024 16:12:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45IGC6Ig009286
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 16:12:06 GMT
+Received: from hu-akhilpo-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Jun 2024 09:12:01 -0700
+Date: Tue, 18 Jun 2024 21:41:58 +0530
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+To: Will Deacon <will@kernel.org>
+CC: Andrew Halaney <ahalaney@redhat.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>,
+        Rob Clark <robdclark@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
+Message-ID: <20240618161158.qpqbv77tqveo5g6l@hu-akhilpo-hyd.qualcomm.com>
+References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
+ <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
+ <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
+ <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
+ <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
+ <20240604144055.GE20384@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240604144055.GE20384@willie-the-truck>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BUNumrrajOAzsr7DX2KcvMEECRsfSlrH
+X-Proofpoint-ORIG-GUID: BUNumrrajOAzsr7DX2KcvMEECRsfSlrH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 adultscore=0 clxscore=1011 priorityscore=1501
+ spamscore=0 phishscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180121
 
-Add a generic driver to support sigma delta modulators.
-Typically, this device is a hardware connected to an IIO device
-in charge of the conversion. The device is exposed as an IIO backend
-device. This backend device and the associated conversion device
-can be seen as an aggregate device from IIO framework.
+On Tue, Jun 04, 2024 at 03:40:56PM +0100, Will Deacon wrote:
+> On Thu, May 16, 2024 at 01:55:26PM -0500, Andrew Halaney wrote:
+> > On Thu, May 16, 2024 at 08:20:05PM GMT, Akhil P Oommen wrote:
+> > > On Thu, May 16, 2024 at 08:15:34AM -0500, Andrew Halaney wrote:
+> > > > If I understand correctly, you don't need any memory barrier.
+> > > > writel()/readl()'s are ordered to the same endpoint. That goes for all
+> > > > the reordering/barrier comments mentioned below too.
+> > > > 
+> > > > device-io.rst:
+> > > > 
+> > > >     The read and write functions are defined to be ordered. That is the
+> > > >     compiler is not permitted to reorder the I/O sequence. When the ordering
+> > > >     can be compiler optimised, you can use __readb() and friends to
+> > > >     indicate the relaxed ordering. Use this with care.
+> > > > 
+> > > > memory-barriers.txt:
+> > > > 
+> > > >      (*) readX(), writeX():
+> > > > 
+> > > > 	    The readX() and writeX() MMIO accessors take a pointer to the
+> > > > 	    peripheral being accessed as an __iomem * parameter. For pointers
+> > > > 	    mapped with the default I/O attributes (e.g. those returned by
+> > > > 	    ioremap()), the ordering guarantees are as follows:
+> > > > 
+> > > > 	    1. All readX() and writeX() accesses to the same peripheral are ordered
+> > > > 	       with respect to each other. This ensures that MMIO register accesses
+> > > > 	       by the same CPU thread to a particular device will arrive in program
+> > > > 	       order.
+> > > > 
+> > > 
+> > > In arm64, a writel followed by readl translates to roughly the following
+> > > sequence: dmb_wmb(), __raw_writel(), __raw_readl(), dmb_rmb(). I am not
+> > > sure what is stopping compiler from reordering  __raw_writel() and __raw_readl()
+> > > above? I am assuming iomem cookie is ignored during compilation.
+> > 
+> > It seems to me that is due to some usage of volatile there in
+> > __raw_writel() etc, but to be honest after reading about volatile and
+> > some threads from gcc mailing lists, I don't have a confident answer :)
+> > 
+> > > 
+> > > Added Will to this thread if he can throw some light on this.
+> > 
+> > Hopefully Will can school us.
+> 
+> The ordering in this case is ensured by the memory attributes used for
+> ioremap(). When an MMIO region is mapped using Device-nGnRE attributes
+> (as it the case for ioremap()), the "nR" part means "no reordering", so
+> readX() and writeX() to that region are ordered wrt each other.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
----
- drivers/iio/adc/Kconfig          |  10 +++
- drivers/iio/adc/Makefile         |   1 +
- drivers/iio/adc/sd_adc_backend.c | 110 +++++++++++++++++++++++++++++++
- 3 files changed, 121 insertions(+)
- create mode 100644 drivers/iio/adc/sd_adc_backend.c
+But that avoids only HW reordering, doesn't it? What about *compiler reordering* in the
+case of a writel following by a readl which translates to:
+	1: dmb_wmb()
+	2: __raw_writel() -> roughly "asm volatile('str')
+	3: __raw_readl() -> roughly "asm volatile('ldr')
+	4: dmb_rmb()
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 3d91015af6ea..f3dfdaa80678 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -1155,6 +1155,16 @@ config SPEAR_ADC
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called spear_adc.
- 
-+config SD_ADC_BACKEND
-+	tristate "Generic sigma delta modulator IIO backend"
-+	select IIO_BACKEND
-+	help
-+	  Select this option to enables sigma delta modulator. This driver can
-+	  support generic sigma delta modulators, as IIO backend devices.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called sd_adc_backend.
-+
- config SD_ADC_MODULATOR
- 	tristate "Generic sigma delta modulator"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 37ac689a0209..9aee2e4307d7 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -139,3 +139,4 @@ obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
- obj-$(CONFIG_XILINX_AMS) += xilinx-ams.o
- xilinx-xadc-y := xilinx-xadc-core.o xilinx-xadc-events.o
- obj-$(CONFIG_XILINX_XADC) += xilinx-xadc.o
-+obj-$(CONFIG_SD_ADC_BACKEND) += sd_adc_backend.o
-diff --git a/drivers/iio/adc/sd_adc_backend.c b/drivers/iio/adc/sd_adc_backend.c
-new file mode 100644
-index 000000000000..556a49dc537b
---- /dev/null
-+++ b/drivers/iio/adc/sd_adc_backend.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generic sigma delta modulator IIO backend
-+ *
-+ * Copyright (C) 2024, STMicroelectronics - All Rights Reserved
-+ */
-+
-+#include <linux/iio/backend.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+
-+struct iio_sd_backend_priv {
-+	struct regulator *vref;
-+	int vref_mv;
-+};
-+
-+static int sd_backend_enable(struct iio_backend *backend)
-+{
-+	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
-+
-+	return regulator_enable(priv->vref);
-+};
-+
-+static void sd_backend_disable(struct iio_backend *backend)
-+{
-+	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
-+
-+	regulator_disable(priv->vref);
-+};
-+
-+static int sd_backend_read(struct iio_backend *backend, int *val, int *val2, long mask)
-+{
-+	struct iio_sd_backend_priv *priv = iio_backend_get_priv(backend);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = priv->vref_mv;
-+		*val2 = 0;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_OFFSET:
-+		*val = 0;
-+		*val2 = 0;
-+		return IIO_VAL_INT;
-+	}
-+
-+	return -EINVAL;
-+};
-+
-+static const struct iio_backend_ops sd_backend_ops = {
-+	.enable = sd_backend_enable,
-+	.disable = sd_backend_disable,
-+	.read_raw = sd_backend_read,
-+};
-+
-+static int iio_sd_backend_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct regulator *vref;
-+	struct iio_sd_backend_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	vref = devm_regulator_get_optional(dev, "vref");
-+	if (IS_ERR(vref)) {
-+		if (PTR_ERR(vref) != -ENODEV)
-+			return dev_err_probe(dev, PTR_ERR(vref), "Failed to get vref\n");
-+	} else {
-+		ret = regulator_get_voltage(vref);
-+		if (ret < 0)
-+			return ret;
-+
-+		priv->vref = vref;
-+		priv->vref_mv = ret / 1000;
-+	}
-+
-+	ret = devm_iio_backend_register(&pdev->dev, &sd_backend_ops, priv);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+};
-+
-+static const struct of_device_id sd_backend_of_match[] = {
-+	{ .compatible = "sd-backend" },
-+	{ .compatible = "ads1201" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sd_backend_of_match);
-+
-+static struct platform_driver iio_sd_backend_adc = {
-+	.driver = {
-+		.name = "iio_sd_adc_backend",
-+		.of_match_table = sd_backend_of_match,
-+	},
-+	.probe = iio_sd_backend_probe,
-+};
-+
-+module_platform_driver(iio_sd_backend_adc);
-+
-+MODULE_DESCRIPTION("Basic sigma delta modulator IIO backend");
-+MODULE_AUTHOR("Olivier Moysan <olivier.moysan@foss.st.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(IIO_BACKEND);
--- 
-2.25.1
+Is the 'volatile' keyword sufficient to avoid reordering between (2) and (3)? Or
+do we need a "memory" clobber to inhibit reordering?
 
+This is still not clear to me even after going through some compiler documentions.
+
+-Akhil.
+
+> 
+> Note that guarantee _doesn't_ apply to other flavours of ioremap(), so
+> e.g. ioremap_wc() won't give you the ordering.
+> 
+> Hope that helps,
+> 
+> Will
