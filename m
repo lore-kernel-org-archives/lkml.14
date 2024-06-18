@@ -1,306 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4015815532F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3131413A3EF;
+	Tue, 18 Jun 2024 10:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718707812; cv=none; b=s8AY2+vKs79sE9SSK5eJ+HP2makSJf/RFMlFCc/A8hGGjeM58HkW4Jwqlq50ZKp1qLs6/vh6XtlqjYCu93kQWAMjiK4jKYek15gmCWo5u2NG7VZ0focn+V8hKtPtd6/vyDA/VC337D0sU4F2+Pz5vX8QIvU8zDCWS1eoMxjYWl0=
+	t=1718707909; cv=none; b=oUBltlPAyZqSEFDwKl1ELbAHPn22b0YhwooZ8AYp1x1WhOtqaDjGs2on/NzraCHaiYslGqdCqFZkq4o5yNr13RYKrVN9H008ScJxzXaS7kHYM9mFGTeAskjDKgSb9s2c1hTA5UoeHzwMZJvccH4NPewRpM1NDYy/s9glQ88m3e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718707812; c=relaxed/simple;
-	bh=zuIaHaRc2wHSelfPBTrftpxGVNzZzHi84yYkdxXtb/w=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D4QUiF6iLAu/MeN2B2gWY8H2v1EMWhAzxuokPQyf5803PBpd3brEEdzVb8oOS3GaZyleWswwvdto9VRf48Pv6SQmeA9fEftgZ04aPKjcDDE/hJpdKDBPbDnyy3E9HFzmtNXHJpJ7ZSuHthGAvIa7/693odEp4yVoy06/IfAHbX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FInN7Rae; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FInN7Rae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718707809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l/ChfiVgZBMW+Q5CvBZD4jxxA/Fmx+01TB6ag5A/b44=;
-	b=FInN7RaeP35/Mn1vLllt+UF6g5vrgdgJKYIo6W1NfLZpYevCZDtPQ6OrjUExgQBzks71lA
-	AdBr5A5QS2M54ZVT7qTEMtNGQyT/qppj7MaMUCrd1CKXM4Pe86MD3cF6nm8J29PrZe1qzM
-	CfRJl997ZoofSwcT1bs/MtJEmaCHJrk=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-BEjOfVXDNKauTWZf91gqQw-1; Tue, 18 Jun 2024 06:50:07 -0400
-X-MC-Unique: BEjOfVXDNKauTWZf91gqQw-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b062c433cfso61109566d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:50:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718707807; x=1719312607;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:in-reply-to
-         :mime-version:references:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l/ChfiVgZBMW+Q5CvBZD4jxxA/Fmx+01TB6ag5A/b44=;
-        b=MGfNIpbYCfjIdPfR1YUukh00A8ys1TJm6STjdZjipd5PVL5wJkKt/LybVMVPomZJxh
-         /hB3QoEjvfsnu5JkNtZTrAi9ud65h0hjAMXXWBGfK9Se35xxFwgvrW/wiavfHSxhpsVJ
-         zvz6IBMlbNvaRLGgps/utf2ofk5jUkGYUQgYkcskY72E6AMODe8FQf+4nuka7HMYerbD
-         28DJFcPJR/JAHGKXn71jPcmZgJsefWV7UqQdVE1UKx7qFLd2b9B4ImlqV0BSjCeNid47
-         JLOUKeSBXT86jnOqjhjILZaS8fYZsJAOGA2k2YXcjmROgjTfdgtZ+5RSOuyUceu+fA68
-         Krrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGhMGTEEqOlTeHWq/NRyugvWnQzlIZOLa9rNzMXlv6q4svHUHq5q/vmuDvu433bdsgRwla+R1OXt0sz/FGjXvrOAXDLRmXr70JeMVk
-X-Gm-Message-State: AOJu0YxeT7U98FRul8Klq6SCkkB0ihSYUtnwiRPPJaXjNwoSdzAMNKm9
-	GtVHnJODxo1vScDfxKQ0OWLMflpLsC/BeAsgAYzjFK6501Vulqc+VptMw5SMRtFYDnpO851Vr6Q
-	q9NSDx0rpmAUcP20Jo4GvPnchnLMS6Q5459MqKInrHaJM0g6U82TPD1PrASo6gBzidwW2e3+BjX
-	nzaSjhXw+her5zci8pBM0MOMkyPk/zPAbnOLBq
-X-Received: by 2002:ad4:5150:0:b0:6b0:77a8:f416 with SMTP id 6a1803df08f44-6b2b00bfea5mr127020746d6.47.1718707807307;
-        Tue, 18 Jun 2024 03:50:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZcXk+B1DGjBzWsshT0SLNobf3SFzVN5baTdv30Ptg1ZIe+fv5v4OlrJ687YcCxXqWrUXq11SvL/itCPlicUg=
-X-Received: by 2002:ad4:5150:0:b0:6b0:77a8:f416 with SMTP id
- 6a1803df08f44-6b2b00bfea5mr127020526d6.47.1718707806942; Tue, 18 Jun 2024
- 03:50:06 -0700 (PDT)
-Received: from 311643009450 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 18 Jun 2024 10:50:05 +0000
-From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
-References: <20240603185647.2310748-1-amorenoz@redhat.com> <20240603185647.2310748-8-amorenoz@redhat.com>
- <8624ccf8-e9e2-4a95-a25c-7d3166bb3256@ovn.org> <f8050877-1728-4723-acb8-8a8ab7674470@ovn.org>
- <CAG=2xmPAwvCR4ky0cu7Yai29v3H592-ATXtNkhsNJ-vTwR4BVw@mail.gmail.com> <5f293bac-4117-4f93-8d3f-636d6ce236a4@ovn.org>
+	s=arc-20240116; t=1718707909; c=relaxed/simple;
+	bh=dqqDQrONi6GgiJG2rZvb/DnknGfgShyAUAlLINpXwtM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJhXaYijokrp9yfef8h/qOjBjfvoZ3o2veu52MdM13eqrtj1YHM1SGflpml860jAv6BEW//mvybeXRBSqxi4m5w09SffX1F3TiPttAjxrelatMJ4aTAEik9rbrU7AndmBtEmwt8oL4C8M8/p6vz0NjipJ6IlMcpCUCd6c4phf+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04F8EDA7;
+	Tue, 18 Jun 2024 03:52:11 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B83D73F6A8;
+	Tue, 18 Jun 2024 03:51:44 -0700 (PDT)
+Message-ID: <4e2422e8-f082-4ce1-8b2b-63721fda2c74@arm.com>
+Date: Tue, 18 Jun 2024 11:51:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <5f293bac-4117-4f93-8d3f-636d6ce236a4@ovn.org>
-Date: Tue, 18 Jun 2024 10:50:05 +0000
-Message-ID: <CAG=2xmPbpvYGy1rAkcLsK6PFxCx3bmZyXKX5RTag8XZBTxMZdg@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 7/9] net: openvswitch: do not notify drops
- inside sample
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com, 
-	horms@kernel.org, dev@openvswitch.org, Pravin B Shelar <pshelar@ovn.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf pmu: Don't de-duplicate core PMUs
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20240617134348.208241-1-james.clark@arm.com>
+ <20240617134348.208241-3-james.clark@arm.com>
+ <CAP-5=fWzmz+_9-Rz1xPwN0sniGvhyiRtrR-OCqAJgiWybpoCXg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fWzmz+_9-Rz1xPwN0sniGvhyiRtrR-OCqAJgiWybpoCXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 12:22:23PM GMT, Ilya Maximets wrote:
-> On 6/18/24 09:00, Adri=C3=A1n Moreno wrote:
-> > On Mon, Jun 17, 2024 at 02:10:37PM GMT, Ilya Maximets wrote:
-> >> On 6/17/24 13:55, Ilya Maximets wrote:
-> >>> On 6/3/24 20:56, Adrian Moreno wrote:
-> >>>> The OVS_ACTION_ATTR_SAMPLE action is, in essence,
-> >>>> observability-oriented.
-> >>>>
-> >>>> Apart from some corner case in which it's used a replacement of clon=
-e()
-> >>>> for old kernels, it's really only used for sFlow, IPFIX and now,
-> >>>> local emit_sample.
-> >>>>
-> >>>> With this in mind, it doesn't make much sense to report
-> >>>> OVS_DROP_LAST_ACTION inside sample actions.
-> >>>>
-> >>>> For instance, if the flow:
-> >>>>
-> >>>>   actions:sample(..,emit_sample(..)),2
-> >>>>
-> >>>> triggers a OVS_DROP_LAST_ACTION skb drop event, it would be extremel=
-y
-> >>>> confusing for users since the packet did reach its destination.
-> >>>>
-> >>>> This patch makes internal action execution silently consume the skb
-> >>>> instead of notifying a drop for this case.
-> >>>>
-> >>>> Unfortunately, this patch does not remove all potential sources of
-> >>>> confusion since, if the sample action itself is the last action, e.g=
-:
-> >>>>
-> >>>>     actions:sample(..,emit_sample(..))
-> >>>>
-> >>>> we actually _should_ generate a OVS_DROP_LAST_ACTION event, but we a=
-ren't.
-> >>>>
-> >>>> Sadly, this case is difficult to solve without breaking the
-> >>>> optimization by which the skb is not cloned on last sample actions.
-> >>>> But, given explicit drop actions are now supported, OVS can just add=
- one
-> >>>> after the last sample() and rewrite the flow as:
-> >>>>
-> >>>>     actions:sample(..,emit_sample(..)),drop
-> >>>>
-> >>>> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> >>>> ---
-> >>>>  net/openvswitch/actions.c | 13 +++++++++++--
-> >>>>  1 file changed, 11 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-> >>>> index 33f6d93ba5e4..54fc1abcff95 100644
-> >>>> --- a/net/openvswitch/actions.c
-> >>>> +++ b/net/openvswitch/actions.c
-> >>>> @@ -82,6 +82,15 @@ static struct action_fifo __percpu *action_fifos;
-> >>>>  static struct action_flow_keys __percpu *flow_keys;
-> >>>>  static DEFINE_PER_CPU(int, exec_actions_level);
-> >>>>
-> >>>> +static inline void ovs_drop_skb_last_action(struct sk_buff *skb)
-> >>>> +{
-> >>>> +	/* Do not emit packet drops inside sample(). */
-> >>>> +	if (OVS_CB(skb)->probability)
-> >>>> +		consume_skb(skb);
-> >>>> +	else
-> >>>> +		ovs_kfree_skb_reason(skb, OVS_DROP_LAST_ACTION);
-> >>>> +}
-> >>>> +
-> >>>>  /* Make a clone of the 'key', using the pre-allocated percpu 'flow_=
-keys'
-> >>>>   * space. Return NULL if out of key spaces.
-> >>>>   */
-> >>>> @@ -1061,7 +1070,7 @@ static int sample(struct datapath *dp, struct =
-sk_buff *skb,
-> >>>>  	if ((arg->probability !=3D U32_MAX) &&
-> >>>>  	    (!arg->probability || get_random_u32() > arg->probability)) {
-> >>>>  		if (last)
-> >>>> -			ovs_kfree_skb_reason(skb, OVS_DROP_LAST_ACTION);
-> >>>> +			ovs_drop_skb_last_action(skb);
-> >>
-> >> Always consuming the skb at this point makes sense, since having smapl=
-e()
-> >> as a last action is a reasonable thing to have.  But this looks more l=
-ike
-> >> a fix for the original drop reason patch set.
-> >>
-> >
-> > I don't think consuming the skb at this point makes sense. It was very
-> > intentionally changed to a drop since a very common use-case for
-> > sampling is drop-sampling, i.e: replacing an empty action list (that
-> > triggers OVS_DROP_LAST_ACTION) with a sample(emit_sample()). Ideally,
-> > that replacement should not have any effect on the number of
-> > OVS_DROP_LAST_ACTION being reported as the packets are being treated in
-> > the same way (only observed in one case).
-> >
-> >
-> >>>>  		return 0;
-> >>>>  	}
-> >>>>
-> >>>> @@ -1579,7 +1588,7 @@ static int do_execute_actions(struct datapath =
-*dp, struct sk_buff *skb,
-> >>>>  		}
-> >>>>  	}
-> >>>>
-> >>>> -	ovs_kfree_skb_reason(skb, OVS_DROP_LAST_ACTION);
-> >>>> +	ovs_drop_skb_last_action(skb);
-> >>>
-> >>> I don't think I agree with this one.  If we have a sample() action wi=
-th
-> >>> a lot of different actions inside and we reached the end while the la=
-st
-> >>> action didn't consume the skb, then we should report that.  E.g.
-> >>> "sample(emit_sample(),push_vlan(),set(eth())),2"  should report that =
-the
-> >>> cloned skb was dropped.  "sample(push_vlan(),emit_sample())" should n=
-ot.
-> >>>
-> >
-> > What is the use case for such action list? Having an action branch
-> > executed randomly doesn't make sense to me if it's not some
-> > observability thing (which IMHO should not trigger drops).
->
-> It is exactly my point.  A list of actions that doesn't end is some sort
-> of a terminal action (output, drop, etc) does not make a lot of sense and
-> hence should be signaled as an unexpected drop, so users can re-check the
-> pipeline in case they missed the terminal action somehow.
->
-> >
-> >>> The only actions that are actually consuming the skb are "output",
-> >>> "userspace", "recirc" and now "emit_sample".  "output" and "recirc" a=
-re
-> >>> consuming the skb "naturally" by stealing it when it is the last acti=
-on.
-> >>> "userspace" has an explicit check to consume the skb if it is the las=
-t
-> >>> action.  "emit_sample" should have the similar check.  It should like=
-ly
-> >>> be added at the point of action introduction instead of having a sepa=
-rate
-> >>> patch.
-> >>>
-> >
-> > Unlinke "output", "recirc", "userspace", etc. with emit_sample the
-> > packet does not continue it's way through the datapath.
->
-> After "output" the packet leaves the datapath too, i.e. does not continue
-> it's way through OVS datapath.
->
 
-I meant a broader concept of "datapath". The packet continues. For the
-userspace action this is true only for the CONTROLLER ofp action but
-since the datapath does not know which action it's implementing, we
-cannot do better.
 
-> >
-> > It would be very confusing if OVS starts monitoring drops and adds a bu=
-nch
-> > of flows such as "actions:emit_sample()" and suddently it stops reporti=
-ng such
-> > drops via standard kfree_skb_reason. Packets _are_ being dropped here,
-> > we are just observing them.
->
-> This might make sense from the higher logic in user space application, bu=
-t
-> it doesn't from the datapath perspective.  And also, if the user adds the
-> 'emit_sample' action for drop monitring, they already know where to find
-> packet samples, they don't need to use tools like dropwatch anymore.
-> This packet is not dropped from the datapath perspective, it is sampled.
->
-> >
-> > And if we change emit_sample to trigger a drop if it's the last action,
-> > then "sample(50%, emit_sample()),2" will trigger a drop half of the tim=
-es
-> > which is also terribly confusing.
->
-> If emit_sample is the last action, then skb should be consumed silently.
-> The same as for "output" and "userspace".
->
-> >
-> > I think we should try to be clear and informative with what we
-> > _actually_ drop and not require the user that is just running
-> > "dropwatch" to understand the internals of the OVS module.
->
-> If someone is already using sampling to watch their packet drops, why wou=
-ld
-> they use dropwatch?
->
-> >
-> > So if you don't want to accept the "observational" nature of sample(),
-> > the only other solution that does not bring even more confusion to OVS
-> > drops would be to have userspace add explicit drop actions. WDYT?
-> >
->
-> These are not drops from the datapath perspective.  Users can add explici=
-t
-> drop actions if they want to, but I'm really not sure why they would do t=
-hat
-> if they are already capturing all these packets in psample, sFlow or IPFI=
-X.
+On 17/06/2024 22:30, Ian Rogers wrote:
+> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
+> 
+>> Arm PMUs have a suffix, either a single decimal (armv8_pmuv3_0) or 3 hex
+>> digits which (armv8_cortex_a53) which Perf assumes are both strippable
+>> suffixes for the purposes of deduplication. S390 "cpum_cf" is a
+>> similarly suffixed core PMU but is only two characters so is not treated
+>> as strippable because the rules are a minimum of 3 hex characters or 1
+>> decimal character.
+>>
+>> There are two paths involved in listing PMU events:
+>>
+>>  * HW/cache event printing assumes core PMUs don't have suffixes so
+>>    doesn't try to strip.
+>>  * Sysfs PMU events share the printing function with uncore PMUs which
+>>    strips.
+>>
+>> This results in slightly inconsistent Perf list behavior if a core PMU
+>> has a suffix:
+>>
+>>   # perf list
+>>   ...
+>>   armv8_pmuv3_0/branch-load-misses/
+>>   armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
+>>   ...
+>>
+>> Fix it by partially reverting back to the old list behavior where
+>> stripping was only done for uncore PMUs. For example commit 8d9f5146f5da
+>> ("perf pmus: Sort pmus by name then suffix") mentions that only PMUs
+>> starting 'uncore_' are considered to have a potential suffix. This
+>> change doesn't go back that far, but does only strip PMUs that are
+>> !is_core. This keeps the desirable behavior where the many possibly
+>> duplicated uncore PMUs aren't repeated, but it doesn't break listing for
+>> core PMUs.
+>>
+>> Searching for a PMU continues to use the new stripped comparison
+>> functions, meaning that it's still possible to request an event by
+>> specifying the common part of a PMU name, or even open events on
+>> multiple similarly named PMUs. For example:
+>>
+>>   # perf stat -e armv8_cortex/inst_retired/
+>>
+>>   5777173628      armv8_cortex_a53/inst_retired/          (99.93%)
+>>   7469626951      armv8_cortex_a57/inst_retired/          (49.88%)
+>>
+>> Fixes: 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like
+>> mrvl_ddr_pmu")
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>>
+> 
+> Should this have my suggested by tag?
+> 
+> Thanks,
+> Ian
 
-Because there is not a single "user". Tools and systems can be built on
-top of tracepoints and samples and they might not be coordinated between
-them. Some observability application can be always enabled and doing
-constant network monitoring or statistics while other lower level tools
-can be run at certain moments to troubleshoot issues.
+Yep, you're right I can add it
 
-In order to run dropwatch in a node you don't need to have rights to
-access the OpenFlow controller and ask it to change the OpenFlow rules
-or else dropwatch simply will not show actual packet drops.
-
-To me it seems obvious that drop sampling (via emit_sample) "includes"
-drop reporting via emit_sample. In both cases you get the packet
-headers, but in one case you also get OFP controller metadata. Now even
-if there is a system that uses both, does it make sense to push to them
-the responsibility of dealing with them being mutually exclusive?
-
-I think this makes debugging OVS datapath unnecessarily obscure when we
-know the packet is actually being dropped intentionally by OVS.
-
-What's the problem with having OVS write the following?
-    "sample(50%, emit_sample()),drop(0)"
-
-Thanks,
-Adri=C3=A1n
-
+> 
+> ---
+>>  tools/perf/util/pmu.c | 24 ++++++++++++++++++------
+>>  1 file changed, 18 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 97d74fe6d816..b73946ba9d05 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -847,6 +847,22 @@ __weak const struct pmu_metrics_table
+>> *pmu_metrics_table__find(void)
+>>         return perf_pmu__find_metrics_table(NULL);
+>>  }
+>>
+>> +/**
+>> + * Return the length of the PMU name not including the suffix for uncore
+>> PMUs.
+>> + *
+>> + * We want to deduplicate many similar uncore PMUs by stripping their
+>> suffixes,
+>> + * but there are never going to be too many core PMUs and the suffixes
+>> might be
+>> + * interesting. "arm_cortex_a53" vs "arm_cortex_a57" or "cpum_cf" for
+>> example.
+>> + *
+>> + * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are
+>> visible
+>> + */
+>> +static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, bool
+>> skip_duplicate_pmus)
+>> +{
+>> +       return skip_duplicate_pmus && !pmu->is_core
+>> +               ? pmu_name_len_no_suffix(pmu->name)
+>> +               : strlen(pmu->name);
+>> +}
+>> +
+>>  /**
+>>   * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring
+>> any
+>>   *                                   trailing suffix? The Suffix must be
+>> in form
+>> @@ -1796,9 +1812,7 @@ static char *format_alias(char *buf, int len, const
+>> struct perf_pmu *pmu,
+>>                           const struct perf_pmu_alias *alias, bool
+>> skip_duplicate_pmus)
+>>  {
+>>         struct parse_events_term *term;
+>> -       size_t pmu_name_len = skip_duplicate_pmus
+>> -               ? pmu_name_len_no_suffix(pmu->name)
+>> -               : strlen(pmu->name);
+>> +       size_t pmu_name_len = pmu_deduped_name_len(pmu,
+>> skip_duplicate_pmus);
+>>         int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len,
+>> pmu->name, alias->name);
+>>
+>>         list_for_each_entry(term, &alias->terms.terms, list) {
+>> @@ -1839,9 +1853,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu,
+>> bool skip_duplicate_pmus,
+>>                 size_t buf_used, pmu_name_len;
+>>
+>>                 info.pmu_name = event->pmu_name ?: pmu->name;
+>> -               pmu_name_len = skip_duplicate_pmus
+>> -                       ? pmu_name_len_no_suffix(info.pmu_name)
+>> -                       : strlen(info.pmu_name);
+>> +               pmu_name_len = pmu_deduped_name_len(pmu,
+>> skip_duplicate_pmus);
+>>                 info.alias = NULL;
+>>                 if (event->desc) {
+>>                         info.name = event->name;
+>> --
+>> 2.34.1
+>>
+>>
+> 
