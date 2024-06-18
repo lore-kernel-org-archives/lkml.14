@@ -1,129 +1,194 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2087.outbound.protection.outlook.com [40.95.110.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A4E15EFA3
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718737927; cv=none; b=fZy06lPLL1cG9RWwWJSbcfwB1vBETDCNQYSLFvtJlC9iIB1PnZQ7fZVGcrvxLkTNVpjJnxqpeGb4dEZyG/0kHO2A9HSv+onTCQ5/Wq3wzKOZL/gNh3zCY5OC3nXO/7FmiJBrm5rqCkHrK5z1xtSAJ3eVZpS3fn6Xq7ReKL3hK50=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718737927; c=relaxed/simple;
-	bh=V6TUkHZXRl29GH5tB+9zD1O+XS7wyCwcd/6nrTmB+zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AMZBug6UBb7GWW5qbQh69zXvwjPuJwEKxRPfYFc78HoikIAkDmkVr92aIvsNGz8D00jS/7ELN0u7nRn3/wQxV/lnXvQU74bZhbSfkbPcDhFAkHHKV/850o9t308PIeww3iIw2/pSlMl3/OrmDOT3ZQRJkaMUvdTp7SJut9JgNH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oH0hcvFJ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E46E1BF50;
+	Tue, 18 Jun 2024 19:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718738074; cv=fail; b=Mp5/F9FecGDPIZAhbMAqYFxm/67T3e1OpYiz4ldVCqAJ/cNBFq0HfS45dPBr3EHxEo1A4eisIKiBg70Ka98NvgMOHBhn8xpJ5uOMJFQ3vEHB3LWDyO0DwEmefoK67mq1VFZERgyNF+Bb6BNcRnLsXDpi9Z+yoFfgW8MO2GkQ6cg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718738074; c=relaxed/simple;
+	bh=5l3pdLD6j41SvSPIj9SqQ8Fhb6SyyRws9o7de6nqEvI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oeIvXa0nGuERhxkImJX5mhhu5XtD58b87LXngH5xQ8Yi9jTntj/Kw9pRpst7ffwvHN4wbCg/ZDUWogaxVn1GhjfH8A1wpIQ7S72p552Fo2MNLRyg0s0vW7eFP7/ZvVE/Xq1tIQOKqY1LQ+RLbbr4IBQnj2PpHWjWgVZsn5yc5Jo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=oxHPn7iR; arc=fail smtp.client-ip=40.95.110.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oH0hcvFJ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-424720e73e1so7524295e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:12:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="oxHPn7iR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OF1j/DOebL14HJysyRPOPd9OMO5MU9L/+cUoSgUjsxgON0vB++sgD5YSjfAoZ5eNbiYESawBm0ekxWaZ2341wilqMGozTvGZvIgeRH8fU/9kxw/TyNDZ4qsuefSIHA4jSxp7C3O/iuABZstnUMzXazUUEiPf3OoSY+0kH3t4isgubnCfk+76Qf5sXlSy0ovxPetm5c8JdNY5pFrRkGIHofXP0215z1PU9Dvm4uHMnWoRePdE4Kzlujs3318eoOoKJ+vRxvQGyrdPI7Esq72cT9Pr91oka/DCxYD3Au9mxzPEGH5V4dd7SXBO32w7XKW9EUwkV5mbOqg2HYrj7cHwBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zt1m6WJbUfu9UFYVa/YU4Ed38FbBGZnxRO2M1Aak2t4=;
+ b=B067XVG9cKbk5VEZiwdCgBPzCtCnlRCvRxpAt5DedYQIYLrfvUSfOVuTLGiw4ukT8umfA7K020rP3UBkJ7h281F4L6FxxlLiUe30L6HM4dRwnOQmPeW+/woQ1deo9kjNmTYAKs/6kP0IG8U5Sn5mUkIzSnm0Z789gDObgOU+iJDB0nXOjieqBsEwAeXVTxmEMCPaa+xq+fVSV5qnHhGjmOdn44FjHgSE5DQYsB4aF22JboOIs7X/m3fhyjuezrnxkNnEzKIqEwvB2KHVPVWj04S4zT+5txdeTTvmUDp86i5STu7+pB04rA9i3bP7A2V2LiiLtDfK6TtD5svt6fLwSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=baylibre.com
+ smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718737924; x=1719342724; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f8+/cR8dmnRCIY8KO1c6EzfyrRTOkElOzLEANvqSOFw=;
-        b=oH0hcvFJ7FmVmxz8THavBoaaaDNUg/2g4Z6LQuingacqxNEXmPzSba9sw4TOfi492Q
-         ooW+qyu7XLOz22qJtfnr6/AwZa8qp6je324y00HxdtdPZebey5DLkLE2XUdSAgZntRq7
-         3ULheWyKCY99KmTO1ePsCu4PxnXk5M7s1jZcGlXhssPN5elk8ATtHOYNi0t+I5f6qvd+
-         TWe2H/5jBl+xtvh7NRA+yfKJWXBGFq7fVgRTq1xBECGXEvF2iXCxeq2jal3oJgtrDO4i
-         TC1F+3uLJu3LyNbchFfqH23CB1Xg9OeZsZvFWA0qVcA8y0cYcLSFg7DPyiKuyCGqdLre
-         5lLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718737924; x=1719342724;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f8+/cR8dmnRCIY8KO1c6EzfyrRTOkElOzLEANvqSOFw=;
-        b=A5BEVdKdidMktCUAIggQpmzNwbQIJzv9l31kgOkd+P8SZtc1LoCR0e4oFisjeffXHi
-         sMc4CiKX1Rj24bQdTl4C6dZYTgnusxFOd5D6T7XFQmFASJOFt1HAv0koOkhZ3d9P8yE9
-         XZqH7DLOJ1JIXRXJY/BoD30Wjrz5Bzz4KrQwhtjeDnofTSZRiTa8/2vEZY+TwJds1GSd
-         yG4+KcwzPybJHcijOUR6+4lIbByHp8GLv59THQL7GMyC9wgPik0/6z/vEJzlPH5xX2VE
-         wBbTf8bSyMPdhyVCh7xL8bymLRMkabCCGmSw2xsvSCm6QTVPdlN/8Dj3ojNlc5N944Hf
-         Zf2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVPwCHoIsFOTOZwE/fmeVWU7Iez6tCm7IlAJ0RbQdvotaZ0lnRi/HOd/7LwoLR1F0SZCbgYxJccqUjbxUhtYjnrsk2nUR+eKpPUTB1A
-X-Gm-Message-State: AOJu0YxcraI8lbUf0v7pkGGXbBlzG/0duoLrFXQda9c5TNwkJWPvXMjb
-	Ko6UU3SvTyf7FWhaiRye9yBR7JgbNC7VxkSvNuhnCF9iaQ7yupbX06fPdVuwubw=
-X-Google-Smtp-Source: AGHT+IHdn2YVcteO5gHaAZyTpV2RKc9NRMuQMnYAe8emYCZSQL9/iTeEcqYKL05YMuGAZiFOdSXtsQ==
-X-Received: by 2002:adf:fe11:0:b0:35e:5bf6:5432 with SMTP id ffacd0b85a97d-363175b8c65mr437516f8f.21.1718737923890;
-        Tue, 18 Jun 2024 12:12:03 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:5d11:7fa7:8997:f811? ([2a00:f41:9028:9df3:5d11:7fa7:8997:f811])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-361a85074a2sm2280828f8f.25.2024.06.18.12.11.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 12:12:03 -0700 (PDT)
-Message-ID: <85e03d10-59a2-4f15-bb85-7b2c0354a5d1@linaro.org>
-Date: Tue, 18 Jun 2024 21:11:58 +0200
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zt1m6WJbUfu9UFYVa/YU4Ed38FbBGZnxRO2M1Aak2t4=;
+ b=oxHPn7iRCmsg2yYso1bgS1SDUO2OYrS8j9pyEryksdQe4620Ao/+Wg0bf2qI155qz8r0nGpd/ViYOdC+HTo5J84E0IFPRxUiQWFCSTEHRIzuQBSuoHrJ6Gv/S43I/0NvSTr7F7ntWpP5LG+1b803LFRDtx+JqCTvhW1P7OpzLyY=
+Received: from KL1PR01CA0007.apcprd01.prod.exchangelabs.com
+ (2603:1096:820::19) by KL1PR03MB8822.apcprd03.prod.outlook.com
+ (2603:1096:820:144::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 18:58:26 +0000
+Received: from HK2PEPF00006FAF.apcprd02.prod.outlook.com
+ (2603:1096:820:0:cafe::3e) by KL1PR01CA0007.outlook.office365.com
+ (2603:1096:820::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.32 via Frontend
+ Transport; Tue, 18 Jun 2024 18:58:25 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ HK2PEPF00006FAF.mail.protection.outlook.com (10.167.8.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Tue, 18 Jun 2024 18:58:24 +0000
+Received: from NTHCML01A.nuvoton.com (10.1.8.177) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Jun
+ 2024 02:58:23 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01A.nuvoton.com
+ (10.1.8.177) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Jun
+ 2024 02:58:23 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 19 Jun 2024 02:58:23 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 87C465F633;
+	Tue, 18 Jun 2024 21:58:22 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 833FBDC0726; Tue, 18 Jun 2024 21:58:22 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <p.zabel@pengutronix.de>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
+	<tmaimon77@gmail.com>
+Subject: [PATCH v25 1/3] dt-bindings: reset: npcm: add clock properties
+Date: Tue, 18 Jun 2024 21:58:17 +0300
+Message-ID: <20240618185819.2155595-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240618185819.2155595-1-tmaimon77@gmail.com>
+References: <20240618185819.2155595-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/23] gcc-sdm845: Add rates to the GP clocks
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Dzmitry Sankouski <dsankouski@gmail.com>,
- Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
- phone-devel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-input@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-2-e3f6662017ac@gmail.com>
- <wnf3mfgdm4p4f5wrxdtlx4wccnizdvohc7iiyu5t22eeb67r57@xun3r73hksrg>
- <ad04e203-4244-4cd3-9c9a-fae002962990@linaro.org>
- <lwrz4rvn6ogseea5v6j7plc3yi3xnzo76dvrsl3muat3iswlkb@zmwa3xo3xgw4>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <lwrz4rvn6ogseea5v6j7plc3yi3xnzo76dvrsl3muat3iswlkb@zmwa3xo3xgw4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FAF:EE_|KL1PR03MB8822:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7bd16319-27f4-4123-a73b-08dc8fc8a162
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|35950700013|48200799015|7416011|376011|7093399009|82310400023|61400799024|921017|35450700002;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QegjpYsomvDfUg2woPe25HvDoG6l1gfykYN7jlY3feKWNJXHBATSEeG2Ztnb?=
+ =?us-ascii?Q?vCOBq1ibVEa0jPw1ZYwZCT0a1mipSie8nhvaXGnruMg5Yh/2CGVVq2HTQDNt?=
+ =?us-ascii?Q?HUfHhp7HEed8C6mkjLRGuelZsYvaTyGzNnmM+k3pHgE+LhMzV26jTNu/3d4A?=
+ =?us-ascii?Q?CVFH1H/Wb7y+/nlrzOsJQhHnvVYMx8+U9/AvcutuodjDqLblHztjJgsT+9F5?=
+ =?us-ascii?Q?OTNAjauWVFa7RiDf92bxUaY7YODTXiT9SeVlk+tUZZeNxweHsMN3qScUQgkZ?=
+ =?us-ascii?Q?DPhuow5mCGkmCdGSodvyikVKV3Uo0Xeguc1FA6YvMxP6lyg0xqtjosDIBC9T?=
+ =?us-ascii?Q?aFs+d4UGcC43c+9IOtbo8ECDvPwi0L/vtFyYAxqinwA6plsolP616e9QY6M+?=
+ =?us-ascii?Q?t5RCj+UI/HHk3uJ44E0kXLbDOwYwuRTpE8+8MOTFDw81tdPBhwsXozeJenr7?=
+ =?us-ascii?Q?9C4fB8OwQCA4iXA0lTqzUvaqN2ad1vJuV3vJhVFH2Nwx8BxT4P7xRzpR6fl5?=
+ =?us-ascii?Q?OpEXyyPVKgQ+wRU1jlTLachjh+x+F/dREgnb5eMuMuZIwbiShKzGZJF/OzFD?=
+ =?us-ascii?Q?77bTLRjKguxfq6TscjV2ANg/YYAXmqwojARm3i9p1yIrKts/m8AJGNm7JMXN?=
+ =?us-ascii?Q?8ZJCssn4EHDsEjKw9VqngsPu0H1hxyM+33RV5ol6XqrLB1I/15OlbxoGTwsn?=
+ =?us-ascii?Q?69On8OEyYRd76E3jvcKDoFf89auP+0R3P+VzNJTeiWZZdsQb4k789AmnhsUI?=
+ =?us-ascii?Q?qxcmS0E6cDFMaUmQ5G5bqZjbKpNALHGQvrWsQjICqUwsDHJaVYGecTx/Q+NC?=
+ =?us-ascii?Q?O6F3POCDWjfh/7VJJBjf+lrUqS7n2HaLnom3cEYoVB9QwyuayMmG9SmA9XWF?=
+ =?us-ascii?Q?zsaUcDW1lX3j7vZ/GRY3Pr4+OzGr5k/wghBmWuUSZEqlHoVQIbnWQcrSW8eq?=
+ =?us-ascii?Q?RKL51Z51mbQzKtVKqDeqQNrpHPi4nnV+38mRh/lrfoidhjTzkMew5P4Obq9t?=
+ =?us-ascii?Q?R0v/UusAh7WZSnnhuFx6cmMqwVrjX3AynC9mrR6eULcpZo6JTN11BhTILcmL?=
+ =?us-ascii?Q?ko7Q1OyCuXLjzUj3geVehgLHv377x3zK7IkNfJUrXZxUSau+IDX6N64M+ueo?=
+ =?us-ascii?Q?uIq830TF3/vhgbW4V/RWIUg9AmXj7OGu0mpB4hBqhRLkcLPcAN85okd8vilg?=
+ =?us-ascii?Q?8ZopF5Uo0dPOcBYHOh2q9voMn6nB/4ZBOLZuoOPlfQ8BhEscZPMDWDcoUQcE?=
+ =?us-ascii?Q?RvH9yYxdmjACNcX6+nIvQU8BjNEQlv+w00ELlGGdveXWCs0TBQFDHl8o4RtX?=
+ =?us-ascii?Q?9zO/Xwsv77+iGpuQaeoHLGv6dMZWPJNFk8KbS/GVWkZZYRG2Wco5Tdeb1ksd?=
+ =?us-ascii?Q?pU8QpvTSohAC0NSswUL1VJTA5f+HpUMYxayDtC4q1sjDnscCQ4lxL3kiEZyd?=
+ =?us-ascii?Q?vMMDsWaSnlCBmS2UBoRwZjv/etEd8jZb?=
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230037)(35950700013)(48200799015)(7416011)(376011)(7093399009)(82310400023)(61400799024)(921017)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 18:58:24.3127
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bd16319-27f4-4123-a73b-08dc8fc8a162
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FAF.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8822
 
+This commit adds a 25MHz reference clock and clock-cell properties to
+the NPCM reset document. The addition is necessitated by the integration
+of the NPCM8xx clock auxiliary bus device into the NPCM reset driver.
 
+The inclusion of the NPCM8xx clock properties in the reset document is
+crucial as the reset block also serves as a clock provider for the
+NPCM8xx clock. This enhancement is intended to facilitate the use of the
+NPCM8xx clock driver.
 
-On 6/18/24 20:55, Dmitry Baryshkov wrote:
-> On Tue, Jun 18, 2024 at 08:50:52PM GMT, Konrad Dybcio wrote:
->>
->>
->> On 6/18/24 19:50, Dmitry Baryshkov wrote:
->>> On Tue, Jun 18, 2024 at 04:59:36PM GMT, Dzmitry Sankouski wrote:
->>>> sdm845 has "General Purpose" clocks that can be muxed to
->>>> SoC pins.
->>>>
->>>> Those clocks may be used as e.g. PWM sources for external peripherals.
->>>> Add more frequencies to the table for those clocks so it's possible
->>>> for arbitrary peripherals to make use of them.
->>>>
->>>> See also: bf8bb8eaccf(clk: qcom: gcc-msm8916: Add rates to the GP clocks)
->>>
->>> Each time I look at the table attached to the GP CLK, I feel that it's
->>> plain wrong. In the end the GPCLK can in theory have arbitrary value
->>> depending on the usecase.
->>>
->>> Bjorn, Konrad, maybe we should add special clk_ops for GP CLK which
->>> allow more flexibility than a default clk_rcg2_ops?
->>
->> If we can somehow get max m/n/d values for all possible parents, sure
-> 
-> Calculate them at runtime?
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../bindings/reset/nuvoton,npcm750-reset.yaml  | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-We'd be calculating the mnd values for a frequency that's either equal or
-reasonably close to the one requested. My worry is that we somehow need
-to get the maximum values they can take (unless they're well-known)
+diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
+index d82e65e37cc0..72523f1bbc18 100644
+--- a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
+@@ -21,6 +21,13 @@ properties:
+   '#reset-cells':
+     const: 2
+ 
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: specify external 25MHz reference clock.
++
+   nuvoton,sysgcr:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: a phandle to access GCR registers.
+@@ -39,6 +46,17 @@ required:
+   - '#reset-cells'
+   - nuvoton,sysgcr
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - nuvoton,npcm845-reset
++then:
++  required:
++    - '#clock-cells'
++    - clocks
++
+ additionalProperties: false
+ 
+ examples:
+-- 
+2.34.1
 
-Konrad
