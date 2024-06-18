@@ -1,48 +1,79 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFD715E5DC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADB715E5D1;
 	Tue, 18 Jun 2024 14:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718720532; cv=none; b=EmhW9YvNVc2tieWkY5s+U/7ajYbbbKfWy1E8WvAwf1ndgEX7AlvE4mQVirZyIIlHBlJcO39c0sHTdOsByMxVsB47FuJSPLL4ek4/dAjLhUg5mjAjrLpOfmXi0LvdcQQlw0Xp1rxHwJbROlKie409ZINifFlVVzWjaJHqg0/iRUk=
+	t=1718720532; cv=none; b=sp9iFP1UZT1h1Jaq5lbYfB0c53T4K0LNscDZVexj2JkCnbjtiGXFO+BQOxnV9oLQJTFhqoEp3Zd1+3/ERPOtRLhpSksgUECR3zSk1rMHeqqounK6j/TalX8ZWn2hrsOwhz7nscKtUmHqW3F88FujBQ6iXAPhTxLGKyS4VzGWvUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718720532; c=relaxed/simple;
-	bh=ug/qQNK60ThJr6Wmrm9eMouW+oYEz5AG/qVXhu9+0z0=;
+	bh=nGdM8GDWiw63LfHVRxOgWy1LqXhSACbPaSb3oZ0WBN0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m5gEblcsy0DmZOExhEtm/XUp4gNDze89pBUF8GvRLLAZRQNvSJ6HY7Zbq5+Pv6FLDyE9kL8dBVcva6C3S6mgG3HKwvAAix2AnFOUnFLKKW6DN2QCFiV8OXBX7DJVBXPXnnmtskc9Wht+K60q2B5KUJGZX6BUnTNc1N/9qgQvvns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W3TTb6Vt2z4f3nTP;
-	Tue, 18 Jun 2024 22:21:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A7CA01A112A;
-	Tue, 18 Jun 2024 22:22:07 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB34A0ImHFmVDEoAQ--.31709S6;
-	Tue, 18 Jun 2024 22:22:07 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	chandanbabu@kernel.org,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH -next v6 2/2] iomap: don't increase i_size in iomap_write_end()
-Date: Tue, 18 Jun 2024 22:21:12 +0800
-Message-Id: <20240618142112.1315279-3-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240618142112.1315279-1-yi.zhang@huaweicloud.com>
-References: <20240618142112.1315279-1-yi.zhang@huaweicloud.com>
+	 MIME-Version; b=bPdw2DvPNZYDjlkG9JHU6//1upWFKYNhT6/re7ZrRSlEqXdMhzUSJZ1VS8wNImh6umKAAz/+c36sDKinoVrnXfKVzp240MDDLCrumZ4Irji+RdoQGZ64/SSvxM0zfhpM9tCoOdh4i1hxLGMgJGzmeEorVzpMZ1e4/cG9AU/8tfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UASmYibB; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UASmYibB"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6f177b78dcso700300366b.1;
+        Tue, 18 Jun 2024 07:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718720529; x=1719325329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0bHpm4DzuXhkRwqoj5WVlYejCFzKpp5Uqn73d1JkWCI=;
+        b=UASmYibBEzigrQBR8iK7+rb3DvYeA3pRZEgBAbib219w9pB/86amNqG012VVRmxSQU
+         VDJazxbUFdIeK02ZfdeuZTbK5egJ4/f1bnn/qBhKfMcoYOtoJVD98SJnNsuq+G63OGu6
+         NHyjEUSSfTraTBTX5WltcP88CeMSH1A6wtiWj8kuAKVR9lj0TwQdRCP+hlJgIVVRq/a4
+         K1lbPNyMvIqD+cymYJogtQSrh/i6YOjqlnH0fMlpMwToN7HaRvvRh9U+o6E9PFc7BR9N
+         Ep9gPb6mFTdKxScn8bfDD1nY1qPVIZpyRkesB1IDuUSCy54CP1r2pBAaS/y65+8jGVqJ
+         YDsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718720529; x=1719325329;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0bHpm4DzuXhkRwqoj5WVlYejCFzKpp5Uqn73d1JkWCI=;
+        b=mkgFuWWaMi8lvHv08inQGTDdp5vASsWmXtmlO7cYfNQaE3y54Elbv/5X+e5Pc93bBZ
+         9JwRcSXEGtlh7PwMGykqWqF0lAErDdMWrFO56SWhrp6Ex7MjPYaF2T/obuufOgNIBiXS
+         59HUWczw+nQl7TbxXyF77Igtgl7FbRT9jP+V4M8FZQ/84/q+bRxcxlIEwWHLqXtAbD+e
+         TYZLnZZXRIs52jvTwubNSpZ5Yg9haEHZVtlM/21G7oy5ogWnmLdF7hIAlIwBDPJbej8f
+         h0WZFOz0+rP+F9qX+9bOx2NY7J6P54FLxwTllFC8GYa55XvqRMKzlZVYDsueXqfRRAAY
+         Vl0w==
+X-Forwarded-Encrypted: i=1; AJvYcCX5qCuBektK7NftonynU30yXdA5NEgU0tQIenYssjWpNTaOpH5U9DDtj0wr/azgGNRBnWOpgGKMHf3z+vTtKs8HOGODgVtgLHTF0G3CXMYo5vcIzXvFyMkOuKaSYfe7GlpZrtj6oOjnka8aXoMqeX55R51iIuzFxsy2glpz3P81xGAtHg==
+X-Gm-Message-State: AOJu0YxScn8FdIC7uaU2QBYJlPpoQul+LLoUOm8FE4ONUiqwaCvFh8Pa
+	QxJFM9Y6WAyle1z4jHzH2/lS+Ox6fp8WVn7gITrFI8FFTvsZp96g
+X-Google-Smtp-Source: AGHT+IHmfs+xDCi8QmMyePuE69HTHQezu3eJCZfCRHQwofBCDVTMM9O4GiL+KlYvc/+3CEI2FJmGdw==
+X-Received: by 2002:a17:906:d111:b0:a6f:10d0:fb85 with SMTP id a640c23a62f3a-a6f60d203e1mr761174866b.19.1718720528400;
+        Tue, 18 Jun 2024 07:22:08 -0700 (PDT)
+Received: from spiri.. ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db6dfesm618191466b.87.2024.06.18.07.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 07:22:08 -0700 (PDT)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: Alisa-Dariana Roman <alisa.roman@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v5 2/6] dt-bindings: iio: adc: ad7192: Update clock config
+Date: Tue, 18 Jun 2024 17:21:34 +0300
+Message-Id: <20240618142138.520192-3-alisa.roman@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240618142138.520192-1-alisa.roman@analog.com>
+References: <20240618142138.520192-1-alisa.roman@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,141 +81,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB34A0ImHFmVDEoAQ--.31709S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrW3CFWxCFWUWr48Cw4DJwb_yoWrAF45pr
-	9F9ayrCan7tw17Wr1kAF98ZryYkayfKFW7CrW7WrWavFn0yr1xKF1ruayYyFyrJ3s3AF4f
-	Xr4kA34rWF1UAr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUAGYLUUUUU
-	=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-From: Zhang Yi <yi.zhang@huawei.com>
+There are actually 4 configuration modes of clock source for AD719X
+devices. Either a crystal can be attached externally between MCLK1 and
+MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
+pin. The other 2 modes make use of the 4.92MHz internal clock.
 
-This reverts commit '0841ea4a3b41 ("iomap: keep on increasing i_size in
-iomap_write_end()")'.
+To configure external clock as either a crystal or a CMOS-compatible
+clock, changing the register settings is necessary. Therefore, add clock
+name xtal alongside mclk. By selecting one or the other, the register is
+configured.
 
-After xfs could zero out the tail blocks aligned to the allocation
-unitsize and convert the tail blocks to unwritten for realtime inode on
-truncate down, it couldn't expose any stale data when unaligned truncate
-down realtime inodes, so we could keep on keeping i_size for
-IOMAP_UNSHARE and IOMAP_ZERO in iomap_write_end().
+The presence of an external clock source is optional, not required. When
+absent, internal clock is used. Modify required property accordingly.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
 ---
- fs/iomap/buffered-io.c | 53 +++++++++++++++++++++++-------------------
- 1 file changed, 29 insertions(+), 24 deletions(-)
+ .../devicetree/bindings/iio/adc/adi,ad7192.yaml      | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index d46558990279..99bedc3f7c39 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -878,37 +878,22 @@ static bool iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
- 		size_t copied, struct folio *folio)
- {
- 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
--	loff_t old_size = iter->inode->i_size;
--	size_t written;
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+index a03da9489ed9..67384bed4cd3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+@@ -39,11 +39,15 @@ properties:
  
- 	if (srcmap->type == IOMAP_INLINE) {
- 		iomap_write_end_inline(iter, folio, pos, copied);
--		written = copied;
--	} else if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
--		written = block_write_end(NULL, iter->inode->i_mapping, pos,
--					len, copied, &folio->page, NULL);
--		WARN_ON_ONCE(written != copied && written != 0);
--	} else {
--		written = __iomap_write_end(iter->inode, pos, len, copied,
--					    folio) ? copied : 0;
-+		return true;
- 	}
+   clocks:
+     maxItems: 1
+-    description: phandle to the master clock (mclk)
++    description:
++      Optionally, either a crystal can be attached externally between MCLK1 and
++      MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
++      pin. If absent, internal 4.92MHz clock is used.
  
--	/*
--	 * Update the in-memory inode size after copying the data into the page
--	 * cache.  It's up to the file system to write the updated size to disk,
--	 * preferably after I/O completion so that no stale data is exposed.
--	 * Only once that's done can we unlock and release the folio.
--	 */
--	if (pos + written > old_size) {
--		i_size_write(iter->inode, pos + written);
--		iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
--	}
--	__iomap_put_folio(iter, pos, written, folio);
-+	if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
-+		size_t bh_written;
+   clock-names:
+-    items:
+-      - const: mclk
++    enum:
++      - xtal
++      - mclk
  
--	if (old_size < pos)
--		pagecache_isize_extended(iter->inode, old_size, pos);
-+		bh_written = block_write_end(NULL, iter->inode->i_mapping, pos,
-+					len, copied, &folio->page, NULL);
-+		WARN_ON_ONCE(bh_written != copied && bh_written != 0);
-+		return bh_written == copied;
-+	}
- 
--	return written == copied;
-+	return __iomap_write_end(iter->inode, pos, len, copied, folio);
- }
- 
- static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
-@@ -923,6 +908,7 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 
- 	do {
- 		struct folio *folio;
-+		loff_t old_size;
- 		size_t offset;		/* Offset into folio */
- 		size_t bytes;		/* Bytes to write to folio */
- 		size_t copied;		/* Bytes copied from user */
-@@ -974,6 +960,23 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 		written = iomap_write_end(iter, pos, bytes, copied, folio) ?
- 			  copied : 0;
- 
-+		/*
-+		 * Update the in-memory inode size after copying the data into
-+		 * the page cache.  It's up to the file system to write the
-+		 * updated size to disk, preferably after I/O completion so that
-+		 * no stale data is exposed.  Only once that's done can we
-+		 * unlock and release the folio.
-+		 */
-+		old_size = iter->inode->i_size;
-+		if (pos + written > old_size) {
-+			i_size_write(iter->inode, pos + written);
-+			iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
-+		}
-+		__iomap_put_folio(iter, pos, written, folio);
-+
-+		if (old_size < pos)
-+			pagecache_isize_extended(iter->inode, old_size, pos);
-+
- 		cond_resched();
- 		if (unlikely(written == 0)) {
- 			/*
-@@ -1344,6 +1347,7 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
- 			bytes = folio_size(folio) - offset;
- 
- 		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
-+		__iomap_put_folio(iter, pos, bytes, folio);
- 		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
-@@ -1409,6 +1413,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		folio_mark_accessed(folio);
- 
- 		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
-+		__iomap_put_folio(iter, pos, bytes, folio);
- 		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
+   interrupts:
+     maxItems: 1
+@@ -135,8 +139,6 @@ patternProperties:
+ required:
+   - compatible
+   - reg
+-  - clocks
+-  - clock-names
+   - interrupts
+   - dvdd-supply
+   - avdd-supply
 -- 
-2.39.2
+2.34.1
 
