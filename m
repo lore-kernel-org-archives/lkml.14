@@ -1,64 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE8C1A2FCE;
-	Tue, 18 Jun 2024 14:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030561A2FB5;
+	Tue, 18 Jun 2024 14:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719315; cv=none; b=oMiStNDR+KRHilwVnmBYpDQs9pGRdR8s09n8wtdoF6mIYyr228k3kRsIl/2kJu6CtBgkps6ekEtAzS1ry9+WFs0eJp3qaQXq5+vlxnnFm+5dLc30qIVTYj/qdX3c4NmcBcJAl9i63t7stzBeNbDOTfNNuShxU8eO9ABuMRlh6i8=
+	t=1718719315; cv=none; b=Hfv9Fy0NhHJ3NNfj9vsoxgqpCbREaNYfgWc4NjfSYfKG7aSdDvXfCbt7l4lo13v5MnRFkHwInN170TvpqCV+YPQ2KePaRsPL19jjbZpXdaiI8xC5Ow3GIO+0jwfIQH3Fv6Uko/svj85d107YWYHaOKL9FjBob59ODFxgj0bDoOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718719315; c=relaxed/simple;
-	bh=Nv2OMF5plJD1Hk35j60RcRSFPrIqpyAANp81hkOdN74=;
+	bh=CF6Xj4LkKBvKhfcI2dCKWsn1m7mwtnyEH8k7bWnrN78=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=rQxNeXmQGMtd496mMrBFGh4E1TArAC5aoi/0CMVo95opvngSI7/wSQMiloSSb43giCQjhvfrp2lTO3jQlspXXkKJamU2eflJPxhdWL4QnJuFwlfPatYjBF7byQoZOMxLFM8Ael2ALxujCDPFM+xUaBbCesDRZjp8CJ26j5x8C4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t64YQuwE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IUIrYQ1t; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=B5LF5MDp5Q43jfyEGZ34zZACvs7O94AaEBeO2/ndsucmJqqRzwPuY7zlpWU1DUuyHfYLXmLTBZheCFaeEu9jV/X++maSXNw22RiAMoYKTcGVzq+RN1fnvFYWWvqtvMP8mwas8+eOqvmNgNlxLTLWzQ2gDb4pgDCQZcGsNGF5dxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fY/Xoud; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XYmEwKka; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t64YQuwE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IUIrYQ1t"
-Date: Tue, 18 Jun 2024 14:01:43 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1fY/Xoud";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XYmEwKka"
+Date: Tue, 18 Jun 2024 14:01:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718719303;
+	s=2020; t=1718719302;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=K8TE9qd+RJ5SHd+kzZBwg+ioVVS+tM8nRRZq/nNDAxg=;
-	b=t64YQuwETBuOIHoevOpfRkZvd+sjujawx7RK4+lRK73HL7gtZLhFLVS01NFd+Wwk26udtt
-	i0djBk0jDMNVWvdWpG7W2PiGdNTcdhb9kkOD6DOq4UVGJ0u7UerFQLRBaYv9KjOaaNyMc2
-	0EA+v5e7k1b3kWkl/Ta4TzvF5PzIqSX563/B8RWd7pPvrIiSKSFhgo13z7rd6zfeV8z/dl
-	qL7CLBzSzYSUiaKX92VVvknvSg9LND19N8yWT59pM/hzRHBkLPNDH0tVoStmgHp53CH4b4
-	33tYJBDLCTJz6sOOBR9WTLPAqPNmOJdsT6iEWj/sndmDkSmk4W3ZlPw3K2Py7Q==
+	bh=+c1TTlm0S4IU963hYSalQtxkave6zxlQsd8ZUIsONnM=;
+	b=1fY/XoudhXASpi+8UsPynt+wjHk+9iUPwmLhATsP5D+C7AnZVIID2pjd5VnJd4TVOl04Yl
+	NcEtAilHzQKfoisCrrh4b7IYtp3o9XvApfB1VS5W41+LV5q/snXtVM3WPssxg24OzM7vZe
+	rmZvL8u5MGZZ95aGsRTPfkcZohPSRZDZIx3TQb+3/hEweBK6DB5MgtaoP2dDFahfMUvZ/G
+	Gz5KOv6wEfC5GctWGKjUcguT7VP24t5i+QfIQp1k+GnN0a71IHJ6JzhMzqSZ+VVm32he9G
+	khyo+Lux5zHVlZ2wJq9OodG7WzQEvp90O1LiIvnCCf2UucXbhcoSl8P++otTZQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718719303;
+	s=2020e; t=1718719302;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=K8TE9qd+RJ5SHd+kzZBwg+ioVVS+tM8nRRZq/nNDAxg=;
-	b=IUIrYQ1t5sG718c83iS42djuWn3QtANizrkoT7TdG/HYTEPvFLJQ7CyYA6G5mj6Ix+MGDG
-	TV1L81xUmxtq5YAg==
+	bh=+c1TTlm0S4IU963hYSalQtxkave6zxlQsd8ZUIsONnM=;
+	b=XYmEwKkarQJ0JQsQovI5fploH8Sf3oUeKc8qW/oepvHoHFWdw1EMLNE+aUPMZDmjSGgIrB
+	SqlvQP5yoSZ5doCw==
 From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cc] cpu/hotplug: Add support for declaring CPU offlining
- not supported
+Subject: [tip: x86/cc] x86/mm: Return correct level from lookup_address() if
+ pte is none
 Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Tao Liu <ltao@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240614095904.1345461-4-kirill.shutemov@linux.intel.com>
-References: <20240614095904.1345461-4-kirill.shutemov@linux.intel.com>
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, Baoquan He <bhe@redhat.com>,
+ Dave Hansen <dave.hansen@intel.com>, Tao Liu <ltao@redhat.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240614095904.1345461-9-kirill.shutemov@linux.intel.com>
+References: <20240614095904.1345461-9-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171871930316.10875.13637336937454429495.tip-bot2@tip-bot2>
+Message-ID: <171871930159.10875.16081839197437299007.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,95 +70,141 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cc branch of tip:
 
-Commit-ID:     1037e4c53e851682ff8d1ab656567a4d5a333c93
-Gitweb:        https://git.kernel.org/tip/1037e4c53e851682ff8d1ab656567a4d5a333c93
+Commit-ID:     9d1dcdfa909178b6f465625bbfd8311e6107b48e
+Gitweb:        https://git.kernel.org/tip/9d1dcdfa909178b6f465625bbfd8311e6107b48e
 Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 14 Jun 2024 12:58:48 +03:00
+AuthorDate:    Fri, 14 Jun 2024 12:58:53 +03:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 17 Jun 2024 17:45:31 +02:00
+CommitterDate: Mon, 17 Jun 2024 17:45:57 +02:00
 
-cpu/hotplug: Add support for declaring CPU offlining not supported
+x86/mm: Return correct level from lookup_address() if pte is none
 
-The ACPI MADT mailbox wakeup method doesn't allow to offline a CPU after
-it has been woken up.
+Currently, lookup_address() returns two things:
 
-Currently, offlining is prevented based on the confidential computing attribute
-which is set for Intel TDX. But TDX is not the only possible user of the wake up
-method. The MADT wakeup can be implemented outside of a confidential computing
-environment. Offline support is a property of the wakeup method, not the CoCo
-implementation.
+  1. A "pte_t" (which might be a p[g4um]d_t)
+  2. The 'level' of the page tables where the "pte_t" was found
+     (returned via a pointer)
 
-Introduce cpu_hotplug_disable_offlining() that can be called to indicate that
-CPU offlining should be disabled.
+If no pte_t is found, 'level' is essentially garbage.
 
-This function is going to replace CC_ATTR_HOTPLUG_DISABLED for ACPI MADT wakeup
-method.
+Always fill out the level.  For NULL "pte_t"s, fill in the level where
+the p*d_none() entry was found mirroring the "found" behavior.
+
+Always filling out the level allows using lookup_address() to precisely skip
+over holes when walking kernel page tables.
+
+Add one more entry into enum pg_level to indicate the size of the VA
+covered by one PGD entry in 5-level paging mode.
+
+Update comments for lookup_address() and lookup_address_in_pgd() to
+reflect changes in the interface.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 Tested-by: Tao Liu <ltao@redhat.com>
-Link: https://lore.kernel.org/r/20240614095904.1345461-4-kirill.shutemov@linux.intel.com
+Link: https://lore.kernel.org/r/20240614095904.1345461-9-kirill.shutemov@linux.intel.com
 ---
- include/linux/cpuhplock.h |  2 ++
- kernel/cpu.c              | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/pgtable_types.h |  1 +
+ arch/x86/mm/pat/set_memory.c         | 21 ++++++++++-----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/cpuhplock.h b/include/linux/cpuhplock.h
-index 431560b..f7aa20f 100644
---- a/include/linux/cpuhplock.h
-+++ b/include/linux/cpuhplock.h
-@@ -21,6 +21,7 @@ void cpus_read_lock(void);
- void cpus_read_unlock(void);
- int  cpus_read_trylock(void);
- void lockdep_assert_cpus_held(void);
-+void cpu_hotplug_disable_offlining(void);
- void cpu_hotplug_disable(void);
- void cpu_hotplug_enable(void);
- void clear_tasks_mm_cpumask(int cpu);
-@@ -36,6 +37,7 @@ static inline void cpus_read_lock(void) { }
- static inline void cpus_read_unlock(void) { }
- static inline int  cpus_read_trylock(void) { return true; }
- static inline void lockdep_assert_cpus_held(void) { }
-+static inline void cpu_hotplug_disable_offlining(void) { }
- static inline void cpu_hotplug_disable(void) { }
- static inline void cpu_hotplug_enable(void) { }
- static inline int remove_cpu(unsigned int cpu) { return -EPERM; }
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 563877d..4c15b47 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -483,6 +483,8 @@ static int cpu_hotplug_disabled;
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b786449..2f32113 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -549,6 +549,7 @@ enum pg_level {
+ 	PG_LEVEL_2M,
+ 	PG_LEVEL_1G,
+ 	PG_LEVEL_512G,
++	PG_LEVEL_256T,
+ 	PG_LEVEL_NUM
+ };
  
- DEFINE_STATIC_PERCPU_RWSEM(cpu_hotplug_lock);
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 498812f..a7a7a6c 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -662,8 +662,9 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
  
-+static bool cpu_hotplug_offline_disabled __ro_after_init;
-+
- void cpus_read_lock(void)
- {
- 	percpu_down_read(&cpu_hotplug_lock);
-@@ -542,6 +544,14 @@ static void lockdep_release_cpus_lock(void)
- 	rwsem_release(&cpu_hotplug_lock.dep_map, _THIS_IP_);
+ /*
+  * Lookup the page table entry for a virtual address in a specific pgd.
+- * Return a pointer to the entry, the level of the mapping, and the effective
+- * NX and RW bits of all page table levels.
++ * Return a pointer to the entry (or NULL if the entry does not exist),
++ * the level of the entry, and the effective NX and RW bits of all
++ * page table levels.
+  */
+ pte_t *lookup_address_in_pgd_attr(pgd_t *pgd, unsigned long address,
+ 				  unsigned int *level, bool *nx, bool *rw)
+@@ -672,13 +673,14 @@ pte_t *lookup_address_in_pgd_attr(pgd_t *pgd, unsigned long address,
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+-	*level = PG_LEVEL_NONE;
++	*level = PG_LEVEL_256T;
+ 	*nx = false;
+ 	*rw = true;
+ 
+ 	if (pgd_none(*pgd))
+ 		return NULL;
+ 
++	*level = PG_LEVEL_512G;
+ 	*nx |= pgd_flags(*pgd) & _PAGE_NX;
+ 	*rw &= pgd_flags(*pgd) & _PAGE_RW;
+ 
+@@ -686,10 +688,10 @@ pte_t *lookup_address_in_pgd_attr(pgd_t *pgd, unsigned long address,
+ 	if (p4d_none(*p4d))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_512G;
+ 	if (p4d_leaf(*p4d) || !p4d_present(*p4d))
+ 		return (pte_t *)p4d;
+ 
++	*level = PG_LEVEL_1G;
+ 	*nx |= p4d_flags(*p4d) & _PAGE_NX;
+ 	*rw &= p4d_flags(*p4d) & _PAGE_RW;
+ 
+@@ -697,10 +699,10 @@ pte_t *lookup_address_in_pgd_attr(pgd_t *pgd, unsigned long address,
+ 	if (pud_none(*pud))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_1G;
+ 	if (pud_leaf(*pud) || !pud_present(*pud))
+ 		return (pte_t *)pud;
+ 
++	*level = PG_LEVEL_2M;
+ 	*nx |= pud_flags(*pud) & _PAGE_NX;
+ 	*rw &= pud_flags(*pud) & _PAGE_RW;
+ 
+@@ -708,15 +710,13 @@ pte_t *lookup_address_in_pgd_attr(pgd_t *pgd, unsigned long address,
+ 	if (pmd_none(*pmd))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_2M;
+ 	if (pmd_leaf(*pmd) || !pmd_present(*pmd))
+ 		return (pte_t *)pmd;
+ 
++	*level = PG_LEVEL_4K;
+ 	*nx |= pmd_flags(*pmd) & _PAGE_NX;
+ 	*rw &= pmd_flags(*pmd) & _PAGE_RW;
+ 
+-	*level = PG_LEVEL_4K;
+-
+ 	return pte_offset_kernel(pmd, address);
  }
  
-+/* Declare CPU offlining not supported */
-+void cpu_hotplug_disable_offlining(void)
-+{
-+	cpu_maps_update_begin();
-+	cpu_hotplug_offline_disabled = true;
-+	cpu_maps_update_done();
-+}
-+
- /*
-  * Wait for currently running CPU hotplug operations to complete (if any) and
-  * disable future CPU hotplug (from sysfs). The 'cpu_add_remove_lock' protects
-@@ -1471,7 +1481,8 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
- 	 * If the platform does not support hotplug, report it explicitly to
- 	 * differentiate it from a transient offlining failure.
- 	 */
--	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED))
-+	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) ||
-+	    cpu_hotplug_offline_disabled)
- 		return -EOPNOTSUPP;
- 	if (cpu_hotplug_disabled)
- 		return -EBUSY;
+@@ -736,9 +736,8 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+  * Lookup the page table entry for a virtual address. Return a pointer
+  * to the entry and the level of the mapping.
+  *
+- * Note: We return pud and pmd either when the entry is marked large
+- * or when the present bit is not set. Otherwise we would return a
+- * pointer to a nonexisting mapping.
++ * Note: the function returns p4d, pud or pmd either when the entry is marked
++ * large or when the present bit is not set. Otherwise it returns NULL.
+  */
+ pte_t *lookup_address(unsigned long address, unsigned int *level)
+ {
