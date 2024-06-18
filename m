@@ -1,70 +1,124 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F78616EB4F;
-	Tue, 18 Jun 2024 19:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965016D9A7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740044; cv=none; b=RX4r2qMh6hMD65Wj2brngxOwRhE1sRJBN4dGJBXQ8uTjE/3bD6oajpwBNlGG62UzcEIxYHzscr5Oc0RZfTh4hVMtYlwXrJsEQ9J7z01dYF9LgkYYgTXXD344vaB/dMfvesz0myF52rcaIxI3CVDYBXIUFWnSvLl+1wVkcrfnAgA=
+	t=1718740055; cv=none; b=qIxp/xXzuZ0tldV1YAdiUd8wLZFYqPc954niO6i2UaF90XCtrRlu1yYsOTVhpz29eVGfAgbGPfQBGv7xfo14X2OEQQp54kNYNuCoA9Sugk9UlKkPRwij2KKDMaHuvdZFS5DCHtFykRJXJ35GkPAhXSv8xtBun5/JnVbaZhRpQFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740044; c=relaxed/simple;
-	bh=8gdDcCSe54P4+dfAmjsoie/lp6JWaQijac5rE6M1Yrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PihvBhqFAkdjsLcd0hvO3EusdoGH6H7r6prYMx5ZdUrnpugsFYF2c7c04JEcoUROIYoBG3CG3YfmRUBhP4h1qrqJ9qgr+Uo1B+kL7/16PEzI1a0B4QCdEgGNAQd99yo+2RA8clu/QIOlcfoi2rlRHPUExzC8RyleqrYKpo0o+fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UxZL/P1c; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718740055; c=relaxed/simple;
+	bh=Qh8AdjS4ngXJ9v45ESBuH58r0izmWZpA9ETBlIq0EHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c78Xtb1DJSF/gOKmMN550OXBVILng/0YDe1Sc9LL6XyUHggcncxJSHsyjn3CoTRXm1tRu7Qy2THHaM8PZ2HhSP3LXUxLELEkM8AIn2iWlJOw81d2Ws6fQ7Kn/iNhJ4W59o2Whyzipnx9Za7G2kz/j54cRBvClWcbyY7T94XvMUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Wa9xinY/; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UxZL/P1c"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3yahc90eC8bxYCtEBBBBSEKm40YkQsH0tBXadWSmuT8=; b=UxZL/P1cRCZ0pq0xRWUE443SuO
-	qEQ3V4hSp4ZTJ4eNhYgXU83MMW4+HNYhXxfW6llwCsgmshno75ATXFzUFFqaczzh0YRT/dGoq5RYO
-	baOGT0vF7WjnqktnrbADs2v9CbZWYvHo1Q+1bHcAkUsrqNWgQnfe+sZcDQO/LI7tuHLVJlI+QbT+b
-	YXygbZCT6j72wTc2VdgQs7oPjA2IJHZTHSMEjz5tT3mHvJGLbR8N7Z2XIrktd0OxCp5m+XMrb+Zkn
-	LoUF9kAJRAdj+TmxScM3rZlgmRn/ioxS10i2g2I9XIe6FX/YtWAtajS0cMjfXgu6MVC3sK8DnWIvF
-	LNfvWERA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJenS-0000000GOqt-3tAP;
-	Tue, 18 Jun 2024 19:47:14 +0000
-Date: Tue, 18 Jun 2024 12:47:14 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, russ.weight@linux.dev,
-	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@samsung.com,
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] rust: add firmware abstractions
-Message-ID: <ZnHkQpyiX4UKdLEt@bombadil.infradead.org>
-References: <20240617203010.101452-1-dakr@redhat.com>
- <20240617203010.101452-3-dakr@redhat.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Wa9xinY/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1718740035; bh=cSv0Y1BnoDAoVs4qW1oCzHu3mFidb6wxsTUaMwSm0e0=;
+ b=Wa9xinY/u1/b0Bo/UAewJZG3InX7D3BO8WzdSp4kfJxCzaJHunAsJB8i2TMrj4UmnCqCBQPqv
+ bsggkkfBt+h8kRiPpptyZcCZ2l4M/WHAAx/h3wvvA0OgHX+8ZJC2r9aMp5+DmMK9KDjFEGhidHO
+ SH41rw+pz47lyYZslveBIawb7xvMvS/7y4gnl2nCRNcvC+dn+n+kgXf3qq5UifFEMfBhSN0Fmqh
+ JILcjYsdDGsjxTldvQMHIN67nLXpJe828enc88Loocd4i9kRpXnD5futkuWcwpl7kVEZFLudR2z
+ 5Q69iYfB2AArj4ILmal58mJ88dWbVGrSCXm3KCQz2K1g==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: Alex Bee <knaerzche@gmail.com>, Nicolas Dufresne
+ <nicolas.dufresne@collabora.com>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, Sebastian Fricke
+ <sebastian.fricke@collabora.com>, Christopher Obbard
+ <chris.obbard@collabora.com>, Detlev Casanova
+ <detlev.casanova@collabora.com>, linux-media@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH v5 03/10] media: rkvdec: h264: Use bytesperline and buffer height as virstride
+Date: Tue, 18 Jun 2024 19:46:27 +0000
+Message-ID: <20240618194647.742037-4-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240618194647.742037-1-jonas@kwiboo.se>
+References: <20240618194647.742037-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617203010.101452-3-dakr@redhat.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 6671e43b64ade33c90059f9e
 
-On Mon, Jun 17, 2024 at 10:29:41PM +0200, Danilo Krummrich wrote:
-> Add an abstraction around the kernels firmware API to request firmware
-> images. The abstraction provides functions to access the firmware's size
-> and backing buffer.
-> 
-> The firmware is released once the abstraction instance is dropped.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+Use bytesperline and buffer height to calculate the strides configured.
 
-I don't speak Rust, so if we're gonna add this, I'd just ask you also
-become a firmware loader maintainer, willing to spend time to help
-review both C and Rust code. Is that too much to ask?
+This does not really change anything other than ensuring the
+bytesperline that is signaled to userspace matches what is configured
+in HW.
 
-  Luis
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+---
+v5:
+- Collect r-b and t-b tags
+
+v4:
+- No change
+
+v3:
+- Remove unnecessary yuv_virstride +=
+
+ drivers/staging/media/rkvdec/rkvdec-h264.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index 4fc167b42cf0..7a1e76d423df 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -896,9 +896,9 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 	dma_addr_t rlc_addr;
+ 	dma_addr_t refer_addr;
+ 	u32 rlc_len;
+-	u32 hor_virstride = 0;
+-	u32 ver_virstride = 0;
+-	u32 y_virstride = 0;
++	u32 hor_virstride;
++	u32 ver_virstride;
++	u32 y_virstride;
+ 	u32 yuv_virstride = 0;
+ 	u32 offset;
+ 	dma_addr_t dst_addr;
+@@ -909,16 +909,16 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 
+ 	f = &ctx->decoded_fmt;
+ 	dst_fmt = &f->fmt.pix_mp;
+-	hor_virstride = (sps->bit_depth_luma_minus8 + 8) * dst_fmt->width / 8;
+-	ver_virstride = round_up(dst_fmt->height, 16);
++	hor_virstride = dst_fmt->plane_fmt[0].bytesperline;
++	ver_virstride = dst_fmt->height;
+ 	y_virstride = hor_virstride * ver_virstride;
+ 
+ 	if (sps->chroma_format_idc == 0)
+ 		yuv_virstride = y_virstride;
+ 	else if (sps->chroma_format_idc == 1)
+-		yuv_virstride += y_virstride + y_virstride / 2;
++		yuv_virstride = y_virstride + y_virstride / 2;
+ 	else if (sps->chroma_format_idc == 2)
+-		yuv_virstride += 2 * y_virstride;
++		yuv_virstride = 2 * y_virstride;
+ 
+ 	reg = RKVDEC_Y_HOR_VIRSTRIDE(hor_virstride / 16) |
+ 	      RKVDEC_UV_HOR_VIRSTRIDE(hor_virstride / 16) |
+-- 
+2.45.2
+
