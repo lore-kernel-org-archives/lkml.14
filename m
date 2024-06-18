@@ -1,128 +1,136 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FAE15530C;
-	Tue, 18 Jun 2024 12:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ADE15689B;
+	Tue, 18 Jun 2024 12:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714200; cv=none; b=Ir8KZom2w2uo3yDltUoPb0IuIQr7x9DWut/ms8OCOOpIY84IlXC2VLv5Oe2nZAaTLLPBjBIBwAkA8AOABI6G8njDGnDXhZh6ngglCZAJUaKxaGVCY/6A7VL27HguA51iZQWM1+7/u/t6V2+JdJ4UKup+u2M719DagaB6W4sf7K8=
+	t=1718714201; cv=none; b=grzWv1Za4ZOAIFsrAUCivINxeSNB22VPURU17h7yIPkCh8dhQhek4I4uGZVSxmRqByMEYsj9H4weAXol0fAABztSpzMonln/tGUJHC4GSc6JgEXq0mHylRFcuvifONHAvuS9I73EG24fnfWIvcrVgf51T4ZTlomqDK/nz/f+DWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714200; c=relaxed/simple;
-	bh=OBcdjLrWWFK3QokNiE+RzQm1SYM29rnb0cpZDwr2rGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Y4o702rkcLhUalpYYKzsKBdLMG4YPgOiCG35gEXFwlypTSrU6+LZLvNf4mWl3sDfV71dDDHR+dPRkfi2ap6l0r3QCpbPxl2WEprRcdBW9gizxYw+xTCuuqYddEnMK3mExUEHh3RI4TB7+/PBxOlXxeVNtUX7zVoONilrRpk/X34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dECsmbWT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718714201; c=relaxed/simple;
+	bh=52hQUnLuJuiNCML3vgwh/OQ21gZ95YeT79kztc6LkvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KGkNn1L5jMDTHGf6ZMxKXSpoY7iT3GOnjXxyxLLRjpsp/JOQqi7crj+x885nagaXzfInjeBolIsD7Vus74iBm3mxC7wzwgoiqYik8UoaUauLIsBxX8ctL2N+bYZvIDcSdxClKMy5sSCwpFBz3vtYXQvZkQ1eTry+zbB5aqRS4h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDKXlM/0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dECsmbWT"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IC8tGl019570;
-	Tue, 18 Jun 2024 12:36:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	T5gyq14bj4+J/6gdfSxcbHQ8pwsxw9GLir8vbhb2hgc=; b=dECsmbWTg13Wcwal
-	U2Iep6Ijmdv3JkObB9SOXZUBZ2HmS4rHO4sfDukHlCqFbbHzO6q8eiCWFiWDBJlg
-	Ool9JmAUAB0Pjf1djFgNcc7HId5XpwKoZ5r+LadQGD+By8DL6ZoQ9B0fo/7Vgp+6
-	ADYRbVxHeye52q1HRWfhMPURlqiL/Wyz8VKd9AyV+ECTPfKGKlf/eoBvl8Uulk2C
-	CqFriOjKabjHBDqX1ljncc32+7/Wp5BkLDAFs8jlTTtNqKuNDoZMFadkqL7G4Npb
-	z77siYlGdF6TPUoPmJk9Z7WYjkRZbf6OeQcXTCHIFqYLAtCR5OPMAxSzWugkomgX
-	mieXYw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yu22gs8ba-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 12:36:34 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45ICaX7B020572
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 12:36:33 GMT
-Received: from [10.216.29.175] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Jun
- 2024 05:36:29 -0700
-Message-ID: <4e3d8f03-11d0-7728-1068-1c965ef79a1a@quicinc.com>
-Date: Tue, 18 Jun 2024 18:06:26 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDKXlM/0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881B2C3277B;
+	Tue, 18 Jun 2024 12:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714200;
+	bh=52hQUnLuJuiNCML3vgwh/OQ21gZ95YeT79kztc6LkvE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TDKXlM/0+tm+g1An1uzXiduXzG/pJcLeaI9Xg9fb6vijN6bkg2Gu8pcA6VaqEP20a
+	 xApdMU/d9joSflkJYWJ7cxKaZ8HcSJoEypJMeL/DOmXTAgB6jAavQ/UvNo+nnVJb6u
+	 QIyseTBjTRf+PscnU5KD9BESCk1Lg6xbQ97TOfzGmv778OQnbyNtsiAGTxBKEdHTk1
+	 y4dwDLZxoSIBH16W4RJI4tu9s/z72qkbCcY/vmCOpsM0aoYkTPyjoP8trnYq0B0+if
+	 vMeDHv92WCl7x4f8udH1s7HQ2jhW1Hnma2zXfpEyL3RqN9Sahcl9uiNYU56C+R5Qif
+	 7d1cqAbnysuQw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	syzbot+8830db5d3593b5546d2e@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 16/44] wifi: mac80211: handle tasklet frames before stopping
+Date: Tue, 18 Jun 2024 08:34:57 -0400
+Message-ID: <20240618123611.3301370-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618123611.3301370-1-sashal@kernel.org>
+References: <20240618123611.3301370-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] media: venus: fix use after free in vdec_close
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Stanimir Varbanov
-	<stanimir.varbanov@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <1715231669-16795-1-git-send-email-quic_dikshita@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <1715231669-16795-1-git-send-email-quic_dikshita@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: nKOpWW-_hJ1r8GSBrkvzwJhLjtc01U7K
-X-Proofpoint-GUID: nKOpWW-_hJ1r8GSBrkvzwJhLjtc01U7K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- clxscore=1011 malwarescore=0 priorityscore=1501 spamscore=0 suspectscore=0
- adultscore=0 impostorscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406180093
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.5
+Content-Transfer-Encoding: 8bit
 
+From: Johannes Berg <johannes.berg@intel.com>
 
-On 5/9/2024 10:44 AM, Dikshita Agarwal wrote:
-> There appears to be a possible use after free with vdec_close().
-> The firmware will add buffer release work to the work queue through
-> HFI callbacks as a normal part of decoding. Randomly closing the
-> decoder device from userspace during normal decoding can incur
-> a read after free for inst.
-> 
-> Fix it by cancelling the work in vdec_close.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: af2c3834c8ca ("[media] media: venus: adding core part and helper functions")
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
-> Changes since v3:
-> - Fixed style issue with fixes tag 
-> 
-> Changes since v2:
-> - Fixed email id
-> 
-> Changes since v1:
-> - Added fixes and stable tags
-> 
->  drivers/media/platform/qcom/venus/vdec.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index 29130a9..56f8a25 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -1747,6 +1747,7 @@ static int vdec_close(struct file *file)
->  
->  	vdec_pm_get(inst);
->  
-> +	cancel_work_sync(&inst->delayed_process_work);
->  	v4l2_m2m_ctx_release(inst->m2m_ctx);
->  	v4l2_m2m_release(inst->m2m_dev);
->  	vdec_ctrl_deinit(inst);
+[ Upstream commit 177c6ae9725d783f9e96f02593ce8fb2639be22f ]
 
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+The code itself doesn't want to handle frames from the driver
+if it's already stopped, but if the tasklet was queued before
+and runs after the stop, then all bets are off. Flush queues
+before actually stopping, RX should be off at this point since
+all the interfaces are removed already, etc.
+
+Reported-by: syzbot+8830db5d3593b5546d2e@syzkaller.appspotmail.com
+Link: https://msgid.link/20240515135318.b05f11385c9a.I41c1b33a2e1814c3a7ef352cd7f2951b91785617@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mac80211/ieee80211_i.h |  2 ++
+ net/mac80211/main.c        | 10 ++++++++--
+ net/mac80211/util.c        |  2 ++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 70c67c860e995..48bf62e92e02e 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -1841,6 +1841,8 @@ void ieee80211_link_info_change_notify(struct ieee80211_sub_if_data *sdata,
+ void ieee80211_configure_filter(struct ieee80211_local *local);
+ u64 ieee80211_reset_erp_info(struct ieee80211_sub_if_data *sdata);
+ 
++void ieee80211_handle_queued_frames(struct ieee80211_local *local);
++
+ u64 ieee80211_mgmt_tx_cookie(struct ieee80211_local *local);
+ int ieee80211_attach_ack_skb(struct ieee80211_local *local, struct sk_buff *skb,
+ 			     u64 *cookie, gfp_t gfp);
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 4eaea0a9975b4..1132dea0e290e 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -423,9 +423,8 @@ u64 ieee80211_reset_erp_info(struct ieee80211_sub_if_data *sdata)
+ 	       BSS_CHANGED_ERP_SLOT;
+ }
+ 
+-static void ieee80211_tasklet_handler(struct tasklet_struct *t)
++void ieee80211_handle_queued_frames(struct ieee80211_local *local)
+ {
+-	struct ieee80211_local *local = from_tasklet(local, t, tasklet);
+ 	struct sk_buff *skb;
+ 
+ 	while ((skb = skb_dequeue(&local->skb_queue)) ||
+@@ -450,6 +449,13 @@ static void ieee80211_tasklet_handler(struct tasklet_struct *t)
+ 	}
+ }
+ 
++static void ieee80211_tasklet_handler(struct tasklet_struct *t)
++{
++	struct ieee80211_local *local = from_tasklet(local, t, tasklet);
++
++	ieee80211_handle_queued_frames(local);
++}
++
+ static void ieee80211_restart_work(struct work_struct *work)
+ {
+ 	struct ieee80211_local *local =
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index a237cbcf7b491..a202be949bfb1 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -1567,6 +1567,8 @@ u32 ieee80211_sta_get_rates(struct ieee80211_sub_if_data *sdata,
+ 
+ void ieee80211_stop_device(struct ieee80211_local *local)
+ {
++	ieee80211_handle_queued_frames(local);
++
+ 	ieee80211_led_radio(local, false);
+ 	ieee80211_mod_tpt_led_trig(local, 0, IEEE80211_TPT_LEDTRIG_FL_RADIO);
+ 
+-- 
+2.43.0
+
