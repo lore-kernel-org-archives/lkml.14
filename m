@@ -1,138 +1,101 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08645D299;
-	Tue, 18 Jun 2024 15:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6663B79C;
+	Tue, 18 Jun 2024 15:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718726148; cv=none; b=FJKeQibxLPNyZs/aphdNVHzB58FCGviQhlXjAipYvBqImlZtYrYI9QPzy/5Vl6ntYbMBJTNojMzvg1wuUTnarXJEadVODJ3t4VoLCw/NPLGkykNn8D8P+M5qeqM+7595IVQ9u1NSXjliuzEs0KJeaIshFNpxlsj+5HZABWc8bXM=
+	t=1718726342; cv=none; b=soAnWSOKsO7F+RwIWARAwf93rMdw1SZjJWkXS8WhScCUVEQZ0XqORcPO4DZ1ZPRc9nqUCKkZVCQtqFyjZrccFmCofQUgaSBNqF7qrCbXpA0dfrkH/plsYPnWzTs5v9Yob2ceB4LBOVbmsh7sdjy2sBuygXXk+HRXoQdrRN17nxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718726148; c=relaxed/simple;
-	bh=lhjj25VP5M4sTOzHNNjscKcLGzs0m0KUFagNmmsLVCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ndhp3YFugIpjo7o4053ZIYxfPCjVRPDwuVKXFAylRmw6lG9VknPeQQH8ByZrIXJiAjapzgyhkGcipa8qqfRT2zRqhbNxn8XkKbhu6zgvZgAgEWxWXPr8DGSSkfH07SjkqI734JcNyZoRFrL8ecrGE9wfk3DF4aoOuuYjXFann7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GH1xLuWs; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1718726342; c=relaxed/simple;
+	bh=sz0YN0y0FVSjHDPfeBoW60WGnfjUu8f2okvfcc2MHlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G93wDXOoOQKayBM6VR5xhJPCMT6DQmaxT8dk6GVY0UndIJwMh1fsyae/HypTXDRBlDTFtMOW4ZO3yk9hs4SZs3G4E4t7ZvdijV3VMQDHPzjVQFtC+dRHCC9fZYfgYHn8dW30Ih8M3d+siqeGP43J5Ytmays5EQuAGRjCuXZYwbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StR/+jKU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GH1xLuWs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 833B11BF204;
-	Tue, 18 Jun 2024 15:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718726137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2KE/O5mxQyzYGqNyk0NZy+aO7Wf1mUhJbeharOTLWU=;
-	b=GH1xLuWsQxAhseqDqFHZLD/PAHYZJjFDGtEsCC1ScJeUUlB6N1r9kc7jpvEKmvzMil1ZLw
-	N7wVAJzKpSnPXXL/hbSWtz0+ILKsU1RIIZRu/IrIfG75FCcKItUgfR+M54pq6bbI7L4dtr
-	IX0N3HpabnDfVqLo0OzGu7jQVD00B2p5g9HSkO5PrG0kZdPRe1U3u/NepoJIeZqKetZj43
-	L5QZaneld0T0Npc8RpVNG6z6+EdYPoreOCeTyULCfvm6IJEp3OOJTx8tqRAoZVp5vYufPZ
-	JeobUn7bnS1yOLi9zePgor/7ilQKJspTnQn9BfPegr1Wx3fffcDxqFTbXCIZIQ==
-Date: Tue, 18 Jun 2024 17:55:33 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Simon Horman" <horms@kernel.org>, "Sai Krishna Gajula"
- <saikrishnag@marvell.com>, "Thomas Gleixner" <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "David S . Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Lee Jones"
- <lee@kernel.org>, "Horatiu Vultur" <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, "Andrew Lunn" <andrew@lunn.ch>, "Heiner
- Kallweit" <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>,
- "Saravana Kannan" <saravanak@google.com>, "Bjorn Helgaas"
- <bhelgaas@google.com>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Lars
- Povlsen" <lars.povlsen@microchip.com>, "Steen Hegelund"
- <Steen.Hegelund@microchip.com>, "Daniel Machon"
- <daniel.machon@microchip.com>, "Alexandre Belloni"
- <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Allan
- Nielsen" <allan.nielsen@microchip.com>, "Luca Ceresoli"
- <luca.ceresoli@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Clement Leger" <clement.leger@bootlin.com>
-Subject: Re: [PATCH v2 01/19] mfd: syscon: Add reference counting and device
- managed support
-Message-ID: <20240618175533.3e1534ca@bootlin.com>
-In-Reply-To: <b685d5e5-09d3-4916-ad0b-d329c166e149@app.fastmail.com>
-References: <20240527161450.326615-1-herve.codina@bootlin.com>
-	<20240527161450.326615-2-herve.codina@bootlin.com>
-	<b685d5e5-09d3-4916-ad0b-d329c166e149@app.fastmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StR/+jKU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B754DC3277B;
+	Tue, 18 Jun 2024 15:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718726341;
+	bh=sz0YN0y0FVSjHDPfeBoW60WGnfjUu8f2okvfcc2MHlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=StR/+jKUNlVdvEZAmn/erjopL4xhu+f9M29jo/xZNGNAUZLes5ueyFEf1gMbhk+XV
+	 A/OMRaMbZclI4zSb+VoObGGIU9Sly4lOuuzY0Vo4APTc+BYcys+o3a6AUEAyfw1B6c
+	 BYd24NogKShRq7igav6Al55NjhFOuwBKJpC+yi5Q6rp+N3MFcguHWo9AmXifm2IadE
+	 8JSOCNK/bFnnU18Oz8p/kJonak2enuO/3tVpE5tZuPecB/epdOSouu++qPIzxdgRj2
+	 JMXTNH1CuD6PVCBaoR0Wwr8nCGQZOvMXXqCC9XE57Jb5haoFnAySEKboYmGbYRHvxI
+	 VjLsz8hGzpQ2g==
+Date: Tue, 18 Jun 2024 16:58:56 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Simon Trimmer <simont@opensource.cirrus.com>,
+	linux-sound@vger.kernel.org, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH] ASoC: cs35l56: Accept values greater than 0 as IRQ
+ numbers
+Message-ID: <dfa7d5d7-2501-4c5f-a6e2-792c7aeb9bb3@sirena.org.uk>
+References: <20240617135338.82006-1-simont@opensource.cirrus.com>
+ <917507e5-dc6c-4e18-a7e1-554625de604e@sirena.org.uk>
+ <3451fcf6-ff33-4f72-83d1-945b026b925b@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LcvkV2LVLHBdzUd/"
+Content-Disposition: inline
+In-Reply-To: <3451fcf6-ff33-4f72-83d1-945b026b925b@opensource.cirrus.com>
+X-Cookie: If you can read this, you're too close.
 
-Hi Arnd,
 
-On Tue, 18 Jun 2024 16:53:30 +0200
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+--LcvkV2LVLHBdzUd/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Mon, May 27, 2024, at 18:14, Herve Codina wrote:
-> > From: Clément Léger <clement.leger@bootlin.com>
-> >
-> > Syscon releasing is not supported.
-> > Without release function, unbinding a driver that uses syscon whether
-> > explicitly or due to a module removal left the used syscon in a in-use
-> > state.
-> >
-> > For instance a syscon_node_to_regmap() call from a consumer retrieve a
-> > syscon regmap instance. Internally, syscon_node_to_regmap() can create
-> > syscon instance and add it to the existing syscon list. No API is
-> > available to release this syscon instance, remove it from the list and
-> > free it when it is not used anymore.
-> >
-> > Introduce reference counting in syscon in order to keep track of syscon
-> > usage using syscon_{get,put}() and add a device managed version of
-> > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
-> > instance on the consumer removal.
-> >
-> > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
-> 
-> This all looks correct from an implementation perspective,
-> but it does add a lot of complexity if now every syscon user
-> feels compelled to actually free up their resources again,
-> while nothing else should actually depend on this.
-> 
-> The only reference I found in your series here is the
-> reset controller, and it only does a single update to
-> the regmap in the probe function.
-> 
-> Would it be possible to just make the syscon support in
-> the reset driver optional and instead poke the register
-> in the mfd driver itself when this is used as a pci device?
-> Or do you expect to see the syscon get used in other
-> places in the future for the PCI case?
-> 
+On Mon, Jun 17, 2024 at 03:33:59PM +0100, Richard Fitzgerald wrote:
+> On 17/06/2024 15:04, Mark Brown wrote:
 
-IMHO, I don't think that poking the register in the mfd driver and so
-avoiding syscon usage is the right solution.
+> > Have all architectures removed 0 as a valid IRQ?
 
-Indeed, additional devices can be added in the DT overlay and an other
-syscon user can be present.
+> From discussion threads we can find 0 might still used on x86 for a
+> legacy device.
 
-Also, overlays can be used on other PCI devices in the future and these PCI
-devices can use drivers that are syscon users. In that case, the same kind
-of workaround will be needed and maybe a quite more complex one depending on
-syscon users.
+Some of the arm platforms were also an issue in the past, though
+possibly they've all been modernised by now.  Don't know about other
+older architectures.
 
-The root issue is that syscon does not support removal.
-I prefer fixing this root issue instead of finding a kind of workaround.
+> But the conversations we can find on this don't seem to exclude passing
+> a negative error number, just that 0 can normally be assumed invalid.
 
-Even if all syscon users are not fixed right now (and probably don't need to
-be fixed), a solution with the new devm_syscon_regmap_lookup_by_phandle() is
-available and drivers that need to release their resources because of a
-device removal can easily move to devm_syscon_regmap_lookup_by_phandle().
+Yes, the question was specifically about the assumption that 0 is
+invalid.  The status of 0 is kind of a mess, people keep assuming that
+it isn't valid and it just depends if users of platforms which try to
+use 0 trip up over it.  Sometimes people work on trying to eliminate
+uses of 0 but it tends to get you into older code nobody wants to touch.
 
-Best regards,
-Hervé
+> The kerneldoc for SPI says:
+
+>  * @irq: Negative, or the number passed to request_irq() to receive
+>  *	interrupts from this device.
+
+Which includes the 0 as valid thing...
+
+--LcvkV2LVLHBdzUd/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZxrr8ACgkQJNaLcl1U
+h9DcJgf/besPBBSWE+U9Elv/LY0aj6BtDK56+ADVsywz9T5PWa+Vba1Eetg1r+Dv
+uvxXRyuNqT05o2FCB/Y89gVWR198ikoYvxVn+GtPjo56flVshC2trkVNgN5FHqWK
+i59G2+xwbiwQM5rMCQhc5ouej7zVrw80AqWNTcIV63BxoN5gh8zWONukbyjwKAUv
+tJblecSBXxpbeI7JwiJR32L9IS21nzYwF7PUaBLOBK0Q48Y+iU0U/5hWLnleEAww
+XCIvEHYjv5/RXWvaNNIowJOMdytuluhi9/4JsJ1udUzloqYbFlNZ1dF0v0LsEuRn
+abuLr9yaB1q2yJfnXOJ+KSWYIlnJVQ==
+=Tyb5
+-----END PGP SIGNATURE-----
+
+--LcvkV2LVLHBdzUd/--
