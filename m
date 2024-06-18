@@ -1,217 +1,255 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2060.outbound.protection.outlook.com [40.107.22.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFEB13A272
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718698734; cv=none; b=cmfvT1T2pleBN+SjLOhJ3HI6wR+hRPaFtA424pCuKl1dOfj+lFFW/pTS3OvmxnnbRpxWhLkkKcW/p8I9jRSyFoIqhD9hsmI7Ot4XDNvtmgISm2Fg2jE+CjVpFzcqHWPxqD76tLWDtcZIFzN4voxnItPSCdQc4cNkZy73BdPz5+8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718698734; c=relaxed/simple;
-	bh=ByoBCIudJMsREOr1c9B7KQwC7LRFq8ExoFOaEZ/f92c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWIKjGMgR6RtKH3nxEJMZHMLFkt7oOi7Dd3HCjwPNuiY+RGwJtqfNc55fhds11ZNAfglUTLrnIGx8i6ZJtl9qtVHjZk8tyrB1VbXWynjTUXTWA2M0elZgaSRVCo5SSIBc7G0W4HmqSuMQ+XHdOzASHFzyvaZwKRFqB9NBw7pLw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pYceKVkf; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93937FF;
+	Tue, 18 Jun 2024 08:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718698899; cv=fail; b=oZJ3UXoxbF/NflZoQQa2qXP2WifA85SJDHi3ht6pC2HbPbJywYNPBGjCdrql8LCfU4uTh/u9nNvxkJ7jxvlQdlxTBJavgt9CFeg6mZbd1boJj447rUXdCdB2TXnOJtjbsN/nkf6cobNxLc863ABcZd7T/V4NFpdhYMRC6oFkwbU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718698899; c=relaxed/simple;
+	bh=m+3DZF06mysUGmvqOd7GbQSwNoWH5D41Qvzk7cTv9mc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=onpxZfTLtq05mqoCnyoxip2MkuI4VZ6Mx9YzWoicq40fcPAYbStY/xvJKVosROf4sKtBhP/HMuhhUUjmIgLW9Lq7JxxPOhvUKMbVFkmKPqN4KSvAT8JlMUN/Co+MaOJVBZnDmw+Xz0/D7QogqPQXuhEGIcU0Xv9jP7D/6NU4nHU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Q/1O8pe1; arc=fail smtp.client-ip=40.107.22.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pYceKVkf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=tj+kMbodb7VA0W8GPKqWyv+bL11Wb/OhQa0goBSMmVY=; b=pYceKVkffCCl3QQcBnxREYvmd0
-	ekK5ib19JfsIMQb3UPsIFtuuc5p+w8EZfZ+B+5DGMuXL4Zkxb3NJ5vdPKQTozgF6dg+bCcX2EP+T9
-	KEFoBIYjrOokMiUepYuhgA4iqeIvgK9cE3tAaE+dbmhk4ew6s15CdiM0Nv1vNrt00aa8j+NdJ5hZ7
-	u6HC7a9W3etJ3SejqapWSIRYZbiNux5+nSkuCu8CsA8dZRVnccOZt746T5u2gnq4y/4Do00GausiG
-	Ds4lHPHg61rmAO4QzrJyl4j8i2arbY3mjDzo2akr+7fw7Rc5MnUlvp5J5rdDPhZRDLuSQpVkE5C5y
-	xnzy97ig==;
-Received: from [24.132.130.84] (helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJTxk-00000006zrr-0p17;
-	Tue, 18 Jun 2024 08:16:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1925D300886; Tue, 18 Jun 2024 10:12:36 +0200 (CEST)
-Date: Tue, 18 Jun 2024 10:12:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: John Stultz <jstultz@google.com>
-Cc: Qais Yousef <qyousef@layalina.io>, LKML <linux-kernel@vger.kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Joel Fernandes <joel@joelfernandes.org>, kernel-team@android.com,
-	hannes@cmpxchg.org
-Subject: Re: [PATCH] RFC: sched: Rework task_sched_runtime to avoid calling
- update_rq_clock
-Message-ID: <20240618081236.GB31592@noisy.programming.kicks-ass.net>
-References: <20240613015837.4132703-1-jstultz@google.com>
- <20240613100441.GC17707@noisy.programming.kicks-ass.net>
- <20240613115142.kxrmlf3btmwjcprg@airbuntu>
- <20240614094833.GM8774@noisy.programming.kicks-ass.net>
- <CANDhNCqcbCJNSyrKG5b7vyjmuHUm0kAJmDecqHF-QRZ_EHq=Zw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Q/1O8pe1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S+pjYcdmUFQgTvvus6o4JG4BzXm3oGqvG7Jv/YrjZy5H+bRs/jvhgIIVPkQN7TeI2V+Sp+Wl9DPLLztb4OBiozYlXqs6G6Rq0avSgFSUej6ZF2wGQWJsEjyVI9ROnzg05l5904A7A4YnSpKbhvEp7jfBhpKClj4zFMPJ8iIAuuho9kFqky39OPcemC4D5c3bPQtfjPRz497FVaxuU+wpXoDctitav+uu1BOV/eKbHBHU8y7NvXKB0+rEW6zF7xhbw1i5AgAckRmaX4juiS9jmG2cDfD8rkQGISPLMhFOWO9th4nHXfnWvSUsndjBtAZYOJWtiUoWyDW+Um+GpatSxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6vC517gcaegSH6Enskl6/tSJist0pKrwB0MGrraQ3Gw=;
+ b=d0fXgPcl/2ic9n/gDYze2sZICm0WDfH+WNPBoS8nLUVaUnR3OKuBr/FX8Fg5GohiR2oLfSbjNbRXLZZJrj4ud4kFXN4JrFU+SmHrzIRT7MUBhxfOi0uH5wxfsuRY19u7mglWn1nUS5wc7FAsTLHC5yQzGd8+eRBWPmgbfHC4MkMcNcxa8jwT66e7UoHwk5cmwcgCeCu4BDpWzTVqlzSigcT9cb1cf/2gbQTIGZ2dFTi8bG3i3mHtHUhT6ebRL1U+Oy0DYk7qWwIKQ70Gd7DkrCgoKikd5PySlMTNYIS17KSaRpUfvQA6yKYH/YBLKC3surbt6hspQekak1kvCIyOKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6vC517gcaegSH6Enskl6/tSJist0pKrwB0MGrraQ3Gw=;
+ b=Q/1O8pe1wsOuwtmAoZur2sovrsY2l3RKouY9jCjPiXEfzM48xZG+Y+kAU6V5KHrG3/FnT/m3gidWom0gXftQpFkcSBJxBn/vCmgldsRFLF4Oh0itnhU+Oy2EnKquW5SrvfxHQTb3azgqDwly/ee+vswUv99rMIA1ZX8ay2zDLsw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by DBBPR04MB7643.eurprd04.prod.outlook.com (2603:10a6:10:203::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
+ 2024 08:21:33 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87%5]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 08:21:33 +0000
+Message-ID: <b0057315-2021-4015-96c8-d09fb6ddb7e0@oss.nxp.com>
+Date: Tue, 18 Jun 2024 16:27:56 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: videobuf2: sync caches for dmabuf memory
+To: Tomasz Figa <tfiga@chromium.org>, TaoJiang <tao.jiang_2@nxp.com>
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
+ shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
+ kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, eagle.zhou@nxp.com, imx@lists.linux.dev,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ m.szyprowski@samsung.com, sumit.semwal@linaro.org, christian.koenig@amd.com,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ Ming Qian <ming.qian@nxp.com>
+References: <20240618073004.3420436-1-tao.jiang_2@nxp.com>
+ <CAAFQd5B_RTHsMwMdD59RAAyFne_0Ok_A4ExdkVOgi=G6-UGfRQ@mail.gmail.com>
+Content-Language: en-US
+From: ming qian <ming.qian@oss.nxp.com>
+In-Reply-To: <CAAFQd5B_RTHsMwMdD59RAAyFne_0Ok_A4ExdkVOgi=G6-UGfRQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SGXP274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::21)
+ To PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANDhNCqcbCJNSyrKG5b7vyjmuHUm0kAJmDecqHF-QRZ_EHq=Zw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|DBBPR04MB7643:EE_
+X-MS-Office365-Filtering-Correlation-Id: 388ff6d4-1f93-4f18-57f5-08dc8f6fa98b
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|7416011|1800799021|376011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eithMmh1ZmNhS0pLT3MwYThUMEdOTS9LRDBqUE4yOGxZNFdwNk41YlozaGtV?=
+ =?utf-8?B?MlR1WEdxLzZZb1lWczJXUE90SVppMWRNVE1mY3RWT0t4aHVuYU0xak1LVDdZ?=
+ =?utf-8?B?cEVOV0o5V1JUdEh6elIweVVIWWZLb2NCVnhvdDdNQTExdWxYRndXMXMxZFdV?=
+ =?utf-8?B?NS93NXlWL3ZROFZNR0hJaVBsOGxXMjlZWEkwZzBhVW5JRnczQkxFcVNLZjMy?=
+ =?utf-8?B?UFk4OStQMERDcEVTTEtZMHpNL3FMMWYvOHZrejg2OExkdmpuMXFwbmZoMFdV?=
+ =?utf-8?B?RCs3NU5qRlVVc1JYbnlQOGgwNm54clVkU1dZeTA2U0VQWnRJbjZ5SXpFeUhM?=
+ =?utf-8?B?RTJLNWNZWU43Mi9vYW9VVUZtN3ljNXErdFRhRjdCL2JuRzlMcWFMS21jU2lx?=
+ =?utf-8?B?ODdHdVNKK3Z6SlUrbnE4UzZFOTR5TnNOWmRWaitWb0Q2Rm5rT0x1VmNwSVdy?=
+ =?utf-8?B?T1Exd2MyOWNQVFNxVWNWanlKOHJLV2ZmaFYwcFVQSXd1VjdEeXFSeThVUUJU?=
+ =?utf-8?B?akVwZXRMZWhLVjBjQk9DdERzci9OdkdBdUtMcjNxVGZBR1VXY3J4QTdBSWFj?=
+ =?utf-8?B?QkliT05EbVl2alNuZ0NiV0xDMEd6RGhIK3hRYWlmNk0xMDZEckJJSlNRajg3?=
+ =?utf-8?B?S0d1Z0xFK1dZYklFSWpmNFNMKzRSKy92SnhEbGhmd1hQQjQ3cERNNXd3QjBZ?=
+ =?utf-8?B?QVZpb0NQUlpjM2FtOVVXNE1jdVZDaTErdTM2WkYxSHRGMjQ3a29sNFhaRFRz?=
+ =?utf-8?B?Vlg3YXdSRHhRdlRqSVdvSHlPWHduekM4YllVTjNBYXFZSjFwMkd2OGFRcHc1?=
+ =?utf-8?B?M3lqWUZYUFk1UmlURWdVdUpIOHNMeWNyNXBEYnhWQlpSNVZwZGdHWlhRVG5y?=
+ =?utf-8?B?OTdxb0xROHdYV2RKRDk2N3d1b3NvbFRJQlk0Slh5Q01SejhZanNDQU9TVG9x?=
+ =?utf-8?B?SjZKSEV4MkNwS3RiSUNzY3NyNHJaTDRpbkpvbGN1UHVRYTdDcmhTMDNFT2h3?=
+ =?utf-8?B?Y1J0T2QyeTllWTZNV3RSUDlmOXlYK3BFdnVrZTlEckNnNDFmUWdTSHNhK0dk?=
+ =?utf-8?B?Y21oUFJZa2FCVW03eFZFUXpMOUhMUklpOEs4VjdrNjFyTGNPVTh3enpsdWxI?=
+ =?utf-8?B?aVpoQ3EwanhlL1RmQ05tcWs5cVRqT1FLODdiUlQzeDc1a2syTXRJVjBES1BV?=
+ =?utf-8?B?U2RRcHE3bXFPY2VYRVl1TnkxYThBZkRpdHllNWplY2dUcElTbm9ONHFDVVFF?=
+ =?utf-8?B?OXFreFkrT3lzS2JuWFBwRUFzSDlVcjZYUUV2MW9NdmNEVlorM3U5TjFhakZE?=
+ =?utf-8?B?UnV5VG9ORStOaXlwT01TemhqaFNFem1jem4ycW1MNmFSUVZPR01DS1FOQUxQ?=
+ =?utf-8?B?d0tRWjB4M1VIaldxQ05haEt4UGU2bjd0K2NKajNXMlpQeGtWN1p5SnA5Mk9m?=
+ =?utf-8?B?WlhmeDlkc3FMT04rdVYwSDdORTZ0OGlBSzZnNllMdUN4dXVvTzBpVmJ5RjNT?=
+ =?utf-8?B?UjhTb094WlRYZWcvUkw2TUMwRUUvbXB0ck5PS1NXazlyQjEvbjlsQ3lWZ004?=
+ =?utf-8?B?SDRhNWFSeXVMU3RwV0ZqOHF3WnJkdmloQUlqeVAySm1Ba2p0cVVIaVZhWlJD?=
+ =?utf-8?B?Zk9MeEtubUNBcTVta2tmVXArcjZUUStjang2Zm9yL3FEWTN3OHZPT1JnVG51?=
+ =?utf-8?Q?XDChNNb/BOiOnERTeGxK?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(7416011)(1800799021)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Uk5BUlA5MExTTTZsSXVRcDJrclVYM3VMalhhcjRFQkJwYVZRR1hjM0VUVXlN?=
+ =?utf-8?B?Y1U3NkF4dUd6VkNHU1NmU2pmVmg5NVJQY1FPU3VGMWJ4SmFEZ1VKR0wzVU1v?=
+ =?utf-8?B?SWxXWS9uUnNRV1hlWHZlTjZrc2ZycTBBTURNOWNLdnRRMGg2NThqeEJxWkUw?=
+ =?utf-8?B?cXpTdHNXVkxUWkp6M052aVNVcEZoRm5BYjgwWlYwZmlsS3JKZlFTSWpnQjV3?=
+ =?utf-8?B?bWh0a3FmbGRtdU96RUZDQzR2Z3UreFFjRjJsVHYwNUpTeHRmYzRGeU1tMUdh?=
+ =?utf-8?B?bEZ4VEU1Y3ZtNXFjMTZWMmZXTmlFeFpYWm5WQm5CN1pHd3MwZy9JSmUxL3Uv?=
+ =?utf-8?B?Vm5jcXRIYUdWY2R6VjU1ODJ0ZGRMd0lnaVN6UHZxOHlvOFhPb3ZKOG84WHRF?=
+ =?utf-8?B?VHRneG5hWXBpdXlqQjhmVWJUTHpPNXpXeVVIdFg3Y3VWdlpOOEJ4NlYxMUZs?=
+ =?utf-8?B?KytldXFxZUE1dmpUNjhxM3M3c0NMekxvTnprcFhscmdxeGIvZ051S0NqOEc5?=
+ =?utf-8?B?OEFDL3A3YW9GQU1id2x3SGRCdmdLRkpCZ1BZQUg0VGEvNnZka21jQ2pucHRl?=
+ =?utf-8?B?bGR3eFRtUFZWSjRTcTNwL25YYmFRd2NKZGxmdW1Qd1dxeUovZkIrNlpRc2V1?=
+ =?utf-8?B?N2JsNUw2ZFN2bEtKNTcySGVtNGxhb2krVDJWekxvUllnWnh4RXJsbG9hWVAw?=
+ =?utf-8?B?U054b2JOeU12Mms0djJ4dXg1anErSHFtc1NWSEFVYy9CbEJWSnZVVGI1T3Ro?=
+ =?utf-8?B?Qlp5aEYzOEwwTlhIZHd2SnM0ck9rTVBMeTNFKzdrRDMwNVlnV21RVkFlVnN5?=
+ =?utf-8?B?Mk9yVndWNVpRZFNJUm8zWmZNNWlnWi9ZaVdhNGhreUVKN1dPSGlvZWc2emFK?=
+ =?utf-8?B?dkVyejNqMlhuLzl3MnRXZXkyUjR1QjRmYm9nd0ZlbUNGN3NtNkU1NFdBMVgw?=
+ =?utf-8?B?QloxYmNLZkpIZ2phS0FVR0RMWTJIVUpucitiTkluSkEwc05CdlNnYTgxb1dH?=
+ =?utf-8?B?aGR6OGw4QVp0YjI0UVFmNk5vRS8zcHVkNFgyeTNtWkZaUlFqRjBoRFE1K095?=
+ =?utf-8?B?bFh6WVdpU3BNbnAySGx6WDEwTkZoMW1jSTNuTG55Y0dhaXFOellEbXpLaUVq?=
+ =?utf-8?B?YzRvazhDbWFhdFVLaUZPSjE5VHNzZ01jREFPcDh2OTdLa1ZiaS94Y0gwU3ZM?=
+ =?utf-8?B?RVpkUmFTMXBqYm9yUEEwS0JiWlI5UndqcDdIV1pBY3FRL2t0WnFZZitOTDFi?=
+ =?utf-8?B?RTdDdFBLNm13UHlKQW5RS2JucFlQVGRIWkFIVUNoRVR1b2NXYlZlRXZQbXor?=
+ =?utf-8?B?SVBBc09kNTFmMVNNOEJ1UXBkNHNLN201L2MrWDcrczQwVDgwMytqZG1VSnRZ?=
+ =?utf-8?B?RTkzcmV2VlFEMHVxaDcyK1NraEdTL2MwWTZ6TnRRWDNtei93VCtndWRkKzRj?=
+ =?utf-8?B?eWJrbGRqdGgzOFlBd21OOXJMbjFVTzNmbnBWR2RkanNzQXlKR2FBdUpzb0ww?=
+ =?utf-8?B?Ri96NTdYL1hod2JUVUE0SFkzNUNhTUZkb1JwbHkzTTRtQW9aMXljQnk0Yzhv?=
+ =?utf-8?B?cTZzVGFadUYxSmkzTmo3VzgvSVE0U2NUWk9UTldValdueHp0WlVKZnUxVDlx?=
+ =?utf-8?B?V2ppRlJqWDd6STRGc0RzUmlmQ291SUxXVkhUNHRVNWVybW5Cb0p5S2FCRFdz?=
+ =?utf-8?B?L1NTaHBIeG9OdGVkV2xaZlU4WGlManpxMlpsM2ErSnd6a3I4R042OHlKWWV0?=
+ =?utf-8?B?cit0VEh6Z002Y1lpOHgvSnh0Z3czblZETVllSTF0YmJvYmltS25wTFFEaE82?=
+ =?utf-8?B?d3RDVDdWOUovNk16d095eEJyMzkzTkE2QUt0UGFHQnA3OHZucUwwWFlZNnc2?=
+ =?utf-8?B?N1d1T3ZnQWpKTFFRKzY3TCtQY2R0L2RVYTdqMGt6VjNJeUZFSFUyZ3lRcUpQ?=
+ =?utf-8?B?MGZyWm1wM1cxYmV4Rk1uMDRqdkw3NTdSZmhUVkFLVm9qZDg1Z1VGSHBHc1lu?=
+ =?utf-8?B?cmZmYXJXd252TmFqdVhtcW1VUno5NERCTmJQaUdkdUo3c0J0dVZKekF2NW9L?=
+ =?utf-8?B?Sklkby9oM0NwTUVwdGJHZGoyekxWdkVDUXB5R2l2di9EWHpVZWlqWi9xcFJS?=
+ =?utf-8?Q?XUV87eclTRR4NdxHDfQ7N7Ou1?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 388ff6d4-1f93-4f18-57f5-08dc8f6fa98b
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 08:21:33.1506
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WZl6lW5yXZCXQiHQbwrtiYq7JQg1uEqHca9uTZ/qjIkTR2JG2/XJs7RrZw+U86DnqGeWfNpU2XBjBy4hpj30uQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7643
 
-On Mon, Jun 17, 2024 at 05:42:25PM -0700, John Stultz wrote:
-> On Fri, Jun 14, 2024 at 2:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > Which then gets me something like the (completely untested) below..
-> >
-> > Hmm?
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 0935f9d4bb7b..36aed99d6a6c 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -724,7 +724,6 @@ static void update_rq_clock_task(struct rq *rq, s64 delta)
-> >
-> >         rq->prev_irq_time += irq_delta;
-> >         delta -= irq_delta;
-> > -       psi_account_irqtime(rq->curr, irq_delta);
-> >         delayacct_irq(rq->curr, irq_delta);
-> >  #endif
-> >  #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
-> > @@ -5459,6 +5458,8 @@ void sched_tick(void)
-> >
-> >         sched_clock_tick();
-> >
-> > +       psi_account_irqtime(curr, NULL, &rq->psi_irq_time);
-> > +
-> >         rq_lock(rq, &rf);
-> >
-> >         update_rq_clock(rq);
-> > @@ -6521,6 +6524,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
-> >                 ++*switch_count;
-> >
-> >                 migrate_disable_switch(rq, prev);
-> > +               psi_account_irqtime(prev, next, &rq->psi_irq_time);
-> 
-> FYI: These references to psi_irq_time hit build issues if
-> CONFIG_IRQ_TIME_ACCOUNTING is disabled.
 
-Ah, well, I did say it was untested...
 
-> Also, separately, while I didn't see this earlier testing on physical
-> devices, when running virtualized, I can pretty easily trip over the
-> following:
+> Hi TaoJiang,
 > 
-> [   65.207340] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
-> [kworker/0:3:374]
-> [   65.211107] irq event stamp: 118664
-> [   65.212786] hardirqs last  enabled at (118663):
-> [<ffffffff97a00e46>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-> [   65.218440] hardirqs last disabled at (118664):
-> [<ffffffff977fdeca>] sysvec_apic_timer_interrupt+0xa/0xc0
-> [   65.223074] softirqs last  enabled at (118546):
-> [<ffffffff9676db78>] __irq_exit_rcu+0x88/0xe0
-> [   65.227118] softirqs last disabled at (118541):
-> [<ffffffff9676db78>] __irq_exit_rcu+0x88/0xe0
-> [   65.231137] CPU: 0 PID: 374 Comm: kworker/0:3 Not tainted
-> 6.10.0-rc4-dirty #4393
-> [   65.234625] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   65.239089] Workqueue: events psi_avgs_work
-> [   65.241122] RIP: 0010:collect_percpu_times+0xff/0x310
-> [   65.243525] Code: b9 02 00 00 00 48 89 df e8 8e a4 01 00 48 8b b4
-> 24 d0 00 00 00 48 89 df e8 5e 9e 01 00 58 45 8b 34 24 41 f6 c6 01 74
-> 0c f3 0
-> [   65.252926] RSP: 0018:ffff958501263d50 EFLAGS: 00000202
-> [   65.255433] RAX: 0000000000017b61 RBX: ffff9585b901d848 RCX: 0000000000000006
-> [   65.258755] RDX: ffffffff967eb6ac RSI: ffffffff9819e305 RDI: ffffffff98177748
-> [   65.262113] RBP: ffff958501263db0 R08: 0000000000000001 R09: 0000000000000000
-> [   65.265475] R10: 0000000000000001 R11: 0000000000000001 R12: ffff9585b901d840
-> [   65.268785] R13: ffff9585b901d884 R14: 0000000000033d8b R15: 0000000000000000
-> [   65.272146] FS:  0000000000000000(0000) GS:ffff9585b9000000(0000)
-> knlGS:0000000000000000
-> [   65.275908] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   65.278629] CR2: 00005631aee8b000 CR3: 0000000116c0e001 CR4: 0000000000370ef0
-> [   65.282002] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   65.285386] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   65.288730] Call Trace:
-> [   65.289958]  <IRQ>
-> [   65.290965]  ? watchdog_timer_fn+0x275/0x310
-> [   65.293185]  ? __pfx_watchdog_timer_fn+0x10/0x10
-> [   65.295379]  ? __hrtimer_run_queues+0x190/0x3b0
-> [   65.297795]  ? hrtimer_interrupt+0xf9/0x230
-> [   65.299782]  ? __sysvec_apic_timer_interrupt+0x82/0x210
-> [   65.302243]  ? sysvec_apic_timer_interrupt+0x98/0xc0
-> [   65.304590]  </IRQ>
-> [   65.305658]  <TASK>
-> [   65.306708]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
-> [   65.309206]  ? psi_avgs_work+0x3c/0xb0
-> [   65.311001]  ? collect_percpu_times+0xff/0x310
-> [   65.313153]  psi_avgs_work+0x3c/0xb0
-> [   65.314864]  process_one_work+0x1fe/0x700
-> [   65.316782]  ? lock_is_held_type+0xcd/0x120
-> [   65.318782]  worker_thread+0x1c7/0x3b0
-> [   65.320571]  ? __pfx_worker_thread+0x10/0x10
-> [   65.322626]  kthread+0xe0/0x110
-> [   65.324103]  ? __pfx_kthread+0x10/0x10
-> [   65.325853]  ret_from_fork+0x28/0x40
-> [   65.327512]  ? __pfx_kthread+0x10/0x10
-> [   65.329255]  ret_from_fork_asm+0x1a/0x30
-> [   65.331073]  </TASK>
-> [   65.332119] Kernel panic - not syncing: softlockup: hung tasks
+> On Tue, Jun 18, 2024 at 4:30 PM TaoJiang <tao.jiang_2@nxp.com> wrote:
+>>
+>> From: Ming Qian <ming.qian@nxp.com>
+>>
+>> When the memory type is VB2_MEMORY_DMABUF, the v4l2 device can't know
+>> whether the dma buffer is coherent or synchronized.
+>>
+>> The videobuf2-core will skip cache syncs as it think the DMA exporter
+>> should take care of cache syncs
+>>
+>> But in fact it's likely that the client doesn't
+>> synchronize the dma buf before qbuf() or after dqbuf(). and it's
+>> difficult to find this type of error directly.
+>>
+>> I think it's helpful that videobuf2-core can call
+>> dma_buf_end_cpu_access() and dma_buf_begin_cpu_access() to handle the
+>> cache syncs.
+>>
+>> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+>> Signed-off-by: TaoJiang <tao.jiang_2@nxp.com>
+>> ---
+>>   .../media/common/videobuf2/videobuf2-core.c   | 22 +++++++++++++++++++
+>>   1 file changed, 22 insertions(+)
+>>
 > 
-> Where collect_percpu_times+0xff/0x310:
-> __seqprop_sequence at include/linux/seqlock.h:211 (discriminator 2)
-> (inlined by) get_recent_times at kernel/sched/psi.c:261 (discriminator 2)
-> (inlined by) collect_percpu_times at kernel/sched/psi.c:359 (discriminator 2)
+> Sorry, that patch is incorrect. I believe you're misunderstanding the
+> way DMA-buf buffers should be managed in the userspace. It's the
+> userspace responsibility to call the DMA_BUF_IOCTL_SYNC ioctl [1] to
+> signal start and end of CPU access to the kernel and imply necessary
+> cache synchronization.
 > 
-> Which looks like its getting stuck in the seqlock loop, and the only
-> way I can see that catching right off, is if we're in some sort of
-> livelock where the calls to psi_account_irqtime(curr, NULL,
-> &rq->psi_irq_time) is coming in frequently enough to change the seqno
-> each iteration through the reader.  But from my initial trace_printk
-> debugging, it seems like from a kworker we enter the loop in
-> get_recent_times(), hit an irq and somehow never really come back out
-> of irq context. Though we continue to get ticks on the task and
-> continue to call psi_account_irqtime().  I was worried we were somehow
-> getting stuck in the 'while ((group = group->parent));' loop in
-> psi_account_irqtime(), but that doesn't seem to be the case.
+> [1] https://docs.kernel.org/driver-api/dma-buf.html#dma-buffer-ioctls
 > 
-> [  238.297094] kworker/-798       0..... 200647713us :
-> collect_percpu_times: JDB: get_recent_times at top of loop 0!
-> [  238.301705] kworker/-798       0..... 200647767us :
-> collect_percpu_times: JDB: get_recent_times done with read (looped:
-> 1)!
-> [  238.306689] kworker/-798       0..... 200647768us :
-> collect_percpu_times: JDB: get_recent_times at top of loop 0!
-> [  238.311313] kworker/-798       0..... 200647769us :
-> collect_percpu_times: JDB: get_recent_times done with read (looped:
-> 1)!
-> [  238.316318] kworker/-798       0d..2. 200647786us :
-> psi_group_change: JDB: psi_group_change seqwrite
-> <normal behavior above>
-> [  238.320460] kworker/-10        0..... 200647790us :
-> collect_percpu_times: JDB: get_recent_times at top of loop 0!
-> [  238.325131] kworker/-10        0d.h.. 200648408us :
-> psi_account_irqtime: JDB: psi_account_irqtime seqwrite (loop count: 0)
-> [  238.330149] kworker/-10        0d.h.. 200649406us :
-> psi_account_irqtime: JDB: psi_account_irqtime seqwrite (loop count: 0)
-> [  238.335140] kworker/-10        0d.h.. 200650405us :
-> psi_account_irqtime: JDB: psi_account_irqtime seqwrite (loop count: 0)
-> ...
-> With the psi_account_irqtime just repeating there each ms/tick.
+> So, really sorry, but it's a NAK.
 > 
-> I'm still digging a bit here to understand what's going on. But I
-> wanted to share.
+> Best regards,
+> Tomasz
 
-Urgh, that's not making any sense to me either. Johannes, considering:
+Hi Tomasz,
+     Thanks for your explanation, sorry for bothering due to our 
+misunderstanding
 
- https://lkml.kernel.org/20240614094833.GM8774@noisy.programming.kicks-ass.net
+Best regards,
+Ming
 
-Do you have any idea what's going on here?
+> 
+>> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+>> index 358f1fe42975..4734ff9cf3ce 100644
+>> --- a/drivers/media/common/videobuf2/videobuf2-core.c
+>> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+>> @@ -340,6 +340,17 @@ static void __vb2_buf_mem_prepare(struct vb2_buffer *vb)
+>>          vb->synced = 1;
+>>          for (plane = 0; plane < vb->num_planes; ++plane)
+>>                  call_void_memop(vb, prepare, vb->planes[plane].mem_priv);
+>> +
+>> +       if (vb->memory != VB2_MEMORY_DMABUF)
+>> +               return;
+>> +       for (plane = 0; plane < vb->num_planes; ++plane) {
+>> +               struct dma_buf *dbuf = vb->planes[plane].dbuf;
+>> +
+>> +               if (!dbuf)
+>> +                       continue;
+>> +
+>> +               dma_buf_end_cpu_access(dbuf, vb->vb2_queue->dma_dir);
+>> +       }
+>>   }
+>>
+>>   /*
+>> @@ -356,6 +367,17 @@ static void __vb2_buf_mem_finish(struct vb2_buffer *vb)
+>>          vb->synced = 0;
+>>          for (plane = 0; plane < vb->num_planes; ++plane)
+>>                  call_void_memop(vb, finish, vb->planes[plane].mem_priv);
+>> +
+>> +       if (vb->memory != VB2_MEMORY_DMABUF)
+>> +               return;
+>> +       for (plane = 0; plane < vb->num_planes; ++plane) {
+>> +               struct dma_buf *dbuf = vb->planes[plane].dbuf;
+>> +
+>> +               if (!dbuf)
+>> +                       continue;
+>> +
+>> +               dma_buf_begin_cpu_access(dbuf, vb->vb2_queue->dma_dir);
+>> +       }
+>>   }
+>>
+>>   /*
+>> --
+>> 2.43.0-rc1
+>>
