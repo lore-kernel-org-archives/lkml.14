@@ -1,208 +1,113 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A0413B2BC;
-	Tue, 18 Jun 2024 12:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5337A2139B6
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712442; cv=none; b=dMJARpGc581aiupZxppJCZ0DBOsOLiJLOBAew854SwGqapse7kW+OApuk/g3CJWIrwDc/S00JIY6rGgUo3EU9k11oQVRWSlaO3BTBP7PEsKpFuoPlWR7jfh8CCZDfXlu6lkxLg4MKFlNGawg4XdL2jKq3SSQ86MWMyMvaqYmO3M=
+	t=1718712521; cv=none; b=ojhVSQOdtM7JwbJ6eBsg4JvsUv691pVbaGDEPV3e5zWZ4B6J7kGYmlBJ4TDhdS2yD1D7UKplGULvM/pDLaAaRDU6BXnqJkXN/OXY3ckhuf/hKHYWIUk4FQsm10gSaLP98cZHkoOLiPaqLP+h8uxjEurv1dtjljPflJUPrm6+NAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718712442; c=relaxed/simple;
-	bh=zIMNWACWd3M1Cq3jpWfZKiQ5Xh7liCvscnKOrJX2hTA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kcpeEzfpNR2mQkm5DO0C35pZF/2ZtREXGROYS+SsEZ8q79nlxuq+p+1g/q6XIkxgORZWXFyJDhY8YNzBDk9ioFf3U6QVif7SChz3bNssuMgi+MG4v+KE3kZU+zA3oNbzofuarsLXelxHFJ7XoS954upEHOEgZsJARqCUp28tTII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbVhBDZR; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718712521; c=relaxed/simple;
+	bh=Yckx3myiIKBg0+WTmA44vy1MYQpPyh6BkmCRseR89ec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r604kKl7MDy4Ac6m8SkDW36mg/vzgV4XzgLYgSCEKaQIYn2cW3F/uJ29dZsmyt/S3rG6aJ2ehW0oMtkjNGpK7UU5RzqwZEUuiZHm/KXfbpMSt0pttFJVpc7Gc/JL2tOwtLdzegmSH+p/NRVpI1osZ6KDZ82v9wXXR17JBYSWFW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=j/rTMOoD; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbVhBDZR"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2bfff08fc29so4466343a91.1;
-        Tue, 18 Jun 2024 05:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718712440; x=1719317240; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8qMW/fhC5hVCG/nXgj+a3Q82/zqzq5GMfidhC1/vwWQ=;
-        b=CbVhBDZRSE56f2nPKs8+osbzXWivc/5soSlsNrHdIv5JYQzwbMgqEhhKhADMM6TRdE
-         us0Ho/SojLECOJKvDENAnGfYV0dKY4UyOmzvfaKkdJcC1MFRkEJkIYA8roMYc3BMOuzq
-         95RE8dWAPathJntsAprj+UNZIZ6ipJp0IYH3f8yeShf3oNoAUmiFwfZkqPlLA346uRc9
-         QgxsRE+sdy/fx+E6fCOqFWXPSdM3uDuuN95T0jNI4UJ3FJ3DcGXIY49+f94+Sr+UkihZ
-         v/1/lRftD7ZkqPIoLmCWt9G6UYSft5hkvoaWypGlzTGUP3pIn0CqPSoHKvFuvSQ1ylyP
-         nsug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718712440; x=1719317240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8qMW/fhC5hVCG/nXgj+a3Q82/zqzq5GMfidhC1/vwWQ=;
-        b=A5mxHS3ZlI/SxZPX2v6ruycRlJdEr9W0IWys/ygJ3jOSiOu/2KfMIherTas08ZdrFP
-         hmfsOCiUY04j4TeekYRCXVGadc3hpxE92xLrZ+tI41LW1IpA9n4JbWj7kpr2y4CZ4BA4
-         e7TqiUckGuircIvQyXaVOQFsZ8fGTWGKGewV+QgkToeqfnpeXCZKrlBYkqfuOSPX8I1i
-         hGeNU9lp+TgMFIjQjQ0Vgd3OdgWM3c/HEQWRXqC5DTK3URMTxUiYt5xDRK67Y8x0oqvR
-         RbNv3Chb685P7IKY9hGwVx4jfReOBB03Mc/BMOSR9P0ICvqWADKDMpUZwBs0+od/rzrO
-         Lr2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVt2Fu7OR3eeLd+R80ppjVKWtHnptxsMnDsA3Cllwjrr1Aux6MJSmAAHYwGrdWEJRQOqdZox8omDk9vzKZ1M8XogD9wzIshiYM0fwsimiHyyylaHssn8q8AZZqoybENB9ChziBEFvhDZg==
-X-Gm-Message-State: AOJu0Yy80yB/dR/A9ZkXk9WZC8/7agfNAQPzQF6qsDcT+7ODvrv09z/G
-	juvubsZf7awysLh1g7CHGXXLkQaasq1tZ557vuvmBRQ0xEk2Bhc1+hBxZg0uAGofMwZI6TMuCLi
-	TWAYiAuBBmN81ZNVq995AVNDf9f0=
-X-Google-Smtp-Source: AGHT+IHg1X7qgFSor7TxKpGXZBPsKGWKdT3X+Qx1Ip3e8IAZa58OsBuEF8S062FwXsVLE54KZxZg9btByg4FhvGFjdA=
-X-Received: by 2002:a17:90b:4d8b:b0:2c4:aa67:895c with SMTP id
- 98e67ed59e1d1-2c4db242648mr11431737a91.17.1718712439650; Tue, 18 Jun 2024
- 05:07:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j/rTMOoD"
+X-Envelope-To: angelogioacchino.delregno@collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718712516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yaKJZwFY6wd1XllaZI8jJVrOqSqeE2cUrM2G+oq1sR8=;
+	b=j/rTMOoDPWYTSlPp2VdJOuT37Q5uAFN8Tsg2EsV4sQIiUaqK5GIq+iAvEYNMRfLEBFuDbP
+	LlqVT/U0m+nFky/pdYKC+SbgxAKwWl3f41XmPGY67FTxWMB4Lu+6+7yUqjrK8WTXY4OUj3
+	UpgZf3YfifUlrEGqe1S6OLCQ/0McQeM=
+X-Envelope-To: chunkuang.hu@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: krzysztof.kozlowski+dt@linaro.org
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: p.zabel@pengutronix.de
+X-Envelope-To: airlied@gmail.com
+X-Envelope-To: daniel@ffwll.ch
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+X-Envelope-To: mripard@kernel.org
+X-Envelope-To: tzimmermann@suse.de
+X-Envelope-To: matthias.bgg@gmail.com
+X-Envelope-To: shawn.sung@mediatek.com
+X-Envelope-To: yu-chang.lee@mediatek.com
+X-Envelope-To: ck.hu@mediatek.com
+X-Envelope-To: jitao.shi@mediatek.com
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: linux-mediatek@lists.infradead.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: wenst@chromium.org
+X-Envelope-To: kernel@collabora.com
+X-Envelope-To: michael@walle.cc
+X-Envelope-To: amergnat@baylibre.com
+Message-ID: <dc1b40ed-0f8f-40c9-8c32-e35e296b37da@linux.dev>
+Date: Tue, 18 Jun 2024 20:08:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617223952.1899201-1-aford173@gmail.com> <5814494.DvuYhMxLoT@steina-w>
-In-Reply-To: <5814494.DvuYhMxLoT@steina-w>
-From: Adam Ford <aford173@gmail.com>
-Date: Tue, 18 Jun 2024 07:07:08 -0500
-Message-ID: <CAHCN7xLPHx_W4GGkSknu=_3o29jT0gQZddLAakDMzUUR0ok=Lg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp: Fix pgc_mlmix location
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com, 
-	marex@denx.de, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
-	Marco Felsch <m.felsch@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 3/3] drm/mediatek: Implement OF graphs support for
+ display paths
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ chunkuang.hu@kernel.org
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com,
+ ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ wenst@chromium.org, kernel@collabora.com, michael@walle.cc,
+ Alexandre Mergnat <amergnat@baylibre.com>
+References: <20240618101726.110416-1-angelogioacchino.delregno@collabora.com>
+ <20240618101726.110416-4-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240618101726.110416-4-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 18, 2024 at 1:15=E2=80=AFAM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
->
-> Hi Adam,
->
-> Am Dienstag, 18. Juni 2024, 00:39:51 CEST schrieb Adam Ford:
-> > The pgc_mlmix shows a power-domain@24, but the reg value is
-> > IMX8MP_POWER_DOMAIN_MLMIX which is set to 4.
-> >
-> > The stuff after the @ symbol should match the stuff referenced
-> > by 'reg' so reorder the pgc_mlmix so it to appear as power-domain@4.
->
-> Taking a look this mismatch seems to be also true for:
-> * IMX8MP_POWER_DOMAIN_VPUMIX
-> * IMX8MP_POWER_DOMAIN_VPU_G1
-> * IMX8MP_POWER_DOMAIN_VPU_G2
-> * IMX8MP_POWER_DOMAIN_VPU_VC8000E
->
-> Would you mind fixing them as well?
+Hi,
 
-I can do that.   I'll send out out later tonight.
 
-adam
->
-> Despite that, for this patch:
-> Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->
-> Thanks and best regards,
-> Alexander
->
-> > Fixes: 834464c8504c ("arm64: dts: imx8mp: add mlmix power domain")
-> > Fixes: 4bedc468b725 ("arm64: dts: imx8mp: Add NPU Node")
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boo=
-t/dts/freescale/imx8mp.dtsi
-> > index b92abb5a5c53..3576d2b89b43 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > @@ -789,6 +789,23 @@ pgc_usb2_phy: power-domain@3 {
-> >                                               reg =3D <IMX8MP_POWER_DOM=
-AIN_USB2_PHY>;
-> >                                       };
-> >
-> > +                                     pgc_mlmix: power-domain@4 {
-> > +                                             #power-domain-cells =3D <=
-0>;
-> > +                                             reg =3D <IMX8MP_POWER_DOM=
-AIN_MLMIX>;
-> > +                                             clocks =3D <&clk IMX8MP_C=
-LK_ML_AXI>,
-> > +                                                      <&clk IMX8MP_CLK=
-_ML_AHB>,
-> > +                                                      <&clk IMX8MP_CLK=
-_NPU_ROOT>;
-> > +                                             assigned-clocks =3D <&clk=
- IMX8MP_CLK_ML_CORE>,
-> > +                                                               <&clk I=
-MX8MP_CLK_ML_AXI>,
-> > +                                                               <&clk I=
-MX8MP_CLK_ML_AHB>;
-> > +                                             assigned-clock-parents =
-=3D <&clk IMX8MP_SYS_PLL1_800M>,
-> > +                                                                      =
-<&clk IMX8MP_SYS_PLL1_800M>,
-> > +                                                                      =
-<&clk IMX8MP_SYS_PLL1_800M>;
-> > +                                             assigned-clock-rates =3D =
-<800000000>,
-> > +                                                                    <8=
-00000000>,
-> > +                                                                    <3=
-00000000>;
-> > +                                     };
-> > +
-> >                                       pgc_audio: power-domain@5 {
-> >                                               #power-domain-cells =3D <=
-0>;
-> >                                               reg =3D <IMX8MP_POWER_DOM=
-AIN_AUDIOMIX>;
-> > @@ -900,23 +917,6 @@ pgc_vpu_vc8000e: power-domain@22 {
-> >                                               reg =3D <IMX8MP_POWER_DOM=
-AIN_VPU_VC8000E>;
-> >                                               clocks =3D <&clk IMX8MP_C=
-LK_VPU_VC8KE_ROOT>;
-> >                                       };
-> > -
-> > -                                     pgc_mlmix: power-domain@24 {
-> > -                                             #power-domain-cells =3D <=
-0>;
-> > -                                             reg =3D <IMX8MP_POWER_DOM=
-AIN_MLMIX>;
-> > -                                             clocks =3D <&clk IMX8MP_C=
-LK_ML_AXI>,
-> > -                                                      <&clk IMX8MP_CLK=
-_ML_AHB>,
-> > -                                                      <&clk IMX8MP_CLK=
-_NPU_ROOT>;
-> > -                                             assigned-clocks =3D <&clk=
- IMX8MP_CLK_ML_CORE>,
-> > -                                                               <&clk I=
-MX8MP_CLK_ML_AXI>,
-> > -                                                               <&clk I=
-MX8MP_CLK_ML_AHB>;
-> > -                                             assigned-clock-parents =
-=3D <&clk IMX8MP_SYS_PLL1_800M>,
-> > -                                                                      =
-<&clk IMX8MP_SYS_PLL1_800M>,
-> > -                                                                      =
-<&clk IMX8MP_SYS_PLL1_800M>;
-> > -                                             assigned-clock-rates =3D =
-<800000000>,
-> > -                                                                    <8=
-00000000>,
-> > -                                                                    <3=
-00000000>;
-> > -                                     };
-> >                               };
-> >                       };
-> >               };
-> >
->
->
-> --
-> TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Ge=
-rmany
-> Amtsgericht M=C3=BCnchen, HRB 105018
-> Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan S=
-chneider
-> http://www.tq-group.com/
->
->
+On 6/18/24 18:17, AngeloGioacchino Del Regno wrote:
+> It is impossible to add each and every possible DDP path combination
+> for each and every possible combination of SoC and board: right now,
+> this driver hardcodes configuration for 10 SoCs and this is going to
+> grow larger and larger, and with new hacks like the introduction of
+> mtk_drm_route which is anyway not enough for all final routes as the
+> DSI cannot be connected to MERGE if it's not a dual-DSI, or enabling
+> DSC preventively doesn't work if the display doesn't support it, or
+> others.
+> 
+> Since practically all display IPs in MediaTek SoCs support being
+> interconnected with different instances of other, or the same, IPs
+> or with different IPs and in different combinations, the final DDP
+> pipeline is effectively a board specific configuration.
+> 
+> Implement OF graphs support to the mediatek-drm drivers, allowing to
+> stop hardcoding the paths, and preventing this driver to get a huge
+> amount of arrays for each board and SoC combination, also paving the
+> way to share the same mtk_mmsys_driver_data between multiple SoCs,
+> making it more straightforward to add support for new chips.
+> 
+> Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+> Tested-by: Alexandre Mergnat <amergnat@baylibre.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Acked-by: Sui Jingfeng <sui.jingfeng@linux.dev>
