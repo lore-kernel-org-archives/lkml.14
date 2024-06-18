@@ -1,103 +1,135 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB1415B0FA;
-	Tue, 18 Jun 2024 07:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A21813B7AF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695632; cv=none; b=rqvN3Fz3xutEjH8AKIoKNhys3VJ5wfAKOF93gmuNw35UEHB+syOoNM5s7TzjgY/NnI0Yk8hCtJRL/220cFbxDHYzEgt8h6MbtgtsvRIrKeRXHOOypKtziIo+ibtYJkfaa7CEp+CSVkQOKf0hwK3NlVUakqDhYfUmzBxjPjNi1aU=
+	t=1718695642; cv=none; b=Hfku1m1qxCELhT589u2blDOfzfdhDeV6jrGJAh/ABJOqKJaOfq6YdrFVI/lDFyiAYRJh0gsbTvklN1MTuxPqtrzDA24u3ibgDmTfWkiGCrynW9D+6fkiT9ZMunWpMIZJUCNrb9N+VOwPxYQcz3814byiea0dKLirq2H+Vz1dum8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695632; c=relaxed/simple;
-	bh=iRjmF4W3MCyCCZaBe1RgE+WC2LYE8fIZlNIkr57SHTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QjNHTZBmDL29jqItH3E4cHpnwpmPVZPPxCQZ+67G40pSO95yUs4I4qG88tpTS/cV9Kd1B8Tlm6+UFNdgnOCg0jABAkLp01BvqzvMFUMjyuBxpTsVm5Iq/4MCyYsaufhCTXsPbdCKtLMQz8/gOx/q3T/8iTvMz/CJXX0qZqaIGpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Grti8WhL; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Grti8WhL"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f64ecb1766so36856805ad.1;
-        Tue, 18 Jun 2024 00:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718695629; x=1719300429; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KnomKee444IxvA5fIMw/4SC/20gaSTbQakqZLbgW7qY=;
-        b=Grti8WhLh9mGs5fbf9uT++nd4EEA5W5RfZEMMdoR3NHh144u0Uy245vTQBDdDXdJB+
-         Srk/YQqyW0tH1NQImOzRLGq8RxlYAQ3M7yCbSCKYEQkf+r0p+Iw9NBVrQtxJ5d2UoYz/
-         ngOkmNQj12V5PCeJCWL0WE/9XOVTjnAf6BNNYokG2Bcui6zXqKMtta1j/h0S7MuVQk4S
-         q3aL6rMW8MOjozECehmlw/TVQ99amurrRs8m6BMLWuexBEdIkZ0/9po1UlIC+OaYt6CM
-         IXS1t5ndwcWNkbO0oQLcLcKQNzAme8Kl+RXgWhLuya1b2SM231EReTuf6MABcGJPlbQB
-         1+Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718695629; x=1719300429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KnomKee444IxvA5fIMw/4SC/20gaSTbQakqZLbgW7qY=;
-        b=RAxIrhqvgFsBd9RJ1ceMIHbIbVIzpxhgKrh9/4KGj631kk11lM7zf0sszQoN3vJyvh
-         OrdyEJ5c8Y1VCeDF9aMCUdq6CphtoHL/6rIU5ia0sKlYJGnIEFZvFiv7h49wDv3p7/ct
-         3sastjHXXvdAFGdshQV1rM9wVukU75ZPInrQO9sKFzuoTwyBYrscRlOjPZAvhIkssxjk
-         UaFldhYwH7ak5K1t4i1ob4J5EVl8bdr+rcoQBuV3ImysO3LU1FxIgedFjWdh73AqYMe8
-         iVXEoNHVXqvaP3xp+SEHqgBMizEnKILEg/upuIvoz6FQjkaRH7QqrjZK+3MHh6jHndVZ
-         gNpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF4PgOSrIQ8dHgy6rJi8XaNl4nZXum3pXWgj9hUc25JodGsFHyStmrxtYRv21JvBbx4rATakeFcqzBoK/L6+jvM0P6fs6ldBhu1cg9Wl9J7KXaT8B9pqHWEhEo3qbmy/JG0VsWV/O2S2W/8GUiKYzzr1jT0fBA/VQQIXhL3YmZk+7LZVzz
-X-Gm-Message-State: AOJu0Yy4wYaD+fAYuqgnPc85blWMDKkZPVh7TRnWg3G8D5LMh1VgG5fQ
-	4Jt5Mxcy8ruPuhjywwAU+y2Yx8J6suVh9WBA5HS95Q/ZX8Ge1oBy
-X-Google-Smtp-Source: AGHT+IFOHdsawk3a1oH1WO+9GISGpmZg1DJsrjPf8odb5ltVd36eKzsjZVlRHORq5DhXsvzycXO/IA==
-X-Received: by 2002:a17:902:ce87:b0:1f7:3d0d:4cd with SMTP id d9443c01a7336-1f8625cf213mr127466945ad.24.1718695629167;
-        Tue, 18 Jun 2024 00:27:09 -0700 (PDT)
-Received: from ux-UP-WHL01 (mailgw01.gttektw.com. [45.117.96.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f98f901bebsm8562825ad.270.2024.06.18.00.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 00:27:08 -0700 (PDT)
-Date: Tue, 18 Jun 2024 15:27:02 +0800
-From: Charles Wang <charles.goodix@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: dmitry.torokhov@gmail.com, dan.carpenter@linaro.org,
-	dianders@chromium.org, robh@kernel.org, krzk+dt@kernel.org,
-	jikos@kernel.org, bentiss@kernel.org, hbarnor@chromium.org,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: input: Goodix SPI HID Touchscreen
-Message-ID: <ZnE2xjDk5uZM-NON@ux-UP-WHL01>
-References: <20240614121538.236727-1-charles.goodix@gmail.com>
- <20240614121538.236727-3-charles.goodix@gmail.com>
- <20240614-blah-sworn-1e13ec9c0e94@spud>
+	s=arc-20240116; t=1718695642; c=relaxed/simple;
+	bh=YhSdnwPfYHBCptd+IaRImgOqklxYVBgy1SqjBOm2jrw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g/Y85QFQ347P71kMUy4DmZZk/6wrju4zit1e+eruII/XCF5zuqR49nH2OBuITVW65jGa8dQiMyzIfTlW6ko3DN1D2hEO+rzOWZsbUcXIXoz2ojdyLAuxabEUjezCZ4VFBSctuyrVhu/WUn8JoSVHlRECFF+bYGEyazZ/O5V+CFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W3JBH1gltz1SCWS;
+	Tue, 18 Jun 2024 15:23:03 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D1E11402C8;
+	Tue, 18 Jun 2024 15:27:16 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 18 Jun 2024 15:27:16 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <akpm@linux-foundation.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 -next] mm/hugetlb_cgroup: register lockdep key for cftype
+Date: Tue, 18 Jun 2024 07:19:22 +0000
+Message-ID: <20240618071922.2127289-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614-blah-sworn-1e13ec9c0e94@spud>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-On Fri, Jun 14, 2024 at 04:27:52PM +0100, Conor Dooley wrote:
-> On Fri, Jun 14, 2024 at 08:15:38PM +0800, Charles Wang wrote:
-> > The Goodix GT7986U touch controller report touch data according to the
-> > HID protocol through the SPI bus. However, it is incompatible with
-> > Microsoft's HID-over-SPI protocol.
-> 
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - goodix,gt7986u
-> 
-> > +  goodix,hid-report-addr:
-> > +    description: the register address for retrieving HID report data.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> You're also missing an explanation anywhere in the patch for why this
-> address varies between gt7986u devices.
+When CONFIG_DEBUG_LOCK_ALLOC is enabled, the following commands can
+trigger a bug,
 
-Ack, I will add an explanation in the next commit.
+mount -t cgroup2 none /sys/fs/cgroup
+cd /sys/fs/cgroup
+echo "+hugetlb" > cgroup.subtree_control
 
-The address variation between GT7986U devices is related to their firmware
-versions. While we strive to maintain consistency, significant firmware
-upgrades might necessitate changes to this address.
+The log is as below:
 
-Charles
+BUG: key ffff8880046d88d8 has not been registered!
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 3 PID: 226 at kernel/locking/lockdep.c:4945 lockdep_init_map_type+0x185/0x220
+Modules linked in:
+CPU: 3 PID: 226 Comm: bash Not tainted 6.10.0-rc4-next-20240617-g76db4c64526c #544
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:lockdep_init_map_type+0x185/0x220
+Code: 00 85 c0 0f 84 6c ff ff ff 8b 3d 6a d1 85 01 85 ff 0f 85 5e ff ff ff 48 c7 c6 21 99 4a 82 48 c7 c7 60 29 49 82 e8 3b 2e f5
+RSP: 0018:ffffc9000083fc30 EFLAGS: 00000282
+RAX: 0000000000000000 RBX: ffffffff828dd820 RCX: 0000000000000027
+RDX: ffff88803cd9cac8 RSI: 0000000000000001 RDI: ffff88803cd9cac0
+RBP: ffff88800674fbb0 R08: ffffffff828ce248 R09: 00000000ffffefff
+R10: ffffffff8285e260 R11: ffffffff828b8eb8 R12: ffff8880046d88d8
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880067281c0
+FS:  00007f68601ea740(0000) GS:ffff88803cd80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005614f3ebc740 CR3: 000000000773a000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ ? __warn+0x77/0xd0
+ ? lockdep_init_map_type+0x185/0x220
+ ? report_bug+0x189/0x1a0
+ ? handle_bug+0x3c/0x70
+ ? exc_invalid_op+0x18/0x70
+ ? asm_exc_invalid_op+0x1a/0x20
+ ? lockdep_init_map_type+0x185/0x220
+ __kernfs_create_file+0x79/0x100
+ cgroup_addrm_files+0x163/0x380
+ ? find_held_lock+0x2b/0x80
+ ? find_held_lock+0x2b/0x80
+ ? find_held_lock+0x2b/0x80
+ css_populate_dir+0x73/0x180
+ cgroup_apply_control_enable+0x12f/0x3a0
+ cgroup_subtree_control_write+0x30b/0x440
+ kernfs_fop_write_iter+0x13a/0x1f0
+ vfs_write+0x341/0x450
+ ksys_write+0x64/0xe0
+ do_syscall_64+0x4b/0x110
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f68602d9833
+Code: 8b 15 61 26 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 08
+RSP: 002b:00007fff9bbdf8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007f68602d9833
+RDX: 0000000000000009 RSI: 00005614f3ebc740 RDI: 0000000000000001
+RBP: 00005614f3ebc740 R08: 000000000000000a R09: 0000000000000008
+R10: 00005614f3db6ba0 R11: 0000000000000246 R12: 0000000000000009
+R13: 00007f68603bd6a0 R14: 0000000000000009 R15: 00007f68603b8880
 
-Thanks
+For lockdep, there is a sanity check in lockdep_init_map_type(), the
+lock-class key must either have been allocated statically or must
+have been registered as a dynamic key. However the commit e18df2889ff9
+("mm/hugetlb_cgroup: prepare cftypes based on template") has changed
+the cftypes from static allocated objects to dynamic allocated objects,
+so the cft->lockdep_key must be registered proactively.
+
+Fixes: e18df2889ff9 ("mm/hugetlb_cgroup: prepare cftypes based on template")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202406181046.8d8b2492-oliver.sang@intel.com
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+
+---
+v2: add bug log to commit message
+---
+ mm/hugetlb_cgroup.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index 2b899c4ae968..4ff238ba1250 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -836,6 +836,8 @@ hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
+ 			cft->file_offset = MEMFILE_OFFSET0(offset) +
+ 					   MEMFILE_FIELD_SIZE(offset) * idx;
+ 		}
++
++		lockdep_register_key(&cft->lockdep_key);
+ 	}
+ }
+ 
+-- 
+2.34.1
+
