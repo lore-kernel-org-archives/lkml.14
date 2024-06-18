@@ -1,151 +1,129 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ACF23BE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932991552EB
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718701061; cv=none; b=T0/YOLEXpE/HvgI+wJ28d8L/KTIff3HTwManD4IZKF2EmmYCswCzT4EH3L2O5m4ik4xM1e5vDdED7+tICIKhIfJHyXG3OU7nWfoaBmyszG6owhkJR2LeWLEvaSlBm8g7PQWx8EY5r9v8mCxK/Wk99GlNdYbFsBUH2U5n/QuVu3s=
+	t=1718701073; cv=none; b=EPd064yqmKzoaOLvv7Hs/0Vrc0Z+KYrJvQaM7d6Gf1pWc1r9/uye/CX7fflSA6s8ZYMo6ys1HlM3E7dc1a+0LZbGsaLxJ1UomeyjHAHWrI6KmfIfIcDSB1yRNAzxxtBQPhmDuUDZma36SUxaHPPXi5040OfGFYXRoWUrb9kQLTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718701061; c=relaxed/simple;
-	bh=c8iN7F59VK8HhpRn5l0fFGS0r0gE+mAVh1zkO8Ckw4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AoQ3KLzWoqOKFsFLrh0hryNO4+cKitD4x3j2TqeYxDUy9CdnXfuAkaLYZt3bqCrTOt9ajF+TaPOLC7jFPg4Tw5VfoG2kTLiJaMRfhh2/fN9NPezMNbi3lMyLzcmCTkvLOsCUIwr8bK75xVM8cGZbtFQJYAqBCXJimv6MCeOi3gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=AJTHda8q; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1718701073; c=relaxed/simple;
+	bh=OfhHEECoMTrvbtNrNAx3G4SFmuDhLfL7z/fJS6M2isc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OeEqp05FpWTR9qkC6CpOEV1vZai9QwpEI4RV/z5vgbqQkQcgps1cMxaqFOEtA28RYSFCewQLI20mmi/rlo8pQlixnzoMQ2MTr7DxougYDISrMechJJ+1rvWPd/I/alAJbIkA+f+/IMBtf6I8hKCiEB9AlENn6UGixAytpAn+6/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIA+p9e3; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="AJTHda8q"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7953f1dcb01so449730485a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 01:57:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIA+p9e3"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso695555966b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 01:57:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1718701059; x=1719305859; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1MJWeAXBDDEpLuGkGIY36gY2Jr0ZSeY/lNnVY9HPv1s=;
-        b=AJTHda8qFeJGi4Ouo/iCiDuY/IxDlt+zCXmu9Jaz9rfuoaFWAuHnKrlPgYoAlYnzkd
-         BpXvcp3bOWkaWUVfGS+/PzwaK+jziPtQyEvj3ToS0X40YSBs2v70LHF+1RuvJ+sVUKCr
-         GPHOklVb6nUApWKTEE8lxtgWObsXzEQtT+dSE=
+        d=linaro.org; s=google; t=1718701070; x=1719305870; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQeZLyvewF8YU8DnwJSqp6ymN/u0iZA0tyrclF4X+xc=;
+        b=LIA+p9e3dawrY4Ai3oc55miUebFEArdtSI88Wn4nE+O9TnJrdWUYECoydjTnye9rQG
+         ZbCDZgD4m9hd+diZJcO6m9LH7QIiwmhQO9cpufgDqwcVIqjoPXUWyGgl9SwQujLwonrv
+         YESWQfdByaEgzXKCInWl5Cfyo/jWzpm5YgVNdrKSOuszhnTnent4J2vU/fNETfP5vhNx
+         Uk8iM1L2Fgpfm/6ofVULiVGIaf8DDd9xBU1z6ehb6gYjYe6OZpdqHHugFQqygfHjX7VB
+         02SryfF/C2tocWLoRkmaVIFDHUiqg6XBkfoNj6pOXpSz5RsiTx/ZlipCkl0yFtazFToR
+         AbDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718701059; x=1719305859;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1MJWeAXBDDEpLuGkGIY36gY2Jr0ZSeY/lNnVY9HPv1s=;
-        b=mrTkf15cPnOKowfeSpcq+ycvEVzxR2boOlRTZp1WINtCQNAKQf0uQfMIZqheV4irPh
-         snInonhsm0MGTQt/OZU8J6zuolnQrDzOb7+TSHpTQQ8YHf09IP7ludoPcbYBfGdBqcXl
-         mNcSXy2VROL/WbEaPvWuM4p967Vn8jmaFt0l/UBMRy57j+rAtc/KLmiSqcrdAvhtL/gA
-         La6Q/FI6oEV9M3/iksGH7BLZK2HD7LTJbLMR7Zycf0Q/nT+npdiXWPJO+Hs3n/3z+8rh
-         D2I3cHOKPgaN/uHN0rkWpEJrVgzVLX5/2IvMoHo0mC2gvxSq8xwsJzXg+S10NMYYlKNy
-         1SmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXN40BVjE4KEsOakJVhl582ehQ5+orSskICLWQsVVrCt2l3Pxf0H07HnyrFPrcwXuVRd7AGWFp1fdu8EkPVjzSHmJEpC1DHRRxWZfIA
-X-Gm-Message-State: AOJu0Yzhc2pVIqlxmqaMN/f/6Oy0nraTmpCe3DcahnyjJ1azlXJb9lJg
-	usfjIabopb88Z2xi58Qtl6slxBCewm7Xva4iow731pVZ9pzWZBAE2tR8HCJdPRk=
-X-Google-Smtp-Source: AGHT+IFECmvJp1ez2eLa+dpQfO6eX8nUMX4FYtnOHPp9ThmxkkpraoTUSlv3dCTdEWRDY19HCOSrbQ==
-X-Received: by 2002:a05:620a:4005:b0:797:cfb3:155f with SMTP id af79cd13be357-798d240afdamr1497813685a.27.1718701058859;
-        Tue, 18 Jun 2024 01:57:38 -0700 (PDT)
-Received: from localhost ([213.195.124.163])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798abe6b4dfsm506192185a.125.2024.06.18.01.57.38
+        d=1e100.net; s=20230601; t=1718701070; x=1719305870;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gQeZLyvewF8YU8DnwJSqp6ymN/u0iZA0tyrclF4X+xc=;
+        b=hedy3Sil7gX4AH4PWZyK4iZLD5vGl0FuHb76EJVNzeDMHYuXqWMj7D+s6iTqGuFySH
+         WCE18UGMGAlypDloBDmH6O2739vLjN3d7bWDCbcwjfsn51/hfAwJhd26fjKB29hasvwD
+         cBf+mQGkiwiPwOuoZrvdne3cASuVB1X6gCyiLQcZUHev0Th6AQTE3eXeceEeRTDnbULW
+         EAmS7zVJdzFx049l7vaem4iGcO/WGOSrw0HKGH2uCTlx6M9fc7LkP9lcw5f2e+uYbPCb
+         JPoqK1W8fdhqQB9cJaSSm7oS9fpxaKKQk0X7mGPF97cCAT/dnxzPey4Easg78HxRj7YC
+         iEVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+gGX7zRUKZB6L3g5eXc+Bwgdi3FlIlEmeTkr8gWUYKLi4pXurWd+l0ZzV98ujOy1Hlm11S8kVK3JTI0X5yXIzBMxLFDFeIhFBxQGo
+X-Gm-Message-State: AOJu0Ywb9hf7pnP8qOvfV+Uxmu9IaJFc9Rv+he473Ogb4t/nOGUZMKvx
+	7WO9+fWvc4nHeTXGAXdl7qKJT6og+fHj1cHxkGxIj1tjcpi3+vVeu0lrmiA+B7o=
+X-Google-Smtp-Source: AGHT+IGyqZXy5Y18iT2k+UrC5GF8C9JEdIPf7YDm/pJlw1f/llTK2DjwXfZqo1KYV/WwRuZX4jbzEQ==
+X-Received: by 2002:a17:906:6894:b0:a6f:33d6:2d45 with SMTP id a640c23a62f3a-a6f60dc4e59mr687544566b.60.1718701069839;
+        Tue, 18 Jun 2024 01:57:49 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db681fsm597748766b.72.2024.06.18.01.57.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 01:57:38 -0700 (PDT)
-Date: Tue, 18 Jun 2024 10:57:35 +0200
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Frediano Ziglio <frediano.ziglio@cloud.com>
-Cc: Jan Beulich <jbeulich@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/xen/time: Reduce Xen timer tick
-Message-ID: <ZnFL_0ihWiI7Yaf0@macbook>
-References: <20240617141303.53857-1-frediano.ziglio@cloud.com>
- <2fe6ef97-84f2-4bf4-870b-b0bb580fa38f@suse.com>
- <ZnBKDRWi_2cO6WbA@macbook>
- <CACHz=Zg4Zoyr4KNeig4yDDNUxvV325beJEyT-L-K0a+FHp7oDg@mail.gmail.com>
+        Tue, 18 Jun 2024 01:57:49 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Tue, 18 Jun 2024 09:57:49 +0100
+Subject: [PATCH v2] arm64: dts: exynos: gs101-oriole: add placeholder
+ regulators for USB phy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACHz=Zg4Zoyr4KNeig4yDDNUxvV325beJEyT-L-K0a+FHp7oDg@mail.gmail.com>
+Message-Id: <20240618-gs101-usb-regulators-in-dt-v2-1-85632069201b@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAAxMcWYC/42NTQqDMBBGryJZd4ozaP9W3qO4SHSMA5KUiUqLe
+ PemnqDL9/h432YSq3Ayj2IzyqskiSEDnQrTjTZ4BukzGyqpKi94BZ+wRFiSA2W/THaOmkAC9DO
+ 43rmOLdUD300OvJQHeR/xZ5t5lJTXn+NrxZ/9K7siIDBRRXVFXY23ZpJgNZ6jetPu+/4FtBCfy
+ MUAAAA=
+To: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, Roy Luo <royluo@google.com>, 
+ kernel-team@android.com, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.13.0
 
-On Tue, Jun 18, 2024 at 09:37:08AM +0100, Frediano Ziglio wrote:
-> On Mon, Jun 17, 2024 at 3:37 PM Roger Pau Monné <roger.pau@citrix.com> wrote:
-> >
-> > On Mon, Jun 17, 2024 at 04:22:21PM +0200, Jan Beulich wrote:
-> > > On 17.06.2024 16:13, Frediano Ziglio wrote:
-> > > > Current timer tick is causing some deadline to fail.
-> > > > The current high value constant was probably due to an old
-> > > > bug in the Xen timer implementation causing errors if the
-> > > > deadline was in the future.
-> > > > This was fixed in Xen commit:
-> > > > 19c6cbd90965 xen/vcpu: ignore VCPU_SSHOTTMR_future
-> > >
-> > > And then newer kernels are no longer reliably usable on Xen older than
-> > > this?
-> >
-> > I think this should reference the Linux commit that removed the usage
-> > of VCPU_SSHOTTMR_future on Linux itself, not the change that makes Xen
-> > ignore the flag.
-> >
-> 
-> Yes, Linux kernel stopped using this flag since 2016 with commit
-> c06b6d70feb32d28f04ba37aa3df17973fd37b6b, "xen/x86: don't lose event
-> interrupts", I'll add it in the commit message.
-> 
-> > > > --- a/arch/x86/xen/time.c
-> > > > +++ b/arch/x86/xen/time.c
-> > > > @@ -30,7 +30,7 @@
-> > > >  #include "xen-ops.h"
-> > > >
-> > > >  /* Minimum amount of time until next clock event fires */
-> > > > -#define TIMER_SLOP 100000
-> > > > +#define TIMER_SLOP 1000
-> > >
-> > > It may be just the lack of knowledge of mine towards noadays's Linux'es
-> > > time handling, but the change of a value with this name and thus
-> > > commented doesn't directly relate to "timer tick" rate. Could you maybe
-> > > help me see the connection?
-> >
-> > The TIMER_SLOP define is used in min_delta_{ns,ticks} field, and I
-> > think this is wrong.
-> >
-> > The min_delta_ns for the Xen timer is 1ns.  If Linux needs some
-> > greater min delta than what the timer interface supports it should be
-> > handled in the generic timer code, not open coded at the definition of
-> > possibly each timer implementation.
-> >
-> 
-> I think this is done to reduce potential event handling frequency, in
-> some other part of timer code (in kernel/time/clockevents.c) there's a
-> comment "Deltas less than 1usec are pointless noise".
+The USB phy requires various power supplies to work.
 
-Then why does the interface allow for timers having a resolution up to
-1ns then?
+While we don't have a PMIC driver yet, the supplies should still be
+added to the DT.
 
-> I think it's hard for a software to get a frequency so high so I
-> didn't propose 1ns.
-> What are you suggesting? To put 1ns and see what happens? Is there any
-> proper test code for this?
+Add some placeholders, which will be replaced with the real ones once
+we PMIC implemented.
 
-The Xen timer interface has a resolution of 1ns, and the Linux
-structures that describe timers also support a 1ns resolution.  I can
-perfectly understand that deltas of 1ns make no sense, but given how
-the Xen timer works those won't be a problem.  The interrupt will get
-injected strictly after the hypercall to setup the timer, because by
-the time Xen processes the delta it will most likely have already
-expired.
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+Note that this patch depends on the updated DT binding from
+https://lore.kernel.org/r/20240617-usb-phy-gs101-v3-0-b66de9ae7424@linaro.org
+---
+Changes in v2:
+- update commit message to clarify that the regulators added here are
+  temporary placeholders only (Krzysztof)
+- use fixed placeholder regulators, not <0> (Krzysztof)
+- Link to v1: https://lore.kernel.org/r/20240617-gs101-usb-regulators-in-dt-v1-1-e2242542c518@linaro.org
+---
+ arch/arm64/boot/dts/exynos/google/gs101-oriole.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Forcing every timer to setup a minimal delta of 1usec is pointless.
-It either needs to be done in the generic code, or the interface to
-register timers needs to be adjusted to allow for a minimum resolution
-of 1usec.
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+index 5e8ffe065081..dec2c6d9619b 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
++++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+@@ -145,6 +145,13 @@ &usbdrd31_dwc3 {
+ };
+ 
+ &usbdrd31_phy {
++	/* TODO: Update these once PMIC is implemented */
++	pll-supply = <&reg_placeholder>;
++	dvdd-usb20-supply = <&reg_placeholder>;
++	vddh-usb20-supply = <&reg_placeholder>;
++	vdd33-usb20-supply = <&reg_placeholder>;
++	vdda-usbdp-supply = <&reg_placeholder>;
++	vddh-usbdp-supply = <&reg_placeholder>;
+ 	status = "okay";
+ };
+ 
 
-Thanks, Roger.
+---
+base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+change-id: 20240617-gs101-usb-regulators-in-dt-bdbbcea25fe9
+
+Best regards,
+-- 
+André Draszik <andre.draszik@linaro.org>
+
