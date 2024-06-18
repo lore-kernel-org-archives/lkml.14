@@ -1,141 +1,147 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CC314F9DC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0275153837
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719144; cv=none; b=irgb4evX2PEHUqSFaMEvCgYPpRkAmU0bWpfbNeUp/IePnvKw211e+cGdtM50/IRtPXnzteJJZsoiv9/Y+XsJLpe/6CNa42FOtqibEfJmo9dkXE3acT1ssTotkyDukoraX52S6kfdPInxpYkGH2uIKAcaefsrVGzLqI/O9tMQ4zc=
+	t=1718719163; cv=none; b=rTiaNAdW11+j4SXKScJzyTJkBVFS/x+5HqJ3C3RrUrhR+3n3EEDenh1GCnxou+NhAoZG+hUJ2sZG4eHpzWJ7hG09LlbIKY205huy6929T/x0x0qtdaOIPDMH020gYTNKsJ/bC87I0+Fn4YQ8nVAUr98CGxB6BnC0Mz8kAZ3F1+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719144; c=relaxed/simple;
-	bh=3Cc3/POGAkxTMFKNCvirXXg1K5WSLp77TWHFdRz5IXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FsTuJFLYkauVlV/ILbpyxuaRssudMcKdOhlsWc8LnLJv5a1KvsWuK6/I2IS82yNXpvlyLe+GebxEQr3IBj3DhKWs5oQhV1SoY8BGwZvlNweMgT+P9YZWvpTRjjQEK+U9rDKy9d3AS7vXxyIkHvy0GUfVv3rTJNQ3kP+Hy7Oyzj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6cLW8tn; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718719163; c=relaxed/simple;
+	bh=yFqQs9J5f3hKHooWIJesv4Gl/Jx8cGiryXHB4+vtKtM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=t3ML3oLUnV4e+HXs/Z0k2DTVj663tR+UL60dGN78901jH+yFEP3i7i30UAIKT/cQaMAW4tCdZENhgqKBv5bVZe/0OgW5TIonV+i6udd9dHZQkKCFIOckMEQPuSPBfPXGGCTauJ8h/Kj9oQCtiT07WCJ+M7GfTgkyfhGyGtv+KmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUpWukeJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6cLW8tn"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-705fff50de2so1479678b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719143; x=1719323943; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Sik2h3nsDyel21Jp17t3SHjC9uUWJPp0CKLjhaHrkIk=;
-        b=O6cLW8tn0Cb8Y78jaJTX2hvyTiOyrnAKVJZwSKy9fA43Xae6cDUXvGrtg3pX7cOaR8
-         cZw3/sAWaMFZ98rhCiUpzq13ccvix3EvlVhV9dW5/4kbNd7Dro8v2dkdiBdki1J9zwdn
-         BPYtWLJA6IpToUQ0UaSJ3k/lnai5dfL008XopgwS26BWzAW4symQ9BU6vB9lyw4gwpQQ
-         m23Yx+r7thmwBWMk8uNpuKVoJKyWf8jmU4+nRcSmR4JPG1PhhkpJHXTd8ZA9CTqSMz+H
-         yU4cSGzsA+I+cqYwNx9QP6FbRY1Ifd65UVlrAqND3asn2iMfPKDd/iKdbgnQLS3tldSX
-         kqdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719143; x=1719323943;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sik2h3nsDyel21Jp17t3SHjC9uUWJPp0CKLjhaHrkIk=;
-        b=i6fGh/gRMPIyO4PFPm0xF+zldp9Bf2LGG89CveTlhM9tudhoOMyYsTNgrvyUVYjTQK
-         YIue8ybq8kMY6PLhefvzzYQJXX3KunQMaE+olavCZLCyVsBBFUsid8yUVlfrC78MitOG
-         6kkNqcg1kMcKPlEXpManWAfS6qPtUzBgpTcByIPn5g3ziA70jIxykMSUkS1/7NG7lngx
-         1XcJZs4uaMrF5DMLL0uLdFT94Dl7YpnNqGg06rzgOd4/CDWQ8BaMM+r+o+59M0aHFfLy
-         9hEohu2L0k1mHYA3WjIFj1c6Chw4gHWq+TkzOdjpNgheHO5esWz8YpMwe1B+0PVHXOOd
-         Y7HA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCDo3zCMHIdInm2z5epH93juQQlJDPk+lY6QfI7f+7XS9OvYH6mzPNFdykFu6c2UL6vu53diHs0lp8VF83iXCdefbZczgy8/xPBgdR
-X-Gm-Message-State: AOJu0YxBsPk/r4YzQvx+uSkeuJW/zDE9G+pWd4FOtTd22XFmwoC6zcY6
-	Gw4/Iw1T9Mkd9uF7aFkfffl/24OsEAL3WJA+J2VLaRJNwlQKtvz5
-X-Google-Smtp-Source: AGHT+IEiinzFmHmdnmLYP4XsvIyrnVEQNRoyQtf+OGBitODon2aa67vxDN6ukc/624yPUW4OT8SVdw==
-X-Received: by 2002:a05:6a00:228b:b0:706:1f67:64d3 with SMTP id d2e1a72fcca58-7061f6768c9mr2805782b3a.14.1718719142770;
-        Tue, 18 Jun 2024 06:59:02 -0700 (PDT)
-Received: from [10.0.0.19] ([122.172.85.149])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb8dd68sm8947876b3a.206.2024.06.18.06.58.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 06:59:02 -0700 (PDT)
-Message-ID: <55d951fc-d5c4-4bd1-9629-352d1e7489f4@gmail.com>
-Date: Tue, 18 Jun 2024 19:28:58 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUpWukeJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB63C4AF49;
+	Tue, 18 Jun 2024 13:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718719162;
+	bh=yFqQs9J5f3hKHooWIJesv4Gl/Jx8cGiryXHB4+vtKtM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=bUpWukeJFa30OXgp7ZJXsq1RCryTVMBKowfY7oBgBnRCCZVnOmx6fwXz142VoZNCD
+	 cnOpdyWftNb9YBObHfbpRwHL6Zep0sMed5iyNYSFcwT+CQ7tX6uwG9N2wfSnSlLK+c
+	 EvGu0qRreeX78n+N44+ajFFRYv629uCZ4Fz2fx0PXjLqzzDJNyuImFugH4ED+pshn+
+	 H3wZy71PPaAJSz9YtM/dSJRVU12VNRP7/RlqOxoIfYC6K5kpW6flZL/KeWE5wjRyc5
+	 W5rZHimAOzqDoaiuHRlSPoz72tLIOn7hpw7VSzZW/dAVhzNwy4UyXk5WMeQpgUGxeS
+	 NxYgOGRk37VSA==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 18 Jun 2024 14:57:42 +0100
+Subject: [PATCH] arm64/fpsimd: Ensure we don't contend a SMCU from idling
+ CPUs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/panel: raydium-rm692e5: transition to mipi_dsi
- wrapped functions
-To: Doug Anderson <dianders@chromium.org>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240615093758.65431-1-tejasvipin76@gmail.com>
- <CAD=FV=XRZKL_ppjUKDK61fQkWhHiQCJLfmVBS7wSo4sUux2g8Q@mail.gmail.com>
- <aa757abb-9883-4a46-a5e1-a7d4d5b044eb@gmail.com>
- <CAD=FV=XX-_YA6ZjiwfqttL5y4i+QRLJn=BQUM2ugSa8HNkEUtg@mail.gmail.com>
-Content-Language: en-US
-From: Tejas Vipin <tejasvipin76@gmail.com>
-In-Reply-To: <CAD=FV=XX-_YA6ZjiwfqttL5y4i+QRLJn=BQUM2ugSa8HNkEUtg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240618-arm64-sme-no-cpuidle-v1-1-1de872e1691f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFWScWYC/x3MSwqAIBRG4a3EHXfBHpi0lWgg9lsXykIpgmjvS
+ cNvcM5DCVGQqC8eirgkyR4yqrIgt9gwg2XKplrVrdJVxzZuuuW0gcPO7jhlWsHGaQNvNJpOUU6
+ PCC/3vx3G9/0AlbqJt2YAAAA=
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3224; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=yFqQs9J5f3hKHooWIJesv4Gl/Jx8cGiryXHB4+vtKtM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmcZK4Slm0rZd9/kE6PWh72D0/61Db7oZv1qHT3/Yl
+ JpdUpn6JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnGSuAAKCRAk1otyXVSH0AHeB/
+ 4hHcpVXVpe5QmBcScbuyD5pbhHT0554FSXu9hTjZemlDfYYxg59lqedNGaFzWilJgJbS64QVgPEUS2
+ GE5Vy9JLQ+zZMzfSL0H3Z27nbbyPg8dHlJTxlmp3wBh7f+LTTORZb6287zXy+tcRjbg0tMWhCSgukP
+ BHWZ09TzFfxxG7h5UUExQKk7cuohFhrCkveQibStRm4ifKrHkbKY5FtfwczW8VqNupPR8C+TQmzHPC
+ JY7n0q7R9Ol1TgDQDj4lvPTzcdaSWe58Y7d75uGI9gJdc+KKOtleGwg8tdFPMIL2838zaVolnDVbTK
+ M9s4jQ9inQXtZlOv4u/bvBhYeY2MJ5
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+When we enter the kernel we currently don't update any of the floating
+point register state until either something else uses floating point or we
+get a CPU_PM_ENTER notification during suspend or cpuidle. This means that
+for a system which has been configured with both suspend and cpuidle
+disabled we will leave whatever floating point state was loaded in the
+registers present while a CPU is idling.
 
+For SME this may cause an idling CPU to interfere with the operation of
+other CPUs, SME may be implemented as a SMCU shared with between multiple
+CPUs. Leaving ZA or especially streaming mode enabled may be taken by
+the hardware as an indication that SME is active use by the CPU and cause
+resources to be allocated to it at the expense of other CPUs.
 
-On 6/18/24 7:06 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Jun 18, 2024 at 5:25 AM Tejas Vipin <tejasvipin76@gmail.com> wrote:
->>
->>>>         rm692e5_reset(ctx);
->>>>
->>>> -       ret = rm692e5_on(ctx);
->>>> -       if (ret < 0) {
->>>> -               dev_err(dev, "Failed to initialize panel: %d\n", ret);
->>>> +       dsi_ctx.accum_err = rm692e5_on(ctx);
->>>> +       if (dsi_ctx.accum_err) {
->>>> +               dev_err(dev, "Failed to initialize panel: %d\n", dsi_ctx.accum_err);
->>>
->>> I'd probably change rm692e5_on() to take the "dsi_ctx" as a parameter
->>> and then you don't need to declare a new one there.
->>>
->>> ...also, you don't need to add an error message since rm692e5_on()
->>> will have already printed one (since the "multi" style functions
->>> always print error messages for you).
->>
->> I'm guessing that the change about regulator_bulk_enable and
->> rm692e5 should also be applied to all the other panels where
->> similar behavior occurs?
-> 
-> Yeah, I'd say so.
-> 
-> 
->>>>                 gpiod_set_value_cansleep(ctx->reset_gpio, 1);
->>>>                 regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
->>>> -               return ret;
->>>> +               return dsi_ctx.accum_err;
->>>
->>> Not new for your patch, but it seems odd that we don't do this error
->>> handling (re-assert reset and disable the regulator) for errors later
->>> in the function. Shouldn't it do that? It feels like the error
->>> handling should be in an "err" label and we should end up doing that
->>> any time we return an error code... What do you think?
->>
->> Personally I don't think this is necessary because imo labels
->> only get useful when there's a couple of them and/or they're
->> jumped to multiple times. I don't think either would happen in
->> this particular function. But I guess if you have some convention
->> in mind, then it could be done?
-> 
-> I think mostly my suggestion was just that we should also do the
-> gpiod_set_value_cansleep() and regulator_bulk_disable() at the end of
-> rm692e5_prepare() if `dsi_ctx.accum_err` is non-zero. Then you've got
-> two places doing the same thing: here and at the end of the function.
-> 
-> ...oh, but everything below here is already a no-op if the error is
-> set. ...so I guess looking at it closer, my suggestion wouldn't be a
-> "goto" but would instead be to just move the gpio/regulator call to
-> the end. What do you think?
+Add an arch_cpu_idle_enter() implementation which disables SME if it is
+active when we idle the CPU, ensuring that we don't create any spurious
+contention even if cpuidle is not enabled.
 
-Yeah, sounds good. I'll be doing that.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ arch/arm64/include/asm/fpsimd.h |  2 ++
+ arch/arm64/kernel/fpsimd.c      | 14 ++++++++++++++
+ arch/arm64/kernel/process.c     |  5 +++++
+ 3 files changed, 21 insertions(+)
 
-> 
-> -Doug
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index bc69ac368d73..e1453a1d261d 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -82,6 +82,8 @@ extern void fpsimd_restore_current_state(void);
+ extern void fpsimd_update_current_state(struct user_fpsimd_state const *state);
+ extern void fpsimd_kvm_prepare(void);
+ 
++extern void fpsimd_idle_enter(void);
++
+ struct cpu_fp_state {
+ 	struct user_fpsimd_state *st;
+ 	void *sve_state;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 82e8a6017382..400eaad374a2 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -2126,6 +2126,20 @@ static void __init fpsimd_pm_init(void)
+ static inline void fpsimd_pm_init(void) { }
+ #endif /* CONFIG_CPU_PM */
+ 
++void fpsimd_idle_enter(void)
++{
++	/*
++	 * Leaving SME enabled may leave this core contending with
++	 * other cores if we have a SMCU, disable whenever we enter
++	 * idle to avoid this.  Only do this if they're actually
++	 * enabled to avoid overhead in cases where we don't enter a
++	 * low enough power state to loose register state.
++	 */
++	if (system_supports_sme() &&
++	    (read_sysreg_s(SYS_SVCR) & (SVCR_SM_MASK | SVCR_ZA_MASK)))
++		fpsimd_save_and_flush_cpu_state();
++}
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static int fpsimd_cpu_dead(unsigned int cpu)
+ {
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 4ae31b7af6c3..fd616882cd49 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -68,6 +68,11 @@ EXPORT_SYMBOL(__stack_chk_guard);
+ void (*pm_power_off)(void);
+ EXPORT_SYMBOL_GPL(pm_power_off);
+ 
++void arch_cpu_idle_enter(void)
++{
++       fpsimd_idle_enter();
++}
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ void __noreturn arch_cpu_idle_dead(void)
+ {
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240617-arm64-sme-no-cpuidle-8c68ef86e370
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
