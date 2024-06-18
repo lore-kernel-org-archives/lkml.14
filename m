@@ -1,140 +1,148 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0B11B29BF;
-	Tue, 18 Jun 2024 12:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3551B3725;
+	Tue, 18 Jun 2024 12:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714563; cv=none; b=G9reV7SJqZ3PLj049y9Mza4ji63uCLKRV3LNV9YfqTss6A/OpNX1EmDZq4Bg/AX9VzA8jHNbZMp5mVUEmjftFvBv9iUVw5AbBdxOl7tEnl+Wb2WPKW1c3Zoof2IJLu1tLjisahbvV4f9sNL0lreIL/aayzedA2w2hQPgELs1hcg=
+	t=1718714564; cv=none; b=qHD8kbZTY81kXaQm6eds3wVHlXFl5vLZZA9Kr5JeES7mKwU9JYBqCrNqoaqVfZtnycve75Rw1HS1vqxUuMqIyahlYPeNQPh5lJWC09vqm+MV9dgopWsabDLS4thwHgQB5zwxn+mhL0O6KacudOUF/aJODiChUbLayIAedP16V9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714563; c=relaxed/simple;
-	bh=YFY+HjJitzBvcux3x//msWVLSC/kvQWZ9WefuLW/TRU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=QgSIMFrtgOMEbaZn5j0a2/EPj/+y6MWj3M3tn96Jj9mYEJfDRgZcn71NibtXr3rQwemfOWg6e+23T+tI+0Y9RfuiFewrNQ4QF2kUCZbb8VUCkMxCEaazQhSCS/Px/2/AXI5BeObI3HlGJd4UE79F+1ZtumrWrkhWmpgoiKz1GuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c+dXQw7T; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718714564; c=relaxed/simple;
+	bh=nrrRDgnq8qD0vJo6Y9EG2YqOkdbCrb2vcK/5Osfd3gk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h/vvf4nXyIRMtR6F4hRQl4nzpAaSKLzt9yl6gUyKzCiLfq6+Km+hmhX/uc48dMb35CfFix1cLQV2A9Of9iopJS1JGLBxPS9OfcSiCBBBRLnSOh2rlsXT9hkceXQrGhxr2UTtLVr9ytV9PT0q8VP63sFzIe/4tT7tMLDhf1zL4aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diQR/c1p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+dXQw7T"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7061d37dc9bso683736b3a.2;
-        Tue, 18 Jun 2024 05:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718714560; x=1719319360; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P5HudLGS8xpGOdXksJh80d3m6RgAVZta5JkAHQdvhSg=;
-        b=c+dXQw7TrwzTH8W1Bz8YC9tAc9J3pMvVuKo+Uka0lTTDH2s0f3stPz7kJRQjjI9WTG
-         bE7eCmrZsWTfqV6VsAF+iReDah6WuLOsRL3jn29kxG6hO9Z4uIhm4PH5uKYss+7Ics3F
-         r4GiTy57usnTMLPaaFawewhd5+EXsG6nGHdXN0tkycnGJv42DK3ccV7+PF9+b/M7kpN5
-         ZDVAFxDtpRS7B63resqt8mHoKyWquzYvq8mrJgzMKJgX5TtDVgGmUyoM+uEE7TMYPy+x
-         FnNgKzM/14VTbsKa94qH8qfqtvUlDUzgjr87/ApRfw/h/+FG+/pzYApUhAPgQp28k8++
-         N/rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718714560; x=1719319360;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P5HudLGS8xpGOdXksJh80d3m6RgAVZta5JkAHQdvhSg=;
-        b=s8/G+YU4GreCeXb8FgjdZEiBRCIOlG2bYkLISCN/uiBAdCmdaWPnfSJdYQPJCVSHpW
-         yzyXoVF843iNwkKZtD4JPRojmbAne2aQkBDZYd3mLNCGmT2lBNjU2zq9DNkYPEh1F7jX
-         0nsvu72nof9cwYgatVNDnmD26CXPjJ2yNSxEhC3IziG1HTehEU3jUSTDvONinnmUWeE+
-         PzsQpaqfPsyZpBCwQtfuJyiFsHrSUHu6xetf7zqEs+6Ou/R6cr8+t4jABzLi24/O/IY+
-         SxRYWGdN0AIBWS343a9+qA5z3sDJRPx5tLkQB6gHkYCpenpf67rRGCG400vQwWlsyZXV
-         X/oA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUV7+Lp4WI21Hf4mGTUMq6+lls4Adw9hVYcQMJkOHTfxiqKgTG6igDIE4z6G3CstnOAheYMF9JPp84TIfu5CSs/wwo4TBlqz2tid9kqE3diLRWtmK/K+/d+DXTkY/1Aal78lYF
-X-Gm-Message-State: AOJu0YyDiDT0HczU3AscN9mlRQkbuKMQcBIKKBfzReBQYlx1lh/69zh1
-	LWpVq+3nWPcO7Ikna4L6+tmXrmDL/2VzD0bLtihrRPUWQhxuCa15
-X-Google-Smtp-Source: AGHT+IFBLml7w5zlkpZKZS1zkZ/T8vrR86PFGYprdyoeL4gyHhlv3UPbh1XtqhPVoYG3Ha8HiHIlPw==
-X-Received: by 2002:a05:6a21:1f24:b0:1b8:3ee2:bef1 with SMTP id adf61e73a8af0-1bae825984cmr12518482637.53.1718714560194;
-        Tue, 18 Jun 2024 05:42:40 -0700 (PDT)
-Received: from localhost ([113.138.207.245])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3e42fsm8898437b3a.100.2024.06.18.05.42.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2024 05:42:39 -0700 (PDT)
-From: joswang <joswang1221@gmail.com>
-To: Thinh.Nguyen@synopsys.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Jos Wang <joswang@lenovo.com>
-Subject: [PATCH v5] usb: dwc3: core: Workaround for CSR read timeout
-Date: Tue, 18 Jun 2024 20:42:35 +0800
-Message-Id: <20240618124235.5093-1-joswang1221@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diQR/c1p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041C9C4AF48;
+	Tue, 18 Jun 2024 12:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714563;
+	bh=nrrRDgnq8qD0vJo6Y9EG2YqOkdbCrb2vcK/5Osfd3gk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=diQR/c1paDxk4jvClU4SP5owMO6EDTemHBEsWeRrknaU9TteDa/od8JkiGrtLQ8mc
+	 x6G8DftwEo45Gij67Xsdag2nmtBoAOSerozVMX2/WLRvfpDGuGP0JScAZCwarWpZYH
+	 efmokiS1J9wvAsvkaF+rPrynXMWMc8HmbDW1GfU0Od9oWovzNu4fU8VHk2CHKyNEC1
+	 aJ0lv5CkkkH6bT5lPQsLJa20QBhUSNJYEKt+ksdKJYepX2pNPjvyfkfWRWekMvM7JX
+	 4/AZC0wiyD5gzLkucltOBmlXoUXUGp3Q6KoIuRdWIj27srN2bwjImh9uZNIkPGCZyw
+	 f1B9wfQYewyYg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 07/13] Input: silead - Always support 10 fingers
+Date: Tue, 18 Jun 2024 08:42:18 -0400
+Message-ID: <20240618124231.3304308-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618124231.3304308-1-sashal@kernel.org>
+References: <20240618124231.3304308-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.219
+Content-Transfer-Encoding: 8bit
 
-From: Jos Wang <joswang@lenovo.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-This is a workaround for STAR 4846132, which only affects
-DWC_usb31 version2.00a operating in host mode.
+[ Upstream commit 38a38f5a36da9820680d413972cb733349400532 ]
 
-There is a problem in DWC_usb31 version 2.00a operating
-in host mode that would cause a CSR read timeout When CSR
-read coincides with RAM Clock Gating Entry. By disable
-Clock Gating, sacrificing power consumption for normal
-operation.
+When support for Silead touchscreens was orginal added some touchscreens
+with older firmware versions only supported 5 fingers and this was made
+the default requiring the setting of a "silead,max-fingers=10" uint32
+device-property for all touchscreen models which do support 10 fingers.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jos Wang <joswang@lenovo.com>
+There are very few models with the old 5 finger fw, so in practice the
+setting of the "silead,max-fingers=10" is boilerplate which needs to
+be copy and pasted to every touchscreen config.
+
+Reporting that 10 fingers are supported on devices which only support
+5 fingers doesn't cause any problems for userspace in practice, since
+at max 4 finger gestures are supported anyways. Drop the max_fingers
+configuration and simply always assume 10 fingers.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20240525193854.39130-2-hdegoede@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v4 -> v5: no change
-v3 -> v4: modify commit message, add Cc: stable@vger.kernel.org
-v2 -> v3:
-- code refactor
-- modify comment, add STAR number, workaround applied in host mode
-- modify commit message, add STAR number, workaround applied in host mode
-- modify Author Jos Wang
-v1 -> v2: no change
+ drivers/input/touchscreen/silead.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
- drivers/usb/dwc3/core.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 7ee61a89520b..2a3adc80fe0f 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -957,12 +957,16 @@ static bool dwc3_core_is_valid(struct dwc3 *dwc)
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index e8b6c3137420b..901e28bc01645 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -70,7 +70,6 @@ struct silead_ts_data {
+ 	struct regulator_bulk_data regulators[2];
+ 	char fw_name[64];
+ 	struct touchscreen_properties prop;
+-	u32 max_fingers;
+ 	u32 chip_id;
+ 	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
+ 	int slots[SILEAD_MAX_FINGERS];
+@@ -98,7 +97,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
+ 	touchscreen_parse_properties(data->input, true, &data->prop);
  
- static void dwc3_core_setup_global_control(struct dwc3 *dwc)
- {
-+	unsigned int power_opt;
-+	unsigned int hw_mode;
- 	u32 reg;
+-	input_mt_init_slots(data->input, data->max_fingers,
++	input_mt_init_slots(data->input, SILEAD_MAX_FINGERS,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
+ 			    INPUT_MT_TRACK);
  
- 	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
- 	reg &= ~DWC3_GCTL_SCALEDOWN_MASK;
-+	hw_mode = DWC3_GHWPARAMS0_MODE(dwc->hwparams.hwparams0);
-+	power_opt = DWC3_GHWPARAMS1_EN_PWROPT(dwc->hwparams.hwparams1);
- 
--	switch (DWC3_GHWPARAMS1_EN_PWROPT(dwc->hwparams.hwparams1)) {
-+	switch (power_opt) {
- 	case DWC3_GHWPARAMS1_EN_PWROPT_CLK:
- 		/**
- 		 * WORKAROUND: DWC3 revisions between 2.10a and 2.50a have an
-@@ -995,6 +999,20 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
- 		break;
+@@ -145,10 +144,10 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 		return;
  	}
  
-+	/*
-+	 * This is a workaround for STAR#4846132, which only affects
-+	 * DWC_usb31 version2.00a operating in host mode.
-+	 *
-+	 * There is a problem in DWC_usb31 version 2.00a operating
-+	 * in host mode that would cause a CSR read timeout When CSR
-+	 * read coincides with RAM Clock Gating Entry. By disable
-+	 * Clock Gating, sacrificing power consumption for normal
-+	 * operation.
-+	 */
-+	if (power_opt != DWC3_GHWPARAMS1_EN_PWROPT_NO &&
-+	    hw_mode != DWC3_GHWPARAMS0_MODE_GADGET && DWC3_VER_IS(DWC31, 200A))
-+		reg |= DWC3_GCTL_DSBLCLKGTNG;
-+
- 	/* check if current dwc3 is on simulation board */
- 	if (dwc->hwparams.hwparams6 & DWC3_GHWPARAMS6_EN_FPGA) {
- 		dev_info(dwc->dev, "Running with FPGA optimizations\n");
+-	if (buf[0] > data->max_fingers) {
++	if (buf[0] > SILEAD_MAX_FINGERS) {
+ 		dev_warn(dev, "More touches reported then supported %d > %d\n",
+-			 buf[0], data->max_fingers);
+-		buf[0] = data->max_fingers;
++			 buf[0], SILEAD_MAX_FINGERS);
++		buf[0] = SILEAD_MAX_FINGERS;
+ 	}
+ 
+ 	touch_nr = 0;
+@@ -200,7 +199,6 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 
+ static int silead_ts_init(struct i2c_client *client)
+ {
+-	struct silead_ts_data *data = i2c_get_clientdata(client);
+ 	int error;
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
+@@ -210,7 +208,7 @@ static int silead_ts_init(struct i2c_client *client)
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_TOUCH_NR,
+-					data->max_fingers);
++					  SILEAD_MAX_FINGERS);
+ 	if (error)
+ 		goto i2c_write_err;
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+@@ -437,13 +435,6 @@ static void silead_ts_read_props(struct i2c_client *client)
+ 	const char *str;
+ 	int error;
+ 
+-	error = device_property_read_u32(dev, "silead,max-fingers",
+-					 &data->max_fingers);
+-	if (error) {
+-		dev_dbg(dev, "Max fingers read error %d\n", error);
+-		data->max_fingers = 5; /* Most devices handle up-to 5 fingers */
+-	}
+-
+ 	error = device_property_read_string(dev, "firmware-name", &str);
+ 	if (!error)
+ 		snprintf(data->fw_name, sizeof(data->fw_name),
 -- 
-2.17.1
+2.43.0
 
