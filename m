@@ -1,83 +1,105 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD51A1A071F;
-	Tue, 18 Jun 2024 12:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC731A08A7;
+	Tue, 18 Jun 2024 12:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714438; cv=none; b=VqUt5ZbnAl5ccsjMLYIrRb1CL091O3uRaQfU2F7UXXXqT3/uPTrOW1TOmZ9YiOMaNSXWsfyQdw+7ZvPL7ejPsBfsCSiZskjFZ2QtWZUWa+ur2I6d8ZXJPzbFvtWntzKRfBAdnM4ykVt1EaMiE/J+aEGpxX4dEAt4uESRNmFvot4=
+	t=1718714439; cv=none; b=XAYqs59eC4ySgx3JEmSgv2+YnV9l86zSyZso/D8jmr6NYbSZ/Od0jC0SFAsbVz3zURr9iQFGWwN4ktN1vQHrI1raHBEPwTqCgjN/iXKS9VqzfWEnH0PCMnYTkm5s7ku/6FthZ3txgzAOcoNRD18Fas5GvCeJxcTOV+9Z3c/6CGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714438; c=relaxed/simple;
-	bh=5a6B7OS5y/6qcp1oPN+ywcFiRxZ6JJXCwOzY6VEkxZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZiP5AXpQIbToBkqX9VnD1gu4c+lss0AZIvGhLuJHrEwNa6GqhgVK9w7tNchxB++EwzbYOc9fXPMYWwnlVT7wD6lcp3HGMuAez+S2X8+4nz5Wg7amHgf5MceqA+dVVvJxj9b9ywXqskhurt7nZSyRz5pH+l9so5/X9jv8Gn19s9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcLycoM3; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718714439; c=relaxed/simple;
+	bh=R9gQ5TWisbAU0V37/lrPQFfzIfNu5uluZ0CmaDwYwDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H0Oo/zliVygdMrbQEUs62K/4yp4v/g4zqzgMvA8LJGfQ36GagSdb8gOkwySJqMrdRZpMz0XOf+E6QGocYpTcaoXSW/ncHafmvylY4f46MX/eKdJ8EuJrRAIWGr+Q0Nk3grnA7oLywicm+ZDowC5BbJvKSKnBeE3115UQIymF4sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0vE+/kw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcLycoM3"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2c2c6b27428so4189370a91.3;
-        Tue, 18 Jun 2024 05:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718714436; x=1719319236; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5a6B7OS5y/6qcp1oPN+ywcFiRxZ6JJXCwOzY6VEkxZg=;
-        b=NcLycoM3Ef8Wq+qSHN2erLNDeH3L84ywxcqX0ujbvW4XPcctS0OnMHvD7HjBOh0sTy
-         zDjLlU/SEtoToQ1fs56GUHNKm3OL6nwsppajIVOG9ArbrOWqWpNo41Fpi2dMFf/q4gZQ
-         PiAErmr/VhFqBgjfuRdDUtD7/jNcVdwaXd0BjG3SQImU5C/4iiBU9SEv0o0mHOgQxHWS
-         ydR0kumarazo6vOtzFjzDen0bp/VdbW2vupHmvNcAeP+dinxK4xr4bU5VskXYIbeltBz
-         oIXafWN83Ao+5HE9iR7rDcAob3o3LNhEVP+jS2RG+7jKtJ0c2ilJ77zMg7yp/YDttFcy
-         2CIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718714436; x=1719319236;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5a6B7OS5y/6qcp1oPN+ywcFiRxZ6JJXCwOzY6VEkxZg=;
-        b=J43uxWacW31BRHRg9onmlbZFPwZFKSEeO31MXOlB4s8cxVllIokrQn1CYJRXA7oAvZ
-         3guNVgy8qkBpsZpgA24VvE/lXskkSbG6noHyE9XEp/ipcZMeg7CJxfEzO+P3v6NiTAnm
-         8UiWyvfIaB5UwVrARKBq+yqLGL6jAnZudyo9mIwhaxaoayHhGGEA2bdUsZ9oywoX2Wtx
-         EdbgeZEop2Bya6w3+7eR12Y22NK7WbI2MMySgufbsdpUg6zh6T37NYzJPy7rAKl7xCAR
-         sFckdhFghwjyVtw6m6qGvQpj9d+Za+IhaY+mFjV7qRfaMWD3hirdO+vkQ7148vLS/QvQ
-         wLdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Wz1xAmdK4X/0RZMukuF9eO7PrMNEW9H1R6tY2+/56L4NZ2vn2sRfi6hSy2v3HD9cT9sIxlRVybI4400LktosRcTLaYi9NzXyDg4q6CARW+6U5iuqdXSSrfduzbuX0t9Q4Qp7RMM+4Co=
-X-Gm-Message-State: AOJu0YxS863x3Hgh6ySz2EW0MGow9QOt4aSw9LkSXC/mTooqL+rjwSsG
-	bzCo5r3MH/ytKBWVqgSMNTbN6oca22ErTtCPVS5eMNB5e8L1+TZJorkkKTdvx3gfEKS92RhbpKF
-	H8/lkCj3dANyyqMSFrxXLGtG0thM=
-X-Google-Smtp-Source: AGHT+IHzJ+FQXBDprzDLivYXPnBaHoSRGyFKlPdv4yqmqIcli49NimXBrXz6EdcJ6mVtfetMmC1KIax8TCU52XOcrsY=
-X-Received: by 2002:a17:90b:253:b0:2c7:6305:9905 with SMTP id
- 98e67ed59e1d1-2c76305b4aemr956131a91.10.1718714435549; Tue, 18 Jun 2024
- 05:40:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0vE+/kw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE48C4AF51;
+	Tue, 18 Jun 2024 12:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714438;
+	bh=R9gQ5TWisbAU0V37/lrPQFfzIfNu5uluZ0CmaDwYwDI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=B0vE+/kw9Zqn7Rk+07S9qG7koP+Q5SAXqBaSpqQzAorTszN2hUHvBRwOE4HB/w6hz
+	 QFjyvzcNtMWa6zb1EpWWtc3SCbNrte4yUpoEcuDneLG4wqdwHNIhj1MaZ2qjt2+fp+
+	 V6kx+NmASAsUdfs96Xef6oCiOBexYp+0ZA26yLarzzqBeMnMeij8Whd0Fr/Qc1odCf
+	 Gs3wBKkvr6ZXF8SX+D8P3KY2k4KXy73SozCYbg9RbZ4M4agh1fQ256jyUjUhMAWcwl
+	 yIhEGS7wdTFfSYe/lGj6132KaA/rcOzE2jRNQEH/3Ickb5qZPSJ0YyMQnzlzIIChd8
+	 hk6dkgGGF02mw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Nicolas Escande <nico.escande@gmail.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 11/29] wifi: mac80211: mesh: init nonpeer_pm to active by default in mesh sdata
+Date: Tue, 18 Jun 2024 08:39:37 -0400
+Message-ID: <20240618124018.3303162-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618124018.3303162-1-sashal@kernel.org>
+References: <20240618124018.3303162-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240615125457.167844-1-rauty@altlinux.org> <2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
-In-Reply-To: <2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
-From: Rauty <rautyrauty@gmail.com>
-Date: Tue, 18 Jun 2024 15:39:58 +0300
-Message-ID: <CAGpJQTHoBAixmxta2WuZfjHjiK9GXF=hkfPyV7PBD5rt9Z_0WA@mail.gmail.com>
-Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset mic on IdeaPad
- 330-17IKB 81DM
-To: Gergo Koteles <soyer@irl.hu>, alsa-devel@alsa-project.org, tiwai@suse.com
-Cc: perex@perex.cz, kailang@realtek.com, sbinding@opensource.cirrus.com, 
-	luke@ljones.dev, shenghao-ding@ti.com, simont@opensource.cirrus.com, 
-	foss@athaariq.my.id, rf@opensource.cirrus.com, wzhd@ustc.edu, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.94
+Content-Transfer-Encoding: 8bit
 
-On Sun, 16 Jun 2024 at 10:38, Takashi Iwai <tiwai@suse.de> wrote:
-> Your From address and Signed-off-by address are different.
-> Could you try to align them?
+From: Nicolas Escande <nico.escande@gmail.com>
 
-Ok.
+[ Upstream commit 6f6291f09a322c1c1578badac8072d049363f4e6 ]
 
-On Sun, 16 Jun 2024 at 21:08, Gergo Koteles <soyer@irl.hu> wrote:
-> There are some similar collisions with Lenovo laptops.
-> Please see commit 0ac32a396e4f41e88df76ce2282423188a2d2ed0 for an
-> example how to handle one.
+With a ath9k device I can see that:
+	iw phy phy0 interface add mesh0 type mp
+	ip link set mesh0 up
+	iw dev mesh0 scan
 
-Yes, you're right. I'll do the same and send v3.
+Will start a scan with the Power Management bit set in the Frame Control Field.
+This is because we set this bit depending on the nonpeer_pm variable of the mesh
+iface sdata and when there are no active links on the interface it remains to
+NL80211_MESH_POWER_UNKNOWN.
+
+As soon as links starts to be established, it wil switch to
+NL80211_MESH_POWER_ACTIVE as it is the value set by befault on the per sta
+nonpeer_pm field.
+As we want no power save by default, (as expressed with the per sta ini values),
+lets init it to the expected default value of NL80211_MESH_POWER_ACTIVE.
+
+Also please note that we cannot change the default value from userspace prior to
+establishing a link as using NL80211_CMD_SET_MESH_CONFIG will not work before
+NL80211_CMD_JOIN_MESH has been issued. So too late for our initial scan.
+
+Signed-off-by: Nicolas Escande <nico.escande@gmail.com>
+Link: https://msgid.link/20240527141759.299411-1-nico.escande@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mac80211/mesh.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index 5a99b8f6e465f..9c9b47d153c28 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1625,6 +1625,7 @@ void ieee80211_mesh_init_sdata(struct ieee80211_sub_if_data *sdata)
+ 	ifmsh->last_preq = jiffies;
+ 	ifmsh->next_perr = jiffies;
+ 	ifmsh->csa_role = IEEE80211_MESH_CSA_ROLE_NONE;
++	ifmsh->nonpeer_pm = NL80211_MESH_POWER_ACTIVE;
+ 	/* Allocate all mesh structures when creating the first mesh interface. */
+ 	if (!mesh_allocated)
+ 		ieee80211s_init();
+-- 
+2.43.0
+
