@@ -1,127 +1,161 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E212595;
-	Tue, 18 Jun 2024 04:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F752595
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718683302; cv=none; b=a+SY7PV2lGNEO3kv66Zlblm3gY5TEXJNJk+n7bI/cmJVHMZJGtL5b4b3XCdFIhaaHJiU6ncYW/1jSWY7xhA0GBr/M+iSJWKR+SbS+wb5/9YUDT9x5GBuscl/PTW6IZRkbmMWSOcaIOKGMuPc4FY0NnoIdgxSEBp74HMR+726x2k=
+	t=1718683455; cv=none; b=ojpwU7l3lcLjymBCjkBS3+HZmp2IMPNhn1v5TRA7jrr802tsuDJDNFDBhHN0CIZxuKI8AMzdGXV2XAjQXssuQtLFGRZ9PEjcLqRkCCf4traPozIkbK6pd5iDGjTzzZ7hZSNcf/mFjg7VJA1ZroLgZsSJYgTVyCgn+qIuC/m+n7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718683302; c=relaxed/simple;
-	bh=HMZmwcszMz4muO8iBnwOnpOFsZw8nvTmN8F2CzLzj0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OKNjM7TVgvNYOiyMY+Nd431I1xscKN1vNLdyhykQGdzTGpVnGg0AmrCidHJaMr+ogxN45K1b8zgsmxKH3wKZRn2+uqZV+UxHiWK17oZIOzmkxQFSORn45qcTHMfYcN4IdCFaU9dxAePk+OWvthbqP3QpSKq3JD/6uNynzt0eors=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.110.225])
-	by gateway (Coremail) with SMTP id _____8Dx2OmgBnFm0s0HAA--.18699S3;
-	Tue, 18 Jun 2024 12:01:36 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.110.225])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxRcWdBnFmQM8mAA--.16960S3;
-	Tue, 18 Jun 2024 12:01:33 +0800 (CST)
-Message-ID: <d9ee8cc2-8fd9-4a99-9673-b3a56187df95@loongson.cn>
-Date: Tue, 18 Jun 2024 12:01:33 +0800
+	s=arc-20240116; t=1718683455; c=relaxed/simple;
+	bh=94IvZ0knlZzd09LLiZCSkHk2vbZlQzsGrqSTZXOLB1w=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PMdVGQIgubG4bCsux9aSBebo1mC88xyD+8CcGg0g2a4UBn3lDIhydsV4roolVQt3GSp7imJKCKnwQdAkNCoucFxUeXRqdpABXChNvtkBGQLk9SfHH8G3RJRRaWqAy87Q4x+vs3GKx6rj0FFoHF3in7O0jiorD4MyBT3CE3uBPbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W3Cgy0XbqzxSKC;
+	Tue, 18 Jun 2024 11:59:58 +0800 (CST)
+Received: from kwepemm000013.china.huawei.com (unknown [7.193.23.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id C23EF140159;
+	Tue, 18 Jun 2024 12:04:08 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm000013.china.huawei.com (7.193.23.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 18 Jun 2024 12:04:07 +0800
+Subject: Re: [PATCH v2] ubi: gluebi: Fix NULL pointer dereference caused by
+ ftl notifier
+To: Gagan Sidhu <broly@mac.com>, Daniel Golle <daniel@makrotopia.org>
+CC: Richard Weinberger <richard@nod.at>, ZhaoLong Wang
+	<wangzhaolong1@huawei.com>, dpervushin <dpervushin@embeddedalley.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>, linux-mtd
+	<linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>, yangerkun <yangerkun@huawei.com>, yi
+ zhang <yi.zhang@huawei.com>
+References: <CFAC276E-E652-40CD-B3D8-563B95E679A8@mac.com>
+ <E3E2C13C-1E52-46F2-BE2D-D2592C3369DB@mac.com>
+ <F2DCFCE7-68FA-4C09-AE5B-09F2233575F1@mac.com>
+ <48D8B89B-0402-4D8B-B045-86104C0C797F@mac.com>
+ <303502000.252057.1718647746641.JavaMail.zimbra@nod.at>
+ <90A90DA4-8B68-432D-9577-0D3635AF84BB@mac.com>
+ <296007365.252185.1718649153090.JavaMail.zimbra@nod.at>
+ <3841F21D-CA54-456C-9D9C-F06EEA332A30@mac.com>
+ <136290141.252319.1718650375432.JavaMail.zimbra@nod.at>
+ <ZnCcsPA-flVcxiAT@makrotopia.org>
+ <C20708FB-0626-475E-A996-DE42ACF57A8B@mac.com>
+ <C7514984-8CEB-4D1F-A896-BD6E653D311B@mac.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <251ae039-9f46-081b-a7ee-fe47de268865@huawei.com>
+Date: Tue, 18 Jun 2024 12:03:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 RESEND 1/1] zh_CN/admin-guide: Add
- zh_CN/admin-guide/numastat.rst translation document
-To: wodemia@foxmail.com, alexs@kernel.org, corbet@lwn.net
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tao Zou <wodemia@linux.alibaba.com>
-References: <tencent_227A20B261EF28E4C37834F2089D5AD91408@qq.com>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <tencent_227A20B261EF28E4C37834F2089D5AD91408@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <C7514984-8CEB-4D1F-A896-BD6E653D311B@mac.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxRcWdBnFmQM8mAA--.16960S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZryrGFykJFyDAFWkKw1DXFc_yoW8uF17pF
-	1kKrySg3WxJry5Cw1xGF17WF18Gr1xuw4DGa4Sqw18twn8Ar4ktrsxtrWUKFn3GrWFyay8
-	AFWFgrWUurWjy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm000013.china.huawei.com (7.193.23.81)
 
-Hi Tao,
+在 2024/6/18 6:13, Gagan Sidhu 写道:
+Hi,
+> spoke to a user, gave him a build without MTD_GLUEBI, restoring changes made by (HAHAHA you are! huawei), it booted fine.
+> 
 
-在 2024/6/18 10:47, wodemia@foxmail.com 写道:
-> From: Tao Zou <wodemia@linux.alibaba.com>
->
-> Add translation zh_CN/admin-guide/numastat.rst and link it to
-> zh_CN/admin-guide/index.rst while clean its todo entry.
->
-> Signed-off-by: Tao Zou <wodemia@linux.alibaba.com>
-> ---
->
-> I apologize, the previous PATCH had an incorrect email address for linux-doc when it was sent, so I need to resend it.
->   
->   .../translations/zh_CN/admin-guide/index.rst  |  2 +-
->   .../zh_CN/admin-guide/numastat.rst            | 50 +++++++++++++++++++
->   2 files changed, 51 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/translations/zh_CN/admin-guide/numastat.rst
->
-> diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
-> index ac2960da33e6..0db80ab830a0 100644
-> --- a/Documentation/translations/zh_CN/admin-guide/index.rst
-> +++ b/Documentation/translations/zh_CN/admin-guide/index.rst
-> @@ -68,6 +68,7 @@ Todolist:
->      cpu-load
->      cputopology
->      lockup-watchdogs
-> +   numastat
->      unicode
->      sysrq
->      mm/index
-> @@ -109,7 +110,6 @@ Todolist:
->   *   module-signing
->   *   mono
->   *   namespaces/index
-> -*   numastat
->   *   parport
->   *   perf-security
->   *   pm/index
-> diff --git a/Documentation/translations/zh_CN/admin-guide/numastat.rst b/Documentation/translations/zh_CN/admin-guide/numastat.rst
-> new file mode 100644
-> index 000000000000..4f7fee557cb5
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/admin-guide/numastat.rst
-> @@ -0,0 +1,50 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. include:: ../disclaimer-zh_CN.rst
-> +
-> +:Original: Documentation/admin-guide/numastat.rst
-> +:Translator: Tao Zou <wodemia@linux.alibaba.com>
-> +
-> +.. _cn_numastat:
-Drop it, because it introduces a warning.
-> +
-> +
-> +===============================
-> +Numa策略命中/未命中统计
-> +===============================
-  Drop unnecessary "=".
+May I have the layers' information about mtd/ubi, you can get it by 
+'mtdinfo -a' and 'ubinfo -a' after booting the device.
+I guess your device boots from ubiblock0_0. There are two ways loading 
+booting device:
+1. mtd(nand)
+    ubi(holds volume ubi0_0)
+    mtd12 (gluebi)
+    mtdblock12  (This way is cut by this patch, so mtdblock12 is not 
+generated, just like Daniel&Richard analyzed)
+2. mtd(nand)
+    ubi(holds volume ubi0_0)
+    ubiblock0_0
 
-one English char,  one "="
+> so we need to think about either deprecating GLUEBI or setting an option in the Kconfig that ensures they are mutually exclusive.
+> 
+> gluebi is definitely highjacking the block device created by UBI_BLOCK and adding the MTD_UBIVOLUME flag to it.
 
-one Chinese char, two "="
+The gluebi(mtd) and ubiblock could exist on the same UBI volume at the 
+same time, but they cannot be opened at the same time. Here is an 
+example I tested on the local machine:
 
+                                              ↗ ubiblock0_0
+mtd0(nandsim) -> ubi0 (holds volume ubi0_0)
+                                              ↘ gluebi(mtd1)
 
-Thanks,
+[root@localhost ~]# ubinfo -a
+UBI version:                    1
+Count of UBI devices:           1
+UBI control device major/minor: 10:61
+Present UBI devices:            ubi0
 
-Yanteng
+ubi0
+Volumes count:                           1
+Logical eraseblock size:                 126976 bytes, 124.0 KiB
+Total amount of logical eraseblocks:     8192 (1040187392 bytes, 992.0 MiB)
+Amount of available logical eraseblocks: 0 (0 bytes)
+Maximum count of volumes                 128
+Count of bad physical eraseblocks:       0
+Count of reserved physical eraseblocks:  160
+Current maximum erase counter value:     2
+Minimum input/output unit size:          2048 bytes
+Character device major/minor:            246:0
+Present volumes:                         0
+
+Volume ID:   0 (on ubi0)
+Type:        dynamic
+Alignment:   1
+Size:        8026 LEBs (1019109376 bytes, 971.8 MiB)
+State:       OK
+Name:        vol_a
+Character device major/minor: 246:1
+[root@localhost ~]# mtdinfo -a
+Count of MTD devices:           2
+Present MTD devices:            mtd0, mtd1
+Sysfs interface supported:      yes
+
+mtd0
+Name:                           NAND simulator partition 0
+Type:                           nand
+Eraseblock size:                131072 bytes, 128.0 KiB
+Amount of eraseblocks:          8192 (1073741824 bytes, 1024.0 MiB)
+Minimum input/output unit size: 2048 bytes
+Sub-page size:                  512 bytes
+OOB size:                       64 bytes
+Character device major/minor:   90:0
+Bad blocks are allowed:         true
+Device is writable:             true
+
+mtd1
+Name:                           vol_a
+Type:                           ubi
+Eraseblock size:                126976 bytes, 124.0 KiB
+Amount of eraseblocks:          8026 (1019109376 bytes, 971.8 MiB)
+Minimum input/output unit size: 2048 bytes
+Sub-page size:                  2048 bytes
+Character device major/minor:   90:2
+Bad blocks are allowed:         false
+Device is writable:             true
+
+[root@localhost ~]# lsblk | grep ubi
+ubiblock0_0 251:0    0 971.9M  0 disk
+
+> 
+> there is no other explanation.
+> 
+> looks like this was an absolutely amazing exchange that even furthered our understanding of wtf is going on.
+> 
+> thanks for being a great moderator for MTD rich
+> 
+> Thanks,
+> Gagan
 
