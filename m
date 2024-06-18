@@ -1,110 +1,202 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79F61741FF;
-	Tue, 18 Jun 2024 20:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211E84D8DC;
+	Tue, 18 Jun 2024 20:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718743633; cv=none; b=MJDqsze8VpmD0HZzVF5f3RjwZ+DW0snxxNCxkYBy0MGIljUObQoGmj/yHxvvGd2rIjZEpTFFHO32QEuVE5VE+gOU3SSDD33rloEAUoiE+zvYK50/irP2dFT7MjUDGsAAOZqYXBUHao/09kTuL834eSj4/kHuowbbVoi+zk9sUzs=
+	t=1718743720; cv=none; b=ns+oaNkwv3K97ResotHsm+CBiKLT1rM3r2reahgjPQKuPQ/3BQ4pTjOEiPngzJVPLHSD51I+4Y29d1aoMWfTkgtOaqyV3Z/MdofRjyrnJfZdX+mUKeVCwAvqpiPC9CYln1FZBkFdnlwoE8Ytn93a1VH9FkKCU+CJFAavmUvqY4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718743633; c=relaxed/simple;
-	bh=VRiPPn+VTLkhAiQA9Zh7a1/UmbTAaW9I7g5e9G74OBs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=A8YoVwuqQHDzeZXZVp+6HXezEGyoMIHaCdhDOVMVHw/5LaNrwSG9pNNQKxJdlo7wLqgSQpHcNMWfOF7U4tmIpDFbMt2L9Uk5tJfVlx0OISlJ07yuUX/CULlU+pPZAiwS8m0c2nU+aShth+CEZnoeo29udv6i98aozuLrfERffgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PZ3z2vaQ; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718743720; c=relaxed/simple;
+	bh=vifOR8wqTe33GN1ZxE0aE3JJoX2X6ojZd3vgLTYu4qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ayK02a5sNZiSFC3/B0ZDk6kF/jTBHVDTQTiBylDZHVl90TI87g03wuNSY2d22cPnlacXpATeqgkL1VqICiVhZPGYp+TchPGgWm/ljR/ZVuLkA3hhqCQb5YwdHaJ5tGYizjYi1ybq3viAY5XmGcZ8QSZSlcm6UtkQtNwpd9fxvow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkroOP1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PZ3z2vaQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718743596; x=1719348396; i=markus.elfring@web.de;
-	bh=7SVn046GRXwum9/obUlRK64bfmhFkYAqL+r0he2hVC8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PZ3z2vaQG9aupKmIeFv80UHAofhbRE8SzMWlvGyOLT4JTk2ms2xfY/Etd1Wuj20R
-	 yFFWFpw2H05Mh3HYyeeU3oqdqe1NbQbv8VPEHCANs4yWb4+S/9TEKhKLTCtZaASDn
-	 mvoToayBJyRR1BrQX+gbCJ3zEvt9UR1Lk+H1MISn0JDQrZt+5AJbHtNz+Qj+rZDMY
-	 KdSB1qdaiYgVXDx5JqosFb+57JfafH35oZtWOQD9r30jd7b+nfVTGleSAit+FvOfT
-	 B5qHopxqzJ+N2psyBrMZZ8m8nWezDxF7nDXx9CKOyRD5sWn989kXI8BJo3n7K0WGd
-	 nxkbZ55Zjnx37REdwA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N6sBv-1sROvz2ip5-00wTNH; Tue, 18
- Jun 2024 22:46:36 +0200
-Message-ID: <2fed4937-e9ea-4635-a061-5c5a0533b152@web.de>
-Date: Tue, 18 Jun 2024 22:46:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkroOP1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87306C3277B;
+	Tue, 18 Jun 2024 20:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718743719;
+	bh=vifOR8wqTe33GN1ZxE0aE3JJoX2X6ojZd3vgLTYu4qs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kkroOP1XahDe8y0PCYQZWwyr7NzPoNIwKnMyP+cVjWRCKFcCxKBzRGDNp5obZrYbz
+	 TXvRrpIY6765aIvN+9QFQnMrnolLmfu4CvKLK7bKU1bY4quBie2SutBEJe4aty31YW
+	 46peRLKOHaHiKEX9ERj/dQSuM/jhak/eoJ05OYZUB2jh7Nr0wShO63IhXLoT/4I5hU
+	 /GzijQeVV3O7i0uDFm9QjeJHWAIhkUsrRqB83M7ASE/xRb/Aj64+dtmUD6SN8zZ5CE
+	 cnAZbMmfem036ZIZuOAsM99HquNtT9GWtVtxfwcD78kDR96olXaYPTHaR4isWpg+AR
+	 IpRfOm6YY/erQ==
+Date: Tue, 18 Jun 2024 15:48:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com,
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kch@nvidia.com, hch@lst.de, gloriouseggroll@gmail.com,
+	kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+Message-ID: <20240618204837.GA1262769@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: David Huang <d-huang@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rockchip@lists.infradead.org,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Conor Dooley <conor+dt@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Sebastian Fricke <sebastian.fricke@collabora.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
- Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
- Aradhya Bhatia <a-bhatia1@ti.com>, Brandon Brnich <b-brnich@ti.com>,
- Darren Etheridge <detheridge@ti.com>, Jai Luthra <j-luthra@ti.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Nicolas Dufresne <nicolas@ndufresne.ca>, Nishanth Menon <nm@ti.com>,
- Praneeth Bajjuri <praneeth@ti.com>, Prasanth Mantena <p-mantena@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Vijay Pothukuchi <vijayp@ti.com>
-References: <20240618193651.2771478-3-devarsht@ti.com>
-Subject: Re: [PATCH v14 2/6] media: imagination: Add E5010 JPEG Encoder driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240618193651.2771478-3-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wzwXm8OOJj/8pn6nEtnfr8d1OPM87N8PKLZGrJG7AtRwShPkJfv
- goefJPjAshUT3KsMHaSIJQDd0ojyS5GvAIHdR4fEZg8oMnlhxgvA1C0Kp+/7GyLJcG4BmUN
- AlRXIpUfvfLdxf5hn/SCicFgPKGdKOfDHCA7TNkkTDjXRjDrAOS9JjvNMmTJ6CUtdVorwKz
- K+2rGUcvcssXRacxWf/nQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:at3o+ErF39k=;WGKgmK/fxWBBs7JOx1gu5uwL1Fg
- w3dEk/evutMPDtSR9ATEgVKc6CMn8or+qhyyNtFQvevcSpMgGWPLm5DO6MiLJs/OqF+Evpdly
- 6Mglv6FhKARWZuckuOr9Iybh5x4MqrVczmAvFNXh7WMgAepf0SSeKvU9OWhn4yNeUViLqRiwm
- A2+NpVJOL25KIkZtDY1LeSLkG6a/9cHTBBCNIEsQL/m9vg7U6UMmill9pFUxYRwNXkqKXhWOv
- xNhV7P82jnNjzhVXn8pddKZ4yPb8nutPAV3tB0r3CdMYUUVrfuhXQSFZ2qrA3eR6ZiN3XQJJy
- jNbbxHc710Y136fB2lylt8WVp4c8WBVNYF0E9HLHDz67vCcqqE2zaUTtL2Pe2KJnFI+5D1Gfb
- 92ULx7M26WSsCvN34Bzegc5ZlXneYuI0EAU46kKbTlriaJjnrsbIgG519xAsIa6aM5UBotDLm
- L3pL4g0USy30zNYJFkdZMDhMdVbgAjgMF2UY+S0AHR5sq6O40vwwX3jxLS3oXuobDf2IDQAUG
- jkiECxQvpUlndBVrVaSoPGp/eTFgyCuY9oxb3V9AxT9oV+Qbv6rjIydlOXcMBcdUcfyzH+vNs
- 6EIYp5rx+WBeEVGrYUdCpXEW0KqpPbWH5EMXB1oPsj6Tc1ILlGh4XHE0ZOTGDYeQJS5qDyO7e
- Si4782B0anEsqxL9qaKWRUJ//15GUlRcXnVM88qA0olrQ/4Bxmzbc9hJgIhLXaFEbLKZkTdZt
- ZWjyqmK4lVqx4M97OU/0MZg2mW7bn0gBGthEgmQ/5q4gnXFLUCf7zKxuZykOVvBZD3sD2AGSb
- yEEj4nCVqkAqSKcHHjMY6TaSLA3vooQmF06pjR9HljAY0l90sChdu9rf/Qi9oATSAf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
 
-=E2=80=A6
-> +++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-> @@ -0,0 +1,1741 @@
-=E2=80=A6
-> +static int e5010_release(struct file *file)
-> +{
-=E2=80=A6
-> +	mutex_lock(&e5010->mutex);
-> +	v4l2_ctrl_handler_free(&ctx->ctrl_handler);
-=E2=80=A6
-> +	kfree(ctx);
-> +	mutex_unlock(&e5010->mutex);
-> +
-> +	return 0;
-> +}
-=E2=80=A6
+On Thu, Apr 25, 2024 at 03:33:01PM +0800, Kai-Heng Feng wrote:
+> On Fri, Apr 19, 2024 at 4:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> > > When the power rail gets cut off, the hardware can create some electric
+> > > noise on the link that triggers AER. If IRQ is shared between AER with
+> > > PME, such AER noise will cause a spurious wakeup on system suspend.
+> > >
+> > > When the power rail gets back, the firmware of the device resets itself
+> > > and can create unexpected behavior like sending PTM messages. For this
+> > > case, the driver will always be too late to toggle off features should
+> > > be disabled.
+> > >
+> > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> > > Management", TLP and DLLP transmission are disabled for a Link in L2/L3
+> > > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
+> > > the power will be turned off during suspend process, disable AER service
+> > > and re-enable it during the resume process. This should not affect the
+> > > basic functionality.
+> > >
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >
+> > Thanks for reviving this series.  I tried follow the history about
+> > this, but there are at least two series that were very similar and I
+> > can't put it all together.
+> >
+> > > ---
+> > > v8:
+> > >  - Add more bug reports.
+> > >
+> > > v7:
+> > >  - Wording
+> > >  - Disable AER completely (again) if power will be turned off
+> > >
+> > > v6:
+> > > v5:
+> > >  - Wording.
+> > >
+> > > v4:
+> > > v3:
+> > >  - No change.
+> > >
+> > > v2:
+> > >  - Only disable AER IRQ.
+> > >  - No more check on PME IRQ#.
+> > >  - Use helper.
+> > >
+> > >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index ac6293c24976..bea7818c2d1b 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/delay.h>
+> > >  #include <linux/kfifo.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/suspend.h>
+> > >  #include <acpi/apei.h>
+> > >  #include <acpi/ghes.h>
+> > >  #include <ras/ras_event.h>
+> > > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
+> > >       return 0;
+> > >  }
+> > >
+> > > +static int aer_suspend(struct pcie_device *dev)
+> > > +{
+> > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > +     struct pci_dev *pdev = rpc->rpd;
+> > > +
+> > > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
+> > > +             aer_disable_rootport(rpc);
+> >
+> > Why do we check pci_ancestor_pr3_present(pdev) and
+> > pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+> > to disable AER interrupts on suspend in general.  I think it will be
+> > better if we do that consistently on all platforms, not special cases
+> > based on details of how we suspend.
+> 
+> Sure. Will change in next revision.
+> 
+> > Also, why do we use aer_disable_rootport() instead of just
+> > aer_disable_irq()?  I think it's the interrupt that causes issues on
+> > suspend.  I see that there *were* some versions that used
+> > aer_disable_irq(), but I can't find the reason it changed.
+> 
+> Interrupt can cause system wakeup, if it's shared with PME.
+> 
+> The reason why aer_disable_rootport() is used over aer_disable_irq()
+> is that when the latter is used the error still gets logged during
+> sleep cycle. Once the pcieport driver resumes, it invokes
+> aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
+> resumed yet.
+> 
+> So use aer_disable_rootport() to prevent such issue from happening.
 
-Would you become interested to apply a statement like =E2=80=9Cguard(mutex=
-)(&e5010->mutex);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/mutex.h#L1=
-96
+I think the issue is more likely on the resume side.
 
-Regards,
-Markus
+aer_disable_rootport() disables AER interrupts, then clears
+PCI_ERR_ROOT_STATUS, so the path looks like this:
+
+  aer_suspend
+    aer_disable_rootport
+      aer_disable_irq()
+      pci_write_config_dword(PCI_ERR_ROOT_STATUS)    # clear
+
+This happens during suspend, so at this point I think the link is
+still active and the spurious AER errors haven't happened yet and it
+probably doesn't matter that we clear PCI_ERR_ROOT_STATUS *here*.
+
+My guess is that what really matters is that we disable the AER
+interrupt so it doesn't happen during suspend, and then when we
+resume, we probably want to clear out the status registers before
+re-enabling the AER interrupt.
+
+In any event, I think we need to push this forward.  I'll post a v9
+based on this but dropping the pci_ancestor_pr3_present(pdev) and
+pm_suspend_via_firmware() tests so we do this unconditionally.
+
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int aer_resume(struct pcie_device *dev)
+> > > +{
+> > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > +     struct pci_dev *pdev = rpc->rpd;
+> > > +
+> > > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
+> > > +             aer_enable_rootport(rpc);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
+> > >       .service        = PCIE_PORT_SERVICE_AER,
+> > >
+> > >       .probe          = aer_probe,
+> > > +     .suspend        = aer_suspend,
+> > > +     .resume         = aer_resume,
+> > >       .remove         = aer_remove,
+> > >  };
+> > >
+> > > --
+> > > 2.34.1
+> > >
