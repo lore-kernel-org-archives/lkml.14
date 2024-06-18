@@ -1,176 +1,189 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4472E13A248;
-	Tue, 18 Jun 2024 09:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB86713E8A0;
+	Tue, 18 Jun 2024 09:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718703212; cv=none; b=fOIZy+p6PegsNXATfMhVwBAjpCz0gssKLmMtKK4wJpslXv7jzQYfBtj3+e1mBrkRsU8Z3hyimblaoW8QCnvd9Vz1LesTCwMDgN8p7OLrE4oqcULXTBepkh7zOG9z7qoCQ6jZvjBHQlJoOS3OUysyMbg354kXVqUXfTo+5+2qzGc=
+	t=1718703213; cv=none; b=PrLQWGBzXDCD9i65BubDuqDF2qyDuUS8wH/7fV3pdYHoTxFphsaNCzr0NHt3JJO5FVj4JyCljVJsih0fASFh7Ljggckpnx6OgJLlkYsoeK5Rnq/T2fpJPKIM1HHR5Ds6wejqZ+GjvHcGhZwCReB6b4raAOnw15Ots+Ln+U95Vlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718703212; c=relaxed/simple;
-	bh=Y4yVcjYnnY7W8lsoQT++en4t/iTVNF7h0Z1wL7oWS/4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oMAGKJag17XAXsvHJ5INH0Hvvpf3OsyKqpdxvGb4hk6H3+taTKSXwn7fH7uusJxmLobKQp5SvJwJK/V0eL77GLuMd0Qpbn1SETLRInoehLSO5e47yndNdpdV5144PhjAjPiQQoSFVge4Y8I/sorIIkWyiDDjdKySN0QniQdXZr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q2YLQ9eU; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718703213; c=relaxed/simple;
+	bh=j3q+EyogCgVnNt16mW7TglpR7ZsBC59ypAKFPs0xJi0=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UVrtIn4dt1+tvTs6y9zXe1xIs+3YYkjin8ZCGb17/ot0tiPSTPcagXr7Ln4qV66A71gFvh2C8A+fZfuIK4Q/eBGfsEp2P6j9NB53DtZkWTh/1GPRON3AEl1uGlTU8islWWpeKPA5Rez4K6qBIpV20P3NVctqIRfFKzHCfO58Fg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lA3cdHof; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q2YLQ9eU"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I91GFD013050;
-	Tue, 18 Jun 2024 09:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=A
-	HwzZj6AgBzBAgYWznsea7PI3942li0K5f+aJcW29/M=; b=Q2YLQ9eUOV9qSqLd4
-	/reVoikE6bPfipSQcy8TR32JESn+fLSjGFnQkyJgOJ5uglqrEaXOBR+VPoYdnEMA
-	IM5jmmLNJBNJvx4QSKVtQpUvynaRZCNi0U2mHqF0LC63nCyYGS+GZVc2ZAlq//qs
-	jR1VIDCnWbAWjdH2cSJBQ7C6kGFft6sAqU872L5Y23Q84XNtb623VKs4gxij5Njc
-	YI5jg+u3+RGq2ZDLlL4kqWrnzJLMMyplnWjz+300WlWj1XBooXSHFv2UwKSi948V
-	YdJLq688l/lrGFsZZ47QdyZNj7IAZfYcla1YKVFVoLgmyHUjr1lGc4Z6VdY1ImHy
-	alh1w==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu6rkg6qy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 09:33:23 +0000 (GMT)
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45I9XMg5001731;
-	Tue, 18 Jun 2024 09:33:22 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu6rkg6qw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 09:33:22 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45I85rcY009478;
-	Tue, 18 Jun 2024 09:33:21 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgmhb0c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 09:33:21 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45I9XJkP48497230
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Jun 2024 09:33:21 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 15C745804B;
-	Tue, 18 Jun 2024 09:33:19 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BDBFF58059;
-	Tue, 18 Jun 2024 09:33:15 +0000 (GMT)
-Received: from [9.204.206.228] (unknown [9.204.206.228])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Jun 2024 09:33:15 +0000 (GMT)
-Message-ID: <d1282b00-1f5d-43d1-8b4d-cb4ea5840330@linux.ibm.com>
-Date: Tue, 18 Jun 2024 15:03:14 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lA3cdHof"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a44c2ce80so6216656a12.0;
+        Tue, 18 Jun 2024 02:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718703210; x=1719308010; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oKRTOK2bSqh5Z6l772n9bon7J4PO0h3RG9G4nJvBISU=;
+        b=lA3cdHofgiN4fsfYQVRhcYhVwPj7UwDVCsE6FzGQXF31IL1iQY8Fd/ahXZoPxeMMoP
+         YKtqdte3QaDQqou9Q23U454f4SN5leaQQxjsPqzcFJGUdxmJK5HDb+6yUytrB7WklDuC
+         fOCHitP6h3AzSqyUStjEch73u4nq1ELN2ZcVkaCIiejQ1OmEgpMa6Lezv8ZMA82X+YDp
+         AP3igfnu7VQJciv95siW9Iwn5jRd0RSsKMjec795CWjiqTUZ6Qv2yVUIbC92grdgP2sh
+         plKQagy/OH/vDECosbVcRoxj90+gQc+bBwYh7mzozilDNm8uA6UeAF14IFjhrO0KCGHF
+         hvgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718703210; x=1719308010;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oKRTOK2bSqh5Z6l772n9bon7J4PO0h3RG9G4nJvBISU=;
+        b=GXqcOR5N0LGmMdT3UNRtgSekA6LLrDE449Oua+DkVZ8fpvsOlx5VwF/0Udc1Qxx20w
+         FpbUZXJUKUnMmDPZOghWgw4OL5JG4mdBLLMa2JD8IS3bEWlpTUG9GiqeVLXGDm4sJrY4
+         0AMJuZVJOvBY50l/S+Ngq1FAAV70tXovs1SK6wA/M8w/+JEkLBbUMd1PcIQt/jGyQirr
+         CjJO8oCYv7Z8KxpnkCPc21M9h1skmKc4DaN34WTa080X0ggN9PLHfgrZSx8gxTNGuszt
+         ceRnN5x+SPBM2T7zQgNAlf09kzC6nPcFZOnA5phCrgWMbXl5fRlB92Foko+CsfTBhhjv
+         Qdyw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfOYCkXxQIZnhPPR1I1Qva9pYQHmbJJ+DuXIPqJBJanwk3XHiYgkjzb9V2sJk+F/QXISDjROJnrsCPkHK1CXue8JQvwveOzj9sNeGxDJjCrsVrDscFH2AtksW8wFNDqzKf2ZQ2u7KUY2ex8tfAnHQXKFDNG8LmcB8nDO9C41RqLIAuzEkb9AjdELXpzwZZmUXnIKiQqOQ8DvK0gvUBtA==
+X-Gm-Message-State: AOJu0YwiYh7x+yOOcQOaaSoJVtRIYUysADndCb72tw01nQK1v2YU9fJa
+	w71s9MeFkXdq3U55SMY8H+u7E5neTXrvTvlexOiKTG662u/UfnQX
+X-Google-Smtp-Source: AGHT+IEB0BWx8Gj3AqMac+0Q3+79Cqy6S3VtrMg68UFlYb+8zqogyYLFBFzCgacmNDYh6M7QeyxJtw==
+X-Received: by 2002:a50:8746:0:b0:573:5c4f:27a8 with SMTP id 4fb4d7f45d1cf-57cbd8e7144mr8081205a12.35.1718703209873;
+        Tue, 18 Jun 2024 02:33:29 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb7439606sm7526102a12.90.2024.06.18.02.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 02:33:29 -0700 (PDT)
+Message-ID: <d35eea56bfef394717611ac43c4e02cd4c813380.camel@gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: frequency: adf4350: add clk provider
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>,  linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Date: Tue, 18 Jun 2024 11:37:18 +0200
+In-Reply-To: <20240618082012.4496-2-antoniu.miclaus@analog.com>
+References: <20240618082012.4496-1-antoniu.miclaus@analog.com>
+	 <20240618082012.4496-2-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf: Timehist account sch delay for scheduled out
- running
-Content-Language: en-US
-To: Fernand Sieber <sieberf@amazon.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20240618090339.87482-1-sieberf@amazon.com>
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <20240618090339.87482-1-sieberf@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pXfN1wn1a4Nhaq1tAIc_DccxM17QE9rH
-X-Proofpoint-GUID: qziM_9SQu9cRK0ufqwmnIY3IRGzv1EoR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 phishscore=0 adultscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180069
 
-Hi Fernand,
-
-On 18/06/24 14:33, Fernand Sieber wrote:
-> When using perf timehist, sch delay is only computed for a waking task,
-> not for a pre empted task. This patches changes sch delay to account for
-> both. This makes sense as testing scheduling policy need to consider the
-> effect of scheduling delay globally, not only for waking tasks.
-> 
-> Example of `perf timehist` report before the patch for `stress` task
-> competing with each other.
-> 
-> First column is wait time, second column sch delay, third column
-> runtime.
-> 
-> 1.492060 [0000]  s    stress[81]                          1.999      0.000      2.000      R  next: stress[83]
-> 1.494060 [0000]  s    stress[83]                          2.000      0.000      2.000      R  next: stress[81]
-> 1.496060 [0000]  s    stress[81]                          2.000      0.000      2.000      R  next: stress[83]
-> 1.498060 [0000]  s    stress[83]                          2.000      0.000      1.999      R  next: stress[81]
-> 
-> After the patch, it looks like this (note that all wait time is not zero
-> anymore):
-> 
-> 1.492060 [0000]  s    stress[81]                          1.999      1.999      2.000      R  next: stress[83]
-> 1.494060 [0000]  s    stress[83]                          2.000      2.000      2.000      R  next: stress[81]
-> 1.496060 [0000]  s    stress[81]                          2.000      2.000      2.000      R  next: stress[83]
-> 1.498060 [0000]  s    stress[83]                          2.000      2.000      1.999      R  next: stress[81]
-> 
-> Signed-off-by: Fernand Sieber <sieberf@amazon.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+On Tue, 2024-06-18 at 11:20 +0300, Antoniu Miclaus wrote:
+> Add clk provider feature for the adf4350.
+>=20
+> Even though the driver was sent as an IIO driver in most cases the
+> device is actually seen as a clock provider.
+>=20
+> This patch aims to cover actual usecases requested by users in order to
+> completely control the output frequencies from userspace.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
->  tools/perf/Documentation/perf-sched.txt | 4 ++--
->  tools/perf/builtin-sched.c              | 5 ++++-
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index a216d2991b19..74c812f7a4a4 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -64,8 +64,8 @@ There are several variants of 'perf sched':
->      
->     By default it shows the individual schedule events, including the wait
->     time (time between sched-out and next sched-in events for the task), the
-> -   task scheduling delay (time between wakeup and actually running) and run
-> -   time for the task:
-> +   task scheduling delay (time between runnable and actually running) and
-> +   run time for the task:
 
-LGTM.
+Hi Antoniu,
 
-Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+For some reason your DT patch is missing (or still did not arrived)... Some
+comments below.
 
-Thanks and Regards
-Madadi Vineeth Reddy
+...
+>=20
+> +static int adf4350_clk_register(struct adf4350_state *st)
+> +{
+> +	struct spi_device *spi =3D st->spi;
+> +	struct clk_init_data init;
+> +	struct clk *clk;
+> +	const char *parent_name;
+> +	int ret;
+> +
+> +	if (!device_property_present(&spi->dev, "#clock-cells"))
+> +		return 0;
+> +
+> +	init.name =3D devm_kasprintf(&spi->dev, GFP_KERNEL, "%s-clk",
+> +				=C2=A0=C2=A0 fwnode_get_name(dev_fwnode(&spi->dev)));
+> +	if (!init.name)
+> +		return -ENOMEM;
+> +
+> +	if (device_property_read_string(&spi->dev, "clock-output-names",
+> +					&init.name))
+> +		init.name =3D spi->dev.of_node->name;
 
->      
->                  time    cpu  task name             wait time  sch delay   run time
->                               [tid/pid]                (msec)     (msec)     (msec)
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 5977c49ae2c7..7422c930abaf 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2659,7 +2659,10 @@ static int timehist_sched_change_event(struct perf_tool *tool,
->  		tr->last_state = state;
->  
->  		/* sched out event for task so reset ready to run time */
-> -		tr->ready_to_run = 0;
-> +		if (state == 'R')
-> +			tr->ready_to_run = t;
-> +		else
-> +			tr->ready_to_run = 0;
->  	}
->  
->  	evsel__save_time(evsel, sample->time, sample->cpu);
+So this means the first devm_kasprintf() is useless :). I believe this shou=
+ld be
+=09
+	init.name =3D devm_kasprintf(&spi->dev, GFP_KERNEL, "%s-clk",
+				   fwnode_get_name(dev_fwnode(&spi->dev)));
+	if (!init.name)
+		return -ENOMEM;
+
+
+> +
+> +	parent_name =3D of_clk_get_parent_name(spi->dev.of_node, 0);
+> +	if (!parent_name)
+> +		return -EINVAL;
+> +
+> +	init.ops =3D &adf4350_clk_ops;
+> +	init.parent_names =3D &parent_name;
+> +	init.num_parents =3D 1;
+> +	init.flags =3D CLK_SET_RATE_PARENT;
+> +
+> +	st->hw.init =3D &init;
+> +	clk =3D devm_clk_register(&spi->dev, &st->hw);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ret =3D of_clk_add_provider(spi->dev.of_node, of_clk_src_simple_get,
+> clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->clkout =3D clk;
+> +
+> +	return devm_add_action_or_reset(&spi->dev, adf4350_clk_del_provider,
+> st);
+> +}
+> +
+> =C2=A0static struct adf4350_platform_data *adf4350_parse_dt(struct device=
+ *dev)
+> =C2=A0{
+> =C2=A0	struct adf4350_platform_data *pdata;
+> @@ -522,8 +637,6 @@ static int adf4350_probe(struct spi_device *spi)
+> =C2=A0
+> =C2=A0	indio_dev->info =3D &adf4350_info;
+> =C2=A0	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> -	indio_dev->channels =3D &adf4350_chan;
+> -	indio_dev->num_channels =3D 1;
+> =C2=A0
+> =C2=A0	mutex_init(&st->lock);
+> =C2=A0
+> @@ -551,6 +664,18 @@ static int adf4350_probe(struct spi_device *spi)
+> =C2=A0			return ret;
+> =C2=A0	}
+> =C2=A0
+> +	ret =3D adf4350_clk_register(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (st->clkout) {
+> +		indio_dev->channels =3D NULL;
+> +		indio_dev->num_channels =3D 0;
+> +	} else {
+> +		indio_dev->channels =3D &adf4350_chan;
+> +		indio_dev->num_channels =3D 1;
+> +	}
+
+nit: The above could be simplied to
+if (!st->clkout) {
+	indio_dev->channels =3D &adf4350_chan;
+	indio_dev->num_channels =3D 1;
+}
+
+- Nuno S=C3=A1
 
