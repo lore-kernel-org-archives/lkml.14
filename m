@@ -1,197 +1,246 @@
-Received: from cluster-d.mailcontrol.com (cluster-d.mailcontrol.com [85.115.60.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1E8158217;
-	Tue, 18 Jun 2024 11:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.115.60.190
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718709405; cv=fail; b=TtFlqb9V3sDNfufg+lt+oYKVqQL+lv9+RH//cfUMD4hDpbsbE8//snXPdoP3lCp3QAnnmUc9Cz6tpx3oOCu4WgYr4F+0TpLocRMVkFTGQjPQRmbwPuTw2UlLaM59j2C4WRVhUotvaUQKaoVH8w0ZCTDdZZDQvUQB2lfZOiUbbuY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718709405; c=relaxed/simple;
-	bh=UCQu2x6/7W+JHkRKsgqYAyq7nUpOduwkDLDMzOwVEnE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GXYXR1UTY21ZU0EyP/iU8XRcZu5U2Tk6ub9OVYzU8U1Mu+mV+TdYHlgnWX4taM/AEX/TOzIFwUy6E1VWstbHH97sQymL+R5qHojjgGPZD//iVIkg1n0cADm63s4T6Wp7NRafpxblnMn7LwgsLiHBkdcj9YEMAOknakag8P03Myg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai; spf=pass smtp.mailfrom=habana.ai; dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b=nrFurUs4; arc=fail smtp.client-ip=85.115.60.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=habana.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=habana.ai
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=habana.ai header.i=@habana.ai header.b="nrFurUs4"
-Received: from rly16d.srv.mailcontrol.com (localhost [127.0.0.1])
-	by rly16d.srv.mailcontrol.com (MailControl) with ESMTP id 45IBGUe4005618;
-	Tue, 18 Jun 2024 12:16:30 +0100
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by rly16d.srv.mailcontrol.com (MailControl) id 45IBG7Bn456721;
-	Tue, 18 Jun 2024 12:16:07 +0100
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03lp2232.outbound.protection.outlook.com [104.47.51.232])
-	by rly16d-eth0.srv.mailcontrol.com (envelope-sender oshpigelman@habana.ai) (MIMEDefang) with ESMTP id 45IBG5YD456019
-	(TLS bits=256 verify=OK); Tue, 18 Jun 2024 12:16:07 +0100 (BST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S/8dpMqvZQkFHwpNKwxdXmxL9yOnWWcnSxwuKvPF1Wf1Z1aN2JKUmDNReNJmxpcBNqxCzwY8+kvvJIgHeyMmfi1DcKnYoPVvaFG+C215OSiZcXOp6F/WgohBb+rNowTF7eZyvU+MqHPp9joTU19pSt5v+U5UmpkhajkXumEBV0dA2NZBOyPeHFqWBD7mGoKY2mZTUp9xX4aU5MT6vgTwITEP1cogHtKKAeu7sKAsr3kHeobd/OdPi/cfebXuGWo4LhvWmAe3/+iYKWJdztIRfCkacy5vf9j4TqECSmA003TpOUu05zXdUqQfDO4CWjoiQI4CRUZ0RGWJGUwhWEFB8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UCQu2x6/7W+JHkRKsgqYAyq7nUpOduwkDLDMzOwVEnE=;
- b=VS841MrtPdyq0j/QyAGNxrOHdeErA5kQfrmdqjdAzDWOMfDwdS0VF0PXJEJMefCJmOAAHt+J1fQ9RT1yXg3dMNKgVAI7CjgFXcXVTIdswA7CsF+VTMCl3siB69IObwDgRkH90Goup+ieor1BSJRlEHlHwRG/E48C6UkAcdED191nEmpv/jAATIzg3UO38vvt6WkC2OSv+EMTMroSCOlkPzmBVMan6Ozb8CYBXRnvPON74sxIhVWN8dv8BqKbsxdWsGAlrVXGPTmet16bWtlbxLY2sWsT+zycUe1dCk7cJIm3TwUtxn/3sIAgEZtVv1bpEonMxrVGFJO7O0HX3xFNfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=habana.ai;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UCQu2x6/7W+JHkRKsgqYAyq7nUpOduwkDLDMzOwVEnE=;
- b=nrFurUs4xSWtabPoFtkDbHN0dKm5tJ4zvqa1Qoc22d68hS/1QYJnIpkkvjKoDsEODwKUoNYhCruuMbSSAL69p3fPp5fl8cdzCnR1s5xPrGb3QsjzhhTMly5iZnqOZCb4Hxo2dFUsqyEnsOyeLMvAej7a4XUY9jIxJRk2Oy8Er3zpwCXejJGpDyhdFduGwhmUQgcKz0pdeYfI3Kbaz5ts/rzeecK5v0ucj2M8qSj/SukdXUA354IXinr+NNCh+cuZChp0eDfNmRI/EG6sMFw9zWO+2Fzn+0cvtx5Q/DhlGP90w7hHG/k1/rySjPso9XdjgqTiRAKMzXoS7Ysd377QRQ==
-Received: from PAWPR02MB9149.eurprd02.prod.outlook.com (2603:10a6:102:33d::18)
- by AS2PR02MB9189.eurprd02.prod.outlook.com (2603:10a6:20b:5f9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 11:16:03 +0000
-Received: from PAWPR02MB9149.eurprd02.prod.outlook.com
- ([fe80::90a0:a4f0:72e9:58b9]) by PAWPR02MB9149.eurprd02.prod.outlook.com
- ([fe80::90a0:a4f0:72e9:58b9%3]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 11:16:03 +0000
-From: Omer Shpigelman <oshpigelman@habana.ai>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>
-CC: "ogabbay@kernel.org" <ogabbay@kernel.org>,
-        Zvika Yehudai
-	<zyehudai@habana.ai>
-Subject: Re: [PATCH 09/15] net: hbl_en: add habanalabs Ethernet driver
-Thread-Topic: [PATCH 09/15] net: hbl_en: add habanalabs Ethernet driver
-Thread-Index: AQHavWrQgrJbi1vMQEmkq/v8mH9idrHIqj8AgAS8uQA=
-Date: Tue, 18 Jun 2024 11:16:03 +0000
-Message-ID: <df68aa17-c32a-45c5-9198-ea2d9fe2c40b@habana.ai>
-References: <20240613082208.1439968-1-oshpigelman@habana.ai>
- <20240613082208.1439968-10-oshpigelman@habana.ai>
- <c65713c5-3c76-4869-9c52-12962678ed1e@linux.dev>
-In-Reply-To: <c65713c5-3c76-4869-9c52-12962678ed1e@linux.dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=habana.ai;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAWPR02MB9149:EE_|AS2PR02MB9189:EE_
-x-ms-office365-filtering-correlation-id: dd263aec-bd6b-4401-0658-08dc8f880a94
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230037|366013|41320700010|1800799021|38070700015;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?NXpidEtjaWpwNVJJZUpzUXlpcUl1aXdaRGJvS0lzZFhzaFkxc1JteXhaZG4x?=
- =?utf-8?B?ajhoTXJsZXcyQngrM1BpZ1RlbDh6TGgrL0N0RUNENytKTlhIbW1TWEJjcnVY?=
- =?utf-8?B?Zk5NRHFCOVU5TU9sZVNpZWwwMVoyT0ZDOXI5RVFjVDI5UDBsWXpUZkhndHBE?=
- =?utf-8?B?MjVBT2UxRG45cHYyMWUyc2RXYVpvQUg5THBwR2cwRnY5Tks4Z0VuV1ZJcG9q?=
- =?utf-8?B?dm1xY2tSRWd0MTNwVWd5VlJlUU1wZFJGWHdNYXh0SDhLU0ZVWWxxTm5tY3Yy?=
- =?utf-8?B?Rk44TUphU2o2SkxCZlM1MGdNNVR0NVlPMVR4RGNiMEFST2lWVjJ3VEVkd2lp?=
- =?utf-8?B?Y0JCUlVvek1pRWRGVzdoWGk2SGhJNkJ0amF0SHlrRlUvQUJ1N0NSK05iaVBY?=
- =?utf-8?B?bTBGMzIzNUJNMHdvNEtqYTNYeGF2N0RDTno3K1poQk52R3hoSytEUGNZRERt?=
- =?utf-8?B?LytqVjk3TlFWUnEwa2pDNUlLcmxVQ3NrSHEvN0N1WTJIZlFLTms4Yk1SRW5n?=
- =?utf-8?B?WGZ3TlRvUHgwdnVzWjZESW5PQm1vbUhaNnhiL1FXUWIwKzhoMXlVQWtyUkNH?=
- =?utf-8?B?VENCRXBLbStabG1XTEVRSG95ci9VcWZvR3l4alAvTDNBQWMwSGQyUUFXSng4?=
- =?utf-8?B?a1k4TnVRbkRCVjVMTnpKMHdySDZZN2wxdXR3M0FGQW5tZEU5b1daR1BXaW96?=
- =?utf-8?B?cEJnaUtYTkc5TzRTSm56K041UlFPcDV1S3ZmM3Z4cHJPdzI5eklnc3FLNWgz?=
- =?utf-8?B?UWFiRm8xbXJSR3hmdzBScEt0eGhpTHorMFB5d0tVV2xaYmJTbUFlWDRjVUN3?=
- =?utf-8?B?VnFDa1V3UnhiNDdHUEJ0UkFucUlhUXBCR2hmOVRkdkIzbmQ1TjF3SnpRSXZU?=
- =?utf-8?B?eDhpd2dFeHZXeUhJVzRGSG5tTlV4WjNPZE1oYVlDa3lOMDFDQmp5YkhFeElp?=
- =?utf-8?B?ZTFJK1EvamJ6TENobEdEaWYrNWp1UzYzbmJySVZpQU95L3Zyb2VFeUw3aUp4?=
- =?utf-8?B?eThiaFIxVzFLSHVjUE82Kyt1TklZRllBOUJINFN3ZnVJMTREK0U2b2g3bXh4?=
- =?utf-8?B?ODQzb1JNNURMYWl3eUdKaThiNk9EVmJteE5VTHhSbWZSSmNnWUJrM1JJQnVX?=
- =?utf-8?B?T2Q3a1pDb3lLZWJONXNRREhOQXF2cEcvZTRkN2VkODZVcFNpNXNBK2JFMWov?=
- =?utf-8?B?d3FhVVBvazlmNFJuTC94OGgyb3hLQm9HZEVUUUhScytKQjRRdXR0VnowTXJ3?=
- =?utf-8?B?RUpkTWxWQ0hHME1odGptWUJwU2ptVWxkZmJpc29udjVid041bzBqZE5ZNFY2?=
- =?utf-8?B?YndpTXRUY2JML2NjaGxBVkRoVDZDcWYraVpkOXU2WXljejNyQjF3SDYwbldM?=
- =?utf-8?B?MFZ2bEY1L21SY1BtMGJmY3psK2FpZnlCOXlCRDRMQytEZ3V1YUVwelQ1ZExU?=
- =?utf-8?B?a05JakhPcFFlSUdldndDTm9FeGlldTZvZnhFYmhXTTd4WW8wL3dHRUVDbHRj?=
- =?utf-8?B?M2RVZDl6d3kwVVJnaDNHdnRZNjV4T1B4cnZXckxPdGZFWHdNTnpZTnRDTWJX?=
- =?utf-8?B?RE5kQ216QmZSZk1XS3FQQ1RXeklJbFlIL2VsWE1nSXhjRnFVNFcrcjZudHJO?=
- =?utf-8?B?L2U0eFNjdlZvRDl1d0hiNXZBTGlQNXdIQWs2QWI5QUdrZWRYcXNaazd1dEhs?=
- =?utf-8?B?T0FGQ1ZBeGNEWlJLYjMvbEdQZlRaT09GS1p1a0VvVmFjdE5BSEdZaW0wSkhp?=
- =?utf-8?Q?Lx9L7EkB8XXGbypRfRIbFGpa4JVbWLFXO89ZUtZ?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR02MB9149.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(41320700010)(1800799021)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?UlhjZGNhRTVCK0tCZ0pWN0hIdVlXTXVic2VpM3BFeDBOcGZlUGMxZ2dVKzFS?=
- =?utf-8?B?aUlKNEYrSHhWWldrS1RJaGpPZ0NoRXRSR0J4YmU4bHl2NHMzbktoK2R5bEho?=
- =?utf-8?B?ek1tNGNHWU5Icm5QQk11V0FjQ20rd2dXaGNJbnRuYlpYK0dBZkVMcUxBaTI5?=
- =?utf-8?B?NnBqUXJDODhtVHJUQlgrbStoeCtYOUZTZjVqc0c4Q0w1SEJjVW9BWjd3Z1Fr?=
- =?utf-8?B?Zm1XRUxLbFFUNy9YM2tOR0l4ekVHUkw5NWJLeGM0aTliNklBNFF1NWg1RUVO?=
- =?utf-8?B?MVFVUkROUHk1QVdTazJtVFpDNzMySnBpblhnMDl0VkYwSTBvSU1jZktUMzlW?=
- =?utf-8?B?Y3hZVmk0cFdaVE55VmtaSGtYOGFGMXJHT1IrTHpJaHM5T3pRblZKbGY4RUw2?=
- =?utf-8?B?ZkxvdlNmdjBaaGlVQzRGakx6dHZ3TFRtNTNKZ3BQMUxCWVJZbks5T1R4NWE4?=
- =?utf-8?B?N3VnYmtnUmI1NzhEWFBacC80UzBWcEx3RmZJblI4MEY3WGVHUVVvL1F5V1lM?=
- =?utf-8?B?OGtINlI0VldDaEtBaTJyVVVpQ0lrcjZ0Z1Jqam42emZZZU5LQlJ6bW5UdVp1?=
- =?utf-8?B?M0ZHcG84eUNpaFB5blNFeXEvMytsdHVMVno1N3YrdmpRWUtSTnNHMEhTUkV6?=
- =?utf-8?B?a0JzM2g1VFA1SC9aWUZjWWpuSk5uRTdhakZnWGY3Qndjd2k0RFFSUXB5VFVJ?=
- =?utf-8?B?MGIyWHlJYzJTcElxM2praFhYKzNuYXNScXRxaHNzS1NRT2RjVkVkd0VjNFNI?=
- =?utf-8?B?ekJQWjJTL2VpL3NqVUQ5dXRGd1VadnM5Qmw4Vk8yT2lSKzFyVUl6a0FKcndl?=
- =?utf-8?B?UTBxTkRpZ1ozUnplcFF5V29vMWxPTytLM2Jyc2RJU3FyTWR0U0FqZlNVWlp5?=
- =?utf-8?B?K0FnZ3BuL0VJWjJCMzhyQzVoM0ZPTDlxakhjV1JnMVdoaG1NQXNMRmtYQy9i?=
- =?utf-8?B?OW9xSzFYYXRyMTlkbFdhOFJ1emVJREFKRGlKRStrby8xS1FyanY0OGhoZ04v?=
- =?utf-8?B?UWYzY2Y1WWdGaUdHNUIrdUo2MWJzbFhnK3M4NUM1R3JvZU5tSnI3ZlB3dU4v?=
- =?utf-8?B?RGRoeFlUSmJYbCtkc0g3UW1iUTNLYWZ6bkRsK2lWU3R1bWpOUHFhYXhjWXl2?=
- =?utf-8?B?ZHMxQW9MdEdLM1BkejBUeXNydmRVNDBuWTFPSTFRTDhXQ1lJd1FzbGtlbFhs?=
- =?utf-8?B?TGtpYitDZlFxa0lxMWlOdFp6aEZtbUV2b2VnL2RnSjgvTXc0blR0VTNMYWlw?=
- =?utf-8?B?ZWlFaG5NdEpadDhJT1dDNkZvWThCOWpSdGx3MGs2dUdjUkFjbEtMVXRGS2lR?=
- =?utf-8?B?WFowZVFYQnllRkJqQU5MMUl6dTdOVDNyZTBTRyt2TS83TisxNmZ0ZjBCQmJS?=
- =?utf-8?B?VUxwQnF2SEZHQkNpRFZJb0hkVk5pUE56NlNLQlNrbFE0enVUZVVsTHMrVUk4?=
- =?utf-8?B?WGNUNm1lSVBiK2loV0ZMZUJUbWxGY01oQTVTSENyWFpJTUdJVTdpK1JDV2VN?=
- =?utf-8?B?dlVHdHZNSkhHaEhQRU9OQlVxTFMyaVhCd0REUmp0Tm9pR2lhQUhhK2ttRjM2?=
- =?utf-8?B?UmtUN0xlOXdZa0J6OFZsOFM5bjRPc3RaZnRtL0M2K3huNGxoelByVjR5RzVx?=
- =?utf-8?B?aWdMRWJoT05jZnpNdWM5djNkQ2RjMVZrVkhwODVVV2ZGUzZIRDNwTm92bUdu?=
- =?utf-8?B?WmRQdzUrY0pkbWZQeElkVEFTT1B4VWc1SEZISWU4WlpEV29YZjNPVjZ0ZGt3?=
- =?utf-8?B?aXJ4b2U5a29lb2gzaEoydE9Sc3RUc2Vwb2V4bjRTYXlpS3p0eVJoTmxiRUNj?=
- =?utf-8?B?S3BrVzM0VE15R2x6UlFiNURXTlBTemdab2JZSitsWkRSdnNGWFRINnZZckx5?=
- =?utf-8?B?L0x2aXp5YUtBNjJ3dVlmNWdkWUthWFhzbGJmWjN4WGxjcDJqMFdCSEZnZmYv?=
- =?utf-8?B?WHFmWjlPZFdMSDRWZVl3UVpiNm1LTzhzRE1uU3p0bzJiT3FoSVRIRXljWTdj?=
- =?utf-8?B?bEZvUUlDYThvVmZYMFpRS0xKL2FKbmE5a1BOOUFuaUNlbXMvS2tWdHdrSHla?=
- =?utf-8?B?MTZLZGUxU3U1aW1RZERPNjJvN3NVR0RpajlGckl6dHNNQ1UzbEhwMzNCU1Bx?=
- =?utf-8?Q?IASOpc+Dp7qS+NipWLQFVb/11?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F920DC35158ACB42976B06FB52FE1646@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B707515A489;
+	Tue, 18 Jun 2024 11:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718709454; cv=none; b=uqW6rUN/rwa3fuUfDfjiEUx65W1JwIpVma2MAoJwlL99eDdYg6/TZheuHv6ggIj2oyeaDX4X4WPsiHGvAWMO/CIRZ+EnhDAPqnh7hJhDdQbgUAsuNW3D7c5yRUA8s+6FYXCu4n9sBVZoMxNJ82d6sTVKK6PDIJdFz0/KfiEhlWE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718709454; c=relaxed/simple;
+	bh=wJHDjjOM5QTpiOE86i73EAvliq7P4OYqHAgjgEd7wow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TeXO1DKVAsTNul0wVUwayI3Vsax73+0v0BNReghC7DzHyR/lQhIFeR4sIyVqUlntWTZAy2qMXluQLXHkfTOOeO1g7IrakVW2ZF4zTtSzZPFaarpNFiO8Kk9vCOXGvbz1csSSoUw1xlqvfNcKfRsypS64V52GUVOfm/z8EV64bto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF21DA7;
+	Tue, 18 Jun 2024 04:17:55 -0700 (PDT)
+Received: from arm.com (e127648.arm.com [10.1.33.10])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3DA63F6A8;
+	Tue, 18 Jun 2024 04:17:30 -0700 (PDT)
+Date: Tue, 18 Jun 2024 12:17:29 +0100
+From: Christian Loehle <christian.loehle@arm.com>
+To: Doug Smythies <dsmythies@telus.net>
+Cc: rafael@kernel.org, vincent.guittot@linaro.org, qyousef@layalina.io,
+	peterz@infradead.org, daniel.lezcano@linaro.org,
+	ulf.hansson@linaro.org, anna-maria@linutronix.de,
+	kajetan.puchalski@arm.com, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] cpuidle: teo: Fixing utilization and intercept
+ logic
+Message-ID: <20240618111729.hqywobxh3gm7rfgq@e127648.arm.com>
+References: <20240611112413.1241352-1-christian.loehle@arm.com>
+ <004a01dac04c$314c4360$93e4ca20$@telus.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	76sAQlH9PYpQ7BmVlQyWYVHjvY/EihU4gwThZSubMh7zCJfKJLm0Yj6mmgG0KmUmrpcxLbrPqef3INz1EmLXftFaTli8oDojm7j9G0QIu6MvOXk4TTs6Q7I7wBARmBbyUbzeaJz3WbBZNU+bc9GE6OCRMM/sbGYxitGse3uwOkfBH2y7GoRu/impkQHQMuQGzcVqjpO2qURb1BqhggH2D+uxIWAKvskOmRWqg9g/8iHIgz/1/QqdZKYi8Dg11gbFls6aeJc4a/JfzcDL+0579C/FoOAfj5NgZCaUO7GDlVDfSkFKUJApE9durMf4LUbQtJCGZVccn0CieIc8M0J7pr0Iqj+kcKkrShUND0iSB7LiPSmw2cZm8pw/D9z6csmq7aX4TCu/uMxvckTypYqo32fadFRMKLPtYPMJRc/srNr/+JyTdvXPcjt5+CQARj8LLkkg4A1jMBq49YF3rvPEyyg7O3IgeCAZeXE5cneLMBinsREsioDQSfc14cppJnG9JY1aY0x9hW2Ef6mz/mU4SLFMLVuN470ytWeJcHT1M2EjO9/dtxrYxAUVDeu3LFvyGsLUXmYBgbdvhMihH2OP9Nh3A1SxWRtPxRkvdTtY3idDeM75xthJnx1cOrZuXZyT
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAWPR02MB9149.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd263aec-bd6b-4401-0658-08dc8f880a94
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2024 11:16:03.5465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ScLm34LKhJwV5UMwvcdb+EGFweMLwhucODyNYIvRxTjU0ya70z4Ts6QCRutWnBXxJcZnfiupr0B8RgZH1L7Rwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB9189
-X-MailControlDKIMCheck: cGFzcyBoYWJhbmEuYWkgW3Bhc3Nd
-X-MailControl-OutInfo: MTcxODcwOTM5MzpGUEtleTEucHJpdjqAngs71bMegzlI48cK9kAvGk0cr0ixh8m+qPCVeD+kJgMrKl92Ud1FlMbhvwYo/pXeFWZ0jjrvss3Q7CXWny5506dZM/AE/VBD36igTryBOPdCs2BYKyiZnj4fyUaS++MWqUZZY8o2f4t6WiBm2PNcstrPpsxyNE7kCB598dldMPofZQe3CELloCtSemoMW+oV5MlQLo0K0RIXZPEDwsR+J1BNibWuvOarnGMR+Z6Ep9Ih4B0XA9XwudGhy5dfMvdEmI7QbxU715B1aLvrlNKAyIkNTEhlWDWgxGqqkDbd8EMUSYM9gDq45TD7YuIR2Yu/6fruyvyB6+UjURExs/5O
-X-Scanned-By: MailControl 44278.2143 (www.mailcontrol.com) on 10.68.1.126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <004a01dac04c$314c4360$93e4ca20$@telus.net>
 
-T24gNi8xNS8yNCAxMzo1NSwgWmh1IFlhbmp1biB3cm90ZToNCj4gW1lvdSBkb24ndCBvZnRlbiBn
-ZXQgZW1haWwgZnJvbSB5YW5qdW4uemh1QGxpbnV4LmRldi4gTGVhcm4gd2h5IHRoaXMgaXMgaW1w
-b3J0YW50IGF0IGh0dHBzOi8vYWthLm1zL0xlYXJuQWJvdXRTZW5kZXJJZGVudGlmaWNhdGlvbiBd
-DQo+DQo+IOWcqCAyMDI0LzYvMTMgMTY6MjIsIE9tZXIgU2hwaWdlbG1hbiDlhpnpgZM6DQo+PiAr
-DQo+PiArLyogVGhpcyBmdW5jdGlvbiBzaG91bGQgYmUgY2FsbGVkIGFmdGVyIGN0cmxfbG9jayB3
-YXMgdGFrZW4gKi8NCj4NCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
-cm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMv
-c3BhcnNlLnJzdD9oPXY2LjEwLXJjMyNuNjQNCj4NCj4gIg0KPiBfX211c3RfaG9sZCAtIFRoZSBz
-cGVjaWZpZWQgbG9jayBpcyBoZWxkIG9uIGZ1bmN0aW9uIGVudHJ5IGFuZCBleGl0Lg0KPiAiDQo+
-IEFkZCAiX19tdXN0X2hvbGQiIHRvIGNvbmZpcm0gIlRoZSBzcGVjaWZpZWQgbG9jayBpcyBoZWxk
-IG9uIGZ1bmN0aW9uDQo+IGVudHJ5IGFuZCBleGl0LiIgPw0KPg0KPiBaaHUgWWFuanVuDQoNClRo
-YW5rcywgSSdsbCBhZGQgaXQuDQoNCg==
+On Sun, Jun 16, 2024 at 05:20:43PM -0700, Doug Smythies wrote:
+> On 2024.06.11 04:24 Christian Loehle wrote:
+>
+> ...
+> > Happy for anyone to take a look and test as well.
+> ...
+>
+> I tested the patch set.
+> I do a set of tests adopted over some years now.
+> Readers may recall that some of the tests search over a wide range of operating conditions looking for areas to focus on in more detail.
+> One interesting observation is that everything seems to run much slower than the last time I did this, last August, Kernel 6.5-rc4.
+>
+
+Thank you very much Doug, that is helpful indeed!
+
+> Test system:
+> Processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz (6 cores, 2 thread per core, 12 CPUs)
+> CPU Frequency scaling driver: intel_pstate
+> HWP (HardWare Pstate) control: Disabled
+> CPU frequency scaling governor: Performance
+> Idle states: 4: name : description:
+>    state0/name:POLL		desc:CPUIDLE CORE POLL IDLE
+>    state1/name:C1_ACPI		desc:ACPI FFH MWAIT 0x0
+>    state2/name:C2_ACPI		desc:ACPI FFH MWAIT 0x30
+>    state3/name:C3_ACPI		desc:ACPI FFH MWAIT 0x60
+
+What are target residencies and exit latencies?
+
+> Ilde driver: intel_idle
+> Idle governor: as per individual test
+> Kernel: 6.10-rc2 and with V1 and V2 patch sets (1000 Hz tick rate)
+> Legend:
+>    teo: unmodified 6.10-rc2
+>    menu:
+>    ladder:
+>    cl: Kernel 6.10-rc2 + Christian Loehle patch set V1
+>    clv2: Kernel 6.10-rc2 + Christian Loehle patch set V2
+> System is extremely idle, other than the test work.
+
+If you don't mind spinning up another one, I'd be very curious about
+results from just the Util-awareness revert (i.e. v2 1/3).
+If not I'll try to reproduce your tests.
+
+>
+> Test 1: 2 core ping pong sweep:
+>
+> Pass a token between 2 CPUs on 2 different cores.
+> Do a variable amount of work at each stop.
+
+Hard to interpret the results here, as state residencies would be the
+most useful one, but from the results I assume that residencies are
+calculated over all possible CPUs, so 4/6 CPUs are pretty much idle
+the entire time, resulting in >75% state3 residency overall.
+
+>
+> Purpose: To utilize the shallowest idle states
+> and observe the transition from using more of 1
+> idle state to another.
+>
+> Results relative to teo (negative is better):
+> 		menu		ladder		clv2		cl
+> average		-2.09%		11.11%		2.88%		1.81%
+> max		10.63%		33.83%		9.45%		10.13%
+> min		-11.58%	6.25%		-3.61%		-3.34%
+>
+> While there are a few operating conditions where clv2 performs better than teo, overall it is worse.
+>
+> Further details:
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/2-1/2-core-pp-relative.png
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/2-1/2-core-pp-data.png
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/2-1/perf/
+>
+> Test 2: 6 core ping pong sweep:
+>
+> Pass a token between 6 CPUs on 6 different cores.
+> Do a variable amount of work at each stop.
+>
+
+My first guess would've been that this is the perfect workload for the
+very low utilization threshold, but even teo has >40% state3 residency
+consistently here.
+
+> Purpose: To utilize the midrange idle states
+> and observe the transitions between use of
+> idle states.
+>
+> Note: This test has uncertainty in an area where the performance is bi-stable for all idle governors,
+> transitioning between much less power and slower performance and much more power and higher performance.
+> On either side of this area, the differences between all idle governors are negligible.
+> Only data from before this area (from results 1 t0 95) was included in the below results.
+>
+
+I see and agree with your interpretation. Difference in power between
+all tested seems to be negligible during that window. Interestingly
+the residencies of idle states seem to be very different, like ladder
+being mostly in deepest state3. Maybe total package power is too coarse
+to show the differences for this test.
+
+> Results relative to teo (negative is better):
+> 		menu	ladder	cl	clv2
+> average		0.16%	4.32%	2.54%	2.64%
+> max		0.92%	14.32%	8.78%	8.50%
+> min		-0.44%	0.27%	0.09%	0.05%
+>
+> One large clv2 difference seems to be excessive use of the deepest idle state,
+> with corresponding 100% hit rate on the "Idle State 3 was to deep" metric.
+> Example (20 second sample time):
+>
+> teo: Idle state 3 entries: 600, 74.33% were to deep or 451. Processor power was 38.0 watts.
+> clv2: Idle state 3 entries: 4,375,243, 100.00% were to deep or 4,375,243. Processor power was 40.6 watts.
+> clv2 loop times were about 8% worse than teo.
+>
+
+Some of the idle state 3 residencies seem to be >100% at the end here,
+not sure what's up with that.
+
+> Further details:
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/6-1/6-core-pp-data-detail-a.png
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/6-1/6-core-pp-data-detail-b.png
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/6-1/6-core-pp-data.png
+> http://smythies.com/~doug/linux/idle/teo-util3/ping-sweep/6-1/perf/
+>
+> Test 3: sleeping ebizzy - 128 threads.
+>
+> Purpose: This test has given interesting results in the past.
+> The test varies the sleep interval between record lookups.
+> The result is varying usage of idle states.
+>
+> Results: relative to teo (negative is better):
+> 		menu	clv2	ladder	cl
+> average		0.06%	0.38%	0.81%	0.35%
+> max		2.53%	3.20%	5.00%	2.87%
+> min		-2.13%	-1.66%	-3.30%	-2.13%
+>
+> No strong conclusion here, from just the data.
+> However, clv2 seems to use a bit more processor power, on average.
+
+Not sure about that, from the residencies ladder and teo should be
+decisive losers in terms of power. While later in the test teo seems
+to be getting worse in power it doesn't quite reflect the difference
+in states.
+E.g. clv2 finishing with 65% state2 residency while teo has 40%, but
+I'll try to get per-CPU power measurements on this one.
+Interestingly ladder is a clear winner if anything, if that is reliable
+as a result that could indicate a too aggressive tick stop from the
+other governors, but cl isn't that much better than clv2 here, even
+though it stops the tick less aggressively.
+
+>
+> Further details:
+
+Link is missing, but I found
+http://smythies.com/~doug/linux/idle/teo-util3/ebizzy/
+from browsing your page.
+
+>
+> Test4: adrestia wakeup latency tests. 500 threads.
+>
+> Purpose: The test was reported in 2023.09 by the kernel test robot and looked
+> both interesting and gave interesting results, so I added it to the tests I run.
+
+http://smythies.com/~doug/linux/idle/teo-util3/adrestia/periodic/perf/
+So interestingly we can see, what I would call, the misbehavior of teo
+here, with teo skipping state2 and state3 entirely. You would expect
+a power regressionhere, but it doesn't translate into package power
+anyway.
+
+>
+> Results:
+> teo:wakeup cost (periodic, 20us): 3130nSec reference
+> clv2:wakeup cost (periodic, 20us): 3179nSec +1.57%
+> cl:wakeup cost (periodic, 20us): 3206nSec +2.43%
+> menu:wakeup cost (periodic, 20us): 2933nSec -6.29%
+> ladder:wakeup cost (periodic, 20us): 3530nSec +12.78%
+
+Is this measured as wakeup latency?
+I can't find much info about the test setup here, do you mind sharing
+something on it?
+
+>
+> No strong conclusion here, from just the data.
+> However, clv2 seems to use a bit more processor power, on average.
+> teo: 69.72 watts
+> clv2: 72.91 watts +4.6%
+> Note 1: The first 5 minutes of the test powers were discarded to allow for thermal stabilization.
+> Note 2: More work is required for this test, because the teo one actually took longer to execute, due to more outlier results than the other tests.
+>
+> There were several other tests run but are not written up herein.
+>
+
+Because results are on par for all? Or inconclusive / not reproducible?
+
+Some final words:
+I was hoping to get rid of Util-awareness with fixed the fixed intercept logic
+and my test showed that this isn't unreasonable.
+Here we do see a case where there is some regression vs Util-awareness.
+The intercept logic is currently decaying quite aggressively, maybe
+that could be tuned to improve teo behavior.
+
+Kind Regards,
+Christian
+
