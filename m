@@ -1,69 +1,102 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2066.outbound.protection.outlook.com [40.107.117.66])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C860D197A7B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DC0197A7B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718679032; cv=fail; b=kw3FSTkwEgAdIAfdllpif29S1W5hBtxw57rrofTxfwa41CC8sGz8v03tYa++m/ICkapE2Nx+sZwC5Of76samRUuN91xacwk0Zep5rt9vT1kMBwngiA0lxJ/VWb9e97a17yrKrj7Kmr+CTIYSI/+t+lRIlfiOHta2jMf6qYGir5I=
+	t=1718679042; cv=fail; b=mCvNz48rrdXioDS1OV7Vbk6/5ySnnhJiT7kosAkB/6vC7ZOtmG6swUNWP53SOL59b9VLdmXqXXEuJlXfmx/FuNs+89TwUZU73e6Toa4KQwdkiC+Er1OiHvSGtSiaR59A1nnOds15iOomgLXLPWiC4Zqb1MAy6d4jCJLvKJz1QnU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718679032; c=relaxed/simple;
-	bh=eXVq8pybtNAXeWoA3MGp3Ug0cnsAluv7kV7qCxRP8vw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dpRPPg7rS487M5akH+Gl9iTu/jvrxfGNqn01eHPP4tv/NhUG8s2ThpU56sYZ3u8mQUpjAX4uD8P15dseGj+m/nO9T7O74rCWClmhwxrAYLF2Ha+irL6UYOfwk28VPURpv1dZJSsli2XaCzjJwOXCOEy+eyusu94voZlv3ZiALoM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=CkZsQm7v; arc=fail smtp.client-ip=40.107.117.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	s=arc-20240116; t=1718679042; c=relaxed/simple;
+	bh=NpG2GF80g6f2VPSHQ9NVm5vJMrA7TYYmNbmfKGkcoMg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XtI+4AkQCfH3LBuMMsC0iLWjybl8luA5diaPhOIwiyMUU3kI+DRRTOU1UJyhVWA/SsOP49ZfnUYQUqWe7E6Es16NLgPcHaKlJUoJ1c3pM1O0i748kcE6iT0BzkQrt04OLW21xcDc9sV/isNUFGRpIiglAe2GVxzkCj9QFapEZiA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3hVI+Rz; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="CkZsQm7v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3hVI+Rz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718679040; x=1750215040;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NpG2GF80g6f2VPSHQ9NVm5vJMrA7TYYmNbmfKGkcoMg=;
+  b=b3hVI+RzJrnqcyCL5YCYYWcOsQe2exesFc6f17Z+oP0K4kRqtWn3eI5e
+   kI1l7B/7tZsCGNvGYYot5hjgVsQ1qB0XsEL4LuS93sh/A8AyxnuWklOJt
+   EApiWBb1P4P9o1z6+VbesMUav+dQtSzLfrNqLPpjowHN9/044wDaoUGzb
+   vFp85b41bHnGBtOJ3iPB/0xL7RVCjIjTwCl0zKZSQbSsH8v2UJHpS7guc
+   FYo2NB2ePwgFutZz1zpg9KDUFub95cXkx55c3keukltIaDkcnlMpVwyz1
+   yupEg2lxcmH8v93rbZIIJe9MlvTkxFUuFIMTAQL1NYtqvx2LQDOz3nais
+   g==;
+X-CSE-ConnectionGUID: d6AqdYklRcGxOcWMr8zomw==
+X-CSE-MsgGUID: 6j2tJdXORjm/j00gjQt2XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="33068332"
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="33068332"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 19:50:39 -0700
+X-CSE-ConnectionGUID: HiE4onTWQlWLud+ogX3MIQ==
+X-CSE-MsgGUID: hNptdsN3SCK3sWgxcKF4BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="45764786"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Jun 2024 19:50:39 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 17 Jun 2024 19:50:38 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 17 Jun 2024 19:50:37 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 17 Jun 2024 19:50:37 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 17 Jun 2024 19:50:37 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nS8WrV3nw1sAN2yqSV77/hEkPWKcdGoToACIlwEMHdxaUh48ctLoHdsSowN91698vTMB5YaoLUpJvO7jtbB4aiwSoUglE4cZfSRIrXtanvBdU/bmqRDYwNA1uxVrfLCL3mdxyV4+IgO4qfytb2SY5i8DUEjzv5GAQyyrHfLsPNfA0SE2mrCZ+JX6aqDh1BNMFWXNTylN+2+0GrxQ4kArFvEcksmSR9CAeAqpw37SFsX7WUSuSAjguyZOqaWeAo9RYSl6FbDRacyj5E6/eMGfVh8B2/96OfyIHz1RJnMNARkr30EwXD7PlbXGvcN6uu12DrqywNraiqFZ7jd2oclb4g==
+ b=Yw0dJrhQhi20NLpN+1+aMzyls4tK3nsfodkT4gv81/p63mGi5GHQoV2i4wXuCYgJFLziMgpHkH4jBtSW8KsW9qBn8tkjwUdin8JnKhxZ7InW0TAwgHrbjzUi1LafIzt550/z1EyPik691vHu3wjOjzz7oUFyG9GkToOw7h36H5pBoa74sw1smva4/1jBQAf9KUj6KaN2hzs3fHY3iXgbMsq0Qed2babRHT+012p0vkA2FgnZ04SOvCpN1G73PwTo7tL3Mp5bfO/0aoOW7nN4703qGqWnAENlvCoa1yTN/jtkYFZHcMskTH7HDc0qGGkIwv1RkYLAaASjhw8l/CpM2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pn+DY6BubZ7dCGC/bINp+q64TeR3k50H+M53uwISo4w=;
- b=Tz1+1I2NUm1aC+t5/3nrFFfjGoeIwQnmesXWJWhYyk4S1YcaeAByoWPCajlb4imScUhVJOXweXlBIIV3oN/nUl0gwWkPDI2pLf/rEvsZkqhssnja0AuVRfTTdsr6+H4sfR8mWYLaBdHPfX8Un5w/s1ZpQAoEmL57Y/f4/Q95nH5zz0sBiIUrsasbq8wFjyDerC9pihigLfweqidiZkMFA2i51BS2gzv21+ml0hdCqAoQ2N2gUKSP/p8yz7iNTnuLgmaOgkVmhYbIlXjBN4txRaHh/0MHjA+R89cUVP7ayr2YOM7USeTATS8t+E2bV8dq3po0+sDVyhT7clhXk4jBpA==
+ bh=cS4EwkDfNsJF0jg/vY3GBT1WxObggJQPg8alrF1dLCU=;
+ b=Od1U0tAInx62Ow+U12pcPkni2a5C4CLfDdD8RY166ijDMLDAPIeWE5zDbOTLFBayk0ZfQKxc85QJumj8wiKczkWuOuMmADYRukVXF5BopPxxXw9olXoOQpm/ytlXdrwmCmDD6lkrjVWuC9LtPeRbzUzzkPLIGqHZRR8gkoT45ZCn9ItvUU0MAQqq1FR60LJuisNXeY+IWAkPmNVh4wxux0KJGIVjshWdI99jID+LDaBCTILofw38irxX2vt4bWm1UdoWk9TTOZyoXcuB/u9RwUuQfPH18PXL5y7R6a39jx87O76riob8OR3IC/QyTBodpiIWl4Hk5A2NNfFZY7zpsA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pn+DY6BubZ7dCGC/bINp+q64TeR3k50H+M53uwISo4w=;
- b=CkZsQm7vL6oAuBfTiZnHKreoWyfQ2hdJQdTEQrUBtffDxhMlSohDCilGJ0ZAs7Fxl7QEPudnnrenHlsv67v2Kjf3CWZT32NuZQfoFg+omGH23xj44PR2ZrpikhKWLV4++SydC2O+197Eg86G9KcXmKw/vh5nPHWjc+ujUrx5THMqH8inaGpvCdltNowYnH/7hHzG+xtomgZVj5dBkmcO2mTXYqeeah+viDsPsdu2khsUMMa49LCbNuTl00yAek80EnU2zYOx8SZ12eM3UeQHaEjSwpBUe4UTPYiqFKBi7a3j3daxlF5wgOsUW4nUrnnxWQ1kbfCPvF257Z3rNSfGIg==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5624.apcprd06.prod.outlook.com (2603:1096:101:c8::14)
- by SI2PR06MB5170.apcprd06.prod.outlook.com (2603:1096:4:1bd::6) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by CH0PR11MB5300.namprd11.prod.outlook.com (2603:10b6:610:bf::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 02:50:23 +0000
-Received: from SEZPR06MB5624.apcprd06.prod.outlook.com
- ([fe80::e837:10e3:818e:bdfd]) by SEZPR06MB5624.apcprd06.prod.outlook.com
- ([fe80::e837:10e3:818e:bdfd%5]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 02:50:22 +0000
-Message-ID: <32e0c2ea-6035-4ec9-b99c-e6b686f04cf3@vivo.com>
-Date: Tue, 18 Jun 2024 10:50:17 +0800
+ 2024 02:50:30 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a%3]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 02:50:30 +0000
+Message-ID: <6ef4a71b-34b4-4f63-be18-310c31c89d53@intel.com>
+Date: Tue, 18 Jun 2024 10:54:18 +0800
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] binder_alloc: Replace kcalloc with kvcalloc to
- mitigate OOM issues
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
- Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Christian Brauner <brauner@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, linux-kernel@vger.kernel.org,
- opensource.kernel@vivo.com
-References: <20240614040930.11119-1-liulei.rjpt@vivo.com>
- <ZmyOJJmA7h6sZ_8A@google.com> <c46a07f5-f504-4c6f-af54-cfa00f987ce3@vivo.com>
- <ZnCDvpFveS6X0a1g@google.com>
-From: Lei Liu <liulei.rjpt@vivo.com>
-In-Reply-To: <ZnCDvpFveS6X0a1g@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] iommu/vt-d: Handle volatile descriptor status read
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, Lu Baolu
+	<baolu.lu@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>,
+	<iommu@lists.linux.dev>
+CC: "Tian, Kevin" <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>
+References: <20240607173817.3914600-1-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <20240607173817.3914600-1-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCPR01CA0083.jpnprd01.prod.outlook.com
- (2603:1096:405:3::23) To SEZPR06MB5624.apcprd06.prod.outlook.com
- (2603:1096:101:c8::14)
+X-ClientProxiedBy: SG2PR02CA0097.apcprd02.prod.outlook.com
+ (2603:1096:4:92::13) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,209 +104,130 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5624:EE_|SI2PR06MB5170:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4bcc3b7-d80e-46fd-e1a0-08dc8f4165d4
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|CH0PR11MB5300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 16af20f3-8cd9-412f-4811-08dc8f416a28
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|52116011|366013|376011|38350700011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T28rM1RoaGFJOUxFNzNjNldGbEdjWEpuQW9jSjBrQUtXTk5RV0pNcVU3Tit6?=
- =?utf-8?B?QjZGcENiSFpKeXA2REM2czB2UUVJYmdLcUdLVVIrRUs0eEk2ZGZUN1MwZzgw?=
- =?utf-8?B?OHFlQ09XaTh3SjJUS2ljZW1OVWtYY2RpMmpKVklaU0cwcTAxZXpyRzUxYitk?=
- =?utf-8?B?dUgvWk45NWQ0QUJYVS95Wk9LTW01bzgyWmtwbmNYWFA3dVFIZjU5ZUZKZFVo?=
- =?utf-8?B?Z2tmNEt6ZFIxOGRxd3I4TEFWcXNDaUF2b0xKNkpSMEF5TC9jdm9abXRrTWgz?=
- =?utf-8?B?Y0hDenFvcTlNekFycW5hTG96eFU5TVRwaHdEblBYZnhxeC9qRVpJeUpMMzRB?=
- =?utf-8?B?UlNQOEdsMVBwelNVc0Jqdkc4MlMvaDM3WUN6OU12dFFRRVcrY0dGeEJPV1Za?=
- =?utf-8?B?ZmVPMGYwRzJERVpmRzUyNE01ZFVIUkZKVVo1Yk1nblJNZVA1ekQ5VUpBTCtX?=
- =?utf-8?B?N25TY2FWS2hVNjZqRTdOdDNNQTVuenY4bDh5N0lIRmxSSC9uWWV6YVBWdWxx?=
- =?utf-8?B?bGRGdTFFZTRVSjR4aU1EeUxIR0ZXQUY4QktKdnFmLytWSzFjbWpCUjcrelZ1?=
- =?utf-8?B?VTM3RHU5cE1aT3RMeEduc2QwUHFZQ0V2ekxZNVpTYVpPTUdhbDBaZmozNnNI?=
- =?utf-8?B?eVpUQ1BUUlpsL0JlTko4WExIRUxVSEg1ei8zMlpLandRN2tZYmNheEtKZ0Rn?=
- =?utf-8?B?Z1B5a1cydlRmT1QzSDdueEtTY0JleWh0T3M0TUhvMGNGYkk4Q2RNbWV4QWdy?=
- =?utf-8?B?cmV3Tk1jR0huZjRjM1o5SitMaTE1NU5aSU9Hejd3WjlYL3JEazlqZU1iZHNQ?=
- =?utf-8?B?VUZMNjRNRG0zRVNTaEw4alRRaXMrR2VzWjNDS05sMXFRM1JQTDJnQTMzcHo5?=
- =?utf-8?B?cmJYSlhnUnVaL0hodkFRa3drQXc0ek0wSERWeWd2ZlJ6ODlYamVPOWx1ejJY?=
- =?utf-8?B?ZXlaa3N0ZXprYUl3UzRWQzVVQ0ZUWDZrWEpMZUR2aWJBWUxYcVE4SkRQOHdq?=
- =?utf-8?B?R3VTYWhHRE5EMExBcTJSQ1ZabmJzSEVZcXArdDB2c1VDWHh2bGhtK0E4Vmgv?=
- =?utf-8?B?ZEpHUHJvbDg5K2lQVTR2aHo2MU5tb0hXTW0zQWdlbzU3SXpxU3dVSHN5UTlT?=
- =?utf-8?B?YjJMaTNiclkxaGtjVWVCS1UrcVBWSTJacDBjVXFzY0xBOE9YYmd1SENueHBm?=
- =?utf-8?B?cDBXUEl5dDZuU3ovamtZaG5wM21lT0x5ZCtjdnVCRk1kU051U1kxYURlWk5L?=
- =?utf-8?B?WXBSSGZsb2dvYVBkSGEybUZRK3loRkkwaFRrL1QyQ0h5TDdxaUxRUEo1d1do?=
- =?utf-8?B?aTRKaUt1SnNsNS9oOXp5elpLaVM3endXa3R1NlFxekMzTVdNSnVIR3dUNDJQ?=
- =?utf-8?B?Rm02OGx6N1lZN0x3NG5HeXREU1p2U2tZaE5pOEoxZEFSZlNqNVZzVFd2RUYv?=
- =?utf-8?B?KzI5SDBKMlFBWXZIbHA1eXQ1MzJORUhaUkFPWEY4blU1YUdJUThOUVJOakpB?=
- =?utf-8?B?RmVwZCtrbmd6Um5YdU92aU81eEFiMzRnZnpUYVB6a1lCYjI0SkJBZi9SbjVL?=
- =?utf-8?B?bkRaejFQUnRhS3dabXVNbXFld3JZT3MycEQ0WWN0UVBLRTRKYS83alcySnlR?=
- =?utf-8?B?ckVlYzMwMi84MXo4WGo2eEE3bWE5NlBhakVkWkFBNjl2TjJoa3pKQlR0T3VL?=
- =?utf-8?B?a1YxTUZrRjFwZVpSOVpLTTlMVkZIMjZJOG1JQVhHaFJRTmNkK0Z5YUtheWJW?=
- =?utf-8?B?bW1NREtYM1pXR0gxMmsySU1ZZE9xUERjT0NIRmQzSFF5a0gydk5LVWswUmxF?=
- =?utf-8?Q?Y+MVpsY4PL6UFMyXZnbikCGIxI1AmY11ZIgz4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5624.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(52116011)(366013)(376011)(38350700011);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WHFsbllUeDlPdG5GUGJnNm5HYWdtNjEvU0s1eVEwODlhT2w3SHBZRm1OU0Fy?=
+ =?utf-8?B?dGlzWGlvejNCMERNMmZaaStyTkVwRHI5TnI4aitMbjl0NjlhdHcyZ1dwc2JG?=
+ =?utf-8?B?czZ0Sk96SWhVMmhzaTF4cG9hN1Fpc1lsTjV2Qmk1blQ5bUphcFpyT1FyYldz?=
+ =?utf-8?B?QnNsZ2k1Z05jemFxeUN5ZXJsRXdtMEt1cEYwKzdDZU95VkN6S3NuNEVKMzVK?=
+ =?utf-8?B?L2R5M2NkcEx2ZXFhZ1BPenREbnVZVW4zUWh4L3NHWlJaa3ltbk1keHVCVjhI?=
+ =?utf-8?B?aHcweXZicjEzMWZkWlpHb2x3RFJOV3VUV3VrQ0U5RW13eTJqYUxieWJvUE42?=
+ =?utf-8?B?VElHSG93cHo5bGxrSmJkMGlCcDlpMWoxZ0FoQzlwcWluVzBWcUg1NWVsQzFQ?=
+ =?utf-8?B?dVBsKzNoeFlSQU80aEJPbmRpa2cyc3IxdGFFNmQ3N2NXdlN0RFpNNktRdlF2?=
+ =?utf-8?B?NlpSYUNhUlpUeWxjViswRnNZUHBUSzFCSWZlSVJmc09JZS96U2Z3cGRhc2Vt?=
+ =?utf-8?B?M1o1clVBVG1lYnkvMW1GbG9QMS9GWTVHSVQvaXpTMEZ4Q1dieHFEVFI0TG4w?=
+ =?utf-8?B?a1I5UVhtNjNWNjJoSTU3NEh1WFNydCtsdjE0azNoY25ZWFJYYWFuSzVXb2No?=
+ =?utf-8?B?L3ZOYnFJS3d3RkxFSDdzN092Y3lFczRoQ2lhWnBhU2g4VTBVYXkrS2N0Qm16?=
+ =?utf-8?B?YmJ6dStPTHFienJKSkk0TlFuWk9qLzlGNDEzQlY3N0lOdHJwUFF1YXJaUllu?=
+ =?utf-8?B?Vlg3aHpyby9DZW9CTEo1QU02eTNRZHB2WnBLS1FVcjdDaVRNdEk2andlZDZv?=
+ =?utf-8?B?UHRFWFlQK2xaUTd6U29PRjJpV3pDMmlNeDRIbDRtblh1eVpGZlpyZUlVOTV5?=
+ =?utf-8?B?cmhhWGhwcThkL3FNck90SzZKLy9FQzZQMEFVSTdaZ1hBbSs3aVJtY2JQVWZF?=
+ =?utf-8?B?Q0R2ZzFtTXo0KzRtVXBEaFFtTTZobmV6cjBmYUdLdG9LdDhlR2VqeFlRNHUy?=
+ =?utf-8?B?b1MzcjhLcHhDQ1JHQ1hSV2xFUTVOMHM1MDNlcG1jNTUzdnhsWGk3MVl5MWcx?=
+ =?utf-8?B?RC84b2NkdnVkMU1ibklMdmYwVVdIMmhrVTVnSmdpM09sdWM4N0hrWW5BV05v?=
+ =?utf-8?B?SURLbm8wcjlsNEhzMC9rSGg0eFVZYm9lUndiZlpFbllYdEpPdkxrNk9KWUNF?=
+ =?utf-8?B?ZEpZT3lvNDBSMlhqMDU0VmlMdWJRY0s3QmF2ZG1YODhvWkEzWEMzTUNQNHpx?=
+ =?utf-8?B?TC90VGtKUHhVVE4rQmoyQzhDUVEyakRQWTBXMEk4aXh0czJsWnZtUE9yRWhZ?=
+ =?utf-8?B?VGdZNDI1aFA3ZDNiSnlxR1pRbEQ4UVN4bzRTZ2djd2V5b3JaYTRGc2VvODhZ?=
+ =?utf-8?B?U09hMHFaOEs4cnRwYkltdUpZQWJibVNDc0JIS09HQWZjUng2bXFtc0RMeFho?=
+ =?utf-8?B?T0VEOTRaQUIxemVDaUpNYStWejNKc3ljbjZzVVcxYzE1RzRpRzg3MEZmMloy?=
+ =?utf-8?B?OThlOXFkVU1waUcrYzJaUXBLc3ZYMmp1SGRZdnZiWnlKZFE4cHF4RDVqTFd0?=
+ =?utf-8?B?akdTWmQwd1dtVWJ2bGJoSHd2REVOdFl0UzdUMjM4cjltc201UlFKbTdBbmRS?=
+ =?utf-8?B?aDdYQ0lQZE45bGVWcHhpcUUwajc4alZrdUlqVTFhd0EzbE9BRnRGejhHMU5V?=
+ =?utf-8?B?QzA5M3ZKQ2RQVE41LzNFZVl6NUFzckpMWWhHWlFBdWNLa3VzQ1JKeHBvTk9W?=
+ =?utf-8?Q?kPaUwKsktLTPTGSw4RWB+FM8oYbik3i+FX32FCR?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QVNnaFoyc244Kzk4MExWdjZuVXdqU29pMXl3NkRMWjk2R3pUamIwQ2pQdEtU?=
- =?utf-8?B?Sng2bmpRTmp3ZVcrMjhKNGxpaTVORDErNlFOcHozbUJyY3RjVFA5NEdCRGdt?=
- =?utf-8?B?SUk2M0pob1RMMkM4VDhGblpuNnF1OWlVSVRjN21DcHBEMmZ5bnNHQzVZUnNw?=
- =?utf-8?B?WjJHR2E4NTVwaU9teUVJSzRTZWtCa0ZPZnJnNEhyeTBRUDJDbXh6K054Z0xJ?=
- =?utf-8?B?QllJYXBUY3M1Z2gzK3g4MDVzK1NHVTYvUEZQK2V3dG5nL21xRk8zWFo2dEtV?=
- =?utf-8?B?clIxUEh4b01IbTBxYk8zQnBTZmluL1ZiN0llM0x5VWJYMktoeHpNSXl4ZVFW?=
- =?utf-8?B?eGFkYzZnOTdIdGpwc0N5OGREQmVOVk1TMnJKUzd1Rms5RXJwS1d2RDZZTEQ4?=
- =?utf-8?B?WWQ4YUgzVG5BQlhoREl6b01RNVJiNUZQTVJGZFJsMkswQ2wzQ09pajErVHNB?=
- =?utf-8?B?OFZpQUZyUXcySGNFQmZtU2kwK2JEZGlvMWsvOXN4RWZqb1Yzai91ZGJrbEpw?=
- =?utf-8?B?L2tGZVVSalZsUTBkNzFBR3ZZc0paK0NnN0c4RFlCeTR0b01vOG5od2wwajhO?=
- =?utf-8?B?b0o2Yi9DTWdidkVobXducmdkR0pvWTcxSkdndEFUbTZSOUpScFI5RGJwSnBE?=
- =?utf-8?B?cUkrSHczektVOS96QXExMWN3RHFCcTlBMlJaMVBYdUxpS05NdWF5LzAzWk8x?=
- =?utf-8?B?VEh4S05FV1NPSjJqVDVia3hWelNzekJENG5qbXJXbUllODNBRWJjWS9UaXJW?=
- =?utf-8?B?bmljL0hzYndSVU9LeW9HY3J3MTlTTlBYbEdOcklLbmZOdi9NdUxWaFhhSkZZ?=
- =?utf-8?B?RlJmVE1DTjRzNWVRRDNoWEROckxpcXAvL1I3LytHbTQ0YlhHOHZHUmNrcTkw?=
- =?utf-8?B?QkVMend5TUJ5blg1K3J0OW9EM1FoRE4wWnhXREdXM285bk0xcHF4bWJMVmJ0?=
- =?utf-8?B?SzF2aGlHeGdwR0RNR1VmNVBNSk8xbjZuTTNCNUFkSjRRblRUd1VNaVFKODJn?=
- =?utf-8?B?aWJWdG9HbmhnQ0VhRFVUYSs1MnFid1RyektHVjQ5YWpSSFNMZ1p3bG10Q0tF?=
- =?utf-8?B?YVdTbTRmVmdGdU9OQjdGWWhoWXRlaHVUa1EyN3ZiVDNLaWZ1M1lKKzIvcDVV?=
- =?utf-8?B?Q3dmd2Y2RDVCTnVpSm9QUk95MjgycE5KWHZPZlF6ekpCMnZVWld0SnB2cmpK?=
- =?utf-8?B?ckFzU1NZZWFJMmYwVXQzM21UWlIzSTdtWFVMOFVpa0FoaGprSWVQYlZXWjEy?=
- =?utf-8?B?NFI2dkpOMmFwS2gyVHFuMmhWR3dLQlFhblVETUtWUmNYeTVlRVlPL0RCY0cx?=
- =?utf-8?B?Ymx1aUsrN3EwWENVTFcvcS9vOWs3TkV6VGp2UElUOEZGOFZLRFA3WndGUXIz?=
- =?utf-8?B?Zy9iQzJiQUZKMkxDTTRlZGpTVGdHa3gwbnNKbE0xRFoxT3pvTU1zVXA2YmU4?=
- =?utf-8?B?ZHRScW1KSDdZcnVzaWNuSngyNlZrc2NMMmdscElvb3hZM1VhbS9CeUNHcGRO?=
- =?utf-8?B?ZnFoTUx1U0VGQ1dYSHBFbHFzcy9MQ0o5WXg2ejhmYXpQQXJjTlJPb1p4ZmFy?=
- =?utf-8?B?eGZBTDF1QXAyNzIxR3JGUWtnWnhIckpKdHBhdUJOVS92cEJySGZWcUhUNlBU?=
- =?utf-8?B?eElEREU1emE0NnpDZFVPTGRBa1ZwazlncXdkWHlnRE0wNkkwYVRNVXFEUGo4?=
- =?utf-8?B?SGJET1M3eVZuZXZ2KzAxL2loN1o1RWhZVjRnREpSNkVSbFVGcnJpTUNFVVhK?=
- =?utf-8?B?a3FvUGwvUlIwWUlXWTY1WmY2MXEwdTVEQk16K01Ya1pkalBieTZmSzkvVDBn?=
- =?utf-8?B?TUtSb0ZnbFBFNkVQSExkTmRGTzFreWFTTFhSYTRleVEzZHo5ZENkSHZXamxD?=
- =?utf-8?B?T0p5ZTJoNkRNdzNqQ3psc3ZONm5NUFBJaEliWUFRcTVZTXBYK3hWb214WUda?=
- =?utf-8?B?c0t5b2RlN0MzRUFhdFVhU1ZvZENlSkdQTVM5YUJKdUZUditod2p2UmVJR0Vn?=
- =?utf-8?B?d090Rnp6QjluQWFkRFNrSUFQd2ZmaklXSDYwZmF3YU5nMVVoL1VFdnFJcTM2?=
- =?utf-8?B?amlBcXdzNkxuRTNtSmlZeUtvTHduZ1BwMXlabUFVWDVIUTd5d3d6ano1UHoy?=
- =?utf-8?Q?N7C/Lrl6QFhX3BUwuzNDMbzaY?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4bcc3b7-d80e-46fd-e1a0-08dc8f4165d4
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5624.apcprd06.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aTRPcUdGbTM3ME5oQllNQXhRQ0N4ai95M0VPQ0lvOXVzbUQ1eXBkMWlob1VQ?=
+ =?utf-8?B?b3R4Q1FGQlV2RDhJSnZ3ZDRVZk1ScWtaakZ1bDdVSEV1cWtPcUU3enU3UDFa?=
+ =?utf-8?B?OVkrcXdOVytMeGVlWWpZdkJ0dWRHczZXR3BKMTAwK3A3TG56eDVWNzN3ckor?=
+ =?utf-8?B?ejEyOHNLVjF2bkJ3ZmlleVQ2dzltMHk4NjU5Qk5VcVFueFFHMVZHL3NCTWM5?=
+ =?utf-8?B?eVFvYitxZjluUkNWTUI2dVl0R3lXMXhsZ0NFZUtBSzBHLzZvZ1RPRzNMd3RS?=
+ =?utf-8?B?dEluUHVGNmpxU3p3czRUWVVFclhqeExjRnZyTk8wQTRRRWwvMm9qU216K1dO?=
+ =?utf-8?B?M1orZEJaREdWWEJUMldEbnlnZUR3aENraytHdWRjc0xFOEpzcEQ5UWZ6Qmox?=
+ =?utf-8?B?Q2VUMFIzS1NxRS93RitMMHZ1dWl3VGJ4cnh4anFPNk5ObzNnVFcvRUtlL2U5?=
+ =?utf-8?B?M2pjQzZyMk8yQ0QvamxpaXJWT2ZMZTdkb0lSZ3hiNE83RVljQ2Q1ODFnTHd1?=
+ =?utf-8?B?dHQ2R1ZWOFZzNG1wMkNScXRlYXVRYzQyZENGbDhrZXljNW1TdHc0U3k0eVMr?=
+ =?utf-8?B?K2NNaERtRnB6TVpUUXBvY2dna0xjaFUwaVR4RE5kN3RnbjJ5SkNwR2w2aG16?=
+ =?utf-8?B?dEhXMXpLOVk3UERvaitTMmYwQ2dnZGROVnpqUEtrYTdNUEhuNmNHMWRRMENL?=
+ =?utf-8?B?NDBJMU5kWldBcmpyZnE0c0NRaEpzRjBmTkh5Wk9vVE11SkRrcHAxVjdtWDhv?=
+ =?utf-8?B?a0x2MklYdE1ucXJSdExUV25FeG5rdVFJZTNrWGIxeStEWVhubU05Q1p4eDVX?=
+ =?utf-8?B?UGJvV1JpVGVKdGhmY2M2ZUVQMDZ2c1hoUWdDQ1JoTlVNaldYUkdDNkJvbXp1?=
+ =?utf-8?B?NlJJZmtCS1VobTlVNHVxU1daSmQyUVByWGROOW1pMmVLUTBLcVpZQzVLd0kx?=
+ =?utf-8?B?WFQ2disxV29WakkzaE9HTmxraDFuY3dMTVFiTzlpL3M3NTlWSXRSUHloeE1O?=
+ =?utf-8?B?QXVGZExjWUJERlpXSDZtbXoycHYrVDE4Y1pNZDF6b0lCVXNvb2FBZ2kyZVhm?=
+ =?utf-8?B?SWdOb1UrNzAyY2lMWFdZU1lsZ0FFMCtBTmxwbTJKd3Q5YXVFN2l6UndxeFdC?=
+ =?utf-8?B?QTBzamkzS2dTR0JsZktsL0tjWlp3OEhTaHZoMVo5ei9yaTh2YWF6ekdyZHJW?=
+ =?utf-8?B?TGpQK1gzMk9XK0lsTWg4TVhiRG9VS0FRMURNZjRYaFlDa3FZVXpROGY2NzI2?=
+ =?utf-8?B?eFF3dG9hQUp6NkFQU292bVRFMmN1RXBrZXZhQnd5QWwyVzNIS09FMEtnTlNV?=
+ =?utf-8?B?TCsvZzAzL2pFdHo3aGFIOFloNUx1alhZTGVkSWxzS3U5dVh5YVdNODV3ZDlC?=
+ =?utf-8?B?bThKSnRUSGI4ZTJodkdnWFA2N1NvcldVdklVVHAvb202TlZ2NkpsTGViNkRl?=
+ =?utf-8?B?Q0loNXB1NG9LU3h3a1NtaUp4S1dCdXBGdXhXQ1JGUGoyV0pJR0pHazdlaFl2?=
+ =?utf-8?B?UjkyaFpVek5PZ2gyelN0a1RmNHlJUlZpR2RiWTNTS2paNDl5WUtuZW1JUTkr?=
+ =?utf-8?B?eHRmZk9qalkwRlhxYWphTnh2SklmOFc3cm1TWW5VWjROVUVUV2Rma1I1NUFU?=
+ =?utf-8?B?L09TOUNST3hUZkZ1SlhsZ1lkQjZ2S0dzc0J2dkRDUlR4TWoxNFgvUHp5R1NU?=
+ =?utf-8?B?MXAweHEzQVJMeXhtam9aOWI2NGZFOVZCSmFqaHBJb3NmU2h2c1ZWQnJhZ3lB?=
+ =?utf-8?B?K3loWkRVRFMwemFyeDNWL2Iyb0ZNTGdheXR5aE9yRFNEYmdNN2RHWjZTUmcv?=
+ =?utf-8?B?V0UwV0VxOXgrTDdwNythN3VMUU1qWVdacmJ1MC9zU1hDWjhnOEtOek9uT0hH?=
+ =?utf-8?B?RFZ3LytoSVpVWmZHUXBqR2ZZYS8xU3Y2bU1wK0RubVVlb2tHV2NmN3h4b3J0?=
+ =?utf-8?B?UXdpemdDNElvcEY0VEwrNWpDRjkvV0lQcFI3cHJtdFdYWWc2VHRUK0RpeDhD?=
+ =?utf-8?B?V0M5RG9TTjN4RXpNZ2RJR0xWUi9aMjBOeUJWbEtkZFdLMDVZK2VQNEh2ci9D?=
+ =?utf-8?B?TXB0QkhFQUt0WGNTYWliRjZaeTNHOElMN09lUyt2ZDd2WjZ3WFVsd2lRS1FB?=
+ =?utf-8?Q?+kEE3Uz61i0XCwacoGqbOqFyG?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16af20f3-8cd9-412f-4811-08dc8f416a28
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 02:50:22.5987
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 02:50:29.9386
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KW88KDAkxsE7moKe93GfD/yiLnDQ0Jjjn8+ZA73J1PTwTZ/hyEkjN3n2XSys1g1tDJCHBRPn0d0FIIRnJSARxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5170
+X-MS-Exchange-CrossTenant-UserPrincipalName: nQtEToLpB6QFWkN/k1o4lvpqiMjwNAel7fDnhMhBiADnO8M3335uM8lKkpCrWfqyKwbzxgTiARaCGlq8judQ9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5300
+X-OriginatorOrg: intel.com
 
+On 2024/6/8 01:38, Jacob Pan wrote:
+> Queued invalidation wait descriptor status is volatile in that IOMMU hardware
+> writes the data upon completion.
+> 
+> Use READ_ONCE() to prevent compiler optimizations which ensures memory
+> reads every time. As a side effect, READ_ONCE() also enforces strict types and
+> may add an extra instruction. But it should not have negative
+> performance impact since we use cpu_relax anyway and the extra time(by
+> adding an instruction) may allow IOMMU HW request cacheline ownership easier.
+> 
+> e.g. gcc 12.3
+> BEFORE:
+> 	81 38 ad de 00 00       cmpl   $0x2,(%rax)
+> 
+> AFTER (with READ_ONCE())
+>      772f:       8b 00                   mov    (%rax),%eax
+>      7731:       3d ad de 00 00          cmp    $0x2,%eax //status data is 32 bit
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/intel/dmar.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 304e84949ca7..1c8d3141cb55 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -1446,7 +1446,7 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>   	 */
+>   	writel(qi->free_head << shift, iommu->reg + DMAR_IQT_REG);
+>   
+> -	while (qi->desc_status[wait_index] != QI_DONE) {
+> +	while (READ_ONCE(qi->desc_status[wait_index]) != QI_DONE) {
+>   		/*
+>   		 * We will leave the interrupts disabled, to prevent interrupt
+>   		 * context to queue another cmd while a cmd is already submitted
 
-On 2024/6/18 2:43, Carlos Llamas wrote:
-> On Mon, Jun 17, 2024 at 12:01:26PM +0800, Lei Liu wrote:
->> On 6/15/2024 at 2:38, Carlos Llamas wrote:
->>> My understanding is that kvcalloc() == kcalloc() if there is enough
->>> contiguous memory no?
->>>
->>> I would expect the performance to be the same at best.
->> 1.The main reason is memory fragmentation, where we are unable to
->> allocate contiguous order3 memory. Additionally, using the GFP_KERNEL
->> allocation flag in the kernel's __alloc_pages_slowpath function results
->> in multiple retry attempts, and if direct_reclaim and memory_compact
->> are unsuccessful, OOM occurs.
->>
->> 2.When fragmentation is severe, we observed that kvmalloc is faster
->> than kmalloc, as it eliminates the need for multiple retry attempts to
->> allocate order3. In such cases, falling back to order0 may result in
->> higher allocation efficiency.
->>
->> 3.Another crucial point is that in the kernel, allocations greater than
->> order3 are considered PAGE_ALLOC_COSTLY_ORDER. This leads to a reduced
->> number of retry attempts in __alloc_pages_slowpath, which explains the
->> increased time for order3 allocation in fragmented scenarios.
->>
->> In summary, under high memory pressure scenarios, the system is prone
->> to fragmentation. Instead of waiting for order3 allocation, it is more
->> efficient to allow kvmalloc to automatically select between order0 and
->> order3, reducing wait times in high memory pressure scenarios. This is
->> also the reason why kvmalloc can improve throughput.
-> Yes, all this makes sense. What I don't understand is how "performance
-> of kvcalloc is better". This is not supposed to be.
+Reviewed-by: Yi Liu <yi.l.liu@intel.com>
 
-Based on my current understanding:
-1.kvmalloc may allocate memory faster than kmalloc in cases of memory 
-fragmentation, which could potentially improve the performance of binder.
-2.Memory allocated by kvmalloc may not be contiguous, which could 
-potentially degrade the data read and write speed of binder.
-
-I'm uncertain about the relative impact of the points mentioned above. 
-I'm interested in hearing your perspective on this matter.
-
->>> I'm not so sure about the results and performance improvements that are
->>> claimed here. However, the switch to kvcalloc() itself seems reasonable
->>> to me.
->>>
->>> I'll run these tests myself as the results might have some noise. I'll
->>> get back with the results.
->>>
->>> Thanks,
->>> Carlos Llamas
->> Okay, thank you for the suggestion. I look forward to receiving your
->> test results and continuing our discussion.
->>
-> I ran several iterations of the benchmark test on a Pixel device and as
-> expected I didn't see any significant differences. This is a good thing,
-> but either we need to understand how you obtained a better performance
-> from using kvcalloc(), or it would be better to drop this claim from the
-> commit log.
->
-> The following are two individual samples of each form. However, if we
-> could average the output and get rid of the noise it seems the numbers
-> are pretty much the same.
->
-> Sample with kcalloc():
-> ------------------------------------------------------------------
-> Benchmark                        Time             CPU   Iterations
-> ------------------------------------------------------------------
-> BM_sendVec_binder/4          19983 ns         9832 ns        60255
-> BM_sendVec_binder/8          19766 ns         9690 ns        71699
-> BM_sendVec_binder/16         19785 ns         9722 ns        72086
-> BM_sendVec_binder/32         20067 ns         9864 ns        71535
-> BM_sendVec_binder/64         20077 ns         9941 ns        69141
-> BM_sendVec_binder/128        20147 ns         9944 ns        71016
-> BM_sendVec_binder/256        20424 ns        10044 ns        69451
-> BM_sendVec_binder/512        20518 ns        10064 ns        69179
-> BM_sendVec_binder/1024       21073 ns        10319 ns        67599
-> BM_sendVec_binder/2048       21482 ns        10502 ns        66767
-> BM_sendVec_binder/4096       22308 ns        10809 ns        63841
-> BM_sendVec_binder/8192       24022 ns        11649 ns        60795
-> BM_sendVec_binder/16384      27172 ns        13426 ns        51940
-> BM_sendVec_binder/32768      32853 ns        16345 ns        42211
-> BM_sendVec_binder/65536      80177 ns        39787 ns        17557
->
-> Sample with kvalloc():
-> ------------------------------------------------------------------
-> Benchmark                        Time             CPU   Iterations
-> ------------------------------------------------------------------
-> BM_sendVec_binder/4          19900 ns         9711 ns        68626
-> BM_sendVec_binder/8          19903 ns         9756 ns        71524
-> BM_sendVec_binder/16         19601 ns         9541 ns        71069
-> BM_sendVec_binder/32         19514 ns         9530 ns        72469
-> BM_sendVec_binder/64         20042 ns        10006 ns        69753
-> BM_sendVec_binder/128        20142 ns         9965 ns        70392
-> BM_sendVec_binder/256        20274 ns         9958 ns        70173
-> BM_sendVec_binder/512        20305 ns         9966 ns        70347
-> BM_sendVec_binder/1024       20883 ns        10250 ns        67813
-> BM_sendVec_binder/2048       21364 ns        10455 ns        67366
-> BM_sendVec_binder/4096       22350 ns        10888 ns        65689
-> BM_sendVec_binder/8192       24113 ns        11707 ns        58149
-> BM_sendVec_binder/16384      27122 ns        13346 ns        52515
-> BM_sendVec_binder/32768      32158 ns        15901 ns        44139
-> BM_sendVec_binder/65536      87594 ns        43627 ns        16040
->
-> To reiterate, the switch to kvcalloc() sounds good to me. Let's just fix
-> the commit log and Greg's suggestions too.
->
-> Thanks,
-> Carlos Llamas
-
-Hmm, this is really good news. From the current test results, it seems 
-that kvmalloc does not degrade performance for binder.
-
-I will retest the data on our phone to see if we reach the same 
-conclusion. If kvmalloc still proves to be better, we will provide you 
-with the reproduction method.
-
+-- 
+Regards,
+Yi Liu
