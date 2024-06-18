@@ -1,153 +1,276 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE74178384
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD21482DA
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718747778; cv=none; b=SHn5MjeKeI+4qIMYlfJt5xIs8ffy2g92s8Q7Sh6qaIt9yj91FVcjFXVgFl6FEfiYfHASPJh2vXnWILJp7dPbZUsl/oLBFb7kOS7i3MFRMxj/A78oIMGVbrxJO+RGlnkzsqO/HFvB33kYz7g68wvn99h0lRTwYnjDZwRzGlCD9HA=
+	t=1718747962; cv=none; b=Ggkf+rVankjiUokzHP1RwLkiflDONUuSdwv6c/WS1sXhklPvi1Lf0Yy+nRh/LcL3yE16oC0Bp8N40pyXQG78LDithL24gcXCPO4HdOzmVGBZOwCbDbV2oyoj0Ie7nKfll+j+x8gvjt1VbKSh/CsNAWveSOH3CpNnp8WTSyhtGjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718747778; c=relaxed/simple;
-	bh=smmYYos6NqVFRFPZ/Mdtn60WSUoCoErKhAymh6N2XoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t7z5d2jsLVskvAuPT2tcTe70enNLTc8ehouqDXguw6qen23pVjW/AWVF3XIUuDNteSxoFBbdYc/tDWV6gJon+3eoBTteDKd6EgcLrll+fN7NIJn+BYOGlEXZJPdDXN650YRb+IVFYH/NZalfs2UaesYkZXkUm4MvSCsykSCS+qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GrB46g9Z; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718747962; c=relaxed/simple;
+	bh=zm1VjWuxosVrdwVjAJrwwt8BO2mJfxlJ4vmwClREYEM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Qmr+g7jDod9pELR8LWYXlXJeKevonmhfVSb5dZWgE8NFp1yAYIInvlmGgL5SZn4lUDFCyqDikxvAp5ux3qLs50hwGGnVvYKi0S3rfwl9M4O8E7WsqQgMiXjsiRbjr5OCbiVsCfyyvyHle+liN6QTCS9GpFw4b+mPrsKAN2eiydQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k28+dmHf; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrB46g9Z"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d24724514eso3468426b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:56:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k28+dmHf"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c7c3069f37so5718a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718747776; x=1719352576; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ji2+efuOAd6wBtWA0zFIRf6hUgNxX8IdSNdDWlzGrZQ=;
-        b=GrB46g9ZzCt+UBj8A2/g+1RHZJhmzUZcpdB8cKrTCywEt6T8SuadDHmsphHXGw4avr
-         VDixJHf9tbqy8aoo5enL+g+YwL68CJWTbWSj70O+1dGGAYUGXy82RlDalANnMZpJOTki
-         hvWuF46AwnYmpFN/O+otCG8OeYz9pHSeU7Pjg=
+        d=google.com; s=20230601; t=1718747960; x=1719352760; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PR/q/l+rF1KRkhTzXDbNoun8qkscu1njT4o+yNkYLE4=;
+        b=k28+dmHfNWTYBNkesjarSmlQgL4JxPeLOS+kDxqK/QJVmvYdRBRMB7DBOXdquNL2iP
+         qqrUNtlrK1PbFMHjaVVOQpJwYS5WWO6Xb1/E1qAs7l9YfqV6/52aLl0tIykGXBo7+a9M
+         EnDdwgDCW9f7tC9R0Qs6puI4sKdQ4l2BVwyCcQgtpqYsVlrHqhdJivF5nqJQ7QCJT5DO
+         i5lUpyffdN2H04DrzuU5WGseAW2VWUfIyTQajPscMnY2TMpDnCW+ZMcZ0anZ91920lGj
+         Oc7rd0rbvaNPhxAdlZGb2CN8FhU/kj9MPu8Tk/z8LqioaSy/Ob4Nhj4WnYPEvMEQT8rV
+         i2kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718747776; x=1719352576;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ji2+efuOAd6wBtWA0zFIRf6hUgNxX8IdSNdDWlzGrZQ=;
-        b=qzGm7JDZL3M3w3EmoO1Z9ZDeVWJmLHNEEmRI5bij50U7zi8VjFDVnHrP47AwCTyJQf
-         QvBEuVqmbSmBOhvxHatB8S5fdRlLRyChyPw5mR9Gy5M8L/mpPsatbaj+d7wMtuuhoQa3
-         +oPjIaqjbuJt001MhvdG6t95fkZSIMtuhWXcy1fS9a6OM+Zogm1yz8D8f4aNABY1tHaO
-         avzFn54SK/vWfTBaEY2+eoyG2kUjdohhLmblnF/ZX+3j3k4+diMbY0bEwcPDqQ49VAqA
-         Q3R6uCxyzFe4tPKTt2e/Ive3AdNE+JAI9EbBNzbxLoaWjFThYfENtUd7n/x5s5MBHYzK
-         aaDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsGJkFR9iQWzvSivNlxp7sGwhJMEXuVqY3Ob7hVXP74GX/dFa77YtHH1g8UQSCnfD9kbe0dw1a1dy3sbelHRk1Rk0LND7qlpaMjLnH
-X-Gm-Message-State: AOJu0YwPTGCUSyhtwMuE8NSbpo6LHota305fUNK98r6n7nBBrkg38ERd
-	3k+2rK08DR2jexnvR9XFrbzjo9ZCE660PEPbML+5marNeQTwBAhdzvffX176ZBvpNGZTVBYtzS0
-	=
-X-Google-Smtp-Source: AGHT+IGqN+G5rG4Su+FUN367Zg++vMzJCbz/S5dZyy+str6UequcOxKN+sAwc0CNT5tSk+djpEMv6Q==
-X-Received: by 2002:a05:6808:1592:b0:3d2:4edc:1ffd with SMTP id 5614622812f47-3d51b96c223mr1318603b6e.12.1718747774837;
-        Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef4de0ecsm59967051cf.9.2024.06.18.14.56.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44056f72257so119551cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9RIomMx590YXxbPfpHDIjwBMJe33ABQzSA7EgUzChUZusXYGLWjxAVxmvFzxupMaQvEjPtkS4sKGYQwUnUsch8WRuKzxGHRP80pC+
-X-Received: by 2002:ac8:5748:0:b0:441:630e:110a with SMTP id
- d75a77b69052e-444aa409525mr298631cf.17.1718746453359; Tue, 18 Jun 2024
- 14:34:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718747960; x=1719352760;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PR/q/l+rF1KRkhTzXDbNoun8qkscu1njT4o+yNkYLE4=;
+        b=fjqvTfONaNbdu5zTCU/9Wxu5FT+Vn6KUdDfAnfdAh+8DsxiyXFMaM5q+JwdIWXnAAF
+         feSq+kUJ2FdAJyapq14yM9pYR/5En3G787xDVpawam+gVUoBpp+Ud2LjQhlg0jvrpv00
+         0KSyrwocmhklCmiTGTDTJqHUkDWgqrlT5VSn6HylVBEMI2cSHZL+J+7cFJBCXgYyqKB3
+         41hDY1xs+UXRtVSlUQ699GRqDjNI09DPxJNWyBCOdCnuVMbIaRH46RuPpjMucov9LpUj
+         HxDovniogUaVtVKveoSsgSmDvlAIm4iUTojYRjGLtIUvGZwFxsVBF6570OcxGPuZMZNn
+         iwpA==
+X-Gm-Message-State: AOJu0YzPRjnhCsqiE9p8+H839dbKYySGhp47YFR1Q7124EtMMTPaKZQe
+	qRbVNDUGmo14GEt1FoYfN7AdKFcD6fktTU7K/40JRqJxfB8zTpJ8/kfGx9EhwpUKEL6ss7pvyJH
+	ItinUDVeYjb/kroDXqGeqgdbY57swFp4cL9xgTdCjGW74i7BJRcfNExzoqfVfTCk8AVOYR5GArh
+	RQThoJ0bTiN6+Bf9aK7tKfgOZw30kuebTGYTFeB/IXDcLZ
+X-Google-Smtp-Source: AGHT+IGgLg+DqDmdh74AEadK98VEnNSHprUuW275qJ3Ck/6JtV96pLW1aeH/U9uruDpiZrekwAX5uOOWjIg8
+X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
+ (user=jstultz job=sendgmr) by 2002:a17:90b:808:b0:2c7:6305:990d with SMTP id
+ 98e67ed59e1d1-2c7b57f9b62mr2785a91.2.1718747958436; Tue, 18 Jun 2024 14:59:18
+ -0700 (PDT)
+Date: Tue, 18 Jun 2024 14:58:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240612222435.3188234-1-dianders@chromium.org>
- <20240612152752.v2.8.I27914059cc822b52db9bf72b4013b525b60e06fd@changeid> <CADnq5_PbqE0E2pP26mGD94cdc=tLZZsF10e7ZZWeC5AU-LS8vw@mail.gmail.com>
-In-Reply-To: <CADnq5_PbqE0E2pP26mGD94cdc=tLZZsF10e7ZZWeC5AU-LS8vw@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 18 Jun 2024 14:34:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XJAiVGFn_Tqs_JNo1fQKFys3m=hH9MwmMot93gkdg=Qw@mail.gmail.com>
-Message-ID: <CAD=FV=XJAiVGFn_Tqs_JNo1fQKFys3m=hH9MwmMot93gkdg=Qw@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] drm/amdgpu: Call drm_atomic_helper_shutdown() at
- shutdown time
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Xinhui Pan <Xinhui.Pan@amd.com>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Aurabindo Pillai <aurabindo.pillai@amd.com>, Candice Li <candice.li@amd.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Hamza Mahfooz <hamza.mahfooz@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>, Le Ma <le.ma@amd.com>, 
-	Lijo Lazar <lijo.lazar@amd.com>, Ma Jun <Jun.Ma2@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Shashank Sharma <shashank.sharma@amd.com>, 
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Victor Lu <victorchengchi.lu@amd.com>, amd-gfx@lists.freedesktop.org, 
-	chenxuebing <chenxb_99091@126.com>, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
+Message-ID: <20240618215909.4099720-1-jstultz@google.com>
+Subject: [PATCH] sched: Move psi_account_irqtime() out of update_rq_clock_task()
+ hotpath
+From: John Stultz <jstultz@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Qais Yousef <qyousef@layalina.io>, 
+	Joel Fernandes <joel@joelfernandes.org>, kernel-team@android.com, 
+	Jimmy Shiu <jimmyshiu@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+It was reported that in moving to 6.1, a larger then 10%
+regression was seen in the performance of
+clock_gettime(CLOCK_THREAD_CPUTIME_ID,...).
 
+Using a simple reproducer, I found:
+5.10:
+100000000 calls in 24345994193 ns => 243.460 ns per call
+100000000 calls in 24288172050 ns => 242.882 ns per call
+100000000 calls in 24289135225 ns => 242.891 ns per call
 
-On Mon, Jun 17, 2024 at 8:01=E2=80=AFAM Alex Deucher <alexdeucher@gmail.com=
-> wrote:
->
-> On Wed, Jun 12, 2024 at 6:37=E2=80=AFPM Douglas Anderson <dianders@chromi=
-um.org> wrote:
-> >
-> > Based on grepping through the source code this driver appears to be
-> > missing a call to drm_atomic_helper_shutdown() at system shutdown
-> > time. Among other things, this means that if a panel is in use that it
-> > won't be cleanly powered off at system shutdown time.
-> >
-> > The fact that we should call drm_atomic_helper_shutdown() in the case
-> > of OS shutdown/restart comes straight out of the kernel doc "driver
-> > instance overview" in drm_drv.c.
-> >
-> > Suggested-by: Maxime Ripard <mripard@kernel.org>
-> > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Cc: Xinhui Pan <Xinhui.Pan@amd.com>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > This commit is only compile-time tested.
-> >
-> > ...and further, I'd say that this patch is more of a plea for help
-> > than a patch I think is actually right. I'm _fairly_ certain that
-> > drm/amdgpu needs this call at shutdown time but the logic is a bit
-> > hard for me to follow. I'd appreciate if anyone who actually knows
-> > what this should look like could illuminate me, or perhaps even just
-> > post a patch themselves!
->
-> I'm not sure this patch makes sense or not.  The driver doesn't really
-> do a formal tear down in its shutdown routine, it just quiesces the
-> hardware.  What are the actual requirements of the shutdown function?
-> In the past when we did a full driver tear down in shutdown, it
-> delayed the shutdown sequence and users complained.
+6.1:
+100000000 calls in 28248646742 ns => 282.486 ns per call
+100000000 calls in 28227055067 ns => 282.271 ns per call
+100000000 calls in 28177471287 ns => 281.775 ns per call
 
-The "inspiration" for this patch is to handle panels properly.
-Specifically, panels often have several power/enable signals going to
-them and often have requirements that these signals are powered off in
-the proper order with the proper delays between them. While we can't
-always do so when the system crashes / reboots in an uncontrolled way,
-panel manufacturers / HW Engineers get upset if we don't power things
-off properly during an orderly shutdown/reboot. When panels are
-powered off badly it can cause garbage on the screen and, so I've been
-told, can even cause long term damage to the panels over time.
+The cause of this was finally narrowed down to the addition of
+psi_account_irqtime() in update_rq_clock_task(), in commit
+52b1364ba0b1 ("sched/psi: Add PSI_IRQ to track IRQ/SOFTIRQ
+pressure").
 
-In Linux, some panel drivers have tried to ensure a proper poweroff of
-the panel by handling the shutdown() call themselves. However, this is
-ugly and panel maintainers want panel drivers to stop doing it. We
-have removed the code doing this from most panels now [1]. Instead the
-assumption is that the DRM modeset drivers should be calling
-drm_atomic_helper_shutdown() which will make sure panels get an
-orderly shutdown.
+In my initial attempt to resolve this, I leaned towards moving
+all accounting work out of the clock_gettime() call path, but it
+wasn't very pretty, so it will have to wait for a later deeper
+rework. Instead, Peter shared this approach:
 
-For a lot more details, see the cover letter [2] which then contains
-links to even more discussions about the topic.
+Rework psi_account_irqtime() to use its own psi_irq_time base
+for accounting, and move it out of the hotpath, calling it
+instead from sched_tick() and __schedule().
 
-[1] https://lore.kernel.org/r/20240605002401.2848541-1-dianders@chromium.or=
-g
-[2] https://lore.kernel.org/r/20240612222435.3188234-1-dianders@chromium.or=
-g
+In testing this, we found the importance of ensuring
+psi_account_irqtime() is run under the rq_lock, which Johannes
+Weiner helpfully explained, so also add some lockdep annotations
+to make that requirement clear.
+
+With this change the performance is back in-line with 5.10:
+6.1+fix:
+100000000 calls in 24297324597 ns => 242.973 ns per call
+100000000 calls in 24318869234 ns => 243.189 ns per call
+100000000 calls in 24291564588 ns => 242.916 ns per call
+
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Qais Yousef <qyousef@layalina.io>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: kernel-team@android.com
+Originally-by: Peter Zijlstra <peterz@infradead.org>
+Reported-by: Jimmy Shiu <jimmyshiu@google.com>
+Signed-off-by: John Stultz <jstultz@google.com>
+---
+ kernel/sched/core.c  |  7 +++++--
+ kernel/sched/psi.c   | 21 ++++++++++++++++-----
+ kernel/sched/sched.h |  1 +
+ kernel/sched/stats.h | 11 ++++++++---
+ 4 files changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bcf2c4cc0522..59ce0841eb1f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -723,7 +723,6 @@ static void update_rq_clock_task(struct rq *rq, s64 delta)
+ 
+ 	rq->prev_irq_time += irq_delta;
+ 	delta -= irq_delta;
+-	psi_account_irqtime(rq->curr, irq_delta);
+ 	delayacct_irq(rq->curr, irq_delta);
+ #endif
+ #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
+@@ -5665,7 +5664,7 @@ void sched_tick(void)
+ {
+ 	int cpu = smp_processor_id();
+ 	struct rq *rq = cpu_rq(cpu);
+-	struct task_struct *curr = rq->curr;
++	struct task_struct *curr;
+ 	struct rq_flags rf;
+ 	unsigned long hw_pressure;
+ 	u64 resched_latency;
+@@ -5677,6 +5676,9 @@ void sched_tick(void)
+ 
+ 	rq_lock(rq, &rf);
+ 
++	curr = rq->curr;
++	psi_account_irqtime(rq, curr, NULL);
++
+ 	update_rq_clock(rq);
+ 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
+ 	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
+@@ -6737,6 +6739,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
+ 		++*switch_count;
+ 
+ 		migrate_disable_switch(rq, prev);
++		psi_account_irqtime(rq, prev, next);
+ 		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
+ 
+ 		trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next, prev_state);
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7b4aa5809c0f..507d7b8d79af 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -773,6 +773,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
+ 	enum psi_states s;
+ 	u32 state_mask;
+ 
++	lockdep_assert_rq_held(cpu_rq(cpu));
+ 	groupc = per_cpu_ptr(group->pcpu, cpu);
+ 
+ 	/*
+@@ -991,22 +992,32 @@ void psi_task_switch(struct task_struct *prev, struct task_struct *next,
+ }
+ 
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+-void psi_account_irqtime(struct task_struct *task, u32 delta)
++void psi_account_irqtime(struct rq *rq, struct task_struct *curr, struct task_struct *prev)
+ {
+-	int cpu = task_cpu(task);
++	int cpu = task_cpu(curr);
+ 	struct psi_group *group;
+ 	struct psi_group_cpu *groupc;
+-	u64 now;
++	u64 now, irq;
++	s64 delta;
+ 
+ 	if (static_branch_likely(&psi_disabled))
+ 		return;
+ 
+-	if (!task->pid)
++	if (!curr->pid)
++		return;
++
++	lockdep_assert_rq_held(rq);
++	group = task_psi_group(curr);
++	if (prev && task_psi_group(prev) == group)
+ 		return;
+ 
+ 	now = cpu_clock(cpu);
++	irq = irq_time_read(cpu);
++	delta = (s64)(irq - rq->psi_irq_time);
++	if (delta < 0)
++		return;
++	rq->psi_irq_time = irq;
+ 
+-	group = task_psi_group(task);
+ 	do {
+ 		if (!group->enabled)
+ 			continue;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index a831af102070..ef20c61004eb 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1126,6 +1126,7 @@ struct rq {
+ 
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+ 	u64			prev_irq_time;
++	u64			psi_irq_time;
+ #endif
+ #ifdef CONFIG_PARAVIRT
+ 	u64			prev_steal_time;
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index 38f3698f5e5b..b02dfc322951 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -110,8 +110,12 @@ __schedstats_from_se(struct sched_entity *se)
+ void psi_task_change(struct task_struct *task, int clear, int set);
+ void psi_task_switch(struct task_struct *prev, struct task_struct *next,
+ 		     bool sleep);
+-void psi_account_irqtime(struct task_struct *task, u32 delta);
+-
++#ifdef CONFIG_IRQ_TIME_ACCOUNTING
++void psi_account_irqtime(struct rq *rq, struct task_struct *curr, struct task_struct *prev);
++#else
++static inline void psi_account_irqtime(struct rq *rq, struct task_struct *curr,
++				       struct task_struct *prev) {}
++#endif /*CONFIG_IRQ_TIME_ACCOUNTING */
+ /*
+  * PSI tracks state that persists across sleeps, such as iowaits and
+  * memory stalls. As a result, it has to distinguish between sleeps,
+@@ -192,7 +196,8 @@ static inline void psi_ttwu_dequeue(struct task_struct *p) {}
+ static inline void psi_sched_switch(struct task_struct *prev,
+ 				    struct task_struct *next,
+ 				    bool sleep) {}
+-static inline void psi_account_irqtime(struct task_struct *task, u32 delta) {}
++static inline void psi_account_irqtime(struct rq *rq, struct task_struct *curr,
++				       struct task_struct *prev) {}
+ #endif /* CONFIG_PSI */
+ 
+ #ifdef CONFIG_SCHED_INFO
+-- 
+2.45.2.627.g7a2c4fd464-goog
+
