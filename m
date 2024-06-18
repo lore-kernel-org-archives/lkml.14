@@ -1,129 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116FA16DC13
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0316DC20
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719335; cv=none; b=RDPuknXCN4v0JplYps0L/97I7HKa26Wu1co7wVvAR7V3MVHsy/B16CCF3AP+BVMEMdZDb8mrfheuGghmqgGGtUoJrkrNlSwzrDXOiIHkqr2kZUHKCCoG7i7Ha36g1a3a09qVVyu06v6ybeM1drMB9s8Jt0U/G42izZFh+feIEsk=
+	t=1718719359; cv=none; b=uXcn8oZEb5LYzoI95kh1OvBbgjmAMFI2zxw1Xr/fWix4z+j4nKtieW4s9Jy3qDSTDXOtKPzPbNWJyGLsy7qeoHaC7KXrlPX5LQ5hXCCddpKtVHHwTfQKK0tzo6KxMxqCMdUwcaUPo25A+pa7QMp8AqjyR/hlsdPpqeN4KKq0ODI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719335; c=relaxed/simple;
-	bh=SxOBJJqyZpXNmD01GyQFkSfg8fr2KyuHVVdyRSegJU0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d2MMMXdZUcFhMbFHDRcVS9iL7Iscd2oNNGepHibzeUosR7qFJvOIbtCGzx6Wtxe9UlnZD+Dk3AeUhI4AAkMxBXGKK6gLYplzAU1GM6psDWKHfPY70w1ZW+9cl9WOZthIrwcEElrVc8RPnB5H8UtNwH1Zg1YfYiargU7OnBUcMso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A05CCDA7;
-	Tue, 18 Jun 2024 07:02:36 -0700 (PDT)
-Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 813213F6A8;
-	Tue, 18 Jun 2024 07:02:08 -0700 (PDT)
-From: Dave Martin <Dave.Martin@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: James Morse <james.morse@arm.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	Peter Newman <peternewman@google.com>,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: [PATCH v2] x86/resctrl: Don't try to free nonexistent RMIDs
-Date: Tue, 18 Jun 2024 15:01:52 +0100
-Message-Id: <20240618140152.83154-1-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718719359; c=relaxed/simple;
+	bh=PLtj7bSe++tHU1muE0ellbCUBsOVwaNLui/U8TXTses=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WrLv0HIR1+xb731nZV0MmTH0hRwOxZ2osDkuOwN5PSmrXyRu2KfE3qM5ymANFmy1O3m6T8DwN1GY7Znd6KkDK3vGJBabmGG4571uiv40prHw1g8z/kG2ZJB6+CFHHV/QgrjuZxhwGPz71/M3EF/D95/DDc8CtrqLw0W9439A6D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vypcjnui; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vypcjnui"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f14af40c2so4574740f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718719355; x=1719324155; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uJg4U+PW9Snx8tG5VLs4l5kg/oNVaqq+3EVHHkcbQfc=;
+        b=vypcjnuiJke07aPcLopSP2JneN2mnNHmsXw7xgLzXa8jq9pBV2NnxEs9W+AMySMcgx
+         FPkt95Cny9Mdqq2ai6lF+rlm1p1WW9eVGUSCXhQT3AM3GENw2atiJQXAW2GK+o4WOtZZ
+         Q7oJWFTF6MilkHHPKrpD90AS2Dvl/4qG9RHqvCkun8W36XnGuCK2WEz0fL7QFdPUXWp0
+         rkKohkFRmS5HFQbKZsS7dFJI7iM5uv5J9+Nw5F/qasNfFHJS/vDk5zMpZE6cO0FT1m58
+         Z27OzAdR0/8QGEE+zIwpmy8iGhrz982wj7bLXgayPypcH9dCwNfb+z42JC1jhOQwIYFw
+         IM2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718719355; x=1719324155;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uJg4U+PW9Snx8tG5VLs4l5kg/oNVaqq+3EVHHkcbQfc=;
+        b=p8LDhnV/sksBQWdccDzu+6a/TSNs+d4KDviizb8AqDdW7HRkU7R8kEPR6mNAAgNRs0
+         X3Y8RdHXXMo1T4f+3Y6bNBk7Ov6XNFksV9cHg7oe600vKl81e9L5olouH2RzrH6qU1kd
+         OE5sqj8MRz79ZB8I59zCr6o/Jd+WTgckxLRnAibK+BIJN/mHPvZEXgZyHY+b/ZwBRh4K
+         mbsBHDOQxYzOVuxqSc6QfhgOVnVTtERUAS6bHAcA0dRNhBRnKsZNE+8DKwfPZBllehZL
+         ivCJAwkOMU1T3bur9Wgq6+naU2d1jMw89vv/nF0bvR1Bet32ZkwXZXCVz1Ql8drf0kmp
+         AYzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcDWLq/j/puRdpYE1r92XLwTJEAktQxS7WzScau6yfk/gFcOGCrAuwn8wILOun+BAIWioPKAJQgN0DEGZzQKkJhWRoOm+t5satFlPh
+X-Gm-Message-State: AOJu0Yxe7pQuJkxpaqP7XwvndG+QifJLpt5bBKM9wQyyB4R0P9k0gEqd
+	6BBdS9sKL4b+qLJpnj1Jp07UVRPmEUpWVvE29rpFolfXrhjW+qP4R3fkfw6W5Bk=
+X-Google-Smtp-Source: AGHT+IEpUUcK2t2NT0uyE9LsIkX7F9ePlZPM6Wgs49S7h0PwgLnOw5XdUvtGqV7G0aa932wJUiWaZg==
+X-Received: by 2002:a5d:5607:0:b0:362:ea80:db0d with SMTP id ffacd0b85a97d-362ea80dc64mr155775f8f.11.1718719354954;
+        Tue, 18 Jun 2024 07:02:34 -0700 (PDT)
+Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f22absm14412546f8f.79.2024.06.18.07.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 07:02:34 -0700 (PDT)
+From: Guillaume Stols <gstols@baylibre.com>
+Date: Tue, 18 Jun 2024 14:02:33 +0000
+Subject: [PATCH 1/9] dt-bindings: iio: adc: adi,ad7606: add missing
+ datasheet link
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240618-cleanup-ad7606-v1-1-f1854d5c779d@baylibre.com>
+References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
+In-Reply-To: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>, 
+ Stefan Popa <stefan.popa@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Guillaume Stols <gstols@baylibre.com>, jstephan@baylibre.com, 
+ dlechner@baylibre.com
+X-Mailer: b4 0.14.0
 
-Commit 6791e0ea3071 ("x86/resctrl: Access per-rmid structures by
-index") adds logic to map individual monitoring groups into a
-global index space used for tracking allocated RMIDs.
+Add AD7606-5 datasheet link.
 
-Attempts to free the default RMID are ignored in free_rmid(),
-and this works fine on x86.
-
-With arm64 MPAM, there is a latent bug here however: on platforms
-with no monitors exposed through resctrl, each control group still
-gets a different monitoring group ID as seen by the hardware, since
-the CLOSID always forms part of the monitoring group ID.  This
-means that when removing a control group, the code may try to free
-this group's default monitoring group RMID for real.  If there are
-no monitors however, the RMID tracking table rmid_ptrs[] would be a
-waste of memory and is never allocated, leading to a splat when
-free_rmid() tries to dereference the table.
-
-One option would be to treat RMID 0 as special for every CLOSID,
-but this would be ugly since we still want to do bookkeeping for
-these monitoring group IDs when there are monitors present in the
-hardware.
-
-Instead, add a gating check of resctrl_arch_mon_capable() in
-free_rmid(), and just do nothing if the hardware doesn't have
-monitors.
-
-This fix mirrors the gating checks already present in
-mkdir_rdt_prepare_rmid_alloc() and elsewhere.
-
-No functional change on x86.
-
-Fixes: 6791e0ea3071 ("x86/resctrl: Access per-rmid structures by index")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Tested-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-
+Signed-off-by: Guillaume Stols <gstols@baylibre.com>
 ---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Based on v6.10-rc3.
-
-Tested on x86 (But so far for the monitors-present case.
-Testing on Atom would be appreciated.)
-
-Tested on arm64 for the no-monitors case.
-
-Changes since v1:
-
- * Typo fixes and rewording in commit message; slurp maintainer tags.
-
-(no code changes)
----
- arch/x86/kernel/cpu/resctrl/monitor.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 2345e6836593..366f496ca3ce 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -519,7 +519,8 @@ void free_rmid(u32 closid, u32 rmid)
- 	 * allows architectures that ignore the closid parameter to avoid an
- 	 * unnecessary check.
- 	 */
--	if (idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
-+	if (!resctrl_arch_mon_capable() ||
-+	    idx == resctrl_arch_rmid_idx_encode(RESCTRL_RESERVED_CLOSID,
- 						RESCTRL_RESERVED_RMID))
- 		return;
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index 7fa46df1f4fb..d55c58400df5 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -11,6 +11,7 @@ maintainers:
  
+ description: |
+   Analog Devices AD7606 Simultaneous Sampling ADC
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7605-4.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7606B.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
 
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
 -- 
 2.34.1
 
