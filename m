@@ -1,95 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from finn.localdomain (finn.gateworks.com [108.161.129.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2528DCC;
-	Tue, 18 Jun 2024 20:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF27916EB4C;
+	Tue, 18 Jun 2024 20:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.161.129.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740849; cv=none; b=MvAoOvwNxQ8Ws0KFC5iJ6cpCa/cEjda2nn3fd0r8aom6L/YKDIsTWp7V1eSviwm2Vp1GSkKSnb9bmzeZIiDPbI4yAkalBDLdPo7vM7T1PkD8cN3PNwt1nopv7XWaQs98B/K6pjv6w3kteIQnGI0QrNwB24RgKoLQv1nBAQcDGSQ=
+	t=1718741017; cv=none; b=iB2Uu7vPqN2PDUaqXBvT52GcrszIOeus/R4oXKSQxO/A4o1ygTHU1csExp1pOgu/tq5R7rWAjEViriQuC2uluI7YEBgtU4Ddp28bze9SHb2gCemT0pmKuCfpuZlDMkl213dzzxRBkbqwaDZGi0Lz6WekCFuvRG/zHNnmj1pkDDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740849; c=relaxed/simple;
-	bh=fAhiLVURfgay222nRJe4+GfOvxzl6P/qliqGaISmi6o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=L6ah/XCI3qJKmVO3NhW202/Tk5H7nObHEsNrqrEkRtVVZHGyitLDWaIS2eTpYBgy2PThkpVCMbjEhatEtp3ScOZWAgSNe5rZx3OjOCnD/k36kaVttnNNymUYyUiIh9bH1OJ1AWk7ONrN3+2okfi8LrjiCvvXCUpwVDbDsHhtqK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/+jn9Bm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/+jn9Bm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC022C3277B;
-	Tue, 18 Jun 2024 20:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718740849;
-	bh=fAhiLVURfgay222nRJe4+GfOvxzl6P/qliqGaISmi6o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=k/+jn9BmLRHP49qv6veutBe42+CoigaB41DD3vIzqtznwjPDHmxPL0lxZyJq4ocXB
-	 U2yriGLN6gYLfLyEG0Le5P3Q0jMFzRk41ssCFR+pH9YUJEL4xP8aeMBL0omD0SPnr0
-	 TosWu/EsHyKnd/XPvk2B8nX9BKL1w8gh+2dHPcE+XODRg77Zm+XYdq6P4bBstrKurf
-	 5EDOAcq1U8Dle4axeJVrKBKAxJ8JxaHqUfOvx+6VgArq9UFnYGR8Embf92i6PyWxVe
-	 GEFsFiCRfiI+ak5kK+6QkBm8ZyfSL/yV99+bCNIddJlSnUn9MyOe0RcdeINLkiH8/Q
-	 bfSu6ZhYLOn/A==
-From: Mark Brown <broonie@kernel.org>
-To: patrice.chotard@foss.st.com
-Cc: linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- christophe.kerello@foss.st.com
-In-Reply-To: <20240618132951.2743935-1-patrice.chotard@foss.st.com>
-References: <20240618132951.2743935-1-patrice.chotard@foss.st.com>
-Subject: Re: (subset) [PATCH 0/3] spi: OCTAL mode fixes
-Message-Id: <171874084769.162949.15399594588029522021.b4-ty@kernel.org>
-Date: Tue, 18 Jun 2024 21:00:47 +0100
+	s=arc-20240116; t=1718741017; c=relaxed/simple;
+	bh=m2eB/dMu1og6DWfAWTWpxsH02qyBitrQbzXdWK0qvfg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AqVReNbmC5gnSMKU4TiFfutAJ+V1scl9gcJiK/AV2juNj7nVuckQ+2/YrO/EW1kotfzUp3q9epCey1gdQ2UCmId2fzBLaBeevPIxBq664jJhYkJ2qnZw9Z/COxTYBsRyfd7940zDC1/Xk17UjBHvU/VFvziJdNP9U1lK35O776Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; arc=none smtp.client-ip=108.161.129.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+Received: from syn-068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+	by finn.localdomain with esmtp (Exim 4.95)
+	(envelope-from <tharvey@gateworks.com>)
+	id 1sJf3A-00Cv10-JD;
+	Tue, 18 Jun 2024 20:03:28 +0000
+From: Tim Harvey <tharvey@gateworks.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] arm64: dts: imx8mm-venice-gw700x: add support for PHY LED's
+Date: Tue, 18 Jun 2024 13:02:54 -0700
+Message-Id: <20240618200253.1738876-1-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Transfer-Encoding: 8bit
 
-On Tue, 18 Jun 2024 15:29:48 +0200, patrice.chotard@foss.st.com wrote:
-> During tests performed using spidev_test in OCTAL mode with spi-stm32-qspi.c,
-> several issues has been found :
->   _ OCTAL mode wasn't supported in spi.c
->   _ CCR register wasn't set correctly when OCTAL mode is set in spi-stm32-qspi.c.
->   _ Fix dual flash mode sanity test in spi-stm32-qspi.c
-> 
-> Patrice Chotard (3):
->   spi: stm32: qspi: Fix dual flash mode sanity test in
->     stm32_qspi_setup()
->   spi: stm32: qspi: Clamp stm32_qspi_get_mode() output to CCR_BUSWIDTH_4
->   spi: add OCTAL mode support
-> 
-> [...]
+The GW700x SoM has an onboard DP83867 RGMII GbE PHY that drives two
+LED's (LED1 and LED2, skipping LED0). Add the appropriate dt bindings to
+allow these PHY LED's to be controlled via a netdev trigger.
 
-Applied to
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ .../dts/freescale/imx8mm-venice-gw700x.dtsi   | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/3] spi: stm32: qspi: Fix dual flash mode sanity test in stm32_qspi_setup()
-      commit: c2bd0791c5f02e964402624dfff45ca8995f5397
-[2/3] spi: stm32: qspi: Clamp stm32_qspi_get_mode() output to CCR_BUSWIDTH_4
-      commit: 63deee52811b2f84ed2da55ad47252f0e8145d62
-[3/3] spi: add OCTAL mode support
-      commit: d6a711a898672dd873aab3844f754a3ca40723a5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi
+index de7f67a4ff2a..36803b038cd5 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi
+@@ -5,6 +5,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/linux-event-codes.h>
++#include <dt-bindings/leds/common.h>
+ #include <dt-bindings/net/ti-dp83867.h>
+ 
+ / {
+@@ -113,6 +114,25 @@ ethphy0: ethernet-phy@0 {
+ 			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+ 			tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+ 			rx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++
++			leds {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				led@1 {
++					reg = <1>;
++					color = <LED_COLOR_ID_AMBER>;
++					function = LED_FUNCTION_LAN;
++					default-state = "keep";
++				};
++
++				led@2 {
++					reg = <2>;
++					color = <LED_COLOR_ID_GREEN>;
++					function = LED_FUNCTION_LAN;
++					default-state = "keep";
++				};
++			};
+ 		};
+ 	};
+ };
+-- 
+2.25.1
 
