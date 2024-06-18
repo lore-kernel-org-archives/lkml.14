@@ -1,104 +1,179 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D511AD4A2
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B920D485
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718704823; cv=none; b=ZrK+7992pNFadO2vAMMdDC8Bv9cCgeb6RLEtZ/MNd0oUqM5OfpFyFbujH1/mrxx5ux1OCtCpsO53BefMIT9TGiTSfot82iFh2lD/vTZn+jjGGKrznR6zqbtlFdNs4NH4zuxjeDT3CbpdVnxsktQ6zoOTlolwcT1f8uv93xb4Sxc=
+	t=1718704826; cv=none; b=fSUMEVAJr6oI6+txgVxjnSQstYNcOGQr5jLNb6H97Ud03N1g8rZWbo/KRhvpZL/5tIFyTgewDVo+PRF783gZr1WRFu/OXN4BOxvr9UvVpwh0yjwAQWOp7431Um31EmdBe3oHmgBX+T4Zg5m3Qn7ktlER0GutTgNlEDrBRy50XPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718704823; c=relaxed/simple;
-	bh=y6CpY8UrSo33MHhP8FCh1QwnMKQUwodzy+eoAoT19Zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bl+tisya0+bdvAsFBiCbjCVYX1uRS7l4EMJBahwWKtl+Bfm/JQf54rVN11Tx0t//MDJJ7ZjPKfrID3y2gS03clah1e1N+lCaXnkTzPssiVC4tSze/06vafZBTfm2/7fdBuTC8gflNbklRF0u10VJR41xtkldH6X82t3nAMvrnno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zA1AtdkZ; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718704826; c=relaxed/simple;
+	bh=MPZfkhMcXHUtq5cnaXvPFbwUglZVGv4j83dGgH+XUwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZG8xeP7zXvIFO9Ga85UOWUMfhNrMmiz0PNoHXQ+q69hlnMMU9a5gPeTcS1frMBFlp+RHtZF5pzkAY2cEGIcwEQRAeGq8ZdkuZDPsBSEQ0MaC/1lLSTgVKX6wrvMTjSjYtAIDBqAsjvCr1+LK3YS8r0KMfnALqH/TEzp6AHDxLS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IZYP2lbU; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zA1AtdkZ"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec10324791so54628611fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:00:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IZYP2lbU"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7041e39a5beso3844140b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718704819; x=1719309619; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ngIQn+y1I4/dZZwfy/zLsGesaWK/7P8e5P4qGlNeiQ=;
-        b=zA1AtdkZhx2yBvP1fm72nvd4dFGaNMrQ9F95AET8l4nk0Lo3DmGwbQ0GNTQcZLNQx0
-         aLvPU+eB/wIdloH6ziBM1627lX+zB3zk81cS0vbEJApmX6VZvGQgf4FnKxG0ywsZmxLF
-         vpE9lPX3i/22liIUwjWqkZL1ZwTIZrA9+tOVN80Idl0Oxil9xPfOOzMELfFdfs3ZX67N
-         GS0nXxhD2wBHeHDHRydxcXzM5wZ0u2Su/lDXRmidAo1RS5E/9AxPs2Nj+Dtt7yJJGt+1
-         a9w6Wh8Cq35OGNPa6ZtIhEyv0KvgYZNawpfhPEyUrXicha5Jok1nGea9UkzgywsuP9+C
-         bwYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718704819; x=1719309619;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1718704824; x=1719309624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2ngIQn+y1I4/dZZwfy/zLsGesaWK/7P8e5P4qGlNeiQ=;
-        b=BlelrN0J0aq23odMzyGBBRhVYdtv4ZOqN5lf5d0llXBr3dwXf832UqO/+JWd8J1aTi
-         vGM6WCVszpMmh8hmb6jQoD9VulKY69qsfGw3uEYkTRGwQtFt8wdN4a6MvTRlNsUEBnbE
-         S/ZWzIvpFz2PkRBEEtoryukZmZnNrx6Bx3IwWCtlN8j+TlIU/UBfp5MpqcU49EJ5Nvm8
-         umkE7V0Tl47ilJh+/f0Z3J/S8qmlIS04GY8YrFiRHkesLpK5CbNOKyzQ4ucZztBsqtFX
-         SmF0IM2bsjVISHrspcWUKd9AMP1Q7a2WHqRsooZ8tisyhWT//HNzA/yLRC8/JiLf7f6A
-         mH3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVJCTYO10GL9IGFMCOljbGpypQlHpE42/7HZ3HKecMLQ80A5VRIQm9w+7fxVwo10HiqZfGW1Z4ztsLOqpEq6Y36PhCMVPDh4nu3SfOo
-X-Gm-Message-State: AOJu0YyDstnjMAw/a/mLBgP7V5Vxe/JYSOQ2f9vG2MU1/Lqqy8EeIkIz
-	uZ5IbRRY3Vbjv0z9MgCPdSv0wVN4b3G99uiusoZEKrJmMnSZAH4u6w+cpTAE+34=
-X-Google-Smtp-Source: AGHT+IH7rtbQgMI/Xpi2ruQ9UrqNrldQoq58i+N6rvWxQBTuiDOV7XZQFcZOb2BQcHFO++Xy6iKxXg==
-X-Received: by 2002:a2e:b013:0:b0:2ec:27e6:39b7 with SMTP id 38308e7fff4ca-2ec27e63cf0mr46551291fa.37.1718704819326;
-        Tue, 18 Jun 2024 03:00:19 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05bf41c1sm16556731fa.11.2024.06.18.03.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 03:00:19 -0700 (PDT)
-Date: Tue, 18 Jun 2024 13:00:17 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Komal Bajaj <quic_kbajaj@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: qcom: qdu1000: Add secure qfprom node
-Message-ID: <uur33zdu526onphnxjtj44mijrj7ykfst4ninrtggcloj6youv@vrdvdd4esecu>
-References: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
+        bh=MZR8CcgURsRbvnUXkE0a3SupFeWf/zFWGzZmoJybLWM=;
+        b=IZYP2lbUqJJTNBWORi2y60gGAu/tlZnsXJqmLyiEItap9gHr52HlKCEmkTeTNgjB4s
+         MrVmUJvzr+5fZzw9f5LvTJHTQf5Wwekqs2ND0iCIo/o/aud2Yjwlm+rhq/0dxn7oPLJh
+         2invlnVfEPWT3p7WUqPKjj23I0oDY/lFGXyRwq6DqPjexZDGZOLIJfdRgfgVsesRPgr8
+         TunpxAojokVZdyVYjn7MFZp32Yn/IW7asepdKDdC/5XrCCPPRF3zRpwsZrjNh/QfU8QM
+         RetLQcwUB+/U91pcQaodfHGCs9eu3kim8pgcTEBqPBzS+/v2Zmv5iM23CiXbU9aglYTj
+         x5Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718704824; x=1719309624;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MZR8CcgURsRbvnUXkE0a3SupFeWf/zFWGzZmoJybLWM=;
+        b=em+kbWMJd97pexbmOpKEvaYmG5yxwNVp0OKd3b0FiR1peQhv5LYL3v2JKkV4OYyU1C
+         nZWmJMH8NWJUHPUlIfXMQMuPfbB4WTdHYjkybQell4BD7gpNLcLxsqedhOy2e4z/MOvS
+         5musjfwaBU0M0UmGpJpylo1Hsa1KXaHfy3mldZUB9crWHEpZsVsr1HItVtk7KLQTFpVU
+         +vw3gc/6iFq649dI+WQ1clxv++qHx9iEa4XKYve2TLwyhrz1ChJ2K8DXgoYgwQNQPpGl
+         qG5ldlTYo6anUMGuIbp5A62+zC/lCWyhwe8p3rTbHXP5ncWkcQKDh3PjpVwCDMA3e/Sd
+         5j/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDw3GTvyGUjuCfvz6U74Ns83GR/j+XiEvmP+HYje74oYDlMPcCeTFbxDpidxNA1ZRaSN33jyZqrzZemYgBJYtmN1cgaXCkmhNMtDSs
+X-Gm-Message-State: AOJu0YzSaFW9t7qDGTLjt30o/H1y41mMAABOSjgt3xYzQmU5XuvkHx5n
+	op89DbNZrYKpnoJ8SFjEuqNZJy56nYtuaP02Qxf1fHn1c7+uBQLfsqa+XvCvNTo/i3QmFIIOvfy
+	J3icJNJaqBlHnKZ0XR7STf7TbJfltaytPSyx1XA==
+X-Google-Smtp-Source: AGHT+IHx8ALlkkaSwJ4WcPFZ7PFlSkSqM6tzPJZC5DokDwldFt2gGFu1bgX+jONtFmGJCQjSmKZTbOUyQJm+CSgTY8k=
+X-Received: by 2002:a05:6a20:1592:b0:1b8:498e:4e29 with SMTP id
+ adf61e73a8af0-1bae84146d7mr12687693637.52.1718704824273; Tue, 18 Jun 2024
+ 03:00:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
+References: <20230725070549.89810-1-luxu.kernel@bytedance.com>
+ <mhng-a0239c56-385e-40a9-8a71-45d50e28b45d@palmer-ri-x1c9>
+ <CAPYmKFvXf7q_8QzFe4VFL1s-j0P3ZGSZ8nG1q4HmtU4rzek77Q@mail.gmail.com>
+ <CAPYmKFvqpe48zaLKrTz085cJcO9fwL+BtHujU4p48onR1Nodfw@mail.gmail.com> <329b22c6-435c-424a-8211-b9a029b0897d@ghiti.fr>
+In-Reply-To: <329b22c6-435c-424a-8211-b9a029b0897d@ghiti.fr>
+From: Xu Lu <luxu.kernel@bytedance.com>
+Date: Tue, 18 Jun 2024 18:00:13 +0800
+Message-ID: <CAPYmKFuLap8SZrcgGM36G85TYshuhMhMA1WUHt1A_VkD9JiTqQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] riscv: Fix local irq restore when flags
+ indicates irq disabled
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2024 at 02:57:11PM GMT, Komal Bajaj wrote:
-> Add secure qfprom node and also add properties for multi channel
-> DDR. This is required for LLCC driver to pick the correct LLCC
-> configuration.
-> 
-> Fixes: 6209038f131f ("arm64: dts: qcom: qdu1000: Add LLCC/system-cache-controller")
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-> ---
-> Changes in v3:
-> * Addressed comment by Konrad
+Hi Alex,
 
-Which comment? Please be more specific in changelogs (no need to resend
-just for this issue, just keep it in mind for the future submissions).
+I will send a new version later today.
 
-> * Added Fixes tag in commit message as suggested by Dmitry
-> * Link to v2: https://lore.kernel.org/linux-arm-msm/20240612063424.2494-1-quic_kbajaj@quicinc.com/
-> 
-> Changes in v2:
-> * Minor correction in commit message
-> * Link to v1: https://lore.kernel.org/linux-arm-msm/20240607113445.2909-1-quic_kbajaj@quicinc.com/
-> ---
->  arch/arm64/boot/dts/qcom/qdu1000.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
+Thanks,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Xu Lu
 
-
--- 
-With best wishes
-Dmitry
+On Tue, Jun 18, 2024 at 5:45=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wro=
+te:
+>
+> Hi Xu Lu,
+>
+> On 24/08/2023 14:08, Xu Lu wrote:
+> > On Wed, Aug 9, 2023 at 2:58=E2=80=AFPM =E6=97=AD=E8=B7=AF <luxu.kernel@=
+bytedance.com> wrote:
+> >> On Wed, Aug 9, 2023 at 2:05=E2=80=AFPM Palmer Dabbelt <palmer@dabbelt.=
+com> wrote:
+> >>> On Tue, 25 Jul 2023 00:05:49 PDT (-0700), luxu.kernel@bytedance.com w=
+rote:
+> >>>> When arch_local_irq_restore() is called with flags indicating irqs
+> >>>> disabled, we need to clear SR_IE bit in CSR_STATUS, whereas current
+> >>>> implementation based on csr_set() function only sets SR_IE bit of
+> >>>> CSR_STATUS when SR_IE bit of flags is high and does nothing when
+> >>>> SR_IE bit of flags is low.
+> >>>>
+> >>>> This commit supplies csr clear operation when calling irq restore
+> >>>> function with flags indicating irq disabled.
+> >>>>
+> >>>> Fixes: 6d60b6ee0c97 ("RISC-V: Device, timer, IRQs, and the SBI")
+> >>>> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> >>>> ---
+> >>>>   arch/riscv/include/asm/irqflags.h | 5 ++++-
+> >>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/=
+asm/irqflags.h
+> >>>> index 08d4d6a5b7e9..7c31fc3c3559 100644
+> >>>> --- a/arch/riscv/include/asm/irqflags.h
+> >>>> +++ b/arch/riscv/include/asm/irqflags.h
+> >>>> @@ -49,7 +49,10 @@ static inline int arch_irqs_disabled(void)
+> >>>>   /* set interrupt enabled status */
+> >>>>   static inline void arch_local_irq_restore(unsigned long flags)
+> >>>>   {
+> >>>> -     csr_set(CSR_STATUS, flags & SR_IE);
+> >>>> +     if (flags & SR_IE)
+> >>>> +             csr_set(CSR_STATUS, SR_IE);
+> >>>> +     else
+> >>>> +             csr_clear(CSR_STATUS, SR_IE);
+> >>> Unless I'm missing something, the original version is correct:
+> >>> local_irq_restore() must be paired with a local_irq_save(), so we can
+> >>> only get here with interrupts disabled.
+> >> Yes, it is correct if local_irq_save() is called when irq is enabled b=
+efore.
+> >> The flags returned will be SR_IE. And it is safe to call local_irq_res=
+tore()
+> >> with flag SR_IE in any case.
+> >>
+> >> However, if local_irq_save() is called when irq is disabled. The SR_IE=
+ bit of
+> >> flag returned is clear. If some code between local_irq_save() and
+> >> local_irq_restore() reenables irq, causing the SR_IE bit of CSR_STATUS
+> >> back to 1, then local_irq_restore() can not restore irq status back to=
+ disabled.
+> >>
+> >> Here is an example in existing driver (may not belong to riscv arch) i=
+n
+> >> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c. The pseudo code
+> >> behaves like:
+> >>
+> >> int rtl8723e_hw_init(struct ieee80211_hw *hw)
+> >> {
+> >>       int err;
+> >>       unsigned long flags;
+> >>       ...
+> >>       local_irq_save_flags(flags);
+> >>       local_irq_enable();
+> >>       ...
+> >>       local_irq_restore(flags);
+> >>       ...
+> >>       return err;
+> >> }
+> >>
+> >>
+> >>>>   }
+> >>>>
+> >>>>   #endif /* _ASM_RISCV_IRQFLAGS_H */
+> > A gentle ping.
+>
+>
+> This got lost but this is still correct and needed.
+>
+> Do you think you can respin a new version? Otherwise, I'll do it and
+> keep you SoB.
+>
+> Thanks,
+>
+> Alex
+>
+>
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
