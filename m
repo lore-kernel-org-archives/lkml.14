@@ -1,91 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0143678C91
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718725739; cv=none; b=UnebrcqiYJH4muzyjgsp6lG3KwrLclhHRaJvco9qihrYvlAkbAt1GYgSIp7B1CcS5JBYj27G32YSBhzEWNlOV2vDSlzcTdVG7qrwQlQQWDDPsEY4Vi8PQKSQJcUjnt5CpoX/2Ao7Ud+y4FvyYQHxNgaiDU73CV3aIpq5MC+L5LM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718725739; c=relaxed/simple;
-	bh=uKdkar9T+buQ+rgXRjYk96RQ1pLgLS/s5OH1+LEQGf8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k08EDogiG5uMzP8gpXr62PFubAGgi6MfXxNKlYP0bbEIfNUzs//v9VFQH41PW26vj1a/OSYpkUAv5fRlLDNRq/CjJE8e9xozGfQTfRdiAX2TkyAdk/wcLnOshiyGclq+sNK4HwcVnQeFTFXrfDKWhs4k0fhivsLEWATYdIji/fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FeG73KYR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6524340851;
+	Tue, 18 Jun 2024 15:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718725741; cv=fail; b=bm1w9peMIM5jHbpv/MkcT6m+ZUlxG3imBQYB5a0qQ3k6aMDPrCRO5NCzIv+OjUe2UaAf3UEBWquyIStsgImxWRzmRFbOCi4r3p3bdqQXJJphGtV+/dAF9oDziGK/QXe+Wlj/4Kvn605IdPSnx4ZwNBc8NdzMZiaOOyslALIIO2A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718725741; c=relaxed/simple;
+	bh=PSSL7mAIfmYWSlwXigPTYvsj0Ifc/pAr90nK1p/Tgj4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Od6bFEXwOPTbmPrK34V0zDVXcaw3+UCUWs3Bxv1IQxPHLaqe8Q/zRzpJsTDR1a1EDvYM4Z9E5ERFbjBpIRAwL2JfNmdaEbFvlWXf+QHbV5hCy5vvhAEjjRa7B3jNniM8cw743gTwtuxpVdDf5EApqD+Hb2ZvCsbwxKyxk0UuDMw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mL3up4jb; arc=fail smtp.client-ip=40.107.223.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FeG73KYR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718725736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jbhl14xAYy/a54hqQydSy+Qa7m2sEEE4gFOceKt9vSQ=;
-	b=FeG73KYRKdGrduDrdVeB3ZCqganNIKw+VIvBdibGgGUVLgabR2QqOPysyeBKFkBTrdlDwi
-	gU1y4ZfGbD8s5sffT9ldprdGtwKlwJXj5Ur8L56JBx9J1wqKFJTjieDEMDBSK8N2bWhV98
-	bFsWoEIOJ3eVOrhovDpmWhwYlsHe1Eg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-75-b7re5-DtOXiyusJP2msIPg-1; Tue, 18 Jun 2024 11:48:53 -0400
-X-MC-Unique: b7re5-DtOXiyusJP2msIPg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-35f142464b9so3394066f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:48:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718725732; x=1719330532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jbhl14xAYy/a54hqQydSy+Qa7m2sEEE4gFOceKt9vSQ=;
-        b=RkxWKw01GCoCClYNKwD85XsxEGoVdyjkdzFLcZl6wqctuVkY8prZv/f74nE2pUbOuL
-         WKcChllskrLpo8xnpX6/Z+LKCWyEArwiPxZhVuRH3wTe6zwAzPcBDVeWLIUYYcYssK3p
-         Z1Gk2ppWRz8Xn+pQnQ03oN/hx5ebxbxMApNy6+mkLZvJk46LHSXTUaTBpniMCdGRVVnm
-         lS56i58SpdFaDiewdXZMs8AkQy+YF/FG5eSL7fmp6EIXdg4l2n72zQEWktLMHJa5fIi4
-         ySqr6et9EYvpY1l1+strqBql1ihX1WVxZIFK0u7EczEGStn1bv9G7mAv87i0pNNar57W
-         pajQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViMrp+p13/Kc+V/TaXNLI8mezhTM4RJbWJYbEZqy25OsVxiQCoYjmqn6E6go/16NQYfjr8WYNXrG09ttiHOfxEgj2FvKVaKgn7IBGe
-X-Gm-Message-State: AOJu0Yws3UBXlesVzrxj22fGg4Y/xyfktQ5/x/EqXta9q1CZ42hCEtNg
-	6AuPIbOPrZfA/QKwZCv4IrNFafN36bavrpET/VTAlgfsJHEQXC9GxVBXbP9HWmWYjLO7QCEu2n+
-	5L9xYHORgZ6TYVtyvMu/X+e9wxkoawTV6OHtnL43ZWmcyk7+9MHmL5L3LmOWw8g==
-X-Received: by 2002:a5d:66ce:0:b0:362:a876:6cc2 with SMTP id ffacd0b85a97d-362a8766e14mr643445f8f.6.1718725732396;
-        Tue, 18 Jun 2024 08:48:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdnbO11plzCAF10UelkIXmaa6jQbyBCnK6b7JzS6IBKVhFwAgOmsi2cQG5eQ/M+V5rPjuZ6Q==
-X-Received: by 2002:a5d:66ce:0:b0:362:a876:6cc2 with SMTP id ffacd0b85a97d-362a8766e14mr643420f8f.6.1718725732039;
-        Tue, 18 Jun 2024 08:48:52 -0700 (PDT)
-Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-362231c7ec0sm1497197f8f.29.2024.06.18.08.48.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 08:48:51 -0700 (PDT)
-From: Danilo Krummrich <dakr@redhat.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	mcgrof@kernel.org,
-	russ.weight@linux.dev,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	wedsonaf@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>
-Subject: [PATCH v4 2/2] rust: add firmware abstractions
-Date: Tue, 18 Jun 2024 17:48:35 +0200
-Message-ID: <20240618154841.6716-3-dakr@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240618154841.6716-1-dakr@redhat.com>
-References: <20240618154841.6716-1-dakr@redhat.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mL3up4jb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QrYweOn18Q1ITFqzXjR/zr6TFRgb8K7pbFP1q+EHQHnPBozpGAH79CtUBBhPWj1q2tQL4LwxtbpXESpc6Tf/7hTueIWz5xtyhyTZldsEuWf+M4p8GQX1S/pJEke1VkS09jZr/BWkgGi92vgsfZlLyvxXDvxBamZzcr96B/hQPXgHXch2UBF8uPCqiyM6W3p5hb6Y0vxMT0y5c2Vmg6E1CKHYDN1zKCMpmLmc/eQmLXFfdoXXz4Snk/8+6lhYp+zdloKzpZRYBfz+Nw6wDaHpkWsYHwS5J4tBoR3F4I/tYa8TDa7n8azapU3kvWBT5ljqNaky9gWGGzBZz+cqTLQ2lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZZ+Mui7B4+tPl1FFOz2Ml6yLbSgZ8yUXnmroXI+bWdk=;
+ b=ZWj6YqMq7bartm+/knae5DaQUZHw6sqQ3j20ZGQbqgxO9a0xNgi+hXrJV6dTBsscATs60dXo1gMi6b5oDyyCL+u0tIXvejuGsUChdT94KCwRUDrUxzoDJLRulzVtEQwZ09grwqrBM2F2RKs619d/ThcOPdkzWrtZxeGzs72P/tBcJEUZwSTGXETteDOjS+XjjsjT2Mp5uSiYQnNnb7Gv72CEkFMESI2OfCsOdHY5bqUvLlJ2sjtjC5yip0IgjfEKcMGXdpWRBtjF3gbT8HIQ2+Phfh5/Cj7F4F8w4rP2JYS2uZmHBwg13wYq6HVf7Ynrs3Aq5JtR+1HCM6BjVjg5fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=alien8.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZ+Mui7B4+tPl1FFOz2Ml6yLbSgZ8yUXnmroXI+bWdk=;
+ b=mL3up4jboyp/3FN43Z0fZdn4rMJ67eTuQ2atvi2/qHg07ut7+IuTqZ2JUsVd7oDeofYpgnz57H31crY6EhH21hOJo3O1BFIWPO/RkolxA4yAeXGAMjbPJb1Aa8ujiOjK21bZFOBfJBc4oKKZcF7T7X0B1upcEvlIzDXbCTE/Hapw1dufJAeTaqWlXV9TIqS1aroY8ZGjQleCvygcwaZ+a+i7SDMSNeZSPK1357E3LiOgzlK2zEBrP27nHnER7lI2lwUlMjdY5VFC8pHiANnd1dGQ1YV2cB919bRn5ZN5Gv4FlAJpIT7N13LxoP9V9ntH3sc5OsE5zwIHx/o5pk7atw==
+Received: from BL1PR13CA0190.namprd13.prod.outlook.com (2603:10b6:208:2be::15)
+ by IA0PR12MB8982.namprd12.prod.outlook.com (2603:10b6:208:481::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 15:48:55 +0000
+Received: from BL02EPF0001A0FE.namprd03.prod.outlook.com
+ (2603:10b6:208:2be:cafe::25) by BL1PR13CA0190.outlook.office365.com
+ (2603:10b6:208:2be::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30 via Frontend
+ Transport; Tue, 18 Jun 2024 15:48:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL02EPF0001A0FE.mail.protection.outlook.com (10.167.242.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.15 via Frontend Transport; Tue, 18 Jun 2024 15:48:55 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 18 Jun
+ 2024 08:48:34 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 18 Jun 2024 08:48:34 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.180)
+ with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Tue, 18 Jun
+ 2024 08:48:33 -0700
+From: David Thompson <davthompson@nvidia.com>
+To: <bp@alien8.de>, <tony.luck@intel.com>, <james.morse@arm.com>,
+	<mchehab@kernel.org>, <rric@kernel.org>
+CC: <shravankr@nvidia.com>, <linux-edac@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
+Subject: [PATCH v2] EDAC/bluefield: Use Arm SMC for EMI access on BlueField-2
+Date: Tue, 18 Jun 2024 11:48:19 -0400
+Message-ID: <20240618154819.28825-1-davthompson@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,172 +78,390 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FE:EE_|IA0PR12MB8982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c0dbfaa-ff61-423d-985e-08dc8fae290f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|376011|36860700010|1800799021|82310400023;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XxCMdBSVa+wItuC6uSlwwEgLB3TDCvgCKF2JNrojyGja4Euiay8sqrjEeXcO?=
+ =?us-ascii?Q?9hs8EGEskOSfn5XsoTnn6jcjrxZvh5AOVieUJW2KZ+/JPjGTO22T5m1ziKqb?=
+ =?us-ascii?Q?wVia7bLXOzcAJPL9dhbcRcr9Y6mcq5pQ3VXxM9/+aJeeZCmZFv2tjc12pn5J?=
+ =?us-ascii?Q?9njCc50seINuCOfpdr2usCP/Lzac/EwL8xr4fSZ2NcYFAs/85Gmpngvi+Myq?=
+ =?us-ascii?Q?vm5X4OLiS/MsxfcknIqPgDiDGN8msA9JAqsYqVuSRSn0jMZRrNdoli0wlvbu?=
+ =?us-ascii?Q?9emfNlvXbz2BrCOWpYIMD9qAWq/m5JpJulRC+N+k1A13Dt3a92MyrMx1HMP4?=
+ =?us-ascii?Q?9oOVQyRMa2JP9eyzHP9CUaQ+YZQl+NUMyU1Cww3N+vYYL3sgAg/m9b9TJH90?=
+ =?us-ascii?Q?r7JMNgrFFofpXZHJBYku4+V1Zadrz2uGOP+wF91ulXJDnCBT7ApteDL/IFyf?=
+ =?us-ascii?Q?KW/CWBldngw0nispOxRqX+DKwDq5CNCRnVtCw6snLkvY8UIdAyGczl41EUrZ?=
+ =?us-ascii?Q?Zjcli/negbGDJCxdnQ4CJoqrmI6MixFM0qzxWGOTG0EjLdMnwutcc9dOMChk?=
+ =?us-ascii?Q?lSzmQ0Vm315f3bfggF4D0CcwYTR3RBv7NhHYVX52agsqHeV33m2Z9Nbyzo0X?=
+ =?us-ascii?Q?uzjhEIvgsLKssJRN6flbvbMvhEMKnEx936hudlhOs1uWdYTBr8/E9PUuP97Z?=
+ =?us-ascii?Q?WDoHW2bSPFS5fvpxdH9RvAK9vIDmPdWAawUg0Fhvt7gdtTO9gNhbcnWnAEIS?=
+ =?us-ascii?Q?mQrAMsjGHRpOps19Mff8wVL63GsElD9e7R4kQzC6LamPf8RzOFBnSw86FRas?=
+ =?us-ascii?Q?qK6akSVuN5LCXGTRC66w2IZtpximaf0XCYS4iDl5qHFBpdL9kkD98WAOroAJ?=
+ =?us-ascii?Q?T3ie4hdUvxpT3MKykTofKqF6ulyfFkIfQNx2W26Yhtu5cBRU+L056cWG8HHR?=
+ =?us-ascii?Q?NZHSDYz4s+jyhgbAlSQCAVzjhCeUztlIrPdf/mQwBZOhLywWRJzb87AGMjac?=
+ =?us-ascii?Q?HZLsG/yKJc5jWDWn30np+6l9CaeBybhv8scirZAWL7BSYEXr8pKANlgPNjCV?=
+ =?us-ascii?Q?l3eyZZBURWuYu+j82ftS5k14jhuqaFDHx64B42eKO/oQN4r6eTbKA/Cw9+ej?=
+ =?us-ascii?Q?iJ5cAetDXqwD1DEpg9FXwcecRLlKYgJ5II1Bobudo39Ddlq1xc4smvALHhfE?=
+ =?us-ascii?Q?VHv/g2Ag8yS3o4LJ/4/CvOduYQvywrjTMCZUgLczQh/vwvYN1hLBPNwNHiGr?=
+ =?us-ascii?Q?eexOuYKmp7AkiJtjFELX6zPp/NuR+jbYDZ69mam6LyLAVYoytXJuur+w228Y?=
+ =?us-ascii?Q?/dEXiZnYmo0hkhjkCB9p1hfItdtMD65lQn3K9jm+S72Cxw0HcGknwVjQr+nx?=
+ =?us-ascii?Q?r1/YTBHP6Mn4ZYOgoZxYYHj87h8mMwnzZ0PqttXUSxGzbl4Qwg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230037)(376011)(36860700010)(1800799021)(82310400023);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 15:48:55.3705
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c0dbfaa-ff61-423d-985e-08dc8fae290f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A0FE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8982
 
-Add an abstraction around the kernels firmware API to request firmware
-images. The abstraction provides functions to access the firmware's size
-and backing buffer.
+The BlueField EDAC driver supports the first generation BlueField-1 SoC,
+but not the second generation BlueField-2 SoC.  The BlueField-2 SoC is
+different in that only secure accesses are allowed to the External Memory
+Interface (EMI) register block. On BlueField-2, all read/write accesses
+from Linux to EMI registers are routed via Arm Secure Monitor Call (SMC)
+through Arm Trusted Firmware (ATF), which runs at EL3 privileged state.
 
-The firmware is released once the abstraction instance is dropped.
+On BlueField-1, EMI registers are mapped and accessed directly. In order
+to support BlueField-2, the driver's read and write access methods must
+be extended with additional logic to include secure access to the EMI
+registers via SMCs.
 
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+The driver's probe routine must check the ACPI table for presence of
+the "sec_reg_block" property and ensure the minimum required SMC service
+version is present before enabling the BlueField-2 secure access methods.
+The "sec_reg_block" property is only present in BlueField-2 ACPI table,
+not the BlueField-1 ACPI table.
+
+Also, the bluefield_edac driver needs two coding style fixes: one fix
+addresses an issue raised by checkpatch, and the other fix provides
+consistency in declaration of #defines.
+
+Signed-off-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
 ---
- drivers/base/firmware_loader/Kconfig |   7 ++
- rust/bindings/bindings_helper.h      |   1 +
- rust/kernel/firmware.rs              | 101 +++++++++++++++++++++++++++
- rust/kernel/lib.rs                   |   2 +
- 4 files changed, 111 insertions(+)
- create mode 100644 rust/kernel/firmware.rs
+v1 -> v2
+a) removed #defines for SMC function IDs that are not used
+b) added "bluefield_edac_" prefix to "secure_readl/writel" functions
+c) added "bluefield_" prefix to "edac_readl/writel" functions
+d) changed logic to use "uN" typedefs instead of "uintN_t"
+e) added initialization of "priv->dev" in probe()
+f) added more details to commit message
 
-diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmware_loader/Kconfig
-index 5ca00e02fe82..a03701674265 100644
---- a/drivers/base/firmware_loader/Kconfig
-+++ b/drivers/base/firmware_loader/Kconfig
-@@ -37,6 +37,13 @@ config FW_LOADER_DEBUG
- 	  SHA256 checksums to the kernel log for each firmware file that is
- 	  loaded.
+v0 -> v1
+Updated commit message
+---
+ drivers/edac/bluefield_edac.c | 174 ++++++++++++++++++++++++++++++----
+ 1 file changed, 155 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
+index 5b3164560648..4e0db1cbfbe7 100644
+--- a/drivers/edac/bluefield_edac.c
++++ b/drivers/edac/bluefield_edac.c
+@@ -47,13 +47,22 @@
+ #define MLXBF_EDAC_MAX_DIMM_PER_MC	2
+ #define MLXBF_EDAC_ERROR_GRAIN		8
  
-+config RUST_FW_LOADER_ABSTRACTIONS
-+	bool "Rust Firmware Loader abstractions"
-+	depends on RUST
-+	depends on FW_LOADER=y
-+	help
-+	  This enables the Rust abstractions for the firmware loader API.
++#define MLXBF_WRITE_REG_32		(0x82000009)
++#define MLXBF_READ_REG_32		(0x8200000A)
++#define MLXBF_SIP_SVC_VERSION		(0x8200ff03)
 +
- if FW_LOADER
++#define MLXBF_SMCCC_ACCESS_VIOLATION	(-4)
++
++#define MLXBF_SVC_REQ_MAJOR		0
++#define MLXBF_SVC_REQ_MINOR		3
++
+ /*
+- * Request MLNX_SIP_GET_DIMM_INFO
++ * Request MLXBF_SIP_GET_DIMM_INFO
+  *
+  * Retrieve information about DIMM on a certain slot.
+  *
+  * Call register usage:
+- * a0: MLNX_SIP_GET_DIMM_INFO
++ * a0: MLXBF_SIP_GET_DIMM_INFO
+  * a1: (Memory controller index) << 16 | (Dimm index in memory controller)
+  * a2-7: not used.
+  *
+@@ -61,7 +70,7 @@
+  * a0: MLXBF_DIMM_INFO defined below describing the DIMM.
+  * a1-3: not used.
+  */
+-#define MLNX_SIP_GET_DIMM_INFO		0x82000008
++#define MLXBF_SIP_GET_DIMM_INFO		0x82000008
  
- config FW_LOADER_PAGED_BUF
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ddb5644d4fd9..18a3f05115cb 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -9,6 +9,7 @@
- #include <kunit/test.h>
- #include <linux/errname.h>
- #include <linux/ethtool.h>
-+#include <linux/firmware.h>
- #include <linux/jiffies.h>
- #include <linux/mdio.h>
- #include <linux/phy.h>
-diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-new file mode 100644
-index 000000000000..b55ea1b45368
---- /dev/null
-+++ b/rust/kernel/firmware.rs
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
+ /* Format for the SMC response about the memory information */
+ #define MLXBF_DIMM_INFO__SIZE_GB GENMASK_ULL(15, 0)
+@@ -72,9 +81,12 @@
+ #define MLXBF_DIMM_INFO__PACKAGE_X GENMASK_ULL(31, 24)
+ 
+ struct bluefield_edac_priv {
++	struct device *dev;
+ 	int dimm_ranks[MLXBF_EDAC_MAX_DIMM_PER_MC];
+ 	void __iomem *emi_base;
+ 	int dimm_per_mc;
++	bool svc_sreg_support;
++	u32 sreg_tbl_edac;
+ };
+ 
+ static u64 smc_call1(u64 smc_op, u64 smc_arg)
+@@ -86,6 +98,71 @@ static u64 smc_call1(u64 smc_op, u64 smc_arg)
+ 	return res.a0;
+ }
+ 
++static int bluefield_edac_secure_readl(void __iomem *addr, u32 *result, u32 sreg_tbl)
++{
++	struct arm_smccc_res res;
++	int status;
 +
-+//! Firmware abstraction
-+//!
-+//! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h")
++	arm_smccc_smc(MLXBF_READ_REG_32, sreg_tbl, (uintptr_t)addr,
++		      0, 0, 0, 0, 0, &res);
 +
-+use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
-+use core::ptr::NonNull;
++	status = res.a0;
 +
-+// One of the following: `bindings::request_firmware`, `bindings::firmware_request_nowarn`,
-+// `firmware_request_platform`, `bindings::request_firmware_direct`
-+type FwFunc =
-+    unsafe extern "C" fn(*mut *const bindings::firmware, *const i8, *mut bindings::device) -> i32;
-+
-+/// Abstraction around a C `struct firmware`.
-+///
-+/// This is a simple abstraction around the C firmware API. Just like with the C API, firmware can
-+/// be requested. Once requested the abstraction provides direct access to the firmware buffer as
-+/// `&[u8]`. The firmware is released once [`Firmware`] is dropped.
-+///
-+/// # Invariants
-+///
-+/// The pointer is valid, and has ownership over the instance of `struct firmware`.
-+///
-+/// Once requested, the `Firmware` backing buffer is not modified until it is freed when `Firmware`
-+/// is dropped.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::{c_str, device::Device, firmware::Firmware};
-+///
-+/// # // SAFETY: *NOT* safe, just for the example to get an `ARef<Device>` instance
-+/// # let dev = unsafe { Device::from_raw(core::ptr::null_mut()) };
-+///
-+/// let fw = Firmware::request(c_str!("path/to/firmware.bin"), &dev).unwrap();
-+/// let blob = fw.data();
-+/// ```
-+pub struct Firmware(NonNull<bindings::firmware>);
-+
-+impl Firmware {
-+    fn request_internal(name: &CStr, dev: &Device, func: FwFunc) -> Result<Self> {
-+        let mut fw: *mut bindings::firmware = core::ptr::null_mut();
-+        let pfw: *mut *mut bindings::firmware = &mut fw;
-+
-+        // SAFETY: `pfw` is a valid pointer to a NULL initialized `bindings::firmware` pointer.
-+        // `name` and `dev` are valid as by their type invariants.
-+        let ret = unsafe { func(pfw as _, name.as_char_ptr(), dev.as_raw()) };
-+        if ret != 0 {
-+            return Err(Error::from_errno(ret));
-+        }
-+
-+        // SAFETY: `func` not bailing out with a non-zero error code, guarantees that `fw` is a
-+        // valid pointer to `bindings::firmware`.
-+        Ok(Firmware(unsafe { NonNull::new_unchecked(fw) }))
-+    }
-+
-+    /// Send a firmware request and wait for it. See also `bindings::request_firmware`.
-+    pub fn request(name: &CStr, dev: &Device) -> Result<Self> {
-+        Self::request_internal(name, dev, bindings::request_firmware)
-+    }
-+
-+    /// Send a request for an optional firmware module. See also
-+    /// `bindings::firmware_request_nowarn`.
-+    pub fn request_nowarn(name: &CStr, dev: &Device) -> Result<Self> {
-+        Self::request_internal(name, dev, bindings::firmware_request_nowarn)
-+    }
-+
-+    fn as_raw(&self) -> *mut bindings::firmware {
-+        self.0.as_ptr()
-+    }
-+
-+    /// Returns the size of the requested firmware in bytes.
-+    pub fn size(&self) -> usize {
-+        // SAFETY: Safe by the type invariant.
-+        unsafe { (*self.as_raw()).size }
-+    }
-+
-+    /// Returns the requested firmware as `&[u8]`.
-+    pub fn data(&self) -> &[u8] {
-+        // SAFETY: Safe by the type invariant. Additionally, `bindings::firmware` guarantees, if
-+        // successfully requested, that `bindings::firmware::data` has a size of
-+        // `bindings::firmware::size` bytes.
-+        unsafe { core::slice::from_raw_parts((*self.as_raw()).data, self.size()) }
-+    }
++	switch (status) {
++	case SMCCC_RET_NOT_SUPPORTED:
++	case MLXBF_SMCCC_ACCESS_VIOLATION:
++		return -1;
++	default:
++		*result = (u32)res.a1;
++		return 0;
++	}
 +}
 +
-+impl Drop for Firmware {
-+    fn drop(&mut self) {
-+        // SAFETY: Safe by the type invariant.
-+        unsafe { bindings::release_firmware(self.as_raw()) };
-+    }
++static int bluefield_edac_secure_writel(void __iomem *addr, u32 data, u32 sreg_tbl)
++{
++	struct arm_smccc_res res;
++	int status;
++
++	arm_smccc_smc(MLXBF_WRITE_REG_32, sreg_tbl, data, (uintptr_t)addr,
++		      0, 0, 0, 0, &res);
++
++	status = res.a0;
++
++	switch (status) {
++	case SMCCC_RET_NOT_SUPPORTED:
++	case MLXBF_SMCCC_ACCESS_VIOLATION:
++		return -1;
++	default:
++		return 0;
++	}
 +}
 +
-+// SAFETY: `Firmware` only holds a pointer to a C `struct firmware`, which is safe to be used from
-+// any thread.
-+unsafe impl Send for Firmware {}
++static int bluefield_edac_readl(void __iomem *addr, u32 *result,
++				bool sreg_support, u32 sreg_tbl)
++{
++	int err = 0;
 +
-+// SAFETY: `Firmware` only holds a pointer to a C `struct firmware`, references to which are safe to
-+// be used from any thread.
-+unsafe impl Sync for Firmware {}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index dd1207f1a873..7707cb013ce9 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -30,6 +30,8 @@
- mod build_assert;
- pub mod device;
- pub mod error;
-+#[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
-+pub mod firmware;
- pub mod init;
- pub mod ioctl;
- #[cfg(CONFIG_KUNIT)]
++	if (sreg_support)
++		err = bluefield_edac_secure_readl(addr, result, sreg_tbl);
++	else
++		*result = readl(addr);
++
++	return err;
++}
++
++static int bluefield_edac_writel(void __iomem *addr, u32 data,
++				 bool sreg_support, u32 sreg_tbl)
++{
++	int err = 0;
++
++	if (sreg_support)
++		err = bluefield_edac_secure_writel(addr, data, sreg_tbl);
++	else
++		writel(data, addr);
++
++	return err;
++}
++
+ /*
+  * Gather the ECC information from the External Memory Interface registers
+  * and report it to the edac handler.
+@@ -99,7 +176,7 @@ static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
+ 	u32 ecc_latch_select, dram_syndrom, serr, derr, syndrom;
+ 	enum hw_event_mc_err_type ecc_type;
+ 	u64 ecc_dimm_addr;
+-	int ecc_dimm;
++	int ecc_dimm, err;
+ 
+ 	ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
+ 				   HW_EVENT_ERR_UNCORRECTED;
+@@ -109,14 +186,22 @@ static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
+ 	 * registers with information about the last ECC error occurrence.
+ 	 */
+ 	ecc_latch_select = MLXBF_ECC_LATCH_SEL__START;
+-	writel(ecc_latch_select, priv->emi_base + MLXBF_ECC_LATCH_SEL);
++	err = bluefield_edac_writel(priv->emi_base + MLXBF_ECC_LATCH_SEL,
++				    ecc_latch_select, priv->svc_sreg_support,
++				    priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "ECC latch select write failed.\n");
+ 
+ 	/*
+ 	 * Verify that the ECC reported info in the registers is of the
+ 	 * same type as the one asked to report. If not, just report the
+ 	 * error without the detailed information.
+ 	 */
+-	dram_syndrom = readl(priv->emi_base + MLXBF_SYNDROM);
++	err = bluefield_edac_readl(priv->emi_base + MLXBF_SYNDROM, &dram_syndrom,
++				   priv->svc_sreg_support, priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "DRAM syndrom read failed.\n");
++
+ 	serr = FIELD_GET(MLXBF_SYNDROM__SERR, dram_syndrom);
+ 	derr = FIELD_GET(MLXBF_SYNDROM__DERR, dram_syndrom);
+ 	syndrom = FIELD_GET(MLXBF_SYNDROM__SYN, dram_syndrom);
+@@ -127,13 +212,24 @@ static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
+ 		return;
+ 	}
+ 
+-	dram_additional_info = readl(priv->emi_base + MLXBF_ADD_INFO);
++	err = bluefield_edac_readl(priv->emi_base + MLXBF_ADD_INFO, &dram_additional_info,
++				   priv->svc_sreg_support, priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "DRAM additional info read failed.\n");
++
+ 	err_prank = FIELD_GET(MLXBF_ADD_INFO__ERR_PRANK, dram_additional_info);
+ 
+ 	ecc_dimm = (err_prank >= 2 && priv->dimm_ranks[0] <= 2) ? 1 : 0;
+ 
+-	edea0 = readl(priv->emi_base + MLXBF_ERR_ADDR_0);
+-	edea1 = readl(priv->emi_base + MLXBF_ERR_ADDR_1);
++	err = bluefield_edac_readl(priv->emi_base + MLXBF_ERR_ADDR_0, &edea0,
++				   priv->svc_sreg_support, priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "Error addr 0 read failed.\n");
++
++	err = bluefield_edac_readl(priv->emi_base + MLXBF_ERR_ADDR_1, &edea1,
++				   priv->svc_sreg_support, priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "Error addr 1 read failed.\n");
+ 
+ 	ecc_dimm_addr = ((u64)edea1 << 32) | edea0;
+ 
+@@ -147,6 +243,7 @@ static void bluefield_edac_check(struct mem_ctl_info *mci)
+ {
+ 	struct bluefield_edac_priv *priv = mci->pvt_info;
+ 	u32 ecc_count, single_error_count, double_error_count, ecc_error = 0;
++	int err;
+ 
+ 	/*
+ 	 * The memory controller might not be initialized by the firmware
+@@ -155,7 +252,11 @@ static void bluefield_edac_check(struct mem_ctl_info *mci)
+ 	if (mci->edac_cap == EDAC_FLAG_NONE)
+ 		return;
+ 
+-	ecc_count = readl(priv->emi_base + MLXBF_ECC_CNT);
++	err = bluefield_edac_readl(priv->emi_base + MLXBF_ECC_CNT, &ecc_count,
++				   priv->svc_sreg_support, priv->sreg_tbl_edac);
++	if (err)
++		dev_err(priv->dev, "ECC count read failed.\n");
++
+ 	single_error_count = FIELD_GET(MLXBF_ECC_CNT__SERR_CNT, ecc_count);
+ 	double_error_count = FIELD_GET(MLXBF_ECC_CNT__DERR_CNT, ecc_count);
+ 
+@@ -172,8 +273,12 @@ static void bluefield_edac_check(struct mem_ctl_info *mci)
+ 	}
+ 
+ 	/* Write to clear reported errors. */
+-	if (ecc_count)
+-		writel(ecc_error, priv->emi_base + MLXBF_ECC_ERR);
++	if (ecc_count) {
++		err = bluefield_edac_writel(priv->emi_base + MLXBF_ECC_ERR, ecc_error,
++					    priv->svc_sreg_support, priv->sreg_tbl_edac);
++		if (err)
++			dev_err(priv->dev, "ECC Error write failed.\n");
++	}
+ }
+ 
+ /* Initialize the DIMMs information for the given memory controller. */
+@@ -189,7 +294,7 @@ static void bluefield_edac_init_dimms(struct mem_ctl_info *mci)
+ 		dimm = mci->dimms[i];
+ 
+ 		smc_arg = mem_ctrl_idx << 16 | i;
+-		smc_info = smc_call1(MLNX_SIP_GET_DIMM_INFO, smc_arg);
++		smc_info = smc_call1(MLXBF_SIP_GET_DIMM_INFO, smc_arg);
+ 
+ 		if (!FIELD_GET(MLXBF_DIMM_INFO__SIZE_GB, smc_info)) {
+ 			dimm->mtype = MEM_EMPTY;
+@@ -244,6 +349,7 @@ static int bluefield_edac_mc_probe(struct platform_device *pdev)
+ 	struct bluefield_edac_priv *priv;
+ 	struct device *dev = &pdev->dev;
+ 	struct edac_mc_layer layers[1];
++	struct arm_smccc_res res;
+ 	struct mem_ctl_info *mci;
+ 	struct resource *emi_res;
+ 	unsigned int mc_idx, dimm_count;
+@@ -279,13 +385,44 @@ static int bluefield_edac_mc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	priv = mci->pvt_info;
++	priv->dev = dev;
++
++	/*
++	 * The "sec_reg_block" property in the ACPI table determines the method
++	 * the driver uses to access the EMI registers:
++	 * a) property is not present - directly access registers via readl/writel
++	 * b) property is present - indirectly access registers via SMC calls
++	 *    (assuming required Silicon Provider service version found)
++	 */
++	if (device_property_read_u32(dev,
++				     "sec_reg_block", &priv->sreg_tbl_edac)) {
++		priv->svc_sreg_support = false;
++	} else {
++		/*
++		 * Check for minimum required Arm Silicon Provider (SiP) service
++		 * version, ensuring support of required SMC function IDs.
++		 */
++		arm_smccc_smc(MLXBF_SIP_SVC_VERSION, 0, 0, 0, 0, 0, 0, 0, &res);
++		if (res.a0 == MLXBF_SVC_REQ_MAJOR &&
++		    res.a1 >= MLXBF_SVC_REQ_MINOR) {
++			priv->svc_sreg_support = true;
++		} else {
++			dev_err(dev, "Required SMCs are not supported.\n");
++			ret = -EINVAL;
++			goto err;
++		}
++	}
+ 
+ 	priv->dimm_per_mc = dimm_count;
+-	priv->emi_base = devm_ioremap_resource(dev, emi_res);
+-	if (IS_ERR(priv->emi_base)) {
+-		dev_err(dev, "failed to map EMI IO resource\n");
+-		ret = PTR_ERR(priv->emi_base);
+-		goto err;
++	if (!priv->svc_sreg_support) {
++		priv->emi_base = devm_ioremap_resource(dev, emi_res);
++		if (IS_ERR(priv->emi_base)) {
++			dev_err(dev, "failed to map EMI IO resource\n");
++			ret = PTR_ERR(priv->emi_base);
++			goto err;
++		}
++	} else {
++		priv->emi_base = (void __iomem *)emi_res->start;
+ 	}
+ 
+ 	mci->pdev = dev;
+@@ -320,7 +457,6 @@ static int bluefield_edac_mc_probe(struct platform_device *pdev)
+ 	edac_mc_free(mci);
+ 
+ 	return ret;
+-
+ }
+ 
+ static void bluefield_edac_mc_remove(struct platform_device *pdev)
 -- 
-2.45.1
+2.30.1
 
