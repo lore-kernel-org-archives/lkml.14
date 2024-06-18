@@ -1,103 +1,112 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A88A13A401;
-	Tue, 18 Jun 2024 09:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25F1327E5;
+	Tue, 18 Jun 2024 09:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718701594; cv=none; b=F89o/nxjS303Y1RCaO1+tVkHQoimOyErRrBg5JGu1v1tZUisyawAM+qMhfcJ9eVAx+qAslwrfmhXE2SujVNqnJUMNBIsjZnkvg3Yzq1DLybVMALsLUFphs/LOgrFBm6rPbKajGgiPA9D8VQ7LGslKq8yURTSKRFLn2UwdUpz8k8=
+	t=1718701625; cv=none; b=Jn0wvKPF58IDg/plZ0pYBKre21IdKn5JuDmF1AwbRImmeL8vlfhqwBp6lNJfg5M0FlWaorT2j16wl9v9rNcSwHC+HC7ijsEBJ8hii3zLWaKwi4WO0/LhmPSVmkjQgC7OB5UjRkuAE0YX4GxgG+gcTBvHFFnpEDQWdLHdaa0LDog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718701594; c=relaxed/simple;
-	bh=1xvnTLcwUC/wXSbK0hHWiovGjdpeba1dJ2R9GFpGru0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERvK3TloFw0mjH7IbyT+RLi2iC2hKqvl3nqTwmxJONGQu2k4j2TDQbr9WId626N3MqilumQM7QJQe4Qfq7tZfm7Ph+x4/0Y8MEBfBjr8kcRggL7IwdI4MCN/u/pm8XBK7NfZmZxvqZjfJHRXwScmAdKdYERVKe6SgrSzCdTazSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=eKYT/zhq; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1718701625; c=relaxed/simple;
+	bh=au8yhi+EmJrIbpHhK6erx6351t7jF0G+m5kzvhU0lhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DsRg+54TQ9NGNO0rIzvFyIcLM4NTBqpXwx1Lh7T11ZAr6zLh9aP0uKe9rfmiZwvoUWo2g1mV75pALgpzjavMvZjy2CVDJMiOqQXEkduVfA0ZLOILQXZKqBr3piJ30HKiCE82GvBxBMwJc7gR/i9ByXZ7MV8Io74xkM0/lAkl0us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+Rp1Lgf; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="eKYT/zhq"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 6499A1C0082; Tue, 18 Jun 2024 11:06:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1718701588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtv9e/zean9YtwVbvYLt9HowqzS0Av+9M4FJjz/aoWY=;
-	b=eKYT/zhqu3DOr0M3GNkrbWzbrhYnGE/w0ZNoD0esRMh4xs7MUkkMRHJU4mshDx+jVxGa2+
-	2+E/k2oxlwylVe5v0+X2v/zl+zOkorCPrGyJsD8RClnTEEf/6nER+7qmK4/RaftY/1cSb3
-	y93jcBKfIDQOxvqXgFm3yjIhCQ8xT80=
-Date: Tue, 18 Jun 2024 11:06:27 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Gregor Riepl <onitake@gmail.com>, corbet@lwn.net,
-	ilpo.jarvinen@linux.intel.com, paulmck@kernel.org,
-	jpoimboe@kernel.org, tglx@linutronix.de, bp@alien8.de,
-	xiongwei.song@windriver.com, linux-doc@vger.kernel.org,
-	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.10 4/8] platform/x86: touchscreen_dmi: Add
- support for setting touchscreen properties from cmdline
-Message-ID: <ZnFOE5LcN2R9/zXc@duo.ucw.cz>
-References: <20240605120554.2968012-1-sashal@kernel.org>
- <20240605120554.2968012-4-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+Rp1Lgf"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f7b785a01so280648266b.1;
+        Tue, 18 Jun 2024 02:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718701622; x=1719306422; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3UbcOf0pxrejnIwiMiz1yEnw+fA4Gbsvc+uTFi94WOA=;
+        b=O+Rp1LgfJOky4k3KzptwtNEAXll6Z6ivgNz3FQpmaFatzlI+XPBgdyQGy/jtrOrdDQ
+         f7mYv/0cuD9brhzWRaUMSZIIphqyFkF9xgI0VdYd+AwPmwML/bbqTH/DcLtAVXzJ2e8O
+         2CKIwJCwc1uUmuQQAEJS7uJ8DzSBo2JNaP7GWAQxe5HxyPBf5Vz8S/6S9CM9d99LJmEO
+         emJ3MJIYDvzryb2hqaoHWAbZ/ejwGEzqr5/i9uQKjtiZmYM2p6clsGJfUm1bRrQxNlrO
+         go77DqLn+0TmM9yPCEF6LefJg3tpiEYR728ykfU0LPMCfnXBe4cfGACQj64B8jFxnuW7
+         M3hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718701622; x=1719306422;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3UbcOf0pxrejnIwiMiz1yEnw+fA4Gbsvc+uTFi94WOA=;
+        b=E2oFXbAieOTa1fp0g7zGrZQR9Zl6sppOdECyZk7tPwgjKaJII9VtythhI6j/ZVPwjB
+         bC4fORFdScF/MO52hOTKBdKUJ6+A41LG5St6GE385WgIQJy1A31IkBqkPTssD+W/K/qu
+         mcHtipXmudBzlu/thvAiHm/NchTXzY9xy41HxH0EiAwIBrkafP91tGjcYmWOqiAc4zdp
+         AeCORtRy34gNDe7QdmTqTV6MOJTJvnE+lKYSnOKoT46ULR5ou+oe10jH6moBCJvwyijn
+         m20YIJYYKV7Lfm3JMZuhWROHP5nvebeqW+cFf8zmhzFwupQuzz5v+vDHR+yOvpEewjJK
+         nWOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdkSvex5kzpdSU+gJe2tGO0TTdWi4x/XTi7qMuys0yz73Dmm1yscOqtUC7N99lIiTr9LFVn5SPhl3RgN8lDpfPzmSGHTG2BQ3C2Mni6m8SssLHSsy6sYD9DX8OejG1r/rJfJZubxtZY2GNWA==
+X-Gm-Message-State: AOJu0Yw/Tpy0qMGYp0S055UDWWSP0uHN9e4hamtJDBpFCqGcux3azKsy
+	xuxWcURHcG8Orx0r+uZr/A6wunGF2/L3PVvKhZGJiQaPHA5yPjEyXDmuMuESBbxV/ZpjmXsPJE4
+	RW42puvmTWaZU9JOgxpv9E+paW1Y=
+X-Google-Smtp-Source: AGHT+IF12XeEHiYb6oAXlGs3X906A3Hpl0vxdM8WrW3ESD2IlcRbjMqyZ9rtPT9hqCD2rLynX1q0MPAyWWXvar3ZWvA=
+X-Received: by 2002:a17:906:255b:b0:a6f:5db5:71a0 with SMTP id
+ a640c23a62f3a-a6f60cefe2emr715634866b.14.1718701621969; Tue, 18 Jun 2024
+ 02:07:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="S/N03PCznFK76NlG"
-Content-Disposition: inline
-In-Reply-To: <20240605120554.2968012-4-sashal@kernel.org>
-
-
---S/N03PCznFK76NlG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240614163416.728752-1-yu.ma@intel.com> <20240614163416.728752-4-yu.ma@intel.com>
+ <fejwlhtbqifb5kvcmilqjqbojf3shfzoiwexc3ucmhhtgyfboy@dm4ddkwmpm5i>
+ <lzotoc5jwq4o4oij26tnzm5n2sqwqgw6ve2yr3vb4rz2mg4cee@iysfvyt77gkx>
+ <fd4eb382a87baed4b49e3cf2cd25e7047f9aede2.camel@linux.intel.com>
+ <8fa3f49b50515f8490acfe5b52aaf3aba0a36606.camel@linux.intel.com> <ZnFGy2nYI9XZSvMl@tiehlicka>
+In-Reply-To: <ZnFGy2nYI9XZSvMl@tiehlicka>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 18 Jun 2024 11:06:49 +0200
+Message-ID: <CAGudoHHaH8NgdxwC1gr-XdyFSzSfPsD__6jMymTC-FQ7=o_ERw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] fs/file.c: move sanity_check from alloc_fd() to put_unused_fd()
+To: Michal Hocko <mhocko@suse.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>, Yu Ma <yu.ma@intel.com>, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tim.c.chen@intel.com, pan.deng@intel.com, 
+	tianyou.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Tue, Jun 18, 2024 at 10:35=E2=80=AFAM Michal Hocko <mhocko@suse.com> wro=
+te:
+>
+> On Mon 17-06-24 11:04:41, Tim Chen wrote:
+> > diff --git a/kernel/sys.c b/kernel/sys.c
+> > index 3a2df1bd9f64..b4e523728c3e 100644
+> > --- a/kernel/sys.c
+> > +++ b/kernel/sys.c
+> > @@ -1471,6 +1471,7 @@ static int do_prlimit(struct task_struct *tsk, un=
+signed int resource,
+> >                 return -EINVAL;
+> >         resource =3D array_index_nospec(resource, RLIM_NLIMITS);
+> >
+> > +       task_lock(tsk->group_leader);
+> >         if (new_rlim) {
+> >                 if (new_rlim->rlim_cur > new_rlim->rlim_max)
+> >                         return -EINVAL;
+>
+> This is clearly broken as it leaves the lock behind on the error, no?
 
-> [ Upstream commit 0b178b02673998f5acca5a0365a8858ca45beedb ]
->=20
-> On x86/ACPI platforms touchscreens mostly just work without needing any
-> device/model specific configuration. But in some cases (mostly with Silead
-> and Goodix touchscreens) it is still necessary to manually specify various
-> touchscreen-properties on a per model basis.
->=20
-> touchscreen_dmi is a special place for DMI quirks for this, but it can be
-> challenging for users to figure out the right property values, especially
-> for Silead touchscreens where non of these can be read back from
-> the touchscreen-controller.
->=20
-> ATM users can only test touchscreen properties by editing touchscreen_dmi=
-=2Ec
-> and then building a completely new kernel which makes it unnecessary
-> difficult for users to test and submit properties when necessary for their
-> laptop / tablet model.
->=20
-> Add support for specifying properties on the kernel commandline to allow
-> users to easily figure out the right settings. See the added documentation
-> in kernel-parameters.txt for the commandline syntax.
+As I explained in my other e-mail there is no need to synchronize
+against rlimit changes, merely the code needs to honor the observed
+value, whatever it is.
 
-I don't believe this is suitable for stable.
+This holds for the stock kernel, does not hold for v1 of the patchset
+and presumably will be addressed in v2.
 
-Best regards,
-								Pavel
+Even if some synchronization was required, moving the lock higher does
+not buy anything because the newly protected area only validates the
+new limit before there is any attempt at setting it and the old limit
+is not looked at.
+
+I think we can safely drop this area and patiently wait for v2.
+
 --=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---S/N03PCznFK76NlG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZnFOEwAKCRAw5/Bqldv6
-8uj9AKCsdtNtMZUOkf6ks4neub3NXKRZfACfcuiNamMXquKiK+ws/iD2l1txxRM=
-=HPHn
------END PGP SIGNATURE-----
-
---S/N03PCznFK76NlG--
+Mateusz Guzik <mjguzik gmail.com>
