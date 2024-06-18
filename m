@@ -1,104 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEE713BC30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBAD13BC35;
 	Tue, 18 Jun 2024 16:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718729640; cv=none; b=fEVr8/2YbfZ2uIkyuaFRc766/cP/dmH1y14hcGQAQ8WmcD0Al9nyWJO3Bz0XdBzkuqZCmWxOfvI3eRfpsMOzsHpLqnmKvPCjzA9ZxaNeFrhfyDQeKcgIC2DKKDlEPXIZbigHwBhXZ/CoEe7Ggz2FiaZToODJ7heRYQkngB4qmdE=
+	t=1718729642; cv=none; b=WbfDJbUxUmKba5ZrcBBBiD4SV+vcOQF0DFhWd9pDH1N85asQUQ0kyjKHvwfnwa+rfXJT0xGUHTNNNxiXgRnNXnyA49HEFYh2jZwwrp66oYv/2ytp9golcU9BIQYlm9c91cpd35v2Sqqr2AjPF7St94muNJ8u5ff8rGUUoFTuWRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718729640; c=relaxed/simple;
-	bh=H7FPRpyPtpISrnLWRcwsipNmbS7NjzQABnkUys2YiRk=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=FvEXBsOk3EagUA+rfA4O9w1o3WCSnmkMc5EhWE6ms9L3kVWG7kIjoU6D53ss4/QmEvXuHyMD5H6QVWMYGMN0Xj37JsKPa06B9KrLmQm3xD5vlD7pegARZTH/Z1BQ5ErbvMri6avuusvPAXGfnws1n1USbr5GUYMuSxR18UpsinY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jcf4SG2w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jcf4SG2w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32A7C4AF64;
-	Tue, 18 Jun 2024 16:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718729639;
-	bh=H7FPRpyPtpISrnLWRcwsipNmbS7NjzQABnkUys2YiRk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Jcf4SG2wpiXbX7ZM1bKI/pPElEHtipY1v8Cb54B2m3NijSvBdmuunGJwin8OCu2dA
-	 bD1brFL2KB6Ghin0KMDFNdh73Dnuxf4Z4q++7oOgJJd1MaooJqeU0oNAY/bKjFfJdv
-	 7+9/aC3KSrwVJZ0FJh+bWki77yjbi1RWEkmuVGMLulLW15fS4s2JT3um70LzR8C+BA
-	 I+vHj5MXo4A8PXjMMweS249CK1TuUuHHKqXVtYCYp0u6lNPeLLkdy9I+Q8KXJ/pagx
-	 evgrZATFvdIweX08+dr13+9LZpy7RpD2fqljrMzoyXzBb73sBgygFcMf5W7E5/U0DS
-	 MtyU9rkE1gkLw==
-Date: Tue, 18 Jun 2024 10:53:58 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1718729642; c=relaxed/simple;
+	bh=MNkGRu9GKer6t/McohMZFDGB7NdhMCoyNOLnBy33Rus=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SJ4ln9VwnAsGkM4NiQWVUgZNeQYrAD6HoLnfXiBlEGmhWf43J9YYS8A+yuDJkcItBI1i3p24VRCxDWj7noTVXjk8N2Q0AgszTDIFhaEBlnC0dClri88ZBHDaOlvUIjdy3yz8T6cOGSa9XHxqyXdP/duqnYrlqLGkWX24bFvL3og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 7804B401EF; Tue, 18 Jun 2024 09:53:53 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 76EAF401CA;
+	Tue, 18 Jun 2024 09:53:53 -0700 (PDT)
+Date: Tue, 18 Jun 2024 09:53:53 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Peter Zijlstra <peterz@infradead.org>
+cc: tglx@linutronix.de, axboe@kernel.dk, linux-kernel@vger.kernel.org, 
+    mingo@redhat.com, dvhart@infradead.org, dave@stgolabs.net, 
+    andrealmeid@igalia.com, Andrew Morton <akpm@linux-foundation.org>, 
+    urezki@gmail.com, hch@infradead.org, lstoakes@gmail.com, 
+    Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org, 
+    linux-mm@kvack.org, linux-arch@vger.kernel.org, malteskarupke@web.de
+Subject: Re: [PATCH v1 11/14] futex: Implement FUTEX2_NUMA
+In-Reply-To: <20240612174432.GK8774@noisy.programming.kicks-ass.net>
+Message-ID: <b476aa71-37ec-a4ee-6a8a-3a28811bb87c@linux.com>
+References: <20230721102237.268073801@infradead.org> <20230721105744.434742902@infradead.org> <9dc04e4c-2adc-5084-4ea1-b200d82be29f@linux.com> <20240612174432.GK8774@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Dzmitry Sankouski <dsankouski@gmail.com>
-Cc: linux-input@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- Daniel Vetter <daniel@ffwll.ch>, linux-pm@vger.kernel.org, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- linux-arm-msm@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, 
- Krzysztof Kozlowski <krzk@kernel.org>, David Airlie <airlied@gmail.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Conor Dooley <conor+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
- phone-devel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Sam Ravnborg <sam@ravnborg.org>, Lee Jones <lee@kernel.org>, 
- linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sebastian Reichel <sre@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, linux-samsung-soc@vger.kernel.org, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-leds@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, linux-clk@vger.kernel.org
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-7-e3f6662017ac@gmail.com>
-References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-7-e3f6662017ac@gmail.com>
-Message-Id: <171872963469.3062613.11658948111775206928.robh@kernel.org>
-Subject: Re: [PATCH v3 07/23] dt-bindings: power: supply: add
- maxim,max77705
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+On Wed, 12 Jun 2024, Peter Zijlstra wrote:
 
-On Tue, 18 Jun 2024 16:59:41 +0300, Dzmitry Sankouski wrote:
-> add maxim,max77705 fuel gauge binding part
-> 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> ---
->  .../bindings/power/supply/maxim,max77705-fg.yaml   | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
+> I read this like: I tested it and it works for me. Is that a correct
+> reading of your statement?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+We tested it and it works as we expected.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/maxim,max77705.example.dtb: pmic@66: fuelgauge: 'monitored-battery', 'power-supplies' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/mfd/maxim,max77705.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/maxim,max77705.example.dtb: fuelgauge: 'monitored-battery', 'power-supplies' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max77705-fg.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240618-starqltechn_integration_upstream-v3-7-e3f6662017ac@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Which in turn raises the issue if this could be done to other large 
+system hashes as well.
