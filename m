@@ -1,77 +1,300 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE3713AD04;
-	Tue, 18 Jun 2024 14:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7312139AC;
+	Tue, 18 Jun 2024 14:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722739; cv=none; b=Qn5pSQPW/fXXkyEXaNGGcKQ15XEQuT47H80ejF/mFi+mtwlOmWAjbE8HOMxwffT6/rGGzkwe6EWkVysgprGiMGTooM0iPoXj8fldLuvh+FlUHjFmGndl6ynJDSWNuV0kn2mo4B0niU3nnfRUVxj1ssQRbFC6KqE/WsQf7G0lV+w=
+	t=1718722777; cv=none; b=N7TJP5BFY8x/FZwwRrm3Y2mkjMOp+FjDCkhV2/HZmzxozleWZHr8upm39nXHzZAt/E8XqDi5AAI9xgjGn8qXWH4CT9juQkNDfc2/p9Cbx/eAU/+BoR7PMwtNCQmKsHMq//i/ENRGOsW338Xo5uLktfZALsNeCm7jhxzEbRo0nTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722739; c=relaxed/simple;
-	bh=zgleJRim5ue5MflARLo6K2lzadluugvyWKliF7w1E1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZ0/+dCnMaNJOqApnP4v0aEtw6QitfGT+yQvgisJt1s4Ax/8/BdU4baZoPUZXHOoaRoLvENSSlyVjvWOuDkPZmfi22bwEs97psIA6hgrQQ2NQGduH/jGlpJEkg+QTc/PJKQLi5rHV0JQQXerEzJ4HvwCfqwJMKtWEmuwU4ObD8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0O/LhgeK; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1718722777; c=relaxed/simple;
+	bh=9VFvLJ5D2bcVwMlb/aO0woCroDo49q//nKnY5oo0Vus=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=agn3GatWEjZXBdUPt6MxNNa35H3Bt4F6+Gq0+H8T4JS8corCDTbaXSYtx6FmYalgbGhEjZ2tXdaJnP1xhlRHNnpneO9gwTpp4HeNShXIjnyv2KYUWE9jHEonNxh9TcE1bKVnnYl/YpwNMLUA6O1t/wDoKunEwfYoPdABj/xJwQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aeg1qpJz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0O/LhgeK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=E19MlYkqGa0m/nMlEgoSq9+/JQ4muSNNLLG6NbXSov0=; b=0O/LhgeKsH9Ep9q4UQ9In6qfTy
-	nReupZV0d8/UsxyRqZ4kYEHrXMAfwjl8rBlfpCMFGmvkhqwfwhyfiLkDDhzRds2KTc/CsXRaFIMdD
-	SUZR+4zdlH8qVV7VkkHBnxDFPaVort7x35bImb06FRTe/ClW8wsSRYxnEmUML5Es9EG0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sJaIF-000O6k-Gf; Tue, 18 Jun 2024 16:58:43 +0200
-Date: Tue, 18 Jun 2024 16:58:43 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Woojung.Huh@microchip.com, dan.carpenter@linaro.org, olteanv@gmail.com,
-	kuba@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
-	edumazet@google.com, davem@davemloft.net, o.rempel@pengutronix.de,
-	Tristram.Ha@microchip.com, bigeasy@linutronix.de, horms@kernel.org,
-	ricardo@marliere.net, casper.casan@gmail.com,
-	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH v1 net-next] net: dsa: Allow only up to two HSR HW
- offloaded ports for KSZ9477
-Message-ID: <6a011bd4-8494-4a6f-9ec4-723ab52c4fbf@lunn.ch>
-References: <20240618130433.1111485-1-lukma@denx.de>
- <339031f6-e732-43b4-9e83-0e2098df65ef@moroto.mountain>
- <24b69bf0-03c9-414a-ac5d-ef82c2eed8f6@lunn.ch>
- <1e2529b4-41f2-4483-9b17-50c6410d8eab@moroto.mountain>
- <BL0PR11MB291397353642C808454F575CE7CE2@BL0PR11MB2913.namprd11.prod.outlook.com>
- <20240618164545.14817f7e@wsk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aeg1qpJz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B634BC4AF55;
+	Tue, 18 Jun 2024 14:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718722776;
+	bh=9VFvLJ5D2bcVwMlb/aO0woCroDo49q//nKnY5oo0Vus=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Aeg1qpJzbdiwhk0HyabcDzTXwO9AQCbIcPBHS7QUTNJkXRqIfCgR1bVmJoAwJqIqW
+	 aA/mfHHKLn6NsqkPepHxDC+fxhid4DKHAx7TUdE+3ULPCiG1Dnpj0ZazWAGetk+T06
+	 Fpqb//mvvp6ioyECDSMv5z7hfiSYl75o2wb5jFEWqnnveBNbsHyvSshFRZp3Faw1RS
+	 I1nQT5+/0ON4TQ6ZRIi6vEVB78OXNSL8/Al7ICpwsSi6AGC4axkLIATerU0pHF4KEy
+	 rePk7ffEiv9dxbrVEHw+Brt4hhINevCU3yqR8++MMgH6r7KixVGf+RFAoK0wZFiJ9J
+	 g+yyDQpcEPjaw==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ebeefb9a6eso59211541fa.1;
+        Tue, 18 Jun 2024 07:59:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWepa+BaUb7KH1NPCSx/EOcQlfS3x0rcBgr1OqfIVuNtzmGnabMy00akWeGXCO9BnuWv0nqsZcTZnMSm4rzjbiGvNOouAaAPP9YSiXmQGR93Tuvn6G/7LMogRnhV/gBFU2L6I9o12a1
+X-Gm-Message-State: AOJu0YxU2/kBHb8PCvLIptU8bCDlU0vdp2rDyzKRSPM9ZM0Q+ARgeD+e
+	ViMNA7MQrYWrP+ZYza8wvQlGklOA4cbso6OEFV57bdq2g88uRGByWCAUnAUv23EaZjGBIoPixhc
+	+C9FaHcK4gAX7W7un9zujgkyYcFU=
+X-Google-Smtp-Source: AGHT+IFmKDr0UJF/vB46P5FDkAXrOS2m32z+9GBnyCDYe1Bfh6hX7g0qK5mLLgIhmZTL1cK7ajhZR9bGd8nlSWfuLOw=
+X-Received: by 2002:a2e:9b93:0:b0:2eb:f5ec:5acc with SMTP id
+ 38308e7fff4ca-2ec3cec5416mr669361fa.25.1718722774799; Tue, 18 Jun 2024
+ 07:59:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618164545.14817f7e@wsk>
+References: <aw675dhrbplkitj3szjut2vyidsxokogkjj3vi76wl2x4wybtg@5rhk5ca5zpmv> <san7zg5rohy7q2oep2kx6awf6gltpuv2f4xlfljw5ezxqydfkv@zkd4k4udcezz>
+In-Reply-To: <san7zg5rohy7q2oep2kx6awf6gltpuv2f4xlfljw5ezxqydfkv@zkd4k4udcezz>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 18 Jun 2024 16:59:22 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEr579hDqV5OuEbBB-O9meCOcmcTe_SZg97UKSLbKj6pw@mail.gmail.com>
+Message-ID: <CAMj1kXEr579hDqV5OuEbBB-O9meCOcmcTe_SZg97UKSLbKj6pw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] arm64: non leaf ptdump support
+To: Maxwell Bland <mbland@motorola.com>
+Cc: linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> For me the:
-> 
-> NL_SET_ERR_MSG_MOD(extack, "Cannot offload more than two ports (in
-> use=0x%x)", dev->hsr_ports);
-> 
-> is fine - as it informs that no more HSR offloading is possible (and
-> allows to SW based RedBox/HSR-SAN operation).
+On Tue, 18 Jun 2024 at 16:40, Maxwell Bland <mbland@motorola.com> wrote:
+>
+> Separate the pte_bits used in ptdump from pxd_bits used by pmd, p4d,
+> pud, and pgd descriptors, thereby adding support for printing key
+> intermediate directory protection bits, such as PXNTable, and enable the
+> associated support Kconfig option.
+>
+> Signed-off-by: Maxwell Bland <mbland@motorola.com>
+> ---
+>  arch/arm64/Kconfig     |   1 +
+>  arch/arm64/mm/ptdump.c | 140 ++++++++++++++++++++++++++++++++++++-----
+>  2 files changed, 125 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 5d91259ee7b5..f4c3290160db 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -98,6 +98,7 @@ config ARM64
+>         select ARCH_SUPPORTS_NUMA_BALANCING
+>         select ARCH_SUPPORTS_PAGE_TABLE_CHECK
+>         select ARCH_SUPPORTS_PER_VMA_LOCK
+> +       select ARCH_SUPPORTS_NON_LEAF_PTDUMP
+>         select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>         select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
+>         select ARCH_WANT_DEFAULT_BPF_JIT
+> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+> index 6986827e0d64..8f0b459c13ed 100644
+> --- a/arch/arm64/mm/ptdump.c
+> +++ b/arch/arm64/mm/ptdump.c
+> @@ -24,6 +24,7 @@
+>  #include <asm/memory.h>
+>  #include <asm/pgtable-hwdef.h>
+>  #include <asm/ptdump.h>
+> +#include <asm/pgalloc.h>
+>
+>
+>  #define pt_dump_seq_printf(m, fmt, args...)    \
+> @@ -105,11 +106,6 @@ static const struct prot_bits pte_bits[] = {
+>                 .val    = PTE_CONT,
+>                 .set    = "CON",
+>                 .clear  = "   ",
+> -       }, {
+> -               .mask   = PTE_TABLE_BIT,
+> -               .val    = PTE_TABLE_BIT,
+> -               .set    = "   ",
+> -               .clear  = "BLK",
+>         }, {
+>                 .mask   = PTE_UXN,
+>                 .val    = PTE_UXN,
+> @@ -143,34 +139,129 @@ static const struct prot_bits pte_bits[] = {
+>         }
+>  };
+>
+> +static const struct prot_bits pxd_bits[] = {
 
-Does user space actually get to see it? I would expect the HSR code
-sees the EOPNOTSUPP, does not consider it an fatal error, and return 0
-to user space.
+This table will need to distinguish between table and block entries.
+In your sample output, I see
 
-If userspace does see it, maybe we should make it clearer it is not an
-actually error. 
+2M PMD   TBL     RW               x            UXNTbl    MEM/NORMAL
 
-"Cannot offload more than two ports, using software bridging"
+for a table entry, which includes a memory type and access permissions
+based on descriptor fields that are not used for table descriptors.
 
-so something similar.
+Some other attributes listed below are equally inapplicable to table
+entries, but happen to be 0x0 so they don't appear in the output, but
+they would if the IGNORED bit in the descriptor happened to be set.
 
-   Andrew
+So I suspect that the distinction pte_bits <-> pxd_bits is not so
+useful here. It would be better to have tbl_bits[], with pointers to
+it in the pg_level array, where the PTE level one is set to NULL.
+
+
+> +       {
+> +               .mask   = PMD_SECT_VALID,
+> +               .val    = PMD_SECT_VALID,
+> +               .set    = " ",
+> +               .clear  = "F",
+> +       }, {
+> +               .mask   = PMD_TABLE_BIT,
+> +               .val    = PMD_TABLE_BIT,
+> +               .set    = "TBL",
+> +               .clear  = "BLK",
+> +       }, {
+> +               .mask   = PMD_SECT_USER,
+> +               .val    = PMD_SECT_USER,
+> +               .set    = "USR",
+> +               .clear  = "   ",
+> +       }, {
+> +               .mask   = PMD_SECT_RDONLY,
+> +               .val    = PMD_SECT_RDONLY,
+> +               .set    = "ro",
+> +               .clear  = "RW",
+> +       }, {
+> +               .mask   = PMD_SECT_S,
+> +               .val    = PMD_SECT_S,
+> +               .set    = "SHD",
+> +               .clear  = "   ",
+> +       }, {
+> +               .mask   = PMD_SECT_AF,
+> +               .val    = PMD_SECT_AF,
+> +               .set    = "AF",
+> +               .clear  = "  ",
+> +       }, {
+> +               .mask   = PMD_SECT_NG,
+> +               .val    = PMD_SECT_NG,
+> +               .set    = "NG",
+> +               .clear  = "  ",
+> +       }, {
+> +               .mask   = PMD_SECT_CONT,
+> +               .val    = PMD_SECT_CONT,
+> +               .set    = "CON",
+> +               .clear  = "   ",
+> +       }, {
+> +               .mask   = PMD_SECT_PXN,
+> +               .val    = PMD_SECT_PXN,
+> +               .set    = "NX",
+> +               .clear  = "x ",
+> +       }, {
+> +               .mask   = PMD_SECT_UXN,
+> +               .val    = PMD_SECT_UXN,
+> +               .set    = "UXN",
+> +               .clear  = "   ",
+> +       }, {
+> +               .mask   = PMD_TABLE_PXN,
+> +               .val    = PMD_TABLE_PXN,
+> +               .set    = "NXTbl",
+> +               .clear  = "     ",
+> +       }, {
+> +               .mask   = PMD_TABLE_UXN,
+> +               .val    = PMD_TABLE_UXN,
+> +               .set    = "UXNTbl",
+> +               .clear  = "      ",
+> +       }, {
+> +               .mask   = PTE_GP,
+> +               .val    = PTE_GP,
+> +               .set    = "GP",
+> +               .clear  = "  ",
+> +       }, {
+> +               .mask   = PMD_ATTRINDX_MASK,
+> +               .val    = PMD_ATTRINDX(MT_DEVICE_nGnRnE),
+> +               .set    = "DEVICE/nGnRnE",
+> +       }, {
+> +               .mask   = PMD_ATTRINDX_MASK,
+> +               .val    = PMD_ATTRINDX(MT_DEVICE_nGnRE),
+> +               .set    = "DEVICE/nGnRE",
+> +       }, {
+> +               .mask   = PMD_ATTRINDX_MASK,
+> +               .val    = PMD_ATTRINDX(MT_NORMAL_NC),
+> +               .set    = "MEM/NORMAL-NC",
+> +       }, {
+> +               .mask   = PMD_ATTRINDX_MASK,
+> +               .val    = PMD_ATTRINDX(MT_NORMAL),
+> +               .set    = "MEM/NORMAL",
+> +       }, {
+> +               .mask   = PMD_ATTRINDX_MASK,
+> +               .val    = PMD_ATTRINDX(MT_NORMAL_TAGGED),
+> +               .set    = "MEM/NORMAL-TAGGED",
+> +       }
+> +};
+> +
+>  struct pg_level {
+>         const struct prot_bits *bits;
+>         char name[4];
+>         int num;
+>         u64 mask;
+> +       unsigned long size;
+>  };
+>
+>  static struct pg_level pg_level[] __ro_after_init = {
+>         { /* pgd */
+>                 .name   = "PGD",
+> -               .bits   = pte_bits,
+> -               .num    = ARRAY_SIZE(pte_bits),
+> +               .bits   = pxd_bits,
+> +               .num    = ARRAY_SIZE(pxd_bits),
+> +               .size   = PGDIR_SIZE,
+>         }, { /* p4d */
+>                 .name   = "P4D",
+> -               .bits   = pte_bits,
+> -               .num    = ARRAY_SIZE(pte_bits),
+> +               .bits   = pxd_bits,
+> +               .num    = ARRAY_SIZE(pxd_bits),
+> +               .size   = P4D_SIZE,
+>         }, { /* pud */
+>                 .name   = "PUD",
+> -               .bits   = pte_bits,
+> -               .num    = ARRAY_SIZE(pte_bits),
+> +               .bits   = pxd_bits,
+> +               .num    = ARRAY_SIZE(pxd_bits),
+> +               .size   = PUD_SIZE,
+>         }, { /* pmd */
+>                 .name   = "PMD",
+> -               .bits   = pte_bits,
+> -               .num    = ARRAY_SIZE(pte_bits),
+> +               .bits   = pxd_bits,
+> +               .num    = ARRAY_SIZE(pxd_bits),
+> +               .size   = PMD_SIZE,
+>         }, { /* pte */
+>                 .name   = "PTE",
+>                 .bits   = pte_bits,
+>                 .num    = ARRAY_SIZE(pte_bits),
+> +               .size   = PAGE_SIZE
+>         },
+>  };
+>
+> @@ -251,10 +342,27 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+>                         note_prot_wx(st, addr);
+>                 }
+>
+> -               pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
+> -                                  st->start_address, addr);
+> +               /*
+> +                * Non-leaf entries use a fixed size for their range
+> +                * specification, whereas leaf entries are grouped by
+> +                * attributes and may not have a range larger than the type
+> +                * specifier.
+> +                */
+> +               if (st->start_address == addr) {
+> +                       if (check_add_overflow(addr, pg_level[st->level].size,
+> +                                              &delta))
+> +                               delta = ULONG_MAX - addr + 1;
+> +                       else
+> +                               delta = pg_level[st->level].size;
+> +                       pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
+> +                                          addr, addr + delta);
+> +               } else {
+> +                       delta = (addr - st->start_address);
+> +                       pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
+> +                                          st->start_address, addr);
+> +               }
+>
+> -               delta = (addr - st->start_address) >> 10;
+> +               delta >>= 10;
+>                 while (!(delta & 1023) && unit[1]) {
+>                         delta >>= 10;
+>                         unit++;
+> --
+> 2.39.2
+>
+>
