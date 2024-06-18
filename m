@@ -1,252 +1,236 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076ED13A899;
-	Tue, 18 Jun 2024 07:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0078D14F11C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695354; cv=none; b=kZoJSArKVViD6gX7ZR6TYgFkbkKQFP/H3E+jIfomdLh7nAUT+lipf0GcQ50RJOhbl+waKUAq3oad2/oHl4MRFyXButJ29H3ScJc5GpL6iNX94XGRH/P3e9nE0n0ed4bL0lzkIZnQc8wxSwh7+mm8Bsfd9pw6+yhFiDHXaplvts0=
+	t=1718695356; cv=none; b=M1zsj+D0k1FI6uLsCNeQceO8trh5eO4JNuaRuth3gpp+nAaqUNKYXDwYKSoA9UxZCVEH8dP2e7yKX548I/2nERPCWzf+Gr8x7cIcS+1T4+IkPhtKBf979iMAmz1mEdHL0UVS0IZ/GsUKmQ6AJBWGLSJ88NxJeJU4km0m0Tn7u7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695354; c=relaxed/simple;
-	bh=9DAgUIuFVOElWSND21t3bONcKg4ll2vl9TNDna6oRQY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iXAirPpw2Ssv/Vlk5ZqpEJi4TcJihy/+WJd50sXaodXgWDpSJRJGUhZLkQmmaf7ZVZyIbAXGYua5tgXS2oXj2h4b8E0C5znJoZdET4/CHLotS3Afb1b920/mscyMep9YcLo+RIiM2lp2puZjgrR77V8xZdo57TzUfMwA+4b0mLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nV9RiH/f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718695356; c=relaxed/simple;
+	bh=L4wf4x2dBZQvEnpkKvLPORNBkAK3TS9LwI2recHxqhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TWyOlF1UyOy8+h9ZdNQ+6L1gpFC10YOD2bnXTIAzUEIjm8rLAiYTY3ME1QNhQDYB398NMyQGvLHi1BRcuAeB5/hNd7qQ1IYnvLCUNkbexOS8INuszcUCd/dqVi79Rg7c50qJEGZooAoqat3xpXpN//XmrcUouxFpf+uUR+IKUA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TMxkDlbH; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nV9RiH/f"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HLh92Z030331;
-	Tue, 18 Jun 2024 07:22:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=okuEunB0CZqbDIx9SXzeMH
-	wZ0COiv+XvO+JxfWiFvJI=; b=nV9RiH/f4UGbc/5wF+ouAcbody1PpxwYx1J/eq
-	YlanJf48MLFkI+p38whh0CtaCq3TD1Qm/7n6LqipVzFc0zd4oGv8mKjfDmiIz6u4
-	I0PZiJuQsLYCwqUjTp+HzUpP66cCdn6FyA7ZsAI2MtHeya9Qqx+XMBNiIzZGIa1l
-	r/fg2h4i/FXiRP/K54v8VxdecFtA9tgH4JJlXRp0RJbaSPtAlc12x+mtEiU4Dz3F
-	tBm77RN0vlRo/Qt9wX+VGlc2ZEQgL+E/ydFwnzroE14Ru5bn+qRkmji/sg4//v1Z
-	+qwVOJq2LOtDhlALjO2Xd2gbRJfkH7horz/n91RL8e+iv6gA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ytwa2gvcx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 07:22:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45I7MQ9f023051
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 07:22:27 GMT
-Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 18 Jun 2024 00:22:20 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-Subject: [PATCH v10 0/4] arm64: dts: qcom: aim300: add AIM300 AIoT
-Date: Tue, 18 Jun 2024 15:21:58 +0800
-Message-ID: <20240618072202.2516025-1-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TMxkDlbH"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-705fff50de2so1244883b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718695354; x=1719300154; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Q8tUv88VFJag+gHbNp32GqIa0FEWnLAl/tXMaE0LKQE=;
+        b=TMxkDlbH4c5urzf0yhxuPNvFMuRp81/pyouYNyen7BPTYwfZSVqdE80zl8j05lDmh3
+         +3YIL86M/MRLRIEvc1y0HqVU3dUAnjeHqTi/EMmjmJadxGvd3CeoevXPhgJiBHyapk11
+         Gxh2O7HTWisu+SDKYgXCOl1OIRrPQwjL3pzBiyRwRXS66MLu1tnocWBND6w+6A3TZiq+
+         u+AZbMBdBiS86RuJpKPULrM4qbmeW4AUGPM3kUHy4Wvs/6bse2Q+ihRCGyxS8T5A4cmW
+         SvVeZ7vq+TdF2B6mn9jsZb8WJn70Ym8dK0ZUm43O1zhRoNrqrqs+i9L9Tdurumk0bEeq
+         NVMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718695354; x=1719300154;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8tUv88VFJag+gHbNp32GqIa0FEWnLAl/tXMaE0LKQE=;
+        b=VxSSse/1Ilki2uw0NjHkRmjppm1NpMbzFsKPTd9cKsFb+AEAZqBBmH7WJJqyul9B3Y
+         ZD0wYcng8HRPFCjodOcgIzY2uFfkvNH0BvLL6Pedc+SixFW8a2DZvX1xBQNEkPz4A4wq
+         QRHLuxM+kLp4JmtTKJvI6Ur5QwZEZA8wAYYVgTe6bb8CWKo2xl4e3hogjxY+3c2OyGXF
+         QbnNZ+TirHtfZ88hbIu5qCp+xDf3cil8JhMKeSYS0Xsa6E+4wN3H/kEzZTVvRFjoESC3
+         ylLV+qSDO7yn2tvqCHP3VZFhEKwRM7vA8Ctnz9NfEmLAgo/PdgGmRPhsfgITWcjz8kBZ
+         OzCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIfGo52R2+LwHLVu3GjwimR03RM5nwT/o6UOLU8vociL95lPS9RkQOx+NzHDoXbup/u1r/ksVe5AviCh8aC6/i1T9hGiUyHF6t1Plg
+X-Gm-Message-State: AOJu0YyO7dkvObH4uSpHJmEhGXteKrnUHfw/1LC+eSVCJKY92aper5BT
+	rlAXrF85g1qswCnJMUshsu0ne1Iz2g4lOsCQDU8n4KX0M3zmwKOPPCKEq7LmeQ==
+X-Google-Smtp-Source: AGHT+IHZA/cvn9bGNm1TUpflHmsdUDHSxPPQlxV8VE5MQB+zfjE1Wi5tnhZ8CkLkeliOfy7yjei59g==
+X-Received: by 2002:a05:6a00:2d95:b0:704:229e:54bd with SMTP id d2e1a72fcca58-7061aba4f70mr3085370b3a.8.1718695354052;
+        Tue, 18 Jun 2024 00:22:34 -0700 (PDT)
+Received: from thinkpad ([120.60.129.117])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3bf7esm8386242b3a.114.2024.06.18.00.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 00:22:33 -0700 (PDT)
+Date: Tue, 18 Jun 2024 12:52:22 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
+	bmasney@redhat.com, djakov@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v14 1/4] PCI: qcom: Add ICC bandwidth vote for CPU to
+ PCIe path
+Message-ID: <20240618072222.GC5485@thinkpad>
+References: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com>
+ <20240609-opp_support-v14-1-801cff862b5a@quicinc.com>
+ <1b5f11a6-52e3-55ca-8c80-dca8f7e0c7c7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: IiO7n51OyEUI5_kpNQSOfZUmQDiQA3DR
-X-Proofpoint-ORIG-GUID: IiO7n51OyEUI5_kpNQSOfZUmQDiQA3DR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180051
+In-Reply-To: <1b5f11a6-52e3-55ca-8c80-dca8f7e0c7c7@linux.intel.com>
 
-Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
-and PMIC functions.
-AIM300 Series is a highly optimized family of modules designed to
-support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
-chip etc.
-Here is a diagram of AIM300 AIoT Carrie Board and SoM
- +--------------------------------------------------+
- |             AIM300 AIOT Carrier Board            |
- |                                                  |
- |           +-----------------+                    |
- |power----->| Fixed regulator |---------+          |
- |           +-----------------+         |          |
- |                                       |          |
- |                                       v VPH_PWR  |
- | +----------------------------------------------+ |
- | |                          AIM300 SOM |        | |
- | |                                     |VPH_PWR | |
- | |                                     v        | |
- | |   +-------+       +--------+     +------+    | |
- | |   | UFS   |       | QCS8550|     |PMIC  |    | |
- | |   +-------+       +--------+     +------+    | |
- | |                                              | |
- | +----------------------------------------------+ |
- |                                                  |
- |                    +----+          +------+      |
- |                    |USB |          | UART |      |
- |                    +----+          +------+      |
- +--------------------------------------------------+
-The following functions have been verified:
-  - uart
-  - usb
-  - ufs
-  - PCIe
-  - PMIC
-  - display
-  - adsp
-  - cdsp
-  - tlmm
+On Fri, Jun 14, 2024 at 03:14:10PM +0300, Ilpo Järvinen wrote:
+> On Sun, 9 Jun 2024, Krishna chaitanya chundru wrote:
+> 
+> > To access the host controller registers of the host controller and the
+> > endpoint BAR/config space, the CPU-PCIe ICC (interconnect) path should
+> > be voted otherwise it may lead to NoC (Network on chip) timeout.
+> > We are surviving because of other driver voting for this path.
+> > 
+> > As there is less access on this path compared to PCIe to mem path
+> > add minimum vote i.e 1KBps bandwidth always which is sufficient enough
+> > to keep the path active and is recommended by HW team.
+> > 
+> > During S2RAM (Suspend-to-RAM), the DBI access can happen very late (while
+> > disabling the boot CPU). So do not disable the CPU-PCIe interconnect path
+> > during S2RAM as that may lead to NoC error.
+> > 
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 45 +++++++++++++++++++++++++++++++---
+> >  1 file changed, 41 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5f9f0ff19baa..ff1d891c8b9a 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -253,6 +253,7 @@ struct qcom_pcie {
+> >  	struct phy *phy;
+> >  	struct gpio_desc *reset;
+> >  	struct icc_path *icc_mem;
+> > +	struct icc_path *icc_cpu;
+> >  	const struct qcom_pcie_cfg *cfg;
+> >  	struct dentry *debugfs;
+> >  	bool suspended;
+> > @@ -1369,6 +1370,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(pcie->icc_mem))
+> >  		return PTR_ERR(pcie->icc_mem);
+> >  
+> > +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
+> > +	if (IS_ERR(pcie->icc_cpu))
+> > +		return PTR_ERR(pcie->icc_cpu);
+> >  	/*
+> >  	 * Some Qualcomm platforms require interconnect bandwidth constraints
+> >  	 * to be set before enabling interconnect clocks.
+> > @@ -1378,11 +1382,25 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> >  	 */
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+> >  	if (ret) {
+> > -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> > +		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> >  			ret);
+> 
+> I think it would be better to separate these message clarifications into a 
+> separate patch. It would make both patches more into the point.
+> 
 
-Documentation for qcs8550[1] and sm8550[2]
-[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
-[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
+No, it doesn't make sense. This patch introduces ICC vote for CPU-PCIe path, so
+it _should_ also update the error message.
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
+- Mani
 
-v9 -> v10:
-  - update the patch commit message and some code comments
-  - use *_dtbs.mbn instead of *_dtbs.elf
-  - use "te-default-state" instead of "te-active-state" and
-    "te-suspend-state"
-v8 -> v9:
-  - Update the patch commit message and some code comments
-v7 -> v8:
-  - rebase patch series on top of:
-    https://lore.kernel.org/linux-arm-msm/20240502-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v5-0-10c650cfeade@linaro.org/
-  - add pinctrl configurations for pcie0 and pcie1 in AIM300 SOM dtsi
-  - move some common usb node settings to SoC dtsi
-  - verified with dtb check, and result is expected, because those
-    warnings are not introduced by current patch series.
-    arch/arm64/boot/dts/qcom/sm8550.dtsi:3037.27-3092.6: Warning
-    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
-    #address-cells/#size-cells without "ranges" or child "reg" property
-v6 -> v7:
-  - correct typos in the commit message
-  - move mdss_dsi0, mdss_dsi0_phy, pcie0_phy, pcie1_phy and usb_dp_qmpphy
-    vdda supply to qcs8550-aim300.dtsi
-  - move the perst and wake gpio settings of pcie0 and pcie1 to
-    qcs8550-aim300.dtsi
-  - move the clock frequency settings of pcie_1_phy_aux_clk, sleep_clk
-    and xo_board to qcs8550-aim300.dtsi
-  - verified with dtb check, and result is expected, because those
-    warnings are not introduced by current patch series.
-    arch/arm64/boot/dts/qcom/sm8550.dtsi:3037.27-3092.6: Warning
-    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
-    #address-cells/#size-cells without "ranges" or child "reg" property
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
-    phy@1c0e000: clock-output-names: ['pcie1_pipe_clk'] is too short
-        from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb: phy@1c0e000: #clock-cells:0:0: 1 was expected
-        from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-v5 -> v6:
-  - move qcs8550 board info bebind sm8550 boards info in qcom.yaml
-v4 -> v5:
-  - "2023-2024" instead of "2023~2024" for License
-  - update patch commit message to previous comments and with an updated
-    board diagram
-  - use qcs8550.dtsi instead of qcm8550.dtsi
-  - remove the reserved memory regions which will be handled by
-    bootloader
-  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
-    remoteproc_mpss function node, audio sound DTS node, new patch will
-    be updated after respective team's end to end full verification
-  - address comments to vph_pwr, move vph_pwr node and related
-    references to qcs8550-aim300-aiot.dts
-  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
-  - add pcie0I AND pcie1 support together
-  - the following patches were applied, so remove these patches from new
-    patch series:
-      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
-      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
-  - verified with dtb check, and result is expected, because those
-    warnings are not introduced by current patch series.
-    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
-    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
-    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
-    #address-cells/#size-cells without "ranges" or child "reg" property
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
-    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
-        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
-    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
-        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
-    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
-        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
-    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
-    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
-        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
-v3 -> v4:
-  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
-    of qcm8550, another board with qcm8550 will be added later
-  - add AIM300 AIoT board string in qcom.yaml file
-  - add sm8550 and qcm8550 fallback compatible
-  - add qcm8550 SoC id
-  - add reserved memory map codes in qcm8550.dtsi
-  - pm8010 and pmr73d are splited into carrier board DTS file. Because
-    the regulators which in pm8550, pm8550ve and pm8550vs are present
-    on the SoM. The regulators which in pm8010 and pmr73d are present
-    on the carrier board.
-  - stay VPH_PWR at qcs8550-aim300.dtsi file
-      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
-      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
-      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
-v2 -> v3:
-  - introduce qcs8550.dtsi
-  - separate fix dtc W=1 warning patch to another patch series
-v1 -> v2:
-  - merge the splited dts patches into one patch
-  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
-  - drop PCIe1 dts node due to it is not enabled
-  - update display node name for drop sde characters
+> Other than that, the change looked okay to me.
+> 
+> -- 
+>  i.
+> 
+> >  		return ret;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Since the CPU-PCIe path is only used for activities like register
+> > +	 * access of the host controller and endpoint Config/BAR space access,
+> > +	 * HW team has recommended to use a minimal bandwidth of 1KBps just to
+> > +	 * keep the path active.
+> > +	 */
+> > +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
+> > +	if (ret) {
+> > +		dev_err(pci->dev, "Failed to set bandwidth for CPU-PCIe interconnect path: %d\n",
+> > +			ret);
+> > +		icc_set_bw(pcie->icc_mem, 0, 0);
+> > +		return ret;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1408,7 +1426,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+> >  
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+> >  	if (ret) {
+> > -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> > +		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> >  			ret);
+> >  	}
+> >  }
+> > @@ -1570,7 +1588,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+> >  	 */
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
+> >  	if (ret) {
+> > -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> > +		dev_err(dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n", ret);
+> >  		return ret;
+> >  	}
+> >  
+> > @@ -1594,7 +1612,18 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+> >  		pcie->suspended = true;
+> >  	}
+> >  
+> > -	return 0;
+> > +	/*
+> > +	 * Only disable CPU-PCIe interconnect path if the suspend is non-S2RAM.
+> > +	 * Because on some platforms, DBI access can happen very late during the
+> > +	 * S2RAM and a non-active CPU-PCIe interconnect path may lead to NoC
+> > +	 * error.
+> > +	 */
+> > +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> > +		ret = icc_disable(pcie->icc_cpu);
+> > +		if (ret)
+> > +			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+> > +	}
+> > +	return ret;
+> >  }
+> >  
+> >  static int qcom_pcie_resume_noirq(struct device *dev)
+> > @@ -1602,6 +1631,14 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> >  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> >  	int ret;
+> >  
+> > +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> > +		ret = icc_enable(pcie->icc_cpu);
+> > +		if (ret) {
+> > +			dev_err(dev, "Failed to enable CPU-PCIe interconnect path: %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	if (pcie->suspended) {
+> >  		ret = qcom_pcie_host_init(&pcie->pci->pp);
+> >  		if (ret)
+> > 
+> > 
 
-previous discussion here:
-[1] v9: https://lore.kernel.org/linux-arm-msm/20240529100926.3166325-1-quic_tengfan@quicinc.com
-[2] v8: https://lore.kernel.org/linux-arm-msm/20240513090735.1666142-1-quic_tengfan@quicinc.com
-[3] v7: https://lore.kernel.org/linux-arm-msm/20240424024508.3857602-1-quic_tengfan@quicinc.com
-[4] v6 RESEND: https://lore.kernel.org/linux-arm-msm/20240401093843.2591147-1-quic_tengfan@quicinc.com
-[5] v6: https://lore.kernel.org/linux-arm-msm/20240308070432.28195-1-quic_tengfan@quicinc.com
-[6] v5: https://lore.kernel.org/linux-arm-msm/20240301134113.14423-1-quic_tengfan@quicinc.com
-[7] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
-[8] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
-[9] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
-[10] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
-
-Tengfei Fan (4):
-  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
-  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
-  arm64: dts: qcom: add base AIM300 dtsi
-  arm64: dts: qcom: aim300: add AIM300 AIoT
-
- .../devicetree/bindings/arm/qcom.yaml         |   8 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 315 ++++++++++++++
- arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 405 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 162 +++++++
- 5 files changed, 891 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
-
-
-base-commit: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
