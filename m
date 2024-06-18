@@ -1,159 +1,124 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D3015747E
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284C51581EE
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718703438; cv=none; b=RflDKzpsGuKZkXVzIPR1f4OiGKJ3FrUnrUyUkqJroW9y4hxRCz4KRErjLhnGh5Pr+PYFL/IhkwvOd5LvRJJkJiEHWEYRypgxeiYByqYZObZjcDj4811UVidCGWgtx196YFV5UgnUtts3nuWFLTt0csykEHBv4GTXSD49C9lrAqg=
+	t=1718703521; cv=none; b=FOkkCebyb6+5G2rPK5Yji6yRP3IVYOvrAh4I/l/5znfZLerheaXx4/X6nq4EdynlQs0/Buir8AzwKsmf5ihS34nrsQn99JIfNkgs5dNe2wk9nXf38GBt+qW0xlR/CKIO7lZW2mlDUUt5A630JZIx1ISI8GfgUEDajS+9IBpRStk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718703438; c=relaxed/simple;
-	bh=JtXo8pDjK/tq6OQrzC0zsd0wxSvh75EE92PF8+P5QaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mda1R2WfFbi4izvzcmPCxE01rcGNtHcZpHmROYLjW14aZsfjtsmT7JKVPQ692i55tgz1HlljoPW9LNdfqpzy0ycwF9dB9HEYybBC8NeuCw7tFmMxz11r1B8m39LkvBgJw35ZzeZvKqGxhAKofgZchkFt2R/r3QqOMkJsdNUbFhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz10t1718703288tudiii
-X-QQ-Originating-IP: 24/5geplR+rievJGK0OhwNv2ND6azFg7OpJbguRyHhU=
-Received: from HX01040082.powercore.com.cn ( [14.19.157.182])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 18 Jun 2024 17:34:47 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14723788730099599002
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: mpe@ellerman.id.au
-Cc: npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	naveen.n.rao@linux.ibm.com,
-	masahiroy@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Fixed duplicate copying in the early boot.
-Date: Tue, 18 Jun 2024 17:34:39 +0800
-Message-Id: <20240618093439.16982-1-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <87le336c6k.fsf@mail.lhotse>
-References: <87le336c6k.fsf@mail.lhotse>
+	s=arc-20240116; t=1718703521; c=relaxed/simple;
+	bh=QenCB3euq69QSB//DNTS+Hjnrm1i70bry2vnqFA0Xns=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gKmLzIkewFlUMlMzwhYzuY86pJCPpuqUvzLjACZxvyl9nFzzzmWgQPa13sE/48W+vWqzQEWtMOJRD1Y9i2Z+QWOLTYnH5fe/CgTr2w2acerP7ktWV0a5Z+dm/b8cPQ384mjd/Z37ICCOT7fY0fPqHR7O4PrWkqw+wc1g6C4kRuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jdTAddo5; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdTAddo5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718703520; x=1750239520;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=QenCB3euq69QSB//DNTS+Hjnrm1i70bry2vnqFA0Xns=;
+  b=jdTAddo5r9wk4ihplKkCPVsKLpjzLIF8enlC3fXWtbd78LSWIW/lWruP
+   l940wLds9UHU+8syqnDE6S0GPk85xLexobd68NPVeTgFj71XlbjBZHCTh
+   NitWfzj7AlCNwU/ez/R0FhIlEKgs88k6O7Jqadmt9M5JBi4DGeZBFtZgp
+   U3Rr9zfwmW6uwwYBLHMJHL//Eztdh3epIqE7Yg+Kdj+lKfGRZSXTHeXe2
+   QeNynxLVLy9BpB1nfCLef9psRBjUyB+vq5Yzo9Dtn/gyRTQuqeBVGsza4
+   CSht8xoZfjPaoy97/j0ChmDlid8OBv2WrZekPfk7Zxv+MefFey/5t8RbX
+   Q==;
+X-CSE-ConnectionGUID: iIExgs1MSzum3CqSOUL10A==
+X-CSE-MsgGUID: Eg3vIbdwRmebQksOhgvJFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="40973746"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="40973746"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 02:38:39 -0700
+X-CSE-ConnectionGUID: 8q3IjEVeRvOFZ8qUIH04zg==
+X-CSE-MsgGUID: w6BdYPq0TguAHoQ8bDknCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="64724227"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.176])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 02:38:29 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>,
+ dri-devel@lists.freedesktop.org,
+ amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, nouveau@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>
+Cc: kernel-dev@igalia.com, Melissa Wen <mwen@igalia.com>,
+ alexander.deucher@amd.com, christian.koenig@amd.com, Simon Ser
+ <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>,
+ daniel@ffwll.ch, Daniel Stone <daniel@fooishbar.org>, 'Marek
+ =?utf-8?B?T2zFocOhayc=?=
+ <maraeo@gmail.com>, Dave Airlie <airlied@gmail.com>,
+ ville.syrjala@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>, Joshua
+ Ashton <joshua@froggi.es>, Michel =?utf-8?Q?D=C3=A4nzer?=
+ <michel.daenzer@mailbox.org>, Sam
+ Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Nicolas
+ Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Karol
+ Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, =?utf-8?Q?And?=
+ =?utf-8?Q?r=C3=A9?= Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v7 2/9] drm: Support per-plane async flip configuration
+In-Reply-To: <20240618030024.500532-3-andrealmeid@igalia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240618030024.500532-1-andrealmeid@igalia.com>
+ <20240618030024.500532-3-andrealmeid@igalia.com>
+Date: Tue, 18 Jun 2024 12:38:26 +0300
+Message-ID: <878qz2h9pp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
 
-Hi Michael Ellerman,=0D
-=0D
-Michael Ellerman <mpe@ellerman.id.au> writes:=0D
-> Jinglin Wen <jinglin.wen@shingroup.cn> writes:=0D
-> > According to the code logic, when the kernel is loaded to address 0,=0D
-> > no copying operation should be performed, but it is currently being=0D
-> > done.=0D
-> >=0D
-> > This patch fixes the issue where the kernel code was incorrectly=0D
-> > duplicated to address 0 when booting from address 0.=0D
-> >=0D
-> > Signed-off-by: Jinglin Wen <jinglin.wen@shingroup.cn>=0D
-> > ---=0D
-> >  arch/powerpc/kernel/head_64.S | 4 +++-=0D
-> >  1 file changed, 3 insertions(+), 1 deletion(-)=0D
-> =0D
-> Thanks for the improved change log.=0D
-> =0D
-> The subject could probably still be clearer, maybe:=0D
->   Fix unnecessary copy to 0 when kernel is booted at address 0=0D
-=0D
-Thanks for your feedback, I will revise my subject.=0D
-=0D
-> =0D
-> Looks like this was introduced by:=0D
-> =0D
->   Fixes: b270bebd34e3 ("powerpc/64s: Run at the kernel virtual address ea=
-rlier in boot")=0D
->   Cc: stable@vger.kernel.org # v6.4+=0D
-> =0D
-> Let me know if you think otherwise.=0D
-> =0D
-> Just out of interest, how are you hitting this bug? AFAIK none of our=0D
-> "normal" boot loaders will load the kernel at 0. =0D
-> =0D
-> > diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_6=
-4.S=0D
-> > index 4690c219bfa4..6c73551bdc50 100644=0D
-> > --- a/arch/powerpc/kernel/head_64.S=0D
-> > +++ b/arch/powerpc/kernel/head_64.S=0D
-> > @@ -647,7 +647,9 @@ __after_prom_start:=0D
-> >   * Note: This process overwrites the OF exception vectors.=0D
-> >   */=0D
-> >  	LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)=0D
-> > -	mr.	r4,r26			/* In some cases the loader may  */=0D
-> > +	tophys(r4,r26)=0D
-> > +	cmplwi	cr0,r4,0	/* runtime base addr is zero */=0D
-> > +	mr	r4,r26			/* In some cases the loader may */=0D
-> >  	beq	9f			/* have already put us at zero */=0D
-> 	=0D
-> That is a pretty minimal fix, but I think the code would be clearer if=0D
-> we just compared the source and destination addresses.=0D
-> =0D
-> Something like the diff below. Can you confirm that works for you.=0D
-> =0D
-> cheers=0D
-> =0D
-=0D
-As for how I discovered this bug, we use zImage.epapr for emulation, which =
-=0D
-loads vmlinux.bin at address 0. When vmlinux.bin is relatively large, I =0D
-found that the boot time of Linux 6.6 is much slower compared to Linux 5.10=
-.108. =0D
-I discovered this issue while comparing the code between the two versions.=
-=0D
-=0D
-> diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.=
-S=0D
-> index 4690c219bfa4..6ad1435303f9 100644=0D
-> --- a/arch/powerpc/kernel/head_64.S=0D
-> +++ b/arch/powerpc/kernel/head_64.S=0D
-> @@ -647,8 +647,9 @@ __after_prom_start:=0D
->   * Note: This process overwrites the OF exception vectors.=0D
->   */=0D
->  	LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)=0D
-> -	mr.	r4,r26			/* In some cases the loader may  */=0D
-> -	beq	9f			/* have already put us at zero */=0D
-> +	mr	r4, r26			// Load the source address into r4=0D
-> +	cmpld	cr0, r3, r4		// Check if source =3D=3D dest=0D
-> +	beq	9f			// If so skip the copy=0D
->  	li	r6,0x100		/* Start offset, the first 0x100 */=0D
->  					/* bytes were copied earlier.	 */=0D
-=0D
-Indeed, your code looks much clearer. I will make the following modificatio=
-ns =0D
-based on your code:=0D
-=0D
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S=
-=0D
-index 4690c219bfa4..751181dfb897 100644=0D
---- a/arch/powerpc/kernel/head_64.S=0D
-+++ b/arch/powerpc/kernel/head_64.S=0D
-@@ -647,8 +647,9 @@ __after_prom_start:=0D
-  * Note: This process overwrites the OF exception vectors.=0D
-  */=0D
-        LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)=0D
--       mr.     r4,r26                  /* In some cases the loader may  */=
-=0D
--       beq     9f                      /* have already put us at zero */=0D
-+       mr      r4,r26                  /* Load the virtual source address =
-into r4 */=0D
-+       cmpd    r3,r4           /* Check if source =3D=3D dest */=0D
-+       beq     9f                      /* If so skip the copy  */=0D
-        li      r6,0x100                /* Start offset, the first 0x100 */=
-=0D
-                                        /* bytes were copied earlier.    */=
- =0D
-=0D
-Thanks,=0D
-=0D
-Jinglin Wen=0D
+On Tue, 18 Jun 2024, Andr=C3=A9 Almeida <andrealmeid@igalia.com> wrote:
+> Drivers have different capabilities on what plane types they can or
+> cannot perform async flips. Create a plane::async_flip field so each
+> driver can choose which planes they allow doing async flips.
+>
+> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+> ---
+>  include/drm/drm_plane.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
+> index 9507542121fa..0bebc72af5c3 100644
+> --- a/include/drm/drm_plane.h
+> +++ b/include/drm/drm_plane.h
+> @@ -786,6 +786,11 @@ struct drm_plane {
+>  	 * @kmsg_panic: Used to register a panic notifier for this plane
+>  	 */
+>  	struct kmsg_dumper kmsg_panic;
+> +
+> +	/**
+> +	 * @async_flip: indicates if a plane can do async flips
+> +	 */
+
+When is it okay to set or change the value of this member?
+
+If you don't document it, people will find creative uses for this.
+
+BR,
+Jani.
+
+
+> +	bool async_flip;
+>  };
+>=20=20
+>  #define obj_to_plane(x) container_of(x, struct drm_plane, base)
+
+--=20
+Jani Nikula, Intel
