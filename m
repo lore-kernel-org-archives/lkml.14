@@ -1,28 +1,29 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815451C69D;
-	Tue, 18 Jun 2024 01:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE721C6B4;
+	Tue, 18 Jun 2024 01:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718675785; cv=none; b=bw1LWQysDcSVLaic90lIM/lN/IJvCaukNbwCGPvRQ+RUTeCd/PdEiJdieCMFJT/jf6ZJGqwNcr2d3l5RkkaJWN6H0/bX42oW0dMTDeDjMNfmOjjPMFiDt2XfVxiTkIzYJzBGjRTkjVm7G29/nsoZ2aIKUzw2iUTHgE81WTPmwe0=
+	t=1718675787; cv=none; b=OMkP3HjlgrHla9nr+lFMtfOkcttExb7sA7MR1garaqNdC8/HtIADtx/8QCct+pSQfsPTFBaBHmrGmqzHQgtYwYqG4gC7isK951qBZ3f5DBypNvIqPZiO4SpcRNdYa1BzqRc5sCMFfn45IRr+G93c3SPAZAv9moO92b8T7I9T7V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718675785; c=relaxed/simple;
-	bh=Rk0sBnDeEUwYk2u6sbtH2hGz9DywdWOuFfeOzip7/NE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L0x5Axy34enirW/FFunwW8G8tE6y5/HPH/vI4gG62Sfggld+PNm5YLZFw/ExYTN5kUABaUhcj9KdiyYNeTRfHgcdkGUqywIF4xpHN7fvLv4ws+9ZClByopxtZx6CA59rHJMeoWSdQXrOnUQYiJK5gnhoKA8YlA7WhyqytidwoUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	s=arc-20240116; t=1718675787; c=relaxed/simple;
+	bh=I/54TK8Eh32J4IC6wgODBKMZiR0HxmWHWcUWSz/7NgU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jc8/XQO/p96gXsOvnPjfUFYCWue8PrVmTHCNFpGRubdmFxx34XTB24luhM1Vl2YbIgLXx0izVnPKRq7JRr79p/LsMNeXkc/W2kDrGBtaaRIb1zxAG89DENs0MD6EOUyOER9wkrjV+FT8uWlKaM0OkKQZE5cU/xnElaBFQOd4ZDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4W38rk3bdTz1j5S5;
-	Tue, 18 Jun 2024 09:52:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W38qd2YWRznVqH;
+	Tue, 18 Jun 2024 09:51:25 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id D735218001B;
-	Tue, 18 Jun 2024 09:56:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id AD966180087;
+	Tue, 18 Jun 2024 09:56:17 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 18 Jun 2024 09:56:13 +0800
+ 15.2.1258.34; Tue, 18 Jun 2024 09:56:16 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
@@ -34,96 +35,186 @@ CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
 	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v3 0/4] perf: support specify vdso path in cmdline
-Date: Tue, 18 Jun 2024 09:55:26 +0800
-Message-ID: <20240618015530.3699434-1-changbin.du@huawei.com>
+Subject: [PATCH v3 2/4] perf: disasm: use build_id_path if fallback failed
+Date: Tue, 18 Jun 2024 09:55:28 +0800
+Message-ID: <20240618015530.3699434-3-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240618015530.3699434-1-changbin.du@huawei.com>
+References: <20240618015530.3699434-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemd100011.china.huawei.com (7.221.188.204)
 
-The vdso dumped from process memory (in buildid-cache) lacks debugging
-info. To annotate vdso symbols with source lines we need specify a
-debugging version.
+If we can not fallback for special dso (vmlinx and vdso), use the
+build_id_path found previously.
 
-For x86, we can find them from your local build as
-'arch/x86/entry/vdso/vdso{32,64}.so.dbg'. Or they may resides in
-'/lib/modules/<version>/vdso/vdso{32,64}.so' on Ubuntu. But notice that the
-builid has to match. 
+To make change easy, this change first refactors the code by extracting
+two functions read_buildid_linkname() and fallback_filename().
 
-If user doesn't specify the path, perf will search them internally as long
-as vmlinux.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/util/disasm.c | 121 ++++++++++++++++++++++++---------------
+ 1 file changed, 75 insertions(+), 46 deletions(-)
 
-Below samples are captured on my local build kernel. perf succesfully
-find debugging version vdso and we can annotate with source without
-specifying vdso path.
-
-$ sudo perf record -a
-$ sudo perf report --objdump=llvm-objdump
-
-Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
-__vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
-Percent│       movq    -48(%rbp),%rsi
-       │       testq   %rax,%rax
-       │     ;               return vread_hvclock();
-       │       movq    %rax,%rdx
-       │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
-       │     ↑ js      eb
-       │     ↑ jmp     74
-       │     ;               ts->tv_sec = vdso_ts->sec;
-  0.02 │147:   leaq    2(%rbx),%rax
-       │       shlq    $4, %rax
-       │       addq    %r10,%rax
-       │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
-  9.38 │152:   movl    (%r10),%ecx
-
-When doing cross platform analysis, we need to specify the vdso path if
-we are interested in its symbols. At most two vdso can be given.
-
-$ sudo perf report --objdump=llvm-objdump \
-      --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
-
-v3:
-  - update documentation.
-v2:
-  - now search vdso automatically as long as vmlinux, as suggested by Adrian.
-  - remove change 'prefer symsrc_filename for filename'.
-
-Changbin Du (4):
-  perf: support specify vdso path in cmdline
-  perf: disasm: use build_id_path if fallback failed
-  perf: symbol: generalize vmlinux path searching
-  perf: symbol: try to seach vdso path if not given by user
-
- tools/perf/Documentation/perf-annotate.txt |   3 +
- tools/perf/Documentation/perf-c2c.txt      |   3 +
- tools/perf/Documentation/perf-inject.txt   |   3 +
- tools/perf/Documentation/perf-report.txt   |   3 +
- tools/perf/Documentation/perf-script.txt   |   3 +
- tools/perf/Documentation/perf-top.txt      |   3 +
- tools/perf/builtin-annotate.c              |   3 +
- tools/perf/builtin-c2c.c                   |   2 +
- tools/perf/builtin-inject.c                |   2 +
- tools/perf/builtin-kallsyms.c              |   2 +
- tools/perf/builtin-probe.c                 |   2 +
- tools/perf/builtin-report.c                |   2 +
- tools/perf/builtin-script.c                |   2 +
- tools/perf/builtin-top.c                   |   4 +
- tools/perf/tests/builtin-test.c            |   3 +-
- tools/perf/util/disasm.c                   | 122 +++++++----
- tools/perf/util/machine.c                  |   4 +-
- tools/perf/util/symbol.c                   | 233 ++++++++++++++++-----
- tools/perf/util/symbol.h                   |   9 +-
- tools/perf/util/symbol_conf.h              |   6 +
- 20 files changed, 312 insertions(+), 102 deletions(-)
-
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 442e9802a772..3075daa61916 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1092,14 +1092,72 @@ int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, s
+ 	return 0;
+ }
+ 
+-static int dso__disassemble_filename(struct dso *dso, char *filename, size_t filename_size)
++static int read_buildid_linkname(char *filename, char *linkname, size_t linkname_size)
+ {
+-	char linkname[PATH_MAX];
+-	char *build_id_filename;
+ 	char *build_id_path = NULL;
+ 	char *pos;
+ 	int len;
+ 
++	build_id_path = strdup(filename);
++	if (!build_id_path)
++		return ENOMEM;
++
++	/*
++	 * old style build-id cache has name of XX/XXXXXXX.. while
++	 * new style has XX/XXXXXXX../{elf,kallsyms,vdso}.
++	 * extract the build-id part of dirname in the new style only.
++	 */
++	pos = strrchr(build_id_path, '/');
++	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
++		dirname(build_id_path);
++
++	len = readlink(build_id_path, linkname, linkname_size);
++	if (len < 0) {
++		free(build_id_path);
++		return -1;
++	}
++
++	linkname[len] = '\0';
++	free(build_id_path);
++	return 0;
++}
++
++static int fallback_filename(struct dso *dso, char *filename, size_t filename_size)
++{
++	char filepath[PATH_MAX];
++
++	/*
++	 * If we don't have build-ids or the build-id file isn't in the
++	 * cache, or is just a kallsyms file, well, lets hope that this
++	 * DSO is the same as when 'perf record' ran.
++	 */
++	if ((dso__kernel(dso) || dso__is_vdso(dso)) && dso__long_name(dso)[0] == '/')
++		snprintf(filepath, sizeof(filepath), "%s", dso__long_name(dso));
++	else
++		__symbol__join_symfs(filepath, sizeof(filepath), dso__long_name(dso));
++
++	mutex_lock(dso__lock(dso));
++	if (access(filepath, R_OK) && errno == ENOENT && dso__nsinfo(dso)) {
++		char *new_name = dso__filename_with_chroot(dso, filepath);
++		if (new_name) {
++			strlcpy(filepath, new_name, sizeof(filepath));
++			free(new_name);
++		}
++	}
++	mutex_unlock(dso__lock(dso));
++
++	if (access(filepath, R_OK) && errno == ENOENT)
++		return ENOENT;
++
++	snprintf(filename, filename_size, "%s", filepath);
++	return 0;
++}
++
++static int dso__disassemble_filename(struct dso *dso, char *filename, size_t filename_size)
++{
++	char linkname[PATH_MAX];
++	char *build_id_filename;
++
+ 	if (dso__symtab_type(dso) == DSO_BINARY_TYPE__KALLSYMS &&
+ 	    !dso__is_kcore(dso))
+ 		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
+@@ -1111,57 +1169,28 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 	} else {
+ 		if (dso__has_build_id(dso))
+ 			return ENOMEM;
+-		goto fallback;
++		return fallback_filename(dso, filename, filename_size);
+ 	}
+ 
+-	build_id_path = strdup(filename);
+-	if (!build_id_path)
+-		return ENOMEM;
+-
+-	/*
+-	 * old style build-id cache has name of XX/XXXXXXX.. while
+-	 * new style has XX/XXXXXXX../{elf,kallsyms,vdso}.
+-	 * extract the build-id part of dirname in the new style only.
+-	 */
+-	pos = strrchr(build_id_path, '/');
+-	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
+-		dirname(build_id_path);
++	if (access(filename, R_OK))
++		return fallback_filename(dso, filename, filename_size);
+ 
+-	if (dso__is_kcore(dso))
++	if (dso__is_kcore(dso) || dso__is_vdso(dso))
+ 		goto fallback;
+ 
+-	len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
+-	if (len < 0)
+-		goto fallback;
++	if (!read_buildid_linkname(filename, linkname, sizeof(linkname) - 1) &&
++	    (!strstr(linkname, DSO__NAME_KALLSYMS) && !strstr(linkname, DSO__NAME_VDSO))) {
++		/* not kallsysms or vdso, use build_id path found above */
++		goto out;
++	}
+ 
+-	linkname[len] = '\0';
+-	if (strstr(linkname, DSO__NAME_KALLSYMS) || strstr(linkname, DSO__NAME_VDSO) ||
+-		access(filename, R_OK)) {
+ fallback:
+-		/*
+-		 * If we don't have build-ids or the build-id file isn't in the
+-		 * cache, or is just a kallsyms file, well, lets hope that this
+-		 * DSO is the same as when 'perf record' ran.
+-		 */
+-		if ((dso__kernel(dso) || dso__is_vdso(dso)) && dso__long_name(dso)[0] == '/')
+-			snprintf(filename, filename_size, "%s", dso__long_name(dso));
+-		else
+-			__symbol__join_symfs(filename, filename_size, dso__long_name(dso));
+-
+-		mutex_lock(dso__lock(dso));
+-		if (access(filename, R_OK) && errno == ENOENT && dso__nsinfo(dso)) {
+-			char *new_name = dso__filename_with_chroot(dso, filename);
+-			if (new_name) {
+-				strlcpy(filename, new_name, filename_size);
+-				free(new_name);
+-			}
+-		}
+-		mutex_unlock(dso__lock(dso));
+-	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
+-		dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
++	if (fallback_filename(dso, filename, filename_size)) {
++		/* if fallback failed, use build_id path found above */
++out:
++		if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND)
++			dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
+ 	}
+-
+-	free(build_id_path);
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
