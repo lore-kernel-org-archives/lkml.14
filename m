@@ -1,176 +1,137 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D2215EFDA;
-	Tue, 18 Jun 2024 18:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A14166317;
+	Tue, 18 Jun 2024 18:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718735904; cv=none; b=gVVqxJA/zV2I7o+GNagvHfExnUNmNswNDtefdxtIljdolmV4nu+Xw1/WGvbNaAXb2eVRp4kEUglFAKYwBHQdUn1jBBFVpsHF1WFF9u3ooSKkJuVN8lYh+NFpLPJgujQICnUGw67bIrO/X5l7CHcwxYuD9Mx3fwaUByzsL/Wuo8Y=
+	t=1718735909; cv=none; b=sXryqxl01EGwny1xzNUT1k1njyHHE/Q/JQn5wRFlsBTw8kBijMoaW06EpZW+ZZSgq9oWZBJzjXovg/M40K1Tf8NtO3c3q8fBeoiGfvLU1lLKb9xypSg6MMslq2p9Dr1WqE/BsoEoGnFhIhUIdGClQg8Yo+5AroPQvexFDH2oxL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718735904; c=relaxed/simple;
-	bh=JWRpO8n0qfJ/LE7k1lFWnR99Wqz0mOCN8aOE7S7nk+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SpLRm8OKFeNDz3OysgI1/PQTOLO0E4gVTwfKJBpZ8v8h+edTZytxIrlc2IfYHE6EZ7UmfubjaSA3XPU5Obvfti/6/CgN3pU4QOyeoQDDCZdBKYFeAKt7ziM7aOcWlm6ImaYvh1ahpJGjjdjxwis1j8MHoxLp27EFx9M4gV0KhYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=URTLKdO8; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718735909; c=relaxed/simple;
+	bh=6vafE+NNpVQtd0n++Rsd3ICmN32Uzta329jfAyQTRl8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2EZczqhQ3okxhgubbkMHR6DVC2q4CucnWZqOuSm1booGjWH8TmjEesMVlqeUwPIX6CNeXYsEGLvGfZoqtY7OUIGF/kd/1lyUE/aVqpheJEDVc1fWxuiNPSsaioAdTSFa2pacCI2CGYDvYHm27BEx0akHD71DmMvdBPouNidFPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OHhlhrBV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="URTLKdO8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718735898;
-	bh=JWRpO8n0qfJ/LE7k1lFWnR99Wqz0mOCN8aOE7S7nk+M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=URTLKdO8gtshe8Dpssr/ERwHwKlx9awqT1KHKsKpTFzfRcsf7d7y0ys7tOOC7W+hf
-	 vs4vkAViUm0zGQeAhqLGVeqgAOyTi8vVKxy0MG3ZtIIgFyBr873nRYQ56oycgcxH7v
-	 W3jl8LVBPkVCn/pUUIHu3hDsrGT50oytb1kWGXZUxZRy9kQhjdkPZu5bT4Pb9T5W3J
-	 U7Dx9u2Zxuf+7CikFyBfo/r44f7Iza/PHhUUsyPmn8f9QruYp8xPYmRgO03qSZcgn1
-	 9j3W/FqOAoxzfgcczsXLyGKZrpz52z5r/DnpUqE3L3O39wk7agtlm3USXyMJxGZAfe
-	 kvsZPyPvD1wcQ==
-Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0EF87378219E;
-	Tue, 18 Jun 2024 18:38:18 +0000 (UTC)
-Received: by jupiter.universe (Postfix, from userid 1000)
-	id 33CB54800D0; Tue, 18 Jun 2024 20:38:17 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v7 5/6] arm64: dts: rockchip: Add VEPU121 to RK3588
-Date: Tue, 18 Jun 2024 20:18:36 +0200
-Message-ID: <20240618183816.77597-6-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618183816.77597-1-sebastian.reichel@collabora.com>
-References: <20240618183816.77597-1-sebastian.reichel@collabora.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OHhlhrBV"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ICqkDd006229;
+	Tue, 18 Jun 2024 18:38:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=hzJDQuddYS+nIuxMYXY3l1iu
+	roExK2HuuOngnKTN9oo=; b=OHhlhrBV7Sx4LXFm8LfK3XfN/ANxDhJTYWmIZuBc
+	Z5X23MWAil8xNCKgmCcVYS79wA834/rBWefMuAK/+YCx0kbYKi/wbsW4ZiQNdrJ9
+	U/7wXtRr/5sY1pRdSrq2rMeVTBOfpTJquPsa7qQpU5toHBjIZ6FdM7m7ENEJbv02
+	VyN95dvzEUMokeIto6/LDz/WbALpCxXhYgNgYjrpxHHriudmLSGu8fCC0D6HucKF
+	J7PHifJ9gVOaWiPpXyOhWsyEcAgufSy+cPtXh44RFpQCOTFtIOJWR847l5DLrx8+
+	AY1RlRdUgsb2GHiG292h+0KCFShSY8s7n9eptnu1jEOlSA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuamp0v70-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 18:38:22 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45IIcKxF008425
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 18:38:20 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Jun 2024 11:38:17 -0700
+Date: Wed, 19 Jun 2024 00:08:13 +0530
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: Komal Bajaj <quic_kbajaj@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: qdu1000: Add secure qfprom node
+Message-ID: <ZnHUFVFKTP+74Iie@hu-mojha-hyd.qualcomm.com>
+References: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JzvoszPKtuzs-LwUahTW8hPU2ARboyyv
+X-Proofpoint-GUID: JzvoszPKtuzs-LwUahTW8hPU2ARboyyv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=776 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406180138
 
-From: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
+On Tue, Jun 18, 2024 at 02:57:11PM +0530, Komal Bajaj wrote:
+> Add secure qfprom node and also add properties for multi channel
+> DDR. This is required for LLCC driver to pick the correct LLCC
+> configuration.
+> 
+> Fixes: 6209038f131f ("arm64: dts: qcom: qdu1000: Add LLCC/system-cache-controller")
+> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+> ---
+> Changes in v3:
+> * Addressed comment by Konrad
+> * Added Fixes tag in commit message as suggested by Dmitry
+> * Link to v2: https://lore.kernel.org/linux-arm-msm/20240612063424.2494-1-quic_kbajaj@quicinc.com/
+> 
+> Changes in v2:
+> * Minor correction in commit message
+> * Link to v1: https://lore.kernel.org/linux-arm-msm/20240607113445.2909-1-quic_kbajaj@quicinc.com/
+> ---
+>  arch/arm64/boot/dts/qcom/qdu1000.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qdu1000.dtsi b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
+> index 7a77f7a55498..27f9fc87079c 100644
+> --- a/arch/arm64/boot/dts/qcom/qdu1000.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
+> @@ -1584,6 +1584,21 @@ system-cache-controller@19200000 {
+>  			reg-names = "llcc0_base",
+>  				    "llcc_broadcast_base";
+>  			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			nvmem-cells = <&multi_chan_ddr>;
+> +			nvmem-cell-names = "multi-chan-ddr";
+> +		};
+> +
+> +		sec_qfprom: efuse@221c8000 {
+> +			compatible = "qcom,qdu1000-sec-qfprom", "qcom,sec-qfprom";
+> +			reg = <0 0x221c8000 0 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			multi_chan_ddr: multi-chan-ddr@12b {
+> +				reg = <0x12b 0x1>;
+> +				bits = <0 2>;
+> +			};
 
-RK3588 has 4 Hantro G1 encoder-only cores. They are all independent IP,
-but can be used as a cluster (i.e. sharing work between the cores).
-These cores are called VEPU121 in the TRM. The TRM describes one more
-VEPU121, but that is combined with a Hantro H1. That one will be handled
-using the VPU binding instead.
+LGTM, without this change, LLCC driver for QDU1000 will result in probe failure.
 
-Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 80 +++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 6ac5ac8b48ab..dd85d4e55922 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -1159,6 +1159,86 @@ power-domain@RK3588_PD_SDMMC {
- 		};
- 	};
- 
-+	vepu121_0: video-codec@fdba0000 {
-+		compatible = "rockchip,rk3588-vepu121";
-+		reg = <0x0 0xfdba0000 0x0 0x800>;
-+		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER0>, <&cru HCLK_JPEG_ENCODER0>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vepu121_0_mmu>;
-+		power-domains = <&power RK3588_PD_VDPU>;
-+	};
-+
-+	vepu121_0_mmu: iommu@fdba0800 {
-+		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
-+		reg = <0x0 0xfdba0800 0x0 0x40>;
-+		interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER0>, <&cru HCLK_JPEG_ENCODER0>;
-+		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3588_PD_VDPU>;
-+		#iommu-cells = <0>;
-+	};
-+
-+	vepu121_1: video-codec@fdba4000 {
-+		compatible = "rockchip,rk3588-vepu121";
-+		reg = <0x0 0xfdba4000 0x0 0x800>;
-+		interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER1>, <&cru HCLK_JPEG_ENCODER1>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vepu121_1_mmu>;
-+		power-domains = <&power RK3588_PD_VDPU>;
-+	};
-+
-+	vepu121_1_mmu: iommu@fdba4800 {
-+		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
-+		reg = <0x0 0xfdba4800 0x0 0x40>;
-+		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER1>, <&cru HCLK_JPEG_ENCODER1>;
-+		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3588_PD_VDPU>;
-+		#iommu-cells = <0>;
-+	};
-+
-+	vepu121_2: video-codec@fdba8000 {
-+		compatible = "rockchip,rk3588-vepu121";
-+		reg = <0x0 0xfdba8000 0x0 0x800>;
-+		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER2>, <&cru HCLK_JPEG_ENCODER2>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vepu121_2_mmu>;
-+		power-domains = <&power RK3588_PD_VDPU>;
-+	};
-+
-+	vepu121_2_mmu: iommu@fdba8800 {
-+		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
-+		reg = <0x0 0xfdba8800 0x0 0x40>;
-+		interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER2>, <&cru HCLK_JPEG_ENCODER2>;
-+		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3588_PD_VDPU>;
-+		#iommu-cells = <0>;
-+	};
-+
-+	vepu121_3: video-codec@fdbac000 {
-+		compatible = "rockchip,rk3588-vepu121";
-+		reg = <0x0 0xfdbac000 0x0 0x800>;
-+		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER3>, <&cru HCLK_JPEG_ENCODER3>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vepu121_3_mmu>;
-+		power-domains = <&power RK3588_PD_VDPU>;
-+	};
-+
-+	vepu121_3_mmu: iommu@fdbac800 {
-+		compatible = "rockchip,rk3588-iommu", "rockchip,rk3568-iommu";
-+		reg = <0x0 0xfdbac800 0x0 0x40>;
-+		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_JPEG_ENCODER3>, <&cru HCLK_JPEG_ENCODER3>;
-+		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3588_PD_VDPU>;
-+		#iommu-cells = <0>;
-+	};
-+
- 	av1d: video-codec@fdc70000 {
- 		compatible = "rockchip,rk3588-av1-vpu";
- 		reg = <0x0 0xfdc70000 0x0 0x800>;
--- 
-2.43.0
+-Mukesh
 
+>  		};
+>  	};
+> 
+> --
+> 2.42.0
+> 
+> 
