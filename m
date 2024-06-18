@@ -1,68 +1,58 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546EE745C0;
-	Tue, 18 Jun 2024 11:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445B3137905
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718711442; cv=none; b=qVTcQlBWuN4HS4eL2pI6Za7vvrrmAH3Irlo9QzNPv0yL00u+5lxFMawkn0Q3B4C0fSlqUy5Lp1kXXJs5nX6K2O8h3oUUN2vH7oxudp22g9wOttOWJ1enL94QeiKZu6S/1mYJpVOTX6WXQ/JH5yBP5CVnJb5QfZPIWz2cS14UJxk=
+	t=1718711469; cv=none; b=XIqzQFY++W4UMxxNEJfTdgoRLLjqophUKO6ATuVo1UOEW9/81BP8JinQNR52P3F9+mQ9XOup59FQX/4oZiSBjwrzdTp4GdWqfjd8/4rJM0SulNP/56rhQkXgnssULXSX+bpxlVOLCTxQU9qCfK0BpYWirz/IOKvg9KFx3DMX9/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718711442; c=relaxed/simple;
-	bh=gn5CPAnzZLTEwuHX/rg00l93QkVeW3D7QPysAsulW2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gfvoHbXPq4kW0ZzgbZEJkVdTWNHO7lRH2qjYxcTC6V71T0O0Aq4DNlv20R68FZY26R/9jb17e6WlaTblGqMqxoEJfCEXA9IdYOE9B8NRl3F+QbIZplFe8Rf+Llac6ZX0gfSgisIOCS6ODbadjYWcpTfnYfvc5as3EM5e1fYtp0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSBJ5ji6; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718711469; c=relaxed/simple;
+	bh=0OCU1F5p+RZ18ExkVkZmiDL8HQ0Vl08o3pAP2J0zteo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTkHrxmRKIVO/3UavogpP5oBpDVXc1NAK7d46psRL5cnxu8GJBgvvEwPykgEuUSn+uTjyrWoZGity4cP2C1CzOAyFrpz9JUxvqE3bVC2Vs3DB7VPifW7KBnApgFJe3gZhaHLyoOLcMYLtShUXmcKGjnfxZfK8DTsDgq/dy/7VXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IwPsPiIp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSBJ5ji6"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f70131063cso41811085ad.2;
-        Tue, 18 Jun 2024 04:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718711440; x=1719316240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5s6/LFX8WRrd2o/jtRmvisL1C8048AZKiXldCA8XPv8=;
-        b=PSBJ5ji6I3hZ3WKzyuqmEA1brrxCv9m/ug/yPLZpw+up79PxIC3NMxf6rc6McBZA2g
-         bh9xSkV58QdezsG0xUsnArqkT/OPAdOWdfH2S3b1vvq18c15kZcda/Hd7V8pxuoalWUi
-         55IN6OZowZiCAQl+9Tqh/OxnI/hL/aHQA+lHhv2OwNib1lTTezjYqaaYENtdQWKgBIaB
-         70ixQdWIhjtuYEPwyB+1391+ga/1DSbXwo4ZqMz9V5nWRdZ4keHaCHRUnq1pxxUvRpCK
-         9j7OYUPW0XiIwYdaxMRbII0n52qRSaD7FmT3mR3qYQM1BsGsMgXO2NCqtFmsDpDPC581
-         agOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718711440; x=1719316240;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5s6/LFX8WRrd2o/jtRmvisL1C8048AZKiXldCA8XPv8=;
-        b=tLEp8ntnTIO79WXpj/e4f+5bgXFkQh2M1ITM4dsQvcSN+MNhr86KycADfDYuFl/xmQ
-         PlVYGkW1YFd9EYVo66GY9bvIcb+8qth2xZCX3GARQ6ZNwmiSsu8eJaYWrzM62q8Qo3JK
-         CEEtAfCzv3xtRCPySryxik+gjmHQe8ALHfg6INYZ6a1ZkZHu1n/UetikhgWBLy2gjlIl
-         KlrUbRroSRf0DtAMKWmKuhNqBRy0o+PqL4FjVvVgqCXBJ9fq/El9UxW+MVK50AZAosZ5
-         eF03K5Hguz1eLvoOSQc7AQ4Lyl5RsoLqAlbwvFAoD60OdqWTHteS0TzepSDnFPpXVtrQ
-         Arnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2lYBBzq4SmW1dSBnXnrCx9bun3bOcQzuHy65tLc+kSC+p+GLtui8wnDRAULeJVqbtYZy23DCNmwk5BIMbHYSmcKMmLt9x/rh9WQllj4gfOtg7Tw1526V7uW0AUSUh/RzNhgoIQ+7Ea8fjpA==
-X-Gm-Message-State: AOJu0Yyva8qlJWIh11SMoUp8SBH9aCJkvCJdoxKpdCGchlvLEtLOmiuy
-	v92iYxgh4XVEWFQagRVw6zmZCEj85hS1stHkzitV4qwyMXRx9oBCynCwTiO5
-X-Google-Smtp-Source: AGHT+IH6Z3j/b0LjFf0GkWIaBhwNo56mHqUE9EsvTcdnjzrbDUZk8I1kDyLDNVWXU4Yb1P3z7Mag0g==
-X-Received: by 2002:a17:902:d50a:b0:1f7:23d9:f530 with SMTP id d9443c01a7336-1f862a0eadfmr139727715ad.66.1718711440120;
-        Tue, 18 Jun 2024 04:50:40 -0700 (PDT)
-Received: from BRUZZHANG-MB0.tencent.com ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855ee7ce5sm95643995ad.129.2024.06.18.04.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 04:50:39 -0700 (PDT)
-From: Peng Zhang <zhangpengpeng0808@gmail.com>
-To: willy@infradead.org,
-	akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwPsPiIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718711467;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KbEwByzdZ2FR46495vyGSwk/Ycglqttws2hwnHDj1Xw=;
+	b=IwPsPiIpeWSiskwiJFV+vKtg26cmt3IwaFOGSuG8/dJgGqwV81/5JaAlrh0Z1ek6khXgVO
+	kg0PNc/IFG2XiNxTKw91IXBlMkmNqeBjyIk9F7RGy1wKpN39er5W6cRAsWWuvmlKryKmLg
+	TmVq7jA2ksOOnG9I39Y6b+4K0ulSB9M=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-jRgKipW8Mxu-BMiVbdwb2g-1; Tue,
+ 18 Jun 2024 07:51:04 -0400
+X-MC-Unique: jRgKipW8Mxu-BMiVbdwb2g-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D03FA19560A7;
+	Tue, 18 Jun 2024 11:51:02 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.152])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 98AFD19560B2;
+	Tue, 18 Jun 2024 11:50:58 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: bruzzhang <bruzzhang@tencent.com>,
-	Rongwei Wang <zigiwang@tencent.com>,
-	Vern Hao <vernhao@tencent.com>
-Subject: [PATCH RFC] mm/readahead: Fix repeat initial_readahead
-Date: Tue, 18 Jun 2024 19:49:41 +0800
-Message-Id: <20240618114941.5935-1-zhangpengpeng0808@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+Cc: jtornosm@redhat.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2] net: usb: ax88179_178a: improve link status logs
+Date: Tue, 18 Jun 2024 13:50:40 +0200
+Message-ID: <20240618115054.101577-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,58 +60,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: bruzzhang <bruzzhang@tencent.com>
+Avoid spurious link status logs that may ultimately be wrong; for example,
+if the link is set to down with the cable plugged, then the cable is
+unplugged and after this the link is set to up, the last new log that is
+appearing is incorrectly telling that the link is up.
 
-Now, if read from start of file, readahead
-state will be repeatly initialized when
-first time async readahead after sync one.
-This case likes:
+In order to avoid errors, show link status logs after link_reset
+processing, and in order to avoid spurious as much as possible, only show
+the link loss when some link status change is detected.
 
-sequence read
-page_cache_sync_readahead()
-  --> ondemand_readahead() <-- initial ra
-  --> folio ready <-- order=2, readahead flags
-folio_test_readahead(folio)
-filemap_readahead() <-- async readahead
- --> ondemand_readahead() <-- initial ra again
-
-The second initialization of ra seems a
-mistake, and right ra window
-(start, size, async_size) should be (4,8,8)
-instead of (0,4,3) after async readahead.
-
-What's more, this patch can improve sequence
-read greatly, the result of test as following:
-
-case name             upstream    upstream+fix  speedup
-----------            --------    ------------  --------
-randread-4k-sync      48981.00    48948.0000    -0.0674%
-seqread-4k-sync       1162630.00  1334915.00    14.8186%
-randread-4k-libaio    47561.00    49910.00      4.9389%
-seqread-4k-libaio     1058526.00  1257134.00    18.7627%
-seqread-1024k-libaio  1365866.00  1411463.00    3.3383%
-
-Signed-off-by: bruzzhang <bruzzhang@tencent.com>
-Signed-off-by: Rongwei Wang <zigiwang@tencent.com>
-Signed-off-by: Vern Hao <vernhao@tencent.com>
+cc: stable@vger.kernel.org
+Fixes: e2ca90c276e1 ("ax88179_178a: ASIX AX88179_178A USB 3.0/2.0 to gigabit ethernet adapter driver")
+Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
 ---
- mm/readahead.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+  - Fix the nits
+v1: https://lore.kernel.org/netdev/20240617103405.654567-1-jtornosm@redhat.com/
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index c1b23989d..498708b4b 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -571,7 +571,7 @@ static void ondemand_readahead(struct readahead_control *ractl,
- 	/*
- 	 * start of file
- 	 */
--	if (!index)
-+	if (!folio && !index)
- 		goto initial_readahead;
+ drivers/net/usb/ax88179_178a.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index c2fb736f78b2..d90ceab282ff 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -326,7 +326,9 @@ static void ax88179_status(struct usbnet *dev, struct urb *urb)
  
- 	/*
+ 	if (netif_carrier_ok(dev->net) != link) {
+ 		usbnet_link_change(dev, link, 1);
+-		netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
++		if (!link)
++			netdev_info(dev->net, "ax88179 - Link status is: %d\n",
++				    link);
+ 	}
+ }
+ 
+@@ -1542,6 +1544,7 @@ static int ax88179_link_reset(struct usbnet *dev)
+ 			 GMII_PHY_PHYSR, 2, &tmp16);
+ 
+ 	if (!(tmp16 & GMII_PHY_PHYSR_LINK)) {
++		netdev_info(dev->net, "ax88179 - Link status is: 0\n");
+ 		return 0;
+ 	} else if (GMII_PHY_PHYSR_GIGA == (tmp16 & GMII_PHY_PHYSR_SMASK)) {
+ 		mode |= AX_MEDIUM_GIGAMODE | AX_MEDIUM_EN_125MHZ;
+@@ -1579,6 +1582,8 @@ static int ax88179_link_reset(struct usbnet *dev)
+ 
+ 	netif_carrier_on(dev->net);
+ 
++	netdev_info(dev->net, "ax88179 - Link status is: 1\n");
++
+ 	return 0;
+ }
+ 
 -- 
-2.39.3
+2.45.1
 
