@@ -1,266 +1,196 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B903C16D4F2
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740099; cv=none; b=lo79sxin7A9awxIi6IG4c1E1e21QnXEhZJ0xoeLRhAN3XhakwBSt1Bp8Q7WASf46BirPw3BcndUXF+h/O1uZuKPnt1elF23Z7VRcIJKhG1RTP1InSdqKhCyqVBJ3VW90t3OWhipywCfAwbqJuXDyuKVyjtfvFxOqvtbCQzREW4I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740099; c=relaxed/simple;
-	bh=OaadSuDg3Zt5H3nbHytRHPm2vMT7VaQsyqyPaUwTe5Q=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A27516D9A0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718740098; cv=fail; b=lDRFOvXxzgKx/Lp23NdnWh1PdnaLHVN8rH0Pesp+tt2RRtj/8s50QeUjyjhbRe2qkaOa6F+xVqUIEoJIsC7mYdNVQ4agHtuJgezfOJlux8ez/a5AonvKDiTzBr3FfarGkPqDTaVRJS+1DFCaitxuBp9JjpjNug6Pd7iw8ZW0mrQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718740098; c=relaxed/simple;
+	bh=44qdVV6ziG+dApG5pNwLUu9WAZNGpsRCrhVeUNdBzbM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mYxlReNzmjleTQx763Rca24xdBs05pZj6fMRJIJQb6su7cIOP3UAMw0P0ao9i/CDqu9At8T4mfYKnFDl14KtsLoJoC3OWx0UVLGfHnTJxjsO+nd0Nox/9zOPKqcO09zUnS4Gl/cbzzFH+ejNmHroA1/l3bvd088unwEbFoOeEs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=BIuLLz8k; arc=none smtp.client-ip=167.172.40.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	 Content-Type:MIME-Version; b=YVFt0llNJI0xbPXIhXSa7VKG3a9iijbYBZDS3YBa1Xfmv3IXwjkDcftzgrjXWS3i7gF2Y1VnSl5JdROEcad2/yJFoMiI/XFJ5cgYlMO27oNAbAepE3iU4zHIyVSS7Dsvv7YSLQk063kEpB3Mzi1Lm+kZDEsl7g8g7mzuf/xwE+4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=p5V5CfUF; arc=fail smtp.client-ip=40.107.92.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="BIuLLz8k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718740060; bh=vLg1vrLKWrSir1pSxtMB4wEHVQbTsj3SVKKsHL322Sc=;
- b=BIuLLz8kcmo0o6tNrR3Nm+pHYmj7fR34PKkcYECkXZzOHPU+v/zX4NVdWDiI9jWoIHkMqmchB
- XnnqsgPM8sgs3TRv+CaCvjCf76nEEpFRR8zmrslqDvTAeDiuGhKprOlFMJv0prSWmfKN3JAwcON
- 0kYJJ72CZ/kYGY3/J267OrXPBIY1osUvmukA1xiyfcz4RQxERqMj4h5JETC2iHDGJBDi4ywMWlt
- 1ALPuyDMqjmKYe5hpDuXTuePkV9rGqAo7mstp7BlBRvOidpijsNrJI42HFeIqIy0gjjcSUsRIkA
- qMl7iiGW8GC8tlRyNfj8Kjz3ARggGEHkck5ygZhroslA==
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: Alex Bee <knaerzche@gmail.com>, Nicolas Dufresne
- <nicolas.dufresne@collabora.com>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Sebastian Fricke
- <sebastian.fricke@collabora.com>, Christopher Obbard
- <chris.obbard@collabora.com>, Detlev Casanova
- <detlev.casanova@collabora.com>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v5 10/10] media: rkvdec: h264: Support High 10 and 4:2:2 profiles
-Date: Tue, 18 Jun 2024 19:46:34 +0000
-Message-ID: <20240618194647.742037-11-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240618194647.742037-1-jonas@kwiboo.se>
-References: <20240618194647.742037-1-jonas@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="p5V5CfUF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PoJvmoBGzhXIflBdx0CcbtgUeuD6ZMv8AIODyU3EZe/COF9O4ABMzEf3jEaQhj2Bw3ahBN70mmlkbdPAOLksa7pfflB7UiwNVeLQitZVQQXiJ7yi633TkUX+PWlpqZlBSySkeR0FtzOL/zyLziU6wlYmYPmZQ8PX55ygEIsjCIeeD/XAjuNkK9bR5bSD5KUyFf4d79KrtydeDO4fAXiwPspTShSlFq9hPohDCLprqmmSFbzW/em1LXCA+RsM0fatveJr088WKfWO7GKab7wknxADElSnBPzCK1col7zAZkvRGaK5Are/P8/d4TueMboouivB6oXhi+mBsDLJPSNgDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zozj8OsHhApv066D4GevwVNwqaPaSaMqnVD1gVWdJZg=;
+ b=cZYKscVyIc9J4RAu2WvEoO+VdAFT0i+9DsxRXYk82TUJEMK97McHVrFcHJ1Vv7mL1TP3Avvlnonq/KpBgRsxLNirZ1gkp6PwXYeTXyIh0zPggXGfrDAmcPiwZaOE0Y1BDQnlE7HKi/dgatLYtx+8E4OysiT7xVJ9PutE3om98KSr5PC6tkBUuiyyVzMHAAW9q3EsTduz5oX1xJm5wRxJzSWvDKLam+5wlxmtIlD8QM2nqTDBzI01lmoz5I2mmjapmGrudBqOikx9vtghZ6WwPzB4T4oWnWYpkzUYVy4+9a3p6XsrWzvCtQ3CDbglUjmhoOgzx5x5eGHpuVmKm1cVEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zozj8OsHhApv066D4GevwVNwqaPaSaMqnVD1gVWdJZg=;
+ b=p5V5CfUFiGx0DhjQXMEXIoP5PjMUZZWDgtBQCIDvg3NbPzYSM7b4+8AVLkEFewE57FLcIbnS1z+yP9Per3vAIXeMkErfsqiCaYzFhu/9O637fDpjgV2qxbnpXzfo+uTXF4rMgPBTsHQvkmV7SXKTU4kdLFU6/aHOFbk+6v6SQiWdERcFnGqa51DP7JwI+yyeresoomRqk/ZT2dBVLibGBC8u7iKTGMG5DZu9x1vCpPalNu1VGpbB4d2YCAarVN78A+SJSe0JMGgAf1tb8vwGJubhV8Q+b8Q0jlT0HHuHYaWtE0iWyjv0U0d7OdkSux5ZrTI3cwhT4ipc4WkgzZpDOw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
+ IA1PR12MB8333.namprd12.prod.outlook.com (2603:10b6:208:3fe::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 19:48:12 +0000
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::f018:13a9:e165:6b7e]) by DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::f018:13a9:e165:6b7e%4]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 19:48:09 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hugh Dickins <hughd@google.com>, "Huang, Ying" <ying.huang@intel.com>,
+ linux-mm@kvack.org, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Yang Shi <shy828301@gmail.com>, David Hildenbrand <david@redhat.com>,
+ Yin Fengwei <fengwei.yin@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/migrate: make migrate_pages_batch() stats consistent.
+Date: Tue, 18 Jun 2024 15:48:03 -0400
+X-Mailer: MailMate (1.14r6038)
+Message-ID: <D1935798-D0AB-4624-AAAF-660CCFEBDFD9@nvidia.com>
+In-Reply-To: <20240618124417.08745f6c08f6ecb2c959a096@linux-foundation.org>
+References: <20240618134151.29214-1-zi.yan@sent.com>
+ <20240618124417.08745f6c08f6ecb2c959a096@linux-foundation.org>
+Content-Type: multipart/signed;
+ boundary="=_MailMate_25E27C35-87B6-46B5-9FCE-9D8FE66C0AA9_=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+X-ClientProxiedBy: BL0PR02CA0111.namprd02.prod.outlook.com
+ (2603:10b6:208:35::16) To DS7PR12MB5744.namprd12.prod.outlook.com
+ (2603:10b6:8:73::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 167.172.40.54
-X-ForwardEmail-ID: 6671e45a64ade33c9005a025
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|IA1PR12MB8333:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47409328-7292-4569-edcd-08dc8fcf9455
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Z7/vw3FeaD5Wa9kAwa6wsCjmhGJxI7YLQ3DRb2QROnpkdvpAfJgnDJfHmeOa?=
+ =?us-ascii?Q?71EiM7OGEbTXWEed3zRLsEa78/ux6Kw3WaYAbJWzkIEyUV8kqlgvjye/vzmf?=
+ =?us-ascii?Q?UWJLKjDc36jxzHuiv7RO9sWUVGPWt/kOnlOys3DqBAvIANyWLOSjMRrKWL0N?=
+ =?us-ascii?Q?szyi19d3/ulx3w4WZmRszxVnK7GD5sFYuNCnNmZdw8GmfhdTTDGNZVv9gi9T?=
+ =?us-ascii?Q?zzxo9w/q+HOTkfgBpsBX84cV9NOOD2mB9R6GAccwW1jKfIchOii0ldIa3rsz?=
+ =?us-ascii?Q?la3sDp1erM/l3l/Ep0eTL/k+jCV++SdFmeNtyRC0F+bgzZ6TXDiXAARh2J1+?=
+ =?us-ascii?Q?tbwC9DEFlgl3gHKEWkHRJzZn/8xv97k55KFrLDFuxhDr3O5I04hqGsI607QQ?=
+ =?us-ascii?Q?6auF6ErtmCstweGcTDpJULJUByD/sZaVLfBq1FVKbn0pnCXd+ZIoIO4M5gDe?=
+ =?us-ascii?Q?cf7/H9aE0f24x6G0hBSYGyMZlR3r2aVhHI3cusi6q0JWoKexBPkpkv1Cj7Ni?=
+ =?us-ascii?Q?owqglPu1kE/XJQwpmdmf9XncVa24goKAUQSpbMT92gI9i/mvPnNfb0zv0Pp+?=
+ =?us-ascii?Q?u2PH4EJmWtd/OBUqKRf6/Hp8alZG7E1sFp9errbSYnQdr+ByDEaZnnbkkqd/?=
+ =?us-ascii?Q?TKeAjBU1EZwMGGz1KuA1ZuD754XOHiRUFCBQvw/3jlkyc/R8tX9EpmwPWknA?=
+ =?us-ascii?Q?wyuwmyEWX/Asp74gBciZ+crHbt0eaumc3jGrTOf14hNcMynBgESr7vAzQpCK?=
+ =?us-ascii?Q?rdrxOhNkoKO1CVTOZuaby8g5Fvx4Mkn5EE2iFHH7fqbR1Phh5tRG184GJCNm?=
+ =?us-ascii?Q?Su8vHVGSr8bQNBaXz7LFZR/lIU5y7gMVeDdtV7jx+Rp8bvcr6asY/lVWc9zA?=
+ =?us-ascii?Q?XzHg+aGLAqJ0mk6yrtsQkSl4tGZ9FeLsyMVxtW7sAmSUMXg5p5k64RopePKk?=
+ =?us-ascii?Q?LRAiKZFMyAL7QUUCYjW8T/cCuCwYYm1kjiB57Wf8RsPpnBMcTPBqx++c4fUP?=
+ =?us-ascii?Q?QlDQz5r61gpDJPt/XvwT+jTVy+WUpryGm57w6yWj4/0ZJnQDsRGh5Z3TBlI1?=
+ =?us-ascii?Q?S467GQN++caUXnx3arT5O1QZFzkjQMAwWCgPmwlnt1q7yPhfi9yKHCxuXXpe?=
+ =?us-ascii?Q?yZm5O5V7EIGJQe7ZyXAxa4nA4doapMlfl8rWfVYAQYFphRSmJVzj+bpx42A7?=
+ =?us-ascii?Q?5CBdFaBubSrdruqWARxLzP47RvyBfVR5gFrrDs93AHMXZUD6E6Itw9OWqJya?=
+ =?us-ascii?Q?akwHdNxvvAVtY9fj8fYiN5GR1in/HAuNIKcgYPFbaWP0nhXBHf193GGYb3pB?=
+ =?us-ascii?Q?HIg7UipJMiYfYe4PTaLn/iDe?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?cEPkdPJquur9U4KG0s5trXcybDe5y3A3P6QEFVi+XP/89NGv2j2tIkV8SnDG?=
+ =?us-ascii?Q?Oa+IDqewPneburgBh9tpf8VoNZhGJT7H9xFyY+gZbpIC1R9yRuNrEn0wf1CO?=
+ =?us-ascii?Q?yUcm5wT1UXupIWb4fPeLqb5/Zu7R83f3fH/FywjxaozhF+Hji1FLce8xlsAZ?=
+ =?us-ascii?Q?rxZ8rhcmskTiDmMWFjyocE/Il2nK8MuVi6JSD3bPHVmHoi2RlTGwT5jX5tII?=
+ =?us-ascii?Q?gVXUu6awdkRmYHNDUYoG/+1TMF2JoJhhRDjKePSfAdgQ4hH9Yn/tUmr0Cyin?=
+ =?us-ascii?Q?kmfE3JCRJIdk0OpcSOKZvmlmUpChFY3Ijra/jQf5qKlKbwybUOD+7wyMT3kk?=
+ =?us-ascii?Q?34pyNrPKzU1TbsxtM+XaJNJecVf6XEx6YHBIUfSDbq53r5T/L6p6sJAevNGH?=
+ =?us-ascii?Q?BrKEqUtDz2EBDGZFqomLtx+X63QWgmiV61E2Hd/X+ptbn5UgUeNPXw8fd+Hq?=
+ =?us-ascii?Q?+SaGEBhnX1ur5KZ1ZZ7HgJbnyb6NdoM8ZcnUitBPnHTGZPPwhM42ACLJl/Do?=
+ =?us-ascii?Q?ScoSkipOx4VoYyo68aCSKV859sRSPTmwxF0UpPuZ2jOXemOU1+UCKjfVPoCl?=
+ =?us-ascii?Q?hsYCemviIhefajDO89N4V1dyskQ878IOqds/4tCt6L7oa6JzgDZPTCETNJ5a?=
+ =?us-ascii?Q?dwX7Fd/oRRcaGkBiQYniIlVMIcXSS5E9LaTRhtvmJeqQTsXKaoSeyXIXy9O9?=
+ =?us-ascii?Q?k6otUoewuIuhH6OoYqo0m7riO90U4Ob/X0s5auoJNTu8YjPs7/i5ry/WNXAG?=
+ =?us-ascii?Q?NVWIG5ru2ZuvDfELCNYVOoa/jQVhI56//b8RU1Ni48bDiHBQ6IflkpGTCnB3?=
+ =?us-ascii?Q?o8v4/SpcVjJlbiFrucNmXwifcd5ksjRMFHgig1pzqL2rqUwieWpxZjUeYXp8?=
+ =?us-ascii?Q?vvhqsjS1TJzTGrqix845tPWXPxlSNelxlmbnGPjvoiCXhlyd9EljoRiBHwZT?=
+ =?us-ascii?Q?OGcGcucAjar2L9JWhy9aJWezhHTtzQQHcSkJ+0DZELNFy3GQAjEt7+7ZSFqJ?=
+ =?us-ascii?Q?9gu0EelF/lPyqMQ+HqIfY7pteKUx32aZ8F3WYC9cB3jLC8m63O4ecWWRI09r?=
+ =?us-ascii?Q?qdU23oHhg96xsJuCNAKzyBvlBa96RWoh9WByV8hVgtNjppqCgl1oOptaiyKM?=
+ =?us-ascii?Q?p77Pdp4zEbJ/xft6BQqdDvZensIgshF6IaqJZb1QyUswPz+JakbthM8D7kZw?=
+ =?us-ascii?Q?o5TOJhbFSMJzNqgKZPvPuxl6gBRPpLEDy4AsoufJCbLTZRicF/+VBoeEl6a9?=
+ =?us-ascii?Q?F5d5CSm971rSjJs6dqqEBkbvUCMQ3gbaNKnnMrjG77+rK/CG5LHfsMBcFK66?=
+ =?us-ascii?Q?hLmjLZtjO08uyXS/hl0W5ZcS6z8mHZ96Ioa5CygpPd4R2vOzAQBgMFVdnptB?=
+ =?us-ascii?Q?dLS0VWNfNJpuIb4/Cx0yLKWNpzICDQhH0/x3QB6BIkzCyL7ddD0zcxa5aGJl?=
+ =?us-ascii?Q?NeQoo9mUNHrw4lFRlNrOW9Vxh50HiAPdAERIwFXKcmNAJVwAdTHjr5O+w2Bv?=
+ =?us-ascii?Q?CJLcExVbvPRJptYFUGCkAK3XrdZCuSNviIhpW+tp4WV+n3eoukHm4RXfaDfS?=
+ =?us-ascii?Q?V0Ky51nRWaGvqCJVcVc=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47409328-7292-4569-edcd-08dc8fcf9455
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 19:48:09.0637
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7rW8hZHhtTOdLnq7QEHbdrsnrlNQQnttUSUXttWkpxdxvbbOkok2yzC7fSJ2KWIL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8333
 
-Add support and enable decoding of H264 High 10 and 4:2:2 profiles.
+--=_MailMate_25E27C35-87B6-46B5-9FCE-9D8FE66C0AA9_=
+Content-Type: text/plain
 
-Decoded CAPTURE buffer width is aligned to 64 pixels to accommodate HW
-requirement of 10-bit format buffers, fixes decoding of:
+On 18 Jun 2024, at 15:44, Andrew Morton wrote:
 
-- Hi422FR13_SONY_A
-- Hi422FR14_SONY_A
-- Hi422FR15_SONY_A
-- Hi422FR6_SONY_A
-- Hi422FR7_SONY_A
-- Hi422FR8_SONY_A
-- Hi422FR9_SONY_A
-- Hi422FREXT18_SONY_A
+> On Tue, 18 Jun 2024 09:41:51 -0400 Zi Yan <zi.yan@sent.com> wrote:
+>
+>> From: Zi Yan <ziy@nvidia.com>
+>>
+>> As Ying pointed out in [1], stats->nr_thp_failed needs to be updated to
+>> avoid stats inconsistency between MIGRATE_SYNC and MIGRATE_ASYNC when
+>> calling migrate_pages_batch().
+>>
+>
+> Thanks.  I'll add
+>
+> Fixes: 7262f208ca68 ("mm/migrate: split source folio if it is on deferred split list")
+>
+> and shall queue it for 6.10-rcX.
+>
+> Please don't forget such details.
 
-The get_image_fmt() ops is implemented to select an image format
-required for the provided SPS control.
+I thought about the Fixes tag. Since Hugh's patch fixes the
+BUG_ON and VM_BUG_ON, I did not add it here. But yeah stats inconsistency
+is something needs to be fixed. Thanks for adding it.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
----
-v5:
-- Move buffer align from rkvdec_fill_decoded_pixfmt to min/step_width
-- Use correct profiles for V4L2_CID_MPEG_VIDEO_H264_PROFILE
-- Collect t-b tags
+--
+Best Regards,
+Yan, Zi
 
-v4:
-- Change to use get_image_fmt() ops
+--=_MailMate_25E27C35-87B6-46B5-9FCE-9D8FE66C0AA9_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename=signature.asc
+Content-Type: application/pgp-signature; name=signature.asc
 
-v3:
-- Add get_fmt_opaque ops, the expected pixelformat is used as opaque
-- Add new valid_fmt ops that validate pixelformat matches opaque
-- Update H264_PROFILE control max value
+-----BEGIN PGP SIGNATURE-----
 
- drivers/staging/media/rkvdec/rkvdec-h264.c | 37 +++++++++++++++-----
- drivers/staging/media/rkvdec/rkvdec.c      | 40 ++++++++++++++++------
- drivers/staging/media/rkvdec/rkvdec.h      |  3 ++
- 3 files changed, 61 insertions(+), 19 deletions(-)
+iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmZx5HMPHHppeUBudmlk
+aWEuY29tAAoJEOJ/noEUByhUPQgQAIWxbd4bOc/5GV7nlPIu1+ybgUcKvgW8caBD
+PVaPjKhz6KmI016KEmF+YgVQ1356qDLTkc6j1Xy5pPkA/38k7YLFm3vcG8/B490Y
+26egLfHKb9uV/lCrnSl0Q4hRDRrmWS4MCLDx0a4dOvapODvGlJBC2z6s8DVX9+e+
+uDR+7hOvGHXRFDEeRckwWWmRbI/w0W9t83lImt6McsjaACR8Ec0ED0qDb1AnKY1r
+QD4RN/VZT120BeEQCA+l4MRkie8meXCyofXJFyZQV4ZSlmJz86ZZyqUMjJ9jCzOs
+PCnpnsljTJW02739fbzErVJQiXQncGPyFRqMFXbbK5E2gE8B709miHyaFAe8lZnK
+Rfyeg1C39UsE/qgbcQwK/OI+BfWCv5Sym3iqWaz0slmD82xcSwYgG6w6SVTc7CvI
+ml0Hz4zNWYypWwZq2mO+VkJd6UGQ1fvt8H09BAs4WUYsjA6GgIKBW8MLw9QK1sX1
+vMZi6U1kDHmu9Iy5Yll9qppLcTz11NXET+zd3a5cQF2DOmSY6mrp1aFo9/j0vNq/
+JptagstlfNOBZqP6M9qAtuymhZG7B3m7F23kYZrYxwyNUEGesxbkVfjYGvKT1jbW
+xHC6XvJUuDxt482nYsf98WbiemcK3Ndxu4+ECPLNMlMc80adAY/BdORf8SgZm0f/
+WjeYvKWY
+=CwEy
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index 8bce8902b8dd..d14b4d173448 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -1027,24 +1027,42 @@ static int rkvdec_h264_adjust_fmt(struct rkvdec_ctx *ctx,
- 	return 0;
- }
- 
-+static enum rkvdec_image_fmt rkvdec_h264_get_image_fmt(struct rkvdec_ctx *ctx,
-+						       struct v4l2_ctrl *ctrl)
-+{
-+	const struct v4l2_ctrl_h264_sps *sps = ctrl->p_new.p_h264_sps;
-+
-+	if (ctrl->id != V4L2_CID_STATELESS_H264_SPS)
-+		return RKVDEC_IMG_FMT_ANY;
-+
-+	if (sps->bit_depth_luma_minus8 == 0) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_8BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_8BIT;
-+	} else if (sps->bit_depth_luma_minus8 == 2) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_10BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_10BIT;
-+	}
-+
-+	return RKVDEC_IMG_FMT_ANY;
-+}
-+
- static int rkvdec_h264_validate_sps(struct rkvdec_ctx *ctx,
- 				    const struct v4l2_ctrl_h264_sps *sps)
- {
- 	unsigned int width, height;
- 
--	/*
--	 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
--	 * but it's currently broken in the driver.
--	 * Reject them for now, until it's fixed.
--	 */
--	if (sps->chroma_format_idc > 1)
--		/* Only 4:0:0 and 4:2:0 are supported */
-+	if (sps->chroma_format_idc > 2)
-+		/* Only 4:0:0, 4:2:0 and 4:2:2 are supported */
- 		return -EINVAL;
- 	if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
- 		/* Luma and chroma bit depth mismatch */
- 		return -EINVAL;
--	if (sps->bit_depth_luma_minus8 != 0)
--		/* Only 8-bit is supported */
-+	if (sps->bit_depth_luma_minus8 != 0 && sps->bit_depth_luma_minus8 != 2)
-+		/* Only 8-bit and 10-bit is supported */
- 		return -EINVAL;
- 
- 	width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
-@@ -1190,4 +1208,5 @@ const struct rkvdec_coded_fmt_ops rkvdec_h264_fmt_ops = {
- 	.stop = rkvdec_h264_stop,
- 	.run = rkvdec_h264_run,
- 	.try_ctrl = rkvdec_h264_try_ctrl,
-+	.get_image_fmt = rkvdec_h264_get_image_fmt,
- };
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 455b9cd34b6a..f5e393d4377c 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -192,10 +192,11 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
- 	},
- 	{
- 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
--		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
--		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
-+		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_422_INTRA,
- 		.cfg.menu_skip_mask =
--			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_444_PREDICTIVE),
- 		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
- 	},
- 	{
-@@ -210,11 +211,23 @@ static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_h264_ctrl_descs),
- };
- 
--static const struct rkvdec_decoded_fmt_desc rkvdec_h264_vp9_decoded_fmts[] = {
-+static const struct rkvdec_decoded_fmt_desc rkvdec_h264_decoded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV15,
-+		.image_fmt = RKVDEC_IMG_FMT_420_10BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV16,
-+		.image_fmt = RKVDEC_IMG_FMT_422_8BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV20,
-+		.image_fmt = RKVDEC_IMG_FMT_422_10BIT,
-+	},
- };
- 
- static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
-@@ -237,21 +250,28 @@ static const struct rkvdec_ctrls rkvdec_vp9_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_vp9_ctrl_descs),
- };
- 
-+static const struct rkvdec_decoded_fmt_desc rkvdec_vp9_decoded_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12,
-+		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
-+	},
-+};
-+
- static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_H264_SLICE,
- 		.frmsize = {
--			.min_width = 48,
-+			.min_width = 64,
- 			.max_width = 4096,
--			.step_width = 16,
-+			.step_width = 64,
- 			.min_height = 48,
- 			.max_height = 2560,
- 			.step_height = 16,
- 		},
- 		.ctrls = &rkvdec_h264_ctrls,
- 		.ops = &rkvdec_h264_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
-+		.decoded_fmts = rkvdec_h264_decoded_fmts,
- 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
- 	},
- 	{
-@@ -266,8 +286,8 @@ static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 		},
- 		.ctrls = &rkvdec_vp9_ctrls,
- 		.ops = &rkvdec_vp9_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_vp9_decoded_fmts),
-+		.decoded_fmts = rkvdec_vp9_decoded_fmts,
- 	}
- };
- 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-index e466a2753ccf..9a9f4fced7a1 100644
---- a/drivers/staging/media/rkvdec/rkvdec.h
-+++ b/drivers/staging/media/rkvdec/rkvdec.h
-@@ -80,6 +80,9 @@ struct rkvdec_coded_fmt_ops {
- enum rkvdec_image_fmt {
- 	RKVDEC_IMG_FMT_ANY = 0,
- 	RKVDEC_IMG_FMT_420_8BIT,
-+	RKVDEC_IMG_FMT_420_10BIT,
-+	RKVDEC_IMG_FMT_422_8BIT,
-+	RKVDEC_IMG_FMT_422_10BIT,
- };
- 
- struct rkvdec_decoded_fmt_desc {
--- 
-2.45.2
-
+--=_MailMate_25E27C35-87B6-46B5-9FCE-9D8FE66C0AA9_=--
