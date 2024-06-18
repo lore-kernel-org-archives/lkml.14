@@ -1,34 +1,73 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A21813B7AF
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9841E863;
+	Tue, 18 Jun 2024 07:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695642; cv=none; b=Hfku1m1qxCELhT589u2blDOfzfdhDeV6jrGJAh/ABJOqKJaOfq6YdrFVI/lDFyiAYRJh0gsbTvklN1MTuxPqtrzDA24u3ibgDmTfWkiGCrynW9D+6fkiT9ZMunWpMIZJUCNrb9N+VOwPxYQcz3814byiea0dKLirq2H+Vz1dum8=
+	t=1718695697; cv=none; b=i/5hMeqYEiE/FZBr/VoCCuv4zjUpMCTkeuKMX46RjRNtP+rp0g5Ru5QCqKd2a20N20BsWCbipqr3A40fqdtO7Z3SRAp/oSafiHi3N6t6fz0DPZirxc9DsjqD30buq3Pl/72xUQBY16at4kv4kTgV/O2H6QQd+Y0dSlkYXPdZD6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695642; c=relaxed/simple;
-	bh=YhSdnwPfYHBCptd+IaRImgOqklxYVBgy1SqjBOm2jrw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g/Y85QFQ347P71kMUy4DmZZk/6wrju4zit1e+eruII/XCF5zuqR49nH2OBuITVW65jGa8dQiMyzIfTlW6ko3DN1D2hEO+rzOWZsbUcXIXoz2ojdyLAuxabEUjezCZ4VFBSctuyrVhu/WUn8JoSVHlRECFF+bYGEyazZ/O5V+CFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W3JBH1gltz1SCWS;
-	Tue, 18 Jun 2024 15:23:03 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D1E11402C8;
-	Tue, 18 Jun 2024 15:27:16 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+	s=arc-20240116; t=1718695697; c=relaxed/simple;
+	bh=Pm+g1zuO3lpBcnw4Y+4LbimsaZWAveg3kEfjlLAa/k0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l1lu/PhVnWwbIlOgKIbKB4E2v7vpAnf4Wzupwk7eST11H0ANlEpqSFoNnNE8iuQUagvXXX/I+v9kolRPLIUmf4pYqcxDlapfe2vjj54+PelaDgxXUHSqVZ4BJdkkCx4cOVl2CHfX6N27WC/XZBLciWtol6L9vAlehkNrdzDzfIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EScJdUd7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EScJdUd7"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HLfSXN025439;
+	Tue, 18 Jun 2024 07:27:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=WVaPTYXZ+AMwgmFA5PnrJu
+	PY3/z3kl0dMUW5njXHbq8=; b=EScJdUd7aEBQG/nPJUQEgIwpm1FS+ffW/EDANy
+	O9GVebWqzgFzHXRzB2jWirUvsZKHPsyEM3mXox+OL72B2A5J3/dCcDw6QZywiNJL
+	cc2/mm5Bf9U515U6KA6SVDd5ZOX02+YB/kmTmtbXt+/BGN2FeNeMjkKn0c68cLnA
+	86GG1JV/UBoKmoHdeMg66uUSAQGumQ0kUHuiVNFET3W0oPEoM9ck7JZdzAPeQqRG
+	YPXrAdzNGge0tK4WmAKG9W2kWKFxcMfC0DpXU8B8JBvjlVqb3IYbQHOCyP04wdO8
+	sMX+YEumNnk78i8lgc0IZ15yEl6+qiE31PPRi2q5XwAQvcMg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys3qf5ta9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 07:27:58 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45I7Rv2N024337
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 07:27:57 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 18 Jun 2024 15:27:16 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] mm/hugetlb_cgroup: register lockdep key for cftype
-Date: Tue, 18 Jun 2024 07:19:22 +0000
-Message-ID: <20240618071922.2127289-1-xiujianfeng@huawei.com>
+ 15.2.1544.9; Tue, 18 Jun 2024 00:27:45 -0700
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC: Jinlong Mao <quic_jinlmao@quicinc.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Tao Zhang
+	<quic_taozha@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Song Chai
+	<quic_songchai@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <andersson@kernel.org>,
+        <quic_yijiyang@quicinc.com>, <quic_yuanjiey@quicinc.com>,
+        <quic_liuxin@quicinc.com>, <quic_yanzl@quicinc.com>,
+        <quic_xinlon@quicinc.com>, <quic_xueqnie@quicinc.com>,
+        <quic_sijiwu@quicinc.com>
+Subject: [PATCH v1 0/3] Add coresight slave register driver to support data filter function
+Date: Tue, 18 Jun 2024 15:27:23 +0800
+Message-ID: <20240618072726.3767974-1-quic_jiegan@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,98 +77,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jv1hjDa81jJN9reNr2ZGwldPlZi59B5j
+X-Proofpoint-ORIG-GUID: jv1hjDa81jJN9reNr2ZGwldPlZi59B5j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180054
 
-When CONFIG_DEBUG_LOCK_ALLOC is enabled, the following commands can
-trigger a bug,
+The Coresight Slave Register(CSR) device hosts miscellaneous configuration
+registers to control various features related to TMC ETR device.
 
-mount -t cgroup2 none /sys/fs/cgroup
-cd /sys/fs/cgroup
-echo "+hugetlb" > cgroup.subtree_control
+The CSR device works as a helper device physically connected to the TMC ETR device.
+---------------------------------------------------------
+             |ETR0|             |ETR1|
+              . \                 / .
+              .  \               /  .
+              .   \             /   .
+              .    \           /    .
+---------------------------------------------------     
+ETR0ATID0-ETR0ATID3     CSR     ETR1ATID0-ETR1ATID3
+---------------------------------------------------
+Each ETR has four ATID registers with 128 bits long in total.
+e.g. ETR0ATID0-ETR0ATID3 registers are used by ETR0 device.
 
-The log is as below:
+Based on the trace id which is programed in CSR ATID register of
+specific ETR, trace data with that trace id can get into ETR's buffer
+while other trace data gets ignored. CSR may contain several ATID registers. 
+Each ATID register is associated with an ETR device.
 
-BUG: key ffff8880046d88d8 has not been registered!
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 3 PID: 226 at kernel/locking/lockdep.c:4945 lockdep_init_map_type+0x185/0x220
-Modules linked in:
-CPU: 3 PID: 226 Comm: bash Not tainted 6.10.0-rc4-next-20240617-g76db4c64526c #544
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:lockdep_init_map_type+0x185/0x220
-Code: 00 85 c0 0f 84 6c ff ff ff 8b 3d 6a d1 85 01 85 ff 0f 85 5e ff ff ff 48 c7 c6 21 99 4a 82 48 c7 c7 60 29 49 82 e8 3b 2e f5
-RSP: 0018:ffffc9000083fc30 EFLAGS: 00000282
-RAX: 0000000000000000 RBX: ffffffff828dd820 RCX: 0000000000000027
-RDX: ffff88803cd9cac8 RSI: 0000000000000001 RDI: ffff88803cd9cac0
-RBP: ffff88800674fbb0 R08: ffffffff828ce248 R09: 00000000ffffefff
-R10: ffffffff8285e260 R11: ffffffff828b8eb8 R12: ffff8880046d88d8
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880067281c0
-FS:  00007f68601ea740(0000) GS:ffff88803cd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005614f3ebc740 CR3: 000000000773a000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- ? __warn+0x77/0xd0
- ? lockdep_init_map_type+0x185/0x220
- ? report_bug+0x189/0x1a0
- ? handle_bug+0x3c/0x70
- ? exc_invalid_op+0x18/0x70
- ? asm_exc_invalid_op+0x1a/0x20
- ? lockdep_init_map_type+0x185/0x220
- __kernfs_create_file+0x79/0x100
- cgroup_addrm_files+0x163/0x380
- ? find_held_lock+0x2b/0x80
- ? find_held_lock+0x2b/0x80
- ? find_held_lock+0x2b/0x80
- css_populate_dir+0x73/0x180
- cgroup_apply_control_enable+0x12f/0x3a0
- cgroup_subtree_control_write+0x30b/0x440
- kernfs_fop_write_iter+0x13a/0x1f0
- vfs_write+0x341/0x450
- ksys_write+0x64/0xe0
- do_syscall_64+0x4b/0x110
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f68602d9833
-Code: 8b 15 61 26 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 08
-RSP: 002b:00007fff9bbdf8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007f68602d9833
-RDX: 0000000000000009 RSI: 00005614f3ebc740 RDI: 0000000000000001
-RBP: 00005614f3ebc740 R08: 000000000000000a R09: 0000000000000008
-R10: 00005614f3db6ba0 R11: 0000000000000246 R12: 0000000000000009
-R13: 00007f68603bd6a0 R14: 0000000000000009 R15: 00007f68603b8880
+To achieve this function, the trace id is obtained and stored in the related
+ETR device's driver data just before enabling the CSR. Then, the CSR
+device can easily obtain the trace ID from the ETR's driver data because the
+ETR's driver data is passed to the CSR's enable/disable functions.
 
-For lockdep, there is a sanity check in lockdep_init_map_type(), the
-lock-class key must either have been allocated statically or must
-have been registered as a dynamic key. However the commit e18df2889ff9
-("mm/hugetlb_cgroup: prepare cftypes based on template") has changed
-the cftypes from static allocated objects to dynamic allocated objects,
-so the cft->lockdep_key must be registered proactively.
+Ensure that every source device has already allocated a trace ID in its probe
+session because the sink device should always be the first device to
+enable when operating coresight_enable_path function. As a helper device of the
+ETR, the CSR device will program the ATID register of a specific ETR according to
+the trace id to enable data filter function at a very early stage. Without the
+correct trace ID, the enablement session will not work.
 
-Fixes: e18df2889ff9 ("mm/hugetlb_cgroup: prepare cftypes based on template")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202406181046.8d8b2492-oliver.sang@intel.com
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+Each CSR's enable session will set one bit in the ATID register.
+Every CSR's disbale seesion will reset all bits of the ATID register.
 
----
-v2: add bug log to commit message
----
- mm/hugetlb_cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+This patch only supports sysfs mode. I will send the perf mode part patch
+once it is ready.
 
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 2b899c4ae968..4ff238ba1250 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -836,6 +836,8 @@ hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
- 			cft->file_offset = MEMFILE_OFFSET0(offset) +
- 					   MEMFILE_FIELD_SIZE(offset) * idx;
- 		}
-+
-+		lockdep_register_key(&cft->lockdep_key);
- 	}
- }
- 
+Looking forward to receiving comments as this is a new driver.
+
+Thanks!
+
+Jie Gan (3):
+  dt-bindings: arm: Add binding document for Coresight Slave Register
+    device.
+  coresight: Add coresight slave register driver to support data filter
+    function in sysfs mode
+  arm64: dts: qcom: Add CSR and ETR nodes for SA8775p
+
+ .../bindings/arm/arm,coresight-tmc.yaml       |   8 +
+ .../bindings/arm/qcom,coresight-csr.yaml      |  49 +++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 167 ++++++++++
+ drivers/hwtracing/coresight/Kconfig           |   6 +
+ drivers/hwtracing/coresight/Makefile          |   1 +
+ drivers/hwtracing/coresight/coresight-core.c  |   6 +-
+ drivers/hwtracing/coresight/coresight-csr.c   | 315 ++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-csr.h   |  24 ++
+ .../coresight/coresight-etm4x-core.c          |   1 +
+ drivers/hwtracing/coresight/coresight-stm.c   |  50 ---
+ drivers/hwtracing/coresight/coresight-sysfs.c |  45 ++-
+ .../hwtracing/coresight/coresight-tmc-core.c  |   1 +
+ drivers/hwtracing/coresight/coresight-tmc.h   |   2 +
+ include/linux/coresight-stm.h                 |  44 +++
+ 14 files changed, 665 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom,coresight-csr.yaml
+ create mode 100644 drivers/hwtracing/coresight/coresight-csr.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-csr.h
+
 -- 
 2.34.1
 
