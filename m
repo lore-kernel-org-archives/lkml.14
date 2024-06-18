@@ -1,174 +1,92 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7BF1487ED
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8B613AA37;
+	Tue, 18 Jun 2024 08:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718698297; cv=none; b=J+cbMKf7sm1kVb64MlW/4v3Me7ki1LNNW7oHF879da11nR9I4UrG2k3aVyjj+okBwftbop+VURc5+V4MVUH45wMOXg+J8mDnZNjc31TD22Bt+hA0WFJnK71HBaArYl2zVrFgK7E3LR83EgRJwQLauFOXYJ3KL5Kf+5LfXsd4YHA=
+	t=1718698430; cv=none; b=XUINKJu9VNdZ4rFjoMxk+ZHWhTcPqekPk5GBoH8Q4tXrwEWtGAO2eLWVwcwqHgGNa7u7kJ8/qbgm9rqpNCBO7GP4hurod9SJaCyDXaPXw/w7r7Plor17iUDc2ePX/LJWzsXXpDkpiLA9RKr8IWNcA4j4xmJNGHU/SSGzx8Ri0qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718698297; c=relaxed/simple;
-	bh=2KNMmat5vMET2BDI7NUXUz9iV8jjghd0Qaf7pSQvWdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p4FO94dfqMfYy1/6svK2d/JoZVgUS0vr3m7LjBb6vbs/1wSpdCvqD8QnegQ0DW8bguQjvGils2la9rrAoAihyjqPelwXjifd76lp1RerKCruw+omveTS2w4S2sOLHedMYWd+SOwNlKmfbRuxIp4c6Ttu4hiKhhx8cLst+1g7zek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=XU3hsbcs; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1718698430; c=relaxed/simple;
+	bh=t0kXkFe+Uc+4GyW6huB1OnZkTwf/7K7wQ3TQ7GFxz8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XA+8vp9JLAHQYPseTKRs9qM5z+elp15WEHcIT6ofJu8NuYkuasDxLCtOila+nWGerlV+jxtMXQ2UTXvx471kftYOVnuekViOvjTa7HgWXalLBuFAYOWAQ54GBKJrofJMvxxtreu9YRhNEsA8WlPyl6YezQcJyzPR7V8YA/jhkUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gI5uDg89; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="XU3hsbcs"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4217d451f69so42429165e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 01:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1718698293; x=1719303093; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5Db/Ttkm8Wt1DAojtG+l5i3VYAIO56vuiF9BvfZCWUE=;
-        b=XU3hsbcs6oN4mExeSoAh7KhcLS6krsD89eVRRiZDBOHpP98+i0yBPiudWLfNIexlJC
-         ouihp8C99os4Xses4INfKTAib8W/j4WOEWCw/Rv0Bo/32czrzhul0WlocnN2BWqNuCsA
-         kvD5gii341WdbDhOgVDoodAuBe7vv1H5QzSgoNLL17py8xgORxnN7hjrT6LIxuVmsGwb
-         BMTW00qy31qvRmR6Df/t7pwxiuUkniVtRL0px3It0GacLgjKCKiDppN3PHJ5S8wP0C6h
-         d5d74zrnSm9jcksmwBVmPgrhbK1RtqIKOfBvpgo0SV4Mo5HwU7ZuLLBCKVRvCI1QGpRP
-         BVcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718698293; x=1719303093;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Db/Ttkm8Wt1DAojtG+l5i3VYAIO56vuiF9BvfZCWUE=;
-        b=Hq9x/OpjoO4aUdejYJw+XFTb8cvb5R5DDz5Eqz0GFVwDaRuhZorK1aCA3oFe2n3VgK
-         SpfK3XFNHXln3aaac5GMUrHtroiqHAOmzbXWqPKClHr5YPPG1s93KPCnjDpJ2CAjCUv2
-         A/wGQkQ4K/EiElb6nNgQNAjoIMrNFBJ+5MIXstV/vk3ZMjwoN4VVt4N7SlPYozHeFjsX
-         QXbSfdTUPmWvThy8gUh8GWaf4K912rWMCtgl+LrV5wz6YLYq1pxlSFrA98WCHqIDPWGp
-         YGh93MF9Oo9cUO5oDLqbcWF/2oaU4y+eHsW84w9c7WSKd7/+diKl5NQYsf/tT9QMaA8C
-         K4XA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhlHRhbt5Ku2LGQlhUocsvmNh9vrToZUmFUzqOCM9bJURyzA+ZlqVTiWYRw/ZTFOS8dHdhCzUyf7+TEbu0UFlkIaO4JuJFt9iDB4Cj
-X-Gm-Message-State: AOJu0Yy5LJ+ruz2bZdLVnrI2CfElpbtb+ns1mpFWCQ214LnbzKtx25iZ
-	6vPrLXrudcRIz5oR8ObOyMoH70EshnjWrN5pJkgMQY0vdC+bhFMyKq19hVZESus=
-X-Google-Smtp-Source: AGHT+IEZ4zfien/Ap0pCf2tDyhM1mJ0USifoiBZp4jjoL6ZEetj9nRXUeKMXuBuNxOiTYrJSsTYSkA==
-X-Received: by 2002:a05:600c:4fcc:b0:423:4c2:7a80 with SMTP id 5b1f17b1804b1-42304c27cabmr78141565e9.5.1718698292647;
-        Tue, 18 Jun 2024 01:11:32 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.189])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f2f30925sm183177995e9.0.2024.06.18.01.11.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 01:11:32 -0700 (PDT)
-Message-ID: <ee58a84c-d0a9-4caf-9b97-40a4eaebae3f@tuxon.dev>
-Date: Tue, 18 Jun 2024 11:11:30 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gI5uDg89"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E995CC3277B;
+	Tue, 18 Jun 2024 08:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718698430;
+	bh=t0kXkFe+Uc+4GyW6huB1OnZkTwf/7K7wQ3TQ7GFxz8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gI5uDg89tWwDrb9mh+iOh94c41ap2tYpemNO3yEoQ2j4LfGyNwWn4v3d0hobbgdIv
+	 YX+9fmakY/HMJuZK0mO+Yz8BtC6vGEQZqEWztJYNrNCA4mD7/cSSFGMcsqB7Dv7HN4
+	 vXZpH15jlt23tsVcZflLYr6V/gh7xNSAjYpoumxoceDQXF6/638FBliUuB+0MxqukH
+	 KuMHaVNnqPXZ+hXDpu0jTN8/SbPFKCzkNLY2aIfsJf1sRRnSHH0MNDIQi4zCwjBO5C
+	 K45OVEPZD3xxQPjzrMCBnAU4qw9IfVyhti6kWnevfZeuuv6x5X6uFRu2ph6olaECdz
+	 G+FSvNWPgLiYg==
+Date: Tue, 18 Jun 2024 10:13:47 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Qiang Yu <yuq825@gmail.com>
+Cc: Dragan Simic <dsimic@manjaro.org>, dri-devel@lists.freedesktop.org, 
+	lima@lists.freedesktop.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
+	airlied@gmail.com, daniel@ffwll.ch, linux-kernel@vger.kernel.org, 
+	Philip Muller <philm@manjaro.org>, Oliver Smith <ollieparanoid@postmarketos.org>, 
+	Daniel Smith <danct12@disroot.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] drm/lima: Mark simple_ondemand governor as softdep
+Message-ID: <20240618-great-hissing-skink-b7950e@houat>
+References: <fdaf2e41bb6a0c5118ff9cc21f4f62583208d885.1718655070.git.dsimic@manjaro.org>
+ <CAKGbVbs8VmCXVOHbhkCYEHNJiKWwy10p0SV9J09h2h7xjs7hUg@mail.gmail.com>
+ <CAKGbVbsM4rCprWdp+aGXE-pvCkb6N7weUyG2z4nXqFpv+y=LrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] dt-bindings: clock: renesas,rzg3s-vbattb-clk:
- Document the VBATTB clock driver
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Conor Dooley <conor@kernel.org>, mturquette@baylibre.com,
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- lee@kernel.org, alexandre.belloni@bootlin.com, magnus.damm@gmail.com,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240614071932.1014067-1-claudiu.beznea.uj@bp.renesas.com>
- <20240614071932.1014067-3-claudiu.beznea.uj@bp.renesas.com>
- <20240615-angler-occupier-6188a3187655@spud>
- <3d9ed0ec-ca9a-45b4-a633-8f7051d13cff@tuxon.dev>
- <20240617-subsoil-creed-04bf5f13d081@spud>
- <0a4ba0e5-3fb1-4ffc-b2d8-a4eb418707eb@tuxon.dev>
- <CAMuHMdXOiuORjLo2nRAFxtXmn5rRm7U-CEHqfX2DoXHmQyfdRQ@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdXOiuORjLo2nRAFxtXmn5rRm7U-CEHqfX2DoXHmQyfdRQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vdvduvkbze4vvc46"
+Content-Disposition: inline
+In-Reply-To: <CAKGbVbsM4rCprWdp+aGXE-pvCkb6N7weUyG2z4nXqFpv+y=LrA@mail.gmail.com>
 
-Hi, Geert,
 
-On 18.06.2024 10:56, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Tue, Jun 18, 2024 at 9:34 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
->> On 17.06.2024 18:19, Conor Dooley wrote:
->>> On Mon, Jun 17, 2024 at 10:02:47AM +0300, claudiu beznea wrote:
->>>> On 15.06.2024 15:17, Conor Dooley wrote:
->>>>> On Fri, Jun 14, 2024 at 10:19:22AM +0300, Claudiu wrote:
->>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>>
->>>>>> The VBATTB IP of the Renesas RZ/G3S SoC controls the clock that feeds
->>>>>> the RTC and the tamper detector. Add documentation for the VBATTB clock
->>>>>> driver.
->>>>>>
->>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>> ---
->>>>>>  .../clock/renesas,rzg3s-vbattb-clk.yaml       | 90 +++++++++++++++++++
->>>>>>  1 file changed, 90 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb-clk.yaml
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb-clk.yaml b/Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb-clk.yaml
->>>>>> new file mode 100644
->>>>>> index 000000000000..ef52a0c0f874
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/clock/renesas,rzg3s-vbattb-clk.yaml
->>>>>> +  renesas,vbattb-osc-bypass:
->>>>>> +    description: set when external clock is connected to RTXOUT pin
-> 
-> FTR, this contradicts the explanation below, which states the external
-> clock oscillator is connected to RTXIN.
+--vdvduvkbze4vvc46
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree.
+On Tue, Jun 18, 2024 at 04:01:26PM GMT, Qiang Yu wrote:
+> On Tue, Jun 18, 2024 at 12:33=E2=80=AFPM Qiang Yu <yuq825@gmail.com> wrot=
+e:
+> >
+> > I see the problem that initramfs need to build a module dependency chai=
+n,
+> > but lima does not call any symbol from simpleondemand governor module.
+> >
+> > softdep module seems to be optional while our dependency is hard one,
+> > can we just add MODULE_INFO(depends, _depends), or create a new
+> > macro called MODULE_DEPENDS()?
+> >
+> This doesn't work on my side because depmod generates modules.dep
+> by symbol lookup instead of modinfo section. So softdep may be our only
+> choice to add module dependency manually. I can accept the softdep
+> first, then make PM optional later.
 
-> 
->>>>>> +    type: boolean
->>>>>
->>>>> When you say "external clock", is that an input or an output?
->>>>
->>>> I took that statement from the HW manual. As of the HW manual [1], table
->>>> 42.2, that would be an input.
->>>
->>> Forgive me for not wanting to open the zip etc and find the information
->>> in the document, but why do you need an extra property? Is it not
->>> something you can determine from the clocks/clock-names properties?
->>
->> It can't be determined from clocks/clock-names as of my understanding. It
->> depends on the type of the input clock (crystal oscillator or external
->> hardware device generating the clock).
->>
->>> It sounds like an additional clock from your description, is it actually
->>> different way to provide the second clock you mention above?
->>
->> This is the block diagram (see [1], only picture this time) of the module
->> controlling the clock. Please open it, it helps in understanding what I'll
->> explain above.
->>
->> The VBATTB blocks controlling the VBATTBCLK are:
->> - 32KHz-clock oscillator
->> - the mux controlled by BKSCCR.SOSEL
->> - the gate who's input is the mux output and XOSCCR.OUTEN
->>
->> To the 32 KHz-clock oscillator block could be connected:
->> 1/ either a crystal oscillator in which case it will be connected to both
->> RTXIN and RTXOUT pins (the direction of RTXOUT is wrong in this picture for
->> this case)
->> 2/ or a device (like [2]) generating a clock which has a single output and,
->> from my understanding and experience with devices like this, only RTXIN is
->> needed, RTXOUT is connected to the ground; for this case the 32KHz-clock
->> oscillator block from [1] need to be bypassed in which case the newly
->> introduced property will be used; this will select the XBYP on the mux.
-> 
-> Sounds similar to the RAA215300 PMIC, which includes an ISL1208-derived
-> RTC, where this was handled using two different clock names:
-> https://elixir.bootlin.com/linux/v6.10-rc1/source/Documentation/devicetree/bindings/regulator/renesas,raa215300.yaml#L49
-> https://elixir.bootlin.com/linux/v6.10-rc1/source/drivers/rtc/rtc-isl1208.c#L869
+It's still super fragile, and depends on the user not changing the
+policy. It should be solved in some other, more robust way.
 
-Yes, seem similar. I wasn't aware of this approach. I'll switch to it.
+Maxime
 
-Thank  you,
-Claudiu Beznea
+--vdvduvkbze4vvc46
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZnFBugAKCRDj7w1vZxhR
+xV4WAQDox5ZaFopBrVQDS59ucBA0YRDGyi9gKRYE808rydy9pAD+LJeN/tR71dDU
+hC6/d8te9teLVZ8K4fkmbqxOwOu/HwU=
+=uQvC
+-----END PGP SIGNATURE-----
+
+--vdvduvkbze4vvc46--
