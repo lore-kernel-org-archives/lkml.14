@@ -1,362 +1,249 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC5315886D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718716098; cv=none; b=BFMhSorsFLWRlsSqvLTjx3V/mLcdXGUVAw43l4Um75hu8Lz+gsEivcljQA662zvfRV604Jaxz68Cxi8WNnNqlsT9p1jgtiTXR4Ski2i3TIR7/PrEwnXXmEsI7rEu/AVqBrqyFYfvrpZY9g5Je29xCaMxGAdVvuJEkIMBRevWo44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718716098; c=relaxed/simple;
-	bh=mn5FtPRbZyXMPbcviqTthDkzoaS/7AUzAtrMRoqletw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RXk/cUUMpRyRrOvSqUshOVqPWQIj1BDgMgIBz0TUWmp8mz5NNZhkCy2FJs0IamUkxTBbiJ9X8AwIzN4YKhZXczot1QVaHZbPwFuRByrdxBzqKvn9Zn0aQuyGMBhvfJwrFeSVRRr3XmXQWRR7SiRVTYNyoUdJNB1aKx4A2xgmVpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W3Rlx72W2z2Ck8m;
-	Tue, 18 Jun 2024 21:04:13 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 022921A016C;
-	Tue, 18 Jun 2024 21:08:07 +0800 (CST)
-Received: from [10.67.110.112] (10.67.110.112) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB36619F495;
+	Tue, 18 Jun 2024 13:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718716101; cv=fail; b=KpJreTIY2Ym5j/j6JD4nFFCsOyD/FjA5eWPXnQfMbF9al4fEVH11rpGY1cByNmHEkuClW7dcPdIZXuG4eWYHpCBMnXHp0jioAr10E+1LXbkIoPrhYsFc6CWy3UBH2KQZrWV6qX3xRvfu+JJJ8kd9JlurfDr4xKXmGDTIfpphang=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718716101; c=relaxed/simple;
+	bh=MobmdaFdN1dF5+vrJevMC01BDfRgWW1ADOw5NzxZsd4=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QEfDg098rco4v1zYQJp7YrCLgep4ywXGOlqbAsNsFjdWXgBH/eCEoolA1gs1hc/i2ttOVHYlInNyUsuSLINK/vXWydXVUws3FMgYuRb9kCO5WvlMsCZVOeeFf3zp5YIsORZro5biM8u6e/52A9zbzH6qLWqxi/egeyiyJFeGMIU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5PHX+8O; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5PHX+8O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718716100; x=1750252100;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MobmdaFdN1dF5+vrJevMC01BDfRgWW1ADOw5NzxZsd4=;
+  b=c5PHX+8OSr2cBTNDrt4iiZbd1FKkmDEEqLn6YP2o6mxSV21brRjHQeD/
+   wRdOOAVHHJEdfEPKs226mfQB1GAewoV54D6f3NYSlX2U8i/D9QKizI2dt
+   suN0/W74xCRaTl3cUi7pfVP9Num6MN6zIVm1TnPo96LoRxFAofMI7xiwN
+   5s3I0bvFcUcfjmJRtppyB0miElfmOr7PSyoA6Swoqgic/q7JadN3k69EU
+   DZKFLIVL4VE6KJoyF1JdDmC56nBk/F/ldEEHMQROhtNHpsPU/jdt1CZOF
+   eoShwiZ5Q/zC5WK5qxRHYyBs9KmghK379doTiFWP49HxJ0czCiSVTX/XF
+   Q==;
+X-CSE-ConnectionGUID: aPfdZQFISlOwF5gJXlQphQ==
+X-CSE-MsgGUID: 7SIymQfaQri5cQ+nC2z6eQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="18505503"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="18505503"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 06:08:19 -0700
+X-CSE-ConnectionGUID: McUuLKaoRLC6h5LnfFmFQA==
+X-CSE-MsgGUID: 8zrbVgbSSXOgzb4iVYanpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="72292730"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Jun 2024 06:08:19 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 18 Jun 2024 06:08:18 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 18 Jun 2024 06:08:18 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 18 Jun 2024 21:08:06 +0800
-Message-ID: <4ee074b9-72c4-f2b8-42e1-57a895d57462@huawei.com>
-Date: Tue, 18 Jun 2024 21:08:06 +0800
+ 15.1.2507.39; Tue, 18 Jun 2024 06:08:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a4HL87xjP2sLCGEBi1D9LeaZs+9VKqfQg0hX7Di1IRLeNJkUKcHZs/+uhhob1tl4tAuM3lIN+CBL+LAd00rWbnGmrTF4MCVxAefDIqQMmZw9Qf5F060rJdxf6K5wEyb2rdl5+VA3a5cRXAk+Vnyo4Y9uJ/lvy1HHkB+AHYVB0Ek3tudQUgAJEAZuxgXIVqV8eA2vxrg66Ot2LKC8zpPg1NlTGC/8cyY3rpdbgNMTY483KMEhUmyfwPlEfBSGq1dUj7XqqF8fXyqMtBqUjMW8gLh2+21uid6a2jXpe2mbrUE6Iw01Y/ikrvgNSTu2MsA+AQtWzpm4XWRDYA1usOrS+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WSHdLR1J9LFCLMxAe6hPCEmDXRrVshKy6IUsrrTKl7s=;
+ b=YnNFtkLZfVwLL6avSNP8+NJByMNiIsEO5XzdKg3do8IvjHTgs8bJ/QQVpwUNOFlJ1vUaalj+zyDFVDQ1KoTGKRZLcR/30tHROThaRWzDeomoQ+tj98Fv23wZWQdH9jIR5JDrSnRp5epdBxYvPgG2EHBQVYeVrRauCTmCtY6D09CRfifiru8sc8aNridyOTilsX05ruESsRW3GJyAQQtWI1o8gMJ45mLfXXHL2M5PMne4rxLnimxRD3MApQM8nV17lcgzT1chr8bvr0UZ/tcCbk0Xl3jcsmDUtGDkAAlSsczU+ZizU0QOP3txG78ADNQXaEbSGhBge8yP7nX01NNgAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com (2603:10b6:303:183::9)
+ by PH7PR11MB7027.namprd11.prod.outlook.com (2603:10b6:510:20a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 13:08:09 +0000
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::4bea:b8f6:b86f:6942]) by MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::4bea:b8f6:b86f:6942%5]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 13:08:06 +0000
+Message-ID: <65081be3-0097-49bb-a28a-f50c733d6eca@intel.com>
+Date: Tue, 18 Jun 2024 15:07:58 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v1 1/1] net: stmmac: Assign configured channel value
+ to EXTTS event
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Alexandre Torgue
+	<alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+CC: <stable@vger.kernel.org>, <kernel@pengutronix.de>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, Richard Cochran
+	<richardcochran@gmail.com>, Tan Tee Min <tee.min.tan@intel.com>, "Wong Vee
+ Khee" <vee.khee.wong@linux.intel.com>
+References: <20240618073821.619751-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+From: Wojciech Drewek <wojciech.drewek@intel.com>
+In-Reply-To: <20240618073821.619751-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR07CA0265.eurprd07.prod.outlook.com
+ (2603:10a6:803:b4::32) To MW4PR11MB5776.namprd11.prod.outlook.com
+ (2603:10b6:303:183::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v3 -next 3/3] mm/hugetlb_cgroup: switch to the new cftypes
-Content-Language: en-US
-To: Marek Szyprowski <m.szyprowski@samsung.com>, <akpm@linux-foundation.org>,
-	<muchun.song@linux.dev>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <osalvador@suse.de>
-References: <20240612092409.2027592-1-xiujianfeng@huawei.com>
- <20240612092409.2027592-4-xiujianfeng@huawei.com>
- <CGME20240618125536eucas1p1c62068f858a59d23fca29bf98efb9323@eucas1p1.samsung.com>
- <602186b3-5ce3-41b3-90a3-134792cc2a48@samsung.com>
-From: xiujianfeng <xiujianfeng@huawei.com>
-In-Reply-To: <602186b3-5ce3-41b3-90a3-134792cc2a48@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR11MB5776:EE_|PH7PR11MB7027:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11e4c877-4476-49f2-9f09-08dc8f97b1ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|1800799021|7416011|376011;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MFltNHdNQXJBTjZUdWVob2xYeStVakdWNE9JMnZ5bFZLRy9XMFFMWDFnbjk0?=
+ =?utf-8?B?YWQ5YWRmL05YSXN5Zk9QMVpleXk5VFU5bXNiaTJoTzArL0lZZk1BT2FINWZD?=
+ =?utf-8?B?MGJUQXZkR01LZzFDVUk0SVBuTE94YmZ6TFhCc05wdlpWSW15ZmRBOGN4Y2pS?=
+ =?utf-8?B?dU9YdWk0V1h2akpDV3RWYkREMjVYRzE3dXNKeVRVbnVHbUFZTXpUM2FsU1M3?=
+ =?utf-8?B?dkxKNGQ1RUZLd1dVaGFZRGl0UlQ0d3hZMzl5L05aWGpRL2UxTWhjMVlkRnBU?=
+ =?utf-8?B?anA3cHROMFAzTDBGMkdwUGhabThFMmZ0MmZCWDdDdVVwTmJyY2hDNHo5K0FO?=
+ =?utf-8?B?eEFiVENVU2pUZmc4dE1nR0JPbnd4R0YzbnRYYytYTGgwcmY1VXkxWGxOU1pp?=
+ =?utf-8?B?eE1POUxVamFxcE9KRjNVZjI5WUJlZXByN01TOTM2N2tRQi9naUZyYWk0ZGtS?=
+ =?utf-8?B?a2Q2QXNudzhKbDI3cTFIRGl6NDRQVGhCblFHYlVNbkpqSS9TL0ZROGxqQ1Jl?=
+ =?utf-8?B?RFVUNERzRjZ6UDIxRUFCMXArekdTZXAzaEVXZTNkTCs3YVgweVVldlU5T1JP?=
+ =?utf-8?B?cGNHYUlaV1BqMVlILzhrUGNCZW1QVFcvOGdQNjc4K3pLQzh2N1RnekRqNlFH?=
+ =?utf-8?B?VVpLWmhNdjdHc3U2Z21ZR1hBQVViT29jYWgzSlpLdzJ0ejJ3aW81dzh4NFFu?=
+ =?utf-8?B?bnNxU0lEakowVmJZRGc4VW1uZ3RIdDBzZ3YyWXo1Skd0RUlyL3c3dnlyQk51?=
+ =?utf-8?B?MDFVcDd1bzlVeDdpdDBSWG81aGk3bVlVOG5mbFVGb29LbXlqTENVc0xUYzNG?=
+ =?utf-8?B?R2pkMmo0WnFJZHFnWU5DalM2dDFSdVVSN2x6MVpqK1NwOHdtYTU0ZWJ4WGVH?=
+ =?utf-8?B?L0xudWtEVmdjNXAxWXhaZ1Fjb1lyaDhCc0Z1TjVxK3pLT2xiV1lkUlZ4Vlg0?=
+ =?utf-8?B?YUprb0pjeCt4WWhOR3FnVnZObVpNWmpITEJLdHB4d1NLS1QvdWVqc2QvYUtJ?=
+ =?utf-8?B?Q3N5MGcrejNKMWVPRUxWZzRnUmRlY0w5aXpjaVlIejkxQXBCYk1FU2tKcit4?=
+ =?utf-8?B?RHdyZTdwbFBZYXlNSk8yNXA4bjFtSUVzTEN5U2NhcjZ2ZWE2OFVkNTZEdDVl?=
+ =?utf-8?B?WVdJUFN1bzNNR1drcy8zYVhKbGxGVEZvclpzSDhoRlkxVGJaakRicUpOM3RY?=
+ =?utf-8?B?Q1hXYURHanRKMmdvUlk3ejlPZ0t0TkR4Z0txSGN3MUdSalhhU3RwQTR3MUdM?=
+ =?utf-8?B?c0lxVmVoTlJOMW9ScjlSVW42WXdVVDJEUXVvZ2JGN3Q2YzM3aTRxUFdRYkw3?=
+ =?utf-8?B?bkVYb3V5SngwV1RvT3ZId1lUcDlDY0ZIMTFyS0RGcndFSnptOER0K3VOOEQ0?=
+ =?utf-8?B?VUl0YWFrQ25SWDFFc2VQcjY5V1FudThRRlYrUWdtMWdzclROZW05b3dTMEtw?=
+ =?utf-8?B?Q3FBaFlYMTJZRUhWQUZEVmhTRHI4WVEzWFJDVDg5ZDZORnBOaEZIaVhzbWZk?=
+ =?utf-8?B?TU95Zm9odUU5VllrdFd1TVVTNjl5N1VleCsyeVF3cDcyR1lpdjBhOEZhMG84?=
+ =?utf-8?B?WE8vYmxyTGQvVEhpcEJVdDNHdjVhZldkbVlMaGkybmVrbjdOc3pIZllEQ2Nw?=
+ =?utf-8?B?b1BtWnBWZ3BOWFozRm14OTZPZFpGTCtSeUt1akJvUk1BMkFtVGk1UHNYWU5s?=
+ =?utf-8?B?TXMrdGZRSHg3aXpvblM5VFNTOFZ3M2l6NGJCNnVrU3p2YlQxUzA0cWxoaWlp?=
+ =?utf-8?Q?LxpOdavmjP0D3CvnO5CLCpIuRREXQ7+KGww6rkd?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB5776.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(7416011)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3Bqc2J1Y1ZmMHFCQ1V5MXpEUysvWHRIU2ZPeitOM25tb0VMeG1hOGRrR0Jt?=
+ =?utf-8?B?UzlOYmRMSWZBOVd1OEhHdmRydVdmQnVtTmlQMER1MGNzMzRDMXczd0lLWCs5?=
+ =?utf-8?B?c20xYWdVZEFkckpydytUWDhPZlpMZGxDWk9XOTJFTFFEUzdDbnNMYXF1bTlM?=
+ =?utf-8?B?R1lQUm8xU2E4WmgvT0t6Z1FFeVhWVkRyU1BzeU5FZ3ZpaDhsaHRIZDVHY3g1?=
+ =?utf-8?B?OVg4ZVNqVG1qRDRaWHo4ZUVwbmY4clp3djZHOUo2c0pBUVJ4ajhmKzRoOWhj?=
+ =?utf-8?B?K2xSeVN2bUowR3VHeCtqMGhZZlp3VnZRU25MQXdYckxkN2Z5bVAxRElKR1FW?=
+ =?utf-8?B?cUZzTG5NeVVrNFlZVHlkNEpsZjhvenA1OEs2cS9VSFNZMFdrdGF5MVBWN3hv?=
+ =?utf-8?B?UGowUU1TbXo4MlpOT014UHEySWtSNWhRNDgySlA5RExmRXNDVUhiSEZkZmxi?=
+ =?utf-8?B?WURmVysvREp6L2ozNkpacW5WTFhwY3BuVHRpb1NFQkZmZ3VNamVBNS90NnZ0?=
+ =?utf-8?B?eng3TDR3NFBBYXFuRldqdjA2dmJ0YmpyTmRIeS9sYTZPanQyeVJlMUdPVDJi?=
+ =?utf-8?B?eHpLajBJOG0rQmtmMnA1em4zbHZRNXA3SXRvb1g4RVg0SlB3LzJoUGI5ejhD?=
+ =?utf-8?B?T3diQVpwNHJOdVFWZUR6M29PUTcveGNKc3RFV3ZPdmoraTRCbWFRbVBHaTYx?=
+ =?utf-8?B?d3F3cW9BdldMbzdBTDFBaG9zTUNlZmxOZmJhN1BLdG1rOEpjVXVxcDNMd2Qy?=
+ =?utf-8?B?emxiQjBoNWttZ1ZMRnplWm5UNVJXL2dDOWxINnN6RXZhaWF4YnQ5UjdpYStu?=
+ =?utf-8?B?QkdzdGlJNlNDZ0wzZWlCOWhobm4zQ09LWFlGY29kbHVTSWVFYzNXbW9IZEhZ?=
+ =?utf-8?B?RWpUV1pLV1FJaXlqVGtRUlZjRXA5blhWNHM5dnJzMHpLb2FadHUxN3V2UVZq?=
+ =?utf-8?B?NksxQjNOTndOMVd6Njd1YTU1dDZtaDd3OVhmWXkxN1paaE1mbEJ6SlViM2FO?=
+ =?utf-8?B?cm1lR2dtbVFsNUptckpJRVhWR2xybXpPUWRhazhpQnpVbklWdHF5UDJqVlkx?=
+ =?utf-8?B?T2NoQ1Q4UnlYYXpUeG5UOXpmSzN6anNPdEZrbEhqMDBFazFJSzdKN1lOSzBq?=
+ =?utf-8?B?d2ZNSzBKelNITjlnUHNvS3gydFRBUW9LVEMvb1FQZFFlU3JmQTJDYXVqNmFz?=
+ =?utf-8?B?SkcwS1cxVjVuTDNuVTI4SisweGpLZ1FnTFl5RWZlOGJIV1VMbE9Tb1NUaksz?=
+ =?utf-8?B?UVV1MTlUL2dvOWlBMmFjcFhGSy9MNEhjWGhrNEVhVjg4RmdWYi9JSlhkajJp?=
+ =?utf-8?B?UU1MeFNFdS9pbU1HZ21TWDVuQ2lVc3NUbmJucHZTNEZ5Wkc2b2E5YW80a1Rm?=
+ =?utf-8?B?c1BDa1JEWGlyU0xpZEhnbXZJWDJWR3NFNm92MjhScDY1MUdNVUE3L2ZVemZi?=
+ =?utf-8?B?WFFONCtpL01zQVFJMUdwTXlsc0tyZ2lFUUEyaG5IR2ZEQWUrZVRmS2VXaTdy?=
+ =?utf-8?B?ZG1WZkVPSGV6YTJYMVZWT1VtbEh2MU5YK3MrV3Y1RHI5OWd6dC83eWpFYkho?=
+ =?utf-8?B?RDNuNDh5RjhQc0VGd0RKTnYySmd1R2dXaVJWVDczcDRMOEhhSTRNaFJSQ2Yx?=
+ =?utf-8?B?bUs4UkJWdkEvOTB1K1grRi8yYU8ydC9DOE5LUFFEZ0F0UXBja3BYSnUyZGoy?=
+ =?utf-8?B?cFVrNmJxSFMrSnNKNnV6Ty8rWFRKaWRSRmRVSEZkMnRsUGFGdEY2R0s2Y2Nl?=
+ =?utf-8?B?T041dDMydGhENDRiYWdoei9rTlBaR2RJZUk5SWdUMk4xUm5DUWJITE92VGg3?=
+ =?utf-8?B?ZWlOZFFvQnltZDRpL0RpaWRucVBmVmw2T2dsN1Y1bzk2RWJJNlVaYVA0NGlv?=
+ =?utf-8?B?d0ZjdFA2djIwOGVYQ0RWaHpueTNOUmd5QjNBZ1RRbTM0dWFNRU5TbE9HTG5T?=
+ =?utf-8?B?Rjg4MmFFanppNUF2SkRrWkREdXVzM0k3NW5NSXpUM3NaT2daL2tiTFk4empx?=
+ =?utf-8?B?VXNwdHBkMTBPZXRDVGhSQWpXUUR0SnhDNmVMcTk3d0w0L0ZDQnNCSlMya0VF?=
+ =?utf-8?B?cE5YRi9seXVQcXc2VjkvdHVoNk15bTUrSTRyUlhNZzBaVXJkMFc5d3A5NURD?=
+ =?utf-8?Q?NY829sImdyGfaKd7RzYTPCCV4?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11e4c877-4476-49f2-9f09-08dc8f97b1ad
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB5776.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 13:08:06.6208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ywpmOg/i3mkDMxa3eHBcSo9ZAkvUC9cVzWm4157edTsrVkwE8MTJVeerjsm1Od+NAxr22+NVLSFGNT0CLFxfZJXFX4gx4rUzAO8gzh6Iej4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7027
+X-OriginatorOrg: intel.com
 
-Hi,
 
-On 2024/6/18 20:55, Marek Szyprowski wrote:
-> Dear All,
-> 
-> On 12.06.2024 11:24, Xiu Jianfeng wrote:
->> The previous patch has already reconstructed the cftype attributes
->> based on the templates and saved them in dfl_cftypes and legacy_cftypes.
->> then remove the old procedure and switch to the new cftypes.
->>
->> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> 
-> This patch landed in yesterday's linux-next (next-20240617) as commit 
-> 11308a02a56cc ("mm/hugetlb_cgroup: switch to the new cftypes"). In my 
-> daily tests I found that it triggers the following lock dependency 
-> checker warning on most of my ARM64 test machines:
-> 
-> BUG: key ffff000005c080d8 has not been registered!
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(1)
-> WARNING: CPU: 1 PID: 1080 at kernel/locking/lockdep.c:4895 
-> lockdep_init_map_type+0x1cc/0x284
-> Modules linked in: ipv6
-> CPU: 1 PID: 1080 Comm: cgmanager Not tainted 6.10.0-rc3+ #1011
-> Hardware name: linux,dummy-virt (DT)
-> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : lockdep_init_map_type+0x1cc/0x284
-> lr : lockdep_init_map_type+0x1cc/0x284
+
+On 18.06.2024 09:38, Oleksij Rempel wrote:
+> Assign the configured channel value to the EXTTS event in the timestamp
+> interrupt handler. Without assigning the correct channel, applications
+> like ts2phc will refuse to accept the event, resulting in errors such
+> as:
 > ...
-> Call trace:
->   lockdep_init_map_type+0x1cc/0x284
->   __kernfs_create_file+0x7c/0x138
->   cgroup_addrm_files+0x170/0x360
->   css_populate_dir+0x70/0x174
->   cgroup_apply_control_enable+0x128/0x378
->   rebind_subsystems+0x384/0x504
->   cgroup_setup_root+0x224/0x420
->   cgroup1_get_tree+0x248/0x36c
->   vfs_get_tree+0x28/0xe8
->   path_mount+0x3e8/0xb78
->   __arm64_sys_mount+0x1f0/0x2dc
->   invoke_syscall+0x48/0x118
->   el0_svc_common.constprop.0+0x40/0xe8
->   do_el0_svc_compat+0x20/0x3c
->   el0_svc_compat+0x44/0xe0
->   el0t_32_sync_handler+0x98/0x148
->   el0t_32_sync+0x194/0x198
-> irq event stamp: 8225
-> hardirqs last  enabled at (8225): [<ffff800080136134>] 
-> console_unlock+0x164/0x190
-> hardirqs last disabled at (8224): [<ffff800080136120>] 
-> console_unlock+0x150/0x190
-> softirqs last  enabled at (8214): [<ffff8000800ae1f4>] 
-> handle_softirqs+0x4dc/0x4f4
-> softirqs last disabled at (8207): [<ffff8000800105d4>] 
-> __do_softirq+0x14/0x20
-> ---[ end trace 0000000000000000 ]---
+> ts2phc[656.834]: config item end1.ts2phc.pin_index is 0
+> ts2phc[656.834]: config item end1.ts2phc.channel is 3
+> ts2phc[656.834]: config item end1.ts2phc.extts_polarity is 2
+> ts2phc[656.834]: config item end1.ts2phc.extts_correction is 0
+> ...
+> ts2phc[656.862]: extts on unexpected channel
+> ts2phc[658.141]: extts on unexpected channel
+> ts2phc[659.140]: extts on unexpected channel
 > 
-> It looks that something is not properly intialized. Reverting $subject 
-> on top of linux-next fixes this issue.
+> Fixes: f4da56529da60 ("net: stmmac: Add support for external trigger timestamping")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
 
-Yes, the root cause is that the cft->lockdep_key has not been registered
-proactively when the CONFIG_DEBUG_LOCK_ALLOC is enabled.
+Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
 
-Would you please try the following patch?
-
-https://lore.kernel.org/all/20240618071922.2127289-1-xiujianfeng@huawei.com/
-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> I've used defconfig with some debug options enabled and some drivers 
-> compiled-in (if this matters):
-> 
-> make ARCH=arm64 defconfig
-> 
-> ./scripts/config -e BLK_DEV_RAM --set-val BLK_DEV_RAM_COUNT 4 --set-val 
-> BLK_DEV_RAM_SIZE 81920 --set-val CMA_SIZE_MBYTES 96 -e PROVE_LOCKING -e 
-> DEBUG_ATOMIC_SLEEP -e STAGING -e I2C_GPIO -e PM_DEBUG -e 
-> PM_ADVANCED_DEBUG -e USB_GADGET -e USB_ETH -e CONFIG_DEVFREQ_THERMAL -e 
-> CONFIG_BRCMFMAC_PCIE -e CONFIG_NFC -d ARCH_SUNXI -d ARCH_ALPINE -d 
-> DRM_NOUVEAU -d ARCH_BCM_IPROC -d ARCH_BERLIN -d ARCH_BRCMSTB -d 
-> ARCH_LAYERSCAPE -d ARCH_LG1K -d ARCH_HISI -d ARCH_MEDIATEK -d ARCH_MVEBU 
-> -d ARCH_SEATTLE -d ARCH_SYNQUACER -d ARCH_RENESAS -d ARCH_STRATIX10 -d 
-> ARCH_TEGRA -d ARCH_SPRD -d ARCH_THUNDER -d ARCH_THUNDER2 -d 
-> ARCH_UNIPHIER -d ARCH_XGENE -d ARCH_ZX -d ARCH_ZYNQMP -d HIBERNATION -d 
-> CLK_SUNXI -d CONFIG_EFI -d CONFIG_TEE -e FW_CFG_SYSFS
-> 
-> 
->> ---
->>   include/linux/hugetlb.h |   5 --
->>   mm/hugetlb_cgroup.c     | 163 +++++-----------------------------------
->>   2 files changed, 17 insertions(+), 151 deletions(-)
->>
->> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
->> index 279aca379b95..a951c0d06061 100644
->> --- a/include/linux/hugetlb.h
->> +++ b/include/linux/hugetlb.h
->> @@ -686,11 +686,6 @@ struct hstate {
->>   	unsigned int nr_huge_pages_node[MAX_NUMNODES];
->>   	unsigned int free_huge_pages_node[MAX_NUMNODES];
->>   	unsigned int surplus_huge_pages_node[MAX_NUMNODES];
->> -#ifdef CONFIG_CGROUP_HUGETLB
->> -	/* cgroup control files */
->> -	struct cftype cgroup_files_dfl[8];
->> -	struct cftype cgroup_files_legacy[10];
->> -#endif
->>   	char name[HSTATE_NAME_LEN];
->>   };
->>   
->> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
->> index 43aae8f88d5f..2b899c4ae968 100644
->> --- a/mm/hugetlb_cgroup.c
->> +++ b/mm/hugetlb_cgroup.c
->> @@ -839,164 +839,26 @@ hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
->>   	}
->>   }
->>   
->> -static void __init __hugetlb_cgroup_file_dfl_init(int idx)
->> +static void __init __hugetlb_cgroup_file_dfl_init(struct hstate *h)
->>   {
->> -	char buf[32];
->> -	struct cftype *cft;
->> -	struct hstate *h = &hstates[idx];
->> +	int idx = hstate_index(h);
->>   
->>   	hugetlb_cgroup_cfttypes_init(h, dfl_files + idx * DFL_TMPL_SIZE,
->>   				     hugetlb_dfl_tmpl, DFL_TMPL_SIZE);
->> -
->> -	/* format the size */
->> -	mem_fmt(buf, sizeof(buf), huge_page_size(h));
->> -
->> -	/* Add the limit file */
->> -	cft = &h->cgroup_files_dfl[0];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_LIMIT);
->> -	cft->seq_show = hugetlb_cgroup_read_u64_max;
->> -	cft->write = hugetlb_cgroup_write_dfl;
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the reservation limit file */
->> -	cft = &h->cgroup_files_dfl[1];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.max", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_LIMIT);
->> -	cft->seq_show = hugetlb_cgroup_read_u64_max;
->> -	cft->write = hugetlb_cgroup_write_dfl;
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the current usage file */
->> -	cft = &h->cgroup_files_dfl[2];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.current", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
->> -	cft->seq_show = hugetlb_cgroup_read_u64_max;
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the current reservation usage file */
->> -	cft = &h->cgroup_files_dfl[3];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.current", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_USAGE);
->> -	cft->seq_show = hugetlb_cgroup_read_u64_max;
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the events file */
->> -	cft = &h->cgroup_files_dfl[4];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, 0);
->> -	cft->seq_show = hugetlb_events_show;
->> -	cft->file_offset = offsetof(struct hugetlb_cgroup, events_file[idx]);
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the events.local file */
->> -	cft = &h->cgroup_files_dfl[5];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events.local", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, 0);
->> -	cft->seq_show = hugetlb_events_local_show;
->> -	cft->file_offset = offsetof(struct hugetlb_cgroup,
->> -				    events_local_file[idx]);
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* Add the numa stat file */
->> -	cft = &h->cgroup_files_dfl[6];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.numa_stat", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, 0);
->> -	cft->seq_show = hugetlb_cgroup_read_numa_stat;
->> -	cft->flags = CFTYPE_NOT_ON_ROOT;
->> -
->> -	/* NULL terminate the last cft */
->> -	cft = &h->cgroup_files_dfl[7];
->> -	memset(cft, 0, sizeof(*cft));
->> -
->> -	WARN_ON(cgroup_add_dfl_cftypes(&hugetlb_cgrp_subsys,
->> -				       h->cgroup_files_dfl));
->>   }
->>   
->> -static void __init __hugetlb_cgroup_file_legacy_init(int idx)
->> +static void __init __hugetlb_cgroup_file_legacy_init(struct hstate *h)
->>   {
->> -	char buf[32];
->> -	struct cftype *cft;
->> -	struct hstate *h = &hstates[idx];
->> +	int idx = hstate_index(h);
->>   
->>   	hugetlb_cgroup_cfttypes_init(h, legacy_files + idx * LEGACY_TMPL_SIZE,
->>   				     hugetlb_legacy_tmpl, LEGACY_TMPL_SIZE);
->> -
->> -	/* format the size */
->> -	mem_fmt(buf, sizeof(buf), huge_page_size(h));
->> -
->> -	/* Add the limit file */
->> -	cft = &h->cgroup_files_legacy[0];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.limit_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_LIMIT);
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -	cft->write = hugetlb_cgroup_write_legacy;
->> -
->> -	/* Add the reservation limit file */
->> -	cft = &h->cgroup_files_legacy[1];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.limit_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_LIMIT);
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -	cft->write = hugetlb_cgroup_write_legacy;
->> -
->> -	/* Add the usage file */
->> -	cft = &h->cgroup_files_legacy[2];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the reservation usage file */
->> -	cft = &h->cgroup_files_legacy[3];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.usage_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_USAGE);
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the MAX usage file */
->> -	cft = &h->cgroup_files_legacy[4];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
->> -	cft->write = hugetlb_cgroup_reset;
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the MAX reservation usage file */
->> -	cft = &h->cgroup_files_legacy[5];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.max_usage_in_bytes", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_MAX_USAGE);
->> -	cft->write = hugetlb_cgroup_reset;
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the failcntfile */
->> -	cft = &h->cgroup_files_legacy[6];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_FAILCNT);
->> -	cft->write = hugetlb_cgroup_reset;
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the reservation failcntfile */
->> -	cft = &h->cgroup_files_legacy[7];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.rsvd.failcnt", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, RES_RSVD_FAILCNT);
->> -	cft->write = hugetlb_cgroup_reset;
->> -	cft->read_u64 = hugetlb_cgroup_read_u64;
->> -
->> -	/* Add the numa stat file */
->> -	cft = &h->cgroup_files_legacy[8];
->> -	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.numa_stat", buf);
->> -	cft->private = MEMFILE_PRIVATE(idx, 0);
->> -	cft->seq_show = hugetlb_cgroup_read_numa_stat;
->> -
->> -	/* NULL terminate the last cft */
->> -	cft = &h->cgroup_files_legacy[9];
->> -	memset(cft, 0, sizeof(*cft));
->> -
->> -	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
->> -					  h->cgroup_files_legacy));
->>   }
->>   
->> -static void __init __hugetlb_cgroup_file_init(int idx)
->> +static void __init __hugetlb_cgroup_file_init(struct hstate *h)
->>   {
->> -	__hugetlb_cgroup_file_dfl_init(idx);
->> -	__hugetlb_cgroup_file_legacy_init(idx);
->> +	__hugetlb_cgroup_file_dfl_init(h);
->> +	__hugetlb_cgroup_file_legacy_init(h);
->>   }
->>   
->>   static void __init __hugetlb_cgroup_file_pre_init(void)
->> @@ -1011,13 +873,22 @@ static void __init __hugetlb_cgroup_file_pre_init(void)
->>   	BUG_ON(!legacy_files);
->>   }
->>   
->> +static void __init __hugetlb_cgroup_file_post_init(void)
->> +{
->> +	WARN_ON(cgroup_add_dfl_cftypes(&hugetlb_cgrp_subsys,
->> +				       dfl_files));
->> +	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
->> +					  legacy_files));
->> +}
->> +
->>   void __init hugetlb_cgroup_file_init(void)
->>   {
->>   	struct hstate *h;
->>   
->>   	__hugetlb_cgroup_file_pre_init();
->>   	for_each_hstate(h)
->> -		__hugetlb_cgroup_file_init(hstate_index(h));
->> +		__hugetlb_cgroup_file_init(h);
->> +	__hugetlb_cgroup_file_post_init();
->>   }
->>   
->>   /*
-> 
-> Best regards
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> index f05bd757dfe52..5ef52ef2698fb 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> @@ -218,6 +218,7 @@ static void timestamp_interrupt(struct stmmac_priv *priv)
+>  {
+>  	u32 num_snapshot, ts_status, tsync_int;
+>  	struct ptp_clock_event event;
+> +	u32 acr_value, channel;
+>  	unsigned long flags;
+>  	u64 ptp_time;
+>  	int i;
+> @@ -243,12 +244,15 @@ static void timestamp_interrupt(struct stmmac_priv *priv)
+>  	num_snapshot = (ts_status & GMAC_TIMESTAMP_ATSNS_MASK) >>
+>  		       GMAC_TIMESTAMP_ATSNS_SHIFT;
+>  
+> +	acr_value = readl(priv->ptpaddr + PTP_ACR);
+> +	channel = ilog2(FIELD_GET(PTP_ACR_MASK, acr_value));
+> +
+>  	for (i = 0; i < num_snapshot; i++) {
+>  		read_lock_irqsave(&priv->ptp_lock, flags);
+>  		get_ptptime(priv->ptpaddr, &ptp_time);
+>  		read_unlock_irqrestore(&priv->ptp_lock, flags);
+>  		event.type = PTP_CLOCK_EXTTS;
+> -		event.index = 0;
+> +		event.index = channel;
+>  		event.timestamp = ptp_time;
+>  		ptp_clock_event(priv->ptp_clock, &event);
+>  	}
