@@ -1,244 +1,208 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2141.outbound.protection.outlook.com [40.92.63.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B575523BE;
-	Tue, 18 Jun 2024 15:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718723572; cv=none; b=DsTV9mIGKLWWDvBLbFx3fy3kCNYBPzUxvNfXzLGU5Rk2zeGglvzc5MsuNq3BCwy/hm3uzJbatwUscAJ5T8fPmrC+DTZ0byaVrzS+DQaggRMRCdA8q/LZWTxKg+WQsPWppIj7tAsiOnq3s67gHhElM3uUSb8ejuibhsBNLqJGvZI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718723572; c=relaxed/simple;
-	bh=VmFNYzE1n5R7Mi+bi1Bih1Vka7yb6+Hzmuas90AeJP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ef6yw0Mu0mbUWNYYZ07RcQyxiWvSMY3Abwk580fKVfjg7ikkZWd/HLBppcwDFsNhXcltmV9Y6O/R+S3IQoIwgC+lm7gdd00/4XVJD9Z9o1Dkuyv0WldF8eqG17LnOEAktfeIY1JRQSoel2P0nAF3dXiiBMY1k65xJrrNfIolkzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3621hHw; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EAD4D599;
+	Tue, 18 Jun 2024 15:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718723590; cv=fail; b=eW7ezhBetvRhMk6C6vvWiJcXFT+vJgi47GbbQYy9J6OM7cD/LDadItVruHyEDHcGnDKsYIghwlGcYLc6EdSYCGPgl23SydqHoWTPtTgX6JFsFzM54ytNpnWBoJETBDrX7CaxznTdZ3Ox24LvkxkMo+z/zaA0FNNgbCXsMuChPjc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718723590; c=relaxed/simple;
+	bh=aM6zulsjhqf5OyjgnMz15UgjaDjLA1y6pf0utKpZsr4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hojzP5JOMjuA+z1CDlKqMW0Id8eiZb9Z+WSDP+EwG4URa6z8QIX+bz+wKpemD7Vw2wY0gEYJxoHt4YuI6RR8/kg7B8jW2MlIMD/aOsBIUW0mYuwcK/tpcUaNsXUQS4tFRB2F6KofF4iNfseh+vhDtHEbLlSrDRGj6Yab0aU4HJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=QJ/s0Hbb; arc=fail smtp.client-ip=40.92.63.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3621hHw"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-705d9f4cd7bso3291819b3a.1;
-        Tue, 18 Jun 2024 08:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718723570; x=1719328370; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=OIBc07ZMpuSom2g6TOp1JREO7tlmjPpeaSY51LzNdW8=;
-        b=V3621hHwuWrGlVnavIwf3UitfRfXbZsezLmdoPwgTLdygdHaHeUCPhpBDVH4q5w/eC
-         pJCs3OCeyK43BY23qXy2xHUNKNdH9pJv4Ua4HupNAktQ+tHIz2HHmspu6NRn1Dcx3RrJ
-         L50ZcbitfyRxXIIpGjyWyVY8mImMRCDTFJcKqaj+EXlYQT1Px7tLdo25rNTAtknOa3ak
-         c6awOB3upz/Xpb0dv54pmzQxtewxYxOmQwEfGtuSb+R2OAvjHvHhGbU2oXuw3ZQgKcrF
-         ufMv1cCQ+80V4XGmwdO5DweLc5gYu1C8p4vtw/aL3zPVj18w94aJfBistDClNimW+H9v
-         mAKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718723570; x=1719328370;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIBc07ZMpuSom2g6TOp1JREO7tlmjPpeaSY51LzNdW8=;
-        b=MSokArfngR2ZGW7Ujm+qjr2QYoATYOvKEe05s738zgYboywcU7/iVoSIs88oL9C2rd
-         CxCglXPj4e/MUunX/uQ7uuxjrRx0NWnKITe41IpIA/zezSAWMj3H8026LR2IU+GqiRoS
-         OVP+QFUG+27cOfPQJDCbiqnXywmlhjaSXbHfIcZoCZDo+cE5uU+fusp29gcYCtZV3utb
-         UfeTvkdRXIXUgFptW9nZNvv1yx36ljBAwmcxVoREvd1zJ6ptsJLiGEgK9+E4G8sy3g2d
-         2ItPC964Nrn/Su7RPNDE382VBbY7wG5PQ0Am5JsCOy7bwFRiw713i9j2oTW+nHg9Q+k7
-         Gf7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAwxq9G+a3mQCJB/jrw/jLFoqTH10XMXy2BhkY8Q5Ruf7ZdxI531YQ3oJFobd3qcM2P2gWAKkX27+JiVem+ELxL0Plar418YdXJsQTcoIrWJNtxxaWGYlMRzdc6xwFjJ9kCwmBvN3FvniUKkcRbeDYBYorS0Yxn9cfK6w84CjfHj+D+A==
-X-Gm-Message-State: AOJu0YxQPXqEZl5BI3d9yJni3+kIGC/7i0DqOETcv4S2DfgiDM4ea93c
-	aeZn+u+N01iyPmKcQ+N+hBcwhqvJu4akt9a6uEWhSg//Y1D0zZ7j+PqXUA==
-X-Google-Smtp-Source: AGHT+IFauT8wQJUEYKoxfUqGp3B7tSk0s7iogE+J5JFtaQdlNyal7L44ebR+CZEOf/lNZ4iVGs4YwA==
-X-Received: by 2002:a05:6a20:5aa9:b0:1b6:a7c5:4faf with SMTP id adf61e73a8af0-1bae7eb3f32mr9931293637.19.1718723567696;
-        Tue, 18 Jun 2024 08:12:47 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fee2c4083asm8065733a12.65.2024.06.18.08.12.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 08:12:47 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <2532ca4a-83dd-4ab8-af04-6ebcd5ca8673@roeck-us.net>
-Date: Tue, 18 Jun 2024 08:12:45 -0700
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="QJ/s0Hbb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E91G3qBiW7Aeo/jHIc8LMiO0vZQxgIO80zwU3216e/byIulmtDXHPltLLcuBF67is1BMJK0yA7xRZOg5oSsQV4jx5LThX6CDEPsG6nM8LsE7058Jaig8Gc6pdunjvjJTt6dYhNClr/NJuraDx9N9NDC8AWuY13VNvWckVwe6oo1Jc34hgNoSQUg1jIJui/LYSWeUAVQ+i+qo3pdqUrIHOIckpE5C91OmWlNIXFCne1n+w4qwznfXfBDKctj7qssq4PGkESTlzRm+IwwkaTzX4fghkUT75oK6sYe1h/E1qbdprd+wCmdGE+oLzd7NVpC9JRAOmaNft+kYZBzRnwi1aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oKTCwDIG8pgERnO8qAnoPLFo+Gwfzux11mjqdeBWce4=;
+ b=SeZXUJJzo+XhtRdg9V8Q0uKb/2XSGxhmO3Hi4IzLovEjxfCnWt2gYiV6ivLDUdDcN7BdpB3RHf6i+4jtPxSAWLlGU4zaLuTCCWeceP8D5kQDGsQcrUr2ZuWNTDMrUPHr1ie0HgSUbqmcfDwnsWhK4Eq572WfHXPCDZb6xkedFfM9PAqwPjSwIqVWrSLRaQ/MjXl8TUto/X0gUISaa6mmsibIijSJnaXVVdzSSA9+TVGZ3lHygckMZ4/0+qUyHxSa9u08HQw7ThnCyl2OlFdNe2IxBrDhepNmCCEpH8Sz4R2SanQUq1ZQrK+OOVsXa5tr3T0NBwtQqg8NuCGJtOf2Ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oKTCwDIG8pgERnO8qAnoPLFo+Gwfzux11mjqdeBWce4=;
+ b=QJ/s0HbbSmALNm0Yshrft3KLuVEHpKNwcdSskPY7SK1DPakxHHmnTYdQHFBsSmEfmi4XdHTBtBLd9Q2XvTXpeB768mpyt88lr1N8faZaUB70SakNpmBfTsNvjtQAJGuWWN+9+jLfW9KYoUE9cx51+WsbFFqtvVlNGZgnfuq0riVJueLNBT7/bdCtwqelUgzJstilsUv0q1h4tJD/j4C9aLuzvpNIM+TMUl1fj5h/cxrY02nDX2MFnGzEE234hF3Ieii+vYCOV/a20GQYFcpTD7sq3eN+hAnfVO3eg07xIyx8SlXsZ4F6n2Z6k4ONxsjeK7VdujiqFFkuZ6AKWCG8Vw==
+Received: from SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:9b::8) by
+ SY7P282MB5268.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:2a9::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.31; Tue, 18 Jun 2024 15:13:03 +0000
+Received: from SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::ac24:7d2b:92fe:20c3]) by SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::ac24:7d2b:92fe:20c3%2]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 15:13:03 +0000
+From: Yuntao Dai <d1581209858@live.com>
+To: jassisinghbrar@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Yuntao Dai <d1581209858@live.com>
+Subject: [PATCH 1/3] dt-bindings: mailbox: add Sophgo cv18x SoCs mailbox
+Date: Tue, 18 Jun 2024 23:12:33 +0800
+Message-ID:
+ <SYBP282MB22389FD1E07BBDC6FE1D90A0C4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <SYBP282MB2238DE0DA19C6EF411B2356CC4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
+References: <SYBP282MB2238DE0DA19C6EF411B2356CC4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
+Content-Type: text/plain
+X-TMN: [ya4n5REVWOzKP9qb85v9Qjesqs2FEZkm]
+X-ClientProxiedBy: TYCP286CA0266.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:455::19) To SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:9b::8)
+X-Microsoft-Original-Message-ID: <20240618151235.5846-1-d1581209858@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] i2c: smbus: Support DDR5 SPD EEPROMs
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Armin Wolf <W_Armin@gmx.de>, Stephen Horvath <s.horvath@outlook.com.au>
-References: <20240604040237.1064024-1-linux@roeck-us.net>
- <20240604040237.1064024-6-linux@roeck-us.net>
- <a5aa120d-8497-4ca8-9752-7d800240b999@molgen.mpg.de>
- <efb77b37-30e5-48a8-b4af-eb9995a2882b@roeck-us.net>
- <33f369c1-1098-458e-9398-30037bd8c5aa@molgen.mpg.de>
- <4e09b843-3d2d-46d7-a8e1-2eabc4382dc7@roeck-us.net>
- <f20ea816-5165-401e-948f-6e77682a2d1b@molgen.mpg.de>
- <975af7e5-b1b0-400e-a1c3-6d9140421f25@roeck-us.net>
- <8719fc64-2b51-4b79-ba52-0a3b9216f2db@molgen.mpg.de>
- <f76a4d07-887b-4efb-b20e-52979db31216@roeck-us.net>
- <fd8868ef-6179-45a7-8249-ee17994a8e78@molgen.mpg.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <fd8868ef-6179-45a7-8249-ee17994a8e78@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYBP282MB2238:EE_|SY7P282MB5268:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5afa7c5c-eba5-474b-f3c6-08dc8fa925ca
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|3412199022|440099025|4302099010|1602099009|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	A69YsiXfAwnkK2REcDdL3iBqSrLwxZiqpomZwJWxOS85yoFXysMOu40XbHZExopnEk+wTRUE/w8NVfmZN0vF0ATRFhg33raoZrYkZzYitJiuAzHhGmS0aCXcEkgUJcYpNhQrAacFvotQfLN1LS9HgtWCWi0r1t3VAzmaxSkxjR7H404n50yzqJHuCNyH/Dis6W2nFNBi56f507be2j0Zg8effjnB5Au/DLh8EsVlNMvWlYT0GjIRe+AkjDVpaK1YBGbMQBl746fo8kvQA8An/CC8+UY+LjV6SoSGrEx4HKS3/udrRCea4AUIWPwEqN2AHeHAb1dVrl/NUfh3doPK0ndAR0dyiJWgOXZNOODZHuas4n69uTQWa2FdwN4+SSpxX7n5SD7iLGI6eeyTCsqwoeJexCY4jEXJj2ZUkEtUzcIKGqqIYLjGn2whUgPNDqNE2JAIP29+AIBRcNZJezpi1S2t+js2Gh280GzaCjBHTRNfjlJjbuDVQvI9FoRnkwP/Ep5OB/cDROTlpr2zxM+giOyaHIbLKo0p0ssmTBeSweqd2N6fdCHVw6ytRzpxJq/kbH+fPl1DPjlp1v39pvrbp40fPT/Ns/BOFXlVz5vk4CadQDpX9KZyhOr3ttTjFaXCkAZbCi6hO3PHgU3M1XcryA/lQYWqytPsxyuw7WTIoCsJbN0U7hfKId/UM54ojZmitBNu2jg/ZH0SurlsyCpUjwVOZ1FBFlUoIDyOE9381lA=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?e5Obq+QQMaaIeLMKpCq/jL2PJEf59tHjleMwN+dpu35S94YBRNcwZ4KUpWDQ?=
+ =?us-ascii?Q?K1o1Dqth3bE+Kv7nVUiSXiHBUsMjW2ubUY/uo8GWygtjkHNg44KRmL+W2Rom?=
+ =?us-ascii?Q?w6V7Z7PW8Kg1JrCk5/4uFZhfZA7MQd0azaovg+fV4abex6hnmHp6n4/M4ibJ?=
+ =?us-ascii?Q?Jz66Xsmv1pKBInEk0nxnixgUeHfjgy4jmwfAM71AYbAzWrmlzEuc02//SbCl?=
+ =?us-ascii?Q?fNthah+cuwclyLJiUEQwI4uM3TCyTskY844tWCL9EcQbqwo3Ov4AUk4S4O7F?=
+ =?us-ascii?Q?dDmcG0Fw1Ixa35suOLw+B7l28VZiThyuEYS+XPQCq/nKZV6bWJeG3XV1cUx4?=
+ =?us-ascii?Q?1Os8KvtxhTQqgg4VA4KbxyzJfoXOnR1mwUaBcnEhoB41d12pzg8cisMuGa+t?=
+ =?us-ascii?Q?PJP2rrHt4dIKlON39B7BuTirxgfQTs5GgjIiEOUr1sIEQa/fEYsqEVtELz44?=
+ =?us-ascii?Q?FQW9U72dhJ5fWHM2+LMNmaeEPT+RzxkR9Y7v0Ymyp9rBUtQEnY/HmXWq2Wyt?=
+ =?us-ascii?Q?Qw11gteTyXMCVHwrvXnkuB0Rz7z8sYnmRDnduSKdnn0ly8cE0I69f6+JvBzR?=
+ =?us-ascii?Q?AowwKvhwlYZBycllQ/y5SPp/CiWjFsneXX+tGhip6gNqrB7zrg6ZHn285Q7c?=
+ =?us-ascii?Q?A4KSCHq7QZm9m7jrgFHrxc3Vadvfdv8ao3DET3p1VAgTs4gIT86lqik1Vozg?=
+ =?us-ascii?Q?6XKPxk2Y0HV7zejOPpI+5JX8AOUq+HQRODcD9em9vjPlOAEteLRWlC6xzWzC?=
+ =?us-ascii?Q?rtNecY6D5jr3x67ZH/j9cfIJP6ZAf5YY4SpFC+ptdrcKl9cmwXEkvHofxby6?=
+ =?us-ascii?Q?d7gJvsG+ZTNw0nSu0aOXqsFRvyQBaofgnXiGYmdi8fiQ1BPXyyE5uqeoHBu4?=
+ =?us-ascii?Q?O/zVIoPxWgshGGQQnZeDg5NXHpJ7fQ8jM68LB0SJyo0OfiWy0lDY5o1yNYa7?=
+ =?us-ascii?Q?8+5qlKfDaaoGwo0qOIPj3A/vqx/RIOx382LyAIclBbXgIqCujYyNpAXx7uuu?=
+ =?us-ascii?Q?5LuW0lPsADOBjxBywzvofas+OfQTek4Kg5xLcqJftZZ73KMkJFT0NLglHH0A?=
+ =?us-ascii?Q?nChtYnekn3KeSBY1qTgS61rdsaYGIN6WxWHj2f7+Pewr7XfzX11tIBK45MF4?=
+ =?us-ascii?Q?2VbPrfJs8oaVSDM1N7FQcRUKipHnEMmnj3IRVtDnu0mTddCaMUUojiPzmSs+?=
+ =?us-ascii?Q?4qExuemIMr0Il2Dt/qObEjt5ajtTRW0vxEoQ+cBzP6WcbCtQVdpw5cpBGi4?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5afa7c5c-eba5-474b-f3c6-08dc8fa925ca
+X-MS-Exchange-CrossTenant-AuthSource: SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 15:13:02.8511
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY7P282MB5268
 
-On 6/18/24 07:59, Paul Menzel wrote:
-> Dear Guenter,
-> 
-> 
-> Am 18.06.24 um 16:23 schrieb Guenter Roeck:
->> On 6/18/24 06:51, Paul Menzel wrote:
-> 
->>> Am 18.06.24 um 15:32 schrieb Guenter Roeck:
->>>
->>>> On 6/18/24 03:25, Paul Menzel wrote:
->>>> [ ... ]
->>>>>
->>>>>      $ ls -l /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
->>>>>      -r--r--r-- 1 root root 1024 Jun 18 12:17 /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
->>>>>      $ cp /sys/bus/i2c/drivers/spd5118/0-0050/eeprom /tmp
->>>>>      cp: error reading '/sys/bus/i2c/drivers/spd5118/0-0050/eeprom': No such device or address
->>>>
->>>> That suggests that the i801 driver got an error when trying some chip operation.
->>>> Unfortunately I have no idea what that error or the failed operation might be.
->>>>
->>>>>      $ od -t x1 /sys/bus/i2c/drivers/spd5118/0-0050/eeprom
->>>>>      od: /sys/bus/i2c/drivers/spd5118/0-0050/eeprom: read error: No such device or address
->>>>>      0000000
->>>>>
->>>>>> sudo i2cdump -y -f 0 0x50
->>>>>
->>>>>      $ sudo LD_LIBRARY_PATH=~/src/i2c-tools/lib tools/i2cdump -y -f 0 0x50
->>>>>      No size specified (using byte-data access)
->>>>>      Error: Could not open file `/dev/i2c-0' or `/dev/i2c/0': No such file or directory
->>>>>
->>>> This should work after you load the "i2c-dev" module.
->>>
->>> Silly me. Thank you.
->>>
->>>> If you get it to work, please provide the output. Maybe it helps tracking down the problem.
->>>
->>> ```
->>> $ sudo LD_LIBRARY_PATH=~/src/i2c-tools/lib tools/i2cdump -y -f 0 0x50
->>> No size specified (using byte-data access)
->>>       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
->>> 00: 51 18 0a 86 32 03 32 00 00 00 00 00 ff 01 00 00    Q???2?2......?..
->>> 10: 00 00 00 00 00 00 00 00 00 00 00 00 70 03 00 00    ............p?..
->>> 20: 50 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00    P?..............
->>> 30: 00 58 01 00 00 00 00 00 00 00 00 00 00 00 00 00    .X?.............
->>> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> 70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> 80: 30 10 12 02 04 00 20 62 00 00 00 00 90 02 00 00    0????. b....??..
->>> 90: 00 00 00 00 a0 01 f2 03 7a 0d 00 00 00 00 80 3e    ....????z?....?>
->>> a0: 80 3e 80 3e 00 7d 80 bb 30 75 27 01 a0 00 82 00    ?>?>.}??0u'??.?.
->>> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> c0: 00 00 00 00 00 00 88 13 08 88 13 08 20 4e 20 10    ......?????? N ?
->>> d0: 27 10 15 34 20 10 27 10 c4 09 04 4c 1d 0c 00 00    '??4 ?'????L??..
->>> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
->>> ```
->>>
->>> So (00,b) = 0x00 opposed to 0x07 in your example output.
->>>
->>
->> Yes, that assumed that reading the nvram/eeprom succeeded, which it didn't.
->> The value might also be 7 directly after booting and before loading
->> the spd5118 driver.
->>
->> Anyway, it almost looks like setting the page doesn't work, or maybe write
->> operations in general.
->>
->> Can you try the following ?
->>
->> dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=64 bs=1
->>
->> and
->>
->> dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=1 bs=64
->>
->> That should only try to read from page 0.
-> 
->      $ sudo dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=64 bs=1
->      64+0 records in
->      64+0 records out
->      64 bytes copied, 0.046002 s, 1.4 kB/s
->      $ sudo dd if=/sys/bus/i2c/drivers/spd5118/0-0050/eeprom of=/tmp/eeprom count=1 bs=64
->      1+0 records in
->      1+0 records out
->      64 bytes copied, 0.000215414 s, 297 kB/s
-> 
->> Also, please try to set a temperature limit, either temp1_max
->> or temp1_crit. Setting temp1_max to, say, 56000, or temp1_crit
->> to 84000 should do.
-> 
-> I did
-> 
->      $ tail -3 /etc/sensors3.conf
->      chip "spd5118-*"
->          set temp1_max 56000
->          set temp1_crit 84000
-> 
-> but it stays with the defaults:
-> 
-> ```
-> $ sensors
+Add devicetree bindings documentation for Sophgo cv18x SoCs mailbox
 
-Did you run "sudo sensors -s" ?
+Signed-off-by: Yuntao Dai <d1581209858@live.com>
+---
+ .../mailbox/sophgo,cv1800b-mailbox.yaml       | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
 
-I don't know if that would report errors, though.
-
-Thanks,
-Guenter
+diff --git a/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
+new file mode 100644
+index 000000000..e1868aaf2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/sophgo,cv1800b-mailbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sophgo cv1800b mailbox controller
++
++maintainers:
++  - Yuntao Dai <d1581209858@live.com>
++
++description:
++  The Sophgo cv18x SoCs mailbox has 8 channels and 8 bytes per channel for
++  different processors. Any processer can write data in a channel, and
++  set co-responding register to raise interrupt to notice another processor,
++  and it is allowed to send data to itself.
++  Sophgo cv18x SoCs has 3 processors and numbered as
++  <1> C906L
++  <2> C906B
++  <3> 8051
++
++properties:
++  compatible:
++    enum:
++      - sophgo,cv1800b-mailbox
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-names:
++    const: mailbox
++
++  recvid:
++    maxItems: 1
++    description:
++      This cell indicates the mailbox controller is running on which processor
++
++  sendto:
++    maxItems: 1
++    description:
++      This cell indicates the message sends to which processor
++
++
++  "#mbox-cells":
++    const: 1
++    description:
++      This cell indicates which channel is used
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - recvid
++  - sendto
++  - "#mbox-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mailbox: mailbox@1900000 {
++        compatible = "sophgo,cv1800b-mailbox";
++        reg = <0x01900000 0x1000>;
++        interrupts = <101 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "mailbox";
++        interrupt-parent = <&plic>;
++        recvid = <1>;
++        sendto = <2>;
++        #mbox-cells = <1>;
++    };
+-- 
+2.17.1
 
