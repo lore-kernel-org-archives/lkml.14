@@ -1,186 +1,103 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0CDF175AE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 01:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2690FC0C;
+	Tue, 18 Jun 2024 01:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718674568; cv=none; b=KC5MwOsgku4hOPON2m2BnWaOTpFCb7XQGLEiU7xR/KQuEDPiHS7Qax5MVk5BqPJUJDSnRVM/aY8NdKItRdfBZKpdn0MygpSlt9BT8qC+05tSycZv1gv4hSas+GRR033/yK4MfRTQn4sOCQOX968hDnY/DwWJjtH/Au9b3eqrDSY=
+	t=1718674642; cv=none; b=JNAwIAt3XAOCVoSgMZvt6VyNi3ibhXuYeqW96Z+86nQRWfulZUVo2M6styfOn1YKNBy1YsmsHVAkvr8Rm5nBo/OLHJmhO6nxf/6uq3zBn5pawKJTwKvJXI2FpB4dwjgD5wNd6W83Xqbu6iT0c7/thaXm40txnO7iow8Y5fg8wzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718674568; c=relaxed/simple;
-	bh=iIEiqIFQgeYCNMQ+Wl/2nLXn0IzTC1Tmy2zBREYYlI0=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rYqBkaqP1K76heLyVROZfTsIftsEyAVmwOdltHiF7g4Uu6Mq4pGWcqF9empuTn0aD1FBcCOvpt4PAoEJE9Qwvw+hZlBwacScRNZxKzNH6Pf/yApjAZnwYi8TN3L6mqlrtkPnazQ/kEqikovJ7mqRK7Y8l/J5YSc9c6VWLJI6wmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=WapzdiPV; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1718674642; c=relaxed/simple;
+	bh=ZCxXsmDoBj5cP7xmfFJ0FJxotceeXczVqyGFhIBJQhc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=qUCWjHUZetXwyPfCuWEAiIuztRj/3L/pV6jJicIBIZOEl35kS36qm52naUEeqhJmsTclxOKBKg2VKCy/wWUGDTKB4hD2+lpMnNx+/jlbqMS++o3d3MGdQShzKTwUrBqi6NeUqPHlM1bQxQuwJ4kxCLrJIB4PZYHNNX7rxhM9GFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BDMVx1BV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="WapzdiPV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
-	Content-Type; bh=5NzfkA5q9C0jLzrw16tR1I+KxBDvfdkzSwgICYcYmlE=;
-	b=WapzdiPVaI2ywexmNqHPjVULouNLRhvk/6ckRcgCL9eIjPlChBoUKHl/IZzYUK
-	XJXYSM72bTX0/MWSf8nlmlozj3dHzKbH8+D3AW1g4IbhbwGNhxO2QhnCfJbqLZr4
-	1l5FnOIYBPrDNS/mv4ePabxihIM+bN5L0aucI28Bfe9rw=
-Received: from [172.21.21.216] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wDnL08O5HBm7o4SAA--.10734S2;
-	Tue, 18 Jun 2024 09:34:08 +0800 (CST)
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-From: yangge1116 <yangge1116@126.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com,
- liuzixing@hygon.cn
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
- <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com>
-Message-ID: <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
-Date: Tue, 18 Jun 2024 09:34:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BDMVx1BV"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HI3bDj005282;
+	Tue, 18 Jun 2024 01:37:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=g1wdLtvXj4www4hzRwlM1Q
+	0k4zjfx6II30nytPOxhnU=; b=BDMVx1BVD+hGdjvvbpUc0vgneiIDebG2dyNr4l
+	YKa96QiZm6abvGePzfZdPC34X7fgOJyQ3Hzwoi1aQrNLCRG9rDdhyWg9TR8BuwKc
+	epWkoHQ6o56pZIFGeTEpft030wGIVmeYNEcODVYMbxYI1amQFoec6zaVw3HnRGV6
+	+672liux7Fa5nUv0V7WKjpRmcTnnCHtdGcpsdN2+RTNdctsEkU1YNbK57mRsorKw
+	7WH7vVwgmKi+/J5gJpt7GhbGN7mHrXj0YDGDeebNRly58CnXZNFGJfS9i1K8JJ8/
+	onxSsk6vyfGZeQInAe4vnOoDl9io2myvRM/LxXYUSQ7dEbmA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ytt378sxy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 01:37:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45I1bBDg005114
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 01:37:11 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Jun
+ 2024 18:37:10 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Mon, 17 Jun 2024 18:37:09 -0700
+Subject: [PATCH] sound/oss/dmasound: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnL08O5HBm7o4SAA--.10734S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFy8Gry7CrWrCFyrJFW7CFg_yoWrArW5pF
-	WfG3Wa9a1UXry7A3ZFy3Z0kry0kw1rKr48Xr1rXr18uwnIyFyIy3y7tF1ruFyrAryUJF40
-	qFWUt3ZxZF4qyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjR67UUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWRACG2VLayL9AgAAsI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240617-md-m68k-sound-oss-dmasound-v1-1-5c19306be930@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMTkcGYC/yXMQQ6CMBBA0auQWTtJqaSiVzEshnaUibY1HSEkh
+ LtbdfkW/2+gXIQVLs0GhRdRyamiPTTgJ0p3RgnVYI3tjGtPGANG1z9Q85wCZlUMkf44mz6QJ+v
+ s0UIdvArfZP3Nr0P1SMo4Fkp++i6fkuYVa/zmAvv+ATScFWaLAAAA
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.14.0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: moh1qhAxtf_dMn5dNmEKsGjniZ6IOXhY
+X-Proofpoint-GUID: moh1qhAxtf_dMn5dNmEKsGjniZ6IOXhY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ spamscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406180011
 
+With ARCH=m68k, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/oss/dmasound/dmasound_core.o
 
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-在 2024/6/17 下午8:47, yangge1116 写道:
-> 
-> 
-> 在 2024/6/17 下午6:26, Barry Song 写道:
->> On Tue, Jun 4, 2024 at 9:15 PM <yangge1116@126.com> wrote:
->>>
->>> From: yangge <yangge1116@126.com>
->>>
->>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->>> THP-sized allocations") no longer differentiates the migration type
->>> of pages in THP-sized PCP list, it's possible to get a CMA page from
->>> the list, in some cases, it's not acceptable, for example, allocating
->>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
->>>
->>> The patch forbids allocating non-CMA THP-sized page from THP-sized
->>> PCP list to avoid the issue above.
->>
->> Could you please describe the impact on users in the commit log?
-> 
-> If a large number of CMA memory are configured in the system (for 
-> example, the CMA memory accounts for 50% of the system memory), starting 
-> virtual machine with device passthrough will get stuck.
-> 
-> During starting virtual machine, it will call pin_user_pages_remote(..., 
-> FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area, 
-> pin_user_pages_remote() will migrate the page from CMA area to non-CMA 
-> area because of FOLL_LONGTERM flag. If non-movable allocation requests 
-> return CMA memory, pin_user_pages_remote() will enter endless loops.
-> 
-> backtrace:
-> pin_user_pages_remote
-> ----__gup_longterm_locked //cause endless loops in this function
-> --------__get_user_pages_locked
-> --------check_and_migrate_movable_pages //always check fail and continue 
-> to migrate
-> ------------migrate_longterm_unpinnable_pages
-> ----------------alloc_migration_target // non-movable allocation
-> 
->> Is it possible that some CMA memory might be used by non-movable
->> allocation requests? 
-> 
-> Yes.
-> 
-> 
->> If so, will CMA somehow become unable to migrate, causing cma_alloc() 
->> to fail?
-> 
-> 
-> No, it will cause endless loops in __gup_longterm_locked(). If 
-> non-movable allocation requests return CMA memory, 
-> migrate_longterm_unpinnable_pages() will migrate a CMA page to another 
-> CMA page, which is useless and cause endless loops in 
-> __gup_longterm_locked().
-> 
-> backtrace:
-> pin_user_pages_remote
-> ----__gup_longterm_locked //cause endless loops in this function
-> --------__get_user_pages_locked
-> --------check_and_migrate_movable_pages //always check fail and continue 
-> to migrate
-> ------------migrate_longterm_unpinnable_pages
-> 
-> 
-> 
-> 
-> 
->>>
->>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for 
->>> THP-sized allocations")
->>> Signed-off-by: yangge <yangge1116@126.com>
->>> ---
->>>   mm/page_alloc.c | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>> index 2e22ce5..0bdf471 100644
->>> --- a/mm/page_alloc.c
->>> +++ b/mm/page_alloc.c
->>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone 
->>> *preferred_zone,
->>>          WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
->>>
->>>          if (likely(pcp_allowed_order(order))) {
->>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & 
->>> ALLOC_CMA ||
->>> +                                               order != 
->>> HPAGE_PMD_ORDER) {
->>> +                       page = rmqueue_pcplist(preferred_zone, zone, 
->>> order,
->>> +                                               migratetype, 
->>> alloc_flags);
->>> +                       if (likely(page))
->>> +                               goto out;
->>> +               }
->>
->> This seems not ideal, because non-CMA THP gets no chance to use PCP. 
->> But it
->> still seems better than causing the failure of CMA allocation.
->>
->> Is there a possible approach to avoiding adding CMA THP into pcp from 
->> the first
->> beginning? Otherwise, we might need a separate PCP for CMA.
->>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ sound/oss/dmasound/dmasound_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The vast majority of THP-sized allocations are GFP_MOVABLE, avoiding 
-adding CMA THP into pcp may incur a slight performance penalty.
+diff --git a/sound/oss/dmasound/dmasound_core.c b/sound/oss/dmasound/dmasound_core.c
+index 164335d3c200..4b1baf4dd50e 100644
+--- a/sound/oss/dmasound/dmasound_core.c
++++ b/sound/oss/dmasound/dmasound_core.c
+@@ -204,6 +204,7 @@ module_param(numWriteBufs, int, 0);
+ static unsigned int writeBufSize = DEFAULT_BUFF_SIZE ;	/* in bytes */
+ module_param(writeBufSize, int, 0);
+ 
++MODULE_DESCRIPTION("Atari/Amiga/Q40 core DMA sound driver");
+ MODULE_LICENSE("GPL");
+ 
+ static int sq_unit = -1;
 
-Commit 1d91df85f399 takes a similar approach to filter, and I mainly 
-refer to it.
-
-
->>> +#else
->>>                  page = rmqueue_pcplist(preferred_zone, zone, order,
->>>                                         migratetype, alloc_flags);
->>>                  if (likely(page))
->>>                          goto out;
->>> +#endif
->>>          }
->>>
->>>          page = rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
->>> -- 
->>> 2.7.4
->>
->> Thanks
->> Barry
->>
+---
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+change-id: 20240617-md-m68k-sound-oss-dmasound-908daca26232
 
