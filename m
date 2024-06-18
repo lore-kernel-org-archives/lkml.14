@@ -1,145 +1,125 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE891C01;
-	Tue, 18 Jun 2024 04:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92DA1C01;
+	Tue, 18 Jun 2024 04:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718685246; cv=none; b=oF88d0YwI8cmVaYcvG+YF8g3PW3QFTukmv2m7sLfGZlF3hI0P5nbsfDsEavoVQfUtv11xrARkQ0ezMeu/jq5KcLqFcsChlgrWGVmTQfT+Ccy6OfeUWkVv6uBpQ4Ovvy8nJRhg2oVJUkaiA9UMBULLQ8Vw8iqJnSv6ED4t/62BzU=
+	t=1718685255; cv=none; b=aOsn4/54SLnuuwBx0J/ov/QDNBtvCT7Byh4QAcp2zzbEMY6VJvZbJOz6xI89Q2kA1zV800X46mI8JDz6gDERWZdqHi3z6oto2z40S+ip7jAzM8uptlgARdzYJSNCJH4R0ySg6GmccuUOe/XvFfgehkz7pg58/ZX7cdUFPjNFMdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718685246; c=relaxed/simple;
-	bh=JG5ilIHKoW/BF0yg9UG/0JJKxeLZlEF3zEaC7zcQSDs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c8kQFy158KpqBkt5FDL3COCGciFIodpvWN0oTyN6kG+dzmcF/AVhSwe0sYmhramWffIV7h9Ie7fMkadJcxRAzbo1jC/Z1Y5XJnGg60gu1i+JFQSABlWwOr1Mp7ZC7MSGu6EsZgosnE7SzjwoijQV9Lo3yyhI2G7XrkNA/mQagxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CK+x7iMg; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718685255; c=relaxed/simple;
+	bh=cVWaqdmlVB3MhB8ZS2KfEGlzyVZFQobqyrEiIiYPoSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TI8YZGGnW7dD6DlGFuSSUzQcdZu77t2JwfsQxUsz7DnxeFVIoDqTvfYHJPAqjnhjBZ3LMooPfiEbI3jqILTUpPO+1hh7RgCFc4aVyP2cGOuNvsBI+JIF4OuYzXiEWOAn/g5keTBP6GAbIWdryGygRuGQGGeqA9ktpf+XfcTTzrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTi7MVJl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK+x7iMg"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f09b457fdso460155066b.2;
-        Mon, 17 Jun 2024 21:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718685243; x=1719290043; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BIwHA+mxDZIARtoB5DwfNg0Gfwpm3V2PRBL0EbC93+0=;
-        b=CK+x7iMgTd3G2rVWVKMjeuyrifbBQDWduUmkrM41oevWeKR00ZviJ0FxXW4uv8LnHD
-         5nq0w8z1eD411ylOs//oh8yf2vLKQsbCk4attPoO1jyiggAkblQmi8BlpMqA978puWeG
-         qtE9gm7Zgjw/sNJBTOJLTXjHHBz1uptXx7Kodidz847W4CrkZvtJ81d2STG1G0k9G35w
-         8vP5VKtkjeVzSpLVLUC036F9bFAYxLhBLHNFrP7nfmOreC1ZY5JI2EwXCfFr5cZfsi/B
-         bcgzlQFdoSy2vIM/2PfT0cXiAw0hS2qxft0KiyRGWdKzdtfCTovqoOxenj601ZOXLdpK
-         n/pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718685243; x=1719290043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BIwHA+mxDZIARtoB5DwfNg0Gfwpm3V2PRBL0EbC93+0=;
-        b=nnOEqDZ72Ohr5b4gc5SsrKVWfcetS2/k2MzVPR0ydFeNH4pjarok4WKEvbq86Y4eIQ
-         xBXrSlmcr5TOA+7ML4u18LLwQqikPKlExlPdYezAHSt8RXoGntNcMsHpJ7y352tplO+w
-         TTHcrhN8rOy6XIhcbIEBH+EoN9m9GMKJYuzkdjfRG+Ywf3wtyjLB4/8S0vIvBTYpFQA6
-         IBwABe6jnrIOi14pfNJmRoqqRHfpLa5joJ6cqTEWlv7IS6ZqoyV51ZUOtZy/Gjo2G4Sd
-         hGwSe+bf8lSvl9LiSTc/MHt9/eoiB8bFzDVNpK+lXxKCl0xhcam/aMRzVPCSg4VNM30j
-         +MiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdw4Mqy6iQGfbsVo6z373NrbdRPW4X1Sqox5iZLNyFRBc4I5NgV+f5vUEzoIxPCau4M5vYw5K5B+pibrNjJFj/EvWuSNpbrLg30kND4GdjUQGhn+NI8INSSqMGiSgA8yyUTNiN
-X-Gm-Message-State: AOJu0Yw2PojsMwXcRS99R4a2z6VEaeUGCOtpicyz5MQqdu7EIIf7aAZO
-	pKVt+yiTlnoJ7UhyouxGZwkD6mvt6gPZ/ur9FXBdIduwJJ1clbJ4HytAltaahPWpOVxS1vIrC+r
-	qvlbAGCPAHD+ZcyuL4B0Zi9pAShU=
-X-Google-Smtp-Source: AGHT+IEvIyNa10vntkg70/P22cvrLRrQaET/PryqCiwiAaxtddZK8JGlqlKFD8nYwOFg282VPsumofyXlGoruVft9M0=
-X-Received: by 2002:a17:906:4ac4:b0:a6f:493d:5b9f with SMTP id
- a640c23a62f3a-a6f60d3f4aamr803279566b.35.1718685242877; Mon, 17 Jun 2024
- 21:34:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTi7MVJl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812B6C3277B;
+	Tue, 18 Jun 2024 04:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718685255;
+	bh=cVWaqdmlVB3MhB8ZS2KfEGlzyVZFQobqyrEiIiYPoSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gTi7MVJlvd3DqJpnKOKwG1xNN9+M3Gsd6MebltbzdgYOGnNyiv6Qeq+xhqfRbROut
+	 SMeCl95OGHDBKyeXsKqzjZiu8nRdzT8VF3nwmPVGyANifUQ4IVXBEyLiZbRBuA+r0p
+	 kkJXl0ojinTkXRpSpsx3wYcxcPeHcuHbPZKbHXToNiDVwXn/Rz1XfUQPLNhFqQRota
+	 Ji/Wh9lpLMGRuNhNmj0DSutuZbOngGorasQOGUjC3tgjSPUjrrJ+nW6aPnlpo7rFMl
+	 BobHJwR5iAtT1Vvtyk20SeGII31d7mB1TqYIv6xVcD0QEwS+Lp2lQuDtie5Zzz8Zc+
+	 WZdChbx6OiHBA==
+Date: Tue, 18 Jun 2024 12:20:13 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@outlook.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Chao Wei <chao.wei@sophgo.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>
+Subject: Re: [PATCH v2 1/6] riscv: dts: sophgo: Put sdhci compatible in dt of
+ specific SoC
+Message-ID: <ZnEK_cg1xLbKOUAD@xhacker>
+References: <20240612-sg2002-v2-0-19a585af6846@bootlin.com>
+ <20240612-sg2002-v2-1-19a585af6846@bootlin.com>
+ <IA1PR20MB49534C9E29E86B478205E4B3BBC02@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240616235829.GA4000183@ofsar>
+ <c75601a1-1389-400e-90b9-99c1e775a866@bootlin.com>
+ <ZnA3O14HOiV1SBPV@xhacker>
+ <20240617-exuberant-protegee-f7d414f0976d@spud>
+ <6a993b58-3d9e-4f92-bf47-7692c9639314@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fdaf2e41bb6a0c5118ff9cc21f4f62583208d885.1718655070.git.dsimic@manjaro.org>
-In-Reply-To: <fdaf2e41bb6a0c5118ff9cc21f4f62583208d885.1718655070.git.dsimic@manjaro.org>
-From: Qiang Yu <yuq825@gmail.com>
-Date: Tue, 18 Jun 2024 12:33:50 +0800
-Message-ID: <CAKGbVbs8VmCXVOHbhkCYEHNJiKWwy10p0SV9J09h2h7xjs7hUg@mail.gmail.com>
-Subject: Re: [PATCH] drm/lima: Mark simple_ondemand governor as softdep
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, daniel@ffwll.ch, linux-kernel@vger.kernel.org, 
-	Philip Muller <philm@manjaro.org>, Oliver Smith <ollieparanoid@postmarketos.org>, 
-	Daniel Smith <danct12@disroot.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a993b58-3d9e-4f92-bf47-7692c9639314@sifive.com>
 
-I see the problem that initramfs need to build a module dependency chain,
-but lima does not call any symbol from simpleondemand governor module.
+On Mon, Jun 17, 2024 at 10:57:54AM -0500, Samuel Holland wrote:
+> Hi Jisheng, Thomas,
+> 
+> On 2024-06-17 10:40 AM, Conor Dooley wrote:
+> > On Mon, Jun 17, 2024 at 09:16:43PM +0800, Jisheng Zhang wrote:
+> >> On Mon, Jun 17, 2024 at 11:16:32AM +0200, Thomas Bonnefille wrote:
+> >>> On 6/17/24 1:58 AM, Yixun Lan wrote:
+> >>>> On 18:47 Wed 12 Jun     , Inochi Amaoto wrote:
+> > 
+> >>>>> Is this change necessary? IIRC, the sdhci is the same across
+> >>>>> the whole series.
+> > 
+> >> sorry for being late, I was busy in the past 2.5 month. Per my
+> >> understanding, the sdhci in cv1800b is the same as the one in
+> >> sg200x. Maybe I'm wrong, but this was my impression when I cooked
+> >> the sdhci driver patch for these SoCs.
+> >>
+> >>>> I tend to agree with Inochi here, if it's same across all SoC, then no bother to
+> >>>> split, it will cause more trouble to maintain..
+> >>>>
+> >>>
+> >>> To be honest, I agree with this to, but as a specific compatible for the
+> >>> SG2002 was created in commit 849e81817b9b, I thought that the best practice
+> >>> was to use it.
+> >>
+> >> I'd like to take this chance to query DT maintainers: FWICT, in the past
+> >> even if the PLIC is the same between SoCs, adding a new compatible for
+> >> them seems a must. So when time goes on, the compatbile list would be
+> >> longer and longer, is it really necessary? Can we just use the existing
+> >> compatible string?
+> >> DT maintainers may answered the query in the past, if so, sorry for
+> >> querying again.
+> > 
+> > For new integrations of an IP, yes, new specific compatibles please. New
+> > integrations may have different bugs etc, even if the IP itself is the
+> > same. If there's different SoCs that are the same die, but with elements
+> > fused off, then sure, use the same compatible.
+> > 
+> > I expect the list of compatibles in the binding to grow rather large, but
+> > that is fine. No one SoC is going to do anything other than something like
+> > compatible = "renesas,$soc-plic", "andestech,corecomplex-plic", "riscv,plic";
+> > which I think is perfectly fine.
+> 
+> And you can do the same thing here for the SDHCI controller: if you think sg200x
+> has the same controller (and integration! e.g. number of clocks/resets) as
+> cv1800b, then you should keep sophgo,cv1800b-dwcmshc as a fallback compatible
+> string. Then the driver doesn't need any changes until/unless you eventually
+> find some reason they are not compatible.
+> 
+> It's better to have a SoC-specific compatible string in the DT and not need it,
+> than find out later you need one and not have it. :)
 
-softdep module seems to be optional while our dependency is hard one,
-can we just add MODULE_INFO(depends, _depends), or create a new
-macro called MODULE_DEPENDS()?
+Good idea, this solution looks better! Thanks for the suggestion
 
-On Tue, Jun 18, 2024 at 4:22=E2=80=AFAM Dragan Simic <dsimic@manjaro.org> w=
-rote:
->
-> Lima DRM driver uses devfreq to perform DVFS, while using simple_ondemand
-> devfreq governor by default.  This causes driver initialization to fail o=
-n
-> boot when simple_ondemand governor isn't built into the kernel statically=
-,
-> as a result of the missing module dependency and, consequently, the requi=
-red
-> governor module not being included in the initial ramdisk.  Thus, let's m=
-ark
-> simple_ondemand governor as a softdep for Lima, to have its kernel module
-> included in the initial ramdisk.
->
-> This is a rather longstanding issue that has forced distributions to buil=
-d
-> devfreq governors statically into their kernels, [1][2] or may have force=
-d
-> some users to introduce unnecessary workarounds.
->
-> Having simple_ondemand marked as a softdep for Lima may not resolve this
-> issue for all Linux distributions.  In particular, it will remain unresol=
-ved
-> for the distributions whose utilities for the initial ramdisk generation =
-do
-> not handle the available softdep information [3] properly yet.  However, =
-some
-> Linux distributions already handle softdeps properly while generating the=
-ir
-> initial ramdisks, [4] and this is a prerequisite step in the right direct=
-ion
-> for the distributions that don't handle them properly yet.
->
-> [1] https://gitlab.manjaro.org/manjaro-arm/packages/core/linux-pinephone/=
--/blob/6.7-megi/config?ref_type=3Dheads#L5749
-> [2] https://gitlab.com/postmarketOS/pmaports/-/blob/7f64e287e7732c9eaa029=
-653e73ca3d4ba1c8598/main/linux-postmarketos-allwinner/config-postmarketos-a=
-llwinner.aarch64#L4654
-> [3] https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/commit/?id=
-=3D49d8e0b59052999de577ab732b719cfbeb89504d
-> [4] https://github.com/archlinux/mkinitcpio/commit/97ac4d37aae084a050be51=
-2f6d8f4489054668ad
->
-> Cc: Philip Muller <philm@manjaro.org>
-> Cc: Oliver Smith <ollieparanoid@postmarketos.org>
-> Cc: Daniel Smith <danct12@disroot.org>
-> Cc: stable@vger.kernel.org
-> Fixes: 1996970773a3 ("drm/lima: Add optional devfreq and cooling device s=
-upport")
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
-> ---
->  drivers/gpu/drm/lima/lima_drv.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_=
-drv.c
-> index 739c865b556f..10bce18b7c31 100644
-> --- a/drivers/gpu/drm/lima/lima_drv.c
-> +++ b/drivers/gpu/drm/lima/lima_drv.c
-> @@ -501,3 +501,4 @@ module_platform_driver(lima_platform_driver);
->  MODULE_AUTHOR("Lima Project Developers");
->  MODULE_DESCRIPTION("Lima DRM Driver");
->  MODULE_LICENSE("GPL v2");
-> +MODULE_SOFTDEP("pre: governor_simpleondemand");
+> 
+> Regards,
+> Samuel
+> 
