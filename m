@@ -1,57 +1,58 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3A116631B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A76168491
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718717873; cv=none; b=oxWFLyfdADLbM+gsUBXLZskVyClqxXYS7TmDcd/yqr3TndW6chb0C9ks7Tf0JnT0HoBa/VKZ6JuJtF1cN03YDce3Cj6vx6kqoviMk1PodKgd4m/mIM/PwhJt5o3U7VToqGif4DnlT/Ac0IwUcM7+pGtO7cSAtJh2ANdaq9dWH+4=
+	t=1718717876; cv=none; b=ZZ8ZUiAtm/1zQOaXqkheg6e/s0/26dBact1gZZv2FHXXSpLB9VV1yvxQaQbFA0xjmuW+Q6ihMuswDB/b7EpD24ux81EhjBteDwAMPECf4ihDuKrFZw0jLdIt/Rpzxazh5WSxpXWr8cOi5ccH4lVDrOTcg9jSB3tWA+FYmPT8TPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718717873; c=relaxed/simple;
-	bh=GoXx+LUbk1pIIGrnFwGZ+D3NCJxZwtQES8xRkbwieRw=;
+	s=arc-20240116; t=1718717876; c=relaxed/simple;
+	bh=JCwRzQfJUN4DIo72lM4nWjkcyF1hZtywYkiYbZ3Wb1g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EaZ2RsQdmc/Q06hVQYhDrWWVzhY4wVRRttHNte4gYiIzANWqTpp67JiaeJjUWqJik/+VXn9n4Al0UtGi4HCnU2ULOBnZ4CCyp8WeZexL0es6KjkR6w9Hx6Jnn0KSWSwX695O8ufmdBkimeyWOmz028mVy0LvBuWN9iX/UFirn3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PBtoONjp; arc=none smtp.client-ip=209.85.167.178
+	 In-Reply-To:To:Cc; b=ZJWxTX5ffaS/30IaUnjceNiWRLFavAtEa2Ap4uhfFPZQN5fHNcse6duCnm3oDh6B3U4b2/nc30wpEkwH5CdNV0SY648VrXcXajJIN4ET+MUPY6sH+sz/0+EjgvLoPgg1hKisIY4hw5mZmILVXze/Uh/ionNZxqIpy+1IJgkCwNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aEnGINkc; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PBtoONjp"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c9cc681ee0so2599572b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:37:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aEnGINkc"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-797dcb558ebso353021785a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:37:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718717871; x=1719322671; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1718717874; x=1719322674; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lyFYwbZ5CJhnsT3ZAVEp/WPT2f72YwpJexmvGlup3eA=;
-        b=PBtoONjpp8Yb95gX83yBzyI7CvzCNSeoVGBBPcj6lD59IVcw5ZuHqMMtoqLk3TvMh8
-         xY67HKSF+dC/akFDVRQR8ffSCvOh8iWrlzSoIeqsp7dfIipF6w7g/FMJybboJWc17tHy
-         PGYdqjEVwHDttgsoqmUSLhELBcQPT/re3guf4=
+        bh=NfmzknDlhP7JVdeMuBVj3S4t4ocBYNX2DjumHrcLghk=;
+        b=aEnGINkci36kajF9DwTSi7/Gsy0zU3fBpt589MxJAI34CBMzb7rxpXvXc0/Hqgh3JN
+         NFtFBDVI90y7ssk9J6m/pO8+qJqL4UR4OdUKoyo3XynsewHPml48Hi+Lvdws2QSqO7A2
+         RIMxG5c1Q3XTqtEGDsad/TUa7LXMQB4jeb6w0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718717871; x=1719322671;
+        d=1e100.net; s=20230601; t=1718717874; x=1719322674;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lyFYwbZ5CJhnsT3ZAVEp/WPT2f72YwpJexmvGlup3eA=;
-        b=gNVhKtURUDfn/R83MknvphxMzCqRkwgYevaXhot46bespvsHb2lyk7Hy9WumM24sJI
-         UtEJ1EJtU2D3tKqe2ETKJS9NYiaI4lSEK0znQdM6Hk1WaKxZz+dLA0jsF0ZaMMszh3CX
-         fMcu5uOB6b4VobjzTg9hBLyQgw11uc7/nbyCtIUFp0SGwAB5hVkRq6wOlNaTdWCdA67t
-         oyUDPwQpHdBZln3FDAFeq7UQeT68NnndsFpiGA8r58/SQTfeBqQNf/iPw5YvzS7nMJ+p
-         aA2CGRXuYUqV5lPR35/GGrCsnTVubBnekAjQUy+HB9X6e/nnKlWrXUcljFLbgKMZ8fZc
-         BNmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0AchZJqM5Hx+v3z1fqR6paIilfj/06nHTrcsKWNYz/OIkOMyAhkgsleLO0dSi6dV9/ELutCeMUg+YIR9SJrKwwU/7UrjMqFtfp3Co
-X-Gm-Message-State: AOJu0Yzu3oxjaKvDo9A8MxY3XBqVrz4nXQjV6wK1tNDSZnt0CModUsP5
-	WGygkG3sgwshUfdicVHoZqUNF1f9G/CNnHTaWYIoW/ICaWdUFcGFXVtkwTZ+Iw==
-X-Google-Smtp-Source: AGHT+IEmRQPni9rlDK9KsV2t5smDWQkyDsQQTzI4m1+U7VAK4E1oD11JY+8S6sqxF/BUxo0nnLHy7A==
-X-Received: by 2002:a05:6808:1a18:b0:3d2:21c8:e1d5 with SMTP id 5614622812f47-3d24e8fb77bmr15257913b6e.25.1718717871081;
-        Tue, 18 Jun 2024 06:37:51 -0700 (PDT)
+        bh=NfmzknDlhP7JVdeMuBVj3S4t4ocBYNX2DjumHrcLghk=;
+        b=gn0ItA9/HBC58S9AbFTRXUdwI7LTWAGODkLbhm2i2J1BefxtGbEbLmci0m2Aduik4x
+         IhDd0sWdE9zhYYlEk6qMmzlJP05C1rFC2PilGf5U2wkAbuEvcbQ1utid/FghY9qR53iU
+         SoO8OvoY1z3O5pzLt3B0Io1KZD5q+LNHwnlN6d3+h4IbACrfb9obYJpuw4CvgXc3xyYJ
+         vOZxD1IhIxWplBQRVm5k0hqVX3kR/tzRkM1EDbvBziR/QNePbtVAiowc1okAw3vt/8CX
+         uUBSTTiXj/A1idsV3LfFGDsq+CW98dvRURmIFBMmmJ7ceT8Dgu+LXo4AygkpuAvc32kf
+         n3VA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUUhP4oEGMVY71F7MhHQ3zfZqO+f3eGOlvnXHJy67TXa7Oez9yjD25TGA39K4AvBJPas5LEUPM/XdmUTVXPPEp2IDi07rZykxy/jIx
+X-Gm-Message-State: AOJu0Yz2RVwwwcCcGoyy/YDaIDcYRsZvjodbMSwEcB6bJcyLyJX7cnst
+	6gue1EskefQuXu+OKIiMT4frboNfUQXpwktWLmidkp0lc0x7PUVBDUTTWDL1HA==
+X-Google-Smtp-Source: AGHT+IGEfL8XeSfOM4jwm81aDULa50VWwdKgHpsA+y9HEy95/tn/hw5XDbDctHO+xTMeAiPX0ksKzA==
+X-Received: by 2002:a05:620a:28d3:b0:795:5ad3:87ce with SMTP id af79cd13be357-798d2438227mr1412816285a.34.1718717873897;
+        Tue, 18 Jun 2024 06:37:53 -0700 (PDT)
 Received: from denia.c.googlers.com (123.178.145.34.bc.googleusercontent.com. [34.145.178.123])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-798abc06e93sm521666385a.82.2024.06.18.06.37.50
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-798abc06e93sm521666385a.82.2024.06.18.06.37.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 06:37:50 -0700 (PDT)
+        Tue, 18 Jun 2024 06:37:53 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 18 Jun 2024 13:37:44 +0000
-Subject: [PATCH v5 01/10] media: venus: Remove unused structs
+Date: Tue, 18 Jun 2024 13:37:46 +0000
+Subject: [PATCH v5 03/10] media: venus: Refactor struct
+ hfi_uncompressed_plane_info
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-cocci-flexarray-v5-1-6a8294942f48@chromium.org>
+Message-Id: <20240618-cocci-flexarray-v5-3-6a8294942f48@chromium.org>
 References: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
 In-Reply-To: <20240618-cocci-flexarray-v5-0-6a8294942f48@chromium.org>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -72,163 +73,33 @@ Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.13.0
 
-This structures are not used, and have a single element array at the end
-of them. Remove them.
+This field is never used, but if we remove it we would change the size
+of the struct and can lead to behavior change. Stay on the safe side by
+replacing the single element array with a single element field.
 
-This fix the following cocci warnings:
-drivers/media/platform/qcom/venus/hfi_helper.h:764:5-15: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1041:5-15: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1088:39-51: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1093:5-22: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1144:4-8: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1239:4-8: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_helper.h:1272:4-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_cmds.h:85:5-16: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_cmds.h:180:5-9: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/platform/qcom/venus/hfi_cmds.h:189:5-9: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+This fixes the following cocci warning:
+drivers/media/platform/qcom/venus/hfi_helper.h:1003:43-60: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/platform/qcom/venus/hfi_cmds.h   | 26 ---------------
- drivers/media/platform/qcom/venus/hfi_helper.h | 46 --------------------------
- 2 files changed, 72 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-index 20acd412ee7b..41f765eac4d9 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-@@ -77,14 +77,6 @@ struct hfi_sys_get_property_pkt {
- 	u32 data[1];
- };
- 
--struct hfi_sys_set_buffers_pkt {
--	struct hfi_pkt_hdr hdr;
--	u32 buffer_type;
--	u32 buffer_size;
--	u32 num_buffers;
--	u32 buffer_addr[1];
--};
--
- struct hfi_sys_ping_pkt {
- 	struct hfi_pkt_hdr hdr;
- 	u32 client_data;
-@@ -171,24 +163,6 @@ struct hfi_session_empty_buffer_uncompressed_plane0_pkt {
- 	u32 data[1];
- };
- 
--struct hfi_session_empty_buffer_uncompressed_plane1_pkt {
--	u32 flags;
--	u32 alloc_len;
--	u32 filled_len;
--	u32 offset;
--	u32 packet_buffer2;
--	u32 data[1];
--};
--
--struct hfi_session_empty_buffer_uncompressed_plane2_pkt {
--	u32 flags;
--	u32 alloc_len;
--	u32 filled_len;
--	u32 offset;
--	u32 packet_buffer3;
--	u32 data[1];
--};
--
- struct hfi_session_fill_buffer_pkt {
- 	struct hfi_session_hdr_pkt shdr;
- 	u32 stream_id;
 diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index e4c05d62cfc7..f61295819cc1 100644
+index f61295819cc1..c53e2fb2d42c 100644
 --- a/drivers/media/platform/qcom/venus/hfi_helper.h
 +++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -759,11 +759,6 @@ struct hfi_multi_stream_3x {
- 	u32 enable;
+@@ -1000,7 +1000,7 @@ struct hfi_uncompressed_plane_constraints {
+ struct hfi_uncompressed_plane_info {
+ 	u32 format;
+ 	u32 num_planes;
+-	struct hfi_uncompressed_plane_constraints plane_constraints[1];
++	struct hfi_uncompressed_plane_constraints plane_constraints;
  };
  
--struct hfi_multi_view_format {
--	u32 views;
--	u32 view_order[1];
--};
--
- #define HFI_MULTI_SLICE_OFF			0x1
- #define HFI_MULTI_SLICE_BY_MB_COUNT		0x2
- #define HFI_MULTI_SLICE_BY_BYTE_COUNT		0x3
-@@ -1036,11 +1031,6 @@ struct hfi_codec_supported {
- 	u32 enc_codecs;
- };
- 
--struct hfi_properties_supported {
--	u32 num_properties;
--	u32 properties[1];
--};
--
- struct hfi_max_sessions_supported {
- 	u32 max_sessions;
- };
-@@ -1076,23 +1066,6 @@ struct hfi_resource_ocmem {
- 	u32 mem;
- };
- 
--struct hfi_resource_ocmem_requirement {
--	u32 session_domain;
--	u32 width;
--	u32 height;
--	u32 size;
--};
--
--struct hfi_resource_ocmem_requirement_info {
--	u32 num_entries;
--	struct hfi_resource_ocmem_requirement requirements[1];
--};
--
--struct hfi_property_sys_image_version_info_type {
--	u32 string_size;
--	u8  str_image_version[1];
--};
--
- struct hfi_codec_mask_supported {
- 	u32 codecs;
- 	u32 video_domains;
-@@ -1135,15 +1108,6 @@ struct hfi_index_extradata_config {
- 	u32 index_extra_data_id;
- };
- 
--struct hfi_extradata_header {
--	u32 size;
--	u32 version;
--	u32 port_index;
--	u32 type;
--	u32 data_size;
--	u8 data[1];
--};
--
- struct hfi_batch_info {
- 	u32 input_batch_count;
- 	u32 output_batch_count;
-@@ -1234,11 +1198,6 @@ static inline void hfi_bufreq_set_count_min_host(struct hfi_buffer_requirements
- 		req->count_min = val;
- };
- 
--struct hfi_data_payload {
--	u32 size;
--	u8 data[1];
--};
--
- struct hfi_enable_picture {
- 	u32 picture_type;
- };
-@@ -1267,11 +1226,6 @@ struct hfi_buffer_alloc_mode_supported {
- 	u32 data[1];
- };
- 
--struct hfi_mb_error_map {
--	u32 error_map_size;
--	u8 error_map[1];
--};
--
- struct hfi_metadata_pass_through {
- 	int enable;
- 	u32 size;
+ struct hfi_uncompressed_format_supported {
 
 -- 
 2.45.2.627.g7a2c4fd464-goog
