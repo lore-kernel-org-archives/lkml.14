@@ -1,45 +1,44 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9E379FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D779C50246;
 	Tue, 18 Jun 2024 17:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718731894; cv=none; b=VjKgtuVLS80Gjy5ZZK73WXSFN4+ZuZMoTEvjvt0EtO++8SNGDPdUrxtWShyR0WIUk8F2yPPqEkujS/QFOiKWqzdT59YUJweyGgVwmFqpa0hDk1YUpSdqPkCtfjT4yf2XalLDWM/pZw34qaN42GRvi1oaaNw/AV9s2z1+glypLOI=
+	t=1718731894; cv=none; b=ajSxKKPKRON4VWRUDa2dgSGIznSPvSUlZwGg4b1m2cT39Iv3FpldHM+hjEdiQfYkVEZe8YGVUH3+cAr8HSpHfPZ+k9zjrcWW7f42G6IhUhGirxt/TQu85Yj7IIFhBXvnWQCNh+S9ONbfE3Cqt6Jn6QJW/BQK80GfYEACGY6oBYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718731894; c=relaxed/simple;
-	bh=GgC/RgGBqPcE9JOI2cHsAqwui9SvFFMMRYbHB0SOCRY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGtXvTJaq/4zlNWINqZtrQMTbYJxWmWXRbPs1B7xz/jlvkpHqH1ODKDBLsptTAWlwwhZ8t+6TEjpR/35OkdvN9ZydmNy6Q3jaaks2YrTiup8D18upQnvo3UCH/DVUyNU3GaTvlaVpfxUcpYkESlj8njNbtkpA8al/wcTnxX7j98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Am2S/ph+; arc=none smtp.client-ip=198.47.19.141
+	bh=hXpkdavMPX9dV2I4u82huap8lNsxumpPrpigp2HtMGg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mt78VdLwtUSR2BJ6L/qdlCBqxdicadLIA7r5+6gvcusoaRx6i9oDm4yccrMciWa1ztiVMeow1MWQrJ5Rmdx2j0SI6wfqW0NZgd3EqbTomo0hlyfWIhLSeCwA3eAntCQWMWc+huaMOlCCGhpCZCd1Kij0eRQ9Zv9Nn2uwsOzF844=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Twf3G+aU; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Am2S/ph+"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45IHVQaR007033;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Twf3G+aU"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45IHVQtt048616;
 	Tue, 18 Jun 2024 12:31:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1718731886;
-	bh=6OBs4PindOmgv8UHdb5SG3claVFLiZWM8QbmIIwYyn8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Am2S/ph+sy+iwyjTJqBVAAwqwz/ZAeYKL3y+L06mZpEk//WQJlH4xGATJNSEGRz4d
-	 I45sbet+cR9zYkkZEAs5dQwA0q+9cqnVoiCh1VhK6FWKuOvurFKnu0NmFwSan8kWHa
-	 r+cKzkW47gy0QgDwKp8D5Vj3VX0VCZcAFM51s4tI=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45IHVQoV042987
+	bh=qTzzrQAtlIWmn+nMM750AlJyr53fZqmeInvHLmBDgns=;
+	h=From:To:CC:Subject:Date;
+	b=Twf3G+aUiPAZjhrp7hMJA1fB3xLtcNokH5+sWEMFpPVGJFoDLPB/hDXmbJQWMqS99
+	 xmCL2VpEhQBE8KSVobQMORWO78b3m/stkH1RmJQM/EJ0cj7PIHGDt5EzegBTdCHiyh
+	 SgB9PiRZ0sJ2n3P45zuR5AGsVydOuP+Z62/Y/dRU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45IHVQgw026410
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Tue, 18 Jun 2024 12:31:26 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
  Jun 2024 12:31:25 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Tue, 18 Jun 2024 12:31:25 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45IHVPb5043311;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45IHVPqP043305;
 	Tue, 18 Jun 2024 12:31:25 -0500
 From: Nishanth Menon <nm@ti.com>
 To: Conor Dooley <conor+dt@kernel.org>,
@@ -54,12 +53,10 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Jared McArthur <j-mcarthur@ti.com>, Bryan
  Brattlof <bb@ti.com>,
         Dhruva Gole <d-gole@ti.com>
-Subject: [PATCH 2/3] arm64: dts: ti: k3-am62p: Add gpio-ranges properties
-Date: Tue, 18 Jun 2024 12:31:22 -0500
-Message-ID: <20240618173123.2592074-3-nm@ti.com>
+Subject: [PATCH 0/3] arm64: dts: ti: k3-am62p/j722s: Add gpio-ranges properties
+Date: Tue, 18 Jun 2024 12:31:20 -0500
+Message-ID: <20240618173123.2592074-1-nm@ti.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618173123.2592074-1-nm@ti.com>
-References: <20240618173123.2592074-1-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,99 +68,37 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On the AM62P platform we have no single 1:1 relation regarding index
-of GPIO and pin controller. The GPIOs and pin controller registers
-have mapping and holes in the map. These have been extracted from the
-AM62P data sheet.
+Hi,
 
-Mux mode input is selected as it is bi-directional. In case a specific
-pull type or a specific pin level drive setting is desired, the board
-device tree files will have to explicitly mux those pins for the GPIO
-with the desired setting.
+This series was tested on BeagleY-AI[1] using the script[2].
 
-Ref: AM62P Data sheet https://www.ti.com/lit/gpn/am62p
+This allows gpiod to request for a gpio that is not in the default GPIO
+mux mode and the framework controls the mux over to required GPIO mode.
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+The series is based off next-20240617.
 
-Note: this generates a 'too large' warning for
-pinctrl-single,gpio-ranges -
-https://lore.kernel.org/r/20240618165102.2380159-1-nm@ti.com/ for more
-details
+NOTE: there is also a dtb_warning that is added, which as far as I can
+see is either a dtschema bug or a pinctrl-single binding error. more
+information in [3]
+
+Jared McArthur (1):
+  arm64: dts: ti: k3-j722s: Add gpio-ranges properties
+
+Nishanth Menon (2):
+  arm64: dts: ti: k3-pinctrl: Define a generic GPIO MUX Mode
+  arm64: dts: ti: k3-am62p: Add gpio-ranges properties
 
  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 14 ++++++++++++++
  arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi  | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j722s.dtsi      | 17 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-pinctrl.h       |  2 ++
+ 4 files changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-index eed06506f617..573c85486db1 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-@@ -258,7 +258,17 @@ main_pmx0: pinctrl@f4000 {
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
- 		pinctrl-single,function-mask = <0xffffffff>;
-+		pinctrl-single,gpio-range =
-+			<&main_pmx0_range 0 32 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&main_pmx0_range 33 92 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&main_pmx0_range 137 5 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&main_pmx0_range 143 3 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&main_pmx0_range 149 2 (PIN_INPUT | PIN_GPIO_MUX_MODE)>;
- 		bootph-all;
-+
-+		main_pmx0_range: gpio-range {
-+			#pinctrl-single,gpio-range-cells = <3>;
-+		};
- 	};
- 
- 	main_esm: esm@420000 {
-@@ -543,6 +553,8 @@ main_gpio0: gpio@600000 {
- 		power-domains = <&k3_pds 77 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 77 0>;
- 		clock-names = "gpio";
-+		gpio-ranges = <&main_pmx0 0 0 32>, <&main_pmx0 32 33 38>,
-+				<&main_pmx0 70 72 22>;
- 	};
- 
- 	main_gpio1: gpio@601000 {
-@@ -560,6 +572,8 @@ main_gpio1: gpio@601000 {
- 		power-domains = <&k3_pds 78 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 78 0>;
- 		clock-names = "gpio";
-+		gpio-ranges = <&main_pmx0 0 94 32>, <&main_pmx0 42 137 5>,
-+				<&main_pmx0 47 143 3>, <&main_pmx0 50 149 2>;
- 	};
- 
- 	sdhci0: mmc@fa10000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-index b973b550eb9d..a27dd12b44ac 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-@@ -11,7 +11,15 @@ mcu_pmx0: pinctrl@4084000 {
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
- 		pinctrl-single,function-mask = <0xffffffff>;
-+		pinctrl-single,gpio-range =
-+			<&mcu_pmx_range 0 21 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&mcu_pmx_range 23 1 (PIN_INPUT | PIN_GPIO_MUX_MODE)>,
-+			<&mcu_pmx_range 32 2 (PIN_INPUT | PIN_GPIO_MUX_MODE)>;
- 		bootph-all;
-+
-+		mcu_pmx_range: gpio-range {
-+			#pinctrl-single,gpio-range-cells = <3>;
-+		};
- 	};
- 
- 	mcu_esm: esm@4100000 {
-@@ -137,6 +145,8 @@ mcu_gpio0: gpio@4201000 {
- 		power-domains = <&k3_pds 79 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 79 0>;
- 		clock-names = "gpio";
-+		gpio-ranges = <&mcu_pmx0 0 0 21>, <&mcu_pmx0 21 23 1>,
-+				<&mcu_pmx0 22 32 2>;
- 	};
- 
- 	mcu_rti0: watchdog@4880000 {
+
+base-commit: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
+[1] https://www.beagleboard.org/boards/beagley-ai
+[2] https://gist.github.com/nmenon/4973770cf0df3f02c2e4f7f3d048d80d
+[3] https://lore.kernel.org/r/20240618165102.2380159-1-nm@ti.com
 -- 
 2.43.0
 
