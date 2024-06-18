@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669AC156F42;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9115746E;
 	Tue, 18 Jun 2024 07:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695541; cv=none; b=G8FDMw8lzFjn4TTnOx3Y1B3sOEyYHUsH1paHP5IxPScOKnTXG35+RjnXM9BrhE/ElNZldxIPjCkkrWoOiCX4G9jC6eXF5YIQcWoDa9+NQ1GCvOwFjZIszgqsVJlO/1o5HRzrrVo+CP36+VJlCIMKIJviZ1e5y6IssvnnLIh53ak=
+	t=1718695542; cv=none; b=F2Hj+Qzy5FLbt71RNmY7Jovf4L0T/duUTXiIvBcGVrgj5mR3BKJQE8wsk6PLiKq0IJlLCcqlzpB/miuOASQf5PHlOak1M9VVugZgQxXFfJ/ieDS2FIpTRhcCHSMUjTo3O4CtkZ8toDjnjkgvX5WwsIwBb1aZ5JWAzbvn3MmBrow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695541; c=relaxed/simple;
-	bh=X7R5a5q84PVJIRPwRnjIqVBMxLGbsKuD9OquSDsOxKI=;
+	s=arc-20240116; t=1718695542; c=relaxed/simple;
+	bh=FbbAiov4OHSV7INKnGdeocZuk+klys2tkIDh/H6h8/A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CiMKb6gzHabEezoEIeyZKzcI9HeQ29l3beETe/uN7Z8CvT7FlzfnBoD+aCDT1DalP2gnwnYdQttgZwR1a+JJohJ3Ee77WMiasd6lTyfBnBAaAohsApXQWHP6dfuigrkkM6LDn616oWZ+IKKdIveHSodWqegTUeVEv5reB86Aprk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FLm5lPFU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tf387lz9; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=nSq3GT49YUAo0RKooC4IuVj68CyRKaPunetYtbQ4su5UH+kdS6tL2HONEuY1TgPbD2RKHTpctmNypLxUOODh+9waWb2f02s4IfWioFf/5lNWMQIOPa08+WjIzFVxh/KCKeNOXKc4XozcxOFr83zWm2pBZ74cdADqYBeqxp4JZNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wGKsD/0M; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d/vCm9Vz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FLm5lPFU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tf387lz9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wGKsD/0M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d/vCm9Vz"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718695535;
+	s=2020; t=1718695536;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y4+m+Kh4U5SEuxn55rR3Br3eloKf+1N6uKkudtS94Sc=;
-	b=FLm5lPFU3rFNpHkkyVotHGe7jKhlMf30Fi8J1JX4TDDI/eHVrnIhQ9gv7b7dYw2ySlDM0L
-	zYuLArV13A6oRBtBpuSDPh/fZOoco+TFO7MBC7SyQTmbmQYBfYGBl478xERSPqY8d4YImp
-	NwHhd4dYfqXTPhbwxFGVxf2EDti0CrHuIVUPCja8cg4v5MnFmb8aZdfkSxEn+NPWmqAmFv
-	YebdUCfw0SR0u0pP7Y/Q6SVHDd7B7l+N3LtazcPa4kXDDGLMzacfEvB0YHkYW94760i+B8
-	o6A5BZEGe8PBsvg+75c63L3LfP9wmmsrD1JXqYeUauaQMXLZ+1CCqAOfnqcA4g==
+	bh=Xg1ApPCQGVJ8CFcoKgcEnIVTe/xamtVzkM/qsLKXD5I=;
+	b=wGKsD/0Ml9NDwu1MhkaCpS5zKJEgeQGaEvXdqvDxUZvdFyMS46ZAZMH/k2RjdunkaEmy0C
+	UHXqOUrjRFltvWcvsaSPtL7hraynxX3h0tiqxI0qkcJl0eygBSMy6LBtmZVwuCAeFkd4Bp
+	OB0WAUv26NC7m7ZC0n53IxQ72VqMsG/EV0ZJsP+JhCy2qKYH24NqSLam9hsXoD7e7Rc987
+	zrs5jEG+gOM/JaCY5+OhFGv5wfY8bz5+SzKQ8tQYhlDuuzSMrkzDPCLDeKbWqut0kxrXOG
+	F2asH/y4tYyOkLxF1GQLxpaaxWWT/zAEUBUFQC6EKVTgFUNhDkNw1kJiE9wTjQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718695535;
+	s=2020e; t=1718695536;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y4+m+Kh4U5SEuxn55rR3Br3eloKf+1N6uKkudtS94Sc=;
-	b=tf387lz9ZTJTpKWgz/ePSVgzNn6Gw8g8zl+zlgrTHyr604eYngzXFHhM6Rg903AV2DVWEe
-	yommig7mxgWfE0Bg==
+	bh=Xg1ApPCQGVJ8CFcoKgcEnIVTe/xamtVzkM/qsLKXD5I=;
+	b=d/vCm9VzTWQVZwd7ky5lcV8a8G7MfFdUgjwA4NO5I1p9MLWvz0Td5SrQmARr+OyR+u4Tdz
+	ERwRg3TunaWvDpAg==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -54,10 +54,22 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v7 net-next 10/15] dev: Use nested-BH locking for softnet_data.process_queue.
-Date: Tue, 18 Jun 2024 09:13:26 +0200
-Message-ID: <20240618072526.379909-11-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	bpf@vger.kernel.org
+Subject: [PATCH v7 net-next 12/15] seg6: Use nested-BH locking for seg6_bpf_srh_states.
+Date: Tue, 18 Jun 2024 09:13:28 +0200
+Message-ID: <20240618072526.379909-13-bigeasy@linutronix.de>
 In-Reply-To: <20240618072526.379909-1-bigeasy@linutronix.de>
 References: <20240618072526.379909-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,103 +80,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-softnet_data::process_queue is a per-CPU variable and relies on disabled
-BH for its locking. Without per-CPU locking in local_bh_disable() on
-PREEMPT_RT this data structure requires explicit locking.
+The access to seg6_bpf_srh_states is protected by disabling preemption.
+Based on the code, the entry point is input_action_end_bpf() and
+every other function (the bpf helper functions bpf_lwt_seg6_*()), that
+is accessing seg6_bpf_srh_states, should be called from within
+input_action_end_bpf().
 
-softnet_data::input_queue_head can be updated lockless. This is fine
-because this value is only update CPU local by the local backlog_napi
-thread.
+input_action_end_bpf() accesses seg6_bpf_srh_states first at the top of
+the function and then disables preemption. This looks wrong because if
+preemption needs to be disabled as part of the locking mechanism then
+the variable shouldn't be accessed beforehand.
 
-Add a local_lock_t to softnet_data and use local_lock_nested_bh() for locki=
-ng
-of process_queue. This change adds only lockdep coverage and does not
-alter the functional behaviour for !PREEMPT_RT.
+Looking at how it is used via test_lwt_seg6local.sh then
+input_action_end_bpf() is always invoked from softirq context. If this
+is always the case then the preempt_disable() statement is superfluous.
+If this is not always invoked from softirq then disabling only
+preemption is not sufficient.
 
+Replace the preempt_disable() statement with nested-BH locking. This is
+not an equivalent replacement as it assumes that the invocation of
+input_action_end_bpf() always occurs in softirq context and thus the
+preempt_disable() is superfluous.
+Add a local_lock_t the data structure and use local_lock_nested_bh() for
+locking. Add lockdep_assert_held() to ensure the lock is held while the
+per-CPU variable is referenced in the helper functions.
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: David Ahern <dsahern@kernel.org>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Yonghong Song <yonghong.song@linux.dev>
+Cc: bpf@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/netdevice.h |  1 +
- net/core/dev.c            | 12 +++++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ include/net/seg6_local.h |  1 +
+ net/core/filter.c        |  3 +++
+ net/ipv6/seg6_local.c    | 22 ++++++++++++++--------
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 96b233a0bc2b3..f725129c9f6f4 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3202,6 +3202,7 @@ static inline bool dev_has_header(const struct net_de=
-vice *dev)
- struct softnet_data {
- 	struct list_head	poll_list;
- 	struct sk_buff_head	process_queue;
-+	local_lock_t		process_queue_bh_lock;
+diff --git a/include/net/seg6_local.h b/include/net/seg6_local.h
+index 3fab9dec2ec45..888c1ce6f5272 100644
+--- a/include/net/seg6_local.h
++++ b/include/net/seg6_local.h
+@@ -19,6 +19,7 @@ extern int seg6_lookup_nexthop(struct sk_buff *skb, struc=
+t in6_addr *nhaddr,
+ extern bool seg6_bpf_has_valid_srh(struct sk_buff *skb);
 =20
- 	/* stats */
- 	unsigned int		processed;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2745001d09eb4..42ac76524e84e 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -449,7 +449,9 @@ static RAW_NOTIFIER_HEAD(netdev_chain);
-  *	queue in the local softnet handler.
-  */
+ struct seg6_bpf_srh_state {
++	local_lock_t bh_lock;
+ 	struct ipv6_sr_hdr *srh;
+ 	u16 hdrlen;
+ 	bool valid;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 7c46ecba3b01b..ba1a739a9bedc 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -6450,6 +6450,7 @@ BPF_CALL_4(bpf_lwt_seg6_store_bytes, struct sk_buff *=
+, skb, u32, offset,
+ 	void *srh_tlvs, *srh_end, *ptr;
+ 	int srhoff =3D 0;
 =20
--DEFINE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
-+DEFINE_PER_CPU_ALIGNED(struct softnet_data, softnet_data) =3D {
-+	.process_queue_bh_lock =3D INIT_LOCAL_LOCK(process_queue_bh_lock),
-+};
- EXPORT_PER_CPU_SYMBOL(softnet_data);
++	lockdep_assert_held(&srh_state->bh_lock);
+ 	if (srh =3D=3D NULL)
+ 		return -EINVAL;
 =20
- /* Page_pool has a lockless array/stack to alloc/recycle pages.
-@@ -5949,6 +5951,7 @@ static void flush_backlog(struct work_struct *work)
- 	}
- 	backlog_unlock_irq_enable(sd);
+@@ -6506,6 +6507,7 @@ BPF_CALL_4(bpf_lwt_seg6_action, struct sk_buff *, skb,
+ 	int hdroff =3D 0;
+ 	int err;
 =20
-+	local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
- 	skb_queue_walk_safe(&sd->process_queue, skb, tmp) {
- 		if (skb->dev->reg_state =3D=3D NETREG_UNREGISTERING) {
- 			__skb_unlink(skb, &sd->process_queue);
-@@ -5956,6 +5959,7 @@ static void flush_backlog(struct work_struct *work)
- 			rps_input_queue_head_incr(sd);
- 		}
- 	}
-+	local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
- 	local_bh_enable();
++	lockdep_assert_held(&srh_state->bh_lock);
+ 	switch (action) {
+ 	case SEG6_LOCAL_ACTION_END_X:
+ 		if (!seg6_bpf_has_valid_srh(skb))
+@@ -6582,6 +6584,7 @@ BPF_CALL_3(bpf_lwt_seg6_adjust_srh, struct sk_buff *,=
+ skb, u32, offset,
+ 	int srhoff =3D 0;
+ 	int ret;
+=20
++	lockdep_assert_held(&srh_state->bh_lock);
+ 	if (unlikely(srh =3D=3D NULL))
+ 		return -EINVAL;
+=20
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index 24e2b4b494cb0..c4828c6620f07 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -1380,7 +1380,9 @@ static int input_action_end_b6_encap(struct sk_buff *=
+skb,
+ 	return err;
  }
 =20
-@@ -6077,7 +6081,9 @@ static int process_backlog(struct napi_struct *napi, =
-int quota)
- 	while (again) {
- 		struct sk_buff *skb;
+-DEFINE_PER_CPU(struct seg6_bpf_srh_state, seg6_bpf_srh_states);
++DEFINE_PER_CPU(struct seg6_bpf_srh_state, seg6_bpf_srh_states) =3D {
++	.bh_lock	=3D INIT_LOCAL_LOCK(bh_lock),
++};
 =20
-+		local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
- 		while ((skb =3D __skb_dequeue(&sd->process_queue))) {
-+			local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
- 			rcu_read_lock();
- 			__netif_receive_skb(skb);
- 			rcu_read_unlock();
-@@ -6086,7 +6092,9 @@ static int process_backlog(struct napi_struct *napi, =
-int quota)
- 				return work;
- 			}
+ bool seg6_bpf_has_valid_srh(struct sk_buff *skb)
+ {
+@@ -1388,6 +1390,7 @@ bool seg6_bpf_has_valid_srh(struct sk_buff *skb)
+ 		this_cpu_ptr(&seg6_bpf_srh_states);
+ 	struct ipv6_sr_hdr *srh =3D srh_state->srh;
 =20
-+			local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
- 		}
-+		local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
++	lockdep_assert_held(&srh_state->bh_lock);
+ 	if (unlikely(srh =3D=3D NULL))
+ 		return false;
 =20
- 		backlog_lock_irq_disable(sd);
- 		if (skb_queue_empty(&sd->input_pkt_queue)) {
-@@ -6101,8 +6109,10 @@ static int process_backlog(struct napi_struct *napi,=
- int quota)
- 			napi->state &=3D NAPIF_STATE_THREADED;
- 			again =3D false;
- 		} else {
-+			local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
- 			skb_queue_splice_tail_init(&sd->input_pkt_queue,
- 						   &sd->process_queue);
-+			local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
- 		}
- 		backlog_unlock_irq_enable(sd);
+@@ -1408,8 +1411,7 @@ bool seg6_bpf_has_valid_srh(struct sk_buff *skb)
+ static int input_action_end_bpf(struct sk_buff *skb,
+ 				struct seg6_local_lwt *slwt)
+ {
+-	struct seg6_bpf_srh_state *srh_state =3D
+-		this_cpu_ptr(&seg6_bpf_srh_states);
++	struct seg6_bpf_srh_state *srh_state;
+ 	struct ipv6_sr_hdr *srh;
+ 	int ret;
+=20
+@@ -1420,10 +1422,14 @@ static int input_action_end_bpf(struct sk_buff *skb,
  	}
+ 	advance_nextseg(srh, &ipv6_hdr(skb)->daddr);
+=20
+-	/* preempt_disable is needed to protect the per-CPU buffer srh_state,
+-	 * which is also accessed by the bpf_lwt_seg6_* helpers
++	/* The access to the per-CPU buffer srh_state is protected by running
++	 * always in softirq context (with disabled BH). On PREEMPT_RT the
++	 * required locking is provided by the following local_lock_nested_bh()
++	 * statement. It is also accessed by the bpf_lwt_seg6_* helpers via
++	 * bpf_prog_run_save_cb().
+ 	 */
+-	preempt_disable();
++	local_lock_nested_bh(&seg6_bpf_srh_states.bh_lock);
++	srh_state =3D this_cpu_ptr(&seg6_bpf_srh_states);
+ 	srh_state->srh =3D srh;
+ 	srh_state->hdrlen =3D srh->hdrlen << 3;
+ 	srh_state->valid =3D true;
+@@ -1446,15 +1452,15 @@ static int input_action_end_bpf(struct sk_buff *skb,
+=20
+ 	if (srh_state->srh && !seg6_bpf_has_valid_srh(skb))
+ 		goto drop;
++	local_unlock_nested_bh(&seg6_bpf_srh_states.bh_lock);
+=20
+-	preempt_enable();
+ 	if (ret !=3D BPF_REDIRECT)
+ 		seg6_lookup_nexthop(skb, NULL, 0);
+=20
+ 	return dst_input(skb);
+=20
+ drop:
+-	preempt_enable();
++	local_unlock_nested_bh(&seg6_bpf_srh_states.bh_lock);
+ 	kfree_skb(skb);
+ 	return -EINVAL;
+ }
 --=20
 2.45.2
 
