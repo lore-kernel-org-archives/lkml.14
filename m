@@ -1,218 +1,178 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EBA149E00;
-	Tue, 18 Jun 2024 10:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7278D16CD1A
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718707093; cv=none; b=bplTfTo4s4LcamX2gIS8O1QkEvWoJuCFrJ9m9SYJnsG8Q7UAw1mzVdFkxjEwzrV+pCMxuEJRrThCNDJW0zT6Aj4TbYIqlHEvj9AEIPNWk+jrv1XNueVuD80QuLhobYb/pa4UAhXA3xPjUoZ42iZ4Rh0aDg0zCcOPOClG2a/H4rY=
+	t=1718707108; cv=none; b=G2tcKNevIatp9hSNel8uHNpamcd+gwSu9amcPMj/gZI3SoNyDfkycMpsEEQ7sdn6JdTqHrtXxZxdUaTxfOu8oiVx1yNNnRCTIxpppOziKoBtHQlUSI6B6ZfPs7PPTYtpSXLfrcOd7ND6emww+DCnolQWV/tBebxuavb+JGag+4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718707093; c=relaxed/simple;
-	bh=wZJLQi/Ekdu9JC9Mi7+yEfD3EfnHwXNBsv+LqAhcRQQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mF25QCnbLS7UWSo8ddDbE+g3dJXJHeTBoOlN/h1Lz39gva0dTQp3Ql/HMGKJJk9zbt8SJ9F+WrNcJ7ocTfOO2dTBTU7CyyaSY/m2w3lMbVrL933SwOtyICVyakf8MpCykKDdVAvqlP9ajnp+/yUfLdeVLRB+vvhLYdXTGCcd430=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=n9F8ocfa; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718707108; c=relaxed/simple;
+	bh=AZdoksxUtXRL1JEsmNkEFGPiEJ6sXnqW05agL++pjYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UFUXJcMzpuqEMEDdWu6bcwcmEYdqFHrYSPBxegbkFc2h0u5Kg/JzLq1ksuIbb3166mmYIYbBYzPRqUr4mKQEqXg/ywcAijn+Lrhc7Ypg9/yRoa6stjjBKZgBfFbSBT9rnKJhzrZ3SF8jQ1FlR/GDo9EsqfDdeB8MuAcyA33/Z+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=H3b3JD1U; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="n9F8ocfa"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I6WQV6017671;
-	Tue, 18 Jun 2024 11:37:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Qsd+quSmL/fyABfE+A5sHO3NwXbp2Y5VM8+yeBUep0c=; b=n9F8ocfaChShw9Qz
-	rxc4iYvvmqhjnvEeYANU9HmbTnKCn4P7YqMOzzBO76seNFDwB75ZZQ95klzQp7zN
-	/uCcQzzc7YrbARdcfHUs4EgCuUZwNjF/Fr7kX7u4WXgxHSVkYJd7FMe7ktMSB6e/
-	XEuDkiIz0AzkjWQ0RYEAyQ6zsaxDm5CC8V0gGHqQKdLRetECrmvx6NIQUEHYAh1t
-	ed01is+2n7+3bMieQOw48AJ8zvjJMRpTZ6qSF6tf+o7JwPStNtMJOZGg+eGsSspk
-	/kpnrNaw7t9oNue9MhMUPzN0H9MT9nR4h6U4u7/1gP2c+ynB9N9sD72fUwnt/M84
-	WPFtuA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ysnwj8b5h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 11:37:30 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C150A40046;
-	Tue, 18 Jun 2024 11:36:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8EF192138DA;
-	Tue, 18 Jun 2024 11:35:37 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 18 Jun
- 2024 11:35:36 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] arm64: dts: st: add ethernet1 and ethernet2 support on stm32mp25
-Date: Tue, 18 Jun 2024 11:35:25 +0200
-Message-ID: <20240618093527.318239-2-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240618093527.318239-1-christophe.roullier@foss.st.com>
-References: <20240618093527.318239-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H3b3JD1U"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6f9611fc320so2331399a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:38:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1718707104; x=1719311904; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qq1vFxMrgUe3BHqjNbGzwCUUF1/CTlGHAYljkroSrGs=;
+        b=H3b3JD1UjPuoFpTD5eJBtWFpvPHTxvbJ6DHa66eUhR4hQcLcg0WLURUpCNr9pfM54v
+         qLk4SrcsN7BcZlvTawATX7/4vGvcip1D3ctm8Y95a10XO1rt+TvNA5THtBWBWn1fDkLs
+         Nsc+NpuXIRCLgtl7H09UqZXE7f8H344EdkyRpYn4vPAiwbx1n9RQaG8Fr1tsrs4SqCbE
+         mqXHbCAIIzTO1r8pAxPggZuIUDKX/cM82OKTuwthBIoC/boGNnN4eYWGeY4MPh12n3OS
+         4SbywuA55v1Zm4N3Pnppzyp3v4BoGAolPrvLFys59y6VQzd16KiQkk5XQLpJRC5Ipo4H
+         ir9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718707104; x=1719311904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qq1vFxMrgUe3BHqjNbGzwCUUF1/CTlGHAYljkroSrGs=;
+        b=dRg6q1JRz12kW4lF9AAVYKDLi7TAzxSSRh8qeOifq1h4xAPkt+o+Q71CI4rJXTjewo
+         GCoVsPfMPXfDrnDfiVyrb6Aabv+QkNWU2e1Xbw+tMZrdOrfjXY2kSGkbP2VD0Bd0j/2t
+         HKh9gAEE7/AhAOK1Ub7a+wcsKhZ4AjbFqg19h3uVDrW9/Mk8wEq05RaPR+9CY17ti1q3
+         AMN7yYmz2h0P3RjOQ4M/yK9HNP9cwlJ5PgRjfwTwaI9swr40sbVBzE0FZiwQbYU/gVPW
+         FrHYM929jlwMe+9TXZY0/i4u22f0XL1psqY/7BEltY9HKPWOSpbTkOYzyrfuGQDTfgNP
+         n9OQ==
+X-Gm-Message-State: AOJu0Yxzh4SunOZ6jdrl6hzvdb2pPRjeAw0ow+P3uFNMmVeJyXspQaJz
+	pWnZgpNipe4lrd2fyNmqQ+6fn/M7x6F55m2oVwXr9viWWG5XRSNsw3ffzIgsL0JO/KWjOQicI8t
+	cZa5jqNi7JC4RTYG6vGqu6zY4dQXoGDv5tWqHbg==
+X-Google-Smtp-Source: AGHT+IH2vZAzENDjSgV/6akmRJ7c2RZBHzcy/7oyoiwK4Myt+lBo2Y7nfaUbFeJ8Be+9iC0edhHwfsXFlrWYewHshLA=
+X-Received: by 2002:a05:6870:b4a2:b0:254:88ea:6d90 with SMTP id
+ 586e51a60fabf-2584285855cmr13792436fac.2.1718707104411; Tue, 18 Jun 2024
+ 03:38:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
+ <20240605121512.32083-3-yongxuan.wang@sifive.com> <20240605-atrium-neuron-c2512b34d3da@spud>
+In-Reply-To: <20240605-atrium-neuron-c2512b34d3da@spud>
+From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Date: Tue, 18 Jun 2024 18:38:13 +0800
+Message-ID: <CAMWQL2gQpHPD=bPenjD+=NP47k8n26+6KP05zogxUtsD6zY6GQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: riscv: Add Svade and Svadu Entries
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, apatel@ventanamicro.com, 
+	alex@ghiti.fr, ajones@ventanamicro.com, greentime.hu@sifive.com, 
+	vincent.chen@sifive.com, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Both instances ethernet based on GMAC SNPS IP on stm32mp25.
-GMAC IP version is SNPS 5.3
+On Thu, Jun 6, 2024 at 12:55=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, Jun 05, 2024 at 08:15:08PM +0800, Yong-Xuan Wang wrote:
+> > Add entries for the Svade and Svadu extensions to the riscv,isa-extensi=
+ons
+> > property.
+> >
+> > Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+> > ---
+> >  .../devicetree/bindings/riscv/extensions.yaml | 30 +++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/=
+Documentation/devicetree/bindings/riscv/extensions.yaml
+> > index 468c646247aa..1e30988826b9 100644
+> > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > @@ -153,6 +153,36 @@ properties:
+> >              ratified at commit 3f9ed34 ("Add ability to manually trigg=
+er
+> >              workflow. (#2)") of riscv-time-compare.
+> >
+> > +        - const: svade
+> > +          description: |
+> > +            The standard Svade supervisor-level extension for raising =
+page-fault
+> > +            exceptions when PTE A/D bits need be set as ratified in th=
+e 20240213
+> > +            version of the privileged ISA specification.
+> > +
+> > +            Both Svade and Svadu extensions control the hardware behav=
+ior when
+> > +            the PTE A/D bits need to be set. The default behavior for =
+the four
+> > +            possible combinations of these extensions in the device tr=
+ee are:
+> > +            1. Neither svade nor svadu in DT: default to svade.
+>
+> I think this needs to be expanded on, as to why nothing means svade.
+>
+> > +            2. Only svade in DT: use svade.
+>
+> That's a statement of the obvious, right?
+>
+> > +            3. Only svadu in DT: use svadu.
+>
+> This is not relevant for Svade.
+>
+> > +            4. Both svade and svadu in DT: default to svade (Linux can=
+ switch to
+> > +               svadu once the SBI FWFT extension is available).
+>
+> "The privilege level to which this devicetree has been provided can switc=
+h to
+> Svadu if the SBI FWFT extension is available".
+>
+> > +        - const: svadu
+> > +          description: |
+> > +            The standard Svadu supervisor-level extension for hardware=
+ updating
+> > +            of PTE A/D bits as ratified at commit c1abccf ("Merge pull=
+ request
+> > +            #25 from ved-rivos/ratified") of riscv-svadu.
+> > +
+> > +            Both Svade and Svadu extensions control the hardware behav=
+ior when
+> > +            the PTE A/D bits need to be set. The default behavior for =
+the four
+> > +            possible combinations of these extensions in the device tr=
+ee are:
+>
+> @Anup/Drew/Alex, are we missing some wording in here about it only being
+> valid to have Svadu in isolation if the provider of the devicetree has
+> actually turned on Svadu? The binding says "the default behaviour", but
+> it is not the "default" behaviour, the behaviour is a must AFAICT. If
+> you set Svadu in isolation, you /must/ have turned it on. If you set
+> Svadu and Svade, you must have Svadu turned off?
+>
+> > +            1. Neither svade nor svadu in DT: default to svade.
+> > +            2. Only svade in DT: use svade.
+>
+> These two are not relevant to Svadu, I'd leave them out.
+>
+> > +            3. Only svadu in DT: use svadu.
+>
+> Again, statement of the obvious?
+>
+> > +            4. Both svade and svadu in DT: default to svade (Linux can=
+ switch to
+> > +               svadu once the SBI FWFT extension is available).
+>
+> Same here as in the Svade entry.
+>
+> Thanks,
+> Conor.
+>
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 49 +++++++++++++++++++++++++
- arch/arm64/boot/dts/st/stm32mp253.dtsi | 51 ++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
+Hi Conor,
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index dcd0656d67a8..3ab788baefc2 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -338,6 +338,55 @@ sdmmc1: mmc@48220000 {
- 				access-controllers = <&rifsc 76>;
- 				status = "disabled";
- 			};
-+
-+			ethernet1: ethernet@482c0000 {
-+				compatible = "st,stm32mp25-dwmac", "snps,dwmac-5.20";
-+				reg = <0x482c0000 0x4000>;
-+				reg-names = "stmmaceth";
-+				interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "macirq";
-+				clock-names = "stmmaceth",
-+					      "mac-clk-tx",
-+					      "mac-clk-rx",
-+					      "ptp_ref",
-+					      "ethstp",
-+					      "eth-ck";
-+				clocks = <&rcc CK_ETH1_MAC>,
-+					 <&rcc CK_ETH1_TX>,
-+					 <&rcc CK_ETH1_RX>,
-+					 <&rcc CK_KER_ETH1PTP>,
-+					 <&rcc CK_ETH1_STP>,
-+					 <&rcc CK_KER_ETH1>;
-+				snps,axi-config = <&stmmac_axi_config_1>;
-+				snps,mixed-burst;
-+				snps,mtl-rx-config = <&mtl_rx_setup_1>;
-+				snps,mtl-tx-config = <&mtl_tx_setup_1>;
-+				snps,pbl = <2>;
-+				snps,tso;
-+				st,syscon = <&syscfg 0x3000>;
-+				access-controllers = <&rifsc 60>;
-+				status = "disabled";
-+
-+				mtl_rx_setup_1: rx-queues-config {
-+					snps,rx-queues-to-use = <2>;
-+					queue0 {};
-+					queue1 {};
-+				};
-+
-+				mtl_tx_setup_1: tx-queues-config {
-+					snps,tx-queues-to-use = <4>;
-+					queue0 {};
-+					queue1 {};
-+					queue2 {};
-+					queue3 {};
-+				};
-+
-+				stmmac_axi_config_1: stmmac-axi-config {
-+					snps,blen = <0 0 0 0 16 8 4>;
-+					snps,rd_osr_lmt = <0x7>;
-+					snps,wr_osr_lmt = <0x7>;
-+				};
-+			};
- 		};
- 
- 		bsec: efuse@44000000 {
-diff --git a/arch/arm64/boot/dts/st/stm32mp253.dtsi b/arch/arm64/boot/dts/st/stm32mp253.dtsi
-index 029f88981961..44fed477a55e 100644
---- a/arch/arm64/boot/dts/st/stm32mp253.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp253.dtsi
-@@ -28,3 +28,54 @@ timer {
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
-+
-+&rifsc {
-+	ethernet2: ethernet@482d0000 {
-+		compatible = "st,stm32mp25-dwmac", "snps,dwmac-5.20";
-+		reg = <0x482d0000 0x4000>;
-+		reg-names = "stmmaceth";
-+		interrupts-extended = <&intc GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "macirq";
-+		clock-names = "stmmaceth",
-+			      "mac-clk-tx",
-+			      "mac-clk-rx",
-+			      "ptp_ref",
-+			      "ethstp",
-+			      "eth-ck";
-+		clocks = <&rcc CK_ETH2_MAC>,
-+			 <&rcc CK_ETH2_TX>,
-+			 <&rcc CK_ETH2_RX>,
-+			 <&rcc CK_KER_ETH2PTP>,
-+			 <&rcc CK_ETH2_STP>,
-+			 <&rcc CK_KER_ETH2>;
-+		snps,axi-config = <&stmmac_axi_config_2>;
-+		snps,mixed-burst;
-+		snps,mtl-rx-config = <&mtl_rx_setup_2>;
-+		snps,mtl-tx-config = <&mtl_tx_setup_2>;
-+		snps,pbl = <2>;
-+		snps,tso;
-+		st,syscon = <&syscfg 0x3400>;
-+		access-controllers = <&rifsc 61>;
-+		status = "disabled";
-+
-+		mtl_rx_setup_2: rx-queues-config {
-+			snps,rx-queues-to-use = <2>;
-+			queue0 {};
-+			queue1 {};
-+		};
-+
-+		mtl_tx_setup_2: tx-queues-config {
-+			snps,tx-queues-to-use = <4>;
-+			queue0 {};
-+			queue1 {};
-+			queue2 {};
-+			queue3 {};
-+		};
-+
-+		stmmac_axi_config_2: stmmac-axi-config {
-+			snps,blen = <0 0 0 0 16 8 4>;
-+			snps,rd_osr_lmt = <0x7>;
-+			snps,wr_osr_lmt = <0x7>;
-+		};
-+	};
-+};
--- 
-2.25.1
+I will update the description. Thank you!
 
+Regards,
+Yong-Xuan
