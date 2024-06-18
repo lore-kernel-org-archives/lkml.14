@@ -1,89 +1,103 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3E418040;
-	Tue, 18 Jun 2024 09:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A353154BE2;
+	Tue, 18 Jun 2024 09:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718702149; cv=none; b=erwdowP/zcSGrOzqSPULU5Xa+diEjMTiitGFt5rJ4BZscLE+rijPOnHyVSBME+PQbtCrkBpbcPcgciCZaC2Fc98i6Vl4E23e826mK+F0j7g7a4yEcHtSHoplPdXJo/U1V/gikHVINupVI6VlEXOrFrps9sUjVU08uI2CiWchsVQ=
+	t=1718702185; cv=none; b=OcQaAi6NOD5gqD35xHh5dnTQQ1SdSWM4gDNKVqVpLpzv06AAWhoclxeK01TF6axGOZ2rrQxBp8LszNH/n1yOhsn1M4hSrIuMBBh2EXkFh2/CkX/aleszSoukzjA10FTdskoGU+SVIWd1Y/o+GPUy60BCQML0lmhNFScVFrT23KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718702149; c=relaxed/simple;
-	bh=VK2Wlb6lDMjzM8Zz61fmRi73Hu0Rvxc798K1at6fAXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=geSHIymiUlxgupJFb+PJI9Qo7FTvkm04vb4gWun3P7uNPi7JtLwFqYEcYTL9HOqEdCCAdJqBixhlfm6D8aaJAxbLi6zuiN1nBcMjwl0oRyp6Q3WbhBC05rSPULzutQ6N1y/Nwh7IMe1NQZX83OQ9xpd0ueJd0ivmSWNWSkOvXm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 60CED1C009A; Tue, 18 Jun 2024 11:15:45 +0200 (CEST)
-Date: Tue, 18 Jun 2024 11:15:44 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	hbathini@linux.ibm.com, bhe@redhat.com, akpm@linux-foundation.org,
-	bhelgaas@google.com, aneesh.kumar@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Naveen N Rao <naveen@kernel.org>
-Subject: Re: [PATCH AUTOSEL 6.9 18/23] powerpc: make fadump resilient with
- memory add/remove events
-Message-ID: <ZnFQQEBeFfO8vOnl@duo.ucw.cz>
-References: <20240527155123.3863983-1-sashal@kernel.org>
- <20240527155123.3863983-18-sashal@kernel.org>
- <944f47df-96f0-40e8-a8e2-750fb9fa358e@linux.ibm.com>
+	s=arc-20240116; t=1718702185; c=relaxed/simple;
+	bh=gJYgxijDZLRQX7vJE03ZtXSpHCoLXF6IHeSC1ttxfRE=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=gP7WZO2BZDDxtC0x0IXQBKWM4mFN2Ha0/2k8hKpDyIy9C95iM9dJN8qKgzV/lmZcJE547f2k5Lw9Vv2IPM3BuOTfdICyNDxBVZBypwa60ofwGK9L20ubRcgX/Pbq7IULSkeDC8/plQUdoJllcSA70u5KssPFcgEEqYRE7gI7IWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvXl7c0f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvXl7c0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A67C4AF1D;
+	Tue, 18 Jun 2024 09:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718702184;
+	bh=gJYgxijDZLRQX7vJE03ZtXSpHCoLXF6IHeSC1ttxfRE=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=ZvXl7c0fqJPirKBWXh00KMCuEMH04R1OF6W1/cCtAOroxdGUuti24F0zDD9CHxGZR
+	 t2rZtMmT91W0ioShq/gabu/Nf3xNNks2U6sy5FBsNGhSxsTS3eBdTCe8aZgrCIqjGX
+	 6uFeWklSQ4eovKwqIZOLWwNSMUXpTdTasfkACtKK5J/80bXph4cEULZguJQxY4OUj/
+	 AcUZ5+2vqRc/ZdI3IPaZyLemWheYT5kAsvQbTg/uQsT13r7OueoFHqsmK774WQZ4MF
+	 v7eL+H7bkTPSa1xKivbRb35CILQhNy/KmXjFjDKOgQLFIkVBFNLtVBhYXsdf5VEgmA
+	 xCfxVT8ek7Heg==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Johannes Berg <johannes.berg@intel.com>,  Michael Nemanov
+ <michael.nemanov@ti.com>,  linux-kernel@vger.kernel.org,
+  linux-wireless@vger.kernel.org
+Subject: Re: [PATCH wireless v2] wifi: wlcore: fix wlcore AP mode
+References: <E1sClp4-00Evu7-8v@rmk-PC.armlinux.org.uk>
+	<Zm1CKAKCnuc94oIi@shell.armlinux.org.uk> <87tthrn8gf.fsf@kernel.org>
+	<ZnA4QpyOdcYxg8LE@shell.armlinux.org.uk>
+Date: Tue, 18 Jun 2024 12:16:21 +0300
+In-Reply-To: <ZnA4QpyOdcYxg8LE@shell.armlinux.org.uk> (Russell King's message
+	of "Mon, 17 Jun 2024 14:21:06 +0100")
+Message-ID: <87a5jimx0a.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TzzIxnkKCl22NOl6"
-Content-Disposition: inline
-In-Reply-To: <944f47df-96f0-40e8-a8e2-750fb9fa358e@linux.ibm.com>
+Content-Type: text/plain
 
+"Russell King (Oracle)" <linux@armlinux.org.uk> writes:
 
---TzzIxnkKCl22NOl6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Jun 17, 2024 at 01:56:48PM +0300, Kalle Valo wrote:
+>> "Russell King (Oracle)" <linux@armlinux.org.uk> writes:
+>> 
+>> > I see all my TI Wilink patches have been marked as "deferred" in the
+>> > wireless patchwork. Please could you explain what the plan is with
+>> > these patches, especially this one which fixes a serious frustrating
+>> > failing that makes AP mode on this hardware very unreliable and thus
+>> > useless.
+>> 
+>> I'm just swamped with patches, I'll try to look at these soon.
+>> 
+>> I wish that TI would take a more active role in upstream, for example
+>> reviewing and testing patches would help a lot.
+>
+> I believe the problem has been that TI have had an attitude of "we
+> only support people using 4.19.38, if you can't reproduce the problem
+> there we aren't interested". To see the versions they support:
+>
+> https://git.ti.com/cgit/wilink8-wlan/build-utilites/tree/patches/kernel_patches?h=r8.9&id=a2ee50aa5190ed3b334373d6cd09b1bff56ffcf7
+>
+> basically, all are ancient.
+>
+> They also appear take the attitude that all the kernel code is ripe
+> for them to hack about with - whcih is why this fix has had to be
+> reworked so it isn't removing NL80211_FEATURE_FULL_AP_CLIENT_STATE
+> for _all_ kernel wireless drivers!
+>
+> Also, I think they also require one to use their hostapd and
+> wpa_supplicant, probably for a similar reason. I know that in some
+> of the patches they've hacked in API changes...
+>
+> Then one can see the attitude of lock-step firmware and driver
+> upgrade - you can't use 8.9.1.x.x firmware with their older driver,
+> and you can't use 8.9.0.x.x with their newer driver. That, of course,
+> is not acceptable to mainline.
+>
+> So, given all this, IMHO it's probably a good thing TI aren't trying
+> to submit their stuff upstream... that is, unless they are willing
+> to learn how to "do things correctly".
+>
+> Maybe I'm being too hard on TI's wireless division, but that seems to
+> be what has been going on.
 
-Hi!
+Yeah, the all you describe above is very common in wireless vendors :/
+But vendors do learn, Realtek is a great example of that. Let's hope
+that TI does too.
 
-> Hello Sasha,
->=20
-> Thank you for considering this patch for the stable tree 6.9, 6.8, 6.6, a=
-nd
-> 6.1.
->=20
-> This patch does two things:
-> 1. Fixes a potential memory corruption issue mentioned as the third point=
- in
-> the commit message
-> 2. Enables the kernel to avoid unnecessary fadump re-registration on memo=
-ry
-> add/remove events
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Actually, I'd suggest dropping this one, as it fixes two things and is
-over 200 lines long, as per stable kernel rules.
-
-(If those are outdated, update them).
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---TzzIxnkKCl22NOl6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZnFQQAAKCRAw5/Bqldv6
-8iXnAKCSkZNG/q44rY4Pt+FmeDt77CBpPgCfeMR7jMzrKnZIcmrU7qCTdt0H+Us=
-=WgYp
------END PGP SIGNATURE-----
-
---TzzIxnkKCl22NOl6--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
