@@ -1,133 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA95515A865;
-	Tue, 18 Jun 2024 12:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954491BA877;
+	Tue, 18 Jun 2024 12:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714588; cv=none; b=hla/HQFna3FCOdnumfJInHwkt68MQevbTcTx214sIbdvWfIf8kZ1GBPQbZjDJ8RSvUHyJTIFgf8Hyq/P4MAZ9A2hQfqNiC0TgrYaMk6L4JZ80vov6tcFDjZGG4Dvn1/oTcyo9bpGkc5pwV7PEgroTJNO5GiwhnXGuWfjx3eAJns=
+	t=1718714589; cv=none; b=LCt/kJj8WoNSOX6Vg3He2UInlTAXAWQgjnW5zGiqiU8c6XDw2r9PV37h9O6HUNWQjm5AuLnZ9hSk+1qft1whCBeOTZwlqkSDBSkCNBXnQ98EYz6u0zG3PrBqyHto1VVpovqVIXu7JFQYS3Cx2gYhXpiTDep/EGbQzD2chUWyKyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714588; c=relaxed/simple;
-	bh=ycTwnbrKA5jMepMlUMl2wrRBzrkzfQw9eMADUA5lL2A=;
+	s=arc-20240116; t=1718714589; c=relaxed/simple;
+	bh=QEw1lVVZFFXX5VT3x5lAacBYDpevRca1ieNXuJOWCEY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cp1E6wWP+o8hzxPFp82lEqeb+fmXysfEzooJXKsc/szIsSraume/fzpK+ZpRYx81LOWT8jYzJpJXHKqmzHZ73K6GbvybaIYmv7SpGDxM9AYxz4P6ryCmdNMd8EibyMOZtF/Gelz6LM19L2NdXxWaQoErTXSDVAvSJ4k75mqNgIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqf5K3KI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bxEwm4Gv/EdWw4nBVGXdevvvMM6gFYI83HAwx/Nn61BqybAIdu4MxGlG+e8Ymt4MvRY+fYqRZ5Ql7L6qW4aXdLrkDvNSC5k45BdohCDcTETdJPOaKld3nNKFWDh36h3vkAwZkoo0e03sdW1dvEios8a7xABuOyVkDuEswL/ZF+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F7477XZ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqf5K3KI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499C8C3277B;
-	Tue, 18 Jun 2024 12:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714588;
-	bh=ycTwnbrKA5jMepMlUMl2wrRBzrkzfQw9eMADUA5lL2A=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F7477XZ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B850C4AF1D;
+	Tue, 18 Jun 2024 12:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718714589;
+	bh=QEw1lVVZFFXX5VT3x5lAacBYDpevRca1ieNXuJOWCEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fqf5K3KI8M+vZvjmTrHGIIbCBCYvLux7spSMMUntH5W9m6mCcfDBkLWgvtINHxDkd
-	 7u6snEhN++XrVqqbXeE0b0wurW7kPmjPsFgSMo2jNJGLpjQdk0AHPjo4RKly8iGRlT
-	 qBBptzEmJlmntcZobbmr6XQoz9RB9P47w5FnwHtL8xxmVC/uDlQ1GZNzgMfF3ZacIx
-	 Iun3Dfn2QDJywXcyQle/mnHLcIR5gTVQhRX+srozSJiY5mexpFGJPr0cbspyUlUM3h
-	 yYipo5A2wuppwqpNPyHC7jVX1E5sTtlZI091kGxSKDduuXXhxQuyV1j90gV4C4awcY
-	 Tmm3M3SVu5o5A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/9] wifi: mac80211: fix UBSAN noise in ieee80211_prep_hw_scan()
-Date: Tue, 18 Jun 2024 08:42:53 -0400
-Message-ID: <20240618124300.3304600-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618124300.3304600-1-sashal@kernel.org>
-References: <20240618124300.3304600-1-sashal@kernel.org>
+	b=F7477XZ6UHGQQSVGcJBeXWVjVQOmTy3bggb4cwY1Z5CzGfFyeuJJiTI59qAsEP9zY
+	 gMpMNibaz2GdBM11XcLD7e1FjA/iS/ab8e5CN+7jLDoPI9R0bMcZukzx7Y3qSkWeAv
+	 EueHMfEX6/OuBq7hDCOO+IOxg9tiESr30Vvxwo2I=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Alex Shi <alex.shi@linux.alibaba.com>,
+	"J. Bruce Fields" <bfields@fieldses.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 004/770] nfsd/nfs3: remove unused macro nfsd3_fhandleres
+Date: Tue, 18 Jun 2024 14:27:37 +0200
+Message-ID: <20240618123407.459902824@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240618123407.280171066@linuxfoundation.org>
+References: <20240618123407.280171066@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.278
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Antipov <dmantipov@yandex.ru>
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
-[ Upstream commit 92ecbb3ac6f3fe8ae9edf3226c76aa17b6800699 ]
+------------------
 
-When testing the previous patch with CONFIG_UBSAN_BOUNDS, I've
-noticed the following:
+From: Alex Shi <alex.shi@linux.alibaba.com>
 
-UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:372:4
-index 0 is out of range for type 'struct ieee80211_channel *[]'
-CPU: 0 PID: 1435 Comm: wpa_supplicant Not tainted 6.9.0+ #1
-Hardware name: LENOVO 20UN005QRT/20UN005QRT <...BIOS details...>
-Call Trace:
- <TASK>
- dump_stack_lvl+0x2d/0x90
- __ubsan_handle_out_of_bounds+0xe7/0x140
- ? timerqueue_add+0x98/0xb0
- ieee80211_prep_hw_scan+0x2db/0x480 [mac80211]
- ? __kmalloc+0xe1/0x470
- __ieee80211_start_scan+0x541/0x760 [mac80211]
- rdev_scan+0x1f/0xe0 [cfg80211]
- nl80211_trigger_scan+0x9b6/0xae0 [cfg80211]
- ...<the rest is not too useful...>
+[ Upstream commit 71fd721839a74d945c242299f6be29a246fc2131 ]
 
-Since '__ieee80211_start_scan()' leaves 'hw_scan_req->req.n_channels'
-uninitialized, actual boundaries of 'hw_scan_req->req.channels' can't
-be checked in 'ieee80211_prep_hw_scan()'. Although an initialization
-of 'hw_scan_req->req.n_channels' introduces some confusion around
-allocated vs. used VLA members, this shouldn't be a problem since
-everything is correctly adjusted soon in 'ieee80211_prep_hw_scan()'.
+The macro is unused, remove it to tame gcc warning:
+fs/nfsd/nfs3proc.c:702:0: warning: macro "nfsd3_fhandleres" is not used
+[-Wunused-macros]
 
-Cleanup 'kmalloc()' math in '__ieee80211_start_scan()' by using the
-convenient 'struct_size()' as well.
-
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Link: https://msgid.link/20240517153332.18271-2-dmantipov@yandex.ru
-[improve (imho) indentation a bit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: "J. Bruce Fields" <bfields@fieldses.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/scan.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs3proc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index ee65f1f50a0ab..d53018610d8a5 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -701,15 +701,21 @@ static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
- 			local->hw_scan_ies_bufsize *= n_bands;
- 		}
- 
--		local->hw_scan_req = kmalloc(
--				sizeof(*local->hw_scan_req) +
--				req->n_channels * sizeof(req->channels[0]) +
--				local->hw_scan_ies_bufsize, GFP_KERNEL);
-+		local->hw_scan_req = kmalloc(struct_size(local->hw_scan_req,
-+							 req.channels,
-+							 req->n_channels) +
-+					     local->hw_scan_ies_bufsize,
-+					     GFP_KERNEL);
- 		if (!local->hw_scan_req)
- 			return -ENOMEM;
- 
- 		local->hw_scan_req->req.ssids = req->ssids;
- 		local->hw_scan_req->req.n_ssids = req->n_ssids;
-+		/* None of the channels are actually set
-+		 * up but let UBSAN know the boundaries.
-+		 */
-+		local->hw_scan_req->req.n_channels = req->n_channels;
-+
- 		ies = (u8 *)local->hw_scan_req +
- 			sizeof(*local->hw_scan_req) +
- 			req->n_channels * sizeof(req->channels[0]);
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 981a4e4c9a3cf..eba84417406ca 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -694,7 +694,6 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
+ #define nfsd3_mkdirargs			nfsd3_createargs
+ #define nfsd3_readdirplusargs		nfsd3_readdirargs
+ #define nfsd3_fhandleargs		nfsd_fhandle
+-#define nfsd3_fhandleres		nfsd3_attrstat
+ #define nfsd3_attrstatres		nfsd3_attrstat
+ #define nfsd3_wccstatres		nfsd3_attrstat
+ #define nfsd3_createres			nfsd3_diropres
 -- 
 2.43.0
+
+
 
