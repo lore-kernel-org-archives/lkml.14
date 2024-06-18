@@ -1,110 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5DC18EFE6;
-	Tue, 18 Jun 2024 12:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE6D19047A;
+	Tue, 18 Jun 2024 12:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714381; cv=none; b=AzooBvzf/6AOSLSMhYOi62QK/R+yWX0jrx6CvMWvIKhgQWwNHa1FlrMWKBDYhNOsE0V6FYAvunHtDfr7a0s7gSog1LeeO/Hs+4zbePddXbDVYYJV779iMartYajQMMPm5p54emPW4i5jA3V5QrLPJNTrOfBq/YQz0rjorTSlS+g=
+	t=1718714381; cv=none; b=Yp1C/6mAOjCmGc10d8HVy1mSNenmsXYQzP9fbX/7bHA5X6tEumpTl17/pZJxk3fDYo5/sw4oSTaXYtWX1QCXe8A65fx+I5NotZ05FUUGHOjkPZC/T48wcAHBFwt1t7TQR9HWvNuvebh/rpozHt3aNVInRAATm+6x+KDHs6jndcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718714381; c=relaxed/simple;
-	bh=7mGrHxL0HdzTrs7BZbgAKSPQi9Yjl+WUY+0IgMEes/8=;
+	bh=e+/mKXkRdPvjBlGr8XNXuV89ZJiYt/k+nMVYcqGYbKw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sb2VSZqsSnZsnP1wHgCO9kfGKOmMYM2/K9KMa+OpgHeSs2T87rcSsfTQ0RxurQb4QyZclIxbrGxMzNzoCJBxLR0MnFjcmH1ABu3EayWF0FIyFcPfVzJf98mEkozqpf+GEZ87QeqHOaVAp5sclc/oGCGtiP5ELiPB7sBjyp/muuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RabkTEnu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hWU2mwnLGpEB2Qiy3P78uOtyG9BE4xcNofpXCzito+tiNFKegZTRNUVFTyEs67VLYlxvRii4sqTdwBeLeqkYVsZz7t0pbWdksHmbKlbYjd963ev/x+qF2VmuW372NS7n9KRoZUWOhYaPPR7t0Vpm1R0WH30FXM+wFnriRG8D83Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ykziTRJg; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RabkTEnu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB782C4AF1D;
-	Tue, 18 Jun 2024 12:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714380;
-	bh=7mGrHxL0HdzTrs7BZbgAKSPQi9Yjl+WUY+0IgMEes/8=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ykziTRJg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718714377;
+	bh=e+/mKXkRdPvjBlGr8XNXuV89ZJiYt/k+nMVYcqGYbKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RabkTEnuQb+yPUMXAQ31VaB4gBu6EWvNbaus0ld49u23OLhpZZ/1JYyIAGYMQmulo
-	 pIdB50zaVSAQHq/8jfcoWtJpHou1decGBKCAIjWKFFLiYT05FSEb1sotdOp8riT7Lm
-	 7+fvhnAFowPwZwELLPdHuURAkpZpVHx5jN+4IEwOSTWHDPWeHhuKrfGXuYAkYDJWMK
-	 676UQKH+F6z/U/e0K0Bd2I6ho4+yShuo7YjJmXGBGrera07c+tKCu36x9dCn4ykMmL
-	 ua8PuhCwU9ToJG7YY3zNsdwgcPKltsblKae8MVYdncCoMjnbP8FydoSgPRM8Lfauov
-	 L64wfWUrq/lHg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 28/35] ila: block BH in ila_output()
-Date: Tue, 18 Jun 2024 08:37:48 -0400
-Message-ID: <20240618123831.3302346-28-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618123831.3302346-1-sashal@kernel.org>
-References: <20240618123831.3302346-1-sashal@kernel.org>
+	b=ykziTRJg5Cai9lwNaWd4iGmTspqKZ/8uEq0NJOinsUZaTJgQRSq9nxRGFRXZOYqmq
+	 YwhMr3wTp0AjvEfb9B3pBj5Vclj264bU9APaHtq6XukCY5kJ/RMHnx4x6lL79m9Wif
+	 S95liCtyqX19lDj8euZlkjQ1vHZwmmU8DQNQnTMf4B+jqI+K2+7YijGPS1Ew6GU0uL
+	 U2kd1m6VD36AVzTp6dKuDvLFaDKR7zhAPLkrEBQcMywh6jLNA7jwqN7tXuVpEsrSno
+	 lm7dympUxa9TLpwKZWHrL2SzRElJLcNHLAP49S39FbDGis4BWJTiT3TReI8UjdpWOX
+	 pYRom/Y1ib8gQ==
+Received: from arisu.localnet (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B09F73780BDB;
+	Tue, 18 Jun 2024 12:39:34 +0000 (UTC)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: Jianfeng Liu <liujianfeng1994@gmail.com>
+Cc: alchark@gmail.com, andy.yan@rock-chips.com, conor+dt@kernel.org,
+ cristian.ciocaltea@collabora.com, devicetree@vger.kernel.org,
+ didi.debian@cknow.org, dsimic@manjaro.org, gregkh@linuxfoundation.org,
+ heiko@sntech.de, krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
+ liujianfeng1994@gmail.com, mchehab@kernel.org, nicolas@ndufresne.ca,
+ robh@kernel.org, sebastian.reichel@collabora.com
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+Date: Tue, 18 Jun 2024 08:39:07 -0400
+Message-ID: <4302165.yKVeVyVuyW@arisu>
+Organization: Collabora
+In-Reply-To: <20240618121329.79936-1-liujianfeng1994@gmail.com>
+References:
+ <4116468.VLH7GnMWUR@arisu> <20240618121329.79936-1-liujianfeng1994@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.34
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart4472750.OBFZWjSADL";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-From: Eric Dumazet <edumazet@google.com>
+--nextPart4472750.OBFZWjSADL
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: Jianfeng Liu <liujianfeng1994@gmail.com>
+Subject: Re: [PATCH 1/3] media: rockchip: Introduce the rkvdec2 driver
+Date: Tue, 18 Jun 2024 08:39:07 -0400
+Message-ID: <4302165.yKVeVyVuyW@arisu>
+Organization: Collabora
+In-Reply-To: <20240618121329.79936-1-liujianfeng1994@gmail.com>
+MIME-Version: 1.0
 
-[ Upstream commit cf28ff8e4c02e1ffa850755288ac954b6ff0db8c ]
+On Tuesday, June 18, 2024 8:13:29 A.M. EDT Jianfeng Liu wrote:
+> Hi Detlev,
+> 
+> On Fri, 14 Jun 2024 21:56:27 -0400, Detlev Casanova wrote:
+> >+		.frmsize = {
+> >+			.min_width = 16,
+> >+			.max_width =  65520,
+> >+			.step_width = 16,
+> >+			.min_height = 16,
+> >+			.max_height =  65520,
+> >+			.step_height = 16,
+> >+		},
+> 
+> I think the min/max width/height are incorrect. From rockchip's TRM V1.0
+> Part1 page 374, supported image size is 64x64 to 65472x65472.
 
-As explained in commit 1378817486d6 ("tipc: block BH
-before using dst_cache"), net/core/dst_cache.c
-helpers need to be called with BH disabled.
+Page 374 shows the sizes for h265. h264 is the next table, where 16x16 and 
+65520x65520 is documented.
 
-ila_output() is called from lwtunnel_output()
-possibly from process context, and under rcu_read_lock().
+> And my
+> chromium can't use rkvdec2 because min width/height are set to 16, which
+> 
+> will cause error at here in rkvdec2_h264_validate_sps:
+> >+	if (width > ctx->coded_fmt.fmt.pix_mp.width ||
+> >+	    height > ctx->coded_fmt.fmt.pix_mp.height)
+> >+		return -EINVAL;
+> 
+> width is 16, height is 32 while ctx->coded_fmt.fmt.pix_mp.width and
+> ctx->coded_fmt.fmt.pix_mp.height are both 16.
 
-We might be interrupted by a softirq, re-enter ila_output()
-and corrupt dst_cache data structures.
+Maybe
 
-Fix the race by using local_bh_disable().
+if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
+	height *= 2;
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Link: https://lore.kernel.org/r/20240531132636.2637995-5-edumazet@google.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv6/ila/ila_lwt.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+is causing issues in this case, I can check.
 
-diff --git a/net/ipv6/ila/ila_lwt.c b/net/ipv6/ila/ila_lwt.c
-index 8c1ce78956bae..9d37f7164e732 100644
---- a/net/ipv6/ila/ila_lwt.c
-+++ b/net/ipv6/ila/ila_lwt.c
-@@ -58,7 +58,9 @@ static int ila_output(struct net *net, struct sock *sk, struct sk_buff *skb)
- 		return orig_dst->lwtstate->orig_output(net, sk, skb);
- 	}
- 
-+	local_bh_disable();
- 	dst = dst_cache_get(&ilwt->dst_cache);
-+	local_bh_enable();
- 	if (unlikely(!dst)) {
- 		struct ipv6hdr *ip6h = ipv6_hdr(skb);
- 		struct flowi6 fl6;
-@@ -86,8 +88,11 @@ static int ila_output(struct net *net, struct sock *sk, struct sk_buff *skb)
- 			goto drop;
- 		}
- 
--		if (ilwt->connected)
-+		if (ilwt->connected) {
-+			local_bh_disable();
- 			dst_cache_set_ip6(&ilwt->dst_cache, dst, &fl6.saddr);
-+			local_bh_enable();
-+		}
- 	}
- 
- 	skb_dst_set(skb, dst);
--- 
-2.43.0
+> After changing them to 64 my chromium can use rkvdec2 to decode h264
+> videos now.
+> 
+> Anyway many thanks to your amazing work!
+> 
+> Best regards,
+> Jianfeng
+
+
+--nextPart4472750.OBFZWjSADL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEonF9IvGrXNkDg+CX5EFKUk4x7bYFAmZxf+sACgkQ5EFKUk4x
+7bYJOAf/Zme2uxfjX+cwsN758W5amw+QvLxn04CfI871RZj09w3zEbV6ZQ1ZYAPg
+mG4XI/KLEUI/tDA0AX6DvEkK0K81bxsoPx+NTzH7sMpeoyq52NtrscARBNUE+jrW
+hiMntPl1ZnnQub2q4K36Lvdiao7vdsM4xBQZC+bq2qo/CaaSY1KvJou6wsgMvug9
+lVVfhHT9EO2bpYntOpZgjJlleNCu6V1lN/b9VhKOFMxCAYhBKDMxXWnfJrx2J8sL
+ATZ68cdCoNSIC7xLlcMfOUzVM8lfTG/dvW8e+VLsoBBbX4FWll8Pk2wKC8r2/Sw8
+/+doLEMSMZG4MUevBqAHFpjkXgkMbA==
+=KICS
+-----END PGP SIGNATURE-----
+
+--nextPart4472750.OBFZWjSADL--
+
+
 
