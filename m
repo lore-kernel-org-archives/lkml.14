@@ -1,183 +1,154 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C3CFBE8
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA6813FF9;
+	Tue, 18 Jun 2024 00:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718670974; cv=none; b=DvUN2kYqtxQKV82jB0SxY/aeaoZeS8TF3xsAINuMDwWi/Q1zx0dr29FKBIh2gwLTx1ltnQXK6T0FfE8tZjlsXc8VwTpdGs/2fCdzP40cuXe3UkKk5iYh8UO71/z60MHosVtZhN0UymhdMitLfCffEmNEeUGgUaxiq95hvbdncac=
+	t=1718670975; cv=none; b=iH2KdsBfGiPw2hfwJSRovjJ4LqgtALsEBqcVzelQMdPVV68LfliPs011IlXbWr/5RmVHRzZmSm2FTRLd0IUBLuwd2Ka4AwpHT+deueutp2tJgoUYb4FxZMt4uC5Zme36yMLXNxXE6sSC0chHjgwK8ucLaO8/V7FJzUFy83fhkLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718670974; c=relaxed/simple;
-	bh=z8PTkL/kHUxYspzF2WwpvHuPdKmUNBbnhlaKNQDhBCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BNYWok/DRvyZzSuFfcrdTBI9ypsGwySOvSTLn2Q8r8k+5/wyN7SGPL6lzU2e+KtRccqvr2S8KJhlXNlXK1qs5bGRrmtQxasRMafyHLIt+gB4Xs6ZfCEF6wPoFqBH2Xnsd/4u+D/SMEEw37JlOAEYGmA1LGEir1YCUgV1PHSlqGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZZCuaBPc; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718670975; c=relaxed/simple;
+	bh=l5oHj8r4X4O3f01X+Du/SbkcT1hBxpkWDNfZfZPYgqQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NjZ5qs2iKQDAimxISbr4DsGAY+9JUXoYCjiFnUDpgCKzM0cyywmZYCU/Pt/zbjlbnYtZCqMBumq5rlDiCN9+CaxLbuobwuhksGR+7VHloEaBncqleYwfSJbGPdSx0TTvGQTea+IGmuQcLE9Pmmy3ACASlX1cs9e+FAv9w9H/v/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lu6Htrs4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZZCuaBPc"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7061365d2f3so746223b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718670972; x=1719275772; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YgDlsk7tZBNWPt6L0xmtq7VcgKRlSUrj1CtdhLHj6YQ=;
-        b=ZZCuaBPcJeeXxLYZXUaE/34cGn+9gKHiT1v94Y9BQeYcUp8yBO+iTnAOBSuUd+KHGH
-         de5NxBXFAt882Vt/ntZ/2MRRKUpC+Nfp3anfWmZ7jZcUvHR+uyt0mKnYkIm2YZxcnEzF
-         HA/p/f2WW1HKhJhfZVksEf+Ua511Tq3Zu7fMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718670972; x=1719275772;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YgDlsk7tZBNWPt6L0xmtq7VcgKRlSUrj1CtdhLHj6YQ=;
-        b=rEu8+mGGRVFxxMjVx848fpvOEDapGs4UwcyJ/+NGxZXQNdidnP0GIEnOxApD3IXfJa
-         JZjdR8U9M+mII+2kDXcPzgU6krdea4Y3eQdyO+M1+XV86qU376fAL7IsNA9HLpsi15gW
-         /FnHAO0homHn90DpHClXsfBtgYy8epN+So2uoJeUNYMZVOR5F4sueeGqu8JLdwht1xjh
-         HCH/f8kKgQ9tKR+TeNcrHwMxkcqeFuYWa8bg5Pis7KXuqEWTWPGYmvDIuF3QIP4mzKeD
-         VHqqW7uJNzlPyHizU3rpkuT3qR+393fK84ad9mJLJOCfRz+QzxNncAHTi3OmV28qWpB0
-         m3EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhBpvtcBX+HzBMPQE4QgVKNBFXUmYutXU0P+Haex5sXeJtr1JkkcvSRYGbv3MdVIV9Fzvji26cdQYq/d5jjPojhY6wGa4J9OYy1iQ9
-X-Gm-Message-State: AOJu0YzvW0V/njDxVz5NTlLny/bD0bqKV/b2ig7df4gJmJ9uf7HQiAgI
-	HFDssaVdJvjfrMwLBaZjCaZYQoKn16+L/JGTMejh7m7JXq4Bfe/t/n4GlEJRgA==
-X-Google-Smtp-Source: AGHT+IHBWxdBBjKCENzeRWXMjIsVcQL3bPswzu6BTKXdBeNDJvIgqbkofEcyTd0R0111Lvl3ltUAiw==
-X-Received: by 2002:a05:6a20:a123:b0:1b1:f7a1:df91 with SMTP id adf61e73a8af0-1bae8353db0mr11922437637.61.1718670971664;
-        Mon, 17 Jun 2024 17:36:11 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:1798:e71b:11ad:8b94])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb99f4dsm7905917b3a.216.2024.06.17.17.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 17:36:10 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: kgdb-bugreport@lists.sourceforge.net,
-	Douglas Anderson <dianders@chromium.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Thorsten Blum <thorsten.blum@toblux.com>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 03/13] kdb: Use "bool" in "md" implementation where appropriate
-Date: Mon, 17 Jun 2024 17:34:37 -0700
-Message-ID: <20240617173426.3.I0ca82391856da1ee8c1c10b7ecf62b4dc0405aa0@changeid>
-X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-In-Reply-To: <20240618003546.4144638-1-dianders@chromium.org>
-References: <20240618003546.4144638-1-dianders@chromium.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lu6Htrs4"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HKh8Xb018761;
+	Tue, 18 Jun 2024 00:36:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	l5oHj8r4X4O3f01X+Du/SbkcT1hBxpkWDNfZfZPYgqQ=; b=lu6Htrs4ZYEAgsxA
+	dq3/4rT3MG9Db6j/9erV2JOPfZrs8p6WUQKlSwwQmjh/3teFqdpm0vvd07AWf5Ev
+	2rLu9OM4KfaKvMOWFv6waasKtiKkAONSWZ5NhfrPybeInwP9NzGmcC5C10nAwzpX
+	FBEQaXM38vx7OYo3IABJRBLNerJzhgwivSjqxy/kXSxE/o/xac6qZw0Lz8981cF2
+	5HoPGhht9issqWyMJbudkWMxW+2XTdr8QHhkPhwY7LUVbu3y9fCq+rPD/3m1Vg8p
+	QfBtSQKlloK1Tns23iGgLUZ0e3rHcleGWqvX2KhTrtD4SVLYREJBY2NzrCIEh9FV
+	m7FLzw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys3b755nj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 00:36:00 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45I0ZxZv007873
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 00:35:59 GMT
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 17 Jun 2024 17:35:55 -0700
+Received: from nalasex01a.na.qualcomm.com ([fe80::62ba:cee1:5495:c89]) by
+ nalasex01a.na.qualcomm.com ([fe80::62ba:cee1:5495:c89%4]) with mapi id
+ 15.02.1544.009; Mon, 17 Jun 2024 17:35:55 -0700
+From: "Gaurav Kashyap (QUIC)" <quic_gaurkash@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "Gaurav Kashyap
+ (QUIC)" <quic_gaurkash@quicinc.com>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>,
+        "andersson@kernel.org" <andersson@kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "neil.armstrong@linaro.org"
+	<neil.armstrong@linaro.org>,
+        srinivas.kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org"
+	<conor+dt@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        kernel
+	<kernel@quicinc.com>,
+        "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "Om Prakash Singh (QUIC)"
+	<quic_omprsing@quicinc.com>,
+        "Bao D. Nguyen (QUIC)"
+	<quic_nguyenb@quicinc.com>,
+        bartosz.golaszewski
+	<bartosz.golaszewski@linaro.org>,
+        "konrad.dybcio@linaro.org"
+	<konrad.dybcio@linaro.org>,
+        "ulf.hansson@linaro.org"
+	<ulf.hansson@linaro.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "mani@kernel.org"
+	<mani@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Prasad Sodagudi
+	<psodagud@quicinc.com>,
+        Sonal Gupta <sonalg@quicinc.com>
+Subject: RE: [PATCH v5 13/15] dt-bindings: crypto: ice: document the hwkm
+ property
+Thread-Topic: [PATCH v5 13/15] dt-bindings: crypto: ice: document the hwkm
+ property
+Thread-Index: AQHawFGXatdRamw0hEaj/PQeSvaH7rHMAUqAgAEiYEA=
+Date: Tue, 18 Jun 2024 00:35:55 +0000
+Message-ID: <af1df42efdb4497cb174bc664c692651@quicinc.com>
+References: <20240617005825.1443206-1-quic_gaurkash@quicinc.com>
+ <20240617005825.1443206-14-quic_gaurkash@quicinc.com>
+ <a9d8606d-fb4a-4394-bab6-3304e1f8b9e5@linaro.org>
+In-Reply-To: <a9d8606d-fb4a-4394-bab6-3304e1f8b9e5@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Ed_Sk8giK7uJLcUkYfxlfnhLd4MgNr-V
+X-Proofpoint-ORIG-GUID: Ed_Sk8giK7uJLcUkYfxlfnhLd4MgNr-V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 mlxscore=0 priorityscore=1501 clxscore=1015
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180002
 
-Like much of kdb, the "md" implementation used the "int" type to store
-boolean values and used 0 for false and 1 for true. While this worked
-(and used to be the only way to do things back in the day), we've had
-"bool" for a lot of years now. Move the "md" functions to use "bool".
-
-While touching this, we touch a line next to a comment using a style
-that's nonstandard for the kdb codebase. Update it in passing.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- kernel/debug/kdb/kdb_main.c | 36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 47e037c3c002..88121334d189 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -1521,8 +1521,8 @@ static int kdb_mdr(unsigned long addr, unsigned int count)
-  * See the kdb help for syntax.
-  */
- static void kdb_md_line(const char *fmtstr, unsigned long addr,
--			int symbolic, int nosect, int bytesperword,
--			int num, int repeat, int phys)
-+			bool symbolic, bool nosect, int bytesperword,
-+			int num, int repeat, bool phys)
- {
- 	/* print just one line of data */
- 	kdb_symtab_t symtab;
-@@ -1590,15 +1590,15 @@ static int kdb_md(int argc, const char **argv)
- 	static unsigned long last_addr;
- 	static int last_radix, last_bytesperword, last_repeat;
- 	int radix = 16, mdcount = 8, bytesperword = KDB_WORD_SIZE, repeat;
--	int nosect = 0;
- 	char fmtchar, fmtstr[64];
- 	unsigned long addr;
- 	unsigned long word;
- 	long offset = 0;
--	int symbolic = 0;
--	int valid = 0;
--	int phys = 0;
--	int raw = 0;
-+	bool nosect = false;
-+	bool symbolic = false;
-+	bool valid = false;
-+	bool phys = false;
-+	bool raw = false;
- 
- 	kdbgetintenv("MDCOUNT", &mdcount);
- 	kdbgetintenv("RADIX", &radix);
-@@ -1609,7 +1609,7 @@ static int kdb_md(int argc, const char **argv)
- 
- 	if (strcmp(argv[0], "mdr") == 0) {
- 		if (argc == 2 || (argc == 0 && last_addr != 0))
--			valid = raw = 1;
-+			valid = raw = true;
- 		else
- 			return KDB_ARGCOUNT;
- 	} else if (isdigit(argv[0][2])) {
-@@ -1622,7 +1622,7 @@ static int kdb_md(int argc, const char **argv)
- 		last_bytesperword = bytesperword;
- 		repeat = mdcount * 16 / bytesperword;
- 		if (!argv[0][3])
--			valid = 1;
-+			valid = true;
- 		else if (argv[0][3] == 'c' && argv[0][4]) {
- 			char *p;
- 			repeat = simple_strtoul(argv[0] + 4, &p, 10);
-@@ -1631,11 +1631,11 @@ static int kdb_md(int argc, const char **argv)
- 		}
- 		last_repeat = repeat;
- 	} else if (strcmp(argv[0], "md") == 0)
--		valid = 1;
-+		valid = true;
- 	else if (strcmp(argv[0], "mds") == 0)
--		valid = 1;
-+		valid = true;
- 	else if (strcmp(argv[0], "mdp") == 0) {
--		phys = valid = 1;
-+		phys = valid = true;
- 	}
- 	if (!valid)
- 		return KDB_NOTFOUND;
-@@ -1730,13 +1730,19 @@ static int kdb_md(int argc, const char **argv)
- 	last_bytesperword = bytesperword;
- 
- 	if (strcmp(argv[0], "mds") == 0) {
--		symbolic = 1;
--		/* Do not save these changes as last_*, they are temporary mds
-+		int tmp;
-+
-+		symbolic = true;
-+
-+		/*
-+		 * Do not save these changes as last_*, they are temporary mds
- 		 * overrides.
- 		 */
- 		bytesperword = KDB_WORD_SIZE;
- 		repeat = mdcount;
--		kdbgetintenv("NOSECT", &nosect);
-+
-+		if (!kdbgetintenv("NOSECT", &tmp))
-+			nosect = tmp;
- 	}
- 
- 	/* Round address down modulo BYTESPERWORD */
--- 
-2.45.2.627.g7a2c4fd464-goog
-
+SGVsbG8gS3J6eXN6dG9mDQoNCk9uICAgMDYvMTcvMjAyNCAxMjoxNyBBTSBQRFQsIEtyenlzenRv
+ZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIDE3LzA2LzIwMjQgMDI6NTEsIEdhdXJhdiBLYXNoeWFw
+IHdyb3RlOg0KPiA+ICsgIHFjb20saWNlLXVzZS1od2ttOg0KPiA+ICsgICAgdHlwZTogYm9vbGVh
+bg0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZSB0aGUgc3VwcG9ydGVkIEhh
+cmR3YXJlIEtleSBNYW5hZ2VyIChIV0tNKSBpbiBRdWFsY29tbSBJQ0UNCj4gPiArICAgICAgdG8g
+c3VwcG9ydCB3cmFwcGVkIGtleXMuIEhhdmluZyB0aGlzIGVudHJ5IGhlbHBzIHNjZW5hcmlvcyB3
+aGVyZQ0KPiA+ICsgICAgICB0aGUgSUNFIGhhcmR3YXJlIHN1cHBvcnRzIEhXS00sIGJ1dCB0aGUg
+VHJ1c3R6b25lIGZpcm13YXJlIGRvZXMNCj4gPiArICAgICAgbm90IGhhdmUgdGhlIGZ1bGwgY2Fw
+YWJpbGl0eSB0byB1c2UgdGhpcyBIV0tNIGFuZCBzdXBwb3J0IHdyYXBwZWQNCj4gPiArICAgICAg
+a2V5cy4gTm90IGhhdmluZyB0aGlzIGVudHJ5IGVuYWJsZWQgd291bGQgbWFrZSBJQ0UgZnVuY3Rp
+b24gaW4NCj4gPiArICAgICAgbm9uLUhXS00gbW9kZSBzdXBwb3J0aW5nIHN0YW5kYXJkIGtleXMu
+DQo+IA0KPiBObyBjaGFuZ2Vsb2csIHByZXZpb3VzIGNvbW1lbnRzIGFuZCBkaXNjdXNzaW9uIGln
+bm9yZWQuDQo+IA0KPiBOQUsNCg0KQXBvbG9naWVzIGZvciBub3QgYWRkcmVzc2luZyB0aGUgcHJl
+dmlvdXMgY29tbWVudHMuDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvOTg5MmM1NDFiYTRl
+NGI1ZDk3NWZhYWE0YjQ5YzkyYmFAcXVpY2luYy5jb20vDQoNCk1heWJlIHdlIGNhbiBjb250aW51
+ZSBvdXIgZGlzY3Vzc2lvbiBoZXJlOw0KIiBTTTg0NTAgYW5kIFNNODM1MCBRQ09NIElDRSBib3Ro
+IHN1cHBvcnQgSFdLTSBpbiB0aGVpciBJQ0UgaGFyZHdhcmUuDQpIb3dldmVyLCB3cmFwcGVkIGtl
+eXMgY2FuIG5vdCBiZSBlbmFibGVkIG9uIHRob3NlIHRhcmdldHMgZHVlIHRvIGNlcnRhaW4NCm1p
+c3NpbmcgdHJ1c3R6b25lIHN1cHBvcnQuIElmIHdlIHNvbGVseSByZWx5IG9uIGhhcmR3YXJlIHZl
+cnNpb24gdG8gZGVjaWRlDQppZiBJQ0UgaGFzIHRvIHVzZSB3cmFwcGVkIGtleXMgZm9yIGRhdGEg
+ZW5jcnlwdGlvbiwgdGhlbiBpdCBiZWNvbWVzIHVudGVzdGFibGUNCm9uIHRob3NlIGNoaXBzZXRz
+LiANCg0KU28sIHdlIHdhbnQgYW5vdGhlciB3YXkgdG8gZGlzdGluZ3Vpc2ggdGhpcyBzY2VuYXJp
+bywgYW5kIGhlbmNlIEkgY2hvc2UgYSBEVCB2ZW5kb3IgcHJvcGVydHkNCnRvIGV4cGxpY2l0bHkg
+bWVudGlvbiBpZiB3ZSBoYXZlIHRvIHVzZSB0aGUgc3VwcG9ydGVkIEhXS00uDQpJZiB0aGVyZSBp
+cyBhbm90aGVyIHdheSwgSSBhbSBvcGVuIHRvIGV4cGxvcmluZyB0aGF0IGFzIHdlbGwuIg0KDQo+
+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KDQpSZWdhcmRzLCANCkdhdXJhdg0KDQo=
