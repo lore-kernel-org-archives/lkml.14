@@ -1,191 +1,101 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DFA139CFC;
-	Tue, 18 Jun 2024 14:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2CD80624
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718721951; cv=none; b=Fq4caqE2sbpEw8TK970gRV8weo8zWtTRHZ4gDuffVEKlCCACrg/+h4ksSfl4QH+F8i6DQZyKXEZ48dQsEELaE6YWbRAK1+LvjywzBSdwzNqo4dGxUWqMkrsCtMbQw4k1Ahw02pLACCkkyGn3KJm1VJqvHjTje3NQDJH8PaGyYLI=
+	t=1718721987; cv=none; b=C4nidaP5BmUNJ+1uC5eOgUOL5fCREBgCZ98CFo65QYeOkjZpteWrNPEejE2wKMQxslMoZaCjn+E2v6eBJmGstZR6BzlQfdMCHLzm85kb5v8WhRZLsw4InynSmHkWtR9hvbvczaih7D+Lt9Lj29uht3tFpXgVCUC4TWyk4KvaeWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718721951; c=relaxed/simple;
-	bh=/eXZnkslDtXtwLMQzzo568CwMVqG0SYfQ/UyG0IHN2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PClvj/rFzI5L73QDoEm8T0YiXyMA7l1cgxiF7hwo5WPEzWQxTDzo+NRkl0h70GBqZipDHXmCUJu3vSRCBeQr38yv6lf17GdnA+Z3FdVTXvg1rEEEpsSophYPRmgK21TktkGaHy4b1lu1EgXsLByHjVKhorbBPXkNZl3o5OJTQCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=DP6GEE3Q; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1718721987; c=relaxed/simple;
+	bh=Og14w/kafuTyurc5NrEOw3F6k/R6K57h2C+os0REkxc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A0QeUzURhkigo5zRUyT6cOBxTqT6QNWK6LF8Kj5b2MKMr7J2Xhdnw3BDYBjnYvFWRjvfPbjrCfu0c7AXiy8NEnIvu8QBeH1W5obrFvW3z/TZJt0MrhbXTEEuJqw9c+jUORC34QXH+SxS16YDhVpiF26B0C+7sPuIWAxjg6Kw3H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UvV8/M2X; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="DP6GEE3Q"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id C4C6A881DB;
-	Tue, 18 Jun 2024 16:45:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1718721947;
-	bh=Ojk5mwSvw+tC6y+Z5fiUjKgjEOz15W+RAyfOfEfKZRE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DP6GEE3QWmViRXPM6lpRCuxF39Ag8BD30mSTgJgZ+ybArBY+nMyJ7lpF+LaQwzKXN
-	 j9YEfRiXQVVWVQc0+J2EbyF1OWL3GqSZl7lH12cs4sffPVLJ262yzAJj91O5O8JKLp
-	 0yW5hAxywVL2CSwdH4ABlkpbZsrrkg0S/Czhe7ETeMYCtOFxmMCCpBBv5hWZ7og6JB
-	 uHbVB7b5As54UTqFgbIDZBy1g/4umujstA2Htc6Ebr1DBePqJbm4dm352BcjhFKqVo
-	 2F7RqVgItXMoZKdUurHmuSGEf2luCN1wrdTKLWLtIRHM/JG4p3GMt+r/FRcVIOtAVh
-	 vME1LG1zfbQtQ==
-Date: Tue, 18 Jun 2024 16:45:45 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: <Woojung.Huh@microchip.com>
-Cc: <dan.carpenter@linaro.org>, <andrew@lunn.ch>, <olteanv@gmail.com>,
- <kuba@kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
- <edumazet@google.com>, <davem@davemloft.net>, <o.rempel@pengutronix.de>,
- <Tristram.Ha@microchip.com>, <bigeasy@linutronix.de>, <horms@kernel.org>,
- <ricardo@marliere.net>, <casper.casan@gmail.com>,
- <linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH v1 net-next] net: dsa: Allow only up to two HSR HW
- offloaded ports for KSZ9477
-Message-ID: <20240618164545.14817f7e@wsk>
-In-Reply-To: <BL0PR11MB291397353642C808454F575CE7CE2@BL0PR11MB2913.namprd11.prod.outlook.com>
-References: <20240618130433.1111485-1-lukma@denx.de>
-	<339031f6-e732-43b4-9e83-0e2098df65ef@moroto.mountain>
-	<24b69bf0-03c9-414a-ac5d-ef82c2eed8f6@lunn.ch>
-	<1e2529b4-41f2-4483-9b17-50c6410d8eab@moroto.mountain>
-	<BL0PR11MB291397353642C808454F575CE7CE2@BL0PR11MB2913.namprd11.prod.outlook.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UvV8/M2X"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f06861ae6so4798162f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718721983; x=1719326783; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EhzA6ITR/mtp+5gOoKdG8vAq1UwKiuZGvALGcvS3hfQ=;
+        b=UvV8/M2XfRgJIWwlp/w6myfk3p5VGObsJvfU3F2DH9UJN99ArLctvwtBedyRe6pP93
+         Yjk8DzyafR8QqAK+v4f6Hc9TPv8RNBWcNmPP6RN7/MpRHThuIRMCjefaE52B+/QL8FRI
+         u54bTeD9nPCvbhqmfh5cTvoWQf246cj623U2m7cwVSwZyi9Vv+0GS/XeBBgGwroW2gmk
+         vy30PpEllq4356Deh8b4M2K57ASTV++fGwULv5NKfWfiLTGGw4m8azsBWrtlQDzwvc5z
+         eALd6RarOengff4dfC5fVbIM8uXhPBgQxZUnuLlyR6h20PzCkiqO4iagDgnEZwNf+faU
+         UX6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718721983; x=1719326783;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EhzA6ITR/mtp+5gOoKdG8vAq1UwKiuZGvALGcvS3hfQ=;
+        b=KHXkCK+bfRvEtgs0vtRiOUd8oh6M77RR8FNrOPvbp4VFXuhxJpRID79VS3IiPsVIfI
+         W+xp2NE3hwOfzFlh99eEhYyoud+RRjUZJS2H4U2UBvQZENotc+0z8J7i0m8kSJuzOSi4
+         BowMes/BqYOiHPSLY6ZgQ6G9rmL3YNeghh8ztRetgzGtV3VzsbbFHDwjSJqYbcxuEDcO
+         Ti8btoeYWm/ScUvn/Ao9pbim93tUpxBLIqlAH+andYsF4aTXGLxY+3I6reTg9suM8DGt
+         C7R4x5M1qjQNkR1AHEv2Dy/Y055fH0fGnupleBcnTeetgWYMqwS/AH98t8XOmUtsiYtB
+         gVGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAUdyH00T7hxqhitX5kBrZmIfHbXCT70gK+CF+zJ3+n9M4mQ36smeqhYHNh/9aRFmjrs+L/3CLEnfTnjuHn0V8d+sdDSLu53XeyCrC
+X-Gm-Message-State: AOJu0YwucA6vwkFFIBw3IgYz5iFT//V/fNNwECUgDMQr9rGsv/BZErIv
+	nnab1TVVI2gGebhBq9uY7Ag8ZeaMeoQdctBVs3pzGB0XBWs6ve76ohytWQSO/Ak=
+X-Google-Smtp-Source: AGHT+IEKa0UB/epbhJn0UELns0QzTpX+72cNV+oeKhKhYZdsy/bAJfnvItOp3AeIO5nUZeTo7XkEpw==
+X-Received: by 2002:a5d:4f8a:0:b0:360:9519:6102 with SMTP id ffacd0b85a97d-36095196123mr4353123f8f.55.1718721982800;
+        Tue, 18 Jun 2024 07:46:22 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509355dsm14246603f8f.13.2024.06.18.07.46.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 07:46:22 -0700 (PDT)
+Message-ID: <910af90e-affb-45f2-a2f7-875ca8362c0f@linaro.org>
+Date: Tue, 18 Jun 2024 16:46:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=faO5bG0JahLBSA=3O3EqoV";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-
---Sig_/=faO5bG0JahLBSA=3O3EqoV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Dan, Andrew, Woojung
-
-> Hi Dan & Andrew,
->=20
-> > On Tue, Jun 18, 2024 at 03:52:23PM +0200, Andrew Lunn wrote: =20
-> > > > diff --git a/drivers/net/dsa/microchip/ksz_common.c =20
-> > b/drivers/net/dsa/microchip/ksz_common.c =20
-> > > > index 2818e24e2a51..181e81af3a78 100644
-> > > > --- a/drivers/net/dsa/microchip/ksz_common.c
-> > > > +++ b/drivers/net/dsa/microchip/ksz_common.c
-> > > > @@ -3906,6 +3906,11 @@ static int ksz_hsr_join(struct
-> > > > dsa_switch *ds, =20
-> > int port, struct net_device *hsr, =20
-> > > >             return -EOPNOTSUPP;
-> > > >     }
-> > > >
-> > > > +   if (hweight8(dev->hsr_ports) > 1) {
-> > > > +           NL_SET_ERR_MSG_MOD(extack, "Cannot offload more
-> > > > than two =20
-> > ports (in use=3D0x%x)", dev->hsr_ports); =20
-> > > > +           return -EOPNOTSUPP;
-> > > > +   } =20
-> > >
-> > > Hi Dan
-> > >
-> > > I don't know HSR to well, but this is offloading to hardware, to
-> > > accelerate what Linux is already doing in software. It should be,
-> > > if the hardware says it cannot do it, software will continue to
-> > > do the job. So the extack message should never be seen. =20
-> >=20
-> > Ah.  Okay.  However the rest of the function prints similar messages
-> > and so probably we could remove those error messages as well.  To be
-> > honest, I just wanted something which functioned as a comment and
-> > mentioned "two ports".  Perhaps the condition would be more clear
-> > as =20
-> > >=3D 2 instead of > 1? =20
-> >  =20
->=20
-> I'm not a HSR expert and so could be a dummy question.
->=20
-> I think this case (upto 2 HSR port offload) is different from other
-> offload error.=20
-
-It is not so different.
-
-In this case when we'd call:
-ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 interlink lan3
-supervision 45 version 1
-
-lan1 and lan2 are correctly configured as ports, which can use HSR
-offloading on ksz9477.
-
-However, when we do already have two bits set in hsr_ports, we need to
-return (-ENOTSUPP), so the interlink port (HSR-SAN) would be used with
-SW based HSR interlink support.
-
-Otherwise, I do see some strange behaviour, as some HSR frames are
-visible on HSR-SAN network and vice versa causing switch to drop frames.
-
-Also conceptually - the interlink (i.e. HSR-SAN port) shall be only SW
-supported as it is also possible to use ksz9477 with only SW based HSR
-(i.e. port0/1 -> hsr0 with offloading, port2 -> HSR-SAN/interlink,
-port4/5 -> hsr1 with SW based HSR).
-
-> Others are checking whether offload is possible or
-> not, so SW HSR can kick in when -EOPNOTSUPP returns.=20
-
-Yes, this is exactly the case.
-
-> However, this
-> happens when joining 3rd (2+) port with hardware offload is enabled.
-> It is still working two ports are in HW HSR offload and next ports
-> are in SW HSR?
-
-As written above, it seems like the in-chip VLAN register is modified
-and some frames are passed between HSR and SAN networks, which is wrong.
-
-Best would be to have only two ports with HSR offloading enabled and
-then others with SW based HSR if required.
-
-For me the:
-
-NL_SET_ERR_MSG_MOD(extack, "Cannot offload more than two ports (in
-use=3D0x%x)", dev->hsr_ports);
-
-is fine - as it informs that no more HSR offloading is possible (and
-allows to SW based RedBox/HSR-SAN operation).
-
->=20
-> Thanks.
-> Woojung
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] interconnect: qcom: sc7280: enable QoS
+ configuration
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
+ <20240607173927.26321-3-quic_okukatla@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240607173927.26321-3-quic_okukatla@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
+On 6/7/24 19:39, Odelu Kukatla wrote:
+> Enable QoS configuration for master ports with predefined values
+> for priority and urgency forawrding.
+> 
+> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> ---
 
-Best regards,
+msm-5.4 also has a qhm_gic node with QoS offset 0x9000, is that of any
+importance, or can we forget it exists?
 
-Lukasz Majewski
+LGTM otherwise:
 
---
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/=faO5bG0JahLBSA=3O3EqoV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmZxnZkACgkQAR8vZIA0
-zr1pDAgAz8iqxMsI8PaedNynjdgMDokKLvfzbsccYcMauZXGlALZ1sKG4xrZ6w6b
-nKRiE6X+EAuCWKLP4d3sTegMP2wg7iAfNFSTwQYltBFndzTPwopi2rf7h5lHQIHV
-w+QxPdn4Dpap0Tcf1Qdb+c+NJzBirrNbNgONrqO5IXgfZA0IsEKxg7tpxj+y8r23
-ygZhw6fSR2As7b0xwy9Oy2f0FZAFXZRpfBgxvHmoj7v2HiRVRx6uuZJMVhU7Ov0q
-wUId3AIiXdrhOdgtyPrS6qTcniWtmPI3vT33KcFZQxzmZOvt5gvIAAJdt2ivuyS0
-OBFpZcy0HUyW2ig31R3SI2RftxSCFQ==
-=A1DY
------END PGP SIGNATURE-----
-
---Sig_/=faO5bG0JahLBSA=3O3EqoV--
+Konrad
