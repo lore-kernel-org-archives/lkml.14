@@ -1,23 +1,58 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F77113BAFB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B731013AD2B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718696929; cv=none; b=CGfe4D2vuH/lnALU8gaA3jMX2p9mTiM3VDTVNRay+K70kfr3DxHOk7hqCXo9p18FSBDQtvDdZm1EiJaDENVRxXHV2yoEqVZ4TBdw0pFw5mrInQDBVG+tqlWg9QCXJLzD1UOlG2erj7UcwMQmGqXqqKf5GiAnsZnTntZNmreLWz4=
+	t=1718696978; cv=none; b=bv6jynyXR5mOqy3fKhaU2qsRJpOznDk8FRkr2NqNedXNUa/b2O0kvWBGrPKCySvOXHGqErdUI3IoNja8NdcVy2T+KBrgoW8jEIyQ53jYDmQbwWTPX2jBL9DyV8cpWaASWfZ1ANDbDcSB+xla1kL9X60x2jGe8i+9b653wjOhIGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718696929; c=relaxed/simple;
-	bh=TFxbyycY/bPvvhtWOg5G0fgnwzjW/Qu4JB14u5ITZHA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bPQ2cl/VCwUjtbYI4qiFHkbTdsCS6Hxow8Fol5UWpql7y8KVmpsV1j8r+uMCJti3pVps3OjcOKti8xAv7B6g38cpOIuX40CjNQfmsDAuzJtqoOOVDIL+vqac2wvuRS/cIbz+B5RbMnR5s+QHUk2FIiPOzNxILUJ2yWgcSGP57zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C8342000A;
-	Tue, 18 Jun 2024 07:48:39 +0000 (UTC)
-Message-ID: <db8c5502-e598-4695-ac13-5c381021e69e@ghiti.fr>
-Date: Tue, 18 Jun 2024 09:48:39 +0200
+	s=arc-20240116; t=1718696978; c=relaxed/simple;
+	bh=M6IjAQJ7uWC7h4ilG1WLKnCCSBc0hUV/buoGZiIOrfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYvEVDHJp3hII1Hl80xLyE4l76IYwzGayMMy3fe/gfbcdvLMOUVVljFhKMI1Ut6urLdxWPWy2v15mwWv66uYeucjAuWxdd7XWcSZKo4XPxNyZBeCJ3ywf6p0mj0UgRvXa7WWc1TiA9XZDYL61D9/ntr5wj14o6d5cwGUP4dUyLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=I5iRKQed; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="I5iRKQed"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-421d32fda86so54649975e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718696975; x=1719301775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=slVhHLNHnoer2IgmxdtW2n42We64zqnTXEtmuZh6XNg=;
+        b=I5iRKQedDIFFDJpbWTppdtVGZllCVr10lV9ML78jpGdOU98sGYNnRjyy/o/engNfWG
+         KTvIn+JRb+RgzzDSFhLx2MzeWK85xVtBHrPz9hYZ/HXCTlH2rffk/UhsHn4nP7Paq0pz
+         SDRt5tqoON1zBiWTz/3z1jqjAZucwbbsqInpi1GRZFb+WeI1GJLX33zMmnIyAsFWPepT
+         p3bnltcqIUIdL+25Gfx2bcwgTsjWL8LctQfMP1sHi7EzkCJwaBHnD0TvfgPiTiEfSjkM
+         +aRXueKxArEPBZE8zUJpOsn0IMl5TeBVHbywhyepHQDdsRZmcxWeu3K/1/E3VZD0Js8E
+         XoRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718696975; x=1719301775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=slVhHLNHnoer2IgmxdtW2n42We64zqnTXEtmuZh6XNg=;
+        b=TPqMjq1Or0OlcfyW1qfbapGlcDAmmrB84geq3nrF/TssWwhARJhvc7QDjTzOSvWUny
+         45/cFCCbL/knRcWFvLQj2iqmrD6dwxvRF4DYuzr+/JrhqOseePW3Ql7RD5ESm22XC5GB
+         fCaLXAxd/ivfUqAL4Qsf8qNIcy2lrVbzdPdgCPBRhTvXNCPDRomrIQnULNeQaP/TuZV0
+         2fLtGCRxYYAhFxWLU+ZOUKX4+/a5xLbwTMfs06LO6eE96OCgaHGBkwO1ZJ9q6GngPiVF
+         g/gyLTKqF05KO2naKxsCUlv/Ofl4Fb7ttbkWvoucge8f2CTHTLgexRT+wIe8wOZi7UoC
+         pWFg==
+X-Gm-Message-State: AOJu0YwnMYDlSGGTpE3iAEMwAOAuXwD2d6mEItStomrhyHrDEPCAtv+t
+	XiYKCMkptfBPi5x0XeJjgHKaIcDh6g4EqYroveV3jWyXj9TYruPTbd9rr8IzPG8=
+X-Google-Smtp-Source: AGHT+IHAe9Sp/boX/61amtrpHaGVSdWp1zPS7L3crhK53BIAjo0hqkzbwsV3DM2DqDUJ03cDNj5hig==
+X-Received: by 2002:a05:600c:4f83:b0:421:29cd:5c95 with SMTP id 5b1f17b1804b1-42304820b3bmr138531575e9.10.1718696974946;
+        Tue, 18 Jun 2024 00:49:34 -0700 (PDT)
+Received: from [192.168.1.70] ([84.102.31.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe919bsm215819655e9.19.2024.06.18.00.49.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 00:49:34 -0700 (PDT)
+Message-ID: <01f2ee94-f8b0-449c-aa19-3ee38a2e36a1@baylibre.com>
+Date: Tue, 18 Jun 2024 09:49:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,309 +60,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf: RISC-V: Check standard event availability
-From: Alexandre Ghiti <alex@ghiti.fr>
-To: Atish Patra <atishp@rivosinc.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Atish Patra <atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Mark Rutland <mark.rutland@arm.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20240418014652.1143466-1-samuel.holland@sifive.com>
- <79087773-9115-4d4c-b566-028a21049d61@rivosinc.com>
- <4c4c70ed-3bff-471c-86ca-872d41380402@ghiti.fr>
+Subject: Re: linux-next: build failure after merge of the mediatek tree
+To: Mark Brown <broonie@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>,
+ Nicolas Pitre <npitre@baylibre.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <ZnBn-vSj-ssrJFr2@sirena.org.uk>
 Content-Language: en-US
-In-Reply-To: <4c4c70ed-3bff-471c-86ca-872d41380402@ghiti.fr>
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <ZnBn-vSj-ssrJFr2@sirena.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 7bit
 
-Hi Samuel, Atish,
-
-On 24/05/2024 22:00, Alexandre Ghiti wrote:
-> Hi Samuel,
+On 6/17/24 18:44, Mark Brown wrote:
+> Hi all,
 >
-> On 26/04/2024 17:38, Atish Patra wrote:
->> On 4/17/24 18:46, Samuel Holland wrote:
->>> The RISC-V SBI PMU specification defines several standard hardware and
->>> cache events. Currently, all of these events are exposed to userspace,
->>> even when not actually implemented. They appear in the `perf list`
->>> output, and commands like `perf stat` try to use them.
->>>
->>> This is more than just a cosmetic issue, because the PMU driver's .add
->>> function fails for these events, which causes pmu_groups_sched_in() to
->>> prematurely stop scheduling in other (possibly valid) hardware events.
->>>
->>> Add logic to check which events are supported by the hardware (i.e. can
->>> be mapped to some counter), so only usable events are reported to
->>> userspace. Since the kernel does not know the mapping between events 
->>> and
->>> possible counters, this check must happen during boot, when no counters
->>> are in use. Make the check asynchronous to minimize impact on boot 
->>> time.
->>>
->>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
->>> ---
->>> Before this patch:
->>> $ perf list hw
->>>
->>> List of pre-defined events (to be used in -e or -M):
->>>
->>>    branch-instructions OR branches [Hardware event]
->>>    branch-misses [Hardware event]
->>>    bus-cycles [Hardware event]
->>>    cache-misses [Hardware event]
->>>    cache-references [Hardware event]
->>>    cpu-cycles OR cycles [Hardware event]
->>>    instructions [Hardware event]
->>>    ref-cycles [Hardware event]
->>>    stalled-cycles-backend OR idle-cycles-backend [Hardware event]
->>>    stalled-cycles-frontend OR idle-cycles-frontend [Hardware event]
->>>
->>> $ perf stat -ddd true
->>>
->>>   Performance counter stats for 'true':
->>>
->>>                4.36 msec task-clock                       # 0.744 
->>> CPUs utilized
->>>                   1      context-switches                 # 229.325 
->>> /sec
->>>                   0      cpu-migrations                   # 0.000 /sec
->>>                  38      page-faults                      # 8.714 K/sec
->>>           4,375,694      cycles                           # 1.003 
->>> GHz                         (60.64%)
->>>             728,945      instructions                     # 0.17  
->>> insn per cycle
->>>              79,199      branches                         # 18.162 
->>> M/sec
->>>              17,709      branch-misses                    # 22.36% 
->>> of all branches
->>>             181,734      L1-dcache-loads                  # 41.676 
->>> M/sec
->>>               5,547      L1-dcache-load-misses            # 3.05% of 
->>> all L1-dcache accesses
->>>       <not counted> LLC-loads (0.00%)
->>>       <not counted> LLC-load-misses (0.00%)
->>>       <not counted> L1-icache-loads (0.00%)
->>>       <not counted> L1-icache-load-misses (0.00%)
->>>       <not counted> dTLB-loads (0.00%)
->>>       <not counted> dTLB-load-misses (0.00%)
->>>       <not counted> iTLB-loads (0.00%)
->>>       <not counted> iTLB-load-misses (0.00%)
->>>       <not counted> L1-dcache-prefetches (0.00%)
->>>       <not counted> L1-dcache-prefetch-misses (0.00%)
->>>
->>>         0.005860375 seconds time elapsed
->>>
->>>         0.000000000 seconds user
->>>         0.010383000 seconds sys
->>>
->>> After this patch:
->>> $ perf list hw
->>>
->>> List of pre-defined events (to be used in -e or -M):
->>>
->>>    branch-instructions OR branches [Hardware event]
->>>    branch-misses [Hardware event]
->>>    cache-misses [Hardware event]
->>>    cache-references [Hardware event]
->>>    cpu-cycles OR cycles [Hardware event]
->>>    instructions [Hardware event]
->>>
->>> $ perf stat -ddd true
->>>
->>>   Performance counter stats for 'true':
->>>
->>>                5.16 msec task-clock                       # 0.848 
->>> CPUs utilized
->>>                   1      context-switches                 # 193.817 
->>> /sec
->>>                   0      cpu-migrations                   # 0.000 /sec
->>>                  37      page-faults                      # 7.171 K/sec
->>>           5,183,625      cycles                           # 1.005 GHz
->>>             961,696      instructions                     # 0.19  
->>> insn per cycle
->>>              85,853      branches                         # 16.640 
->>> M/sec
->>>              20,462      branch-misses                    # 23.83% 
->>> of all branches
->>>             243,545      L1-dcache-loads                  # 47.203 
->>> M/sec
->>>               5,974      L1-dcache-load-misses            # 2.45% of 
->>> all L1-dcache accesses
->>>     <not supported>      LLC-loads
->>>     <not supported>      LLC-load-misses
->>>     <not supported>      L1-icache-loads
->>>     <not supported>      L1-icache-load-misses
->>>     <not supported>      dTLB-loads
->>>              19,619      dTLB-load-misses
->>>     <not supported>      iTLB-loads
->>>               6,831      iTLB-load-misses
->>>     <not supported>      L1-dcache-prefetches
->>>     <not supported>      L1-dcache-prefetch-misses
->>>
->>>         0.006085625 seconds time elapsed
->>>
->>>         0.000000000 seconds user
->>>         0.013022000 seconds sys
->>>
->>>
->>> Changes in v2:
->>>   - Move the event checking to a workqueue to make it asynchronous
->>>   - Add more details to the commit message based on the v1 discussion
->>>
->>>   drivers/perf/riscv_pmu_sbi.c | 45 
->>> +++++++++++++++++++++++++++++++++---
->>>   1 file changed, 42 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/perf/riscv_pmu_sbi.c 
->>> b/drivers/perf/riscv_pmu_sbi.c
->>> index 8cbe6e5f9c39..c326954af066 100644
->>> --- a/drivers/perf/riscv_pmu_sbi.c
->>> +++ b/drivers/perf/riscv_pmu_sbi.c
->>> @@ -20,6 +20,7 @@
->>>   #include <linux/cpu_pm.h>
->>>   #include <linux/sched/clock.h>
->>>   #include <linux/soc/andes/irq.h>
->>> +#include <linux/workqueue.h>
->>>     #include <asm/errata_list.h>
->>>   #include <asm/sbi.h>
->>> @@ -109,7 +110,7 @@ struct sbi_pmu_event_data {
->>>       };
->>>   };
->>>   -static const struct sbi_pmu_event_data pmu_hw_event_map[] = {
->>> +static struct sbi_pmu_event_data pmu_hw_event_map[] = {
->>>       [PERF_COUNT_HW_CPU_CYCLES]        = {.hw_gen_event = {
->>>                               SBI_PMU_HW_CPU_CYCLES,
->>>                               SBI_PMU_EVENT_TYPE_HW, 0}},
->>> @@ -143,7 +144,7 @@ static const struct sbi_pmu_event_data 
->>> pmu_hw_event_map[] = {
->>>   };
->>>     #define C(x) PERF_COUNT_HW_CACHE_##x
->>> -static const struct sbi_pmu_event_data 
->>> pmu_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
->>> +static struct sbi_pmu_event_data 
->>> pmu_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
->>>   [PERF_COUNT_HW_CACHE_OP_MAX]
->>>   [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
->>>       [C(L1D)] = {
->>> @@ -288,6 +289,34 @@ static const struct sbi_pmu_event_data 
->>> pmu_cache_event_map[PERF_COUNT_HW_CACHE_M
->>>       },
->>>   };
->>>   +static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
->>> +{
->>> +    struct sbiret ret;
->>> +
->>> +    ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
->>> +            0, cmask, 0, edata->event_idx, 0, 0);
->>> +    if (!ret.error) {
->>> +        sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
->>> +              ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
->>> +    } else if (ret.error == SBI_ERR_NOT_SUPPORTED) {
->>> +        /* This event cannot be monitored by any counter */
->>> +        edata->event_idx = -EINVAL;
->>> +    }
->>> +}
->>> +
->>> +static void pmu_sbi_check_std_events(struct work_struct *work)
->>> +{
->>> +    for (int i = 0; i < ARRAY_SIZE(pmu_hw_event_map); i++)
->>> +        pmu_sbi_check_event(&pmu_hw_event_map[i]);
->>> +
->>> +    for (int i = 0; i < ARRAY_SIZE(pmu_cache_event_map); i++)
->>> +        for (int j = 0; j < ARRAY_SIZE(pmu_cache_event_map[i]); j++)
->>> +            for (int k = 0; k < 
->>> ARRAY_SIZE(pmu_cache_event_map[i][j]); k++)
->>> + pmu_sbi_check_event(&pmu_cache_event_map[i][j][k]);
->>> +}
->>> +
->>> +static DECLARE_WORK(check_std_events_work, pmu_sbi_check_std_events);
->>> +
->>>   static int pmu_sbi_ctr_get_width(int idx)
->>>   {
->>>       return pmu_ctr_list[idx].width;
->>> @@ -473,6 +502,12 @@ static int pmu_sbi_event_map(struct perf_event 
->>> *event, u64 *econfig)
->>>       u64 raw_config_val;
->>>       int ret;
->>>   +    /*
->>> +     * Ensure we are finished checking standard hardware events for
->>> +     * validity before allowing userspace to configure any events.
->>> +     */
->>> +    flush_work(&check_std_events_work);
->>> +
->>>       switch (type) {
->>>       case PERF_TYPE_HARDWARE:
->>>           if (config >= PERF_COUNT_HW_MAX)
->>> @@ -634,7 +669,8 @@ static inline void pmu_sbi_stop_all(struct 
->>> riscv_pmu *pmu)
->>>        * which may include counters that are not enabled yet.
->>>        */
->>>       sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
->>> -          0, pmu->cmask, 0, 0, 0, 0);
->>> +          0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
->>> +
->>
->> Why is this required for this patch?
->>
->> If the intention is a generic improvement to reset mhpmevent at boot 
->> time, it should be separate patch.
->>
->>>   }
->>>     static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
->>> @@ -1108,6 +1144,9 @@ static int pmu_sbi_device_probe(struct 
->>> platform_device *pdev)
->>>         register_sysctl("kernel", sbi_pmu_sysctl_table);
->>>   +    /* Asynchronously check which standard events are available */
->>> +    schedule_work(&check_std_events_work);
->>> +
->>>       return 0;
->>>     out_unregister:
->>
->> Until we have the new SBI interface defined to optimize these SBI 
->> calls, we can use this individual call approach to fix the current 
->> issue.
->>
->> lgtm otherwise.
->>
->> Reviewed-by: Atish Patra <atishp@rivosinc.com>
->> Tested-by: Atish Patra <atishp@rivosinc.com>
+> After merging the mediatek tree, today's linux-next build (arm64
+> defconfig) failed like this:
 >
+> /tmp/next/build/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3: Warning (graph_port): /fragment@4/__overlay__: graph port node name should be 'port'
+> Error: /tmp/next/build/arch/arm64/boot/dts/mediatek/mt8186.dtsi:2399.29-30 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[4]: *** [/tmp/next/build/scripts/Makefile.lib:431: arch/arm64/boot/dts/mediatek/mt8186-corsola-magneton-sku393216.dtb] Error 1
 >
-> Can you add a Fixes tag for this so that we can merge in 6.10-rcX?
+> Caused by commit
 >
-> Thanks,
+>    d7c1bde38bf37a5 ("arm64: dts: mediatek: mt8186: add default thermal zones")
 >
-> Alex
+> I have used the last version of the mediatek tree from 20240613 instead.
 
+Hello Mark,
 
-So I'd choose the following commit as a Fixes tag: e9991434596f 
-("RISC-V: Add perf platform driver based on SBI PMU extension")
+Here is the explanation:
+https://lore.kernel.org/all/71d53ff6-fdae-440d-b60d-3ae6f0c881d9@baylibre.com/
+https://lore.kernel.org/all/6d9e0f19-9851-4f23-a8b8-6acc82ae7a3d@baylibre.com/
 
-In addition, this patch does not apply cleanly on top of 6.10, the 
-resolution I came up with is there 
-https://github.com/linux-riscv/linux-riscv/pull/1043/commits/0a440d8b9e90117261f02f4d019359847c64cb38
+For some reason, the 2 first commits of the series were not applied
+with the dts. These commits are needed because they contain some
+definitions used by the dts.
 
-Can you guys check it's correct?
-
-Thanks,
-
-Alex
-
-
->
->
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Julien
