@@ -1,123 +1,137 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2042.outbound.protection.outlook.com [40.92.52.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C171C0DCA;
-	Tue, 18 Jun 2024 09:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718702016; cv=fail; b=DUfOD5Xls2dZeh+7/SHtDshoRcHLn7ID1PHlqKrj52rS8fk4a1wDzx1Yndgz6iu1dIS6r0xHx8XgEs+0XPdnq+SkmQa1IBhNckS7IQriUYjsyHbrpxzfnfwNOk3TVUdn++hQY0fEtSB6D5+zTeEvm3r8SXstwG/djCaIBUKDNe4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718702016; c=relaxed/simple;
-	bh=TWLNgfZUZURetCZ2suMVo0RyVd+BZx4upR+vPimkY18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K74BLOX+cZwjsrMu3WEjU+WrXWvELdGn5NuPqsrdKo8A5midKFflY+Uybqfi0RVzHdinqvRWGszWFrf/Wn42YTHm3EYz2zmclH6H8xLfOfHnD2elpu8qkhAG7Y6rX9WOfylXZBqIGfsSwsOsHkdMVRtn1fvx0Ryl4oQWJ1Nvlhs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cskm53nT; arc=fail smtp.client-ip=40.92.52.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1859A155CBE;
+	Tue, 18 Jun 2024 09:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718702044; cv=none; b=fN+NZsb4HuODlP40DUCEmcn1f3N2r+61HDjSNVfhR2CUeayhIKDZkhRkg/RlUWgGLZbBOuQK3hAAqkFGjhcX4wjE9KU99r0n5X28sLYjpFYuz9ELI7+qtu2qCuJeeny4dLdXXsL+owRWsqsYzXWJO/TthuSZsis1s70nupSzNwc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718702044; c=relaxed/simple;
+	bh=ttYN9V7Bv0xdEUu9yvXJ2Kb1OFzdBlAYZwrbDTsO7FI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TQl1Fl/vziVpGdP4oAdkKMwYwub10OsKdb1b5+6QocBrlLwTHhyxoMR79byjuAQ/3bSGyhGaGsNcdajJFL1vxI8wPRo7M1BvMczGIO6UkYblZP+l0cWKosERUo6DN4rpTEK4ApcnbZjDp9xTR3k/EBA7ytgxCYRJNBnx+7KcoZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+D8twzo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cskm53nT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OIVa0Z2tNplPVqIgJWCCol0npMeSkhquBHRlWCmIKG+Xyvx9UUSwldELvw+WJvUGuSGc3SBMT0XDO3jBFkAGSfEsz2ld1N0SVb4L771MWGivH1kDHjXQZIRAJKyjjBKVNwi9zXuDiYzZaGjS8I3rpZiN0fyYgf0OgTvTM8ybWXOId7OQ0+iYOqesF+2HRHkiQLdM9ZsUqndIpP0uruY+616liuzxc7D2MwJIMPGGJ/CKAAHgT8f3IXntz+EI/waIr+nDS5i88s4W2j85vXB1m16g7E5Rikft+maeJKUEqEU6fzwK/uhnIohtLEEVPUqksEoAjhpRgbr/ajnSWoWozQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q3q/xC8quHmijQsE2iVF3t0ohwpu0uSfV91YVOmdtM4=;
- b=NYlf7MdH+agcJkaKYq+oQcQOeJ4hoxQ227sPoBN4qzMU4KpuSESoJchlsxAzsOs8MVi02/a5PNAfQCneFPhhMAYonSVy7RzOKVodSenxCKgoBV1NUfZ5fmozM61jIhrWaC/0PXMi9mA/fa40daB1PPuiLgOOrg90joTWi2eWfgOX861svt7To8IkW7wgfWqSRz/lCNcRvbv/z1RyKHu9mScJeTfhhaf2NfJ1UWkyJcXr4ZR0J5YcOz46IM8H6RFHVXoXf2u7Z7tx4kR9zG5itR0i8w2TGOBRkYE/21y/GxlD79YkOCCI4mi6pRBpT63u56CNBhQKMAhszw+36QFWMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q3q/xC8quHmijQsE2iVF3t0ohwpu0uSfV91YVOmdtM4=;
- b=cskm53nT0oF8jICL6KKZDNzttmba/hIHaWVzlHzPjpyj6lCYfD4Bgnu4r3bKVn0EM6rXZq5cUZqxs+O0YqJK+ZxqhD90+yuyC7AOv7OeGolksOmQUgFI9oLNWWvCMKXlsJee0Jw9JaTy/mb2RC6agkcJiUsVa9B3ddpABiT9U7ReJJPCvlHNxgHAgNUERVKjkon2jCvdLNdEjbo4StYZiSXyDvz32KOkMt8G88dzOjnvB5SD2fxfu0zEZdqZ+eqBbo9RKQjzp9Ggr0/QX4dWZjKThfE0jO0fBEyILCoUPqtSn2HWtkE7oqJROPEn/jHrrmtiTOuPOuvjUEyWMEPgMg==
-Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- (2603:1096:101:56::12) by SEYPR01MB4976.apcprd01.prod.exchangelabs.com
- (2603:1096:101:b3::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 09:13:31 +0000
-Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- ([fe80::b674:8f70:6e29:3756]) by SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- ([fe80::b674:8f70:6e29:3756%4]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 09:13:31 +0000
-Date: Tue, 18 Jun 2024 09:13:17 +0000
-From: Haylen Chu <heylenay@outlook.com>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: Use inverted-wp quirk for CV18xx
- and SG200x SoCs
-Message-ID:
- <TYZPR01MB4211B26AEA487D9FB4D0731ED7CE2@TYZPR01MB4211.apcprd01.prod.exchangelabs.com>
-References: <SEYPR01MB42219753E4388009470D958DD7FC2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
- <Zmrt-dcPR_ZXlYH-@xhacker>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmrt-dcPR_ZXlYH-@xhacker>
-X-TMN: [eevGCR/Bd4NaFashmkaLanuDecTAj2Ee]
-X-ClientProxiedBy: SI2PR02CA0027.apcprd02.prod.outlook.com
- (2603:1096:4:195::14) To TYZPR01MB4211.apcprd01.prod.exchangelabs.com
- (2603:1096:400:1c4::13)
-X-Microsoft-Original-Message-ID: <ZnFPrWJ-K7T5UCMC@ketchup>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+D8twzo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C196C3277B;
+	Tue, 18 Jun 2024 09:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718702043;
+	bh=ttYN9V7Bv0xdEUu9yvXJ2Kb1OFzdBlAYZwrbDTsO7FI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C+D8twzoSvvGoWOZwivYtyP5feM5zLG61KgFlipYdDyKEU8NLYzTatHWDSpxYHf3S
+	 3kEvuMJ19ajA2An6lx+jDXSFsnb2EDI1Q6WSj4Qeo230r7R7w2lUmRpuFUbuBqko7I
+	 e2h/hRuz7y4t/uVkTPkqE5yi/X7tUzVcJzeXNa9OrZ2ZCRiSqJEtnHE0SEl2PQr3uK
+	 1xlgWUMGfDrK+lP6CYeu98f4LrdJ3l8quXoD3asIdQ5PYQ4dS2beKnBerTy+s5W6/i
+	 0M6uxuJmAVzVlX+QzIuPudK2RkNejBIKyzJOu5UQ4rd379w2RLrT0EMAbsI+yltSG7
+	 qoX/xmI+iit5Q==
+Message-ID: <bfda328d-572e-4eca-b451-8e7a112c2f48@kernel.org>
+Date: Tue, 18 Jun 2024 11:13:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEYPR01MB4221:EE_|SEYPR01MB4976:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc2a687f-b064-4c39-3671-08dc8f76ea82
-X-Microsoft-Antispam: BCL:0;ARA:14566002|461199025|3412199022|440099025;
-X-Microsoft-Antispam-Message-Info:
-	XQrAp1hoZPt/ozPkB0w5/em+TZ4LZaT3ev4jDhwK/AL3n1NZq1MHWneJDgfDwPEHsk86vAT9pRolE0rCKF3JxD7sQFYmMHTVMxHJ5PzZxMpAWVyEShwrivio0uloiq4xqzuCL6qg2/B78N9/v1tS2+rNv9hSSx7tRAT3Fh/WOWb+8v629dZDKfsaFr5gaUEX+OUeYV4zmaaxDjdgjMKN5FrcVuA8TUvvazYyjSVOA5c26cu3LBXQLAaDrz4YLxNvThskUR9XtgQehKZmwwlBTlsfkbqzq3Tee46/m8K263IEvcb9VQgFux9tiuLp/BLfrSH+sq5r8j4SEnNAannvr63KuQIQC7CydPU7QxyCd8vqOCWRbEkoa8Y2XMBUGOLqqj44f+MSFlOp43Tmr9BA9SsEq8VzPIqS+rUohCoLHrqV0J+uylaN+L9qiSSJMwjkla4jGhkov/9ZPqLgSxYzO3JxVOvbZ6Q4RwRHirVZGbrvvhS1nB8T0R5D2AKHgT0mabsI41nFyTOlLojjkycjEQ9JzMM4VbER6n5xwHtH4ilf/AfUYIMR0Lddd2+g8svZ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?81x+KtTHBWVONZNmcpdamWiQ5iSJxG4JXGwrBeZpRvlekmBNx6sUTaNF9YmZ?=
- =?us-ascii?Q?RUtXQ/1TBu43UbkKxRo47MlpFEUk+nJhaKd6wi31sHDAgD6KxSfLyDtDqS/h?=
- =?us-ascii?Q?jUu16pZthgepg1NyCOniN95w5ObZhgfZX8CWC0GOMDC7b/+hLNfigSoTJuz2?=
- =?us-ascii?Q?9xyZmRWb/dxgfPI06ap10rI24VcKExTDrIf3t1/A3pEJsMucLXQ3KzUBzX4q?=
- =?us-ascii?Q?gm0XwOMIS9nmlbh5oSyXNk4An3s0Fs+mWnEHqF8au40CtZbwGGS4Hkk3wmfQ?=
- =?us-ascii?Q?K7F+E7THLmDUk9ml24QTD2djRAP/WCp1U1J/9zjimo7QBNynfH2DPdW63PQk?=
- =?us-ascii?Q?hQmaPBwWOxkjy0fNaobZa1ABnhN/0i/dW2DcyHElYcyJbCF56qM/U7t+HERx?=
- =?us-ascii?Q?PjlKjiFKFoO9u7hET8c2DZi9jxhlT1LbU0RDaCIOpTbwsU7i1Za5l+qP1D9q?=
- =?us-ascii?Q?tZhYgfUm/9B6kCJaUJReszHTWMQCHTkVktwPQprmsoWy9sMnmYneityGiH8O?=
- =?us-ascii?Q?8drbNhCE6BLj8Iry6scGwoVWEZdiNgH76BrzZ+kvuU1Mv8w7OO1QmgIwX3Q7?=
- =?us-ascii?Q?F0t4nv2iSTG4zqda9MoiVtiMScR1l3EdxdW4Q4ytWPGY0dwwfUmpdmmeCIyV?=
- =?us-ascii?Q?9Tu8avlTDXWD/ANX2IVXgehKQ44Opeg6V6S6ySpVsrC8gVsDZeUkMoT7XwnS?=
- =?us-ascii?Q?1bRoPs3KKYWD19RSIuXJDcRZqay8TDb63p4bVfk7ArleHF4Loo8nDtS/5GBf?=
- =?us-ascii?Q?T/uqOSUCODTBs0rQcXon2M6lR4WzpYpr8uT261TzHGPNEpSUIG1ZRXK7VaRP?=
- =?us-ascii?Q?VL0dB3IBbvGQQEfY2uOW5PxDdDB8Oi1qkbO8Pu9sDWafdPnGJtGX6A1Klg0O?=
- =?us-ascii?Q?3TFaSiIQuFUcS/yt0+l7LR4Vur/OFILicnlsL/L7eXEjszmsFlPDSCOGYf7c?=
- =?us-ascii?Q?uXzGVr4KZVvKsQDYUS1q2RpPz66fkep8y3wcCYtb4ZIKmUAZx0tyYLXIiKdP?=
- =?us-ascii?Q?eBIKgBn9nB2facxR8F/LjeipqkjrKdfFEyKT6CFTL3mDzKYNeH11PXbSfDhU?=
- =?us-ascii?Q?VrlwkWhQt7F2vty8PHSsAD866F0hVrdj9fIqHa/DB0lmZzMW5OBw+D512pMT?=
- =?us-ascii?Q?j8GGoy64BF7LB6tOrgUcoxvqXEDc7HVujsxLO4panGroi2As9vE6an8Lhl01?=
- =?us-ascii?Q?+3VpReAbdZZytxPhrYH6cU9tkmbxOEBX8HCtXRsuwbjG11Rj89Z2OYGIj10?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc2a687f-b064-4c39-3671-08dc8f76ea82
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR01MB4211.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 09:13:31.2600
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR01MB4976
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: ata: ahci-fsl-qoriq: convert to yaml
+ format
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
+ <linux-ide@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20240617180241.901377-1-Frank.Li@nxp.com>
+ <ZnCKlj_Gp60_2otI@ryzen.lan>
+ <09fad8cc-ff9e-48b4-b954-4f84c61f3ffc@kernel.org>
+ <ZnFJINOphiD1BWyR@ryzen.lan>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZnFJINOphiD1BWyR@ryzen.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 09:03:20PM +0800, Jisheng Zhang wrote:
-> On Fri, May 31, 2024 at 02:13:47PM +0000, Haylen Chu wrote:
-> > MMC controller integrated in Sophgo CV18xx and SG200x SoCs has an
-> > inverted write-protect flag, causing SDCards misdetected as read-only.
-> > So set SDHCI_QURIK_INVERTED_WRITE_PROTECT to make write protection work
-> > correctly.
+On 18/06/2024 10:45, Niklas Cassel wrote:
+> On Tue, Jun 18, 2024 at 09:42:03AM +0200, Krzysztof Kozlowski wrote:
+>> On 17/06/2024 21:12, Niklas Cassel wrote:
+>>> On Mon, Jun 17, 2024 at 02:02:40PM -0400, Frank Li wrote:
+>>>> Convert ahci-fsl-qoirq DT binding to yaml format.
+>>>>
+>>>> Additional changes:
+>>>> - Add reg-names list, ahci and sata-ecc
+>>>> - Add fsl,ls1028a-ahci and fsl,lx2060a-ahci
+>>>>
+>>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>>>> ---
+>>>>  .../bindings/ata/ahci-fsl-qoriq.txt           | 21 -------
+>>>>  .../devicetree/bindings/ata/fsl,ahci.yaml     | 58 +++++++++++++++++++
+>>>>  2 files changed, 58 insertions(+), 21 deletions(-)
+>>>>  delete mode 100644 Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
+>>>>  create mode 100644 Documentation/devicetree/bindings/ata/fsl,ahci.yaml
+>>>
+>>> Should this file perhaps be called:
+>>> fsl,qoriq-ahci.yaml ?
+>>>
+>>> Would be nice with some input from DT maintainers on this.
+>>
+>> This should be rather compatible.
 > 
-> No, I would rather set cd-inverted property in dts.
+> Considering that you gave your Reviewed-by tag, I interpret this sentence
+> as that you are happy with the filename used (fsl,ahci.yaml) in this patch.
+> 
 
-Okay, I will fix it it in dts instead.
+Yes, maybe indeed fsl,qoriq-ahci or compatible-based would be better,
+but probably I provided a bit different review on other patch, so don't
+want to block useful conversion.
 
-Thanks,
-Haylen Chu
+Best regards,
+Krzysztof
+
