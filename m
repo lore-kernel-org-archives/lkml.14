@@ -1,110 +1,90 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BAD1662EA;
-	Tue, 18 Jun 2024 14:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDFA1667FA;
+	Tue, 18 Jun 2024 14:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718720542; cv=none; b=afInIjyugpbrbt3vXdLGIdSYzrFit5X+D6G9u26RnOgXpdsdfsmIUTVhI60oXLq5LxRA3DrFBIYcb484lbHKkV3cZmGbYCIkZ9yO7D+bi0R2Qbr4jLWCa4YllREJ6RsxL5KWOvrDULSaeBSCve7NkQZ6ibkZpyGetIO1VPKo26I=
+	t=1718720547; cv=none; b=nLzHzOLNCp3ZMYLH8fjwuBnjbCiSggYE+HCpKevchEEGySTZQCmdmMyFN+KxxrhYmGkZZwp1JPuQqVj6nf87TlChnZWNKEqzocn1amzHTcRUIthzUZv0pzREjbu5QllfpBTwVb9nxXmQ8vU3bNRhZijZ2TFyQv9+q7oCfB2DXq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718720542; c=relaxed/simple;
-	bh=9nWhS3qqdVUR1DFfHDG1/D2dWJpNJex73LEgHHCjB+A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jmuRT3O4Iut6dvlRfclc3Ia1pIEXJq62y4dKSBSWJ7udCc2CjTYxDYzmfOORkwCxP50nSWlEQAQGl2FMjY7JqDXf35GzNikiqaulWPjP1mdZqeElbwOX8hx31Pmd3O3sb/rJ4aAWWiGBcfBljOnKc59Dzt0yQeOyUR8CPpVUf+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmIxqMhZ; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718720547; c=relaxed/simple;
+	bh=z0aiqnYxRofh69taB3z0ijaSldf6h5lhocM5coo9Xdc=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Zu8fT8sUSuu7GE68xKlvMODVLprXdlQI/6HFy1dkhrVpeWupAe8MUxqQ4VFcz9pBF/2otHItwo7oht/HjDsrOSH93gUeZpNhXDoEuWyio3Y9omZwR72ywf+PPhkO5sE6cbCTK1zsSSm1sovbOceoEnZCt1RzbTETVNsxY4NaKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJrjCGPa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmIxqMhZ"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f0c3d0792so648613266b.3;
-        Tue, 18 Jun 2024 07:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718720539; x=1719325339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nd4fMU4XCRVdn8w+boSaOOLeFk1GxpN6I8ANgWZ/Utc=;
-        b=PmIxqMhZ7Vo39IiVZt7TEiwSj75mNhs3aMz/oTJoc3wYdlZuEUh7YTx/UDacMKr9qd
-         vJmknkwdDdIbMfjJy6DCvOUmKQIkPDvOiU3RDGo2gx3GZFMH0RiFSnHw+vJguR+AVUUh
-         tt9h7MRyxhv8r0p0Lhf7xT+Lz0ZrF6OpsJAGGiMS+WzBrdjj6H7MNoE+FWxGH6NKDVJG
-         xkoLn7tM9+dZIdML9nmNC4tFZSusglFe9U0QSSFy+BWzrfiQ590OPFW5wAXZvaWd34CY
-         eS85ttU7Yh/0wzayrI67lFud3y8zGzjUXnhSAbgQBSAvRXojTrhEkE7YUukVSRTLgX7i
-         Q/xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718720539; x=1719325339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nd4fMU4XCRVdn8w+boSaOOLeFk1GxpN6I8ANgWZ/Utc=;
-        b=nlcaDEbkCepD6Vr3b7/JFgSPxfiECMcglI28JuVAmaIWzK+mYwvw6mjDGyUx47YrVg
-         3AoRPmkcULSUX6o6nMNOCNTYrde8PTuRkNXEo+/s8QlyP258iMXYdCaikShbmYjDkXP7
-         o6z+tRdjNYnv1Of9V/mz+vMN9foji71soO1Tj3rOfbhTyVWXXDtakVo/goxvKOY8Cfcd
-         eMGznE3Zn3Z5PmKskz9NT3spUKQONtYmiB6RpoW2RdCeOo8QQh9WypVzQb4roOho67Bk
-         B7TF9wP6JNI3IHQiE0LVSHPUqPiKBdsLox+gORgvWUegyByqsDdmNGXJrvkdVKVIhKCe
-         auyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhySqcaiMtl7xUPXaXCALuwV6kjr/xbin0tMN3a8Ojq3cYWPuO5R+E5z5wh8mJ7TuoNOZiiImebMRVl/07CEci+ANvLwOI91x2U3EQdNDO+7koVfYfRXV2jQz27tJya0zVW9vQeo/rh3QnJjgBeQ34LzLTDoOVk/Vcpi8rYTcr8Fv93g==
-X-Gm-Message-State: AOJu0Yx7UEi2eY3ZUwaTwWWUYNYMwz6WErFA7X4STR8sdym7Yx9IMPJQ
-	QgZNJqWC32lnXAYzMOIsNKUNa9DNdNQR7xrgJUHZD0fTiUjbWy/I
-X-Google-Smtp-Source: AGHT+IGw8nTjb4FLe1ZvAWgDgoIVGkZHYVCvXgSPLf9KAfjt31/ecVatUcUgK02e1NOE/vUKq35u3Q==
-X-Received: by 2002:a17:906:710a:b0:a6f:10aa:9c3f with SMTP id a640c23a62f3a-a6f60dc8929mr885088966b.54.1718720538818;
-        Tue, 18 Jun 2024 07:22:18 -0700 (PDT)
-Received: from spiri.. ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db6dfesm618191466b.87.2024.06.18.07.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:22:18 -0700 (PDT)
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
-To: Alisa-Dariana Roman <alisa.roman@analog.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: [PATCH v5 6/6] MAINTAINERS: Update AD7192 driver maintainer
-Date: Tue, 18 Jun 2024 17:21:38 +0300
-Message-Id: <20240618142138.520192-7-alisa.roman@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240618142138.520192-1-alisa.roman@analog.com>
-References: <20240618142138.520192-1-alisa.roman@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJrjCGPa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD3C1C4AF1C;
+	Tue, 18 Jun 2024 14:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718720547;
+	bh=z0aiqnYxRofh69taB3z0ijaSldf6h5lhocM5coo9Xdc=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=hJrjCGPaaGr9k+pN1RjTpxGrrTV6mUiO6Im0ZzxwrIjjBFA8ZYrOosj/6UYiRjF0L
+	 agmThfPkP8To6o4lywlwNX0u7z82no77gYQIUwzz7ME+G6h1KBtzPb+WyX8MGRytFO
+	 NQZVGM4rR/cuvSo3+XGRdCS7bPisyWlIB4YXDvXPPsT3S0rXuRHNf8s6KoAn3uMFqw
+	 J14/dt8zuBOtI9q6usgUUHvEU83EUpEWubi3A9z03/DFNZOPh+w5ZfJ0P4Tuo4TW9I
+	 8BSjRkoITdC7uX2YnobxJmwsan8ExmaFIVAJEqwqdELv6tgnRN0h5cynzOPmEeEFLS
+	 O6RDinvi5fzpg==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Support Opensource <support.opensource@diasemi.com>, 
+ Herve Codina <herve.codina@bootlin.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240617125735.582963-1-krzysztof.kozlowski@linaro.org>
+References: <20240617125735.582963-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 1/2] ASoC: soc-dai.h: Constify DAI ops
+ auto_selectable_formats
+Message-Id: <171872054460.81836.3714158879000443319.b4-ty@kernel.org>
+Date: Tue, 18 Jun 2024 15:22:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-Alexandru Tachici has not been active. Also the email address included
-is not reachable anymore. I was assigned to work on the driver instead.
+On Mon, 17 Jun 2024 14:57:34 +0200, Krzysztof Kozlowski wrote:
+> The core ASoC code does not modify contents of the
+> 'auto_selectable_formats' array passed in 'struct snd_soc_dai_ops', so
+> make it const for code safety.
+> 
+> 
 
-Remove Alexandru Tachici and add myself as maintainer of AD7192 driver.
+Applied to
 
-Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 24d372f7653e..d4a958b4341e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1217,7 +1217,7 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r*
- F:	drivers/iio/adc/ad7091r*
- 
- ANALOG DEVICES INC AD7192 DRIVER
--M:	Alexandru Tachici <alexandru.tachici@analog.com>
-+M:	Alisa-Dariana Roman <alisa.roman@analog.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
--- 
-2.34.1
+Thanks!
+
+[1/2] ASoC: soc-dai.h: Constify DAI ops auto_selectable_formats
+      commit: d4a7d067e061c95c6387cf537258082074a4d299
+[2/2] ASoC: Constify DAI ops auto_selectable_formats
+      commit: 595265c92668cbdbd9f299c49907734d468c12e9
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
