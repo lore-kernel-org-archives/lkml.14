@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E523213A41B;
-	Tue, 18 Jun 2024 07:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71338156878;
+	Tue, 18 Jun 2024 07:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695536; cv=none; b=GAbuP5r0byoIQpYAWNGs2kPg15Z8ZzCUjM0mvVLnM5O+IFXIneVLxJrIvw5jQOS/du2a+a2aTn3DG72gRhZAYnV0YtC5jiADF7ZvK8vsdwxgaBMW2Hpp8O/qawvJEP6PD10BYa+Lt1ED5LP9q1A578TJ4JzxHKeQkUQKDnYKi44=
+	t=1718695539; cv=none; b=Gmpw/QcxNgB4hkBQUjPiT3rE1ui6yZURmtAkx4v8nwqRVizRfqIg94YBklRpIj2F8XP2aiMX7s460JOvMP7RNsIFlfxb6B9ZcXQGyLbqskU4++1+hyJWgIt/5NnxZQzqMIDxdeW2ir1Y82mb68wYu/uh7R0h/WWTi44iQRAAAks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695536; c=relaxed/simple;
-	bh=jSt8CNbUvA9rTwhUnR498pGdHxYMZjQy5OeMI7zpRU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j+YK8bjsJoK5YBYdyk8QYFG0D5KLczDk2dZNclIrZ4KwE3ew1w4WARsmZpT0AUj8Lc2RloBdfx/XRZp6XOE1dyyfxsuPUjEWI77tOBON2jhQt7Nc5OlBN97GAcakLC1Q9KbmATePV5+kANYi6rDerMx4pmcCE1yI2jHHEezlBzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sxOvRUzo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xtlI0XC+; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1718695539; c=relaxed/simple;
+	bh=3nOCXH40kHfZO87SmAo125DaEM6dygak/4wmXIHT9LM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RvmAHOcSKdl2GJRPI+pRkj8MyeV9HxCSgMr+ANV3/3N5HlVIBCr9L/RVZG4VR3HKxtbM8VNXBwYogYwhL0umoLFFWJUZWnQYAHKZmqsZoZGKOjbYJH0eZw16yhbu9eZbonFomEr6lcLGSNM+hJC7e5nHmRoZbM5TbGjuhM0xZ+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aF0ybsnW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V1tddVWU; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sxOvRUzo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xtlI0XC+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aF0ybsnW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V1tddVWU"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718695530;
+	s=2020; t=1718695532;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2BR8yrm8K6byCgOiM6f0MGKoccxZnzrPlbU82xFoyM0=;
-	b=sxOvRUzosmLm4uxSjsk4rbOBEzP3sGaNGqo3Sh4fjLvvdh/e124QMJRIinnO5cnEGN22PU
-	28X7UmhBv1ZDa4oKtTvFwHZBblf6DQI+tmnKYEWjaYbkRurjQBoqk1tENfh7nXrKst8iGj
-	sfSRAxcZ0biAqQ8c5/rhgZh307DT/C6Vdgxz54O8oFHE1SIppbURPkoVCaQq/i30PIolDq
-	aem+7aXb2RcJmBSXaPwfAe+lm7aykk4oxsY6oAVEIYD/G9KmY2xfB0DZ07bMkoKE2Tn8b5
-	DOIZeaUL3lrBNsZxtScxwz6WUfL/Wy3Pi5zazxYu7AFe80HQhFlHWhueWA3bjg==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+6ZJx97XD1+mNbkUbduQBaAsweYRZijjNDkdfe4a/D8=;
+	b=aF0ybsnWTEcK6NbLNKE6h4Rp6gDQKVDbtuBX2+p2/5V/UyyEwhFBJLadx2hCqC9EKDRoxs
+	iV9oM43Gz9eRC9XVABOhU8lhvtkAYNyRQz1OlcdspmP9pFDCXIaUFLZ8aBIgxv73IOPyRY
+	7XtxH8YZahoZ+PaGySr68AGI/z/DeD+vqg98vIVq2wH4b1bkW7ALqWMi2DjxnDl07v8kEx
+	6Zx0nGAMbheKXGZWNjsvo4r8St5l0apGfGeHs5MrFWZDPTfIgBuvYDN78obXhF/P+lFMTE
+	rPhdHU9Nm4koopsZCJ4K3aX7A5TPTa4OMc2o0tpLG4l6xLAkiLQW5jmMpk75EQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718695530;
+	s=2020e; t=1718695532;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2BR8yrm8K6byCgOiM6f0MGKoccxZnzrPlbU82xFoyM0=;
-	b=xtlI0XC+1xS3maQgZ9cyTZo2w08Few7EQRkveU60FuqR2NyjGtGXQhQdFhkBV/aEimR68c
-	KjIJEp72dGssxhBQ==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+6ZJx97XD1+mNbkUbduQBaAsweYRZijjNDkdfe4a/D8=;
+	b=V1tddVWU1sNSTuhJrAyjMY53PjqHLkDpfVSfYlKyTyKqxHKmCSrO3xNjdTzYmqh9Gf65bT
+	VQTXCPmN8yIACiCg==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -50,203 +53,95 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v7 net-next 00/15] locking: Introduce nested-BH locking.
-Date: Tue, 18 Jun 2024 09:13:16 +0200
-Message-ID: <20240618072526.379909-1-bigeasy@linutronix.de>
+	Will Deacon <will@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	David Ahern <dsahern@kernel.org>
+Subject: [PATCH v7 net-next 05/15] net/tcp_sigpool: Use nested-BH locking for sigpool_scratch.
+Date: Tue, 18 Jun 2024 09:13:21 +0200
+Message-ID: <20240618072526.379909-6-bigeasy@linutronix.de>
+In-Reply-To: <20240618072526.379909-1-bigeasy@linutronix.de>
+References: <20240618072526.379909-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Disabling bottoms halves acts as per-CPU BKL. On PREEMPT_RT code within
-local_bh_disable() section remains preemtible. As a result high prior
-tasks (or threaded interrupts) will be blocked by lower-prio task (or
-threaded interrupts) which are long running which includes softirq
-sections.
+sigpool_scratch is a per-CPU variable and relies on disabled BH for its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
+this data structure requires explicit locking.
 
-The proposed way out is to introduce explicit per-CPU locks for
-resources which are protected by local_bh_disable() and use those only
-on PREEMPT_RT so there is no additional overhead for !PREEMPT_RT builds.
+Make a struct with a pad member (original sigpool_scratch) and a
+local_lock_t and use local_lock_nested_bh() for locking. This change
+adds only lockdep coverage and does not alter the functional behaviour
+for !PREEMPT_RT.
 
-The series introduces the infrastructure and converts large parts of
-networking which is largest stake holder here. Once this done the
-per-CPU lock from local_bh_disable() on PREEMPT_RT can be lifted.
+Cc: David Ahern <dsahern@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/ipv4/tcp_sigpool.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Performance testing. Baseline is net-next as of commit 93bda33046e7a
-("Merge branch'net-constify-ctl_table-arguments-of-utility-functions'")
-plus v6.10-rc1. A 10GiG link is used between two hosts. The command
-   xdp-bench redirect-cpu --cpu 3 --remote-action drop eth1 -e
-
-was invoked on the receiving side with a ixgbe. The sending side uses
-pktgen_sample03_burst_single_flow.sh on i40e.
-
-Baseline:
-| eth1->?                 9,018,604 rx/s                  0 err,drop/s
-|   receive total         9,018,604 pkt/s                 0 drop/s         =
-       0 error/s
-|     cpu:7               9,018,604 pkt/s                 0 drop/s         =
-       0 error/s
-|   enqueue to cpu 3      9,018,602 pkt/s                 0 drop/s         =
-    7.00 bulk-avg
-|     cpu:7->3            9,018,602 pkt/s                 0 drop/s         =
-    7.00 bulk-avg
-|   kthread total         9,018,606 pkt/s                 0 drop/s         =
- 214,698 sched
-|     cpu:3               9,018,606 pkt/s                 0 drop/s         =
- 214,698 sched
-|     xdp_stats                   0 pass/s        9,018,606 drop/s         =
-       0 redir/s
-|       cpu:3                     0 pass/s        9,018,606 drop/s         =
-       0 redir/s
-|   redirect_err                  0 error/s
-|   xdp_exception                 0 hit/s
-
-perf top --sort cpu,symbol --no-children:
-|   18.14%  007  [k] bpf_prog_4f0ffbb35139c187_cpumap_l4_hash
-|   13.29%  007  [k] ixgbe_poll
-|   12.66%  003  [k] cpu_map_kthread_run
-|    7.23%  003  [k] page_frag_free
-|    6.76%  007  [k] xdp_do_redirect
-|    3.76%  007  [k] cpu_map_redirect
-|    3.13%  007  [k] bq_flush_to_queue
-|    2.51%  003  [k] xdp_return_frame
-|    1.93%  007  [k] try_to_wake_up
-|    1.78%  007  [k] _raw_spin_lock
-|    1.74%  007  [k] cpu_map_enqueue
-|    1.56%  003  [k] bpf_prog_57cd311f2e27366b_cpumap_drop
-
-With this series applied:
-| eth1->?                10,329,340 rx/s                  0 err,drop/s
-|   receive total        10,329,340 pkt/s                 0 drop/s         =
-       0 error/s
-|     cpu:6              10,329,340 pkt/s                 0 drop/s         =
-       0 error/s
-|   enqueue to cpu 3     10,329,338 pkt/s                 0 drop/s         =
-    8.00 bulk-avg
-|     cpu:6->3           10,329,338 pkt/s                 0 drop/s         =
-    8.00 bulk-avg
-|   kthread total        10,329,321 pkt/s                 0 drop/s         =
-  96,297 sched
-|     cpu:3              10,329,321 pkt/s                 0 drop/s         =
-  96,297 sched
-|     xdp_stats                   0 pass/s       10,329,321 drop/s         =
-       0 redir/s
-|       cpu:3                     0 pass/s       10,329,321 drop/s         =
-       0 redir/s
-|   redirect_err                  0 error/s
-|   xdp_exception                 0 hit/s
-
-perf top --sort cpu,symbol --no-children:
-|   20.90%  006  [k] bpf_prog_4f0ffbb35139c187_cpumap_l4_hash
-|   12.62%  006  [k] ixgbe_poll
-|    9.82%  003  [k] page_frag_free
-|    8.73%  003  [k] cpu_map_bpf_prog_run_xdp
-|    6.63%  006  [k] xdp_do_redirect
-|    4.94%  003  [k] cpu_map_kthread_run
-|    4.28%  006  [k] cpu_map_redirect
-|    4.03%  006  [k] bq_flush_to_queue
-|    3.01%  003  [k] xdp_return_frame
-|    1.95%  006  [k] _raw_spin_lock
-|    1.94%  003  [k] bpf_prog_57cd311f2e27366b_cpumap_drop
-
-This diff appears to be noise.
-
-v6=E2=80=A6v7 https://lore.kernel.org/all/20240612170303.3896084-1-bigeasy@=
-linutronix.de/:
-- The softnet_data::xmit (08/15) is moved completely for RT and not
-  limited to one member. During the review it has been noticed that the
-  `more' member requires same protection.
-  After some cleanup this might also be considered conditionally for !RT.
-
-v5=E2=80=A6v6 https://lore.kernel.org/all/20240607070427.1379327-1-bigeasy@=
-linutronix.de/:
-- bpf_redirect_info and the lists (cpu, dev, xsk map_flush_list) is now
-  initialized on first usage instead during setup time
-  (bpf_net_ctx_set()). bpf_redirect_info::kern_flags is used as
-  status to note which member require an init.
-  The bpf_redirect_info::kern_flags is moved to the end of the struct
-  (after nh) in order to be excluded from the memset() which clears
-  everything upto the the nh member.
-  This whole lazy init performed to save cycles and not to waste them to
-  memset bpf_redirect_info and init the three lists on each
-  net_rx_action()/ NAPI invocation even if BPF/redirect is not used.
-  Suggested by Jesper Dangaard Brouer.
-
-- Collect Acked-by/Review-by from PeterZ/ tglx
-
-v4=E2=80=A6v5 https://lore.kernel.org/all/20240604154425.878636-1-bigeasy@l=
-inutronix.de/:
-- Remove the guard() notation as well as __free() within the patches.
-  Patch #1 and #2 add the guard definition for local_lock_nested_bh()
-  but it remains unused with the series.
-  The __free() notation for bpf_net_ctx_clear has been removed entirely.
-
-- Collect Toke's Reviewed-by.
-
-v3=E2=80=A6v4 https://lore.kernel.org/all/20240529162927.403425-1-bigeasy@l=
-inutronix.de/:
-- Removed bpf_clear_redirect_map(), moved the comment to the caller.
-  Suggested by Toke.
-
-- The bpf_redirect_info structure is memset() each time it is assigned.
-  Suggested by Toke.
-
-- The bpf_net_ctx_set() in __napi_busy_loop() has been moved from the
-  top of the function to begin/ end of the BH-disabled section. This has
-  been done to remain in sync with other call sites.
-  After adding the memset() I've been looking at the perf-numbers in my
-  test-case and I haven't noticed an impact, the numbers are in the same
-  range with and without the change. Therefore I kept the numbers from
-  previous posting.
-
-- Collected Alexei's Acked-by.
-
-v2=E2=80=A6v3 https://lore.kernel.org/all/20240503182957.1042122-1-bigeasy@=
-linutronix.de/:
-- WARN checks checks for bpf_net_ctx_get() have been dropped and all
-  NULL checks around it. This means bpf_net_ctx_get_ri() assumes the
-  context has been set and will segfault if it is not the case.
-  Suggested by Alexei and Jesper. This should always work or always
-  segfault.
-
-- It has been suggested by Toke to embed struct bpf_net_context into
-  task_struct instead just a pointer to it. This would increase the size
-  of task_struct by 112 bytes instead just eight and Alexei didn't like
-  it due to the size impact with 1m threads. It is a pointer again.
-
-v1=E2=80=A6v2 https://lore.kernel.org/all/20231215171020.687342-1-bigeasy@l=
-inutronix.de/:
-- Jakub complained about touching networking drivers to make the
-  additional locking work. Alexei complained about the additional
-  locking within the XDP/eBFP case.
-  This led to a change in how the per-CPU variables are accessed for the
-  XDP/eBPF case. On PREEMPT_RT the variables are now stored on stack and
-  the task pointer to the structure is saved in the task_struct while
-  keeping every for !RT unchanged. This was proposed as a RFC in
-  	v1: https://lore.kernel.org/all/20240213145923.2552753-1-bigeasy@linutro=
-nix.de/
-
-  and then updated
-
-        v2: https://lore.kernel.org/all/20240229183109.646865-1-bigeasy@lin=
-utronix.de/
-	  - Renamed the container struct from xdp_storage to bpf_net_context.
-            Suggested by Toke H=C3=B8iland-J=C3=B8rgensen.
-	  - Use the container struct also on !PREEMPT_RT builds. Store the
-	    pointer to the on-stack struct in a per-CPU variable. Suggested by
-            Toke H=C3=B8iland-J=C3=B8rgensen.
-
-  This reduces the initial queue from 24 to 15 patches.
-
-- There were complains about the scoped_guard() which shifts the whole
-  block and makes it harder to review because the whole gets removed and
-  added again. The usage has been replaced with local_lock_nested_bh()+
-  its unlock counterpart.
-
-Sebastian
+diff --git a/net/ipv4/tcp_sigpool.c b/net/ipv4/tcp_sigpool.c
+index 8512cb09ebc09..d8a4f192873a2 100644
+--- a/net/ipv4/tcp_sigpool.c
++++ b/net/ipv4/tcp_sigpool.c
+@@ -10,7 +10,14 @@
+ #include <net/tcp.h>
+=20
+ static size_t __scratch_size;
+-static DEFINE_PER_CPU(void __rcu *, sigpool_scratch);
++struct sigpool_scratch {
++	local_lock_t bh_lock;
++	void __rcu *pad;
++};
++
++static DEFINE_PER_CPU(struct sigpool_scratch, sigpool_scratch) =3D {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
+=20
+ struct sigpool_entry {
+ 	struct crypto_ahash	*hash;
+@@ -72,7 +79,7 @@ static int sigpool_reserve_scratch(size_t size)
+ 			break;
+ 		}
+=20
+-		old_scratch =3D rcu_replace_pointer(per_cpu(sigpool_scratch, cpu),
++		old_scratch =3D rcu_replace_pointer(per_cpu(sigpool_scratch.pad, cpu),
+ 					scratch, lockdep_is_held(&cpool_mutex));
+ 		if (!cpu_online(cpu) || !old_scratch) {
+ 			kfree(old_scratch);
+@@ -93,7 +100,7 @@ static void sigpool_scratch_free(void)
+ 	int cpu;
+=20
+ 	for_each_possible_cpu(cpu)
+-		kfree(rcu_replace_pointer(per_cpu(sigpool_scratch, cpu),
++		kfree(rcu_replace_pointer(per_cpu(sigpool_scratch.pad, cpu),
+ 					  NULL, lockdep_is_held(&cpool_mutex)));
+ 	__scratch_size =3D 0;
+ }
+@@ -277,7 +284,8 @@ int tcp_sigpool_start(unsigned int id, struct tcp_sigpo=
+ol *c) __cond_acquires(RC
+ 	/* Pairs with tcp_sigpool_reserve_scratch(), scratch area is
+ 	 * valid (allocated) until tcp_sigpool_end().
+ 	 */
+-	c->scratch =3D rcu_dereference_bh(*this_cpu_ptr(&sigpool_scratch));
++	local_lock_nested_bh(&sigpool_scratch.bh_lock);
++	c->scratch =3D rcu_dereference_bh(*this_cpu_ptr(&sigpool_scratch.pad));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tcp_sigpool_start);
+@@ -286,6 +294,7 @@ void tcp_sigpool_end(struct tcp_sigpool *c) __releases(=
+RCU_BH)
+ {
+ 	struct crypto_ahash *hash =3D crypto_ahash_reqtfm(c->req);
+=20
++	local_unlock_nested_bh(&sigpool_scratch.bh_lock);
+ 	rcu_read_unlock_bh();
+ 	ahash_request_free(c->req);
+ 	crypto_free_ahash(hash);
+--=20
+2.45.2
 
