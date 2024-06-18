@@ -1,130 +1,154 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0123BE;
-	Tue, 18 Jun 2024 15:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F3A1367;
+	Tue, 18 Jun 2024 15:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722946; cv=none; b=CV64EYoTB+iMZaV+6Iv87C8axMqZ+JoWQ/s2IZ2bIzXU119adiDDYyuzKoKpdBIJvhwuIqLzhMxr1canLIle8cL1xTAZpxH9r98SO2og4h3CMi8pUmyFzChwhQw3IayYX6cPluMlK9/COyi6DkJZvXnl61wack/bobjmfCWGRPM=
+	t=1718723024; cv=none; b=dAPhBinvW61hZJQo4EUBg+MK0hr0i0IQ96A0pQvL9Pgnhqlc3VQeOaXnjeEJ5lSdcAvMobqfT8e/xuszUimKTYLBdbJo+gRmhKsYTus1FEo3/inO/WgtU/myfhFIXFg/s3gp8tp6dl0vNEQtmCCrJDlDdoE/gdGP8Kh/0CmvXxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722946; c=relaxed/simple;
-	bh=4DP/pLvJr5FCTp8Gs8CSgpa+4kUePHLrQ/FzhjNULbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fknrQIa8y0LkvPhysaYPeWXlPRrWnp+wsTAHKlbRU6pIEv/XN/32PVBOKQL8k8yL6B8EIfAtRitS4IMkYij5Z99BeU1DAu2WwXgOHkFEQr+txSx4LeT/7fUXjgcs5wDT+Qzem3x3yEpcmVD1G16CsOuXA49O++G8n3xlf6aZRYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=OTJlfVTQ; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1718723024; c=relaxed/simple;
+	bh=bs7iNpgVUW5Chv5+nq8B2RJJ4Ksk5joWXZdYM6a+9II=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WudOH/nwXDKvFrcfJOv0+ewWAd8kRIkYWaXH3inUeXpgBbrOshbI8KqCWAoEjd+6ZIVTCl3e5oE6IqHEWRKGMBxkDhMzNuZnFj373E1c/cFMYT1PeZHcY2QjfL/MZJ2Nb2BRHghN6kC3o1vmR7l+RgUUVMDZVW055K9zFxqSigI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=2OfyujLT; arc=none smtp.client-ip=148.163.152.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="OTJlfVTQ"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="2OfyujLT"
+Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
+	by m0355090.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 45IEew5e009691;
+	Tue, 18 Jun 2024 15:03:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=DKIM202306; bh=LsDqHofp7K+2f2J0vx8uTn8
+	2tMHjx9v5dUOBs6FATk0=; b=2OfyujLTu3HMNZ/1kzSJ7E1hMLjFWJzgZiOaS3K
+	oRs1TGdAoCy1YW6xeop2sf/8y1LFz8HGoX5igUdv5lCr5PEm7MsN7azev4rIkkTG
+	mO6Vzt+Y5ef1nlT/APQIsXsaI6u9ChRY9JurZ+0SvYKIq8eOFiii6fQFEg68RhgG
+	oYaSMdFpo8C4zTzIIO2CZO3GptHawdoNaUGWva06xhWCmEF3zRJvLCWa+EbrQyiX
+	C4Svw4UQT4bVcuAq71bXyzFYnR1W6+SoyAuzj+B2hLOc9tiau9O+ouvEr7OJBoy0
+	8y21NM+a5F/la2x3fRmN4OPtzoAj89tsUByfesGdwNYrn+g==
+Received: from va32lpfpp03.lenovo.com ([104.232.228.23])
+	by m0355090.ppops.net (PPS) with ESMTPS id 3ysp9ry9k0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 15:03:24 +0000 (GMT)
+Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 3B4FF882DB;
-	Tue, 18 Jun 2024 17:02:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1718722942;
-	bh=9ns9gHRZfDY4bi8jkbvd27zNfS1kRiPooJSAoQsIPe4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OTJlfVTQ1wHzhvj9MakaFaygopHypaAxW2vJgac91reYHZOvBgkNuikuu9kXccGoA
-	 CORnroR7Nqk49LZr+ZZEXLX36mkhBJDi/UK1mezXpkSEK9NmPGkMnngg65hpG1Vy1O
-	 RuDoP6Hq0Amh1dJT79FSZFwEajTvsmLEVV4JZWHRAFVTipdsO91klqnEMm2t08+BbN
-	 Of96jM8m5inuNl+d0ODaFvRr6TTYUXd+abFF4wkdKqRaoKKg8PFmmOVPjCnymrD8y5
-	 CuIXdjWOlviEMgUlAZh199oFd2yswT4QNe6uk54QPx8lqlzyIBDxpMJodVkuzhr7g/
-	 z10GrvV0817+g==
-Date: Tue, 18 Jun 2024 17:02:20 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Woojung.Huh@microchip.com, dan.carpenter@linaro.org, olteanv@gmail.com,
- kuba@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
- edumazet@google.com, davem@davemloft.net, o.rempel@pengutronix.de,
- Tristram.Ha@microchip.com, bigeasy@linutronix.de, horms@kernel.org,
- ricardo@marliere.net, casper.casan@gmail.com, linux-kernel@vger.kernel.org,
- UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH v1 net-next] net: dsa: Allow only up to two HSR HW
- offloaded ports for KSZ9477
-Message-ID: <20240618170220.7c9217bd@wsk>
-In-Reply-To: <6a011bd4-8494-4a6f-9ec4-723ab52c4fbf@lunn.ch>
-References: <20240618130433.1111485-1-lukma@denx.de>
-	<339031f6-e732-43b4-9e83-0e2098df65ef@moroto.mountain>
-	<24b69bf0-03c9-414a-ac5d-ef82c2eed8f6@lunn.ch>
-	<1e2529b4-41f2-4483-9b17-50c6410d8eab@moroto.mountain>
-	<BL0PR11MB291397353642C808454F575CE7CE2@BL0PR11MB2913.namprd11.prod.outlook.com>
-	<20240618164545.14817f7e@wsk>
-	<6a011bd4-8494-4a6f-9ec4-723ab52c4fbf@lunn.ch>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by va32lpfpp03.lenovo.com (Postfix) with ESMTPS id 4W3VPS1FQLz51Q9v;
+	Tue, 18 Jun 2024 15:03:24 +0000 (UTC)
+Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mbland)
+	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4W3VPR6DTRz2VZRs;
+	Tue, 18 Jun 2024 15:03:23 +0000 (UTC)
+Date: Tue, 18 Jun 2024 10:03:22 -0500
+From: Maxwell Bland <mbland@motorola.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ptdump: add intermediate directory support
+Message-ID: <z6tpx36aipbbklsjfvllmcjurmsz7gdxoaazv7qgdvy3rdtn4i@cbapiyxw5hpz>
+References: <fik5ys53dbkpkl22o4s7sw7cxi6dqjcpm2f3kno5tyms73jm5y@buo4jsktsnrt>
+ <ZjtgCfhQDJus3dqI@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sSiMgKlQi8mtC+G=LfOwu2c";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjtgCfhQDJus3dqI@arm.com>
+X-Proofpoint-GUID: 36Dl4qhOa9MmtRZLkP33Gicrqq9UYwHt
+X-Proofpoint-ORIG-GUID: 36Dl4qhOa9MmtRZLkP33Gicrqq9UYwHt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
+ clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180112
 
---Sig_/sSiMgKlQi8mtC+G=LfOwu2c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 08, 2024 at 12:20:41PM GMT, Catalin Marinas wrote:
+> On Tue, Apr 30, 2024 at 11:05:01AM -0500, Maxwell Bland wrote:
+> > -ptdump is a debugfs interface that provides a detailed dump of the
 
-Hi Andrew,
+Hi Catalin! Apologies for the delayed response to this review, life got
+in the way. A version 4 that addresses your comments is available here:
 
-> > For me the:
-> >=20
-> > NL_SET_ERR_MSG_MOD(extack, "Cannot offload more than two ports (in
-> > use=3D0x%x)", dev->hsr_ports);
-> >=20
-> > is fine - as it informs that no more HSR offloading is possible (and
-> > allows to SW based RedBox/HSR-SAN operation). =20
->=20
-> Does user space actually get to see it? I would expect the HSR code
-> sees the EOPNOTSUPP, does not consider it an fatal error, and return 0
-> to user space.
->=20
-> If userspace does see it, maybe we should make it clearer it is not an
-> actually error.=20
->=20
-> "Cannot offload more than two ports, using software bridging"
->=20
-> so something similar.
->=20
+https://lore.kernel.org/all/aw675dhrbplkitj3szjut2vyidsxokogkjj3vi76wl2x4wybtg@5rhk5ca5zpmv/
 
-Exactly - this is useful information - not error indication.
+> > +Assessing these attributes can assist in understanding the memory layout,
+> > +access patterns and security characteristics of the kernel pages.
+> 
+> I presume there's some new text here.
 
-(The same case is when we do want to set the MAC address already
-"taken" by ksz9477 HSR configuration.)
+Yes. Though after having a bit of time to think on it, I just reworked
+the presentation altogether for version 4.
 
->    Andrew
+> 
+> >  	}, {
+> >  		.mask	= PTE_UXN,
+> >  		.val	= PTE_UXN,
+> 
+> Since you are adding a separate pmd_bits[] array, I think we could get
+> rid of the PTE_TABLE_BIT entry. It doesn't make sense for ptes anyway.
 
+Done! Sweet.
 
+> > +static const struct prot_bits pud_bits[] = {
+> [...]
+> > +};
+> 
+> Do we need pud_bits[] as well? Can we not just use pmd_bits[]? Call it
+> pxd_bits if you want, the format is the same for all p*d entries.
 
+Thanks, done!
 
-Best regards,
+> 
+> Please separate the alignment changes into a different patch
 
-Lukasz Majewski
+Done! 
 
---
+> > +			delta = (addr - st->start_address);
+> 
+> What's this supposed to show? In your example, it's strange that the PGD
+> is shown as 128 bytes:
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+This was a bug due to my misunderstanding of what we were going for
+here. Thank you for pointing it out, as it made it easy to notice and
+patch.
 
---Sig_/sSiMgKlQi8mtC+G=LfOwu2c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> >  	if (pgd_leaf(val)) {
+> >  		st->note_page(st, addr, 0, pgd_val(val));
+> >  		walk->action = ACTION_CONTINUE;
+> 
+> Is the difference between leaf and non-leaf calls only the walk->action?
+> We could have a single call to st->note_page() and keep the walk->action
+> setting separately. Do we also need to set ACTION_SUBTREE in case the
+> entry is a table entry? Or is it done in the caller somewhere? I could
+> not figure out.
 
------BEGIN PGP SIGNATURE-----
+ACTION_SUBTREE is the default walk action, so it is implicitly set for
+table descriptors.
 
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmZxoXwACgkQAR8vZIA0
-zr2f0Af/YOZs1ZZDgwlYntv1FPHh044NpxAhElR9o6wgCRRTDgQGdRs3KbqXFOvZ
-OY+hO4fAPk8Qu4zvisM42a0kyW1wm754WMpSqzUp6PF/oSLAALwTqBqPTyiBxojW
-4KUvIj6pv0Aq2iGB88B8QzkNAiPWvVT+kWj2UaJi93w6nnKlVtWw8EBEBIpd4Ts0
-JF5NGojlZ4f8B/r7ukdkfmtLaVcT6m+NOetg7g+fCqElu5mxHJI7iQr5oRWZAo7V
-QR+SBXhR/nnzUKTYxlJL118jjsbHCwushvKBN90LS4rO9oDvA60CSJFLJCoDG0oV
-VTNZaNSbPPZ3RxLWrAvlPlEFDsmvNw==
-=kTCU
------END PGP SIGNATURE-----
+> 
+> An alternative would be to have an ARCH_WANT_NON_LEAF_PTDUMP Kconfig
+> option instead of a bool note_non_leaf in struct ptdump_state. This
+> option seems to be entirely static, not sure it's worth a struct member
+> for it. You'd use IS_ENABLED() above instead of st->note_non_leaf.
 
---Sig_/sSiMgKlQi8mtC+G=LfOwu2c--
+This was an excellent idea, thank you. Incorporated.
+
+BRs and thanks again for your help on this,
+Maxwell Bland
