@@ -1,102 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38A436AEF
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 20:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A27636AEF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 20:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718744239; cv=none; b=mfE8ljvj5LwsneNcMZq2kPTRmUQloZA391a7rYvvq7a4A9yUK1S/mT6veMRxJtn/qIg7e5ATVfL+4AhktYIJpy4izBAlo3ZUDZO4Cvxlf0ixPdzz3P+npbUpu2Pp4TFAxx9Ik+GwVJD3f9CRsxU9wveX+QYF2dyVDXv/1fYeum0=
+	t=1718744329; cv=none; b=EAUcrFoGpTZQgLywSZfJ0esKBQqEiXYm2E0L6CffT5EC9S4kqvq3EQNKUcnSGVVh8REMM2+Ga+ZGdcc8a8bKGlz1CYQ/3OrXtzy00LjFVMt6VP2UylMsgryeqRHdAsWeMoOO7UE3Mx7Jk3fZKEH86BTCE7zEm8NNA/zF83pCswY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718744239; c=relaxed/simple;
-	bh=gP5S8+T89IutLznPSZIbG6xZFxcSA1v6woREFaxuiSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q8c82zKmu5ZXLcW/5wQQoMUqT3s11xlmEJInJ8Wm1q0o8RcDwY+meFNQp6IKXxIR8M7dI9kwd+Z1pHTjrnnkOnf7JjCg0xbaAT/4klUUZ2RQz3Wo7F69SaP8zc3Yh7aaE1XUB6XtDaLkotn//No1wJsZodgOUVGFX8xZYC11MDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QlMBFEaP; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718744329; c=relaxed/simple;
+	bh=GL4WG3gGiRy5iVYQEdrg+YE9pgM649jZLwWBiNBLnAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hNiFX4FaG1k0pbaqSjCyKlG3mXsiRNmx0kIpxykY7OBGRL0qEipyJgwO12yef9QvrmNbSAmt8VHqtOTzVAb7au1f/8gYpAPn8iaaMOHUuyL9OGJhZOqLBn/iL3j/71nh5fxtdLHzJPj1nktQ2/LM6ZHjjtykf6hMkWFv8cvoy+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kfocus.org; spf=pass smtp.mailfrom=kfocus.org; dkim=pass (2048-bit key) header.d=kfocus-org.20230601.gappssmtp.com header.i=@kfocus-org.20230601.gappssmtp.com header.b=nfP/ZnBS; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kfocus.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kfocus.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QlMBFEaP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718744238; x=1750280238;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gP5S8+T89IutLznPSZIbG6xZFxcSA1v6woREFaxuiSY=;
-  b=QlMBFEaP4qF4qsLNCj3c83LtpHfDv82yd3Srt4UruM5ZXK65l2aLQsqy
-   QtHWMu99I+0JFCDdXu8V+szZwXoIBpdhLcCuVWBE0K+kO2O7XQGgrOpPJ
-   bOcovEz6DCzwlqqNnHp4oBrqU6xaCi7W6SBiR5ap+eLq6MxHZ0SqdLBox
-   g3HgVS1IWhB/nejpDvIXUpJfuqyJGoWw5JOgyiiNUjxzMxu77R8rKYLSY
-   OCeqze8OShB+AQb1kCq1MfeYuqfAfRor0BsQ/+K2/yp4YXrkau2PELs95
-   Ko0DZDKaLWh656QUmv9RoVTdBGfgLPffic/xvaeSU2SW35I7SikHEFu4i
-   g==;
-X-CSE-ConnectionGUID: mwLE/AzaS22/40brZOn8Qg==
-X-CSE-MsgGUID: GWDVweQyQTyg9xYX4daeLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="27071003"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="27071003"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 13:57:17 -0700
-X-CSE-ConnectionGUID: lfEKpDG0RkakbKnHFVTaww==
-X-CSE-MsgGUID: sivuB8YdQHqTRWA3Pgl50w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="46060513"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 13:57:16 -0700
-Date: Tue, 18 Jun 2024 14:02:22 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH] x86/irq: Fix comment on IRQ vector layout
-Message-ID: <20240618140222.13086b0c@jacob-builder>
-In-Reply-To: <20240618201320.2066726-1-sohil.mehta@intel.com>
-References: <20240618201320.2066726-1-sohil.mehta@intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kfocus-org.20230601.gappssmtp.com header.i=@kfocus-org.20230601.gappssmtp.com header.b="nfP/ZnBS"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7eee734a668so104841839f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kfocus-org.20230601.gappssmtp.com; s=20230601; t=1718744327; x=1719349127; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5fTw4oIChX/XVGvVrvDmot1CuQjy9wAr2Jw7V0wyH4=;
+        b=nfP/ZnBSgOuujYLsjEgZkwCqLonrPCRytasRpKRJMFmzx1AHzDuf/zM0tBcsUZt4Q2
+         HM4zvMl9KlobFjcf4CfnB1VZvbhzYm00OPpSa+auwO+7KybSi01my25uPLq1DKVOXIe8
+         v4wuwSdwNe9Z/ueHYbHFoCFH3L9EtZu9c5PkdlNAeTR/7q6Sh/FT6d1sFmZsNDM+Q32j
+         Lg18hOo3Pozmic6wbfw02piX54g6/JRhzMbKpFXpjQjurDOEVOaTgwJxxpRl/LHv70nF
+         588FmgtSpxfzi3MQRy2I1w8wzOQ3UDw4r7bR1PIMQE+cNJwcYndoPf+dhTYwJ1wESmV7
+         bigg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718744327; x=1719349127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5fTw4oIChX/XVGvVrvDmot1CuQjy9wAr2Jw7V0wyH4=;
+        b=hl7Rklp64KD+6DrxomUdgh/6HpN3N+mlbTE1sy9sEgK/sgIiHGioltHhD+27Y41tNS
+         cuvfdW4O729UIQNK1l6hu0M2+OsP5if1/4DBaSfIICTTziW8Vwoo5cT5g3qnf68Lm1+G
+         VGUGTqiT8kN2i47t3HCvDxLLD0ylJu82Eb6fSi6i31Kg8d6fTgCjcOjajA+DjEttqGeM
+         77x4jRAPo4LJ3ls8mqVczEMtuxwt977P9tUzAeg4oHECmXrEjHtPbrVK0mD+6y/vEA9x
+         pVCUSCQ5Om7Ti/V5Wia/dweVFNMkePcx0nsCXM+dTTtrE3HIJfHqPYuw6gzJFRbNHFEs
+         aZAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsW3w7hQ1NgdxC77E9LqZJiAUYwRM/Jv0jeKDw/sXbGFwNRMWrMeeI47XOp5RqAaCfWAuojVMaAhN6c+gpzetETTD71NE1qV5zIFIs
+X-Gm-Message-State: AOJu0YxNyFZg49uSTBRRks9CxLda+FNABlH4Ctb/w2qNIo7h36Ij6CTP
+	lO3S84U7wF9/USrh6raO7GeL3+RmT50S/jBsyraa3kWf5/4Krn8dZxinUL9vaM0=
+X-Google-Smtp-Source: AGHT+IH+yRumAclbJinwAffvWd8nRl0WF/o33t8ouaYeI1M5L7Oo53VGMyQECDT4PGd6eSp9S8KX8Q==
+X-Received: by 2002:a05:6602:6415:b0:7eb:6a37:89ce with SMTP id ca18e2360f4ac-7f13ee875b0mr126392339f.14.1718744327667;
+        Tue, 18 Jun 2024 13:58:47 -0700 (PDT)
+Received: from kf-XE ([2607:fb91:111c:4643:b5f:d6ad:8a73:5578])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b95d3e7fd2sm3113958173.157.2024.06.18.13.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 13:58:47 -0700 (PDT)
+Date: Tue, 18 Jun 2024 15:58:44 -0500
+From: Aaron Rainbolt <arainbolt@kfocus.org>
+To: mario.limonciello@amd.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rafael@kernel.org, lenb@kernel.org, mmikowski@kfocus.org,
+	Perry.Yuan@amd.com
+Subject: Re: [PATCH V2 RFC] acpi: Allow ignoring _OSC CPPC v2 bit via kernel
+ parameter
+Message-ID: <ZnH1BDVgo--6WEQn@kf-XE>
+References: <ZnD22b3Br1ng7alf@kf-XE>
+ <b516084f-909e-4ea4-b450-3ee15c5e3527@amd.com>
+ <ZnHSKiaYf2tIQo58@kf-XE>
+ <a7790c74-2bec-4a24-b6e5-223c4e1ed372@amd.com>
+ <ZnHXfLEwk2uRbg58@kf-XE>
+ <b4d65232-b69e-419d-9b15-d0ca64b78b26@amd.com>
+ <ZnHfNbLTgY1op3Zv@kf-XE>
+ <fb8c965a-5f1c-4975-8e7d-6f6a0eb4d02f@amd.com>
+ <ZnHtPbszYT8afOOk@kf-XE>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnHtPbszYT8afOOk@kf-XE>
 
-
-On Tue, 18 Jun 2024 20:13:20 +0000, Sohil Mehta <sohil.mehta@intel.com>
-wrote:
-
-> commit f5a3562ec9dd ("x86/irq: Reserve a per CPU IDT vector for posted
-> MSIs") changed the first system vector from LOCAL_TIMER_VECTOR to
-> POSTED_MSI_NOTIFICATION_VECTOR. Reflect this change in the vector layout
-> comment as well.
+On Tue, Jun 18, 2024 at 03:25:36PM -0500, Aaron Rainbolt wrote:
+> acpi: Allow ignoring _OSC CPPC v2 bit via kernel parameter
 > 
-> However, instead of pointing to the specific vector, use the
-> FIRST_SYSTEM_VECTOR indirection which essentially refers to the same.
-> This would avoid unnecessary modifications to the same comment whenever
-> additional system vectors get added.
+> The _OSC is supposed to contain a bit indicating whether the hardware
+> supports CPPC v2 or not. This bit is not always set, causing CPPC v2 to
+> be considered absent. This results in severe single-core performance
+> issues with the EEVDF scheduler on heterogenous-core Intel processors.
 > 
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> To work around this, provide a new kernel parameter, "ignore_osc_cppc_bit",
+> which may be used to ignore the _OSC CPPC v2 bit and act as if the bit was
+> enabled. This allows CPPC to be properly detected even if not "enabled" by
+> _OSC, allowing users with problematic hardware to obtain decent single-core
+> performance.
+> 
+> Signed-off-by: Aaron Rainbolt <arainbolt@kfocus.org>
+> 
 > ---
->  arch/x86/include/asm/irq_vectors.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/irq_vectors.h
-> b/arch/x86/include/asm/irq_vectors.h index 13aea8fc3d45..970a89e7c6b7
-> 100644 --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -18,8 +18,8 @@
->   *  Vectors   0 ...  31 : system traps and exceptions - hardcoded events
->   *  Vectors  32 ... 127 : device interrupts
->   *  Vector  128         : legacy int80 syscall interface
-> - *  Vectors 129 ... LOCAL_TIMER_VECTOR-1
-> - *  Vectors LOCAL_TIMER_VECTOR ... 255 : special interrupts
-> + *  Vectors 129 ... FIRST_SYSTEM_VECTOR-1
-Should this range be explicitly labeled as "device interrupts"?
+> V1 -> V2: Rewrite to work in cpc_supported_by_cpu.
+> 
+> RFC: I have not yet tested this patch to ensure it functions properly,
+>  nor have I attempted to compile it against mainline. My system takes
+>  a couple of hours or so to build a kernel, and I'd like to submit this
+>  for feedback now and test once it's sent.
 
-Thanks,
-
-Jacob
+I sped up my build by using a defconfig rather than a default menuconfig
+(still learning how these things work), and confirmed that the patch does
+build against 6.10~rc4. Will report back test results hopefully soon.
