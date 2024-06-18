@@ -1,71 +1,58 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0712D45BF1
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4781645BFD
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718725831; cv=none; b=bEO36A4Z5jDVsEXPqFUNp2Wooi/w6JzhpoyKPAV/GzkF0xDb6zOeob6Z0mDOAFBUXTofl1W940yoICeG4COkwMsP33kWKcEYzvY59dJE+eXMX3W4E7ENQgkkk1qvFdZwhEoelI8sP1g301/eiTK2OwwrsbMY+AA/H308V/8WaFg=
+	t=1718725896; cv=none; b=pECqqBMwpXoecuTdrh2mIY4w9L6HzJbPLBz2dLU5hQ/KTrbK6ODC8ayrFedUnb+gwMX0T/CDynMaCc+heCAIUfNGyTSjX4zkGI6WupJJLkG/G1r1hWjxYaboZvGQ4Cwj9v0E4aFEHEWFqlYMZn7n0UB7HHSxrfFghOZGgyAfhts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718725831; c=relaxed/simple;
-	bh=O83FNAdgJkgnscldJT04vDrZcANIzWxDsUu1SHrFuVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ej8A37WlhCHwbbOEidOb8spM1ARgTnrs1Ojrm+JPfot5dAIfO7SsQM2mrzi/f0Igb7dWdUNHsEdV3R+nHGxlIcjqJ18vfC2V+vVclan4phewBkghLWqX4gBSDW5vdLtRw9WJr36zo21elHU12FZ8Wl2hmaEL8tDgtVtcjqXE+Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zmsr+E2K; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718725896; c=relaxed/simple;
+	bh=EC4aqitERxCehlbxkC0+MICQzxA9puJoMAcU63x/ppQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JEuocg6d+VolNd+h+fqRDgKT8Yvk+iewlwkeAZJmYmN4FMXr0sqMP3UkxIzYu/S6X0zF8dSgsPrxTB7NyKrj5CR+/0CwPfo9PcY/KsCY9jtScwLlKI3ZwUrPx/Pd+oLqorvB2ene6IVbJpePOlGhrDRuATUgLurfN1iwuKkYJVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=PbLw1o/q; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zmsr+E2K"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52bc29c79fdso7603170e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718725828; x=1719330628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j0o2btwvxJuAvs23zoxm88cS8MnRzldpGlzftLOxRCk=;
-        b=zmsr+E2KfIvSDLv1hwZZ1RJlEQJ0yo37Ra82b0MjeNoEGbFl9XyM45wMHlrhO0UuVG
-         ZVPH+Kge0JYTpOUKMPAjoXXpwkzYK0Uratz4DCS8+DI6pc/wZ4N8oiGDEL/PqS48kDlW
-         iMdelv+bm05dQV4RhFmHzh47kJSXHZe8e0Y5kNcZgAj0e8wfJHkS+1pQB4Wgmci5JTK/
-         K71/pHY9BDbAzCmHInWLxRhFQjYds2u2tib0/GjwwLr/EYAqV6XYA+Dz9i3vDjrTOauC
-         u3Fm72G87Po1d9+r8hEJsveaoYD7DDPAHW0CGiYIAZXu9/7VHHLXane6n9LE2+HG8+eY
-         hn7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718725828; x=1719330628;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j0o2btwvxJuAvs23zoxm88cS8MnRzldpGlzftLOxRCk=;
-        b=cBu13KOrcXG3F1Qj0qD0ZX4lGiL7UiPiEupcP8zSGieOwQpboobZ6mOfl3HjqU1ty/
-         ENRk/btawVVN204I/Ef7fnICztSxeswE8XK7SUSGar80VXXmpXSVjjvaM0/Lm7y0SuIU
-         4P7r4ZYnXjiEaeOFAczi7dIA//AtVYLnrliiw9gMFV2NhhQP0IiAHTjvbadKwNFdoiEr
-         RYuGPYJ1jvy3qjJYckhSRmVwAbA63IJ53QnwUV0zUGC38e9/ly3LxF8wNQuUuEzF3k5U
-         zFGRMtcJluUO6WqznqVA6ReKfFPRgBkjhHHSeM1YOrRsi+qWmity9u+rg59jU2ucYbpg
-         MhEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMsmi85yCn9EP4lymJS1oM0sQMJTffGUYTZjLm1M4VeF77wS4TO8Qty5fT6/SheMrT6CsOeH9HS7Oz3Qnd+L7+YRnH+NhWuMPi5p0w
-X-Gm-Message-State: AOJu0Yy8J+l1NNuE7Ikt+R65rR8W1+5AL9UvLWrPxbKaBpJJcz3Ie0t3
-	9pRvoxm3L/dPsDOjlrRDuEY6lb0Ht50oE44qaWArsRTVQsEBjcuWSaHmz3SHANc=
-X-Google-Smtp-Source: AGHT+IHHHBPht25n9Gly0ArxuEAcjB2htzP4JMhnxdb/RauObkjrKLdR6j/+3D8xHpgeQ7/4CkMWXg==
-X-Received: by 2002:a19:750c:0:b0:52c:76ac:329b with SMTP id 2adb3069b0e04-52ccaa369d8mr30796e87.35.1718725828111;
-        Tue, 18 Jun 2024 08:50:28 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca287241csm1544550e87.172.2024.06.18.08.50.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 08:50:26 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: Nikunj Kela <nkela@quicinc.com>,
-	Prasad Sodagudi <psodagud@quicinc.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] OPP: Fix support for required OPPs for multiple PM domains
-Date: Tue, 18 Jun 2024 17:50:13 +0200
-Message-Id: <20240618155013.323322-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="PbLw1o/q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1718725286;
+	bh=EC4aqitERxCehlbxkC0+MICQzxA9puJoMAcU63x/ppQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PbLw1o/q0ac0JhAzMHAQOtpU6u6hhhphom/imkTrN1lbbDJ7bPUizbKpcFnISjWi2
+	 AjjbVwuCJxj4zv8YT6DHab0xJO0glqLjLdgCGLAjWZQ3KKWJt1cMbnpaCFxS7Kmpt/
+	 3R2g2E7F9m0QdjWiULG1fPDdjpYK2/BwuvDq6OxUUxO0odHN5O75SQfHID3Zai2uH2
+	 S76+zYWU97obK98s5lAMDZ/7ig0iE0wiDL2Y8TCFvN+8hVIHyJcNXXwXMnTZAjQDWz
+	 Wg9XUfip1k7A8LUS3y1dqY0QOZOs6xADKHlMHieGrET5DMvGEd/F6vBXCQwHLVlvTC
+	 A8Qegl7XPsMVw==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W3WFL28PNz16Pn;
+	Tue, 18 Jun 2024 11:41:26 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	nvdimm@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [RFC PATCH 3/4] arm64: Invoke pre_restart notifiers
+Date: Tue, 18 Jun 2024 11:41:56 -0400
+Message-Id: <20240618154157.334602-4-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240618154157.334602-1-mathieu.desnoyers@efficios.com>
+References: <20240618154157.334602-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,94 +61,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In _set_opp() we are normally bailing out when trying to set an OPP that is
-the current one. This make perfect sense, but becomes a problem when
-_set_required_opps() calls it recursively.
+Invoke the pre_restart notifiers after shutdown, before machine restart.
+This allows preserving pmem memory across warm reboots.
 
-More precisely, when a required OPP is being shared by multiple PM domains,
-we end up skipping to request the corresponding performance-state for all
-of the PM domains, but the first one. Let's fix the problem, by calling
-_set_opp_level() from _set_required_opps() instead.
+Invoke the pre_restart notifiers before emergency machine restart as
+well to cover the panic() scenario.
 
-Fixes: e37440e7e2c2 ("OPP: Call dev_pm_opp_set_opp() for required OPPs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: nvdimm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/opp/core.c | 47 +++++++++++++++++++++++-----------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+ arch/arm64/kernel/process.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index cb4611fe1b5b..45eca65f27f9 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1061,6 +1061,28 @@ static int _set_opp_bw(const struct opp_table *opp_table,
- 	return 0;
- }
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 4ae31b7af6c3..4a27397617fb 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -129,6 +129,8 @@ void machine_restart(char *cmd)
+ 	local_irq_disable();
+ 	smp_send_stop();
  
-+static int _set_opp_level(struct device *dev, struct opp_table *opp_table,
-+			  struct dev_pm_opp *opp)
-+{
-+	unsigned int level = 0;
-+	int ret = 0;
++	do_kernel_pre_restart(cmd);
 +
-+	if (opp) {
-+		if (opp->level == OPP_LEVEL_UNSET)
-+			return 0;
-+
-+		level = opp->level;
-+	}
-+
-+	/* Request a new performance state through the device's PM domain. */
-+	ret = dev_pm_domain_set_performance_state(dev, level);
-+	if (ret)
-+		dev_err(dev, "Failed to set performance state %u (%d)\n", level,
-+			ret);
-+
-+	return ret;
-+}
-+
- /* This is only called for PM domain for now */
- static int _set_required_opps(struct device *dev, struct opp_table *opp_table,
- 			      struct dev_pm_opp *opp, bool up)
-@@ -1091,7 +1113,8 @@ static int _set_required_opps(struct device *dev, struct opp_table *opp_table,
- 		if (devs[index]) {
- 			required_opp = opp ? opp->required_opps[index] : NULL;
- 
--			ret = dev_pm_opp_set_opp(devs[index], required_opp);
-+			ret = _set_opp_level(devs[index], opp_table,
-+					     required_opp);
- 			if (ret)
- 				return ret;
- 		}
-@@ -1102,28 +1125,6 @@ static int _set_required_opps(struct device *dev, struct opp_table *opp_table,
- 	return 0;
- }
- 
--static int _set_opp_level(struct device *dev, struct opp_table *opp_table,
--			  struct dev_pm_opp *opp)
--{
--	unsigned int level = 0;
--	int ret = 0;
--
--	if (opp) {
--		if (opp->level == OPP_LEVEL_UNSET)
--			return 0;
--
--		level = opp->level;
--	}
--
--	/* Request a new performance state through the device's PM domain. */
--	ret = dev_pm_domain_set_performance_state(dev, level);
--	if (ret)
--		dev_err(dev, "Failed to set performance state %u (%d)\n", level,
--			ret);
--
--	return ret;
--}
--
- static void _find_current_opp(struct device *dev, struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp = ERR_PTR(-ENODEV);
+ 	/*
+ 	 * UpdateCapsule() depends on the system being reset via
+ 	 * ResetSystem().
 -- 
-2.34.1
+2.39.2
 
