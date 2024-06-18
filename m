@@ -1,197 +1,142 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6271214F9DC;
-	Tue, 18 Jun 2024 17:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC84F145B37
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 17:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718732939; cv=none; b=HhVa+xj9fZIfU6qQ4Xpa9t8aVgiFDXPkL1wThcoTIniE/wgxTAbP0EPNqq9eV9NcTX4nFFFizZt0jEWsRguIEzlg/JcC1XW0RhIIQzPzo79H/MKU82pJR9SqTxUokCWdsjrrhB41Y6hYFZHvkfgQvkf3i1R87Rz62kar/DLC53A=
+	t=1718733063; cv=none; b=mg2TyoAkIJe4PFi6chts44kv7vevsG+F2ZX3soZQTKv7QPPlWrvSafaYnt0TBKmVJE81eBUUGSOLPhJwF46rAnvutyX9NA8lS0D2067TlpbtflqMPnSB5ASHsRkMQOvoFhTM7n6RICRHk+FAn0IALx1RR5EXUDrLcAQeTqFE0lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718732939; c=relaxed/simple;
-	bh=oUFsCSlWE0iUV7ei20P+IMHW6NNaNUwPBRaqtARWzGw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VZbJShpWF/9JxkBIxrgmApR1CPzDDrxWkGcMRN/276PwYlB/MPkG3C6DvF5NKLJ46wrEfynO3i5jd4eRh5ivi0mbsoYRPmzRIwD9/ZhUmI81Y4l0/uDJEeJVA1CGvVP6+7zh50GRnytRqYGUJWbx1TGRGTVrKpGmlzpDTVeHJpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xag0zhcX; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718733063; c=relaxed/simple;
+	bh=d3mOZkwzhQUitJ9p5NHqTux2I2OqtKSPIYhdsh5PmW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sI+52p6wogMFbVfuiFf1+Ro4b894hAGDPSpOFSLPj9k3w4WifpNQHO6Ba4dgBJ/UXJD2p55A0LaxRpm4o7bP1PzP1mQWyjsWAloeSP1aC8UvsAIJaSDB1sA+FcFefycMrILcHpsmXV2Ad5vZ2zcJqsCduAYLIZcl/+tGAt8el+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UZbjvGBi; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xag0zhcX"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4217a96de38so41515705e9.1;
-        Tue, 18 Jun 2024 10:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZbjvGBi"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52caebc6137so3347924e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718732936; x=1719337736; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vsV4kQ/yyu8OJnHBlUaVv2q+K5a9fhVpenLs4nf79qw=;
-        b=Xag0zhcXkMay2fs2o46EVQZfsYQSXWZq4r3WPd9dlSfKSYHfmjHnApWv+MQ6VFlEOY
-         NLm46Q2b8uqs7Nk7D/ECnOclfMbCUGo5HDtNN9gQJY27Qr+gcVLG+8yhUSa0xVz6EJo+
-         yEsNx2I7uiFUv6KkiwdCCKRQ/lcwZE3Jr513af/hm0uw04BeJU3dNpiW4bpDqLj+7z20
-         MRVHGDUJhxrK9VTDC772iuMY/8bSsIj0b1KtgMNl4089AcGdhGrYxqkdDxRLzDrqihN1
-         nrEPJkpb9tog+Ih6OEJZOmIq1TvvY0gUervVS+Hhe3DWg4TKFzSIhOQMAEfCZ3C9/kOe
-         Yplg==
+        d=linaro.org; s=google; t=1718733060; x=1719337860; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jdrPsOFRH9tibJcIwTVDIHrvX0et09f9Ar+HQWRvLZQ=;
+        b=UZbjvGBibP5eUYTkPaNxof/tkbNC8npO5YOvD3hQ4EtX1wH25FASo/SB13vTt+Rffx
+         FvZTPnWMvGFaWZSF3ry5vXYjC8RLeF5SU0gqaNoM2MMlDHlXcVOpT22HMh4mUZgpjset
+         gny+T5ZxSPjtbqBcELArMFbmZ4XICJl23MclKGrnMxm5xZptuKdYa+ovy+qi+yIQ4XiQ
+         FP4TNqGI5IgNzGlPsYveXlh0A4fqIthbYniUNqLC7sDn5XBj0DBFX0rTNpQnz0IvwFAd
+         3zPAwC/0kmTBHvsqH5zMEXCE49MrcAngFo4cqar0NuEPJU+a84CxoRcMIFrTXgksySPO
+         44YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718732936; x=1719337736;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vsV4kQ/yyu8OJnHBlUaVv2q+K5a9fhVpenLs4nf79qw=;
-        b=soUDFq14B7hnk2wmnH48kmeZPMW+/wnHEOFW4fBy+2SCQ5cTYMHXyDBHsv2wuNHsd/
-         OgCyycclwMkWjkOM80RybFa2ZWwz2EsutGeGbNSde0Krzd7noo3WrGNzNiI5kg1iJw1r
-         meP09s4xOGC2bybAsPRrojw52ms1gmH9JhLGFfnM+lBFJhwWJ6xnasKT4aGWc4G7H8u3
-         l49fq0Key+cdvJn+JBDof7HuwkmQ6z26H85zUnZgBoO0kAgfBCXRhDFpeKbc1scyDmdZ
-         eD/l90U7x42f2z9SgueOhqDscFN0agZt2aIuNKCeTR21HwI0Se4bvaC4Dy4rdDwvkXFB
-         y/nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2X/PDzWT4vRuygshybMsxbP3wzqtvX6JiidV0RI0ePSiS7fNbpBr7h+P7quWit6Lbzwwr4CT/xwU8qMKYMumhjJvucRH6vXPX3DichOLLXIeL+xbaWdhIsW+ULbsu+21krhdzPO+euw==
-X-Gm-Message-State: AOJu0YwCmkRW3aIdEyX/C5i9ImcxmPtrF4Df9cQdorvj/NH3DOsk0egY
-	tWEVWJ2D4zPR1XvzL2e/h2HGJpFvHwZxae+R+9nJlMoL7IdWH6teqDicsXrXQzw=
-X-Google-Smtp-Source: AGHT+IEiuNR/Sc1oNADyJL4in6YAftBjKMaeDiDn8aN1dFTiEHQt+X/SVRnW3oNz3hvZUvX+LeUlYg==
-X-Received: by 2002:a05:6000:ad2:b0:360:9e6a:5987 with SMTP id ffacd0b85a97d-363171e2b87mr209462f8f.12.1718732935612;
-        Tue, 18 Jun 2024 10:48:55 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:d6f0:b448:a40c:81a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36289a4faeasm1253644f8f.95.2024.06.18.10.48.54
+        d=1e100.net; s=20230601; t=1718733060; x=1719337860;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jdrPsOFRH9tibJcIwTVDIHrvX0et09f9Ar+HQWRvLZQ=;
+        b=tV0sAn7EJJ71OJE/oUzScmomVGSPDeN++hXQQfZzc6FJwq8qgHa7QVivoJ7OJAHDq7
+         5Y74KUPzEZ85BcOisdtTqCjOCK25M5CPKqMeJONoWd8ArUoZtDHgcR3iqErLM/UxD2WZ
+         q8jbI2ZQunDn1ormKfP+VZKUaAMJW787ZOxWRGKwQvxIOaZnmgh+FdNvJ1aNEcUe4c/G
+         6gS8/FhbDUreG5iStJ1+rlcfmBShToIOCJeV8tiOXl0rYanpMTkBmr9ug2aGngM7tgt5
+         fnyd2mqw+fh6EOC3j0xINdFyEZuK9x9pVl44ZvKwNs0qIxXoeAYcvsXGldG3K9C+CRBn
+         OnBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjHjabgS4nK6LbtGYHijy/Tw+V1AAjG22xMrbSBU3BMNZ2315Oy4Ejggfhwf+4MGSw+sfj772DSzdVXQ1ctraq7cLA1ozH7I7aTbQ4
+X-Gm-Message-State: AOJu0YwT2sA5ii6VkiBbnhBQrNAjcfnYIDUxYpc0GpbKoA22SC8EtRSB
+	GU94TbHNlzzGF4BRfR6oUEbjeqoWfzNQZe89FYOaXEMk1jY77Jkcebj7q9wFrVc=
+X-Google-Smtp-Source: AGHT+IGM/U45FeUpxxsmNAsTgVBSD3mO9NOKixFEiUXqhhF6IJuZRODRDq1PxwN+t2vV3hmMxogugA==
+X-Received: by 2002:a2e:2416:0:b0:2ec:eee:f19e with SMTP id 38308e7fff4ca-2ec3cfe5a12mr3314651fa.37.1718733059948;
+        Tue, 18 Jun 2024 10:50:59 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec3d00ae2bsm499111fa.51.2024.06.18.10.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 10:48:54 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 4/4] pinctrl: renesas: rzg2l: Reorganize variable configuration macro
-Date: Tue, 18 Jun 2024 18:48:31 +0100
-Message-Id: <20240618174831.415583-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 18 Jun 2024 10:50:59 -0700 (PDT)
+Date: Tue, 18 Jun 2024 20:50:58 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Dzmitry Sankouski <dsankouski@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v3 02/23] gcc-sdm845: Add rates to the GP clocks
+Message-ID: <wnf3mfgdm4p4f5wrxdtlx4wccnizdvohc7iiyu5t22eeb67r57@xun3r73hksrg>
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-2-e3f6662017ac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-2-e3f6662017ac@gmail.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Jun 18, 2024 at 04:59:36PM GMT, Dzmitry Sankouski wrote:
+> sdm845 has "General Purpose" clocks that can be muxed to
+> SoC pins.
+> 
+> Those clocks may be used as e.g. PWM sources for external peripherals.
+> Add more frequencies to the table for those clocks so it's possible
+> for arbitrary peripherals to make use of them.
+> 
+> See also: bf8bb8eaccf(clk: qcom: gcc-msm8916: Add rates to the GP clocks)
 
-The `PIN_CFG_VARIABLE` macro did not indicate the capabilities of a pin
-but served as a flag indicating that the pins of a port have different
-capabilities.
+Each time I look at the table attached to the GP CLK, I feel that it's
+plain wrong. In the end the GPCLK can in theory have arbitrary value
+depending on the usecase.
 
-To better reflect its purpose, move the `PIN_CFG_VARIABLE` macro beside
-`RZG2L_SINGLE_PIN` and rename it to `RZG2L_CFG_VARIABLE`. Additionally,
-introduce new macros for packing variable port configurations:
+Bjorn, Konrad, maybe we should add special clk_ops for GP CLK which
+allow more flexibility than a default clk_rcg2_ops?
 
-- `RZG2L_GPIO_PORT_PACK_VARIABLE(n, a)`: Combines `RZG2L_CFG_VARIABLE`
-  with `RZG2L_GPIO_PORT_PACK` to handle variable pin configurations
-  for a packed port.
-- `RZG2L_GPIO_PORT_SPARSE_PACK_VARIABLE(m, a)`: Combines
-  `RZG2L_CFG_VARIABLE` with `RZG2L_GPIO_PORT_SPARSE_PACK` to handle
-  variable pin configurations for a sparse port.
+> 
+> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> ---
+>  drivers/clk/qcom/gcc-sdm845.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+> index ea4c3bf4fb9b..0efd3364e8f5 100644
+> --- a/drivers/clk/qcom/gcc-sdm845.c
+> +++ b/drivers/clk/qcom/gcc-sdm845.c
+> @@ -283,7 +283,21 @@ static struct clk_rcg2 gcc_sdm670_cpuss_rbcpr_clk_src = {
+>  	},
+>  };
+>  
+> +/*
+> + * This is a frequency table for "General Purpose" clocks.
+> + * These clocks can be muxed to the SoC pins and may be used by
+> + * external devices. They're often used as PWM source.
+> + *
+> + * See comment in gcc-mam8916.c at ftbl_gcc_gp1_3_clk.
+> + */
+>  static const struct freq_tbl ftbl_gcc_gp1_clk_src[] = {
+> +	F(10000,   P_BI_TCXO,    16,  1, 120),
+> +	F(20000,   P_BI_TCXO,    16,  1, 60),
+> +	F(100000,  P_BI_TCXO,    16,  1,  12),
+> +	F(500000,  P_GPLL0_OUT_EVEN, 12, 1, 100),
+> +	F(1000000, P_GPLL0_OUT_EVEN, 12, 1, 50),
+> +	F(2500000, P_GPLL0_OUT_EVEN, 12, 1, 10),
+> +	F(5000000, P_GPLL0_OUT_EVEN, 12, 1, 5),
+>  	F(19200000, P_BI_TCXO, 1, 0, 0),
+>  	F(25000000, P_GPLL0_OUT_EVEN, 12, 0, 0),
+>  	F(50000000, P_GPLL0_OUT_EVEN, 6, 0, 0),
+> 
+> -- 
+> 2.39.2
+> 
 
-Due to the above change the configuration macros have been reorganized
-as follows:
-- Shift the bit positions of `PIN_CFG_NOGPIO_INT`, `PIN_CFG_NOD`,
-  `PIN_CFG_SMT`, `PIN_CFG_ELC`, and `PIN_CFG_IOLH_RZV2H` down by one
-  to accommodate the removal of `PIN_CFG_VARIABLE`.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 29 +++++++++++++++----------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 37a99d33400d..9a67de960470 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -57,14 +57,14 @@
- #define PIN_CFG_IOLH_C			BIT(13)
- #define PIN_CFG_SOFT_PS			BIT(14)
- #define PIN_CFG_OEN			BIT(15)
--#define PIN_CFG_VARIABLE		BIT(16)
--#define PIN_CFG_NOGPIO_INT		BIT(17)
--#define PIN_CFG_NOD			BIT(18)	/* N-ch Open Drain */
--#define PIN_CFG_SMT			BIT(19)	/* Schmitt-trigger input control */
--#define PIN_CFG_ELC			BIT(20)
--#define PIN_CFG_IOLH_RZV2H		BIT(21)
-+#define PIN_CFG_NOGPIO_INT		BIT(16)
-+#define PIN_CFG_NOD			BIT(17)	/* N-ch Open Drain */
-+#define PIN_CFG_SMT			BIT(18)	/* Schmitt-trigger input control */
-+#define PIN_CFG_ELC			BIT(19)
-+#define PIN_CFG_IOLH_RZV2H		BIT(20)
- 
- #define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
-+#define RZG2L_CFG_VARIABLE		BIT_ULL(62)	/* Variable cfg for port pins */
- 
- #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
- 					(PIN_CFG_IOLH_##group | \
-@@ -100,12 +100,17 @@
- #define RZG2L_GPIO_PORT_SPARSE_PACK(m, a, f)	(FIELD_PREP_CONST(PIN_CFG_PIN_MAP_MASK, (m)) | \
- 						 FIELD_PREP_CONST(PIN_CFG_PIN_REG_MASK, (a)) | \
- 						 FIELD_PREP_CONST(PIN_CFG_MASK, (f)))
-+#define RZG2L_GPIO_PORT_SPARSE_PACK_VARIABLE(m, a)	\
-+						(RZG2L_CFG_VARIABLE | \
-+						 RZG2L_GPIO_PORT_SPARSE_PACK(m, a, 0))
- 
- /*
-  * n indicates number of pins in the port, a is the register index
-  * and f is pin configuration capabilities supported.
-  */
- #define RZG2L_GPIO_PORT_PACK(n, a, f)	RZG2L_GPIO_PORT_SPARSE_PACK((1ULL << (n)) - 1, (a), (f))
-+#define RZG2L_GPIO_PORT_PACK_VARIABLE(n, a)	(RZG2L_CFG_VARIABLE | \
-+						 RZG2L_GPIO_PORT_PACK(n, a, 0))
- 
- #define RZG2L_SINGLE_PIN_INDEX_MASK	GENMASK_ULL(62, 56)
- #define RZG2L_SINGLE_PIN_BITS_MASK	GENMASK_ULL(55, 53)
-@@ -371,7 +376,7 @@ static u64 rzg2l_pinctrl_get_variable_pin_cfg(struct rzg2l_pinctrl *pctrl,
- 
- 		if (FIELD_GET(VARIABLE_PIN_CFG_PORT_MASK, cfg) == port &&
- 		    FIELD_GET(VARIABLE_PIN_CFG_PIN_MASK, cfg) == pin)
--			return (pincfg & ~PIN_CFG_VARIABLE) | FIELD_GET(PIN_CFG_MASK, cfg);
-+			return (pincfg & ~RZG2L_CFG_VARIABLE) | FIELD_GET(PIN_CFG_MASK, cfg);
- 	}
- 
- 	return 0;
-@@ -1835,13 +1840,13 @@ static const u64 r9a07g043_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_SPARSE_PACK(0x2, 0x06, PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_PUPD |
- 				    PIN_CFG_FILONOFF | PIN_CFG_FILNUM | PIN_CFG_FILCLKSEL |
- 				    PIN_CFG_IEN | PIN_CFG_NOGPIO_INT),			/* P19 */
--	RZG2L_GPIO_PORT_PACK(8, 0x07, PIN_CFG_VARIABLE),				/* P20 */
-+	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x07),						/* P20 */
- 	RZG2L_GPIO_PORT_SPARSE_PACK(0x2, 0x08, PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_PUPD |
- 				    PIN_CFG_IEN | PIN_CFG_NOGPIO_INT),			/* P21 */
- 	RZG2L_GPIO_PORT_PACK(4, 0x09, PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_PUPD |
- 			     PIN_CFG_IEN | PIN_CFG_NOGPIO_INT),				/* P22 */
--	RZG2L_GPIO_PORT_SPARSE_PACK(0x3e, 0x0a, PIN_CFG_VARIABLE),			/* P23 */
--	RZG2L_GPIO_PORT_PACK(6, 0x0b, PIN_CFG_VARIABLE),				/* P24 */
-+	RZG2L_GPIO_PORT_SPARSE_PACK_VARIABLE(0x3e, 0x0a),				/* P23 */
-+	RZG2L_GPIO_PORT_PACK_VARIABLE(6, 0x0b),						/* P24 */
- 	RZG2L_GPIO_PORT_SPARSE_PACK(0x2, 0x0c, PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_FILONOFF |
- 				    PIN_CFG_FILNUM | PIN_CFG_FILCLKSEL |
- 				    PIN_CFG_NOGPIO_INT),				/* P25 */
-@@ -1913,7 +1918,7 @@ static const u64 r9a09g057_gpio_configs[] = {
- 				      PIN_CFG_ELC),		/* P8 */
- 	RZG2L_GPIO_PORT_PACK(8, 0x29, RZV2H_MPXED_PIN_FUNCS),	/* P9 */
- 	RZG2L_GPIO_PORT_PACK(8, 0x2a, RZV2H_MPXED_PIN_FUNCS),	/* PA */
--	RZG2L_GPIO_PORT_PACK(6, 0x2b, PIN_CFG_VARIABLE),	/* PB */
-+	RZG2L_GPIO_PORT_PACK_VARIABLE(6, 0x2b),			/* PB */
- };
- 
- static const struct {
-@@ -2637,7 +2642,7 @@ static int rzg2l_pinctrl_register(struct rzg2l_pinctrl *pctrl)
- 		if (i && !(i % RZG2L_PINS_PER_PORT))
- 			j++;
- 		pin_data[i] = pctrl->data->port_pin_configs[j];
--		if (pin_data[i] & PIN_CFG_VARIABLE)
-+		if (pin_data[i] & RZG2L_CFG_VARIABLE)
- 			pin_data[i] = rzg2l_pinctrl_get_variable_pin_cfg(pctrl,
- 									 pin_data[i],
- 									 j,
 -- 
-2.34.1
-
+With best wishes
+Dmitry
