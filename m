@@ -1,30 +1,29 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895DE74BE1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE66F7602D
 	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693678; cv=none; b=ACZWt6P+zHX/AAHGcXfEz04kYPSyJTRh0QaPQpdl1C3mrwhrDq4nv+zF/RAj7Yhi67abwzhx7iHVOgKZGM8PEOuaOqzoMYMEqCWWU4Aih6HoB4k8h74qly5XxgWTR+t9OX2JDp0RHUUwUScbrKjTJv11iU670D/r2Dfa7iw3e+U=
+	t=1718693679; cv=none; b=pv4sNqZo6VoIh8R8A/ABxz4Zw//2+uc0Y5ZlZFClFWiFlETLWBy/CauQ6XAYBPmBvCeHfWIp3YqWdzyuY77ebWN+00EYkeqmUyfaKfs7m9Vneuu1p5t7G0KE15um4M3mibI6qygP2FedkWC3JzXqS12ajdjfFD6OTM+O4cY4JWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693678; c=relaxed/simple;
-	bh=0j0o/JJqbkPuCd3w9wnczyFRRX9ombob99obZa5CSFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S+ehJBFyg7zHUCqjHqZtMm55ZkQdJWTOmbveKeDqtJRJc0LOxcy7Vnlpfl1oepJJal/Lz4wnlz1AqrWHy3bUD+uGBhxUApGdWVYlz+SjsF+Pdq2NKZqjfYu0kvO3MaBzv9wZ1s26m8MhTF5EoSKnNJWjrX9UmUZmZwwycpww3ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=X12BZvlz; arc=none smtp.client-ip=115.124.30.100
+	s=arc-20240116; t=1718693679; c=relaxed/simple;
+	bh=S2sGp3wlH/b5kYZp5cjkHur9G9Zz83kTTmfnbJALzzY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nQDu99PvewjhWWPwAzeuIlfhb24g/XykaeSiAOJnGPfcwu/BfrkHbvKF6DnVbhCaWphQHqH3DR4GfjIR6vN+A/QvkPWItITiThbH0vT5Ydn4AcJ3weq6XDUERIfzEtoczf809gE1tH6BMF3mGfWJmMQAR0+6qriBAIzBSvdqV9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lKyP5K6G; arc=none smtp.client-ip=115.124.30.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="X12BZvlz"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lKyP5K6G"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1718693674; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=OhkcTOgQo6MdSZjxEddX9KsK/pU+Rag0OqwoL0KeI6s=;
-	b=X12BZvlzYEHEGso0VQ/0+4DyjCHOUQDR4VUOMb7d3FLyjaGdz8II8RV33NR1meY0QMi3smKKLbnxU/mVKFM6R3oJjHN7N448TfTieXUwHABLq5tNnqqGuRwoRNeoeV3DLkwpB22rOldX+iVkxJbVOOO32E7JM3d4JhduUmgfw4k=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jFFLh_1718693672;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jFFLh_1718693672)
+	t=1718693669; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=DxaCp5bOC4hyWB6FKdEFK/JUDfrUbLNO+z6WPPrt+Vw=;
+	b=lKyP5K6GrpOdFAsIyYXpaiCuDU374+QUNURhr/XPZCF+8FPwIySdQw/WvEGbMsPKQ+ixoQcitc8FRFXCTWtotN5k1kYCqwOqX/GR6q3UaakDo0C+hZDjz8WNI9c3voRHTi9hRDpqZp2q/eD59pqSwZMWJ5ppnTtzXElN5xs0U0s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jFFIj_1718693666;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jFFIj_1718693666)
           by smtp.aliyun-inc.com;
-          Tue, 18 Jun 2024 14:54:32 +0800
+          Tue, 18 Jun 2024 14:54:27 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -43,12 +42,10 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/9] mm: filemap: use xa_get_order() to get the swap entry order
-Date: Tue, 18 Jun 2024 14:54:17 +0800
-Message-Id: <e718e4afb0a387dc04d0e3cb8440d8de20adb011.1718690645.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v2 0/9] support large folio swap-out and swap-in for shmem
+Date: Tue, 18 Jun 2024 14:54:12 +0800
+Message-Id: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
-References: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,38 +54,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the following patches, shmem will support the swap out of large folios,
-which means the shmem mappings may contain large order swap entries, so
-using xa_get_order() to get the folio order of the shmem swap entry to
-update the '*start' correctly.
+Shmem will support large folio allocation [1] [2] to get a better performance,
+however, the memory reclaim still splits the precious large folios when trying
+to swap-out shmem, which may lead to the memory fragmentation issue and can not
+take advantage of the large folio for shmeme.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- mm/filemap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Moreover, the swap code already supports for swapping out large folio without
+split, and large folio swap-in[3] series is queued into mm-unstable branch.
+Hence this patch set also supports the large folio swap-out and swap-in for
+shmem.
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 876cc64aadd7..ecc785758aaf 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2056,6 +2056,8 @@ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
- 		folio = fbatch->folios[idx];
- 		if (!xa_is_value(folio))
- 			nr = folio_nr_pages(folio);
-+		else
-+			nr = 1 << xa_get_order(&mapping->i_pages, indices[idx]);
- 		*start = indices[idx] + nr;
- 	}
- 	return folio_batch_count(fbatch);
-@@ -2120,6 +2122,8 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
- 		folio = fbatch->folios[idx];
- 		if (!xa_is_value(folio))
- 			nr = folio_nr_pages(folio);
-+		else
-+			nr = 1 << xa_get_order(&mapping->i_pages, indices[idx]);
- 		*start = indices[idx] + nr;
- 	}
- 	return folio_batch_count(fbatch);
+Functional testing
+==================
+I use the latest mm-unstable branch to test with reverting Chris's
+"mm: swap: mTHP swap allocator base on swap cluster order" series which
+can cause some problems (Hugh also reported in [4]).
+
+Machine environment: 32 Arm cores, 120G memory and 50G swap device.
+
+1. Run xfstests suite to test tmpfs filesystem, and I did not catch any
+regressions with this patch set.
+FSTYP=tmpfs
+export TEST_DIR=/mnt/tempfs_mnt
+export TEST_DEV=/mnt/tempfs_mnt
+export SCRATCH_MNT=/mnt/scratchdir
+export SCRATCH_DEV=/mnt/scratchdir
+
+2. Run all mm selftests in tools/testing/selftests/mm/, and no
+regressions found.
+
+3. I also wrote several shmem swap test cases, including shmem splitting,
+shmem swapout, shmem swapin, swapoff during shmem swapout, shmem reclaim,
+shmem swapin replacement, etc. I tested these cases under 4K and 64K
+shmem folio sizes with a swap device, and shmem swap functionality works
+well on my machine (I can share these test cases if needed).
+
+Hugh, I think this version has fixed the reference issue you pointed out
+before, and I have also fixed some issues related to shmem swapin replacement.
+So could you help to take a look at this series when you find some time?
+Thanks a lot.
+
+[1] https://lore.kernel.org/all/cover.1717495894.git.baolin.wang@linux.alibaba.com/
+[2] https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
+[3] https://lore.kernel.org/all/20240508224040.190469-6-21cnbao@gmail.com/T/
+[4] https://lore.kernel.org/all/8db63194-77fd-e0b8-8601-2bbf04889a5b@google.com/
+
+Changes from v1:
+ - Remove useless 'order' variable in shmem_partial_swap_usage(), per Daniel.
+ - Add a new patch to return number of pages beeing freed in shmem_free_swap(),
+ per Daniel.
+ - Drop 'orders' parameter for find_get_entries() and find_lock_entries().
+ - Round down the index when adding the swapin folio into the pagecache,
+ suggested by Hugh.
+ - Fix the reference issue when removing folio from pagecache in patch 8.
+ - Fix replacing old folio in swap cache in patch 7.
+
+Changes from RFC:
+ - Rebased to the latest mm-unstable.
+ - Drop the counter name fixing patch, which was queued into mm-hotfixes-stable
+ branch.
+
+Baolin Wang (8):
+  mm: vmscan: add validation before spliting shmem large folio
+  mm: swap: extend swap_shmem_alloc() to support batch SWAP_MAP_SHMEM
+    flag setting
+  mm: shmem: extend shmem_partial_swap_usage() to support large folio
+    swap
+  mm: filemap: use xa_get_order() to get the swap entry order
+  mm: shmem: use swap_free_nr() to free shmem swap entries
+  mm: shmem: support large folio allocation for shmem_replace_folio()
+  mm: shmem: drop folio reference count using 'nr_pages' in
+    shmem_delete_from_page_cache()
+  mm: shmem: support large folio swap out
+
+Daniel Gomez (1):
+  mm: shmem: return number of pages beeing freed in shmem_free_swap
+
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c |   1 +
+ include/linux/swap.h                      |   4 +-
+ include/linux/writeback.h                 |   1 +
+ mm/filemap.c                              |   4 +
+ mm/shmem.c                                | 107 +++++++++++++---------
+ mm/swapfile.c                             |  98 ++++++++++----------
+ mm/vmscan.c                               |  22 ++++-
+ 7 files changed, 142 insertions(+), 95 deletions(-)
+
 -- 
 2.39.3
 
