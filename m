@@ -1,133 +1,152 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2144.outbound.protection.outlook.com [40.92.62.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1152B208A0;
-	Tue, 18 Jun 2024 15:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.144
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718723039; cv=fail; b=CTRreMWGnD8gPFyEXCX66k6HOQE3S61yphKAIWz5lvpgq2pAtYhtITzR49Zm9id5aUCf4ix5zo9gzZPPh5q/jRMpBVgiuI3u4QUbqlufEp03aYTvE+hy7KIz+nYt6RwYoEuHf3NVPeI5ia2nu2ePwPKiRqzCBVW7uZkChsBW1Ww=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718723039; c=relaxed/simple;
-	bh=KZmUMGJ2R4BUctimfp7c3VXWE4VatyAmcuCl2oDniRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EHVS9BdGslEkvEyzTqc/0I3/C4RS3Op3s9eCHlicAHZ75rLXZB5H8Mx9a4gwy1E9S/QzV7Xcdv3Y/qVTst5VVgTDzWmG7kTOMs1s/uNgDbqnzellvXoNAIK7iCJ0NWFA/x/nA7FGsTwj08v1m1wq8md+OwWzzelgK+n8lyg1q9w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=PFkQ76vE; arc=fail smtp.client-ip=40.92.62.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A486EDDA6
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718723062; cv=none; b=Gdvntj6FPtwroR/EMImtTX7SZfUSEiOzrZ0rAO2595YXYSX674yj9ypqCPgzJEl+JLHFBQQVMJKmitqEaNhPCoK4oUUa/BIbiyrLBz41+r78Cl7OAYxN44B5BFKpXkQA5jMKMdqm+IKwqWlcvjd7nc1OvEQ0rxNaiUrFwQL1zHI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718723062; c=relaxed/simple;
+	bh=oNI7wm+Qxqd3SCj8JcCQ4rv2O6lkSDHsI4IM0lVPhwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiELWwafhuqN+kKCmjWEBHAaoJ1mvJx0NMFnYDtmn8IzWDm5ex0iW5YIiF4rw0fXcPcmoFd8VioJ3pOhcJjtO7rvgCD46MfUrgSAjnRqPtkEZNCTF1JwrBLRuyErdmQJfilSTh/yQNISi3vzYCg6RJw82kSqpqG+GBofkuQD010=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=dQRkcdX5; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="PFkQ76vE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X0kaYklC8Iqm+LK+YHBica6ZVhtSE0uVBDjpn0n8dhViLHPlz23uaI1v0N1I8X+ydiMv1FafdPsDWD6l2vgL+QxJLMPr2JpbLwpsBwBhH/PbW8k7QJXC/UADex2e5fnHmCNIsLbhUcKwTmjznGIMT0Sg29Uy1suSFrFRPG2WdvwbUliTpJ8cHzkuaFCbrLuPkEcWNAo2hQSe/XJ5tYi3Y14rH+tld6gDh73kznvCdaMGlbBrqoiPfXtwCW3KXha60jAxuUEAEIq8R3ppDbvj6ojFLom8I+KwhTxDaICaO8eV+lgyqn46Dc/catMeQ6nbWveXw1zoGUFBrB2uU7YZcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D3PMbhmIcHQwHTJoxl4VzJyO5ca9jnfp5cNkaqthJ/g=;
- b=cDCGU2PkTo6ZRxY7lrkPIgpODAq8R5DL8b8wqrATVeCEH6y/+ivG3X3M3PbFlgvULPme7s4R8V93p6lYhm7pCH3k37/PA05Ymv5dEdQjBStGvwZDtTI//xUz0LJKCIMfoSX1EYvodW8S6nKZHEdOKqGh/uFjFT2yQL0u2upfoLngfCgVhh45M6ddJ81TpPSxddnfZneJUjtUrQ9CP6Di6JYKDyx/E/SuJNCIQIp5jK9Kfh/PBeDNqsMxXBcMKUWw91OgSzk2F39+NKDFeYTiC4DnIFl5wMxrBGgMMFegyhj8XF2cBGLxgDSpuSkdh7VwKYKuOrB/W17OCEzYlyZrhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D3PMbhmIcHQwHTJoxl4VzJyO5ca9jnfp5cNkaqthJ/g=;
- b=PFkQ76vEHR+xaDGAgEFydJUBGsMbJolTJ7ag4Hs+YJAvrw9/kqJnZfqy2nQFNKPeV4ZfMf/7Fhdkfpl9FXMiKZEpG3WvXbV/l6G5VJgf/hRaihXEh336xM8QnzSeS9VQWUfn6eC0RlthgeZ0ngfTiHhy5Q5klhGGnVnzRkDZnphVcX74jCviUykpTx87GaHgNuygD0Hm5eJn1oWojWawCuhg3x3U+vzs30HAMLLJgTXCEqT/Juw9Z5EEr2XfoOpqThZJc7tcs+2lj5xmoiSEtNuFjWKY1TRCBIVfwpRkZwCJGsxUK6Tcgl9Q6gbCl0MREO/DZJlShw0Jh770lR8mGg==
-Received: from SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:9b::8) by
- SY6P282MB4005.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:1d8::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.31; Tue, 18 Jun 2024 15:03:51 +0000
-Received: from SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
- ([fe80::ac24:7d2b:92fe:20c3]) by SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
- ([fe80::ac24:7d2b:92fe:20c3%2]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 15:03:51 +0000
-From: Yuntao Dai <d1581209858@live.com>
-To: jassisinghbrar@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	unicorn_wang@outlook.com,
-	inochiama@outlook.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yuntao Dai <d1581209858@live.com>
-Subject: [PATCH 0/3] riscv: sophgo: add mailbox support for cv18x SoCs
-Date: Tue, 18 Jun 2024 23:03:19 +0800
-Message-ID:
- <SYBP282MB2238DE0DA19C6EF411B2356CC4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-TMN: [wzzAo9agJ6Z2G0H/2MwcClOf3eAtPNmX]
-X-ClientProxiedBy: TY2PR01CA0021.jpnprd01.prod.outlook.com
- (2603:1096:404:a::33) To SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:9b::8)
-X-Microsoft-Original-Message-ID: <20240618150319.4649-1-d1581209858@live.com>
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="dQRkcdX5"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so34803775e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718723059; x=1719327859; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=13sfXGKnATjfKiQ/igSfK3J245EVnxbN3IyXAWPl7PE=;
+        b=dQRkcdX51bwFi4EqwpIQQT7cQXP+UusOPBOZAwh/a+E4Iyo+vsjp6Ccr0vDJWm+8Ld
+         hRlcoCAtjd59sieUFmJXrPSkRMiaOk96+H/82C9VOb2wwVLjCdpFibWWuKzk3FttO8kD
+         sDfkZXao/ouv/0sDUnXD+i7Z8G+FuSloOQkAuO5Fpp7uBqmNDV+2UWyCk+J1ADMUPGDr
+         yG0lj38nGHEwMrjMNq1nfGnJsE5Y46mGBkpQ7qcVCNDGd3CRgFCKEQy7YG3TYgcEY3op
+         C1Yl0DCS+T5Z+u5TGKeXgUz91sJ6/yhuhjwsGrRC4w1ODh54ArLoqTaVPPxn7+NI3yWA
+         sSTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718723059; x=1719327859;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=13sfXGKnATjfKiQ/igSfK3J245EVnxbN3IyXAWPl7PE=;
+        b=eWgXpGE4+AyRLgLOmlASTkMcdiFqigzAjKlryLV8R4kSyJ+x2ew1Rz7V/o8ZHyUnzE
+         j6eQz+PmjRAzxT4ejKJfoEIKqfWk05PMR0+ZWBbg4Pr1+GGVl3cPg3v9joYSTN+WeEPE
+         HnPkrFk5dEaKc0JffW/Ynw4SjWHkqgzHt3drr1WKZ4xgRGLyfz73nVsaIkODdXFb8h/R
+         1qCBHfjGSQrwAkb/NA6eN+w0rNPyTmOLTiviJjmrYsHaAeKrRf4KkQX15s+3vsHt9Xkh
+         oZC89dv9XSXv85Q8T/COkhhOo+Vm8cELoaRTtFGtJCS5okpZxEybiluXGhP7yMj/XzkJ
+         2KEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXal3xOZzYujeXDsJvvhYzYJ8j0YIKc2IeqR8dTT7+cRVGkGdm05RTwsw4X+aHSCuU6BrxqKw5VfggR7FKYhGfwhHrsdIahpKBJJvHw
+X-Gm-Message-State: AOJu0YycZjI2quSkaQ2qcnxNEPowCFN7zzgHK1dDnum9URudia0R/iep
+	U3J6aoC4iByo+tbB3uukdh54MdSEjA9KIN0pJTdRsiumrB3OGE9dfGKGGl2+QUI=
+X-Google-Smtp-Source: AGHT+IEdpKD66dCM7Cva1YKCkJ7f5vumKkaFc5LCpY1Zf69IecrHscE++hQ3VwlsuYfD+9eXHBk49A==
+X-Received: by 2002:a05:600c:314a:b0:421:811b:b83e with SMTP id 5b1f17b1804b1-4246f5cfa54mr30393565e9.13.1718723059000;
+        Tue, 18 Jun 2024 08:04:19 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509355dsm14279716f8f.13.2024.06.18.08.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 08:04:18 -0700 (PDT)
+Date: Tue, 18 Jun 2024 16:04:17 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: John Stultz <jstultz@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Joel Fernandes <joel@joelfernandes.org>, kernel-team@android.com
+Subject: Re: [PATCH] RFC: sched: Rework task_sched_runtime to avoid calling
+ update_rq_clock
+Message-ID: <20240618150417.kuoft7jqqg6pcjrf@airbuntu>
+References: <20240613015837.4132703-1-jstultz@google.com>
+ <20240613100441.GC17707@noisy.programming.kicks-ass.net>
+ <20240613115142.kxrmlf3btmwjcprg@airbuntu>
+ <20240614094833.GM8774@noisy.programming.kicks-ass.net>
+ <CANDhNCqcbCJNSyrKG5b7vyjmuHUm0kAJmDecqHF-QRZ_EHq=Zw@mail.gmail.com>
+ <CANDhNCrShc0ak2BZN91fR9uj0MM6R20oskoDD-f7++SgPao6vA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SYBP282MB2238:EE_|SY6P282MB4005:EE_
-X-MS-Office365-Filtering-Correlation-Id: a06af420-65ae-4005-16ba-08dc8fa7dd15
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|3412199022|440099025|1710799023;
-X-Microsoft-Antispam-Message-Info:
-	JcUjd/HhSzjOP+3a8bUkeLMdggUJpR0M3SeIDTTuksDU6nT2jQ/06Pha2O9XQ2CfMQap4/9ML5lZ3RU761V19TFigDyaROdjxwVT336LOolCzsyJSgWi+F5rMyxkmXb//2eX7G+RFPPBV2rHaTOTa5/yMt518PdJD4fVTjL0U+jW8BrjLEQfWFYki++ue+YJLByxbI1mcfqT5BAhEVtTJSipxHEJQssFx34W4aP6IQfZruzLFCt2ELVVla5gJW8G3RZEW8TJnhz3fIcdr6MBG/LkTyIA8M25GrPUzf/ujQ83Wx9nWxNw4ru5UXG2fMNpRxTa7Oy+NQfN6J0qaytG6282n3LBUrTV7U1WAoOTq/Em73lPfSDXXTyMlTIHkzdsriBQ72H7ZFCRilr8QwofnxgmiGH+5+d1nznJoGe6pIEOUDlQAN8RAllMqbe0ee8IYoa+1bpO5EzytA9ndeF1uTbfrLjRhXJxl/YwMHX2HWp4YqfZ7L2keCULrxO9LFduhnXlmiOrELFWmG4WUUUkJofDj7XD2FHbk1CAX3hg41mb6Xrw2wZof7CqlWlwOo9b1zyZuE5BLXfXlVrW3YWaUVLw1IcZoVi8K/QM1JKG9H4=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RwMQUuZsJCxwAozzv6tVvtLNL0ykm/WL8gZ0/2tKTJNwkYj+2XOXoAtNcymo?=
- =?us-ascii?Q?LRpu2c+FRTZbm0LBaxMNq4N6z5TRynK3DXEGiKBVs25y3Z7VmYzZvr5iHsw3?=
- =?us-ascii?Q?opmKTGgtlhiCdaYNzOTxlVuMMVjTzTwVaw1ioD370NcbENOcuP9QhroHXQru?=
- =?us-ascii?Q?06wjPk8Wnscu6QKKXEcHLKi00BZvUu1gV4DuryM4u8QXPSWGdZ0X5R9vN0s0?=
- =?us-ascii?Q?AT+OAXKe+tXT/1a2qR2aS8m5ywJkO7cHR8WrzJi4kP/QWQ02kvCsoWlBi1JN?=
- =?us-ascii?Q?0h6hUpwrJsf6xhe0eCcRb+YZv+8TTSxf8g/4DEzb+4Dy4IG4oG/rQoSCAPXW?=
- =?us-ascii?Q?Oq1ZLOclqz/PTEaB44iyluH974RUbHBZZIbZBqJKYswcEG83nZ2GCGOWfwIq?=
- =?us-ascii?Q?VSCHiyf40eTl8lTmSiucGFI9e2aQz1S1kqVJNRQ6vArA3gwqyK9LgTlyMuPo?=
- =?us-ascii?Q?f6ul7EDrXaAunoD+aWbsvlpzEYomWGim6HET5JXmWmUykLxpTCXiDqwJ7qUI?=
- =?us-ascii?Q?+8VzNV0dlocjfOMtWga67T1Z7CzHoybla68Sd55SHWeiO/pxSDTPUSaSIyvY?=
- =?us-ascii?Q?7JBi87QsVCUQvqCeyf70mmAeY5y7vk6hTVeFSMu2U65QaUbQzscrEDum14eL?=
- =?us-ascii?Q?c7u+mSgcO7TqHEgxkjcEbXO6ZaHBg80PywKFHmShkXkVjMcX4MXLr0h2sU41?=
- =?us-ascii?Q?J4CJR9nNOG7f+M0VDTdyQafSVSI1xxJT1cKYsBdz/H7KZtzHyuCj9rX/puYT?=
- =?us-ascii?Q?H8KF+9+5SSG7qv+xR6+9LIrhCObGAQml8b7MYfeGNq161rboeqyB6u/9oE5k?=
- =?us-ascii?Q?+hgfZyrDnIv2re4ukIFjIQ+HjCaRrGWcWICRRe9aaASSbBoW9uRSFXudBLve?=
- =?us-ascii?Q?e/b/CgDafj7WscUbl5uTqjWllFHRyNaz3vJGTgekAcpAA88tQMsPd34ia5O1?=
- =?us-ascii?Q?nYR2So8vDyaORCjCZmsmQw21KSMJ8UG5mB+58RXyYmXTIT5Z5pgP1QQ+9+to?=
- =?us-ascii?Q?5THTOTEFzZpojA50G1u14NIs+62Ys3tKBDbL+9VXSVypMf7UMsqWF9lwNktb?=
- =?us-ascii?Q?wa/ZYqEqVZB5Dx92TbSFGP6USEwu7C0ano1Nm+v9ik1HIYWfEFAjMLVW0s0G?=
- =?us-ascii?Q?3fTG6J4OvmYJvy05ja0HWa1XGp270fX7WwWWa04hVGcK0Q680T2vZbaRc9ca?=
- =?us-ascii?Q?QVbq6dHcmKeuCpizd5jC6ZcKyq2P3SKNUiApIgcN4TFIBAKzPCq8xiWgcCk?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: a06af420-65ae-4005-16ba-08dc8fa7dd15
-X-MS-Exchange-CrossTenant-AuthSource: SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 15:03:51.5615
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY6P282MB4005
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCrShc0ak2BZN91fR9uj0MM6R20oskoDD-f7++SgPao6vA@mail.gmail.com>
 
-Add mailbox support for Sophgo cv18x SoCs, and test on both cv1800b SoC for 
-milkv-duo and cv1812h SoC for milkv-duo256m
+On 06/17/24 21:45, John Stultz wrote:
+> On Mon, Jun 17, 2024 at 5:42 PM John Stultz <jstultz@google.com> wrote:
+> >
+> > Also, separately, while I didn't see this earlier testing on physical
+> > devices, when running virtualized, I can pretty easily trip over the
+> > following:
+> >
+> > [   65.207340] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
+> > [kworker/0:3:374]
+> > [   65.211107] irq event stamp: 118664
+> > [   65.212786] hardirqs last  enabled at (118663):
+> > [<ffffffff97a00e46>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+> > [   65.218440] hardirqs last disabled at (118664):
+> > [<ffffffff977fdeca>] sysvec_apic_timer_interrupt+0xa/0xc0
+> > [   65.223074] softirqs last  enabled at (118546):
+> > [<ffffffff9676db78>] __irq_exit_rcu+0x88/0xe0
+> > [   65.227118] softirqs last disabled at (118541):
+> > [<ffffffff9676db78>] __irq_exit_rcu+0x88/0xe0
+> > [   65.231137] CPU: 0 PID: 374 Comm: kworker/0:3 Not tainted
+> > 6.10.0-rc4-dirty #4393
+> > [   65.234625] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> > BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> > [   65.239089] Workqueue: events psi_avgs_work
+> > [   65.241122] RIP: 0010:collect_percpu_times+0xff/0x310
+> ...
+> > [   65.288730] Call Trace:
+> > [   65.289958]  <IRQ>
+> > [   65.290965]  ? watchdog_timer_fn+0x275/0x310
+> > [   65.293185]  ? __pfx_watchdog_timer_fn+0x10/0x10
+> > [   65.295379]  ? __hrtimer_run_queues+0x190/0x3b0
+> > [   65.297795]  ? hrtimer_interrupt+0xf9/0x230
+> > [   65.299782]  ? __sysvec_apic_timer_interrupt+0x82/0x210
+> > [   65.302243]  ? sysvec_apic_timer_interrupt+0x98/0xc0
+> > [   65.304590]  </IRQ>
+> > [   65.305658]  <TASK>
+> > [   65.306708]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+> > [   65.309206]  ? psi_avgs_work+0x3c/0xb0
+> > [   65.311001]  ? collect_percpu_times+0xff/0x310
+> > [   65.313153]  psi_avgs_work+0x3c/0xb0
+> > [   65.314864]  process_one_work+0x1fe/0x700
+> > [   65.316782]  ? lock_is_held_type+0xcd/0x120
+> > [   65.318782]  worker_thread+0x1c7/0x3b0
+> > [   65.320571]  ? __pfx_worker_thread+0x10/0x10
+> > [   65.322626]  kthread+0xe0/0x110
+> > [   65.324103]  ? __pfx_kthread+0x10/0x10
+> > [   65.325853]  ret_from_fork+0x28/0x40
+> > [   65.327512]  ? __pfx_kthread+0x10/0x10
+> > [   65.329255]  ret_from_fork_asm+0x1a/0x30
+> > [   65.331073]  </TASK>
+> > [   65.332119] Kernel panic - not syncing: softlockup: hung tasks
+> 
+> As I've been digging on this some more, I'm still a bit baffled.  The
+> kworker seems to get stuck once the irq lands and we don't seem to go
+> back to the workqueue work that was in progress. That cpu ends up not
+> doing anything but occasionally handling ticks until we crash from the
+> softlockup watchdog.
+> 
+> Interestingly, if I move the psi_account_irqtime() call to be under
+> the rq_lock in sched_tick(), as I suggested earlier, I have yet to
+> reproduce the problem.
+> But I'm still trying to piece together exactly why.
 
-Yuntao Dai (3):
-  dt-bindings: mailbox: add Sophgo cv18x SoCs mailbox
-  riscv: dts: add mailbox for Sophgo cv18x SoCs
-  mailbox: sophgo: add mailbox driver for cv18x SoCs
-
- .../mailbox/sophgo,cv1800b-mailbox.yaml       |  75 ++++++++
- arch/riscv/boot/dts/sophgo/cv18xx.dtsi        |  11 ++
- drivers/mailbox/Kconfig                       |  11 ++
- drivers/mailbox/Makefile                      |   2 +
- drivers/mailbox/cv1800b-mailbox.c             | 182 ++++++++++++++++++
- 5 files changed, 281 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
- create mode 100644 drivers/mailbox/cv1800b-mailbox.c
-
--- 
-2.17.1
-
+A bit of a guess, but should irq_time_read() be done with interrupts disabled?
