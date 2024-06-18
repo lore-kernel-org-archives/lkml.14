@@ -1,47 +1,41 @@
-Received: from orthanc.universe-factory.net (orthanc.universe-factory.net [104.238.176.138])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDD518B1A;
-	Tue, 18 Jun 2024 07:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.238.176.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022DA54724;
+	Tue, 18 Jun 2024 07:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695052; cv=none; b=IPR+zZy7uq8CRutwZTLxeaUnxdeqY3XEVa6xtCo/VtNvxrv6ANk8RSnrzYw3j4y9dHch9R8736r8d2fi3c59QbEpqZpXOpU86foSoiDA0MkNsSZPsHQ3Gk6t5SMBCNqcMnabAbAx58zWwJV6Vf1l4FR9/kPN65NUdIEXLrTKpvs=
+	t=1718695229; cv=none; b=mj/lukqNABcunU4C9msfHhx9ImsrIahLpELXPCETJEKhP3gFODuQfWyEnu5Q7PhxI5fWx67hqfbmycBioWCKSca6zRVtja9b9mAHT7WO5deeFXnCXEVIpn8XLSez54C0v9C+dFmcg5KesXupt4/JBPiD0KfqJElGM+wXeSQeEuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695052; c=relaxed/simple;
-	bh=UqukhNboVX5FrXSn6Uoxd1aTGOoK+y0NoHf3mEax7wI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C+QhDdfem1YxpMU0Dja+R2lTarl0165/Ps+5WOym+p8vvPmMuV/wKLUd8vaL1K8ScpW85E5EWMNl5awLv4zSkzSKPqfbxWoUTmcFgAaWshv4Pt0YeUVOnwMN2yvadd14oSCLG3+s23+CNCjQkM/qe5K9MmDK06xMDc/cmVjMjGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; arc=none smtp.client-ip=104.238.176.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
-Received: from avalon.fritz.box (unknown [IPv6:2001:19f0:6c01:100::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by orthanc.universe-factory.net (Postfix) with ESMTPSA id EFA141F917;
-	Tue, 18 Jun 2024 09:17:25 +0200 (CEST)
-From: Matthias Schiffer <mschiffer@universe-factory.net>
-To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1718695229; c=relaxed/simple;
+	bh=FIPT6lCf+zj99FHHyw3mQx//uLZykQ8rPdsZXxS6W+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UWLtTZe4HQFP8dUnwLrl9wYZl2sPX4XFC1EABe6+GCtJlhqGCaErywTDNTw7STKYuzHyS7269gWASpIkIouLiuA4EZ40WFJbxmcqlOLki+wpkgatqitHOO49NacZH/azriN46uhi+x+b3bfUvyfXKHJknFuyTIkuErNBEH4CWbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=teSK2Z1u; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="teSK2Z1u"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718695224; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=nDo5YAs2CRrhczpgfzOhYy/3dEdPBFGSExQgFzNnxkg=;
+	b=teSK2Z1uJK8Ct48u8YsNoDIu1LbRvgYRMrna5tIRlNO/HLcu8hPvqbYWx/4YbelL6eY5rm62sa+Pc0by9etczmFxlF3R9GLFGyKKXhLQRGumPbcz99P+EFp/mUVyyapr2IOwF6m0t8MJBdnAKu15z1sohwV+HUS57dEftWMmwxA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W8jHIvY_1718695214;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W8jHIvY_1718695214)
+          by smtp.aliyun-inc.com;
+          Tue, 18 Jun 2024 15:20:24 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: [PATCH net-next v3 1/2] net: dsa: mt7530: factor out bridge join/leave logic
-Date: Tue, 18 Jun 2024 09:17:12 +0200
-Message-ID: <15c28e5ed5fa02ca7904c71540e254617d571eb8.1718694181.git.mschiffer@universe-factory.net>
-X-Mailer: git-send-email 2.45.2
+	linux-trace-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] fgraph: Use str_plural() in test_graph_storage_single()
+Date: Tue, 18 Jun 2024 15:20:14 +0800
+Message-Id: <20240618072014.20855-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,183 +44,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As preparation for implementing bridge port isolation, move the logic to
-add and remove bits in the port matrix into a new helper
-mt7530_update_port_member(), which is called from
-mt7530_port_bridge_join() and mt7530_port_bridge_leave().
+Use existing str_plural() function rather than duplicating its
+implementation.
 
-Another part of the preparation is using dsa_port_offloads_bridge_dev()
-instead of dsa_port_offloads_bridge() to check for bridge membership, as
-we don't have a struct dsa_bridge in mt7530_port_bridge_flags().
+./kernel/trace/trace_selftest.c:880:56-60: opportunity for str_plural(size).
 
-The port matrix setting is slightly streamlined, now always first setting
-the mt7530_port's pm field and then writing the port matrix from that
-field into the hardware register, instead of duplicating the bit
-manipulation for both the struct field and the register.
-
-mt7530_port_bridge_join() was previously using |= to update the port
-matrix with the port bitmap, which was unnecessary, as pm would only
-have the CPU port set before joining a bridge; a simple assignment can
-be used for both joining and leaving (and will also work when individual
-bits are added/removed in port_bitmap with regard to the previous port
-matrix, which is what happens with port isolation).
-
-No functional change intended.
-
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9349
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
+ kernel/trace/trace_selftest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2: no changes
-v3: addressed overlooked review comments:
-- Ran clang-format on the patch
-- Restored code comment
-- Extended commit message
-
-Thanks for the clang-format pointer - last time I tried that on kernel
-code (years ago), it was rather underwhelming, but it seems it has
-improved a lot.
-
- drivers/net/dsa/mt7530.c | 105 ++++++++++++++++++---------------------
- 1 file changed, 48 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 598434d8d6e4..9ce27ce07d77 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1302,6 +1302,52 @@ mt7530_stp_state_set(struct dsa_switch *ds, int port, u8 state)
- 		   FID_PST(FID_BRIDGED, stp_state));
- }
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index adf0f436d84b..97f1e4bc47dc 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -877,7 +877,7 @@ static int __init test_graph_storage_single(struct fgraph_fixture *fixture)
+ 	int ret;
  
-+static void mt7530_update_port_member(struct mt7530_priv *priv, int port,
-+				      const struct net_device *bridge_dev,
-+				      bool join) __must_hold(&priv->reg_mutex)
-+{
-+	struct dsa_port *dp = dsa_to_port(priv->ds, port), *other_dp;
-+	struct mt7530_port *p = &priv->ports[port], *other_p;
-+	struct dsa_port *cpu_dp = dp->cpu_dp;
-+	u32 port_bitmap = BIT(cpu_dp->index);
-+	int other_port;
-+
-+	dsa_switch_for_each_user_port(other_dp, priv->ds) {
-+		other_port = other_dp->index;
-+		other_p = &priv->ports[other_port];
-+
-+		if (dp == other_dp)
-+			continue;
-+
-+		/* Add/remove this port to/from the port matrix of the other
-+		 * ports in the same bridge. If the port is disabled, port
-+		 * matrix is kept and not being setup until the port becomes
-+		 * enabled.
-+		 */
-+		if (!dsa_port_offloads_bridge_dev(other_dp, bridge_dev))
-+			continue;
-+
-+		if (join) {
-+			other_p->pm |= PCR_MATRIX(BIT(port));
-+			port_bitmap |= BIT(other_port);
-+		} else {
-+			other_p->pm &= ~PCR_MATRIX(BIT(port));
-+		}
-+
-+		if (other_p->enable)
-+			mt7530_rmw(priv, MT7530_PCR_P(other_port),
-+				   PCR_MATRIX_MASK, other_p->pm);
-+	}
-+
-+	/* Add/remove the all other ports to this port matrix. For !join
-+	 * (leaving the bridge), only the CPU port will remain in the port matrix
-+	 * of this port.
-+	 */
-+	p->pm = PCR_MATRIX(port_bitmap);
-+	if (priv->ports[port].enable)
-+		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK, p->pm);
-+}
-+
- static int
- mt7530_port_pre_bridge_flags(struct dsa_switch *ds, int port,
- 			     struct switchdev_brport_flags flags,
-@@ -1345,39 +1391,11 @@ mt7530_port_bridge_join(struct dsa_switch *ds, int port,
- 			struct dsa_bridge bridge, bool *tx_fwd_offload,
- 			struct netlink_ext_ack *extack)
- {
--	struct dsa_port *dp = dsa_to_port(ds, port), *other_dp;
--	struct dsa_port *cpu_dp = dp->cpu_dp;
--	u32 port_bitmap = BIT(cpu_dp->index);
- 	struct mt7530_priv *priv = ds->priv;
+ 	pr_cont("PASSED\n");
+-	pr_info("Testing fgraph storage of %d byte%s: ", size, size > 1 ? "s" : "");
++	pr_info("Testing fgraph storage of %d byte%s: ", size, str_plural(size));
  
- 	mutex_lock(&priv->reg_mutex);
- 
--	dsa_switch_for_each_user_port(other_dp, ds) {
--		int other_port = other_dp->index;
--
--		if (dp == other_dp)
--			continue;
--
--		/* Add this port to the port matrix of the other ports in the
--		 * same bridge. If the port is disabled, port matrix is kept
--		 * and not being setup until the port becomes enabled.
--		 */
--		if (!dsa_port_offloads_bridge(other_dp, &bridge))
--			continue;
--
--		if (priv->ports[other_port].enable)
--			mt7530_set(priv, MT7530_PCR_P(other_port),
--				   PCR_MATRIX(BIT(port)));
--		priv->ports[other_port].pm |= PCR_MATRIX(BIT(port));
--
--		port_bitmap |= BIT(other_port);
--	}
--
--	/* Add the all other ports to this port matrix. */
--	if (priv->ports[port].enable)
--		mt7530_rmw(priv, MT7530_PCR_P(port),
--			   PCR_MATRIX_MASK, PCR_MATRIX(port_bitmap));
--	priv->ports[port].pm |= PCR_MATRIX(port_bitmap);
-+	mt7530_update_port_member(priv, port, bridge.dev, true);
- 
- 	/* Set to fallback mode for independent VLAN learning */
- 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
-@@ -1478,38 +1496,11 @@ static void
- mt7530_port_bridge_leave(struct dsa_switch *ds, int port,
- 			 struct dsa_bridge bridge)
- {
--	struct dsa_port *dp = dsa_to_port(ds, port), *other_dp;
--	struct dsa_port *cpu_dp = dp->cpu_dp;
- 	struct mt7530_priv *priv = ds->priv;
- 
- 	mutex_lock(&priv->reg_mutex);
- 
--	dsa_switch_for_each_user_port(other_dp, ds) {
--		int other_port = other_dp->index;
--
--		if (dp == other_dp)
--			continue;
--
--		/* Remove this port from the port matrix of the other ports
--		 * in the same bridge. If the port is disabled, port matrix
--		 * is kept and not being setup until the port becomes enabled.
--		 */
--		if (!dsa_port_offloads_bridge(other_dp, &bridge))
--			continue;
--
--		if (priv->ports[other_port].enable)
--			mt7530_clear(priv, MT7530_PCR_P(other_port),
--				     PCR_MATRIX(BIT(port)));
--		priv->ports[other_port].pm &= ~PCR_MATRIX(BIT(port));
--	}
--
--	/* Set the cpu port to be the only one in the port matrix of
--	 * this port.
--	 */
--	if (priv->ports[port].enable)
--		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK,
--			   PCR_MATRIX(BIT(cpu_dp->index)));
--	priv->ports[port].pm = PCR_MATRIX(BIT(cpu_dp->index));
-+	mt7530_update_port_member(priv, port, bridge.dev, false);
- 
- 	/* When a port is removed from the bridge, the port would be set up
- 	 * back to the default as is at initial boot which is a VLAN-unaware
+ 	ret = init_fgraph_fixture(fixture);
+ 	if (ret && ret != -ENODEV) {
 -- 
-2.45.2
+2.20.1.7.g153144c
 
