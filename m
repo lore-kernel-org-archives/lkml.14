@@ -1,94 +1,137 @@
-Received: from forward501c.mail.yandex.net (forward501c.mail.yandex.net [178.154.239.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8976770E4;
-	Tue, 18 Jun 2024 16:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579246F307;
+	Tue, 18 Jun 2024 16:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718728170; cv=none; b=fqcPiy8xOX2QNaV7UkX0OpLRFS0ak8gfyK14Umb9OFhC8z/zkhezqCXocOxrAMvd7lQsKOxBtCNfA/2O+cFGqfpBIDysMLfU24/koT1jyMrhQLa52SOe+7HnKalZ755iMzElFlHVAPuvSI/JQRx2RTYp1YrZxNhmvPTrek68qtE=
+	t=1718728177; cv=none; b=MuTPVx+hjaEzs/sIRd8MCMHL6IQo4H2PJWJ+RZn6r8sPm4lbpZwynSqoIPN5doseBht/yKV7qMyFmtT090g3TcFSCeyIYzzUN9e+ZXgzDwSNGbGFBcbyepk7WA/QBKphMY6hKqm9w4Y0Jt3sQ4YNo2R+QgIMBv92iyzEEtCPD2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718728170; c=relaxed/simple;
-	bh=NNATBtdDMGXed2giCTW1DwB6fcduOtiFaUb75X7xHFg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R2ZmQJZTrY/aMwt2ou2Xa/7zdKeKMaTaoJ9G33XciysYCqZ4/DFHo/seBwKYEJYzF3ashVcipA+PhaWfgjefGK0o1BsY7e45hBv0j1ePjyXvwxAggedsvc+LzzTD6J5uK2YqL5JgfDZx9LnZrpX06GunJcsKUWnz70ahC75usH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=hLs1EMY3; arc=none smtp.client-ip=178.154.239.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1718728177; c=relaxed/simple;
+	bh=UsT5NQh0GVQQVdqROGFcp5V5hRUJAqWTfvcSFefzOjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I+cYvU29c7PPSYL5utA8SBYgeSTGt9R5q+G26uSMEmEpk23ijnxd7jUK9EtJgA34rmVMAj2CZkGwsK2AB5nFLSfKzELyd5yZW4gBVY2ibexCCR9gLMuGdDJ/ky47zT+jvj4ZJNDPzouCsbMBjH1HEplw1IdGVpcGS1zFn0WPHnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdxYwlaF; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="hLs1EMY3"
-Received: from mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2146:0:640:e7:0])
-	by forward501c.mail.yandex.net (Yandex) with ESMTPS id 93E42613FE;
-	Tue, 18 Jun 2024 19:29:18 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id HTLk6SYoLqM0-BYs3NsdX;
-	Tue, 18 Jun 2024 19:29:18 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1718728158; bh=NNATBtdDMGXed2giCTW1DwB6fcduOtiFaUb75X7xHFg=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=hLs1EMY3K9bnMNXLJVXLcZcgwgn0K422xeCa9z+LXiA3YAiYLcIticJ54ttbQiRjP
-	 o76du3OpqHVXI3rX63EESDRT2+Lfjplx38d8+f8EFu+re6dYOa2aIZMRROH+iWbIUq
-	 PeDoACEdqbPk6OvOc+4RF1JhWsbKh1SpMzr5Vtfo=
-Authentication-Results: mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <6f9b86b6b79ca0fe7f0379e0e6c6bde4c4e07652.camel@maquefel.me>
-Subject: Re: [PATCH v10 04/38] pinctrl: add a Cirrus ep93xx SoC pin
- controller
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Arnd Bergmann
-	 <arnd@arndb.de>
-Date: Tue, 18 Jun 2024 19:29:17 +0300
-In-Reply-To: <CACRpkda_uMuk4AFOdQSPTWXuibH7nE3R_qSnrecboczddQw+uA@mail.gmail.com>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-	 <20240617-ep93xx-v10-4-662e640ed811@maquefel.me>
-	 <CACRpkda_uMuk4AFOdQSPTWXuibH7nE3R_qSnrecboczddQw+uA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdxYwlaF"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-705c739b878so4598922b3a.1;
+        Tue, 18 Jun 2024 09:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718728175; x=1719332975; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTLwF7FJJq28Tj9sU+QeSNnqnZzMZSab2k97XIaOnBQ=;
+        b=kdxYwlaFSshURseJE6p1MZ83iUCvyUtIkSGe2dcD4XOD6k5co2BHiem+Wo6Dq/exP8
+         5WJ/zpRWg+fAWjxtS/Q0OsWGXZVqfVgKMNuzXTrdXO+9RpHJXGbB5Nu42wGRJCoaK3Zc
+         Tet7RO0pFfhi9v8bQJkWg2o1X7ysfb2j8MrmsuQeQsQmhhYQDeYAwq7zu7h1A6+kDkDF
+         kGLgbVkgdUZIVApRjOllDMzjzFIcjYL/e6VmfD6mBguqXhczPsXoPHSbc/3KdjfTwgTK
+         mT6Y68avSh6XwuZ0yvy2q7lHE+F0GxNEotg40HqKuzVbP0Vdzj3T9Xq0AUxkCSmutLNc
+         Uufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718728175; x=1719332975;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PTLwF7FJJq28Tj9sU+QeSNnqnZzMZSab2k97XIaOnBQ=;
+        b=qkTznE+XZC6V4XLzowarci5ARdMfIM6TFsghP+TMFJjawSH5l5wJSjTXEG96p2OEpq
+         Bz+Inth25y2f3yjC/ixSJmbZJDpUOULOi0oEzpvhNfoxBULVIbsHsK3d4pkxDKqoaFaQ
+         mT/0t/+U3Lp0Qvor/h33tAXxIeoB3WyrMn8BZIR0fgQ2i3zWDeu3tjbG/uki49HzJTBW
+         atPuTWa5hW/967NNakIN4XPL4eXapHTvUF1ZzA0ULbb3NgNDKcQEjRCqpi99kIxeZbG0
+         C+ZjEfBt2YfXUvPkC4RFHribPGtKEU4Fnu0ztzdfMyIHdu2TcNLfrO0AKXw7nNVyPC6A
+         r2RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaUW9xJC4C82It+TWvWqddvT5fmhv3iEiTpTLYlxX5vlyUAmJp1MOpKSXrqxVr8ICJGkhvhHnnSGWNtEd8fQh1Xcu9bfJ9RI+Gh8Vx1AJopGk+d9vESpPD+kM75SaODjIxJyDxwIK0iUbnuWbfAG8icT2GL9jTen3Jfgl2NbCNLSZqVQ==
+X-Gm-Message-State: AOJu0YxALvKGu8HuoMN15VzEsviNG3jX3CvAUqEgppcLkIxpQtAeEwLH
+	/95F9p+wOS6UlFlClvC05UiS9N2FFvGykVuBJC34ZS58Oh5cZDWA
+X-Google-Smtp-Source: AGHT+IFnMIreX7N0zHGAieLQNwRvwy9eIcMc8pU01yWRkzyddP3GNSiHFCx8yMdXsrHRTJUi2+xZJQ==
+X-Received: by 2002:a05:6a20:2905:b0:1bc:bb05:e0db with SMTP id adf61e73a8af0-1bcbb05e107mr95545637.23.1718728175394;
+        Tue, 18 Jun 2024 09:29:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3d1ccsm9130707b3a.125.2024.06.18.09.29.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 09:29:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <fdeea79f-4568-4e70-9b49-0c02abc91170@roeck-us.net>
+Date: Tue, 18 Jun 2024 09:29:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] Add Mule MFD support
+To: Farouk Bouabid <farouk.bouabid@cherry.de>,
+ Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Quentin Schulz <quentin.schulz@cherry.de>, Peter Rosin <peda@axentia.se>,
+ Heiko Stuebner <heiko@sntech.de>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20240618-dev-mule-i2c-mux-v4-0-5462d28354c8@cherry.de>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240618-dev-mule-i2c-mux-v4-0-5462d28354c8@cherry.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Linus!
+On 6/18/24 09:06, Farouk Bouabid wrote:
+> Mule is an MCU that emulates a set of I2C devices which are reachable
+> through an I2C-mux.
+> 
+> The mux and amc6821 combined make the Mule multi-function device (@0x18)
+> 
 
-On Tue, 2024-06-18 at 12:27 +0200, Linus Walleij wrote:
-> On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
-> <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
->=20
-> > From: Nikita Shubin <nikita.shubin@maquefel.me>
-> >=20
-> > Add a pin control (only multiplexing) driver for ep93xx SoC so
-> > we can fully convert ep93xx to device tree.
-> >=20
-> > This driver is capable of muxing ep9301/ep9302/ep9307/ep9312/ep9315
-> > variants, this is chosen based on "compatible" in device tree.
-> >=20
-> > Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Is this patch dependent on the other patches or something I can just
-> apply?
+I don't think that is appropriate. Those devices should all have separate
+devicetree entries and be modeled as individual i2c devices.
 
-Well... it won't work without DT and:
-
-- ARM: ep93xx: add regmap aux_dev
-- soc: Add SoC driver for Cirrus ep93xx
-
-And the above will complain if
-
-- dt-bindings: soc: Add Cirrus EP93xx
-
-is missing.
-
-It's harmless and won't be compiled with current platform code, but
-will fail to compile if "ARM: ep93xx: add regmap aux_dev" is missing.
-
-
->=20
-> Yours,
-> Linus Walleij
+Guenter
 
