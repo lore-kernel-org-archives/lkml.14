@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6051AD4BF;
-	Tue, 18 Jun 2024 13:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1369E1AD9FF;
+	Tue, 18 Jun 2024 13:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718716846; cv=none; b=BBCCOEktjwXKM043JB8REIzknqVnMLqmLfrmhMOdth6hPmyHRVX0h5mrs/Jv9UCtN58ecItwMrayoMp00e+ZwKuc99/X1DXIKOpdx5SyD9eTdrpg8zcPc6xT/bdToc/46vVds+P5lAyXWYo6KOEJDRxDUV+ByqP39jqDrSf+j4w=
+	t=1718716849; cv=none; b=f/ukV2sEcWQ2ngABzJlC9OFQT9UBySPub4Gu9VHAYx4kx0x/bU173+un/TCXVp7yXoAMGgwYt9HyQNEua+B/vlZp0n/R36Qtb8+QS5UG3EkmFddxjHS0IsrQUsymY9ieBoTdCN+vAxR7Bx0+sx8MH+RvwTfLTUjojv/CMc6zuCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718716846; c=relaxed/simple;
-	bh=Qp7CM6iG5kz1apRwYVuMOrXU7YUSRpdnOK+KIpu+IfM=;
+	s=arc-20240116; t=1718716849; c=relaxed/simple;
+	bh=eiEYRg7tb9Zm5L5qiyKdmcxA6sLOHm162FbH/EnNafk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfHkpEFZ2DoNXpGcUlnbeRIqWkHBaRGa52LnB6X0iHaD5A63yG3uJ+gfAdeKS8bTd0ZKq4/pFlzqaIG9Jiv5jGqLQd+fC8Bi2SufhhoFVjuPn2MMQIavcsy8CPs1bxZ822RWvVJYVWOsFbLLXNT0OaX5wKlLcP1nwnu2Sg8Mysc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pWXtEdL+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ki6vZfrewwehav7HjAPGAgDVSepQ9Vrf0tiDbSjajyGB91RUFmZ2mKr7x3WLqknLheDGvXaSKn5n84dAmOOgxLM3rvRfsz3iETtz9lqky1WL1RJBhj8xd+CFOHjdxd7x+RjNRFLqzTZmKxZi3VgkpaWFg9pB4+EDMHv7cbDQWb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2SMaN9t+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pWXtEdL+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E428C4AF1D;
-	Tue, 18 Jun 2024 13:20:45 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2SMaN9t+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6069CC3277B;
+	Tue, 18 Jun 2024 13:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718716846;
-	bh=Qp7CM6iG5kz1apRwYVuMOrXU7YUSRpdnOK+KIpu+IfM=;
+	s=korg; t=1718716848;
+	bh=eiEYRg7tb9Zm5L5qiyKdmcxA6sLOHm162FbH/EnNafk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pWXtEdL+ROtNJD/V6HrgwGTvypKlp5/8Z9Ww4dubowcTM1sOxGEJI8mwcqarzIno8
-	 1SFtTuAO2HBgsRHbtN7sAl49xiFTT+HvSTrJZ1ehK+jflnhcUot9f4NPykjLwrzSxr
-	 I37DKzh71NN0P8l8y+0uLtUuXGdRTHGJ3d6YVLTg=
-Date: Tue, 18 Jun 2024 15:09:28 +0200
+	b=2SMaN9t+BDTOmgY5LngowGE8aP5d6hfv3J72xiUTJu17ASoBewEydNivyJFfkCEem
+	 TT17iISo/QJVq6N7Cd/FW1yNTUuuvPIKBNkHG1O2oKoipHvgbhMtwPpl5mDBBbaefq
+	 btR6MADVjHWoVYhasE9OLDXiJr6nn7k6hnSgIzE4=
+Date: Tue, 18 Jun 2024 15:18:07 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Gabriel Krisman Bertazi <krisman@suse.de>,
-	linux-cve-announce@vger.kernel.org, cve@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CVE-2023-52685: pstore: ram_core: fix possible overflow in
- persistent_ram_init_ecc()
-Message-ID: <2024061823-employer-stylist-2505@gregkh>
-References: <2024051752-CVE-2023-52685-64c5@gregkh>
- <87jzjeojwp.fsf@mailhost.krisman.be>
- <2024052811-cornfield-monday-8bb9@gregkh>
- <202406171413.DE595AF@keescook>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.6 000/741] 6.6.33-rc2 review
+Message-ID: <2024061855-rural-stoplight-1283@gregkh>
+References: <20240609113903.732882729@linuxfoundation.org>
+ <55b8c260-d8f0-4c05-bdf1-c20865fb13f7@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,62 +45,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202406171413.DE595AF@keescook>
+In-Reply-To: <55b8c260-d8f0-4c05-bdf1-c20865fb13f7@roeck-us.net>
 
-On Mon, Jun 17, 2024 at 02:17:49PM -0700, Kees Cook wrote:
-> On Tue, May 28, 2024 at 09:01:13PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, May 27, 2024 at 08:32:54PM -0400, Gabriel Krisman Bertazi wrote:
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > > 
-> > > > Description
-> > > > ===========
-> > > >
-> > > > In the Linux kernel, the following vulnerability has been resolved:
-> > > >
-> > > > pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
-> > > >
-> > > > In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
-> > > > 64-bit value since persistent_ram_zone::buffer_size has type size_t which
-> > > > is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
-> > > > this value gets assigned to has (always 32-bit) *int* type.  Even if that
-> > > > value fits into *int* type, an overflow is still possible when calculating
-> > > > the size_t typed ecc_total variable further below since there's no cast to
-> > > > any 64-bit type before multiplication.  Declaring the ecc_blocks variable
-> > > > as *size_t* should fix this mess...
-> > > >
-> > > > Found by Linux Verification Center (linuxtesting.org) with the SVACE static
-> > > > analysis tool.
-> > > 
-> > > Hi Greg,
-> > > 
-> > > [Cc'ing Kees, who is listed as the pstore maintainer]
-> > > 
-> > > I want to dispute this CVE.  The overflow is in the module
-> > > initialization path, and can only happen at boot time or if the module
-> > > is loaded with specific parameters or due to specific acpi/device tree
-> > > data.  Either way, it would require root privileges to trigger.
+On Mon, Jun 17, 2024 at 10:38:29AM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On 6/9/24 04:41, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.6.33 release.
+> > There are 741 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > Normally root privileges isn't the issue, as many containers allow root
-> > to do things (including loading modules, crazy systems...)
+> > Responses should be made by Tue, 11 Jun 2024 11:36:08 +0000.
+> > Anything received after that time might be too late.
 > > 
-> > Anyway, I'll defer to Kees as to if this should be revoked or not.
+> [ ... ]
+> > 
+> > Duanqiang Wen <duanqiangwen@net-swift.com>
+> >      Revert "net: txgbe: fix clk_name exceed MAX_DEV_ID limits"
+> > 
 > 
-> It's a module parameter or device tree value that is at most INT_MAX or
-> UINT_MAX respectively. Also, it is bounds checked against the buffer
-> itself:
->         if (ecc_total >= prz->buffer_size) {
+> This patch, in its commit message, explicitly states:
 > 
-> So even if it wrapped around and got "too small", there's no damage to
-> be had here.
+>   This reverts commit e30cef001da259e8df354b813015d0e5acc08740.
+>   commit 99f4570cfba1 ("clkdev: Update clkdev id usage to allow
+>   for longer names") can fix clk_name exceed MAX_DEV_ID limits,
+>   so this commit is meaningless.
 > 
-> The worst case is that the ramoops info goes missing because pstore
-> refuses to do anything with the bad value, but pstore can be disabled
-> way more easily than that, by design.
-> 
-> So, no, I don't think this is CVE worthy. I took the patch because it's
-> reasonable to try to get the math right and provide better error
-> reporting.
+> However, commit 99f4570cfba1 has not been applied to v6.6.y,
+> meaning the revert may impact the affected driver under some
+> circumstances.
 
-Now rejected, thanks.
+Ah, that was tricky, thanks, I've queued up 99f4570cfba1 now.
 
 greg k-h
