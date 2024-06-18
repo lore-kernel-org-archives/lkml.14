@@ -1,111 +1,109 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F37139D0C;
-	Tue, 18 Jun 2024 08:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEFE14EC53;
+	Tue, 18 Jun 2024 08:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718699211; cv=none; b=DrUa59X7t8YP6OknZSGlu8xGLMDbPnY53S35JgAnSWpgkcc3qCgHPCqxHFZYYz8XA69iHO8pbykOFe8RsLHKUXvck7iB0DfGVpuX4zb6UASzeSShhiFlG5BlJUr5RHpeMfEWZ1C9S36VFZLIUHeeq+7Bt9XAMrk81CN++NzjZmk=
+	t=1718699300; cv=none; b=jhoiqIo1O4JcuhVMVJOOBnKVMQh9sXEtPua6cB+pxBa6lLamMxKekPis/oYVwZE/db83ORGO8yDCZcQRUsNiV6oHBQboqVbbAxwaxh9DduADOspfmOssDsiX/ouqyxtNFBhy8WOo5WqhrmCDGd0NatZPJuQZQ0iWndw0Im50T+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718699211; c=relaxed/simple;
-	bh=yz2C5fvBJTGqQpnuSLNkBiIZocKFHu/gpBvI/hES3l4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWQsXf8wT23nuhA1kdsNj0cD65a+hhGVjIcOFmV2MFiT1ZnnILxD0w7NOTArXxJH7vHO6VBm8MTrkmsYPCqM/QNKKRVYBg86Xl9cmn6iaf6pwSHhydt1W301FJvjn3XrIpO0nKP1OPfUjLsJx+Kc6+Otf2wi7Be7dgDYEz+FeA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TD8kRNf5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718699300; c=relaxed/simple;
+	bh=fDuBcP24asbSAJrbRE20Sf3+CUeZSdW/nBC+/MiaXAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZXfLBPco8D3hCyauSWdGXqy+BLD623bQxhTQ+bylzFQovtJWtR4DDHlmRYS0/KHFD1GeeYQ/fuViC8gSDMYVOHzSdEXx2UCaqoCLw0lGUvJtfis5X62kktc0MsZZH+vhosy4p6V1kiZ561tuxd2N0ghOY8U1+dgdoZ1zhY0pJQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHKhujOM; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TD8kRNf5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=y/V05mUJk5DDD/0Y/A3n8rzv2x+59hyyMuOW2I/yfmo=; b=TD8kRNf5i7wpP4NwVa51buHFqy
-	4luHLDjx1w/Xbig1Fi4uuSpTm6uTRaww56SpHtlvj70vUb6uoywFJ3Y8wj8CvSxdBH88Xi41DdKJ4
-	gZLXsidw0hcwi7I7jolrjupEz89w8k+t2h1OczpMw/7WaBKMhOgAsfrR0bjhMK4YfolJJblo6Vkvh
-	de2lHllu6t4vDXrrGnzzN5SiOJlDCb6XtVoHyD+SsxOhm6wfR4VAlmExV4T/H8wSRGcp8TJuWo4tA
-	1JqxPn8us9pTWW95CTZW4UrVLPGrv/jyzEXUEJVXO/FhOr3YsimhVMFnypbCh/6m23y8zQn05qEm+
-	Bnivz25Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJU78-0000000707D-3Mbp;
-	Tue, 18 Jun 2024 08:24:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C57D1300886; Tue, 18 Jun 2024 10:22:42 +0200 (CEST)
-Date: Tue, 18 Jun 2024 10:22:42 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Martin Uecker <uecker@tugraz.at>,
-	Erick Archer <erick.archer@outlook.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240618082242.GC31592@noisy.programming.kicks-ass.net>
-References: <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
- <20240614101708.GO8774@noisy.programming.kicks-ass.net>
- <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
- <202406171019.9F0127F@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHKhujOM"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f0dc80ab9so780907266b.2;
+        Tue, 18 Jun 2024 01:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718699297; x=1719304097; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rLTxPv/nsWe7Zfu/tZSlFHX0jN4s9uxiYT3UOnjGPnE=;
+        b=BHKhujOMsSoSJDs16AquPldkxTKu1jVtTuT9aFENoKhQ4Str1oukaTPuDzJsTAg58n
+         Hp1YuGw9UFYL1B9+8a6xznhplVNysrmSCZYCH0G7U3DbDDtl2CioeENH1kSSon8uVMvG
+         rL0/qetDLIolOVx86l2/tN2xh1KDOCpNDNx+dwKHUWSRl/HUsnLdj7JzCco/Y9yDs6Qd
+         twBGuErboaMtKLsMisnh6ZuSZHiA0H2oAAY01AucFFVuAZn7T5qVuEkmMMceeEPHgvXQ
+         z0xF9/af1TJ70J//NjOvoIGPahiHEM3MYNH/gThBfMYoteb1LHBLv9epQ1AC/CQs85kk
+         XZiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718699297; x=1719304097;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rLTxPv/nsWe7Zfu/tZSlFHX0jN4s9uxiYT3UOnjGPnE=;
+        b=ZHSE2AgblgAw1BNoRzIX39FixwOeSllbz2ZyFb4wE5YSqM2GAoPkKEjpGNOooIQDy3
+         PRbESpHCygWc+6uCxfndkW1cC/53HR2FcfWgM4zfER4S6TaC0XNPrxQJqj2po570LvTH
+         UnGBiw5YaVLUOSgDDvHoBgOx14aRge4/ZTKmkTX8DZPLgFnnVtIcSJ5b+lsqwDM4Zqdr
+         f2gcnTs+AvrPDTliHt9lru7IBwPPVFuB9nvycy/YLCqlUASogSMkpCxTetMYUZP2eOlT
+         ahqLpDTxOL8zwEmQp+hJHyTwk/391crij4G52V8tWwSLFY+62oYCioFrxLo1uneQyGMx
+         kHtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQRbXRa0LAbn+GUiMi1CIekYXI0qNJ5zpi9fhIvqQ8jAEDxIin9ZmpfUc7ucadAgMr+Dp3T7IZoBZ16ZwA9LswjUzAgqELSHg1P0o2ybOWxOBCovEeVhBxxEWc+d/PUnj+Jda0pK3JznvWiwgptOeq4ktvgJGH08An/vbBYtwdfBSX5sg1
+X-Gm-Message-State: AOJu0Yy+F74+1TkHAsKyNanEodfczxzJAWge1TgDXt7gHnYjP0r+fewd
+	xBMFlQyLAskSADgjllxlLu6nCm+U+cMSwBEdjRhzWQWIJIRPCrM=
+X-Google-Smtp-Source: AGHT+IHte2kNPklKy0uooT0+VxtXAAzQyiEKdtDQzWdgV/PwLMIcBTFXQgeo3rhoneTxxDcXK0uRew==
+X-Received: by 2002:a17:906:5da:b0:a6f:5dfa:b27a with SMTP id a640c23a62f3a-a6f60d402b1mr699663966b.35.1718699296129;
+        Tue, 18 Jun 2024 01:28:16 -0700 (PDT)
+Received: from ?IPV6:2a02:810b:f40:4600:e5d5:17e7:54e8:5475? ([2a02:810b:f40:4600:e5d5:17e7:54e8:5475])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f99a09fe8sm47580966b.9.2024.06.18.01.28.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 01:28:15 -0700 (PDT)
+Message-ID: <2e98128f-39f8-4800-91f6-c1cfa21fa0a6@gmail.com>
+Date: Tue, 18 Jun 2024 10:28:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406171019.9F0127F@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/6] media: hantro: Add RK3588 VEPU121
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+ ezequiel@vanguardiasur.com.ar, frattaroli.nicolas@gmail.com,
+ heiko@sntech.de, kernel@collabora.com, krzk+dt@kernel.org,
+ linkmauve@linkmauve.fr, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ nicolas.dufresne@collabora.com, p.zabel@pengutronix.de, robh@kernel.org
+References: <20240613135034.31684-5-sebastian.reichel@collabora.com>
+ <20240617025022.25122-1-liujianfeng1994@gmail.com>
+ <o6iccgurpi7sraq7plxaccz37i44te4jaqicnp2nqbke2qtskh@4kboulg3zywx>
+Content-Language: en-US
+From: Alex Bee <knaerzche@gmail.com>
+In-Reply-To: <o6iccgurpi7sraq7plxaccz37i44te4jaqicnp2nqbke2qtskh@4kboulg3zywx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 10:28:20AM -0700, Kees Cook wrote:
+Am 17.06.24 um 13:30 schrieb Sebastian Reichel:
+> Hi,
+> 
+> On Mon, Jun 17, 2024 at 10:50:22AM GMT, Jianfeng Liu wrote:
+>> Hi Sebastian,
+>>
+>> Thu, 13 Jun 2024 15:48:45 +0200, Sebastian Reichel wrote:
+>>> +	{ .compatible = "rockchip,rk3588-vepu121", .data = &rk3568_vpu_variant, },
+>>
+>> rk3568_vpu_variant is decoder's data, typo?
+> 
+> See first sentence of the commit message.
+> 
+I think, what Jianfeng meant, is that you are incorrectly using
+rk3568_vpu_variant for the newly added "rockchip,rk3588-vepu121"
+compatible: rk3568_vpu_variant is for the decoder (confusing, I know:
+should actually be rk3568_vdpu_variant) - you want to use
+rk3568_vepu_variant instead for it instead.
 
-> But, using type attributes we have much more flexibility. Hence, the
-> proposed "wraps" attribute:
-> https://github.com/llvm/llvm-project/pull/86618
+Alex
+> -- Sebastian.
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-So I still think that's going about things backwards.
-
-unsigned explicitly wraps. signed is UB.
-
-When using -fwrapv signed is well defined as 2s complement, which takes
-away the UB and makes it implicitly wrap.
-
-When extending the language, it is important to not break existing code,
-so the default must remain wrap. This in turn means you need to add a
-'nowrap' thingy.
-
-Also, I would very much not make this an attribute, but a full type
-qualifier. Furthermore, add type promotion rules to ensure nowrap takes
-precedence and is preserved throughout expressions. Such that:
-
-  'long' + 'nowrap int' -> 'nowrap long'
-
-Then, once you have this, you can go do things like:
-
-typedef nowrap unsigned long size_t;
-#define sizeof(x) ((size_t)sizeof(x))
-
-and things will just work. Hmm?
