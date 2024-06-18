@@ -1,92 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954491BA877;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404511BA060;
 	Tue, 18 Jun 2024 12:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714589; cv=none; b=LCt/kJj8WoNSOX6Vg3He2UInlTAXAWQgjnW5zGiqiU8c6XDw2r9PV37h9O6HUNWQjm5AuLnZ9hSk+1qft1whCBeOTZwlqkSDBSkCNBXnQ98EYz6u0zG3PrBqyHto1VVpovqVIXu7JFQYS3Cx2gYhXpiTDep/EGbQzD2chUWyKyc=
+	t=1718714590; cv=none; b=V5+x/aWGXg9E3WHGGSB1YcZWh6JqZF1BKFnbZ832pRSQ31O+4SYsmzQZ8aMF+OObNYtYf6u3ZiG5r5HRyAlXGUKod/N7pT+xo+NqbAsGsfEIP3DGAfouuJ9SxRVEvWfFppY9HbXmifi1x9z21cWmnsOk2FD7oIyihCkO1tEQQxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714589; c=relaxed/simple;
-	bh=QEw1lVVZFFXX5VT3x5lAacBYDpevRca1ieNXuJOWCEY=;
+	s=arc-20240116; t=1718714590; c=relaxed/simple;
+	bh=ammvnG7uUFAATQsHx2GwECSfnAV9fnWA0Qmrc8H/Ubw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bxEwm4Gv/EdWw4nBVGXdevvvMM6gFYI83HAwx/Nn61BqybAIdu4MxGlG+e8Ymt4MvRY+fYqRZ5Ql7L6qW4aXdLrkDvNSC5k45BdohCDcTETdJPOaKld3nNKFWDh36h3vkAwZkoo0e03sdW1dvEios8a7xABuOyVkDuEswL/ZF+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F7477XZ6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q2mGOk/rWb9mNOLopltVMWhYybYTPkitZmNHEn7+qdB/I3yiOGG0F7c7gzUeox1CTKyWKGsycdlt1Qi/9yPMCx0kQ7+Bb2X9eCBSuHT4CWFu9uVlq6bcLVesI6ByWwA+qa1SyzszXupy5WzcHcKwtS+Bb2pLyCm5EnAuejLqz0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vywj0xPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F7477XZ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B850C4AF1D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vywj0xPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F11C3277B;
 	Tue, 18 Jun 2024 12:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718714589;
-	bh=QEw1lVVZFFXX5VT3x5lAacBYDpevRca1ieNXuJOWCEY=;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714589;
+	bh=ammvnG7uUFAATQsHx2GwECSfnAV9fnWA0Qmrc8H/Ubw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F7477XZ6UHGQQSVGcJBeXWVjVQOmTy3bggb4cwY1Z5CzGfFyeuJJiTI59qAsEP9zY
-	 gMpMNibaz2GdBM11XcLD7e1FjA/iS/ab8e5CN+7jLDoPI9R0bMcZukzx7Y3qSkWeAv
-	 EueHMfEX6/OuBq7hDCOO+IOxg9tiESr30Vvxwo2I=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Alex Shi <alex.shi@linux.alibaba.com>,
-	"J. Bruce Fields" <bfields@fieldses.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 004/770] nfsd/nfs3: remove unused macro nfsd3_fhandleres
-Date: Tue, 18 Jun 2024 14:27:37 +0200
-Message-ID: <20240618123407.459902824@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240618123407.280171066@linuxfoundation.org>
-References: <20240618123407.280171066@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	b=Vywj0xPug2FjTTxu/QYpPSEG3xZnc57ungTZWObeaehh0CV3b+T8Espjue/xEbCUk
+	 59NfgcpK1nFMqhTfoaYbxWzid6TLp3grcZ/lGGhVhqDFnVhVqZsmwyftW4z7ajNnWu
+	 +xVAYeSVptR77wffNMVxjasjUMwflhSfsEdIA9biNAVzCfrKbj9AVxXzdTaEmZDOOX
+	 ROjRs/k4d8gEB8Iwohx8xodv7FY+zGXmf8gV1bKNQUs0XLf7UxfsksaiKIgdqtbZhV
+	 y+csQlwvpr9b/hi7D6lETt0R9u8HKeqzp7tPM+Oi3gwvTue9DGrTXMXj1mO8W4vJZT
+	 0ywenKmVtL1xQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 6/9] Input: silead - Always support 10 fingers
+Date: Tue, 18 Jun 2024 08:42:54 -0400
+Message-ID: <20240618124300.3304600-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618124300.3304600-1-sashal@kernel.org>
+References: <20240618124300.3304600-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.4.278
 Content-Transfer-Encoding: 8bit
 
-5.10-stable review patch.  If anyone has any objections, please let me know.
+From: Hans de Goede <hdegoede@redhat.com>
 
-------------------
+[ Upstream commit 38a38f5a36da9820680d413972cb733349400532 ]
 
-From: Alex Shi <alex.shi@linux.alibaba.com>
+When support for Silead touchscreens was orginal added some touchscreens
+with older firmware versions only supported 5 fingers and this was made
+the default requiring the setting of a "silead,max-fingers=10" uint32
+device-property for all touchscreen models which do support 10 fingers.
 
-[ Upstream commit 71fd721839a74d945c242299f6be29a246fc2131 ]
+There are very few models with the old 5 finger fw, so in practice the
+setting of the "silead,max-fingers=10" is boilerplate which needs to
+be copy and pasted to every touchscreen config.
 
-The macro is unused, remove it to tame gcc warning:
-fs/nfsd/nfs3proc.c:702:0: warning: macro "nfsd3_fhandleres" is not used
-[-Wunused-macros]
+Reporting that 10 fingers are supported on devices which only support
+5 fingers doesn't cause any problems for userspace in practice, since
+at max 4 finger gestures are supported anyways. Drop the max_fingers
+configuration and simply always assume 10 fingers.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: "J. Bruce Fields" <bfields@fieldses.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20240525193854.39130-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs3proc.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/input/touchscreen/silead.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 981a4e4c9a3cf..eba84417406ca 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -694,7 +694,6 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
- #define nfsd3_mkdirargs			nfsd3_createargs
- #define nfsd3_readdirplusargs		nfsd3_readdirargs
- #define nfsd3_fhandleargs		nfsd_fhandle
--#define nfsd3_fhandleres		nfsd3_attrstat
- #define nfsd3_attrstatres		nfsd3_attrstat
- #define nfsd3_wccstatres		nfsd3_attrstat
- #define nfsd3_createres			nfsd3_diropres
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index c8776146f1d1b..467feacdbd7a2 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -70,7 +70,6 @@ struct silead_ts_data {
+ 	struct regulator_bulk_data regulators[2];
+ 	char fw_name[64];
+ 	struct touchscreen_properties prop;
+-	u32 max_fingers;
+ 	u32 chip_id;
+ 	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
+ 	int slots[SILEAD_MAX_FINGERS];
+@@ -98,7 +97,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
+ 	touchscreen_parse_properties(data->input, true, &data->prop);
+ 
+-	input_mt_init_slots(data->input, data->max_fingers,
++	input_mt_init_slots(data->input, SILEAD_MAX_FINGERS,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
+ 			    INPUT_MT_TRACK);
+ 
+@@ -145,10 +144,10 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 		return;
+ 	}
+ 
+-	if (buf[0] > data->max_fingers) {
++	if (buf[0] > SILEAD_MAX_FINGERS) {
+ 		dev_warn(dev, "More touches reported then supported %d > %d\n",
+-			 buf[0], data->max_fingers);
+-		buf[0] = data->max_fingers;
++			 buf[0], SILEAD_MAX_FINGERS);
++		buf[0] = SILEAD_MAX_FINGERS;
+ 	}
+ 
+ 	touch_nr = 0;
+@@ -200,7 +199,6 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 
+ static int silead_ts_init(struct i2c_client *client)
+ {
+-	struct silead_ts_data *data = i2c_get_clientdata(client);
+ 	int error;
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
+@@ -210,7 +208,7 @@ static int silead_ts_init(struct i2c_client *client)
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_TOUCH_NR,
+-					data->max_fingers);
++					  SILEAD_MAX_FINGERS);
+ 	if (error)
+ 		goto i2c_write_err;
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+@@ -437,13 +435,6 @@ static void silead_ts_read_props(struct i2c_client *client)
+ 	const char *str;
+ 	int error;
+ 
+-	error = device_property_read_u32(dev, "silead,max-fingers",
+-					 &data->max_fingers);
+-	if (error) {
+-		dev_dbg(dev, "Max fingers read error %d\n", error);
+-		data->max_fingers = 5; /* Most devices handle up-to 5 fingers */
+-	}
+-
+ 	error = device_property_read_string(dev, "firmware-name", &str);
+ 	if (!error)
+ 		snprintf(data->fw_name, sizeof(data->fw_name),
 -- 
 2.43.0
-
-
 
