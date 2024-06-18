@@ -1,157 +1,103 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5576155389;
-	Tue, 18 Jun 2024 09:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB65155359;
+	Tue, 18 Jun 2024 09:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718701646; cv=none; b=G22uzxJAgBOpBVEgLt+TdYJ2SNWKwmqbFbNOD/CeLnFcy4exGFTGQYsBr0qrZGsUz28ym1/4gfY7aUP0F3WwJO3Dhf0Kt4kTfxTVhYjbir6GcDJ80NaMuB41hLRjrPoxCx3yEtcYO0Q45TfTMuJpskXJ5s0d8vPC5ywFLIfaPGM=
+	t=1718701686; cv=none; b=Or5dG6ucXJi7oFNdeux+Ey90QrKxIVv8Bh2ZOxiPLIC0s1vqT7GNv257yQ+IDrFJCr2te4K5Bn3d39wTClOAAHaz3dwuac+jBWtiHvmwetnuz+NbxXgcgLczHcI7U9R2dveDi5mwMQkfYO3ac1YtrWi+kHrUPlMcQXDC6x9YSIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718701646; c=relaxed/simple;
-	bh=iAcRPr7AOKSjGkTdc99w7XDM1enuja+68OlgB77FMYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U2Bd75e3ka0b6XLkO2h01quJmzgFxq9itjysuc2mJIRY8tGVPKHDofdIvGnYstd7mUssvaTbio4t0ujQHnV450SD/mG4MXeAGm8G1w+3Lot+O+z5LW9jVUN1925esotyrXZtzCRXnyfla4zU9+pt9J5Uy2OuNUV99k+WggT74d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KhsbSjP6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vdw+UY/k; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KhsbSjP6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vdw+UY/k; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1718701686; c=relaxed/simple;
+	bh=aWEOLZxVcmFG7Tnj8nKoIk9Y+jEqw5pv7TQtLuUW/GM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bU2OC+Q68S98YqIggNUu0GdxWQJZTgIPO4FhFkh/Vj+DqVF4EzsoAWS0PW5kq7IRJa/7WSCN7xjx5pgyb74eoxRKxLIFFOG1tb60h4o729eWtnQVUeYCAvuW/3xR1vlBv0VNCesCr1mlqF9gOXj6kY+akWi9Nl/OZuTebqg+NAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iFRi77EF; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KhsbSjP6";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vdw+UY/k";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KhsbSjP6";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vdw+UY/k"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iFRi77EF"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BAA2940E0219;
+	Tue, 18 Jun 2024 09:07:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aGuF-HTpzT1b; Tue, 18 Jun 2024 09:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718701675; bh=hAO9+helngUuUeubF6L7V/zmmLQ0R5mhgBjYodP5Jf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iFRi77EFPt40/h2RfC93fbcbpEk55gAB/W/g6MVNFoQc8uWRLdvMEqWnxD0DorZSg
+	 F6pGDuX1sHe/x+EDfVcYT1eR+XzDzq6Mz9u6GnZDSN3FVg2mTV4fHOR4X3IreV/ybN
+	 YkvD+xnJu0m2QR4eKN+AY42d1z+riZO7/4wo5L3gHVwD4ip8w7XVCqgJ1kWe8yxgYo
+	 VFS2wUQVeAUWiPpFDMUl8xN9RrL0uYx327vKkxWWUhZ/wwbc8PWtA30BCM5RDE7P9H
+	 VTUeDvKaFbqhqj/GJk19SKyGxQkbH7M8LzAeTSE54CQdebAmAaZYejswQVw7TY7cNf
+	 Bol8FbSafqQIKXR9lKK1C8NPfzZvihvmTg0EjGzToDUmEbQgh1qpVlf0WH/FpytIwG
+	 rVwz/vbh0KRQMhRSDwEvHvTK/ToEwszqK+7/IFbXfyW+kLGYsyaRc5xJUiUZnSb6JS
+	 czKCfqzUbQYXwQfSc180t/lGf4Bz3mWmvwGP/jBrYMaCAN7XBXHfqKRgQOAbYZwY2V
+	 1Dlwsdd+lAjbkpVvwA5UbG7Q6XbsZhE3kCvtrOR8Vl3jDs6AdoCtV88chL3T1AzoNw
+	 RPiLkrHSVdEaya9qkVuqeVxQcy6m1Wh/Epb/QENsPRuLjvPA3IO/6R5H2fapRJNTeA
+	 syoB+CbPNhsLVtRlsPpG7S0c=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A4B832197C;
-	Tue, 18 Jun 2024 09:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718701639; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=5ZVEYvIYH9j/W1UVN1FalkuLoxY8JnQpAdqMTu+qdf4=;
-	b=KhsbSjP6y0GkinjWslI4OBoh+kALBi/4ivyQ4++K/mVn37Mb09NqUqHbFFntz/RvfAfh19
-	oGttCyZbD9fueWEZoKQpLFG3+oZOnGDtnBG1FNx6lI/vtYRG83iYWhWPy0kdxWfifMcyC+
-	bghjjgJT1fjRgEX4nUhmwp47v26770E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718701639;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=5ZVEYvIYH9j/W1UVN1FalkuLoxY8JnQpAdqMTu+qdf4=;
-	b=vdw+UY/kFBdiKfLHS8rOpqGy2uyVugyAY0pjhxoM1T6wfQIvhB/9RRD0TcSnbOkUvh86Go
-	1g0ctgc7on755lAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KhsbSjP6;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="vdw+UY/k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718701639; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=5ZVEYvIYH9j/W1UVN1FalkuLoxY8JnQpAdqMTu+qdf4=;
-	b=KhsbSjP6y0GkinjWslI4OBoh+kALBi/4ivyQ4++K/mVn37Mb09NqUqHbFFntz/RvfAfh19
-	oGttCyZbD9fueWEZoKQpLFG3+oZOnGDtnBG1FNx6lI/vtYRG83iYWhWPy0kdxWfifMcyC+
-	bghjjgJT1fjRgEX4nUhmwp47v26770E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718701639;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=5ZVEYvIYH9j/W1UVN1FalkuLoxY8JnQpAdqMTu+qdf4=;
-	b=vdw+UY/kFBdiKfLHS8rOpqGy2uyVugyAY0pjhxoM1T6wfQIvhB/9RRD0TcSnbOkUvh86Go
-	1g0ctgc7on755lAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 702121369F;
-	Tue, 18 Jun 2024 09:07:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0tB6GkdOcWbcEQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Tue, 18 Jun 2024 09:07:19 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-kernel@vger.kernel.org
-Cc: Petr Vorel <pvorel@suse.cz>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/2] tools: kernel-chktaint: Fix bashism, simplify code
-Date: Tue, 18 Jun 2024 11:06:40 +0200
-Message-ID: <20240618090641.359008-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.45.1
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 27D3540E01F9;
+	Tue, 18 Jun 2024 09:07:45 +0000 (UTC)
+Date: Tue, 18 Jun 2024 11:07:39 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH 1/2] x86/cpufeatures: Add HWP highest perf change feature
+ flag
+Message-ID: <20240618090739.GAZnFOW6FRwcE5EkQI@fat_crate.local>
+References: <20240618035122.438822-1-srinivas.pandruvada@linux.intel.com>
+ <20240618035122.438822-2-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A4B832197C
-X-Spam-Score: -2.44
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.44 / 50.00];
-	BAYES_HAM(-2.43)[97.41%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240618035122.438822-2-srinivas.pandruvada@linux.intel.com>
 
-'==' is bashism, '=' needs to be used for comparison.
-With this fix script can work on systems where the default shell is
-dash, busybox ash or any other strictly POSIX compatible shell.
+On Mon, Jun 17, 2024 at 08:51:20PM -0700, Srinivas Pandruvada wrote:
+> When CPUID[6].EAX[15] is set to 1, this CPU supports notification for
+> HWP (Hardware P-states) highest performance change.
+> 
+> Add a feature flag to check if the CPU supports HWP highest performance
+> change.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 3c7434329661..4674ba5310b2 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -361,6 +361,7 @@
+>  #define X86_FEATURE_HWP_ACT_WINDOW	(14*32+ 9) /* HWP Activity Window */
+>  #define X86_FEATURE_HWP_EPP		(14*32+10) /* HWP Energy Perf. Preference */
+>  #define X86_FEATURE_HWP_PKG_REQ		(14*32+11) /* HWP Package Level Request */
+> +#define X86_FEATURE_HWP_HIGHEST_PERF_CHANGE (14*32+15) /* HWP Highest perf change */
 
-While at it, also improve:
-* remove "x" in the comparison (not needed for decades)
-* use $# for checking number of arguments
-* cleanup whitespace
+Doesn't belong in /proc/cpuinfo:
 
-Fixes: 4ab5a5d2a4a22 ("tools: add a kernel-chktaint to tools/debugging")
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
- tools/debugging/kernel-chktaint | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+#define X86_FEATURE_HWP_HIGHEST_PERF_CHANGE (14*32+15) /* "" HWP Highest perf change */
 
-diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-index 279be06332be9..adbb1d621ccd4 100755
---- a/tools/debugging/kernel-chktaint
-+++ b/tools/debugging/kernel-chktaint
-@@ -18,11 +18,11 @@ retrieved from /proc/sys/kernel/tainted on another system.
- EOF
- }
- 
--if [ "$1"x != "x" ]; then
--	if  [ "$1"x == "--helpx" ] || [ "$1"x == "-hx" ] ; then
-+if [ $# -gt 0 ]; then
-+	if  [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
- 		usage
- 		exit 1
--	elif  [ $1 -ge 0 ] 2>/dev/null ; then
-+	elif  [ $1 -ge 0 ] 2>/dev/null; then
- 		taint=$1
- 	else
- 		echo "Error: Parameter '$1' not a positive integer. Aborting." >&2
+							^^^^^
+
+
 -- 
-2.45.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
