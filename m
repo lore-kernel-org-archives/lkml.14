@@ -1,99 +1,198 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF9215749D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB28315749D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718703731; cv=none; b=U3hbLvDkdouXM1mKun1kO73y0DKkGItvqFbdijQkY42X1bNTuqyu5tSVMq8GQFVeRm4V8Rt1WJxzedeEVSMTzLy0nS4L428YajVS46XeIK+5xpdsu855mF459U6ac6WwjAscRODEzpSiVOlUzc4ALHR5fc5BYbpnybbzU/97YpU=
+	t=1718703765; cv=none; b=Z4c5HOh4RCZyOYkxjKVUp6sxNdJ1ViD9LEA9B9UhPq4A3Z364PqPOyRIJsGAB+CisRGwWhvpOwDrRJBcthitfedjDzBjxKU/I6D/W7AGaN/fHlhdxxYzat7kqLLZrE3mTFglgQPeyyKQ7S35hOSNxxIJJPdXEX4mUeybIYsmxYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718703731; c=relaxed/simple;
-	bh=9wlo1aXqpgX1hYeokbAe0Fon4O9lcRzOuMRt7/9KFOA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=blY7Cn45mUj/y9YTfeSxy7TYk32tQ4Jw5wi7S1LCcWKcGdm7yFgMmBIBOtW+Ef4C8QhYDZ8r1a73+M6QCTRSZmgqaJ8y05UKXjTwnr9ZWk25y0+xCt8xVxBATnMcRanbB6veXPj9lV00e3I1vjG6fq0c+v2bXwtqwiQdiR24VF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp78t1718703621t9im95qb
-X-QQ-Originating-IP: j0bcr4tl1DrbKiAFzsSZfOa5k3gTatx80tph8xjFz5E=
-Received: from HX01040082.powercore.com.cn ( [14.19.141.254])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 18 Jun 2024 17:40:19 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 16779118222086163285
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: segher@kernel.crashing.org
-Cc: mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	naveen.n.rao@linux.ibm.com,
-	masahiroy@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
+	s=arc-20240116; t=1718703765; c=relaxed/simple;
+	bh=xLVb4y/9xJR8W/XNsR1Hn1CFra0UeE8DZDA/cIkKRTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uuCgKg792QPM30gOeCqcfK9iF9le91BHGBjFmZ3GwZAZSTOg6g2+iL95zevV1BSRnN3a9EkywqcL1G7TlEPpt+VjesyhOr5KXXGyu/avEd6GV3CRrsXwC53ol4ie2oGiY1dh8huXj+R2oZ9I/XskERl0eAAIp1qWyjZGXOjJ5GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MryuI+J/; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MryuI+J/"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6f986b92acaso2996984a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718703763; x=1719308563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8UALesfbksrHHNtNwGYa4E+DNFkRXivhYiDbx6+KbJc=;
+        b=MryuI+J/vBdQ7sxu28WAqDUOekVSORhvHePCh3USB2GlTR9NqZ4LZpyrB4/NY3kAF3
+         tyIF/giL8ud7mn7zXhYCvuENg34LzMBue+pOrkfwJL26cJdnKsbTZGVlTs3C/yBYPHr3
+         udQgQV1feXaYGuU8/TnhUTpo7XUo6lzgWIbtijYmmNvt+04k2kQNcVflvB5+Qxc+OZAH
+         1jzpWiAHIhk3/eoYtCpgMc++kfNdv2ArnC9vjMN0pqZ6GaakNvXhe42kgF/Up0FL4uEe
+         kNWV13RX1hoxqtgU4rVpUa0iSPLpE3a/TyjSJ6nE8P89T32e28sG0e7Q8aTWCBk2JgFn
+         UukA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718703763; x=1719308563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8UALesfbksrHHNtNwGYa4E+DNFkRXivhYiDbx6+KbJc=;
+        b=YRAcBHxqaQEFi1K45Ki3IiaPuaREFfw7KFTg9jfz/RHiK0vVLrdsaj6Adnp1W+Ds2A
+         DVR2L+6yoQbs+W1TBQtwXw/A3O0SnE05fDrkJfOdbnuU2X4nPlj+4VRSnTKKSd0Zjiky
+         PYXwsdTWS97ilhgK4FmfoVhC7Bk464tj5jvLYrFSVY7eKurO5Oc9PYWlV/ZygGcQWL+e
+         Znu4fHk4KNeW1GkscpHV7TWiWwdec05QS8tshgQXtsrO1bm8MhGP5prbOJ+RtIZGKplV
+         jLkmf/ix2v3i7LDodSjYFGEbR3A+pthbCPj8rXZfFVbJYqv5ngFI3+QZpEIU+DYb7C0X
+         vzsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZhbR3nFfatvrfDmgSZaENJA5AksoWKrmwe+CkL3YszYm7L5cgTb31IL44ord0oU8oCoO9i4utwoam1QKawng5rKsdvf9L7UZUmwzz
+X-Gm-Message-State: AOJu0YxvbWKFIZelaDge7Z4EhVTyjQNv/xDapfN7C/gQnbFRzy2xps6v
+	kvo7hsatwKLMOfKrUiMTPHjoNH3xu9ZQ9QE/ER8q36puVGxu+0SwkHsT8jWsq7k=
+X-Google-Smtp-Source: AGHT+IHduV0HGFrVmQSxIvryeJgCIEd+h/riwq126F2u6x4F+za92Uiu45uPCTH4ThXJnQkPLkaziw==
+X-Received: by 2002:a9d:4d91:0:b0:6fa:81b:d4f8 with SMTP id 46e09a7af769-6fb9364ecd9mr12749877a34.1.1718703762611;
+        Tue, 18 Jun 2024 02:42:42 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fedf0bef16sm7753098a12.43.2024.06.18.02.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 02:42:42 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	xen-devel@lists.xenproject.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Fixed duplicate copying in the early boot.
-Date: Tue, 18 Jun 2024 17:40:11 +0800
-Message-Id: <20240618094011.19247-1-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240617161336.GM19790@gate.crashing.org>
-References: <20240617161336.GM19790@gate.crashing.org>
+Subject: [PATCH 1/2] xen: privcmd: Switch from mutex to spinlock for irqfds
+Date: Tue, 18 Jun 2024 15:12:28 +0530
+Message-Id: <a66d7a7a9001424d432f52a9fc3931a1f345464f.1718703669.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
+Content-Transfer-Encoding: 8bit
 
-Hi Segher Boessenkool,=0D
-=0D
-Segher Boessenkool <segher@kernel.crashing.org> writes:=0D
-> Hi!=0D
-> =0D
-> On Mon, Jun 17, 2024 at 10:35:09AM +0800, Jinglin Wen wrote:=0D
-> > +	cmplwi	cr0,r4,0	/* runtime base addr is zero */=0D
-> =0D
-> Just write=0D
->    cmpwi r4,0=0D
-> =0D
-> cr0 is the default, also implicit in many other instructions, please=0D
-> don't clutter the source code.  All the extra stuff makes you miss the=0D
-> things that do matter!=0D
-> =0D
-> The "l" is unnecessary, you only care about equality here after all.=0D
-> =0D
-> Should it not be cmpdi here, though?=0D
-> =0D
-> =0D
-> Segher=0D
-=0D
-Thank you very much for your suggestion. I will use cmpd directly from now =
-on. =0D
-The specific code is as follows:=0D
-=0D
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S=
-=0D
-index 4690c219bfa4..751181dfb897 100644=0D
---- a/arch/powerpc/kernel/head_64.S=0D
-+++ b/arch/powerpc/kernel/head_64.S=0D
-@@ -647,8 +647,9 @@ __after_prom_start:=0D
-  * Note: This process overwrites the OF exception vectors.=0D
-  */=0D
-        LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)=0D
--       mr.     r4,r26                  /* In some cases the loader may  */=
-=0D
--       beq     9f                      /* have already put us at zero */=0D
-+       mr      r4,r26                  /* Load the virtual source address =
-into r4 */=0D
-+       cmpd    r3,r4           /* Check if source =3D=3D dest */=0D
-+       beq     9f                      /* If so skip the copy  */=0D
-        li      r6,0x100                /* Start offset, the first 0x100 */=
-=0D
-                                        /* bytes were copied earlier.    */=
- =0D
-=0D
-Thanks,=0D
-=0D
-Jinglin Wen=0D
+irqfd_wakeup() gets EPOLLHUP, when it is called by
+eventfd_release() by way of wake_up_poll(&ctx->wqh, EPOLLHUP), which
+gets called under spin_lock_irqsave(). We can't use a mutex here as it
+will lead to a deadlock.
+
+Fix it by switching over to a spin lock.
+
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/xen/privcmd.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index 67dfa4778864..5ceb6c56cf3e 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -13,7 +13,6 @@
+ #include <linux/file.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/mutex.h>
+ #include <linux/poll.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -845,7 +844,7 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
+ #ifdef CONFIG_XEN_PRIVCMD_EVENTFD
+ /* Irqfd support */
+ static struct workqueue_struct *irqfd_cleanup_wq;
+-static DEFINE_MUTEX(irqfds_lock);
++static DEFINE_SPINLOCK(irqfds_lock);
+ static LIST_HEAD(irqfds_list);
+ 
+ struct privcmd_kernel_irqfd {
+@@ -909,9 +908,11 @@ irqfd_wakeup(wait_queue_entry_t *wait, unsigned int mode, int sync, void *key)
+ 		irqfd_inject(kirqfd);
+ 
+ 	if (flags & EPOLLHUP) {
+-		mutex_lock(&irqfds_lock);
++		unsigned long flags;
++
++		spin_lock_irqsave(&irqfds_lock, flags);
+ 		irqfd_deactivate(kirqfd);
+-		mutex_unlock(&irqfds_lock);
++		spin_unlock_irqrestore(&irqfds_lock, flags);
+ 	}
+ 
+ 	return 0;
+@@ -929,6 +930,7 @@ irqfd_poll_func(struct file *file, wait_queue_head_t *wqh, poll_table *pt)
+ static int privcmd_irqfd_assign(struct privcmd_irqfd *irqfd)
+ {
+ 	struct privcmd_kernel_irqfd *kirqfd, *tmp;
++	unsigned long flags;
+ 	__poll_t events;
+ 	struct fd f;
+ 	void *dm_op;
+@@ -968,18 +970,18 @@ static int privcmd_irqfd_assign(struct privcmd_irqfd *irqfd)
+ 	init_waitqueue_func_entry(&kirqfd->wait, irqfd_wakeup);
+ 	init_poll_funcptr(&kirqfd->pt, irqfd_poll_func);
+ 
+-	mutex_lock(&irqfds_lock);
++	spin_lock_irqsave(&irqfds_lock, flags);
+ 
+ 	list_for_each_entry(tmp, &irqfds_list, list) {
+ 		if (kirqfd->eventfd == tmp->eventfd) {
+ 			ret = -EBUSY;
+-			mutex_unlock(&irqfds_lock);
++			spin_unlock_irqrestore(&irqfds_lock, flags);
+ 			goto error_eventfd;
+ 		}
+ 	}
+ 
+ 	list_add_tail(&kirqfd->list, &irqfds_list);
+-	mutex_unlock(&irqfds_lock);
++	spin_unlock_irqrestore(&irqfds_lock, flags);
+ 
+ 	/*
+ 	 * Check if there was an event already pending on the eventfd before we
+@@ -1011,12 +1013,13 @@ static int privcmd_irqfd_deassign(struct privcmd_irqfd *irqfd)
+ {
+ 	struct privcmd_kernel_irqfd *kirqfd;
+ 	struct eventfd_ctx *eventfd;
++	unsigned long flags;
+ 
+ 	eventfd = eventfd_ctx_fdget(irqfd->fd);
+ 	if (IS_ERR(eventfd))
+ 		return PTR_ERR(eventfd);
+ 
+-	mutex_lock(&irqfds_lock);
++	spin_lock_irqsave(&irqfds_lock, flags);
+ 
+ 	list_for_each_entry(kirqfd, &irqfds_list, list) {
+ 		if (kirqfd->eventfd == eventfd) {
+@@ -1025,7 +1028,7 @@ static int privcmd_irqfd_deassign(struct privcmd_irqfd *irqfd)
+ 		}
+ 	}
+ 
+-	mutex_unlock(&irqfds_lock);
++	spin_unlock_irqrestore(&irqfds_lock, flags);
+ 
+ 	eventfd_ctx_put(eventfd);
+ 
+@@ -1073,13 +1076,14 @@ static int privcmd_irqfd_init(void)
+ static void privcmd_irqfd_exit(void)
+ {
+ 	struct privcmd_kernel_irqfd *kirqfd, *tmp;
++	unsigned long flags;
+ 
+-	mutex_lock(&irqfds_lock);
++	spin_lock_irqsave(&irqfds_lock, flags);
+ 
+ 	list_for_each_entry_safe(kirqfd, tmp, &irqfds_list, list)
+ 		irqfd_deactivate(kirqfd);
+ 
+-	mutex_unlock(&irqfds_lock);
++	spin_unlock_irqrestore(&irqfds_lock, flags);
+ 
+ 	destroy_workqueue(irqfd_cleanup_wq);
+ }
+-- 
+2.31.1.272.g89b43f80a514
+
