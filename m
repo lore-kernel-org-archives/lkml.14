@@ -1,137 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9E44A35
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8914A35
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718724965; cv=none; b=UdFuCEafG5nLc2CRVoNtn84mvtkd1QY/3i4fLIUbz4J2jS5eDKOiSfsAct0CqYl85DS9Q00paMWq1XwgoQmPheS0YblP4uv7L6YDfI9HycLDGLgDNS80FBDlKQVO3XExd22jtkcQ7TQdPOl8+AuiIhZWX6vbFJHu29PUkzj7LpY=
+	t=1718724979; cv=none; b=G3iZlpUXA6rZ9rOswsBj0uKENUFr4pWmUxoB9fBHtBmBpDo0FWjNjXAXwyA7l728rL74JExbYRqOGzV+82zMPSRzZDl0toQafH34Bm3ADEp6Z5ygI/bfRO892t/beEHn9Xiss0qzpuKriD6QoeF1lC3ZZObFTyDoEtnGVG+newg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718724965; c=relaxed/simple;
-	bh=9xitzs2XP+tmm+IuN0TS9nByjEfgmdiyBA9RBD7PxMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=epk2yogTOMPJwLyBZoJkjjq8oxDa0Csr8eTI4G7ruZbje326qFOQaV2W7g0vTTw+S3MfYblUFY/N7+gWvACU3ocUKwKixqWk+kaS8b8vvELl9Ac0geiTiJif5ThX1Kl58y1B4i8vanRb4iBMLJ02JrUo2rrsJHJl6Hw0gyachl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kgUnDNoD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718724979; c=relaxed/simple;
+	bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VApVp92DW72sCo3rocDppWvafTfzb1QRPlJfDnsZuRTQ+3ZQFJsTNEB2zVR7vcGGdE0inIel5RCN5NgmZtnCuSIME6AmkY8g1Q0t/U1FzqFlnDnunQwEcZPdnPr1nbVhN5kwaxFZ701GO86GWFSvWu/629NZo6ROKu9aLjZJALE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ysXS1H4f; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kgUnDNoD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718724963; x=1750260963;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=9xitzs2XP+tmm+IuN0TS9nByjEfgmdiyBA9RBD7PxMc=;
-  b=kgUnDNoDiaJm/QfyTCxDiChQqCtUGs8BIvG5ayckcMqOZxMYHlThj+fx
-   wost3JBsJyCc9H3oHS3ZamIX3X/iwjjZQHRQg/V9aXHpmzOovvoghd1N9
-   uzq9it3C5RB9ePmN/rITtTrLlXPhGXTF6aPsJxec5Prw1y1YAjFIoLliI
-   5xJlPNZ2yi2HT45vZxA7GOE/nnZEa725fn31xNxppNRmW1xdRU5sUfB2K
-   oCA7waGmvFhNc/zE1/3ZMTywAobOcWRqJ/JNiAdbu64QK7UsT0dybR8Sb
-   xSHkZogJd9oZId0PcDxlfKsg8MlJ8NevfuCxtzr/8o1YY5sUQqLMCcWvU
-   g==;
-X-CSE-ConnectionGUID: 2FsjdG9UT0qcw3ZiwVbKag==
-X-CSE-MsgGUID: lybRxsUSSTWK4pnkosA1KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="26196616"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="26196616"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 08:36:00 -0700
-X-CSE-ConnectionGUID: 3+P37hqnRW+JgIqDhHMpNA==
-X-CSE-MsgGUID: 1nGun8BAQ8erbKUipAGrYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="41460722"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 18 Jun 2024 08:35:59 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sJasG-0005dd-24;
-	Tue, 18 Jun 2024 15:35:56 +0000
-Date: Tue, 18 Jun 2024 23:35:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts:93.20-127.4:
- Warning (avoid_unnecessary_addr_size): /soc@0/i2c@78b6000/led-controller@30:
- unnecessary #address-cells/#size-cells without "ranges" or child "reg"
- property
-Message-ID: <202406182328.xfDfqYOF-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ysXS1H4f"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6fc36865561so1513604a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718724977; x=1719329777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
+        b=ysXS1H4fS2mPV03Y4L/m84FKCjlkHSxi4xOu32dnqb6LzOwsyaraZoWoQH+LcpDk1H
+         cFgLindy9f2RhCTqS2qdoZsnPhxjDYvAYZAuddd4mGhwuKseFVr+T63p/7jRFd9y+8Cu
+         iq0nWFCXflnt8DFMsx1/RMCPABIQxCQpdHxEGONq+sFpQwMV16Ue7TY3DTYPNXp/mhaL
+         MO9tdYbrl+a/D/gLdejAg8ugwKJEf4tbZHMNevcmsVyEtI1oi6TnGsm6KCITtEcIjsmo
+         X9j0hF2G1+SGmpdKf/cBeoxvm0rOSp5qNU5/nl/oIjxpF4+GluSqPb5OiFNDRVFGRs8d
+         BLBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718724977; x=1719329777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
+        b=QHWS/3ToPJhv2dDDiplwYoFEeU0S2IcOzjDg8orsPxjJGTJ/dMob/Wlms2jA7oEJ69
+         8Qw/J/n/qZUT0u84LDXau/U8abbivIkwMSSaF6TFDTCW6kVsVwRniX5EDFH60vzgGdpL
+         I/N3YMRQZj9T7lzNNaTMGFOTLD6LaqSKQNR9/Odtfb5a/BDMXeYBS51wqmaARiHM81Oc
+         YBTv98PArn7TTuxcWucjptH6rwSjFYG9L83eIxzXhCnbBGcj5dVH/mJYMcnT9TNvdrGS
+         WqQOAEE6dIstFcyHjmhWwUAj3jH2lxwWeMX+Oq4cRyHtUmpJlr88MM40/dt1jm0tYHkU
+         4CiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0JaQs/eZlI0FKmIoyN96rntiD3/jk5vicrM98WCWHhEX28hcxF9BLn2aXgUdBd5Tm8Sbe1mJsV8VCacH6TgkIOp6cvaltqq/eu3Wm
+X-Gm-Message-State: AOJu0YxLrUVk2z2LPZHlY7sObakfr3jhPmfbzn8UOEOWP6t++U0XAwP9
+	p1/MizRtuWIPDwxihrmtcUgnrZe5HwLvU2e1LNx/hcloiNZMmVdfqpg0E3DvhcKZfd9MG0Dd9kT
+	kMKysUV728gd5MKxcTTQPBaOKOukC0CScxY0s
+X-Google-Smtp-Source: AGHT+IEspShaRu1ToIazyKYK7a+yojtYmsB71BOjBBtI4HtP9AWTraCEUo7NTIwtb9GkxSM1Qq0A95f/tFWqAqFyrLk=
+X-Received: by 2002:a9d:6510:0:b0:6fd:6240:9dba with SMTP id
+ 46e09a7af769-70074ebf134mr77156a34.16.1718724976930; Tue, 18 Jun 2024
+ 08:36:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-10-iii@linux.ibm.com>
+In-Reply-To: <20240613153924.961511-10-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Tue, 18 Jun 2024 17:35:36 +0200
+Message-ID: <CAG_fn=VT5u6fn6eaqzdB4bDZ+aw0kKBta7_Ff2Thn813RG6EVQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/35] kmsan: Expose kmsan_get_metadata()
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3d54351c64e8f9794e8838196036a2de3d752fce
-commit: 5017b8cdb7ebeb32d7f12a05b34d58662e137dbe arm64: dts: qcom: msm8916-longcheer-l8910: Enable RGB LED
-date:   8 months ago
-config: arm64-randconfig-r113-20240606 (https://download.01.org/0day-ci/archive/20240618/202406182328.xfDfqYOF-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce: (https://download.01.org/0day-ci/archive/20240618/202406182328.xfDfqYOF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406182328.xfDfqYOF-lkp@intel.com/
-
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:1592.27-1640.6: Warning (avoid_unnecessary_addr_size): /soc@0/display-subsystem@1a00000/dsi@1a98000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
->> arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts:93.20-127.4: Warning (avoid_unnecessary_addr_size): /soc@0/i2c@78b6000/led-controller@30: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:463.26-466.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/base1@d0: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s0-p1@d0)
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:478.26-481.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s1-p1@d2: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s1-p2@d2)
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:491.26-494.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s2-p2@d4: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s4-p1@d4)
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:503.26-506.6: Warning (unique_unit_address_if_enabled): /soc@0/qfprom@5c000/s4-p2@d5: duplicate unit-address (also used in node /soc@0/qfprom@5c000/s5-p1@d5)
-   arch/arm64/boot/dts/qcom/msm8916.dtsi:1579.11-1589.7: Warning (graph_child_address): /soc@0/display-subsystem@1a00000/display-controller@1a01000/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
-
-vim +93 arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts
-
-    89	
-    90	&blsp_i2c2 {
-    91		status = "okay";
-    92	
-  > 93		led-controller@30 {
-    94			compatible = "kinetic,ktd2026";
-    95			reg = <0x30>;
-    96			#address-cells = <1>;
-    97			#size-cells = <0>;
-    98	
-    99			vin-supply = <&pm8916_l17>;
-   100			vio-supply = <&pm8916_l6>;
-   101	
-   102			pinctrl-0 = <&status_led_default>;
-   103			pinctrl-names = "default";
-   104	
-   105			multi-led {
-   106				color = <LED_COLOR_ID_RGB>;
-   107				function = LED_FUNCTION_STATUS;
-   108	
-   109				#address-cells = <1>;
-   110				#size-cells = <0>;
-   111	
-   112				led@0 {
-   113					reg = <0>;
-   114					color = <LED_COLOR_ID_RED>;
-   115				};
-   116	
-   117				led@1 {
-   118					reg = <1>;
-   119					color = <LED_COLOR_ID_GREEN>;
-   120				};
-   121	
-   122				led@2 {
-   123					reg = <2>;
-   124					color = <LED_COLOR_ID_BLUE>;
-   125				};
-   126			};
-   127		};
-   128	};
-   129	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
+> wrote:
+>
+> Each s390 CPU has lowcore pages associated with it. Each CPU sees its
+> own lowcore at virtual address 0 through a hardware mechanism called
+> prefixing. Additionally, all lowcores are mapped to non-0 virtual
+> addresses stored in the lowcore_ptr[] array.
+>
+> When lowcore is accessed through virtual address 0, one needs to
+> resolve metadata for lowcore_ptr[raw_smp_processor_id()].
+>
+> Expose kmsan_get_metadata() to make it possible to do this from the
+> arch code.
+>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
