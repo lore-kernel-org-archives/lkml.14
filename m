@@ -1,240 +1,291 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBD14C98
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 01:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2A41C697;
+	Tue, 18 Jun 2024 01:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718675740; cv=none; b=DtMJFmzd756CKftrn7veLa7UOKntMpr3EwPa2/vB8JPGv9JW0nH9nH+1K5iejANR3lJ0mcLF+LfYC7MgS/b/7jmvaQay8bcXChDTDGkxHpi1/1+Jeycqn/eyrS5idqqrZFvByx8plRdfpA/AcI54/TET7MjAsmZB1AmIfXYXAcE=
+	t=1718675784; cv=none; b=BE3Fm9+DXyCzFrh9OXHrW7uGkndTVgF7JFMCeLWPrEuqyheVOApRCjbniemM6IMSaliQV0AbmzyHl4Oipm6fwRKIJN/7AC0CX0NJpKA1eMRn6Pj6cCpuyZcsxMsgpIRJ0fpdiSXdQu6+oa/tnCp6BuUOe+xXwxkr6tbsQB5bWLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718675740; c=relaxed/simple;
-	bh=kWhxQgRiUo3VEggC2ElibfY3WYE0LoeKsdSreXJqG38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OQp/o20h8EDbyulSwCpouIB+xLv7ELWgLFVgjJGnSvrMslhdBXy2w1HwdUeDqPDk2bPCGFaK9hv1tISZzXxowEaD5Udb0tU2ro1uud25b7P7g3839M1YtQsXeUZBhTGcxbZkc70L0/P3s8WBw59Qn1OeUmvC654Kv1ES4/tWkcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYgzvDNW; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYgzvDNW"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80b755c6c06so1677679241.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718675738; x=1719280538; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zpsy0npL52e1fCtTldxY0aQBwvhZxOEFkncwykjvpy4=;
-        b=kYgzvDNWA6veeh9VE6yFErrCurEQg+th5zbv8wptLsDuF9KgkmmGoEarR0JBHZGoC9
-         ztBVaOr/PCqFLrNhkaWvmexs0hRItPrv3816ofZ265dmNgnJpHsNrjfqU7y0IE7MeRLj
-         tKQTpByg4ibis3w8pdJFigvDgvzGwsRn/8zy+eYW39dOgKrSTFaheiDTZgZhkIAzNHpT
-         TPy+2GHtU/NB2JlwL19qL8yxbYx9kRcMU6bbH/SRSSaxt7cU9D4/h1NUHFhffg20wP0W
-         hh6n5J7y9hndxI1C70M6ygIc9zJ1hSTPJGb5mf6g5ZiRhyBLvMKtZ3xzyT8UBVLBanJO
-         YL+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718675738; x=1719280538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zpsy0npL52e1fCtTldxY0aQBwvhZxOEFkncwykjvpy4=;
-        b=Ff0ltvPIwDD5Eg3XtCDsAlpZKgulLuuaDX8rneapRK/quY7Pzn2ZpBCGner8E9STOh
-         jFoDkFl0t2zenc8RZZ6ZQ+LkBAsV0qNNfHQ4WzIzieQqC15whDxto0HuGNePFrMbPFUs
-         3jFwPQh7x17CHJLbSxCyrU1FA34xD4rgFflrTlfGjD6TGm8rcEBduPgYtLf65w8t45E0
-         Dla461Xzr1VkmxYDzIzu6guv6y8eC1Lqko32YNq2dNKr9d9WWKT+PhkLLozfAyWT1BQE
-         AleZGjIYwyw9Prmv6bYUDhphJjhiOE+uhnzCvzoLhtNoGm0okmvxiTHrJ/Kii5bGHLbv
-         DgJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpC0lpxAn0QYxwnUUUzXdr1T2qoq5a0KCY1DA81LneTsdqJuPdjLcHGUZFn1l1bZ4GbEzWs4DPS4Y3k2Xy9rnfOBDAsyUJQ3fsdQ1v
-X-Gm-Message-State: AOJu0YwvYdO638Yl3Veax7HPvH6NLvLRHolcGkQqMvnmgFvif3H4Ry+I
-	YtjBtVl74NMWn6Z7q4PQBNob33042zdCdUxtErtWg3prPXXaE3+HhrnV+FwqlBfokZChww2cJa+
-	NECNtxgILzdnevfiKTAgrBTKyZGtoRPKDf70=
-X-Google-Smtp-Source: AGHT+IHeuUoHNmBJX6etzjqRwU2rFGzePFITlJqydbzcSwjLfvLQ5wjO0NeGCPoWT2MH8a8EsKuBzl+yJ6zTST214pE=
-X-Received: by 2002:a05:6102:50aa:b0:48c:3731:e537 with SMTP id
- ada2fe7eead31-48dae346888mr15604114137.12.1718675737576; Mon, 17 Jun 2024
- 18:55:37 -0700 (PDT)
+	s=arc-20240116; t=1718675784; c=relaxed/simple;
+	bh=YovWnQCUn5/Lz+pkf0LK7nOx1JZCjeR8Saq7TlagfeY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K5vj+qlwTOsejCgbEEWT5SYcesJoEkgayF6ko2n9tviYzKFsUwHrdz64oH7KI70JBJNmRDYTXDPZlCLxeZTLnY5F4LVC4BAlAQoUwDDy3PySNt6u5FoZGFxCwR5kBNWD+5V+HiVNc0bfIR1HfWUYUH2MR2b19dwoTzEXUv9ef2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W38sC6dk9zPrMK;
+	Tue, 18 Jun 2024 09:52:47 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id 26EB0180085;
+	Tue, 18 Jun 2024 09:56:19 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 18 Jun 2024 09:56:17 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH v3 3/4] perf: symbol: generalize vmlinux path searching
+Date: Tue, 18 Jun 2024 09:55:29 +0800
+Message-ID: <20240618015530.3699434-4-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240618015530.3699434-1-changbin.du@huawei.com>
+References: <20240618015530.3699434-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
- <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com> <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
-In-Reply-To: <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 18 Jun 2024 09:55:24 +0800
-Message-ID: <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-To: yangge1116 <yangge1116@126.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com, 
-	liuzixing@hygon.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-On Tue, Jun 18, 2024 at 9:36=E2=80=AFAM yangge1116 <yangge1116@126.com> wro=
-te:
->
->
->
-> =E5=9C=A8 2024/6/17 =E4=B8=8B=E5=8D=888:47, yangge1116 =E5=86=99=E9=81=93=
-:
-> >
-> >
-> > =E5=9C=A8 2024/6/17 =E4=B8=8B=E5=8D=886:26, Barry Song =E5=86=99=E9=81=
-=93:
-> >> On Tue, Jun 4, 2024 at 9:15=E2=80=AFPM <yangge1116@126.com> wrote:
-> >>>
-> >>> From: yangge <yangge1116@126.com>
-> >>>
-> >>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-> >>> THP-sized allocations") no longer differentiates the migration type
-> >>> of pages in THP-sized PCP list, it's possible to get a CMA page from
-> >>> the list, in some cases, it's not acceptable, for example, allocating
-> >>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
-> >>>
-> >>> The patch forbids allocating non-CMA THP-sized page from THP-sized
-> >>> PCP list to avoid the issue above.
-> >>
-> >> Could you please describe the impact on users in the commit log?
-> >
-> > If a large number of CMA memory are configured in the system (for
-> > example, the CMA memory accounts for 50% of the system memory), startin=
-g
-> > virtual machine with device passthrough will get stuck.
-> >
-> > During starting virtual machine, it will call pin_user_pages_remote(...=
-,
-> > FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area,
-> > pin_user_pages_remote() will migrate the page from CMA area to non-CMA
-> > area because of FOLL_LONGTERM flag. If non-movable allocation requests
-> > return CMA memory, pin_user_pages_remote() will enter endless loops.
-> >
-> > backtrace:
-> > pin_user_pages_remote
-> > ----__gup_longterm_locked //cause endless loops in this function
-> > --------__get_user_pages_locked
-> > --------check_and_migrate_movable_pages //always check fail and continu=
-e
-> > to migrate
-> > ------------migrate_longterm_unpinnable_pages
-> > ----------------alloc_migration_target // non-movable allocation
-> >
-> >> Is it possible that some CMA memory might be used by non-movable
-> >> allocation requests?
-> >
-> > Yes.
-> >
-> >
-> >> If so, will CMA somehow become unable to migrate, causing cma_alloc()
-> >> to fail?
-> >
-> >
-> > No, it will cause endless loops in __gup_longterm_locked(). If
-> > non-movable allocation requests return CMA memory,
-> > migrate_longterm_unpinnable_pages() will migrate a CMA page to another
-> > CMA page, which is useless and cause endless loops in
-> > __gup_longterm_locked().
+This generalizes the vmlinux path searching logic. Later we will add
+another instance for vdso.
 
-This is only one perspective. We also need to consider the impact on
-CMA itself. For example,
-when CMA is borrowed by THP, and we need to reclaim it through
-cma_alloc() or dma_alloc_coherent(),
-we must move those pages out to ensure CMA's users can retrieve that
-contiguous memory.
+The search pattern is described by struct dso_filename_pattern, and the
+formatted paths are hold in struct dso_filename_paths.
 
-Currently, CMA's memory is occupied by non-movable pages, meaning we
-can't relocate them.
-As a result, cma_alloc() is more likely to fail.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/util/machine.c |   4 +-
+ tools/perf/util/symbol.c  | 112 +++++++++++++++++++++-----------------
+ tools/perf/util/symbol.h  |   8 ++-
+ 3 files changed, 70 insertions(+), 54 deletions(-)
 
-> >
-> > backtrace:
-> > pin_user_pages_remote
-> > ----__gup_longterm_locked //cause endless loops in this function
-> > --------__get_user_pages_locked
-> > --------check_and_migrate_movable_pages //always check fail and continu=
-e
-> > to migrate
-> > ------------migrate_longterm_unpinnable_pages
-> >
-> >
-> >
-> >
-> >
-> >>>
-> >>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
-> >>> THP-sized allocations")
-> >>> Signed-off-by: yangge <yangge1116@126.com>
-> >>> ---
-> >>>   mm/page_alloc.c | 10 ++++++++++
-> >>>   1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >>> index 2e22ce5..0bdf471 100644
-> >>> --- a/mm/page_alloc.c
-> >>> +++ b/mm/page_alloc.c
-> >>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
-> >>> *preferred_zone,
-> >>>          WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-> >>>
-> >>>          if (likely(pcp_allowed_order(order))) {
-> >>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags &
-> >>> ALLOC_CMA ||
-> >>> +                                               order !=3D
-> >>> HPAGE_PMD_ORDER) {
-> >>> +                       page =3D rmqueue_pcplist(preferred_zone, zone=
-,
-> >>> order,
-> >>> +                                               migratetype,
-> >>> alloc_flags);
-> >>> +                       if (likely(page))
-> >>> +                               goto out;
-> >>> +               }
-> >>
-> >> This seems not ideal, because non-CMA THP gets no chance to use PCP.
-> >> But it
-> >> still seems better than causing the failure of CMA allocation.
-> >>
-> >> Is there a possible approach to avoiding adding CMA THP into pcp from
-> >> the first
-> >> beginning? Otherwise, we might need a separate PCP for CMA.
-> >>
->
-> The vast majority of THP-sized allocations are GFP_MOVABLE, avoiding
-> adding CMA THP into pcp may incur a slight performance penalty.
->
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 8477edefc299..68315520f15b 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -896,9 +896,9 @@ size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
+ 			printed += fprintf(fp, "[0] %s\n", filename);
+ 	}
+ 
+-	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
++	for (i = 0; i < vmlinux_paths.nr_entries; ++i) {
+ 		printed += fprintf(fp, "[%d] %s\n", i + dso__has_build_id(kdso),
+-				   vmlinux_path[i]);
++				   vmlinux_paths.paths[i]);
+ 	}
+ 	return printed;
+ }
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index a90c647d37e1..83e5c3807a2c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -48,8 +48,7 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
+ static int dso__load_vdso_sym(struct dso *dso, struct map *map);
+ static bool symbol__is_idle(const char *name);
+ 
+-int vmlinux_path__nr_entries;
+-char **vmlinux_path;
++struct dso_filename_paths vmlinux_paths;
+ 
+ struct symbol_conf symbol_conf = {
+ 	.nanosecs		= false,
+@@ -2043,10 +2042,10 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
+ 	char *filename = NULL;
+ 
+ 	pr_debug("Looking at the vmlinux_path (%d entries long)\n",
+-		 vmlinux_path__nr_entries + 1);
++		 vmlinux_paths.nr_entries + 1);
+ 
+-	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
+-		err = dso__load_vmlinux(dso, map, vmlinux_path[i], false);
++	for (i = 0; i < vmlinux_paths.nr_entries; ++i) {
++		err = dso__load_vmlinux(dso, map, vmlinux_paths.paths[i], false);
+ 		if (err > 0)
+ 			goto out;
+ 	}
+@@ -2210,7 +2209,7 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
+ 			return err;
+ 	}
+ 
+-	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
++	if (!symbol_conf.ignore_vmlinux && vmlinux_paths.paths != NULL) {
+ 		err = dso__load_vmlinux_path(dso, map);
+ 		if (err > 0)
+ 			return err;
+@@ -2285,57 +2284,55 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
+ 	return err;
+ }
+ 
+-static void vmlinux_path__exit(void)
+-{
+-	while (--vmlinux_path__nr_entries >= 0)
+-		zfree(&vmlinux_path[vmlinux_path__nr_entries]);
+-	vmlinux_path__nr_entries = 0;
+-
+-	zfree(&vmlinux_path);
+-}
+-
+-static const char * const vmlinux_paths[] = {
+-	"vmlinux",
+-	"/boot/vmlinux"
++struct dso_filename_pattern {
++	const char *pattern;
++	/*
++	 * 0 for matching directly,
++	 * 1 for matching by kernel_version,
++	 * 2 for matching by kernel_version + arch.
++	 */
++	int match_type;
+ };
+ 
+-static const char * const vmlinux_paths_upd[] = {
+-	"/boot/vmlinux-%s",
+-	"/usr/lib/debug/boot/vmlinux-%s",
+-	"/lib/modules/%s/build/vmlinux",
+-	"/usr/lib/debug/lib/modules/%s/vmlinux",
+-	"/usr/lib/debug/boot/vmlinux-%s.debug"
++struct dso_filename_pattern vmlinux_patterns[] = {
++	{"vmlinux", 0},
++	{"/boot/vmlinux", 0},
++	{"/boot/vmlinux-%s", 1},
++	{"/usr/lib/debug/boot/vmlinux-%s", 1},
++	{"/lib/modules/%s/build/vmlinux", 1},
++	{"/usr/lib/debug/lib/modules/%s/vmlinux", 1},
++	{"/usr/lib/debug/boot/vmlinux-%s.debug", 1},
+ };
+ 
+-static int vmlinux_path__add(const char *new_entry)
++static int dso_filename_path__add(struct dso_filename_paths *paths, const char *new_entry)
+ {
+-	vmlinux_path[vmlinux_path__nr_entries] = strdup(new_entry);
+-	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
++	paths->paths[paths->nr_entries] = strdup(new_entry);
++	if (paths->paths[paths->nr_entries] == NULL)
+ 		return -1;
+-	++vmlinux_path__nr_entries;
++	++paths->nr_entries;
+ 
+ 	return 0;
+ }
+ 
+-static int vmlinux_path__init(struct perf_env *env)
++static void dso_filename_path__exit(struct dso_filename_paths *paths)
+ {
+-	struct utsname uts;
+-	char bf[PATH_MAX];
+-	char *kernel_version;
+-	unsigned int i;
++	while (--paths->nr_entries >= 0)
++		zfree(&paths->paths[paths->nr_entries]);
++	paths->nr_entries = 0;
+ 
+-	vmlinux_path = malloc(sizeof(char *) * (ARRAY_SIZE(vmlinux_paths) +
+-			      ARRAY_SIZE(vmlinux_paths_upd)));
+-	if (vmlinux_path == NULL)
+-		return -1;
+-
+-	for (i = 0; i < ARRAY_SIZE(vmlinux_paths); i++)
+-		if (vmlinux_path__add(vmlinux_paths[i]) < 0)
+-			goto out_fail;
++	zfree(&paths->paths);
++}
+ 
+-	/* only try kernel version if no symfs was given */
+-	if (symbol_conf.symfs[0] != 0)
+-		return 0;
++static int dso_filename_path__init(struct dso_filename_paths *paths,
++				   struct dso_filename_pattern *patterns,
++				   int nr_patterns,
++				   struct perf_env *env)
++{
++	struct utsname uts;
++	char bf[PATH_MAX];
++	const char *kernel_version;
++	const char *arch = perf_env__arch(env);
++	int i;
+ 
+ 	if (env) {
+ 		kernel_version = env->os_release;
+@@ -2346,16 +2343,28 @@ static int vmlinux_path__init(struct perf_env *env)
+ 		kernel_version = uts.release;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(vmlinux_paths_upd); i++) {
+-		snprintf(bf, sizeof(bf), vmlinux_paths_upd[i], kernel_version);
+-		if (vmlinux_path__add(bf) < 0)
++	paths->paths = malloc(sizeof(char *) * nr_patterns);
++	if (paths->paths == NULL)
++		return -1;
++
++	for (i = 0; i < nr_patterns; i++) {
++		if (patterns[i].match_type == 0)
++			strlcpy(bf, patterns[i].pattern, sizeof(bf));
++		else if (symbol_conf.symfs[0] == 0) {
++			/* only try kernel version if no symfs was given */
++			if (patterns[i].match_type == 1)
++				snprintf(bf, sizeof(bf), patterns[i].pattern, kernel_version);
++			else if (patterns[i].match_type == 2)
++				snprintf(bf, sizeof(bf), patterns[i].pattern, kernel_version, arch);
++		}
++		if (dso_filename_path__add(paths, bf) < 0)
+ 			goto out_fail;
+ 	}
+ 
+ 	return 0;
+ 
+ out_fail:
+-	vmlinux_path__exit();
++	dso_filename_path__exit(paths);
+ 	return -1;
+ }
+ 
+@@ -2551,8 +2560,11 @@ int symbol__init(struct perf_env *env)
+ 
+ 	symbol__elf_init();
+ 
+-	if (symbol_conf.try_vmlinux_path && vmlinux_path__init(env) < 0)
++	if (symbol_conf.try_vmlinux_path &&
++	    dso_filename_path__init(&vmlinux_paths, vmlinux_patterns,
++				    ARRAY_SIZE(vmlinux_patterns), env) < 0) {
+ 		return -1;
++	}
+ 
+ 	if (symbol_conf.field_sep && *symbol_conf.field_sep == '.') {
+ 		pr_err("'.' is the only non valid --field-separator argument\n");
+@@ -2629,7 +2641,7 @@ void symbol__exit(void)
+ 	intlist__delete(symbol_conf.tid_list);
+ 	intlist__delete(symbol_conf.pid_list);
+ 	intlist__delete(symbol_conf.addr_list);
+-	vmlinux_path__exit();
++	dso_filename_path__exit(&vmlinux_paths);
+ 	symbol_conf.sym_list = symbol_conf.dso_list = symbol_conf.comm_list = NULL;
+ 	symbol_conf.bt_stop_list = NULL;
+ 	symbol_conf.initialized = false;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 3fb5d146d9b1..30056884945b 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -101,8 +101,12 @@ static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
+ 
+ #define symbol__join_symfs(bf, path) __symbol__join_symfs(bf, sizeof(bf), path)
+ 
+-extern int vmlinux_path__nr_entries;
+-extern char **vmlinux_path;
++struct dso_filename_paths {
++	int nr_entries;
++	char **paths;
++};
++
++extern struct dso_filename_paths vmlinux_paths;
+ 
+ static inline void *symbol__priv(struct symbol *sym)
+ {
+-- 
+2.34.1
 
-But the majority of movable pages aren't CMA, right? Do we have an estimate=
- for
-adding back a CMA THP PCP? Will per_cpu_pages introduce a new cacheline, wh=
-ich
-the original intention for THP was to avoid by having only one PCP[1]?
-
-[1] https://patchwork.kernel.org/project/linux-mm/patch/20220624125423.6126=
--3-mgorman@techsingularity.net/
-
-
-> Commit 1d91df85f399 takes a similar approach to filter, and I mainly
-> refer to it.
->
->
-> >>> +#else
-> >>>                  page =3D rmqueue_pcplist(preferred_zone, zone, order=
-,
-> >>>                                         migratetype, alloc_flags);
-> >>>                  if (likely(page))
-> >>>                          goto out;
-> >>> +#endif
-> >>>          }
-> >>>
-> >>>          page =3D rmqueue_buddy(preferred_zone, zone, order, alloc_fl=
-ags,
-> >>> --
-> >>> 2.7.4
-> >>
-> >> Thanks
-> >> Barry
-> >>
->
->
