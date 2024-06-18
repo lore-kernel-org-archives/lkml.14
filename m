@@ -1,61 +1,60 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB5C15E5BB;
-	Tue, 18 Jun 2024 14:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C119F481;
+	Tue, 18 Jun 2024 14:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719226; cv=none; b=HxiDsXcBqIEC7Q0SsEU5IZFPO0oPIfk8gVLtWjlRypWVwE8yvy5OWhat7uQpENnE6+a8NsQIPe6EpZCDPCZNYSbbhzhwKnVCwjiHTZ+HBrlR6xpLVQFW4r+M/mCHNaHQ042LGYC3heUX/8dO348MbhBVYSj3/kYCh1hY9GDlGug=
+	t=1718719230; cv=none; b=LcIkCNRNd76CbUF70hzUM8odfWr7t11UUHg0fk2oEGTD1ZsMDxO8FBM1WaxoalFpo6PhKKEawNMWg2kPwR4zegemjm1CqXXhROSnYNarl/lhibDASY8LmI+E6lzMqnEAVUSvpjyjPCcIAeQVLWsKt0Z1JLZdzrMKlcSgNX9RKyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719226; c=relaxed/simple;
-	bh=BLOwIqGw+wExDrQOQm9Fvk1lqNaWLusTKKjG//P54Vw=;
+	s=arc-20240116; t=1718719230; c=relaxed/simple;
+	bh=IHZAr5+Cdn0wmqhOZ2PeM9l2Gdz/tWq1OFfADxf5XIQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BFpmnwh0OEy+erQS6+gPui6lusE26nHjvGx6kceWYGOqHCUVpRcpato9N2SkYkneEkgd6br2/ckk0fXDD6JT7p3l0U1mHw7fg4COQVi48VKOKve/g8nuU0zzsb7ND4wPqvz960m+OTnBsrmMJdbVEcpOMfRE2mv4XFWHpaonE88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kgGZKuRU; arc=none smtp.client-ip=209.85.208.48
+	 In-Reply-To:To:Cc; b=gmrlZ8lp74xDEcU2MSdycnbtdMjIVtoyIAVk9IWsMxzvrbI8Lx2b9WfBCtlLkB7MDTwyxs7kCLQ4Ln2QwCUDQNWWzH/gMTf++PLBXTWHPwB4eNLnT0eqc1BNFvHpu5663BFdyAaOiPJ7AMESifYSDexj7jhfRfMueAvTBH05cgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRmTYiqe; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgGZKuRU"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cb9a370ddso6246119a12.1;
-        Tue, 18 Jun 2024 07:00:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRmTYiqe"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d046f4afdso268519a12.1;
+        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719222; x=1719324022; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719227; x=1719324027; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qhfnNpNBsnC71c1gGip7xlB/2wIBnZLefF+1ERb3g1U=;
-        b=kgGZKuRUPVFrBnkwOXdnc3rQ/EJUR7xD9bu0ZT6pfAzhdPNYKG/u2s+ZiQWyrQU9PG
-         YqCTev/TFHklivkAzudkfOqFx9NyhG9sk9E78z4MTKprCIb58ZfDbVhnw4vsDRVtzVCx
-         vB/CaYZRheC2ankuaW5VGPoSDWHmFMTIacTURYBjHbJi+69zdP5EkJSe82MKeVc4x5ZD
-         nBd9CQfLt+4LtAVpji1rCa9V6wpqXyiWsc11RN0FZ5xGk8HGn/kdqVfGInqvEyMUQLO7
-         H3fHtMnOtX+WNhgLd/l+Ix9qO7QtsE7BZOks43tlVRlXEU+iPcpslN8S4dogTb9gAtN6
-         RFcA==
+        bh=lVpSUbQ0RxUxTD6Qqs+KFz8X9qCBPybUa3iBtTp8xZM=;
+        b=lRmTYiqet/n1S42Ij86i6/mKITc/Imt1qa53nFDawxVKRJ816hLtRJklA2XIpSXIfb
+         DC49NQekC1RROEHKXg68LwOS1b1+tqrwQgGjH4Vrpy5Ano2F9vCXF8dJiBIez7RSzUBv
+         Y5SgR7pa/gB3eLDRm1bPItyFIlfDR7rgzWaaqaQtIzztHRhFZ/3t9f2fvb6HQ34qjygU
+         4hZ7ADKmm/4+nYWKTkHcMjr2MHybBem5EEZqau3gxJq2ocmtBfmQXicl3udNmUGpiTpv
+         WFhtfYkTwMo9L9snTzCTRpfjGb/lXaT7kpqWwIQzeVqei/eKPWwjPszGSEMAd91RGa2u
+         B6Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719222; x=1719324022;
+        d=1e100.net; s=20230601; t=1718719227; x=1719324027;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qhfnNpNBsnC71c1gGip7xlB/2wIBnZLefF+1ERb3g1U=;
-        b=k2GbTHiMxhs6vDWMWV9AoO1pLAsFrdaRkRVlcAX5imbFzTS6Gu7rfeKa/xadVst5of
-         iZptKrBzQCVzY16ywuXJET8ZCLaGfTrE8erLos0gKBXVDofc/PLJ4C38ip74TMiqb6ur
-         slilhRvmfpkvD2uotLC3VumGE+PJCINCe9ER7vUAA7CJ1c8LAT63MCrBC5KPTSRUbvj7
-         w+H0kpZgmLGGkFt5s/nd9AhLlN2jmSpWtUO1pkiApJPCSH/CF3U5Cnz0eHO1lfUdWmD2
-         xAoCOw+W01Mx+JHfcy98ZFFIMsltaozsjWjdXrorEPedgBnu1ud/hbrT6O+wsOXVlqwY
-         jftw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0Lib5SdMtYhB9XTbPAtNGA53HTnuWk7UWtrpsy1WJQ6wXituVadkaMQq3GtF0boEsaRZTnT2fJUnmXxLwvt78LGsB1QG/kpMqBGYFcaEQ9HazypG1pMTNpv1lWPeY3gVEAJLOPQEnR3XAKTtWTjK5+SaH7JdkMBvyfiq0D/jnwrUOfp1bWglYnDTSOetGcFdJTnpM9Tju7Q19UZrn9U2c4w3uFx4leUfvFG94lefazA4N7NyHCc9JfhaEUTUWs0SZOsgtEPTl7MZ9GyAibY7evahrS6g+Ow7GP0PQmaWsH7/y9GVSv2wXidnlEDPCJGbOUxG7vyRTGlqXSo8vUyTyFfxr3XDp06uAkGqkVmDu5ooWasZSD6FhcOwg43vO1roSpZgFpSmVfdSmhWwfRM/v3TaqEQ36
-X-Gm-Message-State: AOJu0Ywe93JkjXiMAsM2QnccnrXtQ8Qgqw8VY0Btry5afv6mjr8morjq
-	U82YzNDL/f7hr5/3A5W84e1TLCw9RJjTPnXGevuVszSk4RZlefDR
-X-Google-Smtp-Source: AGHT+IFQTJJ8QXvmtZf52Rf+zFnxjPxqgb7tm/65oOMrxXvpZ0Qcdy5rUNwoYgyi05CXcmCv69WNzA==
-X-Received: by 2002:a50:ccc5:0:b0:57c:dbf6:931f with SMTP id 4fb4d7f45d1cf-57cdbf694e3mr4303195a12.5.1718719221872;
-        Tue, 18 Jun 2024 07:00:21 -0700 (PDT)
+        bh=lVpSUbQ0RxUxTD6Qqs+KFz8X9qCBPybUa3iBtTp8xZM=;
+        b=F8GD1Bh3NCRgE837DsrVjgqCFFA+ZxCm9NgePdBy9jhCPKVXyVX8P1ByKxdHR3qlJe
+         bb6f2zzjCWkdmIDgm3S+u5fgxm7HPrRF0hRi1PK89z2HM7roxH2TRInxvokBLDVoXFhU
+         yuGVu7Vu+3XA/K+RTwRZRUsfiPIIDqFEKjUiYrRZxbBYp4BhlZIPY/F7p5JHOMu7fKy4
+         XWdRq1FHPUUzMpoajn7eHxh4VtNe1Nh4eY7IJp+JblXtqqaF+SKjhw53xEVX8HIcVR4S
+         oNTyTl0YhtBfqYNd+PYow0k7LFnwrM6cCH9VqxGviYEh8q3NnAI8kuBZG0ZZDIj+dugY
+         2RFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuqk9s42snKqAdQttXyUbGb0PYEL3PmCfhbdrU1xRo4P+BTo/HFj/C0DSRdNeigtoNnwGossdZlrpCLgOaHQw/X7TTSq9DNveNKxUsbWBHQU3jLhONeDExDDWHwq8b8GbnqUcojHGszH0WpySywWhxzTSWwjqpGQ70ZZqmDBl2vxKvZtu6FaYpSnuF6K1DLp11M6NG8yUUK1NGnJFh8cn2mtQl/c/MF/c200PMv151iBoxBO6Ery4ZYYjnih7DXHiWNvBMu9QOADOXWO02GXYBR1zc7Rn7YqQiFkSGdJOoXFM/ybYPMTCjacluKeL5PwL3Uan1d0VsrDCEsL60KjoWY0SVanY57um9ZFtvqeo2G62d3Dq05hC4JBGq8kBZY7xuRnC1JOdB6NXcGTZq7FSa7YpVFg5b
+X-Gm-Message-State: AOJu0Yw1RjUnw6IeSj8Bc/d/HdWjtRC33Deyco7FsZbq4SyqCeovVlar
+	h0LL5slC21BAOYM+p+hEr1zyVxoSGddGXUyHjWFi8pR322NV1NAf
+X-Google-Smtp-Source: AGHT+IHe/0ra3yC6deGQmpMua4UTqdcMRRszmsFv8+QoEjoDXgFjZqQesDDjmgynaNQbxBP6akhjMw==
+X-Received: by 2002:aa7:ce04:0:b0:57d:3cf:899d with SMTP id 4fb4d7f45d1cf-57d03cf8aa2mr974692a12.22.1718719226445;
+        Tue, 18 Jun 2024 07:00:26 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.19
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:21 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:26 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:49 +0300
-Subject: [PATCH v3 15/23] power: supply: max77705: Add fuel gauge driver
- for Maxim 77705
+Date: Tue, 18 Jun 2024 16:59:51 +0300
+Subject: [PATCH v3 17/23] mfd: add s2dos series core driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-15-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-17-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -90,801 +89,372 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=23884;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=10509;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=BLOwIqGw+wExDrQOQm9Fvk1lqNaWLusTKKjG//P54Vw=;
- b=maw2WZrWl3pVzUdoaXHmGfxI5ztVfjrdMkzqrfqQYRf+fFwaZMnvw7lsTEmQfZhw4lTpZsnIt
- TK/iewOe2LrAy22IKK7OAVg4nSDqwyizG7HiojHq5SKo0DCRshFJuoA
+ bh=IHZAr5+Cdn0wmqhOZ2PeM9l2Gdz/tWq1OFfADxf5XIQ=;
+ b=l66fMD8sHB8UJYTpLpJ1ay3lJvzfpqGlDq6nPosqrMEDYoFHMPD/dy7mDaSAk2An0pOO6QxUi
+ qEyrqTzd98iCKNsZDfsTPkuE8JTVRSRulb9nsxxFrfA4H6vj652yV10
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-Add driver for Maxim 77705 fuel gauge (part of max77705
-MFD driver) providing power supply class information to userspace.
-
-The driver is configured through DTS (battery and system related
-settings).
+S2DOS05 is a panel/touchscreen PMIC, often found in
+Samsung phones. We define 2 sub-devices for which drivers will
+be added in subsequent patches.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- drivers/power/supply/Kconfig              |   7 +
- drivers/power/supply/Makefile             |   1 +
- drivers/power/supply/max77705_fuelgauge.c | 624 ++++++++++++++++++++++++++++++
- include/linux/power/max77705_fuelgauge.h  | 107 +++++
- 4 files changed, 739 insertions(+)
+ MAINTAINERS                            |   1 +
+ drivers/mfd/Kconfig                    |  13 +++
+ drivers/mfd/Makefile                   |   2 +-
+ drivers/mfd/s2dos-core.c               | 141 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/samsung/s2dos-core.h |  21 +++++
+ include/linux/mfd/samsung/s2dos05.h    | 115 +++++++++++++++++++++++++++
+ 6 files changed, 292 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 47ca8cc00a80..a3fdfcb5aa64 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -558,6 +558,13 @@ config CHARGER_MAX77705
- 	help
- 	  Say Y to enable support for the Maxim MAX77705 battery charger.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f3c245d432d9..b53462684a30 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19908,6 +19908,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s2dos*.yaml
+ F:	Documentation/devicetree/bindings/regulator/samsung,s2m*.yaml
+ F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
+ F:	drivers/clk/clk-s2mps11.c
++F:	drivers/mfd/s2dos*.c
+ F:	drivers/mfd/sec*.c
+ F:	drivers/regulator/s2m*.c
+ F:	drivers/regulator/s5m*.c
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index c4eb8ff2dcad..517d8778d7a8 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1278,6 +1278,19 @@ config MFD_RN5T618
+ 	  additional drivers must be enabled in order to use the
+ 	  functionality of the device.
  
-+config FUEL_GAUGE_MAX77705
-+	tristate "MAX77705 fuel gauge driver"
-+	depends on MFD_MAX77705
-+	default n
++config MFD_S2DOS_CORE
++	tristate "Samsung Electronics PMIC Series Support"
++	depends on I2C=y
++	depends on OF
++	select MFD_CORE
++	select REGMAP_I2C
 +	help
-+	  Say Y to enable support for MAXIM MAX77705 fuel gauge driver.
++	  Support for the Samsung Electronics PMIC devices
++	  usually used to power displays.
++	  This driver provides common support for accessing the device,
++	  additional drivers must be enabled in order to use the functionality
++	  of the device.
 +
- config CHARGER_MAX77976
- 	tristate "Maxim MAX77976 battery charger driver"
- 	depends on I2C
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index dbec648c78c9..e1abad8b6b75 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_CHARGER_DETECTOR_MAX14656)	+= max14656_charger_detector.o
- obj-$(CONFIG_CHARGER_MAX77650)	+= max77650-charger.o
- obj-$(CONFIG_CHARGER_MAX77693)	+= max77693_charger.o
- obj-$(CONFIG_CHARGER_MAX77705)	+= max77705_charger.o
-+obj-$(CONFIG_FUEL_GAUGE_MAX77705)	+= max77705_fuelgauge.o
- obj-$(CONFIG_CHARGER_MAX77976)	+= max77976_charger.o
- obj-$(CONFIG_CHARGER_MAX8997)	+= max8997_charger.o
- obj-$(CONFIG_CHARGER_MAX8998)	+= max8998_charger.o
-diff --git a/drivers/power/supply/max77705_fuelgauge.c b/drivers/power/supply/max77705_fuelgauge.c
+ config MFD_SEC_CORE
+ 	tristate "Samsung Electronics PMIC Series Support"
+ 	depends on I2C=y
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index bf65cc36d59c..37c51aab0205 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -228,7 +228,7 @@ obj-$(CONFIG_MFD_RK8XX_I2C)	+= rk8xx-i2c.o
+ obj-$(CONFIG_MFD_RK8XX_SPI)	+= rk8xx-spi.o
+ obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
+ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+-obj-$(CONFIG_MFD_S2DOS05)	+= s2dos05.o
++obj-$(CONFIG_MFD_S2DOS_CORE)	+= s2dos-core.o
+ obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+ obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+ obj-$(CONFIG_MFD_VEXPRESS_SYSREG)	+= vexpress-sysreg.o
+diff --git a/drivers/mfd/s2dos-core.c b/drivers/mfd/s2dos-core.c
 new file mode 100644
-index 000000000000..108a829421d7
+index 000000000000..a04363b15a2a
 --- /dev/null
-+++ b/drivers/power/supply/max77705_fuelgauge.c
-@@ -0,0 +1,624 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
++++ b/drivers/mfd/s2dos-core.c
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ *  max77705_fuelgauge.c
-+ *  Samsung max77705 Fuel Gauge Driver
++ * s2dos05.c - mfd core driver for the s2dos05 chip
 + *
-+ *  Copyright (C) 2015 Samsung Electronics
-+ *  Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
++ *
 + */
 +
-+#include <linux/of_gpio.h>
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
-+#include <linux/power_supply.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/i2c.h>
++#include <linux/irq.h>
++#include <linux/interrupt.h>
++#include <linux/mutex.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/samsung/s2dos-core.h>
++#include <linux/mfd/samsung/s2dos05.h>
++#include <linux/platform_device.h>
 +#include <linux/regmap.h>
-+#include <linux/power/max77705_fuelgauge.h>
-+#include <linux/mfd/max77705-private.h>
++#include <linux/debugfs.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
 +
-+static const char *max77705_fuelgauge_model		= "max77705";
-+static const char *max77705_fuelgauge_manufacturer	= "Maxim Integrated";
 +static struct dentry *debugfs_file;
 +
-+static enum power_supply_property max77705_fuelgauge_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_VOLTAGE_OCV,
-+	POWER_SUPPLY_PROP_VOLTAGE_AVG,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_AVG,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
-+	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
-+};
-+
-+static int max77705_fg_read_vcell(struct max77705_fuelgauge_data *fuelgauge)
++static int s2dos05_debugfs_show(struct seq_file *s, void *data)
 +{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	u16 w_data;
-+
-+	if (regmap_noinc_read(regmap, VCELL_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read VCELL_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	w_data = (data[1] << 8) | data[0];
-+
-+	return max77705_fg_vs_convert(w_data);
-+}
-+
-+static int max77705_fg_read_vfocv(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	u16 w_data;
-+
-+	if (regmap_noinc_read(regmap, VFOCV_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read VFOCV_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	w_data = (data[1] << 8) | data[0];
-+
-+	return max77705_fg_vs_convert(w_data);
-+}
-+
-+static int max77705_fg_read_avg_vcell(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	u16 w_data;
-+
-+	if (regmap_noinc_read(regmap, AVR_VCELL_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read AVR_VCELL_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	w_data = (data[1] << 8) | data[0];
-+	return max77705_fg_vs_convert(w_data);
-+}
-+
-+static int max77705_fg_check_battery_present(struct max77705_fuelgauge_data
-+					     *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 status_data[2];
-+
-+	if (regmap_noinc_read(regmap, STATUS_REG, status_data, sizeof(status_data)) < 0) {
-+		dev_err(fuelgauge->dev, "Failed to read STATUS_REG\n");
-+		return 0;
-+	}
-+
-+	return !(status_data[0] & MAX77705_BAT_ABSENT_MASK);
-+}
-+
-+static int max77705_fg_read_temp(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2] = { 0, 0 };
-+	int temper = 0;
-+
-+	if (regmap_noinc_read(regmap, TEMPERATURE_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read TEMPERATURE_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	if (data[1] & BIT(7))
-+		temper = ((~(data[1])) & 0xFF) + 1;
-+	else
-+		temper = data[1] & 0x7f;
-+
-+	temper *= 10;
-+	temper += data[0] * 10 / 256;
-+
-+	return temper;
-+}
-+
-+static int max77705_fg_read_socrep(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int soc;
-+
-+	if (regmap_noinc_read(regmap, SOCREP_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read SOCREP_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	soc = data[1];
-+
-+	return min(soc, 100);
-+}
-+
-+static int max77705_fg_read_fullcaprep(struct max77705_fuelgauge_data
-+				       *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int ret;
-+
-+	if (regmap_noinc_read(regmap, FULLCAP_REP_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read FULLCAP_REP_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	ret = (data[1] << 8) + data[0];
-+
-+	return ret * 1000;
-+}
-+
-+static int max77705_fg_read_repcap(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int ret;
-+
-+	if (regmap_noinc_read(regmap, REMCAP_REP_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read REMCAP_REP_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	ret = (data[1] << 8) + data[0];
-+
-+	return ret * 1000;
-+}
-+
-+static int max77705_fg_read_charge_design(struct max77705_fuelgauge_data
-+				       *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int reg;
-+
-+	if (regmap_noinc_read(regmap, DESIGNCAP_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read DESIGNCAP_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	reg = (data[1] << 8) | (data[0]);
-+
-+	return reg * 1000;
-+}
-+
-+static int max77705_fg_set_charge_design(struct regmap *regmap, int value)
-+{
-+	u8 data[2];
-+	int value_mah;
-+
-+	value_mah = value / 1000;
-+	data[0] = value_mah & 0xFF;
-+	data[1] = (value_mah >> 8) & 0xFF;
-+
-+	if (regmap_noinc_write(regmap, DESIGNCAP_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to write DESIGNCAP_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max77705_fg_read_current(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 reg_data[2];
-+	s16 reg_value;
-+	s32 i_current;
-+
-+	if (regmap_noinc_read(regmap, CURRENT_REG, reg_data, sizeof(reg_data)) < 0) {
-+		pr_err("%s: Failed to read CURRENT\n", __func__);
-+		return -1;
-+	}
-+
-+	reg_value = ((reg_data[1] << 8) | reg_data[0]);
-+	i_current = max77705_fg_cs_convert(reg_value, fuelgauge->rsense_conductance);
-+
-+	return i_current;
-+}
-+
-+static int max77705_fg_read_avg_current(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 reg_data[2];
-+	u32 reg_value;
-+	s32 avg_current;
-+
-+	if (regmap_noinc_read(regmap, AVG_CURRENT_REG, reg_data, sizeof(reg_data)) < 0) {
-+		pr_err("%s: Failed to read AVG_CURRENT_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	reg_value = ((reg_data[1] << 8) | reg_data[0]);
-+	avg_current = max77705_fg_cs_convert(reg_value, fuelgauge->rsense_conductance);
-+
-+	return avg_current;
-+}
-+
-+static int max77705_fg_read_tte(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int reg;
-+
-+	if (regmap_noinc_read(regmap, TIME_TO_EMPTY_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read TIME_TO_EMPTY_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	reg = (data[1] << 8) | (data[0]);
-+
-+	return reg;
-+}
-+
-+static int max77705_fg_read_ttf(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int reg;
-+
-+	if (regmap_noinc_read(regmap, TIME_TO_FULL_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read TIME_TO_FULL_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	reg = (data[1] << 8) | (data[0]);
-+
-+	return reg;
-+}
-+
-+static int max77705_fg_read_cycle(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2];
-+	int ret;
-+
-+	if (regmap_noinc_read(regmap, CYCLES_REG, data, sizeof(data)) < 0) {
-+		pr_err("%s: Failed to read CYCLES_REG\n", __func__);
-+		return -1;
-+	}
-+
-+	ret = (data[1] << 8) + data[0];
-+
-+	return ret;
-+}
-+
-+static int max77705_battery_get_status(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	int current_now;
-+	int am_i_supplied;
-+
-+	am_i_supplied = power_supply_am_i_supplied(fuelgauge->psy_fg);
-+	if (am_i_supplied) {
-+		if (am_i_supplied == -ENODEV)
-+			dev_err(fuelgauge->dev,
-+				"power supply not found, fall back to current-based status checking\n");
-+		else
-+			return POWER_SUPPLY_STATUS_CHARGING;
-+	}
-+	if (max77705_fg_read_socrep(fuelgauge) < 100) {
-+		current_now = max77705_fg_read_current(fuelgauge);
-+		if (current_now > 0)
-+			return POWER_SUPPLY_STATUS_CHARGING;
-+		else if (current_now < 0)
-+			return POWER_SUPPLY_STATUS_DISCHARGING;
-+		else
-+			return POWER_SUPPLY_STATUS_NOT_CHARGING;
-+	} else {
-+		return POWER_SUPPLY_STATUS_FULL;
-+	}
-+	return POWER_SUPPLY_STATUS_DISCHARGING;
-+}
-+
-+static bool max77705_fg_init(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	u8 data[2] = { 0, 0 };
-+	u32 volt_threshold = 0;
-+	u32 temp_threshold = 0;
-+
-+	if (fuelgauge->auto_discharge_en) {
-+		/* Auto discharge EN & Alert Enable */
-+		regmap_noinc_read(regmap, CONFIG2_REG, data, sizeof(data));
-+		data[1] |= MAX77705_AUTO_DISCHARGE_EN_MASK >> 8;
-+		regmap_noinc_write(regmap, CONFIG2_REG, data, sizeof(data));
-+
-+		/* Set Auto Discharge temperature & Voltage threshold */
-+		volt_threshold =
-+		    fuelgauge->discharge_volt_threshold < 3900 ? 0x0 :
-+		    fuelgauge->discharge_volt_threshold > 4540 ? 0x20 :
-+		    (fuelgauge->discharge_volt_threshold - 3900) / 20;
-+
-+		temp_threshold =
-+		    fuelgauge->discharge_temp_threshold < 470 ? 0x0 :
-+		    fuelgauge->discharge_temp_threshold > 630 ? 0x20 :
-+		    (fuelgauge->discharge_temp_threshold - 470) / 5;
-+
-+		regmap_noinc_read(regmap, DISCHARGE_THRESHOLD_REG, data, sizeof(data));
-+		data[1] &= ~MAX77705_AUTO_DISCHARGE_VALUE_MASK;
-+		data[1] |= volt_threshold << MAX77705_AUTO_DISCHARGE_VALUE_SHIFT;
-+
-+		data[0] &= ~MAX77705_AUTO_DISCHARGE_VALUE_MASK;
-+		data[0] |= temp_threshold << MAX77705_AUTO_DISCHARGE_VALUE_SHIFT;
-+
-+		regmap_noinc_write(regmap, DISCHARGE_THRESHOLD_REG, data, sizeof(data));
-+
-+		pr_info("%s: DISCHARGE_THRESHOLD Value : 0x%x\n",
-+			__func__, (data[1] << 8) | data[0]);
-+	}
-+
-+	return true;
-+}
-+
-+static int max77705_fg_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct max77705_fuelgauge_data *fuelgauge =
-+	    power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		val->intval = max77705_battery_get_status(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = max77705_fg_check_battery_present(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		val->intval = max77705_fg_read_vcell(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
-+		val->intval = max77705_fg_read_vfocv(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
-+		val->intval = max77705_fg_read_avg_vcell(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		val->intval = max77705_fg_read_current(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CURRENT_AVG:
-+		val->intval = max77705_fg_read_avg_current(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+		val->intval = max77705_fg_read_repcap(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL:
-+		val->intval = max77705_fg_read_fullcaprep(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-+		val->intval = max77705_fg_read_charge_design(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		val->intval = max77705_fg_read_socrep(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_TEMP:
-+		val->intval = max77705_fg_read_temp(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
-+		val->intval = max77705_fg_read_tte(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_TIME_TO_FULL_NOW:
-+		val->intval = max77705_fg_read_ttf(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_CYCLE_COUNT:
-+		val->intval = max77705_fg_read_cycle(fuelgauge);
-+		break;
-+	case POWER_SUPPLY_PROP_MODEL_NAME:
-+		val->strval = max77705_fuelgauge_model;
-+		break;
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval = max77705_fuelgauge_manufacturer;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int max77705_fuelgauge_debugfs_show(struct seq_file *s, void *data)
-+{
-+	struct max77705_fuelgauge_data *fuelgauge = s->private;
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+	int i;
-+	u16 reg_data;
-+	int regs[] = { 0x00, 0x01, 0x02, 0x03, 0x05, 0x06, 0x08, 0x09, 0x11, 0x13, 0x0A,
-+			0x0B, 0x0D, 0x0E, 0x0F, 0x10, 0x15, 0x16, 0x17, 0x18, 0x19, 0x20,
-+			0x1D, 0x1E, 0x1F, 0x23, 0x28, 0x29, 0x2B, 0x32, 0x35, 0x38, 0x3A,
-+			0x3D, 0x40, 0x42, 0x43, 0x45, 0x46, 0x4B, 0x4D, 0xB1, 0xB2, 0xB3,
-+			0xBB, 0xD0, 0xEE, 0xFB, 0xFF, };
-+
-+	seq_puts(s, "MAX77705 FUELGAUGE IC :\n");
++	struct s2dos_core *s2dos05 = s->private;
++	struct regmap *regmap = s2dos05->regmap;
++	unsigned int i, reg, reg_data, pmic_id;
++	int regs[] = {
++		S2DOS05_REG_DEV_ID,
++		S2DOS05_REG_TOPSYS_STAT,
++		S2DOS05_REG_STAT,
++		S2DOS05_REG_EN,
++		S2DOS05_REG_LDO1_CFG,
++		S2DOS05_REG_LDO2_CFG,
++		S2DOS05_REG_LDO3_CFG,
++		S2DOS05_REG_LDO4_CFG,
++		S2DOS05_REG_BUCK_CFG,
++		S2DOS05_REG_BUCK_VOUT,
++		S2DOS05_REG_IRQ_MASK,
++		S2DOS05_REG_SSD_TSD,
++		S2DOS05_REG_OCL,
++		S2DOS05_REG_IRQ
++	};
++	regmap_read(regmap, S2DOS05_REG_DEV_ID, &pmic_id);
++	seq_printf(s, "S2DOS05, id: %d\n", pmic_id);
 +	seq_puts(s, "===================\n");
 +	for (i = 0; i < ARRAY_SIZE(regs); i++) {
-+		regmap_noinc_read(regmap, regs[i], &reg_data, 2);
-+		seq_printf(s, "0x%02x:\t0x%02x\n", regs[i], reg_data);
++		reg = regs[i];
++		regmap_read(regmap, reg, &reg_data);
++		seq_printf(s, "0x%02x:\t0x%02x\n", reg, reg_data);
 +	}
++
 +	seq_puts(s, "\n");
 +	return 0;
 +}
 +
-+static int max77705_fuelgauge_debugfs_open(struct inode *inode,
-+					   struct file *file)
-+{
-+	return single_open(file, max77705_fuelgauge_debugfs_show, inode->i_private);
-+}
++DEFINE_SHOW_ATTRIBUTE(s2dos05_debugfs);
 +
-+static const struct file_operations max77705_fuelgauge_debugfs_fops = {
-+	.open = max77705_fuelgauge_debugfs_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
++static const struct regmap_config s2dos05_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = S2DOS05_REG_IRQ,
 +};
 +
-+static void max77705_battery_settings(struct max77705_fuelgauge_data *fuelgauge)
-+{
-+	struct power_supply_battery_info *info;
-+	struct regmap *regmap = fuelgauge->max77705->regmap_fg;
-+
-+	if (power_supply_get_battery_info(fuelgauge->psy_fg, &info) < 0)
-+		return;
-+
-+	fuelgauge->bat_info = info;
-+
-+	if (!regmap) {
-+		dev_warn(fuelgauge->dev, "data memory update not supported for chip\n");
-+		return;
-+	}
-+
-+	if (info->energy_full_design_uwh != info->charge_full_design_uah) {
-+		if (info->charge_full_design_uah == -EINVAL)
-+			dev_warn(fuelgauge->dev, "missing battery:charge-full-design-microamp-hours\n");
-+		max77705_fg_set_charge_design(regmap, info->charge_full_design_uah);
-+	}
-+}
-+
-+static int max77705_fuelgauge_parse_dt(struct max77705_fuelgauge_data
-+				       *fuelgauge)
-+{
-+	struct device *dev = fuelgauge->dev;
-+	struct device_node *np = dev->of_node;
-+	unsigned int rsense;
-+
-+	if (!np) {
-+		dev_err(dev, "no fuelgauge OF node\n");
-+		return -EINVAL;
-+	}
-+
-+	int ret;
-+
-+	if (np == NULL) {
-+		pr_err("%s np NULL\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(np, "rsense",
-+				   &rsense);
-+	if (ret < 0) {
-+		pr_err("%s error reading rsense %d\n",
-+		       __func__, ret);
-+		fuelgauge->rsense_conductance = 100;
-+	} else
-+		fuelgauge->rsense_conductance = 1000 / rsense; /* rsense in Ohm^-1 */
-+
-+	fuelgauge->auto_discharge_en = of_property_read_bool(np,
-+							     "auto_discharge_en");
-+	if (fuelgauge->auto_discharge_en) {
-+		ret = of_property_read_u32(np,
-+						"discharge_temp_threshold",
-+						&fuelgauge->discharge_temp_threshold);
-+		if (ret < 0) {
-+			dev_err(dev, "error reading rsense_conductance %d\n", ret);
-+			fuelgauge->discharge_temp_threshold = 600;
-+		}
-+
-+		ret = of_property_read_u32(np,
-+						"discharge_volt_threshold",
-+						&fuelgauge->discharge_volt_threshold);
-+		if (ret < 0)
-+			fuelgauge->discharge_volt_threshold = 4200;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct power_supply_desc max77705_fuelgauge_power_supply_desc = {
-+	.name = "max77705-fuelgauge",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = max77705_fuelgauge_props,
-+	.num_properties = ARRAY_SIZE(max77705_fuelgauge_props),
-+	.get_property = max77705_fg_get_property,
++static struct mfd_cell s2dos05_devs[] = {
++	{ .name = "s2dos05-fg" },
++	{
++		.name = "s2dos05-regulator",
++		.of_compatible = "samsung,s2dos05-regulator",
++	},
 +};
 +
-+static int max77705_fuelgauge_probe(struct platform_device *pdev)
++
++static int s2dos05_i2c_probe(struct i2c_client *i2c)
 +{
-+	struct max77705_dev *max77705 = dev_get_drvdata(pdev->dev.parent);
-+	struct max77705_platform_data *pdata = dev_get_platdata(max77705->dev);
-+	struct max77705_fuelgauge_data *fuelgauge;
-+	struct power_supply_config fuelgauge_cfg = { };
++	struct s2dos_core *s2dos05;
++	struct regmap *regmap;
++	struct device *dev = &i2c->dev;
++
++	unsigned int reg_data;
 +	int ret = 0;
 +
-+	fuelgauge = kzalloc(sizeof(*fuelgauge), GFP_KERNEL);
-+	if (!fuelgauge)
++	s2dos05 = kzalloc(sizeof(struct s2dos_core), GFP_KERNEL);
++	if (!s2dos05)
 +		return -ENOMEM;
 +
-+	mutex_init(&fuelgauge->fg_lock);
++	regmap = devm_regmap_init_i2c(i2c, &s2dos05_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "Unable to initialise I2C Regmap\n");
++		return PTR_ERR(regmap);
++	}
++	s2dos05->regmap = regmap;
 +
-+	fuelgauge->dev = &pdev->dev;
-+	fuelgauge->max77705 = max77705;
-+	fuelgauge->max77705_pdata = pdata;
++	if (regmap_read(regmap, S2DOS05_REG_DEV_ID, &reg_data) < 0) {
++		dev_err(dev,
++			"device not found on this channel (this is not an error)\n");
++		ret = -ENODEV;
++	} else {
++		dev_info(dev, "%s device found with id: .0x%x\n",
++				__func__, reg_data);
++	}
 +
-+	ret = max77705_fuelgauge_parse_dt(fuelgauge);
-+	if (ret < 0)
-+		pr_err("%s not found charger dt! ret[%d]\n", __func__, ret);
++	i2c_set_clientdata(i2c, s2dos05);
 +
-+	platform_set_drvdata(pdev, fuelgauge);
-+
-+
-+	debugfs_file = debugfs_create_file("max77705-fuelgauge-regs",
-+				0664, NULL, (void *)fuelgauge,
-+				  &max77705_fuelgauge_debugfs_fops);
++	debugfs_file = debugfs_create_file("s2dos05-regs",
++				0664, NULL, (void *)s2dos05,
++				  &s2dos05_debugfs_fops);
 +	if (!debugfs_file)
-+		dev_err(fuelgauge->dev, "Failed to create debugfs file\n");
++		dev_err(dev, "Failed to create debugfs file\n");
 +
-+	fuelgauge_cfg.drv_data = fuelgauge;
-+	fuelgauge_cfg.of_node = fuelgauge->dev->of_node;
-+
-+	fuelgauge->psy_fg =
-+	    devm_power_supply_register(&pdev->dev,
-+				  &max77705_fuelgauge_power_supply_desc,
-+				  &fuelgauge_cfg);
-+
-+	if (IS_ERR(fuelgauge->psy_fg)) {
-+		pr_err("%s: Failed to Register psy_fg\n", __func__);
-+		goto err_data_free;
-+	}
-+
-+	fuelgauge->fg_irq = max77705->irq_base + MAX77705_FG_IRQ_ALERT;
-+	pr_info("[%s]IRQ_BASE(%d) FG_IRQ(%d)\n",
-+		__func__, max77705->irq_base, fuelgauge->fg_irq);
-+
-+	if (!max77705_fg_init(fuelgauge)) {
-+		pr_err("%s: Failed to Initialize Fuelgauge\n", __func__);
-+		goto err_supply_unreg;
-+	}
-+
-+	max77705_battery_settings(fuelgauge);
-+
-+	return 0;
-+
-+err_supply_unreg:
-+	power_supply_unregister(fuelgauge->psy_fg);
-+	kfree(fuelgauge->bat_info);
-+err_data_free:
-+	mutex_destroy(&fuelgauge->fg_lock);
-+
-+	return ret;
++	return mfd_add_devices(dev, -1, s2dos05_devs,
++			ARRAY_SIZE(s2dos05_devs), NULL, 0, NULL);
 +}
 +
-+static void max77705_fuelgauge_remove(struct platform_device *pdev)
-+{
-+	if (debugfs_file)
-+		debugfs_remove(debugfs_file);
-+}
-+static const struct platform_device_id max77705_fuelgauge_id[] = {
-+	{ "max77705-fuelgauge", 0, },
-+	{ }
++static const struct of_device_id s2dos05_i2c_dt_ids[] = {
++	{ .compatible = "samsung,s2dos05-pmic" },
++	{ },
 +};
-+MODULE_DEVICE_TABLE(platform, max77705_fuelgauge_id);
++MODULE_DEVICE_TABLE(of, s2dos05_i2c_dt_ids);
 +
-+static struct platform_driver max77705_fuelgauge_driver = {
-+	.driver = {
-+		.name = "max77705-fuelgauge",
++static struct i2c_driver s2dos05_i2c_driver = {
++	.driver		= {
++		.name	= "s2dos-core",
++		.owner	= THIS_MODULE,
++		.of_match_table	= s2dos05_i2c_dt_ids,
 +	},
-+	.probe = max77705_fuelgauge_probe,
-+	.remove_new = max77705_fuelgauge_remove,
-+	.id_table	= max77705_fuelgauge_id,
++	.probe		= s2dos05_i2c_probe,
 +};
-+module_platform_driver(max77705_fuelgauge_driver);
 +
-+MODULE_DESCRIPTION("Samsung max77705 Fuel Gauge Driver");
-+MODULE_AUTHOR("Samsung Electronics");
++module_i2c_driver(s2dos05_i2c_driver);
++
++MODULE_DESCRIPTION("s2dos core driver");
++MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/power/max77705_fuelgauge.h b/include/linux/power/max77705_fuelgauge.h
+diff --git a/include/linux/mfd/samsung/s2dos-core.h b/include/linux/mfd/samsung/s2dos-core.h
 new file mode 100644
-index 000000000000..718cd47bc7b6
+index 000000000000..7e84b387063c
 --- /dev/null
-+++ b/include/linux/power/max77705_fuelgauge.h
-@@ -0,0 +1,107 @@
++++ b/include/linux/mfd/samsung/s2dos-core.h
+@@ -0,0 +1,21 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
-+ * max77705_fuelgauge.h
-+ * Samsung max77705 Fuel Gauge Header
++ * s2dos-core.h
 + *
-+ * Copyright (C) 2015 Samsung Electronics, Inc.
-+ *
-+ * This software is 77854 under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd
++ *              http://www.samsung.com
++ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
 + *
 + */
 +
-+#ifndef __MAX77705_FUELGAUGE_H
-+#define __MAX77705_FUELGAUGE_H __FILE__
++#ifndef __LINUX_MFD_S2DOS_CORE_H
++#define __LINUX_MFD_S2DOS_CORE_H
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max77705.h>
-+#include <linux/mfd/max77705-private.h>
-+#include <linux/regulator/machine.h>
-+
-+#define ALERT_EN 0x04
-+#define CAPACITY_SCALE_DEFAULT_CURRENT 1000
-+#define CAPACITY_SCALE_HV_CURRENT 600
-+/*
-+ * Current and capacity values are displayed as a voltage
-+ * and must be divided by the sense resistor to determine Amps or Amp-hours.
-+ * This should be applied to all current, charge, energy registers,
-+ * except ModelGauge m5 Algorithm related ones.
-+ */
-+/* current sense resolution */
-+#define MAX77705_FG_CS_ADC_RESOLUTION 15625 /* 1.5625 microvolts */
-+/* voltage sense resolution */
-+#define MAX77705_FG_VS_ADC_RESOLUTION 78125 /* 78.125 microvolts */
-+/* CONFIG register */
-+#define MAX77705_SOC_ALERT_EN_MASK		BIT(2)
-+/* When set to 1, external temperature measurements should be written from the host */
-+#define MAX77705_TEX_MASK		BIT(8)
-+/* Enable Thermistor */
-+#define MAX77705_ETHRM_MASK		BIT(5)
-+/* CONFIG2 register */
-+#define MAX77705_AUTO_DISCHARGE_EN_MASK BIT(9)
-+/* DISCHARGE register*/
-+#define MAX77705_AUTO_DISCHARGE_VALUE_SHIFT 3
-+#define MAX77705_AUTO_DISCHARGE_VALUE_MASK 0xF8
-+
-+#define MAX77705_FG_CS_MASK BIT(15)
-+/* MISCCFG register */
-+#define MAX77705_AUTO_DISCHARGE_VALUE_MASK 0xF8
-+
-+/* adc resolution for voltage sensing is 78.125 microvolts */
-+inline u64 max77705_fg_vs_convert(u16 reg_val)
-+{
-+	u64 result = (u64)reg_val * MAX77705_FG_VS_ADC_RESOLUTION;
-+
-+	return result / 1000;
-+}
-+
-+/* adc resolution for current sensing is 1.5625 microvolts */
-+inline s32 max77705_fg_cs_convert(s16 reg_val, u32 rsense_conductance)
-+{
-+	s64 result = (s64)reg_val * rsense_conductance * MAX77705_FG_CS_ADC_RESOLUTION;
-+
-+	return result / 10000;
-+}
-+
-+struct max77705_fuelgauge_data {
-+	struct device           *dev;
-+	struct i2c_client       *i2c;
-+	struct i2c_client       *pmic;
-+	struct mutex            fuelgauge_mutex;
-+	struct max77705_dev	*max77705;
-+	struct max77705_platform_data *max77705_pdata;
-+	struct power_supply	      *psy_fg;
-+	struct delayed_work isr_work;
-+
-+	int cable_type;
-+	bool is_charging;
-+
-+	struct power_supply_battery_info *bat_info;
-+
-+	struct mutex fg_lock;
-+
-+	/* register programming */
-+	int reg_addr;
-+	u8 reg_data[2];
-+
-+	unsigned int pre_soc;
-+	int fg_irq;
-+
-+	int temperature;
-+	int low_temp_limit;
-+
-+	bool auto_discharge_en;
-+	u32 discharge_temp_threshold;
-+	u32 discharge_volt_threshold;
-+
-+	u32 rsense_conductance;
-+	u32 fuel_alert_soc;
++struct s2dos_core {
++	struct device *dev;
++	struct regmap *regmap;
 +};
 +
-+#endif /* __MAX77705_FUELGAUGE_H */
++#endif /*  __LINUX_MFD_S2DOS_CORE_H */
+diff --git a/include/linux/mfd/samsung/s2dos05.h b/include/linux/mfd/samsung/s2dos05.h
+new file mode 100644
+index 000000000000..0317dbe56f10
+--- /dev/null
++++ b/include/linux/mfd/samsung/s2dos05.h
+@@ -0,0 +1,115 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * s2dos05.h
++ *
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd
++ *              http://www.samsung.com
++ *
++ */
++
++#ifndef __LINUX_MFD_S2DOS05_H
++#define __LINUX_MFD_S2DOS05_H
++
++/* S2DOS05 registers */
++/* Slave Addr : 0xC0 */
++enum s2dos05_reg {
++	S2DOS05_REG_DEV_ID,
++	S2DOS05_REG_TOPSYS_STAT,
++	S2DOS05_REG_STAT,
++	S2DOS05_REG_EN,
++	S2DOS05_REG_LDO1_CFG,
++	S2DOS05_REG_LDO2_CFG,
++	S2DOS05_REG_LDO3_CFG,
++	S2DOS05_REG_LDO4_CFG,
++	S2DOS05_REG_BUCK_CFG,
++	S2DOS05_REG_BUCK_VOUT,
++	S2DOS05_REG_IRQ_MASK = 0x0D,
++	S2DOS05_REG_SSD_TSD = 0x0E,
++	S2DOS05_REG_OCL = 0x10,
++	S2DOS05_REG_IRQ = 0x11
++};
++
++/* S2DOS05 regulator ids */
++enum s2dos05_regulators {
++	S2DOS05_LDO1,
++	S2DOS05_LDO2,
++	S2DOS05_LDO3,
++	S2DOS05_LDO4,
++	S2DOS05_BUCK1,
++	S2DOS05_REG_MAX,
++};
++
++#define S2DOS05_IRQ_PWRMT_MASK	BIT(5)
++#define S2DOS05_IRQ_TSD_MASK	BIT(4)
++#define S2DOS05_IRQ_SSD_MASK	BIT(3)
++#define S2DOS05_IRQ_SCP_MASK	BIT(2)
++#define S2DOS05_IRQ_UVLO_MASK	BIT(1)
++#define S2DOS05_IRQ_OCD_MASK	BIT(0)
++
++#define S2DOS05_BUCK_MIN1	506250
++#define S2DOS05_LDO_MIN1	1500000
++#define S2DOS05_LDO_MIN2	2700000
++#define S2DOS05_BUCK_STEP1	6250
++#define S2DOS05_LDO_STEP1	25000
++#define S2DOS05_LDO_VSEL_MASK	0x7F
++#define S2DOS05_LDO_FD_MASK	BIT(7)
++#define S2DOS05_BUCK_VSEL_MASK	0xFF
++#define S2DOS05_BUCK_FD_MASK	BIT(3)
++
++#define S2DOS05_ENABLE_MASK_L1	BIT(0)
++#define S2DOS05_ENABLE_MASK_L2	BIT(1)
++#define S2DOS05_ENABLE_MASK_L3	BIT(2)
++#define S2DOS05_ENABLE_MASK_L4	BIT(3)
++#define S2DOS05_ENABLE_MASK_B1	BIT(4)
++
++#define S2DOS05_RAMP_DELAY	12000
++
++#define S2DOS05_ENABLE_TIME_LDO		50
++#define S2DOS05_ENABLE_TIME_BUCK	350
++
++#define S2DOS05_ENABLE_SHIFT	0x06
++#define S2DOS05_LDO_N_VOLTAGES	(S2DOS05_LDO_VSEL_MASK + 1)
++#define S2DOS05_BUCK_N_VOLTAGES (S2DOS05_BUCK_VSEL_MASK + 1)
++
++#define S2DOS05_PMIC_EN_SHIFT	6
++#define S2DOS05_REGULATOR_MAX (S2DOS05_REG_MAX)
++
++/* ----------power meter ----------*/
++#define S2DOS05_REG_PWRMT_CTRL1		0x0A
++#define S2DOS05_REG_PWRMT_CTRL2		0x0B
++#define S2DOS05_REG_PWRMT_DATA	0x0C
++#define S2DOS05_REG_IRQ_MASK	0x0D
++
++#define CHANNEL_ELVDD	0
++#define CHANNEL_ELVSS	1
++#define CHANNEL_AVDD	2
++#define CHANNEL_BUCK	3
++#define CHANNEL_L1	4
++#define CHANNEL_L2	5
++#define CHANNEL_L3	6
++#define CHANNEL_L4	7
++
++#define POWER_ELVDD			24500
++#define POWER_ELVSS			24500
++#define POWER_AVDD			3060
++#define POWER_BUCK			1525
++#define POWER_L1			5000
++#define POWER_L2			5000
++#define POWER_L3			5000
++#define POWER_L4			5000
++
++/* S2DOS05_REG_OCL */
++#define ADC_VALID_MASK			BIT(7)
++/* S2DOS05_REG_PWRMT_CTRL1 */
++#define ADC_ASYNCRD_MASK		BIT(7)
++#define PWRMT_EN_CHK			BIT(6)
++#define SMPNUM_MASK			0x0F
++/* S2DOS05_REG_PWRMT_CTRL2 */
++#define ADC_EN_MASK			BIT(7)
++#define ADC_PTR_MASK			0x0F
++#define POWER_MODE			BIT(4)
++#define RAWCURRENT_MODE			BIT(5)
++
++#define S2DOS05_MAX_ADC_CHANNEL		8
++
++#endif /*  __LINUX_MFD_S2DOS05_H */
 
 -- 
 2.39.2
