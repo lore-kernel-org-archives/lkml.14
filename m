@@ -1,139 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256F42093E5
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 10:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CF22093E5;
+	Tue, 18 Jun 2024 10:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718704894; cv=none; b=CGmJE94u1KAec8zUEIRqRG/4ufS/MEXRqakjwLPkvzjNYpgtpB9r6kagZG+94DCCSv4V/y329YurDTGzUs/fJOnM7MZzXDFqXJ2KBCJiIO+wa+4/aYIczpy6mgihV8OBB/M1dix3TiSiTcMPMs1pzlXPO64OzJWHTUSTfWQF1pc=
+	t=1718704904; cv=none; b=AX56p8cdEPytBj07B5YD8BTTKYINBI1o8VKx6ulWpCqbvtO/+rGhmdqfkc45zSc2BwutBp0eKYcZp7VKi0IydxcRPSoQZ62+hkXEnGzM2meTspjVC+0ukbqPvwFOF946a2yG6bL886Owo4p8CwHm7H1WFxtd8yCldNUA/5z3s/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718704894; c=relaxed/simple;
-	bh=yOh+LtPxm/3KyFCjguRGZbLlWrXkgeTsue3aEKRtSsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EAj18l3wy55dslqav1M+jI8reYJZ6PG+Wrrwt3+PyVeRrvv1R0uA3i9tA164UAm3cmaA//p/WO3zQaarXOWkcYJLtsxLCBQOjdd1LA2yIbQwIso9JBPBlwofh1B0Ma+DyxBDEOvCpTW3G388U5791GXktEU3Yv8/U0JBW1xyjWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QcprsH+C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718704904; c=relaxed/simple;
+	bh=56ndxlWUopxXCxRtq9AcvSBP4vgwCrhT9Wo6d8WigyE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u+moMRwJs4ZFB07nVaT3EXsG6+zxjNCkCunqKJAUKlvO6WNmlDlNRkY4sQsJDl+P7d4V+V9SdVaJWSHQZ2+PpO6J2lxFuhIA5gdg14mkgrmoJSD81knJxMYrKgarVmCqufX4+PBJm0ifm9FB3DJ8E1lJ+geix7XdrXWleFQgC28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Z5AXNp3H; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QcprsH+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54687C4AF1D;
-	Tue, 18 Jun 2024 10:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718704893;
-	bh=yOh+LtPxm/3KyFCjguRGZbLlWrXkgeTsue3aEKRtSsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QcprsH+C0mcjEs5C4VXD7gnhp4ql7gpjc3RxCdaAO1h/oX/tmkv+O44xv0xIufhTM
-	 3S5ZMyMB5hfXioOQGsEVraoqgG5EtoXvHMR+X982L542i8di3NC8NOwZSneVGFdg/M
-	 UJHk1BtlOrUGPhFNW6cF9G2xkIsSnZq6zQkv0wo0=
-Date: Tue, 18 Jun 2024 12:01:30 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/1] container_of: Document container_of_const() is
- preferred
-Message-ID: <2024061827-revival-handwrite-5eb0@gregkh>
-References: <20240617100825.2510728-1-sakari.ailus@linux.intel.com>
- <2024061702-vexingly-hypocrisy-d93d@gregkh>
- <ZnFOrziVMDwtu1NA@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z5AXNp3H"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I9SGHN016418;
+	Tue, 18 Jun 2024 09:56:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	56ndxlWUopxXCxRtq9AcvSBP4vgwCrhT9Wo6d8WigyE=; b=Z5AXNp3HRoxkgb6s
+	XI+msgzi6TLeTTRR/cJVTYO5tIo4iaFp6fcMk+0pPQntyHoFWgHFfc3whXKeoZMe
+	HjqyrcI9eQU7K7CWl+mJuoEE6hPRWPnXrOQH4uk2Mrrsf5NRucKQsVg5V6/oCtof
+	0SCl2D/Vn/2aVFJ64ZXty1ViPvG1FR78M3qdf/7nAWlFEKdUBA7r2N6q2I62tNfW
+	dRpPg2atBTpYRSDX2Y51KNiqo/3Wo3vXROnP7DjPnCRa3QWCpQw/rDiVOTrz53KL
+	sUK3niNLycCPHWA4ElXAdjtMqRPnfM4e8kknScoCFUcYWNEl72NWbZFtds31K6lM
+	0s8YdQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu7mrg339-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:56:16 +0000 (GMT)
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45I9sUGQ024178;
+	Tue, 18 Jun 2024 09:56:15 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu7mrg331-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:56:15 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45I7orXa009425;
+	Tue, 18 Jun 2024 09:56:14 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgmhfw2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:56:14 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45I9u8ui49480134
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Jun 2024 09:56:11 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFDA320043;
+	Tue, 18 Jun 2024 09:56:08 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F02720040;
+	Tue, 18 Jun 2024 09:56:07 +0000 (GMT)
+Received: from [127.0.0.1] (unknown [9.152.108.100])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 18 Jun 2024 09:56:07 +0000 (GMT)
+Message-ID: <1686a7d4dfdfc0a7820f9f9eaf2b08efd1582cc5.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 32/35] s390/uaccess: Add KMSAN support to put_user()
+ and get_user()
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Potapenko <glider@google.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        David
+ Rientjes <rientjes@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joonsoo
+ Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami
+ Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven
+ Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil
+ Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle
+ <svens@linux.ibm.com>
+Date: Tue, 18 Jun 2024 11:56:06 +0200
+In-Reply-To: <CAG_fn=XhWpLKbMO6ZHpnxQDh+PXrTxBnL9X-1zZtBj-CoVk0=g@mail.gmail.com>
+References: <20240613153924.961511-1-iii@linux.ibm.com>
+	 <20240613153924.961511-33-iii@linux.ibm.com>
+	 <CAG_fn=X6wHfmGsVgdqwms_Hk1CQAZ6M5623WyatjVp=Uk-z9pQ@mail.gmail.com>
+	 <e91768f518876ec9b53ffa8069b798107434d0dd.camel@linux.ibm.com>
+	 <CAG_fn=XhWpLKbMO6ZHpnxQDh+PXrTxBnL9X-1zZtBj-CoVk0=g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnFOrziVMDwtu1NA@kekkonen.localdomain>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: thTUXS9VWyXfcdKqlWXkBkJtxj-ngN6F
+X-Proofpoint-ORIG-GUID: PAQyFSQ5hY8FDUl-TDPKYjyoD0hkTlRH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxlogscore=924 spamscore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406180073
 
-On Tue, Jun 18, 2024 at 09:09:03AM +0000, Sakari Ailus wrote:
-> Hi Greg,
-> 
-> On Mon, Jun 17, 2024 at 12:44:55PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jun 17, 2024 at 01:08:25PM +0300, Sakari Ailus wrote:
-> > > There is a warning in kerneldoc documentation of container_of() that
-> > > constness of @ptr is lost. While this is a suggestion container_of_const()
-> > > should be used instead, the vast majority of new code still uses
-> > > container_of():
-> > > 
-> > > $ git diff v6.8 v6.9|grep container_of\(|wc -l
-> > > 788
-> > > $ git diff v6.8 v6.9|grep container_of_const|wc -l
-> > > 11
-> > 
-> > That is because container_of_const is new, and you don't normally go
-> > back and change things unless you have to.  Which is what I am starting
-> > to do for some cases now in the driver core interactions, but generally
-> > it's rare to need this.
-> 
-> container_of_const() does provide a useful a useful sanity check and I
-> think we should encourage people to use it. I'm happy to see many macros
-> under include/ use container_of_const() already, but there seem to be more
-> than 1000 cases where the constness qualifier of a pointer is just
-> discarded just in the scope that got compiled with my current .config (not
-> allyesconfig). While the vast majority are probably benign, I wouldn't be
-> certain there aren't cases where the container of a const pointer ends up
-> being modified.
-> 
-> > 
-> > Also note that container_of_const does not work in an inline function,
-> > which is another reason people might not want to use it.
-> 
-> Does not work or is less useful (compared to a macro)? _Generic() would
-> need to be used if you'd like to have const and non-const variants of an
-> inline function but I guess in most cases macros are just fine.
+On Tue, 2024-06-18 at 11:52 +0200, Alexander Potapenko wrote:
+> On Tue, Jun 18, 2024 at 11:40=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.=
+com>
+> wrote:
+> >=20
+> > On Tue, 2024-06-18 at 11:24 +0200, Alexander Potapenko wrote:
+> > > On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich
+> > > <iii@linux.ibm.com>
+> > > wrote:
+> > > >=20
+> > > > put_user() uses inline assembly with precise constraints, so
+> > > > Clang
+> > > > is
+> > > > in principle capable of instrumenting it automatically.
+> > > > Unfortunately,
+> > > > one of the constraints contains a dereferenced user pointer,
+> > > > and
+> > > > Clang
+> > > > does not currently distinguish user and kernel pointers.
+> > > > Therefore
+> > > > KMSAN attempts to access shadow for user pointers, which is not
+> > > > a
+> > > > right
+> > > > thing to do.
+> > > >=20
+> > > > An obvious fix to add __no_sanitize_memory to __put_user_fn()
+> > > > does
+> > > > not
+> > > > work, since it's __always_inline. And __always_inline cannot be
+> > > > removed
+> > > > due to the __put_user_bad() trick.
+> > > >=20
+> > > > A different obvious fix of using the "a" instead of the "+Q"
+> > > > constraint
+> > > > degrades the code quality, which is very important here, since
+> > > > it's
+> > > > a
+> > > > hot path.
+> > > >=20
+> > > > Instead, repurpose the __put_user_asm() macro to define
+> > > > __put_user_{char,short,int,long}_noinstr() functions and mark
+> > > > them
+> > > > with
+> > > > __no_sanitize_memory. For the non-KMSAN builds make them
+> > > > __always_inline in order to keep the generated code quality.
+> > > > Also
+> > > > define __put_user_{char,short,int,long}() functions, which call
+> > > > the
+> > > > aforementioned ones and which *are* instrumented, because they
+> > > > call
+> > > > KMSAN hooks, which may be implemented as macros.
+> > >=20
+> > > I am not really familiar with s390 assembly, but I think you
+> > > still
+> > > need to call kmsan_copy_to_user() and kmsan_copy_from_user() to
+> > > properly initialize the copied data and report infoleaks.
+> > > Would it be possible to insert calls to linux/instrumented.h
+> > > hooks
+> > > into uaccess functions?
+> >=20
+> > Aren't the existing instrument_get_user() / instrument_put_user()
+> > calls
+> > sufficient?
+>=20
+> Oh, sorry, I overlooked them. Yes, those should be sufficient.
+> But you don't include linux/instrumented.h, do you?
 
-I could not figure out a way to make this an inline function at all.
-Try it yourself and see, maybe I was wrong.
-
-> > > Make an explicit recommendation to use container_of_const(), unless @ptr
-> > > is const but its container isn't.
-> > > 
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  include/linux/container_of.h | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/include/linux/container_of.h b/include/linux/container_of.h
-> > > index 713890c867be..7563015ff165 100644
-> > > --- a/include/linux/container_of.h
-> > > +++ b/include/linux/container_of.h
-> > > @@ -13,7 +13,9 @@
-> > >   * @type:	the type of the container struct this is embedded in.
-> > >   * @member:	the name of the member within the struct.
-> > >   *
-> > > - * WARNING: any const qualifier of @ptr is lost.
-> > > + * WARNING: any const qualifier of @ptr is lost. container_of() should only be
-> > > + * used in cases where @ptr is const and its container is not and you know what
-> > > + * you're doing. Otherwise always use container_of_const().
-> > 
-> > I know of no cases where a @ptr would be const yet the container would
-> > not be, do you?  So why say that here?  That implies that it is a valid
-> > thing to actually do.
-> > 
-> > I don't understand the goal here, do you want to just not have new
-> > usages use container_of() at all?  Or are you trying to warn people of a
-> > common problem that they make?  Having a const @ptr is not normal in the
-> > kernel, so this should be ok.  If not, send patches to fix up those
-> > users please.
-> 
-> My immediate goal is to encourage people to use container_of_const() for
-> the added sanity check and stop adding technical debt (code that ignores
-> const qualifier). Currently people also do think they should be using
-> container_of() instead of container_of_const() because the pointer they
-> have is not const (at the time of writing the code at least).
-
-That's fine, so for new things, use container_of_const(), but generally
-the need for a const is quite rare, outside of the driver core
-interactions.
-
-> Eventually (or hopefully?) adding that sanity check for container_of() may
-> be possible so we'd again have just one macro for the job.
-
-That would be nice, try doing that and see what blows up.
-
-thanks,
-
-greg k-h
+No, apparently we get this include from somewhere else by accident.
+I will add it in a separate patch.
