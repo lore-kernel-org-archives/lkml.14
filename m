@@ -1,128 +1,107 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AAD1F17B;
-	Tue, 18 Jun 2024 14:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BA215AD9E
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718721748; cv=none; b=WISGP0liS75+MJxD2y2PNXVOK8iBaMQ5O4ppgFChvng8S+kNfsjbYSN/8vpx2KtNM+MHPqiRQgE8ilJOQneSAlTepLMAB9Q4PwvNfE1DMYUgc7yJ36uaxsOBpE3VmH5xU8NDegBlGw/ZLsSr1hcYeZO6YUofOldUkz/DsjxYvzY=
+	t=1718721751; cv=none; b=i+fuq+HbMpFnsX29Lf940Wzpm7jR4jhR2mX+2sS49DcMRbuyZP8Xaf6ivbbFJZIHRj2lYkXLwHjJyXl/M2xYtAlUtBdYAMkGeHtDc3G4W+g6pzbgGCecnCxsWu1nE2imRouoJKFmrtKgXMgiisnrtVqwB2ltgP47g3iBl+6MHME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718721748; c=relaxed/simple;
-	bh=J3QMGBZqzIP+aJelogfRoS0tAFI7qSxgroNsPoMsx+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eym9p77vsXcmUW65teIPGUMTt1QuhAjSaM45CYSHJ21BIaVWVx0uYYj40L9xRu4hFGITeQjnWXNSB6dzPgGgFGGH17Cu7weZS0jLryYU/V3+GgZDLTFfukGEbTBXZpaO7yMH7rqkiCPI2i5l5b/l8getaKaowwz9swdkiFUjhSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=63ok91ig; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1718721751; c=relaxed/simple;
+	bh=WWxKwf/arpUungYPOcs5Jw+SlcDPaH/hTG9JTBj39dE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TeiM1y/Fz53qBL108W3Bd7pGu1By4IAh3ON54kA57tN6TR/MVq1ejDuSEIfh2QFPvXwO+Xrs8uVVEJhQIWDBzSrD1AkL5mjeXJY4yL/ZaS1wHHFCDeF5TRJgzudHHEGAd5tLXDpBqIi5nWEeqnJQ6ASws9y0b9X02vrYsjrVOag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r0iOTl0e; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="63ok91ig"
-Received: from pps.filterd (m0355092.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IBkGKC002088;
-	Tue, 18 Jun 2024 14:42:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=DKIM202306; bh=ezwWQXmivCwqBRYERK7BZUh
-	3xDdPWSaca1WBI9VsK/Q=; b=63ok91igM9aGiEEBMeMzFg5e2fnYqPPTXSMShHM
-	8N1gRUJqcMTc+GQqkI4iu5qfSwof0HNHrqzcR6rwua+Ndvq3bV5TEV2D/7yBG7Tq
-	9mIDeeyV563EHgBl0TYfuwOwUCFF90/bgx9eVd16kiwuyPHqAzUWz9nOAcv0Yz7f
-	riIdLZWRo4rAldszEdiXfM3jTTSJVpdx1xpY4hxM2gQn1aC7RI02rekC6VRRGpe2
-	iTTg6jnMaoAWACDhrQ9NAJ6XHGj/l8KWMtRCq+lsNfOO+QwBo9i3+F5YdT3vD2on
-	EepZda0hQwKf2NbJsxyo7ks8XT5D8VNn/rMMrb2sPnsdh6Q==
-Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3yss9d6hk2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 14:42:10 +0000 (GMT)
-Received: from ilclmmrp02.lenovo.com (ilclmmrp02.mot.com [100.65.83.26])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4W3Twy1Qvtz50TkT;
-	Tue, 18 Jun 2024 14:42:10 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp02.lenovo.com (Postfix) with ESMTPSA id 4W3Twy07LJz3p6jp;
-	Tue, 18 Jun 2024 14:42:10 +0000 (UTC)
-Date: Tue, 18 Jun 2024 09:42:08 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: linux-mm@kvack.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Maxwell Bland <mbland@motorola.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/5] arm64: indent ptdump by level, aligning attributes
-Message-ID: <zyhvjj66drbmqfeccpph3b53fltry4smxoocjr7i5hdtqzkoap@i4xidbzzmb6p>
-References: <aw675dhrbplkitj3szjut2vyidsxokogkjj3vi76wl2x4wybtg@5rhk5ca5zpmv>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0iOTl0e"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso92778881fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718721747; x=1719326547; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YRrjGPDAQCR13Q8F1953shfkW5IRb02NqVysm3ok23Q=;
+        b=r0iOTl0efb/8y9vnaZbNwqWyGy31h/kUe0hn1YMzOI6P6h1tn5hQsrzBr08rCZoto7
+         kqU4YyTJUY9IA06qXM+HUe1Cn+UGL9L2ogDy8lLhZMxh8VdGSJ1tXjPCX8Ec4NY69ZX7
+         FP/OuSKMXLsva27owzG2uFNsISmSozVrzgwotUjec3UlOUXHO1LBRqYVnx3B84xG/NFB
+         4yyTCbAL6yYoNFL78WksPmAexJxZBJTk+q2jkYqrTEPm+q3SRqyBDZvyu1sUcrm6yKfm
+         /D20zdMCVL9BjuYq6NMpKIHpOzUJJ0uu1+vWi2ZKtz7J2BZ7QX92vdnx86R4B9HMghcP
+         ABtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718721747; x=1719326547;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YRrjGPDAQCR13Q8F1953shfkW5IRb02NqVysm3ok23Q=;
+        b=jI4u0nFiFgtbSXQgH2F2nXfEZ9Hsc+fBlA8qbzQ1TE5B3cmtkE7ZEklCueMlrVnohm
+         nQrKLETDbc/EWx2xLTxXn78o3cECRUcplEDUQM2v53wFUXOk3OY1YIfV7toTmv/ZY7l5
+         Q21MxUP5bv+QEwMRt9AYF5qvLmC4NUHZolJ57wu579P/ZiH6QBPSNgkX/UBpqL2OoDJw
+         FD87jw/avQ/Qpj9e0DF0/65l3e2+oto+/AXEUDU4UMIvv3KLgw6IAtWbpaHe+rNpQTHV
+         iLi/BykCBiagn33I6LlNEujB4tKa58iFSC4BYzyOGGL3uVfM7hnHxYKz8d00dtgdYuVq
+         qxuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUM8Ecm1Zmz67ap9FF9uYAavNLtbN0dOVu/gojVmKals7yqa0tdykJdS6Neod7ANJHlQYLGAYEVQfH8nK+/MTlcnNff1rYZQVdKOVP+
+X-Gm-Message-State: AOJu0YxkvXJkLVlnlyiRDspiHarP+Pd1kNgMv6oNA2b9+o+I+Gb5N34i
+	UYzcFNT+7b/aDPgczhmCBbfJbWr/4XQjMcUcLZGxUlbrWdA3XOjbs23jFkMm0GA=
+X-Google-Smtp-Source: AGHT+IH7o/2iW8adDQ1VcHtsTbecxJYYHAumInUcxMuFH9tZghs6xo247QAp1+jv1PlSXADfOnLe8A==
+X-Received: by 2002:a05:6512:1056:b0:52c:ba7d:f032 with SMTP id 2adb3069b0e04-52cba7df104mr6159501e87.16.1718721747492;
+        Tue, 18 Jun 2024 07:42:27 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cc477f19bsm263673e87.224.2024.06.18.07.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 07:42:27 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Tue, 18 Jun 2024 16:42:18 +0200
+Subject: [PATCH] interconnect: qcom: qcm2290: Fix mas_snoc_bimc RPM master
+ ID
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aw675dhrbplkitj3szjut2vyidsxokogkjj3vi76wl2x4wybtg@5rhk5ca5zpmv>
-X-Proofpoint-ORIG-GUID: Y_evLIlZBS663m3UA_uhG0DNOEs7VpPu
-X-Proofpoint-GUID: Y_evLIlZBS663m3UA_uhG0DNOEs7VpPu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 adultscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180110
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240618-topic-2290_icc_2-v1-1-64446888a133@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAMmccWYC/x2MQQqAIBAAvxJ7TtiWqOwrESK61V4yNCIQ/54Ec
+ 5nDTIbEUTjB3GSI/EiScFbp2gbcYc+dlfjqQEg9Dt2k7nCJU0QajThnSE3e6sqIjBZqdkXe5P2
+ Xy1rKBxhALthiAAAA
+To: Georgi Djakov <djakov@kernel.org>, Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
-Outputs each level of the page table with two additional spaces for
-parsers, distinction, and readability while maintaining the alignment of
-region size and attributes.
+The value was wrong, resulting in misprogramming of the hardware.
+Fix it.
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
+Fixes: 1a14b1ac3935 ("interconnect: qcom: Add QCM2290 driver support")
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Closes: https://lore.kernel.org/linux-arm-msm/ZgMs_xZVzWH5uK-v@gerhold.net/
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- arch/arm64/mm/ptdump.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/interconnect/qcom/qcm2290.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-index 8f0b459c13ed..2ec16b523043 100644
---- a/arch/arm64/mm/ptdump.c
-+++ b/arch/arm64/mm/ptdump.c
-@@ -336,6 +336,10 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 		   addr >= st->marker[1].start_address) {
- 		const char *unit = units;
- 		unsigned long delta;
-+		unsigned int i;
-+
-+		for (i = 0; i < st->level; i++)
-+			pt_dump_seq_printf(st->seq, "  ");
- 
- 		if (st->current_prot) {
- 			note_prot_uxn(st, addr);
-@@ -362,6 +366,10 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 					   st->start_address, addr);
- 		}
- 
-+		/* Align region information regardlesss of level */
-+		for (i = st->level; i < 4; i++)
-+			pt_dump_seq_printf(st->seq, "  ");
-+
- 		delta >>= 10;
- 		while (!(delta & 1023) && unit[1]) {
- 			delta >>= 10;
-@@ -369,6 +377,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 		}
- 		pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
- 				   pg_level[st->level].name);
-+
- 		if (st->current_prot && pg_level[st->level].bits)
- 			dump_prot(st, pg_level[st->level].bits,
- 				  pg_level[st->level].num);
+diff --git a/drivers/interconnect/qcom/qcm2290.c b/drivers/interconnect/qcom/qcm2290.c
+index ba4cc08684d6..ccbdc6202c07 100644
+--- a/drivers/interconnect/qcom/qcm2290.c
++++ b/drivers/interconnect/qcom/qcm2290.c
+@@ -166,7 +166,7 @@ static struct qcom_icc_node mas_snoc_bimc = {
+ 	.qos.ap_owned = true,
+ 	.qos.qos_port = 6,
+ 	.qos.qos_mode = NOC_QOS_MODE_BYPASS,
+-	.mas_rpm_id = 164,
++	.mas_rpm_id = 3,
+ 	.slv_rpm_id = -1,
+ 	.num_links = ARRAY_SIZE(mas_snoc_bimc_links),
+ 	.links = mas_snoc_bimc_links,
+
+---
+base-commit: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
+change-id: 20240618-topic-2290_icc_2-8da9da970e0a
+
+Best regards,
 -- 
-2.39.2
-
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
