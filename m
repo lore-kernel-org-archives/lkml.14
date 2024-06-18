@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FBE1A2FA3;
-	Tue, 18 Jun 2024 14:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE8C1A2FCE;
+	Tue, 18 Jun 2024 14:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719314; cv=none; b=M2+EJgx/huntwCVF/g3u6h1Ib/UZohZ6PN2S5T+mfEQoXoctqCBd8hW3/UFHP30Nr+fgDC+jgbRtEshqnXk740QDjCpNleUEeCoZ/6N3afqJw0R3lQ7xaajGMn/D3gAOEneoG4CQ9z7Wen7pFfuuqwpUK6RtXtIvXz6zl6zp34Q=
+	t=1718719315; cv=none; b=oMiStNDR+KRHilwVnmBYpDQs9pGRdR8s09n8wtdoF6mIYyr228k3kRsIl/2kJu6CtBgkps6ekEtAzS1ry9+WFs0eJp3qaQXq5+vlxnnFm+5dLc30qIVTYj/qdX3c4NmcBcJAl9i63t7stzBeNbDOTfNNuShxU8eO9ABuMRlh6i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719314; c=relaxed/simple;
-	bh=cxsOhZdf6tudcacoKU9FzawkC0oB7JbfK8Nz/4oDvSo=;
+	s=arc-20240116; t=1718719315; c=relaxed/simple;
+	bh=Nv2OMF5plJD1Hk35j60RcRSFPrIqpyAANp81hkOdN74=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=j2O66MWe1ACjz7Lasa25NRDNw9Rozcfj255yQRqJMnrwmCRvFl5mWJB6nnwMDq9XvMRqbsTxCeeHotCZO3fmm5P/pHJNrWid7G0LbNINVRFEqxAWBx2566VlokxEBh/5KGJAL7iG4hQiRdgxqIaMhLoVb3epWU/5Xwop4VtxAg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fHXMaMZL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BxRF/gBw; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=rQxNeXmQGMtd496mMrBFGh4E1TArAC5aoi/0CMVo95opvngSI7/wSQMiloSSb43giCQjhvfrp2lTO3jQlspXXkKJamU2eflJPxhdWL4QnJuFwlfPatYjBF7byQoZOMxLFM8Ael2ALxujCDPFM+xUaBbCesDRZjp8CJ26j5x8C4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t64YQuwE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IUIrYQ1t; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fHXMaMZL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BxRF/gBw"
-Date: Tue, 18 Jun 2024 14:01:40 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t64YQuwE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IUIrYQ1t"
+Date: Tue, 18 Jun 2024 14:01:43 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718719300;
+	s=2020; t=1718719303;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IRc3KN1z4wuB7Jojkd0E9VSIfgzDze61ufdwFazwcFQ=;
-	b=fHXMaMZLhUjnVoU69pS4XO3IKBqFwnkAsZZLFN6LG8614DiXLaM+/YNLzzQ8ZWTU066MkP
-	KIQb0ZvjxEvJYHTVPV6Ec7+rZ9R/BNUSB+vmrOTKE60gwXCxX9cvJC2UTA171eGSZmunAR
-	G2Ve7WzABlNB+8oqVOkczZzcH6AtHpX4BA4aCMoNu0oAOnUL7cRZsJqq3SDD0w+ubqyRXn
-	kcvO4t6AdZy1lyXf1twyfNVDe/jGq1c+lb119q4s2J8CHqkWoYNabeRSM0E5AztoNPYUAC
-	rz6T9CG1ZN//PoYc6kOtlNE1o5WWEUAr5Zmfqfy8E9WuadgZnyNXZNx/4rjzSw==
+	bh=K8TE9qd+RJ5SHd+kzZBwg+ioVVS+tM8nRRZq/nNDAxg=;
+	b=t64YQuwETBuOIHoevOpfRkZvd+sjujawx7RK4+lRK73HL7gtZLhFLVS01NFd+Wwk26udtt
+	i0djBk0jDMNVWvdWpG7W2PiGdNTcdhb9kkOD6DOq4UVGJ0u7UerFQLRBaYv9KjOaaNyMc2
+	0EA+v5e7k1b3kWkl/Ta4TzvF5PzIqSX563/B8RWd7pPvrIiSKSFhgo13z7rd6zfeV8z/dl
+	qL7CLBzSzYSUiaKX92VVvknvSg9LND19N8yWT59pM/hzRHBkLPNDH0tVoStmgHp53CH4b4
+	33tYJBDLCTJz6sOOBR9WTLPAqPNmOJdsT6iEWj/sndmDkSmk4W3ZlPw3K2Py7Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718719300;
+	s=2020e; t=1718719303;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IRc3KN1z4wuB7Jojkd0E9VSIfgzDze61ufdwFazwcFQ=;
-	b=BxRF/gBwbKuHRQMyMbFZcMtfnqBn5rJ7rss7h7oi0MR2WDmBt452OO845UFxoyMwTozJ/k
-	WVANKYZoPUz8y8Bw==
+	bh=K8TE9qd+RJ5SHd+kzZBwg+ioVVS+tM8nRRZq/nNDAxg=;
+	b=IUIrYQ1t5sG718c83iS42djuWn3QtANizrkoT7TdG/HYTEPvFLJQ7CyYA6G5mj6Ix+MGDG
+	TV1L81xUmxtq5YAg==
 From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cc] x86/mm: Make e820__end_ram_pfn() cover E820_TYPE_ACPI ranges
+Subject: [tip: x86/cc] cpu/hotplug: Add support for declaring CPU offlining
+ not supported
 Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
  Tao Liu <ltao@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240614095904.1345461-13-kirill.shutemov@linux.intel.com>
-References: <20240614095904.1345461-13-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240614095904.1345461-4-kirill.shutemov@linux.intel.com>
+References: <20240614095904.1345461-4-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171871930040.10875.17107246519344852310.tip-bot2@tip-bot2>
+Message-ID: <171871930316.10875.13637336937454429495.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,82 +68,95 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cc branch of tip:
 
-Commit-ID:     06fa48d85b09b3e67afeda220bc19f7102b53beb
-Gitweb:        https://git.kernel.org/tip/06fa48d85b09b3e67afeda220bc19f7102b53beb
+Commit-ID:     1037e4c53e851682ff8d1ab656567a4d5a333c93
+Gitweb:        https://git.kernel.org/tip/1037e4c53e851682ff8d1ab656567a4d5a333c93
 Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 14 Jun 2024 12:58:57 +03:00
+AuthorDate:    Fri, 14 Jun 2024 12:58:48 +03:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 17 Jun 2024 17:46:08 +02:00
+CommitterDate: Mon, 17 Jun 2024 17:45:31 +02:00
 
-x86/mm: Make e820__end_ram_pfn() cover E820_TYPE_ACPI ranges
+cpu/hotplug: Add support for declaring CPU offlining not supported
 
-e820__end_of_ram_pfn() is used to calculate max_pfn which, among other things,
-guides where direct mapping ends. Any memory above max_pfn is not going to be
-present in the direct mapping.
+The ACPI MADT mailbox wakeup method doesn't allow to offline a CPU after
+it has been woken up.
 
-e820__end_of_ram_pfn() finds the end of the RAM based on the highest
-E820_TYPE_RAM range. But it doesn't includes E820_TYPE_ACPI ranges into
-calculation.
+Currently, offlining is prevented based on the confidential computing attribute
+which is set for Intel TDX. But TDX is not the only possible user of the wake up
+method. The MADT wakeup can be implemented outside of a confidential computing
+environment. Offline support is a property of the wakeup method, not the CoCo
+implementation.
 
-Despite the name, E820_TYPE_ACPI covers not only ACPI data, but also EFI tables
-and might be required by kernel to function properly.
+Introduce cpu_hotplug_disable_offlining() that can be called to indicate that
+CPU offlining should be disabled.
 
-Usually the problem is hidden because there is some E820_TYPE_RAM memory above
-E820_TYPE_ACPI. But crashkernel only presents pre-allocated crash memory as
-E820_TYPE_RAM on boot. If the pre-allocated range is small, it can fit under the
-last E820_TYPE_ACPI range.
-
-Modify e820__end_of_ram_pfn() and e820__end_of_low_ram_pfn() to cover
-E820_TYPE_ACPI memory.
-
-The problem was discovered during debugging kexec for TDX guest. TDX guest uses
-E820_TYPE_ACPI to store the unaccepted memory bitmap and pass it between the
-kernels on kexec.
+This function is going to replace CC_ATTR_HOTPLUG_DISABLED for ACPI MADT wakeup
+method.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Tao Liu <ltao@redhat.com>
-Link: https://lore.kernel.org/r/20240614095904.1345461-13-kirill.shutemov@linux.intel.com
+Link: https://lore.kernel.org/r/20240614095904.1345461-4-kirill.shutemov@linux.intel.com
 ---
- arch/x86/kernel/e820.c |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/cpuhplock.h |  2 ++
+ kernel/cpu.c              | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 68b09f7..4893d30 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -828,7 +828,7 @@ u64 __init e820__memblock_alloc_reserved(u64 size, u64 align)
+diff --git a/include/linux/cpuhplock.h b/include/linux/cpuhplock.h
+index 431560b..f7aa20f 100644
+--- a/include/linux/cpuhplock.h
++++ b/include/linux/cpuhplock.h
+@@ -21,6 +21,7 @@ void cpus_read_lock(void);
+ void cpus_read_unlock(void);
+ int  cpus_read_trylock(void);
+ void lockdep_assert_cpus_held(void);
++void cpu_hotplug_disable_offlining(void);
+ void cpu_hotplug_disable(void);
+ void cpu_hotplug_enable(void);
+ void clear_tasks_mm_cpumask(int cpu);
+@@ -36,6 +37,7 @@ static inline void cpus_read_lock(void) { }
+ static inline void cpus_read_unlock(void) { }
+ static inline int  cpus_read_trylock(void) { return true; }
+ static inline void lockdep_assert_cpus_held(void) { }
++static inline void cpu_hotplug_disable_offlining(void) { }
+ static inline void cpu_hotplug_disable(void) { }
+ static inline void cpu_hotplug_enable(void) { }
+ static inline int remove_cpu(unsigned int cpu) { return -EPERM; }
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 563877d..4c15b47 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -483,6 +483,8 @@ static int cpu_hotplug_disabled;
+ 
+ DEFINE_STATIC_PERCPU_RWSEM(cpu_hotplug_lock);
+ 
++static bool cpu_hotplug_offline_disabled __ro_after_init;
++
+ void cpus_read_lock(void)
+ {
+ 	percpu_down_read(&cpu_hotplug_lock);
+@@ -542,6 +544,14 @@ static void lockdep_release_cpus_lock(void)
+ 	rwsem_release(&cpu_hotplug_lock.dep_map, _THIS_IP_);
+ }
+ 
++/* Declare CPU offlining not supported */
++void cpu_hotplug_disable_offlining(void)
++{
++	cpu_maps_update_begin();
++	cpu_hotplug_offline_disabled = true;
++	cpu_maps_update_done();
++}
++
  /*
-  * Find the highest page frame number we have available
-  */
--static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
-+static unsigned long __init e820__end_ram_pfn(unsigned long limit_pfn)
- {
- 	int i;
- 	unsigned long last_pfn = 0;
-@@ -839,7 +839,8 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
- 		unsigned long start_pfn;
- 		unsigned long end_pfn;
- 
--		if (entry->type != type)
-+		if (entry->type != E820_TYPE_RAM &&
-+		    entry->type != E820_TYPE_ACPI)
- 			continue;
- 
- 		start_pfn = entry->addr >> PAGE_SHIFT;
-@@ -865,12 +866,12 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
- 
- unsigned long __init e820__end_of_ram_pfn(void)
- {
--	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
-+	return e820__end_ram_pfn(MAX_ARCH_PFN);
- }
- 
- unsigned long __init e820__end_of_low_ram_pfn(void)
- {
--	return e820_end_pfn(1UL << (32 - PAGE_SHIFT), E820_TYPE_RAM);
-+	return e820__end_ram_pfn(1UL << (32 - PAGE_SHIFT));
- }
- 
- static void __init early_panic(char *msg)
+  * Wait for currently running CPU hotplug operations to complete (if any) and
+  * disable future CPU hotplug (from sysfs). The 'cpu_add_remove_lock' protects
+@@ -1471,7 +1481,8 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
+ 	 * If the platform does not support hotplug, report it explicitly to
+ 	 * differentiate it from a transient offlining failure.
+ 	 */
+-	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED))
++	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) ||
++	    cpu_hotplug_offline_disabled)
+ 		return -EOPNOTSUPP;
+ 	if (cpu_hotplug_disabled)
+ 		return -EBUSY;
