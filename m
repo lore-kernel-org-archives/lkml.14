@@ -1,122 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA0416630B;
-	Tue, 18 Jun 2024 18:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE0D15E5CF;
+	Tue, 18 Jun 2024 18:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718734704; cv=none; b=pK9UAJiGPXHPfoKr9AJDyss3JOFOthiiONEsRRSlNzNG+F333BNC9MuMQREdcC2CAaFOgH4RhKRzNiMANgLopKR5suNOyC1656jQ3FgLOdIB7ouk6tFxcwajR3HqPT5d98ayM5dc3veXZOk9FZx04orqwEKUXO2qAZfyXWMRKbU=
+	t=1718734777; cv=none; b=k5T08lIsFj3GUbRK7qgmDFvNviRjcQwB6VIkUOwtAfU1SX2PfE5ru3+WlLckBNuw42Xf7Sg0sa5F+HcVKLnJENIEOM/d3BDubTtRFq4o7VmqA8wwd15x436RL+vhISoTRnXWkr/4qkJPoZkyghEN0GnRJAQCY5QlYkWvzS6cA2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718734704; c=relaxed/simple;
-	bh=EHvHHvs3IdQ5P9rJaPK4ESC9R2II3qWxcAR6kWa1t4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Thx5gemWxCHeFebJzz9LyuFriogJHRPVHaLnsPzfj3TkKpTjFIc7krSRjHN2Os3Mgs7DHY1rmJKtN1H//g3bzmxCovGY3pmT5eHKVU94Kfx0uGW+3U18S7vWg+pZ42OKWnf/9ibQDz//g8ZqeEtz5zOZRxnx/etvkMj7/TpiyBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b83Rt0oM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718734777; c=relaxed/simple;
+	bh=CLRncUBTVR45wvAAsnnxKrLdiCWAIAAdhMnHTW424Ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISUFgDySGaXmWCNl3RHoaEe4q0vgeNjTPwOCHpIa67ULxLBssd8Podcvd40/pngmDqAVDp39824xEjj3JJTV2TTS79xFni3aNa0wlGZy/TCCfxgKomKxmgpHeL/wLW+9+c03XYZr/6/vwsoHEaHbsPoCPIEo+oSzUbEPrltTYCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bXnk0DbK; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b83Rt0oM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B564AC4AF1C;
-	Tue, 18 Jun 2024 18:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718734704;
-	bh=EHvHHvs3IdQ5P9rJaPK4ESC9R2II3qWxcAR6kWa1t4Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b83Rt0oMqPtrzFHwkktThAbwt6RLmjgTiYcJl5Yy8yP9GJeb/W67nnfp5KZK0arUv
-	 AILftpGiE3WMsdcmNVeO06uiWCOP57jzQFLd1M8NPK1GdpHyeeBWFks1meqa/uR74z
-	 DWfr3k0KW/cwRj2FJZ4zBkjFtSID93TaQ4C7+cS9bb0DBl9MUr+I84JLe5+2BrtIRJ
-	 BUqf6UfT/EeGXEDHkhVbNrnNcvbOZNlJIgR/RwJHs/r28rZ1dBIEY6OkC+j0xFOk89
-	 gykTKPRNkIWYUZK8UdpT7GsbE6qwRUCV9YHJ614stO3SWX0cnJ/oDWEJL45ZS2dn1m
-	 2zQtXOPOaSZGg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] mm/damon/lru_sort: remove unnecessary online tuning handling code
-Date: Tue, 18 Jun 2024 11:18:09 -0700
-Message-Id: <20240618181809.82078-13-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240618181809.82078-1-sj@kernel.org>
-References: <20240618181809.82078-1-sj@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bXnk0DbK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=6rF013NYkWJ7vC3dig6F3esypwWGqLP9D25G+i9avEQ=; b=bXnk0DbK9InWp0ysw0ZGDBc6yC
+	6QCcBK5AvURctxeWVAS/qAiQzwQRUh1a3iYpJ5+6wRi/mO0hUrIKygoT6F5m5CXlH1f7+PctwVwPS
+	JebNBhHZyVcami3ElkOslYTSNM3KSCGByLSPGKbGp52izFyC1CSh4FCVTAau4PZ0bk+g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sJdQE-000PKk-Jc; Tue, 18 Jun 2024 20:19:10 +0200
+Date: Tue, 18 Jun 2024 20:19:10 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Michal Simek <michal.simek@amd.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	linux-kernel@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: xilinx: axienet: Add statistics support
+Message-ID: <a4bea058-c5cd-4d8f-ab0f-cd637ccb3969@lunn.ch>
+References: <20240610231022.2460953-1-sean.anderson@linux.dev>
+ <20240610231022.2460953-4-sean.anderson@linux.dev>
+ <40cff9a6-bad3-4f85-8cbc-6d4bc72f9b9f@lunn.ch>
+ <4d3871c1-afa1-4402-ad62-2fdb9d58dc3c@linux.dev>
+ <6f4916a0-f949-4289-9839-d89af574600d@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f4916a0-f949-4289-9839-d89af574600d@linux.dev>
 
-DAMON_LRU_SORT contains code for handling of online DAMON parameters
-update edge cases.  It is no more necessary since damon_commit_ctx()
-takes care of the cases.  Remove the unnecessary code.
+On Tue, Jun 18, 2024 at 01:03:47PM -0400, Sean Anderson wrote:
+> Hi Andrew,
+> 
+> On 6/11/24 11:36, Sean Anderson wrote:
+> > On 6/10/24 20:26, Andrew Lunn wrote:
+> >>> +static u64 axienet_stat(struct axienet_local *lp, enum temac_stat stat)
+> >>> +{
+> >>> +	return u64_stats_read(&lp->hw_stats[stat]);
+> >>> +}
+> >>> @@ -1695,6 +1760,35 @@ axienet_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
+> >>>  		stats->tx_packets = u64_stats_read(&lp->tx_packets);
+> >>>  		stats->tx_bytes = u64_stats_read(&lp->tx_bytes);
+> >>>  	} while (u64_stats_fetch_retry(&lp->tx_stat_sync, start));
+> >>> +
+> >>> +	if (!(lp->features & XAE_FEATURE_STATS))
+> >>> +		return;
+> >>> +
+> >>> +	do {
+> >>> +		start = u64_stats_fetch_begin(&lp->hw_stat_sync);
+> >>> +		stats->rx_length_errors =
+> >>> +			axienet_stat(lp, STAT_RX_LENGTH_ERRORS);
+> >> 
+> >> I'm i reading this correctly. You are returning the counters from the
+> >> last refresh period. What is that? 2.5Gbps would wrapper around a 32
+> >> byte counter in 13 seconds. I hope these statistics are not 13 seconds
+> >> out of date?
+> > 
+> > By default we use a 1 Hz refresh period. You can of course configure this
+> > up to 13 seconds, but we refuse to raise it further since we risk missing
+> > a wrap-around. It's configurable by userspace so they can determine how
+> > out-of-date they like their stats (vs how often they want to wake up the
+> > CPU).
+> > 
+> >> Since axienet_stats_update() also uses the lp->hw_stat_sync, i don't
+> >> see why you cannot read the hardware counter value and update to the
+> >> latest value.
+> > 
+> > We would need to synchronize against updates to hw_last_counter. Imagine
+> > a scenario like
+> > 
+> > CPU 1					CPU 2
+> > __axienet_device_reset()
+> > 	axienet_stats_update()
+> > 					axienet_stat()
+> > 						u64_stats_read()
+> > 						axienet_ior()
+> > 	/* device reset */
+> > 	hw_last_counter = 0
+> > 						stats->foo = ... - hw_last_counter[...]
+> > 
+> > and now we have a glitch in the counter values, since we effectively are
+> > double-counting the current counter value. Alternatively, we could read
+> > the counter after reset but before hw_last_counter was updated and get a
+> > glitch due to underflow.
+> 
+> Does this make sense to you? If it does, I'll send v2 with just the mutex
+> change and the variable rename pointed out by Simon.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/damon/lru_sort.c | 28 +---------------------------
- 1 file changed, 1 insertion(+), 27 deletions(-)
+What you have is O.K. I just think you can do better.
 
-diff --git a/mm/damon/lru_sort.c b/mm/damon/lru_sort.c
-index f83542973946..4af8fd4a390b 100644
---- a/mm/damon/lru_sort.c
-+++ b/mm/damon/lru_sort.c
-@@ -186,23 +186,11 @@ static struct damos *damon_lru_sort_new_cold_scheme(unsigned int cold_thres)
- 	return damon_lru_sort_new_scheme(&pattern, DAMOS_LRU_DEPRIO);
- }
- 
--static void damon_lru_sort_copy_quota_status(struct damos_quota *dst,
--		struct damos_quota *src)
--{
--	dst->total_charged_sz = src->total_charged_sz;
--	dst->total_charged_ns = src->total_charged_ns;
--	dst->charged_sz = src->charged_sz;
--	dst->charged_from = src->charged_from;
--	dst->charge_target_from = src->charge_target_from;
--	dst->charge_addr_from = src->charge_addr_from;
--}
--
- static int damon_lru_sort_apply_parameters(void)
- {
- 	struct damon_ctx *param_ctx;
- 	struct damon_target *param_target;
--	struct damos *scheme, *hot_scheme, *cold_scheme;
--	struct damos *old_hot_scheme = NULL, *old_cold_scheme = NULL;
-+	struct damos *hot_scheme, *cold_scheme;
- 	unsigned int hot_thres, cold_thres;
- 	int err;
- 
-@@ -215,22 +203,11 @@ static int damon_lru_sort_apply_parameters(void)
- 		goto out;
- 
- 	err = -ENOMEM;
--	damon_for_each_scheme(scheme, ctx) {
--		if (!old_hot_scheme) {
--			old_hot_scheme = scheme;
--			continue;
--		}
--		old_cold_scheme = scheme;
--	}
--
- 	hot_thres = damon_max_nr_accesses(&damon_lru_sort_mon_attrs) *
- 		hot_thres_access_freq / 1000;
- 	hot_scheme = damon_lru_sort_new_hot_scheme(hot_thres);
- 	if (!hot_scheme)
- 		goto out;
--	if (old_hot_scheme)
--		damon_lru_sort_copy_quota_status(&hot_scheme->quota,
--				&old_hot_scheme->quota);
- 
- 	cold_thres = cold_min_age / damon_lru_sort_mon_attrs.aggr_interval;
- 	cold_scheme = damon_lru_sort_new_cold_scheme(cold_thres);
-@@ -238,9 +215,6 @@ static int damon_lru_sort_apply_parameters(void)
- 		damon_destroy_scheme(hot_scheme);
- 		goto out;
- 	}
--	if (old_cold_scheme)
--		damon_lru_sort_copy_quota_status(&cold_scheme->quota,
--				&old_cold_scheme->quota);
- 
- 	damon_set_schemes(param_ctx, &hot_scheme, 1);
- 	damon_add_scheme(param_ctx, cold_scheme);
--- 
-2.39.2
+As you point out, there is a potential race. There are a few
+synchronisation mechanisms for that.
+
+Often you arrange to have exclusive access to a data structure, so you
+know it cannot change while you use it. But as you pointed out, you
+are not in a context which can block on a mutex.
+
+Another mechanism is to know if the data structure has changed while
+you where using it. If it has, throw away what you have, and start
+again. That is what lp->hw_stat_sync etc is all about. You loop while
+its value changes, indicating something made changes. You should be
+able to use this when returning statistics to user space, to return
+the real current statistics, not old cached values.
+
+    Andrew
 
