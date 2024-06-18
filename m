@@ -1,212 +1,222 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2018.outbound.protection.outlook.com [40.92.21.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA2B188CBE;
-	Tue, 18 Jun 2024 22:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718750737; cv=fail; b=HIPHxvaPwINefU9E0TEOILY0YyNrrjczrP1HxNv2AsIGezTYBVBcmKIAd8VIV/edco8ZyLRdcpaMmwjR/P/c5C4E+WzHGQ1dXP435t1YfUouRawD2W3kRWakCU27LBK4B4a6jEDtpZ8uKm8onA0iGSt442HLigf05cOdC1wogI8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718750737; c=relaxed/simple;
-	bh=SoyrcLiEUTD0idG1uPmuXtMPlktLhshEUWF3v5Rt6Oo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PV3KXknQpSXS9exnhKWz3QL1okNw5h7x6A5xIhuO3kB9zkSEhDRP0cMAXkfti1ReYqoWwSBrBUuNv9VVNVyJw711F+LPs3SFzOy+n8nT1HTYyHoHqIhqjZ2pxKXydgR8S0DzgcbZR5dewMW8AG0x/0+OuVItdjUaGHHKzT2Y5Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DGi7bul5; arc=fail smtp.client-ip=40.92.21.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B44318E757;
+	Tue, 18 Jun 2024 22:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718750742; cv=none; b=V9D23rnwOlIeCwQfiUljYFcH4XqXJCLSzGhd+SpvOUyQ5gDjPR/hVS2cM/D+KjVBWurlrIAYYd60s2pTzxbkvpYuTt+5yJwTpbaifwL0UWatv0POiBDMxTU1ZvtVF8DuTHzYz3SQ7ty0RWfBSkE/hr781xWDVilDDhvHMy5CuJ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718750742; c=relaxed/simple;
+	bh=oHyCroq8ofe3DxAkUhI+3vlruUfjDuTglHhZ9P5zO/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XOhm2PH61SJKf8mT92L0MLvh2OSsnQdqkYpwl0w/xSePsP/Q2POZx/2JdwQ6yS7aSRh6PNtgmL1PC0X1W+hKNDYfRKcgJIUYAboNdJ294UzBCkXKqiFeqgpVmNmR1kOb/ocxWt0LldYLR/zZnKn0JtX3cQ04DVygLtCZTYzYNao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCC94icD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DGi7bul5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=khprN3lFd3Zxj+x1wlofHUhHLcmsfIwhqC4BYXneXOhO4EmaYdeKLi0OYbtHWXzO3GaGiBoAnZ1RMpUguYOi6e16H1Qwc1AiU957YV43hhfeddQ6vtoCk+TkIM/NFtAFqI12iDtfXQDMoaTpNmSN5sR2jUOBUZFc67Da/OjWoyyNQ3dG1Vjmz+VMaQG9xsEZEdovudQcuEwCBmXgBwFNaGBnJjwJWh2B1TaJKmiiTQVMXfQeknDSuzIfnNSpWX488UTYorBgKreMZYueFKJbwC/oKQdzA7smKCiWgsqwNvRejFGg0lXu77dwW8aDk1fEse5Ke+IgX5w9xFMKmOPuzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ii/q9LuHGDLjgryoHF03gTIJ7Haq4xyDCL+1qIfRKkI=;
- b=BeF1pJV6G0iaWFdMAzRJ30FXhv8e9K4rqeMSekYZ5g0eP/z1tVBBy6YnABS8S2NKo9Qw5Z8SM9WpS57A97xw1jdZ+kBsSneJ9P0B9CwQFp4X5+hkIiarBNgZQem4/JX1z1HnpAhWSpMxLwzyf5597jvZypwssjpBCbhmNCRoob1VgHTuZlMujobITDp6eqKlPW+MeLMpXAwDaopxyap7+j1+nW6R2s/bPsxzjLk9I0UxEQxrgjwlaebvJ2p53pOf4D4QI7MUDXz6URK83Rb0CRN2OOeGm20fTE+ijQ424Bgefw79kGpi81s+K3UvJPgpmodg7APyXxZH0rwxEQX2EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ii/q9LuHGDLjgryoHF03gTIJ7Haq4xyDCL+1qIfRKkI=;
- b=DGi7bul527aGY2wwzQW8fHeK6s+YYzybfKAlFgm8Fo98UFH2vWo8eayKft2sGoH+90rd5mdU6uxu/7E7sNXv2oClPGXlAYd3JIKwo5XeOJuugeLh5Hv1llOuEefl+WY3N88sRPgCItNenrHWIjZCfJApR6PSny0GYSMSyNSJ5PEM4YefzcXJVahkS1ggEQhk8+N3Ezc6dQ8nh7jczUzMnAhMgEy13IOFDfN3h3G4JzQnqnz/mivGi2HuQdwsaiJ+9SsTMdcVLjgcGxbgiu92wapiVQZpsusG8oflUycFhJanDsbt3CybkKS928vQojX15KODvjrjwedkkUwOGOiPEQ==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by SA1PR20MB4394.namprd20.prod.outlook.com (2603:10b6:806:22a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 22:45:33 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149%6]) with mapi id 15.20.7698.017; Tue, 18 Jun 2024
- 22:45:32 +0000
-Date: Wed, 19 Jun 2024 06:45:16 +0800
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Yuntao Dai <d1581209858@live.com>, jassisinghbrar@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	unicorn_wang@outlook.com, inochiama@outlook.com, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: mailbox: add Sophgo cv18x SoCs mailbox
-Message-ID:
- <IA1PR20MB4953CE25C805EB66EFFDC36DBBCE2@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <SYBP282MB2238DE0DA19C6EF411B2356CC4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
- <SYBP282MB22389FD1E07BBDC6FE1D90A0C4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SYBP282MB22389FD1E07BBDC6FE1D90A0C4CE2@SYBP282MB2238.AUSP282.PROD.OUTLOOK.COM>
-X-TMN: [nI8tfW0HyD3MLek8dSfcPHoIqWHxOodhJq0HuA2nTf8=]
-X-ClientProxiedBy: SG2PR02CA0112.apcprd02.prod.outlook.com
- (2603:1096:4:92::28) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <c7u3cviibnvkuoklzecw4f5ksojeumy2wtasc2j5fmvhmt7s4t@gtkqj3slm7a2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCC94icD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79578C3277B;
+	Tue, 18 Jun 2024 22:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718750741;
+	bh=oHyCroq8ofe3DxAkUhI+3vlruUfjDuTglHhZ9P5zO/Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PCC94icDGrN6b6JhjYQb7+q9Kg8f9qhUjkAs3sZmXuJRY2iPs+oZZysUPeh6+FECY
+	 Zt1U/mCzLd5GNKxbHk4LaOw63kcbemny5RUAnZEO+hP5fvI7DNQSUxIbmCJY0ZISsm
+	 3iX5fdMvI2xE+8Z+dor5LL41BdhbwZtBrrvaxw00BgUJSzFyZLsIWBUi2vxKQR5iIn
+	 U8Efft3IRmhUNLoekTM27t87xrLq8rSdU8yuOwhRBPz32jOo3WNpF4XcxQQN9ZT4RJ
+	 fu9XY7JcOkKEPk5rfzbglurocMh22TKqphvUU037hwl//FtF93IzQ9tDuEjKf/I9iC
+	 BoHG4kNmHyaUQ==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org,
+	viro@zeniv.linux.org.uk,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-mm@kvack.org,
+	liam.howlett@oracle.com,
+	surenb@google.com,
+	rppt@kernel.org,
+	adobriyan@gmail.com,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v5 3/6] fs/procfs: add build ID fetching to PROCMAP_QUERY API
+Date: Tue, 18 Jun 2024 15:45:22 -0700
+Message-ID: <20240618224527.3685213-4-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618224527.3685213-1-andrii@kernel.org>
+References: <20240618224527.3685213-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|SA1PR20MB4394:EE_
-X-MS-Office365-Filtering-Correlation-Id: a68ceefa-9300-4f52-17fd-08dc8fe85c71
-X-MS-Exchange-SLBlob-MailProps:
-	RlF2DIMZ1qWqSQaTqn7+1FJ7I9anhJr8hA5zuZwi1/uB23qX7c5WUISxkBaggbhDy83GBGsz+5JnsHU7wUin6yIdHfwr1AjmZebwMjktGiJi5fZ6dDD8DjxNm7/zW8DFgkRmvMDeZnHcveHyhSQS1OBCrW2ubXwz83FBmM0uNkXvCPVVHP7HuJFom8fQGJcBPcFvPUK/sn+B4+LQqVmRLhzqohF76znCTT6GZulOJLSI2VgImpmIBk5RTAj52XAYBH+5sZb/ef7oSuJ2vSfpzN80YmPpYc9/H64o5I7vTL7N4JhLwZDbS1JWIMRXurPArOURYbTZruJTqRvTk/IgKrubZ056vK6Ac9INPX+diuXCzFlLHh0V8wN97i6TqthsV6jGWd2V/L9HpxD7+M86W/w2iq6j3kO8ajxVdEa9pv2w0JMsCmwhrWaJB4vFsak2hOdO7J2o7AhbkP5CCwBaFRC3og1U1V2AX8mimXc0avmmAvGpsxCFpK2yRYVd3NEy1oBpvCUx9zM/C4icQIiN8VOicHZfZWuL0s8uniZj5PHutagPOIMhmrX4H3a7BCTDu2Bfn/Ec435zft1p/nupivqtYbD9GkeYutcESt2ApUjcWm/KoAZ5vMr+WMWYcyv4fp2yvoB7ChPaGy8JJs5bk0OGF3NNfvPGARpBx/cf6d5TGLlUnNf1N8LMYlxpcSA5zpaQr1ykPVpJvJYYezOAY+OKkZhyWXl71W0H4eacdr0424gI9wv4YTBwPAJwy6m8D294QCIuvWCkoV6w8uYUNk0jRA0b3vXj/atw6v1PVoNlkq0sxZRcZoCNCcaOtzUE5y/QHXJloeUdFQ81tDagWYRtyhw7HzdM
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|4302099010|3412199022|440099025|1602099009|1710799023;
-X-Microsoft-Antispam-Message-Info:
-	1jRHTx8M6Hm+NbOrzM5nG4wm36AAp7ENN5mb1R+1OfZ1rubvvoO4RQJ4GU/BnDh8LMqzgepFcW207QyTCchS5drmfBOKbHWRXU9CZuc+jjTa+5dwyP/XU3AEVZO+AuXUNJxO8FXvyxwcXvE6aKV9X1vN2li8dWR5yKzIaM3RW5Ew9an1/qX/dgQ7aMiFEyrbNxtFRr9+EjZdMn5EIgIhdyEEtnzsqpz8eEsj2y21fIkd1vC8HqEgz7HVolfi7iPnQ1C6+ACqnqjPBFohph7qMd+SaRIq6AuLIbRhHUqAuIHIx3h4v+ySGJEO+MTPXOlAvNMTS4aGxXbXBY66Ehymn2hT36lywpfZ+oxW5QFaLSB/eA7Gg9pNoRqaQtPXJsz17qFRSSftSpvuEhngLPESHfkYvXTWCNocNaVpXZ1zBkQIR3sW8zCxf2Gelv9g5eeB8VQWjqqd17/u9+TckJsh0hZm1S0i6MH4pprYnf0HP62Xufd20BsMh3TInWyr6Lr6TNnaaNFv4A35KQCAUQgaiLLYftPnq/CLjtsejXiceElhH83Ewkx7Iykcsq46Uz88nSSmCR5GF1fdvV+F55JvqMdoUPinFHN/yM22QF5FaTmIyTplmr2HR7KnufCsf4JnGGj8vCJBxLk+kZGk/k+BJy99zxmVBKv2kAa08RQJ+lXGijXBp6x2UVAd4CUQ8Q1q7w6eMQ1XLnIgX++iFTKQ0yFv5CldHy9qfTMlVoc64u4=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eLw7ejHCh4702yjxCiAE6EZooE2CInoHBDkTzWOLtlDgySgfhIW8kgQvhv6O?=
- =?us-ascii?Q?CCBSr/DuNf49hEDrMd+tcJJsWqiMW43JwvfDnUGkKN9+/3hygkL1vH780GHw?=
- =?us-ascii?Q?OdEMDZFx6iHN99o4iEktJko3hcDTsX10P+/kOyBdoDd5l+g2cLTkzzXqzOqf?=
- =?us-ascii?Q?+zeno5CC6JEYHXtpQ3f94SJhsGqzXX88tf18pT6IuqEEzOP+7tjOoREugus8?=
- =?us-ascii?Q?7myW3lM4IudU44MXyOHEKDm1G4057iIrQqA4BTLzURD24GxrxR2aVbk+oQYI?=
- =?us-ascii?Q?V6Shm75g5PuHg9Ci06EZlcpTyXuUN4OoD+wXPOcwhjLus8BcDfUWFd5Banp/?=
- =?us-ascii?Q?RfZ581tU+Ykl0D5OTENQmbhFlup/t4glVn0NusMAuWIV2wD8P8KbZ6VfT7YY?=
- =?us-ascii?Q?Cu8BrzIaWm1VKAGaAdBVzZIV03nGF2l8YB9kRcC0tQJfUWU+1eNFl/TYVxCC?=
- =?us-ascii?Q?Aswp8oGMgWMYOWWjYm+ID/Jn1F/osGf7bLy4QFGqlcY75LFb4bm8BRDTMp68?=
- =?us-ascii?Q?xpwwN46sm0KppxfKhiUuafNpyx0o29L0NeTaPCTAWMxqbctnKTMLzhkRgeX0?=
- =?us-ascii?Q?nWvDZuKI08dqh2GTwY8WNtc2KU7KJx69SW5uE/ipCJvqBlIV+rrfFs0Qi4/x?=
- =?us-ascii?Q?ECx3keCBUL3VVrNohblcBg3mhNQ/P5QCAsHeI+Tja0JrRqF/rsn9bBDtRkLk?=
- =?us-ascii?Q?XVBMIq8yzM6zzhn/f69lYBG64f2Nk0yGqM3ZSy62EYUQTYHYadO2mTzEI3j9?=
- =?us-ascii?Q?2pC/2whaNSq1xMP1ngPEV3Xq+kLJg6NON+/9F0rY5wunjhDPKYiw4accSFlf?=
- =?us-ascii?Q?ww9+qjoy/5MPQSO3cxzIJth5s/HBtHngdqk1soVVFt10CuAx+HHpfRGq79ua?=
- =?us-ascii?Q?HV5E4Do0xd0uGPOqPi0+oy4U5BEsR3MoTpssi7oxoZ2fgiGSEnFujyCLgmne?=
- =?us-ascii?Q?1rsB/byVf3kV5veUpFWVDEiFI7dLLVaGEC0PRVtuHM0WmTgeSG9m3lL8Taoh?=
- =?us-ascii?Q?t3AFbhStfHqiRWdyyyeHMcGLOSUpySjXpOGZqY2BF8tDCAV24Ucef3R8HWAM?=
- =?us-ascii?Q?cQ7YK/L1yvauS2dP+EDIPj1tsMW3z7cHmTE4AgSsQwGiCIJ4/qkCiTCUKSOm?=
- =?us-ascii?Q?hvuhykYJQgoIEL9nraDQ+Bw7HiICsCdFsRvJdygn4Gic5j6lY6v8VBw1Vke4?=
- =?us-ascii?Q?YdDmMjIacUVji/yfbs5I8K7oY55sxW4xZ+xR09wk51EYGZFD45S7/mGiZDyf?=
- =?us-ascii?Q?BHUa1utZ6MxfMsLwYPzl?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a68ceefa-9300-4f52-17fd-08dc8fe85c71
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 22:45:32.8690
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR20MB4394
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 11:12:33PM GMT, Yuntao Dai wrote:
-> Add devicetree bindings documentation for Sophgo cv18x SoCs mailbox
-> 
-> Signed-off-by: Yuntao Dai <d1581209858@live.com>
-> ---
->  .../mailbox/sophgo,cv1800b-mailbox.yaml       | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
-> new file mode 100644
-> index 000000000..e1868aaf2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/sophgo,cv1800b-mailbox.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/sophgo,cv1800b-mailbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sophgo cv1800b mailbox controller
-> +
-> +maintainers:
-> +  - Yuntao Dai <d1581209858@live.com>
-> +
-> +description:
-> +  The Sophgo cv18x SoCs mailbox has 8 channels and 8 bytes per channel for
-> +  different processors. Any processer can write data in a channel, and
-> +  set co-responding register to raise interrupt to notice another processor,
-> +  and it is allowed to send data to itself.
-> +  Sophgo cv18x SoCs has 3 processors and numbered as
-> +  <1> C906L
-> +  <2> C906B
-> +  <3> 8051
+The need to get ELF build ID reliably is an important aspect when
+dealing with profiling and stack trace symbolization, and
+/proc/<pid>/maps textual representation doesn't help with this.
 
-Are you sure the 8051 use the same mailbox layout?
-IIRC, only the small core use this mailbox.
+To get backing file's ELF build ID, application has to first resolve
+VMA, then use it's start/end address range to follow a special
+/proc/<pid>/map_files/<start>-<end> symlink to open the ELF file (this
+is necessary because backing file might have been removed from the disk
+or was already replaced with another binary in the same file path.
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sophgo,cv1800b-mailbox
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    const: mailbox
-> +
-> +  recvid:
-> +    maxItems: 1
-> +    description:
-> +      This cell indicates the mailbox controller is running on which processor
-> +
-> +  sendto:
-> +    maxItems: 1
-> +    description:
-> +      This cell indicates the message sends to which processor
-> +
-> +
-> +  "#mbox-cells":
-> +    const: 1
-> +    description:
-> +      This cell indicates which channel is used
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - recvid
-> +  - sendto
-> +  - "#mbox-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    mailbox: mailbox@1900000 {
-> +        compatible = "sophgo,cv1800b-mailbox";
-> +        reg = <0x01900000 0x1000>;
-> +        interrupts = <101 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "mailbox";
-> +        interrupt-parent = <&plic>;
-> +        recvid = <1>;
-> +        sendto = <2>;
-> +        #mbox-cells = <1>;
-> +    };
-> -- 
-> 2.17.1
-> 
+Such approach, beyond just adding complexity of having to do a bunch of
+extra work, has extra security implications. Because application opens
+underlying ELF file and needs read access to its entire contents (as far
+as kernel is concerned), kernel puts additional capable() checks on
+following /proc/<pid>/map_files/<start>-<end> symlink. And that makes
+sense in general.
+
+But in the case of build ID, profiler/symbolizer doesn't need the
+contents of ELF file, per se. It's only build ID that is of interest,
+and ELF build ID itself doesn't provide any sensitive information.
+
+So this patch adds a way to request backing file's ELF build ID along
+the rest of VMA information in the same API. User has control over
+whether this piece of information is requested or not by either setting
+build_id_size field to zero or non-zero maximum buffer size they
+provided through build_id_addr field (which encodes user pointer as
+__u64 field). This is a completely optional piece of information, and so
+has no performance implications for user cases that don't care about
+build ID, while improving performance and simplifying the setup for
+those application that do need it.
+
+Kernel already implements build ID fetching, which is used from BPF
+subsystem. We are reusing this code here, but plan a follow up changes
+to make it work better under more relaxed assumption (compared to what
+existing code assumes) of being called from user process context, in
+which page faults are allowed. BPF-specific implementation currently
+bails out if necessary part of ELF file is not paged in, all due to
+extra BPF-specific restrictions (like the need to fetch build ID in
+restrictive contexts such as NMI handler).
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ fs/proc/task_mmu.c      | 25 ++++++++++++++++++++++++-
+ include/uapi/linux/fs.h | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 1 deletion(-)
+
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 674405b99d0d..32bef3eeab7f 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -22,6 +22,7 @@
+ #include <linux/pkeys.h>
+ #include <linux/minmax.h>
+ #include <linux/overflow.h>
++#include <linux/buildid.h>
+ 
+ #include <asm/elf.h>
+ #include <asm/tlb.h>
+@@ -445,6 +446,7 @@ static struct vm_area_struct *query_matching_vma(struct mm_struct *mm,
+ 	addr = vma->vm_end;
+ 	if (flags & PROCMAP_QUERY_COVERING_OR_NEXT_VMA)
+ 		goto next_vma;
++
+ no_vma:
+ 	return ERR_PTR(-ENOENT);
+ }
+@@ -455,7 +457,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	struct vm_area_struct *vma;
+ 	struct mm_struct *mm;
+ 	const char *name = NULL;
+-	char *name_buf = NULL;
++	char build_id_buf[BUILD_ID_SIZE_MAX], *name_buf = NULL;
+ 	__u64 usize;
+ 	int err;
+ 
+@@ -477,6 +479,8 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	/* either both buffer address and size are set, or both should be zero */
+ 	if (!!karg.vma_name_size != !!karg.vma_name_addr)
+ 		return -EINVAL;
++	if (!!karg.build_id_size != !!karg.build_id_addr)
++		return -EINVAL;
+ 
+ 	mm = priv->mm;
+ 	if (!mm || !mmget_not_zero(mm))
+@@ -539,6 +543,21 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 		}
+ 	}
+ 
++	if (karg.build_id_size) {
++		__u32 build_id_sz;
++
++		err = build_id_parse(vma, build_id_buf, &build_id_sz);
++		if (err) {
++			karg.build_id_size = 0;
++		} else {
++			if (karg.build_id_size < build_id_sz) {
++				err = -ENAMETOOLONG;
++				goto out;
++			}
++			karg.build_id_size = build_id_sz;
++		}
++	}
++
+ 	if (karg.vma_name_size) {
+ 		size_t name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
+ 		const struct path *path;
+@@ -583,6 +602,10 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	}
+ 	kfree(name_buf);
+ 
++	if (karg.build_id_size && copy_to_user((void __user *)karg.build_id_addr,
++					       build_id_buf, karg.build_id_size))
++		return -EFAULT;
++
+ 	if (copy_to_user(uarg, &karg, min_t(size_t, sizeof(karg), usize)))
+ 		return -EFAULT;
+ 
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 74480ed4fa78..cad6375044bc 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -511,6 +511,26 @@ struct procmap_query {
+ 	 * If set to zero, vma_name_addr should be set to zero as well
+ 	 */
+ 	__u32 vma_name_size;		/* in/out */
++	/*
++	 * If set to non-zero value, signals the request to extract and return
++	 * VMA's backing file's build ID, if the backing file is an ELF file
++	 * and it contains embedded build ID.
++	 *
++	 * Kernel will set this field to zero, if VMA has no backing file,
++	 * backing file is not an ELF file, or ELF file has no build ID
++	 * embedded.
++	 *
++	 * Build ID is a binary value (not a string). Kernel will set
++	 * build_id_size field to exact number of bytes used for build ID.
++	 * If build ID is requested and present, but needs more bytes than
++	 * user-supplied maximum buffer size (see build_id_addr field below),
++	 * -E2BIG error will be returned.
++	 *
++	 * If this field is set to non-zero value, build_id_addr should point
++	 * to valid user space memory buffer of at least build_id_size bytes.
++	 * If set to zero, build_id_addr should be set to zero as well
++	 */
++	__u32 build_id_size;		/* in/out */
+ 	/*
+ 	 * User-supplied address of a buffer of at least vma_name_size bytes
+ 	 * for kernel to fill with matched VMA's name (see vma_name_size field
+@@ -519,6 +539,14 @@ struct procmap_query {
+ 	 * Should be set to zero if VMA name should not be returned.
+ 	 */
+ 	__u64 vma_name_addr;		/* in */
++	/*
++	 * User-supplied address of a buffer of at least build_id_size bytes
++	 * for kernel to fill with matched VMA's ELF build ID, if available
++	 * (see build_id_size field description above for details).
++	 *
++	 * Should be set to zero if build ID should not be returned.
++	 */
++	__u64 build_id_addr;		/* in */
+ };
+ 
+ #endif /* _UAPI_LINUX_FS_H */
+-- 
+2.43.0
+
