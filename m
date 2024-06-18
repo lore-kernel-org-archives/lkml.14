@@ -1,164 +1,151 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FB61891CB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 20:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF5C1741EE
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 20:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718743538; cv=none; b=exJLSTTbMjQLD5lWuxfiaRJZ/oxYCy8ZQ0KRsR574JAQzOrrjprCHVTorMxRno4+exvjs04PWTKiNf/3qjm6OZpARZyPkvpZwqfd88xMFyCcv88aPZfX/QwEFicZLSdFQcX9IYYDdrrqoBZrfiX9fqfqR91J6x5gXHfus5qtoqw=
+	t=1718743579; cv=none; b=YMNG6VSmXMxN3jyrmvD3DWnYhkEeqbrtUBFeAb9Z7qOlk1pUiXFwJYIcHxYNkf10FzxClqdowmkciGyrax688thHzH02rX6qsQ092hMlPMgudJGh2C4ye2YkG61Qnz2eFklLqp5Ux9yR2zhWF/jwdtu3Q7p0OWhPV85SQGsj1Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718743538; c=relaxed/simple;
-	bh=g8FE+T2DD4IZWMYmlFPdiycIjv+h3ge8x8AC1b4ypRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mCG0zCWPEBBveTlrjkK5UOucumT2QFuMK9YVQdg3fYQkSPIPHUfXejDIffpVGkVE9lB5UVsDEHLFU8TTbV7smyUH4dfZ/6C7eu0ai9ZiyFV/MjfTNDbMHSQNsUi1hNeMptmpMgOIKfSGtf4dQXmTHujvPSmCMerYWgQwvQpqPAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=SHrBazZ9; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1718743579; c=relaxed/simple;
+	bh=W/5eL0cTkD5re/fpvMfVw7UyxGfBbAwxLzn/LzfjLmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnk+1pYsKB3vCt+VvJykjs6C5rHXcAbXVyQslqJ32vudnGwzvzVIpBHsWuKb6cy8D7wfJNEGLDcG165s5NIwzPT/E5wFT3VLfEN5H/IKcQhDfbQQuHr3yzqFLXE2Yhv6CztItDp3VTyDxgYYtzobePI2tv0chigPk0xb9eObwPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3xsyea+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="SHrBazZ9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NILpwn3nKSsVCdGL6dYtaZa5d4B531Bu8ZLW1v15jDk=; b=SHrBazZ9Oht6tUv5yhC8XwkKK+
-	Z7JGsPM+a/7GhYejyrGhkwh1ot8052qYKHbHdeAkexjOrRzTD2mDHV/Ka4jW4lh+M7h1vR28IeMKZ
-	fOiGepg1UK257Qtl3xf32caYoywveRgUvs0jhCsTeztWXILLhVYruj6GYOwiQ8ohGKrlvHkrQFK7w
-	I4NDd3vq+4e0dcJrL8KwxUBibvRDXO0WLUTBe19G3cbrAPfPqNnErWSjrY/40V2b48xWXFyHsHwx1
-	k8Qnx6eIpMpWPpQ5gVtRaXAYhWid/hHIqsJMext0a5RysOgffmuK9Ji9l3RfzxeWo8KAWk7aFgUK4
-	RDb7CAjg==;
-Received: from [179.193.2.197] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sJfhi-004sjC-0i; Tue, 18 Jun 2024 22:45:22 +0200
-Message-ID: <92595a28-fcc3-4a5e-bfcb-bd25aca603b9@igalia.com>
-Date: Tue, 18 Jun 2024 17:45:12 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3xsyea+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC60CC3277B;
+	Tue, 18 Jun 2024 20:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718743579;
+	bh=W/5eL0cTkD5re/fpvMfVw7UyxGfBbAwxLzn/LzfjLmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q3xsyea+SwCFJmJvw+sUIjpQkUTQKXqtkhyFkzIUFZRUnQdmy+r1DLfu7k0cd10ZD
+	 cWWlKsgnsqVecYvI/3PblxillQY0fYZfI/NrhC+p+bGsZfMjLCjlpmn8EWA6RqwWEC
+	 ZDtUisJw6tgrZWMANY4192Y8KX0Ubm8VAQY08rNmjVIUKNn2D7LcFHAh3zVWEzlW7z
+	 A0Uvbm5IwV9qQJUlJg4mYn7axj8N0SMuUNsmx864OzHJZkpCY/RgNp9ZF9dQfBEbIO
+	 +tRUdQIkJy+vDmNUWzbQuqqOqlQF97n0phkRhSY0t4f4ldJsI1+1vIfK7IcGYxxijy
+	 Pn9kdIiO3Hnew==
+Date: Tue, 18 Jun 2024 21:46:14 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: Page select register restrictions in regmap core
+Message-ID: <17890e6b-cf00-43cd-9d99-2383b5fbef64@sirena.org.uk>
+References: <4b22e04f-3142-4a5a-a8d1-366c4b8bbb73@sirena.org.uk>
+ <78c93d6b-af0e-4d96-b213-e1e402524361@roeck-us.net>
+ <adcd5997-84ee-4c72-aa37-2940afdc83bd@sirena.org.uk>
+ <c4a5fb5c-90b4-488b-8875-a0b819e24bcd@roeck-us.net>
+ <19893519-20a6-47cf-bb3b-c61dada627bc@sirena.org.uk>
+ <e6733f56-014e-4ea0-aaf8-059334f2b27f@roeck-us.net>
+ <1a62fc39-355c-4885-b5f6-b66f01a1328a@sirena.org.uk>
+ <0287c32d-0b63-4873-9f71-0094a912f8bb@roeck-us.net>
+ <44d4fce5-2ec9-4f62-b7ac-a317c7d843db@sirena.org.uk>
+ <3b47b5e3-4eb2-43f9-8f4f-c021d203305e@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/9] drm: Support per-plane async flip configuration
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
- dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- kernel-dev@igalia.com, Melissa Wen <mwen@igalia.com>,
- alexander.deucher@amd.com, christian.koenig@amd.com,
- Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>,
- daniel@ffwll.ch, Daniel Stone <daniel@fooishbar.org>,
- =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <maraeo@gmail.com>,
- Dave Airlie <airlied@gmail.com>, ville.syrjala@linux.intel.com,
- Xaver Hugl <xaver.hugl@gmail.com>, Joshua Ashton <joshua@froggi.es>,
- =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
- Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-References: <20240618030024.500532-1-andrealmeid@igalia.com>
- <20240618030024.500532-3-andrealmeid@igalia.com> <878qz2h9pp.fsf@intel.com>
- <CAA8EJpqM4iaG3PKM5c0Op7Y7c1SRDrOCk_oOnwG8YfdCxC8w6g@mail.gmail.com>
- <fc67b552-6f61-4f30-9e34-dd6b2364d155@igalia.com>
- <aflfggx2dc2p3y2a76yecjgmahozmbpnkk2qpekrnkpvviih6i@g2uuxeubozbo>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <aflfggx2dc2p3y2a76yecjgmahozmbpnkk2qpekrnkpvviih6i@g2uuxeubozbo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="z955Ry/T/YDp1VmR"
+Content-Disposition: inline
+In-Reply-To: <3b47b5e3-4eb2-43f9-8f4f-c021d203305e@roeck-us.net>
+X-Cookie: If you can read this, you're too close.
 
-Em 18/06/2024 14:43, Dmitry Baryshkov escreveu:
-> On Tue, Jun 18, 2024 at 01:18:10PM GMT, André Almeida wrote:
->> Em 18/06/2024 07:07, Dmitry Baryshkov escreveu:
->>> On Tue, 18 Jun 2024 at 12:38, Jani Nikula <jani.nikula@linux.intel.com> wrote:
->>>>
->>>> On Tue, 18 Jun 2024, André Almeida <andrealmeid@igalia.com> wrote:
->>>>> Drivers have different capabilities on what plane types they can or
->>>>> cannot perform async flips. Create a plane::async_flip field so each
->>>>> driver can choose which planes they allow doing async flips.
->>>>>
->>>>> Signed-off-by: André Almeida <andrealmeid@igalia.com>
->>>>> ---
->>>>>    include/drm/drm_plane.h | 5 +++++
->>>>>    1 file changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
->>>>> index 9507542121fa..0bebc72af5c3 100644
->>>>> --- a/include/drm/drm_plane.h
->>>>> +++ b/include/drm/drm_plane.h
->>>>> @@ -786,6 +786,11 @@ struct drm_plane {
->>>>>          * @kmsg_panic: Used to register a panic notifier for this plane
->>>>>          */
->>>>>         struct kmsg_dumper kmsg_panic;
->>>>> +
->>>>> +     /**
->>>>> +      * @async_flip: indicates if a plane can do async flips
->>>>> +      */
->>>>
->>>> When is it okay to set or change the value of this member?
->>>>
->>>> If you don't document it, people will find creative uses for this.
->>>
->>> Maybe it's better to have a callback instead of a static field? This
->>> way it becomes clear that it's only relevant at the time of the
->>> atomic_check().
->>>
->>
->> So we would have something like bool (*async_flip) for struct
->> drm_plane_funcs I suppose. Then each driver will implement this function and
->> check on runtime if it should flip or not, right?
->>
->> I agree that it makes more clear, but as far as I can see this is not
->> something that is subject to being changed at runtime at all, so it seems a
->> bit overkill to me to encapsulate a static information like that. I prefer
->> to improve the documentation on the struct member to see if this solves the
->> problem. What do you think of the following comment:
-> 
-> It looks like I keep on mixing async_flips as handled via the
-> DRM_MODE_PAGE_FLIP_ASYNC and the plane flips that are governed by
-> .atomic_async_check / .atomic_async_update / drm_atomic_helper_check()
-> and which end up being used just for legacy cursor updates.
-> 
-> So, yes, those are two different code paths, but with your changes I
-> think it becomes even easier to get confused between
-> atomic_async_check() and .async_flip member.
-> 
 
-I see, now that I read about atomic_async_check(), it got me confused as 
-well :)
+--z955Ry/T/YDp1VmR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I see that drivers define atomic_async_check() to tell DRM whether or 
-not such plane is able to do async flips... just like I'm trying to do 
-here. amdgpu implementation for that function is almost the opposite of 
-the restrictions that I've implemented in this patchset:
+On Tue, Jun 18, 2024 at 12:33:40PM -0700, Guenter Roeck wrote:
+> On 6/18/24 10:45, Mark Brown wrote:
+> > On Tue, Jun 18, 2024 at 09:14:56AM -0700, Guenter Roeck wrote:
 
-int amdgpu_dm_plane_atomic_async_check(...) {
-	/* Only support async updates on cursor planes. */
-	if (plane->type != DRM_PLANE_TYPE_CURSOR)
-		return -EINVAL;
+> > > It turns out that at least some i801 controllers don't work with the
+> > > access mechanism used by regmap, or maybe the spd5118 chips don't sup=
+port
+> > > I2C_FUNC_SMBUS_I2C_BLOCK. I already found that those chips don't supp=
+ort
+> > > auto-incrementing the register address and actually reset the address=
+ on byte
+> > > reads (i.e., subsequent calls to i2c_smbus_read_byte() always return =
+the data
+> > > from the first register). Since regmap doesn't have a means for me to=
+ say
+> > > "don't use I2C_FUNC_SMBUS_I2C_BLOCK even if the controller supports i=
+t",
+> > > I may have to drop regmap support entirely anyway. That would be anno=
+ying,
+> > > but right now I have no idea how to work around that problem.
 
-	return 0;
-}
+> > You can set the use_single_read and use_single_write flags in the config
+> > to ensure registers are accessed one at a time, that restriction is
+> > moderately common.
 
-Anyway, I'll try to see if the legacy cursor path might be incorporated 
-somehow in the DRM_MODE_PAGE_FLIP_ASYNC path, or to come up with 
-something that makes them more distinguishable.
+> That doesn't help, unfortunately. Thinking about it, that is not really
+> surprising. The failing write is to the page register, and that was
+> a single write anyway.
 
-Thanks!
+Oh, that's interesting - I'm kind of surprised the wire protocols differ
+but it's been a while since I looked.  We should probably add this to
+the quirking in regmap-i2c.c, have it select one the 8 bit only smbus
+versions for devices that need register at a time operation.  I'd not be
+surprised if other devices have issues, and anyway if it makes a
+difference to the wire protocol we should try to select something as
+close as possible to what we're actually doing.
 
-> 
->> /**
->>   * @async_flip: indicates if a plane can perform async flips. The
->>   * driver should set this true only for planes that the hardware
->>   * supports flipping asynchronously. It may not be changed during
->>   * runtime. This field is checked inside drm_mode_atomic_ioctl() to
->>   * allow only the correct planes to go with DRM_MODE_PAGE_FLIP_ASYNC.
->>   */
-> 
+Something like the below perhaps (this probably needs to be converted to
+a match table type thing at this point, there's the SMBUS_WORD_DATA case
+too):
+
+diff --git a/drivers/base/regmap/regmap-i2c.c b/drivers/base/regmap/regmap-=
+i2c.c
+index a905e955bbfc..499fcec00f2d 100644
+--- a/drivers/base/regmap/regmap-i2c.c
++++ b/drivers/base/regmap/regmap-i2c.c
+@@ -313,6 +313,11 @@ static const struct regmap_bus *regmap_get_i2c_bus(str=
+uct i2c_client *i2c,
+=20
+ 	if (i2c_check_functionality(i2c->adapter, I2C_FUNC_I2C))
+ 		bus =3D &regmap_i2c;
++	else if (config->val_bits =3D=3D 8 && config->reg_bits =3D=3D 8 &&
++		 config->use_single_read && config->use_single_write &&
++		 i2c_check_functionality(i2c->adapter,
++					 I2C_FUNC_SMBUS_BYTE_DATA))
++		bus =3D &regmap_smbus_byte;
+ 	else if (config->val_bits =3D=3D 8 && config->reg_bits =3D=3D 8 &&
+ 		 i2c_check_functionality(i2c->adapter,
+ 					 I2C_FUNC_SMBUS_I2C_BLOCK))
+@@ -334,10 +339,6 @@ static const struct regmap_bus *regmap_get_i2c_bus(str=
+uct i2c_client *i2c,
+ 		default:		/* everything else is not supported */
+ 			break;
+ 		}
+-	else if (config->val_bits =3D=3D 8 && config->reg_bits =3D=3D 8 &&
+-		 i2c_check_functionality(i2c->adapter,
+-					 I2C_FUNC_SMBUS_BYTE_DATA))
+-		bus =3D &regmap_smbus_byte;
+=20
+ 	if (!bus)
+ 		return ERR_PTR(-ENOTSUPP);
+
+--z955Ry/T/YDp1VmR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZx8hYACgkQJNaLcl1U
+h9Cnrgf/QjznT49jDb/DWooOM/acXIOewQfAQkUVwNHqQFrUKzspCZ77zqKBWtmc
+y2wDLj1vH/tG1lWKqerf3dG0hMPSwlIbxjvFbdSW3swO92n4mzEwvUI5b5//wObF
+mOw5e0NCgldbfGSUxMyRxxhufWVDeGvfK8WfhZ/iARtUbVubI40urDMfN2tfv+jD
+irKn0nzLANfl6CXwyh6ZavUU5uCTgM87/jc5bmtmvk+5pug1FKFe10wj0pBvj/o2
+F7LVowF1yvmA3iJYA5INvVFK2rloq0kmjOgDMAqX6vrD8hN5OWv/nuyiAYIFBald
+em7GT5dIr6NXHnn7ePZUcNMP2R3EcQ==
+=8VbC
+-----END PGP SIGNATURE-----
+
+--z955Ry/T/YDp1VmR--
