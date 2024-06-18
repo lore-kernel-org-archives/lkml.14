@@ -1,224 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A4F1AD3FC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC0CC20974C;
+	Tue, 18 Jun 2024 09:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718704483; cv=none; b=Wl27iWcu5RfprWfzGY7ChWNOUlQ5dM9OPl25UzoCa577gV/AjVgYjF2laN/+DUYAUPmgG3qwNv8ShTqqCAs1EaLXQWe3bwCy2sK2BSD7XdnNEGwmBQQGGfzcpZ9YP7y/ziUBDQJWYKapZ0l3gkjsjKx43bjyr93UBKiXvJusjGg=
+	t=1718704529; cv=none; b=tDz+vMIcqkn61ttVdnIOA2l+HEnOuzw/8z5+yPyy7++kWmLxxL/9B65RVxxH44rhF+Kvpd86p0QUXNN8CULZrcf0i8GFYHd3Gw6Q8jaBAPP8RT/uKWJMdHN9OZc2rNF4g5HfENHSv2OvWLMtqW6gvU+xXfJbcELE/1+PT35WmFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718704483; c=relaxed/simple;
-	bh=D3TlojkKvKWyJEHHqBrL01o8w/K9ZWcLf8NUSyaXQNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jeFvQ3gVPV+f92+vFi6ttdF9KTB8RctL0HegN1h+XomUf/a7qWQnXTjhfrGOHTzelMbDTm3WVjIBBWXNRo/sxu+2I9z2Uz3Z6qj4/V9xHktPUrCTYZ+s9fOuEZwUb8yZ2/XDyrmU5tk/ELZQ3XjEYhesLhaAIB6Fy2RzkRq8e5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LVIQ9eIv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LVIQ9eIv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718704481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CN/U2d3PZd70qquRuOoBBo9HLQRVmiK8jzlTBLWFkc4=;
-	b=LVIQ9eIvkVMO4aMyIBpwdKnTSTgNxkJl/p1+5b5QUBI00HHetO4TQczVMpxAa5QBnhMyZ6
-	HUnasrRFWVg2ncOhvvfajC0p8bbNoxzoxh6AHwFaUAOJYR1pBrYE7AiyvApoFpQeGttA8f
-	Oq+b9Hfp3GaesTXn3MuHjv7wV5GoIyE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-442-gcwoGoLkNmK5Ew7RaKGmOA-1; Tue, 18 Jun 2024 05:54:39 -0400
-X-MC-Unique: gcwoGoLkNmK5Ew7RaKGmOA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6f99aca0f8so32286266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:54:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718704479; x=1719309279;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CN/U2d3PZd70qquRuOoBBo9HLQRVmiK8jzlTBLWFkc4=;
-        b=fSGLhkO5Q8TSf+oc6vg1KMrC3Dn0CYB2iCuD3/oNhGnsPHgxWOBMFUGeraaT74K0zf
-         j0xoPPUoN2F8oNBfgjXlX4CvZQezfiTxHPoVXWsHZYHdAHkE4WOZvMt6rx6zOU5ph6Bt
-         JVobEfBTvyJ/HG0gJYCIIAOo16I+rZxLEZaBMzfkS/IaQWV5V1MSGHgJCA+iNgRL/4nH
-         K0Y9+YSh9Hpkfpy/3DCOgD90GU5Arq7XkS5RcwLyPjHduMKhGvOFE78jV47Q9PcraKws
-         rG79xWTLiAER2qGFq0JsXu7n54VE9HBFZeKcC+ucGZ8f46podgM8DW+TcaJ1qsktyDf/
-         7ECA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlB6Sgthbdwd6cbHYu8Rf6+oAk0XYC89bhf5pA02PEuHqWYG9sjqwFEJ92Xo7DOk6wRT+qVLpKS7uy923qcaeutbNWL3HpZr4Syv8j
-X-Gm-Message-State: AOJu0YxhznkG5VFSPme4dCQZtOrkgEm+8YohElBvoi2dm5eKCqb1yhbG
-	ANFQzkFobjIu98F5aNCcbZxd1mZUEU50fSfpPBDPfW7A2+qYGHMjcHMy/99EfZlri/FMRbXOHB0
-	Yudabg86zJ6vDian0L391c07mNWqUFoaxhP6BY76xsI/hA4ZRriYluwZITnrm1A==
-X-Received: by 2002:a17:906:dfd1:b0:a6f:40d5:e287 with SMTP id a640c23a62f3a-a6f60de5f13mr824978366b.74.1718704478643;
-        Tue, 18 Jun 2024 02:54:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEN7i18yuLmu+9t7jwi1SmvBtOsMhB5QqNmhUb10cYsKUskLHGcxRgCCZYGDhEDT8wrA8MCkQ==
-X-Received: by 2002:a17:906:dfd1:b0:a6f:40d5:e287 with SMTP id a640c23a62f3a-a6f60de5f13mr824975466b.74.1718704478183;
-        Tue, 18 Jun 2024 02:54:38 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:1400:78ba:c2d2:22a1:8858? (p200300cbc705140078bac2d222a18858.dip0.t-ipconnect.de. [2003:cb:c705:1400:78ba:c2d2:22a1:8858])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36262f77ad9sm551607f8f.109.2024.06.18.02.54.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 02:54:37 -0700 (PDT)
-Message-ID: <b6fb68dc-7203-47a2-8316-5a5db6978ccf@redhat.com>
-Date: Tue, 18 Jun 2024 11:54:36 +0200
+	s=arc-20240116; t=1718704529; c=relaxed/simple;
+	bh=CUFBO/w85ZfNhHyUDj48ojyn4AZ07NGXPwsFh+G/1nA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e5I91X1KrPOisUWonHzeCnNZjDPLeJT/sK6JHA72J0akgQCMUKkdqBrxCkMbUfmhpnbsB49OxDmCZykA/RlZshk3SkKgg5tw5aPT/O3y9fCT5KLIqBZ2am6FvLkZAjj8qOWa2XM3Xl3FW6AtF8KvPZb3YuB5ZBJdEhQLAhqDz9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3FFBDA7;
+	Tue, 18 Jun 2024 02:55:50 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EB8B3F6A8;
+	Tue, 18 Jun 2024 02:55:24 -0700 (PDT)
+Date: Tue, 18 Jun 2024 10:55:21 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] firmware: imx: add i.MX95 MISC driver
+Message-ID: <ZnFZiV9JzU_7agjW@pluto>
+References: <20240524-imx95-bbm-misc-v2-v4-0-dc456995d590@nxp.com>
+ <20240524-imx95-bbm-misc-v2-v4-6-dc456995d590@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] mm: use folio_add_new_anon_rmap() if
- folio_test_anon(folio)==false
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: baolin.wang@linux.alibaba.com, chrisl@kernel.org,
- linux-kernel@vger.kernel.org, mhocko@suse.com, ryan.roberts@arm.com,
- shy828301@gmail.com, surenb@google.com, v-songbaohua@oppo.com,
- willy@infradead.org, ying.huang@intel.com, yosryahmed@google.com,
- yuzhao@google.com, Shuai Yuan <yuanshuai@oppo.com>
-References: <20240617231137.80726-1-21cnbao@gmail.com>
- <20240617231137.80726-3-21cnbao@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240617231137.80726-3-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240524-imx95-bbm-misc-v2-v4-6-dc456995d590@nxp.com>
 
-On 18.06.24 01:11, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
+On Fri, May 24, 2024 at 04:56:48PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> For the !folio_test_anon(folio) case, we can now invoke folio_add_new_anon_rmap()
-> with the rmap flags set to either EXCLUSIVE or non-EXCLUSIVE. This action will
-> suppress the VM_WARN_ON_FOLIO check within __folio_add_anon_rmap() while initiating
-> the process of bringing up mTHP swapin.
+> The i.MX95 System manager exports SCMI MISC protocol for linux to do
+> various settings, such as set board gpio expander as wakeup source.
 > 
->   static __always_inline void __folio_add_anon_rmap(struct folio *folio,
->                   struct page *page, int nr_pages, struct vm_area_struct *vma,
->                   unsigned long address, rmap_t flags, enum rmap_level level)
->   {
->           ...
->           if (unlikely(!folio_test_anon(folio))) {
->                   VM_WARN_ON_FOLIO(folio_test_large(folio) &&
->                                    level != RMAP_LEVEL_PMD, folio);
->           }
->           ...
->   }
+> The driver is to add the support.
 > 
-> It also improves the code’s readability. Currently, all new anonymous
-> folios calling folio_add_anon_rmap_ptes() are order-0. This ensures
-> that new folios cannot be partially exclusive; they are either entirely
-> exclusive or entirely shared.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> Tested-by: Shuai Yuan <yuanshuai@oppo.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->   mm/memory.c   |  8 ++++++++
->   mm/swapfile.c | 13 +++++++++++--
->   2 files changed, 19 insertions(+), 2 deletions(-)
+>  drivers/firmware/imx/Makefile   |   1 +
+>  drivers/firmware/imx/sm-misc.c  | 108 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/firmware/imx/sm.h |  33 ++++++++++++
+>  3 files changed, 142 insertions(+)
 > 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 1f24ecdafe05..620654c13b2f 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4339,6 +4339,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->   	if (unlikely(folio != swapcache && swapcache)) {
->   		folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
->   		folio_add_lru_vma(folio, vma);
-> +	} else if (!folio_test_anon(folio)) {
-> +		/*
-> +		 * We currently only expect small !anon folios, for which we now
+> diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
+> index fb20e22074e1..cb9c361d9b81 100644
+> --- a/drivers/firmware/imx/Makefile
+> +++ b/drivers/firmware/imx/Makefile
+> @@ -2,3 +2,4 @@
+>  obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
+>  obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o rm.o imx-scu-soc.o
+>  obj-${CONFIG_IMX_SCMI_BBM_EXT}	+= sm-bbm.o
+> +obj-${CONFIG_IMX_SCMI_MISC_EXT}	+= sm-misc.o
+> diff --git a/drivers/firmware/imx/sm-misc.c b/drivers/firmware/imx/sm-misc.c
+> new file mode 100644
+> index 000000000000..22c1a5819425
+> --- /dev/null
+> +++ b/drivers/firmware/imx/sm-misc.c
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2024 NXP.
+> + */
+> +
+> +#include <linux/firmware/imx/sm.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/scmi_imx_protocol.h>
+> +
+> +static const struct scmi_imx_misc_proto_ops *imx_misc_ctrl_ops;
+> +static struct scmi_protocol_handle *ph;
 
-s/now/know/
+Same comments as n V1 ... please have a look :P
 
-> +		 * that they are either fully exclusive or fully shared. If we
-> +		 * ever get large folios here, we have to be careful.
-> +		 */
-> +		VM_WARN_ON_ONCE(folio_test_large(folio));
-> +		folio_add_new_anon_rmap(folio, vma, address, rmap_flags);
->   	} else {
->   		folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, address,
->   					rmap_flags);
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index ae1d2700f6a3..69efa1a57087 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1908,8 +1908,17 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
->   		VM_BUG_ON_FOLIO(folio_test_writeback(folio), folio);
->   		if (pte_swp_exclusive(old_pte))
->   			rmap_flags |= RMAP_EXCLUSIVE;
-> -
-> -		folio_add_anon_rmap_pte(folio, page, vma, addr, rmap_flags);
-> +		/*
-> +		 * We currently only expect small !anon folios, for which we now that
-
-s/now/know/
-
-> +		 * they are either fully exclusive or fully shared. If we ever get
-> +		 * large folios here, we have to be careful.
-> +		 */
-> +		if (!folio_test_anon(folio)) {
-> +			VM_WARN_ON_ONCE(folio_test_large(folio));
-> +			folio_add_new_anon_rmap(folio, vma, addr, rmap_flags);
-> +		} else {
-> +			folio_add_anon_rmap_pte(folio, page, vma, addr, rmap_flags);
-> +		}
->   	} else { /* ksm created a completely new copy */
->   		folio_add_new_anon_rmap(folio, vma, addr, RMAP_EXCLUSIVE);
->   		folio_add_lru_vma(folio, vma);
-
-Thanks!
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Cristian
