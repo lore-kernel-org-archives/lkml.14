@@ -1,119 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445B3137905
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2DE13A877;
+	Tue, 18 Jun 2024 11:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718711469; cv=none; b=XIqzQFY++W4UMxxNEJfTdgoRLLjqophUKO6ATuVo1UOEW9/81BP8JinQNR52P3F9+mQ9XOup59FQX/4oZiSBjwrzdTp4GdWqfjd8/4rJM0SulNP/56rhQkXgnssULXSX+bpxlVOLCTxQU9qCfK0BpYWirz/IOKvg9KFx3DMX9/Q=
+	t=1718711473; cv=none; b=hQhrXdi+U6/nSdpdXCdSyeKhB8GLRqjxPEwb5EgULsZ5csvFJDG0WG0FlsSae5/ycZPrtV0KuvBVaSreeB7Ki9gqynw0IcTQsMGumlnZs1qBgg446m5QraU6fxFllElx5VlMdn80GQ8Hnp6BxKsabWF/fiYePRZAlQj1o1kKjZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718711469; c=relaxed/simple;
-	bh=0OCU1F5p+RZ18ExkVkZmiDL8HQ0Vl08o3pAP2J0zteo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTkHrxmRKIVO/3UavogpP5oBpDVXc1NAK7d46psRL5cnxu8GJBgvvEwPykgEuUSn+uTjyrWoZGity4cP2C1CzOAyFrpz9JUxvqE3bVC2Vs3DB7VPifW7KBnApgFJe3gZhaHLyoOLcMYLtShUXmcKGjnfxZfK8DTsDgq/dy/7VXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IwPsPiIp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718711473; c=relaxed/simple;
+	bh=itnLaYU73scIBSDS2g3n+5LVak3YlcHt72uWNFY4DjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EgLptlAelP05sdRY0hJ+aQrn3bToV0TCXiTLG8qfnNhwxFwmH0wVlMe/rcPb65hUCv/D907PZD1JFydkNer5pp5Qk4eqqWXtE3jtN2GaIDMVD8X56MzBGy36BARwPHrwgwe0ra/JwZYHZi9lR2i4haPjJh8P1q8DKu3YFm7pzmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBZwbDD6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwPsPiIp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718711467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KbEwByzdZ2FR46495vyGSwk/Ycglqttws2hwnHDj1Xw=;
-	b=IwPsPiIpeWSiskwiJFV+vKtg26cmt3IwaFOGSuG8/dJgGqwV81/5JaAlrh0Z1ek6khXgVO
-	kg0PNc/IFG2XiNxTKw91IXBlMkmNqeBjyIk9F7RGy1wKpN39er5W6cRAsWWuvmlKryKmLg
-	TmVq7jA2ksOOnG9I39Y6b+4K0ulSB9M=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-jRgKipW8Mxu-BMiVbdwb2g-1; Tue,
- 18 Jun 2024 07:51:04 -0400
-X-MC-Unique: jRgKipW8Mxu-BMiVbdwb2g-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D03FA19560A7;
-	Tue, 18 Jun 2024 11:51:02 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.152])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 98AFD19560B2;
-	Tue, 18 Jun 2024 11:50:58 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: jtornosm@redhat.com,
-	stable@vger.kernel.org
-Subject: [PATCH v2] net: usb: ax88179_178a: improve link status logs
-Date: Tue, 18 Jun 2024 13:50:40 +0200
-Message-ID: <20240618115054.101577-1-jtornosm@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBZwbDD6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAFB9C4AF50;
+	Tue, 18 Jun 2024 11:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718711473;
+	bh=itnLaYU73scIBSDS2g3n+5LVak3YlcHt72uWNFY4DjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KBZwbDD6sYQU7aQZTWb9SY0CLy/8qhIuWGTnwgEqitFRPMyEv/kECh3uYZPuJ/f1Q
+	 H5Dmm26e6Wtbnl8cLBAxJP9FjaU3/FcD4XxQdFtCSb8YE8q7aczJ7oXzyR7WFaDFbn
+	 QPHi/0X5zRE4k0YJHieQZYraFeUd7TMKiWjwppzpOvcDRHte+2ZRfznSuxONQDvxK8
+	 D00URor2c7FfEkEFTcNEeqCUJYIhGFYCR4oFIB2KxS5/x/DifjqfJSEsb+H99Gd/Jm
+	 wDu/yo7UVTYQeX4AtXyic/yLff/ZbITnm6CBiTHS1yxE1WchY8C4MPoroegtbXG/S9
+	 giyG5s01suKBg==
+Date: Tue, 18 Jun 2024 12:51:07 +0100
+From: Mark Brown <broonie@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Julien Panis <jpanis@baylibre.com>,
+	Nicolas Pitre <npitre@baylibre.com>
+Subject: Re: linux-next: build failure after merge of the mediatek tree
+Message-ID: <b376b01d-45e0-40dd-be10-81ac154ead7c@sirena.org.uk>
+References: <ZnBn-vSj-ssrJFr2@sirena.org.uk>
+ <01f2ee94-f8b0-449c-aa19-3ee38a2e36a1@baylibre.com>
+ <d87b7376-5ba2-4810-90cb-76648d4a8080@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qVqD02ii6DMmnPdV"
+Content-Disposition: inline
+In-Reply-To: <d87b7376-5ba2-4810-90cb-76648d4a8080@kernel.org>
+X-Cookie: If you can read this, you're too close.
 
-Avoid spurious link status logs that may ultimately be wrong; for example,
-if the link is set to down with the cable plugged, then the cable is
-unplugged and after this the link is set to up, the last new log that is
-appearing is incorrectly telling that the link is up.
 
-In order to avoid errors, show link status logs after link_reset
-processing, and in order to avoid spurious as much as possible, only show
-the link loss when some link status change is detected.
+--qVqD02ii6DMmnPdV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-cc: stable@vger.kernel.org
-Fixes: e2ca90c276e1 ("ax88179_178a: ASIX AX88179_178A USB 3.0/2.0 to gigabit ethernet adapter driver")
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
----
-v2:
-  - Fix the nits
-v1: https://lore.kernel.org/netdev/20240617103405.654567-1-jtornosm@redhat.com/
+On Tue, Jun 18, 2024 at 12:03:44PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 18/06/24 09:49, Julien Panis ha scritto:
 
- drivers/net/usb/ax88179_178a.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> > For some reason, the 2 first commits of the series were not applied
+> > with the dts. These commits are needed because they contain some
+> > definitions used by the dts.
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index c2fb736f78b2..d90ceab282ff 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -326,7 +326,9 @@ static void ax88179_status(struct usbnet *dev, struct urb *urb)
- 
- 	if (netif_carrier_ok(dev->net) != link) {
- 		usbnet_link_change(dev, link, 1);
--		netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
-+		if (!link)
-+			netdev_info(dev->net, "ax88179 - Link status is: %d\n",
-+				    link);
- 	}
- }
- 
-@@ -1542,6 +1544,7 @@ static int ax88179_link_reset(struct usbnet *dev)
- 			 GMII_PHY_PHYSR, 2, &tmp16);
- 
- 	if (!(tmp16 & GMII_PHY_PHYSR_LINK)) {
-+		netdev_info(dev->net, "ax88179 - Link status is: 0\n");
- 		return 0;
- 	} else if (GMII_PHY_PHYSR_GIGA == (tmp16 & GMII_PHY_PHYSR_SMASK)) {
- 		mode |= AX_MEDIUM_GIGAMODE | AX_MEDIUM_EN_125MHZ;
-@@ -1579,6 +1582,8 @@ static int ax88179_link_reset(struct usbnet *dev)
- 
- 	netif_carrier_on(dev->net);
- 
-+	netdev_info(dev->net, "ax88179 - Link status is: 1\n");
-+
- 	return 0;
- }
- 
--- 
-2.45.1
+> I'm not sure how should I proceed here.
 
+> Only the mediatek tree is broken, linux-next is ok... should I pick the
+> commits from next or should I remove the dts commits from the mediatek trees?
+
+> First time happening.... :-)
+
+linux-next is only OK because I am merging an old version of the
+mediatek tree rather than your current one.  The mediatek tree should be
+fixed somehow so that it builds, either mechanism should be fine.
+
+--qVqD02ii6DMmnPdV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZxdKoACgkQJNaLcl1U
+h9D3fAf/eh2z/5WZx5xJ+uk5O84ROaOiosRiUwVl+JhlIZ8Ihgv00i32eoTM3De9
+rsllAKch1KgVdqT5s//fnKFOilTixOznoej1Brfwcd8kiZsGrxfaleqSvhSPxBkz
+fc9YfKPQs0wEK2dmohJRFf3we7gy7BOEHr15DYZNtovF0xrOq9jOtZka0hHXODA+
+qqHRMvWyBVSk5/xts5lAaomSbN1rYrQ+sxsRlYcDdKQE9fxZ2/HQHkPOYYO+RM17
+nSPD82K1sf+f2LmBdKv8e/YDYiO4FpM5YsahNm2FrJV9ycxYdGcZHnNdeGw+cRcf
+VD8gOBBa8ei6wkMYKPmLOXAcWfIKbA==
+=rTMi
+-----END PGP SIGNATURE-----
+
+--qVqD02ii6DMmnPdV--
