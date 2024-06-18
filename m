@@ -1,87 +1,221 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542619CCFA;
-	Tue, 18 Jun 2024 03:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0812A33DF;
+	Tue, 18 Jun 2024 03:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718681273; cv=none; b=Ny4Om9pvcT2jNOtbr5JbnMWG9rBA5lPCM5y+zeY3RmU49pihfeshTIGuD91/ybcHEurTRs/WvCxprIqKjE6rXJLFSo27nR/kXYCrw5Wa/6QtbixWeJgw+zvG2b/slSNY69ocot9uT36y0BpSdpazLZIPgV8u5ZTZEGn5PSNsCyY=
+	t=1718681320; cv=none; b=rgWDYoQytJaSWRDl3GeVnbLdHDdMXMZ5Lz6nYqaAvNjVyRSlucpQcJpBLdNvxYxQm0N2z/voWjZ4AwayLFv2Rfs24H5Lq6mer6LRQf5+sVZQoayTB1wcbd9XEO4xPCgyJzLpB0ESlU+r9S5aeJqp8Me+0R3jYpPRVmevwWawCbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718681273; c=relaxed/simple;
-	bh=HbefAp3vXxAOCeTv2vKoJBxIINlbit2uQQySya1MK24=;
+	s=arc-20240116; t=1718681320; c=relaxed/simple;
+	bh=ynM9ShbfFif8uOoK2k0aPFZ9XtuYmV3vn2cQ+gF8Jek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B1bufQUxwU5HDYb7vppHqwLB1MjwHD1adOAGUivlyyR9nJKmroqgY/7jeK3kzUNIXNiTocuO/ltdDYOXgz3IMEkwdORExXBsv/Tg5BWa230brBjC13M95tUJrJBWDkeTFdcF6mS3hCvYv2gJOsy1FJEJSnSERtafhUVoqjGXmF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkVDyqOI; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kxuw/XZ02f89eGt6uQXlgKPJMui5hL6UGWCvQ96MZOejIZIUqj9pn8Eq3uVCFpkJN1aBoVyTU37212bTxcTD0qYTNg2v9oWULd/GDT+hETrpM1EObiv7PihCl9luUDL/sGYfvnYeRNyJrGmR9cRr6x8zRzSZgZfD623eha0n+sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GpXIrxhL; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkVDyqOI"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57c68682d1aso5714679a12.3;
-        Mon, 17 Jun 2024 20:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718681271; x=1719286071; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pWxdAnfhvd3kibdXJZ7Dn08Nbk7gxyBpm6SGjbYsWHQ=;
-        b=hkVDyqOI/Gpgl63Ugcj7h8reKHV39biRoPPkDC+dJb7Xp8vfLT+XV7vXoovnfXHYN5
-         vsfIB9EYgP37OciVMLfhzqru93ddAYm0c3/lQ8SMSHnxRCU0CFP6j+qPZQs2oxfL2vsR
-         TCWdr73sc8TFXjnzQ39weKrwKGZ9zEl3mLXFCQSwsXXmmaAonZFHB0KkzYrcO5EdUNgo
-         zGpI692fdixSAy3kLG4U8L0nzm7EQIU1ogKUdYBCGqmQ4TIiQGUa3OpzXnMR47N78bYj
-         caagoHIaseSDP1fBL50Stoq36MxOmcR3f/bvc3LlDFLEsnrz3Xc9SAr5KVcEUnH1Hh4f
-         lWEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718681271; x=1719286071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pWxdAnfhvd3kibdXJZ7Dn08Nbk7gxyBpm6SGjbYsWHQ=;
-        b=QcnbTiC+GVVgaGEaiWaLq3GU6LDisD2hUmfC7pCxePugu0K/619B2XrliMOc9KDHXf
-         DDUzbllKQx5WnGb4iabq7pkNBPYu/h0GImc9zrmhFW7D4271/ps+oamZWMSnwKinYle8
-         tBEWQKRjPixV52WbmlcSIepw+VMPQ5l4UpyPiipzHJSlNy1tdUp4iyh0gGvKg5I5nolC
-         vPvr69eIiTMLi81aKqHRPfAEZhues4h5iC84ezLU7s3yT8jm5OlUl6tXy4BOTvSo0fHA
-         wrJoPIIBhDcNucVlJUmTA9GQZ/h+mTdrBZWHqVSEBZ/amYIFHrmpun6s2ZVcZM/4nkTs
-         46MA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLFNrhUoDnvSUbZg9BV9JSC1v3q7AGDWHMTRAKERb2AuPkiQRqvd5Ai1t8dIF4YGIXIhNjmzDgZ/9mUp4s5MqZzVci9TKp8+G2vxdkLQzkKiX+MT2RcXrwAJxjmgoK4CvCdb8MRosjFQ==
-X-Gm-Message-State: AOJu0Yw9PnL/BG231w9LShSc/sB8cO7Qrrng5f9mJVVywV+4T9r03DCD
-	hTjNPhjnEsgxZDrgDQSHpF+O1j9rUNMnzdKwKtqpWMarqToWqRjb
-X-Google-Smtp-Source: AGHT+IFaNlcI1hsrh3x8lmqvTKbksviHD0Ek24YPAuPEQiI19lcy+V4yn4D77PQ+9eNkOLdPHU6myQ==
-X-Received: by 2002:a17:906:bf44:b0:a6f:63c7:3083 with SMTP id a640c23a62f3a-a6f63c73259mr780735266b.13.1718681270289;
-        Mon, 17 Jun 2024 20:27:50 -0700 (PDT)
-Received: from andrea (host-79-51-73-205.retail.telecomitalia.it. [79.51.73.205])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecdccdsm571603666b.127.2024.06.17.20.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 20:27:49 -0700 (PDT)
-Date: Tue, 18 Jun 2024 05:27:45 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
-	npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr, paulmck@kernel.org, akiyks@gmail.com,
-	dlustig@nvidia.com, joel@joelfernandes.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	hernan.poncedeleon@huaweicloud.com,
-	jonas.oberhauser@huaweicloud.com
-Subject: Re: [PATCH v3] tools/memory-model: Document herd7 (abstract)
- representation
-Message-ID: <ZnD+sRgr9C6r8+v0@andrea>
-References: <20240617201759.1670994-1-parri.andrea@gmail.com>
- <ZnC-cqQOEU2fd9tO@boqun-archlinux>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GpXIrxhL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718681319; x=1750217319;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ynM9ShbfFif8uOoK2k0aPFZ9XtuYmV3vn2cQ+gF8Jek=;
+  b=GpXIrxhLEKC6B3z0uKiqJR+yFsCj1n7gl4WzfzyGA91Zosg8rzGKxWU6
+   7ZIihLtMYuBVnh7VzrpPCK/tlB1WwrPzL7dSPjW9ozBtg8qM9vKODpIkp
+   wmGbqJgtSR2cxWIaiq8t1WDYtYdVszqqUECo4IR1qxyEJ5rUoIwJ+1KP4
+   i3+xB6nC0haBAbuiSj/wkbiyelYzZG2/jJ+PqmlV51JluUzaA26pVN+Lc
+   QyxLiXLg8kuWOiogsLA1ENqrOo03/RNrl21c+jsOUdrFGVdT3wqPIgOG6
+   foGOBbXOTrp789IjwhsNMJfgvDp9fj37mnfnJnk7nBhMblXHFo4Rx/6Bt
+   A==;
+X-CSE-ConnectionGUID: VeIHqVFFTyWbYtlmTFxd+Q==
+X-CSE-MsgGUID: AbP5IA8hQSWJabby4S3aUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15367658"
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="15367658"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 20:28:38 -0700
+X-CSE-ConnectionGUID: 2QDsvqbKRDu8wtzBPw988Q==
+X-CSE-MsgGUID: NIXYOHcjQhaHFY5INH5WOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="41268516"
+Received: from yy-desk-7060.sh.intel.com (HELO localhost) ([10.239.159.76])
+  by fmviesa007.fm.intel.com with ESMTP; 17 Jun 2024 20:28:35 -0700
+Date: Tue, 18 Jun 2024 11:28:34 +0800
+From: Yuan Yao <yuan.yao@linux.intel.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+Subject: Re: [PATCH v19 085/130] KVM: TDX: Complete interrupts after tdexit
+Message-ID: <20240618032834.a6tuv353vk6vqybw@yy-desk-7060>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <aa6a927214a5d29d5591a0079f4374b05a82a03f.1708933498.git.isaku.yamahata@intel.com>
+ <20240617080729.j5nottky5bjmgdmf@yy-desk-7060>
+ <c1426d14-3c00-4956-89a3-c06336905330@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZnC-cqQOEU2fd9tO@boqun-archlinux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c1426d14-3c00-4956-89a3-c06336905330@linux.intel.com>
+User-Agent: NeoMutt/20171215
 
-> Just to double check, there is also a ->po relation between R*[once] and
-> W*[once], right?
+On Mon, Jun 17, 2024 at 05:07:56PM +0800, Binbin Wu wrote:
+>
+>
+> On 6/17/2024 4:07 PM, Yuan Yao wrote:
+> > On Mon, Feb 26, 2024 at 12:26:27AM -0800, isaku.yamahata@intel.com wrote:
+> > > From: Isaku Yamahata <isaku.yamahata@intel.com>
+> > >
+> > > This corresponds to VMX __vmx_complete_interrupts().  Because TDX
+> > > virtualize vAPIC, KVM only needs to care NMI injection.
+> > >
+> > > Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> > > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> > > ---
+> > > v19:
+> > > - move tdvps_management_check() to this patch
+> > > - typo: complete -> Complete in short log
+> > > ---
+> > >   arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
+> > >   arch/x86/kvm/vmx/tdx.h |  4 ++++
+> > >   2 files changed, 14 insertions(+)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> > > index 83dcaf5b6fbd..b8b168f74dfe 100644
+> > > --- a/arch/x86/kvm/vmx/tdx.c
+> > > +++ b/arch/x86/kvm/vmx/tdx.c
+> > > @@ -535,6 +535,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> > >   	 */
+> > >   }
+> > >
+> > > +static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +	/* Avoid costly SEAMCALL if no nmi was injected */
+> > > +	if (vcpu->arch.nmi_injected)
+> > > +		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
+> > > +							      TD_VCPU_PEND_NMI);
+> > > +}
+> > Looks this leads to NMI injection delay or even won't be
+> > reinjected if KVM_REQ_EVENT is not set on the target cpu
+> > when more than 1 NMIs are pending there.
+> >
+> > On normal VM, KVM uses NMI window vmexit for injection
+> > successful case to rasie the KVM_REQ_EVENT again for remain
+> > pending NMIs, see handle_nmi_window(). KVM also checks
+> > vectoring info after VMEXIT for case that the NMI is not
+> > injected successfully in this vmentry vmexit round, and
+> > raise KVM_REQ_EVENT to try again, see __vmx_complete_interrupts().
+> >
+> > In TDX, consider there's no way to get vectoring info or
+> > handle nmi window vmexit, below checking should cover both
+> > scenarios for NMI injection:
+> >
+> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> > index e9c9a185bb7b..9edf446acd3b 100644
+> > --- a/arch/x86/kvm/vmx/tdx.c
+> > +++ b/arch/x86/kvm/vmx/tdx.c
+> > @@ -835,9 +835,12 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> >   static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
+> >   {
+> >          /* Avoid costly SEAMCALL if no nmi was injected */
+> > -       if (vcpu->arch.nmi_injected)
+> > +       if (vcpu->arch.nmi_injected) {
+> >                  vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
+> >                                                                TD_VCPU_PEND_NMI);
+> > +               if (vcpu->arch.nmi_injected || vcpu->arch.nmi_pending)
+> > +                       kvm_make_request(KVM_REQ_EVENT, vcpu);
+>
+> For nmi_injected, it should be OK because TD_VCPU_PEND_NMI is still set.
+> But for nmi_pending, it should be checked and raise event.
 
-That's right.  rmw = rmw & po
+Right, I just forgot the tdx module can do more than "hardware":
 
-I could add a note about that, but I would stick with the current patch
-/version (and your Reviewed-by:) unless other requests.
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index e9c9a185bb7b..3530a4882efc 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -835,9 +835,16 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
+ {
+        /* Avoid costly SEAMCALL if no nmi was injected */
+-       if (vcpu->arch.nmi_injected)
++       if (vcpu->arch.nmi_injected) {
+                vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
+                                                              TD_VCPU_PEND_NMI);
++               /*
++                  tdx module will retry injection in case of TD_VCPU_PEND_NMI,
++                  so don't need to set KVM_REQ_EVENT for it again.
++                */
++               if (!vcpu->arch.nmi_injected && vcpu->arch.nmi_pending)
++                       kvm_make_request(KVM_REQ_EVENT, vcpu);
++       }
+ }
 
-  Andrea
+>
+> I remember there was a discussion in the following link:
+> https://lore.kernel.org/kvm/20240402065254.GY2444378@ls.amr.corp.intel.com/
+> It said  tdx_vcpu_run() will ignore force_immediate_exit.
+> If force_immediate_exit is igored for TDX, then the nmi_pending handling
+> could still be delayed if the previous NMI was injected successfully.
+
+Yes, not sure the possibility of meeting this in real use
+case, I know it happens in some testing, e.g. the kvm
+unit test's multiple NMI tesing.
+
+>
+>
+> > +       }
+> >   }
+> >
+> > > +
+> > >   struct tdx_uret_msr {
+> > >   	u32 msr;
+> > >   	unsigned int slot;
+> > > @@ -663,6 +671,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >   	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+> > >   	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+> > >
+> > > +	tdx_complete_interrupts(vcpu);
+> > > +
+> > >   	return EXIT_FASTPATH_NONE;
+> > >   }
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+> > > index 44eab734e702..0d8a98feb58e 100644
+> > > --- a/arch/x86/kvm/vmx/tdx.h
+> > > +++ b/arch/x86/kvm/vmx/tdx.h
+> > > @@ -142,6 +142,8 @@ static __always_inline void tdvps_vmcs_check(u32 field, u8 bits)
+> > >   			 "Invalid TD VMCS access for 16-bit field");
+> > >   }
+> > >
+> > > +static __always_inline void tdvps_management_check(u64 field, u8 bits) {}
+> > > +
+> > >   #define TDX_BUILD_TDVPS_ACCESSORS(bits, uclass, lclass)				\
+> > >   static __always_inline u##bits td_##lclass##_read##bits(struct vcpu_tdx *tdx,	\
+> > >   							u32 field)		\
+> > > @@ -200,6 +202,8 @@ TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
+> > >   TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
+> > >   TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
+> > >
+> > > +TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
+> > > +
+> > >   static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
+> > >   {
+> > >   	struct tdx_module_args out;
+> > > --
+> > > 2.25.1
+> > >
+> > >
+>
