@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733A1139D0C;
-	Tue, 18 Jun 2024 10:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F81F14F110;
+	Tue, 18 Jun 2024 10:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718706948; cv=none; b=EBw4z55mmtYm8wb2BVBeWWHtWIhYbGzsB0M9UfGZycoORjGzMrkmcikMbcFY40Ck2SlqaWjmcL6cs8UKIAonKAlhSzaGuYG5wVXk3/gMabh5QifUBcoJMF6oHkkSjA+uZAR2lGMCKCOWMGCALkThxdqJIr0iCaBF+IVJ4QMbcHo=
+	t=1718706951; cv=none; b=QbXzqxlfIzPBdQXdgNjbXo7+2qHbV9bELe7jZqxvgws0gOIj+Zw72qwT90nm7/iMK7zovpkDfkim3+T55hPoCcU/QtnWp5vbIOduO1/YN7tZOv7GWUEofUOjRnlOn9YN6/+DeObvYxBixURJIbmAKALsNVjN5ZxNCgM9DJwowak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718706948; c=relaxed/simple;
-	bh=cct31qT5EtxtPB03CrLKGfYhn4fytwzgxweQkJfmCrE=;
+	s=arc-20240116; t=1718706951; c=relaxed/simple;
+	bh=L5+V8qIFYp3VcWCaebsx4V5WsPKJDTEppVzdSwqF/Ao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XQw4ZSgHb4m6wo0J/DBsTMRVI4g8Gd/vEBwGmHMoTKdEIdcyNTk7NMUcyAuBw+TGMcoh5Ohb6gy8RZ0TXVaCj0NSDpYktsmuC+jxfp6aSn75wPeESeNNp49FBbkjKc3yned+QgFnHT9QcvF5I5U6AWYg7rV+usZB/MaIvq6I/aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1aB2qB+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GX9bPwsIFehw9qChl/0aF4iitUhjj54E3Kmxk7AL1xlPdqatuuXgCCgrh8XoapvRh8w5Qqksy4yiB6PYjy8mBovUpxqm8lcwlx9Uf06Fh5Da/IipGmiPSxlHUBpPeOL8oTl00A7LXj8uJVzcbVVr+TfufBqIwtgbN1INHgQ9SUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YchCiD2U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1aB2qB+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023FAC3277B;
-	Tue, 18 Jun 2024 10:35:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YchCiD2U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D4AC3277B;
+	Tue, 18 Jun 2024 10:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718706947;
-	bh=cct31qT5EtxtPB03CrLKGfYhn4fytwzgxweQkJfmCrE=;
+	s=k20201202; t=1718706950;
+	bh=L5+V8qIFYp3VcWCaebsx4V5WsPKJDTEppVzdSwqF/Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P1aB2qB+6Scdll16rdYMf4YXOOzD4xT6wAFVNPu84c6TNF80heJzjr2g2FJKjS5Jw
-	 WZKB1jXLyLyqbccGsqVS293qoapYDH1gIGCzPlrgOr6GOnBkUD3RwdLHrjfLw4gyD6
-	 MStFO2lqNukXc1Zl049uyJJE0QATEUD9EA6vtKbtWW4UpykyQZgLMnAtt6I08WUqDc
-	 +NUsMMYzT9BXVOAti8VOnsydqXFCsCgNjPfGYOSIzFO8koyEfgbqs2O+GuSsJmjLFM
-	 lJ60XV8gMC5U4206f9nb++1EAfG+v9Pj1yZkGAD+HceCUbkTxRJCutpYrQbINLycRj
-	 Q5PuU8t6hirqw==
+	b=YchCiD2UAWrKbPWD8ouQDL6oB8VxIoUzE2wUlk1S6qziAXyZq5Wl7UZJWmU01o5QM
+	 3+Di9qG411/hG3P/LUlBwBY2NKCky6MFVuT8u/wPcwR4loDEZflV95c6L7GsJY0730
+	 rhLlUWDTxx0e/B+VwgQZHBS/YtxKvbkJo5g4if4i8AvPMCQpGp0zsy8GyAGL2Erf1p
+	 91anI5S60YKrj5krP9D+oUXXoN9FU3gH0Z4y4n80BmIErUVXvY8kCu+vIIOqhCJ1+0
+	 UaTVpvLVZccV7VnNUFpfY6bBXcLaLp76vavTRiwP14rLhQk2Bzu03YuWJY9jxcBWZa
+	 hB99Afn9622Dw==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2 01/12] kconfig: import list_move(_tail) and list_for_each_entry_reverse macros
-Date: Tue, 18 Jun 2024 19:35:20 +0900
-Message-ID: <20240618103541.3508486-2-masahiroy@kernel.org>
+Subject: [PATCH v2 03/12] kconfig: remove sym_get_choice_value()
+Date: Tue, 18 Jun 2024 19:35:22 +0900
+Message-ID: <20240618103541.3508486-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240618103541.3508486-1-masahiroy@kernel.org>
 References: <20240618103541.3508486-1-masahiroy@kernel.org>
@@ -44,104 +44,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Import more macros from include/linux/list.h.
+sym_get_choice_value(menu->sym) is equivalent to sym_calc_choice(menu).
 
-These will be used in the next commit.
+Convert all call sites of sym_get_choice_value() and then remove it.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
-Changes in v2:
-  - Import list_for_each_entry_reverse too
+(no changes since v1)
 
- scripts/kconfig/list.h | 53 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ scripts/kconfig/conf.c   | 6 ++----
+ scripts/kconfig/gconf.c  | 2 +-
+ scripts/kconfig/lkc.h    | 3 +--
+ scripts/kconfig/mconf.c  | 6 +++---
+ scripts/kconfig/nconf.c  | 6 +++---
+ scripts/kconfig/symbol.c | 9 +--------
+ 6 files changed, 11 insertions(+), 21 deletions(-)
 
-diff --git a/scripts/kconfig/list.h b/scripts/kconfig/list.h
-index 882859ddf9f4..409201cd495b 100644
---- a/scripts/kconfig/list.h
-+++ b/scripts/kconfig/list.h
-@@ -127,6 +127,29 @@ static inline void list_del(struct list_head *entry)
- 	entry->prev = LIST_POISON2;
+diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
+index 1c59998a62f7..3d7d454c54da 100644
+--- a/scripts/kconfig/conf.c
++++ b/scripts/kconfig/conf.c
+@@ -422,17 +422,15 @@ static int conf_sym(struct menu *menu)
+ 
+ static void conf_choice(struct menu *menu)
+ {
+-	struct symbol *sym, *def_sym;
++	struct symbol *def_sym;
+ 	struct menu *child;
+ 	bool is_new = false;
+ 
+-	sym = menu->sym;
+-
+ 	while (1) {
+ 		int cnt, def;
+ 
+ 		printf("%*s%s\n", indent - 1, "", menu_get_prompt(menu));
+-		def_sym = sym_get_choice_value(sym);
++		def_sym = sym_calc_choice(menu);
+ 		cnt = def = 0;
+ 		line[0] = 0;
+ 		for (child = menu->list; child; child = child->next) {
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 380421a5cfb2..6b50e25133e3 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -1054,7 +1054,7 @@ static gchar **fill_row(struct menu *menu)
+ 
+ 	if (sym_is_choice(sym)) {	// parse childs for getting final value
+ 		struct menu *child;
+-		struct symbol *def_sym = sym_get_choice_value(sym);
++		struct symbol *def_sym = sym_calc_choice(menu);
+ 		struct menu *def_menu = NULL;
+ 
+ 		for (child = menu->list; child; child = child->next) {
+diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
+index bdd37a16b040..d820272a85fb 100644
+--- a/scripts/kconfig/lkc.h
++++ b/scripts/kconfig/lkc.h
+@@ -110,6 +110,7 @@ void menu_get_ext_help(struct menu *menu, struct gstr *help);
+ /* symbol.c */
+ void sym_clear_all_valid(void);
+ struct symbol *sym_choice_default(struct symbol *sym);
++struct symbol *sym_calc_choice(struct menu *choice);
+ struct property *sym_get_range_prop(struct symbol *sym);
+ const char *sym_get_string_default(struct symbol *sym);
+ struct symbol *sym_check_deps(struct symbol *sym);
+@@ -120,8 +121,6 @@ static inline tristate sym_get_tristate_value(struct symbol *sym)
+ 	return sym->curr.tri;
  }
  
-+/**
-+ * list_move - delete from one list and add as another's head
-+ * @list: the entry to move
-+ * @head: the head that will precede our entry
-+ */
-+static inline void list_move(struct list_head *list, struct list_head *head)
-+{
-+	__list_del_entry(list);
-+	list_add(list, head);
-+}
-+
-+/**
-+ * list_move_tail - delete from one list and add as another's tail
-+ * @list: the entry to move
-+ * @head: the head that will follow our entry
-+ */
-+static inline void list_move_tail(struct list_head *list,
-+				  struct list_head *head)
-+{
-+	__list_del_entry(list);
-+	list_add_tail(list, head);
-+}
-+
- /**
-  * list_is_head - tests whether @list is the list @head
-  * @list: the entry to test
-@@ -166,6 +189,17 @@ static inline int list_empty(const struct list_head *head)
- #define list_first_entry(ptr, type, member) \
- 	list_entry((ptr)->next, type, member)
+-struct symbol *sym_get_choice_value(struct symbol *sym);
+-
+ static inline bool sym_is_choice(struct symbol *sym)
+ {
+ 	/* A choice is a symbol with no name */
+diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
+index 03709eb734ae..4a0a97bb342f 100644
+--- a/scripts/kconfig/mconf.c
++++ b/scripts/kconfig/mconf.c
+@@ -514,7 +514,7 @@ static void build_conf(struct menu *menu)
  
-+/**
-+ * list_last_entry - get the last element from a list
-+ * @ptr:	the list head to take the element from.
-+ * @type:	the type of the struct this is embedded in.
-+ * @member:	the name of the list_head within the struct.
-+ *
-+ * Note, that list is expected to be not empty.
-+ */
-+#define list_last_entry(ptr, type, member) \
-+	list_entry((ptr)->prev, type, member)
-+
- /**
-  * list_next_entry - get the next element in list
-  * @pos:	the type * to cursor
-@@ -174,6 +208,14 @@ static inline int list_empty(const struct list_head *head)
- #define list_next_entry(pos, member) \
- 	list_entry((pos)->member.next, typeof(*(pos)), member)
+ 	type = sym_get_type(sym);
+ 	if (sym_is_choice(sym)) {
+-		struct symbol *def_sym = sym_get_choice_value(sym);
++		struct symbol *def_sym = sym_calc_choice(menu);
+ 		struct menu *def_menu = NULL;
  
-+/**
-+ * list_prev_entry - get the prev element in list
-+ * @pos:	the type * to cursor
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_prev_entry(pos, member) \
-+	list_entry((pos)->member.prev, typeof(*(pos)), member)
-+
- /**
-  * list_entry_is_head - test if the entry points to the head of the list
-  * @pos:	the type * to cursor
-@@ -194,6 +236,17 @@ static inline int list_empty(const struct list_head *head)
- 	     !list_entry_is_head(pos, head, member);			\
- 	     pos = list_next_entry(pos, member))
+ 		child_count++;
+@@ -600,7 +600,7 @@ static void conf_choice(struct menu *menu)
+ 	struct menu *child;
+ 	struct symbol *active;
  
-+/**
-+ * list_for_each_entry_reverse - iterate backwards over list of given type.
-+ * @pos:	the type * to use as a loop cursor.
-+ * @head:	the head for your list.
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_for_each_entry_reverse(pos, head, member)			\
-+	for (pos = list_last_entry(head, typeof(*pos), member);		\
-+	     !list_entry_is_head(pos, head, member); 			\
-+	     pos = list_prev_entry(pos, member))
-+
- /**
-  * list_for_each_entry_safe - iterate over list of given type. Safe against removal of list entry
-  * @pos:	the type * to use as a loop cursor.
+-	active = sym_get_choice_value(menu->sym);
++	active = sym_calc_choice(menu);
+ 	while (1) {
+ 		int res;
+ 		int selected;
+@@ -619,7 +619,7 @@ static void conf_choice(struct menu *menu)
+ 			item_set_data(child);
+ 			if (child->sym == active)
+ 				item_set_selected(1);
+-			if (child->sym == sym_get_choice_value(menu->sym))
++			if (child->sym == sym_calc_choice(menu))
+ 				item_set_tag('X');
+ 		}
+ 		dialog_clear();
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index eb5fc3ccaf9d..1456e24969aa 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -815,7 +815,7 @@ static void build_conf(struct menu *menu)
+ 
+ 	type = sym_get_type(sym);
+ 	if (sym_is_choice(sym)) {
+-		struct symbol *def_sym = sym_get_choice_value(sym);
++		struct symbol *def_sym = sym_calc_choice(menu);
+ 		struct menu *def_menu = NULL;
+ 
+ 		child_count++;
+@@ -1239,7 +1239,7 @@ static void conf_choice(struct menu *menu)
+ 		.pattern = "",
+ 	};
+ 
+-	active = sym_get_choice_value(menu->sym);
++	active = sym_calc_choice(menu);
+ 	/* this is mostly duplicated from the conf() function. */
+ 	while (!global_exit) {
+ 		reset_menu();
+@@ -1248,7 +1248,7 @@ static void conf_choice(struct menu *menu)
+ 			if (!show_all_items && !menu_is_visible(child))
+ 				continue;
+ 
+-			if (child->sym == sym_get_choice_value(menu->sym))
++			if (child->sym == sym_calc_choice(menu))
+ 				item_make(child, ':', "<X> %s",
+ 						menu_get_prompt(child));
+ 			else if (child->sym)
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index 329c7bd314cf..344a241e1e94 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -288,7 +288,7 @@ struct symbol *sym_choice_default(struct symbol *sym)
+  *
+  * Return: a chosen symbol
+  */
+-static struct symbol *sym_calc_choice(struct menu *choice)
++struct symbol *sym_calc_choice(struct menu *choice)
+ {
+ 	struct symbol *res = NULL;
+ 	struct symbol *sym;
+@@ -365,13 +365,6 @@ static struct symbol *sym_calc_choice(struct menu *choice)
+ 	return res;
+ }
+ 
+-struct symbol *sym_get_choice_value(struct symbol *sym)
+-{
+-	struct menu *menu = list_first_entry(&sym->menus, struct menu, link);
+-
+-	return sym_calc_choice(menu);
+-}
+-
+ static void sym_warn_unmet_dep(struct symbol *sym)
+ {
+ 	struct gstr gs = str_new();
 -- 
 2.43.0
 
