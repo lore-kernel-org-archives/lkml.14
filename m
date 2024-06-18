@@ -1,124 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284C51581EE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C4B1581EE;
+	Tue, 18 Jun 2024 09:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718703521; cv=none; b=FOkkCebyb6+5G2rPK5Yji6yRP3IVYOvrAh4I/l/5znfZLerheaXx4/X6nq4EdynlQs0/Buir8AzwKsmf5ihS34nrsQn99JIfNkgs5dNe2wk9nXf38GBt+qW0xlR/CKIO7lZW2mlDUUt5A630JZIx1ISI8GfgUEDajS+9IBpRStk=
+	t=1718703535; cv=none; b=RZ3q7MUsqX0SIL2Rd/AqqGXIgsfQUUaopFMJjo2BsUf+19Xuvp3y0x0ezIYwhghpgV7BjsGi0edWb/Zh74c+6TWtRH/eXLK4AT7UAYHKkzdNBqmTMuR3F8AfPylETzLGV+YvgdZilu64tWzSYV9FhA5io+TPXtxTN2IWSQlUwdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718703521; c=relaxed/simple;
-	bh=QenCB3euq69QSB//DNTS+Hjnrm1i70bry2vnqFA0Xns=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gKmLzIkewFlUMlMzwhYzuY86pJCPpuqUvzLjACZxvyl9nFzzzmWgQPa13sE/48W+vWqzQEWtMOJRD1Y9i2Z+QWOLTYnH5fe/CgTr2w2acerP7ktWV0a5Z+dm/b8cPQ384mjd/Z37ICCOT7fY0fPqHR7O4PrWkqw+wc1g6C4kRuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jdTAddo5; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718703535; c=relaxed/simple;
+	bh=nhjVr4cevvuOqH8B6Da8Fdh5LOC0w2bNsEcw/InfHUw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jzRNOxd+sddzGNumbV0Aw8QMXKFvP6o9mK2vZHhW74nG/o9YOkDlyMmvfnhAB3aUWAPmeJApf7XkEtL6EHXrh6X+eWmsHNeE27Ddz40NM2TCPPNrq2Wp8Kru+9qutHNSDBfE/Y930rPRG2AJuJAzq+owZXp4bjNamAQqpBQ/8zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=l9wP0ruu; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdTAddo5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718703520; x=1750239520;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=QenCB3euq69QSB//DNTS+Hjnrm1i70bry2vnqFA0Xns=;
-  b=jdTAddo5r9wk4ihplKkCPVsKLpjzLIF8enlC3fXWtbd78LSWIW/lWruP
-   l940wLds9UHU+8syqnDE6S0GPk85xLexobd68NPVeTgFj71XlbjBZHCTh
-   NitWfzj7AlCNwU/ez/R0FhIlEKgs88k6O7Jqadmt9M5JBi4DGeZBFtZgp
-   U3Rr9zfwmW6uwwYBLHMJHL//Eztdh3epIqE7Yg+Kdj+lKfGRZSXTHeXe2
-   QeNynxLVLy9BpB1nfCLef9psRBjUyB+vq5Yzo9Dtn/gyRTQuqeBVGsza4
-   CSht8xoZfjPaoy97/j0ChmDlid8OBv2WrZekPfk7Zxv+MefFey/5t8RbX
-   Q==;
-X-CSE-ConnectionGUID: iIExgs1MSzum3CqSOUL10A==
-X-CSE-MsgGUID: Eg3vIbdwRmebQksOhgvJFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="40973746"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="40973746"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 02:38:39 -0700
-X-CSE-ConnectionGUID: 8q3IjEVeRvOFZ8qUIH04zg==
-X-CSE-MsgGUID: w6BdYPq0TguAHoQ8bDknCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="64724227"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.176])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 02:38:29 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>,
- dri-devel@lists.freedesktop.org,
- amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, nouveau@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>
-Cc: kernel-dev@igalia.com, Melissa Wen <mwen@igalia.com>,
- alexander.deucher@amd.com, christian.koenig@amd.com, Simon Ser
- <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>,
- daniel@ffwll.ch, Daniel Stone <daniel@fooishbar.org>, 'Marek
- =?utf-8?B?T2zFocOhayc=?=
- <maraeo@gmail.com>, Dave Airlie <airlied@gmail.com>,
- ville.syrjala@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>, Joshua
- Ashton <joshua@froggi.es>, Michel =?utf-8?Q?D=C3=A4nzer?=
- <michel.daenzer@mailbox.org>, Sam
- Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Nicolas
- Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Karol
- Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, =?utf-8?Q?And?=
- =?utf-8?Q?r=C3=A9?= Almeida
- <andrealmeid@igalia.com>
-Subject: Re: [PATCH v7 2/9] drm: Support per-plane async flip configuration
-In-Reply-To: <20240618030024.500532-3-andrealmeid@igalia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240618030024.500532-1-andrealmeid@igalia.com>
- <20240618030024.500532-3-andrealmeid@igalia.com>
-Date: Tue, 18 Jun 2024 12:38:26 +0300
-Message-ID: <878qz2h9pp.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="l9wP0ruu"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I6WpPp014186;
+	Tue, 18 Jun 2024 11:38:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=ly0QQHKw/UbAz9gVk1FA6b
+	NuTihqIRCOIk67BFECjqI=; b=l9wP0ruuSKDP00BNR9W2kx7dFPXfZpnjZtZ5BO
+	CmsFoK4ZdXeKi2eMguq6n6FUDXxeYkY6nBsDNw/3JvyNg9n09vqw8NgKZT7WQMpy
+	4qJFxWUICcddvNenjDz2+mpO4+T41WX2eAP38oPhsQqyJwmj20jZ4triPRi68UMg
+	lC810NVCnNoLhYsPg3a/Rib69Ps9MnKUGXqQiLMUK6syjK5VsGSQVp3iM7P7Wnxd
+	CiXZM3ryVf5Jlu6WtYgaYGmISdRqmYXh5ZtsfpTkefnUvcoHm24BDY0GhWJpP5sN
+	+3evXgCVs9h2HV5a27TBLIQeAYpzKDv1/2FCuhvLisqPFIEw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ys035jee4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 11:38:18 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C149E40045;
+	Tue, 18 Jun 2024 11:36:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E1AC2138DC;
+	Tue, 18 Jun 2024 11:35:38 +0200 (CEST)
+Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 18 Jun
+ 2024 11:35:35 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] Series DTs to deliver Ethernet for STM32MP25
+Date: Tue, 18 Jun 2024 11:35:24 +0200
+Message-ID: <20240618093527.318239-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
 
-On Tue, 18 Jun 2024, Andr=C3=A9 Almeida <andrealmeid@igalia.com> wrote:
-> Drivers have different capabilities on what plane types they can or
-> cannot perform async flips. Create a plane::async_flip field so each
-> driver can choose which planes they allow doing async flips.
->
-> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-> ---
->  include/drm/drm_plane.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
-> index 9507542121fa..0bebc72af5c3 100644
-> --- a/include/drm/drm_plane.h
-> +++ b/include/drm/drm_plane.h
-> @@ -786,6 +786,11 @@ struct drm_plane {
->  	 * @kmsg_panic: Used to register a panic notifier for this plane
->  	 */
->  	struct kmsg_dumper kmsg_panic;
-> +
-> +	/**
-> +	 * @async_flip: indicates if a plane can do async flips
-> +	 */
+STM32MP25 is STM32 SOC with 2 GMACs instances.
+    GMAC IP version is SNPS 5.3x.
+    GMAC IP configure with 2 RX and 4 TX queue.
+    DMA HW capability register supported
+    RX Checksum Offload Engine supported
+    TX Checksum insertion supported
+    Wake-Up On Lan supported
+    TSO supported
 
-When is it okay to set or change the value of this member?
+Delivered Ethernet2 instance for board EV1 which is connected 
+to Realtek PHY in RGMII mode.
+Ethernet1 instance will be delivered in next step.
 
-If you don't document it, people will find creative uses for this.
+Christophe Roullier (3):
+  arm64: dts: st: add ethernet1 and ethernet2 support on stm32mp25
+  arm64: dts: st: add eth2 pinctrl entries in stm32mp25-pinctrl.dtsi
+  arm64: dts: st: enable Ethernet2 on stm32mp257f-ev1 board
 
-BR,
-Jani.
+ arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 59 +++++++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        | 49 +++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp253.dtsi        | 51 ++++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 24 ++++++++
+ 4 files changed, 183 insertions(+)
 
 
-> +	bool async_flip;
->  };
->=20=20
->  #define obj_to_plane(x) container_of(x, struct drm_plane, base)
+base-commit: efb459303dd5dd6e198a0d58322dc04c3356dc23
+-- 
+2.25.1
 
---=20
-Jani Nikula, Intel
