@@ -1,30 +1,30 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA57A7D07E
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA2E131E33
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693680; cv=none; b=Fol8vPJ+37r8vg5BLpdq2p6kmH1X6Tyv1vUU3str2x5gdznjUW7OQ9kJ5ybTcDHD7F4o6vGVIaUSWVhVHwpjjoi7hPE02QAM2QnnHNCVMfeZ3zNB4ce7CjMZOP9pCEbaAc9pM32Yr1R79UHRVuvtthu/jtA2qBH/OUGHqf0VIYQ=
+	t=1718693682; cv=none; b=sNRHaPaQHBVLw0Sti+EnWigZFdiKxDhP9yLNmo8qnNIT54NRhysfgCWqHl5GZi7JnulZgrHNCDVq8eOAuq889w8cejd1PlyRgR5NNymA2osZznBb4oO69+ukouS7fXQYAQpQR2qjk8jlSJV4888qhqadLQcZP1L3xs0PxH0DQYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693680; c=relaxed/simple;
-	bh=BWI5TFADp95k290UyR2q8Ifcha58gdQYoHqG8YBDuVM=;
+	s=arc-20240116; t=1718693682; c=relaxed/simple;
+	bh=Mh9+JA8BouLeObhnXDllLi20vYXVUfEOul24tJO2drk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y0+2D2YN518aMGonagQScj4U3UgibkOOMVVLxr25ge1+vzAs29c6LnYnvDTy4/8PZTaG0LGmnARfBG0mwjo8g5/9JEzgVFAk+UpyCFDCREw3qiCR0trlN+bOqHWRw6uoXfDS/iS1565uIpsgWT154XAnGTlxlNiZu57oIeUT6Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SdmM4p/h; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=SBirudBZPSAmNspf0rcfx/kDwx+6D8AYt6EIGA4mot1lP6PNG+aV0DgfuD5IXsHazvj5MFB1O4PMKnMQ8BTho0oAM9Q9kpPH63darNe+1gdnJhN7lhB/9Sd/ronrBHakNQwu90fXj7nCfYIM/ead5UG2lHECUiUpUZza155wrkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j/tpHpF6; arc=none smtp.client-ip=115.124.30.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SdmM4p/h"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j/tpHpF6"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1718693671; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=A1nuL6+6NmFkbTac9imOaGsyA3d5PGdnrfoW9BMoYYs=;
-	b=SdmM4p/hL0pBaDI+D+wT/aVXDvnuD6x5K84xMmQFz4Uf9psxbNi3uFDaAVevcy0lwdNiRqmJ9Dx4cIDYkzCGog8zVFzD+UnRRgDBX00WtMKfZ0ouoZqDNpJWLS9QxPxHZ3nnUVEWp0Ft4QVLsSltfear6YK1JDHRaDF0W0PsVW0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jH7lG_1718693669;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jH7lG_1718693669)
+	t=1718693678; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=X2IkWrVoIA4HwkKR/y14knPLhy9dqitMrcGqnXrDEBs=;
+	b=j/tpHpF65loG60eh+FQ8RHML/IKZYpV/JEf/Hx58eIP8cx3s14PxNksyLAxXDZHV66RxDHtvU64yjJqf5rVxSRL49c4gbYI5Ah9wNGB2P61OY4jEe9fJYbLSMDHxmydBJBSiG9krryj/mWAZYprvRPwyMMEKgLvU8y0aYTraplc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jH7nR_1718693676;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jH7nR_1718693676)
           by smtp.aliyun-inc.com;
-          Tue, 18 Jun 2024 14:54:29 +0800
+          Tue, 18 Jun 2024 14:54:36 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -43,9 +43,9 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/9] mm: swap: extend swap_shmem_alloc() to support batch SWAP_MAP_SHMEM flag setting
-Date: Tue, 18 Jun 2024 14:54:14 +0800
-Message-Id: <4909c4bf2f28665c6a35cd7e77990c5defc3d7fb.1718690645.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v2 9/9] mm: shmem: support large folio swap out
+Date: Tue, 18 Jun 2024 14:54:21 +0800
+Message-Id: <df16cdc6c7ce9b3f8e4f71cc6005738c67b3dacf.1718690645.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
 References: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
@@ -57,219 +57,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To support shmem large folio swap operations, add a new parameter to
-swap_shmem_alloc() that allows batch SWAP_MAP_SHMEM flag setting for
-shmem swap entries.
+Shmem will support large folio allocation [1] [2] to get a better performance,
+however, the memory reclaim still splits the precious large folios when trying
+to swap out shmem, which may lead to the memory fragmentation issue and can not
+take advantage of the large folio for shmeme.
 
-While we are at it, using folio_nr_pages() to get the number of pages
-of the folio as a preparation.
+Moreover, the swap code already supports for swapping out large folio without
+split, hence this patch set supports the large folio swap out for shmem.
 
+Note the i915_gem_shmem driver still need to be split when swapping, thus
+add a new flag 'split_large_folio' for writeback_control to indicate spliting
+the large folio.
+
+[1] https://lore.kernel.org/all/cover.1717495894.git.baolin.wang@linux.alibaba.com/
+[2] https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- include/linux/swap.h |  4 +-
- mm/shmem.c           |  6 ++-
- mm/swapfile.c        | 98 +++++++++++++++++++++++---------------------
- 3 files changed, 57 insertions(+), 51 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  1 +
+ include/linux/writeback.h                 |  1 +
+ mm/shmem.c                                |  3 +--
+ mm/vmscan.c                               | 14 ++++++++++++--
+ 4 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index d33ce740b695..bffb2281840d 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -474,7 +474,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry);
- extern swp_entry_t get_swap_page_of_type(int);
- extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
- extern int add_swap_count_continuation(swp_entry_t, gfp_t);
--extern void swap_shmem_alloc(swp_entry_t);
-+extern void swap_shmem_alloc(swp_entry_t, int);
- extern int swap_duplicate(swp_entry_t);
- extern int swapcache_prepare(swp_entry_t);
- extern void swap_free_nr(swp_entry_t entry, int nr_pages);
-@@ -541,7 +541,7 @@ static inline int add_swap_count_continuation(swp_entry_t swp, gfp_t gfp_mask)
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+index c5e1c718a6d2..c66cb9c585e1 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+@@ -308,6 +308,7 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
+ 		.range_start = 0,
+ 		.range_end = LLONG_MAX,
+ 		.for_reclaim = 1,
++		.split_large_folio = 1,
+ 	};
+ 	unsigned long i;
  
--static inline void swap_shmem_alloc(swp_entry_t swp)
-+static inline void swap_shmem_alloc(swp_entry_t swp, int nr)
- {
- }
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index 112d806ddbe4..6f2599244ae0 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -63,6 +63,7 @@ struct writeback_control {
+ 	unsigned range_cyclic:1;	/* range_start is cyclic */
+ 	unsigned for_sync:1;		/* sync(2) WB_SYNC_ALL writeback */
+ 	unsigned unpinned_netfs_wb:1;	/* Cleared I_PINNING_NETFS_WB */
++	unsigned split_large_folio:1;	/* Split large folio for shmem writeback */
  
+ 	/*
+ 	 * When writeback IOs are bounced through async layers, only the
 diff --git a/mm/shmem.c b/mm/shmem.c
-index d09c6bf1f28a..b90965486631 100644
+index 9a35ee7e7f40..2c951d936fc1 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -1432,6 +1432,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
- 	swp_entry_t swap;
- 	pgoff_t index;
-+	int nr_pages;
+@@ -775,7 +775,6 @@ static int shmem_add_to_page_cache(struct folio *folio,
+ 	VM_BUG_ON_FOLIO(index != round_down(index, nr), folio);
+ 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+ 	VM_BUG_ON_FOLIO(!folio_test_swapbacked(folio), folio);
+-	VM_BUG_ON(expected && folio_test_large(folio));
  
- 	/*
- 	 * Our capabilities prevent regular writeback or sync from ever calling
-@@ -1464,6 +1465,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	}
+ 	folio_ref_add(folio, nr);
+ 	folio->mapping = mapping;
+@@ -1462,7 +1461,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
+ 	 * "force", drivers/gpu/drm/i915/gem/i915_gem_shmem.c gets huge pages,
+ 	 * and its shmem_writeback() needs them to be split when swapping.
+ 	 */
+-	if (folio_test_large(folio)) {
++	if (wbc->split_large_folio && folio_test_large(folio)) {
+ 		/* Ensure the subpages are still dirty */
+ 		folio_test_set_dirty(folio);
+ 		if (split_huge_page(page) < 0)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 61465f92283f..fd503506262d 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1245,8 +1245,12 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 			if (!total_swap_pages)
+ 				goto activate_locked;
  
- 	index = folio->index;
-+	nr_pages = folio_nr_pages(folio);
+-			/* Split shmem folio */
+-			if (split_folio_to_list(folio, folio_list))
++			/*
++			 * Only split shmem folio when CONFIG_THP_SWAP
++			 * is not enabled.
++			 */
++			if (!IS_ENABLED(CONFIG_THP_SWAP) &&
++			    split_folio_to_list(folio, folio_list))
+ 				goto keep_locked;
+ 		}
  
- 	/*
- 	 * This is somewhat ridiculous, but without plumbing a SWAP_MAP_FALLOC
-@@ -1516,8 +1518,8 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 	if (add_to_swap_cache(folio, swap,
- 			__GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN,
- 			NULL) == 0) {
--		shmem_recalc_inode(inode, 0, 1);
--		swap_shmem_alloc(swap);
-+		shmem_recalc_inode(inode, 0, nr_pages);
-+		swap_shmem_alloc(swap, nr_pages);
- 		shmem_delete_from_page_cache(folio, swp_to_radix_entry(swap));
- 
- 		mutex_unlock(&shmem_swaplist_mutex);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 9c6d8e557c0f..1dde413264e2 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3362,62 +3362,58 @@ void si_swapinfo(struct sysinfo *val)
-  * - swap-cache reference is requested but the entry is not used. -> ENOENT
-  * - swap-mapped reference requested but needs continued swap count. -> ENOMEM
-  */
--static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
-+static int __swap_duplicate(struct swap_info_struct *p, unsigned long offset,
-+			    int nr, unsigned char usage)
- {
--	struct swap_info_struct *p;
- 	struct swap_cluster_info *ci;
--	unsigned long offset;
- 	unsigned char count;
- 	unsigned char has_cache;
--	int err;
-+	int err, i;
- 
--	p = swp_swap_info(entry);
--
--	offset = swp_offset(entry);
- 	ci = lock_cluster_or_swap_info(p, offset);
- 
--	count = p->swap_map[offset];
--
--	/*
--	 * swapin_readahead() doesn't check if a swap entry is valid, so the
--	 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
--	 */
--	if (unlikely(swap_count(count) == SWAP_MAP_BAD)) {
--		err = -ENOENT;
--		goto unlock_out;
--	}
--
--	has_cache = count & SWAP_HAS_CACHE;
--	count &= ~SWAP_HAS_CACHE;
--	err = 0;
--
--	if (usage == SWAP_HAS_CACHE) {
-+	for (i = 0; i < nr; i++) {
-+		count = p->swap_map[offset + i];
- 
--		/* set SWAP_HAS_CACHE if there is no cache and entry is used */
--		if (!has_cache && count)
--			has_cache = SWAP_HAS_CACHE;
--		else if (has_cache)		/* someone else added cache */
--			err = -EEXIST;
--		else				/* no users remaining */
-+		/*
-+		 * swapin_readahead() doesn't check if a swap entry is valid, so the
-+		 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
-+		 */
-+		if (unlikely(swap_count(count) == SWAP_MAP_BAD)) {
- 			err = -ENOENT;
-+			break;
-+		}
- 
--	} else if (count || has_cache) {
-+		has_cache = count & SWAP_HAS_CACHE;
-+		count &= ~SWAP_HAS_CACHE;
-+		err = 0;
-+
-+		if (usage == SWAP_HAS_CACHE) {
-+			/* set SWAP_HAS_CACHE if there is no cache and entry is used */
-+			if (!has_cache && count)
-+				has_cache = SWAP_HAS_CACHE;
-+			else if (has_cache)		/* someone else added cache */
-+				err = -EEXIST;
-+			else				/* no users remaining */
-+				err = -ENOENT;
-+		} else if (count || has_cache) {
-+			if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
-+				count += usage;
-+			else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
-+				err = -EINVAL;
-+			else if (swap_count_continued(p, offset + i, count))
-+				count = COUNT_CONTINUED;
-+			else
-+				err = -ENOMEM;
-+		} else
-+			err = -ENOENT;			/* unused swap entry */
- 
--		if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
--			count += usage;
--		else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
--			err = -EINVAL;
--		else if (swap_count_continued(p, offset, count))
--			count = COUNT_CONTINUED;
--		else
--			err = -ENOMEM;
--	} else
--		err = -ENOENT;			/* unused swap entry */
-+		if (err)
-+			break;
- 
--	if (!err)
--		WRITE_ONCE(p->swap_map[offset], count | has_cache);
-+		WRITE_ONCE(p->swap_map[offset + i], count | has_cache);
-+	}
- 
--unlock_out:
- 	unlock_cluster_or_swap_info(p, ci);
- 	return err;
- }
-@@ -3426,9 +3422,12 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
-  * Help swapoff by noting that swap entry belongs to shmem/tmpfs
-  * (in which case its reference count is never incremented).
-  */
--void swap_shmem_alloc(swp_entry_t entry)
-+void swap_shmem_alloc(swp_entry_t entry, int nr)
- {
--	__swap_duplicate(entry, SWAP_MAP_SHMEM);
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
-+
-+	__swap_duplicate(p, offset, nr, SWAP_MAP_SHMEM);
- }
- 
- /*
-@@ -3440,9 +3439,11 @@ void swap_shmem_alloc(swp_entry_t entry)
-  */
- int swap_duplicate(swp_entry_t entry)
- {
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
- 	int err = 0;
- 
--	while (!err && __swap_duplicate(entry, 1) == -ENOMEM)
-+	while (!err && __swap_duplicate(p, offset, 1, 1) == -ENOMEM)
- 		err = add_swap_count_continuation(entry, GFP_ATOMIC);
- 	return err;
- }
-@@ -3457,7 +3458,10 @@ int swap_duplicate(swp_entry_t entry)
-  */
- int swapcache_prepare(swp_entry_t entry)
- {
--	return __swap_duplicate(entry, SWAP_HAS_CACHE);
-+	struct swap_info_struct *p = swp_swap_info(entry);
-+	unsigned long offset = swp_offset(entry);
-+
-+	return __swap_duplicate(p, offset, 1, SWAP_HAS_CACHE);
- }
- 
- void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry)
+@@ -1348,10 +1352,16 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 			 * starts and then write it out here.
+ 			 */
+ 			try_to_unmap_flush_dirty();
++try_pageout:
+ 			switch (pageout(folio, mapping, &plug)) {
+ 			case PAGE_KEEP:
+ 				goto keep_locked;
+ 			case PAGE_ACTIVATE:
++				if (shmem_mapping(mapping) && folio_test_large(folio) &&
++				    !split_folio_to_list(folio, folio_list)) {
++					nr_pages = 1;
++					goto try_pageout;
++				}
+ 				goto activate_locked;
+ 			case PAGE_SUCCESS:
+ 				stat->nr_pageout += nr_pages;
 -- 
 2.39.3
 
