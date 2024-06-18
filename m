@@ -1,71 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1212DD92;
-	Tue, 18 Jun 2024 13:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354681607AF
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718717763; cv=none; b=kTNPUK3q1BdoCzsz2ADYHaVE9D91IxbPhIpoUtrJxh753wHtFTvB4jcZaUl9gL7QxMlM8JrugqkZma/kfes86bgd0vFhdlijj9pGLDeMDs3QtQUe34gPZWaRqptMWOHopu0fT5G9DknNo72N4rjVtl54MlL8CwcHJFE4JPYIEqU=
+	t=1718717767; cv=none; b=ETZI6GzCSm1e0WNX1j0JU1VdUQoNYSvDuaYZ9IVDoBbkW2fmf6SXTPRi6HEOCyORSxr0bxI0tGyA9fn9XPN3ClKWFzkh/l8idnXPAF8uGO2GImy3OFJY7T4pjuE4tKN/wDpm6PjXp9tzot2/moWKH/5806ReL5lj+E+3odKodTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718717763; c=relaxed/simple;
-	bh=18wvR2VgD6SuCinm13A5EGVFInqKVMlwI+0FKFOQny8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Meig04PFuD8PNxEuq+17nAyxYJdXYDDeR5vpqCD5Xnls/+T+prf62bx4Wh3r1B7c31x8HQkVRjyGpJogRQy5VzOjAebPdnjdQ2g4xdAXmj1yJKWprXmBCO8ovEAzfXMUCDqQYGiDKtraIrf3M+b5LTDWO2z6K3+KynAJGoPt7hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyETr0v+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718717767; c=relaxed/simple;
+	bh=gE5K1CMg0FDplJQ5qb/JC8BlAQdTg4qg1zpQnY6aNRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZQXjywj+Lu2/u2PzUlpciisuyQifudeBoINuwQMqxg2pTQoFPkWtMM5D21SOAc8as62xYaLl72Xe6g8hRHbRGRvLNgzkTAZigtpcSVfsVsAEF83X19LlmkJ5iODYn+yIHKOsbZ10xIw6DRXihzJYZygoJVG5jbsDNk50R7BW/9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P2B63vUY; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyETr0v+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC18C3277B;
-	Tue, 18 Jun 2024 13:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718717762;
-	bh=18wvR2VgD6SuCinm13A5EGVFInqKVMlwI+0FKFOQny8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RyETr0v+jwdiT2mqIrFgW2uaNIzMjZdZV3tvLwRHC/YA827r0toGorNxynIT5s5Br
-	 GhQhmK93Dfn1Da5kqNsHCLBMDOLdE6bShxE4gmqGyQHz84hPk9gltyALoI/rFMfQ79
-	 s+YuVItDUDB01lSvr8itkVZl7Bs8GNq4Q9kbcONMg2OG1beuLZCAYT0aXhcA29hDx+
-	 VjyapUSjAqeYErAVfcOgiBNLyCcC/zlmn5+JQVMari+d+1yDpg6wadlcqSahhfbdBt
-	 nsmGMt6S1kFNu1S03CCINzqoZ2JzteZHAhdjg7L8LY3hE6FoR2Gm210IN30MKS6A8u
-	 eqce8b3e/B4kQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] MAINTAINERS: TPM DEVICE DRIVER: Update the W-tag
-Date: Tue, 18 Jun 2024 16:35:56 +0300
-Message-ID: <20240618133556.105604-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P2B63vUY"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52bc0a9cea4so4767458e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718717762; x=1719322562; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G9s5hs5ZuL2Zn53VjZAMHLo13K1X8TUCRyypHJObaGA=;
+        b=P2B63vUYfZ59vNDRxC9yU2S2ZKWYTl0FUTUIm9Ezh2a96cIal8cz2avtHwjaYIgrh3
+         3+ATRLAnurGStP3+ayiwh86DJ6ObcSu1+TE6Pz+DZQasdo15onMzshoiGX5rmgpgKUWl
+         wT1wJK0aGumJSae89Uf/+61nOcKWIoc/eKHyK2xbgiPwlWPDfXmUzIQwimuCMYQYv/pw
+         bvSa/23o5i9Q8VI/BDcrFvokoJ+knOWqB9rNPbJ4/+/niji7HGc+FUDs2POZliqZ4ZMd
+         W3otcU4d0lhvyJucusKwQ7vN7Bqp1xcsZIaCfZsmc1knLmDLZ4pDcFR/K2muYE9U55MD
+         GbNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718717762; x=1719322562;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G9s5hs5ZuL2Zn53VjZAMHLo13K1X8TUCRyypHJObaGA=;
+        b=GrrP7tZooylQo9xF7MztlZCQNL+FQHefa2VC3F7oI1PsfQwO0x/XCwufr1pqQn4X+R
+         BvVubmkUrCKUlAvqKQR+5Nd//djkO4sdZESyM6JpbxsB0I2eflC7P5CVQViyGwoS87+V
+         xVrv7KEqMXKhw95yh/QjAXwFQKy/4BPkxeaSDctWUChXdWXmFc+4jsBmQ5qg07dUkgbi
+         DBh8Drdfv/kRMo/uStJBgxkbQM4jLjYyF7HkPTRn59scYPT7++qrfzwltCQbpEGYNakH
+         eFFY2LHMOveO91ZYk2Ul0Y4pbTPX7SYMRHn9+gxL9lKGTF7Rb9rZ4wHi475/fQT2+vRw
+         79Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqgDB8JZoO93FY8ddYRLCDjywpXW7wp4XFV4nVTwdeny0kyxZPqiI4KDFA5bFekQF7HPBzCpEK24uPnAeXTGjO8+s3f2zaUrvOS0zc
+X-Gm-Message-State: AOJu0YyVQ7YrvnUnla1ulMJ/y3vCQ1mZZcu6oNqVqf4M5Tj0/KMGkLB/
+	lPaKxdl8Ud3DIAxdh6BR/QX/CcSUZmVD+bP+FdZAF0Odd84IbTYbA5n6T7HugGE=
+X-Google-Smtp-Source: AGHT+IG9ei9VafGhogll0ZfQrnWQuX3q3mJNG9ItxBVOsOkRff58mzJtsjaCsRuB3ayEgZ5pWyxEaQ==
+X-Received: by 2002:a05:6512:402a:b0:52c:b196:ea37 with SMTP id 2adb3069b0e04-52cc4767572mr906296e87.0.1718717761608;
+        Tue, 18 Jun 2024 06:36:01 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca28720acsm1509466e87.146.2024.06.18.06.36.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 06:36:01 -0700 (PDT)
+Message-ID: <180bb76f-a547-44c9-824c-b8d57f7eb10a@linaro.org>
+Date: Tue, 18 Jun 2024 15:35:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcm6490-shift-otter: Name the
+ regulators
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Caleb Connolly <caleb@postmarketos.org>,
+ Alexander Martinz <amartinz@shiftphones.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240618-qcm6490-regulator-name-v1-0-69fa05e9f58e@fairphone.com>
+ <20240618-qcm6490-regulator-name-v1-2-69fa05e9f58e@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240618-qcm6490-regulator-name-v1-2-69fa05e9f58e@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Git hosting for the test suite has been migrated from Gitlab to Codeberg,
-given the "less hostile environment".
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://codeberg.org/jarkko/linux-tpmdd-test
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aacccb376c28..022aac78a000 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22746,7 +22746,7 @@ M:	Jarkko Sakkinen <jarkko@kernel.org>
- R:	Jason Gunthorpe <jgg@ziepe.ca>
- L:	linux-integrity@vger.kernel.org
- S:	Maintained
--W:	https://gitlab.com/jarkkojs/linux-tpmdd-test
-+W:	https://codeberg.org/jarkko/linux-tpmdd-test
- Q:	https://patchwork.kernel.org/project/linux-integrity/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
- F:	Documentation/devicetree/bindings/tpm/
--- 
-2.45.2
+On 6/18/24 15:30, Luca Weiss wrote:
+> Without explicitly specifying names for the regulators they are named
+> based on the DeviceTree node name. This results in multiple regulators
+> with the same name, making debug prints and regulator_summary impossible
+> to reason about.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
