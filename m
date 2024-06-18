@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB9013B5A8;
-	Tue, 18 Jun 2024 10:17:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382C114532B;
+	Tue, 18 Jun 2024 10:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718705879; cv=none; b=VQGEFbGu5hYCzB8GijohvWhl1KtJrak+gEAsHK5ElojZ1QWPI7YfbuPgdEOc1YDyGi0zCCKFbiO4KTsU019O0pvrBqvIs4G0/eie5JGqhzp3760+OEMV/lytfP/9BuMd9EWHQ6CerWIq2WFNMkiwr/L2rl2YCUGIwbIAQzimZ8Q=
+	t=1718705882; cv=none; b=fQThHB7EQFNncVMt0MW67a1Mne6BkAC0r52mhJ6s3PBH3BDVuu6+qkY76am4UkAhtYT0ACh0mh8h8ORwy9AdB+D8F95X3E3/gsplukKbhOPNgB1d0vFCcqf04twLgaPL5tUuZFTsLKIPUU/PkTSlgflRB9GnLl8x6Tu8MBwsNl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718705879; c=relaxed/simple;
-	bh=90kLxrGoppT56evRiuAitHzcuHZVrjajU71BMRUxT0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPJfpudc14v484iFsJsQXsvxjZm3z/GqzqxPDyjaOqudq1B40hPzU/ZFw4yzDqH7dd99drfvDWWgq6j/un+9P+rottgb0TICHvMcr2QCmxN5xdnB8Ceyok96CaUlfr4A2Nxfu06Hv+z30xaRoyg6FjMdKNYIK7iIiSgDgZFaWbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GBOTDW2s; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1718705882; c=relaxed/simple;
+	bh=Uin4HL8p/uMYwcu6R0/lMaoEXvWDsF3aIDdkjKb66fE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qz+8tb2QWDucTBopP6QB+oknwWHQbIcT16riqy214Dx34xexSONb33uO7WdQ0FExNICTrXGX/QAoEqDTgMV7+Xn9n0fu/cZr6CK7AOoW/chlsmTZW9PgA0+ptAGsuIlIsBtvRLqAVrurYYrjgL7IpRT+OhXdqx4K3aIXYqNrt6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XFxMhSu6; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GBOTDW2s"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XFxMhSu6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718705876;
-	bh=90kLxrGoppT56evRiuAitHzcuHZVrjajU71BMRUxT0Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GBOTDW2snLztuMkKDopHKkimZA4VrpT0jfQA08zxvps5cdOSIoCAFlAc+2ulopPGZ
-	 jGvoYS+oUXE6YlNUbUYnFMZFI5Z1k1MdJ94boJvPePe83uDqBBRL3uWvSAMR5+X63b
-	 5Gnmj0KzGXMYtMSRNOLH4skwTJywC4Fbz5LFSsC4JCC+xGr+ZjowGRMw/Ti8SlyZJP
-	 P3UKZZsjYZaQSTeDYiils6qyAXPbJplwjW4WnBDrhD/d8vejh/uWv7TX/qaEMbdjWI
-	 vZquuNAgxTfGeC4kQyceaYK9y6/Twvg+UsWvs7OXy+pUnje4EEzbOaspMtgzA/7LEx
-	 C5/S6Bo1krZHQ==
+	s=mail; t=1718705879;
+	bh=Uin4HL8p/uMYwcu6R0/lMaoEXvWDsF3aIDdkjKb66fE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XFxMhSu6Yw82hw+10ugYDYqvV+SaUanULxHCsz154q4wtH/pBFYZSEJ2uk+ZzTCDi
+	 87kaKBuLpf7liyKv+tur8D/WmX3OZVn8nnZkvTII6WSyX83GtCllCOpoyTS3s6cQzm
+	 IVma5UYRVhnxzcXIwD8wZMxcftGu48OzrW/SkR1dTtHQrNof+Z4wbzWfpPP7+si/Kj
+	 DgXhNczhUnEwbXD4LeILxR4i9uiArqcX0cYcaKls9z/3Q34b0/6Gh+pUQA0nZQLHF2
+	 OXGOTw7ZI9k2Vj3ABNjsWS6OaJNCMM+4QsC7GNkJh9kA9zOfPVG/Flm3qp5yBzE74m
+	 6iuxCaMHYqkLA==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 742263780F7F;
-	Tue, 18 Jun 2024 10:17:54 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0718E3782186;
+	Tue, 18 Jun 2024 10:17:57 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: robh@kernel.org,
@@ -57,11 +58,14 @@ Cc: robh@kernel.org,
 	wenst@chromium.org,
 	kernel@collabora.com,
 	sui.jingfeng@linux.dev,
-	michael@walle.cc
-Subject: [PATCH v8 0/3] drm/mediatek: Add support for OF graphs
-Date: Tue, 18 Jun 2024 12:17:23 +0200
-Message-ID: <20240618101726.110416-1-angelogioacchino.delregno@collabora.com>
+	michael@walle.cc,
+	Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH v8 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph support for board path
+Date: Tue, 18 Jun 2024 12:17:25 +0200
+Message-ID: <20240618101726.110416-3-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240618101726.110416-1-angelogioacchino.delregno@collabora.com>
+References: <20240618101726.110416-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,104 +74,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v8:
- - Rebased on next-20240617
- - Changed to allow probing a VDO with no available display outputs
+Document OF graph on MMSYS/VDOSYS: this supports up to three DDP paths
+per HW instance (so potentially up to six displays for multi-vdo SoCs).
 
-Changes in v7:
- - Fix typo in patch 3/3
+The MMSYS or VDOSYS is always the first component in the DDP pipeline,
+so it only supports an output port with multiple endpoints - where each
+endpoint defines the starting point for one of the (currently three)
+possible hardware paths.
 
-Changes in v6:
- - Added EPROBE_DEFER check to fix dsi/dpi false positive DT fallback case
- - Dropped refcount of ep_out in mtk_drm_of_get_ddp_ep_cid()
- - Fixed double refcount drop during path building
- - Removed failure upon finding a DT-disabled path as requested
- - Tested again on MT8195, MT8395 boards
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+Tested-by: Alexandre Mergnat <amergnat@baylibre.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../bindings/arm/mediatek/mediatek,mmsys.yaml | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Changes in v5:
- - Fixed commit [2/3], changed allOf -> anyOf to get the
-   intended allowance in the binding
-
-Changes in v4:
- - Fixed a typo that caused pure OF graphs pipelines multiple
-   concurrent outputs to not get correctly parsed (port->id); 
- - Added OVL_ADAPTOR support for OF graph specified pipelines;
- - Now tested with fully OF Graph specified pipelines on MT8195
-   Chromebooks and MT8395 boards;
- - Rebased on next-20240516
-
-Changes in v3:
- - Rebased on next-20240502 because of renames in mediatek-drm
-
-Changes in v2:
- - Fixed wrong `required` block indentation in commit [2/3]
-
-
-The display IPs in MediaTek SoCs are *VERY* flexible and those support
-being interconnected with different instances of DDP IPs (for example,
-merge0 or merge1) and/or with different DDP IPs (for example, rdma can
-be connected with either color, dpi, dsi, merge, etc), forming a full
-Display Data Path that ends with an actual display.
-
-This series was born because of an issue that I've found while enabling
-support for MT8195/MT8395 boards with DSI output as main display: the
-current mtk_drm_route variations would not work as currently, the driver
-hardcodes a display path for Chromebooks, which have a DisplayPort panel
-with DSC support, instead of a DSI panel without DSC support.
-
-There are other reasons for which I wrote this series, and I find that
-hardcoding those paths - when a HW path is clearly board-specific - is
-highly suboptimal. Also, let's not forget about keeping this driver from
-becoming a huge list of paths for each combination of SoC->board->disp
-and... this and that.
-
-For more information, please look at the commit description for each of
-the commits included in this series.
-
-This series is essential to enable support for the MT8195/MT8395 EVK,
-Kontron i1200, Radxa NIO-12L and, mainly, for non-Chromebook boards
-and Chromebooks to co-exist without conflicts.
-
-Besides, this is also a valid option for MT8188 Chromebooks which might
-have different DSI-or-eDP displays depending on the model (as far as I
-can see from the mtk_drm_route attempt for this SoC that is already
-present in this driver).
-
-This series was tested on MT8195 Cherry Tomato and on MT8395 Radxa
-NIO-12L with both hardcoded paths, OF graph support and partially
-hardcoded paths, and pure OF graph support including pipelines that
-require OVL_ADAPTOR support.
-
-AngeloGioacchino Del Regno (3):
-  dt-bindings: display: mediatek: Add OF graph support for board path
-  dt-bindings: arm: mediatek: mmsys: Add OF graph support for board path
-  drm/mediatek: Implement OF graphs support for display paths
-
- .../bindings/arm/mediatek/mediatek,mmsys.yaml |  28 ++
- .../display/mediatek/mediatek,aal.yaml        |  40 +++
- .../display/mediatek/mediatek,ccorr.yaml      |  21 ++
- .../display/mediatek/mediatek,color.yaml      |  22 ++
- .../display/mediatek/mediatek,dither.yaml     |  22 ++
- .../display/mediatek/mediatek,dpi.yaml        |  25 +-
- .../display/mediatek/mediatek,dsc.yaml        |  24 ++
- .../display/mediatek/mediatek,dsi.yaml        |  27 +-
- .../display/mediatek/mediatek,ethdr.yaml      |  22 ++
- .../display/mediatek/mediatek,gamma.yaml      |  19 ++
- .../display/mediatek/mediatek,merge.yaml      |  23 ++
- .../display/mediatek/mediatek,od.yaml         |  22 ++
- .../display/mediatek/mediatek,ovl-2l.yaml     |  22 ++
- .../display/mediatek/mediatek,ovl.yaml        |  22 ++
- .../display/mediatek/mediatek,postmask.yaml   |  21 ++
- .../display/mediatek/mediatek,rdma.yaml       |  22 ++
- .../display/mediatek/mediatek,ufoe.yaml       |  21 ++
- drivers/gpu/drm/mediatek/mtk_disp_drv.h       |   1 +
- .../gpu/drm/mediatek/mtk_disp_ovl_adaptor.c   |  40 ++-
- drivers/gpu/drm/mediatek/mtk_dpi.c            |  21 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 291 ++++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.h        |   2 +-
- drivers/gpu/drm/mediatek/mtk_dsi.c            |  14 +-
- 23 files changed, 731 insertions(+), 41 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
+index b3c6888c1457..3f4262e93c78 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
+@@ -93,6 +93,34 @@ properties:
+   '#reset-cells':
+     const: 1
+ 
++  port:
++    $ref: /schemas/graph.yaml#/properties/port
++    description:
++      Output port node. This port connects the MMSYS/VDOSYS output to
++      the first component of one display pipeline, for example one of
++      the available OVL or RDMA blocks.
++      Some MediaTek SoCs support multiple display outputs per MMSYS.
++    properties:
++      endpoint@0:
++        $ref: /schemas/graph.yaml#/properties/endpoint
++        description: Output to the primary display pipeline
++
++      endpoint@1:
++        $ref: /schemas/graph.yaml#/properties/endpoint
++        description: Output to the secondary display pipeline
++
++      endpoint@2:
++        $ref: /schemas/graph.yaml#/properties/endpoint
++        description: Output to the tertiary display pipeline
++
++    anyOf:
++      - required:
++          - endpoint@0
++      - required:
++          - endpoint@1
++      - required:
++          - endpoint@2
++
+ required:
+   - compatible
+   - reg
 -- 
 2.45.2
 
