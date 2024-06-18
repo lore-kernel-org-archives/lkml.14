@@ -1,105 +1,122 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4E446426;
-	Tue, 18 Jun 2024 18:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5BF46426
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 18:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718737107; cv=none; b=hoM3XCs8h02VWOQzYFZauD0kcdtxpvtf5ylzeQHjeMWT2/9wZ2YIlTZXfuCLUT/uZLPwMJIP5O2dowo5kpkL1kItjTtjBODzQ1mUvk3r5+arAcDMmKcT52oKvI3J3ndOwM0XDrZwYctGrEJxaBoXg84hb9KepXm0+CQ6/6nSCmA=
+	t=1718737153; cv=none; b=rpJ/Cu2Wj4QX7bIcMC7t4UNiNKWocrg0ZLI/tQ7USlYpvOhDO7fMKPQcJry6wV/pMaBHNNQ5mwraDiiTKxJMEGuycZbFiP4bsQOoCx0YBC+8bWBB6pP4PZV0WYX21/8AJsyrhVqNAiQigceTS1vx3HoQsuBDQieB/GQF9suLwvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718737107; c=relaxed/simple;
-	bh=k8EFMG5DMLKsNyQeGALNuSJ/BSvmDb2THX39JB2v2jc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=OaAqV8kDyOCzmPpUnBxwzC5NQcnA55IL1SVARazIdaj9FFqXDAatkLRL8ACr3OYDwbaxkd1ICVeuKqfRH+hMTj9aDxSm6NIfHvAZwdgI3cA3stpl1x6zHNlAe5xqFEjPFPZtDttAvLiBGIimcvSI3Ua9Q/tdaDQPQ/PdEViln5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-632597a42b4so1266897b3.0;
-        Tue, 18 Jun 2024 11:58:24 -0700 (PDT)
+	s=arc-20240116; t=1718737153; c=relaxed/simple;
+	bh=BdWIeCr2Riu1goFyOWQXAGuIK2HMfNskpG+y2gZRe28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q0WCkc8VBwzMbox7wcgmEEqdCrH1gMRVGZIydQiFqJzcSa5YuRY/YDYtyUiwhEtCRAWedgpzCf3T9By2WpvVTvdfdxDsEyZ0eI12T8Uwa/GhCT60R79BivcLyacW89xC6eyBmVntphm3NLmZL86s0bJNd8MMluyOArtrlZScH6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uJTzqjXz; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJTzqjXz"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ccb56d5fdso71297e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718737150; x=1719341950; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9MpCHcPoZaGrAFpup9mciJpiv7a+e50VTao5sjCkleg=;
+        b=uJTzqjXzTYSckg13C8ziigOHkG/lyJEhG0MZbXpkbOEaEKQllckeo2IPtqEcLRaRrq
+         mQc4sB0E/XXTklP5Ny8dc4e+WVCM8uxxQe/Ssa8eYqW3z8JCdFx02y7Ri8Y2IvJqtC8e
+         zEZyXnUO99cN8k2C+N7CdvLBkzLpL4I8FoWQOQ/l+sT8eGU2vRCgHueV1pi54kJqzZk4
+         C/4QIah3MElmmGoqush0rMBDaSJ9PwQhZSRvdHtlr7cPyPwqRYLK9XoccDJPJpX2Misy
+         HbvMaB0SZcD/IkHOWZZkriG/Y+m3EVBAPHgRU8J7gw5ozI0RiZ6F4k/CW5TgMMSFJOQf
+         miUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718737103; x=1719341903;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+X8wf+uC0OjwHBa17rdEnSvQT0n3Fv2/cB2AKsMkZxY=;
-        b=fpmbNHGZeFcGLNlw4tGMA5EfxucpfFdRIMI+4++Gy61zKopvQ+swLmOQ8vGLq0+btE
-         TymZCMj9FZ/iOvuM8WlxfWOpOWqyAVz2W+8vocCppM1h0tpmeaJqI8a1lJPODukD92lz
-         Gym/KSpilX6KGlIT8nlM+gKDSbqBHB+mZlu9mPnZ4HfTNXm7EavH4CVm6avylRPN1rk8
-         J6d2PvHx5s8NhnD+gZRNugmkdkfBrc0ORgDBV8xKfwpvNrVWNfLoUhasHbP7I0RikRuA
-         BOwyu2LRPFJ/yxNj0etQ2R1d9Jwl9eV8Z1pQpSvxF0AujRP87eJd4HVhUfN1TlSl6KK8
-         0oQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyZCE1WlZZDlo1zXEZprBKX56Dr6svgwWgYvmuZ7mWy+8KKS7v0veiIDmtRAWiO56LmBG60G/H+FpDgb6CcBeM1kcRkPGfHscWJHmvHt4Ci/HeWUJ6wPicZ+Vc6W8hvuSTJFK5CEJAuHmseMtim1rVhUB4Korj/rh9EfgmESMSW6LB42MYtfqNRRrKtgSYH6lSh8MtwIb05BbDr89KbSvhO3Bb+N2k
-X-Gm-Message-State: AOJu0YyU0CATIAC2kBYaSwpgjHxwk7sJfecV1mp7+HOwYOQGhGnQhBNu
-	/vjGI987UH6nOWfGTF3BV3SyxHKWSWzvwCxbUVg2DfxMCEazFArvBko8qhGe
-X-Google-Smtp-Source: AGHT+IGHr/VtxA5A0u985IA92CRiSiD7/zYATm8ehyr5rsBrae5vS9IeJXXbkZJEKyDda5lX26nHew==
-X-Received: by 2002:a81:8982:0:b0:62c:f782:ee1e with SMTP id 00721157ae682-63a87ed7484mr6665947b3.11.1718737103362;
-        Tue, 18 Jun 2024 11:58:23 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-631183d7d6dsm18585297b3.17.2024.06.18.11.58.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 11:58:23 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-63036fa87dbso1073557b3.1;
-        Tue, 18 Jun 2024 11:58:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWWccjhGJBDUH61T8+buQqEEx0WAHNu0/e2JIfXLnA/H1lYu/DP3dxVa+eNgZ2tFICmEItifLG7U6IeN4X5V9lyPprkwNbCd6c6RrfJQG23pipFnaHsCB8hvEQb/jGK9rnXcMYYpTBnladsvQO9JFtqCqnCSNKH5ODfoM2zv3sVX5RbW1FvBizSJ6NggFQOTRb2ErxQPV9HkH62zdfo4cM1exxcPqcr
-X-Received: by 2002:a81:e245:0:b0:61b:e506:b0f with SMTP id
- 00721157ae682-63947fc3d6amr27090767b3.4.1718737102803; Tue, 18 Jun 2024
- 11:58:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718737150; x=1719341950;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9MpCHcPoZaGrAFpup9mciJpiv7a+e50VTao5sjCkleg=;
+        b=qCfAD3fahxhL+ybRQTlGDMOwJy0wgCJMzAq+5gLyPoIurSEbH3/iE59Eqq7LgVK9f4
+         IK1ah8situby3SiylquYrzGouLSBEJAXP2B9k+TpOx2iQe4i/L/QS4GvRC+Xd5wDFwad
+         OK2M1ezf5sVsybzk4/+Z7rk0s1Pzg1WF46PSDl2jLnE39GPMzMUP0CRpKGXX26M2vcPV
+         +L5H975IxtNX0VX/tEyRyBzv8D61LlhMnND9YKul6i+Q26DikYKKmWi2LWQsGtYddxLz
+         qVM6Y5HV/YfvDMMb2VnF44s8RjRwtq4wrzFF1xXUrWsD70aC9VkIsGhmcym0B7U6N7CP
+         bKMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjGYWM2lAnxcPfiscFE+XfzCEakZFn3bBjsx5syscOPrc5jz7+Muj6NPqeC+SYoJvThVPTFxgw2bOuhJ2ZhzYPXLMRQWLn6mn4HhWw
+X-Gm-Message-State: AOJu0Yyq/t83wrq3KAHJjrf0JoxllcBO94ASCAbLokuSAAwLYhmOuuib
+	xdVMPf3PjI+GIn5jF+kdIMBBXtj15J1aGGDnC0bCYaTU4QTcHHFQJ0kq6sugAxQ=
+X-Google-Smtp-Source: AGHT+IFDr3U/SrLBiO1uPby6Uc8AxM6+e9mp/Lc1MODZwB4YQh4bCUD9hP+ePj9pH4co7aNG+afopA==
+X-Received: by 2002:a05:6512:2e7:b0:52c:823f:2a0a with SMTP id 2adb3069b0e04-52ccaa2c8c8mr327227e87.10.1718737149939;
+        Tue, 18 Jun 2024 11:59:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2889052sm1573443e87.299.2024.06.18.11.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 11:59:09 -0700 (PDT)
+Date: Tue, 18 Jun 2024 21:59:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Nikita Travkin <nikita@trvn.ru>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC 0/7] usb: typec: ucsi: rework glue driver interface
+Message-ID: <hgqvyaziumpag5g5ajzupllvpwlz44scma6yu3drmtoqwcwav4@w366suy7c2eo>
+References: <20240603-ucsi-rework-interface-v1-0-99a6d544cec8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com> <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
- <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
-In-Reply-To: <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 18 Jun 2024 20:58:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
-Message-ID: <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603-ucsi-rework-interface-v1-0-99a6d544cec8@linaro.org>
 
-Hi Wolfram,
+On Mon, Jun 03, 2024 at 02:24:53AM GMT, Dmitry Baryshkov wrote:
+> The interface between UCSI and the glue driver is very low-level. It
+> allows reading the UCSI data from any offset (but in reality the UCSI
+> driver reads only VERSION, CCI an MESSAGE_IN data). All event handling
+> is to be done by the glue driver (which already resulted in several
+> similar-but-slightly different implementations). It leaves no place to
+> optimize the write-read-read sequence for the command execution (which
+> might be beneficial for some of the drivers), etc.
+> 
+> The patchseries attempts to restructure the UCSI glue driver interface
+> in order to provide sensible operations instead of a low-level read /
+> write calls.
+> 
+> If this approach is found to be acceptable, I plan to further rework the
+> command interface, moving reading CCI and MESSAGE_IN to the common
+> control code, which should simplify driver's implementation and remove
+> necessity to split quirks between sync_control and read_message_in e.g.
+> as implemented in the ucsi_ccg.c.
+> 
+> Note, the series was tested only on the ucsi_glink platforms. Further
+> testing is appreciated.
 
-On Tue, Jun 18, 2024 at 12:54=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > I could see it using configfs instead of DT for configuration and iio
-> > for presenting the output but - from what Wolfram said - insisting on
-> > this will simply result in this development being dropped entirely.
->
-> How do you assign a GPIO via debugfs? I only found the out-of-tree
-> pwm-gpio driver[1] which uses a GPIO number. But those are deprecated
-> these days, or? Any other driver doing this you can point me to?
+Gracious ping for the reviews / comments. My endgoal is to simplify the
+command submission interface, allowing us to handle odd commands in a
+single function rather than having the code split between sync_write()
+and notification handling.
 
-Do you really need debugfs (or configfs)?
-I guess you can just write GPIO line names or GPIO chip
-labels + offsets to the new_device file, like gpio-aggregator does?
+> 
+> Depends: [1], [2]
+> 
+> [1] https://lore.kernel.org/linux-usb/20240521151109.3078775-1-fabrice.gasnier@foss.st.com/
+> 
+> [2] https://lore.kernel.org/linux-usb/20240531104653.1303519-1-heikki.krogerus@linux.intel.com/
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> Dmitry Baryshkov (7):
+>       usb: typec: ucsi: move ucsi_acknowledge() from ucsi_read_error()
+>       usb: typec: ucsi: simplify command sending API
+>       usb: typec: ucsi: split read operation
+>       usb: typec: ucsi: rework command execution functions
+>       usb: typec: ucsi: inline ucsi_read_message_in
+>       usb: typec: ucsi: extract common code for command handling
+>       usb: typec: ucsi: reorder operations in ucsi_run_command()
 
-Documentation/admin-guide/gpio/gpio-aggregator.rst
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+With best wishes
+Dmitry
