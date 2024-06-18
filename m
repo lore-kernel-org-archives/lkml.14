@@ -1,219 +1,120 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAC84655F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7528B136E1D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 03:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718682152; cv=none; b=pGOIhChCLkODKwl6rLhfSR6GDFcvdliiRWB1f6RJKj2BGknEOg5ivq7avWHIERn538m3dM8YUdojGRaxzu1kqReGG8FetlTVaEOJLZ3b4KUWSCkmxi8DYRCJk95IIFB6iPstn8EVA2+78nerIOiQONWT4NOXJclOYJw/domZaoQ=
+	t=1718682154; cv=none; b=svxCpH2ClNPgni5yIhQjA6ppMyHz9B17vRFaWcIgZIYAi827EdjeM3JxRgXcWX7fC+uhY5sM74F6sUyvBlhGihm9KKPmENRwuYx15NC+padFOm+9SsNz5cocSS2Z6qppFGerhc4tPmD0kflBpwibUFddnJzm+2fEIdvvrD48VA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718682152; c=relaxed/simple;
-	bh=XUxcd2xrP6BgK+ZWZVncZJUYuhpwuWh+/+DD8Rtq9ho=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZGDyHGHIlwSJ+DvrbBPBAN5XOKXLSyFEmuh2TF1iNakv/jIlO05dYoA7JurfU7zG7jnp0D16e9UnnAdrgVHx6jU6rBdfgQexvQqPSgns5sGIQJL0wUCWAGy6Qyq2ZGY6mH4OaKQUPm1n8mztHI0j2FhTxUPIY7XcAGoZWQmNyXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=qeOybXQo; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1718682154; c=relaxed/simple;
+	bh=mr9Umo5O3LBLHMSACCL8BnvvbHbeF/lv//SWSngEDfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KWOo56UGkeHY4OKr1p7ZlyUH5Zn6pf8h02WgO3F6SVtOLlkj4iF9cax7uvNY0l455kOyIFuDqItVIUz8JoIcn+GCgZpDI5fvcr/vP40jBNNxOpyzW1p2jvS55WPgRuryFvAeW8/9mj5cAXMd9FA5vhqC160fJb7gC7atbWGHelo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjJEIQqH; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="qeOybXQo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
-	Content-Type; bh=QIrPTMY/YwesLH3jlvYihiQmQO6QVdAPAQ9OqtJ8dyI=;
-	b=qeOybXQoOix/iVFnwtrjm4DDH+/kahKuTK4JTccj6G/TIPYgb7BovTfx3e6wzu
-	PXwwFzXbJPKos/hwaVWzJN79kzFZt9Hlx6Rf5fPh1y91qIaQDA9gP48lhc/CD4Y0
-	/hdeqiS8O4wU4GlRYq1+a1K1J6uRuFFGAIKeEYxsppArg=
-Received: from [172.21.21.216] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wD3_12hAXFmHcQhDQ--.15301S2;
-	Tue, 18 Jun 2024 11:40:19 +0800 (CST)
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com,
- liuzixing@hygon.cn
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
- <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com>
- <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
- <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
-From: yangge1116 <yangge1116@126.com>
-Message-ID: <ad2fc08b-9b25-d8de-0790-a7eab9bef907@126.com>
-Date: Tue, 18 Jun 2024 11:40:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjJEIQqH"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so51827451fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 20:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718682149; x=1719286949; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vQlgYRumVUXLHTiMx5rAYm4M7MKQ2xqVXRN5Nr59i5c=;
+        b=WjJEIQqH2kx9NcMSJ+boRCx55xs7CKhsjHvN3MttrZk+a7njmCp3vcWjWOjVqMDjDO
+         EfgbAfWTXD6aN0jEbrCuW7s3Mmtt95z5JS2/7bbRWaRsIrjNzqIQKrBAgZFolF2qoeA5
+         B1DN5DQEABgQRE2RV7lnZ/zPsUncworX6kxTRFNIBVGWDBit2HBhhb2kUFvmBVBNT+9r
+         LXHbx29Gm3kXBe4A2cCWS0frlxK2C0CtAVEKpwSUO9mgSy8FbLCvYA5bz/x3pGbQZVG9
+         YkwtKZ9KV8EuMx0ywiSTXrg14nQhaUM0lxN12PdkcsI9SGdAAUkFh4dqpaRYymONF+SS
+         5KIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718682149; x=1719286949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vQlgYRumVUXLHTiMx5rAYm4M7MKQ2xqVXRN5Nr59i5c=;
+        b=KRT08vEO8hKKDmgp2fLXuL2e9qaSBX5GrykBv9VRmlFeU2AoibOSKtQUgJNiL3fZek
+         GpXmnluNNIHIXOT113C9KfuIY8sELWBBCC24HpTgM3Qma5YOzHt6+Dpkt4ZTQaE37Bzw
+         CGJLxotqLsPIb2iqXEcmKVm1PG0MxvDc7v0DojVLCTQuCo4KrCSUBLlxWsGPhFR80LXf
+         wvJFZ3ZQ3+uZ1D9TSqlKt1jlQY0maaDJhAPz0ETepCnstN1ek080yzNX91PWo9xpnJ12
+         6KV/TX+mcEw+WlKtnl/NZaaePga4uD2JmW8cXuURV7nLQJyYniyJSzJs4CQoRhUT33cR
+         WsAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQdCUcOHAdMHoPRdow8rE18CWVbO2b7lCtWfY51NT5PGXf3mI68nZgssmJnHy89bM0ATIbJvlaWGtFIXVmMqNYOi5nLnxfooO0YkQo
+X-Gm-Message-State: AOJu0Yw8BpucIfKtOTolpic7VVgGL5p6D2pcGSZlOx7fwAcR+tlbMLYS
+	8JNu2sV3o9agBCXENC67Yj/kaX9EKanXEsYAdiFU2l5HvM60uNDPHYu/lRVaBbfRsz8VP+8sVMG
+	YCpBRRZfbUvY0HmwV0udewqgO1EvY9mD/
+X-Google-Smtp-Source: AGHT+IG15zlh+lCtXaMz7BpFoslec2WYJbCbU8nDBzFG6htRZfLeCw6IvXRIohIVvjbp1+iRfiXytcW2o5/LX0Obopg=
+X-Received: by 2002:a05:651c:221f:b0:2ec:1042:fafc with SMTP id
+ 38308e7fff4ca-2ec1042fbdemr87438671fa.0.1718682148958; Mon, 17 Jun 2024
+ 20:42:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3_12hAXFmHcQhDQ--.15301S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtw17Gr4kuFyxZr4fWFyfJFb_yoW7AFy8pF
-	WfG3Waka1UXryUAwnrt3Z0kr10k34rKr48Wr1rXr18urnIyF1Iyr4xJr18uFyrAryUJF40
-	qr4UtasxZF4DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjEfrUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQsCG2VLayXP7QAAsJ
+References: <20240618020926.1911903-1-zhaoyang.huang@unisoc.com>
+ <ZnD8qYvpyhYtWeHd@casper.infradead.org> <CAGWkznG2Ts0khArZ_X5EYKG7n9=HmcO8d16KVUZ+uQffEc3vrw@mail.gmail.com>
+ <ZnD_mcxk_PCyWNmQ@casper.infradead.org>
+In-Reply-To: <ZnD_mcxk_PCyWNmQ@casper.infradead.org>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Tue, 18 Jun 2024 11:42:17 +0800
+Message-ID: <CAGWkznFgPzqX4w25H26rHaagqmD3Nh7g_VhvhHFouWiQjt1b9A@mail.gmail.com>
+Subject: Re: [PATCH] mm: fix hard lockup in __split_huge_page
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, steve.kang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 18, 2024 at 11:31=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
+g> wrote:
+>
+> On Tue, Jun 18, 2024 at 11:27:12AM +0800, Zhaoyang Huang wrote:
+> > On Tue, Jun 18, 2024 at 11:19=E2=80=AFAM Matthew Wilcox <willy@infradea=
+d.org> wrote:
+> > >
+> > > On Tue, Jun 18, 2024 at 10:09:26AM +0800, zhaoyang.huang wrote:
+> > > > Hard lockup[2] is reported which should be caused by recursive
+> > > > lock contention of lruvec->lru_lock[1] within __split_huge_page.
+> > > >
+> > > > [1]
+> > > > static void __split_huge_page(struct page *page, struct list_head *=
+list,
+> > > >                 pgoff_t end, unsigned int new_order)
+> > > > {
+> > > >         /* lock lru list/PageCompound, ref frozen by page_ref_freez=
+e */
+> > > > //1st lock here
+> > > >         lruvec =3D folio_lruvec_lock(folio);
+> > > >
+> > > >         for (i =3D nr - new_nr; i >=3D new_nr; i -=3D new_nr) {
+> > > >                 __split_huge_page_tail(folio, i, lruvec, list, new_=
+order);
+> > > >                 /* Some pages can be beyond EOF: drop them from pag=
+e cache */
+> > > >                 if (head[i].index >=3D end) {
+> > > >                         folio_put(tail);
+> > > >                             __page_cache_release
+> > > > //2nd lock here
+> > > >                                folio_lruvec_relock_irqsave
+> > >
+> > > Why doesn't lockdep catch this?
+> > It is reported by a regression test of the fix patch which aims at the
+> > find_get_entry livelock issue as below. I don't know the details of
+> > the kernel configuration.
+> >
+> > https://lore.kernel.org/linux-mm/5f989315-e380-46aa-80d1-ce8608889e5f@m=
+arcinwanat.pl/
+>
+> Go away.
+ok, you are the boss anyway. But this series of call chain does have
+the risk of deadlock, right? Besides, the livelock issue which is
+caused by zero ref-count folio within find_get_entry is kept being
+reported by different users.
 
-
-在 2024/6/18 上午9:55, Barry Song 写道:
-> On Tue, Jun 18, 2024 at 9:36 AM yangge1116 <yangge1116@126.com> wrote:
->>
->>
->>
->> 在 2024/6/17 下午8:47, yangge1116 写道:
->>>
->>>
->>> 在 2024/6/17 下午6:26, Barry Song 写道:
->>>> On Tue, Jun 4, 2024 at 9:15 PM <yangge1116@126.com> wrote:
->>>>>
->>>>> From: yangge <yangge1116@126.com>
->>>>>
->>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->>>>> THP-sized allocations") no longer differentiates the migration type
->>>>> of pages in THP-sized PCP list, it's possible to get a CMA page from
->>>>> the list, in some cases, it's not acceptable, for example, allocating
->>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
->>>>>
->>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
->>>>> PCP list to avoid the issue above.
->>>>
->>>> Could you please describe the impact on users in the commit log?
->>>
->>> If a large number of CMA memory are configured in the system (for
->>> example, the CMA memory accounts for 50% of the system memory), starting
->>> virtual machine with device passthrough will get stuck.
->>>
->>> During starting virtual machine, it will call pin_user_pages_remote(...,
->>> FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area,
->>> pin_user_pages_remote() will migrate the page from CMA area to non-CMA
->>> area because of FOLL_LONGTERM flag. If non-movable allocation requests
->>> return CMA memory, pin_user_pages_remote() will enter endless loops.
->>>
->>> backtrace:
->>> pin_user_pages_remote
->>> ----__gup_longterm_locked //cause endless loops in this function
->>> --------__get_user_pages_locked
->>> --------check_and_migrate_movable_pages //always check fail and continue
->>> to migrate
->>> ------------migrate_longterm_unpinnable_pages
->>> ----------------alloc_migration_target // non-movable allocation
->>>
->>>> Is it possible that some CMA memory might be used by non-movable
->>>> allocation requests?
->>>
->>> Yes.
->>>
->>>
->>>> If so, will CMA somehow become unable to migrate, causing cma_alloc()
->>>> to fail?
->>>
->>>
->>> No, it will cause endless loops in __gup_longterm_locked(). If
->>> non-movable allocation requests return CMA memory,
->>> migrate_longterm_unpinnable_pages() will migrate a CMA page to another
->>> CMA page, which is useless and cause endless loops in
->>> __gup_longterm_locked().
-> 
-> This is only one perspective. We also need to consider the impact on
-> CMA itself. For example,
-> when CMA is borrowed by THP, and we need to reclaim it through
-> cma_alloc() or dma_alloc_coherent(),
-> we must move those pages out to ensure CMA's users can retrieve that
-> contiguous memory.
-> 
-> Currently, CMA's memory is occupied by non-movable pages, meaning we
-> can't relocate them.
-> As a result, cma_alloc() is more likely to fail.
-> 
->>>
->>> backtrace:
->>> pin_user_pages_remote
->>> ----__gup_longterm_locked //cause endless loops in this function
->>> --------__get_user_pages_locked
->>> --------check_and_migrate_movable_pages //always check fail and continue
->>> to migrate
->>> ------------migrate_longterm_unpinnable_pages
->>>
->>>
->>>
->>>
->>>
->>>>>
->>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->>>>> THP-sized allocations")
->>>>> Signed-off-by: yangge <yangge1116@126.com>
->>>>> ---
->>>>>    mm/page_alloc.c | 10 ++++++++++
->>>>>    1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>>>> index 2e22ce5..0bdf471 100644
->>>>> --- a/mm/page_alloc.c
->>>>> +++ b/mm/page_alloc.c
->>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
->>>>> *preferred_zone,
->>>>>           WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
->>>>>
->>>>>           if (likely(pcp_allowed_order(order))) {
->>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags &
->>>>> ALLOC_CMA ||
->>>>> +                                               order !=
->>>>> HPAGE_PMD_ORDER) {
->>>>> +                       page = rmqueue_pcplist(preferred_zone, zone,
->>>>> order,
->>>>> +                                               migratetype,
->>>>> alloc_flags);
->>>>> +                       if (likely(page))
->>>>> +                               goto out;
->>>>> +               }
->>>>
->>>> This seems not ideal, because non-CMA THP gets no chance to use PCP.
->>>> But it
->>>> still seems better than causing the failure of CMA allocation.
->>>>
->>>> Is there a possible approach to avoiding adding CMA THP into pcp from
->>>> the first
->>>> beginning? Otherwise, we might need a separate PCP for CMA.
->>>>
->>
->> The vast majority of THP-sized allocations are GFP_MOVABLE, avoiding
->> adding CMA THP into pcp may incur a slight performance penalty.
->>
-> 
-> But the majority of movable pages aren't CMA, right?
-
-Yes.
-
-> Do we have an estimate for
-> adding back a CMA THP PCP? Will per_cpu_pages introduce a new cacheline, which
-> the original intention for THP was to avoid by having only one PCP[1]?
-> 
-> [1] https://patchwork.kernel.org/project/linux-mm/patch/20220624125423.6126-3-mgorman@techsingularity.net/
-> 
-> 
->> Commit 1d91df85f399 takes a similar approach to filter, and I mainly
->> refer to it.
->>
->>
->>>>> +#else
->>>>>                   page = rmqueue_pcplist(preferred_zone, zone, order,
->>>>>                                          migratetype, alloc_flags);
->>>>>                   if (likely(page))
->>>>>                           goto out;
->>>>> +#endif
->>>>>           }
->>>>>
->>>>>           page = rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
->>>>> --
->>>>> 2.7.4
->>>>
->>>> Thanks
->>>> Barry
->>>>
->>
->>
-
+https://lore.kernel.org/linux-mm/CALOAHbC8NM7R-pKvPW6m4fnn_8BQZuPjJrNZaEN=
+=3Dsg67Gp+NGQ@mail.gmail.com/
