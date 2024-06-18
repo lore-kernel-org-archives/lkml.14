@@ -1,29 +1,30 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE66F7602D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4156778676
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693679; cv=none; b=pv4sNqZo6VoIh8R8A/ABxz4Zw//2+uc0Y5ZlZFClFWiFlETLWBy/CauQ6XAYBPmBvCeHfWIp3YqWdzyuY77ebWN+00EYkeqmUyfaKfs7m9Vneuu1p5t7G0KE15um4M3mibI6qygP2FedkWC3JzXqS12ajdjfFD6OTM+O4cY4JWo=
+	t=1718693680; cv=none; b=bPnSeHvZ1Df0Wtbwej/H+Jp7rsa2QyTqRBYo2kljbw2D8pIGdXT5zgZ91ZheBvk9WXjfLTfosk4TciJOpERyaf71FTrzek+pBZG+E7/FZf6LEs0laIYSw2b3LsXgniwx1l9dF1POXQpFa0YIayaITiZn3BQFOqGeIw+LNPFBR9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693679; c=relaxed/simple;
-	bh=S2sGp3wlH/b5kYZp5cjkHur9G9Zz83kTTmfnbJALzzY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nQDu99PvewjhWWPwAzeuIlfhb24g/XykaeSiAOJnGPfcwu/BfrkHbvKF6DnVbhCaWphQHqH3DR4GfjIR6vN+A/QvkPWItITiThbH0vT5Ydn4AcJ3weq6XDUERIfzEtoczf809gE1tH6BMF3mGfWJmMQAR0+6qriBAIzBSvdqV9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lKyP5K6G; arc=none smtp.client-ip=115.124.30.101
+	s=arc-20240116; t=1718693680; c=relaxed/simple;
+	bh=b8LuyynHN3NsClPyf8jZS4sH1SoZUwxuViazv8I7w1Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A3KS+eobtbhuw7HGZ0J/nDzoXyYpP9ysDekn2k20TxvUvZD/e5HHftZN6kZ6ub27/+nPgKlFyr5s0Zy99N2DVDFwhKEW0xZt/jxYUTD4gHfWCt1hJ8py+tdD9QxXLYFb9Sugxs0WWarCblMv0M8LDg2w64WVTebop9QtcJJuank=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=a2KWH0XI; arc=none smtp.client-ip=115.124.30.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lKyP5K6G"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="a2KWH0XI"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1718693669; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=DxaCp5bOC4hyWB6FKdEFK/JUDfrUbLNO+z6WPPrt+Vw=;
-	b=lKyP5K6GrpOdFAsIyYXpaiCuDU374+QUNURhr/XPZCF+8FPwIySdQw/WvEGbMsPKQ+ixoQcitc8FRFXCTWtotN5k1kYCqwOqX/GR6q3UaakDo0C+hZDjz8WNI9c3voRHTi9hRDpqZp2q/eD59pqSwZMWJ5ppnTtzXElN5xs0U0s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jFFIj_1718693666;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jFFIj_1718693666)
+	t=1718693676; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=koLTHCsWXBAa3N27f7lrGDpaxVfvYWdW4ehMIBy6BWA=;
+	b=a2KWH0XIyyGXX0IJR7KJRMXwHPjSTQyPFdqJvj180MWe561lG62uXZ7FRST7HhVxf44mnaYwJineiUzGU/oUGkK1deKfhunH4GrlMm2vZowgDqG2RkMYQ7m/v/ijRGm3N9RfjISejOvYrtB0RTHaFrHjDe5B2VrFW2NTYPTc4Y8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8jKUZG_1718693674;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8jKUZG_1718693674)
           by smtp.aliyun-inc.com;
-          Tue, 18 Jun 2024 14:54:27 +0800
+          Tue, 18 Jun 2024 14:54:34 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -42,10 +43,12 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] support large folio swap-out and swap-in for shmem
-Date: Tue, 18 Jun 2024 14:54:12 +0800
-Message-Id: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v2 7/9] mm: shmem: support large folio allocation for shmem_replace_folio()
+Date: Tue, 18 Jun 2024 14:54:19 +0800
+Message-Id: <75d1c1f2fbc88dce476a53fa90f085b3bebb83c5.1718690645.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
+References: <cover.1718690645.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,91 +57,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Shmem will support large folio allocation [1] [2] to get a better performance,
-however, the memory reclaim still splits the precious large folios when trying
-to swap-out shmem, which may lead to the memory fragmentation issue and can not
-take advantage of the large folio for shmeme.
+To support large folio swapin for shmem in the following patches, add
+large folio allocation for the new replacement folio in shmem_replace_folio().
+Moreover large folios occupy N consecutive entries in the swap cache
+instead of using multi-index entries like the page cache, therefore
+we should replace each consecutive entries in the swap cache instead
+of using the shmem_replace_entry().
 
-Moreover, the swap code already supports for swapping out large folio without
-split, and large folio swap-in[3] series is queued into mm-unstable branch.
-Hence this patch set also supports the large folio swap-out and swap-in for
-shmem.
+As well as updating statistics and folio reference count using the number
+of pages in the folio.
 
-Functional testing
-==================
-I use the latest mm-unstable branch to test with reverting Chris's
-"mm: swap: mTHP swap allocator base on swap cluster order" series which
-can cause some problems (Hugh also reported in [4]).
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ mm/shmem.c | 53 ++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 30 insertions(+), 23 deletions(-)
 
-Machine environment: 32 Arm cores, 120G memory and 50G swap device.
-
-1. Run xfstests suite to test tmpfs filesystem, and I did not catch any
-regressions with this patch set.
-FSTYP=tmpfs
-export TEST_DIR=/mnt/tempfs_mnt
-export TEST_DEV=/mnt/tempfs_mnt
-export SCRATCH_MNT=/mnt/scratchdir
-export SCRATCH_DEV=/mnt/scratchdir
-
-2. Run all mm selftests in tools/testing/selftests/mm/, and no
-regressions found.
-
-3. I also wrote several shmem swap test cases, including shmem splitting,
-shmem swapout, shmem swapin, swapoff during shmem swapout, shmem reclaim,
-shmem swapin replacement, etc. I tested these cases under 4K and 64K
-shmem folio sizes with a swap device, and shmem swap functionality works
-well on my machine (I can share these test cases if needed).
-
-Hugh, I think this version has fixed the reference issue you pointed out
-before, and I have also fixed some issues related to shmem swapin replacement.
-So could you help to take a look at this series when you find some time?
-Thanks a lot.
-
-[1] https://lore.kernel.org/all/cover.1717495894.git.baolin.wang@linux.alibaba.com/
-[2] https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
-[3] https://lore.kernel.org/all/20240508224040.190469-6-21cnbao@gmail.com/T/
-[4] https://lore.kernel.org/all/8db63194-77fd-e0b8-8601-2bbf04889a5b@google.com/
-
-Changes from v1:
- - Remove useless 'order' variable in shmem_partial_swap_usage(), per Daniel.
- - Add a new patch to return number of pages beeing freed in shmem_free_swap(),
- per Daniel.
- - Drop 'orders' parameter for find_get_entries() and find_lock_entries().
- - Round down the index when adding the swapin folio into the pagecache,
- suggested by Hugh.
- - Fix the reference issue when removing folio from pagecache in patch 8.
- - Fix replacing old folio in swap cache in patch 7.
-
-Changes from RFC:
- - Rebased to the latest mm-unstable.
- - Drop the counter name fixing patch, which was queued into mm-hotfixes-stable
- branch.
-
-Baolin Wang (8):
-  mm: vmscan: add validation before spliting shmem large folio
-  mm: swap: extend swap_shmem_alloc() to support batch SWAP_MAP_SHMEM
-    flag setting
-  mm: shmem: extend shmem_partial_swap_usage() to support large folio
-    swap
-  mm: filemap: use xa_get_order() to get the swap entry order
-  mm: shmem: use swap_free_nr() to free shmem swap entries
-  mm: shmem: support large folio allocation for shmem_replace_folio()
-  mm: shmem: drop folio reference count using 'nr_pages' in
-    shmem_delete_from_page_cache()
-  mm: shmem: support large folio swap out
-
-Daniel Gomez (1):
-  mm: shmem: return number of pages beeing freed in shmem_free_swap
-
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c |   1 +
- include/linux/swap.h                      |   4 +-
- include/linux/writeback.h                 |   1 +
- mm/filemap.c                              |   4 +
- mm/shmem.c                                | 107 +++++++++++++---------
- mm/swapfile.c                             |  98 ++++++++++----------
- mm/vmscan.c                               |  22 ++++-
- 7 files changed, 142 insertions(+), 95 deletions(-)
-
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 4d7996962388..c0a9253f3a99 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1878,28 +1878,24 @@ static bool shmem_should_replace_folio(struct folio *folio, gfp_t gfp)
+ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 				struct shmem_inode_info *info, pgoff_t index)
+ {
+-	struct folio *old, *new;
+-	struct address_space *swap_mapping;
+-	swp_entry_t entry;
+-	pgoff_t swap_index;
+-	int error;
+-
+-	old = *foliop;
+-	entry = old->swap;
+-	swap_index = swap_cache_index(entry);
+-	swap_mapping = swap_address_space(entry);
++	struct folio *new, *old = *foliop;
++	swp_entry_t entry = old->swap;
++	struct address_space *swap_mapping = swap_address_space(entry);
++	pgoff_t swap_index = swap_cache_index(entry);
++	XA_STATE(xas, &swap_mapping->i_pages, swap_index);
++	int nr_pages = folio_nr_pages(old);
++	int error = 0, i;
+ 
+ 	/*
+ 	 * We have arrived here because our zones are constrained, so don't
+ 	 * limit chance of success by further cpuset and node constraints.
+ 	 */
+ 	gfp &= ~GFP_CONSTRAINT_MASK;
+-	VM_BUG_ON_FOLIO(folio_test_large(old), old);
+-	new = shmem_alloc_folio(gfp, 0, info, index);
++	new = shmem_alloc_folio(gfp, folio_order(old), info, index);
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+-	folio_get(new);
++	folio_ref_add(new, nr_pages);
+ 	folio_copy(new, old);
+ 	flush_dcache_folio(new);
+ 
+@@ -1909,18 +1905,24 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 	new->swap = entry;
+ 	folio_set_swapcache(new);
+ 
+-	/*
+-	 * Our caller will very soon move newpage out of swapcache, but it's
+-	 * a nice clean interface for us to replace oldpage by newpage there.
+-	 */
++	/* Swap cache still stores N entries instead of a high-order entry */
+ 	xa_lock_irq(&swap_mapping->i_pages);
+-	error = shmem_replace_entry(swap_mapping, swap_index, old, new);
++	for (i = 0; i < nr_pages; i++) {
++		void *item = xas_store(&xas, new);
++
++		if (item != old) {
++			error = -ENOENT;
++			break;
++		}
++
++		xas_next(&xas);
++	}
+ 	if (!error) {
+ 		mem_cgroup_replace_folio(old, new);
+-		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, 1);
+-		__lruvec_stat_mod_folio(new, NR_SHMEM, 1);
+-		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -1);
+-		__lruvec_stat_mod_folio(old, NR_SHMEM, -1);
++		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, nr_pages);
++		__lruvec_stat_mod_folio(new, NR_SHMEM, nr_pages);
++		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -nr_pages);
++		__lruvec_stat_mod_folio(old, NR_SHMEM, -nr_pages);
+ 	}
+ 	xa_unlock_irq(&swap_mapping->i_pages);
+ 
+@@ -1940,7 +1942,12 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 	old->private = NULL;
+ 
+ 	folio_unlock(old);
+-	folio_put_refs(old, 2);
++	/*
++	 * The old folio are removed from swap cache, drop the 'nr_pages'
++	 * reference, as well as one temporary reference getting from swap
++	 * cache.
++	 */
++	folio_put_refs(old, nr_pages + 1);
+ 	return error;
+ }
+ 
 -- 
 2.39.3
 
