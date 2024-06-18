@@ -1,130 +1,180 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26F8156F5E;
-	Tue, 18 Jun 2024 09:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0A156F5A;
+	Tue, 18 Jun 2024 09:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718702803; cv=none; b=OGN80vww7GpMuuAUoAj4PYMCdGJz2cCIO4OXXljAxljy2rhVBqFEto075n0w8Ve5ALUxERI59TyiY8UBHfMGa+bo55TWpa/4i3weLI19WLxj9h0FKsppOBpw7Dwagw6dZ457hemThn5oDw6GlyvoKIvJc573bI1D/YW6CTSLnLM=
+	t=1718702824; cv=none; b=EiTCG8goja0vknkIVwufAwwbFlYRB8/AAn+PjrfIUXzcW5N3MONRuDWs2U7CIY7QW8+VN2w3n7ZGMYU7pZjQXC2TEPjxvBwoUvElw7Mgqyd+WTMkAB6L87fmLvVc1xwx6eoquXyjsSezONYQwzklhRYUz3umCy6GYb3lQhjCG9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718702803; c=relaxed/simple;
-	bh=DrWNUqlodNWphpl4db5ftnDdMdqxjQFTcF7ia2DCoEg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=VRv/jG3deTTnUYrzIGtnYvuyQuBE0uR8CPoPxMT6YKuLkmZ/b9qiESXcd84K+FUjQgZsihfK5grac3rfjk1eYfYjNGebPaBVhjPaz2S9pOBCE8/cLVsxBeK/ItPgIEBP7zgo1bNlJ/Uc5hWoXBr3IuP0DFsebG9l59hCWjM795M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qz4y1zSi; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1718702824; c=relaxed/simple;
+	bh=PcajFIfU/lfXMPheHFBuXTAxzTOMhduVTF1NXCiR94o=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OhhaHOLFWoMNjcn3R7i/U39yyM/zAOwcAx/CPMiQ/ZVbzRS1takD87XLsCdT+qXiMtPptBTMHgGEkb/P/RC9BPP+Sl0b2bTp+oYHkAHYJaEWsF9alYLF+3d08cj5+7iQTtJ/dDW3BJs5SZwrXXEfdJY1/3YYspy4MXTtLzeT1J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=anC5IXNK; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qz4y1zSi"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I9LBpE003923;
-	Tue, 18 Jun 2024 09:26:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=kzCbpGUZRfQH
-	vL0wyrp+IrtWtyMeO5w+QTeqqQME+Iw=; b=Qz4y1zSiI8wjtFooo9Xqg/DmjtMt
-	eUV+ezzefomIoiNd+/tu9a9oCk9YZ5IZl2zOl7BXn5y8v+RKI5WGaI2jUlcffox/
-	Pmsut9DjOI7tFS2R/wlyGqtChNPkfL6itWsVdx2fTVrq4fAIyFMxYpaPITfDfz5S
-	JfV53fYkZX9RR3NC/hpvb+tbIv1cANUBNeioSrTdOOnrn6brTL7FTySSsm+nhtIs
-	bIvkU2z0kUQu+OCHJY12Rqq0OYtpKn1CChClZuf6xLQKurEw72qc9J8HsPUQP6zk
-	eqxX78s88S7xO8F3eylomIthtOVoADzgmB/XgLazfMa8Wi4VGV6Bl6etvg==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ys3qf63mv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 09:26:31 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 45I9QPUO007770;
-	Tue, 18 Jun 2024 09:26:25 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="anC5IXNK"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I9Qo12016215;
+	Tue, 18 Jun 2024 09:26:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=pp1; bh=W
+	HPf+VF+DDwlyBlNY4mXd16OByOTb4uw2IrfouiXYKo=; b=anC5IXNKNLQzPJOgi
+	I+wul+ETRTUkHzQPv9qzLkXBJgrMnUwdrILremB5kKEnVj8kG8XrsP5k5297DTz2
+	Ya9A6ad+Yxv7SBaZPHwObaNWl5xUWj/1GB2I+EsoTOS1NITgC8T32vIIoql3uw1s
+	pgkQqPpZzxaQmGQB+KsLeXzXUohfCcuW3CgiisX9mAFzJULHTk7n9juKvI5agcSR
+	4o4Q44sO1l5fvcb4DeNdhukCJv5X2cAoUGa+mXnGuRK4Gcv0nFg//o6pr9pis5Gh
+	bN4jC2KMTfDyl4LXzfJvfrEHAKv2KoZpJq5OIqNItIdwtp9qWIs1FZ8vQwlLLuxW
+	IdJAA==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3ys41kpnkw-1;
-	Tue, 18 Jun 2024 09:26:25 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45I9QPDm007765;
-	Tue, 18 Jun 2024 09:26:25 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-dikshita-hyd.qualcomm.com [10.213.110.13])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 45I9QPEg007764;
-	Tue, 18 Jun 2024 09:26:25 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 347544)
-	id DDF063275; Tue, 18 Jun 2024 14:56:24 +0530 (+0530)
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zheng Wang <zyytlz.wz@163.com>,
-        stable@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>
-Subject: [PATCH v3] media: venus: fix use after free bug in venus_remove due to race condition
-Date: Tue, 18 Jun 2024 14:55:59 +0530
-Message-Id: <1718702759-18914-1-git-send-email-quic_dikshita@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: h4fzPSZPSkh-Bqb6o9oWh8Bk5cEiQxlI
-X-Proofpoint-ORIG-GUID: h4fzPSZPSkh-Bqb6o9oWh8Bk5cEiQxlI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- malwarescore=0 spamscore=0 mlxlogscore=904 bulkscore=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180069
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu4ja8f6q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:26:54 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45I9QrDb016334;
+	Tue, 18 Jun 2024 09:26:53 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yu4ja8f6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:26:53 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45I7Qc5G011031;
+	Tue, 18 Jun 2024 09:26:52 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yspsn1e7u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 09:26:52 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45I9Qks433620620
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Jun 2024 09:26:48 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5FFA420043;
+	Tue, 18 Jun 2024 09:26:46 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B52320040;
+	Tue, 18 Jun 2024 09:26:44 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.109.215.84])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 18 Jun 2024 09:26:44 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH V2 2/3] tools/perf: Use is_perf_pid_map_name helper
+ function to check dso's of pattern /tmp/perf-%d.map
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <223d1e96-223f-4bda-8133-806a3aa61730@intel.com>
+Date: Tue, 18 Jun 2024 14:56:32 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B5A7F119-DC65-4439-B856-F7D1DE9E3F97@linux.vnet.ibm.com>
+References: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
+ <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
+ <223d1e96-223f-4bda-8133-806a3aa61730@intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: l-ab5PnGqrq_VEqlZKtCu1kn4mjUgglb
+X-Proofpoint-ORIG-GUID: oc8RMytrds2jta0hyO5Y27ghPQKnae6C
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406180069
 
-From: Zheng Wang <zyytlz.wz@163.com>
 
-in venus_probe, core->work is bound with venus_sys_error_handler, which is
-used to handle error. The code use core->sys_err_done to make sync work.
-The core->work is started in venus_event_notify.
 
-If we call venus_remove, there might be an unfished work. The possible
-sequence is as follows:
+> On 18 Jun 2024, at 12:41=E2=80=AFPM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>=20
+> On 17/06/24 16:03, Athira Rajeev wrote:
+>> commit 80d496be89ed ("perf report: Add support for profiling JIT
+>> generated code") added support for profiling JIT generated code.
+>> This patch handles dso's of form "/tmp/perf-$PID.map".
+>>=20
+>> Some of the references doesn't check exactly for same pattern.
+>> some uses "if (!strncmp(dso_name, "/tmp/perf-", 10))". Fix
+>> this by using helper function is_perf_pid_map_name which looks
+>> for proper pattern of form: "/tmp/perf-$PID.map" for these checks.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/util/dsos.c    | 2 +-
+>> tools/perf/util/srcline.c | 2 +-
+>> 2 files changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+>> index ab3d0c01dd63..23cd02aa701d 100644
+>> --- a/tools/perf/util/dsos.c
+>> +++ b/tools/perf/util/dsos.c
+>> @@ -275,7 +275,7 @@ static void dso__set_basename(struct dso *dso)
+>> char *base, *lname;
+>> int tid;
+>>=20
+>> - if (sscanf(dso__long_name(dso), "/tmp/perf-%d.map", &tid) =3D=3D 1) =
+{
+>> + if (is_perf_pid_map_name(dso__long_name(dso))) {
+>=20
+> Perhaps add another helper for this case:
+>=20
+> bool perf_pid_map_tid(const char *dso_name, int *tid)
+> {
+> return sscanf(dso_name, "/tmp/perf-%d.map", &tid) =3D=3D 1;
+> }
+>=20
+> bool is_perf_pid_map_name(const char *dso_name)
+> {
+> int tid;
+>=20
+> return perf_pid_map_tid(dso_name, &tid);
+> }
+>=20
+> And then:
+>=20
+> if (perf_pid_map_tid(dso__long_name(dso), &tid)) {
+>=20
+>=20
 
-CPU0                  CPU1
+Hi Adrian
 
-                     |venus_sys_error_handler
-venus_remove         |
-hfi_destroy	 		 |
-venus_hfi_destroy	 |
-kfree(hdev);	     |
-                     |hfi_reinit
-					 |venus_hfi_queues_reinit
-                     |//use hdev
+Thanks for suggestions. I will be posting V3 soon.
 
-Fix it by canceling the work in venus_remove.
-
-Cc: stable@vger.kernel.org
-Fixes: af2c3834c8ca ("[media] media: venus: adding core part and helper functions")
-Signed-off-by: Zheng Wang <zyytlz.wz@163.com>
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
----
-Changes since v2:
-- used cancel_delayed_work_sync instead of cancel_delayed_work
-
- drivers/media/platform/qcom/venus/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index a712dd4..c139270 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -424,6 +424,7 @@ static void venus_remove(struct platform_device *pdev)
- 	struct device *dev = core->dev;
- 	int ret;
- 
-+	cancel_delayed_work_sync(&core->work);
- 	ret = pm_runtime_get_sync(dev);
- 	WARN_ON(ret < 0);
- 
--- 
-2.7.4
+Athira
+>=20
+>> if (asprintf(&base, "[JIT] tid %d", tid) < 0)
+>> return;
+>> } else {
+>> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+>> index 9d670d8c1c08..51eb78993fe2 100644
+>> --- a/tools/perf/util/srcline.c
+>> +++ b/tools/perf/util/srcline.c
+>> @@ -39,7 +39,7 @@ static const char *srcline_dso_name(struct dso =
+*dso)
+>> if (dso_name[0] =3D=3D '[')
+>> return NULL;
+>>=20
+>> - if (!strncmp(dso_name, "/tmp/perf-", 10))
+>> + if (is_perf_pid_map_name(dso_name))
+>> return NULL;
+>>=20
+>> return dso_name;
+>=20
 
