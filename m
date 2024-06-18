@@ -1,90 +1,165 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8073E157E99
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A63513AD12;
+	Tue, 18 Jun 2024 13:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718717968; cv=none; b=GYEC5+P3i2c+9l6sfBR0CAbOFfwv0xi2cFh5Xe1ivOJuOvpfersBGtGHejplC5mhqHePwFYdF6ykqWbwbY/VPtn0OpWYF9++qjkBC3i/dGmH8i6WQcZDXm6FHv7EZKEtzEjQnrr8jaXvvQWfAP0C5DHAM6wjyWxwP3V0Ikz/hiU=
+	t=1718718007; cv=none; b=kdz4Zc3qPDNrhQlIPgmqEKsGlKPBNjzW/lLS1N2lVCcytsR3xCjy3ftSsOqBLrVHJ0Sghk75d4R3E2/kNaKF0Poh0aVniqlSkRQu+KTEnqyHdEoPNakJVkhyHZoZK27gAoV5cl+Okit0G96boOywifcQuh3cNutJLDe3ksP0OL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718717968; c=relaxed/simple;
-	bh=xLAXHgMQMkC4I+6SWvyCbmbbIm7HDaAMMfOTtmQ/nKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TAkhVur6jNRxSUiQhK1gknTxCQN7Ww7Rs0+kGHbEipuAYq9tV4Jsl4HgMiMWNJDPJtCW+I4sXNJqQcDoXbb/4Qw7Iqryw3KJYdO6YrvwIzB3m4Qpr/3LIF1/aIDVR05FTZmzwLMjms8DcGZC8Jbqx2s4h6HMx5/VR6F9AuRqZrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eSKB/c9U; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718718007; c=relaxed/simple;
+	bh=cAaod5HbTedft+jMo3WIKmXctomGqzUQNoSvFCGJvi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y9trs+PqLcggLitcnPkuVR0lWqjAaqSs5Zw4DlFX463RQCSZJW3jcSW82iNiLfPJ7o72A3rUEcF+p7s9nfDceJ9OKs8Y/amEr4qVbNnHvYVi/iOSJnvVsEXPorbSHce1opGtghX3qcf4axLKOYBvANaHyh4iQkoCs246qe1c09s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pckABaWZ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eSKB/c9U"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so61993061fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718717965; x=1719322765; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mfLHtHo2sQWrIDeLma2mLPYSbPHcNNp3U2Fc5U176hY=;
-        b=eSKB/c9UciQ1KYHO7/5WLG4cA4z7dPNQ34w6nMjEDzNH4X1CD5AsqE1ELyZTqbcmOV
-         OptrMfU6U5vgCx9pTM6NtsMf2M1T9mnQP96FSCQSu3gw+9KpTPPgCW5zWphIXqHZTo3z
-         boQ4LdZIuwxN/8yhkMKxv24BJEkopAJPZc0s1vaZU+jjip8iPgE32oYE6CPFbIwnFmOX
-         EqtAJqTAX+qMrfimXz/x6TCKjjsVAUXcM3lH8Ivx+nsxYt6esROem8diriju3332+pPw
-         XBn2McycLg76uJX5+rWeEEtDnRTRclPTcTkAuCmUOIHP6w5lF4JIm+Y+634tzIfux8Nz
-         PWYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718717965; x=1719322765;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mfLHtHo2sQWrIDeLma2mLPYSbPHcNNp3U2Fc5U176hY=;
-        b=lMfpdAQ7kbuCMIc0ciSmcclKMZshjSXCNg4OHzmFTWzWLD+NNPCDuW6UErhopnL83b
-         Kzu56I0jPXFBAcUX43DcXYHsyzCgd7aPNL64onDFEunry8aK10/auVYqmRKW4bWgSASC
-         HRFgQfd9cKFYdk6ejN2jennU7e+PXTTW7ZtflF8ZkImT3LCFxyOA2kbsqgPdGODVeB20
-         1MmbVW/kGst/7lqDd27VsYu6PZ8uRHk0SZrig0sXSh+dmtWLM38HCdoqqDZd5gz6kQWS
-         mx5+3fMvtWaniL9xVpMaCR2N4qAjVX9/nsEk/GyX6cK7BVZ9V8Zllwjx57Gc5YMrTMsA
-         t5UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3vzbsT5qVuIxTKV01agMWXGEbK4/rmWH7CMrjlsZbxCo6arAOAjTeisy9ITkEVpAG1pudV3PPfTmNJM7D+jhiYgXvbROyRT9Id1ym
-X-Gm-Message-State: AOJu0YwdFOSOB6vI7bloZHDuoxIzo2Obe1Nt26REUYN7fYBZxb1l2GVE
-	ocRM7gQphmQwZVkswPr069I0wVXH2YRb1cMO3mY0onhHZmK3Ybix4cSRwNO0lrA=
-X-Google-Smtp-Source: AGHT+IEwNq+zW99nzMNycBgluvGbyDMFsWVRQh70vLvlD6Gm5mcZeMUN0UL3UL50UtI9BdJHThnIYA==
-X-Received: by 2002:a2e:740a:0:b0:2eb:d6a7:feba with SMTP id 38308e7fff4ca-2ec0e5c6767mr85223051fa.16.1718717962711;
-        Tue, 18 Jun 2024 06:39:22 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec09caf30esm15564321fa.62.2024.06.18.06.39.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 06:39:22 -0700 (PDT)
-Message-ID: <737f8c75-6011-42bc-b9e4-87806bd270a9@linaro.org>
-Date: Tue, 18 Jun 2024 15:39:20 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pckABaWZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718718003;
+	bh=cAaod5HbTedft+jMo3WIKmXctomGqzUQNoSvFCGJvi8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pckABaWZ3hVo9nTfD1W2aQXKoWjWr7T/BF35en54t45UqhduimLvtya5ZqbxEDBfi
+	 fGusPlEY2UfuQNhryxE/m7vla8XrS1ahHDtjyHOdXZRYQelbMkt3HlYf32pgDA3616
+	 qig8+w5KK3U3z+VO7eB56ZEW7I9Oa9C29XO3/fRsySBkQe8a66K74226VS9ki/0NLv
+	 OWiG8jGnNIGz4daVfjtbEbpY7bMaMorQSSzXVZkdap5bal18QWT/et9WvI7IrYbufy
+	 rWrGq10pVzGQFpw4IbnxxkPWsoIXzYIOgpt/fXp/Ax1VMe/ImcyveAwqv9SXvxGTuX
+	 Cy37JPxL5Liag==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E487037811D1;
+	Tue, 18 Jun 2024 13:40:02 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: skhan@linuxfoundation.org
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	shuah@kernel.org
+Subject: Re: [PATCH 0/2] Modify the watchdog selftest for execution with
+Date: Tue, 18 Jun 2024 15:40:38 +0200
+Message-Id: <20240618134038.54803-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <987ba13d-e645-496a-8ec8-91b6399efa4c@linuxfoundation.org>
+References: <987ba13d-e645-496a-8ec8-91b6399efa4c@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: qcom: qdu1000: Add secure qfprom node
-To: Komal Bajaj <quic_kbajaj@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240618092711.15037-1-quic_kbajaj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Shuah,
 
-
-On 6/18/24 11:27, Komal Bajaj wrote:
-> Add secure qfprom node and also add properties for multi channel
-> DDR. This is required for LLCC driver to pick the correct LLCC
-> configuration.
+On 6/7/24 23:07, Shuah Khan wrote:
+> On 6/7/24 03:53, Laura Nao wrote:
+>> Hi Shuah,
+>>
+>> On 6/7/24 01:03, Shuah Khan wrote:
+>>> On 6/6/24 03:57, Laura Nao wrote:
+>>>> Hi Shuah,
+>>>>
+>>>> On 5/6/24 13:13, Laura Nao wrote:
+>>>>> The watchdog selftest script supports various parameters for testing
+>>>>> different IOCTLs. The watchdog ping functionality is validated by
+>>>>> starting
+>>>>> a loop where the watchdog device is periodically pet, which can only
+>>>>> be
+>>>>> stopped by the user interrupting the script.
+>>>>>
+>>>>> This results in a timeout when running this test using the kselftest
+>>>>> runner
+>>>>> with no non-oneshot parameters (or no parameters at all):
+>>>
+>>>
+>>> Sorry for the delay on this.
+>>>
+>>> This test isn't include in the default kselftest run? How are you
+>>> running this?
+>>>
+>>
+>> The goal of this series is to enable the test to be run using the
+>> kselftest runner individually, not as part of the default run. So for
+>> example w/out args:
+>>
+>> make -C tools/testing/selftests TARGETS=watchdog run_tests
+>>
+>> or with args:
+>>
+>> KSELFTEST_WATCHDOG_TEST_ARGS='-b -d -e -s -t 12 -T 3 -n 7 -N -L' make -C
+>> tools/testing/selftests TARGETS=watchdog run_tests
+>>>>>
+>>>>>     TAP version 13
+>>>>>     1..1
+>>>>>     # timeout set to 45
+>>>>>     # selftests: watchdog: watchdog-test
+>>>>>     # Watchdog Ticking Away!
+>>>>>     # .............................................#
+>>>>>     not ok 1 selftests: watchdog: watchdog-test # TIMEOUT 45 seconds
+>>>>>
+>>>>> To address this issue, the first patch in this series limits the
+>>>>> loop
+>>>>> to 5
+>>>>> iterations by default and adds support for a new '-c' option to
+>>>>> customize
+>>>>> the number of pings as required.
+>>>>>
+>>>>> The second patch conforms the test output to the KTAP format.
+>>>>>
+>>>>
+>>>> Gentle ping - any thoughts on this series? It would simplify running
+>>>> the
+>>>> watchdog kselftest in CI environments by leveraging the runner.
+>>>>
+>>>
+>>> This test isn't intended to be included in the default run. It
+>>> requires
+>>> loading a watchdog driver first. Do you load the driver from the
+>>> runner?
+>>>
+>>
+>> I get this test requires watchdog drivers to be loaded (which in this
+>> case can't be added to a config fragment that goes with the selftest, as
+>> they are platform-specific) and therefore cannot be included in the
+>> default run. However, having ktap output support and limiting the ping
+>> loop would allow the test to be run individually in the same way as
+>> other selftests (so through the kselftest runner).
+>>
+>> Naturally, driver dependencies must be met for the test to run and
+>> produce valid results. From my understanding the runner itself cannot
+>> ensure this, so in this case it would be up to the user or CI to
+>> enable/load the appropriate drivers before running the test.
+>> If these dependencies are not satisfied, the test could just exit
+>> with a skip code.
+>>
+>> Does this make sense to you? or is the kselftest runner intended to be
+>> used to run exclusively a subset of tests in the selftests directory
+>> (i.e. the ones that don't have platform-specific driver requirements)?
+>>
 > 
-> Fixes: 6209038f131f ("arm64: dts: qcom: qdu1000: Add LLCC/system-cache-controller")
-> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-> ---
+> There are several tests that aren't included in the default run because
+> they have dependencies and potentially damaging to the running system.
+> These tests are not included for a reason.
+> 
+> The first step would to be ensure writing shell script to load and
+> unload the watchdog module and then pass in existing parameters such
+> as the oneshot to run the test.
+> 
+> There is no need to add a new parameter yet. Also there is no need to
+> convert this to ktap yet.
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+To clarify, I understand that this test is not suitable for the default 
+run, and I do not intend to change that. The patch series is meant to 
+make the test usable in a non-interactive environment, such as a CI,
+when explicitly enabled and with the required modules already loaded.
 
-Konrad
+Thanks,
+
+Laura
+
