@@ -1,61 +1,60 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4821607B2;
-	Tue, 18 Jun 2024 14:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24A119F49B;
+	Tue, 18 Jun 2024 14:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719224; cv=none; b=bf9UHizC3bewgv/z+6Z/s444ozW46oNDXgVoy0kSOXzIrizJ3/+utL3NofnehzHBP5AC0D+BGp0hRpnI82gZHBF9AgnOCBmGhcf9EBBVZbRr5gTnwUdPbSD+fVA75wJQP1b1pG33zjjsn3f0NuEcgcBEzh/WRDlHe5ek8PMxeic=
+	t=1718719233; cv=none; b=m1HRABoS7+dd3egzSzxaqxFL7UjKE6Bb2Aj4pQbVdhXZEFtrmL+zBKFPlHJQBR1QdN+MqeST3VvOCqZBruqtUGYzqjqSfwX/qEqAnnR7o0HTdv50yAMTsEN5Avtv8ICVnwHy0TDPPe3uvT8iy9sACCd6QWKVwI5eK63C0Swo7bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719224; c=relaxed/simple;
-	bh=hKVjmHg9fPappw6Ge/EdwOBFJeuWIpNZ6cWmDemYKw8=;
+	s=arc-20240116; t=1718719233; c=relaxed/simple;
+	bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dNRMXnuizK5xEvDFkdGtvZBS5tUq4oaNZyPJ5WHI9kmvWM1bk/xDsWWN0cRPMp3QaJe9xY7uTxbCDgZnX5jEF5bDSq81UvTD14A8KCUTIi3eSTRlIQ1k4W8/yZcpt6yCBUq67+fzkhx9RSbNruEZY7FsijhiD02CuupJz22j7+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgsHqu2A; arc=none smtp.client-ip=209.85.208.172
+	 In-Reply-To:To:Cc; b=tZXDZ2IZvPgM63KmmMxWBbDusVUMr4ljEc8+Ypm/lzpnK3zGM0a+tzI1y17AhsoGukUUqrGP8W4rqrjUvwoVUO9cbMRX1g6BsFKtMhRorh6lyYmpd1JkhgdYWUfGKAHQjQhTBkm7HudoCPl8pG2ZSZT4VBipEO7Mx5bhXkdbleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkJIOb1o; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgsHqu2A"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so65210421fa.1;
-        Tue, 18 Jun 2024 07:00:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkJIOb1o"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57cce3bc8c6so3823782a12.3;
+        Tue, 18 Jun 2024 07:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719220; x=1719324020; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719229; x=1719324029; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pq6Yfp+kXuwWjkVTMffVNFCMFuU+SGEaW56q4iKxBz4=;
-        b=HgsHqu2ARF5yg++0SP9+jD0FDUvA1M531TNsZ9US6u5ItoKkspdCdFdX1WYsZKp6oF
-         /P0w3+z8snlXr2Pus7outjYIl67rZeHmI2ApBwLSdW+u5iZdUYfqwiQQxK4kxYY9wZVS
-         5fi5ke2lUP0KKx7RXJh8t0mh2HKjw0QjlkRCNuP11Og5dDu5Rux7GNjAwiZmrjra+qe+
-         7TEzic1tJ9B+qx3P27oEBQF7yQiuzHsBcFo3RA03AAC0ffnuW4FgHlLpBPwY6pLFZ9H0
-         KBqFw837AVtstLyBU4JeQ/+rwxQrUlZKsxT279FBYQnECXNgzq/qT9xnwF8lY0iSj4Bo
-         l1/A==
+        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
+        b=WkJIOb1o1+ffYugCAnkSw9Zr134fhg9M3VdiZAefDntFXJNNKnMR0x0OA5qimNCetA
+         aiIG/Lf9z4gieMsu2smeiYhcsbkHMrv1I2grUjJ7ykBHMeZn9d6hPu894Hi/OOmdxRxy
+         SnOy0kzjWlPNX8LAMOIZQa7fvXHudNR2oOz3lfIgv+E/KqTHvKR2Jzb3oRo+HFj4QCqE
+         kDGuHWA4yEud/gCfjg+i2yOw0Y3ooLDOGGJvR7GGghHLgPqxqvCnxcZNAEeEruZOpHBw
+         bty3TgmNdBp5b3B0ElqZh7tTIlDjIzVnIy+rgKUBHhWZ8ScF2Ow+NQpEtrOl3BdtaNBK
+         2DLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719220; x=1719324020;
+        d=1e100.net; s=20230601; t=1718719229; x=1719324029;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pq6Yfp+kXuwWjkVTMffVNFCMFuU+SGEaW56q4iKxBz4=;
-        b=P/V8VZVhJu1nkDmOHnhgCeL1U+Is/sXGhOXvT4tfNLvyUABIQIgKSC4C+vSVFQreXh
-         Ki86stvp6xV6FdCzIN6Hl62+dfkR1n3sUPXGdd6yYiAfpsd+wH40cKgTFAIOy84EFGJg
-         cOhfPP4UTOJsLnzGjttHNrDxJrWQgZLwMbp7xgzgXZ5jW0QGMpUP1oEN90BZ6K0RiTrb
-         ebsu1CoXhXPKYaRsnI+H03hsnrrryjtBnrKGUutKBsjrBUP9tPbDCfQdsEfCVUoPWR/F
-         egGxnTa7tMjsTkrJHUrmvo335syB9q63d2UAnTlAP6xFuQOv3ukeRAxQlInLpJ/yvo4U
-         5Mcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXI8zS7okeMGvGRdNy/ortbqkPN1JnAZE7sD4Z3hMme7NzfPBt4SRFdh3VPfqOoS7bY5VT2lnmWNjZeZ5/R6+NwfeUqa3xrxhoL0IMW/o1yTRyb9AhF9B6C+Ubi/4EgaHerRhcWm9ry/gXwuS6DzWwKjIqFN6yqaZ2qDW3jrOf/knBkCCvhW3S8geD86UQi8LLo9eu9/KTZQh2qBmCosi4Da0BOuey2N7WAfKGzCPU4boO+gHcuO5muHMJQijuES4Zsh7BFdZBuXyc00hoLOvQYDMJIcQKwpmtiWyKnxTbkgexuJ6dF5MJwgGdFh3T9BtwWjhyi2byISbLflXgm7rWkYrTY7n2KKSBYDb1AUg2Vf/nys8PQadxvxZAomwrDcl/bC0FKelbu0Y9ee8e1ZTiGNawxvSqt
-X-Gm-Message-State: AOJu0YyhCqmNiHLxHRcmmYF4hEOxgt9KvTyh94nIw0R0AHTIVqv7xUot
-	WedvrFm69IdFvtysspAX96yx8hagLksP+tViqn6I+odW0BF8MlvQ
-X-Google-Smtp-Source: AGHT+IEIc2idIrMoCRSMpb70Qx8ivNcZJAnEoJ4kpGJ1qvn9RY/NxJohVfT7t3cUTk1JitYhqXeL/g==
-X-Received: by 2002:a2e:7205:0:b0:2eb:f9a1:7dd6 with SMTP id 38308e7fff4ca-2ec0e5b5844mr80733881fa.3.1718719219550;
-        Tue, 18 Jun 2024 07:00:19 -0700 (PDT)
+        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
+        b=P8jiVXsOMmHQr1F/HfN0RL9waM45wRiN48GJ+97XpjWwb97Yu5DBx8fY0jAmTQdo/5
+         E4Gs6653SD3yMoOVqGGt2nOOfh3jAk+hTVP8JQE4LVTnz9Idun8HBW5DpcGwqStBV9L/
+         579UqO70taz+4IIJ9RbdV65hciQWlmRDqDVn1ZPCnkhfnEL8ij5T4tfQVgsjo8yixpLd
+         W1s2zn7ENUXaxobPLeEkp+bxYobvJCDAwlfJBriVrAn5/hRg/Z6+6AtDWzc3HdgOKVKk
+         R/Y1O09IHprytMAHZbG3hqXMrLZpFcUaMAbZdN1RSWIePUFnTh8NX8LbHP1c15MgtNl8
+         q0VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsMs1TT+C+Daq4euQXqZdmvnSSw0QapT7I0PEKYa3VVFXjKK7Ymva22LODIrRtLTF9no54bwLYrfMH0YT8/ekjwXSZeNS3QQMLVhqaL7u7gpVMzxS++KuCXiTC4wWHwXxbDzTHUuRTgba4mAdtoBELdyMO8B9CYrcUBS3OzjTtdYFjB9adssGDw6sErzpYUUhh8W33iWlKDApA3LfOfxG0FlmDP4sY5ZRcDz6kiW59C2I0olQ4mh2pC+2t2I+BqNSFmI9VIe/9xjm+1AVulOSvX6YmntMh+YxIGAXVuCFsu9a5X7Ycowd29ExuCJb12+IdNs/KAt3/Jn7aU5u0mlN5M5WhN3yaq0zPis2SmyPkTYwDxMsaZsUUq3h2eWHGcJBKwfS9okQWEDrLtI+n28Wwssjt+hKD
+X-Gm-Message-State: AOJu0YysE39hlYE31kT2HXWP/6gbQD9kJvkaosnA1utWHv5q48zU+wR1
+	uOJHSRrKHBgAC4npPabXdItRjnGSPeVgbVAx+1oNq0pNroVBqeFy
+X-Google-Smtp-Source: AGHT+IF4ZzHLI9V3+LTX7+JTibxZTfVLCoXIxk/IYmJanCqg5Sh7sZ08YDb/9Oipl6vdG3BZDB9ekA==
+X-Received: by 2002:a50:ab4a:0:b0:578:6c19:4801 with SMTP id 4fb4d7f45d1cf-57cbd6a70e9mr8232702a12.22.1718719228794;
+        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.17
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:19 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:48 +0300
-Subject: [PATCH v3 14/23] power: supply: max77705: Add charger driver for
- Maxim 77705
+Date: Tue, 18 Jun 2024 16:59:52 +0300
+Subject: [PATCH v3 18/23] regulator: add s2dos05 regulator support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-14-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -90,1067 +89,436 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=34495;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=12895;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=hKVjmHg9fPappw6Ge/EdwOBFJeuWIpNZ6cWmDemYKw8=;
- b=xfxQadM+f4Z/jGSyjeHbx9fCbIOIfVRWeUMeqh1I4IKNwLQMEIYvF/fRaLke7MY7m6tZWyLC2
- d+pny78wduhDySBTNMcMO8qTJZwEYPVeMZvR8QkjYBQVAnu01+bjNvI
+ bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
+ b=5XtWTi2CQq9/wixtulx+pvi4NO3P+hcgPgRzF8p95jBWt9lMboWJtUeAdy8U69KlHIY638Q7u
+ vUZauNkhQbHBrjHjjmEPIjCHoFB1/7esgo0w4z1F6LxEg9G5mvxG1nM
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-Add driver for Maxim 77705 switch-mode charger (part of max77705
-MFD driver) providing power supply class information to userspace.
-
-The driver is configured through DTS (battery and system related
-settings). Also, POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE property
-is writable, which allows to configure charge end at less than 100%
+S2dos05 has 1 buck and 4 LDO regulators, used for powering
+panel/touchscreen.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- drivers/power/supply/Kconfig            |   6 +
- drivers/power/supply/Makefile           |   1 +
- drivers/power/supply/max77705_charger.c | 772 ++++++++++++++++++++++++++++++++
- include/linux/mfd/max77705_charger.h    | 225 ++++++++++
- 4 files changed, 1004 insertions(+)
+ MAINTAINERS                           |   1 +
+ drivers/regulator/Kconfig             |   8 +
+ drivers/regulator/Makefile            |   1 +
+ drivers/regulator/s2dos05-regulator.c | 362 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 372 insertions(+)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 3e31375491d5..47ca8cc00a80 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -552,6 +552,12 @@ config CHARGER_MAX77693
- 	help
- 	  Say Y to enable support for the Maxim MAX77693 battery charger.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b53462684a30..bee700a5e648 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19910,6 +19910,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
+ F:	drivers/clk/clk-s2mps11.c
+ F:	drivers/mfd/s2dos*.c
+ F:	drivers/mfd/sec*.c
++F:	drivers/regulator/s2dos*.c
+ F:	drivers/regulator/s2m*.c
+ F:	drivers/regulator/s5m*.c
+ F:	drivers/rtc/rtc-s5m.c
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index d333be2bea3b..d6d6f571a65d 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1297,6 +1297,14 @@ config REGULATOR_RTQ2208
+ 	  and two ldos. It features wide output voltage range from 0.4V to 2.05V
+ 	  and the capability to configure the corresponding power stages.
  
-+config CHARGER_MAX77705
-+	tristate "Maxim MAX77705 battery charger driver"
-+	depends on MFD_MAX77705
++config REGULATOR_S2DOS05
++	tristate "SLSI S2DOS05 regulator"
++	depends on MFD_S2DOS_CORE || COMPILE_TEST
 +	help
-+	  Say Y to enable support for the Maxim MAX77705 battery charger.
++	  This driver provides support for the voltage regulators of the S2DOS05.
++	  The S2DOS05 is a companion power management IC for the smart phones.
++	  The S2DOS05 has 4 LDOs and 1 BUCK outputs.
 +
- config CHARGER_MAX77976
- 	tristate "Maxim MAX77976 battery charger driver"
- 	depends on I2C
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 58b567278034..dbec648c78c9 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -77,6 +77,7 @@ obj-$(CONFIG_CHARGER_MAX14577)	+= max14577_charger.o
- obj-$(CONFIG_CHARGER_DETECTOR_MAX14656)	+= max14656_charger_detector.o
- obj-$(CONFIG_CHARGER_MAX77650)	+= max77650-charger.o
- obj-$(CONFIG_CHARGER_MAX77693)	+= max77693_charger.o
-+obj-$(CONFIG_CHARGER_MAX77705)	+= max77705_charger.o
- obj-$(CONFIG_CHARGER_MAX77976)	+= max77976_charger.o
- obj-$(CONFIG_CHARGER_MAX8997)	+= max8997_charger.o
- obj-$(CONFIG_CHARGER_MAX8998)	+= max8998_charger.o
-diff --git a/drivers/power/supply/max77705_charger.c b/drivers/power/supply/max77705_charger.c
+ config REGULATOR_S2MPA01
+ 	tristate "Samsung S2MPA01 voltage regulator"
+ 	depends on MFD_SEC_CORE || COMPILE_TEST
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index ba15fa5f30ad..80f889404597 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -151,6 +151,7 @@ obj-$(CONFIG_REGULATOR_RTMV20)	+= rtmv20-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ2134) += rtq2134-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ6752)	+= rtq6752-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ2208) += rtq2208-regulator.o
++obj-$(CONFIG_REGULATOR_S2DOS05) += s2dos05-regulator.o
+ obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
+ obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
+ obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
+diff --git a/drivers/regulator/s2dos05-regulator.c b/drivers/regulator/s2dos05-regulator.c
 new file mode 100644
-index 000000000000..2b3e836d4c55
+index 000000000000..3c58a1bd2262
 --- /dev/null
-+++ b/drivers/power/supply/max77705_charger.c
-@@ -0,0 +1,772 @@
++++ b/drivers/regulator/s2dos05-regulator.c
+@@ -0,0 +1,362 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * max77705_charger.c - Battery charger driver for the Maxim 77705
++ * s2dos05.c - Regulator driver for the Samsung s2dos05
 + *
-+ * Copyright (C) 2014 Samsung Electronics
-+ * Krzysztof Kozlowski <krzk@kernel.org>
-+ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.org>
++ * Copyright (C) 2016 Samsung Electronics
++ * Copyright (C) 2023 Dzmitry Sankouski <dsankouski@gmail.com>
++ *
 + */
 +
 +#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/debugfs.h>
-+#include <linux/power_supply.h>
++#include <linux/bug.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/slab.h>
++#include <linux/module.h>
 +#include <linux/regmap.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/mfd/samsung/s2dos-core.h>
++#include <linux/mfd/samsung/s2dos05.h>
++#include <linux/i2c.h>
++#include <linux/debugfs.h>
 +
-+#include <linux/mfd/max77705.h>
-+#include <linux/mfd/max77705_charger.h>
-+#include <linux/mfd/max77705-private.h>
-+
-+#define MAX77705_CHARGER_NAME				"max77705-charger"
-+static const char *max77705_charger_model		= "max77705";
-+static const char *max77705_charger_manufacturer	= "Maxim Integrated";
-+static struct dentry *debugfs_file;
-+
-+static enum power_supply_property max77705_charger_props[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_CHARGE_TYPE,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
++struct s2dos05_data {
++	struct regmap *regmap;
++	struct device *dev;
 +};
 +
-+static int max77705_get_online(struct regmap *regmap, int *val)
++static int s2m_enable(struct regulator_dev *rdev)
 +{
-+	unsigned int data;
-+	int ret;
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
 +
-+	ret = regmap_read(regmap, MAX77705_CHG_REG_INT_OK, &data);
++	return regmap_update_bits(regmap, rdev->desc->enable_reg,
++				  rdev->desc->enable_mask,
++					rdev->desc->enable_mask);
++}
++
++static int s2m_disable_regmap(struct regulator_dev *rdev)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	u8 val;
++
++	if (rdev->desc->enable_is_inverted)
++		val = rdev->desc->enable_mask;
++	else
++		val = 0;
++
++	return regmap_update_bits(regmap, rdev->desc->enable_reg, rdev->desc->enable_mask,
++				   val);
++}
++
++static int s2m_is_enabled_regmap(struct regulator_dev *rdev)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(regmap, rdev->desc->enable_reg, &val);
 +	if (ret < 0)
 +		return ret;
 +
-+	*val = !!(data & MAX77705_CHGIN_OK);
-+
-+	return 0;
++	if (rdev->desc->enable_is_inverted)
++		return (val & rdev->desc->enable_mask) == 0;
++	else
++		return (val & rdev->desc->enable_mask) != 0;
 +}
 +
-+static int max77705_get_charger_state(struct max77705_charger_data *charger)
++static int s2m_get_voltage_sel_regmap(struct regulator_dev *rdev)
 +{
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+	int status = POWER_SUPPLY_STATUS_UNKNOWN;
-+	unsigned int reg_data;
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_DETAILS_01, &reg_data);
-+
-+	pr_debug("%s: charger status (0x%02x)\n", __func__, reg_data);
-+
-+	reg_data &= 0x0f;
-+
-+	switch (reg_data) {
-+	case 0x0:
-+	case MAX77705_CHARGER_CONSTANT_CURRENT:
-+	case MAX77705_CHARGER_CONSTANT_VOLTAGE:
-+		status = POWER_SUPPLY_STATUS_CHARGING;
-+		break;
-+	case MAX77705_CHARGER_END_OF_CHARGE:
-+	case MAX77705_CHARGER_DONE:
-+		status = POWER_SUPPLY_STATUS_FULL;
-+		break;
-+	case 0x05:
-+	case 0x06:
-+	case 0x07:
-+		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
-+	case 0x08:
-+	case 0xA:
-+	case 0xB:
-+		status = POWER_SUPPLY_STATUS_DISCHARGING;
-+		break;
-+	default:
-+		status = POWER_SUPPLY_STATUS_UNKNOWN;
-+		break;
-+	}
-+
-+	return (int)status;
-+}
-+
-+static int max77705_get_battery_health(struct regmap *regmap, int *value)
-+{
-+	unsigned int bat_dtls;
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_DETAILS_01, &bat_dtls);
-+	bat_dtls = ((bat_dtls & MAX77705_BAT_DTLS) >> MAX77705_BAT_DTLS_SHIFT);
-+
-+	pr_debug("%s: bat_dtls(0x%x)\n", __func__, bat_dtls);
-+
-+	switch (bat_dtls) {
-+	case MAX77705_BATTERY_NOBAT:
-+		pr_debug("%s: No battery and the charger is suspended\n", __func__);
-+		*value = POWER_SUPPLY_HEALTH_NO_BATTERY;
-+		break;
-+	case MAX77705_BATTERY_PREQUALIFICATION:
-+		pr_debug("%s: battery is okay but its voltage is low(~VPQLB)\n", __func__);
-+		break;
-+	case MAX77705_BATTERY_DEAD:
-+		pr_debug("%s: battery dead\n", __func__);
-+		*value = POWER_SUPPLY_HEALTH_DEAD;
-+		break;
-+	case MAX77705_BATTERY_GOOD:
-+	case MAX77705_BATTERY_LOWVOLTAGE:
-+		*value = POWER_SUPPLY_HEALTH_GOOD;
-+		break;
-+	case MAX77705_BATTERY_OVERVOLTAGE:
-+		pr_debug("%s: battery ovp\n", __func__);
-+		*value = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		break;
-+	default:
-+		pr_debug("%s: battery unknown\n", __func__);
-+		*value = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max77705_get_vbus_state(struct regmap *regmap, int *value)
-+{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
 +	int ret;
-+	unsigned int charge_dtls;
++	unsigned int val;
 +
-+	ret = regmap_read(regmap, MAX77705_CHG_REG_DETAILS_00, &charge_dtls);
-+	if (ret)
++	ret = regmap_read(regmap, rdev->desc->vsel_reg, &val);
++	if (ret < 0)
 +		return ret;
 +
-+	charge_dtls = ((charge_dtls & MAX77705_CHGIN_DTLS) >>
-+			MAX77705_CHGIN_DTLS_SHIFT);
++	val &= rdev->desc->vsel_mask;
 +
-+	switch (charge_dtls) {
-+	case 0x00:
-+		*value = POWER_SUPPLY_HEALTH_UNDERVOLTAGE;
-+		break;
-+	case 0x01:
-+		*value = POWER_SUPPLY_HEALTH_UNDERVOLTAGE;
-+		break;
-+	case 0x02:
-+		*value = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		break;
-+	case 0x03:
-+		*value = POWER_SUPPLY_HEALTH_GOOD;
-+		break;
-+	default:
-+		return 0;
-+	}
-+	return 0;
++	return val;
 +}
 +
-+static int max77705_get_health(struct regmap *regmap, int *value)
++static int s2m_set_voltage_sel_regmap(struct regulator_dev *rdev,
++					unsigned int sel)
 +{
-+	int ret, is_online = 0;
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
 +
-+	ret = max77705_get_online(regmap, &is_online);
-+	if (ret)
-+		return ret;
-+	if (is_online) {
-+		ret = max77705_get_vbus_state(regmap, value);
-+		if (ret || (*value != POWER_SUPPLY_HEALTH_GOOD))
-+			return ret;
-+	}
-+	ret = max77705_get_battery_health(regmap, value);
-+	if (ret)
-+		return ret;
++	ret = regmap_update_bits(regmap, rdev->desc->vsel_reg, rdev->desc->vsel_mask,
++				sel);
++	if (ret < 0)
++		goto out;
++
++	if (rdev->desc->apply_bit)
++		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
++					 rdev->desc->apply_bit,
++					 rdev->desc->apply_bit);
++	return ret;
++out:
++	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
 +	return ret;
 +}
 +
-+static int max77705_get_input_current(struct max77705_charger_data *charger)
++static int s2m_set_voltage_sel_regmap_buck(struct regulator_dev *rdev,
++					unsigned int sel)
 +{
-+	unsigned int reg_data;
-+	int get_current = 0;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	regmap_read(regmap,
-+			  MAX77705_CHG_REG_CNFG_09, &reg_data);
-+	/* AND operation for removing the formal 1bit  */
-+	reg_data &= MAX77705_CHG_CHGIN_LIM_MASK;
-+
-+	if (reg_data <= 0x3)
-+		get_current = 100;
-+	else if (reg_data >= 0x7F)
-+		get_current = 3200;
-+	else
-+		get_current = (reg_data + 0x01) * 25;
-+
-+	dev_dbg(charger->dev, "reg:(0x%x), charging_current:(%d)\n",
-+			reg_data, get_current);
-+
-+	return get_current;
-+}
-+
-+static void max77705_set_input_current(struct max77705_charger_data *charger,
-+					int input_current)
-+{
-+	int curr_step = 25;
-+	u8 set_reg, set_mask, reg_data = 0;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	mutex_lock(&charger->charger_mutex);
-+
-+
-+	set_reg = MAX77705_CHG_REG_CNFG_09;
-+	set_mask = MAX77705_CHG_CHGIN_LIM_MASK;
-+
-+	if (input_current < 100) {
-+		reg_data = 0x00;
-+		regmap_update_bits(regmap, set_reg, set_mask, reg_data);
-+	} else {
-+		input_current = (input_current > 3200) ? 3200 : input_current;
-+		reg_data = (input_current / curr_step) - 0x01;
-+		regmap_update_bits(regmap, set_reg, set_mask, reg_data);
-+	}
-+
-+	mutex_unlock(&charger->charger_mutex);
-+	dev_dbg(charger->dev, "REG(0x%02x) DATA(0x%02x), CURRENT(%d)\n",
-+		set_reg, reg_data, input_current);
-+}
-+
-+static int max77705_get_float_voltage(struct max77705_charger_data *charger)
-+{
-+	unsigned int reg_data = 0;
-+	int float_voltage;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_CNFG_04, &reg_data);
-+	reg_data &= 0x3F;
-+	float_voltage = reg_data <= 0x04 ? reg_data * 50 + 4000 :
-+					(reg_data - 4) * 10 + 4200;
-+	dev_dbg(charger->dev, "battery cv reg : 0x%x, float voltage val : %d\n",
-+		reg_data, float_voltage);
-+
-+	return float_voltage;
-+}
-+
-+static void max77705_set_float_voltage(struct max77705_charger_data *charger,
-+					int float_voltage)
-+{
-+	int float_voltage_mv;
-+	unsigned int reg_data = 0;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	float_voltage_mv = float_voltage / 1000;
-+	reg_data = float_voltage_mv <= 4000 ? 0x0 :
-+		float_voltage_mv >= 4500 ? 0x23 :
-+		(float_voltage_mv <= 4200) ? (float_voltage_mv - 4000) / 50 :
-+		(((float_voltage_mv - 4200) / 10) + 0x04);
-+
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_04,
-+				CHG_CNFG_04_CHG_CV_PRM_MASK,
-+				(reg_data << CHG_CNFG_04_CHG_CV_PRM_SHIFT));
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_CNFG_04, &reg_data);
-+	dev_dbg(charger->dev, "battery cv voltage 0x%x\n", reg_data);
-+}
-+
-+static bool max77705_check_battery(struct max77705_charger_data *charger)
-+{
-+	unsigned int reg_data;
-+	unsigned int reg_data2;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_INT_OK, &reg_data);
-+
-+	dev_dbg(charger->dev, "CHG_INT_OK(0x%x)\n", reg_data);
-+
-+	regmap_read(regmap,
-+			  MAX77705_CHG_REG_DETAILS_00, &reg_data2);
-+
-+	dev_dbg(charger->dev, "CHG_DETAILS00(0x%x)\n", reg_data2);
-+
-+	if ((reg_data & MAX77705_BATP_OK) || !(reg_data2 & MAX77705_BATP_DTLS))
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static int max77705_get_charge_type(struct regmap *regmap,
-+					union power_supply_propval *val)
-+{
-+	unsigned int reg_data;
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_DETAILS_01, &reg_data);
-+	reg_data &= 0x0F;
-+	switch (reg_data) {
-+	case MAX77705_CHARGER_CONSTANT_CURRENT:
-+		val->strval = "CC Mode";
-+		break;
-+	case MAX77705_CHARGER_CONSTANT_VOLTAGE:
-+		val->strval = "CV Mode";
-+		break;
-+	case MAX77705_CHARGER_END_OF_CHARGE:
-+		val->strval = "EOC";
-+		break;
-+	case MAX77705_CHARGER_DONE:
-+		val->strval = "DONE";
-+		break;
-+	default:
-+		val->strval = "NONE";
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max77705_get_charge_current(struct max77705_charger_data *charger)
-+{
-+	unsigned int reg_data;
-+	int get_current = 0;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_CNFG_02, &reg_data);
-+	reg_data &= MAX77705_CHG_CC;
-+
-+	get_current = reg_data <= 0x2 ? 100 : reg_data * 50;
-+
-+	dev_dbg(charger->dev, "reg:(0x%x), charging_current:(%d)\n",
-+			reg_data, get_current);
-+	return get_current;
-+}
-+
-+static void max77705_set_charge_current(struct max77705_charger_data *charger,
-+					int fast_charging_current)
-+{
-+	int curr_step = 50;
-+	u8 set_mask, reg_data = 0;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	set_mask = MAX77705_CHG_CC;
-+
-+	if (fast_charging_current < 100) {
-+		regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_02, set_mask, 0x00);
-+	} else {
-+		fast_charging_current =
-+			(fast_charging_current > 3150) ? 3150 : fast_charging_current;
-+
-+		reg_data |= (fast_charging_current / curr_step);
-+		regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_02, set_mask, reg_data);
-+	}
-+
-+	dev_dbg(charger->dev, "REG(0x%02x) DATA(0x%02x), CURRENT(%d)\n",
-+		MAX77705_CHG_REG_CNFG_02,
-+		reg_data, fast_charging_current);
-+}
-+
-+static int max77705_chg_set_wdtmr_en(struct max77705_charger_data *charger, bool enable)
-+{
-+	dev_dbg(charger->dev, "WDT en = %d\n", enable);
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	if (enable) {
-+		regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_00,
-+					CHG_CNFG_00_WDTEN_MASK, CHG_CNFG_00_WDTEN_MASK);
-+	} else {
-+		regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_00,
-+					 CHG_CNFG_00_WDTEN_MASK, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static void max77705_charger_initialize(struct max77705_charger_data *charger)
-+{
-+	u8 reg_data;
-+	struct power_supply_battery_info *info;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	if (power_supply_get_battery_info(charger->psy_chg, &info) < 0)
-+		return;
-+
-+	charger->bat_info = info;
-+
-+	/* unlock charger setting protect
-+	 * slowest LX slope
-+	 */
-+	reg_data = MAX77705_CHGPROT_MASK | MAX77705_SLOWEST_LX_SLOPE;
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_06, reg_data,
-+						reg_data);
-+
-+	/*
-+	 * fast charge timer disable
-+	 * restart threshold disable
-+	 * pre-qual charge disable
-+	 */
-+	reg_data = (MAX77705_FCHGTIME_DISABLE << CHG_CNFG_01_FCHGTIME_SHIFT) |
-+			(MAX77705_CHG_RSTRT_DISABLE << CHG_CNFG_01_CHG_RSTRT_SHIFT) |
-+			(MAX77705_CHG_PQEN_DISABLE << CHG_CNFG_01_PQEN_SHIFT);
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_01,
-+						(CHG_CNFG_01_FCHGTIME_MASK |
-+						CHG_CNFG_01_CHG_RSTRT_MASK |
-+						CHG_CNFG_01_PQEN_MASK),
-+						reg_data);
-+
-+	/*
-+	 * OTG off(UNO on), boost off
-+	 */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_00,
-+				CHG_CNFG_00_OTG_CTRL, 0);
-+
-+	/*
-+	 * charge current 450mA(default)
-+	 * otg current limit 900mA
-+	 */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_02,
-+				CHG_CNFG_02_OTG_ILIM_MASK,
-+				MAX77705_OTG_ILIM_900 << CHG_CNFG_02_OTG_ILIM_SHIFT);
-+
-+	/* BAT to SYS OCP 4.80A */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_05,
-+				CHG_CNFG_05_REG_B2SOVRC_MASK,
-+				MAX77705_B2SOVRC_4_8A << CHG_CNFG_05_REG_B2SOVRC_SHIFT);
-+	/*
-+	 * top off current 150mA
-+	 * top off timer 30min
-+	 */
-+	reg_data = (MAX77705_TO_ITH_150MA << CHG_CNFG_03_TO_ITH_SHIFT) |
-+			(MAX77705_TO_TIME_30M << CHG_CNFG_03_TO_TIME_SHIFT) |
-+			(MAX77705_SYS_TRACK_DISABLE << CHG_CNFG_03_SYS_TRACK_DIS_SHIFT);
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_03,
-+			   (CHG_CNFG_03_TO_ITH_MASK |
-+			   CHG_CNFG_03_TO_TIME_MASK |
-+			   CHG_CNFG_03_SYS_TRACK_DIS_MASK), reg_data);
-+
-+	/*
-+	 * cv voltage 4.2V or 4.35V
-+	 * MINVSYS 3.6V(default)
-+	 */
-+	if (info->voltage_max_design_uv < 0) {
-+		dev_warn(charger->dev, "missing battery:voltage-max-design-microvolt\n");
-+		max77705_set_float_voltage(charger, 4200000);
-+	} else {
-+		max77705_set_float_voltage(charger, info->voltage_max_design_uv);
-+	}
-+
-+	/* VCHGIN : REG=4.5V, UVLO=4.7V, WCHGIN : REG=4.5V, UVLO=4.7V */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_12,
-+				CHG_CNFG_12_VCHGIN_REG_MASK | CHG_CNFG_12_WCIN_REG_MASK, 0);
-+
-+	/* Boost mode possible in FACTORY MODE */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_07,
-+				CHG_CNFG_07_REG_FMBST_MASK, MAX77705_CHG_FMBST);
-+
-+	/* Watchdog timer */
-+	max77705_chg_set_wdtmr_en(charger, 0);
-+
-+	/* Active Discharge Enable */
-+	regmap_update_bits(regmap, MAX77705_PMIC_REG_MAINCTRL1, 1, 1);
-+
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_09, MAX77705_CHG_EN, MAX77705_CHG_EN);
-+
-+	/* VBYPSET=5.0V */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_11, CHG_CNFG_11_VBYPSET_MASK, 0);
-+
-+	/* Switching Frequency : 1.5MHz */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_08, CHG_CNFG_08_REG_FSW_MASK,
-+				(MAX77705_CHG_FSW_1_5MHz << CHG_CNFG_08_REG_FSW_SHIFT));
-+
-+	/* Auto skip mode */
-+	regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_12, CHG_CNFG_12_REG_DISKIP_MASK,
-+				(MAX77705_AUTO_SKIP << CHG_CNFG_12_REG_DISKIP_SHIFT));
-+}
-+
-+static bool max77705_charger_unlock(struct max77705_charger_data *charger)
-+{
-+	unsigned int reg_data;
-+	unsigned int chgprot;
-+	int retry_cnt = 0;
-+	bool need_init = false;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	do {
-+		regmap_read(regmap, MAX77705_CHG_REG_CNFG_06,
-+				  &reg_data);
-+		chgprot = (reg_data & MAX77705_CHGPROT_MASK);
-+		if (chgprot != MAX77705_CHGPROT_UNLOCKED) {
-+			dev_err(charger->dev, "unlock err, chgprot(0x%x), retry(%d)\n",
-+					chgprot, retry_cnt);
-+			regmap_update_bits(regmap, MAX77705_CHG_REG_CNFG_06,
-+						MAX77705_CHGPROT_MASK, MAX77705_CHGPROT_MASK);
-+			need_init = true;
-+			msleep(20);
-+		} else
-+			break;
-+	} while ((chgprot != MAX77705_CHGPROT_UNLOCKED) && (++retry_cnt < 10));
-+
-+	return need_init;
-+}
-+
-+static int max77705_prop_writeable(struct power_supply *psy,
-+					  enum power_supply_property psp)
-+{
-+	return (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT) ||
-+		(psp == POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN) ||
-+		(psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
-+		(psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE);
-+}
-+
-+static int max77705_chg_set_property(struct power_supply *psy,
-+					enum power_supply_property psp,
-+					const union power_supply_propval *val)
-+{
-+	struct max77705_charger_data *charger = power_supply_get_drvdata(psy);
-+
-+	/* check unlock status before does set the register */
-+	max77705_charger_unlock(charger);
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		max77705_set_input_current(charger, val->intval);
-+		break;
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		max77705_set_charge_current(charger, val->intval);
-+		break;
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+		if (val->intval > charger->bat_info->voltage_max_design_uv) {
-+			dev_err(charger->dev, "%d voltage higher than max",
-+				val->intval);
-+			return -EINVAL;
-+		}
-+		max77705_set_float_voltage(charger, val->intval);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int max77705_chg_get_property(struct power_supply *psy,
-+					enum power_supply_property psp,
-+					union power_supply_propval *val)
-+{
-+	int ret = 0;
-+	struct max77705_charger_data *charger = power_supply_get_drvdata(psy);
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		max77705_get_online(regmap, &val->intval);
-+		break;
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = max77705_check_battery(charger);
-+		break;
-+	case POWER_SUPPLY_PROP_STATUS:
-+		val->intval = max77705_get_charger_state(charger);
-+		break;
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		ret = max77705_get_health(regmap, &val->intval);
-+		break;
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		val->intval = max77705_get_input_current(charger);
-+		break;
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		val->intval = max77705_get_charge_current(charger);
-+		break;
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
-+		val->intval = max77705_get_float_voltage(charger);
-+		break;
-+	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-+		val->intval = charger->bat_info->voltage_max_design_uv;
-+		break;
-+	case POWER_SUPPLY_PROP_CHARGE_TYPE:
-+		ret = max77705_get_charge_type(regmap, val);
-+		break;
-+	case POWER_SUPPLY_PROP_MODEL_NAME:
-+		val->strval = max77705_charger_model;
-+		break;
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval = max77705_charger_manufacturer;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++
++	ret = regmap_write(regmap, rdev->desc->vsel_reg, sel);
++	if (ret < 0)
++		goto out;
++
++	if (rdev->desc->apply_bit)
++		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
++					 rdev->desc->apply_bit,
++					 rdev->desc->apply_bit);
++	return ret;
++out:
++	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
 +	return ret;
 +}
 +
-+static void max77705_chgin_isr_work(struct work_struct *work)
++static int s2m_set_voltage_time_sel(struct regulator_dev *rdev,
++				   unsigned int old_selector,
++				   unsigned int new_selector)
 +{
-+	struct max77705_charger_data *charger =
-+		container_of(work, struct max77705_charger_data, chgin_work);
-+	regmap_update_bits(charger->max77705->regmap_charger,
-+						MAX77705_CHG_REG_INT_MASK,
-+						MAX77705_CHGIN_IM, MAX77705_CHGIN_IM);
-+	power_supply_changed(charger->psy_chg);
-+	regmap_update_bits(charger->max77705->regmap_charger,
-+						MAX77705_CHG_REG_INT_MASK,
-+						MAX77705_CHGIN_IM, 0);
-+}
++	int old_volt, new_volt;
 +
-+static irqreturn_t max77705_chgin_irq(int irq, void *data)
-+{
-+	struct max77705_charger_data *charger = data;
++	/* sanity check */
++	if (!rdev->desc->ops->list_voltage)
++		return -EINVAL;
 +
-+	queue_work(charger->wqueue, &charger->chgin_work);
++	old_volt = rdev->desc->ops->list_voltage(rdev, old_selector);
++	new_volt = rdev->desc->ops->list_voltage(rdev, new_selector);
 +
-+	return IRQ_HANDLED;
-+}
++	if (old_selector < new_selector)
++		return DIV_ROUND_UP(new_volt - old_volt, S2DOS05_RAMP_DELAY);
 +
-+static int max77705_debugfs_show(struct seq_file *s, void *data)
-+{
-+	struct max77705_charger_data *charger = s->private;
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+	unsigned int reg, reg_data;
-+
-+	seq_printf(s, "MAX77705 CHARGER IC, ver.0x%x\n", charger->pmic_ver);
-+	seq_puts(s, "===================\n");
-+	for (reg = 0xB0; reg <= 0xC3; reg++) {
-+		regmap_read(regmap, reg, &reg_data);
-+		seq_printf(s, "0x%02x:\t0x%02x\n", reg, reg_data);
-+	}
-+
-+	seq_puts(s, "\n");
 +	return 0;
 +}
 +
-+static int max77705_debugfs_open(struct inode *inode, struct file *file)
++static int s2m_set_active_discharge(struct regulator_dev *rdev,
++					bool enable)
 +{
-+	return single_open(file, max77705_debugfs_show, inode->i_private);
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++	u8 val;
++
++	if (enable)
++		val = rdev->desc->active_discharge_on;
++	else
++		val = rdev->desc->active_discharge_off;
++
++	ret = regmap_update_bits(regmap, rdev->desc->active_discharge_reg,
++				rdev->desc->active_discharge_mask, val);
++	return ret;
 +}
 +
-+static const struct file_operations max77705_debugfs_fops = {
-+	.open = max77705_debugfs_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
++static const struct regulator_ops s2dos05_ldo_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.is_enabled		= s2m_is_enabled_regmap,
++	.enable			= s2m_enable,
++	.disable		= s2m_disable_regmap,
++	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
++	.set_voltage_sel	= s2m_set_voltage_sel_regmap,
++	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
++	.set_active_discharge	= s2m_set_active_discharge,
 +};
 +
-+static const struct power_supply_desc max77705_charger_power_supply_desc = {
-+	.name = MAX77705_CHARGER_NAME,
-+	.type		= POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = max77705_charger_props,
-+	.num_properties = ARRAY_SIZE(max77705_charger_props),
-+	.get_property = max77705_chg_get_property,
-+	.set_property = max77705_chg_set_property,
-+	.property_is_writeable = max77705_prop_writeable,
++static const struct regulator_ops s2dos05_buck_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.is_enabled		= s2m_is_enabled_regmap,
++	.enable			= s2m_enable,
++	.disable		= s2m_disable_regmap,
++	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
++	.set_voltage_sel	= s2m_set_voltage_sel_regmap_buck,
++	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
++	.set_active_discharge	= s2m_set_active_discharge,
 +};
 +
-+static int max77705_charger_probe(struct platform_device *pdev)
++#define _BUCK(macro)	S2DOS05_BUCK##macro
++#define _buck_ops(num)	s2dos05_buck_ops##num
++
++#define _LDO(macro)	S2DOS05_LDO##macro
++#define _REG(ctrl)	S2DOS05_REG##ctrl
++#define _ldo_ops(num)	s2dos05_ldo_ops##num
++#define _MASK(macro)	S2DOS05_ENABLE_MASK##macro
++#define _TIME(macro)	S2DOS05_ENABLE_TIME##macro
++
++#define BUCK_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
++	.name		= _name,				\
++	.id		= _id,					\
++	.ops		= _ops,					\
++	.type		= REGULATOR_VOLTAGE,			\
++	.owner		= THIS_MODULE,				\
++	.min_uV		= m,					\
++	.uV_step	= s,					\
++	.n_voltages	= S2DOS05_BUCK_N_VOLTAGES,		\
++	.vsel_reg	= v,					\
++	.vsel_mask	= S2DOS05_BUCK_VSEL_MASK,		\
++	.enable_reg	= e,					\
++	.enable_mask	= em,					\
++	.enable_time	= t,					\
++	.active_discharge_off = 0,				\
++	.active_discharge_on = S2DOS05_BUCK_FD_MASK,		\
++	.active_discharge_reg	= a,				\
++	.active_discharge_mask	= S2DOS05_BUCK_FD_MASK		\
++}
++
++#define LDO_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
++	.name		= _name,				\
++	.id		= _id,					\
++	.ops		= _ops,					\
++	.type		= REGULATOR_VOLTAGE,			\
++	.owner		= THIS_MODULE,				\
++	.min_uV		= m,					\
++	.uV_step	= s,					\
++	.n_voltages	= S2DOS05_LDO_N_VOLTAGES,		\
++	.vsel_reg	= v,					\
++	.vsel_mask	= S2DOS05_LDO_VSEL_MASK,		\
++	.enable_reg	= e,					\
++	.enable_mask	= em,					\
++	.enable_time	= t,					\
++	.active_discharge_off = 0,				\
++	.active_discharge_on = S2DOS05_LDO_FD_MASK,		\
++	.active_discharge_reg	= a,				\
++	.active_discharge_mask	= S2DOS05_LDO_FD_MASK		\
++}
++
++static struct regulator_desc regulators[S2DOS05_REGULATOR_MAX] = {
++		/* name, id, ops, min_uv, uV_step, vsel_reg, enable_reg */
++		LDO_DESC("ldo1", _LDO(1), &_ldo_ops(), _LDO(_MIN1),
++			_LDO(_STEP1), _REG(_LDO1_CFG),
++			_REG(_EN), _MASK(_L1), _TIME(_LDO), _REG(_LDO1_CFG)),
++		LDO_DESC("ldo2", _LDO(2), &_ldo_ops(), _LDO(_MIN1),
++			_LDO(_STEP1), _REG(_LDO2_CFG),
++			_REG(_EN), _MASK(_L2), _TIME(_LDO), _REG(_LDO2_CFG)),
++		LDO_DESC("ldo3", _LDO(3), &_ldo_ops(), _LDO(_MIN2),
++			_LDO(_STEP1), _REG(_LDO3_CFG),
++			_REG(_EN), _MASK(_L3), _TIME(_LDO), _REG(_LDO3_CFG)),
++		LDO_DESC("ldo4", _LDO(4), &_ldo_ops(), _LDO(_MIN2),
++			_LDO(_STEP1), _REG(_LDO4_CFG),
++			_REG(_EN), _MASK(_L4), _TIME(_LDO), _REG(_LDO4_CFG)),
++		BUCK_DESC("buck1", _BUCK(1), &_buck_ops(), _BUCK(_MIN1),
++			_BUCK(_STEP1), _REG(_BUCK_VOUT),
++			_REG(_EN), _MASK(_B1), _TIME(_BUCK), _REG(_BUCK_CFG)),
++};
++
++static int s2dos05_pmic_dt_parse_pdata(struct device *dev,
++					struct of_regulator_match *rdata,
++					unsigned int rdev_num)
 +{
-+	struct max77705_dev *max77705 = dev_get_drvdata(pdev->dev.parent);
-+	struct max77705_platform_data *pdata = dev_get_platdata(max77705->dev);
-+	struct max77705_charger_data *charger;
-+	struct regmap *regmap = max77705->regmap_charger;
-+	struct power_supply_config charger_cfg = { };
-+	int ret = 0;
-+	unsigned int reg_data;
++	struct device_node *reg_np;
++	int err;
 +
-+	charger = kzalloc(sizeof(*charger), GFP_KERNEL);
-+	if (!charger)
++	reg_np = of_get_child_by_name(dev->parent->of_node, "regulators");
++	if (!reg_np) {
++		dev_err(dev, "could not find regulators sub-node\n");
++		return -EINVAL;
++	}
++
++	err = of_regulator_match(dev, reg_np, rdata, rdev_num);
++	of_node_put(reg_np);
++
++	return err;
++}
++
++static int s2dos05_pmic_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct s2dos_core *iodev = dev_get_drvdata(pdev->dev.parent);
++	struct of_regulator_match *rdata = NULL;
++	struct s2dos05_data *s2dos05;
++	struct regulator_config config = { };
++	unsigned int rdev_num = ARRAY_SIZE(regulators);
++	int i;
++	int ret, err = 0;
++
++	s2dos05 = devm_kzalloc(dev, sizeof(struct s2dos05_data),
++				GFP_KERNEL);
++	if (!s2dos05) {
++		ret = -ENOMEM;
++		goto err_data;
++	}
++	platform_set_drvdata(pdev, s2dos05);
++
++	rdata = kcalloc(rdev_num, sizeof(*rdata), GFP_KERNEL);
++	if (!rdata)
 +		return -ENOMEM;
 +
-+	mutex_init(&charger->charger_mutex);
++	for (i = 0; i < rdev_num; i++)
++		rdata[i].name = regulators[i].name;
 +
-+	charger->dev = &pdev->dev;
-+	charger->max77705 = max77705;
-+	charger->max77705_pdata = pdata;
-+
-+	platform_set_drvdata(pdev, charger);
-+
-+	regmap_read(regmap, MAX77705_CHG_REG_INT_OK, &reg_data);
-+
-+	if (regmap_read
-+		(max77705->regmap, MAX77705_PMIC_REG_PMICREV, &reg_data) < 0) {
-+		dev_err(charger->dev,
-+			"device not found on this channel (this is not an error)\n");
-+		ret = -ENOMEM;
-+	} else {
-+		charger->pmic_ver = (reg_data & 0x7);
-+		dev_dbg(charger->dev, "device found : ver.0x%x\n", charger->pmic_ver);
++	err = s2dos05_pmic_dt_parse_pdata(dev, rdata, rdev_num);
++	if (err < 0) {
++		dev_err(dev, "Failed to parse regulators device of_node\n");
++		goto err_data;
 +	}
 +
-+	debugfs_file = debugfs_create_file("max77705-charger-regs",
-+				0664, NULL, (void *)charger,
-+				  &max77705_debugfs_fops);
-+	if (!debugfs_file)
-+		dev_err(charger->dev, "Failed to create debugfs file\n");
++	s2dos05->regmap = iodev->regmap;
++	s2dos05->dev = dev;
 +
-+	charger_cfg.drv_data = charger;
-+	charger_cfg.of_node = charger->dev->of_node;
++	for (i = 0; i < rdev_num; i++) {
++		struct regulator_dev *regulator;
 +
-+	charger->psy_chg =
-+		devm_power_supply_register(&pdev->dev,
-+				  &max77705_charger_power_supply_desc,
-+				  &charger_cfg);
-+	if (IS_ERR(charger->psy_chg)) {
-+		dev_err(charger->dev, "Failed to Register psy_chg\n");
-+		goto err_free;
++		config.init_data = rdata[i].init_data;
++		config.of_node = rdata[i].of_node;
++		config.dev = dev;
++		config.driver_data = s2dos05;
++		regulator = devm_regulator_register(&pdev->dev,
++						&regulators[i], &config);
++		if (IS_ERR(regulator)) {
++			ret = PTR_ERR(regulator);
++			dev_err(&pdev->dev, "regulator init failed for %d\n",
++				i);
++			goto out;
++		}
 +	}
 +
-+	max77705_charger_initialize(charger);
++out:
++	kfree(rdata);
 +
-+	charger->wqueue = create_singlethread_workqueue(dev_name(&pdev->dev));
-+	if (!charger->wqueue) {
-+		pr_err("%s: Fail to Create Workqueue\n", __func__);
-+		goto err_free;
-+	}
-+	INIT_WORK(&charger->chgin_work, max77705_chgin_isr_work);
++	return ret;
 +
-+	charger->irq_chgin = max77705->irq_base + MAX77705_CHG_IRQ_CHGIN_I;
-+	ret = devm_request_threaded_irq(charger->dev, charger->irq_chgin, NULL,
-+					max77705_chgin_irq, 0, "chgin-irq", charger);
-+	if (ret < 0) {
-+		pr_err("%s: fail to request chgin IRQ: %d: %d\n",
-+				__func__, charger->irq_chgin, ret);
-+	} else {
-+		max77705_irq_unmask_subdevice(max77705, MAX77705_IRQSRC_CHG);
-+	}
-+
-+	return 0;
-+
-+err_free:
-+	kfree(charger);
++err_data:
++	devm_kfree(dev, (void *)s2dos05);
++	kfree(s2dos05);
 +
 +	return ret;
 +}
 +
-+static void max77705_charger_remove(struct platform_device *pdev)
-+{
-+	struct max77705_charger_data *charger = platform_get_drvdata(pdev);
-+	struct regmap *regmap = charger->max77705->regmap_charger;
-+
-+	max77705_irq_mask_subdevice(charger->max77705, MAX77705_IRQSRC_CHG);
-+
-+	if (regmap) {
-+		u8 reg_data;
-+
-+		reg_data = CHG_CNFG_00_BUCK_MASK;
-+		regmap_write(regmap, MAX77705_CHG_REG_CNFG_00, reg_data);
-+		reg_data = max77705_convert_ma_to_chgin_ilim_value(500);
-+		regmap_write(regmap, MAX77705_CHG_REG_CNFG_09, reg_data);
-+		reg_data = max77705_convert_ma_to_wcin_ilim_value(320);
-+		regmap_write(regmap, MAX77705_CHG_REG_CNFG_10, reg_data);
-+		reg_data = CHG_CNFG_12_CHGINSEL_MASK | CHG_CNFG_12_WCINSEL_MASK;
-+		regmap_write(regmap, MAX77705_CHG_REG_CNFG_12, reg_data);
-+	} else {
-+		dev_err(charger->dev, "no max77705 i2c client\n");
-+	}
-+
-+	if (debugfs_file)
-+		debugfs_remove(debugfs_file);
-+
-+	kfree(charger);
-+}
-+
-+static const struct platform_device_id max77705_charger_id[] = {
-+	{ "max77705-charger", 0, },
-+	{ }
++static const struct platform_device_id s2dos05_pmic_id[] = {
++	{ "s2dos05-regulator" },
++	{ },
 +};
-+MODULE_DEVICE_TABLE(platform, max77705_charger_id);
++MODULE_DEVICE_TABLE(platform, s2dos05_pmic_id);
 +
-+static struct platform_driver max77705_charger_driver = {
++static struct platform_driver s2dos05_platform_driver = {
 +	.driver = {
-+		.name = "max77705-charger",
++		.name = "s2dos05",
 +	},
-+	.probe = max77705_charger_probe,
-+	.remove_new = max77705_charger_remove,
-+	.id_table	= max77705_charger_id,
++	.probe = s2dos05_pmic_probe,
++	.id_table = s2dos05_pmic_id,
 +};
-+module_platform_driver(max77705_charger_driver);
++module_platform_driver(s2dos05_platform_driver);
 +
 +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
-+MODULE_DESCRIPTION("Maxim 77705 charger driver");
++MODULE_DESCRIPTION("SAMSUNG s2dos05 Regulator Driver");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/max77705_charger.h b/include/linux/mfd/max77705_charger.h
-new file mode 100644
-index 000000000000..816bb63d9583
---- /dev/null
-+++ b/include/linux/mfd/max77705_charger.h
-@@ -0,0 +1,225 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * max77705_charger.h
-+ * Samsung max77705 Charger Header
-+ *
-+ * Copyright (C) 2015 Samsung Electronics, Inc.
-+ *
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#ifndef __MAX77705_CHARGER_H
-+#define __MAX77705_CHARGER_H __FILE__
-+
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max77705.h>
-+#include <linux/mfd/max77705-private.h>
-+#include <linux/regulator/machine.h>
-+
-+/* MAX77705_CHG_REG_CHG_INT */
-+#define MAX77705_BYP_I                  BIT(0)
-+#define MAX77705_INP_LIMIT_I		BIT(1)
-+#define MAX77705_BATP_I                 BIT(2)
-+#define MAX77705_BAT_I                  BIT(3)
-+#define MAX77705_CHG_I                  BIT(4)
-+#define MAX77705_WCIN_I                 BIT(5)
-+#define MAX77705_CHGIN_I                BIT(6)
-+#define MAX77705_AICL_I                 BIT(7)
-+
-+/* MAX77705_CHG_REG_CHG_INT_MASK */
-+#define MAX77705_BYP_IM                 BIT(0)
-+#define MAX77705_INP_LIMIT_IM		BIT(1)
-+#define MAX77705_BATP_IM                BIT(2)
-+#define MAX77705_BAT_IM                 BIT(3)
-+#define MAX77705_CHG_IM                 BIT(4)
-+#define MAX77705_WCIN_IM                BIT(5)
-+#define MAX77705_CHGIN_IM               BIT(6)
-+#define MAX77705_AICL_IM                BIT(7)
-+
-+/* MAX77705_CHG_REG_CHG_INT_OK */
-+#define MAX77705_BYP_OK                 BIT(0)
-+#define MAX77705_DISQBAT_OK		BIT(1)
-+#define MAX77705_BATP_OK		BIT(2)
-+#define MAX77705_BAT_OK                 BIT(3)
-+#define MAX77705_CHG_OK                 BIT(4)
-+#define MAX77705_WCIN_OK		BIT(5)
-+#define MAX77705_CHGIN_OK               BIT(6)
-+#define MAX77705_AICL_OK                BIT(7)
-+
-+/* MAX77705_CHG_REG_CHG_DTLS_00 */
-+#define MAX77705_BATP_DTLS		BIT(0)
-+#define MAX77705_WCIN_DTLS		(BIT(3) | BIT(4))
-+#define MAX77705_WCIN_DTLS_SHIFT	3
-+#define MAX77705_CHGIN_DTLS             (BIT(5) | BIT(6))
-+#define MAX77705_CHGIN_DTLS_SHIFT       5
-+
-+/* MAX77705_CHG_REG_CHG_DTLS_01 */
-+#define MAX77705_CHG_DTLS               (BIT(0) | BIT(1) | BIT(2) | BIT(3))
-+#define MAX77705_CHG_DTLS_SHIFT         0
-+#define MAX77705_BAT_DTLS               (BIT(4) | BIT(5) | BIT(6))
-+#define MAX77705_BAT_DTLS_SHIFT         4
-+
-+/* MAX77705_CHG_REG_CHG_DTLS_02 */
-+#define MAX77705_BYP_DTLS               (BIT(0) | BIT(1) | BIT(2) | BIT(3))
-+#define MAX77705_BYP_DTLS_SHIFT         0
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_00 */
-+#define CHG_CNFG_00_MODE_SHIFT		        0
-+#define CHG_CNFG_00_CHG_SHIFT		        0
-+#define CHG_CNFG_00_UNO_SHIFT		        1
-+#define CHG_CNFG_00_OTG_SHIFT		        1
-+#define CHG_CNFG_00_BUCK_SHIFT		        2
-+#define CHG_CNFG_00_BOOST_SHIFT		        3
-+#define CHG_CNFG_00_WDTEN_SHIFT		        4
-+#define CHG_CNFG_00_MODE_MASK		        (0x0F << CHG_CNFG_00_MODE_SHIFT)
-+#define CHG_CNFG_00_CHG_MASK		        BIT(CHG_CNFG_00_CHG_SHIFT)
-+#define CHG_CNFG_00_UNO_MASK		        BIT(CHG_CNFG_00_UNO_SHIFT)
-+#define CHG_CNFG_00_OTG_MASK		        BIT(CHG_CNFG_00_OTG_SHIFT)
-+#define CHG_CNFG_00_BUCK_MASK		        BIT(CHG_CNFG_00_BUCK_SHIFT)
-+#define CHG_CNFG_00_BOOST_MASK		        BIT(CHG_CNFG_00_BOOST_SHIFT)
-+#define CHG_CNFG_00_WDTEN_MASK		        BIT(CHG_CNFG_00_WDTEN_SHIFT)
-+#define CHG_CNFG_00_UNO_CTRL			(CHG_CNFG_00_UNO_MASK | CHG_CNFG_00_BOOST_MASK)
-+#define CHG_CNFG_00_OTG_CTRL			(CHG_CNFG_00_OTG_MASK | CHG_CNFG_00_BOOST_MASK)
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_01 */
-+#define CHG_CNFG_01_FCHGTIME_SHIFT			0
-+#define CHG_CNFG_01_FCHGTIME_MASK			(0x7 << CHG_CNFG_01_FCHGTIME_SHIFT)
-+#define MAX77705_FCHGTIME_DISABLE			0x0
-+
-+#define CHG_CNFG_01_CHG_RSTRT_SHIFT	4
-+#define CHG_CNFG_01_CHG_RSTRT_MASK	(0x3 << CHG_CNFG_01_CHG_RSTRT_SHIFT)
-+#define MAX77705_CHG_RSTRT_DISABLE	0x3
-+
-+#define CHG_CNFG_01_PQEN_SHIFT			7
-+#define CHG_CNFG_01_PQEN_MASK			(0x1 << CHG_CNFG_01_PQEN_SHIFT)
-+#define MAX77705_CHG_PQEN_DISABLE		0x0
-+#define MAX77705_CHG_PQEN_ENABLE		0x1
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_02 */
-+#define CHG_CNFG_02_OTG_ILIM_SHIFT		6
-+#define CHG_CNFG_02_OTG_ILIM_MASK		(0x3 << CHG_CNFG_02_OTG_ILIM_SHIFT)
-+#define MAX77705_OTG_ILIM_500		0x0
-+#define MAX77705_OTG_ILIM_900		0x1
-+#define MAX77705_OTG_ILIM_1200		0x2
-+#define MAX77705_OTG_ILIM_1500		0x3
-+#define MAX77705_CHG_CC                         0x3F
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_03 */
-+#define CHG_CNFG_03_TO_ITH_SHIFT		0
-+#define CHG_CNFG_03_TO_ITH_MASK			(0x7 << CHG_CNFG_03_TO_ITH_SHIFT)
-+#define MAX77705_TO_ITH_150MA			0x0
-+
-+#define CHG_CNFG_03_TO_TIME_SHIFT		3
-+#define CHG_CNFG_03_TO_TIME_MASK			(0x7 << CHG_CNFG_03_TO_TIME_SHIFT)
-+#define MAX77705_TO_TIME_30M			0x3
-+
-+#define CHG_CNFG_03_SYS_TRACK_DIS_SHIFT		7
-+#define CHG_CNFG_03_SYS_TRACK_DIS_MASK		(0x1 << CHG_CNFG_03_SYS_TRACK_DIS_SHIFT)
-+#define MAX77705_SYS_TRACK_ENABLE	        0x0
-+#define MAX77705_SYS_TRACK_DISABLE	        0x1
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_04 */
-+#define MAX77705_CHG_MINVSYS_MASK               0xC0
-+#define MAX77705_CHG_MINVSYS_SHIFT		6
-+#define MAX77705_CHG_PRM_MASK                   0x1F
-+#define MAX77705_CHG_PRM_SHIFT                  0
-+
-+#define CHG_CNFG_04_CHG_CV_PRM_SHIFT            0
-+#define CHG_CNFG_04_CHG_CV_PRM_MASK             (0x3F << CHG_CNFG_04_CHG_CV_PRM_SHIFT)
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_05 */
-+#define CHG_CNFG_05_REG_B2SOVRC_SHIFT	0
-+#define CHG_CNFG_05_REG_B2SOVRC_MASK	(0xF << CHG_CNFG_05_REG_B2SOVRC_SHIFT)
-+#define MAX77705_B2SOVRC_DISABLE	0x0
-+#define MAX77705_B2SOVRC_4_5A		0x6
-+#define MAX77705_B2SOVRC_4_8A		0x8
-+#define MAX77705_B2SOVRC_5_0A		0x9
-+
-+/* MAX77705_CHG_CNFG_06 */
-+#define CHG_CNFG_01_WDTCLR_SHIFT		0
-+#define CHG_CNFG_01_WDTCLR_MASK			(0x3 << CHG_CNFG_01_WDTCLR_SHIFT)
-+#define MAX77705_WDTCLR				0x01
-+#define MAX77705_CHGPROT_MASK	(BIT(2) | BIT(3))
-+#define MAX77705_CHGPROT_UNLOCKED	(BIT(2) | BIT(3))
-+#define MAX77705_SLOWEST_LX_SLOPE	(BIT(5) | BIT(6))
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_07 */
-+#define MAX77705_CHG_FMBST			0x04
-+#define CHG_CNFG_07_REG_FMBST_SHIFT		2
-+#define CHG_CNFG_07_REG_FMBST_MASK		(0x1 << CHG_CNFG_07_REG_FMBST_SHIFT)
-+#define CHG_CNFG_07_REG_FGSRC_SHIFT		1
-+#define CHG_CNFG_07_REG_FGSRC_MASK		(0x1 << CHG_CNFG_07_REG_FGSRC_SHIFT)
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_08 */
-+#define CHG_CNFG_08_REG_FSW_SHIFT	0
-+#define CHG_CNFG_08_REG_FSW_MASK	(0x3 << CHG_CNFG_08_REG_FSW_SHIFT)
-+#define MAX77705_CHG_FSW_3MHz		0x00
-+#define MAX77705_CHG_FSW_2MHz		0x01
-+#define MAX77705_CHG_FSW_1_5MHz		0x02
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_09 */
-+#define MAX77705_CHG_CHGIN_LIM_MASK     0x7F
-+#define MAX77705_CHG_EN                         0x80
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_10 */
-+#define MAX77705_CHG_WCIN_LIM                   0x3F
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_11 */
-+#define CHG_CNFG_11_VBYPSET_SHIFT		0
-+#define CHG_CNFG_11_VBYPSET_MASK		(0x7F << CHG_CNFG_11_VBYPSET_SHIFT)
-+
-+/* MAX77705_CHG_REG_CHG_CNFG_12 */
-+#define CHG_CNFG_12_CHGINSEL_SHIFT		5
-+#define MAX77705_CHG_WCINSEL			BIT(CHG_CNFG_12_CHGINSEL_SHIFT)
-+#define CHG_CNFG_12_CHGINSEL_MASK		BIT(CHG_CNFG_12_CHGINSEL_SHIFT)
-+#define CHG_CNFG_12_WCINSEL_SHIFT		6
-+#define CHG_CNFG_12_WCINSEL_MASK		BIT(CHG_CNFG_12_WCINSEL_SHIFT)
-+#define CHG_CNFG_12_VCHGIN_REG_MASK		(0x3 << 3)
-+#define CHG_CNFG_12_WCIN_REG_MASK		(0x3 << 1)
-+#define CHG_CNFG_12_REG_DISKIP_SHIFT		0
-+#define CHG_CNFG_12_REG_DISKIP_MASK		(0x1 << CHG_CNFG_12_REG_DISKIP_SHIFT)
-+#define MAX77705_DISABLE_SKIP			0x1
-+#define MAX77705_AUTO_SKIP			0x0
-+
-+/* Convert current in mA to corresponding CNFG09 value */
-+inline u8 max77705_convert_ma_to_chgin_ilim_value(int cur)
-+{
-+	if (unlikely(cur < 0 && cur > 4000))
-+		return 0;
-+	return (((cur - 100) / 33) + 3);
-+}
-+
-+/* Convert current in mA to corresponding CNFG10 value */
-+inline u8 max77705_convert_ma_to_wcin_ilim_value(int cur)
-+{
-+	if (unlikely(cur < 0 && cur > 4000))
-+		return 0;
-+	return (((cur - 60) / 20) + 3);
-+}
-+
-+struct max77705_charger_data {
-+	struct device           *dev;
-+	struct mutex            charger_mutex;
-+
-+	struct max77705_platform_data *max77705_pdata;
-+	struct max77705_dev	*max77705;
-+	struct power_supply_battery_info *bat_info;
-+	struct workqueue_struct *wqueue;
-+	struct work_struct	chgin_work;
-+	int		irq_chgin;
-+
-+	struct power_supply	*psy_chg;
-+
-+	int pmic_ver;
-+};
-+
-+#endif /* __MAX77705_CHARGER_H */
 
 -- 
 2.39.2
