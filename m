@@ -1,107 +1,85 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FF513A89B;
-	Tue, 18 Jun 2024 16:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BF574BE0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 16:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718727166; cv=none; b=q9jPsWB2jZdeHUEc6Ns26O26em19b8mQ1pwlZ35ym+zdjpfj9XTNTy8xGslJgifvFqkScKRUBwla8AwtOze33nvCYatqU2YaTFMZA/Za4LytsKqJ2oEbElDpKqJFg2xgfGwyOZFahSmgiksSqalzEjU8jeFEJkIZ/c9+aenghs0=
+	t=1718727241; cv=none; b=T4F2g6RbkY8E5IzMTamMfh2JHix65hg19RPQqfSjUhKEI+wQUhdDkyKc6gTmnFHMI4OgR9uEq2RP5O81CLT78//LY5Vg1eFlOWS1buGnA/ncNryddFfJ2gkpItVuRbCB6yGhjnWq+Qy8QRk7CPnCmmyv5j6BGNo8GItzqfR5Obc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718727166; c=relaxed/simple;
-	bh=qNULmo001mC5yL2uC9neAijsJRYb5joYOHW/sq9OTls=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=cSlRQ90jpS7cD6EtM0TXBTMxhqgnTQZM07O6dOZSqmblb5OiS4N6zBKcsWq9SpkIk7ggIxCfslug498hfe8QAHCFZFo1toYqQsfEGzDnGCdezd4ygktcCeaN+yWxgFtNbcF4EMdbveHlSxiNqmf86wsPi1XcmI/+lNl3SlV8dPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=lc9PVF+p; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=LS/OLGrv reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="lc9PVF+p";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="LS/OLGrv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1718727163; x=1750263163;
-  h=message-id:subject:from:to:cc:date:
-   content-transfer-encoding:mime-version;
-  bh=qNULmo001mC5yL2uC9neAijsJRYb5joYOHW/sq9OTls=;
-  b=lc9PVF+p//dq3Jl8gPUS0lGu9UN83ZYr6lB7KOqemgeSXB+WzW8XWmOi
-   4jGqGqO2+dHZQHedOScRo5OKAeqoQwOEG4RsSOmrXoaW2Hpl3Sfpt7XkO
-   BHZf5R+eMv1texL/VpjI+1/0jzLdQRzd1S8no4bq9Ihb41Op1CbF/XJax
-   49hqxcLwGZ1P6S1PeJremc2Cu42C1Mu358L1Ez3q6aYGV9z+fZ522aHWU
-   A2sAo6lY9DLwhnZq9OUxd8r7XaKWEcKYhTUK4d/BZ8ENsEaYCeM59+R4Q
-   oPOJ2sk7bHTfM6zJvjcrrn8oRRt8P1yrh1Ejgb4agCaYP3+E8cZyUf//e
-   Q==;
-X-CSE-ConnectionGUID: UFIXNrYPRUOnvkwpxts+4w==
-X-CSE-MsgGUID: orx72WeMR0idy2RCELZc2Q==
-X-IronPort-AV: E=Sophos;i="6.08,247,1712613600"; 
-   d="scan'208";a="37457616"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 18 Jun 2024 18:12:35 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3B5051664C9;
-	Tue, 18 Jun 2024 18:12:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1718727150;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=qNULmo001mC5yL2uC9neAijsJRYb5joYOHW/sq9OTls=;
-	b=LS/OLGrv/yld6GBB/DMqXy8/DiycpIH+FNzKfCT7A2THBG0TLcjyMVprzeFtT/JA8GS/5A
-	7KwK2puAK0sVidAs3x6YI47wboRSfT3jPJhZZeNSKziSkfHl6iR2Wh1rIayE50KgvOuadq
-	8Pd0CcW7N0DZOLiK1eVZAIQutJ74AyAVm7aiycrcyNL5esZ7IuEoLGm5WnpNmJOOkQHcA7
-	ASjTte6NPB6sqiwfgALZS3ZIFWVQr+lj7p0RmvtNm9VLtKwVvRJUAQki0VQIYSpyWoXapv
-	KaWGdHyFCdALxvIbx46/q/6l8k7dV0GmdTnVR6MQMA01ZCrN7BWKhxQXGqGzpA==
-Message-ID: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
-Subject: Kernel hang caused by commit "can: m_can: Start/Cancel polling
- timer together with interrupts"
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Markus Schneider-Pargmann <msp@baylibre.com>
-Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>, Marc Kleine-Budde
- <mkl@pengutronix.de>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Tony Lindgren
- <tony@atomide.com>, Judith Mendez <jm@ti.com>,  linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,  linux@ew.tq-group.com
-Date: Tue, 18 Jun 2024 18:12:27 +0200
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1718727241; c=relaxed/simple;
+	bh=WpwGvZyseMXRhSzg2BOxGHcEd9ygNbzOnGSpkLjQXu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rMHAv5LMIsfkSb3tdPtMdvRBW3AXDGUp6cOjF5jjiciJlJTliuQOeriPcZPmxG/PKwa7PcZQk81J620wLcE3b2HcIi28jdaVhCZvseCfkvO/DIfTQiVtXCRbPZ7qcfT1s4kWsEs1PCl4p6CrpzhYnQYa+oneM+OMDKaBGCvIoJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9321FC4AF1D;
+	Tue, 18 Jun 2024 16:13:58 +0000 (UTC)
+Date: Tue, 18 Jun 2024 12:13:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Samuel Holland
+ <samuel.holland@sifive.com>, Matthew Bystrin <dev.mbstr@gmail.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ puranjay12@gmail.com
+Subject: Re: [PATCH] riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
+Message-ID: <20240618121356.08f961eb@rorschach.local.home>
+In-Reply-To: <20240618145820.62112-1-puranjay@kernel.org>
+References: <20240618145820.62112-1-puranjay@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Markus,
+On Tue, 18 Jun 2024 14:58:20 +0000
+Puranjay Mohan <puranjay@kernel.org> wrote:
 
-we've found that recent kernels hang on the TI AM62x SoC (where no m_can in=
-terrupt is available and
-thus the polling timer is used), always a few seconds after the CAN interfa=
-ces are set up.
+> ftrace_graph_ret_addr() takes an `idx` integer pointer that is used to
+> optimize the stack unwinding. Pass it a valid pointer to utilize the
+> optimizations that might be available in the future.
+> 
+> The commit is making riscv's usage of ftrace_graph_ret_addr() match
+> x86_64.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
-I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cance=
-l polling timer together
-with interrupts"). Both master and 6.6 stable (which received a backport of=
- the commit) are
-affected. On 6.6 the commit is easy to revert, but on master a lot has happ=
-ened on top of that
-change.
+Not only that, the updated code for ftrace_graph_ret_addr() will just
+return the passed in return address if it is NULL. Basically, it will
+not work without this.
 
-As far as I can tell, the reason is that hrtimer_cancel() tries to cancel t=
-he timer synchronously,
-which will deadlock when called from the hrtimer callback itself (hrtimer_c=
-allback -> m_can_isr ->
-m_can_disable_all_interrupts -> hrtimer_cancel).
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-I can try to come up with a fix, but I think you are much more familiar wit=
-h the driver code. Please
-let me know if you need any more information.
-
-Best regards,
-Matthias
+-- Steve
 
 
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+> ---
+>  arch/riscv/kernel/stacktrace.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+> index 528ec7cc9a62..6cb7f9ca9d82 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+> @@ -32,6 +32,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>  			     bool (*fn)(void *, unsigned long), void *arg)
+>  {
+>  	unsigned long fp, sp, pc;
+> +	int graph_idx = 0;
+>  	int level = 0;
+>  
+>  	if (regs) {
+> @@ -68,7 +69,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>  			pc = regs->ra;
+>  		} else {
+>  			fp = frame->fp;
+> -			pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
+> +			pc = ftrace_graph_ret_addr(current, &graph_idx, frame->ra,
+>  						   &frame->ra);
+>  			if (pc == (unsigned long)ret_from_exception) {
+>  				if (unlikely(!__kernel_text_address(pc) || !fn(arg, pc)))
+
