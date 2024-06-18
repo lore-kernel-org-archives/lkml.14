@@ -1,269 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B80C13AD2B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2F613AA5E
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693778; cv=none; b=OuMdp/J8p6fCSgFBEc9PGgs7GMrOyfC/9mXk2VRbMrvEcn4tLccGNNdJCtC0Z4hg8CpNit0gI+xm7MIZ+Sr25q3YK5yteQ+d6CKUsDuzBe1MvVUOrwRRgQtJaPF8mlVO4bdvUzbKMBpJjvGaeT+zJjnJuKTudGpEB8i8aaFP12c=
+	t=1718693795; cv=none; b=FKps4u2dKx9wEJD0RtRWIiy1xyzw2cBLVGxM/kiA8EL17rL2O6poamgJs1nFe4ADVShQMpVN5Odal1VMVYMRkhiV5KXQJ7I/82GDcc4XvJz2nrJYzvHxiaT8c9+AYvBel51uw01LOegs7XxIFjUv8TSL1WEQHYY1yTaROpcNSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693778; c=relaxed/simple;
-	bh=6+24cIDcAKw2fApyhL9V0ZTUfUa7T5xYrUP8O7pxpiQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dxZzYf9PwoM4rLDoROENAjbAd1IOpkf6j1m0T9JZKAqVZ5gfKfeh/PHIwA/mV6BU6sYh96gBkhpoaUg0uFYNYUVguiM9i1hLHMKAmxV3B/0NoDL0cpq8lfIyoQmX924d64E0ltbIJjb/LL9x5jbiMwKkkDL3oWcmILrqL3Yhe4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJ9HE3v1; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718693795; c=relaxed/simple;
+	bh=4NJ1McSbZs2bBPMZ7nNcaP112RpmYeIohtjBsFTLr/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mtt5lQpS2u303Q2GlsLwVoeDWZrAUojDZxOzD/MMeVRtUs5/3jTwKNHuz0KGZ4L7y4BleiHSUH+/k8Tto6G8/4TnNP1FU45TfX+zeNNzzXJIG6bmtMNtCUDHtntXGqc/u5xCk84/Ws8f/oxC1IdiNvXPKGuCru8GTrtBrl0c0ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H9zCuv/G; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJ9HE3v1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718693776; x=1750229776;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=6+24cIDcAKw2fApyhL9V0ZTUfUa7T5xYrUP8O7pxpiQ=;
-  b=iJ9HE3v1S+39b998qF52LqPzIIKUemDLaGCfuvqyrd+qpQdKhSGT8dyA
-   nyq4ceMFMfa5jOgWmGmnYicwGwoK9Cow+TM0DO1TnfDRJzSkLXYXHwSDN
-   uNv6kXfR8rjVl4euhSpx2t31zg8GzRj2IPAmD6UdTQFbPRxE0Uvyahdmj
-   gwq8BKjTVwgrNcmx6FDLuItUSJnZKauVQZrZwq0rqK3U5ZJZBRpK8y859
-   vnQPRMdqksG6MuQc3vnGSLn0g/v5U00lV5gK4S+6EBdK2QI66IxOxpIB6
-   DRkLoNOKBUmfVu/TurdccnDAzQHga48j0L1FMytFHN27bKDvI6w/vHAaN
-   g==;
-X-CSE-ConnectionGUID: +7KriF6eT5ebIyeEW1jrZw==
-X-CSE-MsgGUID: vZn8NxhVQ6y53bq8DhR47Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="19409937"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="19409937"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 23:56:15 -0700
-X-CSE-ConnectionGUID: hGDCuofCS4uSLLycWRJOJA==
-X-CSE-MsgGUID: enW7CI8URjyHRA5amHz/MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="72655182"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 23:56:14 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Kairui Song
- <kasong@tencent.com>,  Ryan Roberts <ryan.roberts@arm.com>,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Barry Song
- <baohua@kernel.org>
-Subject: Re: [PATCH 0/2] mm: swap: mTHP swap allocator base on swap cluster
- order
-In-Reply-To: <CAF8kJuMi198++-OHqE5pG1y3BnvRBPepG59zpq-wqjbgrrLdHw@mail.gmail.com>
-	(Chris Li's message of "Mon, 17 Jun 2024 21:35:32 -0700")
-References: <20240524-swap-allocator-v1-0-47861b423b26@kernel.org>
-	<CANeU7QkmQ+bJoFnr-ca-xp_dP1XgEKNSwb489MYVqynP_Q8Ddw@mail.gmail.com>
-	<87cyp5575y.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuN8HWLpv7=abVM2=M247KGZ92HLDxfgxWZD6JS47iZwZA@mail.gmail.com>
-	<875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuMc3sXKarq3hMPYGFfeqyo81Q63HrE0XtztK9uQkcZacA@mail.gmail.com>
-	<87o78mzp24.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuPLhmJqMi-unDOm820c8_kRnQVA_dnSfgRzMXaHKnDHAQ@mail.gmail.com>
-	<875xum96nn.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CANeU7Q=iYzyjDwgMRLtSZwKv414JqtZK8w=XWDd6bWZ7Ah-8jA@mail.gmail.com>
-	<87wmmw6w9e.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CANeU7Q=Epa438LXEX4WEccxLt6WOziLg2sp_=RA3C4PxtHD5uw@mail.gmail.com>
-	<87a5jp6xuo.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAF8kJuMi198++-OHqE5pG1y3BnvRBPepG59zpq-wqjbgrrLdHw@mail.gmail.com>
-Date: Tue, 18 Jun 2024 14:54:22 +0800
-Message-ID: <8734pa68rl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9zCuv/G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718693793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BjXGn7SpC4HAkT4lUvp5F9/7ZHjW+CPkuO5AAhEulr8=;
+	b=H9zCuv/G7YlnB9ZEk9ki1PtWjklThAbMk20ee8AEirEX7Oqi1AFl0ubUXN/gV1wf3QtkF6
+	m9/c09d3StWxpumAIrWo+wyTf1fEOYBVVL055zFegOO5cl6zebKrtyRNFHnqEjV+TkcuXe
+	F579B7zepXpEsbDJN7kkWhowllJCaYY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-473-Y8hPQ9B1N9GMmkDPYP70MQ-1; Tue, 18 Jun 2024 02:56:31 -0400
+X-MC-Unique: Y8hPQ9B1N9GMmkDPYP70MQ-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-35f06558bc3so3562577f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 23:56:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718693790; x=1719298590;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BjXGn7SpC4HAkT4lUvp5F9/7ZHjW+CPkuO5AAhEulr8=;
+        b=mGY5sjsrVFPjm25NaBLBQd8nKYab9jW6Dv6W0Z9dj43mC+NVBIsfv3KhLQs5vQn6yy
+         etb22qYYODc/qepZS2jVZDZ2kF2/FYva7fcxq2AVXGb4D07g3U0fwzmYT0mZVNNjoRZL
+         aqMpYBaNSUEje0LKeKUkw8fqh//b8vcxIt28xuxfmNcjvp88o/RIGMHYdhvnDBJf/BVI
+         g+JZ0gzQQxOlH7Q9A6ZjB0TJDOEnscEELCN143Y0wvOLLbehHnc3qUEVMTr20UIoSfst
+         2sar75VByZutMDAXjKVBUgiBhG+W9ScsB443LyIwG1vWP3QtQH0SPE5OL7B55ttieNp0
+         YiPw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1a0NO+Zd0XxPQcf0jE4m3BoiyTUD0lG/TZuLBHnO3nJfB9RI7PAvWFcIR7akYgdh3gJBQfdSoz3eeFx3LCh+4DxuAvxKcFrqKpI9t
+X-Gm-Message-State: AOJu0YxpYv0LMsYd5wYg39wEjPwH8BBqFrfZsTTlKjLgm3+W7fbsYK3y
+	RsobSOTVjvseSEITGndsDkRw+8BYaFnKbGPp34tlnrl4HSuIQw7DSlRGj/jRnStd2isYjJVOqIe
+	P2kOnCiyRimptxPz54KGDUieOJAxj6A7feE1EEEik9OSiGlcXMJXAuaDVlX9sWQ==
+X-Received: by 2002:a05:6000:188d:b0:360:82c7:f07f with SMTP id ffacd0b85a97d-36082c7f5dbmr6829767f8f.57.1718693790228;
+        Mon, 17 Jun 2024 23:56:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGujDfzorPxgwvTzQzfY7PmBz5PJ8AoJhQJTgMSXeyewdb08Cf6D/mxjJRjKihjXviRcqbTsw==
+X-Received: by 2002:a05:6000:188d:b0:360:82c7:f07f with SMTP id ffacd0b85a97d-36082c7f5dbmr6829757f8f.57.1718693789826;
+        Mon, 17 Jun 2024 23:56:29 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:1400:78ba:c2d2:22a1:8858? (p200300cbc705140078bac2d222a18858.dip0.t-ipconnect.de. [2003:cb:c705:1400:78ba:c2d2:22a1:8858])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f228asm13524414f8f.73.2024.06.17.23.56.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 23:56:29 -0700 (PDT)
+Message-ID: <0b152bea-ccb6-403e-9c57-08ed5e828135@redhat.com>
+Date: Tue, 18 Jun 2024 08:56:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/6] selftests/mm: mseal, self_elf: fix missing
+ __NR_mseal
+To: John Hubbard <jhubbard@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>,
+ Shuah Khan <shuah@kernel.org>
+Cc: Andrei Vagin <avagin@google.com>,
+ Axel Rasmussen <axelrasmussen@google.com>,
+ Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Peter Xu <peterx@redhat.com>, Rich Felker <dalias@libc.org>,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240618022422.804305-1-jhubbard@nvidia.com>
+ <20240618022422.804305-2-jhubbard@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240618022422.804305-2-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Chris Li <chrisl@kernel.org> writes:
+On 18.06.24 04:24, John Hubbard wrote:
+> The selftests/mm build isn't exactly "broken", according to the current
+> documentation, which still claims that one must run "make headers",
+> before building the kselftests. However, according to the new plan to
+> get rid of that requirement [1], they are future-broken: attempting to
+> build selftests/mm *without* first running "make headers" will fail due
+> to not finding __NR_mseal.
+> 
+> Therefore, include asm-generic/unistd.h, which has all of the system
+> call numbers that are needed, abstracted across the various CPU arches.
+> 
+> [1] commit e076eaca5906 ("selftests: break the dependency upon local
+> header files")
+> 
+> Fixes: 4926c7a52de7 ("selftest mm/mseal memory sealing")
+> Cc: Jeff Xu <jeffxu@chromium.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>   tools/testing/selftests/mm/mseal_test.c | 2 +-
+>   tools/testing/selftests/mm/seal_elf.c   | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+> index 41998cf1dcf5..58c888529f42 100644
+> --- a/tools/testing/selftests/mm/mseal_test.c
+> +++ b/tools/testing/selftests/mm/mseal_test.c
+> @@ -3,7 +3,7 @@
+>   #include <linux/mman.h>
+>   #include <sys/mman.h>
+>   #include <stdint.h>
+> -#include <unistd.h>
+> +#include <asm-generic/unistd.h>
+>   #include <string.h>
+>   #include <sys/time.h>
+>   #include <sys/resource.h>
+> diff --git a/tools/testing/selftests/mm/seal_elf.c b/tools/testing/selftests/mm/seal_elf.c
+> index f2babec79bb6..27bf2f84231d 100644
+> --- a/tools/testing/selftests/mm/seal_elf.c
+> +++ b/tools/testing/selftests/mm/seal_elf.c
+> @@ -2,7 +2,7 @@
+>   #define _GNU_SOURCE
+>   #include <sys/mman.h>
+>   #include <stdint.h>
+> -#include <unistd.h>
+> +#include <asm-generic/unistd.h>
+>   #include <string.h>
+>   #include <sys/time.h>
+>   #include <sys/resource.h>
 
-> On Thu, Jun 13, 2024 at 1:40=E2=80=AFAM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Chris Li <chrisl@kernel.org> writes:
->>
->> > On Mon, Jun 10, 2024 at 7:38=E2=80=AFPM Huang, Ying <ying.huang@intel.=
-com> wrote:
->> >>
->> >> Chris Li <chrisl@kernel.org> writes:
->> >>
->> >> > On Wed, Jun 5, 2024 at 7:02=E2=80=AFPM Huang, Ying <ying.huang@inte=
-l.com> wrote:
->> >> >>
->> >> >> Chris Li <chrisl@kernel.org> writes:
->> >> >>
->> >> >
->> >> >> > In the page allocation side, we have the hugetlbfs which reserve=
- some
->> >> >> > memory for high order pages.
->> >> >> > We should have similar things to allow reserve some high order s=
-wap
->> >> >> > entries without getting polluted by low order one.
->> >> >>
->> >> >> TBH, I don't like the idea of high order swap entries reservation.
->> >> > May I know more if you don't like the idea? I understand this can be
->> >> > controversial, because previously we like to take the THP as the be=
-st
->> >> > effort approach. If there is some reason we can't make THP, we use =
-the
->> >> > order 0 as fall back.
->> >> >
->> >> > For discussion purpose, I want break it down to smaller steps:
->> >> >
->> >> > First, can we agree that the following usage case is reasonable:
->> >> > The usage case is that, as Barry has shown, zsmalloc compresses big=
-ger
->> >> > size than 4K and can have both better compress ratio and CPU
->> >> > performance gain.
->> >> > https://lore.kernel.org/linux-mm/20240327214816.31191-1-21cnbao@gma=
-il.com/
->> >> >
->> >> > So the goal is to make THP/mTHP have some reasonable success rate
->> >> > running in the mix size swap allocation, after either low order or
->> >> > high order swap requests can overflow the swap file size. The alloc=
-ate
->> >> > can still recover from that, after some swap entries got free.
->> >> >
->> >> > Please let me know if you think the above usage case and goal are n=
-ot
->> >> > reasonable for the kernel.
->> >>
->> >> I think that it's reasonable to improve the success rate of high-order
->> >
->> > Glad to hear that.
->> >
->> >> swap entries allocation.  I just think that it's hard to use the
->> >> reservation based method.  For example, how much should be reserved?
->> >
->> > Understand, it is harder to use than a fully transparent method, but
->> > still better than no solution at all. The alternative right now is we
->> > can't do it.
->> >
->> > Regarding how much we should reserve. Similarly, how much should you
->> > choose your swap file size? If you choose N, why not N*120% or N*80%?
->> > That did not stop us from having a swapfile, right?
->> >
->> >> Why system OOM when there's still swap space available?  And so forth.
->> >
->> > Keep in mind that the reservation is an option. If you prefer the old
->> > behavior, you don't have to use the reservation. That shouldn't be a
->> > reason to stop others who want to use it. We don't have an alternative
->> > solution for the long run mix size allocation yet. If there is, I like
->> > to hear it.
->>
->> It's not enough to make it optional.  When you run into issue, you need
->> to debug it.  And you may debug an issue on a system that is configured
->> by someone else.
->
-> That is in general true with all kernel development regardless of
-> using options or not. If there is a bug in my patch, I will need to
-> debug and fix it or the patch might be reverted.
->
-> I don't see that as a reason to take the option path or not. The
-> option just means the user taking this option will need to understand
-> the trade off and accept the defined behavior of that option.
+Still confused. Let's take a look at "microblaze".
 
-User configuration knobs are not forbidden for Linux kernel.  But we are
-more careful about them because they will introduce ABI which we need to
-maintain forever.  And they are hard to be used for users.  Optimizing
-automatically is generally the better solution.  So, I suggest you to
-think more about the automatically solution before diving into a new
-option.
+arch/microblaze/include/asm/unistd.h
+  -> #include <uapi/asm/unistd.h>
 
->>
->> >> So, I prefer the transparent methods.  Just like THP vs. hugetlbfs.
->> >
->> > Me too. I prefer transparent over reservation if it can achieve the
->> > same goal. Do we have a fully transparent method spec out? How to
->> > achieve fully transparent and also avoid fragmentation caused by mix
->> > order allocation/free?
->> >
->> > Keep in mind that we are still in the early stage of the mTHP swap
->> > development, I can have the reservation patch relatively easily. If
->> > you come up with a better transparent method patch which can achieve
->> > the same goal later, we can use it instead.
->>
->> Because we are still in the early stage, I think that we should try to
->> improve transparent solution firstly.  Personally, what I don't like is
->> that we don't work on the transparent solution because we have the
->> reservation solution.
->
-> Do you have a road map or the design for the transparent solution you can=
- share?
-> I am interested to know what is the short term step(e.g. a month)  in
-> this transparent solution you have in mind, so we can compare the
-> different approaches. I can't reason much just by the name
-> "transparent solution" itself. Need more technical details.
->
-> Right now we have a clear usage case we want to support, the swap
-> in/out mTHP with bigger zsmalloc buffers. We can start with the
-> limited usage case first then move to more general ones.
+arch/microblaze/include/uapi/asm/unistd.h
+  -> #include <asm/unistd_32.h>
+   -> Generated during "make headers"
 
-TBH, This is what I don't like.  It appears that you refuse to think
-about the transparent (or automatic) solution.
+usr/include/asm/unistd_32.h is generated via
+arch/microblaze/kernel/syscalls/Makefile with the syshdr command.
 
-I haven't thought about them thoroughly, but at least we may think about
+So we never end up including asm-generic/unistd.h directly on 
+microblaze, but rather converts it (IIUC) to something else.
 
-- promoting low order non-full cluster when we find a free high order
-  swap entries.
+That will work as expected here?
 
-- stealing a low order non-full cluster with low usage count for
-  high-order allocation.
+-- 
+Cheers,
 
-- freeing more swap entries when swap devices become fragmented.
+David / dhildenb
 
->> >> >> that's really important for you, I think that it's better to design
->> >> >> something like hugetlbfs vs core mm, that is, be separated from the
->> >> >> normal swap subsystem as much as possible.
->> >> >
->> >> > I am giving hugetlbfs just to make the point using reservation, or
->> >> > isolation of the resource to prevent mixing fragmentation existing =
-in
->> >> > core mm.
->> >> > I am not suggesting copying the hugetlbfs implementation to the swap
->> >> > system. Unlike hugetlbfs, the swap allocation is typically done from
->> >> > the kernel, it is transparent from the application. I don't think
->> >> > separate from the swap subsystem is a good way to go.
->> >> >
->> >> > This comes down to why you don't like the reservation. e.g. if we u=
-se
->> >> > two swapfile, one swapfile is purely allocate for high order, would
->> >> > that be better?
->> >>
->> >> Sorry, my words weren't accurate.  Personally, I just think that it's
->> >> better to make reservation related code not too intrusive.
->> >
->> > Yes. I will try to make it not too intrusive.
->> >
->> >> And, before reservation, we need to consider something else firstly.
->> >> Whether is it generally good to swap-in with swap-out order?  Should =
-we
->> >
->> > When we have the reservation patch (or other means to sustain mix size
->> > swap allocation/free), we can test it out to get more data to reason
->> > about it.
->> > I consider the swap in size policy an orthogonal issue.
->>
->> No.  I don't think so.  If you swap-out in higher order, but swap-in in
->> lower order, you make the swap clusters fragmented.
->
-> Sounds like that is the reason to apply swap-in the same order of the swa=
-p out.
-> In any case, my original point still stands. We need to have the
-> ability to allocate high order swap entries with reasonable success
-> rate *before* we have the option to choose which size to swap in. If
-> allocating a high order swap always fails, we will be forced to use
-> the low order one, there is no option to choose from. We can't evalute
-> "is it generally good to swap-in with swap-out order?" by actual runs.
-
-I think we don't need to fight for that.  Just prove the value of your
-patchset with reasonable use cases and normal workloads.  Data will
-persuade people.
-
---
-Best Regards,
-Huang, Ying
