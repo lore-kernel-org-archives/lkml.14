@@ -1,60 +1,60 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD3D156F55;
-	Tue, 18 Jun 2024 14:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3386815FCFE;
+	Tue, 18 Jun 2024 14:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719216; cv=none; b=AAnxqRCGlti6RSb50cBLtoN/setJFX8THDn8YgFjVIM7geT4L5PjPbkeaC8HHAxo8i3sS8SoEIqG6Tu24qQMWSg3iexLNcwq2d6t5zVUsV0LA1+VZ60ntIf0RwEEcPW9WwR+uhUpmARpr5M6ocMeBdvepYX7qv+OykExt+cBwbQ=
+	t=1718719221; cv=none; b=mG+oTrkKcXTJxl3T1FbkBwm7dzC2tiaTLRF4zDNthFwzoSEnZ4pSWsToFP3RMomTEO66TcYynXM7jnEIuUAnNIYq1yOXvnhmWX3Ilm8zyJ6lfhcOhr1R8w5qea4rsCjX9pcOh0UYpZ2rlnbplcbWkFqgKtcjIAF5xMiG/0qMCgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719216; c=relaxed/simple;
-	bh=ue3MHT37XXyjNHrxkEj2M0Jd6XrwxyplbB2podMmaEI=;
+	s=arc-20240116; t=1718719221; c=relaxed/simple;
+	bh=/5IwQ99bQQRhP1wEuLRjxNnEs6zzgSHLcHa2YEf0U7U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YjTTJw2R4kLi7sYKTXEzFiSZ74bPmLO8ME6UMdVNR4NBxStSlXOPtifJvDNpZpSEK8tMnRk6vTFUIpcgJ10c9DeS0MjCjYDAdwzvogcDntsEmU6DGbdSHvLLwwe+5X+kCoxWF5cz0euCV1DY/ZNNt/zxyBC7GBY6OBFdgmsEKvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mLEfz7/0; arc=none smtp.client-ip=209.85.208.177
+	 In-Reply-To:To:Cc; b=ABCh9U5KvZxN6slryF0ZWhK3GsHmais5N85CGOS9RiQ0p0TKCZH72H7dJefeJchm/7IjpyPUgoEDrB5IlyWp6B3k9A10MLhSSBJHGFK4SHUPA03qx6ObwRx74CaFp412HkYsG++VsgVaaZkjORemaVNG2RFDGOyOWIKfc/Api8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry7b2TKA; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLEfz7/0"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ebe785b234so54404021fa.1;
-        Tue, 18 Jun 2024 07:00:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry7b2TKA"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c83100cb4so6291666a12.1;
+        Tue, 18 Jun 2024 07:00:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719213; x=1719324013; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719217; x=1719324017; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=id8Hhvq/bt2h6K3B8/2c/eaipM1A6Vdbe4bbmJMwPG4=;
-        b=mLEfz7/0zeymZ25fXYENu1S6DJpAEKHnqxPkyGkP7R5efYz7ou8/RxNFsvfAZwsRCs
-         st48CKtHpDisUep98tR8PJ6+cxu54GpzBOviZ6G73qK5CxuTWzBsEpLrUSW54j7jMCGR
-         ZcmEdEZaEr+0+sIt3YiSiuHR5RtetDR7hX+ZFd1rIRdoHK0Cx/azutbezYKpNqxzPUgZ
-         6sx6pN3pWIeRzL7N+b1BvvW6iuYUmK4t8lmzGGJkjroPoLQQf15tlBj3w4hId2blOVku
-         Iuf+LII10Lb6N7I+kCXfMRbhM47kCNbU1FL+z+ll09zfgnSFpzNG+gINU2XE/U8Ox/vG
-         o0Wg==
+        bh=Iyl7EIOgIrVaZahoT7LEDslZvULejKLZ0v4aPQDoonI=;
+        b=Ry7b2TKAm1yR5Ryl0s6GIF0YOolM9igb92CEKouivniPhTBsatR5BeP4lrpV+KEbj4
+         zBVelCfcsw+eFBr1FSwg5JojIU9vnkE9OCJuNMCH1MIbfqfUDAYZytQF65exKd6vFEws
+         wNB7r/MTGFn0bLl7ld8deCRmIreOdEfTUKgVy8PWPuFUclvRpHssvN0aZKN0xMoaZdh7
+         aCckPh7vAy4b6MmRH0rYEKZMEpujkOg8hFflrZfF7/uWN7VhiWFF3rCYYPBFb8645Gbt
+         2m0uSXXw1tvjZJqWgUYGhVwCUF1WSTmxqmbhHWBp+oUS+gjb/vAadIdCiPNkh0WjY2YM
+         Bnog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719213; x=1719324013;
+        d=1e100.net; s=20230601; t=1718719217; x=1719324017;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=id8Hhvq/bt2h6K3B8/2c/eaipM1A6Vdbe4bbmJMwPG4=;
-        b=iGQwYHEE6lKg5raGZfg2PRwyYhUEUd2QQuy1kzRSotljzLD7uIyZ2MGgnNJI5j7T36
-         XROXdAjL1ioaADxbIkngypPzw/+UR9y/8sjBUjUYnMUWJlWhXnYdsbEGMfW5g7nw7WXW
-         xdHRuzW4U1CVhDpI6jCayHpsHxtU8UFhx3FxIUwsioNWgA+6QuCyzRSdLp+rgqubQUdF
-         V38OQtUa3H+icHlmcn7bRN/88KlEpCEV4RWYvWBt5Zsk18H642JZ8DhQ4rSYkE5aWpQk
-         JhNWDNgcJWZc7O8bbq+lV+fi/gab+Rk+TK4SVHZ1ucukV1zoCQPlDYeJXfvP3TtYLXqU
-         TcGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrNp/He9YupVom4hrAHJvLodmtM22xG2Ml1evLT2UVD34gmFh26hQ7VdWuTfMHme+uTmFtvIpDFdy9Fz+WaOsDjANWsbhIL1J26c5cd5IoH7KHKy+WKlr9sqqoAOufcPcBXz41iBJsTdpQxoaX6zusL/YnUwllfToGX5d0ak4YN7pT50Jah/CD1j2tJcRQsZ+0s/JeaMJ03hY9r1eTbHVyIshBmtMzAdga64Ufg2lxyBVmloSVNWdgzEi5DIM+dhI7BhNfi8dRoHEz4pwio/mckGwSGOyhyDAPX3Gb5JsY+HG7csSde19LHqd5aE/Mgh8IPeNCh0WLthB4JNJkJACyXFQ6Ta92xunbYyFcZcYIEzpaIyOV6FIStYZKAhSQ+JwoKWI6vb2CxbUGEQ00+YkktDz3nmSx
-X-Gm-Message-State: AOJu0YzTcEj162wRKwGlUBOb26fH368VVvPoerHiUj7JY0j3y+HNGmYz
-	uYB8qyTM2Wy/gwhkx5iPqLMOWtMT4WpVKNdFTR2warTCbeXxgNKkKRGaN2nM
-X-Google-Smtp-Source: AGHT+IFGWxNTJWKfvtYtwaUhf5eCQI0VCQBJSAVikp2hNnHlatQzSXBxjfytMltsZ1/pvjUqZscsTQ==
-X-Received: by 2002:a2e:3519:0:b0:2ec:30ee:6972 with SMTP id 38308e7fff4ca-2ec30ee69b1mr28595351fa.24.1718719212474;
-        Tue, 18 Jun 2024 07:00:12 -0700 (PDT)
+        bh=Iyl7EIOgIrVaZahoT7LEDslZvULejKLZ0v4aPQDoonI=;
+        b=M+1e3/0v+1p11HNtd3CMgJRhosPbxAhZ/D3mtSmdhmxHiY4zpyj1M12hZVTsZ0vWZC
+         Gc8g1jYrW8ATH6bxKf4lhUXYcb/gQ3nPlvkbgK2Pa9ZquGcYtuVTD0PPHOxSuaYLKFNn
+         l9uniil4kvXyNSiiozkfd0U/uP1wPuVywKFpmXMiJ1ufjI5kXhs1t6es5eXtSjpxyY1p
+         uRiJxrV99+2LFoS+mIMQp+3p7/0xJs7BkcmU/craLSUnlYAr1Hco3I5xoh1FqXD/ovR2
+         InRwbC8jHaV4MvKGcvqq0IWP5iyCpnShzXkIJlZ4kLW7RtKaIjcEa0FlZyIVdt0dLaWf
+         YmOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUi2HiV/C9tmixniD2/gTyHLV5VdwfC7UIXniTRjCmpf0vzyZdMCM2cYGn/ynGrbE91pbpdBPdopTzOC0LuGaqlt7Paj885iREO8AxmbrEqR12rDE7GAacDI5hGQODojo9zJ1NhPCpFeZ4/ZKM+7JK/ql8B7NeC2JAul2TUl8G+SEgUGZc1JDxfULs+FbZsdoe2Ra8ysbj9M66HyRt9rLeIlf4XqEktMJx8GWdd/VRlPygssZyd6757pEZ521rylVvV0tQrfRURSUTzNkslpMcfxZZKyt9HQM3ilGPuGJDRZqdc6eX8uOSSarf0Yp/25h9GGK4HwRHueisLD/XQzC1BOKwqdGEEHkHgbLrC9/b/24ayLvLNeC4wnePJDflhrZKHLozYUd1pLLLdx7q0hR2X9ywPP/iU
+X-Gm-Message-State: AOJu0YygOZy9ch78//V+ANnffnC7NPMXpYTIUtz1ugxc6jSfWYFd/B5+
+	a0QRq5AX3KKyPaqkJmcXCQdhgxzcHS4qccU9e07R+N22NrvZTwCAKPm3agSx
+X-Google-Smtp-Source: AGHT+IGGllCbRRfBvYmKtKXfQgz30xuR5BJBT8uIwbflUAozAyJ4/JF5SSTi5ZjGzFImDK2lcpqPHA==
+X-Received: by 2002:a50:c346:0:b0:578:f472:d9d5 with SMTP id 4fb4d7f45d1cf-57cbd906889mr7353992a12.37.1718719217184;
+        Tue, 18 Jun 2024 07:00:17 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.10
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:12 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:16 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:45 +0300
-Subject: [PATCH v3 11/23] drm/panel: Add support for S6E3HA8 panel driver
+Date: Tue, 18 Jun 2024 16:59:47 +0300
+Subject: [PATCH v3 13/23] input: add max77705 haptic driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-11-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-13-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -89,500 +89,444 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719184; l=15491;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719184; l=12244;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=ue3MHT37XXyjNHrxkEj2M0Jd6XrwxyplbB2podMmaEI=;
- b=jhF8wZ+oXwUHKCr1cjS4cFqpVzhkjkOtp0p6gy65qFozWvPJJ4ZFnD1XBs+P424Y43p0ESGFP
- XNz3UQCUSTOCQ2MjR042xoIzVbaIvVzVnWtz5BDQCJjsLvwB805bP6R
+ bh=/5IwQ99bQQRhP1wEuLRjxNnEs6zzgSHLcHa2YEf0U7U=;
+ b=IwqH87QADreHlElJVBH5g4BbXvWQGNAdUcyW7w342IefcdtH3+/qzYsds1Feycq0cFdWX/lgJ
+ hLq8aG1QBixAubL/2LUzHO+Svtbe1BLs23uvNyDAmy3jBOGBU0mNcYn
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-Add support for MIPI-DSI based S6E3HA8 AMOLED panel
-driver. This panel has 1440x2960 resolution, 5.8-inch physical
-size, and can be found in starqltechn device.
-Brightness regulation is not yet supported.
+Add support for haptic controller on MAX77705 Multifunction
+device.
+
+This driver supports external pwm and LRA (Linear Resonant Actuator) motor.
+User can control the haptic device via force feedback framework.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- MAINTAINERS                                   |   1 +
- drivers/gpu/drm/panel/Kconfig                 |   7 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c | 426 ++++++++++++++++++++++++++
- 4 files changed, 435 insertions(+)
+ drivers/input/misc/Kconfig           |  11 +
+ drivers/input/misc/Makefile          |   1 +
+ drivers/input/misc/max77705-haptic.c | 378 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 390 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 92a5d0a56353..fae3b8ea9ce4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7154,6 +7154,7 @@ DRM DRIVER FOR SAMSUNG S6E3HA8 PANELS
- M:	Dzmitry Sankouski <dsankouski@gmail.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/display/panel/samsung,s6e3ha8.yaml
-+F:	drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 6ba984d7f0b1..26f7b25a0b42 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -233,6 +233,17 @@ config INPUT_MAX77693_HAPTIC
+ 	  To compile this driver as module, choose M here: the
+ 	  module will be called max77693-haptic.
  
- DRM DRIVER FOR SITRONIX ST7586 PANELS
- M:	David Lechner <david@lechnology.com>
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 2ae0eb0638f3..903fc8c155c0 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -651,6 +651,13 @@ config DRM_PANEL_SAMSUNG_S6E3HA2
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	select VIDEOMODE_HELPERS
- 
-+config DRM_PANEL_SAMSUNG_S6E3HA8
-+	tristate "Samsung S6E3HA8 DSI video mode panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	select VIDEOMODE_HELPERS
++config INPUT_MAX77705_HAPTIC
++	tristate "MAXIM MAX77705 haptic controller support"
++	depends on MFD_MAX77705 && PWM
++	select INPUT_FF_MEMLESS
++	help
++	  This option enables support for the haptic controller on
++	  MAXIM MAX77705 chip.
 +
- config DRM_PANEL_SAMSUNG_S6E63J0X03
- 	tristate "Samsung S6E63J0X03 DSI command mode panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index f0203f6e02f4..71774cc5820a 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D27A1) += panel-samsung-s6d27a1.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D7AA0) += panel-samsung-s6d7aa0.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3FA7) += panel-samsung-s6e3fa7.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2) += panel-samsung-s6e3ha2.o
-+obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA8) += panel-samsung-s6e3ha8.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03) += panel-samsung-s6e63j0x03.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0) += panel-samsung-s6e63m0.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0_SPI) += panel-samsung-s6e63m0-spi.o
-diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c b/drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c
++	  To compile this driver as module, choose M here: the
++	  module will be called max77705-haptic.
++
+ config INPUT_MAX8925_ONKEY
+ 	tristate "MAX8925 ONKEY support"
+ 	depends on MFD_MAX8925
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 04296a4abe8e..4dea2720b757 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_INPUT_KXTJ9)		+= kxtj9.o
+ obj-$(CONFIG_INPUT_M68K_BEEP)		+= m68kspkr.o
+ obj-$(CONFIG_INPUT_MAX77650_ONKEY)	+= max77650-onkey.o
+ obj-$(CONFIG_INPUT_MAX77693_HAPTIC)	+= max77693-haptic.o
++obj-$(CONFIG_INPUT_MAX77705_HAPTIC)	+= max77705-haptic.o
+ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
+ obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
+ obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
+diff --git a/drivers/input/misc/max77705-haptic.c b/drivers/input/misc/max77705-haptic.c
 new file mode 100644
-index 000000000000..49d629643171
+index 000000000000..e92dcb4fff37
 --- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c
-@@ -0,0 +1,426 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/input/misc/max77705-haptic.c
+@@ -0,0 +1,378 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree:
-+ *  Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
++ * Based on max77693-haptic.c:
++ *	Copyright (C) 2014,2015 Samsung Electronics
++ *      Jaewon Kim <jaewon02.kim@samsung.com>
++ *      Krzysztof Kozlowski <krzk@kernel.org>
++ *
++ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
++ *
++ * This program is not provided / owned by Maxim Integrated Products.
 + */
 +
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++#include <linux/input.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
++#include <linux/workqueue.h>
 +#include <linux/regulator/consumer.h>
++#include <linux/mfd/max77705.h>
++#include <linux/mfd/max77705-private.h>
 +
-+#include <drm/display/drm_dsc.h>
-+#include <drm/display/drm_dsc_helper.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
++#define MAX_MAGNITUDE_SHIFT	16
 +
-+struct s6e3ha8 {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct drm_dsc_config dsc;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator_bulk_data supplies[3];
++enum max77705_haptic_motor_type {
++	MAX77705_HAPTIC_ERM = 0,
++	MAX77705_HAPTIC_LRA,
 +};
 +
-+static inline
-+struct s6e3ha8 *to_s6e3ha8_amb577px01_wqhd(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct s6e3ha8, panel);
-+}
-+
-+#define s6e3ha8_call_write_func(ret, func) do {	\
-+	ret = (func);				\
-+	if (ret < 0)				\
-+		return ret;			\
-+} while (0)
-+
-+static int s6e3ha8_test_key_on_lvl1(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0x9f, 0xa5, 0xa5 };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+	return 0;
-+}
-+
-+static int s6e3ha8_test_key_off_lvl1(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0x9f, 0x5a, 0x5a };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+	return 0;
-+}
-+
-+static int s6e3ha8_test_key_on_lvl2(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0xf0, 0x5a, 0x5a };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+}
-+
-+static int s6e3ha8_test_key_off_lvl2(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0xf0, 0xa5, 0xa5 };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+}
-+
-+static int s6e3ha8_test_key_on_lvl3(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0xfc, 0x5a, 0x5a };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+}
-+
-+static int s6e3ha8_test_key_off_lvl3(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0xfc, 0xa5, 0xa5 };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+}
-+
-+static int s6e3ha8_afc_off(struct mipi_dsi_device *dsi)
-+{
-+	static const u8 d[] = { 0xe2, 0x00, 0x00 };
-+
-+	return mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));
-+	return 0;
-+}
-+
-+static int s6e3ha8_power_on(struct s6e3ha8 *ctx)
-+{
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int s6e3ha8_power_off(struct s6e3ha8 *ctx)
-+{
-+	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+}
-+
-+static void s6e3ha8_amb577px01_wqhd_reset(struct s6e3ha8 *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(5000, 6000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(5000, 6000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(5000, 6000);
-+}
-+
-+static int s6e3ha8_amb577px01_wqhd_on(struct s6e3ha8 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	s6e3ha8_test_key_on_lvl1(dsi);
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+
-+	ret = mipi_dsi_compression_mode(dsi, true);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set compression mode: %d\n", ret);
-+		return ret;
-+	}
-+
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	usleep_range(5000, 6000);
-+
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xf2, 0x13);
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+
-+	usleep_range(10000, 11000);
-+
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xf2, 0x13);
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+
-+	/* OMOK setting 1 (Initial setting) - Scaler Latch Setting Guide */
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xb0, 0x07);
-+	/* latch setting 1 : Scaler on/off & address setting & PPS setting -> Image update latch */
-+	mipi_dsi_generic_write_seq(dsi, 0xf2, 0x3c, 0x10);
-+	mipi_dsi_generic_write_seq(dsi, 0xb0, 0x0b);
-+	/* latch setting 2 : Ratio change mode -> Image update latch */
-+	mipi_dsi_generic_write_seq(dsi, 0xf2, 0x30);
-+	/* OMOK setting 2 - Seamless setting guide : WQHD */
-+	mipi_dsi_generic_write_seq(dsi, 0x2a, 0x00, 0x00, 0x05, 0x9f); /* CASET */
-+	mipi_dsi_generic_write_seq(dsi, 0x2b, 0x00, 0x00, 0x0b, 0x8f); /* PASET */
-+	mipi_dsi_generic_write_seq(dsi, 0xba, 0x01); /* scaler setup : scaler off */
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0x35, 0x00); /* TE Vsync ON */
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xed, 0x4c); /* ERR_FG */
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+	s6e3ha8_test_key_on_lvl3(dsi);
-+	/* FFC Setting 897.6Mbps */
-+	mipi_dsi_generic_write_seq(dsi, 0xc5, 0x0d, 0x10, 0xb4, 0x3e, 0x01);
-+	s6e3ha8_test_key_off_lvl3(dsi);
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xb9,
-+				   0x00, 0xb0, 0x81, 0x09, 0x00, 0x00, 0x00,
-+				   0x11, 0x03); /* TSP HSYNC Setting */
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	mipi_dsi_generic_write_seq(dsi, 0xb0, 0x03);
-+	mipi_dsi_generic_write_seq(dsi, 0xf6, 0x43);
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+	s6e3ha8_test_key_on_lvl2(dsi);
-+	/* Brightness condition set */
-+	mipi_dsi_generic_write_seq(dsi, 0xca,
-+				   0x07, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80,
-+				   0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-+				   0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-+				   0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-+				   0x80, 0x80, 0x80, 0x00, 0x00, 0x00);
-+	mipi_dsi_generic_write_seq(dsi, 0xb1, 0x00, 0x0c); /* AID Set : 0% */
-+	mipi_dsi_generic_write_seq(dsi, 0xb5,
-+				   0x19, 0xdc, 0x16, 0x01, 0x34, 0x67, 0x9a,
-+				   0xcd, 0x01, 0x22, 0x33, 0x44, 0x00, 0x00,
-+				   0x05, 0x55, 0xcc, 0x0c, 0x01, 0x11, 0x11,
-+				   0x10); /* MPS/ELVSS Setting */
-+	mipi_dsi_generic_write_seq(dsi, 0xf4, 0xeb, 0x28); /* VINT */
-+	mipi_dsi_generic_write_seq(dsi, 0xf7, 0x03); /* Gamma, LTPS(AID) update */
-+	s6e3ha8_test_key_off_lvl2(dsi);
-+	s6e3ha8_test_key_off_lvl1(dsi);
-+
-+	return 0;
-+}
-+
-+static int s6e3ha8_enable(struct drm_panel *panel)
-+{
-+	struct s6e3ha8 *ctx = to_s6e3ha8_amb577px01_wqhd(panel);
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	int ret;
-+
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_on_lvl1(dsi));
-+	s6e3ha8_call_write_func(ret, mipi_dsi_dcs_set_display_on(dsi));
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_off_lvl1(dsi));
-+
-+	return 0;
-+}
-+
-+static int s6e3ha8_disable(struct drm_panel *panel)
-+{
-+	struct s6e3ha8 *ctx = to_s6e3ha8_amb577px01_wqhd(panel);
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	int ret;
-+
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_on_lvl1(dsi));
-+	s6e3ha8_call_write_func(ret, mipi_dsi_dcs_set_display_off(dsi));
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_off_lvl1(dsi));
-+	msleep(20);
-+
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_on_lvl2(dsi));
-+	s6e3ha8_call_write_func(ret, s6e3ha8_afc_off(dsi));
-+	s6e3ha8_call_write_func(ret, s6e3ha8_test_key_off_lvl2(dsi));
-+
-+	msleep(160);
-+
-+	return 0;
-+}
-+
-+static int s6e3ha8_amb577px01_wqhd_prepare(struct drm_panel *panel)
-+{
-+	struct s6e3ha8 *ctx = to_s6e3ha8_amb577px01_wqhd(panel);
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	struct drm_dsc_picture_parameter_set pps;
-+	int ret;
-+
-+	s6e3ha8_power_on(ctx);
-+	msleep(120);
-+	s6e3ha8_amb577px01_wqhd_reset(ctx);
-+	ret = s6e3ha8_amb577px01_wqhd_on(ctx);
-+
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+		goto err;
-+	}
-+
-+	drm_dsc_pps_payload_pack(&pps, &ctx->dsc);
-+
-+	s6e3ha8_test_key_on_lvl1(dsi);
-+	ret = mipi_dsi_picture_parameter_set(ctx->dsi, &pps);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "failed to transmit PPS: %d\n", ret);
-+		return ret;
-+	}
-+	s6e3ha8_test_key_off_lvl1(dsi);
-+
-+	ret = mipi_dsi_compression_mode(ctx->dsi, true);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable compression mode: %d\n", ret);
-+		return ret;
-+	}
-+
-+
-+	msleep(28);
-+
-+	return 0;
-+err:
-+	s6e3ha8_power_off(ctx);
-+	return ret;
-+}
-+
-+static int s6e3ha8_amb577px01_wqhd_unprepare(struct drm_panel *panel)
-+{
-+	struct s6e3ha8 *ctx = to_s6e3ha8_amb577px01_wqhd(panel);
-+
-+	return s6e3ha8_power_off(ctx);
-+}
-+
-+static const struct drm_display_mode s6e3ha8_amb577px01_wqhd_mode = {
-+	.clock = (1440 + 116 + 44 + 120) * (2960 + 120 + 80 + 124) * 60 / 1000,
-+	.hdisplay = 1440,
-+	.hsync_start = 1440 + 116,
-+	.hsync_end = 1440 + 116 + 44,
-+	.htotal = 1440 + 116 + 44 + 120,
-+	.vdisplay = 2960,
-+	.vsync_start = 2960 + 120,
-+	.vsync_end = 2960 + 120 + 80,
-+	.vtotal = 2960 + 120 + 80 + 124,
-+	.width_mm = 64,
-+	.height_mm = 132,
++enum max77705_haptic_pulse_mode {
++	MAX77705_HAPTIC_EXTERNAL_MODE = 0,
++	MAX77705_HAPTIC_INTERNAL_MODE,
 +};
 +
-+static int s6e3ha8_amb577px01_wqhd_get_modes(struct drm_panel *panel,
-+					     struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
++enum max77705_haptic_pwm_divisor {
++	MAX77705_HAPTIC_PWM_DIVISOR_32 = 0,
++	MAX77705_HAPTIC_PWM_DIVISOR_64,
++	MAX77705_HAPTIC_PWM_DIVISOR_128,
++	MAX77705_HAPTIC_PWM_DIVISOR_256,
++};
 +
-+	mode = drm_mode_duplicate(connector->dev, &s6e3ha8_amb577px01_wqhd_mode);
-+	if (!mode)
++struct max77705_haptic {
++	enum max77705_types dev_type;
++
++	struct regmap *regmap_pmic;
++	struct regmap *regmap_haptic;
++	struct device *dev;
++	struct input_dev *input_dev;
++	struct pwm_device *pwm_dev;
++	struct regulator *motor_reg;
++
++	bool enabled;
++	bool suspend_state;
++	unsigned int magnitude;
++	unsigned int pwm_duty;
++	enum max77705_haptic_motor_type type;
++	enum max77705_haptic_pulse_mode mode;
++
++	struct work_struct work;
++};
++
++static int max77705_haptic_set_duty_cycle(struct max77705_haptic *haptic)
++{
++	struct pwm_args pargs;
++	int delta;
++	int error;
++
++	pwm_get_args(haptic->pwm_dev, &pargs);
++	delta = (pargs.period + haptic->pwm_duty) / 2;
++	error = pwm_config(haptic->pwm_dev, delta, pargs.period);
++	if (error) {
++		dev_err(haptic->dev, "failed to configure pwm: %d\n", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static int max77705_haptic_bias(struct max77705_haptic *haptic, bool on)
++{
++	int error;
++
++	error = regmap_update_bits(haptic->regmap_haptic,
++							   MAX77705_PMIC_REG_MAINCTRL1,
++							   MAX77705_MAINCTRL1_BIASEN_MASK,
++							   on << MAX77705_MAINCTRL1_BIASEN_SHIFT);
++
++	if (error) {
++		dev_err(haptic->dev, "failed to %s bias: %d\n",
++			on ? "enable" : "disable", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static int max77705_haptic_configure(struct max77705_haptic *haptic,
++				     bool enable)
++{
++	unsigned int value, config_reg;
++	int error;
++
++	value = ((haptic->type << MAX77705_CONFIG2_MODE_SHIFT) |
++		(enable << MAX77705_CONFIG2_MEN_SHIFT) |
++		(haptic->mode << MAX77705_CONFIG2_HTYP_SHIFT) |
++		MAX77705_HAPTIC_PWM_DIVISOR_128);
++	config_reg = MAX77705_PMIC_REG_MCONFIG;
++
++	error = regmap_write(haptic->regmap_haptic,
++			     config_reg, value);
++	if (error) {
++		dev_err(haptic->dev,
++			"failed to update haptic config: %d\n", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static void max77705_haptic_enable(struct max77705_haptic *haptic)
++{
++	int error;
++
++	if (haptic->enabled)
++		return;
++
++	error = pwm_enable(haptic->pwm_dev);
++	if (error) {
++		dev_err(haptic->dev,
++			"failed to enable haptic pwm device: %d\n", error);
++		return;
++	}
++
++	error = max77705_haptic_configure(haptic, true);
++	if (error)
++		goto err_enable_config;
++
++	haptic->enabled = true;
++
++	return;
++
++err_enable_config:
++	pwm_disable(haptic->pwm_dev);
++}
++
++static void max77705_haptic_disable(struct max77705_haptic *haptic)
++{
++	int error;
++
++	if (!haptic->enabled)
++		return;
++
++	error = max77705_haptic_configure(haptic, false);
++	if (error)
++		return;
++
++	pwm_disable(haptic->pwm_dev);
++	haptic->enabled = false;
++}
++
++static void max77705_haptic_play_work(struct work_struct *work)
++{
++	struct max77705_haptic *haptic =
++			container_of(work, struct max77705_haptic, work);
++	int error;
++
++	error = max77705_haptic_set_duty_cycle(haptic);
++	if (error) {
++		dev_err(haptic->dev, "failed to set duty cycle: %d\n", error);
++		return;
++	}
++
++	if (haptic->magnitude)
++		max77705_haptic_enable(haptic);
++	else
++		max77705_haptic_disable(haptic);
++}
++
++static int max77705_haptic_play_effect(struct input_dev *dev, void *data,
++				       struct ff_effect *effect)
++{
++	struct max77705_haptic *haptic = input_get_drvdata(dev);
++	struct pwm_args pargs;
++	u64 period_mag_multi;
++
++	haptic->magnitude = effect->u.rumble.strong_magnitude;
++	if (!haptic->magnitude)
++		haptic->magnitude = effect->u.rumble.weak_magnitude;
++
++	/*
++	 * The magnitude comes from force-feedback interface.
++	 * The formula to convert magnitude to pwm_duty as follows:
++	 * - pwm_duty = (magnitude * pwm_period) / MAX_MAGNITUDE(0xFFFF)
++	 */
++	pr_info("magnitude: %d(%x)", haptic->magnitude, haptic->magnitude);
++	pwm_get_args(haptic->pwm_dev, &pargs);
++	period_mag_multi = (u64)pargs.period * haptic->magnitude;
++	haptic->pwm_duty = (unsigned int)(period_mag_multi >>
++						MAX_MAGNITUDE_SHIFT);
++
++	schedule_work(&haptic->work);
++
++	return 0;
++}
++
++static int max77705_haptic_open(struct input_dev *dev)
++{
++	struct max77705_haptic *haptic = input_get_drvdata(dev);
++	int error;
++
++	error = max77705_haptic_bias(haptic, true);
++	if (error)
++		return error;
++
++	error = regulator_enable(haptic->motor_reg);
++	if (error) {
++		dev_err(haptic->dev,
++			"failed to enable regulator: %d\n", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static void max77705_haptic_close(struct input_dev *dev)
++{
++	struct max77705_haptic *haptic = input_get_drvdata(dev);
++	int error;
++
++	cancel_work_sync(&haptic->work);
++	max77705_haptic_disable(haptic);
++
++	error = regulator_disable(haptic->motor_reg);
++	if (error)
++		dev_err(haptic->dev,
++			"failed to disable regulator: %d\n", error);
++
++	max77705_haptic_bias(haptic, false);
++}
++
++static int max77705_haptic_probe(struct platform_device *pdev)
++{
++	struct max77705_dev *max77705 = dev_get_drvdata(pdev->dev.parent);
++	struct max77705_haptic *haptic;
++	int error;
++
++	haptic = devm_kzalloc(&pdev->dev, sizeof(*haptic), GFP_KERNEL);
++	if (!haptic)
 +		return -ENOMEM;
 +
-+	drm_mode_set_name(mode);
++	haptic->regmap_pmic = max77705->regmap;
++	haptic->dev = &pdev->dev;
++	haptic->type = MAX77705_HAPTIC_LRA;
++	haptic->mode = MAX77705_HAPTIC_EXTERNAL_MODE;
++	haptic->suspend_state = false;
 +
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
++	/* Variant-specific init */
++	haptic->dev_type = max77705->type;
++	haptic->regmap_haptic = max77705->regmap;
 +
-+	return 1;
-+}
++	INIT_WORK(&haptic->work, max77705_haptic_play_work);
 +
-+static const struct drm_panel_funcs s6e3ha8_amb577px01_wqhd_panel_funcs = {
-+	.prepare = s6e3ha8_amb577px01_wqhd_prepare,
-+	.unprepare = s6e3ha8_amb577px01_wqhd_unprepare,
-+	.get_modes = s6e3ha8_amb577px01_wqhd_get_modes,
-+	.enable = s6e3ha8_enable,
-+	.disable = s6e3ha8_disable,
-+};
-+
-+static int s6e3ha8_amb577px01_wqhd_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct s6e3ha8 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->supplies[0].supply = "vdd3";
-+	ctx->supplies[1].supply = "vci";
-+	ctx->supplies[2].supply = "vddr";
-+
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-+				      ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get regulators: %d\n", ret);
-+		return ret;
++	/* Get pwm and regulatot for haptic device */
++	haptic->pwm_dev = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(haptic->pwm_dev)) {
++		dev_err(&pdev->dev, "failed to get pwm device\n");
++		return PTR_ERR(haptic->pwm_dev);
 +	}
 +
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
++	/*
++	 * FIXME: pwm_apply_args() should be removed when switching to the
++	 * atomic PWM API.
++	 */
++	pwm_apply_args(haptic->pwm_dev);
 +
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
++	haptic->motor_reg = devm_regulator_get(&pdev->dev, "haptic");
++	if (IS_ERR(haptic->motor_reg)) {
++		dev_err(&pdev->dev, "failed to get regulator\n");
++		return PTR_ERR(haptic->motor_reg);
++	}
 +
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS |
-+		MIPI_DSI_MODE_VIDEO_NO_HFP | MIPI_DSI_MODE_VIDEO_NO_HBP |
-+		MIPI_DSI_MODE_VIDEO_NO_HSA | MIPI_DSI_MODE_NO_EOT_PACKET;
++	/* Initialize input device for haptic device */
++	haptic->input_dev = devm_input_allocate_device(&pdev->dev);
++	if (!haptic->input_dev) {
++		dev_err(&pdev->dev, "failed to allocate input device\n");
++		return -ENOMEM;
++	}
 +
-+	drm_panel_init(&ctx->panel, dev, &s6e3ha8_amb577px01_wqhd_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
++	haptic->input_dev->name = "max77705-haptic";
++	haptic->input_dev->id.version = 1;
++	haptic->input_dev->dev.parent = &pdev->dev;
++	haptic->input_dev->open = max77705_haptic_open;
++	haptic->input_dev->close = max77705_haptic_close;
++	input_set_drvdata(haptic->input_dev, haptic);
++	input_set_capability(haptic->input_dev, EV_FF, FF_RUMBLE);
 +
-+	drm_panel_add(&ctx->panel);
++	error = input_ff_create_memless(haptic->input_dev, NULL,
++				max77705_haptic_play_effect);
++	if (error) {
++		dev_err(&pdev->dev, "failed to create force-feedback\n");
++		return error;
++	}
 +
-+	/* This panel only supports DSC; unconditionally enable it */
-+	dsi->dsc = &ctx->dsc;
++	error = input_register_device(haptic->input_dev);
++	if (error) {
++		dev_err(&pdev->dev, "failed to register input device\n");
++		return error;
++	}
 +
-+	ctx->dsc.dsc_version_major = 1;
-+	ctx->dsc.dsc_version_minor = 1;
++	platform_set_drvdata(pdev, haptic);
 +
-+	ctx->dsc.slice_height = 40;
-+	ctx->dsc.slice_width = 720;
-+	WARN_ON(1440 % ctx->dsc.slice_width);
-+	ctx->dsc.slice_count = 1440 / ctx->dsc.slice_width;
-+	ctx->dsc.bits_per_component = 8;
-+	ctx->dsc.bits_per_pixel = 8 << 4; /* 4 fractional bits */
-+	ctx->dsc.block_pred_enable = true;
++	return 0;
++}
 +
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
-+		drm_panel_remove(&ctx->panel);
-+		return ret;
++static void max77705_haptic_remove(struct platform_device *pdev)
++{
++	struct max77705_haptic *haptic = platform_get_drvdata(pdev);
++
++	if (haptic->enabled)
++		max77705_haptic_disable(haptic);
++}
++
++static int max77705_haptic_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct max77705_haptic *haptic = platform_get_drvdata(pdev);
++
++	if (haptic->enabled) {
++		max77705_haptic_disable(haptic);
++		haptic->suspend_state = true;
 +	}
 +
 +	return 0;
 +}
 +
-+static void s6e3ha8_amb577px01_wqhd_remove(struct mipi_dsi_device *dsi)
++static int max77705_haptic_resume(struct device *dev)
 +{
-+	struct s6e3ha8 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct max77705_haptic *haptic = platform_get_drvdata(pdev);
 +
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
++	if (haptic->suspend_state) {
++		max77705_haptic_enable(haptic);
++		haptic->suspend_state = false;
++	}
 +
-+	drm_panel_remove(&ctx->panel);
++	return 0;
 +}
 +
-+static const struct of_device_id s6e3ha8_amb577px01_wqhd_of_match[] = {
-+	{ .compatible = "samsung,s6e3ha8" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, s6e3ha8_amb577px01_wqhd_of_match);
++static DEFINE_SIMPLE_DEV_PM_OPS(max77705_haptic_pm_ops,
++				max77705_haptic_suspend,
++				max77705_haptic_resume);
 +
-+static struct mipi_dsi_driver s6e3ha8_amb577px01_wqhd_driver = {
-+	.probe = s6e3ha8_amb577px01_wqhd_probe,
-+	.remove = s6e3ha8_amb577px01_wqhd_remove,
-+	.driver = {
-+		.name = "panel-s6e3ha8",
-+		.of_match_table = s6e3ha8_amb577px01_wqhd_of_match,
++static const struct of_device_id of_max77705_haptic_dt_match[] = {
++	{ .compatible = "maxim,max77705-haptic", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, of_max77705_haptic_dt_match);
++
++static struct platform_driver max77705_haptic_driver = {
++	.driver		= {
++		.name	= "max77705-haptic",
++		.pm	= pm_sleep_ptr(&max77705_haptic_pm_ops),
++		.of_match_table = of_max77705_haptic_dt_match,
 +	},
++	.probe		= max77705_haptic_probe,
++	.remove_new	= max77705_haptic_remove,
 +};
-+module_mipi_dsi_driver(s6e3ha8_amb577px01_wqhd_driver);
++module_platform_driver(max77705_haptic_driver);
 +
 +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
-+MODULE_DESCRIPTION("DRM driver for S6E3HA8 panel");
++MODULE_AUTHOR("Jaewon Kim <jaewon02.kim@samsung.com>");
++MODULE_AUTHOR("Krzysztof Kozlowski <krzk@kernel.org>");
++MODULE_DESCRIPTION("MAXIM 77705/77705 Haptic driver");
 +MODULE_LICENSE("GPL");
 
 -- 
