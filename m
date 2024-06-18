@@ -1,96 +1,206 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E3716CD1A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A99C158DBA;
+	Tue, 18 Jun 2024 19:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718739243; cv=none; b=GFaj3i8JA7Sy+t62W/UiRBRPju42GCuWKx2qOYmf2+haBWCDW6LW8JN3HtTDuRynVy5MFIYcOqXJt32Z4YZhG8WiWZv+su3UB9Dzl5VBmO/PCxSIiEZgSim2MahhtGJ2HK3FLqG3XZHHpZUwCaDGMz+SwULdpT1+Mqo4nbcE5Sk=
+	t=1718739427; cv=none; b=BFvBNMu1oja3Na9rTNKFr0fhQ9Y7YagN/7cKaRueQVcsChvdECwxlnAswPT/QIHYFv0Lds08fANKNai/pNlbwNPtGksFF2GytT+C9rUhiMsiYqrmgDuMMPND2HsQf4AvdcA+cUt2eUYE2r4i7PUlSNBN12vcpMhxYqG0gCwiz74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718739243; c=relaxed/simple;
-	bh=gOOHAkWdEq2o+F+PAFBjrXVJB7871zrKdARdfANeYwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WdMizw9meJVBzQ0RGit9sv/GhbIA69zsqDnClMs4LsJHIXtT83oGaYh2nmFSvkTLqghRYQZbKZtjtU5FzcKmWPBCb4Gtyu5/dICTcOhbIgkIWWNKMLFzEvFsTiVvJQFHwXfrk4KZgQTebOoxe0F5yNFKLHuhPEF3ka3pbUqcJlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hXsNFEos; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718739427; c=relaxed/simple;
+	bh=ZwJ9DLP7t3B8Oip+A2WzRaeL8y20P3++jyuDiLN4I0o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PtRVrWlg9Ul5AByAT5T22Sovo1nIY5nPwY6FFXMbgpSC5d0muiwbuV/ZSkjjvT6LvBuXJWoQUVuo1eNjB2iLN3uwBTRPXrCLfSfJZ4L6yj5uWWWLCbOgM1yE42whlw0T7w54ATOsAyFyC46rJdq/9hlyAmuMYsxZYwiNS5HVoQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=F2hAnEaa; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hXsNFEos"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42249a4f9e4so41553495e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718739240; x=1719344040; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oHcB0wrrEA97c0hWkCMLu5O4gDIGel8t6MiFzreOa7A=;
-        b=hXsNFEoseGeXcSBrmmJesPKwX2dbfiRoSaHYtcREq2G7Y6o2Mwv/hkJ0imiJuWLlPq
-         +E0pli+bL/LLMnBUTeaknaO5WRCa4OTBZy7Pspg6aJ7gYX+IbS1xf2dlwPfLNsjgTJVb
-         B3f2hqBmllF0sZdXSrlvoRFQpzmYUTt8dRGAqX+WJnNYRVhN0LGAEwvFhMx9OeWrlTQ/
-         7hhMFq9WrBXzZq7Noi0AHALjUJSROn9Z6em45wNOQLNIb8Tbs3eQ/TFW+QEQbAU2bQ+d
-         V4HtNBEHqeMhLqwnL+xLXE3aIQJRMulhl07zTY18PYoSOeeCAEm3vozrfYkwgyTIU7jn
-         GkSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718739240; x=1719344040;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oHcB0wrrEA97c0hWkCMLu5O4gDIGel8t6MiFzreOa7A=;
-        b=VGHFqO2mew4eFH+Fvpfjr+dKhgRmB5KzMe5heuFdQ95cBBErjEFHg0bA8b7GQjif1U
-         bkrRQvofYUXjqodaY9GeSuwp00DTTq9ywJ0jt5FR/sYcsH73lzGHlJ4KemHb0dCdcvyM
-         zdWpNEBzrY3Pav/QhC9Vc3ahrr9fs7dMRLC6j+daxg50FoeqmHRn0n2RzGg4Mu4ESq5V
-         pkwZGe7av1v3gCncv/PJ2Uf+oI9IidB41VIarlf8T+eAPV7jpsN3+wc30VlPSKpPXYcZ
-         iLYTeq2ETYLaPzck06QD9tmsZy7g6hnUfw/ybh909rPz6eeJz4yLDizab6tTJ8OLYLFO
-         Z1DA==
-X-Gm-Message-State: AOJu0Yz5EMJynXtlviccrRkd/R28SbbG3uKDDwPO/BsthKnZ5uJOpvwZ
-	FjFvPJuzmf/Ca8C5/eo7RRB8b/UNnPaIHv0foLjD1hfKoG6mEXvfuBJfF4RVkWs=
-X-Google-Smtp-Source: AGHT+IF1hfdLk4wvrZbisapNYDaeCPmw0aftasv3gas30inKuHZTvqzfK3httBkIJ6pjUtuRZUjRoA==
-X-Received: by 2002:a05:600c:1615:b0:420:2cbe:7efd with SMTP id 5b1f17b1804b1-42475298bd5mr3272545e9.31.1718739239713;
-        Tue, 18 Jun 2024 12:33:59 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:5d11:7fa7:8997:f811? ([2a00:f41:9028:9df3:5d11:7fa7:8997:f811])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286eef9ccsm233226745e9.5.2024.06.18.12.33.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 12:33:59 -0700 (PDT)
-Message-ID: <8cb65123-dec5-4740-b1ff-58f065716887@linaro.org>
-Date: Tue, 18 Jun 2024 21:33:45 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F2hAnEaa"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45IJasDP075749;
+	Tue, 18 Jun 2024 14:36:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718739414;
+	bh=FF3fwWVsTA6Pl5vQOmtuwHZIFVL/z+Bn2HRLdP84EoU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=F2hAnEaa5BNtcseBfwdM1eoOO1n7Tzsb99UXKSO1oJ7jPG97MJ410J8maJyCxcY91
+	 u9uG3+wW5T/2YqzOaL0IvWUArby8+f8JDWHRS4hzWafzfojy2pNEzqWNkzV1T7OkeF
+	 JvxW5qP75kCURZopGgqm8XBgx7CkfzCM4UkeCQaY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45IJasoS111403
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Jun 2024 14:36:54 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Jun 2024 14:36:54 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Jun 2024 14:36:54 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45IJarQ5010482;
+	Tue, 18 Jun 2024 14:36:53 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>, <afd@ti.com>
+Subject: [PATCH v14 1/6] media: dt-bindings: Add Imagination E5010 JPEG Encoder
+Date: Wed, 19 Jun 2024 01:06:46 +0530
+Message-ID: <20240618193651.2771478-2-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240618193651.2771478-1-devarsht@ti.com>
+References: <20240618193651.2771478-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/3] arm64: dts: qcom: x1e80100: Add BWMONs
-To: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
- djakov@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- srinivas.kandagatla@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
- quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com, conor+dt@kernel.org,
- dmitry.baryshkov@linaro.org, abel.vesa@linaro.org
-References: <20240618154306.279637-1-quic_sibis@quicinc.com>
- <20240618154306.279637-4-quic_sibis@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240618154306.279637-4-quic_sibis@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Add dt-bindings for Imagination E5010 JPEG Encoder [1] which is implemented
+as stateful V4L2 M2M driver.
 
+The device supports baseline encoding with two different quantization
+tables and compression ratio as demanded.
 
-On 6/18/24 17:43, Sibi Sankar wrote:
-> Add the CPU and LLCC BWMONs on X1E80100 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> ---
+Minimum resolution supported is 64x64 and Maximum resolution supported is
+8192x8192.
 
-If you're going to resend, please add a comment like:
+Link: https://www.ti.com/lit/pdf/spruj16 [1] (Section 7.6 JPEG Encoder)
+Co-developed-by: David Huang <d-huang@ti.com>
+Signed-off-by: David Huang <d-huang@ti.com>
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+V14: No change
+V13: Update commit message to use Link: syntax
+V6->V12: No change
+V5:
+ - Add Reviewed-By tag
+V4:
+ - Use ti-specific compatible ti,am62a-jpeg-enc as secondary one
+ - Update commit message and title
+ - Remove clock-names as only single clock
+V3:
+- Add vendor specific compatible
+- Update reg names
+- Update clocks to 1
+- Fix dts example with proper naming
+V2: No change
 
-/* CPU0-3 */
+ .../bindings/media/img,e5010-jpeg-enc.yaml    | 75 +++++++++++++++++++
+ MAINTAINERS                                   |  5 ++
+ 2 files changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
 
-above the respective monitor nodes
+diff --git a/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml b/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
+new file mode 100644
+index 000000000000..085020cb9e61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/img,e5010-jpeg-enc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Imagination E5010 JPEG Encoder
++
++maintainers:
++  - Devarsh Thakkar <devarsht@ti.com>
++
++description: |
++  The E5010 is a JPEG encoder from Imagination Technologies implemented on
++  TI's AM62A SoC. It is capable of real time encoding of YUV420 and YUV422
++  inputs to JPEG and M-JPEG. It supports baseline JPEG Encoding up to
++  8Kx8K resolution.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: ti,am62a-jpeg-enc
++          - const: img,e5010-jpeg-enc
++      - const: img,e5010-jpeg-enc
++
++  reg:
++    items:
++      - description: The E5010 core register region
++      - description: The E5010 mmu register region
++
++  reg-names:
++    items:
++      - const: core
++      - const: mmu
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++      jpeg-encoder@fd20000 {
++          compatible = "img,e5010-jpeg-enc";
++          reg = <0x00 0xfd20000 0x00 0x100>,
++                <0x00 0xfd20200 0x00 0x200>;
++          reg-names = "core", "mmu";
++          clocks = <&k3_clks 201 0>;
++          power-domains = <&k3_pds 201 TI_SCI_PD_EXCLUSIVE>;
++          interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4f09bdb5657e..b5376c04bcfc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10818,6 +10818,11 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/auxdisplay/img,ascii-lcd.yaml
+ F:	drivers/auxdisplay/img-ascii-lcd.c
+ 
++IMGTEC JPEG ENCODER DRIVER
++M:	Devarsh Thakkar <devarsht@ti.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
++
+ IMGTEC IR DECODER DRIVER
+ S:	Orphan
+ F:	drivers/media/rc/img-ir/
+-- 
+2.39.1
 
-Tested-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
