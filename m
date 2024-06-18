@@ -1,349 +1,220 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085411581F6;
-	Tue, 18 Jun 2024 13:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B213C673
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 13:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718716041; cv=none; b=m/0Z3rY67Y9Rmfpfv4izlC2Cb7/kAhuSuypwpXcv9NGaQCrK2nS5dXghJ8qQM/P5Id+uyEZHgjr1nxnpwOTSjKgIVki6BN+efrhpe/VBcexYagXnilh3ySMIkL2qe/9FRWZsJrQb1u42hqlcE8DoWfQdxihMFnj+vI85JggJCT8=
+	t=1718716090; cv=none; b=dXkABScnYM/C9Zz04rx2hE0uGvZV5r5DDVTRr1aaDanYJRT9pSU5xk40gFLspknV128OGx3pY50aq5E8E3++B+GGOBeGm6Js2NYGJTviOmh4lL+q8+qKjjM4Vm4FSj2+fsl2V1Uulc4v+FVeT+sa7I2lmqxkBH+e88EDXiexaZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718716041; c=relaxed/simple;
-	bh=owgvG94ctLRlxd224fF3qsnsskhj3HpX39bUjrr4YHQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LnfD1tcCaAlhBlqExqvSN0OM+QRU89OSUroMEN/QLjUseBXM3rxDJfwlPnbSU1pQBxjBA8x+DI9QUeCweqUim6RRZbRIZ1CtGbvlaZaHs66MuN9vJ5WeL0ZFs5PoCvlfuBhs7MthulrMIDJkaIngxAhdIsPCNunHr7GWGuPU97I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=HbsjD6Q+; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1718716090; c=relaxed/simple;
+	bh=bLpId0JKQOK4hGoXt+SwJlU9WDXtxHak7ccDkw+FL8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hNNyFa1/l3qNHvCSwAosi102ofibu3QW5UNHyIMMk8smIPAClhcQpdWruSx3caONGnX0+BjvMaxaEaL4R7RjKUfgci+z7fWVOxHzka/v5jrSXWJr8FagTbc9qXy2arQLM+Qo6eYNwM63weJ72ITMVcRqWXYqYhKBZFsOnpEnfaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F03gMMaq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="HbsjD6Q+"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I5c7Pt027173;
-	Tue, 18 Jun 2024 08:00:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=upCJVoWEOu4dqc4l
-	0kBAqZ+Zb/2+gNN0VMkcDlM9czc=; b=HbsjD6Q+f3v/kZVXtSxZ2FPmHBgrj99a
-	xoGMU7NmLExLqR8jpnuArR8jjZGrwB4mdQlNAUcH5cjarlk7ESuzzOtdESUsl3xH
-	kOuiVnBA8DySL63YHKnQDsqyOGDaA+Bj4QfKLLRkfA5NfRRQnhg3+p1a9qs4dpew
-	VJXQLVSDgR1IHLQYldfYbkoDa5wVmsB6DBKgRb4qSKPs2mTrpsAI2y/81v7He3a1
-	+A1xnkRA2e0plUDvPhdRnzJQWrtkyrknVANIOjTrXc5PidJUHQ8q/HExr/liM0MJ
-	mWz3VT5NPA2JPLGkGhsRTp3HobEtnVtxL7a42kX7VV5Ce1zbnAa/Ww==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ys7cju2ur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 08:00:16 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Jun
- 2024 14:00:14 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Tue, 18 Jun 2024 14:00:14 +0100
-Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.65.31])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id A49D1820248;
-	Tue, 18 Jun 2024 13:00:14 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Simon
- Trimmer" <simont@opensource.cirrus.com>
-Subject: [PATCH v2] ALSA: hda: cs35l56: Perform firmware download in the background
-Date: Tue, 18 Jun 2024 14:00:11 +0100
-Message-ID: <20240618130011.62860-1-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F03gMMaq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718716087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rDI13r/zgmF3YUpsVokDN5xtfAJiHrQPJKKAxYZjMOg=;
+	b=F03gMMaqKv6XbyObH4M6GUnV4TwXonoMqXhS3CW9O7xoZzVe/Eb2Hm85hiqUOlDNxiF0C2
+	a5cOVKjgMQxuBSCSIfe6w5pL3WIDXxMdQL7Ct9ebZpERX9SGPqyNw6+kQ3asDN7JHb3xef
+	yI+HvI9ObhLcSQFd0lSg7KsJUMiyU9s=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-240-Ft2a85NUNSmoe_akWGQPLg-1; Tue, 18 Jun 2024 09:08:06 -0400
+X-MC-Unique: Ft2a85NUNSmoe_akWGQPLg-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-421292df2adso34429295e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 06:08:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718716085; x=1719320885;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rDI13r/zgmF3YUpsVokDN5xtfAJiHrQPJKKAxYZjMOg=;
+        b=pemFjtMbSPrfGayCfxSEVHm6Pp9GRPz13h54kK1YEZDtcVSLJQz6hmJxWwNdJRvB4C
+         bPSlNBjcqXGSb87qK6wwxgL4heDsuofbcIzr2z1ABkJnS9Qh6k+IZyd1FEEHiE/k6qM2
+         AngrupONUyqz6Y5vxUm3k3lLSdRhNAhG3L9XrSqOa3YrlMDn1B1k8sIBiIYMJ8iWlkCr
+         WlLFvXuxpWstJ2jdUqhQgY55Kc79zxq3GthAhJieOWBMJvc//5juepHCh+eIfcgVsktI
+         RaF53HPSnmZ5VgBT8ZIGed8y+ymhDk/ddEuANomqTWETm/EWu/DgVdKVk9f6twBBVcfO
+         6tDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRKlvO8taWONt8M38l8Ps0RrNsFCPT38/24xX4tuHNcaGjPxVYR3fdoEJKNr27aSwhRq5/uZlgI1iPKzYfliMpkskkaS5py86Hrs8c
+X-Gm-Message-State: AOJu0Yzh4y+DfliCY15ZZUUFPXz6k2n0zNBXnMAgLYv/awjuSM610A3D
+	PJUpC39/tGN8JOVK88qhj1s2NQc3G42Prg0PWbQQ1nmHI9Z4eMojQKOIDyt+b+XxSQ6HoLxZBkc
+	IxdmLYPreCd7iQQDkagnA1WApFENcM2TFsGCP+bpGTPzEZV+bb/1vQ6pxyUkpQA==
+X-Received: by 2002:a05:600c:4b23:b0:422:47a:15c8 with SMTP id 5b1f17b1804b1-42304820d71mr102574665e9.12.1718716084864;
+        Tue, 18 Jun 2024 06:08:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHpxm3J8D7YuKoMV98S3k8xb4FTtVTg1NRGuuoPKxbPPSCYa3N7rtb4jV+3HF2FtwfXiGly0g==
+X-Received: by 2002:a05:600c:4b23:b0:422:47a:15c8 with SMTP id 5b1f17b1804b1-42304820d71mr102574505e9.12.1718716084393;
+        Tue, 18 Jun 2024 06:08:04 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:1400:78ba:c2d2:22a1:8858? (p200300cbc705140078bac2d222a18858.dip0.t-ipconnect.de. [2003:cb:c705:1400:78ba:c2d2:22a1:8858])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f6320c21sm192894355e9.34.2024.06.18.06.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 06:08:03 -0700 (PDT)
+Message-ID: <ce9cb3c5-be63-45f0-91ad-4f7ab335d3b2@redhat.com>
+Date: Tue, 18 Jun 2024 15:08:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: qz6luDEzsI5-lKGjLTQB3bVGnrLVfpNA
-X-Proofpoint-ORIG-GUID: qz6luDEzsI5-lKGjLTQB3bVGnrLVfpNA
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] mm: swap: mTHP swap allocator base on swap cluster
+ order
+To: Chris Li <chrisl@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Kairui Song <kasong@tencent.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ "Huang, Ying" <ying.huang@intel.com>, Kalesh Singh <kaleshsingh@google.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Barry Song <baohua@kernel.org>
+References: <20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-It is possible that during system boot when there multiple devices
-attempting simultaneous initialization on a slow control bus the
-download of firmware and tuning data may take a user perceivable amount
-of time (a slow I2C bus with 4 amps this work could take over 2
-seconds).
+On 15.06.24 01:48, Chris Li wrote:
+> This is the short term solutiolns "swap cluster order" listed
+> in my "Swap Abstraction" discussion slice 8 in the recent
+> LSF/MM conference.
+> 
+> When commit 845982eb264bc "mm: swap: allow storage of all mTHP
+> orders" is introduced, it only allocates the mTHP swap entries
+> from new empty cluster list.  It has a fragmentation issue
+> reported by Barry.
+> 
+> https://lore.kernel.org/all/CAGsJ_4zAcJkuW016Cfi6wicRr8N9X+GJJhgMQdSMp+Ah+NSgNQ@mail.gmail.com/
+> 
+> The mTHP allocation failure rate raises to almost 100% after a few
+> hours in Barry's test run.
+> 
+> The reason is that all the empty cluster has been exhausted while
+> there are planty of free swap entries to in the cluster that is
+> not 100% free.
+> 
+> Remember the swap allocation order in the cluster.
+> Keep track of the per order non full cluster list for later allocation.
+> 
+> This greatly improve the sucess rate of the mTHP swap allocation.
+> 
+> There is some test number in the V1 thread of this series:
+> https://lore.kernel.org/r/20240524-swap-allocator-v1-0-47861b423b26@kernel.org
+> 
+> Reported-by: Barry Song <21cnbao@gmail.com>
+> Signed-off-by: Chris Li <chrisl@kernel.org>
+> ---
 
-Adopt a pattern used in the ASoC driver and perform this activity in a
-background thread so that interactive performance is not impaired. The
-system_long_wq is a parallel workqueue and driver instances will perform
-their firmware downloads in parallel to make best use of available bus
-bandwidth.
+Running the cow.c selftest with a bunch of debug config
+settings enabled, I get on mm-unstable:
 
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
----
- sound/pci/hda/cs35l56_hda.c | 90 ++++++++++++++++++++++++++++++-------
- sound/pci/hda/cs35l56_hda.h |  3 ++
- 2 files changed, 76 insertions(+), 17 deletions(-)
+[   25.236555] list_add corruption. prev->next should be next (ffff888105b5ad08), but was ffff888105b5ae78. (prev=ffff88812580b048).
+[   25.237432] ------------[ cut here ]------------
+[   25.237702] kernel BUG at lib/list_debug.c:32!
+[   25.237962] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+[   25.238288] CPU: 23 PID: 1264 Comm: cow Tainted: G        W          6.10.0-rc4+ #301
+[   25.238720] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   25.239335] RIP: 0010:__list_add_valid_or_report+0x78/0xa0
+[   25.239646] Code: 6b ff 0f 0b 48 89 c1 48 c7 c7 c0 30 0e 83 e8 7f e5 6b ff 0f 0b 48 89 d1 48 89 c6 4c 89 c2 48 c7 c7 18 31 0e 83 e8 68 e5 6b ff <0f> 0b 48 89 f2 48 89 c1 48 89 fe 48 c7 c7 70 31 0e 83 e8 51 e5b
+[   25.240670] RSP: 0000:ffffc90002c87bd0 EFLAGS: 00010246
+[   25.240964] RAX: 0000000000000075 RBX: ffff888105b5ac00 RCX: 0000000000000000
+[   25.241362] RDX: 0000000000000000 RSI: ffff88885f9a1a00 RDI: ffff88885f9a1a00
+[   25.241762] RBP: ffff88810624de20 R08: 0000000000000000 R09: 0000000000000003
+[   25.242158] R10: ffffc90002c87a78 R11: ffffffff83b5b808 R12: 0000000000044000
+[   25.242556] R13: 0000000000044000 R14: ffff88810624e000 R15: ffff88812580bb00
+[   25.242960] FS:  00007f4fb364b740(0000) GS:ffff88885f980000(0000) knlGS:0000000000000000
+[   25.243413] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   25.243737] CR2: 00007f4fb343c000 CR3: 000000010a5dc000 CR4: 0000000000750ef0
+[   25.244145] PKRU: 55555554
+[   25.244303] Call Trace:
+[   25.244445]  <TASK>
+[   25.244572]  ? die+0x36/0x90
+[   25.244742]  ? do_trap+0xdd/0x100
+[   25.244935]  ? __list_add_valid_or_report+0x78/0xa0
+[   25.245211]  ? __list_add_valid_or_report+0x78/0xa0
+[   25.245488]  ? do_error_trap+0x81/0x110
+[   25.245710]  ? __list_add_valid_or_report+0x78/0xa0
+[   25.245988]  ? exc_invalid_op+0x50/0x70
+[   25.246211]  ? __list_add_valid_or_report+0x78/0xa0
+[   25.246488]  ? asm_exc_invalid_op+0x1a/0x20
+[   25.246737]  ? __list_add_valid_or_report+0x78/0xa0
+[   25.247016]  swapcache_free_entries+0x1ec/0x240
+[   25.247286]  free_swap_slot+0xcc/0xe0
+[   25.247498]  put_swap_folio+0xf3/0x3b0
+[   25.247720]  delete_from_swap_cache+0x68/0x90
+[   25.247972]  folio_free_swap+0xd0/0x200
+[   25.248201]  do_swap_page+0xd95/0x12d0
+[   25.248418]  ? __entry_text_end+0x101e45/0x101e49
+[   25.248695]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   25.248969]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   25.249246]  ? __pte_offset_map+0x18e/0x270
+[   25.249490]  __handle_mm_fault+0x915/0xf80
+[   25.249731]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   25.250010]  handle_mm_fault+0x1d1/0x400
+[   25.250242]  do_user_addr_fault+0x16f/0x790
+[   25.250485]  exc_page_fault+0x83/0x260
+[   25.250706]  asm_exc_page_fault+0x26/0x30
 
-diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-index cc4aa90db1d1..96d3f13c5abf 100644
---- a/sound/pci/hda/cs35l56_hda.c
-+++ b/sound/pci/hda/cs35l56_hda.c
-@@ -50,11 +50,19 @@ static const struct reg_sequence cs35l56_hda_dai_config[] = {
- 
- };
- 
-+static void cs35l56_hda_wait_dsp_ready(struct cs35l56_hda *cs35l56)
-+{
-+	/* Wait for patching to complete */
-+	flush_work(&cs35l56->dsp_work);
-+}
-+
- static void cs35l56_hda_play(struct cs35l56_hda *cs35l56)
- {
- 	unsigned int val;
- 	int ret;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	pm_runtime_get_sync(cs35l56->base.dev);
- 	ret = cs35l56_mbox_send(&cs35l56->base, CS35L56_MBOX_CMD_AUDIO_PLAY);
- 	if (ret == 0) {
-@@ -180,6 +188,8 @@ static int cs35l56_hda_mixer_get(struct snd_kcontrol *kcontrol,
- 	unsigned int reg_val;
- 	int i;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	regmap_read(cs35l56->base.regmap, kcontrol->private_value, &reg_val);
- 	reg_val &= CS35L56_ASP_TXn_SRC_MASK;
- 
-@@ -203,6 +213,8 @@ static int cs35l56_hda_mixer_put(struct snd_kcontrol *kcontrol,
- 	if (item >= CS35L56_NUM_INPUT_SRC)
- 		return -EINVAL;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	regmap_update_bits_check(cs35l56->base.regmap, kcontrol->private_value,
- 				 CS35L56_INPUT_MASK, cs35l56_tx_input_values[item],
- 				 &changed);
-@@ -227,6 +239,8 @@ static int cs35l56_hda_posture_get(struct snd_kcontrol *kcontrol,
- 	unsigned int pos;
- 	int ret;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	ret = regmap_read(cs35l56->base.regmap, CS35L56_MAIN_POSTURE_NUMBER, &pos);
- 	if (ret)
- 		return ret;
-@@ -248,6 +262,8 @@ static int cs35l56_hda_posture_put(struct snd_kcontrol *kcontrol,
- 	    (pos > CS35L56_MAIN_POSTURE_MAX))
- 		return -EINVAL;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	ret = regmap_update_bits_check(cs35l56->base.regmap,
- 				       CS35L56_MAIN_POSTURE_NUMBER,
- 				       CS35L56_MAIN_POSTURE_MASK,
-@@ -291,6 +307,8 @@ static int cs35l56_hda_vol_get(struct snd_kcontrol *kcontrol,
- 	int vol;
- 	int ret;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	ret = regmap_read(cs35l56->base.regmap, CS35L56_MAIN_RENDER_USER_VOLUME, &raw_vol);
- 
- 	if (ret)
-@@ -323,6 +341,8 @@ static int cs35l56_hda_vol_put(struct snd_kcontrol *kcontrol,
- 	raw_vol = (vol + CS35L56_MAIN_RENDER_USER_VOLUME_MIN) <<
- 		  CS35L56_MAIN_RENDER_USER_VOLUME_SHIFT;
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+
- 	ret = regmap_update_bits_check(cs35l56->base.regmap,
- 				       CS35L56_MAIN_RENDER_USER_VOLUME,
- 				       CS35L56_MAIN_RENDER_USER_VOLUME_MASK,
-@@ -539,8 +559,9 @@ static void cs35l56_hda_release_firmware_files(const struct firmware *wmfw_firmw
- 	kfree(coeff_filename);
- }
- 
--static void cs35l56_hda_add_dsp_controls(struct cs35l56_hda *cs35l56)
-+static void cs35l56_hda_create_dsp_controls_work(struct work_struct *work)
- {
-+	struct cs35l56_hda *cs35l56 = container_of(work, struct cs35l56_hda, control_work);
- 	struct hda_cs_dsp_ctl_info info;
- 
- 	info.device_name = cs35l56->amp_name;
-@@ -566,7 +587,7 @@ static void cs35l56_hda_apply_calibration(struct cs35l56_hda *cs35l56)
- 		dev_info(cs35l56->base.dev, "Calibration applied\n");
- }
- 
--static int cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
-+static void cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
- {
- 	const struct firmware *coeff_firmware = NULL;
- 	const struct firmware *wmfw_firmware = NULL;
-@@ -574,15 +595,34 @@ static int cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
- 	char *wmfw_filename = NULL;
- 	unsigned int preloaded_fw_ver;
- 	bool firmware_missing;
--	int ret = 0;
-+	bool add_dsp_controls_required = false;
-+	int ret;
-+
-+	/*
-+	 * control_work must be flushed before proceeding, but we can't do that
-+	 * here as it would create a deadlock on controls_rwsem so it must be
-+	 * performed before queuing dsp_work.
-+	 */
-+	WARN_ON_ONCE(work_busy(&cs35l56->control_work));
- 
--	/* Prepare for a new DSP power-up */
-+	/*
-+	 * Prepare for a new DSP power-up. If the DSP has had firmware
-+	 * downloaded previously then it needs to be powered down so that it
-+	 * can be updated and if hadn't been patched before then the controls
-+	 * will need to be added once firmware download succeeds.
-+	 */
- 	if (cs35l56->base.fw_patched)
- 		cs_dsp_power_down(&cs35l56->cs_dsp);
-+	else
-+		add_dsp_controls_required = true;
- 
- 	cs35l56->base.fw_patched = false;
- 
--	pm_runtime_get_sync(cs35l56->base.dev);
-+	ret = pm_runtime_resume_and_get(cs35l56->base.dev);
-+	if (ret < 0) {
-+		dev_err(cs35l56->base.dev, "Failed to resume and get %d\n", ret);
-+		return;
-+	}
- 
- 	/*
- 	 * The firmware can only be upgraded if it is currently running
-@@ -606,7 +646,6 @@ static int cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
- 	 */
- 	if (!coeff_firmware && firmware_missing) {
- 		dev_err(cs35l56->base.dev, ".bin file required but not found\n");
--		ret = -ENOENT;
- 		goto err_fw_release;
- 	}
- 
-@@ -659,6 +698,15 @@ static int cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
- 			  CS35L56_FIRMWARE_MISSING);
- 	cs35l56->base.fw_patched = true;
- 
-+	/*
-+	 * Adding controls is deferred to prevent a lock inversion - ALSA takes
-+	 * the controls_rwsem when adding a control, the get() / put()
-+	 * functions of a control are called holding controls_rwsem and those
-+	 * that depend on running firmware wait for dsp_work() to complete.
-+	 */
-+	if (add_dsp_controls_required)
-+		queue_work(system_long_wq, &cs35l56->control_work);
-+
- 	ret = cs_dsp_run(&cs35l56->cs_dsp);
- 	if (ret)
- 		dev_dbg(cs35l56->base.dev, "%s: cs_dsp_run ret %d\n", __func__, ret);
-@@ -678,8 +726,13 @@ static int cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
- 					   coeff_firmware, coeff_filename);
- err_pm_put:
- 	pm_runtime_put(cs35l56->base.dev);
-+}
- 
--	return ret;
-+static void cs35l56_hda_dsp_work(struct work_struct *work)
-+{
-+	struct cs35l56_hda *cs35l56 = container_of(work, struct cs35l56_hda, dsp_work);
-+
-+	cs35l56_hda_fw_load(cs35l56);
- }
- 
- static int cs35l56_hda_bind(struct device *dev, struct device *master, void *master_data)
-@@ -687,7 +740,6 @@ static int cs35l56_hda_bind(struct device *dev, struct device *master, void *mas
- 	struct cs35l56_hda *cs35l56 = dev_get_drvdata(dev);
- 	struct hda_component_parent *parent = master_data;
- 	struct hda_component *comp;
--	int ret;
- 
- 	comp = hda_component_from_index(parent, cs35l56->index);
- 	if (!comp)
-@@ -701,12 +753,10 @@ static int cs35l56_hda_bind(struct device *dev, struct device *master, void *mas
- 	strscpy(comp->name, dev_name(dev), sizeof(comp->name));
- 	comp->playback_hook = cs35l56_hda_playback_hook;
- 
--	ret = cs35l56_hda_fw_load(cs35l56);
--	if (ret)
--		return ret;
-+	flush_work(&cs35l56->control_work);
-+	queue_work(system_long_wq, &cs35l56->dsp_work);
- 
- 	cs35l56_hda_create_controls(cs35l56);
--	cs35l56_hda_add_dsp_controls(cs35l56);
- 
- #if IS_ENABLED(CONFIG_SND_DEBUG)
- 	cs35l56->debugfs_root = debugfs_create_dir(dev_name(cs35l56->base.dev), sound_debugfs_root);
-@@ -724,6 +774,9 @@ static void cs35l56_hda_unbind(struct device *dev, struct device *master, void *
- 	struct hda_component_parent *parent = master_data;
- 	struct hda_component *comp;
- 
-+	cancel_work_sync(&cs35l56->dsp_work);
-+	cancel_work_sync(&cs35l56->control_work);
-+
- 	cs35l56_hda_remove_controls(cs35l56);
- 
- #if IS_ENABLED(CONFIG_SND_DEBUG)
-@@ -752,6 +805,9 @@ static int cs35l56_hda_system_suspend(struct device *dev)
- {
- 	struct cs35l56_hda *cs35l56 = dev_get_drvdata(dev);
- 
-+	cs35l56_hda_wait_dsp_ready(cs35l56);
-+	flush_work(&cs35l56->control_work);
-+
- 	if (cs35l56->playing)
- 		cs35l56_hda_pause(cs35l56);
- 
-@@ -850,11 +906,8 @@ static int cs35l56_hda_system_resume(struct device *dev)
- 
- 	ret = cs35l56_is_fw_reload_needed(&cs35l56->base);
- 	dev_dbg(cs35l56->base.dev, "fw_reload_needed: %d\n", ret);
--	if (ret > 0) {
--		ret = cs35l56_hda_fw_load(cs35l56);
--		if (ret)
--			return ret;
--	}
-+	if (ret > 0)
-+		queue_work(system_long_wq, &cs35l56->dsp_work);
- 
- 	if (cs35l56->playing)
- 		cs35l56_hda_play(cs35l56);
-@@ -972,6 +1025,9 @@ int cs35l56_hda_common_probe(struct cs35l56_hda *cs35l56, int hid, int id)
- 	mutex_init(&cs35l56->base.irq_lock);
- 	dev_set_drvdata(cs35l56->base.dev, cs35l56);
- 
-+	INIT_WORK(&cs35l56->dsp_work, cs35l56_hda_dsp_work);
-+	INIT_WORK(&cs35l56->control_work, cs35l56_hda_create_dsp_controls_work);
-+
- 	ret = cs35l56_hda_read_acpi(cs35l56, hid, id);
- 	if (ret)
- 		goto err;
-diff --git a/sound/pci/hda/cs35l56_hda.h b/sound/pci/hda/cs35l56_hda.h
-index 464e4aa63cd1..c40d159507c2 100644
---- a/sound/pci/hda/cs35l56_hda.h
-+++ b/sound/pci/hda/cs35l56_hda.h
-@@ -14,6 +14,7 @@
- #include <linux/firmware/cirrus/cs_dsp.h>
- #include <linux/firmware/cirrus/wmfw.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/workqueue.h>
- #include <sound/cs35l56.h>
- 
- struct dentry;
-@@ -21,6 +22,8 @@ struct dentry;
- struct cs35l56_hda {
- 	struct cs35l56_base base;
- 	struct hda_codec *codec;
-+	struct work_struct dsp_work;
-+	struct work_struct control_work;
- 
- 	int index;
- 	const char *system_name;
+
+
+Maybe what Hugh reported already. I'll try reverting your patches
+to see if that fixes these issues.
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
