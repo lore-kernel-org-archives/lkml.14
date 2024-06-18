@@ -1,101 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE3D6A33F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0F913AD1D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719528; cv=none; b=CBOYIFHlDICgm5jv0RS/X2PbaaM5iESwGJloMO/lBwzqcJgW8ls1zxtxQ41iP8uGieTX1J7JjD+uhXppChWwK3FAtABkNVLcjDaTqS2mRVE47Gafim9W4vF73uTV13Y9Ta1MvZgZga4fa9YggM8LH/eToc7H5aci9ezvTodLedU=
+	t=1718719565; cv=none; b=SP1/vpqPEwsN/rPb6WNCLAdnfNufHWwG1t9BLtcZtmM+2s3qumJEcGUs+qYaK+30wy5feLxfE0BfEe1Ttw5/7XjoEZQLGF6S31e8tFb2zkP3bDpBnOzmfAAq2QEYx3AOQc5IepkENrUcIxnUzIDsxra4LXTYqWqNgbUKfsbfX40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719528; c=relaxed/simple;
-	bh=voUsZu4+P8cVPFpKsisVJUT4+hz+waGqy6KYjg3O6XU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KYdBYOJV4el4M+2spil2Q9prcmBJbkBbRQHtcrc7xEVhBHVeHUX7ZBKEHthBfJMoy6MxB7VFnOdLbFHS/bYICezHGdD+Sunp+EwZWqoyDkWx0hA2DRI1Un7RbFUDDk0UzqNXx3B0ebacA5mhUYlQk24coMBdV19ZO5JDIRxH7Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxOGMpVp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718719565; c=relaxed/simple;
+	bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mTFLLT4+yInkXmYKhoTTVORTK27SxHj316/oqefD7vhP/XM9fbcL74XSrbux/J1u2nNttGfvAHip0AkhVrH/YKX1SOxMNU5Fay+oLgTY1mHYQKn7xuRe7DZxu8CMpUTIYxF46zitRvNjtg5aYxy0+u9YthurAd4FxsEwqohLJ0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=Yh4U1CQx; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxOGMpVp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 009C4C3277B;
-	Tue, 18 Jun 2024 14:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718719528;
-	bh=voUsZu4+P8cVPFpKsisVJUT4+hz+waGqy6KYjg3O6XU=;
-	h=From:Date:Subject:To:Cc:From;
-	b=cxOGMpVp/uVKJnoBTxmmDq2a6L/KRzgLcPVWECOqziTVSLE+nRbXhcH/AT0tLUBAL
-	 h8M+t8rVGsu8JTdLjCfELjM/CzKgBHKxCvYmI2bfD+JMeNZ768pBdPwU98mA8K+Trc
-	 MkOAy2yvom4y8ztPyhdVRNFC2/Pmgbj4211Fgfgq3tOLIXdLE9WiRnxyEO7RDdegMK
-	 jH1z48fF8GyzDdj/CXR8K7yfkqq4hxCvYe9vhSqaW2mXyJL+vjEihAvZJFlrOANh/z
-	 Bt1IliRmBX2PC+sciovs5QCGWdUkTGjqDPrd7ioA/goFd8WASSJjezoNVAqPPsT5rh
-	 /l4pOUdrKc/Ow==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 18 Jun 2024 15:03:50 +0100
-Subject: [PATCH] arm64/fpsimd: Ensure that offlined CPUs are not using SME
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="Yh4U1CQx"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35f06861ae6so4764833f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718719560; x=1719324360; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
+        b=Yh4U1CQx0Lgye9unT0e9Ud406zDkIjSjOopSEG76qMtAGf79pJA7+FE6orwSB+cBSA
+         V0qMbMVVGfL+UUpZ1ah35gF+0hkGTxV0kjnS6zR7y3sstPBOQfwq2MZclsfVuO96vpc4
+         0JOJLTa6eLKEoJMLcD4qokl6/y/mVrUBYtUDtNtxRywPMGl3u43fvMd9BwKHdSQMKdxc
+         ehEfWOSz9VuZSV1MJVvKxQLm4gFaEXx1yKBL39i9zFAoN163dE4Hpir9aExcxHnbFxOu
+         rsYs7Xe0Q4lx9hApNHk9O1xZJSm4maujl49Xfl+Icw04kgQH3rfNhtCzmS4uV8v9RJa9
+         lI/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718719560; x=1719324360;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
+        b=HmJ/xuMVu/L9+LnAMr3lPp6mqab6j4BQsIVdzuSz3NYTz6txkRu0cfpFt/N58Dkk9A
+         +WgUp/xUy9WehXnHmMbWl89v1MoW+JrOhr8UWImJNR7yJAnDqcn+m0RVDwvtxblfg/Cp
+         rfn9w54qVQZ6HTCSonpdd2hAGixhNr/5mqcIqNQ9AlWcV6+B82ZaAs1LeKU2VXUjQtZe
+         hjwNQKF4kdhK9gFNwCG9tQ3FDAGHbr45oPwj3tjD9j+/R11eojyPGzmLE2uWtjPGzppx
+         bCmAecIX+F38UvfQbvW6egbLKzzzB0wFKQPfnU7x8wquuMp8a9EFtTapbCdfqq3LJqrN
+         qy+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDufBYZ0xeqKX+YKQN5S50NiLyeRByMlqBl8nXx6l+WuFsb2r1UefQNQj8imGJocJil3f8zcmJLH/O5hEKSG7htX+ZkIGvMYYHAQW
+X-Gm-Message-State: AOJu0Yw9B83mIATBoJXSTTwV1Ka7pOo+/V5agSAvdA97u1nN3rhRb8pF
+	rMbOSl+NE0EUgOjslSaS7a2tcJChunvWUwCy50ympwe/xVvx3XrBRb6Ok4VmFIkGxsb0QVPXFBj
+	oT7s=
+X-Google-Smtp-Source: AGHT+IE7bMWr/KjUbc0niKCiWMXu0LbpQKaj1GXm+QhhAO3g7QpNVncrgW1KSZOUIgxRobwzYgfe7A==
+X-Received: by 2002:a5d:424d:0:b0:361:81b9:bfe3 with SMTP id ffacd0b85a97d-36181b9c0dbmr1185057f8f.24.1718719560595;
+        Tue, 18 Jun 2024 07:06:00 -0700 (PDT)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509c79bsm14361744f8f.41.2024.06.18.07.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 07:06:00 -0700 (PDT)
+Date: Tue, 18 Jun 2024 16:05:57 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Yajun Deng <yajun.deng@linux.dev>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: core: Remove the dup_errno parameter in
+ dev_prep_valid_name()
+Message-ID: <ZnGURZgU5sRkTvPm@nanopsycho.orion>
+References: <20240618131743.2690-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-arm64-fpsimd-sme-cpu-die-v1-1-9a90d1a34918@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAMWTcWYC/x3MMQqAMAxA0atIZgM1qAWvIg7SppqhWhoUQXp3i
- +Mb/n9BOQsrTM0LmW9ROY+Krm3A7euxMYqvBjLUm7GzuOY49hiSSvSokdGlC70wDpbM4GwgMgw
- 1T5mDPP96Xkr5AByMX9FqAAAA
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1642; i=broonie@kernel.org;
- h=from:subject:message-id; bh=voUsZu4+P8cVPFpKsisVJUT4+hz+waGqy6KYjg3O6XU=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmcZQlOfUtP8GynkL5ciAZnGDT43rip612ZKqNulU0
- 2D9L3f2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnGUJQAKCRAk1otyXVSH0HPIB/
- 9qFQFzf6Kv8FGh2lCNWkw7r022T8RQMu2t56+VvJjGjE2R/wZjzeH1OCrQ5jXScZMqonk5JJ2burg+
- MkRKiHfE2oRNicvBkgdbqpSxyJKIvamJdv/TOOBastjQHzZLKMyKiVqNJwYFzFUOzY3HgE2qmlLrnM
- boRTkBuo7GDIIC1zFfKPrxAIqAAseWscgpuoKdl9qtSjhk11w+/lNDh8XsZoPPOn2MtUyWYXXGMrRC
- 1Ykk3oOzJBy9lVsgbcDgPod3xwjWn7XxLU4rnuizGmoCOXfl4yGk8U/il+2CzvBrqXN60yq9DK3Jne
- ItSqnzNlEni1RNRPQE6WNz8NA6tZLx
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618131743.2690-1-yajun.deng@linux.dev>
 
-When we use CPU hotplug to offline a CPU we may transition directly from
-running a task which was using SME to the CPU being offlined. This means
-that PSTATE.{SM,ZA} may still be set, indicating to the system that SME is
-still in use. This could create contention with other still running CPUs if
-the system uses shared SMCUs.
+Tue, Jun 18, 2024 at 03:17:43PM CEST, yajun.deng@linux.dev wrote:
+>netdev_name_in_use() return -EEXIST makes more sense if it's not NULL.
+>But dev_alloc_name() should keep the -ENFILE errno.
+>
+>Remove the dup_errno parameter in dev_prep_valid_name() and add a
+>conditional operator to dev_alloc_name(), replace -EEXIST with
+>-ENFILE.
+>
+>Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 
-For most systems this shouldn't be an issue, we should have PSCI or some
-other power management mechanism which will take care of this as part of
-offlining the CPU. However we do still have support for spin tables, and it
-is possible that system firmware may not be ideally implemented, so let's
-explicitly disable SME during the process of offlining the CPU in order to
-ensure there's no spurious contention.
+Why not.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/kernel/smp.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 31c8b3094dd7..9e8fc6ac758a 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -383,6 +383,10 @@ void __noreturn cpu_die(void)
- 	/* Tell cpuhp_bp_sync_dead() that this CPU is now safe to dispose of */
- 	cpuhp_ap_report_dead();
- 
-+	/* Ensure we are not spuriously contending any SMCU */
-+	if (system_supports_sme())
-+		sme_smstop();
-+
- 	/*
- 	 * Actually shutdown the CPU. This must never fail. The specific hotplug
- 	 * mechanism must perform all required cache maintenance to ensure that
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240617-arm64-fpsimd-sme-cpu-die-57205c7f220e
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
