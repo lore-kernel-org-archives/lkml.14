@@ -1,132 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2072E64C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3E615A844;
+	Tue, 18 Jun 2024 11:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718709249; cv=none; b=YGT2+w5BV26qX2Pla4KDaZFy7+sMRZ8Mi/FNga46Pq7PfdqjaxMaUwPVhc8EaXzB+nVNcm0vXacMa7TnNHZsf7b9dmOgxaff1sTEml42AJXq42Jtp9A/fn4UBh0ks/SUZt8OzNcnUqZH68VYR4Z9jRWLPPbV0YnZIel7VlgBNOc=
+	t=1718709310; cv=none; b=P9fhfvjMlUadZmAt8Z/ZuAqTB2NOxm1hcFB5v/ICXQWl6wIajvxnGGU09+ewSg5mQYDpZV/CLloaL4jhchUDlMBwwtBK36t5fKwY3asvpIcsYmMCMHzJ81Zsth/qLiUL9FhhPrLDQUnZMIVa6XHTj6M4mUDdj6Ajrq/wo+Fwnfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718709249; c=relaxed/simple;
-	bh=gsoN9bsY0Ylo+lc1Cq9XA37iwfd1xzM6Aee7rnvKp+o=;
-	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
-	 In-Reply-To; b=jmPFNt/5lA+W6IHZjyxWcBxML7sVZj3ksNhEuQlb7SRyv1ivQ3BizrchIowdH7GMSq7YpiJhHLiALaoscUfLhh/iBjbN6vwcvUKpA+qnBQp30hj/xB3VhQAGqbZ7O/OSpqy9apz50rvKKWiSTW0w7SAg7rrm4BaN09gAr22ZsHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLE+3EmF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718709310; c=relaxed/simple;
+	bh=FhuwRLQO68CQIh1e4REGDMaFZVAy4zws0a+cKVmWB6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uLJ+MLUHQYx//sX7rIyeOVhU0qgwAjmwAUu+5/GJxrrhTiHAGvKvB2JOni1DYk9F3UlZDRPMB5c9M/On3wrdA9xZv6Je+H81P2pDNHGE3+9WDkVlmkmSdDXbEyHQ3swbnk09eaDwQ5Z8L9zGgC2NyVPhMTksgdPD6A5wnzSL3CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4bIjzSV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLE+3EmF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718F8C3277B;
-	Tue, 18 Jun 2024 11:14:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4bIjzSV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27420C32786;
+	Tue, 18 Jun 2024 11:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718709248;
-	bh=gsoN9bsY0Ylo+lc1Cq9XA37iwfd1xzM6Aee7rnvKp+o=;
-	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
-	b=SLE+3EmFyZIadEXuElCV2DEid0uH63iaCN1BJp6a7K+KfFvX93YdSUyQRGRh0zx4V
-	 7TMQYGW2BQqf0qyeEnh+GFmPuoPM1FU62obH73qTMia1l586tTT/yl0oKGchmESrN2
-	 7FmMRngDDMzDxp66Qd9/r5hqCGFlgBuCNeWSXGxXVryko3pFOLY4sjbEPOXGqIXvNo
-	 +umleYT+raE9mRu6RRTxcICvTOSOlDTXRJLM2Eey1sNbAM/u5iV3rwg31A+a5vqzTF
-	 saohvY1NvMiP/onUxUJagWJNbFS/xC4GWOIGoAKKit1Jb+JiBOa6Y8B5BCQ2uenFFa
-	 a/ZI8A5pN4D7g==
-Content-Type: multipart/signed;
- boundary=15a9403428c9151ae6f526bf0d43cad5e1d85be656b58492aa9773431918;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Tue, 18 Jun 2024 13:14:03 +0200
-Message-Id: <D233KUGR81P5.1BJ8JSACE7C6A@kernel.org>
-To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Pratyush Yadav"
- <pratyush@kernel.org>, "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Richard Weinberger" <richard@nod.at>, "Vignesh Raghavendra"
- <vigneshr@ti.com>, "Linus Walleij" <linus.walleij@linaro.org>
-Subject: Re: [PATCH] mtd: spi-nor: winbond: fix w25q128 regression
-Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "e9hack" <e9hack@gmail.com>
-From: "Michael Walle" <mwalle@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20240610074809.2180535-1-mwalle@kernel.org>
- <76f8be4e-3050-4ae6-93b4-9524a0689022@linaro.org>
-In-Reply-To: <76f8be4e-3050-4ae6-93b4-9524a0689022@linaro.org>
+	s=k20201202; t=1718709310;
+	bh=FhuwRLQO68CQIh1e4REGDMaFZVAy4zws0a+cKVmWB6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h4bIjzSVPAu4fkvyJyB7moPqIUratKHa2oT88TgrlOFzik2cza/FWitwjT4vRm0kB
+	 CPUUKIDPQtGeT3fKthaJpQJAjPxRIC3qKjXUYAOm+vtUfYRQhXP1ya+N4mJh2cdcux
+	 o9ABxKD7i7hGruhZRyP2HFaQRn3EyPfn0Mog5Gm5XSX1HpSbmf1BuWqNnMnOsZ8tbG
+	 Vrf4oTcy1fbLlCfpTDl0uKeHjkePbLtIgRtjY6iFJzdTMIa5enrbAlZeVHshc8YQqb
+	 tvrClkZdjbX6k3bhnULszCBliCxN00ni5+Xzxngnb2oql6zxKgX6OkKmYs9VP6M3by
+	 xUZlSn8n2eupQ==
+Date: Tue, 18 Jun 2024 12:15:05 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: usb: ax88179_178a: improve link status logs
+Message-ID: <20240618111505.GA650324@kernel.org>
+References: <20240617103405.654567-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617103405.654567-1-jtornosm@redhat.com>
 
---15a9403428c9151ae6f526bf0d43cad5e1d85be656b58492aa9773431918
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Mon, Jun 17, 2024 at 12:33:59PM +0200, Jose Ignacio Tornos Martinez wrote:
+> Avoid spurious link status logs that may ultimately be wrong; for example,
+> if the link is set to down with the cable plugged, then the cable is
+> unplugged and afer this the link is set to up, the last new log that is
+> appearing is incorrectly telling that the link is up.
+> 
+> In order to aovid errors, show link status logs after link_reset
+> processing, and in order to avoid spurious as much as possible, only show
+> the link loss when some link status change is detected.
+> 
+> cc: stable@vger.kernel.org
+> Fixes: e2ca90c276e1 ("ax88179_178a: ASIX AX88179_178A USB 3.0/2.0 to gigabit ethernet adapter driver")
+> Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+> ---
+>  drivers/net/usb/ax88179_178a.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+> index c2fb736f78b2..60357796be99 100644
+> --- a/drivers/net/usb/ax88179_178a.c
+> +++ b/drivers/net/usb/ax88179_178a.c
+> @@ -326,7 +326,8 @@ static void ax88179_status(struct usbnet *dev, struct urb *urb)
+>  
+>  	if (netif_carrier_ok(dev->net) != link) {
+>  		usbnet_link_change(dev, link, 1);
+> -		netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
+> +		if (!link)
+> +			netdev_info(dev->net, "ax88179 - Link status is: %d\n", link);
 
-Hi Tudor,
+Sorry Jose,
 
-On Tue Jun 18, 2024 at 12:33 PM CEST, Tudor Ambarus wrote:
-> On 6/10/24 8:48 AM, Michael Walle wrote:
-> > Commit 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
->
-> That commit did:
-> -       { "w25q128", INFO(0xef4018, 0, 64 * 1024, 256)
-> -               NO_SFDP_FLAGS(SECT_4K) },
-> +       { "w25q128", INFO(0xef4018, 0, 0, 0)
-> +               PARSE_SFDP
-> +               FLAGS(SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
->
-> > removed the flags for non-SFDP devices. It was assumed that it wasn't i=
-n
-> > use anymore. This turned out to be wrong. Add the no_sfdp_flags as
-> > well as the size again.
-> >=20
-> > Reported-by: e9hack <e9hack@gmail.com>
-> > Fixes: 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
-> > Signed-off-by: Michael Walle <mwalle@kernel.org>
-> > ---
-> > Hartmut, Linus, could you please test it on your boards? Also, do
-> > you have a real name we should put in the Reported-by tag?
-> >=20
-> > This will also need a manual backport to the stable kernels due to
-> > the new syntax. But that should be straight forward.
-> > ---
-> >  drivers/mtd/spi-nor/winbond.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbon=
-d.c
-> > index ca67bf2c46c3..6b6dec6f8faf 100644
-> > --- a/drivers/mtd/spi-nor/winbond.c
-> > +++ b/drivers/mtd/spi-nor/winbond.c
-> > @@ -105,7 +105,9 @@ static const struct flash_info winbond_nor_parts[] =
-=3D {
-> >  	}, {
-> >  		.id =3D SNOR_ID(0xef, 0x40, 0x18),
-> >  		.name =3D "w25q128",
-> > +		.size =3D SZ_16M,
-> >  		.flags =3D SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
-> > +		.no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
->
-> and here you add dual and quad to trigger SFDP parsing I guess. All fine
-> if the old flash supports dual and quad read. But please update the
-> commit message describing the intention. With that ACK. Would be good to
-> have this merged soon.
+one more nit I noticed after sending my previous email.
 
-Right. It's not because it will trigger the SFDP parsing, but
-because that what was tested by Esben. We're lucky that this will
-trigger the SFDP parsing ;) I'll explain that in more detail and add
-a Link: to the bug report mail.
+The line above looks like it could be wrapped to <= 80 columns wide,
+which is still preferred for Networking code.
 
--michael
+Flagged by checkpatch.pl --max-line-length=80
 
->
-> >  	}, {
-> >  		.id =3D SNOR_ID(0xef, 0x40, 0x19),
-> >  		.name =3D "w25q256",
+>  	}
+>  }
+>  
 
-
---15a9403428c9151ae6f526bf0d43cad5e1d85be656b58492aa9773431918
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZnFr/BIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/hiLAGAg+Khd4RBojemy8adXmvaISa79v2rcf5r
-+KI0MNrT8r1TlCYHMwpebvKmTBFAZxS4AX9qoV2l2Cy7D882vKVYJTT58IsH8QtG
-jujq6cZWjdcC8gSPaEhSiDBLrl08GY/KRI4=
-=UUef
------END PGP SIGNATURE-----
-
---15a9403428c9151ae6f526bf0d43cad5e1d85be656b58492aa9773431918--
+...
