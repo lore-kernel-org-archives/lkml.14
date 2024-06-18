@@ -1,114 +1,96 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9106A15623D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C092415688F;
+	Tue, 18 Jun 2024 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718711930; cv=none; b=gppjP3CH5XfIKkGV3lAwo9ag9EpCePrwzyncVLrs42xeLYdqQTLq0Oh7QXPRRQW6Hkq8/mFC+MQzXixINN+2neKHQJbbZ9FV4x2NyGP9b05ae8WXx7bxBQzY80HltefWKEbipMZ1qmVf++TyMeydla6iscT2ysR+AvhCcWwNP3c=
+	t=1718711943; cv=none; b=uT/4ZHTzI7GC0AN99ghp1aXjTyGY/WH/2ubFoMlp5nqj80hvMjQ3IFWiXc09POtWUT17xeiAPS78jH/+zD6AUpURVYkAQ1g/u0/ndRrsrt9TXjhJIPdlO2JtP2e365Sym5Ov/CZcqyHRraFwOKgNGmv2wuFU7oyNf9axeY/YDa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718711930; c=relaxed/simple;
-	bh=wZNDOpKTHd8ecMNd02qDgiQzqSAwFcy8iQEhq7EYuXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ax1NQhWhPL2xBvbC4UHhHMV78/zrP9wR34I9pYD0Y0Of3VsuzslU5L33nMaNbjvOvbkX5iedKMQVFoAIgUI2BPfHTGXlX3DZ/xnWHFuA+r0gWjlyI3mW6wDPMiq1aOw7cWTCD/Z3Sq8FuDdIEC7Jnb3Dc/uxUG5z443aKzCkAqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R6D9tNuL; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718711943; c=relaxed/simple;
+	bh=PeQStbUscq8oKm2W8Tdn0/cT+IIXSaLj/fuD/VTRdN0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OExXOthS0o8JYoWnKSG8UzhQTZ451mDFAiXFjhkMADmoeHC/AWRGnBXreGWIhgw+O3E2+sJgo+exOMUwrji6p//mbC9kTtDku42VyBBECfQg+329hJ2ifcXnhgvqAal/WmR8inZFrUSzCsZcoizatc5NAj0Y2tHkfauvpIjsweY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dvbmmilm; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R6D9tNuL"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c84a21c62so5939861e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718711926; x=1719316726; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b0mT3XAsM1Zdtz0rmlruEJnGJo+to5fPb6ArUIDmdJk=;
-        b=R6D9tNuLndazqa4wIMQ7K+k+I7+GXnNJb2HwtC6ToGoYAeb8kokZLDjxzxFechzTu7
-         k6jl6MKhQH5xVNLZQcEQc/rmu24oPTVOA4WllEntBPbdTB7mpgZyhAY2r5m0YWdZWMQd
-         cqguxHA1M3H18KTqrWqV+N4dHMeDE6JssFy5oAXIcAS5TyxFcb3uoMbOX7f5je+hSh6m
-         lnfGjD4xTPMglnLAPafurqJB5jX8SGSqm35jR9RibGYOpqkGGhi2JEU9lTDtDOCXUvvH
-         7QyIpWzGoASmgBfeicLctasfBk+9aItxGYMXXb/w4F69arskevECmpjAioZF9/jku+ZZ
-         roXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718711926; x=1719316726;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b0mT3XAsM1Zdtz0rmlruEJnGJo+to5fPb6ArUIDmdJk=;
-        b=FoaiMY4SKxJkfR6mECyHTta+iok3C/xmdE3z9lTjTyAK83GXiGaXyjwOaT0MzRSk13
-         bI3eb9xCiMheTuZLyMdB405Bm9VGqPBguc0mLmp3L9t+rjG8PnKPzwDkYtmYi975SxLH
-         5NptMsh9Xh6AFLU3d9Kcbd2sSOsDO4NZb6XggepYjjyg2Yg5TBntAuox2PsB6Gpv5/WR
-         BX2c3F/yrMu1hXMRraQv4o1+QoxxkmzuwVo36pVwt67cjOaDvmOMn7eoZM5gw3ptzX3B
-         AfNetIqSVqXm/TjHirU5TVnC164prMBxnx3pUbSByujelLIxMnShubno4dFFQgt7iH/C
-         03gA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQDPc1oVrnThd56FzNPd9+SaeALsV68ax51EZw5iugfWe4aE3ufGtDJKZI3B3qc6hwD2dM4oCHVNYdl2pXSPiiwtvmcItISHQwOVPi
-X-Gm-Message-State: AOJu0YwNIC0inYVvrpYyTbf2QQZ0KEIY8Fa7uL+1zkLOI0+KPcpdYzAe
-	4xPWUa4ELbZeDHlYhFmGCP5U8RkicjB64W8Z1Gy2LRMxLKWZo5c5mptLL8v9iFM=
-X-Google-Smtp-Source: AGHT+IFVN5opPFCyVRbiMdFP/MEYoH1ZpA6hRXvw7NtnUj084W/GcW3Rkzq1niVmtjR+lXnvSn5rUQ==
-X-Received: by 2002:a19:e015:0:b0:52c:a483:4cc6 with SMTP id 2adb3069b0e04-52ca6e6dd0emr7019928e87.36.1718711925772;
-        Tue, 18 Jun 2024 04:58:45 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca282f07dsm1491804e87.81.2024.06.18.04.58.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 04:58:45 -0700 (PDT)
-Message-ID: <ae8cf864-11e7-4bfc-87b2-afc5490b90a9@linaro.org>
-Date: Tue, 18 Jun 2024 13:58:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dvbmmilm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718711941; x=1750247941;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PeQStbUscq8oKm2W8Tdn0/cT+IIXSaLj/fuD/VTRdN0=;
+  b=DvbmmilmbflD/nCa54LGQWP10xGx00eLxdf906mcizWBUW8veR1fyS1g
+   +mZS/woJuvJt+6ObKsc4kTKN6lObW7FSAY08fJQTSovEOlLbiBRXGMOfd
+   8XPIxtGanITGAhLbE49q2FcDY7hTwc+MVkEtnP87YYjcnoIogkusBfFPl
+   90j/j22omGv+58Ng5dorGVZZbowZ0ugjtbAYFBDcUjX22TUvyII8SRBGQ
+   qI+jwKemK/gXwjF50dQ8GtDm8zWDzib2sblYhyNBgntcdfqIr+YL+czjA
+   NK1yj3BFmTwqH50xdYODKtdggyt3cNmn/lZurAxCIkNRyiYUryBrAsW2a
+   A==;
+X-CSE-ConnectionGUID: RWTA3JEpTCiebxhG70obzA==
+X-CSE-MsgGUID: /y2cA7+TTyWk2TNbwJ6gDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15727539"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15727539"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 04:59:01 -0700
+X-CSE-ConnectionGUID: /z9uheBwQuyd3nSf6XhO+A==
+X-CSE-MsgGUID: cNtcuSBEQryH3bVbtDzW2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="64765533"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.7])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 04:58:58 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 18 Jun 2024 14:58:54 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: matan@svgalib.org, agathe@boutmy.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] platform/x86: lg-laptop: Use ACPI device handle when
+ evaluating WMAB/WMBB
+In-Reply-To: <20240606233540.9774-5-W_Armin@gmx.de>
+Message-ID: <60dfc0ce-ff3c-afd4-46e8-c0458e2db8d1@linux.intel.com>
+References: <20240606233540.9774-1-W_Armin@gmx.de> <20240606233540.9774-5-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/12] arm64: dts: qcom: sc8280xp-x13s: enable pm8008
- camera pmic
-To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
- Mark Brown <broonie@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Das Srinagesh <quic_gurus@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd
- <swboyd@chromium.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240608155526.12996-1-johan+linaro@kernel.org>
- <20240608155526.12996-13-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240608155526.12996-13-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-1937100483-1718711934=:1400"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1937100483-1718711934=:1400
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Fri, 7 Jun 2024, Armin Wolf wrote:
+
+> On the LG Gram 16Z90S, the WMAB and WMBB ACPI methods are not mapped
+> under \XINI, but instead are mapped under \_SB.XINI.
+>=20
+> The reason for this is that the LGEX0820 ACPI device used by this
+> driver is mapped at \_SB.XINI, so the ACPI methods where moved as well
+> to appear below the LGEX0820 ACPI device.
+>=20
+> Fix this by using the ACPI handle from the ACPI device when evaluating
+> both methods.
+>=20
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+> Tested-by: Agathe Boutmy <agathe@boutmy.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+
+I remember looking this through earlier but it seems I never gave a tag=20
+for it...
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 
+--=20
+ i.
 
-On 6/8/24 17:55, Johan Hovold wrote:
-> Enable the PM8008 PMIC which is used to power the camera sensors.
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
-
-
->   .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    | 123 ++++++++++++++++++
->   1 file changed, 123 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> index 642705b7d896..daca6bd2e34c 100644
-> --- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> @@ -297,6 +297,27 @@ linux,cma {
->   	};
->   
->   	thermal-zones {
-> +		pm8008-thermal {
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <0>;
-
-This single line can be dropped now
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+--8323328-1937100483-1718711934=:1400--
