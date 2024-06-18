@@ -1,110 +1,162 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from orthanc.universe-factory.net (orthanc.universe-factory.net [104.238.176.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC1F55E58;
-	Tue, 18 Jun 2024 06:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEC41D9535;
+	Tue, 18 Jun 2024 06:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.238.176.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718691723; cv=none; b=VuEO5kWe9GxT2KpeFrGBBGjJuePR8XlO2uLKZOjtI1Wnv+0/z80KQcncRZ5couitkH4n2GKdJOaL6AXpv/rbaFaiQFaR4A2fJMoXWktd1BRKDJe0dIdn+iYupB4qF2k7RxB7+57t1X84oi6ZDhXyglItdRC/EMWq2mFqULR8sDA=
+	t=1718691745; cv=none; b=VOWp+S49ejijvKCgrkTqC3xl57M9PdhmT5aMOxTmO7PyXTlppG1OfdEWGEFaekT3DlpcCWKQldgREy8MQ9Uur9oANukSGhWcyHQOMjrNPGcHuDTqNzGY4rDOQARbF0JHuJQ7w/xTOeXwausAY0BpUwpMTVSrb3DfYQgrADF0bkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718691723; c=relaxed/simple;
-	bh=m1zG2yEWX7cBjqsBzhezr80cVaRI1m/8Ekw9b0fms2c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LwlznVw7ggqdV4IOgxExIwwiTeCFB15yK1fg/iMNM8U4um1HpTtbNoAwI5D8Ea1zBaVQXQWB3sgtZSsius8K5iK36Dr+md2n+asef2+6AuH4BTJWYQDH6FwQ+CoTyzaY/mOLYfbHhbCmyXwQt9d54iYMedrcA3VtpozJ9+h8+r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W3Gqd6Qk9z4f3jLV;
-	Tue, 18 Jun 2024 14:21:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id AC8ED1A016E;
-	Tue, 18 Jun 2024 14:21:56 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCH7wyCJ3Fm1K4IAQ--.17725S4;
-	Tue, 18 Jun 2024 14:21:56 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2] blk-throttle: fix lower control under super low iops limit
-Date: Tue, 18 Jun 2024 14:21:08 +0800
-Message-Id: <20240618062108.3680835-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718691745; c=relaxed/simple;
+	bh=lrIEYL8C56enjDZz6hyG7L9syLSFkPNkc7tWSgvmSHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EPqaIEJR5jPeHvyKVXylJnfiXO+i+c0mq0C30o+4ud68CczMjKjN/HrLL2+OsuuyP6t4rpiizyRcTPA8OBV4qApF8N5+bcmwr/+tdtEBJk6+jKmY2KU2BpLZPNpy+5J3Jcjk+C8GZTv0SvuV2X689k/52gKjRR+dSQk1DBy+Hw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; arc=none smtp.client-ip=104.238.176.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=universe-factory.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
+Received: from [IPV6:2001:19f0:6c01:100::2] (unknown [IPv6:2001:19f0:6c01:100::2])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by orthanc.universe-factory.net (Postfix) with ESMTPSA id 44C041F917;
+	Tue, 18 Jun 2024 08:22:20 +0200 (CEST)
+Message-ID: <2ea4d24a-c345-463a-8160-2675b8339d79@universe-factory.net>
+Date: Tue, 18 Jun 2024 08:22:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH7wyCJ3Fm1K4IAQ--.17725S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1kCryfZFykGr47Kw4UJwb_yoW8GF45pr
-	W3Kr1jgF4DWFn7KF43Gw4ayFy8CFWkZr9xJ398uw1ayr13CF17Krn3CF4Yyw4xZFZa9FW7
-	ury8ta4kAF1UCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
-	fUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 1/2] net: dsa: mt7530: factor out bridge
+ join/leave logic
+Content-Language: en-US-large
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <378bc964b49f9e9954336e99009932ac22bfe172.1718603656.git.mschiffer@universe-factory.net>
+ <555b23dc-e054-426b-a26b-6313f260064f@arinc9.com>
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+Autocrypt: addr=mschiffer@universe-factory.net; keydata=
+ xsFNBFLNIUUBEADtyPGKZY/BVjqAp68oV5xpY557+KDgXN4jDrdtANDDMjIDakbXAD1A1zqX
+ LUREvXMsKA/vacGF2I4/0kwsQhNeOzhGPsBa8y785WFQjxq4LsBJpC4QfDvcheIl4BeKoHzf
+ UYDp4hgPBrKcaRRoBODMwp1FZmJxhRVtiQ2m6piemksF1Wpx+6wZlcw4YhQdEnw7QZByYYgA
+ Bv7ZoxSQZzyeR/Py0G5/zg9ABLcTF56UWq+ZkiLEMg/5K5hzUKLYC4h/xNV58mNHBho0k/D4
+ jPmCjXy7bouDzKZjnu+CIsMoW9RjGH393GNCc+F3Xuo35g3L4lZ89AdNhZ0zeMLJCTx5uYOQ
+ N5YZP2eHW2PlVZpwtDOR0zWoy1c0q6DniYtn0HGStVLuP+MQxuRe2RloJE7fDRfz7/OfOU6m
+ BVkRyMCCPwWYXyEs2y8m4akXDvBCPTNMMEPRIy3qcAN4HnOrmnc24qfQzYp9ajFt1YrXMqQy
+ SQgcTzuVYkYVnEMFBhN6P2EKoKU+6Mee01UFb7Ww8atiqG3U0oxsXbOIVLrrno6JONdYeAvy
+ YuZbAxJivU3/RkGLSygZV53EUCfyoNldDuUL7Gujtn/R2/CsBPM+RH8oOVuh3od2Frf0PP8p
+ 9yYoa2RD7PfX4WXdNfYv0OWgFgpz0leup9xhoUNE9RknpbLlUwARAQABzTJNYXR0aGlhcyBT
+ Y2hpZmZlciA8bXNjaGlmZmVyQHVuaXZlcnNlLWZhY3RvcnkubmV0PsLBlwQTAQoAQQIbAwUL
+ CQgHAwUVCgkICwUWAwIBAAIeAQIXgAIZARYhBGZk572mtmmIHsUudRbvP2TLIB2cBQJk6wEu
+ BQkV4EbpAAoJEBbvP2TLIB2cjTQQAOE1NZ9T2CCWLPwENeAgWCi+mTrwzz2iZFYm9kZYe13f
+ ZmeGad30u6B57RW24w3hp6uFY764XTHo8J0pLveYSg9zxgrMZp1elWp4Pnmyw7tosJuxmb7V
+ cE4zeW74TZmP653Li12OZGVZ863VDpDN5cTTdm/t1pOp0cnZlLHo3OtGemxdOFd0MSauYAqF
+ htvM3TbWdnGonnMblKX8cSRwW5FUzOwJ+KuF7KsYxQCAEQkWwd1gmevPISpXpvIDicyPgK5w
+ ToS3MKayMKf0iFIFCzRwLZAzVhVY987yPaUPwyY6pzozNYla4OTLnXQaXQlLeiP9EgMF2UXT
+ kI345ZnCcyG66uY3eZv1taRWt+IfguPQo8eVdAZDWVh9LZ3nCw/gobfKFr+tk0c1bqCm0N3m
+ pBWB+d+EmBVaW4YkZWGxgt0nje76791qI5s5xtr+IqaxBUmA1W6SIvz4kfzsvt6xeM6rgrrY
+ M9R9mF2Vrc84cHbIRt69ScmvSo5da7Cpi/evQtG9rdSPb3ycCfFptxfaTnxrxSQw1i7Uw+O1
+ OmsETE/ThAFRuqO5wp4Pf0D788bdWP/Pc5/n9nARmJ9xOV46UHiLV4KmMBVY+VE8TJbZoqc/
+ EpLnpknTpNOteJ5+DVYQ/ZV+mWv56nwOpJS+5CV/g1GEGzRf6ZVZMDYl9lC4NcnWzsFNBFLN
+ IUUBEADCFlCWLGQmnKkb1DvWbyIPcTuy7ml07G5VhCcRKrYD9GAasvGwb1FafSHxZ1k0JeWx
+ FOT02TEMmjVUqals2rINUfu3YXaALq8R0aQ/TjZ8X+jI6Q6HsHwOdFTBL4zD4pKs43iRWd+g
+ x8xYBb8aUBY+KiRKP70XCzQMdrEG1x6FABbUX9651hN20Qt/GKNixHVy3vaD3PzteH/jugqf
+ tNu98XQ2h4BJBG4gZ0gwjpexu/LjP2t0IOULSsFSf6S8Nat6bPgMW3CrEdTOGklAP9sqjbby
+ i8GAbsxZhjx7YDkl1MpFGxlC2g0kFC0MMLue9pSsT5nwDl230IxZgkS7joLSfmjTWj1tyEry
+ kiWV7ta3rx27NtXYnHtGrHy+yubTsBygt2uZbL9l2OR4zsc9+hLftF6Up/2D09nFzmLKKcd5
+ 1bDrb+SMsWull0DjAv73IRF9zrHPJoaVesaTzUGfXlXGxsOqpQ9U2NjUUJg3B/9ijKGM3z9E
+ 6PF/0Xmc5gG3C4XzT0xJVfsKZcZoWuPl++QQA7nHJMbexyruKOMqzS273vAKnTzvOD0chIvU
+ 0DZ/FfJBqNdRfv3cUwgQwsBU6BGsGCnM0ofFMg7m0xnCAQeXe9hxAoH1vgGjX0M5U5sJarJA
+ +E6o5Kmqtyo0g5R0NBiAxJnhUB0eHJPAElFrR7u1zQARAQABwsF8BBgBCgAmAhsMFiEEZmTn
+ vaa2aYgexS51Fu8/ZMsgHZwFAmTrAV8FCRXgRxoACgkQFu8/ZMsgHZwE0A/+PCYHd4kl/oPK
+ Kqv9qe89fEz4s8BSVmX+Aq/u52Fl373rcVWpGjokzYDr7jhUHMLEYJcAdmv5AXIbee6az6ip
+ OgshW3/rVRRXTgh+DkQMyQZPTHDbB7o9JLcXQ1ehZeEzI8u+HxvWE+Anoquz8Ufsd/3RttgQ
+ 6HPHSiIogzDizVGxUEPhxFvcH/KlSTTtcmS126Kng2AWs5StE7BW53/cukTLfBR0IGBH1Uwv
+ NqDMomXBOifAkv29LFf6qJJkgKA56eiMtUgVjYMgDm9KFOIwDV7J0tNHLqIc0zZEJF+BtxZM
+ 8tAhPi930wDK4Lcx3TkSNa5/yhmSSnOtLL+YU7R/Gqx24gEeZ0ceMW6A4I6qVrgd3X8pKSYr
+ DzqfF/m+ODQeCiSUKtqUa1Kyx736txQ8/Y1DvfXqglIIcF2yiLYpxdHNrNsIC6Me0lEWrFel
+ C/dkbUrddrlCOReulvhn1Qve+zh7UC9gLeN6ZkneRgTb6G9NZQhkssXV7ZKXGzn26tzwAgSy
+ Ezh+M8kMylL84WE2TkQKo59oqMV7scWcrcY801Lhurb636ZJ/ebMd4bn+eAzwURaeqzScZ2b
+ hg1eFj1e0ZkaSVyAu9gBCzuRUnbZ4TiC8/mFfg7HxTnbOSPYI6TrNPFzuzf1NDPLXRXV+rcY
+ cQqe8eRmcdNdqWSiJQ8VLoI=
+In-Reply-To: <555b23dc-e054-426b-a26b-6313f260064f@arinc9.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------PBONYVPojjQ4770kAfxrJe0Q"
 
-From: Yu Kuai <yukuai3@huawei.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------PBONYVPojjQ4770kAfxrJe0Q
+Content-Type: multipart/mixed; boundary="------------txyx4cF6yZe4kJ3yCDKE6l7V";
+ protected-headers="v1"
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Message-ID: <2ea4d24a-c345-463a-8160-2675b8339d79@universe-factory.net>
+Subject: Re: [PATCH net-next v2 1/2] net: dsa: mt7530: factor out bridge
+ join/leave logic
+References: <378bc964b49f9e9954336e99009932ac22bfe172.1718603656.git.mschiffer@universe-factory.net>
+ <555b23dc-e054-426b-a26b-6313f260064f@arinc9.com>
+In-Reply-To: <555b23dc-e054-426b-a26b-6313f260064f@arinc9.com>
 
-User will configure allowed iops limit in 1s, and calculate_io_allowed()
-will calculate allowed iops in the slice by:
+--------------txyx4cF6yZe4kJ3yCDKE6l7V
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-limit * HZ / throtl_slice
+T24gMTgvMDYvMjAyNCAwNjo0OCwgQXLEsW7DpyDDnE5BTCB3cm90ZToNCj4gT24gMTcvMDYv
+MjAyNCAyMS4zMCwgTWF0dGhpYXMgU2NoaWZmZXIgd3JvdGU6DQo+PiBBcyBwcmVwYXJhdGlv
+biBmb3IgaW1wbGVtZW50aW5nIGJyaWRnZSBwb3J0IGlzb2xhdGlvbiwgbW92ZSB0aGUgbG9n
+aWMgdG8NCj4+IGFkZCBhbmQgcmVtb3ZlIGJpdHMgaW4gdGhlIHBvcnQgbWF0cml4IGludG8g
+YSBuZXcgaGVscGVyDQo+PiBtdDc1MzBfdXBkYXRlX3BvcnRfbWVtYmVyKCksIHdoaWNoIGlz
+IGNhbGxlZCBmcm9tDQo+PiBtdDc1MzBfcG9ydF9icmlkZ2Vfam9pbigpIGFuZCBtdDc1MzBf
+cG9ydF9icmlkZ2VfbGVhdmUoKS4NCj4+DQo+PiBObyBmdW5jdGlvbmFsIGNoYW5nZSBpbnRl
+bmRlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBTY2hpZmZlciA8bXNjaGlm
+ZmVyQHVuaXZlcnNlLWZhY3RvcnkubmV0Pg0KPiANCj4gSSBzZWUgdGhhdCBteSByZXZpZXcg
+b2YgdGhlIHByZXZpb3VzIHZlcnNpb24gb2YgdGhpcyBwYXRjaCB3YXMgY29tcGxldGVseQ0K
+PiBpZ25vcmVkLiBXaHk/DQo+IA0KPiBBcsSxbsOnDQoNClVnaCwgSSBzb21laG93IG92ZXJs
+b29rZWQgdGhlIHJldmlldyBtYWlsIGZvciB0aGlzIHBhdGNoLiBTb3JyeSBhYm91dCB0aGF0
+LCANCndpbGwgYWRkcmVzcyB5b3VyIGNvbW1lbnRzIGluIHYzLg0KDQpNYXR0aGlhcw0K
 
-However, if limit is quite low, the result can be 0, then
-allowed IO in the slice is 0, this will cause missing dispatch and
-control will be lower than limit.
+--------------txyx4cF6yZe4kJ3yCDKE6l7V--
 
-For example, set iops_limit to 5 with HD disk, and test will found that
-iops will be 3.
+--------------PBONYVPojjQ4770kAfxrJe0Q
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-This is usually not a big deal, because user will unlikely to configure
-such low iops limit, however, this is still a problem in the extreme
-scene.
+-----BEGIN PGP SIGNATURE-----
 
-Fix the problem by making sure the wait time calculated by
-tg_within_iops_limit() should allow at least one IO to be dispatched.
+wsF5BAABCAAjFiEEZmTnvaa2aYgexS51Fu8/ZMsgHZwFAmZxJ5sFAwAAAAAACgkQFu8/ZMsgHZxZ
+MBAAwVv09Oyw7RiI9OdMTQ2qiWblrcBsTGNOtODWHL+GsMJPAph5Yc0pAbKuVZdK2tjKLNQEV/4P
+Jcq08YNPSZuyB6Wm30puzUMHzzPU4y0awx13/RDVWdjULq54XzXL0E0IauE/41RdoW1N97gmMqi2
+5+ZHCcJ55PyxTMdrQ8J4ihNRjrC4q5/60Hpw+5pkCGVlq2fwUxM363bVBiGnrbwCEkEAOGhoQXIT
+a+38Xg977kJEhecqnVoJltR3pFomDtvttjozxN1L8RGZBVpvSpKUjg72FeLVg9VtOYs+vHjbx2zD
+oEO4FBf83P2ZYA0W+PqQJAVrxHLlZtf65cvLqYFG1c06+w/Ulzuz0M+sgdWJh2sd5F4pMsproFVE
+zdsNVEJn7Mf4VOgviHyemyBGD4qVuRdVCjhmpI2QhmJxs3ZQ0S4tsJO5j9+Nj68Y/f09f2d9XaFj
+akYXLzJBt6rNjcPH1L1izdPU0TRNNKiTXjxJbVXMRlLxqI5DFbKEqKE3HPwyLExbdN3/ZX8FgHCm
+I4iIR6pjfJxQ3mqIVA0FygHS4CkkdEPJmR5npI+KJmAHEis/SGJLxmKBmEmsOUQZzhgqKJVFKtak
+QTvMlOK1tfOoJf9WzHKXujRg/+qNe1eLZUfNAAiNSZXnzfVXSxgNwtT5DSOS1oMl58SLi65fCB6r
+W6E=
+=RCWV
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
-Changes in v2:
- - instead of extend thorlt_slice, extend wait time;
- block/blk-throttle.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index c1bf73f8c75d..dc6140fa3de0 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -704,6 +704,9 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
- 
- 	/* Calc approx time to dispatch */
- 	jiffy_wait = jiffy_elapsed_rnd - jiffy_elapsed;
-+
-+	/* make sure at least one io can be dispatched after waiting */
-+	jiffy_wait = max(jiffy_wait, HZ / iops_limit + 1);
- 	return jiffy_wait;
- }
- 
--- 
-2.39.2
-
+--------------PBONYVPojjQ4770kAfxrJe0Q--
