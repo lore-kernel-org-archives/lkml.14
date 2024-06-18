@@ -1,114 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498D81D69E;
-	Tue, 18 Jun 2024 15:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485521D69E
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718723530; cv=none; b=JPX2beOQP/uRRw83WuVgTdmDcqwkTA/RzVdFRK+FDGlpYxZVJ8O3D1oX7U/fBJdhYXTobCYAXGywJscXh50tBKR8FBUHQqtnYpe4fH2MauVKUs41JNk3kxhWOXP6rivEeKsN3xGeYLIcHKz4yeo1Uc1z0UuSg5mGyD7R0C+MuQQ=
+	t=1718723536; cv=none; b=XIYV4XYaOoES/GLfDhiev5ZroBLDORsv+Dcpppr/AAWzdYGGaUG6a6ftjYWGtMRH2gUvjHIFnPGfBMwEqtbv10Qynp53ks701U5B3y0z89q+GdyIQPM5NtSytdp31iAJ9NFDVKArq8rPJTXbrRMOESJEFQio3Iew/lBLw2LxWN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718723530; c=relaxed/simple;
-	bh=bMfJOZvYtAPMyEwZepUNDHBwH3iCBZZUTjaVItVAg7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7MLKa+8iYS5S6yh6Vm91Ya1/KnIcJXIzVsPIX2z6+fqiKhpmiUY3tSZfjidgAQtv86wzx1jBA+8DbejC3nwVcgYMoIHvmdrN53K2QWRBOUeuLQBQmwR0DfDDLDiLVD3hL2Ap0doSCN1Q/qvfEIsxr5Rb8GoHHDmaWmdZDdt2P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9Gor6RB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718723536; c=relaxed/simple;
+	bh=kiewTNom2O47OTfFgOcrJGUfRo6DrcAKHxtaAdWUzTQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GdhZInH7VUmwqces6Zt4hm8ZrsEXIsZg6RIGNu/eQX1cwjvAXfFxEkj20kYRZaeFn1W8KpKv5VgPX1/cKBz6LHffpgPI09K4qK1ewI9ibRI/EL6LhRr9LyI7Nff95YMDA51te37VUh5X2GBlnDF6XflfE5umUMEHgsxzBa7UD5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oDLh2KyT; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9Gor6RB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0626C3277B;
-	Tue, 18 Jun 2024 15:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718723529;
-	bh=bMfJOZvYtAPMyEwZepUNDHBwH3iCBZZUTjaVItVAg7I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C9Gor6RBbqpPDQKTkJ0/s1IJIT2xMDmGcy90a65TX9mZnYBmf/UEX1KwADOac+2so
-	 M7oJmcGtUw4et+lq5+e6iVjQMSu2hZ2p2G/5sw0MNoKkN2zzcgeaer1Xs+2xVibjll
-	 u1a0Rsy2ceOWv7tx0WHKVJrECQTWNE47sFqdHg5QZk6mF+08JujRAzNS4MoQEpC2dh
-	 V/u/WcZ2E2CdWN4ToU0ILCMWOmXsIkOCavGh9i4dLGeo8tFJKBure44RY/WWkxR6pV
-	 p0e4dcyICY3IcLLzYVbmboJm0nKH2dwkFYeblTX+yzGcdG1Z/9iMhESMqjqNAXGyEx
-	 zI2SVIaWi6Jeg==
-Date: Tue, 18 Jun 2024 16:12:04 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Guillaume Stols <gstols@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Beniamin Bia <beniamin.bia@analog.com>,
-	Stefan Popa <stefan.popa@analog.com>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	jstephan@baylibre.com, dlechner@baylibre.com
-Subject: Re: [PATCH 4/9] dt-bindings: iio: adc: adi,ad7606: add supply
- properties
-Message-ID: <20240618-eggnog-cusp-8b5a17313367@spud>
-References: <20240618-cleanup-ad7606-v1-0-f1854d5c779d@baylibre.com>
- <20240618-cleanup-ad7606-v1-4-f1854d5c779d@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oDLh2KyT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718723535; x=1750259535;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kiewTNom2O47OTfFgOcrJGUfRo6DrcAKHxtaAdWUzTQ=;
+  b=oDLh2KyTUJtj/Chyl839AYqxnm+F0LDr7CE7fRjmAZVOvqf5HngAp/76
+   j6WhZKcBsPcfmRvUaHvHuXyc98GVczkIJJUkPrXMMPJX8uPDTNnY4IJ7v
+   IWuzjaNoMPs/hJNoA+4mwb05vSuoSvNoPu0me6AKL9t4Q7a4JxlD9MLHb
+   CzyJjeRKxoFVRLUDmcBbRlx/WCJyrJMrL1HQHLJD/4aqmbTG1bS2tX4Xr
+   hNLt+k6SqMGBgaPzHvOT7TQkP+gzmZkzMVs0r1JUiLPhhLhWqTAK1lnbA
+   bc/bIYugIvmm2RM8drKHI4mx67BEWj3MIzc5QP4tY5CujYzYK1f2OOiBo
+   A==;
+X-CSE-ConnectionGUID: LLJhLg2FS2eO0eWIHBQ3gg==
+X-CSE-MsgGUID: lcMDCmNkS/qjRRI8v32H8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15374175"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15374175"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 08:12:14 -0700
+X-CSE-ConnectionGUID: vKnAiQhbTd6SK7nWUg7ALg==
+X-CSE-MsgGUID: JlX7slZ7SxC+JxQpickPIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="41426916"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa006.fm.intel.com with ESMTP; 18 Jun 2024 08:12:14 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Cc: ak@linux.intel.com,
+	eranian@google.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [RESEND PATCH 00/12] Support Lunar Lake and Arrow Lake core PMU
+Date: Tue, 18 Jun 2024 08:10:32 -0700
+Message-Id: <20240618151044.1318612-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dwSxzLPU/JD5GHB2"
-Content-Disposition: inline
-In-Reply-To: <20240618-cleanup-ad7606-v1-4-f1854d5c779d@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
---dwSxzLPU/JD5GHB2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From the core PMU' perspective, the Lunar Lake and Arrow Lake are the
+same, which are similar to the previous generation Meteor Lake. Both are
+hybrid platforms, with e-core and p-core.
 
-On Tue, Jun 18, 2024 at 02:02:36PM +0000, Guillaume Stols wrote:
-> Add voltage supplies
+The key differences include:
+- The e-core supports 3 new fixed counters
+- The p-core supports an updated PEBS Data Source format
+- More GP counters (Updated event constraint table)
+- New Architectural performance monitoring V6
+  (New Perfmon MSRs aliasing, umask2, eq).
+- New PEBS format V6 (Counters Snapshotting group)
+- New RDPMC metrics clear mode
 
-Are these available on all devices?
+The details for the above new features can be found in the Intel
+Architecture Instruction Set Extensions and Future Features (052).
+https://cdrdv2.intel.com/v1/dl/getContent/671368
 
->=20
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> index 80866940123c..e480c9a7c7ca 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> @@ -35,6 +35,15 @@ properties:
-> =20
->    avcc-supply: true
-> =20
-> +  vdrive-supply:
-> +    description:
-> +      Determines the voltage level at which the interface logic pins will
-> +      operate.
-> +
-> +  refin-supply:
-> +    description:
-> +      The voltage supply for optional external reference voltage.
-> +
->    interrupts:
->      description:
->        The BUSY pin falling edge indicates that the conversion is over, a=
-nd thus
->=20
-> --=20
-> 2.34.1
->=20
+The counters may not be continuous anymore. Patch 1-2 converts the max
+number of counters to a mask of counters. The change is a generic change
+which impacts all X86 platforms.
 
---dwSxzLPU/JD5GHB2
-Content-Type: application/pgp-signature; name="signature.asc"
+Patch 3-4 supports all the legacy features on LNL and ARL.
 
------BEGIN PGP SIGNATURE-----
+Patch 5-7 supports the new Architectural performance monitoring V6.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnGjxAAKCRB4tDGHoIJi
-0jfNAQD/IO92nu0o5BVlJoeT8eKFMJuXZdNa82oSRiAaZ94tqAEAsrrW1Y2fjM9G
-36teI0yB8XX9R9RohxAMR5+Ln9E71QE=
-=Jamf
------END PGP SIGNATURE-----
+Patch 8-11 supports the new PEBS format V6.
 
---dwSxzLPU/JD5GHB2--
+Patch 12 supports the new RDPMC metrics clear mode.
+
+Kan Liang (12):
+  perf/x86/intel: Support the PEBS event mask
+  perf/x86: Support counter mask
+  perf/x86: Add Lunar Lake and Arrow Lake support
+  perf/x86/intel: Support new data source for Lunar Lake
+  perf/x86: Add config_mask to represent EVENTSEL bitmask
+  perf/x86/intel: Support PERFEVTSEL extension
+  perf/x86/intel: Support Perfmon MSRs aliasing
+  perf/x86: Extend event update interface
+  perf: Extend perf_output_read
+  perf/x86/intel: Move PEBS event update after the sample output
+  perf/x86/intel: Support PEBS counters snapshotting
+  perf/x86/intel: Support RDPMC metrics clear mode
+
+ arch/x86/events/amd/core.c           |  26 +-
+ arch/x86/events/core.c               | 123 +++----
+ arch/x86/events/intel/core.c         | 466 ++++++++++++++++++++-------
+ arch/x86/events/intel/ds.c           | 267 +++++++++++++--
+ arch/x86/events/intel/knc.c          |   2 +-
+ arch/x86/events/intel/p4.c           |  12 +-
+ arch/x86/events/intel/p6.c           |   2 +-
+ arch/x86/events/perf_event.h         |  81 ++++-
+ arch/x86/events/perf_event_flags.h   |   2 +-
+ arch/x86/events/zhaoxin/core.c       |  14 +-
+ arch/x86/include/asm/intel_ds.h      |   6 +
+ arch/x86/include/asm/msr-index.h     |   6 +
+ arch/x86/include/asm/perf_event.h    |  27 ++
+ include/uapi/linux/perf_event.h      |   6 +-
+ kernel/events/core.c                 |  15 +-
+ tools/perf/Documentation/topdown.txt |   9 +-
+ 16 files changed, 810 insertions(+), 254 deletions(-)
+
+-- 
+2.35.1
+
