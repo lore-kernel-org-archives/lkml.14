@@ -1,30 +1,30 @@
 Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C1D185E5F
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B903C16D4F2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740079; cv=none; b=U0JMsW2EzE1Wf6ta7SDyqosC1X7uat/B0zOzqP/X1nQMgkFIMB8SH/2wK4zgUSAz/rnJs7PIm6BT0AHZdyQNp6ngyzKjF2F4pZjs8GH2bE8jJ1G7MFjugV0GFX1XETqh31pQ15bOV7p4PD3cbSyXE8O4nhyW1YiDW+tugUtROiw=
+	t=1718740099; cv=none; b=lo79sxin7A9awxIi6IG4c1E1e21QnXEhZJ0xoeLRhAN3XhakwBSt1Bp8Q7WASf46BirPw3BcndUXF+h/O1uZuKPnt1elF23Z7VRcIJKhG1RTP1InSdqKhCyqVBJ3VW90t3OWhipywCfAwbqJuXDyuKVyjtfvFxOqvtbCQzREW4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740079; c=relaxed/simple;
-	bh=snynFABNM1Gck5Um7mIRJ4IKlsAaJh7ae0xK4flsN6M=;
+	s=arc-20240116; t=1718740099; c=relaxed/simple;
+	bh=OaadSuDg3Zt5H3nbHytRHPm2vMT7VaQsyqyPaUwTe5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G6mUIwBE1OAG7bdieORDx3/2iB5ONo7XI4I6TYApPv0BoNvjdAu3sYcZNOYPLNgRuNxCL3mUU27SzKv2u7EEX/i6duThw2cjxUaNwQoIS3PQdD5Yltu1jW9MJB694xQdAKW4SOwMb4aRHSRKblc3zXkeBcNL5H7ywmN1czArucQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=MLiSRG/u; arc=none smtp.client-ip=167.172.40.54
+	 MIME-Version; b=mYxlReNzmjleTQx763Rca24xdBs05pZj6fMRJIJQb6su7cIOP3UAMw0P0ao9i/CDqu9At8T4mfYKnFDl14KtsLoJoC3OWx0UVLGfHnTJxjsO+nd0Nox/9zOPKqcO09zUnS4Gl/cbzzFH+ejNmHroA1/l3bvd088unwEbFoOeEs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=BIuLLz8k; arc=none smtp.client-ip=167.172.40.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="MLiSRG/u"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="BIuLLz8k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718740039; bh=cTokzGuyZHy1zj6EjyxdTVicVJYVVw875XcQ0l6Fy9M=;
- b=MLiSRG/un15q/I2VlOgT5rHLpuZ1qEyz0/R5KGo08Lmhh4DWKIosf/LoqWIuys+JpIf5um8F9
- EZ8Ggh3yHHJniBJnXbSX4oJoiWutOHTZmef8CzmM9S7CMDXUROdCgVDstUY7Kv5yY6rXArbRaqB
- CIaK86qnLkBvpFE2B0YP49m1YhiQtrzY/VmjFdu4jgghZPYikS82plWNGHxChGFbD82e9sU5QIh
- fX1pGtCTDYkiWl91DlqIKK+Fv+DApSDA8t6/lrs1uaVEqjpfMJ8r8zKi8wXxsCtPRoOJGwJgKGS
- 4gvrcfcNCRvPFHuPoIvrXCygu4J7COC7ls/vpJn1yWQA==
+ t=1718740060; bh=vLg1vrLKWrSir1pSxtMB4wEHVQbTsj3SVKKsHL322Sc=;
+ b=BIuLLz8kcmo0o6tNrR3Nm+pHYmj7fR34PKkcYECkXZzOHPU+v/zX4NVdWDiI9jWoIHkMqmchB
+ XnnqsgPM8sgs3TRv+CaCvjCf76nEEpFRR8zmrslqDvTAeDiuGhKprOlFMJv0prSWmfKN3JAwcON
+ 0kYJJ72CZ/kYGY3/J267OrXPBIY1osUvmukA1xiyfcz4RQxERqMj4h5JETC2iHDGJBDi4ywMWlt
+ 1ALPuyDMqjmKYe5hpDuXTuePkV9rGqAo7mstp7BlBRvOidpijsNrJI42HFeIqIy0gjjcSUsRIkA
+ qMl7iiGW8GC8tlRyNfj8Kjz3ARggGEHkck5ygZhroslA==
 From: Jonas Karlman <jonas@kwiboo.se>
 To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
  <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "Greg
@@ -37,9 +37,9 @@ Cc: Alex Bee <knaerzche@gmail.com>, Nicolas Dufresne
  <detlev.casanova@collabora.com>, linux-media@vger.kernel.org,
  linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
  linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v5 05/10] media: rkvdec: Extract rkvdec_fill_decoded_pixfmt into helper
-Date: Tue, 18 Jun 2024 19:46:29 +0000
-Message-ID: <20240618194647.742037-6-jonas@kwiboo.se>
+Subject: [PATCH v5 10/10] media: rkvdec: h264: Support High 10 and 4:2:2 profiles
+Date: Tue, 18 Jun 2024 19:46:34 +0000
+Message-ID: <20240618194647.742037-11-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240618194647.742037-1-jonas@kwiboo.se>
 References: <20240618194647.742037-1-jonas@kwiboo.se>
@@ -56,80 +56,211 @@ X-Complaints-To: abuse@forwardemail.net
 X-ForwardEmail-Version: 0.4.40
 X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
  167.172.40.54
-X-ForwardEmail-ID: 6671e44464ade33c90059fcb
+X-ForwardEmail-ID: 6671e45a64ade33c9005a025
 
-Extract call to v4l2_fill_pixfmt_mp() and ajusting of sizeimage into a
-helper. Replace current code with a call to the new helper.
+Add support and enable decoding of H264 High 10 and 4:2:2 profiles.
+
+Decoded CAPTURE buffer width is aligned to 64 pixels to accommodate HW
+requirement of 10-bit format buffers, fixes decoding of:
+
+- Hi422FR13_SONY_A
+- Hi422FR14_SONY_A
+- Hi422FR15_SONY_A
+- Hi422FR6_SONY_A
+- Hi422FR7_SONY_A
+- Hi422FR8_SONY_A
+- Hi422FR9_SONY_A
+- Hi422FREXT18_SONY_A
+
+The get_image_fmt() ops is implemented to select an image format
+required for the provided SPS control.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Tested-by: Christopher Obbard <chris.obbard@collabora.com>
 ---
 v5:
-- Collect r-b and t-b tags
+- Move buffer align from rkvdec_fill_decoded_pixfmt to min/step_width
+- Use correct profiles for V4L2_CID_MPEG_VIDEO_H264_PROFILE
+- Collect t-b tags
 
 v4:
-- Do not reset pix_mp->field in rkvdec_fill_decoded_pixfmt()
+- Change to use get_image_fmt() ops
 
 v3:
-- No changes
+- Add get_fmt_opaque ops, the expected pixelformat is used as opaque
+- Add new valid_fmt ops that validate pixelformat matches opaque
+- Update H264_PROFILE control max value
 
- drivers/staging/media/rkvdec/rkvdec.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec-h264.c | 37 +++++++++++++++-----
+ drivers/staging/media/rkvdec/rkvdec.c      | 40 ++++++++++++++++------
+ drivers/staging/media/rkvdec/rkvdec.h      |  3 ++
+ 3 files changed, 61 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index ac398b5a9736..d1087519d218 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -27,6 +27,16 @@
- #include "rkvdec.h"
- #include "rkvdec-regs.h"
- 
-+static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
-+				       struct v4l2_pix_format_mplane *pix_mp)
-+{
-+	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
-+			    pix_mp->width, pix_mp->height);
-+	pix_mp->plane_fmt[0].sizeimage += 128 *
-+		DIV_ROUND_UP(pix_mp->width, 16) *
-+		DIV_ROUND_UP(pix_mp->height, 16);
-+}
-+
- static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-@@ -192,13 +202,9 @@ static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
- 
- 	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
- 	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
--	v4l2_fill_pixfmt_mp(&f->fmt.pix_mp,
--			    ctx->coded_fmt_desc->decoded_fmts[0],
--			    ctx->coded_fmt.fmt.pix_mp.width,
--			    ctx->coded_fmt.fmt.pix_mp.height);
--	f->fmt.pix_mp.plane_fmt[0].sizeimage += 128 *
--		DIV_ROUND_UP(f->fmt.pix_mp.width, 16) *
--		DIV_ROUND_UP(f->fmt.pix_mp.height, 16);
-+	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
-+	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
-+	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index 8bce8902b8dd..d14b4d173448 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -1027,24 +1027,42 @@ static int rkvdec_h264_adjust_fmt(struct rkvdec_ctx *ctx,
+ 	return 0;
  }
  
- static int rkvdec_enum_framesizes(struct file *file, void *priv,
-@@ -264,12 +270,7 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
- 				       &pix_mp->height,
- 				       &coded_desc->frmsize);
++static enum rkvdec_image_fmt rkvdec_h264_get_image_fmt(struct rkvdec_ctx *ctx,
++						       struct v4l2_ctrl *ctrl)
++{
++	const struct v4l2_ctrl_h264_sps *sps = ctrl->p_new.p_h264_sps;
++
++	if (ctrl->id != V4L2_CID_STATELESS_H264_SPS)
++		return RKVDEC_IMG_FMT_ANY;
++
++	if (sps->bit_depth_luma_minus8 == 0) {
++		if (sps->chroma_format_idc == 2)
++			return RKVDEC_IMG_FMT_422_8BIT;
++		else
++			return RKVDEC_IMG_FMT_420_8BIT;
++	} else if (sps->bit_depth_luma_minus8 == 2) {
++		if (sps->chroma_format_idc == 2)
++			return RKVDEC_IMG_FMT_422_10BIT;
++		else
++			return RKVDEC_IMG_FMT_420_10BIT;
++	}
++
++	return RKVDEC_IMG_FMT_ANY;
++}
++
+ static int rkvdec_h264_validate_sps(struct rkvdec_ctx *ctx,
+ 				    const struct v4l2_ctrl_h264_sps *sps)
+ {
+ 	unsigned int width, height;
  
--	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
--			    pix_mp->width, pix_mp->height);
--	pix_mp->plane_fmt[0].sizeimage +=
--		128 *
--		DIV_ROUND_UP(pix_mp->width, 16) *
--		DIV_ROUND_UP(pix_mp->height, 16);
-+	rkvdec_fill_decoded_pixfmt(ctx, pix_mp);
- 	pix_mp->field = V4L2_FIELD_NONE;
+-	/*
+-	 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
+-	 * but it's currently broken in the driver.
+-	 * Reject them for now, until it's fixed.
+-	 */
+-	if (sps->chroma_format_idc > 1)
+-		/* Only 4:0:0 and 4:2:0 are supported */
++	if (sps->chroma_format_idc > 2)
++		/* Only 4:0:0, 4:2:0 and 4:2:2 are supported */
+ 		return -EINVAL;
+ 	if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
+ 		/* Luma and chroma bit depth mismatch */
+ 		return -EINVAL;
+-	if (sps->bit_depth_luma_minus8 != 0)
+-		/* Only 8-bit is supported */
++	if (sps->bit_depth_luma_minus8 != 0 && sps->bit_depth_luma_minus8 != 2)
++		/* Only 8-bit and 10-bit is supported */
+ 		return -EINVAL;
  
- 	return 0;
+ 	width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
+@@ -1190,4 +1208,5 @@ const struct rkvdec_coded_fmt_ops rkvdec_h264_fmt_ops = {
+ 	.stop = rkvdec_h264_stop,
+ 	.run = rkvdec_h264_run,
+ 	.try_ctrl = rkvdec_h264_try_ctrl,
++	.get_image_fmt = rkvdec_h264_get_image_fmt,
+ };
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index 455b9cd34b6a..f5e393d4377c 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -192,10 +192,11 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+ 	},
+ 	{
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+-		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+-		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
++		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
++		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_422_INTRA,
+ 		.cfg.menu_skip_mask =
+-			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
++			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
++			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_444_PREDICTIVE),
+ 		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+ 	},
+ 	{
+@@ -210,11 +211,23 @@ static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
+ 	.num_ctrls = ARRAY_SIZE(rkvdec_h264_ctrl_descs),
+ };
+ 
+-static const struct rkvdec_decoded_fmt_desc rkvdec_h264_vp9_decoded_fmts[] = {
++static const struct rkvdec_decoded_fmt_desc rkvdec_h264_decoded_fmts[] = {
+ 	{
+ 		.fourcc = V4L2_PIX_FMT_NV12,
+ 		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
+ 	},
++	{
++		.fourcc = V4L2_PIX_FMT_NV15,
++		.image_fmt = RKVDEC_IMG_FMT_420_10BIT,
++	},
++	{
++		.fourcc = V4L2_PIX_FMT_NV16,
++		.image_fmt = RKVDEC_IMG_FMT_422_8BIT,
++	},
++	{
++		.fourcc = V4L2_PIX_FMT_NV20,
++		.image_fmt = RKVDEC_IMG_FMT_422_10BIT,
++	},
+ };
+ 
+ static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
+@@ -237,21 +250,28 @@ static const struct rkvdec_ctrls rkvdec_vp9_ctrls = {
+ 	.num_ctrls = ARRAY_SIZE(rkvdec_vp9_ctrl_descs),
+ };
+ 
++static const struct rkvdec_decoded_fmt_desc rkvdec_vp9_decoded_fmts[] = {
++	{
++		.fourcc = V4L2_PIX_FMT_NV12,
++		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
++	},
++};
++
+ static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
+ 	{
+ 		.fourcc = V4L2_PIX_FMT_H264_SLICE,
+ 		.frmsize = {
+-			.min_width = 48,
++			.min_width = 64,
+ 			.max_width = 4096,
+-			.step_width = 16,
++			.step_width = 64,
+ 			.min_height = 48,
+ 			.max_height = 2560,
+ 			.step_height = 16,
+ 		},
+ 		.ctrls = &rkvdec_h264_ctrls,
+ 		.ops = &rkvdec_h264_fmt_ops,
+-		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
+-		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
++		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
++		.decoded_fmts = rkvdec_h264_decoded_fmts,
+ 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
+ 	},
+ 	{
+@@ -266,8 +286,8 @@ static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
+ 		},
+ 		.ctrls = &rkvdec_vp9_ctrls,
+ 		.ops = &rkvdec_vp9_fmt_ops,
+-		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
+-		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
++		.num_decoded_fmts = ARRAY_SIZE(rkvdec_vp9_decoded_fmts),
++		.decoded_fmts = rkvdec_vp9_decoded_fmts,
+ 	}
+ };
+ 
+diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+index e466a2753ccf..9a9f4fced7a1 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.h
++++ b/drivers/staging/media/rkvdec/rkvdec.h
+@@ -80,6 +80,9 @@ struct rkvdec_coded_fmt_ops {
+ enum rkvdec_image_fmt {
+ 	RKVDEC_IMG_FMT_ANY = 0,
+ 	RKVDEC_IMG_FMT_420_8BIT,
++	RKVDEC_IMG_FMT_420_10BIT,
++	RKVDEC_IMG_FMT_422_8BIT,
++	RKVDEC_IMG_FMT_422_10BIT,
+ };
+ 
+ struct rkvdec_decoded_fmt_desc {
 -- 
 2.45.2
 
