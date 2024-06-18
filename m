@@ -1,231 +1,165 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8411CD00
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9278D199B0
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718676643; cv=none; b=hWvp+dYocHpTM744pCT+ObCrSTtFJ5ZYzw3q7yaopH5nPaRVYw2/4QIMXCqO3/5d0Y0Rn+YxaDb9wcgjftuqJictAj+/BBz7nEtrB2CxdBNtg2mpn1JlcLVuMPgXPMRIPz3/Fk4X2mXWSDWv+IVnKIguuz+8z9NpkuuMfd7DUNQ=
+	t=1718676747; cv=none; b=muNzxWwz64S2XgDW54iasyAdelHjcLKC9xstKMechWhNjsGkhQtqs15h9mPj4wAvadVVUw6kfyvJ2XjWF2OLbDKyvF7FqOnYZrCjxwzyx/WHlvpxY53IhLdHNqvO7DjvmHl0sphePWn+BXFip0BXF2TwTTsDI5HBUShJOFtwJOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718676643; c=relaxed/simple;
-	bh=q5a0ite6n7zpBMQ97+BxoR6JUlhGWO8XsoFM4djECr4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DxYwcyTewRoNtjnOvkWCmz5NxxNdGTw1oGye401DVbxo6X2kR51xYpFEc+OGR9mnxOdI0J5Wq6Hcz6LYfoijNRLngWKQdeGgRHKLwKzHtI4JjdQalyFnokO/qQGSdg7jo+EhsGfl+DLT7WqVjN1v8jXVsgX7VqIapFumNe9lUvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 45I29XaZ076616;
-	Tue, 18 Jun 2024 10:09:33 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4W397R213mz2Qv7yJ;
-	Tue, 18 Jun 2024 10:05:07 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 18 Jun 2024 10:09:31 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox
-	<willy@infradead.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [PATCH] mm: fix hard lockup in __split_huge_page
-Date: Tue, 18 Jun 2024 10:09:26 +0800
-Message-ID: <20240618020926.1911903-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1718676747; c=relaxed/simple;
+	bh=XfsgfTxIbf80Vaj2+gGtTRv2D1VtoN9sVBiv1EbMpe0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nGCy6KvsQTF+V0EzPPzPNT5Xy4Nl/rSAWUUexwWjfgBTMqj8Ve+hcZJvD8ZlT+oiZY8HznwBYiE5BKpOYtmbbt5t91Zlxt9dbIRqA0K4AzxGWfwHg1MbKNebUXdy3+izl6lleqcvBuYP+3IFtHjo+d2lo7TxuoWeRiPUqfu5axs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BDndtwMO; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BDndtwMO"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43fdb797ee2so24772441cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 19:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718676743; x=1719281543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XfsgfTxIbf80Vaj2+gGtTRv2D1VtoN9sVBiv1EbMpe0=;
+        b=BDndtwMOPRhaG5ald4kpU+EJ5naZa2bswKenuJHeb/tBzo4R2C7fgYaW7WVLJycyUw
+         uimDCvVuxJfKTnq+Yb0CjGcj86KTWOk6TraFYfaSPElYYISe0wQY9vGVJPZS1/KP2AKn
+         DhDIsdM1nA/ETNLE4E4LNGGUKCzpb0zYmhVz0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718676743; x=1719281543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XfsgfTxIbf80Vaj2+gGtTRv2D1VtoN9sVBiv1EbMpe0=;
+        b=uPL9m9G3yjLZ1YYnWXzK4A7hFLDK326TESp1Qr7n1fVmOO8JHcjnrUA/6SO56wUGdV
+         iN/BUBzNtG22KFg5AbbS5EXdoR527PoU3YRfaUK/h1J0iYj/cYqTITlt3fIB3c1T7VJN
+         HfkLBDDrYNtKFrVVrQYLKaIB/mjiDwz9DUDESKVj3WfzWHmJQfk4QS5jL3oMH4hqmHXH
+         pf7e0eTuC/sL8LXbutOl+EuWGR3raJYvAkTnZxuQ1IMBKTe04na6AFMNDeMqRTQIGMt+
+         HBV4jiUc+F6sthqzovWgkQlxwW5YMO1LMelnVCUytTo1Udnfzkoo8O7n/9R16SduCwAU
+         gcRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXl+cujVWiBdE6Gcd4t2wbUrnF/tyyBmNx+kzbcHXfP6TyqxhmKx71P9QUtcNl7O0TO4YLkbgaCum/DCCaf4/qqcjyF61LVnwFO+7bp
+X-Gm-Message-State: AOJu0Ywm0h6AxJoL9d5vCSXFVvLx5KwMR8E0DzULrw4a8EQg/Gf/Tjdl
+	cOmbgMYrBXOG9OCxoh3u+5AUufm0kjWAaHquSmNdJYsZox0e2sLRvOUuDgpn8yU26Zbg21n5EwU
+	=
+X-Google-Smtp-Source: AGHT+IFjbGzv2GfWTRgOzow9N5IEdhMRMWhzfMmOh5tF1lzY5vCaJe1OdVI2S5Rw3gVych2RsbY3yg==
+X-Received: by 2002:ac8:7f08:0:b0:441:54cd:2752 with SMTP id d75a77b69052e-442169f6b44mr136030831cf.39.1718676743152;
+        Mon, 17 Jun 2024 19:12:23 -0700 (PDT)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441f2fcc2a2sm52256811cf.72.2024.06.17.19.12.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 19:12:22 -0700 (PDT)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4405dffca81so64481cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 19:12:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXy40VKn1VwClB5snme4i3An4ujyuT7sUHYLZ03uWwdqFOxHXZl0pObpJIGnEza3ZQOSjN/XwBBJpFJ6ird93TQDziB7g09d7NiyaQg
+X-Received: by 2002:ac8:598b:0:b0:441:62e9:98b with SMTP id
+ d75a77b69052e-4449cc66d3cmr1351231cf.10.1718676741668; Mon, 17 Jun 2024
+ 19:12:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 45I29XaZ076616
+References: <20240617103018.515f0bf1@endymion.delvare> <xd2yybtxvzte7gwqwg2vudzvhoekqao2dle6zsuduzjzi3rsay@xhahwof2prph>
+ <20240617132348.5f20bf89@endymion.delvare> <vsrsvmrkqnmxs3ncqv5m2gevzefiq55tr2iolxlmoehsvgcfkn@hyx37vax6r5e>
+ <20240617201814.73a07702@endymion.delvare> <jbqbn6zaqq7j5htxuqxb34tjrf5lnqabkh5ywtnklhd4owyc3h@ztvolr6hjrti>
+In-Reply-To: <jbqbn6zaqq7j5htxuqxb34tjrf5lnqabkh5ywtnklhd4owyc3h@ztvolr6hjrti>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 17 Jun 2024 19:12:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X4qVDTOdMFQeEiJi2DD=tuEj66vP35XQKrSj5-r_YADQ@mail.gmail.com>
+Message-ID: <CAD=FV=X4qVDTOdMFQeEiJi2DD=tuEj66vP35XQKrSj5-r_YADQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND] drm/display: Drop obsolete dependency on COMPILE_TEST
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jean Delvare <jdelvare@suse.de>, dri-devel@lists.freedesktop.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Andrew Morton <akpm@linux-foundation.org>, YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Hi,
 
-Hard lockup[2] is reported which should be caused by recursive
-lock contention of lruvec->lru_lock[1] within __split_huge_page.
+On Mon, Jun 17, 2024 at 3:26=E2=80=AFPM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Mon, Jun 17, 2024 at 08:18:14PM GMT, Jean Delvare wrote:
+> > On Mon, 17 Jun 2024 14:55:22 +0300, Dmitry Baryshkov wrote:
+> > > On Mon, Jun 17, 2024 at 01:23:48PM GMT, Jean Delvare wrote:
+> > > > Hi Dmitry,
+> > > >
+> > > > Thanks for your feedback.
+> > > >
+> > > > On Mon, 17 Jun 2024 12:57:19 +0300, Dmitry Baryshkov wrote:
+> > > > > On Mon, Jun 17, 2024 at 10:30:30AM GMT, Jean Delvare wrote:
+> > > > > > Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"=
+), it
+> > > > > > is possible to test-build any driver which depends on OF on any
+> > > > > > architecture by explicitly selecting OF. Therefore depending on
+> > > > > > COMPILE_TEST as an alternative is no longer needed.
+> > > > >
+> > > > > The goal of this clause is to allow build-testing the driver with=
+ OF
+> > > > > being disabled (meaning that some of OF functions are stubbed and=
+ some
+> > > > > might disappear). I don't see how user-selectable OF provides the=
+ same
+> > > > > result.
+> > > >
+> > > > Historically, the goal of this clause *was* to allow build-testing =
+the
+> > > > driver on architectures which did not support OF, and that did make
+> > > > sense back then. As I understand it, building the driver without OF
+> > > > support was never a goal per se (if it was, then the driver wouldn'=
+t be
+> > > > set to depend on OF in the first place).
+> > > >
+> > > > Some of my other submissions include the following explanation whic=
+h
+> > > > you might find useful (I ended up stripping it on resubmission afte=
+r
+> > > > being told I was being too verbose, but maybe it was needed after a=
+ll):
+> > > >
+> > > > It is actually better to always build such drivers with OF enabled,
+> > > > so that the test builds are closer to how each driver will actually=
+ be
+> > > > built on its intended target. Building them without OF may not test
+> > > > much as the compiler will optimize out potentially large parts of t=
+he
+> > > > code. In the worst case, this could even pop false positive warning=
+s.
+> > > > Dropping COMPILE_TEST here improves the quality of our testing and
+> > > > avoids wasting time on non-existent issues.
+> > >
+> > > This doesn't seem to match the COMPILE_TEST usage that I observe in
+> > > other places. For example, we frequently use 'depends on ARCH_QCOM ||
+> > > COMPILE_TEST'. Which means that the driver itself doesn't make sense
+> > > without ARCH_QCOM, but we want for it to be tested on non-ARCH_QCOM
+> > > cases. I think the same logic applies to 'depends on OF ||
+> > > COMPILE_TEST' clauses. The driver (DP AUX bus) depends on OF to be fu=
+lly
+> > > functional, but it should be compilable even without OF case.
+> >
+> > The major difference is that one can't possibly enable ARCH_QCOM if
+> > building on X86 for example. Therefore COMPILE_TEST is the only way to
+> > let everyone (including randconfig/allmodconfig build farms) test-build
+> > your code.
+> >
+> > On the other hand, if you want to test-build drm_dp_aux_bus, you can
+> > simply enable OF, because it is available on all architectures and
+> > doesn't depend on anything. No need for COMPILE_TEST.
+>
+> I'd probably let Doug respond, what was his intention.
 
-[1]
-static void __split_huge_page(struct page *page, struct list_head *list,
-                pgoff_t end, unsigned int new_order)
-{
-        /* lock lru list/PageCompound, ref frozen by page_ref_freeze */
-//1st lock here
-        lruvec = folio_lruvec_lock(folio);
+Is this me? This looks like a straight revert of commit 876271118aa4
+("drm/display: Fix build error without CONFIG_OF")
 
-        for (i = nr - new_nr; i >= new_nr; i -= new_nr) {
-                __split_huge_page_tail(folio, i, lruvec, list, new_order);
-                /* Some pages can be beyond EOF: drop them from page cache */
-                if (head[i].index >= end) {
-                        folio_put(tail);
-                            __page_cache_release
-//2nd lock here
-                               folio_lruvec_relock_irqsave
+I don't personally have anything against removing COMPILE_TEST for
+this given that I wasn't the one who added it, but make sure it's not
+going to cause randconfig issues.
 
-[2]
-[26887.389623] watchdog: Watchdog detected hard LOCKUP on cpu 21
-[26887.389682] CPU: 21 PID: 264 Comm: kswapd0 Kdump: loaded Tainted: G
-      W          6.6.31.el9 #3
-[26887.389685] Hardware name: FUJITSU PRIMERGY RX2540 M4/D3384-A1, BIOS
-V5.0.0.12 R1.22.0 for D3384-A1x                    06/04/2018
-[26887.389687] RIP: 0010:native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389696] Code: 08 0f 92 c2 8b 45 00 0f b6 d2 c1 e2 08 30 e4 09 d0
-a9 00 01 ff ff 0f 85 ea 01 00 00 85 c0 74 12 0f b6 45 00 84 c0 74 0a f3
-90 <0f> b6 45 00 84 c0 75 f6 b8 01 00 00 00 66 89 45 00 5b 5d 41 5c 41
-[26887.389698] RSP: 0018:ffffb3e587a87a20 EFLAGS: 00000002
-[26887.389700] RAX: 0000000000000001 RBX: ffff9ad6c6f67050 RCX:
-0000000000000000
-[26887.389701] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-ffff9ad6c6f67050
-[26887.389703] RBP: ffff9ad6c6f67050 R08: 0000000000000000 R09:
-0000000000000067
-[26887.389704] R10: 0000000000000000 R11: 0000000000000000 R12:
-0000000000000046
-[26887.389705] R13: 0000000000000200 R14: 0000000000000000 R15:
-ffffe1138aa98000
-[26887.389707] FS:  0000000000000000(0000) GS:ffff9ade20340000(0000)
-knlGS:0000000000000000
-[26887.389708] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[26887.389710] CR2: 000000002912809b CR3: 000000064401e003 CR4:
-00000000007706e0
-[26887.389711] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-0000000000000000
-[26887.389712] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-0000000000000400
-[26887.389713] PKRU: 55555554
-[26887.389714] Call Trace:
-[26887.389717]  <NMI>
-[26887.389720]  ? watchdog_hardlockup_check+0xac/0x150
-[26887.389725]  ? __perf_event_overflow+0x102/0x1d0
-[26887.389729]  ? handle_pmi_common+0x189/0x3e0
-[26887.389735]  ? set_pte_vaddr_p4d+0x4a/0x60
-[26887.389738]  ? flush_tlb_one_kernel+0xa/0x20
-[26887.389742]  ? native_set_fixmap+0x65/0x80
-[26887.389745]  ? ghes_copy_tofrom_phys+0x75/0x110
-[26887.389751]  ? __ghes_peek_estatus.isra.0+0x49/0xb0
-[26887.389755]  ? intel_pmu_handle_irq+0x10b/0x230
-[26887.389756]  ? perf_event_nmi_handler+0x28/0x50
-[26887.389759]  ? nmi_handle+0x58/0x150
-[26887.389764]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389768]  ? default_do_nmi+0x6b/0x170
-[26887.389770]  ? exc_nmi+0x12c/0x1a0
-[26887.389772]  ? end_repeat_nmi+0x16/0x1f
-[26887.389777]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389780]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389784]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389787]  </NMI>
-[26887.389788]  <TASK>
-[26887.389789]  __raw_spin_lock_irqsave+0x3d/0x50
-[26887.389793]  folio_lruvec_lock_irqsave+0x5e/0x90
-[26887.389798]  __page_cache_release+0x68/0x230
-[26887.389801]  ? remove_migration_ptes+0x5c/0x80
-[26887.389807]  __folio_put+0x24/0x60
-[26887.389808]  __split_huge_page+0x368/0x520
-[26887.389812]  split_huge_page_to_list+0x4b3/0x570
-[26887.389816]  deferred_split_scan+0x1c8/0x290
-[26887.389819]  do_shrink_slab+0x12f/0x2d0
-[26887.389824]  shrink_slab_memcg+0x133/0x1d0
-[26887.389829]  shrink_node_memcgs+0x18e/0x1d0
-[26887.389832]  shrink_node+0xa7/0x370
-[26887.389836]  balance_pgdat+0x332/0x6f0
-[26887.389842]  kswapd+0xf0/0x190
-[26887.389845]  ? balance_pgdat+0x6f0/0x6f0
-[26887.389848]  kthread+0xee/0x120
-[26887.389851]  ? kthread_complete_and_exit+0x20/0x20
-[26887.389853]  ret_from_fork+0x2d/0x50
-[26887.389857]  ? kthread_complete_and_exit+0x20/0x20
-[26887.389859]  ret_from_fork_asm+0x11/0x20
-[26887.389864]  </TASK>
-[26887.389865] Kernel panic - not syncing: Hard LOCKUP
-[26887.389867] CPU: 21 PID: 264 Comm: kswapd0 Kdump: loaded Tainted: G
-      W          6.6.31.el9 #3
-[26887.389869] Hardware name: FUJITSU PRIMERGY RX2540 M4/D3384-A1, BIOS
-V5.0.0.12 R1.22.0 for D3384-A1x                    06/04/2018
-[26887.389870] Call Trace:
-[26887.389871]  <NMI>
-[26887.389872]  dump_stack_lvl+0x44/0x60
-[26887.389877]  panic+0x241/0x330
-[26887.389881]  nmi_panic+0x2f/0x40
-[26887.389883]  watchdog_hardlockup_check+0x119/0x150
-[26887.389886]  __perf_event_overflow+0x102/0x1d0
-[26887.389889]  handle_pmi_common+0x189/0x3e0
-[26887.389893]  ? set_pte_vaddr_p4d+0x4a/0x60
-[26887.389896]  ? flush_tlb_one_kernel+0xa/0x20
-[26887.389899]  ? native_set_fixmap+0x65/0x80
-[26887.389902]  ? ghes_copy_tofrom_phys+0x75/0x110
-[26887.389906]  ? __ghes_peek_estatus.isra.0+0x49/0xb0
-[26887.389909]  intel_pmu_handle_irq+0x10b/0x230
-[26887.389911]  perf_event_nmi_handler+0x28/0x50
-[26887.389913]  nmi_handle+0x58/0x150
-[26887.389916]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389920]  default_do_nmi+0x6b/0x170
-[26887.389922]  exc_nmi+0x12c/0x1a0
-[26887.389923]  end_repeat_nmi+0x16/0x1f
-[26887.389926] RIP: 0010:native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389930] Code: 08 0f 92 c2 8b 45 00 0f b6 d2 c1 e2 08 30 e4 09 d0
-a9 00 01 ff ff 0f 85 ea 01 00 00 85 c0 74 12 0f b6 45 00 84 c0 74 0a f3
-90 <0f> b6 45 00 84 c0 75 f6 b8 01 00 00 00 66 89 45 00 5b 5d 41 5c 41
-[26887.389931] RSP: 0018:ffffb3e587a87a20 EFLAGS: 00000002
-[26887.389933] RAX: 0000000000000001 RBX: ffff9ad6c6f67050 RCX:
-0000000000000000
-[26887.389934] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-ffff9ad6c6f67050
-[26887.389935] RBP: ffff9ad6c6f67050 R08: 0000000000000000 R09:
-0000000000000067
-[26887.389936] R10: 0000000000000000 R11: 0000000000000000 R12:
-0000000000000046
-[26887.389937] R13: 0000000000000200 R14: 0000000000000000 R15:
-ffffe1138aa98000
-[26887.389940]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389943]  ? native_queued_spin_lock_slowpath+0x6e/0x2c0
-[26887.389946]  </NMI>
-[26887.389947]  <TASK>
-[26887.389947]  __raw_spin_lock_irqsave+0x3d/0x50
-[26887.389950]  folio_lruvec_lock_irqsave+0x5e/0x90
-[26887.389953]  __page_cache_release+0x68/0x230
-[26887.389955]  ? remove_migration_ptes+0x5c/0x80
-[26887.389958]  __folio_put+0x24/0x60
-[26887.389960]  __split_huge_page+0x368/0x520
-[26887.389963]  split_huge_page_to_list+0x4b3/0x570
-[26887.389967]  deferred_split_scan+0x1c8/0x290
-[26887.389971]  do_shrink_slab+0x12f/0x2d0
-[26887.389974]  shrink_slab_memcg+0x133/0x1d0
-[26887.389978]  shrink_node_memcgs+0x18e/0x1d0
-[26887.389982]  shrink_node+0xa7/0x370
-[26887.389985]  balance_pgdat+0x332/0x6f0
-[26887.389991]  kswapd+0xf0/0x190
-[26887.389994]  ? balance_pgdat+0x6f0/0x6f0
-[26887.389997]  kthread+0xee/0x120
-[26887.389998]  ? kthread_complete_and_exit+0x20/0x20
-[26887.390000]  ret_from_fork+0x2d/0x50
-[26887.390003]  ? kthread_complete_and_exit+0x20/0x20
-[26887.390004]  ret_from_fork_asm+0x11/0x20
-[26887.390009]  </TASK>
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
- mm/huge_memory.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9859aa4f7553..ea504df46d3b 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2925,7 +2925,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 				folio_account_cleaned(tail,
- 					inode_to_wb(folio->mapping->host));
- 			__filemap_remove_folio(tail, NULL);
-+			unlock_page_lruvec(lruvec);
- 			folio_put(tail);
-+			folio_lruvec_lock(folio);
- 		} else if (!PageAnon(page)) {
- 			__xa_store(&folio->mapping->i_pages, head[i].index,
- 					head + i, 0);
--- 
-2.25.1
-
+-Doug
