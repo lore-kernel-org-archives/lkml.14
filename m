@@ -1,88 +1,126 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5603F1BF38;
-	Tue, 18 Jun 2024 07:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865C214F113;
+	Tue, 18 Jun 2024 07:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695348; cv=none; b=KzUpst8zLI0Uwue+yQzEsBhFhj3GpsAhbxZMleLA8vi2O3DSgdZ74yqEOw3Z3zGWeRA/rIL/+ORkMYCcI632oRI0krLJYMbrxGTbeUwIFSrUVGFxpInP4OL0qzyaqJXrqo/ZHo1xfCI3HMgVCFYaKERTNdioZDHgncoVmwYoCco=
+	t=1718695356; cv=none; b=PbN9Bahfdjb34Ihd3Us4Mha2V/GNt04N6gH2810p/lIie8YJtZ95qi4ZfDBLFdq5P9fBVbI9tWr8E75jPHgoExI07Axh4WykeJMXUKQ9sA8yQGnjC5OV9//Uf6cguUXFGzZjL0Pg0oejtkC6RET7qZdhr83zPdKk51eLdRypY6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695348; c=relaxed/simple;
-	bh=fgOMeiSNWMTUpBSBXUqhL6wT38bkG2TPTOJfTexXmnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PaAh0LYUq8Ketwc5tz0tw1R2Bzp3UToBpyqquWobM5oNUg12t8dFn+Bd5w1vdHUtrMBT/CtXboS85zNNOp4RuCJH7SJiKmlNR9bH4/o5uC1klHSswgSpCIAcoepicYw5MWm7Bo+KyLdx18BDunpPvsCBieApdcg8egBhKIT4pqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=f9o9n/8A; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718695356; c=relaxed/simple;
+	bh=FgCW6lbnkeK5hQtWiqLgXobuP5tSz+mSPCM3Ha7/m4I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ANt+Gnyq5FH1KmSG60PPdDx+tKYRTT/d/NMbfCmNNa2Ib+C883myYpqagWoN5IzXe5dJVdvSJmX2T0L891kMX2cwzGVwYQNUQ1CWQW82w4jGtAOqExPguGZKlcqM1VGJULOraoGIJktgPBsycMEooVnZCvFvel6qsFHh4yZFV/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bjY1sBot; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="f9o9n/8A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=lFXQoNB3NgLdP7vmjHlHVASYxjD4E3i9aARHyEZwpPQ=;
-	t=1718695346; x=1719127346; b=f9o9n/8AdOf+vQl5l4rPSdzVGbrgG1F6kQQ1wNUosMdY140
-	bpSWviEOWuRpnFzbXLexSsXDdLw50hsUivvkHTzJfxLT6MuQ7YEqAYd2o5ojfqBwEjTyeLliQP2g0
-	EKrBNUlVE5UYrIFsAFsMk5C1vIoF3DxYMGPZVWrHL20dlB0hQlQwn5gVU+eVVUCfNvQaa5hfi1Zh1
-	fIAy/cHgp822HPW8rUOmGHXH+6PyLkN4Wo2/XlOgS30/RZsI+EMaZLiSdpF3KN1C/Dgc806Ckmvq/
-	1oT8sRdwR0mz9ub3LMdcvaksBI2VxzNL+LTwTUoP/W/BOYlFnd50YqkIo/0yA3Hg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJTAb-0005x8-Bf; Tue, 18 Jun 2024 09:22:21 +0200
-Message-ID: <c11dc5f8-2638-40bf-b562-fa5cf8bf40fe@leemhuis.info>
-Date: Tue, 18 Jun 2024 09:22:20 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bjY1sBot"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I3CbtP010482;
+	Tue, 18 Jun 2024 07:22:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Z1hvJQ4iI014dFN7iif1JKEeKuCXqSIBokPUxnkvBPM=; b=bjY1sBotGYQ2gebM
+	QxUAzHw8wJmyfIQwuPC48HGCo2CCpJVIV7I46mpuEuQhEua/ZHNfpBu/zlJT7+ws
+	OYnyvsDzIkopkuG6+662DfjF22gWrzA0BpljRZSQYQ1FMZdUK812F7MHoUtZYd88
+	SAa+Qv8K7gFnoRGNKbJGfH/MDk9cmb7tX7z7UKJ45ViHhFIwlbC3aZB/DXSF11/z
+	Wt8IoN1dFFi49cS1eTZKfQYoVx19XCgSX6sS5Pe8nZjpl17l8VSOODpTd4ZW5YPi
+	L4Aj4yQ9e4Nad5dvipM907hvvAwo2dGrTrucoWo+iVTI3clB1nr4HJfKh/wPH+CU
+	2f7zow==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yu24n0dj5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 07:22:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45I7MTYr023073
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 07:22:29 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Jun 2024 00:22:23 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v10 1/4] dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+Date: Tue, 18 Jun 2024 15:21:59 +0800
+Message-ID: <20240618072202.2516025-2-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240618072202.2516025-1-quic_tengfan@quicinc.com>
+References: <20240618072202.2516025-1-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] spi: omap2-mcspi: not working with kernel v6.10
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <jpaulo.silvagoncalves@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>,
- Louis Chauvet <louis.chauvet@bootlin.com>, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, joao.goncalves@toradex.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240612170030.3qatttsgrwjg2m5s@joaog-nb>
- <1b9852d1-4454-4f62-bd8a-fb6167dc0576@leemhuis.info>
- <20240617195358.v3ewnsu4jgkygvby@joaog-nb>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240617195358.v3ewnsu4jgkygvby@joaog-nb>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718695346;2050ca34;
-X-HE-SMSGID: 1sJTAb-0005x8-Bf
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8a6r7gZD4Sx2Tu8nBUS_ENZBiylMvuwk
+X-Proofpoint-ORIG-GUID: 8a6r7gZD4Sx2Tu8nBUS_ENZBiylMvuwk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180053
 
-On 17.06.24 21:53, João Paulo Gonçalves wrote:
-> 
-> On Mon, Jun 17, 2024 at 11:29:05AM +0200, Thorsten Leemhuis wrote:
->> In that case the thing that really
->> helps would be if you could use a git bisection to find the change that
->> causes this.
-> 
-> For me, spi stopped working in commit d153ff4056cb ("spi: omap2-mcspi:
-> Add support for MULTI-mode").
+Document QCS8550 SoC and the AIM300 AIoT board bindings.
+QCS8550 is derived from SM8550. The difference between SM8550 and
+QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
+in IoT scenarios.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC chip
+etc.
+AIM stands for Artificial Intelligence Module. AIoT stands for AI IoT.
 
-Hmmm, Louis (which already was in the CC) posted a patch with a Fixes:
-tag referencing that commit more than a month ago:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-spi: omap2-mcspi: Ensure that CS is correctly asserted when switching
-from MULTI mode to SINGLE mode
-https://lore.kernel.org/all/20240506-fix-omap2-mcspi-v2-1-d9c77ba8b9c7@bootlin.com/
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 1be21a16ba36..d839691a900c 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -42,6 +42,7 @@ description: |
+         msm8996
+         msm8998
+         qcs404
++        qcs8550
+         qcm2290
+         qcm6490
+         qdu1000
+@@ -1018,6 +1019,13 @@ properties:
+               - sony,pdx234
+           - const: qcom,sm8550
+ 
++      - items:
++          - enum:
++              - qcom,qcs8550-aim300-aiot
++          - const: qcom,qcs8550-aim300
++          - const: qcom,qcs8550
++          - const: qcom,sm8550
++
+       - items:
+           - enum:
+               - qcom,sm8650-hdk
+-- 
+2.25.1
 
-Unless I'm missing something, that patch did not make much progress
-since then. But I wonder if that might help. Louis? FWIW, this thread
-starts here with João problem description:
-https://lore.kernel.org/all/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
