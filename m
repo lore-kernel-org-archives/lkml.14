@@ -1,158 +1,137 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05F4745C0
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0E917C8
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718696254; cv=none; b=CROPqJPbkJwQ0USflTiSMQRn3+RVRzCKQA1YYNRulAxwhJ1FYu7VUkGkiGzgjbiyoFHBhY5lR0oc7GUkZMWoxa3yULCodRnQfsbXmPbHQ1sUsnQ7i5W3SdFq685Ydqy7I5wN+hSQLmk+QRm5lMUDCAoc4OqysZ6iQVVrUovrcgc=
+	t=1718696333; cv=none; b=V0HQ37WzG8kjqRKnaWU+RWb5WSn1j/8WH4ht/23SnemqUVI+Hj9GQBsZBRyhojFAOudboZLu6nU64iLXIoJb8l4r11EzxjLVn6KOvc1rAn1OTgLVJb420vOQfiJeaPUxI6JaM6GDFXw4YvW1BZh7lSQXzcRhaJbVed+P2RBzvA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718696254; c=relaxed/simple;
-	bh=uvVLziiyMiGFpjopXmDs48T5glxhlHbZxzgTrEwKQ5E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kzAaHNZTOhv2VED0cfsohRjaSwS/R9vbMq4UMmQZI4DYeMrDgI3esSvfKNvoW9Op/USJkFCKaSxuL0K5DhA7rsrOVAYntdw1RVYqxq4tWO6NvFVO0bmDjJZ1P1rtlXAGkmybtL0Cd2geyxj5mBMOA3xuVFyRa8Wica+5qMI+m7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JekiHeof; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1718696333; c=relaxed/simple;
+	bh=M0YJClBO4I10mGGrQvNSUAkg6JBeDSss0hFeaki0ouE=;
+	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UqaRBhO2gYlsLg/QUj3RYl3v5qR0eZ8RlInV014grUPgoM6KD6ug1FNAAlXBeYIuiqPNySK/otdoN1gt50uXdUO1GsXGf1MBOuTtvR/j87ncadFb+FYjrKWKPHKYi7rrDIzdkKJsPLpBr2gDwDl+L07cA5SZFZdpuBskd56vIgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CXYTaLZ3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JekiHeof"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CXYTaLZ3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718696251;
+	s=mimecast20190719; t=1718696330;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=K8FGdsJkQW+byEQkX1yS33c/wIMs4hmfFSLxQwVoRiY=;
-	b=JekiHeofLytkIuzCTtHV1Ft7Zrfl2CeArcnbIXg4ac2B5UyDFtlODZA8SriADsTecYKrS2
-	4T1XYW67DGaBF1vGsJgs3bpMHv43bSKNuAVsIq3+XYTFtUlamjBoC1FOpm+WpJTqPkUD02
-	d+XynEhZ71ZGJbtuBC1lME2f2knP8/I=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=vS0L8gNZ+c55CBoTy4Q79OS0/z+oWmaelgdSL3NjO84=;
+	b=CXYTaLZ3TUt/823qTQF12/WGyKn9cKNamu0ZueihmZXkWu6gnUr/lf1XQ3W8m5ixOan5al
+	m8nIwCk6RVCrt3DM7FmLgUaTgN1LtC2q/1o3mIVaasUA3ZomL0h6vTZvs33lIZ1hk1pioT
+	HOnPe7U6nPJgwqQTc68P6d8Ylk07CpU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-427-EKRwSf2nPQugL0-wDIstPQ-1; Tue, 18 Jun 2024 03:37:29 -0400
-X-MC-Unique: EKRwSf2nPQugL0-wDIstPQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-423034c6119so29815455e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:37:29 -0700 (PDT)
+ us-mta-511-zhuFmbX5OPmBtAhggwycRg-1; Tue, 18 Jun 2024 03:38:49 -0400
+X-MC-Unique: zhuFmbX5OPmBtAhggwycRg-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6b2cf9bbe69so32275516d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:38:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718696249; x=1719301049;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K8FGdsJkQW+byEQkX1yS33c/wIMs4hmfFSLxQwVoRiY=;
-        b=RSV9btmFCYlLk58OOmu7R+j7rYFWNYIWUii6xKf/b/wNSUM134gAInnZUa+SqYguzR
-         dSpE5O+8aPR2RXenz+LqMspwydiX21SYfjD+7ZRQZ4k6VCKIMwZPYZGTEwxkPOLG5Hfs
-         ouzdnq/D3hcXNHESwl8TPxIl6SFvpMy/S7y37VMN48c2bD0eXsUfRVTslT+t/5Am9VMS
-         nlErAS4HzuyJH31dGAE+uZJ4pSelgJoSe8n+3aS1737yrkoTa3SO1HUKFSwVXyrgcNMp
-         pVhV7nlABT9KGL7I/bi8Nvl99hBHz3Pu/aP7e0Ex+4mBUN2DnVefgKqLd3O8EXZuNkjG
-         NFCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUK0WxYLw9BfImMuyoaug94d6HF9YqRp3nmuPeyYfRXnA1j4o3ALLu0a91F3Ys61dDHsH+xU3T/aKSCcQs36QYULZszVA8/Rc38IzQk
-X-Gm-Message-State: AOJu0YxXA/hMn99r/w2KCmpSZmmSYA7VNoBt+RxijET7sxVybMSF2B7C
-	qfAu37Lub/F3J4jEyhv25NrX68LlGhvzNwv+rhTHw5yu8qOrmiapuHl2QI0QRCcwMugtpkANiET
-	UWC4XduNqsXD01eQ8VaoZs2B3O05Lkyq9ze3cNxU5GS5Y8cxa6VM29IVQ22MrablHVe6pKw==
-X-Received: by 2002:a05:600c:4b16:b0:421:8060:f772 with SMTP id 5b1f17b1804b1-423bc08c155mr51871705e9.0.1718696248845;
-        Tue, 18 Jun 2024 00:37:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfgclri3NxDFiUz/oariusZFRsh1RRo8IZxCVzJtH92orM3Jg4zKGg5HrECllAq8yhBp8d5Q==
-X-Received: by 2002:a05:600c:4b16:b0:421:8060:f772 with SMTP id 5b1f17b1804b1-423bc08c155mr51871585e9.0.1718696248428;
-        Tue, 18 Jun 2024 00:37:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:1400:78ba:c2d2:22a1:8858? (p200300cbc705140078bac2d222a18858.dip0.t-ipconnect.de. [2003:cb:c705:1400:78ba:c2d2:22a1:8858])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f8be0c69sm182381445e9.33.2024.06.18.00.37.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 00:37:28 -0700 (PDT)
-Message-ID: <030ba6a5-d3ff-429b-8672-59b7f7d44208@redhat.com>
-Date: Tue, 18 Jun 2024 09:37:26 +0200
+        d=1e100.net; s=20230601; t=1718696328; x=1719301128;
+        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vS0L8gNZ+c55CBoTy4Q79OS0/z+oWmaelgdSL3NjO84=;
+        b=TIy1FPTx9iEkehoVfp2iKXhHstqY17NaTyU9q/crxBgj9TrAtVUrUalVMT/ndGHG2U
+         CNHJR7EHji8Hw2X7qSRrOZgQr8/zXLA8El8t4oBfg7fAbsFi+tTv2qGvL8gRfowXqxe2
+         lZTgPVmuzkcJoB6QLd9N7SORSKHlurvDrWrvjFo+27GDeUP3psb5CgH8oSGu00IWfUAc
+         YCGaUD4fw5YoTL1EIkTOYmH34aMrNAZFYTZTkXAEnv1SbKqfIFujNeVh6QMnKoYh6Vl3
+         RT1oFB/13WjAQfTahE051rf7Wyv5u6MimeKi7lRWDJ8NuqWpETspHQhKXAngU0RDNWBK
+         x40w==
+X-Forwarded-Encrypted: i=1; AJvYcCUnoavVqAJQFCSEbjHVuLR0pFbpMpQ1lyeeO98xnOLnOfiFn9BhVKf0yGIHLnmdQMQycq6I7f/CCs/DlUJMN3gh/snP9XUK4JWovxKP
+X-Gm-Message-State: AOJu0Ywq/hZ6ROX/Rlb0rcIU8DR7r8k+ZSz0mFJU0HgusjHwKeNZso7i
+	W/NUGgS4okL3SYHgN2YOXjTw19+TLxb1UfJ4a2Oei39ou8neR9PYZi7wsuMeCJSwo1SwPJzOvvK
+	Ja7sUtc6hTPAP474gGX5cbU1xrTnlv0ClAXeZ42I9LWadOw/fGtBk2xe9QDH10depCSksuI5hcd
+	8fGWAoDV/loQg4IRhDamsQUYB0i0Mmp7bVSXji
+X-Received: by 2002:ad4:420e:0:b0:6b0:8c25:abfa with SMTP id 6a1803df08f44-6b2afd8571emr104202996d6.57.1718696328425;
+        Tue, 18 Jun 2024 00:38:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3F5G/KHtjnRX2STbBX8sqxnLPA6kAkwk3Iqz/SG8R6aigMHaYs3OJzjUa58lLUtE2JyX2Ynuwxi792BgQ1zg=
+X-Received: by 2002:ad4:420e:0:b0:6b0:8c25:abfa with SMTP id
+ 6a1803df08f44-6b2afd8571emr104202876d6.57.1718696328128; Tue, 18 Jun 2024
+ 00:38:48 -0700 (PDT)
+Received: from 311643009450 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 18 Jun 2024 07:38:47 +0000
+From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
+References: <20240603185647.2310748-1-amorenoz@redhat.com> <20240603185647.2310748-3-amorenoz@redhat.com>
+ <282d4b46-70c1-454b-810a-ef3353f1b0f2@ovn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] khugepaged: Simplify the allocation of slab caches
-To: Hongfu Li <lihongfu@kylinos.cn>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240618014517.25954-1-lihongfu@kylinos.cn>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240618014517.25954-1-lihongfu@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <282d4b46-70c1-454b-810a-ef3353f1b0f2@ovn.org>
+Date: Tue, 18 Jun 2024 07:38:47 +0000
+Message-ID: <CAG=2xmMqfBLeFjqzzHG3uHLx9d8sDsdbguxZm8cxbR5nEVDZ7Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/9] net: sched: act_sample: add action cookie
+ to sample
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: netdev@vger.kernel.org, aconole@redhat.com, echaudro@redhat.com, 
+	horms@kernel.org, dev@openvswitch.org, Jamal Hadi Salim <jhs@mojatatu.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 18.06.24 03:45, Hongfu Li wrote:
-> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-> to simplify the creation of SLAB caches.
-> 
-> Signed-off-by: Hongfu Li <lihongfu@kylinos.cn>
-> ---
->   mm/khugepaged.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 774a97e6e2da..f8d08b49420c 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -385,10 +385,7 @@ int hugepage_madvise(struct vm_area_struct *vma,
->   
->   int __init khugepaged_init(void)
->   {
-> -	mm_slot_cache = kmem_cache_create("khugepaged_mm_slot",
-> -					  sizeof(struct khugepaged_mm_slot),
-> -					  __alignof__(struct khugepaged_mm_slot),
-> -					  0, NULL);
-> +	mm_slot_cache = KMEM_CACHE(khugepaged_mm_slot, 0);
->   	if (!mm_slot_cache)
->   		return -ENOMEM;
->   
+On Mon, Jun 17, 2024 at 12:00:04PM GMT, Ilya Maximets wrote:
+> On 6/3/24 20:56, Adrian Moreno wrote:
+> > If the action has a user_cookie, pass it along to the sample so it can
+> > be easily identified.
+> >
+> > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+> > ---
+> >  net/sched/act_sample.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+> > index a69b53d54039..5c3f86ec964a 100644
+> > --- a/net/sched/act_sample.c
+> > +++ b/net/sched/act_sample.c
+> > @@ -165,9 +165,11 @@ TC_INDIRECT_SCOPE int tcf_sample_act(struct sk_buff *skb,
+> >  				     const struct tc_action *a,
+> >  				     struct tcf_result *res)
+> >  {
+> > +	u8 cookie_data[TC_COOKIE_MAX_SIZE] = {};
+>
+> Is it necessary to initialize these 16 bytes on every call?
+> Might be expensive.  We're passing the data length around,
+> so the uninitialized parts should not be accessed.
+>
 
-Acked-by: David Hildenbrand <david@redhat.com>
+They "should" not, indeed. I was just trying to be extra careful.
+Are you worried TC_COOKIE_MAX_SIZE could grow or the cycles needed to
+clear the current 16 bytes?
 
--- 
-Cheers,
-
-David / dhildenb
+> Best regards, Ilya Maximets.
+>
+> >  	struct tcf_sample *s = to_sample(a);
+> >  	struct psample_group *psample_group;
+> >  	struct psample_metadata md = {};
+> > +	struct tc_cookie *user_cookie;
+> >  	int retval;
+> >
+> >  	tcf_lastuse_update(&s->tcf_tm);
+> > @@ -189,6 +191,16 @@ TC_INDIRECT_SCOPE int tcf_sample_act(struct sk_buff *skb,
+> >  		if (skb_at_tc_ingress(skb) && tcf_sample_dev_ok_push(skb->dev))
+> >  			skb_push(skb, skb->mac_len);
+> >
+> > +		rcu_read_lock();
+> > +		user_cookie = rcu_dereference(a->user_cookie);
+> > +		if (user_cookie) {
+> > +			memcpy(cookie_data, user_cookie->data,
+> > +			       user_cookie->len);
+> > +			md.user_cookie = cookie_data;
+> > +			md.user_cookie_len = user_cookie->len;
+> > +		}
+> > +		rcu_read_unlock();
+> > +
+> >  		md.trunc_size = s->truncate ? s->trunc_size : skb->len;
+> >  		psample_sample_packet(psample_group, skb, s->rate, &md);
+> >
+>
 
