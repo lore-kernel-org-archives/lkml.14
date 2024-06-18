@@ -1,41 +1,23 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3C61419B3;
-	Tue, 18 Jun 2024 12:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABBE13A3E1;
+	Tue, 18 Jun 2024 12:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712157; cv=none; b=sOTj1eZNI3Pp3i+eHrTj7HaDlMyryEUn2DyHcNpJ5dqVffTPAbsVN1aYJTys/3/hpZszNBkgb5A0jrlodzDCOSxRrAhMoYEdQW641B86Hw242aiAyoskZpQ8UcLVYqgflMTmcrp6FmYxC0lakQNaB7tDULmFqnwfHGEBRMV1x3M=
+	t=1718712171; cv=none; b=Z6AR56NsUDTFYuCysiT2BVWr/jhVR2sib39ML0TL4jiUz9CE0y7ePMH91wV0U+M/tHOkhX6F3yrLhkCALwlKrADwwnxx0aAYQbPFAe++gDxsgfc235D69NVe3EkaB2+QEovO4YrtUTFZUFMdkLO7XrVs7/wDzNs2OfaDkEZhkLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718712157; c=relaxed/simple;
-	bh=/PDz/xpL0YIwagnMrBVoYHnF3YhYaTqwbvNs6CfbhnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NmUJGC+NvZqzcMzlvjcyBKfxtfq77485Jvr2M3IRWdMER8+WT/z9fJr5CrsgKGeI2svE5BN7tvyeM9qyvp9IDJ3kkyQxIr/sjS03ZlQI+K4ohsP+saiOPE9h6isBIdzowrpg/sBpMWYS9IgJ0rUNUuv926NrH6vSN508FJoNYsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=J59HipBt; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="J59HipBt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1718712147; x=1719316947; i=deller@gmx.de;
-	bh=KazL8lPyZjhl9SQQly3zXXFrIFGEDfdAjzeR5tlpaJk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=J59HipBtRPfyC8yFgvqH0LDo3UjFbdqWnvh77mR3Y8QNMTyyCgZWbB68WeLqllAH
-	 oMHKaljZb9Cp73CKBPKswaPVcQbc3+CvSAGShjumoqoj/0+Ix5Rc22Jc23hDwnyxL
-	 n0s80aGJSjdDQam8yYIrg4Tj0HXOx6c5In72n3fSdopi57djVYi3uo3GfH73LHXup
-	 iZzNRpitCpDBQKuiBTdGCjG1aiMbLvOoYtch5udkF7xOpL5nEEuWVbdZ5GlO7AiaA
-	 fhEcoqzVFm5jHc+8qRjQ8J2K5oWOeQV0r3OG+C8GGQj5zFXgGRsU18CflOpZ9lNNT
-	 j/JfWRxBsSBwAKigig==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.8.0.6] ([78.94.87.245]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mn2W5-1slPS008AR-00hJdM; Tue, 18
- Jun 2024 14:02:27 +0200
-Message-ID: <edf45156-4ce4-4ab1-a3b8-32d1628feb66@gmx.de>
-Date: Tue, 18 Jun 2024 14:02:25 +0200
+	s=arc-20240116; t=1718712171; c=relaxed/simple;
+	bh=cbzF01ahKtAAGn0TxOe2bawlyssofdtkzjYQzurcqGc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T7pTJGwugl276ySH+t/NTBxBaAa17cqeWfBTSPtbIjQTEpMiaMaMYaQd7Og88OQNuzbnSrjfGG2xzSxkrRMSTPU4zcLgxlbBZgVoX15kGGEAEWfEm/e9CX+teqwCx0R+bWN432ziAIgVLqGw/noYen7tChlHYTA4KAHqRuTQ3ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 61AE81C0006;
+	Tue, 18 Jun 2024 12:02:37 +0000 (UTC)
+Message-ID: <b603c8b5-3100-4ccf-b014-9274f980358d@ghiti.fr>
+Date: Tue, 18 Jun 2024 14:02:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,111 +25,224 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: amifb: add missing MODULE_DESCRIPTION() macro
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20240617-md-m68k-drivers-video-fbdev-amifb-v1-1-85f74746ecd4@quicinc.com>
+Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
 Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20240617-md-m68k-drivers-video-fbdev-amifb-v1-1-85f74746ecd4@quicinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+To: Conor Dooley <conor.dooley@microchip.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ puranjay Mohan <puranjay12@gmail.com>, Andy Chiu <andy.chiu@sifive.com>
+References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+ <20240613-lubricant-breath-061192a9489a@wendy>
+ <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
+In-Reply-To: <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nzU49krb0P0srJ9sw/bU4rEepCemcESpPIGap0VolZSYs0A5kns
- ITa1oudBheWDHYSOTYWouEQ76Pr0A7Ql24A5LY2lo/QSLhb2lmqjmFVBB9/g2D+yyJD2x2Q
- K+oocN03dL3OqfAoX6baAMKe+glAgES6csWq9NWiwWX/nozz4j2Jc6+J1muBRd2/x6MM5hQ
- r7LFf8WTUd8EhtjI30IBw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9mnA1uuzbmQ=;iLHqUU7bXPbWF/ysGPJ9+ymH6SA
- akJxYli97gjGeOv3eR4lsKTHjRwwRvdjrzEiAlWvVQJZ/2xRn2xylmOe7jERUT7T0UZ1nDs8v
- gjXwQ+KbrNu+n80/I71Tv8AV1p0kezK0mlPw7Iz84n2nEbm0s1FUOP3JROqNyCz/aU693Szng
- frSm1eae6nN7bJyo4XM/LnR5/MQ7mCT8iI30KuYBtfe4q08HST1eMJJTLoUcdhZ38sJFO5C8O
- rTZkmhaILJbNcZncan7uhksv7KkzJ+gXeO9l1QGKkUjpxeJ+Cpe+VvdB8jPy7pyPYVdMoRNKg
- 41p7VLAH3Bx4Dz4gWmxWLS1Od3OZ2WvUvHDF8lVi3rVifOz7YvsTULevVrvjq4AV4yt3V94+c
- nuVfbtqfGzxx0L+tvtR/4qMQqS7kv1LjfMfXVxHnTxVyw6BR6fvttldO0QKfatbp8Bywg7FB0
- Xboez7nUvbKStCF5YwROqrlJbjBylZh6brMM0rQeL3sBdymvdJip1b91o8HSDyTBYv7jCgJrE
- 74mz76DMngivFotLyicuXespSmc7/kIj3gF8Z2WIN7yYuGbJe2DZ12hfrLgjLvf4UiX0vBrYH
- /QoYwKRK8AYzCXLd4sehl3Zd12dmzXqiARzJq48lZNjt6/VqcHd/erUgms5odIXDzkRau0oGC
- yPR5IaHeeE0EKZkx1Iqcq8qaEVPJen39V40kXzZo2WWPforM59B6ImZJk6XCfk05mxeoigrll
- y5+jE2/DchfC4hvpvZw07HuRYQLar9c5J9M8269Lq2nVdftfSd8Ryi/64/J8enfsmwqbbV9tT
- rUrEYSEKGUBrH2/FKggR2CCYfQ8iAmN/BSvaxHzM3fd/I=
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-On 6/18/24 05:14, Jeff Johnson wrote:
-> With ARCH=3Dm68k, make allmodconfig && make W=3D1 C=3D1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/am=
-ifb.o
->
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
->
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Hi Conor,
 
-both patches applied.
+On 17/06/2024 15:23, Alexandre Ghiti wrote:
+> Hi Conor,
+>
+> Sorry for the delay here.
+>
+> On 13/06/2024 09:48, Conor Dooley wrote:
+>> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
+>>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+>>> converted ftrace_make_nop() to use patch_insn_write() which does not
+>>> emit any icache flush relying entirely on __ftrace_modify_code() to do
+>>> that.
+>>>
+>>> But we missed that ftrace_make_nop() was called very early directly 
+>>> when
+>>> converting mcount calls into nops (actually on riscv it converts 2B 
+>>> nops
+>>> emitted by the compiler into 4B nops).
+>>>
+>>> This caused crashes on multiple HW as reported by Conor and Björn since
+>>> the booting core could have half-patched instructions in its icache
+>>> which would trigger an illegal instruction trap: fix this by emitting a
+>>> local flush icache when early patching nops.
+>>>
+>>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>> ---
+>>>   arch/riscv/include/asm/cacheflush.h | 6 ++++++
+>>>   arch/riscv/kernel/ftrace.c          | 3 +++
+>>>   2 files changed, 9 insertions(+)
+>>>
+>>> diff --git a/arch/riscv/include/asm/cacheflush.h 
+>>> b/arch/riscv/include/asm/cacheflush.h
+>>> index dd8d07146116..ce79c558a4c8 100644
+>>> --- a/arch/riscv/include/asm/cacheflush.h
+>>> +++ b/arch/riscv/include/asm/cacheflush.h
+>>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
+>>>       asm volatile ("fence.i" ::: "memory");
+>>>   }
+>>>   +static inline void local_flush_icache_range(unsigned long start,
+>>> +                        unsigned long end)
+>>> +{
+>>> +    local_flush_icache_all();
+>>> +}
+>>> +
+>>>   #define PG_dcache_clean PG_arch_1
+>>>     static inline void flush_dcache_folio(struct folio *folio)
+>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>>> index 4f4987a6d83d..32e7c401dfb4 100644
+>>> --- a/arch/riscv/kernel/ftrace.c
+>>> +++ b/arch/riscv/kernel/ftrace.c
+>>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct 
+>>> dyn_ftrace *rec)
+>>>       out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>>       mutex_unlock(&text_mutex);
+>> So, turns out that this patch is not sufficient. I've seen some more
+>> crashes, seemingly due to initialising nops on this mutex_unlock().
+>> Palmer suggested moving the if (!mod) ... into the lock, which fixed
+>> the problem for me.
+>
+>
+> Ok, it makes sense, I completely missed that. I'll send a fix for that 
+> shortly so that it can be merged in rc5.
+>
+> Thanks,
+>
+> Alex
 
-Thanks!
-Helge
 
-> ---
->   drivers/video/fbdev/amifb.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/video/fbdev/amifb.c b/drivers/video/fbdev/amifb.c
-> index 305f396c764c..132638240521 100644
-> --- a/drivers/video/fbdev/amifb.c
-> +++ b/drivers/video/fbdev/amifb.c
-> @@ -3782,5 +3782,6 @@ static struct platform_driver amifb_driver __refda=
-ta =3D {
->
->   module_platform_driver_probe(amifb_driver, amifb_probe);
->
-> +MODULE_DESCRIPTION("Amiga builtin chipset frame buffer driver");
->   MODULE_LICENSE("GPL");
->   MODULE_ALIAS("platform:amiga-video");
->
-> ---
-> base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
-> change-id: 20240617-md-m68k-drivers-video-fbdev-amifb-3f65d4a6ed79
->
+So I digged a bit more and I'm afraid that the only way to make sure 
+this issue does not happen elsewhere is to flush the icache right after 
+the patching. We actually can't wait to batch the icache flush since 
+along the way, we may call a function that has just been patched (the 
+issue that you encountered here).
 
+I don't know how much it will impact the performance but I guess it will.
+
+Unless someone has a better idea (I added Andy and Puranjay in cc), here 
+is the patch that implements this, can you give it a try? Thanks
+
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index 87cbd86576b2..4b95c574fd04 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct 
+dyn_ftrace *rec)
+         out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+         mutex_unlock(&text_mutex);
+
+-       if (!mod)
+-               local_flush_icache_range(rec->ip, rec->ip + 
+MCOUNT_INSN_SIZE);
+-
+         return out;
+  }
+
+@@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
+         } else {
+                 while (atomic_read(&param->cpu_count) <= num_online_cpus())
+                         cpu_relax();
+-       }
+
+-       local_flush_icache_all();
++               local_flush_icache_all();
++       }
+
+         return 0;
+  }
+diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+index 4007563fb607..ab03732d06c4 100644
+--- a/arch/riscv/kernel/patch.c
++++ b/arch/riscv/kernel/patch.c
+@@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
+
+         memset(waddr, c, len);
+
++       /*
++        * We could have just patched a function that is about to be
++        * called so make sure we don't execute partially patched
++        * instructions by flushing the icache as soon as possible.
++        */
++       local_flush_icache_range((unsigned long)waddr,
++                                (unsigned long)waddr + len);
++
+         patch_unmap(FIX_TEXT_POKE0);
+
+         if (across_pages)
+@@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const 
+void *insn, size_t len)
+
+         ret = copy_to_kernel_nofault(waddr, insn, len);
+
++       /*
++        * We could have just patched a function that is about to be
++        * called so make sure we don't execute partially patched
++        * instructions by flushing the icache as soon as possible.
++        */
++       local_flush_icache_range((unsigned long)waddr,
++                                (unsigned long)waddr + len);
++
+         patch_unmap(FIX_TEXT_POKE0);
+
+         if (across_pages)
+@@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
+
+         ret = patch_insn_set(tp, c, len);
+
+-       if (!ret)
+-               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
+-
+         return ret;
+  }
+  NOKPROBE_SYMBOL(patch_text_set_nosync);
+@@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns, 
+size_t len)
+
+         ret = patch_insn_write(tp, insns, len);
+
+-       if (!ret)
+-               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
+-
+         return ret;
+  }
+  NOKPROBE_SYMBOL(patch_text_nosync);
+@@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
+         } else {
+                 while (atomic_read(&patch->cpu_count) <= num_online_cpus())
+                         cpu_relax();
+-       }
+
+-       local_flush_icache_all();
++               local_flush_icache_all();
++       }
+
+         return ret;
+  }
+
+
+>
+>
+>>
+>>>   +    if (!mod)
+>>> +        local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
+>>> +
+>>>       return out;
+>>>   }
+>>>   --
+>>> 2.39.2
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
