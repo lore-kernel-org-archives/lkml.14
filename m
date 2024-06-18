@@ -1,85 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBD82139C1
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D3782869
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722723; cv=none; b=XWAZIUXkyTBwD4Uq7zvsOnfzOyR5QYpHPFUWQkMkKxX2z5hfY9fZl7rNIvYvjSL8rS6IFC9c8DLRz7gDIHde8jsnb/6y1kFblKYN/sPFAY6pf7utXv6LwzpJAhc5If0xKrFvBiq3c7+/uiQBdxXs+ihvLv0TPwdYP85bKTgkOZo=
+	t=1718722736; cv=none; b=nxHsfpY85K36tZeaIwIkes02Sb9zfvfm6qrHz3b9Rbdca8dyGZBNLNqUqo5rH3ZQozwYJAQ68TDVrxFU910RFYtIE2CwkQLMxRADqn++ziNOgddJoz+TnSr3yo9KyGd7AvTrva24TkZkJ/sMfCgir3CHKgsU3pwNNWjfy+z9oFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722723; c=relaxed/simple;
-	bh=J2+M0QZB+3iNVpJ3pCU5SALGJs3I3cxIThL9w+gyU9M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HK6QQ64yUFGV5a+F5d2xE8twp3wWNC1YHL0xV0/NTHuR2NyYjtj9fRfOGC1jqSRQJFGpk7BHedTY9tW3Crg2sZA+3mlWP74BVaSE92p3bZ+FdR4rFXBp/qsvu9nKU8HsGqshyoFLU+LnHjKEwIEmyJqYwzQKCyvZwxoNPCKerxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKVz41ct; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718722736; c=relaxed/simple;
+	bh=bWsVoVFDNs1jkkJd+kXXlKTi0xZ56hpAFSilnb6yp10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DMkgpHETVPIvmBrm6W5Kw/WJP44+CUi4B5M03r77ug1VJ9AaCUsgivMHS3LU7CgnFPnKqgQUSU4NT2VQFOPuS9Fj262u0ZBNiu8xfsypJvVrjIoD0Ds0gV3kkrU/cJ4h5NoxNjf/HfFUuGbJao9lmSkd5svOMwoWrQXEiT/mlJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=YEgnFPOV; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKVz41ct"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608BCC3277B;
-	Tue, 18 Jun 2024 14:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718722722;
-	bh=J2+M0QZB+3iNVpJ3pCU5SALGJs3I3cxIThL9w+gyU9M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NKVz41cthMe7Fer2+MAJuymZBSA+QFw1ETHg7RW4SdSyRUxvOfS8dsn5IE8flvlBg
-	 CgPsR1kVe7bEmPhmA4yH75NC1KTRpaPnC22J3QDU64rL55XY/VAQXpTGQPK9JLpsX9
-	 qKz0Oq0mDc8ydV1AhzvOPlfVu1B+fRaJRJsakERLssd28n5d0EDr3Wo3U1X6111Qri
-	 Tm3EVeBtSaJjfuuaf+FzsiHooKBjMvBrZuemyKl1QJclf2RkydgtEC2p7fvW4LORsv
-	 /hTqYaFdKH4km3+MaNhb3Ocd/NitUAWgSipgy+d1TAUOBm0v9HWp74R0VeCYBia/0n
-	 jIAL1ADvrdo5g==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Matthew Bystrin <dev.mbstr@gmail.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: puranjay12@gmail.com,
-	rostedt@goodmis.org
-Subject: [PATCH] riscv: stacktrace: fix usage of ftrace_graph_ret_addr()
-Date: Tue, 18 Jun 2024 14:58:20 +0000
-Message-Id: <20240618145820.62112-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="YEgnFPOV"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42278f3aea4so49056775e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718722733; x=1719327533; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4r3MR9O5+PRy4ZfWPnTqHE3YhX8R4tD2dYUjol8FvqI=;
+        b=YEgnFPOVEWQOPItoDQQSEPnXVKmtkL/W9+GfqJNOGwwNQIq1eRZcSbmjvJ0rw8Rc5f
+         rb34DmEMjv1V00hxHe/yDt1IwXw2my8iWIgVkf9JPnZ4KrOi8b8trpdBAolfXorTFuzZ
+         6b1CJY1uD0rqK/KeVIRFLVeCYWKmNwcWlneg+otQJrZPlS6AFN4mbHoeImn63XVzVSJy
+         zTBd1TtHf30SS5SHKxgNAXJ17nk/cpYXcBWLNlhwB4GgT16UQrZ6edyarRLF/eNWRyGq
+         nS9Uow+2nDVvHp20fd5fZHP7KGtwbJoDUiSLweZJzEAcOgKYb+dJrwAM4/ir2n5Jp4MO
+         pJnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718722733; x=1719327533;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4r3MR9O5+PRy4ZfWPnTqHE3YhX8R4tD2dYUjol8FvqI=;
+        b=QnXucj9RBvOOwIIi0RLoWOa5HHpGoria4xRG+NzTXkGDW9FWn4I/LaNJj56PUpGMA+
+         IKXwkHSgzbaNxd+czXUlOYQqJ8vLKTILgxKnbhPD3b901Oga9I+NzVGawxKRE7HVX+xd
+         qQKYTwNYzTlTQyvWadMtdw0BrDL0WaNIBXfrX4cSIwXymPhX5srLoffaezlutgZbcAe/
+         nnU8wIuf+h/9ta4lZCFvaO9DGiZBgZ6+w8fY9NqGXlTYNyjCbCSci2tg4d7L+CrHCTWU
+         gGsGPEjOdGbOwpVsirDXVmUiSLH1P6XGRm8DMciGmo4HMPZSvvm3TTibTq0eZfgcWJVb
+         inAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKaIyKxSpReR5tYvRnAjWLKrCp/DBAaq86Bi7jUcF/0ocRC/3193e44jFDJCQ1O+phtQYFHrY/ZQac0Ixeog8o1ECI9csCuqLeA9Y/
+X-Gm-Message-State: AOJu0YxSkDq5+qhrgv9xs//rJ4RB0xY09HxW0bdqB77bb+8Dm2Bo/Sgb
+	OdxxYoR06vZx3NC8m7jeIkGTzwGx5URY80HRQqm3fhybKPKW/7o8tjElRy8jxv8=
+X-Google-Smtp-Source: AGHT+IFe9SpTww03ArRDna6kc98mVAzFwlA7d+uCWp1Tmdb6HESUIWUaP8XEN2UYC/ZRpcdCb8crww==
+X-Received: by 2002:a05:600c:15ca:b0:421:5605:8c92 with SMTP id 5b1f17b1804b1-4230482bd1emr101175265e9.20.1718722732928;
+        Tue, 18 Jun 2024 07:58:52 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4246b67f0aesm59216185e9.45.2024.06.18.07.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 07:58:52 -0700 (PDT)
+Date: Tue, 18 Jun 2024 15:58:51 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	vincent.donnefort@arm.com, ke.wang@unisoc.com,
+	linux-kernel@vger.kernel.org, christian.loehle@arm.com
+Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding
+ actual_cpu_capacity
+Message-ID: <20240618145851.je4a7cu4ltrt3qxa@airbuntu>
+References: <20240606070645.3295-1-xuewen.yan@unisoc.com>
+ <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
+ <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
+ <20240616222003.agcz5osb2nkli75h@airbuntu>
+ <CAB8ipk-ejDKQTr8nAmK9MkhL2Ra=0J==p3Q+U-4K18G6MeJhQw@mail.gmail.com>
+ <20240617110348.pyofhzekzoqda7fo@airbuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240617110348.pyofhzekzoqda7fo@airbuntu>
 
-ftrace_graph_ret_addr() takes an `idx` integer pointer that is used to
-optimize the stack unwinding. Pass it a valid pointer to utilize the
-optimizations that might be available in the future.
+On 06/17/24 12:03, Qais Yousef wrote:
 
-The commit is making riscv's usage of ftrace_graph_ret_addr() match
-x86_64.
+> > Sorry, I miss the "fits_capacity() use capacity_of()", and without
+> > uclamp_max, the rd is over-utilized,
+> > and would not use feec().
+> > But I notice the uclamp_max, if the rq's uclamp_max is smaller than
+> > SCHED_CAPACITY_SCALE,
+> > and is bigger than actual_cpu_capacity, the util_fits_cpu() would
+> > return true, and the rd is not over-utilized.
+> > Is this setting intentional?
+> 
+> Hmm. To a great extent yes. We didn't want to take all types of rq pressure
+> into account for uclamp_max. But this corner case could be debatable.
+> 
+> Is this the source of your problem? If you change util_fits_cpu() to return
+> false here, would this fix the problem you're seeing?
 
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
----
- arch/riscv/kernel/stacktrace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+FWIW, if this happens due to uclamp_max, then this patch to do the capping is
+still needed.
 
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 528ec7cc9a62..6cb7f9ca9d82 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -32,6 +32,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 			     bool (*fn)(void *, unsigned long), void *arg)
- {
- 	unsigned long fp, sp, pc;
-+	int graph_idx = 0;
- 	int level = 0;
- 
- 	if (regs) {
-@@ -68,7 +69,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 			pc = regs->ra;
- 		} else {
- 			fp = frame->fp;
--			pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
-+			pc = ftrace_graph_ret_addr(current, &graph_idx, frame->ra,
- 						   &frame->ra);
- 			if (pc == (unsigned long)ret_from_exception) {
- 				if (unlikely(!__kernel_text_address(pc) || !fn(arg, pc)))
--- 
-2.40.1
-
+I think it's good to understand first how we end up in feec() when a CPU is
+supposed to be overutlized. uclamp_max is the only way to override this
+decision AFAICT..
