@@ -1,147 +1,303 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640EF15217A;
-	Tue, 18 Jun 2024 12:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F034415B99B;
+	Tue, 18 Jun 2024 12:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718715160; cv=none; b=lnnfXb3ZLK3lVh80lqvPTc3txljEjkI69rFSMT0APz3UlWIidxEh8PoX+CGXk0uWGQ926/y7E/5EgFucWoD10MGv5oGrf/n5uVE1psTEDFDfno94UUaGU3JNDIwIh3QdiSVOGs1lphONYc8RoEL9kHv0OvG3V7M7i1omqG85YJc=
+	t=1718715332; cv=none; b=iA9mUpDPKFxgMupnfxLfbYjhKp0DrH0jX1q2oRCpLWT4bZOo1rw8iWBgi7f3Ca8fzzKg/SEmFhJ3T+g7/W5m8vD1n9RGichZ8OoBMqK4zYnb5nhTc28e40J7PFQ+aR+0XYNjpR3G9XnQDzyC5yOqhKxyUx/VBrOxa3DQCWFbVUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718715160; c=relaxed/simple;
-	bh=pBn80IzhuGRdmTZVHYfLCIkKKqjBbgAETcNFsymps04=;
+	s=arc-20240116; t=1718715332; c=relaxed/simple;
+	bh=Kn8S8dUnZbDCIC+TWAp5uw60QXnA0M97hIF8La7hjMc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cAe6R3mnuJenQti3rfxk7zi9uI/Og1NLfz+k7AcGt+OIBF/tENX0b2GIlu3iSFwUxBHsNiCpB3AA9HMVr4zelQEHbMUAhjEpw4nc/w+yYhZL9SdWFDaysbmsny/pt0VkCQYJtokAYXeIjbZzAQCQ7ne2m7OQ/FVCLAr+SM7A/Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NcF6YQZp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NcF6YQZp"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ICj8Es011062;
-	Tue, 18 Jun 2024 12:52:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=U
-	+4m8KYIdzZvREkSj/dSgWtwYRuSrHOhhAO28kw7O94=; b=NcF6YQZpPFXgEzgJU
-	WCL7luYEdCobKKY/0NDzFQAcYizsIdBHHzz0wd2tEnBJVN/K8dHzK575CvM8Hv8N
-	7jCHY8xDFj6wcD7xQwWN+j4kDzuuyAMoi99hDEsoNbOU/A1oDTaUjrwvqPPfVvCJ
-	uDQ3APnhNFZoRTBbDbygmb2WBcW7I25FUhhAaVIfqnAH8uYg5PXQiG5SoMCm7+rX
-	Q70YDNj1kMvhc0ZFI1X5a3tV8mSY8nw+RSg9sPRbkxgpMRqyHkolhQiYAVXqNj7A
-	PyQaSrJwGAHvg+ctX9jM4pQiLA8uyTUkMX8fVx2Fv/Um2YYeE0lQVzvwoYryDYbh
-	QEvGg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yua9p82ae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 12:52:34 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45IC1Yn8009433;
-	Tue, 18 Jun 2024 12:52:33 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgmjukv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 12:52:33 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45ICqRVv17891672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Jun 2024 12:52:29 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 851AA2004F;
-	Tue, 18 Jun 2024 12:52:27 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 464E22004D;
-	Tue, 18 Jun 2024 12:52:27 +0000 (GMT)
-Received: from [9.152.212.186] (unknown [9.152.212.186])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 18 Jun 2024 12:52:27 +0000 (GMT)
-Message-ID: <064eb313-2f38-479d-80bd-14777f7d3d62@linux.ibm.com>
-Date: Tue, 18 Jun 2024 14:52:26 +0200
+	 In-Reply-To:Content-Type; b=WfLtZ4hsf77wYsamSG35StzrGldL8GDNtbNCvKRTGarpLlaA3lCUA2Xims3kWAxvliB1M15SL7lv7wpJi5IuFKFkCFopGkrnJk5zJ2xDjuFybwRBOMOSGv65c+iKl3Q0dPSVhyGl+Gvqjr5F/GO7NbZFrGa/zRaF8xZU2Gn2pJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W3RYY5Z23z4f3jtC;
+	Tue, 18 Jun 2024 20:55:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 91F081A0FAD;
+	Tue, 18 Jun 2024 20:55:20 +0800 (CST)
+Received: from [10.67.111.172] (unknown [10.67.111.172])
+	by APP4 (Coremail) with SMTP id gCh0CgCH8A21g3FmuWgiAQ--.31099S3;
+	Tue, 18 Jun 2024 20:55:18 +0800 (CST)
+Message-ID: <5ab67b75-4334-3678-40d2-8be98460d496@huaweicloud.com>
+Date: Tue, 18 Jun 2024 20:55:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] s390/cio: add missing MODULE_DESCRIPTION() macros
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v6 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
 Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20240615-md-s390-drivers-s390-cio-v1-1-8fc9584e8595@quicinc.com>
-From: Vineeth Vijayan <vneethv@linux.ibm.com>
-In-Reply-To: <20240615-md-s390-drivers-s390-cio-v1-1-8fc9584e8595@quicinc.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com, Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>, David Howells
+ <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+References: <20240613155506.811013916@goodmis.org>
+ <20240613155527.437020271@goodmis.org>
+From: Zhengyejian <zhengyejian@huaweicloud.com>
+In-Reply-To: <20240613155527.437020271@goodmis.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NsIo8IT7sIOm_ZqKTw8PjkyJK5nEJUZs
-X-Proofpoint-GUID: NsIo8IT7sIOm_ZqKTw8PjkyJK5nEJUZs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- clxscore=1011 mlxscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- phishscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406180092
+X-CM-TRANSID:gCh0CgCH8A21g3FmuWgiAQ--.31099S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtFW3tw13Gry5Wry8Gr1Utrb_yoW3Gr18pr
+	WxJr1FyFZrtr1xXr4Ikw1Uu3yru3Z3KF1ag34DAryDuFsrWr12gw4jgr4Yv3s5ArWvgF4q
+	qF4vyayI9w4DJ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6r106r1rM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UZ18PUUUUU=
+X-CM-SenderInfo: x2kh0w51hmxt3q6k3tpzhluzxrxghudrp/
 
-
-
-On 6/16/24 05:56, Jeff Johnson wrote:
-> With ARCH=s390, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/cio/ccwgroup.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/cio/vfio_ccw.o
+On 2024/6/13 23:55, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> In order to allow for requesting a memory region that can be used for
+> things like pstore on multiple machines where the memory layout is not the
+> same, add a new option to the kernel command line called "reserve_mem".
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> The format is:  reserve_mem=nn:align:name
+> 
+> Where it will find nn amount of memory at the given alignment of align.
+> The name field is to allow another subsystem to retrieve where the memory
+> was found. For example:
+> 
+>    reserve_mem=12M:4096:oops ramoops.mem_name=oops
+> 
+> Where ramoops.mem_name will tell ramoops that memory was reserved for it
+> via the reserve_mem option and it can find it by calling:
+> 
+>    if (reserve_mem_find_by_name("oops", &start, &size)) {
+> 	// start holds the start address and size holds the size given
+> 
+> This is typically used for systems that do not wipe the RAM, and this
+> command line will try to reserve the same physical memory on soft reboots.
+> Note, it is not guaranteed to be the same location. For example, if KASLR
+> places the kernel at the location of where the RAM reservation was from a
+> previous boot, the new reservation will be at a different location.  Any
+> subsystem using this feature must add a way to verify that the contents of
+> the physical memory is from a previous boot, as there may be cases where
+> the memory will not be located at the same location.
+> 
+> Not all systems may work either. There could be bit flips if the reboot
+> goes through the BIOS. Using kexec to reboot the machine is likely to
+> have better results in such cases.
+> 
+> Link: https://lore.kernel.org/all/ZjJVnZUX3NZiGW6q@kernel.org/
+> 
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->   drivers/s390/cio/ccwgroup.c     | 1 +
->   drivers/s390/cio/vfio_ccw_drv.c | 1 +
->   2 files changed, 2 insertions(+)
+>   .../admin-guide/kernel-parameters.txt         |  22 ++++
+>   include/linux/mm.h                            |   2 +
+>   mm/memblock.c                                 | 117 ++++++++++++++++++
+>   3 files changed, 141 insertions(+)
 > 
-> diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
-> index b72f672a7720..a741e5012fce 100644
-> --- a/drivers/s390/cio/ccwgroup.c
-> +++ b/drivers/s390/cio/ccwgroup.c
-> @@ -550,4 +550,5 @@ void ccwgroup_remove_ccwdev(struct ccw_device *cdev)
->   	put_device(&gdev->dev);
->   }
->   EXPORT_SYMBOL(ccwgroup_remove_ccwdev);
-> +MODULE_DESCRIPTION("CCW group bus driver");
-
-the name of the bus here is "ccwgroup" bus without a space.
-Otherwise this change in ccwgroup.c looks good to me.
-Thank you for the patch.
-
-With the correction mentioned above,
-Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-
-
->   MODULE_LICENSE("GPL");
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 8ad49030a7bf..49da348355b4 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -488,4 +488,5 @@ static void __exit vfio_ccw_sch_exit(void)
->   module_init(vfio_ccw_sch_init);
->   module_exit(vfio_ccw_sch_exit);
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index b600df82669d..56e18b1a520d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5710,6 +5710,28 @@
+>   			them.  If <base> is less than 0x10000, the region
+>   			is assumed to be I/O ports; otherwise it is memory.
 >   
-> +MODULE_DESCRIPTION("VFIO based Physical Subchannel device driver");
+> +	reserve_mem=	[RAM]
+> +			Format: nn[KNG]:<align>:<label>
+> +			Reserve physical memory and label it with a name that
+> +			other subsystems can use to access it. This is typically
+> +			used for systems that do not wipe the RAM, and this command
+> +			line will try to reserve the same physical memory on
+> +			soft reboots. Note, it is not guaranteed to be the same
+> +			location. For example, if anything about the system changes
+> +			or if booting a different kernel. It can also fail if KASLR
+> +			places the kernel at the location of where the RAM reservation
+> +			was from a previous boot, the new reservation will be at a
+> +			different location.
+> +			Any subsystem using this feature must add a way to verify
+> +			that the contents of the physical memory is from a previous
+> +			boot, as there may be cases where the memory will not be
+> +			located at the same location.
+> +
+> +			The format is size:align:label for example, to request
+> +			12 megabytes of 4096 alignment for ramoops:
+> +
+> +			reserve_mem=12M:4096:oops ramoops.mem_name=oops
+> +
+>   	reservetop=	[X86-32,EARLY]
+>   			Format: nn[KMG]
+>   			Reserves a hole at the top of the kernel virtual
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 9849dfda44d4..077fb589b88a 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4263,4 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
+>   void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+>   void vma_pgtable_walk_end(struct vm_area_struct *vma);
+>   
+> +int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
+> +
+>   #endif /* _LINUX_MM_H */
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index d09136e040d3..b7b0e8c3868d 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -2244,6 +2244,123 @@ void __init memblock_free_all(void)
+>   	totalram_pages_add(pages);
+>   }
+>   
+> +/* Keep a table to reserve named memory */
+> +#define RESERVE_MEM_MAX_ENTRIES		8
+> +#define RESERVE_MEM_NAME_SIZE		16
+> +struct reserve_mem_table {
+> +	char			name[RESERVE_MEM_NAME_SIZE];
+> +	phys_addr_t		start;
+> +	phys_addr_t		size;
+> +};
+> +static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+> +static int reserved_mem_count;
+> +
+> +/* Add wildcard region with a lookup name */
+> +static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+> +				   const char *name)
+> +{
+> +	struct reserve_mem_table *map;
+> +
+> +	map = &reserved_mem_table[reserved_mem_count++];
+> +	map->start = start;
+> +	map->size = size;
+> +	strscpy(map->name, name);
+> +}
+> +
+> +/**
+> + * reserve_mem_find_by_name - Find reserved memory region with a given name
+> + * @name: The name that is attached to a reserved memory region
+> + * @start: If found, holds the start address
+> + * @size: If found, holds the size of the address.
+> + *
+> + * @start and @size are only updated if @name is found.
+> + *
+> + * Returns: 1 if found or 0 if not found.
+> + */
+> +int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
+> +{
+> +	struct reserve_mem_table *map;
+> +	int i;
+> +
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		map = &reserved_mem_table[i];
+> +		if (!map->size)
+> +			continue;
+> +		if (strcmp(name, map->name) == 0) {
+> +			*start = map->start;
+> +			*size = map->size;
+> +			return 1;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
+> +
+> +/*
+> + * Parse reserve_mem=nn:align:name
+> + */
+> +static int __init reserve_mem(char *p)
+> +{
+> +	phys_addr_t start, size, align, tmp;
+> +	char *name;
+> +	char *oldp;
+> +	int len;
+> +
+> +	if (!p)
+> +		return -EINVAL;
+> +
+> +	/* Check if there's room for more reserved memory */
+> +	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
+> +		return -EBUSY;
+> +
+> +	oldp = p;
+> +	size = memparse(p, &p);
+> +	if (!size || p == oldp)
+> +		return -EINVAL;
+> +
+> +	if (*p != ':')
+> +		return -EINVAL;
+> +
+> +	align = memparse(p+1, &p);
+> +	if (*p != ':')
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * memblock_phys_alloc() doesn't like a zero size align,
+> +	 * but it is OK for this command to have it.
+> +	 */
+> +	if (align < SMP_CACHE_BYTES)
+> +		align = SMP_CACHE_BYTES;
+> +
+> +	name = p + 1;
+> +	len = strlen(name);
+> +
+> +	/* name needs to have length but not too big */
+> +	if (!len || len >= RESERVE_MEM_NAME_SIZE)
+> +		return -EINVAL;
+> +
+> +	/* Make sure that name has text */
+> +	for (p = name; *p; p++) {
+> +		if (!isspace(*p))
+> +			break;
+> +	}
+> +	if (!*p)
+> +		return -EINVAL;
+> +
+> +	/* Make sure the name is not already used */
+> +	if (reserve_mem_find_by_name(name, &start, &tmp))
+> +		return -EBUSY;
+> +
+> +	start = memblock_phys_alloc(size, align);
+> +	if (!start)
+> +		return -ENOMEM;
+> +
+> +	reserved_mem_add(start, size, name);
+> +
+> +	return 0;
 
-Halil/Mathew/Eric,
-Could you please comment on this ?
+Hi, steve, should here return 1 ? Other __setup functions
+return 1 when it success.
 
->   MODULE_LICENSE("GPL v2");
-> 
-> ---
-> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> change-id: 20240615-md-s390-drivers-s390-cio-3598abb802ad
-> 
+> +}
+> +__setup("reserve_mem=", reserve_mem);
+> +
+>   #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+>   static const char * const flagname[] = {
+>   	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
+
