@@ -1,76 +1,129 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2F753A9;
-	Tue, 18 Jun 2024 04:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF7C53A9;
+	Tue, 18 Jun 2024 04:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718686094; cv=none; b=BuOlaGVtWi0LkU/dCMFKv3P3sdkcwryQ3NRLf/tKd5laaSnJ7ss710ekJmuxogVL4sGMN76BL/BMElNCnWtddeT+Ab+M24ysEb2ed4F6mec3WPt1muAti93U4kBLJdEbO5YEjsGfXxWL/pn/2qbgilfm0rfTOqcQGWiHQgX26fA=
+	t=1718686107; cv=none; b=gvD/YlOrPwp7FlCEH0yNCTn5sswcYNLtyrAEOwXEohskf9p68P8JA7VAf5K1KW8Pisy/zmPontjSATo5kIs+Nye1EQo3Jo0BE4vQ2fh+MReuWSwIjcl0AkVyIYQ3swgfXTBerLYyNEk3ho+jv+OAgd+yJ5oS+/WIyrM8bV8yH50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718686094; c=relaxed/simple;
-	bh=zmvDLkScg73a7Uy+pTBMt27bcXzj/6hEZbBD/5EAv9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BO5DXTtRzwehmYDSd+7twD8GyVsjIIRpZadqmYdzZhTXrARc7KMXjOFHZDX6VboN33rdjdkmTQi3RNw4Oaj+M8HUcpCnSJ089gZ/u63vUsuT0GGtRiDgGy0UVE9Zg0nsGYUk7/HM+aMdekPRudBbNxJ02OOIRBdBNWWkz9xA5UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=fUwcSHOR; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1718686107; c=relaxed/simple;
+	bh=uQRT705hswxV4eHkecwYH5nnl/fTVa9ZyWh6LbZP3oM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPacbMyM3YsPwIzmOxDnVcO9MzLKlghrKaL02VWhaG8OBG2Fm1ZJ0nw+gF4F2aWWEyaaK01qqJn5LxO42oATLIleoCStXbA+7FZRolQAflXDhMcT8pmU+yqE6x7QnK/s/cPFjA/W9ATbZvPYLuYylnH6TNfZvZXlTpqfnx4/sxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bh6Na5MH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="fUwcSHOR"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 60A05C0002;
-	Tue, 18 Jun 2024 04:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1718686090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7eoG87lpKHygI/hoj/AcOkMNGo9t/VxMJbEW0DRK/g=;
-	b=fUwcSHORmHty6Dm5gHlhI4nkyC50zcXGuZhVE6qise2i7+ptZ7H3xU7U3CF3Osv4Ptp+JZ
-	0NkkZ6aU4F7tVZ5kutiYhJUAunMO3fTqry1ukSTISwjVMrLIr+6pkv6oZEfX65EFeZM8AW
-	UBEUDxVytLb8qUDj+skoV/a2zPsa8g3Rp3MgBhdlXxWm/HKt8TdvDHGtAVX110HLxRjCTm
-	69iPUqjdbvYwkSyi0uWC5Uy/RO5NMdYTWm8/5noPbcEf8IrlxZvXTEZJuxvZFcV7Y07FMi
-	KwtA+nmr/QCV4wOequ3tg7DAgmSncmy+GyTV75KwoPMYneq+4TzhlaKqfvvlfg==
-Message-ID: <555b23dc-e054-426b-a26b-6313f260064f@arinc9.com>
-Date: Tue, 18 Jun 2024 07:48:02 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bh6Na5MH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92685C3277B;
+	Tue, 18 Jun 2024 04:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718686107;
+	bh=uQRT705hswxV4eHkecwYH5nnl/fTVa9ZyWh6LbZP3oM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bh6Na5MHc3JrAvMbsJpyCpZKvDy2XEoJrEmyR5EvCKzupYOrvNfZogz7BJtaibGlm
+	 fYBMJkQONTPddF47mFqhUbUTi/T832VplagecpzuDma3vWQnxjImCiAxuk4n516Zfx
+	 ueMvb1lpkIBFBTmtdXj8CSo1lf9btx8mnO4JDrofcdsCyUJN/KG9ohJ5Wa6qc3mdx7
+	 8FhaxrQz87M3Vh+dRwj6vVA/3vmqFvZkovmoqYNCrUJYpChnLGj3fWI4g2nnqdfWtH
+	 V1FhxpfJT5gGQ4nwmXEzFsg++64f6qdQSzLAqyE9PylKgo9sAlYumN4wghb2pk6MCU
+	 LMG/+hx82la7w==
+Date: Tue, 18 Jun 2024 12:34:27 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Yixun Lan <dlan@gentoo.org>, Yangyu Chen <cyy@cyyself.name>,
+	linux-riscv@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup.patel@wdc.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jesse Taube <jesse@rivosinc.com>
+Subject: Re: [PATCH v1 0/9] riscv: add initial support for SpacemiT K1
+Message-ID: <ZnEOU7D00J8Jzy-1@xhacker>
+References: <tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com>
+ <20240616-exorcism-computing-e11e26084a62@spud>
+ <20240616224811.GC3983622@ofsar>
+ <ZnBEBQjTQtFs-fXt@xhacker>
+ <20240617-synapse-carmaker-0a59c7c6edb7@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 1/2] net: dsa: mt7530: factor out bridge
- join/leave logic
-To: Matthias Schiffer <mschiffer@universe-factory.net>,
- Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <378bc964b49f9e9954336e99009932ac22bfe172.1718603656.git.mschiffer@universe-factory.net>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <378bc964b49f9e9954336e99009932ac22bfe172.1718603656.git.mschiffer@universe-factory.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240617-synapse-carmaker-0a59c7c6edb7@spud>
 
-On 17/06/2024 21.30, Matthias Schiffer wrote:
-> As preparation for implementing bridge port isolation, move the logic to
-> add and remove bits in the port matrix into a new helper
-> mt7530_update_port_member(), which is called from
-> mt7530_port_bridge_join() and mt7530_port_bridge_leave().
+On Mon, Jun 17, 2024 at 04:32:59PM +0100, Conor Dooley wrote:
+> On Mon, Jun 17, 2024 at 10:11:17PM +0800, Jisheng Zhang wrote:
+> > On Sun, Jun 16, 2024 at 10:48:11PM +0000, Yixun Lan wrote:
+> > > Hi Conor
+> > >  Thanks for bringing this up
+> > > 
+> > > On 19:35 Sun 16 Jun     , Conor Dooley wrote:
+> > > > On Mon, Jun 17, 2024 at 01:18:52AM +0800, Yangyu Chen wrote:
+> > > > 
+> > > > No MAINTAINERS update, so I figure that means you don't want to maintain
+> > > > it going forwards? If there's someone out that that does care about the
+> > > > spacemit k1 (Jesse maybe?), then I'd be more than happy to have them
+> > > > look after it.
+> > > Yangyu kind of has limited time, too many stuff for him..
+> > > 
+> > > I'd volunteered to help on this if it can fill the gap
+> > > Also I'd be more than happy if anyone willing step forward to co-maintain..
+> > 
+> > Does maintainership work like this? Is willing to do enough?
+> > FWICT, maintainership involves active patch contributing, reviewing and
+> > maintaining the whole SoC. It is better to take over the maintainership
+> > after showing enough patch contributions and understanding of the SoC.
 > 
-> No functional change intended.
+> I was going to reply to your other patch about providing more complete
+> "basic" support for the SoC, but I guess I'll reply here and address
+> both points. After the k230 and th1520, which were both merged with very
+
+When I saw k230 a few minutes ago, I assumed you mean k210 since I
+didn't found k230 support in linus tree now. After searching the
+maillist, I found oh there is a k230 series which is similar to this
+series, no pinctrl, no clk, no reset. Since the incomplete K230 initial
+series hasn't been merged into Linus tree now, is it possible to drop
+it so that we can avoid the same mistake for k230.
+
+> basic support and have made very little progress towards being a useful
+> platform, I'm pretty reluctant to merge another platform in a super
+> basic state. I was going to make this point before you brought it up,
+> but it's good to know I am not the only one with that view. To be clear,
+> I'm not pointing blame for those platforms, I'd just like to avoid a
+
+Yep previously I thought it was fine to use a fixed clock or dummy clock
+during the initial patches, but I changed my mind now, especially after
+Samuel complained the cv1800b reset dt changes.
+
+> repeat. If Yangyu doesn't have time to do any development work on the
+> platform, I'd like to see someone else (and as I mentioned Jesse is
+> interested) take on getting some of the basic driver patches written and
+> merge only when those are accepted. Having no in-tree clock and pinctrl
+> drivers is definitely a hindrance to other people doing parallel
+> development of drivers and I'd like to avoid that.
 > 
-> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+> Getting back to your point in this mail, whoever gets the platform to
+> that state is well suited to looking after it going forwards. Some other
 
-I see that my review of the previous version of this patch was completely
-ignored. Why?
+The person who can bring the platfrom support to a well-moduled state,
+IE, proper clk, pinctrl, reset drivers shows the passion, the code
+contribution and solid understanding of the SoC, sure he/she is
+definitely suited to maintain the SoC. I just don't think it's 
+a good practice a person can became maintainer even w/o one LoC
+contrubition to the SoC, because IMHO code contribution matters
+for maintainership.
 
-Arınç
+> interested parties could also join as reviewers. I don't want to see
+> people joining as maintainers that are not going to have an interest
+> in the platform going forward, as that'll just end up with me as the
+> defacto maintainer.
+
+> 
+> Thanks,
+> Conor.
+
+
