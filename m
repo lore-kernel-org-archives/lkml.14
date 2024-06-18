@@ -1,276 +1,96 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF86C29D19
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9017984;
+	Tue, 18 Jun 2024 05:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718689879; cv=none; b=EQJ+hrqHKg8lpZImr688TpTc+9tq/UrhNmFXlXcIE2geEn2DjH0tabkx75XV0lUFaSyuoXLnoYBKdYrdRtQJx4/54vawz06sSTxxuQUR6ICiD0RmXCX51IUauWgYbkoi2BznWgk7VrHmWfaBl8so63uVdLLWDFGrYNlMydthfPY=
+	t=1718689955; cv=none; b=X2BbXx7kvsyp+iEvmKmX3AGh9Dn/rDhUsQR4Mavc9l24BRkgi1eXjLpPclH91RrZ7WXmx+j0aL9lmzwa3xynbYCEYWan8AzM6R1ArKiy0F4tmstOFFGswqCMOfsQFPMAvjnYldVbkACDyD4dU717TsBca2MQLCOZJpiadRSlDfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718689879; c=relaxed/simple;
-	bh=xwMdQjm3RXhL4Xn8LkwNstlqvAWBMg28px3b3cnAifU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gEEwRw/4+PPuAxtw5KGJtmFICL2G9g3h/z/V0lZIICLaZ0LOZIJspetWYwGDWdVEZzsxwCUXmnBWZbXqedkRLr4KSL/SGx6GuVPHS9whCuoWL5/6Ipuevxmi0jDXk5uHtu9X6d6R491J4nS0/FUgVka/rGp9LjJ7tEypT7oFET4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=p1QjbVXL; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1718689955; c=relaxed/simple;
+	bh=wt7xCVTFfKMu8aCJOlbZ/3AyuVG3qL/1z88/Rnk0WEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dIghS8y//SaC4RiCmtClTqyNLPxnWxXYF9Oen0tM0MevVEPIYXMb/iJZZ84Hyo9xheaKavYn67RoCIJeuVH/WXgRC5nW+bGO1XLe6H0Yv0EEMmut7uZkJElb7KxKkqiKweWmvBO+VYXgHWpkSzu8vF3Fgk5wobqsdjZMeGk3dac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4LMZ2Fe; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="p1QjbVXL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
-	Content-Type; bh=fULidGb+uvxXgscYWHbx+Jh3MrCdG6txdQsuV5f2w4g=;
-	b=p1QjbVXLOaBdM+P5bPCBk1kFH9srnhgYdNVBMiD+DnG7yFZY60qAnDpqd2KazI
-	dCTKq07H0EfxOpe81ehHJcOHUBBZzvO7DhQCxsidBryOnnn87LrPQ4ckzVWUbZ51
-	nRd4MaBliyLb0lwkNP/KbzD1L2hPRrSLkB5Qozq2mm1BM=
-Received: from [172.21.21.216] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wDXPxUFIHFmDnmvBw--.2240S2;
-	Tue, 18 Jun 2024 13:49:59 +0800 (CST)
-Subject: Re: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating
- non-CMA THP-sized page
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, baolin.wang@linux.alibaba.com,
- liuzixing@hygon.cn
-References: <1717492460-19457-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4zvG7gwukioZnqN+GpWHbpK1rkC0Jeqo5VFVL_RLACkaw@mail.gmail.com>
- <2e3a3a3f-737c-ed01-f820-87efee0adc93@126.com>
- <9b227c9d-f59b-a8b0-b353-7876a56c0bde@126.com>
- <CAGsJ_4ynfvjXsr6QFBA_7Gzk3PaO1pk+6ErKZaNCt4H+nuwiJw@mail.gmail.com>
- <4482bf69-eb07-0ec9-f777-28ce40f96589@126.com>
- <CAGsJ_4ytYTpvRVgR1EoazsH=QxZCDE2e8H0BeXrY-6zWFD0kCg@mail.gmail.com>
-From: yangge1116 <yangge1116@126.com>
-Message-ID: <5177ce6d-6c75-482e-4fa8-749972f08ffe@126.com>
-Date: Tue, 18 Jun 2024 13:49:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4LMZ2Fe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718689954; x=1750225954;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wt7xCVTFfKMu8aCJOlbZ/3AyuVG3qL/1z88/Rnk0WEk=;
+  b=l4LMZ2FeHyvPSpF3Sg+U1BO4aMPVQHSa0Ovf19SDSlG15O8AIcaLDFgI
+   4yK1UmMcXiNAmPDaIyQV/oey4BVoqN1rBkXOKHMDF1dobniFQfZj6nwVx
+   2aQUg81Yoe+qm37AvzBNyVV8ATFhywKeLHAlyW80lBADgCFIreULr/OSk
+   vIFC7E53Xz5ZsrxP3x/eaVTy65QDDHXlyVm8IGljvKq3M3Z1docDW4x4C
+   6C7O6q62YmvKKYSglJrxs5EHhomYwGRVMiLhFE1OCLX15W1CNdThNXtTn
+   L7oBXmq1xA81liHim+Pf4rg81PVYtMCzpEV2n7vLIV1Gqcbq5eGMSBtks
+   g==;
+X-CSE-ConnectionGUID: PTk9q5YCSIi5uwD7MLrLQg==
+X-CSE-MsgGUID: nbOWs0XFR3ix26EnAnsk5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15685680"
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="15685680"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 22:52:33 -0700
+X-CSE-ConnectionGUID: glyAr8txS66BfBWnm1LLPw==
+X-CSE-MsgGUID: Ps4cPlzdTei2MgpC/Xjr3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
+   d="scan'208";a="41352842"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by orviesa010.jf.intel.com with ESMTP; 17 Jun 2024 22:52:33 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 2/2] cpufreq: intel_pstate: Update Lunar Lake hybrid scaling factor
+Date: Mon, 17 Jun 2024 22:52:21 -0700
+Message-ID: <20240618055221.446108-2-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240618055221.446108-1-srinivas.pandruvada@linux.intel.com>
+References: <20240618055221.446108-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGsJ_4ytYTpvRVgR1EoazsH=QxZCDE2e8H0BeXrY-6zWFD0kCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXPxUFIHFmDnmvBw--.2240S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JFykXFy3XryfKw15GFykZrb_yoWxKr17pF
-	WfJ3W7Kr4UXryUAw17twn0kr1jkw1UKr18Xr15Jry8urnIyr1IyF4xJr1UuFyrAryUJF40
-	qrWUtasxZF4UA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjiSLUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWRYCG2VLayh1vQABsy
 
+Change hybrid scaling factor for Lunar Lake. Scaling factor is
+1.15 for P-cores compared to E-cores.
 
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/cpufreq/intel_pstate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-在 2024/6/18 下午12:10, Barry Song 写道:
-> On Tue, Jun 18, 2024 at 3:32 PM yangge1116 <yangge1116@126.com> wrote:
->>
->>
->>
->> 在 2024/6/18 上午9:55, Barry Song 写道:
->>> On Tue, Jun 18, 2024 at 9:36 AM yangge1116 <yangge1116@126.com> wrote:
->>>>
->>>>
->>>>
->>>> 在 2024/6/17 下午8:47, yangge1116 写道:
->>>>>
->>>>>
->>>>> 在 2024/6/17 下午6:26, Barry Song 写道:
->>>>>> On Tue, Jun 4, 2024 at 9:15 PM <yangge1116@126.com> wrote:
->>>>>>>
->>>>>>> From: yangge <yangge1116@126.com>
->>>>>>>
->>>>>>> Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->>>>>>> THP-sized allocations") no longer differentiates the migration type
->>>>>>> of pages in THP-sized PCP list, it's possible to get a CMA page from
->>>>>>> the list, in some cases, it's not acceptable, for example, allocating
->>>>>>> a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
->>>>>>>
->>>>>>> The patch forbids allocating non-CMA THP-sized page from THP-sized
->>>>>>> PCP list to avoid the issue above.
->>>>>>
->>>>>> Could you please describe the impact on users in the commit log?
->>>>>
->>>>> If a large number of CMA memory are configured in the system (for
->>>>> example, the CMA memory accounts for 50% of the system memory), starting
->>>>> virtual machine with device passthrough will get stuck.
->>>>>
->>>>> During starting virtual machine, it will call pin_user_pages_remote(...,
->>>>> FOLL_LONGTERM, ...) to pin memory. If a page is in CMA area,
->>>>> pin_user_pages_remote() will migrate the page from CMA area to non-CMA
->>>>> area because of FOLL_LONGTERM flag. If non-movable allocation requests
->>>>> return CMA memory, pin_user_pages_remote() will enter endless loops.
->>>>>
->>>>> backtrace:
->>>>> pin_user_pages_remote
->>>>> ----__gup_longterm_locked //cause endless loops in this function
->>>>> --------__get_user_pages_locked
->>>>> --------check_and_migrate_movable_pages //always check fail and continue
->>>>> to migrate
->>>>> ------------migrate_longterm_unpinnable_pages
->>>>> ----------------alloc_migration_target // non-movable allocation
->>>>>
->>>>>> Is it possible that some CMA memory might be used by non-movable
->>>>>> allocation requests?
->>>>>
->>>>> Yes.
->>>>>
->>>>>
->>>>>> If so, will CMA somehow become unable to migrate, causing cma_alloc()
->>>>>> to fail?
->>>>>
->>>>>
->>>>> No, it will cause endless loops in __gup_longterm_locked(). If
->>>>> non-movable allocation requests return CMA memory,
->>>>> migrate_longterm_unpinnable_pages() will migrate a CMA page to another
->>>>> CMA page, which is useless and cause endless loops in
->>>>> __gup_longterm_locked().
->>>
->>> This is only one perspective. We also need to consider the impact on
->>> CMA itself. For example,
->>> when CMA is borrowed by THP, and we need to reclaim it through
->>> cma_alloc() or dma_alloc_coherent(),
->>> we must move those pages out to ensure CMA's users can retrieve that
->>> contiguous memory.
->>>
->>> Currently, CMA's memory is occupied by non-movable pages, meaning we
->>> can't relocate them.
->>> As a result, cma_alloc() is more likely to fail.
->>>
->>>>>
->>>>> backtrace:
->>>>> pin_user_pages_remote
->>>>> ----__gup_longterm_locked //cause endless loops in this function
->>>>> --------__get_user_pages_locked
->>>>> --------check_and_migrate_movable_pages //always check fail and continue
->>>>> to migrate
->>>>> ------------migrate_longterm_unpinnable_pages
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>>>
->>>>>>> Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->>>>>>> THP-sized allocations")
->>>>>>> Signed-off-by: yangge <yangge1116@126.com>
->>>>>>> ---
->>>>>>>     mm/page_alloc.c | 10 ++++++++++
->>>>>>>     1 file changed, 10 insertions(+)
->>>>>>>
->>>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>>>>>> index 2e22ce5..0bdf471 100644
->>>>>>> --- a/mm/page_alloc.c
->>>>>>> +++ b/mm/page_alloc.c
->>>>>>> @@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone
->>>>>>> *preferred_zone,
->>>>>>>            WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
->>>>>>>
->>>>>>>            if (likely(pcp_allowed_order(order))) {
->>>>>>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>>>>> +               if (!IS_ENABLED(CONFIG_CMA) || alloc_flags &
->>>>>>> ALLOC_CMA ||
->>>>>>> +                                               order !=
->>>>>>> HPAGE_PMD_ORDER) {
->>>>>>> +                       page = rmqueue_pcplist(preferred_zone, zone,
->>>>>>> order,
->>>>>>> +                                               migratetype,
->>>>>>> alloc_flags);
->>>>>>> +                       if (likely(page))
->>>>>>> +                               goto out;
->>>>>>> +               }
->>>>>>
->>>>>> This seems not ideal, because non-CMA THP gets no chance to use PCP.
->>>>>> But it
->>>>>> still seems better than causing the failure of CMA allocation.
->>>>>>
->>>>>> Is there a possible approach to avoiding adding CMA THP into pcp from
->>>>>> the first
->>>>>> beginning? Otherwise, we might need a separate PCP for CMA.
->>>>>>
->>>>
->>>> The vast majority of THP-sized allocations are GFP_MOVABLE, avoiding
->>>> adding CMA THP into pcp may incur a slight performance penalty.
->>>>
->>>
->>> But the majority of movable pages aren't CMA, right?
->>
->>> Do we have an estimate for
->>> adding back a CMA THP PCP? Will per_cpu_pages introduce a new cacheline, which
->>> the original intention for THP was to avoid by having only one PCP[1]?
->>>
->>> [1] https://patchwork.kernel.org/project/linux-mm/patch/20220624125423.6126-3-mgorman@techsingularity.net/
->>>
->>
->> The size of struct per_cpu_pages is 256 bytes in current code containing
->> commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized
->> allocations").
->> crash> struct per_cpu_pages
->> struct per_cpu_pages {
->>       spinlock_t lock;
->>       int count;
->>       int high;
->>       int high_min;
->>       int high_max;
->>       int batch;
->>       u8 flags;
->>       u8 alloc_factor;
->>       u8 expire;
->>       short free_count;
->>       struct list_head lists[13];
->> }
->> SIZE: 256
->>
->> After revert commit 5d0a661d808f ("mm/page_alloc: use only one PCP list
->> for THP-sized allocations"), the size of struct per_cpu_pages is 272 bytes.
->> crash> struct per_cpu_pages
->> struct per_cpu_pages {
->>       spinlock_t lock;
->>       int count;
->>       int high;
->>       int high_min;
->>       int high_max;
->>       int batch;
->>       u8 flags;
->>       u8 alloc_factor;
->>       u8 expire;
->>       short free_count;
->>       struct list_head lists[15];
->> }
->> SIZE: 272
->>
->> Seems commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
->> THP-sized allocations") decrease one cacheline.
-> 
-> the proposal is not reverting the patch but adding one CMA pcp.
-> so it is "struct list_head lists[14]"; in this case, the size is still
-> 256?
-> 
-
-Yes, if only add one CMA pcp, the size is still 256. Seems adding one 
-CMA pcp is more reasonable.
-
-> 
->>
->>>
->>>> Commit 1d91df85f399 takes a similar approach to filter, and I mainly
->>>> refer to it.
->>>>
->>>>
->>>>>>> +#else
->>>>>>>                    page = rmqueue_pcplist(preferred_zone, zone, order,
->>>>>>>                                           migratetype, alloc_flags);
->>>>>>>                    if (likely(page))
->>>>>>>                            goto out;
->>>>>>> +#endif
->>>>>>>            }
->>>>>>>
->>>>>>>            page = rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
->>>>>>> --
->>>>>>> 2.7.4
->>>>>>
->>>>>> Thanks
->>>>>> Barry
->>>>>>
->>>>
->>>>
->>
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 72d9e60369e0..32c331ee97ca 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -300,6 +300,7 @@ static struct cpufreq_driver *intel_pstate_driver __read_mostly;
+ 
+ #define HYBRID_SCALING_FACTOR		78741
+ #define HYBRID_SCALING_FACTOR_MTL	80000
++#define HYBRID_SCALING_FACTOR_LNL	86957
+ 
+ static int hybrid_scaling_factor = HYBRID_SCALING_FACTOR;
+ 
+@@ -3402,6 +3403,7 @@ static const struct x86_cpu_id intel_epp_default[] = {
+ static const struct x86_cpu_id intel_hybrid_scaling_factor[] = {
+ 	X86_MATCH_VFM(INTEL_METEORLAKE_L, HYBRID_SCALING_FACTOR_MTL),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE, HYBRID_SCALING_FACTOR_MTL),
++	X86_MATCH_VFM(INTEL_LUNARLAKE_M, HYBRID_SCALING_FACTOR_LNL),
+ 	{}
+ };
+ 
+-- 
+2.44.0
 
