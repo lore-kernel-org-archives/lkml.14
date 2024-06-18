@@ -1,110 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0ED482C6
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFE21CD20;
+	Tue, 18 Jun 2024 15:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718723438; cv=none; b=u0jYVsPJDUli0rVHb95Fi8WctPNck150/lv7UvndOJbrs/HUwNYtPn+2VjkOk6suOxqhkkTfuOolB38AelZ2b5+s8CHR27lPoneIbCHu41M6lQr1WzxZ3DoD4sNacFERwIVP8W+esLZvHIg7qSVdsj9f8A+xua1MLMobPu4V+bU=
+	t=1718723473; cv=none; b=Ik205GD4Axuy9ZSt7fcVotq+2ArBdx5Bmb1lDXioyjTW3h/ly320qVWfl+ntft532Ih6/yduo7YZ381MMe+EdMjGCRwRg9J5H0e5LUQled43gplgxcRvflIO5tWYufs3yEpQCvI8VCQBmKp3ll0JPgAlw78WhoFdaprpEU+fnMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718723438; c=relaxed/simple;
-	bh=AxiGyfC55u2RtY0Ev8YK8wIoUOAdy0LeEA5TKxtRv5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AXaw76JaUoJ5n+/B+AotjiS8XVP7j7okpC5P5qSJqlFK0k09PAoXexTrOOiizNidA+kNTpXhs0rUcBKao3oWZ/+Esfq4zjGZgiNdDVKpXfTl/PJUbKfLA5CMfhhjxozGMQd0yN/PdwX0IGdee2U8kktE55UftcGWMzbCd9BtVE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hpk4Ikfd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718723473; c=relaxed/simple;
+	bh=K3N59nwNldSfgDAHXVnjWYBImxW4g56QyolpLFrZVFY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZfpbkW1QqvV3PtqAweB9ZgUUUx5mAxIatsqo5MtD/2RIsqTBEyDxsZlPPYhzNH+NCbtu2t5j4w99+fwFhI47ABWUV6ZXi5+l/Z8rfT4yB7HPFQ+iRRq1MiRs4g4BEMNZdvOCrd5GGuu2vioYGqNW/Jsv+nu/3digpLLuyq8+tMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=FaBSxoqP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XoeTy9+A; arc=none smtp.client-ip=64.147.123.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hpk4Ikfd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718723435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1es3ECOkdNs+2hzIuvv3Jx9YKFXHOd3EXF7iaYcF0ds=;
-	b=Hpk4Ikfd/5feiK9crtxKDEo0hsrZxHPuF5EkontHSzGFsNNes3DmY8ishsDJrehX6tcQBh
-	VVFLJyvrHUzr9LLru1BK7uX6qtJXC5GeqK2xsKcsPkaxUtZdzVb8GKp50WRU8hM+7k+K1P
-	jov5yVDhWA5ZFf1tyWJiHW91yhavQiM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-1udAHGKsNN68fESFhGYFag-1; Tue,
- 18 Jun 2024 11:10:31 -0400
-X-MC-Unique: 1udAHGKsNN68fESFhGYFag-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B95C19560B1;
-	Tue, 18 Jun 2024 15:10:30 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.192.208])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67D8D1956057;
-	Tue, 18 Jun 2024 15:10:28 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>
-Subject: [PATCH v1] mm/rmap: cleanup partially-mapped handling in __folio_remove_rmap()
-Date: Tue, 18 Jun 2024 17:10:26 +0200
-Message-ID: <20240618151026.521019-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="FaBSxoqP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XoeTy9+A"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 0EAA0180009E;
+	Tue, 18 Jun 2024 11:11:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 18 Jun 2024 11:11:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1718723469; x=1718809869; bh=GS
+	rBwu9bAC0f/uxRBDNmUvVdUkHdbVe6XDApK3YOq2Q=; b=FaBSxoqP1C9n5Xubfh
+	pNPJAXlLeIG0GkBHqNBiz2cMUD/IBDN5zLVHWaLVW3nj4XnOHYMm2xQo6reVO04N
+	FVMlMGMJP+oMZLPjXO/Q9x+Cpito6k4vhB3DIr84uUjZ7bcaT3M58lDeSRk4i1Sh
+	QdIYyCMAHyTbBr9GMc1cvYpBcnJXO4BH+GpAMZ3CUar4Ojsv9+TbNvdnHPTdkvq9
+	a4eQ8CHSfCm3M+FjxlFCiRIfY4a1uwxXM5R7SieYZBDaj8mAve85gk8TqzK56ZQz
+	D36zEsmak9wikSTA2mA7SkdU1nZ/Wf/70FmPRlBgJz2r4rId634QTRysYHVS7Dy/
+	H21w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1718723469; x=1718809869; bh=GSrBwu9bAC0f/
+	uxRBDNmUvVdUkHdbVe6XDApK3YOq2Q=; b=XoeTy9+AcP7e7mKx1rKsMx6IJg6Lp
+	jftbt7zftVAmQmGxoqhjjNTzpEg9HMnatQ0F7ycfId8Hnni+LjSmA1IcqiYNJ5sX
+	2ZCNA2NwmHp1Lopz+hHFXCsHX3dxWgPcdzpfgAqCE30ymJ4wfsqKVHe6M8cDxa4K
+	Y2kufMh6TjtTRV8jy+zg7eq16LCv5q4nCCFSjuG05sogXfwWxpNI/RvBt2IRqeZL
+	sqAD/5uwVUlRS3XDxn5swH+IeRh6OpwXGyeJSDTMRb+YT6aAmNzhus8NJF7tWCSo
+	45G/1lCCP2XcF/8maV2VB1NwhimLVOdiweJ0A0MwvpOW9Ls/NCHQlEc8Q==
+X-ME-Sender: <xms:jaNxZhwD7IkSaruvcE0jUM7Olo7bSHshxv40KFnfXvkpFjceLSP2Fg>
+    <xme:jaNxZhSXDjLnWcBnHqP3bGmSBHmXt4IqyTig0uaRuNOTgaIt_7P9vkNXjzf6fePFs
+    RtOr6e4dgR_T6V3Z0s>
+X-ME-Received: <xmr:jaNxZrWjwgH_vWQ6n8EVxC2fOMSQ_aofKd-5whzbGgbzHqY1tBSSkwQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvkedgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeflihgrgihu
+    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
+    ftrfgrthhtvghrnhepgfevffejteegjeeflefgkeetleekhfeugfegvdeuueejkeejteek
+    kedvfffffedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehf
+    lhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:jaNxZji-s8QVOUFT3-wQ-e8jq8i_LPFpBJndxCwShRCN1joU8OETrA>
+    <xmx:jaNxZjASUmXHHK9jspscTrbx1kOoFZYtKXmmIsTpRztlYnbXpJ-06g>
+    <xmx:jaNxZsJ6b8VhJbaSu6mULsmZ_FeQ4dyRi8dCKum2qfD51uO9cztABQ>
+    <xmx:jaNxZiAiNxJ7s1mX21Xw-1gnnXvC2sZxH2H3KfNBK2QEBxvnlL1CqA>
+    <xmx:jaNxZn6QISwSorhwN16ycAlEFoUQ0sRJu_BZNotl-UtwmVBMJaLyOTUz>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 18 Jun 2024 11:11:08 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v3 0/8] MIPS: Boston: Fix syscon devicetree binding and
+ node
+Date: Tue, 18 Jun 2024 16:11:00 +0100
+Message-Id: <20240618-boston-syscon-v3-0-c47c06647a26@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIWjcWYC/3WMzQrCMBAGX6Xs2Uh+29ST7yEeYrtpA9pIUoKl9
+ N1NehEFT8ss38wKEYPDCKdqhYDJReenDOJQQTeaaUDi+szAKZdUMUFuPs5+InGJXT4aBVPYSqN
+ bCdl5BrTutfcu18yjy+uw7PnEyvdfKTFCSSusVarphZL6bO/L4M187PwDSivxj18z/uvz4luNz
+ NDGmlp8+9u2vQGsPYmU7AAAAA==
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Paul Burton <paulburton@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1598;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=K3N59nwNldSfgDAHXVnjWYBImxW4g56QyolpLFrZVFY=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTCxT3Rh6U5bTfxLMqzlOOevPDr6YNrlMrFTEscfv9kW
+ +Q688qyjlIWBjEuBlkxRZYQAaW+DY0XF1x/kPUHZg4rE8gQBi5OAZjI3WpGhjVfGtL8nCMjzgvM
+ 3LK1W7GuRvxVu6jiqmMeBhk+bCqSPgz/FKvVQpc+NuBntFjyiXWi4qEz4qtesFcwLjS/+mTF0jP
+ GPAA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Let's simplify and reduce code indentation. In the RMAP_LEVEL_PTE case, we
-already check for nr when computing partially_mapped.
-
-For RMAP_LEVEL_PMD, it's a bit more confusing. Likely, we don't need the
-"nr" check, but we could have "nr < nr_pmdmapped" also if we stumbled
-into the "/* Raced ahead of another remove and an add? */" case. So
-let's simply move the nr check in there.
-
-Note that partially_mapped is always false for small folios.
-
-No functional change intended.
-
-Cc: Yosry Ahmed <yosryahmed@google.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- mm/rmap.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Changes in v3:
+- Drop CPU bindings in question
+- See individual patches
+- Link to v2: https://lore.kernel.org/r/20240612-boston-syscon-v2-0-9f8e1a07fa63@flygoat.com
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index afec4b6800caf..aa900e46cdf82 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1551,11 +1551,12 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
- 			}
- 		}
- 
--		partially_mapped = nr < nr_pmdmapped;
-+		partially_mapped = nr && nr < nr_pmdmapped;
- 		break;
- 	}
- 
--	if (nr) {
-+	if (partially_mapped && folio_test_anon(folio) &&
-+	    list_empty(&folio->_deferred_list))
- 		/*
- 		 * Queue anon large folio for deferred split if at least one
- 		 * page of the folio is unmapped and at least one page
-@@ -1563,10 +1564,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
- 		 *
- 		 * Check partially_mapped first to ensure it is a large folio.
- 		 */
--		if (folio_test_anon(folio) && partially_mapped &&
--		    list_empty(&folio->_deferred_list))
--			deferred_split_folio(folio);
--	}
-+		deferred_split_folio(folio);
- 	__folio_mod_stat(folio, -nr, -nr_pmdmapped);
- 
- 	/*
+Changes in v2:
+- Write a new binding for this device (Krzysztof)
+- Sweep other warnings
+- Link to v1: https://lore.kernel.org/r/20240513-boston-syscon-v1-0-93ff557d3548@flygoat.com
+
+---
+Jiaxun Yang (8):
+      MIPS: dts: Boston: Add simple-mfd compatible for syscon
+      MIPS: dts: Boston: Move syscon-reboot node under syscon
+      MIPS: dts: Boston: Rename clock node as clock-controller
+      MIPS: dts: Boston: Remove unused #interrupt-cells
+      MIPS: dts: Boston: Add model property
+      MIPS: dts: Boston: Rename uart node
+      dt-bindings: mfd: Add img,boston-platform-regs
+      dt-bindings: mips: img: Add devices binding
+
+ .../devicetree/bindings/clock/img,boston-clock.txt | 31 --------
+ .../bindings/mfd/img,boston-platform-regs.yaml     | 74 +++++++++++++++++++
+ .../devicetree/bindings/mips/img/devices.yaml      | 33 +++++++++
+ .../bindings/mips/img/pistachio-marduk.txt         | 10 ---
+ .../devicetree/bindings/mips/img/pistachio.txt     | 42 -----------
+ .../devicetree/bindings/mips/img/xilfpga.txt       | 83 ----------------------
+ arch/mips/boot/dts/img/boston.dts                  | 25 ++++---
+ 7 files changed, 119 insertions(+), 179 deletions(-)
+---
+base-commit: 6ba6c795dc73c22ce2c86006f17c4aa802db2a60
+change-id: 20240513-boston-syscon-8e315e94a894
+
+Best regards,
 -- 
-2.45.2
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
