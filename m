@@ -1,119 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3FD210F8
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116EA81E;
+	Tue, 18 Jun 2024 06:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718690140; cv=none; b=evuzkRayzDY+req65HVui+SLRTaWQ6qKHZHnxNkUrPsllVf1vi9ox942ZmDFa7CfkKRGpMgMwnYaZvg5bp7weR1WqPjcWOrH9W8rzj1Pji44gVNvwIg62ZBmUrWNVHl4717vHnnFkUnFvJmXNf1ciI3EcK8mmjVPU7VQJKK0SDI=
+	t=1718691100; cv=none; b=fCytyWHluHdUYyzcjvjNdTO1AkyYYkh4eyF8yzkWypVJ3q48c24iblvFbzN5wv2aSMdl5Dzx+1CJbUfFVxtqfuJWQbVmMpfFlPZGyD2zPbsCID+9JUM6qImE4l8v5f0fqakTbxIuIXG6IfB/kGmfPlYU1vlj/UenKUsSsAa4M3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718690140; c=relaxed/simple;
-	bh=7RiwnKT2I1MFdE03Yi9OQNr5nfwBkB7Vzra8koLRLqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ktBO/X2vweUW/Kz31J0f4H13Wm3bclf/4lvpHBrbNLnSoxcMTit2VCNuZFY8KpgSOuBZjfY+k5/tLlulezG4GeXeRwYmPz1HK19iFjBJLWQDOrib2yJ/vtK+nTNXqEQpkgTm9B6/W4KhV+GXEpphMAuw8XOQ3axu9k9AMPlU+xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DrzxiCPL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718691100; c=relaxed/simple;
+	bh=kME9BdtvzC+4KF2BU+0JcBQkX5uvuN2MNShMq84mZBI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BobZxPtrsbuHefQdbuP+5NpgVxb0Pm9pTphsG70pE88/Ci/COK4hW0QnGzgJ27asmRTVMuUxR4CfNo9bHagNxgS1iQdPyak7iDI1KKxMO2HD7TxQaoDk+7HCl5eLa5fvj6TFS6LzD8/f/qyIZUEoTkmIFoSXlm9q6Eo9oMVRZ4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=WngEI+ij; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DrzxiCPL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718690138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hWu/voSZi4FQiwHW6WOBcFhupKmk2O/NDijOpbvubbo=;
-	b=DrzxiCPLWRmGgQSAFDiNNQKaozwSgiAmJvuZvvT2fhHviuWwfDbfvjj3biWJWawJWEQQsg
-	dKyZv4qXTWKEG+PetZ5S65+JLhGBFaFk0VR05TIxCaCF/qSYbpzdAq5H0sh1Ala7ikEZJ4
-	XERuvl78HfPRf8dC35q++MAsASu6nCw=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-SM0uLFChPtWUUhYFyfJikA-1; Tue, 18 Jun 2024 01:55:28 -0400
-X-MC-Unique: SM0uLFChPtWUUhYFyfJikA-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-2502a80477bso92103fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 22:55:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718690128; x=1719294928;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hWu/voSZi4FQiwHW6WOBcFhupKmk2O/NDijOpbvubbo=;
-        b=w4GpCr8hDErN2IBPql86YMj1c9St/nfJp/O4rO9AXIKhrK3PCkRQLPLdhR88bCOywt
-         vaBm8AEpO8sivDaHgEhuUrLoGrmvJtyMYJjfaWCf03fqB+CNv8zg0YHXSbSeArcxI0C4
-         3RY8ps0+2C2Yp6yJMbk3orSHtTkLHYfH47fu6tcoybRI3uc4JIrNYbZvk3CBRjThz9hW
-         cczUEh+Q9QUaipS2MMKEag+8tTow9mJuP8R7bAEkB8oQ5rGp7nhVAiD+7yrLzznwA0EI
-         AMajXfElSS82SLhBlg+gRXwE0AA+Ds8g0xQ+jXNUIn9sHyEYCBplY1XvySLujuCQkSMW
-         MRKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0U+ga2C2yI4b3fo35x+9/R2Wwjgkgek9tkQus4WcQRjai0CEX3iZz16r2bEixa8ygARv9UFp/zmsC9y43OxtW65oo9CpOEde9ePdH
-X-Gm-Message-State: AOJu0YwU1EeiKY1WuQSYcKwZVkk/VTlBIyLQqzQmol4UUJw8QgkGnici
-	dleClQQgB0v0AaJlp4EDx+a5Kw3AHPalhJ92DuRClTRl/33rWmgAnFS5bVGkeWZyo+Kirb1AXQB
-	eftAG8PoPgUEDF6gbOE+cE28JKcAwuA4SaKFWL2tcCYhvrBWq+BOImzvtnhibcw==
-X-Received: by 2002:a05:6358:8a6:b0:19f:4cd0:aad1 with SMTP id e5c5f4694b2df-19fb4eb049cmr1247884355d.2.1718690128083;
-        Mon, 17 Jun 2024 22:55:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmf7CqoB5qG+f+SoSDNog9sHPlb0eZ/k8nda7B9rivFb2/iFdvUu6nxAvxJ5wxsEEdjtvYqg==
-X-Received: by 2002:a05:6358:8a6:b0:19f:4cd0:aad1 with SMTP id e5c5f4694b2df-19fb4eb049cmr1247882755d.2.1718690127611;
-        Mon, 17 Jun 2024 22:55:27 -0700 (PDT)
-Received: from [10.66.61.39] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fedf592f0csm7512541a12.54.2024.06.17.22.55.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 22:55:27 -0700 (PDT)
-Message-ID: <8fd7e58d-1d87-430d-a974-47ee05bc72de@redhat.com>
-Date: Tue, 18 Jun 2024 13:55:22 +0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="WngEI+ij"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HIkL2a017645;
+	Mon, 17 Jun 2024 23:11:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=CO/bmxZ8gDB4g2Hg2KtGgps+FXjnTZ/iMxrbvKGZ0xM=; b=Wng
+	EI+ijvWm08/NwejTHwzNJimcUUzn3/F73SL4Ms2HjKnZDldS5kY2n+5sBJgIE1DQ
+	0zm2O8f9jEpvijGBV8mPOBXqTnUU4cUoWloUFHe+/8868byoXwR6SvKrAu1izA+9
+	BjcflWmiJqdK73yXsZ+EkXnQFdogJ6ZGSWT1pjKLK9jvHRqtWw4pK5H8zCiQ1t9b
+	kP4mBMzcJhKuhLSxZ6FrLeNXWb+6qYamymkVOohM4rb+9ahWwk5sceIhbhndd/7A
+	4k02ZA1l1ZYAMUXy/xgkaPRWBTVp1Fr4Z6v/rEnPizxcvKm88zl9hHuhyCxjCZz8
+	NQFfeaW84ulS+evijJA==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3ysafh8drv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 23:11:30 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 17 Jun 2024 23:11:30 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 17 Jun 2024 23:11:30 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 7A96A3F706D;
+	Mon, 17 Jun 2024 23:11:25 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
+        <sbhatta@marvell.com>, <hkelam@marvell.com>
+Subject: [net PATCH] octeontx2-pf: Fix linking objects into multiple modules
+Date: Tue, 18 Jun 2024 11:41:22 +0530
+Message-ID: <20240618061122.6628-1-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] KVM: arm64: Making BT Field in ID_AA64PFR1_EL1
- writable
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Marc Zyngier <maz@kernel.org>, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, James Morse
- <james.morse@arm.com>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- Shuah Khan <shuah@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-References: <20240617075131.1006173-1-shahuang@redhat.com>
- <ZnB1FPw3Eg8-61mL@linux.dev>
-Content-Language: en-US
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <ZnB1FPw3Eg8-61mL@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: lm4U5CH5WfhHlLydH643g_56zZn9gQxe
+X-Proofpoint-GUID: lm4U5CH5WfhHlLydH643g_56zZn9gQxe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
 
-Hi Oliver,
+This patch fixes the below build warning messages that are
+caused due to linking same files to multiple modules by
+exporting the required symbols.
 
-On 6/18/24 01:40, Oliver Upton wrote:
-> On Mon, Jun 17, 2024 at 03:51:29AM -0400, Shaoqin Huang wrote:
->> In this patch series, we try to make more register fields writable like
->> ID_AA64PFR1_EL1.BT since this can benifit the migration between some of the
->> machines which have different BT values.
->>
->> Changelog:
->> ----------
->> RFCv1 -> v1:
->>    * Fix the compilation error.
->>    * Delete the machine specific information and make the description more
->>      generable.
-> 
-> Can you please address Marc's feedback?
-> 
-> If we only make things writable a field at a time it's going to take
-> forever to catch up w/ the architecture.
-> 
-> https://lore.kernel.org/kvmarm/86zfrpjkt6.wl-maz@kernel.org/
+"scripts/Makefile.build:244: drivers/net/ethernet/marvell/octeontx2/nic/Makefile:
+otx2_devlink.o is added to multiple modules: rvu_nicpf rvu_nicvf
 
-Ok. I will update the patch series again with tackling the full register.
+scripts/Makefile.build:244: drivers/net/ethernet/marvell/octeontx2/nic/Makefile:
+otx2_dcbnl.o is added to multiple modules: rvu_nicpf rvu_nicvf"
 
-Thanks,
-Shaoqin
+Fixes: 8e67558177f8 ("octeontx2-pf: PFC config support with DCBx").
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/nic/Makefile       | 3 +--
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_dcbnl.c   | 7 +++++++
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c | 2 ++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-> 
-
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/Makefile b/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
+index 5664f768cb0c..64a97a0a10ed 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/Makefile
+@@ -9,10 +9,9 @@ obj-$(CONFIG_OCTEONTX2_VF) += rvu_nicvf.o otx2_ptp.o
+ rvu_nicpf-y := otx2_pf.o otx2_common.o otx2_txrx.o otx2_ethtool.o \
+                otx2_flows.o otx2_tc.o cn10k.o otx2_dmac_flt.o \
+                otx2_devlink.o qos_sq.o qos.o
+-rvu_nicvf-y := otx2_vf.o otx2_devlink.o
++rvu_nicvf-y := otx2_vf.o
+ 
+ rvu_nicpf-$(CONFIG_DCB) += otx2_dcbnl.o
+-rvu_nicvf-$(CONFIG_DCB) += otx2_dcbnl.o
+ rvu_nicpf-$(CONFIG_MACSEC) += cn10k_macsec.o
+ 
+ ccflags-y += -I$(srctree)/drivers/net/ethernet/marvell/octeontx2/af
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_dcbnl.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_dcbnl.c
+index 28fb643d2917..aa01110f04a3 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_dcbnl.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_dcbnl.c
+@@ -54,6 +54,7 @@ int otx2_pfc_txschq_config(struct otx2_nic *pfvf)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_pfc_txschq_config);
+ 
+ static int otx2_pfc_txschq_alloc_one(struct otx2_nic *pfvf, u8 prio)
+ {
+@@ -122,6 +123,7 @@ int otx2_pfc_txschq_alloc(struct otx2_nic *pfvf)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_pfc_txschq_alloc);
+ 
+ static int otx2_pfc_txschq_stop_one(struct otx2_nic *pfvf, u8 prio)
+ {
+@@ -260,6 +262,7 @@ int otx2_pfc_txschq_update(struct otx2_nic *pfvf)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_pfc_txschq_update);
+ 
+ int otx2_pfc_txschq_stop(struct otx2_nic *pfvf)
+ {
+@@ -282,6 +285,7 @@ int otx2_pfc_txschq_stop(struct otx2_nic *pfvf)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_pfc_txschq_stop);
+ 
+ int otx2_config_priority_flow_ctrl(struct otx2_nic *pfvf)
+ {
+@@ -321,6 +325,7 @@ int otx2_config_priority_flow_ctrl(struct otx2_nic *pfvf)
+ 	mutex_unlock(&pfvf->mbox.lock);
+ 	return err;
+ }
++EXPORT_SYMBOL(otx2_config_priority_flow_ctrl);
+ 
+ void otx2_update_bpid_in_rqctx(struct otx2_nic *pfvf, int vlan_prio, int qidx,
+ 			       bool pfc_enable)
+@@ -385,6 +390,7 @@ void otx2_update_bpid_in_rqctx(struct otx2_nic *pfvf, int vlan_prio, int qidx,
+ 			 "Updating BPIDs in CQ and Aura contexts of RQ%d failed with err %d\n",
+ 			 qidx, err);
+ }
++EXPORT_SYMBOL(otx2_update_bpid_in_rqctx);
+ 
+ static int otx2_dcbnl_ieee_getpfc(struct net_device *dev, struct ieee_pfc *pfc)
+ {
+@@ -472,3 +478,4 @@ int otx2_dcbnl_set_ops(struct net_device *dev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_dcbnl_set_ops);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+index 99ddf31269d9..458d34a62e18 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+@@ -113,6 +113,7 @@ int otx2_register_dl(struct otx2_nic *pfvf)
+ 	devlink_free(dl);
+ 	return err;
+ }
++EXPORT_SYMBOL(otx2_register_dl);
+ 
+ void otx2_unregister_dl(struct otx2_nic *pfvf)
+ {
+@@ -124,3 +125,4 @@ void otx2_unregister_dl(struct otx2_nic *pfvf)
+ 				  ARRAY_SIZE(otx2_dl_params));
+ 	devlink_free(dl);
+ }
++EXPORT_SYMBOL(otx2_unregister_dl);
 -- 
-Shaoqin
+2.25.1
 
