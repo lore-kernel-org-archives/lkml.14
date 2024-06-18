@@ -1,76 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C91CD29
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD561CD29;
+	Tue, 18 Jun 2024 15:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718725267; cv=none; b=uLtv79YRI53LoNo5DjtWuRfLb6qS/IfbbwMQwzT5RlWukOemC2tspuLuv0vBcbUPRf7dCETVrhZY3VoPq9Zn1WabarHG+6gr2Ax7hb7FM9A0UPwUOQEsdvSXFIGHa7N5J4ri5G+EUMasOREU7+ppdvMGwPZLn88ClZHWe70sxUM=
+	t=1718725393; cv=none; b=Yfz81RglXadEPN7Jv9DxV+pO19aTm5Q2RiNGS0zZBtgRjyoHhaoyWOKlrWdvcTwKlLgXH31F1nE0UXA9E6sQ1ZfXQW7bLghbgaT5GIoiDKle8xEHYZ3X9BAUJko+1QHl+vIFVeItqM/dm72SIvUvTolytwb6KfFFhikcs9X+HEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718725267; c=relaxed/simple;
-	bh=CJrK0+s51TojWb4uz38DIYO+IOAei4tLxpuCbpdl00c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZBMfqUCw7otY48g4SsMnossIq6mi9EPG6t/OT2KFTbqThKFjDbpSxuJthk8SalpWGRfzQp/MfFrr4hNY1uzdJFAGp3vQJcS9UIeqHMKR82TBCllvWMCBizSyMCOuOazUvp6SfncuZRR8v0jXJUbA9oaXlge5HhuICzMtYCFkzV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7IaDs7M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7IaDs7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335B6C3277B;
-	Tue, 18 Jun 2024 15:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718725267;
-	bh=CJrK0+s51TojWb4uz38DIYO+IOAei4tLxpuCbpdl00c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7IaDs7M6Yli1+SoiM1yhQ+EI5uySoIl8uIxOYCAH0jpByhipRbq0r4YKhqx/k7pJ
-	 KxmafVwC20DStPa5AAMGCE9DoQ4Xj64rNVnLVptLkq1ubnwee/fxvqMorbcjvbiKQ3
-	 lzc2pQSvt/+0hqI/k03NCrB/RRQq2NjDLsTd4Plm5Xrdb7W1U9oyP0IQJ6+yJCnLEF
-	 C1aI2JgbdROO4Z8py7QC3HWRO3ohX13KFJsCyGA0gF/icwTcMc4/eGkezN8zBrs6/W
-	 1i3KoAthWUYJa9rhVAkowWC+0yh6JCxUgzofH3qQDxhg3BZaRzkME/v7UhaTSmlwq4
-	 Iblj3xZ9IZ3PQ==
-Date: Tue, 18 Jun 2024 16:41:02 +0100
-From: Will Deacon <will@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_pmuv3: Avoid assigning fixed cycle counter
- with threshold
-Message-ID: <20240618154102.GD2354@willie-the-truck>
-References: <20240611155012.2286044-1-robh@kernel.org>
+	s=arc-20240116; t=1718725393; c=relaxed/simple;
+	bh=gGx8gkJpM9wjGl4dfZe8iwSMFIAJ8nVorKm3b84gtgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s8yvTHbGkIXUzGTVTnyTqRBt0bQd79Yb357nObAAoUr0zogyp9+Ifb6j88FzRPQ7OyLH6QEoD7wgtNW4rLVUwFdUMpKlIrjo1KNKgY+E8CTxxTlBcXtKDkTylGVFaCSbY3Vd9LEvlBseVnhDjC4960ZnyG/kxquCMAiodLEEgEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE13C3277B;
+	Tue, 18 Jun 2024 15:43:08 +0000 (UTC)
+Date: Tue, 18 Jun 2024 11:43:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexander Graf <graf@amazon.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, <suleiman@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
+ Esmat <youssefesmat@google.com>, "Beau Belgrave"
+ <beaub@linux.microsoft.com>, Baoquan He <bhe@redhat.com>, "Borislav Petkov"
+ <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David Howells
+ <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 0/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240618114307.48513bb5@rorschach.local.home>
+In-Reply-To: <cd759ac0-73e6-4ab3-a2d0-94f43eec5752@amazon.com>
+References: <20240613155506.811013916@goodmis.org>
+	<b0ed328f-c4e5-4e9b-ae4e-5c60703ab376@amazon.com>
+	<20240613131212.7d1a7ffa@rorschach.local.home>
+	<7c90c574-5cfa-40cf-bd4c-1188136cd886@amazon.com>
+	<20240617164006.198b9ba3@rorschach.local.home>
+	<049b2e0f-00b2-4704-8868-1569a006a134@amazon.com>
+	<CAMj1kXF3AetyuLh-QU8yaE-wTLcgyzwuAwe-uo_3EqSDsAYhuQ@mail.gmail.com>
+	<cd759ac0-73e6-4ab3-a2d0-94f43eec5752@amazon.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611155012.2286044-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 09:50:12AM -0600, Rob Herring (Arm) wrote:
-> If the user has requested a counting threshold for the CPU cycles event,
-> then the fixed cycle counter can't be assigned as it lacks threshold
-> support. Currently, the thresholds will work or not randomly depending
-> on which counter the event is assigned.
-> 
-> While using thresholds for CPU cycles doesn't make much sense, it can be
-> useful for testing purposes.
-> 
-> Fixes: 816c26754447 ("arm64: perf: Add support for event counting threshold")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/perf/arm_pmuv3.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 23fa6c5da82c..2612be29ee23 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -939,9 +939,10 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
->  	struct hw_perf_event *hwc = &event->hw;
->  	unsigned long evtype = hwc->config_base & ARMV8_PMU_EVTYPE_EVENT;
-> +	bool has_threshold = !!(hwc->config_base & ARMV8_PMU_EVTYPE_TH);
+On Tue, 18 Jun 2024 13:47:49 +0200
+Alexander Graf <graf@amazon.com> wrote:
 
-Just a nit, but I don't think you need the '!!' here.
+> IMHO the big fat disclaimer should be in the argument name. 
+> "reserve_mem" to me sounds like it actually guarantees a reservation - 
+> which it doesn't. Can we name it more along the lines of "debug" (to 
+> indicate it's not for production data) or "phoenix" (usually gets reborn 
+> out of ashes, but you can never know for sure): "debug_mem", / 
+> "phoenix_mem"?
 
-Will
+I don't see any reason it will not reserve memory. That doesn't seem to
+be the issue.  What is not guaranteed is that it will be in the same
+location as last time. So the name is correct. It's not
+"reserve_consistent_memory" ;-)
+
+-- Steve
