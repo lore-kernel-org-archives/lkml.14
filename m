@@ -1,81 +1,33 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D90484FDA;
-	Tue, 18 Jun 2024 06:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EC4210F8;
+	Tue, 18 Jun 2024 06:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693545; cv=none; b=dTVVdXQsFIJsbyJcvw6VDNJZa8j3EzL75VLkyYeuovbBT+Sv01e+H/dBGcsLE+Y82CxLMrmamU/lCjxR1MRf1uKe4mrR7n7bQJrDFKaB9BWXlUfWRZRjqSUVEhWGHusSPqv/gY4z3iQbdMGcH/Llwe5j0W4Fkjt+6U6YQgTAMa0=
+	t=1718693667; cv=none; b=aT5TBnNX2ig2uLzQHMeOGTkcRPEbsxxDNviAJr2qh/fkrcng6oVwXUcsLAYAsrIos8XbP5Du2IlcB9znDSSvJJ2T3+BNRUAeYWdu+eqzGTwvdVaELuf6b0tc35TLyDTX+BX++KTfbAPdnevMixLag6ESuZmmzONBOFTHcx32MIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693545; c=relaxed/simple;
-	bh=TBweA9ZhxwxO7EDdlp4lNOyVlNXpBz4h8rajTBRkJWc=;
+	s=arc-20240116; t=1718693667; c=relaxed/simple;
+	bh=4SApKPo6r2T2yqAQ1YtMPdKRofGXHQggS2kC0nhaOWM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p1JcHvlFjcFaNh+jWMPlNgTAusX5Pk5KrWSbfyKf1YLwij9/CFNP/MZqF6xwZMtNNns8owVVCT48uNH5zw8d8nQMFfiFjI3eMpHtP0wn9lxyWRNvl+FmNU+DpHQQdTohOM7Mke4Sy+a6fTLTx/TuqRFVLKScegJZ2Q0cBtQEUCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kT69tpqr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YlLpKnW/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kT69tpqr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YlLpKnW/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=lr9Hrk08YuoXOKh1UYxVMvb0PZDHVAxWOnjFX81gTMglMdGFQEpz/Av8n3VukmzE1P7Z7PkfID3PcMJ7PdsCEvo53PaIsiuZ+AcUv+gDJKFFLOgrdo6fBuO+XfxqHd0X6KY7h86FDt0Wcnu8pBNkvLMv5SKuyB0uJwHlnPpCLNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdXB65nX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kT69tpqr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YlLpKnW/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kT69tpqr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YlLpKnW/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5D00922804;
-	Tue, 18 Jun 2024 06:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718693542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h1AskpgoSW43DiWneIGTKCBlhZ8DT6Ti9Evavgts+OM=;
-	b=kT69tpqr1vGVDr4ZT2p63TsjqabTJg8QqBnYZut3t6ZucsHEt2eVmIy+e10TEug++pViF6
-	Z7i2PClr+PZ+HoGy9xxALV2v6QmDWJ21ZE07oope5jlZoxCaXb8HCHz5KpvqGOEoS480PP
-	3mGHfEANSIRq6LDZevEcPPV7X+L2vk0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718693542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h1AskpgoSW43DiWneIGTKCBlhZ8DT6Ti9Evavgts+OM=;
-	b=YlLpKnW/NOt8TxM29M6Rl1FEPHaTq0O86+tdi7XwnCCSwqDJ8k7Lw2xH07hdX/zVf1FCY/
-	yVzWVOnF2kUWnvDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=kT69tpqr;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="YlLpKnW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718693542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h1AskpgoSW43DiWneIGTKCBlhZ8DT6Ti9Evavgts+OM=;
-	b=kT69tpqr1vGVDr4ZT2p63TsjqabTJg8QqBnYZut3t6ZucsHEt2eVmIy+e10TEug++pViF6
-	Z7i2PClr+PZ+HoGy9xxALV2v6QmDWJ21ZE07oope5jlZoxCaXb8HCHz5KpvqGOEoS480PP
-	3mGHfEANSIRq6LDZevEcPPV7X+L2vk0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718693542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h1AskpgoSW43DiWneIGTKCBlhZ8DT6Ti9Evavgts+OM=;
-	b=YlLpKnW/NOt8TxM29M6Rl1FEPHaTq0O86+tdi7XwnCCSwqDJ8k7Lw2xH07hdX/zVf1FCY/
-	yVzWVOnF2kUWnvDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7743C1369F;
-	Tue, 18 Jun 2024 06:52:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /HViG6UucWbnZQAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 18 Jun 2024 06:52:21 +0000
-Message-ID: <3fad9f08-12cd-44c5-b79c-ba49f6587c45@suse.de>
-Date: Tue, 18 Jun 2024 08:52:19 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdXB65nX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F2EC3277B;
+	Tue, 18 Jun 2024 06:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718693666;
+	bh=4SApKPo6r2T2yqAQ1YtMPdKRofGXHQggS2kC0nhaOWM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fdXB65nX1cCh95uS+AbuUQMrB7QwQPbYqKMtjEkF02o3rzDi6d6XIgsHQPKWphsCP
+	 yTUEYb2xE05MIJtB3ErtKerNJ43aXQPyf9LZ5uGdPtxd3xX5vQWCDZAW8URM9465AO
+	 s4MOPXFGXBQd9y7P1YugH7koSDBL9Zd2KKNGFnq7gHOCgHADdYlUbkeHl3wEHsDqgO
+	 OzvmuK2lWO5z5ARHNFpNdJCKe8bC9LibZLIumLe3Kb8//MsuFStVuwRojrUZrKoEq2
+	 CZlvsawahBo4R7GkIN9brWSljbBfIHKcEhh7X8Sx9veL5uhxhAC1qPNkOtir+nC3if
+	 d6Ofdv4V00uZA==
+Message-ID: <11d19894-b068-49cb-afe6-b87f47cd4426@kernel.org>
+Date: Tue, 18 Jun 2024 08:54:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,89 +35,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 04/11] readahead: allocate folios with
- mapping_min_order in readahead
+Subject: Re: [PATCH v4 1/2] dt-bindings: power: supply: add support for
+ MAX17201/MAX17205 fuel gauge
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <thomas@t-8ch.de>
+References: <20240617184504.304211-1-dima.fedrau@gmail.com>
+ <20240617184504.304211-2-dima.fedrau@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>,
- "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
- brauner@kernel.org, akpm@linux-foundation.org, mcgrof@kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- yang@os.amperecomputing.com, Zi Yan <zi.yan@sent.com>,
- linux-xfs@vger.kernel.org, p.raghav@samsung.com,
- linux-fsdevel@vger.kernel.org, hch@lst.de, gost.dev@samsung.com,
- cl@os.amperecomputing.com, john.g.garry@oracle.com
-References: <20240607145902.1137853-1-kernel@pankajraghav.com>
- <20240607145902.1137853-5-kernel@pankajraghav.com>
- <ZmnuCQriFLdHKHkK@casper.infradead.org>
- <20240614092602.jc5qeoxy24xj6kl7@quentin>
- <ZnAs6lyMuHyk2wxI@casper.infradead.org>
- <20240617160420.ifwlqsm5yth4g7eo@quentin>
- <ZnBf5wXMOBWNl52x@casper.infradead.org>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <ZnBf5wXMOBWNl52x@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[sent.com];
-	FREEMAIL_CC(0.00)[fromorbit.com,kernel.org,oracle.com,linux-foundation.org,kvack.org,vger.kernel.org,os.amperecomputing.com,sent.com,samsung.com,lst.de];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 5D00922804
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
-X-Spam-Level: 
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240617184504.304211-2-dima.fedrau@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/17/24 18:10, Matthew Wilcox wrote:
-> On Mon, Jun 17, 2024 at 04:04:20PM +0000, Pankaj Raghav (Samsung) wrote:
->> On Mon, Jun 17, 2024 at 01:32:42PM +0100, Matthew Wilcox wrote:
->> So the following can still be there from Hannes patch as we have a
->> stable reference:
->>
->>   		ractl->_workingset |= folio_test_workingset(folio);
->> -		ractl->_nr_pages++;
->> +		ractl->_nr_pages += folio_nr_pages(folio);
->> +		i += folio_nr_pages(folio);
->>   	}
+On 17/06/2024 20:45, Dimitri Fedrau wrote:
+> Adding documentation for MAXIMs MAX17201/MAX17205 fuel gauge.
 > 
-> We _can_, but we just allocated it, so we know what size it is already.
-> I'm starting to feel that Hannes' patch should be combined with this
-> one.
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> ---
+>  .../bindings/power/supply/maxim,max1720x.yaml | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max1720x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max1720x.yaml b/Documentation/devicetree/bindings/power/supply/maxim,max1720x.yaml
+> new file mode 100644
+> index 000000000000..52467af5388a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/maxim,max1720x.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/maxim,max1720x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim MAX1720x fuel gauge
+> +
+> +maintainers:
+> +  - Dimitri Fedrau <dima.fedrau@gmail.com>
+> +
+> +allOf:
+> +  - $ref: power-supply.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max17201
+> +      - maxim,max17205
 
-And we could even make it conditional; on recent devices allocating 64k
-(or even 2M) worth of zero pages is not a big deal. And if you have 
-machines where this is an issue maybe using large folios isn't the best
-of ideas to start with.
+Your driver suggests these are compatible, so express it in the bindings
+(oneOf with list and fallback).
 
-Cheers,
+https://elixir.bootlin.com/linux/v6.3-rc6/source/Documentation/devicetree/bindings/sound/nvidia,tegra210-ope.yaml#L31
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Best regards,
+Krzysztof
 
