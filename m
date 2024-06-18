@@ -1,94 +1,97 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22E515A4B7
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845B015AAD8
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 11:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718709454; cv=none; b=NuoVWHaNdBBuXPCzNq3FnPbt4PFhHWUe3LslpyPRx3rHAkfdHKXqIIbcdxji6ENh3WelRouqwj1byCrU2V6OJUjw6+kfwwVjhqqQ7NjU2MZ8cXV9MqzecXqaFrj9Dh88w+MyzuGhdLxATc72GXwtWK4FkokcfWCDG4vbm3XofBc=
+	t=1718709511; cv=none; b=A5eftqMuGGXiwwaHmLh3Rl/NZ+gBK/oQcJxE+p5ZtbUh88A8ti340hOj25pN9ye8R1KGLrLpbacCdghhoniUcpI30YCcbJzcqaDdwu5qblB8ot7G1Yy7SLYRNKBDJ2UF/GNSt0v0alZI+TxZXASBCoSkLxwTR3K8fhPI6rG+Ubc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718709454; c=relaxed/simple;
-	bh=YYKxlep8+oqHxAY2y5ou9k9Z/pjt9apvicxUun9EwkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuAVoGHqWkmrgJ8Qr1oAmG9qG/bEtrWRI3OPrx1nW7M0sH7GrXVWlE/SISr59VXlKsLNfL3BsFLXS8x1lwCV1kXsOR18z3ZDmepowE02TLAesjVRdO6dNYOv2+7l79r64nVS4GzfES0J6FE4RNgRHj8M9NyL+dpURXf5WIUof7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JwZALNTN; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718709511; c=relaxed/simple;
+	bh=VpwLSXxd2so5RpDUPQQbRIpAOvy+lMCNE16WaIXiuXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XxUtQZt8AASKdosEfCClK2wQ2iU33o4CIPo9qrr8yNCBl8bSbqQ2EFUJ6pT2DUfGc0HYhDTnJ9ouBo073KFE5zjP/QhtWEw8s2fqeK7dXoFupoSP4rHhwSvycGZ8Ud8o5N/g0wqH9CvjmN2xlB1XKvoeEqqzx2qO06wGHC31A4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CETyuQjA; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JwZALNTN"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c85a7f834so6822220e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:17:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CETyuQjA"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ebe0a81dc8so58179861fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 04:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718709450; x=1719314250; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RQ+i+yUylzc0vNZND2yRwe4IaOpgkA3NphEu3B2GdDM=;
-        b=JwZALNTNZE7T3UppX2PUWnkdpqzVJdNs9txgnhng3siLsehLKZqKw6L5lNaY4jgtLo
-         p8z+37F6hy0y5xVbT+PMzbOlxksDyjmVl2Zup4q9X886tQMrhS6ZZ1WPKMRUUFNrMdFc
-         sHeOrjGfzkA+E2iHe+sTbmNFawOm67aOSWSgyLRy5sOAmS/s6g3QZR9gcKPsgwqWXue1
-         TK+7WMyL8RJK86FnDitcCWP9vUeMXUhj0YR6XB3/k8FPoJnUIKpkXzFGTaKokXKHI5Bm
-         g6sefwjdAO5/RBi49vf0XoA2gwCkUngvpj9EoFjq1Z03RrnJbGHe1ozZA9Ay3TwpIjxP
-         zZpg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718709508; x=1719314308; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WAlYx/JuM0nLXWPnb4Hl0KlsCS/vpWurWGlHz9NapmM=;
+        b=CETyuQjAxCV/2ihW6z8lGioKPMvlz6+f3nToboCBa0dnC2NR/wGpprrm2AOG9Bf/9+
+         sLe9xcFIZwmE7krb8rHSSCyGyprLCBMqJrfiwgbzLe7PgjeU9IdnzHrW0v7oG/v8x4e1
+         EunzRkTqsj24x/pEykntig73daQCQoXsIek5Tajep+LNuLxOyvamxNo5mqAdIJDGztqu
+         YyBohwrh4cojJcdzfeugNr7YghNgngFGvg/2oXmTv0PnANt7As1+6AsW11GW4qYVKioD
+         4/9mjbzT3D3QaQz9mBIyH7nHRyUkR3yFTcodJ6zSRgM3G2GfCGd1ZBfaj2TkqM/mC1mp
+         LLzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718709450; x=1719314250;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RQ+i+yUylzc0vNZND2yRwe4IaOpgkA3NphEu3B2GdDM=;
-        b=ofeD/CQOGytmkActVfu4OPI2s3m4sDPXLrLcqyd2KX6bgwFzxKqwLd8dlslXECiCRr
-         bO3frsYPjypBUGGvqjN5LS+LIw2Z71zQ0uHbaeCjXBu6ZnKi1MHFA0ku2/qsCLwFAIhK
-         HPlSvVKIi73oHYBmFWnae2IWQn/q8hOh4KX9mM4KRLO9ry0vZLeO9ZTXGKH8k7VhWaDA
-         170i3D/35nqHO9rVJWE+7JUvyAbFgJjlm6vH6PdUk5OsZo4XO5NpZHYaw482LyNRmE8j
-         PUagWSm4WW56UD59mqanHGFhOJJVBj1qdCa3oDd6YC7QN44LrHXzsv5ji7FzsHY3QKky
-         LZwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo40foDRwWLqEjx1G/30uPOqTd19EXuOvx/QYDUZkmqKccdn2CY/YKuFnXwPwTeg+ALbUHdSMtDy6f9PqsYYKJaruecRdqzJAXLzLi
-X-Gm-Message-State: AOJu0YzdlcACEeE+a7ev5KZMP3EFiJvuNWcAQ/1KZuj+4hBBNzQFUQnU
-	wGmohTCo0U+tjuTcQ73wmhX0LEyrg7Nhbc0okLbE7efC8UfAz4VO8JLHXphnsLM=
-X-Google-Smtp-Source: AGHT+IHHBBxjqquwzsz10R7mhJV/FLoBeBD8boOTDbExy+3KWVhzVyEG734oQ2FbmXMY1nRFQiofEw==
-X-Received: by 2002:ac2:43dc:0:b0:52c:82cf:b80 with SMTP id 2adb3069b0e04-52ca6e9a0dfmr6058474e87.63.1718709450007;
-        Tue, 18 Jun 2024 04:17:30 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2872480sm1474922e87.157.2024.06.18.04.17.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 04:17:29 -0700 (PDT)
-Message-ID: <290fb9e0-64ea-45ca-87e6-70c0e6edd6a1@linaro.org>
-Date: Tue, 18 Jun 2024 13:17:25 +0200
+        d=1e100.net; s=20230601; t=1718709508; x=1719314308;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WAlYx/JuM0nLXWPnb4Hl0KlsCS/vpWurWGlHz9NapmM=;
+        b=Nf0Z+EyugsDq4DrRRQoSPqP5FhYK7KMlSGTUHfNbRTw2Fim7vbS6wOyFXjQji97Yu8
+         rfdno+NaK6fx19fJHybCshasg/Zu29uPZUVXja8GHlTBiQ+XTzkAQYFW43GwTmrjYRti
+         mrhdPb7IMMT4Gs0+BWD6j8zEpXTY4KR9w4Bzt5pW829JWzGYGCO91lnI6HB2Z0Dpww96
+         oT54RnFOsUcWmuhHb5edepqZZNQ+kFRCBRcAaPBHHDPT71maKggzaJwLcRZCZ3O7Hj/e
+         XE+0SdzatgU1ij3fopM9oKmETCdBJFr9UfMKjLUy/zm6lzilWT4bYShzedW6hZHsnasP
+         /c7g==
+X-Forwarded-Encrypted: i=1; AJvYcCV1be77mwv7grt3J62N6NHoo7l82T3+z2lL0ftQfiLLaKZCDN9TP/60riJoupbUj0PCRwJcLrU+ty53EXg1CS5M0U/ozE6kDMjlawmu
+X-Gm-Message-State: AOJu0YxTiNsWhgF0PNM3R1W5FPzHZ2dnZwU8x+eDmjVMHsDd0vEAAc1I
+	12mIEz6CLjMY5ZdXc15T2v2WcJIDIEqhbv36+jA4dPg8nJatfP/q0U7Ul1V13wU=
+X-Google-Smtp-Source: AGHT+IE9A08bBC7d6Sk1JmiWrXwfKAgU+YUKuiR8b7sOFmkrRIqZM7JKEf2GvjkTRTYxJ41G4x7yyA==
+X-Received: by 2002:a2e:9dda:0:b0:2eb:fda7:e366 with SMTP id 38308e7fff4ca-2ec0e601058mr92996301fa.39.1718709507530;
+        Tue, 18 Jun 2024 04:18:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:4028:a105:7678:4219])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-423b67b3037sm111434235e9.47.2024.06.18.04.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 04:18:27 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Support Opensource <support.opensource@diasemi.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH RFT] pinctrl: da9062: replace gpiochip_get_desc() with gpio_device_get_desc()
+Date: Tue, 18 Jun 2024 13:18:24 +0200
+Message-ID: <20240618111824.15593-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] drm/msm/adreno: Move CP_PROTECT settings to hw
- catalog
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240617225127.23476-1-robdclark@gmail.com>
- <20240617225127.23476-6-robdclark@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240617225127.23476-6-robdclark@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+In order to finally confine the unsafe gpiochip_get_desc() to
+drivers/gpio/, let's convert this driver to using the safer alternative
+that takes the gpio_device as argument.
 
-On 6/18/24 00:51, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> Move the CP_PROTECT settings into the hw catalog.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/pinctrl-da9062.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think a702 was skipped over
+diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
+index 22e3cd2cc963..6f44a13b90ce 100644
+--- a/drivers/pinctrl/pinctrl-da9062.c
++++ b/drivers/pinctrl/pinctrl-da9062.c
+@@ -139,7 +139,7 @@ static int da9062_gpio_direction_input(struct gpio_chip *gc,
+ {
+ 	struct da9062_pctl *pctl = gpiochip_get_data(gc);
+ 	struct regmap *regmap = pctl->da9062->regmap;
+-	struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
++	struct gpio_desc *desc = gpio_device_get_desc(gc->gpiodev, offset);
+ 	unsigned int gpi_type;
+ 	int ret;
+ 
+-- 
+2.43.0
 
-Konrad
