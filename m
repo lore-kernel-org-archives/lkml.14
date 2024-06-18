@@ -1,146 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170D417F3;
-	Tue, 18 Jun 2024 00:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E646617F3
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718670648; cv=none; b=lwXiBixrphuGa78Jkwcmbqfg5X5vfPdv2jsVlJJe8GIeyyzPAKoL/ohaOZ3H7p2HGXWqE3uQo1+UhrwnkNbHYKc6jQIFwL526Fu2GehY/WMx/ymFR18VTljrelo2X40kHCwKp4I0aFdt36Q6Bq6WMp0x1LDycwbsg8n6J8FenMY=
+	t=1718670969; cv=none; b=uC00I5Seg0NsiRo0JUCOjQzLkzuEzS8z0ub3LPSX8HejhzATg8PYm+iOqhfS1w9Be2MrfybEnQaj7ZOSjnLnxu4wqroK16EKeU2thfC6d9J0RVMbYgV8FeCep88OeMwGudSZCcjSY9zJ/hM0/urse4S6z0vDuhBTfesqOvrEZ28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718670648; c=relaxed/simple;
-	bh=FdpTsig6BTVDhc8/bI5WIzYpdqvQKtYmhHMwuOn+XOA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gbLGG2IrB7sGALasyDMvObe232WJY/pn68qFtIGlcfQI8Ay50yeBrB5YaL2QpJfi+Oojk0ZE83ObQjELg/PhuBvOVJN8BvJO6njTzEEf+aR9+o1Ilz7gDlYw6DDfyoWRQGpTUnRHMYSEhAaJ+emiz3PqMZNx5I7psyhkj7C6PYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j5YGDA52; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718670969; c=relaxed/simple;
+	bh=9px3wyebkBbJYS658unJTN3zeUWI1tlbu+B04rK6Re8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FbT6LsKYLnZRUQi43dM7C1DsNIZ8tC8CXcp+dVuvv1qjNr0hX6OTxNKE6ChnC3myi9eFka8cNHTD2EEURHk10mNSXc1MiZ5ZyBV1iNbY/2M5kLUwZ1RL0sP2JMJ26VtvQHFgKSPGq0P6nq+LO2q6u4EsmAAztdbJG1ds/FqbOeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PTTn2YzF; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j5YGDA52"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718670646; x=1750206646;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=FdpTsig6BTVDhc8/bI5WIzYpdqvQKtYmhHMwuOn+XOA=;
-  b=j5YGDA52OKkN/E57cSwrCxM5t+/nMJRaPk0OK5G3MJXbn7jH0Q4ettxX
-   rOtZqmpP3+3r35NPeVmZatI2C5WrSarcp3+z5X8XE+GtgxtuI0UHjzk/G
-   jmkTUVxmZQjDhcvX+YR2SLWNL4c7JnF1OtQcvi/GBXROeb2Mvt3ZMBwoF
-   5JLK58vQBFiqmuMlXWJ+ffCt24GuJfZ+d96i8bmUOVMBtz/KXE0gBBRCK
-   MuBaBvG2xfsa5k7zHx6TOxlKaQiHyFZfkcA5u8sjXZ8mKsUBTJg5h3JzL
-   80B/3qgXBs2FsrF/pB8cB1phndlyPRQVAcalSFdibvGfDtgCkAoKeXDbp
-   w==;
-X-CSE-ConnectionGUID: Z+SN1S0IRAmX7/aE6o9TgQ==
-X-CSE-MsgGUID: zmoRC7MPR+qSdWcP0vpOMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15355287"
-X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
-   d="scan'208";a="15355287"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 17:30:45 -0700
-X-CSE-ConnectionGUID: UWPGeQu8R7K2xpNk9YR0ag==
-X-CSE-MsgGUID: iuj5Zq6TS8CtOuobGcmJEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
-   d="scan'208";a="78826441"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 17:30:43 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,  Dan Williams
- <dan.j.williams@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Bharata B Rao <bharata@amd.com>,  Alistair
- Popple <apopple@nvidia.com>,  "Aneesh Kumar K . V"
- <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH -V2] cxl/region: Support to calculate memory tier
- abstract distance
-In-Reply-To: <b1652fc6-b3d7-46e6-8dc4-15e2841c68d8@intel.com> (Dave Jiang's
-	message of "Mon, 17 Jun 2024 10:06:34 -0700")
-References: <20240611055423.470574-1-ying.huang@intel.com>
-	<ZmjBfcaosIlOODFR@aschofie-mobl2>
-	<87v8285ngi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<b1652fc6-b3d7-46e6-8dc4-15e2841c68d8@intel.com>
-Date: Tue, 18 Jun 2024 08:28:51 +0800
-Message-ID: <877cen5c1o.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTTn2YzF"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7046e87e9afso3906657b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2024 17:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718670965; x=1719275765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EAmTQGDwnRoUTYe26zjjCbDBySNjpTqbxdCkAqrJzA4=;
+        b=PTTn2YzF3zaNb0P7jmffuo1BD9Q6GUM86+KXoMrBMs42OgTx9lubGX1aFoHn1sKmj7
+         rTLi7oMyC/GevRwKtIm3bDp55RKTZxF4Nh+VjJyA3cXO/kCCv34AQ8nZuoiIZex4PHl9
+         p5jyogkWhmomV8aJbH1xNcRnWmfQRJ/Zm0zvw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718670965; x=1719275765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EAmTQGDwnRoUTYe26zjjCbDBySNjpTqbxdCkAqrJzA4=;
+        b=AfX8TrrCPg8VdsDGxYo/EuNw7M5A/NKSD5ioAmdG1ylamHHVQmwPxzq17MxzNf/bXb
+         1qcERTzejmO50m6EX+dVoTTTSFgYMfN4gr6SHMhAnSJncMq7HXAW1uZGguyWmvfmiBxZ
+         32eZkkn9wCOXiPCi9T4jw4pucybZlDjapwOILY0jd8GXu7AoSGIZkQK6jW08VugiV77F
+         ff+68vqM+6zXv3oTjvGUJEhp5UZZKD1E137YgAYgUydcFNGfEFABv0FEkr7l/PKwrr67
+         aWiN2K4FLPNRwB88vgwjVP/s1GvvzTLOI14iPY+kOYbbAXOZwrS6RU07FJJnMLJPlou4
+         t0ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVI6avka7OpDO+GBHQdc/YDmQwwj/I0a+PKwo1krnDTjjjucg5DO8RogmvnuBrL6KgXBWIUnsnoKJyoZ6N1W2j7A+xE2NH8Z/NJZVym
+X-Gm-Message-State: AOJu0YwmDdqX7Leor0ofSNkO8lTvU6BxUnpWLzVWvWxFt1iKXROOGZcK
+	Nhohwzks+GTK+36+Hast735a9KOvtPGlTDLj1Qvrhrx4n94Ot97mYb/hAJYZhVjNTmdG+KWFAKw
+	=
+X-Google-Smtp-Source: AGHT+IHMNUwf5V0/59skzGTiBwg0s5Cu2tXWTY9d3on5TY7byFeiOmGlppfKSTCNe4S1l2n9pqUGHw==
+X-Received: by 2002:a05:6a21:7884:b0:1af:86da:3f7 with SMTP id adf61e73a8af0-1bae7e224c7mr11021501637.4.1718670965170;
+        Mon, 17 Jun 2024 17:36:05 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:1798:e71b:11ad:8b94])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb99f4dsm7905917b3a.216.2024.06.17.17.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 17:36:04 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: kgdb-bugreport@lists.sourceforge.net,
+	Douglas Anderson <dianders@chromium.org>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Thorsten Blum <thorsten.blum@toblux.com>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/13] kdb: Add the ability to read iomapped memory via kdb + clean up "md" commands
+Date: Mon, 17 Jun 2024 17:34:34 -0700
+Message-ID: <20240618003546.4144638-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 
-Dave Jiang <dave.jiang@intel.com> writes:
 
-> On 6/16/24 7:10 PM, Huang, Ying wrote:
->> Alison Schofield <alison.schofield@intel.com> writes:
->> 
->>> On Tue, Jun 11, 2024 at 01:54:23PM +0800, Ying Huang wrote:
->> 
->> [snip]
->> 
->>>> ---
->>>>  drivers/cxl/core/region.c | 40 +++++++++++++++++++++++++++++++++++----
->>>>  drivers/cxl/cxl.h         |  2 ++
->>>>  2 files changed, 38 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>> index 3c2b6144be23..81d0910c0a02 100644
->>>> --- a/drivers/cxl/core/region.c
->>>> +++ b/drivers/cxl/core/region.c
->>>> @@ -9,6 +9,7 @@
->>>>  #include <linux/uuid.h>
->>>>  #include <linux/sort.h>
->>>>  #include <linux/idr.h>
->>>> +#include <linux/memory-tiers.h>
->>>>  #include <cxlmem.h>
->>>>  #include <cxl.h>
->>>>  #include "core.h"
->>>> @@ -2304,14 +2305,20 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->>>>  	return true;
->>>>  }
->>>>  
->>>> +static int cxl_region_nid(struct cxl_region *cxlr)
->>>> +{
->>>> +	struct cxl_region_params *p = &cxlr->params;
->>>> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
->>>> +	struct cxl_decoder *cxld = &cxled->cxld;
->>>> +
->>>> +	return phys_to_target_node(cxld->hpa_range.start);
->>>> +}
->>>> +
->>>
->>> I believe it's OK to send a resource_size_t to phys_to_target_node()
->>> like this:
->>>
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -2308,10 +2308,8 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->>>  static int cxl_region_nid(struct cxl_region *cxlr)
->>>  {
->>>         struct cxl_region_params *p = &cxlr->params;
->>> -       struct cxl_endpoint_decoder *cxled = p->targets[0];
->>> -       struct cxl_decoder *cxld = &cxled->cxld;
->>>
->>> -       return phys_to_target_node(cxld->hpa_range.start);
->>> +       return phys_to_target_node(p->res->start);
->>>  }
->>>
->> 
->> Read the related code again, it appears that there's a theoretical race
->> condition here.  The register_memory_notifier() is called in
->> devm_cxl_add_region(), where p->targets[] and p->res haven't been
->> setupped yet.  And, IIUC, p->targets[] or p->res may be gone during the
->> life cycle of regions too.  If so, we need to use
->> guard(rwsem_read)(&cxl_region_rwsem) to protect p->targets[] and p->res
->> references.  Because the memory notifier may be called for other nodes
->> online/offline.
->
-> You mind sending a patch? :)
+The overall goal of this patch series is to add the ability to read
+from IO mapped memory at the kdb prompt. This is something I've long
+wished to have but never got around to implementing until now.
 
-Sure.  Will do it.
+As I tried to implement this, I realized that the existing "md" code was
+a bit of a mess. I spent a bunch of time cleaning up the function which
+made the ability to support iomapped memory atop that pretty simple.
 
---
-Best Regards,
-Huang, Ying
+The cleanup code here is not quite a no-op. The "md" handling code has
+some esoteric corner cases that it handled and, as part of this, I removed
+some of the weird corners. I have a hard time believing anyone was relying
+on these, but if you think someone is then please yell.
+
+Also note that it would probably be good to add iomapped memory writes,
+but this series is already pretty long so maybe that can be done later.
+
+
+Douglas Anderson (13):
+  kdb: Get rid of "minlen" for the "md" command
+  kdb: Document the various "md" commands better
+  kdb: Use "bool" in "md" implementation where appropriate
+  kdb: Drop "offset" and "name" args to kdbgetaddrarg()
+  kdb: Separate out "mdr" handling
+  kdb: Remove "mdW" and "mdWcN" handling of "W" == 0
+  kdb: Tweak "repeat" handling code for "mdW" and "mdWcN"
+  kdb: In kdb_md() make `repeat` and `mdcount` calculations more obvious
+  kdb: Use 'unsigned int' in kdb_md() where appropriate
+  kdb: Replease simple_strtoul() with kstrtouint() in kdb_md()
+  kdb: Abstract out parsing for mdWcN
+  kdb: Add mdpW / mdpWcN commands
+  kdb: Add mdi, mdiW / mdiWcN commands to show iomapped memory
+
+ kernel/debug/kdb/kdb_bp.c      |   5 +-
+ kernel/debug/kdb/kdb_bt.c      |   4 +-
+ kernel/debug/kdb/kdb_main.c    | 309 +++++++++++++++++++--------------
+ kernel/debug/kdb/kdb_private.h |   5 +-
+ kernel/debug/kdb/kdb_support.c |  48 +++++
+ 5 files changed, 236 insertions(+), 135 deletions(-)
+
+-- 
+2.45.2.627.g7a2c4fd464-goog
+
