@@ -1,70 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD561CD29;
-	Tue, 18 Jun 2024 15:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3A047A74;
+	Tue, 18 Jun 2024 15:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718725393; cv=none; b=Yfz81RglXadEPN7Jv9DxV+pO19aTm5Q2RiNGS0zZBtgRjyoHhaoyWOKlrWdvcTwKlLgXH31F1nE0UXA9E6sQ1ZfXQW7bLghbgaT5GIoiDKle8xEHYZ3X9BAUJko+1QHl+vIFVeItqM/dm72SIvUvTolytwb6KfFFhikcs9X+HEg=
+	t=1718725412; cv=none; b=LjdTmtJuCbcd8WC6UxRDEO/iyZrT3lLee/KshTSHOqPD7AOMmTirXSVplD281HRk0H63mTzP7a/te66zdpYcPpvjFEPFRWGtPk91+zaqx4AS2oyRsr5EqbNBRdmH97X5HT+GsO3P4mTQIs3//HEegg/hH96n01yiUAGnl7iy/A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718725393; c=relaxed/simple;
-	bh=gGx8gkJpM9wjGl4dfZe8iwSMFIAJ8nVorKm3b84gtgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s8yvTHbGkIXUzGTVTnyTqRBt0bQd79Yb357nObAAoUr0zogyp9+Ifb6j88FzRPQ7OyLH6QEoD7wgtNW4rLVUwFdUMpKlIrjo1KNKgY+E8CTxxTlBcXtKDkTylGVFaCSbY3Vd9LEvlBseVnhDjC4960ZnyG/kxquCMAiodLEEgEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE13C3277B;
-	Tue, 18 Jun 2024 15:43:08 +0000 (UTC)
-Date: Tue, 18 Jun 2024 11:43:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, <suleiman@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
- Esmat <youssefesmat@google.com>, "Beau Belgrave"
- <beaub@linux.microsoft.com>, Baoquan He <bhe@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David Howells
- <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v6 0/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Message-ID: <20240618114307.48513bb5@rorschach.local.home>
-In-Reply-To: <cd759ac0-73e6-4ab3-a2d0-94f43eec5752@amazon.com>
-References: <20240613155506.811013916@goodmis.org>
-	<b0ed328f-c4e5-4e9b-ae4e-5c60703ab376@amazon.com>
-	<20240613131212.7d1a7ffa@rorschach.local.home>
-	<7c90c574-5cfa-40cf-bd4c-1188136cd886@amazon.com>
-	<20240617164006.198b9ba3@rorschach.local.home>
-	<049b2e0f-00b2-4704-8868-1569a006a134@amazon.com>
-	<CAMj1kXF3AetyuLh-QU8yaE-wTLcgyzwuAwe-uo_3EqSDsAYhuQ@mail.gmail.com>
-	<cd759ac0-73e6-4ab3-a2d0-94f43eec5752@amazon.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718725412; c=relaxed/simple;
+	bh=ebpbN/dNpywtDLCB8DP9glpqyeM0ApP6XhSkY8+iOqo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c+HBd8iwVpbmlSG8zzebmlPjPBtQ8COfJwrdy6IaFSbuX+19dFbavxE4ERiG1SmrUI+3JiI1wGVBEVexpldMdyNoO2YIFk+Qp9gXsxvSY9OtvN74dp6Jq89SsYOrg7oaRt6LE54VQ3HxNdRs5JXQVptgC/3Wi+MPKSjGTXYrGHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z/T0Q6No; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z/T0Q6No"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45IBCq9C005316;
+	Tue, 18 Jun 2024 15:43:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=OqODJXPbx60YyCH10yYajv
+	QGq9at/EuxoeSseHwNRC8=; b=Z/T0Q6NomxomoptUYjg6H3EEsw7o3e7rlO2lWq
+	79uhgxu6d8uNCiXAYQ6gL3osN6NbxGJKFEPOeLUn+Y/tJkaJRH6nxhENSxX1iXGx
+	jYUEWmZZYcvkm+LqRMZmTkjc66pMs8lXHE/fxrcI4T4CAH6bvED/gvWRP6Kw1JHz
+	/3fhVMR6vrAELQd85KEyGuXmzVmKXP6ciLs5qPlcRjyrzXIGn3pCZqne7CN1ethW
+	olfY7/7VP1pui/P9LlNBHWyR+4zb7iiensLoG+Q7+1N6m4dQkO1SJIQ0nZksIzuj
+	+pTM7SIcq1/KMsyi64Vtz6q0hqG0F8venv7hckOxsuT9zDmg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yu95rgqpy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 15:43:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45IFhPxh016645
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 15:43:25 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Jun 2024 08:43:20 -0700
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <srinivas.kandagatla@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
+        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <abel.vesa@linaro.org>
+Subject: [PATCH V2 0/3] arm64: dts: qcom: x1e80100: Enable bwmon support
+Date: Tue, 18 Jun 2024 21:13:03 +0530
+Message-ID: <20240618154306.279637-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: kBnSRCW1KWj95IMeLd0QO4y1wlHAoiVt
+X-Proofpoint-ORIG-GUID: kBnSRCW1KWj95IMeLd0QO4y1wlHAoiVt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 phishscore=0 mlxlogscore=957 suspectscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406180118
 
-On Tue, 18 Jun 2024 13:47:49 +0200
-Alexander Graf <graf@amazon.com> wrote:
+This patch series enables bwmon support on X1E80100 SoCs.
 
-> IMHO the big fat disclaimer should be in the argument name. 
-> "reserve_mem" to me sounds like it actually guarantees a reservation - 
-> which it doesn't. Can we name it more along the lines of "debug" (to 
-> indicate it's not for production data) or "phoenix" (usually gets reborn 
-> out of ashes, but you can never know for sure): "debug_mem", / 
-> "phoenix_mem"?
+V2:
+* Allow for opp-tables to be optional on X1E cpu-bwmon instances. [Konrad]
+* Drop Rb from Krzysztof due to more bindings changes.
+* Use explicit request/free irq and add comments regarding the race
+  introduced when adding the IRQF_SHARED flag. [Krzysztof/Dmitry]
+* Use consistent numbering of the opps across instances. [Shiv]
+* Use ICC_TAG_ACTIVE_ONLY instead of magic numbers. [Konrad]
+* Drop fastrpc enablement patch. [Bjorn]
 
-I don't see any reason it will not reserve memory. That doesn't seem to
-be the issue.  What is not guaranteed is that it will be in the same
-location as last time. So the name is correct. It's not
-"reserve_consistent_memory" ;-)
+tag: next-20240617
+base-commit: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
 
--- Steve
+Sibi Sankar (3):
+  dt-bindings: interconnect: qcom,msm8998-bwmon: Add X1E80100 BWMON
+    instances
+  soc: qcom: icc-bwmon: Allow for interrupts to be shared across
+    instances
+  arm64: dts: qcom: x1e80100: Add BWMONs
+
+ .../interconnect/qcom,msm8998-bwmon.yaml      |  14 +-
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 120 ++++++++++++++++++
+ drivers/soc/qcom/icc-bwmon.c                  |  14 +-
+ 3 files changed, 144 insertions(+), 4 deletions(-)
+
+-- 
+2.34.1
+
