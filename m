@@ -1,131 +1,153 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBEF1586CC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF97C1AC78B;
+	Tue, 18 Jun 2024 09:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718704363; cv=none; b=i85pIhiy3PkFP5u8G40QAgx94yLbwn7lnCtalv6tp9eHnaVrb9zf5vmkkaXd5iGxkQ3L98NBWsfFiwrSpeNWmzvY1CFQvhau3DW/2zoj8uFyIw7hCXTbaIi+HlVBPYSXhmOKii92h6xadWvjgrpxmlZkzXNQNoZ26nJkVjICxO0=
+	t=1718704363; cv=none; b=CrpjdT5I5O9Z3mDlm4up2hUDm9vKKnIx66C4br+dPqAKzcZMR9y7SQSQqLytTybYhZLWOp3CfOK0SBMbASD+wHno5wzUT2gC25tYl84dWBqGHfDSCYEVfVctDGxQI5OYDaIYEe9kFUQJVArsfHGRymPzXEXJvL2eLSB48h700ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718704363; c=relaxed/simple;
-	bh=/lD+4/1pW5cDhxFei3+MLKsCC6iwlHSFD/OS/9oOq0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MBNDeMrG0Ggr7rYBZ9BgWZ4t82LmAr6HaNDZdKNIK68UXI0oW5ORYlOnBj7ZXXQa1Sj5bL0/jP9lrV3t2rLykNw04LmkEfI/JlGsddqFAd+uE1RfJsihJW+RB4ck9MgomcZWH8x6Bbn81jq+JDq0ULfK/MsfUnKLXCe2lk11xaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VsjrAVmf; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=SSxtrx0QUg2Wx7cvN+gJuUD0e6TauR5b527O69izf+k=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nfYYLn8/8wamF+u4oOGjCNff7yNY4YEJf1fWsHl51BO9yyVq+IDwrwPz/yWpD1d6757PD4I5vkEo+FBA1rMtsx16M2imwh09ZKSqYJ15qw11b+85DPfk2uo0cagx6OQE/O2ILJbFa32aVSq3rlAYbjLRZ7RWkZuIc9INz9Oyllk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RFpSx1KN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RVXQeHxu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RFpSx1KN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RVXQeHxu; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VsjrAVmf"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-630daaec9c7so45363627b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718704361; x=1719309161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/lD+4/1pW5cDhxFei3+MLKsCC6iwlHSFD/OS/9oOq0k=;
-        b=VsjrAVmfhgKgk0BZz2OIJMF9bkJgUftEQSucdt4LClcFdeaIEazUlInTIYbKQswyIV
-         d+4RBPWvUu3nPmnArN0vcFRyv0q+/c/+QqtkfkN++EMG/fbX80mjNeuQZWV88lo0V0yN
-         G8ce0zJGquwCtM1xrfKMvuo+U/1xuHM3dkGDswFfwXlPaE4tASod2Dwb1l3J35H+9a4K
-         hgtODdwdRk5QVlkwnKqXv/PHSvTHBWfSM27tibrPdCi0jKqihzSbBoAVdgOq+KNfaXws
-         P8D6bu6wFEz2B7WXRuDd+YogrqAcVmzM2/x/tHk3/2thUU8MGwh6VJQ/Bg9ccMWw4udb
-         cTVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718704361; x=1719309161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/lD+4/1pW5cDhxFei3+MLKsCC6iwlHSFD/OS/9oOq0k=;
-        b=vA2ESvj4hCMeAjZH/8y7gT/m6gD8GHUXmuWfuWuEL9hz1w+QAmhLMFN1EUpMcUhOIm
-         o3GGOPiMG6wi0h04ZK9NJ1Sur+aVlahKbZLcPgjpcGOA1L6jSaCh6SRncHi3hz9wngrS
-         Jnr88/l5Y41F1Aabeh/1BLVCTfSjKkZIRta4/HR7cjcYPCMbRBOImy9k959tlSUyVwE7
-         Lls66MxoRNT2GYD2CIO3fxvqRQwAt0qDjnfnyl6Xidg0k83EF9/1qrHTNJ5gjomFSY/e
-         TnTbitlwqsfuUYOb7Hen5bvICUwaJ0FjAlG1zt+tr5Eq6YScGCs9FarwMBgbxCUg/Akp
-         ro/g==
-X-Forwarded-Encrypted: i=1; AJvYcCW7bj/iMMAFSGUjbIZSsrKLaNdnmrujzPAiUDcCI6uXcy3cEVVMPNkf42FPKTQW4f67/Nm7oDrbb/hImAju+gHxoh9+6HqUQZ9Hq/yC
-X-Gm-Message-State: AOJu0Yw59k90woWp/slOb2LFSiUAQZjVnznI+5UPdvDVvQp9sssJgxxH
-	GuYfTwhy5gIBP1yv07SgFqkIF5807CYOA7fGOiLC0jaUTSGydel0/1vcezb/ebjWRwqSBuSqttZ
-	0Qn6jRisQ7dSWdHEWEOyxw7b3EcFODXtRvCBs
-X-Google-Smtp-Source: AGHT+IHXX6s3T5giMDf3tx1b3GNQGpbXZt612lcGTYaBiEl87A/J206Ls33wh8SD7x8kKB2X9MD+tfEpY+oW/2ib5Ck=
-X-Received: by 2002:a0d:d456:0:b0:632:c442:2316 with SMTP id
- 00721157ae682-632c44224b4mr101739057b3.3.1718704360687; Tue, 18 Jun 2024
- 02:52:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RFpSx1KN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RVXQeHxu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RFpSx1KN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RVXQeHxu"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 600D8219C4;
+	Tue, 18 Jun 2024 09:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718704356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y72GhFWTBnlWQ6W2vqBZp1TnCwscWwZaxfHEyJk338M=;
+	b=RFpSx1KNc+zFAkDpUOhpDz361bKkyU3rlSd5lRzvTNmah6qCrpBEBaMxNEl5WR+dpbs+I4
+	FziXUki7Q7pRl6/dqVxTCq2gzPcAnJWW0gFRcwXza3KMEXnwJsybNyXuPBsY7hUMGxuY/R
+	yjscNPr2Rrjtvd59Z/HXKg+1w7HFH+s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718704356;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y72GhFWTBnlWQ6W2vqBZp1TnCwscWwZaxfHEyJk338M=;
+	b=RVXQeHxuT5Ek/u0/7nY6WyZIOLCYod/khkacKNSPRm3AesNLjFxbXHNRd1/aJGTrJYc9+5
+	rf+MGTsb2brax4DQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RFpSx1KN;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RVXQeHxu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718704356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y72GhFWTBnlWQ6W2vqBZp1TnCwscWwZaxfHEyJk338M=;
+	b=RFpSx1KNc+zFAkDpUOhpDz361bKkyU3rlSd5lRzvTNmah6qCrpBEBaMxNEl5WR+dpbs+I4
+	FziXUki7Q7pRl6/dqVxTCq2gzPcAnJWW0gFRcwXza3KMEXnwJsybNyXuPBsY7hUMGxuY/R
+	yjscNPr2Rrjtvd59Z/HXKg+1w7HFH+s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718704356;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y72GhFWTBnlWQ6W2vqBZp1TnCwscWwZaxfHEyJk338M=;
+	b=RVXQeHxuT5Ek/u0/7nY6WyZIOLCYod/khkacKNSPRm3AesNLjFxbXHNRd1/aJGTrJYc9+5
+	rf+MGTsb2brax4DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3BFD513AA0;
+	Tue, 18 Jun 2024 09:52:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AWgbDuRYcWaAIAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 18 Jun 2024 09:52:36 +0000
+Date: Tue, 18 Jun 2024 11:53:02 +0200
+Message-ID: <87le327f29.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Simon Trimmer <simont@opensource.cirrus.com>
+Cc: <tiwai@suse.com>,
+	<linux-sound@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<patches@opensource.cirrus.com>,
+	<soyer@irl.hu>,
+	<shenghao-ding@ti.com>,
+	<kevin-lu@ti.com>,
+	<baojun.xu@ti.com>
+Subject: Re: [PATCH v3 0/4] ALSA: hda: Improvements to hda_component
+In-Reply-To: <20240617154105.108635-1-simont@opensource.cirrus.com>
+References: <20240617154105.108635-1-simont@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-33-iii@linux.ibm.com>
- <CAG_fn=X6wHfmGsVgdqwms_Hk1CQAZ6M5623WyatjVp=Uk-z9pQ@mail.gmail.com> <e91768f518876ec9b53ffa8069b798107434d0dd.camel@linux.ibm.com>
-In-Reply-To: <e91768f518876ec9b53ffa8069b798107434d0dd.camel@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 18 Jun 2024 11:52:03 +0200
-Message-ID: <CAG_fn=XhWpLKbMO6ZHpnxQDh+PXrTxBnL9X-1zZtBj-CoVk0=g@mail.gmail.com>
-Subject: Re: [PATCH v4 32/35] s390/uaccess: Add KMSAN support to put_user()
- and get_user()
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 600D8219C4
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Tue, Jun 18, 2024 at 11:40=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.co=
-m> wrote:
->
-> On Tue, 2024-06-18 at 11:24 +0200, Alexander Potapenko wrote:
-> > On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm=
-.com>
-> > wrote:
-> > >
-> > > put_user() uses inline assembly with precise constraints, so Clang
-> > > is
-> > > in principle capable of instrumenting it automatically.
-> > > Unfortunately,
-> > > one of the constraints contains a dereferenced user pointer, and
-> > > Clang
-> > > does not currently distinguish user and kernel pointers. Therefore
-> > > KMSAN attempts to access shadow for user pointers, which is not a
-> > > right
-> > > thing to do.
-> > >
-> > > An obvious fix to add __no_sanitize_memory to __put_user_fn() does
-> > > not
-> > > work, since it's __always_inline. And __always_inline cannot be
-> > > removed
-> > > due to the __put_user_bad() trick.
-> > >
-> > > A different obvious fix of using the "a" instead of the "+Q"
-> > > constraint
-> > > degrades the code quality, which is very important here, since it's
-> > > a
-> > > hot path.
-> > >
-> > > Instead, repurpose the __put_user_asm() macro to define
-> > > __put_user_{char,short,int,long}_noinstr() functions and mark them
-> > > with
-> > > __no_sanitize_memory. For the non-KMSAN builds make them
-> > > __always_inline in order to keep the generated code quality. Also
-> > > define __put_user_{char,short,int,long}() functions, which call the
-> > > aforementioned ones and which *are* instrumented, because they call
-> > > KMSAN hooks, which may be implemented as macros.
-> >
-> > I am not really familiar with s390 assembly, but I think you still
-> > need to call kmsan_copy_to_user() and kmsan_copy_from_user() to
-> > properly initialize the copied data and report infoleaks.
-> > Would it be possible to insert calls to linux/instrumented.h hooks
-> > into uaccess functions?
->
-> Aren't the existing instrument_get_user() / instrument_put_user() calls
-> sufficient?
+On Mon, 17 Jun 2024 17:41:01 +0200,
+Simon Trimmer wrote:
+> 
+> This series of patches moves duplicated members from the
+> instanced component structures into a new parent structure and
+> introduces locking so that consumers of the interface do not use
+> stale data.
+> 
+> Changes in v3:
+>  - These Fixes separated from this series to make them easier
+>    to manage:
+>    https://lore.kernel.org/all/20240613133713.75550-1-simont@opensource.cirrus.com/
+> 
+> Simon Trimmer (4):
+>   ALSA: hda: hda_component: Introduce component parent structure
+>   ALSA: hda: hda_component: Change codecs to use component parent structure
+>   ALSA: hda: hda_component: Move codec field into the parent
+>   ALSA: hda: hda_component: Protect shared data with a mutex
 
-Oh, sorry, I overlooked them. Yes, those should be sufficient.
-But you don't include linux/instrumented.h, do you?
+Applied all patches now to for-next branch.  Thanks.
+
+
+Takashi
