@@ -1,81 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1369E1AD9FF;
-	Tue, 18 Jun 2024 13:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BAE676036;
+	Tue, 18 Jun 2024 13:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718716849; cv=none; b=f/ukV2sEcWQ2ngABzJlC9OFQT9UBySPub4Gu9VHAYx4kx0x/bU173+un/TCXVp7yXoAMGgwYt9HyQNEua+B/vlZp0n/R36Qtb8+QS5UG3EkmFddxjHS0IsrQUsymY9ieBoTdCN+vAxR7Bx0+sx8MH+RvwTfLTUjojv/CMc6zuCU=
+	t=1718717177; cv=none; b=lmjx5hJjMaOv1OtPUiuEzlcHhsDGmWadEJaJFEFCUsJHH811Ik32jd6vU7uzInyfiD2tfwIxCPb//H3ZdQyHVFR7M4g82QxWbE8vZg8ZzmoXzL5DTg9UH4Q5jleFR1y0WuPsGjxIxIkMshxBMlUqYVk1s6VsEq7pbm6kdvYQ0Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718716849; c=relaxed/simple;
-	bh=eiEYRg7tb9Zm5L5qiyKdmcxA6sLOHm162FbH/EnNafk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ki6vZfrewwehav7HjAPGAgDVSepQ9Vrf0tiDbSjajyGB91RUFmZ2mKr7x3WLqknLheDGvXaSKn5n84dAmOOgxLM3rvRfsz3iETtz9lqky1WL1RJBhj8xd+CFOHjdxd7x+RjNRFLqzTZmKxZi3VgkpaWFg9pB4+EDMHv7cbDQWb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2SMaN9t+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2SMaN9t+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6069CC3277B;
-	Tue, 18 Jun 2024 13:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718716848;
-	bh=eiEYRg7tb9Zm5L5qiyKdmcxA6sLOHm162FbH/EnNafk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2SMaN9t+BDTOmgY5LngowGE8aP5d6hfv3J72xiUTJu17ASoBewEydNivyJFfkCEem
-	 TT17iISo/QJVq6N7Cd/FW1yNTUuuvPIKBNkHG1O2oKoipHvgbhMtwPpl5mDBBbaefq
-	 btR6MADVjHWoVYhasE9OLDXiJr6nn7k6hnSgIzE4=
-Date: Tue, 18 Jun 2024 15:18:07 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.6 000/741] 6.6.33-rc2 review
-Message-ID: <2024061855-rural-stoplight-1283@gregkh>
-References: <20240609113903.732882729@linuxfoundation.org>
- <55b8c260-d8f0-4c05-bdf1-c20865fb13f7@roeck-us.net>
+	s=arc-20240116; t=1718717177; c=relaxed/simple;
+	bh=ilL+aNMmlTmTWINmpxF0mYRwKVQqupyT2snELs2/YGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DWH6sRMMckOjgdssfwjrzHUWu9taKPSRkWWt3h6K/Wn/wB0AIf9H6Oi/my9piLLzmIdtygtdOPKXB7sQ4XovY/W5cQxD5rven7zU8tHIOgYlDawMI/0S0tE96YOUVbz7KvOTjPTxFFlYYIpDqIL+n+qJx52JhGr0j5ewVZnzmf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.110.225])
+	by gateway (Coremail) with SMTP id _____8DxzOryinFm2esHAA--.31900S3;
+	Tue, 18 Jun 2024 21:26:10 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.110.225])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnsfwinFmTI4nAA--.30592S3;
+	Tue, 18 Jun 2024 21:26:09 +0800 (CST)
+Message-ID: <1d1b1633-63e3-428a-b572-fe4ef294f7d1@loongson.cn>
+Date: Tue, 18 Jun 2024 21:26:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55b8c260-d8f0-4c05-bdf1-c20865fb13f7@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 RESEND 1/1] zh_CN/admin-guide: Add
+ zh_CN/admin-guide/numastat.rst translation document
+To: Tao Zou <wodemia@foxmail.com>
+Cc: alexs@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, wodemia@linux.alibaba.com
+References: <d9ee8cc2-8fd9-4a99-9673-b3a56187df95@loongson.cn>
+ <tencent_262FCAE8F01C8D0582A45600851988585806@qq.com>
+Content-Language: en-US
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <tencent_262FCAE8F01C8D0582A45600851988585806@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxnsfwinFmTI4nAA--.30592S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXry8JF17tw1UGrWfuw4rJFc_yoW5Cw1xpa
+	ykKFySg3Z7Jry5Cw1xKF12qF17Kr4Sgw4DJFySqw18t3s8Arn3tr43trZ09F93WrW0yay8
+	XayFgrWUur4Yy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8CksDUUUUU==
 
-On Mon, Jun 17, 2024 at 10:38:29AM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On 6/9/24 04:41, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.6.33 release.
-> > There are 741 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Tue, 11 Jun 2024 11:36:08 +0000.
-> > Anything received after that time might be too late.
-> > 
-> [ ... ]
-> > 
-> > Duanqiang Wen <duanqiangwen@net-swift.com>
-> >      Revert "net: txgbe: fix clk_name exceed MAX_DEV_ID limits"
-> > 
-> 
-> This patch, in its commit message, explicitly states:
-> 
->   This reverts commit e30cef001da259e8df354b813015d0e5acc08740.
->   commit 99f4570cfba1 ("clkdev: Update clkdev id usage to allow
->   for longer names") can fix clk_name exceed MAX_DEV_ID limits,
->   so this commit is meaningless.
-> 
-> However, commit 99f4570cfba1 has not been applied to v6.6.y,
-> meaning the revert may impact the affected driver under some
-> circumstances.
 
-Ah, that was tricky, thanks, I've queued up 99f4570cfba1 now.
+在 2024/6/18 16:44, Tao Zou 写道:
+> Hi, Yanteng Si. Thanks for your suggestion.
+>
+> On Tue, 18 Jun 2024 12:01:33 +0800 Yanteng Si wrote:
+>> 在 2024/6/18 10:47, wodemia@foxmail.com 写道:
+>>> From: Tao Zou <wodemia@linux.alibaba.com>
+>>>
+>>> Add translation zh_CN/admin-guide/numastat.rst and link it to
+>>> zh_CN/admin-guide/index.rst while clean its todo entry.
+>>>
+>>> Signed-off-by: Tao Zou <wodemia@linux.alibaba.com>
+>>> ---
+>>>
+>>> I apologize, the previous PATCH had an incorrect email address for linux-doc when it was sent, so I need to resend it.
+>>>    
+>>>    .../translations/zh_CN/admin-guide/index.rst  |  2 +-
+>>>    .../zh_CN/admin-guide/numastat.rst            | 50 +++++++++++++++++++
+>>>    2 files changed, 51 insertions(+), 1 deletion(-)
+>>>    create mode 100644 Documentation/translations/zh_CN/admin-guide/numastat.rst
+>>>
+>>> diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
+>>> index ac2960da33e6..0db80ab830a0 100644
+>>> --- a/Documentation/translations/zh_CN/admin-guide/index.rst
+>>> +++ b/Documentation/translations/zh_CN/admin-guide/index.rst
+>>> @@ -68,6 +68,7 @@ Todolist:
+>>>       cpu-load
+>>>       cputopology
+>>>       lockup-watchdogs
+>>> +   numastat
+>>>       unicode
+>>>       sysrq
+>>>       mm/index
+>>> @@ -109,7 +110,6 @@ Todolist:
+>>>    *   module-signing
+>>>    *   mono
+>>>    *   namespaces/index
+>>> -*   numastat
+>>>    *   parport
+>>>    *   perf-security
+>>>    *   pm/index
+>>> diff --git a/Documentation/translations/zh_CN/admin-guide/numastat.rst b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+>>> new file mode 100644
+>>> index 000000000000..4f7fee557cb5
+>>> --- /dev/null
+>>> +++ b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+>>> @@ -0,0 +1,50 @@
+>>> +.. SPDX-License-Identifier: GPL-2.0
+>>> +.. include:: ../disclaimer-zh_CN.rst
+>>> +
+>>> +:Original: Documentation/admin-guide/numastat.rst
+>>> +:Translator: Tao Zou <wodemia@linux.alibaba.com>
+>>> +
 
-greg k-h
+>>> +.. _cn_numastat:
+>> Drop it, because it introduces a warning.
+> I'm not quite sure which lines should be dropped, as you've mentioned several. Could you give me more details of the warning?
+
+Sorry, Drop  "+.. _cn_numastat:"
+
+
+This label is useless, if you read the newly translated Chinese documents,
+
+you will find that all do not have this label.
+
+
+In fact, these labels should be removed from Chinese documents.
+
+Why is that? Because there is a duplicate tag in the original
+
+document, this will introduce some warning. Therefore, if
+
+there is a similar label in the original document, we should
+
+not bring it to the Chinese document.
+
+
+I'm not sure if _cn_xxxx will trigger a warning, it's been a while
+
+since I've seen a warning like this. But since it's useless,
+
+let's Drop it.
+
+
+Thanks,
+
+Yanteng
+
+
+>>> +
+>>> +
+>>> +===============================
+>>> +Numa策略命中/未命中统计
+>>> +===============================
+>>   Drop unnecessary "=".
+>>
+>> one English char,  one "="
+>>
+>> one Chinese char, two "="
+> Get it. I will fix it in PATCH v2.
+
