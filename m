@@ -1,30 +1,30 @@
 Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77CB16DC07
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261E31741F4
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:47:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740055; cv=none; b=o8iMwaDUBdtLQanCg4vv0wBD/uA2vAkhIBrANzueoi7t9BYi2kzHVa3HwigSUyGaZlkX/osCa9QVLH59/PQHflWfxSUmCPaM/MozYeMrNKNxwLap1MsExXDFAoYSi+GINKP5PFuPSnXa4SK73wdRN3SDozvkEQnoZVx/vHvXnwU=
+	t=1718740059; cv=none; b=JymLeiVNLucshSluqlRqpod9GKSmhGGO/dhbxZQc6G72qE+JJecgEhz3OFCIVep+fblKsJ2ORhHYOyBIZh/31+ECSh54LtA3BrFPj11aB4wXctWYoTbgP6b0bKYlEojBslpbKv6Qz5/qZrX4JMfQXJef775jctkSrEl+1sN9fvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740055; c=relaxed/simple;
-	bh=f7MDqrTS9VA2w94f9+abC6s+OPf3kDOoiI4lylYuxJk=;
+	s=arc-20240116; t=1718740059; c=relaxed/simple;
+	bh=uZrAjTHf0u7fS3QuLGHkiSs/0b/WMlW8Uo68oLrZ1k8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EfimfgLdWrAL5pK9AkqwfAtj73Jb5STptVArgXoQb82nA6Aqydutvl2QKSDO/P5yPUhrKERfR7dKa5jV4zoVHiVJeZ2ZKdT1JPGL6ZAch8L1401SmYgiQzGGJQW8q/BCtpaTe/FO+86wbRTdvj5r+1mUelrX0dGm8imVZXt/pxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=HenJYAdY; arc=none smtp.client-ip=149.28.215.223
+	 MIME-Version; b=FA17JejENOAr9DsolExwl28hucYEA0ZsqmYe5wcuF+ePLwKv657JCFkO594ZyrrV3b4jzABuVJPy4IF1/8g2qN0UftInDXbRWHVymoiOcQYrMq6+U98fKL6rbPupYF0ZdEoyoVQqsM2Z3x8rkYJxbopq1IKJp0aFQikVmBzIeCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=mJczLc35; arc=none smtp.client-ip=149.28.215.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="HenJYAdY"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="mJczLc35"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718740037; bh=KB45lJtSwQJs9wxJYwKUH/S/Frg3RhjQrCXHEaw5DeQ=;
- b=HenJYAdYjg+PRVnPJ0uai12GuMaqdaDEywRDETcDa2zsws1szChQvi3TGKyjVfISrGXl768Kr
- lycQDdzoCcuSMLsvRk6fP1QGinOqYGv35jbAkyWABOv8WVQcon4hSxiKFa+YXlLj5v4pCBesfhY
- 1DQnHrz6ssolwYW+UplVfuC71MCz5IUme35Y8wU3ianW+wF+rxYfg1wj4pdE/JUBYInMJ11b9/x
- PyG5GTzWTMJyfDK8O4jiIGK4+WQU2bHsOFjJzZIs1h1JyiR4fNWvtjlzUXU82GO+9rdlkIIwDRm
- VCswyX4WbIQTMg4P9GESbB+cLtYep4w+TtvbAWNAYawA==
+ t=1718740042; bh=Tg1B3ozbkcBZvc/wGkgqOfGFH2yx6qrOxxdxObcl1+4=;
+ b=mJczLc35fIyKm5OtpqRMlAXPaIMWncJVvBf90CSXW9Fx6rbNJqlIvF68p/vdo63dMXFDcbmpI
+ pUbgEuW3fKWpfIoeGyCR7dSDIV5IyuDLwSu5QpSy5ouPwlCTt4Cu65wI++M2jCvsqjDqrn4TIM+
+ +HsXA+GY+xAhUXYZVP9HduZR9M/j91DPNGx867HnW2hrvVchhvFTLQfVOowO8H1yOSamYQOQk40
+ T1hiuDa8x036XZs00+TdRgRV+0FTTDJyI2DWFwBy7R9D1H2gsO1p7BtAkHB545q1avT6BJjEd6v
+ 4+9HSpH2WTOH7oqxe7dzMLG8zbUFcrN+bFpr8cVvEgYA==
 From: Jonas Karlman <jonas@kwiboo.se>
 To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab
  <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "Greg
@@ -37,9 +37,9 @@ Cc: Alex Bee <knaerzche@gmail.com>, Nicolas Dufresne
  <detlev.casanova@collabora.com>, linux-media@vger.kernel.org,
  linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
  linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v5 04/10] media: rkvdec: h264: Don't hardcode SPS/PPS parameters
-Date: Tue, 18 Jun 2024 19:46:28 +0000
-Message-ID: <20240618194647.742037-5-jonas@kwiboo.se>
+Subject: [PATCH v5 06/10] media: rkvdec: Move rkvdec_reset_decoded_fmt helper
+Date: Tue, 18 Jun 2024 19:46:30 +0000
+Message-ID: <20240618194647.742037-7-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240618194647.742037-1-jonas@kwiboo.se>
 References: <20240618194647.742037-1-jonas@kwiboo.se>
@@ -56,17 +56,11 @@ X-Complaints-To: abuse@forwardemail.net
 X-ForwardEmail-Version: 0.4.40
 X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
  149.28.215.223
-X-ForwardEmail-ID: 6671e43f64ade33c90059fb7
+X-ForwardEmail-ID: 6671e44864ade33c90059fdd
 
-From: Alex Bee <knaerzche@gmail.com>
+Move rkvdec_reset_decoded_fmt() and the called rkvdec_reset_fmt() helper
+functions in preparation for adding a new caller in an upcoming patch.
 
-Some SPS/PPS parameters are currently hardcoded in the driver even
-though they exist in the stable uapi controls.
-
-Use values from SPS/PPS controls instead of hardcoding them.
-
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
-[jonas@kwiboo.se: constraint_set_flags condition, commit message]
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
@@ -81,43 +75,80 @@ v4:
 v3:
 - New patch
 
- drivers/staging/media/rkvdec/rkvdec-h264.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec.c | 46 +++++++++++++--------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index 7a1e76d423df..8bce8902b8dd 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -655,13 +655,14 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index d1087519d218..7e59db3fc24d 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -37,6 +37,29 @@ static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
+ 		DIV_ROUND_UP(pix_mp->height, 16);
+ }
  
- #define WRITE_PPS(value, field) set_ps_field(hw_ps->info, field, value)
- 	/* write sps */
--	WRITE_PPS(0xf, SEQ_PARAMETER_SET_ID);
--	WRITE_PPS(0xff, PROFILE_IDC);
--	WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
-+	WRITE_PPS(sps->seq_parameter_set_id, SEQ_PARAMETER_SET_ID);
-+	WRITE_PPS(sps->profile_idc, PROFILE_IDC);
-+	WRITE_PPS(!!(sps->constraint_set_flags & (1 << 3)), CONSTRAINT_SET3_FLAG);
- 	WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
- 	WRITE_PPS(sps->bit_depth_luma_minus8, BIT_DEPTH_LUMA);
- 	WRITE_PPS(sps->bit_depth_chroma_minus8, BIT_DEPTH_CHROMA);
--	WRITE_PPS(0, QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG);
-+	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_QPPRIME_Y_ZERO_TRANSFORM_BYPASS),
-+		  QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG);
- 	WRITE_PPS(sps->log2_max_frame_num_minus4, LOG2_MAX_FRAME_NUM_MINUS4);
- 	WRITE_PPS(sps->max_num_ref_frames, MAX_NUM_REF_FRAMES);
- 	WRITE_PPS(sps->pic_order_cnt_type, PIC_ORDER_CNT_TYPE);
-@@ -688,8 +689,8 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
- 		  DIRECT_8X8_INFERENCE_FLAG);
++static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
++			     u32 fourcc)
++{
++	memset(f, 0, sizeof(*f));
++	f->fmt.pix_mp.pixelformat = fourcc;
++	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
++	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
++	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
++	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
++	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
++}
++
++static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
++{
++	struct v4l2_format *f = &ctx->decoded_fmt;
++
++	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
++	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
++	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
++	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
++	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
++}
++
+ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+@@ -169,18 +192,6 @@ rkvdec_find_coded_fmt_desc(u32 fourcc)
+ 	return NULL;
+ }
  
- 	/* write pps */
--	WRITE_PPS(0xff, PIC_PARAMETER_SET_ID);
--	WRITE_PPS(0x1f, PPS_SEQ_PARAMETER_SET_ID);
-+	WRITE_PPS(pps->pic_parameter_set_id, PIC_PARAMETER_SET_ID);
-+	WRITE_PPS(pps->seq_parameter_set_id, PPS_SEQ_PARAMETER_SET_ID);
- 	WRITE_PPS(!!(pps->flags & V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE),
- 		  ENTROPY_CODING_MODE_FLAG);
- 	WRITE_PPS(!!(pps->flags & V4L2_H264_PPS_FLAG_BOTTOM_FIELD_PIC_ORDER_IN_FRAME_PRESENT),
+-static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
+-			     u32 fourcc)
+-{
+-	memset(f, 0, sizeof(*f));
+-	f->fmt.pix_mp.pixelformat = fourcc;
+-	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
+-	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
+-	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+-	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
+-	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
+-}
+-
+ static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
+ {
+ 	struct v4l2_format *f = &ctx->coded_fmt;
+@@ -196,17 +207,6 @@ static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
+ 		ctx->coded_fmt_desc->ops->adjust_fmt(ctx, f);
+ }
+ 
+-static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
+-{
+-	struct v4l2_format *f = &ctx->decoded_fmt;
+-
+-	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
+-	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+-	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
+-	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
+-	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
+-}
+-
+ static int rkvdec_enum_framesizes(struct file *file, void *priv,
+ 				  struct v4l2_frmsizeenum *fsize)
+ {
 -- 
 2.45.2
 
