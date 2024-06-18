@@ -1,87 +1,101 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0F913AD1D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DBB158A07
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719565; cv=none; b=SP1/vpqPEwsN/rPb6WNCLAdnfNufHWwG1t9BLtcZtmM+2s3qumJEcGUs+qYaK+30wy5feLxfE0BfEe1Ttw5/7XjoEZQLGF6S31e8tFb2zkP3bDpBnOzmfAAq2QEYx3AOQc5IepkENrUcIxnUzIDsxra4LXTYqWqNgbUKfsbfX40=
+	t=1718719578; cv=none; b=Xk1fyggqElycXTR4L02WuSHgheL8lkgVNjgGEKdmvozJzxGWQ2NXj7Trt0FuMnr0lq3WDMpXM+sLhSZ1N1Pb53eu9+EYuI3f/SEnAl3enI0mFKW8bvKB/kCjaTfX6XL7QlEcye2hO2ejJC+7vOaDGERb6DRuA6dv+DFF4ieK+eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719565; c=relaxed/simple;
-	bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTFLLT4+yInkXmYKhoTTVORTK27SxHj316/oqefD7vhP/XM9fbcL74XSrbux/J1u2nNttGfvAHip0AkhVrH/YKX1SOxMNU5Fay+oLgTY1mHYQKn7xuRe7DZxu8CMpUTIYxF46zitRvNjtg5aYxy0+u9YthurAd4FxsEwqohLJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=Yh4U1CQx; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1718719578; c=relaxed/simple;
+	bh=JIVKjv9o/hlqHws4mlvGqtvCExur4cvFhcjzhdAqB/Y=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KDa8c60/Jb9Uto1spZnUEmazNAQpwh3X1up9GkFSEnJhrajPedDh9NsUxL3YlaR5DMzUQ1It3mmo6QIRRIRMuDsxLAjqkPCT/3h4eF3f5+BX6RI/5QTgdCNf5hFCzGh4XHhyYwS60ZN79DFM8QxLgfFfXh/VJYiQOi+fg//1t9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UusCoi3B; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="Yh4U1CQx"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35f06861ae6so4764833f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:06:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UusCoi3B"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02a4de4f4eso1164553276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:06:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1718719560; x=1719324360; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
-        b=Yh4U1CQx0Lgye9unT0e9Ud406zDkIjSjOopSEG76qMtAGf79pJA7+FE6orwSB+cBSA
-         V0qMbMVVGfL+UUpZ1ah35gF+0hkGTxV0kjnS6zR7y3sstPBOQfwq2MZclsfVuO96vpc4
-         0JOJLTa6eLKEoJMLcD4qokl6/y/mVrUBYtUDtNtxRywPMGl3u43fvMd9BwKHdSQMKdxc
-         ehEfWOSz9VuZSV1MJVvKxQLm4gFaEXx1yKBL39i9zFAoN163dE4Hpir9aExcxHnbFxOu
-         rsYs7Xe0Q4lx9hApNHk9O1xZJSm4maujl49Xfl+Icw04kgQH3rfNhtCzmS4uV8v9RJa9
-         lI/g==
+        d=google.com; s=20230601; t=1718719575; x=1719324375; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2G9ol4+qy118R59S97h3lDvVaYiNKtni1Bduo/B80M=;
+        b=UusCoi3BEu0k9RhqTzuedvLcUA8IVzBAVUV0Hd18opEsPr+WkNk8JNwIpzb8AF76zC
+         g+UvtzwyckdQpQBp080H5sTLOqguUAWFDzQTsvYVXwkgor71ycHVDtSfqIdgMxac+xXx
+         HYUz0EmB+4SFbI+AvwRY6e2fOsRriNiwTB0BZrX8EaLNtjiR5aMxwXmn94F6NtPK6nCf
+         snkAHBNREwFgK7mLPDVDJS52y4YNfvAKBXqpkV78jEsdXahrZ3BWF4eln6ZzU5uDiaiQ
+         Z4PSLBXsnS5y4Njrbz+HUGR1g1TlQHr+umz7BVt3R+9rARZIfKj0pykYJk86SqEsCiWR
+         qWVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719560; x=1719324360;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=04/tbEPWIlzSSeHU9wlvxwNF+LmoJL2+5nJuBYusf84=;
-        b=HmJ/xuMVu/L9+LnAMr3lPp6mqab6j4BQsIVdzuSz3NYTz6txkRu0cfpFt/N58Dkk9A
-         +WgUp/xUy9WehXnHmMbWl89v1MoW+JrOhr8UWImJNR7yJAnDqcn+m0RVDwvtxblfg/Cp
-         rfn9w54qVQZ6HTCSonpdd2hAGixhNr/5mqcIqNQ9AlWcV6+B82ZaAs1LeKU2VXUjQtZe
-         hjwNQKF4kdhK9gFNwCG9tQ3FDAGHbr45oPwj3tjD9j+/R11eojyPGzmLE2uWtjPGzppx
-         bCmAecIX+F38UvfQbvW6egbLKzzzB0wFKQPfnU7x8wquuMp8a9EFtTapbCdfqq3LJqrN
-         qy+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUVDufBYZ0xeqKX+YKQN5S50NiLyeRByMlqBl8nXx6l+WuFsb2r1UefQNQj8imGJocJil3f8zcmJLH/O5hEKSG7htX+ZkIGvMYYHAQW
-X-Gm-Message-State: AOJu0Yw9B83mIATBoJXSTTwV1Ka7pOo+/V5agSAvdA97u1nN3rhRb8pF
-	rMbOSl+NE0EUgOjslSaS7a2tcJChunvWUwCy50ympwe/xVvx3XrBRb6Ok4VmFIkGxsb0QVPXFBj
-	oT7s=
-X-Google-Smtp-Source: AGHT+IE7bMWr/KjUbc0niKCiWMXu0LbpQKaj1GXm+QhhAO3g7QpNVncrgW1KSZOUIgxRobwzYgfe7A==
-X-Received: by 2002:a5d:424d:0:b0:361:81b9:bfe3 with SMTP id ffacd0b85a97d-36181b9c0dbmr1185057f8f.24.1718719560595;
-        Tue, 18 Jun 2024 07:06:00 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509c79bsm14361744f8f.41.2024.06.18.07.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:06:00 -0700 (PDT)
-Date: Tue, 18 Jun 2024 16:05:57 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: core: Remove the dup_errno parameter in
- dev_prep_valid_name()
-Message-ID: <ZnGURZgU5sRkTvPm@nanopsycho.orion>
-References: <20240618131743.2690-1-yajun.deng@linux.dev>
+        d=1e100.net; s=20230601; t=1718719575; x=1719324375;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2G9ol4+qy118R59S97h3lDvVaYiNKtni1Bduo/B80M=;
+        b=deUX367WOXoHjA1oW7chm2r+uJ2rCCEi8wiWwdDKoSEvRRhHmJLiZQIZYM5iKfbc3K
+         zJq/8ESbGA+2J6axAtp8ZRl6UGxRpMT/og0qJIdbwApsim8TKCkFwq2WAT3krSbEOst+
+         dZG8Ofw1BEj7PMsm7W6O1BM2Dlos1P0awvHd/FL/HX7lR+zPFihYkMo54oUfkT8KX4mT
+         uWNeHCi+hFgtL0WrJ2qTDZYkg095SfkFShFJ6ALQqn/hflXDEP3QZjuXYmDYtZii6UuW
+         ApPj4rJYcj4DXC1/l9d5+OQN32FdoRKNWDlqfviVHrNumOodeeOFKpJ0LW5WxowcRRU6
+         uXKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXP4w/cyRveCBHCXPZkpmRPoavK8RTs00k3UTAV4w1laZ3vyT36l9b6k7Z056HL9FlzRNQqgc0rKPKblRStzwP7oJGDT1qf/V/wZYEA
+X-Gm-Message-State: AOJu0YwkS1R+bxZmmyv7kILO7kpRPfkR3nYVhxpG1IT/efR1Ekj8rOoF
+	KRyGbU+B8KOzLyuos436ZTIE1oWQDqZHaF3lJBHRnWutzx4EdPmKmCy5g5fo3zsjIILFu0e6hpu
+	zrw==
+X-Google-Smtp-Source: AGHT+IEzJQkA0wwSsmNWrHMtvOFE67uD+a4zJelQVNSNlEgmlkViXQM+7Gk/318mGpxWOd2trXry35nlUgE=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1005:b0:dff:35fd:c804 with SMTP id
+ 3f1490d57ef6-dff35fde096mr1085527276.9.1718719575474; Tue, 18 Jun 2024
+ 07:06:15 -0700 (PDT)
+Date: Tue, 18 Jun 2024 07:06:13 -0700
+In-Reply-To: <20240618113840.24163-1-bp@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618131743.2690-1-yajun.deng@linux.dev>
+Mime-Version: 1.0
+References: <20240618113840.24163-1-bp@kernel.org>
+Message-ID: <ZnGUVcEUUF_1Vqmi@google.com>
+Subject: Re: [RFC PATCH] x86/cpufeatures: Flip the /proc/cpuinfo appearance logic
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Content-Type: text/plain; charset="us-ascii"
 
-Tue, Jun 18, 2024 at 03:17:43PM CEST, yajun.deng@linux.dev wrote:
->netdev_name_in_use() return -EEXIST makes more sense if it's not NULL.
->But dev_alloc_name() should keep the -ENFILE errno.
->
->Remove the dup_errno parameter in dev_prep_valid_name() and add a
->conditional operator to dev_alloc_name(), replace -EEXIST with
->-ENFILE.
->
->Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+On Tue, Jun 18, 2024, Borislav Petkov wrote:
+> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+> 
+> I'm getting tired of telling people to put a magic "" in the
+> 
+>   #define X86_FEATURE		/* "" ... */
+> 
+> comment to hide the new feature flag from the user-visible
+> /proc/cpuinfo.
+> 
+> Flip the logic to make it explicit: an explicit "<name>" in the comment
+> adds the flag to /proc/cpuinfo and otherwise not, by default.
+> 
+> Add the "<name>" of all the existing flags to keep backwards
+> compatibility with userspace.
 
-Why not.
+If we're going to churn the whole file, why not take the opportunity make it more
+structured?  E.g. use a variadic macro so the name doesn't need to be buried in a
+string inside a comment, and so that each feature doesn't have to open code the
+math.  Lack of third input omits the flag from /proc/cpuinfo, and a magic keyword,
+e.g. AUTO, uses the feature name.
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+There are quite a few games that could be played with macros, and IMO pretty much
+all of them would be better than comment+string shenanigans.
+
+#define X86F(word, bit, abi_name...) ((word) * 32 + bit)
+
+#define X86_FEATURE_FPU           X86F(0,  0, AUTO)
+
+#define X86_FEATURE_XMM		  X86F(0, 25, SSE2)
+
+#define X86_FEATURE_K8		  X86F(3,  4)
+
