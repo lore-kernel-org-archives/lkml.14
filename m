@@ -1,39 +1,35 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49B326AC1;
-	Tue, 18 Jun 2024 13:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AEB1865C;
+	Tue, 18 Jun 2024 13:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718717348; cv=none; b=LwR6KT0IARKgqH5RaVHNwJt+NF1WciNgqI5tIYeae4fnd0kr10UCTvb0ZCncPiuiGj86TUNZJ3qasLLCClfnEmu4eHDIBrthXwC5FEoPj+AOXr4HZcvvCV+KctcrAm6IyHrh+jAUn0Ee2fmm8kN7bY2hVwJfxOSh+QBprm3eHng=
+	t=1718717431; cv=none; b=nZ+gh30a79bop0gDljNebrzalJ+197cc5zyhTZuabMfFsRLaaaMoWzdcqVgbbkWQZB3v9qMpeTxtURZCuvxmL8ml1NZ6jEKBoakYIYrP6eehxNW/RGo5cegx1Dxj94Dqq8o7x8kAXatGCa3hK2Zh3uIsl61q9KFICoSUQq9AOpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718717348; c=relaxed/simple;
-	bh=6CikAg2USWerGYoZ7lUcHeqLlHtbn8FaFf/1kvzWjg4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tSz0WxAPLkt6Drtd3l56ontOV4aOeWaVDlFHQAZdkE6e6SuD/amGBsJZFDzalF9ySI3ON7Htoo6U+LQPbheUCPYjSAOhvwNMZDNVTtYWUk3ApQ7TuYZb6mHmZDkVHTlbbf57zfV32Zge3J+xgsZ+1IyyTu9ZfEzdUP7CLoS0Yp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W3SCh3PfCzwSTS;
-	Tue, 18 Jun 2024 21:24:48 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5746318007A;
-	Tue, 18 Jun 2024 21:29:02 +0800 (CST)
-Received: from localhost.huawei.com (10.50.165.33) by
- kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 18 Jun 2024 21:29:01 +0800
-From: Yihang Li <liyihang9@huawei.com>
-To: <dlemoal@kernel.org>
-CC: <cassel@kernel.org>, <James.Bottomley@HansenPartnership.com>,
-	<martin.petersen@oracle.com>, <john.g.garry@oracle.com>,
-	<yanaijie@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>, <liyihang9@huawei.com>,
-	<chenxiang66@hisilicon.com>, <prime.zeng@huawei.com>
-Subject: [bug report] scsi: SATA devices missing after FLR is triggered during HBA suspended
-Date: Tue, 18 Jun 2024 21:29:00 +0800
-Message-ID: <20240618132900.2731301-1-liyihang9@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1718717431; c=relaxed/simple;
+	bh=mCy/oVF4ICSRB/Yh3OGp3+lcxnyY+CSQ//CTQNIgHOQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PWKXEfv1X1O7iYD0z4JywqqmyUHqjlr+8lMtd9VkJcVe5ywZss+RIYMAor7Pnfll5YPnfpH84UuKUV9zJ0PMmxyAy9WdDfn0vLfiHyBT/IgAVTs0iJ4YeQnnVcutjrB88XIfii4nB79/gSkKlEWy3iH0uHHxDB2ZVFDNeyLZDa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXTMvx27; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXTMvx27"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F1806C3277B;
+	Tue, 18 Jun 2024 13:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718717430;
+	bh=mCy/oVF4ICSRB/Yh3OGp3+lcxnyY+CSQ//CTQNIgHOQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hXTMvx27OADw0Kbw5UsDxxLqaqXAyG7cgso/3KLZ99QhSx5YhDY2XS3rfNFzrrWsI
+	 gPX+kAQxbIUOFyJ6HfxyZVzHbwEycutevwZsbGmGYBoCAGbdg6HXTY5wNh2QwtWVzg
+	 J6ktm21IaS8CfnLiO/E2M9F32XDndP4b84Y7fDRAV/izdg1bCuIKzGCp1cin5exiKh
+	 gPAvjzWrjgs2XhshqEfh+PRwUFU3tX2GqWVYDI0lv4Nq6wcee2Ns/aDfV4yEek8qYQ
+	 IHDhNOKIug5SGcArL26mBCMaUEGoyBfgxxCONXEVLaw/kz7tR1oxGHuEg6xqHuXcjb
+	 666bsKItl7j1g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7163C32768;
+	Tue, 18 Jun 2024 13:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,45 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500008.china.huawei.com (7.221.188.139)
+Subject: Re: [PATCH net-next] net: microchip: Constify struct vcap_operations
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171871742994.9870.13970058134666207593.git-patchwork-notify@kernel.org>
+Date: Tue, 18 Jun 2024 13:30:29 +0000
+References: <d8e76094d2e98ebb5bfc8205799b3a9db0b46220.1718524644.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <d8e76094d2e98ebb5bfc8205799b3a9db0b46220.1718524644.git.christophe.jaillet@wanadoo.fr>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
+ daniel.machon@microchip.com, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
 
-Hi Damien,
+Hello:
 
-I found out that two issues is caused by commit 0c76106cb975 ("scsi: sd:
-Fix TCG OPAL unlock on system resume") and 626b13f015e0 ("scsi: Do not
-rescan devices with a suspended queue").
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-The two issues as follows for the situation that there are ATA disks
-connected with SAS controller:
-(1) FLR is triggered after all disks and controller are suspended. As a
-result, the number of disks is abnormal.
-(2) After all disks and controller are suspended, and resuming all disks
-again, the driver reference counting is not 0 (The value of "Used" in the
-lsmod command output is not 0).
+On Sun, 16 Jun 2024 09:57:56 +0200 you wrote:
+> "struct vcap_operations" are not modified in these drivers.
+> 
+> Constifying this structure moves some data to a read-only section, so
+> increase overall security.
+> 
+> In order to do it, "struct vcap_control" also needs to be adjusted to this
+> new const qualifier.
+> 
+> [...]
 
-For the issue 1, After all disks and controller are suspended, FLR command
-will resuming the controller and all sas ports. libsas layer will call
-ata_sas_port_resume() to resume ata port and schedule EH to recover it.
-In libata standard error handler ata_std_error_handler(), it will call ata
-reset function, revalidate ATA devices and issue ATA device command
-ATA_CMD_READ_NATIVE_MAX_EXT to read native max address. This command will
-failed due to the controller enter suspend state again and libata disable
-the device finally. The controller enter suspend state again because FLR
-command completes and the runtime PM usage counter is 0.
+Here is the summary with links:
+  - [net-next] net: microchip: Constify struct vcap_operations
+    https://git.kernel.org/netdev/net-next/c/8c379e3ce404
 
-In commit 0c76106cb975 ("scsi: sd: Fix TCG OPAL unlock on system resume")
-and 626b13f015e0 ("scsi: Do not rescan devices with a suspended queue"),
-use blk_queue_pm_only() to check the device request queue state, if the
-device request queue is not running, the device will not be rescanned.
-Therefore, the runtime PM usage counter of the controller will not
-increase so that the controller enters the suspended state again.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-For the issue 2, the cause is unknown.
-
-How to solve these two issues?
-
-regards,
-Yihang
 
