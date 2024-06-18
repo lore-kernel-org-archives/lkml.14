@@ -1,79 +1,120 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B11210EC;
-	Tue, 18 Jun 2024 19:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBEA15ECFD
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 19:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718739999; cv=none; b=WUnpj6giwABKVMkfTjDFR5cGTHZJqEdOxUIKAEWzxjNcP5gJ/rltU+Tpo6RqR6L+xTk3FO/JZUSXdsaBZvu+3HU79LBIYB4RCeAsWVLhb9alMWqDuJgBjl/t41vdCRbFPsQJGCm0w0Rb78kYK7V9X9PADqQSeP41GFgZ1aiBapQ=
+	t=1718740013; cv=none; b=ccKSPlHVBpZRKNyr7jbqssqzrWxtNaT1r4p5j1s8+DxG0A1Dhp58oMCYPHkyUrjWXbntWQ1E0lhJ0KyyNEVXUj91rIW/3R03miXFweKDPuPjhkwWBxZ5+E+I6V2PsgAVhxXzWQ3mfShqjc7LZbliZtnVSkcWGKfs37p2BLoImE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718739999; c=relaxed/simple;
-	bh=1oiiqnJsXRdv/WF0pn4lymayB9HOHKdn76NUUDDegz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EQXfOlOkhpbgS8Gi6+yeXJ031IuyinEBmBxzA8lh3guAJMsQqzJVwGWjUDlhsXAZf12CXUl5sjAD9ZxEnNCRDDKYUN5eHWQ8kpgg3mkily0VWn+KihhSOiV10DRatGfxGODW28Xnz8znzd7RzjaMo2U8yhBX6gs0kl+A/lG1LeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=VrwNhgu4; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1718740013; c=relaxed/simple;
+	bh=cCA6VLX62IDjCPZsqkeLgA2nW91IT5j8nl7XYymOaCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rr6ap8634tOHHdFuPwOWwlkp/csmNZTrjxp0e1KtRJywh4ZaUwHb+JOg8tWcYFrHlgjK/yZFxn3V1EDrBmJDqt99lMnclNJu3sktztyvbZ4SANjUNA6I9Gc64O++bqoCDmPzfYFNGcVveI28HaIbd3885yh5LtJT6JKEZHrtBR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pXN2msVV; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="VrwNhgu4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2757AC0002;
-	Tue, 18 Jun 2024 19:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1718739994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rG4sRsDd/6xRCJRJQvFE0uunSAdGcquD+BOsXJyzENw=;
-	b=VrwNhgu4xIFNCUD1woGi5FZoLAKdyDQMgjD9/8z/sKyQiL7FWRYAEO++yzN7nKhuA7ZeWn
-	xz0geDfMNarScDQfAjQYQPz6z+1mywCeBV4Tb2DcnBh9ctGIQGCrNtaSlm3CeHfY8xf1pV
-	57SKkizX812tx05B0P2lyIhFz0DBbK/XwxY3JalhVur9kPDDJw1GZZKXmPDV3/X0X4qBRE
-	YBdsMCpV8yrcdiW5vhuZBmx2b2bGxCTWlOkTfKyfBETJfxvjxGU3D8SgpbGjO41kRzKqMD
-	KigVoKD8vzxKfZX/j84pZ6vgKFG3Y6HYmO0Ax+Vo9sLKykbMy0ag/bt7InjxCw==
-Message-ID: <5266ed1d-ebfb-41fb-9036-b9afcd7ce843@arinc9.com>
-Date: Tue, 18 Jun 2024 22:46:29 +0300
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pXN2msVV"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52bc3130ae6so6283142e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718740010; x=1719344810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ho7/Qs26KEYzkDAAbDAFYeryla1DX+NBsAS+13y4jlk=;
+        b=pXN2msVVLJtSMxl9K4ff9tcFkr8F6WorAKurVHEJgUprvKZs19Cam06XJHGVNfW896
+         vAtI5qUrZ8TvEW9J5kYqw2yMHx67FNttzk+YCVAnz4Ovo1iYUj76DuKOGrjWtQuGY1ag
+         OnzB9Hzh6WI/xFm/VztfYI5OcRiUOkMEM5aUtWrvRIltW3aw2sa8M8q86c1OJOQ0PJmW
+         wLnlHF8COmWDx53m4SggtmGSGBuqtHwkW3jiU9oePs5o3fGkebEV0Xp/mtDpyM6QVBxr
+         75RUNtmcTH2AdbuGo/rpCNVYc5va8TC5Fb+rRShFjKZhd6ne7A4iJVl2FiZcRr3DpoEg
+         62Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718740010; x=1719344810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ho7/Qs26KEYzkDAAbDAFYeryla1DX+NBsAS+13y4jlk=;
+        b=dd5GQk0ejcXrtkF2/gCowaD9VdBb/vXRlnwfq9mYiZCn8lEnn51Qtcdj94a11Gd1yJ
+         eN8TJP7ouS35vnDkhrooI7wfh16KimDI669jChrGbu6s64Iz/RPHIE0oGORaFUsFXoXY
+         SedvZEHy/Jkz718Nqug3UYATY1GB2pawJl8J8XDxWqpmDigBKolB24pUrjKfHl6+Zkju
+         Ws0OUorzwjiy5+7t0yt15rjzMCrEtekDpU6ZrByo2sMpzTin7kk/pAr2WcDJ1Ww3Dm6/
+         VanJ0xmYqqJvCfOzn2vpztwDHkyqA8++pjTl35ifPV4rFnmys8iBViVUGvaSTMsH3Kxh
+         aSpA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8fPOfiP1YnF/0HkIzOJCI+IWKgQ55KVZ49v6jTqHEi1NRcQhEUukcytTfwSot+PXFhICta+6l1FrWiOmRGhKKBE6Z6xn3Lu/sOLtA
+X-Gm-Message-State: AOJu0YxpSQ6rqNNXQ3V/8shzr5vsYx1f3xum147a845vgBIhVdYzibz0
+	exsHj5586o+CEb+kLmi1VrhHEAJF7mIR45vU02VeY9eg9Bnir9poWSoFv6IV9lobHUJWb/r7RKj
+	KJm59nUybDqaL6v24W8o1Ie4WrMP7QsmKSwO+zQ==
+X-Google-Smtp-Source: AGHT+IFJweTCkdsgLEObHJA+yL+W9iel1opmGVNUxb9kenTWp/3n7/A86NF6dmRjIE6Abrtq21WliDB0UVutHnR03wM=
+X-Received: by 2002:ac2:4d84:0:b0:52b:5451:996a with SMTP id
+ 2adb3069b0e04-52ccaa3768cmr253147e87.31.1718740009929; Tue, 18 Jun 2024
+ 12:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 2/2] net: dsa: mt7530: add support for bridge
- port isolation
-To: Matthias Schiffer <mschiffer@universe-factory.net>,
- Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <15c28e5ed5fa02ca7904c71540e254617d571eb8.1718694181.git.mschiffer@universe-factory.net>
- <499be699382f8b674d19516b6a365b2265de2151.1718694181.git.mschiffer@universe-factory.net>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <499be699382f8b674d19516b6a365b2265de2151.1718694181.git.mschiffer@universe-factory.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+ <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+ <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
+ <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com> <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
+ <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q> <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Jun 2024 21:46:38 +0200
+Message-ID: <CAMRc=McWEAx5v5BUyw_ZKcU_SxONZnkM-otge9HPRCP_z28nhw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 18/06/2024 10.17, Matthias Schiffer wrote:
-> Remove a pair of ports from the port matrix when both ports have the
-> isolated flag set.
-> 
-> Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
-> ---
-> 
-> v2: removed unintended formatting change
-> v3: no changes
+On Tue, Jun 18, 2024 at 8:58=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Wolfram,
+>
+> On Tue, Jun 18, 2024 at 12:54=E2=80=AFPM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> > > I could see it using configfs instead of DT for configuration and iio
+> > > for presenting the output but - from what Wolfram said - insisting on
+> > > this will simply result in this development being dropped entirely.
+> >
+> > How do you assign a GPIO via debugfs? I only found the out-of-tree
+> > pwm-gpio driver[1] which uses a GPIO number. But those are deprecated
+> > these days, or? Any other driver doing this you can point me to?
+>
+> Do you really need debugfs (or configfs)?
+> I guess you can just write GPIO line names or GPIO chip
+> labels + offsets to the new_device file, like gpio-aggregator does?
+>
+> Documentation/admin-guide/gpio/gpio-aggregator.rst
+>
 
-Works as expected on MT7530 and MT7531. Thank you for doing this!
+IMO that adds a lot of custom string parsing in kernel for no reason.
+TBH Today I'd NAK this interface and propose configfs instead as well.
 
-Reviewed-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Tested-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Bart
 
-Arınç
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
