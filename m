@@ -1,192 +1,69 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3E757FC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A281D531;
+	Tue, 18 Jun 2024 15:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718724062; cv=none; b=KPF9VmReXE6D6AWA0zQX+bRl7N3bFMTXXzI1X/mATmRPrqN0tIo6Nyd9m8u3vAP+1XfJZmrb6yljY2ygQAayxrfF18SdnTb5GbY+ekuPeBIj8SuGMnf9BEuNn6aeztoT56B5yr0qbYf2Q4gWKa8b/bFUU6sWtmB47IU/VGbxI3Q=
+	t=1718724073; cv=none; b=mlwyWRE9y7qa/WUJvNnm6ALJVGaI+BT3UmSqfQeXpiYfhYX8irlpVno5qa4hdtoUE3kMzJU7grO1kT9I+qkBjbAI9Cw2nzc47WqAU1bX18+kgyrNgBxKKqEd8dcmAB5zMyYqYYbf6ODuqlPypsfgN1a2TrkIkSzzD2ij0Cgi3fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718724062; c=relaxed/simple;
-	bh=aWKOsFTEJQMOcd+nhqaLsAM16olGUYE9sAIrZtQmnWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gu4fecDY6x+ZVLC1NxGj9KgMSExzjZel8ey2jfi6cORv1kmrP1L9vljbAzZpA3QPOUEV4TIdhxSqhJpn19UHwuPiepmuXeRb5918nszm193/UpiZuhIMPlKNf6Lqb3tU/4au2MZxKdlLq0jTM1miI1jU8xcbrysp+b/ezHRT8sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U4MNaDdY; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718724073; c=relaxed/simple;
+	bh=pftZobImKhsOZDGQpcO6l7rtiCtIORxyQekHLEb4TL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ijdFVyESzw9kZb4Q92YkCoO56wzcU0lAfTeM6U4Mq6xURlNHKqsujxBF5CWjKJ9GCzfJW0p5JHHy8CeLzFS48JQOaHZSoMLlglkuYeqsvD/MP85SiOEeeYVWbub22yoo3pGwUTBZmBHhPhikpkScEFV1xgHZ2UcNrDIzBU76gC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcJWtPJf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4MNaDdY"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c4e9dc81c4so3343035a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718724060; x=1719328860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DLDbhAstyU2+spu2kChcjnkBG50+2Jh57WO8/dOE4+0=;
-        b=U4MNaDdY7x43OvLwIX5mV1GoS4XJM5zojx+3BOe43jwi3VZwsno7CtEyr4wPv+nPua
-         yCBNox/zaXAJhodNR5mpVnrzRjcalsQvVjd40EAsdOAaEODWhlUGRY1KM6x9il2MavCC
-         dNXvCGB3pHFUJgF/9Hy+79g+cB6uxSmALpuuPAElbMLY/Kg0+Pq4DJWA1BYnLtsuHRY8
-         EBnO1U8EuBJMkudXrLeKUAFbG8J2KiDmyGWucqCMHyXJ+wclkjMi+NNpso2SaHZJv06w
-         cws2eiG5kDTtQ69JhGbnGPFrDV1jvC91/3YL8q/5BhoXLmE28rFt6jZr4sGeXqm3oR+b
-         1g9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718724060; x=1719328860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DLDbhAstyU2+spu2kChcjnkBG50+2Jh57WO8/dOE4+0=;
-        b=QKxwZ9RUVhitmGxSeG0DYaI9iKLHAyjIX6tqEAVs0XSaVYlI2JdGfO0s3cmK+sQt1m
-         phIEuG1HATxWybOotBCcvYJh/ptZzDG50HRb+EShp5GRjE3TjONYXXHzmo5Bmw+1gUcm
-         dT4qGDD8vO9/OVMfXf8VSSeFpXzyqH7JqAtbJqg2GMfdJWP0FZnsZdzp2b6999ZYnIeu
-         1QeqnslonWvWWYJ7FoVqBE3IvDjtR1vVWAnGopnNMRbYPDUMCByI8Ht6aoFKgRQVCYKX
-         XFsLzX4oTwFdHTI1gL1v/e1rwc7/vaMOfDz1JwIv7WBXxEaxcGPhiOlUHL+mbMzJi4r7
-         efzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUz/3VcTGppooColWYBPQD8jOadroXC1isyjfCVp45dzdsb+JFMH5yYQpRiMypaobx2972A9BDXnkjUeQXb7q8X/1TgdNu3FPwXjb2v
-X-Gm-Message-State: AOJu0YxRJJAdQubsqkFzw0pIzzK32/Jz8forFF3GjDgSYl6VsO0HvOB+
-	TLJCEjHvPjoGXFtX9UIImMEJdKUPVpWW8km62fP6k7r3PyP/73634e0lP4ha9wbOdl1QyrrqQ7x
-	+p1i83hWGLsw3tPu2kaS2SaNcFS/VJwkrPtUirA==
-X-Google-Smtp-Source: AGHT+IGg6dgGz9S3dewGGfmJJkI7EDeIN+QQrlb/XwJSI/uNADXNA0RZIZ+0Cz8W+wVZBqnDrAsDfA+Q7s/ZE8ec5MU=
-X-Received: by 2002:a17:90a:ea8f:b0:2bd:d2f9:fa1e with SMTP id
- 98e67ed59e1d1-2c7b5d90596mr1438a91.43.1718724060031; Tue, 18 Jun 2024
- 08:21:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcJWtPJf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0C07C3277B;
+	Tue, 18 Jun 2024 15:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718724072;
+	bh=pftZobImKhsOZDGQpcO6l7rtiCtIORxyQekHLEb4TL4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dcJWtPJf3vEj86v2xNuwAcgNgX+rYIaB4a7zu8zFgUJwtPpYlgkTf+mv2C7xQTTuU
+	 lqvIzkBWi10sytsNherZxhuDxCp5t2IUftghf/la/fsOvUdEI3g2v4A8CL5Ml+Jd0l
+	 Nxp5hWsfHb/v/8/ma6QtA/W0SMraGM2TclONNXOXRfdbqUlqLoIWde+uvzJBdcbb2a
+	 Edsb272wNYVU9x6cnnlJhsjZDVOQ6QnfYjRnkU0Q/+ZQLqdK6ckKo9gH1IyqtDuyYA
+	 mmDBMU/rCkCokdRrTlZPU7OEQIPkdkuuwnk5U7MrxAvDjeuvZhNu0rdL4rlVfwqCnM
+	 2x8/M5bFsgRVw==
+Date: Tue, 18 Jun 2024 08:21:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Daniel Golle <daniel@makrotopia.org>, Qingfang Deng
+ <dqfext@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-mediatek@lists.infradead.org>, Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v7 2/5] net: phy: mediatek: Move LED and
+ read/write page helper functions into mtk phy lib
+Message-ID: <20240618082111.27d386b6@kernel.org>
+In-Reply-To: <20240613104023.13044-3-SkyLake.Huang@mediatek.com>
+References: <20240613104023.13044-1-SkyLake.Huang@mediatek.com>
+	<20240613104023.13044-3-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606070645.3295-1-xuewen.yan@unisoc.com> <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
- <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
- <20240616222003.agcz5osb2nkli75h@airbuntu> <CAB8ipk-ejDKQTr8nAmK9MkhL2Ra=0J==p3Q+U-4K18G6MeJhQw@mail.gmail.com>
- <20240617110348.pyofhzekzoqda7fo@airbuntu>
-In-Reply-To: <20240617110348.pyofhzekzoqda7fo@airbuntu>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 18 Jun 2024 17:20:48 +0200
-Message-ID: <CAKfTPtA191thPW4Yw2JpnToQjpAnNTw+oWacMShT9F_z6VrA=g@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding actual_cpu_capacity
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Xuewen Yan <xuewen.yan94@gmail.com>, Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, vincent.donnefort@arm.com, ke.wang@unisoc.com, 
-	linux-kernel@vger.kernel.org, christian.loehle@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Jun 2024 at 13:03, Qais Yousef <qyousef@layalina.io> wrote:
->
-> On 06/17/24 15:27, Xuewen Yan wrote:
-> > Hi Qais,
-> >
-> > On Mon, Jun 17, 2024 at 6:20=E2=80=AFAM Qais Yousef <qyousef@layalina.i=
-o> wrote:
-> > >
-> > > On 06/12/24 16:11, Xuewen Yan wrote:
-> > > > Hi Qais
-> > > >
-> > > > On Mon, Jun 10, 2024 at 6:55=E2=80=AFAM Qais Yousef <qyousef@layali=
-na.io> wrote:
-> > > > >
-> > > > > On 06/06/24 15:06, Xuewen Yan wrote:
-> > > > > > Because the effective_cpu_util() would return a util which
-> > > > > > maybe bigger than the actual_cpu_capacity, this could cause
-> > > > > > the pd_busy_time calculation errors.
-> > > > > > So clamp the cpu_busy_time with the eenv->cpu_cap, which is
-> > > > > > the actual_cpu_capacity.
-> > > > >
-> > > > > I actually think capping by pd_cap is something we should remove.=
- Saturated
-> > > > > systems aren't calculated properly especially when uclamp_max is =
-used.
-> > > > >
-> > > > > But this might a bigger change and out of scope of what you're pr=
-oposing..
-> > > >
-> > > > I agree, there are other things to consider before doing this.
-> > > >
-> > > > >
-> > > > > Did this 'wrong' calculation cause an actual problem for task pla=
-cement?
-> > > > > I assume the pd looked 'busier' because some CPUs were too busy.
-> > > >
-> > > > This will not only affect calculations in scenarios with high tempe=
-ratures.
-> > > > Sometimes, users will set scalimg_max_freq to actively limit the CP=
-U frequency,
-> > > > so that even if the CPU load is large, the CPU frequency will not b=
-e very high.
-> > > > At this time, even if tasks are placed on other CPUs in the same PD=
-,
-> > > > the energy increment may not be too large, thus affecting core sele=
-ction.
-> > > >
-> > > > >
-> > > > > Was the system in overutilzied state? Usually if one CPU is that =
-busy
-> > > > > overutilized should be set and we'd skip EAS - unless uclamp_max =
-was used.
-> > > >
-> > > > As Christian said, This case occurs not only in the overutil scenar=
-io,
-> > > > this scenario holds true as long as the actual-cpu-capacity caused =
-by
-> > > > the reduction in max cpu frequency is smaller than the cpu util.
-> > >
-> > > Hmm. Sorry I might be thick here, but shouldn't fits_capacity() use
-> > > capacity_of() which should return capacity based on get_actual_cpu_ca=
-pacity()
-> > > to compare if we are overutilized? If we are higher than this value t=
-hat you
-> > > need to cap, then the CPU must be overutilized and we shouldn't be in=
- feec() in
-> > > the first place, no? Unless the rq is capped with uclamp_max that is.
-> >
-> > Sorry, I miss the "fits_capacity() use capacity_of()", and without
-> > uclamp_max, the rd is over-utilized,
-> > and would not use feec().
-> > But I notice the uclamp_max, if the rq's uclamp_max is smaller than
-> > SCHED_CAPACITY_SCALE,
-> > and is bigger than actual_cpu_capacity, the util_fits_cpu() would
-> > return true, and the rd is not over-utilized.
-> > Is this setting intentional?
->
-> Hmm. To a great extent yes. We didn't want to take all types of rq pressu=
-re
-> into account for uclamp_max. But this corner case could be debatable.
+On Thu, 13 Jun 2024 18:40:20 +0800 Sky Huang wrote:
+> This patch moves mtk-ge-soc.c's LED code into mtk phy lib. We
+> can use those helper functions in mtk-ge.c as well. That is to
+> say, we have almost the same HW LED controller design in
+> mt7530/mt7531/mt7981/mt7988's Giga ethernet phy.
+> 
+> Also integrate read/write pages into one helper function. They
+> are basically the same.
 
-Shouldn't we use get_actual_cpu_capacity() instead of
-arch_scale_cpu_capacity() everywhere in util_fits_cpu().
-get_actual_cpu_capacity() appeared recently and there were discussion
-about using or not the thermal load_avg but everything is fixed now
-and  think that using get_actual_cpu_capacity() everywhere in
-util_fits_cpu( would make sense and cover the case reported by Xuewen
-just above
-
->
-> Is this the source of your problem? If you change util_fits_cpu() to retu=
-rn
-> false here, would this fix the problem you're seeing?
->
-> >
-> > >
-> > > I generally think our current definition of overutilized is wrong and=
- the use
-> > > case you're talking about should hold true if it's just a single CPU =
-that is
-> > > overutilized. But I can't see how you end up in feec() if the util is=
- higher
-> > > than the CPU in our current code base.
-> > >
-> > > What did I miss?
-> > >
-> > > And should effective_cpu_util() return a value higher than
-> > > get_actual_cpu_capacity()?
-> >
-> > I also thought about changing this at first, but because this function
-> > is called in many places,
-> > I am not 100% sure that changing it will not have any unexpected conseq=
-uences,
-> > so I only changed feec():)
->
-> Yes I had similar doubts. But the question had to be asked :-)
+Could you please split this into multiple patches? maybe:
+ - change the line wrapping
+ - integrate read/write pages into one helper 
+ - create mtk-phy-lib.c and mtk.h (pure code move)
+ - add support for LEDs to the other SoC
