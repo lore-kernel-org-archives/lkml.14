@@ -1,753 +1,341 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE98813C91A;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712557; cv=none; b=HB35coI9JE2DHCfOzoYv91lirgTgjilZzOt8IIduRRFEhJFiY2vBJEbhqJ+408shIEqKEszjzyF/l19bTNb9JPJaofNyee9d+FcQ4HyR9r0baw0b1QQkX8NWuFUTaKG+phgVzfrbusR3sWQPbOfMvdUkNaO7AC3W1mFHnvWpbms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718712557; c=relaxed/simple;
-	bh=ZKZCr+awYVYJQ7NV3CBSV+uqWmJOE+XyYRY4zwCrNkA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R85K2r7JngTPSZMzFz94s8mnm88JOpAD3nWEpyyQ1VRwY3U816tSt3OzjB9Y9mMdkWh69Uk9bUlcWw92P80ClyOc2F11PnU8ByvsOpqXWjNoPw+TvkUJl/ClAmG/CP0V+2OmBN0zpiglLrqZQxCEdiwxGPsQWyzjnNJyB56F8B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrQ2QiI7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DFF14A4C8;
+	Tue, 18 Jun 2024 12:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718712562; cv=fail; b=PV0FhvrkC4ky3G77zqWv8mGqhOTM9Dffqdr1Zuv9QlNUWBRVuypf1BXStY+GK8+LwD1DR0fnqRoBoRC+YsaiRMBpUQXbWfe3if9Kk2dojCgflDWewLorebWaVNSTwSKfLmMZmOWsTLYrc2jQr0z935VJMEFvvitkGZQlUPXzKHg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718712562; c=relaxed/simple;
+	bh=YupEkzwBp269ZQGPB+3sFmtOeYjpa7UrqocS5BxjGeg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D9Dcodarcbc4getQEyXcoL9f6UiBogXhepA2cLQDiMJOC1/+zmjWxgTKDoOp62O9FyEsWYMNcCfhbqhQrNL0NkKM0oCsHsEZh2Dx1pYdP2C476l/xBuS+yUB0kgPND8vW3IBeyGzyhndBidP1Zkur8AVvM4OG56wy6tBVTZcaLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fqXvo9bp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=reBbHIHv; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrQ2QiI7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B7227C4DE08;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718712556;
-	bh=ZKZCr+awYVYJQ7NV3CBSV+uqWmJOE+XyYRY4zwCrNkA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RrQ2QiI7/q9g9OsspqC/rBV7iUDqUHnauWZhf6cPL60+Jq79K9ftkI9+hd2soFIGq
-	 IFOpbFq3bP3TLJwn3y2bUHlxfzCkxGOG3htE4IjBWyZS7u6Bn0+hu6uW6iJQXc7+k/
-	 D49MrLRqTYnIdZbAJO8qIeglRfUzCvVulwQUJt2Rakzt10smf9vgUT/srksicxuBou
-	 4CVNSaqAQn+xqeu1jQdnroT+lWISnbSLmYaHkvJsxn06KDSDxShikOm+AcsCaRwT+T
-	 +ebyCFAnwMVmbFE9IrBg9ZV3s9Yf8lCCgbdfn7N/jeUSg7Y5Y7ue+B2IQZnrjrf0HX
-	 9+uA7HBZiiaaQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4B9C2BA1A;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Tue, 18 Jun 2024 14:08:22 +0200
-Subject: [PATCH RESEND v10 11/12] arm64: dts: Add DTS for Marvell PXA1908
- and samsung,coreprimevelte
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fqXvo9bp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="reBbHIHv"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45I7tPGB031956;
+	Tue, 18 Jun 2024 12:09:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=+dR9ZWO5BeS3xvo6q0JQHxNY2kT/pYeHYjM/5a6/4CM=; b=
+	fqXvo9bpwKGwjsMud83KNXYV6T608gIeaYjDH/jl8CtChOg6LcWZb+skYpE5IX2L
+	Tp1UtRTGI072ZqHJ1yYJmowOJvulV+F9KQCmAZy+3p2p9IkIr9kV5JlG5zhbzb/W
+	D8O5Q5jdAaL7Wi+9wfvRuAXiKs0lZ6+wi0OktRDAUpUbs7Jt+/+kRvlvSAwl8e/T
+	bR/SemgkOa1ovDw9Ptk2aeSj2uAZsSCPmSZJV1qWF8C8n6n2K8DnhhRLYPABgwC2
+	rdBxiYlwLwVeN6Ljy9wdoYuN/82RS/QDbPUb+96h8KehQ6wxri3wiyVdQw0bjjq6
+	oG//iYtpD7DIaBX8Q6WpDg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ys30bmrcy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Jun 2024 12:09:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45IBNd5O034477;
+	Tue, 18 Jun 2024 12:08:59 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2046.outbound.protection.outlook.com [104.47.70.46])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ys1de98bt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Jun 2024 12:08:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=axFl1+1ksd2zgplGdl76t1bNljiDFkubst6jUV9TbBMwBU79lBH6E4XoZVA4bBWSnRUwHyImM9F1EB0PL6QbUetThMAKTUgRSq2M1x/ns8wCdjFeI4epjhDfPQhDCAYPjsLbWn5JqrwqjOTtu/BddiSj5gny9zkFxQT3fUz6GK7sEyFnT66GctRTDhWO0yGVBdmTmd1EnY9MrM9oEaCBUoGQ3EnNSvmy2HKcfMqXopg4j2i3m/YnGJ/D5v+9hCYEKU1gRqUZiFAtHyfsN95kD63ZDeTP2xBdFyWg8gvIgDcAKc8GcIEplnMx+sXYJqTn5MyCxtJJOEQJ3UcWh1m/OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+dR9ZWO5BeS3xvo6q0JQHxNY2kT/pYeHYjM/5a6/4CM=;
+ b=X1AMeL3dqpx9Z8O9/101RUTgCzBNKSkf1qpdHNBSuKc7BT3FQXGcfzIwn0dg2qVEbW6rrDDvcNtUSK2v2JGi8hh9He5fjFsm1JLCAe53H58D6DntGy4ya4goRY+57qWLjrWZ9FZAQcf0+EWaAJQ1KQZra8UgzVU0gBeA0FZX6Z8ew3URsGokHudgui4uQwbxIC9c3M9YrtKCOg35Bcf9XDIieHqJKfTY9ETikqfAzLW9mplakzMrNPaQXRzRaHzx+WLTCA/i197rLHBL88FEGRs2rj1IYyhVfHyMu9rEDKahQk1ceQielHXjNh3ed659LYh1IgYzG3ajcWdEZdN/jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+dR9ZWO5BeS3xvo6q0JQHxNY2kT/pYeHYjM/5a6/4CM=;
+ b=reBbHIHv5DSrqfMt/uqDsQwiVE585KR6jvKlBEj+gTQzqtzjMFPvqgQ+XrHUgHe6JA3qYo/rQUypjPXFnP3/irjczNDL0ipMee6bAukVoIDkVQZp/0k2W3O5uy2oQPh2nwEwYd+UTATKtG9nvgctiLwRNAyktc1/4f74g/yTjy0=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SN7PR10MB6452.namprd10.prod.outlook.com (2603:10b6:806:2a3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 12:08:57 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
+ 12:08:57 +0000
+Message-ID: <bfc045d4-746e-4555-9e17-5a0be57ac787@oracle.com>
+Date: Tue, 18 Jun 2024 13:08:53 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] scsi: libsas: Fix exp-attached end device cannot be
+ scanned in again after probe failed
+To: yangxingui <yangxingui@huawei.com>, yanaijie@huawei.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        damien.lemoal@opensource.wdc.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, prime.zeng@hisilicon.com,
+        chenxiang66@hisilicon.com, kangfenglong@huawei.com
+References: <20240613122355.7797-1-yangxingui@huawei.com>
+ <437c99f4-a67d-48d9-98ee-58cbbc3d19f4@oracle.com>
+ <815fcddf-85cc-126e-4be1-618b5ba8f823@huawei.com>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <815fcddf-85cc-126e-4be1-618b5ba8f823@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO2P265CA0505.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:13b::12) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240618-pxa1908-lkml-v10-11-754e5ece9078@skole.hr>
-References: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
-In-Reply-To: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Rob Herring <robh@kernel.org>, 
- Kees Cook <kees@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16554;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=7cixHFZvwa/xV/r+XLK8/GkNsSViZCgL1RlybCOLyvo=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmcXjSR24nsIf8DD0HbguRDeRAfLmtMpXigDGzY
- MMfTQk6vkCJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZnF40gAKCRCaEZ6wQi2W
- 4XmnD/9PLJ34YFnmfXNUJP/zUo77DvPbLVK6g0hTPhRqa5wR2KvW24+ekGMt+jPlfIVeTg6uzq1
- stNMthP8oqAVahvQ3WbsrycrFS0itiY4ejEgdzlkLWc5csx6fqCr6Nxe0XAFw10hGZAs5Ik+Uqy
- ooFnugfodDJIk95/ShJ6Ye2KcZoiSJsVlRy9HXIHUThnqvbshxD92ofs+IkzOHR7xh+EEphFR7a
- IP7ri5x8PFXrSl1VbMbOrdV9gfVsgu7/xV8jada6KZbZpvgatLK/Q9GdDYew4WGIwTD6RC60UY4
- TLbapRErdU5pXIlznrDX2kvyy5WYDrDa5He5UBVoW5iaBPfTYll4LKYl/BsfNg3HU1L7hF329FN
- /ed2nKM9j+SYmCRCFXVgbxzJ62hjKwE/DdkJeklJiifgreqs1s82Z/bi9lilWDsDkCT1fGeLE0i
- 3eLOEGf0XvYQaDALry2cUSDNIVlZwtD1PpkBsf4k6v2Hmiw/ozesSpyQKV91PgZdRKKZ0K6DBsi
- LhQUllR/Ggn7CwSDWxfO09BEqlBxlUZz+nXBIiLnatiWsr+N5cXjpBCnqGBA2nzVN+C02oVyM+D
- kMX1KQx/rD8w0wpclSfVyRD5dJhiROMY1XjqKk10J7dVFjEzZt98pxDBjGFJtBAp7A+YYg8BkKW
- mTSqrvuARmlwOzA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
-X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/default with
- auth_id=112
-X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Reply-To: duje.mihanovic@skole.hr
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SN7PR10MB6452:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb3db300-a391-4060-c787-08dc8f8f6e4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|7416011|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?NlM4djhCSElpa1d4cU1rYmE3TWdGMytQdWZmajFQRnhyTkY2Yk1QeVdsNFhk?=
+ =?utf-8?B?MHIzVW1tVVdZRVBuOEhxelkwTVo0ZkxiTHdyYmJFYVZJeWNkOGdFMXdHL3Vv?=
+ =?utf-8?B?bXFISlpNWHlid3hMU1RsUWxEYURiQnpoT0VvTDFKSXlhUER0V256NExRd0hJ?=
+ =?utf-8?B?cGM5Nmg4bVNzL1hsV2RRamlYNFNYNWJoQi8vcmt0T3kyWWlwMWt6VmxiUE5V?=
+ =?utf-8?B?NTNVcmQxRE5GdDJLSWlFQ25XazlyTVJKNjBkaWV0RWdwTDlna0paNjJjNnBk?=
+ =?utf-8?B?a0J1SFFvUlRtYjN4b2RSVFNoTlp4NXRNcGlxTHdXTjhkclVVUFhEVHJ2L09Q?=
+ =?utf-8?B?UGREMzVCbFkzMkliZjhia0J6U1c3ZTZRWE5ZbzA5Q3M0ZXlnVXRXbVFmd05W?=
+ =?utf-8?B?Y1hlZ2RFYU00MzRuUStpZVlaYjZmYWtQQmVyTlcwU2NpRTV1byt6QktINWQz?=
+ =?utf-8?B?dE5ZSU8wN0NDSkJrSU1CbHlML0Y3SGYrRlcxbm1ock1SQ3dRcVRVcFUzelg5?=
+ =?utf-8?B?L0w5a1RQUUMrMWkzcHZpRkpmOWI0bGcxRnRSMU9aMXJ0MlhERWZIVy8reHB2?=
+ =?utf-8?B?blI1VElGaWlVVlFtRzdxWjd6SkgyOG84YVQ4RTd3ZlR1VjdZYnhSdzZzVzQr?=
+ =?utf-8?B?YXdzalpBaGR5MTF1Y3MrVjZDUm5wbHo3QURnQUtaNTFWMGpydTZpQ3M2MWxo?=
+ =?utf-8?B?eHh4Wk4ySTJqUkVGT1VUMUF4REFyUFBqN1A0c2xXeWZUVW9MSU0yWHBZUU1v?=
+ =?utf-8?B?b0QwbjNLUzFJb1dxL3BxbHJBR0UrNE5naHFoOWh6akJOQUlKZW04NEMzY25G?=
+ =?utf-8?B?dWtucUpjZ0F6NVNmbk9kdGV5NDh4U1Y5TDBDcVFBb29uOGJ5Vk9lZVRwdlB5?=
+ =?utf-8?B?KzZaNlJlMDFMR2Zma1lPRXQyeEpjRGh2ZEl6SWpDVVQ5UVpodlNuTUFPTytk?=
+ =?utf-8?B?cFRXTjV5SzJsUDVzUlZNWHhvRHdISnJkeDNoTVAvQVMwNitKVXlsdExIS3lm?=
+ =?utf-8?B?UE5iRGp0cUZtSmJ5aUFUb0dkb0wyMThxM0Y3UXQrSVV5SjIxQW02T21yQk95?=
+ =?utf-8?B?K0x2UWhqdnUxWXlpcDNJZ1Znb0JTQnpWcGdMV01NWmlpbEczTFE5aUp3N3Rn?=
+ =?utf-8?B?RFVsTGtiMlR4M0lDTUpDUjYzcXkxQVBLQTVIS0lMWU1KQWo3RXVlZ2JnSXpK?=
+ =?utf-8?B?eXZqdWkxdTVVM21HOVgyOVhROFZaWjNtQkh6KytDZ0hJWE53UkY1OFl0czZk?=
+ =?utf-8?B?Q09JTmg4YVlCRkV0UE0xUElzeE41N0xrZkFTaFZDRlpMTnpHS1YzdmlJTGVQ?=
+ =?utf-8?B?MHpNcU5LQmxOM0NicXREUVlrRTVEVW5RY2VaY0ViQUZscXRSV3doV0tMUERW?=
+ =?utf-8?B?YUM2ZVE5WTJVQVFkQ2JGZGViZ1V2SDJIaUlnSzk4cWU0dlBTbko3L1pOS0Q3?=
+ =?utf-8?B?T2ZWd0UxZ2ZYZzhwcDBMNEtUZnFMTHN1M0dpR05FTloxWFFqZDZQaFRaZHdt?=
+ =?utf-8?B?NnJ3cUJqK2toc0NKYmtkSDlubStQUjV5bHVsd3RiN0h0UkJ3dDBneENZblZq?=
+ =?utf-8?B?UEVRVStBSUNpMktBY0dtZ29zOC9VNHJkdkxEMlZmMVdCeWVueTJaMm53YU5H?=
+ =?utf-8?B?TWxjdmdGbjNUWXV2a1lldTQ3bnpiZjVEcUtwMDQyMERoK0VXQ1ZUaGw4dUV0?=
+ =?utf-8?B?NUtyM0pLUU1sWEhCd2hGb1p1dllsTnIxb2cwSVBHK05uUjFXODdyUk5EMnFu?=
+ =?utf-8?Q?SJP903RDpJHXoVJ3DFF0e0jUoiWXXAIPsmr2Vmg?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?RjVaWGdrc2dJVEdBUUwxS0MzOTNFWlZtVFAwSmdwdytOWGlBbElqdk1RNUsx?=
+ =?utf-8?B?bCtZWno3TUs1eCtvNUlkRE14cXhUUWY3dDlKTFNQc0oxNHpOZjBad0ZaMFdx?=
+ =?utf-8?B?TXJYTi8rblRzTFdSOTRpM1UrSDFrb3Bmd243ZzIxSXVoNTYzSllVSkpBYnNW?=
+ =?utf-8?B?UFh3L1pTclM0c0xpNDVHMzJWRXkwMnV0SjZhZzRONGUrc1BtOHluWHY5alND?=
+ =?utf-8?B?bG9tQ2dhTFNRQ0ZiSzkzQ0J3aE1CUEpWM3kzREgyVmJuTVFRbm1RWm1sN2ov?=
+ =?utf-8?B?dDlXQWErN0lZQ0h4TkZZbUs2djk1emx6LzJkUjVRMmtpU1JLZjVyaitRdlVT?=
+ =?utf-8?B?VkRnNFNFeGhqc1RDc1g5QU0ySjNDWEJEb1pZeFRSTmg5Z1RVYTQzdThTRzNZ?=
+ =?utf-8?B?dTN4U0N5WlN4eW9UdC92bGZ0VmRkbHllWDhSbm5CS0hVaElHUFYyZm0rYmNL?=
+ =?utf-8?B?di9tZkpZaUtHaVBlaWhQRnl3OFd3OWJLQ0c5OThvbUtXVzE5SnV6NzV3V2Vy?=
+ =?utf-8?B?b3E4MG5MenY3MWVLWFhlcXlwZmJSckI3Nk01TEwyNVhFVDFBWTNXaUp0SzUz?=
+ =?utf-8?B?NDJrQjRJRXdISkVhNGhTMVZ3WUp3L1VPczlYY09hNlZTajlpR2hFRlRYeUE0?=
+ =?utf-8?B?UWNEVlRVaHBuNVlDUkxMWDhvZzB4QnM0ZnpsaVZGRG8rWEMwc2dXamVLQ1Rk?=
+ =?utf-8?B?Nm55YUN5ZnFQVVNrVytnTTlGWjRBSGF6NThGajh5ZEFPeFF5R2JEVEVYd2cw?=
+ =?utf-8?B?eWNHcmlJQkgvZWNIK1ZjTXBXSXo1NjNRTDk5dEg5VlVUN0Y0WVhPOUhIdVRK?=
+ =?utf-8?B?VzhtVFYveUhSU1N2M29HcHd3dC9pWGpjOGNJMmZmTGQ3SXhtYzN1bXowNjlz?=
+ =?utf-8?B?djRpaXp2MHlzdGFqbmxkZmR2Wk5PcHNLbnF0UGk1NkVHRHFTT3B2STdBU1ZY?=
+ =?utf-8?B?RXNGcFJPbGo2UUZVY2xSZDY3T01Pa2xBTktDTzFyYUgrQWhCcU5tNmVuNXZq?=
+ =?utf-8?B?NGtORi9MMHNIcnNYTmdzd09mc29iTzU1aDU4cmRRdTdsWExCSHk1VGhzN2Nv?=
+ =?utf-8?B?SzB5M1R6WG5SVWVlL2h4RWZiYjNQUk12SHREWHlzK0I0SlV1YnZHRTJ4Umkz?=
+ =?utf-8?B?N21zbXYwRnFjYmQweXYrb2JWcUo0eTNZTFpvQnlzTHM2dFFWNWxDUXQ1MmZk?=
+ =?utf-8?B?Q0J1OHBXbDBjWHF0dERKNEFsZTdRUjcyMDZRQUpqRExuaWF3YXFhWEoyaG9H?=
+ =?utf-8?B?VllCZG9FUzMvRzh6Nmd5dUtTZndUN1VUbWN6dEFvZkpuUnVlNjZlNXQ1TTlu?=
+ =?utf-8?B?M3diU3YzdWJ2UGFMbGZzUTZVN2dVOWRyWVplc3ptNHVGeStiZnBneDFZL2xi?=
+ =?utf-8?B?OCt3TnIwVFZtUjl4WkwvVjZ3VWJuTFhqUEIrdG1aVFZhclBSUWVlVit5WHVI?=
+ =?utf-8?B?QVBhV1o0aFNmejJ5RkM2a2hCaWdKbkxrTzJrOU1NaXNoc2JiUW1VK0R0TGE5?=
+ =?utf-8?B?aVJPbGcxV1ViMUlJZFo5U28yZkN5N0Q3K1VnU1ptVGlNUmpJTmF4Mm8yMWRW?=
+ =?utf-8?B?VytZalMwMlF1d1A3TnFFMXN6bU10Y0FCbXBQTnhkVjVmNkhNSW9tcDhhTncv?=
+ =?utf-8?B?MnIzTktuZG5LZDJBb2hvVWZLWUpkYzFKZW5DMjNuQTljRFBLM3BkMENHRGNu?=
+ =?utf-8?B?dVYzTEJBUk44RHNCbFhhTXNaQjZVeTVMV0FpaFRZQ05NVE0zK3pHRWZCNndn?=
+ =?utf-8?B?U0l5K2hLakR1eGJBNmVBbVpvcURKbVR3bWw5M3VLZ2h0bjlSUGVERmVsUC9p?=
+ =?utf-8?B?REdPdUpTTVc1SkNiN1cvNnI2MzFKamI5ZndNK1RIR1JTUTBSZlNEQVNpTGRW?=
+ =?utf-8?B?YTdiN2hqR0pXK0MrNDk3N0ZEalllRERQQ3FvMkx5S2ZGdEZVb0F2UVdKaTQy?=
+ =?utf-8?B?MlFwTVpyZlphQjhjYW4zSEYrYjJXYUhUcjFOS2RwdjZKSU1tNWpha3dOMFNI?=
+ =?utf-8?B?L1pUM0plUzlGYW4wSXJ0SzJXQVBzd1dGdXNndXpSSGVucnpkQWhRV0dESUlI?=
+ =?utf-8?B?TGhzSHdwcms2N2JlVHFDOTN3SmJDbGtUNXJFL0pSanlDVEYrTGJURTB5S1dT?=
+ =?utf-8?B?eE5UWmIrRzN1b3ZKTUc5bWh1VmZIS3V4cUl0TGZDdW1LWG5BZVVMR1JTR3Rt?=
+ =?utf-8?B?Tmc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	j/Qu7bQqUJ97ZQyS5HLBXojvBkZFjR3tLj7l+H7735vfavQbk345+IuFMYbfJeMtwOaCFSmEtzaDGmJX/xDIWPt4mMh9Cr4guAJzbruw2qkj9q1LQYqTEfyeoMxhqvWOnYIr+kfaAPmhHMaPM+8tbR+85o1kwIrxEDuw/L18H53GeaVtPimyI/SQ1xmB9PD2PeIKkS6PVRMuEom+w5aWbWkFkNYMHRhNF/FyyQNjqZkdvkKu5eqYGGHX4YRfCQDyNKLr8QPr7AwQ3m8b2EnO6wkMopeeMuHDCTjg8SQyvg74IkceFskiYEy99BTwJsLRwRqmE7qFWRhqCaQmEkRHHaEpa6bFfx+g1YIotr9x0IbdEU/hmB7xZnwqDjZ7CmqUy1C8drSwP7qH3p+MFkLWfyb9UTGMcIZtTqGZTbtDBzFCJOuPYEjKhjST9jjtI38VJ4wwe1vLcqzHgab93yNJ6xaijMWOD/Z6WD5cU+dgzeuX5SKY+gLRZTnQAaVPsT58Vat6kROZqQE26DBgv5qNqHhyyQHqEuC6BDWEYW2Pgc5ON0bR7fanSxhWBrdWfAs5oOh5kH9UjtVFaBE8TvPEyU6mBMkNqV/LnvliZIwvhiY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb3db300-a391-4060-c787-08dc8f8f6e4c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 12:08:57.6602
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fZMWknIohYqrHZeDvSWRoXb9Zd0NmMUcMbpyJf7KZy/7HJ3WwwumQKWfKG+x905l6uA2tUV+dezu+JO0gf57Hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6452
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_02,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406180089
+X-Proofpoint-GUID: YXhUy1WKdxOLxoE3omS7n0WoJxFThGOO
+X-Proofpoint-ORIG-GUID: YXhUy1WKdxOLxoE3omS7n0WoJxFThGOO
 
-From: Duje Mihanović <duje.mihanovic@skole.hr>
+On 18/06/2024 12:45, yangxingui wrote:
+> Hi, John,
+> 
+> Thanks for your reply.
+> 
+> On 2024/6/18 16:55, John Garry wrote:
+>> On 13/06/2024 13:23, Xingui Yang wrote:
+>>
+>> Sorry for delay in responding and asking further questions.
+> It doesn't matter.
+>>
+>>> We found that it is judged as broadcast flutter when the exp-attached 
+>>> end
+>>> device reconnects after probe failed, as follows:
+>>>
+>>> [78779.654026] sas: broadcast received: 0
+>>> [78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
+>>> [78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+>>> [78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated 
+>>> BROADCAST(CHANGE)
+>>> [78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
+>>> [78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 
+>>> 500e004aaaaaaa05 (stp)
+>>> [78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
+>>> [78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+>>> [78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+>>> ...
+>>> [78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 
+>>> tries: 1
+>>> [78835.171344] sas: sas_probe_sata: for exp-attached device 
+>>> 500e004aaaaaaa05 returned -19
+>>> [78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
+>>> [78835.187487] sas: broadcast received: 0
+>>> [78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
+>>> [78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+>>> [78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated 
+>>> BROADCAST(CHANGE)
+>>> [78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
+>>> [78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 
+>>> 500e004aaaaaaa05 (stp)
+>>> [78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
+>>> [78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+>>>
+>>> The cause of the problem is that the related ex_phy's 
+>>> attached_sas_addr was
+>>> not cleared after the end device probe failed. In order to solve the 
+>>> above
+>>> problem, a function sas_ex_unregister_end_dev() is defined to clear the
+>>> ex_phy information and unregister the end device after the 
+>>> exp-attached end
+>>> device probe failed.
+>>
+>> Can you just manually clear the ex_phy's attached_sas_addr at the 
+>> appropiate point (along with calling sas_unregister_dev())? It seems 
+>> that we are using heavy-handed approach in calling 
+>> sas_unregister_devs_sas_addr(), which does the clearing and much more.
+> 
+> I just tried it and it worked. If we only clear ex_phy's 
+> attached_sas_addr, there is no need to call sas_destruct_ports(). We are 
+> currently using sas_unregister_devs_sas_addr() which will add the port 
+> to sas_port_del_list, so we need to call sas_destruct_ports() separately 
+> to delete the port.
+> 
+> Should we also delete the port after the devices probe failed?
 
-Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
-Edition LTE, a smartphone based on said SoC.
+I'm not sure. Please check it.
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- arch/arm64/boot/dts/marvell/Makefile               |   3 +
- .../dts/marvell/pxa1908-samsung-coreprimevelte.dts | 328 +++++++++++++++++++++
- arch/arm64/boot/dts/marvell/pxa1908.dtsi           | 300 +++++++++++++++++++
- 3 files changed, 631 insertions(+)
+sas_fail_probe() would still call sas_unregister_dev(), as required.
 
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 99b8cb3c49e1..687c256d95fe 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -28,3 +28,6 @@ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-A.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-B.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += ac5x-rd-carrier-cn9131.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += ac5-98dx35xx-rd.dtb
-+
-+# MMP SoC Family
-+dtb-$(CONFIG_ARCH_MMP) += pxa1908-samsung-coreprimevelte.dtb
-diff --git a/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
-new file mode 100644
-index 000000000000..2a1f309c8e54
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include "pxa1908.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/linux-event-codes.h>
-+
-+/ {
-+	model = "Samsung Galaxy Core Prime VE LTE";
-+	compatible = "samsung,coreprimevelte", "marvell,pxa1908";
-+
-+	aliases {
-+		mmc0 = &sdh2; /* eMMC */
-+		mmc1 = &sdh0; /* SD card */
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		stdout-path = "serial0:115200n8";
-+
-+		/* S-Boot places the initramfs here */
-+		linux,initrd-start = <0x4d70000>;
-+		linux,initrd-end = <0x5000000>;
-+
-+		fb0: framebuffer@17177000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x17177000 0 (480 * 800 * 4)>;
-+			width = <480>;
-+			height = <800>;
-+			stride = <(480 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	/* Bootloader fills this in */
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0 0 0>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer@17000000 {
-+			reg = <0 0x17000000 0 0x1800000>;
-+			no-map;
-+		};
-+
-+		gpu@9000000 {
-+			reg = <0 0x9000000 0 0x1000000>;
-+		};
-+
-+		/* Communications processor, aka modem */
-+		cp@5000000 {
-+			reg = <0 0x5000000 0 0x3000000>;
-+		};
-+
-+		cm3@a000000 {
-+			reg = <0 0xa000000 0 0x80000>;
-+		};
-+
-+		seclog@8000000 {
-+			reg = <0 0x8000000 0 0x100000>;
-+		};
-+
-+		ramoops@8100000 {
-+			compatible = "ramoops";
-+			reg = <0 0x8100000 0 0x40000>;
-+			record-size = <0x8000>;
-+			console-size = <0x20000>;
-+			max-reason = <5>;
-+		};
-+	};
-+
-+
-+	i2c-muic {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&gpio 30 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&gpio 29 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <3>;
-+		i2c-gpio,timeout-ms = <100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c_muic_pins>;
-+
-+		muic: extcon@14 {
-+			compatible = "siliconmitus,sm5504-muic";
-+			reg = <0x14>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pins>;
-+		autorepeat;
-+
-+		key-home {
-+			label = "Home";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpio 50 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		key-volup {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		key-voldown {
-+			label = "Volume Down";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&smmu {
-+	status = "okay";
-+};
-+
-+&pmx {
-+	pinctrl-single,gpio-range = <&range 55 55 0>,
-+				    <&range 110 32 0>,
-+				    <&range 52 1 0>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&board_pins_0 &board_pins_1 &board_pins_2>;
-+
-+	board_pins_0: board-pins-0 {
-+		pinctrl-single,pins = <
-+			0x160 0
-+			0x164 0
-+			0x168 0
-+			0x16c 0
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0x8000 0x8000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0x8000 0x8000 0 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0x288 0x388>;
-+	};
-+
-+	board_pins_1: board-pins-1 {
-+		pinctrl-single,pins = <
-+			0x44 1
-+			0x48 1
-+			0x20 1
-+			0x18 1
-+			0x14 1
-+			0x10 1
-+			0xc 1
-+			0x8 1
-+			0x68 1
-+			0x58 0
-+			0x54 0
-+			0x7c 0
-+			0x6c 0
-+			0x70 0
-+			0x4c 1
-+			0x50 1
-+			0xac 0
-+			0x90 0
-+			0x8c 0
-+			0x88 0
-+			0x84 0
-+			0xc8 0
-+			0x128 0
-+			0x190 0
-+			0x194 0
-+			0x1a0 0
-+			0x114 0
-+			0x118 0
-+			0x1d8 0
-+			0x1e4 0
-+			0xe8 0
-+			0x100 0
-+			0x204 0
-+			0x210 0
-+			0x218 0
-+		>;
-+		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xc000>;
-+		pinctrl-single,low-power-mode = <0x288 0x388>;
-+	};
-+
-+	board_pins_2: board-pins-2 {
-+		pinctrl-single,pins = <
-+			0x260 0
-+			0x264 0
-+			0x268 0
-+			0x26c 0
-+			0x270 0
-+			0x274 0
-+			0x78 0
-+			0x74 0
-+			0xb0 1
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0 0x388>;
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		pinctrl-single,pins = <
-+			0x198 6
-+			0x19c 6
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0 0x388>;
-+	};
-+
-+	gpio_keys_pins: gpio-keys-pins {
-+		pinctrl-single,pins = <
-+			0x11c 0
-+			0x120 0
-+			0x1a4 0
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0x8000 0xa0000 0x8000 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0 0x388>;
-+	};
-+
-+	i2c_muic_pins: i2c-muic-pins {
-+		pinctrl-single,pins = <
-+			0x154 0
-+			0x150 0
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0x288 0x388>;
-+	};
-+
-+	sdh0_pins_0: sdh0-pins-0 {
-+		pinctrl-single,pins = <
-+			0x108 0
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0 0x388>;
-+	};
-+
-+	sdh0_pins_1: sdh0-pins-1 {
-+		pinctrl-single,pins = <
-+			0x94 0
-+			0x98 0
-+			0x9c 0
-+			0xa0 0
-+			0xa4 0
-+		>;
-+		pinctrl-single,drive-strength = <0x800 0x1800>;
-+		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0 0x388>;
-+	};
-+
-+	sdh0_pins_2: sdh0-pins-2 {
-+		pinctrl-single,pins = <
-+			0xa8 0
-+		>;
-+		pinctrl-single,drive-strength = <0x1000 0x1800>;
-+		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
-+		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
-+		pinctrl-single,input-schmitt = <0x40 0 0x40 0x70>;
-+		pinctrl-single,low-power-mode = <0x208 0x388>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+};
-+
-+&twsi0 {
-+	status = "okay";
-+};
-+
-+&twsi1 {
-+	status = "okay";
-+};
-+
-+&twsi2 {
-+	status = "okay";
-+};
-+
-+&twsi3 {
-+	status = "okay";
-+};
-+
-+&usb {
-+	extcon = <&muic>, <&muic>;
-+};
-+
-+&sdh2 {
-+	/* Disabled for now because initialization fails with -ETIMEDOUT. */
-+	status = "disabled";
-+	bus-width = <8>;
-+	non-removable;
-+	mmc-ddr-1_8v;
-+};
-+
-+&sdh0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdh0_pins_0 &sdh0_pins_1 &sdh0_pins_2>;
-+	cd-gpios = <&gpio 11 0>;
-+	cd-inverted;
-+	bus-width = <4>;
-+	wp-inverted;
-+};
-diff --git a/arch/arm64/boot/dts/marvell/pxa1908.dtsi b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
-new file mode 100644
-index 000000000000..cf2b9109688c
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
-@@ -0,0 +1,300 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/dts-v1/;
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/marvell,pxa1908.h>
-+
-+/ {
-+	model = "Marvell Armada PXA1908";
-+	compatible = "marvell,pxa1908";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0 0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0 1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0 2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0 3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		smmu: iommu@c0010000 {
-+			compatible = "arm,mmu-400";
-+			reg = <0 0xc0010000 0 0x10000>;
-+			#global-interrupts = <1>;
-+			#iommu-cells = <1>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@d1df9000 {
-+			compatible = "arm,gic-400";
-+			reg = <0 0xd1df9000 0 0x1000>,
-+				<0 0xd1dfa000 0 0x2000>,
-+				/* The subsequent registers are guesses. */
-+				<0 0xd1dfc000 0 0x2000>,
-+				<0 0xd1dfe000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		apb@d4000000 {
-+			compatible = "simple-bus";
-+			reg = <0 0xd4000000 0 0x200000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0xd4000000 0x200000>;
-+
-+			pdma: dma-controller@0 {
-+				compatible = "marvell,pdma-1.0";
-+				reg = <0 0x10000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				dma-channels = <30>;
-+				#dma-cells = <2>;
-+			};
-+
-+			twsi1: i2c@10800 {
-+				compatible = "mrvl,mmp-twsi";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0x10800 0x64>;
-+				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbc PXA1908_CLK_TWSI1>;
-+				mrvl,i2c-fast-mode;
-+				status = "disabled";
-+			};
-+
-+			twsi0: i2c@11000 {
-+				compatible = "mrvl,mmp-twsi";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0x11000 0x64>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbc PXA1908_CLK_TWSI0>;
-+				mrvl,i2c-fast-mode;
-+				status = "disabled";
-+			};
-+
-+			twsi3: i2c@13800 {
-+				compatible = "mrvl,mmp-twsi";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0x13800 0x64>;
-+				interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbc PXA1908_CLK_TWSI3>;
-+				mrvl,i2c-fast-mode;
-+				status = "disabled";
-+			};
-+
-+			apbc: clock-controller@15000 {
-+				compatible = "marvell,pxa1908-apbc";
-+				reg = <0x15000 0x1000>;
-+				#clock-cells = <1>;
-+			};
-+
-+			uart0: serial@17000 {
-+				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
-+				reg = <0x17000 0x1000>;
-+				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbc PXA1908_CLK_UART0>;
-+				reg-shift = <2>;
-+			};
-+
-+			uart1: serial@18000 {
-+				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
-+				reg = <0x18000 0x1000>;
-+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbc PXA1908_CLK_UART1>;
-+				reg-shift = <2>;
-+			};
-+
-+			gpio: gpio@19000 {
-+				compatible = "marvell,mmp-gpio";
-+				reg = <0x19000 0x800>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				clocks = <&apbc PXA1908_CLK_GPIO>;
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "gpio_mux";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ranges = <0 0x19000 0x800>;
-+
-+				gpio@0 {
-+					reg = <0x0 0x4>;
-+				};
-+
-+				gpio@4 {
-+					reg = <0x4 0x4>;
-+				};
-+
-+				gpio@8 {
-+					reg = <0x8 0x4>;
-+				};
-+
-+				gpio@100 {
-+					reg = <0x100 0x4>;
-+				};
-+			};
-+
-+			pmx: pinmux@1e000 {
-+				compatible = "marvell,pxa1908-padconf", "pinconf-single";
-+				reg = <0x1e000 0x330>;
-+
-+				#pinctrl-cells = <1>;
-+				pinctrl-single,register-width = <32>;
-+				pinctrl-single,function-mask = <7>;
-+
-+				range: gpio-range {
-+					#pinctrl-single,gpio-range-cells = <3>;
-+				};
-+			};
-+
-+			uart2: serial@36000 {
-+				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
-+				reg = <0x36000 0x1000>;
-+				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbcp PXA1908_CLK_UART2>;
-+				reg-shift = <2>;
-+			};
-+
-+			twsi2: i2c@37000 {
-+				compatible = "mrvl,mmp-twsi";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0x37000 0x64>;
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apbcp PXA1908_CLK_TWSI2>;
-+				mrvl,i2c-fast-mode;
-+				status = "disabled";
-+			};
-+
-+			apbcp: clock-controller@3b000 {
-+				compatible = "marvell,pxa1908-apbcp";
-+				reg = <0x3b000 0x1000>;
-+				#clock-cells = <1>;
-+			};
-+
-+			mpmu: clock-controller@50000 {
-+				compatible = "marvell,pxa1908-mpmu";
-+				reg = <0x50000 0x1000>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		axi@d4200000 {
-+			compatible = "simple-bus";
-+			reg = <0 0xd4200000 0 0x200000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0xd4200000 0x200000>;
-+
-+			usbphy: phy@7000 {
-+				compatible = "marvell,pxa1928-usb-phy";
-+				reg = <0x7000 0x200>;
-+				clocks = <&apmu PXA1908_CLK_USB>;
-+				#phy-cells = <0>;
-+			};
-+
-+			usb: usb@8000 {
-+				compatible = "chipidea,usb2";
-+				reg = <0x8000 0x200>;
-+				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apmu PXA1908_CLK_USB>;
-+				phys = <&usbphy>;
-+				phy-names = "usb-phy";
-+			};
-+
-+			sdh0: mmc@80000 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0x80000 0x120>;
-+				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apmu PXA1908_CLK_SDH0>;
-+				clock-names = "io";
-+				mrvl,clk-delay-cycles = <31>;
-+			};
-+
-+			sdh1: mmc@80800 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0x80800 0x120>;
-+				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apmu PXA1908_CLK_SDH1>;
-+				clock-names = "io";
-+				mrvl,clk-delay-cycles = <31>;
-+			};
-+
-+			sdh2: mmc@81000 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0x81000 0x120>;
-+				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&apmu PXA1908_CLK_SDH2>;
-+				clock-names = "io";
-+				mrvl,clk-delay-cycles = <31>;
-+			};
-+
-+			apmu: clock-controller@82800 {
-+				compatible = "marvell,pxa1908-apmu";
-+				reg = <0x82800 0x400>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+	};
-+};
+And you said that the sas_fail_probe() probe call would be asynchronous 
+to sas_revalidate_domainin(). I actually expected you to have the new 
+call to sas_destruct_ports() at the top of sas_revalidate_domainin(), 
+like v2, but it is in sas_probe_devices().
 
--- 
-2.45.2
+Anyway, please check whether you require this additional call to delete 
+the port.
+
+> 
+> Maybe I can update another version and only clear ex_phy's 
+> attached_sas_addr based on your suggestions.
+>>
+>>>
+>>> As devices may probe failed after done REVALIDATING DOMAIN when call
+>>> sas_probe_devices(). Then after its port is added to the 
+>>> sas_port_del_list,
+>>> the port will not be deleted until the end of the next REVALIDATING 
+>>> DOMAIN
+>>> and sas_destruct_ports() is called. A warning about creating a duplicate
+>>> port will occur in the new REVALIDATING DOMAIN when the end device
+>>> reconnects. Therefore, the previous destroy_list and sas_port_del_list
+>>> should be handled after devices probe failed.
+>>>
+>>> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+>>> ---
+>>> Changes since v2:
+>>> - Add a helper for calling sas_destruct_devices() and 
+>>> sas_destruct_ports(),
+>>>    and put the new call at the end of sas_probe_devices() based on 
+>>> John's
+>>>    suggestion.
+>>>
+>>> Changes since v1:
+>>> - Simplify the process of getting ex_phy id based on Jason's suggestion.
+>>> - Update commit information.
+>>> ---
+>>>   drivers/scsi/libsas/sas_discover.c | 32 +++++++++++++++++++-----------
+>>>   drivers/scsi/libsas/sas_expander.c |  8 ++++++++
+>>>   drivers/scsi/libsas/sas_internal.h |  6 +++++-
+>>>   3 files changed, 33 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/scsi/libsas/sas_discover.c 
+>>> b/drivers/scsi/libsas/sas_discover.c
+>>> index 8fb7c41c0962..8c517e47d2b9 100644
+>>> --- a/drivers/scsi/libsas/sas_discover.c
+>>> +++ b/drivers/scsi/libsas/sas_discover.c
+>>> @@ -17,6 +17,22 @@
+>>>   #include <scsi/sas_ata.h>
+>>>   #include "scsi_sas_internal.h"
+>>> +static void sas_destruct_ports(struct asd_sas_port *port)
+>>> +{
+>>> +    struct sas_port *sas_port, *p;
+>>> +
+>>> +    list_for_each_entry_safe(sas_port, p, &port->sas_port_del_list, 
+>>> del_list) {
+>>> +        list_del_init(&sas_port->del_list);
+>>> +        sas_port_delete(sas_port);
+>>> +    }
+>>> +}
+>>> +
+>>> +static void sas_destruct_devices_and_ports(struct asd_sas_port *port)
+>>
+>> "and" in a function name never sounds right.
+>>
+>> Can you just call sas_destruct_port(), as it takes a port arg? Maybe 
+>> rename sas_destruct_ports() to sas_delete_ports(), as it does "delete" 
+>> - this may avoid some confusion in names.
+> As described above, if we only clear ex_phy's attached_sas_addr, we do 
+> not need to call sas_destruct_ports().
+
+Thanks,
+John
 
 
