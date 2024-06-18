@@ -1,63 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C1613AA44;
-	Tue, 18 Jun 2024 21:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C57013DDD2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718746401; cv=none; b=jJy6v/K7/7sCcl03G/V+kmIdGOXXa5kEbsKetlFFQzCL3mxE8yje7VCPLWmoQhwnuel1+rZTC5BxAuTNHMGI9nPg2uGzGscU6FFkjJQSTCVxVXL98oKqATfO7UqhvPOMTOlQjOnc5YLYMJh1O4LWcnemZd6tR6BU4gk8m9s/oN8=
+	t=1718746489; cv=none; b=qgjFWHggOyoD5v2jCamiUWzLYIRjr9YnidIepxDxb65uH+EmjT+iQcyKgpZkLkGY2ExP+ppeUa2obRNS5B5kHfXIkz5A/OSAnhtfzZ73P57RRYtm5jS23QUotl1bSs1MUlU8yxhcaE7c50dVWQE42PiaoioxHnLEcxGxRx8DtNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718746401; c=relaxed/simple;
-	bh=ktlCxkeNN2m+cMsASQTvod072rETu+DxRKX4AqEkj8Q=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KiV04oMQW9/MSFUS35Sq2T33z3+EO8i0pFojiBpNzDCRvM/2V6xfzNfpxEse+TqgnPfOdIkOxkFjnimDwL/KaL65adYpR2CvlZ+HpLZWl8IsF3qwF22dG6oTEJKPmSaaR92AJiXud7cKaCweq1i9DvgyooQz2wwZzSwffIF5vis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QM9IpRLJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718746489; c=relaxed/simple;
+	bh=aCMu+PMfiwJEa9jVW44po1uqrhhhuusBhEOb4kSCNb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fzd1gDGpw3jVdZo0a7/j37GyLg5OdG5W+44xhdvh4e8siuhsubY8qAkx6Kvvq4+iybOtWJeaZHsY/e3SMY4Mb/CPaN6XePV3oNHNqTnetUh4TKw4aprFdV5xJyFRI+4FplxY7VCv7Inv8x0Dv1MHEMHTcHlbAdjd39nym4BMH5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l+gW5eaS; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QM9IpRLJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4486C3277B;
-	Tue, 18 Jun 2024 21:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718746400;
-	bh=ktlCxkeNN2m+cMsASQTvod072rETu+DxRKX4AqEkj8Q=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=QM9IpRLJwgP50256mMBOXZi2sEDHrXf7Tz9OPqqR9cI094W+iGrze46EBp9iSiO4t
-	 9YKdIl4kWpNDycYin6oEPGkm4sKAecWazmTjc49eMaUZjjjSOAPQTW8QeM5FWRmr4f
-	 O/Rdq3LatA41u1iUcODeatnXGQg0d2pQUajrhmDdFKf7LcOjzl51fx5YLGp7lfenbk
-	 luhQ04/FQvb0A2RjOs5B+3PhDXDB4kXEToOOGMRWV6CBLZHl4+i/ShETtXnWqZGjkr
-	 PDwdj9UVjjexYDEomWPPm532A2/X31ull+a4y7xAghmB2/U5JGtgTipPobho1r5jDb
-	 pYm/J1s0lwfWQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B1E28C4361C;
-	Tue, 18 Jun 2024 21:33:20 +0000 (UTC)
-Subject: Re: [GIT PULL] Kselftest fixes for Linux 6.10-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <772723d8-a7bb-4053-be40-b00680b518bf@linuxfoundation.org>
-References: <772723d8-a7bb-4053-be40-b00680b518bf@linuxfoundation.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <772723d8-a7bb-4053-be40-b00680b518bf@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.10-rc5
-X-PR-Tracked-Commit-Id: ed3994ac847e0d6605f248e7f6776b1d4f445f4b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 92e5605a199efbaee59fb19e15d6cc2103a04ec2
-Message-Id: <171874640071.26682.1305521738242890558.pr-tracker-bot@kernel.org>
-Date: Tue, 18 Jun 2024 21:33:20 +0000
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l+gW5eaS"
+X-Envelope-To: akpm@linux-foundation.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718746484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uCcgPhMT9v27bOz9O3+n1SaaJwS+iEnfXv26dRb41IU=;
+	b=l+gW5eaSmKpsFqkM+8k3godaPJNaYfHtWPYvol12kbqM3FF1A/bsxydW9jA6tpASWGg3eT
+	9kn5eZKLHFLEDpPHMQZzfE6aS55s/SS/suUNa5lqwAinKpuzc+zEx+r/16oYaOXVfiZPcn
+	me3P3x9MStpUft3FdisWgWEjj7hAQrs=
+X-Envelope-To: mhocko@kernel.org
+X-Envelope-To: torvalds@linux-foundation.org
+X-Envelope-To: kernel-team@meta.com
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: kyle@infradead.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	kernel-team@meta.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Kyle McMartin <kyle@infradead.org>
+Subject: [PATCH] mm: ratelimit oversized kvmalloc warnings instead of once
+Date: Tue, 18 Jun 2024 14:34:21 -0700
+Message-ID: <20240618213421.282381-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Tue, 18 Jun 2024 11:42:42 -0600:
+At the moment oversize kvmalloc warnings are triggered once using
+WARN_ON_ONCE() macro. One issue with this approach is that it only
+detects the first abuser and then ignores the remaining abusers which
+complicates detecting all such abusers in a timely manner. The situation
+becomes worse when the repro has low probability and requires production
+traffic and thus require large set of machines to find such abusers. In
+Mera production, this warn once is slowing down the detection of these
+abusers. Simply replace WARN_ON_ONCE with WARN_RATELIMIT.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-fixes-6.10-rc5
+Reported-by: Kyle McMartin <kyle@infradead.org>
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ mm/util.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/92e5605a199efbaee59fb19e15d6cc2103a04ec2
-
-Thank you!
-
+diff --git a/mm/util.c b/mm/util.c
+index 10f215985fe5..de36344e8d53 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -649,7 +649,8 @@ void *kvmalloc_node_noprof(size_t size, gfp_t flags, int node)
+ 
+ 	/* Don't even allow crazy sizes */
+ 	if (unlikely(size > INT_MAX)) {
+-		WARN_ON_ONCE(!(flags & __GFP_NOWARN));
++		WARN_RATELIMIT(!(flags & __GFP_NOWARN), "size = %zu > INT_MAX",
++			       size);
+ 		return NULL;
+ 	}
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
