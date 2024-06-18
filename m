@@ -1,159 +1,179 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0388E158A05
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1A713C81B;
+	Tue, 18 Jun 2024 12:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714209; cv=none; b=pEu+VrDL+50ZLEXO+DLGle2WxkXi1eZmIbvPOa0FGOAy1t3IYN9smFG8NuKsDY6Qo4olWBRc2jafsloUxH/9uDgqWQEHNXhoV/YLHMKFikDZ0tb+AaRoNcfRKnWfty11BV/Hm1YBV2TeTLdc6Q4GdiRhXQaUbNZFftvg9TEHChM=
+	t=1718714213; cv=none; b=PcuqQdFo6n+YrdNvDZzQ5Xn4EAXC7kjNV4neVeahvsJynQpna6sA1JjtyYpoQVcqhB914tSDvmg/hfNBPEwZsvWIEb2Wk1yx1gvmImVB+p9wt+aczdtuF1QhE6MtBO+fOmiT5XoRJWhSClaa1pho9vGYbEQme+Yj1t7nnIZLPB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714209; c=relaxed/simple;
-	bh=wc3nxRp/zEr6rzxbLlYJyj2e4UgxApK3/epeyKCpZJk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mqcvkJjy/Kj2F2OVAsps1YcqFC6/TfaAcuIgL2EQ5sIn29SKSUgRXFqZiVzktj+EjIgP5YJpHpUAhHQvfDiAV0A8lmlkBOShKXyowDqkHD1Qg71H0CAJBk0E9e2KEIkMnvWjxo/LtkyE6MPdssMHSkB7rRytQ/3s4CVshKOKJic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oSJuvqIN; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718714213; c=relaxed/simple;
+	bh=W+Kqzrrisl+xzqP63S4grqOrs6f5pItw2/GgaKQC/zo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JvCaNT8vf8T51x/Z9I64pmOcgmAGX0GCe5PNjKemImcO1TOW6jZ1AMqwI/knD/1TrGnk/lEx8oY6ER90hMd/bxR5FfVXrviH9eYQfPyQ9au4ubt4oDPpnJnkUlr7P62lrZo7u9/PciKaLaB6pMbqWdFAV6HZ5lOgJaEe57RZraY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgFgCMZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oSJuvqIN"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c9034860dso6787860e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718714205; x=1719319005; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NTiN80rKMTOzOqZ3XNmwbttNTimI7k+ulamUrzc9SmI=;
-        b=oSJuvqIN8dssT/cy0Sh4t/Svml0TiJg6LZU/pzyXG3cepAPspJp0oCpAHpDROucCfj
-         ZmQYgial3+/eiZzFljZam8No/zka8nUnIYTQyGPhVVrSwRkYF+fm1cXh9fCyZ3+DsPJR
-         wpk+sVgOV/rtNdkZvmYvcoLZ3i2rQc30rAgmk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718714205; x=1719319005;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NTiN80rKMTOzOqZ3XNmwbttNTimI7k+ulamUrzc9SmI=;
-        b=Qdwk0mgwwTwVPWXbmT/ByHmt4vGTQjb2/P9JzSQn0FejEVb70SrNzCVzloTQBNpk3L
-         jEY2cSCco8PWxedLDgSNJMHPtdZeVP8vY/bcWKhUnPyGKxUX0f8N2rIevY3g8e+dD+Fc
-         YfBS2RkAEJZnTFT+DaVCY75A79BmHdNquQI3SRkPP3GFZpOcChvL3ZfLZInee1wtvuzP
-         v6ZMW+Nso3EYt0gjHv/LgENdkrRXgXMUerXUVd3W1wVN1d2lXFuxGUX1SR9tAKNnPfrZ
-         X8Vtla1WHj5g7KW0ZK2uodG+o0Ajt/cni3P0V47TPdyoy7X7b+TAM0rTo16fpWDjz109
-         voHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUo+R/Jwd7BH8TCWwmsznfpFH1ypM7LHAExkKzQuc7Fg5yJpv5trO0k2kJmMc4lhO8hEN8jN8pdi8QJUhm4taBHcoF+TIIM1nMTEkko
-X-Gm-Message-State: AOJu0YwqwXLyizzZuas02sO2vaX14H95jKmhIGJFg9dbq4nQn8xgC7Pa
-	8Fb9ucgJB+qmGp2PGucb3TVtU6PcY/9IifKKGug91BTjOh1g+jWuMaKaCQ355yYS6Wm14EWE2lG
-	7wg==
-X-Google-Smtp-Source: AGHT+IGVz912/IwOeoIITQuGSbM03qtKkKaFyrCDsxrI2IBqa5vH5+mLb26Fl6cCMP4FI80HcMppLQ==
-X-Received: by 2002:ac2:532a:0:b0:52c:8075:4f3 with SMTP id 2adb3069b0e04-52ca6e6e9c6mr8607639e87.36.1718714203628;
-        Tue, 18 Jun 2024 05:36:43 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca288e6dfsm1504844e87.307.2024.06.18.05.36.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 05:36:42 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec17eb4493so63336661fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:36:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXGZb3ygwqPKvGqZNNzmGkUkm0d7TYBqXLSaRXEl4pnaqcRsJpXUqEwnShla0WSOF7BT/rH1fMFxlbJ7GaWJ5yUGeNULuffLivJpNl8
-X-Received: by 2002:a05:6512:3e25:b0:52c:8b03:99d1 with SMTP id
- 2adb3069b0e04-52ca6e92adcmr12517058e87.48.1718714202517; Tue, 18 Jun 2024
- 05:36:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgFgCMZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C36AC3277B;
+	Tue, 18 Jun 2024 12:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718714213;
+	bh=W+Kqzrrisl+xzqP63S4grqOrs6f5pItw2/GgaKQC/zo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SgFgCMZX+L3ynhwO2BeCWsJO4XxuSe7+e5EWlGvxYnSZDqVkvrR/A3zK0LLVSrgFl
+	 34762YFrcgzebtyuSBpKr2CmwWeqm5SK6zsNQ8Xtgke6kX06+ofqCRguyH7qqxJUNg
+	 Ps56oEhPeDLgL1kBbpzzINfaObs/BE260yqfQZkD8zwW1wEKqWaNlQrYgI4jNnka2x
+	 TEPttfh/l2whIoY3VwJ9SKEISn8Fyr3Gor1MqPUqZdqlXZzvlOzfdAKfIsf5xA3w8i
+	 c9QKwCgvvmjOpHoY5ZP5MRplqy22thY6mqo1ealuIBnf7rqU9oAUUQJ4hYdPEn3Qs4
+	 5d99JEANV5JpQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Benjamin Berg <benjamin.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	kvalo@kernel.org,
+	gregory.greenman@intel.com,
+	emmanuel.grumbach@intel.com,
+	ilan.peer@intel.com,
+	shaul.triebitz@intel.com,
+	dan.carpenter@linaro.org,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 19/44] wifi: iwlwifi: mvm: remove stale STA link data during restart
+Date: Tue, 18 Jun 2024 08:35:00 -0400
+Message-ID: <20240618123611.3301370-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618123611.3301370-1-sashal@kernel.org>
+References: <20240618123611.3301370-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527-cocci-flexarray-v3-0-cda09c535816@chromium.org> <3f7baafb-82c7-3955-e871-687fafe8048c@quicinc.com>
-In-Reply-To: <3f7baafb-82c7-3955-e871-687fafe8048c@quicinc.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 18 Jun 2024 14:36:27 +0200
-X-Gmail-Original-Message-ID: <CANiDSCszoUyZW85qaCrkkfNR73dXBrAURayWD8_jpV6Er6fOsg@mail.gmail.com>
-Message-ID: <CANiDSCszoUyZW85qaCrkkfNR73dXBrAURayWD8_jpV6Er6fOsg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/18] media: Fix the last set of coccinelle warnings
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
-	Andy Walls <awalls@md.metrocast.net>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.5
+Content-Transfer-Encoding: 8bit
 
-Hi Vikash
+From: Benjamin Berg <benjamin.berg@intel.com>
 
-On Tue, 18 Jun 2024 at 14:34, Vikash Garodia <quic_vgarodia@quicinc.com> wrote:
->
-> Hi Ricardo,
->
-> On 5/28/2024 2:38 AM, Ricardo Ribalda wrote:
-> > With this set we are done with all the cocci warning/errors.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> > Changes in v3:
-> > - Do not rename structure fields. (Thanks Bryan)
-> > - Link to v2: https://lore.kernel.org/r/20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org
-> >
-> > Changes in v2:
-> > - allegro: Replace hard coded 1 with a define. (Thanks Michael)
-> > - Link to v1: https://lore.kernel.org/r/20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org
-> >
-> > ---
-> > Ricardo Ribalda (18):
-> >       media: allegro: nal-hevc: Replace array[1] with arrray[N]
-> >       media: xilinx: Refactor struct xvip_dma
-> >       media: dvb-frontend/mxl5xx: Refactor struct MBIN_FILE_T
-> >       media: dvb-frontend/mxl5xx: Use flex array for MBIN_SEGMENT_T
-> >       media: pci: cx18: Use flex arrays for struct cx18_scb
-> >       media: siano: Refactor struct sms_msg_data
-> >       media: siano: Remove unused structures
-> >       media: siano: Use flex arrays for sms_firmware
-> >       media: venus: Remove unused structs
-> >       media: venus: Use flex array for hfi_session_release_buffer_pkt
-> >       media: venus: Refactor struct hfi_uncompressed_plane_info
-> >       media: venus: Refactor struct hfi_session_get_property_pkt
-> >       media: venus: Refactor struct hfi_uncompressed_format_supported
-> >       media: venus: Refactor hfi_session_empty_buffer_uncompressed_plane0_pkt
-> >       media: venus: Refactor hfi_session_empty_buffer_compressed_pkt
-> >       media: venus: Refactor hfi_sys_get_property_pkt
-> >       media: venus: Refactor hfi_session_fill_buffer_pkt
-> >       media: venus: Refactor hfi_buffer_alloc_mode_supported
-> >
-> >  drivers/media/common/siano/smscoreapi.c        | 10 +++---
-> >  drivers/media/common/siano/smscoreapi.h        | 18 ++---------
-> >  drivers/media/common/siano/smsdvb-main.c       |  4 +--
-> >  drivers/media/common/siano/smsendian.c         |  8 +++--
-> >  drivers/media/dvb-frontends/mxl5xx.c           |  2 +-
-> >  drivers/media/dvb-frontends/mxl5xx_defs.h      |  4 +--
-> >  drivers/media/pci/cx18/cx18-scb.h              |  2 +-
-> >  drivers/media/platform/allegro-dvt/nal-hevc.h  |  7 ++--
-> >  drivers/media/platform/qcom/venus/hfi_cmds.c   |  8 ++---
-> >  drivers/media/platform/qcom/venus/hfi_cmds.h   | 38 ++++------------------
-> >  drivers/media/platform/qcom/venus/hfi_helper.h | 45 ++------------------------
-> >  drivers/media/platform/qcom/venus/hfi_parser.c |  2 +-
-> >  drivers/media/platform/xilinx/xilinx-dma.c     |  4 +--
-> >  drivers/media/platform/xilinx/xilinx-dma.h     |  2 +-
-> >  14 files changed, 39 insertions(+), 115 deletions(-)
-> > ---
-> > base-commit: 48259b90973718d2277db27b5e510f0fe957eaa0
-> > change-id: 20240507-cocci-flexarray-9a807a8e108e
-> >
-> > Best regards,
->
-> Could you also mention if you have run any video usecase on any of the boards
-> with these changes ?
+[ Upstream commit cc3ba78f202de9752aceb16342ab62bdfbffac7e ]
 
-I have only compile tested this series. If you have access to any of
-the hardware it would be great if you could test it out :)
+If pre-recovery mac80211 tried to disable a link but this disablement
+failed, then there might be a mismatch between mac80211 assuming the
+link has been disabled and the driver still having the data around.
+During recover itself, that is not a problem, but should the link be
+activated again at a later point, iwlwifi will refuse the activation as
+it detects the inconsistent state.
 
-Regards!
+Solve this corner-case by iterating the station in the restart cleanup
+handler.
 
->
-> Regards,
-> Vikash
+Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240513132416.d2fd60338055.I840d4fdce5fd49fe69896d928b071067e3730259@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c | 37 +++++++++++++++++++
+ .../net/wireless/intel/iwlwifi/mvm/mld-sta.c  | 10 ++---
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h  |  5 +++
+ 3 files changed, 47 insertions(+), 5 deletions(-)
 
-
-
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 7ed7444c98715..d2557d9f63e59 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -1115,6 +1115,39 @@ static void iwl_mvm_cleanup_iterator(void *data, u8 *mac,
+ 	RCU_INIT_POINTER(mvmvif->deflink.probe_resp_data, NULL);
+ }
+ 
++static void iwl_mvm_cleanup_sta_iterator(void *data, struct ieee80211_sta *sta)
++{
++	struct iwl_mvm *mvm = data;
++	struct iwl_mvm_sta *mvm_sta;
++	struct ieee80211_vif *vif;
++	int link_id;
++
++	mvm_sta = iwl_mvm_sta_from_mac80211(sta);
++	vif = mvm_sta->vif;
++
++	if (!sta->valid_links)
++		return;
++
++	for (link_id = 0; link_id < ARRAY_SIZE((sta)->link); link_id++) {
++		struct iwl_mvm_link_sta *mvm_link_sta;
++
++		mvm_link_sta =
++			rcu_dereference_check(mvm_sta->link[link_id],
++					      lockdep_is_held(&mvm->mutex));
++		if (mvm_link_sta && !(vif->active_links & BIT(link_id))) {
++			/*
++			 * We have a link STA but the link is inactive in
++			 * mac80211. This will happen if we failed to
++			 * deactivate the link but mac80211 roll back the
++			 * deactivation of the link.
++			 * Delete the stale data to avoid issues later on.
++			 */
++			iwl_mvm_mld_free_sta_link(mvm, mvm_sta, mvm_link_sta,
++						  link_id, false);
++		}
++	}
++}
++
+ static void iwl_mvm_restart_cleanup(struct iwl_mvm *mvm)
+ {
+ 	iwl_mvm_stop_device(mvm);
+@@ -1137,6 +1170,10 @@ static void iwl_mvm_restart_cleanup(struct iwl_mvm *mvm)
+ 	 */
+ 	ieee80211_iterate_interfaces(mvm->hw, 0, iwl_mvm_cleanup_iterator, mvm);
+ 
++	/* cleanup stations as links may be gone after restart */
++	ieee80211_iterate_stations_atomic(mvm->hw,
++					  iwl_mvm_cleanup_sta_iterator, mvm);
++
+ 	mvm->p2p_device_vif = NULL;
+ 
+ 	iwl_mvm_reset_phy_ctxts(mvm);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mld-sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/mld-sta.c
+index 36dc291d98dd6..a21e29947475f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mld-sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mld-sta.c
+@@ -515,11 +515,11 @@ static int iwl_mvm_mld_cfg_sta(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 	return iwl_mvm_mld_send_sta_cmd(mvm, &cmd);
+ }
+ 
+-static void iwl_mvm_mld_free_sta_link(struct iwl_mvm *mvm,
+-				      struct iwl_mvm_sta *mvm_sta,
+-				      struct iwl_mvm_link_sta *mvm_sta_link,
+-				      unsigned int link_id,
+-				      bool is_in_fw)
++void iwl_mvm_mld_free_sta_link(struct iwl_mvm *mvm,
++			       struct iwl_mvm_sta *mvm_sta,
++			       struct iwl_mvm_link_sta *mvm_sta_link,
++			       unsigned int link_id,
++			       bool is_in_fw)
+ {
+ 	RCU_INIT_POINTER(mvm->fw_id_to_mac_id[mvm_sta_link->sta_id],
+ 			 is_in_fw ? ERR_PTR(-EINVAL) : NULL);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+index b3450569864eb..7dd8f7f4b4492 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.h
+@@ -638,6 +638,11 @@ int iwl_mvm_mld_update_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
+ 			   struct ieee80211_sta *sta);
+ int iwl_mvm_mld_rm_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
+ 		       struct ieee80211_sta *sta);
++void iwl_mvm_mld_free_sta_link(struct iwl_mvm *mvm,
++			       struct iwl_mvm_sta *mvm_sta,
++			       struct iwl_mvm_link_sta *mvm_sta_link,
++			       unsigned int link_id,
++			       bool is_in_fw);
+ int iwl_mvm_mld_rm_sta_id(struct iwl_mvm *mvm, u8 sta_id);
+ int iwl_mvm_mld_update_sta_links(struct iwl_mvm *mvm,
+ 				 struct ieee80211_vif *vif,
 -- 
-Ricardo Ribalda
+2.43.0
+
