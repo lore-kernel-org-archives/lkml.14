@@ -1,192 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91113A877
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CCA131E33;
+	Tue, 18 Jun 2024 07:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718695434; cv=none; b=MXdySEe8ILeabZd8EVX1kouUoae7FXsmdbKB79dZbiJtnk/qC0ixo9CQIP1gA3URUuqGDLUddawUFbiuyyMNW849Bi3yTPJkRg1zfViH0huszNYVDEe6LFV7SpoxRnikDJhFg291tUReX9QeU2+xfJAqHg7H8KTr3KgXG588/Lg=
+	t=1718695534; cv=none; b=sHccYuylJafcOPie3JhqUG0xUkoeEdnzETf7yGHou9cEKkwqdvhprLvnmMwB6+CUXcMjSIGZcnCo0jySOHSsa8EX0NX30KdZOiUr8JLn7yZFPSjwcIQoJ5PZaRr6ZZB7x5nzzz35K2amlDohQTO4ITReyOGJXVkaYAGk5SYPa3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718695434; c=relaxed/simple;
-	bh=jtutfQ/YnGXYiZoliavf4txQTcAFOGOJa0KhiybXy94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DU9797knw2Ro+ZI2WZOkUHxqDw0BXD+LHk6YG45nZrGRkjO0H/Vv4MYYYWjZCba1YMQ+/QfPX54qhDvcyTIhoSz4bvIkY7RdqUP+TUG3OVFlrcejc+vfMpYFAYAZR0u1Mb5Tm5JzEuIWefyN9fu2jFgI94kcHAhS00BwoUFDuAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E032c5qG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718695534; c=relaxed/simple;
+	bh=JY6ydblJxV3mkgvucOoAjw6D4clChvFMAFGtZ6EWhAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RmX5Pkf492CVhnWeSUKomGoQw86OOW5fL7cqB/1WsUJOnnva973WGQ+FoZtrmzv4DZuiLkHnwDm/GWqLzOyHcqpKj8LnNM+ySFHTUYHD+evJBGxuI/zoyk7f6/tF61R0LMIMFDtwJJESIQzYsAfOYnuWhxmvXWte20c4Rgw5k58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xw0sFZjX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KncEbNOS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E032c5qG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718695432;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xw0sFZjX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KncEbNOS"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718695531;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ektUs2o9ZwmGp4QGKP67xVqU+KCA2sw3x/s+8mFOJyU=;
-	b=E032c5qG2LFD1yEBJwiOUNtLfKM3IjgLZZWWAAZxO4gAIGiOPMHJT46I1Qmj1LfNnRZdvX
-	kvg3S9BxlN8HbzuOjsPmFfwRobCSFqmwkVuQpBLI+TxN1RrtawHQwUiv+PxeWwVzB4P2Av
-	WOT8OvrTQC6pXwb35AlV6Ex40tmj/rw=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-284-mk2WrX_DOhqloq_nzkGYmw-1; Tue, 18 Jun 2024 03:23:50 -0400
-X-MC-Unique: mk2WrX_DOhqloq_nzkGYmw-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-2502a80477bso109268fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 00:23:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718695429; x=1719300229;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ektUs2o9ZwmGp4QGKP67xVqU+KCA2sw3x/s+8mFOJyU=;
-        b=TlqIiMHBCEiQWrvbAFG5m7y1iDv1rytdFSJ7GwpJwr1NUGT74Dp5s8vpVCJEYGUIlV
-         Q1fy+EpoiXO0cDUprz3Mojkro39FBIO3M0++jBNphmslE1FWiinqVvunwQYGxI5e9No3
-         UGEL4koh8UL8w4atiCSZPpQoVwfM+yNiwY4ejItlmbcB6YibQkyHs1XBIbjsTJbNcZ7+
-         yJJW42GWbV/VftL9ZxKGB+7DuntSjDSo385awfT46eiEmKF8iZs84s0/cBIPNeKiW6dN
-         X71TM+BOUzYqfjNSeKnm9BDZE7ne6qxmIfFeoaKjAJ/AehUOwStD0eQ/OrT+EBj0yP4G
-         iKUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUarE5wizmVzao5p4nukBe7p+qGeJKAzLGFLC4BabL7JiGaV78jDkt6PV8gZCfIlaklQWNSbhP2xZDxFuX8oIAmj6vCeY/LGILSYDwm
-X-Gm-Message-State: AOJu0YzfRW3+tuyJDC6QIv0H4s+oAEMleZricqlrzaxrbOMM5hzkj+SD
-	0UY7aH6Z5+VIAqXB89gazaWFjWlPD0oUndPdwoC/ledVoJeWM/AwNvgtzg8bQQrN+cttKJr+m7J
-	dRKEgY7stHxNPWRiM6Ypf28o4NdN/0+OZjDeXRezxVdFLSk33PWSOQsayrv5LVg==
-X-Received: by 2002:a05:6870:9a25:b0:254:a7df:721b with SMTP id 586e51a60fabf-25842cfc466mr12492783fac.5.1718695428987;
-        Tue, 18 Jun 2024 00:23:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGzh9F+irOsR5lWcnREhTCTKn/pzQg2Hw7QKb2g0z70Pr0m1XAmIppde3Pf/VUtv48DRUNuQ==
-X-Received: by 2002:a05:6870:9a25:b0:254:a7df:721b with SMTP id 586e51a60fabf-25842cfc466mr12492771fac.5.1718695428566;
-        Tue, 18 Jun 2024 00:23:48 -0700 (PDT)
-Received: from [10.66.61.39] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3cda1sm8387767b3a.117.2024.06.18.00.23.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 00:23:48 -0700 (PDT)
-Message-ID: <25df0c92-8c02-4804-b4a0-7ec7a6790a89@redhat.com>
-Date: Tue, 18 Jun 2024 15:23:43 +0800
+	bh=D7uoLiV1k+rI19wogyKAy82/pJLM3IfKwwDbBRQvfd8=;
+	b=xw0sFZjX5HmV74K1JLR1T/oOA/jFgdzFeSVvQDQCtQCbxQVRtd7jzE0IdUaBDw4c47BB15
+	ISjxYkEnYDFnTXUlcJDL1rLFpt28U0haClaEzmOcIO3q+DKAoLllNcBpYbSQSDGVOoP2AR
+	5yKDGvfavgMkbyCbfTqOf0ff2pQoL3eVDRhmYMsgALfuJrNlMpaf58Ba7uFcJrtALN3gBT
+	ONIRZJW72GcBxOkqMzKucNoy5XlEy3gYbtBCWdDFBNwCAh1TT1cg3z8bwfp6JhMtlTLcdH
+	+wz3aX4f5qyHgS0T3hEA8PtjBdQN88onfRRECaZl/gnjI3uwMyQyMlIwIUVdVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718695531;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7uoLiV1k+rI19wogyKAy82/pJLM3IfKwwDbBRQvfd8=;
+	b=KncEbNOSElYIw3zGtTh0rMaLzKrJyPa8ff8Ez4osZAspFeBfiJGj0xStu11Mbprw3gRm44
+	n4eunjyCAYC2QwBw==
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v7 net-next 01/15] locking/local_lock: Introduce guard definition for local_lock.
+Date: Tue, 18 Jun 2024 09:13:17 +0200
+Message-ID: <20240618072526.379909-2-bigeasy@linutronix.de>
+In-Reply-To: <20240618072526.379909-1-bigeasy@linutronix.de>
+References: <20240618072526.379909-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/3] KVM: selftests: aarch64: Add invalid filter test
- in pmu_event_filter_test
-To: Raghavendra Rao Ananta <rananta@google.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>,
- kvmarm@lists.linux.dev, Eric Auger <eric.auger@redhat.com>,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240613082345.132336-1-shahuang@redhat.com>
- <20240613082345.132336-4-shahuang@redhat.com>
- <CAJHc60xpGAA1pmz0ad_Fq3a5M-pQMiyxQ4hdNhc6vQrgpSjGww@mail.gmail.com>
-Content-Language: en-US
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <CAJHc60xpGAA1pmz0ad_Fq3a5M-pQMiyxQ4hdNhc6vQrgpSjGww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
+Introduce lock guard definition for local_lock_t. There are no users
+yet.
 
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/local_lock.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On 6/18/24 08:01, Raghavendra Rao Ananta wrote:
-> Hi Shaoqin,
-> 
-> On Thu, Jun 13, 2024 at 1:27 AM Shaoqin Huang <shahuang@redhat.com> wrote:
->>
->> Add the invalid filter test which sets the filter beyond the event
->> space and sets the invalid action to double check if the
->> KVM_ARM_VCPU_PMU_V3_FILTER will return the expected error.
->>
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->> Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
->> ---
->>   .../kvm/aarch64/pmu_event_filter_test.c       | 37 +++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>
->> diff --git a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
->> index fb0fde1ed436..13b2f354c39b 100644
->> --- a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
->> +++ b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
->> @@ -8,6 +8,7 @@
->>    * This test checks if the guest only see the limited pmu event that userspace
->>    * sets, if the guest can use those events which user allow, and if the guest
->>    * can't use those events which user deny.
->> + * It also checks that setting invalid filter ranges return the expected error.
->>    * This test runs only when KVM_CAP_ARM_PMU_V3, KVM_ARM_VCPU_PMU_V3_FILTER
->>    * is supported on the host.
->>    */
->> @@ -178,6 +179,40 @@ static void destroy_vpmu_vm(void)
->>          kvm_vm_free(vpmu_vm.vm);
->>   }
->>
->> +static void test_invalid_filter(void)
->> +{
->> +       struct kvm_pmu_event_filter invalid;
->> +       int ret;
->> +
->> +       pr_info("Test: test_invalid_filter\n");
->> +
->> +       memset(&vpmu_vm, 0, sizeof(vpmu_vm));
->> +
->> +       vpmu_vm.vm = vm_create(1);
->> +       vpmu_vm.vcpu = vm_vcpu_add_with_vpmu(vpmu_vm.vm, 0, guest_code);
->> +       vpmu_vm.gic_fd = vgic_v3_setup(vpmu_vm.vm, 1, 64);
->> +       __TEST_REQUIRE(vpmu_vm.gic_fd >= 0,
->> +                      "Failed to create vgic-v3, skipping");
->> +
->> +       /* The max event number is (1 << 16), set a range largeer than it. */
-> nit: s/largeer/larger
-> 
-> Also, perhaps not in this series, but we can also check for -EBUSY
-> situations such as setting a (valid) filter after
-> KVM_ARM_VCPU_PMU_V3_INIT and after the vCPUs have started.
-> 
-
-That's also a great test, we can add it in the future.
-
-> Besides that, Reviewed-by: Raghavendra Rao Ananta <rananta@google.com>
-
-Thanks a lot for your reviewing.
-
-> 
-> - Raghavendra
-> 
-> 
-> 
->> +       invalid = __DEFINE_FILTER(BIT(15), BIT(15) + 1, 0);
->> +       ret = __kvm_device_attr_set(vpmu_vm.vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
->> +                                   KVM_ARM_VCPU_PMU_V3_FILTER, &invalid);
->> +       TEST_ASSERT(ret && errno == EINVAL, "Set Invalid filter range "
->> +                   "ret = %d, errno = %d (expected ret = -1, errno = EINVAL)",
->> +                   ret, errno);
->> +
->> +       /* Set the Invalid action. */
->> +       invalid = __DEFINE_FILTER(0, 1, 3);
->> +       ret = __kvm_device_attr_set(vpmu_vm.vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
->> +                                   KVM_ARM_VCPU_PMU_V3_FILTER, &invalid);
->> +       TEST_ASSERT(ret && errno == EINVAL, "Set Invalid filter action "
->> +                   "ret = %d, errno = %d (expected ret = -1, errno = EINVAL)",
->> +                   ret, errno);
->> +
->> +       destroy_vpmu_vm();
->> +}
->> +
->>   static void run_test(struct test_desc *t)
->>   {
->>          pr_info("Test: %s\n", t->name);
->> @@ -300,4 +335,6 @@ int main(void)
->>          TEST_REQUIRE(kvm_pmu_support_events());
->>
->>          run_tests();
->> +
->> +       test_invalid_filter();
->>   }
->> --
->> 2.40.1
->>
->>
-> 
-
--- 
-Shaoqin
+diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+index e55010fa73296..82366a37f4474 100644
+--- a/include/linux/local_lock.h
++++ b/include/linux/local_lock.h
+@@ -51,4 +51,15 @@
+ #define local_unlock_irqrestore(lock, flags)			\
+ 	__local_unlock_irqrestore(lock, flags)
+=20
++DEFINE_GUARD(local_lock, local_lock_t __percpu*,
++	     local_lock(_T),
++	     local_unlock(_T))
++DEFINE_GUARD(local_lock_irq, local_lock_t __percpu*,
++	     local_lock_irq(_T),
++	     local_unlock_irq(_T))
++DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
++		    local_lock_irqsave(_T->lock, _T->flags),
++		    local_unlock_irqrestore(_T->lock, _T->flags),
++		    unsigned long flags)
++
+ #endif
+--=20
+2.45.2
 
