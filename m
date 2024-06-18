@@ -1,57 +1,57 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242351849C2;
-	Tue, 18 Jun 2024 21:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD661849D5;
+	Tue, 18 Jun 2024 21:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718745717; cv=none; b=JtAy38UEXpvheTANdlRupPaKxoZCk661pjPTRUfAmnH1PV1UdmL/VLklRiO3VvbGi/jRSD4d6oTQOu88QdJ2odANbztmb+ikdzkU9w/vOcM2bqT76RIXQxUyByU1JnLY69hIUyQFBoUvjIBcAwSxX8NaHBhQXq/N0rpF+/K6qDM=
+	t=1718745721; cv=none; b=ZSQAmhikBjTDguObnef1BfmpOx07fBu7McZu1mivBnoc4Ie+5B5dxjzyZLupQA+6qeRLLVZDG4JkUtu6coLC5YwP+mcnqeSc72FZxO/4CB8Zj1gc6nRWG7E8xtldvrV+PV8S9Evdty529fvCDOEyVr5VW0O3TWIL1FodZirIkok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718745717; c=relaxed/simple;
-	bh=RKaqKORwCm79aYxEzs+AxBSumcBDYKDg+f1TlkCkgAY=;
+	s=arc-20240116; t=1718745721; c=relaxed/simple;
+	bh=Q3z2P5R/SCGJO6ZQ/NvMUnTSHdruw7V+QLoqPFYMnCQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l6XlUvSXFMdrSHq5n4kQ59Uu//XroEL/h7M/EgmEM0qfu2siUQxNNqh2KQTgG62ti02JbLvG996dnQCIYWYZfAV3/bxdqALTjwtAMkO7Znm7MhphvClgUdewLQTKQKHGwywryYMdyFIAbBa+ms4L/JvUmlMKMu5BCWKcDfw1iGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CObUcDU2; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=CkKRe1QW2WwG483bT0Xwt7jJO4L0YKEGIjeTBwp8flez3+zzkgsTHiHFr02T7IhL8iHGGGqzRy1zSNv+gHhJ2Sc2ccp4TCk3wiwBncbOt2DL1aCRNhi3X/hB0JwnemXR2LF3NaO+hCdTMNWN5O22bMyZM9ty2dN2mgnJ8W8AmJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ju2BBxHe; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CObUcDU2"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f4a5344ec7so1776855ad.1;
-        Tue, 18 Jun 2024 14:21:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju2BBxHe"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f70fdc9644so2105065ad.0;
+        Tue, 18 Jun 2024 14:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718745714; x=1719350514; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718745718; x=1719350518; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bkY+WmY00tL6nNODrprJnabUNPsEYaOpiIEorWThkhs=;
-        b=CObUcDU2M/Jk1Tp/MO7WdSkfc159EWh4X7/owS/J9hh8qhvsHohbld2d1ukCfN8RNZ
-         bm552F9oGOAPEm+TZGUzg0jr9fEY6UZEjtKMznlmBXECVTqQtrT4e8h7UZRpm1exQ+ab
-         tx+jgfKLRxFvLSj3JDRcdQNF7rc4MpPhNsNDiD6rJWVMl6R2D+GKKM48SaTQt454OyWD
-         ORORb21+6yWsmOnH92NvLTJGlG8+9OC8NhXmkMUbHuxYVESr2BUKpXRBk/fzAuwq7KrJ
-         0uq7HGhN/C77R8rD+iXcVfvsMHAYNnRYji8GNr0cTNlqSPpPC3fC5EmIGubMwYXk2xCo
-         bl9w==
+        bh=8zieK3tFDL+/w1uUktoaY8l58exkpo48XXYmUJxwLSc=;
+        b=Ju2BBxHepiD2XCUIQ46CoBaWjxJZei5BtIRsoj4ntZyGkQHv8WxPG4cGSItgvqPMen
+         QFXKPNKchSa75zgfsX6z+z79pJdopfq2me5WZOQK/KNn9TJSVsU6fjDpoQQ1mE7iBz1u
+         hEQVYNr/QBAJWjryAEkccuCNEq7YSAdItaTSzZfZwd/f0GJQ+4xuxvimKb72Dxj8jtAZ
+         pjJAQX8Fm/B4kSeTO4Z6qydNViF3A8tfvcHJPh9v2ia5PEKTqYiIRlVfnQ4VqmIGVzk7
+         KQuYA80MBP2t2jMYkN95mlQmFH3vKoWaXJrQJX+DcqvbDbkh/pBJBL5vYEK7/6amI7yj
+         8/FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718745714; x=1719350514;
+        d=1e100.net; s=20230601; t=1718745718; x=1719350518;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=bkY+WmY00tL6nNODrprJnabUNPsEYaOpiIEorWThkhs=;
-        b=G5vmsvjEExWuRSRXETDvrv/wdXJAT1MkEjOcwSd8apEpkkylox9VGlwMJkLClqP+n2
-         57tPV72SbEmvmfOBDv1yEQb9aL3KbsUtlR8yfpO8NM5zvc+K7glE1QMeOKMIPBnuv+RN
-         WBzSJMGDUjZ4nE8iCt7ASLD4OULXTaa9rv5RE5mkbbjiqbPN6qDCw3aiyfBgzBgQjfNT
-         DtlIG87+k9qyXr8FIzkr4tg2WvXVqQjcYu+2Qi6VlHk4g/pqlykJd/sEo2Pk2CFNxRIR
-         J4pnkFckxmGzPxlQPVBPKdQzrJSSAmvSadWts8bpimPrlB3f0kzPf2iQ+EuTTc4lV1ib
-         ZP9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVxRo8CXud6uRWP25KImGgbPeDrNBBHmCpmpYj1IfKa8mfjGHa6++rYdtm46jA6oe/mhOUqxaw6IOU3aHvMfZj5laI+
-X-Gm-Message-State: AOJu0YwwqQCJkvyuNCiwBxlqu8piHmkigblYl7rhyNK9Y//MyQWqgWt8
-	n4Rnx8dFjJM9hYidkjbanm8OY/chIzOv+jAkd/4caZDg1BSMPS6z
-X-Google-Smtp-Source: AGHT+IF0HzQwdRzfH5y57MI+fW+XGvO91pfh/qwLumrSwAD6UP2AawBChHsagDBx9o7msuxnqc1Tyw==
-X-Received: by 2002:a17:902:ecd1:b0:1f7:1b61:af6a with SMTP id d9443c01a7336-1f98b28d628mr50818485ad.28.1718745714103;
-        Tue, 18 Jun 2024 14:21:54 -0700 (PDT)
+        bh=8zieK3tFDL+/w1uUktoaY8l58exkpo48XXYmUJxwLSc=;
+        b=bOcFTMGfeOgoOiQSfu6Wio39YFPbPdeV1AP9wqrMtGEoIpXlQGYxYjokJK7d0rFYzW
+         KSaMOtRL+zfR+xxv9E8fbrmWuQigQmQjnOqDQgcnWJ+7fk9Y40yrFvria9kJXsqbFxRC
+         7IkujMTrdoyz6J9Ao1dMiNBLm16goJB1BwE7jlrABlqUDbirp408Dxu7Pvev2OxM4hPB
+         jJxoFQz3igvoJmiYZz7oSqto/SWCROaEoQtaRzwbP5NFwImyGU+c05WmzlDBL16O2TQ5
+         Jjwtze/rn4/issts9zDlmB5X5Vy2VA2xhmWbyAaUTHNfInZ4ifiduMeVPu/Lki1izlyq
+         gu1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUoqks7GflgS7303VLKX6rlRdi5beZOgBiwFm6wtKN3uo5nHaC1ZkYLIYYleOD1Hz+AzsxAjFHzqupK1MIFTMrsZxt5
+X-Gm-Message-State: AOJu0YxQpKE3hXUNDYTnEJpk7B4T6xdxADA5aD23uKPnh1uxv01IzDKd
+	1zNRkZh1rxzwe3Gx62Fk7qtBGSTje29C9Gz2e7NPv2Hoy5R1TKWd
+X-Google-Smtp-Source: AGHT+IFHTF+lvWNFc8D3bfJw3EjYPHsUD8neUX++ZgSHa/Ejlu+PRqEb1fs0gzDxRfwxiMvg5JF9dw==
+X-Received: by 2002:a17:902:f684:b0:1f6:a572:86ab with SMTP id d9443c01a7336-1f9a8d5de07mr13986185ad.15.1718745717788;
+        Tue, 18 Jun 2024 14:21:57 -0700 (PDT)
 Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855efea73sm101632565ad.182.2024.06.18.14.21.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855ee9e3csm102493935ad.169.2024.06.18.14.21.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 14:21:53 -0700 (PDT)
+        Tue, 18 Jun 2024 14:21:57 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	kernel-team@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 25/30] sched_ext: Implement sched_ext_ops.cpu_online/offline()
-Date: Tue, 18 Jun 2024 11:17:40 -1000
-Message-ID: <20240618212056.2833381-26-tj@kernel.org>
+Subject: [PATCH 27/30] sched_ext: Implement core-sched support
+Date: Tue, 18 Jun 2024 11:17:42 -1000
+Message-ID: <20240618212056.2833381-28-tj@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240618212056.2833381-1-tj@kernel.org>
 References: <20240618212056.2833381-1-tj@kernel.org>
@@ -101,652 +101,717 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add ops.cpu_online/offline() which are invoked when CPUs come online and
-offline respectively. As the enqueue path already automatically bypasses
-tasks to the local dsq on a deactivated CPU, BPF schedulers are guaranteed
-to see tasks only on CPUs which are between online() and offline().
+The core-sched support is composed of the following parts:
 
-If the BPF scheduler doesn't implement ops.cpu_online/offline(), the
-scheduler is automatically exited with SCX_ECODE_RESTART |
-SCX_ECODE_RSN_HOTPLUG. Userspace can implement CPU hotpplug support
-trivially by simply reinitializing and reloading the scheduler.
+- task_struct->scx.core_sched_at is added. This is a timestamp which can be
+  used to order tasks. Depending on whether the BPF scheduler implements
+  custom ordering, it tracks either global FIFO ordering of all tasks or
+  local-DSQ ordering within the dispatched tasks on a CPU.
 
-scx_qmap is updated to print out online CPUs on hotplug events. Other
-schedulers are updated to restart based on ecode.
+- prio_less() is updated to call scx_prio_less() when comparing SCX tasks.
+  scx_prio_less() calls ops.core_sched_before() if available or uses the
+  core_sched_at timestamp. For global FIFO ordering, the BPF scheduler
+  doesn't need to do anything. Otherwise, it should implement
+  ops.core_sched_before() which reflects the ordering.
 
-v3: - The previous implementation added @reason to
-      sched_class.rq_on/offline() to distinguish between CPU hotplug events
-      and topology updates. This was buggy and fragile as the methods are
-      skipped if the current state equals the target state. Instead, add
-      scx_rq_[de]activate() which are directly called from
-      sched_cpu_de/activate(). This also allows ops.cpu_on/offline() to
-      sleep which can be useful.
+- When core-sched is enabled, balance_scx() balances all SMT siblings so
+  that they all have tasks dispatched if necessary before pick_task_scx() is
+  called. pick_task_scx() picks between the current task and the first
+  dispatched task on the local DSQ based on availability and the
+  core_sched_at timestamps. Note that FIFO ordering is expected among the
+  already dispatched tasks whether running or on the local DSQ, so this path
+  always compares core_sched_at instead of calling into
+  ops.core_sched_before().
 
-    - ops.dispatch() could be called on a CPU that the BPF scheduler was
-      told to be offline. The dispatch patch is updated to bypass in such
-      cases.
+qmap_core_sched_before() is added to scx_qmap. It scales the
+distances from the heads of the queues to compare the tasks across different
+priority queues and seems to behave as expected.
 
-v2: - To accommodate lock ordering change between scx_cgroup_rwsem and
-      cpus_read_lock(), CPU hotplug operations are put into its own SCX_OPI
-      block and enabled eariler during scx_ope_enable() so that
-      cpus_read_lock() can be dropped before acquiring scx_cgroup_rwsem.
+v3: Fixed build error when !CONFIG_SCHED_SMT reported by Andrea Righi.
 
-    - Auto exit with ECODE added.
+v2: Sched core added the const qualifiers to prio_less task arguments.
+    Explicitly drop them for ops.core_sched_before() task arguments. BPF
+    enforces access control through the verifier, so the qualifier isn't
+    actually operative and only gets in the way when interacting with
+    various helpers.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: David Vernet <dvernet@meta.com>
-Acked-by: Josh Don <joshdon@google.com>
-Acked-by: Hao Luo <haoluo@google.com>
-Acked-by: Barret Rhoden <brho@google.com>
+Reviewed-by: Josh Don <joshdon@google.com>
+Cc: Andrea Righi <andrea.righi@canonical.com>
 ---
- kernel/sched/core.c                          |   4 +
- kernel/sched/ext.c                           | 156 ++++++++++++++++++-
- kernel/sched/ext.h                           |   4 +
- kernel/sched/sched.h                         |   6 +
- tools/sched_ext/include/scx/compat.h         |  26 ++++
- tools/sched_ext/include/scx/user_exit_info.h |  28 ++++
- tools/sched_ext/scx_central.c                |   9 +-
- tools/sched_ext/scx_qmap.bpf.c               |  57 +++++++
- tools/sched_ext/scx_qmap.c                   |   4 +
- tools/sched_ext/scx_simple.c                 |   8 +-
- 10 files changed, 290 insertions(+), 12 deletions(-)
+ include/linux/sched/ext.h      |   3 +
+ kernel/Kconfig.preempt         |   2 +-
+ kernel/sched/core.c            |  10 +-
+ kernel/sched/ext.c             | 250 +++++++++++++++++++++++++++++++--
+ kernel/sched/ext.h             |   5 +
+ tools/sched_ext/scx_qmap.bpf.c |  91 +++++++++++-
+ tools/sched_ext/scx_qmap.c     |   5 +-
+ 7 files changed, 346 insertions(+), 20 deletions(-)
 
+diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
+index 21c627337e01..3db7b32b2d1d 100644
+--- a/include/linux/sched/ext.h
++++ b/include/linux/sched/ext.h
+@@ -129,6 +129,9 @@ struct sched_ext_entity {
+ 	struct list_head	runnable_node;	/* rq->scx.runnable_list */
+ 	unsigned long		runnable_at;
+ 
++#ifdef CONFIG_SCHED_CORE
++	u64			core_sched_at;	/* see scx_prio_less() */
++#endif
+ 	u64			ddsp_dsq_id;
+ 	u64			ddsp_enq_flags;
+ 
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index 39ecfc2b5a1c..7dde5e424ac3 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -135,7 +135,7 @@ config SCHED_CORE
+ 
+ config SCHED_CLASS_EXT
+ 	bool "Extensible Scheduling Class"
+-	depends on BPF_SYSCALL && BPF_JIT && !SCHED_CORE
++	depends on BPF_SYSCALL && BPF_JIT
+ 	help
+ 	  This option enables a new scheduler class sched_ext (SCX), which
+ 	  allows scheduling policies to be implemented as BPF programs to
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0e6ff33f34e4..c798c847d57e 100644
+index c798c847d57e..5eec6639773b 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -7984,6 +7984,8 @@ int sched_cpu_activate(unsigned int cpu)
- 		cpuset_cpu_active();
- 	}
+@@ -169,7 +169,10 @@ static inline int __task_prio(const struct task_struct *p)
+ 	if (p->sched_class == &idle_sched_class)
+ 		return MAX_RT_PRIO + NICE_WIDTH; /* 140 */
  
-+	scx_rq_activate(rq);
+-	return MAX_RT_PRIO + MAX_NICE; /* 120, squash fair */
++	if (task_on_scx(p))
++		return MAX_RT_PRIO + MAX_NICE + 1; /* 120, squash ext */
 +
- 	/*
- 	 * Put the rq online, if not already. This happens:
- 	 *
-@@ -8044,6 +8046,8 @@ int sched_cpu_deactivate(unsigned int cpu)
- 	}
- 	rq_unlock_irqrestore(rq, &rf);
++	return MAX_RT_PRIO + MAX_NICE; /* 119, squash fair */
+ }
  
-+	scx_rq_deactivate(rq);
+ /*
+@@ -198,6 +201,11 @@ static inline bool prio_less(const struct task_struct *a,
+ 	if (pa == MAX_RT_PRIO + MAX_NICE)	/* fair */
+ 		return cfs_prio_less(a, b, in_fi);
+ 
++#ifdef CONFIG_SCHED_CLASS_EXT
++	if (pa == MAX_RT_PRIO + MAX_NICE + 1)	/* ext */
++		return scx_prio_less(a, b, in_fi);
++#endif
 +
- #ifdef CONFIG_SCHED_SMT
- 	/*
- 	 * When going down, decrement the number of cores with SMT present.
+ 	return false;
+ }
+ 
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 686dab6ab592..7c2f2a542b32 100644
+index 26616cd0c5df..1feb690be9d8 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
-@@ -30,6 +30,29 @@ enum scx_exit_kind {
- 	SCX_EXIT_ERROR_STALL,	/* watchdog detected stalled runnable tasks */
+@@ -344,6 +344,24 @@ struct sched_ext_ops {
+ 	 */
+ 	bool (*yield)(struct task_struct *from, struct task_struct *to);
+ 
++	/**
++	 * core_sched_before - Task ordering for core-sched
++	 * @a: task A
++	 * @b: task B
++	 *
++	 * Used by core-sched to determine the ordering between two tasks. See
++	 * Documentation/admin-guide/hw-vuln/core-scheduling.rst for details on
++	 * core-sched.
++	 *
++	 * Both @a and @b are runnable and may or may not currently be queued on
++	 * the BPF scheduler. Should return %true if @a should run before @b.
++	 * %false if there's no required ordering or @b should run before @a.
++	 *
++	 * If not specified, the default is ordering them according to when they
++	 * became runnable.
++	 */
++	bool (*core_sched_before)(struct task_struct *a, struct task_struct *b);
++
+ 	/**
+ 	 * set_weight - Set task weight
+ 	 * @p: task to set weight for
+@@ -625,6 +643,14 @@ enum scx_enq_flags {
+ enum scx_deq_flags {
+ 	/* expose select DEQUEUE_* flags as enums */
+ 	SCX_DEQ_SLEEP		= DEQUEUE_SLEEP,
++
++	/* high 32bits are SCX specific */
++
++	/*
++	 * The generic core-sched layer decided to execute the task even though
++	 * it hasn't been dispatched yet. Dequeue from the BPF side.
++	 */
++	SCX_DEQ_CORE_SCHED_EXEC	= 1LLU << 32,
  };
  
-+/*
-+ * An exit code can be specified when exiting with scx_bpf_exit() or
-+ * scx_ops_exit(), corresponding to exit_kind UNREG_BPF and UNREG_KERN
-+ * respectively. The codes are 64bit of the format:
+ enum scx_pick_idle_cpu_flags {
+@@ -1260,6 +1286,49 @@ static int ops_sanitize_err(const char *ops_name, s32 err)
+ 	return -EPROTO;
+ }
+ 
++/**
++ * touch_core_sched - Update timestamp used for core-sched task ordering
++ * @rq: rq to read clock from, must be locked
++ * @p: task to update the timestamp for
 + *
-+ *   Bits: [63  ..  48 47   ..  32 31 .. 0]
-+ *         [ SYS ACT ] [ SYS RSN ] [ USR  ]
-+ *
-+ *   SYS ACT: System-defined exit actions
-+ *   SYS RSN: System-defined exit reasons
-+ *   USR    : User-defined exit codes and reasons
-+ *
-+ * Using the above, users may communicate intention and context by ORing system
-+ * actions and/or system reasons with a user-defined exit code.
++ * Update @p->scx.core_sched_at timestamp. This is used by scx_prio_less() to
++ * implement global or local-DSQ FIFO ordering for core-sched. Should be called
++ * when a task becomes runnable and its turn on the CPU ends (e.g. slice
++ * exhaustion).
 + */
-+enum scx_exit_code {
-+	/* Reasons */
-+	SCX_ECODE_RSN_HOTPLUG	= 1LLU << 32,
-+
-+	/* Actions */
-+	SCX_ECODE_ACT_RESTART	= 1LLU << 48,
-+};
-+
- /*
-  * scx_exit_info is passed to ops.exit() to describe why the BPF scheduler is
-  * being disabled.
-@@ -457,7 +480,29 @@ struct sched_ext_ops {
- 	void (*dump_task)(struct scx_dump_ctx *ctx, struct task_struct *p);
- 
- 	/*
--	 * All online ops must come before ops.init().
-+	 * All online ops must come before ops.cpu_online().
-+	 */
-+
-+	/**
-+	 * cpu_online - A CPU became online
-+	 * @cpu: CPU which just came up
-+	 *
-+	 * @cpu just came online. @cpu will not call ops.enqueue() or
-+	 * ops.dispatch(), nor run tasks associated with other CPUs beforehand.
-+	 */
-+	void (*cpu_online)(s32 cpu);
-+
-+	/**
-+	 * cpu_offline - A CPU is going offline
-+	 * @cpu: CPU which is going offline
-+	 *
-+	 * @cpu is going offline. @cpu will not call ops.enqueue() or
-+	 * ops.dispatch(), nor run tasks associated with other CPUs afterwards.
-+	 */
-+	void (*cpu_offline)(s32 cpu);
-+
++static void touch_core_sched(struct rq *rq, struct task_struct *p)
++{
++#ifdef CONFIG_SCHED_CORE
 +	/*
-+	 * All CPU hotplug ops must come before ops.init().
- 	 */
- 
- 	/**
-@@ -496,6 +541,15 @@ struct sched_ext_ops {
- 	 */
- 	u32 exit_dump_len;
- 
-+	/**
-+	 * hotplug_seq - A sequence number that may be set by the scheduler to
-+	 * detect when a hotplug event has occurred during the loading process.
-+	 * If 0, no detection occurs. Otherwise, the scheduler will fail to
-+	 * load if the sequence number does not match @scx_hotplug_seq on the
-+	 * enable path.
++	 * It's okay to update the timestamp spuriously. Use
++	 * sched_core_disabled() which is cheaper than enabled().
 +	 */
-+	u64 hotplug_seq;
++	if (!sched_core_disabled())
++		p->scx.core_sched_at = rq_clock_task(rq);
++#endif
++}
 +
- 	/**
- 	 * name - BPF scheduler's name
- 	 *
-@@ -509,7 +563,9 @@ struct sched_ext_ops {
- enum scx_opi {
- 	SCX_OPI_BEGIN			= 0,
- 	SCX_OPI_NORMAL_BEGIN		= 0,
--	SCX_OPI_NORMAL_END		= SCX_OP_IDX(init),
-+	SCX_OPI_NORMAL_END		= SCX_OP_IDX(cpu_online),
-+	SCX_OPI_CPU_HOTPLUG_BEGIN	= SCX_OP_IDX(cpu_online),
-+	SCX_OPI_CPU_HOTPLUG_END		= SCX_OP_IDX(init),
- 	SCX_OPI_END			= SCX_OP_IDX(init),
- };
- 
-@@ -694,6 +750,7 @@ static atomic_t scx_exit_kind = ATOMIC_INIT(SCX_EXIT_DONE);
- static struct scx_exit_info *scx_exit_info;
- 
- static atomic_long_t scx_nr_rejected = ATOMIC_LONG_INIT(0);
-+static atomic_long_t scx_hotplug_seq = ATOMIC_LONG_INIT(0);
- 
- /*
-  * The maximum amount of time in jiffies that a task may be runnable without
-@@ -1419,11 +1476,7 @@ static void direct_dispatch(struct task_struct *p, u64 enq_flags)
- 
- static bool scx_rq_online(struct rq *rq)
++/**
++ * touch_core_sched_dispatch - Update core-sched timestamp on dispatch
++ * @rq: rq to read clock from, must be locked
++ * @p: task being dispatched
++ *
++ * If the BPF scheduler implements custom core-sched ordering via
++ * ops.core_sched_before(), @p->scx.core_sched_at is used to implement FIFO
++ * ordering within each local DSQ. This function is called from dispatch paths
++ * and updates @p->scx.core_sched_at if custom core-sched ordering is in effect.
++ */
++static void touch_core_sched_dispatch(struct rq *rq, struct task_struct *p)
++{
++	lockdep_assert_rq_held(rq);
++	assert_clock_updated(rq);
++
++#ifdef CONFIG_SCHED_CORE
++	if (SCX_HAS_OP(core_sched_before))
++		touch_core_sched(rq, p);
++#endif
++}
++
+ static void update_curr_scx(struct rq *rq)
  {
--#ifdef CONFIG_SMP
--	return likely(rq->online);
--#else
--	return true;
--#endif
-+	return likely(rq->scx.flags & SCX_RQ_ONLINE);
- }
+ 	struct task_struct *curr = rq->curr;
+@@ -1275,8 +1344,11 @@ static void update_curr_scx(struct rq *rq)
+ 	account_group_exec_runtime(curr, delta_exec);
+ 	cgroup_account_cputime(curr, delta_exec);
  
- static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
-@@ -1438,6 +1491,11 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 	if (sticky_cpu == cpu_of(rq))
- 		goto local_norefill;
- 
-+	/*
-+	 * If !scx_rq_online(), we already told the BPF scheduler that the CPU
-+	 * is offline and are just running the hotplug path. Don't bother the
-+	 * BPF scheduler.
-+	 */
- 	if (!scx_rq_online(rq))
- 		goto local;
- 
-@@ -2673,6 +2731,42 @@ void __scx_update_idle(struct rq *rq, bool idle)
- #endif
- }
- 
-+static void handle_hotplug(struct rq *rq, bool online)
-+{
-+	int cpu = cpu_of(rq);
-+
-+	atomic_long_inc(&scx_hotplug_seq);
-+
-+	if (online && SCX_HAS_OP(cpu_online))
-+		SCX_CALL_OP(SCX_KF_SLEEPABLE, cpu_online, cpu);
-+	else if (!online && SCX_HAS_OP(cpu_offline))
-+		SCX_CALL_OP(SCX_KF_SLEEPABLE, cpu_offline, cpu);
-+	else
-+		scx_ops_exit(SCX_ECODE_ACT_RESTART | SCX_ECODE_RSN_HOTPLUG,
-+			     "cpu %d going %s, exiting scheduler", cpu,
-+			     online ? "online" : "offline");
-+}
-+
-+void scx_rq_activate(struct rq *rq)
-+{
-+	handle_hotplug(rq, true);
-+}
-+
-+void scx_rq_deactivate(struct rq *rq)
-+{
-+	handle_hotplug(rq, false);
-+}
-+
-+static void rq_online_scx(struct rq *rq)
-+{
-+	rq->scx.flags |= SCX_RQ_ONLINE;
-+}
-+
-+static void rq_offline_scx(struct rq *rq)
-+{
-+	rq->scx.flags &= ~SCX_RQ_ONLINE;
-+}
-+
- #else	/* CONFIG_SMP */
- 
- static bool test_and_clear_cpu_idle(int cpu) { return false; }
-@@ -3104,6 +3198,9 @@ DEFINE_SCHED_CLASS(ext) = {
- 	.balance		= balance_scx,
- 	.select_task_rq		= select_task_rq_scx,
- 	.set_cpus_allowed	= set_cpus_allowed_scx,
-+
-+	.rq_online		= rq_online_scx,
-+	.rq_offline		= rq_offline_scx,
- #endif
- 
- 	.task_tick		= task_tick_scx,
-@@ -3235,10 +3332,18 @@ static ssize_t scx_attr_nr_rejected_show(struct kobject *kobj,
- }
- SCX_ATTR(nr_rejected);
- 
-+static ssize_t scx_attr_hotplug_seq_show(struct kobject *kobj,
-+					 struct kobj_attribute *ka, char *buf)
-+{
-+	return sysfs_emit(buf, "%ld\n", atomic_long_read(&scx_hotplug_seq));
-+}
-+SCX_ATTR(hotplug_seq);
-+
- static struct attribute *scx_global_attrs[] = {
- 	&scx_attr_state.attr,
- 	&scx_attr_switch_all.attr,
- 	&scx_attr_nr_rejected.attr,
-+	&scx_attr_hotplug_seq.attr,
- 	NULL,
- };
- 
-@@ -3941,6 +4046,25 @@ static struct kthread_worker *scx_create_rt_helper(const char *name)
- 	return helper;
- }
- 
-+static void check_hotplug_seq(const struct sched_ext_ops *ops)
-+{
-+	unsigned long long global_hotplug_seq;
-+
-+	/*
-+	 * If a hotplug event has occurred between when a scheduler was
-+	 * initialized, and when we were able to attach, exit and notify user
-+	 * space about it.
-+	 */
-+	if (ops->hotplug_seq) {
-+		global_hotplug_seq = atomic_long_read(&scx_hotplug_seq);
-+		if (ops->hotplug_seq != global_hotplug_seq) {
-+			scx_ops_exit(SCX_ECODE_ACT_RESTART | SCX_ECODE_RSN_HOTPLUG,
-+				     "expected hotplug seq %llu did not match actual %llu",
-+				     ops->hotplug_seq, global_hotplug_seq);
-+		}
+-	if (curr->scx.slice != SCX_SLICE_INF)
++	if (curr->scx.slice != SCX_SLICE_INF) {
+ 		curr->scx.slice -= min(curr->scx.slice, delta_exec);
++		if (!curr->scx.slice)
++			touch_core_sched(rq, curr);
 +	}
-+}
-+
- static int validate_ops(const struct sched_ext_ops *ops)
+ }
+ 
+ static void dsq_mod_nr(struct scx_dispatch_q *dsq, s32 delta)
+@@ -1469,6 +1541,8 @@ static void direct_dispatch(struct task_struct *p, u64 enq_flags)
  {
+ 	struct scx_dispatch_q *dsq;
+ 
++	touch_core_sched_dispatch(task_rq(p), p);
++
+ 	enq_flags |= (p->scx.ddsp_enq_flags | SCX_ENQ_CLEAR_OPSS);
+ 	dsq = find_dsq_for_dispatch(task_rq(p), p->scx.ddsp_dsq_id, p);
+ 	dispatch_enqueue(dsq, p, enq_flags);
+@@ -1550,12 +1624,19 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+ 	return;
+ 
+ local:
++	/*
++	 * For task-ordering, slice refill must be treated as implying the end
++	 * of the current slice. Otherwise, the longer @p stays on the CPU, the
++	 * higher priority it becomes from scx_prio_less()'s POV.
++	 */
++	touch_core_sched(rq, p);
+ 	p->scx.slice = SCX_SLICE_DFL;
+ local_norefill:
+ 	dispatch_enqueue(&rq->scx.local_dsq, p, enq_flags);
+ 	return;
+ 
+ global:
++	touch_core_sched(rq, p);	/* see the comment in local: */
+ 	p->scx.slice = SCX_SLICE_DFL;
+ 	dispatch_enqueue(&scx_dsq_global, p, enq_flags);
+ }
+@@ -1619,6 +1700,9 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
+ 	if (SCX_HAS_OP(runnable))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, runnable, p, enq_flags);
+ 
++	if (enq_flags & SCX_ENQ_WAKEUP)
++		touch_core_sched(rq, p);
++
+ 	do_enqueue_task(rq, p, enq_flags, sticky_cpu);
+ }
+ 
+@@ -2106,6 +2190,7 @@ static void finish_dispatch(struct rq *rq, struct rq_flags *rf,
+ 	struct scx_dispatch_q *dsq;
+ 	unsigned long opss;
+ 
++	touch_core_sched_dispatch(rq, p);
+ retry:
  	/*
-@@ -4023,6 +4147,10 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ 	 * No need for _acquire here. @p is accessed only after a successful
+@@ -2183,8 +2268,8 @@ static void flush_dispatch_buf(struct rq *rq, struct rq_flags *rf)
+ 	dspc->cursor = 0;
+ }
+ 
+-static int balance_scx(struct rq *rq, struct task_struct *prev,
+-		       struct rq_flags *rf)
++static int balance_one(struct rq *rq, struct task_struct *prev,
++		       struct rq_flags *rf, bool local)
+ {
+ 	struct scx_dsp_ctx *dspc = this_cpu_ptr(scx_dsp_ctx);
+ 	bool prev_on_scx = prev->sched_class == &ext_sched_class;
+@@ -2208,7 +2293,7 @@ static int balance_scx(struct rq *rq, struct task_struct *prev,
+ 	}
+ 
+ 	if (prev_on_scx) {
+-		WARN_ON_ONCE(prev->scx.flags & SCX_TASK_BAL_KEEP);
++		WARN_ON_ONCE(local && (prev->scx.flags & SCX_TASK_BAL_KEEP));
+ 		update_curr_scx(rq);
+ 
+ 		/*
+@@ -2220,10 +2305,16 @@ static int balance_scx(struct rq *rq, struct task_struct *prev,
+ 		 *
+ 		 * See scx_ops_disable_workfn() for the explanation on the
+ 		 * bypassing test.
++		 *
++		 * When balancing a remote CPU for core-sched, there won't be a
++		 * following put_prev_task_scx() call and we don't own
++		 * %SCX_TASK_BAL_KEEP. Instead, pick_task_scx() will test the
++		 * same conditions later and pick @rq->curr accordingly.
+ 		 */
+ 		if ((prev->scx.flags & SCX_TASK_QUEUED) &&
+ 		    prev->scx.slice && !scx_ops_bypassing()) {
+-			prev->scx.flags |= SCX_TASK_BAL_KEEP;
++			if (local)
++				prev->scx.flags |= SCX_TASK_BAL_KEEP;
+ 			goto has_tasks;
  		}
  	}
+@@ -2285,10 +2376,56 @@ static int balance_scx(struct rq *rq, struct task_struct *prev,
+ 	return has_tasks;
+ }
  
-+	for (i = SCX_OPI_CPU_HOTPLUG_BEGIN; i < SCX_OPI_CPU_HOTPLUG_END; i++)
-+		if (((void (**)(void))ops)[i])
-+			static_branch_enable_cpuslocked(&scx_has_op[i]);
++static int balance_scx(struct rq *rq, struct task_struct *prev,
++		       struct rq_flags *rf)
++{
++	int ret;
 +
- 	cpus_read_unlock();
- 
- 	ret = validate_ops(ops);
-@@ -4064,6 +4192,8 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
- 	percpu_down_write(&scx_fork_rwsem);
- 	cpus_read_lock();
- 
-+	check_hotplug_seq(ops);
++	ret = balance_one(rq, prev, rf, true);
 +
- 	for (i = SCX_OPI_NORMAL_BEGIN; i < SCX_OPI_NORMAL_END; i++)
- 		if (((void (**)(void))ops)[i])
- 			static_branch_enable_cpuslocked(&scx_has_op[i]);
-@@ -4374,6 +4504,9 @@ static int bpf_scx_init_member(const struct btf_type *t,
- 		ops->exit_dump_len =
- 			*(u32 *)(udata + moff) ?: SCX_EXIT_DUMP_DFL_LEN;
- 		return 1;
-+	case offsetof(struct sched_ext_ops, hotplug_seq):
-+		ops->hotplug_seq = *(u64 *)(udata + moff);
-+		return 1;
- 	}
- 
- 	return 0;
-@@ -4387,6 +4520,8 @@ static int bpf_scx_check_member(const struct btf_type *t,
- 
- 	switch (moff) {
- 	case offsetof(struct sched_ext_ops, init_task):
-+	case offsetof(struct sched_ext_ops, cpu_online):
-+	case offsetof(struct sched_ext_ops, cpu_offline):
- 	case offsetof(struct sched_ext_ops, init):
- 	case offsetof(struct sched_ext_ops, exit):
- 		break;
-@@ -4457,6 +4592,8 @@ static s32 init_task_stub(struct task_struct *p, struct scx_init_task_args *args
- static void exit_task_stub(struct task_struct *p, struct scx_exit_task_args *args) {}
- static void enable_stub(struct task_struct *p) {}
- static void disable_stub(struct task_struct *p) {}
-+static void cpu_online_stub(s32 cpu) {}
-+static void cpu_offline_stub(s32 cpu) {}
- static s32 init_stub(void) { return -EINVAL; }
- static void exit_stub(struct scx_exit_info *info) {}
- 
-@@ -4479,6 +4616,8 @@ static struct sched_ext_ops __bpf_ops_sched_ext_ops = {
- 	.exit_task = exit_task_stub,
- 	.enable = enable_stub,
- 	.disable = disable_stub,
-+	.cpu_online = cpu_online_stub,
-+	.cpu_offline = cpu_offline_stub,
- 	.init = init_stub,
- 	.exit = exit_stub,
- };
-@@ -4719,6 +4858,9 @@ void __init init_sched_ext_class(void)
- 		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_preempt, GFP_KERNEL));
- 		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_wait, GFP_KERNEL));
- 		init_irq_work(&rq->scx.kick_cpus_irq_work, kick_cpus_irq_workfn);
-+
-+		if (cpu_online(cpu))
-+			cpu_rq(cpu)->scx.flags |= SCX_RQ_ONLINE;
- 	}
- 
- 	register_sysrq_key('S', &sysrq_sched_ext_reset_op);
-diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
-index 4ebd1c2478f1..037f9acdf443 100644
---- a/kernel/sched/ext.h
-+++ b/kernel/sched/ext.h
-@@ -40,6 +40,8 @@ int scx_fork(struct task_struct *p);
- void scx_post_fork(struct task_struct *p);
- void scx_cancel_fork(struct task_struct *p);
- bool scx_can_stop_tick(struct rq *rq);
-+void scx_rq_activate(struct rq *rq);
-+void scx_rq_deactivate(struct rq *rq);
- int scx_check_setscheduler(struct task_struct *p, int policy);
- bool task_should_scx(struct task_struct *p);
- void init_sched_ext_class(void);
-@@ -81,6 +83,8 @@ static inline int scx_fork(struct task_struct *p) { return 0; }
- static inline void scx_post_fork(struct task_struct *p) {}
- static inline void scx_cancel_fork(struct task_struct *p) {}
- static inline bool scx_can_stop_tick(struct rq *rq) { return true; }
-+static inline void scx_rq_activate(struct rq *rq) {}
-+static inline void scx_rq_deactivate(struct rq *rq) {}
- static inline int scx_check_setscheduler(struct task_struct *p, int policy) { return 0; }
- static inline bool task_on_scx(const struct task_struct *p) { return false; }
- static inline void init_sched_ext_class(void) {}
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 147d18cf01ce..c0d6e42c99cc 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -726,6 +726,12 @@ struct cfs_rq {
- #ifdef CONFIG_SCHED_CLASS_EXT
- /* scx_rq->flags, protected by the rq lock */
- enum scx_rq_flags {
++#ifdef CONFIG_SCHED_SMT
 +	/*
-+	 * A hotplugged CPU starts scheduling before rq_online_scx(). Track
-+	 * ops.cpu_on/offline() state so that ops.enqueue/dispatch() are called
-+	 * only while the BPF scheduler considers the CPU to be online.
++	 * When core-sched is enabled, this ops.balance() call will be followed
++	 * by put_prev_scx() and pick_task_scx() on this CPU and pick_task_scx()
++	 * on the SMT siblings. Balance the siblings too.
 +	 */
-+	SCX_RQ_ONLINE		= 1 << 0,
- 	SCX_RQ_BALANCING	= 1 << 1,
- 	SCX_RQ_CAN_STOP_TICK	= 1 << 2,
- };
-diff --git a/tools/sched_ext/include/scx/compat.h b/tools/sched_ext/include/scx/compat.h
-index c58024c980c8..cc56ff9aa252 100644
---- a/tools/sched_ext/include/scx/compat.h
-+++ b/tools/sched_ext/include/scx/compat.h
-@@ -8,6 +8,9 @@
- #define __SCX_COMPAT_H
- 
- #include <bpf/btf.h>
-+#include <fcntl.h>
-+#include <stdlib.h>
-+#include <unistd.h>
- 
- struct btf *__COMPAT_vmlinux_btf __attribute__((weak));
- 
-@@ -106,6 +109,28 @@ static inline bool __COMPAT_struct_has_field(const char *type, const char *field
- #define SCX_OPS_SWITCH_PARTIAL							\
- 	__COMPAT_ENUM_OR_ZERO("scx_ops_flags", "SCX_OPS_SWITCH_PARTIAL")
- 
-+static inline long scx_hotplug_seq(void)
-+{
-+	int fd;
-+	char buf[32];
-+	ssize_t len;
-+	long val;
++	if (sched_core_enabled(rq)) {
++		const struct cpumask *smt_mask = cpu_smt_mask(cpu_of(rq));
++		int scpu;
 +
-+	fd = open("/sys/kernel/sched_ext/hotplug_seq", O_RDONLY);
-+	if (fd < 0)
-+		return -ENOENT;
++		for_each_cpu_andnot(scpu, smt_mask, cpumask_of(cpu_of(rq))) {
++			struct rq *srq = cpu_rq(scpu);
++			struct rq_flags srf;
++			struct task_struct *sprev = srq->curr;
 +
-+	len = read(fd, buf, sizeof(buf) - 1);
-+	SCX_BUG_ON(len <= 0, "read failed (%ld)", len);
-+	buf[len] = 0;
-+	close(fd);
++			/*
++			 * While core-scheduling, rq lock is shared among
++			 * siblings but the debug annotations and rq clock
++			 * aren't. Do pinning dance to transfer the ownership.
++			 */
++			WARN_ON_ONCE(__rq_lockp(rq) != __rq_lockp(srq));
++			rq_unpin_lock(rq, rf);
++			rq_pin_lock(srq, &srf);
 +
-+	val = strtoul(buf, NULL, 10);
-+	SCX_BUG_ON(val < 0, "invalid num hotplug events: %lu", val);
++			update_rq_clock(srq);
++			balance_one(srq, sprev, &srf, false);
 +
-+	return val;
-+}
-+
- /*
-  * struct sched_ext_ops can change over time. If compat.bpf.h::SCX_OPS_DEFINE()
-  * is used to define ops and compat.h::SCX_OPS_LOAD/ATTACH() are used to load
-@@ -123,6 +148,7 @@ static inline bool __COMPAT_struct_has_field(const char *type, const char *field
- 										\
- 	__skel = __scx_name##__open();						\
- 	SCX_BUG_ON(!__skel, "Could not open " #__scx_name);			\
-+	__skel->struct_ops.__ops_name->hotplug_seq = scx_hotplug_seq();		\
- 	__skel; 								\
- })
- 
-diff --git a/tools/sched_ext/include/scx/user_exit_info.h b/tools/sched_ext/include/scx/user_exit_info.h
-index c2ef85c645e1..891693ee604e 100644
---- a/tools/sched_ext/include/scx/user_exit_info.h
-+++ b/tools/sched_ext/include/scx/user_exit_info.h
-@@ -77,7 +77,35 @@ struct user_exit_info {
- 	if (__uei->msg[0] != '\0')						\
- 		fprintf(stderr, " (%s)", __uei->msg);				\
- 	fputs("\n", stderr);							\
-+	__uei->exit_code;							\
- })
- 
-+/*
-+ * We can't import vmlinux.h while compiling user C code. Let's duplicate
-+ * scx_exit_code definition.
-+ */
-+enum scx_exit_code {
-+	/* Reasons */
-+	SCX_ECODE_RSN_HOTPLUG		= 1LLU << 32,
-+
-+	/* Actions */
-+	SCX_ECODE_ACT_RESTART		= 1LLU << 48,
-+};
-+
-+enum uei_ecode_mask {
-+	UEI_ECODE_USER_MASK		= ((1LLU << 32) - 1),
-+	UEI_ECODE_SYS_RSN_MASK		= ((1LLU << 16) - 1) << 32,
-+	UEI_ECODE_SYS_ACT_MASK		= ((1LLU << 16) - 1) << 48,
-+};
-+
-+/*
-+ * These macro interpret the ecode returned from UEI_REPORT().
-+ */
-+#define UEI_ECODE_USER(__ecode)		((__ecode) & UEI_ECODE_USER_MASK)
-+#define UEI_ECODE_SYS_RSN(__ecode)	((__ecode) & UEI_ECODE_SYS_RSN_MASK)
-+#define UEI_ECODE_SYS_ACT(__ecode)	((__ecode) & UEI_ECODE_SYS_ACT_MASK)
-+
-+#define UEI_ECODE_RESTART(__ecode)	(UEI_ECODE_SYS_ACT((__ecode)) == SCX_ECODE_ACT_RESTART)
-+
- #endif	/* __bpf__ */
- #endif	/* __USER_EXIT_INFO_H */
-diff --git a/tools/sched_ext/scx_central.c b/tools/sched_ext/scx_central.c
-index fb3f50886552..21deea320bd7 100644
---- a/tools/sched_ext/scx_central.c
-+++ b/tools/sched_ext/scx_central.c
-@@ -46,14 +46,14 @@ int main(int argc, char **argv)
- {
- 	struct scx_central *skel;
- 	struct bpf_link *link;
--	__u64 seq = 0;
-+	__u64 seq = 0, ecode;
- 	__s32 opt;
- 	cpu_set_t *cpuset;
- 
- 	libbpf_set_print(libbpf_print_fn);
- 	signal(SIGINT, sigint_handler);
- 	signal(SIGTERM, sigint_handler);
--
-+restart:
- 	skel = SCX_OPS_OPEN(central_ops, scx_central);
- 
- 	skel->rodata->central_cpu = 0;
-@@ -126,7 +126,10 @@ int main(int argc, char **argv)
- 	}
- 
- 	bpf_link__destroy(link);
--	UEI_REPORT(skel, uei);
-+	ecode = UEI_REPORT(skel, uei);
- 	scx_central__destroy(skel);
-+
-+	if (UEI_ECODE_RESTART(ecode))
-+		goto restart;
- 	return 0;
- }
-diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
-index 4a87377558c8..619078355bf5 100644
---- a/tools/sched_ext/scx_qmap.bpf.c
-+++ b/tools/sched_ext/scx_qmap.bpf.c
-@@ -358,8 +358,63 @@ void BPF_STRUCT_OPS(qmap_dump_task, struct scx_dump_ctx *dctx, struct task_struc
- 		     taskc->force_local);
- }
- 
-+/*
-+ * Print out the online and possible CPU map using bpf_printk() as a
-+ * demonstration of using the cpumask kfuncs and ops.cpu_on/offline().
-+ */
-+static void print_cpus(void)
-+{
-+	const struct cpumask *possible, *online;
-+	s32 cpu;
-+	char buf[128] = "", *p;
-+	int idx;
-+
-+	possible = scx_bpf_get_possible_cpumask();
-+	online = scx_bpf_get_online_cpumask();
-+
-+	idx = 0;
-+	bpf_for(cpu, 0, scx_bpf_nr_cpu_ids()) {
-+		if (!(p = MEMBER_VPTR(buf, [idx++])))
-+			break;
-+		if (bpf_cpumask_test_cpu(cpu, online))
-+			*p++ = 'O';
-+		else if (bpf_cpumask_test_cpu(cpu, possible))
-+			*p++ = 'X';
-+		else
-+			*p++ = ' ';
-+
-+		if ((cpu & 7) == 7) {
-+			if (!(p = MEMBER_VPTR(buf, [idx++])))
-+				break;
-+			*p++ = '|';
++			rq_unpin_lock(srq, &srf);
++			rq_repin_lock(rq, rf);
 +		}
 +	}
-+	buf[sizeof(buf) - 1] = '\0';
-+
-+	scx_bpf_put_cpumask(online);
-+	scx_bpf_put_cpumask(possible);
-+
-+	bpf_printk("CPUS: |%s", buf);
++#endif
++	return ret;
 +}
 +
-+void BPF_STRUCT_OPS(qmap_cpu_online, s32 cpu)
-+{
-+	bpf_printk("CPU %d coming online", cpu);
-+	/* @cpu is already online at this point */
-+	print_cpus();
-+}
-+
-+void BPF_STRUCT_OPS(qmap_cpu_offline, s32 cpu)
-+{
-+	bpf_printk("CPU %d going offline", cpu);
-+	/* @cpu is still online at this point */
-+	print_cpus();
-+}
-+
- s32 BPF_STRUCT_OPS_SLEEPABLE(qmap_init)
+ static void set_next_task_scx(struct rq *rq, struct task_struct *p, bool first)
  {
-+	print_cpus();
-+
- 	return scx_bpf_create_dsq(SHARED_DSQ, -1);
- }
- 
-@@ -378,6 +433,8 @@ SCX_OPS_DEFINE(qmap_ops,
- 	       .dump			= (void *)qmap_dump,
- 	       .dump_cpu		= (void *)qmap_dump_cpu,
- 	       .dump_task		= (void *)qmap_dump_task,
-+	       .cpu_online		= (void *)qmap_cpu_online,
-+	       .cpu_offline		= (void *)qmap_cpu_offline,
- 	       .init			= (void *)qmap_init,
- 	       .exit			= (void *)qmap_exit,
- 	       .timeout_ms		= 5000U,
-diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
-index 2a97421afe9a..920fb54f9c77 100644
---- a/tools/sched_ext/scx_qmap.c
-+++ b/tools/sched_ext/scx_qmap.c
-@@ -122,5 +122,9 @@ int main(int argc, char **argv)
- 	bpf_link__destroy(link);
- 	UEI_REPORT(skel, uei);
- 	scx_qmap__destroy(skel);
-+	/*
-+	 * scx_qmap implements ops.cpu_on/offline() and doesn't need to restart
-+	 * on CPU hotplug events.
-+	 */
- 	return 0;
- }
-diff --git a/tools/sched_ext/scx_simple.c b/tools/sched_ext/scx_simple.c
-index 7f500d1d56ac..bead482e1383 100644
---- a/tools/sched_ext/scx_simple.c
-+++ b/tools/sched_ext/scx_simple.c
-@@ -62,11 +62,12 @@ int main(int argc, char **argv)
- 	struct scx_simple *skel;
- 	struct bpf_link *link;
- 	__u32 opt;
-+	__u64 ecode;
- 
- 	libbpf_set_print(libbpf_print_fn);
- 	signal(SIGINT, sigint_handler);
- 	signal(SIGTERM, sigint_handler);
--
-+restart:
- 	skel = SCX_OPS_OPEN(simple_ops, scx_simple);
- 
- 	while ((opt = getopt(argc, argv, "vh")) != -1) {
-@@ -93,7 +94,10 @@ int main(int argc, char **argv)
+ 	if (p->scx.flags & SCX_TASK_QUEUED) {
+-		WARN_ON_ONCE(atomic_long_read(&p->scx.ops_state) != SCX_OPSS_NONE);
++		/*
++		 * Core-sched might decide to execute @p before it is
++		 * dispatched. Call ops_dequeue() to notify the BPF scheduler.
++		 */
++		ops_dequeue(p, SCX_DEQ_CORE_SCHED_EXEC);
+ 		dispatch_dequeue(rq, p);
  	}
  
- 	bpf_link__destroy(link);
--	UEI_REPORT(skel, uei);
-+	ecode = UEI_REPORT(skel, uei);
- 	scx_simple__destroy(skel);
-+
-+	if (UEI_ECODE_RESTART(ecode))
-+		goto restart;
- 	return 0;
+@@ -2379,7 +2516,8 @@ static void put_prev_task_scx(struct rq *rq, struct task_struct *p)
+ 		/*
+ 		 * If @p has slice left and balance_scx() didn't tag it for
+ 		 * keeping, @p is getting preempted by a higher priority
+-		 * scheduler class. Leave it at the head of the local DSQ.
++		 * scheduler class or core-sched forcing a different task. Leave
++		 * it at the head of the local DSQ.
+ 		 */
+ 		if (p->scx.slice && !scx_ops_bypassing()) {
+ 			dispatch_enqueue(&rq->scx.local_dsq, p, SCX_ENQ_HEAD);
+@@ -2436,6 +2574,84 @@ static struct task_struct *pick_next_task_scx(struct rq *rq)
+ 	return p;
  }
+ 
++#ifdef CONFIG_SCHED_CORE
++/**
++ * scx_prio_less - Task ordering for core-sched
++ * @a: task A
++ * @b: task B
++ *
++ * Core-sched is implemented as an additional scheduling layer on top of the
++ * usual sched_class'es and needs to find out the expected task ordering. For
++ * SCX, core-sched calls this function to interrogate the task ordering.
++ *
++ * Unless overridden by ops.core_sched_before(), @p->scx.core_sched_at is used
++ * to implement the default task ordering. The older the timestamp, the higher
++ * prority the task - the global FIFO ordering matching the default scheduling
++ * behavior.
++ *
++ * When ops.core_sched_before() is enabled, @p->scx.core_sched_at is used to
++ * implement FIFO ordering within each local DSQ. See pick_task_scx().
++ */
++bool scx_prio_less(const struct task_struct *a, const struct task_struct *b,
++		   bool in_fi)
++{
++	/*
++	 * The const qualifiers are dropped from task_struct pointers when
++	 * calling ops.core_sched_before(). Accesses are controlled by the
++	 * verifier.
++	 */
++	if (SCX_HAS_OP(core_sched_before) && !scx_ops_bypassing())
++		return SCX_CALL_OP_2TASKS_RET(SCX_KF_REST, core_sched_before,
++					      (struct task_struct *)a,
++					      (struct task_struct *)b);
++	else
++		return time_after64(a->scx.core_sched_at, b->scx.core_sched_at);
++}
++
++/**
++ * pick_task_scx - Pick a candidate task for core-sched
++ * @rq: rq to pick the candidate task from
++ *
++ * Core-sched calls this function on each SMT sibling to determine the next
++ * tasks to run on the SMT siblings. balance_one() has been called on all
++ * siblings and put_prev_task_scx() has been called only for the current CPU.
++ *
++ * As put_prev_task_scx() hasn't been called on remote CPUs, we can't just look
++ * at the first task in the local dsq. @rq->curr has to be considered explicitly
++ * to mimic %SCX_TASK_BAL_KEEP.
++ */
++static struct task_struct *pick_task_scx(struct rq *rq)
++{
++	struct task_struct *curr = rq->curr;
++	struct task_struct *first = first_local_task(rq);
++
++	if (curr->scx.flags & SCX_TASK_QUEUED) {
++		/* is curr the only runnable task? */
++		if (!first)
++			return curr;
++
++		/*
++		 * Does curr trump first? We can always go by core_sched_at for
++		 * this comparison as it represents global FIFO ordering when
++		 * the default core-sched ordering is used and local-DSQ FIFO
++		 * ordering otherwise.
++		 *
++		 * We can have a task with an earlier timestamp on the DSQ. For
++		 * example, when a current task is preempted by a sibling
++		 * picking a different cookie, the task would be requeued at the
++		 * head of the local DSQ with an earlier timestamp than the
++		 * core-sched picked next task. Besides, the BPF scheduler may
++		 * dispatch any tasks to the local DSQ anytime.
++		 */
++		if (curr->scx.slice && time_before64(curr->scx.core_sched_at,
++						     first->scx.core_sched_at))
++			return curr;
++	}
++
++	return first;	/* this may be %NULL */
++}
++#endif	/* CONFIG_SCHED_CORE */
++
+ static enum scx_cpu_preempt_reason
+ preempt_reason_from_class(const struct sched_class *class)
+ {
+@@ -2843,13 +3059,15 @@ static void task_tick_scx(struct rq *rq, struct task_struct *curr, int queued)
+ 	update_curr_scx(rq);
+ 
+ 	/*
+-	 * While bypassing, always resched as we can't trust the slice
+-	 * management.
++	 * While disabling, always resched and refresh core-sched timestamp as
++	 * we can't trust the slice management or ops.core_sched_before().
+ 	 */
+-	if (scx_ops_bypassing())
++	if (scx_ops_bypassing()) {
+ 		curr->scx.slice = 0;
+-	else if (SCX_HAS_OP(tick))
++		touch_core_sched(rq, curr);
++	} else if (SCX_HAS_OP(tick)) {
+ 		SCX_CALL_OP(SCX_KF_REST, tick, curr);
++	}
+ 
+ 	if (!curr->scx.slice)
+ 		resched_curr(rq);
+@@ -3203,6 +3421,10 @@ DEFINE_SCHED_CLASS(ext) = {
+ 	.rq_offline		= rq_offline_scx,
+ #endif
+ 
++#ifdef CONFIG_SCHED_CORE
++	.pick_task		= pick_task_scx,
++#endif
++
+ 	.task_tick		= task_tick_scx,
+ 
+ 	.switching_to		= switching_to_scx,
+@@ -3416,12 +3638,14 @@ bool task_should_scx(struct task_struct *p)
+  *
+  * c. balance_scx() never sets %SCX_TASK_BAL_KEEP as the slice value can't be
+  *    trusted. Whenever a tick triggers, the running task is rotated to the tail
+- *    of the queue.
++ *    of the queue with core_sched_at touched.
+  *
+  * d. pick_next_task() suppresses zero slice warning.
+  *
+  * e. scx_bpf_kick_cpu() is disabled to avoid irq_work malfunction during PM
+  *    operations.
++ *
++ * f. scx_prio_less() reverts to the default core_sched_at order.
+  */
+ static void scx_ops_bypass(bool bypass)
+ {
+@@ -4583,6 +4807,7 @@ static void running_stub(struct task_struct *p) {}
+ static void stopping_stub(struct task_struct *p, bool runnable) {}
+ static void quiescent_stub(struct task_struct *p, u64 deq_flags) {}
+ static bool yield_stub(struct task_struct *from, struct task_struct *to) { return false; }
++static bool core_sched_before_stub(struct task_struct *a, struct task_struct *b) { return false; }
+ static void set_weight_stub(struct task_struct *p, u32 weight) {}
+ static void set_cpumask_stub(struct task_struct *p, const struct cpumask *mask) {}
+ static void update_idle_stub(s32 cpu, bool idle) {}
+@@ -4607,6 +4832,7 @@ static struct sched_ext_ops __bpf_ops_sched_ext_ops = {
+ 	.stopping = stopping_stub,
+ 	.quiescent = quiescent_stub,
+ 	.yield = yield_stub,
++	.core_sched_before = core_sched_before_stub,
+ 	.set_weight = set_weight_stub,
+ 	.set_cpumask = set_cpumask_stub,
+ 	.update_idle = update_idle_stub,
+diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
+index 037f9acdf443..6555878c5da3 100644
+--- a/kernel/sched/ext.h
++++ b/kernel/sched/ext.h
+@@ -70,6 +70,11 @@ static inline const struct sched_class *next_active_class(const struct sched_cla
+ 	for_active_class_range(class, (prev_class) > &ext_sched_class ?		\
+ 			       &ext_sched_class : (prev_class), (end_class))
+ 
++#ifdef CONFIG_SCHED_CORE
++bool scx_prio_less(const struct task_struct *a, const struct task_struct *b,
++		   bool in_fi);
++#endif
++
+ #else	/* CONFIG_SCHED_CLASS_EXT */
+ 
+ #define scx_enabled()		false
+diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
+index 619078355bf5..c75c70d6a8eb 100644
+--- a/tools/sched_ext/scx_qmap.bpf.c
++++ b/tools/sched_ext/scx_qmap.bpf.c
+@@ -13,6 +13,7 @@
+  * - Sleepable per-task storage allocation using ops.prep_enable().
+  * - Using ops.cpu_release() to handle a higher priority scheduling class taking
+  *   the CPU away.
++ * - Core-sched support.
+  *
+  * This scheduler is primarily for demonstration and testing of sched_ext
+  * features and unlikely to be useful for actual workloads.
+@@ -67,9 +68,21 @@ struct {
+ 	},
+ };
+ 
++/*
++ * Per-queue sequence numbers to implement core-sched ordering.
++ *
++ * Tail seq is assigned to each queued task and incremented. Head seq tracks the
++ * sequence number of the latest dispatched task. The distance between the a
++ * task's seq and the associated queue's head seq is called the queue distance
++ * and used when comparing two tasks for ordering. See qmap_core_sched_before().
++ */
++static u64 core_sched_head_seqs[5];
++static u64 core_sched_tail_seqs[5];
++
+ /* Per-task scheduling context */
+ struct task_ctx {
+ 	bool	force_local;	/* Dispatch directly to local_dsq */
++	u64	core_sched_seq;
+ };
+ 
+ struct {
+@@ -93,6 +106,7 @@ struct {
+ 
+ /* Statistics */
+ u64 nr_enqueued, nr_dispatched, nr_reenqueued, nr_dequeued;
++u64 nr_core_sched_execed;
+ 
+ s32 BPF_STRUCT_OPS(qmap_select_cpu, struct task_struct *p,
+ 		   s32 prev_cpu, u64 wake_flags)
+@@ -159,8 +173,18 @@ void BPF_STRUCT_OPS(qmap_enqueue, struct task_struct *p, u64 enq_flags)
+ 		return;
+ 	}
+ 
+-	/* Is select_cpu() is telling us to enqueue locally? */
+-	if (tctx->force_local) {
++	/*
++	 * All enqueued tasks must have their core_sched_seq updated for correct
++	 * core-sched ordering, which is why %SCX_OPS_ENQ_LAST is specified in
++	 * qmap_ops.flags.
++	 */
++	tctx->core_sched_seq = core_sched_tail_seqs[idx]++;
++
++	/*
++	 * If qmap_select_cpu() is telling us to or this is the last runnable
++	 * task on the CPU, enqueue locally.
++	 */
++	if (tctx->force_local || (enq_flags & SCX_ENQ_LAST)) {
+ 		tctx->force_local = false;
+ 		scx_bpf_dispatch(p, SCX_DSQ_LOCAL, slice_ns, enq_flags);
+ 		return;
+@@ -204,6 +228,19 @@ void BPF_STRUCT_OPS(qmap_enqueue, struct task_struct *p, u64 enq_flags)
+ void BPF_STRUCT_OPS(qmap_dequeue, struct task_struct *p, u64 deq_flags)
+ {
+ 	__sync_fetch_and_add(&nr_dequeued, 1);
++	if (deq_flags & SCX_DEQ_CORE_SCHED_EXEC)
++		__sync_fetch_and_add(&nr_core_sched_execed, 1);
++}
++
++static void update_core_sched_head_seq(struct task_struct *p)
++{
++	struct task_ctx *tctx = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
++	int idx = weight_to_idx(p->scx.weight);
++
++	if (tctx)
++		core_sched_head_seqs[idx] = tctx->core_sched_seq;
++	else
++		scx_bpf_error("task_ctx lookup failed");
+ }
+ 
+ void BPF_STRUCT_OPS(qmap_dispatch, s32 cpu, struct task_struct *prev)
+@@ -258,6 +295,7 @@ void BPF_STRUCT_OPS(qmap_dispatch, s32 cpu, struct task_struct *prev)
+ 			if (!p)
+ 				continue;
+ 
++			update_core_sched_head_seq(p);
+ 			__sync_fetch_and_add(&nr_dispatched, 1);
+ 			scx_bpf_dispatch(p, SHARED_DSQ, slice_ns, 0);
+ 			bpf_task_release(p);
+@@ -275,6 +313,49 @@ void BPF_STRUCT_OPS(qmap_dispatch, s32 cpu, struct task_struct *prev)
+ 	}
+ }
+ 
++/*
++ * The distance from the head of the queue scaled by the weight of the queue.
++ * The lower the number, the older the task and the higher the priority.
++ */
++static s64 task_qdist(struct task_struct *p)
++{
++	int idx = weight_to_idx(p->scx.weight);
++	struct task_ctx *tctx;
++	s64 qdist;
++
++	tctx = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
++	if (!tctx) {
++		scx_bpf_error("task_ctx lookup failed");
++		return 0;
++	}
++
++	qdist = tctx->core_sched_seq - core_sched_head_seqs[idx];
++
++	/*
++	 * As queue index increments, the priority doubles. The queue w/ index 3
++	 * is dispatched twice more frequently than 2. Reflect the difference by
++	 * scaling qdists accordingly. Note that the shift amount needs to be
++	 * flipped depending on the sign to avoid flipping priority direction.
++	 */
++	if (qdist >= 0)
++		return qdist << (4 - idx);
++	else
++		return qdist << idx;
++}
++
++/*
++ * This is called to determine the task ordering when core-sched is picking
++ * tasks to execute on SMT siblings and should encode about the same ordering as
++ * the regular scheduling path. Use the priority-scaled distances from the head
++ * of the queues to compare the two tasks which should be consistent with the
++ * dispatch path behavior.
++ */
++bool BPF_STRUCT_OPS(qmap_core_sched_before,
++		    struct task_struct *a, struct task_struct *b)
++{
++	return task_qdist(a) > task_qdist(b);
++}
++
+ void BPF_STRUCT_OPS(qmap_cpu_release, s32 cpu, struct scx_cpu_release_args *args)
+ {
+ 	u32 cnt;
+@@ -354,8 +435,8 @@ void BPF_STRUCT_OPS(qmap_dump_task, struct scx_dump_ctx *dctx, struct task_struc
+ 	if (!(taskc = bpf_task_storage_get(&task_ctx_stor, p, 0, 0)))
+ 		return;
+ 
+-	scx_bpf_dump("QMAP: force_local=%d",
+-		     taskc->force_local);
++	scx_bpf_dump("QMAP: force_local=%d core_sched_seq=%llu",
++		     taskc->force_local, taskc->core_sched_seq);
+ }
+ 
+ /*
+@@ -428,6 +509,7 @@ SCX_OPS_DEFINE(qmap_ops,
+ 	       .enqueue			= (void *)qmap_enqueue,
+ 	       .dequeue			= (void *)qmap_dequeue,
+ 	       .dispatch		= (void *)qmap_dispatch,
++	       .core_sched_before	= (void *)qmap_core_sched_before,
+ 	       .cpu_release		= (void *)qmap_cpu_release,
+ 	       .init_task		= (void *)qmap_init_task,
+ 	       .dump			= (void *)qmap_dump,
+@@ -437,5 +519,6 @@ SCX_OPS_DEFINE(qmap_ops,
+ 	       .cpu_offline		= (void *)qmap_cpu_offline,
+ 	       .init			= (void *)qmap_init,
+ 	       .exit			= (void *)qmap_exit,
++	       .flags			= SCX_OPS_ENQ_LAST,
+ 	       .timeout_ms		= 5000U,
+ 	       .name			= "qmap");
+diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
+index 920fb54f9c77..bc36ec4f88a7 100644
+--- a/tools/sched_ext/scx_qmap.c
++++ b/tools/sched_ext/scx_qmap.c
+@@ -112,9 +112,10 @@ int main(int argc, char **argv)
+ 		long nr_enqueued = skel->bss->nr_enqueued;
+ 		long nr_dispatched = skel->bss->nr_dispatched;
+ 
+-		printf("stats  : enq=%lu dsp=%lu delta=%ld reenq=%"PRIu64" deq=%"PRIu64"\n",
++		printf("stats  : enq=%lu dsp=%lu delta=%ld reenq=%"PRIu64" deq=%"PRIu64" core=%"PRIu64"\n",
+ 		       nr_enqueued, nr_dispatched, nr_enqueued - nr_dispatched,
+-		       skel->bss->nr_reenqueued, skel->bss->nr_dequeued);
++		       skel->bss->nr_reenqueued, skel->bss->nr_dequeued,
++		       skel->bss->nr_core_sched_execed);
+ 		fflush(stdout);
+ 		sleep(1);
+ 	}
 -- 
 2.45.2
 
