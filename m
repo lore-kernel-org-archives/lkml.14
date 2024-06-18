@@ -1,166 +1,153 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616641741E5;
-	Tue, 18 Jun 2024 21:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718747723; cv=fail; b=NWsaONznYYtHyuD689HWsos82FIRfWVyQ0TSI7ztid9sMyh7V7ZpL9nyhM60M8W4Os1EbY/sFUgwbOFszuxDkMC7U4kSQhH4XAt/i+3WyyNGMjyiTgrRPEpPBh/oU0mRN8hmSW4TqTASLEZ2VWR+BCzWSjIvKlu+1pUDoza9J+I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718747723; c=relaxed/simple;
-	bh=KYEuLRMYijezD2UiHq50yo0wkk57ciTvKXoMRQxtNaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DsPaS24TWGQ19VI6jeamcjtMiJfxrm5FISCbutdqZ9NMOHjrEgBcIoMduKJdMLeVGlQUBThnSCSM6zODeviMhIn8FHHli0TWxU7lPnFINzqVoWGjug2PFidJOSjsLATOvekhvpcu01JIRcLdD6knge0lCEg9a4v65nORI3+wge4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fRMcKjsg; arc=fail smtp.client-ip=40.107.94.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE74178384
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 21:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718747778; cv=none; b=SHn5MjeKeI+4qIMYlfJt5xIs8ffy2g92s8Q7Sh6qaIt9yj91FVcjFXVgFl6FEfiYfHASPJh2vXnWILJp7dPbZUsl/oLBFb7kOS7i3MFRMxj/A78oIMGVbrxJO+RGlnkzsqO/HFvB33kYz7g68wvn99h0lRTwYnjDZwRzGlCD9HA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718747778; c=relaxed/simple;
+	bh=smmYYos6NqVFRFPZ/Mdtn60WSUoCoErKhAymh6N2XoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t7z5d2jsLVskvAuPT2tcTe70enNLTc8ehouqDXguw6qen23pVjW/AWVF3XIUuDNteSxoFBbdYc/tDWV6gJon+3eoBTteDKd6EgcLrll+fN7NIJn+BYOGlEXZJPdDXN650YRb+IVFYH/NZalfs2UaesYkZXkUm4MvSCsykSCS+qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GrB46g9Z; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fRMcKjsg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dw/nKIRexWJggo70W7cnS0XXGvwsjmlNyXC1R/FCYNZQLvJov6c29b6YPCvVAVvNaZQMzXTjgQTshks6m+baeaX2UqY1uG11bKeeIk3FDj8/GspHSJ3aUqQRGL8PtQy9v5I0Vr0cya+GUvd7O1DULe8ibMOaTHdP5Jl3ar2GWYur+X0y8WZ8LzzlIbUeKbybuHDhjkRge1TAqCyKpTyq20b6hXK9Q6ByDXIF0K/vQkEXMRg11JEmfu+Qm/5GEVX8q0V8OyMK/sXibZH11lBFlDmvMMPXxl+s5oR5snhyjrUuoOOabcg4SfM5JUgTbvwEiqQSkBT0p8GLvLgCCyzwjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sj2kgZUo4iSns2TqrKpfBAS9wtFpm0Ppdmv48eRfwMc=;
- b=lpBL2K/z+wf/uH+XzR57g7d7L7RMwaVVE3g5F3eOa1cTc6G04nfXCwzBJFbZ0pDUoiiLH3lCVU9oq+zVhXrhsFnThUgM3Dwi4eQp1DuUGllwAYt1Sx1uC1K1YZt2DG+/wwBiHb+McQVL59SzB2IBR0ksKH8OVMiy3+f1R5ArRSqWOOxGhXc2mcB/zSIk0PoWM+OaXWPXA8FPQ4c/ZjSV34JHbLTVT2stWFKsb2jtKVa5Dbrv2ER7kctl06c9Z06cUzOO44bYS3iguZa/fLxwXBQRaZAsF0Z1+o6FuluMOrKZ9Gf4i/OXnYDOy6tql78A7uym9F5nQX/4dhINCiFdHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linux-foundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sj2kgZUo4iSns2TqrKpfBAS9wtFpm0Ppdmv48eRfwMc=;
- b=fRMcKjsgkJXfs1W6ZuGCj3jTJembfjCufLLcBLISdkJ0FzmkG3eFWbXX35LbcTQllViEcIDvzwtfW+BiEmYA9PSEH2EJwtG+peXQzhXnj47wY1KDyEHX31TXHv67tz1XbPa+X0mmWQPNVZpDYYe2tMg3ijK3SnIwWtiiMBok9i/WTXHn6vZ546fVKdg+dxCLwH+tj2JSruf7r61mnlKSTyK9kp3Ga+I5vh1CGF2uxwCN/XwWAFohqoaNebCsKNAWySMoTsHZLhcq/Wggvd+fz5KworBjh81t+O0r9F1tSiKTBzmL2zZq1GS0knfHcjGSaIJP5RIlFvNFfTd/bcXZYA==
-Received: from BLAPR03CA0033.namprd03.prod.outlook.com (2603:10b6:208:32d::8)
- by DS0PR12MB7969.namprd12.prod.outlook.com (2603:10b6:8:146::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
- 2024 21:55:15 +0000
-Received: from MN1PEPF0000F0E1.namprd04.prod.outlook.com
- (2603:10b6:208:32d:cafe::77) by BLAPR03CA0033.outlook.office365.com
- (2603:10b6:208:32d::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31 via Frontend
- Transport; Tue, 18 Jun 2024 21:55:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MN1PEPF0000F0E1.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Tue, 18 Jun 2024 21:55:15 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 18 Jun
- 2024 14:55:01 -0700
-Received: from [10.110.48.28] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 18 Jun
- 2024 14:55:00 -0700
-Message-ID: <9e1ab5f0-68ef-4eec-aa07-04a202037d5d@nvidia.com>
-Date: Tue, 18 Jun 2024 14:54:55 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrB46g9Z"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d24724514eso3468426b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718747776; x=1719352576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ji2+efuOAd6wBtWA0zFIRf6hUgNxX8IdSNdDWlzGrZQ=;
+        b=GrB46g9ZzCt+UBj8A2/g+1RHZJhmzUZcpdB8cKrTCywEt6T8SuadDHmsphHXGw4avr
+         VDixJHf9tbqy8aoo5enL+g+YwL68CJWTbWSj70O+1dGGAYUGXy82RlDalANnMZpJOTki
+         hvWuF46AwnYmpFN/O+otCG8OeYz9pHSeU7Pjg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718747776; x=1719352576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ji2+efuOAd6wBtWA0zFIRf6hUgNxX8IdSNdDWlzGrZQ=;
+        b=qzGm7JDZL3M3w3EmoO1Z9ZDeVWJmLHNEEmRI5bij50U7zi8VjFDVnHrP47AwCTyJQf
+         QvBEuVqmbSmBOhvxHatB8S5fdRlLRyChyPw5mR9Gy5M8L/mpPsatbaj+d7wMtuuhoQa3
+         +oPjIaqjbuJt001MhvdG6t95fkZSIMtuhWXcy1fS9a6OM+Zogm1yz8D8f4aNABY1tHaO
+         avzFn54SK/vWfTBaEY2+eoyG2kUjdohhLmblnF/ZX+3j3k4+diMbY0bEwcPDqQ49VAqA
+         Q3R6uCxyzFe4tPKTt2e/Ive3AdNE+JAI9EbBNzbxLoaWjFThYfENtUd7n/x5s5MBHYzK
+         aaDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsGJkFR9iQWzvSivNlxp7sGwhJMEXuVqY3Ob7hVXP74GX/dFa77YtHH1g8UQSCnfD9kbe0dw1a1dy3sbelHRk1Rk0LND7qlpaMjLnH
+X-Gm-Message-State: AOJu0YwPTGCUSyhtwMuE8NSbpo6LHota305fUNK98r6n7nBBrkg38ERd
+	3k+2rK08DR2jexnvR9XFrbzjo9ZCE660PEPbML+5marNeQTwBAhdzvffX176ZBvpNGZTVBYtzS0
+	=
+X-Google-Smtp-Source: AGHT+IGqN+G5rG4Su+FUN367Zg++vMzJCbz/S5dZyy+str6UequcOxKN+sAwc0CNT5tSk+djpEMv6Q==
+X-Received: by 2002:a05:6808:1592:b0:3d2:4edc:1ffd with SMTP id 5614622812f47-3d51b96c223mr1318603b6e.12.1718747774837;
+        Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441ef4de0ecsm59967051cf.9.2024.06.18.14.56.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44056f72257so119551cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:56:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9RIomMx590YXxbPfpHDIjwBMJe33ABQzSA7EgUzChUZusXYGLWjxAVxmvFzxupMaQvEjPtkS4sKGYQwUnUsch8WRuKzxGHRP80pC+
+X-Received: by 2002:ac8:5748:0:b0:441:630e:110a with SMTP id
+ d75a77b69052e-444aa409525mr298631cf.17.1718746453359; Tue, 18 Jun 2024
+ 14:34:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] selftests/mm: mseal, self_elf: fix missing
- __NR_mseal
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: David Hildenbrand <david@redhat.com>, Jeff Xu <jeffxu@chromium.org>,
-	"Shuah Khan" <shuah@kernel.org>, Andrei Vagin <avagin@google.com>, Axel
- Rasmussen <axelrasmussen@google.com>, Christian Brauner <brauner@kernel.org>,
-	Kees Cook <kees@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Muhammad Usama Anjum
-	<usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, Rich Felker
-	<dalias@libc.org>, <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-References: <20240618022422.804305-1-jhubbard@nvidia.com>
- <20240618022422.804305-2-jhubbard@nvidia.com>
- <0b152bea-ccb6-403e-9c57-08ed5e828135@redhat.com>
- <9d08f768-b9da-4a44-9d75-a16d6cde6b66@nvidia.com>
- <916f5ba4-02c4-4a33-97e1-5343bde5ae54@redhat.com>
- <ee207aed-d116-49b4-a5cc-91385c52e258@nvidia.com>
- <20240618145348.d49c130694dcde29ec7a6c8e@linux-foundation.org>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20240618145348.d49c130694dcde29ec7a6c8e@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E1:EE_|DS0PR12MB7969:EE_
-X-MS-Office365-Filtering-Correlation-Id: 89b5ae8f-c431-4124-79c4-08dc8fe15658
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|82310400023|1800799021|7416011|376011|36860700010;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QW9FTHQ2emVBQWVrODZpWStWNVhnVEpwd05xaGVacEtuUmdnY3NOWFpDOTJ0?=
- =?utf-8?B?Wkg0MEpvVXkvMFdtYVZJMmM2cDN2b1Fqa2tKeEVmS3dPV01waml2bWJkaXlL?=
- =?utf-8?B?TWpUbW5DeXNjTDlSTjBTZWthM2YvRTV3RHlFdGNKWnB2SlRrYkJZcks4MmxW?=
- =?utf-8?B?SkcxK3pnNVV2YWZGei9yZUc0djl0RWJ5MkRUeVF5MEo5ZlFrRzY4K3N3Unh2?=
- =?utf-8?B?QjI2dHBiOHpQYUQ1Qjd0K01YVS81ZDNVRW1qS0dqY01sek56cEF4ZGxwYlox?=
- =?utf-8?B?LzFQaklQWVRseG5nZWtJcEVLM1BURUU4YmdlblUzRWI2Y3hWM1J4SldmQ2pU?=
- =?utf-8?B?MVFxcmxOdjBBeFQ1QlpOMXZVRmVVbFprbkdySm94amJ6NUhoVjlabjVzbjUz?=
- =?utf-8?B?R0hJT2VVOHlEZkNyVGVqYjR6dzg0Tm9HU2FHWWI4NEJLKzd0ODV4OHM3bDFN?=
- =?utf-8?B?elhsZDVkQXJIeGM2dVpuRWZnZjlvNmlJZnNkcEdML0dXeHcwQVBldFF3dnlX?=
- =?utf-8?B?cXNKN21BdXQ2TWVhR0d3UE5aRE92Zkozblp6ZXlsTHFTaXN6dEN2MTNNbm5o?=
- =?utf-8?B?RFEzTzJrK1lwakMxdjlBWGNDVGFvRVNWcEJBa2pTZzZtSmh2WHV3VGY3TmRn?=
- =?utf-8?B?dXJmQy9Gd0lmcjU1VE9VQ3FJZlRwQStsd2d6UmxjSW9yc3JaK0YrOTIvTjNJ?=
- =?utf-8?B?Z2Z2Y3dBaVBsdUxoWnp6bUFucVZDVlBBbzlMbldiNGVsUnVuSjFhdWM1S2Vn?=
- =?utf-8?B?MHdkdElHOWZ6ZHFIeFo1dFBuRldBUTlPNlRYWUVxUkQ2VWRWa3NJSU1yVk1J?=
- =?utf-8?B?NVhPTFlFS2VFOE1YbzJjdmdDdWZRYk55cW9qcDVGRERUNTNJMjJkRGdtU0dH?=
- =?utf-8?B?NFpWeGtEYXBnaW9Cb2tOaEp1cG1PM0EvSjMrQnk2dWZVQ0JFb1FZbmlWMGdQ?=
- =?utf-8?B?RWtIMGM5UFJreGRCZmljOVNWeXIzNzJDdVVPOUJZZDNFWS9MQnFpR1Fab2tV?=
- =?utf-8?B?MUR4TFU0dmtuUm45K3NESExrbHFFSUpxQjRqMTZTWkhhV2VSeVM1Z2sxRm9I?=
- =?utf-8?B?eGtlc0tJQ1R3eU94YUU2MloweURwdnA4N0NwK2FzU2wvNlF5a3RocE4vQ2NF?=
- =?utf-8?B?b1A2Sk5TS2xOVWhBUkxHUyt5M1hQUFNJUmlnZWdHWnRGZjFLZENCRE5sUEpO?=
- =?utf-8?B?cGVVZm9SNEh5OGJwaW9uS1NwQ0lFZXN4Z1M0eWVSMFJwVW9zdWIrZE0vMEdZ?=
- =?utf-8?B?M3ZjcVFiTnl0dzk0SVV4SlFhLzZCSDNTcThqb1A5NUM0dm5qS2R5SEh6NVAv?=
- =?utf-8?B?VmRlZ2kzRWtHSTVhYWNpV3Y3TU9hZkRPTjI5aE9yK29BcGVVeFpYbGFCNnJN?=
- =?utf-8?B?a0NTKzJnUVphYlpBRDZvaDJpUEtCc2hTVFNoQW4rOU1nVThucWVmam0rOXkz?=
- =?utf-8?B?bXk5d3pvVVF1WWx4QUh3M05LaThLWFpEYktFSHczTU1hNEMxb1FpUEZLbTdh?=
- =?utf-8?B?Y1NFb1EreWRzZzFYYUZENDlNblg3M3Y4aWZpZFNod1N2WG1pbHU2azRqN1BG?=
- =?utf-8?B?SElhazVsZUgwRFk2L2dwejFtKzZVbEhWUmVwaUFKdXF1OGZXbUp4ajdhVDVt?=
- =?utf-8?B?OG9rQlh3QnR1TkUzTXdtVjBJbWJnSnlFNzQydjVpTVlyWWUydTZ4YVlDaStp?=
- =?utf-8?B?MnlxRnJHTm9heVJtNU1ZTHovV0gxREtWOGFZdHRoYnByUUZ3bFJYWDBiTC9x?=
- =?utf-8?B?RUp0N2hBYnhySXBBWWxEVHBpN2tOQ0lvRVFKTVFQSXJMdFJSZnVmVjcrU1kx?=
- =?utf-8?B?WEJFaER5VEllVE9vZDdzRmxoSkZCODBBMEdYaEJvQ1BERlR5RUh0V1J0eHNy?=
- =?utf-8?B?eW1qSkN2RXVBUHkvQkJVeElSbDFHNHFma1RENkNqNUdzclE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230037)(82310400023)(1800799021)(7416011)(376011)(36860700010);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 21:55:15.6789
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89b5ae8f-c431-4124-79c4-08dc8fe15658
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7969
+References: <20240612222435.3188234-1-dianders@chromium.org>
+ <20240612152752.v2.8.I27914059cc822b52db9bf72b4013b525b60e06fd@changeid> <CADnq5_PbqE0E2pP26mGD94cdc=tLZZsF10e7ZZWeC5AU-LS8vw@mail.gmail.com>
+In-Reply-To: <CADnq5_PbqE0E2pP26mGD94cdc=tLZZsF10e7ZZWeC5AU-LS8vw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 18 Jun 2024 14:34:01 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XJAiVGFn_Tqs_JNo1fQKFys3m=hH9MwmMot93gkdg=Qw@mail.gmail.com>
+Message-ID: <CAD=FV=XJAiVGFn_Tqs_JNo1fQKFys3m=hH9MwmMot93gkdg=Qw@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] drm/amdgpu: Call drm_atomic_helper_shutdown() at
+ shutdown time
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Xinhui Pan <Xinhui.Pan@amd.com>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Aurabindo Pillai <aurabindo.pillai@amd.com>, Candice Li <candice.li@amd.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Hamza Mahfooz <hamza.mahfooz@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>, Le Ma <le.ma@amd.com>, 
+	Lijo Lazar <lijo.lazar@amd.com>, Ma Jun <Jun.Ma2@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Shashank Sharma <shashank.sharma@amd.com>, 
+	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Victor Lu <victorchengchi.lu@amd.com>, amd-gfx@lists.freedesktop.org, 
+	chenxuebing <chenxb_99091@126.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/18/24 2:53 PM, Andrew Morton wrote:
-> On Tue, 18 Jun 2024 14:29:32 -0700 John Hubbard <jhubbard@nvidia.com> wrote:
-> 
->> OK, I've drafted an updated commit description (below)
-> 
-> <copy><paste>
-
-Awesome! :)
+Hi,
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+On Mon, Jun 17, 2024 at 8:01=E2=80=AFAM Alex Deucher <alexdeucher@gmail.com=
+> wrote:
+>
+> On Wed, Jun 12, 2024 at 6:37=E2=80=AFPM Douglas Anderson <dianders@chromi=
+um.org> wrote:
+> >
+> > Based on grepping through the source code this driver appears to be
+> > missing a call to drm_atomic_helper_shutdown() at system shutdown
+> > time. Among other things, this means that if a panel is in use that it
+> > won't be cleanly powered off at system shutdown time.
+> >
+> > The fact that we should call drm_atomic_helper_shutdown() in the case
+> > of OS shutdown/restart comes straight out of the kernel doc "driver
+> > instance overview" in drm_drv.c.
+> >
+> > Suggested-by: Maxime Ripard <mripard@kernel.org>
+> > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > Cc: Xinhui Pan <Xinhui.Pan@amd.com>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> > This commit is only compile-time tested.
+> >
+> > ...and further, I'd say that this patch is more of a plea for help
+> > than a patch I think is actually right. I'm _fairly_ certain that
+> > drm/amdgpu needs this call at shutdown time but the logic is a bit
+> > hard for me to follow. I'd appreciate if anyone who actually knows
+> > what this should look like could illuminate me, or perhaps even just
+> > post a patch themselves!
+>
+> I'm not sure this patch makes sense or not.  The driver doesn't really
+> do a formal tear down in its shutdown routine, it just quiesces the
+> hardware.  What are the actual requirements of the shutdown function?
+> In the past when we did a full driver tear down in shutdown, it
+> delayed the shutdown sequence and users complained.
 
+The "inspiration" for this patch is to handle panels properly.
+Specifically, panels often have several power/enable signals going to
+them and often have requirements that these signals are powered off in
+the proper order with the proper delays between them. While we can't
+always do so when the system crashes / reboots in an uncontrolled way,
+panel manufacturers / HW Engineers get upset if we don't power things
+off properly during an orderly shutdown/reboot. When panels are
+powered off badly it can cause garbage on the screen and, so I've been
+told, can even cause long term damage to the panels over time.
+
+In Linux, some panel drivers have tried to ensure a proper poweroff of
+the panel by handling the shutdown() call themselves. However, this is
+ugly and panel maintainers want panel drivers to stop doing it. We
+have removed the code doing this from most panels now [1]. Instead the
+assumption is that the DRM modeset drivers should be calling
+drm_atomic_helper_shutdown() which will make sure panels get an
+orderly shutdown.
+
+For a lot more details, see the cover letter [2] which then contains
+links to even more discussions about the topic.
+
+[1] https://lore.kernel.org/r/20240605002401.2848541-1-dianders@chromium.or=
+g
+[2] https://lore.kernel.org/r/20240612222435.3188234-1-dianders@chromium.or=
+g
