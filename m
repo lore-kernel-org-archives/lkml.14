@@ -1,57 +1,57 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE8818E751;
-	Tue, 18 Jun 2024 21:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5556518EFD4;
+	Tue, 18 Jun 2024 21:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718745690; cv=none; b=Ya3ODJmasshgHA7uZAdObhTyNK1lDv56NvCCGYMhlTyQqNI46y58L/biU5mvN4PtYIjmIKmAV9KuVY8a6Hksy2ZZSMa7CaC6pSJiK9TUGbmaC7tTZfZJBTcwc3gGZD3UroxcHE4Pon/LtwPnBzu4XonLXN+Te4q5MYBYTM39Csc=
+	t=1718745693; cv=none; b=PUpDSl7OfXnbaJU9zgYfssQOgSOt8qTdShigC3+zupy3migGLpoqavcx8X1LJ5VQZlw1Rt4Tm8OfcvRX68CHcHAF6ltIKlKlPGYYIHTSIOLDq/nhhkKqzetBbpO5xYpwN4IAD2eRB/9fkOnQ9a1nsS14FnAV2EOOypLi4NG0/2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718745690; c=relaxed/simple;
-	bh=isPgjGCj5VYkz8kph0fDAf8QGlImi3qrAKr2bOn5Mw8=;
+	s=arc-20240116; t=1718745693; c=relaxed/simple;
+	bh=RuC5g7MWTdWgG90aaNreaFWp7Evm9J7ZZmCyOISTg5M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U5xC3AfIluf/duuQ4CekKnkH5wtu4jytk6XB+HM7U0ctxRLeBrjVTiSbSpwR+gBxlYiLZlwUgGobEGMp50iysaZTi1cHohQe5cYrnoZPXlXqfOPkmq20QVlUpgQ4Tdc+8YZzYQPW2xM82V8tvLA6lB/Hn8AAMF69JmvaSbVT+CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQG1fyuo; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=tUmoqAC17LkPbzU4Lup8TQM4UgHyZGsbZ8PpvikUY/V7nwuiLrTUdHA8OuBBpP9VOeGDz6WiTYw92Q7hOvNU5MzggvT3mOwjpnXAd1DfC8Jz9I4laBxSwLXUXDVYoI0wG+QTF0Kjo7PcMmEkuPNLVAON2v1WOlsUoPnGX6hpT2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVmyjvlB; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQG1fyuo"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2c7b3c513f9so352988a91.3;
-        Tue, 18 Jun 2024 14:21:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVmyjvlB"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f9885d5c04so14969715ad.0;
+        Tue, 18 Jun 2024 14:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718745688; x=1719350488; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718745692; x=1719350492; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hOFAkzKC0puX6BIl4C+hN/L4RbIVfW4dE2cuXneFTqQ=;
-        b=kQG1fyuoA0wrmi/ytjhrr1+8ypDqOrMFlYteMrSeWRkO9auzctkz6TZwHPaWnU/V9b
-         1KvE/jFMgqcC0iUSwe9ZKbBysSV84teqyGqTsaG2iWaecA3o4705CrWfO3r6tXQHgw6K
-         UsFPwIUQfZ5c2lu8d2WqhYao1dpINgM+nbzKd3xjpWBqwkmlpiEds1eTPctSsCIZO7zd
-         T66VP0zGRlKIzOyvUKutA+PdDUTkwSeQFOUiwh9iUT+5t8r0FXex3NPVJuQSslESv7Zm
-         xF9lEb0P0eaVBCmH5nkWTyZ6ae84I4AKFEeQpPyWVVhdJUuGhiSyGZOFCWPffsYOvIzy
-         Ro5g==
+        bh=QlWXBAcaK8Ni/dW0U+2RpZNRNJOhBi6NFu1cj9+RBRQ=;
+        b=dVmyjvlBus9DiXbnK4fzKrqBjfF0pMondZYhughJwOsNHrmJRoxhnELx5nd2Hp6WKZ
+         BEUB2r3trANtpipbJl7t3pZVRqF3ckWySKFfeiuTlrSYlnXNl6/EjRRE/sGhayeMnxGq
+         Zqn8M8NC8cjJoptRrpcB0HEztWvPMF+h8TzPCGH8y6dmU8+mZVzoTrkE8pYEEuREs2U9
+         Y9IabHbfgtaMtEn2OGBT6cOmxhJeUi+HUCpTglYl7/wtQIb0FxckodtNZaYfPNzG2a2S
+         kYUEeX3234oQ1vTtPUuJC95PpfFtzzTHDdIpfeyjAgxboLCrXof/YgSB3iEm5hgIlX/p
+         V65w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718745688; x=1719350488;
+        d=1e100.net; s=20230601; t=1718745692; x=1719350492;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hOFAkzKC0puX6BIl4C+hN/L4RbIVfW4dE2cuXneFTqQ=;
-        b=swZC6QbW1ody6Prf/kkdVF5zdzGLiBEh8dxGN/Ue5A88fWzlkaUAX5NW/853IhY4CE
-         ZgBrV32VAzPFH7GCxG387iUyQr5d9oQt/+4bn/Z/8T+EJjNdI/9yKOSx9K63dnLAVeM6
-         /VgWk58Plaj+m5GPYcBfce92tKTyg2FJdf2mIYlNlqmsnDluEqvF5Tgx0s1GZUB0NmHy
-         OidUuGYeK4IOd77D3cGcrtvjMwKQUhx1BG0nbULmu8cu5cqSjemyUZVJmEDUbTKw61lU
-         Ia1C4hfqnk5SHCkrcyyK8vatgwzzUSIX7hqveSFs6fQzlvzzA5qLGqeqXC90ai1UY8W9
-         uIaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTClZ3T80Hgtf5NAE0annFEUnMSBOHEVjRHLkJWaU7jiuhOv1ficXkGSBFffXeyq5Qc04vjAkZxlZZqsa3KrShMtm9
-X-Gm-Message-State: AOJu0YwTcZvfl9yFnWhL2vcuX7vVzNJKgiMXsL5irprWSomthn4ImKw6
-	/XlQrcHQfpbvXa4dNxl2m+VxXQaBzcOHlQb24auFtar3p7eLjOzf
-X-Google-Smtp-Source: AGHT+IHhECxNjxY3MuUeaQfDNgwMOMAbh1KW+wo9V7wXEl43G8DJRohFRaD7uYWVWddJ7rO2eRddOQ==
-X-Received: by 2002:a17:90a:12cf:b0:2c2:deda:8561 with SMTP id 98e67ed59e1d1-2c7b5dc9665mr844324a91.41.1718745687952;
-        Tue, 18 Jun 2024 14:21:27 -0700 (PDT)
+        bh=QlWXBAcaK8Ni/dW0U+2RpZNRNJOhBi6NFu1cj9+RBRQ=;
+        b=qR00kutjeKkNxG3ojuZQNrXZAZ1bYd4V4H7yc/kfXpbRNi/SzB376KDAliHly2ZmcQ
+         TTtyaankNM6bnk1LmoW8+gohIIMM2nrYXFOLGXCCd3Jts6xs1r5U11BEIN4WnWmbzEVI
+         G6F0D0i1XjgKj1z0YCATjUESbzGuQP7Rykww9ol9vKJEWQQWu5vJbj4cJEBvzzDoAmGm
+         +Q7VEeLlOEBCCY/v2OSDLNqto8OlcjhI/JHI/EKcrcKr/o9aGNdloDI98WNp0fhEiOd8
+         iJhnZIMeZwfFRChDpTRwurd3S5xCLkYRdi+SEseqc2c4Aa9PrakJXlh8MQEg93IuUuhf
+         SWZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1XLzpQ5oQkN391MNRxiauRfBnX1XZkFHeeLtkRDyXcuTOvhC2hlh2ZTmVS1knK4yK65eBLvqWAU/Up9qQ9gld0ggB
+X-Gm-Message-State: AOJu0YwEZI/oFBorJ8FBxAjdhW+GTYPVxKLD4QFoH11Kcpm4I/wAd4gD
+	koLFuMGeMVO6gI+ND9vk6t0PJpL3Clq0h+zNU5q1d9ZVXIqTMjin
+X-Google-Smtp-Source: AGHT+IGdnpXUTOALhl6KDzpS9H4XItnNTkMAPNLYKOGjF7DCOUIewQv7aqxL87oHdC3Z8JJ/Dzl7Lg==
+X-Received: by 2002:a17:902:ecc7:b0:1f7:1a9:bf05 with SMTP id d9443c01a7336-1f9aa469a1bmr11462555ad.53.1718745691529;
+        Tue, 18 Jun 2024 14:21:31 -0700 (PDT)
 Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c4671099sm11336457a91.38.2024.06.18.14.21.27
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e5a0d5sm102236325ad.43.2024.06.18.14.21.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 14:21:27 -0700 (PDT)
+        Tue, 18 Jun 2024 14:21:31 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -86,11 +86,11 @@ To: torvalds@linux-foundation.org,
 Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH 12/30] sched_ext: Implement runnable task stall watchdog
-Date: Tue, 18 Jun 2024 11:17:27 -1000
-Message-ID: <20240618212056.2833381-13-tj@kernel.org>
+	David Vernet <void@manifault.com>,
+	Tejun Heo <tj@kernel.org>
+Subject: [PATCH 14/30] sched_ext: Print sched_ext info when dumping stack
+Date: Tue, 18 Jun 2024 11:17:29 -1000
+Message-ID: <20240618212056.2833381-15-tj@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240618212056.2833381-1-tj@kernel.org>
 References: <20240618212056.2833381-1-tj@kernel.org>
@@ -102,491 +102,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Vernet <dvernet@meta.com>
+From: David Vernet <void@manifault.com>
 
-The most common and critical way that a BPF scheduler can misbehave is by
-failing to run runnable tasks for too long. This patch implements a
-watchdog.
+It would be useful to see what the sched_ext scheduler state is, and what
+scheduler is running, when we're dumping a task's stack. This patch
+therefore adds a new print_scx_info() function that's called in the same
+context as print_worker_info() and print_stop_info(). An example dump
+follows.
 
-* All tasks record when they become runnable.
+  BUG: kernel NULL pointer dereference, address: 0000000000000999
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  PGD 0 P4D 0
+  Oops: 0002 [#1] PREEMPT SMP
+  CPU: 13 PID: 2047 Comm: insmod Tainted: G           O       6.6.0-work-10323-gb58d4cae8e99-dirty #34
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS unknown 2/2/2022
+  Sched_ext: qmap (enabled+all), task: runnable_at=-17ms
+  RIP: 0010:init_module+0x9/0x1000 [test_module]
+  ...
 
-* A watchdog work periodically scans all runnable tasks. If any task has
-  stayed runnable for too long, the BPF scheduler is aborted.
+v3: - scx_ops_enable_state_str[] definition moved to an earlier patch as
+      it's now used by core implementation.
 
-* scheduler_tick() monitors whether the watchdog itself is stuck. If so, the
-  BPF scheduler is aborted.
+    - Convert jiffy delta to msecs using jiffies_to_msecs() instead of
+      multiplying by (HZ / MSEC_PER_SEC). The conversion is implemented in
+      jiffies_delta_msecs().
 
-Because the watchdog only scans the tasks which are currently runnable and
-usually very infrequently, the overhead should be negligible.
-scx_qmap is updated so that it can be told to stall user and/or
-kernel tasks.
+v2: - We are now using scx_ops_enable_state_str[] outside
+      CONFIG_SCHED_DEBUG. Move it outside of CONFIG_SCHED_DEBUG and to the
+      top. This was reported by Changwoo and Andrea.
 
-A detected task stall looks like the following:
-
- sched_ext: BPF scheduler "qmap" errored, disabling
- sched_ext: runnable task stall (dbus-daemon[953] failed to run for 6.478s)
-    scx_check_timeout_workfn+0x10e/0x1b0
-    process_one_work+0x287/0x560
-    worker_thread+0x234/0x420
-    kthread+0xe9/0x100
-    ret_from_fork+0x1f/0x30
-
-A detected watchdog stall:
-
- sched_ext: BPF scheduler "qmap" errored, disabling
- sched_ext: runnable task stall (watchdog failed to check in for 5.001s)
-    scheduler_tick+0x2eb/0x340
-    update_process_times+0x7a/0x90
-    tick_sched_timer+0xd8/0x130
-    __hrtimer_run_queues+0x178/0x3b0
-    hrtimer_interrupt+0xfc/0x390
-    __sysvec_apic_timer_interrupt+0xb7/0x2b0
-    sysvec_apic_timer_interrupt+0x90/0xb0
-    asm_sysvec_apic_timer_interrupt+0x1b/0x20
-    default_idle+0x14/0x20
-    arch_cpu_idle+0xf/0x20
-    default_idle_call+0x50/0x90
-    do_idle+0xe8/0x240
-    cpu_startup_entry+0x1d/0x20
-    kernel_init+0x0/0x190
-    start_kernel+0x0/0x392
-    start_kernel+0x324/0x392
-    x86_64_start_reservations+0x2a/0x2c
-    x86_64_start_kernel+0x104/0x109
-    secondary_startup_64_no_verify+0xce/0xdb
-
-Note that this patch exposes scx_ops_error[_type]() in kernel/sched/ext.h to
-inline scx_notify_sched_tick().
-
-v4: - While disabling, cancel_delayed_work_sync(&scx_watchdog_work) was
-      being called before forward progress was guaranteed and thus could
-      lead to system lockup. Relocated.
-
-    - While enabling, it was comparing msecs against jiffies without
-      conversion leading to spurious load failures on lower HZ kernels.
-      Fixed.
-
-    - runnable list management is now used by core bypass logic and moved to
-      the patch implementing sched_ext core.
-
-v3: - bpf_scx_init_member() was incorrectly comparing ops->timeout_ms
-      against SCX_WATCHDOG_MAX_TIMEOUT which is in jiffies without
-      conversion leading to spurious load failures in lower HZ kernels.
-      Fixed.
-
-v2: - Julia Lawall noticed that the watchdog code was mixing msecs and
-      jiffies. Fix by using jiffies for everything.
-
-Signed-off-by: David Vernet <dvernet@meta.com>
-Reviewed-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: David Vernet <void@manifault.com>
+Reported-by: Changwoo Min <changwoo@igalia.com>
+Reported-by: Andrea Righi <andrea.righi@canonical.com>
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Acked-by: Josh Don <joshdon@google.com>
-Acked-by: Hao Luo <haoluo@google.com>
-Acked-by: Barret Rhoden <brho@google.com>
-Cc: Julia Lawall <julia.lawall@inria.fr>
 ---
- include/linux/sched/ext.h      |   1 +
- init/init_task.c               |   1 +
- kernel/sched/core.c            |   1 +
- kernel/sched/ext.c             | 130 ++++++++++++++++++++++++++++++++-
- kernel/sched/ext.h             |   2 +
- tools/sched_ext/scx_qmap.bpf.c |  12 +++
- tools/sched_ext/scx_qmap.c     |  12 ++-
- 7 files changed, 153 insertions(+), 6 deletions(-)
+ include/linux/sched/ext.h |  2 ++
+ kernel/sched/core.c       |  1 +
+ kernel/sched/ext.c        | 53 +++++++++++++++++++++++++++++++++++++++
+ lib/dump_stack.c          |  1 +
+ 4 files changed, 57 insertions(+)
 
 diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
-index c1530a7992cc..96031252436f 100644
+index ea7c501ac819..85fb5dc725ef 100644
 --- a/include/linux/sched/ext.h
 +++ b/include/linux/sched/ext.h
-@@ -122,6 +122,7 @@ struct sched_ext_entity {
- 	atomic_long_t		ops_state;
- 
- 	struct list_head	runnable_node;	/* rq->scx.runnable_list */
-+	unsigned long		runnable_at;
- 
- 	u64			ddsp_dsq_id;
- 	u64			ddsp_enq_flags;
-diff --git a/init/init_task.c b/init/init_task.c
-index c6804396fe12..8a44c932d10f 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -106,6 +106,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- 		.sticky_cpu	= -1,
- 		.holding_cpu	= -1,
- 		.runnable_node	= LIST_HEAD_INIT(init_task.scx.runnable_node),
-+		.runnable_at	= INITIAL_JIFFIES,
- 		.ddsp_dsq_id	= SCX_DSQ_INVALID,
- 		.slice		= SCX_SLICE_DFL,
- 	},
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 6042ce3bfee0..f4365becdc13 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5516,6 +5516,7 @@ void sched_tick(void)
- 	calc_global_load_tick(rq);
- 	sched_core_tick(rq);
- 	task_tick_mm_cid(rq, curr);
-+	scx_tick(rq);
- 
- 	rq_unlock(rq, &rf);
- 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 1f5d80df263a..3dc515b3351f 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -8,6 +8,7 @@
- 
- enum scx_consts {
- 	SCX_DSP_DFL_MAX_BATCH		= 32,
-+	SCX_WATCHDOG_MAX_TIMEOUT	= 30 * HZ,
- 
- 	SCX_EXIT_BT_LEN			= 64,
- 	SCX_EXIT_MSG_LEN		= 1024,
-@@ -24,6 +25,7 @@ enum scx_exit_kind {
- 
- 	SCX_EXIT_ERROR = 1024,	/* runtime error, error msg contains details */
- 	SCX_EXIT_ERROR_BPF,	/* ERROR but triggered through scx_bpf_error() */
-+	SCX_EXIT_ERROR_STALL,	/* watchdog detected stalled runnable tasks */
+@@ -155,10 +155,12 @@ struct sched_ext_entity {
  };
  
- /*
-@@ -319,6 +321,15 @@ struct sched_ext_ops {
- 	 */
- 	u64 flags;
+ void sched_ext_free(struct task_struct *p);
++void print_scx_info(const char *log_lvl, struct task_struct *p);
  
-+	/**
-+	 * timeout_ms - The maximum amount of time, in milliseconds, that a
-+	 * runnable task should be able to wait before being scheduled. The
-+	 * maximum timeout may not exceed the default timeout of 30 seconds.
-+	 *
-+	 * Defaults to the maximum allowed timeout value of 30 seconds.
-+	 */
-+	u32 timeout_ms;
-+
- 	/**
- 	 * name - BPF scheduler's name
- 	 *
-@@ -472,6 +483,23 @@ struct static_key_false scx_has_op[SCX_OPI_END] =
- static atomic_t scx_exit_kind = ATOMIC_INIT(SCX_EXIT_DONE);
- static struct scx_exit_info *scx_exit_info;
+ #else	/* !CONFIG_SCHED_CLASS_EXT */
  
-+/*
-+ * The maximum amount of time in jiffies that a task may be runnable without
-+ * being scheduled on a CPU. If this timeout is exceeded, it will trigger
-+ * scx_ops_error().
-+ */
-+static unsigned long scx_watchdog_timeout;
-+
-+/*
-+ * The last time the delayed work was run. This delayed work relies on
-+ * ksoftirqd being able to run to service timer interrupts, so it's possible
-+ * that this work itself could get wedged. To account for this, we check that
-+ * it's not stalled in the timer tick, and trigger an error if it is.
-+ */
-+static unsigned long scx_watchdog_timestamp = INITIAL_JIFFIES;
-+
-+static struct delayed_work scx_watchdog_work;
-+
- /* idle tracking */
- #ifdef CONFIG_SMP
- #ifdef CONFIG_CPUMASK_OFFSTACK
-@@ -1170,6 +1198,11 @@ static void set_task_runnable(struct rq *rq, struct task_struct *p)
- {
- 	lockdep_assert_rq_held(rq);
+ static inline void sched_ext_free(struct task_struct *p) {}
++static inline void print_scx_info(const char *log_lvl, struct task_struct *p) {}
  
-+	if (p->scx.flags & SCX_TASK_RESET_RUNNABLE_AT) {
-+		p->scx.runnable_at = jiffies;
-+		p->scx.flags &= ~SCX_TASK_RESET_RUNNABLE_AT;
-+	}
-+
- 	/*
- 	 * list_add_tail() must be used. scx_ops_bypass() depends on tasks being
- 	 * appened to the runnable_list.
-@@ -1177,9 +1210,11 @@ static void set_task_runnable(struct rq *rq, struct task_struct *p)
- 	list_add_tail(&p->scx.runnable_node, &rq->scx.runnable_list);
+ #endif	/* CONFIG_SCHED_CLASS_EXT */
+ #endif	/* _LINUX_SCHED_EXT_H */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f4365becdc13..1a3144c80af8 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7486,6 +7486,7 @@ void sched_show_task(struct task_struct *p)
+ 
+ 	print_worker_info(KERN_INFO, p);
+ 	print_stop_info(KERN_INFO, p);
++	print_scx_info(KERN_INFO, p);
+ 	show_stack(p, NULL, KERN_INFO);
+ 	put_task_stack(p);
  }
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 8ff30b80e862..6f4de29d7372 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -586,6 +586,14 @@ static __printf(3, 4) void scx_ops_exit_kind(enum scx_exit_kind kind,
  
--static void clr_task_runnable(struct task_struct *p)
-+static void clr_task_runnable(struct task_struct *p, bool reset_runnable_at)
- {
- 	list_del_init(&p->scx.runnable_node);
-+	if (reset_runnable_at)
-+		p->scx.flags |= SCX_TASK_RESET_RUNNABLE_AT;
- }
+ #define SCX_HAS_OP(op)	static_branch_likely(&scx_has_op[SCX_OP_IDX(op)])
  
- static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags)
-@@ -1217,7 +1252,8 @@ static void ops_dequeue(struct task_struct *p, u64 deq_flags)
- {
- 	unsigned long opss;
- 
--	clr_task_runnable(p);
-+	/* dequeue is always temporary, don't reset runnable_at */
-+	clr_task_runnable(p, false);
- 
- 	/* acquire ensures that we see the preceding updates on QUEUED */
- 	opss = atomic_long_read_acquire(&p->scx.ops_state);
-@@ -1826,7 +1862,7 @@ static void set_next_task_scx(struct rq *rq, struct task_struct *p, bool first)
- 
- 	p->se.exec_start = rq_clock_task(rq);
- 
--	clr_task_runnable(p);
-+	clr_task_runnable(p, true);
- }
- 
- static void put_prev_task_scx(struct rq *rq, struct task_struct *p)
-@@ -2176,9 +2212,71 @@ static void reset_idle_masks(void) {}
- 
- #endif	/* CONFIG_SMP */
- 
--static void task_tick_scx(struct rq *rq, struct task_struct *curr, int queued)
-+static bool check_rq_for_timeouts(struct rq *rq)
++static long jiffies_delta_msecs(unsigned long at, unsigned long now)
 +{
-+	struct task_struct *p;
-+	struct rq_flags rf;
-+	bool timed_out = false;
-+
-+	rq_lock_irqsave(rq, &rf);
-+	list_for_each_entry(p, &rq->scx.runnable_list, scx.runnable_node) {
-+		unsigned long last_runnable = p->scx.runnable_at;
-+
-+		if (unlikely(time_after(jiffies,
-+					last_runnable + scx_watchdog_timeout))) {
-+			u32 dur_ms = jiffies_to_msecs(jiffies - last_runnable);
-+
-+			scx_ops_error_kind(SCX_EXIT_ERROR_STALL,
-+					   "%s[%d] failed to run for %u.%03us",
-+					   p->comm, p->pid,
-+					   dur_ms / 1000, dur_ms % 1000);
-+			timed_out = true;
-+			break;
-+		}
-+	}
-+	rq_unlock_irqrestore(rq, &rf);
-+
-+	return timed_out;
++	if (time_after(at, now))
++		return jiffies_to_msecs(at - now);
++	else
++		return -(long)jiffies_to_msecs(now - at);
 +}
 +
-+static void scx_watchdog_workfn(struct work_struct *work)
-+{
-+	int cpu;
-+
-+	WRITE_ONCE(scx_watchdog_timestamp, jiffies);
-+
-+	for_each_online_cpu(cpu) {
-+		if (unlikely(check_rq_for_timeouts(cpu_rq(cpu))))
-+			break;
-+
-+		cond_resched();
-+	}
-+	queue_delayed_work(system_unbound_wq, to_delayed_work(work),
-+			   scx_watchdog_timeout / 2);
-+}
-+
-+void scx_tick(struct rq *rq)
+ /* if the highest set bit is N, return a mask with bits [N+1, 31] set */
+ static u32 higher_bits(u32 flags)
  {
-+	unsigned long last_check;
+@@ -3715,6 +3723,51 @@ static const struct sysrq_key_op sysrq_sched_ext_reset_op = {
+ 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
+ };
+ 
++/**
++ * print_scx_info - print out sched_ext scheduler state
++ * @log_lvl: the log level to use when printing
++ * @p: target task
++ *
++ * If a sched_ext scheduler is enabled, print the name and state of the
++ * scheduler. If @p is on sched_ext, print further information about the task.
++ *
++ * This function can be safely called on any task as long as the task_struct
++ * itself is accessible. While safe, this function isn't synchronized and may
++ * print out mixups or garbages of limited length.
++ */
++void print_scx_info(const char *log_lvl, struct task_struct *p)
++{
++	enum scx_ops_enable_state state = scx_ops_enable_state();
++	const char *all = READ_ONCE(scx_switching_all) ? "+all" : "";
++	char runnable_at_buf[22] = "?";
++	struct sched_class *class;
++	unsigned long runnable_at;
 +
-+	if (!scx_enabled())
++	if (state == SCX_OPS_DISABLED)
 +		return;
 +
-+	last_check = READ_ONCE(scx_watchdog_timestamp);
-+	if (unlikely(time_after(jiffies,
-+				last_check + READ_ONCE(scx_watchdog_timeout)))) {
-+		u32 dur_ms = jiffies_to_msecs(jiffies - last_check);
-+
-+		scx_ops_error_kind(SCX_EXIT_ERROR_STALL,
-+				   "watchdog failed to check in for %u.%03us",
-+				   dur_ms / 1000, dur_ms % 1000);
++	/*
++	 * Carefully check if the task was running on sched_ext, and then
++	 * carefully copy the time it's been runnable, and its state.
++	 */
++	if (copy_from_kernel_nofault(&class, &p->sched_class, sizeof(class)) ||
++	    class != &ext_sched_class) {
++		printk("%sSched_ext: %s (%s%s)", log_lvl, scx_ops.name,
++		       scx_ops_enable_state_str[state], all);
++		return;
 +	}
 +
- 	update_other_load_avgs(rq);
++	if (!copy_from_kernel_nofault(&runnable_at, &p->scx.runnable_at,
++				      sizeof(runnable_at)))
++		scnprintf(runnable_at_buf, sizeof(runnable_at_buf), "%+ldms",
++			  jiffies_delta_msecs(runnable_at, jiffies));
++
++	/* print everything onto one line to conserve console space */
++	printk("%sSched_ext: %s (%s%s), task: runnable_at=%s",
++	       log_lvl, scx_ops.name, scx_ops_enable_state_str[state], all,
++	       runnable_at_buf);
 +}
 +
-+static void task_tick_scx(struct rq *rq, struct task_struct *curr, int queued)
-+{
- 	update_curr_scx(rq);
- 
- 	/*
-@@ -2248,6 +2346,7 @@ static int scx_ops_init_task(struct task_struct *p, struct task_group *tg, bool
- 
- 	scx_set_task_state(p, SCX_TASK_INIT);
- 
-+	p->scx.flags |= SCX_TASK_RESET_RUNNABLE_AT;
- 	return 0;
- }
- 
-@@ -2326,6 +2425,7 @@ void init_scx_entity(struct sched_ext_entity *scx)
- 	scx->sticky_cpu = -1;
- 	scx->holding_cpu = -1;
- 	INIT_LIST_HEAD(&scx->runnable_node);
-+	scx->runnable_at = jiffies;
- 	scx->ddsp_dsq_id = SCX_DSQ_INVALID;
- 	scx->slice = SCX_SLICE_DFL;
- }
-@@ -2783,6 +2883,8 @@ static const char *scx_exit_reason(enum scx_exit_kind kind)
- 		return "runtime error";
- 	case SCX_EXIT_ERROR_BPF:
- 		return "scx_bpf_error";
-+	case SCX_EXIT_ERROR_STALL:
-+		return "runnable task stall";
- 	default:
- 		return "<UNKNOWN>";
- 	}
-@@ -2904,6 +3006,8 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
- 	if (scx_ops.exit)
- 		SCX_CALL_OP(SCX_KF_UNLOCKED, exit, ei);
- 
-+	cancel_delayed_work_sync(&scx_watchdog_work);
-+
- 	/*
- 	 * Delete the kobject from the hierarchy eagerly in addition to just
- 	 * dropping a reference. Otherwise, if the object is deleted
-@@ -3026,6 +3130,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ void __init init_sched_ext_class(void)
  {
- 	struct scx_task_iter sti;
- 	struct task_struct *p;
-+	unsigned long timeout;
- 	int i, ret;
+ 	s32 cpu, v;
+diff --git a/lib/dump_stack.c b/lib/dump_stack.c
+index 222c6d6c8281..9581ef4efec5 100644
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -68,6 +68,7 @@ void dump_stack_print_info(const char *log_lvl)
  
- 	mutex_lock(&scx_ops_enable_mutex);
-@@ -3103,6 +3208,16 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
- 		goto err_disable;
- 	}
- 
-+	if (ops->timeout_ms)
-+		timeout = msecs_to_jiffies(ops->timeout_ms);
-+	else
-+		timeout = SCX_WATCHDOG_MAX_TIMEOUT;
-+
-+	WRITE_ONCE(scx_watchdog_timeout, timeout);
-+	WRITE_ONCE(scx_watchdog_timestamp, jiffies);
-+	queue_delayed_work(system_unbound_wq, &scx_watchdog_work,
-+			   scx_watchdog_timeout / 2);
-+
- 	/*
- 	 * Lock out forks before opening the floodgate so that they don't wander
- 	 * into the operations prematurely.
-@@ -3413,6 +3528,12 @@ static int bpf_scx_init_member(const struct btf_type *t,
- 		if (ret == 0)
- 			return -EINVAL;
- 		return 1;
-+	case offsetof(struct sched_ext_ops, timeout_ms):
-+		if (msecs_to_jiffies(*(u32 *)(udata + moff)) >
-+		    SCX_WATCHDOG_MAX_TIMEOUT)
-+			return -E2BIG;
-+		ops->timeout_ms = *(u32 *)(udata + moff);
-+		return 1;
- 	}
- 
- 	return 0;
-@@ -3569,6 +3690,7 @@ void __init init_sched_ext_class(void)
- 	}
- 
- 	register_sysrq_key('S', &sysrq_sched_ext_reset_op);
-+	INIT_DELAYED_WORK(&scx_watchdog_work, scx_watchdog_workfn);
+ 	print_worker_info(log_lvl, current);
+ 	print_stop_info(log_lvl, current);
++	print_scx_info(log_lvl, current);
  }
  
- 
-diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
-index 9c5a2d928281..56fcdb0b2c05 100644
---- a/kernel/sched/ext.h
-+++ b/kernel/sched/ext.h
-@@ -29,6 +29,7 @@ static inline bool task_on_scx(const struct task_struct *p)
- 	return scx_enabled() && p->sched_class == &ext_sched_class;
- }
- 
-+void scx_tick(struct rq *rq);
- void init_scx_entity(struct sched_ext_entity *scx);
- void scx_pre_fork(struct task_struct *p);
- int scx_fork(struct task_struct *p);
-@@ -66,6 +67,7 @@ static inline const struct sched_class *next_active_class(const struct sched_cla
- #define scx_enabled()		false
- #define scx_switched_all()	false
- 
-+static inline void scx_tick(struct rq *rq) {}
- static inline void scx_pre_fork(struct task_struct *p) {}
- static inline int scx_fork(struct task_struct *p) { return 0; }
- static inline void scx_post_fork(struct task_struct *p) {}
-diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
-index 976a2693da71..8beae08dfdc7 100644
---- a/tools/sched_ext/scx_qmap.bpf.c
-+++ b/tools/sched_ext/scx_qmap.bpf.c
-@@ -29,6 +29,8 @@ enum consts {
- char _license[] SEC("license") = "GPL";
- 
- const volatile u64 slice_ns = SCX_SLICE_DFL;
-+const volatile u32 stall_user_nth;
-+const volatile u32 stall_kernel_nth;
- const volatile u32 dsp_batch;
- 
- u32 test_error_cnt;
-@@ -129,11 +131,20 @@ static int weight_to_idx(u32 weight)
- 
- void BPF_STRUCT_OPS(qmap_enqueue, struct task_struct *p, u64 enq_flags)
- {
-+	static u32 user_cnt, kernel_cnt;
- 	struct task_ctx *tctx;
- 	u32 pid = p->pid;
- 	int idx = weight_to_idx(p->scx.weight);
- 	void *ring;
- 
-+	if (p->flags & PF_KTHREAD) {
-+		if (stall_kernel_nth && !(++kernel_cnt % stall_kernel_nth))
-+			return;
-+	} else {
-+		if (stall_user_nth && !(++user_cnt % stall_user_nth))
-+			return;
-+	}
-+
- 	if (test_error_cnt && !--test_error_cnt)
- 		scx_bpf_error("test triggering error");
- 
-@@ -261,4 +272,5 @@ SCX_OPS_DEFINE(qmap_ops,
- 	       .init_task		= (void *)qmap_init_task,
- 	       .init			= (void *)qmap_init,
- 	       .exit			= (void *)qmap_exit,
-+	       .timeout_ms		= 5000U,
- 	       .name			= "qmap");
-diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
-index 7c84ade7ecfb..6e9e9726cd62 100644
---- a/tools/sched_ext/scx_qmap.c
-+++ b/tools/sched_ext/scx_qmap.c
-@@ -19,10 +19,12 @@ const char help_fmt[] =
- "\n"
- "See the top-level comment in .bpf.c for more details.\n"
- "\n"
--"Usage: %s [-s SLICE_US] [-e COUNT] [-b COUNT] [-p] [-v]\n"
-+"Usage: %s [-s SLICE_US] [-e COUNT] [-t COUNT] [-T COUNT] [-b COUNT] [-p] [-v]\n"
- "\n"
- "  -s SLICE_US   Override slice duration\n"
- "  -e COUNT      Trigger scx_bpf_error() after COUNT enqueues\n"
-+"  -t COUNT      Stall every COUNT'th user thread\n"
-+"  -T COUNT      Stall every COUNT'th kernel thread\n"
- "  -b COUNT      Dispatch upto COUNT tasks together\n"
- "  -p            Switch only tasks on SCHED_EXT policy intead of all\n"
- "  -v            Print libbpf debug messages\n"
-@@ -55,7 +57,7 @@ int main(int argc, char **argv)
- 
- 	skel = SCX_OPS_OPEN(qmap_ops, scx_qmap);
- 
--	while ((opt = getopt(argc, argv, "s:e:b:pvh")) != -1) {
-+	while ((opt = getopt(argc, argv, "s:e:t:T:b:pvh")) != -1) {
- 		switch (opt) {
- 		case 's':
- 			skel->rodata->slice_ns = strtoull(optarg, NULL, 0) * 1000;
-@@ -63,6 +65,12 @@ int main(int argc, char **argv)
- 		case 'e':
- 			skel->bss->test_error_cnt = strtoul(optarg, NULL, 0);
- 			break;
-+		case 't':
-+			skel->rodata->stall_user_nth = strtoul(optarg, NULL, 0);
-+			break;
-+		case 'T':
-+			skel->rodata->stall_kernel_nth = strtoul(optarg, NULL, 0);
-+			break;
- 		case 'b':
- 			skel->rodata->dsp_batch = strtoul(optarg, NULL, 0);
- 			break;
+ /**
 -- 
 2.45.2
 
