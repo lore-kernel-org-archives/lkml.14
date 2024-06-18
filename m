@@ -1,126 +1,106 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B62856B8C;
-	Tue, 18 Jun 2024 16:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5586C4CB4B;
+	Tue, 18 Jun 2024 16:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718729451; cv=none; b=LzhZ1aD9AkOz4AghaUXIwXwPArr4EdC9wSj82TIyJowEUjxFEHmIhEwLlDX64llh5HV70SN11H2GChi2tJE8hKcq/wCXrxBHknpq9fesYMKflqdm+dzW3GYLmQZrhvnoIJ3eRCVt6TBm4oBzb8/unX3bN7uC91wPj8yKHQ/XMo0=
+	t=1718729475; cv=none; b=NvBMmsfIcsWq5C8zPwhdDGYJTnSCP+gDiO2sn5Gzt7rgpFA+KORa84fzCZ0hOfAXnLbwDzUpqSO2UjBclpDqhQWjcm0jd19XKPfKlRZ3fKyyXtP7sC0ANqooPLbVWXHyhS8mv9gr3zEcn6cFszH6yTk9eDccT6Hv1cr8Gd8mcH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718729451; c=relaxed/simple;
-	bh=WCWnF1tCWCkGAB1OhE8HbNrmsX/frO3b1N++OWubed4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aoTtqS3xHyA3I9efgpV0ic6A9gszcicGII+uI4bZzEI0VJhi99GSi+wEJ3fbG90nM+ohZf1PykZAjbQ/J8EtmqOvQeS3hK/gsq/cu3K3ufTU1a7z0jbWddZ73TbZWlbRx121dz5J5wOTSHmLdOL8BLn0hDJPs+9tPSZppDdXnu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WT46ZamZ; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718729475; c=relaxed/simple;
+	bh=PYwVMDAiC3RFinNw6W/w2pZAP4HWbkTkG/3WbS/uhJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QRIB2y+aFtmu6r6jvPMWf1VfrfpoJJBLIgOVbplig4gjqG1ez5l9chSkSEMtK1fIr6rbkF2H5ibGs4so6Nog+WCCF2RaNVk//R1CyDkptq1++uLP1M19XgSPPwndUwNQmuhlzRZBu5oaggmW3Jx0zrArRPw9X1CYkrzkpyDISEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DhYDYsns; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WT46ZamZ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45IGoSHZ076289;
-	Tue, 18 Jun 2024 11:50:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718729428;
-	bh=/8JyMP0dEUxv10e4ddkxCVOvkktmSLVcKrhuuo33fBA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=WT46ZamZQetWXNzI8f3Kyc2+Umajw3bN23/d6pGN6gnoVwi5648LviAiR+RcE/wXi
-	 nG+T2qiDEzll6MBVMmvM26Bl6mQVox8tU8EdoBBeDJXJb0+hNYEikqZ0l8aESib5oa
-	 +35GDRxv5DMVmV3Vr/Bgcydfe+/0sx/Pqf5T0fi0=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45IGoSCc003334
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 18 Jun 2024 11:50:28 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
- Jun 2024 11:50:27 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 18 Jun 2024 11:50:27 -0500
-Received: from [10.250.212.197] ([10.250.212.197])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45IGoPJD007094;
-	Tue, 18 Jun 2024 11:50:26 -0500
-Message-ID: <a8108b2a-fae5-408c-a187-3cb4b2887366@ti.com>
-Date: Tue, 18 Jun 2024 19:50:25 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DhYDYsns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82F8C4AF48;
+	Tue, 18 Jun 2024 16:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718729474;
+	bh=PYwVMDAiC3RFinNw6W/w2pZAP4HWbkTkG/3WbS/uhJ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DhYDYsns1VmefSrocJnh8lhPn4dG74YKBaXFckRJH7y5koD+BCiWiFAYpLcyN5Cmd
+	 LyYd81Sv4vGy0J1JHjvEKCW7W+RU2cmJcZT/18j7TwoYzM65DfSV2XBCKlTPX2xl8g
+	 y3Ed54zMBNb7whp5cTXfSp6oFJ3uYC7gXp/uvZ1O0UsqCvIUxScmlEefxIa00fgoh8
+	 PnXrtZQj5SkzbhWyt8PczbDwKmuE9cvANi/oiwi5NDiAZC5WzCmZAwLUCLbsPEjfGN
+	 6BF/tmCctqfjLwiSa5Qqk3R1D756qW7+P/8YgJvOMMGS6SbRz716KzyISrIwv5+Q0M
+	 7387U5R+6UkSg==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso5136891e87.3;
+        Tue, 18 Jun 2024 09:51:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVoEYc+z/SpwiSrz50Z6K9rjzczVjHTDIpjkIdmJtPfj5yplskIMF9cbtwemsr8YrknsaS+oDRUeuKJefBzL+Gv6rM0XJVY85z5J39HlIkwwa1b6yid+2xcA1lS2OxOdAS6FHEru7iz5EGrhz+DvNZwumI8Pfi62eR+i04dC5eBGSHKyX6uP9Fi36BCSbaXF4UHxz1E1UQNpls4RMI4oPCW1S3JuIl9Du+Z
+X-Gm-Message-State: AOJu0Yy3xfH35MMGPiAK0WcIj7gz9SCBCuXBFqKXgTWT7Nv/AL5QlyQO
+	vPYXBBAiYV1ELi2a504dXT7eGP9MtKxU+6ske+srDdbN5T8useTm37g4v5fW+XBGb1yAYm34544
+	qhrDO9ZnM2mBbpNp5bJoRiD3Erfc=
+X-Google-Smtp-Source: AGHT+IEiRX7GEsAqXvuZkzKWEDQYGYj5Zs1pfZ0hxtklKEBiqui3d6dIT3EMtVA4nIPtaY1zvaTLydirlE0A+d90cJM=
+X-Received: by 2002:a19:e04b:0:b0:52c:856a:d45f with SMTP id
+ 2adb3069b0e04-52ccaa5b881mr102099e87.19.1718729473554; Tue, 18 Jun 2024
+ 09:51:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless v2] wifi: wlcore: fix wlcore AP mode
-To: Kalle Valo <kvalo@kernel.org>,
-        "Russell King (Oracle)"
-	<linux@armlinux.org.uk>
-CC: Johannes Berg <johannes.berg@intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>
-References: <E1sClp4-00Evu7-8v@rmk-PC.armlinux.org.uk>
- <Zm1CKAKCnuc94oIi@shell.armlinux.org.uk> <87tthrn8gf.fsf@kernel.org>
- <ZnA4QpyOdcYxg8LE@shell.armlinux.org.uk> <87a5jimx0a.fsf@kernel.org>
-Content-Language: en-US
-From: "Nemanov, Michael" <michael.nemanov@ti.com>
-In-Reply-To: <87a5jimx0a.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240617175818.58219-17-samitolvanen@google.com> <2024061842-hatless-viewpoint-5024@gregkh>
+In-Reply-To: <2024061842-hatless-viewpoint-5024@gregkh>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 19 Jun 2024 01:50:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_OsXeoDRoMbdXUGY=-jhuoHgo-L6W79n+Kb4G4xEBwQ@mail.gmail.com>
+Message-ID: <CAK7LNAS_OsXeoDRoMbdXUGY=-jhuoHgo-L6W79n+Kb4G4xEBwQ@mail.gmail.com>
+Subject: Re: [PATCH 00/15] Implement MODVERSIONS for Rust
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Matthew Maurer <mmaurer@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/18/2024 12:16 PM, Kalle Valo wrote:
-> 
-> "Russell King (Oracle)" <linux@armlinux.org.uk> writes:
-> 
->> On Mon, Jun 17, 2024 at 01:56:48PM +0300, Kalle Valo wrote:
->>> "Russell King (Oracle)" <linux@armlinux.org.uk> writes:
->>> 
->>> > I see all my TI Wilink patches have been marked as "deferred" in the
->>> > wireless patchwork. Please could you explain what the plan is with
->>> > these patches, especially this one which fixes a serious frustrating
->>> > failing that makes AP mode on this hardware very unreliable and thus
->>> > useless.
->>> 
->>> I'm just swamped with patches, I'll try to look at these soon.
->>> 
->>> I wish that TI would take a more active role in upstream, for example
->>> reviewing and testing patches would help a lot.
->>
->> I believe the problem has been that TI have had an attitude of "we
->> only support people using 4.19.38, if you can't reproduce the problem
->> there we aren't interested". To see the versions they support:
->>
->> https://git.ti.com/cgit/wilink8-wlan/build-utilites/tree/patches/kernel_patches?h=r8.9&id=a2ee50aa5190ed3b334373d6cd09b1bff56ffcf7
->>
->> basically, all are ancient.
->>
->> They also appear take the attitude that all the kernel code is ripe
->> for them to hack about with - whcih is why this fix has had to be
->> reworked so it isn't removing NL80211_FEATURE_FULL_AP_CLIENT_STATE
->> for _all_ kernel wireless drivers!
->>
->> Also, I think they also require one to use their hostapd and
->> wpa_supplicant, probably for a similar reason. I know that in some
->> of the patches they've hacked in API changes...
->>
->> Then one can see the attitude of lock-step firmware and driver
->> upgrade - you can't use 8.9.1.x.x firmware with their older driver,
->> and you can't use 8.9.0.x.x with their newer driver. That, of course,
->> is not acceptable to mainline.
->>
->> So, given all this, IMHO it's probably a good thing TI aren't trying
->> to submit their stuff upstream... that is, unless they are willing
->> to learn how to "do things correctly".
->>
->> Maybe I'm being too hard on TI's wireless division, but that seems to
->> be what has been going on.
-> 
-> Yeah, the all you describe above is very common in wireless vendors :/
-> But vendors do learn, Realtek is a great example of that. Let's hope
-> that TI does too.
+On Wed, Jun 19, 2024 at 1:44=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 17, 2024 at 05:58:19PM +0000, Sami Tolvanen wrote:
+> > Hi folks,
+> >
+> > This series implements CONFIG_MODVERSIONS for Rust, an important
+> > feature for distributions like Android that want to ship Rust
+> > kernel modules, and depend on modversions to help ensure module ABI
+> > compatibility.
+> >
+> > There have been earlier proposals [1][2] that would allow Rust
+> > modules to coexist with modversions, but none that actually implement
+> > symbol versioning. Unlike C, Rust source code doesn't have sufficient
+> > information about the final ABI, as the compiler has considerable
+> > freedom in adjusting structure layout for improved performance [3],
+> > for example, which makes using a source code parser like genksyms
+> > a non-starter. Based on Matt's suggestion and previous feedback
+> > from maintainers, this series uses DWARF debugging information for
+> > computing versions. DWARF is an established and relatively stable
+> > format, which includes all the necessary ABI details, and adding a
+> > CONFIG_DEBUG_INFO dependency for Rust symbol versioning seems like a
+> > reasonable trade-off.
+> >
+> > The first 12 patches of this series add a small tool for computing
+> > symbol versions from DWARF, called gendwarfksyms. When passed a list
+> > of exported symbols, the tool generates an expanded type string
+> > for each symbol, and computes symbol CRCs similarly to genksyms.
+> > gendwarfksyms is written in C and uses libdw to process DWARF, mainly
+> > because of the existing support for C host tools that use elfutils
+> > (e.g., objtool).
+>
+> That's cool, can the C code be switched to also use this?  That way we
+> only have one path/code for all of this?
 
-I can say that the driver for the next generation of chips (CC33xx) does 
-not and will not require any modifications to mac80211, cfg80211 and 
-supplicant.
 
-I will also try to aid and review patches for wl18xx.
+As the description says, it requires CONFIG_DEBUG_INFO.
+We can strip the debug info from the final vmlinux, but
+I guess the build speed will be even slower than the current genksyms.
 
-Michael.
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
