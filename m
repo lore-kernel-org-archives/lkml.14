@@ -1,157 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E5B28DA0;
-	Wed, 19 Jun 2024 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF7011CA1
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 14:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718806545; cv=none; b=ZLnLzO58O1jQ0Jaa+75FkMTFfSBHAiOqIYDADss5HAGFJ2ICrz73Alw5FQ6D6Z1YGmhcIvKcfCQ78NS76907t2qTjflSeLISTIlecJwiJzNI/XBa3qXL210hw3O3ELRsZiqUJVc2KwWuewtrPj0MBoE/qXdGrYZv6u6r4VHoKSU=
+	t=1718806595; cv=none; b=LhOEn344b3YysumY5jU6ol7e3Kl62nrGA9YOJWNKE59gtB5QW7/4ykkyPCgADZTLsqUIM4a/bH/okjBwQjdUUr0IvhN0qdlax8ErrRnB1OaeYdh3IiA1hgk6lJel+1z3hInWLjBLDpeqs8AnylSjie4RN+zahHRCZMM7DsFurL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718806545; c=relaxed/simple;
-	bh=75+xQJ+zYWZwFS+LDfQjwS8KBVlunNetvyViFQ5ET0I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gP65OxMTplD6/RIr7OJAKjr74y5Ywx9x31pCmn6TWtRSsrwjq4Y3YsFuN2O7Fk7mA1Pk4v9Kb90Xg/pjTm6N6bb7ws+JcYIcZSf/SfmJhSuL5ZsIGy9TLDEGpq/0svSeOYLhf5ZYAHRtxArNJpoqhCiMrn/7QcbQjcewqRPvueI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kz6GOBFl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718806595; c=relaxed/simple;
+	bh=j8hnpKSgdsPwZhLgHwzSQMYWcXcujLvM0S2A4+l+rpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AVxES4FlqqiCKqHcfkBu5EETkEHD8dyeiWFf63QTJt/bLpkNvm9PGEmfbsfV4nSpht/iSwD77c4FYK9m57+I8RKJ+/kX12d2TYZkGzB2Z1Ti2E54YuEFRlYMTdr+uK12s6VZVaWz50mxyZoTFCaeZSd0qPLUsXsM1M6YHEPUgmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VEiUsVF8; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kz6GOBFl"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JALipC023156;
-	Wed, 19 Jun 2024 14:15:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OPmm5oKB4vtOtPyMpWkgfv6WzzFq6btVJ2Ez2u40C6I=; b=Kz6GOBFl1IQqzM0c
-	U+U41dH3u/7Ldq++RFIjC4cDtnhYL5Q/0cP7fFIRIkEYRWcEMm1MsbeO1ApS25dT
-	IDWuouf822ESIjQ5qYP2DEoSaaPNtdco9F63eKE0l89n1peu+T9vQR+b2TjurCoU
-	GE7J/d8cCK5uDnZBU8qOFf7EEnh7lNfLpb9T0BSc71OQhVy8tL4Unj8bxkBExpms
-	wCuZzyy6v8rKYhmZkDe7Aum4r262HN/A8910FGwVfar+RfDKlX8mc+vGf+TTYvEI
-	rnrda6wTLPKt//eKJxK4SSD28VuBv5ijeDjqerqmopyuWHQ9+ICWZ3QyA5xs11s5
-	sjErfA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9x1x18-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 14:15:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JEFKwk014691
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 14:15:20 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 19 Jun 2024 07:15:13 -0700
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J .
- Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, Pavel Machek
-	<pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Andy
- Gross" <agross@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-CC: <linux-pm@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Ajit
- Pandey" <quic_ajipan@quicinc.com>
-Subject: [PATCH V6 4/5] clk: qcom: videocc: Use HW_CTRL_TRIGGER for SM8250, SC7280 vcodec GDSC's
-Date: Wed, 19 Jun 2024 19:44:12 +0530
-Message-ID: <20240619141413.7983-5-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240619141413.7983-1-quic_jkona@quicinc.com>
-References: <20240619141413.7983-1-quic_jkona@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VEiUsVF8"
+X-Envelope-To: leon@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718806591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7YB9+PQ0z1j6tWHwXjxGAjgSnoPcuX+AMvafJbdH/Y=;
+	b=VEiUsVF8H2cuXxGHYJXKR6rFCC6a1/RQ8mqASAwIwniKHLP05IqkvUzy9+HVAHseCmSwmS
+	IjkE0ZYFaN9tAk2tH1m3xpg+S/gKfrAlcENIrm624/D7xmsgNlkrhrHIs+aLbopn/9gFOF
+	C51OxOTobHtDWYLcTaTydtiYI9cwaWI=
+X-Envelope-To: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
+X-Envelope-To: jgg@ziepe.ca
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+X-Envelope-To: netdev@vger.kernel.org
+X-Envelope-To: syzkaller-bugs@googlegroups.com
+Message-ID: <94d36dd5-313b-46b3-8d43-95016175d273@linux.dev>
+Date: Wed, 19 Jun 2024 22:16:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [syzbot] [rdma?] WARNING in ib_uverbs_release_dev
+To: Leon Romanovsky <leon@kernel.org>,
+ syzbot <syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com>, jgg@ziepe.ca
+Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000057e4c061b386e23@google.com>
+ <20240619091557.GM4025@unreal>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20240619091557.GM4025@unreal>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UE7GY50ZYfzPsZM6JH4rZufKg8CL0x-J
-X-Proofpoint-GUID: UE7GY50ZYfzPsZM6JH4rZufKg8CL0x-J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=785
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406190107
+X-Migadu-Flow: FLOW_OUT
 
-For Venus V6 variant SoCs(sm8250, sc7280), the venus driver uses the newly
-introduced dev_pm_genpd_set_hwmode() API to switch the vcodec GDSC to
-HW/SW control modes at runtime. Hence use HW_CTRL_TRIGGER flag for vcodec
-GDSC's on sm8250, sc7280 to register the set_hwmode_dev & get_hwmode_dev
-callbacks for vcodec GDSC and allow the GDSC mode to be changed using
-dev_pm_genpd_set_hwmode() API.
+在 2024/6/19 17:15, Leon Romanovsky 写道:
+> On Tue, Jun 18, 2024 at 11:37:18PM -0700, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=19ec7595e3aa1a45f623
+>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>>
+>> Unfortunately, I don't have any reproducer for this issue yet.
+>>
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/27e64d7472ce/disk-2ccbdf43.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/e1c494bb5c9c/vmlinux-2ccbdf43.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/752498985a5e/bzImage-2ccbdf43.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+19ec7595e3aa1a45f623@syzkaller.appspotmail.com
+>>
+>> smc: removing ib device syz0
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 0 PID: 51 at kernel/rcu/srcutree.c:653 cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
+>> Modules linked in:
+>> CPU: 0 PID: 51 Comm: kworker/u8:3 Not tainted 6.10.0-rc3-syzkaller-00044-g2ccbdf43d5e7 #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+>> Workqueue: ib-unreg-wq ib_unregister_work
+>> RIP: 0010:cleanup_srcu_struct+0x404/0x4d0 kernel/rcu/srcutree.c:653
+>> Code: 12 80 00 48 c7 03 00 00 00 00 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 14 67 34 0a 90 0f 0b 90 eb e7 90 0f 0b 90 eb e1 90 <0f> 0b 90 eb db 90 0f 0b 90 eb 0a 90 0f 0b 90 eb 04 90 0f 0b 90 48
+>> RSP: 0018:ffffc90000bb7970 EFLAGS: 00010202
+>> RAX: 0000000000000001 RBX: ffff88802a1bc980 RCX: 0000000000000002
+>> RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffe8ffffd74c58
+>> RBP: 0000000000000001 R08: ffffe8ffffd74c5f R09: 1ffffd1ffffae98b
+>> R10: dffffc0000000000 R11: fffff91ffffae98c R12: dffffc0000000000
+>> R13: ffff88802285b5f0 R14: ffff88802285b000 R15: ffff88802a1bc800
+>> FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007fa3852cae10 CR3: 000000000e132000 CR4: 0000000000350ef0
+>> Call Trace:
+>>   <TASK>
+>>   ib_uverbs_release_dev+0x4e/0x80 drivers/infiniband/core/uverbs_main.c:136
+>>   device_release+0x9b/0x1c0
+>>   kobject_cleanup lib/kobject.c:689 [inline]
+>>   kobject_release lib/kobject.c:720 [inline]
+>>   kref_put include/linux/kref.h:65 [inline]
+>>   kobject_put+0x231/0x480 lib/kobject.c:737
+>>   remove_client_context+0xb9/0x1e0 drivers/infiniband/core/device.c:776
+>>   disable_device+0x13b/0x360 drivers/infiniband/core/device.c:1282
+>>   __ib_unregister_device+0x6d/0x170 drivers/infiniband/core/device.c:1475
+>>   ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1586
+>>   process_one_work kernel/workqueue.c:3231 [inline]
+>>   process_scheduled_works+0xa2e/0x1830 kernel/workqueue.c:3312
+>>   worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+>>   kthread+0x2f2/0x390 kernel/kthread.c:389
+>>   ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
+>>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>>   </TASK>
+> 
+> I see that this is caused by call to ib_unregister_device_queued() as a
+> response to NETDEV_UNREGISTER event, but we don't flush anything before.
+> How can we be sure that ib_device is not used anymore?
 
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/clk/qcom/videocc-sc7280.c | 2 +-
- drivers/clk/qcom/videocc-sm8250.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Hi, Leon
 
-diff --git a/drivers/clk/qcom/videocc-sc7280.c b/drivers/clk/qcom/videocc-sc7280.c
-index 317b325d6daf..88c90853cf6e 100644
---- a/drivers/clk/qcom/videocc-sc7280.c
-+++ b/drivers/clk/qcom/videocc-sc7280.c
-@@ -240,7 +240,7 @@ static struct gdsc mvs0_gdsc = {
- 		.name = "mvs0_gdsc",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
--	.flags = HW_CTRL | RETAIN_FF_ENABLE,
-+	.flags = HW_CTRL_TRIGGER | RETAIN_FF_ENABLE,
- };
- 
- static struct gdsc mvsc_gdsc = {
-diff --git a/drivers/clk/qcom/videocc-sm8250.c b/drivers/clk/qcom/videocc-sm8250.c
-index d7e0c32284c1..df479a69cddd 100644
---- a/drivers/clk/qcom/videocc-sm8250.c
-+++ b/drivers/clk/qcom/videocc-sm8250.c
-@@ -293,7 +293,7 @@ static struct gdsc mvs0_gdsc = {
- 	.pd = {
- 		.name = "mvs0_gdsc",
- 	},
--	.flags = HW_CTRL,
-+	.flags = HW_CTRL_TRIGGER,
- 	.pwrsts = PWRSTS_OFF_ON,
- };
- 
-@@ -302,7 +302,7 @@ static struct gdsc mvs1_gdsc = {
- 	.pd = {
- 		.name = "mvs1_gdsc",
- 	},
--	.flags = HW_CTRL,
-+	.flags = HW_CTRL_TRIGGER,
- 	.pwrsts = PWRSTS_OFF_ON,
- };
- 
--- 
-2.43.0
+This is the console output:
+
+https://syzkaller.appspot.com/x/log.txt?x=179e93fe980000
+
+ From the above link, it seems that other devices or subsystems failed 
+firstly, then caused this call trace to appear. When other problem 
+occurred, the whole kernel system was in mess state.So it is not weird 
+that some problems occurred.
+
+To be simple, the root cause is not in RDMA subsystem.
+
+I will continue to delve into this problem.
+
+Zhu Yanjun
+> 
+> Thanks
 
