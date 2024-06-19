@@ -1,58 +1,59 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F79225AF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36028475
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 19:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718824580; cv=none; b=ZvSgzFdArs1DvmyS0cLC3Uvl39wIMyS0raQvASoyarrYTaVNw1ABxAx3yCpm9uD2JyoKCSguf4zhvK5Sjxy3leJ31G2CiHQ3ZJjSoG0MsnCcEh3Y2BgR8so1R6amQiQif23hA48DR6coaqCWW7E/B7myhvwGMUzbFq2WV3pDt6M=
+	t=1718824614; cv=none; b=AQdRSQ7BYS8c6V5fEJ0lo3z1hHKAsFbXdGrTjl2p61Vsa5hkRqQTFJE6UNOFgQ8TwuJkUBgp5NAwHGwF6T6I2TOhjcBq8N5eLJAp9Z066tQ0ieeBsIp10Rv4HoK66SWdWn3WUYdlaEjk5klQtto5bQPYdHp2WeQnXEchtfx7QBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718824580; c=relaxed/simple;
-	bh=yJrxFSgPh0QuqkiXzOmnP8k+M1hWvwouzWu4chmR7Ko=;
+	s=arc-20240116; t=1718824614; c=relaxed/simple;
+	bh=bGrAT0XuX6HIRNqdaF1eFEFv7sX4k+pappk3LlTHjpU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I/7jwQlQJJYJQC4cZK3tfeeE0EvUTpIyaqGA+fJj0ajlxzRE9Lt7Nr+NgurFmWp0pnBIWyH7MBLjABWYsJJH/aU9zwgqjlmPchHeeY2nkmUbGyTLu/P1JgBafqmivjcp/86JTcjP1/W4g6hSntX0kizHolN8RaFZ2dFAdHzOezo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lc8CGBh/; arc=none smtp.client-ip=209.85.218.54
+	 In-Reply-To:Content-Type; b=uNYZgtDUKuoJx2VE1izf0HHpv/WZF3RmMPseG/gXyqy7GwOZubHCvle1fvTnQsoXnXZvtpl28wuW5Y9DCVq+RneOLPTHHnFaeXc6pLrwyFmHoFkF32klLCq+CFB13cIE5l2BhcSpiW/s5GshP+NmLFVSR/MQL6rMS5wlxQVPM2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xnPJP2aC; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc8CGBh/"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso24973566b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:16:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xnPJP2aC"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57cbc2a2496so75436a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 12:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718824577; x=1719429377; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718824611; x=1719429411; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3yEJfbkZg1yJ5m5VYOAmJOz46lXmJNvnDDj3GFcbJg8=;
-        b=lc8CGBh/zhjnJuVaz2GtQP0HJh/gqQX0VCKsYjmD4sgCbqcyzsCNyeVx39oWe7ta5k
-         i+S60YchQMGMcohRv/WMBhOyNZ+Z9//DK+FHKmebb8E+AxBYZLT7GJTo482628j2aqZ9
-         tI+cYhgXeJtrTIJTuBvCMK9ddIweumviH2cpndEimeGMAltN4u2+B0XF4j7/J6v7PA0X
-         ExOXw+nk+F+4+PhLL/rq9lXX+VtIMVRU8fMdF5SIPkE3jqe203IqUA1u/hCbvrG1ZkR3
-         KurwepWMa8JvMdF6gR6x7aZyXo1Z3Nggszi5JnE6G2LQBNfSADKKHSfAZ/TUVzKWdwBD
-         d9Jw==
+        bh=xW27As3CyhfzKxmc2us+WS7TrU6cHg0Z4tjRes0sYro=;
+        b=xnPJP2aCDh2MMIGK+izEkA5UWO4CLVd5mTLPlKoPTP/34HHjI/IWKpQE+l6qQdUnt2
+         XIikaR6voKPDNObpX4hrWAVRBJ2v/FVhsyRDvukg/VZ9p+37qFD+syDdBJAcTu/HuQeD
+         y6hnMLLlDO3tF9R3aqFOjq07gNR5B3v3Px61LPimNpdVp1NxPvqfRSHH3dgI3YxxYBJO
+         Jr2ujzZQuHAwZfZLGLSLUupNYtqDlNBchgQa3ek5nP6jEen6Ess2kVpkFnNNYbgnWHWt
+         yTYZgiZyhJxUHMHaQT1HG9qH11h6PY9+ao9+k61mtrpZ9rPWdqdXKDMvOJv0H2DTM4nz
+         wm7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718824577; x=1719429377;
+        d=1e100.net; s=20230601; t=1718824611; x=1719429411;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3yEJfbkZg1yJ5m5VYOAmJOz46lXmJNvnDDj3GFcbJg8=;
-        b=gp+I4jxy988KJkqUB4rJ1kC2DhIbn5gkmnoZREvh0w7Qz5KLTn1xduO5KS52KCTghR
-         NwPSu29wpnRb1fbcOIrdfAOW8477tCTWLYMLznqCPdxJSbzMBEa8WL1sNcbX7oh4CDqv
-         6JoHHDt+wwTNGe9PXfd8rXpEq5f6WHeNDHZFu7ZlRTkTVVI+OKnX/EtmRbs9zImd8K2q
-         e3lhonUoryoiFWgNUTrIU4Iy0CS7MlCPCZMmLOdTYjyQVGZ8a5zjizzsm+DBJTywnsxP
-         vfE1EU6wkkKPMrrDt5mULDp18G4wj4JytJUrlO7hWGeJGuFGGtO7MLati27iYcBr8pDb
-         Cjgg==
-X-Gm-Message-State: AOJu0Yyhju2RoemE3qeE6dGmjgHlPyHBck9R96VojtODHdqoEaeFOBan
-	4zThlln7LMCzCMwpnWdxi0FvYK3cQhtr4r0VrER1uTpJbHLlPA4xSVi2d0Yy3aE=
-X-Google-Smtp-Source: AGHT+IE8ZkBq8SDbwkZNBrB9p14Qcunp5+QpcNAulyIdJq1GogucMKYZh0P5W7z1T9VwPobhNYsr0Q==
-X-Received: by 2002:a17:907:a588:b0:a6f:55e3:ee5f with SMTP id a640c23a62f3a-a6fa4109cd4mr230994066b.9.1718824576961;
-        Wed, 19 Jun 2024 12:16:16 -0700 (PDT)
+        bh=xW27As3CyhfzKxmc2us+WS7TrU6cHg0Z4tjRes0sYro=;
+        b=rgVWCf0rv1+1EqQ1ahEA/y5l8x1oyGuBlXoaLCBpF/wZqj7/IXWme8FUxKTfomjip0
+         KISOy8jeOpOS0cvrzsqrCo1DhsAapdO7OAw/3NaZr4R4GEcGqnP56cc2DebCIvp7QymF
+         kkG38N2xRYrEYljaFvLJ6z8mEiUjdQF+cvJg7DQaE0/9GWu8ErwAKP9NPJWDwSuaF/uy
+         OX6QpSNk/TsQQw3UFzQQEZiNp3P/R/6u67KgXk2B963WIsAExyANopX+Jr9oKS19GDlL
+         nrPH2AhhN5Xl9KtfJ9aJmcFInM0smjojIFO7tb8XjNZkfgZfTYW/FbDJDj9Tl/ZbVfEz
+         +lSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQY4J0DLcPnaMWw38xoqXNGC8hw6N9y2XDGaLEjOOovW096n7HUlLCrP8npEXqhXztO8XzfLsJu+6ps4zZVX6YYnDR6YODNduo8F6J
+X-Gm-Message-State: AOJu0YyqJZBKainO0m3ITdUUJi6vycQmCQQG+zoV0GC2Dzc/oU6icX9+
+	O/dFgpP3tF9rEof3Uvh2Ysb/z/RCcXnmMYzBxUTWmpTaImHSUWrjP4F7ulW+NmU=
+X-Google-Smtp-Source: AGHT+IFwU14UM0dtxkXha3cXVSm5zW59OPajkJoXmZPv7v7qen57UTQtx+vhLPPHRqijWQnwtuQjeQ==
+X-Received: by 2002:a50:ee92:0:b0:57c:6d9a:914e with SMTP id 4fb4d7f45d1cf-57d0bff1a34mr2084327a12.30.1718824610830;
+        Wed, 19 Jun 2024 12:16:50 -0700 (PDT)
 Received: from ?IPV6:2a00:f41:9028:9df3:4dba:9578:7545:6874? ([2a00:f41:9028:9df3:4dba:9578:7545:6874])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f4170bsm684420766b.157.2024.06.19.12.16.15
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cbbb5576csm8108656a12.89.2024.06.19.12.16.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 12:16:16 -0700 (PDT)
-Message-ID: <a30fb728-d832-4309-8415-a28fed301e27@linaro.org>
-Date: Wed, 19 Jun 2024 21:16:14 +0200
+        Wed, 19 Jun 2024 12:16:50 -0700 (PDT)
+Message-ID: <58025447-b916-43e6-ad07-0b11710edc3c@linaro.org>
+Date: Wed, 19 Jun 2024 21:16:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,75 +61,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in
- bwmon_intr_thread
-To: Shivnandan Kumar <quic_kshivnan@quicinc.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- quic_rgottimu@quicinc.com
-References: <20240619135140.3581119-1-quic_kshivnan@quicinc.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8916-gplus-fl8005a: Add sound and
+ modem
+To: "Lin, Meng-Bo" <linmengbo06890@proton.me>, linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20240619111523.54301-1-linmengbo06890@proton.me>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240619135140.3581119-1-quic_kshivnan@quicinc.com>
+In-Reply-To: <20240619111523.54301-1-linmengbo06890@proton.me>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/19/24 15:51, Shivnandan Kumar wrote:
-> Add tracepoint for tracing the measured traffic in kbps,
-> up_kbps and down_kbps in bwmon. This information is valuable
-> for understanding what bwmon hw measures at the system cache
-> level and at the DDR level which is helpful in debugging
-> bwmon behavior.
+On 6/19/24 13:15, Lin, Meng-Bo wrote:
+> Enable sound and modem for the GPLUS FL8005A.
+> The setup is similar to most MSM8916 devices, i.e.:
 > 
-> Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+>   - QDSP6 audio
+>   - Earpiece/headphones/microphones via digital/analog codec in
+>     MSM8916/PM8916
+>   - WWAN Internet via BAM-DMUX
+> 
+> Signed-off-by: "Lin, Meng-Bo" <linmengbo06890@proton.me>
 > ---
->   MAINTAINERS                        |  1 +
->   drivers/soc/qcom/icc-bwmon.c       |  7 +++--
->   drivers/soc/qcom/trace_icc-bwmon.h | 49 ++++++++++++++++++++++++++++++
->   3 files changed, 55 insertions(+), 2 deletions(-)
->   create mode 100644 drivers/soc/qcom/trace_icc-bwmon.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 242fc612fbc5..1b410c0183bb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18573,6 +18573,7 @@ M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->   L:	linux-arm-msm@vger.kernel.org
->   S:	Maintained
->   F:	Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
-> +F:	drivers/soc/qcom/trace_icc-bwmon.h
->   F:	drivers/soc/qcom/icc-bwmon.c
-> 
->   QUALCOMM IOMMU
-> diff --git a/drivers/soc/qcom/icc-bwmon.c b/drivers/soc/qcom/icc-bwmon.c
-> index fb323b3364db..9b5ac1e62673 100644
-> --- a/drivers/soc/qcom/icc-bwmon.c
-> +++ b/drivers/soc/qcom/icc-bwmon.c
-> @@ -17,6 +17,8 @@
->   #include <linux/pm_opp.h>
->   #include <linux/regmap.h>
->   #include <linux/sizes.h>
-> +#define CREATE_TRACE_POINTS
-> +#include "trace_icc-bwmon.h"
-> 
->   /*
->    * The BWMON samples data throughput within 'sample_ms' time. With three
-> @@ -645,9 +647,9 @@ static irqreturn_t bwmon_intr_thread(int irq, void *dev_id)
->   	struct icc_bwmon *bwmon = dev_id;
->   	unsigned int irq_enable = 0;
->   	struct dev_pm_opp *opp, *target_opp;
-> -	unsigned int bw_kbps, up_kbps, down_kbps;
-> +	unsigned int bw_kbps, up_kbps, down_kbps, meas_kbps;
-> 
-> -	bw_kbps = bwmon->target_kbps;
-> +	meas_kbps = bw_kbps = bwmon->target_kbps;
-> 
->   	target_opp = dev_pm_opp_find_bw_ceil(bwmon->dev, &bw_kbps, 0);
 
-This breaks bwmon, as dev_pm_opp_find_bw_ceil is now fed a random
-(uninitialized variable) value
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
