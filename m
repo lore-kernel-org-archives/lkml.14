@@ -1,151 +1,100 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2180.outbound.protection.outlook.com [40.92.62.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FF38120D;
-	Wed, 19 Jun 2024 10:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791760; cv=fail; b=p7LLUGqTW+R8jGpKiW8P22yS3uXfYG6VbbZi26Xb9tGPEoihWwTyPAzxtFQCAi/Asz5KiJTNrrjf7sX1LZnMeukJHS5nIDj/VtsxtvjB8NooxgJCqQeX0YOmB54UDuW0eCFXuJnmHD7cLljsJRmf5dSfeqO/gTpvhvL9GtjZipA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791760; c=relaxed/simple;
-	bh=kk92+fFmvqmtk9Xcsg/QLUvgefVvsJgV7XPpu2zvJhw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BHudRg+LHaYHCJzff8lIhhyMnLU4wFkHK/c/N/vsBpeaQNQBvTQFQgQ3UZcWa/wPSbkYn3yqvAtUjTBKpozbVKPm7k6l/awSGr0i+vdlZXZqHmAfyP6KCkCFWvH7lFkoPYL2KQAnJWBVGSIt3ssqDHl9eDgIt30wDvrEnUpmvuU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=COdK+w5q; arc=fail smtp.client-ip=40.92.62.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54C3824A1;
+	Wed, 19 Jun 2024 10:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718791781; cv=none; b=SfywH3Bd9tAyQ3lJXOzL4VlBhpNR1Ca+/3MjGK8SI7rdIZKlBfBOB+jebRK5MozKcQZuojiri4Unz9wYJLuK0ydxFuXm4x5P+sqUJ3yAFcFPgs64+7NijNJEIkYrdDN+XZUSqg3O2OcEakbf2LcwCHatsA3XuvjVwcWbL5cJysk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718791781; c=relaxed/simple;
+	bh=14bX73tgmn/BA687/LvvfUIWNbL3RdKyEfzJPMxEJL4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CZytc2tIiMXRn29Q9l0ot34QysdcjCvEhRl8kAZQ0Mf4gFpZx0mvhWqTABxMBkgrgosjl/oXrvsZjEKzhkTAPUBaTZevfpYtcxkDwtl+CdvIN/yXA6CcbCyy8mSzuEy9KC/BViHHRl4j0qNjwQDeXsjkncc3o5hnOrbkl7wfxdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=1h4vqr1K; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="COdK+w5q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ksxv2nkFrN+ez2LFvof955ns+CANfUNHSOxKg+u1aUAx4Er0rx3V45G1s7JMz+4nWLy5dK5WmTNLIx7I3QVPt8nIwHyNHV/KxAiLmjIl6BiEtNWmabrkAIOAgJqpHy+21QVZRRomx9PYtxBIkv54KXFxMFcnVZoLbe8Fqecw8dEuymE1Nofh55TBzKwc735ijK5cMp79qC9Sznfuk04Od1ExpVdTjYZ0qNX+ZlxvSjl8vlWa3UzQN1AIBkyMj0lG4mzf+Zq623KpgnP535p+MO6V06LfR5taPrkistUS0IL/3zhX5gXpPPM7AWX95JKF+/T1c+p38Jp4je7Fgt4R2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+ux1+bRl70pr3534GMjaOb7S7Rrn0Tu+/V1jx5cn3Rc=;
- b=HuJzR7sOHBqL769yBLVysPSoC+ixQrBiLn0EngzGB1YcY9piys6wBiZ6okRoksVUEuBBNAqdjkVobiNhh2+OODFBbQZC1h7JPnFiEUN8cZTEic/cfcx358O811zRRZJQ2njiiPqFclCeFUK049j+LuUyHwIK4dNqthW/Wq/ngLrzOSMaQ39CtxTH0DW9cs2M1YiRghXLCx+lG+YSIX2RnvO2gMZQe12K0irdzhrbvdcr60S7EocKCkr9tEclDwrDNYhkWeHmlY1NmfRaJrDJt4Dx/8k/3oL+wJkBBAsrd7AHESa40qcg0fHJ5sBtGZIg0MdDdAVTfhLEh9Jn/EKJMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+ux1+bRl70pr3534GMjaOb7S7Rrn0Tu+/V1jx5cn3Rc=;
- b=COdK+w5qVpuyQhxWlwh+rhjP31T3WJBB12BgLvoYo/RF/0wbwr8E/+lhJoQrh0yQQEZV4DAErg8WRNf7HFczZkT3sUHZPAi8F/G1q8IgIkJ5ajZhZBP7bdCmSCoH7sxSPihH1Pz3pYUvAZHcGVsj8lTXP9R3glfN5anwJzaIkmDrk4+VSHa56Iwj4oRLxKQielfGa/BfpFN2Aaj33V9pIwQjTRfwQWVnvRNn25OJcF42vkcqK8nvSKWPcTkJgbHvihg702SxShjeeZySitvOfuEuJgBD3ZMOU5xHJxSIeh5vgcdXLcxJwUkqsYkn6J7wXckdB/8i7lcK0vg27zB0Pg==
-Received: from SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:1b3::6) by
- ME3P282MB1954.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:b1::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.19; Wed, 19 Jun 2024 10:09:12 +0000
-Received: from SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
- ([fe80::a8e8:3859:c279:c289]) by SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
- ([fe80::a8e8:3859:c279:c289%5]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
- 10:09:12 +0000
-From: Jinjian Song <songjinjian@hotmail.com>
-To: kuba@kernel.org,
-	Vanillan Wang <songjinjian@hotmail.com>
-Cc: chandrashekar.devegowda@intel.com,
-	chiranjeevi.rapolu@linux.intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	haijun.liu@mediatek.com,
-	jinjian.song@fibocom.com,
-	johannes@sipsolutions.net,
-	linux-kernel@vger.kernel.org,
-	loic.poulain@linaro.org,
-	m.chetan.kumar@linux.intel.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	ricardo.martinez@linux.intel.com,
-	ryazanov.s.a@gmail.com
-Subject: Re: [net-next v1] net: wwan: t7xx: Add debug port
-Date: Wed, 19 Jun 2024 18:08:38 +0800
-Message-ID:
- <SYBP282MB3528ACDD0F9077C35ADE236BBBCF2@SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240614081136.17dd3d1f@kernel.org>
-References: <20240614081136.17dd3d1f@kernel.org>
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TMN: [zbEZ06kR55lNr3t9ZQKVtT4X7tA3CSmZ]
-X-ClientProxiedBy: SG2PR02CA0126.apcprd02.prod.outlook.com
- (2603:1096:4:188::11) To SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:1b3::6)
-X-Microsoft-Original-Message-ID:
- <20240619100838.5186-1-songjinjian@hotmail.com>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="1h4vqr1K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718791771;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=14bX73tgmn/BA687/LvvfUIWNbL3RdKyEfzJPMxEJL4=;
+	b=1h4vqr1KRANPl05ZjHoyf2xpS1KYMGmytx2Oz+taxWQRpuzmLQ2t8bW+vuGysp/uCwJwk1
+	db5yPoHWwqfxTzamfzPhZI4O6/0oESkXRReHcC+sivV2vonQfUap2TIhnK2Ldo0EYgrOmr
+	/aYpULb30jruX1Au3Ew6CgxSNAJUWQg=
+Message-ID: <d452ecc4fc703a1f98aa4f243c6ded7fbfe54b0e.camel@crapouillou.net>
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	 <rdunlap@infradead.org>
+Date: Wed, 19 Jun 2024 12:09:29 +0200
+In-Reply-To: <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+	 <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SYBP282MB3528:EE_|ME3P282MB1954:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79367eb8-4c15-4b08-8560-08dc9047ddab
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|440099025|3412199022|1710799023;
-X-Microsoft-Antispam-Message-Info:
-	t06vlSfH+0elnWxdCCMhwRq7hezUN8+lkUxOkrBJOYgXpyS+XI3eE8rUZboRA35xAWtzO87rJCAI3Rm0eTTf9HVs8QoW55/ZGmVh3MFvYTWIv9DMKj5Gc+KPHsCRvraeyJaiPRuEZ21hF2YDuPTumNrHJMEnosamCRqIMbSpvTvw7n7BWld9O5+3lCfN73PXxiHu0Tq34Y6Dhm3C67fdpX8WUKZg+/yccUwFn8wh+4E+SDzMeZaFWtUdeXB2Kks+QDb/Lp5wYp5s6hdwF5jsR0FtjtO7OinnSzeFpjLtDEEsvodY/mxRuDH7TnCDzt8jakPgA5GNWCR1zVHZRYXh5UfaP0DEotG9LiqlM7f8TC0I4q658yr7u6iAQaZtgtzJ+AmdKtEs+GIGdgsvRwqq8i1H1ZnafUgX1/2kbwur3WtfcBj7EGk61L/3zGQvJQOObuJhqgWiFBFN0QnD7PblxATcarhChxEj5CEi0hB9blCLb/WEzMUDP5UCCOCffyY2gqoztw1pIkiwD77oOfWnCwx1nv6o+gLM6ub2zSoicYHykiZt4j8ROqFiY3r/CtAyLq4AZoODeeAYkRcObalUv3E02nLvOV/RZC4NgWCbqUNHAfB0BtlinHnEd5uClVRg
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JMRRqcS8sZQWPWMb3AwedrA1tbtubBSLG8cVrIVwEVDQcA4erQY27iF0zfHn?=
- =?us-ascii?Q?3Py5R1WhrFoxDuksscX8cs9q1hNK6PsVxfh3egtubqj2WaTm+ENDP6pzK/Xz?=
- =?us-ascii?Q?DIhDbjUr22+VchnQroxIM5xWEUP3O8TTj6onNT5twvQ1ZjHeii6+oG65z9cd?=
- =?us-ascii?Q?9WPC77f5/xXZTPYV3pc7yT2vaA/Rd7pLRTaAiT3gcEETb3AKF2NRH9WLbh2T?=
- =?us-ascii?Q?LTRXbCt2Kh1llVDSYxpiHmcjJNW/ssvvajArg1QoduWCj1DYVwU9+ROrSjth?=
- =?us-ascii?Q?uH9SDChGLm9iRQd2F7kP25bX9QepLyJ8lZMKlwdcTqaxVkPDkJbZoOSE3TNO?=
- =?us-ascii?Q?Uq9eGB7PIKKTC1/SrLhM45xxIq3Ea1XaZOY3CxGHGO4quc3leX81XKRzQSKk?=
- =?us-ascii?Q?tkj9Vn1bMMKue4EgRQFyT8w6w+lprXIOdUAmvsMPEKlM9vusZlb5bx3SDw2t?=
- =?us-ascii?Q?GKAK02wdjQHo7D5y3sKZAytPhVXK2ojPVegQq3/dsU49HolAMvrxYFSbw9VH?=
- =?us-ascii?Q?eMDAVN/OT/QUNeanykgIt0/IqAd9vyD8wMCyFQcGjD7EY1clr/DrOlhl8zil?=
- =?us-ascii?Q?shFyTUVmQtuAj1qKhsRIDegV48nEufiJUp6Ezn3NhOHuWkbfz3n0YuPmpxDQ?=
- =?us-ascii?Q?cK1pJI6SGoX4sMGcsTgtjR2sjBVx9hqiOyX18eR7+x0l2DffrUu8ZNDbuHV7?=
- =?us-ascii?Q?yK4KFRC3dIpd84yRjBiuKuJvggU74Y216xMBFY6278nUG0PTZOufvjg+5hUv?=
- =?us-ascii?Q?6yOG9ZerN6Zitq2q813V8y/Am6fUZ4MwJQizeoY8N06NODHX6VKH6l03GfAY?=
- =?us-ascii?Q?gLS/w2W0ciKSbmbj1oaOpgGKIZh0BLNmPUMuLm0tW3f76DSq2R+5QHLvhY4h?=
- =?us-ascii?Q?I9J1R0bFnbwHLpjGBcVguhQ5UsYbkfsZP/aZK5aj9MQVE5jfhny9ntqEhwRu?=
- =?us-ascii?Q?wsb4qRr3efFVnbCo7pu33nzg1JcY9dcG1CNTQl7P+V+Z/97QR6U/oYl3sWQw?=
- =?us-ascii?Q?kI/FM8mOnm3VdWKTKkMCkh16Lb1ZKxeqKLGiBI6//9cMdYMSL2K+9AD3i8B3?=
- =?us-ascii?Q?kblP4bcw2zQ862o1WTIBXLPw2MYq0S97cqnUmBCSJwT0feA4DlZ3RkkCyKO9?=
- =?us-ascii?Q?RI0mx9k0c7gfPbBKkzi7T2WdkksCyFf6D9NI8lHMssex0RxsHdVbMa+s7DYl?=
- =?us-ascii?Q?1I+sqL1YkOEusV5Vw5ntl9xBwQbFLIqaS0X8iEUeFTaUb5n/NhuKmUJiZAxj?=
- =?us-ascii?Q?nqdQYz4nq3sPNe2cMtgJ?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79367eb8-4c15-4b08-8560-08dc9047ddab
-X-MS-Exchange-CrossTenant-AuthSource: SYBP282MB3528.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 10:09:12.0361
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME3P282MB1954
 
-From: Jakub Kicinski <kuba@kernel.org>
+Hi Markus,
 
->On Fri, 14 Jun 2024 17:49:51 +0800 Vanillan Wang wrote:
->> From: Jinjian Song <jinjian.song@fibocom.com>
->> 
->> Add support for userspace to switch on the debug port(ADB,MIPC).
->>  - ADB port: /dev/ccci_sap_adb
->>  - MIPC port: /dev/ttyMIPC0
->> 
->> Switch on debug port:
->>  - debug: 'echo debug > /sys/bus/pci/devices/${bdf}/t7xx_mode
->> 
->> Switch off debug port:
->>  - normal: 'echo normal > /sys/bus/pci/devices/${bdf}/t7xx_mode
->
->You need to provide more detail on what it does and how it's used.
-I will add more detail to that, thanks.
+Le mercredi 19 juin 2024 =C3=A0 12:03 +0200, Markus Elfring a =C3=A9crit=C2=
+=A0:
+> =E2=80=A6
+> > All errors (new ones prefixed by >>):
+> >=20
+> > > > drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump
+> > > > from this goto statement to its label
+> > =C2=A0=C2=A0=C2=A0 1715 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_dmabuf_unmap_a=
+ttachment;
+> =E2=80=A6
+>=20
+> Would you dare to transform the remaining goto chain into further
+> applications
+> of scope-based resource management?
 
->> +	txq_mtu = t7xx_get_port_mtu(port);
->> +	if (txq_mtu < 0)
->> +		return -EINVAL;
->
->drivers/net/wwan/t7xx/t7xx_port_debug.c:153:5-12: WARNING: Unsigned expression compared with zero: txq_mtu < 0
->-- 
->
-I will fix it, thanks
+We discussed this after v6 or v7, DRM/DMABUF maintainers were not keen
+on doing that *just yet*.
 
-Jinjian,
-Best Regards.
+Cheers,
+-Paul
