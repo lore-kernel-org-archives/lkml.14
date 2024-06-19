@@ -1,254 +1,185 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5761514EF
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 17:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4BE339A8;
+	Wed, 19 Jun 2024 17:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718816547; cv=none; b=szJkHEQzmJoOQF2nWclbAjoCgizEYwzf1Dh1ejsca9UGO91F7XsJdEio7I2SsTic1gC+CEXinWd9CkcIHLI/LyVKjOxckJPLWnEIE8bDJEdiLzn6Rw/bTE2trMsZ8Q0Pa7Zm7WUVljUU6EYBKXOc+ZVRFabOGQ1ZYQKrrFawNpU=
+	t=1718816574; cv=none; b=SKDauQ0aJbSvnkJR4J6gKXPd1zEIE6fF/b+VtKHBcA0lhOO7jT0agelnRrOO2Nv82mfI9bLgWdRFXyIBaUtsafDNKy3NFC84UEJsrAQNtRUOa9U/o0TQ+m7yEnzGUCuuE2Pi0V5Ezu3MhPyM9XFKozwi2nP27v+OkzKKAxWHX0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718816547; c=relaxed/simple;
-	bh=0vO4GKaP767w0/XD+Si416dist7SXca57A4FWcH2paQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hyTuz5POwgsWsdury9iCNpiwDGRY/dKIkfjOrYb1vmi7HfcuZF3/QUUYmfyx/XkuAPeSRrH3pU5V6WVmuwP58RDsanIZDMFQvl8OY7mIGY5Q7RhZcWDpzTIs6py6rg4GjUViW9U31ESiU+9PTiUSN5gF2TQCLXhgHyrFyHOyTLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-37620c37ae8so9175895ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:02:25 -0700 (PDT)
+	s=arc-20240116; t=1718816574; c=relaxed/simple;
+	bh=PDVe6x1W7Sg6im99IZlElznaygjLXCfxFfHhjxUX5NI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBsSSaBBq1jWWiF6NhJngv+oh0IyeKwGgmnnIzqgLedG4i5pazDy+0TvJAqNM+ReZ2svMiZ9FmIjWyVvyw0/zAIZB6csUEzMRSGfd85o9n0MFhNU+9sp+GQKaa6lxb3yYsOxdjthm9ESPvTWMPneaKS0YCSVm4/caOvRJWwGs70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1FmR4Im; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1FmR4Im"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f44b45d6abso50950995ad.0;
+        Wed, 19 Jun 2024 10:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718816572; x=1719421372; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nCyy/iTu+Rgj32SD9M0e0oNUqf2SCUNkQAcuASyXy2Y=;
+        b=Z1FmR4ImULJ8sI4zxYjERU0cXSE6y3aSwpT3tlxP3gw+N+i6PjLmoF9iwcLPhXU08B
+         MAjIIweuAeAt8W9mjAYdRTJG7TBCRT1Q+5yPFpEqcoK9GpJo6NQpGoq7qjUfDR6UDx0n
+         V5Hlt8aLLV2YLbKyjSosK7aJBSo/WfhMrtMYMPgX6vmeKzOV0uz+XhYHncftsllnhnq1
+         UKMdsrtMsHXoXda+SwjR7ej668OisJgghCjJm1KqEykN2bC3fBjrpPzKqrVBrenoCO+R
+         NKwy9cUFsGnBp+AbKpzIzo28G78qMvJCdVbkOhFxDFAzQpr5mUqhzZ5jMvTOUj75yDgY
+         EmRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718816545; x=1719421345;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UWJmbqOBPchg8T0EuVb6TtoE3L9OrAp1dqQL8qXw334=;
-        b=r1jDSYePpSKqpT6J/TifgTrctVjCJD5TK9VXBDoF3nHLmHir+Ygt7uECFmlo+XNxR7
-         yjCaNVJnBG3EMB9NhyMEN9uQqTU8dN9e8YpWZJBRgcGuMKecCILJ2lznBU/r4E7pBMeA
-         KzfwBMRYLie4K0omtHXtEdV8Eoq5sUuVO2y47gNnim9zB39yq9NBDyG0a+6/NHX1+DIQ
-         NGETkELgMHxAxPFUiKmM2C6hk4EJ5e71DzmkwnBSpJDUBhhEf22Pq2L36bnx99txnu98
-         J2g1JS+K6TL3FhX5Xdbc1HyCMJdrhPRAjj2GEwfWwUhMSCUBsg9h8p3gMrirTfzYvWk2
-         245A==
-X-Forwarded-Encrypted: i=1; AJvYcCWwLsBalnsr4y84NovnL8vF7e1BMVY11vj+LLYliDKMM7UD2h6MstnP7h1oULxc3gNZUQ5UkGciIhOPElIoHdyXbrUufHhiB6g0ULb/
-X-Gm-Message-State: AOJu0YzUENYCXz+K2uxiOkk3IPrtCX1M4QZvFJsO0UhK1ToDPsh6rwao
-	FLJEGLbHh991IF5leiOU1Jx8fzlUSOHZr6sZbgdXAftd4jPhQbRREx+xf5/qvq01AwGz2ixwntL
-	HW0uv/pqveIX7hH+lkbNxYrIE2azNE90BrQtlMOnUHXuLDVSQ4tLJgmc=
-X-Google-Smtp-Source: AGHT+IGG+jy/QZJDvaJsVEmz2br/qj5OV0b0xIwU6nt1cNy4F8SFq2xs0EtRU4+71UWtY+rA/r/2MtFTPmdrehDPLxlizgHgGgZ/
+        d=1e100.net; s=20230601; t=1718816572; x=1719421372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nCyy/iTu+Rgj32SD9M0e0oNUqf2SCUNkQAcuASyXy2Y=;
+        b=hvoXFscCLdCULEsfj8qGZWTUKl6QUjrbSx/7TgPGGVI+9WRjXwFvWJoe6Fqu527OPM
+         gO5cwrgEv0BbM8blfDoafAfBiVkYjs9jkK9Tmo1SGeV6EgGsxgKSq4ytacsIoZEWuUvk
+         N02jD9vcgtB0tgF5GNI1aqlSQmFscw/2nXkwgHGjwaUj3TPpcne9OXsTtOOWRbg/3VEH
+         MIEkzC7H7KSpzKozG9YFS0T5Wqq8BjRNL199JdKOtj8TO58bnxL+EDXS56ln9JIcrHCQ
+         mtT7J1sE6HnQiH7WFQcGKEM+OcQxQA1YYXSYQ1VTTPC719IGdueyE66rDulrqN5bHfd3
+         fOoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSVtrjG7MywLV1Vadn2MxEhod+GH3xG3rbbiaHBc+ojeXfSJenY6fvNkpKs9qMYeQq+PkVAXKYd3kD+dwTJoCH+GFRquclTSOI0KyiFS7CbmB5HRwBHmdBGmOBZ21/y2KC/7/5m1vpygUUwQmYf8rLkdJjnPUQL0hSxzUD/imE4n9+6xUcOVwG461HN6ehphKtw18uJBFJ5mMAOD9p2w==
+X-Gm-Message-State: AOJu0YywUscR6XrmQzTue58YJZkczvxD8BRsKRwXseC+l98WcoRIJJw+
+	a1dWpHr1QHQiG8atrBw2cCyJpdOUu+YulI9NsyzXbsAWqst0Wnqx
+X-Google-Smtp-Source: AGHT+IFN6ZzW+EYZcLINoXOjKKuRVNBPYCeqYeRfUtLufjNP5tnpECbgvisRvGRDtPqhH3MaSsFOmQ==
+X-Received: by 2002:a17:902:ec83:b0:1f7:414:d687 with SMTP id d9443c01a7336-1f9aa468225mr36186415ad.67.1718816570993;
+        Wed, 19 Jun 2024 10:02:50 -0700 (PDT)
+Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f15149sm119839705ad.218.2024.06.19.10.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 10:02:50 -0700 (PDT)
+Date: Wed, 19 Jun 2024 14:04:14 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] dt-bindings: iio: adc: Add AD4000
+Message-ID: <ZnMPjtj1ZhOzKeps@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1718749981.git.marcelo.schmitt@analog.com>
+ <34a16c6e513b32bc6111b695e1c8b467bd6993d9.1718749981.git.marcelo.schmitt@analog.com>
+ <38f99355-0186-4c2f-912a-cb03d6e4823c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2183:b0:375:da97:f21a with SMTP id
- e9e14a558f8ab-3761d7288a6mr1983605ab.3.1718816544969; Wed, 19 Jun 2024
- 10:02:24 -0700 (PDT)
-Date: Wed, 19 Jun 2024 10:02:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000098e724061b41297e@google.com>
-Subject: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- hci_sock_get_cookie (2)
-From: syzbot <syzbot+d047bdb99944f4429ce7@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38f99355-0186-4c2f-912a-cb03d6e4823c@baylibre.com>
 
-Hello,
+On 06/19, David Lechner wrote:
+> On 6/18/24 6:12 PM, Marcelo Schmitt wrote:
+> > Add device tree documentation for AD4000 series of ADC devices.
+> > 
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4000-4004-4008.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4001-4005.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4002-4006-4010.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4003-4007-4011.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ad4020-4021-4022.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4001.pdf
+> > Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4003.pdf
+> 
+> Datasheets URLs are listed in the patch, so probably don't need them
+> in the commit message too.
 
-syzbot found the following issue on:
+okay, removed them for v5.
 
-HEAD commit:    45403b12c29c ip_tunnel: Move stats allocation to core
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12dd357a980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ce6b8d38d53fa4e
-dashboard link: https://syzkaller.appspot.com/bug?extid=d047bdb99944f4429ce7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+...
+> 
+> There are data sheets listed for adaq400x but no compatibles.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Ah, that's correct. I missed
+      - const: adi,adaq4001
+      - const: adi,adaq4003
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/08e0ccb0d0c7/disk-45403b12.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d8c2fb69ea08/vmlinux-45403b12.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f665a6962ffc/bzImage-45403b12.xz
+thanks
+> 
+...
+> > +
+> > +  adi,gain-milli:
+> > +    description: |
+> > +      The hardware gain applied to the ADC input (in milli units).
+> > +      The gain provided by the ADC input scaler is defined by the hardware
+> > +      connections between chip pins OUT+, R1K-, R1K1-, R1K+, R1K1+, and OUT-.
+> > +      If not present, default to 1000 (no actual gain applied).
+> > +    $ref: /schemas/types.yaml#/definitions/uint16
+> 
+> Any particular reason why this needs to be uint16 instead of the more
+> common uint32?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d047bdb99944f4429ce7@syzkaller.appspotmail.com
+The values fit into 16 bits and Nuno asked to make it a 16-bit property.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in hci_sock_get_cookie+0x49/0x50 net/bluetooth/hci_sock.c:96
-Read of size 4 at addr ffff888055333568 by task syz-executor.2/5954
+> 
+> > +    enum: [454, 909, 1000, 1900]
+> > +    default: 1000
+> > +
+...
+> > +  # The configuration register can only be accessed in '3-wire' mode
+> > +  - if:
+> > +      not:
+> > +        properties:
+> > +          adi,spi-mode:
+> > +            contains:
+> > +              enum:
+> > +                - single
+> 
+> adi,spi-mode is not an array and we are only checking for one value,
+> so this could be simplified to:
+> 
+>   properties:
+>     adi,spi-mode:
+>       const: single
+> 
+ok, changed to do the check that way.
 
-CPU: 1 PID: 5954 Comm: syz-executor.2 Not tainted 6.10.0-rc2-syzkaller-00724-g45403b12c29c #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- hci_sock_get_cookie+0x49/0x50 net/bluetooth/hci_sock.c:96
- mgmt_cmd_status+0x1be/0x4d0 net/bluetooth/mgmt_util.c:149
- cmd_status_rsp net/bluetooth/mgmt.c:1451 [inline]
- cmd_complete_rsp+0xe7/0x150 net/bluetooth/mgmt.c:1466
- mgmt_pending_foreach+0xd1/0x130 net/bluetooth/mgmt_util.c:259
- __mgmt_power_off+0x187/0x420 net/bluetooth/mgmt.c:9413
- hci_dev_close_sync+0x587/0xf60 net/bluetooth/hci_sync.c:5058
- hci_dev_do_close net/bluetooth/hci_core.c:556 [inline]
- hci_dev_close+0x112/0x210 net/bluetooth/hci_core.c:581
- sock_do_ioctl+0x158/0x460 net/socket.c:1222
- sock_ioctl+0x629/0x8e0 net/socket.c:1341
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2334e7cea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f2335caa0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f2334fb3f80 RCX: 00007f2334e7cea9
-RDX: 0000000000000000 RSI: 00000000400448ca RDI: 000000000000000d
-RBP: 00007f2334eebff4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f2334fb3f80 R15: 00007ffd57013a68
- </TASK>
+...
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        /* Example for a AD devices */
+> 
+> Comments are a bit redundant since it says "examples:" above and
+> the type of the chip in the compatible string.
+> 
+I like the comments. I think it makes clear we have AD and ADAQ devices but ok,
+removing them for v5.
 
-Allocated by task 5225:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
- __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
- kasan_kmalloc include/linux/kasan.h:211 [inline]
- __do_kmalloc_node mm/slub.c:4121 [inline]
- __kmalloc_noprof+0x1f9/0x400 mm/slub.c:4134
- kmalloc_noprof include/linux/slab.h:664 [inline]
- sk_prot_alloc+0xe0/0x210 net/core/sock.c:2096
- sk_alloc+0x38/0x370 net/core/sock.c:2149
- bt_sock_alloc+0x3c/0x340 net/bluetooth/af_bluetooth.c:148
- hci_sock_create+0xa1/0x190 net/bluetooth/hci_sock.c:2202
- bt_sock_create+0x161/0x230 net/bluetooth/af_bluetooth.c:132
- __sock_create+0x490/0x920 net/socket.c:1571
- sock_create net/socket.c:1622 [inline]
- __sys_socket_create net/socket.c:1659 [inline]
- __sys_socket+0x150/0x3c0 net/socket.c:1706
- __do_sys_socket net/socket.c:1720 [inline]
- __se_sys_socket net/socket.c:1718 [inline]
- __x64_sys_socket+0x7a/0x90 net/socket.c:1718
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 5962:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
- poison_slab_object+0xe0/0x150 mm/kasan/common.c:240
- __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
- kasan_slab_free include/linux/kasan.h:184 [inline]
- slab_free_hook mm/slub.c:2195 [inline]
- slab_free mm/slub.c:4436 [inline]
- kfree+0x149/0x360 mm/slub.c:4557
- sk_prot_free net/core/sock.c:2132 [inline]
- __sk_destruct+0x476/0x5f0 net/core/sock.c:2224
- sock_put include/net/sock.h:1879 [inline]
- mgmt_pending_free net/bluetooth/mgmt_util.c:307 [inline]
- mgmt_pending_remove+0x13e/0x1a0 net/bluetooth/mgmt_util.c:315
- mgmt_pending_foreach+0xd1/0x130 net/bluetooth/mgmt_util.c:259
- mgmt_index_removed+0xe6/0x340 net/bluetooth/mgmt.c:9346
- hci_sock_bind+0xcc6/0x1140 net/bluetooth/hci_sock.c:1307
- __sys_bind+0x23d/0x2f0 net/socket.c:1847
- __do_sys_bind net/socket.c:1858 [inline]
- __se_sys_bind net/socket.c:1856 [inline]
- __x64_sys_bind+0x7a/0x90 net/socket.c:1856
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888055333000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 1384 bytes inside of
- freed 2048-byte region [ffff888055333000, ffff888055333800)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x55330
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: 0xffffefff(slab)
-raw: 00fff00000000040 ffff888015042000 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000080008 00000001ffffefff 0000000000000000
-head: 00fff00000000040 ffff888015042000 dead000000000100 dead000000000122
-head: 0000000000000000 0000000000080008 00000001ffffefff 0000000000000000
-head: 00fff00000000003 ffffea000154cc01 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0x1d20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC|__GFP_HARDWALL), pid 4538, tgid 4538 (klogd), ts 83329536244, free_ts 22893428251
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1468
- prep_new_page mm/page_alloc.c:1476 [inline]
- get_page_from_freelist+0x2e2d/0x2ee0 mm/page_alloc.c:3402
- __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4660
- __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
- alloc_slab_page+0x5f/0x120 mm/slub.c:2264
- allocate_slab+0x5a/0x2e0 mm/slub.c:2427
- new_slab mm/slub.c:2480 [inline]
- ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3666
- __slab_alloc+0x58/0xa0 mm/slub.c:3756
- __slab_alloc_node mm/slub.c:3809 [inline]
- slab_alloc_node mm/slub.c:3988 [inline]
- kmalloc_trace_noprof+0x1d5/0x2c0 mm/slub.c:4147
- kmalloc_noprof include/linux/slab.h:660 [inline]
- syslog_print+0x121/0x9c0 kernel/printk/printk.c:1553
- do_syslog+0x3bb/0x810 kernel/printk/printk.c:1731
- __do_sys_syslog kernel/printk/printk.c:1823 [inline]
- __se_sys_syslog kernel/printk/printk.c:1821 [inline]
- __x64_sys_syslog+0x7c/0x90 kernel/printk/printk.c:1821
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 1 tgid 1 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1088 [inline]
- free_unref_page+0xd22/0xea0 mm/page_alloc.c:2565
- free_contig_range+0x9e/0x160 mm/page_alloc.c:6619
- destroy_args+0x8a/0x890 mm/debug_vm_pgtable.c:1038
- debug_vm_pgtable+0x4be/0x550 mm/debug_vm_pgtable.c:1418
- do_one_initcall+0x248/0x880 init/main.c:1267
- do_initcall_level+0x157/0x210 init/main.c:1329
- do_initcalls+0x3f/0x80 init/main.c:1345
- kernel_init_freeable+0x435/0x5d0 init/main.c:1578
- kernel_init+0x1d/0x2b0 init/main.c:1467
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Memory state around the buggy address:
- ffff888055333400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888055333480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888055333500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                          ^
- ffff888055333580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888055333600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> > +        adc@0 {
+> > +            compatible = "adi,ad4020";
+> > +            reg = <0>;
+> > +            spi-max-frequency = <71000000>;
+> > +            vdd-supply = <&supply_1_8V>;
+> > +            vio-supply = <&supply_1_8V>;
+> > +            ref-supply = <&supply_5V>;
+> > +            cnv-gpios = <&gpio0 88 GPIO_ACTIVE_HIGH>;
+> > +        };
+> > +    };
+> > +  - |
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        /* Example for a ADAQ devices */
+> > +        adc@0 {
+> > +            compatible = "adi,adaq4003";
+> > +            reg = <0>;
+> > +            spi-max-frequency = <80000000>;
+> > +            vdd-supply = <&supply_1_8V>;
+> > +            vio-supply = <&supply_1_8V>;
+> > +            ref-supply = <&supply_5V>;
+> > +            adi,high-z-input;
+> > +            adi,gain-milli = /bits/ 16 <454>;
+> > +            adi,spi-mode = "single";
+> > +        };
+> > +    };
