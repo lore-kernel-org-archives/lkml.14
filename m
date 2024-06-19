@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6327603A;
-	Wed, 19 Jun 2024 07:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417B67C6C9;
+	Wed, 19 Jun 2024 07:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718781806; cv=none; b=LraUn9TQENUxB3cc27oH0Nuimd7lSrkltOCr8c6UsPctXv96F+r1hFno69rRNsHdLAOjaEFdYxwQcRumlBEcBYDXK5QmsoWzVVv4RoBS1PxV4rSNttsMjQ6KRdA4fZqacYbGUCHfSRD3x2EWoqekVkroKPuQjfvTissaA/yOjzk=
+	t=1718781807; cv=none; b=jvdCEDlJQL0S3MUwTDf0A1+wZ9ys6PDQhULU2BgpBkywalOoeyorwwp8jQrrEerYQqVfpwK9PWL0vZZK5Ao3vR8Pg8AJdwl7Z3wcmXG4AAptFD6Mn9Ltu/1OMVYKFY4VJprp/Smcf0uCOG+kBBv0NdxljdINwcLcVQ3dP/ilKvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718781806; c=relaxed/simple;
-	bh=LIlnRdFChcWrskshA2uHWa9ibTblCvtjpr5uMO8mOMw=;
+	s=arc-20240116; t=1718781807; c=relaxed/simple;
+	bh=pSf/Z0JsPY9xuccDTq3qRsA+msduJP12GujlmQ1ybu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RWI+Rle0BUJiL0b1p9ZRzy90Mh/5a3lIHr6Gdf4Qd7KlSACgFyQocQosdmrzNtvKrW5Lr/KThsUesNtqUdTGMO6xR/AynGHkpSBUfvkC53zX1mHdIrE8oJmInG40yCOaqk7pqd3omNloRZ4/0jWTV5U9tPjdBe+5tV95n+CvcTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4n8qIIbt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ego/3/i8; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Xo20xSI/hfv2/mRANgWQU457PBtyK9DIGzgNlGRTWnCQRJx6F466eXTpx9JRALSCeYByhJdDmaT1ZGG9DbKCNnlQrZYWVSVOdKlXEamqCLJI7Sa4MBj060d+JMpGhBxjT0SowAITrvH0VC6E/hSkw4aFhvJ9QGdjhljR+DN3K5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L2XjrxS7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LqTkAmLs; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4n8qIIbt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ego/3/i8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L2XjrxS7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LqTkAmLs"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718781802;
+	s=2020; t=1718781804;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
-	b=4n8qIIbtjRctRz6J4ZL834HhsofsYEqRlq5/OqJfMlCw196qSk4eC2N+5Q5vDwbb6opiD1
-	tEWKpCIlTwXlohF6AgfayZmFpSKfjdWPaNBWdSSwRKMKzsOdUSSyYTQt7hJwK6Yfs/kAuM
-	C4XaB4M5CZ4NSoEvMn+pR5TFNxTyzOCtHb9fcapdqe7MW5Q5/xFROZFFJutB3o5jGbbx7Q
-	BHoryr99ZTfo5cOUx4ZgP3cPNF6nzCSxYb5cvUhKFeMBY+yDWoGQ1qt3pATb4w0iQulljA
-	LOnjelXmcHFeUleyMPUv6twv/QafZrTiEVK697VZ+CzV6UwUW2tKIbbGskhk6g==
+	bh=I13A++imoQhao8gFnSZ3Ll5CYpEUTnm71Pum08/yKbQ=;
+	b=L2XjrxS7T4a9bSZpE0LhfaK/UjPzBnACRKvlHyeFN4Bjt4fwn7SAym2AXMuR7R0cLFfFEh
+	c3VQtwA6zx1iLEFDCUJw7Gwb88TzS5N8qnA7ioaX1Ve5wmL4E+R84OjSIgl6bKm4yUV6xe
+	QaBaD9RD3MWpvpkmWQUXf3cgIybBDChN8q7sKyFmVbkw3CUAWgaluQqImIRJDp8f1biMJn
+	UVQE8uNoHBHqBtkJfULXkhF7RFTntt98pdM8m/ZN0nK/KtEt9oHlcX6jRgTsofgtGiz8wB
+	+NXoMI8RBLL/dD80UWaXP6h4X3JMZWpliHdZnHc4ruJD2w4IjF7lcshk6FyOdw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718781802;
+	s=2020e; t=1718781804;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6g1GPYi+I136Cqy2m8SrkrLrDF9fK7B/YVAMV5OHSck=;
-	b=Ego/3/i8VIi2OYkflJp60BaA6uOWX89aZEckhOSHYXgVV7N/JWKJsBagLR+u10nZw3JPB6
-	kIuqfGZIKI/4UABA==
+	bh=I13A++imoQhao8gFnSZ3Ll5CYpEUTnm71Pum08/yKbQ=;
+	b=LqTkAmLsAEnpSlS7pHdW5aCra/01nOVVsfeNfkXG2xWaG2sTRmk2+5U2JGRZl4o0DhkHTg
+	iHNBb5v+A4GrekCg==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -54,11 +54,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	David Ahern <dsahern@kernel.org>
-Subject: [PATCH v8 net-next 06/15] net/ipv4: Use nested-BH locking for ipv4_tcp_sk.
-Date: Wed, 19 Jun 2024 09:16:57 +0200
-Message-ID: <20240619072253.504963-7-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v8 net-next 09/15] dev: Remove PREEMPT_RT ifdefs from backlog_lock.*().
+Date: Wed, 19 Jun 2024 09:17:00 +0200
+Message-ID: <20240619072253.504963-10-bigeasy@linutronix.de>
 In-Reply-To: <20240619072253.504963-1-bigeasy@linutronix.de>
 References: <20240619072253.504963-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -69,102 +68,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-ipv4_tcp_sk is a per-CPU variable and relies on disabled BH for its
-locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
-this data structure requires explicit locking.
+The backlog_napi locking (previously RPS) relies on explicit locking if
+either RPS or backlog NAPI is enabled. If both are disabled then locking
+was achieved by disabling interrupts except on PREEMPT_RT. PREEMPT_RT
+was excluded because the needed synchronisation was already provided
+local_bh_disable().
 
-Make a struct with a sock member (original ipv4_tcp_sk) and a
-local_lock_t and use local_lock_nested_bh() for locking. This change
-adds only lockdep coverage and does not alter the functional behaviour
-for !PREEMPT_RT.
+Since the introduction of backlog NAPI and making it mandatory for
+PREEMPT_RT the ifdef within backlog_lock.*() is obsolete and can be
+removed.
 
-Cc: David Ahern <dsahern@kernel.org>
+Remove the ifdefs in backlog_lock.*().
+
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/net/sock.h  |  5 +++++
- net/ipv4/tcp_ipv4.c | 15 +++++++++++----
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ net/core/dev.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index b30ea0c342a65..cce23ac4d5148 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -544,6 +544,11 @@ struct sock {
- 	netns_tracker		ns_tracker;
- };
-=20
-+struct sock_bh_locked {
-+	struct sock *sock;
-+	local_lock_t bh_lock;
-+};
-+
- enum sk_pacing {
- 	SK_PACING_NONE		=3D 0,
- 	SK_PACING_NEEDED	=3D 1,
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index de0c8f43448ab..318bdd9b8f27c 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -93,7 +93,9 @@ static int tcp_v4_md5_hash_hdr(char *md5_hash, const stru=
-ct tcp_md5sig_key *key,
- struct inet_hashinfo tcp_hashinfo;
- EXPORT_SYMBOL(tcp_hashinfo);
-=20
--static DEFINE_PER_CPU(struct sock *, ipv4_tcp_sk);
-+static DEFINE_PER_CPU(struct sock_bh_locked, ipv4_tcp_sk) =3D {
-+	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
-+};
-=20
- static u32 tcp_v4_init_seq(const struct sk_buff *skb)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index c15b0215a66b7..2745001d09eb4 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -229,7 +229,7 @@ static inline void backlog_lock_irq_save(struct softnet=
+_data *sd,
  {
-@@ -882,7 +884,9 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
-ruct sk_buff *skb,
- 	arg.tos =3D ip_hdr(skb)->tos;
- 	arg.uid =3D sock_net_uid(net, sk && sk_fullsock(sk) ? sk : NULL);
- 	local_bh_disable();
--	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
-+	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
-+	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
-+
- 	sock_net_set(ctl_sk, net);
- 	if (sk) {
- 		ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
-@@ -907,6 +911,7 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
-ruct sk_buff *skb,
- 	sock_net_set(ctl_sk, &init_net);
- 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
- 	__TCP_INC_STATS(net, TCP_MIB_OUTRSTS);
-+	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
- 	local_bh_enable();
-=20
- #ifdef CONFIG_TCP_MD5SIG
-@@ -1002,7 +1007,8 @@ static void tcp_v4_send_ack(const struct sock *sk,
- 	arg.tos =3D tos;
- 	arg.uid =3D sock_net_uid(net, sk_fullsock(sk) ? sk : NULL);
- 	local_bh_disable();
--	ctl_sk =3D this_cpu_read(ipv4_tcp_sk);
-+	local_lock_nested_bh(&ipv4_tcp_sk.bh_lock);
-+	ctl_sk =3D this_cpu_read(ipv4_tcp_sk.sock);
- 	sock_net_set(ctl_sk, net);
- 	ctl_sk->sk_mark =3D (sk->sk_state =3D=3D TCP_TIME_WAIT) ?
- 			   inet_twsk(sk)->tw_mark : READ_ONCE(sk->sk_mark);
-@@ -1017,6 +1023,7 @@ static void tcp_v4_send_ack(const struct sock *sk,
-=20
- 	sock_net_set(ctl_sk, &init_net);
- 	__TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
-+	local_unlock_nested_bh(&ipv4_tcp_sk.bh_lock);
- 	local_bh_enable();
+ 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
+ 		spin_lock_irqsave(&sd->input_pkt_queue.lock, *flags);
+-	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++	else
+ 		local_irq_save(*flags);
  }
 =20
-@@ -3615,7 +3622,7 @@ void __init tcp_v4_init(void)
+@@ -237,7 +237,7 @@ static inline void backlog_lock_irq_disable(struct soft=
+net_data *sd)
+ {
+ 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
+ 		spin_lock_irq(&sd->input_pkt_queue.lock);
+-	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++	else
+ 		local_irq_disable();
+ }
 =20
- 		sk->sk_clockid =3D CLOCK_MONOTONIC;
+@@ -246,7 +246,7 @@ static inline void backlog_unlock_irq_restore(struct so=
+ftnet_data *sd,
+ {
+ 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
+ 		spin_unlock_irqrestore(&sd->input_pkt_queue.lock, *flags);
+-	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++	else
+ 		local_irq_restore(*flags);
+ }
 =20
--		per_cpu(ipv4_tcp_sk, cpu) =3D sk;
-+		per_cpu(ipv4_tcp_sk.sock, cpu) =3D sk;
- 	}
- 	if (register_pernet_subsys(&tcp_sk_ops))
- 		panic("Failed to create the TCP control socket.\n");
+@@ -254,7 +254,7 @@ static inline void backlog_unlock_irq_enable(struct sof=
+tnet_data *sd)
+ {
+ 	if (IS_ENABLED(CONFIG_RPS) || use_backlog_threads())
+ 		spin_unlock_irq(&sd->input_pkt_queue.lock);
+-	else if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++	else
+ 		local_irq_enable();
+ }
+=20
 --=20
 2.45.2
 
