@@ -1,85 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB6175811;
-	Wed, 19 Jun 2024 11:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B908713664C;
+	Wed, 19 Jun 2024 11:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718795243; cv=none; b=fTkMokPr5d231LRZRes3ToWZ9ZwSrLRnlYYcdQ9o+5SuUUhaF46g125ZE2OtJUcDGn9fVKvAPlJo33zgj/LzqO+qJF1dvCgH3ENH17vCAMv/bMeWKZSsYJiru7ah30DxaA8ioHjweD+0el7wEUS+9Ot0mMKkRzrs3WHyN8sU++k=
+	t=1718795284; cv=none; b=A/RdsvS7o0hh2N2UEcpyPen1edkZbVYfnH240eenxzuY7gj+YIBmZGjP2XLNF8kYedAgInNoGnAUbghzvEPkqrTMp6u/9QRtnTbF86pAP4StXy3/5REQdC8HC9NfP4gbmfvaodbQ2ZYJ4BBWsVOsw1apVdzh82gv3nLeN7gaHyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718795243; c=relaxed/simple;
-	bh=rDc/rfrtzolpD0LTP1ks60v9uPUWCXxUWHIpdqLAbDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IJZwOYt2/xKbxo1MsOV+fcfQECuP/xpwaTBSVZrOIQKLMh84eAnlDd/RIrE8Qhcs+VzlBnYeUPDZrP1tqeF6PG56zS1YJxfJ7U1ihfhFdrt0q+g3mj2xXEylQJPjEkUhxNlMQzq99RbWvQWnJtP/Q4Tgew7J2iATDP3LYBcA6Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5eHszd2; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5eHszd2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718795241; x=1750331241;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rDc/rfrtzolpD0LTP1ks60v9uPUWCXxUWHIpdqLAbDQ=;
-  b=U5eHszd2znRX6Tmh5paU8lmROzpypjvQqE6EFeOt1mDg59iJD+W3uV5a
-   YxGnMaAdHgcGtCacIF3mxSed2T9pRW2gDvF/hOLgqSyqkm0Q2JG/Kmx3o
-   YYRrRj91q7dhsG44UhnLW5TBxcTXFKwEVbO1tFCfvsFPmJMdj4W+12epg
-   4dwG36aOPdNVDjLDPdFe2OVPnOUHi9N13FjDuRqH0aGCaiRv34J43zONa
-   ynMXDPX5jG2smKS0tXk2lshFUMUg3uMxSNL8oNNWLy1b5mNMyiabFAu7i
-   hH6FjR+Kil+oVrl1yoiq6KLAJKF9qUYB0Y7GaEFZw8EyGRjFGGU9ZOueg
-   A==;
-X-CSE-ConnectionGUID: RkIeyIerTZqxULtHBtMFWA==
-X-CSE-MsgGUID: QGmPf0MkSeyiVP9UuJW0mg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="41131497"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="41131497"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 04:07:20 -0700
-X-CSE-ConnectionGUID: OaSuUQ2bTlm4Ss3wYCm8Hg==
-X-CSE-MsgGUID: c1s9mH8ZTE6nKxCOZt8zvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="79364591"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by orviesa001.jf.intel.com with ESMTP; 19 Jun 2024 04:07:19 -0700
-Message-ID: <18cb1377-dc56-bd19-e634-fbded8965f3d@linux.intel.com>
-Date: Wed, 19 Jun 2024 14:09:17 +0300
+	s=arc-20240116; t=1718795284; c=relaxed/simple;
+	bh=1roHWMTkenylQTVxa6sCfmt+lt8ygc+cj7orJ3CFXr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Y9pY21zgylwDqVvOoQSftTYpXTpzFIzzusCcLCo/7TCJwC6FW6ptBDvOBxNlv30cO+3k6BrydaRHMP2pl75UgL2gG9YZ7968US2ZA4hYarOoT+/OdhebPtO13pndgo+yIx8RGDrbsMmyhCAGer4V1MUYCWu4DTQCzVoMeqHZC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sJtAM-00027J-00; Wed, 19 Jun 2024 13:07:50 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 7C77AC0120; Wed, 19 Jun 2024 13:07:40 +0200 (CEST)
+Date: Wed, 19 Jun 2024 13:07:40 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: torvalds@linux-foundation.org
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS fixes for v6.10
+Message-ID: <ZnK7/CW+hLH3/Hhs@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2] xhci: Apply XHCI_RESET_TO_DEFAULT quirk to TGL
-Content-Language: en-US
-To: Reka Norman <rekanorman@chromium.org>,
- Mathias Nyman <mathias.nyman@intel.com>
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20240614002917.4014146-1-rekanorman@chromium.org>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20240614002917.4014146-1-rekanorman@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 14.6.2024 3.28, Reka Norman wrote:
-> TGL systems have the same issue as ADL, where a large boot firmware
-> delay is seen if USB ports are left in U3 at shutdown. So apply the
-> XHCI_RESET_TO_DEFAULT quirk to TGL as well.
-> 
-> The issue it fixes is a ~20s boot time delay when booting from S5. It
-> affects TGL devices, and TGL support was added starting from v5.3.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Reka Norman <rekanorman@chromium.org>
+The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
 
-Added to queue
+  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
 
-Thanks
-Mathias
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips-fixes_6.10_1
 
+for you to fetch changes up to 6e5aee08bd2517397c9572243a816664f2ead547:
 
+  Revert "MIPS: pci: lantiq: restore reset gpio polarity" (2024-06-13 10:17:09 +0200)
+
+----------------------------------------------------------------
+- fix for BCM6538 boards
+- fix RB532 PCI workaround
+
+----------------------------------------------------------------
+Christian Marangi (1):
+      mips: bmips: BCM6358: make sure CBR is correctly set
+
+Ilpo Järvinen (1):
+      MIPS: Routerboard 532: Fix vendor retry check code
+
+Martin Schiller (1):
+      MIPS: pci: lantiq: restore reset gpio polarity
+
+Thomas Bogendoerfer (1):
+      Revert "MIPS: pci: lantiq: restore reset gpio polarity"
+
+ arch/mips/bmips/setup.c     | 3 ++-
+ arch/mips/pci/ops-rc32434.c | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
