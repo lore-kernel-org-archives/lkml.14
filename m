@@ -1,190 +1,93 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8A11EA74;
-	Wed, 19 Jun 2024 02:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA745224DD;
+	Wed, 19 Jun 2024 02:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718763420; cv=none; b=kSDv5zNXrHSdoUnAMf7CoWx6L1gtx0JVVe0qApY5Ixg+qgI/nwPlhZ21Yhs77CrcXz0JNWxxFGg53eNYg7rGXw9wLxEGcHr7lUx44/4TDuvjtVMqJ7DAile1KcLONrQG1iappJGPla46fS/EukQBXUk2xmeTJZSPSZs564r+Gw8=
+	t=1718763623; cv=none; b=ptBDUtNLY3LCiW+kW+N6fCFfOB88CqYGwc40x4UgBV6hfk9YZa7ZRA3fQavJrorWc5djvzpUQwrvHUbLogbzN/8yHLTEomQMmY1yMx2PUJrAelw4pdxw4k5NoJGQf+WDmjZOtnOK8kQN4dsB3g8sD+xfzCg7k0i67ECHh3xt92U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718763420; c=relaxed/simple;
-	bh=HASXpDjNd2RHtCSey6cb/9CA17Pw1n51jwiTRiMlFc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kzWvepMhApy+P6W8ZI4AXD4F3MjraICZ4yeSFLmE+Wek/VaFGlGJkae06BVayGZI2VF1rDGVTBuLIcV8uSwSVgC889quqOeKnD838yQJltX6zHm6gjWv/mmmUloEfE766MdkTSPZ2f7dK0q1eykluTeIe8fsy2Pnh7xH4Fhvnc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y0JNrcEx; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718763623; c=relaxed/simple;
+	bh=L4FZ6KZ4NQEXlCXFdqBaPb9Wfo46WVv6wjZlCzocA0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sy+i1q60rCKlGabmRUJoCP/wpVF1+Esg0QrTuKzsPft6amL1Yd0lLgddoAIfLYxN3kxjuxoBtkAQNSYiEw3kf088xLsh/keGvt56fO3oW9P76zkm1JdStmUuGbVc/LSWZLTlVMXGWvbzNV78P8hslxjmxWBa4hcjItcchzCFm/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzQ5eYTz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0JNrcEx"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2547e1c7bbeso3207274fac.2;
-        Tue, 18 Jun 2024 19:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718763418; x=1719368218; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cRNKRw+EdEWM4sTuEjNXHCmouPWU72BgyGwGHxeoQQ8=;
-        b=Y0JNrcEx51F1XiKHh+X5rpBpDzqpk46SrWvJo3VE7KgAqqxvqZiCBcySQegtBPf9ZH
-         kEzTjrsEfsuEBvRojd+rKV7oSbnMKTesA9WK//RdxK24/L0yIYurW2MXx3Zz/tBAUsmr
-         zHjmD8EHX+4S4b3m9Cj9Xi0VmBkPsxlYaJkDnBOE/j7E14MYKLKX1lP7pJ98FayAaU5P
-         0aMRbB37iPcnSVy4s+af5bUTpFESBDl5P0G8mjwoSHQsAlk6zsXIfrL/P87bEVK6MUu4
-         i/jLrf5yc+IBHUaSThGq/mgQka17965Q3b8craBkIMFzjQCMv/qybWcrqETLr0Ijog3q
-         lyIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718763418; x=1719368218;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cRNKRw+EdEWM4sTuEjNXHCmouPWU72BgyGwGHxeoQQ8=;
-        b=Flx/EqyiY48l6h8dj93A2XC8siuWepNFdftjIk/29M1Mm4Nf8O57lCHKiHtsPgO6zt
-         2yeDhpE130IVjXfg/L/dpdpbEKDEaEwzZWmwcx0ZaFR0JR+40Dc22oqZnm4Lp5chsD8R
-         ezBjknfZNb4fl4eQhNvGxlpZfCukoKdxSuMKnzl8hNsmGMwnx/RZufVVRuGLJQH9g+D+
-         PhLLXJkVLr9pgebXzm31vJCMvwq/732cx1PbZpWe7InUGOTG1lIJFuYGxrxDbA2kXkWb
-         vZTrvv6vrEzBt2R0uwuKkCimtJdrHpnZKUAFWFrqjwFwdKLqBnPS4MNgfYA84IMTXfMS
-         qGtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUktYOgdCut2pVy1YSD0ybzurma/Svw2qdth5gF6jFYPcjIdLI6bHTbdrQ4BH31SaezsvzS4xPMsaaJGzKqIW/OsRrhgzWxKe1tm/+UygS248Ko2AhqRxx5cPRIyX7SslnOCfoUYRNt5sD+aV4ShDx9w56NUgEaRi+V9mASOnB57qtM7yB
-X-Gm-Message-State: AOJu0Yw2Hzjo0uiu8XP5kkIr0a2HTL7nBl3XxSe2l1XkK2DKMKygdXam
-	ubPC9am+KEgm6SJ7PBCjOQIp2U6XSqftkjh/QX9P31KlvTGM45NI
-X-Google-Smtp-Source: AGHT+IHpPhJ7zP7UN2BsY3unZsGUx9/U3vd2RdXQWiBk5jUZDOB6vaXOTsyuwUahSne82+LDr1KhGw==
-X-Received: by 2002:a05:6870:45a4:b0:23f:eea9:ae74 with SMTP id 586e51a60fabf-25c94d02f34mr1527205fac.46.1718763417948;
-        Tue, 18 Jun 2024 19:16:57 -0700 (PDT)
-Received: from ux-UP-WHL01 (mailgw01.goodix.com. [45.117.96.243])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-70c5ddb7334sm2816499a12.33.2024.06.18.19.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 19:16:57 -0700 (PDT)
-Date: Wed, 19 Jun 2024 10:16:50 +0800
-From: Charles Wang <charles.goodix@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: dmitry.torokhov@gmail.com, dan.carpenter@linaro.org, robh@kernel.org,
-	dianders@chromium.org, krzk+dt@kernel.org, jikos@kernel.org,
-	bentiss@kernel.org, hbarnor@chromium.org,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] dt-bindings: input: Goodix SPI HID Touchscreen
-Message-ID: <ZnI_kt3APuF6NWvR@ux-UP-WHL01>
-References: <20240618084455.1451461-1-charles.goodix@gmail.com>
- <20240618084455.1451461-3-charles.goodix@gmail.com>
- <20240618-affluent-unroasted-e6d5d34d1ea2@spud>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzQ5eYTz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718763622; x=1750299622;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=L4FZ6KZ4NQEXlCXFdqBaPb9Wfo46WVv6wjZlCzocA0Y=;
+  b=dzQ5eYTzBn+JpZqIEkX/axlYZyqFYzfoQDXVl2N4O50gdvoZ3kp9Ksgl
+   JLSNnMnA4g+tT0W27S5ajx0Za0VvaAPWHQm7WEpEV50FzcvTckhoV+KbB
+   o4L1DINy0OsI81/VjtfmkZ30qLWEBCRWs+MHpLBKwhVO0aUS3SC3MCLS2
+   x2Hz8X8pKTbRyoydS6y4s5EG3NOGOvyIOugC5Krxp531YY4T8rpWIsFLu
+   XvzP60eJIPDlLdPqwX5L4e4poR/q1rT49ro+IkTh6I7GpuRihesQH/siN
+   DFDDXJwCxoz2vVCjPgWFqwCZ0HoyRu9DedIJxBbhaKa8utt7MrY5ZuhtL
+   w==;
+X-CSE-ConnectionGUID: 7lQatKlhT06iRdoePEXpyQ==
+X-CSE-MsgGUID: xJtHp/w+QOGcCEvssH7HXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15648141"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="15648141"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 19:20:21 -0700
+X-CSE-ConnectionGUID: +5sIfbt4SNaj1Gmrp29TtA==
+X-CSE-MsgGUID: AriEdL1KSFWvtuCR5Vp+zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="42470812"
+Received: from unknown (HELO dell-3650.sh.intel.com) ([10.239.159.147])
+  by orviesa007.jf.intel.com with ESMTP; 18 Jun 2024 19:20:17 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 0/2] KVM vPMU code refine
+Date: Thu, 20 Jun 2024 02:21:26 +0800
+Message-Id: <20240619182128.4131355-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618-affluent-unroasted-e6d5d34d1ea2@spud>
+Content-Transfer-Encoding: 8bit
 
-Hi Conor,
+This small patchset refines KVM vPMU code and relevant selftests.
+Patch 1/2 defines new macro KVM_PMC_MAX_GENERIC to avoid the Intel
+specific macro KVM_INTEL_PMC_MAX_GENERIC to be used in vPMU x86 common
+code. Patch 2/2 reduces the verbosity of "Random seed" messages to avoid
+the hugh number of messages to flood the regular output of selftests.
 
-On Tue, Jun 18, 2024 at 06:43:18PM +0100, Conor Dooley wrote:
-> On Tue, Jun 18, 2024 at 04:44:54PM +0800, Charles Wang wrote:
-> > The Goodix GT7986U touch controller report touch data according to the
-> > HID protocol through the SPI bus. However, it is incompatible with
-> > Microsoft's HID-over-SPI protocol.
-> > 
-> > Signed-off-by: Charles Wang <charles.goodix@gmail.com>
-> > ---
-> >  .../bindings/input/goodix,gt7986u.yaml        | 72 +++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml b/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
-> > new file mode 100644
-> > index 000000000..25a26b4ce
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/goodix,gt7986u.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/goodix,gt7986u.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: GOODIX GT7986U SPI HID Touchscreen
-> > +
-> > +maintainers:
-> > +  - Charles Wang <charles.goodix@gmail.com>
-> > +
-> > +description: Supports the Goodix GT7986U touchscreen.
-> > +  This touch controller reports data packaged according to the HID protocol,
-> > +  but is incompatible with Microsoft's HID-over-SPI protocol.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - goodix,gt7986u
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +    description: reset gpio the chip is connected to.
-> 
-> The description here isn't needed, it's obvious :)
->
+No logic change in this patchset and Kselftests/KUT PMU related tests
+passed with this patchset.
 
-Ack.
+Dapeng Mi (2):
+  KVM: x86/pmu: Define KVM_PMC_MAX_GENERIC for platform independence
+  selftests: kvm: Reduce verbosity of "Random seed" messages
 
-> > +  goodix,hid-report-addr:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> 
-> This | is not needed, there's no formatting to preserve.
-> 
-> Those are nits:
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> 
+ arch/x86/include/asm/kvm_host.h            | 9 +++++----
+ arch/x86/kvm/svm/pmu.c                     | 2 +-
+ arch/x86/kvm/vmx/pmu_intel.c               | 2 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c | 2 +-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
-Thank you. If there is a next version, I will fix these.
 
-Charles,
-
-> 
-> > +      The register address for retrieving HID report data.
-> > +      This address is related to the device firmware and may
-> > +      change after a firmware update.
-> > +
-> > +  spi-max-frequency: true
-> > +
-> > +additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - reset-gpios
-> > +  - goodix,hid-report-addr
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    spi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      touchscreen@0 {
-> > +        compatible = "goodix,gt7986u";
-> > +        reg = <0>;
-> > +        interrupt-parent = <&gpio>;
-> > +        interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
-> > +        reset-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
-> > +        spi-max-frequency = <10000000>;
-> > +        goodix,hid-report-addr = <0x22c8c>;
-> > +      };
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.43.0
-> > 
-
+base-commit: 0ce958282e66b3d1882e2bb2f503a5e2cebcc3ef
+-- 
+2.34.1
 
